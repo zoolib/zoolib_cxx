@@ -49,7 +49,7 @@ void ZByteSwap_Test()
 	ZAssertStop(0, 0x3412 == ZByteSwap_Read16(&value16));
 	ZAssertStop(0, 0x78563412 == ZByteSwap_Read32(&value32));
 	ZAssertStop(0, 0xF0DEBC9A78563412LL == ZByteSwap_Read64(&value64));
-	
+
 	ZByteSwap_16(&value16);
 	ZAssertStop(0, 0x3412 == value16);
 

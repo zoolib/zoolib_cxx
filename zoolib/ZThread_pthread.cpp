@@ -50,7 +50,7 @@ void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
 
 	ID theID;
 	int result = ::pthread_create(&theID, &threadAttr, iProc, iParam);
-		
+
 	::pthread_attr_destroy(&threadAttr);
 
 	if (result != 0)
@@ -120,7 +120,7 @@ bool ZCnd_pthread::pWaitUntil(pthread_mutex_t& iMtx, ZTime iDeadline)
 
 ZMtxR_pthread::ZMtxR_pthread()
 	{
-    pthread_mutexattr_t attr;
+	pthread_mutexattr_t attr;
 	::pthread_mutexattr_init(&attr);
 	::pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
 	::pthread_mutex_init(&fMutex, &attr);

@@ -33,7 +33,7 @@ class ZYadR_FS;
 
 class ZYadR_FS : public virtual ZYadR
 	{
-public:	
+public:
 	ZYadR_FS(const ZFileSpec& iFS);
 
 // From ZYadR
@@ -58,7 +58,7 @@ class ZYadMapRPos_Dir
 :	public ZYadR_FS,
 	public ZYadMapRPos
 	{
-public:	
+public:
 	ZYadMapRPos_Dir(const ZFileSpec& iFS);
 	ZYadMapRPos_Dir(const ZFileSpec& iFS, const ZFileIter& iFileIter);
 

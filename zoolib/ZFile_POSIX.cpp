@@ -85,7 +85,7 @@ class Make_FileLoc
 			case ZFileLoc::eLoc_App: oResult = ZFileLoc_POSIX::sGet_App(); return true;
 			}
 		return false;
-		}	
+		}
 	} sMaker0;
 
 } // anonymous namespace

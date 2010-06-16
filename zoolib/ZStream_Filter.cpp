@@ -199,7 +199,7 @@ void ZStreamWPos_Filter::Imp_Flush()
 
 uint64 ZStreamWPos_Filter::Imp_GetPosition()
 	{ return const_cast<ZStreamWPos&>(fStreamReal).Imp_GetPosition(); }
-	
+
 void ZStreamWPos_Filter::Imp_SetPosition(uint64 iPosition)
 	{ return const_cast<ZStreamWPos&>(fStreamReal).Imp_SetPosition(iPosition); }
 
@@ -237,7 +237,7 @@ void ZStreamRWPos_Filter::Imp_Flush()
 
 uint64 ZStreamRWPos_Filter::Imp_GetPosition()
 	{ return const_cast<ZStreamRWPos&>(fStreamReal).Imp_GetPosition(); }
-	
+
 void ZStreamRWPos_Filter::Imp_SetPosition(uint64 iPosition)
 	{ return const_cast<ZStreamRWPos&>(fStreamReal).Imp_SetPosition(iPosition); }
 

@@ -91,7 +91,7 @@ class Make_Decoder
 			return false;
 			}
 		return true;
-		}	
+		}
 	} sMaker0;
 
 class Make_Encoder
@@ -140,7 +140,7 @@ class Make_Encoder
 			return false;
 			}
 		return true;
-		}	
+		}
 	} sMaker1;
 
 } // anonymous namespace
@@ -363,7 +363,7 @@ static bool spDecodeUTF16Swapped(
 					&countConsumed, &countSkipped,
 					localDest, iDestCU,
 					&countGenerated);
-				
+
 				ZAssertStop(2, countConsumed == countToMove);
 
 				localSource += countToMove;
@@ -394,7 +394,7 @@ static bool spDecodeUTF16Swapped(
 					&countConsumed, nullptr,
 					localDest, iDestCU,
 					&countGenerated);
-				
+
 				ZAssertStop(2, countConsumed == countToMove);
 
 				localSource += countToMove;

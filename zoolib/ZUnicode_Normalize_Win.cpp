@@ -51,7 +51,7 @@ static string16 spNormalized_C_Win(const string16& iString, ENormForm iNormForm)
 			case eNormForm_C: theNF = NormalizationC; break;
 			case eNormForm_KC: theNF = NormalizationKC; break;
 			}
-		
+
 		for (;;)
 			{
 			int reqEstimate = ::NormalizeString(theNF,
@@ -92,7 +92,7 @@ static string16 spNormalized_C_Win(const string16& iString, ENormForm iNormForm)
 			case eNormForm_C: theFlags = MAP_PRECOMPOSED; break;
 			case eNormForm_KC: theFlags = MAP_PRECOMPOSED | MAP_FOLDCZONE; break;
 			}
-		
+
 		for (;;)
 			{
 			int reqEstimate = ::FoldStringW(theFlags,
@@ -127,8 +127,8 @@ class Function
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = spNormalized_C_Win(iParam.fString, iParam.fNormForm);
-		return true;		
-		}	
+		return true;
+		}
 	} sFunction0;
 
 #endif // WINVER >= 0x0500

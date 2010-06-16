@@ -122,7 +122,7 @@ ZRef<Result> Iterator_Product::ReadInc()
 			if (!fResult_LHS)
 				return ZRef<Result>();
 			}
-		
+
 		for (;;)
 			{
 			if (ZRef<Result> theRHS_Result = fIterator_RHS->ReadInc())

@@ -155,7 +155,7 @@ public:
 
 	void Inset(ZCoord iH, ZCoord iV);
 	ZGRgn Insetted(ZCoord iH, ZCoord iV) const;
-	
+
 	void Inset(const ZPointPOD& iPoint);
 	ZGRgn Insetted(const ZPointPOD& iPoint) const;
 

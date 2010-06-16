@@ -263,7 +263,7 @@ public:
 			{
 			fOwner = 0;
 			fMtx.Release();
-			}		
+			}
 		}
 
 private:
@@ -392,7 +392,7 @@ public:
 			this->pSignal(acquired);
 			return false;
 			}
-		
+
 		return true;
 		}
 

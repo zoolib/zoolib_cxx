@@ -680,7 +680,7 @@ ObjectRef& ObjectRef::operator=(const ZRef<JSObjectRef>& iOther)
 	}
 
 ZQ_T<Value> ObjectRef::QGet(const string8& iName) const
-	{	
+	{
 	JSValueRef theEx = nullptr;
 	JSValueRef theResult = ::JSObjectGetProperty(sCurrentContextRef(),
 		inherited::Get(), String(iName), &theEx);
@@ -949,7 +949,7 @@ JSClassRef ObjectImp::spGetJSClass()
 
 	static JSClassRef spClassRef = ::JSClassCreate(&classDefinition);
 
-	return spClassRef;	
+	return spClassRef;
 	}
 
 } // namespace ZJavaScriptCore

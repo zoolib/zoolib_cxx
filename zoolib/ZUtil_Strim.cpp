@@ -51,7 +51,7 @@ bool sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP)
 
 	if (theCP == iCP)
 		return true;
-		
+
 	iStrimU.Unread(theCP);
 	return false;
 	}
@@ -137,7 +137,7 @@ bool sTryRead_HexDigit(const ZStrimU& iStrimU, int& oDigit)
 		oDigit = theCP - 'A' + 10;
 		return true;
 		}
-		
+
 	iStrimU.Unread(theCP);
 	return false;
 	}
@@ -166,7 +166,7 @@ bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64)
 				}
 			spThrowParseException("Expected a valid hex integer after '0x' prefix");
 			}
-		
+
 		iStrimU.Unread(theCP);
 		if (!ZUnicode::sIsDigit(theCP))
 			{
@@ -463,7 +463,7 @@ void sCopy_Line(const ZStrimR& iStrimR, const ZStrimW& oDest)
 		if (ZUnicode::sIsEOL(theCP))
 			break;
 		oDest.WriteCP(theCP);
-		}	
+		}
 	}
 
 void sSkip_Line(const ZStrimR& iStrimR)
@@ -488,7 +488,7 @@ bool sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& oDest
 		if (theCP == iTerminator)
 			return true;
 		oDest.WriteCP(theCP);
-		}		
+		}
 	}
 
 bool sSkip_Until(const ZStrimR& iStrimR, UTF32 iTerminator)

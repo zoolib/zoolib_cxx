@@ -64,9 +64,9 @@ private:
 
 	ZMtxR fMtxR_Structure;
 	ZCnd fCnd;
-	
+
 	bool fReadBusy;
-	
+
 	int64 fNextLocalID;
 
 	bool fError;

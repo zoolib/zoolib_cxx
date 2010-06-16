@@ -114,14 +114,14 @@ ZWNDW::ZWNDW(WNDPROC iWNDPROC)
 :	fWNDPROC(iWNDPROC),
 	fHWND(nullptr)
 	{}
-	
+
 ZWNDW::~ZWNDW()
 	{
 	if (HWND theHWND = fHWND)
 		{
 		fHWND = nullptr;
 		::DestroyWindow(theHWND);
-		}	
+		}
 	}
 
 static ZWindowClassRegistrationW
@@ -204,7 +204,7 @@ LRESULT ZWNDW::sWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iL
 		}
 
 	ZAssertStop(0, theZWNDW);
-	return theZWNDW->WindowProc(iHWND, iMessage, iWPARAM, iLPARAM);	
+	return theZWNDW->WindowProc(iHWND, iMessage, iWPARAM, iLPARAM);
 	}
 
 ZWNDW* ZWNDW::sFromHWNDNilOkayW(HWND iHWND)

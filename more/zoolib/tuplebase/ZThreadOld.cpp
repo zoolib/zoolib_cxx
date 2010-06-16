@@ -44,7 +44,7 @@ ZMutex::ZMutex(const char* iName, bool iCreateAcquired)
 		fCount = 0;
 		}
 	}
-	
+
 ZMutex::~ZMutex()
 	{}
 

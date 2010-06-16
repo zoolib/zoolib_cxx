@@ -158,7 +158,7 @@ void ZTS_RAM::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples
 			fTuples.erase(position);
 			}
 		}
-	}	
+	}
 
 void ZTS_RAM::GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples)
 	{
@@ -260,7 +260,7 @@ void ZTS_RAM::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint
 			if (indicesToUse.size() > 1)
 				s << "\nUsing multiple indices";
 		#endif
-			
+
 		for (/*no init*/;iterIndex != indicesToUse.end(); ++iterIndex, ++iterCriterionUnion)
 			{
 			#if ZCONFIG_TS_RAM_Logging

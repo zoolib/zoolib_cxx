@@ -53,7 +53,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	|| MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_2
 
 extern "C" typedef
-OSErr 
+OSErr
 (*FSNewAliasMinimalUnicode_Ptr)(
   const FSRef *    targetParentRef,
   UniCharCount     targetNameLength,
@@ -61,7 +61,7 @@ OSErr
   AliasHandle *    inAlias,
   Boolean *        isDirectory)            /* can be NULL */;
 
-static OSErr 
+static OSErr
 FSNewAliasMinimalUnicode(
   const FSRef *    targetParentRef,
   UniCharCount     targetNameLength,
@@ -109,7 +109,7 @@ public:
 	~UseHandle();
 
 	void* Ptr() const;
-	size_t Size()  const;
+	size_t Size() const;
 
 private:
 	Handle fHandle;
@@ -250,8 +250,8 @@ static UINT spSystemCodePage()
 		char theCP[10];
 		int length = ::GetLocaleInfoA(
 			::GetSystemDefaultLCID(),
-			LOCALE_IDEFAULTANSICODEPAGE, 
-			theCP, 
+			LOCALE_IDEFAULTANSICODEPAGE,
+			theCP,
 			countof(theCP));
 
 		std::sscanf(theCP, "%d", &sValue);
@@ -365,7 +365,7 @@ FileRef::FileRef(const ZTrail& iTrail)
 			}
 
 		const string16 leaf = ZUnicode::sAsUTF16(iTrail.Leaf());
-		
+
 		OSErr result = ::FSNewAliasMinimalUnicode(
 			&parentFSRef,
 			leaf.size(), (const UniChar*)leaf.c_str(),
@@ -421,7 +421,7 @@ FileRef::FileRef(const ZTrail& iTrail)
 				header[0] = ZFOURCC('u', 't', 'x', 't');
 				header[1] = handleSize;
 				header[2] = stringSize / 2;
-				buffer.SetPosition(0);				
+				buffer.SetPosition(0);
 				buffer.Read(&header[3], stringSize);
 				}
 
@@ -465,7 +465,7 @@ ZTrail FileRef::AsTrail() const
 		#endif
 
 	#elif defined(__PIWin__)
-		
+
 		// Need to look at this again when we're doing 64 bit compiles.
 		ZAssertCompile(ZIntTrait_T<sizeof(size_t)>::eIs32Bit);
 
@@ -487,7 +487,7 @@ ZTrail FileRef::AsTrail() const
 						const string8 theWinPath = ZUnicode::sAsUTF8((const UTF16*)&header[3]);
 						return sWinAsTrail(theWinPath);
 						}
-					}					
+					}
 				}
 			}
 		// The handle did not pass our screening, assume it's

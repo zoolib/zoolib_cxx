@@ -115,7 +115,7 @@ static ZRef<ZStreamerRWCon> spConnect(const string& iScheme, const string& iHost
 		{
 		if (ZString::sEquali("http", iScheme))
 			return theEP;
-		
+
 		return sMake_StreamerRWCon_SSL(theEP, theEP);
 		}
 	return ZRef<ZStreamerRWCon>();
@@ -445,7 +445,7 @@ static bool spReadPOST(const ZStreamR& iStreamR, const Map& iHeader, Val& oVal)
 		// It's explicitly some kind of text. Use sCreateStrimmerR to create an appropriate
 		// strimmer, which it does by examining values in iHeader.
 		oVal = spCreateStrimmerR(iHeader, iStreamR)->GetStrimR().ReadAll8();
-		return true;		
+		return true;
 		}
 	else if (!content_type)
 		{

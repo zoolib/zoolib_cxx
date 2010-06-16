@@ -685,7 +685,7 @@ ZVal_ZooLib::ZVal_ZooLib(const ZStreamR& iStreamR, size_t iSize)
 void ZVal_ZooLib::Clear()
 	{
 	this->pRelease();
-	fType.fType = eZType_Null;	
+	fType.fType = eZType_Null;
 	}
 
 template <>
@@ -695,7 +695,7 @@ ZQ_T<ZType> ZVal_ZooLib::QGet_T<ZType>() const
 		return fData.fAs_Type;
 	return null;
 	}
-	
+
 template <>
 ZQ_T<uint64> ZVal_ZooLib::QGet_T<uint64>() const
 	{
@@ -711,7 +711,7 @@ ZQ_T<int8> ZVal_ZooLib::QGet_T<int8>() const
 		return fData.fAs_Int8;
 	return null;
 	}
-	
+
 template <>
 ZQ_T<int16> ZVal_ZooLib::QGet_T<int16>() const
 	{
@@ -1293,7 +1293,7 @@ int ZVal_ZooLib::pUncheckedCompare(const ZVal_ZooLib& iOther) const
 
 			const ZRef<ZCounted>* otherZRef =
 				sFetch_T<ZRef<ZCounted> >(iOther.fType.fBytes);
-			
+
 			if (*thisZRef < *otherZRef)
 				return -1;
 			else if (*otherZRef < *thisZRef)
@@ -2144,7 +2144,7 @@ bool ZMap_ZooLib::QGet(Index_t iIndex, ZVal_ZooLib& oVal) const
 		oVal = *theValue;
 		return true;
 		}
-	return false;	
+	return false;
 	}
 
 bool ZMap_ZooLib::QGet(const char* iPropName, ZVal_ZooLib& oVal) const

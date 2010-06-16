@@ -81,7 +81,7 @@ bool RelRename::operator==(const RelRename& iOther) const
 
 bool RelRename::operator!=(const RelRename& iOther) const
 	{ return fElems != iOther.fElems; }
-	
+
 bool RelRename::operator<(const RelRename& iOther) const
 	{ return fElems < iOther.fElems; }
 

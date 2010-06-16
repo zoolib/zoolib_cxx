@@ -82,7 +82,7 @@ bool ZBlackBerryServer::Handler_ManagerChanged::Read(const ZStreamR& r)
 		fState = eState_SendClosed;
 		locker.Release();
 		ZStreamerWriter::Wake();
-		return false;		
+		return false;
 		}
 
 	switch (fState)
@@ -316,7 +316,7 @@ public:
 		if (fBBServer)
 			fBBServer->pManagerChanged(iParam);
 		}
-	
+
 private:
 	ZBlackBerryServer* fBBServer;
 	};
@@ -338,7 +338,7 @@ public:
 		if (fBBServer)
 			fBBServer->pDeviceFinished(iParam);
 		}
-	
+
 private:
 	ZBlackBerryServer* fBBServer;
 	};
@@ -380,7 +380,7 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 
 	const int req = r.ReadUInt8();
 	if (req == 0)
-		{		
+		{
 		// Async changed notifications
 		ZGuardRMtxR locker(fMutex);
 		ZRef<Handler_ManagerChanged> theHandler = new Handler_ManagerChanged(iSRWCon, iSRWCon, this);
@@ -407,7 +407,7 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 			w.WriteUInt64(*i);
 		}
 	else if (req == 2)
-		{		
+		{
 		// Async device finished notifications
 		const uint64 deviceID = r.ReadUInt64();
 

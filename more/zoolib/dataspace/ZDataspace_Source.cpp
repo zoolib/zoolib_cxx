@@ -169,7 +169,7 @@ void Gather::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 
 	Rename_t theRename;
 	theRename[oldName] = newName;
-	
+
 	g0.fExpr_Logic = DoRename(theRename).Do(g0.fExpr_Logic);
 
 	this->pSetResult(g0);
@@ -237,7 +237,7 @@ ZRef<Expr_Rel> sAsRel(const SearchThing& iSearchThing)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 AddedSearch::AddedSearch(int64 iRefcon, ZRef<Expr_Rel> iRel)
 :	fRefcon(iRefcon)
@@ -246,7 +246,7 @@ AddedSearch::AddedSearch(int64 iRefcon, ZRef<Expr_Rel> iRel)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 Source::Source()
 	{}
@@ -268,7 +268,7 @@ void Source::pInvokeCallbacks()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 #if 0
 
@@ -289,7 +289,7 @@ class DeltaPack
 Source
 	{
 	void Register(ZRef<Searcher>, Rel iRel);
-	
+
 	void Update();
 	void Commit();
 	};

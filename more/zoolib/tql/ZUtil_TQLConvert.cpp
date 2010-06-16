@@ -115,7 +115,7 @@ static Spec spAsTSpec(const ZTBSpec& iTBSpec)
 		else
 			{
 			theTSpec |= sect;
-			}			
+			}
 		}
 
 	return theTSpec;;
@@ -180,9 +180,9 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, const Spec
 
 			if (iFilter)
 				theFilter &= *iFilter;
-			
+
 			Query innerQ;
-			bool isFirst = true;			
+			bool isFirst = true;
 			for (vector<ZRef<ZTBQueryNode> >::const_iterator
 				iterNodes = theIntersection.fNodes.begin(), theEnd = theIntersection.fNodes.end();
 				iterNodes != theEnd; ++iterNodes)
@@ -253,7 +253,7 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, const Spec
 
 		// Rename it to sIDName.
 		theQ = sRename(theQ, sIDName, sourcePropName);
-		
+
 		// Get the referenced tuples and filter them
 		if (iFilter)
 			{

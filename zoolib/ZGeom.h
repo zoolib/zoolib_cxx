@@ -519,7 +519,7 @@ public:
 	T CenterV() const
 		{ return T((top + bottom) / 2); }
 
-	ZPoint_T<T> Pin(const ZPoint_T<T>& inPoint) const 
+	ZPoint_T<T> Pin(const ZPoint_T<T>& inPoint) const
 		{
 		return ZPoint_T<T>(std::max(left, std::min(inPoint.h, right)),
 			std::max(top, std::min(inPoint.v, bottom)));
@@ -671,7 +671,7 @@ public:
 			theRect.bottom = T(point1.v + 1);
 			}
 		return theRect;
-		} 
+		}
 	};
 
 // =================================================================================================

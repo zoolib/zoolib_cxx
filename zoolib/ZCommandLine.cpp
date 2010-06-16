@@ -355,7 +355,7 @@ ZCommandLine::ZCommandLine()
 :	fHead(nullptr),
 	fTail(nullptr)
 	{
-	sCommandLineCurrent = this;	
+	sCommandLineCurrent = this;
 	}
 
 ZCommandLine::~ZCommandLine()
@@ -448,7 +448,7 @@ bool ZCommandLine::pParse(
 		}
 	return true;
 	}
-	
+
 bool ZCommandLine::pParseOne(const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv)
 	{
 	int argLength = strlen(ioArgv[0]);
@@ -533,7 +533,7 @@ ZCommandLine::Opt::Opt(
 	ZAssert(ZCommandLine::sCommandLineCurrent);
 	ZCommandLine::sCommandLineCurrent->pAppendOpt(this);
 	}
-	
+
 ZCommandLine::Opt::~Opt()
 	{}
 
@@ -556,7 +556,7 @@ ZCommandLine::String::String(
 :	Opt(iName, iDescription, eOptional, true),
 	fDefault(iDefault)
 	{}
-	
+
 ZCommandLine::String::String(const string& iName, const string& iDescription)
 :	Opt(iName, iDescription, eOptional, false)
 	{}

@@ -102,7 +102,7 @@ a ZWinCOM::Variant can be used where a VARIANT would be expected. In other cases
 API itself does not have an equivalent of Val, so our Val is a subclass of ZAny, and we
 do appropriate marshalling at the Map and Seq level.
 
-There is one more set of ZooLib types that are conceptually part of the ZVal API. ZData_XXX is 
+There is one more set of ZooLib types that are conceptually part of the ZVal API. ZData_XXX is
 equivalent to a CFData or NSData -- it's simply a block of bytes. ZData_CF and ZData_NS wrap
 CFData and NSData respectively, and ZData_Any is signature compatible with them both and is
 implemented as a vector<char>.

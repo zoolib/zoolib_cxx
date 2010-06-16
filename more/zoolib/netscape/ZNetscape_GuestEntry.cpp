@@ -98,15 +98,15 @@ EXPORT_DEF(int) main(
 			(oPluginFuncs->size - offsetof(NPPluginFuncs, newp)) / sizeof(void*),
 			spGlue_PluginFuncs);
 
-		*oShutdownFunc = (NPP_ShutdownProcPtr)NP_Shutdown; 	
+		*oShutdownFunc = (NPP_ShutdownProcPtr)NP_Shutdown;
 		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(&oShutdownFunc, 1, spGlue_Shutdown);
-		
+
 	#else
 
 		// We're something else, so raw function pointers are OK.
 		result = NP_Initialize(iNPNF);
 		NP_GetEntryPoints(oPluginFuncs);
-		*oShutdownFunc = (NPP_ShutdownProcPtr)NP_Shutdown; 	
+		*oShutdownFunc = (NPP_ShutdownProcPtr)NP_Shutdown;
 
 	#endif
 

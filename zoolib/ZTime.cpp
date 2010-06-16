@@ -115,7 +115,7 @@ int ZTime::Compare(const ZTime& iOther) const
 	if (fVal > iOther.fVal)
 		return 1;
 
-	return 0;	
+	return 0;
 	}
 
 ZTime ZTime::sNow()
@@ -163,7 +163,7 @@ ZTime ZTime::sNow()
 
 	#error Unsupported platform
 
-#endif	
+#endif
 	}
 
 ZTime ZTime::sSystem()
@@ -285,7 +285,7 @@ double ZTime::sSinceBoot()
 		return ZTime(theSI.uptime);
 
 	return -1;
-	
+
 #elif ZCONFIG_SPI_Enabled(BSD)
 
 	return sNow() - sBoot();
@@ -294,7 +294,7 @@ double ZTime::sSinceBoot()
 
 	// Assume that sSystem is returning elapsed time since boot.
 	return sSystem().fVal;
-	
+
 #endif
 	}
 

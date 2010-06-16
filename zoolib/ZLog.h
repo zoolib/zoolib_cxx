@@ -124,7 +124,7 @@ protected:
 	LogMeister();
 	LogMeister(const LogMeister&);
 	LogMeister& operator=(const LogMeister&);
-	
+
 public:
 	virtual ~LogMeister();
 	virtual bool Enabled(EPriority iPriority, const std::string& iName);

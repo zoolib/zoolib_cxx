@@ -791,7 +791,7 @@ one or the other reaches its end.
 */
 void ZStreamW::CopyAllFrom(const ZStreamR& iStreamR) const
 	{
-	uint64 countRead, countWritten;	
+	uint64 countRead, countWritten;
 	this->CopyAllFrom(iStreamR, &countRead, &countWritten);
 	if (countRead > countWritten)
 		ZStreamW::sThrowEndOfStream();
@@ -1211,7 +1211,7 @@ void ZStreamU_Unreader::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			fStreamSource.Read(localDest, localDestEnd - localDest, &countRead);
 			if (countRead == 0)
 				break;
-			localDest += countRead;				
+			localDest += countRead;
 			}
 		}
 
@@ -1224,10 +1224,10 @@ void ZStreamU_Unreader::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		else
 			{
 			fState = eStateNormal;
-			fChar = localDest[-1];			
+			fChar = localDest[-1];
 			}
 		}
-	
+
 	if (oCountRead)
 		*oCountRead = localDest - reinterpret_cast<char*>(oDest);
 	}
@@ -1264,7 +1264,7 @@ void ZStreamU_Unreader::Imp_Unread()
 				("You called ZStreamU_Unreader::Imp_Unread when end of stream has been seen."));
 			break;
 			}
-		}	
+		}
 	}
 
 // =================================================================================================

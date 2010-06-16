@@ -48,21 +48,21 @@ static void sDumpSFW(const ZStrimW& s, ZRef<SQL::Expr_Rel_SFW> iExpr)
 	const Rename_t& theRename = iExpr->GetRename();
 	s << "Renames:\n";
 	for (Rename_t::const_iterator i = theRename.begin(); i != theRename.end(); ++i)
-		s << "  " << (*i).second << "<--" << (*i).first << "\n" ;
+		s << " " << (*i).second << "<--" << (*i).first << "\n" ;
 
-	s << "Relhead:\n  ";
+	s << "Relhead:\n";
 	Util_Strim_RelHead::sWrite_RelHead(iExpr->GetRelHead(), s);
 	s << "\n";
 
-	s << "Condition:\n  ";
-	ZVisitor_Expr_Logic_ValPred_DoToStrim().DoToStrim(theOptions, s, iExpr->GetCondition()); 
+	s << "Condition:\n";
+	ZVisitor_Expr_Logic_ValPred_DoToStrim().DoToStrim(theOptions, s, iExpr->GetCondition());
 	s << "\n";
 
 	s << "Rels:\n";
 	const vector<ZRef<Expr_Rel_Concrete> >& theRels = iExpr->GetRels();
 	for (vector<ZRef<Expr_Rel_Concrete> >::const_iterator i = theRels.begin(); i != theRels.end(); ++i)
 		{
-		s << "  ";
+		s << " ";
 		Util_Strim_Rel::sToStrim(*i, theOptions, s);
 		s << "\n";
 		}

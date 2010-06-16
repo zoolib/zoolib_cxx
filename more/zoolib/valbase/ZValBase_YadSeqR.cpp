@@ -67,7 +67,7 @@ public:
 	Iterator(ZRef<Expr_Rel_Concrete> iExpr, size_t iIndex);
 
 	virtual ~Iterator();
-	
+
 	virtual ZRef<ZQE::Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
 

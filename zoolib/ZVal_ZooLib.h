@@ -84,7 +84,7 @@ public:
 	void swap(ZVal_ZooLib& iOther);
 
 	class Ex_IllegalType;
-	
+
 	ZVal_ZooLib();
 	~ZVal_ZooLib();
 	ZVal_ZooLib(const ZVal_ZooLib& iOther);
@@ -189,7 +189,7 @@ private:
 	void pFromStream(ZType iType, const ZStreamR& iStream);
 
 	friend class ZMap_ZooLib;
-	
+
 	// Data is stored in one of several ways.
 	// * For POD data <= 8 bytes in length, we simply store the
 	// data directly, using named fields of fData.

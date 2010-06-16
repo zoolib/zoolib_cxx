@@ -169,7 +169,7 @@ LogMeister::LogMeister(const LogMeister&)
 
 LogMeister& LogMeister::operator=(const LogMeister&)
 	{ return *this; }
-	
+
 LogMeister::~LogMeister()
 	{}
 

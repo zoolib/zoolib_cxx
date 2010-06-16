@@ -40,7 +40,7 @@ public:
 	Iterator(ZRef<Iter> iIter, const string8& iPrefix);
 
 	virtual ~Iterator();
-	
+
 	virtual ZRef<ZQE::Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
 

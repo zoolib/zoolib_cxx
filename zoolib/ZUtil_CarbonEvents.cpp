@@ -518,7 +518,7 @@ string ZUtil_CarbonEvents::sEventTypeAsString(UInt16 iEventType)
 		}
 	return ZStringf("%u", iEventType);
 	}
-		
+
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Carbon64)

@@ -458,7 +458,7 @@ inline void ZByteSwap_32(volatile void* ioValueAddress)
 		#if defined(__i486__) || defined(__i586__) || defined(__i686__)
 			__asm__ ("bswap %0" : "+r" (iValue));
 		#else
-			__asm__ 
+			__asm__
 				(
 				"xchgb %b0, %h0\n"
 				"rorl $16, %0\n"

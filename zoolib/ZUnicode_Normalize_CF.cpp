@@ -92,8 +92,8 @@ class Function
 			spCFStringNormalize(srm, theNF);
 			oResult = ZUtil_CFType::sAsUTF16(srm);
 			}
-		return true;		
-		}	
+		return true;
+		}
 	} sFunction0;
 
 } // anonymous namespace

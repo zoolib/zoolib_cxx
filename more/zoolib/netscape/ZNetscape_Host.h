@@ -123,7 +123,7 @@ protected:
 	virtual bool Imp_Enumerate(std::vector<string>& oNames);
 
 private:
-	static NPObject* spAllocate(NPP npp, NPClass *aClass);	
+	static NPObject* spAllocate(NPP npp, NPClass *aClass);
 	static void spDeallocate(NPObject* npobj);
 	static void spInvalidate(NPObject* npobj);
 	static bool spHasMethod(NPObject* npobj, NPIdentifier name);

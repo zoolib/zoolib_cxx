@@ -128,7 +128,7 @@ ZTBServer::~ZTBServer()
 bool ZTBServer::Read(const ZStreamR& iStream)
 	{
 	ZTuple req(iStream);
-	
+
 	spDumpRequest(fLogFacility, this, req);
 
 	ZMutexLocker locker(fMutex_Structure);
@@ -302,7 +302,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		// Do the high priority ones first.
 		ZTuple response;
 		response.SetString("What", "GetTuples_Ack");
-		
+
 		bool allEmptied = true;
 		bool sentAny = false;
 		vector<ZTValue>& vectorTransactionTuples =
@@ -407,7 +407,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		ZTuple response;
 		response.SetString("What", "GetTuples_Ack");
 		response.SetString("extra", "low priority");
-		
+
 		bool allEmptied = true;
 		vector<ZTValue>& vectorTransactionTuples =
 			response.SetMutableVector("Transactions");

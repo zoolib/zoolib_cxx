@@ -50,7 +50,7 @@ class Make_NameLookup
 		{
 		oResult = new ZNetNameLookup_Internet_WinSock(iParam.f0, iParam.f1, iParam.f2);
 		return true;
-		}	
+		}
 	} sMaker0;
 
 
@@ -61,7 +61,7 @@ class Make_Listener
 		{
 		oResult = new ZNetListener_TCP_WinSock(iParam.f0, iParam.f1, iParam.f2);
 		return true;
-		}	
+		}
 	} sMaker1;
 
 
@@ -72,7 +72,7 @@ class Make_Endpoint
 		{
 		oResult = new ZNetEndpoint_TCP_WinSock(iParam.f0, iParam.f1);
 		return true;
-		}	
+		}
 	} sMaker2;
 
 } // anonymous namespace
@@ -101,7 +101,7 @@ private:
 	WSADATA fWSADATA;
 	} sInitializeWinSock;
 
-} // anonymous namespace 
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

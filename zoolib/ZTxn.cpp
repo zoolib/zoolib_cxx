@@ -72,7 +72,7 @@ bool ZTxn::Commit()
 void ZTxn::Abort()
 	{
 	ZAcqMtxR locker(fMutex);
-	this->pAbort();	
+	this->pAbort();
 	}
 
 struct Waiter_Validate

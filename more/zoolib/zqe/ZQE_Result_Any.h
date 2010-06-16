@@ -46,7 +46,7 @@ public:
 
 // Our protocol
 	const ZVal_Any& GetVal();
-	
+
 	void AddAnnotation(ZRef<ZCounted> iCounted);
 	void AddAnnotations(const std::set<ZRef<ZCounted> >& iAnnotations);
 	const std::set<ZRef<ZCounted> >& GetAnnotations();

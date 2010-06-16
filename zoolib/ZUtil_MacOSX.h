@@ -39,14 +39,14 @@ namespace ZUtil_MacOSX {
 
 struct Thunk_CFMCalledByMachO
 	{
-	void* glue[2];	
+	void* glue[2];
 	};
 
 void sCreateThunks_CFMCalledByMachO(void* ioFuncs, size_t iCount, std::vector<char>& ioStorage);
 
 struct Thunk_MachOCalledByCFM
 	{
-	uint32 glue[6];		
+	uint32 glue[6];
 	};
 
 void sCreateThunks_MachOCalledByCFM(void* ioFuncs, size_t iCount, std::vector<char>& ioStorage);

@@ -109,7 +109,7 @@ static inline uint64 spUnpackID(const void* iAddress)
 	{
 	uint64 result = *static_cast<const uint64*>(iAddress);
 	ZByteSwap_LittleToHost64(&result);
-	return result; 
+	return result;
 	}
 
 static inline uint64 spUnpackID(const DBT& iDBT)
@@ -157,7 +157,7 @@ static inline int spCompareInc(const uint8*& ioLeft, const uint8*& ioRight)
 
 static int spCompareIndex(const uint8*& ioLeftCur, const uint8* iLeftEnd,
 	const uint8*& ioRightCur, const uint8* iRightEnd)
-	{	
+	{
 	while (ioLeftCur < iLeftEnd && ioRightCur < iRightEnd)
 		{
 		if (int compare = spCompareInc(ioLeftCur, ioRightCur))
@@ -355,7 +355,7 @@ void ZTS_DB::Index::Find(const std::set<uint64>& iSkipIDs,
 	DBT theData;
 	if (0 != theDB->seq(theDB, &theKey, &theData, R_CURSOR))
 		return;
-	
+
 	theKeyStream.SetPosition(endOfEqualValues);
 	if (bestValueLess)
 		{
@@ -368,7 +368,7 @@ void ZTS_DB::Index::Find(const std::set<uint64>& iSkipIDs,
 			bestValueLessEqual->ToStream(theKeyStream);
 		theKeyStream.WriteUInt64LE(kMaxID);
 		}
-	
+
 	const void* limitData = theKeyMB.GetData();
 	const size_t limitSize = theKeyStream.GetPosition();
 	for (;;)
@@ -673,7 +673,7 @@ void ZTS_DB::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 			// Skip any zero IDs that might have been passed.
 			continue;
 			}
-		
+
 		TypeID_t ti(0, theID);
 		DBT theKey;
 		spPackTypeID(ti, theKey);
@@ -689,7 +689,7 @@ void ZTS_DB::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 				// And we have a new value, so replace the stored tuple.
 				DBT_Tuple theDBT_Tuple(newTuple);
 				result = fDB->put(fDB, &theKey, &theDBT_Tuple, R_CURSOR);
-				
+
 				// Update the indices
 				for (vector<ZTupleIndex*>::iterator i = fIndices.begin(); i != fIndices.end(); ++i)
 					static_cast<Index*>(*i)->Update(theID, oldTuple, newTuple);
@@ -748,7 +748,7 @@ void ZTS_DB::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint6
 		// At least one of iSpec's OR clauses could not be accelerated by
 		// an index, so we're going to have to walk every tuple for that
 		// clause, so we might as well do so for all of them.
-		
+
 		// Look for the first key of type zero, ID >= 1
 		TypeID_t ti(0, 1);
 		DBT theKey;
@@ -785,7 +785,7 @@ void ZTS_DB::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint6
 		// We found an index for each clause of iSpec. So now use them.
 		ZTBSpec::CriterionUnion::const_iterator iterCriterionUnion = theCriterionUnion.begin();
 		vector<ZTupleIndex*>::const_iterator iterIndex = indicesToUse.begin();
-			
+
 		for (/*no init*/;iterIndex != indicesToUse.end(); ++iterIndex, ++iterCriterionUnion)
 			{
 			vector<const ZTBSpec::Criterion*> uncheckedCriteria;
@@ -871,7 +871,7 @@ void ZTS_DB::pFlush()
 	for (vector<ZTupleIndex*>::const_iterator i = fIndices.begin(); i != fIndices.end(); ++i)
 		static_cast<Index*>(*i)->ToStream(theStream);
 	}
-	
+
 	// The key under which it is stored is of type zero, ID zero.
 	uint8 zeroes[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	DBT theKey;
@@ -882,7 +882,7 @@ void ZTS_DB::pFlush()
 	theData.data = theMB.GetData();
 	theData.size = theMB.GetSize();
 	fDB->put(fDB, &theKey, &theData, 0);
-	
+
 	fDB->sync(fDB, 0);
 	}
 

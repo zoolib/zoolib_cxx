@@ -220,7 +220,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 					{
 					// It's a time with no content, hence an invalid time.
 					oVal = ZTime();
-					
+
 					// We'll take an early exit so the normal code that
 					// looks for a closing parenthesis doesn't choke.
 					return true;
@@ -285,7 +285,7 @@ static ZRef<ZYadR> spMakeYadR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU)
 	const ZStrimU& theStrimU = iStrimmerU->GetStrimU();
 
 	sSkip_WSAndCPlusPlusComments(theStrimU);
-	
+
 	if (sTryRead_CP(theStrimU, '['))
 		{
 		return new ZYadSeqR_ZooLibStrim(iStrimmerU, true);
@@ -472,7 +472,7 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* oDest, size_t iCount, si
 		}
 
 	if (oCount)
-		*oCount = localDest - oDest;	
+		*oCount = localDest - oDest;
 	}
 
 // =================================================================================================
@@ -526,7 +526,7 @@ ZYadMapR_ZooLibStrim::ZYadMapR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iRe
 :	fStrimmerU(iStrimmerU),
 	fReadDelimiter(iReadDelimiter)
 	{}
-	
+
 void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
@@ -640,7 +640,7 @@ static void spWriteString(
 		ZStrimW_Escaped::Options theOptions;
 		theOptions.fQuoteQuotes = quoteQuotes;
 		theOptions.fEscapeHighUnicode = false;
-		
+
 		ZStrimW_Escaped(theOptions, s).Write(iString);
 
 		s.Write(delimiter);
@@ -662,7 +662,7 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 			{
 			if (iMayNeedInitialLF)
 				spWriteLFIndent(s, iLevel, iOptions);
-			
+
 			s.Writef("( // %lld bytes", theSize);
 			spWriteLFIndent(s, iLevel, iOptions);
 			if (iOptions.fRawAsASCII)
@@ -774,7 +774,7 @@ static void spToStrim_Strim(const ZStrimW& s, const ZStrimR& iStrimR,
 		ZStrimW_Escaped::Options theOptions;
 		theOptions.fQuoteQuotes = true;
 		theOptions.fEscapeHighUnicode = false;
-		
+
 		ZStrimW_Escaped(theOptions, s)
 			.CopyAllFrom(iStrimR);
 

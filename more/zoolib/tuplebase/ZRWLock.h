@@ -80,15 +80,15 @@ private:
 	public:
 		Read(ZRWLock* iRWLock, const char* iName) : fRWLock(iRWLock) {}
 		~Read() {}
-	
+
 		virtual void Acquire();
 		virtual void Release();
 		virtual bool IsLocked();
-	
+
 	private:
 		ZRWLock* fRWLock;
 		};
-	
+
 	Read fRead;
 	friend class Read;
 
@@ -98,11 +98,11 @@ public:
 	public:
 		Write(ZRWLock* iRWLock, const char* iName) : fRWLock(iRWLock) {}
 		~Write() {}
-	
+
 		virtual void Acquire();
-		virtual void Release();	
+		virtual void Release();
 		virtual bool IsLocked();
-	
+
 		ZRWLock& GetRWLock() { return *fRWLock; }
 	private:
 		ZRWLock* fRWLock;

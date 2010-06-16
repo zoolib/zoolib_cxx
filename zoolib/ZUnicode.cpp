@@ -28,7 +28,7 @@ Author: Mark E. Davis
 Copyright (C) 1994 Taligent, Inc. All rights reserved.
 
 This code is copyrighted. Under the copyright laws, this code may not
-be copied, in whole or part, without prior written consent of Taligent. 
+be copied, in whole or part, without prior written consent of Taligent.
 
 Taligent grants the right to use or reprint this code as long as this
 ENTIRE copyright notice is reproduced in the code or reproduction.
@@ -109,7 +109,7 @@ never be relied upon in your code.
 ISO 10646 formally defines a 31 bit character set, the range of legal code points is
 thus from 0 to 0x7FFFFFFF. This range is considered to be divided into 32768 planes of
 65536 code points. As of this writing characters have only been assigned to plane 0,
-the so-called Basic Multilingual Plane (BMP). There is a committment to never assign 
+the so-called Basic Multilingual Plane (BMP). There is a committment to never assign
 characters beyond plane 16. So the range of legal code points is restricted to
 0 to 0x10FFFF (1,114,112 distinct code points). UCS-4 and UTF-8 can represent the
 entire 31 bit range, but UTF-16 is unable to represent code points beyond plane 16.
@@ -274,7 +274,7 @@ string8& operator+=(string8& ioString, UTF32 iCP)
 			case 3:	*--iter = (realCP | byteMark) & byteMask; realCP >>= 6;
 			case 2:	*--iter = (realCP | byteMark) & byteMask; realCP >>= 6;
 			}
-		*--iter = realCP | ZUnicode::sUTF8StartByteMark[bytesToWrite];	
+		*--iter = realCP | ZUnicode::sUTF8StartByteMark[bytesToWrite];
 		}
 	return ioString;
 	}
@@ -305,7 +305,7 @@ const uint8 sUTF8SequenceLength[256] =
 	5,5,5,5, // Start, 5 byte
 	6,6, // Start, 6 byte
 	0,0 // 0xFE and 0xFF are illegal UTF8 code units.
-	}; 
+	};
 
 // These arrays are indexed by sequence length. So the element 0 is never
 // referenced. Element 1 is what would be used for standalone characters,

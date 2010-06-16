@@ -52,7 +52,7 @@ static void spRead(FILE* iFILE, void* oDest, size_t iCount, size_t* oCountRead)
 				break;
 			iCount -= countRead;
 			localDest += countRead;
-			}		
+			}
 		}
 	if (oCountRead)
 		*oCountRead = reinterpret_cast<char*>(oDest) - localDest;

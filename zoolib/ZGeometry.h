@@ -80,7 +80,7 @@ public:
 
 	T x;
 	T y;
-	
+
 	ZGPointPOD_T& operator=(T iVal);
 
 	ZGPointPOD_T& operator=(const ZPointPOD& other);
@@ -430,7 +430,7 @@ public:
 
 	ZGRectPOD_T& SetMinY(T iY);
 	ZGRectPOD_T& SetMaxY(T iY);
-	
+
 	T MinX() const;
 	T MaxX() const;
 
@@ -890,7 +890,7 @@ ZGRect_T<T> operator&(const ZGRectPOD_T<T>& l, const ZGRectPOD_T<U>& r)
 	T ox = max(l.MinX(), T(r.MinX()));
 	T eh = min(l.MaxX(), T(r.MaxX()));
 	eh = eh > ox ? eh - ox : 0;
-	
+
 	T oy = max(l.MinY(), T(r.MinY()));
 	T ev = min(l.MaxY(), T(r.MaxY()));
 	ev = ev > oy ? ev - oy : 0;
@@ -908,7 +908,7 @@ ZGRectPOD_T<T>& operator&=(ZGRectPOD_T<T>& l, const ZGRectPOD_T<U>& r)
 	T ox = max(l.MinX(), T(r.MinX()));
 	T eh = min(l.MaxX(), T(r.MaxX()));
 	eh = eh > ox ? eh - ox : 0;
-	
+
 	T oy = max(l.MinY(), T(r.MinY()));
 	T ev = min(l.MaxY(), T(r.MaxY()));
 	ev = ev > oy ? ev - oy : 0;
@@ -931,7 +931,7 @@ ZGRect_T<T> operator|(const ZGRectPOD_T<T>& l, const ZGRectPOD_T<U>& r)
 	T ox = min(l.MinX(), T(r.MinX()));
 	T eh = max(l.MaxX(), T(r.MaxX()));
 	eh = eh > ox ? eh - ox : 0;
-	
+
 	T oy = min(l.MinY(), T(r.MinY()));
 	T ev = max(l.MaxY(), T(r.MaxY()));
 	ev = ev > oy ? ev - oy : 0;
@@ -949,7 +949,7 @@ ZGRectPOD_T<T>& operator|=(ZGRectPOD_T<T>& l, const ZGRectPOD_T<U>& r)
 	T ox = min(l.MinX(), T(r.MinX()));
 	T eh = max(l.MaxX(), T(r.MaxX()));
 	eh = eh > ox ? eh - ox : 0;
-	
+
 	T oy = min(l.MinY(), T(r.MinY()));
 	T ev = max(l.MaxY(), T(r.MaxY()));
 	ev = ev > oy ? ev - oy : 0;

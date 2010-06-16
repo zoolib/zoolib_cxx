@@ -267,7 +267,7 @@ ZFileSpec ZFileSpec::Ancestor(size_t iCount, Error* oError) const
 	}
 
 ZFileSpec ZFileSpec::Descendant(const std::string* iComps, size_t iCount, Error* oError) const
-	{		
+	{
 	if (fLoc)
 		{
 		if (oError)
@@ -887,7 +887,7 @@ ZFileTreeIter& ZFileTreeIter::Advance()
 				fCurrent = fStack.back().Current();
 			else
 				fStack.pop_back();
-			}	
+			}
 		}
 	return *this;
 	}

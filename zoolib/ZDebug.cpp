@@ -114,7 +114,7 @@ static void spHandleDebug_POSIX(const Params_t& iParams, va_list iArgs)
 		// Force a segfault
 		*reinterpret_cast<double*>(1) = 0;
 //		abort();
-		}		
+		}
 	}
 
 class DebugFunction_POSIX
@@ -213,7 +213,7 @@ static bool spIsDebuggerPresent()
 				}
 
 			const uint32* processDatabase = reinterpret_cast<const uint32*>(processID ^ obfuscator);
-			if (!IsBadReadPtr(processDatabase, kProcessDatabaseBytes)) 
+			if (!IsBadReadPtr(processDatabase, kProcessDatabaseBytes))
 				{
 				uint32 flags = processDatabase[kOffsetFlags];
 				return (flags & kDebuggerPresentFlag) != 0;
@@ -252,7 +252,7 @@ static void spHandleDebug_Win(const Params_t& iParams, va_list iArgs)
 
 			::ExitProcess(0);
 			}
-		}		
+		}
 	}
 
 class DebugFunction_Win

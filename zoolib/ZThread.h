@@ -133,7 +133,7 @@ private:
 			{}
 		};
 
-	
+
 	static ProcResult_t
 	#if ZCONFIG_API_Enabled(Thread_Win)
 		__stdcall
@@ -152,7 +152,7 @@ private:
 			}
 		catch (...)
 			{}
-			
+
 		sFinished();
 
 		return 0;

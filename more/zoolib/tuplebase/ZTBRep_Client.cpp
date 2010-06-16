@@ -377,7 +377,7 @@ void ZTBRep_Client::Trans_Count(Transaction* iTransaction, const ZTBQuery& iQuer
 	theTransCount->fQueryAsTuple = iQuery.AsTuple();
 	iTransaction->fCounts_Unsent.push_back(theTransCount);
 	fTransactions_NeedWork.insert(iTransaction);
-	fCondition_Sender.Broadcast();	
+	fCondition_Sender.Broadcast();
 
 	this->pDoStuff();
 	}
@@ -535,7 +535,7 @@ ZTBRep_Client::TransTuple* ZTBRep_Client::pGetTransTuple(Transaction* iTransacti
 		return (*iter).second;
 
 	TransTuple* newTransTuple = new TransTuple(iID);
-	
+
 	iTransaction->fTransTuples.insert(map<uint64, TransTuple*>::value_type(iID, newTransTuple));
 
 	return newTransTuple;
@@ -653,7 +653,7 @@ void ZTBRep_Client::pDoStuff()
 			{
 			Transaction* theTransaction = *i;
 			if (theTransaction->fCallback_Validate)
-				theTransaction->fCallback_Validate(false, theTransaction->fRefcon);	
+				theTransaction->fCallback_Validate(false, theTransaction->fRefcon);
 			}
 		}
 
@@ -682,7 +682,7 @@ void ZTBRep_Client::pDoStuff()
 			{
 			Transaction* theTransaction = *i;
 			if (theTransaction->fCallback_Validate)
-				theTransaction->fCallback_Validate(false, theTransaction->fRefcon);	
+				theTransaction->fCallback_Validate(false, theTransaction->fRefcon);
 			}
 		}
 
@@ -795,7 +795,7 @@ void ZTBRep_Client::pDoStuff()
 							theCallback(theRefcon, 1, &theID, &theValue);
 							}
 						}
-					}					
+					}
 				theTransaction->fTransTuples_NeedWork.clear();
 				}
 
@@ -844,7 +844,7 @@ void ZTBRep_Client::pDoStuff()
 void ZTBRep_Client::pReader(const ZStreamR& iStream)
 	{
 	ZTuple theResp(iStream);
-	
+
 	ZMutexLocker locker(fMutex_Structure);
 	fTime_LastRead = ZTime::sSystem();
 
@@ -898,9 +898,9 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 
 			sSortedInsertMustNotContain(
 				kDebug_TBRep_Client, fTransactions_Created, theTransaction);
-	
+
 			ZAssertStop(kDebug_TBRep_Client, theTransaction->fServerID == 0);
-	
+
 			theTransaction->fServerID = theTuple.GetInt64("ServerID");
 			fCondition_Transaction.Broadcast();
 			}
@@ -1005,7 +1005,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 				reinterpret_cast<TransSearch_t*>(theSearchTuple.GetInt64("SearchID"));
 			Transaction* theTransaction = theSearch->fTransaction;
 			theTransaction->fSearches_Waiting.erase(theSearch);
-			
+
 			vector<uint64> vectorResultIDs;
 			theSearchTuple.Get("Results").MutableSeq()
 				.GetVector_T(back_inserter(vectorResultIDs), uint64());
@@ -1025,7 +1025,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 				reinterpret_cast<TransCount_t*>(theCountTuple.GetInt64("CountID"));
 			Transaction* theTransaction = theCount->fTransaction;
 			theTransaction->fCounts_Waiting.erase(theCount);
-			
+
 			theCount->fCallback(theCount->fRefcon, theCountTuple.GetInt64("Result"));
 			delete theCount;
 			}
@@ -1116,7 +1116,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 			didAnything = true;
 			}
 		}
-	
+
 	if (!fTransactions_Aborted_Unsent.empty())
 		{
 		ZTuple reqTuple;

@@ -93,7 +93,7 @@ ZQ_T<bool> sQCoerceBool(const ZAny& iAny)
 	{
 	if (const bool* pBool = iAny.PGet_T<bool>())
 		return *pBool;
-	
+
 	if (ZQ_T<int64> qInt64 = sQCoerceInt(iAny))
 		return (0 != qInt64.Get());
 

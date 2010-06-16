@@ -54,7 +54,7 @@ void ZWinService::sRunDispatcher()
 
 	if (ZLOG(s, eDebug, "ZWinService"))
 		s << "ZWinService::sRunDispatcher 2";
-	::StartServiceCtrlDispatcherW(&spEntries[0]);	
+	::StartServiceCtrlDispatcherW(&spEntries[0]);
 	}
 
 ZWinService::ZWinService(

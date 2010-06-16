@@ -1377,7 +1377,7 @@ bool Functions_Read_T<I, UTF8>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32& 
 					oCP = firstByte;
 					return true;
 					}
-					
+
 				uint32 result = firstByte & sUTF8StartByteMask[sequenceLength];
 				I localCurrent = ioCurrent;
 				while (--sequenceLength)
@@ -1521,9 +1521,9 @@ string32 Functions_Convert_T<I>::sAsUTF32(I iSource, size_t iCountCU)
 	string32::iterator iter = result.begin();
 	I theEnd = iSource + iCountCU;
 	for (UTF32 theCP; sReadInc(iSource, theEnd, theCP); /*no inc*/)
-		*iter++ = theCP;		
+		*iter++ = theCP;
 	result.resize(iter - result.begin());
-	return result;	
+	return result;
 #else
 	string32 result;
 	result.reserve(iCountCU);
@@ -1582,7 +1582,7 @@ string16 Functions_Convert_T<I>::sAsUTF16(I iSource, size_t iCountCU)
 			}
 		}
 	result.resize(iter - result.begin());
-	return result;	
+	return result;
 #else
 	string16 result;
 	result.reserve(iCountCU);

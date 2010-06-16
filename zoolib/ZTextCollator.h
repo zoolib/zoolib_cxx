@@ -94,7 +94,7 @@ public:
 
 	bool Contains(const UTF32* iPattern, size_t iPatternLength,
 		const UTF32* iTarget, size_t iTargetLength) const;
-	
+
 private:
 	void pMakeSafe() const;
 	ZRef<ZTextCollatorRep> fRep;
@@ -175,7 +175,7 @@ public:
 	struct Param_t
 		{
 		string8 fLocaleName;
-		int fStrength;		
+		int fStrength;
 		};
 
 // Our protocol

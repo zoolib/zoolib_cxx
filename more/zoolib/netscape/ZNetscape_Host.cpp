@@ -195,7 +195,7 @@ bool ObjectH::Imp_HasProperty(const string& iName)
 	vector<string> theNames;
 	if (this->Imp_Enumerate(theNames))
 		return ZUtil_STL::sContains(theNames, iName);
-	
+
 	return false;
 	}
 
@@ -387,7 +387,7 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	oNPNF.version = NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL;
 
 	oNPNF.size = sizeof(oNPNF);
-	
+
 	oNPNF.geturl = spGetURL;
 	oNPNF.posturl = spPostURL;
 	oNPNF.requestread = spRequestRead;
@@ -549,7 +549,7 @@ void HostMeister::spStatus(NPP npp, const char* message)
 
 const char* HostMeister::spUserAgent(NPP npp)
 	{
-	ZNETSCAPE_BEFORE			
+	ZNETSCAPE_BEFORE
 		return sGet()->UserAgent(npp);
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}

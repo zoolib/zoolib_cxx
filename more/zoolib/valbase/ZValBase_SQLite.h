@@ -39,7 +39,7 @@ class ConcreteDomain : public ZRA::ConcreteDomain
 	{
 public:
 	ConcreteDomain(ZRef<ZSQLite::DB> iDB);
-	
+
 	ZRef<ZSQLite::DB> GetDB();
 
 private:

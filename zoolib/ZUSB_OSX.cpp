@@ -85,7 +85,7 @@ static IOUSBDeviceInterface182** spCreate_USBDeviceInterface(io_service_t iUSBDe
 		}
 
 	return theIOUSBDeviceInterface;
-	}	
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -260,11 +260,11 @@ IOUSBDeviceInterface182** ZUSBDevice::GetIOUSBDeviceInterface()
 ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(
 	CFRunLoopRef iRunLoopRef, uint8 iProtocol)
 	{
-	IOUSBFindInterfaceRequest request; 
-	request.bInterfaceClass = kIOUSBFindInterfaceDontCare; 
-	request.bInterfaceSubClass = kIOUSBFindInterfaceDontCare; 
-	request.bInterfaceProtocol = kIOUSBFindInterfaceDontCare; 
-	request.bAlternateSetting = kIOUSBFindInterfaceDontCare; 
+	IOUSBFindInterfaceRequest request;
+	request.bInterfaceClass = kIOUSBFindInterfaceDontCare;
+	request.bInterfaceSubClass = kIOUSBFindInterfaceDontCare;
+	request.bInterfaceProtocol = kIOUSBFindInterfaceDontCare;
+	request.bAlternateSetting = kIOUSBFindInterfaceDontCare;
 
 	io_iterator_t iterator;
 	if (kIOReturnSuccess != fIOUSBDeviceInterface[0]->CreateInterfaceIterator(
@@ -283,11 +283,11 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(
 			continue;
 			}
 
-		SInt32 score; 
+		SInt32 score;
 		IOCFPlugInInterface** plugInInterface;
-		if (kIOReturnSuccess != ::IOCreatePlugInInterfaceForService(usbInterface, 
-			kIOUSBInterfaceUserClientTypeID, 
-			kIOCFPlugInInterfaceID, 
+		if (kIOReturnSuccess != ::IOCreatePlugInInterfaceForService(usbInterface,
+			kIOUSBInterfaceUserClientTypeID,
+			kIOCFPlugInInterfaceID,
 			&plugInInterface, &score))
 			{
 			plugInInterface = nullptr;
@@ -298,7 +298,7 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(
 			{
 			IOUSBInterfaceInterface190** theIOUSBInterfaceInterface;
 
-			if (plugInInterface[0]->QueryInterface(plugInInterface, 
+			if (plugInInterface[0]->QueryInterface(plugInInterface,
 				CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID190),
 				(LPVOID*)&theIOUSBInterfaceInterface))
 				{
@@ -367,7 +367,7 @@ const IOUSBDeviceDescriptor& ZUSBDevice::GetDeviceDescriptor()
 	this->pFetchDeviceDescriptor();
 	return fIOUSBDeviceDescriptor;
 	}
-	
+
 // If we use IOUSBDeviceInterface197 then we can bypass this crap.
 void ZUSBDevice::pFetchDeviceDescriptor()
 	{
@@ -491,7 +491,7 @@ bool StreamerR_TO::pRefill(double iTimeout)
 	fEnd = 0;
 	UInt32 localCount = fSize;
 	IOReturn result = fII[0]->ReadPipeTO(
-		fII, fPipeRefR, fBuffer, &localCount, iTimeout * 1e3, 1000000);	
+		fII, fPipeRefR, fBuffer, &localCount, iTimeout * 1e3, 1000000);
 
 	if (kIOUSBTransactionTimeout == result)
 		{
@@ -559,7 +559,7 @@ private:
 
 	ZMtx fMtx;
 	ZCnd fCnd;
-	uint8* fBuffer;	
+	uint8* fBuffer;
 	const size_t fSize;
 	size_t fOffset;
 	size_t fEnd;
@@ -658,7 +658,7 @@ void StreamerR_Async::pTriggerRead()
 
 	IOReturn result = fII[0]->ReadPipeAsync(
 		fII, fPipeRefR, fBuffer, fSize, spCompletion, this);
-	
+
 	if (kIOReturnSuccess == result)
 		fPending = true;
 	}

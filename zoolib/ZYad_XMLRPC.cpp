@@ -153,7 +153,7 @@ static void spRead_TagWrappedText(ZML::StrimU& r, const string& iTagName, string
 	spBegin(r, iTagName);
 
 		oText = r.ReadAll8();
-	
+
 	spEnd(r, iTagName);
 	}
 
@@ -170,7 +170,7 @@ static bool spTryRead_SimpleValue(ZML::StrimU& r, ZAny& oVal)
 
 		return false;
 		}
-	
+
 	// If there's no open tag, then we're not at the start of a value.
 	if (r.Current() != ZML::eToken_TagBegin)
 		return false;
@@ -267,7 +267,7 @@ static ZRef<ZYadR> spMakeYadR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 			return new ZYadStrimR_XMLRPC(iStrimmerU);
 			}
 		}
-	
+
 	ZAny theVal;
 	if (spTryRead_SimpleValue(theR, theVal))
 		return new ZYadPrimR_Std(theVal);
@@ -358,7 +358,7 @@ void ZYadSeqR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 		}
 
 	spBegin(theR, "value");
-	
+
 	if (!(oYadR = spMakeYadR_XMLRPC(fStrimmerU)))
 		spThrowParseException("Expected a value");
 	}
@@ -421,7 +421,7 @@ void ZYadSeqR_XMLRPC_Params::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	sSkipText(theR);
 
 	spBegin(theR, "value");
-	
+
 	if (!(oYadR = spMakeYadR_XMLRPC(fStrimmerU)))
 		spThrowParseException("Expected a value");
 	}
@@ -470,7 +470,7 @@ void ZYadSeqR_XMLRPC_Fault::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 		}
 
 	spBegin(theR, "value");
-	
+
 	if (!(oYadR = spMakeYadR_XMLRPC(fStrimmerU)))
 		spThrowParseException("Expected a value");
 	}
@@ -482,7 +482,7 @@ void ZYadSeqR_XMLRPC_Fault::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 ZYadMapR_XMLRPC::ZYadMapR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 	{}
-	
+
 void ZYadMapR_XMLRPC::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
@@ -534,14 +534,14 @@ static void spToStrim_Stream(const ZML::StrimW& s, const ZStreamR& iStreamR)
 	{
 	s.Begin("base64");
 		iStreamR.CopyAllTo(ZStreamW_Base64Encode(ZStreamW_ASCIIStrim(s)));
-	s.End("base64");	
+	s.End("base64");
 	}
 
 static void spToStrim_Strim(const ZML::StrimW& s, const ZStrimR& iStrimR)
 	{
 	s.Begin("string");
 		iStrimR.CopyAllTo(s);
-	s.End("string");	
+	s.End("string");
 	}
 
 static void spToStrim_Seq(const ZML::StrimW& s, ZRef<ZYadSeqR> iYadSeqR)

@@ -82,7 +82,7 @@ class ZStreamerRWCon_SSL_OSX
 public:
 	ZStreamerRWCon_SSL_OSX(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~ZStreamerRWCon_SSL_OSX();
-	
+
 // From ZStreamerRCon via ZStreamerRWCon_SSL
 	virtual const ZStreamRCon& GetStreamRCon();
 

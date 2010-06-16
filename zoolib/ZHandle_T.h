@@ -55,7 +55,7 @@ public:
 		if (fHandle)
 			::DisposeHandle((Handle)fHandle);
 		}
-	
+
 	ZHandle_T& operator=(const ZHandle_T& iOther)
 		{
 		if (this != iOther)

@@ -100,7 +100,7 @@ void ZYadMapR_Simple::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>
 		if (spRead_Until(theStrimU, ',', theValue))
 			theStrimU.Unread(',');
 		}
-	
+
 	oYadR = sMakeYadR(theValue);
 	}
 

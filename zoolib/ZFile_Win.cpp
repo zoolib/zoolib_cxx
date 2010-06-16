@@ -74,7 +74,7 @@ class Make_FileLoc
 				}
 			}
 		return false;
-		}	
+		}
 	} sMaker0;
 
 } // anonymous namespace
@@ -283,7 +283,7 @@ static ZFile::Error spWriteAt(HANDLE iFileHANDLE, uint64 iOffset,
 
 static ZFile::Error spGetPosition(HANDLE iFileHANDLE, uint64& oPosition)
 	{
-	LONG positionHigh = 0;	
+	LONG positionHigh = 0;
 	DWORD positionLow = ::SetFilePointer(iFileHANDLE, 0, &positionHigh, FILE_CURRENT);
 	if (positionLow == -1)
 		{
@@ -376,7 +376,7 @@ static ZRef<ZFileLoc> spGetCWD(ZFile::Error* oErr)
 		if (result <= 0)
 			{
 			if (oErr)
-				*oErr = spTranslateError(::GetLastError());					
+				*oErr = spTranslateError(::GetLastError());
 			break;
 			}
 		if (result < bufSize)
@@ -396,7 +396,7 @@ static ZRef<ZFileLoc> spGetCWDNT(ZFile::Error* oErr)
 		if (result <= 0)
 			{
 			if (oErr)
-				*oErr = spTranslateError(::GetLastError());					
+				*oErr = spTranslateError(::GetLastError());
 			break;
 			}
 		if (result < bufSize)
@@ -476,7 +476,7 @@ RealRep_Win::RealRep_Win(ZRef<ZFileLoc_Win> iFileLoc)
 				query += "\\*";
 			else
 				query += "*";
-	
+
 			WIN32_FIND_DATAA theWFD;
 			fHANDLE = ::FindFirstFileA(query.c_str(), &theWFD);
 			if (fHANDLE != INVALID_HANDLE_VALUE)
@@ -540,7 +540,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::sGet_CWD()
 
 ZRef<ZFileLoc> ZFileLoc_Win::sGet_Root()
 	{ return new ZFileLoc_Win; }
-	
+
 ZRef<ZFileLoc> ZFileLoc_Win::sGet_App()
 	{
 	size_t bufSize = 1024;
@@ -582,7 +582,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::sFromFullWinPath(const char* iPath)
 		vector<string> components;
 		ZTrail::sParseStringAndAppend("\\", ".", "..", iPath + 2, pathLength - 2, components);
 		return new ZFileLoc_Win(string(iPath, 2), components);
-		}		
+		}
 	return ZRef<ZFileLoc>();
 	}
 
@@ -780,7 +780,7 @@ ZFile::Kind ZFileLoc_Win::Kind(ZFile::Error* oErr)
 			*oErr = spTranslateError(::GetLastError());
 		return ZFile::kindNone;
 		}
-		
+
 	if (result & FILE_ATTRIBUTE_DIRECTORY)
 		return ZFile::kindDir;
 
@@ -801,7 +801,7 @@ uint64 ZFileLoc_Win::Size(ZFile::Error* oErr)
 
 		if (oErr)
 			*oErr = ZFile::errorNone;
-			
+
 		return spAsUInt64(theWFD.nFileSizeHigh, theWFD.nFileSizeLow);
 		}
 	else
@@ -822,7 +822,7 @@ ZTime ZFileLoc_Win::TimeCreated(ZFile::Error* oErr)
 
 		if (oErr)
 			*oErr = ZFile::errorNone;
-			
+
 		return spAsZTime(theWFD.ftCreationTime);
 		}
 	else
@@ -843,7 +843,7 @@ ZTime ZFileLoc_Win::TimeModified(ZFile::Error* oErr)
 
 		if (oErr)
 			*oErr = ZFile::errorNone;
-			
+
 		return spAsZTime(theWFD.ftLastWriteTime);
 		}
 	else
@@ -999,7 +999,7 @@ string ZFileLoc_Win::pGetPath()
 		result += "\\";
 		}
 	else
-		{	
+		{
 		for (size_t x = 0; x < fComps.size(); ++x)
 			{
 			result += "\\";
@@ -1068,7 +1068,7 @@ RealRep_WinNT::RealRep_WinNT(ZRef<ZFileLoc_WinNT> iFileLoc)
 				query += L"\\*";
 			else
 				query += L"*";
-	
+
 			WIN32_FIND_DATAW theWFD;
 			fHANDLE = ::FindFirstFileW(query.c_str(), &theWFD);
 			if (fHANDLE != INVALID_HANDLE_VALUE)
@@ -1132,7 +1132,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::sGet_CWD()
 
 ZRef<ZFileLoc> ZFileLoc_WinNT::sGet_Root()
 	{ return new ZFileLoc_WinNT; }
-	
+
 ZRef<ZFileLoc> ZFileLoc_WinNT::sGet_App()
 	{
 	size_t bufSize = 1024;
@@ -1174,7 +1174,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::sFromFullWinPath(const UTF16* iPath)
 		vector<string16> components;
 		ZTrail::sParseStringAndAppend(L"\\", L".", L"..", iPath + 2, pathLength - 2, components);
 		return new ZFileLoc_WinNT(string16(iPath, 2), components);
-		}		
+		}
 	return ZRef<ZFileLoc>();
 	}
 
@@ -1389,7 +1389,7 @@ ZFile::Kind ZFileLoc_WinNT::Kind(ZFile::Error* oErr)
 			*oErr = spTranslateError(::GetLastError());
 		return ZFile::kindNone;
 		}
-		
+
 	if (result & FILE_ATTRIBUTE_DIRECTORY)
 		return ZFile::kindDir;
 
@@ -1410,7 +1410,7 @@ uint64 ZFileLoc_WinNT::Size(ZFile::Error* oErr)
 
 		if (oErr)
 			*oErr = ZFile::errorNone;
-			
+
 		return spAsUInt64(theWFD.nFileSizeHigh, theWFD.nFileSizeLow);
 		}
 	else
@@ -1431,7 +1431,7 @@ ZTime ZFileLoc_WinNT::TimeCreated(ZFile::Error* oErr)
 
 		if (oErr)
 			*oErr = ZFile::errorNone;
-			
+
 		return spAsZTime(theWFD.ftCreationTime);
 		}
 	else
@@ -1452,7 +1452,7 @@ ZTime ZFileLoc_WinNT::TimeModified(ZFile::Error* oErr)
 
 		if (oErr)
 			*oErr = ZFile::errorNone;
-			
+
 		return spAsZTime(theWFD.ftLastWriteTime);
 		}
 	else

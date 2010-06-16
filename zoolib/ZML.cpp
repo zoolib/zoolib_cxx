@@ -62,7 +62,7 @@ static string spReadReference(
 			gotIt = sTryRead_DecimalInteger(iStrim, theInt);
 
 		if (gotIt && sTryRead_CP(iStrim, ';'))
-			result += UTF32(theInt);				
+			result += UTF32(theInt);
 		}
 	else
 		{
@@ -124,7 +124,7 @@ static bool spReadMLIdentifier(const ZStrimU& s, string& oText)
 		s.Unread(curCP);
 		return false;
 		}
-		
+
 	oText += curCP;
 
 	for (;;)
@@ -228,7 +228,7 @@ static bool spReadMLAttributeName(const ZStrimU& s, string& oName)
 				s.Unread(curCP);
 				break;
 				}
-				
+
 			oName += curCP;
 			}
 		}
@@ -367,7 +367,7 @@ void StrimU::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 					fBuffer = ZUnicode::sAsUTF32(spReadReference(fStrim, fCallback, fRefcon));
 					}
 				else
-					{					
+					{
 					*localDest++ = theCP;
 					--iCount;
 					}
@@ -489,7 +489,7 @@ void StrimU::pAdvance()
 		if (!fStrim.ReadCP(theCP))
 			{
 			fToken = eToken_Exhausted;
-			return;			
+			return;
 			}
 
 		if (theCP != '<')
@@ -504,7 +504,7 @@ void StrimU::pAdvance()
 		if (!fStrim.ReadCP(theCP))
 			{
 			fToken = eToken_Exhausted;
-			return;			
+			return;
 			}
 
 		switch (theCP)
@@ -606,7 +606,7 @@ void StrimU::pAdvance()
 					}
 
 				sSkip_WS(fStrim);
-			
+
 				if (sTryRead_CP(fStrim, '/'))
 					fToken = eToken_TagEmpty;
 				else
@@ -895,12 +895,12 @@ we declare a copy constructor and then don't define it. Why? In the words of
 %2F4ae1743b3e3abeac%3Ftvc%3D1%26#doc_59d07f9519b39ad1">
 Pete C on comp.lang.c++</a>:
 
-<tt>"When initialising a const reference to an rvalue (which we are in this 
+<tt>"When initialising a const reference to an rvalue (which we are in this
 case), the compiler may either:<br>
 a) Bind the reference directly to the object that the rvalue represents, or<br>
 b) Construct a temporary const object from the rvalue, and bind the  reference
 to the temporary.<br>
-The choice is implementation-defined, but the standard says that the 
+The choice is implementation-defined, but the standard says that the
 constructor that would be used in (b) must be available anyway.<br>
 ...<br>
 See section 8.5.3.5 of the Standard for gory details."</tt>
@@ -1223,7 +1223,7 @@ const StrimW& StrimW::Attr(const string8& iName, const string8& iValue) const
 					case '<':
 					case '>':
 					case 0x00A0:
-						break;		
+						break;
 					default:
 						{
 						if (theCP >= 0x20)

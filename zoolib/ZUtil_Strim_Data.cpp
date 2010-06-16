@@ -61,7 +61,7 @@ void ZUtil_Strim_Data::sDumpData(bool iShowSize, const ZStreamRPos& iStreamRPos,
 
 		uint64 lastPos = iStreamRPos.GetPosition();
 		const uint64 countToCopy = min(countRemaining, uint64(chunkSize));
-			
+
 		uint64 countCopied;
 		ZStreamW_HexStrim(byteSeparator, "", 0, s)
 			.CopyFrom(iStreamRPos, countToCopy, &countCopied, nullptr);

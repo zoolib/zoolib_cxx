@@ -63,7 +63,7 @@ public:
 
 	PSource* fPSource;
 	PQuery* fPQuery;
-	
+
 	int64 fRefcon;
 	vector<RelRename> fRelRenames;
 	PredCompound fPredCompound;
@@ -97,7 +97,7 @@ public:
 
 	PSource* fPSource;
 	PQuery* fPQuery;
-	
+
 	int64 fFirstRefcon;
 	vector<vector<ZRef<ZQE::Result> > > fResultsVector;
 	};
@@ -147,7 +147,7 @@ public:
 	Iterator_PSourceProduct(PSourceProduct* iPSP, size_t iIndex);
 
 	virtual ~Iterator_PSourceProduct();
-	
+
 	virtual ZRef<ZQE::Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
 
@@ -191,7 +191,7 @@ public:
 	Iterator_PSourceSearches(PSourceSearches* iPSS, size_t iWhichVector, size_t iIndex);
 
 	virtual ~Iterator_PSourceSearches();
-	
+
 	virtual ZRef<ZQE::Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
 
@@ -269,7 +269,7 @@ void Source_Union::PQuery::Regenerate()
 			if (theProduct)
 				theProduct = new ZQE::Iterator_Product(theProduct, theUnion);
 			else
-				theProduct = theUnion;			
+				theProduct = theUnion;
 			}
 		}
 
@@ -297,7 +297,7 @@ void Source_Union::PQuery::Regenerate()
 					ZVal_Any theVal = theResult_Any->GetVal();
 					ZYad_ZooLibStrim::sToStrim(sMakeYadR(theVal), ZStdIO::strim_err);
 					ZStdIO::strim_err << "\n";
-					
+
 					if (fSearchThing.fPredCompound.Matches(theContext, theVal))
 						fResults.push_back(theResult);
 					}
@@ -350,7 +350,7 @@ static PredCompound::Sect spExtractPertinent(
 	{
 	// iRelHead -- the set of names provided by the source
 	// So we preserve only those ZValPreds whose names all appear in iRelHead
-	 
+	
 	const RelHead theTos = iRelRename.GetRelHead_To();
 	PredCompound::Sect result;
 	for (PredCompound::Sect::iterator iterSect = ioSect.begin();
@@ -487,7 +487,7 @@ void Source_Union::Update(
 		{
 		PSource* thePSource = *iterPSource;
 		ZUtil_STL::sInsertMustNotContain(kDebug,
-			fMap_SourceToPSource, thePSource->fSource, thePSource);	
+			fMap_SourceToPSource, thePSource->fSource, thePSource);
 		}
 	fPSources_ToAdd.clear();
 
@@ -534,7 +534,7 @@ void Source_Union::pUpdate(
 		thePQuery->fSearchThing = sAsSearchThing(thePQuery->fRel);
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
-		
+
 		// Go through the SearchThing's RelRenames, for each see if there's a
 		// single source that handles it, leaving any remainder to other sources.
 		vector<RelRename> theRelRenames = thePQuery->fSearchThing.fRelRenames;
@@ -581,12 +581,12 @@ void Source_Union::pUpdate(
 			// Get the subset of iPred that applies to iRelRename, but using the rel's real names.
 			const PredCompound thePredCompound =
 				spExtractPertinent(thePQuery->fSearchThing.fPredCompound, *i);
-			
+
 			theRel = theRel & sAsExpr_Logic(thePredCompound);
 
 			thePQuery->fRels.push_back(theRel);
 			}
-		
+
 		for (map<Source*, PSource*>::iterator iterSource = fMap_SourceToPSource.begin();
 			iterSource != fMap_SourceToPSource.end(); ++iterSource)
 			{
@@ -615,7 +615,7 @@ void Source_Union::pUpdate(
 				}
 			}
 		}
-	
+
 	// >------
 	// We can/should parallelize this next bit, one task per source.
 	for (map<Source*, PSource*>::iterator i = fMap_SourceToPSource.begin();
@@ -656,7 +656,7 @@ void Source_Union::pUpdate(
 
 			vector<int64> localRemoved;
 			localRemoved.swap(thePSource->fPSourceQueries_ToRemove);
-			
+
 			vector<SearchResult> localChanged;
 			Clock localClock;
 			thePSource->fSource->Update(false,

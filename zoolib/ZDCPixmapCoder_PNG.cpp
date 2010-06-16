@@ -84,7 +84,7 @@ static void spPNG_Read(png_structp png_ptr, png_bytep iDestAddress, png_size_t i
 void ZDCPixmapEncoder_PNG::sWritePixmap(const ZStreamW& iStream, const ZDCPixmap& iPixmap)
 	{
 	ZDCPixmapEncoder_PNG theEncoder;
-	ZDCPixmapEncoder::sWritePixmap(iStream, iPixmap, theEncoder); 
+	ZDCPixmapEncoder::sWritePixmap(iStream, iPixmap, theEncoder);
 	}
 
 ZDCPixmapEncoder_PNG::ZDCPixmapEncoder_PNG()

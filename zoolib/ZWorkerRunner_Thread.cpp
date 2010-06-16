@@ -46,7 +46,7 @@ public:
 		theWR->Start();
 		oResult = theWR;
 		return true;
-		}	
+		}
 	} sMaker0;
 
 } // anonymous namespace

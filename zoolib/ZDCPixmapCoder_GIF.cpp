@@ -54,7 +54,7 @@ static const int spInterlaceIncrement[] = { 8, 8, 4, 2 };
 void ZDCPixmapEncoder_GIF::sWritePixmap(const ZStreamW& iStream, const ZDCPixmap& iPixmap)
 	{
 	ZDCPixmapEncoder_GIF theEncoder(false);
-	ZDCPixmapEncoder::sWritePixmap(iStream, iPixmap, theEncoder); 
+	ZDCPixmapEncoder::sWritePixmap(iStream, iPixmap, theEncoder);
 	}
 
 //! Regular constructor, \param iInterlace should be true to generate an interlaced GIF.
@@ -141,7 +141,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	// globalStrmFlags |= 0x08; // set this if the color table is sorted in priority order
 
 	ZAssertStop(2, iRasterDesc.fPixvalDesc.fDepth > 0 && iRasterDesc.fPixvalDesc.fDepth <= 8);
-	
+
 	globalStrmFlags |= iRasterDesc.fPixvalDesc.fDepth - 1; // globalColorTableSize & depth
 	iStream.WriteUInt8(globalStrmFlags);
 
@@ -373,19 +373,19 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			spThrowBadFormat();
 
 		fIs89a = version == '9';
-	
+
 		fSize.h = iStream.ReadUInt16LE();
 		fSize.v = iStream.ReadUInt16LE();
-	
+
 		uint8 strmFlags = iStream.ReadUInt8();
 			bool strmHasGlobalColorTable = (strmFlags & 0x80) != 0;
 			//uint8 strmColorResolution = (strmFlags & 0x7) >> 4;
 			//bool strmSortFlag = (strmFlags & 0x08) != 0;
 			uint8 strmGlobalColorTableSize = (strmFlags & 0x7);
-	
+
 		uint8 strmBackgroundColorIndex = iStream.ReadUInt8();
 		/*uint8 strmPixelAspectRatio = */iStream.ReadUInt8();
-	
+
 		if (strmHasGlobalColorTable)
 			{
 			vector<ZRGBA_POD> theColors;

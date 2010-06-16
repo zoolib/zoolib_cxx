@@ -76,7 +76,7 @@ static bool spAECheckIsRecord(const AEDesc* theDesc)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 namespace ZooLib {
 
@@ -504,7 +504,7 @@ ZSeq_AppleEvent& ZSeq_AppleEvent::operator=(const ZSeq_AppleEvent& iOther)
 		ZAssert(typeAEList == iOther.descriptorType);
 		::AEDuplicateDesc(&iOther, this);
 		}
-	return *this;	
+	return *this;
 	}
 
 ZSeq_AppleEvent::ZSeq_AppleEvent(const AEDescList& iOther)
@@ -523,7 +523,7 @@ ZSeq_AppleEvent& ZSeq_AppleEvent::operator=(const AEDescList& iOther)
 		ZAssert(typeAEList == iOther.descriptorType);
 		::AEDuplicateDesc(&iOther, this);
 		}
-	return *this;	
+	return *this;
 	}
 
 size_t ZSeq_AppleEvent::Count() const
@@ -636,7 +636,7 @@ ZMap_AppleEvent& ZMap_AppleEvent::operator=(const ZMap_AppleEvent& iOther)
 		ZAssert(spAECheckIsRecord(&iOther));
 		::AEDuplicateDesc(&iOther, this);
 		}
-	return *this;	
+	return *this;
 	}
 
 ZMap_AppleEvent::ZMap_AppleEvent(AEKeyword iType)
@@ -675,7 +675,7 @@ ZMap_AppleEvent& ZMap_AppleEvent::operator=(const AERecord& iOther)
 		ZAssert(spAECheckIsRecord(&iOther));
 		::AEDuplicateDesc(&iOther, this);
 		}
-	return *this;	
+	return *this;
 	}
 
 void ZMap_AppleEvent::Clear()
@@ -735,7 +735,7 @@ ZVal_AppleEvent ZMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, Index_t i
 
 ZVal_AppleEvent ZMap_AppleEvent::Get(AEKeyword iName) const
 	{ return this->DGet(ZVal_AppleEvent(), iName); }
-	
+
 ZVal_AppleEvent ZMap_AppleEvent::Get(const std::string& iName) const
 	{ return this->DGet(ZVal_AppleEvent(), iName); }
 

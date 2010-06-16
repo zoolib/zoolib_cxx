@@ -109,10 +109,10 @@ namespace { // anonymous
 struct CompareTuples_t
 	{
 	CompareTuples_t(ZTextCollator* ioTextCollators, const vector<ZTBQuery::SortSpec>& iSort);
-	
+
 	bool operator()(const pair<uint64, vector<const ZTValue*> >& iLeft,
 		const pair<uint64, vector<const ZTValue*> >& iRight) const;
-		
+
 	const vector<ZTBQuery::SortSpec>& fSort;
 
 	typedef pair<uint64, ZTuple> first_argument_type;
@@ -230,10 +230,10 @@ struct ComparePrefix_t
 	{
 	ComparePrefix_t(ZTextCollator* ioTextCollators, size_t iOffset,
 		const vector<ZTBQuery::SortSpec>& iSort);
-	
+
 	bool operator()(const vector<const ZTValue*>& iLeft,
 		const vector<const ZTValue*>& iRight) const;
-		
+
 	size_t fOffset;
 	const vector<ZTBQuery::SortSpec>& fSort;
 

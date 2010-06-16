@@ -10,7 +10,7 @@ namespace ZDataset {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 static void spDumpData(const ZData& iData, const ZStrimW& s)
 	{
@@ -73,14 +73,14 @@ static void spDump(ZRef<ClockedDeltasChain> iSDC, const ZStrimW& s)
 		spDump(iSDC->GetParent(), s);
 		s << "--------\n";
 		spDump(iSDC->GetClockedDeltas(), s);
-		}	
+		}
 	}
 
 static void spDump(const string& iName, ZRef<Dataset> iDataset, const ZStrimW& s)
 	{
 	s << "\n------------------\n------------------\n" << iName << "\n";
 	s << iDataset->GetNombre().AsString() << "\n";
-	
+
 	s << "Contents\n";
 	spDump(iDataset->GetComposed(), s);
 
@@ -109,7 +109,7 @@ static void dumptspair(const NamedClock& a, const NamedClock& b)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 static void spJoin(ZRef<Dataset> iTarget, ZRef<Dataset> iSource)
 	{iTarget->Join(iSource); }

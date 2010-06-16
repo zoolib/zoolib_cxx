@@ -140,11 +140,11 @@ ZRef<ZYadR> sMakeYadR(const ZRef<NSObject>& iVal)
 	ZMap_NS asMap;
 	if (theVal.QGetMap(asMap))
 		return new ZYadMapRPos_NS(asMap);
-		
+
 	ZSeq_NS asSeq;
 	if (theVal.QGetSeq(asSeq))
 		return new ZYadSeqRPos_NS(asSeq);
-		
+
 	ZData_NS asData;
 	if (theVal.QGetData(asData))
 		return new ZYadStreamRPos_NS(asData);

@@ -250,7 +250,7 @@ void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyToDispatch(const ZStreamW& iStre
 	fStreamR.CopyTo(iStreamW, min(iCount, uint64(fCountRemaining)), &countRead, oCountWritten);
 	fCountRemaining -= countRead;
 	if (oCountRead)
-		*oCountRead = countRead;	
+		*oCountRead = countRead;
 	}
 
 void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
@@ -260,7 +260,7 @@ void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyTo(const ZStreamW& iStreamW, uin
 	fStreamR.CopyTo(iStreamW, min(iCount, uint64(fCountRemaining)), &countRead, oCountWritten);
 	fCountRemaining -= countRead;
 	if (oCountRead)
-		*oCountRead = countRead;	
+		*oCountRead = countRead;
 	}
 
 void ZFileFormat_JPEG::StreamR_Segment::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
@@ -269,7 +269,7 @@ void ZFileFormat_JPEG::StreamR_Segment::Imp_Skip(uint64 iCount, uint64* oCountSk
 	fStreamR.Skip(min(iCount, uint64(fCountRemaining)), &countSkipped);
 	fCountRemaining -= countSkipped;
 	if (oCountSkipped)
-		*oCountSkipped = countSkipped;	
+		*oCountSkipped = countSkipped;
 	}
 
 void ZFileFormat_JPEG::StreamR_Segment::pInit(uint8& oSegmentType, bool iSkipOnDestroy)
@@ -375,7 +375,7 @@ void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW)
 		const char* markerName = "";
 		if (segmentType >= 0xC0)
 			markerName = sSegmentAsText(segmentType - 0xC0);
-		
+
 		iStrimW.Writef("Type: %02X, %s ", segmentType, markerName);
 
 		if (sIs_SOF(segmentType))
@@ -399,7 +399,7 @@ void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW)
 				if (countRead == 0)
 					break;
 				theStream.SetPosition(0);
-				iStrimW.Write("  |");
+				iStrimW.Write(" |");
 				for (;;)
 					{
 					uint8 theByte;
@@ -418,7 +418,7 @@ void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW)
 			uint64 theSize;
 			s.SkipAll(&theSize);
 			iStrimW.Writef("size: %lld\n", theSize);
-			}			
+			}
 		}
 	}
 } // namespace ZFileFormat_JPEG

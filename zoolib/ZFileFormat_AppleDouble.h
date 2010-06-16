@@ -57,7 +57,7 @@ public:
 	void Append(uint32 iEntryID, const void* iSource, size_t iSize);
 
 	ZRef<ZStreamerRWPos> Create(uint32 iEntryID);
-	
+
 	void ToStream(const ZStreamW& iStreamW) const;
 
 private:

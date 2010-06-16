@@ -359,13 +359,13 @@ void ZStreamR_DynamicBuffered::Imp_Read(void* oDest, size_t iCount, size_t* oCou
 			if (countRead == 0)
 				break;
 			ZMemCopy(localDest, buffer, countRead);
-	
+
 			size_t countWritten;
 			fStreamBuffer.Write(buffer, countRead, &countWritten);
 			// This is another case where we're basically screwed if the
 			// write stream goes dead on us, as far as preserving ZStreamR
 			// semantics and not reading more data than we can dispose of.
-			ZAssertLog(kDebug_Stream_Buffered, countRead == countWritten);	
+			ZAssertLog(kDebug_Stream_Buffered, countRead == countWritten);
 			}
 		else
 			{

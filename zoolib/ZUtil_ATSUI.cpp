@@ -82,7 +82,7 @@ ATSUStyle sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 		::ATSUDisposeStyle(localStyle);
 		return nullptr;
 		}
-		
+
 	return localStyle;
 	}
 

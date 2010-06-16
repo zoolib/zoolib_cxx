@@ -316,7 +316,7 @@ bool ZTSWatcher_Reader::Read(const ZStreamR& iStreamR)
 					int64 theRefcon = iStreamR.ReadInt64();
 					pair<map<int64, vector<uint64> >::iterator, bool> pos =
 						changedQueries.insert(pair<int64, vector<uint64> >(theRefcon, vector<uint64>()));
-					
+
 					vector<uint64>& theVector = (*pos.first).second;
 					if (uint32 theIDCount = iStreamR.ReadCount())
 						{

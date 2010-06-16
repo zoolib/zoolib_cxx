@@ -111,7 +111,7 @@ bool ZTSWatcher_AutoReconnect::Sync(
 			iAddedIDs, iAddedIDsCount,
 			iRemovedQueries, iRemovedQueriesCount,
 			iAddedQueries, iAddedQueriesCount);
-	
+
 	if (!this->pEnsureConnection())
 		return false;
 
@@ -316,7 +316,7 @@ void ZTSWatcher_AutoReconnect::pUpdateRegistrations(
 			ZUtil_STL::sEraseMustContain(kDebug, fQueries, dummy);
 			}
 		}
-	
+
 	while (iAddedQueriesCount--)
 		{
 		ZUtil_STL::sInsertMustNotContain(kDebug, fQueries, *iAddedQueries++);

@@ -81,7 +81,7 @@ LRESULT ZWorkerRunner_EventLoop_Win::WindowProc(
 		ZWorkerRunner_EventLoop::pCallback();
 		return 0;
 		}
-	return ZWNDW::WindowProc(iHWND, iMessage, iWPARAM, iLPARAM);	
+	return ZWNDW::WindowProc(iHWND, iMessage, iWPARAM, iLPARAM);
 	}
 
 } // namespace ZooLib

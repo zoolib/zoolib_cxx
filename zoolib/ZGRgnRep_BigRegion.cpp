@@ -73,7 +73,7 @@ public:
 		{
 		oResult = new ZGRgnRep_BigRegion(ZBigRegion(iParam));
 		return true;
-		}	
+		}
 	} sMaker0;
 
 } // anonymous namespace

@@ -110,7 +110,7 @@ class Make_Rect
 		HRGN theHRGN = ::CreateRectRgn(iParam.left, iParam.top, iParam.right, iParam.bottom);
 		oResult = new ZGRgnRep_HRGN(theHRGN);
 		return true;
-		}	
+		}
 	} sMaker0;
 
 } // anonymous namespace

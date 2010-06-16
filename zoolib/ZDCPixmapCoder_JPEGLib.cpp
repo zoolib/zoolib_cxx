@@ -314,7 +314,7 @@ void ZDCPixmapEncoder_JPEGLib::sWritePixmap(const ZStreamW& iStream,
 	const ZDCPixmap& iPixmap, int iQuality)
 	{
 	ZDCPixmapEncoder_JPEGLib theEncoder(iQuality);
-	ZDCPixmapEncoder::sWritePixmap(iStream, iPixmap, theEncoder); 
+	ZDCPixmapEncoder::sWritePixmap(iStream, iPixmap, theEncoder);
 	}
 
 ZDCPixmapEncoder_JPEGLib::ZDCPixmapEncoder_JPEGLib(int iQuality)
@@ -399,7 +399,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 
 					theEM.BeforeCall();
 					::jpeg_write_scanlines(&theJCS, rowPtr, 1);
-					}				
+					}
 				}
 			}
 

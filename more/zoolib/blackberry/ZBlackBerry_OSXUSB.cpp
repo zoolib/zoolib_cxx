@@ -62,7 +62,7 @@ static bool spSendControlMessage(IOUSBDeviceInterface182** iUDI,
 		if (oCountDone)
 			*oCountDone = 0;
 		return false;
-		}		
+		}
 
 	if (oCountDone)
 		*oCountDone = urequest.wLenDone;
@@ -132,7 +132,7 @@ static void spChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 	if (IOUSBDeviceInterface182** theUDI = iUSBDevice->GetIOUSBDeviceInterface())
 		{
 		char buffer[2];
-		
+
 		uint16_t theValue = 0;
 		if (iAllowMassStorage)
 			theValue = 1;
@@ -173,7 +173,7 @@ public:
 		if (ZRef<Manager_OSXUSB> theManager = fManager)
 			theManager->pDeviceAttached(iParam);
 		}
-	
+
 private:
 	ZWeakRef<Manager_OSXUSB> fManager;
 	};
@@ -194,7 +194,7 @@ public:
 		if (ZRef<Manager_OSXUSB> theManager = fManager)
 			theManager->pDeviceDetached(iParam);
 		}
-	
+
 private:
 	ZWeakRef<Manager_OSXUSB> fManager;
 	};
@@ -463,7 +463,7 @@ void Manager_OSXUSB::pDeviceAttached(ZRef<ZUSBDevice> iUSBDevice)
 	Device_t theD;
 	theD.fID = fNextID++;
 	theD.fUSBDevice = iUSBDevice;
-	
+
 	if (usedPower < 250)
 		{
 		// We're not on full power, and so may have reconfigured the device to
@@ -503,7 +503,7 @@ void Manager_OSXUSB::pDeviceDetached(ZRef<ZUSBDevice> iUSBDevice)
 			}
 		}
 	ZAssert(gotIt);
-		
+
 	locker.Release();
 
 	iUSBDevice->UnregisterDeviceDetached(fCB_DeviceDetached);

@@ -45,7 +45,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_Photoshop_SDKVersion ZCONFIG_Photoshop_SDKVersion_CS2
 #elif defined(errHostVersionIncompatible)
 	#define ZCONFIG_Photoshop_SDKVersion ZCONFIG_Photoshop_SDKVersion_CS1
-#else 
+#else
 	#define ZCONFIG_Photoshop_SDKVersion ZCONFIG_Photoshop_SDKVersion_PS7
 #endif
 

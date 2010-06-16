@@ -64,7 +64,7 @@ namespace ZUtil_CarbonEvents {
 
 bool sQGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, void* oBuffer);
-  
+
 size_t sGetParamLength(EventRef iEventRef, EventParamName iName, EventParamType iType);
 
 template <typename T>

@@ -35,7 +35,7 @@ class Iterator_Intersect : public Iterator
 	{
 public:
 	Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
-	
+
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
@@ -57,7 +57,7 @@ class Iterator_Product : public Iterator
 	{
 public:
 	Iterator_Product(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
-	
+
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
@@ -80,7 +80,7 @@ class Iterator_Union : public Iterator
 	{
 public:
 	Iterator_Union(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
-	
+
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();

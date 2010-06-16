@@ -52,8 +52,8 @@ class Make_Decoder
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = new ZTextDecoder_ICU(iParam);
-		return true;		
-		}	
+		return true;
+		}
 	} sMaker0;
 
 class Make_Encoder
@@ -62,8 +62,8 @@ class Make_Encoder
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = new ZTextEncoder_ICU(iParam);
-		return true;		
-		}	
+		return true;
+		}
 	} sMaker1;
 
 } // anonymous namespace

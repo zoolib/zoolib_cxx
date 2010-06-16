@@ -339,7 +339,7 @@ void NPVariant_T<T>::SetObject(T* iValue)
 	iValue->Retain();
 	this->pRelease();
 	value.objectValue = iValue;
-	type = NPVariantType_Object;	
+	type = NPVariantType_Object;
 	}
 
 template <class T>

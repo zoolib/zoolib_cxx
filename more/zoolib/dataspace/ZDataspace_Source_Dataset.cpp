@@ -62,7 +62,7 @@ ZVal_Any spAsVal(const Daton& iDaton)
 		{
 		ZRef<ZStreamerR> theStreamerR =
 			new ZStreamerRPos_T<ZStreamRPos_Data_T<ZData_Any> >(iDaton.GetData());
-		
+
 		ZRef<ZStrimmerR> theStrimmerR_StreamUTF8 =
 			new ZStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(theStreamerR);
 
@@ -95,7 +95,7 @@ public:
 	Iterator(const RelHead& iRelHead, Map_t::const_iterator iCurrent, Map_t::const_iterator iEnd);
 
 	virtual ~Iterator();
-	
+
 	virtual ZRef<ZQE::Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
 
@@ -163,7 +163,7 @@ class Visitor_DoMakeIterator
 public:
 	Visitor_DoMakeIterator(Source_Dataset* iSource);
 
-	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr);	
+	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr);
 
 private:
 	Source_Dataset* fSource;
@@ -226,7 +226,7 @@ void Source_Dataset::Update(
 
 		++iAdded;
 		}
-	
+
 	while (iRemovedCount--)
 		{
 		PQuery* thePQuery = ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPQuery, *iRemoved++);

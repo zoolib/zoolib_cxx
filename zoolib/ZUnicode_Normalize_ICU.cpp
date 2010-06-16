@@ -75,8 +75,8 @@ class Function
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = sNormalized(iParam.fString, iParam.fNormForm);
-		return true;		
-		}	
+		return true;
+		}
 	} sFunction0;
 
 } // anonymous namespace

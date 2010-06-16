@@ -43,7 +43,7 @@ are stored as int64s, unless the mantissa has a fractional component or exceeds 
 or if there is an exponent,in which case a double is used.
 
 The mappings are as follows:
-	
+
 <pre>
 
 JSON          ZVal
@@ -187,7 +187,7 @@ static ZRef<ZYadR> spMakeYadR_JSON(ZRef<ZStrimmerU> iStrimmerU)
 	const ZStrimU& theStrimU = iStrimmerU->GetStrimU();
 
 	sSkip_WSAndCPlusPlusComments(theStrimU);
-	
+
 	if (sTryRead_CP(theStrimU, '['))
 		{
 		return new ZYadSeqR_JSON(iStrimmerU);
@@ -343,7 +343,7 @@ static void spWriteString(const ZStrimW& s, const string& iString)
 	ZStrimW_Escaped::Options theOptions;
 	theOptions.fQuoteQuotes = true;
 	theOptions.fEscapeHighUnicode = false;
-	
+
 	ZStrimW_Escaped(theOptions, s).Write(iString);
 
 	s.Write("\"");
@@ -356,7 +356,7 @@ static void spWriteString(const ZStrimW& s, const ZStrimR& iStrimR)
 	ZStrimW_Escaped::Options theOptions;
 	theOptions.fQuoteQuotes = true;
 	theOptions.fEscapeHighUnicode = false;
-	
+
 	ZStrimW_Escaped(theOptions, s).CopyAllFrom(iStrimR);
 
 	s.Write("\"");

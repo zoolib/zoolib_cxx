@@ -808,7 +808,7 @@ PIActionReference Spec::MakeRef() const
 	{
 	bool allOK = true;
 	PIActionReference theRef = nullptr;
-	
+
 	if (noErr == spPSActionReference->Make(&theRef))
 		{
 		for (vector<Entry>::const_reverse_iterator i = fEntries.rbegin();
@@ -1013,7 +1013,7 @@ ZAny Val::DAsAny(const ZAny& iDefault) const
 
 	if (const Seq* theVal = this->PGet_T<Seq>())
 		return ZAny(theVal->AsSeq_Any(iDefault));
-		
+
 	return *this;
 	}
 
@@ -1178,7 +1178,7 @@ size_t Seq::Count() const
 void Seq::Clear()
 	{
 	spPSActionList->Free(fAL);
-	spPSActionList->Make(&fAL);	
+	spPSActionList->Make(&fAL);
 	}
 
 ZQ_T<Val> Seq::QGet(size_t iIndex) const
@@ -1436,7 +1436,7 @@ KeyID Map::KeyOf(Index_t iIndex) const
 		if (noErr == spPSActionDescriptor->GetKey(fAD, iIndex.GetIndex(), &result))
 			return result;
 		}
-	return 0;	
+	return 0;
 	}
 
 string8 Map::NameOf(Index_t iIndex) const

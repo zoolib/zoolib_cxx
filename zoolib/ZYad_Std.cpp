@@ -75,7 +75,7 @@ ZRef<ZYadR> ZYadSeqR_Std::ReadInc()
 ZYadMapR_Std::ZYadMapR_Std()
 :	fStarted(false)
 	{}
-	
+
 ZYadMapR_Std::ZYadMapR_Std(bool iFinished)
 :	fStarted(iFinished)
 	{}
@@ -95,7 +95,7 @@ ZRef<ZYadR> ZYadMapR_Std::ReadInc(std::string& oName)
 		{
 		fValue->Finish();
 		fValue.Clear();
-		this->Imp_ReadInc(false, oName, fValue);		
+		this->Imp_ReadInc(false, oName, fValue);
 		}
 
 	return fValue;

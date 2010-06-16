@@ -124,7 +124,7 @@ static void spReadUTF32_UTF8(const ZStreamR& iStreamR,
 	{
 	UTF32* localDest = oDest;
 	UTF32* localDestEnd = oDest + iCount;
-	
+
 	uint8 curByte;
 	bool gotByte = false;
 	while (localDest < localDestEnd)
@@ -179,7 +179,7 @@ static void spReadUTF8_UTF8(const ZStreamR& iStreamR, UTF8* oDest,
 	size_t localCountCP = iCountCP;
 	UTF8* localDest = oDest;
 	UTF8* localDestEnd = oDest + iCountCU;
-	
+
 	uint8 curByte;
 	bool gotByte = false;
 	while (localDest < localDestEnd && localCountCP)
@@ -531,7 +531,7 @@ ZStrimR_StreamDecoder::ZStrimR_StreamDecoder(const pair<ZTextDecoder*, const ZSt
 	{
 	ZAssertStop(2, iParam.second);
 	ZAssertStop(2, fDecoder);
-	}	
+	}
 
 ZStrimR_StreamDecoder::~ZStrimR_StreamDecoder()
 	{
@@ -574,7 +574,7 @@ ZStrimW_StreamEncoder::ZStrimW_StreamEncoder(const pair<ZTextEncoder*, const ZSt
 	{
 	ZAssertStop(2, iParam.second);
 	ZAssertStop(2, fEncoder);
-	}	
+	}
 
 ZStrimW_StreamEncoder::~ZStrimW_StreamEncoder()
 	{

@@ -119,7 +119,7 @@ void ZNatterChannel::pRemove(ZNatterExchange* iExchange)
 		{
 		guard.Acquire();
 		fError = true;
-		fCnd.Broadcast();		
+		fCnd.Broadcast();
 		}
 	}
 
@@ -182,13 +182,13 @@ ZQ_T<ZData_Any> ZNatterChannel::pReadFor(ZGuardRMtxR& iGuard, ZRef<ZNatterExchan
 	{
 	while (!fError && iExchange->fWaiting)
 		this->pRead(iGuard);
-	
+
 	if (fError)
 		return null;
 
 	ZQ_T<ZData_Any> result;
 	result.swap(iExchange->fDataQ);
-	return result;	
+	return result;
 	}
 
 static bool spReadPacket(uint8& oType, int64& oID, ZData_Any& oData, const ZStreamR& r)

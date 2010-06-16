@@ -80,7 +80,7 @@ ZSeq_Any::Rep::Rep()
 
 ZSeq_Any::Rep::~Rep()
 	{}
-	
+
 ZSeq_Any::Rep::Rep(const Vector_t& iVector)
 :	fVector(iVector)
 	{}

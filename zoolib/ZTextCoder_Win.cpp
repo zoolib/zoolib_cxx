@@ -55,8 +55,8 @@ class Make_Decoder
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = new ZTextDecoder_Win(iParam);
-		return true;		
-		}	
+		return true;
+		}
 	} sMaker0;
 
 class Make_Encoder
@@ -65,8 +65,8 @@ class Make_Encoder
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = new ZTextEncoder_Win(iParam);
-		return true;		
-		}	
+		return true;
+		}
 	} sMaker1;
 
 } // anonymous namespace
@@ -140,13 +140,13 @@ static NameToCodePage_t spNameToCodePage[] =
 		{ "ibm857", 857, 2047 },	// OEM - Turkish
 		{ "ibm860", 860, 2048 },	// OEM - Portuguese
 		{ "ibm861", 861, 2049 },	// OEM - Icelandic
-		{ "ibm862", 862, 2013 },	// OEM - Hebrew 
+		{ "ibm862", 862, 2013 },	// OEM - Hebrew
 		{ "ibm863", 863, 2050 },	// OEM - Canadian-French
 		{ "ibm864", 864, 2051 },	// OEM - Arabic
 		{ "ibm865", 865, 2052 },	// OEM - Nordic
 		{ "ibm866", 866, 2086 },	// OEM - Russian
 		{ "ibm869", 869, 2054 },	// OEM - Modern Greek
-		{ "ibm870", 870, 2055 },	// IBM EBCDIC - Multilingual/ROECE (Latin-2) 
+		{ "ibm870", 870, 2055 },	// IBM EBCDIC - Multilingual/ROECE (Latin-2)
 //		{ "ibm874", 874, -1 },		// ANSI/OEM - Thai (same as CP28605, ISO 8859-15) <--- Not true?
 		{ "ibm949", 949, -1 },		// ANSI/OEM - Korean (Unified Hangeul Code)
 		{ "ibm950", 950, -1 },		// ANSI/OEM - Traditional Chinese (Taiwan; Hong Kong SAR, PRC)
@@ -341,7 +341,7 @@ static void spMBToWC_CanFail(
 				iSourceCU /= 2;
 				if (!iSourceCU)
 					{
-					// iSourceCU went to zero. 
+					// iSourceCU went to zero.
 					oSourceCU = 0;
 					oDestCU = 0;
 					break;
@@ -398,7 +398,7 @@ bool ZTextDecoder_Win::Decode(
 		size_t utf32Generated;
 		ZUnicode::sUTF16ToUTF32(
 			reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
-			&utf16Consumed, nullptr, 
+			&utf16Consumed, nullptr,
 			localDest, iDestCU,
 			&utf32Generated);
 
@@ -424,7 +424,7 @@ bool ZTextDecoder_Win::Decode(
 	}
 
 void ZTextDecoder_Win::Init(UINT iSourceCodePage)
-	{	
+	{
 	if (!::IsValidCodePage(iSourceCodePage))
 		throw runtime_error("ZTextDecoder_Win, invalid code page");
 	fSourceCodePage = iSourceCodePage;
@@ -517,7 +517,7 @@ void ZTextEncoder_Win::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 			localSource, iSourceCU,
 			&utf32Consumed, nullptr,
 			reinterpret_cast<UTF16*>(utf16Buffer), kBufSize,
-			&utf16Generated, 
+			&utf16Generated,
 			iSourceCU, nullptr);
 
 		size_t utf16Consumed;

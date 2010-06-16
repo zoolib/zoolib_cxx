@@ -80,7 +80,7 @@ void ZTSWatcherServerAsync::Kill()
 	ZMutexLocker locker(fMutex);
 	fSendClose = true;
 	locker.Release();
-	ZStreamerWriter::Wake();	
+	ZStreamerWriter::Wake();
 	}
 
 bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
@@ -151,7 +151,7 @@ bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
 
 					ZTSWatcher::AddedQueryCombo theCombo(theSize);
 					theCombo.fRefcon = theRefcon;
-					theCombo.fPrefetch = thePrefetch; 
+					theCombo.fPrefetch = thePrefetch;
 
 					iStreamR.Read(theCombo.fMemoryBlock.GetData(), theSize);
 
@@ -290,7 +290,7 @@ bool ZTSWatcherServerAsync::Write(const ZStreamW& iStreamW)
 			iStreamW.WriteUInt8(eResp_Close);
 			return false;
 			}
-		
+
 		iStreamW.WriteUInt8(eResp_SyncResults);
 
 		iStreamW.WriteCount(watcherAddedIDs.size());
@@ -310,7 +310,7 @@ bool ZTSWatcherServerAsync::Write(const ZStreamW& iStreamW)
 			iStreamW.WriteUInt64(*i);
 			(*iterCT).ToStream(iStreamW);
 			}
-		
+
 		iStreamW.WriteCount(changedQueries.size());
 		for (map<int64, vector<uint64> >::const_iterator
 			i = changedQueries.begin(), theEnd = changedQueries.end();

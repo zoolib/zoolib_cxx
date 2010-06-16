@@ -248,7 +248,7 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Read(void* oDest, size_t iCount, size_t* oCoun
 			break;
 			}
 		else if (fBuffer.empty())
-			{			
+			{
 			fCondition.Wait(fMutex);
 			}
 		else

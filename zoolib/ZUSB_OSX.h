@@ -86,7 +86,7 @@ public:
 	void UnregisterDeviceDetached(ZRef<CB_DeviceDetached> iCallback);
 
 	IOUSBDeviceInterface182** GetIOUSBDeviceInterface();
-	
+
 	ZRef<ZUSBInterfaceInterface> CreateInterfaceInterface(
 		CFRunLoopRef iRunLoopRef, uint8 iProtocol);
 

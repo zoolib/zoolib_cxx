@@ -82,7 +82,7 @@ private:
 	Clock fClock;
 
 	map<ZDataset::Daton, pair<ZDataset::NamedClock, ZVal_Any> > fMap;
-	
+
 	class PQuery;
 	map<int64, PQuery*> fMap_RefconToPQuery;
 	};

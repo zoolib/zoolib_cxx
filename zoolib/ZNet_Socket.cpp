@@ -127,7 +127,7 @@ int ZNet_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 					{
 					spChecked_MSG_NOSIGNAL = true;
 					return ::send(iSocket, iSource, iCount, 0);
-					}				
+					}
 				}
 			return result;
 			}
@@ -161,7 +161,7 @@ int ZNet_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
 					{
 					spChecked_MSG_NOSIGNAL = true;
 					return ::recv(iSocket, oDest, iCount, 0);
-					}				
+					}
 				}
 			return result;
 			}
@@ -260,12 +260,12 @@ ZRef<ZNetEndpoint> ZNetListener_Socket::Listen()
 void ZNetListener_Socket::CancelListen()
 	{
 	fMutexNR.Acquire();
-	
+
 	// It's not essential that we do anything here other than wait for a call to Listen
 	// to drop out. However, if spFastCancellationEnabled, then we issue a SIGALRM to
 	// the blocked thread, which will drop out of its call to poll or select with
 	// an inncoccuous EINTR.
-	
+
 	#if ZCONFIG_SPI_Enabled(pthread)
 		if (spFastCancellationEnabled && fThreadID_Listening)
 			{

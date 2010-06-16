@@ -269,7 +269,7 @@ void sEraseMustContain(const int iDebugLevel, std::map<K, V>& ioMap, K iKey)
 
 template <typename K, typename V>
 V sEraseAndReturn(const int iDebugLevel, std::map<K, V>& ioMap, K iKey)
-	{	
+	{
 	typename std::map<K, V>::iterator iter = ioMap.find(iKey);
 	ZAssertStop(iDebugLevel, ioMap.end() != iter);
 	V result = (*iter).second;

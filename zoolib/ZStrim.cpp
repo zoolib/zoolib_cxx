@@ -629,7 +629,7 @@ bool ZStrimR::Imp_ReadCP(UTF32& oCP)
 			return false;
 		if (ZUnicode::sIsValid(oCP))
 			return true;
-		}	
+		}
 	}
 
 /// Read and discard iCountCP code points.
@@ -964,7 +964,7 @@ const ZStrimW& ZStrimW::Writev(const UTF8* iString, va_list iArgs) const
 	{
 	size_t count;
 	this->pWritev(count, iString, iArgs);
-	return *this;	
+	return *this;
 	}
 
 const ZStrimW& ZStrimW::Writev(size_t& oWritten, const UTF8* iString, va_list iArgs) const
@@ -1601,7 +1601,7 @@ void ZStrimU_String32::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 		}
 	else
 		{
-		size_t countConsumed;		
+		size_t countConsumed;
 		ZUnicode::sUTF32ToUTF32(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
@@ -1624,7 +1624,7 @@ void ZStrimU_String32::Imp_ReadUTF16(UTF16* oDest,
 		}
 	else
 		{
-		size_t countConsumed;		
+		size_t countConsumed;
 		ZUnicode::sUTF32ToUTF16(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
@@ -1648,7 +1648,7 @@ void ZStrimU_String32::Imp_ReadUTF8(UTF8* oDest,
 		}
 	else
 		{
-		size_t countConsumed;		
+		size_t countConsumed;
 		ZUnicode::sUTF32ToUTF8(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
@@ -1702,7 +1702,7 @@ void ZStrimU_String16::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 		}
 	else
 		{
-		size_t countConsumed;		
+		size_t countConsumed;
 		ZUnicode::sUTF16ToUTF32(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
@@ -1725,7 +1725,7 @@ void ZStrimU_String16::Imp_ReadUTF16(UTF16* oDest,
 		}
 	else
 		{
-		size_t countConsumed;		
+		size_t countConsumed;
 		ZUnicode::sUTF16ToUTF16(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
@@ -1749,7 +1749,7 @@ void ZStrimU_String16::Imp_ReadUTF8(UTF8* oDest,
 		}
 	else
 		{
-		size_t countConsumed;		
+		size_t countConsumed;
 		ZUnicode::sUTF16ToUTF8(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
@@ -1805,7 +1805,7 @@ void ZStrimU_String8::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 		}
 	else
 		{
-		size_t countConsumed;		
+		size_t countConsumed;
 		ZUnicode::sUTF8ToUTF32(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
@@ -1828,7 +1828,7 @@ void ZStrimU_String8::Imp_ReadUTF16(UTF16* oDest,
 		}
 	else
 		{
-		size_t countConsumed;		
+		size_t countConsumed;
 		ZUnicode::sUTF8ToUTF16(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
@@ -1852,7 +1852,7 @@ void ZStrimU_String8::Imp_ReadUTF8(UTF8* oDest,
 		}
 	else
 		{
-		size_t countConsumed;		
+		size_t countConsumed;
 		ZUnicode::sUTF8ToUTF8(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,

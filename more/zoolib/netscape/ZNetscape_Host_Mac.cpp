@@ -118,7 +118,7 @@ NPError Host_Mac::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 		case NPNVSupportsWindowless:
 			{
 			*static_cast<NPBool*>(ret_value) = TRUE;
-            return NPERR_NO_ERROR;
+			return NPERR_NO_ERROR;
 			}
 		#if defined(XP_MACOSX)
 		case NPNVsupportsCoreGraphicsBool:
@@ -172,7 +172,7 @@ void Host_Mac::DoActivate(bool iActivate)
 		theER.modifiers = activeFlag;
 	else
 		theER.modifiers = 0;
-	
+
 	this->DoEvent(theER);
 	}
 
@@ -437,7 +437,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 	{
 	switch (::GetEventClass(iEventRef))
 		{
-        case kEventClassMouse:
+		case kEventClassMouse:
 			{
 			#if defined(XP_MACOSX)
 				if (::GetEventKind(iEventRef) == kEventMouseDown)
@@ -626,7 +626,7 @@ Host_HIViewRef::Host_HIViewRef(
 		{ kEventClassControl, kEventControlClick },
 		{ kEventClassControl, kEventControlTrack },
 		{ kEventClassControl, kEventControlBoundsChanged },
-		
+
 
 		{ kEventClassMouse, kEventMouseDown },
 		{ kEventClassMouse, kEventMouseUp },
@@ -709,7 +709,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 
 	switch (::GetEventClass(iEventRef))
 		{
-        case kEventClassMouse:
+		case kEventClassMouse:
 		case kEventClassKeyboard:
 			{
 			if (this->pDeliverEvent(iEventRef))
@@ -791,7 +791,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 							{
 							theER.what = nullEvent;
 							spWriteEvent(s, theER);
-							this->Guest_HandleEvent(&theER);							
+							this->Guest_HandleEvent(&theER);
 							}
 						}
 					return noErr;
@@ -864,7 +864,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					::HIViewSetNeedsDisplayInRect(fHIViewRef, &spHI(ZGRectf(newFrame.extent)), true);
 
 					this->pApplyInsets(newFrame);
-						
+
 
 					if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
 						s << "kEventControlBoundsChanged, newFrame2: " << newFrame;

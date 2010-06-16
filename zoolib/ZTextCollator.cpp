@@ -82,7 +82,7 @@ minimalist implementation that understands only the attributes of the ASCII rang
 needn't rely on any external API or data. ZTextCollatorRep_ICU uses ICU and thus correctly
 handles all code points, and has a comprehensive suite of collation rules.
 
-For more information on ICU collation see 
+For more information on ICU collation see
 <a href="http://icu.sourceforge.net/userguide/Collate_Intro.html">Collation Introduction</a>.
 */
 

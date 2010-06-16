@@ -244,7 +244,7 @@ private:
 	void pHTTPFetcher(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZData_Any& iHeaders,
 		ZRef<ZStreamerR> iStreamerR);
-	
+
 	ZSafeSet<ZRef<HTTPFetcher> > fHTTPFetchers;
 
 	class Sender;

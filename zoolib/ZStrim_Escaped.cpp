@@ -139,7 +139,7 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 		}
 
 	if (oCount)
-		*oCount = localDest - oDest;	
+		*oCount = localDest - oDest;
 	}
 
 // =================================================================================================

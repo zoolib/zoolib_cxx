@@ -74,7 +74,7 @@ Expr_Rel_Restrict_T<Val>::Expr_Rel_Restrict_T(
 template <class Val>
 Expr_Rel_Restrict_T<Val>::~Expr_Rel_Restrict_T()
 	{}
-	
+
 template <class Val>
 void Expr_Rel_Restrict_T<Val>::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{

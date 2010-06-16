@@ -73,7 +73,7 @@ public:
 	Handle Get() const;
 	Handle Orphan();
 	Handle& OParam();
-	
+
 private:
 	Handle fHandle;
 	};

@@ -41,7 +41,7 @@ protected:
 
 public:
 	virtual ~GuestMeister_Std();
-	
+
 // From GuestMeister
 	virtual NPError New(
 		NPMIMEType pluginType, NPP iNPP, uint16 mode,
@@ -91,7 +91,7 @@ protected:
 
 public:
 	virtual ~Guest_Std();
-	
+
 // Our protocol
 	virtual NPError Guest_Destroy(NPSavedData** save);
 

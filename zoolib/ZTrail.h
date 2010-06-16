@@ -64,7 +64,7 @@ public:
 
 	ZTrail operator+(const ZTrail& iTrail) const;
 	ZTrail& operator+=(const ZTrail& iTrail);
-	
+
 	template <class I>
 	void AppendTrail(const I& iBegin, const I& iEnd)
 		{ fComps.insert(fComps.end(), iBegin, iEnd); }

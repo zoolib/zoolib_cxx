@@ -66,8 +66,8 @@ public:
 		ZAcqMtx acq(fMtx);
 		std::swap(iP, fP);
 		spRetain(fP);
-		spRelease(iP);	
-		return *this;		
+		spRelease(iP);
+		return *this;
 		}
 
 	template <class O>

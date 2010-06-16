@@ -94,7 +94,7 @@ bool ZStreamerCopier::Work()
 		std::vector<char> buffer(fChunkSize);
 		return spCopy(fStreamerRCon->GetStreamRCon(),
 			&buffer[0], fChunkSize, fStreamerWCon->GetStreamWCon());
-		}	
+		}
 	}
 
 void ZStreamerCopier::Kill()

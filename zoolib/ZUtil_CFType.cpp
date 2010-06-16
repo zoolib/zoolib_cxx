@@ -247,10 +247,10 @@ ZAny sDAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
 		return ZAny(ZTime(kCFAbsoluteTimeIntervalSince1970
 			+ ::CFDateGetAbsoluteTime(iVal.StaticCast<CFDateRef>())));
 		}
-	
+
 	if (theTypeID == ::CFDataGetTypeID())
 		return ZAny(spAsData_Any(iVal.StaticCast<CFDataRef>()));
-	
+
 	if (theTypeID == ::CFNumberGetTypeID())
 		{
 		const CFNumberRef theNumberRef = iVal.StaticCast<CFNumberRef>();
@@ -394,14 +394,14 @@ ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 		}
 	else if (const int* theValue = iVal.PGet_T<int>())
 		{
-		if (ZIntIs32Bit)	
+		if (ZIntIs32Bit)
 			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
 			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const unsigned int* theValue = iVal.PGet_T<unsigned int>())
 		{
-		if (ZIntIs32Bit)	
+		if (ZIntIs32Bit)
 			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
 			return spMakeNumber(kCFNumberSInt64Type, theValue);

@@ -106,7 +106,7 @@ static OSStatus spMPTaskEntry(void* iArg)
 		void* param1;
 		void* param2;
 		void* param3;
-		
+
 		if (noErr != ::MPWaitOnQueue(spQueue, &param1, &param2, &param3, kDurationForever))
 			break;
 
@@ -208,7 +208,7 @@ public:
 		{
 		oResult = new ZNetNameLookup_Internet_MacOT_OSX(iParam.f0, iParam.f1, iParam.f2);
 		return true;
-		}	
+		}
 	} sMaker0;
 
 
@@ -222,7 +222,7 @@ public:
 		{
 		oResult = new ZNetListener_TCP_MacOT_OSX(iParam.f1, iParam.f2);
 		return true;
-		}	
+		}
 	} sMaker1;
 
 
@@ -236,7 +236,7 @@ public:
 		{
 		oResult = new ZNetEndpoint_TCP_MacOT_OSX(iParam.f0, iParam.f1);
 		return true;
-		}	
+		}
 	} sMaker2;
 
 } // anonymous namespace
@@ -436,7 +436,7 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 
 	if (theStruct->fResult == noErr)
 		theStruct->fResult = ::OTSetBlocking(theStruct->fListener->fEndpointRef);
-		
+
 	if (theStruct->fResult == noErr)
 		{
 		theStruct->fResult = spSetFourByteOption(theStruct->fListener->fEndpointRef,
@@ -484,7 +484,7 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Destructor(void* iParam)
 	}
 
 static OSStatus spOTAcceptQ(EndpointRef listener, EndpointRef worker, TCall* call)
-	// My own personal wrapper around the OTAccept routine that handles 
+	// My own personal wrapper around the OTAccept routine that handles
 	// the connection attempt disappearing cleanly.
 	{
 	// First try the Accept.
@@ -495,17 +495,17 @@ static OSStatus spOTAcceptQ(EndpointRef listener, EndpointRef worker, TCall* cal
 		{
 		OTResult look = ::OTLook(listener);
 
-		// Only two async events should be able to cause Accept to "look", namely 
-		// T_LISTEN and T_DISCONNECT. However, the "tilisten" module prevents 
-		// further connection attempts coming up while we're still thinking about 
+		// Only two async events should be able to cause Accept to "look", namely
+		// T_LISTEN and T_DISCONNECT. However, the "tilisten" module prevents
+		// further connection attempts coming up while we're still thinking about
 		// this one, so the only event that should come up is T_DISCONNECT.
 
 		ZAssertStop(kDebug_OT, look == T_DISCONNECT);
 		if (look == T_DISCONNECT)
 			{
-			// If we get a T_DISCONNECT, it should be for the current pending 
-			// connection attempt. We receive the disconnect info and check 
-			// the sequence number against that in the call. If they match, 
+			// If we get a T_DISCONNECT, it should be for the current pending
+			// connection attempt. We receive the disconnect info and check
+			// the sequence number against that in the call. If they match,
 			// the connection attempt disappeared and we return kOTNoDataErr.
 			// If they don't match, that's weird.
 
@@ -569,7 +569,7 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Listen(void* iParam)
 		if (acceptedEndpointRef)
 			{
 			theOTResult = ::OTSetBlocking(acceptedEndpointRef);
-			if (theOTResult == noErr)		
+			if (theOTResult == noErr)
 				theOTResult = spOTAcceptQ(
 					theStruct->fListener->fEndpointRef, acceptedEndpointRef, &theTCall);
 

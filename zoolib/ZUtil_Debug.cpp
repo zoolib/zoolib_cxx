@@ -204,7 +204,7 @@ void LogMeister::LogIt(
 	ZRef<ZStrimmerW> theStrimmerW = fStrimmerW;
 	if (!theStrimmerW)
 		return;
-	
+
 	const ZStrimW& theStrimW = theStrimmerW->GetStrimW();
 
 	ZTime now = ZTime::sNow();

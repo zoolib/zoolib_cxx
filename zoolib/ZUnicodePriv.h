@@ -254,7 +254,7 @@ inline bool std::char_traits<charT>::eq(const char_type& c1, const char_type& c2
 
 template <class charT>
 inline bool std::char_traits<charT>::lt(const char_type& c1, const char_type& c2)
-	{ 
+	{
 	return c1 < c2;
 	}
 

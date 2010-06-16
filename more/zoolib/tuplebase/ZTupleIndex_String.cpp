@@ -126,7 +126,7 @@ void ZTupleIndex_String::Find(const set<uint64>& iSkipIDs,
 
 	theKey.fID = kMaxID;
 	set<Key, Compare>::iterator upperBound = fSet.upper_bound(theKey);
-		
+
 	if (iSkipIDs.empty())
 		{
 		for (/*no init*/; lowerBound != upperBound; ++lowerBound)

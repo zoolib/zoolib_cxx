@@ -375,7 +375,7 @@ private:
 
 	// It is essential that these fields remain in this order,
 	// as they may be initialized from a stream.
-	
+
 	ZTName fPropName;
 	Comparator fComparator;
 	ZTValue fTValue;

@@ -38,7 +38,7 @@ class ZStrimU_Std : public ZStrimU
 public:
 	ZStrimU_Std(ZTextDecoder* iDecoder, const ZStreamR& iStreamR);
 
-// From ZStrimR via ZStrimU 
+// From ZStrimR via ZStrimU
 	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
 // From ZStrimU

@@ -39,7 +39,7 @@ ZRef<ZStreamerRPos> ZBlockStore::OpenRPos(BlockID iBlockID)
 
 ZRef<ZStreamerW> ZBlockStore::OpenW(BlockID iBlockID)
 	{ return this->OpenWPos(iBlockID); }
-	
+
 ZRef<ZStreamerWPos> ZBlockStore::OpenWPos(BlockID iBlockID)
 	{ return this->OpenRWPos(iBlockID); }
 

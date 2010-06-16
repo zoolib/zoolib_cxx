@@ -135,7 +135,7 @@ static bool spSync1(
 	{
 	ZTime start = ZTime::sSystem();
 
-	
+
 	vector<uint64> removedIDs;
 	iReq.Get("removedIDs").GetSeq().GetVector_T(back_inserter(removedIDs), uint64());
 
@@ -202,7 +202,7 @@ static bool spSync1(
 					if (lastID >= theID)
 						writeNeededSort = true;
 					lastID = theID;
-					
+
 					writtenTupleIDs.push_back(theID);
 					writtenTuples.push_back(theTuple);
 					}
@@ -262,7 +262,7 @@ static bool spSync1(
 		}
 
 	ZTime afterChangedTuples = ZTime::sSystem();
-	
+
 	if (size_t theCount = changedQueries.size())
 		{
 		vector<ZTValue>& changedQueriesV = response.SetMutableVector("changedQueries");
@@ -280,7 +280,7 @@ static bool spSync1(
 			changedQueriesV.push_back(temp);
 			}
 		}
-	
+
 	ZTime beforeSend = ZTime::sSystem();
 
 	uint64 bytesWritten;
@@ -294,7 +294,7 @@ static bool spSync1(
 	ZTime afterSend = ZTime::sSystem();
 
 	if (kDebug_ShowTimes)
-		{	
+		{
 		if (ZLOG(s, eInfo, "ZTSWatcherServer"))
 			{
 			bool isEmpty =
@@ -324,7 +324,7 @@ static bool spSync1(
 				1000*(beforeSend-afterChangedTuples),
 				1000*(afterSend-beforeSend),
 				removedIDs.size(),
-				addedIDs.size(), 
+				addedIDs.size(),
 				removedQueries.size(),
 				writtenTuples.size(),
 				sortChar,
@@ -371,7 +371,7 @@ static void spSync_Initial(const ZStreamR& iStreamR,
 			oRemovedQueries.push_back(iStreamR.ReadInt64());
 		}
 	}
-	
+
 
 static bool spSync_NextBit(const ZStreamR& iStreamR,
 	vector<uint64>& oWrittenTupleIDs,
@@ -407,7 +407,7 @@ static void spSync_LastBit(const ZStreamW& iStreamW,
 	ZAssertStop(kDebug_TSWatcherServer, iChangedTupleIDs.size() == iChangedTuples.size());
 
 	spWriteCount(iStreamW, iChangedTupleIDs.size());
-	
+
 	vector<ZTuple>::const_iterator iterCT = iChangedTuples.begin();
 	for (vector<uint64>::const_iterator
 		i = iChangedTupleIDs.begin(), theEnd = iChangedTupleIDs.end();
@@ -416,7 +416,7 @@ static void spSync_LastBit(const ZStreamW& iStreamW,
 		iStreamW.WriteUInt64(*i);
 		(*iterCT).ToStream(iStreamW);
 		}
-	
+
 	spWriteCount(iStreamW, iChangedQueries.size());
 	for (map<int64, vector<uint64> >::const_iterator
 		i = iChangedQueries.begin(), theEnd = iChangedQueries.end();
@@ -472,7 +472,7 @@ static bool spSync2(
 			}
 		}
 
-	
+
 	vector<uint64> writtenTupleIDs;
 	vector<ZTuple> writtenTuples;
 	spSync_NextBit(iStreamR, writtenTupleIDs, writtenTuples);
@@ -518,7 +518,7 @@ static bool spSync2(
 	ZTime afterSend = ZTime::sSystem();
 
 	if (kDebug_ShowTimes)
-		{	
+		{
 		if (ZLOG(s, eInfo, "ZTSWatcherServer"))
 			{
 			bool isEmpty =
@@ -542,7 +542,7 @@ static bool spSync2(
 				1000*(afterSync-beforeSync),
 				1000*(afterSend-afterSync),
 				removedIDs.size(),
-				addedIDs.size(), 
+				addedIDs.size(),
 				removedQueries.size(),
 				writtenTuples.size(),
 				addedQueries.size(),
@@ -603,12 +603,12 @@ static bool spSync3(
 			}
 		}
 
-	
+
 	vector<uint64> writtenTupleIDs;
 	vector<ZTuple> writtenTuples;
 	bool writeNeededSort = spSync_NextBit(iStreamR, writtenTupleIDs, writtenTuples);
 
-	
+
 	vector<uint64> watcherAddedIDs;
 	vector<uint64> changedTupleIDs;
 	vector<ZTuple> changedTuples;
@@ -649,7 +649,7 @@ static bool spSync3(
 	ZTime afterSend = ZTime::sSystem();
 
 	if (kDebug_ShowTimes)
-		{	
+		{
 		if (ZLOG(s, eInfo, "ZTSWatcherServer"))
 			{
 			bool isEmpty =
@@ -675,7 +675,7 @@ static bool spSync3(
 				1000*(afterSync-beforeSync),
 				1000*(afterSend-afterSync),
 				removedIDs.size(),
-				addedIDs.size(), 
+				addedIDs.size(),
 				removedQueries.size(),
 				writtenTuples.size(),
 				sortChar,
@@ -727,7 +727,7 @@ static bool spSync4(
 
 			ZTSWatcher::AddedQueryCombo theCombo(theSize);
 			theCombo.fRefcon = theRefcon;
-			theCombo.fPrefetch = thePrefetch; 
+			theCombo.fPrefetch = thePrefetch;
 
 			iStreamR.Read(theCombo.fMemoryBlock.GetData(), theSize);
 
@@ -735,12 +735,12 @@ static bool spSync4(
 			}
 		}
 
-	
+
 	vector<uint64> writtenTupleIDs;
 	vector<ZTuple> writtenTuples;
 	bool writeNeededSort = spSync_NextBit(iStreamR, writtenTupleIDs, writtenTuples);
 
-	
+
 	vector<uint64> watcherAddedIDs;
 	vector<uint64> changedTupleIDs;
 	vector<ZTuple> changedTuples;
@@ -759,7 +759,7 @@ static bool spSync4(
 		changedQueries))
 		{
 		return false;
-		}		
+		}
 
 	ZTime afterSync = ZTime::sSystem();
 
@@ -792,7 +792,7 @@ static bool spSync4(
 	ZTime afterSend = ZTime::sSystem();
 
 	if (kDebug_ShowTimes)
-		{	
+		{
 		if (ZLOG(s, eInfo, "ZTSWatcherServer"))
 			{
 			bool isEmpty =
@@ -819,7 +819,7 @@ static bool spSync4(
 				1000*(afterSync-beforeSync),
 				1000*(afterSend-afterSync),
 				removedIDs.size(),
-				addedIDs.size(), 
+				addedIDs.size(),
 				removedQueries.size(),
 				writtenTuples.size(),
 				sortChar,
@@ -902,7 +902,7 @@ void ZTSWatcherServer::Run(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
 					s << "Unrecognized request: " << theWhat;
 				break;
 				}
-			}		
+			}
 		}
 	}
 

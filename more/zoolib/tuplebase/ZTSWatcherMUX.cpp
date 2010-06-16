@@ -95,7 +95,7 @@ class ZTSWatcherMUX::DLink_WQuery_Tripped
 
 class ZTSWatcherMUX::WQuery
 :	public ZTSWatcherMUX::DLink_WQuery_PQuery,
-	public ZTSWatcherMUX::DLink_WQuery_Tripped	
+	public ZTSWatcherMUX::DLink_WQuery_Tripped
 	{
 private:
 	WQuery(); // Not implemented
@@ -173,7 +173,7 @@ class ZTSWatcherMUX::DLink_WTuple_Tripped
 
 class ZTSWatcherMUX::WTuple
 :	public ZTSWatcherMUX::DLink_WTuple_PTuple,
-	public ZTSWatcherMUX::DLink_WTuple_Tripped	
+	public ZTSWatcherMUX::DLink_WTuple_Tripped
 	{
 private:
 	WTuple(); // Not implemented
@@ -229,7 +229,7 @@ private:
 	map<uint64, WTuple> fWTuples;
 
 	DListHead<DLink_WQuery_Tripped> fWQueries_Tripped;
-	
+
 	DListHead<DLink_WTuple_Tripped> fWTuples_Tripped;
 
 	Callback_t fCallback;
@@ -357,7 +357,7 @@ void ZTSWatcherMUX::Watcher_Finalize(Watcher* iWatcher)
 		iWatcher->FinalizationComplete();
 		return;
 		}
-	
+
 	for (map<int64, WQuery>::iterator i = iWatcher->fWQueries.begin();
 		i != iWatcher->fWQueries.end(); ++i)
 		{
@@ -562,7 +562,7 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 
 					iWatcher->fWTuples_Tripped.Insert(theWTuple);
 					oAddedIDs.push_back(theID);
-					}				
+					}
 				}
 			}
 		}
@@ -715,7 +715,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 			ZUtil_STL::sEraseMustContain(kDebug, fMB_To_PQuery, thePQuery->fMB);
 			}
 		}
-	
+
 
 	if (!iWatcher->fAlwaysForceSync && !fForceNextSync && !iWaitForSync)
 		{
@@ -769,7 +769,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 			&& addedIDs.empty()
 			&& removedQueries.empty()
 			&& addedQueries.empty()
-			&& writtenIDs.empty())	
+			&& writtenIDs.empty())
 			{
 			// And we haven't got any new work to do, so we can return.
 			return true;
@@ -890,7 +890,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 				}
 			thePQuery->fResults.swap(i->second);
 			}
-		}		
+		}
 
 	fCurrentSyncNumber = 0;
 	fCondition.Broadcast();
@@ -925,7 +925,7 @@ ZTSWatcherMUX::PQuery* ZTSWatcherMUX::pGetPQuery(const ZTSWatcher::AddedQueryCom
 		pair<ZMemoryBlock, PQuery>(theMB, PQuery(theRefcon, iAQC.fPrefetch, theMB)))->second;
 
 	fRefcon_To_PQuery.insert(pair<int64, PQuery*>(theRefcon, thePQuery));
-	return thePQuery;	
+	return thePQuery;
 	}
 
 ZTSWatcherMUX::PQuery* ZTSWatcherMUX::pGetPQueryIfExtant(int64 iRefcon)
@@ -943,7 +943,7 @@ ZTSWatcherMUX::PTuple* ZTSWatcherMUX::pGetPTuple(uint64 iID)
 	map<uint64, PTuple>::iterator i = fPTuples.lower_bound(iID);
 	if (i != fPTuples.end() && i->first == iID)
 		return &i->second;
-		
+
 	PTuple* thePTuple = &fPTuples.insert(i, pair<uint64, PTuple>(iID, PTuple(iID)))->second;
 	return thePTuple;
 	}
@@ -987,7 +987,7 @@ void ZTSWatcherMUX::pCallback()
 				localWatcherRef->fCallback(localWatcherRef->fCallbackRefcon);
 				break;
 				}
-			}		
+			}
 		}
 	}
 

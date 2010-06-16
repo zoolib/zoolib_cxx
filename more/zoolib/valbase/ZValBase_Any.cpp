@@ -40,7 +40,7 @@ public:
 	Iterator(const ZSeq_Any& iSeq, size_t iIndex);
 
 	virtual ~Iterator();
-	
+
 	virtual ZRef<ZQE::Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
 

@@ -33,7 +33,7 @@ namespace ZooLib {
 
 class ZStreamerRPos_StreamR : public ZStreamerRPos
 	{
-public:	
+public:
 	ZStreamerRPos_StreamR(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerRWPos> iStreamerRWPos);
 
 // From ZStreamerR via ZStreamerRPos
@@ -41,7 +41,7 @@ public:
 
 // From ZStreamerRPos
 	virtual const ZStreamRPos& GetStreamRPos();
-	
+
 private:
 	ZRef<ZStreamerR> fStreamerR;
 	ZRef<ZStreamerRWPos> fStreamerRWPos;

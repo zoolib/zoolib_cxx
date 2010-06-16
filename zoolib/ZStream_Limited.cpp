@@ -122,7 +122,7 @@ ZStreamRPos_Limited::ZStreamRPos_Limited(
 	fOffset(iOffset),
 	fLimit(iLimit)
 	{}
-	
+
 ZStreamRPos_Limited::~ZStreamRPos_Limited()
 	{}
 

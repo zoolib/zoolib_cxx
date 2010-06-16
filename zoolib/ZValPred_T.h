@@ -271,7 +271,7 @@ Val ZValComparand_Trail_T<Val>::GetVal(ZValContext& iContext, const Val& iVal)
 
 template <class Val>
 std::set<ZTrail> ZValComparand_Trail_T<Val>::GetNames()
-	{ 
+	{
 	std::set<ZTrail> theNames;
 	if (fTrail.Count())
 		theNames.insert(fTrail);

@@ -284,7 +284,7 @@ ZTS_Watchable::~ZTS_Watchable()
 	ZMutexLocker locker(fMutex_Structure);
 
 	ZAssertStop(kDebug, fWatchers.empty());
-	
+
 	// We're retaining PQueries past the point that they're in active
 	// use by any watchers, so we need to explicitly delete any
 	// remaining ones, and let the map's destructor take care of
@@ -361,7 +361,7 @@ void ZTS_Watchable::Watcher_Finalize(Watcher* iWatcher)
 		i != theEnd; ++i)
 		{
 		WatcherQuery* theWatcherQuery = (*i).second;
-		
+
 		// Detach theWatcherQuery from its PQuery.
 		PQuery* thePQuery = theWatcherQuery->fPQuery;
 		thePQuery->fUsingWatcherQueries.Erase(theWatcherQuery);
@@ -454,7 +454,7 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 			{
 			ZTBQuery& theTBQueryRef = i->fTBQuery;
 			ZMemoryBlock& theMBRef = i->fMemoryBlock;
-			
+
 			if (!theTBQueryRef)
 				{
 				map<ZMemoryBlock, PQuery*>::iterator existing = fMB_To_PQuery.find(theMBRef);
@@ -593,7 +593,7 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 	locker_Structure.Acquire();
 
 	if (size_t changedCount = iWatcher->fTrippedPTuples.size())
-		{		
+		{
 		oChangedTupleIDs.resize(changedCount);
 		vector<uint64>::iterator iter = oChangedTupleIDs.begin();
 		for (set<PTuple*>::iterator

@@ -730,7 +730,7 @@ public:
 	int GetChangeCount() const;
 
 	bool HasAlpha() const;
-	PixelDesc WithoutAlpha() const;	
+	PixelDesc WithoutAlpha() const;
 
 	void AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const;
 	void AsRGBAs(const uint32* iPixvals, size_t iCount, ZRGBA_POD* oColors) const;

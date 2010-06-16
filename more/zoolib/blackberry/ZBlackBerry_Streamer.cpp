@@ -45,7 +45,7 @@ namespace ZBlackBerry {
 enum EMsg
 	{
 // Messages we send to the BB
-	eMsg_GetAttribute = 0x05, // 
+	eMsg_GetAttribute = 0x05, //
 	eMsg_SelectMode = 0x07,
 	eMsg_ChannelOpen = 0x0A,
 	eMsg_PasswordResponse = 0x0F,
@@ -199,10 +199,10 @@ public:
 		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~Commer_Streamer();
 
-// From ZStreamReader via ZCommer	
+// From ZStreamReader via ZCommer
 	virtual bool Read(const ZStreamR& iStreamR);
 
-// From ZStreamWriter via ZCommer	
+// From ZStreamWriter via ZCommer
 	virtual bool Write(const ZStreamW& iStreamW);
 
 // From ZCommer
@@ -717,7 +717,7 @@ ZRef<Channel> Commer_Streamer::Open(bool iPreserveBoundaries,
 		theChannel->fState = eState_LookupNeeded;
 
 		ZStreamerWriter::Wake();
-		
+
 		while (theChannel->fState != eState_Dead
 			&& theChannel->fState != eState_Connected)
 			{
@@ -1064,7 +1064,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				theBuffer.insert(theBuffer.end(), iPayloadSize);
 				theBuffer.insert(theBuffer.end(), iPayloadSize >> 8);
 				}
-				
+
 			theBuffer.insert(theBuffer.end(), readBuffer.begin(), readBuffer.end());
 			theChannel->fCondition_Receive.Broadcast();
 			}
@@ -1137,7 +1137,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 						// more and then the sizes, but the line following skips *5*. Why?
 
 						// There's three bytes, then the following:
-						// 01 SS SS 00 -- max BB send size 
+						// 01 SS SS 00 -- max BB send size
 						// 02 RR RR 00 -- max BB receive size
 						// 03 01 00 00
 						// 04 01 00 00
@@ -1151,7 +1151,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 						}
 					else
 						{
-						// Nack. 
+						// Nack.
 						ZAssert(theChannelID == 0xFF);
 						/*uint16 theError = */iStreamR.ReadUInt16LE();
 						theChannel->fState = eState_Dead;
@@ -1171,7 +1171,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				const uint16 theChannelID = iStreamR.ReadInt16LE();
 				/*const uint8 ignore = */iStreamR.ReadUInt8();
 				const uint8 remainingTries = iStreamR.ReadUInt8();
-				
+
 				/*const uint8 unknown = */iStreamR.ReadUInt8();
 				/*const uint16 param = */iStreamR.ReadUInt16LE();
 				const uint32 challenge = iStreamR.ReadUInt32();
@@ -1215,7 +1215,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					theChannel->fState = eState_CloseNeeded;
 					theChannel->fError = Device::error_PasswordIncorrect;
 					ZStreamerWriter::Wake();
-					}				
+					}
 				break;
 				}
 			case eMsg_ChannelOpen_Ack:
@@ -1232,7 +1232,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					{
 					theChannel->fState = eState_Connected;
 					theChannel->fCondition_Receive.Broadcast();
-					}				
+					}
 				break;
 				}
 			case eMsg_ChannelClose:
@@ -1292,7 +1292,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					{
 					theChannel->fState = eState_Dead;
 					theChannel->fCondition_Receive.Broadcast();
-					theChannel->fCondition_Send.Broadcast();					
+					theChannel->fCondition_Send.Broadcast();
 					}
 				break;
 				}
@@ -1310,7 +1310,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					{
 					theChannel->fState = eState_Dead;
 					theChannel->fCondition_Receive.Broadcast();
-					theChannel->fCondition_Send.Broadcast();					
+					theChannel->fCondition_Send.Broadcast();
 					}
 				break;
 				}
@@ -1346,7 +1346,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 							{
 							s.Writef("channel %d, expected sequence: %u, received: %u",
 								seqChannelID, theChannel->fNextSequence, sequence);
-							}					
+							}
 						}
 					ZAssert(theChannel->fWaitingForSequence);
 					theChannel->fWaitingForSequence = false;
@@ -1357,7 +1357,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				break;
 				}
 			}
-		}		
+		}
 	}
 
 static void spSHA1(const void* iSource, size_t iSourceSize, uint8 oDigest[20])
@@ -1384,7 +1384,7 @@ bool Commer_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 			w.WriteString(iChannel->fName);
 			for (size_t x = nameLength; x < 16; ++x)
 				w.WriteUInt8(0x00); // Padding
-			
+
 			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Commer_Streamer"))
 				{
 				s << "pWriteOne, SelectMode";
@@ -1448,7 +1448,7 @@ bool Commer_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 			{
 			if (iChannel->fSend_Size == 0)
 				return false;
-			
+
 			if (iChannel->fWaitingForSequence)
 				return false;
 
@@ -1563,12 +1563,12 @@ bool Commer_Streamer::pSendFunky(uint16 iLength, const ZStreamW& iStreamW)
 	size_t countWritten;
 	iStreamW.Write(buffer, 3, &countWritten);
 	fMutex.Acquire();
-	
+
 	if (countWritten == 3)
 		return true;
 
 	fLifecycle = eLifecycle_StreamsDead;
-	return false;	
+	return false;
 	}
 
 void Commer_Streamer::pFlush(const ZStreamW& iStreamW)

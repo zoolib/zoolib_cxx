@@ -92,7 +92,7 @@ public:
 		{ spRetain(fP); }
 
 	~ZRef()
-		{ spRelease(fP); } 
+		{ spRelease(fP); }
 
 	ZRef& operator=(const ZRef& iOther)
 		{
@@ -110,15 +110,15 @@ public:
 	ZRef(T* iP)
 	:	fP(iP)
 		{ spRetain(fP); }
-	
+
 	ZRef& operator=(T* iP)
 		{
 		std::swap(iP, fP);
 		spRetain(fP);
-		spRelease(iP);	
+		spRelease(iP);
 		return *this;
 		}
-	
+
 	template <class O>
 	ZRef(const ZRef<O>& iOther)
 	:	fP(iOther.Get())
@@ -244,7 +244,7 @@ public:
 		{ spRetain(fP); }
 
 	~ZRef()
-		{ spRelease(fP); } 
+		{ spRelease(fP); }
 
 	ZRef& operator=(const ZRef& iOther)
 		{
@@ -262,15 +262,15 @@ public:
 	ZRef(T* iP)
 	:	fP(iP)
 		{ spRetain(fP); }
-	
+
 	ZRef& operator=(T* iP)
 		{
 		std::swap(iP, fP);
 		spRetain(fP);
-		spRelease(iP);	
+		spRelease(iP);
 		return *this;
 		}
-	
+
 	template <class O>
 	ZRef(const ZRef<O>& iOther)
 	:	fP(iOther.Get())

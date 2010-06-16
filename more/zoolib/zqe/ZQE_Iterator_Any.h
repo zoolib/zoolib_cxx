@@ -40,7 +40,7 @@ class Iterator_Any_Project
 	{
 public:
 	Iterator_Any_Project(ZRef<Iterator> iIterator, const ZRA::RelHead& iRelHead);
-	
+
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
@@ -59,7 +59,7 @@ class Iterator_Any_Rename
 	{
 public:
 	Iterator_Any_Rename(ZRef<Iterator> iIterator, const ZRA::RelName& iNew, const ZRA::RelName& iOld);
-	
+
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
@@ -79,7 +79,7 @@ class Iterator_Any_Restrict
 	{
 public:
 	Iterator_Any_Restrict(ZRef<Iterator> iIterator, const ZValPred& iValPred);
-	
+
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
@@ -98,7 +98,7 @@ class Iterator_Any_Select
 	{
 public:
 	Iterator_Any_Select(ZRef<Iterator> iIterator, ZRef<ZExpr_Logic> iExpr_Logic);
-	
+
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();

@@ -123,7 +123,7 @@ void MakeSFW::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
 	Rename_t theRename = sfw0->GetRename();
 	const Rename_t& theRename1 = sfw1->GetRename();
 	theRename.insert(theRename1.begin(), theRename1.end());
-	
+
 	vector<ZRef<Expr_Rel_Concrete> > rels = sfw0->GetRels();
 	const vector<ZRef<Expr_Rel_Concrete> > rels1 = sfw1->GetRels();
 	rels.insert(rels.end(), rels1.begin(), rels1.end());
@@ -198,7 +198,7 @@ void MakeSFW::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 		sfw0->GetCondition(),
 		sfw0->GetRels());
 
-	this->pSetResult(result);	
+	this->pSetResult(result);
 	}
 
 static ZValPred spRenamedInverse(
@@ -218,7 +218,7 @@ void MakeSFW::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
 	{
 	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
 
-	const Rename_t& theRename = sfw0->GetRename();	
+	const Rename_t& theRename = sfw0->GetRename();
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
 		theRename,
 		sfw0->GetRelHead(),
@@ -232,7 +232,7 @@ void MakeSFW::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	{
 	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
 
-	const Rename_t& theRename = sfw0->GetRename();	
+	const Rename_t& theRename = sfw0->GetRename();
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
 		theRename,
 		sfw0->GetRelHead(),
@@ -488,7 +488,7 @@ void sAsSQL(ZRef<Expr_Rel_SFW> iSFW, const ZStrimW& s)
 		{
 		s << "SELECT";
 		const RelHead& theRelHead = iSFW->GetRelHead();
-		
+
 		const Rename_t theRename = sInvert(iSFW->GetRename());
 
 		const set<string8>& names = theRelHead.GetElems();
@@ -529,7 +529,7 @@ void sAsSQL(ZRef<Expr_Rel_SFW> iSFW, const ZStrimW& s)
 		}
 
 		s << " WHERE ";
-		ToStrim_SQL().DoToStrim(ToStrim_SQL::Options(), s, iSFW->GetCondition()); 
+		ToStrim_SQL().DoToStrim(ToStrim_SQL::Options(), s, iSFW->GetCondition());
 		s << ";";
 		}
 	}

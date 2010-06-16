@@ -160,7 +160,7 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 	fNPPluginFuncs.size = sizeof(NPPluginFuncs);
 
 	fShutdown = sLookup_T<NPP_ShutdownProcPtr>(fHMODULE, "NP_Shutdown");
-	
+
 	NP_InitializeFuncPtr theInit =
 		sLookup_T<NP_InitializeFuncPtr>
 		(fHMODULE, "NP_Initialize");
@@ -298,7 +298,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 
 		// Call main, which itself will be a CFM function, but the bundle function
 		// lookup mechanism will have created a MachO-callable thunk for it.
-		
+
 		MainFuncPtr theMain =
 			sLookup_T<MainFuncPtr>
 			(theBundleRef, CFSTR("main"));
@@ -316,7 +316,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 				fGlue_PluginFuncs);
 
 			ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(&fShutdown, 1, fGlue_Shutdown);
-		#endif		
+		#endif
 		}
 	}
 

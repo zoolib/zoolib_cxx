@@ -45,7 +45,7 @@ inline bool ZTupleIndex_General::Key::operator<(const Key& iOther) const
 	// The upshot being that when one or other vector of values is
 	// exhausted we return false, indicating that this is not smaller
 	// than iOther.
-	
+
 	const ZTValue* const* otherIter = &iOther.fValues[0];
 	const ZTValue* const* otherEnd = &iOther.fValues[iOther.fPropCount];
 
@@ -108,7 +108,7 @@ void ZTupleIndex_General::Erase(uint64 iID, const ZTuple* iTuple)
 
 void ZTupleIndex_General::Find(const set<uint64>& iSkipIDs,
 		vector<const ZTBSpec::Criterion*>& ioCriteria, vector<uint64>& oIDs)
-	{	
+	{
 	set<Key>::const_iterator lowerBound, upperBound;
 	if (this->pSetupIterators(ioCriteria, lowerBound, upperBound))
 		{
@@ -323,7 +323,7 @@ bool ZTupleIndex_General::pKeyFromTuple(uint64 iID, const ZTuple* iTuple, Key& o
 	oKey.fPropCount = fPropNameCount;
 
 	oKey.fValues[0] = iTuple->PGet(tupleIter);
-	
+
 	for (size_t x = 1; x < fPropNameCount; ++x)
 		{
 		if (const ZTValue* theVal = iTuple->PGet(fPropNames[x]))

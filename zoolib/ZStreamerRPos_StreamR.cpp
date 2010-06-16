@@ -32,7 +32,7 @@ ZStreamerRPos_StreamR::ZStreamerRPos_StreamR(
 	fStreamerRWPos(iStreamerRWPos),
 	fStreamRPos_StreamR(iStreamerR->GetStreamR(), iStreamerRWPos->GetStreamRWPos())
 	{}
-	
+
 const ZStreamR& ZStreamerRPos_StreamR::GetStreamR()
 	{ return fStreamRPos_StreamR; }
 

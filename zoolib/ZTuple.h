@@ -75,7 +75,7 @@ public:
 
 	Index_t begin() const { return this->Begin(); }
 	Index_t end() const { return this->End(); }
-	
+
 	typedef Index_t const_iterator;
 
 	const_iterator IteratorOf(const char* iPropName) const

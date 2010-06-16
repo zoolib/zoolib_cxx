@@ -97,7 +97,7 @@ public:
 
 	virtual void Find(const std::set<uint64>& iSkipIDs,
 		std::vector<const ZTBSpec::Criterion*>& ioCriteria, std::vector<uint64>& oIDs)
-		{	
+		{
 		typename std::set<Key>::const_iterator lowerBound, upperBound;
 		if (this->pSetupIterators(ioCriteria, lowerBound, upperBound))
 			{
@@ -293,7 +293,7 @@ private:
 			}
 
 		oKey.fValues[0] = iTuple->PGet(tupleIter);
-		
+
 		for (size_t x = 1; x < kPropCount; ++x)
 			{
 			if (const ZTValue* theVal = iTuple->PGet(fPropNames[x]))

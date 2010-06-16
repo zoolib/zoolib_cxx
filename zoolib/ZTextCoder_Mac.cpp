@@ -55,8 +55,8 @@ class Make_Decoder
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = new ZTextDecoder_Mac(iParam);
-		return true;		
-		}	
+		return true;
+		}
 	} sMaker0;
 
 class Make_Encoder
@@ -65,8 +65,8 @@ class Make_Encoder
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = new ZTextEncoder_Mac(iParam);
-		return true;		
-		}	
+		return true;
+		}
 	} sMaker1;
 
 } // anonymous namespace
@@ -184,7 +184,7 @@ bool ZTextDecoder_Mac::Decode(
 			size_t countToConvert = min(iSourceBytes, kBufSize);
 			err = ::ConvertFromTextToUnicode(
 				fInfo,
-				countToConvert, localSource, 
+				countToConvert, localSource,
 				flags,
 				countToConvert, spSourceOffsets, &countOffsets, offsets,
 				kBufSize * sizeof(UniChar), &sourceConsumed, &utf16Generated, utf16Buffer);
@@ -193,7 +193,7 @@ bool ZTextDecoder_Mac::Decode(
 			{
 			err = ::ConvertFromTextToUnicode(
 				fInfo,
-				iSourceBytes, localSource, 
+				iSourceBytes, localSource,
 				flags,
 				0, nullptr, nullptr, nullptr, // Offset array stuff.
 				kBufSize * sizeof(UniChar), &sourceConsumed, &utf16Generated, utf16Buffer);
@@ -210,7 +210,7 @@ bool ZTextDecoder_Mac::Decode(
 				}
 			else if (err == kTECPartialCharErr)
 				{
-				// An incomplete sequence was all that was present in the source. 
+				// An incomplete sequence was all that was present in the source.
 				sourceComplete = false;
 				break;
 				}
@@ -240,7 +240,7 @@ bool ZTextDecoder_Mac::Decode(
 			}
 		else
 			{
-			ZAssertStopf(1, (utf16Generated & 1) == 0, ("utf16Generated should be even")); 
+			ZAssertStopf(1, (utf16Generated & 1) == 0, ("utf16Generated should be even"));
 			utf16Generated /= 2;
 
 			size_t utf16Consumed;
@@ -347,13 +347,13 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		ByteCount destGenerated;
 		OSStatus err = ::ConvertFromUnicodeToText(
 			fInfo,
-			utf16Generated * 2, utf16Buffer, 
+			utf16Generated * 2, utf16Buffer,
 			flags,
 			0, nullptr, nullptr, nullptr, // Offset array stuff.
 			iDestBytes, &utf16Consumed, &destGenerated, localDest);
 
-		ZAssertStop(1, err == 0); 
-		ZAssertStopf(1, (utf16Consumed & 1) == 0, ("utf16Consumed should be even")); 
+		ZAssertStop(1, err == 0);
+		ZAssertStopf(1, (utf16Consumed & 1) == 0, ("utf16Consumed should be even"));
 		utf16Consumed /= 2;
 		if (utf16Generated > utf16Consumed)
 			{

@@ -82,7 +82,7 @@ protected:
 public:
 // From ZVisitee
 	virtual void Accept(ZVisitor& iVisitor);
-	
+
 // Our protocol
 	virtual void Finish();
 	virtual ZRef<ZYadR> Meta();

@@ -47,7 +47,7 @@ class Make_NameLookup
 		{
 		oResult = new ZNetNameLookup_Local_Socket(iParam);
 		return true;
-		}	
+		}
 	} sMaker0;
 
 
@@ -58,7 +58,7 @@ class Make_Listener
 		{
 		oResult = new ZNetListener_Local_Socket(iParam.f0, iParam.f1);
 		return true;
-		}	
+		}
 	} sMaker1;
 
 
@@ -69,7 +69,7 @@ class Make_Endpoint
 		{
 		oResult = new ZNetEndpoint_Local_Socket(iParam);
 		return true;
-		}	
+		}
 	} sMaker2;
 
 } // anonymous namespace

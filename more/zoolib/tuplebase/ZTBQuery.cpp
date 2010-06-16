@@ -677,7 +677,7 @@ static void spSimplify(vector<ZTBQueryNode_Combo::Intersection>& ioIntersections
 
 		if ((*i).fNodes.empty())
 			{
-			if (gotAnAll)	
+			if (gotAnAll)
 				{
 				gotSimpleOnes = true;
 				simpleFilter |= (*i).fFilter;

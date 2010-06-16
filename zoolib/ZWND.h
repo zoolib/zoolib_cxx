@@ -57,7 +57,7 @@ protected:
 	static ZWNDW* sFromHWNDNilOkayW(HWND iHWND);
 
 	HWND fHWND;
-	WNDPROC fWNDPROC;	
+	WNDPROC fWNDPROC;
 	};
 
 // =================================================================================================
@@ -88,7 +88,7 @@ protected:
 	static ZWNDSubClassW* sFromHWNDNilOkayW(HWND iHWND);
 
 	HWND fHWND;
-	WNDPROC fWNDPROC;	
+	WNDPROC fWNDPROC;
 	};
 
 } // namespace ZooLib

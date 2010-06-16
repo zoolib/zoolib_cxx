@@ -599,7 +599,7 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 		{
 		return result;
 		}
-	return new ZDCPixmapRep(iRaster, iBounds, iPixelDesc);	
+	return new ZDCPixmapRep(iRaster, iBounds, iPixelDesc);
 	}
 
 ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
@@ -671,7 +671,7 @@ void ZDCPixmapRep::CopyFrom(ZPointPOD iDestLocation,
 	if (kDebug_Pixmap <= ZCONFIG_Debug)
 		{
 		ZAssertStop(kDebug_Pixmap, iSourceBounds == (iSourceBounds & iSourceRep->GetBounds()));
-	
+
 		ZRectPOD destBounds = iSourceBounds + (iDestLocation - iSourceBounds.TopLeft());
 		ZAssertStop(kDebug_Pixmap, destBounds == (destBounds & fBounds));
 		}

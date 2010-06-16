@@ -92,7 +92,7 @@ class ZStreamerRWCon_SSL_Win
 public:
 	ZStreamerRWCon_SSL_Win(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~ZStreamerRWCon_SSL_Win();
-	
+
 // From ZStreamerRCon via ZStreamerRWCon
 	virtual const ZStreamRCon& GetStreamRCon();
 

@@ -29,7 +29,7 @@ namespace ZooLib {
 /**
 \defgroup Types
 Although the standard library defines a range of integer types in cstdint,
-older versions of the library may not define the complete range, or 
+older versions of the library may not define the complete range, or
 the types may conflict with types used in platform specific headers. Also some
 compilers differ in their representation of 64 bit integers. To harmonize
 these disparate environments ZTypes.h defines a useful standard set of

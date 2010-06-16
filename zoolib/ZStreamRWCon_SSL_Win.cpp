@@ -39,7 +39,7 @@ ZMACRO_MSVCStaticLib_cpp(StreamRWCon_SSL_Win)
 		((PSecHandle) x)->dwLower = (ULONG_PTR) -1 ; \
 		((PSecHandle) x)->dwUpper = (ULONG_PTR) -1 ;
 #endif
-	
+
 #ifndef SP_PROT_SSL3TLS1_CLIENTS
 	#define SP_PROT_SSL3TLS1_CLIENTS (SP_PROT_TLS1_CLIENT | SP_PROT_SSL3_CLIENT)
 #endif
@@ -68,7 +68,7 @@ class Make_SSL
 		{
 		oResult = new ZStreamerRWCon_SSL_Win(iParam.fStreamerR, iParam.fStreamerW);
 		return true;
-		}	
+		}
 	} sMaker0;
 
 } // anonymous namespace
@@ -127,7 +127,7 @@ static bool spAcquireCredentials(bool iVerify, bool iCheckName, CredHandle& oCre
 
 	if (!iVerify)
 		theSCC.dwFlags |= SCH_CRED_MANUAL_CRED_VALIDATION;
-	else if (!iCheckName)		
+	else if (!iCheckName)
 		theSCC.dwFlags |= SCH_CRED_NO_SERVERNAME_CHECK;
 
 	return SEC_E_OK == sPSFT->AcquireCredentialsHandleA(
@@ -167,7 +167,7 @@ ZStreamRWCon_SSL_Win::ZStreamRWCon_SSL_Win(const ZStreamR& iStreamR, const ZStre
 
 	if (!spAcquireCredentials(iVerify, iCheckName, fCredHandle))
 		throw runtime_error("ZStreamRWCon_SSL_Win, couldn't acquire credentials");
-		
+
 	if (!this->pConnect())
 		{
 		sPSFT->FreeCredentialsHandle(&fCredHandle);
@@ -535,12 +535,12 @@ bool ZStreamRWCon_SSL_Win::pHandshake()
 				return false;
 
 			// Remove consumed data.
-			if (inSB[1].BufferType == SECBUFFER_EXTRA) 
+			if (inSB[1].BufferType == SECBUFFER_EXTRA)
 				fBufferEnc.erase(fBufferEnc.begin(), fBufferEnc.end() - inSB[1].cbBuffer);
 			else
 				fBufferEnc.clear();
 
-			if (result == SEC_E_OK) 
+			if (result == SEC_E_OK)
 				{
 				// Handshake completed successfully.
 				return true;

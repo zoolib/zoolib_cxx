@@ -278,7 +278,7 @@ ZStreamMUX::Endpoint::Endpoint(ZRef<ZStreamMUX> iMUX, uint32 iEPID, size_t iRece
 	{
 	ZAssert(spIsRemote(fEPID));
 	}
-	
+
 // Called by ZStreamMUX when opening a connection
 ZStreamMUX::Endpoint::Endpoint(ZRef<ZStreamMUX> iMUX, uint32 iEPID, size_t iReceiveBufferSize,
 	const string* iOpenName)
@@ -459,7 +459,7 @@ void ZStreamMUX::Listener::Finalize()
 		}
 
 	this->FinalizationComplete();
-	delete this;	
+	delete this;
 	}
 
 ZRef<ZStreamerRWCon> ZStreamMUX::Listener::MakeStreamerRWCon()
@@ -565,7 +565,7 @@ void ZStreamMUX::Finalize()
 
 void ZStreamMUX::Finished()
 	{
-	
+
 	}
 
 void ZStreamMUX::Start(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
@@ -1206,14 +1206,14 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 				}
 			locker.Release();
 			fCommer.StaticCast<ZStreamerWriter>()->Wake();
-			break;			
+			break;
 			}
 		case eMsg_OpenAck:
 			{
 			locker.Release();
 
 			const uint32 theID = spReceivePackedID(iStreamR);
-			ZAssert(spIsLocal(theID));			
+			ZAssert(spIsLocal(theID));
 			const uint32 creditLimit = spReceivePackedInt(iStreamR);
 
 			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
@@ -1239,7 +1239,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 
 			// An attempt to contact a Listener failed.
 			const uint32 theID = spReceivePackedID(iStreamR);
-			ZAssert(spIsLocal(theID));			
+			ZAssert(spIsLocal(theID));
 
 			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
@@ -1425,7 +1425,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 
 			theEP->fCreditRemaining += countAcked;
 			theEP->fCondition_Send.Broadcast();
-			break;			
+			break;
 			}
 		case eMsg_Goodbye:
 			{
@@ -1655,9 +1655,9 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 				iEP->fStateSend = eStateSend_Closed;
 				if (this->pDetachIfUnused(iEP))
 					delete iEP;
-				return this->pSendMessage(iStreamW, eMsg_CloseYourReceive, theEPID);				
+				return this->pSendMessage(iStreamW, eMsg_CloseYourReceive, theEPID);
 				}
-			
+
 			if (iEP->fStateSend != eStateSend_Closed)
 				{
 				if (size_t countToSend = iEP->fBuffer_Send.size())
@@ -1698,7 +1698,7 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 							this, theEPID);
 						}
 					iEP->fStateSend = eStateSend_CloseSent;
-					return this->pSendMessage(iStreamW, eMsg_CloseYourReceive, theEPID);				
+					return this->pSendMessage(iStreamW, eMsg_CloseYourReceive, theEPID);
 					}
 				}
 			break;

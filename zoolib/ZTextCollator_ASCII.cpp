@@ -44,7 +44,7 @@ class Make_Collator
 			return true;
 			}
 		return false;
-		}	
+		}
 	} sMaker0;
 
 } // anonymous namespace
@@ -158,7 +158,7 @@ int ZTextCollatorRep_ASCII::Compare(const string8& iLeft, const string8& iRight)
 
 	return spCompare(fStrength, iLeft.data(), iLeft.size(), iRight.data(), iRight.size());
 	}
- 
+
 int ZTextCollatorRep_ASCII::Compare(const UTF8* iLeft, size_t iLeftLength,
 	const UTF8* iRight, size_t iRightLength)
 	{

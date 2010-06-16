@@ -116,7 +116,7 @@ class Make_Rect
 		::MacSetRectRgn(theRgnHandle, iParam.left, iParam.top, iParam.right, iParam.bottom);
 		oResult = new ZGRgnRep_RgnHandle(theRgnHandle);
 		return true;
-		}	
+		}
 	} sMaker0;
 
 } // anonymous namespace

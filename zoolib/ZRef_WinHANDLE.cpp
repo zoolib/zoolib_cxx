@@ -92,7 +92,7 @@ void sRetain_T(HANDLE& ioHANDLE)
 template <>
 void sRelease_T(HANDLE iHANDLE)
 	{
-	if (iHANDLE) 
+	if (iHANDLE)
 		::CloseHandle(iHANDLE);
 	}
 

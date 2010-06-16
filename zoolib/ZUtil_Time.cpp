@@ -107,12 +107,12 @@ static void spTimeToTM(time_t iTime_t, struct tm& oTM)
 
 		uint32 days = uint32(timeSince1900) / kSecondsPerDay;
 		uint32 seconds = uint32(timeSince1900) % kSecondsPerDay;
-	
+
 		// January 1, 1900 was a Monday.
 		oTM.tm_wday = (days + 1) % 7;
-	
+
 		uint32 years = 0;
-	
+
 		for (;;)
 			{
 			// AG 2003-10-28. This is taken from MSL, and it seems
@@ -120,41 +120,41 @@ static void spTimeToTM(time_t iTime_t, struct tm& oTM)
 			// to figure out the number of years/number of days represented
 			// by iTime_t.
 			uint32 daysThisYear = spLeapYear(years) ? 366 : 365;
-	
+
 			if (days < daysThisYear)
 				break;
-	
+
 			days -= daysThisYear;
 			++years;
 			}
-	
+
 		oTM.tm_year = years;
 		oTM.tm_yday = days;
-	
+
 		uint32 months = 0;
-	
+
 		uint32 isLeapYear = spLeapYear(years);
-	
+
 		for (;;)
 			{
 			uint32 daysThruThisMonth = spMonthToDays[isLeapYear][months + 1];
-	
+
 			if (days < daysThruThisMonth)
 				{
 				days -= spMonthToDays[isLeapYear][months];
 				break;
 				}
-	
+
 			++months;
 			}
-	
+
 		oTM.tm_mon = months;
 		oTM.tm_mday = days + 1;
-	
+
 		oTM.tm_hour = seconds / kSecondsPerHour;
-	
+
 		seconds = seconds % kSecondsPerHour;
-	
+
 		oTM.tm_min = seconds / kSecondsPerMinute;
 		oTM.tm_sec = seconds % kSecondsPerMinute;
 
@@ -205,7 +205,7 @@ static time_t spTMToTime(const struct tm& iTM)
 // So we handle the %z and %Z fields ourselves.
 
 static string spFormatTimeUTC(const struct tm& iTM, const string& iFormat)
-	{	
+	{
 	string realFormat;
 	realFormat.reserve(iFormat.size());
 
@@ -400,7 +400,7 @@ string ZUtil_Time::sAsStringLocal(ZTime iTime, const string& iFormat)
 
 		time_t theTimeT = time_t(iTime.fVal);
 		::localtime_r(&theTimeT, &theTM);
-		
+
 		char buf[256];
 		strftime(buf, 255, iFormat.c_str(), &theTM);
 		return buf;
@@ -415,7 +415,7 @@ static string spYmdHM(ZTime iTime, bool iIncludeT)
 	else
 		return ZUtil_Time::sAsStringUTC(iTime, "%Y-%m-%d %H:%M:");
 	}
-	
+
 string ZUtil_Time::sAsString_ISO8601(ZTime iTime, bool iIncludeT)
 	{
 	// We've got about 10 significant digits in year (-9,999 to +9,999),

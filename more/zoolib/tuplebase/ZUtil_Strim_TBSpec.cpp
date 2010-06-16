@@ -182,7 +182,7 @@ static bool spRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 		if (!sTryRead_EscapedString(iStrimU, '"', thePropertyName))
 			{
 			if (!sTryRead_EscapedString(iStrimU, '\'', thePropertyName))
-				{				
+				{
 				if (!ZYad_ZooLibStrim::sRead_Identifier(
 					iStrimU, &thePropertyNameLC, &thePropertyName))
 					{
@@ -214,7 +214,7 @@ static bool spRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 			}
 
 		sSkip_WSAndCPlusPlusComments(iStrimU);
-		
+
 		ZTValue theTV;
 		if (!ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTV))
 			throw ParseException("Expected a value after a relationship");

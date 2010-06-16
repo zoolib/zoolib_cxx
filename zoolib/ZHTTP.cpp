@@ -203,7 +203,7 @@ void Response::Send(const ZStreamW& s) const
 		s.WriteString((*i).second);
 		s.WriteString("\r\n");
 		}
-	s.WriteString("\r\n");	
+	s.WriteString("\r\n");
 	}
 
 // =================================================================================================
@@ -793,11 +793,11 @@ yadda yadda yadda
 type = string(); // the type eg 'text'
 subtype = string(); // the subtype
 parameters = {
-             parameterName1 = string(parameterValue1);
-             parameterName2 = string(parameterValue2);
-			 // ...
-             parameterNameX = string(parameterValueX);			 
-			 }
+  parameterName1 = string(parameterValue1);
+  parameterName2 = string(parameterValue2);
+  // ...
+  parameterNameX = string(parameterValueX);			
+  }
 }
 <\endcode>
 */
@@ -840,21 +840,21 @@ bool sRead_accept_language(const ZStreamU& iStream, Map* ioFields)
 
 		Map temp;
 		temp.Set("tag", languageTag);
-		
+
 		Map parameters;
 		for (;;)
 			{
 			sSkipLWS(iStream);
-	
+
 			if (!sReadChar(iStream, ';'))
 				break;
-	
+
 			string name, value;
 			if (!sReadParameter(iStream, &name, &value, nullptr))
 				break;
-			parameters.Set(name, value); 
+			parameters.Set(name, value);
 			}
-	
+
 		if (parameters)
 			temp.Set("parameters", parameters);
 
@@ -865,7 +865,7 @@ bool sRead_accept_language(const ZStreamU& iStream, Map* ioFields)
 
 		if (!sReadChar(iStream, ','))
 			break;
-		}	
+		}
 	return true;
 	}
 
@@ -957,7 +957,7 @@ bool sRead_transfer_encoding(const ZStreamU& iStream, Map* ioFields)
 	string encoding;
 	if (!sRead_transfer_encoding(iStream, encoding))
 		return false;
-	
+
 	if (ioFields)
 		ioFields->Set("transfer-encoding", encoding);
 
@@ -1003,10 +1003,10 @@ bool sRead_content_disposition(const ZStreamU& iStream, Map& oTuple)
 		for (;;)
 			{
 			sSkipLWS(iStream);
-	
+
 			if (!sReadChar(iStream, ';'))
 				break;
-	
+
 			string name, value;
 			if (!sReadParameter(iStream, &name, &value, nullptr))
 				break;
@@ -1299,7 +1299,7 @@ bool sReadLanguageTag(const ZStreamU& iStream, string* oLanguageTag)
 	{
 	if (oLanguageTag)
 		oLanguageTag->resize(0);
-	
+
 	char readChar;
 	if (!iStream.ReadChar(readChar))
 		return false;
@@ -1431,7 +1431,7 @@ bool sReadToken(const ZStreamU& iStream, string* oTokenLC, string* oTokenExact)
 		else
 			{
 			gotAny = true;
-	
+
 			if (oTokenLC)
 				oTokenLC->append(1, char(tolower(readChar)));
 			if (oTokenExact)
@@ -1487,7 +1487,7 @@ bool sReadToken_Cookie(const ZStreamU& iStream, string* oTokenLC, string* oToken
 		else
 			{
 			gotAny = true;
-	
+
 			if (oTokenLC)
 				oTokenLC->append(1, char(tolower(readChar)));
 			if (oTokenExact)
@@ -1705,7 +1705,7 @@ bool sIs_ctext(char iChar)
 
 bool sIs_qdtext(char iChar)
 	{
-	return sIs_TEXT(iChar) && iChar != '\"';	
+	return sIs_TEXT(iChar) && iChar != '\"';
 	}
 
 // =================================================================================================

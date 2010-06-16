@@ -47,7 +47,7 @@ class Make_NameLookup
 		{
 		oResult = new ZNetNameLookup_Local_Win(iParam);
 		return true;
-		}	
+		}
 	} sMaker0;
 
 
@@ -58,7 +58,7 @@ class Make_Listener
 		{
 		oResult = new ZNetListener_Local_Win(iParam.f0);
 		return true;
-		}	
+		}
 	} sMaker1;
 
 
@@ -69,7 +69,7 @@ class Make_Endpoint
 		{
 		oResult = new ZNetEndpoint_Local_Win(iParam);
 		return true;
-		}	
+		}
 	} sMaker2;
 
 } // anonymous namespace
@@ -136,13 +136,13 @@ static ZRef<HANDLE> spCreateNamedPipe(const string16& iPipeName)
 	if (INVALID_HANDLE_VALUE == theHANDLE)
 		throw runtime_error("ZNetListener_Local_Win, spCreateNamedPipe failed");
 
-	return Adopt(theHANDLE);	
+	return Adopt(theHANDLE);
 	}
 
 #if 0
 static ZRef<HANDLE> spCreateEvent()
 	{
-	
+
 	}
 #endif
 
@@ -188,13 +188,13 @@ static ZRef<HANDLE> spConnect(const string& iName)
 	for (;;)
 		{
 		HANDLE theHANDLE = ::CreateFileW(
-			thePipeName.c_str(),   // pipe name 
-			GENERIC_READ | GENERIC_WRITE, // read and write access 
-			0,              // no sharing 
+			thePipeName.c_str(),   // pipe name
+			GENERIC_READ | GENERIC_WRITE, // read and write access
+			0,              // no sharing
 			NULL,           // default security attributes
-			OPEN_EXISTING,  // opens existing pipe 
-			0,              // default attributes 
-			NULL);          // no template file 
+			OPEN_EXISTING,  // opens existing pipe
+			0,              // default attributes
+			NULL);          // no template file
 
 		if (theHANDLE != INVALID_HANDLE_VALUE)
 			return Adopt(theHANDLE);
@@ -251,7 +251,7 @@ size_t ZNetEndpoint_Local_Win::Imp_CountReadable()
 
 bool ZNetEndpoint_Local_Win::Imp_WaitReadable(double iTimeout)
 	{
-	return WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, DWORD(iTimeout * 1e3));	
+	return WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, DWORD(iTimeout * 1e3));
 	}
 
 void ZNetEndpoint_Local_Win::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)

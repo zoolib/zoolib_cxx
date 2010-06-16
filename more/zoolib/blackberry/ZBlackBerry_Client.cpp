@@ -77,7 +77,7 @@ Channel_Client::Channel_Client(
 	fIdealReadSize(fIdealReadSize),
 	fIdealWriteSize(fIdealWriteSize)
 	{}
-	
+
 Channel_Client::~Channel_Client()
 	{}
 
@@ -166,7 +166,7 @@ Device_Client::Device_Client(ZRef<ZStreamerRWCon> theSRWCon,
 	fDeviceID(iDeviceID),
 	fOpen(true)
 	{
-	sStartCommerRunners(this);	
+	sStartCommerRunners(this);
 	}
 
 Device_Client::~Device_Client()
@@ -363,7 +363,7 @@ bool Manager_Client::Commer_Changed::Read(const ZStreamR& r)
 
 		fSendNotificationRequest = true;
 		ZStreamerWriter::Wake();
-		return true;		
+		return true;
 		}
 	else
 		{
@@ -448,7 +448,7 @@ void Manager_Client::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 			const ZStreamR& r = theSRWCon->GetStreamR();
 
 			size_t theCount = r.ReadCount();
-			
+
 			vector<uint64> deviceIDs;
 			deviceIDs.reserve(theCount);
 
@@ -488,7 +488,7 @@ void Manager_Client::pDetached(ZRef<Commer_Changed> iCommer)
 	{
 	ZAssert(iCommer == fCommer_Changed);
 	fCommer_Changed.Clear();
-	
+
 	while (fAutoReconnect)
 		{
 		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
@@ -518,7 +518,7 @@ void Manager_Client::pStartCommer(ZRef<ZStreamerRWCon> iSRWCon)
 	fCommer_Changed = new Commer_Changed(iSRWCon, this);
 	this->pChanged();
 
-	sStartCommerRunners(fCommer_Changed);	
+	sStartCommerRunners(fCommer_Changed);
 	}
 
 } // namespace ZBlackBerry

@@ -299,7 +299,7 @@ size_t Channel_BBDevMgr::Imp_CountReadable()
 		double theTimeout = 0;
 		this->pRefill(locker, theChannel, &theTimeout);
 		}
-		
+
 	return fEnd - fStart;
 	}
 
@@ -381,7 +381,7 @@ void Channel_BBDevMgr::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 	}
 
 void Channel_BBDevMgr::Imp_SendDisconnect()
-	{	
+	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "Imp_SendDisconnect";
 
@@ -519,7 +519,7 @@ ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 
 	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
-		try 
+		try
 			{
 			ZRef<Channel> theChannel = new Channel_BBDevMgr(theDevice, iPreserveBoundaries, iName, iPasswordHash);
 			return theChannel;
@@ -601,7 +601,7 @@ bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 							{
 							if (SUCCEEDED(theDP->Value(&oValue)))
 								return true;
-							}	
+							}
 						}
 					}
 				}
@@ -655,7 +655,7 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 					}
 				}
 			}
-		}	
+		}
 	}
 
 Manager_BBDevMgr::~Manager_BBDevMgr()

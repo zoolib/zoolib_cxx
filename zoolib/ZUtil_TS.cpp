@@ -255,7 +255,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 
 			if (!sTryRead_CP(iStrimU, ':'))
 				throw Ex_MalformedText("Expected ':' after tuple ID");
-			
+
 			sSkip_WSAndCPlusPlusComments(iStrimU);
 
 			ZTuple theTuple;
@@ -309,7 +309,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 
 			if (!sTryRead_CP(iStrimU, ':'))
 				throw Ex_MalformedText("Expected ':' after tuple ID");
-			
+
 			sSkip_WSAndCPlusPlusComments(iStrimU);
 
 			ZTuple theTuple;

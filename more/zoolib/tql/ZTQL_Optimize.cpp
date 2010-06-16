@@ -72,7 +72,7 @@ public:
 	virtual void Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iExpr);
 	virtual void Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr);
 	virtual void Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr);
-	virtual void Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr);	
+	virtual void Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr);
 
 // From ZVisitor_Expr_Logic_ValPred
 	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr);

@@ -145,7 +145,7 @@ void ZFileFormat_QuickTime::StreamR_Chunk::Imp_CopyToDispatch(
 	fStream.CopyTo(iStreamW, min(iCount, uint64(fCountRemaining)), &countRead, oCountWritten);
 	fCountRemaining -= countRead;
 	if (oCountRead)
-		*oCountRead = countRead;	
+		*oCountRead = countRead;
 	}
 
 void ZFileFormat_QuickTime::StreamR_Chunk::Imp_CopyTo(
@@ -155,7 +155,7 @@ void ZFileFormat_QuickTime::StreamR_Chunk::Imp_CopyTo(
 	fStream.CopyTo(iStreamW, min(iCount, uint64(fCountRemaining)), &countRead, oCountWritten);
 	fCountRemaining -= countRead;
 	if (oCountRead)
-		*oCountRead = countRead;	
+		*oCountRead = countRead;
 	}
 
 void ZFileFormat_QuickTime::StreamR_Chunk::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
@@ -164,7 +164,7 @@ void ZFileFormat_QuickTime::StreamR_Chunk::Imp_Skip(uint64 iCount, uint64* oCoun
 	fStream.Skip(min(iCount, uint64(fCountRemaining)), &countSkipped);
 	fCountRemaining -= countSkipped;
 	if (oCountSkipped)
-		*oCountSkipped = countSkipped;	
+		*oCountSkipped = countSkipped;
 	}
 
 void ZFileFormat_QuickTime::StreamR_Chunk::pInit(uint32& oChunkType, bool iSkipOnDestroy)

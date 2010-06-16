@@ -59,7 +59,7 @@ public:
 
 	void KillResponders();
 	void KillRespondersWait();
-	
+
 	ZRef<ZStreamerRWFactory> GetFactory();
 
 	ZSafeSetIterConst<ZRef<Responder> > GetResponders();
@@ -103,7 +103,7 @@ class ZServer_T : public ZServer
 public:
 	ZServer_T() {}
 	ZServer_T(const P& iParam) : fParam(iParam) {}
-	
+
 // From ZServer
 	virtual ZRef<Responder> MakeResponder()
 		{ return new R(this, fParam); }

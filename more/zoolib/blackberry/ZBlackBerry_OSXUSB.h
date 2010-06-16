@@ -82,7 +82,7 @@ private:
 	ZMtxR fMutex;
 	CFRunLoopRef fRunLoopRef;
 	bool fAllowMassStorage;
-	
+
 	mach_port_t fMasterPort;
 	IONotificationPortRef fIONotificationPortRef;
 

@@ -58,7 +58,7 @@ class ZTSWatcher_Latent::PTuple
 	PTuple(); // Not implemented
 public:
 	PTuple(uint64 iID);
-	
+
 	const uint64 fID;
 	ZTuple fWrittenValue;
 	bool fWritten;
@@ -118,7 +118,7 @@ bool ZTSWatcher_Latent::Sync(
 
 	if (!fTSWatcher)
 		return false;
-	
+
 	// Take note of tuple registration changes.
 	for (size_t x = 0; x < iRemovedIDsCount; ++x)
 		{
@@ -364,7 +364,7 @@ bool ZTSWatcher_Latent::Sync(
 			ZAssertStop(kDebug, thePTuple->fClientKnown);
 			ZAssertStop(kDebug, thePTuple->fServerKnown);
 			}
-		
+
 		oChangedTupleIDs.push_back(theID);
 		oChangedTuples.push_back(changedTuples[x]);
 		}
@@ -474,7 +474,7 @@ void ZTSWatcher_Latent::Discard(bool iWaitForSync)
 
 		while (iWaitForSync && fMode != eMode_Normal)
 			fCondition_Save.Wait(fMutex_Save);
-		
+
 		}
 	}
 
@@ -519,7 +519,7 @@ ZTSWatcher_Latent::PTuple& ZTSWatcher_Latent::pGetPTuple(uint64 iID)
 	map<uint64, PTuple>::iterator i = fPTuples.lower_bound(iID);
 	if (i != fPTuples.end() && i->first == iID)
 		return i->second;
-		
+
 	return fPTuples.insert(i, pair<uint64, PTuple>(iID, PTuple(iID)))->second;
 	}
 

@@ -41,7 +41,7 @@ public:
 
 	static ZValPredCompound sTrue();
 	static ZValPredCompound sFalse();
-	
+
 	ZValPredCompound();
 	ZValPredCompound(const ZValPredCompound& iOther);
 	~ZValPredCompound();

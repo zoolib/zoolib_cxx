@@ -48,8 +48,8 @@ class Make_Decoder
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = new ZTextDecoder_iconv(iParam);
-		return true;		
-		}	
+		return true;
+		}
 	} sMaker0;
 
 class Make_Encoder
@@ -58,8 +58,8 @@ class Make_Encoder
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = new ZTextEncoder_iconv(iParam);
-		return true;		
-		}	
+		return true;
+		}
 	} sMaker1;
 
 } // anonymous namespace
@@ -112,7 +112,7 @@ static iconv_t spIconvOpenDecoder(const string& iSourceName)
 	if (ZCONFIG(Endian, Big))
 		result = ::iconv_open("UTF-32BE", iSourceName.c_str());
 	else
-		result = ::iconv_open("UTF-32LE", iSourceName.c_str());	
+		result = ::iconv_open("UTF-32LE", iSourceName.c_str());
 
 	if (result == iconv_t(-1))
 		return 0;
@@ -219,7 +219,7 @@ static iconv_t spIconvOpenEncoder(const string& iDestName)
 	if (ZCONFIG(Endian, Big))
 		result = ::iconv_open(iDestName.c_str(), "UTF-32BE");
 	else
-		result = ::iconv_open(iDestName.c_str(), "UTF-32LE");	
+		result = ::iconv_open(iDestName.c_str(), "UTF-32LE");
 
 	if (result == iconv_t(-1))
 		return 0;

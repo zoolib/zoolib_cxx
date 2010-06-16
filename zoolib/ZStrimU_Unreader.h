@@ -37,7 +37,7 @@ class ZStrimU_Unreader : public ZStrimU
 public:
 	ZStrimU_Unreader(const ZStrimR& iStrimSource);
 
-// From ZStrimR via ZStrimU 
+// From ZStrimR via ZStrimU
 	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
 	virtual bool Imp_ReadCP(UTF32& oCP);

@@ -297,7 +297,7 @@ typedef enum
 			, NPNVsupportsCarbonBool = 2003
 		#endif
 
-		, NPNVsupportsCocoaBool = 2004		
+		, NPNVsupportsCocoaBool = 2004
 		, NPNVbrowserTextInputFuncs = 1002
 	#endif
 	} NPNVariable;
@@ -366,14 +366,14 @@ typedef enum
 		{
 		NPCocoaEventType type;
 		uint32 version;
-		
+
 		union
 			{
 			struct
 				{
 				uint32 modifierFlags;
 				double pluginX;
-				double pluginY;			
+				double pluginY;
 				int32 buttonNumber;
 				int32 clickCount;
 				double deltaX;
@@ -398,7 +398,7 @@ typedef enum
 			struct
 				{
 				NPBool hasFocus;
-				} focus;		
+				} focus;
 			} data;
 		} NPCocoaEvent;
 #endif
@@ -472,9 +472,9 @@ typedef struct _NPPrint
 
 	typedef struct _NPEvent
 		{
-		uint16   event;
-		uint32   wParam;
-		uint32   lParam;
+		uint16 event;
+		uint32 wParam;
+		uint32 lParam;
 		} NPEvent;
 
 #elif defined(XP_UNIX)
@@ -652,7 +652,7 @@ typedef struct _NPString
 	const NPUTF8* utf8characters;
 	uint32_t utf8length;
 	} NPString;
-  
+
 typedef enum
 	{
 	NPVariantType_Void,
@@ -813,7 +813,7 @@ typedef struct _NPNetscapeFuncs
 	{
 	uint16 size;
 	uint16 version;
-	
+
 	NPN_GetURLProcPtr geturl;
 	NPN_PostURLProcPtr posturl;
 	NPN_RequestReadProcPtr requestread;
@@ -835,7 +835,7 @@ typedef struct _NPNetscapeFuncs
 	NPN_InvalidateRectProcPtr invalidaterect;
 	NPN_InvalidateRegionProcPtr invalidateregion;
 	NPN_ForceRedrawProcPtr forceredraw;
-	
+
 	NPN_GetStringIdentifierProcPtr getstringidentifier;
 	NPN_GetStringIdentifiersProcPtr getstringidentifiers;
 	NPN_GetIntIdentifierProcPtr getintidentifier;
@@ -907,8 +907,8 @@ typedef struct _NPPluginFuncs
 
 
 typedef ZNetscape_API_EXPORTED_CALLBACK(NPError, NP_GetEntryPointsFuncPtr)(NPPluginFuncs*);
-typedef ZNetscape_API_EXPORTED_CALLBACK(void, NPP_ShutdownProcPtr)(void);	
- 
+typedef ZNetscape_API_EXPORTED_CALLBACK(void, NPP_ShutdownProcPtr)(void);
+
 #if defined(XP_MACOSX)
 	typedef void (*BP_CreatePluginMIMETypesPreferencesFuncPtr)(void);
 	typedef NPError (*MainFuncPtr)(NPNetscapeFuncs*, NPPluginFuncs*, NPP_ShutdownProcPtr*);

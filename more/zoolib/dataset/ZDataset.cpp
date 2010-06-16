@@ -70,7 +70,7 @@ string Nombre::AsString() const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 NamedClock::NamedClock()
 	{}
@@ -125,7 +125,7 @@ string NamedClock::AsString() const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 Delta::Delta(const map<Daton, bool>& iStatements)
 :	fStatements(iStatements)
@@ -139,7 +139,7 @@ const map<Daton, bool>& Delta::GetStatements()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 ClockedDeltas::ClockedDeltas(const Map_NamedClock_Delta_t& iMap)
 :	fMap(iMap)
@@ -153,7 +153,7 @@ const Map_NamedClock_Delta_t& ClockedDeltas::GetMap()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 ClockedDeltasChain::ClockedDeltasChain(
 	ZRef<ClockedDeltasChain> iParent, ZRef<ClockedDeltas> iClockedDeltas)
@@ -169,7 +169,7 @@ ZRef<ClockedDeltas> ClockedDeltasChain::GetClockedDeltas()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 Dataset::Dataset(const Nombre& iNombre, Clock iClock, ZRef<ClockedDeltasChain> iClockedDeltasChain)
 :	fNombre(iNombre)
@@ -333,7 +333,7 @@ void Dataset::pCommit()
 	if (!fPendingStatements.empty())
 		{
 		fClock.Event();
-		
+
 		ZRef<Delta> theDelta = new Delta(&fPendingStatements);
 
 		Map_NamedClock_Delta_t theMap;

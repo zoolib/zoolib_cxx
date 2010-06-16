@@ -53,7 +53,7 @@ void ZNetNameRegistered_DNSSD::pInit(ip_port iPort,
 			++iTXT;
 			}
 		}
-	
+
 	DNSServiceErrorType result = ::DNSServiceRegister(
 		&fDNSServiceRef, // output service ref
 		0, // flags
@@ -74,7 +74,7 @@ void ZNetNameRegistered_DNSSD::pInit(ip_port iPort,
 			{
 			s.Writef("DNSServiceRegister, failed with result: %d", result);
 			throw runtime_error("Couldn't register name");
-			}		
+			}
 		}
 	}
 
@@ -197,7 +197,7 @@ void ZNetNameRegistered_DNSSD::spDNSServiceRegisterReply(
 	ZAcqMtx acq(theNNR->fMutex);
 
 	ZAssert(sdRef == theNNR->fDNSServiceRef);
-	
+
 	theNNR->pDNSServiceRegisterReply(flags, errorCode, name, regtype, domain);
 	}
 

@@ -92,7 +92,7 @@ public:
 
 	ZVal_AppleEvent(DescType iDescType, const void* iVal, size_t iSize)
 		{ ::AECreateDesc(iDescType, iVal, iSize, this); }
-	
+
 // ZVal protocol
 	void Clear();
 

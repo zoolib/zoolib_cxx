@@ -41,7 +41,7 @@ class Expr_Rel
 	{
 protected:
 	Expr_Rel();
-	
+
 public:
 	virtual RelHead GetRelHead() = 0;
 	};

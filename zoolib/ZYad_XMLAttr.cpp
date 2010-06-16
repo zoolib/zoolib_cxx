@@ -33,15 +33,15 @@ ZYad_XMLAttr turns this:
 
 into this:
   {
-  tag1 = 
+  tag1 =
     {
     tag2 = "val3";
-    tag4 = 
+    tag4 =
       {
       at5 = "5";
       at6 = "6";
       };
-    tag7 = 
+    tag7 =
       {
       at8 = "8";
       tag9 = {};

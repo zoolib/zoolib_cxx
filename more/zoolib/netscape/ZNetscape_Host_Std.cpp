@@ -570,7 +570,7 @@ bool Host_Std::HTTPFetcher::Work()
 		{
 		string theURL = fURL;
 		ZHTTP::Map theHeaders;
-		ZHTTP::Data theRawHeaders;	
+		ZHTTP::Data theRawHeaders;
 		ZRef<ZStreamerR> theStreamerR;
 		if (fIsPOST)
 			{
@@ -722,7 +722,7 @@ bool Host_Std::Sender::pDeliverData()
 
 	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
 		s.Writef("countReadable = %zu", countReadable);
-	
+
 	if (countReadable == 0)
 		return false;
 
@@ -1080,7 +1080,7 @@ void Host_Std::SendDataSync(
 			}
 
 		if (iNotifyData)
-            this->Guest_URLNotify(iURL.c_str(), NPRES_DONE, iNotifyData);
+			this->Guest_URLNotify(iURL.c_str(), NPRES_DONE, iNotifyData);
 
 		this->Guest_DestroyStream(&theNPStream, NPRES_DONE);
 		}

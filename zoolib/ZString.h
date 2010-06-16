@@ -86,7 +86,7 @@ int sComparei(const string& iLeft, const string& iRight);
 bool sEquali(const string& iLeft, const string& iRight);
 bool sContainsi(const string& iTarget, const string& iCandidate);
 
-// -- 
+// --
 // ZUtil_Tuple-style conversion API
 
 ZQ_T<int64> sQInt64(const string& iString);
@@ -104,12 +104,12 @@ bool sQDouble(const string& iString, double& oVal);
 double sDDouble(double iDefault, const string& iString);
 double sDouble(const string& iString);
 
-// -- 
+// --
 
 string sFresh(const string& iOther);
 void sMakeFresh(string& ioString);
 
-// -- 
+// --
 
 inline int sAsInt(const string& iString)
 	{ return int(sInt64(iString)); }

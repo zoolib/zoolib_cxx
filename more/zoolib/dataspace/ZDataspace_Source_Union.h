@@ -79,7 +79,7 @@ private:
 	map<Source*, PSource*> fMap_SourceToPSource;
 
 	Clock fClock;
-	
+
 	void pUpdate(
 		AddedSearch* iAdded, size_t iAddedCount,
 		int64* iRemoved, size_t iRemovedCount,

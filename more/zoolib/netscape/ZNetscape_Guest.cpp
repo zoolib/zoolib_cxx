@@ -233,7 +233,7 @@ bool ObjectG::Imp_HasProperty(const std::string& iName)
 	vector<string> theNames;
 	if (this->Imp_Enumerate(theNames))
 		return ZUtil_STL::sContains(theNames, iName);
-	
+
 	return false;
 	}
 
@@ -483,7 +483,7 @@ NPError GuestMeister::Initialize(NPNetscapeFuncs_Z* iBrowserFuncs)
 		fNPNF.construct = iBrowserFuncs->construct;
 		}
 
-    return NPERR_NO_ERROR;
+	return NPERR_NO_ERROR;
 	}
 
 NPError GuestMeister::GetEntryPoints(NPPluginFuncs* oPluginFuncs)
@@ -491,26 +491,26 @@ NPError GuestMeister::GetEntryPoints(NPPluginFuncs* oPluginFuncs)
 	oPluginFuncs->size = sizeof(NPPluginFuncs);
 	oPluginFuncs->version = 11;
 
-    oPluginFuncs->newp = spNew;
-    oPluginFuncs->destroy = spDestroy;
-    oPluginFuncs->setwindow = spSetWindow;
-    oPluginFuncs->newstream = spNewStream;
-    oPluginFuncs->destroystream = spDestroyStream;
-    oPluginFuncs->asfile = spStreamAsFile;
-    oPluginFuncs->writeready = (NPP_WriteReadyProcPtr)spWriteReady;
-    oPluginFuncs->write = (NPP_WriteProcPtr)spWrite;
-    oPluginFuncs->print = spPrint;
-    oPluginFuncs->event = spHandleEvent;
-    oPluginFuncs->urlnotify = spURLNotify;
-    oPluginFuncs->getvalue = spGetValue;
-    oPluginFuncs->setvalue = spSetValue;
-    
-    return NPERR_NO_ERROR;
+	oPluginFuncs->newp = spNew;
+	oPluginFuncs->destroy = spDestroy;
+	oPluginFuncs->setwindow = spSetWindow;
+	oPluginFuncs->newstream = spNewStream;
+	oPluginFuncs->destroystream = spDestroyStream;
+	oPluginFuncs->asfile = spStreamAsFile;
+	oPluginFuncs->writeready = (NPP_WriteReadyProcPtr)spWriteReady;
+	oPluginFuncs->write = (NPP_WriteProcPtr)spWrite;
+	oPluginFuncs->print = spPrint;
+	oPluginFuncs->event = spHandleEvent;
+	oPluginFuncs->urlnotify = spURLNotify;
+	oPluginFuncs->getvalue = spGetValue;
+	oPluginFuncs->setvalue = spSetValue;
+
+	return NPERR_NO_ERROR;
 	}
 
 NPError GuestMeister::Shutdown()
 	{
-    return NPERR_NO_ERROR;
+	return NPERR_NO_ERROR;
 	}
 
 const NPNetscapeFuncs_Z& GuestMeister::GetNPNetscapeFuncs()
@@ -837,13 +837,13 @@ jref GuestMeister::spGetJavaClass()
 static bool spHostUsesOldWebKit(NPP npp)
 	{
 	// Logic and comments taken from NetscapeMoviePlugIn/main.c
-    // This check is necessary if you want your exposed NPObject to not leak in WebKit-based
-    // browsers (including Safari) released prior to Mac OS X 10.5 (Leopard).
-    // Earlier versions of WebKit retained the NPObject returned from
-    // NPP_GetValue(NPPVpluginScriptableNPObject). However, the NPRuntime API says NPObjects
-    // should be retained by the plug-in before they are returned.  WebKit versions later than
-    // 420 do not retain returned NPObjects automatically; plug-ins are required to retain them
-    // before returning from NPP_GetValue(), as in other browsers.
+	// This check is necessary if you want your exposed NPObject to not leak in WebKit-based
+	// browsers (including Safari) released prior to Mac OS X 10.5 (Leopard).
+	// Earlier versions of WebKit retained the NPObject returned from
+	// NPP_GetValue(NPPVpluginScriptableNPObject). However, the NPRuntime API says NPObjects
+	// should be retained by the plug-in before they are returned. WebKit versions later than
+	// 420 do not retain returned NPObjects automatically; plug-ins are required to retain them
+	// before returning from NPP_GetValue(), as in other browsers.
 
 	static bool spChecked = false;
 	static bool spUsesOldWebKit = false;
@@ -856,7 +856,7 @@ static bool spHostUsesOldWebKit(NPP npp)
 				{
 				versionString += strlen(prefix);
 				int webKitVersion = atoi(versionString);
-		        if (webKitVersion && webKitVersion < 420)
+				if (webKitVersion && webKitVersion < 420)
 					spUsesOldWebKit = true;
 				}
 			}

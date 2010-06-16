@@ -121,7 +121,7 @@ static void MD5_Update(ZStream_MD5::Context *ctx, unsigned char const *buf, uint
 }
 
 /*
- * Final wrapup - pad to 64-byte boundary with the bit pattern 
+ * Final wrapup - pad to 64-byte boundary with the bit pattern
  * 1 0* (64-bit count of bits processed, MSB-first)
  */
 static void MD5_Final(unsigned char digest[16], ZStream_MD5::Context *ctx)
@@ -195,7 +195,7 @@ static void MD5Transform(uint32 buf[4], const unsigned char inext[64], ZStream_M
 {
     register uint32 a, b, c, d, i;
     uint32 in[16];
-    
+
     for (i = 0; i < 16; i++)
       in[i] = GET_32BIT_LSB_FIRST(inext + 4 * i);
 

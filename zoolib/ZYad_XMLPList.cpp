@@ -134,7 +134,7 @@ static ZRef<ZYadR> spMakeYadR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU)
 			return new ZYadStrimR_XMLPList(iStrimmerU, true);
 			}
 		}
-	
+
 	ZAny theVal;
 	if (spTryRead_Any(theR, theVal))
 		return new ZYadPrimR_Std(theVal);
@@ -232,7 +232,7 @@ ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMust
 :	fStrimmerU(iStrimmerU),
 	fMustReadEndTag(iMustReadEndTag)
 	{}
-	
+
 void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, string& oName, ZRef<ZYadR>& oYadR)
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
@@ -283,14 +283,14 @@ static void spToStrim_Stream(const ZML::StrimW& s, const ZStreamR& iStreamR)
 	{
 	s.Begin("data");
 		iStreamR.CopyAllTo(ZStreamW_Base64Encode(ZStreamW_ASCIIStrim(s)));
-	s.End("data");	
+	s.End("data");
 	}
 
 static void spToStrim_Strim(const ZML::StrimW& s, const ZStrimR& iStrimR)
 	{
 	s.Begin("string");
 		iStrimR.CopyAllTo(s);
-	s.End("string");	
+	s.End("string");
 	}
 
 static void spToStrim_List(const ZML::StrimW& s, ZRef<ZYadSeqR> iYadSeqR)

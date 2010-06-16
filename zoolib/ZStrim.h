@@ -80,7 +80,7 @@ public:
 	bool ReadCP(UTF32& oCP) const;
 	UTF32 ReadCP() const;
 	//@}
-	
+
 
 /** \name Standard library strings
 */	//@{

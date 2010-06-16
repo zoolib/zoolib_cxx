@@ -115,7 +115,7 @@ public:
 	:	fSize(iOther.fSize)
 		{ ZMemCopy(fBuffer, iOther.fBuffer, fSize); }
 
-	String(const char* iString, size_t iSize);		
+	String(const char* iString, size_t iSize);
 
 	int Compare(const String& iOther) const;
 	int Compare(const char* iString, size_t iSize) const;
@@ -155,7 +155,7 @@ inline ZTName::ZTName(const ZTName& iOther)
 
 inline bool ZTName::operator==(const ZTName& iOther) const
 	{ return 0 == this->Compare(iOther); }
-	
+
 inline bool ZTName::operator!=(const ZTName& iOther) const
 	{ return !(*this == iOther); }
 

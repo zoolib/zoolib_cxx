@@ -294,7 +294,7 @@ public:
 			}
 		return *this;
 		}
-	
+
 	ZSafeSetIterConst& operator=(const ZSafeSet<T>& iSafeSet)
 		{
 		if (ZRef<ZSafeSetRep<T> > theRep = fRep)
@@ -358,7 +358,7 @@ public:
 
 	ZSafeSetIter& operator=(const ZSafeSetIter& iOther)
 		{ return ZSafeSetIterConst<T>::operator=(iOther); }
-	
+
 	bool QReadErase(T& oValue)
 		{
 		if (ZRef<ZSafeSetRep<T> > theRep = ZSafeSetIterConst<T>::fRep)
@@ -409,14 +409,14 @@ ZQ_T<T> ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter)
 	else
 		{
 		(*ioIter.fNextEntry).fIters.Erase(&ioIter);
-		
+
 		result = (*ioIter.fNextEntry).fT;
 
 		if (++ioIter.fNextEntry == fList.end())
 			ioIter.fRep.Clear();
 		else
 			(*ioIter.fNextEntry).fIters.PushBack(&ioIter);
-			
+
 		}
 	return result;
 	}
@@ -462,7 +462,7 @@ ZQ_T<T> ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter)
 		if (ioIter.fNextEntry == fList.end())
 			ioIter.fRep.Clear();
 		else
-			(*ioIter.fNextEntry).fIters.PushBack(&ioIter);		
+			(*ioIter.fNextEntry).fIters.PushBack(&ioIter);
 
 		fMap.erase(result.Get());
 		}
@@ -492,7 +492,7 @@ bool ZSafeSetRep<T>::pErase(const T& iT)
 	fList.erase(listIter);
 	fMap.erase(mapIter);
 
-	return true;		
+	return true;
 	}
 
 } // namespace ZooLib

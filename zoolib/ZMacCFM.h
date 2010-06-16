@@ -115,7 +115,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef proc##ProcPtr proc##_UPP
 	#define ZMacCFM_Priv_DefineUPP1_Void(proc, arg1) \
 		typedef proc##ProcPtr proc##_UPP
-#endif		
+#endif
 
 #define ZMacCFM_DefineProc1(ret, upp, arg1) \
 	ZMacCFM_Priv_DefineProcPtr1(ret, upp, arg1); \
@@ -403,7 +403,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef proc##ProcPtr proc##_UPP
 	#define ZMacCFM_Priv_DefineUPP7_Void(proc, arg1, arg2, arg3, arg4, arg5, arg6, arg7) \
 		typedef proc##ProcPtr proc##_UPP
-#endif		
+#endif
 
 #define ZMacCFM_DefineProc7(ret, upp, arg1, arg2, arg3, arg4, arg5, arg6, arg7) \
 	ZMacCFM_Priv_DefineProcPtr7(ret, upp, arg1, arg2, arg3, arg4, arg5, arg6, arg7); \

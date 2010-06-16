@@ -196,7 +196,7 @@ public:
 	virtual ZFile::Error ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
-	
+
 private:
 	ZMtx fMutex;
 	uint64 fPosition;
@@ -218,7 +218,7 @@ public:
 	virtual ZFile::Error ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
-	
+
 private:
 	HANDLE fFileHANDLE;
 	bool fCloseWhenFinalized;
@@ -243,7 +243,7 @@ public:
 
 	virtual ZFile::Error Flush();
 	virtual ZFile::Error FlushVolume();
-	
+
 private:
 	ZMtx fMutex;
 	uint64 fPosition;
@@ -270,7 +270,7 @@ public:
 
 	virtual ZFile::Error Flush();
 	virtual ZFile::Error FlushVolume();
-	
+
 private:
 	HANDLE fFileHANDLE;
 	bool fCloseWhenFinalized;
@@ -296,7 +296,7 @@ public:
 
 	virtual ZFile::Error Flush();
 	virtual ZFile::Error FlushVolume();
-	
+
 private:
 	ZMtx fMutex;
 	uint64 fPosition;
@@ -324,7 +324,7 @@ public:
 
 	virtual ZFile::Error Flush();
 	virtual ZFile::Error FlushVolume();
-	
+
 private:
 	HANDLE fFileHANDLE;
 	bool fCloseWhenFinalized;

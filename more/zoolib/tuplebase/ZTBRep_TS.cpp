@@ -786,7 +786,7 @@ void ZTBRep_TS::Trans_Commit(Transaction* iTransaction)
 	// the value got changed.
 
 	if (!iTransaction->fSet_Written.empty())
-		{	
+		{
 		ZLocker locker_Write(fTS->GetWriteLock());
 		ZMutexLocker lockerStructure(fMutex_Structure);
 

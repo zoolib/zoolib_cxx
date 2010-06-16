@@ -411,11 +411,11 @@ ZRef<ZYadR> spMakeYadR_ZooLibStream(ZRef<ZStreamerR> iStreamerR)
 			case 0x80 | eZType_Tuple:
 				return new ZYadMapR_ZooLibStreamNew(iStreamerR);
 			case eZType_Raw:
-				return new ZYadStreamR_ZooLibStreamOld(iStreamerR);			
+				return new ZYadStreamR_ZooLibStreamOld(iStreamerR);
 			case 0x80 | eZType_Raw:
-				return new ZYadStreamR_ZooLibStreamNew(iStreamerR);			
+				return new ZYadStreamR_ZooLibStreamNew(iStreamerR);
 			case eZType_String:
-				return new ZYadStrimR_ZooLibStream(iStreamerR);			
+				return new ZYadStrimR_ZooLibStream(iStreamerR);
 			default:
 				return new ZYadPrimR_ZooLib(ZType(theType), iStreamerR->GetStreamR());
 			}

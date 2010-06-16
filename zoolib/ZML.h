@@ -119,7 +119,7 @@ public:
 	StrimmerU(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues);
 	StrimmerU(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon);
 	virtual ~StrimmerU();
-	
+
 // From ZStrimmerU
 	const ZStrimU& GetStrimU();
 
@@ -293,7 +293,7 @@ protected:
 	void pEnd();
 
 	const ZStrimW& fStrimSink;
-	
+
 	ETagType fTagType;
 	bool fWrittenSinceLastTag;
 	bool fLastWasBegin;

@@ -2241,7 +2241,7 @@ void ZDCPixmapNS::PixelDesc::AsRGBAs(
 	{ fRep->Imp_AsRGBAs(iPixvals, iCount, oColors); }
 
 uint16 ZDCPixmapNS::PixelDesc::AsAlpha(uint32 iPixval) const
-	{ return fRep->Imp_AsAlpha(iPixval); }	
+	{ return fRep->Imp_AsAlpha(iPixval); }
 
 uint32 ZDCPixmapNS::PixelDesc::AsPixval(const ZRGBA_POD& iRGBA) const
 	{ return fRep->Imp_AsPixval(iRGBA); }
@@ -2386,7 +2386,7 @@ template <class S, class D>
 static void sMungeRow_T(
 	void* iRowAddress, const PixvalDesc& iPixvalDesc,
 	const S& iMapPixvalToRGB, const D& iMapRGBToPixval,
-	ZCoord inStartH, int32 inCount, ZCoord inCoordV, 
+	ZCoord inStartH, int32 inCount, ZCoord inCoordV,
 	MungeProc iMungeProc, void* iRefcon)
 	{
 	PixvalAccessor sourceAccessor(iPixvalDesc);

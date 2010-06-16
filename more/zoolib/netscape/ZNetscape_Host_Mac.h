@@ -67,7 +67,7 @@ protected:
 	void EventLoopTimer_Idle(EventLoopTimerRef iTimer);
 
 	bool fAllowCG;
-    EventLoopTimerRef fEventLoopTimerRef_Idle;
+	EventLoopTimerRef fEventLoopTimerRef_Idle;
 
 	#if defined(XP_MACOSX)
 		NP_CGContext fNP_CGContext;

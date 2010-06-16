@@ -42,7 +42,7 @@ public:
 	enum { kDebug = ZCONFIG_TSWatcherMUX_Debug };
 
 	ZTSWatcherMUX(ZRef<ZTSWatcher> iTSWatcher, size_t iCacheSize_Queries, size_t iCacheSize_Tuples);
-	~ZTSWatcherMUX(); 
+	~ZTSWatcherMUX();
 
 // From ZTSWatcherFactory
 	virtual ZRef<ZTSWatcher> MakeTSWatcher();
@@ -85,10 +85,10 @@ private:
 		std::map<int64, std::vector<uint64> >& oChangedQueries);
 
 	void Watcher_SetCallback(Watcher* iWatcher, ZTSWatcher::Callback_t iCallback, void* iRefcon);
-	
+
 	bool pSyncAll(bool iWaitForSync, Watcher* iWatcher);
 
-	PQuery* pGetPQuery(const ZTSWatcher::AddedQueryCombo& iAQC);	
+	PQuery* pGetPQuery(const ZTSWatcher::AddedQueryCombo& iAQC);
 	PQuery* pGetPQueryIfExtant(int64 iRefcon);
 
 	PTuple* pGetPTuple(uint64 iID);
@@ -106,7 +106,7 @@ private:
 	bool fForceNextSync;
 
 	ZRef<ZTSWatcher> fTSWatcher;
-	
+
 	std::set<Watcher*> fWatchers;
 
 	int64 fNextQueryRefcon;

@@ -44,7 +44,7 @@ void ZDCPixmapEncoder_BMP::sWritePixmap(const ZStreamW& iStream,
 	const ZDCPixmap& iPixmap, bool iWithFileHeader)
 	{
 	ZDCPixmapEncoder_BMP theEncoder(iWithFileHeader);
-	ZDCPixmapEncoder::sWritePixmap(iStream, iPixmap, theEncoder); 
+	ZDCPixmapEncoder::sWritePixmap(iStream, iPixmap, theEncoder);
 	}
 
 ZDCPixmapEncoder_BMP::ZDCPixmapEncoder_BMP(bool iWithFileHeader)

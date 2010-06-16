@@ -81,7 +81,7 @@ private:
 	ZRef<ZStreamerW> fStreamerW;
 	bool fStreamsOkay;
 	bool fSentClose;
-	
+
 	uint64* fBaseID;
 	size_t* fCountIssued;
 

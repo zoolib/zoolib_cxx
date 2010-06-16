@@ -38,7 +38,7 @@ protected:
 
 public:
 	virtual ~Iterator();
-	
+
 // Our protocol
 	virtual ZRef<Iterator> Clone() = 0;
 	virtual ZRef<Result> ReadInc() = 0;

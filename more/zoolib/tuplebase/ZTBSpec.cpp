@@ -76,7 +76,7 @@ static ZTBSpec::ERel spRelFromString(const std::string& iString)
 	else if (iString == "VectorContains") return ZTBSpec::eRel_VectorContains;
 	else if (iString == "StringContains") return ZTBSpec::eRel_StringContains;
 	else if (iString == "re") return ZTBSpec::eRel_Regex;
-		 
+		
 	return ZTBSpec::eRel_Invalid;
 	}
 
@@ -433,7 +433,7 @@ static bool spSimplify(ZTBSpec::CriterionSect& ioCrit)
 				i = ioCrit.insert(i,
 					ZTBSpec::Criterion(propName, ZTBSpec::eRel_LessEqual, smallestLessEqual));
 				}
-				
+
 			if (gotLargestGreater)
 				{
 				i = ioCrit.insert(i,
@@ -665,7 +665,7 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			}
 		case eRel_LacksOfType:
 			{
-			return iTuple.PGet(propIter)->TypeOf() != this->GetTValue().GetType();			
+			return iTuple.PGet(propIter)->TypeOf() != this->GetTValue().GetType();
 			}
 		case eRel_VectorContains:
 			{
@@ -680,7 +680,7 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 						return true;
 					}
 				}
-			return false;			
+			return false;
 			}
 		case eRel_StringContains:
 			{
@@ -833,7 +833,7 @@ public:
 	Rep(const Criterion& iCriterion);
 	Rep(const CriterionSect& iCriterionSect);
 
-	CriterionUnion fCriterionUnion;	
+	CriterionUnion fCriterionUnion;
 	};
 
 ZTBSpec::Rep::Rep()
@@ -1266,7 +1266,7 @@ ZTBSpec::ZTBSpec(CriterionUnion& ioCriterionUnion, bool iKnowWhatIAmDoing)
 :	fRep(new Rep)
 	{
 	ZAssertStop(1, iKnowWhatIAmDoing);
-	fRep->fCriterionUnion.swap(ioCriterionUnion);	
+	fRep->fCriterionUnion.swap(ioCriterionUnion);
 	}
 
 } // namespace ZooLib

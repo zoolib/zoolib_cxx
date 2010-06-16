@@ -95,7 +95,7 @@ struct GatherContents_t
 	vector<CFStringRef>* fNames;
 	vector<CFTypeRef>* fValues;
 	};
-	
+
 static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon)
 	{
 	GatherContents_t* theParam = static_cast<GatherContents_t*>(iRefcon);
@@ -129,7 +129,7 @@ ZYadMapRPos_CFType::ZYadMapRPos_CFType(const ZRef<CFDictionaryRef>& iDictionary)
 
 ZRef<ZYadR> ZYadMapRPos_CFType::ReadInc(string& oName)
 	{
-	if (fPosition < fNames.size())	
+	if (fPosition < fNames.size())
 		{
 		oName = ZUtil_CFType::sAsUTF8(fNames.at(fPosition));
 		return sMakeYadR(fValues[fPosition++]);

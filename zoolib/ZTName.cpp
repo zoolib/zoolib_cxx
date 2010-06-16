@@ -308,7 +308,7 @@ int ZTName::Compare(const ZTName& iOther) const
 				else
 					{
 					// Other is unallocated, thus empty.
-					
+
 					// This equals other.
 					return 0;
 					}
@@ -333,7 +333,7 @@ int ZTName::Compare(const ZTName& iOther) const
 				// cannot be empty, so this must be less than other.
 				return -1;
 				}
-			
+
 			}
 		}
 	else if (sIsPNRep(iOther.fData))

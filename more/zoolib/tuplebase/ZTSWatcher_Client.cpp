@@ -378,7 +378,7 @@ void ZTSWatcher_Client::pSync1(
 				1000*(afterReceive-startReceiving),
 				1000*(allDone-afterReceive),
 				iRemovedIDsCount,
-				iAddedIDsCount, 
+				iAddedIDsCount,
 				iRemovedQueriesCount,
 				iWrittenTuplesCount,
 				iAddedQueriesCount,
@@ -497,7 +497,7 @@ void ZTSWatcher_Client::pSync2(
 			int64 theRefcon = theStreamR.ReadInt64();
 			pair<map<int64, vector<uint64> >::iterator, bool> pos =
 				oChangedQueries.insert(pair<int64, vector<uint64> >(theRefcon, vector<uint64>()));
-			
+
 			vector<uint64>& theVector = (*pos.first).second;
 			if (uint32 theIDCount = spReadCount(theStreamR))
 				{
@@ -534,7 +534,7 @@ void ZTSWatcher_Client::pSync2(
 				1000*(startReceiving-afterSend),
 				1000*(allDone-startReceiving),
 				iRemovedIDsCount,
-				iAddedIDsCount, 
+				iAddedIDsCount,
 				iRemovedQueriesCount,
 				iWrittenTuplesCount,
 				iAddedQueriesCount,
@@ -558,7 +558,7 @@ void ZTSWatcher_Client::pSync3(
 	map<int64, vector<uint64> >& oChangedQueries)
 	{
 	ZAssert(fSupports3);
-	
+
 	const ZTime beforeSend = ZTime::sSystem();
 
 	ZTuple request;
@@ -632,7 +632,7 @@ void ZTSWatcher_Client::pSync3(
 		const ZStreamR& theStreamR = iStreamR;
 	#endif
 
-	
+
 	oChangedTupleIDs.clear();
 	oChangedTuples.clear();
 	if (uint32 theCount = spReadCount(theStreamR))
@@ -655,7 +655,7 @@ void ZTSWatcher_Client::pSync3(
 			int64 theRefcon = theStreamR.ReadInt64();
 			pair<map<int64, vector<uint64> >::iterator, bool> pos =
 				oChangedQueries.insert(pair<int64, vector<uint64> >(theRefcon, vector<uint64>()));
-			
+
 			vector<uint64>& theVector = (*pos.first).second;
 			if (uint32 theIDCount = spReadCount(theStreamR))
 				{
@@ -693,7 +693,7 @@ void ZTSWatcher_Client::pSync3(
 				1000*(startReceiving-afterSend),
 				1000*(allDone-startReceiving),
 				iRemovedIDsCount,
-				iAddedIDsCount, 
+				iAddedIDsCount,
 				iRemovedQueriesCount,
 				iWrittenTuplesCount,
 				iAddedQueriesCount,
@@ -718,7 +718,7 @@ void ZTSWatcher_Client::pSync4(
 	map<int64, vector<uint64> >& oChangedQueries)
 	{
 	ZAssert(fSupports4);
-	
+
 	const ZTime beforeSend = ZTime::sSystem();
 
 	ZTuple request;
@@ -794,7 +794,7 @@ void ZTSWatcher_Client::pSync4(
 		const ZStreamR& theStreamR = iStreamR;
 	#endif
 
-	
+
 	oAddedIDs.clear();
 	if (uint32 theCount = spReadCount(theStreamR))
 		{
@@ -825,7 +825,7 @@ void ZTSWatcher_Client::pSync4(
 			int64 theRefcon = theStreamR.ReadInt64();
 			pair<map<int64, vector<uint64> >::iterator, bool> pos =
 				oChangedQueries.insert(pair<int64, vector<uint64> >(theRefcon, vector<uint64>()));
-			
+
 			vector<uint64>& theVector = (*pos.first).second;
 			if (uint32 theIDCount = spReadCount(theStreamR))
 				{
@@ -863,7 +863,7 @@ void ZTSWatcher_Client::pSync4(
 				1000*(startReceiving-afterSend),
 				1000*(allDone-startReceiving),
 				iRemovedIDsCount,
-				iAddedIDsCount, 
+				iAddedIDsCount,
 				iRemovedQueriesCount,
 				iWrittenTuplesCount,
 				iAddedQueriesCount,

@@ -53,8 +53,8 @@ class Make_Collator
 			oResult = new ZTextCollatorRep_ICU(nullptr, iParam.fStrength);
 		else
 			oResult = new ZTextCollatorRep_ICU(iParam.fLocaleName.c_str(), iParam.fStrength);
-		return true;		
-		}	
+		return true;
+		}
 	} sMaker0;
 
 } // anonymous namespace
@@ -157,7 +157,7 @@ int ZTextCollatorRep_ICU::Compare(const string16& iLeft, const string16& iRight)
 
 	return ::ucol_strcoll(fCollator, iLeft.data(), iLeft.size(), iRight.data(), iRight.size());
 	}
- 
+
 int ZTextCollatorRep_ICU::Compare(const UTF16* iLeft, size_t iLeftLength,
 	const UTF16* iRight, size_t iRightLength)
 	{
@@ -190,7 +190,7 @@ static bool spContains(UCollator* iCollator, const UTF16* iPattern, size_t iPatt
 
 	if (U_FAILURE(status))
 		return false;
-	
+
 	return pos != USEARCH_DONE;
 	}
 

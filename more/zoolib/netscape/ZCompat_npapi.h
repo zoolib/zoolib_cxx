@@ -157,7 +157,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	typedef void (*NPN_PluginThreadAsyncCallProcPtr)
 		(NPP npp, void (*func)(void *), void *userData);
 	typedef bool (*NPN_ConstructProcPtr)
-		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);  
+		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
 #endif
 
 #if 0
@@ -196,7 +196,7 @@ enum
 	NPNVpluginDrawingModel = 1000,
 	NPNVsupportsCoreGraphicsBool = 2001,
 	NPNVsupportsOpenGLBool = 2002,
-	
+
 	#ifndef NP_NO_QUICKDRAW
 		NPNVsupportsQuickDrawBool = 2000,
 	#endif

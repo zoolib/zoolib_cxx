@@ -50,7 +50,7 @@ typedef string ReadableBy;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 class SearchThing
 	{
@@ -71,7 +71,7 @@ ZRef<ZRA::Expr_Rel> sAsRelFrom(const vector<RelRename>& iRelRenames);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 class AddedSearch
 	{
@@ -84,7 +84,7 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 class SearchResult
 	{
@@ -95,7 +95,7 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 class Source;
 
@@ -103,7 +103,7 @@ typedef ZCallback_T<Source*> Callback;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * 
+#pragma mark *
 
 class Source
 	{
@@ -120,7 +120,7 @@ public:
 		AddedSearch* iAdded, size_t iAddedCount,
 		int64* iRemoved, size_t iRemovedCount,
 		vector<SearchResult>& oChanged,
-		Clock& oClock) = 0;	
+		Clock& oClock) = 0;
 
 	void Register(ZRef<Callback> iCallback);
 	void Unregister(ZRef<Callback> iCallback);

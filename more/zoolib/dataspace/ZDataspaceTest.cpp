@@ -53,7 +53,7 @@ static void spDumpChanged(const vector<SearchResult>& iChanged, const ZStrimW& w
 				w << "???";
 				}
 			w << "\n";
-			}		
+			}
 		}
 	w << "---------------------\n";
 	}

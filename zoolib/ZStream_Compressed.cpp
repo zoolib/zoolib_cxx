@@ -109,7 +109,7 @@ ZStreamRPos_Compressed::ZStreamRPos_Compressed(const ZStreamRPos& iSource)
 	iSource.Read(dummy, sizeof(spMagicText), &countRead);
 	if (countRead != sizeof(spMagicText) || 0 != memcmp(dummy, spMagicText, sizeof(spMagicText)))
 		throw runtime_error("ZStreamRPos_Compressed, magic text not found");
-	
+
 	fChunkSize = iSource.ReadUInt32();
 	fSize = iSource.ReadUInt64();
 	uint32 offsetCount = (fSize + fChunkSize - 1) / fChunkSize;

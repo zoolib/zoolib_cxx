@@ -65,7 +65,7 @@ NPError Host_Win::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 		case NPNVSupportsWindowless:
 			{
 			*static_cast<NPBool*>(ret_value) = TRUE;
-            return NPERR_NO_ERROR;
+			return NPERR_NO_ERROR;
 			}
 		}
 
@@ -218,7 +218,7 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 				theNPEvent.wParam = iWPARAM;
 				theNPEvent.lParam = iLPARAM;
 				this->Guest_HandleEvent(&theNPEvent);
-				return 0;				
+				return 0;
 				}
 			break;
 			}

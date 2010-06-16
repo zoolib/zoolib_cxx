@@ -46,7 +46,7 @@ namespace ZNet
 		errorNone,
 		errorGeneric,
 		errorBadState,
-	
+
 		errorCouldntConnect,
 		errorLocalPortInUse,
 		errorCantGetAmountUnread,

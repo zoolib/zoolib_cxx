@@ -52,7 +52,7 @@ public:
 	Nombre(const Nombre& iOther);
 	~Nombre();
 	Nombre& operator=(const Nombre& iOther);
-	
+
 	Nombre(uint64 iFork);
 	Nombre(const Nombre& iOther, uint64 iFork);
 
@@ -75,7 +75,7 @@ public:
 	NamedClock(const NamedClock& iOther);
 	~NamedClock();
 	NamedClock& operator=(const NamedClock& iOther);
-	
+
 	NamedClock(const Nombre& iNombre, Clock iClock);
 
 	bool operator<(const NamedClock& iRHS) const;

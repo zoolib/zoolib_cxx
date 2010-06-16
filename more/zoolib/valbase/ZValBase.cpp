@@ -36,7 +36,7 @@ class Visitor_DoMakeIterator
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 	{
 public:
-	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr);	
+	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr);
 	};
 
 void Visitor_DoMakeIterator::Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)

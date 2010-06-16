@@ -37,7 +37,7 @@ class RateLimiter
 	{
 public:
 	RateLimiter(double iRate, size_t iQuantum);
-	
+
 	size_t GetCount(size_t iLastCount, size_t iCount);
 
 private:

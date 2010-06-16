@@ -38,7 +38,7 @@ public:
 	:	fData(iData),
 		fPosition(0)
 		{}
-	
+
 	~ZStreamRPos_Data_T()
 		{}
 
@@ -95,7 +95,7 @@ public:
 		fPosition = 0;
 		fSizeLogical = fData.GetSize();
 		}
-	
+
 	ZStreamRWPos_Data_T(T& iData)
 	:	fData(iData)
 		{
@@ -121,7 +121,7 @@ public:
 		if (oCountRead)
 			*oCountRead = countToCopy;
 		}
-		
+
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 		{
 		const size_t realSkip = ZStream::sClampedSize(iCount, fSizeLogical, fPosition);

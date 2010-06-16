@@ -95,7 +95,7 @@ size_t ZStreamRWCon_MemoryPipe::Imp_CountReadable()
 	{
 	ZAcqMtx acq(fMutex);
 	if (fSource)
-		return fSourceEnd - fSource;	
+		return fSourceEnd - fSource;
 	return 0;
 	}
 
@@ -208,7 +208,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Write(const void* iSource, size_t iCount, size
 			fSource = nullptr;
 			fSourceEnd = nullptr;
 			}
-		
+
 		if (localSource != static_cast<const uint8*>(iSource))
 			{
 			// We were able to write *some* data. Let's give up for now

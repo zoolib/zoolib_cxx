@@ -93,7 +93,7 @@ void ZStreamRPos_StreamR::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 				fBuffer.SetPosition(fBuffer.GetPosition() - countCopied);
 				}
 			}
-		}	
+		}
 	if (oCountRead)
 		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}

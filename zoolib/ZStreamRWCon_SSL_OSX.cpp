@@ -42,7 +42,7 @@ class Make_SSL
 		{
 		oResult = new ZStreamerRWCon_SSL_OSX(iParam.fStreamerR, iParam.fStreamerW);
 		return true;
-		}	
+		}
 	} sMaker0;
 
 } // anonymous namespace
@@ -142,7 +142,7 @@ OSStatus ZStreamRWCon_SSL_OSX::pRead(void* oDest, size_t* ioCount)
 	catch (...)
 		{
 		return errSSLClosedAbort;
-		}		
+		}
 	}
 
 OSStatus ZStreamRWCon_SSL_OSX::spRead(SSLConnectionRef iRefcon, void* oDest, size_t* ioCount)
@@ -169,7 +169,7 @@ OSStatus ZStreamRWCon_SSL_OSX::pWrite(const void* iSource, size_t* ioCount)
 	catch (...)
 		{
 		return errSSLClosedAbort;
-		}		
+		}
 	}
 
 OSStatus ZStreamRWCon_SSL_OSX::spWrite(SSLConnectionRef iRefcon, const void* iSource, size_t* ioCount)

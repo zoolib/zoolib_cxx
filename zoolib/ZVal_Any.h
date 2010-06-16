@@ -199,7 +199,7 @@ class ZSeq_Any::Rep
 private:
 	Rep();
 	virtual ~Rep();
-	
+
 	Rep(const Vector_t& iVector);
 
 	template <class Iterator>
@@ -368,7 +368,7 @@ class ZMap_Any::Rep
 private:
 	Rep();
 	virtual ~Rep();
-	
+
 	Rep(const Map_t& iMap);
 
 	template <class Iterator>

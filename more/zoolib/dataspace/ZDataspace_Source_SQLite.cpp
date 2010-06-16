@@ -119,7 +119,7 @@ void Source_SQLite::Update(
 
 			theSearchResult.fResults.push_back(new ZQE::Result_Any(theMap));
 			}
-		
+
 		oChanged.push_back(theSearchResult);
 		}
 

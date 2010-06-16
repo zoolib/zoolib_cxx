@@ -104,7 +104,7 @@ class Make_Rect
 		::XUnionRectWithRegion(&tempRect, theRegion, theRegion);
 		oResult = new ZGRgnRep_XRegion(theRegion);
 		return true;
-		}	
+		}
 	} sMaker0;
 
 } // anonymous namespace

@@ -406,7 +406,7 @@ ZQ_T<Val> KeyRef::QGet(const Index_t& iIndex) const
 	offset -= countKeys;
 	if (offset >= countValues)
 		return null;
-		
+
 	vector<WCHAR> theName(maxLengthValueName);
 	DWORD curLength = 1024;
 	for (;;)

@@ -36,7 +36,7 @@ class Iterator : public ZQE::Iterator
 public:
 	Iterator(ZRef<ZYadSeqRClone> iYadSeqRClone);
 	virtual ~Iterator();
-	
+
 	virtual ZRef<ZQE::Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
 
