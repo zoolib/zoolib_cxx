@@ -796,7 +796,33 @@ ZGRect_T<T>::ZGRect_T(const ZGPointPOD_T<U>& iOrigin, T iWidth, T iHeight)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Operations
+#pragma mark * Operations - Extent/Extent
+
+template <class T>
+inline
+ZGExtentPOD_T<T> operator+(const ZGExtentPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
+	{ return ZGExtentPOD_T<T>(l.h + r.h, l.h + r.v); }
+
+template <class T>
+inline
+ZGExtentPOD_T<T>& operator+=(ZGExtentPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
+	{ l.h += r.h; l.h += r.v; return l; }
+
+
+template <class T>
+inline
+ZGExtentPOD_T<T> operator-(const ZGExtentPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
+	{ return ZGExtentPOD_T<T>(l.h - r.h, l.v - r.v); }
+
+template <class T>
+inline
+ZGExtentPOD_T<T>& operator-=(ZGExtentPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
+	{ l.h -= r.h; l.v -= r.v; return l; }
+
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Operations - Extent/Point
 
 template <class T>
 inline
@@ -824,6 +850,9 @@ inline
 ZGPoint_T<T>& operator-=(ZGPoint_T<T>& l, const ZGExtentPOD_T<T>& r)
 	{ l.x -= r.h; l.y -= r.v; return l; }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Operations - Rect/Extent
 
 template <class T>
 inline
@@ -846,6 +875,10 @@ inline
 ZGRectPOD_T<T>& operator-=(ZGRectPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
 	{ l.origin -= r; return l; }
 
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Operations - Rect
 
 template <class T, class U>
 inline
