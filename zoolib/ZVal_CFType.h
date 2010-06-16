@@ -96,17 +96,6 @@ public:
 	ZQ_T<S> QGet_T() const;
 
 	template <class S>
-	bool QGet_T(S& oVal) const
-		{
-		if (ZQ_T<S> theQ = this->QGet_T<S>())
-			{
-			oVal = theQ.Get();
-			return true;
-			}
-		return false;
-		}
-
-	template <class S>
 	S DGet_T(const S& iDefault) const
 		{
 		if (ZQ_T<S> theQ = this->QGet_T<S>())
@@ -183,6 +172,21 @@ public:
 	ZVal_CFType DGet(const ZVal_CFType& iDefault, size_t iIndex) const;
 	ZVal_CFType Get(size_t iIndex) const;
 
+	template <class S>
+	inline
+	ZQ_T<S> QGet_T(size_t iIndex) const
+		{ return this->Get(iIndex).QGet_T<S>(); }
+
+	template <class S>
+	inline
+	S DGet_T(const S& iDefault, size_t iIndex) const
+		{ return this->Get(iIndex).DGet_T<S>(iDefault); }
+
+	template <class S>
+	inline
+	S Get_T(size_t iIndex) const
+		{ return this->Get(iIndex).Get_T<S>(); }
+
 	ZSeq_CFType& Set(size_t iIndex, const ZVal_CFType& iVal);
 
 	ZSeq_CFType& Erase(size_t iIndex);
@@ -247,6 +251,30 @@ public:
 
 	ZVal_CFType Get(const string8& iName) const;
 	ZVal_CFType Get(CFStringRef iName) const;
+
+	template <class S>
+	ZQ_T<S> QGet_T(const string8& iName) const
+		{ return this->Get(iName).QGet_T<S>(); }
+
+	template <class S>
+	ZQ_T<S> QGet_T(CFStringRef iName) const
+		{ return this->Get(iName).QGet_T<S>(); }
+
+	template <class S>
+	S DGet_T(const S& iDefault, const string8& iName) const
+		{ return this->Get(iName).DGet_T<S>(iDefault); }
+
+	template <class S>
+	S DGet_T(const S& iDefault, CFStringRef iName) const
+		{ return this->Get(iName).DGet_T<S>(iDefault); }
+
+	template <class S>
+	S Get_T(const string8& iName) const
+		{ return this->Get(iName).Get_T<S>(); }
+
+	template <class S>
+	S Get_T(CFStringRef iName) const
+		{ return this->Get(iName).Get_T<S>(); }
 
 	ZMap_CFType& Set(const string8& iName, const ZVal_CFType& iVal);
 	ZMap_CFType& Set(CFStringRef iName, const ZVal_CFType& iVal);

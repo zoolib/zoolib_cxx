@@ -29,49 +29,39 @@ namespace ZNetscape {
 #pragma mark * NPVariantBase
 
 template <>
-bool NPVariantBase::QGet_T<bool>(bool& oVal) const
+ZQ_T<bool> NPVariantBase::QGet_T<bool>() const
 	{
 	if (type == NPVariantType_Bool)
-		{
-		oVal = value.boolValue;
-		return true;
-		}
-	return false;
+		return bool(value.boolValue);
+	return null;
 	}
 
 template <>
-bool NPVariantBase::QGet_T<int32>(int32& oVal) const
+ZQ_T<int32> NPVariantBase::QGet_T<int32>() const
 	{
 	if (type == NPVariantType_Int32)
-		{
-		oVal = value.intValue;
-		return true;
-		}
-	return false;
+		return int32(value.boolValue);
+	return null;
 	}
 
 template <>
-bool NPVariantBase::QGet_T<double>(double& oVal) const
+ZQ_T<double> NPVariantBase::QGet_T<double>() const
 	{
 	if (type == NPVariantType_Double)
-		{
-		oVal = value.doubleValue;
-		return true;
-		}
-	return false;
+		return double(value.boolValue);
+	return null;
 	}
 
 template <>
-bool NPVariantBase::QGet_T<std::string>(std::string& oVal) const
+ZQ_T<std::string> NPVariantBase::QGet_T<std::string>() const
 	{
 	if (type == NPVariantType_String)
 		{
-		oVal = std::string(
+		return std::string(
 			sNPStringCharsConst(value.stringValue),
 			sNPStringLengthConst(value.stringValue));
-		return true;
 		}
-	return false;
+	return null;
 	}
 
 } // namespace ZNetscape

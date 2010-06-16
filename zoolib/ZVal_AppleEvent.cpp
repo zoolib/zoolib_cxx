@@ -784,14 +784,18 @@ AEDesc& ZMap_AppleEvent::OParam()
 	return *this;
 	}
 
-bool ZMap_AppleEvent::QGetAttr(AEKeyword iName, ZVal_AppleEvent& oVal) const
-	{ return noErr == ::AEGetAttributeDesc(this, iName, typeWildCard, &oVal.OParam()); }
+ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGetAttr(AEKeyword iName) const
+	{
+	ZVal_AppleEvent result;
+	if (noErr == ::AEGetAttributeDesc(this, iName, typeWildCard, &result.OParam()))
+		return result;
+	return null;
+	}
 
 ZVal_AppleEvent ZMap_AppleEvent::DGetAttr(const ZVal_AppleEvent& iDefault, AEKeyword iName) const
 	{
-	ZVal_AppleEvent theVal;
-	if (this->QGetAttr(iName, theVal))
-		return theVal;
+	if (ZQ_T<ZVal_AppleEvent> theVal = this->QGetAttr(iName))
+		return theVal.Get();
 	return iDefault;
 	}
 

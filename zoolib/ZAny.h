@@ -207,17 +207,6 @@ public:
 		{ return ZAnyBaseCast<S>(this); }
 
 	template <class S>
-	bool QGet_T(S& oVal) const
-		{
-		if (const S* theVal = this->PGet_T<S>())
-			{
-			oVal = *theVal;
-			return true;
-			}
-		return false;
-		}
-
-	template <class S>
 	ZQ_T<S> QGet_T() const
 		{
 		if (const S* theVal = this->PGet_T<S>())

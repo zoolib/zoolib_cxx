@@ -95,7 +95,7 @@ DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVO
 			{
 			if (fAllowPause)
 				{
-				ZGuardMtx locker(fMutex_State);
+				ZAcqMtx acq(fMutex_State);
 				if (fServiceStatus.dwCurrentState == SERVICE_RUNNING)
 					{
 					fServiceStatus.dwCurrentState = SERVICE_PAUSE_PENDING;
@@ -115,7 +115,7 @@ DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVO
 			{
 			if (fAllowPause)
 				{
-				ZGuardMtx locker(fMutex_State);
+				ZAcqMtx acq(fMutex_State);
 				if (fServiceStatus.dwCurrentState == SERVICE_PAUSED)
 					{
 					fServiceStatus.dwCurrentState = SERVICE_CONTINUE_PENDING;
@@ -133,7 +133,7 @@ DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVO
 			}
 		case SERVICE_CONTROL_STOP:
 			{
-			ZGuardMtx locker(fMutex_State);
+			ZAcqMtx acq(fMutex_State);
 			if (fServiceStatus.dwCurrentState == SERVICE_PAUSED
 				|| fServiceStatus.dwCurrentState == SERVICE_RUNNING)
 				{
@@ -173,7 +173,7 @@ void ZWinService::Continued()
 void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	{
 	{
-	ZGuardMtx locker(fMutex_State);
+	ZAcqMtx acq(fMutex_State);
 	fServiceStatus.dwServiceType = SERVICE_WIN32;
 	fServiceStatus.dwCurrentState = SERVICE_START_PENDING;
 	fServiceStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_PAUSE_CONTINUE;
@@ -199,7 +199,7 @@ void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	catch (...)
 		{}
 
-	ZGuardMtx locker(fMutex_State);
+	ZAcqMtx acq(fMutex_State);
 
 	fServiceStatus.dwCurrentState = SERVICE_STOPPED;
 	::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);

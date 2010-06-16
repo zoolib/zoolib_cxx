@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape_Object__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZQ_T.h"
 #include "zoolib/netscape/ZNetscape.h"
 
 #include <string>
@@ -81,8 +82,8 @@ public:
 	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
 
 // ZMap protocol (ish)
-	bool QGet(const std::string& iName, Variant_t& oVal);
-	bool QGet(size_t iIndex, Variant_t& oVal);
+	ZQ_T<Variant_t> QGet(const std::string& iName);
+	ZQ_T<Variant_t> QGet(size_t iIndex);
 
 	Variant_t DGet(const Variant_t& iDefault, const std::string& iName);
 	Variant_t DGet(const Variant_t& iDefault, size_t iIndex);

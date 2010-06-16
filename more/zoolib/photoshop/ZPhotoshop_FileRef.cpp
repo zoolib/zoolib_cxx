@@ -84,10 +84,6 @@ FSNewAliasMinimalUnicode(
 
 #endif // __PIMac__
 
-namespace ZooLib {
-
-using std::string;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZPhotoshop suites, for local use
@@ -95,9 +91,14 @@ using std::string;
 static AutoSuite<PSHandleSuite2>
 	spPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
 
+
+namespace ZooLib {
+
+using std::string;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * UseHandle
+#pragma mark * UseHandle (anonymous)
 
 namespace { // anonymous
 

@@ -159,14 +159,13 @@ public:
 
 // ZVal Get protocol
 	template <class S>
-	bool QGet_T(S& oVal) const;
+	ZQ_T<S> QGet_T() const;
 
 	template <class S>
 	S DGet_T(const S& iDefault) const
 		{
-		S result;
-		if (this->QGet_T(result))
-			return result;
+		if (ZQ_T<S> theQ = this->QGet_T<S>())
+			return theQ.Get();
 		return iDefault;
 		}
 
@@ -202,7 +201,7 @@ public:
 	ObjectRef& operator=(const ZRef<JSObjectRef>& iOther);
 
 // ZMap protocol (ish)
-	bool QGet(const string8& iName, Value& oVal) const;
+	ZQ_T<Value> QGet(const string8& iName) const;
 	Value DGet(const Value& iDefault, const string8& iName) const;
 	Value Get(const string8& iName) const;
 	bool Set(const string8& iName, const Value& iValue);
@@ -211,7 +210,7 @@ public:
 // ZSeq protocol (ish)
 	bool IsSeq() const;
 	size_t Count() const;
-	bool QGet(size_t iIndex, Value& oVal) const;
+	ZQ_T<Value> QGet(size_t iIndex) const;
 	Value DGet(const Value& iDefault, size_t iIndex) const;
 	Value Get(size_t iIndex) const;
 	bool Set(size_t iIndex, const Value& iValue);

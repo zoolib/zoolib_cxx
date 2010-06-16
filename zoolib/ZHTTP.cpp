@@ -216,31 +216,27 @@ void Response::Send(const ZStreamW& s) const
 bool sOrganizeRanges(size_t iSourceSize, const Val& iRangeParam,
 	vector<pair<size_t, size_t> >& oRanges)
 	{
-	Map asMap = iRangeParam.GetMap();
-	int64 reqBegin;
-	if (asMap.Get("begin").QGet_T(reqBegin))
+	const Map asMap = iRangeParam.GetMap();
+	if (ZQ_T<int64> reqBegin = asMap.QGet_T<int64>("begin"))
 		{
-		int64 reqEnd;
-		if (asMap.Get("end").QGet_T(reqEnd))
+		if (reqBegin.Get() <= iSourceSize)
 			{
-			if (reqEnd < reqBegin)
-				return false;
-			if (reqEnd > iSourceSize)
-				return false;
+			if (ZQ_T<int64> reqEnd = asMap.QGet_T<int64>("end"))
+				{
+				if (reqEnd.Get() < reqBegin.Get())
+					return false;
+				if (reqEnd.Get() > iSourceSize)
+					return false;
+				oRanges.push_back(pair<size_t, size_t>(reqBegin.Get(), reqEnd.Get() + 1));
+				return true;
+				}
 			}
-		if (reqBegin > iSourceSize)
-			return false;
-		oRanges.push_back(pair<size_t, size_t>(reqBegin, reqEnd + 1));
-		return true;
 		}
-	else
+	else if (ZQ_T<int64> reqLast = asMap.QGet_T<int64>("last"))
 		{
-		int64 reqLast;
-		if (asMap.Get("last").QGet_T(reqLast))
+		if (reqLast.Get() <= iSourceSize)
 			{
-			if (reqLast > iSourceSize)
-				return false;
-			oRanges.push_back(pair<size_t, size_t>(iSourceSize - reqLast, iSourceSize));
+			oRanges.push_back(pair<size_t, size_t>(iSourceSize - reqLast.Get(), iSourceSize));
 			return true;
 			}
 		}

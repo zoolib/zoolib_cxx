@@ -689,206 +689,149 @@ void ZVal_ZooLib::Clear()
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<ZType>(ZType& oVal) const
+ZQ_T<ZType> ZVal_ZooLib::QGet_T<ZType>() const
 	{
 	if (fType.fType == eZType_Type)
-		{
-		oVal = fData.fAs_Type;
-		return true;
-		}
-	return false;
+		return fData.fAs_Type;
+	return null;
 	}
 	
 template <>
-bool ZVal_ZooLib::QGet_T<uint64>(uint64& oVal) const
+ZQ_T<uint64> ZVal_ZooLib::QGet_T<uint64>() const
 	{
 	if (fType.fType == eZType_ID)
-		{
-		oVal = fData.fAs_ID;
-		return true;
-		}
-	return false;
+		return fData.fAs_ID;
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<int8>(int8& oVal) const
+ZQ_T<int8> ZVal_ZooLib::QGet_T<int8>() const
 	{
 	if (fType.fType == eZType_Int8)
-		{
-		oVal = fData.fAs_Int8;
-		return true;
-		}
-	return false;
+		return fData.fAs_Int8;
+	return null;
 	}
 	
 template <>
-bool ZVal_ZooLib::QGet_T<int16>(int16& oVal) const
+ZQ_T<int16> ZVal_ZooLib::QGet_T<int16>() const
 	{
 	if (fType.fType == eZType_Int16)
-		{
-		oVal = fData.fAs_Int16;
-		return true;
-		}
-	return false;
+		return fData.fAs_Int16;
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<int32>(int32& oVal) const
+ZQ_T<int32> ZVal_ZooLib::QGet_T<int32>() const
 	{
 	if (fType.fType == eZType_Int32)
-		{
-		oVal = fData.fAs_Int32;
-		return true;
-		}
-	return false;
+		return fData.fAs_Int32;
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<int64>(int64& oVal) const
+ZQ_T<int64> ZVal_ZooLib::QGet_T<int64>() const
 	{
 	if (fType.fType == eZType_Int64)
-		{
-		oVal = fData.fAs_Int64;
-		return true;
-		}
-	return false;
+		return fData.fAs_Int64;
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<bool>(bool& oVal) const
+ZQ_T<bool> ZVal_ZooLib::QGet_T<bool>() const
 	{
 	if (fType.fType == eZType_Bool)
-		{
-		oVal = fData.fAs_Bool;
-		return true;
-		}
-	return false;
+		return fData.fAs_Bool;
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<float>(float& oVal) const
+ZQ_T<float> ZVal_ZooLib::QGet_T<float>() const
 	{
 	if (fType.fType == eZType_Float)
-		{
-		oVal = fData.fAs_Float;
-		return true;
-		}
-	return false;
+		return fData.fAs_Float;
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<double>(double& oVal) const
+ZQ_T<double> ZVal_ZooLib::QGet_T<double>() const
 	{
 	if (fType.fType == eZType_Double)
-		{
-		oVal = fData.fAs_Double;
-		return true;
-		}
-	return false;
+		return fData.fAs_Double;
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<ZTime>(ZTime& oVal) const
+ZQ_T<ZTime> ZVal_ZooLib::QGet_T<ZTime>() const
 	{
 	if (fType.fType == eZType_Time)
-		{
-		oVal = fData.fAs_Time;
-		return true;
-		}
-	return false;
+		return fData.fAs_Time;
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<void*>(void*& oVal) const
+ZQ_T<void*> ZVal_ZooLib::QGet_T<void*>() const
 	{
 	if (fType.fType == eZType_Pointer)
-		{
-		oVal = fData.fAs_Pointer;
-		return true;
-		}
-	return false;
+		return fData.fAs_Pointer;
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<ZRectPOD>(ZRectPOD& oVal) const
+ZQ_T<ZRectPOD> ZVal_ZooLib::QGet_T<ZRectPOD>() const
 	{
 	if (fType.fType == eZType_Rect)
-		{
-		oVal = *fData.fAs_Rect;
-		return true;
-		}
-	return false;
+		return *fData.fAs_Rect;
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<ZPointPOD>(ZPointPOD& oVal) const
+ZQ_T<ZPointPOD> ZVal_ZooLib::QGet_T<ZPointPOD>() const
 	{
 	if (fType.fType == eZType_Point)
-		{
-		oVal = fData.fAs_Point;
-		return true;
-		}
-	return false;
+		return fData.fAs_Point;
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<string>(string& oVal) const
+ZQ_T<string> ZVal_ZooLib::QGet_T<string>() const
 	{
 	if (fType.fType == eZType_String)
-		{
-		sFetch_T<ValString>(fType.fBytes)->ToString(oVal);
-		return true;
-		}
+		return sFetch_T<ValString>(fType.fBytes)->AsString();
 	else if (fType.fType < 0)
-		{
-		oVal = string(fType.fBytes, -fType.fType-1);
-		return true;
-		}
-	return false;
+		return string(fType.fBytes, -fType.fType-1);
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<ZData_ZooLib>(ZData_ZooLib& oVal) const
+ZQ_T<ZData_ZooLib> ZVal_ZooLib::QGet_T<ZData_ZooLib>() const
 	{
 	if (fType.fType == eZType_Raw)
-		{
-		oVal = *sFetch_T<ZData_ZooLib>(fType.fBytes);
-		return true;
-		}
-	return false;
+		return *sFetch_T<ZData_ZooLib>(fType.fBytes);
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<ZSeq_ZooLib>(ZSeq_ZooLib& oVal) const
+ZQ_T<ZSeq_ZooLib> ZVal_ZooLib::QGet_T<ZSeq_ZooLib>() const
 	{
 	if (fType.fType == eZType_Vector)
-		{
-		oVal = *sFetch_T<ZSeq_ZooLib>(fType.fBytes);
-		return true;
-		}
-	return false;
+		return *sFetch_T<ZSeq_ZooLib>(fType.fBytes);
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<ZMap_ZooLib>(ZMap_ZooLib& oVal) const
+ZQ_T<ZMap_ZooLib> ZVal_ZooLib::QGet_T<ZMap_ZooLib>() const
 	{
 	if (fType.fType == eZType_Tuple)
-		{
-		oVal = *sFetch_T<ZMap_ZooLib>(fType.fBytes);
-		return true;
-		}
-	return false;
+		return *sFetch_T<ZMap_ZooLib>(fType.fBytes);
+	return null;
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<ZRef<ZCounted> >(ZRef<ZCounted>& oVal) const
+ZQ_T<ZRef<ZCounted> > ZVal_ZooLib::QGet_T<ZRef<ZCounted> >() const
 	{
 	if (fType.fType == eZType_RefCounted)
-		{
-		oVal = *sFetch_T<ZRef<ZCounted> >(fType.fBytes);
-		return true;
-		}
-	return false;
+		return *sFetch_T<ZRef<ZCounted> >(fType.fBytes);
+	return null;
 	}
 
 template <>

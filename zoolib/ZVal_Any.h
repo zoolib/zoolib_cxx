@@ -133,27 +133,47 @@ public:
 
 	void Clear();
 
-	template <class S>
-	S* PGet_T(size_t iIndex);
-
-	template <class S>
-	const S* PGet_T(size_t iIndex) const;
-
-	template <class S>
-	ZQ_T<S> QGet_T(size_t iIndex) const;
-
-	template <class S>
-	S DGet_T(const S& iDefault, size_t iIndex) const;
-
-	template <class S>
-	S Get_T(size_t iIndex) const;
-
 	ZVal_Any* PGet(size_t iIndex);
 	const ZVal_Any* PGet(size_t iIndex) const;
 	ZQ_T<ZVal_Any> QGet(size_t iIndex) const;
-	bool QGet(size_t iIndex, ZVal_Any& oVal) const;
 	ZVal_Any DGet(const ZVal_Any& iDefault, size_t iIndex) const;
 	const ZVal_Any& Get(size_t iIndex) const;
+
+	template <class S>
+	S* PGet_T(size_t iIndex)
+		{
+		if (ZVal_Any* theVal = this->PGet(iIndex))
+			return theVal->PGet_T<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	const S* PGet_T(size_t iIndex) const
+		{
+		if (const ZVal_Any* theVal = this->PGet(iIndex))
+			return theVal->PGet_T<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	ZQ_T<S> QGet_T(size_t iIndex) const
+		{
+		if (ZQ_T<Val_t> theQ = this->QGet(iIndex))
+			return theQ.Get().QGet_T<S>();
+		return null;
+		}
+
+	template <class S>
+	S DGet_T(const S& iDefault, size_t iIndex) const
+		{
+		if (ZQ_T<S> theQ = this->QGet_T<S>(iIndex))
+			return theQ.Get();
+		return iDefault;
+		}
+
+	template <class S>
+	S Get_T(size_t iIndex) const
+		{ return this->DGet_T<S>(S(), iIndex); }
 
 	ZSeq_Any& Set(size_t iIndex, const ZVal_Any& iVal);
 
@@ -168,43 +188,6 @@ private:
 
 	ZRef<Rep> fRep;
 	};
-
-template <class S>
-inline
-S* ZSeq_Any::PGet_T(size_t iIndex)
-	{
-	if (ZVal_Any* theVal = this->PGet(iIndex))
-		return theVal->PGet_T<S>();
-	return nullptr;
-	}
-
-template <class S>
-inline
-const S* ZSeq_Any::PGet_T(size_t iIndex) const
-	{
-	if (const ZVal_Any* theVal = this->PGet(iIndex))
-		return theVal->PGet_T<S>();
-	return nullptr;
-	}
-
-template <class S>
-inline
-ZQ_T<S> ZSeq_Any::QGet_T(size_t iIndex) const
-	{
-	if (const ZVal_Any* theVal = this->PGet(iIndex))
-		return theVal->QGet_T<S>();
-	return ZQ_T<S>();
-	}
-
-template <class S>
-inline
-S ZSeq_Any::DGet_T(const S& iDefault, size_t iIndex) const
-	{ return this->Get(iIndex).DGet_T<S>(iDefault); }
-
-template <class S>
-inline
-S ZSeq_Any::Get_T(size_t iIndex) const
-	{ return this->Get(iIndex).Get_T<S>(); }
 
 // =================================================================================================
 #pragma mark -
@@ -274,36 +257,6 @@ public:
 // ZMap protocol
 	void Clear();
 
-	template <class S>
-	S* PGet_T(const string8& iName);
-
-	template <class S>
-	S* PGet_T(const Index_t& iIndex);
-
-	template <class S>
-	const S* PGet_T(const string8& iName) const;
-
-	template <class S>
-	const S* PGet_T(const Index_t& iIndex) const;
-
-	template <class S>
-	ZQ_T<S> QGet_T(const string8& iName) const;
-
-	template <class S>
-	ZQ_T<S> QGet_T(const Index_t& iIndex) const;
-
-	template <class S>
-	S DGet_T(const S& iDefault, const string8& iName) const;
-
-	template <class S>
-	S DGet_T(const S& iDefault, const Index_t& iIndex) const;
-
-	template <class S>
-	S Get_T(const string8& iName) const;
-
-	template <class S>
-	S Get_T(const Index_t& iIndex) const;
-
 	ZVal_Any* PGet(const string8& iName);
 	ZVal_Any* PGet(const Index_t& iIndex);
 
@@ -313,14 +266,75 @@ public:
 	ZQ_T<ZVal_Any> QGet(const string8& iName) const;
 	ZQ_T<ZVal_Any> QGet(const Index_t& iIndex) const;
 
-	bool QGet(const string8& iName, ZVal_Any& oVal) const;
-	bool QGet(const Index_t& iIndex, ZVal_Any& oVal) const;
-
 	ZVal_Any DGet(const ZVal_Any& iDefault, const string8& iName) const;
 	ZVal_Any DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const;
 
 	const ZVal_Any& Get(const string8& iName) const;
 	const ZVal_Any& Get(const Index_t& iIndex) const;
+
+	template <class S>
+	S* PGet_T(const string8& iName)
+		{
+		if (ZVal_Any* theVal = this->PGet(iName))
+			return theVal->PGet_T<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	S* PGet_T(const Index_t& iIndex)
+		{
+		if (ZVal_Any* theVal = this->PGet(iIndex))
+			return theVal->PGet_T<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	const S* PGet_T(const string8& iName) const
+		{
+		if (const ZVal_Any* theVal = this->PGet(iName))
+			return theVal->PGet_T<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	const S* PGet_T(const Index_t& iIndex) const
+		{
+		if (const ZVal_Any* theVal = this->PGet(iIndex))
+			return theVal->PGet_T<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	ZQ_T<S> QGet_T(const string8& iName) const
+		{
+		if (const ZVal_Any* theVal = this->PGet(iName))
+			return theVal->QGet_T<S>();
+		return ZQ_T<S>();
+		}
+
+	template <class S>
+	ZQ_T<S> QGet_T(const Index_t& iIndex) const
+		{
+		if (const ZVal_Any* theVal = this->PGet(iIndex))
+			return theVal->QGet_T<S>();
+		return ZQ_T<S>();
+		}
+
+	template <class S>
+	S DGet_T(const S& iDefault, const string8& iName) const
+		{ return this->Get(iName).DGet_T<S>(iDefault); }
+
+	template <class S>
+	S DGet_T(const S& iDefault, const Index_t& iIndex) const
+		{ return this->Get(iIndex).DGet_T<S>(iDefault); }
+
+	template <class S>
+	S Get_T(const string8& iName) const
+		{ return this->Get(iName).Get_T<S>(); }
+
+	template <class S>
+	S Get_T(const Index_t& iIndex) const
+		{ return this->Get(iIndex).Get_T<S>(); }
 
 	ZMap_Any& Set(const string8& iName, const ZVal_Any& iVal);
 	ZMap_Any& Set(const Index_t& iIndex, const ZVal_Any& iVal);
@@ -343,80 +357,6 @@ private:
 
 	ZRef<Rep> fRep;
 	};
-
-template <class S>
-inline
-S* ZMap_Any::PGet_T(const string8& iName)
-	{
-	if (ZVal_Any* theVal = this->PGet(iName))
-		return theVal->PGet_T<S>();
-	return nullptr;
-	}
-
-template <class S>
-inline
-S* ZMap_Any::PGet_T(const Index_t& iIndex)
-	{
-	if (ZVal_Any* theVal = this->PGet(iIndex))
-		return theVal->PGet_T<S>();
-	return nullptr;
-	}
-
-template <class S>
-inline
-const S* ZMap_Any::PGet_T(const string8& iName) const
-	{
-	if (const ZVal_Any* theVal = this->PGet(iName))
-		return theVal->PGet_T<S>();
-	return nullptr;
-	}
-
-template <class S>
-inline
-const S* ZMap_Any::PGet_T(const Index_t& iIndex) const
-	{
-	if (const ZVal_Any* theVal = this->PGet(iIndex))
-		return theVal->PGet_T<S>();
-	return nullptr;
-	}
-
-template <class S>
-inline
-ZQ_T<S> ZMap_Any::QGet_T(const string8& iName) const
-	{
-	if (const ZVal_Any* theVal = this->PGet(iName))
-		return theVal->QGet_T<S>();
-	return ZQ_T<S>();
-	}
-
-template <class S>
-inline
-ZQ_T<S> ZMap_Any::QGet_T(const Index_t& iIndex) const
-	{
-	if (const ZVal_Any* theVal = this->PGet(iIndex))
-		return theVal->QGet_T<S>();
-	return ZQ_T<S>();
-	}
-
-template <class S>
-inline
-S ZMap_Any::DGet_T(const S& iDefault, const string8& iName) const
-	{ return this->Get(iName).DGet_T<S>(iDefault); }
-
-template <class S>
-inline
-S ZMap_Any::DGet_T(const S& iDefault, const Index_t& iIndex) const
-	{ return this->Get(iIndex).DGet_T<S>(iDefault); }
-
-template <class S>
-inline
-S ZMap_Any::Get_T(const string8& iName) const
-	{ return this->Get(iName).Get_T<S>(); }
-
-template <class S>
-inline
-S ZMap_Any::Get_T(const Index_t& iIndex) const
-	{ return this->Get(iIndex).Get_T<S>(); }
 
 // =================================================================================================
 #pragma mark -

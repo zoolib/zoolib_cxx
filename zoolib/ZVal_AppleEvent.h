@@ -100,17 +100,6 @@ public:
 	ZQ_T<S> QGet_T() const;
 
 	template <class S>
-	bool QGet_T(S& oVal) const
-		{
-		if (ZQ_T<S> result = this->QGet_T<S>())
-			{
-			oVal = result.Get();
-			return true;
-			}
-		return false;
-		}
-
-	template <class S>
 	S DGet_T(const S& iDefault) const
 		{
 		if (ZQ_T<S> result = this->QGet_T<S>())
@@ -251,7 +240,7 @@ public:
 // Our protocol
 	AERecord& OParam();
 
-	bool QGetAttr(AEKeyword iName, ZVal_AppleEvent& oVal) const;
+	ZQ_T<ZVal_AppleEvent> QGetAttr(AEKeyword iName) const;
 	ZVal_AppleEvent DGetAttr(const ZVal_AppleEvent& iDefault, AEKeyword iName) const;
 	ZVal_AppleEvent GetAttr(AEKeyword iName) const;
 	void SetAttr(AEKeyword iName, const AEDesc& iVal);

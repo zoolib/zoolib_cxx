@@ -303,6 +303,26 @@ public:
 	Val DGet(const Val& iDefault, size_t iIndex) const;
 	Val Get(size_t iIndex) const;
 
+	template <class S>
+	ZQ_T<S> QGet_T(size_t iIndex) const
+		{
+		if (ZQ_T<Val_t> theQ = this->QGet(iIndex))
+			return theQ.Get().QGet_T<S>();
+		return null;
+		}
+
+	template <class S>
+	S DGet_T(const S& iDefault, size_t iIndex) const
+		{
+		if (ZQ_T<S> theQ = this->QGet_T<S>(iIndex))
+			return theQ.Get();
+		return iDefault;
+		}
+
+	template <class S>
+	S Get_T(size_t iIndex) const
+		{ return this->DGet_T<S>(S(), iIndex); }
+
 	Seq& Append(const Val& iVal);
 
 // Our protocol
@@ -362,6 +382,42 @@ public:
 	Val Get(KeyID iKey) const;
 	Val Get(const string8& iName) const;
 	Val Get(Index_t iIndex) const;
+
+	template <class S>
+	ZQ_T<S> QGet_T(KeyID iKey) const
+		{ return this->Get(iKey).QGet_T<S>(); }
+
+	template <class S>
+	ZQ_T<S> QGet_T(const string8& iName) const
+		{ return this->Get(iName).QGet_T<S>(); }
+
+	template <class S>
+	ZQ_T<S> QGet_T(const Index_t& iIndex) const
+		{ return this->Get(iIndex).QGet_T<S>(); }
+
+	template <class S>
+	S DGet_T(const S& iDefault, KeyID iKey) const
+		{ return this->Get(iKey).DGet_T<S>(iDefault); }
+
+	template <class S>
+	S DGet_T(const S& iDefault, const string8& iName) const
+		{ return this->Get(iName).DGet_T<S>(iDefault); }
+
+	template <class S>
+	S DGet_T(const S& iDefault, const Index_t& iIndex) const
+		{ return this->Get(iIndex).DGet_T<S>(iDefault); }
+
+	template <class S>
+	S Get_T(KeyID iKey) const
+		{ return this->Get(iKey).Get_T<S>(); }
+
+	template <class S>
+	S Get_T(const string8& iName) const
+		{ return this->Get(iName).Get_T<S>(); }
+
+	template <class S>
+	S Get_T(const Index_t& iIndex) const
+		{ return this->Get(iIndex).Get_T<S>(); }
 
 	Map& Set(KeyID iKey, const Val& iVal);
 	Map& Set(const string8& iName, const Val& iVal);

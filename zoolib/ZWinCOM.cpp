@@ -185,168 +185,123 @@ Variant::Variant(ZRef<IDispatch> iVal)
 	}
 
 template <>
-bool Variant::QGet_T<int8>(int8& oVal) const
+ZQ_T<int8> Variant::QGet_T<int8>() const
 	{
 	if (VT_I1 == vt)
-		{
-		oVal = cVal;
-		return true;
-		}
-	return false;
+		return int8(cVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<uint8>(uint8& oVal) const
+ZQ_T<uint8> Variant::QGet_T<uint8>() const
 	{
 	if (VT_UI1 == vt)
-		{
-		oVal = bVal;
-		return true;
-		}
-	return false;
+		return uint8(bVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<int16>(int16& oVal) const
+ZQ_T<int16> Variant::QGet_T<int16>() const
 	{
 	if (VT_I2 == vt)
-		{
-		oVal = iVal;
-		return true;
-		}
-	return false;
+		return int16(iVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<uint16>(uint16& oVal) const
+ZQ_T<uint16> Variant::QGet_T<uint16>() const
 	{
 	if (VT_UI2 == vt)
-		{
-		oVal = uiVal;
-		return true;
-		}
-	return false;
+		return uint16(uiVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<int32>(int32& oVal) const
+ZQ_T<int32> Variant::QGet_T<int32>() const
 	{
 	if (VT_I4 == vt)
-		{
-		oVal = lVal;
-		return true;
-		}
-	return false;
+		return int32(lVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<uint32>(uint32& oVal) const
+ZQ_T<uint32> Variant::QGet_T<uint32>() const
 	{
 	if (VT_UI4 == vt)
-		{
-		oVal = ulVal;
-		return true;
-		}
-	return false;
+		return uint32(ulVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<int64>(int64& oVal) const
+ZQ_T<int64> Variant::QGet_T<int64>() const
 	{
 	if (VT_I8 == vt)
-		{
-		oVal = llVal;
-		return true;
-		}
-	return false;
+		return int64(llVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<uint64>(uint64& oVal) const
+ZQ_T<uint64> Variant::QGet_T<uint64>() const
 	{
 	if (VT_UI8 == vt)
-		{
-		oVal = ullVal;
-		return true;
-		}
-	return false;
+		return uint64(ullVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<bool>(bool& oVal) const
+ZQ_T<bool> Variant::QGet_T<bool>() const
 	{
 	if (VT_BOOL == vt)
-		{
-		oVal = boolVal;
-		return true;
-		}
-	return false;
+		return bool(boolVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<float>(float& oVal) const
+ZQ_T<float> Variant::QGet_T<float>() const
 	{
 	if (VT_R4 == vt)
-		{
-		oVal = fltVal;
-		return true;
-		}
-	return false;
+		return float(fltVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<double>(double& oVal) const
+ZQ_T<double> Variant::QGet_T<double>() const
 	{
 	if (VT_R8 == vt)
-		{
-		oVal = dblVal;
-		return true;
-		}
-	return false;
+		return double(dblVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<string8>(string8& oVal) const
+ZQ_T<string8> Variant::QGet_T<string8>() const
 	{
 	if (VT_BSTR == vt)
-		{
-		oVal = ZUnicode::sAsUTF8(bstrVal, ::SysStringLen(bstrVal));
-		return true;
-		}
-	return false;
+		return ZUnicode::sAsUTF8(bstrVal, ::SysStringLen(bstrVal));
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<string16>(string16& oVal) const
+ZQ_T<string16> Variant::QGet_T<string16>() const
 	{
 	if (VT_BSTR == vt)
-		{
-		oVal = string16(bstrVal, ::SysStringLen(bstrVal));
-		return true;
-		}
-	return false;
+		return string16(bstrVal, ::SysStringLen(bstrVal));
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<ZRef<IUnknown> >(ZRef<IUnknown>& oVal) const
+ZQ_T<ZRef<IUnknown> > Variant::QGet_T<ZRef<IUnknown> >() const
 	{
 	if (VT_UNKNOWN == vt)
-		{
-		oVal = punkVal;
-		return true;
-		}
-	return false;
+		return ZRef<IUnknown>(punkVal);
+	return null;
 	}
 
 template <>
-bool Variant::QGet_T<ZRef<IDispatch> >(ZRef<IDispatch>& oVal) const
+ZQ_T<ZRef<IDispatch> > Variant::QGet_T<ZRef<IDispatch> >() const
 	{
 	if (VT_DISPATCH == vt)
-		{
-		oVal = pdispVal;
-		return true;
-		}
-	return false;
+		return ZRef<IDispatch>(pdispVal);
+	return null;
 	}
 
 template <>

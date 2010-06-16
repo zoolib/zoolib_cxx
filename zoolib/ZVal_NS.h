@@ -96,22 +96,10 @@ public:
 	ZQ_T<S> QGet_T() const;
 
 	template <class S>
-	bool QGet_T(S& oVal) const
-		{
-		if (ZQ_T<S> theQ = this->QGet_T<S>())
-			{
-			oVal = theQ.Get();
-			return true;
-			}
-		return false;
-		}
-
-	template <class S>
 	S DGet_T(const S& iDefault) const
 		{
-		S result;
-		if (this->QGet_T(result))
-			return result;
+		if (ZQ_T<S> theQ = this->QGet_T<S>())
+			return theQ.Get();
 		return iDefault;
 		}
 
@@ -176,6 +164,18 @@ public:
 	ZVal_NS DGet(const ZVal_NS& iDefault, size_t iIndex) const;
 	ZVal_NS Get(size_t iIndex) const;
 
+	template <class S>
+	ZQ_T<S> QGet_T(size_t iIndex) const
+		{ return this->Get(iIndex).QGet_T<S>(); }
+
+	template <class S>
+	S DGet_T(const S& iDefault, size_t iIndex) const
+		{ return this->Get(iIndex).DGet_T<S>(iDefault); }
+
+	template <class S>
+	S Get_T(size_t iIndex) const
+		{ return this->Get(iIndex).Get_T<S>(); }
+
 	ZSeq_NS& Set(size_t iIndex, const ZVal_NS& iVal);
 
 	ZSeq_NS& Erase(size_t iIndex);
@@ -236,6 +236,30 @@ public:
 
 	ZVal_NS Get(const string8& iName) const;
 	ZVal_NS Get(NSString* iName) const;
+
+	template <class S>
+	ZQ_T<S> QGet_T(const string8& iName) const
+		{ return this->Get(iName).QGet_T<S>(); }
+
+	template <class S>
+	ZQ_T<S> QGet_T(NSString* iName) const
+		{ return this->Get(iName).QGet_T<S>(); }
+
+	template <class S>
+	S DGet_T(const S& iDefault, const string8& iName) const
+		{ return this->Get(iName).DGet_T<S>(iDefault); }
+
+	template <class S>
+	S DGet_T(const S& iDefault, NSString* iName) const
+		{ return this->Get(iName).DGet_T<S>(iDefault); }
+
+	template <class S>
+	S Get_T(const string8& iName) const
+		{ return this->Get(iName).Get_T<S>(); }
+
+	template <class S>
+	S Get_T(NSString* iName) const
+		{ return this->Get(iName).Get_T<S>(); }
 
 	ZMap_NS& Set(const string8& iName, const ZVal_NS& iVal);
 	ZMap_NS& Set(NSString* iName, const ZVal_NS& iVal);

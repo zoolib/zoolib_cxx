@@ -59,7 +59,7 @@ public:
 			sDestroy_T<T>(iOther.fBytes);
 			iOther.fHasValue = false;
 			fHasValue = true;
-			}			
+			}
 		}
 
 	ZQ_T()
@@ -129,6 +129,22 @@ public:
 		{
 		ZAssert(fHasValue);
 		return *sFetch_T<T>(fBytes);
+		}
+
+	T& Get()
+		{
+		ZAssert(fHasValue);
+		return *sFetch_T<T>(fBytes);
+		}
+
+	T& OParam()
+		{
+		if (fHasValue)
+			sDestroy_T<T>(fBytes);
+
+		fHasValue = true;
+
+		sConstruct_T<T>(fBytes);
 		}
 
 	void Clear()
