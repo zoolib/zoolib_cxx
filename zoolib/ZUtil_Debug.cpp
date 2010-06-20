@@ -217,18 +217,23 @@ void LogMeister::LogIt(
 	// up, so long as iName is 20 CPs or less in length.
 	string extraSpace(fExtraSpace - min(fExtraSpace, curLength), ' ');
 
+	theStrimW << ZUtil_Time::sAsString_ISO8601_us(now, false);
+	#if __MACH__
+		// GDB on Mac uses the mach thread ID for the systag.
+		theStrimW << ZStringf(" %5x/", ((int)mach_thread_self()));
+	#else
+		theStrimW << " 0x";
+	#endif
+
+	if (sizeof(ZThread::sID()) > 4)
+		theStrimW << ZStringf("%016llX", (uint64)ZThread::sID());
+	else
+		theStrimW << ZStringf("%08X", (uint32)(uint64)ZThread::sID());
+
 	theStrimW
-			<< ZUtil_Time::sAsString_ISO8601_us(now, false)
-			#if __MACH__
-				// GDB on Mac uses the mach thread ID for the systag.
-				<< ZStringf(" %5x/", ((int)mach_thread_self()))
-			#else
-				<< " 0x"
-			#endif
-			<< ZStringf("%llX", (uint64)ZThread::sID())
-			<< " P" << ZStringf("%X", iPriority)
-			<< " " << extraSpace << iName
-			<< " - " << iMessage << "\n";
+		<< " P" << ZStringf("%X", iPriority)
+		<< " " << extraSpace << iName
+		<< " - " << iMessage << "\n";
 
 	theStrimW.Flush();
 	}
