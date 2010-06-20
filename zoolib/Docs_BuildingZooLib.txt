@@ -16,8 +16,8 @@ There is a default copy of this file in \c zoolib/default_config. If you wish to
 To use ZooLib in your own project:
 - Put the ZooLib directory somewhere stable.
 - In your project, add the \c zoolib/source/zoolib/cxx directory to your header search paths.
-- If you \e don't need to make any configuration changes, add \c zoolib/source/zoolib/cxx/default_config to your header search paths.
-- If you want to use any features from the more directory, add \c zoolib/source/zoolib/cxx/more to your header search paths.
+- If you \em don't need to make any configuration changes, add \c zoolib/source/zoolib/cxx/default_config to your header search paths.
+- If you want to use any features from the \c more directory, add \c zoolib/source/zoolib/cxx/more to your header search paths.
 - Add to your project whichever ZooLib cpp/mm files you need.
 
 You can see sample projects in \c zoolib_samples, a sibling of the top-level zoolib directory. 
