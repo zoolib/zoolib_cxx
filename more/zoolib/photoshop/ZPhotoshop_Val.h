@@ -236,7 +236,7 @@ public:
 
 	Val(const ZAny& iOther);
 
-	Val(int32 iVal);
+	Val(::int32 iVal);
 	Val(double iVal);
 	Val(bool iVal);
 	Val(const string8& iVal);

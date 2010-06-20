@@ -52,7 +52,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		{ \
 		case typeSInt32: \
 			{ \
-			int32 theVal; \
+			::int32 theVal; \
 			if (noErr == SUITE->GetInteger(iSource, iKey, &theVal)) \
 				SUITE->PutInteger(DEST, theVal); \
 			break; \
@@ -147,7 +147,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			} \
 		case typeRawData: \
 			{ \
-			int32 theLength; \
+			::int32 theLength; \
 			if (noErr == SUITE->GetDataLength(iSource, iKey, &theLength)) \
 				{ \
 				Data theVal(theLength); \
@@ -164,7 +164,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define GETTERCASES(SUITE, P0, P1) \
 	case typeSInt32: \
 		{ \
-		int32 theVal; \
+		::int32 theVal; \
 		if (noErr == SUITE->GetInteger(P0, P1, &theVal)) \
 			{ return theVal; } \
 		break; \
@@ -247,7 +247,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		} \
 	case typeRawData: \
 		{ \
-		int32 theLength; \
+		::int32 theLength; \
 		if (noErr == SUITE->GetDataLength(P0, P1, &theLength)) \
 			{ \
 			Data result(theLength); \
@@ -962,7 +962,7 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 				}
 			case formOffset:
 				{
-				int32 theVal;
+				::int32 theVal;
 				if (noErr != spPSActionReference->GetOffset(iRef, &theVal))
 					allOK = false;
 				else
@@ -1037,7 +1037,7 @@ Val::Val(const ZAny& iOther)
 :	ZAny(iOther)
 	{}
 
-Val::Val(int32 iVal)
+Val::Val(::int32 iVal)
 :	ZAny(iVal)
 	{}
 

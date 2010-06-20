@@ -22,6 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZPhotoshop__ 1
 #include "zconfig.h"
 
+// When building for Windows, PITypes.h pulls in Windows.h, and pollutes
+// the preprocessor macro space with all kinds of crap. So we first pull in
+// ZCompat_Win, which undoes the worst of it.
+#include "zoolib/ZCompat_Win.h"
+
 // Pick up some photoshop definitions
 #include "PIGeneral.h"
 
