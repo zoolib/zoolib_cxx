@@ -65,7 +65,7 @@ class ZWorkerRunner
 	{
 protected:
 // Called by subclasses
-	void pAttachWorker(ZRef<ZWorker> iWorker);
+	bool pAttachWorker(ZRef<ZWorker> iWorker);
 	void pDetachWorker(ZRef<ZWorker> iWorker);
 	bool pInvokeWork(ZRef<ZWorker> iWorker);
 
@@ -179,6 +179,112 @@ private:
 	T2 fT2;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWorker_Void_T0
+
+class ZWorker_Void_T0 : public ZWorker
+	{
+public:
+	typedef void (*Function_t)();
+
+	ZWorker_Void_T0(Function_t iFunction)
+	:	fFunction(iFunction)
+		{}
+
+	virtual bool Work()
+		{ return false; }
+
+	virtual void RunnerDetached()
+		{ fFunction(); }
+
+private:
+	Function_t fFunction;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWorker_Void_T1
+
+template <class T0>
+class ZWorker_Void_T1 : public ZWorker
+	{
+public:
+	typedef void (*Function_t)(const T0&);
+
+	ZWorker_Void_T1(Function_t iFunction, const T0& iT0)
+	:	fFunction(iFunction)
+	,	fT0(iT0)
+		{}
+
+	virtual bool Work()
+		{ return false; }
+
+	virtual void RunnerDetached()
+		{ fFunction(fT0); }
+
+private:
+	Function_t fFunction;
+	T0 fT0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWorker_Void_T2
+
+template <class T0, class T1>
+class ZWorker_Void_T2 : public ZWorker
+	{
+public:
+	typedef void (*Function_t)(const T0&, const T1&);
+
+	ZWorker_Void_T2(Function_t iFunction, const T0& iT0, const T1& iT1)
+	:	fFunction(iFunction)
+	,	fT0(iT0)
+	,	fT1(iT1)
+		{}
+
+	virtual bool Work()
+		{ return false; }
+
+	virtual void RunnerDetached()
+		{ fFunction(fT0, fT1); }
+
+private:
+	Function_t fFunction;
+	T0 fT0;
+	T1 fT1;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWorker_Void_T3
+
+template <class T0, class T1, class T2>
+class ZWorker_Void_T3 : public ZWorker
+	{
+public:
+	typedef void (*Function_t)(const T0&, const T1&, const T2&);
+
+	ZWorker_Void_T3(Function_t iFunction, const T0& iT0, const T1& iT1, const T2& iT2)
+	:	fFunction(iFunction)
+	,	fT0(iT0)
+	,	fT1(iT1)
+	,	fT2(iT2)
+		{}
+
+	virtual bool Work()
+		{ return false; }
+
+	virtual void RunnerDetached()
+		{ fFunction(fT0, fT1, fT2); }
+
+private:
+	Function_t fFunction;
+	T0 fT0;
+	T1 fT1;
+	T2 fT2;
+	};
 } // namespace ZooLib
 
 #endif // __ZWorker__

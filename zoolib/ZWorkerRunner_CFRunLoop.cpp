@@ -20,9 +20,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZWorkerRunner_CFRunLoop.h"
 
-#if ZCONFIG_SPI_Enabled(CoreFoundation)
+#if ZCONFIG_API_Enabled(WorkerRunner_CFRunLoop)
 
 #include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZVal_CFType.h"
 
 namespace ZooLib {
 
@@ -66,6 +67,10 @@ ZWorkerRunner_CFRunLoop::ZWorkerRunner_CFRunLoop(ZRef<CFRunLoopRef> iRunLoop)
 		0, // order
 		spRunLoopTimerCallBack,
 		&theContext));
+
+//	const ZSeq_CF theSeq = Adopt(::CFRunLoopCopyAllModes(::CFRunLoopGetCurrent()));
+//	for (size_t x = 0; x < theSeq.Count(); ++x)
+//		::CFRunLoopAddTimer(fRunLoop, fRunLoopTimer, theSeq.Get(x).GetCFString());
 	::CFRunLoopAddTimer(fRunLoop, fRunLoopTimer, kCFRunLoopCommonModes);
 	}
 
@@ -126,11 +131,12 @@ ZRef<ZWorkerRunner_CFRunLoop> ZWorkerRunner_CFRunLoop::sMain()
 void ZWorkerRunner_CFRunLoop::pAdd(ZRef<ZWorker> iWorker, CFAbsoluteTime iAbsoluteTime)
 	{
 	ZAcqMtxR acq(fMtx);
-	ZWorkerRunner::pAttachWorker(iWorker);
-
-	fWorkersSet.Insert(iWorker);
-	ZUtil_STL::sInsertMustNotContain(1, fWorkersMap, iWorker, iAbsoluteTime);
-	this->pTrigger(0);
+	if (ZWorkerRunner::pAttachWorker(iWorker))
+		{
+		fWorkersSet.Insert(iWorker);
+		ZUtil_STL::sInsertMustNotContain(1, fWorkersMap, iWorker, iAbsoluteTime);
+		this->pTrigger(0);
+		}
 	}
 
 void ZWorkerRunner_CFRunLoop::pTrigger(CFAbsoluteTime iAbsoluteTime)
@@ -165,8 +171,8 @@ void ZWorkerRunner_CFRunLoop::pRunLoopTimerCallBack()
 					guard.Acquire();
 					fWorkersSet.Erase(theWorker);
 					ZUtil_STL::sEraseMustContain(1, fWorkersMap, theWorker);
-					ZWorkerRunner::pDetachWorker(theWorker);
 					guard.Release();
+					ZWorkerRunner::pDetachWorker(theWorker);
 					}
 				}
 			else if (!gotEarliestLater || earliestLater > theTime)
@@ -204,4 +210,4 @@ void ZWorkerRunner_CFRunLoop::spRunLoopTimerCallBack(CFRunLoopTimerRef iTimer, v
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(CoreFoundation)
+#endif // ZCONFIG_API_Enabled(WorkerRunner_CFRunLoop)

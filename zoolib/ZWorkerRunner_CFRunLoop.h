@@ -22,13 +22,29 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZWorkerRunner_CFRunLoop__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
 
 #include "zoolib/ZSafeSet.h"
 #include "zoolib/ZWorker.h"
 
 #include <map>
 
-#if ZCONFIG_SPI_Enabled(CoreFoundation)
+// CFRunLoop is not available in CW's headers
+#ifndef ZCONFIG_API_Avail__WorkerRunner_CFRunLoop
+#	if ZCONFIG_SPI_Enabled(CoreFoundation) && !ZCONFIG(Compiler,CodeWarrior)
+#		define ZCONFIG_API_Avail__WorkerRunner_CFRunLoop 1
+#	endif
+#endif
+
+#ifndef ZCONFIG_API_Avail__WorkerRunner_CFRunLoop
+#	define ZCONFIG_API_Avail__WorkerRunner_CFRunLoop 0
+#endif
+
+#ifndef ZCONFIG_API_Desired__WorkerRunner_CFRunLoop
+#	define ZCONFIG_API_Desired__WorkerRunner_CFRunLoop 1
+#endif
+
+#if ZCONFIG_API_Enabled(WorkerRunner_CFRunLoop)
 
 #include ZMACINCLUDE2(CoreFoundation,CFRunLoop.h)
 
@@ -78,6 +94,5 @@ private:
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(CoreFoundation)
-
+#endif // ZCONFIG_API_Enabled(WorkerRunner_CFRunLoop)
 #endif // __ZWorkerRunner_CFRunLoop__

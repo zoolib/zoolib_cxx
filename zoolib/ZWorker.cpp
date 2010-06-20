@@ -27,7 +27,11 @@ namespace ZooLib {
 /**
 \defgroup Worker
 
-ZWorker provides a disciplined lifecycle for long-lived repetitive tasks.
+\brief ZWorker provides a disciplined lifecycle for long-lived repetitive jobs.
+
+A ZWorker derivative overrides the ZWorker::Work method, and once attached to a ZWorkerRunner
+Work will be called whenever the ZWorker has been woken, until Work returns false or allows
+an exception to propogate out.
 
 */
 
@@ -85,7 +89,7 @@ bool ZWorker::IsAttached()
 \sa Worker
 */
 
-void ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
+bool ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 	{
 	ZAssert(iWorker);
 	ZAssert(! ZRef<ZWorkerRunner>(iWorker->fRunner));
@@ -95,9 +99,14 @@ void ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 	try
 		{
 		iWorker->RunnerAttached();
+		return true;
 		}
 	catch (...)
-		{}
+		{
+		iWorker->fRunner.Clear();
+		}
+
+	return false;
 	}
 
 void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)

@@ -90,11 +90,12 @@ bool ZWorkerRunner_EventLoop::IsAwake(ZRef<ZWorker> iWorker)
 void ZWorkerRunner_EventLoop::pStartWorker(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtxR acq(fMtx);
-	ZWorkerRunner::pAttachWorker(iWorker);
-
-	fWorkersSet.Insert(iWorker);
-	ZUtil_STL::sInsertMustNotContain(1, fWorkersMap, iWorker, ZTime(0));
-	this->pTriggerCallback();
+	if (ZWorkerRunner::pAttachWorker(iWorker))
+		{
+		fWorkersSet.Insert(iWorker);
+		ZUtil_STL::sInsertMustNotContain(1, fWorkersMap, iWorker, ZTime(0));
+		this->pTriggerCallback();
+		}
 	}
 
 void ZWorkerRunner_EventLoop::pCallback()
@@ -121,8 +122,8 @@ void ZWorkerRunner_EventLoop::pCallback()
 					guard.Acquire();
 					fWorkersSet.Erase(theWorker);
 					ZUtil_STL::sEraseMustContain(1, fWorkersMap, theWorker);
-					ZWorkerRunner::pDetachWorker(theWorker);
 					guard.Release();
+					ZWorkerRunner::pDetachWorker(theWorker);
 					}
 				}
 			}

@@ -107,16 +107,19 @@ void ZWorkerRunner_Thread::Start()
 	{
 	ZRef<ZWorkerRunner_Thread> self = this;
 
-	ZWorkerRunner::pAttachWorker(fWorker);
-
-	try
+	if (ZWorkerRunner::pAttachWorker(fWorker))
 		{
-		ZThread::sCreate_T<ZRef<ZWorkerRunner_Thread> >(spRun, this);
-		}
-	catch (...)
-		{
-		ZWorkerRunner::pDetachWorker(fWorker);
-		throw;
+		try
+			{
+			ZThread::sCreate_T<ZRef<ZWorkerRunner_Thread> >(spRun, this);
+			}
+		catch (...)
+			{
+			ZRef<ZWorker> theWorker = fWorker;
+			fWorker.Clear();
+			ZWorkerRunner::pDetachWorker(theWorker);
+			throw;
+			}
 		}
 	}
 
@@ -126,7 +129,7 @@ void ZWorkerRunner_Thread::pRun()
 	if (ZLOGF(s, eDebug))
 		s << typeid(*fWorker.Get()).name();
 
-	ZAcqMtx acq(fMtx);
+	ZGuardRMtx guard(fMtx);
 	for (;;)
 		{
 		for (;;)
@@ -146,9 +149,11 @@ void ZWorkerRunner_Thread::pRun()
 			break;
 		}
 
-	ZWorkerRunner::pDetachWorker(fWorker);
+	ZRef<ZWorker> theWorker = fWorker;
 	fWorker.Clear();
-	fCnd.Broadcast();
+	guard.Release();
+
+	ZWorkerRunner::pDetachWorker(theWorker);
 	}
 
 void ZWorkerRunner_Thread::spRun(ZRef<ZWorkerRunner_Thread> iParam)
