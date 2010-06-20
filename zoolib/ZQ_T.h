@@ -91,6 +91,7 @@ public:
 			if (fHasValue)
 				sCopyConstruct_T<T>(fBytes, iOther.fBytes);
 			}
+		return *this;
 		}
 
 	ZQ_T(const null_t& iP0)
