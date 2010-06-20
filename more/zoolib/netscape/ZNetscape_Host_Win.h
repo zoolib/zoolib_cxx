@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape_Host_Win__ 1
 #include "zconfig.h"
 
+#if ! ZCONFIG_Is64Bit
+
 #include "zoolib/netscape/ZNetscape_Host_Std.h"
 
 #if defined(XP_WIN)
@@ -74,5 +76,7 @@ protected:
 } // namespace ZooLib
 
 #endif // defined(XP_WIN)
+
+#endif // ! ZCONFIG_Is64Bit
 
 #endif // __ZNetscape_Host_Win__

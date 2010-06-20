@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape_Host_Mac__ 1
 #include "zconfig.h"
 
+#if ! ZCONFIG_Is64Bit
+ 
 #include "zoolib/ZGeometry.h"
 #include "zoolib/netscape/ZNetscape_Host_Std.h"
 
@@ -160,5 +162,7 @@ private:
 } // namespace ZNetscape
 
 } // namespace ZooLib
+
+#endif // ! ZCONFIG_Is64Bit
 
 #endif // __ZNetscape_Host_Mac__

@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZNetscape_Host_Win.h"
 
+#if ! ZCONFIG_Is64Bit
 #if defined(XP_WIN)
 
 #include "zoolib/ZLog.h"
@@ -273,3 +274,4 @@ void Host_Win::pStuffNPWindow(int iWidth, int iHeight)
 } // namespace ZooLib
 
 #endif // defined(XP_WIN)
+#endif // ! ZCONFIG_Is64Bit

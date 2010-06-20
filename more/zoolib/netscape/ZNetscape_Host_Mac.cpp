@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZNetscape_Host_Mac.h"
 
+#if ! ZCONFIG_Is64Bit
 #if defined(XP_MAC) || defined(XP_MACOSX)
 
 #include "zoolib/ZLog.h"
@@ -887,3 +888,4 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 } // namespace ZooLib
 
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
+#endif // ! ZCONFIG_Is64Bit
