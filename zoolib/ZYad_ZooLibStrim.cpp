@@ -310,7 +310,7 @@ static ZRef<ZYadR> spMakeYadR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU)
 		{
 		ZAny theVal;
 		if (spFromStrim_Value(theStrimU, theVal))
-			return new ZYadPrimR_Any(theVal);
+			return new ZYadAtomR_Any(theVal);
 		}
 
 	return ZRef<ZYadR>();
@@ -1069,9 +1069,9 @@ static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		{
 		spToStrim_Strim(s, theYadStrimR->GetStrimR(), iLevel, iOptions, iMayNeedInitialLF);
 		}
-	else if (ZRef<ZYadPrimR> theYadPrimR = ZRefDynamicCast<ZYadPrimR>(iYadR))
+	else if (ZRef<ZYadAtomR> theYadAtomR = ZRefDynamicCast<ZYadAtomR>(iYadR))
 		{
-		spToStrim_SimpleValue(s, theYadPrimR->AsAny(),
+		spToStrim_SimpleValue(s, theYadAtomR->AsAny(),
 			iLevel, iOptions, iMayNeedInitialLF);
 		}
 	else

@@ -122,7 +122,7 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		return sMakeYadR(theMap);
 		}
 
-	return new ZYadPrimR_Any(iVal.AsAny());
+	return new ZYadAtomR_Any(iVal.AsAny());
 	}
 
 ZRef<ZYadSeqRPos> sMakeYadR(const Seq& iSeq)

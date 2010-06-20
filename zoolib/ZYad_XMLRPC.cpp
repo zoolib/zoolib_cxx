@@ -270,7 +270,7 @@ static ZRef<ZYadR> spMakeYadR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 
 	ZAny theVal;
 	if (spTryRead_SimpleValue(theR, theVal))
-		return new ZYadPrimR_Std(theVal);
+		return new ZYadAtomR_Std(theVal);
 
 	return ZRef<ZYadR>();
 	}
@@ -643,9 +643,9 @@ static void spToStrim(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 		{
 		spToStrim_Strim(s, theYadStrimR->GetStrimR());
 		}
-	else if (ZRef<ZYadPrimR> theYadPrimR = ZRefDynamicCast<ZYadPrimR>(iYadR))
+	else if (ZRef<ZYadAtomR> theYadAtomR = ZRefDynamicCast<ZYadAtomR>(iYadR))
 		{
-		spToStrim_Any(s, theYadPrimR->AsAny());
+		spToStrim_Any(s, theYadAtomR->AsAny());
 		}
 	else
 		{

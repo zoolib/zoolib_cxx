@@ -43,16 +43,16 @@ typedef ZYadR_Val_T<ZRef<CFTypeRef> > ZYadR_CFType;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_CFType
+#pragma mark * ZYadAtomR_CFType
 
-class ZYadPrimR_CFType
+class ZYadAtomR_CFType
 :	public ZYadR_CFType
-,	public ZYadPrimR
+,	public ZYadAtomR
 	{
 public:
-	ZYadPrimR_CFType(const ZRef<CFTypeRef>& iVal);
+	ZYadAtomR_CFType(const ZRef<CFTypeRef>& iVal);
 
-// From ZYadPrimR
+// From ZYadAtomR
 	virtual ZAny AsAny();
 	};
 

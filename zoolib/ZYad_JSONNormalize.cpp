@@ -116,21 +116,21 @@ static ZRef<ZYadR> spMakeYadR_JSONNormalize(
 		{
 		return theYadStrimR;
 		}
-	else if (ZRef<ZYadPrimR> theYadPrimR = ZRefDynamicCast<ZYadPrimR>(iYadR))
+	else if (ZRef<ZYadAtomR> theYadAtomR = ZRefDynamicCast<ZYadAtomR>(iYadR))
 		{
 		ZAny normalized;
-		if (spNormalizeSimpleValue(theYadPrimR->AsAny(), normalized))
-			return new ZYadPrimR_Std(normalized);
+		if (spNormalizeSimpleValue(theYadAtomR->AsAny(), normalized))
+			return new ZYadAtomR_Std(normalized);
 		}
 
 	if (iPreserve)
 		{
 		// We weren't able to normalize, but we've been
 		// asked to preserve values, so return a null.
-		return new ZYadPrimR_Std(ZAny());
+		return new ZYadAtomR_Std(ZAny());
 		}
 
-	return ZRef<ZYadPrimR_Std>();
+	return ZRef<ZYadAtomR_Std>();
 	}
 
 // =================================================================================================

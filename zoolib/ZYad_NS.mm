@@ -36,13 +36,13 @@ using std::vector;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_NS
+#pragma mark * ZYadAtomR_NS
 
-ZYadPrimR_NS::ZYadPrimR_NS(const ZRef<NSObject>& iVal)
+ZYadAtomR_NS::ZYadAtomR_NS(const ZRef<NSObject>& iVal)
 :	ZYadR_NS(iVal)
 	{}
 
-ZAny ZYadPrimR_NS::AsAny()
+ZAny ZYadAtomR_NS::AsAny()
 	{ return ZUtil_NS::sAsAny(this->GetVal()); }
 
 // =================================================================================================
@@ -153,7 +153,7 @@ ZRef<ZYadR> sMakeYadR(const ZRef<NSObject>& iVal)
 	if (theVal.QGetNSString(asNSString))
 		return new ZYadStrimR_NS(asNSString);
 
-	return new ZYadPrimR_NS(iVal);
+	return new ZYadAtomR_NS(iVal);
 	}
 
 ZRef<ZYadStrimR> sMakeYadR(const ZRef<NSMutableString>& iString)
@@ -192,7 +192,7 @@ public:
 	Visitor_GetVal(ZRef<NSObject> iDefault);
 
 // From ZVisitor_Yad
-	virtual void Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual void Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR);
 	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
 	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
@@ -212,8 +212,8 @@ Visitor_GetVal::Visitor_GetVal(ZRef<NSObject> iDefault)
 :	fDefault(iDefault)
 	{}
 
-void Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
-	{ fOutput = ZUtil_NS::sDAsNSObject(fDefault, iYadPrimR->AsAny()); }
+void Visitor_GetVal::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+	{ fOutput = ZUtil_NS::sDAsNSObject(fDefault, iYadAtomR->AsAny()); }
 
 void Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{ fOutput = sReadAll_T<ZData_NS>(iYadStreamR->GetStreamR()); }

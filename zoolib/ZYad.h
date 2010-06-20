@@ -92,9 +92,9 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR
+#pragma mark * ZYadAtomR
 
-class ZYadPrimR
+class ZYadAtomR
 :	public virtual ZYadR
 	{
 public:
@@ -238,7 +238,7 @@ class ZVisitor_Yad
 	{
 public:
 	virtual void Visit_YadR(ZRef<ZYadR> iYadR);
-	virtual void Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual void Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR);
 	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
 	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
@@ -249,16 +249,16 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_Any
+#pragma mark * ZYadAtomR_Any
 
-class ZYadPrimR_Any
-:	public ZYadPrimR
+class ZYadAtomR_Any
+:	public ZYadAtomR
 	{
 public:
-	ZYadPrimR_Any(const ZAny& iAny);
-	virtual ~ZYadPrimR_Any();
+	ZYadAtomR_Any(const ZAny& iAny);
+	virtual ~ZYadAtomR_Any();
 
-// From ZYadPrimR
+// From ZYadAtomR
 	virtual ZAny AsAny();
 
 // Our protocol

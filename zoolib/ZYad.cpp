@@ -117,19 +117,19 @@ void ZYadR::Accept_Yad(ZVisitor_Yad& iVisitor)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR
+#pragma mark * ZYadAtomR
 
 /**
-\class ZYadPrimR
+\class ZYadAtomR
 \ingroup Yad
 \sa Yad
 
 */
 
-void ZYadPrimR::Accept_Yad(ZVisitor_Yad& iVisitor)
-	{ iVisitor.Visit_YadPrimR(this); }
+void ZYadAtomR::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadAtomR(this); }
 
-bool ZYadPrimR::IsSimple(const ZYadOptions& iOptions)
+bool ZYadAtomR::IsSimple(const ZYadOptions& iOptions)
 	{ return true; }
 
 // =================================================================================================
@@ -367,8 +367,8 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 void ZVisitor_Yad::Visit_YadR(ZRef<ZYadR> iYadR)
 	{ this->Visit(iYadR); }
 
-void ZVisitor_Yad::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
-	{ this->Visit_YadR(iYadPrimR); }
+void ZVisitor_Yad::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+	{ this->Visit_YadR(iYadAtomR); }
 
 void ZVisitor_Yad::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{ this->Visit_YadR(iYadStreamR); }
@@ -390,19 +390,19 @@ void ZVisitor_Yad::Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_Any
+#pragma mark * ZYadAtomR_Any
 
-ZYadPrimR_Any::ZYadPrimR_Any(const ZAny& iAny)
+ZYadAtomR_Any::ZYadAtomR_Any(const ZAny& iAny)
 :	fAny(iAny)
 	{}
 
-ZYadPrimR_Any::~ZYadPrimR_Any()
+ZYadAtomR_Any::~ZYadAtomR_Any()
 	{}
 
-ZAny ZYadPrimR_Any::AsAny()
+ZAny ZYadAtomR_Any::AsAny()
 	{ return fAny; }
 
-const ZAny& ZYadPrimR_Any::GetAny()
+const ZAny& ZYadAtomR_Any::GetAny()
 	{ return fAny; }
 
 // =================================================================================================

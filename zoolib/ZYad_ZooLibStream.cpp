@@ -417,7 +417,7 @@ ZRef<ZYadR> spMakeYadR_ZooLibStream(ZRef<ZStreamerR> iStreamerR)
 			case eZType_String:
 				return new ZYadStrimR_ZooLibStream(iStreamerR);
 			default:
-				return new ZYadPrimR_ZooLib(ZType(theType), iStreamerR->GetStreamR());
+				return new ZYadAtomR_ZooLib(ZType(theType), iStreamerR->GetStreamR());
 			}
 		}
 

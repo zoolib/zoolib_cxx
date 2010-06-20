@@ -37,13 +37,13 @@ using std::vector;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_CFType
+#pragma mark * ZYadAtomR_CFType
 
-ZYadPrimR_CFType::ZYadPrimR_CFType(const ZRef<CFTypeRef>& iVal)
+ZYadAtomR_CFType::ZYadAtomR_CFType(const ZRef<CFTypeRef>& iVal)
 :	ZYadR_CFType(iVal)
 	{}
 
-ZAny ZYadPrimR_CFType::AsAny()
+ZAny ZYadAtomR_CFType::AsAny()
 	{ return ZUtil_CFType::sAsAny(this->GetVal()); }
 
 // =================================================================================================
@@ -169,7 +169,7 @@ ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
 	if (ZQ_T<ZRef<CFStringRef> > theQ = theVal.QGet_T<ZRef<CFStringRef> >())
 		return sMakeYadR(theQ.Get());
 
-	return new ZYadPrimR_CFType(iVal);
+	return new ZYadAtomR_CFType(iVal);
 	}
 
 ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFMutableStringRef>& iString)
@@ -208,7 +208,7 @@ public:
 	Visitor_GetVal(ZRef<CFTypeRef> iDefault);
 
 // From ZVisitor_Yad
-	virtual void Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual void Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR);
 	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
 	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
@@ -228,8 +228,8 @@ Visitor_GetVal::Visitor_GetVal(ZRef<CFTypeRef> iDefault)
 :	fDefault(iDefault)
 	{}
 
-void Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
-	{ fOutput = ZUtil_CFType::sDAsCFType(fDefault, iYadPrimR->AsAny()); }
+void Visitor_GetVal::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+	{ fOutput = ZUtil_CFType::sDAsCFType(fDefault, iYadAtomR->AsAny()); }
 
 void Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{ fOutput = sReadAll_T<ZData_CFType>(iYadStreamR->GetStreamR()); }

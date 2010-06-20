@@ -204,10 +204,10 @@ static ZRef<ZYadR> spMakeYadR_JSON(ZRef<ZStrimmerU> iStrimmerU)
 		{
 		ZAny theVal;
 		if (spFromStrim_Value(theStrimU, theVal))
-			return new ZYadPrimR_Std(theVal);
+			return new ZYadAtomR_Std(theVal);
 		}
 
-	return ZRef<ZYadPrimR_Std>();
+	return ZRef<ZYadAtomR_Std>();
 	}
 
 // =================================================================================================
@@ -447,8 +447,8 @@ void ZVisitor_Yad_JSONWriter::Visit_YadR(ZRef<ZYadR> iYadR)
 		fStrimW << " /*!! Unhandled yad !!*/";
 	}
 
-void ZVisitor_Yad_JSONWriter::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
-	{ spToStrim_SimpleValue(fStrimW, iYadPrimR->AsAny()); }
+void ZVisitor_Yad_JSONWriter::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+	{ spToStrim_SimpleValue(fStrimW, iYadAtomR->AsAny()); }
 
 void ZVisitor_Yad_JSONWriter::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{

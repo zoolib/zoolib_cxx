@@ -96,23 +96,23 @@ static bool spIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_ZooLib
+#pragma mark * ZYadAtomR_ZooLib
 
-ZYadPrimR_ZooLib::ZYadPrimR_ZooLib()
+ZYadAtomR_ZooLib::ZYadAtomR_ZooLib()
 	{}
 
-ZYadPrimR_ZooLib::ZYadPrimR_ZooLib(const ZVal_ZooLib& iVal)
+ZYadAtomR_ZooLib::ZYadAtomR_ZooLib(const ZVal_ZooLib& iVal)
 :	ZYadR_ZooLib(iVal)
 	{}
 
-ZYadPrimR_ZooLib::ZYadPrimR_ZooLib(ZType iType, const ZStreamR& iStreamR)
+ZYadAtomR_ZooLib::ZYadAtomR_ZooLib(ZType iType, const ZStreamR& iStreamR)
 :	ZYadR_ZooLib(ZVal_ZooLib(iType, iStreamR))
 	{}
 
-bool ZYadPrimR_ZooLib::IsSimple(const ZYadOptions& iOptions)
+bool ZYadAtomR_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return spIsSimple(iOptions, fVal); }
 
-ZAny ZYadPrimR_ZooLib::AsAny()
+ZAny ZYadAtomR_ZooLib::AsAny()
 	{ return fVal.AsAny(); }
 
 // =================================================================================================
@@ -163,7 +163,7 @@ ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal)
 		case eZType_String: return sMakeYadR(iVal.GetString());
 		}
 
-	return new ZYadPrimR_ZooLib(iVal);
+	return new ZYadAtomR_ZooLib(iVal);
 	}
 
 ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_ZooLib& iSeq)
@@ -184,7 +184,7 @@ public:
 	Visitor_GetVal(const ZVal_ZooLib& iDefault);
 
 // From ZVisitor_Yad
-	virtual void Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual void Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR);
 	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
 	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
@@ -204,8 +204,8 @@ Visitor_GetVal::Visitor_GetVal(const ZVal_ZooLib& iDefault)
 :	fDefault(iDefault)
 	{}
 
-void Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
-	{ fOutput = ZVal_ZooLib::sDFromAny(fDefault, iYadPrimR->AsAny()); }
+void Visitor_GetVal::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+	{ fOutput = ZVal_ZooLib::sDFromAny(fDefault, iYadAtomR->AsAny()); }
 
 void Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{ fOutput = sReadAll_T<ZData_ZooLib>(iYadStreamR->GetStreamR()); }

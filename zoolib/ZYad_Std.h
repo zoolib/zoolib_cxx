@@ -40,9 +40,9 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_Std
+#pragma mark * ZYadAtomR_Std
 
-typedef ZYadPrimR_Any ZYadPrimR_Std;
+typedef ZYadAtomR_Any ZYadAtomR_Std;
 
 // =================================================================================================
 #pragma mark -

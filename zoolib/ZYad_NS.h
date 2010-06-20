@@ -43,16 +43,16 @@ typedef ZYadR_Val_T<ZRef<NSObject> > ZYadR_NS;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_NS
+#pragma mark * ZYadAtomR_NS
 
-class ZYadPrimR_NS
+class ZYadAtomR_NS
 :	public ZYadR_NS
-,	public ZYadPrimR
+,	public ZYadAtomR
 	{
 public:
-	ZYadPrimR_NS(const ZRef<NSObject>& iVal);
+	ZYadAtomR_NS(const ZRef<NSObject>& iVal);
 
-// From ZYadPrimR
+// From ZYadAtomR
 	virtual ZAny AsAny();
 	};
 

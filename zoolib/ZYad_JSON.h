@@ -104,7 +104,7 @@ public:
 
 // From ZVisitor_Yad
 	virtual void Visit_YadR(ZRef<ZYadR> iYadR);
-	virtual void Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual void Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR);
 	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
 	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);

@@ -36,21 +36,21 @@ typedef ZYadR_Val_T<ZVal_ZooLib> ZYadR_ZooLib;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_ZooLib
+#pragma mark * ZYadAtomR_ZooLib
 
-class ZYadPrimR_ZooLib
+class ZYadAtomR_ZooLib
 :	public ZYadR_ZooLib,
-	public ZYadPrimR
+	public ZYadAtomR
 	{
 public:
-	ZYadPrimR_ZooLib();
-	ZYadPrimR_ZooLib(const ZVal_ZooLib& iVal);
-	ZYadPrimR_ZooLib(ZType iType, const ZStreamR& iStreamR);
+	ZYadAtomR_ZooLib();
+	ZYadAtomR_ZooLib(const ZVal_ZooLib& iVal);
+	ZYadAtomR_ZooLib(ZType iType, const ZStreamR& iStreamR);
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
-// From ZYadPrimR
+// From ZYadAtomR
 	ZAny AsAny();
 	};
 

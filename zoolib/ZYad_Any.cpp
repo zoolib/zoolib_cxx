@@ -43,7 +43,7 @@ ZRef<ZYadR> sMakeYadR(const ZAny& iVal)
 	if (const ZMap_Any* theVal = iVal.PGet_T<ZMap_Any>())
 		return sMakeYadR(*theVal);
 
-	return new ZYadPrimR_Any(iVal);
+	return new ZYadAtomR_Any(iVal);
 	}
 
 ZRef<ZYadStreamR> sMakeYadR(const ZData_Any& iData)
@@ -67,7 +67,7 @@ public:
 	Visitor_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault);
 
 // From ZVisitor_Yad
-	virtual void Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual void Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR);
 	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
 	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
@@ -89,8 +89,8 @@ Visitor_GetVal::Visitor_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefaul
 ,	fDefault(iDefault)
 	{}
 
-void Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
-	{ fOutput = iYadPrimR->AsAny(); }
+void Visitor_GetVal::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+	{ fOutput = iYadAtomR->AsAny(); }
 
 void Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{ fOutput = sReadAll_T<ZData_Any>(iYadStreamR->GetStreamR()); }
@@ -153,8 +153,8 @@ ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
 
 ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
 	{
-	if (ZRef<ZYadPrimR_Any> asPrim = iYadR.DynamicCast<ZYadPrimR_Any>())
-		return asPrim->GetAny();
+	if (ZRef<ZYadAtomR_Any> asAtom = iYadR.DynamicCast<ZYadAtomR_Any>())
+		return asAtom->GetAny();
 
 	if (ZRef<ZYadStrimU_String> asString = iYadR.DynamicCast<ZYadStrimU_String>())
 		return asString->GetStrim().GetString8();
