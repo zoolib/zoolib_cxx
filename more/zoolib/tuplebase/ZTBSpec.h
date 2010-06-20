@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZTextCollator.h"
-#include "zoolib/ZTuple.h"
+#include "zoolib/tuplebase/ZTuple.h"
 #include "zoolib/tuplebase/ZRegex.h"
 
 #include <set>

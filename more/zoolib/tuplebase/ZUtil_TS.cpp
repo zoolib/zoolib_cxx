@@ -18,16 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_TS.h"
+#include "zoolib/tuplebase/ZUtil_TS.h"
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStream_Buffered.h"
 #include "zoolib/ZTextCoder_Unicode.h"
 #include "zoolib/ZStrimU_Std.h"
 #include "zoolib/ZString.h"
-#include "zoolib/ZTuple.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
+#include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
 #include "zoolib/ZYad_ZooLib.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 

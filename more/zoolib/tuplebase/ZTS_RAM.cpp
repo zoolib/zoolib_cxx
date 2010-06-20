@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tuplebase/ZTupleIndex.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
+#include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
 
 using std::map;
 using std::pair;
