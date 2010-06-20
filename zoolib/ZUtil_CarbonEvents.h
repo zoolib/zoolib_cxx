@@ -93,6 +93,7 @@ void sSetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType,
 
 typedef void (*CallbackProc_t)(void* iRefcon);
 
+void sInvokeOnMainThread(bool iAlwaysDelayed, CallbackProc_t iCallback, void* iRefcon);
 void sInvokeOnMainThread(CallbackProc_t iCallback, void* iRefcon);
 
 std::string sEventAsString(EventClass iEC, EventKind iEK);

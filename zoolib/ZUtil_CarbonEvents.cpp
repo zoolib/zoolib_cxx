@@ -81,7 +81,7 @@ public:
 	Handler();
 	~Handler();
 
-	void InvokeOnMainThread(CallbackProc_t iCallback, void* iRefcon);
+	void InvokeOnMainThread(bool iAlwaysDelayed, CallbackProc_t iCallback, void* iRefcon);
 
 private:
 	static EventHandlerUPP spEventHandlerUPP;
@@ -125,9 +125,9 @@ Handler::~Handler()
 	fEventQueueRef = nullptr;
 	}
 
-void Handler::InvokeOnMainThread(CallbackProc_t iCallbackProc, void* iRefcon)
+void Handler::InvokeOnMainThread(bool iAlwaysDelayed, CallbackProc_t iCallbackProc, void* iRefcon)
 	{
-	if (fMainID == ZThread::sID())
+	if (!iAlwaysDelayed && fMainID == ZThread::sID())
 		{
 		iCallbackProc(iRefcon);
 		}
@@ -195,10 +195,12 @@ Handler spHandler;
 
 } // anonymous namespace
 
+void ZUtil_CarbonEvents::sInvokeOnMainThread(
+	bool iAlwaysDelayed, CallbackProc_t iCallback, void* iRefcon)
+	{ spHandler.InvokeOnMainThread(iAlwaysDelayed, iCallback, iRefcon); }
+
 void ZUtil_CarbonEvents::sInvokeOnMainThread(CallbackProc_t iCallback, void* iRefcon)
-	{
-	spHandler.InvokeOnMainThread(iCallback, iRefcon);
-	}
+	{ spHandler.InvokeOnMainThread(false, iCallback, iRefcon); }
 
 #define CLASSONLY(a) case a: theClass = #a; break
 #define CLASS(a) case a: theClass = #a
