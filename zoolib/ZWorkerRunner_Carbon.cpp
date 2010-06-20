@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZWorkerRunner_EventLoop_Carbon.h"
+#include "zoolib/ZWorkerRunner_Carbon.h"
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
 
@@ -33,45 +33,48 @@ namespace ZooLib {
 
 namespace { // anonymous
 
-ZSafeRef<ZWorkerRunner_EventLoop_Carbon> spRunner(new ZWorkerRunner_EventLoop_Carbon);
+ZSafeRef<ZWorkerRunner_Carbon> spRunner(new ZWorkerRunner_Carbon);
 
-ZRef<ZWorkerRunner_EventLoop_Carbon> spGetRunner()
+ZRef<ZWorkerRunner_Carbon> spGetRunner()
 	{ return spRunner; }
 
 } // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_EventLoop_Carbon
+#pragma mark * ZWorkerRunner_Carbon
 
 /**
-\class ZWorkerRunner_EventLoop_Carbon
+\class ZWorkerRunner_Carbon
 \ingroup Worker
 \sa Worker
 */
 
-ZWorkerRunner_EventLoop_Carbon::ZWorkerRunner_EventLoop_Carbon()
+ZWorkerRunner_Carbon::ZWorkerRunner_Carbon()
 	{}
 
-ZWorkerRunner_EventLoop_Carbon::~ZWorkerRunner_EventLoop_Carbon()
+ZWorkerRunner_Carbon::~ZWorkerRunner_Carbon()
 	{}
 
-void ZWorkerRunner_EventLoop_Carbon::pQueueCallback()
-	{ ZUtil_CarbonEvents::sInvokeOnMainThread(spCallback, this); }
-
-void ZWorkerRunner_EventLoop_Carbon::sStartWorker(ZRef<ZWorker> iWorker)
+void ZWorkerRunner_Carbon::pQueueCallback()
 	{
-	if (ZRef<ZWorkerRunner_EventLoop_Carbon> theRunner = spGetRunner())
+	// We want the callback to be queued, not made immediately if we're running
+	// on the main thread, because that may be because we're handling workers and
+	// an infinite recursion will be the result.
+	ZUtil_CarbonEvents::sInvokeOnMainThread(true, spCallback, this);
+	}
+
+void ZWorkerRunner_Carbon::sStartWorker(ZRef<ZWorker> iWorker)
+	{
+	if (ZRef<ZWorkerRunner_Carbon> theRunner = spGetRunner())
 		theRunner->pStartWorker(iWorker);
 	}
 
-void ZWorkerRunner_EventLoop_Carbon::spCallback(void* iRefcon)
+void ZWorkerRunner_Carbon::spCallback(void* iRefcon)
 	{
-	if (ZRef<ZWorkerRunner_EventLoop_Carbon> theRunner =
-		static_cast<ZWorkerRunner_EventLoop_Carbon*>(iRefcon))
-		{
-		theRunner->pCallback();
-		}
+	if (ZRef<ZWorkerRunner_Carbon> theRunner =
+		static_cast<ZWorkerRunner_Carbon*>(iRefcon))
+		{ theRunner->pCallback(); }
 	}
 
 } // namespace ZooLib

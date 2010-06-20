@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorkerRunner_EventLoop_Carbon__
-#define __ZWorkerRunner_EventLoop_Carbon__ 1
+#ifndef __ZWorkerRunner_Carbon__
+#define __ZWorkerRunner_Carbon__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -31,14 +31,14 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_EventLoop_Carbon
+#pragma mark * ZWorkerRunner_Carbon
 
-class ZWorkerRunner_EventLoop_Carbon
+class ZWorkerRunner_Carbon
 :	public ZWorkerRunner_EventLoop
 	{
 public:
-	ZWorkerRunner_EventLoop_Carbon();
-	virtual ~ZWorkerRunner_EventLoop_Carbon();
+	ZWorkerRunner_Carbon();
+	virtual ~ZWorkerRunner_Carbon();
 
 // From ZWorkerRunner_EventLoop
 	virtual void pQueueCallback();
@@ -54,4 +54,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(Carbon64)
 
-#endif // __ZWorkerRunner_EventLoop_Carbon__
+#endif // __ZWorkerRunner_Carbon__
