@@ -57,7 +57,7 @@ public:
 		SInt32 iUSBVendor, SInt32 iUSBProduct);
 	virtual ~ZUSBWatcher();
 
-	typedef ZCallback_T<ZRef<ZUSBDevice> > CB_DeviceAttached;
+	typedef ZCallback_T1<ZRef<ZUSBDevice> > CB_DeviceAttached;
 	void RegisterDeviceAttached(ZRef<CB_DeviceAttached> iCallback);
 	void UnregisterDeviceAttached(ZRef<CB_DeviceAttached> iCallback);
 
@@ -68,7 +68,7 @@ private:
 	IONotificationPortRef fIONotificationPortRef;
 	io_iterator_t fNotification;
 
-	ZCallbackSet_T<ZRef<ZUSBDevice> > fCallbacks;
+	ZCallbackSet_T1<ZRef<ZUSBDevice> > fCallbacks;
 	};
 
 // ================================================================================================
@@ -81,7 +81,7 @@ public:
 	ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_t iUSBDevice);
 	virtual ~ZUSBDevice();
 
-	typedef ZCallback_T<ZRef<ZUSBDevice> > CB_DeviceDetached;
+	typedef ZCallback_T1<ZRef<ZUSBDevice> > CB_DeviceDetached;
 	void RegisterDeviceDetached(ZRef<CB_DeviceDetached> iCallback);
 	void UnregisterDeviceDetached(ZRef<CB_DeviceDetached> iCallback);
 
@@ -107,7 +107,7 @@ private:
 	IOUSBDeviceInterface182** fIOUSBDeviceInterface;
 	io_object_t fNotification;
 	UInt32 fLocationID;
-	ZCallbackSet_T<ZRef<ZUSBDevice> > fCallbacks;
+	ZCallbackSet_T1<ZRef<ZUSBDevice> > fCallbacks;
 	bool fDetached;
 	bool fHasIOUSBDeviceDescriptor;
 	IOUSBDeviceDescriptor fIOUSBDeviceDescriptor;

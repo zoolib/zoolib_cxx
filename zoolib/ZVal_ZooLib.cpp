@@ -648,25 +648,25 @@ ZVal_ZooLib::ZVal_ZooLib(const string& iVal)
 ZVal_ZooLib::ZVal_ZooLib(const ZData_ZooLib& iVal)
 	{
 	fType.fType = eZType_Raw;
-	sConstruct_T(fType.fBytes, iVal);
+	sConstruct_T<ZData_ZooLib, ZData_ZooLib>(fType.fBytes, iVal);
 	}
 
 ZVal_ZooLib::ZVal_ZooLib(const ZSeq_ZooLib& iVal)
 	{
 	fType.fType = eZType_Vector;
-	sConstruct_T(fType.fBytes, iVal);
+	sConstruct_T<ZSeq_ZooLib, ZSeq_ZooLib>(fType.fBytes, iVal);
 	}
 
 ZVal_ZooLib::ZVal_ZooLib(const ZMap_ZooLib& iVal)
 	{
 	fType.fType = eZType_Tuple;
-	sConstruct_T(fType.fBytes, iVal);
+	sConstruct_T<ZMap_ZooLib, ZMap_ZooLib>(fType.fBytes, iVal);
 	}
 
 ZVal_ZooLib::ZVal_ZooLib(const ZRef<ZCounted>& iVal)
 	{
 	fType.fType = eZType_RefCounted;
-	sConstruct_T(fType.fBytes, iVal);
+	sConstruct_T<ZRef<ZCounted>, ZRef<ZCounted> >(fType.fBytes, iVal);
 	}
 
 ZVal_ZooLib::ZVal_ZooLib(const void* iSource, size_t iSize)
@@ -979,7 +979,7 @@ template <>
 void ZVal_ZooLib::Set_T<ZData_ZooLib>(const ZData_ZooLib& iVal)
 	{
 	this->pRelease();
-	sConstruct_T(fType.fBytes, iVal);
+	sConstruct_T<ZData_ZooLib, ZData_ZooLib>(fType.fBytes, iVal);
 	fType.fType = eZType_Raw;
 	}
 
@@ -987,7 +987,7 @@ template <>
 void ZVal_ZooLib::Set_T<ZSeq_ZooLib>(const ZSeq_ZooLib& iVal)
 	{
 	this->pRelease();
-	sConstruct_T(fType.fBytes, iVal);
+	sConstruct_T<ZSeq_ZooLib, ZSeq_ZooLib>(fType.fBytes, iVal);
 	fType.fType = eZType_Vector;
 	}
 
@@ -995,7 +995,7 @@ template <>
 void ZVal_ZooLib::Set_T<ZMap_ZooLib>(const ZMap_ZooLib& iVal)
 	{
 	this->pRelease();
-	sConstruct_T(fType.fBytes, iVal);
+	sConstruct_T<ZMap_ZooLib, ZMap_ZooLib>(fType.fBytes, iVal);
 	fType.fType = eZType_Tuple;
 	}
 
@@ -1004,7 +1004,7 @@ void ZVal_ZooLib::Set_T<ZRef<ZCounted> >(const ZRef<ZCounted>& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_RefCounted;
-	sConstruct_T(fType.fBytes, iVal);
+	sConstruct_T<ZRef<ZCounted>, ZRef<ZCounted> >(fType.fBytes, iVal);
 	}
 
 int ZVal_ZooLib::Compare(const ZVal_ZooLib& iOther) const
@@ -1524,25 +1524,25 @@ void ZVal_ZooLib::pCopy(const ZVal_ZooLib& iOther)
 				fData.fAs_Point = iOther.fData.fAs_Point;
 				break;
 			case eZType_String:
-				sCopyConstruct_T<ValString>(fType.fBytes, iOther.fType.fBytes);
+				sConstructFromVoidStar_T<ValString>(fType.fBytes, iOther.fType.fBytes);
 				break;
 #if 0//##
 			case eZType_Name:
-				sCopyConstruct_T<ZTName>(fType.fBytes, iOther.fType.fBytes);
+				sConstructFromVoidStar_T<ZTName>(fType.fBytes, iOther.fType.fBytes);
 				break;
 #endif//##
 			case eZType_Tuple:
-				sCopyConstruct_T<ZMap_ZooLib>(fType.fBytes, iOther.fType.fBytes);
+				sConstructFromVoidStar_T<ZMap_ZooLib>(fType.fBytes, iOther.fType.fBytes);
 				break;
 			case eZType_RefCounted:
-				sCopyConstruct_T<ZRef<ZCounted> >
+				sConstructFromVoidStar_T<ZRef<ZCounted> >
 					(fType.fBytes, iOther.fType.fBytes);
 				break;
 			case eZType_Raw:
-				sCopyConstruct_T<ZData_ZooLib>(fType.fBytes, iOther.fType.fBytes);
+				sConstructFromVoidStar_T<ZData_ZooLib>(fType.fBytes, iOther.fType.fBytes);
 				break;
 			case eZType_Vector:
-				sCopyConstruct_T<ZSeq_ZooLib>(fType.fBytes, iOther.fType.fBytes);
+				sConstructFromVoidStar_T<ZSeq_ZooLib>(fType.fBytes, iOther.fType.fBytes);
 				break;
 			default:
 				ZDebugStopf(kDebug_Tuple, ("Unknown type (%d)", fType.fType));

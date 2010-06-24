@@ -71,7 +71,7 @@ SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZAccumulator_T.h"
-#include "zoolib/ZGeom_POD.h"
+#include "zoolib/ZGeomPOD.h"
 
 #include <vector>
 

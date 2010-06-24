@@ -43,22 +43,22 @@ public:
 			{
 			if (iOther.fHasValue)
 				{
-				std::swap(*(T*)fBytes, *(T*)iOther.fBytes);
+				std::swap(*sFetch_T<T>(fBytes), *sFetch_T<T>(iOther.fBytes));
 				}
 			else
 				{
-				sCopyConstruct_T<T>(iOther.fBytes, fBytes);
-				sDestroy_T<T>(fBytes);
 				iOther.fHasValue = true;
 				fHasValue = false;
+				sConstructFromVoidStar_T<T>(iOther.fBytes, fBytes);
+				sDestroy_T<T>(fBytes);
 				}
 			}
 		else if (iOther.fHasValue)
 			{
-			sCopyConstruct_T<T>(fBytes, iOther.fBytes);
-			sDestroy_T<T>(iOther.fBytes);
 			iOther.fHasValue = false;
 			fHasValue = true;
+			sConstructFromVoidStar_T<T>(fBytes, iOther.fBytes);
+			sDestroy_T<T>(iOther.fBytes);
 			}
 		}
 
@@ -70,7 +70,7 @@ public:
 	:	fHasValue(iOther.fHasValue)
 		{
 		if (fHasValue)
-			sCopyConstruct_T<T>(fBytes, iOther.fBytes);
+			sConstructFromVoidStar_T<T>(fBytes, iOther.fBytes);
 		}
 
 	~ZQ_T()
@@ -84,19 +84,39 @@ public:
 		if (this != &iOther)
 			{
 			if (fHasValue)
-				sDestroy_T<T>(fBytes);
-
-			fHasValue = iOther.fHasValue;
-
-			if (fHasValue)
-				sCopyConstruct_T<T>(fBytes, iOther.fBytes);
+				{
+				if (iOther.fHasValue)
+					{
+					sAssignFromVoidStar_T<T>(fBytes, iOther.fBytes);
+					}
+				else
+					{
+					fHasValue = false;
+					sDestroy_T<T>(fBytes);
+					}
+				}
+			else if (iOther.fHasValue)
+				{
+				fHasValue = true;
+				sConstructFromVoidStar_T<T>(fBytes, iOther.fBytes);
+				}
 			}
 		return *this;
 		}
 
-	ZQ_T(const null_t& iP0)
+	ZQ_T(const null_t&)
 	:	fHasValue(false)
 		{}
+
+	ZQ_T& operator=(const null_t&)
+		{
+		if (fHasValue)
+			{
+			fHasValue = false;
+			sDestroy_T<T>(fBytes);
+			}
+		return *this;
+		}
 
 	template <class P0>
 	ZQ_T(const P0& iP0)
@@ -111,12 +131,14 @@ public:
 	ZQ_T& operator=(const T& iValue)
 		{
 		if (fHasValue)
-			sDestroy_T<T>(fBytes);
-
-		fHasValue = true;
-
-		sCopyConstruct_T<T>(fBytes, &iValue);
-
+			{
+			sAssign_T(fBytes, iValue);
+			}
+		else
+			{
+			fHasValue = true;
+			sConstruct_T<T,T>(fBytes, iValue);
+			}
 		return *this;
 		}
 

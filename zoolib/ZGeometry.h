@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZGeom_POD.h"
+#include "zoolib/ZGeomPOD.h"
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 #	if ZCONFIG_SPI_Enabled(iPhone)
