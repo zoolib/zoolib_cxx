@@ -112,16 +112,16 @@ HWND ZWNDW::sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam)
 
 ZWNDW::ZWNDW(WNDPROC iWNDPROC)
 :	fWNDPROC(iWNDPROC),
-	fHWND(nullptr)
+	fHWND(nullptr),
+	fDestructorEntered(false)
 	{}
 
 ZWNDW::~ZWNDW()
 	{
-	if (HWND theHWND = fHWND)
-		{
-		fHWND = nullptr;
-		::DestroyWindow(theHWND);
-		}
+	fDestructorEntered = true;
+	if (fHWND)
+		::DestroyWindow(fHWND);
+	ZAssert(!fHWND);
 	}
 
 static ZWindowClassRegistrationW
@@ -149,14 +149,13 @@ void ZWNDW::Create(HWND iParent, DWORD iStyle)
 	}
 
 HWND ZWNDW::GetHWND()
-	{
-	return fHWND;
-	}
+	{ return fHWND; }
 
 void ZWNDW::HWNDDestroyed(HWND iHWND)
 	{
 	ZAssert(!fHWND);
-	delete this;
+	if (!fDestructorEntered)
+		delete this;
 	}
 
 LRESULT ZWNDW::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)

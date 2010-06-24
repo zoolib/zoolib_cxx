@@ -58,6 +58,7 @@ protected:
 
 	HWND fHWND;
 	WNDPROC fWNDPROC;
+	bool fDestructorEntered;
 	};
 
 // =================================================================================================
