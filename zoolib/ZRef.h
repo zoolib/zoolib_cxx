@@ -362,6 +362,10 @@ template <class P>
 Adopt_T<P> NoRetain(P iP)
 	{ return Adopt_T<P>(iP); }
 
+template <class T>
+ZRef<T> MakeRef(T* iP)
+	{ return ZRef<T>(iP); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZRef casts

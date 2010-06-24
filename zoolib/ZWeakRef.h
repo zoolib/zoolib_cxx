@@ -152,6 +152,10 @@ public:
 		{ return ZRef<T>(*this) < ZRef<T>(iOther); }
 	};
 
+template <class T>
+ZWeakRef<T> MakeWeakRef(T* iP)
+	{ return ZRef<T>(iP); }
+
 } // namespace ZooLib
 
 #endif // __ZWeakRef__
