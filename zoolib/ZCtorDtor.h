@@ -35,13 +35,6 @@ inline T* sConstruct_T(void* oBytes)
 	return static_cast<T*>(oBytes);
 	}
 
-template <class T>
-inline T* sConstruct_T(void* oBytes, const T& iOther)
-	{
-	new(oBytes) T(iOther);
-	return static_cast<T*>(oBytes);
-	}
-
 template <class T, class P0>
 inline T* sConstruct_T(void* oBytes, const P0& iP0)
 	{
@@ -57,15 +50,12 @@ inline T* sConstruct_T(void* oBytes, const P0& iP0, const P1& iP1)
 	}
 
 template <class T>
-inline T* sCopyConstruct_T(void* oBytes, const void* iSource)
-	{
-	new(oBytes) T(*static_cast<const T*>(iSource));
-	return static_cast<T*>(oBytes);
-	}
-
-template <class T>
 inline void sDestroy_T(void* oBytes)
 	{ static_cast<T*>(oBytes)->~T(); }
+
+template <class T>
+inline T& sAssign_T(void* ioBytes, const T& iOther)
+	{ return *static_cast<T*>(ioBytes) = iOther; }
 
 template <class T>
 inline const T* sFetch_T(const void* iBytes)
@@ -74,6 +64,17 @@ inline const T* sFetch_T(const void* iBytes)
 template <class T>
 inline T* sFetch_T(void* iBytes)
 	{ return static_cast<T*>(iBytes); }
+
+template <class T>
+inline T* sConstructFromVoidStar_T(void* oBytes, const void* iSource)
+	{
+	new(oBytes) T(*static_cast<const T*>(iSource));
+	return static_cast<T*>(oBytes);
+	}
+
+template <class T>
+inline T& sAssignFromVoidStar_T(void* ioBytes, const void* iBytes)
+	{ return *static_cast<T*>(ioBytes) = *static_cast<const T*>(iBytes); }
 
 } // namespace ZooLib
 
