@@ -18,19 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZGeom_POD.h"
+#include "zoolib/ZGeomPOD.h"
 
 namespace ZooLib {
+
+ZPointPOD sTestXXXXX(int32 iH, int32 iV);
+ZPointPOD sTestXXXXX(int32 iH, int32 iV)
+	{ return sPointPOD(iH, iV); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZPointPOD
-
-ZPointPOD sPointPOD(int32 iH, int32 iV)
-	{
-	const ZPointPOD result = {iH, iV};
-	return result;
-	}
 
 template <>
 int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR)
@@ -43,12 +41,6 @@ int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR)
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZRectPOD
-
-ZRectPOD sRectPOD(int32 iLeft, int32 iTop, int32 iRight, int32 iBottom)
-	{
-	const ZRectPOD result = {iLeft, iTop, iRight, iBottom};
-	return result;
-	}
 
 template <>
 int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR)
