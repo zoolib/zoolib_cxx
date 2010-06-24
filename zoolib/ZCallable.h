@@ -22,10 +22,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCallable__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZWeakRef.h"
 #include "zoolib/ZSafeSet.h"
+#include "zoolib/ZWeakRef.h"
 
 namespace ZooLib {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable
+
+class ZCallable
+:	public ZCounted
+,	public ZWeakReferee
+	{};
 
 // =================================================================================================
 #pragma mark -
@@ -33,8 +42,7 @@ namespace ZooLib {
 
 template <class R>
 class ZCallable_R0
-:	public ZCounted
-,	public ZWeakReferee
+:	public ZCallable
 	{
 public:
 	virtual R Invoke() = 0;
@@ -46,11 +54,10 @@ public:
 
 template <class R, class P0>
 class ZCallable_R1
-:	public ZCounted
-,	public ZWeakReferee
+:	public ZCallable
 	{
 public:
-	virtual R Invoke(P0 iP0) = 0;
+	virtual R Invoke(P0) = 0;
 	};
 
 // =================================================================================================
@@ -59,11 +66,10 @@ public:
 
 template <class R, class P0, class P1>
 class ZCallable_R2
-:	public ZCounted
-,	public ZWeakReferee
+:	public ZCallable
 	{
 public:
-	virtual R Invoke(P0 iP0, P1 iP1) = 0;
+	virtual R Invoke(P0, P1) = 0;
 	};
 
 // =================================================================================================
@@ -72,11 +78,10 @@ public:
 
 template <class R, class P0, class P1, class P2>
 class ZCallable_R3
-:	public ZCounted
-,	public ZWeakReferee
+:	public ZCallable
 	{
 public:
-	virtual R Invoke(P0 iP0, P1 iP1, P2 iP2) = 0;
+	virtual R Invoke(P0, P1, P2) = 0;
 	};
 
 // =================================================================================================
@@ -85,11 +90,10 @@ public:
 
 template <class R, class P0, class P1, class P2, class P3>
 class ZCallable_R4
-:	public ZCounted
-,	public ZWeakReferee
+:	public ZCallable
 	{
 public:
-	virtual R Invoke(P0 iP0, P1 iP1, P2 iP2, P3 iP3) = 0;
+	virtual R Invoke(P0, P1, P2, P3 iP3) = 0;
 	};
 
 // =================================================================================================
@@ -97,8 +101,7 @@ public:
 #pragma mark * ZCallable_V0
 
 class ZCallable_V0
-:	public ZCounted
-,	public ZWeakReferee
+:	public ZCallable
 	{
 public:
 	virtual void Invoke() = 0;
@@ -110,11 +113,10 @@ public:
 
 template <class P0>
 class ZCallable_V1
-:	public ZCounted
-,	public ZWeakReferee
+:	public ZCallable
 	{
 public:
-	virtual void Invoke(P0 iP0) = 0;
+	virtual void Invoke(P0) = 0;
 	};
 
 // =================================================================================================
@@ -123,11 +125,10 @@ public:
 
 template <class P0, class P1>
 class ZCallable_V2
-:	public ZCounted
-,	public ZWeakReferee
+:	public ZCallable
 	{
 public:
-	virtual void Invoke(P0 iP0, P1 iP1) = 0;
+	virtual void Invoke(P0, P1) = 0;
 	};
 
 // =================================================================================================
@@ -136,11 +137,22 @@ public:
 
 template <class P0, class P1, class P2>
 class ZCallable_V3
-:	public ZCounted
-,	public ZWeakReferee
+:	public ZCallable
 	{
 public:
-	virtual void Invoke(P0 iP0, P1 iP1, P2 iP2) = 0;
+	virtual void Invoke(P0, P1, P2) = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_V4
+
+template <class P0, class P1, class P2, class P3>
+class ZCallable_V4
+:	public ZCallable
+	{
+public:
+	virtual void Invoke(P0, P1, P2, P3) = 0;
 	};
 
 // =================================================================================================
@@ -272,6 +284,41 @@ public:
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
 					theCB.Get()->Invoke(iP0, iP1, iP2);
+				continue;
+				}
+			break;
+			}
+		}
+
+private:
+	ZSafeSet<ZWeakRef<Callable_t> > fCallables;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallableSet_T4
+
+template <class P0, class P1, class P2, class P3>
+class ZCallableSet_T4
+	{
+public:
+	typedef ZCallable_V4<P0, P1, P2, P3> Callable_t;
+
+	void Register(ZRef<Callable_t> iCallable)
+		{ fCallables.Insert(iCallable); }
+
+	void Unregister(ZRef<Callable_t> iCallable)
+		{ fCallables.Erase(iCallable); }
+
+	void Invoke(P0 iP0, P1 iP1, P2 iP2, P3 iP3)
+		{
+		for (ZSafeSetIterConst<ZWeakRef<Callable_t> > iter = fCallables;
+			/*no test*/; /*no inc*/)
+			{
+			if (ZQ_T<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
+				{
+				if (ZRef<Callable_t> theCB = theQ.Get())
+					theCB.Get()->Invoke(iP0, iP1, iP2, iP3);
 				continue;
 				}
 			break;
