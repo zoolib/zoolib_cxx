@@ -52,6 +52,10 @@ private:
 	ZRef<Callable_t> fCallable;
 	};
 
+inline ZRef<ZWorker> MakeWorker(
+	const ZRef<ZCallable_R1<bool, ZRef<ZWorker> > >& iCallable)
+	{ return new ZWorker_Callable_T0(iCallable); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWorker_Callable_T1
@@ -80,6 +84,12 @@ private:
 	const P0 fP0;
 	};
 
+template <class P0>
+ZRef<ZWorker> MakeWorker(
+	const ZRef<ZCallable_R2<bool, ZRef<ZWorker>, const P0&> >& iCallable,
+	const P0& iP0)
+	{ return new ZWorker_Callable_T1<P0>(iCallable, iP0); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWorker_Callable_T2
@@ -100,7 +110,7 @@ public:
 	virtual bool Work()
 		{
 		if (ZRef<Callable_t> theCallable = fCallable)
-			return fCallable->Invoke(fP0, fP1);
+			return fCallable->Invoke(this, fP0, fP1);
 		return false;
 		}
 
@@ -109,6 +119,12 @@ private:
 	const P0 fP0;
 	const P1 fP1;
 	};
+
+template <class P0, class P1>
+ZRef<ZWorker> MakeWorker(
+	const ZRef<ZCallable_R3<bool, ZRef<ZWorker>, const P0&, const P1&> >& iCallable,
+	const P0& iP0, const P1& iP1)
+	{ return new ZWorker_Callable_T2<P0, P1>(iCallable, iP0, iP1); }
 
 // =================================================================================================
 #pragma mark -
@@ -142,6 +158,12 @@ private:
 	const P2 fP2;
 	};
 
+template <class P0, class P1, class P2>
+ZRef<ZWorker> MakeWorker(
+	const ZRef<ZCallable_R4<bool, ZRef<ZWorker>, const P0&, const P1&, const P2&> >& iCallable,
+	const P0& iP0, const P1& iP1, const P2& iP2)
+	{ return new ZWorker_Callable_T3<P0, P1, P2>(iCallable, iP0, iP1, iP2); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWorker_Callable_Once_T0
@@ -165,6 +187,10 @@ public:
 private:
 	ZRef<Callable_t> fCallable;
 	};
+
+inline ZRef<ZWorker> MakeWorker(
+	const ZRef<ZCallable_V0>& iCallable)
+	{ return new ZWorker_Callable_Once_T0(iCallable); }
 
 // =================================================================================================
 #pragma mark -
@@ -192,6 +218,12 @@ private:
 	ZRef<Callable_t> fCallable;
 	const P0 fP0;
 	};
+
+template <class P0>
+ZRef<ZWorker> MakeWorker(
+	const ZRef<ZCallable_V1<const P0&> >& iCallable,
+	const P0& iP0)
+	{ return new ZWorker_Callable_Once_T1<P0>(iCallable, iP0); }
 
 // =================================================================================================
 #pragma mark -
@@ -221,6 +253,12 @@ private:
 	const P0 fP0;
 	const P1 fP1;
 	};
+
+template <class P0, class P1>
+ZRef<ZWorker> MakeWorker(
+	const ZRef<ZCallable_V2<const P0&, const P1&> >& iCallable,
+	const P0& iP0, const P1& iP1)
+	{ return new ZWorker_Callable_Once_T2<P0, P1>(iCallable, iP0, iP1); }
 
 // =================================================================================================
 #pragma mark -
@@ -253,6 +291,12 @@ private:
 	const P1 fP1;
 	const P2 fP2;
 	};
+
+template <class P0, class P1, class P2>
+ZRef<ZWorker> MakeWorker(
+	const ZRef<ZCallable_V3<const P0&, const P1&, const P2&> >& iCallable,
+	const P0& iP0, const P1& iP1, const P2& iP2)
+	{ return new ZWorker_Callable_Once_T3<P0, P1, P2>(iCallable, iP0, iP1, iP2); }
 
 } // namespace ZooLib
 

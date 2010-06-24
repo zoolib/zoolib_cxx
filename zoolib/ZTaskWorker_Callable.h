@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -27,10 +27,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTaskWorker_T0
+#pragma mark * ZWorker_Callable_T0
 
 class ZTaskWorker_Callable_T0
 :	public ZTaskWorker
@@ -43,65 +42,9 @@ public:
 		{}
 	};
 
-#if 0
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZTaskWorker_T1
-
-template <class P0>
-class ZTaskWorker_T1
-:	public ZTaskWorker
-,	public ZWorker_Callable_T1
-	{
-public:
-	ZTaskWorker_T1(
-		ZRef<ZTaskMaster> iTaskMaster,
-		ZRef<Callable_t> iCallable,
-		const P0& iP0)
-	:	ZTaskWorker(iTaskMaster)
-	,	ZWorker_Callable_T1(iCallable, iP0)
-		{}
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZTaskWorker_T2
-
-template <class P0, class P1>
-class ZTaskWorker_T2
-:	public ZTaskWorker
-,	public ZWorker_Callable_T2
-	{
-public:
-	ZTaskWorker_T2(
-		ZRef<ZTaskMaster> iTaskMaster,
-		ZRef<Callable_t> iCallable,
-		const P0& iP0, const P1& iP1)
-	:	ZTaskWorker(iTaskMaster)
-	,	ZWorker_Callable_T2(iCallable, iP0, iP1)
-		{}
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZTaskWorker_T3
-
-template <class P0, class P1, class P2>
-class ZTaskWorker_T3
-:	public ZTaskWorker
-,	public ZWorker_Callable_T3
-	{
-public:
-	ZTaskWorker_T3(
-		ZRef<ZTaskMaster> iTaskMaster,
-		ZRef<Callable_t> iCallable,
-		const P0& iP0, const P1& iP1, const P2& iP2)
-	:	ZTaskWorker(iTaskMaster)
-	,	ZWorker_Callable_T3(iCallable, iP0, iP1, iP2)
-		{}
-	};
-
-#endif
+inline ZRef<ZTaskWorker> MakeTaskWorker(ZRef<ZTaskMaster> iTaskMaster,
+	const ZRef<ZCallable_R1<bool, ZRef<ZWorker> > >& iCallable)
+	{ return new ZTaskWorker_Callable_T0(iTaskMaster, iCallable); }
 
 } // namespace ZooLib
 
