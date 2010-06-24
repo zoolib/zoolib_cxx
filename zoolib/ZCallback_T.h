@@ -29,42 +29,53 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallback_T
+#pragma mark * ZCallback_T0
 
-template <class Param_t>
-class ZCallback_T
+class ZCallback_T0
 :	public ZCounted
 ,	public ZWeakReferee
 	{
 public:
-	virtual void Invoke(Param_t iParam) = 0;
+	virtual void Invoke() = 0;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallbackSet_T
+#pragma mark * ZCallback_T1
 
-template <class Param_t>
-class ZCallbackSet_T
+template <class T0>
+class ZCallback_T1
 :	public ZCounted
 ,	public ZWeakReferee
 	{
 public:
-	void Register(ZRef<ZCallback_T<Param_t> > iCallback)
+	virtual void Invoke(T0 iParam) = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallbackSet_T0
+
+class ZCallbackSet_T0
+	{
+public:
+	typedef ZCallback_T0 Callback_t;
+
+	void Register(ZRef<Callback_t> iCallback)
 		{ fCallbacks.Insert(iCallback); }
 
-	void Unregister(ZRef<ZCallback_T<Param_t> > iCallback)
+	void Unregister(ZRef<Callback_t> iCallback)
 		{ fCallbacks.Erase(iCallback); }
 
-	void Invoke(Param_t iParam)
+	void Invoke()
 		{
-		for (ZSafeSetIterConst<ZWeakRef<ZCallback_T<Param_t> > > iter = fCallbacks;
+		for (ZSafeSetIterConst<ZWeakRef<Callback_t> > iter = fCallbacks;
 			/*no test*/; /*no inc*/)
 			{
-			if (ZQ_T<ZWeakRef<ZCallback_T<Param_t> > > theQ = iter.QReadInc())
+			if (ZQ_T<ZWeakRef<Callback_t> > theQ = iter.QReadInc())
 				{
-				if (ZRef<ZCallback_T<Param_t> > theCB = theQ.Get())
-					theCB.Get()->Invoke(iParam);
+				if (ZRef<Callback_t> theCB = theQ.Get())
+					theCB.Get()->Invoke();
 				continue;
 				}
 			break;
@@ -72,9 +83,44 @@ public:
 		}
 
 private:
-	ZSafeSet<ZWeakRef<ZCallback_T<Param_t> > > fCallbacks;
+	ZSafeSet<ZWeakRef<Callback_t> > fCallbacks;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallbackSet_T1
+
+template <class P0>
+class ZCallbackSet_T1
+	{
+public:
+	typedef ZCallback_T1<P0> Callback_t;
+
+	void Register(ZRef<Callback_t> iCallback)
+		{ fCallbacks.Insert(iCallback); }
+
+	void Unregister(ZRef<Callback_t> iCallback)
+		{ fCallbacks.Erase(iCallback); }
+
+	void Invoke(P0 iP0)
+		{
+		for (ZSafeSetIterConst<ZWeakRef<Callback_t> > iter = fCallbacks;
+			/*no test*/; /*no inc*/)
+			{
+			if (ZQ_T<ZWeakRef<Callback_t> > theQ = iter.QReadInc())
+				{
+				if (ZRef<Callback_t> theCB = theQ.Get())
+					theCB.Get()->Invoke(iP0);
+				continue;
+				}
+			break;
+			}
+		}
+
+private:
+	ZSafeSet<ZWeakRef<Callback_t> > fCallbacks;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZDataspace_Source__
+#endif // __ZCallback_T__
