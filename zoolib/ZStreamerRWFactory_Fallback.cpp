@@ -28,6 +28,9 @@ using std::vector;
 #pragma mark -
 #pragma mark * ZStreamerRWFactory_Fallback
 
+ZStreamerRWFactory_Fallback::ZStreamerRWFactory_Fallback()
+	{}
+
 ZStreamerRWFactory_Fallback::ZStreamerRWFactory_Fallback(
 	const ZRef<ZStreamerRWFactory>* iFactories, size_t iCount)
 :	fFactories(iFactories, iFactories + iCount)
