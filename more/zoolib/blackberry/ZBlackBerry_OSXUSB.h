@@ -76,7 +76,10 @@ public:
 	virtual ZRef<Device> Open(uint64 iDeviceID);
 
 private:
+	ZRef<ZUSBWatcher::CB_DeviceAttached> fCB_DeviceAttached;
 	void pDeviceAttached(ZRef<ZUSBDevice> iDevice);
+
+	ZRef<ZUSBDevice::CB_DeviceDetached> fCB_DeviceDetached;
 	void pDeviceDetached(ZRef<ZUSBDevice> iDevice);
 
 	ZMtxR fMutex;
@@ -95,13 +98,7 @@ private:
 	ZRef<ZUSBWatcher> fUSBWatcher_Dual_HS;
 	ZRef<ZUSBWatcher> fUSBWatcher_Storm_HS;
 
-	class CB_DeviceAttached;
-	friend class CB_DeviceAttached;
-	ZRef<CB_DeviceAttached> fCB_DeviceAttached;
 
-	class CB_DeviceDetached;
-	friend class CB_DeviceDetached;
-	ZRef<CB_DeviceDetached> fCB_DeviceDetached;
 
 	struct Device_t
 		{

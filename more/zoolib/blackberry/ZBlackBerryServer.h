@@ -41,13 +41,8 @@ public:
 	void HandleRequest(ZRef<ZStreamerRWCon> iSRWCon);
 
 private:
-	class CB_ManagerChanged;
-	friend class CB_ManagerChanged;
-	ZRef<CB_ManagerChanged> fCB_ManagerChanged;
-
-	class CB_DeviceFinished;
-	friend class CB_DeviceFinished;
-	ZRef<CB_DeviceFinished> fCB_DeviceFinished;
+	ZRef<ZBlackBerry::Manager::CB_ManagerChanged> fCB_ManagerChanged;
+	ZRef<ZBlackBerry::Device::CB_DeviceFinished> fCB_DeviceFinished;
 
 	void pManagerChanged(ZRef<ZBlackBerry::Manager> iManager);
 	void pDeviceFinished(ZRef<ZBlackBerry::Device> iDevice);

@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/blackberry/ZBlackBerry_Streamer.h"
 
 #include "zoolib/ZByteSwap.h"
+#include "zoolib/ZCallable_T.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStream_Memory.h"
@@ -161,48 +162,6 @@ static void spChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 #pragma mark -
 #pragma mark * ZBlackBerry::Manager_OSXUSB
 
-class Manager_OSXUSB::CB_DeviceAttached : public ZUSBWatcher::CB_DeviceAttached
-	{
-public:
-	CB_DeviceAttached(ZRef<Manager_OSXUSB> iManager)
-	:	fManager(iManager)
-		{}
-
-	virtual void Invoke(ZRef<ZUSBDevice> iParam)
-		{
-		if (ZRef<Manager_OSXUSB> theManager = fManager)
-			theManager->pDeviceAttached(iParam);
-		}
-
-private:
-	ZWeakRef<Manager_OSXUSB> fManager;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Manager_OSXUSB
-
-class Manager_OSXUSB::CB_DeviceDetached : public ZUSBDevice::CB_DeviceDetached
-	{
-public:
-	CB_DeviceDetached(ZRef<Manager_OSXUSB> iManager)
-	:	fManager(iManager)
-		{}
-
-	virtual void Invoke(ZRef<ZUSBDevice> iParam)
-		{
-		if (ZRef<Manager_OSXUSB> theManager = fManager)
-			theManager->pDeviceDetached(iParam);
-		}
-
-private:
-	ZWeakRef<Manager_OSXUSB> fManager;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Manager_OSXUSB
-
 Manager_OSXUSB::Manager_OSXUSB(CFRunLoopRef iRunLoopRef, bool iAllowMassStorage)
 :	fRunLoopRef(iRunLoopRef),
 	fAllowMassStorage(iAllowMassStorage),
@@ -231,8 +190,8 @@ void Manager_OSXUSB::Initialize()
 
 	ZLOGFUNCTION(eDebug);
 
-	fCB_DeviceAttached = new CB_DeviceAttached(this);
-	fCB_DeviceDetached = new CB_DeviceDetached(this);
+	fCB_DeviceAttached = MakeCallable(&Manager_OSXUSB::pDeviceAttached, MakeWeakRef(this));
+	fCB_DeviceDetached = MakeCallable(&Manager_OSXUSB::pDeviceDetached, MakeWeakRef(this));
 
 	fIONotificationPortRef = ::IONotificationPortCreate(fMasterPort);
 

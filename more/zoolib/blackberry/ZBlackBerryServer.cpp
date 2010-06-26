@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/blackberry/ZBlackBerryServer.h"
 
+#include "zoolib/ZCallable_T.h"
 #include "zoolib/ZCommer.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
@@ -301,50 +302,6 @@ bool StreamerCopier_Chunked::Work()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZBlackBerryServer::CB_ManagerChanged
-
-class ZBlackBerryServer::CB_ManagerChanged
-:	public ZBlackBerry::Manager::CB_ManagerChanged
-	{
-public:
-	CB_ManagerChanged(ZBlackBerryServer* iBBServer)
-	:	fBBServer(iBBServer)
-		{}
-
-	virtual void Invoke(ZRef<ZBlackBerry::Manager> iParam)
-		{
-		if (fBBServer)
-			fBBServer->pManagerChanged(iParam);
-		}
-
-private:
-	ZBlackBerryServer* fBBServer;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerryServer::CB_DeviceFinished
-
-class ZBlackBerryServer::CB_DeviceFinished
-:	public ZBlackBerry::Device::CB_DeviceFinished
-	{
-public:
-	CB_DeviceFinished(ZBlackBerryServer* iBBServer)
-	:	fBBServer(iBBServer)
-		{}
-
-	virtual void Invoke(ZRef<ZBlackBerry::Device> iParam)
-		{
-		if (fBBServer)
-			fBBServer->pDeviceFinished(iParam);
-		}
-
-private:
-	ZBlackBerryServer* fBBServer;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZBlackBerryServer
 
 static string spReadString(const ZStreamR& r)
@@ -356,8 +313,8 @@ static string spReadString(const ZStreamR& r)
 
 ZBlackBerryServer::ZBlackBerryServer(ZRef<ZBlackBerry::Manager> iManager)
 :	fManager(iManager)
-,	fCB_ManagerChanged(new CB_ManagerChanged(this))
-,	fCB_DeviceFinished(new CB_DeviceFinished(this))
+,	fCB_ManagerChanged(MakeCallable(&ZBlackBerryServer::pManagerChanged, this))
+,	fCB_DeviceFinished(MakeCallable(&ZBlackBerryServer::pDeviceFinished, this))
 	{
 	fManager->RegisterManagerChanged(fCB_ManagerChanged);
 	this->pManagerChanged(fManager);
