@@ -395,6 +395,9 @@ void ZStreamRWCon_SSL_Win::Imp_Write(const void* iSource, size_t iCount, size_t*
 	fSendOpen = false;
 	}
 
+void ZStreamRWCon_SSL_Win::Imp_Flush()
+	{ fStreamW.Flush(); }
+
 void ZStreamRWCon_SSL_Win::Imp_SendDisconnect()
 	{
 	if (!fSendOpen)

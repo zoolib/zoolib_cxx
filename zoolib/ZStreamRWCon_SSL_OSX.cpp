@@ -112,6 +112,9 @@ bool ZStreamRWCon_SSL_OSX::Imp_ReceiveDisconnect(double iTimeout)
 void ZStreamRWCon_SSL_OSX::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{ ::SSLWrite(fSSLCR, iSource, iCount, oCountWritten); }
 
+void ZStreamRWCon_SSL_OSX::Imp_Flush()
+	{ fStreamW.Flush(); }
+
 void ZStreamRWCon_SSL_OSX::Imp_SendDisconnect()
 	{
 	::SSLClose(fSSLCR);

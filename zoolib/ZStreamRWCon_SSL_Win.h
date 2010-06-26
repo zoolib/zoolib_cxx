@@ -61,6 +61,7 @@ public:
 
 // From ZStreamW via ZStreamWCon
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual void Imp_Flush();
 
 // From ZStreamWCon
 	virtual void Imp_SendDisconnect();
