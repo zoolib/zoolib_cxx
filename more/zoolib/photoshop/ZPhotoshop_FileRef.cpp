@@ -467,7 +467,7 @@ ZTrail FileRef::AsTrail() const
 	#elif defined(__PIWin__)
 
 		// Need to look at this again when we're doing 64 bit compiles.
-		ZAssertCompile(ZIntTrait_T<sizeof(size_t)>::eIs32Bit);
+//##		ZAssertCompile(ZIntTrait_T<sizeof(size_t)>::eIs32Bit);
 
 		UseHandle useHandle(fHandle);
 		size_t handleSize = useHandle.Size();
