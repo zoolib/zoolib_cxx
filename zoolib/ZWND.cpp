@@ -31,7 +31,7 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZWindowClassRegistrationW
 
-static HINSTANCE spGetModuleHandle()
+HINSTANCE ZWNDW::sGetModuleHandle()
 	{
 	#if ZCONFIG(Compiler, CodeWarrior)
 		return ::GetModuleHandleW(nullptr);
@@ -39,7 +39,7 @@ static HINSTANCE spGetModuleHandle()
 		HMODULE theHINSTANCE;
 		bool result = ::GetModuleHandleExW(
 			GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
-			reinterpret_cast<LPCWSTR>(spGetModuleHandle),
+			reinterpret_cast<LPCWSTR>(sGetModuleHandle),
 			&theHINSTANCE);
 		ZAssert(result);
 		return theHINSTANCE;
@@ -67,7 +67,7 @@ ZWindowClassRegistrationW::ZWindowClassRegistrationW(WNDPROC iWNDPROC, const WCH
 	windowClass.lpfnWndProc = iWNDPROC;
 	windowClass.cbClsExtra = 0;
 	windowClass.cbWndExtra = 0;
-	windowClass.hInstance = spGetModuleHandle();
+	windowClass.hInstance = ZWNDW::sGetModuleHandle();
 	windowClass.hIcon = nullptr;
 	windowClass.hCursor = ::LoadCursorW(nullptr, MAKEINTRESOURCEW(IDC_ARROW));
 	windowClass.hbrBackground = 0;//(HBRUSH)COLOR_WINDOW;
@@ -79,7 +79,7 @@ ZWindowClassRegistrationW::ZWindowClassRegistrationW(WNDPROC iWNDPROC, const WCH
 
 ZWindowClassRegistrationW::~ZWindowClassRegistrationW()
 	{
-	bool result = ::UnregisterClassW(fWNDCLASSName, spGetModuleHandle());
+	bool result = ::UnregisterClassW(fWNDCLASSName, ZWNDW::sGetModuleHandle());
 	ZAssert(result);
 	}
 
@@ -106,7 +106,7 @@ HWND ZWNDW::sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam)
 		10, // initial y size
 		iParent, // Parent window
 		nullptr,
-		spGetModuleHandle(),
+		sGetModuleHandle(),
 		iCreateParam); // creation parameters
 	}
 
@@ -142,7 +142,7 @@ void ZWNDW::Create(HWND iParent, DWORD iStyle)
 		10, // initial y size
 		iParent, // Parent window
 		nullptr,
-		spGetModuleHandle(),
+		sGetModuleHandle(),
 		this); // creation parameters
 
 	ZAssert(fHWND == theHWND);

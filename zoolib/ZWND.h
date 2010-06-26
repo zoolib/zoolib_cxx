@@ -35,6 +35,8 @@ namespace ZooLib {
 class ZWNDW
 	{
 public:
+	static HINSTANCE sGetModuleHandle();
+
 	static HWND sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam);
 
 	ZWNDW(WNDPROC iWNDPROC);
