@@ -27,17 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h" // For Adopt_T
 
-#ifdef __OBJC__
-	@class NSObject;
-//	#include "zoolib/ZOBJC.h"
-//	#include <Foundation/NSObject.h>
-#endif // __OBJC__
-
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZooLib::nullref, akin to std::nullptr
 
 // =================================================================================================
 #pragma mark -
