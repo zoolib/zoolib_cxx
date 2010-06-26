@@ -192,7 +192,9 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 ZRef<ZYadR> sMakeYadR(ZRef<ZML::StrimmerU> iStrimmerU)
 	{
 	sSkipText(iStrimmerU->GetStrim());
-	return new YadMapR(iStrimmerU);
+	if (iStrimmerU->GetStrim().Current() != ZML::eToken_Exhausted)
+		return new YadMapR(iStrimmerU);
+	return null;
 	}
 
 } // namespace ZYad_XMLAttr
