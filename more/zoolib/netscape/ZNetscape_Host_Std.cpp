@@ -721,7 +721,7 @@ bool Host_Std::Sender::pDeliverData()
 	const size_t countReadable = theStreamR.CountReadable();
 
 	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-		s.Writef("countReadable = %zu", countReadable);
+		s.Writef("countReadable = %llu", (uint64)countReadable);
 
 	if (countReadable == 0)
 		return false;
@@ -747,7 +747,7 @@ bool Host_Std::Sender::pDeliverData()
 			return false;
 
 		if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-			s.Writef("countRead = %zu", countRead);
+			s.Writef("countRead = %llu", (uint64)countRead);
 
 		for (size_t start = 0; start < countRead; /*no inc*/)
 			{
