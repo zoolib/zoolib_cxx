@@ -125,10 +125,9 @@ static ZRef<HANDLE> spCreateNamedPipe(const string16& iPipeName)
 		iPipeName.c_str(), // lpName
 		PIPE_ACCESS_DUPLEX, // dwOpenMode
 		PIPE_TYPE_BYTE | PIPE_WAIT, // dwPipeMode
-//		FILE_FLAG_OVERLAPPED | PIPE_TYPE_BYTE | PIPE_WAIT, // dwPipeMode
 		PIPE_UNLIMITED_INSTANCES, // nMaxInstances
-		0, // nOutBufferSize
-		0, // nInBufferSize
+		8192, // nOutBufferSize
+		8192, // nInBufferSize
 		0, // nDefaultTimeOut
 		nullptr // lpSecurityAttributes
 		);
@@ -139,17 +138,9 @@ static ZRef<HANDLE> spCreateNamedPipe(const string16& iPipeName)
 	return Adopt(theHANDLE);
 	}
 
-#if 0
-static ZRef<HANDLE> spCreateEvent()
-	{
-
-	}
-#endif
-
 ZNetListener_Local_Win::ZNetListener_Local_Win(const string& iName)
 :	fPath(spAsPipeName(iName))
 ,	fHANDLE(spCreateNamedPipe(fPath))
-//,	fEvent(spCreateEvent())
 	{}
 
 ZNetListener_Local_Win::~ZNetListener_Local_Win()
@@ -160,8 +151,6 @@ ZRef<ZNetEndpoint> ZNetListener_Local_Win::Listen()
 	{
 	if (WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, 1000))
 		{
-//		OVERLAPPED theOVERLAPPED = {0};
-//		theOVERLAPPED.hEvent = fEvent;
 		if (::ConnectNamedPipe(fHANDLE, nullptr) || ::GetLastError() == ERROR_PIPE_CONNECTED)
 			{
 			ZRef<HANDLE> theHANDLE;
@@ -262,9 +251,6 @@ void ZNetEndpoint_Local_Win::Imp_Flush()
 
 bool ZNetEndpoint_Local_Win::Imp_ReceiveDisconnect(double iTimeout)
 	{
-//	if (!this->Imp_WaitReadable(iTimeout))
-//		return false;
-
 	for (;;)
 		{
 		uint64 countSkipped;
