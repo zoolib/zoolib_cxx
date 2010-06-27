@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 namespace FileFormat {
-namespace IFF {
+namespace AppleDouble {
 
 using std::vector;
 
@@ -126,6 +126,6 @@ void Writer::ToStream(const ZStreamW& iStreamW) const
 		}
 	}
 
-} // namespace IFF
+} // namespace AppleDouble
 } // namespace FileFormat
 } // namespace ZooLib

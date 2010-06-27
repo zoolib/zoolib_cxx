@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 namespace FileFormat {
-namespace IFF {
+namespace AppleDouble {
 
 // =================================================================================================
 #pragma mark -
@@ -76,7 +76,7 @@ private:
 	std::vector<Entry> fEntries;
 	};
 
-} // namespace IFF
+} // namespace AppleDouble
 } // namespace FileFormat
 } // namespace ZooLib
 
