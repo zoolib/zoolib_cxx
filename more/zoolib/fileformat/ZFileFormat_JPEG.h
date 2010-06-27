@@ -28,12 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
+namespace FileFormat {
+namespace JPEG {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZFileFormat_JPEG
-
-namespace ZFileFormat_JPEG {
 
 enum
 	{
@@ -153,8 +153,8 @@ private:
 	size_t fCountRemaining;
 	};
 
-} // namespace ZFileFormat_JPEG
-
+} // namespace JPEG
+} // namespace FileFormat
 } // namespace ZooLib
 
 #endif // __ZFileFormat_JPEG__

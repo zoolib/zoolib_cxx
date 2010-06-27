@@ -28,8 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-
-namespace ZFileFormat_IFF {
+namespace FileFormat {
+namespace IFF {
 
 // =================================================================================================
 #pragma mark -
@@ -168,8 +168,8 @@ private:
 	uint64 fStart;
 	};
 
-} // namespace ZFileFormat_IFF
-
+} // namespace IFF
+} // namespace FileFormat
 } // namespace ZooLib
 
 #endif // __ZFileFormat_IFF__

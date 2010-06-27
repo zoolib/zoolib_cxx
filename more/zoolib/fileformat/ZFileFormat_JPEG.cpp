@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZFileFormat_JPEG.h"
+#include "zoolib/fileformat/ZFileFormat_JPEG.h"
 
 #include "zoolib/ZStream_Tee.h"
 #include "zoolib/ZStreamRWPos_RAM.h"
@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim.h"
 
 namespace ZooLib {
+namespace FileFormat {
+namespace JPEG {
 
 using std::min;
 
@@ -111,7 +113,7 @@ static const char* const spSegmentNames[] =
 #pragma mark -
 #pragma mark * ZFileFormat_JPEG
 
-const char* ZFileFormat_JPEG::sSegmentAsText(uint8 iSegment)
+const char* sSegmentAsText(uint8 iSegment)
 	{
 	if (iSegment == 0x01)
 		return "TEM";
@@ -122,7 +124,7 @@ const char* ZFileFormat_JPEG::sSegmentAsText(uint8 iSegment)
 	return "??";
 	}
 
-bool ZFileFormat_JPEG::sIs_SOF(uint8 iSegment)
+bool sIs_SOF(uint8 iSegment)
 	{
 	// Note that there are no segments of eJPEG_SOF_4, eJPEG_SOF_8
 	// or eJPEG_SOF_C. Those bytes values (0xC4, 0xC8 and 0xCC)
@@ -147,7 +149,7 @@ bool ZFileFormat_JPEG::sIs_SOF(uint8 iSegment)
 	return false;
 	}
 
-bool ZFileFormat_JPEG::sIs_APP(uint8 iSegment)
+bool sIs_APP(uint8 iSegment)
 	{
 	switch (iSegment)
 		{
@@ -174,7 +176,7 @@ bool ZFileFormat_JPEG::sIs_APP(uint8 iSegment)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZFileFormat_JPEG::StreamR_Segment
+#pragma mark * StreamR_Segment
 
 /**
 A read filter stream that examines its source stream for 0xFF 0xXX sequences. If
@@ -194,20 +196,20 @@ sequence can be found then \a oSegmentType will be set to zero.
 \sa ZFileFormat_QuickTime
 */
 
-ZFileFormat_JPEG::StreamR_Segment::StreamR_Segment(uint8& oSegmentType, const ZStreamR& iStreamR)
+StreamR_Segment::StreamR_Segment(uint8& oSegmentType, const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{
 	this->pInit(oSegmentType, true);
 	}
 
-ZFileFormat_JPEG::StreamR_Segment::StreamR_Segment(
+StreamR_Segment::StreamR_Segment(
 	uint8& oSegmentType, bool iSkipOnDestroy, const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{
 	this->pInit(oSegmentType, iSkipOnDestroy);
 	}
 
-ZFileFormat_JPEG::StreamR_Segment::~StreamR_Segment()
+StreamR_Segment::~StreamR_Segment()
 	{
 	if (fSkipOnDestroy && fCountRemaining)
 		{
@@ -220,7 +222,7 @@ ZFileFormat_JPEG::StreamR_Segment::~StreamR_Segment()
 		}
 	}
 
-void ZFileFormat_JPEG::StreamR_Segment::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+void StreamR_Segment::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount && fCountRemaining)
@@ -237,13 +239,13 @@ void ZFileFormat_JPEG::StreamR_Segment::Imp_Read(void* oDest, size_t iCount, siz
 		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
-size_t ZFileFormat_JPEG::StreamR_Segment::Imp_CountReadable()
+size_t StreamR_Segment::Imp_CountReadable()
 	{ return min(fCountRemaining, fStreamR.CountReadable()); }
 
-bool ZFileFormat_JPEG::StreamR_Segment::Imp_WaitReadable(double iTimeout)
+bool StreamR_Segment::Imp_WaitReadable(double iTimeout)
 	{ return fStreamR.WaitReadable(iTimeout); }
 
-void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
+void StreamR_Segment::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
 	uint64 countRead;
@@ -253,7 +255,7 @@ void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyToDispatch(const ZStreamW& iStre
 		*oCountRead = countRead;
 	}
 
-void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+void StreamR_Segment::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
 	uint64 countRead;
@@ -263,7 +265,7 @@ void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyTo(const ZStreamW& iStreamW, uin
 		*oCountRead = countRead;
 	}
 
-void ZFileFormat_JPEG::StreamR_Segment::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
+void StreamR_Segment::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
 	uint64 countSkipped;
 	fStreamR.Skip(min(iCount, uint64(fCountRemaining)), &countSkipped);
@@ -272,7 +274,7 @@ void ZFileFormat_JPEG::StreamR_Segment::Imp_Skip(uint64 iCount, uint64* oCountSk
 		*oCountSkipped = countSkipped;
 	}
 
-void ZFileFormat_JPEG::StreamR_Segment::pInit(uint8& oSegmentType, bool iSkipOnDestroy)
+void StreamR_Segment::pInit(uint8& oSegmentType, bool iSkipOnDestroy)
 	{
 	fSkipOnDestroy = iSkipOnDestroy;
 	fCountRemaining = 0;
@@ -360,8 +362,6 @@ void ZFileFormat_JPEG::StreamR_Segment::pInit(uint8& oSegmentType, bool iSkipOnD
 #pragma mark -
 #pragma mark * ZFileFormat_JPEG, testing
 
-namespace ZFileFormat_JPEG {
-
 void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW);
 void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW)
 	{
@@ -421,6 +421,7 @@ void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW)
 			}
 		}
 	}
-} // namespace ZFileFormat_JPEG
 
+} // namespace JPEG
+} // namespace FileFormat
 } // namespace ZooLib

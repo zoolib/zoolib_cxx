@@ -27,12 +27,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
+namespace FileFormat {
+namespace IFF {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZFileFormat_AppleDouble
-
-namespace ZFileFormat_AppleDouble {
+#pragma mark * FileFormat::AppleDouble
 
 static const uint32 entryID_DataFork = 1;
 static const uint32 entryID_ResourceFork = 2;
@@ -43,6 +43,10 @@ static const uint32 entryID_IconColor = 6;
 static const uint32 entryID_FileInfo = 7;
 static const uint32 entryID_FinderInfo = 9;
 static const uint32 entryID_User = 0x80000000U;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * FileFormat::AppleDouble::Writer
 
 class Writer
 	{
@@ -72,8 +76,8 @@ private:
 	std::vector<Entry> fEntries;
 	};
 
-} // namespace ZFileFormat_AppleDouble
-
+} // namespace IFF
+} // namespace FileFormat
 } // namespace ZooLib
 
 #endif // __ZFileFormat_AppleDouble__

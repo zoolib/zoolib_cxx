@@ -28,12 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-
-namespace ZFileFormat_QuickTime {
+namespace FileFormat {
+namespace QuickTime {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZFileFormat_QuickTime::Writer
+#pragma mark * FileFormat::QuickTime::Writer
 
 class Writer
 	{
@@ -154,8 +154,8 @@ private:
 	uint64 fStart;
 	};
 
-} // namespace ZFileFormat_QuickTime
-
+} // namespace QuickTime
+} // namespace FileFormat
 } // namespace ZooLib
 
 #endif // __ZFileFormat_QuickTime__

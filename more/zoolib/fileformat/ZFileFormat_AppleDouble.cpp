@@ -18,30 +18,32 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZFileFormat_AppleDouble.h"
+#include "zoolib/fileformat/ZFileFormat_AppleDouble.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStreamR_Source.h"
 #include "zoolib/ZStreamRWPos_RAM.h"
 
 namespace ZooLib {
+namespace FileFormat {
+namespace IFF {
 
 using std::vector;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZFileFormat_AppleDouble
+#pragma mark * Writer
 
-ZFileFormat_AppleDouble::Writer::Writer()
+Writer::Writer()
 	{
 	fIsAppleSingle = false;
 	}
 
-void ZFileFormat_AppleDouble::Writer::SetIsAppleSingle(bool iIsAppleSingle)
+void Writer::SetIsAppleSingle(bool iIsAppleSingle)
 	{
 	fIsAppleSingle = iIsAppleSingle;
 	}
 
-void ZFileFormat_AppleDouble::Writer::Append(uint32 iEntryID, ZRef<ZStreamerRPos> iStreamerRPos)
+void Writer::Append(uint32 iEntryID, ZRef<ZStreamerRPos> iStreamerRPos)
 	{
 	Entry theEntry;
 	theEntry.fID = iEntryID;
@@ -50,35 +52,35 @@ void ZFileFormat_AppleDouble::Writer::Append(uint32 iEntryID, ZRef<ZStreamerRPos
 	fEntries.push_back(theEntry);
 	}
 
-void ZFileFormat_AppleDouble::Writer::Append(uint32 iEntryID, const ZStreamRPos& iStreamRPos)
+void Writer::Append(uint32 iEntryID, const ZStreamRPos& iStreamRPos)
 	{
 	ZRef<ZStreamerRWPos> theStreamer = new ZStreamerRWPos_T<ZStreamRWPos_RAM>;
 	theStreamer->GetStreamW().CopyAllFrom(iStreamRPos);
 	this->Append(iEntryID, theStreamer);
 	}
 
-void ZFileFormat_AppleDouble::Writer::Append(uint32 iEntryID, const ZStreamR& iStreamR, size_t iSize)
+void Writer::Append(uint32 iEntryID, const ZStreamR& iStreamR, size_t iSize)
 	{
 	ZRef<ZStreamerRWPos> theStreamer = new ZStreamerRWPos_T<ZStreamRWPos_RAM>;
 	theStreamer->GetStreamW().CopyFrom(iStreamR, iSize);
 	this->Append(iEntryID, theStreamer);
 	}
 
-void ZFileFormat_AppleDouble::Writer::Append(uint32 iEntryID, const void* iSource, size_t iSize)
+void Writer::Append(uint32 iEntryID, const void* iSource, size_t iSize)
 	{
 	ZRef<ZStreamerRWPos> theStreamer = new ZStreamerRWPos_T<ZStreamRWPos_RAM>;
 	theStreamer->GetStreamWPos().Write(iSource, iSize);
 	this->Append(iEntryID, theStreamer);
 	}
 
-ZRef<ZStreamerRWPos> ZFileFormat_AppleDouble::Writer::Create(uint32 iEntryID)
+ZRef<ZStreamerRWPos> Writer::Create(uint32 iEntryID)
 	{
 	ZRef<ZStreamerRWPos> theStreamer = new ZStreamerRWPos_T<ZStreamRWPos_RAM>;
 	this->Append(iEntryID, theStreamer);
 	return theStreamer;
 	}
 
-void ZFileFormat_AppleDouble::Writer::ToStream(const ZStreamW& iStreamW) const
+void Writer::ToStream(const ZStreamW& iStreamW) const
 	{
 	// Magic number
 	if (fIsAppleSingle)
@@ -124,4 +126,6 @@ void ZFileFormat_AppleDouble::Writer::ToStream(const ZStreamW& iStreamW) const
 		}
 	}
 
+} // namespace IFF
+} // namespace FileFormat
 } // namespace ZooLib
