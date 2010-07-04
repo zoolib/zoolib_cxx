@@ -25,18 +25,31 @@ namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * RelHead
+
+RelHead sPrefixed(const RelName& iRelName, const RelHead& iRelHead)
+	{
+	if (iRelName.empty())
+		return iRelHead;
+
+	RelHead result;
+	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
+		result.insert(iRelName + *i);
+
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Rename_t
 
-/*
-Rename_t sInvert(const Rename_t& iRename)
+Rename_t sInverted(const Rename_t& iRename)
 	{
 	Rename_t result;
 	for (Rename_t::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
 		result[(*i).second] = (*i).first;
-
 	return result;
 	}
-*/
 
 } // namespace ZRA
 } // namespace ZooLib

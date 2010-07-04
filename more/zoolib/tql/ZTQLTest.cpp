@@ -163,7 +163,7 @@ void sTestQL4(const ZStrimW& s)
 				}
 			else
 				{
-				s.Writef("%08X, ", theZQEResult.Get());
+				s.Writef("%p, ", theZQEResult.Get());
 				}
 			}
 		else

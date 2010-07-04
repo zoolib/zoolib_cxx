@@ -254,14 +254,14 @@ Source::Source()
 Source::~Source()
 	{}
 
-void Source::Register(ZRef<Callback> iCallback)
-	{ fCallbacks.Register(iCallback); }
+void Source::Register(ZRef<Callable> iCallable)
+	{ fCallables.Register(iCallable); }
 
-void Source::Unregister(ZRef<Callback> iCallback)
-	{ fCallbacks.Unregister(iCallback); }
+void Source::Unregister(ZRef<Callable> iCallable)
+	{ fCallables.Unregister(iCallable); }
 
-void Source::pInvokeCallbacks()
-	{ fCallbacks.Invoke(this); }
+void Source::pInvokeCallables()
+	{ fCallables.Invoke(this); }
 
 } // namespace ZDataspace
 } // namespace ZooLib

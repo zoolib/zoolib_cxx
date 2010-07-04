@@ -205,14 +205,14 @@ static ZValPred spRenamedInverse(
 	const ZValPred& iValPred, const Rename_t& iRename)
 	{
 	ZValPred result;
-	if (iValPred.Renamed(sInvert(iRename), result))
+	if (iValPred.Renamed(sInverted(iRename), result))
 		return result;
 	return iValPred;
 	}
 
 static ZRef<ZExpr_Logic> spRenamedInverse(
 	ZRef<ZExpr_Logic> iExpr_Logic, const Rename_t& iRename)
-	{ return DoRename(sInvert(iRename)).Do(iExpr_Logic); }
+	{ return DoRename(sInverted(iRename)).Do(iExpr_Logic); }
 
 void MakeSFW::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
 	{
@@ -333,7 +333,7 @@ void ToStrim_SQL::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
 	}
 
 typedef ZValComparator_Simple_T<ZVal_Expr> ZValComparator_Simple;
-typedef ZValComparand_Trail_T<ZVal_Expr> ZValComparand_Trail;
+typedef ZValComparand_Name_T<ZVal_Expr> ZValComparand_Name;
 typedef ZValComparand_Var_T<ZVal_Expr> ZValComparand_Var;
 typedef ZValComparand_Const_T<ZVal_Expr> ZValComparand_Const;
 
@@ -400,13 +400,9 @@ static void spToStrim(const ZRef<ZValPred::Comparand>& iCR, const ZStrimW& s)
 		{
 		s << "!!Null Comparand!!";
 		}
-	else if (ZRef<ZValComparand_Trail> cr = iCR.DynamicCast<ZValComparand_Trail>())
+	else if (ZRef<ZValComparand_Name> cr = iCR.DynamicCast<ZValComparand_Name>())
 		{
-		const ZTrail& theTrail = cr->GetTrail();
-		if (theTrail.Count() == 1)
-			spWrite_PropName(theTrail.At(0), s);
-		else
-			spWrite_PropName("/" + theTrail.AsString(), s);
+		spWrite_PropName(cr->GetName(), s);
 		}
 	else if (ZRef<ZValComparand_Var> cr = iCR.DynamicCast<ZValComparand_Var>())
 		{
@@ -489,7 +485,7 @@ void sAsSQL(ZRef<Expr_Rel_SFW> iSFW, const ZStrimW& s)
 		s << "SELECT";
 		const RelHead& theRelHead = iSFW->GetRelHead();
 
-		const Rename_t theRename = sInvert(iSFW->GetRename());
+		const Rename_t theRename = sInverted(iSFW->GetRename());
 
 		const set<string8>& names = theRelHead.GetElems();
 

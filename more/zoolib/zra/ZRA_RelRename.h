@@ -83,7 +83,6 @@ private:
 } // namespace ZooLib
 
 namespace std {
-template <class T>
 inline void swap(ZooLib::ZRA::RelRename& a, ZooLib::ZRA::RelRename& b)
 	{ a.swap(b); }
 }

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDataspace_Source__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallback_T.h"
+#include "zoolib/ZCallable.h"
 #include "zoolib/ZValPredCompound.h"
 
 #include "zoolib/zqe/ZQE_Result.h"
@@ -99,7 +99,7 @@ public:
 
 class Source;
 
-typedef ZCallback_T<Source*> Callback;
+typedef ZCallable_V1<Source*> Callable;
 
 // =================================================================================================
 #pragma mark -
@@ -122,14 +122,14 @@ public:
 		vector<SearchResult>& oChanged,
 		Clock& oClock) = 0;
 
-	void Register(ZRef<Callback> iCallback);
-	void Unregister(ZRef<Callback> iCallback);
+	void Register(ZRef<Callable> iCallable);
+	void Unregister(ZRef<Callable> iCallable);
 
 protected:
-	void pInvokeCallbacks();
+	void pInvokeCallables();
 
 private:
-	ZCallbackSet_T<Source*> fCallbacks;
+	ZCallableSet_T1<Source*> fCallables;
 	};
 
 } // namespace ZDataspace

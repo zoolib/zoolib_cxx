@@ -37,17 +37,6 @@ void sWrite_PropName(const string8& iName, const ZStrimW& s)
 	ZYad_ZooLibStrim::sWrite_PropName(iName, s);
 	}
 
-void sWrite_PropName(const ZTrail& iName, const ZStrimW& s)
-	{
-	s.Write("@");
-	for (size_t x = 0; x < iName.Count(); ++x)
-		{
-		if (x)
-			s << "/";
-		ZYad_ZooLibStrim::sWrite_PropName(iName.At(x), s);
-		}
-	}
-
 void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
 	{
 	const RelHead::Base_t& names = iRelHead.GetElems();

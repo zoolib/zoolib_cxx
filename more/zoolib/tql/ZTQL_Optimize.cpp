@@ -19,6 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZExpr_Logic_ValPred.h"
+
+#include "zoolib/ZValPredCompound.h"
+
 #include "zoolib/tql/ZTQL_Optimize.h"
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
@@ -37,28 +40,8 @@ using namespace ZRA;
 
 namespace { // anonymous
 
-typedef std::vector<ZValPred> CondSect;
-typedef std::vector<CondSect> CondUnion;
-
-CondUnion spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight)
-	{
-	CondUnion result;
-	for (CondUnion::const_iterator iterLeft = iLeft.begin();
-		iterLeft != iLeft.end(); ++iterLeft)
-		{
-		for (CondUnion::const_iterator iterRight = iRight.begin();
-			iterRight != iRight.end(); ++iterRight)
-			{
-			result.push_back(*iterLeft);
-			CondSect& temp = result.back();
-			temp.insert(temp.end(), iterRight->begin(), iterRight->end());
-			}
-		}
-	return result;
-	}
-
 class Gather
-:	public virtual ZVisitor_Do_T<CondUnion>
+:	public virtual ZVisitor_Do_T<ZValPredCompound>
 ,	public virtual ZVisitor_Expr_Logic_True
 ,	public virtual ZVisitor_Expr_Logic_False
 ,	public virtual ZVisitor_Expr_Logic_Not
@@ -79,61 +62,37 @@ public:
 	};
 
 void Gather::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iExpr)
-	{
-	CondUnion result;
-	result.resize(1);
-	this->pSetResult(result);
-	}
+	{ this->pSetResult(ZValPredCompound::sTrue()); }
 
 void Gather::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iExpr)
-	{ this->pSetResult(CondUnion()); }
+	{ this->pSetResult(ZValPredCompound::sFalse()); }
 
 void Gather::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr)
 	{ ZUnimplemented(); }
 
 void Gather::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr)
-	{
-	const CondUnion left = this->Do(iExpr->GetOp0());
-	const CondUnion right = this->Do(iExpr->GetOp1());
-
-	const CondUnion result = spCrossMultiply(left, right);
-
-	this->pSetResult(result);
-	}
+	{ this->pSetResult(this->Do(iExpr->GetOp0()) & this->Do(iExpr->GetOp1())); }
 
 void Gather::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr)
-	{
-	const CondUnion left = this->Do(iExpr->GetOp0());
-	const CondUnion right = this->Do(iExpr->GetOp1());
-
-	CondUnion result = left;
-	result.insert(result.end(), right.begin(), right.end());
-
-	this->pSetResult(result);
-	}
+	{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
 
 void Gather::Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr)
-	{
-	CondUnion result;
-	result.resize(1);
-	result[0].push_back(iExpr->GetValPred());
-
-	this->pSetResult(result);
-	}
+	{ this->pSetResult(iExpr->GetValPred()); }
 
 ZRef<Expr_Rel> spConvertSelect(ZRef<Expr_Rel> iRelation, ZRef<ZExpr_Logic> iLogical)
 	{
 	if (!iRelation)
 		return ZRef<Expr_Rel>();
 
-	const CondUnion resultLogical = Gather().Do(iLogical);
+	const ZValPredCompound resultLogical = Gather().Do(iLogical);
+	const ZValPredCompound::SectUnion& theSU = resultLogical.fSectUnion;
 
 	ZRef<Expr_Rel> resultRelation;
-	for (CondUnion::const_iterator iterUnion = resultLogical.begin();
-		iterUnion != resultLogical.end(); ++iterUnion)
+	for (ZValPredCompound::SectUnion::const_iterator iterUnion = theSU.begin();
+		iterUnion != theSU.end(); ++iterUnion)
 		{
 		ZRef<Expr_Rel> current = iRelation;
-		for (CondSect::const_iterator iterSect = iterUnion->begin();
+		for (ZValPredCompound::Sect::const_iterator iterSect = iterUnion->begin();
 			iterSect != iterUnion->end(); ++iterSect)
 			{
 			current = new Expr_Rel_Restrict(current, *iterSect);

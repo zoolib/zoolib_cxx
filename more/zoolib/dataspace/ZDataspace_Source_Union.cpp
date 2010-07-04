@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZExpr_Logic.h"
 #include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_set.h"
 
 #include "zoolib/dataspace/ZDataspace_Source_Union.h"
 
@@ -244,8 +245,8 @@ void Source_Union::PQuery::Regenerate()
 	fResults.clear();
 
 	// For each entry in fRels we have a source rel, effectively. Union the
-	// results from each of the fPSourceSearches for each index. Join that
-	// with each of the other fPSourceSearches, and with each of the fPSourceproducts,
+	// results from each of the fPSourceSearches for each position. Join that
+	// with each of the other fPSourceSearches, and with each of the fPSourceProducts,
 	// and filter by fSearchThing's fValPredCompound.
 
 	ZRef<ZQE::Iterator> theProduct;
@@ -315,9 +316,10 @@ void Source_Union::PQuery::Regenerate()
 class Source_Union::PSource
 	{
 public:
-	PSource(Source* iSource);
+	PSource(Source* iSource, const string8& iPrefix);
 
 	Source* fSource;
+	const string8 fPrefix;
 
 	int64 fNextRefcon;
 
@@ -330,8 +332,9 @@ public:
 	vector<int64> fPSourceQueries_ToRemove;
 	};
 
-Source_Union::PSource::PSource(Source* iSource)
+Source_Union::PSource::PSource(Source* iSource, const string8& iPrefix)
 :	fSource(iSource)
+,	fPrefix(iPrefix)
 ,	fNextRefcon(1)
 	{}
 
@@ -390,7 +393,30 @@ static RelRename spMerge(const vector<RelRename>& iRelRenames)
 	}
 
 static bool spIsEmptyOrContains(const set<RelHead>& iRelHeads, const RelHead& iRH)
-	{ return iRelHeads.empty() || ZUtil_STL::sContains(iRelHeads, iRH); }
+	{
+	if (iRelHeads.empty())
+		return true;
+
+	for (set<RelHead>::const_iterator i = iRelHeads.begin(); i != iRelHeads.end(); ++i)
+		{
+		if (ZUtil_STL_set::sIncludes(*i, iRH))
+			return true;
+		}
+	return false;
+//	return iRelHeads.empty() || ZUtil_STL::sContains(iRelHeads, iRH);
+	}
+
+static set<RelHead> spPrefixed(const string8& iPrefix, const set<RelHead>& iRelHeads)
+	{
+	if (iPrefix.empty())
+		return iRelHeads;
+
+	set<RelHead> result;
+	for (set<RelHead>::const_iterator i = iRelHeads.begin(); i != iRelHeads.end(); ++i)
+		result.insert(ZRA::sPrefixed(iPrefix, *i));
+
+	return result;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -405,15 +431,18 @@ Source_Union::~Source_Union()
 
 set<RelHead> Source_Union::GetRelHeads()
 	{
-	// If any of our sources have an relhead set (signifying universality) then we must do the same.
 	set<RelHead> result;
 	for (map<Source*, PSource*>::iterator i = fMap_SourceToPSource.begin();
 		i != fMap_SourceToPSource.end(); ++i)
 		{
 		const set<RelHead>& theRelHeads = (*i).first->GetRelHeads();
 		if (theRelHeads.empty())
+			{
+			// If any of our sources have an relhead set (signifying universality)
+			// then we must do the same.
 			return set<RelHead>();
-		result = ZUtil_STL_set::sOr(result, theRelHeads);
+			}
+		result = ZUtil_STL_set::sOr(result, spPrefixed((*i).second->fPrefix, theRelHeads));
 		}
 	return result;
 	}
@@ -497,10 +526,10 @@ void Source_Union::Update(
 		oChanged, oClock);
 	}
 
-void Source_Union::InsertSource(Source* iSource)
+void Source_Union::InsertSource(Source* iSource, const string8& iPrefix)
 	{
 	ZAssert(! ZUtil_STL::sContains(fMap_SourceToPSource, iSource));
-	fPSources_ToAdd.insert(new PSource(iSource));
+	fPSources_ToAdd.insert(new PSource(iSource, iPrefix));
 	}
 
 void Source_Union::EraseSource(Source* iSource)
@@ -546,8 +575,21 @@ void Source_Union::pUpdate(
 			for (map<Source*, PSource*>::iterator iterSource = fMap_SourceToPSource.begin();
 				iterSource != fMap_SourceToPSource.end(); ++iterSource)
 				{
-				if (spIsEmptyOrContains(
-					(*iterSource).first->GetRelHeads(), (*iterRelRenames).GetRelHead_From()))
+				PSource* thePSource = (*iterSource).second;
+				const string thePrefix = thePSource->fPrefix;
+				const set<RelHead> theSet =
+					spPrefixed(thePrefix, (*iterSource).first->GetRelHeads());
+				
+				for (set<RelHead>::const_iterator i = theSet.begin(); i != theSet.end(); ++i)
+					{
+					ZRA::Util_Strim_RelHead::sWrite_RelHead(*i, ZStdIO::strim_err);
+					ZStdIO::strim_err << "\n";
+					}
+				
+				const RelHead theRHFrom = (*iterRelRenames).GetRelHead_From();
+				ZRA::Util_Strim_RelHead::sWrite_RelHead(theRHFrom, ZStdIO::strim_err);
+				ZStdIO::strim_err << "\n";
+				if (spIsEmptyOrContains(theSet, theRHFrom))
 					{
 					if (! soleSourceHandlingRelRename)
 						{
@@ -689,7 +731,8 @@ void Source_Union::pUpdate(
 					ZAssert(iterSearches != thePSource->fMap_RefconToPSourceSearches.end());
 					PSourceSearches* thePSourceSearches = (*iterSearches).second;
 					const int64 foundRefcon = (*iterSearches).first;
-					const int64 offset = thePSourceSearches->fResultsVector.size() + theRefcon - foundRefcon - 1;
+					const int64 offset =
+						thePSourceSearches->fResultsVector.size() + theRefcon - foundRefcon - 1;
 					thePSourceSearches->fResultsVector[offset].swap((*i).fResults);
 					fPQuery_Changed.InsertIfNotContains(thePSourceSearches->fPQuery);
 					}

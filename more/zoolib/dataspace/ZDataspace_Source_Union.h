@@ -52,7 +52,7 @@ public:
 		Clock& oClock);
 
 // Our protocol
-	void InsertSource(Source* iSource);
+	void InsertSource(Source* iSource, const string8& iPrefix);
 	void EraseSource(Source* iSource);
 
 private:

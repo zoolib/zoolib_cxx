@@ -37,6 +37,8 @@ namespace ZRA {
 
 typedef ZSet_T<RelName> RelHead;
 
+RelHead sPrefixed(const RelName& iRelName, const RelHead& iRelHead);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * RelHead operators
@@ -68,15 +70,14 @@ inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
 
 typedef std::map<RelName, RelName> Rename_t;
 
-Rename_t sInvert(const Rename_t& iRename);
+Rename_t sInverted(const Rename_t& iRename);
 
 } // namespace ZRA
 } // namespace ZooLib
 
 namespace std {
-template <class T>
 inline void swap(ZooLib::ZRA::RelHead& a, ZooLib::ZRA::RelHead& b)
 	{ a.swap(b); }
-}
+} // namespace std
 
 #endif // __ZRA_RelHead__

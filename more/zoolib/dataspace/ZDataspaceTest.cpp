@@ -126,16 +126,16 @@ void sDataspaceTest(const ZStrimW& w)
 	ZRef<ZSQLite::DB> theDB = new ZSQLite::DB("/Users/ag/sqlitetest/MyVideos34.db");
 
 	const string movieArray[] = {"movie.idFile", "movie.idMovie", "movie.idMovie", "movie.c00"};
-	const RelHead rhMovie(movieArray, countof(movieArray));
+	const RelHead rhMovie = sPrefixed("sql.", RelHead(movieArray, countof(movieArray)));
 
 	Source_SQLite theSource_SQLite(theDB);
 
 	Source_Union theSource;
-	theSource.InsertSource(&theSource_SQLite);
+	theSource.InsertSource(&theSource_SQLite, "sql.");
 
 //	spDump(theSource.GetRelHeads(), w);
 
-	ZRA::Rel relMovie = sConcrete(null, "movie", rhMovie);
+	ZRA::Rel relMovie = sConcrete(null, "moviething", rhMovie);
 
 	{
 	vector<AddedSearch> theAddedSearches;

@@ -31,7 +31,6 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * RelName
 
-//typedef ZTrail RelName;
 typedef string8 RelName;
 
 } // namespace ZRA
