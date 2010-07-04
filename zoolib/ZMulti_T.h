@@ -79,7 +79,7 @@ public:
 #pragma mark -
 #pragma mark * ZMulti_T4
 
-template <class T0, class T1, class T2, class T4>
+template <class T0, class T1, class T2, class T3>
 class ZMulti_T4
 	{
 public:
