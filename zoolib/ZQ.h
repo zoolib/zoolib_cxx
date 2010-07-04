@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQ_T__
-#define __ZQ_T__
+#ifndef __ZQ__
+#define __ZQ__
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
@@ -31,13 +31,13 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQ_T
+#pragma mark * ZQ
 
 template <class T>
-class ZQ_T
+class ZQ
 	{
 public:
-	void swap(ZQ_T& iOther)
+	void swap(ZQ& iOther)
 		{
 		if (fHasValue)
 			{
@@ -62,24 +62,24 @@ public:
 			}
 		}
 
-	ZQ_T()
+	ZQ()
 	:	fHasValue(false)
 		{}
 
-	ZQ_T(const ZQ_T& iOther)
+	ZQ(const ZQ& iOther)
 	:	fHasValue(iOther.fHasValue)
 		{
 		if (fHasValue)
 			sConstructFromVoidStar_T<T>(fBytes, iOther.fBytes);
 		}
 
-	~ZQ_T()
+	~ZQ()
 		{
 		if (fHasValue)
 			sDestroy_T<T>(fBytes);
 		}
 
-	ZQ_T& operator=(const ZQ_T& iOther)
+	ZQ& operator=(const ZQ& iOther)
 		{
 		if (this != &iOther)
 			{
@@ -104,11 +104,11 @@ public:
 		return *this;
 		}
 
-	ZQ_T(const null_t&)
+	ZQ(const null_t&)
 	:	fHasValue(false)
 		{}
 
-	ZQ_T& operator=(const null_t&)
+	ZQ& operator=(const null_t&)
 		{
 		if (fHasValue)
 			{
@@ -119,16 +119,16 @@ public:
 		}
 
 	template <class P0>
-	ZQ_T(const P0& iP0)
+	ZQ(const P0& iP0)
 	:	fHasValue(true)
 		{ sConstruct_T<T, P0>(fBytes, iP0); }
 
 	template <class P0, class P1>
-	ZQ_T(const P0& iP0, const P1& iP1)
+	ZQ(const P0& iP0, const P1& iP1)
 	:	fHasValue(true)
 		{ sConstruct_T<T, P0, P1>(fBytes, iP0, iP1); }
 
-	ZQ_T& operator=(const T& iValue)
+	ZQ& operator=(const T& iValue)
 		{
 		if (fHasValue)
 			{
@@ -142,7 +142,7 @@ public:
 		return *this;
 		}
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZQ_T,
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZQ,
 		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const
@@ -186,4 +186,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZQ_T__
+#endif // __ZQ__
