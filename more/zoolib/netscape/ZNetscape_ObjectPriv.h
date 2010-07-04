@@ -130,7 +130,7 @@ bool NPObject_T<Variant_t>::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
 	}
 
 template <class Variant_t>
-ZQ_T<Variant_t> NPObject_T<Variant_t>::QGet(const std::string& iName)
+ZQ<Variant_t> NPObject_T<Variant_t>::QGet(const std::string& iName)
 	{
 	Variant_t theVar;
 	if (static_cast<Self_t*>(this)->GetProperty(iName, theVar))
@@ -139,7 +139,7 @@ ZQ_T<Variant_t> NPObject_T<Variant_t>::QGet(const std::string& iName)
 	}
 
 template <class Variant_t>
-ZQ_T<Variant_t> NPObject_T<Variant_t>::QGet(size_t iIndex)
+ZQ<Variant_t> NPObject_T<Variant_t>::QGet(size_t iIndex)
 	{
 	Variant_t theVar;
 	if (static_cast<Self_t*>(this)->GetProperty(iIndex, theVar))

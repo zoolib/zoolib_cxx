@@ -193,6 +193,8 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 				}
 			// fall through
 			}
+		case WM_SETCURSOR:
+		case WM_KILLFOCUS:
 		case WM_ACTIVATE:
 		case WM_LBUTTONDOWN:
 		case WM_LBUTTONDBLCLK:
@@ -207,10 +209,24 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 		case WM_MOUSEACTIVATE:
 		case WM_KEYDOWN:
 		case WM_KEYUP:
-//##		case WM_CHAR:
-//##		case WM_DEADCHAR:
-		case WM_SETCURSOR:
-		case WM_KILLFOCUS:
+
+#if 0
+		case WM_CHAR:
+		case WM_DEADCHAR:
+
+		case WM_SYSKEYDOWN:
+		case WM_SYSKEYUP:
+		case WM_SYSCHAR:
+		case WM_SYSDEADCHAR:
+
+		case WM_IME_CHAR:
+		case WM_IME_STARTCOMPOSITION:
+		case WM_IME_ENDCOMPOSITION:
+		case WM_IME_COMPOSITION:
+
+		case WM_INPUTLANGCHANGEREQUEST:
+#endif
+
 			{
 			if (!fIsWindowed)
 				{

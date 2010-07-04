@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZMacFixup.h"
-
+#include "zoolib/ZQ.h"
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZTypes.h"
 #include "zoolib/ZUnicodeString.h"
@@ -46,7 +46,7 @@ namespace ZPhotoshop {
 #pragma mark * Public utilities
 
 ZTrail sWinAsTrail(const string8& iWin);
-ZTrail sAsTrail(const SPPlatformFileSpecification& iSpec);
+ZQ<ZTrail> sAsTrail(const SPPlatformFileSpecification& iSpec);
 
 // =================================================================================================
 #pragma mark -
@@ -68,7 +68,7 @@ public:
 
 	explicit FileRef(const ZTrail& iTrail);
 
-	ZTrail AsTrail() const;
+	ZQ<ZTrail> AsTrail() const;
 
 	Handle Get() const;
 	Handle Orphan();

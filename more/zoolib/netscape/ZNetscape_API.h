@@ -450,7 +450,7 @@ typedef struct _NPPrint
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * NPEvent
+#pragma mark * NPMenu
 
 #if defined(XP_MACOSX)
 	typedef NPNSMenu NPMenu;

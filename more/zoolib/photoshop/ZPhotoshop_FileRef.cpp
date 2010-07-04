@@ -227,14 +227,14 @@ static ZTrail spMacAsTrail(short iVRefNum, long iDirID, const unsigned char* iNa
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
 
-static ZTrail spMacAsTrail(const FSRef& iFSRef)
+static ZQ<ZTrail> spMacAsTrail(const FSRef& iFSRef)
 	{
 	// Use 1024, PATH_MAX not defined in old Mac headers.
 	char buffer[1024];
 	if (noErr == ::FSRefMakePath(&iFSRef, (UInt8*)buffer, 1024))
 		return ZTrail(buffer);
 
-	return ZTrail(false);
+	return null;
 	}
 
 #endif // ZCONFIG_SPI_Enabled(Carbon64)
@@ -283,7 +283,7 @@ ZTrail sWinAsTrail(const string8& iWin)
 	return result;
 	}
 
-ZTrail sAsTrail(const SPPlatformFileSpecification& iSpec)
+ZQ<ZTrail> sAsTrail(const SPPlatformFileSpecification& iSpec)
 	{
 	#if ZCONFIG_SPI_Enabled(Carbon)
 
@@ -434,7 +434,7 @@ FileRef::FileRef(const ZTrail& iTrail)
 	#endif
 	}
 
-ZTrail FileRef::AsTrail() const
+ZQ<ZTrail> FileRef::AsTrail() const
 	{
 	#if defined(__PIMac__)
 
@@ -503,7 +503,7 @@ ZTrail FileRef::AsTrail() const
 
 	#endif
 
-	return ZTrail(false);
+	return null;
 	}
 
 Handle FileRef::Get() const
@@ -523,7 +523,7 @@ Handle& FileRef::OParam()
 	// the bytes 'utxt' that tells PS that it should return a UTF16
 	// string, with a special header that distinguishes it from the
 	// regular 8-bit encoding using the system codepage.
-	fHandle = reinterpret_cast<Handle>('utxt'); \
+	fHandle = reinterpret_cast<Handle>('utxt');
 	return fHandle;
 	}
 

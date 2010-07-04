@@ -545,7 +545,7 @@ String Value::ToString() const
 	}
 
 template <>
-ZQ_T<bool> Value::QGet_T<bool>() const
+ZQ<bool> Value::QGet_T<bool>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
@@ -556,7 +556,7 @@ ZQ_T<bool> Value::QGet_T<bool>() const
 	}
 
 template <>
-ZQ_T<double> Value::QGet_T<double>() const
+ZQ<double> Value::QGet_T<double>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
@@ -572,7 +572,7 @@ ZQ_T<double> Value::QGet_T<double>() const
 	}
 
 template <>
-ZQ_T<String> Value::QGet_T<String>() const
+ZQ<String> Value::QGet_T<String>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
@@ -587,23 +587,23 @@ ZQ_T<String> Value::QGet_T<String>() const
 	}
 
 template <>
-ZQ_T<string16> Value::QGet_T<string16>() const
+ZQ<string16> Value::QGet_T<string16>() const
 	{
-	if (ZQ_T<String> theQ = this->QGet_T<String>())
+	if (ZQ<String> theQ = this->QGet_T<String>())
 		return theQ.Get().AsString16();
 	return null;
 	}
 
 template <>
-ZQ_T<string8> Value::QGet_T<string8>() const
+ZQ<string8> Value::QGet_T<string8>() const
 	{
-	if (ZQ_T<String> theQ = this->QGet_T<String>())
+	if (ZQ<String> theQ = this->QGet_T<String>())
 		return theQ.Get().AsString8();
 	return null;
 	}
 
 template <>
-ZQ_T<ObjectRef> Value::QGet_T<ObjectRef>() const
+ZQ<ObjectRef> Value::QGet_T<ObjectRef>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
@@ -628,7 +628,7 @@ ZAny ObjectRef::AsAny() const
 	{
 	if (JSObjectRef thisRef = inherited::Get())
 		{
-		if (ZQ_T<double> theQ = this->Get("length").QGetDouble())
+		if (ZQ<double> theQ = this->Get("length").QGetDouble())
 			{
 			ZSeq_Any result;
 			for (size_t x = 0; x < theQ.Get(); ++x)
@@ -679,7 +679,7 @@ ObjectRef& ObjectRef::operator=(const ZRef<JSObjectRef>& iOther)
 	return *this;
 	}
 
-ZQ_T<Value> ObjectRef::QGet(const string8& iName) const
+ZQ<Value> ObjectRef::QGet(const string8& iName) const
 	{
 	JSValueRef theEx = nullptr;
 	JSValueRef theResult = ::JSObjectGetProperty(sCurrentContextRef(),
@@ -691,7 +691,7 @@ ZQ_T<Value> ObjectRef::QGet(const string8& iName) const
 
 Value ObjectRef::DGet(const Value& iDefault, const string8& iName) const
 	{
-	if (ZQ_T<Value> theQ = this->QGet(iName))
+	if (ZQ<Value> theQ = this->QGet(iName))
 		return theQ.Get();
 	return iDefault;
 	}
@@ -716,7 +716,7 @@ bool ObjectRef::Erase(const string8& iName)
 bool ObjectRef::IsSeq() const
 	{ return this->QGet("length"); }
 
-ZQ_T<Value> ObjectRef::QGet(size_t iIndex) const
+ZQ<Value> ObjectRef::QGet(size_t iIndex) const
 	{
 	JSValueRef theEx = nullptr;
 	JSValueRef theResult = ::JSObjectGetPropertyAtIndex(sCurrentContextRef(),
@@ -728,7 +728,7 @@ ZQ_T<Value> ObjectRef::QGet(size_t iIndex) const
 
 Value ObjectRef::DGet(const Value& iDefault, size_t iIndex) const
 	{
-	if (ZQ_T<Value> theQ = this->QGet(iIndex))
+	if (ZQ<Value> theQ = this->QGet(iIndex))
 		return theQ.Get();
 	return iDefault;
 	}

@@ -1181,7 +1181,7 @@ void Seq::Clear()
 	spPSActionList->Make(&fAL);
 	}
 
-ZQ_T<Val> Seq::QGet(size_t iIndex) const
+ZQ<Val> Seq::QGet(size_t iIndex) const
 	{
 	if (iIndex < this->Count())
 		{
@@ -1201,7 +1201,7 @@ ZQ_T<Val> Seq::QGet(size_t iIndex) const
 
 Val Seq::DGet(const Val& iDefault, size_t iIndex) const
 	{
-	if (ZQ_T<Val> theQ = this->QGet(iIndex))
+	if (ZQ<Val> theQ = this->QGet(iIndex))
 		return theQ.Get();
 	return iDefault;
 	}
@@ -1316,7 +1316,7 @@ Map::Map(const string8& iType, Adopt_T<PIActionDescriptor> iOther)
 void Map::Clear()
 	{ spPSActionDescriptor->Clear(fAD); }
 
-ZQ_T<Val> Map::QGet(KeyID iKey) const
+ZQ<Val> Map::QGet(KeyID iKey) const
 	{
 	if (fAD)
 		{
@@ -1334,29 +1334,29 @@ ZQ_T<Val> Map::QGet(KeyID iKey) const
 	return null;
 	}
 
-ZQ_T<Val> Map::QGet(const string8& iName) const
+ZQ<Val> Map::QGet(const string8& iName) const
 	{ return this->QGet(spAsKeyID(iName)); }
 
-ZQ_T<Val> Map::QGet(Index_t iIndex) const
+ZQ<Val> Map::QGet(Index_t iIndex) const
 	{ return this->QGet(this->KeyOf(iIndex)); }
 
 Val Map::DGet(const Val& iDefault, KeyID iKey) const
 	{
-	if (ZQ_T<Val> theQ = this->QGet(iKey))
+	if (ZQ<Val> theQ = this->QGet(iKey))
 		return theQ.Get();
 	return iDefault;
 	}
 
 Val Map::DGet(const Val& iDefault, const string8& iName) const
 	{
-	if (ZQ_T<Val> theQ = this->QGet(iName))
+	if (ZQ<Val> theQ = this->QGet(iName))
 		return theQ.Get();
 	return iDefault;
 	}
 
 Val Map::DGet(const Val& iDefault, Index_t iIndex) const
 	{
-	if (ZQ_T<Val> theQ = this->QGet(iIndex))
+	if (ZQ<Val> theQ = this->QGet(iIndex))
 		return theQ.Get();
 	return iDefault;
 	}

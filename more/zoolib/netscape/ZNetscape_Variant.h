@@ -45,12 +45,12 @@ class NPVariantBase
 public:
 // ZVal Get protocol
 	template <class S>
-	ZQ_T<S> QGet_T() const;
+	ZQ<S> QGet_T() const;
 
 	template <class S>
 	S DGet_T(const S& iDefault) const
 		{
-		if (ZQ_T<S> theQ = this->QGet_T<S>())
+		if (ZQ<S> theQ = this->QGet_T<S>())
 			return theQ.Get();
 		return iDefault;
 		}

@@ -299,14 +299,14 @@ public:
 
 	void Clear();
 
-	ZQ_T<Val> QGet(size_t iIndex) const;
+	ZQ<Val> QGet(size_t iIndex) const;
 	Val DGet(const Val& iDefault, size_t iIndex) const;
 	Val Get(size_t iIndex) const;
 
 	template <class S>
-	ZQ_T<S> QGet_T(size_t iIndex) const
+	ZQ<S> QGet_T(size_t iIndex) const
 		{
-		if (ZQ_T<Val_t> theQ = this->QGet(iIndex))
+		if (ZQ<Val_t> theQ = this->QGet(iIndex))
 			return theQ.Get().QGet_T<S>();
 		return null;
 		}
@@ -314,7 +314,7 @@ public:
 	template <class S>
 	S DGet_T(const S& iDefault, size_t iIndex) const
 		{
-		if (ZQ_T<S> theQ = this->QGet_T<S>(iIndex))
+		if (ZQ<S> theQ = this->QGet_T<S>(iIndex))
 			return theQ.Get();
 		return iDefault;
 		}
@@ -371,9 +371,9 @@ public:
 // ZMap protocol
 	void Clear();
 
-	ZQ_T<Val> QGet(KeyID iKey) const;
-	ZQ_T<Val> QGet(const string8& iName) const;
-	ZQ_T<Val> QGet(Index_t iIndex) const;
+	ZQ<Val> QGet(KeyID iKey) const;
+	ZQ<Val> QGet(const string8& iName) const;
+	ZQ<Val> QGet(Index_t iIndex) const;
 
 	Val DGet(const Val& iDefault, KeyID iKey) const;
 	Val DGet(const Val& iDefault, const string8& iName) const;
@@ -384,15 +384,15 @@ public:
 	Val Get(Index_t iIndex) const;
 
 	template <class S>
-	ZQ_T<S> QGet_T(KeyID iKey) const
+	ZQ<S> QGet_T(KeyID iKey) const
 		{ return this->Get(iKey).QGet_T<S>(); }
 
 	template <class S>
-	ZQ_T<S> QGet_T(const string8& iName) const
+	ZQ<S> QGet_T(const string8& iName) const
 		{ return this->Get(iName).QGet_T<S>(); }
 
 	template <class S>
-	ZQ_T<S> QGet_T(const Index_t& iIndex) const
+	ZQ<S> QGet_T(const Index_t& iIndex) const
 		{ return this->Get(iIndex).QGet_T<S>(); }
 
 	template <class S>

@@ -109,9 +109,12 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 
 	if (const FileRef* asFileRef = iVal.PGet_T<FileRef>())
 		{
+		ZTrail theTrail;
+		if (ZQ<ZTrail> theQ = asFileRef->AsTrail())
+			theTrail = theQ.Get();
 		const ZMap_Any theMap = ZMap_Any()
 			.Set("!Type", string("FileRef"))
-			.Set("PathTrail", asFileRef->AsTrail().AsString());
+			.Set("PathTrail", theTrail.AsString());
 		return sMakeYadR(theMap);
 		}
 
