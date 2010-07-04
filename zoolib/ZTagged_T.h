@@ -26,7 +26,7 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWinRegistry::ZTagged_T
+#pragma mark * ZTagged_T
 
 template <class Tag, class Value>
 class ZTagged_T

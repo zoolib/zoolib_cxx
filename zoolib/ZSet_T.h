@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZSet_T__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_set.h"
 
 namespace ZooLib {
 
@@ -271,7 +271,6 @@ ZSet_T<T> ZSet_T<T>::operator^(const Base_t& iOther) const
 template <class T>
 bool ZSet_T<T>::Contains(const Base_t& iOther) const
 	{ return ZUtil_STL_set::sIncludes(*this, iOther); }
-//	{ return ZUtil_STL_set::sIncludes(iOther.fElems, fElems); }
 
 template <class T>
 bool ZSet_T<T>::Contains(const T& iElem) const

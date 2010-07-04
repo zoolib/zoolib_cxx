@@ -121,7 +121,7 @@ public:
 	void Clear();
 
 	template <class S>
-	ZQ_T<S> QGet_T() const
+	ZQ<S> QGet_T() const
 		{
 		S theVal;
 		if (this->QGet_T<S>(theVal))
@@ -135,7 +135,7 @@ public:
 	template <class S>
 	S DGet_T(const S& iDefault) const
 		{
-		if (ZQ_T<S> theQ = this->QGet_T<S>())
+		if (ZQ<S> theQ = this->QGet_T<S>())
 			return theQ.Get();
 		return iDefault;
 		}
@@ -309,7 +309,7 @@ public:
 
 	void Clear();
 
-	ZQ_T<ZVal_ZooLib> QGet(size_t iIndex) const;
+	ZQ<ZVal_ZooLib> QGet(size_t iIndex) const;
 	bool QGet(size_t iIndex, ZVal_ZooLib& oVal) const;
 	ZVal_ZooLib DGet(const ZVal_ZooLib& iDefault, size_t iIndex) const;
 	ZVal_ZooLib Get(size_t iIndex) const;
@@ -449,9 +449,9 @@ public:
 	const ZVal_ZooLib* PGet(const char* iPropName) const;
 	const ZVal_ZooLib* PGet(const ZTName& iPropName) const;
 
-	ZQ_T<ZVal_ZooLib> QGet(Index_t iIndex) const;
-	ZQ_T<ZVal_ZooLib> QGet(const char* iPropName) const;
-	ZQ_T<ZVal_ZooLib> QGet(const ZTName& iPropName) const;
+	ZQ<ZVal_ZooLib> QGet(Index_t iIndex) const;
+	ZQ<ZVal_ZooLib> QGet(const char* iPropName) const;
+	ZQ<ZVal_ZooLib> QGet(const ZTName& iPropName) const;
 
 	bool QGet(Index_t iIndex, ZVal_ZooLib& oVal) const;
 	bool QGet(const char* iPropName, ZVal_ZooLib& oVal) const;

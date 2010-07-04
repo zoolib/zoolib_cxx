@@ -97,12 +97,12 @@ public:
 	void Clear();
 
 	template <class S>
-	ZQ_T<S> QGet_T() const;
+	ZQ<S> QGet_T() const;
 
 	template <class S>
 	S DGet_T(const S& iDefault) const
 		{
-		if (ZQ_T<S> result = this->QGet_T<S>())
+		if (ZQ<S> result = this->QGet_T<S>())
 			return result.Get();
 		return iDefault;
 		}
@@ -168,7 +168,7 @@ public:
 
 	void Clear();
 
-	ZQ_T<ZVal_AppleEvent> QGet(size_t iIndex) const;
+	ZQ<ZVal_AppleEvent> QGet(size_t iIndex) const;
 	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, size_t iIndex) const;
 	ZVal_AppleEvent Get(size_t iIndex) const;
 
@@ -217,9 +217,9 @@ public:
 // ZMap protocol
 	void Clear();
 
-	ZQ_T<ZVal_AppleEvent> QGet(AEKeyword iName) const;
-	ZQ_T<ZVal_AppleEvent> QGet(const std::string& iName) const;
-	ZQ_T<ZVal_AppleEvent> QGet(Index_t iPropIter) const;
+	ZQ<ZVal_AppleEvent> QGet(AEKeyword iName) const;
+	ZQ<ZVal_AppleEvent> QGet(const std::string& iName) const;
+	ZQ<ZVal_AppleEvent> QGet(Index_t iPropIter) const;
 
 	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, AEKeyword iName) const;
 	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, const std::string& iName) const;
@@ -240,7 +240,7 @@ public:
 // Our protocol
 	AERecord& OParam();
 
-	ZQ_T<ZVal_AppleEvent> QGetAttr(AEKeyword iName) const;
+	ZQ<ZVal_AppleEvent> QGetAttr(AEKeyword iName) const;
 	ZVal_AppleEvent DGetAttr(const ZVal_AppleEvent& iDefault, AEKeyword iName) const;
 	ZVal_AppleEvent GetAttr(AEKeyword iName) const;
 	void SetAttr(AEKeyword iName, const AEDesc& iVal);

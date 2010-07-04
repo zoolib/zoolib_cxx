@@ -832,7 +832,7 @@ string ZFileLoc_POSIX::GetName(ZFile::Error* oErr) const
 	return string();
 	}
 
-ZTrail ZFileLoc_POSIX::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
+ZQ<ZTrail> ZFileLoc_POSIX::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
 	{
 	if (oErr)
 		*oErr = ZFile::errorNone;
@@ -856,7 +856,7 @@ ZTrail ZFileLoc_POSIX::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
 
 	if (oErr)
 		*oErr = ZFile::errorGeneric;
-	return ZTrail(false);
+	return null;
 	}
 
 ZRef<ZFileLoc> ZFileLoc_POSIX::GetParent(ZFile::Error* oErr)

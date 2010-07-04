@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark * ZMACRO_ZValAccessors
 
 #define ZMACRO_ZValAccessors_Decl_Get(T, TYPENAME, TYPE) \
-	ZQ_T<TYPE> QGet##TYPENAME() const; \
+	ZQ<TYPE> QGet##TYPENAME() const; \
 	bool QGet##TYPENAME(TYPE& oVal) const; \
 	TYPE DGet##TYPENAME(const TYPE& iDefault) const; \
 	TYPE Get##TYPENAME() const; \
@@ -37,11 +37,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	void Set##TYPENAME(const TYPE& iVal); \
 
 #define ZMACRO_ZValAccessors_Def_GetP(P, T, TYPENAME, TYPE) \
-	P ZQ_T<TYPE> T::QGet##TYPENAME() const \
+	P ZQ<TYPE> T::QGet##TYPENAME() const \
 		{ return this->QGet_T<TYPE>(); } \
 	P bool T::QGet##TYPENAME(TYPE& oVal) const \
 		{ \
-		if (ZQ_T<TYPE> theQ = this->QGet_T<TYPE>()) \
+		if (ZQ<TYPE> theQ = this->QGet_T<TYPE>()) \
 			{ oVal = theQ.Get(); return true; } \
 		return false; \
 		} \

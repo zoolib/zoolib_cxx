@@ -168,11 +168,11 @@ const ZVal_Any* ZSeq_Any::PGet(size_t iIndex) const
 	return nullptr;
 	}
 
-ZQ_T<ZVal_Any> ZSeq_Any::QGet(size_t iIndex) const
+ZQ<ZVal_Any> ZSeq_Any::QGet(size_t iIndex) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return *theVal;
-	return ZQ_T<ZVal_Any>();
+	return ZQ<ZVal_Any>();
 	}
 
 ZVal_Any ZSeq_Any::DGet(const ZVal_Any& iDefault, size_t iIndex) const
@@ -412,18 +412,18 @@ const ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex) const
 	return nullptr;
 	}
 
-ZQ_T<ZVal_Any> ZMap_Any::QGet(const string8& iName) const
+ZQ<ZVal_Any> ZMap_Any::QGet(const string8& iName) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iName))
 		return *theVal;
-	return ZQ_T<ZVal_Any>();
+	return ZQ<ZVal_Any>();
 	}
 
-ZQ_T<ZVal_Any> ZMap_Any::QGet(const Index_t& iIndex) const
+ZQ<ZVal_Any> ZMap_Any::QGet(const Index_t& iIndex) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return *theVal;
-	return ZQ_T<ZVal_Any>();
+	return ZQ<ZVal_Any>();
 	}
 
 ZVal_Any ZMap_Any::DGet(const ZVal_Any& iDefault, const string8& iName) const

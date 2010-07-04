@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZDList.h"
-#include "zoolib/ZQ_T.h"
+#include "zoolib/ZQ.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZWeakRef.h"
@@ -190,10 +190,10 @@ private:
 		}
 
 	bool pReadInc(ZSafeSetIterConst<T>& ioIter, T& oValue);
-	ZQ_T<T> pReadInc(ZSafeSetIterConst<T>& ioIter);
+	ZQ<T> pReadInc(ZSafeSetIterConst<T>& ioIter);
 
 	bool pReadErase(ZSafeSetIter<T>& ioIter, T& oValue);
-	ZQ_T<T> pReadErase(ZSafeSetIter<T>& ioIter);
+	ZQ<T> pReadErase(ZSafeSetIter<T>& ioIter);
 
 	ZMtx fMtx;
 	EntryList fList;
@@ -311,7 +311,7 @@ public:
 		return false;
 		}
 
-	ZQ_T<T> QReadInc()
+	ZQ<T> QReadInc()
 		{
 		if (ZRef<ZSafeSetRep<T> > theRep = fRep)
 			return theRep->pReadInc(*this);
@@ -366,7 +366,7 @@ public:
 		return false;
 		}
 
-	ZQ_T<T> QReadInc()
+	ZQ<T> QReadInc()
 		{
 		if (ZRef<ZSafeSetRep<T> > theRep = ZSafeSetIterConst<T>::fRep)
 			return theRep->pReadErase(*this);
@@ -389,7 +389,7 @@ public:
 template <class T>
 bool ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter, T& oValue)
 	{
-	if (ZQ_T<T> result = this->pReadInc(ioIter))
+	if (ZQ<T> result = this->pReadInc(ioIter))
 		{
 		oValue = result.Get();
 		return true;
@@ -398,10 +398,10 @@ bool ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter, T& oValue)
 	}
 
 template <class T>
-ZQ_T<T> ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter)
+ZQ<T> ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter)
 	{
 	ZAcqMtx acq(fMtx);
-	ZQ_T<T> result;
+	ZQ<T> result;
 	if (ioIter.fNextEntry == fList.end())
 		{
 		ioIter.fRep.Clear();
@@ -424,7 +424,7 @@ ZQ_T<T> ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter)
 template <class T>
 bool ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter, T& oValue)
 	{
-	if (ZQ_T<T> result = this->pReadErase(ioIter))
+	if (ZQ<T> result = this->pReadErase(ioIter))
 		{
 		oValue = result.Get();
 		return true;
@@ -433,10 +433,10 @@ bool ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter, T& oValue)
 	}
 
 template <class T>
-ZQ_T<T> ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter)
+ZQ<T> ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter)
 	{
 	ZAcqMtx acq(fMtx);
-	ZQ_T<T> result;
+	ZQ<T> result;
 	if (ioIter.fNextEntry == fList.end())
 		{
 		ioIter.fRep.Clear();

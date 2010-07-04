@@ -61,7 +61,7 @@ public:
 	virtual ZRef<ZFileIterRep> CreateIterRep();
 
 	virtual std::string GetName(ZFile::Error* oErr) const;
-	virtual ZTrail TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const;
+	virtual ZQ<ZTrail> TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const;
 
 	virtual ZRef<ZFileLoc> GetParent(ZFile::Error* oErr);
 	virtual ZRef<ZFileLoc> GetDescendant(

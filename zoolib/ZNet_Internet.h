@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMulti_T.h"
 #include "zoolib/ZNet.h"
-#include "zoolib/ZTypes.h"
+#include "zoolib/ZStdInt.h"
 
 #include <string>
 
@@ -103,12 +103,6 @@ public:
 
 	static ZRef<ZNetListener_TCP> sCreate(
 		ip_addr iAddress, ip_port iPort, size_t iListenQueueSize);
-
-	static ZRef<ZNetListener_TCP> sCreateListener(
-		ip_port iPort, size_t iListenQueueSize);
-
-	static ZRef<ZNetListener_TCP> sCreateListener(
-		ip_addr iAddress, ip_port iPort, size_t iListenQueueSize);
 	};
 
 // =================================================================================================
@@ -121,9 +115,6 @@ public:
 	typedef ZMulti_T2<ip_addr, ip_port> MakeParam_t;
 
 	static ZRef<ZNetEndpoint_TCP> sCreateConnected(
-		ip_addr iRemoteHost, ip_port iRemotePort);
-
-	static ZRef<ZNetEndpoint_TCP> sCreateConnectedEndpoint(
 		ip_addr iRemoteHost, ip_port iRemotePort);
 	};
 

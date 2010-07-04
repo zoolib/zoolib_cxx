@@ -118,9 +118,9 @@ public:
 	KeyRef& operator=(const ZRef<HKEY>& iOther);
 
 // ZMap protocol
-	ZQ_T<Val> QGet(const string16& iName) const;
-	ZQ_T<Val> QGet(const string8& iName) const;
-	ZQ_T<Val> QGet(const Index_t& iIndex) const;
+	ZQ<Val> QGet(const string16& iName) const;
+	ZQ<Val> QGet(const string8& iName) const;
+	ZQ<Val> QGet(const Index_t& iIndex) const;
 
 	Val DGet(const Val& iDefault, const string16& iName) const;
 	Val DGet(const Val& iDefault, const string8& iName) const;

@@ -29,7 +29,7 @@ namespace ZUtil_Strim_ValPred {
 using std::string;
 
 typedef ZValComparator_Simple_T<ZVal_Expr> ZValComparator_Simple;
-typedef ZValComparand_Trail_T<ZVal_Expr> ZValComparand_Trail;
+typedef ZValComparand_Name_T<ZVal_Expr> ZValComparand_Name;
 typedef ZValComparand_Var_T<ZVal_Expr> ZValComparand_Var;
 typedef ZValComparand_Const_T<ZVal_Expr> ZValComparand_Const;
 
@@ -49,13 +49,9 @@ static void spToStrim(const ZRef<ZValPred::Comparand>& iCR, const ZStrimW& s)
 		{
 		s << "!!Null Comparand!!";
 		}
-	else if (ZRef<ZValComparand_Trail> cr = iCR.DynamicCast<ZValComparand_Trail>())
+	else if (ZRef<ZValComparand_Name> cr = iCR.DynamicCast<ZValComparand_Name>())
 		{
-		const ZTrail& theTrail = cr->GetTrail();
-		if (theTrail.Count() == 1)
-			spWrite_PropName(theTrail.At(0), s);
-		else
-			spWrite_PropName("/" + theTrail.AsString(), s);
+		spWrite_PropName(cr->GetName(), s);
 		}
 	else if (ZRef<ZValComparand_Var> cr = iCR.DynamicCast<ZValComparand_Var>())
 		{

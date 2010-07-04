@@ -23,16 +23,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZTrail.h"
 #include "zoolib/ZUtil_STL_set.h"
 
 #include <map>
+#include <string>
 
 namespace ZooLib {
 
 // There is an equivalent typedef in ZRA_RelHead, and it's possible that it
 // should be promoted to its own file, but for now that seems excessive.
-typedef std::map<ZTrail, ZTrail> Rename_t;
+typedef std::map<std::string, std::string> Rename_t;
 
 class ZValContext
 	{};
@@ -102,7 +102,7 @@ ZValComparator_Simple_T<Val>::ZValComparator_Simple_T(EComparator iEComparator)
 template <class Val>
 bool ZValComparator_Simple_T<Val>::Matches(const Val& iLHS, const Val& iRHS)
 	{
-	int compare = sCompare_T(iLHS, iRHS);
+	const int compare = sCompare_T(iLHS, iRHS);
 	switch (fEComparator)
 		{
 		case eLT: return compare < 0;
@@ -179,7 +179,7 @@ public:
 	virtual ~ZValComparand_T();
 
 	virtual Val GetVal(ZValContext& iContext, const Val& iVal) = 0;
-	virtual std::set<ZTrail> GetNames();
+	virtual std::set<std::string> GetNames();
 	virtual ZRef<ZValComparand_T> Renamed(const Rename_t& iRename);
 	};
 
@@ -192,8 +192,8 @@ ZValComparand_T<Val>::~ZValComparand_T()
 	{}
 
 template <class Val>
-std::set<ZTrail> ZValComparand_T<Val>::GetNames()
-	{ return std::set<ZTrail>(); }
+std::set<std::string> ZValComparand_T<Val>::GetNames()
+	{ return std::set<std::string>(); }
 
 template <class Val>
 ZRef<ZValComparand_T<Val> > ZValComparand_T<Val>::Renamed(const Rename_t& iRename)
@@ -234,63 +234,49 @@ Val ZValComparand_Const_T<Val>::GetVal()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValComparand_Trail_T
+#pragma mark * ZValComparand_Name_T
 
 template <class Val>
-class ZValComparand_Trail_T : public ZValComparand_T<Val>
+class ZValComparand_Name_T : public ZValComparand_T<Val>
 	{
 public:
-	ZValComparand_Trail_T(const ZTrail& iTrail);
+	ZValComparand_Name_T(const std::string& iName);
 
 // From ZValComparand_T
 	virtual Val GetVal(ZValContext& iContext, const Val& iVal);
-	virtual std::set<ZTrail> GetNames();
+	virtual std::set<std::string> GetNames();
 	virtual ZRef<ZValComparand_T<Val> > Renamed(const Rename_t& iRename);
 
 // Our protocol
-	const ZTrail& GetTrail();
+	const std::string& GetName();
 
 private:
-	const ZTrail fTrail;
+	const std::string fName;
 	};
 
 template <class Val>
-ZValComparand_Trail_T<Val>::ZValComparand_Trail_T(const ZTrail& iTrail)
-:	fTrail(iTrail)
+ZValComparand_Name_T<Val>::ZValComparand_Name_T(const std::string& iName)
+:	fName(iName)
 	{}
 
 template <class Val>
-Val ZValComparand_Trail_T<Val>::GetVal(ZValContext& iContext, const Val& iVal)
-	{
-	Val theVal = iVal;
-	for (size_t x = 0, theCount = fTrail.Count(); x < theCount; ++x)
-		theVal = theVal.GetMap().Get(fTrail.At(x));
-
-	return theVal;
-	}
+Val ZValComparand_Name_T<Val>::GetVal(ZValContext& iContext, const Val& iVal)
+	{ return iVal.GetMap().Get(fName); }
 
 template <class Val>
-std::set<ZTrail> ZValComparand_Trail_T<Val>::GetNames()
-	{
-	std::set<ZTrail> theNames;
-	if (fTrail.Count())
-		theNames.insert(fTrail);
-	return theNames;
-	}
+std::set<std::string> ZValComparand_Name_T<Val>::GetNames()
+	{ return std::set<std::string>(&fName, &fName + 1); }
 
 template <class Val>
-const ZTrail& ZValComparand_Trail_T<Val>::GetTrail()
-	{ return fTrail; }
+const std::string& ZValComparand_Name_T<Val>::GetName()
+	{ return fName; }
 
 template <class Val>
-ZRef<ZValComparand_T<Val> > ZValComparand_Trail_T<Val>::Renamed(const Rename_t& iRename)
+ZRef<ZValComparand_T<Val> > ZValComparand_Name_T<Val>::Renamed(const Rename_t& iRename)
 	{
-	if (fTrail.Count())
-		{
-		Rename_t::const_iterator i = iRename.find(fTrail);
-		if (i != iRename.end())
-			return new ZValComparand_Trail_T((*i).second);
-		}
+	Rename_t::const_iterator i = iRename.find(fName);
+	if (i != iRename.end())
+		return new ZValComparand_Name_T((*i).second);
 	return this;
 	}
 
@@ -357,7 +343,7 @@ public:
 
 	bool Matches(ZValContext& iContext, const Val& iVal) const;
 
-	std::set<ZTrail> GetNames() const;
+	std::set<std::string> GetNames() const;
 
 	bool Renamed(const Rename_t& iRename, ZValPred_T& oResult) const;
 
@@ -424,7 +410,7 @@ bool ZValPred_T<Val>::Matches(ZValContext& iContext, const Val& iVal) const
 	{ return fComparator->Matches(fLHS->GetVal(iContext, iVal), fRHS->GetVal(iContext, iVal)); }
 
 template <class Val>
-std::set<ZTrail> ZValPred_T<Val>::GetNames() const
+std::set<std::string> ZValPred_T<Val>::GetNames() const
 	{ return ZUtil_STL_set::sOr(fLHS->GetNames(), fRHS->GetNames()); }
 
 template <class Val>
@@ -476,17 +462,7 @@ CConst_T(const Val& iVal)
 template <class Val>
 ZValComparandPseudo_T<Val>
 CName_T(const std::string& iName)
-	{ return new ZValComparand_Trail_T<Val>(ZTrail(&iName, &iName + 1)); }
-
-template <class Val>
-ZValComparandPseudo_T<Val>
-CTrail_T(const ZTrail& iTrail)
-	{ return new ZValComparand_Trail_T<Val>(iTrail); }
-
-template <class Val>
-ZValComparandPseudo_T<Val>
-CVal_T()
-	{ return new ZValComparand_Trail_T<Val>(ZTrail()); }
+	{ return new ZValComparand_Name_T<Val>(iName); }
 
 // FIXME
 // I'm not sure that we need Var -- when we're using ZValPred in relational queries

@@ -320,7 +320,7 @@ void ZVal_AppleEvent::Clear()
 	{ ::AEDisposeDesc(this); }
 
 template <>
-ZQ_T<bool> ZVal_AppleEvent::QGet_T<bool>() const
+ZQ<bool> ZVal_AppleEvent::QGet_T<bool>() const
 	{
 	if (typeTrue == descriptorType)
 		{
@@ -336,11 +336,11 @@ ZQ_T<bool> ZVal_AppleEvent::QGet_T<bool>() const
 		::AEGetDescData(this, &theFlag, sizeof(theFlag));
 		return true && theFlag;
 		}
-	return ZQ_T<bool>();
+	return ZQ<bool>();
 	}
 
 template <>
-ZQ_T<string> ZVal_AppleEvent::QGet_T<string>() const
+ZQ<string> ZVal_AppleEvent::QGet_T<string>() const
 	{
 	if (false)
 		{}
@@ -362,29 +362,29 @@ ZQ_T<string> ZVal_AppleEvent::QGet_T<string>() const
 			::AEGetDescData(this, const_cast<char*>(theString.data()), theSize);
 		return theString;
 		}
-	return ZQ_T<string>();
+	return ZQ<string>();
 	}
 
 template <>
-ZQ_T<ZSeq_AppleEvent> ZVal_AppleEvent::QGet_T<ZSeq_AppleEvent>() const
+ZQ<ZSeq_AppleEvent> ZVal_AppleEvent::QGet_T<ZSeq_AppleEvent>() const
 	{
 	if (typeAEList == descriptorType)
 		return ZSeq_AppleEvent(*static_cast<const AEDescList*>(this));
 
-	return ZQ_T<ZSeq_AppleEvent>();
+	return ZQ<ZSeq_AppleEvent>();
 	}
 
 template <>
-ZQ_T<ZMap_AppleEvent> ZVal_AppleEvent::QGet_T<ZMap_AppleEvent>() const
+ZQ<ZMap_AppleEvent> ZVal_AppleEvent::QGet_T<ZMap_AppleEvent>() const
 	{
 	if (spAECheckIsRecord(this))
 		return ZMap_AppleEvent(*static_cast<const AEDescList*>(this));
 
-	return ZQ_T<ZMap_AppleEvent>();
+	return ZQ<ZMap_AppleEvent>();
 	}
 
 template <class S>
-ZQ_T<S> ZVal_AppleEvent::QGet_T() const
+ZQ<S> ZVal_AppleEvent::QGet_T() const
 	{
 	const DescType desiredDescType = ZAELookup_CPP2Desc<S>::sDescType;
 	if (desiredDescType == descriptorType)
@@ -405,7 +405,7 @@ ZQ_T<S> ZVal_AppleEvent::QGet_T() const
 		}
 
 	::AEDisposeDesc(&coerced);
-	return ZQ_T<S>();
+	return ZQ<S>();
 	}
 
 template <>
@@ -540,7 +540,7 @@ void ZSeq_AppleEvent::Clear()
 	::AECreateList(nullptr, 0, false, this);
 	}
 
-ZQ_T<ZVal_AppleEvent> ZSeq_AppleEvent::QGet(size_t iIndex) const
+ZQ<ZVal_AppleEvent> ZSeq_AppleEvent::QGet(size_t iIndex) const
 	{
 	ZVal_AppleEvent result;
 	if (noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, &result.OParam()))
@@ -684,7 +684,7 @@ void ZMap_AppleEvent::Clear()
 	::AECreateList(nullptr, 0, true, this);
 	}
 
-ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(AEKeyword iName) const
+ZQ<ZVal_AppleEvent> ZMap_AppleEvent::QGet(AEKeyword iName) const
 	{
 	ZVal_AppleEvent result;
 	if (noErr == ::AEGetKeyDesc(this, iName, typeWildCard, &result.OParam()))
@@ -692,7 +692,7 @@ ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(AEKeyword iName) const
 	return null;
 	}
 
-ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(const string& iName) const
+ZQ<ZVal_AppleEvent> ZMap_AppleEvent::QGet(const string& iName) const
 	{
 	ZVal_AppleEvent result;
 	if (noErr == ::AEGetKeyDesc(this, spAsAEKeyword(iName), typeWildCard, &result.OParam()))
@@ -700,7 +700,7 @@ ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(const string& iName) const
 	return null;
 	}
 
-ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(Index_t iIndex) const
+ZQ<ZVal_AppleEvent> ZMap_AppleEvent::QGet(Index_t iIndex) const
 	{
 	ZVal_AppleEvent result;
 	if (noErr == ::AEGetNthDesc(this, iIndex.GetIndex() + 1, typeWildCard,
@@ -713,7 +713,7 @@ ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(Index_t iIndex) const
 
 ZVal_AppleEvent ZMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, AEKeyword iName) const
 	{
-	if (ZQ_T<ZVal_AppleEvent> theVal = this->QGet(iName))
+	if (ZQ<ZVal_AppleEvent> theVal = this->QGet(iName))
 		return theVal.Get();
 	return iDefault;
 	}
@@ -721,14 +721,14 @@ ZVal_AppleEvent ZMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, AEKeyword
 ZVal_AppleEvent ZMap_AppleEvent::DGet(
 	const ZVal_AppleEvent& iDefault, const std::string& iName) const
 	{
-	if (ZQ_T<ZVal_AppleEvent> theVal = this->QGet(iName))
+	if (ZQ<ZVal_AppleEvent> theVal = this->QGet(iName))
 		return theVal.Get();
 	return iDefault;
 	}
 
 ZVal_AppleEvent ZMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, Index_t iIndex) const
 	{
-	if (ZQ_T<ZVal_AppleEvent> theVal = this->QGet(iIndex))
+	if (ZQ<ZVal_AppleEvent> theVal = this->QGet(iIndex))
 		return theVal.Get();
 	return iDefault;
 	}
@@ -784,7 +784,7 @@ AEDesc& ZMap_AppleEvent::OParam()
 	return *this;
 	}
 
-ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGetAttr(AEKeyword iName) const
+ZQ<ZVal_AppleEvent> ZMap_AppleEvent::QGetAttr(AEKeyword iName) const
 	{
 	ZVal_AppleEvent result;
 	if (noErr == ::AEGetAttributeDesc(this, iName, typeWildCard, &result.OParam()))
@@ -794,7 +794,7 @@ ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGetAttr(AEKeyword iName) const
 
 ZVal_AppleEvent ZMap_AppleEvent::DGetAttr(const ZVal_AppleEvent& iDefault, AEKeyword iName) const
 	{
-	if (ZQ_T<ZVal_AppleEvent> theVal = this->QGetAttr(iName))
+	if (ZQ<ZVal_AppleEvent> theVal = this->QGetAttr(iName))
 		return theVal.Get();
 	return iDefault;
 	}

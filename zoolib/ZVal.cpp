@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZString.h"
 #include "zoolib/ZVal.h"
 
 namespace ZooLib {
@@ -76,7 +77,7 @@ if (theVal.QGet_T<int>(theInt3))
 	{} // use theInt3
 
 // Example 4:
-if (ZQ_T<int> theQ = theVal.QGet_T<int>())
+if (ZQ<int> theQ = theVal.QGet_T<int>())
 	{} // Use theQ.Get();
 
 // Example 5:
@@ -94,7 +95,7 @@ In the third example the stored value is placed in \c theInt3 and true retured, 
 untouched and false returned. The 'Q' stands for Query (cf LISPish function names). This variant is
 increasingly being replaced by the following.
 
-Our fourth example returns a \c ZQ_T<int>. Evaluated in a boolean context a ZQ_T returns a
+Our fourth example returns a \c ZQ<int>. Evaluated in a boolean context a ZQ_T returns a
 true-equivalent if it had a value assigned to it, false otherwise. So we can declare space
 for the result \em and check if we got one without polluting the enclosing scope with another name. 
 
@@ -131,5 +132,12 @@ implemented as a vector<char>.
 ZNetscape::VariantG, ZNetscape::VariantH and ZWinCOM::Variant. As far as possible the classes
 are type compatible with native types e.g a ZWinCOM::Variant can be used where a VARIANT
 would be expected. Oftentimes there's no native ZVal type, instead the native API has */
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sEquali
+
+bool sEquali(const std::string& iLeft, const std::string& iRight)
+	{ return ZString::sEquali(iLeft, iRight); }
 
 } // namespace ZooLib

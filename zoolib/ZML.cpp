@@ -1246,7 +1246,7 @@ const StrimW& StrimW::Attr(const string8& iName, const string8& iValue) const
 		if (!newValue)
 			{
 			// We saw no CPs that need entity encoding, so never allocated newValue
-			// no did we accumulate values into it. So we can do so now and will
+			// nor did we accumulate values into it. So we can do so now and will
 			// share the underlying rep held by iValue.
 			newValue = new string8(iValue);
 			}

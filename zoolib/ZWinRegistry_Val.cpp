@@ -77,7 +77,7 @@ static string16 spReadLimited(const UTF16* iSource, size_t iLimit)
 	return result;
 	}
 
-static ZQ_T<Val> spQGet(DWORD iType, const void* iBuffer, DWORD iLength)
+static ZQ<Val> spQGet(DWORD iType, const void* iBuffer, DWORD iLength)
 	{
 	switch (iType)
 		{
@@ -316,7 +316,7 @@ KeyRef& KeyRef::operator=(const ZRef<HKEY>& iOther)
 	return *this;
 	}
 
-ZQ_T<Val> KeyRef::QGet(const string16& iName) const
+ZQ<Val> KeyRef::QGet(const string16& iName) const
 	{
 	if (iName.empty())
 		return null;
@@ -365,10 +365,10 @@ ZQ_T<Val> KeyRef::QGet(const string16& iName) const
 		}
 	}
 
-ZQ_T<Val> KeyRef::QGet(const string8& iName) const
+ZQ<Val> KeyRef::QGet(const string8& iName) const
 	{ return this->QGet(ZUnicode::sAsUTF16(iName)); }
 
-ZQ_T<Val> KeyRef::QGet(const Index_t& iIndex) const
+ZQ<Val> KeyRef::QGet(const Index_t& iIndex) const
 	{
 	DWORD countKeys, maxLengthKeyName, countValues, maxLengthValueName;
 	if (!spCount(*this, &countKeys, &maxLengthKeyName, &countValues, &maxLengthValueName))
@@ -441,21 +441,21 @@ ZQ_T<Val> KeyRef::QGet(const Index_t& iIndex) const
 
 Val KeyRef::DGet(const Val& iDefault, const string16& iName) const
 	{
-	if (ZQ_T<Val> theQ = this->QGet(iName))
+	if (ZQ<Val> theQ = this->QGet(iName))
 		return theQ.Get();
 	return iDefault;
 	}
 
 Val KeyRef::DGet(const Val& iDefault, const string8& iName) const
 	{
-	if (ZQ_T<Val> theQ = this->QGet(ZUnicode::sAsUTF16(iName)))
+	if (ZQ<Val> theQ = this->QGet(ZUnicode::sAsUTF16(iName)))
 		return theQ.Get();
 	return iDefault;
 	}
 
 Val KeyRef::DGet(const Val& iDefault, const Index_t& iIndex) const
 	{
-	if (ZQ_T<Val> theQ = this->QGet(iIndex))
+	if (ZQ<Val> theQ = this->QGet(iIndex))
 		return theQ.Get();
 	return iDefault;
 	}

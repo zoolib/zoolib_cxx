@@ -93,12 +93,12 @@ public:
 	void Clear();
 
 	template <class S>
-	ZQ_T<S> QGet_T() const;
+	ZQ<S> QGet_T() const;
 
 	template <class S>
 	S DGet_T(const S& iDefault) const
 		{
-		if (ZQ_T<S> theQ = this->QGet_T<S>())
+		if (ZQ<S> theQ = this->QGet_T<S>())
 			return theQ.Get();
 		return iDefault;
 		}
@@ -160,12 +160,12 @@ public:
 
 	void Clear();
 
-	ZQ_T<ZVal_NS> QGet(size_t iIndex) const;
+	ZQ<ZVal_NS> QGet(size_t iIndex) const;
 	ZVal_NS DGet(const ZVal_NS& iDefault, size_t iIndex) const;
 	ZVal_NS Get(size_t iIndex) const;
 
 	template <class S>
-	ZQ_T<S> QGet_T(size_t iIndex) const
+	ZQ<S> QGet_T(size_t iIndex) const
 		{ return this->Get(iIndex).QGet_T<S>(); }
 
 	template <class S>
@@ -228,8 +228,8 @@ public:
 // ZMap protocol
 	void Clear();
 
-	ZQ_T<ZVal_NS> QGet(const string8& iName) const;
-	ZQ_T<ZVal_NS> QGet(NSString* iName) const;
+	ZQ<ZVal_NS> QGet(const string8& iName) const;
+	ZQ<ZVal_NS> QGet(NSString* iName) const;
 
 	ZVal_NS DGet(const ZVal_NS& iDefault, const string8& iName) const;
 	ZVal_NS DGet(const ZVal_NS& iDefault, NSString* iName) const;
@@ -238,11 +238,11 @@ public:
 	ZVal_NS Get(NSString* iName) const;
 
 	template <class S>
-	ZQ_T<S> QGet_T(const string8& iName) const
+	ZQ<S> QGet_T(const string8& iName) const
 		{ return this->Get(iName).QGet_T<S>(); }
 
 	template <class S>
-	ZQ_T<S> QGet_T(NSString* iName) const
+	ZQ<S> QGet_T(NSString* iName) const
 		{ return this->Get(iName).QGet_T<S>(); }
 
 	template <class S>

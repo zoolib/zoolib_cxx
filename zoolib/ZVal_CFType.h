@@ -93,12 +93,12 @@ public:
 	void Clear();
 
 	template <class S>
-	ZQ_T<S> QGet_T() const;
+	ZQ<S> QGet_T() const;
 
 	template <class S>
 	S DGet_T(const S& iDefault) const
 		{
-		if (ZQ_T<S> theQ = this->QGet_T<S>())
+		if (ZQ<S> theQ = this->QGet_T<S>())
 			return theQ.Get();
 		return iDefault;
 		}
@@ -106,7 +106,7 @@ public:
 	template <class S>
 	S Get_T() const
 		{
-		if (ZQ_T<S> theQ = this->QGet_T<S>())
+		if (ZQ<S> theQ = this->QGet_T<S>())
 			return theQ.Get();
 		return S();
 		}
@@ -168,13 +168,13 @@ public:
 
 	void Clear();
 
-	ZQ_T<ZVal_CFType> QGet(size_t iIndex) const;
+	ZQ<ZVal_CFType> QGet(size_t iIndex) const;
 	ZVal_CFType DGet(const ZVal_CFType& iDefault, size_t iIndex) const;
 	ZVal_CFType Get(size_t iIndex) const;
 
 	template <class S>
 	inline
-	ZQ_T<S> QGet_T(size_t iIndex) const
+	ZQ<S> QGet_T(size_t iIndex) const
 		{ return this->Get(iIndex).QGet_T<S>(); }
 
 	template <class S>
@@ -243,8 +243,8 @@ public:
 // ZMap protocol
 	void Clear();
 
-	ZQ_T<ZVal_CFType> QGet(const string8& iName) const;
-	ZQ_T<ZVal_CFType> QGet(CFStringRef iName) const;
+	ZQ<ZVal_CFType> QGet(const string8& iName) const;
+	ZQ<ZVal_CFType> QGet(CFStringRef iName) const;
 
 	ZVal_CFType DGet(const ZVal_CFType& iDefault, const string8& iName) const;
 	ZVal_CFType DGet(const ZVal_CFType& iDefault, CFStringRef iName) const;
@@ -253,11 +253,11 @@ public:
 	ZVal_CFType Get(CFStringRef iName) const;
 
 	template <class S>
-	ZQ_T<S> QGet_T(const string8& iName) const
+	ZQ<S> QGet_T(const string8& iName) const
 		{ return this->Get(iName).QGet_T<S>(); }
 
 	template <class S>
-	ZQ_T<S> QGet_T(CFStringRef iName) const
+	ZQ<S> QGet_T(CFStringRef iName) const
 		{ return this->Get(iName).QGet_T<S>(); }
 
 	template <class S>

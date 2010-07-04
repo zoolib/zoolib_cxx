@@ -33,7 +33,7 @@ namespace ZooLib {
 
 template <class Val>
 class ZVisitor_Expr_Logic_ValPred_DoGetNames_T
-:	public virtual ZVisitor_Do_T<std::set<ZTrail> >
+:	public virtual ZVisitor_Do_T<std::set<std::string> >
 ,	public virtual ZVisitor_Expr_Logic_ValPred_T<Val>
 ,	public virtual ZVisitor_Expr_Op1_T<ZExpr_Logic>
 ,	public virtual ZVisitor_Expr_Op2_T<ZExpr_Logic>

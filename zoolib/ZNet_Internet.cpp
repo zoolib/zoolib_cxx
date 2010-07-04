@@ -108,31 +108,11 @@ ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
 		::sInvoke(MakeParam_t(iAddress, iPort, iListenQueueSize));
 	}
 
-ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreateListener(ip_port iPort, size_t iListenQueueSize)
-	{
-	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
-		::sInvoke(MakeParam_t(0, iPort, iListenQueueSize));
-	}
-
-ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreateListener(
-	ip_addr iAddress, ip_port iPort, size_t iListenQueueSize)
-	{
-	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
-		::sInvoke(MakeParam_t(iAddress, iPort, iListenQueueSize));
-	}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetEndpoint_TCP
 
 ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected(
-	ip_addr iRemoteHost, ip_port iRemotePort)
-	{
-	return ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam_t>
-		::sInvoke(MakeParam_t(iRemoteHost, iRemotePort));
-	}
-
-ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnectedEndpoint(
 	ip_addr iRemoteHost, ip_port iRemotePort)
 	{
 	return ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam_t>

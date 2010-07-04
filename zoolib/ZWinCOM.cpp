@@ -185,7 +185,7 @@ Variant::Variant(ZRef<IDispatch> iVal)
 	}
 
 template <>
-ZQ_T<int8> Variant::QGet_T<int8>() const
+ZQ<int8> Variant::QGet_T<int8>() const
 	{
 	if (VT_I1 == vt)
 		return int8(cVal);
@@ -193,7 +193,7 @@ ZQ_T<int8> Variant::QGet_T<int8>() const
 	}
 
 template <>
-ZQ_T<uint8> Variant::QGet_T<uint8>() const
+ZQ<uint8> Variant::QGet_T<uint8>() const
 	{
 	if (VT_UI1 == vt)
 		return uint8(bVal);
@@ -201,7 +201,7 @@ ZQ_T<uint8> Variant::QGet_T<uint8>() const
 	}
 
 template <>
-ZQ_T<int16> Variant::QGet_T<int16>() const
+ZQ<int16> Variant::QGet_T<int16>() const
 	{
 	if (VT_I2 == vt)
 		return int16(iVal);
@@ -209,7 +209,7 @@ ZQ_T<int16> Variant::QGet_T<int16>() const
 	}
 
 template <>
-ZQ_T<uint16> Variant::QGet_T<uint16>() const
+ZQ<uint16> Variant::QGet_T<uint16>() const
 	{
 	if (VT_UI2 == vt)
 		return uint16(uiVal);
@@ -217,7 +217,7 @@ ZQ_T<uint16> Variant::QGet_T<uint16>() const
 	}
 
 template <>
-ZQ_T<int32> Variant::QGet_T<int32>() const
+ZQ<int32> Variant::QGet_T<int32>() const
 	{
 	if (VT_I4 == vt)
 		return int32(lVal);
@@ -225,7 +225,7 @@ ZQ_T<int32> Variant::QGet_T<int32>() const
 	}
 
 template <>
-ZQ_T<uint32> Variant::QGet_T<uint32>() const
+ZQ<uint32> Variant::QGet_T<uint32>() const
 	{
 	if (VT_UI4 == vt)
 		return uint32(ulVal);
@@ -233,7 +233,7 @@ ZQ_T<uint32> Variant::QGet_T<uint32>() const
 	}
 
 template <>
-ZQ_T<int64> Variant::QGet_T<int64>() const
+ZQ<int64> Variant::QGet_T<int64>() const
 	{
 	if (VT_I8 == vt)
 		return int64(llVal);
@@ -241,7 +241,7 @@ ZQ_T<int64> Variant::QGet_T<int64>() const
 	}
 
 template <>
-ZQ_T<uint64> Variant::QGet_T<uint64>() const
+ZQ<uint64> Variant::QGet_T<uint64>() const
 	{
 	if (VT_UI8 == vt)
 		return uint64(ullVal);
@@ -249,7 +249,7 @@ ZQ_T<uint64> Variant::QGet_T<uint64>() const
 	}
 
 template <>
-ZQ_T<bool> Variant::QGet_T<bool>() const
+ZQ<bool> Variant::QGet_T<bool>() const
 	{
 	if (VT_BOOL == vt)
 		return bool(boolVal);
@@ -257,7 +257,7 @@ ZQ_T<bool> Variant::QGet_T<bool>() const
 	}
 
 template <>
-ZQ_T<float> Variant::QGet_T<float>() const
+ZQ<float> Variant::QGet_T<float>() const
 	{
 	if (VT_R4 == vt)
 		return float(fltVal);
@@ -265,7 +265,7 @@ ZQ_T<float> Variant::QGet_T<float>() const
 	}
 
 template <>
-ZQ_T<double> Variant::QGet_T<double>() const
+ZQ<double> Variant::QGet_T<double>() const
 	{
 	if (VT_R8 == vt)
 		return double(dblVal);
@@ -273,7 +273,7 @@ ZQ_T<double> Variant::QGet_T<double>() const
 	}
 
 template <>
-ZQ_T<string8> Variant::QGet_T<string8>() const
+ZQ<string8> Variant::QGet_T<string8>() const
 	{
 	if (VT_BSTR == vt)
 		return ZUnicode::sAsUTF8(bstrVal, ::SysStringLen(bstrVal));
@@ -281,7 +281,7 @@ ZQ_T<string8> Variant::QGet_T<string8>() const
 	}
 
 template <>
-ZQ_T<string16> Variant::QGet_T<string16>() const
+ZQ<string16> Variant::QGet_T<string16>() const
 	{
 	if (VT_BSTR == vt)
 		return string16(bstrVal, ::SysStringLen(bstrVal));
@@ -289,7 +289,7 @@ ZQ_T<string16> Variant::QGet_T<string16>() const
 	}
 
 template <>
-ZQ_T<ZRef<IUnknown> > Variant::QGet_T<ZRef<IUnknown> >() const
+ZQ<ZRef<IUnknown> > Variant::QGet_T<ZRef<IUnknown> >() const
 	{
 	if (VT_UNKNOWN == vt)
 		return ZRef<IUnknown>(punkVal);
@@ -297,7 +297,7 @@ ZQ_T<ZRef<IUnknown> > Variant::QGet_T<ZRef<IUnknown> >() const
 	}
 
 template <>
-ZQ_T<ZRef<IDispatch> > Variant::QGet_T<ZRef<IDispatch> >() const
+ZQ<ZRef<IDispatch> > Variant::QGet_T<ZRef<IDispatch> >() const
 	{
 	if (VT_DISPATCH == vt)
 		return ZRef<IDispatch>(pdispVal);

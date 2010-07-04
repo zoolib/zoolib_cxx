@@ -37,6 +37,7 @@ using std::string;
 
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf
+#	define strncasecmp _strnicmp
 #endif
 
 #ifndef va_copy
@@ -212,30 +213,58 @@ string ZString::sSubstitute(const string& iString, const string* iParams, size_t
 
 int ZString::sComparei(const string& iLeft, const string& iRight)
 	{
-	size_t sizeLeft = iLeft.size();
-	size_t sizeRight = iRight.size();
-	size_t sizeMin = min(sizeLeft, sizeRight);
-	for (size_t x = 0; x < sizeMin; ++x)
+	if (const size_t sizeLeft = iLeft.size())
 		{
-		if (int result = int(toupper(iLeft[x])) - int(toupper(iRight[x])))
-			return result;
+		if (const size_t sizeRight = iRight.size())
+			{
+			if (const int result =
+				strncasecmp(iLeft.data(), iRight.data(), min(sizeLeft, sizeRight)))
+				{
+				return result;
+				}
+			else if (sizeLeft < sizeRight)
+				return -1;
+			else if (sizeRight < sizeLeft)
+				return 1;
+			else
+				return 0;
+			}
+		else
+			{
+			return 1;
+			}
 		}
-	if (sizeLeft < sizeRight)
+	else if (iRight.size())
+		{
 		return -1;
-	if (sizeRight < sizeLeft)
-		return 1;
-	return 0;
+		}
+	else
+		{
+		return 0;
+		}
 	}
 
 bool ZString::sEquali(const string& iLeft, const string& iRight)
-	{ return 0 == sComparei(iLeft, iRight); }
+	{
+	if (const size_t theSize = iLeft.size())
+		{
+		if (theSize != iRight.size())
+			return false;
+
+		return 0 == strncasecmp(iLeft.data(), iRight.data(), theSize);
+		}
+	else
+		{
+		return ! iRight.size();
+		}
+	}
 
 bool ZString::sContainsi(const string& iTarget, const string& iCandidate)
 	{
 	return string::npos != ZUnicode::sToLower(iTarget).find(ZUnicode::sToLower(iCandidate));
 	}
 
-ZQ_T<int64> ZString::sQInt64(const string& iString)
+ZQ<int64> ZString::sQInt64(const string& iString)
 	{
 	if (iString.size())
 		{
@@ -243,12 +272,12 @@ ZQ_T<int64> ZString::sQInt64(const string& iString)
 		if (sscanf(iString.c_str(), "%lld", &result) > 0)
 			return result;
 		}
-	return ZQ_T<int64>();
+	return ZQ<int64>();
 	}
 
 bool ZString::sQInt64(const string& iString, int64& oVal)
 	{
-	if (ZQ_T<int64> qInt64 = sQInt64(iString))
+	if (ZQ<int64> qInt64 = sQInt64(iString))
 		{
 		oVal = qInt64.Get();
 		return true;
@@ -258,7 +287,7 @@ bool ZString::sQInt64(const string& iString, int64& oVal)
 
 int64 ZString::sDInt64(int64 iDefault, const string& iString)
 	{
-	if (ZQ_T<int64> qInt64 = sQInt64(iString))
+	if (ZQ<int64> qInt64 = sQInt64(iString))
 		return qInt64.Get();
 	return iDefault;
 	}
@@ -266,20 +295,20 @@ int64 ZString::sDInt64(int64 iDefault, const string& iString)
 int64 ZString::sInt64(const string& iString)
 	{ return sDInt64(0, iString); }
 
-ZQ_T<uint64> ZString::sQUInt64(const string& iString)
+ZQ<uint64> ZString::sQUInt64(const string& iString)
 	{
 	if (iString.size())
 		{
 		uint64 result;
 		if (sscanf(iString.c_str(), "%llu", &result) > 0)
-			return ZQ_T<uint64>(result);
+			return ZQ<uint64>(result);
 		}
-	return ZQ_T<uint64>();
+	return ZQ<uint64>();
 	}
 
 bool ZString::sQUInt64(const string& iString, uint64& oVal)
 	{
-	if (ZQ_T<uint64> qUInt64 = sQUInt64(iString))
+	if (ZQ<uint64> qUInt64 = sQUInt64(iString))
 		{
 		oVal = qUInt64.Get();
 		return true;
@@ -289,7 +318,7 @@ bool ZString::sQUInt64(const string& iString, uint64& oVal)
 
 uint64 ZString::sDUInt64(uint64 iDefault, const string& iString)
 	{
-	if (ZQ_T<uint64> qUInt64 = sQUInt64(iString))
+	if (ZQ<uint64> qUInt64 = sQUInt64(iString))
 		return qUInt64.Get();
 	return iDefault;
 	}
@@ -297,20 +326,20 @@ uint64 ZString::sDUInt64(uint64 iDefault, const string& iString)
 uint64 ZString::sUInt64(const string& iString)
 	{ return sDUInt64(0, iString); }
 
-ZQ_T<double> ZString::sQDouble(const string& iString)
+ZQ<double> ZString::sQDouble(const string& iString)
 	{
 	if (iString.size())
 		{
 		double result;
 		if (sscanf(iString.c_str(), "%lf", &result) > 0)
-			return ZQ_T<double>(result);
+			return ZQ<double>(result);
 		}
-	return ZQ_T<double>();
+	return ZQ<double>();
 	}
 
 bool ZString::sQDouble(const string& iString, double& oVal)
 	{
-	if (ZQ_T<double> qDouble = sQDouble(iString))
+	if (ZQ<double> qDouble = sQDouble(iString))
 		{
 		oVal = qDouble.Get();
 		return true;
@@ -320,7 +349,7 @@ bool ZString::sQDouble(const string& iString, double& oVal)
 
 double ZString::sDDouble(double iDefault, const string& iString)
 	{
-	if (ZQ_T<double> qDouble = sQDouble(iString))
+	if (ZQ<double> qDouble = sQDouble(iString))
 		return qDouble.Get();
 	return iDefault;
 	}

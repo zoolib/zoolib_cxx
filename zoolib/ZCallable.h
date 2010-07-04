@@ -175,7 +175,7 @@ public:
 		for (ZSafeSetIterConst<ZWeakRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
 			{
-			if (ZQ_T<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
+			if (ZQ<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
 					theCB.Get()->Invoke();
@@ -210,7 +210,7 @@ public:
 		for (ZSafeSetIterConst<ZWeakRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
 			{
-			if (ZQ_T<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
+			if (ZQ<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
 					theCB.Get()->Invoke(iP0);
@@ -245,7 +245,7 @@ public:
 		for (ZSafeSetIterConst<ZWeakRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
 			{
-			if (ZQ_T<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
+			if (ZQ<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
 					theCB.Get()->Invoke(iP0, iP1);
@@ -280,7 +280,7 @@ public:
 		for (ZSafeSetIterConst<ZWeakRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
 			{
-			if (ZQ_T<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
+			if (ZQ<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
 					theCB.Get()->Invoke(iP0, iP1, iP2);
@@ -315,7 +315,7 @@ public:
 		for (ZSafeSetIterConst<ZWeakRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
 			{
-			if (ZQ_T<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
+			if (ZQ<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
 					theCB.Get()->Invoke(iP0, iP1, iP2, iP3);

@@ -225,10 +225,10 @@ void LogMeister::LogIt(
 		theStrimW << " 0x";
 	#endif
 
-	if (sizeof(ZThread::sID()) > 4)
+	if (sizeof(ZThread::ID) > 4)
 		theStrimW << ZStringf("%016llX", (uint64)ZThread::sID());
 	else
-		theStrimW << ZStringf("%08X", (uint32)(uint64)ZThread::sID());
+		theStrimW << ZStringf("%08llX", (uint64)ZThread::sID());
 
 	theStrimW
 		<< " P" << ZStringf("%X", iPriority)

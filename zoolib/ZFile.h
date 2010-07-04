@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZFile__ 1
 
 #include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZQ.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
@@ -117,8 +118,8 @@ public:
 	std::string AsString() const;
 	std::string AsString_Native() const;
 
-	ZTrail TrailTo(const ZFileSpec& oDest, Error* oError = 0) const;
-	ZTrail TrailFrom(const ZFileSpec& iSource, Error* oError = 0) const;
+	ZQ<ZTrail> TrailTo(const ZFileSpec& oDest, Error* oError = 0) const;
+	ZQ<ZTrail> TrailFrom(const ZFileSpec& iSource, Error* oError = 0) const;
 
 	ZFile::Kind Kind(Error* oError = 0) const;
 
@@ -240,7 +241,7 @@ public:
 	virtual ZRef<ZFileIterRep> CreateIterRep();
 
 	virtual std::string GetName(ZFile::Error* oError) const = 0;
-	virtual ZTrail TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oError) const = 0;
+	virtual ZQ<ZTrail> TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oError) const = 0;
 
 	virtual ZRef<ZFileLoc> GetAncestor(size_t iCount, ZFile::Error* oError);
 	virtual ZRef<ZFileLoc> GetParent(ZFile::Error* oError) = 0;

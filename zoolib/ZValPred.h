@@ -53,12 +53,6 @@ inline ZValComparandPseudo CConst(const ZVal_Expr& iVal)
 inline ZValComparandPseudo CName(const std::string& iName)
 	{ return CName_T<ZVal_Expr>(iName); }
 
-inline ZValComparandPseudo CTrail(const ZTrail& iTrail)
-	{ return CTrail_T<ZVal_Expr>(iTrail); }
-
-inline ZValComparandPseudo CVal()
-	{ return CVal_T<ZVal_Expr>(); }
-
 inline ZValComparandPseudo CVar(const std::string& iVarName)
 	{ return CVar_T<ZVal_Expr>(iVarName); }
 

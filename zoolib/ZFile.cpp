@@ -318,7 +318,7 @@ string ZFileSpec::AsString_Native() const
 	}
 
 /// Return a ZTrail representing the steps to get from this file spec to \a oDest.
-ZTrail ZFileSpec::TrailTo(const ZFileSpec& oDest, ZFile::Error* oError) const
+ZQ<ZTrail> ZFileSpec::TrailTo(const ZFileSpec& oDest, ZFile::Error* oError) const
 	{
 	if (ZRef<ZFileLoc> myRealLoc = this->pPhysicalLoc())
 		{
@@ -329,11 +329,11 @@ ZTrail ZFileSpec::TrailTo(const ZFileSpec& oDest, ZFile::Error* oError) const
 	if (oError)
 		*oError = ZFile::errorInvalidFileSpec;
 
-	return ZTrail(false);
+	return null;
 	}
 
 /// Return a ZTrail representing the steps to get from \a iSource to this file spec.
-ZTrail ZFileSpec::TrailFrom(const ZFileSpec& iSource, ZFile::Error* oError) const
+ZQ<ZTrail> ZFileSpec::TrailFrom(const ZFileSpec& iSource, ZFile::Error* oError) const
 	{
 	if (ZRef<ZFileLoc> myRealLoc = this->pPhysicalLoc())
 		{
@@ -344,7 +344,7 @@ ZTrail ZFileSpec::TrailFrom(const ZFileSpec& iSource, ZFile::Error* oError) cons
 	if (oError)
 		*oError = ZFile::errorInvalidFileSpec;
 
-	return ZTrail(false);
+	return null;
 	}
 
 /// Returns the kind of file system entity represented by the node, if it exists.

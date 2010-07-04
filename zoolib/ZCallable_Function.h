@@ -41,7 +41,7 @@ public:
 	:	fFunction(iFunction)
 		{}
 
-	// From ZCallable_V0
+	// From ZCallable_R0
 	virtual void Invoke()
 		{ fFunction(); }
 

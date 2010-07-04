@@ -223,7 +223,7 @@ void ZVal_CFType::Clear()
 	{ inherited::Clear(); }
 
 template <>
-ZQ_T<int8> ZVal_CFType::QGet_T<int8>() const
+ZQ<int8> ZVal_CFType::QGet_T<int8>() const
 	{
 	int8 theVal;
 	if (spGetNumber_T(*this, kCFNumberSInt8Type, theVal))
@@ -234,7 +234,7 @@ ZQ_T<int8> ZVal_CFType::QGet_T<int8>() const
 	}
 
 template <>
-ZQ_T<int16> ZVal_CFType::QGet_T<int16>() const
+ZQ<int16> ZVal_CFType::QGet_T<int16>() const
 	{
 	int16 theVal;
 	if (spGetNumber_T(*this, kCFNumberSInt16Type, theVal))
@@ -245,7 +245,7 @@ ZQ_T<int16> ZVal_CFType::QGet_T<int16>() const
 	}
 
 template <>
-ZQ_T<int32> ZVal_CFType::QGet_T<int32>() const
+ZQ<int32> ZVal_CFType::QGet_T<int32>() const
 	{
 	int32 theVal;
 	if (spGetNumber_T(*this, kCFNumberSInt32Type, theVal))
@@ -262,7 +262,7 @@ ZQ_T<int32> ZVal_CFType::QGet_T<int32>() const
 	}
 
 template <>
-ZQ_T<int64> ZVal_CFType::QGet_T<int64>() const
+ZQ<int64> ZVal_CFType::QGet_T<int64>() const
 	{
 	int64 theVal;
 	if (spGetNumber_T(*this, kCFNumberSInt64Type, theVal))
@@ -279,7 +279,7 @@ ZQ_T<int64> ZVal_CFType::QGet_T<int64>() const
 	}
 
 template <>
-ZQ_T<bool> ZVal_CFType::QGet_T<bool>() const
+ZQ<bool> ZVal_CFType::QGet_T<bool>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFBooleanGetTypeID())
 		return true &&::CFBooleanGetValue(this->StaticCast<CFBooleanRef>());
@@ -287,7 +287,7 @@ ZQ_T<bool> ZVal_CFType::QGet_T<bool>() const
 	}
 
 template <>
-ZQ_T<float> ZVal_CFType::QGet_T<float>() const
+ZQ<float> ZVal_CFType::QGet_T<float>() const
 	{
 	float theVal;
 	if (spGetNumber_T(*this, kCFNumberFloat32Type, theVal))
@@ -298,7 +298,7 @@ ZQ_T<float> ZVal_CFType::QGet_T<float>() const
 	}
 
 template <>
-ZQ_T<double> ZVal_CFType::QGet_T<double>() const
+ZQ<double> ZVal_CFType::QGet_T<double>() const
 	{
 	double theVal;
 	if (spGetNumber_T(*this, kCFNumberFloat64Type, theVal))
@@ -309,7 +309,7 @@ ZQ_T<double> ZVal_CFType::QGet_T<double>() const
 	}
 
 template <>
-ZQ_T<string8> ZVal_CFType::QGet_T<string8>() const
+ZQ<string8> ZVal_CFType::QGet_T<string8>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFStringGetTypeID())
 		return sAsUTF8(this->StaticCast<CFStringRef>());
@@ -317,7 +317,7 @@ ZQ_T<string8> ZVal_CFType::QGet_T<string8>() const
 	}
 
 template <>
-ZQ_T<ZRef<CFStringRef> > ZVal_CFType::QGet_T<ZRef<CFStringRef> >() const
+ZQ<ZRef<CFStringRef> > ZVal_CFType::QGet_T<ZRef<CFStringRef> >() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFStringGetTypeID())
 		return this->StaticCast<CFStringRef>();
@@ -325,7 +325,7 @@ ZQ_T<ZRef<CFStringRef> > ZVal_CFType::QGet_T<ZRef<CFStringRef> >() const
 	}
 
 template <>
-ZQ_T<ZData_CFType> ZVal_CFType::QGet_T<ZData_CFType>() const
+ZQ<ZData_CFType> ZVal_CFType::QGet_T<ZData_CFType>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFDataGetTypeID())
 		return this->StaticCast<CFDataRef>();
@@ -333,7 +333,7 @@ ZQ_T<ZData_CFType> ZVal_CFType::QGet_T<ZData_CFType>() const
 	}
 
 template <>
-ZQ_T<ZSeq_CFType> ZVal_CFType::QGet_T<ZSeq_CFType>() const
+ZQ<ZSeq_CFType> ZVal_CFType::QGet_T<ZSeq_CFType>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFArrayGetTypeID())
 		return this->StaticCast<CFArrayRef>();
@@ -341,7 +341,7 @@ ZQ_T<ZSeq_CFType> ZVal_CFType::QGet_T<ZSeq_CFType>() const
 	}
 
 template <>
-ZQ_T<ZMap_CFType> ZVal_CFType::QGet_T<ZMap_CFType>() const
+ZQ<ZMap_CFType> ZVal_CFType::QGet_T<ZMap_CFType>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFDictionaryGetTypeID())
 		return this->StaticCast<CFDictionaryRef>();
@@ -518,7 +518,7 @@ size_t ZSeq_CFType::Count() const
 void ZSeq_CFType::Clear()
 	{ inherited::Clear(); }
 
-ZQ_T<ZVal_CFType> ZSeq_CFType::QGet(size_t iIndex) const
+ZQ<ZVal_CFType> ZSeq_CFType::QGet(size_t iIndex) const
 	{
 	if (CFArrayRef theArray = this->pArray())
 		{
@@ -533,7 +533,7 @@ ZQ_T<ZVal_CFType> ZSeq_CFType::QGet(size_t iIndex) const
 
 ZVal_CFType ZSeq_CFType::DGet(const ZVal_CFType& iDefault, size_t iIndex) const
 	{
-	if (ZQ_T<ZVal_CFType> theQ = this->QGet(iIndex))
+	if (ZQ<ZVal_CFType> theQ = this->QGet(iIndex))
 		return theQ.Get();
 	return iDefault;
 	}
@@ -709,7 +709,7 @@ ZMap_CFType& ZMap_CFType::operator=(const Adopt_T<CFDictionaryRef>& iOther)
 void ZMap_CFType::Clear()
 	{ inherited::Clear(); }
 
-ZQ_T<ZVal_CFType> ZMap_CFType::QGet(const string8& iName) const
+ZQ<ZVal_CFType> ZMap_CFType::QGet(const string8& iName) const
 	{
 	if (CFDictionaryRef theDictionary = this->pDictionary())
 		{
@@ -719,7 +719,7 @@ ZQ_T<ZVal_CFType> ZMap_CFType::QGet(const string8& iName) const
 	return null;
 	}
 
-ZQ_T<ZVal_CFType> ZMap_CFType::QGet(CFStringRef iName) const
+ZQ<ZVal_CFType> ZMap_CFType::QGet(CFStringRef iName) const
 	{
 	if (CFDictionaryRef theDictionary = this->pDictionary())
 		{
@@ -731,14 +731,14 @@ ZQ_T<ZVal_CFType> ZMap_CFType::QGet(CFStringRef iName) const
 
 ZVal_CFType ZMap_CFType::DGet(const ZVal_CFType& iDefault, const string8& iName) const
 	{
-	if (ZQ_T<ZVal_CFType> theQ = this->QGet(iName))
+	if (ZQ<ZVal_CFType> theQ = this->QGet(iName))
 		return theQ.Get();
 	return iDefault;
 	}
 
 ZVal_CFType ZMap_CFType::DGet(const ZVal_CFType& iDefault, CFStringRef iName) const
 	{
-	if (ZQ_T<ZVal_CFType> theQ = this->QGet(iName))
+	if (ZQ<ZVal_CFType> theQ = this->QGet(iName))
 		return theQ.Get();
 	return iDefault;
 	}

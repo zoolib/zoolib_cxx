@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZData_Any.h"
-#include "zoolib/ZQ_T.h"
+#include "zoolib/ZQ.h"
 #include "zoolib/ZStreamerReader.h"
 
 #include <deque>
@@ -31,30 +31,31 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 
 namespace ZooLib {
+namespace ZNatter {
 
-class ZNatterExchange;
+class Exchange;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZNatterChannel
+#pragma mark * Channel
 
-class ZNatterChannel
+class Channel
 :	public ZCounted
 	{
 public:
-	ZNatterChannel(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
-	virtual ~ZNatterChannel();
+	Channel(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+	virtual ~Channel();
 
-	ZQ_T<ZData_Any> Receive(ZRef<ZNatterExchange>* oExchange);
+	ZQ<ZData_Any> Receive(ZRef<Exchange>* oExchange);
 	void Send(ZData_Any iData);
 
 private:
-	// Called by ZNatterExchange instances
-	void pAdd(ZNatterExchange* iExchange);
-	void pRemove(ZNatterExchange* iExchange);
-	ZQ_T<ZData_Any> pSendReceive(ZRef<ZNatterExchange> iExchange, ZData_Any iData);
+	// Called by Exchange instances
+	void pAdd(Exchange* iExchange);
+	void pRemove(Exchange* iExchange);
+	ZQ<ZData_Any> pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData);
 
-	ZQ_T<ZData_Any> pReadFor(ZGuardRMtxR& iGuard, ZRef<ZNatterExchange> iExchange);
+	ZQ<ZData_Any> pReadFor(ZGuardRMtxR& iGuard, ZRef<Exchange> iExchange);
 	void pRead(ZGuardRMtxR& iGuard);
 
 	ZRef<ZStreamerR> fStreamerR;
@@ -75,34 +76,35 @@ private:
 
 	std::set<int64> fRetired;
 
-	std::map<int64, ZRef<ZNatterExchange> > fPending;
+	std::map<int64, ZRef<Exchange> > fPending;
 
-	friend class ZNatterExchange;
+	friend class Exchange;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZNatterChannel
+#pragma mark * Exchange
 
-class ZNatterExchange
+class Exchange
 :	public ZCounted
 	{
 public:
-	ZNatterExchange(ZRef<ZNatterChannel> iChannel);
-	virtual ~ZNatterExchange();
+	Exchange(ZRef<Channel> iChannel);
+	virtual ~Exchange();
 
 // Our protocol
-	ZQ_T<ZData_Any> SendReceive(const ZData_Any& iData);
+	ZQ<ZData_Any> SendReceive(const ZData_Any& iData);
 
 private:
-	ZRef<ZNatterChannel> fChannel;
+	ZRef<Channel> fChannel;
 	int64 fID;
 	bool fWaiting;
-	ZQ_T<ZData_Any> fDataQ;
+	ZQ<ZData_Any> fDataQ;
 
-	friend class ZNatterChannel;
+	friend class Channel;
 	};
 
+} // namespace ZNatter
 } // namespace ZooLib
 
 #endif // __ZNatter__

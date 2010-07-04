@@ -295,7 +295,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // null is a marker value, used in places where we're wanting to be explicit about returning an
 // empty value of some sort, but where we don't want to have to manually create the value each time.
 
-const class null_t {} null = {};
+#ifdef __cplusplus
+	typedef nullptr_t null_t;
+	const null_t null = {};
+//	const class null_t {} null = {};
+#endif
 
 // =================================================================================================
 #if __MACH__

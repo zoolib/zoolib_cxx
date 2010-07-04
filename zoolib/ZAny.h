@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h" // For swap
 #include "zoolib/ZCompat_operator_bool.h"
-#include "zoolib/ZQ_T.h"
+#include "zoolib/ZQ.h"
 #include "zoolib/ZStdInt.h" // For int64
 
 #include <typeinfo>
@@ -207,11 +207,11 @@ public:
 		{ return ZAnyBaseCast<S>(this); }
 
 	template <class S>
-	ZQ_T<S> QGet_T() const
+	ZQ<S> QGet_T() const
 		{
 		if (const S* theVal = this->PGet_T<S>())
-			return ZQ_T<S>(*theVal);
-		return ZQ_T<S>();
+			return ZQ<S>(*theVal);
+		return ZQ<S>();
 		}
 
 	template <class S>
@@ -250,23 +250,28 @@ const ValueType* ZAnyCast(const ZAny* operand)
 
 } // namespace ZooLib
 
+namespace std {
+inline void swap(ZooLib::ZAny& a, ZooLib::ZAny& b)
+	{ a.swap(b); }
+} // namespace std
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAny coercion
 
 namespace ZooLib {
 
-ZQ_T<bool> sQCoerceBool(const ZAny& iAny);
+ZQ<bool> sQCoerceBool(const ZAny& iAny);
 bool sQCoerceBool(const ZAny& iAny, bool& oVal);
 bool sDCoerceBool(bool iDefault, const ZAny& iAny);
 bool sCoerceBool(const ZAny& iAny);
 
-ZQ_T<int64> sQCoerceInt(const ZAny& iAny);
+ZQ<int64> sQCoerceInt(const ZAny& iAny);
 bool sQCoerceInt(const ZAny& iAny, int64& oVal);
 int64 sDCoerceInt(int64 iDefault, const ZAny& iAny);
 int64 sCoerceInt(const ZAny& iAny);
 
-ZQ_T<double> sQCoerceReal(const ZAny& iAny);
+ZQ<double> sQCoerceReal(const ZAny& iAny);
 bool sQCoerceReal(const ZAny& iAny, double& oVal);
 double sDCoerceReal(double iDefault, const ZAny& iAny);
 double sCoerceReal(const ZAny& iAny);

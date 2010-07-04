@@ -98,4 +98,4 @@ void sRelease_T(HANDLE iHANDLE)
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(CFType)
+#endif // ZCONFIG_SPI_Enabled(Win)

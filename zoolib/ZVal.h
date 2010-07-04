@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStdInt.h" // For size_t
-#include "zoolib/ZString.h"//##
+
+#include <string>
 
 namespace ZooLib {
 
@@ -68,12 +69,14 @@ private:
 #pragma mark -
 #pragma mark * sPGeti, case-insensitive get
 
+bool sEquali(const std::string& iLeft, const std::string& iRight);
+
 template <class Map_t>
 typename Map_t::Val_t* sPGeti(Map_t& iMap, const std::string& iNamei)
 	{
 	for (typename Map_t::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
 		{
-		if (ZString::sEquali(iMap.NameOf(i), iNamei))
+		if (sEquali(iMap.NameOf(i), iNamei))
 			return iMap.PGet(i);
 		}
 	return nullptr;
@@ -84,7 +87,7 @@ const typename Map_t::Val_t* sPGeti(const Map_t& iMap, const std::string& iNamei
 	{
 	for (typename Map_t::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
 		{
-		if (ZString::sEquali(iMap.NameOf(i), iNamei))
+		if (sEquali(iMap.NameOf(i), iNamei))
 			return iMap.PGet(i);
 		}
 	return nullptr;
