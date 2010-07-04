@@ -35,16 +35,12 @@ namespace ZooLib {
 
 class ZTrail
 	{
+	ZTrail(bool); // Not implemented
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTrail, operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const;
-
 	ZTrail();
 	ZTrail(const ZTrail& iTrail);
 	~ZTrail();
 	ZTrail& operator=(const ZTrail& iTrail);
-
-	explicit ZTrail(bool iValid);
 
 	ZTrail(const string8& iPOSIXTrail);
 	ZTrail(const char* iPOSIXTrail);
@@ -55,8 +51,7 @@ public:
 
 	template <class I>
 	ZTrail(const I& iBegin, const I& iEnd)
-	:	fComps(iBegin, iEnd),
-		fValid(true)
+	:	fComps(iBegin, iEnd)
 		{}
 
 	bool operator==(const ZTrail& iOther) const;
@@ -117,7 +112,6 @@ public:
 
 private:
 	std::vector<string8> fComps;
-	bool fValid;
 	};
 
 ZTrail operator+(const string8& iPOSIXTrail, const ZTrail& iTrail);

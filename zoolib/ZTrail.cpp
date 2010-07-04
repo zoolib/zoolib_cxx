@@ -140,16 +140,11 @@ size_t ZTrail::sNormalize_ReturnLeadingBounces(const vector<string8>& iComps,
 	return bounces;
 	}
 
-ZTrail::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fValid); }
-
 ZTrail::ZTrail()
-:	fValid(true)
 	{}
 
 ZTrail::ZTrail(const ZTrail& iTrail)
-:	fComps(iTrail.fComps),
-	fValid(iTrail.fValid)
+:	fComps(iTrail.fComps)
 	{}
 
 ZTrail::~ZTrail()
@@ -158,30 +153,22 @@ ZTrail::~ZTrail()
 ZTrail& ZTrail::operator=(const ZTrail& iTrail)
 	{
 	fComps = iTrail.fComps;
-	fValid = iTrail.fValid;
 	return *this;
 	}
 
-ZTrail::ZTrail(bool iValid)
-:	fValid(iValid)
-	{}
-
 ZTrail::ZTrail(const string8& iPOSIXTrail)
-:	fValid(true)
 	{
 	if (size_t trailLength = iPOSIXTrail.size())
 		sParseStringAndAppend("/", ".", "..", iPOSIXTrail.data(), trailLength, fComps);
 	}
 
 ZTrail::ZTrail(const char* iPOSIXTrail)
-:	fValid(true)
 	{
 	if (size_t trailLength = std::strlen(iPOSIXTrail))
 		sParseStringAndAppend("/", ".", "..", iPOSIXTrail, trailLength, fComps);
 	}
 
 ZTrail::ZTrail(const char* iPOSIXTrail, size_t iSize)
-:	fValid(true)
 	{
 	if (iSize)
 		sParseStringAndAppend("/", ".", "..", iPOSIXTrail, iSize, fComps);
@@ -189,7 +176,6 @@ ZTrail::ZTrail(const char* iPOSIXTrail, size_t iSize)
 
 ZTrail::ZTrail(const string8& iSeparator, const string8& iIgnore,
 	const string8& iBounce, const string8& iTrail)
-:	fValid(true)
 	{
 	if (size_t trailLength = iTrail.size())
 		{
@@ -199,18 +185,10 @@ ZTrail::ZTrail(const string8& iSeparator, const string8& iIgnore,
 	}
 
 bool ZTrail::operator==(const ZTrail& iOther) const
-	{
-	if (fValid && iOther.fValid)
-		return fComps == iOther.fComps;
-	return fValid == iOther.fValid;
-	}
+	{ return fComps == iOther.fComps; }
 
 bool ZTrail::operator<(const ZTrail& iOther) const
-	{
-	if (fValid && iOther.fValid)
-		return fComps < iOther.fComps;
-	return fValid < iOther.fValid;
-	}
+	{ return fComps < iOther.fComps; }
 
 ZTrail ZTrail::operator+(const ZTrail& iTrail) const
 	{
@@ -221,89 +199,37 @@ ZTrail ZTrail::operator+(const ZTrail& iTrail) const
 
 ZTrail& ZTrail::operator+=(const ZTrail& iTrail)
 	{
-	// What does it mean to append a valid trail to an invalid one?
-	if (iTrail.fValid)
-		{
-		if (fValid)
-			{
-			fComps.insert(fComps.end(), iTrail.fComps.begin(), iTrail.fComps.end());
-			}
-		else
-			{
-			fValid = true;
-			fComps = iTrail.fComps;
-			}
-		}
+	fComps.insert(fComps.end(), iTrail.fComps.begin(), iTrail.fComps.end());
 	return *this;
 	}
 
 void ZTrail::AppendTrail(const ZTrail& iTrail)
-	{
-	if (iTrail.fValid)
-		{
-		if (fValid)
-			{
-			fComps.insert(fComps.end(), iTrail.fComps.begin(), iTrail.fComps.end());
-			}
-		else
-			{
-			fValid = true;
-			fComps = iTrail.fComps;
-			}
-		}
-	}
+	{ fComps.insert(fComps.end(), iTrail.fComps.begin(), iTrail.fComps.end()); }
 
 void ZTrail::AppendComp(const string8& iComp)
-	{
-	fValid = true;
-	fComps.push_back(iComp);
-	}
+	{ fComps.push_back(iComp); }
 
 void ZTrail::AppendBounce()
-	{
-	fValid = true;
-	fComps.push_back(string8());
-	}
+	{ fComps.push_back(string8()); }
 
 void ZTrail::AppendBounces(size_t iCount)
 	{
-	fValid = true;
 	string8 empty;
 	while (iCount--)
 		fComps.push_back(empty);
 	}
 
 void ZTrail::PrependTrail(const ZTrail& iTrail)
-	{
-	if (iTrail.fValid)
-		{
-		if (fValid)
-			{
-			fComps.insert(fComps.begin(), iTrail.fComps.begin(), iTrail.fComps.end());
-			}
-		else
-			{
-			fValid = true;
-			fComps = iTrail.fComps;
-			}
-		}
-	}
+	{ fComps.insert(fComps.begin(), iTrail.fComps.begin(), iTrail.fComps.end()); }
 
 void ZTrail::PrependComp(const string8& iComp)
-	{
-	fValid = true;
-	fComps.insert(fComps.begin(), iComp);
-	}
+	{ fComps.insert(fComps.begin(), iComp); }
 
 void ZTrail::PrependBounce()
-	{
-	fValid = true;
-	fComps.insert(fComps.begin(), string8());
-	}
+	{ fComps.insert(fComps.begin(), string8()); }
 
 void ZTrail::PrependBounces(size_t iCount)
 	{
-	fValid = true;
 	string8 empty;
 	while (iCount--)
 		fComps.insert(fComps.begin(), empty);
