@@ -26,15 +26,30 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZMulti_T1
+
+template <class T0>
+class ZMulti_T1
+	{
+public:
+	ZMulti_T1(const T0& i0)
+	:	f0(i0)
+		{}
+
+	T0 f0;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZMulti_T2
 
 template <class T0, class T1>
 class ZMulti_T2
 	{
 public:
-	ZMulti_T2(const T0& iT0, const T1& iT1)
-	:	f0(iT0),
-		f1(iT1)
+	ZMulti_T2(const T0& i0, const T1& i1)
+	:	f0(i0)
+	,	f1(i1)
 		{}
 
 	T0 f0;
@@ -49,15 +64,36 @@ template <class T0, class T1, class T2>
 class ZMulti_T3
 	{
 public:
-	ZMulti_T3(const T0& iT0, const T1& iT1, const T2& iT2)
-	:	f0(iT0),
-		f1(iT1),
-		f2(iT2)
+	ZMulti_T3(const T0& i0, const T1& i1, const T2& i2)
+	:	f0(i0)
+	,	f1(i1)
+	,	f2(i2)
 		{}
 
 	T0 f0;
 	T1 f1;
 	T2 f2;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMulti_T4
+
+template <class T0, class T1, class T2, class T4>
+class ZMulti_T4
+	{
+public:
+	ZMulti_T4(const T0& i0, const T1& i1, const T2& i2, const T3& i3)
+	:	f0(i0)
+	,	f1(i1)
+	,	f2(i2)
+	,	f3(i3)
+		{}
+
+	T0 f0;
+	T1 f1;
+	T2 f2;
+	T3 f3;
 	};
 
 } // namespace ZooLib
