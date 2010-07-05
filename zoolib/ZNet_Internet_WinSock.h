@@ -79,7 +79,7 @@ protected:
 	bool fStarted;
 	size_t fCountAddressesToReturn;
 	size_t fCurrentIndex;
-	std::vector<ip_addr> fAddresses;
+	std::vector<ip4_addr> fAddresses;
 	};
 
 // =================================================================================================
@@ -89,8 +89,8 @@ protected:
 class ZNetListener_TCP_WinSock : public ZNetListener_TCP, private ZNet_Internet_WinSock
 	{
 public:
-	ZNetListener_TCP_WinSock(ip_port iLocalPort, size_t iListenQueueSize);
-	ZNetListener_TCP_WinSock(ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize);
+	ZNetListener_TCP_WinSock(ip_port iLocalPort);
+	ZNetListener_TCP_WinSock(ip4_addr iLocalAddress, ip_port iLocalPort);
 	virtual ~ZNetListener_TCP_WinSock();
 
 // From ZNetListener_TCP
@@ -101,7 +101,7 @@ public:
 	virtual ip_port GetPort();
 
 protected:
-	void pInit(ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize);
+	void pInit(ip4_addr iLocalAddress, ip_port iLocalPort);
 
 	SOCKET fSOCKET;
 	};
@@ -118,7 +118,7 @@ class ZNetEndpoint_TCP_WinSock
 	{
 public:
 	ZNetEndpoint_TCP_WinSock(SOCKET iSOCKET);
-	ZNetEndpoint_TCP_WinSock(ip_addr iRemoteHost, ip_port iRemotePort);
+	ZNetEndpoint_TCP_WinSock(ip4_addr iRemoteHost, ip_port iRemotePort);
 	virtual ~ZNetEndpoint_TCP_WinSock();
 
 // From ZStreamerRCon via ZNetEndpoint_TCP

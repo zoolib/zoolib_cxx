@@ -55,18 +55,18 @@ class Make_NameLookup
 
 
 class Make_Listener
-:	public ZFunctionChain_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam_t>
+:	public ZFunctionChain_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam4_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetListener_TCP_WinSock(iParam.f0, iParam.f1, iParam.f2);
+		oResult = new ZNetListener_TCP_WinSock(iParam.f0, iParam.f1);
 		return true;
 		}
 	} sMaker1;
 
 
 class Make_Endpoint
-:	public ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
+:	public ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam4_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -142,7 +142,7 @@ ZNetNameLookup_Internet_WinSock::ZNetNameLookup_Internet_WinSock(
 		}
 	else
 		{
-		ip_addr theIPAddr = ::inet_addr(inName.c_str());
+		ip4_addr theIPAddr = ::inet_addr(inName.c_str());
 		if (theIPAddr != INADDR_NONE)
 			{
 			fStarted = true;
@@ -197,7 +197,7 @@ void ZNetNameLookup_Internet_WinSock::Advance()
 ZRef<ZNetAddress> ZNetNameLookup_Internet_WinSock::CurrentAddress()
 	{
 	if (fCurrentIndex < fAddresses.size())
-		return new ZNetAddress_Internet(fAddresses[fCurrentIndex], fPort);
+		return new ZNetAddress_IP4(fAddresses[fCurrentIndex], fPort);
 
 	return ZRef<ZNetAddress>();
 	}
@@ -209,15 +209,15 @@ ZRef<ZNetName> ZNetNameLookup_Internet_WinSock::CurrentName()
 #pragma mark -
 #pragma mark * ZNetListener_TCP_WinSock
 
-ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock(ip_port iLocalPort, size_t iListenQueueSize)
+ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock(ip_port iLocalPort)
 	{
-	this->pInit(INADDR_ANY, iLocalPort, iListenQueueSize);
+	this->pInit(INADDR_ANY, iLocalPort);
 	}
 
 ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock(
-	ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize)
+	ip4_addr iLocalAddress, ip_port iLocalPort)
 	{
-	this->pInit(iLocalAddress, iLocalPort, iListenQueueSize);
+	this->pInit(iLocalAddress, iLocalPort);
 	}
 
 ZNetListener_TCP_WinSock::~ZNetListener_TCP_WinSock()
@@ -274,7 +274,7 @@ ip_port ZNetListener_TCP_WinSock::GetPort()
 	}
 
 void ZNetListener_TCP_WinSock::pInit(
-	ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize)
+	ip4_addr iLocalAddress, ip_port iLocalPort)
 	{
 	fSOCKET = ::socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (fSOCKET == INVALID_SOCKET)
@@ -299,7 +299,7 @@ void ZNetListener_TCP_WinSock::pInit(
 		throw ZNetEx(sTranslateError(err));
 		}
 
-	if (::listen(fSOCKET, iListenQueueSize))
+	if (::listen(fSOCKET, 5))
 		{
 		int err = ::WSAGetLastError();
 		::closesocket(fSOCKET);
@@ -329,7 +329,7 @@ ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock(SOCKET iSOCKET)
 	::setsockopt(fSOCKET, IPPROTO_TCP, TCP_NODELAY, (char*)&noDelayFlag, sizeof(noDelayFlag));
 	}
 
-ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock(ip_addr iRemoteHost, ip_port iRemotePort)
+ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock(ip4_addr iRemoteHost, ip_port iRemotePort)
 	{
 	fSOCKET = ::socket(AF_INET, SOCK_STREAM, 0);
 	if (fSOCKET == INVALID_SOCKET)
@@ -368,7 +368,7 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetLocalAddress()
 		{
 		if (localSockAddr.sin_family == AF_INET)
 			{
-			return new ZNetAddress_Internet(
+			return new ZNetAddress_IP4(
 				ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
 			}
 		}
@@ -382,7 +382,7 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetRemoteAddress()
 	int length = sizeof(remoteSockAddr);
 	if (::getpeername(fSOCKET, (sockaddr*)&remoteSockAddr, &length) >= 0)
 		{
-		return new ZNetAddress_Internet(
+		return new ZNetAddress_IP4(
 			ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));
 		}
 

@@ -32,8 +32,21 @@ namespace ZooLib {
 
 // =================================================================================================
 
-typedef uint32 ip_addr;
 typedef uint16 ip_port;
+
+typedef uint32 ip4_addr;
+typedef ip4_addr ip_addr;
+
+struct ip6_addr
+	{
+	union
+		{
+		uint8 fAs8[16];
+		uint16 fAs16[8];
+		uint32 fAs32[4];
+		uint64 fAs64[2];
+		};
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -41,23 +54,62 @@ typedef uint16 ip_port;
 
 class ZNetAddress_Internet : public ZNetAddress
 	{
+protected:
+	ZNetAddress_Internet(ip_port iPort);
+
+// Our protocol
+	ip_port GetPort() const
+		{ return fPort; }
+
+protected:
+	const ip_port fPort;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZNetAddress_IP4
+
+class ZNetAddress_IP4 : public ZNetAddress_Internet
+	{
 public:
-	ZNetAddress_Internet();
-	ZNetAddress_Internet(const ZNetAddress_Internet& other);
-	ZNetAddress_Internet(ip_addr iHost, ip_port inPort);
-	ZNetAddress_Internet(uint8 iHost1, uint8 iHost2, uint8 iHost3, uint8 iHost4, ip_port iPort);
-	virtual ~ZNetAddress_Internet();
+	ZNetAddress_IP4(ip4_addr iAddr, ip_port iPort);
+	ZNetAddress_IP4(uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, uint8 iAddr4, ip_port iPort);
 
 // From ZNetAddress
 	virtual ZRef<ZNetEndpoint> Connect() const;
 
 // Our protocol
-	ip_addr GetHost() const { return fHost; }
-	ip_port GetPort() const { return fPort; }
+	ip4_addr GetAddr() const
+		{ return fAddr; }
+
+	static const ip4_addr sLoopback = 0x7F000001u;
+	static const ip4_addr sAny = 0;
 
 private:
-	ip_addr fHost;
-	ip_port fPort;
+	const ip4_addr fAddr;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZNetAddress_IP6
+
+class ZNetAddress_IP6 : public ZNetAddress_Internet
+	{
+public:
+	ZNetAddress_IP6(ip_port iPort, ip6_addr iAddr);
+
+// From ZNetAddress
+	virtual ZRef<ZNetEndpoint> Connect() const;
+
+// Our protocol
+	const ip6_addr& GetAddr() const
+		{ return fAddr; }
+
+	static const ip6_addr sLoopback;
+	static const ip6_addr sAny;
+
+private:
+	const ip6_addr fAddr;
 	};
 
 // =================================================================================================
@@ -69,8 +121,6 @@ class ZNetName_Internet : public ZNetName
 public:
 	typedef ZMulti_T3<std::string, ip_port, size_t> LookupParam_t;
 
-	ZNetName_Internet();
-	ZNetName_Internet(const ZNetName_Internet& other);
 	ZNetName_Internet(const std::string& iName, ip_port iPort);
 	virtual ~ZNetName_Internet();
 
@@ -83,8 +133,8 @@ public:
 	ip_port GetPort() const;
 
 private:
-	std::string fName;
-	ip_port fPort;
+	const std::string fName;
+	const ip_port fPort;
 	};
 
 // =================================================================================================
@@ -94,15 +144,15 @@ private:
 class ZNetListener_TCP : public virtual ZNetListener
 	{
 public:
-	typedef ZMulti_T3<ip_addr, ip_port, size_t> MakeParam_t;
+	typedef ZMulti_T1<ip_port> MakeParam_t;
+	typedef ZMulti_T2<ip4_addr, ip_port> MakeParam4_t;
+	typedef ZMulti_T2<ip6_addr, ip_port> MakeParam6_t;
 
 	virtual ip_port GetPort() = 0;
 
-	static ZRef<ZNetListener_TCP> sCreate(
-		ip_port iPort, size_t iListenQueueSize);
-
-	static ZRef<ZNetListener_TCP> sCreate(
-		ip_addr iAddress, ip_port iPort, size_t iListenQueueSize);
+	static ZRef<ZNetListener_TCP> sCreate(ip_port iPort);
+	static ZRef<ZNetListener_TCP> sCreate(ip4_addr iAddress, ip_port iPort);
+	static ZRef<ZNetListener_TCP> sCreate(ip6_addr iAddress, ip_port iPort);
 	};
 
 // =================================================================================================
@@ -112,10 +162,11 @@ public:
 class ZNetEndpoint_TCP : public virtual ZNetEndpoint
 	{
 public:
-	typedef ZMulti_T2<ip_addr, ip_port> MakeParam_t;
+	typedef ZMulti_T2<ip4_addr, ip_port> MakeParam4_t;
+	typedef ZMulti_T2<ip6_addr, ip_port> MakeParam6_t;
 
-	static ZRef<ZNetEndpoint_TCP> sCreateConnected(
-		ip_addr iRemoteHost, ip_port iRemotePort);
+	static ZRef<ZNetEndpoint_TCP> sCreateConnected(ip4_addr iRemoteAddr, ip_port iRemotePort);
+	static ZRef<ZNetEndpoint_TCP> sCreateConnected(ip6_addr iRemoteAddr, ip_port iRemotePort);
 	};
 
 } // namespace ZooLib

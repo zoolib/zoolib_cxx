@@ -35,6 +35,9 @@ ZNetEx::ZNetEx(ZNet::Error iError)
 #pragma mark -
 #pragma mark * ZNetAddress
 
+ZNetAddress::ZNetAddress()
+	{}
+
 ZNetAddress::~ZNetAddress()
 	{}
 
@@ -57,6 +60,9 @@ ZNetAddressLookup::~ZNetAddressLookup()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetName
+
+ZNetName::ZNetName()
+	{}
 
 ZNetName::~ZNetName()
 	{}
@@ -137,15 +143,5 @@ bool ZNetEndpoint::ReceiveDisconnect(double iTimeout)
 
 void ZNetEndpoint::SendDisconnect()
 	{ this->GetStreamWCon().SendDisconnect(); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpointDG
-
-ZNetEndpointDG::ZNetEndpointDG()
-	{}
-
-ZNetEndpointDG::~ZNetEndpointDG()
-	{}
 
 } // namespace ZooLib

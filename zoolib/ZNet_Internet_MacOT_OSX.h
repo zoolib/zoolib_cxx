@@ -79,7 +79,7 @@ protected:
 class ZNetListener_TCP_MacOT_OSX : public ZNetListener_TCP
 	{
 public:
-	ZNetListener_TCP_MacOT_OSX(ip_port iLocalPort, size_t iListenQueueSize);
+	ZNetListener_TCP_MacOT_OSX(ip_port iLocalPort);
 	virtual ~ZNetListener_TCP_MacOT_OSX();
 
 // From ZNetListener via ZNetListener_TCP

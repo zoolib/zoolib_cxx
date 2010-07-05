@@ -67,7 +67,7 @@ class Make_Endpoint
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetEndpoint_Local_Win(iParam);
+		oResult = new ZNetEndpoint_Local_Win(iParam.f0);
 		return true;
 		}
 	} sMaker2;

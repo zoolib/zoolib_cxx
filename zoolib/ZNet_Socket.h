@@ -63,7 +63,7 @@ class ZNetListener_Socket
 	protected ZNet_Socket
 	{
 protected:
-	ZNetListener_Socket(int iSocketFD, size_t iListenQueueSize);
+	ZNetListener_Socket(int iSocketFD);
 
 public:
 	virtual ~ZNetListener_Socket();

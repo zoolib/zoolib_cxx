@@ -627,7 +627,7 @@ string ZFileLoc_Win::GetName(ZFile::Error* oErr) const
 	return fBase;
 	}
 
-ZTrail ZFileLoc_Win::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
+ZQ<ZTrail> ZFileLoc_Win::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
 	{
 	if (ZFileLoc_Win* dest = ZRefDynamicCast<ZFileLoc_Win>(oDest))
 		{
@@ -640,7 +640,7 @@ ZTrail ZFileLoc_Win::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
 		}
 	if (oErr)
 		*oErr = ZFile::errorGeneric;
-	return ZTrail(false);
+	return null;
 	}
 
 ZRef<ZFileLoc> ZFileLoc_Win::GetParent(ZFile::Error* oErr)
@@ -1215,7 +1215,7 @@ string ZFileLoc_WinNT::GetName(ZFile::Error* oErr) const
 	return ZUnicode::sAsUTF8(fBase);
 	}
 
-ZTrail ZFileLoc_WinNT::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
+ZQ<ZTrail> ZFileLoc_WinNT::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
 	{
 	if (ZFileLoc_WinNT* dest = ZRefDynamicCast<ZFileLoc_WinNT>(oDest))
 		{
@@ -1236,7 +1236,7 @@ ZTrail ZFileLoc_WinNT::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
 		}
 	if (oErr)
 		*oErr = ZFile::errorGeneric;
-	return ZTrail(false);
+	return null;
 	}
 
 ZRef<ZFileLoc> ZFileLoc_WinNT::GetParent(ZFile::Error* oErr)

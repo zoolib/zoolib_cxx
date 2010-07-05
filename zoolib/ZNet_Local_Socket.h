@@ -77,11 +77,11 @@ class ZNetListener_Local_Socket
 :	public ZNetListener_Local,
 	public ZNetListener_Socket
 	{
-	ZNetListener_Local_Socket(int iFD, size_t iListenQueueSize, bool iKnowWhatImDoing);
+	ZNetListener_Local_Socket(int iFD, bool iKnowWhatImDoing);
 public:
-	static ZRef<ZNetListener_Local_Socket> sCreateWithFD(int iFD, size_t iListenQueueSize);
+	static ZRef<ZNetListener_Local_Socket> sCreateWithFD(int iFD);
 
-	ZNetListener_Local_Socket(const std::string& iPath, size_t iListenQueueSize);
+	ZNetListener_Local_Socket(const std::string& iPath);
 	virtual ~ZNetListener_Local_Socket();
 
 // From ZNetListener_Socket

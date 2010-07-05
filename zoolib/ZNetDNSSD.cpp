@@ -193,12 +193,8 @@ void ZNetNameRegistered_DNSSD::spDNSServiceRegisterReply(
 	if (!context)
 		return;
 
-	ZNetNameRegistered_DNSSD* theNNR = static_cast<ZNetNameRegistered_DNSSD*>(context);
-	ZAcqMtx acq(theNNR->fMutex);
-
-	ZAssert(sdRef == theNNR->fDNSServiceRef);
-
-	theNNR->pDNSServiceRegisterReply(flags, errorCode, name, regtype, domain);
+	static_cast<ZNetNameRegistered_DNSSD*>(context)->
+		pDNSServiceRegisterReply(flags, errorCode, name, regtype, domain);
 	}
 
 } // namespace ZooLib

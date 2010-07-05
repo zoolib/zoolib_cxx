@@ -56,7 +56,7 @@ class Make_Listener
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetListener_Local_Socket(iParam.f0, iParam.f1);
+		oResult = new ZNetListener_Local_Socket(iParam.f0);
 		return true;
 		}
 	} sMaker1;
@@ -67,7 +67,7 @@ class Make_Endpoint
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetEndpoint_Local_Socket(iParam);
+		oResult = new ZNetEndpoint_Local_Socket(iParam.f0);
 		return true;
 		}
 	} sMaker2;
@@ -106,7 +106,7 @@ ZRef<ZNetAddress> ZNetNameLookup_Local_Socket::CurrentAddress()
 	if (!fFinished)
 		return new ZNetAddress_Local(fPath);
 
-	return ZRef<ZNetAddress>();
+	return null;
 	}
 
 ZRef<ZNetName> ZNetNameLookup_Local_Socket::CurrentName()
@@ -116,16 +116,15 @@ ZRef<ZNetName> ZNetNameLookup_Local_Socket::CurrentName()
 #pragma mark -
 #pragma mark * ZNetListener_Local_Socket
 
-ZRef<ZNetListener_Local_Socket> ZNetListener_Local_Socket::sCreateWithFD(
-	int iFD, size_t iListenQueueSize)
+ZRef<ZNetListener_Local_Socket> ZNetListener_Local_Socket::sCreateWithFD(int iFD)
 	{
 	try
 		{
-		return new ZNetListener_Local_Socket(iFD, iListenQueueSize, true);
+		return new ZNetListener_Local_Socket(iFD, I_KNOW_WHAT_IM_DOING);
 		}
 	catch (...)
 		{}
-	return ZRef<ZNetListener_Local_Socket>();
+	return null;
 	}
 
 static int spEnsureLocal(int iSocketFD)
@@ -140,9 +139,8 @@ static int spEnsureLocal(int iSocketFD)
 	throw std::runtime_error("ZNetListener_Local_Socket, not a local socket");
 	}
 
-ZNetListener_Local_Socket::ZNetListener_Local_Socket(
-	int iSocketFD, size_t iListenQueueSize, bool iKnowWhatImDoing)
-:	ZNetListener_Socket(spEnsureLocal(iSocketFD), iListenQueueSize)
+ZNetListener_Local_Socket::ZNetListener_Local_Socket(int iSocketFD, bool iKnowWhatImDoing)
+:	ZNetListener_Socket(spEnsureLocal(iSocketFD))
 	{
 	ZAssert(iKnowWhatImDoing);
 	}
@@ -176,9 +174,8 @@ static int spListen(const string& iPath)
 	return theSocketFD;
 	}
 
-ZNetListener_Local_Socket::ZNetListener_Local_Socket(
-	const std::string& iPath, size_t iListenQueueSize)
-:	ZNetListener_Socket(spListen(iPath), iListenQueueSize),
+ZNetListener_Local_Socket::ZNetListener_Local_Socket(const std::string& iPath)
+:	ZNetListener_Socket(spListen(iPath)),
 	fPath(iPath)
 	{}
 
@@ -189,9 +186,7 @@ ZNetListener_Local_Socket::~ZNetListener_Local_Socket()
 	}
 
 ZRef<ZNetEndpoint> ZNetListener_Local_Socket::Imp_MakeEndpoint(int iSocketFD)
-	{
-	return new ZNetEndpoint_Local_Socket(iSocketFD);
-	}
+	{ return new ZNetEndpoint_Local_Socket(iSocketFD); }
 
 // =================================================================================================
 #pragma mark -

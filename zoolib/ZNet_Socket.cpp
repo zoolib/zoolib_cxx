@@ -53,10 +53,6 @@ namespace ZooLib {
 #	define SO_NOSIGPIPE 0x1022
 #endif
 
-#ifndef TCP_NODELAY
-#	include <netinet/tcp.h>
-#endif
-
 static void spSetSocketOptions(int iSocket)
 	{
 	// Set the socket to be non blocking
@@ -79,7 +75,7 @@ int ZNet_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
 
 #elif defined(linux) || defined(__sun__)
 
-// RedHat Linux 6.1 adds the sigpipe on closed behavior to recv and send, and also adds
+// RedHat Linux 6.1 adds the sigpipe-on-closed behavior to recv and send, and also adds
 // a new flag that can be passed to supress that behavior. Older kernels return EINVAL
 // if they don't recognize the flag, and thus don't have the behavior. So we use a static
 // bool to remember if MSG_NOSIGNAL is available in the kernel.
@@ -87,7 +83,7 @@ int ZNet_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
 static void spSetSocketOptions(int iSocket)
 	{
 	// Set the socket to be non blocking
-	::fcntl(iSocket, F_SETFL, ::fcntl(iSocket, F_GETFL,0) | O_NONBLOCK);
+	::fcntl(iSocket, F_SETFL, ::fcntl(iSocket, F_GETFL, 0) | O_NONBLOCK);
 
 	// Enable keep alive
 	int keepAliveFlag = 1;
@@ -197,10 +193,10 @@ ZNet::Error ZNet_Socket::sTranslateError(int iNativeError)
 
 static bool spFastCancellationEnabled;
 
-ZNetListener_Socket::ZNetListener_Socket(int iSocketFD, size_t iListenQueueSize)
+ZNetListener_Socket::ZNetListener_Socket(int iSocketFD)
 :	fSocketFD(iSocketFD)
 	{
-	if (::listen(fSocketFD, iListenQueueSize) < 0)
+	if (::listen(fSocketFD, 5) < 0)
 		{
 		int err = errno;
 		::close(fSocketFD);

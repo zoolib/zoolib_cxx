@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZNet_Internet.h"
 #include "zoolib/ZFunctionChain.h"
+#include "zoolib/ZNet_Internet.h"
 #include "zoolib/ZString.h"
 
 using std::string;
@@ -30,47 +30,55 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZNetAddress_Internet
 
-ZNetAddress_Internet::ZNetAddress_Internet()
+ZNetAddress_Internet::ZNetAddress_Internet(ip_port iPort)
+:	fPort(iPort)
 	{}
 
-ZNetAddress_Internet::ZNetAddress_Internet(const ZNetAddress_Internet& other)
-:	fHost(other.fHost),
-	fPort(other.fPort)
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZNetAddress_IP4
+
+ZNetAddress_IP4::ZNetAddress_IP4(ip4_addr iAddr, ip_port iPort)
+:	ZNetAddress_Internet(iPort)
+,	fAddr(iAddr)
 	{}
 
-ZNetAddress_Internet::ZNetAddress_Internet(ip_addr iHost, ip_port iPort)
-:	fHost(iHost),
-	fPort(iPort)
+ZNetAddress_IP4::ZNetAddress_IP4(
+	uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, uint8 iAddr4, ip_port iPort)
+:	ZNetAddress_Internet(iPort)
+,	fAddr((iAddr1 << 24) | (iAddr2 << 16) | (iAddr3 << 8) | iAddr4)
 	{}
 
-ZNetAddress_Internet::ZNetAddress_Internet(
-	uint8 iHost1, uint8 iHost2, uint8 iHost3, uint8 iHost4, ip_port iPort)
-:	fHost((iHost1 << 24) | (iHost2 << 16) | (iHost3 << 8) | iHost4),
-	fPort(iPort)
+ZRef<ZNetEndpoint> ZNetAddress_IP4::Connect() const
+	{ return ZNetEndpoint_TCP::sCreateConnected(fAddr, fPort); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZNetAddress_IP6
+
+ZNetAddress_IP6::ZNetAddress_IP6(ip_port iPort, ip6_addr iAddr)
+:	ZNetAddress_Internet(iPort)
+,	fAddr(iAddr)
 	{}
 
-ZNetAddress_Internet::~ZNetAddress_Internet()
-	{}
+ZRef<ZNetEndpoint> ZNetAddress_IP6::Connect() const
+	{ return ZNetEndpoint_TCP::sCreateConnected(fAddr, fPort); }
 
-ZRef<ZNetEndpoint> ZNetAddress_Internet::Connect() const
-	{ return ZNetEndpoint_TCP::sCreateConnected(fHost, fPort); }
+const ip6_addr ZNetAddress_IP6::sLoopback =
+	{{{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }}};
+
+const ip6_addr ZNetAddress_IP6::sAny =
+	{{{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }}};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetName_Internet
 
-ZNetName_Internet::ZNetName_Internet()
-:	fPort(0)
-	{}
-
-ZNetName_Internet::ZNetName_Internet(const ZNetName_Internet& other)
-:	fName(other.fName),
-	fPort(other.fPort)
-	{}
-
 ZNetName_Internet::ZNetName_Internet(const string& iName, ip_port iPort)
-:	fName(iName),
-	fPort(iPort)
+:	fName(iName)
+,	fPort(iPort)
 	{}
 
 ZNetName_Internet::~ZNetName_Internet()
@@ -95,17 +103,24 @@ ip_port ZNetName_Internet::GetPort() const
 #pragma mark -
 #pragma mark * ZNetListener_TCP
 
-ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(ip_port iPort, size_t iListenQueueSize)
+ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(ip_port iPort)
 	{
 	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
-		::sInvoke(MakeParam_t(0, iPort, iListenQueueSize));
+		::sInvoke(MakeParam_t(iPort));
 	}
 
 ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
-	ip_addr iAddress, ip_port iPort, size_t iListenQueueSize)
+	ip4_addr iAddress, ip_port iPort)
 	{
-	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
-		::sInvoke(MakeParam_t(iAddress, iPort, iListenQueueSize));
+	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam4_t>
+		::sInvoke(MakeParam4_t(iAddress, iPort));
+	}
+
+ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
+	ip6_addr iAddress, ip_port iPort)
+	{
+	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam6_t>
+		::sInvoke(MakeParam6_t(iAddress, iPort));
 	}
 
 // =================================================================================================
@@ -113,10 +128,17 @@ ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
 #pragma mark * ZNetEndpoint_TCP
 
 ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected(
-	ip_addr iRemoteHost, ip_port iRemotePort)
+	ip4_addr iRemoteAddr, ip_port iRemotePort)
 	{
-	return ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam_t>
-		::sInvoke(MakeParam_t(iRemoteHost, iRemotePort));
+	return ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam4_t>
+		::sInvoke(MakeParam4_t(iRemoteAddr, iRemotePort));
+	}
+
+ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected(
+	ip6_addr iRemoteAddr, ip_port iRemotePort)
+	{
+	return ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam6_t>
+		::sInvoke(MakeParam6_t(iRemoteAddr, iRemotePort));
 	}
 
 } // namespace ZooLib

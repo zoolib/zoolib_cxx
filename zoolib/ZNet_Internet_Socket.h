@@ -53,7 +53,8 @@ namespace ZooLib {
 
 namespace ZNet_TCP_Socket {
 
-int sListen(ip_addr iLocalAddress, ip_port iLocalPort);
+int sListen(ip4_addr iLocalAddress, ip_port iLocalPort);
+int sListen(ip6_addr iLocalAddress, ip_port iLocalPort);
 
 } // namespace ZNet_TCP_Socket
 
@@ -76,12 +77,12 @@ public:
 	virtual ZRef<ZNetName> CurrentName();
 
 protected:
-	std::string fName;
-	ip_port fPort;
+	const std::string fName;
+	const ip_port fPort;
 	bool fStarted;
 	size_t fCountAddressesToReturn;
 	size_t fCurrentIndex;
-	std::vector<ip_addr> fAddresses;
+	std::vector<ZRef<ZNetAddress_Internet> > fAddresses;
 	};
 
 // =================================================================================================
@@ -92,12 +93,14 @@ class ZNetListener_TCP_Socket
 :	public ZNetListener_TCP,
 	public ZNetListener_Socket
 	{
-	ZNetListener_TCP_Socket(int iFD, size_t iListenQueueSize, bool iKnowWhatImDoing);
+	ZNetListener_TCP_Socket(int iFD, bool iKnowWhatImDoing);
 public:
-	static ZRef<ZNetListener_TCP_Socket> sCreateWithFD(int iFD, size_t iListenQueueSize);
+	static ZRef<ZNetListener_TCP_Socket> sCreateWithFD(int iFD);
 
-	ZNetListener_TCP_Socket(ip_port iLocalPort, size_t iListenQueueSize);
-	ZNetListener_TCP_Socket(ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize);
+	ZNetListener_TCP_Socket(ip_port iLocalPort);
+	ZNetListener_TCP_Socket(ip4_addr iLocalAddress, ip_port iLocalPort);
+	ZNetListener_TCP_Socket(ip6_addr iLocalAddress, ip_port iLocalPort);
+
 	virtual ~ZNetListener_TCP_Socket();
 
 // From ZNetListener_TCP
@@ -117,7 +120,8 @@ class ZNetEndpoint_TCP_Socket
 	{
 public:
 	ZNetEndpoint_TCP_Socket(int iSocketFD);
-	ZNetEndpoint_TCP_Socket(ip_addr iRemoteHost, ip_port iRemotePort);
+	ZNetEndpoint_TCP_Socket(ip4_addr iRemoteHost, ip_port iRemotePort);
+	ZNetEndpoint_TCP_Socket(ip6_addr iRemoteHost, ip_port iRemotePort);
 
 	virtual ~ZNetEndpoint_TCP_Socket();
 

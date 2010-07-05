@@ -84,11 +84,10 @@ const string& ZNetName_Local::GetPath() const
 #pragma mark -
 #pragma mark * ZNetListener_Local
 
-ZRef<ZNetListener_Local> ZNetListener_Local::sCreate(
-	const string& iPath, size_t iListenQueueSize)
+ZRef<ZNetListener_Local> ZNetListener_Local::sCreate(const string& iPath)
 	{
 	return ZFunctionChain_T<ZRef<ZNetListener_Local>, MakeParam_t>
-		::sInvoke(MakeParam_t(iPath, iListenQueueSize));
+		::sInvoke(MakeParam_t(iPath));
 	}
 
 // =================================================================================================

@@ -220,14 +220,14 @@ public:
 
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetListener_TCP_MacOT_OSX(iParam.f1, iParam.f2);
+		oResult = new ZNetListener_TCP_MacOT_OSX(iParam.f0);
 		return true;
 		}
 	} sMaker1;
 
 
 class Make_Endpoint
-:	public ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
+:	public ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam4_t>
 	{
 public:
 	Make_Endpoint() : Base_t(false) {}
@@ -363,7 +363,7 @@ void ZNetNameLookup_Internet_MacOT_OSX::Advance()
 ZRef<ZNetAddress> ZNetNameLookup_Internet_MacOT_OSX::CurrentAddress()
 	{
 	if (fCurrentIndex < kMaxHostAddrs && fInetHostInfo.addrs[fCurrentIndex])
-		return new ZNetAddress_Internet(fInetHostInfo.addrs[fCurrentIndex], fPort);
+		return new ZNetAddress_IP4(fInetHostInfo.addrs[fCurrentIndex], fPort);
 
 	return ZRef<ZNetAddress>();
 	}
@@ -402,14 +402,8 @@ struct ListenerConstruct_t
 	OTResult fResult;
 	};
 
-ZNetListener_TCP_MacOT_OSX::ZNetListener_TCP_MacOT_OSX(ip_port iLocalPort, size_t iListenQueueSize)
+ZNetListener_TCP_MacOT_OSX::ZNetListener_TCP_MacOT_OSX(ip_port iLocalPort)
 	{
-	if (iListenQueueSize == 0)
-		iListenQueueSize = 5;
-
-	if (iListenQueueSize > 10)
-		iListenQueueSize = 10; // Let's not max out OT *too* much.
-
 	// For the moment, remember the port in an instance variable
 	// rather than pulling it from fEndpointRef
 	fLocalPort = iLocalPort;
@@ -419,7 +413,7 @@ ZNetListener_TCP_MacOT_OSX::ZNetListener_TCP_MacOT_OSX(ip_port iLocalPort, size_
 	ListenerConstruct_t theStruct;
 	theStruct.fListener = this;
 	theStruct.fLocalPort = iLocalPort;
-	theStruct.fListenQueueSize = iListenQueueSize;
+	theStruct.fListenQueueSize = 5;
 	ZMacMP::sInvokeInMP(sMP_Constructor, &theStruct);
 
 	if (theStruct.fResult != noErr)
@@ -730,7 +724,7 @@ const ZStreamWCon& ZNetEndpoint_TCP_MacOT_OSX::GetStreamWCon()
 	{ return *this; }
 
 ZRef<ZNetAddress> ZNetEndpoint_TCP_MacOT_OSX::GetRemoteAddress()
-	{ return new ZNetAddress_Internet(fRemoteHost, fRemotePort); }
+	{ return new ZNetAddress_IP4(fRemoteHost, fRemotePort); }
 
 struct Imp_Read_t
 	{

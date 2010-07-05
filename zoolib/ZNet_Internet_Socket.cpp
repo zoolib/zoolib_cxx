@@ -53,26 +53,47 @@ class Make_NameLookup
 	} sMaker0;
 
 
-class Make_Listener
-:	public ZFunctionChain_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam_t>
+class Make_Listener4
+:	public ZFunctionChain_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam4_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetListener_TCP_Socket(iParam.f0, iParam.f1, iParam.f2);
+		oResult = new ZNetListener_TCP_Socket(iParam.f0, iParam.f1);
 		return true;
 		}
 	} sMaker1;
 
 
-class Make_Endpoint
-:	public ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
+class Make_Listener6
+:	public ZFunctionChain_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam6_t>
+	{
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
+		{
+		oResult = new ZNetListener_TCP_Socket(iParam.f0, iParam.f1);
+		return true;
+		}
+	} sMaker2;
+
+
+class Make_Endpoint4
+:	public ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam4_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = new ZNetEndpoint_TCP_Socket(iParam.f0, iParam.f1);
 		return true;
 		}
-	} sMaker2;
+	} sMaker3;
+
+class Make_Endpoint6
+:	public ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam6_t>
+	{
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
+		{
+		oResult = new ZNetEndpoint_TCP_Socket(iParam.f0, iParam.f1);
+		return true;
+		}
+	} sMaker4;
 
 } // anonymous namespace
 
@@ -80,7 +101,7 @@ class Make_Endpoint
 #pragma mark -
 #pragma mark * ZNet_TCP_Socket
 
-int ZNet_TCP_Socket::sListen(ip_addr iLocalAddress, ip_port iLocalPort)
+int ZNet_TCP_Socket::sListen(ip4_addr iLocalAddress, ip_port iLocalPort)
 	{
 	int theSocketFD = ::socket(PF_INET, SOCK_STREAM, 0);
 	if (theSocketFD < 0)
@@ -89,16 +110,43 @@ int ZNet_TCP_Socket::sListen(ip_addr iLocalAddress, ip_port iLocalPort)
 		throw ZNetEx(ZNet_Socket::sTranslateError(err));
 		}
 
-	// Enable SO_REUSEADDR, cause it's a real pain waiting for TIME_WAIT to expire
 	int reuseAddrFlag = 1;
-	::setsockopt(
-		theSocketFD, SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
+	::setsockopt(theSocketFD,
+		SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
 
-	sockaddr_in localSockAddr;
-	ZMemZero_T(localSockAddr);
+	sockaddr_in localSockAddr = {0};
+	localSockAddr.sin_len = sizeof(localSockAddr);
 	localSockAddr.sin_family = AF_INET;
 	localSockAddr.sin_port = htons(iLocalPort);
 	localSockAddr.sin_addr.s_addr = htonl(iLocalAddress);
+
+	if (::bind(theSocketFD, (sockaddr*)&localSockAddr, sizeof(localSockAddr)) < 0)
+		{
+		int err = errno;
+		::close(theSocketFD);
+		throw ZNetEx(ZNet_Socket::sTranslateError(err));
+		}
+	return theSocketFD;
+	}
+
+int ZNet_TCP_Socket::sListen(ip6_addr iLocalAddress, ip_port iLocalPort)
+	{
+	int theSocketFD = ::socket(PF_INET6, SOCK_STREAM, 0);
+	if (theSocketFD < 0)
+		{
+		int err = errno;
+		throw ZNetEx(ZNet_Socket::sTranslateError(err));
+		}
+
+	int reuseAddrFlag = 1;
+	::setsockopt(theSocketFD,
+		SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
+
+	sockaddr_in6 localSockAddr = {0};
+	localSockAddr.sin6_len = sizeof(localSockAddr);
+	localSockAddr.sin6_family = AF_INET6;
+	localSockAddr.sin6_port = htons(iLocalPort);
+	localSockAddr.sin6_addr = *(const struct in6_addr*)(&iLocalAddress);
 
 	if (::bind(theSocketFD, (sockaddr*)&localSockAddr, sizeof(localSockAddr)) < 0)
 		{
@@ -115,26 +163,34 @@ int ZNet_TCP_Socket::sListen(ip_addr iLocalAddress, ip_port iLocalPort)
 
 ZNetNameLookup_Internet_Socket::ZNetNameLookup_Internet_Socket(
 	const string& iName, ip_port iPort, size_t iMaxAddresses)
-:	fName(iName),
-	fPort(iPort),
-	fStarted(false),
-	fCurrentIndex(0),
-	fCountAddressesToReturn(iMaxAddresses)
+:	fName(iName)
+,	fPort(iPort)
+,	fStarted(true)
+,	fCurrentIndex(0)
+,	fCountAddressesToReturn(iMaxAddresses)
 	{
-	if (iName.empty())
+	if (fName.empty())
+		return;
+
+	if (string::npos != fName.find(':'))
 		{
-		fStarted = true;
-		fCountAddressesToReturn = 0;
+		ip6_addr theAddr;
+		if (0 == ::inet_pton(AF_INET6, fName.c_str(), &theAddr))
+			{
+			fAddresses.push_back(new ZNetAddress_IP6(fPort, theAddr));
+			return;
+			}		
 		}
 	else
 		{
-		in_addr theInAddr;
-		if (0 != ::inet_aton(fName.c_str(), &theInAddr))
+		ip4_addr theAddr;
+		if (0 == ::inet_pton(AF_INET, fName.c_str(), &theAddr))
 			{
-			fStarted = true;
-			fAddresses.push_back(ntohl(theInAddr.s_addr));
+			fAddresses.push_back(new ZNetAddress_IP4(ntohl(theAddr), fPort));
+			return;
 			}
 		}
+	fStarted = false;
 	}
 
 ZNetNameLookup_Internet_Socket::~ZNetNameLookup_Internet_Socket()
@@ -146,33 +202,28 @@ void ZNetNameLookup_Internet_Socket::Start()
 		return;
 
 	fStarted = true;
-
-#if __MACH__
-	// FreeBSD uses thread-specific data to make gethostbyname reentrant.
-	if (hostent* theHostEnt = ::gethostbyname(fName.c_str()))
-		{
-		char** listPtr = theHostEnt->h_addr_list;
-		while (*listPtr && fCountAddressesToReturn)
-			{
-			in_addr* in_addrPtr = reinterpret_cast<in_addr*>(*listPtr);
-			fAddresses.push_back(ntohl(in_addrPtr->s_addr));
-			++listPtr;
-			--fCountAddressesToReturn;
-			}
-		}
-#else
-	// This is the thread-safe version
-	char buffer[4096];
-	hostent resultBuf;
+	//## getaddrinfo
 	hostent* result;
-	int herrno;
+	#if __MACH__
+		// FreeBSD uses thread-specific data to make gethostbyname reentrant.
+		result = ::gethostbyname(fName.c_str());
+	#else
+		// This is the thread-safe version
+		char buffer[4096];
+		hostent resultBuf;
+		int herrno;
 
-#if __sun__
-	result = ::gethostbyname_r(fName.c_str(), &resultBuf, buffer, 4096, &herrno);
-#else
-	if (0 != ::gethostbyname_r(fName.c_str(), &resultBuf, buffer, 4096, &result, &herrno))
-		result = nullptr;
-#endif
+		#if __sun__
+			result = ::gethostbyname_r(fName.c_str(),
+				&resultBuf, buffer, sizeof(buffer), &herrno);
+		#else
+			if (0 != ::gethostbyname_r(fName.c_str(),
+				&resultBuf, buffer, sizeof(buffer), &result, &herrno))
+				{
+				result = nullptr;
+				}
+		#endif
+	#endif
 
 	if (result)
 		{
@@ -180,12 +231,11 @@ void ZNetNameLookup_Internet_Socket::Start()
 		while (*listPtr && fCountAddressesToReturn)
 			{
 			in_addr* in_addrPtr = reinterpret_cast<in_addr*>(*listPtr);
-			fAddresses.push_back(ntohl(in_addrPtr->s_addr));
+			fAddresses.push_back(new ZNetAddress_IP4(ntohl(in_addrPtr->s_addr), fPort));
 			++listPtr;
 			--fCountAddressesToReturn;
 			}
 		}
-#endif
 	}
 
 bool ZNetNameLookup_Internet_Socket::Finished()
@@ -206,9 +256,9 @@ void ZNetNameLookup_Internet_Socket::Advance()
 ZRef<ZNetAddress> ZNetNameLookup_Internet_Socket::CurrentAddress()
 	{
 	if (fCurrentIndex < fAddresses.size())
-		return new ZNetAddress_Internet(fAddresses[fCurrentIndex], fPort);
+		return fAddresses[fCurrentIndex];
 
-	return ZRef<ZNetAddress>();
+	return null;
 	}
 
 ZRef<ZNetName> ZNetNameLookup_Internet_Socket::CurrentName()
@@ -218,45 +268,50 @@ ZRef<ZNetName> ZNetNameLookup_Internet_Socket::CurrentName()
 #pragma mark -
 #pragma mark * ZNetListener_TCP_Socket
 
-ZRef<ZNetListener_TCP_Socket> ZNetListener_TCP_Socket::sCreateWithFD(
-	int iFD, size_t iListenQueueSize)
-	{
-	try
-		{
-		return new ZNetListener_TCP_Socket(iFD, iListenQueueSize, true);
-		}
-	catch (...)
-		{}
-	return ZRef<ZNetListener_TCP_Socket>();
-	}
-
 static int spEnsureInet(int iSocketFD)
 	{
-	sockaddr_in localSockAddr;
-	socklen_t length = sizeof(localSockAddr);
-	if (::getsockname(iSocketFD, (sockaddr*)&localSockAddr, &length) >= 0)
+	uint8 buffer[SOCK_MAXADDRLEN];
+	socklen_t length = sizeof(buffer);
+	if (::getsockname(iSocketFD, (sockaddr*)buffer, &length) >= 0)
 		{
-		if (localSockAddr.sin_family == AF_INET)
+		const sa_family_t theFamily = ((sockaddr*)buffer)->sa_family;
+
+		if (theFamily == AF_INET)
+			return iSocketFD;
+
+		if (theFamily == AF_INET6)
 			return iSocketFD;
 		}
 	throw std::runtime_error("ZNetListener_TCP_Socket, not an inet socket");
 	}
 
-ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(
-	int iSocketFD, size_t iListenQueueSize, bool iKnowWhatImDoing)
-:	ZNetListener_Socket(spEnsureInet(iSocketFD), iListenQueueSize)
+ZRef<ZNetListener_TCP_Socket> ZNetListener_TCP_Socket::sCreateWithFD(int iFD)
 	{
-	// We could ensure that iSocketFD
+	try
+		{
+		return new ZNetListener_TCP_Socket(iFD, I_KNOW_WHAT_IM_DOING);
+		}
+	catch (...)
+		{}
+	return null;
+	}
+
+ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(int iSocketFD, bool iKnowWhatImDoing)
+:	ZNetListener_Socket(spEnsureInet(iSocketFD))
+	{
 	ZAssert(iKnowWhatImDoing);
 	}
 
-ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(ip_port iLocalPort, size_t iListenQueueSize)
-:	ZNetListener_Socket(ZNet_TCP_Socket::sListen(0, iLocalPort), iListenQueueSize)
+ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(ip_port iLocalPort)
+:	ZNetListener_Socket(ZNet_TCP_Socket::sListen(0, iLocalPort))
 	{}
 
-ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(
-	ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize)
-:	ZNetListener_Socket(ZNet_TCP_Socket::sListen(iLocalAddress, iLocalPort), iListenQueueSize)
+ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(ip4_addr iLocalAddress, ip_port iLocalPort)
+:	ZNetListener_Socket(ZNet_TCP_Socket::sListen(iLocalAddress, iLocalPort))
+	{}
+
+ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(ip6_addr iLocalAddress, ip_port iLocalPort)
+:	ZNetListener_Socket(ZNet_TCP_Socket::sListen(iLocalAddress, iLocalPort))
 	{}
 
 ZNetListener_TCP_Socket::~ZNetListener_TCP_Socket()
@@ -264,17 +319,23 @@ ZNetListener_TCP_Socket::~ZNetListener_TCP_Socket()
 
 ip_port ZNetListener_TCP_Socket::GetPort()
 	{
-	sockaddr_in localSockAddr;
-	socklen_t length = sizeof(localSockAddr);
-	if (::getsockname(this->GetSocketFD(), (sockaddr*)&localSockAddr, &length) >= 0)
-		return ntohs(localSockAddr.sin_port);
+	uint8 buffer[SOCK_MAXADDRLEN];
+	socklen_t length = sizeof(buffer);
+	if (::getsockname(fSocketFD, (sockaddr*)&buffer[0], &length) >= 0)
+		{
+		const sa_family_t theFamily = ((sockaddr*)buffer)->sa_family;
+
+		if (theFamily == AF_INET)
+			return ntohs(((sockaddr_in*)buffer)->sin_port);
+
+		if (theFamily == AF_INET6)
+			return ntohs(((sockaddr_in6*)buffer)->sin6_port);
+		}
 	return 0;
 	}
 
 ZRef<ZNetEndpoint> ZNetListener_TCP_Socket::Imp_MakeEndpoint(int iSocketFD)
-	{
-	return new ZNetEndpoint_TCP_Socket(iSocketFD);
-	}
+	{ return new ZNetEndpoint_TCP_Socket(iSocketFD); }
 
 // =================================================================================================
 #pragma mark -
@@ -292,33 +353,83 @@ static void spSetSocketOptions(int iSocketFD)
 	::setsockopt(iSocketFD, IPPROTO_TCP, TCP_NODELAY, (char*)&noDelayFlag, sizeof(noDelayFlag));
 	}
 
+static int spConnect4(ip4_addr iRemoteHost, ip_port iRemotePort)
+	{
+	int socketFD = ::socket(PF_INET, SOCK_STREAM, 0);
+	if (socketFD < 0)
+		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
+
+	sockaddr_in remoteSockAddr = {0};
+	remoteSockAddr.sin_len = sizeof(sockaddr_in);
+	remoteSockAddr.sin_family = AF_INET;
+	remoteSockAddr.sin_port = htons(iRemotePort);
+	remoteSockAddr.sin_addr.s_addr = htonl(iRemoteHost);
+	if (::connect(socketFD, (sockaddr*)&remoteSockAddr, sizeof(remoteSockAddr)) < 0)
+		{
+		int err = errno;
+		::close(socketFD);
+		throw ZNetEx(ZNet_Socket::sTranslateError(err));
+		}
+	return socketFD;
+	}
+
+static int spConnect6(ip6_addr iRemoteHost, ip_port iRemotePort)
+	{
+	int socketFD = ::socket(PF_INET6, SOCK_STREAM, 0);
+	if (socketFD < 0)
+		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
+
+	sockaddr_in6 remoteSockAddr = {0};
+	remoteSockAddr.sin6_len = sizeof(sockaddr_in);
+	remoteSockAddr.sin6_family = AF_INET6;
+	remoteSockAddr.sin6_port = htons(iRemotePort);
+	remoteSockAddr.sin6_addr = *(const struct in6_addr*)(&iRemoteHost);
+	if (::connect(socketFD, (sockaddr*)&remoteSockAddr, sizeof(remoteSockAddr)) < 0)
+		{
+		int err = errno;
+		::close(socketFD);
+		throw ZNetEx(ZNet_Socket::sTranslateError(err));
+		}
+	return socketFD;
+	}
+
+static ZRef<ZNetAddress> spGetAddress(const sockaddr* iSockAddr)
+	{
+	const sa_family_t theFamily = ((sockaddr*)iSockAddr)->sa_family;
+
+	if (theFamily == AF_INET)
+		{
+		const sockaddr_in* in = (const sockaddr_in*)iSockAddr;
+		return new ZNetAddress_IP4(
+			ntohl(in->sin_addr.s_addr),
+			ntohs(in->sin_port));
+		}
+
+	if (theFamily == AF_INET6)
+		{
+		const sockaddr_in6* in = (const sockaddr_in6*)iSockAddr;
+		return new ZNetAddress_IP6(
+			ntohs(in->sin6_port),
+			*((const struct ip6_addr*)(&in->sin6_addr)));
+		}
+
+	return null;
+	}
+
 ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket(int iSocketFD)
 :	ZNetEndpoint_Socket(iSocketFD)
 	{
 	spSetSocketOptions(this->GetSocketFD());
 	}
 
-static int spConnect(ip_addr iRemoteHost, ip_port iRemotePort)
+ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket(ip4_addr iRemoteHost, ip_port iRemotePort)
+:	ZNetEndpoint_Socket(spConnect4(iRemoteHost, iRemotePort))
 	{
-	int socketFD = ::socket(PF_INET, SOCK_STREAM, 0);
-	if (socketFD < 0)
-		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
-
-	sockaddr_in remoteSockAddr;
-	ZMemZero_T(remoteSockAddr);
-	remoteSockAddr.sin_family = AF_INET;
-	remoteSockAddr.sin_port = htons(iRemotePort);
-	remoteSockAddr.sin_addr.s_addr = htonl(iRemoteHost);
-	if (::connect(socketFD, (sockaddr*)&remoteSockAddr, sizeof(remoteSockAddr)) < 0)
-		{
-		::close(socketFD);
-		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
-		}
-	return socketFD;
+	spSetSocketOptions(this->GetSocketFD());
 	}
 
-ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket(ip_addr iRemoteHost, ip_port iRemotePort)
-:	ZNetEndpoint_Socket(spConnect(iRemoteHost, iRemotePort))
+ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket(ip6_addr iRemoteHost, ip_port iRemotePort)
+:	ZNetEndpoint_Socket(spConnect6(iRemoteHost, iRemotePort))
 	{
 	spSetSocketOptions(this->GetSocketFD());
 	}
@@ -328,34 +439,22 @@ ZNetEndpoint_TCP_Socket::~ZNetEndpoint_TCP_Socket()
 
 ZRef<ZNetAddress> ZNetEndpoint_TCP_Socket::GetLocalAddress()
 	{
-	sockaddr_in localSockAddr;
-	socklen_t length = sizeof(localSockAddr);
-	if (::getsockname(this->GetSocketFD(), (sockaddr*)&localSockAddr, &length) >= 0)
-		{
-		if (localSockAddr.sin_family == AF_INET)
-			{
-			return new ZNetAddress_Internet(
-				ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
-			}
-		}
+	uint8 buffer[SOCK_MAXADDRLEN];
+	socklen_t length = sizeof(buffer);
+	if (::getsockname(this->GetSocketFD(), (sockaddr*)buffer, &length) >= 0)
+		return spGetAddress((sockaddr*)buffer);
 
-	return ZRef<ZNetAddress>();
+	return null;
 	}
 
 ZRef<ZNetAddress> ZNetEndpoint_TCP_Socket::GetRemoteAddress()
 	{
-	sockaddr_in remoteSockAddr;
-	socklen_t length = sizeof(remoteSockAddr);
-	if (::getpeername(this->GetSocketFD(), (sockaddr*)&remoteSockAddr, &length) >= 0)
-		{
-		if (remoteSockAddr.sin_family == AF_INET)
-			{
-			return new ZNetAddress_Internet(
-				ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));
-			}
-		}
+	uint8 buffer[SOCK_MAXADDRLEN];
+	socklen_t length = sizeof(buffer);
+	if (::getpeername(this->GetSocketFD(), (sockaddr*)buffer, &length) >= 0)
+		return spGetAddress((sockaddr*)buffer);
 
-	return ZRef<ZNetAddress>();
+	return null;
 	}
 
 // =================================================================================================

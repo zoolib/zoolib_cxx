@@ -76,6 +76,9 @@ private:
 /// Represents the physical address of a particular endpoint on a particular host.
 class ZNetAddress : public ZStreamerRWConFactory
 	{
+protected:
+	ZNetAddress();
+
 public:
 	virtual ~ZNetAddress();
 
@@ -114,6 +117,9 @@ public:
 /// Represents the abstract name of a port or service on a host or hosts.
 class ZNetName : public ZStreamerRWConFactory
 	{
+protected:
+	ZNetName();
+
 public:
 	virtual ~ZNetName();
 
@@ -195,25 +201,6 @@ public:
 	bool WaitTillReadable(double iTimeout);
 	bool ReceiveDisconnect(double iTimeout);
 	void SendDisconnect();
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpointDG
-
-class ZNetEndpointDG : public ZCounted
-	{
-protected:
-	ZNetEndpointDG();
-
-public:
-	virtual ~ZNetEndpointDG();
-
-	virtual ZNet::Error Receive(void* iBuffer, size_t iBufferSize,
-		size_t& oCountReceived, ZRef<ZNetAddress>& oSourceAddress) = 0;
-
-	virtual ZNet::Error Send(const void* iBuffer, size_t iCount,
-		ZRef<ZNetAddress> iDestAddress) = 0;
 	};
 
 } // namespace ZooLib
