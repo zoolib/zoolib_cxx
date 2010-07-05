@@ -79,8 +79,8 @@ public:
 protected:
 	const std::string fName;
 	const ip_port fPort;
+	const size_t fCountAddressesToReturn;
 	bool fStarted;
-	size_t fCountAddressesToReturn;
 	size_t fCurrentIndex;
 	std::vector<ZRef<ZNetAddress_Internet> > fAddresses;
 	};

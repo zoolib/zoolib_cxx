@@ -99,6 +99,33 @@ class Make_Endpoint6
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Helpers
+
+static ZRef<ZNetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr)
+	{
+	const sa_family_t theFamily = ((sockaddr*)iSockAddr)->sa_family;
+
+	if (theFamily == AF_INET)
+		{
+		const sockaddr_in* in = (const sockaddr_in*)iSockAddr;
+		return new ZNetAddress_IP4(
+			ntohl(in->sin_addr.s_addr),
+			ntohs(in->sin_port));
+		}
+
+	if (theFamily == AF_INET6)
+		{
+		const sockaddr_in6* in = (const sockaddr_in6*)iSockAddr;
+		return new ZNetAddress_IP6(
+			ntohs(in->sin6_port),
+			*((const struct ip6_addr*)(&in->sin6_addr)));
+		}
+
+	return null;
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZNet_TCP_Socket
 
 int ZNet_TCP_Socket::sListen(ip4_addr iLocalAddress, ip_port iLocalPort)
@@ -165,31 +192,27 @@ ZNetNameLookup_Internet_Socket::ZNetNameLookup_Internet_Socket(
 	const string& iName, ip_port iPort, size_t iMaxAddresses)
 :	fName(iName)
 ,	fPort(iPort)
+,	fCountAddressesToReturn(iMaxAddresses)
 ,	fStarted(true)
 ,	fCurrentIndex(0)
-,	fCountAddressesToReturn(iMaxAddresses)
 	{
 	if (fName.empty())
 		return;
 
-	if (string::npos != fName.find(':'))
+	ip6_addr theAddr6;
+	if (1 == ::inet_pton(AF_INET6, fName.c_str(), &theAddr6))
 		{
-		ip6_addr theAddr;
-		if (0 == ::inet_pton(AF_INET6, fName.c_str(), &theAddr))
-			{
-			fAddresses.push_back(new ZNetAddress_IP6(fPort, theAddr));
-			return;
-			}		
-		}
-	else
+		fAddresses.push_back(new ZNetAddress_IP6(fPort, theAddr6));
+		return;
+		}		
+
+	ip4_addr theAddr4;
+	if (1 == ::inet_pton(AF_INET, fName.c_str(), &theAddr4))
 		{
-		ip4_addr theAddr;
-		if (0 == ::inet_pton(AF_INET, fName.c_str(), &theAddr))
-			{
-			fAddresses.push_back(new ZNetAddress_IP4(ntohl(theAddr), fPort));
-			return;
-			}
+		fAddresses.push_back(new ZNetAddress_IP4(ntohl(theAddr4), fPort));
+		return;
 		}
+
 	fStarted = false;
 	}
 
@@ -202,40 +225,21 @@ void ZNetNameLookup_Internet_Socket::Start()
 		return;
 
 	fStarted = true;
-	//## getaddrinfo
-	hostent* result;
-	#if __MACH__
-		// FreeBSD uses thread-specific data to make gethostbyname reentrant.
-		result = ::gethostbyname(fName.c_str());
-	#else
-		// This is the thread-safe version
-		char buffer[4096];
-		hostent resultBuf;
-		int herrno;
 
-		#if __sun__
-			result = ::gethostbyname_r(fName.c_str(),
-				&resultBuf, buffer, sizeof(buffer), &herrno);
-		#else
-			if (0 != ::gethostbyname_r(fName.c_str(),
-				&resultBuf, buffer, sizeof(buffer), &result, &herrno))
-				{
-				result = nullptr;
-				}
-		#endif
-	#endif
+	struct addrinfo hints = {0};
+	hints.ai_family = PF_UNSPEC;
+	struct addrinfo* theAI;
+	if (0 != ::getaddrinfo(fName.c_str(), nullptr, nullptr, &theAI))
+		return;
 
-	if (result)
+	struct addrinfo* theAI_ForDispose = theAI;
+	for (;theAI && fAddresses.size() < fCountAddressesToReturn; theAI = theAI->ai_next)
 		{
-		char** listPtr = result->h_addr_list;
-		while (*listPtr && fCountAddressesToReturn)
-			{
-			in_addr* in_addrPtr = reinterpret_cast<in_addr*>(*listPtr);
-			fAddresses.push_back(new ZNetAddress_IP4(ntohl(in_addrPtr->s_addr), fPort));
-			++listPtr;
-			--fCountAddressesToReturn;
-			}
+		if (ZRef<ZNetAddress_Internet> theNA = spAsNetAddress((sockaddr*)theAI->ai_addr))
+			fAddresses.push_back(theNA);
 		}
+
+	::freeaddrinfo(theAI_ForDispose);
 	}
 
 bool ZNetNameLookup_Internet_Socket::Finished()
@@ -393,29 +397,6 @@ static int spConnect6(ip6_addr iRemoteHost, ip_port iRemotePort)
 	return socketFD;
 	}
 
-static ZRef<ZNetAddress> spGetAddress(const sockaddr* iSockAddr)
-	{
-	const sa_family_t theFamily = ((sockaddr*)iSockAddr)->sa_family;
-
-	if (theFamily == AF_INET)
-		{
-		const sockaddr_in* in = (const sockaddr_in*)iSockAddr;
-		return new ZNetAddress_IP4(
-			ntohl(in->sin_addr.s_addr),
-			ntohs(in->sin_port));
-		}
-
-	if (theFamily == AF_INET6)
-		{
-		const sockaddr_in6* in = (const sockaddr_in6*)iSockAddr;
-		return new ZNetAddress_IP6(
-			ntohs(in->sin6_port),
-			*((const struct ip6_addr*)(&in->sin6_addr)));
-		}
-
-	return null;
-	}
-
 ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket(int iSocketFD)
 :	ZNetEndpoint_Socket(iSocketFD)
 	{
@@ -442,7 +423,7 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_Socket::GetLocalAddress()
 	uint8 buffer[SOCK_MAXADDRLEN];
 	socklen_t length = sizeof(buffer);
 	if (::getsockname(this->GetSocketFD(), (sockaddr*)buffer, &length) >= 0)
-		return spGetAddress((sockaddr*)buffer);
+		return spAsNetAddress((sockaddr*)buffer);
 
 	return null;
 	}
@@ -452,7 +433,7 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_Socket::GetRemoteAddress()
 	uint8 buffer[SOCK_MAXADDRLEN];
 	socklen_t length = sizeof(buffer);
 	if (::getpeername(this->GetSocketFD(), (sockaddr*)buffer, &length) >= 0)
-		return spGetAddress((sockaddr*)buffer);
+		return spAsNetAddress((sockaddr*)buffer);
 
 	return null;
 	}
