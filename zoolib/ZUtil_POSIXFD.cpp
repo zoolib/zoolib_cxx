@@ -42,6 +42,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZUtil_POSIXFD {
 
+static void spSetup(fd_set& oSet, int iFD)
+	{
+	// For (marginally) improved efficiency we could zero only those bits <= iFD.
+	FD_ZERO(&oSet);
+	FD_SET(iFD, &oSet);
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_POSIXFD
@@ -51,28 +58,25 @@ namespace ZUtil_POSIXFD {
 bool sWaitReadable(int iFD, double iTimeout)
 	{
 	fd_set readSet, exceptSet;
-	FD_ZERO(&readSet);
-	FD_ZERO(&exceptSet);
-	FD_SET(iFD, &readSet);
-	FD_SET(iFD, &exceptSet);
+	spSetup(readSet, iFD);
+	spSetup(exceptSet, iFD);
 
-	struct timeval timeOut;
-	timeOut.tv_sec = int(iTimeout);
-	timeOut.tv_usec = int(fmod(iTimeout, 1.0) * 1e6);
-	return 0 < ::select(iFD + 1, &readSet, nullptr, &exceptSet, &timeOut);
+	struct timeval timeout;
+	timeout.tv_sec = int(iTimeout);
+	timeout.tv_usec = int(fmod(iTimeout, 1.0) * 1e6);
+	return 0 < ::select(iFD + 1, &readSet, nullptr, &exceptSet, &timeout);
 	}
 
 void sWaitWriteable(int iFD)
 	{
 	fd_set writeSet;
-	FD_ZERO(&writeSet);
-	FD_SET(iFD, &writeSet);
+	spSetup(writeSet, iFD);
 
-	struct timeval timeOut;
-	timeOut.tv_sec = 1;
-	timeOut.tv_usec = 0;
+	struct timeval timeout;
+	timeout.tv_sec = 1;
+	timeout.tv_usec = 0;
 
-	::select(iFD + 1, nullptr, &writeSet, nullptr, &timeOut);
+	::select(iFD + 1, nullptr, &writeSet, nullptr, &timeout);
 	}
 
 #elif defined(linux) || defined(__sun__)
