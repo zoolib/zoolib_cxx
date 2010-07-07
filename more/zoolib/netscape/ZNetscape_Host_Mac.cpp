@@ -334,7 +334,6 @@ Host_WindowRef::Host_WindowRef(
 		{ kEventClassWindow, kEventWindowFocusAcquired },
 		{ kEventClassWindow, kEventWindowFocusRelinquish },
 		{ kEventClassWindow, kEventWindowBoundsChanged },
-		{ kEventClassWindow, kEventWindowHandleContentClick },
 		{ kEventClassWindow, kEventWindowDrawContent },
 
 		{ kEventClassKeyboard, kEventRawKeyDown },
@@ -440,21 +439,6 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 		{
 		case kEventClassMouse:
 			{
-			#if defined(XP_MACOSX)
-				if (::GetEventKind(iEventRef) == kEventMouseDown)
-					{
-					if (inContent == sDGetParam_T<WindowPartCode>(
-						0,
-						iEventRef, kEventParamWindowPartCode, typeWindowPartCode))
-						{
-						this->pDeliverEvent(iEventRef);
-						// Absorb the mousedown, so that the standard handler
-						// does not absorb the mouseUp.
-						return noErr;
-						}
-					}
-			#endif
-
 			this->pDeliverEvent(iEventRef);
 			break;
 			}
@@ -468,12 +452,6 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 			{
 			switch (::GetEventKind(iEventRef))
 				{
-				case kEventWindowHandleContentClick:
-					{
-					// Claim we handled the event, to allow
-					// raw mouseUp/mouseDowns to be delivered.
-					return noErr;
-					}
 				case kEventWindowDrawContent:
 					{
 					::CallNextEventHandler(iCallRef, iEventRef);
