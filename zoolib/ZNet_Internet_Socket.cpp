@@ -101,23 +101,27 @@ class Make_Endpoint6
 #pragma mark -
 #pragma mark * Helpers
 
-static ZRef<ZNetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr)
+static ZRef<ZNetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_port iPort)
 	{
 	const sa_family_t theFamily = ((sockaddr*)iSockAddr)->sa_family;
 
 	if (theFamily == AF_INET)
 		{
 		const sockaddr_in* in = (const sockaddr_in*)iSockAddr;
+		if (!iPort)
+			iPort = ntohs(in->sin_port);
 		return new ZNetAddress_IP4(
 			ntohl(in->sin_addr.s_addr),
-			ntohs(in->sin_port));
+			iPort);
 		}
 
 	if (theFamily == AF_INET6)
 		{
 		const sockaddr_in6* in = (const sockaddr_in6*)iSockAddr;
+		if (!iPort)
+			iPort = ntohs(in->sin6_port);
 		return new ZNetAddress_IP6(
-			ntohs(in->sin6_port),
+			iPort,
 			*((const struct ip6_addr*)(&in->sin6_addr)));
 		}
 
@@ -235,7 +239,7 @@ void ZNetNameLookup_Internet_Socket::Start()
 	struct addrinfo* theAI_ForDispose = theAI;
 	for (;theAI && fAddresses.size() < fCountAddressesToReturn; theAI = theAI->ai_next)
 		{
-		if (ZRef<ZNetAddress_Internet> theNA = spAsNetAddress((sockaddr*)theAI->ai_addr))
+		if (ZRef<ZNetAddress_Internet> theNA = spAsNetAddress((sockaddr*)theAI->ai_addr, fPort))
 			fAddresses.push_back(theNA);
 		}
 
@@ -423,7 +427,7 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_Socket::GetLocalAddress()
 	uint8 buffer[SOCK_MAXADDRLEN];
 	socklen_t length = sizeof(buffer);
 	if (::getsockname(this->GetSocketFD(), (sockaddr*)buffer, &length) >= 0)
-		return spAsNetAddress((sockaddr*)buffer);
+		return spAsNetAddress((sockaddr*)buffer, 0);
 
 	return null;
 	}
@@ -433,7 +437,7 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_Socket::GetRemoteAddress()
 	uint8 buffer[SOCK_MAXADDRLEN];
 	socklen_t length = sizeof(buffer);
 	if (::getpeername(this->GetSocketFD(), (sockaddr*)buffer, &length) >= 0)
-		return spAsNetAddress((sockaddr*)buffer);
+		return spAsNetAddress((sockaddr*)buffer, 0);
 
 	return null;
 	}
