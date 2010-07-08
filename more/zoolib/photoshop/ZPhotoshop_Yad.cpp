@@ -125,6 +125,9 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		return sMakeYadR(theMap);
 		}
 
+	if (const string* asString = iVal.PGet_T<string>())
+		return ZooLib::sMakeYadR(*asString);
+
 	return new ZYadAtomR_Any(iVal.AsAny());
 	}
 

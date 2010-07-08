@@ -870,6 +870,12 @@ PIActionReference Spec::MakeRef() const
 					}
 				}
 			}
+
+		if (!allOK)
+			{
+			spPSActionReference->Free(theRef);
+			theRef = nullptr;
+			}
 		}
 
 	return theRef;
