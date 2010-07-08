@@ -30,9 +30,6 @@ ZMACRO_MSVCStaticLib_cpp(Net_Local_Win)
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_WinFile.h"
 
-#include "zoolib/ZLog.h"
-#include "zoolib/ZUtil_Strim_Data.h"
-
 namespace ZooLib {
 
 using std::runtime_error;
@@ -251,19 +248,8 @@ ZRef<HANDLE> ZNetEndpoint_Local_Win::GetHANDLE()
 
 void ZNetEndpoint_Local_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	ZLOGFUNCTION(eWarning);
-	if (ZLOGF(s, eNotice))
-		{
-		s.Writef("size: %llu", (uint64)iCount);
-		}
-
 	ZUtil_WinFile::sRead(fHANDLE, nullptr, fEvent_Read,
 		oDest, iCount, oCountRead);
-
-	if (ZLOGF(s, eNotice))
-		{
-		ZUtil_Strim_Data::sDumpData(s, true, oDest, *oCountRead);
-		}
 	}
 
 size_t ZNetEndpoint_Local_Win::Imp_CountReadable()
@@ -284,12 +270,6 @@ bool ZNetEndpoint_Local_Win::Imp_WaitReadable(double iTimeout)
 
 void ZNetEndpoint_Local_Win::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	ZLOGFUNCTION(eWarning);
-	if (ZLOGF(s, eNotice))
-		{
-		ZUtil_Strim_Data::sDumpData(s, true, iSource, iCount);
-		}
-
 	ZUtil_WinFile::sWrite(fHANDLE, nullptr, fEvent_Write,
 		iSource, iCount, oCountWritten);
 	}
@@ -297,7 +277,7 @@ void ZNetEndpoint_Local_Win::Imp_Write(const void* iSource, size_t iCount, size_
 void ZNetEndpoint_Local_Win::Imp_Flush()
 	{
 	// Do NOT call FlushFileBuffers. It won't return till the far end has read everything
-	// we've written, which will likely deadlock us in common use.
+	// we've written, which in common situations will likely cause deadlock.
 	}
 
 bool ZNetEndpoint_Local_Win::Imp_ReceiveDisconnect(double iTimeout)
