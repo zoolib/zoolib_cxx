@@ -75,24 +75,41 @@ DWORD sWrite(HANDLE iHANDLE, const void* iSource, size_t iCount, size_t* oCountW
 
 DWORD sRead(HANDLE iHANDLE, const uint64* iOffset,
 	void* oDest, size_t iCount, size_t* oCountRead)
+	{ return sRead(iHANDLE, iOffset, nullptr, oDest, iCount, oCountRead);  }
+
+DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset,
+	const void* iSource, size_t iCount, size_t* oCountWritten)
+	{ return sWrite(iHANDLE, iOffset, nullptr, iSource, iCount, oCountWritten);  }
+
+DWORD sRead(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
+	void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
 
 	OVERLAPPED theOVERLAPPED = {0};
+
 	if (iOffset)
 		{
 		theOVERLAPPED.Offset = *iOffset;
 		theOVERLAPPED.OffsetHigh = *iOffset >> 32;
 		}
+
+	if (iEvent)
+		theOVERLAPPED.hEvent = iEvent;
+
 	DWORD countRead = 0;
 	if (!::ReadFile(iHANDLE, oDest, iCount, &countRead, &theOVERLAPPED))
 		{
 		int err = ::GetLastError();
+
 		if (err != ERROR_IO_PENDING)
 			return err;
 
-		if (!::GetOverlappedResult(iHANDLE, &theOVERLAPPED, &countRead, TRUE))
+		if (iEvent)
+			::WaitForSingleObject(iEvent, INFINITE);
+
+		if (!::GetOverlappedResult(iHANDLE, &theOVERLAPPED, &countRead, FALSE))
 			return ::GetLastError();
 		}
 
@@ -102,29 +119,35 @@ DWORD sRead(HANDLE iHANDLE, const uint64* iOffset,
 	return 0;
 	}
 
-DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset,
+DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
 	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	if (oCountWritten)
 		*oCountWritten = 0;
 
-	OVERLAPPED theOVERLAPPED;
-	theOVERLAPPED.Internal = 0;
-	theOVERLAPPED.InternalHigh = 0;
+	OVERLAPPED theOVERLAPPED = {0};
+
 	if (iOffset)
 		{
 		theOVERLAPPED.Offset = *iOffset;
 		theOVERLAPPED.OffsetHigh = *iOffset >> 32;
 		}
-	theOVERLAPPED.hEvent = 0;
+
+	if (iEvent)
+		theOVERLAPPED.hEvent = iEvent;
+
 	DWORD countWritten = 0;
 	if (!::WriteFile(iHANDLE, iSource, iCount, &countWritten, &theOVERLAPPED))
 		{
 		int err = ::GetLastError();
+
 		if (err != ERROR_IO_PENDING)
 			return err;
 
-		if (!::GetOverlappedResult(iHANDLE, &theOVERLAPPED, &countWritten, TRUE))
+		if (iEvent)
+			::WaitForSingleObject(iEvent, INFINITE);
+
+		if (!::GetOverlappedResult(iHANDLE, &theOVERLAPPED, &countWritten, FALSE))
 			return ::GetLastError();
 		}
 

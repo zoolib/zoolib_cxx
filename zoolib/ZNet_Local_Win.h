@@ -90,7 +90,8 @@ public:
 private:
 	const string16 fPath;
 	ZRef<HANDLE> fHANDLE;
-//	ZRef<HANDLE> fEvent;
+	ZRef<HANDLE> fEvent;
+	OVERLAPPED fOVERLAPPED;
 	};
 
 // =================================================================================================
@@ -141,7 +142,11 @@ private:
 	virtual void Imp_Abort();
 
 private:
+	void pInit(const ZRef<HANDLE>& iHANDLE);
+
 	ZRef<HANDLE> fHANDLE;
+	ZRef<HANDLE> fEvent_Read;
+	ZRef<HANDLE> fEvent_Write;
 
 	friend class ZNetListener_Local_Win;
 	};

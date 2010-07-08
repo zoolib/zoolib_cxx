@@ -25,9 +25,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ZMACRO_MSVCStaticLib_cpp(Net_Local_Win)
 
 #include "zoolib/ZFunctionChain.h"
+#include "zoolib/ZMemory.h"
 #include "zoolib/ZRef_WinHANDLE.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_WinFile.h"
+
+#include "zoolib/ZLog.h"
+#include "zoolib/ZUtil_Strim_Data.h"
 
 namespace ZooLib {
 
@@ -76,6 +80,73 @@ class Make_Endpoint
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Helpers
+
+static string16 spAsPipeName(const string8& iName)
+	{ return ZUnicode::sAsUTF16("\\\\.\\pipe\\" + iName); }
+
+static ZRef<HANDLE> spConnect(const string& iName)
+	{
+	const string16 thePipeName = spAsPipeName(iName);
+
+	for (;;)
+		{
+		HANDLE theHANDLE = ::CreateFileW(
+			thePipeName.c_str(),   // pipe name
+			GENERIC_READ | GENERIC_WRITE, // read and write access
+			0, // no sharing
+			nullptr, // default security attributes
+			OPEN_EXISTING, // opens existing pipe
+			FILE_FLAG_OVERLAPPED, // attributes
+			nullptr); // no template file
+
+		if (theHANDLE && theHANDLE != INVALID_HANDLE_VALUE)
+			return Adopt(theHANDLE);
+
+		if (::GetLastError() != ERROR_PIPE_BUSY)
+			{
+			if (::WaitNamedPipeW(thePipeName.c_str(), 20000))
+				continue;
+			}
+
+		throw runtime_error("spConnect, couldn't connect");
+		}
+	}
+
+static ZRef<HANDLE> spCreateNamedPipe(const string16& iPipeName, bool iFirst)
+	{
+	DWORD theOpenMode = PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED;
+
+	if (iFirst)
+		theOpenMode |= FILE_FLAG_FIRST_PIPE_INSTANCE;
+
+	HANDLE theHANDLE = ::CreateNamedPipeW(
+		iPipeName.c_str(), // lpName
+		theOpenMode, // dwOpenMode
+		PIPE_TYPE_BYTE | PIPE_WAIT, // dwPipeMode
+		PIPE_UNLIMITED_INSTANCES, // nMaxInstances
+		0, // nOutBufferSize
+		0, // nInBufferSize
+		0, // nDefaultTimeOut
+		nullptr // lpSecurityAttributes
+		);
+
+	if (!theHANDLE || INVALID_HANDLE_VALUE == theHANDLE)
+		throw runtime_error("ZNetListener_Local_Win, spCreateNamedPipe failed");
+
+	return Adopt(theHANDLE);
+	}
+
+static ZRef<HANDLE> spCreateEvent()
+	{
+	HANDLE theHANDLE = ::CreateEvent(nullptr, true, false, nullptr);
+	if (!theHANDLE || INVALID_HANDLE_VALUE == theHANDLE)
+		throw runtime_error("spCreateEvent failed");
+	return Adopt(theHANDLE);
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZNetNameLookup_Local_Win
 
 ZNetNameLookup_Local_Win::ZNetNameLookup_Local_Win(const std::string& iPath)
@@ -116,95 +187,49 @@ ZRef<ZNetName> ZNetNameLookup_Local_Win::CurrentName()
 #pragma mark -
 #pragma mark * ZNetListener_Local_Win
 
-static string16 spAsPipeName(const string8& iName)
-	{ return ZUnicode::sAsUTF16("\\\\.\\pipe\\" + iName); }
-
-static ZRef<HANDLE> spCreateNamedPipe(const string16& iPipeName)
-	{
-	HANDLE theHANDLE = ::CreateNamedPipeW(
-		iPipeName.c_str(), // lpName
-		PIPE_ACCESS_DUPLEX, // dwOpenMode
-		PIPE_TYPE_BYTE | PIPE_WAIT, // dwPipeMode
-		PIPE_UNLIMITED_INSTANCES, // nMaxInstances
-		8192, // nOutBufferSize
-		8192, // nInBufferSize
-		0, // nDefaultTimeOut
-		nullptr // lpSecurityAttributes
-		);
-
-	if (INVALID_HANDLE_VALUE == theHANDLE)
-		throw runtime_error("ZNetListener_Local_Win, spCreateNamedPipe failed");
-
-	return Adopt(theHANDLE);
-	}
-
 ZNetListener_Local_Win::ZNetListener_Local_Win(const string& iName)
 :	fPath(spAsPipeName(iName))
-,	fHANDLE(spCreateNamedPipe(fPath))
-	{}
+,	fHANDLE(spCreateNamedPipe(fPath, true))
+,	fEvent(spCreateEvent())
+	{
+	ZMemZero(&fOVERLAPPED, sizeof(fOVERLAPPED));
+	fOVERLAPPED.hEvent = fEvent;
+	}
 
 ZNetListener_Local_Win::~ZNetListener_Local_Win()
-	{
-	}
+	{}
 
 ZRef<ZNetEndpoint> ZNetListener_Local_Win::Listen()
 	{
-	if (WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, 1000))
-		{
-		if (::ConnectNamedPipe(fHANDLE, nullptr) || ::GetLastError() == ERROR_PIPE_CONNECTED)
-			{
-			ZRef<HANDLE> theHANDLE;
-			theHANDLE.swap(fHANDLE);
-			fHANDLE = spCreateNamedPipe(fPath);
-			return new ZNetEndpoint_Local_Win(theHANDLE);
-			}
-		}
-	return null;
+	bool success = ::ConnectNamedPipe(fHANDLE, &fOVERLAPPED);
+
+//	DWORD err = ::GetLastError();
+//	if (!success && (err == ERROR_IO_PENDING || err == ERROR_PIPE_LISTENING))
+//		::WaitForSingleObjectEx(fEvent, INFINITE, TRUE);
+
+	DWORD dummy;
+	success = ::GetOverlappedResult(fHANDLE, &fOVERLAPPED, &dummy, TRUE);
+
+	ZRef<HANDLE> theHANDLE;
+	theHANDLE.swap(fHANDLE);
+	fHANDLE = spCreateNamedPipe(fPath, false);
+	return new ZNetEndpoint_Local_Win(theHANDLE);
 	}
 
 void ZNetListener_Local_Win::CancelListen()
 	{
+	// We should do a CancelIoEx here
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetEndpoint_Local_Win
 
-static ZRef<HANDLE> spConnect(const string& iName)
-	{
-	const string16 thePipeName = spAsPipeName(iName);
-
-	for (;;)
-		{
-		HANDLE theHANDLE = ::CreateFileW(
-			thePipeName.c_str(),   // pipe name
-			GENERIC_READ | GENERIC_WRITE, // read and write access
-			0,              // no sharing
-			NULL,           // default security attributes
-			OPEN_EXISTING,  // opens existing pipe
-			0,              // default attributes
-			NULL);          // no template file
-
-		if (theHANDLE != INVALID_HANDLE_VALUE)
-			return Adopt(theHANDLE);
-
-		if (::GetLastError() == ERROR_PIPE_BUSY)
-			{
-			if (::WaitNamedPipeW(thePipeName.c_str(), 20000))
-				continue;
-			}
-
-		throw runtime_error("spConnect, couldn't connect");
-		}
-	}
-
 ZNetEndpoint_Local_Win::ZNetEndpoint_Local_Win(const ZRef<HANDLE>& iHANDLE)
-:	fHANDLE(iHANDLE)
-	{}
+	{ this->pInit(iHANDLE); }
 
 ZNetEndpoint_Local_Win::ZNetEndpoint_Local_Win(const string& iName)
-:	fHANDLE(spConnect(iName))
-	{}
+	{ this->pInit(spConnect(iName)); }
 
 ZNetEndpoint_Local_Win::~ZNetEndpoint_Local_Win()
 	{}
@@ -225,7 +250,21 @@ ZRef<HANDLE> ZNetEndpoint_Local_Win::GetHANDLE()
 	{ return fHANDLE; }
 
 void ZNetEndpoint_Local_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
-	{ ZUtil_WinFile::sRead(fHANDLE, oDest, iCount, oCountRead); }
+	{
+	ZLOGFUNCTION(eWarning);
+	if (ZLOGF(s, eNotice))
+		{
+		s.Writef("size: %llu", (uint64)iCount);
+		}
+
+	ZUtil_WinFile::sRead(fHANDLE, nullptr, fEvent_Read,
+		oDest, iCount, oCountRead);
+
+	if (ZLOGF(s, eNotice))
+		{
+		ZUtil_Strim_Data::sDumpData(s, true, oDest, *oCountRead);
+		}
+	}
 
 size_t ZNetEndpoint_Local_Win::Imp_CountReadable()
 	{
@@ -244,10 +283,22 @@ bool ZNetEndpoint_Local_Win::Imp_WaitReadable(double iTimeout)
 	}
 
 void ZNetEndpoint_Local_Win::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ ZUtil_WinFile::sWrite(fHANDLE, iSource, iCount, oCountWritten); }
+	{
+	ZLOGFUNCTION(eWarning);
+	if (ZLOGF(s, eNotice))
+		{
+		ZUtil_Strim_Data::sDumpData(s, true, iSource, iCount);
+		}
+
+	ZUtil_WinFile::sWrite(fHANDLE, nullptr, fEvent_Write,
+		iSource, iCount, oCountWritten);
+	}
 
 void ZNetEndpoint_Local_Win::Imp_Flush()
-	{ ZUtil_WinFile::sFlush(fHANDLE); }
+	{
+	// Do NOT call FlushFileBuffers. It won't return till the far end has read everything
+	// we've written, which will likely deadlock us in common use.
+	}
 
 bool ZNetEndpoint_Local_Win::Imp_ReceiveDisconnect(double iTimeout)
 	{
@@ -269,6 +320,13 @@ void ZNetEndpoint_Local_Win::Imp_SendDisconnect()
 void ZNetEndpoint_Local_Win::Imp_Abort()
 	{
 	::DisconnectNamedPipe(fHANDLE);
+	}
+
+void ZNetEndpoint_Local_Win::pInit(const ZRef<HANDLE>& iHANDLE)
+	{
+	fHANDLE = iHANDLE;
+	fEvent_Read = spCreateEvent();
+	fEvent_Write = spCreateEvent();
 	}
 
 // =================================================================================================

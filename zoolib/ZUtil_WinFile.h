@@ -53,6 +53,12 @@ DWORD sRead(HANDLE iHANDLE, const uint64* iOffset,
 DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset,
 	const void* iSource, size_t iCount, size_t* oCountWritten);
 
+DWORD sRead(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
+	void* oDest, size_t iCount, size_t* oCountRead);
+
+DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
+	const void* iSource, size_t iCount, size_t* oCountWritten);
+
 } // namespace ZUtil_WinFile
 
 } // namespace ZooLib
