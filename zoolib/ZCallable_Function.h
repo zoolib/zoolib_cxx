@@ -42,8 +42,8 @@ public:
 		{}
 
 	// From ZCallable_R0
-	virtual void Invoke()
-		{ fFunction(); }
+	virtual R Invoke()
+		{ return fFunction(); }
 
 private:
 	Function_t fFunction;
