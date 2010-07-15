@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Logic_ValPred.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
+#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoToStrim.h"
 
 #include "zoolib/dataspace/ZDataspace_Source.h"
 
@@ -31,22 +32,58 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 
+#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+
 namespace ZooLib {
 namespace ZDataspace {
 using std::set;
 using namespace ZRA;
 
 static ZRef<Expr_Rel> spConcrete(
-	ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelRename& iRelRename)
+	ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const NameMap& iNameMap)
 	{
-	ZRef<Expr_Rel> theRel = sConcrete(iConcreteDomain, iName, iRelRename.GetRelHead_From());
-	const set<RelRename::Elem_t>& theElems = iRelRename.GetElems();
-	for (set<RelRename::Elem_t>::const_iterator i = theElems.begin(); i != theElems.end(); ++i)
+	ZRef<Expr_Rel> theRel = sConcrete(iConcreteDomain, iName, iNameMap.GetRelHead_From());
+	const set<NameMap::Elem_t>& theElems = iNameMap.GetElems();
+	for (set<NameMap::Elem_t>::const_iterator i = theElems.begin(); i != theElems.end(); ++i)
 		{
 		if ((*i).first != (*i).second)
 			theRel = sRename(theRel, (*i).first, (*i).second);
 		}
 	return theRel;
+	}
+
+const ZStrimW& operator<<(const ZStrimW& w, const SearchThing& iST)
+	{
+	w << "(";
+	bool isSubsequent = false;
+	for (vector<NameMap>::const_iterator i = iST.fNameMaps.begin(); i != iST.fNameMaps.end(); ++i)
+		{
+		if (isSubsequent)
+			w << ", ";
+		isSubsequent = true;
+		w << *i;
+		}
+	w << ")\n";
+	ZVisitor_Expr_Logic_ValPred_DoToStrim().DoToStrim(ZVisitor_DoToStrim::Options(), w, sAsExpr_Logic(iST.fPredCompound));
+	return w;
+	}
+
+const ZStrimW& operator<<(const ZStrimW& w, const RelHead& iRH)
+	{
+	ZRA::Util_Strim_RelHead::sWrite_RelHead(iRH, w);
+	return w;
+	}
+
+const ZStrimW& operator<<(const ZStrimW& w, const set<RelHead>& iSet)
+	{
+	bool isSubsequent = false;
+	for (set<RelHead>::const_iterator i = iSet.begin(); i != iSet.end(); ++i)
+		{
+		if (isSubsequent)
+			w << ", ";
+		w << *i;
+		}
+	return w;
 	}
 
 // =================================================================================================
@@ -93,10 +130,10 @@ class Gather_t
 public:
 	Gather_t();
 	Gather_t(ZRef<ZExpr_Logic> iExpr_Logic, const RelHead& iRelHead);
-	Gather_t(ZRef<ZExpr_Logic> iExpr_Logic, const vector<RelRename>& iRelRenames);
+	Gather_t(ZRef<ZExpr_Logic> iExpr_Logic, const vector<NameMap>& iNameMaps);
 
 	ZRef<ZExpr_Logic> fExpr_Logic;
-	vector<RelRename> fRelRenames;
+	vector<NameMap> fNameMaps;
 	};
 
 Gather_t::Gather_t()
@@ -104,12 +141,12 @@ Gather_t::Gather_t()
 
 Gather_t::Gather_t(ZRef<ZExpr_Logic> iExpr_Logic, const RelHead& iRelHead)
 :	fExpr_Logic(iExpr_Logic)
-,	fRelRenames(1, iRelHead)
+,	fNameMaps(1, iRelHead)
 	{}
 
-Gather_t::Gather_t(ZRef<ZExpr_Logic> iExpr_Logic, const vector<RelRename>& iRelRenames)
+Gather_t::Gather_t(ZRef<ZExpr_Logic> iExpr_Logic, const vector<NameMap>& iNameMaps)
 :	fExpr_Logic(iExpr_Logic)
-,	fRelRenames(iRelRenames)
+,	fNameMaps(iNameMaps)
 	{}
 
 class Gather
@@ -148,7 +185,7 @@ void Gather::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
 	Gather_t g0 = this->Do(iExpr->GetOp0());
 	const Gather_t g1 = this->Do(iExpr->GetOp1());
 
-	g0.fRelRenames.insert(g0.fRelRenames.end(), g1.fRelRenames.begin(), g1.fRelRenames.end());
+	g0.fNameMaps.insert(g0.fNameMaps.end(), g1.fNameMaps.begin(), g1.fNameMaps.end());
 	g0.fExpr_Logic &= g1.fExpr_Logic;
 
 	this->pSetResult(g0);
@@ -164,7 +201,7 @@ void Gather::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	const RelName& oldName = iExpr->GetOld();
 	const RelName& newName = iExpr->GetNew();
 
-	for (vector<RelRename>::iterator i = g0.fRelRenames.begin(); i != g0.fRelRenames.end(); ++i)
+	for (vector<NameMap>::iterator i = g0.fNameMaps.begin(); i != g0.fNameMaps.end(); ++i)
 		(*i).ApplyToFrom(newName, oldName);
 
 	Rename_t theRename;
@@ -196,7 +233,7 @@ SearchThing sAsSearchThing(ZRef<ZRA::Expr_Rel> iRel)
 	const Gather_t theG = Gather().Do(iRel);
 
 	SearchThing result;
-	result.fRelRenames = theG.fRelRenames;
+	result.fNameMaps = theG.fNameMaps;
 	result.fPredCompound = sAsValPredCompound(theG.fExpr_Logic);
 
 	return result;
@@ -205,25 +242,25 @@ SearchThing sAsSearchThing(ZRef<ZRA::Expr_Rel> iRel)
 ZRef<Expr_Rel> sAsRel(const RelHead& iRelHead)
 	{ return sConcrete(null, "Fake", iRelHead); }
 
-ZRef<Expr_Rel> sAsRel(const RelRename& iRelRename)
-	{ return spConcrete(null, "FakeRenamed", iRelRename); }
+ZRef<Expr_Rel> sAsRel(const NameMap& iNameMap)
+	{ return spConcrete(null, "FakeRenamed", iNameMap); }
 
-ZRef<Expr_Rel> sAsRel(const vector<RelRename>& iRelRenames)
+ZRef<Expr_Rel> sAsRel(const vector<NameMap>& iNameMaps)
 	{
 	ZRef<Expr_Rel> result;
-	for (vector<RelRename>::const_iterator i = iRelRenames.begin();
-		i != iRelRenames.end(); ++i)
+	for (vector<NameMap>::const_iterator i = iNameMaps.begin();
+		i != iNameMaps.end(); ++i)
 		{
 		result = result * sAsRel(*i);
 		}
 	return result;
 	}
 
-ZRef<Expr_Rel> sAsRelFrom(const vector<RelRename>& iRelRenames)
+ZRef<Expr_Rel> sAsRelFrom(const vector<NameMap>& iNameMaps)
 	{
 	ZRef<Expr_Rel> result;
-	for (vector<RelRename>::const_iterator i = iRelRenames.begin();
-		i != iRelRenames.end(); ++i)
+	for (vector<NameMap>::const_iterator i = iNameMaps.begin();
+		i != iNameMaps.end(); ++i)
 		{
 		result = result * sConcrete(null, "FakeProduct", (*i).GetRelHead_From());
 		}
@@ -232,16 +269,16 @@ ZRef<Expr_Rel> sAsRelFrom(const vector<RelRename>& iRelRenames)
 
 ZRef<Expr_Rel> sAsRel(const SearchThing& iSearchThing)
 	{
-	return sAsRel(iSearchThing.fRelRenames) & sAsExpr_Logic(iSearchThing.fPredCompound);
+	return sAsRel(iSearchThing.fNameMaps) & sAsExpr_Logic(iSearchThing.fPredCompound);
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark *
 
-AddedSearch::AddedSearch(int64 iRefcon, ZRef<Expr_Rel> iRel)
+AddedSearch::AddedSearch(int64 iRefcon, const SearchThing& iSearchThing)
 :	fRefcon(iRefcon)
-,	fRel(iRel)
+,	fSearchThing(iSearchThing)
 	{}
 
 // =================================================================================================

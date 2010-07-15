@@ -186,7 +186,8 @@ class Source_Dataset::PQuery
 	{
 public:
 	int64 fRefcon;
-	ZRef<ZRA::Expr_Rel> fRel;
+	SearchThing fSearchThing;
+//	ZRef<ZRA::Expr_Rel> fRel;
 //	ZRef<ZQE::Result> fResults;
 	};
 
@@ -217,12 +218,11 @@ void Source_Dataset::Update(
 		{
 		PQuery* thePQuery = new PQuery;
 		thePQuery->fRefcon = iAdded->fRefcon;
-		thePQuery->fRel = iAdded->fRel;
+		thePQuery->fSearchThing = iAdded->fSearchThing;
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
 
-		ZRA::Util_Strim_Rel::sToStrim(iAdded->fRel, ZStdIO::strim_err);
-		ZStdIO::strim_err << "\n";
+		ZStdIO::strim_err << iAdded->fSearchThing << "\n";
 
 		++iAdded;
 		}
@@ -242,6 +242,7 @@ void Source_Dataset::Update(
 		SearchResult theSearchResult;
 		theSearchResult.fRefcon = (*i).first;
 
+#if 0 //##
 		for (ZRef<ZQE::Iterator> theIterator = Visitor_DoMakeIterator(this).Do((*i).second->fRel);;)
 			{
 			ZRef<ZQE::Result> theResult = theIterator->ReadInc();
@@ -249,6 +250,7 @@ void Source_Dataset::Update(
 				break;
 			theSearchResult.fResults.push_back(theResult);
 			}
+#endif
 		oChanged.push_back(theSearchResult);
 		}
 

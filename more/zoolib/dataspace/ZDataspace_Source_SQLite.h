@@ -51,12 +51,15 @@ public:
 		Clock& oClock);
 
 private:
+	string8 pAsSQL(const SearchThing& iSearchThing);
+
 	ZRef<ZSQLite::DB> fDB;
 	int fChangeCount;
 	Clock fClock;
 
 	class PQuery;
 	map<int64, PQuery*> fMap_RefconToPQuery;
+	map<string8, RelHead> fMap_NameToRelHead;
 	};
 
 } // namespace ZDataspace

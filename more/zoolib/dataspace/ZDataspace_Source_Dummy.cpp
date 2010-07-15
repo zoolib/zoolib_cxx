@@ -22,8 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZExpr_Logic.h"
 
-#include "zoolib/ZStdIO.h"
-#include "zoolib/zra/ZRA_Util_Strim_Rel.h"
+#include "zoolib/ZLog.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -54,9 +53,8 @@ void Source_Dummy::Update(
 		SearchResult dummy;
 		dummy.fRefcon = iAdded->fRefcon;
 		oChanged.push_back(dummy);
-
-		ZRA::Util_Strim_Rel::sToStrim(iAdded->fRel, ZStdIO::strim_err);
-		ZStdIO::strim_err << "\n";
+		if (ZLOGPF(s, eDebug))
+			s << iAdded->fSearchThing;
 		++iAdded;
 		}
 	}

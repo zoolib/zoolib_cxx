@@ -18,15 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZString.h"
 #include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/dataspace/ZDataspace_Source_SQLite.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
+
 #include "zoolib/zra/ZRA_SQL.h"
+
+#include "zoolib/ZLog.h"
 
 namespace ZooLib {
 namespace ZDataspace {
 
 using namespace ZSQLite;
+using ZRA::RelName;
 
 // =================================================================================================
 #pragma mark -
@@ -35,15 +41,24 @@ using namespace ZSQLite;
 class Source_SQLite::PQuery
 	{
 public:
-	PQuery(int64 iRefcon);
+	PQuery(int64 iRefcon, const string8& iSQL);
 
 	const int64 fRefcon;
-	string fSQL;
+	const string8 fSQL;
 	};
 
-Source_SQLite::PQuery::PQuery(int64 iRefcon)
+Source_SQLite::PQuery::PQuery(int64 iRefcon, const string8& iSQL)
 :	fRefcon(iRefcon)
+,	fSQL(iSQL)
 	{}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Helpers
+
+namespace { // anonymous
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -53,6 +68,22 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 :	fDB(iDB)
 	{
 	fChangeCount = ::sqlite3_total_changes(fDB->GetDB());
+
+	for (ZRef<Iter> iterTables = new Iter(fDB, "select name from sqlite_master;");
+		iterTables->HasValue(); iterTables->Advance())
+		{
+		const string8 theTableName = iterTables->Get(0).Get_T<string>();
+		ZAssert(!theTableName.empty());
+		RelHead theRelHead;
+		for (ZRef<Iter> iterTable = new Iter(fDB, "pragma table_info(" + theTableName + ");");
+			iterTable->HasValue(); iterTable->Advance())
+			{
+			theRelHead.Insert(theTableName + "_" + iterTable->Get(1).Get_T<string>());
+			}
+
+		if (!theRelHead.empty())
+			ZUtil_STL::sInsertMustNotContain(kDebug, fMap_NameToRelHead, theTableName, theRelHead);
+		}
 	}
 
 Source_SQLite::~Source_SQLite()
@@ -61,18 +92,10 @@ Source_SQLite::~Source_SQLite()
 set<RelHead> Source_SQLite::GetRelHeads()
 	{
 	set<RelHead> result;
-
-	for (ZRef<Iter> iterTables = new Iter(fDB, "select name from sqlite_master;");
-		iterTables->HasValue(); iterTables->Advance())
+	for (map<string8, RelHead>::const_iterator i = fMap_NameToRelHead.begin();
+		i != fMap_NameToRelHead.end(); ++i)
 		{
-		const string8 theTableName = iterTables->Get(0).Get_T<string>();
-		RelHead theRelHead;
-		for (ZRef<Iter> iterTable = new Iter(fDB, "pragma table_info(" + theTableName + ");");
-			iterTable->HasValue(); iterTable->Advance())
-			{
-			theRelHead.Insert(theTableName + "." + iterTable->Get(1).Get_T<string>());
-			}
-		result.insert(theRelHead);
+		result.insert(i->second);
 		}
 	return result;
 	}
@@ -94,9 +117,11 @@ void Source_SQLite::Update(
 
 	while (iAddedCount--)
 		{
-		PQuery* thePQuery = new PQuery(iAdded->fRefcon);
-		ZRef<ZRA::SQL::Expr_Rel_SFW> theSFW = ZRA::SQL::sConvert(iAdded->fRel);
-		thePQuery->fSQL = sAsSQL(theSFW);
+		if (ZLOGF(s, eDebug))
+			s << "\n" << iAdded->fSearchThing;
+		
+		const string8 theSQL = this->pAsSQL(iAdded->fSearchThing);
+		PQuery* thePQuery = new PQuery(iAdded->fRefcon, theSQL);
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
 		++iAdded;
@@ -126,6 +151,76 @@ void Source_SQLite::Update(
 	fClock.Event();
 
 	oClock = fClock;
+	}
+
+string8 Source_SQLite::pAsSQL(const SearchThing& iSearchThing)
+	{
+	// Go through each NameMap. Use the from to identify which table it represents. Generate
+	// a distinct name for the table, for use in an AS clause. Rewrite the from to reference
+	// the distinct name.
+
+	// We can then generate an SFW formed from the reworked NameMaps and the ValPredCompound, which
+	// is written in terms of the Tos.
+
+	map<string8, int> tableSuffixes;
+	vector<NameMap> revisedNameMaps;
+	string8 theFields;
+	for (vector<NameMap>::const_iterator i = iSearchThing.fNameMaps.begin();
+		i != iSearchThing.fNameMaps.end(); ++i)
+		{
+		const NameMap& sourceNameMap = *i;
+		const RelHead& theRH_From = sourceNameMap.GetRelHead_From();
+		if (ZLOGF(s, eDebug))
+			s << theRH_From;
+		for (map<string8, RelHead>::const_iterator i = fMap_NameToRelHead.begin();
+			i != fMap_NameToRelHead.end(); ++i)
+			{
+			if (ZUtil_STL_set::sIncludes(i->second, theRH_From))
+				{
+				// Found a table.
+				const RelName theTableName = i->first;
+				const int theSuffix = tableSuffixes[theTableName]++;
+				const RelName newPrefix = theTableName + ZStringf("%d", theSuffix) + ".";
+				const RelName oldPrefix = theTableName + "_";
+
+				NameMap newNameMap;
+				for (set<NameMap::Elem_t>::const_iterator i = sourceNameMap.GetElems().begin();
+					i != sourceNameMap.GetElems().end(); ++i)
+					{
+					const RelName oldFrom = i->second;
+					RelName newFrom = ZRA::sPrefixRemove(theTableName + "_", oldFrom);
+					newFrom = ZRA::sPrefixAdd(newPrefix, newFrom);
+					newNameMap.InsertToFrom(i->first, newFrom);
+					if (! theFields.empty())
+						theFields += ", ";
+					theFields += newFrom + " AS '" + i->first + "'";
+					}
+				revisedNameMaps.push_back(newNameMap);
+				if (ZLOGF(s, eDebug))
+					s << newNameMap;
+				}
+			}
+		}
+
+	string8 theTables;
+	for (map<string8, int>::const_iterator i = tableSuffixes.begin();
+		i != tableSuffixes.end(); ++i)
+		{
+		for (int x = 0; x < i->second; ++x)
+			{
+			if (! theTables.empty())
+				theTables += ", ";
+			theTables += i->first + " AS '" + i->first + ZStringf("%d", x) + "'";
+			}
+		}
+
+	string8 result = "SELECT " + theFields + " FROM " + theTables + " WHERE ";
+	
+	result += ZRA::SQL::sAsSQL(sAsExpr_Logic(iSearchThing.fPredCompound));
+	
+	if (ZLOGF(s, eDebug))
+		s << result;
+	return result;
 	}
 
 } // namespace ZDataspace

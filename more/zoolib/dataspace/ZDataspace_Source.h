@@ -23,12 +23,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
+#include "zoolib/ZStrim.h"
 #include "zoolib/ZValPredCompound.h"
 
 #include "zoolib/zqe/ZQE_Result.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel.h"
-#include "zoolib/zra/ZRA_RelRename.h"
+#include "zoolib/zra/ZRA_NameMap.h"
 
 #include "ZIntervalTreeClock.h"
 
@@ -42,7 +43,7 @@ namespace ZDataspace {
 using namespace std;
 
 using ZRA::RelHead;
-using ZRA::RelRename;
+using ZRA::NameMap;
 
 typedef ZIntervalTreeClock::Clock Clock;
 
@@ -55,19 +56,23 @@ typedef string ReadableBy;
 class SearchThing
 	{
 public:
-//	RelHead fProject;
-	vector<RelRename> fRelRenames;
+	vector<NameMap> fNameMaps;
 	ZValPredCompound fPredCompound;
 	};
+
+const ZStrimW& operator<<(const ZStrimW& w, const SearchThing& iST);
 
 SearchThing sAsSearchThing(ZRef<ZRA::Expr_Rel> iRel);
 
 ZRef<ZRA::Expr_Rel> sAsRel(const RelHead& iRelHead);
-ZRef<ZRA::Expr_Rel> sAsRel(const RelRename& iRelRenames);
-ZRef<ZRA::Expr_Rel> sAsRel(const vector<RelRename>& iRelRenames);
+ZRef<ZRA::Expr_Rel> sAsRel(const NameMap& iNameMaps);
+ZRef<ZRA::Expr_Rel> sAsRel(const vector<NameMap>& iNameMaps);
 ZRef<ZRA::Expr_Rel> sAsRel(const SearchThing& iSearchThing);
 
-ZRef<ZRA::Expr_Rel> sAsRelFrom(const vector<RelRename>& iRelRenames);
+ZRef<ZRA::Expr_Rel> sAsRelFrom(const vector<NameMap>& iNameMaps);
+
+const ZStrimW& operator<<(const ZStrimW& w, const RelHead& iRH);
+const ZStrimW& operator<<(const ZStrimW& w, const set<RelHead>& iSet);
 
 // =================================================================================================
 #pragma mark -
@@ -76,10 +81,10 @@ ZRef<ZRA::Expr_Rel> sAsRelFrom(const vector<RelRename>& iRelRenames);
 class AddedSearch
 	{
 public:
-	AddedSearch(int64 iRefcon, ZRef<ZRA::Expr_Rel> iRel);
+	AddedSearch(int64 iRefcon, const SearchThing& iSearchThing);
 
 	int64 fRefcon;
-	ZRef<ZRA::Expr_Rel> fRel;
+	SearchThing fSearchThing;
 	};
 
 // =================================================================================================
