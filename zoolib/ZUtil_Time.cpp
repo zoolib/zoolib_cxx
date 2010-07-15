@@ -450,8 +450,7 @@ string ZUtil_Time::sAsString_ISO8601_us(ZTime iTime, bool iIncludeT)
  ZTime ZUtil_Time::sFromString_ISO8601(const string& iString)
  	{
  	const char* theCString = iString.c_str();
-	struct tm theTM;
-	ZMemZero_T(theTM);
+	struct tm theTM = {0};
 
 	bool gotIt = false;
 	double seconds;

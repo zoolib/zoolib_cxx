@@ -115,6 +115,12 @@ public:
 	static const int32 kEpochDelta_1970_To_2001 = -978307200;
 
 	static const uint32 kEpochDelta_2001_To_1970 = 978307200U;
+
+	static const uint32 kSecond = 1;
+	static const uint32 kMinute = 60 * kSecond;
+	static const uint32 kHour = 60 * kMinute;
+	static const uint32 kDay = 24 * kHour;
+	static const uint32 kYear = 365 * kDay;
 	};
 
 inline ZTime operator+(double iInterval, const ZTime& iTime)
