@@ -106,8 +106,16 @@ ZVal_NS::ZVal_NS(NSObject* iVal)
 :	inherited(iVal)
 	{}
 
+ZVal_NS::ZVal_NS(const ZRef<struct objc_object*>& iVal)
+:	inherited(iVal)
+	{}
+
 ZVal_NS::ZVal_NS(const ZRef<NSObject>& iVal)
 :	inherited(iVal)
+	{}
+
+ZVal_NS::ZVal_NS(const Adopt_T<struct objc_object*>& iVal)
+:	inherited(iVal.Get())
 	{}
 
 ZVal_NS::ZVal_NS(const Adopt_T<NSObject>& iVal)
@@ -182,6 +190,12 @@ ZVal_NS::ZVal_NS(NSDictionary* iVal)
 :	inherited(iVal)
 	{}
 
+ZVal_NS& ZVal_NS::operator=(struct objc_object* iVal)
+	{
+	inherited::operator=(iVal);
+	return *this;
+	}
+
 ZVal_NS& ZVal_NS::operator=(NSObject* iVal)
 	{
 	inherited::operator=(iVal);
@@ -194,9 +208,21 @@ ZVal_NS& ZVal_NS::operator=(const ZRef<NSObject>& iVal)
 	return *this;
 	}
 
+ZVal_NS& ZVal_NS::operator=(const ZRef<struct objc_object*>& iVal)
+	{
+	inherited::operator=(iVal);
+	return *this;
+	}
+
 ZVal_NS& ZVal_NS::operator=(const Adopt_T<NSObject>& iVal)
 	{
 	inherited::operator=(iVal);
+	return *this;
+	}
+
+ZVal_NS& ZVal_NS::operator=(const Adopt_T<struct objc_object*>& iVal)
+	{
+	inherited::operator=(iVal.Get());
 	return *this;
 	}
 

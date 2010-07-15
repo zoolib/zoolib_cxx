@@ -63,6 +63,8 @@ public:
 	ZVal_NS(struct objc_object* iVal);
 	ZVal_NS(NSObject* iVal);
 	ZVal_NS(const ZRef<NSObject>& iVal);
+	ZVal_NS(const ZRef<struct objc_object*>& iVal);
+	ZVal_NS(const Adopt_T<struct objc_object*>& iVal);
 	ZVal_NS(const Adopt_T<NSObject>& iVal);
 
 	ZVal_NS(int8 iVal);
@@ -85,8 +87,11 @@ public:
 	explicit ZVal_NS(NSArray* iVal);
 	explicit ZVal_NS(NSDictionary* iVal);
 
+	ZVal_NS& operator=(struct objc_object* iVal);
 	ZVal_NS& operator=(NSObject* iVal);
+	ZVal_NS& operator=(const ZRef<struct objc_object*>& iVal);
 	ZVal_NS& operator=(const ZRef<NSObject>& iVal);
+	ZVal_NS& operator=(const Adopt_T<struct objc_object*>& iVal);
 	ZVal_NS& operator=(const Adopt_T<NSObject>& iVal);
 
 // ZVal protocol
