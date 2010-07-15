@@ -228,8 +228,7 @@ ZRef<ZNetEndpoint> ZNetListener_Socket::Listen()
 
 	sWaitReadable(fSocketFD, sleepTime);
 
-	char remoteSockAddr[1024];
-	ZMemZero_T(remoteSockAddr);
+	char remoteSockAddr[SOCK_MAXADDRLEN];
 	socklen_t addrSize = sizeof(remoteSockAddr);
 	int result = ::accept(fSocketFD, (sockaddr*)&remoteSockAddr, &addrSize);
 

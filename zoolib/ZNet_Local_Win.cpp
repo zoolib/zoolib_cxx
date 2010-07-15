@@ -189,7 +189,7 @@ ZNetListener_Local_Win::ZNetListener_Local_Win(const string& iName)
 ,	fHANDLE(spCreateNamedPipe(fPath, true))
 ,	fEvent(spCreateEvent())
 	{
-	ZMemZero(&fOVERLAPPED, sizeof(fOVERLAPPED));
+	ZMemZero_T(fOVERLAPPED);
 	fOVERLAPPED.hEvent = fEvent;
 	}
 
