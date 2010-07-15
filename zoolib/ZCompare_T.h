@@ -33,6 +33,51 @@ public:
 		{ return sCompare_T<T>(iL, iR); }
 	};
 
+template <class InputIterator>
+inline int sCompareIterators_T(
+	InputIterator leftIter, InputIterator leftEnd,
+	InputIterator rightIter, InputIterator rightEnd)
+	{
+	for (/*no init*/; /*no test*/; ++leftIter, ++rightIter)
+		{
+		if (leftIter != leftEnd)
+			{
+			// Left is not exhausted.
+			if (rightIter != rightEnd)
+				{
+				// Right is not exhausted either, so we compare their current values.
+				if (int compare = sCompare_T(*leftIter, *rightIter))
+					{
+					// The current values of left and right
+					// are different, so we have a result.
+					return compare;
+					}
+				}
+			else
+				{
+				// Exhausted right, but still have left
+				// remaining, so left is greater than right.
+				return 1;
+				}
+			}
+		else
+			{
+			// Exhausted left.
+			if (rightIter != rightEnd)
+				{
+				// Still have right remaining, so left is less than right.
+				return -1;
+				}
+			else
+				{
+				// Exhausted right. And as left is also
+				// exhausted left equals right.
+				return 0;
+				}
+			}
+		}
+	}
+
 } // namespace ZooLib
 
 #endif // __ZCompare_Vector__
