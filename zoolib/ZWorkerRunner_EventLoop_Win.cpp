@@ -67,10 +67,10 @@ static UINT spMSG_Invoke = ::RegisterWindowMessageW(L"ZWorkerRunner_EventLoop_Wi
 void ZWorkerRunner_EventLoop_Win::pQueueCallback()
 	{ ::PostMessageW(this->GetHWND(), spMSG_Invoke, 0, 0); }
 
-void ZWorkerRunner_EventLoop_Win::sStartWorker(ZRef<ZWorker> iWorker)
+void ZWorkerRunner_EventLoop_Win::sAttach(ZRef<ZWorker> iWorker)
 	{
 	if (ZRef<ZWorkerRunner_EventLoop_Win> theRunner = spGetRunner())
-		theRunner->pStartWorker(iWorker);
+		theRunner->pAttach(iWorker);
 	}
 
 LRESULT ZWorkerRunner_EventLoop_Win::WindowProc(

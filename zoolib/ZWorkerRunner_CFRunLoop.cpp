@@ -68,9 +68,6 @@ ZWorkerRunner_CFRunLoop::ZWorkerRunner_CFRunLoop(ZRef<CFRunLoopRef> iRunLoop)
 		spRunLoopTimerCallBack,
 		&theContext));
 
-//	const ZSeq_CF theSeq = Adopt(::CFRunLoopCopyAllModes(::CFRunLoopGetCurrent()));
-//	for (size_t x = 0; x < theSeq.Count(); ++x)
-//		::CFRunLoopAddTimer(fRunLoop, fRunLoopTimer, theSeq.Get(x).GetCFString());
 	::CFRunLoopAddTimer(fRunLoop, fRunLoopTimer, kCFRunLoopCommonModes);
 	}
 
@@ -113,13 +110,15 @@ bool ZWorkerRunner_CFRunLoop::IsAwake(ZRef<ZWorker> iWorker)
 	}
 
 void ZWorkerRunner_CFRunLoop::Add(ZRef<ZWorker> iWorker)
-	{ this->pAdd(iWorker, CFAbsoluteTime(0)); }
-
-void ZWorkerRunner_CFRunLoop::AddWakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
-	{ this->pAdd(iWorker, spSystemAsAbsoluteTime(iSystemTime)); }
-
-void ZWorkerRunner_CFRunLoop::AddWakeIn(ZRef<ZWorker> iWorker, double iInterval)
-	{ this->pAdd(iWorker, spDelayAsAbsoluteTime(iInterval)); }
+	{
+	ZAcqMtxR acq(fMtx);
+	if (ZWorkerRunner::pAttachWorker(iWorker))
+		{
+		fWorkersSet.Insert(iWorker);
+		ZUtil_STL::sInsertMustNotContain(1,
+			fWorkersMap, iWorker, ::CFAbsoluteTimeGetCurrent() + ZTime::kYear);
+		}
+	}
 
 // Assume that main thread will become the thread used by that returned
 // by CFRunLoopGetMain, which is only available on 10.5+.
@@ -127,17 +126,6 @@ static ZRef<ZWorkerRunner_CFRunLoop> spWR = new ZWorkerRunner_CFRunLoop(::CFRunL
 
 ZRef<ZWorkerRunner_CFRunLoop> ZWorkerRunner_CFRunLoop::sMain()
 	{ return spWR; }
-
-void ZWorkerRunner_CFRunLoop::pAdd(ZRef<ZWorker> iWorker, CFAbsoluteTime iAbsoluteTime)
-	{
-	ZAcqMtxR acq(fMtx);
-	if (ZWorkerRunner::pAttachWorker(iWorker))
-		{
-		fWorkersSet.Insert(iWorker);
-		ZUtil_STL::sInsertMustNotContain(1, fWorkersMap, iWorker, iAbsoluteTime);
-		this->pTrigger(0);
-		}
-	}
 
 void ZWorkerRunner_CFRunLoop::pTrigger(CFAbsoluteTime iAbsoluteTime)
 	{

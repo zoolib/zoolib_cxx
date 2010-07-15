@@ -63,7 +63,7 @@ public:
 
 ZWorkerRunner_Thread::ZWorkerRunner_Thread(ZRef<ZWorker> iWorker)
 :	fWorker(iWorker)
-,	fNextWake(ZTime::sSystem())
+,	fNextWake(ZTime::sSystem() + ZTime::kYear)
 	{}
 
 void ZWorkerRunner_Thread::Wake(ZRef<ZWorker> iWorker)

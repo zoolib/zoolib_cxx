@@ -64,10 +64,10 @@ void ZWorkerRunner_Carbon::pQueueCallback()
 	ZUtil_CarbonEvents::sInvokeOnMainThread(true, spCallback, this);
 	}
 
-void ZWorkerRunner_Carbon::sStartWorker(ZRef<ZWorker> iWorker)
+void ZWorkerRunner_Carbon::sAttach(ZRef<ZWorker> iWorker)
 	{
 	if (ZRef<ZWorkerRunner_Carbon> theRunner = spGetRunner())
-		theRunner->pStartWorker(iWorker);
+		theRunner->pAttach(iWorker);
 	}
 
 void ZWorkerRunner_Carbon::spCallback(void* iRefcon)

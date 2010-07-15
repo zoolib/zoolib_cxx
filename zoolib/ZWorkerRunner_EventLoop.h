@@ -52,7 +52,7 @@ protected:
 	virtual void pQueueCallback() = 0;
 
 // Called by subclasses
-	void pStartWorker(ZRef<ZWorker> iWorker);
+	void pAttach(ZRef<ZWorker> iWorker);
 	void pCallback();
 
 private:

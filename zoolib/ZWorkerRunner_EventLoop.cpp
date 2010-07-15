@@ -87,14 +87,14 @@ bool ZWorkerRunner_EventLoop::IsAwake(ZRef<ZWorker> iWorker)
 	return fWorkersMap[iWorker] <= ZTime::sSystem();
 	}
 
-void ZWorkerRunner_EventLoop::pStartWorker(ZRef<ZWorker> iWorker)
+void ZWorkerRunner_EventLoop::pAttach(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtxR acq(fMtx);
 	if (ZWorkerRunner::pAttachWorker(iWorker))
 		{
 		fWorkersSet.Insert(iWorker);
-		ZUtil_STL::sInsertMustNotContain(1, fWorkersMap, iWorker, ZTime(0));
-		this->pTriggerCallback();
+		ZUtil_STL::sInsertMustNotContain(1,
+			fWorkersMap, iWorker, ZTime::sSystem() + ZTime::kYear);
 		}
 	}
 
@@ -154,10 +154,7 @@ void ZWorkerRunner_EventLoop::pWake(ZRef<ZWorker> iWorker, ZTime iSystemTime)
 		fWorker_Waker = new Worker_Waker(this);
 		sStartWorkerRunner(fWorker_Waker);
 		}
-	else
-		{
-		fWorker_Waker->WakeAt(iSystemTime);
-		}
+	fWorker_Waker->WakeAt(iSystemTime);
 	}
 
 } // namespace ZooLib

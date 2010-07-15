@@ -144,6 +144,7 @@ void sStartWorkerRunner(ZRef<ZWorker> iWorker)
 	{
 	bool result = ZFunctionChain_T<ZRef<ZWorkerRunner>, ZRef<ZWorker> >::sInvoke(iWorker);
 	ZAssert(result);
+	iWorker->Wake();
 	}
 
 } // namespace ZooLib

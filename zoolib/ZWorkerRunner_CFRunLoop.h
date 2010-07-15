@@ -72,13 +72,10 @@ public:
 
 // Our protocol
 	void Add(ZRef<ZWorker> iWorker);
-	void AddWakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
-	void AddWakeIn(ZRef<ZWorker> iWorker, double iInterval);
 
 	static ZRef<ZWorkerRunner_CFRunLoop> sMain();
 
 private:
-	void pAdd(ZRef<ZWorker> iWorker, CFAbsoluteTime iAbsoluteTime);
 	void pTrigger(CFAbsoluteTime iAbsoluteTime);
 
 	void pRunLoopTimerCallBack();

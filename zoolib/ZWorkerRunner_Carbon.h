@@ -44,7 +44,7 @@ public:
 	virtual void pQueueCallback();
 
 // Our protocol
-	static void sStartWorker(ZRef<ZWorker> iWorker);
+	static void sAttach(ZRef<ZWorker> iWorker);
 
 private:
 	static void spCallback(void* iRefcon);
