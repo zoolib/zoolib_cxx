@@ -147,8 +147,8 @@ ZNetListener_Local_Socket::ZNetListener_Local_Socket(int iSocketFD, bool iKnowWh
 
 static int spListen(const string& iPath)
 	{
-	sockaddr_un localSockAddr;
-	ZMemZero_T(localSockAddr);
+	sockaddr_un localSockAddr = {0};
+	localSockAddr.sun_len = sizeof(sockaddr_un);
 
 	if (iPath.empty() || iPath.length() >= sizeof(localSockAddr.sun_path))
 		throw ZNetEx(ZNet::errorGeneric);
@@ -207,8 +207,8 @@ static int spConnect(const string& iPath)
 	if (socketFD < 0)
 		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
 
-	sockaddr_un remoteSockAddr;
-	ZMemZero_T(remoteSockAddr);
+	sockaddr_un remoteSockAddr = {0};
+	remoteSockAddr.sun_len = sizeof(remoteSockAddr);
 	remoteSockAddr.sun_family = AF_LOCAL;
 	strcpy(remoteSockAddr.sun_path, iPath.c_str());
 
