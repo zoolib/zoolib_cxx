@@ -76,14 +76,14 @@ struct ZRectPOD
 
 	bool operator==(const ZRectPOD& other) const
 		{
-		return top == other.top && left == other.left &&
-			bottom == other.bottom && right == other.right;
+		return top == other.top && left == other.left
+			&& bottom == other.bottom && right == other.right;
 		}
 
 	bool operator!=(const ZRectPOD& other) const
 		{
-		return top != other.top || left != other.left ||
-			bottom != other.bottom || right != other.right;
+		return top != other.top || left != other.left 
+			|| bottom != other.bottom || right != other.right;
 		}
 
 	bool Contains(int32 h, int32 v) const

@@ -22,10 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-ZPointPOD sTestXXXXX(int32 iH, int32 iV);
-ZPointPOD sTestXXXXX(int32 iH, int32 iV)
-	{ return sPointPOD(iH, iV); }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZPointPOD
