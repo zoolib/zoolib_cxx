@@ -27,9 +27,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Pick up Apple's config macros if they're available
 #if __MACH__
 #	include <AvailabilityMacros.h>
-#	if defined (AVAILABLE_MAC_OS_X_VERSION_10_0_AND_LATER)
-#		include <TargetConditionals.h>
+#	include <TargetConditionals.h>
+
+#	if TARGET_OS_IPHONE
+#		define ZMACRO_IPhone 1
+#		define ZMACRO_IPhone_Device 1
+#		define ZMACRO_IPhone_Simulator 0
+#	elif TARGET_IPHONE_SIMULATOR
+#		define ZMACRO_IPhone 1
+#		define ZMACRO_IPhone_Device 0
+#		define ZMACRO_IPhone_Simulator 1
 #	endif
+
 #endif
 
 // Although it seems that this formulation should work in this header, as it
@@ -42,7 +51,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark AppleEvent
 #ifndef ZCONFIG_SPI_Avail__AppleEvent
 #	define ZCONFIG_SPI_Avail__AppleEvent \
-	(ZCONFIG_SPI_Avail__Carbon64 && ZCONFIG_SPI_Desired__Carbon64)
+		(ZCONFIG_SPI_Avail__Carbon64 && ZCONFIG_SPI_Desired__Carbon64)
 #endif
 
 #ifndef ZCONFIG_SPI_Desired__AppleEvent
@@ -122,13 +131,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark Carbon
 #ifndef ZCONFIG_SPI_Avail__Carbon
 #	if __MACH__
-#		if ! TARGET_IPHONE_SIMULATOR && ! TARGET_OS_IPHONE && ! __LP64__
+#		if ! ZMACRO_IPhone && ! __LP64__
 #			define ZCONFIG_SPI_Avail__Carbon 1
 #		endif
 #	elif macintosh
-#		if defined(TARGET_API_MAC_CARBON) && TARGET_API_MAC_CARBON
+#		if TARGET_API_MAC_CARBON
 #			define ZCONFIG_SPI_Avail__Carbon 1
-#		elif defined(TARGET_CARBON) && TARGET_CARBON
+#		elif TARGET_CARBON
 #			define ZCONFIG_SPI_Avail__Carbon 1
 #		endif
 #	endif
@@ -150,7 +159,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	if ZCONFIG_SPI_Avail__Carbon
 #		define ZCONFIG_SPI_Avail__Carbon64 1
 #	elif __MACH__
-#		if ! TARGET_IPHONE_SIMULATOR && ! TARGET_OS_IPHONE
+#		if ! ZMACRO_IPhone
 #			define ZCONFIG_SPI_Avail__Carbon64 1
 #		endif
 #	endif
@@ -201,6 +210,44 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_SPI_Desired__Cocoa
 #	define ZCONFIG_SPI_Desired__Cocoa 1
+#endif
+
+
+// =================================================================================================
+#pragma mark CocoaFoundation
+#ifndef ZCONFIG_SPI_Avail__CocoaFoundation
+#	if __MACH__
+#		define ZCONFIG_SPI_Avail__CocoaFoundation 1
+#	elif __COCOTRON__
+#		define ZCONFIG_SPI_Avail__CocoaFoundation 1
+#	endif
+#endif
+
+#ifndef ZCONFIG_SPI_Avail__CocoaFoundation
+#	define ZCONFIG_SPI_Avail__CocoaFoundation 0
+#endif
+
+#ifndef ZCONFIG_SPI_Desired__CocoaFoundation
+#	define ZCONFIG_SPI_Desired__CocoaFoundation 1
+#endif
+
+
+// =================================================================================================
+#pragma mark CocoaAppKit
+#ifndef ZCONFIG_SPI_Avail__CocoaAppKit
+#	if __MACH__
+#		define ZCONFIG_SPI_Avail__CocoaAppKit (!ZMACRO_IPhone)
+#	elif __COCOTRON__
+#		define ZCONFIG_SPI_Avail__CocoaAppKit 1
+#	endif
+#endif
+
+#ifndef ZCONFIG_SPI_Avail__CocoaAppKit
+#	define ZCONFIG_SPI_Avail__CocoaAppKit 0
+#endif
+
+#ifndef ZCONFIG_SPI_Desired__CocoaAppKit
+#	define ZCONFIG_SPI_Desired__CocoaAppKit 1
 #endif
 
 
@@ -271,11 +318,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_SPI_Desired__GDI 1
 #endif
 
-
 // =================================================================================================
 #pragma mark iconv
 #ifndef ZCONFIG_SPI_Avail__iconv
-#	define ZCONFIG_SPI_Avail__iconv (ZCONFIG_SPI_Avail__MacOSX && ZCONFIG_SPI_Desired__MacOSX)
+#	define ZCONFIG_SPI_Avail__iconv \
+		((ZCONFIG_SPI_Avail__MacOSX && ZCONFIG_SPI_Desired__MacOSX) || ZMACRO_IPhone)
 #endif
 
 #ifndef ZCONFIG_SPI_Desired__iconv
@@ -308,7 +355,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark iPhone
 #ifndef ZCONFIG_SPI_Avail__iPhone
-#	if __MACH__ && defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+#	if __MACH__ && defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 #		define ZCONFIG_SPI_Avail__iPhone 1
 #	endif
 #endif
@@ -398,7 +445,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark MacOSX
 #ifndef ZCONFIG_SPI_Avail__MacOSX
-#	if __MACH__
+#	if __MACH__ && ! ZMACRO_IPhone
 #		define ZCONFIG_SPI_Avail__MacOSX 1
 #	endif
 #endif
@@ -461,8 +508,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark QuickDraw
 #ifndef ZCONFIG_SPI_Avail__QuickDraw
 #	define ZCONFIG_SPI_Avail__QuickDraw \
-	((ZCONFIG_SPI_Avail__Carbon && ZCONFIG_SPI_Desired__Carbon) \
-	|| (ZCONFIG_SPI_Avail__MacClassic && ZCONFIG_SPI_Desired__MacClassic))
+		((ZCONFIG_SPI_Avail__Carbon && ZCONFIG_SPI_Desired__Carbon) \
+		|| (ZCONFIG_SPI_Avail__MacClassic && ZCONFIG_SPI_Desired__MacClassic))
 #endif
 
 #ifndef ZCONFIG_SPI_Avail__QuickDraw
