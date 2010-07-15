@@ -68,6 +68,9 @@ ZRef<Expr_Rel_SFW> sConvert(ZRef<Expr_Rel> iExpr);
 void sAsSQL(ZRef<Expr_Rel_SFW> iSFW, const ZStrimW& s);
 string8 sAsSQL(ZRef<Expr_Rel_SFW> iSFW);
 
+void sAsSQL(ZRef<ZExpr_Logic> iExpr, const ZStrimW& s);
+string8 sAsSQL(ZRef<ZExpr_Logic> iExpr);
+
 } // namespace SQL
 } // namespace ZRA
 } // namespace ZooLib

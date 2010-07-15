@@ -86,14 +86,14 @@ Expr_Rel_Concrete_Simple::Expr_Rel_Concrete_Simple(
 ,	fRelHead(iRelHead)
 	{}
 
+RelHead Expr_Rel_Concrete_Simple::GetRelHead()
+	{ return fRelHead; }
+
 ZRef<ConcreteDomain> Expr_Rel_Concrete_Simple::GetConcreteDomain()
 	{ return fConcreteDomain; }
 
 string8 Expr_Rel_Concrete_Simple::GetName()
 	{ return fName; }
-
-RelHead Expr_Rel_Concrete_Simple::GetRelHead()
-	{ return fRelHead; }
 
 // =================================================================================================
 #pragma mark -
@@ -102,6 +102,9 @@ RelHead Expr_Rel_Concrete_Simple::GetRelHead()
 ZRef<Expr_Rel> sConcrete(
 	ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead)
 	{ return new Expr_Rel_Concrete_Simple(iConcreteDomain, iName, iRelHead); }
+
+ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead)
+	{ return new Expr_Rel_Concrete_Simple(null, string8(), iRelHead); }
 
 } // namespace ZRA
 } // namespace ZooLib

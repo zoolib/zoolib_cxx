@@ -525,7 +525,7 @@ void sAsSQL(ZRef<Expr_Rel_SFW> iSFW, const ZStrimW& s)
 		}
 
 		s << " WHERE ";
-		ToStrim_SQL().DoToStrim(ToStrim_SQL::Options(), s, iSFW->GetCondition());
+		sAsSQL(iSFW->GetCondition(), s);
 		s << ";";
 		}
 	}
@@ -534,6 +534,18 @@ string8 sAsSQL(ZRef<Expr_Rel_SFW> iSFW)
 	{
 	string8 result;
 	sAsSQL(iSFW, ZStrimW_String(result));
+	return result;
+	}
+
+void sAsSQL(ZRef<ZExpr_Logic> iExpr, const ZStrimW& s)
+	{
+	ToStrim_SQL().DoToStrim(ToStrim_SQL::Options(), s, iExpr);
+	}
+
+string8 sAsSQL(ZRef<ZExpr_Logic> iExpr)
+	{
+	string8 result;
+	sAsSQL(iExpr, ZStrimW_String(result));
 	return result;
 	}
 

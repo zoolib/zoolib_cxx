@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 #include "zoolib/zra/ZRA_RelHead.h"
-#include "zoolib/zra/ZRA_RelRename.h"
+#include "zoolib/zra/ZRA_NameMap.h"
 
 namespace ZooLib {
 namespace ZRA {
@@ -92,10 +92,12 @@ public:
 	Expr_Rel_Concrete_Simple(
 		ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead);
 
+// From Expr_Rel via Expr_Rel_Concrete
+	virtual RelHead GetRelHead();
+
 // From Expr_Rel_Concrete
 	virtual ZRef<ConcreteDomain> GetConcreteDomain();
 	virtual string8 GetName();
-	virtual RelHead GetRelHead();
 
 private:
 	ZRef<ConcreteDomain> fConcreteDomain;
@@ -105,6 +107,8 @@ private:
 
 ZRef<Expr_Rel> sConcrete(
 	ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead);
+
+ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead);
 
 } // namespace ZRA
 } // namespace ZooLib

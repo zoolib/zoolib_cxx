@@ -37,7 +37,11 @@ namespace ZRA {
 
 typedef ZSet_T<RelName> RelHead;
 
-RelHead sPrefixed(const RelName& iRelName, const RelHead& iRelHead);
+RelName sPrefixAdd(const RelName& iPrefix, const RelName& iRelName);
+RelName sPrefixRemove(const RelName& iPrefix, const RelName& iRelName);
+
+RelHead sPrefixAdd(const RelName& iPrefix, const RelHead& iRelHead);
+RelHead sPrefixRemove(const RelName& iPrefix, const RelHead& iRelHead);
 
 // =================================================================================================
 #pragma mark -

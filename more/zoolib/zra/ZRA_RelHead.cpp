@@ -27,14 +27,36 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * RelHead
 
-RelHead sPrefixed(const RelName& iRelName, const RelHead& iRelHead)
+RelName sPrefixAdd(const RelName& iPrefix, const RelName& iRelName)
+	{ return iPrefix + iRelName; }
+
+RelName sPrefixRemove(const RelName& iPrefix, const RelName& iRelName)
 	{
-	if (iRelName.empty())
+	if (iRelName.substr(0, iPrefix.size()) == iPrefix)
+		return iRelName.substr(iPrefix.size(), RelName::npos);
+	return iRelName;
+	}
+
+RelHead sPrefixAdd(const RelName& iPrefix, const RelHead& iRelHead)
+	{
+	if (iPrefix.empty())
 		return iRelHead;
 
 	RelHead result;
 	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		result.insert(iRelName + *i);
+		result.insert(sPrefixAdd(iPrefix, *i));
+
+	return result;
+	}
+
+RelHead sPrefixRemove(const RelName& iPrefix, const RelHead& iRelHead)
+	{
+	if (iPrefix.empty())
+		return iRelHead;
+
+	RelHead result;
+	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
+		result.insert(sPrefixRemove(iPrefix, *i));
 
 	return result;
 	}
