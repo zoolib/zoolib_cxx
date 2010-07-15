@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_STL_set.h"
 
-#include "zoolib/zra/ZRA_RelRename.h"
+#include "zoolib/zra/ZRA_NameMap.h"
 
 namespace ZooLib {
 namespace ZRA {
@@ -29,76 +29,95 @@ namespace ZRA {
 using std::map;
 using std::set;
 
+const ZStrimW& operator<<(const ZStrimW& w, const NameMap& iNM)
+	{
+	w << "(";
+	bool isSubsequent = false;
+	const set<NameMap::Elem_t>& theElems = iNM.GetElems();
+	for (set<NameMap::Elem_t>::const_iterator i = theElems.begin(); i != theElems.end(); ++i)
+		{
+		if (isSubsequent)
+			w << ", ";
+		isSubsequent = true;
+		w << (*i).first << "<--" << (*i).second;
+		}
+	w << ")";
+	return w;
+	}
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * RelRename
+#pragma mark * NameMap
 
-RelRename::RelRename(set<Elem_t>* ioElems)
+NameMap::NameMap(set<Elem_t>* ioElems)
 	{
 	ioElems->swap(fElems);
 	}
 
-void RelRename::swap(RelRename& iOther)
+void NameMap::swap(NameMap& iOther)
 	{ fElems.swap(iOther.fElems); }
 
-RelRename::RelRename()
+NameMap::NameMap()
 	{}
 
-RelRename::RelRename(const RelRename& iOther)
+NameMap::NameMap(const NameMap& iOther)
 :	fElems(iOther.fElems)
 	{}
 
-RelRename::~RelRename()
+NameMap::~NameMap()
 	{}
 
-RelRename& RelRename::operator=(const RelRename& iOther)
+NameMap& NameMap::operator=(const NameMap& iOther)
 	{
 	fElems = iOther.fElems;
 	return *this;
 	}
 
-RelRename::RelRename(const set<Elem_t>& iElems)
+NameMap::NameMap(const set<Elem_t>& iElems)
 :	fElems(iElems)
 	{}
 
-RelRename::RelRename(const RelHead& iRelHead)
+NameMap::NameMap(const RelHead& iRelHead)
 	{
 	const RelHead::Base_t& theElems = iRelHead.GetElems();
 	for (RelHead::Base_t::const_iterator i = theElems.begin(); i != theElems.end(); ++i)
 		fElems.insert(std::make_pair(*i, *i));
 	}
 
-RelRename RelRename::Inverted() const
+NameMap NameMap::Inverted() const
 	{
 	set<Elem_t> result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)
 		result.insert(Elem_t((*i).second, (*i).first));
-	return RelRename(&result);
+	return NameMap(&result);
 	}
 
-bool RelRename::operator==(const RelRename& iOther) const
+bool NameMap::operator==(const NameMap& iOther) const
 	{ return fElems == iOther.fElems; }
 
-bool RelRename::operator!=(const RelRename& iOther) const
+bool NameMap::operator!=(const NameMap& iOther) const
 	{ return fElems != iOther.fElems; }
 
-bool RelRename::operator<(const RelRename& iOther) const
+bool NameMap::operator<(const NameMap& iOther) const
 	{ return fElems < iOther.fElems; }
 
-RelRename& RelRename::operator|=(const RelRename& iOther)
+NameMap& NameMap::operator|=(const NameMap& iOther)
 	{
 	*this = *this | iOther;
 	return *this;
 	}
 
-RelRename RelRename::operator|(const RelRename& iOther) const
+NameMap NameMap::operator|(const NameMap& iOther) const
 	{
 	set<Elem_t> result;
 	ZUtil_STL_set::sOr(fElems, iOther.fElems, result);
-	return RelRename(&result);
+	return NameMap(&result);
 	}
 
-void RelRename::ApplyToFrom(const RelHead::key_type& iNameTo, const RelHead::key_type& iNameFrom)
+void NameMap::InsertToFrom(const RelName& iNameTo, const RelName& iNameFrom)
+	{ fElems.insert(Elem_t(iNameTo, iNameFrom)); }
+
+void NameMap::ApplyToFrom(const RelHead::key_type& iNameTo, const RelHead::key_type& iNameFrom)
 	{
 	set<Elem_t> result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)
@@ -115,10 +134,10 @@ void RelRename::ApplyToFrom(const RelHead::key_type& iNameTo, const RelHead::key
 	fElems.swap(result);
 	}
 
-const set<RelRename::Elem_t>& RelRename::GetElems() const
+const set<NameMap::Elem_t>& NameMap::GetElems() const
 	{ return fElems; }
 
-RelHead RelRename::GetRelHead_To() const
+RelHead NameMap::GetRelHead_To() const
 	{
 	RelHead result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)
@@ -126,7 +145,7 @@ RelHead RelRename::GetRelHead_To() const
 	return result;
 	}
 
-RelHead RelRename::GetRelHead_From() const
+RelHead NameMap::GetRelHead_From() const
 	{
 	RelHead result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)
@@ -134,7 +153,7 @@ RelHead RelRename::GetRelHead_From() const
 	return result;
 	}
 
-map<RelHead::key_type, RelHead::key_type> RelRename::GetRename() const
+map<RelHead::key_type, RelHead::key_type> NameMap::GetRename() const
 	{
 	map<RelHead::key_type, RelHead::key_type> result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)

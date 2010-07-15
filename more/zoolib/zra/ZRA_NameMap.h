@@ -18,10 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_RelRename__
-#define __ZRA_RelRename__ 1
+#ifndef __ZRA_NameMap__
+#define __ZRA_NameMap__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZStrim.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/zra/ZRA_RelHead.h"
 
@@ -33,35 +34,36 @@ namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * RelRename
+#pragma mark * NameMap
 
-class RelRename
+class NameMap
 	{
 public:
 	typedef std::pair<RelName, RelName> Elem_t;
 
-	RelRename(std::set<Elem_t>* ioElems);
+	NameMap(std::set<Elem_t>* ioElems);
 
-	void swap(RelRename& iOther);
+	void swap(NameMap& iOther);
 
-	RelRename();
-	RelRename(const RelRename& iOther);
-	~RelRename();
-	RelRename& operator=(const RelRename& iOther);
+	NameMap();
+	NameMap(const NameMap& iOther);
+	~NameMap();
+	NameMap& operator=(const NameMap& iOther);
 
-	RelRename(const std::set<Elem_t>& iElems);
+	NameMap(const std::set<Elem_t>& iElems);
 
-	RelRename(const RelHead& iRelHead);
+	NameMap(const RelHead& iRelHead);
 
-	RelRename Inverted() const;
+	NameMap Inverted() const;
 
-	bool operator==(const RelRename& iOther) const;
-	bool operator!=(const RelRename& iOther) const;
-	bool operator<(const RelRename& iOther) const;
+	bool operator==(const NameMap& iOther) const;
+	bool operator!=(const NameMap& iOther) const;
+	bool operator<(const NameMap& iOther) const;
 
-	RelRename& operator|=(const RelRename& iOther);
-	RelRename operator|(const RelRename& iOther) const;
+	NameMap& operator|=(const NameMap& iOther);
+	NameMap operator|(const NameMap& iOther) const;
 
+	void InsertToFrom(const RelName& iNameTo, const RelName& iNameFrom);
 	void ApplyToFrom(const RelName& iNameTo, const RelName& iNameFrom);
 
 	const std::set<Elem_t>& GetElems() const;
@@ -75,6 +77,8 @@ private:
 	std::set<Elem_t> fElems;
 	};
 
+const ZStrimW& operator<<(const ZStrimW& w, const NameMap& iNM);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Rename_t
@@ -83,8 +87,8 @@ private:
 } // namespace ZooLib
 
 namespace std {
-inline void swap(ZooLib::ZRA::RelRename& a, ZooLib::ZRA::RelRename& b)
+inline void swap(ZooLib::ZRA::NameMap& a, ZooLib::ZRA::NameMap& b)
 	{ a.swap(b); }
 }
 
-#endif // __ZRA_RelRename__
+#endif // __ZRA_NameMap__
