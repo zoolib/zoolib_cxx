@@ -47,7 +47,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <X11/Xutil.h>
 #endif
 
-#if ZCONFIG_SPI_Enabled(Cocoa)
+#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
 #	if defined(__OBJC__)
 #		import <Foundation/NSGeometry.h>
 #	else
@@ -95,7 +95,7 @@ public:
 		operator CGPoint() const;
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
 		ZGPointPOD_T& operator=(const NSPoint& pt);
 		operator NSPoint() const;
 	#endif
@@ -163,7 +163,7 @@ public:
 		ZGPoint_T(const CGPoint& other);
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
 		ZGPoint_T(const NSPoint& other);
 	#endif
 
@@ -237,7 +237,7 @@ public:
 		operator CGSize() const;
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
 		ZGExtentPOD_T& operator=(const NSSize& pt);
 		operator NSSize() const;
 	#endif
@@ -305,7 +305,7 @@ public:
 		ZGExtent_T(const CGSize& other);
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
 		ZGExtent_T(const NSSize& size);
 	#endif
 
@@ -394,7 +394,7 @@ public:
 		operator CGRect() const;
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
 		ZGRectPOD_T& operator=(const NSRect& rect);
 		operator NSRect() const;
 	#endif
@@ -696,7 +696,7 @@ public:
 		ZGRect_T(const CGRect& iRect);
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
 		ZGRect_T(const NSSize& iSize);
 		ZGRect_T(const NSRect& iRect);
 	#endif
@@ -1046,7 +1046,7 @@ ZGRect_T<T>::ZGRect_T(const CGRect& iRect)
 #pragma mark -
 #pragma mark * Cocoa
 
-#if ZCONFIG_SPI_Enabled(Cocoa)
+#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
 template <class T>
 inline
 ZGPointPOD_T<T>& ZGPointPOD_T<T>::operator=(const NSPoint& pt)
