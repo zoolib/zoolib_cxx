@@ -42,14 +42,11 @@ using std::max;
 #pragma mark -
 #pragma mark * Identity
 
-const ZRef<Identity> Identity::spZero = new Identity;
-const ZRef<Identity> Identity::spOne = new Identity;
+static const ZRef<Identity> spZero = new Identity;
+static const ZRef<Identity> spOne = new Identity;
 
-const ZRef<Identity> Identity::spZeroOne = new Identity(spZero, spOne);
-const ZRef<Identity> Identity::spOneZero = new Identity(spOne, spZero);
-
-Identity::Identity()
-	{}
+static const ZRef<Identity> spZeroOne = new Identity(spZero, spOne);
+static const ZRef<Identity> spOneZero = new Identity(spOne, spZero);
 
 ZRef<Identity> Identity::sZero()
 	{ return spZero; }
@@ -57,13 +54,20 @@ ZRef<Identity> Identity::sZero()
 ZRef<Identity> Identity::sOne()
 	{ return spOne; }
 
-Identity::Identity(const ZRef<Identity>& iLeft, const ZRef<Identity>& iRight)
-:	fLeft(iLeft)
-,	fRight(iRight)
-	{ ZAssert(fLeft && fRight); }
+Identity::Identity()
+	{}
 
 Identity::~Identity()
 	{}
+
+Identity::Identity(const ZRef<Identity>& iLeft, const ZRef<Identity>& iRight)
+:	fLeft(iLeft)
+,	fRight(iRight)
+	{
+	ZAssert(fLeft && fRight);
+	ZAssert(!(fLeft->IsZero() && fRight->IsZero()));
+	ZAssert(!(fLeft->IsOne() && fRight->IsOne()));
+	}
 
 bool Identity::IsLeaf()
 	{ return !fLeft; }
@@ -99,6 +103,7 @@ void Identity::Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight)
 		{
 		ZRef<Identity> newLeft, newRight;
 		fLeft->Split(newLeft, newRight);
+
 		oLeft = new Identity(newLeft, spZero);
 		oRight = new Identity(newRight, spZero);
 		}
@@ -106,6 +111,7 @@ void Identity::Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight)
 		{
 		ZRef<Identity> newLeft, newRight;
 		fRight->Split(newLeft, newRight);
+
 		oLeft = new Identity(spZero, newLeft);
 		oRight = new Identity(spZero, newRight);
 		}
@@ -126,15 +132,20 @@ ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther)
 		{
 		return this;
 		}
+	else if (this->IsOne() || iOther->IsOne())
+		{
+		return this; // or we could return iOther.
+		}
 	else
 		{
-		// This assert looks dangerous -- what if we're adding 1 to {l,r} or vice versa?
-		assert(this->IsInternal() && iOther->IsInternal());
+		ZAssert(this->IsInternal() && iOther->IsInternal());
 		ZRef<Identity> newLeft = fLeft->Summed(iOther->fLeft);
 		ZRef<Identity> newRight = fRight->Summed(iOther->fRight);
+
 		if (newLeft->IsZero() && newRight->IsZero() || newLeft->IsOne() && newRight->IsOne())
-			return newLeft; // or equivalently newRight
-		return new Identity(newLeft, newRight);
+			return newLeft; // or equivalently newRight.
+
+		return new Identity(newLeft, newRight);		
 		}
 	}
 
@@ -142,10 +153,17 @@ ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther)
 #pragma mark -
 #pragma mark * Event
 
-const ZRef<Event> Event::spZero = new Event(0);
+const ZRef<Event> spEventZero = new Event;
 
 ZRef<Event> Event::sZero()
-	{ return spZero; }
+	{ return spEventZero; }
+
+Event::Event()
+:	fValue(0)
+	{}
+
+Event::~Event()
+	{}
 
 Event::Event(size_t iValue)
 :	fValue(iValue)
@@ -161,14 +179,11 @@ Event::Event(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
 
 Event::Event(bool iWithZeroChildren, size_t iValue)
 :	fValue(iValue)
-,	fLeft(spZero)
-,	fRight(spZero)
+,	fLeft(spEventZero)
+,	fRight(spEventZero)
 	{
 	ZAssert(iWithZeroChildren);
 	}
-
-Event::~Event()
-	{}
 
 size_t Event::Value()
 	{ return fValue; }
@@ -223,7 +238,7 @@ bool Event::LessEqual(const ZRef<Event>& iOther)
 		ZRef<Event> thisLiftedLeft = fLeft->pLifted(fValue);
 		if (thisLiftedLeft->LessEqual(iOther))
 			{
-			ZRef<Event> thisLiftedRight = iOther->fLeft->pLifted(iOther->fValue);
+			ZRef<Event> thisLiftedRight = fRight->pLifted(fValue);
 			return thisLiftedRight->LessEqual(iOther);
 			}
 		}
@@ -325,14 +340,14 @@ ZRef<Event> Event::Filled(const ZRef<Identity>& iIdentity)
 		}		
 	}
 
-ZRef<Event> Event::Grown(ZRef<Identity> iIdentity)
+ZRef<Event> Event::Grown(const ZRef<Identity>& iIdentity)
 	{
 	ZRef<Event> result;
 	this->pGrown(iIdentity, result);
 	return result;
 	}
 
-size_t Event::pGrown(ZRef<Identity> iIdentity, ZRef<Event>& oEvent)
+size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent)
 	{
 	if (this->IsLeaf())
 		{
@@ -430,6 +445,11 @@ ZRef<Stamp> Stamp::sSeed()
 Stamp::Stamp(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent)
 :	fIdentity(iIdentity)
 ,	fEvent(iEvent)
+	{
+	ZAssert(fIdentity && fEvent);
+	}
+
+Stamp::~Stamp()
 	{}
 
 ZRef<Stamp> Stamp::Evented()

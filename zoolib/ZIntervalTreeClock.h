@@ -34,16 +34,14 @@ namespace ZIntervalTreeClock {
 class Identity
 :	public ZCountedWithoutFinalize
 	{
-private:
-	Identity();
-
 public:
 	static ZRef<Identity> sZero();
 	static ZRef<Identity> sOne();
 
-	Identity(const ZRef<Identity>& iLeft, const ZRef<Identity>& iRight);
-
+	Identity();
 	virtual ~Identity();
+
+	Identity(const ZRef<Identity>& iLeft, const ZRef<Identity>& iRight);
 
 	bool IsLeaf();
 	bool IsOne();
@@ -60,12 +58,6 @@ public:
 private:
 	const ZRef<Identity> fLeft;
 	const ZRef<Identity> fRight;
-
-	static const ZRef<Identity> spZero;
-	static const ZRef<Identity> spOne;
-
-	static const ZRef<Identity> spZeroOne;
-	static const ZRef<Identity> spOneZero;
 	};
 
 // =================================================================================================
@@ -75,17 +67,15 @@ private:
 class Event
 :	public ZCountedWithoutFinalize
 	{
-private:
-	Event(); // Not implemented
-
 public:
 	static ZRef<Event> sZero();
+
+	Event();
+	virtual ~Event();
 
 	Event(size_t iValue);
 	Event(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
 	Event(bool iWithZeroChildren, size_t iValue);
-
-	virtual ~Event();
 
 	size_t Value();
 
@@ -105,10 +95,10 @@ public:
 
 	ZRef<Event> Joined(const ZRef<Event>& iOther);
 	ZRef<Event> Filled(const ZRef<Identity>& iIdentity);
-	ZRef<Event> Grown(ZRef<Identity> iIdentity);
+	ZRef<Event> Grown(const ZRef<Identity>& iIdentity);
 
 private:
-	size_t pGrown(ZRef<Identity> iIdentity, ZRef<Event>& oEvent);
+	size_t pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent);
 	ZRef<Event> pDropped(size_t d);
 	ZRef<Event> pLifted(size_t d);
 	ZRef<Event> pNormalized();
@@ -117,8 +107,6 @@ private:
 	const ZRef<Event> fLeft;
 	const ZRef<Event> fRight;
 	const size_t fValue;
-
-	static const ZRef<Event> spZero;
 	};
 
 // =================================================================================================
@@ -130,7 +118,9 @@ class Stamp
 	{
 public:
 	static ZRef<Stamp> sSeed();
+
 	Stamp(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent);
+	virtual ~Stamp();
 
 	ZRef<Stamp> Evented();
 	void Forked(ZRef<Stamp>& oLeft, ZRef<Stamp>& oRight);
