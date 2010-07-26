@@ -183,7 +183,7 @@ public:
 template <class T>
 inline
 ZGPoint_T<T>::ZGPoint_T()
-	{}
+	{ this->x = 0; this->y = 0; }
 
 template <class T>
 inline
@@ -325,40 +325,28 @@ public:
 template <class T>
 inline
 ZGExtent_T<T>::ZGExtent_T()
-	{}
+	{ this->h = 0; this->v = 0; }
 
 template <class T>
 inline
 ZGExtent_T<T>::ZGExtent_T(T iVal)
-	{
-	this->h = iVal;
-	this->v = iVal;
-	}
+	{ this->h = iVal; this->v = iVal; }
 
 template <class T>
 inline
 ZGExtent_T<T>::ZGExtent_T(T iH, T iV)
-	{
-	this->h = iH;
-	this->v = iV;
-	}
+	{ this->h = iH; this->v = iV; }
 
 template <class T>
 template <class S>
 inline
 ZGExtent_T<T>::ZGExtent_T(const ZGExtentPOD_T<S>& other)
-	{
-	this->h = T(other.h);
-	this->v = T(other.v);
-	}
+	{ this->h = T(other.h); this->v = T(other.v); }
 
 template <class T>
 inline
 ZGExtent_T<T>::ZGExtent_T(const ZPointPOD& iPoint)
-	{
-	this->h = T(iPoint.h);
-	this->v = T(iPoint.v);
-	}
+	{ this->h = T(iPoint.h); this->v = T(iPoint.v); }
 
 // =================================================================================================
 #pragma mark -
@@ -967,6 +955,7 @@ ZGRectPOD_T<T>& operator|=(ZGRectPOD_T<T>& l, const ZGRectPOD_T<U>& r)
 #pragma mark * CoreGraphics
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
+
 template <class T>
 inline
 ZGPointPOD_T<T>& ZGPointPOD_T<T>::operator=(const CGPoint& pt)
@@ -1040,13 +1029,15 @@ ZGRect_T<T>::ZGRect_T(const CGRect& iRect)
 	this->origin = iRect.origin;
 	this->extent = iRect.size;
 	}
-#endif
+
+#endif // ZCONFIG_SPI_Enabled(CoreGraphics)
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Cocoa
 
 #if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
+
 template <class T>
 inline
 ZGPointPOD_T<T>& ZGPointPOD_T<T>::operator=(const NSPoint& pt)
@@ -1119,18 +1110,21 @@ ZGRect_T<T>::ZGRect_T(const NSSize& iSize)
 	}
 
 template <class T>
-inline ZGRect_T<T>::ZGRect_T(const NSRect& iRect)
+inline
+ZGRect_T<T>::ZGRect_T(const NSRect& iRect)
 	{
 	this->origin = iRect.origin;
 	this->extent = iRect.size;
 	}
-#endif
+
+#endif // ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * QuickDraw
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
+
 template <class T>
 inline
 ZGPointPOD_T<T>& ZGPointPOD_T<T>::operator=(const Point& pt)
@@ -1207,13 +1201,15 @@ ZGRect_T<T>::ZGRect_T(const Rect& iRect)
 	this->extent.h = T(iRect.right - iRect.left);
 	this->extent.v = T(iRect.bottom - iRect.top);
 	}
-#endif
+
+#endif // ZCONFIG_SPI_Enabled(QuickDraw)
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * GDI
 
 #if ZCONFIG_SPI_Enabled(GDI)
+
 template <class T>
 inline
 ZGPointPOD_T<T>& ZGPointPOD_T<T>::operator=(const POINT& pt)
@@ -1290,13 +1286,15 @@ ZGRect_T<T>::ZGRect_T(const RECT& iRect)
 	this->extent.h = T(iRect.right - iRect.left);
 	this->extent.v = T(iRect.bottom - iRect.top);
 	}
-#endif
+
+#endif // ZCONFIG_SPI_Enabled(GDI)
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * X11
 
 #if ZCONFIG_SPI_Enabled(X11)
+
 template <class T>
 inline
 ZGPointPOD_T<T>& ZGPointPOD_T<T>::operator=(const XPoint& pt)
@@ -1307,7 +1305,8 @@ ZGPointPOD_T<T>& ZGPointPOD_T<T>::operator=(const XPoint& pt)
 	}
 
 template <class T>
-inline ZPointPOD_T<T>::operator XPoint() const
+inline
+ZPointPOD_T<T>::operator XPoint() const
 	{
 	XPoint theXPoint;
 	theXPoint.x = short(x);
@@ -1316,7 +1315,8 @@ inline ZPointPOD_T<T>::operator XPoint() const
 	}
 
 template <class T>
-inline ZGPoint_T<T>::ZGPoint_T(const XPoint& pt)
+inline
+ZGPoint_T<T>::ZGPoint_T(const XPoint& pt)
 :	x(T(pt.x)),
 	y(T(pt.y))
 	{
@@ -1334,7 +1334,8 @@ ZGExtentPOD_T<T>& ZGExtentPOD_T<T>::operator=(const XPoint& pt)
 	}
 
 template <class T>
-inline ZGExtentPOD_T<T>::operator XPoint() const
+inline
+ZGExtentPOD_T<T>::operator XPoint() const
 	{
 	XPoint theXPoint;
 	theXPoint.x = short(h);
@@ -1343,7 +1344,8 @@ inline ZGExtentPOD_T<T>::operator XPoint() const
 	}
 
 template <class T>
-inline ZGExtent_T<T>::ZGExtent_T(const XPoint& pt)
+inline
+ZGExtent_T<T>::ZGExtent_T(const XPoint& pt)
 	{
 	this->h = T(pt.x);
 	this->v = T(pt.y);
@@ -1361,7 +1363,8 @@ ZGRectPOD_T<T>& ZGRectPOD_T<T>::operator=(const XRectangle& rect)
 	}
 
 template <class T>
-inline ZGRectPOD_T<T>::operator XRectangle() const
+inline
+ZGRectPOD_T<T>::operator XRectangle() const
 	{
 	XRectangle theXRectangle;
 
@@ -1391,7 +1394,8 @@ inline ZGRectPOD_T<T>::operator XRectangle() const
 	}
 
 template <class T>
-inline ZGRect_T<T>::ZGRect_T(const XRectangle& iRect)
+inline
+ZGRect_T<T>::ZGRect_T(const XRectangle& iRect)
 :	origin(iRect.x, iRect.y),
 	extent(iRect.width, iRect.height)
 	{
@@ -1400,7 +1404,8 @@ inline ZGRect_T<T>::ZGRect_T(const XRectangle& iRect)
 	this->extent.x = T(iRect.width);
 	this->extent.y = T(iRect.height);
 	}
-#endif
+
+#endif // ZCONFIG_SPI_Enabled(X11)
 
 // =================================================================================================
 #pragma mark -
