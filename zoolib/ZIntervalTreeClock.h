@@ -77,6 +77,7 @@ public:
 	Event(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
 	Event(bool iWithZeroChildren, size_t iValue);
 
+// Accessors, mainly for text and binary streaming.
 	size_t Value();
 
 	bool IsLeaf();
@@ -85,6 +86,7 @@ public:
 	ZRef<Event> Left();
 	ZRef<Event> Right();
 
+// Comparison
 	bool Equals(const ZRef<Event>& iOther);
 	bool LessEqual(const ZRef<Event>& iOther);
 
@@ -93,12 +95,14 @@ public:
 	bool IsConcurrent(const ZRef<Event>& iOther);
 	bool IsSame(const ZRef<Event>& iOther);
 
+// Fundamental operations
+	ZRef<Event> Evented(const ZRef<Identity>& iIdentity);
 	ZRef<Event> Joined(const ZRef<Event>& iOther);
-	ZRef<Event> Filled(const ZRef<Identity>& iIdentity);
-	ZRef<Event> Grown(const ZRef<Identity>& iIdentity);
 
 private:
 	size_t pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent);
+
+	ZRef<Event> pFilled(const ZRef<Identity>& iIdentity);
 	ZRef<Event> pDropped(size_t d);
 	ZRef<Event> pLifted(size_t d);
 	ZRef<Event> pNormalized();
@@ -111,6 +115,13 @@ private:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Event mutating operations
+
+void sEvent(ZRef<Event>& ioEvent, const ZRef<Identity>& iIdentity);
+void sJoin(ZRef<Event>& ioEvent, const ZRef<Event>& iOther);
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Stamp
 
 class Stamp
@@ -120,15 +131,15 @@ public:
 	static ZRef<Stamp> sSeed();
 
 	Stamp(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent);
+	Stamp(const ZRef<Stamp>& iStamp, const ZRef<Event>& iEvent);
+	Stamp(const ZRef<Identity>& iIdentity, const ZRef<Stamp>& iStamp);
 	virtual ~Stamp();
 
-	ZRef<Stamp> Evented();
-	void Forked(ZRef<Stamp>& oLeft, ZRef<Stamp>& oRight);
-	ZRef<Stamp> Joined(const ZRef<Stamp>& iOther);
-
+// Accessors, mainly for text and binary streaming.
 	ZRef<Identity> GetIdentity();
 	ZRef<Event> GetEvent();
-	
+
+// Comparison
 	bool LessEqual(const ZRef<Stamp>& iOther);
 
 	bool IsBefore(const ZRef<Stamp>& iOther);
@@ -136,12 +147,29 @@ public:
 	bool IsConcurrent(const ZRef<Stamp>& iOther);
 	bool IsSame(const ZRef<Stamp>& iOther);
 
+// Higher level operations
+	ZRef<Stamp> Sent();
+	ZRef<Stamp> Received(const ZRef<Event>& iEvent);
+
+// Fundamental operations
+	ZRef<Stamp> Evented();
+	ZRef<Stamp> Joined(const ZRef<Stamp>& iOther);
+	void Forked(ZRef<Stamp>& oLeft, ZRef<Stamp>& oRight);
+	
 private:
 	const ZRef<Identity> fIdentity;
 	const ZRef<Event> fEvent;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Stamp mutating operations
+
+void sSend(ZRef<Stamp>& ioStamp);
+void sReceive(ZRef<Stamp>& ioStamp, const ZRef<Event>& iEventReceived);
+
 void sEvent(ZRef<Stamp>& ioStamp);
+void sJoin(ZRef<Stamp>& ioStamp, const ZRef<Stamp>& iOther);
 ZRef<Stamp> sFork(ZRef<Stamp>& ioStamp);
 
 } // namespace ZIntervalTreeClock

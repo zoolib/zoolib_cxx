@@ -73,10 +73,10 @@ bool Identity::IsLeaf()
 	{ return !fLeft; }
 
 bool Identity::IsOne()
-	{ return !fLeft && spZero != this; }
+	{ return spZero != this && !fLeft; }
 
 bool Identity::IsZero()
-	{ return !fLeft && spZero == this; }
+	{ return spZero == this; }
 
 bool Identity::IsInternal()
 	{ return fLeft; }
@@ -134,7 +134,8 @@ ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther)
 		}
 	else if (this->IsOne() || iOther->IsOne())
 		{
-		return this; // or we could return iOther.
+		// This case is not covered in the ITC paper, but seems reasonable to me.
+		return this;
 		}
 	else
 		{
@@ -200,6 +201,7 @@ ZRef<Event> Event::Left()
 ZRef<Event> Event::Right()
 	{ return fRight; }
 
+
 bool Event::Equals(const ZRef<Event>& iOther)
 	{
 	if (iOther == this)
@@ -257,6 +259,14 @@ bool Event::IsConcurrent(const ZRef<Event>& iOther)
 bool Event::IsSame(const ZRef<Event>& iOther)
 	{ return this->LessEqual(iOther) && iOther->LessEqual(this); }
 
+ZRef<Event> Event::Evented(const ZRef<Identity>& iIdentity)
+	{
+	ZRef<Event> newEvent = this->pFilled(iIdentity);
+	if (newEvent->Equals(this))
+		newEvent->pGrown(iIdentity, newEvent);
+	return newEvent;
+	}
+
 ZRef<Event> Event::Joined(const ZRef<Event>& iOther)
 	{
 	if (this->IsLeaf())
@@ -296,55 +306,6 @@ ZRef<Event> Event::Joined(const ZRef<Event>& iOther)
 			return result->pNormalized();
 			}
 		}
-	}
-
-ZRef<Event> Event::Filled(const ZRef<Identity>& iIdentity)
-	{
-	if (iIdentity->IsZero())
-		{
-		return this;
-		}
-	else if (iIdentity->IsOne())
-		{
-		return new Event(this->pHeight());
-		}
-	else if (this->IsLeaf())
-		{
-		return this;
-		}
-	else
-		{
-		assert(iIdentity->IsInternal());
-		const ZRef<Identity> identityLeft = iIdentity->Left();
-		const ZRef<Identity> identityRight = iIdentity->Right();
-		if (identityLeft->IsOne())
-			{
-			ZRef<Event> newRight = fRight->Filled(identityRight);
-			ZRef<Event> newLeft = new Event(max(fLeft->pHeight(), newRight->pHeight()));
-			ZRef<Event> result = new Event(fValue, newLeft, newRight);
-			return result->pNormalized();
-			}
-		else if (identityRight->IsOne())
-			{
-			ZRef<Event> newLeft = fLeft->Filled(identityLeft);
-			ZRef<Event> newRight = new Event(max(newLeft->pHeight(), fRight->pHeight()));
-			ZRef<Event> result = new Event(fValue, newLeft, newRight);
-			return result->pNormalized();
-			}
-		else
-			{
-			ZRef<Event> result =
-				new Event(fValue, fLeft->Filled(identityLeft), fRight->Filled(identityRight));
-			return result->pNormalized();
-			}
-		}		
-	}
-
-ZRef<Event> Event::Grown(const ZRef<Identity>& iIdentity)
-	{
-	ZRef<Event> result;
-	this->pGrown(iIdentity, result);
-	return result;
 	}
 
 size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent)
@@ -403,6 +364,48 @@ size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent)
 		}		
 	}
 
+ZRef<Event> Event::pFilled(const ZRef<Identity>& iIdentity)
+	{
+	if (iIdentity->IsZero())
+		{
+		return this;
+		}
+	else if (iIdentity->IsOne())
+		{
+		return new Event(this->pHeight());
+		}
+	else if (this->IsLeaf())
+		{
+		return this;
+		}
+	else
+		{
+		assert(iIdentity->IsInternal());
+		const ZRef<Identity> identityLeft = iIdentity->Left();
+		const ZRef<Identity> identityRight = iIdentity->Right();
+		if (identityLeft->IsOne())
+			{
+			ZRef<Event> newRight = fRight->pFilled(identityRight);
+			ZRef<Event> newLeft = new Event(max(fLeft->pHeight(), newRight->pHeight()));
+			ZRef<Event> result = new Event(fValue, newLeft, newRight);
+			return result->pNormalized();
+			}
+		else if (identityRight->IsOne())
+			{
+			ZRef<Event> newLeft = fLeft->pFilled(identityLeft);
+			ZRef<Event> newRight = new Event(max(newLeft->pHeight(), fRight->pHeight()));
+			ZRef<Event> result = new Event(fValue, newLeft, newRight);
+			return result->pNormalized();
+			}
+		else
+			{
+			ZRef<Event> result =
+				new Event(fValue, fLeft->pFilled(identityLeft), fRight->pFilled(identityRight));
+			return result->pNormalized();
+			}
+		}		
+	}
+
 ZRef<Event> Event::pDropped(size_t d)
 	{
 	ZAssert(fValue >= d);
@@ -437,6 +440,16 @@ size_t Event::pHeight()
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Event mutating operations
+
+void sEvent(ZRef<Event>& ioEvent, const ZRef<Identity>& iIdentity)
+	{ ioEvent = ioEvent->Evented(iIdentity); }
+
+void sJoin(ZRef<Event>& ioEvent, const ZRef<Event>& iOther)
+	{ ioEvent = ioEvent->Joined(iOther); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Stamp
 
 ZRef<Stamp> Stamp::sSeed()
@@ -449,31 +462,18 @@ Stamp::Stamp(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent)
 	ZAssert(fIdentity && fEvent);
 	}
 
-Stamp::~Stamp()
+Stamp::Stamp(const ZRef<Stamp>& iStamp, const ZRef<Event>& iEvent)
+:	fIdentity(iStamp->fIdentity)
+,	fEvent(iEvent)
 	{}
 
-ZRef<Stamp> Stamp::Evented()
-	{
-	ZRef<Event> newEvent = fEvent->Filled(fIdentity);
-	if (newEvent->Equals(fEvent))
-		newEvent = newEvent->Grown(fIdentity);
-	return new Stamp(fIdentity, newEvent);
-	}
+Stamp::Stamp(const ZRef<Identity>& iIdentity, const ZRef<Stamp>& iStamp)
+:	fIdentity(iIdentity)
+,	fEvent(iStamp->fEvent)
+	{}
 
-void Stamp::Forked(ZRef<Stamp>& oLeft, ZRef<Stamp>& oRight)
-	{
-	ZRef<Identity> newLeft, newRight;
-	fIdentity->Split(newLeft, newRight);
-	oLeft = new Stamp(newLeft, fEvent);
-	oRight = new Stamp(newRight, fEvent);
-	}
-
-ZRef<Stamp> Stamp::Joined(const ZRef<Stamp>& iOther)
-	{
-	ZRef<Identity> newIdentity = fIdentity->Summed(iOther->fIdentity);
-	ZRef<Event> newEvent = fEvent->Joined(iOther->fEvent);
-	return new Stamp(newIdentity, newEvent);
-	}
+Stamp::~Stamp()
+	{}
 
 ZRef<Identity> Stamp::GetIdentity()
 	{ return fIdentity; }
@@ -496,8 +496,45 @@ bool Stamp::IsConcurrent(const ZRef<Stamp>& iOther)
 bool Stamp::IsSame(const ZRef<Stamp>& iOther)
 	{ return fEvent->IsSame(iOther->fEvent); }
 
+ZRef<Stamp> Stamp::Sent()
+	{ return new Stamp(fIdentity, fEvent->Evented(fIdentity)); }
+
+ZRef<Stamp> Stamp::Received(const ZRef<Event>& iEvent)
+	{ return new Stamp(fIdentity, fEvent->Joined(iEvent)->Evented(fIdentity)); }
+
+ZRef<Stamp> Stamp::Evented()
+	{ return new Stamp(fIdentity, fEvent->Evented(fIdentity)); }
+
+ZRef<Stamp> Stamp::Joined(const ZRef<Stamp>& iOther)
+	{
+	ZRef<Identity> newIdentity = fIdentity->Summed(iOther->fIdentity);
+	ZRef<Event> newEvent = fEvent->Joined(iOther->fEvent);
+	return new Stamp(newIdentity, newEvent);
+	}
+
+void Stamp::Forked(ZRef<Stamp>& oLeft, ZRef<Stamp>& oRight)
+	{
+	ZRef<Identity> newLeft, newRight;
+	fIdentity->Split(newLeft, newRight);
+	oLeft = new Stamp(newLeft, fEvent);
+	oRight = new Stamp(newRight, fEvent);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Stamp mutating operations
+
+void sSend(ZRef<Stamp>& ioStamp)
+	{ ioStamp = ioStamp->Sent(); }
+
+void sReceive(ZRef<Stamp>& ioStamp, const ZRef<Event>& iEventReceived)
+	{ ioStamp = ioStamp->Received(iEventReceived); }
+
 void sEvent(ZRef<Stamp>& ioStamp)
 	{ ioStamp = ioStamp->Evented(); }
+
+void sJoin(ZRef<Stamp>& ioStamp, const ZRef<Stamp>& iOther)
+	{ ioStamp = ioStamp->Joined(iOther); }
 
 ZRef<Stamp> sFork(ZRef<Stamp>& ioStamp)
 	{
