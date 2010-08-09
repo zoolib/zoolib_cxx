@@ -32,7 +32,7 @@ namespace ZooLib {
 #pragma mark * ZWorker_Callable_T0
 
 class ZWorker_Callable_T0
-:	public virtual ZWorker
+:	public ZWorker
 	{
 public:
 	typedef ZCallable_R1<bool, ZRef<ZWorker> > Callable_t;
@@ -62,33 +62,33 @@ inline ZRef<ZWorker> MakeWorker(
 
 template <class P0>
 class ZWorker_Callable_T1
-:	public virtual ZWorker
+:	public ZWorker
 	{
 public:
 	typedef ZCallable_R2<bool, ZRef<ZWorker>, const P0&> Callable_t;
 
-	ZWorker_Callable_T1(ZRef<Callable_t> iCallable, const P0& iP0)
+	ZWorker_Callable_T1(ZRef<Callable_t> iCallable, const P0& i0)
 	:	fCallable(iCallable)
-	,	fP0(iP0)
+	,	f0(i0)
 		{}
 
 	virtual bool Work()
 		{
 		if (ZRef<Callable_t> theCallable = fCallable)
-			return fCallable->Invoke(this, fP0);
+			return fCallable->Invoke(this, f0);
 		return false;
 		}
 
 private:
 	ZRef<Callable_t> fCallable;
-	const P0 fP0;
+	const P0 f0;
 	};
 
 template <class P0>
 ZRef<ZWorker> MakeWorker(
 	const ZRef<ZCallable_R2<bool, ZRef<ZWorker>, const P0&> >& iCallable,
-	const P0& iP0)
-	{ return new ZWorker_Callable_T1<P0>(iCallable, iP0); }
+	const P0& i0)
+	{ return new ZWorker_Callable_T1<P0>(iCallable, i0); }
 
 // =================================================================================================
 #pragma mark -
@@ -96,35 +96,35 @@ ZRef<ZWorker> MakeWorker(
 
 template <class P0, class P1>
 class ZWorker_Callable_T2
-:	public virtual ZWorker
+:	public ZWorker
 	{
 public:
 	typedef ZCallable_R3<bool, ZRef<ZWorker>, const P0&, const P1&> Callable_t;
 
-	ZWorker_Callable_T2(ZRef<Callable_t> iCallable, const P0& iP0, const P1& iP1)
+	ZWorker_Callable_T2(ZRef<Callable_t> iCallable, const P0& i0, const P1& i1)
 	:	fCallable(iCallable)
-	,	fP0(iP0)
-	,	fP1(iP1)
+	,	f0(i0)
+	,	f1(i1)
 		{}
 
 	virtual bool Work()
 		{
 		if (ZRef<Callable_t> theCallable = fCallable)
-			return fCallable->Invoke(this, fP0, fP1);
+			return fCallable->Invoke(this, f0, f1);
 		return false;
 		}
 
 private:
 	ZRef<Callable_t> fCallable;
-	const P0 fP0;
-	const P1 fP1;
+	const P0 f0;
+	const P1 f1;
 	};
 
 template <class P0, class P1>
 ZRef<ZWorker> MakeWorker(
 	const ZRef<ZCallable_R3<bool, ZRef<ZWorker>, const P0&, const P1&> >& iCallable,
-	const P0& iP0, const P1& iP1)
-	{ return new ZWorker_Callable_T2<P0, P1>(iCallable, iP0, iP1); }
+	const P0& i0, const P1& i1)
+	{ return new ZWorker_Callable_T2<P0, P1>(iCallable, i0, i1); }
 
 // =================================================================================================
 #pragma mark -
@@ -132,37 +132,37 @@ ZRef<ZWorker> MakeWorker(
 
 template <class P0, class P1, class P2>
 class ZWorker_Callable_T3
-:	public virtual ZWorker
+:	public ZWorker
 	{
 public:
 	typedef ZCallable_R4<bool, ZRef<ZWorker>, const P0&, const P1&, const P2&> Callable_t;
 
-	ZWorker_Callable_T3(ZRef<Callable_t> iCallable, const P0& iP0, const P1& iP1, const P2& iP2)
+	ZWorker_Callable_T3(ZRef<Callable_t> iCallable, const P0& i0, const P1& i1, const P2& i2)
 	:	fCallable(iCallable)
-	,	fP0(iP0)
-	,	fP1(iP1)
-	,	fP2(iP2)
+	,	f0(i0)
+	,	f1(i1)
+	,	f2(i2)
 		{}
 
 	virtual bool Work()
 		{
 		if (ZRef<Callable_t> theCallable = fCallable)
-			return fCallable->Invoke(this, fP0, fP1, fP2);
+			return fCallable->Invoke(this, f0, f1, f2);
 		return false;
 		}
 
 private:
 	ZRef<Callable_t> fCallable;
-	const P0 fP0;
-	const P1 fP1;
-	const P2 fP2;
+	const P0 f0;
+	const P1 f1;
+	const P2 f2;
 	};
 
 template <class P0, class P1, class P2>
 ZRef<ZWorker> MakeWorker(
 	const ZRef<ZCallable_R4<bool, ZRef<ZWorker>, const P0&, const P1&, const P2&> >& iCallable,
-	const P0& iP0, const P1& iP1, const P2& iP2)
-	{ return new ZWorker_Callable_T3<P0, P1, P2>(iCallable, iP0, iP1, iP2); }
+	const P0& i0, const P1& i1, const P2& i2)
+	{ return new ZWorker_Callable_T3<P0, P1, P2>(iCallable, i0, i1, i2); }
 
 // =================================================================================================
 #pragma mark -
@@ -203,27 +203,27 @@ class ZWorker_Callable_Once_T1
 public:
 	typedef ZCallable_V1<const P0&> Callable_t;
 
-	ZWorker_Callable_Once_T1(ZRef<Callable_t> iCallable, const P0& iP0)
+	ZWorker_Callable_Once_T1(ZRef<Callable_t> iCallable, const P0& i0)
 	:	fCallable(iCallable)
-	,	fP0(iP0)
+	,	f0(i0)
 		{}
 
 	virtual bool Work()
 		{ return false; }
 
 	virtual void RunnerDetached()
-		{ fCallable->Invoke(fP0); }
+		{ fCallable->Invoke(f0); }
 
 private:
 	ZRef<Callable_t> fCallable;
-	const P0 fP0;
+	const P0 f0;
 	};
 
 template <class P0>
 ZRef<ZWorker> MakeWorker(
 	const ZRef<ZCallable_V1<const P0&> >& iCallable,
-	const P0& iP0)
-	{ return new ZWorker_Callable_Once_T1<P0>(iCallable, iP0); }
+	const P0& i0)
+	{ return new ZWorker_Callable_Once_T1<P0>(iCallable, i0); }
 
 // =================================================================================================
 #pragma mark -
@@ -236,29 +236,29 @@ class ZWorker_Callable_Once_T2
 public:
 	typedef ZCallable_V2<const P0&, const P1&> Callable_t;
 
-	ZWorker_Callable_Once_T2(ZRef<Callable_t> iCallable, const P0& iP0, const P1& iP1)
+	ZWorker_Callable_Once_T2(ZRef<Callable_t> iCallable, const P0& i0, const P1& i1)
 	:	fCallable(iCallable)
-	,	fP0(iP0)
-	,	fP1(iP1)
+	,	f0(i0)
+	,	f1(i1)
 		{}
 
 	virtual bool Work()
 		{ return false; }
 
 	virtual void RunnerDetached()
-		{ fCallable->Invoke(fP0, fP1); }
+		{ fCallable->Invoke(f0, f1); }
 
 private:
 	ZRef<Callable_t> fCallable;
-	const P0 fP0;
-	const P1 fP1;
+	const P0 f0;
+	const P1 f1;
 	};
 
 template <class P0, class P1>
 ZRef<ZWorker> MakeWorker(
 	const ZRef<ZCallable_V2<const P0&, const P1&> >& iCallable,
-	const P0& iP0, const P1& iP1)
-	{ return new ZWorker_Callable_Once_T2<P0, P1>(iCallable, iP0, iP1); }
+	const P0& i0, const P1& i1)
+	{ return new ZWorker_Callable_Once_T2<P0, P1>(iCallable, i0, i1); }
 
 // =================================================================================================
 #pragma mark -
@@ -272,31 +272,31 @@ public:
 	typedef ZCallable_V3<const P0&, const P1&, const P2&> Callable_t;
 
 	ZWorker_Callable_Once_T3(
-		ZRef<Callable_t> iCallable, const P0& iP0, const P1& iP1, const P2& iP2)
+		ZRef<Callable_t> iCallable, const P0& i0, const P1& i1, const P2& i2)
 	:	fCallable(iCallable)
-	,	fP0(iP0)
-	,	fP1(iP1)
-	,	fP2(iP2)
+	,	f0(i0)
+	,	f1(i1)
+	,	f2(i2)
 		{}
 
 	virtual bool Work()
 		{ return false; }
 
 	virtual void RunnerDetached()
-		{ fCallable->Invoke(fP0, fP1, fP2); }
+		{ fCallable->Invoke(f0, f1, f2); }
 
 private:
 	ZRef<Callable_t> fCallable;
-	const P0 fP0;
-	const P1 fP1;
-	const P2 fP2;
+	const P0 f0;
+	const P1 f1;
+	const P2 f2;
 	};
 
 template <class P0, class P1, class P2>
 ZRef<ZWorker> MakeWorker(
 	const ZRef<ZCallable_V3<const P0&, const P1&, const P2&> >& iCallable,
-	const P0& iP0, const P1& iP1, const P2& iP2)
-	{ return new ZWorker_Callable_Once_T3<P0, P1, P2>(iCallable, iP0, iP1, iP2); }
+	const P0& i0, const P1& i1, const P2& i2)
+	{ return new ZWorker_Callable_Once_T3<P0, P1, P2>(iCallable, i0, i1, i2); }
 
 } // namespace ZooLib
 
