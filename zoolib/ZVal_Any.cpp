@@ -335,12 +335,12 @@ int ZMap_Any::Compare(const ZMap_Any& iOther) const
 			if (iterOther != endOther)
 				{
 				// Other is not exhausted either, so we compare their current values.
-				if (int compare = sCompare_T<string>((*iterThis).first, (*iterOther).first))
+				if (int compare = sCompare_T<string>(iterThis->first, iterOther->first))
 					{
 					// The names are different.
 					return compare;
 					}
-				if (int compare = sCompare_T<ZVal_Any>((*iterThis).second, (*iterOther).second))
+				if (int compare = sCompare_T<ZVal_Any>(iterThis->second, iterOther->second))
 					{
 					// The values are different.
 					return compare;
@@ -381,7 +381,7 @@ ZVal_Any* ZMap_Any::PGet(const string8& iName)
 		this->pTouch();
 		Index_t theIndex = fRep->fMap.find(iName);
 		if (theIndex != fRep->fMap.end())
-			return &(*theIndex).second;
+			return &theIndex->second;
 		}
 	return nullptr;
 	}
@@ -390,7 +390,7 @@ ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex)
 	{
 	Map_t::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
-		return &(*theIndex).second;
+		return &theIndex->second;
 	return nullptr;
 	}
 
@@ -400,7 +400,7 @@ const ZVal_Any* ZMap_Any::PGet(const string8& iName) const
 		{
 		Index_t theIndex = fRep->fMap.find(iName);
 		if (theIndex != fRep->fMap.end())
-			return &(*theIndex).second;
+			return &theIndex->second;
 		}
 	return nullptr;
 	}
@@ -408,7 +408,7 @@ const ZVal_Any* ZMap_Any::PGet(const string8& iName) const
 const ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex) const
 	{
 	if (fRep && iIndex != fRep->fMap.end())
-		return &(*iIndex).second;
+		return &iIndex->second;
 	return nullptr;
 	}
 
@@ -465,7 +465,7 @@ ZMap_Any& ZMap_Any::Set(const Index_t& iIndex, const ZVal_Any& iVal)
 	{
 	Map_t::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
-		(*theIndex).second = iVal;
+		theIndex->second = iVal;
 	return *this;
 	}
 
@@ -504,7 +504,7 @@ ZMap_Any::Index_t ZMap_Any::End() const
 string8 ZMap_Any::NameOf(const Index_t& iIndex) const
 	{
 	if (fRep && iIndex != fRep->fMap.end())
-		return (*iIndex).first;
+		return iIndex->first;
 	return string8();
 	}
 
@@ -543,7 +543,7 @@ ZMap_Any::Map_t::iterator ZMap_Any::pTouch(const Index_t& iIndex)
 		}
 	else if (fRep->GetRefCount() != 1)
 		{
-		const string theName = (*iIndex).first;
+		const string theName = iIndex->first;
 		fRep = new Rep(fRep->fMap);
 		return fRep->fMap.find(theName);
 		}
