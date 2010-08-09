@@ -119,14 +119,14 @@ public:
 		}
 
 	template <class P0>
-	ZQ(const P0& iP0)
+	ZQ(const P0& i0)
 	:	fHasValue(true)
-		{ sConstruct_T<T, P0>(fBytes, iP0); }
+		{ sConstruct_T<T, P0>(fBytes, i0); }
 
 	template <class P0, class P1>
-	ZQ(const P0& iP0, const P1& iP1)
+	ZQ(const P0& i0, const P1& i1)
 	:	fHasValue(true)
-		{ sConstruct_T<T, P0, P1>(fBytes, iP0, iP1); }
+		{ sConstruct_T<T, P0, P1>(fBytes, i0, i1); }
 
 	ZQ& operator=(const T& iValue)
 		{
