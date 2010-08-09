@@ -60,12 +60,9 @@ public:
 	~ZVal_NS();
 	ZVal_NS& operator=(const ZVal_NS& iOther);
 
-	ZVal_NS(struct objc_object* iVal);
-	ZVal_NS(NSObject* iVal);
-	ZVal_NS(const ZRef<NSObject>& iVal);
-	ZVal_NS(const ZRef<struct objc_object*>& iVal);
-	ZVal_NS(const Adopt_T<struct objc_object*>& iVal);
-	ZVal_NS(const Adopt_T<NSObject>& iVal);
+	ZVal_NS(id iVal) : inherited(iVal) {}
+	template <class S> ZVal_NS(const ZRef<S>& iVal) : inherited(iVal) {}
+	template <class S> ZVal_NS(const Adopt_T<S>& iVal) : inherited(iVal) {}
 
 	ZVal_NS(int8 iVal);
 	ZVal_NS(int16 iVal);
@@ -77,22 +74,26 @@ public:
 	ZVal_NS(const char* iVal);
 	ZVal_NS(const string8& iVal);
 	ZVal_NS(const string16& iVal);
-	ZVal_NS(NSString* iVal);
 
-	ZVal_NS(const ZData_NS& iVal);
-	ZVal_NS(const ZSeq_NS& iVal);
-	ZVal_NS(const ZMap_NS& iVal);
+	ZVal_NS& operator=(id iVal)
+		{
+		inherited::operator=(iVal);
+		return *this;
+		}
 
-	explicit ZVal_NS(NSData* iVal);
-	explicit ZVal_NS(NSArray* iVal);
-	explicit ZVal_NS(NSDictionary* iVal);
+	template <class S>
+	ZVal_NS& operator=(const ZRef<S>& iVal)
+		{
+		inherited::operator=(iVal);
+		return *this;
+		}
 
-	ZVal_NS& operator=(struct objc_object* iVal);
-	ZVal_NS& operator=(NSObject* iVal);
-	ZVal_NS& operator=(const ZRef<struct objc_object*>& iVal);
-	ZVal_NS& operator=(const ZRef<NSObject>& iVal);
-	ZVal_NS& operator=(const Adopt_T<struct objc_object*>& iVal);
-	ZVal_NS& operator=(const Adopt_T<NSObject>& iVal);
+	template <class S>
+	ZVal_NS& operator=(const Adopt_T<S>& iVal)
+		{
+		inherited::operator=(iVal);
+		return *this;
+		}
 
 // ZVal protocol
 	void Clear();
@@ -117,8 +118,11 @@ public:
 
 // Typename accessors
 /// \cond DoxygenIgnore
+	typedef NSString* NSStringPtr;
+
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_NS)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, NSString, ZRef<NSString>)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, NSString, NSStringPtr)
+//	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, NSString, ZRef<NSString>)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Data, ZData_NS)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Seq, ZSeq_NS)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Map, ZMap_NS)
@@ -145,17 +149,11 @@ public:
 	ZSeq_NS(NSMutableArray* iOther);
 	ZSeq_NS(NSArray* iOther);
 
-	ZSeq_NS(const ZRef<NSMutableArray>& iOther);
-	ZSeq_NS(const ZRef<NSArray>& iOther);
-
 	ZSeq_NS(const Adopt_T<NSMutableArray>& iOther);
 	ZSeq_NS(const Adopt_T<NSArray>& iOther);
 
 	ZSeq_NS& operator=(NSMutableArray* iOther);
 	ZSeq_NS& operator=(NSArray* iOther);
-
-	ZSeq_NS& operator=(const ZRef<NSMutableArray>& iOther);
-	ZSeq_NS& operator=(const ZRef<NSArray>& iOther);
 
 	ZSeq_NS& operator=(const Adopt_T<NSMutableArray>& iOther);
 	ZSeq_NS& operator=(const Adopt_T<NSArray>& iOther);
@@ -215,17 +213,11 @@ public:
 	ZMap_NS(NSMutableDictionary* iOther);
 	ZMap_NS(NSDictionary* iOther);
 
-	ZMap_NS(const ZRef<NSMutableDictionary>& iOther);
-	ZMap_NS(const ZRef<NSDictionary>& iOther);
-
 	ZMap_NS(const Adopt_T<NSMutableDictionary>& iOther);
 	ZMap_NS(const Adopt_T<NSDictionary>& iOther);
 
 	ZMap_NS& operator=(NSMutableDictionary* iOther);
 	ZMap_NS& operator=(NSDictionary* iOther);
-
-	ZMap_NS& operator=(const ZRef<NSMutableDictionary>& iOther);
-	ZMap_NS& operator=(const ZRef<NSDictionary>& iOther);
 
 	ZMap_NS& operator=(const Adopt_T<NSMutableDictionary>& iOther);
 	ZMap_NS& operator=(const Adopt_T<NSDictionary>& iOther);
