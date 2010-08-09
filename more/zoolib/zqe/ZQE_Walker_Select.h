@@ -18,28 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Result__
-#define __ZQE_Result__ 1
+#ifndef __ZQE_Walker_Select__
+#define __ZQE_Walker_Select__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZValPred.h"
+#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Result
+#pragma mark * Walker_Select
 
-class Result : public ZCounted
+class Walker_Select : public Walker
 	{
 public:
-	virtual bool SameAs(ZRef<Result> iOther) = 0;
-	virtual ZRef<Result> ProductWith(ZRef<Result> iOther) = 0;
+	Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Logic> iExpr_Logic);
+	virtual ~Walker_Select();
+
+// Our protocol
+	virtual size_t Count();
+	virtual string8 NameOf(size_t iIndex);
+
+	virtual ZRef<Walker> Clone();
+	virtual ZRef<Row> ReadInc();
+
+private:
+	ZRef<Walker> fWalker;
+	ZRef<ZExpr_Logic> fExpr_Logic;
 	};
 
 } // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZQE_Result__
+#endif // __ZQE_Walker_Select__

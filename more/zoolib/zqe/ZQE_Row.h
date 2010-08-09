@@ -18,79 +18,107 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Iterator_Std__
-#define __ZQE_Iterator_Std__ 1
+#ifndef __ZQE_Row__
+#define __ZQE_Row__ 1
 #include "zconfig.h"
 
-#include "zoolib/zqe/ZQE_Iterator.h"
+#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZVal_Any.h"
+
+#include <set>
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator_Intersect
+#pragma mark * Row
 
-class Iterator_Intersect : public Iterator
+class Row : public ZCounted
 	{
+protected:
+	Row();
+
 public:
-	Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
+	virtual ~Row();
 
-// From Iterator
-	virtual ZRef<Iterator> Clone();
-	virtual ZRef<Result> ReadInc();
+// Our protocol
+	virtual size_t Count() = 0;
+	virtual ZVal_Any Get(size_t iIndex) = 0;
 
-private:
-	Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
-		ZRef<Iterator> iIterator_RHS_Model);
-
-	ZRef<Iterator> fIterator_LHS;
-	ZRef<Iterator> fIterator_RHS;
-	ZRef<Iterator> fIterator_RHS_Model;
+	virtual void GetAnnotations(std::set<ZRef<ZCounted> >& ioAnnotations);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator_Product
+#pragma mark * RowVector
 
-class Iterator_Product : public Iterator
+class RowVector : public ZCounted
 	{
 public:
-	Iterator_Product(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
+	RowVector();
+	RowVector(const std::vector<ZRef<Row> >& iRows);
+	RowVector(std::vector<ZRef<Row> >* ioRows);
+	virtual ~RowVector();
 
-// From Iterator
-	virtual ZRef<Iterator> Clone();
-	virtual ZRef<Result> ReadInc();
+// Our protocol
+	size_t Count();
+	ZRef<Row> Get(size_t iIndex);
+
+	const std::vector<ZRef<Row> >& GetRows();
 
 private:
-	Iterator_Product(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
-		ZRef<Iterator> iIterator_RHS_Model);
-
-	ZRef<Iterator> fIterator_LHS;
-	ZRef<Iterator> fIterator_RHS;
-	ZRef<Iterator> fIterator_RHS_Model;
-	ZRef<Result> fResult_LHS;
+	std::vector<ZRef<Row> > fRows;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator_Union
+#pragma mark * Row_Pair
 
-class Iterator_Union : public Iterator
+class Row_Pair : public Row
 	{
 public:
-	Iterator_Union(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
+	Row_Pair(const ZRef<Row>& iLeft, const ZRef<Row>& iRight);
+	virtual ~Row_Pair();
 
-// From Iterator
-	virtual ZRef<Iterator> Clone();
-	virtual ZRef<Result> ReadInc();
+// From Row
+	virtual size_t Count();
+	virtual ZVal_Any Get(size_t iIndex);
+
+	virtual void GetAnnotations(std::set<ZRef<ZCounted> >& ioAnnotations);
 
 private:
-	ZRef<Iterator> fIterator_LHS;
-	ZRef<Iterator> fIterator_RHS;
+	const ZRef<Row> fLeft;
+	const ZRef<Row> fRight;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Row_Vector
+
+class Row_Vector : public Row
+	{
+public:
+	Row_Vector(const std::vector<ZVal_Any>& iVals);
+	Row_Vector(std::vector<ZVal_Any>* ioVals);
+	virtual ~Row_Vector();
+
+// From Row
+	virtual size_t Count();
+	virtual ZVal_Any Get(size_t iIndex);
+
+	virtual void GetAnnotations(std::set<ZRef<ZCounted> >& ioAnnotations);
+
+// Our protocol
+	void AddAnnotation(ZRef<ZCounted> iCounted);
+	void AddAnnotations(const std::set<ZRef<ZCounted> >& iAnnotations);
+
+private:
+	std::vector<ZVal_Any> fVals;
+	std::set<ZRef<ZCounted> > fAnnotations;
 	};
 
 } // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZQE_Iterator_Std__
+#endif // __ZQE_Row__

@@ -18,64 +18,73 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Iterator_Std.h"
-#include "zoolib/zqe/ZQE_Visitor_Expr_Rel_DoMakeIterator.h"
+#include "zoolib/zqe/ZQE_Walker_Product.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_DoMakeIterator
+#pragma mark * Walker_Product
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Difference(
-	ZRef<ZRA::Expr_Rel_Difference> iExpr)
+Walker_Product::Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_Right,
+	ZRef<Walker> iWalker_Right_Model, ZRef<Row> iRow_Left)
+:	fWalker_Left(iWalker_Left)
+,	fWalker_Right(iWalker_Right)
+,	fWalker_Right_Model(iWalker_Right_Model)
+,	fRow_Left(iRow_Left)
+	{}
+
+Walker_Product::Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_Right_Model)
+:	fWalker_Left(iWalker_Left)
+,	fWalker_Right_Model(iWalker_Right_Model)
+	{}
+
+Walker_Product::~Walker_Product()
+	{}
+
+size_t Walker_Product::Count()
+	{ return fWalker_Left->Count() + fWalker_Right_Model->Count(); }
+
+string8 Walker_Product::NameOf(size_t iIndex)
 	{
-	ZUnimplemented();
+	const size_t leftCount = fWalker_Left->Count();
+	if (iIndex >= leftCount)
+		return fWalker_Right_Model->NameOf(iIndex - leftCount);
+	else
+		return fWalker_Left->NameOf(iIndex);
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr)
+ZRef<Walker> Walker_Product::Clone()
 	{
-	if (ZRef<Iterator> op0 = this->Do(iExpr->GetOp0()))
+	if (fWalker_Right)
 		{
-		if (ZRef<Iterator> op1 = this->Do(iExpr->GetOp1()))
-			this->pSetResult(new Iterator_Intersect(op0, op1));
+		return new Walker_Product(fWalker_Left->Clone(), fWalker_Right->Clone(),
+			fWalker_Right_Model->Clone(), fRow_Left);
+		}
+	else
+		{
+		return new Walker_Product(fWalker_Left->Clone(), fWalker_Right_Model->Clone());
 		}
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr)
+ZRef<Row> Walker_Product::ReadInc()
 	{
-	if (ZRef<Iterator> op0 = this->Do(iExpr->GetOp0()))
+	for (;;)
 		{
-		if (ZRef<Iterator> op1 = this->Do(iExpr->GetOp1()))
-			this->pSetResult(new Iterator_Product(op0, op1));
+		if (!fWalker_Right)
+			{
+			fWalker_Right = fWalker_Right_Model->Clone();
+			fRow_Left = fWalker_Left->ReadInc();
+			if (!fRow_Left)
+				return null;			
+			}
+
+		if (ZRef<Row> theRow_Right = fWalker_Right->ReadInc())
+			return new Row_Pair(fRow_Left, theRow_Right);
+
+		fWalker_Right.Clear();
 		}
-	}
-
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Union(ZRef<ZRA::Expr_Rel_Union> iExpr)
-	{
-	if (ZRef<Iterator> op0 = this->Do(iExpr->GetOp0()))
-		{
-		if (ZRef<Iterator> op1 = this->Do(iExpr->GetOp1()))
-			this->pSetResult(new Iterator_Union(op0, op1));
-		else
-			this->pSetResult(op0);
-		}
-	}
-
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr)
-	{
-	ZUnimplemented();
-	}
-
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr)
-	{
-	ZUnimplemented();
-	}
-
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr)
-	{
-	ZUnimplemented();
 	}
 
 } // namespace ZQE

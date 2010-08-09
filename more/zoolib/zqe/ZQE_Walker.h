@@ -18,45 +18,40 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Result_Any__
-#define __ZQE_Result_Any__ 1
+#ifndef __ZQE_Walker__
+#define __ZQE_Walker__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal_Any.h"
-#include "zoolib/zqe/ZQE_Result.h"
 
-#include <set>
+#include "zoolib/zqe/ZQE_Row.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Result
+#pragma mark * Walker
 
-class Result_Any : public Result
+class Walker : public ZCounted
 	{
-public:
-	Result_Any(const ZVal_Any& iVal);
-	Result_Any(const ZVal_Any& iVal, ZRef<Result_Any> iOther);
+protected:
+	Walker();
 
-// From Result
-	virtual bool SameAs(ZRef<Result> iOther);
-	virtual ZRef<Result> ProductWith(ZRef<Result> iOther);
+public:
+	virtual ~Walker();
 
 // Our protocol
-	const ZVal_Any& GetVal();
+	virtual size_t Count() = 0;
+	virtual string8 NameOf(size_t iIndex) = 0;
 
-	void AddAnnotation(ZRef<ZCounted> iCounted);
-	void AddAnnotations(const std::set<ZRef<ZCounted> >& iAnnotations);
-	const std::set<ZRef<ZCounted> >& GetAnnotations();
-
-private:
-	const ZVal_Any fVal;
-	std::set<ZRef<ZCounted> > fAnnotations;
+	virtual ZRef<Walker> Clone() = 0;
+	virtual ZRef<Row> ReadInc() = 0;
 	};
 
 } // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZQE_Result_Val_Any__
+#endif // __ZQE_Walker__

@@ -18,33 +18,52 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Iterator__
-#define __ZQE_Iterator__ 1
-#include "zconfig.h"
-
-#include "zoolib/zqe/ZQE_Result.h"
+#include "zoolib/zqe/ZQE_Walker_ValPredCompound.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator
+#pragma mark * Walker_ValPredCompound
 
-class Iterator : public ZCounted
+Walker_ValPredCompound::Walker_ValPredCompound(
+	ZRef<Walker> iWalker, const ZValPredCompound& iValPredCompound)
+:	fWalker(iWalker)
+,	fValPredCompound(iValPredCompound)
+	{}
+
+Walker_ValPredCompound::~Walker_ValPredCompound()
+	{}
+
+size_t Walker_ValPredCompound::Count()
+	{ return fWalker->Count(); }
+
+string8 Walker_ValPredCompound::NameOf(size_t iIndex)
+	{ return fWalker->NameOf(iIndex); }
+
+ZRef<Walker> Walker_ValPredCompound::Clone()
+	{ return new Walker_ValPredCompound(fWalker->Clone(), fValPredCompound); }
+
+ZRef<Row> Walker_ValPredCompound::ReadInc()
 	{
-protected:
-	Iterator();
+	ZValContext context;
+	for (;;)
+		{
+		if (ZRef<Row> theRow = fWalker->ReadInc())
+			{
+			ZMap_Any theMap;
+			for (size_t x = 0, count = fWalker->Count(); x < count; ++x)
+				theMap.Set(fWalker->NameOf(x), theRow->Get(x));
 
-public:
-	virtual ~Iterator();
+			if (fValPredCompound.Matches(context, theMap))
+				return theRow;
 
-// Our protocol
-	virtual ZRef<Iterator> Clone() = 0;
-	virtual ZRef<Result> ReadInc() = 0;
-	};
+			continue;
+			}
+		return null;
+		}
+	}
 
 } // namespace ZQE
 } // namespace ZooLib
-
-#endif // __ZQE_Iterator__

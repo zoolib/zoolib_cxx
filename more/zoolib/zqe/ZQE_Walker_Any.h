@@ -18,18 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Visitor_Expr_Rel_DoMakeIterator__
-#define __ZQE_Visitor_Expr_Rel_DoMakeIterator__ 1
+#ifndef __ZQE_Walker_Any__
+#define __ZQE_Walker_Any__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZVisitor_Do_T.h"
-#include "zoolib/zqe/ZQE_Iterator.h"
+
+#include "zoolib/zqe/ZQE_Walker.h"
+
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 
 namespace ZooLib {
@@ -37,16 +40,17 @@ namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_DoMakeIterator
+#pragma mark * Visitor_DoMakeWalker_Any
 
-class Visitor_Expr_Rel_DoMakeIterator
-:	public virtual ZVisitor_Do_T<ZRef<Iterator> >
+class Visitor_DoMakeWalker_Any
+:	public virtual ZVisitor_Do_T<ZRef<Walker> >
 ,	public virtual ZRA::Visitor_Expr_Rel_Difference
 ,	public virtual ZRA::Visitor_Expr_Rel_Intersect
 ,	public virtual ZRA::Visitor_Expr_Rel_Product
 ,	public virtual ZRA::Visitor_Expr_Rel_Union
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
+,	public virtual ZRA::Visitor_Expr_Rel_Restrict
 ,	public virtual ZRA::Visitor_Expr_Rel_Select
 	{
 public:
@@ -57,10 +61,11 @@ public:
 
 	virtual void Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr);
 	virtual void Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr);
+	virtual void Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict> iExpr);
 	virtual void Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr);
 	};
 
 } // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZQE_Visitor_Expr_Rel_DoMakeIterator__
+#endif // __ZQE_Walker_Any__
