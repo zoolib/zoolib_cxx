@@ -149,6 +149,10 @@ private:
 	NPP_ShutdownProcPtr fShutdown;
 	};
 
+typedef NPError (*NP_GetEntryPointsFuncPtr)(NPPluginFuncs*);
+
+typedef NPError (*Flash_DisableLocalSecurityFuncPtr)(void);
+
 GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 :	fHMODULE(iHMODULE)
 	{
@@ -174,6 +178,13 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 
 	// Windows Flash 10.1 requires theEntryPoints be called first.
 	theEntryPoints(&fNPPluginFuncs);
+
+	if (Flash_DisableLocalSecurityFuncPtr theDLS =
+		sLookup_T<Flash_DisableLocalSecurityFuncPtr>(fHMODULE, "Flash_DisableLocalSecurity"))
+		{
+		theDLS();
+		}
+
 	theInit(&fNPNF);
 	}
 

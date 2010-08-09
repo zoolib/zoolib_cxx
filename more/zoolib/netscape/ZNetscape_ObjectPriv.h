@@ -55,25 +55,25 @@ Variant_t NPObject_T<Variant_t>::Invoke(const std::string& iName)
 
 template <class Variant_t>
 Variant_t NPObject_T<Variant_t>::Invoke(const std::string& iName,
-	const Variant_t& iP0)
-	{ return static_cast<Self_t*>(this)->Invoke(iName, &iP0, 1); }
+	const Variant_t& i0)
+	{ return static_cast<Self_t*>(this)->Invoke(iName, &i0, 1); }
 
 template <class Variant_t>
 Variant_t NPObject_T<Variant_t>::Invoke(const std::string& iName,
-	const Variant_t& iP0,
-	const Variant_t& iP1)
+	const Variant_t& i0,
+	const Variant_t& i1)
 	{
-	Variant_t arr[] = { iP0, iP1};
+	Variant_t arr[] = { i0, i1};
 	return static_cast<Self_t*>(this)->Invoke(iName, arr, countof(arr));
 	}
 
 template <class Variant_t>
 Variant_t NPObject_T<Variant_t>::Invoke(const std::string& iName,
-	const Variant_t& iP0,
-	const Variant_t& iP1,
-	const Variant_t& iP2)
+	const Variant_t& i0,
+	const Variant_t& i1,
+	const Variant_t& i2)
 	{
-	Variant_t arr[] = { iP0, iP1, iP2 };
+	Variant_t arr[] = { i0, i1, i2 };
 	return static_cast<Self_t*>(this)->Invoke(iName, arr, countof(arr));
 	}
 
@@ -91,25 +91,25 @@ Variant_t NPObject_T<Variant_t>::InvokeDefault()
 
 template <class Variant_t>
 Variant_t NPObject_T<Variant_t>::InvokeDefault(
-	const Variant_t& iP0)
-	{ return static_cast<Self_t*>(this)->InvokeDefault(&iP0, 1); }
+	const Variant_t& i0)
+	{ return static_cast<Self_t*>(this)->InvokeDefault(&i0, 1); }
 
 template <class Variant_t>
 Variant_t NPObject_T<Variant_t>::InvokeDefault(
-	const Variant_t& iP0,
-	const Variant_t& iP1)
+	const Variant_t& i0,
+	const Variant_t& i1)
 	{
-	Variant_t arr[] = { iP0, iP1 };
+	Variant_t arr[] = { i0, i1 };
 	return static_cast<Self_t*>(this)->InvokeDefault(arr, countof(arr));
 	}
 
 template <class Variant_t>
 Variant_t NPObject_T<Variant_t>::InvokeDefault(
-	const Variant_t& iP0,
-	const Variant_t& iP1,
-	const Variant_t& iP2)
+	const Variant_t& i0,
+	const Variant_t& i1,
+	const Variant_t& i2)
 	{
-	Variant_t arr[] = { iP0, iP1, iP2 };
+	Variant_t arr[] = { i0, i1, i2 };
 	return static_cast<Self_t*>(this)->InvokeDefault(arr, countof(arr));
 	}
 

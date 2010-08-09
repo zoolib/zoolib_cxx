@@ -52,32 +52,32 @@ public:
 	Variant_t Invoke(const std::string& iName);
 
 	Variant_t Invoke(const std::string& iName,
-		const Variant_t& iP0);
+		const Variant_t& i0);
 
 	Variant_t Invoke(const std::string& iName,
-		const Variant_t& iP0,
-		const Variant_t& iP1);
+		const Variant_t& i0,
+		const Variant_t& i1);
 
 	Variant_t Invoke(const std::string& iName,
-		const Variant_t& iP0,
-		const Variant_t& iP1,
-		const Variant_t& iP2);
+		const Variant_t& i0,
+		const Variant_t& i1,
+		const Variant_t& i2);
 
 	Variant_t InvokeDefault(const Variant_t* iArgs, size_t iCount);
 
 	Variant_t InvokeDefault();
 
 	Variant_t InvokeDefault(
-		const Variant_t& iP0);
+		const Variant_t& i0);
 
 	Variant_t InvokeDefault(
-		const Variant_t& iP0,
-		const Variant_t& iP1);
+		const Variant_t& i0,
+		const Variant_t& i1);
 
 	Variant_t InvokeDefault(
-		const Variant_t& iP0,
-		const Variant_t& iP1,
-		const Variant_t& iP2);
+		const Variant_t& i0,
+		const Variant_t& i1,
+		const Variant_t& i2);
 
 	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
 
