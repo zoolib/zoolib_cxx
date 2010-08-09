@@ -93,7 +93,7 @@ class ZCallable_R4
 :	public ZCallable
 	{
 public:
-	virtual R Invoke(P0, P1, P2, P3 iP3) = 0;
+	virtual R Invoke(P0, P1, P2, P3 i3) = 0;
 	};
 
 // =================================================================================================
@@ -205,7 +205,7 @@ public:
 	void Unregister(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Invoke(P0 iP0)
+	void Invoke(P0 i0)
 		{
 		for (ZSafeSetIterConst<ZWeakRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
@@ -213,7 +213,7 @@ public:
 			if (ZQ<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB.Get()->Invoke(iP0);
+					theCB.Get()->Invoke(i0);
 				continue;
 				}
 			break;
@@ -240,7 +240,7 @@ public:
 	void Unregister(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Invoke(P0 iP0, P1 iP1)
+	void Invoke(P0 i0, P1 i1)
 		{
 		for (ZSafeSetIterConst<ZWeakRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
@@ -248,7 +248,7 @@ public:
 			if (ZQ<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB.Get()->Invoke(iP0, iP1);
+					theCB.Get()->Invoke(i0, i1);
 				continue;
 				}
 			break;
@@ -275,7 +275,7 @@ public:
 	void Unregister(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Invoke(P0 iP0, P1 iP1, P2 iP2)
+	void Invoke(P0 i0, P1 i1, P2 i2)
 		{
 		for (ZSafeSetIterConst<ZWeakRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
@@ -283,7 +283,7 @@ public:
 			if (ZQ<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB.Get()->Invoke(iP0, iP1, iP2);
+					theCB.Get()->Invoke(i0, i1, i2);
 				continue;
 				}
 			break;
@@ -310,7 +310,7 @@ public:
 	void Unregister(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Invoke(P0 iP0, P1 iP1, P2 iP2, P3 iP3)
+	void Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		for (ZSafeSetIterConst<ZWeakRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
@@ -318,7 +318,7 @@ public:
 			if (ZQ<ZWeakRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB.Get()->Invoke(iP0, iP1, iP2, iP3);
+					theCB.Get()->Invoke(i0, i1, i2, i3);
 				continue;
 				}
 			break;

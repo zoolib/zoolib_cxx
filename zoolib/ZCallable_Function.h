@@ -58,15 +58,15 @@ class ZCallable_Function_R1
 :	public ZCallable_R1<R, P0>
 	{
 public:
-	typedef R (*Function_t)(P0 iP0);
+	typedef R (*Function_t)(P0);
 
 	ZCallable_Function_R1(Function_t iFunction)
 	:	fFunction(iFunction)
 		{}
 
 	// From ZCallable_R1
-	virtual R Invoke(P0 iP0)
-		{ return fFunction(iP0); }
+	virtual R Invoke(P0 i0)
+		{ return fFunction(i0); }
 
 private:
 	Function_t fFunction;
@@ -88,8 +88,8 @@ public:
 		{}
 
 	// From ZCallable_R2
-	virtual R Invoke(P0 iP0, P1 iP1)
-		{ return fFunction(iP0, iP1); }
+	virtual R Invoke(P0 i0, P1 i1)
+		{ return fFunction(i0, i1); }
 
 private:
 	Function_t fFunction;
@@ -111,12 +111,36 @@ public:
 		{}
 
 	// From ZCallable_R3
-	virtual R Invoke(P0 iP0, P1 iP1, P2 iP2)
-		{ return fFunction(iP0, iP1, iP2); }
+	virtual R Invoke(P0 i0, P1 i1, P2 i2)
+		{ return fFunction(i0, i1, i2); }
 
 private:
 	Function_t fFunction;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_Function_R4
+
+template <class R, class P0, class P1, class P2, class P3>
+class ZCallable_Function_R4
+:	public ZCallable_R4<R, P0, P1, P2, P3>
+	{
+public:
+	typedef R (*Function_t)(P0, P1, P2, P3);
+
+	ZCallable_Function_R4(Function_t iFunction)
+	:	fFunction(iFunction)
+		{}
+
+	// From ZCallable_R4
+	virtual R Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
+		{ return fFunction(i0, i1, i2, i3); }
+
+private:
+	Function_t fFunction;
+	};
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCallable_Function_V0
@@ -148,15 +172,15 @@ class ZCallable_Function_V1
 :	public ZCallable_V1<P0>
 	{
 public:
-	typedef void (*Function_t)(P0 iP0);
+	typedef void (*Function_t)(P0);
 
 	ZCallable_Function_V1(Function_t iFunction)
 	:	fFunction(iFunction)
 		{}
 
 	// From ZCallable_V1
-	virtual void Invoke(P0 iP0)
-		{ fFunction(iP0); }
+	virtual void Invoke(P0 i0)
+		{ fFunction(i0); }
 
 private:
 	Function_t fFunction;
@@ -178,8 +202,8 @@ public:
 		{}
 
 	// From ZCallable_V2
-	virtual void Invoke(P0 iP0, P1 iP1)
-		{ fFunction(iP0, iP1); }
+	virtual void Invoke(P0 i0, P1 i1)
+		{ fFunction(i0, i1); }
 
 private:
 	Function_t fFunction;
@@ -201,8 +225,31 @@ public:
 		{}
 
 	// From ZCallable_V3
-	virtual void Invoke(P0 iP0, P1 iP1, P2 iP2)
-		{ fFunction(iP0, iP1, iP2); }
+	virtual void Invoke(P0 i0, P1 i1, P2 i2)
+		{ fFunction(i0, i1, i2); }
+
+private:
+	Function_t fFunction;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_Function_V4
+
+template <class P0, class P1, class P2, class P3>
+class ZCallable_Function_V4
+:	public ZCallable_V4<P0, P1, P2, P3>
+	{
+public:
+	typedef void (*Function_t)(P0, P1, P2, P3);
+
+	ZCallable_Function_V4(Function_t iFunction)
+	:	fFunction(iFunction)
+		{}
+
+	// From ZCallable_V4
+	virtual void Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
+		{ fFunction(i0, i1, i2, i3); }
 
 private:
 	Function_t fFunction;

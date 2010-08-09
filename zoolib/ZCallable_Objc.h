@@ -28,6 +28,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <objc/message.h>
 
+namespace ZooLib {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * RefAsPtr
+
+template <class T> struct RefAsPtr
+	{ static T sGet(const T& iT) { return iT; } };
+
+template <class T> struct RefAsPtr<const T&>
+	{ static const T* sGet(const T& iT) { return &iT; } };
+
+template <class T> struct RefAsPtr<T&>
+	{ static T* sGet(T& iT) { return &iT; } };
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCallableBase_ObjC
@@ -71,8 +86,11 @@ public:
 	ZCallable_ObjC_O1(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
 
 	// From ZCallable_R1
-	virtual id Invoke(P0 iP0)
-		{ return objc_msgSend(fObj, fSEL, iP0); }
+	virtual id Invoke(P0 i0)
+		{
+		return objc_msgSend(fObj, fSEL,
+			RefAsPtr<P0>::sGet(i0));
+		}
 	};
 
 // =================================================================================================
@@ -88,8 +106,57 @@ public:
 	ZCallable_ObjC_O2(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
 
 	// From ZCallable_R2
-	virtual id Invoke(P0 iP0, P1 iP1)
-		{ return objc_msgSend(fObj, fSEL, iP0, iP1); }
+	virtual id Invoke(P0 i0, P1 i1)
+		{
+		return objc_msgSend(fObj, fSEL,
+			RefAsPtr<P0>::sGet(i0),
+			RefAsPtr<P1>::sGet(i1));
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_ObjC_O3
+
+template <class P0, class P1, class P2>
+class ZCallable_ObjC_O3
+:	ZCallableBase_ObjC
+,	public ZCallable_R3<id, P0, P1, P2>
+	{
+public:
+	ZCallable_ObjC_O3(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+
+	// From ZCallable_R3
+	virtual id Invoke(P0 i0, P1 i1, P2 i2)
+		{
+		return objc_msgSend(fObj, fSEL,
+			RefAsPtr<P0>::sGet(i0),
+			RefAsPtr<P1>::sGet(i1),
+			RefAsPtr<P2>::sGet(i2));
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_ObjC_O4
+
+template <class P0, class P1, class P2, class P3>
+class ZCallable_ObjC_O4
+:	ZCallableBase_ObjC
+,	public ZCallable_R4<id, P0, P1, P2, P3>
+	{
+public:
+	ZCallable_ObjC_O4(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+
+	// From ZCallable_R4
+	virtual id Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
+		{
+		return objc_msgSend(fObj, fSEL,
+			RefAsPtr<P0>::sGet(i0),
+			RefAsPtr<P1>::sGet(i1),
+			RefAsPtr<P2>::sGet(i2),
+			RefAsPtr<P3>::sGet(i3));
+		}
 	};
 
 // =================================================================================================
@@ -115,14 +182,17 @@ public:
 template <class P0>
 class ZCallable_ObjC_V1
 :	ZCallableBase_ObjC
-	public ZCallable_V1<P0>
+,	public ZCallable_V1<P0>
 	{
 public:
 	ZCallable_ObjC_V1(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
 
 	// From ZCallable_V1
-	virtual void Invoke(P0 iP0)
-		{ objc_msgSend(fObj, fSEL, iP0); }
+	virtual void Invoke(P0 i0)
+		{
+		objc_msgSend(fObj, fSEL,
+			RefAsPtr<P0>::sGet(i0));
+		}
 	};
 
 // =================================================================================================
@@ -132,15 +202,66 @@ public:
 template <class P0, class P1>
 class ZCallable_ObjC_V2
 :	ZCallableBase_ObjC
-	public ZCallable_V2<P0, P1>
+,	public ZCallable_V2<P0, P1>
 	{
 public:
 	ZCallable_ObjC_V2(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
 
 	// From ZCallable_V2
-	virtual void Invoke(P0 iP0, P1 iP1)
-		{ objc_msgSend(fObj, fSEL, iP0, iP1); }
+	virtual void Invoke(P0 i0, P1 i1)
+		{
+		objc_msgSend(fObj, fSEL,
+			RefAsPtr<P0>::sGet(i0),
+			RefAsPtr<P1>::sGet(i1));
+		}
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_ObjC_V3
+
+template <class P0, class P1, class P2>
+class ZCallable_ObjC_V3
+:	ZCallableBase_ObjC
+,	public ZCallable_V3<P0, P1, P2>
+	{
+public:
+	ZCallable_ObjC_V3(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+
+	// From ZCallable_V3
+	virtual void Invoke(P0 i0, P1 i1, P2 i2)
+		{
+		objc_msgSend(fObj, fSEL,
+			RefAsPtr<P0>::sGet(i0),
+			RefAsPtr<P1>::sGet(i1),
+			RefAsPtr<P2>::sGet(i2));
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_ObjC_V4
+
+template <class P0, class P1, class P2, class P3>
+class ZCallable_ObjC_V4
+:	ZCallableBase_ObjC
+,	public ZCallable_V4<P0, P1, P2, P3>
+	{
+public:
+	ZCallable_ObjC_V4(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+
+	// From ZCallable_V4
+	virtual void Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
+		{
+		objc_msgSend(fObj, fSEL,
+			RefAsPtr<P0>::sGet(i0),
+			RefAsPtr<P1>::sGet(i1),
+			RefAsPtr<P2>::sGet(i2),
+			RefAsPtr<P3>::sGet(i3));
+		}
+	};
+
+} // namespace ZooLib
 
 #endif // __OBJC__
 #endif // __ZCallable_Objc__

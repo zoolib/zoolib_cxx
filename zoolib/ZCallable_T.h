@@ -148,10 +148,10 @@ public:
 		{}
 
 	// From ZCallable_R1
-	virtual R Invoke(P0 iP0)
+	virtual R Invoke(P0 i0)
 		{
 		if (Temp_t temp = ZCallableTraits_T<Stored_t>::sGetTemp(fCallee))
-			return (ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(iP0);
+			return (ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(i0);
 		return R();
 		}
 
@@ -185,10 +185,10 @@ public:
 		{}
 
 	// From ZCallable_R2
-	virtual R Invoke(P0 iP0, P1 iP1)
+	virtual R Invoke(P0 i0, P1 i1)
 		{
 		if (Temp_t temp = ZCallableTraits_T<Stored_t>::sGetTemp(fCallee))
-			return (ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(iP0, iP1);
+			return (ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(i0, i1);
 		return R();
 		}
 
@@ -222,10 +222,10 @@ public:
 		{}
 
 	// From ZCallable_R3
-	virtual R Invoke(P0 iP0, P1 iP1, P2 iP2)
+	virtual R Invoke(P0 i0, P1 i1, P2 i2)
 		{
 		if (Temp_t temp = ZCallableTraits_T<Stored_t>::sGetTemp(fCallee))
-			return (ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(iP0, iP1, iP2);
+			return (ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(i0, i1, i2);
 		return R();
 		}
 
@@ -295,10 +295,10 @@ public:
 		{}
 
 	// From ZCallable_V1
-	virtual void Invoke(P0 iP0)
+	virtual void Invoke(P0 i0)
 		{
 		if (Temp_t temp = ZCallableTraits_T<Stored_t>::sGetTemp(fCallee))
-			(ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(iP0);
+			(ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(i0);
 		}
 
 private:
@@ -331,10 +331,10 @@ public:
 		{}
 
 	// From ZCallable_V2
-	virtual void Invoke(P0 iP0, P1 iP1)
+	virtual void Invoke(P0 i0, P1 i1)
 		{
 		if (Temp_t temp = ZCallableTraits_T<Stored_t>::sGetTemp(fCallee))
-			(ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(iP0, iP1);
+			(ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(i0, i1);
 		}
 
 private:
@@ -367,10 +367,10 @@ public:
 		{}
 
 	// From ZCallable_V3
-	virtual void Invoke(P0 iP0, P1 iP1, P2 iP2)
+	virtual void Invoke(P0 i0, P1 i1, P2 i2)
 		{
 		if (Temp_t temp = ZCallableTraits_T<Stored_t>::sGetTemp(fCallee))
-			(ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(iP0, iP1, iP2);
+			(ZCallableTraits_T<Temp_t>::sGetPtr(temp)->*fMethod)(i0, i1, i2);
 		}
 
 private:
