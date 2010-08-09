@@ -56,7 +56,7 @@ private:
 
 class Iter : public ZCounted
 	{
-	Iter(ZRef<DB> iDB, const string8& iSQL, size_t iPosition);
+	Iter(ZRef<DB> iDB, const string8& iSQL, uint64 iPosition);
 
 public:
 	Iter(ZRef<DB> iDB, const string8& iSQL);

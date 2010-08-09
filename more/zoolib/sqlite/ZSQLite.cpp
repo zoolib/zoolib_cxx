@@ -62,7 +62,7 @@ sqlite3* DB::GetDB()
 // fPosition == 1 still references the first result, but sqlite3_step
 // has been called, and fHasValue tells us if we've got a value.
 
-Iter::Iter(ZRef<DB> iDB, const string8& iSQL, size_t iPosition)
+Iter::Iter(ZRef<DB> iDB, const string8& iSQL, uint64 iPosition)
 :	fDB(iDB)
 ,	fSQL(iSQL)
 ,	fStmt(nullptr)
@@ -175,7 +175,8 @@ ZAny Iter::Get(size_t iIndex)
 				case SQLITE3_TEXT:
 					{
 					const unsigned char* theText = ::sqlite3_column_text(fStmt, iIndex);
-					return ZAny(string8((const char*)theText, ::sqlite3_column_bytes(fStmt, iIndex)));
+					return ZAny(
+						string8((const char*)theText, ::sqlite3_column_bytes(fStmt, iIndex)));
 					}
 				case SQLITE_BLOB:
 					{
