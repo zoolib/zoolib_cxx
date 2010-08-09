@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZValPredCompound__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZExpr_Logic_ValPred.h"
-#include "zoolib/ZValPred.h"
 
 #include <vector>
 
@@ -70,6 +70,8 @@ public:
 
 ZValPredCompound sAsValPredCompound(ZRef<ZExpr_Logic> iExpr);
 ZRef<ZExpr_Logic> sAsExpr_Logic(const ZValPredCompound& iVCF);
+
+template <> int sCompare_T(const ZValPredCompound& iL, const ZValPredCompound& iR);
 
 } // namespace ZooLib
 

@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare_Vector.h"
 #include "zoolib/ZValPredCompound.h"
 #include "zoolib/ZVisitor_Do_T.h"
 
@@ -42,8 +43,8 @@ static void spCrossProduct(const SectUnion& iSourceA,
 			{
 			oDest.push_back(*iterSourceA);
 			ZValPredCompound::Sect& temp = oDest.back();
-			temp.reserve(temp.size() + (*iterSourceB).size());
-			temp.insert(temp.end(), (*iterSourceB).begin(), (*iterSourceB).end());
+			temp.reserve(temp.size() + iterSourceB->size());
+			temp.insert(temp.end(), iterSourceB->begin(), iterSourceB->end());
 			}
 		}
 	}
@@ -174,10 +175,10 @@ bool ZValPredCompound::Matches(ZValContext& iContext, const ZVal_Any& iVal) cons
 		iterSectUnion != fSectUnion.end(); ++iterSectUnion)
 		{
 		bool allOkay = true;
-		for (Sect::const_iterator iterSect = (*iterSectUnion).begin();
-			allOkay && iterSect != (*iterSectUnion).end(); ++iterSect)
+		for (Sect::const_iterator iterSect = iterSectUnion->begin();
+			allOkay && iterSect != iterSectUnion->end(); ++iterSect)
 			{
-			if (!(*iterSect).Matches(iContext, iVal))
+			if (!iterSect->Matches(iContext, iVal))
 				allOkay = false;
 			}
 		if (allOkay)
@@ -249,8 +250,8 @@ ZRef<ZExpr_Logic> sAsExpr_Logic(const ZValPredCompound& iVCF)
 		outer != iVCF.fSectUnion.end(); ++outer)
 		{
 		ZRef<ZExpr_Logic> temp = sTrue();
-		for (Sect::const_iterator inner = (*outer).begin();
-			inner != (*outer).end(); ++inner)
+		for (Sect::const_iterator inner = outer->begin();
+			inner != outer->end(); ++inner)
 			{
 			temp = temp & (*inner);
 			}
@@ -258,5 +259,8 @@ ZRef<ZExpr_Logic> sAsExpr_Logic(const ZValPredCompound& iVCF)
 		}
 	return result;
 	}
+
+template <> int sCompare_T(const ZValPredCompound& iL, const ZValPredCompound& iR)
+	{ return sCompare_T(iL.fSectUnion, iR.fSectUnion); }
 
 } // namespace ZooLib

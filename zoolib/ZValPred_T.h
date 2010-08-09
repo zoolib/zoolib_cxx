@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZValPred_T__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZUtil_STL_set.h"
 
@@ -45,6 +46,11 @@ template <class Val> class ZValPred_T;
 #pragma mark -
 #pragma mark * ZValComparator_T
 
+template <class Val> class ZValComparator_Simple_T;
+template <class Val> class ZValComparator_StringContains_T;
+template <class Val> class ZValComparator_SeqContains_T;
+template <class Val> class ZValComparator_Regex_T;
+
 template <class Val>
 class ZValComparator_T : public ZCounted
 	{
@@ -55,6 +61,14 @@ public:
 	virtual ~ZValComparator_T();
 
 	virtual bool Matches(const Val& iLHS, const Val& iRHS) = 0;
+
+	int Compare(ZRef<ZValComparator_T> iOther);
+
+	virtual int pRevCompare(ZValComparator_T<Val>* iOther) = 0;
+	virtual int pCompare_Simple(ZValComparator_Simple_T<Val>* iOther) = 0;
+	virtual int pCompare_StringContains(ZValComparator_StringContains_T<Val>* iOther) = 0;
+	virtual int pCompare_SeqContains(ZValComparator_SeqContains_T<Val>* iOther) = 0;
+	virtual int pCompare_Regex(ZValComparator_Regex_T<Val>* iOther) = 0;
 	};
 
 template <class Val>
@@ -65,12 +79,78 @@ template <class Val>
 ZValComparator_T<Val>::~ZValComparator_T()
 	{}
 
+template <class Val>
+int ZValComparator_T<Val>::Compare(ZRef<ZValComparator_T> iOther)
+	{
+	// An extant node is greater than an absent node.
+	if (!iOther)
+		return 1;
+
+	// VERY IMPORTANT. pRevCompare returns 1 if the callee is less than
+	// the param. So we invoke it on iOther to get the sense that callers expect.
+	return iOther.Get()->pRevCompare(this);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZValComparand_GT bases
+
+template <class Val>
+class ZValComparator_GT_T : public ZValComparator_T<Val>
+	{
+public:
+// From ZValComparand_T<Val>
+	virtual int pCompare_Simple(ZValComparator_Simple_T<Val>* iOther)
+		{ return -1 ;}
+
+	virtual int pCompare_StringContains(ZValComparator_StringContains_T<Val>* iOther)
+		{ return -1 ;}
+
+	virtual int pCompare_SeqContains(ZValComparator_SeqContains_T<Val>* iOther)
+		{ return -1 ;}
+
+	virtual int pCompare_Regex(ZValComparator_Regex_T<Val>* iOther)
+		{ return -1 ;}
+	};
+
+template <class Val>
+class ZValComparator_GT_Simple_T : public ZValComparator_GT_T<Val>
+	{
+public:
+	virtual int pCompare_Simple(ZValComparator_Simple_T<Val>* iOther)
+		{ return 1 ;}
+	};
+
+template <class Val>
+class ZValComparator_GT_StringContains_T : public ZValComparator_GT_Simple_T<Val>
+	{
+public:
+	virtual int pCompare_StringContains(ZValComparator_StringContains_T<Val>* iOther)
+		{ return 1 ;}
+	};
+
+template <class Val>
+class ZValComparator_GT_SeqContains_T : public ZValComparator_GT_StringContains_T<Val>
+	{
+public:
+	virtual int pCompare_SeqContains(ZValComparator_SeqContains_T<Val>* iOther)
+		{ return 1 ;}
+	};
+
+template <class Val>
+class ZValComparator_GT_Regex_T : public ZValComparator_GT_SeqContains_T<Val>
+	{
+public:
+	virtual int pCompare_Regex(ZValComparator_Regex_T<Val>* iOther)
+		{ return 1 ;}
+	};
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValComparator_Simple_T
 
 template <class Val>
-class ZValComparator_Simple_T : public ZValComparator_T<Val>
+class ZValComparator_Simple_T : public ZValComparator_GT_T<Val>
 	{
 public:
 	enum EComparator
@@ -86,6 +166,9 @@ public:
 
 // From ZValComparator_T
 	virtual bool Matches(const Val& iLHS, const Val& iRHS);
+
+	virtual int pRevCompare(ZValComparator_T<Val>* iOther);
+	virtual int pCompare_Simple(ZValComparator_Simple_T<Val>* iOther);
 
 // Our protocol
 	EComparator GetEComparator();
@@ -120,18 +203,29 @@ typename ZValComparator_Simple_T<Val>::EComparator
 ZValComparator_Simple_T<Val>::GetEComparator()
 	{ return fEComparator; }
 
+template <class Val>
+int ZValComparator_Simple_T<Val>::pRevCompare(ZValComparator_T<Val>* iOther)
+	{ return iOther->pCompare_Simple(this); }
+
+template <class Val>
+int ZValComparator_Simple_T<Val>::pCompare_Simple(ZValComparator_Simple_T<Val>* iOther)
+	{ return sCompare_T(int(fEComparator), int(iOther->fEComparator)); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValComparator_StringContains_T
 
 template <class Val>
-class ZValComparator_StringContains_T : public ZValComparator_T<Val>
+class ZValComparator_StringContains_T : public ZValComparator_GT_Simple_T<Val>
 	{
 public:
 	ZValComparator_StringContains_T(int iStrength);
 
 // From ZValComparator_T
 	virtual bool Matches(const Val& iLHS, const Val& iRHS);
+
+	virtual int pRevCompare(ZValComparator_T<Val>* iOther);
+	virtual int pCompare_StringContains(ZValComparator_StringContains_T<Val>* iOther);
 
 private:
 	const int fStrength;
@@ -142,13 +236,16 @@ private:
 #pragma mark * ZValComparator_SeqContains_T
 
 template <class Val>
-class ZValComparator_SeqContains_T : public ZValComparator_T<Val>
+class ZValComparator_SeqContains_T : public ZValComparator_GT_StringContains_T<Val>
 	{
 public:
 	ZValComparator_SeqContains_T();
 
 // From ZValComparator_T
 	virtual bool Matches(const Val& iLHS, const Val& iRHS);
+
+	virtual int pRevCompare(ZValComparator_T<Val>* iOther);
+	virtual int pCompare_SeqContains(ZValComparator_SeqContains_T<Val>* iOther);
 	};
 
 // =================================================================================================
@@ -156,18 +253,25 @@ public:
 #pragma mark * ZValComparator_Regex_T
 
 template <class Val>
-class ZValComparator_Regex_T : public ZValComparator_T<Val>
+class ZValComparator_Regex_T : public ZValComparator_GT_SeqContains_T<Val>
 	{
 public:
 	ZValComparator_Regex_T();
 
 // From ZValComparator_T
 	virtual bool Matches(const Val& iLHS, const Val& iRHS);
+
+	virtual int pRevCompare(ZValComparator_T<Val>* iOther);
+	virtual int pCompare_Regex(ZValComparator_Regex_T<Val>* iOther);
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValComparand_T
+
+template <class Val> class ZValComparand_Const_T;
+template <class Val> class ZValComparand_Name_T;
+template <class Val> class ZValComparand_Var_T;
 
 template <class Val>
 class ZValComparand_T : public ZCounted
@@ -181,6 +285,13 @@ public:
 	virtual Val GetVal(ZValContext& iContext, const Val& iVal) = 0;
 	virtual std::set<std::string> GetNames();
 	virtual ZRef<ZValComparand_T> Renamed(const Rename_t& iRename);
+
+	int Compare(ZRef<ZValComparand_T> iOther);
+
+	virtual int pRevCompare(ZValComparand_T<Val>* iOther) = 0;
+	virtual int pCompare_Const(ZValComparand_Const_T<Val>* iOther) = 0;
+	virtual int pCompare_Name(ZValComparand_Name_T<Val>* iOther) = 0;
+	virtual int pCompare_Var(ZValComparand_Var_T<Val>* iOther) = 0;
 	};
 
 template <class Val>
@@ -199,18 +310,76 @@ template <class Val>
 ZRef<ZValComparand_T<Val> > ZValComparand_T<Val>::Renamed(const Rename_t& iRename)
 	{ return this; }
 
+template <class Val>
+int ZValComparand_T<Val>::Compare(ZRef<ZValComparand_T> iOther)
+	{
+	// An extant node is greater than an absent node.
+	if (!iOther)
+		return 1;
+
+	// VERY IMPORTANT. pRevCompare returns 1 if the callee is less than
+	// the param. So we invoke it on iOther to get the sense that callers expect.
+	return iOther.Get()->pRevCompare(this);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZValComparand_GT bases
+
+template <class Val>
+class ZValComparand_GT_T : public ZValComparand_T<Val>
+	{
+public:
+// From ZValComparand_T<Val>
+	virtual int pCompare_Const(ZValComparand_Const_T<Val>* iOther)
+		{ return -1 ;}
+
+	virtual int pCompare_Name(ZValComparand_Name_T<Val>* iOther)
+		{ return -1 ;}
+
+	virtual int pCompare_Var(ZValComparand_Var_T<Val>* iOther)
+		{ return -1 ;}
+	};
+
+template <class Val>
+class ZValComparand_GT_Const_T : public ZValComparand_GT_T<Val>
+	{
+public:
+	virtual int pCompare_Const(ZValComparand_Const_T<Val>* iOther)
+		{ return 1 ;}
+	};
+
+template <class Val>
+class ZValComparand_GT_Name_T : public ZValComparand_GT_T<Val>
+	{
+public:
+	virtual int pCompare_Name(ZValComparand_Name_T<Val>* iOther)
+		{ return 1 ;}
+	};
+
+template <class Val>
+class ZValComparand_GT_Var_T : public ZValComparand_GT_T<Val>
+	{
+public:
+	virtual int pCompare_Var(ZValComparand_Var_T<Val>* iOther)
+		{ return 1 ;}
+	};
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValComparand_Const_T
 
 template <class Val>
-class ZValComparand_Const_T : public ZValComparand_T<Val>
+class ZValComparand_Const_T : public ZValComparand_GT_T<Val>
 	{
 public:
 	ZValComparand_Const_T(const Val& iVal);
 
 // From ZValComparand_T
 	virtual Val GetVal(ZValContext& iContext, const Val& iVal);
+
+	virtual int pRevCompare(ZValComparand_T<Val>* iOther);
+	virtual int pCompare_Const(ZValComparand_Const_T<Val>* iOther);
 
 // Our protocol
 	Val GetVal();
@@ -232,12 +401,20 @@ template <class Val>
 Val ZValComparand_Const_T<Val>::GetVal()
 	{ return fVal; }
 
+template <class Val>
+int ZValComparand_Const_T<Val>::pRevCompare(ZValComparand_T<Val>* iOther)
+	{ return iOther->pCompare_Const(this); }
+
+template <class Val>
+int ZValComparand_Const_T<Val>::pCompare_Const(ZValComparand_Const_T<Val>* iOther)
+	{ return sCompare_T(fVal, iOther->fVal); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValComparand_Name_T
 
 template <class Val>
-class ZValComparand_Name_T : public ZValComparand_T<Val>
+class ZValComparand_Name_T : public ZValComparand_GT_Const_T<Val>
 	{
 public:
 	ZValComparand_Name_T(const std::string& iName);
@@ -246,6 +423,9 @@ public:
 	virtual Val GetVal(ZValContext& iContext, const Val& iVal);
 	virtual std::set<std::string> GetNames();
 	virtual ZRef<ZValComparand_T<Val> > Renamed(const Rename_t& iRename);
+
+	virtual int pRevCompare(ZValComparand_T<Val>* iOther);
+	virtual int pCompare_Name(ZValComparand_Name_T<Val>* iOther);
 
 // Our protocol
 	const std::string& GetName();
@@ -276,22 +456,33 @@ ZRef<ZValComparand_T<Val> > ZValComparand_Name_T<Val>::Renamed(const Rename_t& i
 	{
 	Rename_t::const_iterator i = iRename.find(fName);
 	if (i != iRename.end())
-		return new ZValComparand_Name_T((*i).second);
+		return new ZValComparand_Name_T(i->second);
 	return this;
 	}
+
+template <class Val>
+int ZValComparand_Name_T<Val>::pRevCompare(ZValComparand_T<Val>* iOther)
+	{ return iOther->pCompare_Name(this); }
+
+template <class Val>
+int ZValComparand_Name_T<Val>::pCompare_Name(ZValComparand_Name_T<Val>* iOther)
+	{ return sCompare_T(fName, iOther->fName); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValComparand_Var_T
 
 template <class Val>
-class ZValComparand_Var_T : public ZValComparand_T<Val>
+class ZValComparand_Var_T : public ZValComparand_GT_Name_T<Val>
 	{
 public:
 	ZValComparand_Var_T(const std::string& iVarName);
 
 // From ZValComparand_T
 	virtual Val GetVal(ZValContext& iContext, const Val& iVal);
+
+	virtual int pRevCompare(ZValComparand_T<Val>* iOther);
+	virtual int pCompare_Var(ZValComparand_Var_T<Val>* iOther);
 
 // Our protocol
 	std::string GetVarName();
@@ -315,6 +506,14 @@ Val ZValComparand_Var_T<Val>::GetVal(ZValContext& iContext, const Val& iVal)
 template <class Val>
 std::string ZValComparand_Var_T<Val>::GetVarName()
 	{ return fVarName; }
+
+template <class Val>
+int ZValComparand_Var_T<Val>::pRevCompare(ZValComparand_T<Val>* iOther)
+	{ return iOther->pCompare_Var(this); }
+
+template <class Val>
+int ZValComparand_Var_T<Val>::pCompare_Var(ZValComparand_Var_T<Val>* iOther)
+	{ return sCompare_T(fVarName, iOther->fVarName); }
 
 // =================================================================================================
 #pragma mark -
@@ -531,6 +730,22 @@ ZValPred_T<Val> operator>(
 		(iLHS,
 		new ZValComparator_Simple_T<Val>(ZValComparator_Simple_T<Val>::eGT),
 		iRHS);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCompare_T
+
+template <class Val>
+int sCompare_T(const ZValPred_T<Val>& iL, const ZValPred_T<Val>& iR)
+	{
+	if (int compare = iL.GetLHS()->Compare(iR.GetLHS()))
+		return compare;
+
+	if (int compare = iL.GetComparator()->Compare(iR.GetComparator()))
+		return compare;
+
+	return iL.GetRHS()->Compare(iR.GetRHS());
 	}
 
 } // namespace ZooLib
