@@ -122,8 +122,8 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 	{
 	if (fIter != fAttrs.end())
 		{
-		oName = (*fIter).first;
-		ZRef<ZYadR> result = ZooLib::sMakeYadR((*fIter).second);
+		oName = fIter->first;
+		ZRef<ZYadR> result = ZooLib::sMakeYadR(fIter->second);
 		++fIter;
 		return result;
 		}

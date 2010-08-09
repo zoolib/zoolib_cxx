@@ -42,13 +42,13 @@ public:
 		{}
 
 	template <class P0>
-	ZYadR_Val_T(const P0& iP0)
-	:	fVal(iP0)
+	ZYadR_Val_T(const P0& i0)
+	:	fVal(i0)
 		{}
 
 	template <class P0, class P1>
-	ZYadR_Val_T(const P0& iP0, const P1& iP1)
-	:	fVal(iP0, iP1)
+	ZYadR_Val_T(const P0& i0, const P1& i1)
+	:	fVal(i0, i1)
 		{}
 
 // Our protocol
