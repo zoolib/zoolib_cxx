@@ -158,7 +158,7 @@ public:
 	template <class S>
 	ZGPoint_T(const ZGPoint_T<S>& other);
 
-// Conversions to & from native types
+// Construct from native types
 	#if ZCONFIG_SPI_Enabled(CoreGraphics)
 		ZGPoint_T(const CGPoint& other);
 	#endif
@@ -300,7 +300,7 @@ public:
 
 	ZGExtent_T(const ZPointPOD& iPoint);
 
-// Conversions to & from native types
+// Construct from native types
 	#if ZCONFIG_SPI_Enabled(CoreGraphics)
 		ZGExtent_T(const CGSize& other);
 	#endif
@@ -377,6 +377,7 @@ public:
 	template <class U>
 	ZGRectPOD_T& operator=(const ZGExtentPOD_T<U>& iExtent);
 
+// Conversions to & from native types
 	#if ZCONFIG_SPI_Enabled(CoreGraphics)
 		ZGRectPOD_T& operator=(const CGRect& rect);
 		operator CGRect() const;
@@ -402,6 +403,7 @@ public:
 		operator XRectangle() const;
 	#endif
 
+// Relational operators
 	bool operator==(const ZGRectPOD_T& other) const
 		{ return origin == other.origin && extent == other.extent; }
 
@@ -678,7 +680,7 @@ public:
 	template <class U>
 	ZGRect_T(const ZGPointPOD_T<U>& iOrigin, T iWidth, T iHeight);
 
-// Conversions to & from native types
+// Construct from native types
 	#if ZCONFIG_SPI_Enabled(CoreGraphics)
 		ZGRect_T(const CGSize& iSize);
 		ZGRect_T(const CGRect& iRect);
