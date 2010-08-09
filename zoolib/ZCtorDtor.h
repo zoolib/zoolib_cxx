@@ -36,16 +36,16 @@ inline T* sConstruct_T(void* oBytes)
 	}
 
 template <class T, class P0>
-inline T* sConstruct_T(void* oBytes, const P0& iP0)
+inline T* sConstruct_T(void* oBytes, const P0& i0)
 	{
-	new(oBytes) T(iP0);
+	new(oBytes) T(i0);
 	return static_cast<T*>(oBytes);
 	}
 
 template <class T, class P0, class P1>
-inline T* sConstruct_T(void* oBytes, const P0& iP0, const P1& iP1)
+inline T* sConstruct_T(void* oBytes, const P0& i0, const P1& i1)
 	{
-	new(oBytes) T(iP0, iP1);
+	new(oBytes) T(i0, i1);
 	return static_cast<T*>(oBytes);
 	}
 
