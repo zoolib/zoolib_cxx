@@ -48,7 +48,7 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Event>& iEvent)
 		{
 		w << "(";
 		w.Writef("%zu", iEvent->Value());
-		w << "," << iEvent->Left() << "," << iEvent->Right();
+		w << "+" << iEvent->Left() << "," << iEvent->Right();
 		w << ")";
 		}
 	return w;
