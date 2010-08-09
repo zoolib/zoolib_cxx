@@ -788,7 +788,7 @@ void StrimR_TextOnly::AllNames(vector<string>& oNames) const
 	for (vector<pair<string, Attrs_t> >::const_iterator i = fTags.begin();
 		i != fTags.end(); ++i)
 		{
-		oNames.push_back((*i).first);
+		oNames.push_back(i->first);
 		}
 	}
 
@@ -797,7 +797,7 @@ void StrimR_TextOnly::AllAttrs(vector<Attrs_t>& oAttrs) const
 	for (vector<pair<string, Attrs_t> >::const_iterator i = fTags.begin();
 		i != fTags.end(); ++i)
 		{
-		oAttrs.push_back((*i).second);
+		oAttrs.push_back(i->second);
 		}
 	}
 
@@ -1283,7 +1283,7 @@ const StrimW& StrimW::Attrf(const string8& iName, const UTF8* iValue, ...) const
 const StrimW& StrimW::Attrs(const Attrs_t& iMap) const
 	{
 	for (Attrs_t::const_iterator i = iMap.begin(); i != iMap.end(); ++i)
-		this->Attr((*i).first, (*i).second);
+		this->Attr(i->first, i->second);
 
 	return *this;
 	}
