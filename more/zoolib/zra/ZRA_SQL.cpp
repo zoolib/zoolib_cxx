@@ -182,9 +182,9 @@ void MakeSFW::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	bool foundIt = false;
 	for (Rename_t::iterator i = theRename.begin(); i != theRename.end(); /*no inc*/)
 		{
-		if ((*i).second == oldName)
+		if (i->second == oldName)
 			{
-			(*i).second = newName;
+			i->second = newName;
 			foundIt = true;
 			}
 		}

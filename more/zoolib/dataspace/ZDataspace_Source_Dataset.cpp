@@ -27,23 +27,27 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_ZooLibStrim.h"
 
 #include "zoolib/dataspace/ZDataspace_Source_Dataset.h"
+#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
-#include "zoolib/zqe/ZQE_Iterator_Any.h"
-#include "zoolib/zqe/ZQE_Result_Any.h"
-#include "zoolib/zqe/ZQE_Iterator_Any.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
-
-#include "zoolib/ZStdIO.h"
-#include "zoolib/zra/ZRA_Util_Strim_Rel.h"
+#include "zoolib/zqe/ZQE_Walker_Any.h"
+#include "zoolib/zqe/ZQE_Walker_Product.h"
+#include "zoolib/zqe/ZQE_Walker_ValPredCompound.h"
 
 namespace ZooLib {
 namespace ZDataspace {
 
-using ZDataset::ClockedDeltas;
-using ZDataset::Daton;
 using ZDataset::Dataset;
-using ZDataset::Map_NamedClock_Delta_t;
-using ZDataset::NamedClock;
+using ZDataset::Daton;
+using ZDataset::Deltas;
+using ZDataset::Map_NamedEvent_Delta_t;
+using ZDataset::NamedEvent;
+
+using ZRA::NameMap;
+
+using std::map;
+using std::pair;
+using std::set;
+using std::vector;
 
 /*
 Minimally, keep an index of property names in contents -- that way we can efficiently
@@ -87,60 +91,88 @@ ZVal_Any spAsVal(const Daton& iDaton)
 
 namespace { // anonymous
 
-class Iterator : public ZQE::Iterator
+class Walker : public ZQE::Walker
 	{
 public:
-	typedef map<Daton, pair<NamedClock, ZVal_Any> > Map_t;
+	typedef map<Daton, pair<NamedEvent, ZVal_Any> > Map_t;
 
-	Iterator(const RelHead& iRelHead, Map_t::const_iterator iCurrent, Map_t::const_iterator iEnd);
+	Walker(const NameMap& iNameMap, Map_t::const_iterator iCurrent, Map_t::const_iterator iEnd);
+	Walker(const vector<pair<string8, string8> >& iNames,
+		Map_t::const_iterator iCurrent, Map_t::const_iterator iEnd);
 
-	virtual ~Iterator();
+	virtual ~Walker();
 
-	virtual ZRef<ZQE::Iterator> Clone();
-	virtual ZRef<ZQE::Result> ReadInc();
+// From ZQE::Walker
+	virtual size_t Count();
+	virtual string8 NameOf(size_t iIndex);
+
+	virtual ZRef<ZQE::Walker> Clone();
+	virtual ZRef<ZQE::Row> ReadInc();
 
 private:
-	const RelHead fRelHead;
+	vector<pair<string8, string8> > fNames;
 	Map_t::const_iterator fCurrent;
 	const Map_t::const_iterator fEnd;
 	};
 
-Iterator::Iterator(
-	const RelHead& iRelHead, Map_t::const_iterator iCurrent, Map_t::const_iterator iEnd)
-:	fRelHead(iRelHead)
+Walker::Walker(const NameMap& iNameMap, Map_t::const_iterator iCurrent, Map_t::const_iterator iEnd)
+:	fNames(iNameMap.GetElems().begin(), iNameMap.GetElems().end())
 ,	fCurrent(iCurrent)
 ,	fEnd(iEnd)
 	{}
 
-Iterator::~Iterator()
+Walker::Walker(const vector<pair<string8, string8> >& iNames,
+	Map_t::const_iterator iCurrent, Map_t::const_iterator iEnd)
+:	fNames(iNames)
+,	fCurrent(iCurrent)
+,	fEnd(iEnd)
 	{}
 
-ZRef<ZQE::Iterator> Iterator::Clone()
-	{ return new Iterator(fRelHead, fCurrent, fEnd); }
+Walker::~Walker()
+	{}
 
-ZRef<ZQE::Result> Iterator::ReadInc()
+size_t Walker::Count()
+	{ return fNames.size(); }
+
+string8 Walker::NameOf(size_t iIndex)
+	{
+	if (iIndex < fNames.size())
+		return fNames[iIndex].first;
+	return string8();
+	}
+
+ZRef<ZQE::Walker> Walker::Clone()
+	{ return new Walker(fNames, fCurrent, fEnd); }
+
+ZRef<ZQE::Row> Walker::ReadInc()
 	{
 	while (fCurrent != fEnd)
 		{
-		const ZVal_Any& theVal = (*fCurrent).second.second;
+		const ZVal_Any& theVal = fCurrent->second.second;
 		if (const ZMap_Any* theMap = theVal.PGet_T<ZMap_Any>())
 			{
-			ZRA::RelHead sourceRelHead;
-			ZMap_Any newMap;
-			for (ZMap_Any::Index_t i = theMap->Begin(); i != theMap->End(); ++i)
+			vector<ZVal_Any> theVals;
+			theVals.reserve(fNames.size());
+			bool allGood = true;
+			for (size_t x = 0; x < fNames.size(); ++x)
 				{
-				const string theName = theMap->NameOf(i);
-				sourceRelHead |= theName;
-				if (fRelHead.Contains(theName))
-					newMap.Set(theName, theMap->Get(i));
+				if (const ZVal_Any* theVal = theMap->PGet(fNames[x].second))
+					{
+					theVals[x] = *theVal;
+					}
+				else
+					{
+					allGood = false;
+					break;
+					}
 				}
 
-			if (sourceRelHead.Contains(fRelHead))
+			if (allGood)
 				{
-				ZRef<ZQE::Result_Any> result = new ZQE::Result_Any(newMap);
-				result->AddAnnotation(new Annotation_Daton((*fCurrent).first));
+				ZRef<ZQE::Row_Vector> theRow = new ZQE::Row_Vector(&theVals);
+				theRow->AddAnnotation(new Annotation_Daton(fCurrent->first));
 				++fCurrent;
-				return result;
+				return theRow;
 				}
 			}
 		++fCurrent;
@@ -152,43 +184,13 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_DoMakeIterator (anonymous)
-
-namespace { // anonymous
-
-class Visitor_DoMakeIterator
-:	public virtual ZQE::Visitor_DoMakeIterator_Any
-,	public virtual ZRA::Visitor_Expr_Rel_Concrete
-	{
-public:
-	Visitor_DoMakeIterator(Source_Dataset* iSource);
-
-	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr);
-
-private:
-	Source_Dataset* fSource;
-	};
-
-Visitor_DoMakeIterator::Visitor_DoMakeIterator(Source_Dataset* iSource)
-:	fSource(iSource)
-	{}
-
-void Visitor_DoMakeIterator::Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
-	{ this->pSetResult(fSource->pMakeIterator(iExpr->GetRelHead())); }
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Source_Dataset::PQuery
 
 class Source_Dataset::PQuery
 	{
 public:
 	int64 fRefcon;
-	SearchThing fSearchThing;
-//	ZRef<ZRA::Expr_Rel> fRel;
-//	ZRef<ZQE::Result> fResults;
+	SearchSpec fSearchSpec;
 	};
 
 // =================================================================================================
@@ -207,10 +209,10 @@ set<RelHead> Source_Dataset::GetRelHeads()
 
 void Source_Dataset::Update(
 	bool iLocalOnly,
-	AddedSearch* iAdded, size_t iAddedCount,
-	int64* iRemoved, size_t iRemovedCount,
+	const AddedSearch* iAdded, size_t iAddedCount,
+	const int64* iRemoved, size_t iRemovedCount,
 	vector<SearchResult>& oChanged,
-	Clock& oClock)
+	ZRef<Event>& oEvent)
 	{
 	oChanged.clear();
 
@@ -218,11 +220,9 @@ void Source_Dataset::Update(
 		{
 		PQuery* thePQuery = new PQuery;
 		thePQuery->fRefcon = iAdded->fRefcon;
-		thePQuery->fSearchThing = iAdded->fSearchThing;
+		thePQuery->fSearchSpec = iAdded->fSearchSpec;
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
-
-		ZStdIO::strim_err << iAdded->fSearchThing << "\n";
 
 		++iAdded;
 		}
@@ -240,67 +240,88 @@ void Source_Dataset::Update(
 		i != fMap_RefconToPQuery.end(); ++i)
 		{
 		SearchResult theSearchResult;
-		theSearchResult.fRefcon = (*i).first;
+		theSearchResult.fRefcon = i->first;
+		const vector<NameMap>& theNM = i->second->fSearchSpec.fNameMaps;
 
-#if 0 //##
-		for (ZRef<ZQE::Iterator> theIterator = Visitor_DoMakeIterator(this).Do((*i).second->fRel);;)
+		ZRef<ZQE::Walker> theWalker;
+		for (vector<NameMap>::const_iterator iterNM = theNM.begin();
+			iterNM != theNM.end(); ++iterNM)
 			{
-			ZRef<ZQE::Result> theResult = theIterator->ReadInc();
-			if (!theResult)
-				break;
-			theSearchResult.fResults.push_back(theResult);
+			ZRef<ZQE::Walker> cur = new Walker(*iterNM, fMap.begin(), fMap.end());
+			if (theWalker)
+				theWalker = new ZQE::Walker_Product(theWalker, cur);
+			else
+				theWalker = cur;
 			}
-#endif
+
+		theWalker =
+			new ZQE::Walker_ValPredCompound(theWalker, i->second->fSearchSpec.fPredCompound);
+
+		vector<string8> theRowHead;
+		for (size_t x = 0; x < theWalker->Count(); ++x)
+			theRowHead.push_back(theWalker->NameOf(x));
+
+		vector<ZRef<ZQE::Row> > theRows;
+
+		for (;;)
+			{
+			if (ZRef<ZQE::Row> theRow = theWalker->ReadInc())
+				theRows.push_back(theRow);
+			else
+				break;
+			}
+
 		oChanged.push_back(theSearchResult);
 		}
 
-	oClock = fClock;
+	oEvent = fEvent;
 	}
 
 void Source_Dataset::Dump(const ZStrimW& w)
 	{
-	for (map<Daton, pair<NamedClock, ZVal_Any> >::iterator i = fMap.begin(); i != fMap.end(); ++i)
+	for (map<Daton, pair<NamedEvent, ZVal_Any> >::iterator i = fMap.begin(); i != fMap.end(); ++i)
 		{
-		ZYad_ZooLibStrim::sToStrim(sMakeYadR((*i).second.second), w);
+		ZYad_ZooLibStrim::sToStrim(sMakeYadR(i->second.second), w);
 		w << "\n";
 		}
 	}
 
-ZRef<ZQE::Iterator> Source_Dataset::pMakeIterator(const RelHead& iRelHead)
-	{ return new Iterator(iRelHead, fMap.begin(), fMap.end()); }
+ZRef<ZQE::Walker> Source_Dataset::pMakeWalker(const RelHead& iRelHead)
+	{ return new Walker(iRelHead, fMap.begin(), fMap.end()); }
 
 void Source_Dataset::pPull()
 	{
-	Clock newClock;
-	ZRef<ClockedDeltas> clockedDeltas;
-	fDataset->GetClockedDeltas(fClock, newClock, clockedDeltas);
-	fClock = newClock;
+	using ZIntervalTreeClock::Stamp;
 
-	const Map_NamedClock_Delta_t& theNCDM = clockedDeltas->GetMap();
-	for (Map_NamedClock_Delta_t::const_iterator
-		iterNCDM = theNCDM.begin(), endNCDM = theNCDM.end();
-		iterNCDM != endNCDM; ++iterNCDM)
+	ZRef<Deltas> theDeltas;
+	fEvent = fDataset->GetDeltas(theDeltas, fEvent);
+
+	const Map_NamedEvent_Delta_t& theNEDM = theDeltas->GetMap();
+	for (Map_NamedEvent_Delta_t::const_iterator
+		iterNEDM = theNEDM.begin(), endNEDM = theNEDM.end();
+		iterNEDM != endNEDM; ++iterNEDM)
 		{
-		const NamedClock& theNamedClock = (*iterNCDM).first;
-		const map<Daton, bool>& theStatements = (*iterNCDM).second->GetStatements();
-		for (map<Daton, bool>::const_iterator iterStmts = theStatements.begin();
-			iterStmts != theStatements.end(); ++iterStmts)
+		const NamedEvent& theNamedEvent = iterNEDM->first;
+		const map<Daton, bool>& theStatements = iterNEDM->second->GetStatements();
+		for (map<Daton, bool>::const_iterator
+			iterStmts = theStatements.begin(), endStmts = theStatements.end();
+			iterStmts != endStmts; ++iterStmts)
 			{
-			const Daton& theDaton = (*iterStmts).first;
-			const pair<NamedClock, ZVal_Any> newPair(theNamedClock, spAsVal(theDaton));
+			const Daton& theDaton = iterStmts->first;
+			const pair<NamedEvent, ZVal_Any> newPair(theNamedEvent, spAsVal(theDaton));
 
-			map<Daton, pair<NamedClock, ZVal_Any> >::iterator iterMap = fMap.find(theDaton);
+			map<Daton, pair<NamedEvent, ZVal_Any> >::iterator iterMap = fMap.find(theDaton);
 
-			if (iterMap == fMap.end() || (*iterMap).first != theDaton)
+			if (iterMap == fMap.end() || iterMap->first != theDaton)
 				{
-				if ((*iterStmts).second)
+				if (iterStmts->second)
 					fMap.insert(iterMap, make_pair(theDaton, newPair));
 				}
-			else if ((*iterMap).second.first < theNamedClock)
+			else if (iterMap->second.first < theNamedEvent)
 				{
-				// Only change if theNamedClock is more recent than what we've got.
-				if ((*iterStmts).second)
-					(*iterMap).second = newPair;
+				// Only change if theNamedEvent is more recent than what we've got.
+				if (iterStmts->second)
+					iterMap->second = newPair;
 				else
 					fMap.erase(iterMap);
 				}

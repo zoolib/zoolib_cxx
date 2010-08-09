@@ -1,10 +1,9 @@
 
-#include "zoolib/zqe/ZQE_Result_Any.h"
-
 #include "zoolib/dataspace/ZDataspace_Source_Dataset.h"
 #include "zoolib/dataspace/ZDataspace_Source_Dummy.h"
 #include "zoolib/dataspace/ZDataspace_Source_SQLite.h"
 #include "zoolib/dataspace/ZDataspace_Source_Union.h"
+#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
 #include "zoolib/ZExpr_Logic.h"
 #include "zoolib/ZStrim.h"
@@ -13,6 +12,8 @@
 #include "zoolib/ZValPred.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
+
+#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
 #include "zoolib/zra/ZRA_Util_RelOperators.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
@@ -23,6 +24,10 @@ using namespace ZooLib;
 using namespace ZRA;
 using namespace ZDataspace;
 using namespace ZDataset;
+
+using std::set;
+using std::string;
+using std::vector;
 
 static ZData_Any spAsData(const ZVal_Any& iVal)
 	{
@@ -37,20 +42,29 @@ static void spDumpChanged(const vector<SearchResult>& iChanged, const ZStrimW& w
 	{
 	for (vector<SearchResult>::const_iterator i = iChanged.begin(); i != iChanged.end(); ++i)
 		{
-		for (vector<ZRef<ZQE::Result> >::const_iterator j = (*i).fResults.begin(); j != (*i).fResults.end(); ++j)
+		const SearchResult& theSearchResult = *i;
+		ZRef<SearchRows> theSearchRows = theSearchResult.fSearchRows;
+		const size_t theColCount = theSearchRows->GetRowHead().size();
+		for (size_t x = 0; x < theColCount; ++x)
+			w << theSearchRows->GetRowHead()[x] << "\t";
+		w << "\n";
+
+		ZRef<ZQE::RowVector> theRowVector = theSearchRows->GetRowVector();
+		for (size_t iterRV = 0; iterRV < theRowVector->Count(); ++iterRV)
 			{
-			if (ZRef<ZQE::Result_Any> theResult = (*j).DynamicCast<ZQE::Result_Any>())
+			ZRef<ZQE::Row> theRow = theRowVector->Get(iterRV);
+			ZAssert(theRow->Count() == theColCount);
+			for (size_t x = 0; x < theColCount; ++x)
 				{
-				ZYad_ZooLibStrim::sToStrim(0, ZYadOptions(true), sMakeYadR(theResult->GetVal()), w);
-				const set<ZRef<ZCounted> >& theAnnotations = theResult->GetAnnotations();
-				for (set<ZRef<ZCounted> >::const_iterator k = theAnnotations.begin(); k != theAnnotations.end(); ++k)
-					{
-					w << typeid(*(*k).Get()).name() << ", ";
-					}
+				ZYad_ZooLibStrim::sToStrim(0, ZYadOptions(true), sMakeYadR(theRow->Get(x)), w);
+				w << "\t";
 				}
-			else
+
+			set<ZRef<ZCounted> > theAnnotations;
+			theRow->GetAnnotations(theAnnotations);
+			for (set<ZRef<ZCounted> >::const_iterator k = theAnnotations.begin(); k != theAnnotations.end(); ++k)
 				{
-				w << "???";
+				w << typeid(*k->Get()).name() << ", ";
 				}
 			w << "\n";
 			}
@@ -88,11 +102,11 @@ static void spDump(const NameMap& iNameMap, const ZStrimW& w)
 		if (!isFirst)
 			w.Write(", ");
 		isFirst = false;
-		Util_Strim_RelHead::sWrite_PropName((*i).first, w);
-		if ((*i).first != (*i).second)
+		Util_Strim_RelHead::sWrite_PropName(i->first, w);
+		if (i->first != i->second)
 			{
 			w << "/";
-			Util_Strim_RelHead::sWrite_PropName((*i).second, w);
+			Util_Strim_RelHead::sWrite_PropName(i->second, w);
 			}
 		}
 	w.Write("]");
@@ -105,18 +119,14 @@ static void spDump(const vector<NameMap>& iNameMaps, const ZStrimW& w)
 		spDump(*i, w);
 	}
 
-static void spDump(const SearchThing& iSearchThing, const ZStrimW& w)
-	{
-	spDump(iSearchThing.fNameMaps, w);
-	Util_Strim_Rel::sToStrim(sAsRel(iSearchThing), w);
-	w << "\n";
-//	spDump(sAsRel(iSearchThing.fValPredCompound), w);
-	}
+static void spDump(const SearchSpec& iSearchSpec, const ZStrimW& w)
+	{ w << iSearchSpec; }
 
 static void spDump(const Rel& iRel, const ZStrimW& w)
 	{
+//	w << iRel;
 	Util_Strim_Rel::sToStrim(iRel, w);
-	w << "\n";
+//	w << "\n";
 	}
 
 static ZRA::Rel spPrefix(const RelName& iPrefix, ZRA::Rel iRel)
@@ -141,7 +151,7 @@ Bug id_sim i1.n 1 - i2.n 1
 
 // =================================================================================================
 
-void sDataspaceTest(const ZStrimW& w)
+void sDataspaceTest1(const ZStrimW& w)
 	{
 	ZRef<ZSQLite::DB> theDB = new ZSQLite::DB("/Users/ag/sqlitetest/MyVideos34.db");
 
@@ -167,51 +177,55 @@ void sDataspaceTest(const ZStrimW& w)
 
 	{
 	vector<AddedSearch> theAddedSearches;
-	theAddedSearches.push_back(AddedSearch(1, sAsSearchThing(theRel)));
+	theAddedSearches.push_back(AddedSearch(1, sAsSearchSpec(theRel)));
 	vector<SearchResult> changed;
-	Clock newClock;
+	ZRef<Event> newEvent;
 	theSource.Update(false,
 		ZUtil_STL::sFirstOrNil(theAddedSearches), theAddedSearches.size(),
 		nullptr, 0,
-		changed, newClock);
+		changed, newEvent);
 
 	spDumpChanged(changed, w);
 	}
 	}
 
-void sDataspaceTest2(const ZStrimW& w)
+void sDataspaceTest(const ZStrimW& w)
 	{
 	ZRef<ZSQLite::DB> theDB = new ZSQLite::DB("/Users/ag/sqlitetest/MyVideos34.db");
 
-	const string movieArray[] = {"movie.idFile", "movie.idMovie", "movie.idMovie", "movie.c00"};
+	const string movieArray[] = {"movie_idFile", "movie_idMovie", "movie_idMovie", "movie_c00"};
 	const RelHead rhMovie = RelHead(movieArray, countof(movieArray));
-	const RelHead rhMovie_sql = sPrefixAdd("sql.", rhMovie);
+	const RelHead rhMovie_sql = rhMovie;//sPrefixAdd("sql.", rhMovie);
 
 
 	ZRA::Rel relMovieA = sConcrete(rhMovie_sql);
 	ZRA::Rel relMovieB = spPrefix("b_", relMovieA);
-	relMovieB = sRename(relMovieB, "IDMOVIE", "b_sql.movie.idFile");
+	relMovieB = sRename(relMovieB, "IDMOVIERem", "b_movie_idFile");
 
-	Source_SQLite theSource_SQLite(theDB);
+	Source* theSource_SQLite = new Source_SQLite(theDB);
 
+	set<RelHead> theRelHeads;
+	Source* theSource2 = new Source_Dummy(theRelHeads);
 	Source_Union theSource;
-	theSource.InsertSource(&theSource_SQLite, "sql.");
+	theSource.InsertSource(theSource_SQLite, "");
+	theSource.InsertSource(theSource2, "");
 
 //	spDump(theSource.GetRelHeads(), w);
 
 	ZRA::Rel theRel = relMovieA * relMovieB;
-	theRel = theRel & (CName("IDMOVIE") == CString("somestring"));
+//	theRel = theRel & (CName("IDMOVIE") == CString("somestring"));
+	theRel = theRel & (CName("IDMOVIERem") == CConst(int64(2)));
 //	theRel = theRel & (CName("b_sql.movie.idFile") == CName("sql.movie.idFile"));
 
 	{
 	vector<AddedSearch> theAddedSearches;
-	theAddedSearches.push_back(AddedSearch(1, sAsSearchThing(theRel)));
+	theAddedSearches.push_back(AddedSearch(1, sAsSearchSpec(theRel)));
 	vector<SearchResult> changed;
-	Clock newClock;
+	ZRef<Event> newEvent;
 	theSource.Update(false,
 		ZUtil_STL::sFirstOrNil(theAddedSearches), theAddedSearches.size(),
 		nullptr, 0,
-		changed, newClock);
+		changed, newEvent);
 
 	spDumpChanged(changed, w);
 	}

@@ -18,55 +18,53 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDataspace_Source_SQLite__
-#define __ZDataspace_Source_SQLite__ 1
-#include "zconfig.h"
+#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
+#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoToStrim.h"
 
-#include "zoolib/ZWorker.h"
-
-#include "zoolib/dataspace/ZDataspace_Source.h"
-
-#include "zoolib/sqlite/ZSQLite.h"
+#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
 namespace ZooLib {
 namespace ZDataspace {
 
+using ZRA::NameMap;
+
+using std::set;
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_SQLite
+#pragma mark *
 
-class Source_SQLite : public Source
+const ZStrimW& operator<<(const ZStrimW& w, const SearchSpec& iSearchSpec)
 	{
-public:
-	enum { kDebug = 1 };
+	w << "(";
+	bool isSubsequent = false;
+	for (vector<NameMap>::const_iterator i = iSearchSpec.fNameMaps.begin();
+		i != iSearchSpec.fNameMaps.end(); ++i)
+		{
+		if (isSubsequent)
+			w << ", ";
+		isSubsequent = true;
+		w << *i;
+		}
+	w << ")\n";
+	ZVisitor_Expr_Logic_ValPred_DoToStrim()
+		.DoToStrim(ZVisitor_DoToStrim::Options(), w, sAsExpr_Logic(iSearchSpec.fPredCompound));
+	return w;
+	}
 
-	Source_SQLite(ZRef<ZSQLite::DB> iDB);
-	virtual ~Source_SQLite();
+const ZStrimW& operator<<(const ZStrimW& w, const set<RelHead>& iSet)
+	{
+	bool isSubsequent = false;
+	for (set<RelHead>::const_iterator i = iSet.begin(); i != iSet.end(); ++i)
+		{
+		if (isSubsequent)
+			w << ", ";
+		w << *i;
+		}
+	return w;
+	}
 
-	virtual std::set<RelHead> GetRelHeads();
-
-	virtual void Update(
-		bool iLocalOnly,
-		const AddedSearch* iAdded, size_t iAddedCount,
-		const int64* iRemoved, size_t iRemovedCount,
-		std::vector<SearchResult>& oChanged,
-		ZRef<Event>& oEvent);
-
-private:
-	bool pCheck(ZRef<ZWorker> iWorker);
-
-	string8 pAsSQL(const SearchSpec& iSearchSpec);
-
-	ZRef<ZSQLite::DB> fDB;
-	int fChangeCount;
-	ZRef<Stamp> fStamp;
-
-	class PQuery;
-	std::map<int64, PQuery*> fMap_RefconToPQuery;
-	std::map<string8, RelHead> fMap_NameToRelHead;
-	};
 
 } // namespace ZDataspace
 } // namespace ZooLib
-
-#endif // __ZDataspace_Source_SQLite__

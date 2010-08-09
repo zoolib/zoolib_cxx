@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare_Pair.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_STL_set.h"
 
@@ -39,7 +40,7 @@ const ZStrimW& operator<<(const ZStrimW& w, const NameMap& iNM)
 		if (isSubsequent)
 			w << ", ";
 		isSubsequent = true;
-		w << (*i).first << "<--" << (*i).second;
+		w << i->first << "<--" << i->second;
 		}
 	w << ")";
 	return w;
@@ -88,7 +89,7 @@ NameMap NameMap::Inverted() const
 	{
 	set<Elem_t> result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)
-		result.insert(Elem_t((*i).second, (*i).first));
+		result.insert(Elem_t(i->second, i->first));
 	return NameMap(&result);
 	}
 
@@ -122,9 +123,9 @@ void NameMap::ApplyToFrom(const RelHead::key_type& iNameTo, const RelHead::key_t
 	set<Elem_t> result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)
 		{
-		if ((*i).first == iNameFrom)
+		if (i->first == iNameFrom)
 			{
-			result.insert(Elem_t(iNameTo, (*i).second));
+			result.insert(Elem_t(iNameTo, i->second));
 			}
 		else
 			{
@@ -141,7 +142,7 @@ RelHead NameMap::GetRelHead_To() const
 	{
 	RelHead result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)
-		result |= (*i).first;
+		result |= i->first;
 	return result;
 	}
 
@@ -149,7 +150,7 @@ RelHead NameMap::GetRelHead_From() const
 	{
 	RelHead result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)
-		result |= (*i).second;
+		result |= i->second;
 	return result;
 	}
 
@@ -157,9 +158,19 @@ map<RelHead::key_type, RelHead::key_type> NameMap::GetRename() const
 	{
 	map<RelHead::key_type, RelHead::key_type> result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)
-		result[(*i).second] = (*i).first;
+		result[i->second] = i->first;
 	return result;
 	}
 
 } // namespace ZRA
+} // namespace ZooLib
+
+namespace ZooLib {
+
+template <> int sCompare_T(const ZRA::NameMap& iL, const ZRA::NameMap& iR)
+	{
+	const std::set<ZRA::NameMap::Elem_t>& l = iL.GetElems();
+	const std::set<ZRA::NameMap::Elem_t>& r = iR.GetElems();
+	return sCompareIterators_T(l.begin(), l.end(), r.begin(), r.end());
+	}
 } // namespace ZooLib

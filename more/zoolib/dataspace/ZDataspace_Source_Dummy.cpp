@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/dataspace/ZDataspace_Source_Dummy.h"
+#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
 #include "zoolib/ZExpr_Logic.h"
 
@@ -26,6 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 namespace ZDataspace {
+
+using ZRA::NameMap;
+
+using std::set;
+using std::vector;
 
 // =================================================================================================
 #pragma mark -
@@ -43,10 +49,10 @@ set<RelHead> Source_Dummy::GetRelHeads()
 
 void Source_Dummy::Update(
 	bool iLocalOnly,
-	AddedSearch* iAdded, size_t iAddedCount,
-	int64* iRemoved, size_t iRemovedCount,
+	const AddedSearch* iAdded, size_t iAddedCount,
+	const int64* iRemoved, size_t iRemovedCount,
 	vector<SearchResult>& oChanged,
-	Clock& oClock)
+	ZRef<Event>& oEvent)
 	{
 	while (iAddedCount--)
 		{
@@ -54,9 +60,21 @@ void Source_Dummy::Update(
 		dummy.fRefcon = iAdded->fRefcon;
 		oChanged.push_back(dummy);
 		if (ZLOGPF(s, eDebug))
-			s << iAdded->fSearchThing;
+			s << iAdded->fSearchSpec;
+		vector<string8> theRowHead;
+		for (vector<NameMap>::const_iterator i = iAdded->fSearchSpec.fNameMaps.begin();
+			i != iAdded->fSearchSpec.fNameMaps.end(); ++i)
+			{
+			RelHead theRH = i->GetRelHead_To();
+			theRowHead.insert(theRowHead.end(), theRH.begin(), theRH.end());
+			}
+		SearchResult theSR;
+		theSR.fRefcon = iAdded->fRefcon;
+		theSR.fSearchRows = new SearchRows(&theRowHead);
+		oChanged.push_back(theSR);
 		++iAdded;
 		}
+	oEvent = Event::sZero();
 	}
 
 } // namespace ZDataspace

@@ -69,7 +69,7 @@ Rename_t sInverted(const Rename_t& iRename)
 	{
 	Rename_t result;
 	for (Rename_t::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
-		result[(*i).second] = (*i).first;
+		result[i->second] = i->first;
 	return result;
 	}
 
@@ -87,12 +87,6 @@ Rename_t sInverted(const Rename_t& iRename)
 
 using namespace ZooLib;
 using namespace ZRA;
-
-const ZStrimW& operator<<(const ZStrimW& iStrimW, const RelHead& iRelHead)
-	{
-	Util_Strim_RelHead::sWrite_RelHead(iRelHead, iStrimW);
-	return iStrimW;
-	}
 
 #define show(a) s << #a << ": " << (a) << "\n";
 

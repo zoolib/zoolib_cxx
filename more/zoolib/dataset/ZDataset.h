@@ -23,23 +23,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZData_Any.h"
+#include "zoolib/ZIntervalTreeClock.h"
 #include "zoolib/ZThread.h"
 
 #include "zoolib/dataset/ZDataset_Daton.h"
 
-#include "ZIntervalTreeClock.h"
-
 #include <map>
 #include <set>
-#include <string>
 #include <vector>
 
 namespace ZooLib {
 namespace ZDataset {
 
-using namespace std;
-
-typedef ZIntervalTreeClock::Clock Clock;
+using ZIntervalTreeClock::Event;
+using ZIntervalTreeClock::Stamp;
 
 // =================================================================================================
 #pragma mark -
@@ -58,35 +55,35 @@ public:
 
 	bool operator<(const Nombre& iRHS) const;
 
-	string AsString() const;
+	std::string AsString() const;
 
 private:
-	vector<uint64> fForks;
+	std::vector<uint64> fForks;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * NamedClock
+#pragma mark * NamedEvent
 
-class NamedClock
+class NamedEvent
 	{
 public:
-	NamedClock();
-	NamedClock(const NamedClock& iOther);
-	~NamedClock();
-	NamedClock& operator=(const NamedClock& iOther);
+	NamedEvent();
+	NamedEvent(const NamedEvent& iOther);
+	~NamedEvent();
+	NamedEvent& operator=(const NamedEvent& iOther);
 
-	NamedClock(const Nombre& iNombre, Clock iClock);
+	NamedEvent(const Nombre& iNombre, const ZRef<Event>& iEvent);
 
-	bool operator<(const NamedClock& iRHS) const;
+	bool operator<(const NamedEvent& iRHS) const;
 
-	string AsString() const;
+	std::string AsString() const;
 
-	Clock GetClock() const;
+	ZRef<Event> GetEvent() const;
 
 private:
 	Nombre fNombre;
-	Clock fClock;
+	ZRef<Event> fEvent;
 	};
 
 // =================================================================================================
@@ -96,52 +93,53 @@ private:
 class Delta : public ZCountedWithoutFinalize
 	{
 public:
-	Delta(const map<Daton, bool>& iStatements);
-	Delta(map<Daton, bool>* ioStatements);
+	Delta(const std::map<Daton, bool>& iStatements);
+	Delta(std::map<Daton, bool>* ioStatements);
 
-	const map<Daton, bool>& GetStatements();
+	const std::map<Daton, bool>& GetStatements();
 
 private:
-	map<Daton, bool> fStatements;
+	std::map<Daton, bool> fStatements;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Map_NamedClock_Delta_t
+#pragma mark * Map_NamedEvent_Delta_t
 
-typedef map<NamedClock, ZRef<Delta> > Map_NamedClock_Delta_t;
+typedef std::map<NamedEvent, ZRef<Delta> > Map_NamedEvent_Delta_t;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ClockedDeltas
+#pragma mark * Deltas
 
-class ClockedDeltas : public ZCountedWithoutFinalize
+class Deltas : public ZCountedWithoutFinalize
 	{
 public:
-	ClockedDeltas(const Map_NamedClock_Delta_t& iMap);
-	ClockedDeltas(Map_NamedClock_Delta_t* ioMap);
+	Deltas(const Map_NamedEvent_Delta_t& iMap);
+	Deltas(Map_NamedEvent_Delta_t* ioMap);
 
-	const Map_NamedClock_Delta_t& GetMap();
+	const Map_NamedEvent_Delta_t& GetMap();
 
 private:
-	Map_NamedClock_Delta_t fMap;
+	Map_NamedEvent_Delta_t fMap;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ClockedDeltasChain
+#pragma mark * DeltasChain
 
-class ClockedDeltasChain : public ZCountedWithoutFinalize
+class DeltasChain : public ZCountedWithoutFinalize
 	{
 public:
-	ClockedDeltasChain(ZRef<ClockedDeltasChain> iParent, ZRef<ClockedDeltas> iClockedDeltas);
+	DeltasChain(const ZRef<DeltasChain>& iParent, const ZRef<Deltas>& iDeltas);
 
-	ZRef<ClockedDeltasChain> GetParent();
-	ZRef<ClockedDeltas> GetClockedDeltas();
+	ZRef<DeltasChain> GetParent();
+	ZRef<Deltas> GetDeltas();
 
 private:
-	ZRef<ClockedDeltasChain> fParent;
-	ZRef<ClockedDeltas> fClockedDeltas;
+	// When we do consolidation of Deltas, fParent will need to be mutable.
+	const ZRef<DeltasChain> fParent;
+	const ZRef<Deltas> fDeltas;
 	};
 
 // =================================================================================================
@@ -151,37 +149,40 @@ private:
 class Dataset : public ZCounted
 	{
 public:
-	Dataset(const Nombre& iNombre, Clock iClock);
+	Dataset(const Nombre& iNombre, const ZRef<Stamp>& iStamp);
 
-	void Insert(Daton iDaton);
-	void Erase(Daton iDaton);
+	void Insert(const Daton& iDaton);
+	void Erase(const Daton& iDaton);
 
-	Clock GetClock();
+	ZRef<Stamp> GetStamp();
+	ZRef<Event> GetEvent();
 
 	ZRef<Dataset> Fork();
 
 	void Join(ZRef<Dataset> iOther);
 
-	void GetClockedDeltas(const Clock& iClock, Clock& oClock, ZRef<ClockedDeltas>& oClockedDeltas);
+	void GetDeltas(ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas, const ZRef<Event>& iEvent);
+	ZRef<Event> GetDeltas(ZRef<Deltas>& oDeltas, const ZRef<Event>& iEvent);
 
-	void IncorporateClockedDeltas(const Clock& iClock, ZRef<ClockedDeltas> iClockedDeltas);
+	void IncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& iDeltas);
 
-	set<Daton> GetComposed();
+	std::set<Daton> GetComposed();
 
 	const Nombre& GetNombre();
-	ZRef<ClockedDeltasChain> GetClockedDeltasChain();
+	ZRef<DeltasChain> GetDeltasChain();
 
 private:
-	Dataset(const Nombre& iNombre, Clock iClock, ZRef<ClockedDeltasChain> iClockedDeltasChain);
+	Dataset(
+		const Nombre& iNombre, const ZRef<Stamp>& iStamp, const ZRef<DeltasChain>& iDeltasChain);
 
 	void pCommit();
 
 	ZMtx fMtx; // RWLock?
 	const Nombre fNombre;
 	uint64 fNextFork;
-	Clock fClock;
-	map<Daton, bool> fPendingStatements;
-	ZRef<ClockedDeltasChain> fClockedDeltasChain;
+	ZRef<Stamp> fStamp;
+	std::map<Daton, bool> fPendingStatements;
+	ZRef<DeltasChain> fDeltasChain;
 	};
 
 } // namespace ZDataset

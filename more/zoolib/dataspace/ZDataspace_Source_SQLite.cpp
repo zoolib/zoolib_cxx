@@ -22,16 +22,27 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/dataspace/ZDataspace_Source_SQLite.h"
-#include "zoolib/zqe/ZQE_Result_Any.h"
+#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
 #include "zoolib/zra/ZRA_SQL.h"
+#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
 #include "zoolib/ZLog.h"
+
+#include "zoolib/ZCallable_T.h"
+#include "zoolib/ZWorker_Callable.h"
+#include "zoolib/ZWorkerRunner_CFRunLoop.h"
 
 namespace ZooLib {
 namespace ZDataspace {
 
+using std::map;
+using std::set;
+using std::vector;
+
 using namespace ZSQLite;
+
+using ZRA::NameMap;
 using ZRA::RelName;
 
 // =================================================================================================
@@ -54,36 +65,33 @@ Source_SQLite::PQuery::PQuery(int64 iRefcon, const string8& iSQL)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Helpers
-
-namespace { // anonymous
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Source_SQLite
 
 Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 :	fDB(iDB)
+,	fStamp(Stamp::sSeed())
 	{
 	fChangeCount = ::sqlite3_total_changes(fDB->GetDB());
 
 	for (ZRef<Iter> iterTables = new Iter(fDB, "select name from sqlite_master;");
 		iterTables->HasValue(); iterTables->Advance())
 		{
-		const string8 theTableName = iterTables->Get(0).Get_T<string>();
+		const string8 theTableName = iterTables->Get(0).Get_T<string8>();
 		ZAssert(!theTableName.empty());
 		RelHead theRelHead;
 		for (ZRef<Iter> iterTable = new Iter(fDB, "pragma table_info(" + theTableName + ");");
 			iterTable->HasValue(); iterTable->Advance())
 			{
-			theRelHead.Insert(theTableName + "_" + iterTable->Get(1).Get_T<string>());
+			theRelHead.Insert(theTableName + "_" + iterTable->Get(1).Get_T<string8>());
 			}
 
 		if (!theRelHead.empty())
 			ZUtil_STL::sInsertMustNotContain(kDebug, fMap_NameToRelHead, theTableName, theRelHead);
 		}
+
+	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(&Source_SQLite::pCheck, this));
+	ZWorkerRunner_CFRunLoop::sMain()->Add(theWorker);
+	theWorker->Wake();
 	}
 
 Source_SQLite::~Source_SQLite()
@@ -102,10 +110,10 @@ set<RelHead> Source_SQLite::GetRelHeads()
 
 void Source_SQLite::Update(
 	bool iLocalOnly,
-	AddedSearch* iAdded, size_t iAddedCount,
-	int64* iRemoved, size_t iRemovedCount,
+	const AddedSearch* iAdded, size_t iAddedCount,
+	const int64* iRemoved, size_t iRemovedCount,
 	vector<SearchResult>& oChanged,
-	Clock& oClock)
+	ZRef<Event>& oEvent)
 	{
 	oChanged.clear();
 
@@ -118,42 +126,62 @@ void Source_SQLite::Update(
 	while (iAddedCount--)
 		{
 		if (ZLOGF(s, eDebug))
-			s << "\n" << iAdded->fSearchThing;
+			s << "\n" << iAdded->fSearchSpec;
 		
-		const string8 theSQL = this->pAsSQL(iAdded->fSearchThing);
+		const string8 theSQL = this->pAsSQL(iAdded->fSearchSpec);
 		PQuery* thePQuery = new PQuery(iAdded->fRefcon, theSQL);
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
 		++iAdded;
 		}
 
+	// For now, just regenerate everything every time. Later we'll only generate
+	// newly added queries, or everything if the sqlite change count increments.
 	for (map<int64, PQuery*>::iterator i = fMap_RefconToPQuery.begin();
 		i != fMap_RefconToPQuery.end(); ++i)
 		{
-		PQuery* thePQuery = (*i).second;
+		PQuery* thePQuery = i->second;
+
+		ZRef<Iter> theIter = new Iter(fDB, thePQuery->fSQL);
+		vector<string8> theRowHead;
+		const size_t theCount = theIter->Count();
+		for (size_t x = 0; x < theCount; ++x)
+			theRowHead.push_back(theIter->NameOf(x));
+
+		vector<ZRef<ZQE::Row> > theRows;
+		for (/*no init*/;theIter->HasValue(); theIter->Advance())
+			{
+			vector<ZVal_Any> theVals;
+			theVals.reserve(theCount);
+			for (size_t x = 0; x < theCount; ++x)
+				theVals.push_back(theIter->Get(x));
+			ZRef<ZQE::Row> theRow = new ZQE::Row_Vector(&theVals);
+			theRows.push_back(theRow);
+			}
+
+		ZRef<ZQE::RowVector> theRowVector = new ZQE::RowVector(&theRows);
+		ZRef<SearchRows> theSearchRows = new SearchRows(&theRowHead, theRowVector);
 
 		SearchResult theSearchResult;
 		theSearchResult.fRefcon = thePQuery->fRefcon;
-
-		for (ZRef<Iter> theIter = new Iter(fDB, thePQuery->fSQL);
-			theIter->HasValue(); theIter->Advance())
-			{
-			ZMap_Any theMap;
-			for (size_t x = 0; x < theIter->Count(); ++x)
-				theMap.Set(theIter->NameOf(x), theIter->Get(x));
-
-			theSearchResult.fResults.push_back(new ZQE::Result_Any(theMap));
-			}
+		theSearchResult.fSearchRows = theSearchRows;
 
 		oChanged.push_back(theSearchResult);
 		}
 
-	fClock.Event();
+	sEvent(fStamp);
 
-	oClock = fClock;
+	oEvent = fStamp->GetEvent();
 	}
 
-string8 Source_SQLite::pAsSQL(const SearchThing& iSearchThing)
+bool Source_SQLite::pCheck(ZRef<ZWorker> iWorker)
+	{
+	this->pInvokeCallables();
+	iWorker->WakeIn(10);
+	return true;
+	}
+
+string8 Source_SQLite::pAsSQL(const SearchSpec& iSearchSpec)
 	{
 	// Go through each NameMap. Use the from to identify which table it represents. Generate
 	// a distinct name for the table, for use in an AS clause. Rewrite the from to reference
@@ -162,11 +190,16 @@ string8 Source_SQLite::pAsSQL(const SearchThing& iSearchThing)
 	// We can then generate an SFW formed from the reworked NameMaps and the ValPredCompound, which
 	// is written in terms of the Tos.
 
+	// We should rewrite the ValPredCompound and the AS clauses using unqiue
+	// names ("zoolib_unique_1",...) so we don't get bitten by SQL's case-insentivity
+	// and clashes with column names.
+	// We'll live with it for now.
+
 	map<string8, int> tableSuffixes;
 	vector<NameMap> revisedNameMaps;
 	string8 theFields;
-	for (vector<NameMap>::const_iterator i = iSearchThing.fNameMaps.begin();
-		i != iSearchThing.fNameMaps.end(); ++i)
+	for (vector<NameMap>::const_iterator i = iSearchSpec.fNameMaps.begin();
+		i != iSearchSpec.fNameMaps.end(); ++i)
 		{
 		const NameMap& sourceNameMap = *i;
 		const RelHead& theRH_From = sourceNameMap.GetRelHead_From();
@@ -216,7 +249,7 @@ string8 Source_SQLite::pAsSQL(const SearchThing& iSearchThing)
 
 	string8 result = "SELECT " + theFields + " FROM " + theTables + " WHERE ";
 	
-	result += ZRA::SQL::sAsSQL(sAsExpr_Logic(iSearchThing.fPredCompound));
+	result += ZRA::SQL::sAsSQL(sAsExpr_Logic(iSearchSpec.fPredCompound));
 	
 	if (ZLOGF(s, eDebug))
 		s << result;

@@ -27,14 +27,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataset/ZDataset.h"
 #include "zoolib/dataspace/ZDataspace_Source.h"
 
-#include "zoolib/zqe/ZQE_Iterator.h"
+#include "zoolib/zqe/ZQE_Walker.h"
 
-#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
-
-#include "zoolib/ZStrim.h"
+#include <map>
 
 namespace ZooLib {
 namespace ZDataspace {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Annotation_Daton
 
 class Annotation_Daton : public ZCounted
 	{
@@ -62,29 +64,30 @@ public:
 	Source_Dataset(ZRef<ZDataset::Dataset> iDataset);
 	virtual ~Source_Dataset();
 
-	virtual set<RelHead> GetRelHeads();
+	virtual std::set<RelHead> GetRelHeads();
 
 	virtual void Update(
 		bool iLocalOnly,
-		AddedSearch* iAdded, size_t iAddedCount,
-		int64* iRemoved, size_t iRemovedCount,
-		vector<SearchResult>& oChanged,
-		Clock& oClock);
+		const AddedSearch* iAdded, size_t iAddedCount,
+		const int64* iRemoved, size_t iRemovedCount,
+		std::vector<SearchResult>& oChanged,
+		ZRef<Event>& oEvent);
 
 	void Dump(const ZStrimW& w);
 
-	ZRef<ZQE::Iterator> pMakeIterator(const RelHead& iRelHead);
+	ZRef<ZQE::Walker> pMakeWalker(const RelHead& iRelHead);
 
 private:
 	void pPull();
 
 	ZRef<ZDataset::Dataset> fDataset;
-	Clock fClock;
+	ZRef<Event> fEvent;
 
-	map<ZDataset::Daton, pair<ZDataset::NamedClock, ZVal_Any> > fMap;
+	std::map<ZDataset::Daton, std::pair<ZDataset::NamedEvent, ZVal_Any> > fMap;
 
 	class PQuery;
-	map<int64, PQuery*> fMap_RefconToPQuery;
+	// We could have the PQuery be an in-place value in the map.
+	std::map<int64, PQuery*> fMap_RefconToPQuery;
 	};
 
 } // namespace ZDataspace

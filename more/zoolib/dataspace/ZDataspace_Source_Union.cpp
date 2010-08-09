@@ -18,30 +18,154 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Logic.h"
-#include "zoolib/ZUtil_STL.h"
-#include "zoolib/ZUtil_STL_set.h"
-
-#include "zoolib/dataspace/ZDataspace_Source_Union.h"
-
-#include "zoolib/zqe/ZQE_Iterator_Any.h"
-#include "zoolib/zqe/ZQE_Iterator_Std.h"
-#include "zoolib/zqe/ZQE_Result_Any.h"
-
-#include "zoolib/zra/ZRA_Util_RelOperators.h"
-
-// Debugging
-//###include "zoolib/ZStdIO.h"
+// >>> Debugging
 #include "zoolib/ZLog.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
+// <<< Debugging
+
+#include "zoolib/ZCallable_T.h"
+#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_set.h"
+
+#include "zoolib/dataspace/ZDataspace_Source_Union.h"
+#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
+
+#include "zoolib/zqe/ZQE_Walker_Product.h"
+#include "zoolib/zqe/ZQE_Walker_ValPredCompound.h"
+
+#include "zoolib/zra/ZRA_Util_RelOperators.h"
 
 namespace ZooLib {
 namespace ZDataspace {
 
+using std::map;
+using std::set;
+using std::vector;
+
+using ZQE::Row;
+using ZQE::RowVector;
+using ZQE::Walker;
+
+using ZRA::NameMap;
+
 typedef ZValPredCompound PredCompound;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Walker_RowVectors
+
+class Walker_RowVectors : public Walker
+	{
+public:
+	Walker_RowVectors(const vector<string8>& iRowHead,
+		const vector<ZRef<RowVector> >& iRowVectors, size_t iIndex1, size_t iIndex2);
+
+	virtual ~Walker_RowVectors();
+
+// Our protocol
+	virtual size_t Count();
+	virtual string8 NameOf(size_t iIndex);
+
+	virtual ZRef<Walker> Clone();
+	virtual ZRef<Row> ReadInc();
+
+private:
+	vector<string8> fRowHead;
+	vector<ZRef<RowVector> > fRowVectors;
+	size_t fIndex1;
+	size_t fIndex2;
+	};
+
+Walker_RowVectors::Walker_RowVectors(const vector<string8>& iRowHead,
+	const vector<ZRef<RowVector> >& iRowVectors, size_t iIndex1, size_t iIndex2)
+:	fRowHead(iRowHead)
+,	fRowVectors(iRowVectors)
+,	fIndex1(iIndex1)
+,	fIndex2(iIndex2)
+	{}
+
+Walker_RowVectors::~Walker_RowVectors()
+	{}
+
+size_t Walker_RowVectors::Count()
+	{ return fRowHead.size(); }
+
+string8 Walker_RowVectors::NameOf(size_t iIndex)
+	{
+	if (iIndex < fRowHead.size())
+		return fRowHead[iIndex];
+	return string8();
+	}
+
+ZRef<Walker> Walker_RowVectors::Clone()
+	{ return new Walker_RowVectors(fRowHead, fRowVectors, fIndex1, fIndex2); }
+
+ZRef<Row> Walker_RowVectors::ReadInc()
+	{
+	if (fIndex1 < fRowVectors.size())
+		{
+		ZRef<Row> result = fRowVectors[fIndex1]->Get(fIndex2++);
+		if (fIndex2 >= fRowVectors[fIndex1]->Count())
+			{
+			fIndex2 = 0;
+			++fIndex1;
+			}
+		return result;
+		}
+		
+	return null;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Walker_SearchRows
+
+class Walker_SearchRows : public Walker
+	{
+public:
+	Walker_SearchRows(ZRef<SearchRows> iSearchRows, size_t iIndex);
+
+	virtual ~Walker_SearchRows();
+
+// Our protocol
+	virtual size_t Count();
+	virtual string8 NameOf(size_t iIndex);
+
+	virtual ZRef<Walker> Clone();
+	virtual ZRef<Row> ReadInc();
+
+private:
+	ZRef<SearchRows> fSearchRows;
+	size_t fIndex;
+	};
+
+Walker_SearchRows::Walker_SearchRows(ZRef<SearchRows> iSearchRows, size_t iIndex)
+:	fSearchRows(iSearchRows)
+,	fIndex(iIndex)
+	{}
+
+Walker_SearchRows::~Walker_SearchRows()
+	{}
+
+size_t Walker_SearchRows::Count()
+	{ return fSearchRows->GetRowHead().size(); }
+
+string8 Walker_SearchRows::NameOf(size_t iIndex)
+	{
+	if (iIndex < fSearchRows->GetRowHead().size())
+		return fSearchRows->GetRowHead()[iIndex];
+	return string8();
+	}
+
+ZRef<Walker> Walker_SearchRows::Clone()
+	{ return new Walker_SearchRows(fSearchRows, fIndex); }
+
+ZRef<Row> Walker_SearchRows::ReadInc()
+	{ return fSearchRows->GetRowVector()->Get(fIndex++); }
 
 // =================================================================================================
 #pragma mark -
@@ -66,8 +190,8 @@ public:
 	PQuery* fPQuery;
 	int64 fRefcon;
 
-	SearchThing fSearchThing;
-	vector<ZRef<ZQE::Result> > fResults;
+	SearchSpec fSearchSpec;
+	ZRef<SearchRows> fSearchRows;
 	};
 
 Source_Union::PSourceProduct::PSourceProduct(PSource* iPSource, PQuery* iPQuery, int64 iRefcon)
@@ -99,7 +223,7 @@ public:
 	PQuery* fPQuery;
 	int64 fFirstRefcon;
 
-	vector<vector<ZRef<ZQE::Result> > > fResultsVector;
+	vector<ZRef<SearchRows> > fVector_SearchRows;
 	};
 
 Source_Union::PSourceSearches::PSourceSearches(PSource* iPSource, PQuery* iPQuery, int64 iFirstRefcon)
@@ -120,102 +244,122 @@ class Source_Union::PQuery
 :	public DLink_PQuery_Changed
 	{
 public:
-	PQuery(int64 iRefcon, const SearchThing& iSearchThing);
+	PQuery(int64 iRefcon, const SearchSpec& iSearchSpec);
 
 	void Regenerate();
 
 	const int64 fRefcon;
-	const SearchThing fSearchThing;
+	const SearchSpec fSearchSpec;
 
 	DListHead<DLink_PSourceProduct_InPQuery> fPSourceProducts;
 	DListHead<DLink_PSourceSearches_InPQuery> fPSourceSearches;
 
-	vector<SearchThing> fSearchThings;
+	vector<SearchSpec> fSearchSpecs;
 
-	vector<ZRef<ZQE::Result> > fResults;
+	ZRef<SearchRows> fSearchRows;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Source_Union::PQuery definition
 
-Source_Union::PQuery::PQuery(int64 iRefcon, const SearchThing& iSearchThing)
+Source_Union::PQuery::PQuery(int64 iRefcon, const SearchSpec& iSearchSpec)
 :	fRefcon(iRefcon)
-,	fSearchThing(iSearchThing)
+,	fSearchSpec(iSearchSpec)
 	{}
+
+static void spGetRowHead(ZRef<Walker> iWalker, vector<string8>& oRowHead)
+	{
+	oRowHead.clear();
+	oRowHead.reserve(iWalker->Count());
+	for (size_t x = 0; x < iWalker->Count(); ++x)
+		oRowHead.push_back(iWalker->NameOf(x));
+	}
+
+static bool spMatches(const ZValPredCompound& iVPC, const vector<string8>& iRowHead, ZRef<Row> iRow)
+	{
+	ZMap_Any theMap;
+	for (size_t x = 0, count = iRowHead.size(); x < count; ++x)
+		theMap.Set(iRowHead[x], iRow->Get(x));
+
+	if (ZLOGF(s, eDebug))
+		ZYad_ZooLibStrim::sToStrim(sMakeYadR(theMap), s);
+
+	ZValContext theContext;
+	return iVPC.Matches(theContext, theMap);
+	}
 
 void Source_Union::PQuery::Regenerate()
 	{
 	if (ZLOGPF(s, eDebug))
-		s << fSearchThing;
+		s << fSearchSpec;
 
-	fResults.clear();
+	fSearchRows.Clear();
 
 	// For each entry in fRels we have a source rel, effectively. Union the
 	// results from each of the fPSourceSearches for each position. Join that
 	// with each of the other fPSourceSearches, and with each of the fPSourceProducts,
-	// and filter by fSearchThing's fValPredCompound.
+	// and filter by fSearchSpec's fValPredCompound.
 
-#if 0 //##
-	ZRef<ZQE::Iterator> theProduct;
+	ZRef<Walker> theProduct;
 
-	for (size_t x = 0; x < fRels.size(); ++x)
+	// For each SearchSpec
+	for (size_t x = 0; x < fSearchSpecs.size(); ++x)
 		{
-		ZRef<ZQE::Iterator> theUnion;
+		vector<string8> theRowHead;
+		vector<ZRef<RowVector> > theRowVectors;
+
+		// Union together the results from all the PSourceSearch for this SearchSpec.
 		for (DListIterator<PSourceSearches, DLink_PSourceSearches_InPQuery>
 			iter = fPSourceSearches; iter; iter.Advance())
 			{
 			PSourceSearches* thePSS = iter.Current();
-			ZRef<ZQE::Iterator> anIterator = new Iterator_PSourceSearches(thePSS, x);
-			if (theUnion)
-				theUnion = new ZQE::Iterator_Union(theUnion, anIterator);
-			else
-				theUnion = anIterator;
+			theRowVectors.push_back(thePSS->fVector_SearchRows[x]->GetRowVector());
+			if (theRowHead.empty())
+				theRowHead = thePSS->fVector_SearchRows[x]->GetRowHead();
+			ZAssert(theRowHead == thePSS->fVector_SearchRows[x]->GetRowHead());
 			}
 
-		if (theUnion)
-			{
-			if (theProduct)
-				theProduct = new ZQE::Iterator_Product(theProduct, theUnion);
-			else
-				theProduct = theUnion;
-			}
+		ZRef<Walker> theUnion = new Walker_RowVectors(theRowHead, theRowVectors, 0, 0);
+
+		// Product that with whatever we had before.
+		if (theProduct)
+			theProduct = new ZQE::Walker_Product(theProduct, theUnion);
+		else
+			theProduct = theUnion;
 		}
 
+	// Now product that with the result set from each PSourceProduct
 	for (DListIterator<PSourceProduct, DLink_PSourceProduct_InPQuery>
 		iter = fPSourceProducts; iter; iter.Advance())
 		{
 		PSourceProduct* thePSP = iter.Current();
-		ZRef<ZQE::Iterator> anIterator = new Iterator_PSourceProduct(thePSP);
+		
+		ZRef<Walker> theWalker = new Walker_SearchRows(thePSP->fSearchRows, 0);
 
 		if (theProduct)
-			theProduct = new ZQE::Iterator_Product(theProduct, anIterator);
+			theProduct = new ZQE::Walker_Product(theProduct, theWalker);
 		else
-			theProduct = anIterator;
+			theProduct = theWalker;
 		}
 
 	if (theProduct)
 		{
-		ZValContext theContext;
+		vector<string8> theRowHead;
+		spGetRowHead(theProduct, theRowHead);
+
+		vector<ZRef<Row> > theRows;
 		for (;;)
 			{
-			if (ZRef<ZQE::Result> theResult = theProduct->ReadInc())
-				{
-				if (ZRef<ZQE::Result_Any> theResult_Any = theResult.DynamicCast<ZQE::Result_Any>())
-					{
-					ZVal_Any theVal = theResult_Any->GetVal();
-					if (ZLOGPF(s, eDebug))
-						ZYad_ZooLibStrim::sToStrim(sMakeYadR(theVal), s);
-
-					if (fSearchThing.fPredCompound.Matches(theContext, theVal))
-						fResults.push_back(theResult);
-					}
-				}
-			else
+			ZRef<Row> theRow = theProduct->ReadInc();
+			if (!theRow)
 				break;
+			if (spMatches(fSearchSpec.fPredCompound, theRowHead, theRow))
+				theRows.push_back(theRow);				
 			}
+
+		fSearchRows = new SearchRows(theRowHead, new RowVector(&theRows));
 		}
-#endif
 	}
 
 // =================================================================================================
@@ -268,7 +412,7 @@ static PredCompound::Sect spPertinentOnly(
 	for (PredCompound::Sect::const_iterator iterSect = iSect.begin();
 		iterSect != iSect.end(); ++iterSect)
 		{
-		if (theTos.Contains((*iterSect).GetNames()))
+		if (theTos.Contains(iterSect->GetNames()))
 			result.push_back(*iterSect);
 //			result.push_back(spRenamed(iNameMap.Inverted(), *iterSect));
 		}
@@ -306,7 +450,6 @@ static bool spIsEmptyOrContains(const set<RelHead>& iRelHeads, const RelHead& iR
 			return true;
 		}
 	return false;
-//	return iRelHeads.empty() || ZUtil_STL::sContains(iRelHeads, iRH);
 	}
 
 static set<RelHead> spPrefixAdd(const string8& iPrefix, const set<RelHead>& iRelHeads)
@@ -317,7 +460,7 @@ static set<RelHead> spPrefixAdd(const string8& iPrefix, const set<RelHead>& iRel
 	set<RelHead> result;
 	for (set<RelHead>::const_iterator i = iRelHeads.begin(); i != iRelHeads.end(); ++i)
 		{
-		ZAssertLog(0, !(*i).empty());
+		ZAssertLog(0, !i->empty());
 		result.insert(ZRA::sPrefixAdd(iPrefix, *i));
 		}
 
@@ -343,7 +486,7 @@ static NameMap spPrefixRemove(const string8& iPrefix, const NameMap& iNameMap)
 	set<NameMap::Elem_t> result;
 	const set<NameMap::Elem_t>& theElems = iNameMap.GetElems();
 	for (set<NameMap::Elem_t>::const_iterator i = theElems.begin(); i != theElems.end(); ++i)
-		result.insert(NameMap::Elem_t((*i).first, ZRA::sPrefixRemove(iPrefix, (*i).second)));
+		result.insert(NameMap::Elem_t(i->first, ZRA::sPrefixRemove(iPrefix, i->second)));
 	return result;
 	}
 
@@ -365,10 +508,22 @@ static vector<NameMap> spPrefixRemove(const string8& iPrefix, const vector<NameM
 
 Source_Union::Source_Union()
 :	fNextRefcon(1)
-	{}
+,	fEvent(Event::sZero())
+,	fCallable(MakeCallable(&Source_Union::pCallback, this))
+	{
+	}
 
 Source_Union::~Source_Union()
-	{}
+	{
+	fCallable.Clear();
+	for (map<Source*, PSource*>::iterator i = fMap_SourceToPSource.begin();
+		i != fMap_SourceToPSource.end(); ++i)
+		{
+		delete i->first;
+		delete i->second;
+		}
+	// More to do, but leave it for now.
+	}
 
 set<RelHead> Source_Union::GetRelHeads()
 	{
@@ -376,28 +531,28 @@ set<RelHead> Source_Union::GetRelHeads()
 	for (map<Source*, PSource*>::iterator i = fMap_SourceToPSource.begin();
 		i != fMap_SourceToPSource.end(); ++i)
 		{
-		const set<RelHead>& theRelHeads = (*i).first->GetRelHeads();
+		const set<RelHead>& theRelHeads = i->first->GetRelHeads();
 		if (theRelHeads.empty())
 			{
 			// If any of our sources have an empty relhead set (signifying universality)
 			// then we must do the same.
 			return set<RelHead>();
 			}
-		result = ZUtil_STL_set::sOr(result, spPrefixAdd((*i).second->fPrefix, theRelHeads));
+		result = ZUtil_STL_set::sOr(result, spPrefixAdd(i->second->fPrefix, theRelHeads));
 		}
 	return result;
 	}
 
 void Source_Union::Update(
 	bool iLocalOnly,
-	AddedSearch* iAdded, size_t iAddedCount,
-	int64* iRemoved, size_t iRemovedCount,
+	const AddedSearch* iAdded, size_t iAddedCount,
+	const int64* iRemoved, size_t iRemovedCount,
 	vector<SearchResult>& oChanged,
-	Clock& oClock)
+	ZRef<Event>& oEvent)
 	{
 	if (fPSources_ToRemove.empty() && fPSources_ToAdd.empty())
 		{
-		this->pUpdate(iAdded, iAddedCount, iRemoved, iRemovedCount, oChanged, oClock);
+		this->pUpdate(iAdded, iAddedCount, iRemoved, iRemovedCount, oChanged, oEvent);
 		return;
 		}
 
@@ -407,12 +562,13 @@ void Source_Union::Update(
 		{
 		PSource* thePSource = *iterPSource;
 		ZUtil_STL::sEraseMustContain(kDebug, fMap_SourceToPSource, thePSource->fSource);
+		thePSource->fSource->Unregister(fCallable);
 
 		for (map<int64, PSourceProduct*>::iterator
 			i = thePSource->fMap_RefconToPSourceProduct.begin();
 			i != thePSource->fMap_RefconToPSourceProduct.end(); ++i)
 			{
-			PSourceProduct* thePSP = (*i).second;
+			PSourceProduct* thePSP = i->second;
 			thePSP->fPQuery->fPSourceProducts.Erase(thePSP);
 			delete thePSP;
 			}
@@ -421,7 +577,7 @@ void Source_Union::Update(
 			i = thePSource->fMap_RefconToPSourceSearches.begin();
 			i != thePSource->fMap_RefconToPSourceSearches.end(); ++i)
 			{
-			PSourceSearches* thePSS = (*i).second;
+			PSourceSearches* thePSS = i->second;
 			thePSS->fPQuery->fPSourceSearches.Erase(thePSS);
 			delete thePSS;
 			}
@@ -437,16 +593,16 @@ void Source_Union::Update(
 	for (map<int64, PQuery*>::iterator i = fMap_RefconToPQuery.begin();
 		i != fMap_RefconToPQuery.end(); ++i)
 		{
-		PQuery* thePQuery = (*i).second;
+		PQuery* thePQuery = i->second;
 		if (!ZUtil_STL::sContains(removedSorted, thePQuery->fRefcon))
-			theAdded.push_back(AddedSearch(thePQuery->fRefcon, thePQuery->fSearchThing));
+			theAdded.push_back(AddedSearch(thePQuery->fRefcon, thePQuery->fSearchSpec));
 		theRemoved.push_back(thePQuery->fRefcon);
 		}
 
 	// Remove them
 	this->pUpdate(nullptr, 0,
 		ZUtil_STL::sFirstOrNil(theRemoved), theRemoved.size(),
-		oChanged, oClock);
+		oChanged, oEvent);
 
 	// We won't get any changes, but ensure that the vector is clear.
 	oChanged.clear();
@@ -464,26 +620,30 @@ void Source_Union::Update(
 	// And register/re-register queries.
 	this->pUpdate(ZUtil_STL::sFirstOrNil(theAdded), theAdded.size(),
 		nullptr, 0,
-		oChanged, oClock);
+		oChanged, oEvent);
 	}
 
 void Source_Union::InsertSource(Source* iSource, const string8& iPrefix)
 	{
 	ZAssert(! ZUtil_STL::sContains(fMap_SourceToPSource, iSource));
 	fPSources_ToAdd.insert(new PSource(iSource, iPrefix));
+	iSource->Register(fCallable);
 	}
 
 void Source_Union::EraseSource(Source* iSource)
 	{
 	ZAssert(ZUtil_STL::sContains(fMap_SourceToPSource, iSource));
-	ZUtil_STL::sInsertMustNotContain(kDebug, fPSources_ToAdd, fMap_SourceToPSource[iSource]);
+	ZUtil_STL::sInsertMustNotContain(kDebug, fPSources_ToRemove, fMap_SourceToPSource[iSource]);
 	}
 
+void Source_Union::pCallback(Source* iSource)
+	{ Source::pInvokeCallables(); }
+
 void Source_Union::pUpdate(
-	AddedSearch* iAdded, size_t iAddedCount,
-	int64* iRemoved, size_t iRemovedCount,
+	const AddedSearch* iAdded, size_t iAddedCount,
+	const int64* iRemoved, size_t iRemovedCount,
 	vector<SearchResult>& oChanged,
-	Clock& oClock)
+	ZRef<Event>& oEvent)
 	{
 	oChanged.clear();
 
@@ -497,15 +657,15 @@ void Source_Union::pUpdate(
 
 	while (iAddedCount--)
 		{
-		PQuery* thePQuery = new PQuery(iAdded->fRefcon, iAdded->fSearchThing);
+		PQuery* thePQuery = new PQuery(iAdded->fRefcon, iAdded->fSearchSpec);
 		++iAdded;
 
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
 
-		// Go through the SearchThing's NameMaps. For each, see if there's a
+		// Go through the SearchSpec's NameMaps. For each, see if there's a
 		// single source that handles it. Any that isn't is left in theNameMaps.
-		vector<NameMap> theNameMaps = thePQuery->fSearchThing.fNameMaps;
+		vector<NameMap> theNameMaps = thePQuery->fSearchSpec.fNameMaps;
 		map<PSource*, vector<NameMap> > products;
 		for (vector<NameMap>::iterator iterNameMaps = theNameMaps.begin();
 			iterNameMaps != theNameMaps.end(); /*no inc*/)
@@ -514,16 +674,16 @@ void Source_Union::pUpdate(
 			for (map<Source*, PSource*>::iterator iterSource = fMap_SourceToPSource.begin();
 				iterSource != fMap_SourceToPSource.end(); ++iterSource)
 				{
-				PSource* thePSource = (*iterSource).second;
-				const string thePrefix = thePSource->fPrefix;
-				set<RelHead> theSet = (*iterSource).first->GetRelHeads();
+				PSource* thePSource = iterSource->second;
+				const string8 thePrefix = thePSource->fPrefix;
+				set<RelHead> theSet = iterSource->first->GetRelHeads();
 
 				theSet = spPrefixAdd(thePrefix, theSet);
 				
 				if (ZLOGPF(s, eDebug))
 					s << theSet;
 				
-				const RelHead theRHFrom = (*iterNameMaps).GetRelHead_From();
+				const RelHead theRHFrom = iterNameMaps->GetRelHead_From();
 
 				if (ZLOGPF(s, eDebug))
 					s << theRHFrom;
@@ -532,7 +692,7 @@ void Source_Union::pUpdate(
 					{
 					if (! soleSourceHandlingNameMap)
 						{
-						soleSourceHandlingNameMap = (*iterSource).second;
+						soleSourceHandlingNameMap = iterSource->second;
 						}
 					else
 						{
@@ -556,18 +716,18 @@ void Source_Union::pUpdate(
 		// Anything remaining in theNameMaps is to be product-ed locally.
 		for (vector<NameMap>::iterator i = theNameMaps.begin(); i != theNameMaps.end(); ++i)
 			{
-			SearchThing theSearchThing;
-			theSearchThing.fNameMaps.push_back(*i);
-			theSearchThing.fPredCompound =
-				spPertinentOnly(thePQuery->fSearchThing.fPredCompound, *i);
-			thePQuery->fSearchThings.push_back(theSearchThing);
+			SearchSpec theSearchSpec;
+			theSearchSpec.fNameMaps.push_back(*i);
+			theSearchSpec.fPredCompound =
+				spPertinentOnly(thePQuery->fSearchSpec.fPredCompound, *i);
+			thePQuery->fSearchSpecs.push_back(theSearchSpec);
 			}
 
 		// Create the PSourceProduct and PSourceSearches instances for each PSource.
 		for (map<Source*, PSource*>::iterator iterSource = fMap_SourceToPSource.begin();
 			iterSource != fMap_SourceToPSource.end(); ++iterSource)
 			{
-			PSource* thePSource = (*iterSource).second;
+			PSource* thePSource = iterSource->second;
 
 			map<PSource*, vector<NameMap> >::iterator iterProducts = products.find(thePSource);
 			if (iterProducts != products.end())
@@ -575,9 +735,9 @@ void Source_Union::pUpdate(
 				PSourceProduct* thePSP =
 					new PSourceProduct(thePSource, thePQuery, thePSource->fNextRefcon++);
 				thePSource->fMap_RefconToPSourceProduct[thePSP->fRefcon] = thePSP;
-				thePSP->fSearchThing.fNameMaps = (*iterProducts).second;
-				thePSP->fSearchThing.fPredCompound = spPertinentOnly(
-					thePQuery->fSearchThing.fPredCompound, spMerge(thePSP->fSearchThing.fNameMaps));
+				thePSP->fSearchSpec.fNameMaps = iterProducts->second;
+				thePSP->fSearchSpec.fPredCompound = spPertinentOnly(
+					thePQuery->fSearchSpec.fPredCompound, spMerge(thePSP->fSearchSpec.fNameMaps));
 				thePSource->fPSourceProducts_ToAdd.Insert(thePSP);
 				thePQuery->fPSourceProducts.Insert(thePSP);
 				}
@@ -585,9 +745,9 @@ void Source_Union::pUpdate(
 				{
 				PSourceSearches* thePSS =
 					new PSourceSearches(thePSource, thePQuery, thePSource->fNextRefcon);
-				// We can use theRelHeads.size() or thePQuery->fSearchThings.size();
-				ZAssert(thePQuery->fSearchThings.size() == theNameMaps.size());
-				thePSource->fNextRefcon += thePQuery->fSearchThings.size();
+				// We can use theRelHeads.size() or thePQuery->fSearchSpecs.size();
+				ZAssert(thePQuery->fSearchSpecs.size() == theNameMaps.size());
+				thePSource->fNextRefcon += thePQuery->fSearchSpecs.size();
 				thePSource->fMap_RefconToPSourceSearches[thePSource->fNextRefcon - 1] = thePSS;
 				thePSource->fPSourceSearches_ToAdd.Insert(thePSS);
 				thePQuery->fPSourceSearches.Insert(thePSS);
@@ -600,7 +760,7 @@ void Source_Union::pUpdate(
 	for (map<Source*, PSource*>::iterator i = fMap_SourceToPSource.begin();
 		i != fMap_SourceToPSource.end(); ++i)
 		{
-		PSource* thePSource = (*i).second;
+		PSource* thePSource = i->second;
 		if (thePSource->fPSourceProducts_ToAdd.Size()
 			|| thePSource->fPSourceSearches_ToAdd.Size()
 			|| thePSource->fPSourceQueries_ToRemove.size())
@@ -610,15 +770,15 @@ void Source_Union::pUpdate(
 			for (DListIteratorEraseAll<PSourceProduct, DLink_PSourceProduct_ToAdd>
 				iter = thePSource->fPSourceProducts_ToAdd; iter; iter.Advance())
 				{
-				// We need to modify the searchthing's namemap so it's 'from' values
+				// We need to modify the SearchSpec's namemap so it's 'from' values
 				// have the prefix stripped.
 				PSourceProduct* thePSourceProduct = iter.Current();
-				SearchThing theSearchThing;
-				theSearchThing.fPredCompound = thePSourceProduct->fSearchThing.fPredCompound;
-				theSearchThing.fNameMaps =
-					spPrefixRemove(thePSource->fPrefix, thePSourceProduct->fSearchThing.fNameMaps);
+				SearchSpec theSearchSpec;
+				theSearchSpec.fPredCompound = thePSourceProduct->fSearchSpec.fPredCompound;
+				theSearchSpec.fNameMaps =
+					spPrefixRemove(thePSource->fPrefix, thePSourceProduct->fSearchSpec.fNameMaps);
 				localAdded.push_back(
-					AddedSearch(thePSourceProduct->fRefcon, theSearchThing));
+					AddedSearch(thePSourceProduct->fRefcon, theSearchSpec));
 				}
 
 			for (DListIteratorEraseAll<PSourceSearches, DLink_PSourceSearches_ToAdd>
@@ -627,9 +787,9 @@ void Source_Union::pUpdate(
 				PSourceSearches* thePSourceSearches = iter.Current();
 				PQuery* thePQuery = thePSourceSearches->fPQuery;
 				int64 theRefcon = thePSourceSearches->fFirstRefcon;
-				thePSourceSearches->fResultsVector.resize(thePQuery->fSearchThings.size());
-				for (vector<SearchThing>::iterator i = thePQuery->fSearchThings.begin();
-					i != thePQuery->fSearchThings.end(); ++i)
+				thePSourceSearches->fVector_SearchRows.resize(thePQuery->fSearchSpecs.size());
+				for (vector<SearchSpec>::iterator i = thePQuery->fSearchSpecs.begin();
+					i != thePQuery->fSearchSpecs.end(); ++i)
 					{
 					localAdded.push_back(AddedSearch(theRefcon++, *i));
 					}
@@ -639,28 +799,28 @@ void Source_Union::pUpdate(
 			localRemoved.swap(thePSource->fPSourceQueries_ToRemove);
 
 			vector<SearchResult> localChanged;
-			Clock localClock;
+			ZRef<Event> localEvent;
 			thePSource->fSource->Update(false,
 				ZUtil_STL::sFirstOrNil(localAdded), localAdded.size(),
 				ZUtil_STL::sFirstOrNil(localRemoved), localRemoved.size(),
 				localChanged,
-				localClock);
+				localEvent);
 
-			// Watch this -- we'll need to handle the clock join carefully when MTed.
-			fClock.Join(localClock);
+			// Watch this -- we'll need to handle the event join carefully when MTed.
+			sJoin(fEvent, localEvent);
 
 			for (vector<SearchResult>::iterator i = localChanged.begin();
 				i != localChanged.end(); ++i)
 				{
-				const int64 theRefcon = (*i).fRefcon;
+				const int64 theRefcon = i->fRefcon;
 				map<int64, PSourceProduct*>::iterator iterProduct =
 					thePSource->fMap_RefconToPSourceProduct.find(theRefcon);
 
 				if (iterProduct != thePSource->fMap_RefconToPSourceProduct.end()
-					&& (*iterProduct).first == theRefcon)
+					&& iterProduct->first == theRefcon)
 					{
-					PSourceProduct* thePSourceProduct = (*iterProduct).second;
-					thePSourceProduct->fResults.swap((*i).fResults);
+					PSourceProduct* thePSourceProduct = iterProduct->second;
+					thePSourceProduct->fSearchRows.swap(i->fSearchRows);
 					fPQuery_Changed.InsertIfNotContains(thePSourceProduct->fPQuery);
 					}
 				else
@@ -668,11 +828,11 @@ void Source_Union::pUpdate(
 					map<int64, PSourceSearches*>::iterator iterSearches =
 						thePSource->fMap_RefconToPSourceSearches.lower_bound(theRefcon);
 					ZAssert(iterSearches != thePSource->fMap_RefconToPSourceSearches.end());
-					PSourceSearches* thePSourceSearches = (*iterSearches).second;
-					const int64 foundRefcon = (*iterSearches).first;
+					PSourceSearches* thePSourceSearches = iterSearches->second;
+					const int64 foundRefcon = iterSearches->first;
 					const int64 offset =
-						thePSourceSearches->fResultsVector.size() + theRefcon - foundRefcon - 1;
-					thePSourceSearches->fResultsVector[offset].swap((*i).fResults);
+						thePSourceSearches->fVector_SearchRows.size() + theRefcon - foundRefcon - 1;
+					thePSourceSearches->fVector_SearchRows[offset].swap(i->fSearchRows);
 					fPQuery_Changed.InsertIfNotContains(thePSourceSearches->fPQuery);
 					}
 				}
@@ -699,11 +859,11 @@ void Source_Union::pUpdate(
 		PQuery* thePQuery = iter.Current();
 		SearchResult theSearchResult;
 		theSearchResult.fRefcon = thePQuery->fRefcon;
-		theSearchResult.fResults = thePQuery->fResults;
+		theSearchResult.fSearchRows = thePQuery->fSearchRows;
 		oChanged.push_back(theSearchResult);
 		}
 
-	oClock = fClock;
+	oEvent = fEvent;
 	}
 
 void Source_Union::pDetachPQuery(PQuery* iPQuery)
@@ -733,7 +893,7 @@ void Source_Union::pDetachPQuery(PQuery* iPQuery)
 
 		thePSource->fMap_RefconToPSourceSearches.erase(theRefcon);
 
-		for (size_t x = thePSourceSearches->fPQuery->fSearchThings.size(); x; --x)
+		for (size_t x = thePSourceSearches->fPQuery->fSearchSpecs.size(); x; --x)
 			thePSource->fPSourceQueries_ToRemove.push_back(theRefcon++);
 
 		delete thePSourceSearches;

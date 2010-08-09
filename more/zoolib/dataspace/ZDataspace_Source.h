@@ -23,92 +23,69 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZValPredCompound.h"
+#include "zoolib/ZIntervalTreeClock.h"
 
-#include "zoolib/zqe/ZQE_Result.h"
+#include "zoolib/dataspace/ZDataspace_SearchSpec.h"
+#include "zoolib/zqe/ZQE_Row.h"
+#include "zoolib/zra/ZRA_RelHead.h"
 
-#include "zoolib/zra/ZRA_Expr_Rel.h"
-#include "zoolib/zra/ZRA_NameMap.h"
-
-#include "ZIntervalTreeClock.h"
-
-#include <map>
 #include <set>
 #include <vector>
 
 namespace ZooLib {
 namespace ZDataspace {
 
-using namespace std;
+using ZIntervalTreeClock::Event;
+using ZIntervalTreeClock::Stamp;
 
 using ZRA::RelHead;
-using ZRA::NameMap;
-
-typedef ZIntervalTreeClock::Clock Clock;
-
-typedef string ReadableBy;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
-
-class SearchThing
-	{
-public:
-	vector<NameMap> fNameMaps;
-	ZValPredCompound fPredCompound;
-	};
-
-const ZStrimW& operator<<(const ZStrimW& w, const SearchThing& iST);
-
-SearchThing sAsSearchThing(ZRef<ZRA::Expr_Rel> iRel);
-
-ZRef<ZRA::Expr_Rel> sAsRel(const RelHead& iRelHead);
-ZRef<ZRA::Expr_Rel> sAsRel(const NameMap& iNameMaps);
-ZRef<ZRA::Expr_Rel> sAsRel(const vector<NameMap>& iNameMaps);
-ZRef<ZRA::Expr_Rel> sAsRel(const SearchThing& iSearchThing);
-
-ZRef<ZRA::Expr_Rel> sAsRelFrom(const vector<NameMap>& iNameMaps);
-
-const ZStrimW& operator<<(const ZStrimW& w, const RelHead& iRH);
-const ZStrimW& operator<<(const ZStrimW& w, const set<RelHead>& iSet);
-
-// =================================================================================================
-#pragma mark -
-#pragma mark *
+#pragma mark * AddedSearch
 
 class AddedSearch
 	{
 public:
-	AddedSearch(int64 iRefcon, const SearchThing& iSearchThing);
+	AddedSearch(int64 iRefcon, const SearchSpec& iSearchSpec);
 
 	int64 fRefcon;
-	SearchThing fSearchThing;
+	SearchSpec fSearchSpec;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * SearchRows
+
+class SearchRows : public ZCountedWithoutFinalize
+	{
+public:
+	SearchRows(const std::vector<string8>& iRowHead, ZRef<ZQE::RowVector> iRowVector);
+	SearchRows(std::vector<string8>* ioRowHead, ZRef<ZQE::RowVector> iRowVector);
+	SearchRows(std::vector<string8>* ioRowHead);
+
+	const std::vector<string8>& GetRowHead();
+	ZRef<ZQE::RowVector> GetRowVector();
+
+private:
+	std::vector<string8> fRowHead;
+	ZRef<ZQE::RowVector> fRowVector;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * SearchResult
 
 class SearchResult
 	{
 public:
 	int64 fRefcon;
-	vector<ZRef<ZQE::Result> > fResults;
+	ZRef<SearchRows> fSearchRows;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
-
-class Source;
-
-typedef ZCallable_V1<Source*> Callable;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark *
+#pragma mark * Source
 
 class Source
 	{
@@ -118,15 +95,16 @@ protected:
 public:
 	virtual ~Source();
 
-	virtual set<RelHead> GetRelHeads() = 0;
+	virtual std::set<RelHead> GetRelHeads() = 0;
 
 	virtual void Update(
 		bool iLocalOnly,
-		AddedSearch* iAdded, size_t iAddedCount,
-		int64* iRemoved, size_t iRemovedCount,
-		vector<SearchResult>& oChanged,
-		Clock& oClock) = 0;
+		const AddedSearch* iAdded, size_t iAddedCount,
+		const int64* iRemoved, size_t iRemovedCount,
+		std::vector<SearchResult>& oChanged,
+		ZRef<Event>& oEvent) = 0;
 
+	typedef ZCallable_V1<Source*> Callable;
 	void Register(ZRef<Callable> iCallable);
 	void Unregister(ZRef<Callable> iCallable);
 
@@ -135,6 +113,21 @@ protected:
 
 private:
 	ZCallableSet_T1<Source*> fCallables;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * SourceFactory
+
+class SourceFactory : public ZCounted
+	{
+protected:
+	SourceFactory();
+
+public:
+	virtual ~SourceFactory();
+	
+	virtual Source* Make() = 0;
 	};
 
 } // namespace ZDataspace

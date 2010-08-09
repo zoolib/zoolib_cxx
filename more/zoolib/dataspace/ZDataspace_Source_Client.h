@@ -38,14 +38,14 @@ public:
 	Source_Client(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~Source_Client();
 
-	virtual set<RelHead> GetRelHeads();
+	virtual std::set<RelHead> GetRelHeads();
 
 	virtual void Update(
 		bool iLocalOnly,
-		AddedSearch* iAdded, size_t iAddedCount,
-		int64* iRemoved, size_t iRemovedCount,
-		vector<SearchResult>& oChanged,
-		Clock& oClock);
+		const AddedSearch* iAdded, size_t iAddedCount,
+		const int64* iRemoved, size_t iRemovedCount,
+		std::vector<SearchResult>& oChanged,
+		ZRef<Stamp>& oStamp);
 
 private:
 	class StreamerReader;

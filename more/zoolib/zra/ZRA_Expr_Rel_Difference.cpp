@@ -50,6 +50,9 @@ ZRef<Expr_Rel> Expr_Rel_Difference::Self()
 ZRef<Expr_Rel> Expr_Rel_Difference::Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
 	{ return new Expr_Rel_Difference(iOp0, iOp1); }
 
+RelHead Expr_Rel_Difference::GetRelHead()
+	{ return this->GetOp0()->GetRelHead(); }
+
 void Expr_Rel_Difference::Accept_Expr_Rel_Difference(Visitor_Expr_Rel_Difference& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Difference(this); }
 

@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_NameMap__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/zra/ZRA_RelHead.h"
@@ -79,16 +80,16 @@ private:
 
 const ZStrimW& operator<<(const ZStrimW& w, const NameMap& iNM);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Rename_t
-
 } // namespace ZRA
+} // namespace ZooLib
+
+namespace ZooLib {
+template <> int sCompare_T(const ZRA::NameMap& iL, const ZRA::NameMap& iR);
 } // namespace ZooLib
 
 namespace std {
 inline void swap(ZooLib::ZRA::NameMap& a, ZooLib::ZRA::NameMap& b)
 	{ a.swap(b); }
-}
+} // namespace std
 
 #endif // __ZRA_NameMap__

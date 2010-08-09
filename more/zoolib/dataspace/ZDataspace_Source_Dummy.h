@@ -35,21 +35,21 @@ class Source_Dummy : public Source
 	{
 public:
 	// Some kind of index specs to be passed in too.
-	Source_Dummy(const set<RelHead>& iRelHeads);
+	Source_Dummy(const std::set<RelHead>& iRelHeads);
 	virtual ~Source_Dummy();
 
 // From Source
-	virtual set<RelHead> GetRelHeads();
+	virtual std::set<RelHead> GetRelHeads();
 
 	virtual void Update(
 		bool iLocalOnly,
-		AddedSearch* iAdded, size_t iAddedCount,
-		int64* iRemoved, size_t iRemovedCount,
-		vector<SearchResult>& oChanged,
-		Clock& oClock);
+		const AddedSearch* iAdded, size_t iAddedCount,
+		const int64* iRemoved, size_t iRemovedCount,
+		std::vector<SearchResult>& oChanged,
+		ZRef<Event>& oEvent);
 
 private:
-	set<RelHead> fRelHeads;
+	std::set<RelHead> fRelHeads;
 	};
 
 } // namespace ZDataspace

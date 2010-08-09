@@ -42,14 +42,14 @@ public:
 	virtual ~Source_Union();
 
 // From Source
-	virtual set<RelHead> GetRelHeads();
+	virtual std::set<RelHead> GetRelHeads();
 
 	virtual void Update(
 		bool iLocalOnly,
-		AddedSearch* iAdded, size_t iAddedCount,
-		int64* iRemoved, size_t iRemovedCount,
-		vector<SearchResult>& oChanged,
-		Clock& oClock);
+		const AddedSearch* iAdded, size_t iAddedCount,
+		const int64* iRemoved, size_t iRemovedCount,
+		std::vector<SearchResult>& oChanged,
+		ZRef<Event>& oEvent);
 
 // Our protocol
 	void InsertSource(Source* iSource, const string8& iPrefix);
@@ -60,9 +60,8 @@ private:
 	class DLink_PQuery_Changed;
 
 	int64 fNextRefcon;
-	map<int64, PQuery*> fMap_RefconToPQuery;
+	std::map<int64, PQuery*> fMap_RefconToPQuery;
 	DListHead<DLink_PQuery_Changed> fPQuery_Changed;
-
 
 	class PSourceProduct;
 	class DLink_PSourceProduct_ToAdd;
@@ -73,26 +72,29 @@ private:
 	class DLink_PSourceSearches_InPQuery;
 
 	class PSource;
-	set<PSource*> fPSources_ToAdd;
-	set<PSource*> fPSources_ToRemove;
+	std::set<PSource*> fPSources_ToAdd;
+	std::set<PSource*> fPSources_ToRemove;
 
-	map<Source*, PSource*> fMap_SourceToPSource;
+	std::map<Source*, PSource*> fMap_SourceToPSource;
 
-	Clock fClock;
+	ZRef<Event> fEvent;
+	ZRef<Source::Callable> fCallable;
+
+	void pCallback(Source* iSource);
 
 	void pUpdate(
-		AddedSearch* iAdded, size_t iAddedCount,
-		int64* iRemoved, size_t iRemovedCount,
-		vector<SearchResult>& oChanged,
-		Clock& oClock);
+		const AddedSearch* iAdded, size_t iAddedCount,
+		const int64* iRemoved, size_t iRemovedCount,
+		std::vector<SearchResult>& oChanged,
+		ZRef<Event>& oEvent);
 
 	void pDetachPQuery(PQuery* iPQuery);
 
-	class Iterator_PSourceProduct;
-	friend class Iterator_PSourceProduct;
+//	class Iterator_PSourceProduct;
+//	friend class Iterator_PSourceProduct;
 
-	class Iterator_PSourceSearches;
-	friend class Iterator_PSourceSearches;
+//	class Iterator_PSourceSearches;
+//	friend class Iterator_PSourceSearches;
 	};
 
 } // namespace ZDataspace
