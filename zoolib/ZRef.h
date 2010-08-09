@@ -136,6 +136,18 @@ public:
 		return *this;
 		}
 
+	ZRef(const Adopt_T<T*>& iNRP)
+	:	fP(iNRP.Get())
+		{}
+
+	ZRef& operator=(const Adopt_T<T*>& iNRP)
+		{
+		T* theP = iNRP.Get();
+		std::swap(theP, fP);
+		spRelease(theP);
+		return *this;
+		}
+
 	bool operator==(const T* iP) const
 		{ return fP == iP; }
 
@@ -173,6 +185,13 @@ public:
 		T* theP = nullptr;
 		std::swap(theP, fP);
 		spRelease(theP);
+		}
+
+	T* Orphan()
+		{
+		T* theP = nullptr;
+		std::swap(theP, fP);
+		return theP;
 		}
 
 	// Used with COM output parameters. See sCOMPtr and sCOMVoidPtr in ZWinCOM.h
