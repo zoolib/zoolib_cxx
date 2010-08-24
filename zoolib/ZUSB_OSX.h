@@ -39,6 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZSafeRef.h"
 #include "zoolib/ZStreamer.h"
 
 namespace ZooLib {
@@ -57,9 +58,8 @@ public:
 		SInt32 iUSBVendor, SInt32 iUSBProduct);
 	virtual ~ZUSBWatcher();
 
-	typedef ZCallable_V1<ZRef<ZUSBDevice> > CB_DeviceAttached;
-	void RegisterDeviceAttached(ZRef<CB_DeviceAttached> iCallback);
-	void UnregisterDeviceAttached(ZRef<CB_DeviceAttached> iCallback);
+	typedef ZCallable1<void,ZRef<ZUSBDevice> > CB_DeviceAttached;
+	void SetCallable(ZRef<CB_DeviceAttached> iCallable);
 
 private:
 	void pDeviceAdded(io_iterator_t iIterator);
@@ -68,7 +68,7 @@ private:
 	IONotificationPortRef fIONotificationPortRef;
 	io_iterator_t fNotification;
 
-	ZCallableSet_T1<ZRef<ZUSBDevice> > fCallbacks;
+	ZSafeRef<CB_DeviceAttached> fCallable;
 	};
 
 // ================================================================================================
@@ -81,9 +81,8 @@ public:
 	ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_t iUSBDevice);
 	virtual ~ZUSBDevice();
 
-	typedef ZCallable_V1<ZRef<ZUSBDevice> > CB_DeviceDetached;
-	void RegisterDeviceDetached(ZRef<CB_DeviceDetached> iCallback);
-	void UnregisterDeviceDetached(ZRef<CB_DeviceDetached> iCallback);
+	typedef ZCallable1<void,ZRef<ZUSBDevice> > CB_DeviceDetached;
+	void SetCallable(ZRef<CB_DeviceDetached> iCallable);
 
 	IOUSBDeviceInterface182** GetIOUSBDeviceInterface();
 
@@ -107,10 +106,10 @@ private:
 	IOUSBDeviceInterface182** fIOUSBDeviceInterface;
 	io_object_t fNotification;
 	UInt32 fLocationID;
-	ZCallableSet_T1<ZRef<ZUSBDevice> > fCallbacks;
 	bool fDetached;
 	bool fHasIOUSBDeviceDescriptor;
 	IOUSBDeviceDescriptor fIOUSBDeviceDescriptor;
+	ZSafeRef<CB_DeviceDetached> fCallable;
 	};
 
 // =================================================================================================
