@@ -64,6 +64,9 @@ public:
 
 	bool Matches(ZValContext& iContext, const ZVal_Any& iVal) const;
 
+	ZValPredCompound& Rename(const Rename_t& iRename);
+	ZValPredCompound Renamed(const Rename_t& iRename) const;
+
 public:
 	SectUnion fSectUnion;
 	};

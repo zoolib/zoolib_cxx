@@ -187,6 +187,27 @@ bool ZValPredCompound::Matches(ZValContext& iContext, const ZVal_Any& iVal) cons
 	return false;
 	}
 
+ZValPredCompound& ZValPredCompound::Rename(const Rename_t& iRename)
+	{
+	for (SectUnion::iterator iterSectUnion = fSectUnion.begin();
+		iterSectUnion != fSectUnion.end(); ++iterSectUnion)
+		{
+		for (Sect::iterator iterSect = iterSectUnion->begin();
+			iterSect != iterSectUnion->end(); ++iterSect)
+			{
+			*iterSect = iterSect->Renamed(iRename);
+			}
+		}
+	return *this;
+	}
+
+ZValPredCompound ZValPredCompound::Renamed(const Rename_t& iRename) const
+	{
+	ZValPredCompound result = *this;
+	result.Rename(iRename);
+	return result;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * AsValPredCompound (anonymous)
