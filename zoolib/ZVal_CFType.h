@@ -61,9 +61,13 @@ public:
 	~ZVal_CFType();
 	ZVal_CFType& operator=(const ZVal_CFType& iOther);
 
-	ZVal_CFType(CFTypeRef iVal);
-	ZVal_CFType(const ZRef<CFTypeRef>& iVal);
-	ZVal_CFType(const Adopt_T<CFTypeRef>& iVal);
+	ZVal_CFType(CFTypeRef iVal) : inherited(iVal) {}
+	template <class S> ZVal_CFType(const ZRef<S>& iVal) : inherited(iVal) {}
+	template <class S> ZVal_CFType(const Adopt_T<S>& iVal) : inherited(iVal) {}
+
+//	ZVal_CFType(CFTypeRef iVal);
+//	ZVal_CFType(const ZRef<CFTypeRef>& iVal);
+//	ZVal_CFType(const Adopt_T<CFTypeRef>& iVal);
 
 	ZVal_CFType(int8 iVal);
 	ZVal_CFType(int16 iVal);
@@ -85,9 +89,28 @@ public:
 	explicit ZVal_CFType(CFArrayRef iVal);
 	explicit ZVal_CFType(CFDictionaryRef iVal);
 
-	ZVal_CFType& operator=(CFTypeRef iVal);
-	ZVal_CFType& operator=(const ZRef<CFTypeRef>& iVal);
-	ZVal_CFType& operator=(const Adopt_T<CFTypeRef>& iVal);
+	ZVal_CFType& operator=(CFTypeRef iVal)
+		{
+		inherited::operator=(iVal);
+		return *this;
+		}
+
+	template <class S>
+	ZVal_CFType& operator=(const ZRef<S>& iVal)
+		{
+		inherited::operator=(iVal);
+		return *this;
+		}
+
+	template <class S>
+	ZVal_CFType& operator=(const Adopt_T<S>& iVal)
+		{
+		inherited::operator=(iVal);
+		return *this;
+		}
+
+//	ZVal_CFType& operator=(CFTypeRef iVal);
+//	ZVal_CFType& operator=(const Adopt_T<CFTypeRef>& iVal);
 
 // ZVal protocol
 	void Clear();
@@ -148,17 +171,11 @@ public:
 	ZSeq_CFType(CFMutableArrayRef iOther);
 	ZSeq_CFType(CFArrayRef iOther);
 
-	ZSeq_CFType(const ZRef<CFMutableArrayRef>& iOther);
-	ZSeq_CFType(const ZRef<CFArrayRef>& iOther);
-
 	ZSeq_CFType(const Adopt_T<CFMutableArrayRef>& iOther);
 	ZSeq_CFType(const Adopt_T<CFArrayRef>& iOther);
 
 	ZSeq_CFType& operator=(CFMutableArrayRef iOther);
 	ZSeq_CFType& operator=(CFArrayRef iOther);
-
-	ZSeq_CFType& operator=(const ZRef<CFMutableArrayRef>& iOther);
-	ZSeq_CFType& operator=(const ZRef<CFArrayRef>& iOther);
 
 	ZSeq_CFType& operator=(const Adopt_T<CFMutableArrayRef>& iOther);
 	ZSeq_CFType& operator=(const Adopt_T<CFArrayRef>& iOther);
@@ -222,9 +239,6 @@ public:
 	~ZMap_CFType();
 	ZMap_CFType& operator=(const ZMap_CFType& iOther);
 
-	ZMap_CFType(const ZRef<CFMutableDictionaryRef>& iOther);
-	ZMap_CFType(const ZRef<CFDictionaryRef>& iOther);
-
 	ZMap_CFType(CFMutableDictionaryRef iOther);
 	ZMap_CFType(CFDictionaryRef iOther);
 
@@ -233,9 +247,6 @@ public:
 
 	ZMap_CFType& operator=(CFMutableDictionaryRef iOther);
 	ZMap_CFType& operator=(CFDictionaryRef iOther);
-
-	ZMap_CFType& operator=(const ZRef<CFMutableDictionaryRef>& iOther);
-	ZMap_CFType& operator=(const ZRef<CFDictionaryRef>& iOther);
 
 	ZMap_CFType& operator=(const Adopt_T<CFMutableDictionaryRef>& iOther);
 	ZMap_CFType& operator=(const Adopt_T<CFDictionaryRef>& iOther);

@@ -50,7 +50,7 @@ class ZYadAtomR_NS
 ,	public ZYadAtomR
 	{
 public:
-	ZYadAtomR_NS(const ZRef<NSObject>& iVal);
+	ZYadAtomR_NS(NSObject* iVal);
 
 // From ZYadAtomR
 	virtual ZAny AsAny();
@@ -68,7 +68,7 @@ class ZYadStreamRPos_NS
 ,	public ZStreamerRPos_NS
 	{
 public:
-	ZYadStreamRPos_NS(const ZRef<NSData>& iData);
+	ZYadStreamRPos_NS(NSData* iData);
 	virtual ~ZYadStreamRPos_NS();
 
 // From ZYadR
@@ -99,8 +99,8 @@ class ZYadSeqRPos_NS
 ,	public ZYadSeqRPos_Val_Self_T<ZYadSeqRPos_NS, ZSeq_NS>
 	{
 public:
-	ZYadSeqRPos_NS(const ZRef<NSArray>& iArray);
-	ZYadSeqRPos_NS(const ZRef<NSArray>& iArray, uint64 iPosition);
+	ZYadSeqRPos_NS(NSArray* iArray);
+	ZYadSeqRPos_NS(NSArray* iArray, uint64 iPosition);
 	};
 
 // =================================================================================================
@@ -111,13 +111,13 @@ class ZYadMapRPos_NS
 :	public ZYadR_NS
 ,	public ZYadMapRPos
 	{
-	ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary,
+	ZYadMapRPos_NS(NSDictionary* iDictionary,
 		uint64 iPosition,
 		const ZSeq_NS& iNames,
 		const ZSeq_NS& iValues);
 
 public:
-	ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary);
+	ZYadMapRPos_NS(NSDictionary* iDictionary);
 
 // From ZYadMapR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
@@ -140,23 +140,23 @@ private:
 
 ZRef<ZYadR> sMakeYadR(const ZRef<NSObject>& iVal);
 
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<NSMutableString>& iString);
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<NSString>& iString);
+ZRef<ZYadStrimR> sMakeYadR(NSMutableString* iString);
+ZRef<ZYadStrimR> sMakeYadR(NSString* iString);
 
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSMutableData>& iData);
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSData>& iData);
+ZRef<ZYadStreamR> sMakeYadR(NSMutableData* iData);
+ZRef<ZYadStreamR> sMakeYadR(NSData* iData);
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSMutableArray>& iArray);
-ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSArray>& iArray);
+ZRef<ZYadSeqRPos> sMakeYadR(NSMutableArray* iArray);
+ZRef<ZYadSeqRPos> sMakeYadR(NSArray* iArray);
 
-ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSMutableDictionary>& iDictionary);
-ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSDictionary>& iDictionary);
+ZRef<ZYadMapRPos> sMakeYadR(NSMutableDictionary* iDictionary);
+ZRef<ZYadMapRPos> sMakeYadR(NSDictionary* iDictionary);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sFromYadR
 
-ZRef<NSObject> sFromYadR(const ZRef<NSObject>& iDefault, ZRef<ZYadR> iYadR);
+ZRef<NSObject> sFromYadR(NSObject* iDefault, ZRef<ZYadR> iYadR);
 
 } // namespace ZooLib
 

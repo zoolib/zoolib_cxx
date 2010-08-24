@@ -272,9 +272,6 @@ void ZVal_NS::Set_T<string8>(const string8& iVal)
 template <>
 void ZVal_NS::Set_T<ZVal_NS::NSStringPtr>(const ZVal_NS::NSStringPtr& iVal)
 	{ inherited::operator=(iVal); }
-//template <>
-//void ZVal_NS::Set_T<ZRef<NSString> >(const ZRef<NSString>& iVal)
-//	{ inherited::operator=(iVal); }
 
 template <>
 void ZVal_NS::Set_T<ZData_NS>(const ZData_NS& iVal)
@@ -294,7 +291,6 @@ void ZVal_NS::Set_T<ZMap_NS>(const ZMap_NS& iVal)
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_NS)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, NSString, ZVal_NS::NSStringPtr)
-//ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, NSString, ZRef<NSString>)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Data, ZData_NS)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Seq, ZSeq_NS)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Map, ZMap_NS)

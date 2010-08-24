@@ -38,7 +38,7 @@ using std::vector;
 #pragma mark -
 #pragma mark * ZYadAtomR_NS
 
-ZYadAtomR_NS::ZYadAtomR_NS(const ZRef<NSObject>& iVal)
+ZYadAtomR_NS::ZYadAtomR_NS(NSObject* iVal)
 :	ZYadR_NS(iVal)
 	{}
 
@@ -49,9 +49,9 @@ ZAny ZYadAtomR_NS::AsAny()
 #pragma mark -
 #pragma mark * ZYadStreamRPos_NS
 
-ZYadStreamRPos_NS::ZYadStreamRPos_NS(const ZRef<NSData>& iDataRef)
+ZYadStreamRPos_NS::ZYadStreamRPos_NS(NSData* iDataRef)
 :	ZYadR_NS(iDataRef)
-,	ZStreamerRPos_NS(iDataRef)
+,	ZStreamerRPos_NS(ZRef<NSData>(iDataRef))
 	{}
 
 ZYadStreamRPos_NS::~ZYadStreamRPos_NS()
@@ -73,12 +73,12 @@ ZYadStrimR_NS::ZYadStrimR_NS(ZRef<NSString> iString)
 #pragma mark -
 #pragma mark * ZYadSeqRPos_NS
 
-ZYadSeqRPos_NS::ZYadSeqRPos_NS(const ZRef<NSArray>& iArray)
+ZYadSeqRPos_NS::ZYadSeqRPos_NS(NSArray* iArray)
 :	ZYadR_NS(iArray)
 ,	YadSeqBase_t(iArray)
 	{}
 
-ZYadSeqRPos_NS::ZYadSeqRPos_NS(const ZRef<NSArray>& iArray, uint64 iPosition)
+ZYadSeqRPos_NS::ZYadSeqRPos_NS(NSArray* iArray, uint64 iPosition)
 :	ZYadR_NS(iArray)
 ,	YadSeqBase_t(iArray, iPosition)
 	{}
@@ -87,7 +87,7 @@ ZYadSeqRPos_NS::ZYadSeqRPos_NS(const ZRef<NSArray>& iArray, uint64 iPosition)
 #pragma mark -
 #pragma mark * ZYadMapRPos_NS
 
-ZYadMapRPos_NS::ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary,
+ZYadMapRPos_NS::ZYadMapRPos_NS(NSDictionary* iDictionary,
 	uint64 iPosition,
 	const ZSeq_NS& iNames,
 	const ZSeq_NS& iValues)
@@ -98,7 +98,7 @@ ZYadMapRPos_NS::ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary,
 ,	fValues(iValues)
 	{}
 
-ZYadMapRPos_NS::ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary)
+ZYadMapRPos_NS::ZYadMapRPos_NS(NSDictionary* iDictionary)
 :	ZYadR_NS(iDictionary)
 ,	fDictionary(iDictionary)
 ,	fPosition(0)
@@ -149,35 +149,35 @@ ZRef<ZYadR> sMakeYadR(const ZRef<NSObject>& iVal)
 	if (theVal.QGetData(asData))
 		return new ZYadStreamRPos_NS(asData);
 
-	ZRef<NSString> asNSString;
+	NSString* asNSString;
 	if (theVal.QGetNSString(asNSString))
 		return new ZYadStrimR_NS(asNSString);
 
 	return new ZYadAtomR_NS(iVal);
 	}
 
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<NSMutableString>& iString)
+ZRef<ZYadStrimR> sMakeYadR(NSMutableString* iString)
 	{ return new ZYadStrimR_NS(iString); }
 
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<NSString>& iString)
+ZRef<ZYadStrimR> sMakeYadR(NSString* iString)
 	{ return new ZYadStrimR_NS(iString); }
 
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSMutableData>& iData)
+ZRef<ZYadStreamR> sMakeYadR(NSMutableData* iData)
 	{ return new ZYadStreamRPos_NS(iData); }
 
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSData>& iData)
+ZRef<ZYadStreamR> sMakeYadR(NSData* iData)
 	{ return new ZYadStreamRPos_NS(iData); }
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSMutableArray>& iArray)
+ZRef<ZYadSeqRPos> sMakeYadR(NSMutableArray* iArray)
 	{ return new ZYadSeqRPos_NS(iArray); }
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSArray>& iArray)
+ZRef<ZYadSeqRPos> sMakeYadR(NSArray* iArray)
 	{ return new ZYadSeqRPos_NS(iArray); }
 
-ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSMutableDictionary>& iDictionary)
+ZRef<ZYadMapRPos> sMakeYadR(NSMutableDictionary* iDictionary)
 	{ return new ZYadMapRPos_NS(iDictionary); }
 
-ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSDictionary>& iDictionary)
+ZRef<ZYadMapRPos> sMakeYadR(NSDictionary* iDictionary)
 	{ return new ZYadMapRPos_NS(iDictionary); }
 
 // =================================================================================================
@@ -257,7 +257,7 @@ ZRef<NSObject> Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)
 	return result;
 	}
 
-ZRef<NSObject> sFromYadR(const ZRef<NSObject>& iDefault, ZRef<ZYadR> iYadR)
+ZRef<NSObject> sFromYadR(NSObject* iDefault, ZRef<ZYadR> iYadR)
 	{
 	if (ZRef<ZYadR_NS> theYadR = iYadR.DynamicCast<ZYadR_NS>())
 		return theYadR->GetVal();

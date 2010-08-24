@@ -50,7 +50,7 @@ class ZYadAtomR_CFType
 ,	public ZYadAtomR
 	{
 public:
-	ZYadAtomR_CFType(const ZRef<CFTypeRef>& iVal);
+	ZYadAtomR_CFType(CFTypeRef iVal);
 
 // From ZYadAtomR
 	virtual ZAny AsAny();
@@ -68,7 +68,7 @@ class ZYadStreamRPos_CFType
 ,	public ZStreamerRPos_CFType
 	{
 public:
-	ZYadStreamRPos_CFType(const ZRef<CFDataRef>& iData);
+	ZYadStreamRPos_CFType(CFDataRef iData);
 	virtual ~ZYadStreamRPos_CFType();
 
 // From ZYadR
@@ -87,7 +87,7 @@ class ZYadStrimR_CFType
 ,	public ZStrimmerR_CFString
 	{
 public:
-	ZYadStrimR_CFType(const ZRef<CFStringRef>& iStringRef);
+	ZYadStrimR_CFType(CFStringRef iStringRef);
 	};
 
 // =================================================================================================
@@ -99,8 +99,8 @@ class ZYadSeqRPos_CFType
 ,	public ZYadSeqRPos_Val_Self_T<ZYadSeqRPos_CFType, ZSeq_CFType>
 	{
 public:
-	ZYadSeqRPos_CFType(const ZRef<CFArrayRef>& iArray);
-	ZYadSeqRPos_CFType(const ZRef<CFArrayRef>& iArray, uint64 iPosition);
+	ZYadSeqRPos_CFType(CFArrayRef iArray);
+	ZYadSeqRPos_CFType(CFArrayRef iArray, uint64 iPosition);
 	};
 
 // =================================================================================================
@@ -111,13 +111,13 @@ class ZYadMapRPos_CFType
 :	public ZYadR_CFType
 ,	public ZYadMapRPos
 	{
-	ZYadMapRPos_CFType(const ZRef<CFDictionaryRef>& iDictionary,
+	ZYadMapRPos_CFType(CFDictionaryRef iDictionary,
 		uint64 iPosition,
 		const std::vector<CFStringRef>& iNames,
 		const std::vector<CFTypeRef>& iValues);
 
 public:
-	ZYadMapRPos_CFType(const ZRef<CFDictionaryRef>& iDictionary);
+	ZYadMapRPos_CFType(CFDictionaryRef iDictionary);
 
 // From ZYadMapR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
@@ -140,23 +140,23 @@ private:
 
 ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal);
 
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFMutableStringRef>& iString);
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFStringRef>& iString);
+ZRef<ZYadStrimR> sMakeYadR(CFMutableStringRef iString);
+ZRef<ZYadStrimR> sMakeYadR(CFStringRef iString);
 
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFMutableDataRef>& iData);
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData);
+ZRef<ZYadStreamR> sMakeYadR(CFMutableDataRef iData);
+ZRef<ZYadStreamR> sMakeYadR(CFDataRef iData);
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<CFMutableArrayRef>& iArray);
-ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<CFArrayRef>& iArray);
+ZRef<ZYadSeqRPos> sMakeYadR(CFMutableArrayRef iArray);
+ZRef<ZYadSeqRPos> sMakeYadR(CFArrayRef iArray);
 
-ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFMutableDictionaryRef>& iDictionary);
-ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary);
+ZRef<ZYadMapRPos> sMakeYadR(CFMutableDictionaryRef iDictionary);
+ZRef<ZYadMapRPos> sMakeYadR(CFDictionaryRef iDictionary);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sFromYadR
 
-ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR);
+ZRef<CFTypeRef> sFromYadR(CFTypeRef iDefault, ZRef<ZYadR> iYadR);
 
 } // namespace ZooLib
 
