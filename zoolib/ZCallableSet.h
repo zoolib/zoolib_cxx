@@ -36,7 +36,6 @@ class ZCallableSet0
 	{
 public:
 	typedef ZCallable0<void> Callable_t;
-	typedef ZWeakRef<Callable_t> WRC;
 
 	void Register(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
@@ -46,13 +45,13 @@ public:
 
 	void Invoke()
 		{
-		for (ZSafeSetIterConst<WRC> iter = fCallables;
+		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
 			{
-			if (ZQ<WRC> theQ = iter.QReadInc())
+			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB.Get()->Invoke();
+					theCB->Invoke();
 				continue;
 				}
 			break;
@@ -60,7 +59,7 @@ public:
 		}
 
 private:
-	ZSafeSet<WRC> fCallables;
+	ZSafeSet<ZRef<Callable_t> > fCallables;
 	};
 
 // =================================================================================================
@@ -73,7 +72,6 @@ class ZCallableSet1
 	{
 public:
 	typedef ZCallable1<void,P0> Callable_t;
-	typedef ZWeakRef<Callable_t> WRC;
 
 	void Register(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
@@ -83,13 +81,13 @@ public:
 
 	void Invoke(P0 i0)
 		{
-		for (ZSafeSetIterConst<WRC> iter = fCallables;
+		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
 			{
-			if (ZQ<WRC> theQ = iter.QReadInc())
+			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB.Get()->Invoke(i0);
+					theCB->Invoke(i0);
 				continue;
 				}
 			break;
@@ -97,7 +95,7 @@ public:
 		}
 
 private:
-	ZSafeSet<WRC> fCallables;
+	ZSafeSet<ZRef<Callable_t> > fCallables;
 	};
 
 // =================================================================================================
@@ -110,7 +108,6 @@ class ZCallableSet2
 	{
 public:
 	typedef ZCallable2<void,P0,P1> Callable_t;
-	typedef ZWeakRef<Callable_t> WRC;
 
 	void Register(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
@@ -120,13 +117,13 @@ public:
 
 	void Invoke(P0 i0, P1 i1)
 		{
-		for (ZSafeSetIterConst<WRC> iter = fCallables;
+		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
 			{
-			if (ZQ<WRC> theQ = iter.QReadInc())
+			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB.Get()->Invoke(i0, i1);
+					theCB->Invoke(i0, i1);
 				continue;
 				}
 			break;
@@ -134,7 +131,7 @@ public:
 		}
 
 private:
-	ZSafeSet<WRC> fCallables;
+	ZSafeSet<ZRef<Callable_t> > fCallables;
 	};
 
 // =================================================================================================
@@ -147,7 +144,6 @@ class ZCallableSet3
 	{
 public:
 	typedef ZCallable3<void,P0,P1,P2> Callable_t;
-	typedef ZWeakRef<Callable_t> WRC;
 
 	void Register(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
@@ -157,13 +153,13 @@ public:
 
 	void Invoke(P0 i0, P1 i1, P2 i2)
 		{
-		for (ZSafeSetIterConst<WRC> iter = fCallables;
+		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
 			{
-			if (ZQ<WRC> theQ = iter.QReadInc())
+			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB.Get()->Invoke(i0, i1, i2);
+					theCB->Invoke(i0, i1, i2);
 				continue;
 				}
 			break;
@@ -171,7 +167,7 @@ public:
 		}
 
 private:
-	ZSafeSet<WRC> fCallables;
+	ZSafeSet<ZRef<Callable_t> > fCallables;
 	};
 
 // =================================================================================================
@@ -184,7 +180,6 @@ class ZCallableSet4
 	{
 public:
 	typedef ZCallable4<void,P0,P1,P2,P3> Callable_t;
-	typedef ZWeakRef<Callable_t> WRC;
 
 	void Register(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
@@ -194,13 +189,13 @@ public:
 
 	void Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		for (ZSafeSetIterConst<WRC> iter = fCallables;
+		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
 			{
-			if (ZQ<WRC> theQ = iter.QReadInc())
+			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB.Get()->Invoke(i0, i1, i2, i3);
+					theCB->Invoke(i0, i1, i2, i3);
 				continue;
 				}
 			break;
@@ -208,7 +203,7 @@ public:
 		}
 
 private:
-	ZSafeSet<WRC> fCallables;
+	ZSafeSet<ZRef<Callable_t> > fCallables;
 	};
 
 } // namespace ZooLib
