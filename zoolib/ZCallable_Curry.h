@@ -23,13 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
-#include "zoolib/ZWorker.h"
 
 namespace ZooLib {
-
-// Use Function signature syntax to specifiy return and param types,
-// then we can parametrize most stuff on a single template param:
-//##typedef R (*Signature_t)(P0, P1, P2, P3) etc.
 
 // =================================================================================================
 #pragma mark -
@@ -37,28 +32,19 @@ namespace ZooLib {
 
 template <class T> struct ZCallable_CurryTraits
 	{
-//	typedef T Ref_Remove_t;
 	typedef const T ConstRef_Remove_t;
-
-//	typedef T& Ref_Add_t;
 	typedef const T& ConstRef_Add_t;
 	};
 
 template <class T> struct ZCallable_CurryTraits<const T&>
 	{
-//	typedef const T RemoveRef_t;
 	typedef const T ConstRef_Remove_t;
-
-//	typedef T& Ref_Add_t;
 	typedef const T& ConstRef_Add_t;
 	};
 
 template <class T> struct ZCallable_CurryTraits<T&>
 	{
-//	typedef T RemoveRef_t;
 	typedef const T ConstRef_Remove_t;
-
-//	typedef T& Ref_Add_t;
 	typedef const T& ConstRef_Add_t;
 	};
 
