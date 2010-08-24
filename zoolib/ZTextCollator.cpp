@@ -244,7 +244,7 @@ bool ZTextCollator::Contains(const UTF32* iPattern, size_t iPatternLength,
 
 void ZTextCollator::pMakeSafe() const
 	{
-	if (fRep->GetRefCount() > 1)
+	if (fRep->IsShared())
 		{
 		ZRef<ZTextCollatorRep> newRep = fRep->SafeCopy();
 		const_cast<ZTextCollator*>(this)->fRep = newRep;

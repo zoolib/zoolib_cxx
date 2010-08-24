@@ -318,9 +318,7 @@ void ZStreamMUX::Endpoint::Finalize()
 		hasMUX = true;
 		// Endpoint_Finalize calls our FinalizationComplete, we don't do it here.
 		if (theMUX->Endpoint_Finalize(this))
-			{
 			needsDelete = true;
-			}
 		}
 
 	if (hasMUX)
@@ -330,15 +328,8 @@ void ZStreamMUX::Endpoint::Finalize()
 		return;
 		}
 
-	if (this->GetRefCount() != 1)
-		{
-		this->FinalizationComplete();
-		}
-	else
-		{
-		this->FinalizationComplete();
+	if (this->FinishFinalize())
 		delete this;
-		}
 	}
 
 const ZStreamRCon& ZStreamMUX::Endpoint::GetStreamRCon()
@@ -458,8 +449,8 @@ void ZStreamMUX::Listener::Finalize()
 		return;
 		}
 
-	this->FinalizationComplete();
-	delete this;
+	if (this->FinishFinalize())
+		delete this;
 	}
 
 ZRef<ZStreamerRWCon> ZStreamMUX::Listener::MakeStreamerRWCon()
@@ -529,9 +520,9 @@ ZStreamMUX::~ZStreamMUX()
 void ZStreamMUX::Finalize()
 	{
 	ZGuardRMtxR locker(fMutex);
-	if (this->GetRefCount() != 1)
+	if (this->IsShared())
 		{
-		this->FinalizationComplete();
+		this->FinishFinalize();
 		return;
 		}
 
@@ -553,14 +544,11 @@ void ZStreamMUX::Finalize()
 
 	fMap_IDToEndpoint.clear();
 
-	if (this->GetRefCount() != 1)
+	if (this->FinishFinalize())
 		{
-		this->FinalizationComplete();
-		return;
+		locker.Release();
+		delete this;
 		}
-	this->FinalizationComplete();
-	locker.Release();
-	delete this;
 	}
 
 void ZStreamMUX::Finished()
@@ -827,13 +815,8 @@ bool ZStreamMUX::Endpoint_Finalize(Endpoint* iEP)
 			this, iEP->fEPID);
 		}
 
-	if (iEP->GetRefCount() != 1)
-		{
-		iEP->FinalizationComplete();
+	if (!iEP->FinishFinalize())
 		return false;
-		}
-
-	iEP->FinalizationComplete();
 
 	if (iEP->fStateSend == eStateSend_Open)
 		{
@@ -1011,11 +994,8 @@ void ZStreamMUX::Endpoint_Abort(Endpoint* iEP)
 void ZStreamMUX::Listener_Finalize(Listener* iListener)
 	{
 	ZGuardRMtxR locker(fMutex);
-	if (iListener->GetRefCount() != 1)
-		{
-		iListener->FinalizationComplete();
+	if (!iListener->FinishFinalize())
 		return;
-		}
 
 	map<std::string, Listener*>::iterator i = fMap_NameToListener.find(iListener->fName);
 	ZAssert(i != fMap_NameToListener.end());
@@ -1028,6 +1008,8 @@ void ZStreamMUX::Listener_Finalize(Listener* iListener)
 		this->Endpoint_Abort(theEndpoint);
 		theEndpoint->fListener = nullptr;
 		}
+
+	delete iListener;
 	}
 
 ZRef<ZStreamerRWCon> ZStreamMUX::Listener_Listen(Listener* iListener)
@@ -1110,8 +1092,7 @@ bool ZStreamMUX::pDetachIfUnused(Endpoint* iEP)
 		fCommer.StaticCast<ZStreamerWriter>()->Wake();
 		}
 
-//	return true;
-	return 0 == iEP->GetRefCount();
+	return !iEP->IsReferenced();
 	}
 
 void ZStreamMUX::pAbort(Endpoint* iEP)

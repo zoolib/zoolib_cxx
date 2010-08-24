@@ -88,11 +88,9 @@ private:
 		{
 		{ // Scope for guard
 		ZAcqMtx acq(fMtx);
-		if (this->GetRefCount() != 1)
-			{
-			this->FinalizationComplete();
+
+		if (!this->FinishFinalize())
 			return;
-			}
 
 		// Invalidate all iterators referencing entries.
 		for (typename EntryList::iterator listIter = fList.begin();
@@ -105,8 +103,6 @@ private:
 				theIter->fRep.Clear();
 				}
 			}
-
-		this->FinalizationComplete();
 		}
 		delete this;
 		}

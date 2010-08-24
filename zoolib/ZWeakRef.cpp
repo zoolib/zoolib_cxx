@@ -61,8 +61,7 @@ ZWeakRefereeProxy::~ZWeakRefereeProxy()
 void ZWeakRefereeProxy::Finalize()
 	{
 	ZGuardRMtx guard(fMtx);
-	this->FinalizationComplete();
-	if (!fReferee && !this->GetRefCount())
+	if (this->FinishFinalize() && !fReferee)
 		{
 		guard.Release();
 		delete this;
@@ -74,7 +73,7 @@ void ZWeakRefereeProxy::pDetachReferee(ZWeakReferee* iReferee)
 	ZGuardRMtx guard(fMtx);
 	ZAssert(iReferee == fReferee);
 	fReferee = nullptr;
-	if (!this->GetRefCount())
+	if (this->FinishFinalize())
 		{
 		guard.Release();
 		delete this;

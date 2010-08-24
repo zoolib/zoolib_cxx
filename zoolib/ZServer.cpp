@@ -100,14 +100,8 @@ void ZServer::Finalize()
 			break;
 		}
 
-	if (this->GetRefCount() != 1)
-		{
-		this->FinalizationComplete();
-		return;
-		}
-	this->FinalizationComplete();
-
-	delete this;
+	if (this->FinishFinalize())
+		delete this;
 	}
 
 void ZServer::Task_Finished(ZRef<ZTask> iTask)

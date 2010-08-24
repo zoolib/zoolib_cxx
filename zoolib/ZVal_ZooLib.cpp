@@ -1929,7 +1929,7 @@ void ZSeq_ZooLib::pTouch()
 	{
 	if (fRep)
 		{
-		if (fRep->GetRefCount() > 1)
+		if (fRep->IsShared())
 			fRep = new Rep(fRep->fVector);
 		}
 	else
@@ -2484,7 +2484,7 @@ void ZMap_ZooLib::pErase(Index_t iIndex)
 	if (iIndex == fRep->fProperties.end())
 		return;
 
-	if (fRep->GetRefCount() == 1)
+	if (!fRep->IsShared())
 		{
 		fRep->fProperties.erase(iIndex);
 		}
@@ -2503,7 +2503,7 @@ void ZMap_ZooLib::pTouch()
 	{
 	if (fRep)
 		{
-		if (fRep->GetRefCount() > 1)
+		if (fRep->IsShared())
 			fRep = new Rep(fRep->fProperties);
 		}
 	else
@@ -2516,7 +2516,7 @@ ZMap_ZooLib::Index_t ZMap_ZooLib::pTouch(Index_t iIndex)
 	{
 	ZAssertStop(kDebug_Tuple, fRep);
 
-	if (fRep->GetRefCount() == 1)
+	if (!fRep->IsShared())
 		return iIndex;
 
 	size_t index = iIndex - fRep->fProperties.begin();

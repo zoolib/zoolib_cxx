@@ -230,7 +230,7 @@ void ZSeq_Any::pTouch()
 		{
 		fRep = new Rep;
 		}
-	else if (fRep->GetRefCount() != 1)
+	else if (fRep->IsShared())
 		{
 		fRep = new Rep(fRep->fVector);
 		}
@@ -529,7 +529,7 @@ void ZMap_Any::pTouch()
 		{
 		fRep = new Rep;
 		}
-	else if (fRep->GetRefCount() != 1)
+	else if (fRep->IsShared())
 		{
 		fRep = new Rep(fRep->fMap);
 		}
@@ -541,7 +541,7 @@ ZMap_Any::Map_t::iterator ZMap_Any::pTouch(const Index_t& iIndex)
 		{
 		return spEmptyMap.end();
 		}
-	else if (fRep->GetRefCount() != 1)
+	else if (fRep->IsShared())
 		{
 		const string theName = iIndex->first;
 		fRep = new Rep(fRep->fMap);

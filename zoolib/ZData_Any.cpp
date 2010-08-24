@@ -165,9 +165,8 @@ void ZData_Any::CopyTo(void* oDest, size_t iCount) const
 
 void ZData_Any::pTouch()
 	{
-	if (fRep->GetRefCount() == 1)
-		return;
-	fRep = new Rep(fRep->fVector);
+	if (fRep->IsShared())
+		fRep = new Rep(fRep->fVector);
 	}
 
 } // namespace ZooLib

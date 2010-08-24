@@ -727,7 +727,7 @@ void ZDCPixmapRep::SetCache(ZRef<ZDCPixmapCache> iCache)
 
 ZRef<ZDCPixmapRep> ZDCPixmapRep::Touch()
 	{
-	if (this->GetRefCount() > 1 || fRaster->GetRefCount() > 1 || fRaster->GetCanModify() == false)
+	if (this->IsShared() || fRaster->IsShared() || fRaster->GetCanModify() == false)
 		{
 		const RasterDesc& ourRasterDesc = fRaster->GetRasterDesc();
 		RasterDesc newRasterDesc = ourRasterDesc;

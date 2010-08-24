@@ -153,7 +153,7 @@ void ZGRgn::Inset(ZCoord iH, ZCoord iV)
 	{
 	if (fRep)
 		{
-		if (fRep->GetRefCount() > 1)
+		if (fRep->IsShared())
 			fRep = fRep->Insetted(iH, iV);
 		else
 			fRep->Inset(iH, iV);
@@ -173,7 +173,7 @@ void ZGRgn::Offset(ZCoord iOffsetH, ZCoord iOffsetV)
 		{
 		if (fRep)
 			{
-			if (fRep->GetRefCount() > 1)
+			if (fRep->IsShared())
 				fRep = fRep->Offsetted(iOffsetH, iOffsetV);
 			else
 				fRep->Offset(iOffsetH, iOffsetV);
@@ -195,7 +195,7 @@ void ZGRgn::Include(const ZRectPOD& iRect)
 	{
 	if (!fRep)
 		fRep = spMake(iRect);
-	else if (fRep->GetRefCount() > 1)
+	else if (fRep->IsShared())
 		fRep = fRep->Including(iRect);
 	else
 		fRep->Include(iRect);
@@ -213,7 +213,7 @@ void ZGRgn::Intersect(const ZRectPOD& iRect)
 	{
 	if (fRep)
 		{
-		if (fRep->GetRefCount() > 1)
+		if (fRep->IsShared())
 			fRep = fRep->Intersecting(iRect);
 		else
 			fRep->Intersect(iRect);
@@ -231,7 +231,7 @@ void ZGRgn::Exclude(const ZRectPOD& iRect)
 	{
 	if (fRep)
 		{
-		if (fRep->GetRefCount() > 1)
+		if (fRep->IsShared())
 			fRep = fRep->Excluding(iRect);
 		else
 			fRep->Exclude(iRect);
@@ -251,7 +251,7 @@ void ZGRgn::Include(const ZGRgn& iOther)
 		fRep = iOther.fRep;
 	else if (iOther.fRep)
 		{
-		if (fRep->GetRefCount() > 1)
+		if (fRep->IsShared())
 			fRep = fRep->Including(iOther.fRep);
 		else
 			fRep->Include(iOther.fRep);
@@ -276,7 +276,7 @@ void ZGRgn::Intersect(const ZGRgn& iOther)
 		}
 	else if (fRep)
 		{
-		if (fRep->GetRefCount() > 1)
+		if (fRep->IsShared())
 			fRep = fRep->Intersecting(iOther.fRep);
 		else
 			fRep->Intersect(iOther.fRep);
@@ -294,7 +294,7 @@ void ZGRgn::Exclude(const ZGRgn& iOther)
 	{
 	if (fRep && iOther.fRep)
 		{
-		if (fRep->GetRefCount() > 1)
+		if (fRep->IsShared())
 			fRep = fRep->Excluding(iOther.fRep);
 		else
 			fRep->Exclude(iOther.fRep);
@@ -316,7 +316,7 @@ void ZGRgn::Xor(const ZGRgn& iOther)
 		}
 	else if (iOther.fRep)
 		{
-		if (fRep->GetRefCount() > 1)
+		if (fRep->IsShared())
 			fRep = fRep->Xoring(iOther.fRep);
 		else
 			fRep->Xor(iOther.fRep);

@@ -807,7 +807,7 @@ ZFileIter& ZFileIter::Advance()
 	{
 	if (fRep)
 		{
-		if (fRep->GetRefCount() > 1)
+		if (fRep->IsShared())
 			fRep = fRep->Clone();
 
 		if (fRep)
