@@ -340,11 +340,8 @@ ZRef<ZTSWatcher> ZTS_Watchable::NewWatcher()
 void ZTS_Watchable::Watcher_Finalize(Watcher* iWatcher)
 	{
 	ZMutexLocker locker(fMutex_Structure);
-	if (iWatcher->GetRefCount() > 1)
-		{
-		iWatcher->FinalizationComplete();
+	if (!iWatcher->FinishFinalize())
 		return;
-		}
 
 	ZUtil_STL::sEraseMustContain(kDebug, fWatchers, iWatcher);
 	for (set<PTuple*>::iterator i = iWatcher->fPTuples.begin(),
@@ -374,8 +371,6 @@ void ZTS_Watchable::Watcher_Finalize(Watcher* iWatcher)
 
 		delete theWatcherQuery;
 		}
-
-	iWatcher->FinalizationComplete();
 
 	delete iWatcher;
 	}

@@ -352,11 +352,8 @@ ZRef<ZTSWatcher> ZTSWatcherMUX::NewWatcher(bool iAlwaysForceSync)
 void ZTSWatcherMUX::Watcher_Finalize(Watcher* iWatcher)
 	{
 	ZMutexLocker locker(fMutex_Structure);
-	if (iWatcher->GetRefCount() != 1)
-		{
-		iWatcher->FinalizationComplete();
+	if (!iWatcher->FinishFinalize())
 		return;
-		}
 
 	for (map<int64, WQuery>::iterator i = iWatcher->fWQueries.begin();
 		i != iWatcher->fWQueries.end(); ++i)
@@ -381,7 +378,7 @@ void ZTSWatcherMUX::Watcher_Finalize(Watcher* iWatcher)
 	iWatcher->fWTuples.clear();
 
 	ZUtil_STL::sEraseMustContain(kDebug, fWatchers, iWatcher);
-	iWatcher->FinalizationComplete();
+
 	delete iWatcher;
 	}
 

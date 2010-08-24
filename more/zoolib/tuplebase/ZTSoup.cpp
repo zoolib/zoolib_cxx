@@ -1232,8 +1232,7 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 					{
 					s << "Changed, removing TCrouton, ID: "
 						<< ZStringf("%llX", theTCrouton->GetID())
-						<< ", Address: " << ZStringf("%p", theTCrouton.Get())
-						<< ", Refcount: " << ZStringf("%d", theTCrouton->GetRefCount());
+						<< ", Address: " << ZStringf("%p", theTCrouton.Get());
 					}
 
 				(*i).StaticCast<ZTCrouton_Bowl>()->fTBowl.Clear();

@@ -1254,7 +1254,7 @@ void ZTBSpec::MakeFresh()
 	{
 	if (!fRep)
 		fRep = new Rep;
-	else if (fRep->GetRefCount() > 1)
+	else if (fRep->IsShared())
 		fRep = new Rep(*fRep.Get());
 	}
 
