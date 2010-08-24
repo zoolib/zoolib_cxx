@@ -3,8 +3,6 @@
 #include "zoolib/ZRef_NSObject.h"
 #include "zoolib/ZUtil_NSObject.h"
 
-using ZooLib::IPhone::UITVC_Section;
-
 namespace ZooLib {
 namespace IPhone {
 
@@ -12,10 +10,26 @@ namespace IPhone {
 #pragma mark -
 #pragma mark * UITVC_Section
 
+void UITVC_Section::SetHeaderHeight(ZQ<CGFloat> iHeight)
+	{ fHeaderHeight = iHeight; }
+
+void UITVC_Section::SetFooterHeight(ZQ<CGFloat> iHeight)
+	{ fFooterHeight = iHeight; }
+
+void UITVC_Section::SetHeaderTitle(ZQ<string8> iTitle)
+	{ fHeaderTitle = iTitle; }
+
+void UITVC_Section::SetFooterTitle(ZQ<string8> iTitle)
+	{ fFooterTitle = iTitle; }
+
+void UITVC_Section::SetHeaderView(ZRef<UIView> iUIView)
+	{ fHeaderView = iUIView; }
+
+void UITVC_Section::SetFooterView(ZRef<UIView> iUIView)
+	{ fFooterView = iUIView; }
+
 size_t UITVC_Section::NumberOfRows()
-	{
-	return 0;
-	}
+	{ return 0; }
 
 ZRef<UITableViewCell> UITVC_Section::UITableViewCellForRow(UITableView* iView, size_t iIndex)
 	{ return null; }
@@ -27,19 +41,28 @@ ZQ<CGFloat> UITVC_Section::RowHeight(size_t iIndex)
 	{ return null; }
 
 ZQ<CGFloat> UITVC_Section::HeaderHeight()
-	{ return null; }
+	{ return fHeaderHeight; }
 
 ZQ<CGFloat> UITVC_Section::FooterHeight()
-	{ return null; }
+	{ return fFooterHeight; }
+
+ZQ<string8> UITVC_Section::HeaderTitle()
+	{ return fHeaderTitle; }
+
+ZQ<string8> UITVC_Section::FooterTitle()
+	{ return fFooterTitle; }
 
 ZRef<UIView> UITVC_Section::HeaderView()
-	{ return null; }
+	{ return fHeaderView; }
 
 ZRef<UIView> UITVC_Section::FooterView()
-	{ return null; }
+	{ return fFooterView; }
 
 void UITVC_Section::AccessoryButtonTapped(size_t iIndex)
 	{}
+
+ZQ<bool> UITVC_Section::ShouldIndentWhileEditing(size_t iIndex)
+	{ return null; }
 
 // =================================================================================================
 #pragma mark -
@@ -75,6 +98,19 @@ void UITVC_Section_WithRow::AccessoryButtonTapped(size_t iIndex)
 		return theRow->AccessoryButtonTapped();
 	}
 
+ZQ<bool> UITVC_Section_WithRow::ShouldIndentWhileEditing(size_t iIndex)
+	{
+	if (ZRef<Row> theRow = this->pGetRow(iIndex))
+		return theRow->ShouldIndentWhileEditing();
+	return null;
+	}
+
+ZQ<CGFloat> UITVC_Section_WithRow::RowHeight(size_t iIndex)
+	{
+	if (ZRef<Row> theRow = this->pGetRow(iIndex))
+		return theRow->RowHeight();
+	return null;
+	}
 
 ZRef<UITVC_Section_WithRow::Row> UITVC_Section_WithRow::pGetRow(size_t iIndex)
 	{
@@ -93,8 +129,17 @@ ZRef<UITableViewCell> UITVC_Section_WithRow::Row::UITableViewCellForRow(UITableV
 ZQ<UITableViewCellEditingStyle> UITVC_Section_WithRow::Row::EditingStyle()
 	{ return null; }
 
+ZQ<bool> UITVC_Section_WithRow::Row::ShouldIndentWhileEditing()
+	{ return null; }
+
+ZQ<CGFloat> UITVC_Section_WithRow::Row::RowHeight()
+	{ return null; }
+
 void UITVC_Section_WithRow::Row::AccessoryButtonTapped()
-	{}
+	{
+	if (fCallable)
+		fCallable->Invoke(this);
+	}
 
 } // namespace IPhone
 } // namespace ZooLib
@@ -102,6 +147,8 @@ void UITVC_Section_WithRow::Row::AccessoryButtonTapped()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZooLib_UITVC_WithSections
+
+using ZooLib::IPhone::UITVC_Section;
 
 @implementation ZooLib_UITVC_WithSections
 
@@ -162,6 +209,26 @@ void UITVC_Section_WithRow::Row::AccessoryButtonTapped()
 	return tableView.sectionFooterHeight;
 	}
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+	{
+	if (ZRef<UITVC_Section> theSection = [self pGetSection:section])
+		{
+		if (ZQ<string8> theQ = theSection->HeaderTitle())
+			return ZUtil_NSObject::sString(theQ.Get());
+		}
+	return null;
+	}
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+	{
+	if (ZRef<UITVC_Section> theSection = [self pGetSection:section])
+		{
+		if (ZQ<string8> theQ = theSection->FooterTitle())
+			return ZUtil_NSObject::sString(theQ.Get());
+		}
+	return null;
+	}
+
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 	{
 	if (ZRef<UITVC_Section> theSection = [self pGetSection:section])
@@ -188,6 +255,16 @@ void UITVC_Section_WithRow::Row::AccessoryButtonTapped()
 		theSection->AccessoryButtonTapped(indexPath.row);
 	}
 
+- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
+	{
+	if (ZRef<UITVC_Section> theSection = [self pGetSection:indexPath.section])
+		{
+		if (ZQ<bool> theQ = theSection->ShouldIndentWhileEditing(indexPath.row))
+			return theQ.Get();
+		}
+	return true;
+	}
+
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 	{
 	if (ZRef<UITVC_Section> theSection = [self pGetSection:indexPath.section])
@@ -198,12 +275,12 @@ void UITVC_Section_WithRow::Row::AccessoryButtonTapped()
 	return UITableViewCellEditingStyleNone;
 	}
 
-- (void) addSection:(ZRef<IPhone::UITVC_Section>) iSection
+- (void) addSection:(ZRef<UITVC_Section>) iSection
 	{
 	fSections.push_back(iSection);
 	}
 
--(ZRef<IPhone::UITVC_Section>)pGetSection:(size_t)iIndex
+-(ZRef<UITVC_Section>)pGetSection:(size_t)iIndex
 	{
 	if (iIndex < fSections.size())
 		return fSections[iIndex];
