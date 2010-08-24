@@ -29,22 +29,22 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorker_Callable_T0
+#pragma mark * ZTaskWorker_Callable0
 
-class ZTaskWorker_Callable_T0
+class ZTaskWorker_Callable0
 :	public ZTaskWorker
-,	public ZWorker_Callable_T0
+,	public ZWorker_Callable0
 	{
 public:
-	ZTaskWorker_Callable_T0(ZRef<ZTaskMaster> iTaskMaster, ZRef<Callable_t> iCallable)
+	ZTaskWorker_Callable0(ZRef<ZTaskMaster> iTaskMaster, ZRef<Callable_t> iCallable)
 	:	ZTaskWorker(iTaskMaster)
-	,	ZWorker_Callable_T0(iCallable)
+	,	ZWorker_Callable0(iCallable)
 		{}
 	};
 
 inline ZRef<ZTaskWorker> MakeTaskWorker(ZRef<ZTaskMaster> iTaskMaster,
 	const ZRef<ZCallable_R1<bool, ZRef<ZWorker> > >& iCallable)
-	{ return new ZTaskWorker_Callable_T0(iTaskMaster, iCallable); }
+	{ return new ZTaskWorker_Callable0(iTaskMaster, iCallable); }
 
 } // namespace ZooLib
 
