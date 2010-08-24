@@ -24,11 +24,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_NameMap.h"
 
-namespace ZooLib {
-namespace ZRA {
-
 using std::map;
 using std::set;
+
+namespace ZooLib {
+namespace ZRA {
 
 const ZStrimW& operator<<(const ZStrimW& w, const NameMap& iNM)
 	{
