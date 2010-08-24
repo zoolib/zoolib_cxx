@@ -785,13 +785,13 @@ ObjectImp::~ObjectImp()
 
 void ObjectImp::Finalize()
 	{
-	this->FinalizationComplete();
+	this->FinishFinalize();
 	this->pTossIfAppropriate();
 	}
 
 void ObjectImp::pTossIfAppropriate()
 	{
-	if (this->GetRefCount() == 0 && !fJSObjectRef)
+	if (!fJSObjectRef && !this->IsReferenced())
 		delete this;
 	}
 
