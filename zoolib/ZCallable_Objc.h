@@ -32,60 +32,56 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * RefAsPtr
+#pragma mark * ZCallableBase_Objc
 
-template <class T> struct RefAsPtr
-	{ static T sGet(const T& iT) { return iT; } };
-
-template <class T> struct RefAsPtr<const T&>
-	{ static const T* sGet(const T& iT) { return &iT; } };
-
-template <class T> struct RefAsPtr<T&>
-	{ static T* sGet(T& iT) { return &iT; } };
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCallableBase_ObjC
-
-class ZCallableBase_ObjC
+class ZCallableBase_Objc
 	{
 public:
-	ZCallableBase_ObjC(id iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+	ZCallableBase_Objc(id iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 protected:
+	template <class T> struct RefAsPtr
+		{ static T sGet(const T& iT) { return iT; } };
+
+	template <class T> struct RefAsPtr<const T&>
+		{ static const T* sGet(const T& iT) { return &iT; } };
+
+	template <class T> struct RefAsPtr<T&>
+		{ static T* sGet(T& iT) { return &iT; } };
+
 	id fObj;
 	SEL fSEL;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_ObjC_O0
+#pragma mark * ZCallable_Objc_O0
 
-class ZCallable_ObjC_O0
-:	ZCallableBase_ObjC
-,	public ZCallable_R0<id>
+class ZCallable_Objc_O0
+:	ZCallableBase_Objc
+,	public ZCallable0<id>
 	{
 public:
-	ZCallable_ObjC_O0(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+	ZCallable_Objc_O0(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
 
-	// From ZCallable_R0
+	// From ZCallable0
 	virtual id Invoke()
 		{ return objc_msgSend(fObj, fSEL); }
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_ObjC_O1
+#pragma mark * ZCallable_Objc_O1
 
 template <class P0>
-class ZCallable_ObjC_O1
-:	ZCallableBase_ObjC
-,	public ZCallable_R1<id, P0>
+class ZCallable_Objc_O1
+:	ZCallableBase_Objc
+,	public ZCallable1<id, P0>
 	{
 public:
-	ZCallable_ObjC_O1(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+	ZCallable_Objc_O1(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
 
-	// From ZCallable_R1
+	// From ZCallable1
 	virtual id Invoke(P0 i0)
 		{
 		return objc_msgSend(fObj, fSEL,
@@ -95,17 +91,17 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_ObjC_O2
+#pragma mark * ZCallable_Objc_O2
 
 template <class P0, class P1>
-class ZCallable_ObjC_O2
-:	ZCallableBase_ObjC
-,	public ZCallable_R2<id, P0, P1>
+class ZCallable_Objc_O2
+:	ZCallableBase_Objc
+,	public ZCallable2<id, P0, P1>
 	{
 public:
-	ZCallable_ObjC_O2(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+	ZCallable_Objc_O2(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
 
-	// From ZCallable_R2
+	// From ZCallable2
 	virtual id Invoke(P0 i0, P1 i1)
 		{
 		return objc_msgSend(fObj, fSEL,
@@ -116,17 +112,17 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_ObjC_O3
+#pragma mark * ZCallable_Objc_O3
 
 template <class P0, class P1, class P2>
-class ZCallable_ObjC_O3
-:	ZCallableBase_ObjC
-,	public ZCallable_R3<id, P0, P1, P2>
+class ZCallable_Objc_O3
+:	ZCallableBase_Objc
+,	public ZCallable3<id, P0, P1, P2>
 	{
 public:
-	ZCallable_ObjC_O3(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+	ZCallable_Objc_O3(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
 
-	// From ZCallable_R3
+	// From ZCallable3
 	virtual id Invoke(P0 i0, P1 i1, P2 i2)
 		{
 		return objc_msgSend(fObj, fSEL,
@@ -138,17 +134,17 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_ObjC_O4
+#pragma mark * ZCallable_Objc_O4
 
 template <class P0, class P1, class P2, class P3>
-class ZCallable_ObjC_O4
-:	ZCallableBase_ObjC
-,	public ZCallable_R4<id, P0, P1, P2, P3>
+class ZCallable_Objc_O4
+:	ZCallableBase_Objc
+,	public ZCallable4<id, P0, P1, P2, P3>
 	{
 public:
-	ZCallable_ObjC_O4(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+	ZCallable_Objc_O4(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
 
-	// From ZCallable_R4
+	// From ZCallable4
 	virtual id Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		return objc_msgSend(fObj, fSEL,
@@ -161,33 +157,33 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_ObjC_V0
+#pragma mark * ZCallable_Objc_V0
 
-class ZCallable_ObjC_V0
-:	ZCallableBase_ObjC
-,	public ZCallable_V0
+class ZCallable_Objc_V0
+:	ZCallableBase_Objc
+,	public ZCallable0<void>
 	{
 public:
-	ZCallable_ObjC_V0(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+	ZCallable_Objc_V0(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
 
-	// From ZCallable_V0
+	// From ZCallable0
 	virtual void Invoke()
 		{ objc_msgSend(fObj, fSEL); }
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_ObjC_V1
+#pragma mark * ZCallable_Objc_V1
 
 template <class P0>
-class ZCallable_ObjC_V1
-:	ZCallableBase_ObjC
-,	public ZCallable_V1<P0>
+class ZCallable_Objc_V1
+:	ZCallableBase_Objc
+,	public ZCallable1<void,P0>
 	{
 public:
-	ZCallable_ObjC_V1(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+	ZCallable_Objc_V1(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
 
-	// From ZCallable_V1
+	// From ZCallable1
 	virtual void Invoke(P0 i0)
 		{
 		objc_msgSend(fObj, fSEL,
@@ -197,17 +193,17 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_ObjC_V2
+#pragma mark * ZCallable_Objc_V2
 
 template <class P0, class P1>
-class ZCallable_ObjC_V2
-:	ZCallableBase_ObjC
-,	public ZCallable_V2<P0, P1>
+class ZCallable_Objc_V2
+:	ZCallableBase_Objc
+,	public ZCallable2<void,P0, P1>
 	{
 public:
-	ZCallable_ObjC_V2(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+	ZCallable_Objc_V2(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
 
-	// From ZCallable_V2
+	// From ZCallable2
 	virtual void Invoke(P0 i0, P1 i1)
 		{
 		objc_msgSend(fObj, fSEL,
@@ -218,17 +214,17 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_ObjC_V3
+#pragma mark * ZCallable_Objc_V3
 
 template <class P0, class P1, class P2>
-class ZCallable_ObjC_V3
-:	ZCallableBase_ObjC
-,	public ZCallable_V3<P0, P1, P2>
+class ZCallable_Objc_V3
+:	ZCallableBase_Objc
+,	public ZCallable3<void,P0, P1, P2>
 	{
 public:
-	ZCallable_ObjC_V3(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+	ZCallable_Objc_V3(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
 
-	// From ZCallable_V3
+	// From ZCallable3
 	virtual void Invoke(P0 i0, P1 i1, P2 i2)
 		{
 		objc_msgSend(fObj, fSEL,
@@ -240,17 +236,17 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_ObjC_V4
+#pragma mark * ZCallable_Objc_V4
 
 template <class P0, class P1, class P2, class P3>
-class ZCallable_ObjC_V4
-:	ZCallableBase_ObjC
-,	public ZCallable_V4<P0, P1, P2, P3>
+class ZCallable_Objc_V4
+:	ZCallableBase_Objc
+,	public ZCallable4<void,P0, P1, P2, P3>
 	{
 public:
-	ZCallable_ObjC_V4(id iObj, SEL iSEL) : ZCallableBase_ObjC(iObj, iSEL) {}
+	ZCallable_Objc_V4(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
 
-	// From ZCallable_V4
+	// From ZCallable4
 	virtual void Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		objc_msgSend(fObj, fSEL,
