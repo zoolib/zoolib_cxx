@@ -145,7 +145,7 @@ ZRef<ZCallable2<R,P0,P1> >
 Curry(
 	const ZRef<ZCallable3<R,P0,P1,Bound> >& iCallable,
 	typename ZCallable_CurryTraits<Bound>::ConstRef_Add_t iBound)
-	{ return new ZCallable_Curry2<R, P0, P1, Bound>(iCallable, iBound); }
+	{ return new ZCallable_Curry2<R,P0,P1,Bound>(iCallable, iBound); }
 
 // =================================================================================================
 #pragma mark -
