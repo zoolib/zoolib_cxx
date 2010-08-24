@@ -45,14 +45,12 @@ void ZCountedBase::Initialize()
 
 void ZCountedBase::Finalize()
 	{
-	ZAssertStopf(1, 1 == ZAtomic_Get(&fRefCount),
-		("Refcount is not 1, it is %d", ZAtomic_Get(&fRefCount)));
-	this->FinalizationComplete();
-	delete this;
+	if (this->FinishFinalize())
+		delete this;
 	}
 
-void ZCountedBase::FinalizationComplete()
-	{ ZAtomic_Dec(&fRefCount); }
+bool ZCountedBase::FinishFinalize()
+	{ return ZAtomic_DecAndTest(&fRefCount); }
 
 void ZCountedBase::Retain()
 	{
@@ -78,8 +76,11 @@ void ZCountedBase::Release()
 		}
 	}
 
-int ZCountedBase::GetRefCount() const
-	{ return ZAtomic_Get(&fRefCount); }
+bool ZCountedBase::IsShared() const
+	{ return 1 < ZAtomic_Get(&fRefCount); }
+
+bool ZCountedBase::IsReferenced() const
+	{ return 0 != ZAtomic_Get(&fRefCount); }
 
 int ZCountedBase::pCOMAddRef()
 	{
@@ -129,7 +130,10 @@ void ZCountedWithoutFinalize::Release()
 		delete this;
 	}
 
-int ZCountedWithoutFinalize::GetRefCount() const
-	{ return ZThreadSafe_Get(fRefCount); }
+bool ZCountedWithoutFinalize::IsShared() const
+	{ return 1 < ZAtomic_Get(&fRefCount); }
+
+bool ZCountedWithoutFinalize::IsReferenced() const
+	{ return 0 != ZAtomic_Get(&fRefCount); }
 
 } // namespace ZooLib

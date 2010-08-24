@@ -40,11 +40,12 @@ public:
 	virtual void Initialize();
 	virtual void Finalize();
 
-	void FinalizationComplete();
+	bool FinishFinalize();
 
 	void Retain();
 	void Release();
-	int GetRefCount() const;
+	bool IsShared() const;
+	bool IsReferenced() const;
 
 protected:
 	int pCOMAddRef();
@@ -73,7 +74,8 @@ public:
 
 	void Retain() { ZThreadSafe_Inc(fRefCount); }
 	void Release();
-	int GetRefCount() const;
+	bool IsShared() const;
+	bool IsReferenced() const;
 
 private:
 	ZThreadSafe_t fRefCount;
