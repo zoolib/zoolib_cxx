@@ -707,7 +707,10 @@ public:
 template <class T>
 inline
 ZGRect_T<T>::ZGRect_T()
-	{}
+	{
+	this->origin = T(0);
+	this->extent = T(0);
+	}
 
 template <class T>
 inline
