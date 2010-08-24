@@ -131,7 +131,7 @@ public:
 	typedef R (*Function_t)(id, SEL);
 
 	// From ZCallable0
-	virtual R Invoke()
+	virtual R Call()
 		{
 		return MsgSend<R, Function_t>::sMsgSend()
 			(fObj, fSEL);
@@ -152,7 +152,7 @@ public:
 	typedef R (*Function_t)(id, SEL, P0);
 
 	// From ZCallable1
-	virtual R Invoke(P0 i0)
+	virtual R Call(P0 i0)
 		{
 		return MsgSend<R, Function_t>::sMsgSend()
 			(fObj, fSEL, i0);
@@ -173,7 +173,7 @@ public:
 	typedef R (*Function_t)(id, SEL, P0, P1);
 
 	// From ZCallable2
-	virtual R Invoke(P0 i0, P1 i1)
+	virtual R Call(P0 i0, P1 i1)
 		{
 		return MsgSend<R, Function_t>::sMsgSend()
 			(fObj, fSEL, i0, i1);
@@ -194,7 +194,7 @@ public:
 	typedef R (*Function_t)(id, SEL, P0, P1, P2);
 
 	// From ZCallable3
-	virtual R Invoke(P0 i0, P1 i1, P2 i2)
+	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{
 		return MsgSend<R, Function_t>::sMsgSend()
 			(fObj, fSEL, i0, i1, i2);
@@ -215,7 +215,7 @@ public:
 	typedef R (*Function_t)(id, SEL, P0, P1, P2, P3);
 
 	// From ZCallable4
-	virtual R Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
+	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		return MsgSend<R, Function_t>::sMsgSend()
 			(fObj, fSEL, i0, i1, i2, i3);

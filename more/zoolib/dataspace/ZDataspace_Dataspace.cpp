@@ -329,7 +329,7 @@ void Dataspace::pTriggerLocalUpdate()
 		{
 		fCalled_LocalUpdateNeeded = true;
 		if (ZRef<Callable_UpdateNeeded> theCallable = fCallable_LocalUpdateNeeded)
-			theCallable->Invoke(this);
+			theCallable->Call(this);
 		}
 	}
 
@@ -340,7 +340,7 @@ void Dataspace::pTriggerSourceUpdate()
 		{
 		fCalled_SourceUpdateNeeded = true;
 		if (ZRef<Callable_UpdateNeeded> theCallable = fCallable_SourceUpdateNeeded)
-			theCallable->Invoke(this);
+			theCallable->Call(this);
 		}
 	}
 
@@ -435,7 +435,7 @@ Sieve_Callable::Sieve_Callable(ZRef<Callable> iCallable)
 void Sieve_Callable::Changed(bool iIsLoad)
 	{
 	if (ZRef<Callable> theCallable = fCallable)
-		theCallable->Invoke(this, iIsLoad);
+		theCallable->Call(this, iIsLoad);
 	}
 
 } // namespace ZDataspace

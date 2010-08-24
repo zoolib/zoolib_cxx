@@ -49,7 +49,7 @@ void Manager::SetCallable(ZRef<CB_ManagerChanged> iCallable)
 void Manager::pChanged()
 	{
 	if (ZRef<CB_ManagerChanged> theCallable = fCallable)
-		theCallable->Invoke(this);
+		theCallable->Call(this);
 	}
 
 // =================================================================================================
@@ -80,7 +80,7 @@ void Device::SetCallable(ZRef<CB_DeviceFinished> iCallable)
 void Device::pFinished()
 	{
 	if (ZRef<CB_DeviceFinished> theCallable = fCallable)
-		theCallable->Invoke(this);
+		theCallable->Call(this);
 	}
 
 // =================================================================================================

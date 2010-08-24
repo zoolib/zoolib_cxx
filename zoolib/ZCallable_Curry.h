@@ -23,26 +23,28 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
+#include "zoolib/ZRef.h"
 
 namespace ZooLib {
+namespace ZCallable_Curry {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_CurryTraits
+#pragma mark * Traits
 
-template <class T> struct ZCallable_CurryTraits
+template <class T> struct Traits
 	{
 	typedef const T ConstRef_Remove_t;
 	typedef const T& ConstRef_Add_t;
 	};
 
-template <class T> struct ZCallable_CurryTraits<const T&>
+template <class T> struct Traits<const T&>
 	{
 	typedef const T ConstRef_Remove_t;
 	typedef const T& ConstRef_Add_t;
 	};
 
-template <class T> struct ZCallable_CurryTraits<T&>
+template <class T> struct Traits<T&>
 	{
 	typedef const T ConstRef_Remove_t;
 	typedef const T& ConstRef_Add_t;
@@ -50,135 +52,141 @@ template <class T> struct ZCallable_CurryTraits<T&>
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Curry0
+#pragma mark * Callable0
 
 template <class R, class Bound>
-class ZCallable_Curry0
+class Callable0
 :	public ZCallable0<R>
 	{
 public:
 	typedef ZCallable1<R,Bound> Callable_t;
 
-	ZCallable_Curry0(
+	Callable0(
 		ZRef<Callable_t> iCallable,
-		typename ZCallable_CurryTraits<Bound>::ConstRef_Add_t iBound)
+		typename Traits<Bound>::ConstRef_Add_t iBound)
 	:	fCallable(iCallable)
 	,	fBound(iBound)
 		{}
 
-	virtual R Invoke()
-		{ return fCallable->Invoke(fBound); }
+	virtual R Call()
+		{ return fCallable->Call(fBound); }
 
 private:
 	ZRef<Callable_t> fCallable;
-	typename ZCallable_CurryTraits<Bound>::ConstRef_Remove_t fBound;
+	typename Traits<Bound>::ConstRef_Remove_t fBound;
 	};
-
-template <class R, class Bound>
-ZRef<ZCallable0<R> >
-Curry(
-	const ZRef<ZCallable1<R,Bound> >& iCallable,
-	typename ZCallable_CurryTraits<Bound>::ConstRef_Add_t iBound)
-	{ return new ZCallable_Curry0<R,Bound>(iCallable, iBound); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Curry1
+#pragma mark * Callable1
 
 template <class R, class P0, class Bound>
-class ZCallable_Curry1
+class Callable1
 :	public ZCallable1<R,P0>
 	{
 public:
 	typedef ZCallable2<R,P0,Bound> Callable_t;
 
-	ZCallable_Curry1(
+	Callable1(
 		ZRef<Callable_t> iCallable,
-		typename ZCallable_CurryTraits<Bound>::ConstRef_Add_t iBound)
+		typename Traits<Bound>::ConstRef_Add_t iBound)
 	:	fCallable(iCallable)
 	,	fBound(iBound)
 		{}
 
-	virtual R Invoke(P0 i0)
-		{ return fCallable->Invoke(i0, fBound); }
+	virtual R Call(P0 i0)
+		{ return fCallable->Call(i0, fBound); }
 
 private:
 	ZRef<Callable_t> fCallable;
-	typename ZCallable_CurryTraits<Bound>::ConstRef_Remove_t fBound;
+	typename Traits<Bound>::ConstRef_Remove_t fBound;
 	};
-
-template <class R, class P0, class Bound>
-ZRef<ZCallable1<R,P0> >
-Curry(
-	const ZRef<ZCallable2<R,P0,Bound> >& iCallable,
-	typename ZCallable_CurryTraits<Bound>::ConstRef_Add_t iBound)
-	{ return new ZCallable_Curry1<R,P0,Bound>(iCallable, iBound); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Curry2
+#pragma mark * Callable2
 
 template <class R, class P0, class P1, class Bound>
-class ZCallable_Curry2
+class Callable2
 :	public ZCallable2<R,P0,P1>
 	{
 public:
 	typedef ZCallable3<R,P0,P1,Bound> Callable_t;
 
-	ZCallable_Curry2(
+	Callable2(
 		ZRef<Callable_t> iCallable,
-		typename ZCallable_CurryTraits<Bound>::ConstRef_Add_t iBound)
+		typename Traits<Bound>::ConstRef_Add_t iBound)
 	:	fCallable(iCallable)
 	,	fBound(iBound)
 		{}
 
-	virtual R Invoke(P0 i0, P1 i1)
-		{ return fCallable->Invoke(i0, i1, fBound); }
+	virtual R Call(P0 i0, P1 i1)
+		{ return fCallable->Call(i0, i1, fBound); }
 
 private:
 	ZRef<Callable_t> fCallable;
-	typename ZCallable_CurryTraits<Bound>::ConstRef_Remove_t fBound;
+	typename Traits<Bound>::ConstRef_Remove_t fBound;
 	};
-
-template <class R, class P0, class P1, class Bound>
-ZRef<ZCallable2<R,P0,P1> >
-Curry(
-	const ZRef<ZCallable3<R,P0,P1,Bound> >& iCallable,
-	typename ZCallable_CurryTraits<Bound>::ConstRef_Add_t iBound)
-	{ return new ZCallable_Curry2<R,P0,P1,Bound>(iCallable, iBound); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Curry3
+#pragma mark * Callable3
 
 template <class R, class P0, class P1, class P2, class Bound>
-class ZCallable_Curry3
+class Callable3
 :	public ZCallable3<R,P0,P1,P2>
 	{
 public:
 	typedef ZCallable4<R,P0,P1,P2,Bound> Callable_t;
 
-	ZCallable_Curry3(
+	Callable3(
 		ZRef<Callable_t> iCallable,
-		typename ZCallable_CurryTraits<Bound>::ConstRef_Add_t iBound)
+		typename Traits<Bound>::ConstRef_Add_t iBound)
 	:	fCallable(iCallable)
 	,	fBound(iBound)
 		{}
 
-	virtual R Invoke(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Invoke(i0, i1, i2, fBound); }
+	virtual R Call(P0 i0, P1 i1, P2 i2)
+		{ return fCallable->Call(i0, i1, i2, fBound); }
 
 private:
 	ZRef<Callable_t> fCallable;
-	typename ZCallable_CurryTraits<Bound>::ConstRef_Remove_t fBound;
+	typename Traits<Bound>::ConstRef_Remove_t fBound;
 	};
+
+} // namespace ZCallable_Curry
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * MakeCallable
+
+template <class R, class Bound>
+ZRef<ZCallable0<R> >
+Curry(
+	const ZRef<ZCallable1<R,Bound> >& iCallable,
+	typename ZCallable_Curry::Traits<Bound>::ConstRef_Add_t iBound)
+	{ return new ZCallable_Curry::Callable0<R,Bound>(iCallable, iBound); }
+
+template <class R, class P0, class Bound>
+ZRef<ZCallable1<R,P0> >
+Curry(
+	const ZRef<ZCallable2<R,P0,Bound> >& iCallable,
+	typename ZCallable_Curry::Traits<Bound>::ConstRef_Add_t iBound)
+	{ return new ZCallable_Curry::Callable1<R,P0,Bound>(iCallable, iBound); }
+
+template <class R, class P0, class P1, class Bound>
+ZRef<ZCallable2<R,P0,P1> >
+Curry(
+	const ZRef<ZCallable3<R,P0,P1,Bound> >& iCallable,
+	typename ZCallable_Curry::Traits<Bound>::ConstRef_Add_t iBound)
+	{ return new ZCallable_Curry::Callable2<R,P0,P1,Bound>(iCallable, iBound); }
 
 template <class R, class P0, class P1, class P2, class Bound>
 ZRef<ZCallable3<R,P0,P1,P2> >
 Curry(
 	const ZRef<ZCallable4<R,P0,P1,P2, Bound> >& iCallable,
-	typename ZCallable_CurryTraits<Bound>::ConstRef_Add_t iBound)
-	{ return new ZCallable_Curry3<R,P0,P1,P2, Bound>(iCallable, iBound); }
+	typename ZCallable_Curry::Traits<Bound>::ConstRef_Add_t iBound)
+	{ return new ZCallable_Curry::Callable3<R,P0,P1,P2, Bound>(iCallable, iBound); }
 
 } // namespace ZooLib
 

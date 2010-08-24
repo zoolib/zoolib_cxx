@@ -44,7 +44,7 @@ public:
 	virtual bool Work()
 		{
 		if (ZRef<Callable_t> theCallable = fCallable)
-			return fCallable->Invoke(this);
+			return fCallable->Call(this);
 		return false;
 		}
 
@@ -76,7 +76,7 @@ public:
 	virtual void RunnerDetached()
 		{
 		if (ZRef<Callable_t> theCallable = fCallable)
-			fCallable->Invoke();
+			fCallable->Call();
 		}
 
 private:

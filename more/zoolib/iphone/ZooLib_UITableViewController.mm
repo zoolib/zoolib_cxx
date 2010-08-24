@@ -138,7 +138,7 @@ ZQ<CGFloat> UITVC_Section_WithRow::Row::RowHeight()
 void UITVC_Section_WithRow::Row::AccessoryButtonTapped()
 	{
 	if (fCallable)
-		fCallable->Invoke(this);
+		fCallable->Call(this);
 	}
 
 } // namespace IPhone

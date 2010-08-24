@@ -43,7 +43,7 @@ public:
 	void Unregister(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Invoke()
+	void Call()
 		{
 		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
@@ -51,7 +51,7 @@ public:
 			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB->Invoke();
+					theCB->Call();
 				continue;
 				}
 			break;
@@ -79,7 +79,7 @@ public:
 	void Unregister(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Invoke(P0 i0)
+	void Call(P0 i0)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
@@ -87,7 +87,7 @@ public:
 			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB->Invoke(i0);
+					theCB->Call(i0);
 				continue;
 				}
 			break;
@@ -115,7 +115,7 @@ public:
 	void Unregister(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Invoke(P0 i0, P1 i1)
+	void Call(P0 i0, P1 i1)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
@@ -123,7 +123,7 @@ public:
 			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB->Invoke(i0, i1);
+					theCB->Call(i0, i1);
 				continue;
 				}
 			break;
@@ -151,7 +151,7 @@ public:
 	void Unregister(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Invoke(P0 i0, P1 i1, P2 i2)
+	void Call(P0 i0, P1 i1, P2 i2)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
@@ -159,7 +159,7 @@ public:
 			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB->Invoke(i0, i1, i2);
+					theCB->Call(i0, i1, i2);
 				continue;
 				}
 			break;
@@ -187,7 +187,7 @@ public:
 	void Unregister(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
+	void Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables;
 			/*no test*/; /*no inc*/)
@@ -195,7 +195,7 @@ public:
 			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				{
 				if (ZRef<Callable_t> theCB = theQ.Get())
-					theCB->Invoke(i0, i1, i2, i3);
+					theCB->Call(i0, i1, i2, i3);
 				continue;
 				}
 			break;

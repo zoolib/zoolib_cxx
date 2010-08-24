@@ -45,7 +45,7 @@ class ZCallable0
 public:
 	typedef R R_t;
 	typedef R (*Function_t)();
-	virtual R Invoke() = 0;
+	virtual R Call() = 0;
 	};
 
 // =================================================================================================
@@ -60,7 +60,7 @@ public:
 	typedef R R_t;
 	typedef P0 P0_t;
 	typedef R (*Function_t)(P0);
-	virtual R Invoke(P0) = 0;
+	virtual R Call(P0) = 0;
 	};
 
 // =================================================================================================
@@ -76,7 +76,7 @@ public:
 	typedef P0 P0_t;
 	typedef P1 P1_t;
 	typedef R (*Function_t)(P0, P1);
-	virtual R Invoke(P0, P1) = 0;
+	virtual R Call(P0, P1) = 0;
 	};
 
 // =================================================================================================
@@ -93,7 +93,7 @@ public:
 	typedef P1 P1_t;
 	typedef P2 P2_t;
 	typedef R (*Function_t)(P0, P1, P2);
-	virtual R Invoke(P0, P1, P2) = 0;
+	virtual R Call(P0, P1, P2) = 0;
 	};
 
 // =================================================================================================
@@ -111,7 +111,7 @@ public:
 	typedef P2 P2_t;
 	typedef P3 P3_t;
 	typedef R (*Function_t)(P0, P1, P2, P3);
-	virtual R Invoke(P0, P1, P2, P3 i3) = 0;
+	virtual R Call(P0, P1, P2, P3 i3) = 0;
 	};
 
 } // namespace ZooLib

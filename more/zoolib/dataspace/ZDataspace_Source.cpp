@@ -83,7 +83,7 @@ void Source::SetCallable(ZRef<Callable> iCallable)
 void Source::pInvokeCallables()
 	{
 	if (ZRef<Callable> theCallable = fCallable)
-		theCallable->Invoke(this);
+		theCallable->Call(this);
 	}
 
 } // namespace ZDataspace
