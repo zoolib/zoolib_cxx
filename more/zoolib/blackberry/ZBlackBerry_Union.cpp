@@ -42,7 +42,6 @@ Manager_Union::Manager_Union(const vector<ZRef<Manager> >& iManagers)
 		anEntry.fManager = theManager;
 		anEntry.fValid = false;
 		fEntries.push_back(anEntry);
-		theManager->RegisterManagerChanged(this);
 		}
 	}
 
@@ -50,13 +49,13 @@ void Manager_Union::Initialize()
 	{
 	Manager::Initialize();
 	for (vector<Entry_t>::const_iterator i = fEntries.begin(); i != fEntries.end(); ++i)
-		(*i).fManager->RegisterManagerChanged(this);
+		(*i).fManager->SetCallable(this);
 	}
 
 void Manager_Union::Finalize()
 	{
 	for (vector<Entry_t>::const_iterator i = fEntries.begin(); i != fEntries.end(); ++i)
-		(*i).fManager->UnregisterManagerChanged(this);
+		(*i).fManager->SetCallable(null);
 	Manager::Finalize();
 	}
 

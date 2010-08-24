@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZData_Any.h"
+#include "zoolib/ZSafeRef.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 
@@ -83,15 +84,14 @@ public:
 	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs) = 0;
 	virtual ZRef<Device> Open(uint64 iDeviceID) = 0;
 
-	typedef ZCallable_V1<ZRef<Manager> > CB_ManagerChanged;
-	void RegisterManagerChanged(ZRef<CB_ManagerChanged> iCallback);
-	void UnregisterManagerChanged(ZRef<CB_ManagerChanged> iCallback);
+	typedef ZCallable1<void,ZRef<Manager> > CB_ManagerChanged;
+	void SetCallable(ZRef<CB_ManagerChanged> iCallable);
 
 protected:
 	void pChanged();
 
 private:
-	ZCallableSet_T1<ZRef<Manager> > fCallbacks;
+	ZSafeRef<CB_ManagerChanged> fCallable;
 	};
 
 // =================================================================================================
@@ -126,15 +126,14 @@ public:
 	virtual Data GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
 	virtual uint32 GetPIN();
 
-	typedef ZCallable_V1<ZRef<Device> > CB_DeviceFinished;
-	void RegisterDeviceFinished(ZRef<CB_DeviceFinished> iCallback);
-	void UnregisterDeviceFinished(ZRef<CB_DeviceFinished> iCallback);
+	typedef ZCallable1<void,ZRef<Device> > CB_DeviceFinished;
+	void SetCallable(ZRef<CB_DeviceFinished> iCallback);
 
 protected:
 	void pFinished();
 
 private:
-	ZCallableSet_T1<ZRef<Device> > fCallbacks;
+	ZSafeRef<CB_DeviceFinished> fCallable;
 	};
 
 // =================================================================================================

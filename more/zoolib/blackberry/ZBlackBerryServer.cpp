@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/blackberry/ZBlackBerryServer.h"
 
-#include "zoolib/ZCallable_T.h"
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZCommer.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
@@ -316,7 +316,7 @@ ZBlackBerryServer::ZBlackBerryServer(ZRef<ZBlackBerry::Manager> iManager)
 ,	fCB_ManagerChanged(MakeCallable(&ZBlackBerryServer::pManagerChanged, this))
 ,	fCB_DeviceFinished(MakeCallable(&ZBlackBerryServer::pDeviceFinished, this))
 	{
-	fManager->RegisterManagerChanged(fCB_ManagerChanged);
+	fManager->SetCallable(fCB_ManagerChanged);
 	this->pManagerChanged(fManager);
 	}
 
@@ -327,7 +327,7 @@ ZBlackBerryServer::~ZBlackBerryServer()
 	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
 		ZAssert(i->fHandlers.empty());
 
-	fManager->UnregisterManagerChanged(fCB_ManagerChanged);
+	fManager->SetCallable(null);
 	}
 
 void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
@@ -506,7 +506,7 @@ void ZBlackBerryServer::pManagerChanged(ZRef<ZBlackBerry::Manager> iManager)
 				theEntry.fID = curID;
 				theEntry.fDevice = theDevice;
 				fEntries.push_back(theEntry);
-				theDevice->RegisterDeviceFinished(fCB_DeviceFinished);
+				theDevice->SetCallable(fCB_DeviceFinished);
 				}
 			}
 		}
@@ -527,7 +527,7 @@ void ZBlackBerryServer::pDeviceFinished(ZRef<ZBlackBerry::Device> iDevice)
 		if (i->fDevice == iDevice)
 			{
 			i->fLive = false;
-			iDevice->UnregisterDeviceFinished(fCB_DeviceFinished);
+			iDevice->SetCallable(null);
 
 			if (i->fHandlers.empty())
 				{

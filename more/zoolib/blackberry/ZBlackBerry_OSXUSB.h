@@ -45,6 +45,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(BlackBerry_OSXUSB)
 
 #include "zoolib/ZTime.h"
+#include "zoolib/ZWeakRef.h"
 
 #include <CoreFoundation/CFRunLoop.h> // For CFRunLoopRef
 #include <mach/mach.h> // For mach_port_t
@@ -97,8 +98,6 @@ private:
 	ZRef<ZUSBWatcher> fUSBWatcher_Pearl_HS;
 	ZRef<ZUSBWatcher> fUSBWatcher_Dual_HS;
 	ZRef<ZUSBWatcher> fUSBWatcher_Storm_HS;
-
-
 
 	struct Device_t
 		{

@@ -389,15 +389,8 @@ void Channel_Streamer::Finalize()
 		return;
 		}
 
-	if (this->GetRefCount() != 1)
-		{
-		this->FinalizationComplete();
-		}
-	else
-		{
-		this->FinalizationComplete();
+	if (this->FinishFinalize())
 		delete this;
-		}
 	}
 
 size_t Channel_Streamer::GetIdealSize_Read()
@@ -788,13 +781,8 @@ bool Commer_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 	{
 	ZGuardRMtxR locker(fMutex);
 
-	if (iChannel->GetRefCount() != 1)
-		{
-		iChannel->FinalizationComplete();
+	if (!iChannel->FinishFinalize())
 		return false;
-		}
-
-	iChannel->FinalizationComplete();
 
 	switch (iChannel->fState)
 		{
@@ -1031,7 +1019,7 @@ ZRef<Channel_Streamer> Commer_Streamer::pFindChannel(const string& iName)
 
 bool Commer_Streamer::pDetachIfUnused(Channel_Streamer* iChannel)
 	{
-	if (iChannel->GetRefCount() != 0)
+	if (iChannel->IsReferenced())
 		return false;
 
 	if (iChannel->fState != eState_Dead)

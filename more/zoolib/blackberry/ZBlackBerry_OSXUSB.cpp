@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/blackberry/ZBlackBerry_Streamer.h"
 
 #include "zoolib/ZByteSwap.h"
-#include "zoolib/ZCallable_T.h"
+#include "zoolib/ZCallable.h"
+#include "zoolib/ZCallable_PMF.h" // For MakeCallable
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStream_Memory.h"
@@ -196,25 +197,25 @@ void Manager_OSXUSB::Initialize()
 	fIONotificationPortRef = ::IONotificationPortCreate(fMasterPort);
 
 	fUSBWatcher_Trad = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 1);
-	fUSBWatcher_Trad->RegisterDeviceAttached(fCB_DeviceAttached);
+	fUSBWatcher_Trad->SetCallable(fCB_DeviceAttached);
 
 	fUSBWatcher_Pearl = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 6);
-	fUSBWatcher_Pearl->RegisterDeviceAttached(fCB_DeviceAttached);
+	fUSBWatcher_Pearl->SetCallable(fCB_DeviceAttached);
 
 	fUSBWatcher_Dual = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 4);
-	fUSBWatcher_Dual->RegisterDeviceAttached(fCB_DeviceAttached);
+	fUSBWatcher_Dual->SetCallable(fCB_DeviceAttached);
 
 	fUSBWatcher_Trad_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8001);
-	fUSBWatcher_Trad_HS->RegisterDeviceAttached(fCB_DeviceAttached);
+	fUSBWatcher_Trad_HS->SetCallable(fCB_DeviceAttached);
 
 	fUSBWatcher_Pearl_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8006);
-	fUSBWatcher_Pearl_HS->RegisterDeviceAttached(fCB_DeviceAttached);
+	fUSBWatcher_Pearl_HS->SetCallable(fCB_DeviceAttached);
 
 	fUSBWatcher_Dual_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8004);
-	fUSBWatcher_Dual_HS->RegisterDeviceAttached(fCB_DeviceAttached);
+	fUSBWatcher_Dual_HS->SetCallable(fCB_DeviceAttached);
 
 	fUSBWatcher_Storm_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8007);
-	fUSBWatcher_Storm_HS->RegisterDeviceAttached(fCB_DeviceAttached);
+	fUSBWatcher_Storm_HS->SetCallable(fCB_DeviceAttached);
 
 	::CFRunLoopAddSource(fRunLoopRef,
 		::IONotificationPortGetRunLoopSource(fIONotificationPortRef),
@@ -441,7 +442,7 @@ void Manager_OSXUSB::pDeviceAttached(ZRef<ZUSBDevice> iUSBDevice)
 	fDevices.push_back(theD);
 	locker.Release();
 
-	iUSBDevice->RegisterDeviceDetached(fCB_DeviceDetached);
+	iUSBDevice->SetCallable(fCB_DeviceDetached);
 
 	Manager::pChanged();
 	}
@@ -465,7 +466,7 @@ void Manager_OSXUSB::pDeviceDetached(ZRef<ZUSBDevice> iUSBDevice)
 
 	locker.Release();
 
-	iUSBDevice->UnregisterDeviceDetached(fCB_DeviceDetached);
+	iUSBDevice->SetCallable(null);
 
 	Manager::pChanged();
 	}

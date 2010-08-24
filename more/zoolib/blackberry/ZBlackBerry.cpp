@@ -43,14 +43,14 @@ Manager::Manager()
 Manager::~Manager()
 	{}
 
-void Manager::RegisterManagerChanged(ZRef<CB_ManagerChanged> iCallback)
-	{ fCallbacks.Register(iCallback); }
-
-void Manager::UnregisterManagerChanged(ZRef<CB_ManagerChanged> iCallback)
-	{ fCallbacks.Unregister(iCallback); }
+void Manager::SetCallable(ZRef<CB_ManagerChanged> iCallable)
+	{ fCallable = iCallable; }
 
 void Manager::pChanged()
-	{ fCallbacks.Invoke(this); }
+	{
+	if (ZRef<CB_ManagerChanged> theCallable = fCallable)
+		theCallable->Invoke(this);
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -74,14 +74,14 @@ ZRef<Channel> Device::Open(
 uint32 Device::GetPIN()
 	{ return 0; }
 
-void Device::RegisterDeviceFinished(ZRef<CB_DeviceFinished> iCallback)
-	{ fCallbacks.Register(iCallback); }
-
-void Device::UnregisterDeviceFinished(ZRef<CB_DeviceFinished> iCallback)
-	{ fCallbacks.Unregister(iCallback); }
+void Device::SetCallable(ZRef<CB_DeviceFinished> iCallable)
+	{ fCallable = iCallable; }
 
 void Device::pFinished()
-	{ fCallbacks.Invoke(this); }
+	{
+	if (ZRef<CB_DeviceFinished> theCallable = fCallable)
+		theCallable->Invoke(this);
+	}
 
 // =================================================================================================
 #pragma mark -
