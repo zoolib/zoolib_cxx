@@ -380,7 +380,6 @@ ZRef<Event> Event::pFilled(const ZRef<Identity>& iIdentity)
 		}
 	else
 		{
-		assert(iIdentity->IsInternal());
 		const ZRef<Identity> identityLeft = iIdentity->Left();
 		const ZRef<Identity> identityRight = iIdentity->Right();
 		if (identityLeft->IsOne())
