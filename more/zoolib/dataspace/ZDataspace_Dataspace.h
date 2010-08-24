@@ -44,7 +44,7 @@ class Dataspace
 public:
 	enum { kDebug = 1 };
 
-	typedef ZCallable_V1<Dataspace*> Callable_UpdateNeeded;
+	typedef ZCallable1<void,Dataspace*> Callable_UpdateNeeded;
 
 	Dataspace(Source* iSource);
 	~Dataspace();
@@ -80,8 +80,8 @@ private:
 	ZMtxR fMtx_CallSourceUpdate;
 	ZMtxR fMtx_Structure;
 
-	ZWeakRef<ZCallable_V1<Dataspace*> > fCallable_LocalUpdateNeeded;
-	ZWeakRef<ZCallable_V1<Dataspace*> > fCallable_SourceUpdateNeeded;
+	ZRef<ZCallable1<void,Dataspace*> > fCallable_LocalUpdateNeeded;
+	ZRef<ZCallable1<void,Dataspace*> > fCallable_SourceUpdateNeeded;
 
 	bool fCalled_LocalUpdateNeeded;
 	bool fCalled_SourceUpdateNeeded;
@@ -100,6 +100,8 @@ private:
 	int64 fNextRefcon;
 
 	void pFinalize(Sieve* iSieve);
+	ZRef<SearchRows> pGetSearchRows(Sieve* iSieve);
+	bool pIsLoaded(Sieve* iSieve);
 
 	DListHead<DLink_Sieve_JustRegistered> fSieves_JustRegistered;
 
@@ -137,6 +139,8 @@ public:
 
 	ZRef<SearchRows> GetSearchRows();
 
+	bool IsLoaded();
+
 private:
 	Dataspace::PSieve* fPSieve;
 	
@@ -150,7 +154,7 @@ private:
 class Sieve_Callable : public Sieve
 	{
 public:
-	typedef ZCallable_V2<const ZRef<Sieve>&, bool> Callable;
+	typedef ZCallable2<void,const ZRef<Sieve>&, bool> Callable;
 	Sieve_Callable(ZRef<Callable> iCallable);
 
 // From Sieve

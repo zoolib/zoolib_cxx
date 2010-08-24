@@ -77,14 +77,14 @@ Source::Source()
 Source::~Source()
 	{}
 
-void Source::Register(ZRef<Callable> iCallable)
-	{ fCallables.Register(iCallable); }
-
-void Source::Unregister(ZRef<Callable> iCallable)
-	{ fCallables.Unregister(iCallable); }
+void Source::SetCallable(ZRef<Callable> iCallable)
+	{ fCallable = iCallable; }
 
 void Source::pInvokeCallables()
-	{ fCallables.Invoke(this); }
+	{
+	if (ZRef<Callable> theCallable = fCallable)
+		theCallable->Invoke(this);
+	}
 
 } // namespace ZDataspace
 } // namespace ZooLib

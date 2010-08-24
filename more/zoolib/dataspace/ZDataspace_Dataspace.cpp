@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCallable_T.h"
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/dataspace/ZDataspace_Dataspace.h"
 
@@ -73,12 +73,12 @@ Dataspace::Dataspace(Source* iSource)
 ,	fNextRefcon(1)
 	{
 	fCallable_Source = MakeCallable(&Dataspace::pCallback_Source, this);
-	fSource->Register(fCallable_Source);
+	fSource->SetCallable(fCallable_Source);
 	}
 
 Dataspace::~Dataspace()
 	{
-	fSource->Unregister(fCallable_Source);
+	fSource->SetCallable(null);
 	delete fSource;
 	}
 
@@ -168,7 +168,6 @@ void Dataspace::LocalUpdate()
 			fPSieves_SourceUpdate.EraseIfContains(thePSieve);
 			fPSieves_Changed.EraseIfContains(thePSieve);
 			ZUtil_STL::sEraseMustContain(kDebug, fSearchSpec_To_PSieve, thePSieve->fSearchSpec);
-			delete thePSieve;
 			}
 		}
 
@@ -355,11 +354,9 @@ void Dataspace::pFinalize(Sieve* iSieve)
 	{
 	ZAcqMtxR acq_CallLocalUpdate(fMtx_CallLocalUpdate);
 	ZAcqMtxR acq_Structure(fMtx_Structure);
-	if (1 != iSieve->GetRefCount())
-		{
-		iSieve->FinalizationComplete();
+
+	if (!iSieve->FinishFinalize())
 		return;
-		}
 
 	PSieve* thePSieve = iSieve->fPSieve;
 	iSieve->fPSieve = nullptr;
@@ -372,6 +369,16 @@ void Dataspace::pFinalize(Sieve* iSieve)
 		this->pTriggerLocalUpdate();
 		}
 	}
+
+ZRef<SearchRows> Dataspace::pGetSearchRows(Sieve* iSieve)
+	{
+	if (fSieves_JustRegistered.Contains(iSieve))
+		return null;
+	return iSieve->fPSieve->fSearchRows_Local;
+	}
+
+bool Dataspace::pIsLoaded(Sieve* iSieve)
+	{ return ! fSieves_JustRegistered.Contains(iSieve); }
 
 // =================================================================================================
 #pragma mark -
@@ -406,8 +413,15 @@ void Sieve::Changed(bool iIsLoad)
 ZRef<SearchRows> Sieve::GetSearchRows()
 	{
 	if (fPSieve)
-		return fPSieve->fSearchRows_Local;
+		return fPSieve->fDataspace->pGetSearchRows(this);
 	return null;
+	}
+
+bool Sieve::IsLoaded()
+	{
+	if (fPSieve)
+		return fPSieve->fDataspace->pIsLoaded(this);
+	return false;
 	}
 
 // =================================================================================================

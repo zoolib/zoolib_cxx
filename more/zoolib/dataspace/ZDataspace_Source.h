@@ -104,15 +104,14 @@ public:
 		std::vector<SearchResult>& oChanged,
 		ZRef<Event>& oEvent) = 0;
 
-	typedef ZCallable_V1<Source*> Callable;
-	void Register(ZRef<Callable> iCallable);
-	void Unregister(ZRef<Callable> iCallable);
+	typedef ZCallable1<void,Source*> Callable;
+	void SetCallable(ZRef<Callable> iCallable);
 
 protected:
 	void pInvokeCallables();
 
 private:
-	ZCallableSet_T1<Source*> fCallables;
+	ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================

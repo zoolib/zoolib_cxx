@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZLog.h"
 
-#include "zoolib/ZCallable_T.h"
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZWorker_Callable.h"
 #include "zoolib/ZWorkerRunner_CFRunLoop.h"
 
@@ -44,6 +44,21 @@ using namespace ZSQLite;
 
 using ZRA::NameMap;
 using ZRA::RelName;
+
+const ZStrimW& operator<<(const ZStrimW& w, const Rename_t& iRename)
+	{
+	w << "(";
+	bool isSubsequent = false;
+	for (Rename_t::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
+		{
+		if (isSubsequent)
+			w << ", ";
+		isSubsequent = true;
+		w << i->first << "<--" << i->second;
+		}
+	w << ")";
+	return w;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -195,8 +210,8 @@ string8 Source_SQLite::pAsSQL(const SearchSpec& iSearchSpec)
 	// and clashes with column names.
 	// We'll live with it for now.
 
-	map<string8, int> tableSuffixes;
-	vector<NameMap> revisedNameMaps;
+	map<string8, int> theTableSuffixes;
+	map<string8, string8> theRename;
 	string8 theFields;
 	for (vector<NameMap>::const_iterator i = iSearchSpec.fNameMaps.begin();
 		i != iSearchSpec.fNameMaps.end(); ++i)
@@ -205,6 +220,7 @@ string8 Source_SQLite::pAsSQL(const SearchSpec& iSearchSpec)
 		const RelHead& theRH_From = sourceNameMap.GetRelHead_From();
 		if (ZLOGF(s, eDebug))
 			s << theRH_From;
+
 		for (map<string8, RelHead>::const_iterator i = fMap_NameToRelHead.begin();
 			i != fMap_NameToRelHead.end(); ++i)
 			{
@@ -212,32 +228,28 @@ string8 Source_SQLite::pAsSQL(const SearchSpec& iSearchSpec)
 				{
 				// Found a table.
 				const RelName theTableName = i->first;
-				const int theSuffix = tableSuffixes[theTableName]++;
+				const int theSuffix = theTableSuffixes[theTableName]++;
 				const RelName newPrefix = theTableName + ZStringf("%d", theSuffix) + ".";
 				const RelName oldPrefix = theTableName + "_";
 
-				NameMap newNameMap;
 				for (set<NameMap::Elem_t>::const_iterator i = sourceNameMap.GetElems().begin();
 					i != sourceNameMap.GetElems().end(); ++i)
 					{
 					const RelName oldFrom = i->second;
 					RelName newFrom = ZRA::sPrefixRemove(theTableName + "_", oldFrom);
 					newFrom = ZRA::sPrefixAdd(newPrefix, newFrom);
-					newNameMap.InsertToFrom(i->first, newFrom);
 					if (! theFields.empty())
 						theFields += ", ";
 					theFields += newFrom + " AS '" + i->first + "'";
+					ZUtil_STL::sInsertMustNotContain(1, theRename, i->first, newFrom);
 					}
-				revisedNameMaps.push_back(newNameMap);
-				if (ZLOGF(s, eDebug))
-					s << newNameMap;
 				}
 			}
 		}
 
 	string8 theTables;
-	for (map<string8, int>::const_iterator i = tableSuffixes.begin();
-		i != tableSuffixes.end(); ++i)
+	for (map<string8, int>::const_iterator i = theTableSuffixes.begin();
+		i != theTableSuffixes.end(); ++i)
 		{
 		for (int x = 0; x < i->second; ++x)
 			{
@@ -249,10 +261,14 @@ string8 Source_SQLite::pAsSQL(const SearchSpec& iSearchSpec)
 
 	string8 result = "SELECT " + theFields + " FROM " + theTables + " WHERE ";
 	
-	result += ZRA::SQL::sAsSQL(sAsExpr_Logic(iSearchSpec.fPredCompound));
+	if (ZLOGF(s, eDebug))
+		s << theRename;
+
+	result += ZRA::SQL::sAsSQL(sAsExpr_Logic(iSearchSpec.fPredCompound.Renamed(theRename)));
 	
 	if (ZLOGF(s, eDebug))
 		s << result;
+
 	return result;
 	}
 

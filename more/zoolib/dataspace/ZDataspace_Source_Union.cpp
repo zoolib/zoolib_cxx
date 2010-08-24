@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_ZooLibStrim.h"
 // <<< Debugging
 
-#include "zoolib/ZCallable_T.h"
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZExpr_Logic.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_STL_set.h"
@@ -366,7 +366,12 @@ void Source_Union::PQuery::Regenerate()
 #pragma mark -
 #pragma mark * Source_Union::PSource
 
+class Source_Union::DLink_PSource_ToUpdate
+:	public DListLink<PSource, DLink_PSource_ToUpdate, kDebug>
+	{};
+
 class Source_Union::PSource
+:	public DLink_PSource_ToUpdate
 	{
 public:
 	PSource(Source* iSource, const string8& iPrefix);
@@ -510,8 +515,7 @@ Source_Union::Source_Union()
 :	fNextRefcon(1)
 ,	fEvent(Event::sZero())
 ,	fCallable(MakeCallable(&Source_Union::pCallback, this))
-	{
-	}
+	{}
 
 Source_Union::~Source_Union()
 	{
@@ -562,7 +566,7 @@ void Source_Union::Update(
 		{
 		PSource* thePSource = *iterPSource;
 		ZUtil_STL::sEraseMustContain(kDebug, fMap_SourceToPSource, thePSource->fSource);
-		thePSource->fSource->Unregister(fCallable);
+		thePSource->fSource->SetCallable(null);
 
 		for (map<int64, PSourceProduct*>::iterator
 			i = thePSource->fMap_RefconToPSourceProduct.begin();
@@ -612,6 +616,7 @@ void Source_Union::Update(
 		iterPSource != fPSources_ToAdd.end(); ++iterPSource)
 		{
 		PSource* thePSource = *iterPSource;
+		thePSource->fSource->SetCallable(fCallable);
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fMap_SourceToPSource, thePSource->fSource, thePSource);
 		}
@@ -625,9 +630,9 @@ void Source_Union::Update(
 
 void Source_Union::InsertSource(Source* iSource, const string8& iPrefix)
 	{
+	ZAssert(iSource);
 	ZAssert(! ZUtil_STL::sContains(fMap_SourceToPSource, iSource));
 	fPSources_ToAdd.insert(new PSource(iSource, iPrefix));
-	iSource->Register(fCallable);
 	}
 
 void Source_Union::EraseSource(Source* iSource)
@@ -637,7 +642,13 @@ void Source_Union::EraseSource(Source* iSource)
 	}
 
 void Source_Union::pCallback(Source* iSource)
-	{ Source::pInvokeCallables(); }
+	{
+	if (PSource* thePSource = fMap_SourceToPSource[iSource])
+		{
+		fPSource_ToUpdate.InsertIfNotContains(thePSource);
+		Source::pInvokeCallables();
+		}
+	}
 
 void Source_Union::pUpdate(
 	const AddedSearch* iAdded, size_t iAddedCount,
@@ -761,10 +772,14 @@ void Source_Union::pUpdate(
 		i != fMap_SourceToPSource.end(); ++i)
 		{
 		PSource* thePSource = i->second;
-		if (thePSource->fPSourceProducts_ToAdd.Size()
+		if (fPSource_ToUpdate.Contains(thePSource)
+			|| thePSource->fPSourceProducts_ToAdd.Size()
 			|| thePSource->fPSourceSearches_ToAdd.Size()
-			|| thePSource->fPSourceQueries_ToRemove.size())
+			|| thePSource->fPSourceQueries_ToRemove.size()
+			|| true)
 			{
+			fPSource_ToUpdate.EraseIfContains(thePSource);
+
 			vector<AddedSearch> localAdded;
 
 			for (DListIteratorEraseAll<PSourceProduct, DLink_PSourceProduct_ToAdd>

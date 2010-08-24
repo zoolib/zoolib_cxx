@@ -72,8 +72,10 @@ private:
 	class DLink_PSourceSearches_InPQuery;
 
 	class PSource;
+	class DLink_PSource_ToUpdate;
 	std::set<PSource*> fPSources_ToAdd;
 	std::set<PSource*> fPSources_ToRemove;
+	DListHead<DLink_PSource_ToUpdate> fPSource_ToUpdate;
 
 	std::map<Source*, PSource*> fMap_SourceToPSource;
 
@@ -89,12 +91,6 @@ private:
 		ZRef<Event>& oEvent);
 
 	void pDetachPQuery(PQuery* iPQuery);
-
-//	class Iterator_PSourceProduct;
-//	friend class Iterator_PSourceProduct;
-
-//	class Iterator_PSourceSearches;
-//	friend class Iterator_PSourceSearches;
 	};
 
 } // namespace ZDataspace
