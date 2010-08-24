@@ -47,17 +47,17 @@ public:
 				}
 			else
 				{
+				sConstructFromVoidStar_T<T>(iOther.fBytes, fBytes);
 				iOther.fHasValue = true;
 				fHasValue = false;
-				sConstructFromVoidStar_T<T>(iOther.fBytes, fBytes);
 				sDestroy_T<T>(fBytes);
 				}
 			}
 		else if (iOther.fHasValue)
 			{
-			iOther.fHasValue = false;
-			fHasValue = true;
 			sConstructFromVoidStar_T<T>(fBytes, iOther.fBytes);
+			fHasValue = true;
+			iOther.fHasValue = false;
 			sDestroy_T<T>(iOther.fBytes);
 			}
 		}
@@ -97,8 +97,8 @@ public:
 				}
 			else if (iOther.fHasValue)
 				{
-				fHasValue = true;
 				sConstructFromVoidStar_T<T>(fBytes, iOther.fBytes);
+				fHasValue = true;
 				}
 			}
 		return *this;
@@ -136,8 +136,8 @@ public:
 			}
 		else
 			{
-			fHasValue = true;
 			sConstruct_T<T,T>(fBytes, iValue);
+			fHasValue = true;
 			}
 		return *this;
 		}
@@ -165,17 +165,16 @@ public:
 		if (fHasValue)
 			sDestroy_T<T>(fBytes);
 
-		fHasValue = true;
-
 		sConstruct_T<T>(fBytes);
+		fHasValue = true;
 		}
 
 	void Clear()
 		{
 		if (fHasValue)
 			{
-			sDestroy_T<T>(fBytes);
 			fHasValue = false;
+			sDestroy_T<T>(fBytes);
 			}
 		}
 
