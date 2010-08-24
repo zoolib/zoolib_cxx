@@ -30,6 +30,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+// Warning, does not handle large-sized return types. We'll need to call objc_msgSend_stret,
+// but I need to examine the ABI docs first.
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCallableBase_Objc
@@ -40,222 +43,124 @@ public:
 	ZCallableBase_Objc(id iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 protected:
-	template <class T> struct RefAsPtr
-		{ static T sGet(const T& iT) { return iT; } };
-
-	template <class T> struct RefAsPtr<const T&>
-		{ static const T* sGet(const T& iT) { return &iT; } };
-
-	template <class T> struct RefAsPtr<T&>
-		{ static T* sGet(T& iT) { return &iT; } };
-
 	id fObj;
 	SEL fSEL;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Objc_O0
+#pragma mark * ZCallable_Objc0
 
-class ZCallable_Objc_O0
+template <class R>
+class ZCallable_Objc0
 :	ZCallableBase_Objc
-,	public ZCallable0<id>
+,	public ZCallable0<R>
 	{
 public:
-	ZCallable_Objc_O0(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
+	ZCallable_Objc0(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
+	typedef R (*Function_t)(id, SEL);
 
 	// From ZCallable0
-	virtual id Invoke()
-		{ return objc_msgSend(fObj, fSEL); }
+	virtual R Invoke()
+		{ return ((Function_t)objc_msgSend)(fObj, fSEL); }
 	};
+
+template <class R>
+ZRef<ZCallable0<R> >
+MakeCallable(id iObj, SEL iSEL)
+	{ return new ZCallable_Objc0<R>(iObj, iSEL); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Objc_O1
+#pragma mark * ZCallable_Objc1
 
-template <class P0>
-class ZCallable_Objc_O1
+template <class R, class P0>
+class ZCallable_Objc1
 :	ZCallableBase_Objc
-,	public ZCallable1<id, P0>
+,	public ZCallable1<R,P0>
 	{
 public:
-	ZCallable_Objc_O1(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
+	ZCallable_Objc1(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
+	typedef R (*Function_t)(id, SEL, P0);
 
 	// From ZCallable1
-	virtual id Invoke(P0 i0)
-		{
-		return objc_msgSend(fObj, fSEL,
-			RefAsPtr<P0>::sGet(i0));
-		}
+	virtual R Invoke(P0 i0)
+		{ return ((Function_t)objc_msgSend)(fObj, fSEL, i0); }
 	};
+
+template <class R, class P0>
+ZRef<ZCallable1<R,P0> >
+MakeCallable(id iObj, SEL iSEL)
+	{ return new ZCallable_Objc1<R,P0>(iObj, iSEL); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Objc_O2
+#pragma mark * ZCallable_Objc2
 
-template <class P0, class P1>
-class ZCallable_Objc_O2
+template <class R, class P0, class P1>
+class ZCallable_Objc2
 :	ZCallableBase_Objc
-,	public ZCallable2<id, P0, P1>
+,	public ZCallable2<R,P0, P1>
 	{
 public:
-	ZCallable_Objc_O2(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
+	ZCallable_Objc2(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
+	typedef R (*Function_t)(id, SEL, P0, P1);
 
 	// From ZCallable2
-	virtual id Invoke(P0 i0, P1 i1)
-		{
-		return objc_msgSend(fObj, fSEL,
-			RefAsPtr<P0>::sGet(i0),
-			RefAsPtr<P1>::sGet(i1));
-		}
+	virtual R Invoke(P0 i0, P1 i1)
+		{ return ((Function_t)objc_msgSend)(fObj, fSEL, i0, i1); }
 	};
+
+template <class R, class P0, class P1>
+ZRef<ZCallable2<R,P0,P1> >
+MakeCallable(id iObj, SEL iSEL)
+	{ return new ZCallable_Objc2<R,P0,P1>(iObj, iSEL); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Objc_O3
+#pragma mark * ZCallable_Objc3
 
-template <class P0, class P1, class P2>
-class ZCallable_Objc_O3
+template <class R, class P0, class P1, class P2>
+class ZCallable_Objc3
 :	ZCallableBase_Objc
-,	public ZCallable3<id, P0, P1, P2>
+,	public ZCallable3<R,P0, P1, P2>
 	{
 public:
-	ZCallable_Objc_O3(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
+	ZCallable_Objc3(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
+	typedef R (*Function_t)(id, SEL, P0, P1, P2);
 
 	// From ZCallable3
-	virtual id Invoke(P0 i0, P1 i1, P2 i2)
-		{
-		return objc_msgSend(fObj, fSEL,
-			RefAsPtr<P0>::sGet(i0),
-			RefAsPtr<P1>::sGet(i1),
-			RefAsPtr<P2>::sGet(i2));
-		}
+	virtual R Invoke(P0 i0, P1 i1, P2 i2)
+		{ return ((Function_t)objc_msgSend)(fObj, fSEL, i0, i1, i2); }
 	};
+
+template <class R, class P0, class P1, class P2>
+ZRef<ZCallable3<R,P0,P1,P2> >
+MakeCallable(id iObj, SEL iSEL)
+	{ return new ZCallable_Objc3<R,P0,P1,P2>(iObj, iSEL); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Objc_O4
+#pragma mark * ZCallable_Objc4
 
-template <class P0, class P1, class P2, class P3>
-class ZCallable_Objc_O4
+template <class R, class P0, class P1, class P2, class P3>
+class ZCallable_Objc4
 :	ZCallableBase_Objc
-,	public ZCallable4<id, P0, P1, P2, P3>
+,	public ZCallable4<R,P0,P1,P2,P3>
 	{
 public:
-	ZCallable_Objc_O4(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
+	ZCallable_Objc4(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
+	typedef R (*Function_t)(id, SEL, P0, P1, P2, P3);
 
 	// From ZCallable4
-	virtual id Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
-		{
-		return objc_msgSend(fObj, fSEL,
-			RefAsPtr<P0>::sGet(i0),
-			RefAsPtr<P1>::sGet(i1),
-			RefAsPtr<P2>::sGet(i2),
-			RefAsPtr<P3>::sGet(i3));
-		}
+	virtual R Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
+		{ return ((Function_t)objc_msgSend)(fObj, fSEL, i0, i1, i2, i3); }
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Objc_V0
-
-class ZCallable_Objc_V0
-:	ZCallableBase_Objc
-,	public ZCallable0<void>
-	{
-public:
-	ZCallable_Objc_V0(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
-
-	// From ZCallable0
-	virtual void Invoke()
-		{ objc_msgSend(fObj, fSEL); }
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Objc_V1
-
-template <class P0>
-class ZCallable_Objc_V1
-:	ZCallableBase_Objc
-,	public ZCallable1<void,P0>
-	{
-public:
-	ZCallable_Objc_V1(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
-
-	// From ZCallable1
-	virtual void Invoke(P0 i0)
-		{
-		objc_msgSend(fObj, fSEL,
-			RefAsPtr<P0>::sGet(i0));
-		}
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Objc_V2
-
-template <class P0, class P1>
-class ZCallable_Objc_V2
-:	ZCallableBase_Objc
-,	public ZCallable2<void,P0, P1>
-	{
-public:
-	ZCallable_Objc_V2(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
-
-	// From ZCallable2
-	virtual void Invoke(P0 i0, P1 i1)
-		{
-		objc_msgSend(fObj, fSEL,
-			RefAsPtr<P0>::sGet(i0),
-			RefAsPtr<P1>::sGet(i1));
-		}
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Objc_V3
-
-template <class P0, class P1, class P2>
-class ZCallable_Objc_V3
-:	ZCallableBase_Objc
-,	public ZCallable3<void,P0, P1, P2>
-	{
-public:
-	ZCallable_Objc_V3(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
-
-	// From ZCallable3
-	virtual void Invoke(P0 i0, P1 i1, P2 i2)
-		{
-		objc_msgSend(fObj, fSEL,
-			RefAsPtr<P0>::sGet(i0),
-			RefAsPtr<P1>::sGet(i1),
-			RefAsPtr<P2>::sGet(i2));
-		}
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Objc_V4
-
-template <class P0, class P1, class P2, class P3>
-class ZCallable_Objc_V4
-:	ZCallableBase_Objc
-,	public ZCallable4<void,P0, P1, P2, P3>
-	{
-public:
-	ZCallable_Objc_V4(id iObj, SEL iSEL) : ZCallableBase_Objc(iObj, iSEL) {}
-
-	// From ZCallable4
-	virtual void Invoke(P0 i0, P1 i1, P2 i2, P3 i3)
-		{
-		objc_msgSend(fObj, fSEL,
-			RefAsPtr<P0>::sGet(i0),
-			RefAsPtr<P1>::sGet(i1),
-			RefAsPtr<P2>::sGet(i2),
-			RefAsPtr<P3>::sGet(i3));
-		}
-	};
+template <class R, class P0, class P1, class P2, class P3>
+ZRef<ZCallable4<R,P0,P1,P2,P3> >
+MakeCallable(id iObj, SEL iSEL)
+	{ return new ZCallable_Objc4<R,P0,P1,P2,P3>(iObj, iSEL); }
 
 } // namespace ZooLib
 
