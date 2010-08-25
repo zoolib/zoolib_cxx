@@ -47,18 +47,18 @@ public:
 				}
 			else
 				{
-				sConstructFromVoidStar_T<T>(iOther.fBytes, fBytes);
+				sCtorFromVoidStar_T<T>(iOther.fBytes, fBytes);
 				iOther.fHasValue = true;
 				fHasValue = false;
-				sDestroy_T<T>(fBytes);
+				sDtor_T<T>(fBytes);
 				}
 			}
 		else if (iOther.fHasValue)
 			{
-			sConstructFromVoidStar_T<T>(fBytes, iOther.fBytes);
+			sCtorFromVoidStar_T<T>(fBytes, iOther.fBytes);
 			fHasValue = true;
 			iOther.fHasValue = false;
-			sDestroy_T<T>(iOther.fBytes);
+			sDtor_T<T>(iOther.fBytes);
 			}
 		}
 
@@ -70,13 +70,13 @@ public:
 	:	fHasValue(iOther.fHasValue)
 		{
 		if (fHasValue)
-			sConstructFromVoidStar_T<T>(fBytes, iOther.fBytes);
+			sCtorFromVoidStar_T<T>(fBytes, iOther.fBytes);
 		}
 
 	~ZQ()
 		{
 		if (fHasValue)
-			sDestroy_T<T>(fBytes);
+			sDtor_T<T>(fBytes);
 		}
 
 	ZQ& operator=(const ZQ& iOther)
@@ -92,12 +92,12 @@ public:
 				else
 					{
 					fHasValue = false;
-					sDestroy_T<T>(fBytes);
+					sDtor_T<T>(fBytes);
 					}
 				}
 			else if (iOther.fHasValue)
 				{
-				sConstructFromVoidStar_T<T>(fBytes, iOther.fBytes);
+				sCtorFromVoidStar_T<T>(fBytes, iOther.fBytes);
 				fHasValue = true;
 				}
 			}
@@ -113,7 +113,7 @@ public:
 		if (fHasValue)
 			{
 			fHasValue = false;
-			sDestroy_T<T>(fBytes);
+			sDtor_T<T>(fBytes);
 			}
 		return *this;
 		}
@@ -121,22 +121,23 @@ public:
 	template <class P0>
 	ZQ(const P0& i0)
 	:	fHasValue(true)
-		{ sConstruct_T<T, P0>(fBytes, i0); }
+		{ sCtor_T<T, P0>(fBytes, i0); }
 
 	template <class P0, class P1>
 	ZQ(const P0& i0, const P1& i1)
 	:	fHasValue(true)
-		{ sConstruct_T<T, P0, P1>(fBytes, i0, i1); }
+		{ sCtor_T<T, P0, P1>(fBytes, i0, i1); }
 
-	ZQ& operator=(const T& iValue)
+	template <class P0>
+	ZQ& operator=(const P0& iValue)
 		{
 		if (fHasValue)
 			{
-			sAssign_T(fBytes, iValue);
+			sAssign_T<T>(fBytes, iValue);
 			}
 		else
 			{
-			sConstruct_T<T,T>(fBytes, iValue);
+			sCtor_T<T,P0>(fBytes, iValue);
 			fHasValue = true;
 			}
 		return *this;
@@ -163,9 +164,9 @@ public:
 	T& OParam()
 		{
 		if (fHasValue)
-			sDestroy_T<T>(fBytes);
+			sDtor_T<T>(fBytes);
 
-		sConstruct_T<T>(fBytes);
+		sCtor_T<T>(fBytes);
 		fHasValue = true;
 		}
 
@@ -174,7 +175,7 @@ public:
 		if (fHasValue)
 			{
 			fHasValue = false;
-			sDestroy_T<T>(fBytes);
+			sDtor_T<T>(fBytes);
 			}
 		}
 
