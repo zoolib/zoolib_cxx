@@ -41,6 +41,8 @@ inline int ZAtomic_Get(const ZAtomic_t* iAtomic)
 inline void ZAtomic_Set(ZAtomic_t* iAtomic, int iParam)
 	{ iAtomic->fValue = iParam; }
 
+bool ZAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue);
+
 bool ZAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue);
 int ZAtomic_Swap(ZAtomic_t* iAtomic, int iParam);
 

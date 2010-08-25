@@ -200,6 +200,22 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 namespace ZooLib {
 
 // -----------------------------------------------
+#if !defined(DEFINED_ZAtomic_CompareAndSwapPtr)
+#define DEFINED_ZAtomic_CompareAndSwapPtr 1
+
+bool ZAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
+	{
+	#if ZCONFIG_Is64Bit
+		return ::OSAtomicCompareAndSwap64Barrier
+			((int64_t)iOldValue, (int64_t)iNewValue, (int64_t*)iPtrAddress);
+	#else
+		return ::OSAtomicCompareAndSwap32Barrier
+			((int32_t)iOldValue, (int32_t)iNewValue, (int32_t*)iPtrAddress);
+	#endif
+	}
+
+#endif
+// -----------------------------------------------
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
 #define DEFINED_ZAtomic_CompareAndSwap 1
 
