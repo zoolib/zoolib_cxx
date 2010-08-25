@@ -10,36 +10,6 @@ namespace IPhone {
 #pragma mark -
 #pragma mark * UITVC_Section
 
-void UITVC_Section::SetHeaderHeight(ZQ<CGFloat> iHeight)
-	{ fHeaderHeight = iHeight; }
-
-void UITVC_Section::SetFooterHeight(ZQ<CGFloat> iHeight)
-	{ fFooterHeight = iHeight; }
-
-void UITVC_Section::SetHeaderTitle(ZQ<string8> iTitle)
-	{ fHeaderTitle = iTitle; }
-
-void UITVC_Section::SetFooterTitle(ZQ<string8> iTitle)
-	{ fFooterTitle = iTitle; }
-
-void UITVC_Section::SetHeaderView(ZRef<UIView> iUIView)
-	{ fHeaderView = iUIView; }
-
-void UITVC_Section::SetFooterView(ZRef<UIView> iUIView)
-	{ fFooterView = iUIView; }
-
-size_t UITVC_Section::NumberOfRows()
-	{ return 0; }
-
-ZRef<UITableViewCell> UITVC_Section::UITableViewCellForRow(UITableView* iView, size_t iIndex)
-	{ return null; }
-
-ZQ<UITableViewCellEditingStyle> UITVC_Section::EditingStyle(size_t iIndex)
-	{ return null; }
-
-ZQ<CGFloat> UITVC_Section::RowHeight(size_t iIndex)
-	{ return null; }
-
 ZQ<CGFloat> UITVC_Section::HeaderHeight()
 	{ return fHeaderHeight; }
 
@@ -58,11 +28,32 @@ ZRef<UIView> UITVC_Section::HeaderView()
 ZRef<UIView> UITVC_Section::FooterView()
 	{ return fFooterView; }
 
-void UITVC_Section::AccessoryButtonTapped(size_t iIndex)
-	{}
+size_t UITVC_Section::NumberOfRows()
+	{ return 0; }
+
+ZRef<UITableViewCell> UITVC_Section::UITableViewCellForRow(UITableView* iView, size_t iIndex)
+	{ return fTableViewCell; }
+
+ZQ<UITableViewCellEditingStyle> UITVC_Section::EditingStyle(size_t iIndex)
+	{ return fEditingStyle; }
 
 ZQ<bool> UITVC_Section::ShouldIndentWhileEditing(size_t iIndex)
-	{ return null; }
+	{ return fShouldIndentWhileEditing; }
+
+ZQ<CGFloat> UITVC_Section::RowHeight(size_t iIndex)
+	{ return fRowHeight; }
+
+void UITVC_Section::AccessoryButtonTapped(size_t iIndex)
+	{
+	if (fCallable_AccessoryButtonTapped)
+		fCallable_AccessoryButtonTapped->Call(this, iIndex);
+	}
+
+void UITVC_Section::RowSelected(size_t iIndex)
+	{
+	if (fCallable_RowSelected)
+		fCallable_RowSelected->Call(this, iIndex);
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -89,7 +80,7 @@ ZQ<UITableViewCellEditingStyle> UITVC_Section_WithRow::EditingStyle(size_t iInde
 	{
 	if (ZRef<Row> theRow = this->pGetRow(iIndex))
 		return theRow->EditingStyle();
-	return null;
+	return UITVC_Section::EditingStyle(iIndex);
 	}
 
 void UITVC_Section_WithRow::AccessoryButtonTapped(size_t iIndex)
@@ -98,18 +89,24 @@ void UITVC_Section_WithRow::AccessoryButtonTapped(size_t iIndex)
 		return theRow->AccessoryButtonTapped();
 	}
 
+void UITVC_Section_WithRow::RowSelected(size_t iIndex)
+	{
+	if (ZRef<Row> theRow = this->pGetRow(iIndex))
+		return theRow->RowSelected();
+	}
+
 ZQ<bool> UITVC_Section_WithRow::ShouldIndentWhileEditing(size_t iIndex)
 	{
 	if (ZRef<Row> theRow = this->pGetRow(iIndex))
 		return theRow->ShouldIndentWhileEditing();
-	return null;
+	return UITVC_Section::ShouldIndentWhileEditing(iIndex);
 	}
 
 ZQ<CGFloat> UITVC_Section_WithRow::RowHeight(size_t iIndex)
 	{
 	if (ZRef<Row> theRow = this->pGetRow(iIndex))
 		return theRow->RowHeight();
-	return null;
+	return UITVC_Section::RowHeight(iIndex);
 	}
 
 ZRef<UITVC_Section_WithRow::Row> UITVC_Section_WithRow::pGetRow(size_t iIndex)
@@ -124,21 +121,27 @@ ZRef<UITVC_Section_WithRow::Row> UITVC_Section_WithRow::pGetRow(size_t iIndex)
 #pragma mark * UITVC_Section_WithRow
 
 ZRef<UITableViewCell> UITVC_Section_WithRow::Row::UITableViewCellForRow(UITableView* iView)
-	{ return null; }
+	{ return fTableViewCell; }
 
 ZQ<UITableViewCellEditingStyle> UITVC_Section_WithRow::Row::EditingStyle()
-	{ return null; }
+	{ return fEditingStyle; }
 
 ZQ<bool> UITVC_Section_WithRow::Row::ShouldIndentWhileEditing()
-	{ return null; }
+	{ return fShouldIndentWhileEditing; }
 
 ZQ<CGFloat> UITVC_Section_WithRow::Row::RowHeight()
-	{ return null; }
+	{ return fRowHeight; }
 
 void UITVC_Section_WithRow::Row::AccessoryButtonTapped()
 	{
-	if (fCallable)
-		fCallable->Call(this);
+	if (fCallable_AccessoryButtonTapped)
+		fCallable_AccessoryButtonTapped->Call(this);
+	}
+
+void UITVC_Section_WithRow::Row::RowSelected()
+	{
+	if (fCallable_RowSelected)
+		fCallable_RowSelected->Call(this);
 	}
 
 } // namespace IPhone
@@ -253,6 +256,12 @@ using ZooLib::IPhone::UITVC_Section;
 	{
 	if (ZRef<UITVC_Section> theSection = [self pGetSection:indexPath.section])
 		theSection->AccessoryButtonTapped(indexPath.row);
+	}
+
+- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
+	{
+	if (ZRef<UITVC_Section> theSection = [self pGetSection:indexPath.section])
+		theSection->RowSelected(indexPath.row);
 	}
 
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath

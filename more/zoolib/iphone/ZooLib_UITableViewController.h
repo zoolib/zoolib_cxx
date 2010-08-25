@@ -20,22 +20,6 @@ namespace IPhone {
 class UITVC_Section : public ZCounted
 	{
 public:
-	void SetHeaderHeight(ZQ<CGFloat> iHeight);
-	void SetFooterHeight(ZQ<CGFloat> iHeight);
-
-	void SetHeaderTitle(ZQ<string8> iTitle);
-	void SetFooterTitle(ZQ<string8> iTitle);
-
-	void SetHeaderView(ZRef<UIView> iUIView);
-	void SetFooterView(ZRef<UIView> iUIView);
-
-	virtual size_t NumberOfRows();
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iIndex);
-	virtual ZQ<UITableViewCellEditingStyle> EditingStyle(size_t iIndex);
-	virtual ZQ<bool> ShouldIndentWhileEditing(size_t iIndex);
-
-	virtual ZQ<CGFloat> RowHeight(size_t iIndex);
-
 	virtual ZQ<CGFloat> HeaderHeight();
 	virtual ZQ<CGFloat> FooterHeight();
 
@@ -45,9 +29,17 @@ public:
 	virtual ZRef<UIView> HeaderView();
 	virtual ZRef<UIView> FooterView();
 
-	virtual void AccessoryButtonTapped(size_t iIndex);
+	virtual size_t NumberOfRows();
+	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iIndex);
+	virtual ZQ<UITableViewCellEditingStyle> EditingStyle(size_t iIndex);
+	virtual ZQ<bool> ShouldIndentWhileEditing(size_t iIndex);
+	virtual ZQ<CGFloat> RowHeight(size_t iIndex);
 
-private:
+	virtual void AccessoryButtonTapped(size_t iIndex);
+	virtual void RowSelected(size_t iIndex);
+
+// -----
+
 	ZQ<CGFloat> fHeaderHeight;
 	ZQ<CGFloat> fFooterHeight;
 
@@ -56,6 +48,13 @@ private:
 
 	ZRef<UIView> fHeaderView;
 	ZRef<UIView> fFooterView;
+
+	ZRef<UITableViewCell> fTableViewCell;
+	ZQ<UITableViewCellEditingStyle> fEditingStyle;
+	ZQ<bool> fShouldIndentWhileEditing;
+	ZQ<CGFloat> fRowHeight;
+	ZRef<ZCallable2<void,ZRef<UITVC_Section>,size_t> > fCallable_AccessoryButtonTapped;
+	ZRef<ZCallable2<void,ZRef<UITVC_Section>,size_t> > fCallable_RowSelected;
 	};
 
 // =================================================================================================
@@ -74,6 +73,7 @@ public:
 	virtual ZQ<bool> ShouldIndentWhileEditing(size_t iIndex);
 	virtual ZQ<CGFloat> RowHeight(size_t iIndex);
 	virtual void AccessoryButtonTapped(size_t iIndex);
+	virtual void RowSelected(size_t iIndex);
 
 	std::vector<ZRef<Row> > fRows;
 
@@ -92,12 +92,14 @@ public:
 	virtual ZQ<bool> ShouldIndentWhileEditing();
 	virtual ZQ<CGFloat> RowHeight();
 	virtual void AccessoryButtonTapped();
+	virtual void RowSelected();
 
 	ZRef<UITableViewCell> fTableViewCell;
 	ZQ<UITableViewCellEditingStyle> fEditingStyle;
 	ZQ<bool> fShouldIndentWhileEditing;
 	ZQ<CGFloat> fRowHeight;
-	ZRef<ZCallable1<void,ZRef<Row> > > fCallable;
+	ZRef<ZCallable1<void,ZRef<Row> > > fCallable_AccessoryButtonTapped;
+	ZRef<ZCallable1<void,ZRef<Row> > > fCallable_RowSelected;
 	};
 
 } // namespace IPhone
@@ -132,6 +134,7 @@ using namespace ZooLib;
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section;
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath;
+- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath;
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 
