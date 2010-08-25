@@ -46,10 +46,16 @@ an exception to propogate out.
 */
 
 void ZWorker::RunnerAttached()
-	{}
+	{
+	if (ZRef<Callable_t> theCallable = fCallable_Attached)
+		theCallable->Call(this);
+	}
 
 void ZWorker::RunnerDetached()
-	{}
+	{
+	if (ZRef<Callable_t> theCallable = fCallable_Detached)
+		theCallable->Call(this);
+	}
 
 void ZWorker::Wake()
 	{
@@ -78,6 +84,12 @@ bool ZWorker::IsAwake()
 
 bool ZWorker::IsAttached()
 	{ return ZRef<ZWorkerRunner>(fRunner); }
+
+ZRef<ZWorker::Callable_t> ZWorker::SwapCallable_Attached(ZRef<Callable_t> iCallable)
+	{ return fCallable_Attached.Swap(iCallable); }
+
+ZRef<ZWorker::Callable_t> ZWorker::SwapCallable_Detached(ZRef<Callable_t> iCallable)
+	{ return fCallable_Detached.Swap(iCallable); }
 
 // =================================================================================================
 #pragma mark -

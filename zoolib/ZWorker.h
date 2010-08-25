@@ -22,7 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZWorker__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCallable.h"
 #include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZSafeRef.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZWeakRef.h"
 
@@ -50,8 +52,14 @@ public:
 	bool IsAwake();
 	bool IsAttached();
 
+	typedef ZCallable1<void,ZRef<ZWorker> > Callable_t;
+	ZRef<Callable_t> SwapCallable_Attached(ZRef<Callable_t> iCallable);
+	ZRef<Callable_t> SwapCallable_Detached(ZRef<Callable_t> iCallable);
+
 private:
 	ZWeakRef<ZWorkerRunner> fRunner;
+	ZSafeRef<Callable_t> fCallable_Attached;
+	ZSafeRef<Callable_t> fCallable_Detached;
 	friend class ZWorkerRunner;
 	};
 
