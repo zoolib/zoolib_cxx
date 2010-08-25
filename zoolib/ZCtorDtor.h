@@ -29,28 +29,28 @@ namespace ZooLib {
 #pragma mark * Placement construction/destruction
 
 template <class T>
-inline T* sConstruct_T(void* oBytes)
+inline T* sCtor_T(void* oBytes)
 	{
 	new(oBytes) T();
 	return static_cast<T*>(oBytes);
 	}
 
 template <class T, class P0>
-inline T* sConstruct_T(void* oBytes, const P0& i0)
+inline T* sCtor_T(void* oBytes, const P0& i0)
 	{
 	new(oBytes) T(i0);
 	return static_cast<T*>(oBytes);
 	}
 
 template <class T, class P0, class P1>
-inline T* sConstruct_T(void* oBytes, const P0& i0, const P1& i1)
+inline T* sCtor_T(void* oBytes, const P0& i0, const P1& i1)
 	{
 	new(oBytes) T(i0, i1);
 	return static_cast<T*>(oBytes);
 	}
 
 template <class T>
-inline void sDestroy_T(void* oBytes)
+inline void sDtor_T(void* oBytes)
 	{ static_cast<T*>(oBytes)->~T(); }
 
 template <class T>
@@ -58,15 +58,7 @@ inline T& sAssign_T(void* ioBytes, const T& iOther)
 	{ return *static_cast<T*>(ioBytes) = iOther; }
 
 template <class T>
-inline const T* sFetch_T(const void* iBytes)
-	{ return static_cast<const T*>(iBytes); }
-
-template <class T>
-inline T* sFetch_T(void* iBytes)
-	{ return static_cast<T*>(iBytes); }
-
-template <class T>
-inline T* sConstructFromVoidStar_T(void* oBytes, const void* iSource)
+inline T* sCtorFromVoidStar_T(void* oBytes, const void* iSource)
 	{
 	new(oBytes) T(*static_cast<const T*>(iSource));
 	return static_cast<T*>(oBytes);
@@ -75,6 +67,18 @@ inline T* sConstructFromVoidStar_T(void* oBytes, const void* iSource)
 template <class T>
 inline T& sAssignFromVoidStar_T(void* ioBytes, const void* iBytes)
 	{ return *static_cast<T*>(ioBytes) = *static_cast<const T*>(iBytes); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Access
+
+template <class T>
+inline const T* sFetch_T(const void* iBytes)
+	{ return static_cast<const T*>(iBytes); }
+
+template <class T>
+inline T* sFetch_T(void* iBytes)
+	{ return static_cast<T*>(iBytes); }
 
 } // namespace ZooLib
 

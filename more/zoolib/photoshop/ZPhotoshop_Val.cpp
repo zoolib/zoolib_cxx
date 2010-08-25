@@ -568,7 +568,7 @@ Spec::Entry Spec::Entry::sEnum(ClassID iClassID, const Enumerated& iEnum)
 	{
 	Entry theEntry;
 	theEntry.fDCI = iClassID.GetDCI();
-	sConstruct_T<Enumerated>(theEntry.fData.fBytes, iEnum);
+	sCtor_T<Enumerated>(theEntry.fData.fBytes, iEnum);
 	theEntry.fFormID = formEnumerated;
 	return theEntry;
 	}
@@ -595,7 +595,7 @@ Spec::Entry Spec::Entry::sName(ClassID iClassID, const string8& iName)
 	{
 	Entry theEntry;
 	theEntry.fDCI = iClassID.GetDCI();
-	sConstruct_T<string8>(theEntry.fData.fBytes, iName);
+	sCtor_T<string8>(theEntry.fData.fBytes, iName);
 	theEntry.fFormID = formName;
 	return theEntry;
 	}
@@ -605,7 +605,7 @@ Spec::Entry Spec::Entry::sName(ClassID iClassID, const ZRef<ASZString>& iName)
 	Entry theEntry;
 	theEntry.fDCI = iClassID.GetDCI();
 	string8 theString8 = ZUnicode::sAsUTF8(spAsString16(iName));
-	sConstruct_T<string8>(theEntry.fData.fBytes, theString8);
+	sCtor_T<string8>(theEntry.fData.fBytes, theString8);
 	theEntry.fFormID = formName;
 	return theEntry;
 	}
@@ -642,12 +642,12 @@ void Spec::Entry::pRelease()
 			break;
 		case formEnumerated:
 			{
-			sDestroy_T<Enumerated>(fData.fBytes);
+			sDtor_T<Enumerated>(fData.fBytes);
 			break;
 			}
 		case formName:
 			{
-			sDestroy_T<string8>(fData.fBytes);
+			sDtor_T<string8>(fData.fBytes);
 			break;
 			}
 		}
@@ -663,7 +663,7 @@ void Spec::Entry::pCopyFrom(const Entry& iOther)
 			}
 		case formEnumerated:
 			{
-			sConstructFromVoidStar_T<Enumerated>(fData.fBytes, iOther.fData.fBytes);
+			sCtorFromVoidStar_T<Enumerated>(fData.fBytes, iOther.fData.fBytes);
 			break;
 			}
 		case formIdentifier:
@@ -678,7 +678,7 @@ void Spec::Entry::pCopyFrom(const Entry& iOther)
 			}
 		case formName:
 			{
-			sConstructFromVoidStar_T<string8>(fData.fBytes, iOther.fData.fBytes);
+			sCtorFromVoidStar_T<string8>(fData.fBytes, iOther.fData.fBytes);
 			break;
 			}
 		case formOffset:
