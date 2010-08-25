@@ -87,6 +87,15 @@ public:
 		}
 
 	template <class O>
+	ZRef<T> Swap(ZRef<O>& ioOther)
+		{
+		ZAcqMtx acq(fMtx);
+		T* theP = ioOther.Get();
+		std::swap(theP, fP);
+		return theP;
+		}
+
+	template <class O>
 	operator ZRef<O>()
 		{
 		ZAcqMtx acq(fMtx);

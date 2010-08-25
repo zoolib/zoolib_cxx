@@ -48,6 +48,7 @@ public:
 	bool IsReferenced() const;
 
 protected:
+	void pDispose();
 	int pCOMAddRef();
 	int pCOMRelease();
 

@@ -82,6 +82,11 @@ bool ZCountedBase::IsShared() const
 bool ZCountedBase::IsReferenced() const
 	{ return 0 != ZAtomic_Get(&fRefCount); }
 
+void ZCountedBase::pDispose()
+	{
+	delete this;
+	}
+
 int ZCountedBase::pCOMAddRef()
 	{
 	int oldRefCount = ZAtomic_Add(&fRefCount, 1);

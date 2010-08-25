@@ -379,24 +379,22 @@ ZRef<T> MakeRef(T* iP)
 #pragma mark -
 #pragma mark * ZRef casts
 
-template <class O, class T> inline O* ZRefDynamicCast(const ZRef<T>& iVal)
+template <class O, class T> O* ZRefDynamicCast(const ZRef<T>& iVal)
 	{ return dynamic_cast<O*>(iVal.Get()); }
 
-template <class O, class T> inline O* ZRefStaticCast(const ZRef<T>& iVal)
+template <class O, class T> O* ZRefStaticCast(const ZRef<T>& iVal)
 	{ return static_cast<O*>(iVal.Get()); }
 
-template <class O, class T> inline O ZRefStaticCast(const ZRef<T*>& iVal)
+template <class O, class T> O ZRefStaticCast(const ZRef<T*>& iVal)
 	{ return static_cast<O>(iVal.Get()); }
 
-template <class O, class T> inline O ZRefStaticCast(const ZRef<const T*>& iVal)
+template <class O, class T> O ZRefStaticCast(const ZRef<const T*>& iVal)
 	{ return static_cast<O>(iVal.Get()); }
+
+template <class T>
+void swap(ZooLib::ZRef<T>& a, ZooLib::ZRef<T>& b)
+	{ a.swap(b); }
 
 } // namespace ZooLib
-
-namespace std {
-template <class T>
-inline void swap(ZooLib::ZRef<T>& a, ZooLib::ZRef<T>& b)
-	{ a.swap(b); }
-}
 
 #endif // __ZRef__
