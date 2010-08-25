@@ -61,9 +61,7 @@ class Callable0
 public:
 	typedef ZCallable1<R,Bound> Callable_t;
 
-	Callable0(
-		ZRef<Callable_t> iCallable,
-		typename Traits<Bound>::ConstRef_Add_t iBound)
+	Callable0(ZRef<Callable_t> iCallable, typename Traits<Bound>::ConstRef_Add_t iBound)
 	:	fCallable(iCallable)
 	,	fBound(iBound)
 		{}
@@ -87,9 +85,7 @@ class Callable1
 public:
 	typedef ZCallable2<R,P0,Bound> Callable_t;
 
-	Callable1(
-		ZRef<Callable_t> iCallable,
-		typename Traits<Bound>::ConstRef_Add_t iBound)
+	Callable1(ZRef<Callable_t> iCallable, typename Traits<Bound>::ConstRef_Add_t iBound)
 	:	fCallable(iCallable)
 	,	fBound(iBound)
 		{}
@@ -113,9 +109,7 @@ class Callable2
 public:
 	typedef ZCallable3<R,P0,P1,Bound> Callable_t;
 
-	Callable2(
-		ZRef<Callable_t> iCallable,
-		typename Traits<Bound>::ConstRef_Add_t iBound)
+	Callable2(ZRef<Callable_t> iCallable, typename Traits<Bound>::ConstRef_Add_t iBound)
 	:	fCallable(iCallable)
 	,	fBound(iBound)
 		{}
@@ -139,9 +133,7 @@ class Callable3
 public:
 	typedef ZCallable4<R,P0,P1,P2,Bound> Callable_t;
 
-	Callable3(
-		ZRef<Callable_t> iCallable,
-		typename Traits<Bound>::ConstRef_Add_t iBound)
+	Callable3(ZRef<Callable_t> iCallable, typename Traits<Bound>::ConstRef_Add_t iBound)
 	:	fCallable(iCallable)
 	,	fBound(iBound)
 		{}
