@@ -129,7 +129,7 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 		}
 
 	if (!fStrimmerU)
-		return ZRef<ZYadR>();
+		return null;
 
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
@@ -140,11 +140,11 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 	if (fOuterName.empty())
 		{
 		if (theR.Current() == ZML::eToken_Exhausted)
-			return ZRef<ZYadR>();
+			return null;
 		}
 	else if (sTryRead_End(theR, fOuterName))
 		{
-		return ZRef<ZYadR>();
+		return null;
 		}
 
 	if (theR.Current() == ZML::eToken_TagEmpty)

@@ -113,7 +113,7 @@ ZRef<ZYadR> ZYadMapRPos_NS::ReadInc(string& oName)
 		oName = fNames.Get(fPosition).GetString();
 		return sMakeYadR(fValues.Get(fPosition++));
 		}
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 ZRef<ZYadMapRPos> ZYadMapRPos_NS::Clone()

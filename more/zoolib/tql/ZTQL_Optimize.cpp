@@ -82,7 +82,7 @@ void Gather::Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr)
 ZRef<Expr_Rel> spConvertSelect(ZRef<Expr_Rel> iRelation, ZRef<ZExpr_Logic> iLogical)
 	{
 	if (!iRelation)
-		return ZRef<Expr_Rel>();
+		return null;
 
 	const ZValPredCompound resultLogical = Gather().Do(iLogical);
 	const ZValPredCompound::SectUnion& theSU = resultLogical.fSectUnion;

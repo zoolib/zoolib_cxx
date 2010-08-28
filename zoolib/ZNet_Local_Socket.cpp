@@ -239,7 +239,7 @@ ZRef<ZNetAddress> ZNetEndpoint_Local_Socket::GetRemoteAddress()
 			return new ZNetAddress_Local(remoteSockAddr.sun_path);
 		}
 
-	return ZRef<ZNetAddress>();
+	return null;
 	}
 
 // =================================================================================================

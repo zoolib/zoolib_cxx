@@ -174,7 +174,7 @@ ZRef<ZNetAddress> ZNetNameLookup_Local_Win::CurrentAddress()
 	if (!fFinished)
 		return new ZNetAddress_Local(fPath);
 
-	return ZRef<ZNetAddress>();
+	return null;
 	}
 
 ZRef<ZNetName> ZNetNameLookup_Local_Win::CurrentName()

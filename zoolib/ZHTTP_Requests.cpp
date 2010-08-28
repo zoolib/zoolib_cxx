@@ -109,7 +109,7 @@ static ZRef<ZStreamerRWCon> spConnect(const string& iScheme, const string& iHost
 		}
 	else
 		{
-		return ZRef<ZStreamerRWCon>();
+		return null;
 		}
 
 	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
@@ -119,7 +119,7 @@ static ZRef<ZStreamerRWCon> spConnect(const string& iScheme, const string& iHost
 
 		return sMake_StreamerRWCon_SSL(theEP, theEP);
 		}
-	return ZRef<ZStreamerRWCon>();
+	return null;
 	}
 
 ZRef<ZStreamerR> sRequest(
@@ -188,7 +188,7 @@ ZRef<ZStreamerR> sRequest(
 				}
 			}
 		}
-	return ZRef<ZStreamerR>();
+	return null;
 	}
 
 static void spPost_Prefix(const ZStreamW& w,
@@ -287,7 +287,7 @@ ZRef<ZStreamerR> sPost(
 				}
 			}
 		}
-	return ZRef<ZStreamerR>();
+	return null;
 	}
 
 ZRef<ZStreamerR> sPostRaw(
@@ -329,7 +329,7 @@ ZRef<ZStreamerR> sPostRaw(
 				}
 			}
 		}
-	return ZRef<ZStreamerR>();
+	return null;
 	}
 
 // =================================================================================================

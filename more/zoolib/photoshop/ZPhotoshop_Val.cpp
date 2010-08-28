@@ -427,7 +427,7 @@ static ZRef<ASZString> spAsASZString(const string16& iString)
 			return result;
 			}
 		}
-	return ZRef<ASZString>();
+	return null;
 	}
 
 static TypeID spAsRuntimeTypeID(const string8& iString)

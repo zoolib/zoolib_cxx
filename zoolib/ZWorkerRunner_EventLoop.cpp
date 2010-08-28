@@ -67,7 +67,6 @@ ZWorkerRunner_EventLoop::ZWorkerRunner_EventLoop()
 
 ZWorkerRunner_EventLoop::~ZWorkerRunner_EventLoop()
 	{
-	ZWeakReferee::pDetachProxy();
 	if (fWorker_Waker)
 		fWorker_Waker->Wake();
 	}

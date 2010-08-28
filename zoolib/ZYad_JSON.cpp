@@ -207,7 +207,7 @@ static ZRef<ZYadR> spMakeYadR_JSON(ZRef<ZStrimmerU> iStrimmerU)
 			return new ZYadAtomR_Std(theVal);
 		}
 
-	return ZRef<ZYadAtomR_Std>();
+	return null;
 	}
 
 // =================================================================================================

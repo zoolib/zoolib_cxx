@@ -58,7 +58,7 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Buffered::MakeStreamerRW()
 		return theSRW;
 		}
 
-	return ZRef<ZStreamerRW>();
+	return null;
 	}
 
 } // namespace ZooLib

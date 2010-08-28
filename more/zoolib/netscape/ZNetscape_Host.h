@@ -26,8 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/netscape/ZNetscape_Object.h"
 #include "zoolib/netscape/ZNetscape_Variant.h"
 
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZDebug.h" // For ZAssert
-#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZValAccessors.h"
 
 #include <string>
@@ -380,7 +380,7 @@ private:
 #pragma mark -
 #pragma mark * GuestFactory
 
-class GuestFactory : public ZRefCountedWithFinalize
+class GuestFactory : public ZCounted
 	{
 protected:
 	GuestFactory();

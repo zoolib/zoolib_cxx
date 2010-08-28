@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamerRWFactory_Retry__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZSafeRef.h"
+#include "zoolib/ZSafe.h"
 #include "zoolib/ZStreamer.h"
 
 namespace ZooLib {
@@ -45,7 +45,7 @@ public:
 	void Abort();
 
 private:
-	ZSafeRef<ZStreamerRWFactory> fStreamerRWFactory;
+	ZSafe<ZRef<ZStreamerRWFactory> > fStreamerRWFactory;
 	size_t fCount;
 	double fInterval;
 	};

@@ -21,12 +21,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZStreamMUX__
 #define __ZStreamMUX__ 1
 #include "zconfig.h"
+
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZDList.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
-#include "zoolib/ZWeakRef.h"
 
 #include <deque>
 #include <map>
@@ -39,8 +39,7 @@ namespace ZooLib {
 #pragma mark * ZStreamMUX
 
 class ZStreamMUX
-:	public ZCounted,
-	public ZWeakReferee
+:	public ZCounted
 	{
 public:
 	class Options;

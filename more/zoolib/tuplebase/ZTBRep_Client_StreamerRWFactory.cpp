@@ -43,7 +43,7 @@ ZRef<ZStreamerRW> ZTBRep_Client_StreamerRWFactory::EstablishConnection()
 	{
 	if (fStreamerRWFactory)
 		return fStreamerRWFactory->MakeStreamerRW();
-	return ZRef<ZStreamerRW>();
+	return null;
 	}
 
 bool ZTBRep_Client_StreamerRWFactory::Reader(const ZStreamR& iStreamR)

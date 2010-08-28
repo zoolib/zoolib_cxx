@@ -83,12 +83,12 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Retry::MakeStreamerRW()
 			}
 		}
 
-	return ZRef<ZStreamerRW>();
+	return null;
 	}
 
 void ZStreamerRWFactory_Retry::Abort()
 	{
-	fStreamerRWFactory.Clear();
+	fStreamerRWFactory = null;
 	}
 
 } // namespace ZooLib

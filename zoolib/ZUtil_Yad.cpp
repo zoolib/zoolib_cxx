@@ -83,7 +83,7 @@ static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 				}
 			}
 		}
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 // =================================================================================================

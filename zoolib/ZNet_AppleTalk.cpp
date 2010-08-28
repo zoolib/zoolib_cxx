@@ -77,7 +77,7 @@ ZRef<ZNetNameLookup> ZNetName_AppleTalk::CreateLookup(size_t iMaxAddresses) cons
 	return new ZNetNameLookup_AppleTalk_MacClassic(fName, fType, fZone, iMaxAddresses);
 #endif // ZCONFIG(API_Net, MacClassic)
 
-	return ZRef<ZNetNameLookup>();
+	return null;
 	}
 
 string ZNetName_AppleTalk::GetType() const
@@ -94,7 +94,7 @@ ZRef<ZNetNameRegistered_AppleTalk> ZNetName_AppleTalk::RegisterSocket(uint8 iSoc
 	if (theNN->IsRegistrationGood())
 		return theNN;
 #endif // ZCONFIG(API_Net, MacClassic)
-	return ZRef<ZNetNameRegistered_AppleTalk>();
+	return null;
 	}
 
 // ==================================================
@@ -123,7 +123,7 @@ ZRef<ZNetListener_ADSP> ZNetListener_ADSP::sCreateListener()
 	return new ZNetListener_ADSP_MacClassic;
 #endif // ZCONFIG(API_Net, MacClassic)
 
-	return ZRef<ZNetListener_ADSP>();
+	return null;
 	}
 
 // ==================================================
@@ -141,7 +141,7 @@ ZRef<ZNetEndpoint_ADSP> ZNetEndpoint_ADSP::sCreateConnectedEndpoint(
 		}
 	catch (...)
 		{}
-	return ZRef<ZNetEndpoint_ADSP>();
+	return null;
 	}
 
 } // namespace ZooLib

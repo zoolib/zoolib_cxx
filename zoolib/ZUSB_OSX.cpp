@@ -114,7 +114,7 @@ ZUSBWatcher::~ZUSBWatcher()
 void ZUSBWatcher::SetCallable(ZRef<CB_DeviceAttached> iCallable)
 	{
 	fCallable = iCallable;
-	if (fCallable)
+	if (iCallable)
 		this->pDeviceAdded(fNotification);
 	}
 

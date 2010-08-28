@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSoup__ 1
 
 #include "zoolib/ZDList.h"
-#include "zoolib/ZWeakRef.h"
 #include "zoolib/tuplebase/ZThreadOld.h"
 #include "zoolib/tuplebase/ZTSWatcher.h"
 
@@ -269,7 +268,6 @@ private:
 
 class ZTBowl
 :	public ZTSieve
-,	public ZWeakReferee
 	{
 public:
 	ZTBowl();

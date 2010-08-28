@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPixmapNS__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZGeomPOD.h"
 #include "zoolib/ZRGBA.h"
-#include "zoolib/ZRef_Counted.h"
 
 // For documentation, see ZDCPixmapNS.cpp
 

@@ -58,7 +58,7 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 	{
 	if (ZRef<ZYadR> theYadR = fYadSeqRClone->ReadInc())
 		return new ZQE::Result_Any(sFromYadR(ZVal_Any(), theYadR));
-	return ZRef<ZQE::Result>();
+	return null;
 	}
 
 // =================================================================================================

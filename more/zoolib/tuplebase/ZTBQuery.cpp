@@ -1103,7 +1103,7 @@ static ZRef<ZTBQueryNode> spNodeFromStream(const ZStreamR& iStreamR)
 	uint8 theType = iStreamR.ReadUInt8();
 	switch (theType)
 		{
-		case 0: return ZRef<ZTBQueryNode>();
+		case 0: return null;
 		case 1: return new ZTBQueryNode_All(iStreamR);
 		case 2: return new ZTBQueryNode_Combo(iStreamR);
 		case 3: return new ZTBQueryNode_Difference(iStreamR);

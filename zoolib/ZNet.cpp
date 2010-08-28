@@ -45,10 +45,10 @@ ZRef<ZStreamerRWCon> ZNetAddress::MakeStreamerRWCon()
 	{ return this->Connect(); }
 
 ZRef<ZNetAddressLookup> ZNetAddress::CreateLookup(size_t iMaxNames) const
-	{ return ZRef<ZNetAddressLookup>(); };
+	{ return null; };
 
 ZRef<ZNetEndpoint> ZNetAddress::Connect() const
-	{ return ZRef<ZNetEndpoint>(); }
+	{ return null; }
 
 // =================================================================================================
 #pragma mark -
@@ -71,7 +71,7 @@ ZRef<ZStreamerRWCon> ZNetName::MakeStreamerRWCon()
 	{ return this->Connect(); }
 
 ZRef<ZNetNameLookup> ZNetName::CreateLookup(size_t iMaxAddresses) const
-	{ return ZRef<ZNetNameLookup>(); };
+	{ return null; };
 
 ZRef<ZNetEndpoint> ZNetName::Connect() const
 	{ return this->Connect(1); }
@@ -88,7 +88,7 @@ ZRef<ZNetEndpoint> ZNetName::Connect(size_t iMaxAddresses) const
 			theLookup->Advance();
 			}
 		}
-	return ZRef<ZNetEndpoint>();
+	return null;
 	}
 
 ZRef<ZNetAddress> ZNetName::Lookup() const
@@ -99,7 +99,7 @@ ZRef<ZNetAddress> ZNetName::Lookup() const
 		if (!theLookup->Finished())
 			return theLookup->CurrentAddress();
 		}
-	return ZRef<ZNetAddress>();
+	return null;
 	}
 
 // =================================================================================================
@@ -133,7 +133,7 @@ ZNetEndpoint::~ZNetEndpoint()
 	{}
 
 ZRef<ZNetAddress> ZNetEndpoint::GetLocalAddress()
-	{ return ZRef<ZNetAddress>(); }
+	{ return null; }
 
 bool ZNetEndpoint::WaitTillReadable(double iTimeout)
 	{ return this->GetStreamRCon().WaitReadable(iTimeout); }

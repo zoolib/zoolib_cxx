@@ -85,11 +85,11 @@ bool ZWorker::IsAwake()
 bool ZWorker::IsAttached()
 	{ return ZRef<ZWorkerRunner>(fRunner); }
 
-ZRef<ZWorker::Callable_t> ZWorker::SwapCallable_Attached(ZRef<Callable_t> iCallable)
-	{ return fCallable_Attached.Swap(iCallable); }
+ZRef<ZWorker::Callable_t> ZWorker::GetSetCallable_Attached(ZRef<Callable_t> iCallable)
+	{ return fCallable_Attached.GetSet(iCallable); }
 
-ZRef<ZWorker::Callable_t> ZWorker::SwapCallable_Detached(ZRef<Callable_t> iCallable)
-	{ return fCallable_Detached.Swap(iCallable); }
+ZRef<ZWorker::Callable_t> ZWorker::GetSetCallable_Detached(ZRef<Callable_t> iCallable)
+	{ return fCallable_Detached.GetSet(iCallable); }
 
 // =================================================================================================
 #pragma mark -
@@ -104,7 +104,7 @@ ZRef<ZWorker::Callable_t> ZWorker::SwapCallable_Detached(ZRef<Callable_t> iCalla
 bool ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 	{
 	ZAssert(iWorker);
-	ZAssert(! ZRef<ZWorkerRunner>(iWorker->fRunner));
+	ZAssert(! iWorker->fRunner.Get());
 
 	iWorker->fRunner = ZRef<ZWorkerRunner>(this);
 
@@ -124,7 +124,7 @@ bool ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
 	{
 	ZAssert(iWorker);
-	ZAssert(ZRef<ZWorkerRunner>(iWorker->fRunner) == this);
+	ZAssert(iWorker->fRunner.Get() == this);
 
 	iWorker->fRunner.Clear();
 

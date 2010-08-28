@@ -365,7 +365,7 @@ ZRef<ZNetAddress> ZNetNameLookup_Internet_MacOT_OSX::CurrentAddress()
 	if (fCurrentIndex < kMaxHostAddrs && fInetHostInfo.addrs[fCurrentIndex])
 		return new ZNetAddress_IP4(fInetHostInfo.addrs[fCurrentIndex], fPort);
 
-	return ZRef<ZNetAddress>();
+	return null;
 	}
 
 ZRef<ZNetName> ZNetNameLookup_Internet_MacOT_OSX::CurrentName()
@@ -541,7 +541,7 @@ ZRef<ZNetEndpoint> ZNetListener_TCP_MacOT_OSX::Listen()
 			theStruct.fAcceptedEndpointRef, theStruct.fInetAddress);
 		}
 
-	return ZRef<ZNetEndpoint>();
+	return null;
 	}
 
 void ZNetListener_TCP_MacOT_OSX::sMP_Listen(void* iParam)

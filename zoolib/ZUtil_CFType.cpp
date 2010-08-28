@@ -321,7 +321,7 @@ ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 			&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
 			return kCFNull;
 		#else
-			return ZRef<CFTypeRef>();
+			return null;
 		#endif
 		}
 	else if (const string8* theValue = iVal.PGet_T<string8>())
@@ -441,7 +441,7 @@ ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 	}
 
 ZRef<CFTypeRef> sAsCFType(const ZAny& iVal)
-	{ return sDAsCFType(ZRef<CFTypeRef>(), iVal); }
+	{ return sDAsCFType(null, iVal); }
 
 } // namespace ZUtil_CFType
 

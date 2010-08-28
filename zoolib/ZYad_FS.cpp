@@ -97,7 +97,7 @@ ZRef<ZYadR> ZYadMapRPos_Dir::ReadInc(std::string& oName)
 			return result;
 			}
 		}
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 ZRef<ZYadMapRPos> ZYadMapRPos_Dir::Clone()
@@ -166,7 +166,7 @@ ZRef<ZYadR> ZYad_FS::sMakeYadR(const ZFileSpec& iFS)
 		{
 		return new ZYadStreamRPos_File(iFS);
 		}
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 } // namespace ZooLib

@@ -170,7 +170,7 @@ ContextRefSetter::~ContextRefSetter()
 #pragma mark -
 #pragma mark * ZJavaScriptCore::ContextRef::Rep
 
-class ContextRef::Rep : public ZRefCountedWithFinalize
+class ContextRef::Rep : public ZCounted
 	{
 public:
 	Rep(ZRef<JSGlobalContextRef> iJSGlobalContextRef);
@@ -926,7 +926,7 @@ ZRef<ObjectImp> ObjectImp::spFromRef(JSObjectRef object)
 	{
 	if (object)
 		return static_cast<ObjectImp*>(::JSObjectGetPrivate(object));
-	return ZRef<ObjectImp>();
+	return null;
 	}
 
 JSClassRef ObjectImp::spGetJSClass()

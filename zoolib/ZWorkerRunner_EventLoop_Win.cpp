@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZSafeRef.h"
+#include "zoolib/ZSafe.h"
 
 namespace ZooLib {
 
@@ -32,7 +32,7 @@ namespace ZooLib {
 
 namespace { // anonymous
 
-ZSafeRef<ZWorkerRunner_EventLoop_Win> spRunner(new ZWorkerRunner_EventLoop_Win);
+ZSafe<ZRef<ZWorkerRunner_EventLoop_Win> > spRunner(new ZWorkerRunner_EventLoop_Win);
 
 ZRef<ZWorkerRunner_EventLoop_Win> spGetRunner()
 	{ return spRunner; }

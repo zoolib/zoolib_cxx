@@ -387,7 +387,7 @@ ZRef<ZTSWatcher> ZTSWatcherFactory_Reader::MakeTSWatcher()
 			}
 		}
 
-	return ZRef<ZTSWatcher>();
+	return null;
 	}
 
 } // namespace ZooLib

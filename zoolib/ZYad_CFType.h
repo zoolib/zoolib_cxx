@@ -138,7 +138,7 @@ private:
 #pragma mark -
 #pragma mark * sMakeYadR
 
-ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal);
+ZRef<ZYadR> sMakeYadR(CFTypeRef iVal);
 
 ZRef<ZYadStrimR> sMakeYadR(CFMutableStringRef iString);
 ZRef<ZYadStrimR> sMakeYadR(CFStringRef iString);

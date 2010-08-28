@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamerOpener__
 #include "zconfig.h"
 
-#include "zoolib/ZSafeRef.h"
+#include "zoolib/ZSafe.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZTask.h"
 #include "zoolib/ZWorker.h"
@@ -52,7 +52,7 @@ public:
 
 private:
 	ZRef<ZStreamerRWFactory> fFactory;
-	ZSafeRef<ZStreamerRW> fStreamerRW;
+	ZSafe<ZRef<ZStreamerRW> > fStreamerRW;
 	};
 
 } // namespace ZooLib

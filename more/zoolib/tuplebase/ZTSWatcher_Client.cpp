@@ -903,7 +903,7 @@ ZRef<ZTSWatcher> ZTSWatcherFactory_Client::MakeTSWatcher()
 			return new ZTSWatcher_Client(true, true, true, theSRW);
 		}
 
-	return ZRef<ZTSWatcher>();
+	return null;
 	}
 
 } // namespace ZooLib

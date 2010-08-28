@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZAny.h"
-#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZUnicodeString.h"
 
 #include <sqlite3.h>

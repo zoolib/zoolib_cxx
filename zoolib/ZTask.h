@@ -22,8 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTask__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZWeakRef.h"
+#include "zoolib/ZCounted.h"
 
 namespace ZooLib {
 
@@ -34,8 +33,7 @@ class ZTask;
 #pragma mark * ZTaskMaster
 
 class ZTaskMaster
-:	public ZCounted,
-	public ZWeakReferee
+:	public ZCounted
 	{
 public:
 	virtual void Task_Finished(ZRef<ZTask> iTask);
@@ -52,7 +50,8 @@ private:
 #pragma mark -
 #pragma mark * ZTask
 
-class ZTask : public ZCounted
+class ZTask
+:	public ZCounted
 	{
 public:
 	ZTask(ZRef<ZTaskMaster> iTaskMaster);

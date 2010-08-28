@@ -110,7 +110,7 @@ void ZYadR::Finish()
 	{}
 
 ZRef<ZYadR> ZYadR::Meta()
-	{ return ZRef<ZYadR>(); }
+	{ return null; }
 
 void ZYadR::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ iVisitor.Visit_YadR(this); }

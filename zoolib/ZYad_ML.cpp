@@ -111,7 +111,7 @@ ZRef<ZYadR> ZYadMapR_ML::Meta()
 	if (!fAttrs.empty())
 		return new ZYadMapRPos_Any(fAttrs);
 
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 ZML::Attrs_t ZYadMapR_ML::GetAttrs()

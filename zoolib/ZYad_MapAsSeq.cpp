@@ -93,7 +93,7 @@ ZRef<ZYadR> YadSeqR::ReadInc()
 		{
 		return theYadR;
 		}
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 } // anonymous namespace

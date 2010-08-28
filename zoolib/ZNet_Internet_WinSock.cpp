@@ -199,7 +199,7 @@ ZRef<ZNetAddress> ZNetNameLookup_Internet_WinSock::CurrentAddress()
 	if (fCurrentIndex < fAddresses.size())
 		return new ZNetAddress_IP4(fAddresses[fCurrentIndex], fPort);
 
-	return ZRef<ZNetAddress>();
+	return null;
 	}
 
 ZRef<ZNetName> ZNetNameLookup_Internet_WinSock::CurrentName()
@@ -251,7 +251,7 @@ ZRef<ZNetEndpoint> ZNetListener_TCP_WinSock::Listen()
 				return new ZNetEndpoint_TCP_WinSock(newSOCKET);
 			}
 		}
-	return ZRef<ZNetEndpoint>();
+	return null;
 	}
 
 void ZNetListener_TCP_WinSock::CancelListen()
@@ -373,7 +373,7 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetLocalAddress()
 			}
 		}
 
-	return ZRef<ZNetAddress>();
+	return null;
 	}
 
 ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetRemoteAddress()
@@ -386,7 +386,7 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetRemoteAddress()
 			ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));
 		}
 
-	return ZRef<ZNetAddress>();
+	return null;
 	}
 
 void ZNetEndpoint_TCP_WinSock::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)

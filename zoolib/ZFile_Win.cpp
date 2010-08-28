@@ -383,7 +383,7 @@ static ZRef<ZFileLoc> spGetCWD(ZFile::Error* oErr)
 			return ZFileLoc_Win::sFromFullWinPath(&buffer[0]);
 		bufSize *= 2;
 		}
-	return ZRef<ZFileLoc>();
+	return null;
 	}
 
 static ZRef<ZFileLoc> spGetCWDNT(ZFile::Error* oErr)
@@ -403,7 +403,7 @@ static ZRef<ZFileLoc> spGetCWDNT(ZFile::Error* oErr)
 			return ZFileLoc_WinNT::sFromFullWinPath(&buffer[0]);
 		bufSize *= 2;
 		}
-	return ZRef<ZFileLoc>();
+	return null;
 	}
 
 static ZTime spAsZTime(const FILETIME& iFT)
@@ -556,7 +556,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::sGet_App()
 		bufSize *= 2;
 		}
 
-	return ZRef<ZFileLoc>();
+	return null;
 	}
 
 ZRef<ZFileLoc> ZFileLoc_Win::sFromFullWinPath(const char* iPath)
@@ -564,7 +564,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::sFromFullWinPath(const char* iPath)
 	size_t pathLength = ZUnicode::sCountCU(iPath);
 	const char* pathEnd = iPath + pathLength;
 	if (pathLength < 3)
-		return ZRef<ZFileLoc>();
+		return null;
 
 	if (iPath[0] == '\\' && iPath[1] == '\\')
 		{
@@ -583,7 +583,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::sFromFullWinPath(const char* iPath)
 		ZTrail::sParseStringAndAppend("\\", ".", "..", iPath + 2, pathLength - 2, components);
 		return new ZFileLoc_Win(string(iPath, 2), components);
 		}
-	return ZRef<ZFileLoc>();
+	return null;
 	}
 
 ZFileLoc_Win::ZFileLoc_Win()
@@ -656,7 +656,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::GetParent(ZFile::Error* oErr)
 	else if (fBase.empty())
 		{
 		// We're the root. Our parent is nil.
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 	else
 		{
@@ -686,7 +686,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::GetDescendant(const string* iComps, size_t iCount, 
 		if (iComps[0].size() == 1 && isalpha(iComps[0][0]))
 			return new ZFileLoc_Win(iComps[0] + ":", iComps + 1, iCount - 1);
 
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 
 	return new ZFileLoc_Win(fBase, iComps, iCount);
@@ -860,7 +860,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::CreateDir(ZFile::Error* oErr)
 		{
 		if (oErr)
 			*oErr = spTranslateError(::GetLastError());
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 
 	if (oErr)
@@ -877,12 +877,12 @@ ZRef<ZFileLoc> ZFileLoc_Win::MoveTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr)
 			return oDest;
 		if (oErr)
 			*oErr = spTranslateError(::GetLastError());
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 
 	if (oErr)
 		*oErr = ZFile::errorGeneric;
-	return ZRef<ZFileLoc>();
+	return null;
 	}
 
 bool ZFileLoc_Win::Delete(ZFile::Error* oErr)
@@ -908,7 +908,7 @@ ZRef<ZStreamerRPos> ZFileLoc_Win::OpenRPos(bool iPreventWriters, ZFile::Error* o
 	{
 	HANDLE theFileHANDLE = spOpen(this->pGetPath(), true, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZStreamerRPos>();
+		return null;
 	return new ZStreamerRPos_File_Win(theFileHANDLE, true);
 	}
 
@@ -916,7 +916,7 @@ ZRef<ZStreamerWPos> ZFileLoc_Win::OpenWPos(bool iPreventWriters, ZFile::Error* o
 	{
 	HANDLE theFileHANDLE = spOpen(this->pGetPath(), false, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZStreamerWPos>();
+		return null;
 	return new ZStreamerWPos_File_Win(theFileHANDLE, true);
 	}
 
@@ -924,7 +924,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_Win::OpenRWPos(bool iPreventWriters, ZFile::Error*
 	{
 	HANDLE theFileHANDLE = spOpen(this->pGetPath(), true, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZStreamerRWPos>();
+		return null;
 	return new ZStreamerRWPos_File_Win(theFileHANDLE, true);
 	}
 
@@ -933,7 +933,7 @@ ZRef<ZStreamerWPos> ZFileLoc_Win::CreateWPos(
 	{
 	HANDLE theFileHANDLE = spCreate(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZStreamerWPos>();
+		return null;
 	return new ZStreamerWPos_File_Win(theFileHANDLE, true);
 	}
 
@@ -942,7 +942,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_Win::CreateRWPos(
 	{
 	HANDLE theFileHANDLE = spCreate(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZStreamerRWPos>();
+		return null;
 	return new ZStreamerRWPos_File_Win(theFileHANDLE, true);
 	}
 
@@ -950,7 +950,7 @@ ZRef<ZFileR> ZFileLoc_Win::OpenFileR(bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = spOpen(this->pGetPath(), true, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZFileR>();
+		return null;
 	return new ZFileR_Win(theFileHANDLE, true);
 	}
 
@@ -958,7 +958,7 @@ ZRef<ZFileW> ZFileLoc_Win::OpenFileW(bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = spOpen(this->pGetPath(), false, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZFileW>();
+		return null;
 	return new ZFileW_Win(theFileHANDLE, true);
 	}
 
@@ -966,7 +966,7 @@ ZRef<ZFileRW> ZFileLoc_Win::OpenFileRW(bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = spOpen(this->pGetPath(), true, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZFileRW>();
+		return null;
 	return new ZFileRW_Win(theFileHANDLE, true);
 	}
 
@@ -974,7 +974,7 @@ ZRef<ZFileW> ZFileLoc_Win::CreateFileW(bool iOpenExisting, bool iPreventWriters,
 	{
 	HANDLE theFileHANDLE = spCreate(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZFileW>();
+		return null;
 	return new ZFileW_Win(theFileHANDLE, true);
 	}
 
@@ -983,7 +983,7 @@ ZRef<ZFileRW> ZFileLoc_Win::CreateFileRW(
 	{
 	HANDLE theFileHANDLE = spCreate(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZFileRW>();
+		return null;
 	return new ZFileRW_Win(theFileHANDLE, true);
 	}
 
@@ -1148,7 +1148,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::sGet_App()
 		bufSize *= 2;
 		}
 
-	return ZRef<ZFileLoc>();
+	return null;
 	}
 
 ZRef<ZFileLoc> ZFileLoc_WinNT::sFromFullWinPath(const UTF16* iPath)
@@ -1156,7 +1156,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::sFromFullWinPath(const UTF16* iPath)
 	size_t pathLength = ZUnicode::sCountCU(iPath);
 	const UTF16* pathEnd = iPath + pathLength;
 	if (pathLength < 3)
-		return ZRef<ZFileLoc>();
+		return null;
 
 	if (iPath[0] == '\\' && iPath[1] == '\\')
 		{
@@ -1175,7 +1175,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::sFromFullWinPath(const UTF16* iPath)
 		ZTrail::sParseStringAndAppend(L"\\", L".", L"..", iPath + 2, pathLength - 2, components);
 		return new ZFileLoc_WinNT(string16(iPath, 2), components);
 		}
-	return ZRef<ZFileLoc>();
+	return null;
 	}
 
 ZFileLoc_WinNT::ZFileLoc_WinNT()
@@ -1252,7 +1252,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::GetParent(ZFile::Error* oErr)
 	else if (fBase.empty())
 		{
 		// We're the root. Our parent is nil.
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 	else
 		{
@@ -1290,7 +1290,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::GetDescendant(
 			return new ZFileLoc_WinNT(ZUnicode::sAsUTF16(iComps[0]) + L":", newComps);
 			}
 
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 
 	vector<string16> newComps;
@@ -1469,7 +1469,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::CreateDir(ZFile::Error* oErr)
 		{
 		if (oErr)
 			*oErr = spTranslateError(::GetLastError());
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 
 	if (oErr)
@@ -1486,12 +1486,12 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::MoveTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr)
 			return oDest;
 		if (oErr)
 			*oErr = spTranslateError(::GetLastError());
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 
 	if (oErr)
 		*oErr = ZFile::errorGeneric;
-	return ZRef<ZFileLoc>();
+	return null;
 	}
 
 bool ZFileLoc_WinNT::Delete(ZFile::Error* oErr)
@@ -1517,7 +1517,7 @@ ZRef<ZStreamerRPos> ZFileLoc_WinNT::OpenRPos(bool iPreventWriters, ZFile::Error*
 	{
 	HANDLE theFileHANDLE = spOpenNT(this->pGetPath(), true, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZStreamerRPos>();
+		return null;
 	return new ZStreamerRPos_File_Win(theFileHANDLE, true);
 	}
 
@@ -1525,7 +1525,7 @@ ZRef<ZStreamerWPos> ZFileLoc_WinNT::OpenWPos(bool iPreventWriters, ZFile::Error*
 	{
 	HANDLE theFileHANDLE = spOpenNT(this->pGetPath(), false, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZStreamerWPos>();
+		return null;
 	return new ZStreamerWPos_File_Win(theFileHANDLE, true);
 	}
 
@@ -1533,7 +1533,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_WinNT::OpenRWPos(bool iPreventWriters, ZFile::Erro
 	{
 	HANDLE theFileHANDLE = spOpenNT(this->pGetPath(), true, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZStreamerRWPos>();
+		return null;
 	return new ZStreamerRWPos_File_Win(theFileHANDLE, true);
 	}
 
@@ -1542,7 +1542,7 @@ ZRef<ZStreamerWPos> ZFileLoc_WinNT::CreateWPos(
 	{
 	HANDLE theFileHANDLE = spCreateNT(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZStreamerWPos>();
+		return null;
 	return new ZStreamerWPos_File_Win(theFileHANDLE, true);
 	}
 
@@ -1551,7 +1551,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_WinNT::CreateRWPos(
 	{
 	HANDLE theFileHANDLE = spCreateNT(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZStreamerRWPos>();
+		return null;
 	return new ZStreamerRWPos_File_Win(theFileHANDLE, true);
 	}
 
@@ -1559,7 +1559,7 @@ ZRef<ZFileR> ZFileLoc_WinNT::OpenFileR(bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = spOpenNT(this->pGetPath(), true, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZFileR>();
+		return null;
 	return new ZFileR_WinNT(theFileHANDLE, true);
 	}
 
@@ -1567,7 +1567,7 @@ ZRef<ZFileW> ZFileLoc_WinNT::OpenFileW(bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = spOpenNT(this->pGetPath(), false, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZFileW>();
+		return null;
 	return new ZFileW_WinNT(theFileHANDLE, true);
 	}
 
@@ -1575,7 +1575,7 @@ ZRef<ZFileRW> ZFileLoc_WinNT::OpenFileRW(bool iPreventWriters, ZFile::Error* oEr
 	{
 	HANDLE theFileHANDLE = spOpenNT(this->pGetPath(), true, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZFileRW>();
+		return null;
 	return new ZFileRW_WinNT(theFileHANDLE, true);
 	}
 
@@ -1584,7 +1584,7 @@ ZRef<ZFileW> ZFileLoc_WinNT::CreateFileW(
 	{
 	HANDLE theFileHANDLE = spCreateNT(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZFileW>();
+		return null;
 	return new ZFileW_WinNT(theFileHANDLE, true);
 	}
 
@@ -1593,7 +1593,7 @@ ZRef<ZFileRW> ZFileLoc_WinNT::CreateFileRW(
 	{
 	HANDLE theFileHANDLE = spCreateNT(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
-		return ZRef<ZFileRW>();
+		return null;
 	return new ZFileRW_WinNT(theFileHANDLE, true);
 	}
 

@@ -249,7 +249,7 @@ ZRef<ZNetEndpoint> ZNetListener_Socket::Listen()
 		::close(result);
 		}
 
-	return ZRef<ZNetEndpoint>();
+	return null;
 	}
 
 void ZNetListener_Socket::CancelListen()

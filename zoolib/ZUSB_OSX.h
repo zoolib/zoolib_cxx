@@ -38,8 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <IOKit/usb/IOUSBLib.h>
 
 #include "zoolib/ZCallable.h"
-#include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZSafeRef.h"
+#include "zoolib/ZCounted.h"
+#include "zoolib/ZSafe.h"
 #include "zoolib/ZStreamer.h"
 
 namespace ZooLib {
@@ -68,7 +68,7 @@ private:
 	IONotificationPortRef fIONotificationPortRef;
 	io_iterator_t fNotification;
 
-	ZSafeRef<CB_DeviceAttached> fCallable;
+	ZSafe<ZRef<CB_DeviceAttached> > fCallable;
 	};
 
 // ================================================================================================
@@ -109,7 +109,7 @@ private:
 	bool fDetached;
 	bool fHasIOUSBDeviceDescriptor;
 	IOUSBDeviceDescriptor fIOUSBDeviceDescriptor;
-	ZSafeRef<CB_DeviceDetached> fCallable;
+	ZSafe<ZRef<CB_DeviceDetached> > fCallable;
 	};
 
 // =================================================================================================

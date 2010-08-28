@@ -134,7 +134,7 @@ ZRef<ZYadR> ZYadMapRPos_CFType::ReadInc(string& oName)
 		oName = ZUtil_CFType::sAsUTF8(fNames.at(fPosition));
 		return sMakeYadR(fValues[fPosition++]);
 		}
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 ZRef<ZYadMapRPos> ZYadMapRPos_CFType::Clone()
@@ -153,7 +153,7 @@ void ZYadMapRPos_CFType::SetPosition(const std::string& iName)
 #pragma mark -
 #pragma mark * sMakeYadR
 
-ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
+ZRef<ZYadR> sMakeYadR(CFTypeRef iVal)
 	{
 	const ZVal_CFType theVal = iVal;
 

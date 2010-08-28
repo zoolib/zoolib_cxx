@@ -272,7 +272,7 @@ static ZRef<ZYadR> spMakeYadR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 	if (spTryRead_SimpleValue(theR, theVal))
 		return new ZYadAtomR_Std(theVal);
 
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 // =================================================================================================

@@ -102,7 +102,7 @@ public:
 		{
 		if (fPosition < fSeq.Count())
 			return sMakeYadR(fSeq.Get(fPosition++));
-		return ZRef<ZYadR>();
+		return null;
 		}
 
 // From ZYadSeqRPos
@@ -157,7 +157,7 @@ public:
 		{
 		if (fPosition < fSeq.Count())
 			return sMakeYadR(fSeq.Get(fPosition++));
-		return ZRef<ZYadR>();
+		return null;
 		}
 
 // From ZYadSeqRPos
@@ -207,7 +207,7 @@ public:
 			oName = fMap.NameOf(fIndex);
 			return sMakeYadR(fMap.Get(fIndex++));
 			}
-		return ZRef<ZYadR>();
+		return null;
 		}
 
 // From ZYadMapRPos
@@ -258,7 +258,7 @@ public:
 			oName = fMap.NameOf(fIndex);
 			return sMakeYadR(fMap.Get(fIndex++));
 			}
-		return ZRef<ZYadR>();
+		return null;
 		}
 
 // From ZYadMapRPos

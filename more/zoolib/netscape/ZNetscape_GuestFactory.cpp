@@ -149,9 +149,7 @@ private:
 	NPP_ShutdownProcPtr fShutdown;
 	};
 
-typedef NPError (*NP_GetEntryPointsFuncPtr)(NPPluginFuncs*);
-
-typedef NPError (*Flash_DisableLocalSecurityFuncPtr)(void);
+typedef ZNetscape_API_EXPORTED_CALLBACK(NPError, Flash_DisableLocalSecurityFuncPtr)(void);
 
 GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 :	fHMODULE(iHMODULE)
@@ -490,7 +488,7 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iN
 	catch (...)
 		{}
 
-	return ZRef<ZNetscape::GuestFactory>();
+	return null;
 	}
 
 } // namespace ZooLib

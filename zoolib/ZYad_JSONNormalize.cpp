@@ -130,7 +130,7 @@ static ZRef<ZYadR> spMakeYadR_JSONNormalize(
 		return new ZYadAtomR_Std(ZAny());
 		}
 
-	return ZRef<ZYadAtomR_Std>();
+	return null;
 	}
 
 // =================================================================================================

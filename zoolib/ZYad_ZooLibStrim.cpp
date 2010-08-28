@@ -313,7 +313,7 @@ static ZRef<ZYadR> spMakeYadR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU)
 			return new ZYadAtomR_Any(theVal);
 		}
 
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 // =================================================================================================

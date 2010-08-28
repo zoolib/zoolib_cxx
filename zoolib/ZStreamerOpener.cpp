@@ -43,7 +43,7 @@ bool ZStreamerOpener::Work()
 
 void ZStreamerOpener::Kill()
 	{
-	fStreamerRW.Clear();
+	fStreamerRW = null;
 	ZTask::pFinished();
 	}
 

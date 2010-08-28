@@ -690,7 +690,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 			return new ZFileLoc_POSIX(true, comps, true);
 			}
 		}
-	return ZRef<ZFileLoc_POSIX>();
+	return null;
 	}
 
 #elif ZCONFIG_SPI_Enabled(MacOSX)
@@ -717,7 +717,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 		spSplit('/', false, &buffer[0], &buffer[0] + theSize - 1, comps);
 		return new ZFileLoc_POSIX(true, comps, true);
 		}
-	return ZRef<ZFileLoc_POSIX>();
+	return null;
 	}
 
 #else
@@ -779,7 +779,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 			}
 		}
 
-	return ZRef<ZFileLoc_POSIX>();
+	return null;
 	}
 
 #endif
@@ -873,7 +873,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::GetParent(ZFile::Error* oErr)
 	if (fIsAtRoot)
 		{
 		// We're at the root, our parent is nil.
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 	else
 		{
@@ -890,7 +890,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::GetParent(ZFile::Error* oErr)
 		else
 			{
 			// The CWD is the root, and so our parent is nil.
-			return ZRef<ZFileLoc>();
+			return null;
 			}
 		}
 	}
@@ -1061,7 +1061,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::CreateDir(ZFile::Error* oErr)
 		{
 		if (oErr)
 			*oErr = spTranslateError(errno);
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 
 	if (oErr)
@@ -1077,14 +1077,14 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::MoveTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr)
 		{
 		if (oErr)
 			*oErr = ZFile::errorGeneric;
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 
 	if (0 > ::rename(this->pGetPath().c_str(), other->pGetPath().c_str()))
 		{
 		if (oErr)
 			*oErr = spTranslateError(errno);
-		return ZRef<ZFileLoc>();
+		return null;
 		}
 
 	return other;
@@ -1121,7 +1121,7 @@ ZRef<ZStreamerRPos> ZFileLoc_POSIX::OpenRPos(bool iPreventWriters, ZFile::Error*
 	{
 	int theFD = spOpen(this->pGetPath().c_str(), true, false, iPreventWriters, oErr);
 	if (theFD < 0)
-		return ZRef<ZStreamerRPos>();
+		return null;
 
 	return new ZStreamerRWPos_File_POSIX(theFD, true);
 	}
@@ -1130,7 +1130,7 @@ ZRef<ZStreamerWPos> ZFileLoc_POSIX::OpenWPos(bool iPreventWriters, ZFile::Error*
 	{
 	int theFD = spOpen(this->pGetPath().c_str(), false, true, iPreventWriters, oErr);
 	if (theFD < 0)
-		return ZRef<ZStreamerWPos>();
+		return null;
 
 	return new ZStreamerWPos_File_POSIX(theFD, true);
 	}
@@ -1139,7 +1139,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_POSIX::OpenRWPos(bool iPreventWriters, ZFile::Erro
 	{
 	int theFD = spOpen(this->pGetPath().c_str(), true, true, iPreventWriters, oErr);
 	if (theFD < 0)
-		return ZRef<ZStreamerRWPos>();
+		return null;
 
 	return new ZStreamerRWPos_File_POSIX(theFD, true);
 	}
@@ -1149,7 +1149,7 @@ ZRef<ZStreamerWPos> ZFileLoc_POSIX::CreateWPos(
 	{
 	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFD < 0)
-		return ZRef<ZStreamerWPos>();
+		return null;
 
 	return new ZStreamerWPos_File_POSIX(theFD, true);
 	}
@@ -1159,7 +1159,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_POSIX::CreateRWPos(
 	{
 	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFD < 0)
-		return ZRef<ZStreamerRWPos>();
+		return null;
 
 	return new ZStreamerRWPos_File_POSIX(theFD, true);
 	}
@@ -1168,7 +1168,7 @@ ZRef<ZFileR> ZFileLoc_POSIX::OpenFileR(bool iPreventWriters, ZFile::Error* oErr)
 	{
 	int theFD = spOpen(this->pGetPath().c_str(), true, false, iPreventWriters, oErr);
 	if (theFD < 0)
-		return ZRef<ZFileR>();
+		return null;
 
 	if (ZCONFIG_File_AtAPISupported)
 		return new ZFileR_POSIX(theFD, true);
@@ -1180,7 +1180,7 @@ ZRef<ZFileW> ZFileLoc_POSIX::OpenFileW(bool iPreventWriters, ZFile::Error* oErr)
 	{
 	int theFD = spOpen(this->pGetPath().c_str(), false, true, iPreventWriters, oErr);
 	if (theFD < 0)
-		return ZRef<ZFileW>();
+		return null;
 
 	if (ZCONFIG_File_AtAPISupported)
 		return new ZFileW_POSIX(theFD, true);
@@ -1192,7 +1192,7 @@ ZRef<ZFileRW> ZFileLoc_POSIX::OpenFileRW(bool iPreventWriters, ZFile::Error* oEr
 	{
 	int theFD = spOpen(this->pGetPath().c_str(), true, true, iPreventWriters, oErr);
 	if (theFD < 0)
-		return ZRef<ZFileRW>();
+		return null;
 
 	if (ZCONFIG_File_AtAPISupported)
 		return new ZFileRW_POSIX(theFD, true);
@@ -1205,7 +1205,7 @@ ZRef<ZFileW> ZFileLoc_POSIX::CreateFileW(
 	{
 	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFD < 0)
-		return ZRef<ZFileW>();
+		return null;
 
 	if (ZCONFIG_File_AtAPISupported)
 		return new ZFileW_POSIX(theFD, true);
@@ -1218,7 +1218,7 @@ ZRef<ZFileRW> ZFileLoc_POSIX::CreateFileRW(
 	{
 	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFD < 0)
-		return ZRef<ZFileRW>();
+		return null;
 
 	if (ZCONFIG_File_AtAPISupported)
 		return new ZFileRW_POSIX(theFD, true);

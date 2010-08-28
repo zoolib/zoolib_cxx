@@ -139,7 +139,7 @@ static ZRef<ZYadR> spMakeYadR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU)
 	if (spTryRead_Any(theR, theVal))
 		return new ZYadAtomR_Std(theVal);
 
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 // =================================================================================================

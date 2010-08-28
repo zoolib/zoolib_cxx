@@ -421,7 +421,7 @@ ZRef<ZYadR> spMakeYadR_ZooLibStream(ZRef<ZStreamerR> iStreamerR)
 			}
 		}
 
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 } // namespace ZooLib

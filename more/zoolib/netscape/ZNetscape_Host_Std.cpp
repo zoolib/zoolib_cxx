@@ -601,7 +601,7 @@ bool Host_Std::HTTPFetcher::Work()
 	if (fHost)
 		{
 		fHost->pHTTPFetcher(
-			this, fNotifyData, fURL, "", ZHTTP::Data(), ZRef<ZStreamerR>());
+			this, fNotifyData, fURL, "", ZHTTP::Data(), null);
 		}
 
 	return false;
@@ -1106,10 +1106,10 @@ void Host_Std::DeliverData()
 	}
 
 ZRef<NPObjectH> Host_Std::Host_GetWindowObject()
-	{ return ZRef<NPObjectH>(); }
+	{ return null; }
 
 ZRef<NPObjectH> Host_Std::Host_GetPluginObject()
-	{ return ZRef<NPObjectH>(); }
+	{ return null; }
 
 ZRef<NPObjectH> Host_Std::Guest_GetNPObject()
 	{

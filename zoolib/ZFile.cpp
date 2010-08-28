@@ -559,7 +559,7 @@ ZRef<ZStreamerRPos> ZFileSpec::OpenRPos(bool iPreventWriters, ZFile::Error* oErr
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;
 		}
-	return ZRef<ZStreamerRPos>();
+	return null;
 	}
 
 /// Return a new ZStreamerW backed by the contents of the file referenced by the file spec.
@@ -583,7 +583,7 @@ ZRef<ZStreamerWPos> ZFileSpec::OpenWPos(bool iPreventWriters, ZFile::Error* oErr
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;
 		}
-	return ZRef<ZStreamerWPos>();
+	return null;
 	}
 
 /// Return a new ZStreamerRWPos backed by the contents of the file referenced by the file spec.
@@ -601,7 +601,7 @@ ZRef<ZStreamerRWPos> ZFileSpec::OpenRWPos(bool iPreventWriters, ZFile::Error* oE
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;
 		}
-	return ZRef<ZStreamerRWPos>();
+	return null;
 	}
 
 /// Create a new file in the file system and return a ZStreamerWPos that provides access to it.
@@ -625,7 +625,7 @@ ZRef<ZStreamerWPos> ZFileSpec::CreateWPos(
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;
 		}
-	return ZRef<ZStreamerWPos>();
+	return null;
 	}
 
 ZRef<ZStreamerRWPos> ZFileSpec::CreateRWPos(
@@ -643,7 +643,7 @@ ZRef<ZStreamerRWPos> ZFileSpec::CreateRWPos(
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;
 		}
-	return ZRef<ZStreamerRWPos>();
+	return null;
 	}
 
 ZRef<ZFileR> ZFileSpec::OpenFileR(bool iPreventWriters, ZFile::Error* oError) const
@@ -660,7 +660,7 @@ ZRef<ZFileR> ZFileSpec::OpenFileR(bool iPreventWriters, ZFile::Error* oError) co
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;
 		}
-	return ZRef<ZFileR>();
+	return null;
 	}
 
 ZRef<ZFileW> ZFileSpec::OpenFileW(bool iPreventWriters, ZFile::Error* oError) const
@@ -677,7 +677,7 @@ ZRef<ZFileW> ZFileSpec::OpenFileW(bool iPreventWriters, ZFile::Error* oError) co
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;
 		}
-	return ZRef<ZFileW>();
+	return null;
 	}
 
 ZRef<ZFileRW> ZFileSpec::OpenFileRW(bool iPreventWriters, ZFile::Error* oError) const
@@ -694,7 +694,7 @@ ZRef<ZFileRW> ZFileSpec::OpenFileRW(bool iPreventWriters, ZFile::Error* oError) 
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;
 		}
-	return ZRef<ZFileRW>();
+	return null;
 	}
 
 ZRef<ZFileW> ZFileSpec::CreateFileW(
@@ -712,7 +712,7 @@ ZRef<ZFileW> ZFileSpec::CreateFileW(
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;
 		}
-	return ZRef<ZFileW>();
+	return null;
 	}
 
 ZRef<ZFileRW> ZFileSpec::CreateFileRW(
@@ -730,7 +730,7 @@ ZRef<ZFileRW> ZFileSpec::CreateFileRW(
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;
 		}
-	return ZRef<ZFileRW>();
+	return null;
 	}
 
 ZRef<ZFileLoc> ZFileSpec::GetFileLoc() const
@@ -744,7 +744,7 @@ ZRef<ZFileLoc> ZFileSpec::pPhysicalLoc() const
 			return fLoc;
 		return fLoc->GetDescendant(&fComps[0], fComps.size(), nullptr);
 		}
-	return ZRef<ZFileLoc>();
+	return null;
 	}
 
 #if ZCONFIG_File_EnableDeprecated
@@ -925,7 +925,7 @@ ZFileLoc::~ZFileLoc()
 	{}
 
 ZRef<ZFileIterRep> ZFileLoc::CreateIterRep()
-	{ return ZRef<ZFileIterRep>(); }
+	{ return null; }
 
 ZRef<ZFileLoc> ZFileLoc::GetAncestor(size_t iCount, ZFile::Error* oError)
 	{
@@ -948,21 +948,21 @@ ZRef<ZStreamerRPos> ZFileLoc::OpenRPos(bool iPreventWriters, ZFile::Error* oErro
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
-	return ZRef<ZStreamerRPos>();
+	return null;
 	}
 
 ZRef<ZStreamerWPos> ZFileLoc::OpenWPos(bool iPreventWriters, ZFile::Error* oError)
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
-	return ZRef<ZStreamerWPos>();
+	return null;
 	}
 
 ZRef<ZStreamerRWPos> ZFileLoc::OpenRWPos(bool iPreventWriters, ZFile::Error* oError)
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
-	return ZRef<ZStreamerRWPos>();
+	return null;
 	}
 
 ZRef<ZStreamerWPos> ZFileLoc::CreateWPos(
@@ -970,7 +970,7 @@ ZRef<ZStreamerWPos> ZFileLoc::CreateWPos(
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
-	return ZRef<ZStreamerWPos>();
+	return null;
 	}
 
 ZRef<ZStreamerRWPos> ZFileLoc::CreateRWPos(
@@ -978,42 +978,42 @@ ZRef<ZStreamerRWPos> ZFileLoc::CreateRWPos(
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
-	return ZRef<ZStreamerRWPos>();
+	return null;
 	}
 
 ZRef<ZFileR> ZFileLoc::OpenFileR(bool iPreventWriters, ZFile::Error* oError)
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
-	return ZRef<ZFileR>();
+	return null;
 	}
 
 ZRef<ZFileW> ZFileLoc::OpenFileW(bool iPreventWriters, ZFile::Error* oError)
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
-	return ZRef<ZFileW>();
+	return null;
 	}
 
 ZRef<ZFileRW> ZFileLoc::OpenFileRW(bool iPreventWriters, ZFile::Error* oError)
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
-	return ZRef<ZFileRW>();
+	return null;
 	}
 
 ZRef<ZFileW> ZFileLoc::CreateFileW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError)
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
-	return ZRef<ZFileW>();
+	return null;
 	}
 
 ZRef<ZFileRW> ZFileLoc::CreateFileRW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError)
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
-	return ZRef<ZFileRW>();
+	return null;
 	}
 
 // =================================================================================================

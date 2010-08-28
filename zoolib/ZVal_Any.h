@@ -24,8 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZAny.h"
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZData_Any.h"
-#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors.h"

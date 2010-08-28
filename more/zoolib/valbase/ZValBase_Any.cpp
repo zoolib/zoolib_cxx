@@ -69,7 +69,7 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 	{
 	if (fIndex < fSeq.Count())
 		return new ZQE::Result_Any(fSeq.Get(fIndex++));
-	return ZRef<ZQE::Result>();
+	return null;
 	}
 
 } // anonymous namespace

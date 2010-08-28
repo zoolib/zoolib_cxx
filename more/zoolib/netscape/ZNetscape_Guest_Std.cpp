@@ -166,7 +166,7 @@ NPError Guest_Std::Guest_SetValue(NPNVariable iNPNVariable, void* iValue)
 	{ return NPERR_GENERIC_ERROR; }
 
 ZRef<NPObjectG> Guest_Std::Guest_GetNPObject()
-	{ return ZRef<NPObjectG>(); }
+	{ return null; }
 
 } // namespace ZNetscape
 

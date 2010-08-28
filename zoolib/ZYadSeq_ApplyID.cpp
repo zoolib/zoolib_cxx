@@ -48,7 +48,7 @@ ZRef<ZYadR> ZYadSeqR_ApplyID::ReadInc()
 		return sMakeYadR(theMap);
 		}
 
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 // =================================================================================================
@@ -76,7 +76,7 @@ ZRef<ZYadR> ZYadSeqRPos_ApplyID::ReadInc()
 		return sMakeYadR(theMap);
 		}
 
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 //##ZRef<ZYadSeqRPos> ZYadSeqRPos_ApplyID::Clone()

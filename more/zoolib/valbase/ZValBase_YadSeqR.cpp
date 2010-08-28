@@ -129,7 +129,7 @@ ZRef<ZQE::Result> Expr_Rel_Concrete::ReadInc(size_t& ioIndex)
 		return result;
 		}
 
-	return ZRef<ZQE::Result>();
+	return null;
 	}
 
 // =================================================================================================

@@ -47,7 +47,7 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Precon::MakeStreamerRW()
 	if (fFactory)
 		return fFactory->MakeStreamerRW();
 
-	return ZRef<ZStreamerRW>();
+	return null;
 	}
 
 // =================================================================================================
@@ -74,7 +74,7 @@ ZRef<ZStreamerRWCon> ZStreamerRWConFactory_Precon::MakeStreamerRWCon()
 	if (fFactory)
 		return fFactory->MakeStreamerRWCon();
 
-	return ZRef<ZStreamerRWCon>();
+	return null;
 	}
 
 } // namespace ZooLib

@@ -458,7 +458,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Listener::MakeStreamerRWCon()
 	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		return theMUX->Listener_Listen(this);
 	else
-		return ZRef<ZStreamerRWCon>();
+		return null;
 	}
 
 void ZStreamMUX::Listener::Cancel()
@@ -600,7 +600,7 @@ ZRef<ZStreamerRWConFactory> ZStreamMUX::Listen(
 		fMap_NameToListener.insert(pair<string, Listener*>(iName, theListener.Get()));
 		return theListener;
 		}
-	return ZRef<ZStreamerRWConFactory>();
+	return null;
 	}
 
 ZRef<ZStreamerRWCon> ZStreamMUX::Connect(const std::string& iName)
@@ -637,7 +637,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Connect(const std::string& iName, size_t iRecei
 			return theEndpoint;
 		}
 
-	return ZRef<ZStreamerRWCon>();
+	return null;
 	}
 
 uint32 ZStreamMUX::sGetConID(ZRef<ZStreamerRWCon> iCon)
@@ -1020,7 +1020,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Listener_Listen(Listener* iListener)
 		iListener->fCondition.Wait(fMutex);
 
 	if (iListener->fEndpoints_Pending.Empty())
-		return ZRef<ZStreamerRWCon>();
+		return null;
 
 	Endpoint* theEndpoint = iListener->fEndpoints_Pending.PopFront<Endpoint>();
 	theEndpoint->fListener = nullptr;

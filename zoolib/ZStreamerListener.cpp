@@ -29,7 +29,7 @@ namespace ZooLib {
 ZStreamerListener::ZStreamerListener(ZRef<ZStreamerRWFactory> iFactory)
 :	fFactory(iFactory)
 	{
-	ZAssert(fFactory);
+	ZAssert(iFactory);
 	}
 
 ZStreamerListener::~ZStreamerListener()
@@ -75,7 +75,7 @@ void ZStreamerListener::Stop()
 	{
 	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
 		{
-		fFactory.Clear();
+		fFactory = null;//.Clear();
 		theFactory->Cancel();
 		}
 	ZWorker::Wake();

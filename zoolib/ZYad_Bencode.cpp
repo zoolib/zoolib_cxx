@@ -168,7 +168,7 @@ static ZRef<ZYadR> spMakeYadR_Bencode(ZRef<ZStreamerU> iStreamerU)
 			}
 		}
 
-	return ZRef<ZYadR>();
+	return null;
 	}
 
 // =================================================================================================

@@ -49,7 +49,7 @@ ZRef<ZYadR> ZYadSeqR_Expr_Logic::ReadInc()
 			}
 		else
 			{
-			return ZRef<ZYadR>();
+			return null;
 			}
 		}
 	}
@@ -79,7 +79,7 @@ ZRef<ZYadR> ZYadSeqRPos_Expr_Logic::ReadInc()
 			}
 		else
 			{
-			return ZRef<ZYadR>();
+			return null;
 			}
 		}
 	}

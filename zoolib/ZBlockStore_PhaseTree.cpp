@@ -1181,7 +1181,7 @@ ZRef<ZStreamerRWPos> ZBlockStore_PhaseTree::Create(BlockID& oBlockID)
 		this->WriteFinish();
 		}
 	oBlockID = 0;
-	return ZRef<ZStreamerRWPos>();
+	return null;
 	}
 
 ZRef<ZStreamerRPos> ZBlockStore_PhaseTree::OpenRPos(BlockID iBlockID)
@@ -1199,7 +1199,7 @@ ZRef<ZStreamerRPos> ZBlockStore_PhaseTree::OpenRPos(BlockID iBlockID)
 			}
 		}
 
-	return ZRef<ZStreamerRPos>();
+	return null;
 	}
 
 ZRef<ZStreamerRWPos> ZBlockStore_PhaseTree::OpenRWPos(BlockID iBlockID)
@@ -1218,7 +1218,7 @@ ZRef<ZStreamerRWPos> ZBlockStore_PhaseTree::OpenRWPos(BlockID iBlockID)
 
 		this->WriteFinish();
 		}
-	return ZRef<ZStreamerRWPos>();
+	return null;
 	}
 
 bool ZBlockStore_PhaseTree::Delete(BlockID iBlockID)
@@ -1308,7 +1308,7 @@ ZRef<ZStreamerRWPos> ZBlockStore_PhaseTree::CreateWithSpecificID(
 		}
 
 	oActualBlockID = 0;
-	return ZRef<ZStreamerRWPos>();
+	return null;
 	}
 
 ZBlockStore::BlockID ZBlockStore_PhaseTree::GetNextBlockID(BlockID iBlockID)

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
 
-#include "zoolib/ZSafeRef.h"
+#include "zoolib/ZSafe.h"
 #include "zoolib/ZUtil_CarbonEvents.h"
 
 namespace ZooLib {
@@ -33,7 +33,7 @@ namespace ZooLib {
 
 namespace { // anonymous
 
-ZSafeRef<ZWorkerRunner_Carbon> spRunner(new ZWorkerRunner_Carbon);
+ZSafe<ZRef<ZWorkerRunner_Carbon> > spRunner(new ZWorkerRunner_Carbon);
 
 ZRef<ZWorkerRunner_Carbon> spGetRunner()
 	{ return spRunner; }

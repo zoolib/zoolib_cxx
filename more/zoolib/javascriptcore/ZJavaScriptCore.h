@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
-#include "zoolib/ZRef.h"
-#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZTypes.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZValAccessors.h"
@@ -229,7 +228,7 @@ public:
 #pragma mark * ZJavaScriptCore::ObjectImp
 
 class ObjectImp
-:	public ZRefCountedWithFinalize
+:	public ZCounted
 	{
 public:
 	ObjectImp();
