@@ -538,7 +538,7 @@ ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 			*oError = error_DeviceClosed;
 		}
 
-	return ZRef<Channel>();
+	return null;
 	}
 
 Data Device_BBDevMgr::GetAttribute(uint16 iObject, uint16 iAttribute)
@@ -758,7 +758,7 @@ ZRef<Device> Manager_BBDevMgr::Open(uint64 iDeviceID)
 			return i->fDevice;;
 		}
 
-	return ZRef<Device>();
+	return null;
 	}
 
 } // namespace ZBlackBerry

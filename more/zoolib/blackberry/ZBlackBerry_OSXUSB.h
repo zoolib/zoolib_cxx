@@ -45,7 +45,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(BlackBerry_OSXUSB)
 
 #include "zoolib/ZTime.h"
-#include "zoolib/ZWeakRef.h"
 
 #include <CoreFoundation/CFRunLoop.h> // For CFRunLoopRef
 #include <mach/mach.h> // For mach_port_t
@@ -60,7 +59,6 @@ namespace ZBlackBerry {
 
 class Manager_OSXUSB
 :	public Manager
-,	public ZWeakReferee
 	{
 public:
 	Manager_OSXUSB(CFRunLoopRef iRunLoopRef, bool iAllowMassStorage);

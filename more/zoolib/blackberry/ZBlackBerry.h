@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZData_Any.h"
-#include "zoolib/ZSafeRef.h"
+#include "zoolib/ZSafe.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 
@@ -91,7 +91,7 @@ protected:
 	void pChanged();
 
 private:
-	ZSafeRef<CB_ManagerChanged> fCallable;
+	ZSafe<ZRef<CB_ManagerChanged> > fCallable;
 	};
 
 // =================================================================================================
@@ -123,7 +123,7 @@ public:
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError) = 0;
 
-	virtual Data GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
+	virtual ZQ<Data> GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
 	virtual uint32 GetPIN();
 
 	typedef ZCallable1<void,ZRef<Device> > CB_DeviceFinished;
@@ -133,7 +133,7 @@ protected:
 	void pFinished();
 
 private:
-	ZSafeRef<CB_DeviceFinished> fCallable;
+	ZSafe<ZRef<CB_DeviceFinished> > fCallable;
 	};
 
 // =================================================================================================

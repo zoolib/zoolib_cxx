@@ -358,7 +358,7 @@ ZRef<Device> Manager_OSXUSB::Open(uint64 iDeviceID)
 				}
 			}
 		}
-	return ZRef<Device>();
+	return null;
 	}
 
 void Manager_OSXUSB::pDeviceAttached(ZRef<ZUSBDevice> iUSBDevice)

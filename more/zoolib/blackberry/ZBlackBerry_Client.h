@@ -34,8 +34,7 @@ namespace ZBlackBerry {
 #pragma mark * Manager_Client
 
 class Manager_Client
-:	public Manager,
-	public ZWeakReferee
+:	public Manager
 	{
 private:
 	Manager_Client();

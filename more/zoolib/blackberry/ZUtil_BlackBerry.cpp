@@ -54,7 +54,7 @@ ZRef<ZBlackBerry::Manager> sMakeManager(ZRef<ZStreamerRWConFactory> iFactory)
 		}
 	catch (...)
 		{}
-	return ZRef<ZBlackBerry::Manager>();
+	return null;
 	}
 
 ZRef<ZBlackBerry::Manager> sMakeManager()
@@ -108,7 +108,7 @@ ZRef<ZBlackBerry::Manager> sMakeManager()
 			{}
 	#endif
 
-	return ZRef<Manager>();
+	return null;
 	}
 
 } // namespace ZUtil_BlackBerry

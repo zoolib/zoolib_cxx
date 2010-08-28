@@ -189,8 +189,7 @@ class Channel_Streamer;
 
 class Commer_Streamer
 :	public ZCommer,
-	public ZTask,
-	public ZWeakReferee
+	public ZTask
 	{
 	friend class Channel_Streamer;
 
@@ -656,7 +655,6 @@ bool Commer_Streamer::Write(const ZStreamW& iStreamW)
 
 void Commer_Streamer::Finished()
 	{
-	ZWeakReferee::pDetachProxy();
 	ZTask::pFinished();
 	}
 
@@ -741,7 +739,7 @@ ZRef<Channel> Commer_Streamer::Open(bool iPreserveBoundaries,
 	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Commer_Streamer"))
 		s << "Open name: " << iName << ", failed";
 
-	return ZRef<Channel>();
+	return null;
 	}
 
 Data Commer_Streamer::GetAttribute(uint16 iObject, uint16 iAttribute)
@@ -1000,7 +998,7 @@ ZRef<Channel_Streamer> Commer_Streamer::pFindChannel(uint16 iChannelID)
 	if (ZLOG(s, eDebug, "ZBlackBerry::Commer_Streamer"))
 		s.Writef("pFindChannel, couldn't find channel for channelID: %d", iChannelID);
 
-	return ZRef<Channel_Streamer>();
+	return null;
 	}
 
 ZRef<Channel_Streamer> Commer_Streamer::pFindChannel(const string& iName)
@@ -1014,7 +1012,7 @@ ZRef<Channel_Streamer> Commer_Streamer::pFindChannel(const string& iName)
 	if (ZLOG(s, eDebug, "ZBlackBerry::Commer_Streamer"))
 		s << "pFindChannel, couldn't find channel for name: " << iName;
 
-	return ZRef<Channel_Streamer>();
+	return null;
 	}
 
 bool Commer_Streamer::pDetachIfUnused(Channel_Streamer* iChannel)
@@ -1595,7 +1593,6 @@ void Device_Streamer::Initialize()
 
 void Device_Streamer::Finalize()
 	{
-	ZWeakReferee::pDetachProxy();
 	if (ZRef<Commer_Streamer> theCommer = fCommer)
 		{
 		fCommer.Clear();
@@ -1612,11 +1609,11 @@ ZRef<Channel> Device_Streamer::Open(bool iPreserveBoundaries,
 	return null;
 	}
 
-Data Device_Streamer::GetAttribute(uint16 iObject, uint16 iAttribute)
+ZQ<Data> Device_Streamer::GetAttribute(uint16 iObject, uint16 iAttribute)
 	{
 	if (fCommer)
 		return fCommer->GetAttribute(iObject, iAttribute);
-	return Data();
+	return null;
 	}
 
 uint32 Device_Streamer::GetPIN()

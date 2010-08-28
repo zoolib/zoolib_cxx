@@ -141,7 +141,7 @@ public:
 // From Device
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const string& iName, const PasswordHash* iPasswordHash, Error* oError);
-	virtual Data GetAttribute(uint16 iObject, uint16 iAttribute);
+	virtual ZQ<Data> GetAttribute(uint16 iObject, uint16 iAttribute);
 	virtual uint32 GetPIN();
 
 // From ZCommer
@@ -217,10 +217,10 @@ ZRef<Channel> Device_Client::Open(bool iPreserveBoundaries,
 	catch (...)
 		{}
 
-	return ZRef<Channel>();
+	return null;
 	}
 
-Data Device_Client::GetAttribute(uint16 iObject, uint16 iAttribute)
+ZQ<Data> Device_Client::GetAttribute(uint16 iObject, uint16 iAttribute)
 	{
 	try
 		{
@@ -244,7 +244,7 @@ Data Device_Client::GetAttribute(uint16 iObject, uint16 iAttribute)
 		}
 	catch (...)
 		{}
-	return Data();
+	return null;
 	}
 
 uint32 Device_Client::GetPIN()

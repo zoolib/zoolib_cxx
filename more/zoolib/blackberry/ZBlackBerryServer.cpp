@@ -400,15 +400,16 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 		const uint16 attribute = r.ReadUInt16();
 		if (ZRef<ZBlackBerry::Device> theDevice = this->pGetDevice(deviceID))
 			{
-			const ZBlackBerry::Data theMB = theDevice->GetAttribute(object, attribute);
-			w.WriteBool(true);
-			w.WriteCount(theMB.GetSize());
-			w.Write(theMB.GetData(), theMB.GetSize());
+			if (ZQ<ZBlackBerry::Data> theQ = theDevice->GetAttribute(object, attribute))
+				{
+				ZBlackBerry::Data theMB = theQ.Get();
+				w.WriteBool(true);
+				w.WriteCount(theMB.GetSize());
+				w.Write(theMB.GetData(), theMB.GetSize());
+				return;
+				}
 			}
-		else
-			{
-			w.WriteBool(false);
-			}
+		w.WriteBool(false);
 		}
 	else if (req == 5)
 		{
@@ -454,7 +455,7 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				w.Flush();
 				// Use a standard copier for the device-->client direction
 				ZRef<ZWorker> deviceToClient =
-					new ZStreamerCopier(ZRef<ZTaskMaster>(), deviceCon, iSRWCon, readSize);
+					new ZStreamerCopier(null, deviceCon, iSRWCon, readSize);
 				sStartWorkerRunner(deviceToClient);
 
 				// And our specialized copier for the client-->device direction.
