@@ -109,19 +109,21 @@ uint8 (&byte_array_of_same_dimension_as(T(&)[N]))[N];
 template <class T>
 class Adopt_T
 	{
-	T* fP;
 public:
-	Adopt_T(T* iP) : fP(iP) {}
+	explicit Adopt_T(T* iP) : fP(iP) {}
 	T* Get() const { return fP; }
+private:
+	T* fP;
 	};
 
 template <class T>
 class Adopt_T<T*>
 	{
-	T* fP;
 public:
-	Adopt_T(T* iP) : fP(iP) {}
+	explicit Adopt_T(T* iP) : fP(iP) {}
 	T* Get() const { return fP; }
+private:
+	T* fP;
 	};
 
 template <class P>
