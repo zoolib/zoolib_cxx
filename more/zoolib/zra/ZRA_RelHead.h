@@ -79,9 +79,4 @@ Rename_t sInverted(const Rename_t& iRename);
 } // namespace ZRA
 } // namespace ZooLib
 
-namespace std {
-inline void swap(ZooLib::ZRA::RelHead& a, ZooLib::ZRA::RelHead& b)
-	{ a.swap(b); }
-} // namespace std
-
 #endif // __ZRA_RelHead__

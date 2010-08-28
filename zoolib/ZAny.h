@@ -248,12 +248,10 @@ template<typename ValueType>
 const ValueType* ZAnyCast(const ZAny* operand)
 	{ return operand->PGet_T<ValueType>(); }
 
-} // namespace ZooLib
-
-namespace std {
-inline void swap(ZooLib::ZAny& a, ZooLib::ZAny& b)
+inline void swap(ZAny& a, ZAny& b)
 	{ a.swap(b); }
-} // namespace std
+
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -

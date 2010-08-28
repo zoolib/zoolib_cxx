@@ -310,12 +310,10 @@ template <class T>
 inline ZSet_T<T> operator|(const T& iElem, const ZSet_T<T>& iSet)
 	{ return iSet | iElem; }
 
-} // namespace ZooLib
-
-namespace std {
 template <class T>
-inline void swap(ZooLib::ZSet_T<T>& a, ZooLib::ZSet_T<T>& b)
+inline void swap(ZSet_T<T>& a, ZSet_T<T>& b)
 	{ a.swap(b); }
-}
+
+} // namespace ZooLib
 
 #endif // __ZSet_T__

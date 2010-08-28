@@ -154,6 +154,9 @@ public:
 /// \endcond DoxygenIgnore
 	};
 
+inline void swap(Variant& a, Variant& b)
+	{ a.swap(b); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWinCOM::String
@@ -192,19 +195,7 @@ bool operator==(const String& l, const string16& r);
 bool operator==(const string16& l, const String& r);
 
 } // namespace ZWinCOM
-
 } // namespace ZooLib
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * std::swap
-
-namespace std {
-
-inline void swap(ZooLib::ZWinCOM::Variant& a, ZooLib::ZWinCOM::Variant& b)
-	{ a.swap(b); }
-
-} // namespace std
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 

@@ -136,6 +136,9 @@ public:
 /// \endcond DoxygenIgnore
 	};
 
+inline void swap(ZVal_AppleEvent& a, ZVal_AppleEvent& b)
+	{ a.swap(b); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZSeq_AppleEvent
@@ -181,6 +184,9 @@ public:
 	ZSeq_AppleEvent& Append(const AEDesc& iVal);
 	ZSeq_AppleEvent& Append(const ZVal_AppleEvent& iVal);
 	};
+
+inline void swap(ZSeq_AppleEvent& a, ZSeq_AppleEvent& b)
+	{ a.swap(b); }
 
 // =================================================================================================
 #pragma mark -
@@ -263,24 +269,10 @@ private:
 	AEKeyword pKeyOf(size_t iIndex) const;
 	};
 
+inline void swap(ZMap_AppleEvent& a, ZMap_AppleEvent& b)
+	{ a.swap(b); }
+
 } // namespace ZooLib
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * std::swap
-
-namespace std {
-
-inline void swap(ZooLib::ZVal_AppleEvent& a, ZooLib::ZVal_AppleEvent& b)
-	{ a.swap(b); }
-
-inline void swap(ZooLib::ZSeq_AppleEvent& a, ZooLib::ZSeq_AppleEvent& b)
-	{ a.swap(b); }
-
-inline void swap(ZooLib::ZMap_AppleEvent& a, ZooLib::ZMap_AppleEvent& b)
-	{ a.swap(b); }
-
-} // namespace std
 
 #endif // ZCONFIG_SPI_Enabled(AppleEvent)
 

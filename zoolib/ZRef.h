@@ -377,13 +377,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * NoRetain wrapper
-
-// Deprecated. Use Adopt<P> from ZTypes.h instead.
-
-template <class P>
-Adopt_T<P> NoRetain(P iP)
-	{ return Adopt_T<P>(iP); }
+#pragma mark * MakeRef
 
 template <class T>
 ZRef<T> MakeRef(T* iP)

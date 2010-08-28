@@ -40,12 +40,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "PIActions.h"
 
 namespace ZooLib {
+namespace ZPhotoshop {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZPhotoshop
-
-namespace ZPhotoshop {
 
 using std::string;
 using std::vector;
@@ -219,6 +218,9 @@ private:
 	vector<Entry> fEntries;
 	};
 
+inline void swap(Spec& a, Spec& b)
+	{ a.swap(b); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Val
@@ -264,6 +266,9 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Spec, Spec)
 /// \endcond DoxygenIgnore
 	};
+
+inline void swap(Val& a, Val& b)
+	{ a.swap(b); }
 
 // =================================================================================================
 #pragma mark -
@@ -334,6 +339,9 @@ public:
 private:
 	PIActionList fAL;
 	};
+
+inline void swap(Seq& a, Seq& b)
+	{ a.swap(b); }
 
 // =================================================================================================
 #pragma mark -
@@ -453,28 +461,11 @@ private:
 	PIActionDescriptor fAD;
 	};
 
+inline void swap(Map& a, Map& b)
+	{ a.swap(b); }
+
+
 } // namespace ZPhotoshop
-
 } // namespace ZooLib
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * std::swap
-
-namespace std {
-
-inline void swap(ZooLib::ZPhotoshop::Spec& a, ZooLib::ZPhotoshop::Spec& b)
-	{ a.swap(b); }
-
-inline void swap(ZooLib::ZPhotoshop::Val& a, ZooLib::ZPhotoshop::Val& b)
-	{ a.swap(b); }
-
-inline void swap(ZooLib::ZPhotoshop::Seq& a, ZooLib::ZPhotoshop::Seq& b)
-	{ a.swap(b); }
-
-inline void swap(ZooLib::ZPhotoshop::Map& a, ZooLib::ZPhotoshop::Map& b)
-	{ a.swap(b); }
-
-} // namespace std
 
 #endif // __ZPhotoshop_Val__

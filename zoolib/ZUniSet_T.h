@@ -420,12 +420,10 @@ template <class T>
 ZUniSet_T<T> operator&(const T& iElem, const ZUniSet_T<T>& iUniSet_T)
 	{ return iUniSet_T & iElem; }
 
-} // namespace ZooLib
-
-namespace std {
 template <class T>
-inline void swap(ZooLib::ZUniSet_T<T>& a, ZooLib::ZUniSet_T<T>& b)
+inline void swap(ZUniSet_T<T>& a, ZUniSet_T<T>& b)
 	{ a.swap(b); }
-}
+
+} // namespace ZooLib
 
 #endif // __ZUniSet_T__

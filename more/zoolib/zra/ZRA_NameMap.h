@@ -78,6 +78,9 @@ private:
 	std::set<Elem_t> fElems;
 	};
 
+inline void swap(NameMap& a, NameMap& b)
+	{ a.swap(b); }
+
 const ZStrimW& operator<<(const ZStrimW& w, const NameMap& iNM);
 
 } // namespace ZRA
@@ -86,10 +89,5 @@ const ZStrimW& operator<<(const ZStrimW& w, const NameMap& iNM);
 namespace ZooLib {
 template <> int sCompare_T(const ZRA::NameMap& iL, const ZRA::NameMap& iR);
 } // namespace ZooLib
-
-namespace std {
-inline void swap(ZooLib::ZRA::NameMap& a, ZooLib::ZRA::NameMap& b)
-	{ a.swap(b); }
-} // namespace std
 
 #endif // __ZRA_NameMap__

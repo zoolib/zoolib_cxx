@@ -184,6 +184,10 @@ private:
 	bool fHasValue;
 	};
 
+template <class T>
+inline void swap(ZQ<T>& a, ZQ<T>& b)
+	{ a.swap(b); }
+
 } // namespace ZooLib
 
 #endif // __ZQ__

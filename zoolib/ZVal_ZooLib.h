@@ -265,6 +265,9 @@ inline bool operator>=(const ZVal_ZooLib& l, const ZVal_ZooLib& r)
 template <> inline int sCompare_T(const ZVal_ZooLib& iL, const ZVal_ZooLib& iR)
 	{ return iL.Compare(iR); }
 
+inline void swap(ZVal_ZooLib& a, ZVal_ZooLib& b)
+	{ a.swap(b); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVal_ZooLib::Ex_IllegalType
@@ -548,16 +551,5 @@ template <> inline int sCompare_T(const ZMap_ZooLib& iL, const ZMap_ZooLib& iR)
 	{ return iL.Compare(iR); }
 
 } // namespace ZooLib
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * std::swap
-
-namespace std {
-
-inline void swap(ZooLib::ZVal_ZooLib& a, ZooLib::ZVal_ZooLib& b)
-	{ a.swap(b); }
-
-} // namespace std
 
 #endif // __ZVal_ZooLib__

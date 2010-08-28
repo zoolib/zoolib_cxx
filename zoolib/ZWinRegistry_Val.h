@@ -39,7 +39,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-
 namespace ZWinRegistry {
 
 using namespace std;
@@ -150,20 +149,11 @@ public:
 	HKEY& OParam();
 	};
 
-} // namespace ZWinRegistry
-
-} // namespace ZooLib
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * std::swap
-
-namespace std {
-
-inline void swap(ZooLib::ZWinRegistry::KeyRef& a, ZooLib::ZWinRegistry::KeyRef& b)
+inline void swap(KeyRef& a, KeyRef& b)
 	{ a.swap(b); }
 
-} // namespace std
+} // namespace ZWinRegistry
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
