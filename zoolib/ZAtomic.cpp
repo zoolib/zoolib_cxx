@@ -272,6 +272,17 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 namespace ZooLib {
 
 // -----------------------------------------------
+#if !defined(DEFINED_ZAtomic_CompareAndSwapPtr)
+#define DEFINED_ZAtomic_CompareAndSwapPtr 1
+
+bool ZAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
+	{
+	return iOldValue
+		== ::InterlockedCompareExchangePointer((volatile PVOID*)iPtrAddress, iNewValue, iOldValue);
+	}
+
+#endif
+// -----------------------------------------------
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
 #define DEFINED_ZAtomic_CompareAndSwap 1
 
