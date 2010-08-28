@@ -22,10 +22,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRef__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZAtomic.h" // For ZAtomic_CompareAndSwapPtr
 #include "zoolib/ZCompat_algorithm.h" // For std::swap
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h" // For Adopt_T
+
+#ifdef __OBJC__
+	struct objc_object;
+#endif
 
 namespace ZooLib {
 
@@ -59,8 +64,9 @@ public:
 #ifdef __OBJC__
 	operator bool() const { return !!fP; }
 
-	template <class O>
-	operator O*() const { return fP; }
+	operator struct objc_object*() const { return fP; }
+//	template <class O>
+//	operator O*() const { return fP; }
 
 #else
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRef,
@@ -70,8 +76,16 @@ public:
 		{ return operator_bool_generator_type::translate(fP); }
 #endif
 
-	void swap(ZRef& iOther)
-		{ std::swap(fP, iOther.fP); }
+	void swap(ZRef& ioOther)
+		{ std::swap(fP, ioOther.fP); }
+
+	bool AtomicSetIfNull(T* iNew)
+		{
+		if (!ZAtomic_CompareAndSwapPtr(&fP, 0, iNew))
+			return false;
+		spRetain(iNew);
+		return true;
+		}
 
 	ZRef()
 	:	fP(nullptr)
@@ -392,7 +406,7 @@ template <class O, class T> O ZRefStaticCast(const ZRef<const T*>& iVal)
 	{ return static_cast<O>(iVal.Get()); }
 
 template <class T>
-void swap(ZooLib::ZRef<T>& a, ZooLib::ZRef<T>& b)
+void swap(ZRef<T>& a, ZRef<T>& b)
 	{ a.swap(b); }
 
 } // namespace ZooLib

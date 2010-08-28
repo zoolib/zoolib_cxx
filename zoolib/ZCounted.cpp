@@ -25,6 +25,32 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZCountedWithoutFinalize
+
+ZCountedWithoutFinalize::ZCountedWithoutFinalize()
+:	fRefCount(0)
+	{}
+
+ZCountedWithoutFinalize::~ZCountedWithoutFinalize()
+	{
+	ZAssertStopf(1, ZThreadSafe_Get(fRefCount) == 0,
+		("Non-zero refcount at destruction, it is %d", ZThreadSafe_Get(fRefCount)));
+	}
+
+void ZCountedWithoutFinalize::Release()
+	{
+	if (ZThreadSafe_DecAndTest(fRefCount))
+		delete this;
+	}
+
+bool ZCountedWithoutFinalize::IsShared() const
+	{ return 1 < ZAtomic_Get(&fRefCount); }
+
+bool ZCountedWithoutFinalize::IsReferenced() const
+	{ return 0 != ZAtomic_Get(&fRefCount); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZCountedBase
 
 ZCountedBase::ZCountedBase()
@@ -33,6 +59,7 @@ ZCountedBase::ZCountedBase()
 
 ZCountedBase::~ZCountedBase()
 	{
+	ZAssert(!fWRP);
 	ZAssertStopf(1, 0 == ZAtomic_Get(&fRefCount),
 		("Non-zero refcount at destruction, it is %d", ZAtomic_Get(&fRefCount)));
 	}
@@ -50,7 +77,18 @@ void ZCountedBase::Finalize()
 	}
 
 bool ZCountedBase::FinishFinalize()
-	{ return ZAtomic_DecAndTest(&fRefCount); }
+	{
+	if (!ZAtomic_DecAndTest(&fRefCount))
+		return false;
+	
+	if (fWRP)
+		{
+		fWRP->Clear();
+		fWRP.Clear();
+		}
+
+	return true;
+	}
 
 void ZCountedBase::Retain()
 	{
@@ -82,9 +120,19 @@ bool ZCountedBase::IsShared() const
 bool ZCountedBase::IsReferenced() const
 	{ return 0 != ZAtomic_Get(&fRefCount); }
 
-void ZCountedBase::pDispose()
+ZRef<ZCountedBase::WRP> ZCountedBase::GetWRP()
 	{
-	delete this;
+	if (!fWRP)
+		{
+		ZRef<WRP> theWRP = new WRP(this);
+		if (!fWRP.AtomicSetIfNull(theWRP.Get()))
+			{
+			// We lost the race, so (efficiently) clear theWRP's reference
+			// to us, or we'll trip an asssertion in WRP::~WRP.
+			theWRP->Clear();
+			}
+		}
+	return fWRP;
 	}
 
 int ZCountedBase::pCOMAddRef()
@@ -117,28 +165,25 @@ int ZCountedBase::pCOMRelease()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCountedWithoutFinalize
+#pragma mark * ZCountedBase::WRP
 
-ZCountedWithoutFinalize::ZCountedWithoutFinalize()
-:	fRefCount(0)
+ZCountedBase::WRP::WRP(ZCountedBase* iCountedBase)
+:	fCountedBase(iCountedBase)
 	{}
 
-ZCountedWithoutFinalize::~ZCountedWithoutFinalize()
+ZCountedBase::WRP::~WRP()
+	{ ZAssert(!fCountedBase); }
+
+ZRef<ZCountedBase> ZCountedBase::WRP::GetCountedBase()
 	{
-	ZAssertStopf(1, ZThreadSafe_Get(fRefCount) == 0,
-		("Non-zero refcount at destruction, it is %d", ZThreadSafe_Get(fRefCount)));
+	ZAcqMtx acq(fMtx);
+	return fCountedBase;
 	}
 
-void ZCountedWithoutFinalize::Release()
+void ZCountedBase::WRP::Clear()
 	{
-	if (ZThreadSafe_DecAndTest(fRefCount))
-		delete this;
+	ZAcqMtx acq(fMtx);
+	fCountedBase = nullptr;
 	}
-
-bool ZCountedWithoutFinalize::IsShared() const
-	{ return 1 < ZAtomic_Get(&fRefCount); }
-
-bool ZCountedWithoutFinalize::IsReferenced() const
-	{ return 0 != ZAtomic_Get(&fRefCount); }
 
 } // namespace ZooLib

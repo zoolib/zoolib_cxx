@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,42 +18,76 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRef_Counted__
-#define __ZRef_Counted__ 1
+#ifndef __ZSafe__
+#define __ZSafe__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRef.h"
-#include "zoolib/ZCounted.h"
+#include "zoolib/ZThread.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sRetain/sRelase for ZCountedBase derivatives (ie ZCounted)
+#pragma mark * ZSafe
 
-inline void sRetain(ZCountedBase& iObject)
-	{ iObject.Retain(); }
+template <class T>
+class ZSafe
+	{
+public:
+	ZSafe()
+		{}
 
-inline void sRelease(ZCountedBase& iObject)
-	{ iObject.Release(); }
+	ZSafe(const ZSafe& iOther)
+	:	fVal(iOther)
+		{}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * sRetain/sRelease for ZCountedWithoutFinalize derivatives
+	const ZSafe& operator=(const ZSafe& iOther)
+		{
+		const T newVal = iOther;
+		ZAcqMtx acq(fMtx);
+		fVal = newVal;
+		return *this;		
+		}
 
-inline void sRetain(ZCountedWithoutFinalize& iObject)
-	{ iObject.Retain(); }
+	~ZSafe()
+		{}
 
-inline void sRelease(ZCountedWithoutFinalize& iObject)
-	{ iObject.Release(); }
+	ZSafe(const T& iOther)
+	:	fVal(iOther)
+		{}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Typedefs for older code
+	ZSafe& operator=(const T& iOther)
+		{
+		ZAcqMtx acq(fMtx);
+		fVal = iOther;
+		return *this;
+		}
 
-typedef ZCounted ZRefCountedWithFinalize;
-typedef ZCountedWithoutFinalize ZRefCounted;
+	operator T() const
+		{
+		ZAcqMtx acq(fMtx);
+		return fVal;
+		}
+
+	T Get() const
+		{
+		ZAcqMtx acq(fMtx);
+		return fVal;
+		}
+
+	T GetSet(const T& iOther)
+		{
+		ZAcqMtx acq(fMtx);
+		const T prior = fVal;
+		fVal = iOther;
+		return prior;
+		}
+
+private:
+	mutable ZMtx fMtx;
+	T fVal;
+	};
 
 } // namespace ZooLib
 
-#endif // __ZRef_Counted__
+#endif // __ZWeakRef__
