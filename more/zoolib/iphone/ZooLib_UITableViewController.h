@@ -3,7 +3,6 @@
 
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZQ.h"
-#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZUnicodeString.h"
 
 #import <UIKit/UITableView.h>
@@ -20,6 +19,10 @@ namespace IPhone {
 class UITVC_Section : public ZCounted
 	{
 public:
+	UITVC_Section();
+
+	void SetHeaderFooterShownWhenEmpty(bool iShow);
+
 	virtual ZQ<CGFloat> HeaderHeight();
 	virtual ZQ<CGFloat> FooterHeight();
 
@@ -39,6 +42,8 @@ public:
 	virtual void RowSelected(size_t iIndex);
 
 // -----
+	bool fHeaderFooterShownWhenEmpty;
+
 
 	ZQ<CGFloat> fHeaderHeight;
 	ZQ<CGFloat> fFooterHeight;

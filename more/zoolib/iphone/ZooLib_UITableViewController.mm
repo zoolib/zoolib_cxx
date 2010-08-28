@@ -9,12 +9,26 @@ namespace IPhone {
 // =================================================================================================
 #pragma mark -
 #pragma mark * UITVC_Section
+UITVC_Section::UITVC_Section()
+:	fHeaderFooterShownWhenEmpty(true)
+	{}
+
+void UITVC_Section::SetHeaderFooterShownWhenEmpty(bool iShow)
+	{ fHeaderFooterShownWhenEmpty = iShow; }
 
 ZQ<CGFloat> UITVC_Section::HeaderHeight()
-	{ return fHeaderHeight; }
+	{
+	if (fHeaderFooterShownWhenEmpty || this->NumberOfRows())
+		return fHeaderHeight;
+	return 0;
+	}
 
 ZQ<CGFloat> UITVC_Section::FooterHeight()
-	{ return fFooterHeight; }
+	{
+	if (fHeaderFooterShownWhenEmpty || this->NumberOfRows())
+		return fFooterHeight;
+	return 0;
+	}
 
 ZQ<string8> UITVC_Section::HeaderTitle()
 	{ return fHeaderTitle; }
@@ -179,7 +193,7 @@ using ZooLib::IPhone::UITVC_Section;
 		if (ZRef<UITableViewCell> theCell = theSection->UITableViewCellForRow(tableView, indexPath.row))
 			return [theCell.Orphan() autorelease];
 		}
-	return null;
+	return nullptr;
 	}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -219,7 +233,7 @@ using ZooLib::IPhone::UITVC_Section;
 		if (ZQ<string8> theQ = theSection->HeaderTitle())
 			return ZUtil_NSObject::sString(theQ.Get());
 		}
-	return null;
+	return nullptr;
 	}
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
@@ -229,7 +243,7 @@ using ZooLib::IPhone::UITVC_Section;
 		if (ZQ<string8> theQ = theSection->FooterTitle())
 			return ZUtil_NSObject::sString(theQ.Get());
 		}
-	return null;
+	return nullptr;
 	}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -239,7 +253,7 @@ using ZooLib::IPhone::UITVC_Section;
 		if (ZRef<UIView> theView = theSection->HeaderView())
 			return [theView.Orphan() autorelease];
 		}
-	return null;
+	return nullptr;
 	}
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
@@ -249,7 +263,7 @@ using ZooLib::IPhone::UITVC_Section;
 		if (ZRef<UIView> theView = theSection->FooterView())
 			return [theView.Orphan() autorelease];
 		}
-	return null;
+	return nullptr;
 	}
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
