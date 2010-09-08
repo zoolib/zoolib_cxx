@@ -241,6 +241,13 @@ public:
 		bottom(iBottom)
 		{}
 
+	ZRect_T(const ZPointPOD& iSize)
+	:	left(T(0)),
+		top(T(0)),
+		right(T(iSize.h)),
+		bottom(T(iSize.v))
+		{}
+
 	template <class S>
 	ZRect_T(const ZPoint_T<S>& iSize)
 	:	left(T(0)),
