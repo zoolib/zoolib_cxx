@@ -23,40 +23,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZAtomic.h"
-#include "zoolib/ZRef.h"
+#include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZThread.h"
-#include "zoolib/ZThreadSafe.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCountedWithoutFinalize
-
-class ZCountedWithoutFinalize
-	{
-public:
-	ZCountedWithoutFinalize();
-	virtual ~ZCountedWithoutFinalize();
-
-	void Retain() { ZThreadSafe_Inc(fRefCount); }
-	void Release();
-	bool IsShared() const;
-	bool IsReferenced() const;
-
-private:
-	ZThreadSafe_t fRefCount;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * sRetain/sRelease for ZCountedWithoutFinalize derivatives
-
-inline void sRetain(ZCountedWithoutFinalize& iObject)
-	{ iObject.Retain(); }
-
-inline void sRelease(ZCountedWithoutFinalize& iObject)
-	{ iObject.Release(); }
 
 // =================================================================================================
 #pragma mark -
@@ -212,17 +182,6 @@ public:
 			}
 		return null;
 		}
-
-#if 0
-	bool operator==(const ZWeakRef& iOther) const
-		{ return ZRef<T>(*this) == ZRef<T>(iOther); }
-
-	bool operator!=(const ZWeakRef& iOther) const
-		{ return ZRef<T>(*this) != ZRef<T>(iOther); }
-
-	bool operator<(const ZWeakRef& iOther) const
-		{ return ZRef<T>(*this) < ZRef<T>(iOther); }
-#endif
 
 private:
 	ZRef<ZCountedBase::WRP> fWRP;

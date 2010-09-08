@@ -25,32 +25,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCountedWithoutFinalize
-
-ZCountedWithoutFinalize::ZCountedWithoutFinalize()
-:	fRefCount(0)
-	{}
-
-ZCountedWithoutFinalize::~ZCountedWithoutFinalize()
-	{
-	ZAssertStopf(1, ZThreadSafe_Get(fRefCount) == 0,
-		("Non-zero refcount at destruction, it is %d", ZThreadSafe_Get(fRefCount)));
-	}
-
-void ZCountedWithoutFinalize::Release()
-	{
-	if (ZThreadSafe_DecAndTest(fRefCount))
-		delete this;
-	}
-
-bool ZCountedWithoutFinalize::IsShared() const
-	{ return 1 < ZAtomic_Get(&fRefCount); }
-
-bool ZCountedWithoutFinalize::IsReferenced() const
-	{ return 0 != ZAtomic_Get(&fRefCount); }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZCountedBase
 
 ZCountedBase::ZCountedBase()
