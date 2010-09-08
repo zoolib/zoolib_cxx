@@ -53,7 +53,7 @@ public:
 		{}
 
 	ZVal_Any(const ZVal_Any& iOther)
-	:	ZAny((const ZAny&)iOther)
+	:	ZAny(iOther.AsAny())
 		{}
 
 	~ZVal_Any()
@@ -61,7 +61,7 @@ public:
 
 	ZVal_Any& operator=(const ZVal_Any& iOther)
 		{
-		ZAny::operator=((const ZAny&)iOther);
+		ZAny::operator=(iOther.AsAny());
 		return *this;
 		}
 

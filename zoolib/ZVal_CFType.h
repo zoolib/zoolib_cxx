@@ -65,10 +65,6 @@ public:
 	template <class S> ZVal_CFType(const ZRef<S>& iVal) : inherited(iVal) {}
 	template <class S> ZVal_CFType(const Adopt_T<S>& iVal) : inherited(iVal) {}
 
-//	ZVal_CFType(CFTypeRef iVal);
-//	ZVal_CFType(const ZRef<CFTypeRef>& iVal);
-//	ZVal_CFType(const Adopt_T<CFTypeRef>& iVal);
-
 	ZVal_CFType(int8 iVal);
 	ZVal_CFType(int16 iVal);
 	ZVal_CFType(int32 iVal);
@@ -108,9 +104,6 @@ public:
 		inherited::operator=(iVal);
 		return *this;
 		}
-
-//	ZVal_CFType& operator=(CFTypeRef iVal);
-//	ZVal_CFType& operator=(const Adopt_T<CFTypeRef>& iVal);
 
 // ZVal protocol
 	void Clear();
