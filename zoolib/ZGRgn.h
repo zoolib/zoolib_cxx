@@ -96,8 +96,6 @@ public:
 
 class ZGRgn
 	{
-	ZRef<ZGRgnRep> fRep;
-
 public:
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZGRgn, operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const
@@ -145,10 +143,6 @@ public:
 
 	bool IsEqualTo(const ZGRgn& iOther) const;
 
-// Equality
-	bool operator==(const ZGRgn& iOther) const;
-	bool operator!=(const ZGRgn& iOther) const;
-
 // Manipulation
 	void Outline();
 	ZGRgn Outlined() const;
@@ -186,51 +180,9 @@ public:
 	void Xor(const ZGRgn& iOther);
 	ZGRgn Xoring(const ZGRgn& iOther) const;
 
-// Algebraic API
-	void operator+=(const ZPointPOD& iOffset);
-
-	ZGRgn operator+(const ZPointPOD& iOffset) const;
-
-	void operator-=(const ZPointPOD& iOffset);
-
-	ZGRgn operator-(const ZPointPOD& iOffset) const;
-
-// Combining with rectangles
-	void operator|=(const ZRectPOD& iRect);
-
-	ZGRgn operator|(const ZRectPOD& iRect) const;
-
-	void operator&=(const ZRectPOD& iRect);
-
-	ZGRgn operator&(const ZRectPOD& iRect) const;
-
-	void operator-=(const ZRectPOD& iRect);
-
-	ZGRgn operator-(const ZRectPOD& iRect) const;
-
-// Combining with regions
-	void operator|=(const ZGRgn& iOther);
-
-	ZGRgn operator|(const ZGRgn& iOther) const;
-
-	void operator&=(const ZGRgn& iOther);
-
-	ZGRgn operator&(const ZGRgn& iOther) const;
-
-	void operator-=(const ZGRgn& iOther);
-
-	ZGRgn operator-(const ZGRgn& iOther) const;
-
-	void operator^=(const ZGRgn& iOther);
-
-	ZGRgn operator^(const ZGRgn& iOther) const;
+private:
+	ZRef<ZGRgnRep> fRep;
 	};
-
-inline bool ZGRgn::operator==(const ZGRgn& iOther) const
-	{ return this->IsEqualTo(iOther); }
-
-inline bool ZGRgn::operator!=(const ZGRgn& iOther) const
-	{ return ! this->IsEqualTo(iOther); }
 
 inline void ZGRgn::Inset(const ZPointPOD& iInset)
 	{ return this->Inset(iInset.h, iInset.v); }
@@ -244,59 +196,67 @@ inline void ZGRgn::Offset(const ZPointPOD& iOffset)
 inline ZGRgn ZGRgn::Offsetted(const ZPointPOD& iOffset) const
 	{ return this->Offsetted(iOffset.h, iOffset.v); }
 
-inline void ZGRgn::operator+=(const ZPointPOD& iOffset)
-	{ return this->Offset(iOffset.h, iOffset.v); }
+// Operator API
 
-inline ZGRgn ZGRgn::operator+(const ZPointPOD& iOffset) const
-	{ return this->Offsetted(iOffset.h, iOffset.v); }
+inline bool operator==(const ZGRgn& l, const ZGRgn& r)
+	{ return l.IsEqualTo(r); }
 
-inline void ZGRgn::operator-=(const ZPointPOD& iOffset)
-	{ return this->Offset(-iOffset.h, -iOffset.v); }
+inline bool operator!=(const ZGRgn& l, const ZGRgn& r)
+	{ return !l.IsEqualTo(r); }
 
-inline ZGRgn ZGRgn::operator-(const ZPointPOD& iOffset) const
-	{ return this->Offsetted(-iOffset.h, -iOffset.v); }
+inline void operator+=(ZGRgn& ioRgn, const ZPointPOD& iOffset)
+	{ ioRgn.Offset(iOffset.h, iOffset.v); }
 
-inline void ZGRgn::operator|=(const ZRectPOD& iRect)
-	{ return this->Include(iRect); }
+inline ZGRgn operator+(const ZGRgn& iRgn, const ZPointPOD& iOffset)
+	{ return iRgn.Offsetted(iOffset.h, iOffset.v); }
 
-inline ZGRgn ZGRgn::operator|(const ZRectPOD& iRect) const
-	{ return this->Including(iRect); }
+inline void operator-=(ZGRgn& ioRgn, const ZPointPOD& iOffset)
+	{ ioRgn.Offset(-iOffset.h, -iOffset.v); }
 
-inline void ZGRgn::operator&=(const ZRectPOD& iRect)
-	{ return this->Intersect(iRect); }
+inline ZGRgn operator-(const ZGRgn& iRgn, const ZPointPOD& iOffset)
+	{ return iRgn.Offsetted(-iOffset.h, -iOffset.v); }
 
-inline ZGRgn ZGRgn::operator&(const ZRectPOD& iRect) const
-	{ return this->Intersecting(iRect); }
+inline void operator|=(ZGRgn& ioRgn, const ZRectPOD& iRect)
+	{ ioRgn.Include(iRect); }
 
-inline void ZGRgn::operator-=(const ZRectPOD& iRect)
-	{ return this->Exclude(iRect); }
+inline ZGRgn operator|(const ZGRgn& iRgn, const ZRectPOD& iRect)
+	{ return iRgn.Including(iRect); }
 
-inline ZGRgn ZGRgn::operator-(const ZRectPOD& iRect) const
-	{ return this->Excluding(iRect); }
+inline void operator&=(ZGRgn& ioRgn, const ZRectPOD& iRect)
+	{ ioRgn.Intersect(iRect); }
 
-inline void ZGRgn::operator|=(const ZGRgn& iOther)
-	{ return this->Include(iOther); }
+inline ZGRgn operator&(const ZGRgn& iRgn, const ZRectPOD& iRect)
+	{ return iRgn.Intersecting(iRect); }
 
-inline ZGRgn ZGRgn::operator|(const ZGRgn& iOther) const
-	{ return this->Including(iOther); }
+inline void operator-=(ZGRgn& ioRgn, const ZRectPOD& iRect)
+	{ ioRgn.Exclude(iRect); }
 
-inline void ZGRgn::operator&=(const ZGRgn& iOther)
-	{ return this->Intersect(iOther); }
+inline ZGRgn operator-(const ZGRgn& iRgn, const ZRectPOD& iRect)
+	{ return iRgn.Excluding(iRect); }
 
-inline ZGRgn ZGRgn::operator&(const ZGRgn& iOther) const
-	{ return this->Intersecting(iOther); }
+inline void operator|=(ZGRgn& ioRgn, const ZGRgn& iOther)
+	{ ioRgn.Include(iOther); }
 
-inline void ZGRgn::operator-=(const ZGRgn& iOther)
-	{ return this->Exclude(iOther); }
+inline ZGRgn operator|(const ZGRgn& iRgn, const ZGRgn& iOther)
+	{ return iRgn.Including(iOther); }
 
-inline ZGRgn ZGRgn::operator-(const ZGRgn& iOther) const
-	{ return this->Excluding(iOther); }
+inline void operator&=(ZGRgn& ioRgn, const ZGRgn& iOther)
+	{ ioRgn.Intersect(iOther); }
 
-inline void ZGRgn::operator^=(const ZGRgn& iOther)
-	{ return this->Xor(iOther); }
+inline ZGRgn operator&(const ZGRgn& iRgn, const ZGRgn& iOther)
+	{ return iRgn.Intersecting(iOther); }
 
-inline ZGRgn ZGRgn::operator^(const ZGRgn& iOther) const
-	{ return this->Xoring(iOther); }
+inline void operator-=(ZGRgn& ioRgn, const ZGRgn& iOther)
+	{ ioRgn.Exclude(iOther); }
+
+inline ZGRgn operator-(const ZGRgn& iRgn, const ZGRgn& iOther)
+	{ return iRgn.Excluding(iOther); }
+
+inline void operator^=(ZGRgn& ioRgn, const ZGRgn& iOther)
+	{ ioRgn.Xor(iOther); }
+
+inline ZGRgn operator^(const ZGRgn& iRgn, const ZGRgn& iOther)
+	{ return iRgn.Xoring(iOther); }
 
 // =================================================================================================
 #pragma mark -
