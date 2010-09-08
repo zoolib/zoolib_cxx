@@ -48,7 +48,7 @@ ZStrimR_NSString::~ZStrimR_NSString()
 
 void ZStrimR_NSString::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
-	const size_t length = [fString length];
+	const size_t length = [fString.Get() length];
 	if (0 == length)
 		{
 		if (oCount)
@@ -61,7 +61,7 @@ void ZStrimR_NSString::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 		UTF16 buffer[kBufSize];
 		const size_t cuToCopy = min(iCount, min(countAvailable, kBufSize));
 		const NSRange theRange = { fPosition, cuToCopy };
-		[fString getCharacters:(unichar*)buffer range:theRange];
+		[fString.Get() getCharacters:(unichar*)buffer range:theRange];
 		ZUnicode::sUTF16ToUTF32(
 			buffer, cuToCopy,
 			&countConsumed, nullptr,
@@ -156,7 +156,7 @@ void ZStrimR_NSString::Imp_ReadUTF8(UTF8* oDest,
 bool ZStrimR_NSString::Imp_ReadCP(UTF32& oCP)
 	{
 	using namespace ZUnicode;
-	const size_t length = [fString length];
+	const size_t length = [fString.Get() length];
 	for (;;)
 		{
 		if (fPosition >= length)
@@ -165,7 +165,7 @@ bool ZStrimR_NSString::Imp_ReadCP(UTF32& oCP)
 			return false;
 			}
 
-		const unichar theCU = [fString characterAtIndex:fPosition++];
+		const unichar theCU = [fString.Get() characterAtIndex:fPosition++];
 		if (sIsSmallNormal(theCU))
 			{
 			oCP = theCU;
@@ -181,7 +181,7 @@ bool ZStrimR_NSString::Imp_ReadCP(UTF32& oCP)
 				return false;
 				}
 
-			const unichar theCU2 = [fString characterAtIndex:fPosition++];
+			const unichar theCU2 = [fString.Get() characterAtIndex:fPosition++];
 			if (sIsLowSurrogate(theCU2))
 				{
 				oCP = sUTF32FromSurrogates(theCU, theCU2);
@@ -219,7 +219,7 @@ void ZStrimW_NSString::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, siz
 		{
 		NSString* asString =
 			[[NSString alloc] initWithCharacters:(unichar*)iSource length:iCountCU];
-		[fString appendString:asString];
+		[fString.Get() appendString:asString];
 		[asString release];
 		}
 
