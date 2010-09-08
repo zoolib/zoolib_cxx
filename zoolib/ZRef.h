@@ -218,7 +218,7 @@ public:
 		}
 
 	bool AtomicSetIfNull(T* iNew)
-		{ return this->AtomicCompareAndSwap(&fP, 0, iNew); }
+		{ return this->AtomicCompareAndSwap(0, iNew); }
 
 private:
 	T* fP;
