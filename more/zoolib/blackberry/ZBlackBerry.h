@@ -46,30 +46,6 @@ class Channel;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZBlackBerry::StartStop
-
-class StartStop : public ZCounted
-	{
-protected:
-	StartStop();
-
-public:
-// From ZCounted
-	virtual void Initialize();
-	virtual void Finalize();
-
-// Our protocol
-	virtual void Started();
-	virtual void Stopped();
-
-private:
-	ZMtxR fMutex;
-	ZCnd fCondition;
-	int fStartCount;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZBlackBerry::Manager
 
 class Manager : public ZCounted
