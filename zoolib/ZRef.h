@@ -60,32 +60,21 @@ private:
 		}
 
 public:
+	#ifdef __OBJC__
 
-#ifdef __OBJC__
-	operator bool() const { return !!fP; }
+		operator T*() const { return fP; }
 
-	operator struct objc_object*() const { return fP; }
-//	template <class O>
-//	operator O*() const { return fP; }
+	#else
 
-#else
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRef,
-		operator_bool_generator_type, operator_bool_type);
+		ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRef,
+			operator_bool_generator_type, operator_bool_type);
 
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fP); }
-#endif
+		operator operator_bool_type() const
+			{ return operator_bool_generator_type::translate(fP); }
+	#endif
 
 	void swap(ZRef& ioOther)
 		{ std::swap(fP, ioOther.fP); }
-
-	bool AtomicSetIfNull(T* iNew)
-		{
-		if (!ZAtomic_CompareAndSwapPtr(&fP, 0, iNew))
-			return false;
-		spRetain(iNew);
-		return true;
-		}
 
 	ZRef()
 	:	fP(nullptr)
@@ -218,6 +207,18 @@ public:
 	template <class O>
 	O* StaticCast() const
 		{ return static_cast<O*>(fP); }
+
+	bool AtomicCompareAndSwap(T* iPrior, T* iNew)
+		{
+		if (!ZAtomic_CompareAndSwapPtr(&fP, iPrior, iNew))
+			return false;
+		spRetain(iNew);
+		spRelease(iPrior);
+		return true;
+		}
+
+	bool AtomicSetIfNull(T* iNew)
+		{ return this->AtomicCompareAndSwap(&fP, 0, iNew); }
 
 private:
 	T* fP;
