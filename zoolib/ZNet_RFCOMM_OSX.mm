@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <IOBluetooth/objc/IOBluetoothSDPServiceRecord.h>
 
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZOBJC.h"
+#include "zoolib/ZObjC.h"
 
 using std::deque;
 using std::min;
