@@ -111,7 +111,7 @@ public:
 	typedef P2 P2_t;
 	typedef P3 P3_t;
 	typedef R (*Function_t)(P0, P1, P2, P3);
-	virtual R Call(P0, P1, P2, P3 i3) = 0;
+	virtual R Call(P0, P1, P2, P3) = 0;
 	};
 
 } // namespace ZooLib
