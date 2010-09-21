@@ -80,6 +80,10 @@ private:
 	uint64 fPosition;
 	};
 
+template <class T>
+ZStreamRPos_Data_T<T> MakeStreamRPos_Data_T(const T& iData)
+	{ return ZStreamRPos_Data_T<T>(iData); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamRWPos_Data_T
@@ -196,6 +200,10 @@ private:
 	uint64 fPosition;
 	size_t fSizeLogical;
 	};
+
+template <class T>
+ZStreamRWPos_Data_T<T> MakeStreamRWPos_Data_T(T& iData)
+	{ return ZStreamRWPos_Data_T<T>(iData); }
 
 // =================================================================================================
 #pragma mark -
