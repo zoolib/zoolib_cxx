@@ -32,7 +32,7 @@ namespace ZooLib {
 #pragma mark * ZWorker_Callable
 
 class ZWorker_Callable
-:	public virtual ZWorker
+:	public ZWorker
 	{
 public:
 	typedef ZCallable1<bool, ZRef<ZWorker> > Callable_t;
@@ -61,7 +61,7 @@ inline ZRef<ZWorker> MakeWorker(
 #pragma mark * ZWorker_Callable_Once
 
 class ZWorker_Callable_Once
-:	public virtual ZWorker
+:	public ZWorker
 	{
 public:
 	typedef ZCallable0<void> Callable_t;
@@ -83,7 +83,12 @@ private:
 	ZRef<Callable_t> fCallable;
 	};
 
+// Maker that makes explicit this is will be a one-shot worker.
 inline ZRef<ZWorker> MakeWorkerOnce(
+	const ZRef<ZCallable0<void> >& iCallable)
+	{ return new ZWorker_Callable_Once(iCallable); }
+
+inline ZRef<ZWorker> MakeWorker(
 	const ZRef<ZCallable0<void> >& iCallable)
 	{ return new ZWorker_Callable_Once(iCallable); }
 
