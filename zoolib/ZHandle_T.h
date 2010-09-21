@@ -77,7 +77,7 @@ public:
 		}
 
 	ZHandle_T(Adopt_T<T> iOther)
-	:	fHandle(iOther)
+	:	fHandle(iOther.Get())
 		{}
 
 	ZHandle_T& operator=(T iOther)
