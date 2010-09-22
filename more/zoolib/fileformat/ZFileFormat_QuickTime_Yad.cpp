@@ -54,56 +54,28 @@ static bool spIsName(uint8 iChar)
 static bool spNotName(uint8 iChar)
 	{ return !spIsName(iChar); }
 
-static void spReadHeader(const ZStreamR& r,
-	size_t& oHeaderSize, uint64& oSize, string& oName, bool& oIsContainer, bool& oIsValid)
+static bool spIsValidName(uint32 iName)
 	{
-	// For now assume that extended size follows 32 bit name. Specs are unclear, and
-	// it may be that uuid name follows normal header, with extended size following.
-	oIsContainer = true;
-	oIsValid = true;
+	return (spIsName(char(iName >> 24))
+		&& spIsName(char(iName >> 16))
+		&& spIsName(char(iName >> 8))
+		&& spIsName(char(iName)));
+	}
 
-	oSize = r.ReadUInt32();
-	const uint32 theName32 = r.ReadUInt32();
-	oHeaderSize = 8;
+static ZQ<bool> spIsContainer(const string& iName)
+	{
+	if (false) {}
+	else if (iName == "mean") return false;
+	else if (iName == "hdlr") return false;
+	else if (iName == "ftyp") return false;
+	else if (iName == "mdat") return false;
+	else if (iName == "----") return true;
+	else if (iName == "moov") return true;
+	else if (iName == "udta") return true;
+	else if (iName == "ilst") return true;
 
-	if (spNotName(char(theName32 >> 24))
-		|| spNotName(char(theName32 >> 16))
-		|| spNotName(char(theName32 >> 8))
-		|| spNotName(char(theName32)))
-		{
-		oIsContainer = false;
-		}
-	else
-		{
-		if (oSize == 0)
-			{
-			// Extends to end of file. Really only valid at top level.
-			oSize = -1;
-			}
-		else if (oSize == 1)
-			{
-			// 64 bit size follows header
-			oSize = r.ReadUInt64();
-			oHeaderSize += 8;
-			if (oSize < 16)
-				oIsValid = false;
-			}
-		else if (oSize < 8)
-			{
-			oIsValid = false;
-			}
-
-		if (theName32 == ZFOURCC('u','u','i','d'))
-			{
-			// 16 byte uuid
-			oName = r.ReadString(16);
-			oHeaderSize += 16;
-			}
-		else
-			{
-			oName = spOSTypeAsString(theName32);
-			}
-		}
+	// Don't know.
+	return null;
 	}
 
 } // anonymous namespace
@@ -116,11 +88,9 @@ class YadStreamR
 :	public ZYadStreamR
 	{
 public:
-	YadStreamR(ZRef<ZStreamerR> iPrior, ZRef<ZStreamerR> iReal, uint64 iSize)
-	:	fPrior(iPrior)
-	,	fReal(iReal)
-	,	fStreamR_Cat(fPrior->GetStreamR(), fReal->GetStreamR())
-	,	fStreamR_Limited(iSize, fStreamR_Cat)
+	YadStreamR(ZRef<ZStreamerR> iStreamerR, uint64 iSize)
+	:	fStreamerR(iStreamerR)
+	,	fStreamR_Limited(iSize, fStreamerR->GetStreamR())
 		{}
 
 // From ZStreamerR via ZYadStreamR
@@ -128,17 +98,20 @@ public:
 		{ return fStreamR_Limited; }
 
 private:
-	ZRef<ZStreamerR> fPrior;
-	ZRef<ZStreamerR> fReal;
-	ZStreamR_Cat fStreamR_Cat;
+	ZRef<ZStreamerR> fStreamerR;
 	ZStreamR_Limited fStreamR_Limited;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * YadMapR
 
 class YadMapR : public ZYadMapR_Std
 	{
 public:
 	YadMapR(ZRef<ZStreamerR> iStreamerR, uint64 iRemaining);
-	YadMapR(ZRef<ZStreamerR> iStreamerR, uint64 iRemaining, uint64 iFirstSize, const string& iFirstName);
+	YadMapR(ZRef<ZStreamerR> iStreamerR, uint64 iRemaining,
+		uint64 iFirstSize, uint64 iFirstHeaderSize, const string& iFirstName);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
@@ -146,8 +119,9 @@ public:
 private:
 	ZRef<ZStreamerR> fStreamerR;
 	uint64 fRemaining;
-	bool fHasFirst;
+	const bool fHasFirst;
 	uint64 fFirstSize;
+	uint64 fFirstHeaderSize;
 	string fFirstName;
 	};
 
@@ -157,18 +131,15 @@ YadMapR::YadMapR(ZRef<ZStreamerR> iStreamerR, uint64 iRemaining)
 ,	fHasFirst(false)
 	{}
 
-YadMapR::YadMapR(ZRef<ZStreamerR> iStreamerR,
-	uint64 iRemaining, uint64 iFirstSize, const string& iFirstName)
+YadMapR::YadMapR(ZRef<ZStreamerR> iStreamerR, uint64 iRemaining,
+	uint64 iFirstSize, uint64 iFirstHeaderSize, const string& iFirstName)
 :	fStreamerR(iStreamerR)
 ,	fRemaining(iRemaining)
 ,	fHasFirst(true)
 ,	fFirstSize(iFirstSize)
+,	fFirstHeaderSize(iFirstHeaderSize)
 ,	fFirstName(iFirstName)
 	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * YadMapR
 
 void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
@@ -176,42 +147,93 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 		return;
 
 	const ZStreamR& r = fStreamerR->GetStreamR();
+
 	uint64 theSize;
 	if (iIsFirst && fHasFirst)
 		{
-		theSize = fFirstSize;
-		oName = fFirstName;
 		fRemaining -= fFirstSize;
+		theSize = fFirstSize - fFirstHeaderSize;
+		oName = fFirstName;
 		}
 	else
 		{
-		bool isContainer, isValid;
-		size_t headerSize;
-		spReadHeader(r, headerSize, theSize, oName, isContainer, isValid);
+		theSize = r.ReadUInt32();
+		const uint32 theName32 = r.ReadUInt32();
+		size_t headerSize = 8;
+		bool isValidSize = true;
+		if (theSize == 0)
+			{
+			// Extends to end of file. Really only valid at top level.
+			theSize = -1;
+			}
+		else if (theSize == 1)
+			{
+			// 64 bit size follows header
+			theSize = r.ReadUInt64();
+			headerSize += 8;
+			if (theSize < 16)
+				isValidSize = false;
+			}
+		else
+			{
+			if (theSize < 8)
+				isValidSize= false;
+			}
+
+		if (theName32 == ZFOURCC('u','u','i','d'))
+			{
+			// 16 byte uuid
+			oName = r.ReadString(16);
+			headerSize += 16;
+			}
+		else
+			{
+			oName = spOSTypeAsString(theName32);
+			}
 		fRemaining -= theSize;
 		theSize -= headerSize;
 		}
 
-	// Read the entry's header to see if it looks like a container.
-	ZData_Any buffer;
-	size_t firstHeaderSize;
-	uint64 firstSize;
-	string firstName;
-	bool firstIsContainer;
-	bool firstIsValid;
-
-	spReadHeader(
-		ZStreamR_Tee(r, MakeStreamRWPos_Data_T(buffer)),
-		firstHeaderSize, firstSize, firstName, firstIsContainer, firstIsValid);	
-
-	if (firstIsContainer)
+	ZQ<bool> isContainerQ = spIsContainer(oName);
+	if (isContainerQ)
 		{
-		oYadR = new YadMapR(fStreamerR, theSize - firstHeaderSize, firstSize - firstHeaderSize, firstName);
+		if (isContainerQ.Get())
+			oYadR = new YadMapR(fStreamerR, theSize);
+		else
+			oYadR = new YadStreamR(fStreamerR, theSize);
 		}
 	else
 		{
-		ZRef<ZStreamerR> prior = new ZStreamerR_T<ZStreamRPos_Data_T<ZData_Any> >(buffer);
-		oYadR = new YadStreamR(prior, fStreamerR, theSize);
+		// Don't know if this is a container or not. Try reading a little of the content,
+		// keeping a copy in buffer.
+		ZData_Any buffer;
+		ZStreamRWPos_Data_T<ZData_Any> bufferStream(buffer, 0);
+		ZStreamR_Tee theStreamR_Tee(r, bufferStream);
+		const uint32 firstSize = theStreamR_Tee.ReadUInt32();
+		const uint32 firstName32 = theStreamR_Tee.ReadUInt32();
+		if (firstSize >= 8 && spIsValidName(firstName32))
+			{
+			size_t headerSize;
+			string firstName;
+			if (firstName32 == ZFOURCC('u','u','i','d'))
+				{
+				firstName = r.ReadString(16);
+				headerSize = 24;
+				}
+			else
+				{
+				firstName = spOSTypeAsString(firstName32);
+				headerSize = 8;
+				}
+			oYadR = new YadMapR(fStreamerR, theSize, firstSize, headerSize, firstName);
+			}
+		else
+			{
+			ZRef<ZStreamerR> prior =
+				new ZStreamerR_T<ZStreamRPos_Data_T<ZData_Any> >(buffer);
+			ZRef<ZStreamerR> theCat = new ZStreamerR_Cat(prior, fStreamerR);
+			oYadR = new YadStreamR(theCat, theSize);
+			}
 		}
 	}
 
