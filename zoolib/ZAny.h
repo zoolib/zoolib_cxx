@@ -210,8 +210,8 @@ public:
 	ZQ<S> QGet_T() const
 		{
 		if (const S* theVal = this->PGet_T<S>())
-			return ZQ<S>(*theVal);
-		return ZQ<S>();
+			return *theVal;
+		return null;
 		}
 
 	template <class S>

@@ -309,7 +309,7 @@ public:
 		{
 		if (const ZVal_Any* theVal = this->PGet(iName))
 			return theVal->QGet_T<S>();
-		return ZQ<S>();
+		return null;
 		}
 
 	template <class S>
@@ -317,7 +317,7 @@ public:
 		{
 		if (const ZVal_Any* theVal = this->PGet(iIndex))
 			return theVal->QGet_T<S>();
-		return ZQ<S>();
+		return null;
 		}
 
 	template <class S>

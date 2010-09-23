@@ -117,7 +117,7 @@ ZQ<bool> sQCoerceBool(const ZAny& iAny)
 		if (ZString::sEquali(*pString, "f") || ZString::sEquali(*pString, "false"))
 			return false;
 		}
-	return ZQ<bool>();
+	return null;
 	}
 
 bool sQCoerceBool(const ZAny& iAny, bool& oVal)
