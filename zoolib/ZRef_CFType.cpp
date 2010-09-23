@@ -107,4 +107,8 @@ ZMACRO_RETAIN_RELEASE(CVBufferRef)
 typedef struct OpaquePasteboardRef* PasteboardRef;
 ZMACRO_RETAIN_RELEASE(PasteboardRef)
 
+// =================================================================================================
+typedef struct __CFUserNotification * CFUserNotificationRef;
+ZMACRO_RETAIN_RELEASE(CFUserNotificationRef)
+
 #endif // ZCONFIG_SPI_Enabled(CFType)
