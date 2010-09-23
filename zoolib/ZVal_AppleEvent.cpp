@@ -336,7 +336,7 @@ ZQ<bool> ZVal_AppleEvent::QGet_T<bool>() const
 		::AEGetDescData(this, &theFlag, sizeof(theFlag));
 		return true && theFlag;
 		}
-	return ZQ<bool>();
+	return null;
 	}
 
 template <>
@@ -362,7 +362,7 @@ ZQ<string> ZVal_AppleEvent::QGet_T<string>() const
 			::AEGetDescData(this, const_cast<char*>(theString.data()), theSize);
 		return theString;
 		}
-	return ZQ<string>();
+	return null;
 	}
 
 template <>
@@ -371,7 +371,7 @@ ZQ<ZSeq_AppleEvent> ZVal_AppleEvent::QGet_T<ZSeq_AppleEvent>() const
 	if (typeAEList == descriptorType)
 		return ZSeq_AppleEvent(*static_cast<const AEDescList*>(this));
 
-	return ZQ<ZSeq_AppleEvent>();
+	return null;
 	}
 
 template <>
@@ -380,7 +380,7 @@ ZQ<ZMap_AppleEvent> ZVal_AppleEvent::QGet_T<ZMap_AppleEvent>() const
 	if (spAECheckIsRecord(this))
 		return ZMap_AppleEvent(*static_cast<const AEDescList*>(this));
 
-	return ZQ<ZMap_AppleEvent>();
+	return null;
 	}
 
 template <class S>
@@ -405,7 +405,7 @@ ZQ<S> ZVal_AppleEvent::QGet_T() const
 		}
 
 	::AEDisposeDesc(&coerced);
-	return ZQ<S>();
+	return null;
 	}
 
 template <>
