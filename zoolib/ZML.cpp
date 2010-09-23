@@ -44,8 +44,7 @@ using std::vector;
 #pragma mark -
 #pragma mark * Static helper functions
 
-static string spReadReference(
-	const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
+static string spReadReference(const ZStrimU& iStrim, ZRef<Callable_Entity> iCallable)
 	{
 	using namespace ZUtil_Strim;
 
@@ -91,8 +90,8 @@ static string spReadReference(
 
 		if (!theEntity.empty())
 			{
-			if (iCallback)
-				result = iCallback(iRefcon, theEntity);
+			if (iCallable)
+				result = iCallable->Call(theEntity);
 			else if (theEntity == "quot")
 				result = "\"";
 			else if (theEntity == "lt")
@@ -166,7 +165,7 @@ static bool spReadUntil(const ZStrimU& s, UTF32 iTerminator, string& oText)
 
 static bool spReadUntil(
 	const ZStrimU& s, bool iRecognizeEntities,
-	EntityCallback iCallback, void* iRefcon,
+	ZRef<Callable_Entity> iCallable,
 	UTF32 iTerminator, string& oText)
 	{
 	oText.resize(0);
@@ -184,7 +183,7 @@ static bool spReadUntil(
 			}
 		else if (theCP == '&' && iRecognizeEntities)
 			{
-			oText += spReadReference(s, iCallback, iRefcon);
+			oText += spReadReference(s, iCallable);
 			}
 		else
 			{
@@ -238,7 +237,7 @@ static bool spReadMLAttributeName(const ZStrimU& s, string& oName)
 
 static bool spReadMLAttributeValue(
 	const ZStrimU& s, bool iRecognizeEntities,
-	EntityCallback iCallback, void* iRefcon,
+	ZRef<Callable_Entity> iCallable,
 	string& oValue)
 	{
 	oValue.resize(0);
@@ -249,13 +248,11 @@ static bool spReadMLAttributeValue(
 
 	if (curCP == '"')
 		{
-		return spReadUntil(s, iRecognizeEntities,
-			iCallback, iRefcon, '"', oValue);
+		return spReadUntil(s, iRecognizeEntities, iCallable, '"', oValue);
 		}
 	else if (curCP == '\'')
 		{
-		return spReadUntil(s, iRecognizeEntities,
-			iCallback, iRefcon, '\'', oValue);
+		return spReadUntil(s, iRecognizeEntities, iCallable, '\'', oValue);
 		}
 	else
 		{
@@ -280,7 +277,7 @@ static bool spReadMLAttributeValue(
 				}
 			else if (curCP == '&' && iRecognizeEntities)
 				{
-				oValue += spReadReference(s, iCallback, iRefcon);
+				oValue += spReadReference(s, iCallable);
 				}
 			else
 				{
@@ -298,27 +295,18 @@ static bool spReadMLAttributeValue(
 
 StrimU::StrimU(const ZStrimU& iStrim)
 :	fStrim(iStrim),
-	fCallback(nullptr),
 	fBufferStart(0),
 	fToken(eToken_Fresh),
 	fRecognizeEntitiesInAttributeValues(false)
 	{}
 
-StrimU::StrimU(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues)
+StrimU::StrimU(const ZStrimU& iStrim,
+	bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable)
 :	fStrim(iStrim),
-	fCallback(nullptr),
 	fBufferStart(0),
 	fToken(eToken_Fresh),
-	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues)
-	{}
-
-StrimU::StrimU(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
-:	fStrim(iStrim),
-	fCallback(iCallback),
-	fRefcon(iRefcon),
-	fBufferStart(0),
-	fToken(eToken_Fresh),
-	fRecognizeEntitiesInAttributeValues(false)
+	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues),
+	fCallable(iCallable)
 	{}
 
 StrimU::~StrimU()
@@ -364,7 +352,7 @@ void StrimU::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 				else if (theCP == '&')
 					{
 					fBufferStart = 0;
-					fBuffer = ZUnicode::sAsUTF32(spReadReference(fStrim, fCallback, fRefcon));
+					fBuffer = ZUnicode::sAsUTF32(spReadReference(fStrim, fCallable));
 					}
 				else
 					{
@@ -591,8 +579,7 @@ void StrimU::pAdvance()
 						string attributeValue;
 						attributeValue.reserve(8);
 						if (!spReadMLAttributeValue(
-							fStrim, fRecognizeEntitiesInAttributeValues,
-							fCallback, fRefcon, attributeValue))
+							fStrim, fRecognizeEntitiesInAttributeValues, fCallable, attributeValue))
 							{
 							fToken = eToken_Exhausted;
 							return;
@@ -630,14 +617,10 @@ StrimmerU::StrimmerU(ZRef<ZStrimmerU> iStrimmerU)
 ,	fStrim(iStrimmerU->GetStrimU())
 	{}
 
-StrimmerU::StrimmerU(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues)
+StrimmerU::StrimmerU(ZRef<ZStrimmerU> iStrimmerU,
+	bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable)
 :	fStrimmerU(iStrimmerU)
-,	fStrim(iStrimmerU->GetStrimU(), iRecognizeEntitiesInAttributeValues)
-	{}
-
-StrimmerU::StrimmerU(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon)
-:	fStrimmerU(iStrimmerU)
-,	fStrim(iStrimmerU->GetStrimU(), iCallback, iRefcon)
+,	fStrim(iStrimmerU->GetStrimU(), iRecognizeEntitiesInAttributeValues, iCallable)
 	{}
 
 StrimmerU::~StrimmerU()
@@ -710,103 +693,6 @@ bool sTryRead_End(StrimU& r, const string& iTagName)
 	r.Advance();
 	return true;
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZML::StrimR_TextOnly
-
-#if 0
-
-StrimR_TextOnly::StrimR_TextOnly(StrimU& iStrimU)
-:	fStrimU(iStrimU)
-	{}
-
-void StrimR_TextOnly::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
-	{
-	UTF32* localDest = oDest;
-	while (iCount)
-		{
-		if (fStrimU.Current() == eToken_Text)
-			{
-			size_t countRead;
-			fStrimU.Read(localDest, iCount, &countRead);
-			if (countRead == 0)
-				{
-				fStrimU.Advance();
-				}
-			else
-				{
-				localDest += countRead;
-				iCount -= countRead;
-				}
-			}
-		else
-			{
-			switch (fStrimU.Current())
-				{
-				case eToken_TagBegin:
-					{
-					fTags.push_back(pair<string, Attrs_t>(fStrimU.Name(), fStrimU.Attrs()));
-					break;
-					}
-				case eToken_TagEnd:
-					{
-					if (!fTags.empty())
-						fTags.pop_back();
-					break;
-					}
-				case eToken_Exhausted:
-					{
-					iCount = 0;
-					break;
-					}
-				default:
-					break;
-				}
-			fStrimU.Advance();
-			}
-		}
-
-	if (oCount)
-		*oCount = localDest - oDest;
-	}
-
-string StrimR_TextOnly::BackName() const
-	{
-	ZAssert(!fTags.empty());
-	return fTags.back().first;
-	}
-
-Attrs_t StrimR_TextOnly::BackAttr() const
-	{
-	ZAssert(!fTags.empty());
-	return fTags.back().second;
-	}
-
-void StrimR_TextOnly::AllNames(vector<string>& oNames) const
-	{
-	for (vector<pair<string, Attrs_t> >::const_iterator i = fTags.begin();
-		i != fTags.end(); ++i)
-		{
-		oNames.push_back(i->first);
-		}
-	}
-
-void StrimR_TextOnly::AllAttrs(vector<Attrs_t>& oAttrs) const
-	{
-	for (vector<pair<string, Attrs_t> >::const_iterator i = fTags.begin();
-		i != fTags.end(); ++i)
-		{
-		oAttrs.push_back(i->second);
-		}
-	}
-
-const vector<pair<string, Attrs_t> >& StrimR_TextOnly::All() const
-	{
-	return fTags;
-	}
-
-#endif
 
 // =================================================================================================
 #pragma mark -
