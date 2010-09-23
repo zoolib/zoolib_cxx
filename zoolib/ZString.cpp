@@ -272,7 +272,7 @@ ZQ<int64> ZString::sQInt64(const string& iString)
 		if (sscanf(iString.c_str(), "%lld", &result) > 0)
 			return result;
 		}
-	return ZQ<int64>();
+	return null;
 	}
 
 bool ZString::sQInt64(const string& iString, int64& oVal)
@@ -301,9 +301,9 @@ ZQ<uint64> ZString::sQUInt64(const string& iString)
 		{
 		uint64 result;
 		if (sscanf(iString.c_str(), "%llu", &result) > 0)
-			return ZQ<uint64>(result);
+			result;
 		}
-	return ZQ<uint64>();
+	return null;
 	}
 
 bool ZString::sQUInt64(const string& iString, uint64& oVal)
@@ -332,9 +332,9 @@ ZQ<double> ZString::sQDouble(const string& iString)
 		{
 		double result;
 		if (sscanf(iString.c_str(), "%lf", &result) > 0)
-			return ZQ<double>(result);
+			result;
 		}
-	return ZQ<double>();
+	return null;
 	}
 
 bool ZString::sQDouble(const string& iString, double& oVal)
