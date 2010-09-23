@@ -144,7 +144,7 @@ Attributes::~Attributes()
 	{}
 
 void Attributes::Add(
-	const ATSUAttributeTag& iTag, size_t iSize, const void* iValue)
+	const ATSUAttributeTag& iTag, const void* iValue, size_t iSize)
 	{
 	fTags.push_back(iTag);
 	fSizes.push_back(iSize);

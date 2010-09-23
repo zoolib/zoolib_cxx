@@ -60,11 +60,11 @@ public:
 	Attributes();
 	~Attributes();
 
-	void Add(const ATSUAttributeTag& iTag, size_t iSize, const void* iValue);
+	void Add(const ATSUAttributeTag& iTag, const void* iValue, size_t iSize);
 
 	template <typename T>
 	void Add_T(const ATSUAttributeTag& iTag, const T& iValue)
-		{ this->Add(iTag, sizeof(iValue), &iValue); }
+		{ this->Add(iTag, &iValue, sizeof(iValue)); }
 
 	bool Apply(ATSUTextLayout iLayout);
 	bool Apply(ATSUStyle iStyle);
