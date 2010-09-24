@@ -99,7 +99,7 @@ static size_t spGetBytes_RPos(void* iInfo, void* oBuffer, size_t iCount)
 static void spSkipBytes_RPos(void* iInfo, size_t iCount)
 	{ static_cast<ZRef<ZStreamerRPos>*>(iInfo)[0]->GetStreamR().Skip(iCount); }
 
-static void spRewind(void* iInfo)
+static void spRewind_RPos(void* iInfo)
 	{ static_cast<ZRef<ZStreamerRPos>*>(iInfo)[0]->GetStreamRPos().SetPosition(0); }
 
 static void spReleaseProvider_RPos(void* iInfo)
@@ -119,7 +119,7 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential_RPos =
 	0,
 	spGetBytes_RPos,
 	spSkipForward_RPos,
-	spRewind,
+	spRewind_RPos,
 	spReleaseProvider_RPos
 	};
 
@@ -135,7 +135,7 @@ static CGDataProviderCallbacks spCallbacks_RPos =
 	{
 	spGetBytes_RPos,
 	spSkipBytes_RPos,
-	spRPos,
+	spRewind_RPos,
 	spReleaseProvider_RPos
 	};
 
