@@ -116,6 +116,11 @@ public:
 	template <class S>
 	void Set_T(const S& iVal);
 
+	using inherited::Get;
+	ZVal_NS Get(const string8& iName) const;
+	ZVal_NS Get(NSString* iName) const;
+	ZVal_NS Get(size_t iIndex) const;
+
 // Typename accessors
 /// \cond DoxygenIgnore
 	typedef NSString* NSStringPtr;

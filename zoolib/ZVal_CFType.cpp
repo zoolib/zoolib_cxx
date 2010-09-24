@@ -366,6 +366,15 @@ template <>
 void ZVal_CFType::Set_T<ZMap_CFType>(const ZMap_CFType& iVal)
 	{ inherited::operator=(iVal); }
 
+ZVal_CFType ZVal_CFType::Get(const string8& iName) const
+	{ return this->GetMap().Get(iName); }
+
+ZVal_CFType ZVal_CFType::Get(CFStringRef iName) const
+	{ return this->GetMap().Get(iName); }
+
+ZVal_CFType ZVal_CFType::Get(size_t iIndex) const
+	{ return this->GetSeq().Get(iIndex); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVal_CFType typename accessors

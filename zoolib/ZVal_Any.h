@@ -89,6 +89,9 @@ public:
 
 	int Compare(const ZVal_Any& iOther) const;
 
+	ZVal_Any Get(const string8& iName) const;
+	ZVal_Any Get(size_t iIndex) const;
+
 // Typename accessors
 /// \cond DoxygenIgnore
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Data, ZData_Any)

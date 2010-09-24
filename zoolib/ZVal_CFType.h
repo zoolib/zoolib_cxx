@@ -130,6 +130,11 @@ public:
 	template <class S>
 	void Set_T(const S& iVal);
 
+	using inherited::Get;
+	ZVal_CFType Get(const string8& iName) const;
+	ZVal_CFType Get(CFStringRef iName) const;
+	ZVal_CFType Get(size_t iIndex) const;
+
 // Typename accessors
 /// \cond DoxygenIgnore
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_CFType)

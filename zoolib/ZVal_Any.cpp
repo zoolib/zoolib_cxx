@@ -65,6 +65,12 @@ int ZVal_Any::Compare(const ZVal_Any& iOther) const
 	return ZCompare::sCompare(typeName, this->VoidStar(), iOther.VoidStar());
 	}
 
+ZVal_Any ZVal_Any::Get(const string8& iName) const
+	{ return this->GetMap().Get(iName); }
+
+ZVal_Any ZVal_Any::Get(size_t iIndex) const
+	{ return this->GetSeq().Get(iIndex); }
+
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Data, ZData_Any)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Seq, ZSeq_Any)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Map, ZMap_Any)

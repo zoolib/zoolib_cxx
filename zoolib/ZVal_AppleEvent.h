@@ -117,6 +117,9 @@ public:
 // Our protocol
 	AEDesc& OParam();
 
+	ZVal_AppleEvent Get(const std::string& iName) const;
+	ZVal_AppleEvent Get(size_t iIndex) const;
+
 // Typename accessors
 /// \cond DoxygenIgnore
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Int16, int16)

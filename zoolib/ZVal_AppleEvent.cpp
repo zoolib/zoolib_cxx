@@ -452,6 +452,12 @@ AEDesc& ZVal_AppleEvent::OParam()
 	return *this;
 	}
 
+ZVal_AppleEvent ZVal_AppleEvent::Get(const std::string& iName) const
+	{ return this->GetMap().Get(iName); }
+
+ZVal_AppleEvent ZVal_AppleEvent::Get(size_t iIndex) const
+	{ return this->GetSeq().Get(iIndex); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVal_AppleEvent typename accessors

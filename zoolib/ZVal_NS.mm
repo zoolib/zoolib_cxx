@@ -285,6 +285,15 @@ template <>
 void ZVal_NS::Set_T<ZMap_NS>(const ZMap_NS& iVal)
 	{ inherited::operator=(iVal); }
 
+ZVal_NS ZVal_NS::Get(const string8& iName) const
+	{ return this->GetMap().Get(iName); }
+
+ZVal_NS ZVal_NS::Get(NSString* iName) const
+	{ return this->GetMap().Get(iName); }
+
+ZVal_NS ZVal_NS::Get(size_t iIndex) const
+	{ return this->GetSeq().Get(iIndex); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVal_NS typename accessors
