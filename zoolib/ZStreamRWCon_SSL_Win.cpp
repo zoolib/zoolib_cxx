@@ -77,16 +77,16 @@ class Make_SSL
 #pragma mark -
 #pragma mark * Helpers
 
-static PSecurityFunctionTableA sPSFT = ::InitSecurityInterfaceA();
+static PSecurityFunctionTableA spPSFT = ::InitSecurityInterfaceA();
 
-static void spWriteFlushFree(SecBuffer& sb, const ZStreamW& w)
+static void spWriteFreeFlush(SecBuffer& sb, const ZStreamW& w)
 	{
 	if (!sb.pvBuffer)
 		return;
 
 	if (!sb.cbBuffer)
 		{
-		sPSFT->FreeContextBuffer(sb.pvBuffer);
+		spPSFT->FreeContextBuffer(sb.pvBuffer);
 		sb.pvBuffer = nullptr;
 		}
 	else
@@ -97,13 +97,20 @@ static void spWriteFlushFree(SecBuffer& sb, const ZStreamW& w)
 		const bool shortWrite = (countWritten != sb.cbBuffer);
 		sb.cbBuffer = 0;
 
-		sPSFT->FreeContextBuffer(sb.pvBuffer);
+		spPSFT->FreeContextBuffer(sb.pvBuffer);
 		sb.pvBuffer = nullptr;
 
 		if (shortWrite)
 			ZStreamW::sThrowEndOfStream();
 		w.Flush();
 		}
+	}
+
+static bool spWriteFully(const SecBuffer& sb, const ZStreamW& w)
+	{
+	size_t countWritten;
+	w.Write(sb.pvBuffer, sb.cbBuffer, &countWritten);
+	return countWritten == sb.cbBuffer;
 	}
 
 static bool spReadMore(vector<char>& ioBuf, const ZStreamR& r)
@@ -130,7 +137,7 @@ static bool spAcquireCredentials(bool iVerify, bool iCheckName, CredHandle& oCre
 	else if (!iCheckName)
 		theSCC.dwFlags |= SCH_CRED_NO_SERVERNAME_CHECK;
 
-	return SEC_E_OK == sPSFT->AcquireCredentialsHandleA(
+	return SEC_E_OK == spPSFT->AcquireCredentialsHandleA(
 		nullptr,
 		const_cast<SEC_CHAR*>(UNISP_NAME_A),
 		SECPKG_CRED_OUTBOUND,
@@ -158,6 +165,7 @@ ZStreamRWCon_SSL_Win::ZStreamRWCon_SSL_Win(const ZStreamR& iStreamR, const ZStre
 :	fStreamR(iStreamR)
 ,	fStreamW(iStreamW)
 ,	fSendOpen(true)
+,	fReceiveOpen(true)
 	{
 	bool iVerify = false;
 	bool iCheckName = false;
@@ -170,15 +178,15 @@ ZStreamRWCon_SSL_Win::ZStreamRWCon_SSL_Win(const ZStreamR& iStreamR, const ZStre
 
 	if (!this->pConnect())
 		{
-		sPSFT->FreeCredentialsHandle(&fCredHandle);
+		spPSFT->FreeCredentialsHandle(&fCredHandle);
 		throw runtime_error("ZStreamRWCon_SSL_Win, couldn't handshake");
 		}
 	}
 
 ZStreamRWCon_SSL_Win::~ZStreamRWCon_SSL_Win()
 	{
-	sPSFT->DeleteSecurityContext(&fCtxtHandle);
-	sPSFT->FreeCredentialsHandle(&fCredHandle);
+	spPSFT->DeleteSecurityContext(&fCtxtHandle);
+	spPSFT->FreeCredentialsHandle(&fCredHandle);
 	}
 
 void ZStreamRWCon_SSL_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
@@ -226,7 +234,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRe
 		inSBD.pBuffers = inSB;
 		inSBD.ulVersion = SECBUFFER_VERSION;
 
-		SECURITY_STATUS scRet = sPSFT->DecryptMessage(&fCtxtHandle, &inSBD, 0, nullptr);
+		SECURITY_STATUS scRet = spPSFT->DecryptMessage(&fCtxtHandle, &inSBD, 0, nullptr);
 
 		if (scRet == SEC_E_INCOMPLETE_MESSAGE || (FAILED(scRet) && fBufferEnc.empty()))
 			{
@@ -261,7 +269,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRe
 		SecBuffer* encrypted = nullptr;
 
 		// Pickup any decrypted data
-		for (size_t x = 1; x < 4; ++x)
+		for (size_t x = 0; x < 4; ++x)
 			{
 			if (inSB[x].BufferType == SECBUFFER_DATA && ! decrypted)
 				decrypted = &inSB[x];
@@ -284,7 +292,8 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRe
 			// Anything remaining we put in fBufferPlain, which must be
 			// empty otherwise we wouldn't have got to this point.
 			const char* data = static_cast<const char*>(decrypted->pvBuffer);
-			fBufferPlain.insert(fBufferPlain.begin(), data + countToCopy, data + decrypted->cbBuffer);
+			fBufferPlain.insert(fBufferPlain.begin(),
+				data + countToCopy, data + decrypted->cbBuffer);
 			}
 
 		if (encrypted)
@@ -340,7 +349,7 @@ void ZStreamRWCon_SSL_Win::Imp_Write(const void* iSource, size_t iCount, size_t*
 		*oCountWritten = 0;
 
 	SecPkgContext_StreamSizes theSizes;
-	if (FAILED(sPSFT->QueryContextAttributesA(
+	if (FAILED(spPSFT->QueryContextAttributesA(
 		&fCtxtHandle, SECPKG_ATTR_STREAM_SIZES, &theSizes)))
 		{
 		// QueryContextAttributesA really shouldn't ever fail.
@@ -378,13 +387,12 @@ void ZStreamRWCon_SSL_Win::Imp_Write(const void* iSource, size_t iCount, size_t*
 	outSBD.cBuffers = 4;
 	outSBD.ulVersion = SECBUFFER_VERSION;
 
-	SECURITY_STATUS result = sPSFT->EncryptMessage(&fCtxtHandle, 0, &outSBD, 0);
+	SECURITY_STATUS result = spPSFT->EncryptMessage(&fCtxtHandle, 0, &outSBD, 0);
 	if (SUCCEEDED(result))
 		{
-		const size_t countToSend = outSB[0].cbBuffer + outSB[1].cbBuffer + outSB[2].cbBuffer;
-		size_t countSent;
-		fStreamW.Write(outSB[0].pvBuffer, countToSend, &countSent);
-		if (countSent == countToSend)
+		if (spWriteFully(outSB[0], fStreamW)
+			&& spWriteFully(outSB[1], fStreamW)
+			&& spWriteFully(outSB[2], fStreamW))
 			{
 			if (oCountWritten)
 				*oCountWritten = countToEncrypt;
@@ -416,7 +424,7 @@ void ZStreamRWCon_SSL_Win::Imp_SendDisconnect()
 	outSBD.ulVersion = SECBUFFER_VERSION;
 
 	DWORD attributes;
-	SECURITY_STATUS scRet = sPSFT->InitializeSecurityContextA(
+	SECURITY_STATUS scRet = spPSFT->InitializeSecurityContextA(
 		&fCredHandle,
 		&fCtxtHandle,
 		nullptr,
@@ -433,7 +441,7 @@ void ZStreamRWCon_SSL_Win::Imp_SendDisconnect()
 	if (FAILED(scRet))
 		return;
 
-	spWriteFlushFree(outSB[0], fStreamW);
+	spWriteFreeFlush(outSB[0], fStreamW);
 	}
 
 void ZStreamRWCon_SSL_Win::Imp_Abort()
@@ -455,7 +463,7 @@ bool ZStreamRWCon_SSL_Win::pConnect()
 	outSBD.ulVersion = SECBUFFER_VERSION;
 
 	DWORD attributes;
-	if (SEC_I_CONTINUE_NEEDED != sPSFT->InitializeSecurityContextA(
+	if (SEC_I_CONTINUE_NEEDED != spPSFT->InitializeSecurityContextA(
 		&fCredHandle,
 		nullptr,
 		nullptr, // other party, needed if we're verifying
@@ -472,7 +480,7 @@ bool ZStreamRWCon_SSL_Win::pConnect()
 		return false;
 		}
 
-	spWriteFlushFree(outSB[0], fStreamW);
+	spWriteFreeFlush(outSB[0], fStreamW);
 
 	return this->pHandshake();
 	}
@@ -510,7 +518,7 @@ bool ZStreamRWCon_SSL_Win::pHandshake()
 		outSBD.ulVersion = SECBUFFER_VERSION;
 
 		DWORD attributes;
-		const SECURITY_STATUS result = sPSFT->InitializeSecurityContextA(
+		const SECURITY_STATUS result = spPSFT->InitializeSecurityContextA(
 			&fCredHandle,
 			&fCtxtHandle,
 			nullptr,
@@ -532,7 +540,7 @@ bool ZStreamRWCon_SSL_Win::pHandshake()
 		else
 			{
 			// Send anything that was generated.
-			spWriteFlushFree(outSB[0], fStreamW);
+			spWriteFreeFlush(outSB[0], fStreamW);
 
 			if (FAILED(result))
 				return false;
