@@ -75,12 +75,27 @@ public:
 		return fVal;
 		}
 
+	void Set(const T& iOther)
+		{
+		ZAcqMtx acq(fMtx);
+		fVal = iOther;
+		}
+
 	T GetSet(const T& iOther)
 		{
 		ZAcqMtx acq(fMtx);
 		const T prior = fVal;
 		fVal = iOther;
 		return prior;
+		}
+
+	bool CompareAndSwap(const T& iOld, const T& iNew)
+		{
+		ZAcqMtx acq(fMtx);
+		if (fVal != iOld)
+			return false;
+		fVal = iNew;
+		return true;
 		}
 
 private:
