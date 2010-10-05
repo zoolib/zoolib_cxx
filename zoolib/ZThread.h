@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread_boost.h"
 #include "zoolib/ZThread_MacMP.h"
 #include "zoolib/ZThread_pthread.h"
-#include "zoolib/ZThread_T.h" // For ZGuard_T, ZAcquirer_T, ZReleaser_T
+#include "zoolib/ZThread_T.h" // For ZAcquirer_T, ZReleaser_T, ZGuardR_T
 #include "zoolib/ZThread_Win.h"
 
 namespace ZooLib {
