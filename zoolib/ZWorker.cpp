@@ -83,7 +83,7 @@ bool ZWorker::IsAwake()
 	}
 
 bool ZWorker::IsAttached()
-	{ return ZRef<ZWorkerRunner>(fRunner); }
+	{ return fRunner.Get(); }
 
 ZRef<ZWorker::Callable_t> ZWorker::GetSetCallable_Attached(ZRef<Callable_t> iCallable)
 	{ return fCallable_Attached.GetSet(iCallable); }

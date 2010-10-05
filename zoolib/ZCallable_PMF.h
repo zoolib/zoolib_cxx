@@ -98,7 +98,7 @@ public:
 
 template <class Callee_t, class Passed_t, class R>
 class Callable0
-:	public ZCallable<R()>
+:	public ZCallable<R(void)>
 	{
 public:
 	typedef typename Traits<Passed_t>::Stored_t Stored_t;
@@ -289,7 +289,7 @@ private:
 #pragma mark * MakeCallable
 
 template <class Callee_t, class Passed_t, class R>
-ZRef<ZCallable<R()> >
+ZRef<ZCallable<R(void)> >
 MakeCallable(R (Callee_t::*iMethod)(), const Passed_t& iCallee)
 	{ return new Callable0<Callee_t, Passed_t, R>(iMethod, iCallee); }
 

@@ -35,7 +35,7 @@ class ZWorker_Callable
 :	public virtual ZWorker
 	{
 public:
-	typedef ZCallable<bool(ZRef<ZWorker>)> Callable_t;
+	typedef ZCallable<bool(ZRef_ZWorker)> Callable_t;
 
 	ZWorker_Callable(const ZRef<Callable_t>& iCallable)
 	:	fCallable(iCallable)
@@ -53,7 +53,7 @@ private:
 	};
 
 inline ZRef<ZWorker> MakeWorker(
-	const ZRef<ZCallable<bool(ZRef<ZWorker>)> >& iCallable)
+	const ZRef<ZCallable<bool(ZRef_ZWorker)> >& iCallable)
 	{ return new ZWorker_Callable(iCallable); }
 
 // =================================================================================================

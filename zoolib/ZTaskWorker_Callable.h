@@ -43,7 +43,7 @@ public:
 	};
 
 inline ZRef<ZTaskWorker> MakeTaskWorker(ZRef<ZTaskMaster> iTaskMaster,
-	const ZRef<ZCallable<bool(ZRef<ZWorker>)> >& iCallable)
+	const ZRef<ZCallable<bool(ZRef_ZWorker)> >& iCallable)
 	{ return new ZTaskWorker_Callable(iTaskMaster, iCallable); }
 
 } // namespace ZooLib

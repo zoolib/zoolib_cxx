@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 
 #include "zoolib/ZCompat_algorithm.h" // For min
+#include "zoolib/ZCompat_string.h" // For strncasecmp
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZUnicode.h"

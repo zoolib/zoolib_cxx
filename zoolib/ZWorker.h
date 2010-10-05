@@ -23,13 +23,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
-#include "zoolib/ZCounted.h"
 #include "zoolib/ZSafe.h"
 #include "zoolib/ZTime.h"
 
 namespace ZooLib {
 
 class ZWorkerRunner;
+
+// CW workaround
+class ZWorker;
+typedef ZRef<ZWorker> ZRef_ZWorker;
 
 // =================================================================================================
 #pragma mark -
@@ -51,7 +54,9 @@ public:
 	bool IsAwake();
 	bool IsAttached();
 
-	typedef ZCallable<void(ZRef<ZWorker>)> Callable_t;
+
+	typedef ZCallable<void(ZRef_ZWorker)> Callable_t;
+
 	ZRef<Callable_t> GetSetCallable_Attached(ZRef<Callable_t> iCallable);
 	ZRef<Callable_t> GetSetCallable_Detached(ZRef<Callable_t> iCallable);
 
