@@ -31,53 +31,28 @@ namespace ZCallable_PMF {
 #pragma mark -
 #pragma mark * Traits
 
-template <class T>
-class Traits
+template <class T> struct Traits
 	{};
 
-template <class T>
-class Traits<T*>
+template <class T> struct Traits<T*>
 	{
-public:
-	typedef T* Object_t;
 	typedef T* Temp_t;
-	typedef T* Ptr_t;
-
-	static Temp_t sGetTemp(const Object_t& iObject)
-		{ return iObject; }
-
-	static Ptr_t sGetPtr(const Temp_t& iTemp)
-		{ return iTemp; }
+	static T* sGetTemp(T* iObject) { return iObject; }
+	static T* sGetPtr(T* iTemp) { return iTemp; }
 	};
 
-template <class T>
-class Traits<ZRef<T> >
+template <class T> struct Traits<ZRef<T> >
 	{
-public:
-	typedef ZRef<T> Object_t;
-	typedef ZRef<T> Temp_t;
-	typedef T* Ptr_t;
-
-	static Temp_t sGetTemp(const Object_t& iObject)
-		{ return iObject; }
-
-	static Ptr_t sGetPtr(const Temp_t& iTemp)
-		{ return iTemp.Get(); }
+	typedef const ZRef<T>& Temp_t;
+	static const ZRef<T>& sGetTemp(const ZRef<T>& iObject) { return iObject; }
+	static T* sGetPtr(const ZRef<T>& iTemp) { return iTemp.Get(); }
 	};
 
-template <class T>
-class Traits<ZWeakRef<T> >
+template <class T> struct Traits<ZWeakRef<T> >
 	{
-public:
-	typedef ZWeakRef<T> Object_t;
 	typedef ZRef<T> Temp_t;
-	typedef T* Ptr_t;
-
-	static Temp_t sGetTemp(const Object_t& iObject)
-		{ return iObject; }
-
-	static Ptr_t sGetPtr(const Temp_t& iTemp)
-		{ return iTemp.Get(); }
+	static ZRef<T> sGetTemp(const ZWeakRef<T>& iObject) { return iObject; }
+	static T* sGetPtr(const ZRef<T>& iTemp) { return iTemp.Get(); }
 	};
 
 // =================================================================================================
