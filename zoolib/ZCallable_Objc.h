@@ -26,12 +26,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifdef __OBJC__
 
 #include <objc/message.h>
-#include <tr1/type_traits>
+#if defined(__arm__)
+	#include <tr1/type_traits>
+#endif
 
 namespace ZooLib {
 namespace ZCallable_ObjC {
 
-using namespace std::tr1;
+#if defined(__arm__)
+	using namespace std::tr1;
+#endif
 
 // =================================================================================================
 #pragma mark -
@@ -121,13 +125,19 @@ protected:
 #pragma mark -
 #pragma mark * Callable0
 
+template <class Func> class Callable;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 0 params)
+
 template <class R>
-class Callable0
+class Callable<R(void)>
 :	Base
 ,	public ZCallable<R(void)>
 	{
 public:
-	Callable0(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 	typedef R (*Function_t)(id, SEL);
 
 	// From ZCallable
@@ -140,15 +150,15 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable1
+#pragma mark * Callable (specialization for 1 param)
 
 template <class R, class P0>
-class Callable1
+class Callable<R(P0)>
 :	Base
 ,	public ZCallable<R(P0)>
 	{
 public:
-	Callable1(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 	typedef R (*Function_t)(id, SEL, P0);
 
 	// From ZCallable
@@ -161,15 +171,15 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable2
+#pragma mark * Callable (specialization for 2 params)
 
 template <class R, class P0, class P1>
-class Callable2
+class Callable<R(P0,P1)>
 :	Base
 ,	public ZCallable<R(P0,P1)>
 	{
 public:
-	Callable2(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 	typedef R (*Function_t)(id, SEL, P0, P1);
 
 	// From ZCallable
@@ -182,15 +192,15 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable3
+#pragma mark * Callable (specialization for 3 params)
 
 template <class R, class P0, class P1, class P2>
-class Callable3
+class Callable<R(P0,P1,P2)>
 :	Base
 ,	public ZCallable<R(P0,P1,P2)>
 	{
 public:
-	Callable3(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 	typedef R (*Function_t)(id, SEL, P0, P1, P2);
 
 	// From ZCallable
@@ -203,15 +213,15 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable4
+#pragma mark * Callable (specialization for 5 params)
 
 template <class R, class P0, class P1, class P2, class P3>
-class Callable4
+class Callable<R(P0,P1,P2,P3)>
 :	Base
 ,	public ZCallable<R(P0,P1,P2,P3)>
 	{
 public:
-	Callable4(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 	typedef R (*Function_t)(id, SEL, P0, P1, P2, P3);
 
 	// From ZCallable
@@ -227,12 +237,12 @@ public:
 #pragma mark * Callable5
 
 template <class R, class P0, class P1, class P2, class P3, class P4>
-class Callable5
+class Callable<R(P0,P1,P2,P3,P4)>
 :	Base
 ,	public ZCallable<R(P0,P1,P2,P3,P4)>
 	{
 public:
-	Callable5(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 	typedef R (*Function_t)(id, SEL, P0, P1, P2, P3, P4);
 
 	// From ZCallable
@@ -247,35 +257,10 @@ public:
 #pragma mark -
 #pragma mark * MakeCallable
 
-template <class R>
-ZRef<ZCallable<R(void)> >
+template <class Func>
+ZRef<ZCallable<Func> >
 MakeCallable(id iObj, SEL iSEL)
-	{ return new Callable0<R>(iObj, iSEL); }
-
-template <class R, class P0>
-ZRef<ZCallable<R(P0)> >
-MakeCallable(id iObj, SEL iSEL)
-	{ return new Callable1<R,P0>(iObj, iSEL); }
-
-template <class R, class P0, class P1>
-ZRef<ZCallable<R(P0,P1)> >
-MakeCallable(id iObj, SEL iSEL)
-	{ return new Callable2<R,P0,P1>(iObj, iSEL); }
-
-template <class R, class P0, class P1, class P2>
-ZRef<ZCallable<R(P0,P1,P2)> >
-MakeCallable(id iObj, SEL iSEL)
-	{ return new Callable3<R,P0,P1,P2>(iObj, iSEL); }
-
-template <class R, class P0, class P1, class P2, class P3>
-ZRef<ZCallable<R(P0,P1,P2,P3)> >
-MakeCallable(id iObj, SEL iSEL)
-	{ return new Callable4<R,P0,P1,P2,P3>(iObj, iSEL); }
-
-template <class R, class P0, class P1, class P2, class P3, class P4>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >
-MakeCallable(id iObj, SEL iSEL)
-	{ return new Callable5<R,P0,P1,P2,P3,P4>(iObj, iSEL); }
+	{ return new Callable<Func>(iObj, iSEL); }
 
 } // namespace ZCallable_ObjC
 
