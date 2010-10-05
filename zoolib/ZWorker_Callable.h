@@ -52,8 +52,7 @@ private:
 	ZRef<Callable_t> fCallable;
 	};
 
-inline ZRef<ZWorker> MakeWorker(
-	const ZRef<ZCallable<bool(ZRef_ZWorker)> >& iCallable)
+inline ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable::Callable_t> iCallable)
 	{ return new ZWorker_Callable(iCallable); }
 
 // =================================================================================================
@@ -84,12 +83,10 @@ private:
 	};
 
 // Maker that makes explicit this is will be a one-shot worker.
-inline ZRef<ZWorker> MakeWorkerOnce(
-	const ZRef<ZCallable<void(void)> >& iCallable)
+inline ZRef<ZWorker> MakeWorkerOnce(ZRef<ZWorker_Callable_Once::Callable_t> iCallable)
 	{ return new ZWorker_Callable_Once(iCallable); }
 
-inline ZRef<ZWorker> MakeWorker(
-	const ZRef<ZCallable<void(void)> >& iCallable)
+inline ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable_Once::Callable_t> iCallable)
 	{ return new ZWorker_Callable_Once(iCallable); }
 
 } // namespace ZooLib

@@ -27,11 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZCallable_Bind {
 
-struct Empty_t {};
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * SigTraits_T
+
+struct Empty_t {};
 
 template <class Func>
 struct SigTraits_T;
