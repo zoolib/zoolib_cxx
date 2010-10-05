@@ -138,14 +138,13 @@ OSStatus ZStreamRWCon_SSL_OSX::pRead(void* oDest, size_t* ioCount)
 		size_t countRead;
 		fStreamR.ReadAll(oDest, countToRead, &countRead);
 		*ioCount = countRead;
-		if (countRead == 0)
-			return ioErr;
-		return noErr;
+		if (countRead)
+			return noErr;
 		}
 	catch (...)
-		{
-		return errSSLClosedAbort;
-		}
+		{}
+
+	return ioErr;
 	}
 
 OSStatus ZStreamRWCon_SSL_OSX::spRead(SSLConnectionRef iRefcon, void* oDest, size_t* ioCount)
@@ -165,17 +164,17 @@ OSStatus ZStreamRWCon_SSL_OSX::pWrite(const void* iSource, size_t* ioCount)
 		fStreamW.Write(iSource, countToWrite, &countWritten);
 		fLastWasWrite = true;
 		*ioCount = countWritten;
-		if (countWritten == 0)
-			return errSSLClosedAbort;
-		return noErr;
+		if (countWritten)
+			return noErr;
 		}
 	catch (...)
-		{
-		return errSSLClosedAbort;
-		}
+		{}
+
+	return ioErr;
 	}
 
-OSStatus ZStreamRWCon_SSL_OSX::spWrite(SSLConnectionRef iRefcon, const void* iSource, size_t* ioCount)
+OSStatus ZStreamRWCon_SSL_OSX::spWrite(
+	SSLConnectionRef iRefcon, const void* iSource, size_t* ioCount)
 	{
 	ZStreamRWCon_SSL_OSX* theS =
 		const_cast<ZStreamRWCon_SSL_OSX*>(static_cast<const ZStreamRWCon_SSL_OSX*>(iRefcon));
