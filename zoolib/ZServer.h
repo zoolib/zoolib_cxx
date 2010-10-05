@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZServer__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCallable.h"
 #include "zoolib/ZSafeSet.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZTask.h"
 #include "zoolib/ZWorker.h"
 
 namespace ZooLib {
@@ -33,7 +33,7 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZServer
 
-class ZServer : public ZTaskMaster
+class ZServer : public ZCounted
 	{
 public:
 	class Responder;
@@ -44,9 +44,6 @@ public:
 
 // From ZCounted
 	virtual void Finalize();
-
-// From ZTaskMaster
-	virtual void Task_Finished(ZRef<ZTask> iTask);
 
 // Our protocol
 	virtual ZRef<Responder> MakeResponder() = 0;
@@ -64,8 +61,14 @@ public:
 	ZSafeSetIterConst<ZRef<Responder> > GetResponders();
 
 private:
+	void pListenerFinished(ZRef<ZWorker> iWorker);
+	void pResponderFinished(ZRef<Responder> iResponder);
+
 	class StreamerListener;
 	friend class StreamerListener;
+
+	class StreamerResponder;
+	friend class StreamerResponder;
 
 // Called by StreamerListener
 	void pConnected(ZRef<ZStreamerRW> iStreamer);
@@ -81,7 +84,7 @@ private:
 #pragma mark -
 #pragma mark * ZServer::Responder
 
-class ZServer::Responder : public ZTask
+class ZServer::Responder : public ZCounted
 	{
 public:
 	Responder(ZRef<ZServer> iServer);
@@ -89,7 +92,15 @@ public:
 
 	virtual void Respond(ZRef<ZStreamerRW> iStreamerRW) = 0;
 
+	virtual void Kill();
+
 	ZRef<ZServer> GetServer();
+
+protected:
+	void pFinished();
+
+private:
+	ZWeakRef<ZServer> fServer;
 	};
 
 // =================================================================================================

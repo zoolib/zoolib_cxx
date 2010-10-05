@@ -54,11 +54,17 @@ public:
 
 	void WaitTillFinished();
 
+	typedef ZCallable<void(ZRef<ZCommer>)> Callable_t;
+	ZRef<Callable_t> GetSetCallable_Started(ZRef<Callable_t> iCallable);
+	ZRef<Callable_t> GetSetCallable_Finished(ZRef<Callable_t> iCallable);
+
 private:
 	ZMtx fMtx;
 	ZCnd fCnd;
 	bool fReadStarted;
 	bool fWriteStarted;
+	ZRef<Callable_t> fCallable_Started;
+	ZRef<Callable_t> fCallable_Finished;
 	};
 
 // =================================================================================================

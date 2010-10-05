@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZTask.h"
 #include "zoolib/ZWorker.h"
 
 namespace ZooLib {
@@ -33,23 +32,18 @@ namespace ZooLib {
 #pragma mark * ZStreamerCopier
 
 class ZStreamerCopier
-:	public ZWorker,
-	public ZTask
+:	public ZWorker
 	{
 public:
-	ZStreamerCopier(ZRef<ZTaskMaster> iTaskMaster, ZRef<ZStreamerRCon> iStreamerRCon,
-		ZRef<ZStreamerWCon> iStreamerWCon);
+	ZStreamerCopier(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon);
 
-	ZStreamerCopier(ZRef<ZTaskMaster> iTaskMaster, ZRef<ZStreamerRCon> iStreamerRCon,
-		ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize);
+	ZStreamerCopier(
+		ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize);
 
 	virtual ~ZStreamerCopier();
 
 // From ZWorker
-	virtual void RunnerDetached();
 	virtual bool Work();
-
-// From ZTask
 	virtual void Kill();
 
 private:

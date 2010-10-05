@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZServer.h"
 #include "zoolib/ZStreamerListener.h"
 
@@ -29,50 +30,29 @@ namespace ZooLib {
 
 class ZServer::StreamerListener
 :	public ZStreamerListener
-,	public ZTask
 	{
 public:
 	StreamerListener(ZRef<ZServer> iServer, ZRef<ZStreamerRWFactory> iFactory);
 	virtual ~StreamerListener();
 
-// From StreamerListener
-	virtual void ListenFinished();
-
+// From ZStreamerListener
 	virtual bool Connected(ZRef<ZStreamerRW> iStreamer);
-
-// From ZTask
-	virtual void Kill();
+	ZRef<ZServer> fServer;
 	};
 
 ZServer::StreamerListener::StreamerListener(
 	ZRef<ZServer> iServer, ZRef<ZStreamerRWFactory> iFactory)
 :	ZStreamerListener(iFactory)
-,	ZTask(iServer)
+,	fServer(iServer)
 	{}
 
 ZServer::StreamerListener::~StreamerListener()
 	{}
 
-void ZServer::StreamerListener::ListenFinished()
-	{
-	ZTask::pFinished();
-	ZStreamerListener::ListenFinished();
-	}
-
 bool ZServer::StreamerListener::Connected(ZRef<ZStreamerRW> iStreamerRW)
 	{
-	if (ZRef<ZServer> theServer = this->GetTaskMaster().StaticCast<ZServer>())
-		{
-		theServer->pConnected(iStreamerRW);
-		return true;
-		}
-	return false;
-	}
-
-void ZServer::StreamerListener::Kill()
-	{
-	ZStreamerListener::Stop();
-	ZStreamerListener::Wake();
+	fServer->pConnected(iStreamerRW);
+	return true;
 	}
 
 // =================================================================================================
@@ -92,32 +72,10 @@ void ZServer::Finalize()
 	{
 	this->StopListenerWait();
 
-	for (ZSafeSetIter<ZRef<Responder> > i = fResponders; /*no test*/; /*no inc*/)
-		{
-		if (ZRef<Responder> theResponder = i.ReadErase())
-			this->pDetachTask(theResponder);
-		else
-			break;
-		}
+	fResponders.Clear();
 
 	if (this->FinishFinalize())
 		delete this;
-	}
-
-void ZServer::Task_Finished(ZRef<ZTask> iTask)
-	{
-	ZAcqMtx acq(fMtx);
-
-	if (fStreamerListener == iTask)
-		{
-		fStreamerListener.Clear();
-		}
-	else if (ZRef<Responder> theResponder = ZRefDynamicCast<Responder>(iTask))
-		{
-		fResponders.Erase(theResponder);
-		}
-
-	fCnd.Broadcast();
 	}
 
 void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
@@ -128,6 +86,7 @@ void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
 	ZAssert(iFactory);
 
 	fStreamerListener = new StreamerListener(this, iFactory);
+	fStreamerListener->GetSetCallable_Detached(MakeCallable(&ZServer::pListenerFinished, MakeWeakRef(this)));
 
 	sStartWorkerRunner(fStreamerListener);
 	}
@@ -138,7 +97,7 @@ void ZServer::StopListener()
 	if (ZRef<StreamerListener> theSL = fStreamerListener)
 		{
 		guard.Release();
-		theSL->Kill();
+		theSL->Stop();
 		}
 	}
 
@@ -182,6 +141,20 @@ ZRef<ZStreamerRWFactory> ZServer::GetFactory()
 ZSafeSetIterConst<ZRef<ZServer::Responder> > ZServer::GetResponders()
 	{ return fResponders; }
 
+void ZServer::pListenerFinished(ZRef<ZWorker> iWorker)
+	{
+	ZAcqMtx acq(fMtx);
+	fStreamerListener.Clear();
+	fCnd.Broadcast();
+	}
+
+void ZServer::pResponderFinished(ZRef<Responder> iResponder)
+	{
+	ZAcqMtx acq(fMtx);
+	fResponders.Erase(iResponder);
+	fCnd.Broadcast();
+	}
+
 void ZServer::pConnected(ZRef<ZStreamerRW> iStreamerRW)
 	{
 	if (iStreamerRW)
@@ -199,13 +172,22 @@ void ZServer::pConnected(ZRef<ZStreamerRW> iStreamerRW)
 #pragma mark * ZServer::Responder
 
 ZServer::Responder::Responder(ZRef<ZServer> iServer)
-:	ZTask(iServer)
+:	fServer(iServer)
 	{}
 
 ZServer::Responder::~Responder()
 	{}
 
+void ZServer::Responder::Kill()
+	{}
+
 ZRef<ZServer> ZServer::Responder::GetServer()
-	{ return this->GetTaskMaster().StaticCast<ZServer>(); }
+	{ return fServer.Get(); }
+
+void ZServer::Responder::pFinished()
+	{
+	if (ZRef<ZServer> theServer = fServer.Get())
+		theServer->pResponderFinished(this);
+	}
 
 } // namespace ZooLib

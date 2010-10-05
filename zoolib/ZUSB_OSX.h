@@ -58,7 +58,7 @@ public:
 		SInt32 iUSBVendor, SInt32 iUSBProduct);
 	virtual ~ZUSBWatcher();
 
-	typedef ZCallable1<void,ZRef<ZUSBDevice> > CB_DeviceAttached;
+	typedef ZCallable<void(ZRef<ZUSBDevice>)> CB_DeviceAttached;
 	void SetCallable(ZRef<CB_DeviceAttached> iCallable);
 
 private:
@@ -81,7 +81,7 @@ public:
 	ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_t iUSBDevice);
 	virtual ~ZUSBDevice();
 
-	typedef ZCallable1<void,ZRef<ZUSBDevice> > CB_DeviceDetached;
+	typedef ZCallable<void(ZRef<ZUSBDevice>)> CB_DeviceDetached;
 	void SetCallable(ZRef<CB_DeviceDetached> iCallable);
 
 	IOUSBDeviceInterface182** GetIOUSBDeviceInterface();

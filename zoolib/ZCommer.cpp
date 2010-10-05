@@ -107,16 +107,44 @@ void ZCommer::WriteFinished()
 	}
 
 void ZCommer::Started()
-	{}
+	{
+	ZGuardRMtx guard(fMtx);
+	if (ZRef<Callable_t> theCallable = fCallable_Started)
+		{
+		guard.Release();
+		theCallable->Call(this);
+		}
+	}
 
 void ZCommer::Finished()
-	{}
+	{
+	ZGuardRMtx guard(fMtx);
+	if (ZRef<Callable_t> theCallable = fCallable_Finished)
+		{
+		guard.Release();
+		theCallable->Call(this);
+		}
+	}
 
 void ZCommer::WaitTillFinished()
 	{
 	ZAcqMtx locker(fMtx);
 	while (fReadStarted || fWriteStarted)
 		fCnd.Wait(fMtx);
+	}
+
+ZRef<ZCommer::Callable_t> ZCommer::GetSetCallable_Started(ZRef<Callable_t> iCallable)
+	{
+	ZAcqMtx locker(fMtx);
+	fCallable_Started.swap(iCallable);
+	return iCallable;
+	}
+
+ZRef<ZCommer::Callable_t> ZCommer::GetSetCallable_Finished(ZRef<Callable_t> iCallable)
+	{
+	ZAcqMtx locker(fMtx);
+	fCallable_Finished.swap(iCallable);
+	return iCallable;
 	}
 
 // =================================================================================================

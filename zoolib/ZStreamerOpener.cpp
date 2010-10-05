@@ -26,9 +26,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZStreamerCopier
 
-ZStreamerOpener::ZStreamerOpener(ZRef<ZTaskMaster> iTaskMaster, ZRef<ZStreamerRWFactory> iFactory)
-:	ZTask(iTaskMaster)
-,	fFactory(iFactory)
+ZStreamerOpener::ZStreamerOpener(ZRef<ZStreamerRWFactory> iFactory)
+:	fFactory(iFactory)
 	{}
 
 ZStreamerOpener::~ZStreamerOpener()
@@ -37,14 +36,12 @@ ZStreamerOpener::~ZStreamerOpener()
 bool ZStreamerOpener::Work()
 	{
 	fStreamerRW = fFactory->MakeStreamerRW();
-	ZTask::pFinished();
 	return false;
 	}
 
 void ZStreamerOpener::Kill()
 	{
 	fStreamerRW = null;
-	ZTask::pFinished();
 	}
 
 ZRef<ZStreamerRW> ZStreamerOpener::GetStreamerRW()

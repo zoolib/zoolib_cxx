@@ -57,6 +57,9 @@ void ZWorker::RunnerDetached()
 		theCallable->Call(this);
 	}
 
+void ZWorker::Kill()
+	{}
+
 void ZWorker::Wake()
 	{
 	if (ZRef<ZWorkerRunner> theRunner = fRunner)

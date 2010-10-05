@@ -47,13 +47,14 @@ public:
 
 	virtual bool Work() = 0;
 
+	virtual void Kill();
+
 	void Wake();
 	void WakeAt(ZTime iSystemTime);
 	void WakeIn(double iInterval);
 
 	bool IsAwake();
 	bool IsAttached();
-
 
 	typedef ZCallable<void(ZRef_ZWorker)> Callable_t;
 

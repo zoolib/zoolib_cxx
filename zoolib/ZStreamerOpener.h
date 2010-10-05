@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZSafe.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZTask.h"
 #include "zoolib/ZWorker.h"
 
 namespace ZooLib {
@@ -34,17 +33,14 @@ namespace ZooLib {
 #pragma mark * ZStreamerOpener
 
 class ZStreamerOpener
-:	public ZWorker,
-	public ZTask
+:	public ZWorker
 	{
 public:
-	ZStreamerOpener(ZRef<ZTaskMaster> iTaskMaster, ZRef<ZStreamerRWFactory> iFactory);
+	ZStreamerOpener(ZRef<ZStreamerRWFactory> iFactory);
 	virtual ~ZStreamerOpener();
 
 // From ZWorker
 	virtual bool Work();
-
-// From ZTask
 	virtual void Kill();
 
 // Our protocol

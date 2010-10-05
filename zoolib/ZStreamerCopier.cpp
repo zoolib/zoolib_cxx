@@ -55,30 +55,22 @@ static bool spCopy(
 	return true;
 	}
 
-ZStreamerCopier::ZStreamerCopier(ZRef<ZTaskMaster> iTaskMaster,
+ZStreamerCopier::ZStreamerCopier(
 	ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon)
-:	ZTask(iTaskMaster),
-	fStreamerRCon(iStreamerRCon),
+:	fStreamerRCon(iStreamerRCon),
 	fStreamerWCon(iStreamerWCon),
 	fChunkSize(sStackBufferSize)
 	{}
 
-ZStreamerCopier::ZStreamerCopier(ZRef<ZTaskMaster> iTaskMaster,
+ZStreamerCopier::ZStreamerCopier(
 	ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize)
-:	ZTask(iTaskMaster),
-	fStreamerRCon(iStreamerRCon),
+:	fStreamerRCon(iStreamerRCon),
 	fStreamerWCon(iStreamerWCon),
 	fChunkSize(iChunkSize)
 	{}
 
 ZStreamerCopier::~ZStreamerCopier()
 	{}
-
-void ZStreamerCopier::RunnerDetached()
-	{
-	ZTask::pFinished();
-	ZWorker::RunnerDetached();
-	}
 
 bool ZStreamerCopier::Work()
 	{
