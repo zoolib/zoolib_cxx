@@ -104,7 +104,7 @@ public:
 		std::vector<SearchResult>& oChanged,
 		ZRef<Event>& oEvent) = 0;
 
-	typedef ZCallable1<void,Source*> Callable;
+	typedef ZCallable<void(Source*)> Callable;
 	void SetCallable(ZRef<Callable> iCallable);
 
 protected:

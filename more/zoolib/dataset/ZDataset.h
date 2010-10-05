@@ -146,7 +146,7 @@ private:
 #pragma mark -
 #pragma mark * Dataset
 
-class Dataset : public ZCounted
+class Dataset : public ZCountedWithoutFinalize
 	{
 public:
 	Dataset(const Nombre& iNombre, const ZRef<Stamp>& iStamp);

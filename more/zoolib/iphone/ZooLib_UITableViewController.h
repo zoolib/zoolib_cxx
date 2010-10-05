@@ -82,8 +82,8 @@ public:
 	ZQ<UITableViewCellEditingStyle> fEditingStyle;
 	ZQ<bool> fShouldIndentWhileEditing;
 	ZQ<CGFloat> fRowHeight;
-	ZRef<ZCallable2<void,ZRef<UITVC_Section>,size_t> > fCallable_AccessoryButtonTapped;
-	ZRef<ZCallable2<void,ZRef<UITVC_Section>,size_t> > fCallable_RowSelected;
+	ZRef<ZCallable<void(ZRef<UITVC_Section>,size_t)> > fCallable_AccessoryButtonTapped;
+	ZRef<ZCallable<void(ZRef<UITVC_Section>,size_t)> > fCallable_RowSelected;
 	};
 
 // =================================================================================================
@@ -127,8 +127,8 @@ public:
 	ZQ<UITableViewCellEditingStyle> fEditingStyle;
 	ZQ<bool> fShouldIndentWhileEditing;
 	ZQ<CGFloat> fRowHeight;
-	ZRef<ZCallable1<void,ZRef<Row> > > fCallable_AccessoryButtonTapped;
-	ZRef<ZCallable1<void,ZRef<Row> > > fCallable_RowSelected;
+	ZRef<ZCallable<void(ZRef<Row>)> > fCallable_AccessoryButtonTapped;
+	ZRef<ZCallable<void(ZRef<Row>)> > fCallable_RowSelected;
 	};
 
 } // namespace IPhone
