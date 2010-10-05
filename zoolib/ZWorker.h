@@ -51,7 +51,7 @@ public:
 	bool IsAwake();
 	bool IsAttached();
 
-	typedef ZCallable1<void,ZRef<ZWorker> > Callable_t;
+	typedef ZCallable<void(ZRef<ZWorker>)> Callable_t;
 	ZRef<Callable_t> GetSetCallable_Attached(ZRef<Callable_t> iCallable);
 	ZRef<Callable_t> GetSetCallable_Detached(ZRef<Callable_t> iCallable);
 
