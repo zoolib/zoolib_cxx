@@ -86,20 +86,20 @@ template <> struct Selector<void> { enum { value = eUse_normal }; };
 
 // -----
 
-template <class T, class Func_t, int selector = Selector<T>::value>
+template <class R, class Func_t, int selector = Selector<R>::value>
 struct MsgSend;
 
-template <class T, class Func_t>
-struct MsgSend<T, Func_t, eUse_normal>
+template <class R, class Func_t>
+struct MsgSend<R, Func_t, eUse_normal>
 	{ static Func_t sMsgSend() { return (Func_t)objc_msgSend; } };
 
-template <class T, class Func_t>
-struct MsgSend<T, Func_t, eUse_stret>
+template <class R, class Func_t>
+struct MsgSend<R, Func_t, eUse_stret>
 	{ static Func_t sMsgSend() { return (Func_t)objc_msgSend_stret; } };
 
 #if defined(__i386__) || defined(__x86_64__)
-	template <class T, class Func_t>
-	struct MsgSend<T, Func_t, eUse_fpret>
+	template <class R, class Func_t>
+	struct MsgSend<R, Func_t, eUse_fpret>
 		{ static Func_t sMsgSend() { return (Func_t)objc_msgSend_fpret; } };
 #endif
 
@@ -282,7 +282,6 @@ MakeCallable(id iObj, SEL iSEL)
 // =================================================================================================
 #pragma mark -
 #pragma mark * MakeCallable
-
 
 using ZCallable_ObjC::MakeCallable;
 

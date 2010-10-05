@@ -26,181 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-struct Empty_t {};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * SigTraits_T
-
-template <class Func>
-struct SigTraits_T;
-
-template <class R_p>
-struct SigTraits_T<R_p (void)>
-	{
-	typedef R_p R;
-
-	typedef Empty_t L0;
-	typedef Empty_t L1;
-	typedef Empty_t L2;
-	typedef Empty_t L3;
-	typedef Empty_t L4;
-
-	typedef Empty_t R4;
-	typedef Empty_t R3;
-	typedef Empty_t R2;
-	typedef Empty_t R1;
-	typedef Empty_t R0;
-	
-	typedef R (Func)();
-	};
-
-template <class R_p, class P0>
-struct SigTraits_T<R_p (P0)>
-	{
-	typedef R_p R;
-
-	typedef P0 L0;
-	typedef Empty_t L1;
-	typedef Empty_t L2;
-	typedef Empty_t L3;
-	typedef Empty_t L4;
-
-	typedef P0 R0;
-	typedef Empty_t R1;
-	typedef Empty_t R2;
-	typedef Empty_t R3;
-	typedef Empty_t R4;
-
-	typedef R (Func)(P0);
-	
-	typedef R (FuncL1)();
-
-	typedef R (FuncR1)();
-	};
-
-template <class R_p, class P0, class P1>
-struct SigTraits_T<R_p (P0, P1)>
-	{
-	typedef R_p R;
-
-	typedef P0 L0;
-	typedef P1 L1;
-	typedef Empty_t L2;
-	typedef Empty_t L3;
-	typedef Empty_t L4;
-
-	typedef P1 R0;
-	typedef P0 R1;
-	typedef Empty_t R2;
-	typedef Empty_t R3;
-	typedef Empty_t R4;
-
-	typedef R (Func)(P0,P1);
-
-	typedef R (FuncL1)(P1);
-	typedef R (FuncL2)();
-
-	typedef R (FuncR1)(P0);
-	typedef R (FuncR2)();
-	};
-
-template <class R_p, class P0, class P1, class P2>
-struct SigTraits_T<R_p (P0, P1, P2)>
-	{
-	typedef R_p R;
-
-	typedef P0 L0;
-	typedef P1 L1;
-	typedef P2 L2;
-	typedef Empty_t L3;
-	typedef Empty_t L4;
-
-	typedef P2 R0;
-	typedef P1 R1;
-	typedef P0 R2;
-	typedef Empty_t R3;
-	typedef Empty_t R4;
-
-	typedef R (Func)(P0, P1, P2);
-
-	typedef R (FuncL1)(P1,P2);
-	typedef R (FuncL2)(P2);
-	typedef R (FuncL3)();
-
-	typedef R (FuncR1)(P0, P1);
-	typedef R (FuncR2)(P0);
-	typedef R (FuncR3)();
-	};
-
-template <class R_p, class P0, class P1, class P2, class P3>
-struct SigTraits_T<R_p (P0, P1, P2, P3)>
-	{
-	typedef R_p R;
-
-	typedef P0 L0;
-	typedef P1 L1;
-	typedef P2 L2;
-	typedef P3 L3;
-	typedef Empty_t L4;
-
-	typedef P3 R0;
-	typedef P2 R1;
-	typedef P1 R2;
-	typedef P0 R3;
-	typedef Empty_t R4;
-
-	typedef R (Func)(P0, P1, P2, P3);
-
-	typedef R (FuncL1)(P1, P2, P3);
-	typedef R (FuncL2)(P2, P3);
-	typedef R (FuncL3)(P3);
-	typedef R (FuncL4)();
-
-	typedef R (FuncR1)(P0, P1, P2);
-	typedef R (FuncR2)(P0, P1);
-	typedef R (FuncR3)(P0);
-	typedef R (FuncR4)();
-	};
-
-template <class R_p, class P0, class P1, class P2, class P3, class P4>
-struct SigTraits_T<R_p (P0, P1, P2, P3, P4)>
-	{
-	typedef R_p R;
-
-	typedef P0 L0;
-	typedef P1 L1;
-	typedef P2 L2;
-	typedef P3 L3;
-	typedef P4 L4;
-
-	typedef P4 R0;
-	typedef P3 R1;
-	typedef P2 R2;
-	typedef P1 R3;
-	typedef P0 R4;
-
-	typedef R (Func)(P0, P1, P2, P3, P4);
-
-	typedef R (FuncL1)(P1, P2, P3, P4);
-	typedef R (FuncL2)(P2, P3, P4);
-	typedef R (FuncL3)(P3, P4);
-	typedef R (FuncL4)(P4);
-	typedef R (FuncL5)();
-
-	typedef R (FuncR1)(P0, P1, P2, P3);
-	typedef R (FuncR2)(P0, P1, P2);
-	typedef R (FuncR3)(P0, P1);
-	typedef R (FuncR4)(P0);
-	typedef R (FuncR5)();
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable
-
-template <typename Func> class ZCallable;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCallableBase
@@ -212,6 +37,12 @@ class ZCallableBase
 public:
 	typedef Func_p Func;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable
+
+template <typename Func> class ZCallable;
 
 // =================================================================================================
 #pragma mark -
