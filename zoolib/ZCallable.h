@@ -26,92 +26,263 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+struct Empty_t {};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * SigTraits_T
+
+template <class Func>
+struct SigTraits_T;
+
+template <class R_p>
+struct SigTraits_T<R_p (void)>
+	{
+	typedef R_p R;
+
+	typedef Empty_t L0;
+	typedef Empty_t L1;
+	typedef Empty_t L2;
+	typedef Empty_t L3;
+	typedef Empty_t L4;
+
+	typedef Empty_t R4;
+	typedef Empty_t R3;
+	typedef Empty_t R2;
+	typedef Empty_t R1;
+	typedef Empty_t R0;
+	
+	typedef R (Func)();
+	};
+
+template <class R_p, class P0>
+struct SigTraits_T<R_p (P0)>
+	{
+	typedef R_p R;
+
+	typedef P0 L0;
+	typedef Empty_t L1;
+	typedef Empty_t L2;
+	typedef Empty_t L3;
+	typedef Empty_t L4;
+
+	typedef P0 R0;
+	typedef Empty_t R1;
+	typedef Empty_t R2;
+	typedef Empty_t R3;
+	typedef Empty_t R4;
+
+	typedef R (Func)(P0);
+	
+	typedef R (FuncL1)();
+
+	typedef R (FuncR1)();
+	};
+
+template <class R_p, class P0, class P1>
+struct SigTraits_T<R_p (P0, P1)>
+	{
+	typedef R_p R;
+
+	typedef P0 L0;
+	typedef P1 L1;
+	typedef Empty_t L2;
+	typedef Empty_t L3;
+	typedef Empty_t L4;
+
+	typedef P1 R0;
+	typedef P0 R1;
+	typedef Empty_t R2;
+	typedef Empty_t R3;
+	typedef Empty_t R4;
+
+	typedef R (Func)(P0,P1);
+
+	typedef R (FuncL1)(P1);
+	typedef R (FuncL2)();
+
+	typedef R (FuncR1)(P0);
+	typedef R (FuncR2)();
+	};
+
+template <class R_p, class P0, class P1, class P2>
+struct SigTraits_T<R_p (P0, P1, P2)>
+	{
+	typedef R_p R;
+
+	typedef P0 L0;
+	typedef P1 L1;
+	typedef P2 L2;
+	typedef Empty_t L3;
+	typedef Empty_t L4;
+
+	typedef P2 R0;
+	typedef P1 R1;
+	typedef P0 R2;
+	typedef Empty_t R3;
+	typedef Empty_t R4;
+
+	typedef R (Func)(P0, P1, P2);
+
+	typedef R (FuncL1)(P1,P2);
+	typedef R (FuncL2)(P2);
+	typedef R (FuncL3)();
+
+	typedef R (FuncR1)(P0, P1);
+	typedef R (FuncR2)(P0);
+	typedef R (FuncR3)();
+	};
+
+template <class R_p, class P0, class P1, class P2, class P3>
+struct SigTraits_T<R_p (P0, P1, P2, P3)>
+	{
+	typedef R_p R;
+
+	typedef P0 L0;
+	typedef P1 L1;
+	typedef P2 L2;
+	typedef P3 L3;
+	typedef Empty_t L4;
+
+	typedef P3 R0;
+	typedef P2 R1;
+	typedef P1 R2;
+	typedef P0 R3;
+	typedef Empty_t R4;
+
+	typedef R (Func)(P0, P1, P2, P3);
+
+	typedef R (FuncL1)(P1, P2, P3);
+	typedef R (FuncL2)(P2, P3);
+	typedef R (FuncL3)(P3);
+	typedef R (FuncL4)();
+
+	typedef R (FuncR1)(P0, P1, P2);
+	typedef R (FuncR2)(P0, P1);
+	typedef R (FuncR3)(P0);
+	typedef R (FuncR4)();
+	};
+
+template <class R_p, class P0, class P1, class P2, class P3, class P4>
+struct SigTraits_T<R_p (P0, P1, P2, P3, P4)>
+	{
+	typedef R_p R;
+
+	typedef P0 L0;
+	typedef P1 L1;
+	typedef P2 L2;
+	typedef P3 L3;
+	typedef P4 L4;
+
+	typedef P4 R0;
+	typedef P3 R1;
+	typedef P2 R2;
+	typedef P1 R3;
+	typedef P0 R4;
+
+	typedef R (Func)(P0, P1, P2, P3, P4);
+
+	typedef R (FuncL1)(P1, P2, P3, P4);
+	typedef R (FuncL2)(P2, P3, P4);
+	typedef R (FuncL3)(P3, P4);
+	typedef R (FuncL4)(P4);
+	typedef R (FuncL5)();
+
+	typedef R (FuncR1)(P0, P1, P2, P3);
+	typedef R (FuncR2)(P0, P1, P2);
+	typedef R (FuncR3)(P0, P1);
+	typedef R (FuncR4)(P0);
+	typedef R (FuncR5)();
+	};
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCallable
 
-class ZCallable
-:	public ZCounted
-	{};
+template <typename Func> class ZCallable;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable0
+#pragma mark * ZCallableBase
 
-template <class R>
-class ZCallable0
-:	public ZCallable
+template <typename Func_p>
+class ZCallableBase
+:	public ZCounted
 	{
 public:
-	typedef R R_t;
-	typedef R (*Function_t)();
+	typedef Func_p Func;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 0 params)
+
+template <typename R>
+class ZCallable<R (void)>
+:	public ZCallableBase<R (void)>
+	{
+public:
 	virtual R Call() = 0;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable1
+#pragma mark * ZCallable (specialization for 1 param)
 
-template <class R, class P0>
-class ZCallable1
-:	public ZCallable
+template <typename R, typename P0>
+class ZCallable<R (P0)>
+:	public ZCallableBase<R (P0)>
 	{
 public:
-	typedef R R_t;
-	typedef P0 P0_t;
-	typedef R (*Function_t)(P0);
 	virtual R Call(P0) = 0;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable2
+#pragma mark * ZCallable (specialization for 2 params)
 
-template <class R, class P0, class P1>
-class ZCallable2
-:	public ZCallable
+template <typename R, typename P0, typename P1>
+class ZCallable<R (P0,P1)>
+:	public ZCallableBase<R (P0, P1)>
 	{
 public:
-	typedef R R_t;
-	typedef P0 P0_t;
-	typedef P1 P1_t;
-	typedef R (*Function_t)(P0, P1);
 	virtual R Call(P0, P1) = 0;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable3
+#pragma mark * ZCallable (specialization for 3 params)
 
-template <class R, class P0, class P1, class P2>
-class ZCallable3
-:	public ZCallable
+template <typename R, typename P0, typename P1, typename P2>
+class ZCallable<R (P0, P1, P2)>
+:	public ZCallableBase<R (P0, P1, P2)>
 	{
 public:
-	typedef R R_t;
-	typedef P0 P0_t;
-	typedef P1 P1_t;
-	typedef P2 P2_t;
-	typedef R (*Function_t)(P0, P1, P2);
 	virtual R Call(P0, P1, P2) = 0;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable4
+#pragma mark * ZCallable (specialization for 4 params)
 
-template <class R, class P0, class P1, class P2, class P3>
-class ZCallable4
-:	public ZCallable
+template <typename R, typename P0, typename P1, typename P2, typename P3>
+class ZCallable<R (P0, P1, P2, P3)>
+:	public ZCallableBase<R (P0, P1, P2, P3)>
 	{
 public:
-	typedef R R_t;
-	typedef P0 P0_t;
-	typedef P1 P1_t;
-	typedef P2 P2_t;
-	typedef P3 P3_t;
-	typedef R (*Function_t)(P0, P1, P2, P3);
 	virtual R Call(P0, P1, P2, P3) = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 5 params)
+
+template <typename R, typename P0, typename P1, typename P2, typename P3, typename P4>
+class ZCallable<R (P0, P1, P2, P3, P4)>
+:	public ZCallableBase<R (P0, P1, P2, P3, P4)>
+	{
+public:
+	virtual R Call(P0, P1, P2, P3, P4) = 0;
 	};
 
 } // namespace ZooLib

@@ -98,7 +98,7 @@ public:
 
 template <class Callee_t, class Passed_t, class R>
 class Callable0
-:	public ZCallable0<R>
+:	public ZCallable<R()>
 	{
 public:
 	typedef typename Traits<Passed_t>::Stored_t Stored_t;
@@ -111,7 +111,7 @@ public:
 	,	fCallee(iCallee)
 		{}
 
-	// From ZCallable0
+	// From ZCallable
 	virtual R Call()
 		{
 		if (Temp_t temp = Traits<Stored_t>::sGetTemp(fCallee))
@@ -130,7 +130,7 @@ private:
 
 template <class Callee_t, class Passed_t, class R, class P0>
 class Callable1
-:	public ZCallable1<R,P0>
+:	public ZCallable<R(P0)>
 	{
 public:
 	typedef typename Traits<Passed_t>::Stored_t Stored_t;
@@ -143,7 +143,7 @@ public:
 	,	fCallee(iCallee)
 		{}
 
-	// From ZCallable1
+	// From ZCallable
 	virtual R Call(P0 i0)
 		{
 		if (Temp_t temp = Traits<Stored_t>::sGetTemp(fCallee))
@@ -162,7 +162,7 @@ private:
 
 template <class Callee_t, class Passed_t, class R, class P0, class P1>
 class Callable2
-:	public ZCallable2<R,P0,P1>
+:	public ZCallable<R(P0,P1)>
 	{
 public:
 	typedef typename Traits<Passed_t>::Stored_t Stored_t;
@@ -175,7 +175,7 @@ public:
 	,	fCallee(iCallee)
 		{}
 
-	// From ZCallable2
+	// From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{
 		if (Temp_t temp = Traits<Stored_t>::sGetTemp(fCallee))
@@ -194,7 +194,7 @@ private:
 
 template <class Callee_t, class Passed_t, class R, class P0, class P1, class P2>
 class Callable3
-:	public ZCallable3<R,P0,P1,P2>
+:	public ZCallable<R(P0,P1,P2)>
 	{
 public:
 	typedef typename Traits<Passed_t>::Stored_t Stored_t;
@@ -207,7 +207,7 @@ public:
 	,	fCallee(iCallee)
 		{}
 
-	// From ZCallable3
+	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{
 		if (Temp_t temp = Traits<Stored_t>::sGetTemp(fCallee))
@@ -226,7 +226,7 @@ private:
 
 template <class Callee_t, class Passed_t, class R, class P0, class P1, class P2, class P3>
 class Callable4
-:	public ZCallable4<R,P0,P1,P2,P3>
+:	public ZCallable<R(P0,P1,P2,P3)>
 	{
 public:
 	typedef typename Traits<Passed_t>::Stored_t Stored_t;
@@ -239,7 +239,7 @@ public:
 	,	fCallee(iCallee)
 		{}
 
-	// From ZCallable3
+	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		if (Temp_t temp = Traits<Stored_t>::sGetTemp(fCallee))
@@ -252,36 +252,79 @@ private:
 	Stored_t fCallee;
 	};
 
-} // namespace ZCallable_PMF
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable5
+
+template <class Callee_t, class Passed_t, class R, class P0, class P1, class P2, class P3, class P4>
+class Callable5
+:	public ZCallable<R(P0,P1,P2,P3,P4)>
+	{
+public:
+	typedef typename Traits<Passed_t>::Stored_t Stored_t;
+	typedef typename Traits<Stored_t>::Temp_t Temp_t;
+
+	typedef R (Callee_t::*Method_t)(P0, P1, P2, P3, P4);
+
+	Callable5(Method_t iMethod, const Passed_t& iCallee)
+	:	fMethod(iMethod)
+	,	fCallee(iCallee)
+		{}
+
+	// From ZCallable
+	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
+		{
+		if (Temp_t temp = Traits<Stored_t>::sGetTemp(fCallee))
+			return (Traits<Temp_t>::sGetPtr(temp)->*fMethod)(i0, i1, i2, i3, i4);
+		return R();
+		}
+
+private:
+	Method_t fMethod;
+	Stored_t fCallee;
+	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * MakeCallable
 
 template <class Callee_t, class Passed_t, class R>
-ZRef<ZCallable0<R> >
+ZRef<ZCallable<R()> >
 MakeCallable(R (Callee_t::*iMethod)(), const Passed_t& iCallee)
-	{ return new ZCallable_PMF::Callable0<Callee_t, Passed_t, R>(iMethod, iCallee); }
+	{ return new Callable0<Callee_t, Passed_t, R>(iMethod, iCallee); }
 
 template <class Callee_t, class Passed_t, class R, class P0>
-ZRef<ZCallable1<R,P0> >
+ZRef<ZCallable<R(P0)> >
 MakeCallable(R (Callee_t::*iMethod)(P0), const Passed_t& iCallee)
-	{ return new ZCallable_PMF::Callable1<Callee_t, Passed_t, R, P0>(iMethod, iCallee); }
+	{ return new Callable1<Callee_t, Passed_t, R, P0>(iMethod, iCallee); }
 
 template <class Callee_t, class Passed_t, class R, class P0, class P1>
-ZRef<ZCallable2<R,P0,P1> >
+ZRef<ZCallable<R(P0,P1)> >
 MakeCallable(R (Callee_t::*iMethod)(P0, P1), const Passed_t& iCallee)
-	{ return new ZCallable_PMF::Callable2<Callee_t, Passed_t, R, P0, P1>(iMethod, iCallee); }
+	{ return new Callable2<Callee_t, Passed_t, R, P0, P1>(iMethod, iCallee); }
 
 template <class Callee_t, class Passed_t, class R, class P0, class P1, class P2>
-ZRef<ZCallable3<R,P0,P1,P2> >
+ZRef<ZCallable<R(P0,P1,P2)> >
 MakeCallable(R (Callee_t::*iMethod)(P0, P1, P2), const Passed_t& iCallee)
-	{ return new ZCallable_PMF::Callable3<Callee_t, Passed_t, R, P0, P1, P2>(iMethod, iCallee); }
+	{ return new Callable3<Callee_t, Passed_t, R, P0, P1, P2>(iMethod, iCallee); }
 
 template <class Callee_t, class Passed_t, class R, class P0, class P1, class P2, class P3>
-ZRef<ZCallable4<R,P0,P1,P2,P3> >
+ZRef<ZCallable<R(P0,P1,P2,P3)> >
 MakeCallable(R (Callee_t::*iMethod)(P0, P1, P2, P3), const Passed_t& iCallee)
-	{ return new ZCallable_PMF::Callable4<Callee_t, Passed_t, R, P0, P1, P2, P3>(iMethod, iCallee); }
+	{ return new Callable4<Callee_t, Passed_t, R, P0, P1, P2, P3>(iMethod, iCallee); }
+
+template <class Callee_t, class Passed_t, class R, class P0, class P1, class P2, class P3, class P4>
+ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >
+MakeCallable(R (Callee_t::*iMethod)(P0, P1, P2, P3, P4), const Passed_t& iCallee)
+	{ return new Callable5<Callee_t, Passed_t, R, P0, P1, P2, P3, P4>(iMethod, iCallee); }
+
+} // namespace ZCallable_PMF
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * MakeCallable
+
+using ZCallable_PMF::MakeCallable;
 
 } // namespace ZooLib
 

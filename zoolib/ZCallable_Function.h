@@ -26,22 +26,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+namespace ZCallable_Function {
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Function0
+#pragma mark * Callable0
 
 template <class R>
-class ZCallable_Function0
-:	public ZCallable0<R>
+class Callable0
+:	public ZCallable<R(void)>
 	{
 public:
 	typedef R (*Function_t)();
 
-	ZCallable_Function0(Function_t iFunction)
+	Callable0(Function_t iFunction)
 	:	fFunction(iFunction)
 		{}
 
-	// From ZCallable0
+	// From ZCallable
 	virtual R Call()
 		{ return fFunction(); }
 
@@ -49,27 +51,22 @@ private:
 	Function_t fFunction;
 	};
 
-template <class R>
-ZRef<ZCallable0<R> >
-MakeCallable(R (*iFunction)())
-	{ return new ZCallable_Function0<R>(iFunction); }
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Function1
+#pragma mark * Callable1
 
 template <class R, class P0>
-class ZCallable_Function1
-:	public ZCallable1<R,P0>
+class Callable1
+:	public ZCallable<R(P0)>
 	{
 public:
 	typedef R (*Function_t)(P0);
 
-	ZCallable_Function1(Function_t iFunction)
+	Callable1(Function_t iFunction)
 	:	fFunction(iFunction)
 		{}
 
-	// From ZCallable1
+	// From ZCallable
 	virtual R Call(P0 i0)
 		{ return fFunction(i0); }
 
@@ -77,27 +74,22 @@ private:
 	Function_t fFunction;
 	};
 
-template <class R, class P0>
-ZRef<ZCallable1<R,P0> >
-MakeCallable(R (*iFunction)(P0))
-	{ return new ZCallable_Function1<R,P0>(iFunction); }
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Function2
+#pragma mark * Callable2
 
 template <class R, class P0, class P1>
-class ZCallable_Function2
-:	public ZCallable2<R,P0,P1>
+class Callable2
+:	public ZCallable<R(P0,P1)>
 	{
 public:
 	typedef R (*Function_t)(P0, P1);
 
-	ZCallable_Function2(Function_t iFunction)
+	Callable2(Function_t iFunction)
 	:	fFunction(iFunction)
 		{}
 
-	// From ZCallable2
+	// From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{ return fFunction(i0, i1); }
 
@@ -105,27 +97,22 @@ private:
 	Function_t fFunction;
 	};
 
-template <class R, class P0, class P1>
-ZRef<ZCallable2<R,P0,P1> >
-MakeCallable(R (*iFunction)(P0,P1))
-	{ return new ZCallable_Function2<R,P0,P1>(iFunction); }
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Function3
+#pragma mark * Callable3
 
 template <class R, class P0, class P1, class P2>
-class ZCallable_Function3
-:	public ZCallable3<R,P0,P1,P2>
+class Callable3
+:	public ZCallable<R(P0,P1,P2)>
 	{
 public:
 	typedef R (*Function_t)(P0, P1, P2);
 
-	ZCallable_Function3(Function_t iFunction)
+	Callable3(Function_t iFunction)
 	:	fFunction(iFunction)
 		{}
 
-	// From ZCallable3
+	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{ return fFunction(i0, i1, i2); }
 
@@ -133,27 +120,22 @@ private:
 	Function_t fFunction;
 	};
 
-template <class R, class P0, class P1, class P2>
-ZRef<ZCallable3<R,P0,P1,P2> >
-MakeCallable(R (*iFunction)(P0,P1,P2))
-	{ return new ZCallable_Function3<R,P0,P1,P2>(iFunction); }
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Function4
+#pragma mark * Callable4
 
 template <class R, class P0, class P1, class P2, class P3>
-class ZCallable_Function4
-:	public ZCallable4<R,P0,P1,P2,P3>
+class Callable4
+:	public ZCallable<R(P0,P1,P2,P3)>
 	{
 public:
 	typedef R (*Function_t)(P0, P1, P2, P3);
 
-	ZCallable_Function4(Function_t iFunction)
+	Callable4(Function_t iFunction)
 	:	fFunction(iFunction)
 		{}
 
-	// From ZCallable4
+	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{ return fFunction(i0, i1, i2, i3); }
 
@@ -161,10 +143,70 @@ private:
 	Function_t fFunction;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable5
+
+template <class R, class P0, class P1, class P2, class P3, class P4>
+class Callable5
+:	public ZCallable<R(P0,P1,P2,P3,P4)>
+	{
+public:
+	typedef R (*Function_t)(P0, P1, P2, P3,P4);
+
+	Callable5(Function_t iFunction)
+	:	fFunction(iFunction)
+		{}
+
+	// From ZCallable
+	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
+		{ return fFunction(i0, i1, i2, i3, i4); }
+
+private:
+	Function_t fFunction;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * MakeCallablle
+
+template <class R>
+ZRef<ZCallable<R(void)> >
+MakeCallable(R (*iFunction)())
+	{ return new Callable0<R>(iFunction); }
+
+template <class R, class P0>
+ZRef<ZCallable<R(P0)> >
+MakeCallable(R (*iFunction)(P0))
+	{ return new Callable1<R,P0>(iFunction); }
+
+template <class R, class P0, class P1>
+ZRef<ZCallable<R(P0,P1)> >
+MakeCallable(R (*iFunction)(P0,P1))
+	{ return new Callable2<R,P0,P1>(iFunction); }
+
+template <class R, class P0, class P1, class P2>
+ZRef<ZCallable<R(P0,P1,P2)> >
+MakeCallable(R (*iFunction)(P0,P1,P2))
+	{ return new Callable3<R,P0,P1,P2>(iFunction); }
+
 template <class R, class P0, class P1, class P2, class P3>
-ZRef<ZCallable4<R,P0,P1,P2,P3> >
+ZRef<ZCallable<R(P0,P1,P2,P3)> >
 MakeCallable(R (*iFunction)(P0,P1,P2,P3))
-	{ return new ZCallable_Function4<R,P0,P1,P2,P3>(iFunction); }
+	{ return new Callable4<R,P0,P1,P2,P3>(iFunction); }
+
+template <class R, class P0, class P1, class P2, class P3, class P4>
+ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >
+MakeCallable(R (*iFunction)(P0,P1,P2,P3,P4))
+	{ return new Callable5<R,P0,P1,P2,P3,P4>(iFunction); }
+
+} // namespace ZCallable_Function
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * MakeCallable
+
+using ZCallable_Function::MakeCallable;
 
 } // namespace ZooLib
 
