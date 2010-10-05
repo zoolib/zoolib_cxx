@@ -124,13 +124,13 @@ protected:
 template <class R>
 class Callable0
 :	Base
-,	public ZCallable0<R>
+,	public ZCallable<R(void)>
 	{
 public:
 	Callable0(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 	typedef R (*Function_t)(id, SEL);
 
-	// From ZCallable0
+	// From ZCallable
 	virtual R Call()
 		{
 		return MsgSend<R, Function_t>::sMsgSend()
@@ -145,13 +145,13 @@ public:
 template <class R, class P0>
 class Callable1
 :	Base
-,	public ZCallable1<R,P0>
+,	public ZCallable<R(P0)>
 	{
 public:
 	Callable1(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 	typedef R (*Function_t)(id, SEL, P0);
 
-	// From ZCallable1
+	// From ZCallable
 	virtual R Call(P0 i0)
 		{
 		return MsgSend<R, Function_t>::sMsgSend()
@@ -166,13 +166,13 @@ public:
 template <class R, class P0, class P1>
 class Callable2
 :	Base
-,	public ZCallable2<R,P0,P1>
+,	public ZCallable<R(P0,P1)>
 	{
 public:
 	Callable2(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 	typedef R (*Function_t)(id, SEL, P0, P1);
 
-	// From ZCallable2
+	// From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{
 		return MsgSend<R, Function_t>::sMsgSend()
@@ -187,13 +187,13 @@ public:
 template <class R, class P0, class P1, class P2>
 class Callable3
 :	Base
-,	public ZCallable3<R,P0,P1,P2>
+,	public ZCallable<R(P0,P1,P2)>
 	{
 public:
 	Callable3(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 	typedef R (*Function_t)(id, SEL, P0, P1, P2);
 
-	// From ZCallable3
+	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{
 		return MsgSend<R, Function_t>::sMsgSend()
@@ -208,13 +208,13 @@ public:
 template <class R, class P0, class P1, class P2, class P3>
 class Callable4
 :	Base
-,	public ZCallable4<R,P0,P1,P2,P3>
+,	public ZCallable<R(P0,P1,P2,P3)>
 	{
 public:
 	Callable4(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 	typedef R (*Function_t)(id, SEL, P0, P1, P2, P3);
 
-	// From ZCallable4
+	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		return MsgSend<R, Function_t>::sMsgSend()
@@ -222,36 +222,69 @@ public:
 		}
 	};
 
-} // namespace ZCallable_ObjC
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable5
+
+template <class R, class P0, class P1, class P2, class P3, class P4>
+class Callable5
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4)>
+	{
+public:
+	Callable5(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+	typedef R (*Function_t)(id, SEL, P0, P1, P2, P3, P4);
+
+	// From ZCallable
+	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
+		{
+		return MsgSend<R, Function_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4);
+		}
+	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * MakeCallable
 
 template <class R>
-ZRef<ZCallable0<R> >
+ZRef<ZCallable<R(void)> >
 MakeCallable(id iObj, SEL iSEL)
-	{ return new ZCallable_ObjC::Callable0<R>(iObj, iSEL); }
+	{ return new Callable0<R>(iObj, iSEL); }
 
 template <class R, class P0>
-ZRef<ZCallable1<R,P0> >
+ZRef<ZCallable<R(P0)> >
 MakeCallable(id iObj, SEL iSEL)
-	{ return new ZCallable_ObjC::Callable1<R,P0>(iObj, iSEL); }
+	{ return new Callable1<R,P0>(iObj, iSEL); }
 
 template <class R, class P0, class P1>
-ZRef<ZCallable2<R,P0,P1> >
+ZRef<ZCallable<R(P0,P1)> >
 MakeCallable(id iObj, SEL iSEL)
-	{ return new ZCallable_ObjC::Callable2<R,P0,P1>(iObj, iSEL); }
+	{ return new Callable2<R,P0,P1>(iObj, iSEL); }
 
 template <class R, class P0, class P1, class P2>
-ZRef<ZCallable3<R,P0,P1,P2> >
+ZRef<ZCallable<R(P0,P1,P2)> >
 MakeCallable(id iObj, SEL iSEL)
-	{ return new ZCallable_ObjC::Callable3<R,P0,P1,P2>(iObj, iSEL); }
+	{ return new Callable3<R,P0,P1,P2>(iObj, iSEL); }
 
 template <class R, class P0, class P1, class P2, class P3>
-ZRef<ZCallable4<R,P0,P1,P2,P3> >
+ZRef<ZCallable<R(P0,P1,P2,P3)> >
 MakeCallable(id iObj, SEL iSEL)
-	{ return new ZCallable_ObjC::Callable4<R,P0,P1,P2,P3>(iObj, iSEL); }
+	{ return new Callable4<R,P0,P1,P2,P3>(iObj, iSEL); }
+
+template <class R, class P0, class P1, class P2, class P3, class P4>
+ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >
+MakeCallable(id iObj, SEL iSEL)
+	{ return new Callable5<R,P0,P1,P2,P3,P4>(iObj, iSEL); }
+
+} // namespace ZCallable_ObjC
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * MakeCallable
+
+
+using ZCallable_ObjC::MakeCallable;
 
 } // namespace ZooLib
 
