@@ -32,10 +32,10 @@ namespace ZooLib {
 #pragma mark * ZWorker_Callable
 
 class ZWorker_Callable
-:	public ZWorker
+:	public virtual ZWorker
 	{
 public:
-	typedef ZCallable1<bool, ZRef<ZWorker> > Callable_t;
+	typedef ZCallable<bool(ZRef<ZWorker>)> Callable_t;
 
 	ZWorker_Callable(const ZRef<Callable_t>& iCallable)
 	:	fCallable(iCallable)
@@ -53,7 +53,7 @@ private:
 	};
 
 inline ZRef<ZWorker> MakeWorker(
-	const ZRef<ZCallable1<bool, ZRef<ZWorker> > >& iCallable)
+	const ZRef<ZCallable<bool(ZRef<ZWorker>)> >& iCallable)
 	{ return new ZWorker_Callable(iCallable); }
 
 // =================================================================================================
@@ -64,7 +64,7 @@ class ZWorker_Callable_Once
 :	public ZWorker
 	{
 public:
-	typedef ZCallable0<void> Callable_t;
+	typedef ZCallable<void(void)> Callable_t;
 
 	ZWorker_Callable_Once(const ZRef<Callable_t>& iCallable)
 	:	fCallable(iCallable)
@@ -85,11 +85,11 @@ private:
 
 // Maker that makes explicit this is will be a one-shot worker.
 inline ZRef<ZWorker> MakeWorkerOnce(
-	const ZRef<ZCallable0<void> >& iCallable)
+	const ZRef<ZCallable<void(void)> >& iCallable)
 	{ return new ZWorker_Callable_Once(iCallable); }
 
 inline ZRef<ZWorker> MakeWorker(
-	const ZRef<ZCallable0<void> >& iCallable)
+	const ZRef<ZCallable<void(void)> >& iCallable)
 	{ return new ZWorker_Callable_Once(iCallable); }
 
 } // namespace ZooLib
