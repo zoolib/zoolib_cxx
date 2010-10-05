@@ -30,7 +30,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-
 namespace ZUtil_STL {
 
 // ==================================================
@@ -58,56 +57,66 @@ const T* sFirstOrNil(const std::vector<T>& iVec)
 	return iVec.empty() ? nullptr : &iVec[0];
 	}
 
+template <typename T>
+typename std::set<T>::iterator sEraseInc(std::set<T>& ioSet, typename std::set<T>::iterator iter)
+	{
+	if (ioSet.end() != iter)
+		{
+		const T theVal = *iter;
+		ioSet.erase(iter);
+		iter = ioSet.lower_bound(theVal);
+		}
+	return iter;
+	}
+
 // ==================================================
 
 /** Returns true if iVector contains iElement. iVector is
 assumed to be unordered, so we use find to make the determination. */
-template <typename T, typename S>
-bool sContains(const std::vector<T>& iVector, S iElement)
+template <typename Base, typename Derived>
+bool sContains(const std::vector<Base>& iVector, Derived iElement)
 	{ return iVector.end() != std::find(iVector.begin(), iVector.end(), iElement); }
 
 
 /** Returns true if iSet contains iElement. */
-template <typename T, typename S>
-bool sContains(const std::set<T>& iSet, S iElement)
+template <typename Base, typename Derived>
+bool sContains(const std::set<Base>& iSet, Derived iElement)
 	{ return iSet.end() != iSet.find(iElement); }
 
 
 /** Returns true if iMap has an element at iKey. */
-template <typename K, typename V>
-bool sContains(const std::map<K, V>& iMap, K iKey)
+template <typename KBase, typename KDerived, typename Value>
+bool sContains(const std::map<KBase, Value>& iMap, KDerived iKey)
 	{ return iMap.end() != iMap.find(iKey); }
 
 
-/** Appends iElement to ioVector by calling push_back. If iElement
-was already contained in ioVector then false is returned and no change is made
-to ioVector. */
-template <typename T>
-bool sPushBackIfNotContains(std::vector<T>& ioVector, T iElement)
+/** Appends iElement to ioVec by calling push_back. If iElement was already contained in ioVec
+then false is returned and no change is made to ioVec. */
+template <typename Base, typename Derived>
+bool sPushBackIfNotContains(std::vector<Base>& ioVec, Derived iElement)
 	{
-	typename std::vector<T>::iterator i = std::find(ioVector.begin(), ioVector.end(), iElement);
-	if (i != ioVector.end())
+	typename std::vector<Base>::iterator i = std::find(ioVec.begin(), ioVec.end(), iElement);
+	if (i != ioVec.end())
 		return false;
-	ioVector.push_back(iElement);
+	ioVec.push_back(iElement);
 	return true;
 	}
 
 
-/** Appends iElement to ioVector by calling push_back. We first assert, controlled
-by iDebugLevel, that iElement is not already present in ioVector. */
-template <typename T>
-void sPushBackMustNotContain(const int iDebugLevel, std::vector<T>& ioVector, T iElement)
+/** Appends iElement to ioVec by calling push_back. We first assert, controlled
+by iDebugLevel, that iElement is not already present in ioVec. */
+template <typename Base, typename Derived>
+void sPushBackMustNotContain(const int iDebugLevel, std::vector<Base>& ioVec, Derived iElement)
 	{
-	ZAssertStop(iDebugLevel,
-		ioVector.end() == std::find(ioVector.begin(), ioVector.end(), iElement));
-	ioVector.push_back(iElement);
+	ZAssertStop(iDebugLevel, ioVec.end() == std::find(ioVec.begin(), ioVec.end(), iElement));
+	ioVec.push_back(iElement);
 	}
 
 
 /** Inserts iElement to ioSet. We first assert, controlled
 by iDebugLevel, that iElement is not already present in ioSet. */
-template <typename T>
-void sInsertMustNotContain(const int iDebugLevel, std::set<T>& ioSet, T iElement)
+template <typename Base, typename Derived>
+void sInsertMustNotContain(const int iDebugLevel, std::set<Base>& ioSet, Derived iElement)
 	{
 	ZAssertStop(iDebugLevel, ioSet.end() == ioSet.find(iElement));
 	ioSet.insert(iElement);
@@ -115,178 +124,176 @@ void sInsertMustNotContain(const int iDebugLevel, std::set<T>& ioSet, T iElement
 
 
 /** Inserts iElement in ioSet, if it's not already contained. */
-template <typename T>
-bool sInsertIfNotContains(std::set<T>& ioSet, T iElement)
+template <typename Base, typename Derived>
+bool sInsertIfNotContains(std::set<Base>& ioSet, Derived iElement)
 	{
-	typename std::set<T>::iterator i = ioSet.lower_bound(iElement);
-	if (ioSet.end() == i || !(*i == iElement))
-		{
-		ioSet.insert(i, iElement);
-		return true;
-		}
-	return false;
+	typename std::set<Base>::iterator i = ioSet.lower_bound(iElement);
+	if (ioSet.end() != i && *i == iElement)
+		return false;
+	ioSet.insert(i, iElement);
+	return true;
 	}
 
 
-/** If the unordered vector ioVector contains iElement then it is
-removed and true returned. Otherwise no change is made to ioVector and
+/** If the unordered vector ioVec contains iElement then it is
+removed and true returned. Otherwise no change is made to ioVec and
 false is returned. */
-template <typename T>
-bool sEraseIfContains(std::vector<T>& ioVector, T iElement)
+template <typename Base, typename Derived>
+bool sEraseIfContains(std::vector<Base>& ioVec, Derived iElement)
 	{
-	typename std::vector<T>::iterator i = std::find(ioVector.begin(), ioVector.end(), iElement);
-	if (i == ioVector.end())
+	typename std::vector<Base>::iterator i = std::find(ioVec.begin(), ioVec.end(), iElement);
+	if (i == ioVec.end())
 		return false;
-	ioVector.erase(i);
+	ioVec.erase(i);
 	return true;
 	}
 
 
 /** If ioSet contains iElement then it is removed and true returned.
 Otherwise no change is made to ioSet and false is returned. */
-template <typename T>
-bool sEraseIfContains(std::set<T>& ioSet, T iElement)
+template <typename Base, typename Derived>
+bool sEraseIfContains(std::set<Base>& ioSet, Derived iElement)
 	{
-	typename std::set<T>::iterator i = ioSet.find(iElement);
-	if (i != ioSet.end())
-		{
-		ioSet.erase(i);
-		return true;
-		}
-	return false;
+	typename std::set<Base>::iterator i = ioSet.find(iElement);
+	if (i == ioSet.end())
+		return false;
+	ioSet.erase(i);
+	return true;
 	}
 
 
-/** Removes iElement from ioVector, asserting that it is present and
+/** Removes iElement from ioVec, asserting that it is present and
 returning an iterator referencing the position at which iElement was found. */
-template <typename T>
-typename std::vector<T>::iterator sEraseMustContain(
-	const int iDebugLevel, std::vector<T>& ioVector, T iElement)
+template <typename Base, typename Derived>
+typename std::vector<Base>::iterator sEraseMustContain(const int iDebugLevel,
+	std::vector<Base>& ioVec, Derived iElement)
 	{
-	typename std::vector<T>::iterator i = std::find(ioVector.begin(), ioVector.end(), iElement);
-	ZAssertStop(iDebugLevel, i != ioVector.end());
-	return ioVector.erase(i);
+	typename std::vector<Base>::iterator i = std::find(ioVec.begin(), ioVec.end(), iElement);
+	ZAssertStop(iDebugLevel, i != ioVec.end());
+	return ioVec.erase(i);
 	}
 
 
 /** Removes iElement from ioSet, asserting that it is present. */
-template <typename T>
-void sEraseMustContain(const int iDebugLevel, std::set<T>& ioSet, T iElement)
+template <typename Base, typename Derived>
+void sEraseMustContain(const int iDebugLevel, std::set<Base>& ioSet, Derived iElement)
 	{
-	typename std::set<T>::iterator i = ioSet.find(iElement);
+	typename std::set<Base>::iterator i = ioSet.find(iElement);
 	ZAssertStop(iDebugLevel, i != ioSet.end());
 	ioSet.erase(i);
 	}
 
 // ==================================================
 
-/** The contents of iVector are assumed to be sorted by less<T>. Returns
+/** The contents of iVector are assumed to be sorted by less<Base>. Returns
 true if iVector contains iElement. */
-template <typename T>
-bool sSortedContains(const std::vector<T>& iVector, T iElement)
+template <typename Base, typename Derived>
+bool sSortedContains(const std::vector<Base>& iVector, Derived iElement)
 	{
-	typename std::vector<T>::const_iterator i =
+	typename std::vector<Base>::const_iterator i =
 		lower_bound(iVector.begin(), iVector.end(), iElement);
 	return i != iVector.end() && *i == iElement;
 	}
 
 
-/** The contents of iVector are assumed to be sorted by less<T>. If iElement
-was already contained in iVector then false is returned and no change is made
-to iVector. Otherwise it is inserted using lower_bound and less<T> and true
+/** The contents of ioVec are assumed to be sorted by less<Base>. If iElement
+was already contained in ioVec then false is returned and no change is made
+to ioVec. Otherwise it is inserted using lower_bound and less<Base> and true
 is returned. */
-template <typename T>
-bool sSortedInsertIfNotContains(std::vector<T>& iVector, T iElement)
+template <typename Base, typename Derived>
+bool sSortedInsertIfNotContains(std::vector<Base>& ioVec, Derived iElement)
 	{
-	typename std::vector<T>::iterator i = lower_bound(iVector.begin(), iVector.end(), iElement);
-	if (i != iVector.end() && *i == iElement)
+	typename std::vector<Base>::iterator i = lower_bound(ioVec.begin(), ioVec.end(), iElement);
+
+	if (i != ioVec.end() && *i == iElement)
 		return false;
-	iVector.insert(i, iElement);
+
+	ioVec.insert(i, iElement);
 	return true;
 	}
 
 
-/** The contents of iVector are assumed to be sorted by less<T>. Returns false
-if iVector does not contain iElement. If iVector does contain
+/** The contents of ioVec are assumed to be sorted by less<Base>. Returns false
+if ioVec does not contain iElement. If ioVec does contain
 iElement then it is removed and true returned. */
-template <typename T>
-bool sSortedEraseIfContains(std::vector<T>& iVector, T iElement)
+template <typename Base, typename Derived>
+bool sSortedEraseIfContains(std::vector<Base>& ioVec, Derived iElement)
 	{
-	typename std::vector<T>::iterator i = lower_bound(iVector.begin(), iVector.end(), iElement);
-	if (i == iVector.end() || !(*i == iElement))
+	typename std::vector<Base>::iterator i = lower_bound(ioVec.begin(), ioVec.end(), iElement);
+
+	if (i == ioVec.end() || !(*i == iElement))
 		return false;
-	iVector.erase(i);
+
+	ioVec.erase(i);
 	return true;
 	}
 
 
-/** The contents of iVector are assumed to be sorted by less<T>. We first
-assert, under the control of iDebugLevel, that iVector does not contain iElement.
-We then insert iElement using lower_bound and less<T>. */
-template <typename T>
-void sSortedInsertMustNotContain(const int iDebugLevel, std::vector<T>& iVector, T iElement)
+/** The contents of ioVec are assumed to be sorted by less<Base>. We first
+assert, under the control of iDebugLevel, that ioVec does not contain iElement.
+We then insert iElement using lower_bound and less<Base>. */
+template <typename Base, typename Derived>
+void sSortedInsertMustNotContain(const int iDebugLevel, std::vector<Base>& ioVec, Derived iElement)
 	{
-	typename std::vector<T>::iterator i = lower_bound(iVector.begin(), iVector.end(), iElement);
-	ZAssertStop(iDebugLevel, i == iVector.end() || !(*i == iElement));
-	iVector.insert(i, iElement);
+	typename std::vector<Base>::iterator i = lower_bound(ioVec.begin(), ioVec.end(), iElement);
+	ZAssertStop(iDebugLevel, i == ioVec.end() || !(*i == iElement));
+	ioVec.insert(i, iElement);
 	}
 
 
-/** The contents of iVector are assumed to be sorted by less<T>. We first
-assert, under the control of iDebugLevel, that iVector contains iElement.
-We then remove iElement using lower_bound and less<T>. */
-template <typename T>
-void sSortedEraseMustContain(const int iDebugLevel, std::vector<T>& iVector, T iElement)
+/** The contents of ioVec are assumed to be sorted by less<Base>. We first
+assert, under the control of iDebugLevel, that ioVec contains iElement.
+We then remove iElement using lower_bound and less<Base>. */
+template <typename Base, typename Derived>
+void sSortedEraseMustContain(const int iDebugLevel, std::vector<Base>& ioVec, Derived iElement)
 	{
-	typename std::vector<T>::iterator i = lower_bound(iVector.begin(), iVector.end(), iElement);
-	ZAssertStop(iDebugLevel, i != iVector.end() && *i == iElement);
-	iVector.erase(i);
+	typename std::vector<Base>::iterator i = lower_bound(ioVec.begin(), ioVec.end(), iElement);
+	ZAssertStop(iDebugLevel, i != ioVec.end() && *i == iElement);
+	ioVec.erase(i);
 	}
 
 // ==================================================
 
-template <typename K, typename V>
-bool sEraseIfContains(std::map<K, V>& ioMap, K iKey)
+template <typename KBase, typename KDerived, typename Value>
+bool sEraseIfContains(std::map<KBase, Value>& ioMap, KDerived iKey)
 	{
-	typename std::map<K, V>::iterator i = ioMap.find(iKey);
-	if (i != ioMap.end())
-		{
-		ioMap.erase(i);
-		return true;
-		}
-	return false;
+	typename std::map<KBase, Value>::iterator i = ioMap.find(iKey);
+	if (i == ioMap.end())
+		return false;
+	ioMap.erase(i);
+	return true;
 	}
 
 
-template <typename K, typename V>
-void sEraseMustContain(const int iDebugLevel, std::map<K, V>& ioMap, K iKey)
+template <typename KBase, typename KDerived, typename Value>
+void sEraseMustContain(const int iDebugLevel, std::map<KBase, Value>& ioMap, KDerived iKey)
 	{
-	typename std::map<K, V>::iterator i = ioMap.find(iKey);
+	typename std::map<KBase, Value>::iterator i = ioMap.find(iKey);
 	ZAssertStop(iDebugLevel, i != ioMap.end());
 	ioMap.erase(i);
 	}
 
 
-template <typename K, typename V>
-V sEraseAndReturn(const int iDebugLevel, std::map<K, V>& ioMap, K iKey)
+template <typename KBase, typename KDerived, typename Value>
+Value sEraseAndReturn(const int iDebugLevel, std::map<KBase, Value>& ioMap, KDerived iKey)
 	{
-	typename std::map<K, V>::iterator iter = ioMap.find(iKey);
+	typename std::map<KBase, Value>::iterator iter = ioMap.find(iKey);
 	ZAssertStop(iDebugLevel, ioMap.end() != iter);
-	V result = (*iter).second;
+	Value result = (*iter).second;
 	ioMap.erase(iter);
 	return result;
 	}
 
 
-template <typename K, typename V>
-void sInsertMustNotContain(const int iDebugLevel, std::map<K, V>& ioMap, K iKey, V iValue)
+template <typename KBase, typename KDerived, typename Value>
+void sInsertMustNotContain(const int iDebugLevel,
+	std::map<KBase, Value>& ioMap, KDerived iKey, Value iValue)
 	{
 	ZAssertStop(iDebugLevel, ioMap.end() == ioMap.find(iKey));
-	ioMap.insert(typename std::map<K, V>::value_type(iKey, iValue));
+	ioMap.insert(typename std::map<KBase, Value>::value_type(iKey, iValue));
 	}
 
 } // namespace ZUtil_STL
-
 } // namespace ZooLib
 
 #endif // __ZUtil_STL__
