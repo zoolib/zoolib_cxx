@@ -64,7 +64,8 @@ static bool spIsValidName(uint32 iName)
 
 static ZQ<bool> spIsContainer(const string& iName)
 	{
-	if (false) {}
+	// Disabled for now.
+	if (true) {}
 	else if (iName == "mean") return false;
 	else if (iName == "hdlr") return false;
 	else if (iName == "ftyp") return false;
@@ -194,8 +195,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 		theSize -= headerSize;
 		}
 
-	ZQ<bool> isContainerQ = spIsContainer(oName);
-	if (isContainerQ)
+	if (ZQ<bool> isContainerQ = spIsContainer(oName))
 		{
 		if (isContainerQ.Get())
 			oYadR = new YadMapR(fStreamerR, theSize);
