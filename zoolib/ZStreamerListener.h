@@ -43,6 +43,7 @@ public:
 	virtual void RunnerDetached();
 
 	virtual bool Work();
+	virtual void Kill();
 
 // Our protocol
 	virtual void ListenStarted();
@@ -51,8 +52,6 @@ public:
 	virtual bool Connected(ZRef<ZStreamerRW> iStreamer) = 0;
 
 	ZRef<ZStreamerRWFactory> GetFactory();
-
-	void Stop();
 
 protected:
 	ZSafe<ZRef<ZStreamerRWFactory> > fFactory;

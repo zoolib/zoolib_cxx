@@ -97,7 +97,7 @@ void ZServer::StopListener()
 	if (ZRef<StreamerListener> theSL = fStreamerListener)
 		{
 		guard.Release();
-		theSL->Stop();
+		theSL->Kill();
 		}
 	}
 

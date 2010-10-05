@@ -62,6 +62,16 @@ bool ZStreamerListener::Work()
 	return false;
 	}
 
+void ZStreamerListener::Kill()
+	{
+	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+		{
+		fFactory = null;
+		theFactory->Cancel();
+		}
+	ZWorker::Wake();
+	}
+
 void ZStreamerListener::ListenStarted()
 	{}
 
@@ -70,15 +80,5 @@ void ZStreamerListener::ListenFinished()
 
 ZRef<ZStreamerRWFactory> ZStreamerListener::GetFactory()
 	{ return fFactory; }
-
-void ZStreamerListener::Stop()
-	{
-	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
-		{
-		fFactory = null;//.Clear();
-		theFactory->Cancel();
-		}
-	ZWorker::Wake();
-	}
 
 } // namespace ZooLib
