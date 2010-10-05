@@ -54,7 +54,7 @@ enum EToken
 typedef pair<string, string> Attr_t;
 typedef vector<Attr_t> Attrs_t;
 
-typedef ZCallable1<string,string> Callable_Entity;
+typedef ZCallable<string(string)> Callable_Entity;
 
 // =================================================================================================
 #pragma mark -

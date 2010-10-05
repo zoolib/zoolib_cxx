@@ -36,14 +36,14 @@ class ZTaskWorker_Callable
 ,	public ZWorker_Callable
 	{
 public:
-	ZTaskWorker_Callable(ZRef<ZTaskMaster> iTaskMaster, ZRef<Callable_t> iCallable)
+	ZTaskWorker_Callable(ZRef<ZTaskMaster> iTaskMaster, ZRef<ZWorker_Callable::Callable_t> iCallable)
 	:	ZTaskWorker(iTaskMaster)
 	,	ZWorker_Callable(iCallable)
 		{}
 	};
 
 inline ZRef<ZTaskWorker> MakeTaskWorker(ZRef<ZTaskMaster> iTaskMaster,
-	const ZRef<ZCallable1<bool, ZRef<ZWorker> > >& iCallable)
+	const ZRef<ZCallable<bool(ZRef<ZWorker>)> >& iCallable)
 	{ return new ZTaskWorker_Callable(iTaskMaster, iCallable); }
 
 } // namespace ZooLib

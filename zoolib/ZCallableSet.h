@@ -32,10 +32,10 @@ namespace ZooLib {
 #pragma mark * ZCallableSet0
 
 class ZCallableSet0
-:	public ZCallable0<void>
+:	public ZCallable<void(void)>
 	{
 public:
-	typedef ZCallable0<void> Callable_t;
+	typedef ZCallable<void(void)> Callable_t;
 
 	void Register(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
@@ -68,10 +68,10 @@ private:
 
 template <class P0>
 class ZCallableSet1
-:	public ZCallable1<void,P0>
+:	public ZCallable<void(P0)>
 	{
 public:
-	typedef ZCallable1<void,P0> Callable_t;
+	typedef ZCallable<void(P0)> Callable_t;
 
 	void Register(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
@@ -104,10 +104,10 @@ private:
 
 template <class P0, class P1>
 class ZCallableSet2
-:	public ZCallable2<void,P0,P1>
+:	public ZCallable<void(P0,P1)>
 	{
 public:
-	typedef ZCallable2<void,P0,P1> Callable_t;
+	typedef ZCallable<void(P0,P1)> Callable_t;
 
 	void Register(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
@@ -140,10 +140,10 @@ private:
 
 template <class P0, class P1, class P2>
 class ZCallableSet3
-:	public ZCallable3<void,P0,P1,P2>
+:	public ZCallable<void(P0,P1,P2)>
 	{
 public:
-	typedef ZCallable3<void,P0,P1,P2> Callable_t;
+	typedef ZCallable<void(P0,P1,P2)> Callable_t;
 
 	void Register(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
@@ -176,10 +176,10 @@ private:
 
 template <class P0, class P1, class P2, class P3>
 class ZCallableSet4
-:	public ZCallable4<void,P0,P1,P2,P3>
+:	public ZCallable<void(P0,P1,P2,P3)>
 	{
 public:
-	typedef ZCallable4<void,P0,P1,P2,P3> Callable_t;
+	typedef ZCallable<void(P0,P1,P2,P3)> Callable_t;
 
 	void Register(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }

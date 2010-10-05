@@ -62,7 +62,7 @@ static void spThrowIfErr(IOReturn iErr)
 		throw runtime_error("Got error");
 	}
 
-static IOCFPlugInInterface** spCreatePluginInterface(io_service_t iService)
+static IOCFPlugInInterface** spCreate_PluginInterface(io_service_t iService)
 	{
 	IOCFPlugInInterface** plugInInterface = nullptr;
 	SInt32 theScore;
@@ -74,7 +74,7 @@ static IOCFPlugInInterface** spCreatePluginInterface(io_service_t iService)
 static IOUSBDeviceInterface182** spCreate_USBDeviceInterface(io_service_t iUSBDevice)
 	{
 	IOUSBDeviceInterface182** theIOUSBDeviceInterface = nullptr;
-	if (IOCFPlugInInterface** plugInInterface = spCreatePluginInterface(iUSBDevice))
+	if (IOCFPlugInInterface** plugInInterface = spCreate_PluginInterface(iUSBDevice))
 		{
 		if (0 != plugInInterface[0]->QueryInterface(plugInInterface,
 			CFUUIDGetUUIDBytes(kIOUSBDeviceInterfaceID182), (LPVOID*)&theIOUSBDeviceInterface))
