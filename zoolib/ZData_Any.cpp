@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_Vector.h"
-#include "zoolib/ZCounted.h"
+#include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZUtil_STL.h"
 
