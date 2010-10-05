@@ -514,7 +514,7 @@ static vector<NameMap> spPrefixRemove(const string8& iPrefix, const vector<NameM
 Source_Union::Source_Union()
 :	fNextRefcon(1)
 ,	fEvent(Event::sZero())
-,	fCallable(MakeCallable(&Source_Union::pCallback, this))
+,	fCallable(MakeCallable(this, &Source_Union::pCallback))
 	{}
 
 Source_Union::~Source_Union()

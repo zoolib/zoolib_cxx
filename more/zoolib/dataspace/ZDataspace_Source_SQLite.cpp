@@ -104,7 +104,7 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 			ZUtil_STL::sInsertMustNotContain(kDebug, fMap_NameToRelHead, theTableName, theRelHead);
 		}
 
-	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(&Source_SQLite::pCheck, this));
+	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(this, &Source_SQLite::pCheck));
 	ZWorkerRunner_CFRunLoop::sMain()->Add(theWorker);
 	theWorker->Wake();
 	}

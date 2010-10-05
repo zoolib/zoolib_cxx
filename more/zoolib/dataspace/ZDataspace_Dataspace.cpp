@@ -72,7 +72,7 @@ Dataspace::Dataspace(Source* iSource)
 ,	fCalled_SourceUpdateNeeded(false)
 ,	fNextRefcon(1)
 	{
-	fCallable_Source = MakeCallable(&Dataspace::pCallback_Source, this);
+	fCallable_Source = MakeCallable(this, &Dataspace::pCallback_Source);
 	fSource->SetCallable(fCallable_Source);
 	}
 
