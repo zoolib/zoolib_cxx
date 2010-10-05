@@ -60,7 +60,7 @@ public:
 	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs) = 0;
 	virtual ZRef<Device> Open(uint64 iDeviceID) = 0;
 
-	typedef ZCallable1<void,ZRef<Manager> > CB_ManagerChanged;
+	typedef ZCallable<void(ZRef<Manager>)> CB_ManagerChanged;
 	void SetCallable(ZRef<CB_ManagerChanged> iCallable);
 
 protected:
@@ -102,7 +102,7 @@ public:
 	virtual ZQ<Data> GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
 	virtual uint32 GetPIN();
 
-	typedef ZCallable1<void,ZRef<Device> > CB_DeviceFinished;
+	typedef ZCallable<void(ZRef<Device>)> CB_DeviceFinished;
 	void SetCallable(ZRef<CB_DeviceFinished> iCallback);
 
 protected:

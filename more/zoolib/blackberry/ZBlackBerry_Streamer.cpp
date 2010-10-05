@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/blackberry/ZBlackBerry_Streamer.h"
 
 #include "zoolib/ZByteSwap.h"
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZStream_Limited.h"
@@ -188,14 +189,12 @@ bool StreamW_Chunked::Send(uint16 iChannelID, const ZStreamW& iStreamW)
 class Channel_Streamer;
 
 class Commer_Streamer
-:	public ZCommer,
-	public ZTask
+:	public ZCommer
 	{
 	friend class Channel_Streamer;
 
 public:
-	Commer_Streamer(ZRef<ZTaskMaster> iTaskMaster,
-		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+	Commer_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~Commer_Streamer();
 
 // From ZStreamReader via ZCommer
@@ -203,9 +202,6 @@ public:
 
 // From ZStreamWriter via ZCommer
 	virtual bool Write(const ZStreamW& iStreamW);
-
-// From ZCommer
-	virtual void Finished();
 
 // Called by Device_Streamer
 	void Stop();
@@ -468,10 +464,8 @@ void Channel_Streamer::Imp_Abort()
 #pragma mark -
 #pragma mark * Commer_Streamer definition
 
-Commer_Streamer::Commer_Streamer(ZRef<ZTaskMaster> iTaskMaster,
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+Commer_Streamer::Commer_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	ZCommer(iStreamerR, iStreamerW),
-	ZTask(iTaskMaster),
 	fGetAttributeSent(false),
 	fGetAttribute(nullptr),
 	fLifecycle(eLifecycle_Running)
@@ -651,11 +645,6 @@ bool Commer_Streamer::Write(const ZStreamW& iStreamW)
 		}
 
 	return false;
-	}
-
-void Commer_Streamer::Finished()
-	{
-	ZTask::pFinished();
 	}
 
 void Commer_Streamer::Stop()
@@ -1587,7 +1576,8 @@ Device_Streamer::~Device_Streamer()
 void Device_Streamer::Initialize()
 	{
 	Device::Initialize();
-	fCommer = new Commer_Streamer(this, fStreamerR, fStreamerW);
+	fCommer = new Commer_Streamer(fStreamerR, fStreamerW);
+	fCommer->GetSetCallable_Finished(MakeCallable(&Device_Streamer::pCommerFinished, MakeWeakRef(this)));
 	sStartCommerRunners(fCommer);
 	}
 
@@ -1623,13 +1613,11 @@ uint32 Device_Streamer::GetPIN()
 	return 0;
 	}
 
-void Device_Streamer::Task_Finished(ZRef<ZTask> iTask)
+void Device_Streamer::pCommerFinished(ZRef<ZCommer> iCommer)
 	{
-	if (iTask == fCommer)
-		{
-		fCommer.Clear();
-		Device::pFinished();
-		}
+	ZAssert(iCommer == fCommer);
+	fCommer.Clear();
+	Device::pFinished();
 	}
 
 } // namespace ZBlackBerry
