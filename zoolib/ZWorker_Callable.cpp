@@ -18,12 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorker_Callable__
-#define __ZWorker_Callable__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZCallable.h"
-#include "zoolib/ZWorker.h"
+#include "zoolib/ZWorker_Callable.h"
 
 namespace ZooLib {
 
@@ -31,49 +26,41 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZWorker_Callable
 
-class ZWorker_Callable
-:	public virtual ZWorker
+ZWorker_Callable::ZWorker_Callable(const ZRef<Callable_t>& iCallable)
+:	fCallable(iCallable)
+	{}
+
+bool ZWorker_Callable::Work()
 	{
-public:
-	typedef ZCallable<bool(ZRef_ZWorker)> Callable_t;
+	if (ZRef<Callable_t> theCallable = fCallable)
+		return fCallable->Call(this);
+	return false;
+	}
 
-	ZWorker_Callable(const ZRef<Callable_t>& iCallable);
-
-// From ZWorker
-	virtual bool Work();
-
-private:
-	ZRef<Callable_t> fCallable;
-	};
-
-ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable::Callable_t> iCallable);
+ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable::Callable_t> iCallable)
+	{ return new ZWorker_Callable(iCallable); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWorker_Callable_Once
 
-class ZWorker_Callable_Once
-:	public ZWorker
+ZWorker_Callable_Once::ZWorker_Callable_Once(const ZRef<Callable_t>& iCallable)
+:	fCallable(iCallable)
+	{}
+
+bool ZWorker_Callable_Once::Work()
+	{ return false; }
+
+void ZWorker_Callable_Once::RunnerDetached()
 	{
-public:
-	typedef ZCallable<void(void)> Callable_t;
+	if (ZRef<Callable_t> theCallable = fCallable)
+		fCallable->Call();
+	}
 
-	ZWorker_Callable_Once(const ZRef<Callable_t>& iCallable);
+ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable_Once::Callable_t> iCallable)
+	{ return new ZWorker_Callable_Once(iCallable); }
 
-// From ZWorker
-	virtual void RunnerDetached();
-
-	virtual bool Work();
-
-private:
-	ZRef<Callable_t> fCallable;
-	};
-
-ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable_Once::Callable_t> iCallable);
-
-// Maker that makes explicit this is will be a one-shot worker.
-ZRef<ZWorker> MakeWorkerOnce(ZRef<ZWorker_Callable_Once::Callable_t> iCallable);
+ZRef<ZWorker> MakeWorkerOnce(ZRef<ZWorker_Callable_Once::Callable_t> iCallable)
+	{ return new ZWorker_Callable_Once(iCallable); }
 
 } // namespace ZooLib
-
-#endif // __ZWorker_Callable__
