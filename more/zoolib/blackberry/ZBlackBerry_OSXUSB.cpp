@@ -191,8 +191,9 @@ void Manager_OSXUSB::Initialize()
 
 	ZLOGFUNCTION(eDebug);
 
-	fCB_DeviceAttached = MakeCallable(&Manager_OSXUSB::pDeviceAttached, MakeWeakRef(this));
-	fCB_DeviceDetached = MakeCallable(&Manager_OSXUSB::pDeviceDetached, MakeWeakRef(this));
+	// Now we have MakeWeakRef, this could be moved into the constructor.
+	fCB_DeviceAttached = MakeCallable(MakeWeakRef(this), &Manager_OSXUSB::pDeviceAttached);
+	fCB_DeviceDetached = MakeCallable(MakeWeakRef(this), &Manager_OSXUSB::pDeviceDetached);
 
 	fIONotificationPortRef = ::IONotificationPortCreate(fMasterPort);
 

@@ -313,8 +313,8 @@ static string spReadString(const ZStreamR& r)
 
 ZBlackBerryServer::ZBlackBerryServer(ZRef<ZBlackBerry::Manager> iManager)
 :	fManager(iManager)
-,	fCB_ManagerChanged(MakeCallable(&ZBlackBerryServer::pManagerChanged, this))
-,	fCB_DeviceFinished(MakeCallable(&ZBlackBerryServer::pDeviceFinished, this))
+,	fCB_ManagerChanged(MakeCallable(this, &ZBlackBerryServer::pManagerChanged))
+,	fCB_DeviceFinished(MakeCallable(this, &ZBlackBerryServer::pDeviceFinished))
 	{
 	fManager->SetCallable(fCB_ManagerChanged);
 	this->pManagerChanged(fManager);
