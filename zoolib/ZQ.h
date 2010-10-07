@@ -33,7 +33,7 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZQ
 
-template <class T>
+template <class T, bool Sense = true>
 class ZQ
 	{
 public:
@@ -66,7 +66,8 @@ public:
 	:	fHasValue(false)
 		{}
 
-	ZQ(const ZQ& iOther)
+	template <bool OtherSense>
+	ZQ(const ZQ<T, OtherSense>& iOther)
 	:	fHasValue(iOther.fHasValue)
 		{
 		if (fHasValue)
@@ -79,7 +80,8 @@ public:
 			sDtor_T<T>(fBytes);
 		}
 
-	ZQ& operator=(const ZQ& iOther)
+	template <bool OtherSense>
+	ZQ& operator=(const ZQ<T, OtherSense>& iOther)
 		{
 		if (this != &iOther)
 			{
@@ -147,7 +149,7 @@ public:
 		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fHasValue); }
+		{ return operator_bool_generator_type::translate(fHasValue == Sense); }
 
 	const T& Get() const
 		{
@@ -182,6 +184,7 @@ public:
 private:
 	char fBytes[sizeof(T)];
 	bool fHasValue;
+	friend class ZQ<T, !Sense>;
 	};
 
 template <class T>
