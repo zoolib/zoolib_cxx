@@ -19,8 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZWorkerRunner_EventLoop.h"
-
-#include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_STL.h"
 
 namespace ZooLib {
@@ -33,7 +31,6 @@ class ZWorkerRunner_EventLoop::Worker_Waker : public ZWorker
 	{
 public:
 	Worker_Waker(ZRef<ZWorkerRunner_EventLoop> iRunner);
-	virtual ~Worker_Waker();
 
 	virtual bool Work();
 
@@ -43,20 +40,12 @@ public:
 ZWorkerRunner_EventLoop::Worker_Waker::Worker_Waker(
 	ZRef<ZWorkerRunner_EventLoop> iRunner)
 :	fRunner(iRunner)
-	{
-	ZLOGTRACE(eNotice);
-	}
-
-ZWorkerRunner_EventLoop::Worker_Waker::~Worker_Waker()
-	{
-	ZLOGTRACE(eNotice);
-	}
+	{}
 
 bool ZWorkerRunner_EventLoop::Worker_Waker::Work()
 	{
 	if (ZRef<ZWorkerRunner_EventLoop> theRunner = fRunner)
 		return theRunner->pTriggerCallback();
-	ZLOGTRACE(eNotice);
 	return false;
 	}
 
