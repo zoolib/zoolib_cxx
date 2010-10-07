@@ -127,7 +127,9 @@ void ZWorkerRunner_Thread::Start()
 			}
 		catch (...)
 			{
-			ZWorkerRunner::pDetachWorker(fWorker.Orphan());
+			ZRef<ZWorker> theWorker = fWorker;
+			fWorker.Clear();
+			ZWorkerRunner::pDetachWorker(theWorker);
 			throw;
 			}
 		}
