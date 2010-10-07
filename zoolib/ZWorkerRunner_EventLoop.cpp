@@ -33,6 +33,7 @@ class ZWorkerRunner_EventLoop::Worker_Waker : public ZWorker
 	{
 public:
 	Worker_Waker(ZRef<ZWorkerRunner_EventLoop> iRunner);
+	virtual ~Worker_Waker();
 
 	virtual bool Work();
 
@@ -42,12 +43,20 @@ public:
 ZWorkerRunner_EventLoop::Worker_Waker::Worker_Waker(
 	ZRef<ZWorkerRunner_EventLoop> iRunner)
 :	fRunner(iRunner)
-	{}
+	{
+	ZLOGTRACE(eNotice);
+	}
+
+ZWorkerRunner_EventLoop::Worker_Waker::~Worker_Waker()
+	{
+	ZLOGTRACE(eNotice);
+	}
 
 bool ZWorkerRunner_EventLoop::Worker_Waker::Work()
 	{
 	if (ZRef<ZWorkerRunner_EventLoop> theRunner = fRunner)
 		return theRunner->pTriggerCallback();
+	ZLOGTRACE(eNotice);
 	return false;
 	}
 
@@ -67,8 +76,12 @@ ZWorkerRunner_EventLoop::ZWorkerRunner_EventLoop()
 
 ZWorkerRunner_EventLoop::~ZWorkerRunner_EventLoop()
 	{
-	if (fWorker_Waker)
-		fWorker_Waker->Wake();
+	ZAcqMtxR acq(fMtx);
+	if (ZRef<ZWorker> theWorker = fWorker_Waker)
+		{
+		fWorker_Waker.Clear();
+		theWorker->Wake();
+		}
 	}
 
 void ZWorkerRunner_EventLoop::Wake(ZRef<ZWorker> iWorker)
@@ -83,7 +96,16 @@ void ZWorkerRunner_EventLoop::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
 bool ZWorkerRunner_EventLoop::IsAwake(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtxR acq(fMtx);
-	return fWorkersMap[iWorker] <= ZTime::sSystem();
+	std::map<ZRef<ZWorker>, ZTime>::iterator i = fWorkersMap.find(iWorker);
+	if (i == fWorkersMap.end())
+		return false;
+	return i->second <= ZTime::sSystem();
+	}
+
+bool ZWorkerRunner_EventLoop::IsAttached(ZRef<ZWorker> iWorker)
+	{
+	ZAcqMtxR acq(fMtx);
+	return ZUtil_STL::sContains(fWorkersMap, iWorker);
 	}
 
 void ZWorkerRunner_EventLoop::pAttach(ZRef<ZWorker> iWorker)
@@ -108,10 +130,15 @@ void ZWorkerRunner_EventLoop::pCallback()
 
 	for (ZSafeSetIter<ZRef<ZWorker> > iter = fWorkersSet;;)
 		{
-		if (ZRef<ZWorker> theWorker = iter.ReadInc())
+		if (ZQ<ZRef<ZWorker>, false> theNotQ = iter.QReadInc())
 			{
+			break;
+			}
+		else
+			{
+			ZRef<ZWorker> theWorker = theNotQ.Get();
 			guard.Acquire();
-			ZTime theTime = fWorkersMap[theWorker];
+			const ZTime theTime = ZUtil_STL::sGetMustContain(1, fWorkersMap, theWorker);
 			guard.Release();
 
 			if (theTime <= ZTime::sSystem())
@@ -126,9 +153,15 @@ void ZWorkerRunner_EventLoop::pCallback()
 					}
 				}
 			}
-		else
+		}
+
+	if (fWorkersSet.Empty())
+		{
+		if (ZRef<ZWorker> theWorker = fWorker_Waker)
 			{
-			break;
+			fWorker_Waker->fRunner.Clear();
+			fWorker_Waker.Clear();
+			theWorker->Wake();
 			}
 		}
 	}
@@ -147,13 +180,22 @@ bool ZWorkerRunner_EventLoop::pTriggerCallback()
 void ZWorkerRunner_EventLoop::pWake(ZRef<ZWorker> iWorker, ZTime iSystemTime)
 	{
 	ZAcqMtxR acq(fMtx);
-	fWorkersMap[iWorker] = iSystemTime;
-	if (!fWorker_Waker)
+	if (ZUtil_STL::sSetIfContains(fWorkersMap, iWorker, iSystemTime))
 		{
-		fWorker_Waker = new Worker_Waker(this);
-		sStartWorkerRunner(fWorker_Waker);
+		if (iSystemTime <= ZTime::sSystem())
+			{
+			this->pTriggerCallback();
+			}
+		else
+			{
+			if (!fWorker_Waker)
+				{
+				fWorker_Waker = new Worker_Waker(this);
+				sStartWorkerRunner(fWorker_Waker);
+				}
+			fWorker_Waker->WakeAt(iSystemTime);
+			}
 		}
-	fWorker_Waker->WakeAt(iSystemTime);
 	}
 
 } // namespace ZooLib

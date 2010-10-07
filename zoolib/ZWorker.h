@@ -86,6 +86,7 @@ protected:
 	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime) = 0;
 	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval) = 0;
 	virtual bool IsAwake(ZRef<ZWorker> iWorker) = 0;
+	virtual bool IsAttached(ZRef<ZWorker> iWorker) = 0;
 
 	friend class ZWorker;
 	};

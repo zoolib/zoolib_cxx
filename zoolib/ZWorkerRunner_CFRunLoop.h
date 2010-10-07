@@ -69,6 +69,7 @@ public:
 	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
 	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
 	virtual bool IsAwake(ZRef<ZWorker> iWorker);
+	virtual bool IsAttached(ZRef<ZWorker> iWorker);
 
 // Our protocol
 	void Add(ZRef<ZWorker> iWorker);
@@ -76,6 +77,7 @@ public:
 	static ZRef<ZWorkerRunner_CFRunLoop> sMain();
 
 private:
+	void pWake(ZRef<ZWorker> iWorker, CFAbsoluteTime iAbsoluteTime);
 	void pTrigger(CFAbsoluteTime iAbsoluteTime);
 
 	void pRunLoopTimerCallBack();

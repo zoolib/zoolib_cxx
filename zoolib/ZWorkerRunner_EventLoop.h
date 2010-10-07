@@ -46,6 +46,7 @@ public:
 	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
 	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
 	virtual bool IsAwake(ZRef<ZWorker> iWorker);
+	virtual bool IsAttached(ZRef<ZWorker> iWorker);
 
 protected:
 // Must be implemented by subclasses

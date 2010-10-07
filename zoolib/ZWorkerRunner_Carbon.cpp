@@ -72,9 +72,8 @@ void ZWorkerRunner_Carbon::sAttach(ZRef<ZWorker> iWorker)
 
 void ZWorkerRunner_Carbon::spCallback(void* iRefcon)
 	{
-	if (ZRef<ZWorkerRunner_Carbon> theRunner =
-		static_cast<ZWorkerRunner_Carbon*>(iRefcon))
-		{ theRunner->pCallback(); }
+	if (ZRef<ZWorkerRunner_Carbon> theRunner = static_cast<ZWorkerRunner_Carbon*>(iRefcon))
+		theRunner->pCallback();
 	}
 
 } // namespace ZooLib

@@ -81,32 +81,25 @@ void ZWorkerRunner_CFRunLoop::Finalize()
 	}
 
 void ZWorkerRunner_CFRunLoop::Wake(ZRef<ZWorker> iWorker)
-	{
-	ZAcqMtxR acq(fMtx);
-	fWorkersMap[iWorker] = 0;
-	this->pTrigger(0);
-	}
+	{ this->pWake(iWorker, 0); }
 
 void ZWorkerRunner_CFRunLoop::WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
-	{
-	const CFAbsoluteTime theAT = spSystemAsAbsoluteTime(iSystemTime);
-	ZAcqMtxR acq(fMtx);
-	fWorkersMap[iWorker] = theAT;
-	this->pTrigger(theAT);
-	}
+	{ this->pWake(iWorker, spSystemAsAbsoluteTime(iSystemTime)); }
 
 void ZWorkerRunner_CFRunLoop::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
-	{
-	const CFAbsoluteTime theAT = spDelayAsAbsoluteTime(iInterval);
-	ZAcqMtxR acq(fMtx);
-	fWorkersMap[iWorker] = theAT;
-	this->pTrigger(theAT);
-	}
+	{ this->pWake(iWorker, spDelayAsAbsoluteTime(iInterval)); }
 
 bool ZWorkerRunner_CFRunLoop::IsAwake(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtxR acq(fMtx);
-	return fWorkersMap[iWorker] <= ::CFAbsoluteTimeGetCurrent();
+	return ZUtil_STL::sContains(fWorkersMap, iWorker)
+		&& fWorkersMap[iWorker] <= ::CFAbsoluteTimeGetCurrent();
+	}
+
+bool ZWorkerRunner_CFRunLoop::IsAttached(ZRef<ZWorker> iWorker)
+	{
+	ZAcqMtxR acq(fMtx);
+	return ZUtil_STL::sContains(fWorkersMap, iWorker);
 	}
 
 void ZWorkerRunner_CFRunLoop::Add(ZRef<ZWorker> iWorker)
@@ -126,6 +119,16 @@ static ZRef<ZWorkerRunner_CFRunLoop> spWR = new ZWorkerRunner_CFRunLoop(::CFRunL
 
 ZRef<ZWorkerRunner_CFRunLoop> ZWorkerRunner_CFRunLoop::sMain()
 	{ return spWR; }
+
+void ZWorkerRunner_CFRunLoop::pWake(ZRef<ZWorker> iWorker, CFAbsoluteTime iAbsoluteTime)
+	{
+	ZAcqMtxR acq(fMtx);
+	if (ZUtil_STL::sContains(fWorkersMap, iWorker))
+		{
+		fWorkersMap[iWorker] = iAbsoluteTime;
+		this->pTrigger(iAbsoluteTime);
+		}	
+	}
 
 void ZWorkerRunner_CFRunLoop::pTrigger(CFAbsoluteTime iAbsoluteTime)
 	{
@@ -149,7 +152,7 @@ void ZWorkerRunner_CFRunLoop::pRunLoopTimerCallBack()
 		if (ZRef<ZWorker> theWorker = iter.ReadInc())
 			{
 			ZGuardRMtxR guard(fMtx);
-			const CFAbsoluteTime theTime = fWorkersMap[theWorker];
+			const CFAbsoluteTime theTime = ZUtil_STL::sGetMustContain(1, fWorkersMap, theWorker);
 			guard.Release();
 
 			if (theTime <= now)
@@ -189,11 +192,8 @@ void ZWorkerRunner_CFRunLoop::pRunLoopTimerCallBack()
 
 void ZWorkerRunner_CFRunLoop::spRunLoopTimerCallBack(CFRunLoopTimerRef iTimer, void* iRefcon)
 	{
-	if (ZRef<ZWorkerRunner_CFRunLoop> theRunner =
-		static_cast<ZWorkerRunner_CFRunLoop*>(iRefcon))
-		{
+	if (ZRef<ZWorkerRunner_CFRunLoop> theRunner = static_cast<ZWorkerRunner_CFRunLoop*>(iRefcon))
 		theRunner->pRunLoopTimerCallBack();
-		}
 	}
 
 } // namespace ZooLib
