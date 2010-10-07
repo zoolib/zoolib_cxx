@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZLog.h"
 #include "zoolib/ZServer.h"
 #include "zoolib/ZStreamerListener.h"
 
@@ -114,10 +115,10 @@ void ZServer::KillResponders()
 	{
 	for (ZSafeSetIterConst<ZRef<Responder> > i = fResponders; /*no test*/; /*no inc*/)
 		{
-		if (ZRef<Responder> theResponder = i.ReadInc())
-			theResponder->Kill();
-		else
+		if (ZQ<ZRef<Responder>,false> theNQ = i.QReadInc())
 			break;
+		else
+			theNQ.Get()->Kill();
 		}
 	}
 
