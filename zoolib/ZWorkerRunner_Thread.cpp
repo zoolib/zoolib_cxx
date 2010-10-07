@@ -69,31 +69,40 @@ ZWorkerRunner_Thread::ZWorkerRunner_Thread(ZRef<ZWorker> iWorker)
 void ZWorkerRunner_Thread::Wake(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtx acq(fMtx);
-	ZAssert(iWorker == fWorker);
-	fNextWake = 0;
-	fCnd.Broadcast();
+	if (fWorker)
+		{
+		ZAssert(iWorker == fWorker);
+		fNextWake = 0;
+		fCnd.Broadcast();
+		}
 	}
 
 void ZWorkerRunner_Thread::WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
 	{
 	ZAcqMtx acq(fMtx);
-	ZAssert(iWorker == fWorker);
-	if (fNextWake > iSystemTime)
+	if (fWorker)
 		{
-		fNextWake = iSystemTime;
-		fCnd.Broadcast();
-		}
+		ZAssert(iWorker == fWorker);
+		if (fNextWake > iSystemTime)
+			{
+			fNextWake = iSystemTime;
+			fCnd.Broadcast();
+			}
+			}
 	}
 
 void ZWorkerRunner_Thread::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
 	{
 	ZAcqMtx acq(fMtx);
-	ZAssert(iWorker == fWorker);
-	ZTime newWake = ZTime::sSystem() + iInterval;
-	if (fNextWake > newWake)
+	if (fWorker)
 		{
-		fNextWake = newWake;
-		fCnd.Broadcast();
+		ZAssert(iWorker == fWorker);
+		ZTime newWake = ZTime::sSystem() + iInterval;
+		if (fNextWake > newWake)
+			{
+			fNextWake = newWake;
+			fCnd.Broadcast();
+			}
 		}
 	}
 
@@ -126,6 +135,7 @@ void ZWorkerRunner_Thread::Start()
 void ZWorkerRunner_Thread::pRun()
 	{
 	ZLOGFUNCTION(eDebug);
+
 	if (ZLOGF(s, eDebug))
 		s << typeid(*fWorker.Get()).name();
 
