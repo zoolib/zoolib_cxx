@@ -103,6 +103,7 @@ namespace ZThread {
 void sStarted();
 void sFinished();
 void sDontTearDownTillAllThreadsExit();
+void sWaitTillAllThreadsExit();
 
 class InitHelper
 	{
@@ -140,6 +141,14 @@ private:
 	#endif
 	sEntry(ProxyParam* iProxyParam)
 		{
+		// Useful when debugging under GDB, which (on MacOS) doesn't always
+		// tell us what pthread_id corresponds to a thread.
+		#if ZCONFIG(Compiler,GCC)
+			const ZThread::ID theThreadID __attribute__((unused)) = ZThread::sID();		
+		#else
+			const ZThread::ID theThreadID = ZThread::sID();
+		#endif
+
 		ProxyParam localProxyParam = *iProxyParam;
 
 		delete iProxyParam;

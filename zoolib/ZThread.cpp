@@ -46,6 +46,26 @@ static bool spDontTearDown;
 void sDontTearDownTillAllThreadsExit()
 	{ spDontTearDown = true; }
 
+void sWaitTillAllThreadsExit()
+	{
+	for (;;)
+		{
+		int count = ZAtomic_Get(&spThreadCount);
+		// This sleep serves two purposes. First it means we're polling at
+		// intervals for the value of sThreadCount, rather than busy-waiting.
+		// Second, at least .1s will elapse between the thread count hitting
+		// zero and this code exiting, so the last thread will have
+		// had a chance to fully terminate.
+			sSleep(.1);
+		if (0 == count)
+			{
+//			fputs("ZThread, final exit\n", stderr);
+			break;
+			}
+		}
+
+	}
+
 static ZAtomic_t spInitCount;
 
 InitHelper::InitHelper()
@@ -54,23 +74,7 @@ InitHelper::InitHelper()
 InitHelper::~InitHelper()
 	{
 	if (ZAtomic_DecAndTest(&spInitCount) && spDontTearDown)
-		{
-		for (;;)
-			{
-			int count = ZAtomic_Get(&spThreadCount);
-			// This sleep serves two purposes. First it means we're polling at
-			// intervals for the value of sThreadCount, rather than busy-waiting.
-			// Second, at least .1s will elapse between the thread count hitting
-			// zero and this code exiting, so the last thread will have
-			// had a chance to fully terminate.
-			sSleep(.1);
-			if (0 == count)
-				{
-				fputs("ZThread, final exit\n", stderr);
-				break;
-				}
-			}
-		}
+		sWaitTillAllThreadsExit();
 	}
 
 static ProcResult_t
