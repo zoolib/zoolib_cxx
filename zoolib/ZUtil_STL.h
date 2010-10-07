@@ -293,6 +293,34 @@ void sInsertMustNotContain(const int iDebugLevel,
 	ioMap.insert(typename std::map<KBase, Value>::value_type(iKey, iValue));
 	}
 
+template <typename KBase, typename KDerived, typename Value>
+void sSetMustContain(const int iDebugLevel,
+	std::map<KBase, Value>& ioMap, KDerived iKey, Value iValue)
+	{
+	typename std::map<KBase, Value>::iterator i = ioMap.find(iKey);
+	ZAssertStop(iDebugLevel, ioMap.end() != i);
+	i->second = iValue;
+	}
+
+template <typename KBase, typename KDerived, typename Value>
+bool sSetIfContains(std::map<KBase, Value>& ioMap, KDerived iKey, Value iValue)
+	{
+	typename std::map<KBase, Value>::iterator i = ioMap.find(iKey);
+	if (ioMap.end() == i)
+		return false;
+	i->second = iValue;
+	return true;
+	}
+
+template <typename KBase, typename KDerived, typename Value>
+Value sGetMustContain(const int iDebugLevel,
+	std::map<KBase, Value>& ioMap, KDerived iKey)
+	{
+	typename std::map<KBase, Value>::iterator i = ioMap.find(iKey);
+	ZAssertStop(iDebugLevel, ioMap.end() != i);
+	return i->second;
+	}
+
 } // namespace ZUtil_STL
 } // namespace ZooLib
 
