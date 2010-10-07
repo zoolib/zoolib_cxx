@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
+#include "zoolib/ZLog.h"
 #include "zoolib/ZWorker.h"
 
 namespace ZooLib {
@@ -131,23 +132,14 @@ void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
 
 	iWorker->fRunner.Clear();
 
-	try
-		{
-		iWorker->RunnerDetached();
-		}
-	catch (...)
-		{}
+	try { iWorker->RunnerDetached(); }
+	catch (...) {}
 	}
 
 bool ZWorkerRunner::pInvokeWork(ZRef<ZWorker> iWorker)
 	{
-	try
-		{
-		return iWorker->Work();
-		}
-	catch (...)
-		{}
-
+	try { return iWorker->Work(); }
+	catch (...) {}
 	return false;
 	}
 
