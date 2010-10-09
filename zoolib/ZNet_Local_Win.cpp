@@ -30,6 +30,13 @@ ZMACRO_MSVCStaticLib_cpp(Net_Local_Win)
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_WinFile.h"
 
+#ifndef FILE_FLAG_FIRST_PIPE_INSTANCE
+	#if (_WIN32_WINNT >= 0x0500)
+		#define FILE_FLAG_FIRST_PIPE_INSTANCE 524288
+	#endif
+#endif
+
+
 namespace ZooLib {
 
 using std::runtime_error;
