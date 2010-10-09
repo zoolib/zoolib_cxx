@@ -149,8 +149,13 @@ void ZWorkerRunner_CFRunLoop::pRunLoopTimerCallBack()
 
 	for (ZSafeSetIter<ZRef<ZWorker> > iter = fWorkersSet;;)
 		{
-		if (ZRef<ZWorker> theWorker = iter.ReadInc())
+		if (ZQ<ZRef<ZWorker>,false> theNQ = iter.QReadInc())
 			{
+			break;
+			}
+		else
+			{
+			ZRef<ZWorker> theWorker = theNQ.Get();
 			ZGuardRMtxR guard(fMtx);
 			const CFAbsoluteTime theTime = ZUtil_STL::sGetMustContain(1, fWorkersMap, theWorker);
 			guard.Release();
@@ -171,10 +176,6 @@ void ZWorkerRunner_CFRunLoop::pRunLoopTimerCallBack()
 				gotEarliestLater = true;
 				earliestLater = theTime;
 				}
-			}
-		else
-			{
-			break;
 			}
 		}
 
