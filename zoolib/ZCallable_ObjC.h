@@ -90,22 +90,22 @@ template <> struct Selector<void> { enum { value = eUse_normal }; };
 
 // -----
 
-template <class R, class Func_t, int selector = Selector<R>::value>
+template <class R, class FunctionPtr_t, int selector = Selector<R>::value>
 struct MsgSend;
 
-template <class R, class Func_t>
-struct MsgSend<R, Func_t, eUse_normal>
-	{ static Func_t sMsgSend() { return (Func_t)objc_msgSend; } };
+template <class R, class FunctionPtr_t>
+struct MsgSend<R, FunctionPtr_t, eUse_normal>
+	{ static FunctionPtr_t sMsgSend() { return (FunctionPtr_t)objc_msgSend; } };
 
-template <class R, class Func_t>
-struct MsgSend<R, Func_t, eUse_stret>
-	{ static Func_t sMsgSend() { return (Func_t)objc_msgSend_stret; } };
+template <class R, class FunctionPtr_t>
+struct MsgSend<R, FunctionPtr_t, eUse_stret>
+	{ static FunctionPtr_t sMsgSend() { return (FunctionPtr_t)objc_msgSend_stret; } };
 
 #if defined(__i386__) || defined(__x86_64__)
-	template <class R, class Func_t>
-	struct MsgSend<R, Func_t, eUse_fpret>
-		{ static Func_t sMsgSend() { return (Func_t)objc_msgSend_fpret; } };
-#endif
+template <class R, class FunctionPtr_t>
+struct MsgSend<R, FunctionPtr_t, eUse_fpret>
+	{ static FunctionPtr_t sMsgSend() { return (FunctionPtr_t)objc_msgSend_fpret; } };
+#endif // defined(__i386__) || defined(__x86_64__)
 
 // =================================================================================================
 #pragma mark -
@@ -125,7 +125,7 @@ protected:
 #pragma mark -
 #pragma mark * Callable0
 
-template <class Func> class Callable;
+template <class Signature> class Callable;
 
 // =================================================================================================
 #pragma mark -
@@ -137,13 +137,14 @@ class Callable<R(void)>
 ,	public ZCallable<R(void)>
 	{
 public:
+	typedef R (*FunctionPtr_t)(id,SEL);
+
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
-	typedef R (*Function_t)(id, SEL);
 
 	// From ZCallable
 	virtual R Call()
 		{
-		return MsgSend<R, Function_t>::sMsgSend()
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
 			(fObj, fSEL);
 		}
 	};
@@ -152,19 +153,21 @@ public:
 #pragma mark -
 #pragma mark * Callable (specialization for 1 param)
 
-template <class R, class P0>
+template <class R,
+	class P0>
 class Callable<R(P0)>
 :	Base
 ,	public ZCallable<R(P0)>
 	{
 public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0);
+
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
-	typedef R (*Function_t)(id, SEL, P0);
 
 	// From ZCallable
 	virtual R Call(P0 i0)
 		{
-		return MsgSend<R, Function_t>::sMsgSend()
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
 			(fObj, fSEL, i0);
 		}
 	};
@@ -173,19 +176,21 @@ public:
 #pragma mark -
 #pragma mark * Callable (specialization for 2 params)
 
-template <class R, class P0, class P1>
+template <class R,
+	class P0, class P1>
 class Callable<R(P0,P1)>
 :	Base
 ,	public ZCallable<R(P0,P1)>
 	{
 public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1);
+
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
-	typedef R (*Function_t)(id, SEL, P0, P1);
 
 	// From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{
-		return MsgSend<R, Function_t>::sMsgSend()
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
 			(fObj, fSEL, i0, i1);
 		}
 	};
@@ -194,19 +199,21 @@ public:
 #pragma mark -
 #pragma mark * Callable (specialization for 3 params)
 
-template <class R, class P0, class P1, class P2>
+template <class R,
+	class P0, class P1, class P2>
 class Callable<R(P0,P1,P2)>
 :	Base
 ,	public ZCallable<R(P0,P1,P2)>
 	{
 public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2);
+
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
-	typedef R (*Function_t)(id, SEL, P0, P1, P2);
 
 	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{
-		return MsgSend<R, Function_t>::sMsgSend()
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
 			(fObj, fSEL, i0, i1, i2);
 		}
 	};
@@ -215,19 +222,21 @@ public:
 #pragma mark -
 #pragma mark * Callable (specialization for 4 params)
 
-template <class R, class P0, class P1, class P2, class P3>
+template <class R,
+	class P0, class P1, class P2, class P3>
 class Callable<R(P0,P1,P2,P3)>
 :	Base
 ,	public ZCallable<R(P0,P1,P2,P3)>
 	{
 public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3);
+
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
-	typedef R (*Function_t)(id, SEL, P0, P1, P2, P3);
 
 	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		return MsgSend<R, Function_t>::sMsgSend()
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
 			(fObj, fSEL, i0, i1, i2, i3);
 		}
 	};
@@ -236,20 +245,318 @@ public:
 #pragma mark -
 #pragma mark * Callable (specialization for 5 params)
 
-template <class R, class P0, class P1, class P2, class P3, class P4>
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4>
 class Callable<R(P0,P1,P2,P3,P4)>
 :	Base
 ,	public ZCallable<R(P0,P1,P2,P3,P4)>
 	{
 public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4);
+
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
-	typedef R (*Function_t)(id, SEL, P0, P1, P2, P3, P4);
 
 	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		return MsgSend<R, Function_t>::sMsgSend()
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
 			(fObj, fSEL, i0, i1, i2, i3, i4);
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 6 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5>
+class Callable<R(P0,P1,P2,P3,P4,P5)>
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4,P5)>
+	{
+public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5);
+
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+
+	// From ZCallable
+	virtual R Call
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
+		{
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5);
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 7 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6>
+class Callable<R(P0,P1,P2,P3,P4,P5,P6)>
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6)>
+	{
+public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6);
+
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+
+	// From ZCallable
+	virtual R Call
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+		{
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6);
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 8 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7>
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
+	{
+public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7);
+
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+
+	// From ZCallable
+	virtual R Call
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+		{
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7);
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 9 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8>
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
+	{
+public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8);
+
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+
+	// From ZCallable
+	virtual R Call
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8)
+		{
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 10 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9>
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
+	{
+public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
+
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+
+	// From ZCallable
+	virtual R Call
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9)
+		{
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 11 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA>
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
+	{
+public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
+
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+
+	// From ZCallable
+	virtual R Call
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA)
+		{
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 12 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB>
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
+	{
+public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
+
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+
+	// From ZCallable
+	virtual R Call
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA, PB iB)
+		{
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 13 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC>
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
+	{
+public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
+
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+
+	// From ZCallable
+	virtual R Call
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA, PB iB, PC iC)
+		{
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 14 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD>
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
+	{
+public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
+
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+
+	// From ZCallable
+	virtual R Call
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
+		{
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 15 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE>
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
+	{
+public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
+
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+
+	// From ZCallable
+	virtual R Call
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
+		{
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 16 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE, class PF>
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
+:	Base
+,	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
+	{
+public:
+	typedef R (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
+
+	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
+
+	// From ZCallable
+	virtual R Call
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
+		{
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
 		}
 	};
 
@@ -257,10 +564,10 @@ public:
 #pragma mark -
 #pragma mark * MakeCallable
 
-template <class Func>
-ZRef<ZCallable<Func> >
+template <class Signature>
+ZRef<ZCallable<Signature> >
 MakeCallable(id iObj, SEL iSEL)
-	{ return new Callable<Func>(iObj, iSEL); }
+	{ return new Callable<Signature>(iObj, iSEL); }
 
 } // namespace ZCallable_ObjC
 
