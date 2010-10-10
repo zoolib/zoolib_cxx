@@ -1138,21 +1138,21 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::RF P0;
-	typedef typename SigTraits::RE P1;
-	typedef typename SigTraits::RD P2;
-	typedef typename SigTraits::RC P3;
-	typedef typename SigTraits::RB P4;
-	typedef typename SigTraits::RA P5;
-	typedef typename SigTraits::R9 P6;
-	typedef typename SigTraits::R8 P7;
-	typedef typename SigTraits::R7 P8;
-	typedef typename SigTraits::R6 P9;
-	typedef typename SigTraits::R5 PA;
-	typedef typename SigTraits::R4 PB;
-	typedef typename SigTraits::R3 PC;
-	typedef typename SigTraits::R2 PD;
-	typedef typename SigTraits::R1 PE;
+	typedef typename SigTraits::L1 P0;
+	typedef typename SigTraits::L2 P1;
+	typedef typename SigTraits::L3 P2;
+	typedef typename SigTraits::L4 P3;
+	typedef typename SigTraits::L5 P4;
+	typedef typename SigTraits::L6 P5;
+	typedef typename SigTraits::L7 P6;
+	typedef typename SigTraits::L8 P7;
+	typedef typename SigTraits::L9 P8;
+	typedef typename SigTraits::LA P9;
+	typedef typename SigTraits::LB PA;
+	typedef typename SigTraits::LC PB;
+	typedef typename SigTraits::LD PC;
+	typedef typename SigTraits::LE PD;
+	typedef typename SigTraits::LF PE;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL01>::Call;
 
@@ -1238,20 +1238,20 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::RE P0;
-	typedef typename SigTraits::RD P1;
-	typedef typename SigTraits::RC P2;
-	typedef typename SigTraits::RB P3;
-	typedef typename SigTraits::RA P4;
-	typedef typename SigTraits::R9 P5;
-	typedef typename SigTraits::R8 P6;
-	typedef typename SigTraits::R7 P7;
-	typedef typename SigTraits::R6 P8;
-	typedef typename SigTraits::R5 P9;
-	typedef typename SigTraits::R4 PA;
-	typedef typename SigTraits::R3 PB;
-	typedef typename SigTraits::R2 PC;
-	typedef typename SigTraits::R1 PD;
+	typedef typename SigTraits::L2 P0;
+	typedef typename SigTraits::L3 P1;
+	typedef typename SigTraits::L4 P2;
+	typedef typename SigTraits::L5 P3;
+	typedef typename SigTraits::L6 P4;
+	typedef typename SigTraits::L7 P5;
+	typedef typename SigTraits::L8 P6;
+	typedef typename SigTraits::L9 P7;
+	typedef typename SigTraits::LA P8;
+	typedef typename SigTraits::LB P9;
+	typedef typename SigTraits::LC PA;
+	typedef typename SigTraits::LD PB;
+	typedef typename SigTraits::LE PC;
+	typedef typename SigTraits::LF PD;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL02>::Call;
 
@@ -1335,19 +1335,19 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::RD P0;
-	typedef typename SigTraits::RC P1;
-	typedef typename SigTraits::RB P2;
-	typedef typename SigTraits::RA P3;
-	typedef typename SigTraits::R9 P4;
-	typedef typename SigTraits::R8 P5;
-	typedef typename SigTraits::R7 P6;
-	typedef typename SigTraits::R6 P7;
-	typedef typename SigTraits::R5 P8;
-	typedef typename SigTraits::R4 P9;
-	typedef typename SigTraits::R3 PA;
-	typedef typename SigTraits::R2 PB;
-	typedef typename SigTraits::R1 PC;
+	typedef typename SigTraits::L3 P0;
+	typedef typename SigTraits::L4 P1;
+	typedef typename SigTraits::L5 P2;
+	typedef typename SigTraits::L6 P3;
+	typedef typename SigTraits::L5 P4;
+	typedef typename SigTraits::L8 P5;
+	typedef typename SigTraits::L9 P6;
+	typedef typename SigTraits::LA P7;
+	typedef typename SigTraits::LB P8;
+	typedef typename SigTraits::LC P9;
+	typedef typename SigTraits::LD PA;
+	typedef typename SigTraits::LE PB;
+	typedef typename SigTraits::LF PC;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL03>::Call;
 
@@ -1429,18 +1429,18 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::RC P0;
-	typedef typename SigTraits::RB P1;
-	typedef typename SigTraits::RA P2;
-	typedef typename SigTraits::R9 P3;
-	typedef typename SigTraits::R8 P4;
-	typedef typename SigTraits::R7 P5;
-	typedef typename SigTraits::R6 P6;
-	typedef typename SigTraits::R5 P7;
-	typedef typename SigTraits::R4 P8;
-	typedef typename SigTraits::R3 P9;
-	typedef typename SigTraits::R2 PA;
-	typedef typename SigTraits::R1 PB;
+	typedef typename SigTraits::L4 P0;
+	typedef typename SigTraits::L5 P1;
+	typedef typename SigTraits::L6 P2;
+	typedef typename SigTraits::L7 P3;
+	typedef typename SigTraits::L8 P4;
+	typedef typename SigTraits::L9 P5;
+	typedef typename SigTraits::LA P6;
+	typedef typename SigTraits::LB P7;
+	typedef typename SigTraits::LC P8;
+	typedef typename SigTraits::LD P9;
+	typedef typename SigTraits::LE PA;
+	typedef typename SigTraits::LF PB;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL04>::Call;
 
@@ -1520,17 +1520,17 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::RB P0;
-	typedef typename SigTraits::RA P1;
-	typedef typename SigTraits::R9 P2;
-	typedef typename SigTraits::R8 P3;
-	typedef typename SigTraits::R7 P4;
-	typedef typename SigTraits::R6 P5;
-	typedef typename SigTraits::R5 P6;
-	typedef typename SigTraits::R4 P7;
-	typedef typename SigTraits::R3 P8;
-	typedef typename SigTraits::R2 P9;
-	typedef typename SigTraits::R1 PA;
+	typedef typename SigTraits::L5 P0;
+	typedef typename SigTraits::L6 P1;
+	typedef typename SigTraits::L7 P2;
+	typedef typename SigTraits::L8 P3;
+	typedef typename SigTraits::L9 P4;
+	typedef typename SigTraits::LA P5;
+	typedef typename SigTraits::LB P6;
+	typedef typename SigTraits::LC P7;
+	typedef typename SigTraits::LD P8;
+	typedef typename SigTraits::LE P9;
+	typedef typename SigTraits::LF PA;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL05>::Call;
 
@@ -1608,16 +1608,16 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::RA P0;
-	typedef typename SigTraits::R9 P1;
-	typedef typename SigTraits::R8 P2;
-	typedef typename SigTraits::R7 P3;
-	typedef typename SigTraits::R6 P4;
-	typedef typename SigTraits::R5 P5;
-	typedef typename SigTraits::R4 P6;
-	typedef typename SigTraits::R3 P7;
-	typedef typename SigTraits::R2 P8;
-	typedef typename SigTraits::R1 P9;
+	typedef typename SigTraits::L6 P0;
+	typedef typename SigTraits::L7 P1;
+	typedef typename SigTraits::L8 P2;
+	typedef typename SigTraits::L9 P3;
+	typedef typename SigTraits::LA P4;
+	typedef typename SigTraits::LB P5;
+	typedef typename SigTraits::LC P6;
+	typedef typename SigTraits::LD P7;
+	typedef typename SigTraits::LE P8;
+	typedef typename SigTraits::LF P9;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL06>::Call;
 
@@ -1693,15 +1693,15 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R9 P0;
-	typedef typename SigTraits::R8 P1;
-	typedef typename SigTraits::R7 P2;
-	typedef typename SigTraits::R6 P3;
-	typedef typename SigTraits::R5 P4;
-	typedef typename SigTraits::R4 P5;
-	typedef typename SigTraits::R3 P6;
-	typedef typename SigTraits::R2 P7;
-	typedef typename SigTraits::R1 P8;
+	typedef typename SigTraits::L7 P0;
+	typedef typename SigTraits::L8 P1;
+	typedef typename SigTraits::L9 P2;
+	typedef typename SigTraits::LA P3;
+	typedef typename SigTraits::LB P4;
+	typedef typename SigTraits::LC P5;
+	typedef typename SigTraits::LD P6;
+	typedef typename SigTraits::LE P7;
+	typedef typename SigTraits::LF P8;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL07>::Call;
 
@@ -1775,14 +1775,14 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R8 P0;
-	typedef typename SigTraits::R7 P1;
-	typedef typename SigTraits::R6 P2;
-	typedef typename SigTraits::R5 P3;
-	typedef typename SigTraits::R4 P4;
-	typedef typename SigTraits::R3 P5;
-	typedef typename SigTraits::R2 P6;
-	typedef typename SigTraits::R1 P7;
+	typedef typename SigTraits::L8 P0;
+	typedef typename SigTraits::L9 P1;
+	typedef typename SigTraits::LA P2;
+	typedef typename SigTraits::LB P3;
+	typedef typename SigTraits::LC P4;
+	typedef typename SigTraits::LD P5;
+	typedef typename SigTraits::LE P6;
+	typedef typename SigTraits::LF P7;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL08>::Call;
 
@@ -1855,13 +1855,13 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R7 P0;
-	typedef typename SigTraits::R6 P1;
-	typedef typename SigTraits::R5 P2;
-	typedef typename SigTraits::R4 P3;
-	typedef typename SigTraits::R3 P4;
-	typedef typename SigTraits::R2 P5;
-	typedef typename SigTraits::R1 P6;
+	typedef typename SigTraits::L9 P0;
+	typedef typename SigTraits::LA P1;
+	typedef typename SigTraits::LB P2;
+	typedef typename SigTraits::LC P3;
+	typedef typename SigTraits::LD P4;
+	typedef typename SigTraits::LE P5;
+	typedef typename SigTraits::LF P6;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL09>::Call;
 
@@ -1933,12 +1933,12 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R6 P0;
-	typedef typename SigTraits::R5 P1;
-	typedef typename SigTraits::R4 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R2 P4;
-	typedef typename SigTraits::R1 P5;
+	typedef typename SigTraits::LA P0;
+	typedef typename SigTraits::LB P1;
+	typedef typename SigTraits::LC P2;
+	typedef typename SigTraits::LD P3;
+	typedef typename SigTraits::LE P4;
+	typedef typename SigTraits::LF P5;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL10>::Call;
 
@@ -2009,11 +2009,11 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R5 P0;
-	typedef typename SigTraits::R4 P1;
-	typedef typename SigTraits::R3 P2;
-	typedef typename SigTraits::R2 P3;
-	typedef typename SigTraits::R1 P4;
+	typedef typename SigTraits::LB P0;
+	typedef typename SigTraits::LC P1;
+	typedef typename SigTraits::LD P2;
+	typedef typename SigTraits::LE P3;
+	typedef typename SigTraits::LF P4;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL11>::Call;
 
@@ -2083,10 +2083,10 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R4 P0;
-	typedef typename SigTraits::R3 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R1 P3;
+	typedef typename SigTraits::LC P0;
+	typedef typename SigTraits::LD P1;
+	typedef typename SigTraits::LE P2;
+	typedef typename SigTraits::LF P3;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL12>::Call;
 
@@ -2155,9 +2155,9 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R3 P0;
-	typedef typename SigTraits::R2 P1;
-	typedef typename SigTraits::R1 P2;
+	typedef typename SigTraits::LD P0;
+	typedef typename SigTraits::LE P1;
+	typedef typename SigTraits::LF P2;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL13>::Call;
 
@@ -2225,8 +2225,8 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R2 P0;
-	typedef typename SigTraits::R1 P1;
+	typedef typename SigTraits::LE P0;
+	typedef typename SigTraits::LF P1;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL14>::Call;
 
@@ -2293,7 +2293,7 @@ public:
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R1 P0;
+	typedef typename SigTraits::LF P0;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureL15>::Call;
 
@@ -2399,28 +2399,28 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR01(
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i0,
-		const ZRef<Callable_t>& iCallable)
+		const ZRef<Callable_t>& iCallable,
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i0)
 	:	f0(i0)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R4 P4;
-	typedef typename SigTraits::R5 P5;
-	typedef typename SigTraits::R6 P6;
-	typedef typename SigTraits::R7 P7;
-	typedef typename SigTraits::R8 P8;
-	typedef typename SigTraits::R9 P9;
-	typedef typename SigTraits::RA PA;
-	typedef typename SigTraits::RB PB;
-	typedef typename SigTraits::RC PC;
-	typedef typename SigTraits::RD PD;
-	typedef typename SigTraits::RE PE;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
+	typedef typename SigTraits::L4 P4;
+	typedef typename SigTraits::L5 P5;
+	typedef typename SigTraits::L6 P6;
+	typedef typename SigTraits::L7 P7;
+	typedef typename SigTraits::L8 P8;
+	typedef typename SigTraits::L9 P9;
+	typedef typename SigTraits::LA PA;
+	typedef typename SigTraits::LB PB;
+	typedef typename SigTraits::LC PC;
+	typedef typename SigTraits::LD PD;
+	typedef typename SigTraits::LE PE;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR01>::Call;
 
@@ -2429,56 +2429,56 @@ private:
 		{ return fCallable->Call(f0); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, i0); }
+		{ return fCallable->Call(i0, f0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, f0); }
 
 	typename ParamTraits<typename SigTraits::R0>::ConstRef_Remove_t f0;
 	ZRef<Callable_t> fCallable;
@@ -2498,28 +2498,28 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR02(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t i0,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i1,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i1)
 	:	f0(i0), f1(i1)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R4 P4;
-	typedef typename SigTraits::R5 P5;
-	typedef typename SigTraits::R6 P6;
-	typedef typename SigTraits::R7 P7;
-	typedef typename SigTraits::R8 P8;
-	typedef typename SigTraits::R9 P9;
-	typedef typename SigTraits::RA PA;
-	typedef typename SigTraits::RB PB;
-	typedef typename SigTraits::RC PC;
-	typedef typename SigTraits::RD PD;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
+	typedef typename SigTraits::L4 P4;
+	typedef typename SigTraits::L5 P5;
+	typedef typename SigTraits::L6 P6;
+	typedef typename SigTraits::L7 P7;
+	typedef typename SigTraits::L8 P8;
+	typedef typename SigTraits::L9 P9;
+	typedef typename SigTraits::LA PA;
+	typedef typename SigTraits::LB PB;
+	typedef typename SigTraits::LC PC;
+	typedef typename SigTraits::LD PD;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR02>::Call;
 
@@ -2528,52 +2528,52 @@ private:
 		{ return fCallable->Call(f0, f1); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, i0); }
+		{ return fCallable->Call(i0, f0, f1); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, f0, f1); }
 
 	typename ParamTraits<typename SigTraits::R1>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::R0>::ConstRef_Remove_t f1;
@@ -2594,28 +2594,28 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR03(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t i1,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i2,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i2)
 	:	f0(i0), f1(i1), f2(i2)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R4 P4;
-	typedef typename SigTraits::R5 P5;
-	typedef typename SigTraits::R6 P6;
-	typedef typename SigTraits::R7 P7;
-	typedef typename SigTraits::R8 P8;
-	typedef typename SigTraits::R9 P9;
-	typedef typename SigTraits::RA PA;
-	typedef typename SigTraits::RB PB;
-	typedef typename SigTraits::RC PC;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
+	typedef typename SigTraits::L4 P4;
+	typedef typename SigTraits::L5 P5;
+	typedef typename SigTraits::L6 P6;
+	typedef typename SigTraits::L7 P7;
+	typedef typename SigTraits::L8 P8;
+	typedef typename SigTraits::L9 P9;
+	typedef typename SigTraits::LA PA;
+	typedef typename SigTraits::LB PB;
+	typedef typename SigTraits::LC PC;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR03>::Call;
 
@@ -2624,48 +2624,48 @@ private:
 		{ return fCallable->Call(f0, f1, f2); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0, f1, f2); }
 
 	typename ParamTraits<typename SigTraits::R2>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::R1>::ConstRef_Remove_t f1;
@@ -2687,28 +2687,28 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR04(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t i2,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i3,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i3)
 	:	f0(i0), f1(i1), f2(i2), f3(i3)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R4 P4;
-	typedef typename SigTraits::R5 P5;
-	typedef typename SigTraits::R6 P6;
-	typedef typename SigTraits::R7 P7;
-	typedef typename SigTraits::R8 P8;
-	typedef typename SigTraits::R9 P9;
-	typedef typename SigTraits::RA PA;
-	typedef typename SigTraits::RB PB;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
+	typedef typename SigTraits::L4 P4;
+	typedef typename SigTraits::L5 P5;
+	typedef typename SigTraits::L6 P6;
+	typedef typename SigTraits::L7 P7;
+	typedef typename SigTraits::L8 P8;
+	typedef typename SigTraits::L9 P9;
+	typedef typename SigTraits::LA PA;
+	typedef typename SigTraits::LB PB;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR04>::Call;
 
@@ -2717,44 +2717,44 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1, f2, f3); }
 
 	typename ParamTraits<typename SigTraits::R3>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::R2>::ConstRef_Remove_t f1;
@@ -2777,28 +2777,28 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR05(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::R4>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t i2,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t i3,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i4,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i4)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R4 P4;
-	typedef typename SigTraits::R5 P5;
-	typedef typename SigTraits::R6 P6;
-	typedef typename SigTraits::R7 P7;
-	typedef typename SigTraits::R8 P8;
-	typedef typename SigTraits::R9 P9;
-	typedef typename SigTraits::RA PA;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
+	typedef typename SigTraits::L4 P4;
+	typedef typename SigTraits::L5 P5;
+	typedef typename SigTraits::L6 P6;
+	typedef typename SigTraits::L7 P7;
+	typedef typename SigTraits::L8 P8;
+	typedef typename SigTraits::L9 P9;
+	typedef typename SigTraits::LA PA;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR05>::Call;
 
@@ -2807,40 +2807,40 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2, f3, f4); }
 
 	typename ParamTraits<typename SigTraits::R4>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::R3>::ConstRef_Remove_t f1;
@@ -2864,28 +2864,28 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR06(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::R5>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::R4>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t i2,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t i3,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t i4,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i5,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i5)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R4 P4;
-	typedef typename SigTraits::R5 P5;
-	typedef typename SigTraits::R6 P6;
-	typedef typename SigTraits::R7 P7;
-	typedef typename SigTraits::R8 P8;
-	typedef typename SigTraits::R9 P9;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
+	typedef typename SigTraits::L4 P4;
+	typedef typename SigTraits::L5 P5;
+	typedef typename SigTraits::L6 P6;
+	typedef typename SigTraits::L7 P7;
+	typedef typename SigTraits::L8 P8;
+	typedef typename SigTraits::L9 P9;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR06>::Call;
 
@@ -2894,36 +2894,36 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3, f4, f5); }
 
 	typename ParamTraits<typename SigTraits::R5>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::R4>::ConstRef_Remove_t f1;
@@ -2948,28 +2948,28 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR07(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::R6>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::R5>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::R4>::ConstRef_Add_t i2,
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t i3,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t i4,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t i5,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i6,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i6)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R4 P4;
-	typedef typename SigTraits::R5 P5;
-	typedef typename SigTraits::R6 P6;
-	typedef typename SigTraits::R7 P7;
-	typedef typename SigTraits::R8 P8;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
+	typedef typename SigTraits::L4 P4;
+	typedef typename SigTraits::L5 P5;
+	typedef typename SigTraits::L6 P6;
+	typedef typename SigTraits::L7 P7;
+	typedef typename SigTraits::L8 P8;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR07>::Call;
 
@@ -2978,32 +2978,32 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4, f5, f6); }
 
 	typename ParamTraits<typename SigTraits::R6>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::R5>::ConstRef_Remove_t f1;
@@ -3029,6 +3029,7 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR08(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::R7>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::R6>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::R5>::ConstRef_Add_t i2,
@@ -3036,21 +3037,20 @@ public:
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t i4,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t i5,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t i6,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i7,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i7)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R4 P4;
-	typedef typename SigTraits::R5 P5;
-	typedef typename SigTraits::R6 P6;
-	typedef typename SigTraits::R7 P7;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
+	typedef typename SigTraits::L4 P4;
+	typedef typename SigTraits::L5 P5;
+	typedef typename SigTraits::L6 P6;
+	typedef typename SigTraits::L7 P7;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR08>::Call;
 
@@ -3059,28 +3059,28 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	typename ParamTraits<typename SigTraits::R7>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::R6>::ConstRef_Remove_t f1;
@@ -3107,6 +3107,7 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR09(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::R8>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::R7>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::R6>::ConstRef_Add_t i2,
@@ -3115,21 +3116,20 @@ public:
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t i5,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t i6,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t i7,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i8,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i8)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R4 P4;
-	typedef typename SigTraits::R5 P5;
-	typedef typename SigTraits::R6 P6;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
+	typedef typename SigTraits::L4 P4;
+	typedef typename SigTraits::L5 P5;
+	typedef typename SigTraits::L6 P6;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR09>::Call;
 
@@ -3138,25 +3138,25 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	typename ParamTraits<typename SigTraits::R8>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::R7>::ConstRef_Remove_t f1;
@@ -3184,6 +3184,7 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR10(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::R9>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::R8>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::R7>::ConstRef_Add_t i2,
@@ -3193,20 +3194,19 @@ public:
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t i6,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t i7,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t i8,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i9,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t i9)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R4 P4;
-	typedef typename SigTraits::R5 P5;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
+	typedef typename SigTraits::L4 P4;
+	typedef typename SigTraits::L5 P5;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR10>::Call;
 
@@ -3215,22 +3215,22 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3, i4); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	typename ParamTraits<typename SigTraits::R9>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::R8>::ConstRef_Remove_t f1;
@@ -3259,6 +3259,7 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR11(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::RA>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::R9>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::R8>::ConstRef_Add_t i2,
@@ -3269,19 +3270,18 @@ public:
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t i7,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t i8,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t i9,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iA,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iA)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
-	typedef typename SigTraits::R4 P4;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
+	typedef typename SigTraits::L4 P4;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR11>::Call;
 
@@ -3290,19 +3290,19 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2, i3, i4); }
+		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	typename ParamTraits<typename SigTraits::RA>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::R9>::ConstRef_Remove_t f1;
@@ -3332,6 +3332,7 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR12(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::RB>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::RA>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::R9>::ConstRef_Add_t i2,
@@ -3343,18 +3344,17 @@ public:
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t i8,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t i9,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t iA,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iB,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iB)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA), fB(iB)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
-	typedef typename SigTraits::R3 P3;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
+	typedef typename SigTraits::L3 P3;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR12>::Call;
 
@@ -3363,16 +3363,16 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1, i2, i3); }
+		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	typename ParamTraits<typename SigTraits::RB>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::RA>::ConstRef_Remove_t f1;
@@ -3403,6 +3403,7 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR13(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::RC>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::RB>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::RA>::ConstRef_Add_t i2,
@@ -3415,17 +3416,16 @@ public:
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t i9,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t iA,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t iB,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iC,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iC)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA), fB(iB), fC(iC)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
-	typedef typename SigTraits::R2 P2;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
+	typedef typename SigTraits::L2 P2;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR13>::Call;
 
@@ -3434,13 +3434,13 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0, i1, i2); }
+		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	typename ParamTraits<typename SigTraits::RC>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::RB>::ConstRef_Remove_t f1;
@@ -3472,6 +3472,7 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR14(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::RD>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::RC>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::RB>::ConstRef_Add_t i2,
@@ -3485,16 +3486,15 @@ public:
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t iA,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t iB,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t iC,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iD,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iD)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA), fB(iB), fC(iC), fD(iD)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
-	typedef typename SigTraits::R1 P1;
+	typedef typename SigTraits::L0 P0;
+	typedef typename SigTraits::L1 P1;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR14>::Call;
 
@@ -3503,10 +3503,10 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, i0, i1); }
+		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
 
 	typename ParamTraits<typename SigTraits::RD>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::RC>::ConstRef_Remove_t f1;
@@ -3539,6 +3539,7 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR15(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::RE>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::RD>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::RC>::ConstRef_Add_t i2,
@@ -3553,15 +3554,14 @@ public:
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t iB,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t iC,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t iD,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iE,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iE)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA), fB(iB), fC(iC), fD(iD), fE(iE)
 	,	fCallable(iCallable)
 		{}
 
 	typedef typename SigTraits::R R;
-	typedef typename SigTraits::R0 P0;
+	typedef typename SigTraits::L0 P0;
 
 	using ZCallable<typename SigTraits_T<Signature_p>::SignatureR15>::Call;
 
@@ -3570,7 +3570,7 @@ private:
 		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, i0); }
+		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
 
 	typename ParamTraits<typename SigTraits::RE>::ConstRef_Remove_t f0;
 	typename ParamTraits<typename SigTraits::RD>::ConstRef_Remove_t f1;
@@ -3604,6 +3604,7 @@ public:
 	typedef SigTraits_T<Signature> SigTraits;
 
 	CallableR16(
+		const ZRef<Callable_t>& iCallable,
 		typename ParamTraits<typename SigTraits::RF>::ConstRef_Add_t i0,
 		typename ParamTraits<typename SigTraits::RE>::ConstRef_Add_t i1,
 		typename ParamTraits<typename SigTraits::RD>::ConstRef_Add_t i2,
@@ -3619,8 +3620,7 @@ public:
 		typename ParamTraits<typename SigTraits::R3>::ConstRef_Add_t iC,
 		typename ParamTraits<typename SigTraits::R2>::ConstRef_Add_t iD,
 		typename ParamTraits<typename SigTraits::R1>::ConstRef_Add_t iE,
-		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iF,
-		const ZRef<Callable_t>& iCallable)
+		typename ParamTraits<typename SigTraits::R0>::ConstRef_Add_t iF)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA), fB(iB), fC(iC), fD(iD), fE(iE), fF(iF)
 	,	fCallable(iCallable)
@@ -3967,13 +3967,13 @@ BindR(
 		(iCallable,
 		i0);
 	}
-
+// We need to reverse the order of these params
 template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR02> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i1)
 	{
 	return new CallableR02<typename Callable::Signature>
 		(iCallable,
@@ -3984,9 +3984,9 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR03> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i0,
 	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i2)
 	{
 	return new CallableR03<typename Callable::Signature>
 		(iCallable,
@@ -3997,10 +3997,10 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR04> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i3)
 	{
 	return new CallableR04<typename Callable::Signature>
 		(iCallable,
@@ -4011,11 +4011,11 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR05> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i1,
 	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i3,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i4)
 	{
 	return new CallableR05<typename Callable::Signature>
 		(iCallable,
@@ -4026,12 +4026,12 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR06> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i5)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i3,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i4,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i5)
 	{
 	return new CallableR06<typename Callable::Signature>
 		(iCallable,
@@ -4042,13 +4042,13 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR07> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i2,
 	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i5,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i6)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i4,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i5,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i6)
 	{
 	return new CallableR07<typename Callable::Signature>
 		(iCallable,
@@ -4059,14 +4059,14 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR08> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i5,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i6,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i7)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i3,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i4,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i5,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i6,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i7)
 	{
 	return new CallableR08<typename Callable::Signature>
 		(iCallable,
@@ -4077,15 +4077,15 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR09> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i3,
 	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i5,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i6,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i7,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i8)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i5,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i6,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i7,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i8)
 	{
 	return new CallableR09<typename Callable::Signature>
 		(iCallable,
@@ -4096,16 +4096,16 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR10> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i5,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i6,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i7,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i8,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i9)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i3,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i4,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i5,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i6,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i7,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i8,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i9)
 	{
 	return new CallableR10<typename Callable::Signature>
 		(iCallable,
@@ -4116,17 +4116,17 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR11> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i3,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i4,
 	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i5,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i6,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i7,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i8,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i9,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t iA)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i6,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i7,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i8,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i9,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t iA)
 	{
 	return new CallableR11<typename Callable::Signature>
 		(iCallable,
@@ -4137,18 +4137,18 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR12> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i5,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i6,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i7,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i8,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i9,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t iA,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RB>::ConstRef_Add_t iB)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RB>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i3,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i4,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i5,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i6,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i7,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i8,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i9,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t iA,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t iB)
 	{
 	return new CallableR12<typename Callable::Signature>
 		(iCallable,
@@ -4159,19 +4159,19 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR13> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i5,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RC>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RB>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i3,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i4,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i5,
 	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i6,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i7,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i8,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i9,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t iA,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RB>::ConstRef_Add_t iB,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RC>::ConstRef_Add_t iC)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i7,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i8,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i9,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t iA,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t iB,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t iC)
 	{
 	return new CallableR13<typename Callable::Signature>
 		(iCallable,
@@ -4182,20 +4182,20 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR14> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i5,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i6,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i7,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i8,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i9,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t iA,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RB>::ConstRef_Add_t iB,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RC>::ConstRef_Add_t iC,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RD>::ConstRef_Add_t iD)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RD>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RC>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RB>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t i3,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i4,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i5,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i6,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i7,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i8,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i9,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t iA,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t iB,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t iC,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t iD)
 	{
 	return new CallableR14<typename Callable::Signature>
 		(iCallable,
@@ -4206,21 +4206,21 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR15> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i5,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i6,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RE>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RD>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RC>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RB>::ConstRef_Add_t i3,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t i4,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i5,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i6,
 	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i7,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i8,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i9,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t iA,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RB>::ConstRef_Add_t iB,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RC>::ConstRef_Add_t iC,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RD>::ConstRef_Add_t iD,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RE>::ConstRef_Add_t iE)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i8,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i9,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t iA,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t iB,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t iC,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t iD,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t iE)
 	{
 	return new CallableR15<typename Callable::Signature>
 		(iCallable,
@@ -4231,22 +4231,22 @@ template <class Callable>
 ZRef<ZCallable<typename SigTraits_T<typename Callable::Signature>::SignatureR16> >
 BindR(
 	const ZRef<Callable>& iCallable,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t i0,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t i1,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t i2,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t i3,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t i4,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t i5,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i6,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i7,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i8,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i9,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t iA,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RB>::ConstRef_Add_t iB,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RC>::ConstRef_Add_t iC,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RD>::ConstRef_Add_t iD,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RE>::ConstRef_Add_t iE,
-	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RF>::ConstRef_Add_t iF)
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RF>::ConstRef_Add_t i0,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RE>::ConstRef_Add_t i1,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RD>::ConstRef_Add_t i2,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RC>::ConstRef_Add_t i3,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RB>::ConstRef_Add_t i4,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::RA>::ConstRef_Add_t i5,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R9>::ConstRef_Add_t i6,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R8>::ConstRef_Add_t i7,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R7>::ConstRef_Add_t i8,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R6>::ConstRef_Add_t i9,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R5>::ConstRef_Add_t iA,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R4>::ConstRef_Add_t iB,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R3>::ConstRef_Add_t iC,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R2>::ConstRef_Add_t iD,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R1>::ConstRef_Add_t iE,
+	typename ParamTraits<typename SigTraits_T<typename Callable::Signature>::R0>::ConstRef_Add_t iF)
 	{
 	return new CallableR16<typename Callable::Signature>
 		(iCallable,
