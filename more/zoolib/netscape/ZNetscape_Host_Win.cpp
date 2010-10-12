@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZNetscape_Host_Win.h"
 
-#if ! ZCONFIG_Is64Bit
 #if defined(XP_WIN)
 
 #include "zoolib/ZLog.h"
@@ -29,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstdio>
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -79,14 +77,14 @@ NPError Host_Win::Host_SetValue(NPP npp, NPPVariable variable, void* value)
 		{
 		case NPPVpluginWindowBool:
 			{
-			if (ZLOG(s, eDebug, "Host_Win"))
+			if (ZLOG(s, eDebug - 1, "Host_Win"))
 				s << "Host_SetValue, NPPVpluginWindowBool: " << (value ? "true" : "false");
 			fIsWindowed = value;
 			return NPERR_NO_ERROR;
 			}
 		case NPPVpluginTransparentBool:
 			{
-			if (ZLOG(s, eDebug, "Host_Win"))
+			if (ZLOG(s, eDebug - 1, "Host_Win"))
 				s << "Host_SetValue, NPPVpluginTransparentBool: " << (value ? "true" : "false");
 			fIsTransparent = value;
 			return NPERR_NO_ERROR;
@@ -138,25 +136,22 @@ void Host_Win::PaintBackground(HDC iHDC, const PAINTSTRUCT& iPS)
 
 LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
+	bool callPlugin = false;
+	bool callDefault = false;
+	
 	switch (iMessage)
 		{
 		case WM_TIMER:
 			{
 			this->DeliverData();
 			if (!fIsWindowed)
-				{
-				NPEvent theNPEvent;
-				theNPEvent.event = iMessage;
-				theNPEvent.wParam = iWPARAM;
-				theNPEvent.lParam = iLPARAM;
-				this->Guest_HandleEvent(&theNPEvent);
-				}
-			return 0;
+				callPlugin = true;
+			break;
 			}
 		case WM_PAINT:
 			{
 			this->pPaint(iHWND, iWPARAM, iLPARAM);
-			return 0;
+			break;
 			}
 		case WM_WINDOWPOSCHANGED:
 			{
@@ -182,6 +177,7 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 
 				this->pStuffNPWindow(theWidth, theHeight);
 				}
+			callDefault = true;
 			break;
 			}
 		case WM_SETFOCUS:
@@ -189,59 +185,56 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 			if (fInnerWND)
 				{
 				::SetFocus(fInnerWND);
-				return 0;
 				}
-			// fall through
-			}
-		case WM_SETCURSOR:
-		case WM_KILLFOCUS:
-		case WM_ACTIVATE:
-		case WM_LBUTTONDOWN:
-		case WM_LBUTTONDBLCLK:
-		case WM_RBUTTONDBLCLK:
-		case WM_RBUTTONUP:
-		case WM_LBUTTONUP:
-		case WM_MOUSEMOVE:
-		case WM_MBUTTONDOWN:
-		case WM_MBUTTONUP:
-		case WM_MBUTTONDBLCLK:
-//		case WM_MOUSEHOVER:
-		case WM_MOUSEACTIVATE:
-		case WM_KEYDOWN:
-		case WM_KEYUP:
-
-#if 0
-		case WM_CHAR:
-		case WM_DEADCHAR:
-
-		case WM_SYSKEYDOWN:
-		case WM_SYSKEYUP:
-		case WM_SYSCHAR:
-		case WM_SYSDEADCHAR:
-
-		case WM_IME_CHAR:
-		case WM_IME_STARTCOMPOSITION:
-		case WM_IME_ENDCOMPOSITION:
-		case WM_IME_COMPOSITION:
-
-		case WM_INPUTLANGCHANGEREQUEST:
-#endif
-
-			{
-			if (!fIsWindowed)
+			else
 				{
-				NPEvent theNPEvent;
-				theNPEvent.event = iMessage;
-				theNPEvent.wParam = iWPARAM;
-				theNPEvent.lParam = iLPARAM;
-				this->Guest_HandleEvent(&theNPEvent);
-				return 0;
+				callPlugin = true;
+				callDefault = true;
 				}
 			break;
 			}
+
+		case WM_KEYUP:
+		case WM_KEYDOWN:
+
+		case WM_MOUSEMOVE:
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP:
+		case WM_LBUTTONDBLCLK:
+		case WM_MBUTTONDBLCLK:
+		case WM_RBUTTONDBLCLK:
+
+		case WM_SETCURSOR:
+		case WM_MOUSEACTIVATE:
+		case WM_ACTIVATE:
+		case WM_KILLFOCUS:
+			{
+			callPlugin = !fIsWindowed;
+			break;
+			}
+		default:
+			{
+			callDefault = true;
+			}
 		}
 
-	return ZWNDSubClassW::WindowProc(iHWND, iMessage, iWPARAM, iLPARAM);
+	if (callPlugin)
+		{
+		NPEvent theNPEvent;
+		theNPEvent.event = iMessage;
+		theNPEvent.wParam = iWPARAM;
+		theNPEvent.lParam = iLPARAM;
+		this->Guest_HandleEvent(&theNPEvent);
+		}
+
+	if (callDefault)
+		return ZWNDSubClassW::WindowProc(iHWND, iMessage, iWPARAM, iLPARAM);
+
+	return 0;
 	}
 
 void Host_Win::pPaint(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM)
@@ -286,8 +279,6 @@ void Host_Win::pStuffNPWindow(int iWidth, int iHeight)
 	}
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // defined(XP_WIN)
-#endif // ! ZCONFIG_Is64Bit
