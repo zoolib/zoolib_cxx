@@ -107,13 +107,18 @@ static void spHandleDebug_POSIX(const Params_t& iParams, va_list iArgs)
 	::fputs(theBuf, stderr);
 	::fputs("\n", stderr);
 	fputs("  *", stderr);
-	::vfprintf(stderr, iParams.fUserMessage, iArgs);
-	::fputs("\n", stderr);
+	if (iParams.fUserMessage)
+		::vfprintf(stderr, iParams.fUserMessage, iArgs);
 	if (iParams.fStop)
 		{
+		::fputs("\n", stderr);
 		// Force a segfault
 		*reinterpret_cast<double*>(1) = 0;
 //		abort();
+		}
+	else
+		{
+		::fputs("\n", stderr);
 		}
 	}
 
