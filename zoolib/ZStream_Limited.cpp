@@ -120,7 +120,7 @@ ZStreamRPos_Limited::ZStreamRPos_Limited(
 	uint64 iOffset, uint64 iLimit, const ZStreamRPos& iStreamSource)
 :	fStreamSource(iStreamSource),
 	fOffset(iOffset),
-	fLimit(iLimit)
+	fLimit(min(iLimit, ZUINT64_C(0xFFFFFFFFFFFFFFFF) - fOffset))
 	{}
 
 ZStreamRPos_Limited::~ZStreamRPos_Limited()
@@ -142,7 +142,7 @@ void ZStreamRPos_Limited::Imp_SetPosition(uint64 iPosition)
 	{ fStreamSource.SetPosition(fOffset + iPosition); }
 
 uint64 ZStreamRPos_Limited::Imp_GetSize()
-	{ return min(fStreamSource.GetSize(), fLimit); }
+	{ return min(fStreamSource.GetSize() - fOffset, fLimit); }
 
 // =================================================================================================
 #pragma mark -
