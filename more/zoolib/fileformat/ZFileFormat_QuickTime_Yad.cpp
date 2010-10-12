@@ -49,7 +49,7 @@ static string spOSTypeAsString(uint32 iOSType)
 	}
 
 static bool spIsName(uint8 iChar)
-	{ return iChar >= 32; }
+	{ return iChar >= 32 && iChar <= 126; }
 
 static bool spNotName(uint8 iChar)
 	{ return !spIsName(iChar); }
@@ -94,6 +94,10 @@ public:
 	,	fStreamR_Limited(iSize, fStreamerR->GetStreamR())
 		{}
 
+// From ZYadR
+	virtual void Finish()
+		{ fStreamR_Limited.SkipAll(); }
+
 // From ZStreamerR via ZYadStreamR
 	const ZStreamR& GetStreamR()
 		{ return fStreamR_Limited; }
@@ -101,6 +105,34 @@ public:
 private:
 	ZRef<ZStreamerR> fStreamerR;
 	ZStreamR_Limited fStreamR_Limited;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * YadStreamRPos
+
+class YadStreamRPos
+:	public ZYadStreamR
+,	public virtual ZStreamerRPos
+	{
+public:
+	YadStreamRPos(ZRef<ZStreamerRPos> iStreamerRPos, uint64 iSize)
+	:	fStreamerRPos(iStreamerRPos)
+	,	fStreamRPos_Limited(fStreamerRPos->GetStreamRPos().GetPosition(),
+		iSize, fStreamerRPos->GetStreamRPos())
+		{}
+
+// From ZYadR
+	virtual void Finish()
+		{ fStreamRPos_Limited.SkipAll(); }
+
+// From ZStreamerRPos
+	const ZStreamRPos& GetStreamRPos()
+		{ return fStreamRPos_Limited; }
+
+private:
+	ZRef<ZStreamerRPos> fStreamerRPos;
+	ZStreamRPos_Limited fStreamRPos_Limited;
 	};
 
 // =================================================================================================
@@ -142,6 +174,33 @@ YadMapR::YadMapR(ZRef<ZStreamerR> iStreamerR, uint64 iRemaining,
 ,	fFirstName(iFirstName)
 	{}
 
+static bool spLooksLikeAContainer(const ZStreamR& iStreamR, size_t iOuterSize,
+	uint32& oFirstSize, size_t& oHeaderSize, string& oFirstName)
+	{
+	if (iOuterSize >= 8)
+		{
+		oFirstSize = iStreamR.ReadUInt32();
+		const uint32 firstName32 = iStreamR.ReadUInt32();
+		if (oFirstSize >= 8 && spIsValidName(firstName32))
+			{
+			if (firstName32 == ZFOURCC('u','u','i','d'))
+				{
+				if (iOuterSize < 24)
+					return false;
+				oFirstName = iStreamR.ReadString(16);
+				oHeaderSize = 24;
+				}
+			else
+				{
+				oFirstName = spOSTypeAsString(firstName32);
+				oHeaderSize = 8;
+				}
+			return true;
+			}
+		}
+	return false;
+	}
+
 void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	if (!fRemaining)
@@ -152,6 +211,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	uint64 theSize;
 	if (iIsFirst && fHasFirst)
 		{
+		ZAssertLog(0, fRemaining >= fFirstSize);
 		fRemaining -= fFirstSize;
 		theSize = fFirstSize - fFirstHeaderSize;
 		oName = fFirstName;
@@ -191,48 +251,70 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 			{
 			oName = spOSTypeAsString(theName32);
 			}
+		ZAssertLog(0, fRemaining >= theSize);
 		fRemaining -= theSize;
 		theSize -= headerSize;
 		}
 
-	if (ZQ<bool> isContainerQ = spIsContainer(oName))
+	if (ZRef<ZStreamerRPos> theSRPos = fStreamerR.DynamicCast<ZStreamerRPos>())
 		{
-		if (isContainerQ.Get())
-			oYadR = new YadMapR(fStreamerR, theSize);
-		else
-			oYadR = new YadStreamR(fStreamerR, theSize);
-		}
-	else
-		{
-		// Don't know if this is a container or not. Try reading a little of the content,
-		// keeping a copy in buffer.
-		ZData_Any buffer;
-		ZStreamRWPos_Data_T<ZData_Any> bufferStream(buffer, 0);
-		ZStreamR_Tee theStreamR_Tee(r, bufferStream);
-		const uint32 firstSize = theStreamR_Tee.ReadUInt32();
-		const uint32 firstName32 = theStreamR_Tee.ReadUInt32();
-		if (firstSize >= 8 && spIsValidName(firstName32))
+		if (ZQ<bool> isContainerQ = spIsContainer(oName))
 			{
-			size_t headerSize;
-			string firstName;
-			if (firstName32 == ZFOURCC('u','u','i','d'))
-				{
-				firstName = r.ReadString(16);
-				headerSize = 24;
-				}
+			if (isContainerQ.Get())
+				oYadR = new YadMapR(fStreamerR, theSize);
 			else
-				{
-				firstName = spOSTypeAsString(firstName32);
-				headerSize = 8;
-				}
-			oYadR = new YadMapR(fStreamerR, theSize, firstSize, headerSize, firstName);
+				oYadR = new YadStreamRPos(theSRPos, theSize);
 			}
 		else
 			{
-			ZRef<ZStreamerR> prior =
-				new ZStreamerR_T<ZStreamRPos_Data_T<ZData_Any> >(buffer);
-			ZRef<ZStreamerR> theCat = new ZStreamerR_Cat(prior, fStreamerR);
-			oYadR = new YadStreamR(theCat, theSize);
+			// Don't know if this is a container or not. Try reading a little of the content.
+			uint64 priorPos = theSRPos->GetStreamRPos().GetPosition();
+			uint32 firstSize;
+			size_t headerSize;
+			string firstName;
+			if (spLooksLikeAContainer(theSRPos->GetStreamR(), theSize,
+				firstSize, headerSize, firstName) && theSize >= firstSize)
+				{
+				oYadR = new YadMapR(theSRPos, theSize, firstSize, headerSize, firstName);
+				}
+			else
+				{
+				theSRPos->GetStreamRPos().SetPosition(priorPos);
+				oYadR = new YadStreamRPos(theSRPos, theSize);
+				}
+			}
+		}
+	else
+		{
+		if (ZQ<bool> isContainerQ = spIsContainer(oName))
+			{
+			if (isContainerQ.Get())
+				oYadR = new YadMapR(fStreamerR, theSize);
+			else
+				oYadR = new YadStreamR(fStreamerR, theSize);
+			}
+		else
+			{
+			// Don't know if this is a container or not.
+			// Try reading a little of the content, keeping a copy in buffer.
+			ZData_Any buffer;
+			ZStreamRWPos_Data_T<ZData_Any> bufferStream(buffer, 0);
+			ZStreamR_Tee theStreamR_Tee(r, bufferStream);
+			uint32 firstSize;
+			size_t headerSize;
+			string firstName;
+			if (spLooksLikeAContainer(theStreamR_Tee, theSize,
+				firstSize, headerSize, firstName))
+				{
+				oYadR = new YadMapR(fStreamerR, theSize, firstSize, headerSize, firstName);
+				}
+			else
+				{
+				ZRef<ZStreamerR> prior =
+					new ZStreamerR_T<ZStreamRPos_Data_T<ZData_Any> >(buffer);
+				ZRef<ZStreamerR> theCat = new ZStreamerR_Cat(prior, fStreamerR);
+				oYadR = new YadStreamR(theCat, theSize);
+				}
 			}
 		}
 	}
@@ -244,7 +326,11 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 ZRef<ZYadR> sMakeYadR(ZRef<ZStreamerR> iStreamerR)
 	{
 	if (ZRef<ZStreamerRPos> theSRPos = iStreamerR.DynamicCast<ZStreamerRPos>())
-		return new YadMapR(iStreamerR, theSRPos->GetStreamRPos().CountReadable());
+		{
+		const uint64 theSize = theSRPos->GetStreamRPos().GetSize();
+		const uint64 thePosition = theSRPos->GetStreamRPos().GetPosition();
+		return new YadMapR(iStreamerR, theSize - thePosition);
+		}
 
 	return new YadMapR(iStreamerR, uint64(-1));
 	}
