@@ -44,9 +44,10 @@ struct ZYadOptions
 	std::string fEOLString;
 	std::string fIndentString;
 
-	int fRawChunkSize;
+	size_t fRawChunkSize;
 	std::string fRawByteSeparator;
 	bool fRawAsASCII;
+	ZQ<uint64> fRawSizeCap;
 
 	bool fBreakStrings;
 	int fStringLineLength;
