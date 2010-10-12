@@ -45,7 +45,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	#define NPEventType_GetFocusEvent getFocusEvent
 	#define NPEventType_LoseFocusEvent loseFocusEvent
-	#define NPEventType_AdjustCursorEvent loseFocusEvent
+	#define NPEventType_AdjustCursorEvent adjustCursorEvent
 
 #else
 
