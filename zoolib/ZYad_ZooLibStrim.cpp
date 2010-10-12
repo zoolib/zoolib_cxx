@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+using std::min;
 using std::string;
 using std::vector;
 
@@ -663,17 +664,28 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 			if (iMayNeedInitialLF)
 				spWriteLFIndent(s, iLevel, iOptions);
 
+			uint64 countRemaining = theSize;
+			if (iOptions.fRawSizeCap)
+				countRemaining = min(countRemaining, iOptions.fRawSizeCap.Get());
+
 			s.Writef("( // %lld bytes", theSize);
+
+			if (countRemaining < theSize)
+				s.Writef(" (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
+
 			spWriteLFIndent(s, iLevel, iOptions);
 			if (iOptions.fRawAsASCII)
 				{
+
 				for (;;)
 					{
 					uint64 lastPos = iStreamRPos.GetPosition();
+					const size_t countToCopy =
+						min(iOptions.fRawChunkSize, ZStream::sClampedSize(countRemaining));
 					uint64 countCopied;
 					ZStreamW_HexStrim(iOptions.fRawByteSeparator, string(), 0, s)
-						.CopyFrom(iStreamRPos, iOptions.fRawChunkSize, &countCopied, nullptr);
-
+						.CopyFrom(iStreamRPos, countToCopy, &countCopied, nullptr);
+					countRemaining -= countCopied;
 					if (countCopied == 0)
 						break;
 
