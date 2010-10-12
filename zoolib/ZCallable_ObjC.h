@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifdef __OBJC__
 
 #include <objc/message.h>
+
 #if defined(__arm__)
 	#include <tr1/type_traits>
 #endif
