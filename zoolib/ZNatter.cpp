@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZNatter.h"
+#include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZUtil_STL.h"
 
 namespace ZooLib {
@@ -199,10 +200,7 @@ static bool spReadPacket(uint8& oType, int64& oID, ZData_Any& oData, const ZStre
 		oType = r.ReadUInt8();
 		oID = r.ReadInt64();
 		if (oType == 2)
-			{
-			oData.SetSize(r.ReadCount());
-			r.Read(oData.GetData(), oData.GetSize());
-			}
+			oData = sRead_T<ZData_Any>(r, r.ReadCount());
 		return true;
 		}
 	catch (...)
@@ -247,8 +245,7 @@ void Channel::pRead(ZGuardRMtxR& iGuard)
 				{
 				if (!ZUtil_STL::sEraseIfContains(fRetired, theID))
 					{
-					ZRef<Exchange> theExchange =
-						ZUtil_STL::sEraseAndReturn(1, fPending, theID);
+					ZRef<Exchange> theExchange = ZUtil_STL::sEraseAndReturn(1, fPending, theID);
 					ZAssert(theExchange->fWaiting);
 					theExchange->fWaiting = false;
 					}
