@@ -32,7 +32,7 @@ namespace ZooLib {
 #pragma mark * ZWorker_Callable
 
 class ZWorker_Callable
-:	public virtual ZWorker
+:	public ZWorker
 	{
 public:
 	typedef ZCallable<bool(ZRef_ZWorker)> Callable_t;
