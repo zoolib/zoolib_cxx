@@ -50,11 +50,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
 #	if defined(__OBJC__)
 #		import <Foundation/NSGeometry.h>
+#		define ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME \
+			defined(NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES) \
+			&& NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES
 #	else
-	typedef struct _NSPoint { float x; float y; } NSPoint;
-	typedef struct _NSSize { float width; float height; } NSSize;
-	typedef struct _NSRect { NSPoint origin; NSSize size; } NSRect;
+#		if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 \
+			&& (__LP64__ || NS_BUILD_32_LIKE_64)
+#				define ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME 1
+#		else
+			typedef struct _NSPoint { float x; float y; } NSPoint;
+			typedef struct _NSSize { float width; float height; } NSSize;
+			typedef struct _NSRect { NSPoint origin; NSSize size; } NSRect;
+#		endif
 #	endif
+#endif
+
+#ifndef ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
+#	define ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME 0
 #endif
 
 // Include these after the platform files -- cmath causes problems
@@ -95,7 +107,8 @@ public:
 		operator CGPoint() const;
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) \
+		&& !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 		ZGPointPOD_T& operator=(const NSPoint& pt);
 		operator NSPoint() const;
 	#endif
@@ -159,7 +172,8 @@ public:
 		ZGPoint_T(const CGPoint& other);
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) \
+		&& !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 		ZGPoint_T(const NSPoint& other);
 	#endif
 
@@ -228,7 +242,8 @@ public:
 		operator CGSize() const;
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) \
+		&& !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 		ZGExtentPOD_T& operator=(const NSSize& pt);
 		operator NSSize() const;
 	#endif
@@ -292,7 +307,8 @@ public:
 		ZGExtent_T(const CGSize& other);
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) \
+		&& !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 		ZGExtent_T(const NSSize& size);
 	#endif
 
@@ -365,7 +381,8 @@ public:
 		operator CGRect() const;
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) \
+		&& !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 		ZGRectPOD_T& operator=(const NSRect& rect);
 		operator NSRect() const;
 	#endif
@@ -642,7 +659,8 @@ public:
 		ZGRect_T(const CGRect& iRect);
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
+	#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) \
+		&& !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 		ZGRect_T(const NSSize& iSize);
 		ZGRect_T(const NSRect& iRect);
 	#endif
@@ -755,7 +773,6 @@ template <class T>
 ZGExtentPOD_T<T>& operator-=(ZGExtentPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
 	{ l.h -= r.h; l.v -= r.v; return l; }
 
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Operations - Extent/Point
@@ -801,7 +818,6 @@ ZGRect_T<T> operator-(const ZGRectPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
 template <class T>
 ZGRectPOD_T<T>& operator-=(ZGRectPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
 	{ l.origin -= r; return l; }
-
 
 // =================================================================================================
 #pragma mark -
@@ -961,7 +977,8 @@ ZGRect_T<T>::ZGRect_T(const CGRect& iRect)
 #pragma mark -
 #pragma mark * Cocoa
 
-#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
+#if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) \
+	&& !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 
 template <class T>
 ZGPointPOD_T<T>& ZGPointPOD_T<T>::operator=(const NSPoint& pt)
@@ -1032,7 +1049,8 @@ ZGRect_T<T>::ZGRect_T(const NSRect& iRect)
 	this->extent = iRect.size;
 	}
 
-#endif // ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
+#endif // ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) \
+	&& !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 
 // =================================================================================================
 #pragma mark -
