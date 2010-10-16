@@ -206,10 +206,23 @@ FunctionEntryExit::~FunctionEntryExit()
 #pragma mark -
 #pragma mark * ZLog::sLogTrace
 
-void sLogTrace(EPriority iPriority, const char* iFile, int iLine)
+static const char* spTruncateFileName(const char* iFilename)
+	{
+	#if ZCONFIG_SPI_Enabled(Win)
+		if (const char* truncatedFilename = strrchr(iFilename, '\\'))
+		return truncatedFilename + 1;
+	#else
+		if (const char* truncatedFilename = strrchr(iFilename, '/'))
+		return truncatedFilename + 1;
+	#endif
+
+	return iFilename;
+	}
+
+void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iFunctionName)
 	{
 	if (const S& s = S(iPriority, "ZLOGTRACE"))
-		s << iFile << ":" << ZStringf("%d", iLine);
+		s << spTruncateFileName(iFile) << ":" << ZStringf("%d", iLine) << ", in " << iFunctionName;
 	}
 
 } // namespace ZLog

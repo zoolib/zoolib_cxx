@@ -45,7 +45,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZLOGFUNCTION(p) ZooLib::ZLog::FunctionEntryExit \
 	ZMACRO_CONCAT(theLogFEE_,__LINE__)(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION)
 
-#define ZLOGTRACE(p) ZooLib::ZLog::sLogTrace(ZooLib::ZLog::p, __FILE__, __LINE__)
+#define ZLOGTRACE(p) \
+	ZooLib::ZLog::sLogTrace(ZooLib::ZLog::p, __FILE__, __LINE__, ZMACRO_PRETTY_FUNCTION)
 
 namespace ZooLib {
 
@@ -151,9 +152,9 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZLog::sLogLine
+#pragma mark * ZLog::sLogTrace
 
-void sLogTrace(EPriority iPriority, const char* iFile, int iLine);
+void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iFunctionName);
 
 } // namespace ZLog
 
