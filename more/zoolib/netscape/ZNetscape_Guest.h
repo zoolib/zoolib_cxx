@@ -33,7 +33,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 class NPObjectG;
@@ -479,7 +478,6 @@ private:
 	};
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // __ZNetscape_Guest__

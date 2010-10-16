@@ -65,7 +65,7 @@ NPP NPPSetter::sCurrent()
 #pragma mark -
 #pragma mark * NPVariantG
 
-// Explicitly instantiate NPVariantG
+// Explicitly instantiate NPVariant_T<NPObjectG>, aka NPVariantG
 template class NPVariant_T<NPObjectG>;
 
 // Provide implementation of NPVariantBase::QGet_T<ZRef<NPObjectG> >
@@ -92,9 +92,6 @@ void sFree_T<NPVariantG>(void* iPtr)
 // =================================================================================================
 #pragma mark -
 #pragma mark * NPObjectG
-
-// Explicitly instantiate NPObjectG
-template class NPObject_T<NPVariantG>;
 
 void sRetain(NPObjectG& iOb)
 	{ iOb.Retain(); }
