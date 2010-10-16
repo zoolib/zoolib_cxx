@@ -119,7 +119,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark * NP_VERSION
 
 #define NP_VERSION_MAJOR 0
-#define NP_VERSION_MINOR 20
+#define NP_VERSION_MINOR 24
 
 // =================================================================================================
 #pragma mark -
@@ -281,7 +281,8 @@ typedef enum
 
 	NPNVWindowNPObject = 15,
 	NPNVPluginElementNPObject = 16,
-	NPNVSupportsWindowless = 17
+	NPNVSupportsWindowless = 17,
+	NPNVprivateModeBool = 18
 
 	#if defined(XP_MACOSX)
 		, NPNVpluginDrawingModel = 1000
@@ -292,15 +293,21 @@ typedef enum
 
 		, NPNVsupportsCoreGraphicsBool = 2001
 		, NPNVsupportsOpenGLBool = 2002
+		, NPNVsupportsCoreAnimationBool = 2003
 
 		#ifndef NP_NO_CARBON
-			, NPNVsupportsCarbonBool = 2003
+			, NPNVsupportsCarbonBool = 3000
 		#endif
 
-		, NPNVsupportsCocoaBool = 2004
+		, NPNVsupportsCocoaBool = 3001
 		, NPNVbrowserTextInputFuncs = 1002
 	#endif
 	} NPNVariable;
+
+typedef enum {
+  NPNURLVCookie = 501,
+  NPNURLVProxy
+} NPNURLVariable;
 
 // =================================================================================================
 #pragma mark -
@@ -356,6 +363,7 @@ typedef enum
 		NPCocoaEventFocusChanged,
 		NPCocoaEventWindowFocusChanged,
 		NPCocoaEventScrollWheel,
+		NPCocoaEventTextInput
 		} NPCocoaEventType;
 
 	typedef struct _NPNSString NPNSString;
@@ -390,6 +398,7 @@ typedef enum
 				} key;
 			struct
 				{
+				CGContextRef context;
 				double x;
 				double y;
 				double width;
@@ -399,6 +408,10 @@ typedef enum
 				{
 				NPBool hasFocus;
 				} focus;
+			struct
+				{
+				NPNSString *text;
+				} text;
 			} data;
 		} NPCocoaEvent;
 #endif
@@ -460,6 +473,18 @@ typedef struct _NPPrint
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * NPCoordinateSpace
+
+typedef enum {
+  NPCoordinateSpacePlugin = 1,
+  NPCoordinateSpaceWindow,
+  NPCoordinateSpaceFlippedWindow,
+  NPCoordinateSpaceScreen,
+  NPCoordinateSpaceFlippedScreen
+} NPCoordinateSpace;
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * NPEvent
 
 #if defined(XP_MAC) || defined(XP_MACOSX)
@@ -473,7 +498,7 @@ typedef struct _NPPrint
 	typedef struct _NPEvent
 		{
 		uint16 event;
-		uintptr_t wParam
+		uintptr_t wParam;
 		uintptr_t lParam;
 		} NPEvent;
 
@@ -782,11 +807,26 @@ ZMacCFM_DefineProc4(bool, NPN_Enumerate, NPP, NPObject*, NPIdentifier**, uint32_
 ZMacCFM_DefineProc3_Void(NPN_PluginThreadAsyncCall, NPP, void (*)(void*), void*);
 ZMacCFM_DefineProc5(bool, NPN_Construct, NPP, NPObject*, const NPVariant*, uint32_t, NPVariant*);
 
+typedef NPError (*NPN_GetValueForURLProcPtr)
+	(NPP npp, NPNURLVariable variable, const char* url, char** value, uint32_t* len);
+
+typedef NPError (*NPN_SetValueForURLProcPtr)
+	(NPP npp, NPNURLVariable variable, const char* url, const char* value, uint32_t len);
+
+typedef NPError (*NPN_GetAuthenticationInfoProcPtr)
+	(NPP npp, const char* protocol, const char* host, int32_t port, const char* scheme,
+	const char *realm, char** username, uint32_t* ulen, char** password, uint32_t* plen);
+
+
 ZMacCFM_DefineProc4
 	(uint32, NPN_ScheduleTimer, NPP, uint32, NPBool, void (*)(NPP npp, uint32 timerID));
 
 ZMacCFM_DefineProc2_Void(NPN_UnscheduleTimer, NPP, uint32);
 ZMacCFM_DefineProc2(NPError, NPN_PopUpContextMenu, NPP, NPMenu*);
+
+typedef NPBool (*NPN_ConvertPointProcPtr)
+	(NPP npp, double sourceX, double sourceY, NPCoordinateSpace sourceSpace,
+	double *destX, double *destY, NPCoordinateSpace destSpace);
 
 ZMacCFM_DefineProc7
 	(NPError, NPP_New, NPMIMEType, NPP, uint16, int16, char**, char**, NPSavedData*);
@@ -860,9 +900,13 @@ typedef struct _NPNetscapeFuncs
 	NPN_EnumerateProcPtr enumerate;
 	NPN_PluginThreadAsyncCallProcPtr pluginthreadasynccall;
 	NPN_ConstructProcPtr construct;
-	NPN_ScheduleTimerProcPtr scheduletimer;
-	NPN_UnscheduleTimerProcPtr unscheduletimer;
-	NPN_PopUpContextMenuProcPtr popupcontextmenu;
+    NPN_GetValueForURLProcPtr getvalueforurl;
+    NPN_SetValueForURLProcPtr setvalueforurl;
+    NPN_GetAuthenticationInfoProcPtr getauthenticationinfo;
+    NPN_ScheduleTimerProcPtr scheduletimer;
+    NPN_UnscheduleTimerProcPtr unscheduletimer;
+    NPN_PopUpContextMenuProcPtr popupcontextmenu;
+    NPN_ConvertPointProcPtr convertpoint;
 	} NPNetscapeFuncs;
 
 // =================================================================================================
