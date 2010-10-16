@@ -28,12 +28,11 @@ using std::string;
 using std::strncpy;
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZNetscape::NPClass_Z
+#pragma mark * NPClass_Z
 
 #define ASSIGN(a) this->a = a
 
@@ -75,7 +74,10 @@ NPClass_Z* sGetClass(NPObject* obj)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZNetscape
+#pragma mark * sAsString
+
+string sAsString(const NPString& iNPString)
+	{ return string(sNPStringCharsConst(iNPString), sNPStringLengthConst(iNPString)); }
 
 #define CASE(a) case a: return #a
 
@@ -97,12 +99,18 @@ string sAsString(NPNVariable iVar)
 		CASE(NPNVWindowNPObject);
 		CASE(NPNVPluginElementNPObject);
 		CASE(NPNVSupportsWindowless);
+		CASE(NPNVprivateModeBool);
 		#if defined(XP_MACOSX)
 			#ifndef NP_NO_QUICKDRAW
 				CASE(NPNVsupportsQuickDrawBool);
 			#endif
+			#ifndef NP_NO_CARBON
+				CASE(NPNVsupportsCarbonBool);
+			#endif
 			CASE(NPNVsupportsCoreGraphicsBool);
+			CASE(NPNVsupportsCoreAnimationBool);
 			CASE(NPNVsupportsOpenGLBool);
+			CASE(NPNVsupportsCocoaBool);
 		#endif
 		}
 	return ZStringf("NPNVariable=%d", iVar);
@@ -127,6 +135,7 @@ string sAsString(NPPVariable iVar)
 		CASE(NPPVpluginScriptableNPObject);
 		#if defined(XP_MACOSX)
 			CASE(NPPVpluginDrawingModel);
+			CASE(NPPVpluginEventModel);
 		#endif
 		}
 	return ZStringf("NPPVariable=%d", iVar);
@@ -135,5 +144,4 @@ string sAsString(NPPVariable iVar)
 #undef CASE
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
