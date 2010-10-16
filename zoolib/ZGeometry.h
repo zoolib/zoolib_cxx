@@ -26,47 +26,48 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGeomPOD.h"
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
-#	if ZCONFIG_SPI_Enabled(iPhone)
-#		include ZMACINCLUDE2(CoreGraphics,CGGeometry.h)
-#	else
-#		include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGGeometry.h)
-#	endif
+	#if ZCONFIG_SPI_Enabled(iPhone)
+		#include ZMACINCLUDE2(CoreGraphics,CGGeometry.h)
+	#else
+		#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGGeometry.h)
+	#endif
 #endif
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,MacTypes.h)
-#	include ZMACINCLUDE3(ApplicationServices,QD,QuickDraw.h)
+	#include ZMACINCLUDE3(CoreServices,CarbonCore,MacTypes.h)
+	#include ZMACINCLUDE3(ApplicationServices,QD,QuickDraw.h)
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)
-#	include "zoolib/ZCompat_Win.h"
+	#include "zoolib/ZCompat_Win.h"
 #endif
 
 #if ZCONFIG_SPI_Enabled(X11)
-#	include "zoolib/ZCompat_Xlib.h"
-#	include <X11/Xutil.h>
+	#include "zoolib/ZCompat_Xlib.h"
+	#include <X11/Xutil.h>
 #endif
 
 #if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
-#	if defined(__OBJC__)
-#		import <Foundation/NSGeometry.h>
-#		define ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME \
-			defined(NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES) \
-			&& NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES
-#	else
-#		if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 \
+
+	#if defined(__OBJC__)
+		#import <Foundation/NSGeometry.h>
+		#define ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME \
+			(defined(NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES) \
+			&& NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES)
+	#else
+		#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 \
 			&& (__LP64__ || NS_BUILD_32_LIKE_64)
-#				define ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME 1
-#		else
+			#define ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME 1
+		#else
 			typedef struct _NSPoint { float x; float y; } NSPoint;
 			typedef struct _NSSize { float width; float height; } NSSize;
 			typedef struct _NSRect { NSPoint origin; NSSize size; } NSRect;
-#		endif
-#	endif
+		#endif
+	#endif
 #endif
 
 #ifndef ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
-#	define ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME 0
+	#define ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME 0
 #endif
 
 // Include these after the platform files -- cmath causes problems
