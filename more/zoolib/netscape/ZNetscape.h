@@ -30,7 +30,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -105,11 +104,11 @@ public:
 #pragma mark -
 #pragma mark * sAsString
 
+std::string sAsString(const NPString& iNPString);
 std::string sAsString(NPNVariable iVar);
 std::string sAsString(NPPVariable iVar);
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // __ZNetscape__
