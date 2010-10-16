@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	#include ZProjectHeader_npapi
 
-#elif defined(__APPLE__) && ! __LP64__
+#elif 0 // defined(__APPLE__) && ! __LP64__
 
 	#include <WebKit/npfunctions.h>
 	#if !defined(XP_MACOSX)
@@ -138,8 +138,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL 19
 #endif
 
+#ifndef NPVERS_HAS_ALL_NETWORK_STREAMS
+	#define NPVERS_HAS_ALL_NETWORK_STREAMS 20
+#endif
+
+#ifndef NPVERS_HAS_URL_AND_AUTH_INFO
+	#define NPVERS_HAS_URL_AND_AUTH_INFO 21
+#endif
+
+#ifndef NPVERS_HAS_PRIVATE_MODE
+	#define NPVERS_HAS_PRIVATE_MODE 22
+#endif
+
 #ifndef NPVERS_MACOSX_HAS_EVENT_MODELS
-	#define NPVERS_MACOSX_HAS_EVENT_MODELS 20
+	#define NPVERS_MACOSX_HAS_EVENT_MODELS 23
+#endif
+
+#ifndef NPVERS_HAS_CANCEL_SRC_STREAM
+	#define NPVERS_HAS_CANCEL_SRC_STREAM 24
 #endif
 
 #if NP_VERSION_MINOR < NPVERS_HAS_POPUPS_ENABLED_STATE
@@ -156,18 +172,33 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if NP_VERSION_MINOR < NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL
 	typedef void (*NPN_PluginThreadAsyncCallProcPtr)
 		(NPP npp, void (*func)(void *), void *userData);
+
 	typedef bool (*NPN_ConstructProcPtr)
 		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
 #endif
 
-#if 0
+#if NP_VERSION_MINOR < NPVERS_HAS_ALL_NETWORK_STREAMS
+	typedef NPError (*NPN_GetValueForURLProcPtr)
+		(NPP npp, NPNURLVariable variable, const char* url, char** value, uint32_t* len);
+
+	typedef NPError (*NPN_SetValueForURLProcPtr)
+		(NPP npp, NPNURLVariable variable, const char* url, const char* value, uint32_t len);
+#endif
+
+#if NP_VERSION_MINOR < NPVERS_HAS_URL_AND_AUTH_INFO
+	typedef NPError (*NPN_GetAuthenticationInfoProcPtr)
+		(NPP npp, const char* protocol, const char* host, int32_t port, const char* scheme,
+		const char *realm, char** username, uint32_t* ulen, char** password, uint32_t* plen);
+#endif
+
+#if 1
 	typedef uint32 (*NPN_ScheduleTimerProcPtr)
 		(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
 
 	typedef void (*NPN_UnscheduleTimerProcPtr)
 		(NPP npp, uint32 timerID);
 
-	typedef void * NPMenu;
+//	typedef void * NPMenu;
 	typedef NPError (*NPN_PopUpContextMenuProcPtr)(NPP instance, NPMenu* menu);
 #endif
 
@@ -226,7 +257,14 @@ typedef struct NP_CGContext
 enum
 	{
 	NPPVpluginDrawingModel = 1000,
-	NPNVSupportsWindowless = 17
+	NPPVpluginEventModel = 1001,
+	NPNVSupportsWindowless = 17,
+	NPNVsupportsCarbonBool = 2003,
+	NPNVsupportsCocoaBool = 2004,
+	#ifndef NP_NO_CARBON
+		NPEventModelCarbon = 0,
+	#endif
+	NPEventModelCocoa = 1
 	};
 
 #endif // defined(ZCONFIG_NPAPI_WebKit_10_5)
