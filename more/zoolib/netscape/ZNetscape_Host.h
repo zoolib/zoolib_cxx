@@ -33,7 +33,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 using std::string;
@@ -268,6 +267,11 @@ public:
 	virtual bool Construct
 		(NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result) = 0;
 
+	virtual uint32 ScheduleTimer
+		(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID)) = 0;
+
+	virtual void UnscheduleTimer(NPP npp, uint32 timerID) = 0;
+
 private:
 	static NPError spGetURL(NPP npp, const char* URL, const char* window);
 
@@ -374,6 +378,11 @@ private:
 
 	static bool spConstruct
 		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
+
+	static uint32 spScheduleTimer
+		(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
+
+	static void spUnscheduleTimer(NPP npp, uint32 timerID);
 	};
 
 // =================================================================================================
@@ -444,7 +453,6 @@ private:
 	};
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // __ZNetscape_Host__

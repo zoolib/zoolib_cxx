@@ -43,7 +43,6 @@ using std::string;
 using std::vector;
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -54,9 +53,7 @@ HostMeister_Std::HostMeister_Std()
 	{}
 
 HostMeister_Std::~HostMeister_Std()
-	{
-//##	ZLOGFUNCTION(eDebug);
-	}
+	{}
 
 Host_Std* HostMeister_Std::sHostFromNPP_Std(NPP npp)
 	{ return static_cast<Host_Std*>(sHostFromNPP(npp)); }
@@ -66,8 +63,7 @@ Host_Std* HostMeister_Std::sHostFromStream_Std(NPStream* iNPStream)
 
 NPError HostMeister_Std::GetURL(NPP npp, const char* URL, const char* window)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "GetURL";
+	ZLOGFUNCTION(eDebug);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_GetURL(npp, URL, window);
@@ -78,8 +74,7 @@ NPError HostMeister_Std::GetURL(NPP npp, const char* URL, const char* window)
 NPError HostMeister_Std::PostURL(NPP npp,
 	const char* URL, const char* window, uint32 len, const char* buf, NPBool file)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "PostURL";
+	ZLOGFUNCTION(eDebug);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_PostURL(npp, URL, window, len, buf, file);
@@ -89,8 +84,7 @@ NPError HostMeister_Std::PostURL(NPP npp,
 
 NPError HostMeister_Std::RequestRead(NPStream* stream, NPByteRange* rangeList)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "RequestRead";
+	ZLOGFUNCTION(eDebug);
 
 	if (Host_Std* theHost = sHostFromStream_Std(stream))
 		return theHost->Host_RequestRead(stream, rangeList);
@@ -101,8 +95,7 @@ NPError HostMeister_Std::RequestRead(NPStream* stream, NPByteRange* rangeList)
 NPError HostMeister_Std::NewStream(NPP npp,
 	NPMIMEType type, const char* window, NPStream** stream)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "NewStream";
+	ZLOGFUNCTION(eDebug);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_NewStream(npp, type, window, stream);
@@ -112,8 +105,7 @@ NPError HostMeister_Std::NewStream(NPP npp,
 
 int32 HostMeister_Std::Write(NPP npp, NPStream* stream, int32 len, void* buffer)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "Write";
+	ZLOGFUNCTION(eDebug);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_Write(npp, stream, len, buffer);
@@ -123,8 +115,7 @@ int32 HostMeister_Std::Write(NPP npp, NPStream* stream, int32 len, void* buffer)
 
 NPError HostMeister_Std::DestroyStream(NPP npp, NPStream* stream, NPReason reason)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "DestroyStream";
+	ZLOGFUNCTION(eDebug);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_DestroyStream(npp, stream, reason);
@@ -134,8 +125,7 @@ NPError HostMeister_Std::DestroyStream(NPP npp, NPStream* stream, NPReason reaso
 
 void HostMeister_Std::Status(NPP npp, const char* message)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "Status";
+	ZLOGFUNCTION(eDebug);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		theHost->Host_Status(npp, message);
@@ -143,8 +133,7 @@ void HostMeister_Std::Status(NPP npp, const char* message)
 
 const char* HostMeister_Std::UserAgent(NPP npp)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "UserAgent";
+	ZLOGFUNCTION(eDebug);
 
 	#if defined(XP_WIN)
 		// From WebKit, PluginViewWin.cpp.
@@ -154,7 +143,9 @@ const char* HostMeister_Std::UserAgent(NPP npp)
 	#elif ZCONFIG(Processor, PPC)
 		return "Mozilla/5.0 (Macintosh; U; PPC Mac OS X)";
 	#else
-		return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X)";
+		return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-us) AppleWebKit/533.18.1 (KHTML, like Gecko) Version/5.0.2 Safari/533.18.5";
+//		return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X)";
+//		return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X)";
 	#endif
 	}
 
@@ -175,8 +166,7 @@ void* HostMeister_Std::GetJavaEnv()
 
 void* HostMeister_Std::GetJavaPeer(NPP npp)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "GetJavaPeer";
+	ZLOGFUNCTION(eDebug);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_GetJavaPeer(npp);
@@ -245,7 +235,7 @@ NPError HostMeister_Std::SetValue(NPP npp, NPPVariable variable, void* value)
 
 void HostMeister_Std::InvalidateRect(NPP npp, NPRect* rect)
 	{
-	if (ZLOG(s, eDebug + 1, "HostMeister_Std"))
+	if (ZLOGF(s, eDebug + 1))
 		{
 		s.Writef("InvalidateRect, (%u, %u, %u, %u)",
 			rect->left, rect->top, rect->right, rect->bottom);
@@ -257,8 +247,7 @@ void HostMeister_Std::InvalidateRect(NPP npp, NPRect* rect)
 
 void HostMeister_Std::InvalidateRegion(NPP npp, NPRegion region)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "InvalidateRegion";
+	ZLOGFUNCTION(eDebug);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		theHost->Host_InvalidateRegion(npp, region);
@@ -266,8 +255,7 @@ void HostMeister_Std::InvalidateRegion(NPP npp, NPRegion region)
 
 void HostMeister_Std::ForceRedraw(NPP npp)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "ForceRedraw";
+	ZLOGFUNCTION(eDebug);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_ForceRedraw(npp);
@@ -312,8 +300,7 @@ int32 HostMeister_Std::IntFromIdentifier(NPIdentifier identifier)
 
 NPObject* HostMeister_Std::CreateObject(NPP npp, NPClass* aClass)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("CreateObject");
+	ZLOGFUNCTION(eDebug);
 
 	ZAssert(aClass);
 	NPObject* result;
@@ -367,8 +354,7 @@ bool HostMeister_Std::Invoke(NPP npp,
 bool HostMeister_Std::InvokeDefault(NPP npp,
 	NPObject* obj, const NPVariant* args, uint32 argCount, NPVariant* result)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("InvokeDefault");
+	ZLOGFUNCTION(eDebug);
 
 	if (NPClass_Z* theClass = sGetClass(obj))
 		{
@@ -383,7 +369,11 @@ bool HostMeister_Std::Evaluate(NPP npp,
 	NPObject* obj, NPString* script, NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("Evaluate");
+		s << "Evaluate: " << sAsString(*script);
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_Evaluate(npp, obj, script, result);
+
 	return false;
 	}
 
@@ -405,8 +395,7 @@ bool HostMeister_Std::GetProperty(NPP npp,
 bool HostMeister_Std::SetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, const NPVariant* value)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("SetProperty");
+	ZLOGFUNCTION(eDebug);
 
 	if (NPClass_Z* theClass = sGetClass(obj))
 		{
@@ -419,8 +408,7 @@ bool HostMeister_Std::SetProperty(NPP npp,
 
 bool HostMeister_Std::RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("RemoveProperty");
+	ZLOGFUNCTION(eDebug);
 
 	if (NPClass_Z* theClass = sGetClass(obj))
 		{
@@ -433,8 +421,7 @@ bool HostMeister_Std::RemoveProperty(NPP npp, NPObject* obj, NPIdentifier proper
 
 bool HostMeister_Std::HasProperty(NPP, NPObject* obj, NPIdentifier propertyName)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("HasProperty");
+	ZLOGFUNCTION(eDebug);
 
 	if (NPClass_Z* theClass = sGetClass(obj))
 		{
@@ -447,8 +434,7 @@ bool HostMeister_Std::HasProperty(NPP, NPObject* obj, NPIdentifier propertyName)
 
 bool HostMeister_Std::HasMethod(NPP npp, NPObject* obj, NPIdentifier methodName)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("HasMethod");
+	ZLOGFUNCTION(eDebug);
 
 	if (NPClass_Z* theClass = sGetClass(obj))
 		{
@@ -479,26 +465,24 @@ void HostMeister_Std::ReleaseVariantValue(NPVariant* variant)
 
 void HostMeister_Std::SetException(NPObject* obj, const NPUTF8* message)
 	{
+	ZLOGFUNCTION(eDebug);
 	ZUnimplemented();
 	}
 
 void HostMeister_Std::PushPopupsEnabledState(NPP npp, NPBool enabled)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("PushPopupsEnabledState");
+	ZLOGFUNCTION(eDebug);
 	}
 
 void HostMeister_Std::PopPopupsEnabledState(NPP npp)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("PopPopupsEnabledState");
+	ZLOGFUNCTION(eDebug);
 	}
 
 bool HostMeister_Std::Enumerate
 	(NPP, NPObject* obj, NPIdentifier **identifier, uint32 *count)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("Enumerate");
+	ZLOGFUNCTION(eDebug);
 
 	if (NPClass_Z* theClass = sGetClass(obj))
 		{
@@ -512,16 +496,28 @@ bool HostMeister_Std::Enumerate
 void HostMeister_Std::PluginThreadAsyncCall
 	(NPP npp, void (*func)(void *), void *userData)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("PluginThreadAsyncCall");
+	ZLOGFUNCTION(eDebug);
 	}
 
 bool HostMeister_Std::Construct
 	(NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s.Writef("Construct");
+	ZLOGFUNCTION(eDebug);
 	return false;
+	}
+
+uint32 HostMeister_Std::ScheduleTimer
+	(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID))
+	{
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_ScheduleTimer(npp, interval, repeat, timerFunc);
+	return 0;
+	}
+
+void HostMeister_Std::UnscheduleTimer(NPP npp, uint32 timerID)
+	{
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_UnscheduleTimer(npp, timerID);
 	}
 
 // =================================================================================================
@@ -889,6 +885,7 @@ static string spFixURL(const string& iBaseURL, const string& iRelativeURL)
 NPError Host_Std::Host_GetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
 	{
+	ZLOGFUNCTION(eDebug);
 	const string theURL = spFixURL(fURL, URL);
 	if (theURL.empty())
 		return NPERR_INVALID_URL;
@@ -967,10 +964,27 @@ void Host_Std::Host_InvalidateRegion(NPP npp, NPRegion region)
 void Host_Std::Host_ForceRedraw(NPP npp)
 	{}
 
+bool Host_Std::Host_Evaluate(NPP npp,
+	NPObject* obj, NPString* script, NPVariant* result)
+	{ return false; }
+
+uint32 Host_Std::Host_ScheduleTimer
+	(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID))
+	{
+	ZLOGFUNCTION(eDebug);
+	return 0;
+	}
+
+void Host_Std::Host_UnscheduleTimer(NPP npp, uint32 timerID)
+	{
+	ZLOGFUNCTION(eDebug);
+	}
+
 void Host_Std::pHTTPFetcher(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZHTTP::Data& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 	{
+	ZLOGFUNCTION(eDebug);
 	fHTTPFetchers.Erase(iHTTPFetcher);
 	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
 	}
@@ -1019,6 +1033,7 @@ void Host_Std::SendDataAsync(
 	const std::string& iURL, const std::string& iMIME, const ZHTTP::Data& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 	{
+	ZLOGFUNCTION(eDebug);
 	Sender* theSender = new Sender(this, this->GetNPP(),
 		iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
 	fSenders.Insert(theSender);
@@ -1088,7 +1103,7 @@ void Host_Std::SendDataSync(
 
 void Host_Std::DeliverData()
 	{
-	for (ZSafeSetIterConst<Sender* > i = fSenders;;)
+	for (ZSafeSetIterConst<Sender*> i = fSenders;;)
 		{
 		if (Sender* current = i.ReadInc())
 			{
@@ -1119,5 +1134,4 @@ ZRef<NPObjectH> Host_Std::Guest_GetNPObject()
 	}
 
 } // namespace ZNetscape
-
 } // namespace ZooLib

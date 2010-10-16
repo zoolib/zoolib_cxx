@@ -154,6 +154,11 @@ public:
 	virtual bool Construct
 		(NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result);
 
+	virtual uint32 ScheduleTimer
+		(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
+
+	virtual void UnscheduleTimer(NPP npp, uint32 timerID);
+
 private:
 	std::set<std::string> fStrings;
 	};
@@ -207,6 +212,14 @@ public:
 	virtual void Host_InvalidateRegion(NPP npp, NPRegion region);
 
 	virtual void Host_ForceRedraw(NPP npp);
+
+	virtual bool Host_Evaluate(NPP npp,
+		NPObject* obj, NPString* script, NPVariant* result);
+
+	virtual uint32 Host_ScheduleTimer
+		(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
+
+	virtual void Host_UnscheduleTimer(NPP npp, uint32 timerID);
 
 // Our protocol
 	typedef std::pair<std::string, std::string> Param_t;

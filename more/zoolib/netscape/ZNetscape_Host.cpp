@@ -41,7 +41,7 @@ namespace ZNetscape {
 #pragma mark -
 #pragma mark * NPVariantH
 
-// Explicitly instantiate NPVariantH
+// Explicitly instantiate NPVariant_T<NPObjectH>, aka NPVariantH
 template class NPVariant_T<NPObjectH>;
 
 // Provide implementation of NPVariantBase::QGet_T<ZRef<NPObjectH> >
@@ -68,9 +68,6 @@ void sFree_T<NPVariantH>(void* iPtr)
 // =================================================================================================
 #pragma mark -
 #pragma mark * NPObjectH
-
-// Explicitly instantiate NPObjectH
-template class NPObject_T<NPVariantH>;
 
 void sRetain(NPObjectH& iOb)
 	{ iOb.Retain(); }
@@ -384,7 +381,7 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	{
 	ZMemZero_T(oNPNF);
 
-	oNPNF.version = NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL;
+	oNPNF.version = NP_VERSION_MINOR;//NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL;
 
 	oNPNF.size = sizeof(oNPNF);
 
@@ -471,6 +468,8 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	oNPNF.enumerate = spEnumerate;
 	oNPNF.pluginthreadasynccall = spPluginThreadAsyncCall;
 	oNPNF.construct = spConstruct;
+	oNPNF.scheduletimer = spScheduleTimer;
+	oNPNF.unscheduletimer = spUnscheduleTimer;
 	}
 
 HostMeister::HostMeister()
@@ -831,6 +830,21 @@ bool HostMeister::spConstruct
 	ZNETSCAPE_BEFORE
 		sGet()->Construct(npp, obj, args, argCount, result);
 	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
+
+uint32 HostMeister::spScheduleTimer
+	(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID))
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->ScheduleTimer(npp, interval, repeat, timerFunc);
+	ZNETSCAPE_AFTER_VOID
+	}
+
+void HostMeister::spUnscheduleTimer(NPP npp, uint32 timerID)
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->UnscheduleTimer(npp, timerID);
+	ZNETSCAPE_AFTER_VOID
 	}
 
 // =================================================================================================
