@@ -163,7 +163,7 @@ ZRef<ZStreamerR> sRequest(
 						*oFields = theHeaders;
 
 					if ("HEAD" == iMethod)
-						return new ZStreamerR_T<ZStreamR_Null>();
+						return new ZStreamerR_T<ZStreamR_Null>;
 
 					ZRef<ZStreamerR> theStreamerR =
 						sMakeContentStreamer(theHeaders, theEP);
