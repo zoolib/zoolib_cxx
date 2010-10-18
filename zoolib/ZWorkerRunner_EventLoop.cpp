@@ -30,24 +30,19 @@ namespace ZooLib {
 class ZWorkerRunner_EventLoop::Worker_Waker : public ZWorker
 	{
 public:
-	Worker_Waker(ZRef<ZWorkerRunner_EventLoop> iRunner);
+	Worker_Waker(ZRef<ZWorkerRunner_EventLoop> iRunner)
+	:	fRunner(iRunner)
+		{}
 
-	virtual bool Work();
+	virtual bool Work()
+		{
+		if (ZRef<ZWorkerRunner_EventLoop> theRunner = fRunner)
+			return theRunner->pTriggerCallback();
+		return false;
+		}
 
 	ZWeakRef<ZWorkerRunner_EventLoop> fRunner;
 	};
-
-ZWorkerRunner_EventLoop::Worker_Waker::Worker_Waker(
-	ZRef<ZWorkerRunner_EventLoop> iRunner)
-:	fRunner(iRunner)
-	{}
-
-bool ZWorkerRunner_EventLoop::Worker_Waker::Work()
-	{
-	if (ZRef<ZWorkerRunner_EventLoop> theRunner = fRunner)
-		return theRunner->pTriggerCallback();
-	return false;
-	}
 
 // =================================================================================================
 #pragma mark -

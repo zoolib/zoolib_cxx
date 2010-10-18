@@ -72,7 +72,7 @@ public:
 	virtual bool IsAttached(ZRef<ZWorker> iWorker);
 
 // Our protocol
-	void Add(ZRef<ZWorker> iWorker);
+	void Attach(ZRef<ZWorker> iWorker);
 
 	static ZRef<ZWorkerRunner_CFRunLoop> sMain();
 
