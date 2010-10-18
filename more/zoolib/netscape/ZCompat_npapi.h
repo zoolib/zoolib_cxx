@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	#include ZProjectHeader_npapi
 
-#elif 0 // defined(__APPLE__) && ! __LP64__
+#elif defined(__APPLE__) && ! __LP64__
 
 	#include <WebKit/npfunctions.h>
 	#if !defined(XP_MACOSX)
@@ -178,6 +178,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if NP_VERSION_MINOR < NPVERS_HAS_ALL_NETWORK_STREAMS
+	typedef enum {
+	  NPNURLVCookie = 501,
+	  NPNURLVProxy
+	} NPNURLVariable;
+
 	typedef NPError (*NPN_GetValueForURLProcPtr)
 		(NPP npp, NPNURLVariable variable, const char* url, char** value, uint32_t* len);
 
@@ -191,14 +196,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		const char *realm, char** username, uint32_t* ulen, char** password, uint32_t* plen);
 #endif
 
-#if 1
+#if NP_VERSION_MINOR < NPVERS_MACOSX_HAS_EVENT_MODELS
 	typedef uint32 (*NPN_ScheduleTimerProcPtr)
 		(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
 
 	typedef void (*NPN_UnscheduleTimerProcPtr)
 		(NPP npp, uint32 timerID);
 
-//	typedef void * NPMenu;
+	typedef void * NPMenu;
 	typedef NPError (*NPN_PopUpContextMenuProcPtr)(NPP instance, NPMenu* menu);
 #endif
 
@@ -225,14 +230,28 @@ enum
 	{
 	NPPVpluginDrawingModel = 1000,
 	NPNVpluginDrawingModel = 1000,
+	NPPVpluginEventModel = 1001,
 	NPNVsupportsCoreGraphicsBool = 2001,
 	NPNVsupportsOpenGLBool = 2002,
 
 	#ifndef NP_NO_QUICKDRAW
 		NPNVsupportsQuickDrawBool = 2000,
 	#endif
-	NPNVSupportsWindowless = 17
+	NPNVSupportsWindowless = 17,
+	NPNVprivateModeBool = 18,
+
+	NPNVsupportsCarbonBool = 3000,
+	NPNVsupportsCoreAnimationBool = 2003,
+	NPNVsupportsCocoaBool = 3001
 	};
+
+typedef enum
+	{
+	#ifndef NP_NO_CARBON
+		NPEventModelCarbon = 0,
+	#endif
+	NPEventModelCocoa = 1,
+	} NPEventModel;
 
 typedef enum
 	{

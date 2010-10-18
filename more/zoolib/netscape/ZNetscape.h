@@ -93,10 +93,14 @@ public:
 		NPN_ConstructProcPtr construct;
 	#endif
 
-	#if 0
+	#if NP_VERSION_MINOR < NPVERS_MACOSX_HAS_EVENT_MODELS
+		void* dummy_getvalueforurl;
+		void* dummy_setvalueforurl;
+		void* dummy_getauthenticationinfo;
 		NPN_ScheduleTimerProcPtr scheduletimer;
 		NPN_UnscheduleTimerProcPtr unscheduletimer;
 		NPN_PopUpContextMenuProcPtr popupcontextmenu;
+		void* dummy_convertpoint;
 	#endif
 	};
 

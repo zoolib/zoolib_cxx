@@ -837,7 +837,7 @@ uint32 HostMeister::spScheduleTimer
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->ScheduleTimer(npp, interval, repeat, timerFunc);
-	ZNETSCAPE_AFTER_VOID
+	ZNETSCAPE_AFTER_RETURN(0)
 	}
 
 void HostMeister::spUnscheduleTimer(NPP npp, uint32 timerID)
