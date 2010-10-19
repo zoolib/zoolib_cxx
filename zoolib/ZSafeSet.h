@@ -360,7 +360,7 @@ public:
 		return false;
 		}
 
-	ZQ<T> QReadInc()
+	ZQ<T> QReadErase()
 		{
 		if (ZRef<ZSafeSetRep<T> > theRep = ZSafeSetIterConst<T>::fRep)
 			return theRep->pReadErase(*this);
