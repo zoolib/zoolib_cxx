@@ -278,13 +278,82 @@ enum
 	NPPVpluginDrawingModel = 1000,
 	NPPVpluginEventModel = 1001,
 	NPNVSupportsWindowless = 17,
-	NPNVsupportsCarbonBool = 2003,
-	NPNVsupportsCocoaBool = 2004,
+	NPNVprivateModeBool = 18,
+	NPNVsupportsCarbonBool = 3000,
+	NPNVsupportsCoreAnimationBool = 2003,
+	NPNVsupportsCocoaBool = 3001,
 	#ifndef NP_NO_CARBON
 		NPEventModelCarbon = 0,
 	#endif
 	NPEventModelCocoa = 1
 	};
+
+	typedef enum
+		{
+		NPCocoaEventDrawRect = 1,
+		NPCocoaEventMouseDown,
+		NPCocoaEventMouseUp,
+		NPCocoaEventMouseMoved,
+		NPCocoaEventMouseEntered,
+		NPCocoaEventMouseExited,
+		NPCocoaEventMouseDragged,
+		NPCocoaEventKeyDown,
+		NPCocoaEventKeyUp,
+		NPCocoaEventFlagsChanged,
+		NPCocoaEventFocusChanged,
+		NPCocoaEventWindowFocusChanged,
+		NPCocoaEventScrollWheel,
+		NPCocoaEventTextInput
+		} NPCocoaEventType;
+
+	typedef struct _NPNSString NPNSString;
+	typedef struct _NPNSWindow NPNSWindow;
+	typedef struct _NPNSMenu NPNSMenu;
+
+	typedef struct _NPCocoaEvent
+		{
+		NPCocoaEventType type;
+		uint32 version;
+
+		union
+			{
+			struct
+				{
+				uint32 modifierFlags;
+				double pluginX;
+				double pluginY;
+				int32 buttonNumber;
+				int32 clickCount;
+				double deltaX;
+				double deltaY;
+				double deltaZ;
+				} mouse;
+			struct
+				{
+				uint32 modifierFlags;
+				NPNSString *characters;
+				NPNSString *charactersIgnoringModifiers;
+				NPBool isARepeat;
+				uint16 keyCode;
+				} key;
+			struct
+				{
+				CGContextRef context;
+				double x;
+				double y;
+				double width;
+				double height;
+				} draw;
+			struct
+				{
+				NPBool hasFocus;
+				} focus;
+			struct
+				{
+				NPNSString *text;
+				} text;
+			} data;
+		} NPCocoaEvent;
 
 #endif // defined(ZCONFIG_NPAPI_WebKit_10_5)
 
