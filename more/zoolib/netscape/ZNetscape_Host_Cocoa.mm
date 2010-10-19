@@ -30,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRGBA.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZUtil_Strim_Geom.h"
+#include "zoolib/ZWorker.h"
+#include "zoolib/ZWorkerRunner_CFRunLoop.h"
 
 // =================================================================================================
 #pragma mark -
@@ -41,11 +43,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	{
 	[super init];
 	fHost = nullptr;
+
+	NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self
+		selector:@selector(frameChanged:)
+		name:NSViewFrameDidChangeNotification
+		object:self];
+
 	return self;
 	}
 
 - (void)dealloc
 	{
+	NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+	[nc removeObserver:self]; 
+
 	if (fHost)
 		{
 		delete fHost;
@@ -54,13 +66,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	[super dealloc];
 	}
 
+- (BOOL)isFlipped
+	{ return YES; }
+
 - (BOOL)acceptsFirstResponder
-	{
-	return YES;
-	}
+	{ return YES; }
 
 - (BOOL)becomeFirstResponder
 	{
+	ZLOGTRACE(eDebug);
 	if (fHost)
 		fHost->FocusChanged(true);
 	return YES;
@@ -68,6 +82,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 - (BOOL)resignFirstResponder
 	{
+	ZLOGTRACE(eDebug);
 	if (fHost)
 		fHost->FocusChanged(false);
 	return YES;
@@ -87,7 +102,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 - (void)mouseMoved:(NSEvent *)theEvent
 	{
-	ZLOGTRACE(eDebug);
+	ZLOGTRACE(eDebug + 1);
 	if (fHost)
 		fHost->SendMouseEvent(theEvent, NPCocoaEventMouseMoved);
 	}
@@ -142,10 +157,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		fHost->Draw(dirtyRect);
 	}
 
-- (void)timer:(NSTimer*)timer
+- (void)frameChanged:(id)sender
 	{
 	if (fHost)
-		fHost->Timer();
+		fHost->FrameChanged();
 	}
 
 @end
@@ -157,6 +172,32 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZNetscape {
 
+class Host_Cocoa::Worker_Timer : public ZWorker
+	{
+public:
+	Worker_Timer(Host_Cocoa* iHost)
+	:	fHost(iHost)
+		{}
+
+	virtual bool Work()
+		{
+		if (fHost)
+			{
+			fHost->Timer();
+			this->WakeIn(50e-3); // 50ms
+			return true;
+			}
+		return false;
+		}
+
+	virtual void Kill()
+		{
+		fHost = nullptr;
+		}
+
+	Host_Cocoa* fHost;
+	};
+
 Host_Cocoa::Host_Cocoa(ZRef<GuestFactory> iGuestFactory, NSView_NetscapeHost* iView)
 :	Host_Std(iGuestFactory)
 ,	fView(iView)
@@ -166,11 +207,9 @@ Host_Cocoa::Host_Cocoa(ZRef<GuestFactory> iGuestFactory, NSView_NetscapeHost* iV
 	if (fView)
 		fView->fHost = this;
 
-	[NSTimer scheduledTimerWithTimeInterval:0.1
-		target:fView
-		selector:@selector(timer:)
-		userInfo:nil
-		repeats:YES];
+	fWorker_Timer = new Worker_Timer(this);
+	ZWorkerRunner_CFRunLoop::sMain()->Attach(fWorker_Timer);
+	fWorker_Timer->Wake();
 
 //	fNPWindow.type = NPWindowTypeWindow;
 	fNPWindow.type = NPWindowTypeDrawable;//NPWindowTypeWindow;
@@ -187,6 +226,12 @@ Host_Cocoa::Host_Cocoa(ZRef<GuestFactory> iGuestFactory, NSView_NetscapeHost* iV
 
 Host_Cocoa::~Host_Cocoa()
 	{
+	if (ZRef<ZWorker> theWorker = fWorker_Timer)
+		{
+		fWorker_Timer.Clear();
+		theWorker->Kill();
+		}
+
 	if (fView)
 		ZAssert(fView->fHost == this);
 	}
@@ -263,9 +308,25 @@ void Host_Cocoa::Host_InvalidateRect(NPP npp, NPRect* rect)
 void Host_Cocoa::PostCreateAndLoad()
 	{
 	Host_Std::PostCreateAndLoad();
-	this->Guest_SetWindow(&fNPWindow);
+	this->pDoSetWindow();
 	[fView setNeedsDisplay:true];
 	this->FocusChanged(true);
+	}
+
+void Host_Cocoa::pDoSetWindow()
+	{
+	ZGRectf theFrame = [fView frame];
+	float width = theFrame.Width();
+	float height = theFrame.Height();
+
+	fNPWindow.width = width;
+	fNPWindow.height = height;
+	fNPWindow.clipRect.left = 0;
+	fNPWindow.clipRect.top = 0;
+	fNPWindow.clipRect.right = width;
+	fNPWindow.clipRect.bottom = height;
+	
+	this->Guest_SetWindow(&fNPWindow);
 	}
 
 static inline void spInitialize(NPCocoaEvent& oEvent, NPCocoaEventType iType)
@@ -319,7 +380,6 @@ void Host_Cocoa::SendText(NSEvent* iEvent)
 
 bool Host_Cocoa::SendKeyEvent(NSEvent* iEvent, NPCocoaEventType iType)
 	{
-	this->FocusChanged(true);
 	NPCocoaEvent event;
 	spInitialize(event, iType);
 
@@ -373,7 +433,11 @@ void Host_Cocoa::FocusChanged(bool hasFocus)
 	spInitialize(event, NPCocoaEventFocusChanged);
 	event.data.focus.hasFocus = hasFocus;
 	this->Guest_HandleEvent(&event);	
+	}
 
+void Host_Cocoa::WindowFocusChanged(bool hasFocus)
+	{
+	NPCocoaEvent event;
 	spInitialize(event, NPCocoaEventWindowFocusChanged);
 	event.data.focus.hasFocus = hasFocus;
 	this->Guest_HandleEvent(&event);	
@@ -382,7 +446,12 @@ void Host_Cocoa::FocusChanged(bool hasFocus)
 void Host_Cocoa::Timer()
 	{
 	Host_Std::DeliverData();
-//	Host_Mac::DoIdle();	
+	}
+
+void Host_Cocoa::FrameChanged()
+	{
+	ZLOGTRACE(eDebug);
+	this->pDoSetWindow();
 	}
 
 } // namespace ZNetscape

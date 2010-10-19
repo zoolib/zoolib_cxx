@@ -75,9 +75,16 @@ public:
 	bool SendKeyEvent(NSEvent* iEvent, NPCocoaEventType iType);
 	bool SendMouseEvent(NSEvent* iEvent, NPCocoaEventType iType);
 	void FocusChanged(bool hasFocus);
+	void WindowFocusChanged(bool hasFocus);
 	void Timer();
+	void FrameChanged();
+
 protected:
+	void pDoSetWindow();
 	NSView_NetscapeHost* fView;
+
+	class Worker_Timer;
+	ZRef<Worker_Timer> fWorker_Timer;
 
 	NPWindow fNPWindow;
 	
