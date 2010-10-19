@@ -36,7 +36,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 using std::string;
-
+using ::uint32;
 class NPObjectH;
 
 // =================================================================================================
