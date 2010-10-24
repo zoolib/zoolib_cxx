@@ -62,8 +62,8 @@ void ZObserver::Finalize()
 void ZObserver::spCallback(CFNotificationCenterRef center,
 	void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
 	{
-	ZRef<ZObserver> theNotification = static_cast<ZObserver*>(observer);
-	theNotification->fCallable->Call(object, ZUtil_CFType::sAsUTF8(name), userInfo);
+	ZRef<ZObserver> theObserver = static_cast<ZObserver*>(observer);
+	theObserver->fCallable->Call(theObserver, userInfo);
 	}
 
 } // namespace ZooLib
