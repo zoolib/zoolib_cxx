@@ -69,6 +69,9 @@ void sFree_T<NPVariantH>(void* iPtr)
 #pragma mark -
 #pragma mark * NPObjectH
 
+// Explicitly instantiate NPObject_T<NPVariantH>
+template class NPObject_T<NPVariantH>;
+
 void sRetain(NPObjectH& iOb)
 	{ iOb.Retain(); }
 

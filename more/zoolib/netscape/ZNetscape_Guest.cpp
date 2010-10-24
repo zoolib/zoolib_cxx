@@ -93,7 +93,10 @@ void sFree_T<NPVariantG>(void* iPtr)
 #pragma mark -
 #pragma mark * NPObjectG
 
-void sRetain(NPObjectG& iOb)
+// Explicitly instantiate NPObject_T<NPVariantG>
+template class NPObject_T<NPVariantG>;
+ 
+ void sRetain(NPObjectG& iOb)
 	{ iOb.Retain(); }
 
 void sRelease(NPObjectG& iOb)
