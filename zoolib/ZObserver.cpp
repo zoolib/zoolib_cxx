@@ -18,47 +18,54 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCFNotification__
-#define __ZCFNotification__ 1
-#include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZObserver.h"
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 
-#include "zoolib/ZCallable.h"
-
-#include <CoreFoundation/CFNotificationCenter.h>
-
-#include <string>
+#include "zoolib/ZUtil_CFType.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCFNotification
+#pragma mark * ZObserver
 
-class ZCFNotification: public ZCounted
+ZObserver::ZObserver(void* iObject, const std::string& iName, ZRef<Callable> iCallable)
+:	fObject(iObject)
+,	fName(iName)
+,	fCallable(iCallable)
+	{}
+
+ZObserver::~ZObserver()
+	{}
+
+void ZObserver::Initialize()
 	{
-public:
-	typedef ZCallable<void(const void*, const std::string&, CFDictionaryRef)> Callable;
+	ZCounted::Initialize();
 
-	ZCFNotification(void* iObject, const std::string& iName, ZRef<Callable> iCallable);
-	virtual ~ZCFNotification();
+	::CFNotificationCenterAddObserver(
+		::CFNotificationCenterGetLocalCenter(),
+		this,
+		spCallback,
+		ZUtil_CFType::sString(fName),
+		fObject,
+		CFNotificationSuspensionBehaviorDeliverImmediately);
+	}
 
-// From ZCounted
-	virtual void Initialize();
-	virtual void Finalize();
+void ZObserver::Finalize()
+	{
+	::CFNotificationCenterRemoveEveryObserver(::CFNotificationCenterGetLocalCenter(), this);
 
-private:
-	static void spCallback(CFNotificationCenterRef center,
-		void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo);
+	ZCounted::Finalize();
+	}
 
-	void* fObject;
-	std::string fName;
-	ZRef<Callable> fCallable;
-	};
+void ZObserver::spCallback(CFNotificationCenterRef center,
+	void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
+	{
+	ZRef<ZObserver> theNotification = static_cast<ZObserver*>(observer);
+	theNotification->fCallable->Call(object, ZUtil_CFType::sAsUTF8(name), userInfo);
+	}
 
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
-#endif // __ZCFNotification__
