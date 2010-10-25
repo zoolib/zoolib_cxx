@@ -240,11 +240,6 @@ NPError Host_Cocoa::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value
 	{
 	switch (variable)
 		{
-		case 74656:
-			{
-			*static_cast<NPBool*>(ret_value) = true;
-			return NPERR_NO_ERROR;
-			}
 		case NPNVsupportsCoreAnimationBool:
 			{
 			*static_cast<NPBool*>(ret_value) = false;
