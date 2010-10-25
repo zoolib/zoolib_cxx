@@ -34,7 +34,7 @@ namespace ZIntervalTreeClock {
 
 const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Identity>& iIdentity);
 const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Event>& iEvent);
-const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Stamp>& iStamp);
+const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Clock>& iClock);
 
 } // namespace ZIntervalTreeClock
 } // namespace ZooLib

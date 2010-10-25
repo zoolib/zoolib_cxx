@@ -54,9 +54,9 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Event>& iEvent)
 	return w;
 	}
 
-const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Stamp>& iStamp)
+const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Clock>& iClock)
 	{
-	w << "[" << iStamp->GetIdentity() << "/" << iStamp->GetEvent() << "]";
+	w << "[" << iClock->GetIdentity() << "/" << iClock->GetEvent() << "]";
 	return w;
 	}
 
