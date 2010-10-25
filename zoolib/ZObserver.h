@@ -26,10 +26,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 
 #include "zoolib/ZCallable.h"
+#include "zoolib/ZQ.h"
 
 #include <CoreFoundation/CFNotificationCenter.h>
 
 #include <string>
+
+#if __OBJC__
+	@class NSString;
+#endif
 
 namespace ZooLib {
 
@@ -43,6 +48,10 @@ public:
 	typedef ZCallable<void(ZRef<ZObserver>, CFDictionaryRef)> Callable;
 
 	ZObserver(void* iObject, const std::string& iName, ZRef<Callable> iCallable);
+	ZObserver(void* iObject, CFStringRef iName, ZRef<Callable> iCallable);
+	#if __OBJC__
+		ZObserver(void* iObject, NSString* iName, ZRef<Callable> iCallable);
+	#endif
 	virtual ~ZObserver();
 
 // From ZCounted
@@ -52,13 +61,18 @@ public:
 // Our protocol
 	void* GetObject();
 	std::string GetName();
+	CFStringRef GetName_CFStringRef();
+	#if __OBJC__
+		NSString* GetName_NSString();
+	#endif
 
 private:
 	static void spCallback(CFNotificationCenterRef center,
 		void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo);
 
 	void* fObject;
-	std::string fName;
+	ZQ<std::string> fName_String;
+	ZQ<ZRef<CFStringRef> > fName_CFStringRef;
 	ZRef<Callable> fCallable;
 	};
 
