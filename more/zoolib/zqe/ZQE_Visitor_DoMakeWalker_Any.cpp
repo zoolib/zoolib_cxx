@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Walker_Any.h"
+#include "zoolib/zqe/ZQE_Visitor_DoMakeWalker_Any.h"
 #include "zoolib/zqe/ZQE_Walker_Product.h"
 #include "zoolib/zqe/ZQE_Walker_Select.h"
 

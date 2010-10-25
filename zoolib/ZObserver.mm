@@ -32,7 +32,19 @@ namespace ZooLib {
 
 ZObserver::ZObserver(void* iObject, const std::string& iName, ZRef<Callable> iCallable)
 :	fObject(iObject)
-,	fName(iName)
+,	fName_String(iName)
+,	fCallable(iCallable)
+	{}
+
+ZObserver::ZObserver(void* iObject, CFStringRef iName, ZRef<Callable> iCallable)
+:	fObject(iObject)
+,	fName_CFStringRef(iName)
+,	fCallable(iCallable)
+	{}
+
+ZObserver::ZObserver(void* iObject, NSString* iName, ZRef<Callable> iCallable)
+:	fObject(iObject)
+,	fName_CFStringRef((CFStringRef)iName)
 ,	fCallable(iCallable)
 	{}
 
@@ -43,11 +55,14 @@ void ZObserver::Initialize()
 	{
 	ZCounted::Initialize();
 
+	if (!fName_CFStringRef)
+		fName_CFStringRef = ZUtil_CFType::sString(fName_String.Get());
+
 	::CFNotificationCenterAddObserver(
 		::CFNotificationCenterGetLocalCenter(),
 		this,
 		spCallback,
-		ZUtil_CFType::sString(fName),
+		fName_CFStringRef.Get(),
 		fObject,
 		CFNotificationSuspensionBehaviorDeliverImmediately);
 	}
@@ -63,7 +78,21 @@ void* ZObserver::GetObject()
 	{ return fObject; }
 
 std::string ZObserver::GetName()
-	{ return fName; }
+	{
+	if (!fName_String)
+		fName_String = ZUtil_CFType::sAsUTF8(fName_CFStringRef.Get());
+	return fName_String.Get();
+	}
+
+CFStringRef ZObserver::GetName_CFStringRef()
+	{
+	if (!fName_CFStringRef)
+		fName_CFStringRef = ZUtil_CFType::sString(fName_String.Get());
+	return fName_CFStringRef.Get();
+	}
+
+NSString* ZObserver::GetName_NSString()
+	{ return (NSString*)this->GetName_CFStringRef(); }
 
 void ZObserver::spCallback(CFNotificationCenterRef center,
 	void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
