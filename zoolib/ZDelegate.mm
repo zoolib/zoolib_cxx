@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDelegate.h"
 
+using std::string;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZooLib_ZDelegate_Proxy
@@ -29,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 @public
 	ZooLib::ZDelegate* fDelegate;
 	};
-@end
+@end // interface ZooLib_ZDelegate_Proxy
 
 @implementation ZooLib_ZDelegate_Proxy
 
@@ -53,7 +55,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	return nil;
 	}
 
-@end
+@end // implementation ZooLib_ZDelegate_Proxy
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * C++
 
 namespace ZooLib {
 
@@ -73,6 +79,8 @@ ZDelegate::~ZDelegate()
 	{
 	fProxy->fDelegate = nil;
 	[fProxy release];
+	for (map<SEL, Wrapper*>::iterator i = fWrappers.begin(); i != fWrappers.end(); ++i)
+		delete i->second;
 	}
 
 ZDelegate::operator id()
@@ -92,8 +100,55 @@ NSMethodSignature* ZDelegate::pMethodSignatureForSelector(SEL aSelector)
 	{
 	map<SEL, Wrapper*>::iterator i = fWrappers.find(aSelector);
 	if (fWrappers.end() != i)
-		return i->second->MethodSignature();
+		return i->second->fNSMethodSignature;
 	return nil;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZDelegate::Wrapper
+
+static const string kSep = "@:";
+
+void ZDelegate::Wrapper::SetSignature(const char* R)
+	{
+	const string signature = R + kSep;
+	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+	}
+
+void ZDelegate::Wrapper::SetSignature(const char* R,
+	const char* P0)
+	{
+	const string signature = R + kSep + P0;
+	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+	}
+	
+void ZDelegate::Wrapper::SetSignature(const char* R,
+	const char* P0, const char* P1)
+	{
+	const string signature = R + kSep + P0 + P1;
+	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+	}
+
+void ZDelegate::Wrapper::SetSignature(const char* R,
+	const char* P0, const char* P1, const char* P2)
+	{
+	const string signature = R + kSep + P0 + P1 + P2;
+	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+	}
+
+void ZDelegate::Wrapper::SetSignature(const char* R,
+	const char* P0, const char* P1, const char* P2, const char* P3)
+	{
+	const string signature = R + kSep + P0 + P1 + P2 + P3;
+	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+	}
+
+void ZDelegate::Wrapper::SetSignature(const char* R,
+	const char* P0, const char* P1, const char* P2, const char* P3, const char* P4)
+	{
+	const string signature = R + kSep + P0 + P1 + P2 + P3 + P4;
+	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
 	}
 
 } // namespace ZooLib

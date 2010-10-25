@@ -98,8 +98,27 @@ class ZDelegate::Wrapper
 	friend class ZDelegate;
 
 	virtual ~Wrapper() {}
-	virtual NSMethodSignature* MethodSignature() = 0;
 	virtual void ForwardInvocation(NSInvocation* anInvocation) = 0;
+
+	void SetSignature(const char* R);
+
+	void SetSignature(const char* R,
+		const char* P0);
+
+	void SetSignature(const char* R,
+		const char* P0, const char* P1);
+
+	void SetSignature(const char* R,
+		const char* P0, const char* P1, const char* P2);
+
+	void SetSignature(const char* R,
+		const char* P0, const char* P1, const char* P2, const char* P3);
+
+	void SetSignature(const char* R,
+		const char* P0, const char* P1, const char* P2, const char* P3, const char* P4);
+
+protected:
+	ZRef<NSMethodSignature> fNSMethodSignature;
 	};
 
 // =================================================================================================
@@ -116,15 +135,9 @@ class ZDelegate::Wrapper_T<R(void)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		std::string signature;
-		signature += @encode(R);
-		signature += "@:";
-		fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+		this->SetSignature(@encode(R));
 		}
 	
-	virtual NSMethodSignature* MethodSignature()
-		{ return fNSMethodSignature; }
-
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		R result = fCallable->Call();
@@ -132,7 +145,6 @@ class ZDelegate::Wrapper_T<R(void)> : public ZDelegate::Wrapper
 		}
 
 	ZRef<Callable> fCallable;
-	ZRef<NSMethodSignature> fNSMethodSignature;
 	};
 
 // =================================================================================================
@@ -150,16 +162,10 @@ class ZDelegate::Wrapper_T<R(P0)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		std::string signature;
-		signature += @encode(R);
-		signature += "@:";
-		signature += @encode(P0);
-		fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+		this->SetSignature(@encode(R),
+			@encode(P0));
 		}
 	
-	virtual NSMethodSignature* MethodSignature()
-		{ return fNSMethodSignature; }
-
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -170,7 +176,6 @@ class ZDelegate::Wrapper_T<R(P0)> : public ZDelegate::Wrapper
 		}
 
 	ZRef<Callable> fCallable;
-	ZRef<NSMethodSignature> fNSMethodSignature;
 	};
 
 // =================================================================================================
@@ -188,16 +193,9 @@ class ZDelegate::Wrapper_T<R(P0,P1)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		std::string signature;
-		signature += @encode(R);
-		signature += "@:";
-		signature += @encode(P0);
-		signature += @encode(P1);
-		fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+		this->SetSignature(@encode(R),
+			@encode(P0), @encode(P1));
 		}
-	
-	virtual NSMethodSignature* MethodSignature()
-		{ return fNSMethodSignature; }
 
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
@@ -211,7 +209,6 @@ class ZDelegate::Wrapper_T<R(P0,P1)> : public ZDelegate::Wrapper
 		}
 
 	ZRef<Callable> fCallable;
-	ZRef<NSMethodSignature> fNSMethodSignature;
 	};
 
 // =================================================================================================
@@ -229,18 +226,10 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		std::string signature;
-		signature += @encode(R);
-		signature += "@:";
-		signature += @encode(P0);
-		signature += @encode(P1);
-		signature += @encode(P2);
-		fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+		this->SetSignature(@encode(R),
+			@encode(P0), @encode(P1), @encode(P2));
 		}
 	
-	virtual NSMethodSignature* MethodSignature()
-		{ return fNSMethodSignature; }
-
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -255,7 +244,6 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2)> : public ZDelegate::Wrapper
 		}
 
 	ZRef<Callable> fCallable;
-	ZRef<NSMethodSignature> fNSMethodSignature;
 	};
 
 // =================================================================================================
@@ -273,19 +261,10 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		std::string signature;
-		signature += @encode(R);
-		signature += "@:";
-		signature += @encode(P0);
-		signature += @encode(P1);
-		signature += @encode(P2);
-		signature += @encode(P3);
-		fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+		this->SetSignature(@encode(R),
+			@encode(P0), @encode(P1), @encode(P2), @encode(P3));
 		}
 	
-	virtual NSMethodSignature* MethodSignature()
-		{ return fNSMethodSignature; }
-
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -302,7 +281,6 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3)> : public ZDelegate::Wrapper
 		}
 
 	ZRef<Callable> fCallable;
-	ZRef<NSMethodSignature> fNSMethodSignature;
 	};
 
 // =================================================================================================
@@ -320,20 +298,10 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		std::string signature;
-		signature += @encode(R);
-		signature += "@:";
-		signature += @encode(P0);
-		signature += @encode(P1);
-		signature += @encode(P2);
-		signature += @encode(P3);
-		signature += @encode(P4);
-		fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+		this->SetSignature(@encode(R),
+			@encode(P0), @encode(P1), @encode(P2), @encode(P3), @encode(P4));
 		}
 	
-	virtual NSMethodSignature* MethodSignature()
-		{ return fNSMethodSignature; }
-
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -352,7 +320,6 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4)> : public ZDelegate::Wrapper
 		}
 
 	ZRef<Callable> fCallable;
-	ZRef<NSMethodSignature> fNSMethodSignature;
 	};
 
 // =================================================================================================
