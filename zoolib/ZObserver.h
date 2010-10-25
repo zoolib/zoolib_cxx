@@ -49,6 +49,10 @@ public:
 	virtual void Initialize();
 	virtual void Finalize();
 
+// Our protocol
+	void* GetObject();
+	std::string GetName();
+
 private:
 	static void spCallback(CFNotificationCenterRef center,
 		void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo);

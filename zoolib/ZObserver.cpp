@@ -59,6 +59,12 @@ void ZObserver::Finalize()
 	ZCounted::Finalize();
 	}
 
+void* ZObserver::GetObject()
+	{ return fObject; }
+
+std::string ZObserver::GetName()
+	{ return fName; }
+
 void ZObserver::spCallback(CFNotificationCenterRef center,
 	void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
 	{
