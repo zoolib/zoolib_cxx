@@ -201,7 +201,6 @@ ZRef<Event> Event::Left()
 ZRef<Event> Event::Right()
 	{ return fRight; }
 
-
 bool Event::Equals(const ZRef<Event>& iOther)
 	{
 	if (iOther == this)
