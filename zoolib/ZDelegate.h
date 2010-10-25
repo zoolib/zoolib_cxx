@@ -22,19 +22,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDelegate__ 1
 #include "zconfig.h"
 
-#ifdef __OBJC__
-
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZRef_NSObject.h"
 
-#import <Foundation/NSInvocation.h>
-#import <Foundation/NSMethodSignature.h>
-
 #include <map>
 #include <string>
 
-@class ZooLib_ZDelegate_Proxy;
+#ifdef __OBJC__
+	#import <Foundation/NSInvocation.h>
+	#import <Foundation/NSMethodSignature.h>
+#endif
+
+#ifdef __OBJC__
+	@class ZooLib_ZDelegate_Proxy;
+#else
+	typedef struct objc_ZooLib_ZDelegate_Proxy ZooLib_ZDelegate_Proxy;
+#endif
 
 namespace ZooLib {
 
@@ -48,22 +52,29 @@ public:
 	ZDelegate();
 	~ZDelegate();
 
+	#ifdef __OBJC__
+
 	template <class Callable>
 	void Add(SEL iSEL, ZRef<Callable> iCallable);
 
 	operator id();
 
-// Can't be physically private, access needed by ZooLib_ZDelegate_Proxy.
+	// These can't be physically private, as they must be accessible by ZooLib_ZDelegate_Proxy.
 	BOOL pRespondsToSelector(SEL aSelector);
 	void pForwardInvocation(NSInvocation* anInvocation);
 	NSMethodSignature* pMethodSignatureForSelector(SEL aSelector);
 
+	#endif // __OBJC__
+
 private:
 	class Wrapper;
-	template <class Signature> class Wrapper_T;
 
 	ZooLib_ZDelegate_Proxy* fProxy;
 	std::map<SEL, Wrapper*> fWrappers;
+
+	#ifdef __OBJC__
+
+	template <class Signature> class Wrapper_T;
 
 	template <class R>
 	static Wrapper* spMakeWrapper(ZRef<ZCallable<R(void)> > iCallable);
@@ -87,7 +98,11 @@ private:
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4>
 	static Wrapper* spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable);
+
+	#endif // __OBJC__
 	};
+
+#ifdef __OBJC__
 
 // =================================================================================================
 #pragma mark -
@@ -362,7 +377,8 @@ void ZDelegate::Add(SEL iSEL, ZRef<Callable> iCallable)
 	fWrappers[iSEL] = spMakeWrapper(iCallable);
 	}
 
+#endif // __OBJC__
+
 } // namespace ZooLib
 
-#endif // __OBJC__
 #endif // __ZDelegate__
