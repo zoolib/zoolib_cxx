@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVal_Any.h"
 
 #include <map>
+#include <set>
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -43,22 +44,22 @@ public:
 	virtual ~Source_Any();
 
 // From Source
-	virtual set<RelHead> GetRelHeads();
+	virtual std::set<RelHead> GetRelHeads();
 
 	virtual void Update(
 		bool iLocalOnly,
 		const AddedSearch* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount,
-		vector<SearchResult>& oChanged,
+		std::vector<SearchResult>& oChanged,
 		ZRef<Event>& oEvent);
 
 private:
-	ZRef<Stamp> fStamp;
+	ZRef<Clock> fClock;
 
 	std::map<uint64, ZVal_Any> fMap;
 
 	class PQuery;
-	map<int64, PQuery*> fMap_RefconToPQuery;
+	std::map<int64, PQuery*> fMap_RefconToPQuery;
 	};
 
 } // namespace ZDataspace

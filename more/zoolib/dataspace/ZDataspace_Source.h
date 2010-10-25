@@ -36,7 +36,7 @@ namespace ZooLib {
 namespace ZDataspace {
 
 using ZIntervalTreeClock::Event;
-using ZIntervalTreeClock::Stamp;
+using ZIntervalTreeClock::Clock;
 
 using ZRA::RelHead;
 

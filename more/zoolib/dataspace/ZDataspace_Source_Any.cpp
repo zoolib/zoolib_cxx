@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/dataspace/ZDataspace_Source_Any.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-#include "zoolib/zqe/ZQE_Result_Any.h"
 
 #include "zoolib/zra/ZRA_SQL.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
@@ -34,6 +33,9 @@ namespace ZooLib {
 namespace ZDataspace {
 
 using ZRA::RelName;
+using std::map;
+using std::set;
+using std::vector;
 
 // =================================================================================================
 #pragma mark -
@@ -42,15 +44,15 @@ using ZRA::RelName;
 class Source_Any::PQuery
 	{
 public:
-	PQuery(int64 iRefcon, const SearchThing& iSearchThing);
+	PQuery(int64 iRefcon, const SearchSpec& iSearchSpec);
 
 	const int64 fRefcon;
-	const SearchThing fSearchThing;
+	const SearchSpec fSearchSpec;
 	};
 
-Source_Any::PQuery::PQuery(int64 iRefcon, const SearchThing& iSearchThing)
+Source_Any::PQuery::PQuery(int64 iRefcon, const SearchSpec& iSearchSpec)
 :	fRefcon(iRefcon)
-,	fSearchThing(iSearchThing)
+,	fSearchSpec(iSearchSpec)
 	{}
 
 // =================================================================================================
@@ -68,8 +70,8 @@ set<RelHead> Source_Any::GetRelHeads()
 
 void Source_Any::Update(
 	bool iLocalOnly,
-	AddedSearch* iAdded, size_t iAddedCount,
-	int64* iRemoved, size_t iRemovedCount,
+	const AddedSearch* iAdded, size_t iAddedCount,
+	const int64* iRemoved, size_t iRemovedCount,
 	vector<SearchResult>& oChanged,
 	ZRef<Event>& oEvent)
 	{
@@ -84,9 +86,9 @@ void Source_Any::Update(
 	while (iAddedCount--)
 		{
 		if (ZLOGF(s, eDebug))
-			s << "\n" << iAdded->fSearchThing;
+			s << "\n" << iAdded->fSearchSpec;
 		
-		PQuery* thePQuery = new PQuery(iAdded->fRefcon, iAdded->fSearchThing);
+		PQuery* thePQuery = new PQuery(iAdded->fRefcon, iAdded->fSearchSpec);
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
 		++iAdded;
@@ -116,9 +118,9 @@ void Source_Any::Update(
 		oChanged.push_back(theSearchResult);
 		}
 
-	sEvent(fStamp);
+	sEvent(fClock);
 
-	oEvent = fStamp->GetEvent();
+	oEvent = fClock->GetEvent();
 	}
 
 } // namespace ZDataspace

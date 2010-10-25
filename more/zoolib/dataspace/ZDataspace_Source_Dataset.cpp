@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/ZDataspace_Source_Dataset.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
-#include "zoolib/zqe/ZQE_Walker_Any.h"
+#include "zoolib/zqe/ZQE_Visitor_DoMakeWalker_Any.h"
 #include "zoolib/zqe/ZQE_Walker_Product.h"
 #include "zoolib/zqe/ZQE_Walker_ValPredCompound.h"
 
@@ -291,18 +291,18 @@ ZRef<ZQE::Walker> Source_Dataset::pMakeWalker(const RelHead& iRelHead)
 
 void Source_Dataset::pPull()
 	{
-	using ZIntervalTreeClock::Stamp;
+//	using ZIntervalTreeClock::Clock;
 
 	ZRef<Deltas> theDeltas;
 	fEvent = fDataset->GetDeltas(theDeltas, fEvent);
 
-	const Map_NamedEvent_Delta_t& theNEDM = theDeltas->GetMap();
+	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
 	for (Map_NamedEvent_Delta_t::const_iterator
-		iterNEDM = theNEDM.begin(), endNEDM = theNEDM.end();
-		iterNEDM != endNEDM; ++iterNEDM)
+		iterMNED = theMNED.begin(), endMNED = theMNED.end();
+		iterMNED != endMNED; ++iterMNED)
 		{
-		const NamedEvent& theNamedEvent = iterNEDM->first;
-		const map<Daton, bool>& theStatements = iterNEDM->second->GetStatements();
+		const NamedEvent& theNamedEvent = iterMNED->first;
+		const map<Daton, bool>& theStatements = iterMNED->second->GetStatements();
 		for (map<Daton, bool>::const_iterator
 			iterStmts = theStatements.begin(), endStmts = theStatements.end();
 			iterStmts != endStmts; ++iterStmts)
@@ -319,7 +319,7 @@ void Source_Dataset::pPull()
 				}
 			else if (iterMap->second.first < theNamedEvent)
 				{
-				// Only change if theNamedEvent is more recent than what we've got.
+				// theNamedEvent is more recent than what we've got and thus supersedes it.
 				if (iterStmts->second)
 					iterMap->second = newPair;
 				else

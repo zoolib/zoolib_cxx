@@ -59,7 +59,7 @@ private:
 
 	ZRef<ZSQLite::DB> fDB;
 	int fChangeCount;
-	ZRef<Stamp> fStamp;
+	ZRef<Clock> fClock;
 
 	class PQuery;
 	std::map<int64, PQuery*> fMap_RefconToPQuery;

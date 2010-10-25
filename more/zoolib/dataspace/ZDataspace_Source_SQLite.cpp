@@ -84,7 +84,7 @@ Source_SQLite::PQuery::PQuery(int64 iRefcon, const string8& iSQL)
 
 Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 :	fDB(iDB)
-,	fStamp(Stamp::sSeed())
+,	fClock(Clock::sSeed())
 	{
 	fChangeCount = ::sqlite3_total_changes(fDB->GetDB());
 
@@ -105,7 +105,7 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 		}
 
 	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(this, &Source_SQLite::pCheck));
-	ZWorkerRunner_CFRunLoop::sMain()->Add(theWorker);
+	ZWorkerRunner_CFRunLoop::sMain()->Attach(theWorker);
 	theWorker->Wake();
 	}
 
@@ -184,9 +184,9 @@ void Source_SQLite::Update(
 		oChanged.push_back(theSearchResult);
 		}
 
-	sEvent(fStamp);
+	sEvent(fClock);
 
-	oEvent = fStamp->GetEvent();
+	oEvent = fClock->GetEvent();
 	}
 
 bool Source_SQLite::pCheck(ZRef<ZWorker> iWorker)

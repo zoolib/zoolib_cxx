@@ -36,7 +36,7 @@ namespace ZooLib {
 namespace ZDataset {
 
 using ZIntervalTreeClock::Event;
-using ZIntervalTreeClock::Stamp;
+using ZIntervalTreeClock::Clock;
 
 // =================================================================================================
 #pragma mark -
@@ -149,12 +149,12 @@ private:
 class Dataset : public ZCountedWithoutFinalize
 	{
 public:
-	Dataset(const Nombre& iNombre, const ZRef<Stamp>& iStamp);
+	Dataset(const Nombre& iNombre, const ZRef<Clock>& iClock);
 
 	void Insert(const Daton& iDaton);
 	void Erase(const Daton& iDaton);
 
-	ZRef<Stamp> GetStamp();
+	ZRef<Clock> GetClock();
 	ZRef<Event> GetEvent();
 
 	ZRef<Dataset> Fork();
@@ -173,14 +173,14 @@ public:
 
 private:
 	Dataset(
-		const Nombre& iNombre, const ZRef<Stamp>& iStamp, const ZRef<DeltasChain>& iDeltasChain);
+		const Nombre& iNombre, const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain);
 
 	void pCommit();
 
 	ZMtx fMtx; // RWLock?
 	const Nombre fNombre;
 	uint64 fNextFork;
-	ZRef<Stamp> fStamp;
+	ZRef<Clock> fClock;
 	std::map<Daton, bool> fPendingStatements;
 	ZRef<DeltasChain> fDeltasChain;
 	};

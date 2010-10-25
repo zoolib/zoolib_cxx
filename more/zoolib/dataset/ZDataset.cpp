@@ -122,7 +122,7 @@ ZRef<Event> NamedEvent::GetEvent() const
 	{ return fEvent; }
 
 string NamedEvent::AsString() const
-	{ return fNombre.AsString() + ":" /*+ ZStringf("%llu", fStamp)*/; }
+	{ return fNombre.AsString() + ":" /*+ ZStringf("%llu", fClock)*/; }
 
 // =================================================================================================
 #pragma mark -
@@ -172,17 +172,17 @@ ZRef<Deltas> DeltasChain::GetDeltas()
 #pragma mark *
 
 Dataset::Dataset(
-	const Nombre& iNombre, const ZRef<Stamp>& iStamp, const ZRef<DeltasChain>& iDeltasChain)
+	const Nombre& iNombre, const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain)
 :	fNombre(iNombre)
 ,	fNextFork(1)
-,	fStamp(iStamp)
+,	fClock(iClock)
 ,	fDeltasChain(iDeltasChain)
 	{}
 
-Dataset::Dataset(const Nombre& iNombre, const ZRef<Stamp>& iStamp)
+Dataset::Dataset(const Nombre& iNombre, const ZRef<Clock>& iClock)
 :	fNombre(iNombre)
 ,	fNextFork(1)
-,	fStamp(iStamp)
+,	fClock(iClock)
 	{}
 
 void Dataset::Insert(const Daton& iDaton)
@@ -199,31 +199,31 @@ void Dataset::Erase(const Daton& iDaton)
 	fPendingStatements[iDaton] = false;
 	}
 
-ZRef<Stamp> Dataset::GetStamp()
+ZRef<Clock> Dataset::GetClock()
 	{
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
-	return fStamp;
+	return fClock;
 	}
 
 ZRef<Event> Dataset::GetEvent()
 	{
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
-	return fStamp->GetEvent();
+	return fClock->GetEvent();
 	}
 
 ZRef<Dataset> Dataset::Fork()
 	{
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
-	return new Dataset(Nombre(fNombre, fNextFork++), sFork(fStamp), fDeltasChain);
+	return new Dataset(Nombre(fNombre, fNextFork++), sFork(fClock), fDeltasChain);
 	}
 
 void Dataset::Join(ZRef<Dataset> iOther)
 	{
 	ZRef<Deltas> theDeltas;
-	ZRef<Event> otherEvent = iOther->GetDeltas(theDeltas, fStamp->GetEvent());
+	ZRef<Event> otherEvent = iOther->GetDeltas(theDeltas, fClock->GetEvent());
 	this->IncorporateDeltas(otherEvent, theDeltas);
 	}
 
@@ -249,7 +249,7 @@ void Dataset::GetDeltas(ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas, const ZRef<E
 		}
 
 	oDeltas = new Deltas(&resultMap);
-	oEvent = fStamp->GetEvent();
+	oEvent = fClock->GetEvent();
 	}
 
 ZRef<Event> Dataset::GetDeltas(ZRef<Deltas>& oDeltas, const ZRef<Event>& iEvent)
@@ -264,7 +264,7 @@ void Dataset::IncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& i
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
 	fDeltasChain = new DeltasChain(fDeltasChain, iDeltas);
-	sReceive(fStamp, iEvent);
+	sReceive(fClock, iEvent);
 	}
 
 typedef pair<NamedEvent, size_t> TSIndex_t;
@@ -342,9 +342,9 @@ void Dataset::pCommit()
 	{
 	if (!fPendingStatements.empty())
 		{
-		sEvent(fStamp);
+		sEvent(fClock);
 
-		const NamedEvent theNE(fNombre, fStamp->GetEvent());
+		const NamedEvent theNE(fNombre, fClock->GetEvent());
 		const ZRef<Delta> theDelta = new Delta(&fPendingStatements);
 
 		Map_NamedEvent_Delta_t theMap;
