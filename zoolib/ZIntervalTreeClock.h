@@ -122,39 +122,39 @@ void sJoin(ZRef<Event>& ioEvent, const ZRef<Event>& iOther);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Stamp
+#pragma mark * Clock
 
-class Stamp
+class Clock
 :	public ZCountedWithoutFinalize
 	{
 public:
-	static ZRef<Stamp> sSeed();
+	static ZRef<Clock> sSeed();
 
-	Stamp(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent);
-	Stamp(const ZRef<Stamp>& iStamp, const ZRef<Event>& iEvent);
-	Stamp(const ZRef<Identity>& iIdentity, const ZRef<Stamp>& iStamp);
-	virtual ~Stamp();
+	Clock(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent);
+	Clock(const ZRef<Clock>& iClock, const ZRef<Event>& iEvent);
+	Clock(const ZRef<Identity>& iIdentity, const ZRef<Clock>& iClock);
+	virtual ~Clock();
 
 // Accessors, mainly for text and binary streaming.
 	ZRef<Identity> GetIdentity();
 	ZRef<Event> GetEvent();
 
 // Comparison
-	bool LessEqual(const ZRef<Stamp>& iOther);
+	bool LessEqual(const ZRef<Clock>& iOther);
 
-	bool IsBefore(const ZRef<Stamp>& iOther);
-	bool IsAfter(const ZRef<Stamp>& iOther);
-	bool IsConcurrent(const ZRef<Stamp>& iOther);
-	bool IsSame(const ZRef<Stamp>& iOther);
+	bool IsBefore(const ZRef<Clock>& iOther);
+	bool IsAfter(const ZRef<Clock>& iOther);
+	bool IsConcurrent(const ZRef<Clock>& iOther);
+	bool IsSame(const ZRef<Clock>& iOther);
 
 // Higher level operations
-	ZRef<Stamp> Sent();
-	ZRef<Stamp> Received(const ZRef<Event>& iEvent);
+	ZRef<Clock> Sent();
+	ZRef<Clock> Received(const ZRef<Event>& iEvent);
 
 // Fundamental operations
-	ZRef<Stamp> Evented();
-	ZRef<Stamp> Joined(const ZRef<Stamp>& iOther);
-	void Forked(ZRef<Stamp>& oLeft, ZRef<Stamp>& oRight);
+	ZRef<Clock> Evented();
+	ZRef<Clock> Joined(const ZRef<Clock>& iOther);
+	void Forked(ZRef<Clock>& oLeft, ZRef<Clock>& oRight);
 	
 private:
 	const ZRef<Identity> fIdentity;
@@ -163,14 +163,14 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Stamp mutating operations
+#pragma mark * Clock mutating operations
 
-void sSend(ZRef<Stamp>& ioStamp);
-void sReceive(ZRef<Stamp>& ioStamp, const ZRef<Event>& iEventReceived);
+void sSend(ZRef<Clock>& ioClock);
+void sReceive(ZRef<Clock>& ioClock, const ZRef<Event>& iEventReceived);
 
-void sEvent(ZRef<Stamp>& ioStamp);
-void sJoin(ZRef<Stamp>& ioStamp, const ZRef<Stamp>& iOther);
-ZRef<Stamp> sFork(ZRef<Stamp>& ioStamp);
+void sEvent(ZRef<Clock>& ioClock);
+void sJoin(ZRef<Clock>& ioClock, const ZRef<Clock>& iOther);
+ZRef<Clock> sFork(ZRef<Clock>& ioClock);
 
 } // namespace ZIntervalTreeClock
 } // namespace ZooLib

@@ -448,97 +448,97 @@ void sJoin(ZRef<Event>& ioEvent, const ZRef<Event>& iOther)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Stamp
+#pragma mark * Clock
 
-ZRef<Stamp> Stamp::sSeed()
-	{ return new Stamp(Identity::sOne(), Event::sZero()); }
+ZRef<Clock> Clock::sSeed()
+	{ return new Clock(Identity::sOne(), Event::sZero()); }
 
-Stamp::Stamp(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent)
+Clock::Clock(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent)
 :	fIdentity(iIdentity)
 ,	fEvent(iEvent)
 	{
 	ZAssert(fIdentity && fEvent);
 	}
 
-Stamp::Stamp(const ZRef<Stamp>& iStamp, const ZRef<Event>& iEvent)
-:	fIdentity(iStamp->fIdentity)
+Clock::Clock(const ZRef<Clock>& iClock, const ZRef<Event>& iEvent)
+:	fIdentity(iClock->fIdentity)
 ,	fEvent(iEvent)
 	{}
 
-Stamp::Stamp(const ZRef<Identity>& iIdentity, const ZRef<Stamp>& iStamp)
+Clock::Clock(const ZRef<Identity>& iIdentity, const ZRef<Clock>& iClock)
 :	fIdentity(iIdentity)
-,	fEvent(iStamp->fEvent)
+,	fEvent(iClock->fEvent)
 	{}
 
-Stamp::~Stamp()
+Clock::~Clock()
 	{}
 
-ZRef<Identity> Stamp::GetIdentity()
+ZRef<Identity> Clock::GetIdentity()
 	{ return fIdentity; }
 
-ZRef<Event> Stamp::GetEvent()
+ZRef<Event> Clock::GetEvent()
 	{ return fEvent; }
 
-bool Stamp::LessEqual(const ZRef<Stamp>& iOther)
+bool Clock::LessEqual(const ZRef<Clock>& iOther)
 	{ return fEvent->LessEqual(iOther->fEvent); }
 
-bool Stamp::IsBefore(const ZRef<Stamp>& iOther)
+bool Clock::IsBefore(const ZRef<Clock>& iOther)
 	{ return fEvent->IsBefore(iOther->fEvent); }
 	
-bool Stamp::IsAfter(const ZRef<Stamp>& iOther)
+bool Clock::IsAfter(const ZRef<Clock>& iOther)
 	{ return fEvent->IsAfter(iOther->fEvent); }
 
-bool Stamp::IsConcurrent(const ZRef<Stamp>& iOther)
+bool Clock::IsConcurrent(const ZRef<Clock>& iOther)
 	{ return fEvent->IsConcurrent(iOther->fEvent); }
 
-bool Stamp::IsSame(const ZRef<Stamp>& iOther)
+bool Clock::IsSame(const ZRef<Clock>& iOther)
 	{ return fEvent->IsSame(iOther->fEvent); }
 
-ZRef<Stamp> Stamp::Sent()
-	{ return new Stamp(fIdentity, fEvent->Evented(fIdentity)); }
+ZRef<Clock> Clock::Sent()
+	{ return new Clock(fIdentity, fEvent->Evented(fIdentity)); }
 
-ZRef<Stamp> Stamp::Received(const ZRef<Event>& iEvent)
-	{ return new Stamp(fIdentity, fEvent->Joined(iEvent)->Evented(fIdentity)); }
+ZRef<Clock> Clock::Received(const ZRef<Event>& iEvent)
+	{ return new Clock(fIdentity, fEvent->Joined(iEvent)->Evented(fIdentity)); }
 
-ZRef<Stamp> Stamp::Evented()
-	{ return new Stamp(fIdentity, fEvent->Evented(fIdentity)); }
+ZRef<Clock> Clock::Evented()
+	{ return new Clock(fIdentity, fEvent->Evented(fIdentity)); }
 
-ZRef<Stamp> Stamp::Joined(const ZRef<Stamp>& iOther)
+ZRef<Clock> Clock::Joined(const ZRef<Clock>& iOther)
 	{
 	ZRef<Identity> newIdentity = fIdentity->Summed(iOther->fIdentity);
 	ZRef<Event> newEvent = fEvent->Joined(iOther->fEvent);
-	return new Stamp(newIdentity, newEvent);
+	return new Clock(newIdentity, newEvent);
 	}
 
-void Stamp::Forked(ZRef<Stamp>& oLeft, ZRef<Stamp>& oRight)
+void Clock::Forked(ZRef<Clock>& oLeft, ZRef<Clock>& oRight)
 	{
 	ZRef<Identity> newLeft, newRight;
 	fIdentity->Split(newLeft, newRight);
-	oLeft = new Stamp(newLeft, fEvent);
-	oRight = new Stamp(newRight, fEvent);
+	oLeft = new Clock(newLeft, fEvent);
+	oRight = new Clock(newRight, fEvent);
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Stamp mutating operations
+#pragma mark * Clock mutating operations
 
-void sSend(ZRef<Stamp>& ioStamp)
-	{ ioStamp = ioStamp->Sent(); }
+void sSend(ZRef<Clock>& ioClock)
+	{ ioClock = ioClock->Sent(); }
 
-void sReceive(ZRef<Stamp>& ioStamp, const ZRef<Event>& iEventReceived)
-	{ ioStamp = ioStamp->Received(iEventReceived); }
+void sReceive(ZRef<Clock>& ioClock, const ZRef<Event>& iEventReceived)
+	{ ioClock = ioClock->Received(iEventReceived); }
 
-void sEvent(ZRef<Stamp>& ioStamp)
-	{ ioStamp = ioStamp->Evented(); }
+void sEvent(ZRef<Clock>& ioClock)
+	{ ioClock = ioClock->Evented(); }
 
-void sJoin(ZRef<Stamp>& ioStamp, const ZRef<Stamp>& iOther)
-	{ ioStamp = ioStamp->Joined(iOther); }
+void sJoin(ZRef<Clock>& ioClock, const ZRef<Clock>& iOther)
+	{ ioClock = ioClock->Joined(iOther); }
 
-ZRef<Stamp> sFork(ZRef<Stamp>& ioStamp)
+ZRef<Clock> sFork(ZRef<Clock>& ioClock)
 	{
-	ZRef<Stamp> a, b;
-	ioStamp->Forked(a, b);
-	ioStamp = a;
+	ZRef<Clock> a, b;
+	ioClock->Forked(a, b);
+	ioClock = a;
 	return b;
 	}
 
