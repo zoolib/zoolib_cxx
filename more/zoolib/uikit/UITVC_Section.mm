@@ -17,7 +17,7 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
-#include "zoolib/iphone/ZooLib_UITableViewController.h"
+#include "zoolib/uikit/UITVC_Section.h"
 
 #if ZCONFIG_SPI_Enabled(iPhone)
 
@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_NSObject.h"
 
 namespace ZooLib {
-namespace IPhone {
+namespace UIKit {
 
 // =================================================================================================
 #pragma mark -
@@ -123,14 +123,14 @@ void UITVC_Section_WithRow::AccessoryButtonTapped(size_t iIndex)
 	{
 	if (ZRef<Row> theRow = this->pGetRow(iIndex))
 		return theRow->AccessoryButtonTapped();
-	return UITVC_Section::AccessoryButtonTapped(iIndex)
+	return UITVC_Section::AccessoryButtonTapped(iIndex);
 	}
 
 void UITVC_Section_WithRow::RowSelected(size_t iIndex)
 	{
 	if (ZRef<Row> theRow = this->pGetRow(iIndex))
 		return theRow->RowSelected();
-	return UITVC_Section::RowSelected(iIndex)
+	return UITVC_Section::RowSelected(iIndex);
 	}
 
 ZQ<bool> UITVC_Section_WithRow::ShouldIndentWhileEditing(size_t iIndex)
@@ -182,14 +182,14 @@ void UITVC_Section_WithRow::Row::RowSelected()
 		fCallable_RowSelected->Call(this);
 	}
 
-} // namespace IPhone
+} // namespace UIKit
 } // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZooLib_UITVC_WithSections
 
-using ZooLib::IPhone::UITVC_Section;
+using ZooLib::UIKit::UITVC_Section;
 
 @implementation ZooLib_UITVC_WithSections
 

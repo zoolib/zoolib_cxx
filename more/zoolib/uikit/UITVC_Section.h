@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_UITableViewController__
-#define __ZooLib_UITableViewController__ 1
+#ifndef __UITVC_Section__
+#define __UITVC_Section__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-namespace IPhone {
+namespace UIKit {
 
 // =================================================================================================
 #pragma mark -
@@ -131,7 +131,7 @@ public:
 	ZRef<ZCallable<void(ZRef<Row>)> > fCallable_RowSelected;
 	};
 
-} // namespace IPhone
+} // namespace UIKit
 } // namespace ZooLib
 
 using namespace ZooLib;
@@ -142,7 +142,7 @@ using namespace ZooLib;
 
 @interface ZooLib_UITVC_WithSections : UITableViewController
 	{
-	std::vector<ZRef<IPhone::UITVC_Section> > fSections;
+	std::vector<ZRef<UIKit::UITVC_Section> > fSections;
 	}
 
 // From UITableViewDataSource
@@ -168,12 +168,12 @@ using namespace ZooLib;
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 // Our protocol
-- (void) addSection:(ZRef<IPhone::UITVC_Section>) iSection;
+- (void) addSection:(ZRef<UIKit::UITVC_Section>) iSection;
 
--(ZRef<IPhone::UITVC_Section>)pGetSection:(size_t)iIndex;
+-(ZRef<UIKit::UITVC_Section>)pGetSection:(size_t)iIndex;
 
 @end // interface ZooLib_UITVC_WithSections
 
 #endif // ZCONFIG_SPI_Enabled(iPhone)
 
-#endif // __ZooLib_UITableViewController__
+#endif // __UITVC_Section__
