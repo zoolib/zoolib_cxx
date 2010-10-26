@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __UITVC_Section__
-#define __UITVC_Section__ 1
+#ifndef __UITVC_WithSections__
+#define __UITVC_WithSections__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -38,12 +38,12 @@ namespace UIKit {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * UITVC_Section
+#pragma mark * Section
 
-class UITVC_Section : public ZCounted
+class Section : public ZCounted
 	{
 public:
-	UITVC_Section();
+	Section();
 
 	void SetHeaderFooterShownWhenEmpty(bool iShow);
 
@@ -82,15 +82,15 @@ public:
 	ZQ<UITableViewCellEditingStyle> fEditingStyle;
 	ZQ<bool> fShouldIndentWhileEditing;
 	ZQ<CGFloat> fRowHeight;
-	ZRef<ZCallable<void(ZRef<UITVC_Section>,size_t)> > fCallable_AccessoryButtonTapped;
-	ZRef<ZCallable<void(ZRef<UITVC_Section>,size_t)> > fCallable_RowSelected;
+	ZRef<ZCallable<void(ZRef<Section>,size_t)> > fCallable_AccessoryButtonTapped;
+	ZRef<ZCallable<void(ZRef<Section>,size_t)> > fCallable_RowSelected;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * UITVC_Section_WithRow
+#pragma mark * Section_WithRows
 
-class UITVC_Section_WithRow : public UITVC_Section
+class Section_WithRows : public Section
 	{
 public:
 	class Row;
@@ -111,9 +111,9 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * UITVC_Section_WithRow::Row
+#pragma mark * Section_WithRows::Row
 
-class UITVC_Section_WithRow::Row : public ZCounted
+class Section_WithRows::Row : public ZCounted
 	{
 public:
 	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView);
@@ -134,15 +134,13 @@ public:
 } // namespace UIKit
 } // namespace ZooLib
 
-using namespace ZooLib;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZooLib_UITVC_WithSections
+#pragma mark * UITableViewController_WithSections
 
-@interface ZooLib_UITVC_WithSections : UITableViewController
+@interface UITableViewController_WithSections : UITableViewController
 	{
-	std::vector<ZRef<UIKit::UITVC_Section> > fSections;
+	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections;
 	}
 
 // From UITableViewDataSource
@@ -168,12 +166,12 @@ using namespace ZooLib;
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 // Our protocol
-- (void) addSection:(ZRef<UIKit::UITVC_Section>) iSection;
+- (void) addSection:(ZooLib::ZRef<ZooLib::UIKit::Section>) iSection;
 
--(ZRef<UIKit::UITVC_Section>)pGetSection:(size_t)iIndex;
+-(ZooLib::ZRef<ZooLib::UIKit::Section>)pGetSection:(size_t)iIndex;
 
-@end // interface ZooLib_UITVC_WithSections
+@end // interface UITableViewController_WithSections
 
 #endif // ZCONFIG_SPI_Enabled(iPhone)
 
-#endif // __UITVC_Section__
+#endif // __UITVC_WithSections__

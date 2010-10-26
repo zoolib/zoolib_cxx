@@ -17,7 +17,7 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
-#include "zoolib/uikit/UITVC_Section.h"
+#include "zoolib/uikit/UITableViewController_WithSections.h"
 
 #if ZCONFIG_SPI_Enabled(iPhone)
 
@@ -29,63 +29,63 @@ namespace UIKit {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * UITVC_Section
+#pragma mark * Section
 
-UITVC_Section::UITVC_Section()
+Section::Section()
 :	fHeaderFooterShownWhenEmpty(true)
 	{}
 
-void UITVC_Section::SetHeaderFooterShownWhenEmpty(bool iShow)
+void Section::SetHeaderFooterShownWhenEmpty(bool iShow)
 	{ fHeaderFooterShownWhenEmpty = iShow; }
 
-ZQ<CGFloat> UITVC_Section::HeaderHeight()
+ZQ<CGFloat> Section::HeaderHeight()
 	{
 	if (fHeaderFooterShownWhenEmpty || this->NumberOfRows())
 		return fHeaderHeight;
 	return null;
 	}
 
-ZQ<CGFloat> UITVC_Section::FooterHeight()
+ZQ<CGFloat> Section::FooterHeight()
 	{
 	if (fHeaderFooterShownWhenEmpty || this->NumberOfRows())
 		return fFooterHeight;
 	return null;
 	}
 
-ZQ<string8> UITVC_Section::HeaderTitle()
+ZQ<string8> Section::HeaderTitle()
 	{ return fHeaderTitle; }
 
-ZQ<string8> UITVC_Section::FooterTitle()
+ZQ<string8> Section::FooterTitle()
 	{ return fFooterTitle; }
 
-ZRef<UIView> UITVC_Section::HeaderView()
+ZRef<UIView> Section::HeaderView()
 	{ return fHeaderView; }
 
-ZRef<UIView> UITVC_Section::FooterView()
+ZRef<UIView> Section::FooterView()
 	{ return fFooterView; }
 
-size_t UITVC_Section::NumberOfRows()
+size_t Section::NumberOfRows()
 	{ return 0; }
 
-ZRef<UITableViewCell> UITVC_Section::UITableViewCellForRow(UITableView* iView, size_t iIndex)
+ZRef<UITableViewCell> Section::UITableViewCellForRow(UITableView* iView, size_t iIndex)
 	{ return fTableViewCell; }
 
-ZQ<UITableViewCellEditingStyle> UITVC_Section::EditingStyle(size_t iIndex)
+ZQ<UITableViewCellEditingStyle> Section::EditingStyle(size_t iIndex)
 	{ return fEditingStyle; }
 
-ZQ<bool> UITVC_Section::ShouldIndentWhileEditing(size_t iIndex)
+ZQ<bool> Section::ShouldIndentWhileEditing(size_t iIndex)
 	{ return fShouldIndentWhileEditing; }
 
-ZQ<CGFloat> UITVC_Section::RowHeight(size_t iIndex)
+ZQ<CGFloat> Section::RowHeight(size_t iIndex)
 	{ return fRowHeight; }
 
-void UITVC_Section::AccessoryButtonTapped(size_t iIndex)
+void Section::AccessoryButtonTapped(size_t iIndex)
 	{
 	if (fCallable_AccessoryButtonTapped)
 		fCallable_AccessoryButtonTapped->Call(this, iIndex);
 	}
 
-void UITVC_Section::RowSelected(size_t iIndex)
+void Section::RowSelected(size_t iIndex)
 	{
 	if (fCallable_RowSelected)
 		fCallable_RowSelected->Call(this, iIndex);
@@ -93,61 +93,61 @@ void UITVC_Section::RowSelected(size_t iIndex)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * UITVC_Section_WithRow
+#pragma mark * Section_WithRows
 
-void UITVC_Section_WithRow::AddRow(ZRef<Row> iRow)
+void Section_WithRows::AddRow(ZRef<Row> iRow)
 	{
 	fRows.push_back(iRow);
 	}
 
-size_t UITVC_Section_WithRow::NumberOfRows()
+size_t Section_WithRows::NumberOfRows()
 	{
 	return fRows.size();
 	}
 
-ZRef<UITableViewCell> UITVC_Section_WithRow::UITableViewCellForRow(UITableView* iView, size_t iIndex)
+ZRef<UITableViewCell> Section_WithRows::UITableViewCellForRow(UITableView* iView, size_t iIndex)
 	{
 	if (ZRef<Row> theRow = this->pGetRow(iIndex))
 		return theRow->UITableViewCellForRow(iView);
-	return UITVC_Section::UITableViewCellForRow(iView, iIndex);
+	return Section::UITableViewCellForRow(iView, iIndex);
 	}
 
-ZQ<UITableViewCellEditingStyle> UITVC_Section_WithRow::EditingStyle(size_t iIndex)
+ZQ<UITableViewCellEditingStyle> Section_WithRows::EditingStyle(size_t iIndex)
 	{
 	if (ZRef<Row> theRow = this->pGetRow(iIndex))
 		return theRow->EditingStyle();
-	return UITVC_Section::EditingStyle(iIndex);
+	return Section::EditingStyle(iIndex);
 	}
 
-void UITVC_Section_WithRow::AccessoryButtonTapped(size_t iIndex)
+void Section_WithRows::AccessoryButtonTapped(size_t iIndex)
 	{
 	if (ZRef<Row> theRow = this->pGetRow(iIndex))
 		return theRow->AccessoryButtonTapped();
-	return UITVC_Section::AccessoryButtonTapped(iIndex);
+	return Section::AccessoryButtonTapped(iIndex);
 	}
 
-void UITVC_Section_WithRow::RowSelected(size_t iIndex)
+void Section_WithRows::RowSelected(size_t iIndex)
 	{
 	if (ZRef<Row> theRow = this->pGetRow(iIndex))
 		return theRow->RowSelected();
-	return UITVC_Section::RowSelected(iIndex);
+	return Section::RowSelected(iIndex);
 	}
 
-ZQ<bool> UITVC_Section_WithRow::ShouldIndentWhileEditing(size_t iIndex)
+ZQ<bool> Section_WithRows::ShouldIndentWhileEditing(size_t iIndex)
 	{
 	if (ZRef<Row> theRow = this->pGetRow(iIndex))
 		return theRow->ShouldIndentWhileEditing();
-	return UITVC_Section::ShouldIndentWhileEditing(iIndex);
+	return Section::ShouldIndentWhileEditing(iIndex);
 	}
 
-ZQ<CGFloat> UITVC_Section_WithRow::RowHeight(size_t iIndex)
+ZQ<CGFloat> Section_WithRows::RowHeight(size_t iIndex)
 	{
 	if (ZRef<Row> theRow = this->pGetRow(iIndex))
 		return theRow->RowHeight();
-	return UITVC_Section::RowHeight(iIndex);
+	return Section::RowHeight(iIndex);
 	}
 
-ZRef<UITVC_Section_WithRow::Row> UITVC_Section_WithRow::pGetRow(size_t iIndex)
+ZRef<Section_WithRows::Row> Section_WithRows::pGetRow(size_t iIndex)
 	{
 	if (iIndex < fRows.size())
 		return fRows[iIndex];
@@ -156,27 +156,27 @@ ZRef<UITVC_Section_WithRow::Row> UITVC_Section_WithRow::pGetRow(size_t iIndex)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * UITVC_Section_WithRow::Row
+#pragma mark * Section_WithRows::Row
 
-ZRef<UITableViewCell> UITVC_Section_WithRow::Row::UITableViewCellForRow(UITableView* iView)
+ZRef<UITableViewCell> Section_WithRows::Row::UITableViewCellForRow(UITableView* iView)
 	{ return fTableViewCell; }
 
-ZQ<UITableViewCellEditingStyle> UITVC_Section_WithRow::Row::EditingStyle()
+ZQ<UITableViewCellEditingStyle> Section_WithRows::Row::EditingStyle()
 	{ return fEditingStyle; }
 
-ZQ<bool> UITVC_Section_WithRow::Row::ShouldIndentWhileEditing()
+ZQ<bool> Section_WithRows::Row::ShouldIndentWhileEditing()
 	{ return fShouldIndentWhileEditing; }
 
-ZQ<CGFloat> UITVC_Section_WithRow::Row::RowHeight()
+ZQ<CGFloat> Section_WithRows::Row::RowHeight()
 	{ return fRowHeight; }
 
-void UITVC_Section_WithRow::Row::AccessoryButtonTapped()
+void Section_WithRows::Row::AccessoryButtonTapped()
 	{
 	if (fCallable_AccessoryButtonTapped)
 		fCallable_AccessoryButtonTapped->Call(this);
 	}
 
-void UITVC_Section_WithRow::Row::RowSelected()
+void Section_WithRows::Row::RowSelected()
 	{
 	if (fCallable_RowSelected)
 		fCallable_RowSelected->Call(this);
@@ -187,18 +187,19 @@ void UITVC_Section_WithRow::Row::RowSelected()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZooLib_UITVC_WithSections
+#pragma mark * UITableViewController_WithSections
 
-using ZooLib::UIKit::UITVC_Section;
+using namespace ZooLib;
+using ZooLib::UIKit::Section;
 
-@implementation ZooLib_UITVC_WithSections
+@implementation UITableViewController_WithSections
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
 	{ return fSections.size(); }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:section])
+	if (ZRef<Section> theSection = [self pGetSection:section])
 		return theSection->NumberOfRows();
 	return 0;
 	}
@@ -210,7 +211,7 @@ using ZooLib::UIKit::UITVC_Section;
  
  - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:indexPath.section])
+	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
 		if (ZRef<UITableViewCell> theCell = theSection->UITableViewCellForRow(tableView, indexPath.row))
 			return [theCell.Orphan() autorelease];
@@ -220,7 +221,7 @@ using ZooLib::UIKit::UITVC_Section;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:indexPath.section])
+	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
 		if (ZQ<CGFloat> theQ = theSection->RowHeight(indexPath.row))
 			return theQ.Get();
@@ -230,7 +231,7 @@ using ZooLib::UIKit::UITVC_Section;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:section])
+	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<CGFloat> theQ = theSection->HeaderHeight())
 			return theQ.Get();
@@ -240,7 +241,7 @@ using ZooLib::UIKit::UITVC_Section;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:section])
+	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<CGFloat> theQ = theSection->FooterHeight())
 			return theQ.Get();
@@ -250,7 +251,7 @@ using ZooLib::UIKit::UITVC_Section;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:section])
+	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<string8> theQ = theSection->HeaderTitle())
 			return ZUtil_NSObject::sString(theQ.Get());
@@ -260,7 +261,7 @@ using ZooLib::UIKit::UITVC_Section;
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:section])
+	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<string8> theQ = theSection->FooterTitle())
 			return ZUtil_NSObject::sString(theQ.Get());
@@ -270,7 +271,7 @@ using ZooLib::UIKit::UITVC_Section;
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:section])
+	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZRef<UIView> theView = theSection->HeaderView())
 			return [theView.Orphan() autorelease];
@@ -280,7 +281,7 @@ using ZooLib::UIKit::UITVC_Section;
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:section])
+	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZRef<UIView> theView = theSection->FooterView())
 			return [theView.Orphan() autorelease];
@@ -290,19 +291,19 @@ using ZooLib::UIKit::UITVC_Section;
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:indexPath.section])
+	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		theSection->AccessoryButtonTapped(indexPath.row);
 	}
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:indexPath.section])
+	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		theSection->RowSelected(indexPath.row);
 	}
 
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:indexPath.section])
+	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
 		if (ZQ<bool> theQ = theSection->ShouldIndentWhileEditing(indexPath.row))
 			return theQ.Get();
@@ -312,7 +313,7 @@ using ZooLib::UIKit::UITVC_Section;
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 	{
-	if (ZRef<UITVC_Section> theSection = [self pGetSection:indexPath.section])
+	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
 		if (ZQ<UITableViewCellEditingStyle> theQ = theSection->EditingStyle(indexPath.row))
 			return theQ.Get();
@@ -320,18 +321,18 @@ using ZooLib::UIKit::UITVC_Section;
 	return UITableViewCellEditingStyleNone;
 	}
 
-- (void) addSection:(ZRef<UITVC_Section>) iSection
+- (void) addSection:(ZRef<Section>) iSection
 	{
 	fSections.push_back(iSection);
 	}
 
--(ZRef<UITVC_Section>)pGetSection:(size_t)iIndex
+-(ZRef<Section>)pGetSection:(size_t)iIndex
 	{
 	if (iIndex < fSections.size())
 		return fSections[iIndex];
 	return null;
 	}
 
-@end // implementation ZooLib_UITVC_WithSections
+@end // implementation UITableViewController_WithSections
 
 #endif // ZCONFIG_SPI_Enabled(iPhone)
