@@ -51,7 +51,7 @@ class ZExpr_Logic_True
 public:
 	ZExpr_Logic_True();
 
-// From ZExpr_Op0
+// From ZExpr_Op0_T
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Logic>& iVisitor);
 
 	virtual ZRef<ZExpr_Logic> Self();
@@ -87,7 +87,7 @@ class ZExpr_Logic_False
 public:
 	ZExpr_Logic_False();
 
-// From ZExpr_Op0
+// From ZExpr_Op0_T
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Logic>& iVisitor);
 
 	virtual ZRef<ZExpr_Logic> Self();
