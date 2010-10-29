@@ -128,41 +128,41 @@ NSMethodSignature* ZDelegate::pMethodSignatureForSelector(SEL aSelector)
 // Type code for receiver (an id) and SEL.
 static const string kRcvrSEL = "@:";
 
-void ZDelegate::Wrapper::SetSignature(const char* R)
+void ZDelegate::Wrapper::pSetSignature(const char* R)
 	{
 	const string signature = R + kRcvrSEL;
 	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
 	}
 
-void ZDelegate::Wrapper::SetSignature(const char* R,
+void ZDelegate::Wrapper::pSetSignature(const char* R,
 	const char* P0)
 	{
 	const string signature = R + kRcvrSEL + P0;
 	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
 	}
 	
-void ZDelegate::Wrapper::SetSignature(const char* R,
+void ZDelegate::Wrapper::pSetSignature(const char* R,
 	const char* P0, const char* P1)
 	{
 	const string signature = R + kRcvrSEL + P0 + P1;
 	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
 	}
 
-void ZDelegate::Wrapper::SetSignature(const char* R,
+void ZDelegate::Wrapper::pSetSignature(const char* R,
 	const char* P0, const char* P1, const char* P2)
 	{
 	const string signature = R + kRcvrSEL + P0 + P1 + P2;
 	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
 	}
 
-void ZDelegate::Wrapper::SetSignature(const char* R,
+void ZDelegate::Wrapper::pSetSignature(const char* R,
 	const char* P0, const char* P1, const char* P2, const char* P3)
 	{
 	const string signature = R + kRcvrSEL + P0 + P1 + P2 + P3;
 	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
 	}
 
-void ZDelegate::Wrapper::SetSignature(const char* R,
+void ZDelegate::Wrapper::pSetSignature(const char* R,
 	const char* P0, const char* P1, const char* P2, const char* P3, const char* P4)
 	{
 	const string signature = R + kRcvrSEL + P0 + P1 + P2 + P3 + P4;

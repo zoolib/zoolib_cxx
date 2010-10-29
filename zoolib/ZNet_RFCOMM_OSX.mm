@@ -34,13 +34,6 @@ using std::deque;
 using std::min;
 using std::runtime_error;
 
-using namespace ZooLib;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
-
-
 namespace ZooLib {
 
 // =================================================================================================
