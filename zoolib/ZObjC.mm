@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
-#include <Foundation/NSAutoReleasePool.h>
+#import <Foundation/NSAutoReleasePool.h>
 
 namespace ZooLib {
 
