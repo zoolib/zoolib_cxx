@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <IOBluetooth/objc/IOBluetoothRFCOMMChannel.h>
 #import <IOBluetooth/objc/IOBluetoothSDPServiceRecord.h>
 
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZObjC.h"
 
@@ -37,82 +38,8 @@ using namespace ZooLib;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Delegate_ZNetListener_RFCOMM_OSX
-
-@interface Delegate_ZNetListener_RFCOMM_OSX : NSObject
-	{
-	ZNetListener_RFCOMM_OSX* fListener;
-	}
-@end
-
-@implementation Delegate_ZNetListener_RFCOMM_OSX
-
-- initWithListener:(ZNetListener_RFCOMM_OSX*)iListener
-	{
-	self = [super init];
-	fListener = iListener;
-	return self;
-	}
-
-- (void)channelOpened:(IOBluetoothUserNotification *)iNotification
-	channel:(IOBluetoothRFCOMMChannel*)iChannel
-	{
-	fListener->pChannelOpened(iChannel);
-	}
-@end
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Delegate_ZNetEndpoint_RFCOMM_OSX
-
-@interface Delegate_ZNetEndpoint_RFCOMM_OSX : NSObject
-	{
-	ZNetEndpoint_RFCOMM_OSX* fEndpoint;
-	}
-@end
-
-@implementation Delegate_ZNetEndpoint_RFCOMM_OSX
-
-- initWithEndpoint:(ZNetEndpoint_RFCOMM_OSX*)iEndpoint
-	{
-	self = [super init];
-	fEndpoint = iEndpoint;
-	return self;
-	}
-
-// @protocol IOBluetoothRFCOMMChannelDelegate
-- (void)rfcommChannelData:(IOBluetoothRFCOMMChannel *)rfcommChannel
-	data:(void *)dataPointer length:(size_t)dataLength
-	{
-	fEndpoint->pReceived(dataPointer, dataLength);
-	}
-
-//- (void)rfcommChannelOpenComplete:(IOBluetoothRFCOMMChannel*)rfcommChannel status:(IOReturn)error;
-
-- (void)rfcommChannelClosed:(IOBluetoothRFCOMMChannel *)rfcommChannel
-	{
-	fEndpoint->pClosed();
-	}
-
-//- (void)rfcommChannelControlSignalsChanged:(IOBluetoothRFCOMMChannel*)rfcommChannel;
-
-//- (void)rfcommChannelFlowControlChanged:(IOBluetoothRFCOMMChannel*)rfcommChannel;
-
-//- (void)rfcommChannelWriteComplete:(IOBluetoothRFCOMMChannel*)rfcommChannel
-//	refcon:(void*)refcon status:(IOReturn)error;
-
-//- (void)rfcommChannelQueueSpaceAvailable:(IOBluetoothRFCOMMChannel*)rfcommChannel;
-
-
-@end
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Factory functions
 
-namespace { // anonymous
-
-} // anonymous namespace
 
 namespace ZooLib {
 
@@ -122,13 +49,14 @@ namespace ZooLib {
 
 ZNetListener_RFCOMM_OSX::ZNetListener_RFCOMM_OSX(CFDictionaryRef iServiceDict)
 	{
-	fDelegate = [[Delegate_ZNetListener_RFCOMM_OSX alloc] initWithListener:this];
+	fDelegate.Add(@selector(channelOpened:channel:),
+		MakeCallable(this, &ZNetListener_RFCOMM_OSX::pChannelOpened));
+
 	// iServiceDict should (must?) have an entry for "0100 - ServiceName*"
 
 	IOBluetoothSDPServiceRecordRef serviceRecordRef;
 	if (kIOReturnSuccess != IOBluetoothAddServiceDict(iServiceDict, &serviceRecordRef))
 		{
-		DESTROY(fDelegate);
 		throw runtime_error("ZNetListener_RFCOMM_OSX, couldn't initialize");
 		}
 
@@ -152,8 +80,6 @@ ZNetListener_RFCOMM_OSX::~ZNetListener_RFCOMM_OSX()
 	if (fNotification)
 		[fNotification unregister];
 	fNotification = nullptr;
-
-	DESTROY(fDelegate);
 	}
 
 ZRef<ZNetEndpoint> ZNetListener_RFCOMM_OSX::Listen()
@@ -178,7 +104,8 @@ void ZNetListener_RFCOMM_OSX::CancelListen()
 	fCondition.Broadcast();
 	}
 
-void ZNetListener_RFCOMM_OSX::pChannelOpened(IOBluetoothRFCOMMChannel* iChannel)
+void ZNetListener_RFCOMM_OSX::pChannelOpened(
+	IOBluetoothUserNotification*, IOBluetoothRFCOMMChannel* iChannel)
 	{
 	ZAcqMtx acq(fMutex);
 	[iChannel release]; // ??
@@ -189,38 +116,33 @@ void ZNetListener_RFCOMM_OSX::pChannelOpened(IOBluetoothRFCOMMChannel* iChannel)
 // =================================================================================================
 
 ZNetEndpoint_RFCOMM_OSX::ZNetEndpoint_RFCOMM_OSX(IOBluetoothDevice* iDevice, uint8 iChannelID)
-:	fDelegate(nullptr),
-	fChannel(nullptr),
-	fOpen(true)
+:	fChannel(nullptr)
+,	fOpen(true)
 	{
-	fDelegate = [[Delegate_ZNetEndpoint_RFCOMM_OSX alloc] initWithEndpoint:this];
+	fDelegate.Add(@selector(rfcommChannelData:data:length:),
+		MakeCallable(this, &ZNetEndpoint_RFCOMM_OSX::pReceived));
+
+	fDelegate.Add(@selector(rfcommChannelClosed:),
+		MakeCallable(this, &ZNetEndpoint_RFCOMM_OSX::pClosed));
 
 	if (kIOReturnSuccess
 		!= [iDevice openRFCOMMChannelSync:&fChannel withChannelID:iChannelID delegate:fDelegate])
 		{
-		[fDelegate release];
 		throw runtime_error("ZNetEndpoint_RFCOMM_OSX, couldn't connect");
 		}
-
-	[fChannel retain];
 	}
 
 ZNetEndpoint_RFCOMM_OSX::ZNetEndpoint_RFCOMM_OSX(IOBluetoothRFCOMMChannel* iChannel)
-:	fDelegate(nullptr),
-	fChannel(iChannel),
-	fOpen(true)
+:	fChannel(iChannel)
+,	fOpen(true)
 	{
 	[fChannel retain];
-
-	fDelegate = [[Delegate_ZNetEndpoint_RFCOMM_OSX alloc] initWithEndpoint:this];
-
-	[fChannel setDelegate: fDelegate];
+	[fChannel setDelegate:fDelegate];
 	}
 
 ZNetEndpoint_RFCOMM_OSX::~ZNetEndpoint_RFCOMM_OSX()
 	{
 	DESTROY(fChannel);
-	DESTROY(fDelegate);
 	}
 
 const ZStreamRCon& ZNetEndpoint_RFCOMM_OSX::GetStreamRCon()
@@ -341,7 +263,7 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Abort()
 	[fChannel closeChannel];
 	}
 
-void ZNetEndpoint_RFCOMM_OSX::pReceived(const void* iSource, size_t iLength)
+void ZNetEndpoint_RFCOMM_OSX::pReceived(IOBluetoothRFCOMMChannel*, void* iSource, size_t iLength)
 	{
 	ZAcqMtx acq(fMutex);
 	const uint8* data = static_cast<const uint8*>(iSource);
@@ -349,7 +271,7 @@ void ZNetEndpoint_RFCOMM_OSX::pReceived(const void* iSource, size_t iLength)
 	fCondition.Broadcast();
 	}
 
-void ZNetEndpoint_RFCOMM_OSX::pClosed()
+void ZNetEndpoint_RFCOMM_OSX::pClosed(IOBluetoothRFCOMMChannel*)
 	{
 	ZAcqMtx acq(fMutex);
 	fOpen = false;

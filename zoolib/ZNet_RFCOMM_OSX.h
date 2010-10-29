@@ -48,6 +48,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_RFCOMM_OSX)
 
+#include "zoolib/ZDelegate.h"
 #include "zoolib/ZThread.h"
 
 #include <deque>
@@ -56,22 +57,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <IOBluetooth/Bluetooth.h>
 
 #ifdef __OBJC__
+
 	// We're being included in ObjC/ObjC++ code, so use appropriate forward declarations.
 	@class IOBluetoothDevice;
 	@class IOBluetoothRFCOMMChannel;
 	@class IOBluetoothUserNotification;
 
-	@class Delegate_ZNetListener_RFCOMM_OSX;
-	@class Delegate_ZNetEndpoint_RFCOMM_OSX;
 #else
+
 	#include <IOBluetooth/IOBluetoothUserLib.h>
 
 	typedef OpaqueIOBluetoothObjectRef IOBluetoothDevice;
 	typedef OpaqueIOBluetoothObjectRef IOBluetoothRFCOMMChannel;
 	typedef OpaqueIOBluetoothObjectRef IOBluetoothUserNotification;
 
-	typedef void* Delegate_ZNetListener_RFCOMM_OSX;
-	typedef void* Delegate_ZNetEndpoint_RFCOMM_OSX;
 #endif
 
 namespace ZooLib {
@@ -90,11 +89,10 @@ public:
 	virtual ZRef<ZNetEndpoint> Listen();
 	virtual void CancelListen();
 
-// Called by Delegate_ZNetListener_RFCOMM_OSX
-	void pChannelOpened(IOBluetoothRFCOMMChannel* iChannel);
-
 private:
-	Delegate_ZNetListener_RFCOMM_OSX* fDelegate;
+	void pChannelOpened(IOBluetoothUserNotification*, IOBluetoothRFCOMMChannel* iChannel);
+
+	ZDelegate fDelegate;
 
 	BluetoothRFCOMMChannelID fChannelID;
 	BluetoothSDPServiceRecordHandle fHandle;
@@ -147,12 +145,11 @@ public:
 // From ZStreamRCon and ZStreamWCon
 	virtual void Imp_Abort();
 
-// Private, but needs to be accessible to our delegate
-	void pReceived(const void* iSource, size_t iLength);
-	void pClosed();
-
 private:
-	Delegate_ZNetEndpoint_RFCOMM_OSX* fDelegate;
+	void pReceived(IOBluetoothRFCOMMChannel*, void* iSource, size_t iLength);
+	void pClosed(IOBluetoothRFCOMMChannel*);
+
+	ZDelegate fDelegate;
 
 	IOBluetoothRFCOMMChannel* fChannel;
 	ZMtx fMutex;
