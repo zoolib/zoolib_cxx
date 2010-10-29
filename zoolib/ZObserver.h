@@ -60,6 +60,7 @@ public:
 
 // Our protocol
 	void* GetObject();
+
 	std::string GetName();
 	CFStringRef GetName_CFStringRef();
 	#if __OBJC__
