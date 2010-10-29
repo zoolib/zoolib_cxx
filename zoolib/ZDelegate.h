@@ -112,27 +112,27 @@ class ZDelegate::Wrapper
 	{
 	friend class ZDelegate;
 
+protected:
 	virtual ~Wrapper() {}
 	virtual void ForwardInvocation(NSInvocation* anInvocation) = 0;
 
-	void SetSignature(const char* R);
+	void pSetSignature(const char* R);
 
-	void SetSignature(const char* R,
+	void pSetSignature(const char* R,
 		const char* P0);
 
-	void SetSignature(const char* R,
+	void pSetSignature(const char* R,
 		const char* P0, const char* P1);
 
-	void SetSignature(const char* R,
+	void pSetSignature(const char* R,
 		const char* P0, const char* P1, const char* P2);
 
-	void SetSignature(const char* R,
+	void pSetSignature(const char* R,
 		const char* P0, const char* P1, const char* P2, const char* P3);
 
-	void SetSignature(const char* R,
+	void pSetSignature(const char* R,
 		const char* P0, const char* P1, const char* P2, const char* P3, const char* P4);
 
-protected:
 	ZRef<NSMethodSignature> fNSMethodSignature;
 	};
 
@@ -150,13 +150,38 @@ class ZDelegate::Wrapper_T<R(void)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		this->SetSignature(@encode(R));
+		this->pSetSignature(@encode(R));
 		}
 	
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		R result = fCallable->Call();
 		[anInvocation setReturnValue:&result];
+		}
+
+	ZRef<Callable> fCallable;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZDelegate::Wrapper_T (specialized for void return, 0 params)
+
+template <>
+class ZDelegate::Wrapper_T<void(void)> : public ZDelegate::Wrapper
+	{
+	friend class ZDelegate;
+
+	typedef ZCallable<void(void)> Callable;
+
+	Wrapper_T(ZRef<Callable> iCallable)
+	:	fCallable(iCallable)
+		{
+		this->pSetSignature(@encode(void));
+		}
+	
+	virtual void ForwardInvocation(NSInvocation* anInvocation)
+		{
+		fCallable->Call();
 		}
 
 	ZRef<Callable> fCallable;
@@ -177,7 +202,7 @@ class ZDelegate::Wrapper_T<R(P0)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		this->SetSignature(@encode(R),
+		this->pSetSignature(@encode(R),
 			@encode(P0));
 		}
 	
@@ -188,6 +213,35 @@ class ZDelegate::Wrapper_T<R(P0)> : public ZDelegate::Wrapper
 
 		R result = fCallable->Call(p0);
 		[anInvocation setReturnValue:&result];
+		}
+
+	ZRef<Callable> fCallable;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZDelegate::Wrapper_T (specialized for void return, 1 param)
+
+template <class P0>
+class ZDelegate::Wrapper_T<void(P0)> : public ZDelegate::Wrapper
+	{
+	friend class ZDelegate;
+
+	typedef ZCallable<void(P0)> Callable;
+
+	Wrapper_T(ZRef<Callable> iCallable)
+	:	fCallable(iCallable)
+		{
+		this->pSetSignature(@encode(void),
+			@encode(P0));
+		}
+	
+	virtual void ForwardInvocation(NSInvocation* anInvocation)
+		{
+		P0 p0;
+		[anInvocation getArgument:&p0 atIndex:2];
+
+		fCallable->Call(p0);
 		}
 
 	ZRef<Callable> fCallable;
@@ -208,7 +262,7 @@ class ZDelegate::Wrapper_T<R(P0,P1)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		this->SetSignature(@encode(R),
+		this->pSetSignature(@encode(R),
 			@encode(P0), @encode(P1));
 		}
 
@@ -221,6 +275,37 @@ class ZDelegate::Wrapper_T<R(P0,P1)> : public ZDelegate::Wrapper
 
 		R result = fCallable->Call(p0, p1);
 		[anInvocation setReturnValue:&result];
+		}
+
+	ZRef<Callable> fCallable;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZDelegate::Wrapper_T (specialized for void return, 2 params)
+
+template <class P0, class P1>
+class ZDelegate::Wrapper_T<void(P0,P1)> : public ZDelegate::Wrapper
+	{
+	friend class ZDelegate;
+
+	typedef ZCallable<void(P0,P1)> Callable;
+
+	Wrapper_T(ZRef<Callable> iCallable)
+	:	fCallable(iCallable)
+		{
+		this->pSetSignature(@encode(void),
+			@encode(P0), @encode(P1));
+		}
+
+	virtual void ForwardInvocation(NSInvocation* anInvocation)
+		{
+		P0 p0;
+		[anInvocation getArgument:&p0 atIndex:2];
+		P1 p1;
+		[anInvocation getArgument:&p1 atIndex:3];
+
+		fCallable->Call(p0, p1);
 		}
 
 	ZRef<Callable> fCallable;
@@ -241,7 +326,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		this->SetSignature(@encode(R),
+		this->pSetSignature(@encode(R),
 			@encode(P0), @encode(P1), @encode(P2));
 		}
 	
@@ -263,6 +348,39 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2)> : public ZDelegate::Wrapper
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZDelegate::Wrapper_T (specialized for void return, 3 params)
+
+template <class P0, class P1, class P2>
+class ZDelegate::Wrapper_T<void(P0,P1,P2)> : public ZDelegate::Wrapper
+	{
+	friend class ZDelegate;
+
+	typedef ZCallable<void(P0,P1,P2)> Callable;
+
+	Wrapper_T(ZRef<Callable> iCallable)
+	:	fCallable(iCallable)
+		{
+		this->pSetSignature(@encode(void),
+			@encode(P0), @encode(P1), @encode(P2));
+		}
+	
+	virtual void ForwardInvocation(NSInvocation* anInvocation)
+		{
+		P0 p0;
+		[anInvocation getArgument:&p0 atIndex:2];
+		P1 p1;
+		[anInvocation getArgument:&p1 atIndex:3];
+		P2 p2;
+		[anInvocation getArgument:&p2 atIndex:4];
+
+		fCallable->Call(p0, p1, p2);
+		}
+
+	ZRef<Callable> fCallable;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZDelegate::Wrapper_T (specialized for 4 params)
 
 template <class R,
@@ -276,7 +394,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		this->SetSignature(@encode(R),
+		this->pSetSignature(@encode(R),
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3));
 		}
 	
@@ -300,6 +418,41 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3)> : public ZDelegate::Wrapper
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZDelegate::Wrapper_T (specialized for void return, 4 params)
+
+template <class P0, class P1, class P2, class P3>
+class ZDelegate::Wrapper_T<void(P0,P1,P2,P3)> : public ZDelegate::Wrapper
+	{
+	friend class ZDelegate;
+
+	typedef ZCallable<void(P0,P1,P2,P3)> Callable;
+
+	Wrapper_T(ZRef<Callable> iCallable)
+	:	fCallable(iCallable)
+		{
+		this->pSetSignature(@encode(void),
+			@encode(P0), @encode(P1), @encode(P2), @encode(P3));
+		}
+	
+	virtual void ForwardInvocation(NSInvocation* anInvocation)
+		{
+		P0 p0;
+		[anInvocation getArgument:&p0 atIndex:2];
+		P1 p1;
+		[anInvocation getArgument:&p1 atIndex:3];
+		P2 p2;
+		[anInvocation getArgument:&p2 atIndex:4];
+		P3 p3;
+		[anInvocation getArgument:&p3 atIndex:5];
+
+		fCallable->Call(p0, p1, p2, p3);
+		}
+
+	ZRef<Callable> fCallable;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZDelegate::Wrapper_T (specialized for 5 params)
 
 template <class R,
@@ -313,7 +466,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4)> : public ZDelegate::Wrapper
 	Wrapper_T(ZRef<Callable> iCallable)
 	:	fCallable(iCallable)
 		{
-		this->SetSignature(@encode(R),
+		this->pSetSignature(@encode(R),
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3), @encode(P4));
 		}
 	
@@ -332,6 +485,43 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4)> : public ZDelegate::Wrapper
 
 		R result = fCallable->Call(p0, p1, p2, p3, p4);
 		[anInvocation setReturnValue:&result];
+		}
+
+	ZRef<Callable> fCallable;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZDelegate::Wrapper_T (specialized for void return, 5 params)
+
+template <class P0, class P1, class P2, class P3, class P4>
+class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4)> : public ZDelegate::Wrapper
+	{
+	friend class ZDelegate;
+
+	typedef ZCallable<void(P0,P1,P2,P3,P4)> Callable;
+
+	Wrapper_T(ZRef<Callable> iCallable)
+	:	fCallable(iCallable)
+		{
+		this->pSetSignature(@encode(void),
+			@encode(P0), @encode(P1), @encode(P2), @encode(P3), @encode(P4));
+		}
+	
+	virtual void ForwardInvocation(NSInvocation* anInvocation)
+		{
+		P0 p0;
+		[anInvocation getArgument:&p0 atIndex:2];
+		P1 p1;
+		[anInvocation getArgument:&p1 atIndex:3];
+		P2 p2;
+		[anInvocation getArgument:&p2 atIndex:4];
+		P3 p3;
+		[anInvocation getArgument:&p3 atIndex:5];
+		P4 p4;
+		[anInvocation getArgument:&p4 atIndex:6];
+
+		fCallable->Call(p0, p1, p2, p3, p4);
 		}
 
 	ZRef<Callable> fCallable;
