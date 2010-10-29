@@ -21,6 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZDelegate__
 #define __ZDelegate__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(Cocoa)
 
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZCompat_NonCopyable.h"
@@ -31,10 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifdef __OBJC__
 	#import <Foundation/NSInvocation.h>
-	#import <Foundation/NSMethodSignature.h>
-#endif
-
-#ifdef __OBJC__
+	@class NSMethodSignature;
 	@class ZooLib_ZDelegate_Proxy;
 #else
 	typedef struct objc_ZooLib_ZDelegate_Proxy ZooLib_ZDelegate_Proxy;
@@ -381,4 +381,5 @@ void ZDelegate::Add(SEL iSEL, ZRef<Callable> iCallable)
 
 } // namespace ZooLib
 
+#endif // ZCONFIG_SPI_Enabled(Cocoa)
 #endif // __ZDelegate__

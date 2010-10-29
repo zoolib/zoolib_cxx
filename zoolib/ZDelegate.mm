@@ -20,7 +20,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDelegate.h"
 
+#if ZCONFIG_SPI_Enabled(Cocoa)
+
+#import <Foundation/NSMethodSignature.h>
+
 using std::string;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Workaround
+
+#if !defined(MAC_OS_X_VERSION_10_5) || (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5)
+
+// signatureWithObjCTypes was not declared before 10.5.
+@interface NSMethodSignature (objctypes)
++(NSMethodSignature*)signatureWithObjCTypes:(const char*)types;
+@end
+
+#endif // !defined(MAC_OS_X_VERSION_10_5) || (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5)
 
 // =================================================================================================
 #pragma mark -
@@ -153,3 +170,5 @@ void ZDelegate::Wrapper::SetSignature(const char* R,
 	}
 
 } // namespace ZooLib
+
+#endif // ZCONFIG_SPI_Enabled(Cocoa)
