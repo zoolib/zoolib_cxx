@@ -811,7 +811,7 @@ MakeCallable(
 
 template <class Class_t, class Object_t, class R,
 	class P0, class P1, class P2, class P3,
-		class P4, class P5, class P6, class P7,
+	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> >
@@ -826,7 +826,7 @@ template <class Class_t, class Object_t, class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
-		class PC, class PD, class PE, class PF>
+	class PC, class PD, class PE, class PF>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >
 MakeCallable(const Object_t& iObject,
 	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
