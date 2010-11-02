@@ -163,9 +163,34 @@ void ZDelegate::Wrapper::pSetSignature(const char* R,
 	}
 
 void ZDelegate::Wrapper::pSetSignature(const char* R,
-	const char* P0, const char* P1, const char* P2, const char* P3, const char* P4)
+	const char* P0, const char* P1, const char* P2, const char* P3,
+	const char* P4)
 	{
 	const string signature = R + kRcvrSEL + P0 + P1 + P2 + P3 + P4;
+	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+	}
+
+void ZDelegate::Wrapper::pSetSignature(const char* R,
+	const char* P0, const char* P1, const char* P2, const char* P3,
+	const char* P4, const char* P5)
+	{
+	const string signature = R + kRcvrSEL + P0 + P1 + P2 + P3 + P4 + P5;
+	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+	}
+
+void ZDelegate::Wrapper::pSetSignature(const char* R,
+	const char* P0, const char* P1, const char* P2, const char* P3,
+	const char* P4, const char* P5, const char* P6)
+	{
+	const string signature = R + kRcvrSEL + P0 + P1 + P2 + P3 + P4 + P5 + P6;
+	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
+	}
+
+void ZDelegate::Wrapper::pSetSignature(const char* R,
+	const char* P0, const char* P1, const char* P2, const char* P3,
+	const char* P4, const char* P5, const char* P6, const char* P7)
+	{
+	const string signature = R + kRcvrSEL + P0 + P1 + P2 + P3 + P4 + P5 + P6 + P7;
 	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
 	}
 
