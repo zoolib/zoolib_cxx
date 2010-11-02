@@ -55,14 +55,11 @@ void ZObserver::Initialize()
 	{
 	ZCounted::Initialize();
 
-	if (!fName_CFStringRef)
-		fName_CFStringRef = ZUtil_CFType::sString(fName_String.Get());
-
 	::CFNotificationCenterAddObserver(
 		::CFNotificationCenterGetLocalCenter(),
 		this,
 		spCallback,
-		fName_CFStringRef.Get(),
+		this->GetName_CFStringRef(),
 		fObject,
 		CFNotificationSuspensionBehaviorDeliverImmediately);
 	}
