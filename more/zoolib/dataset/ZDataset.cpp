@@ -71,7 +71,7 @@ string Nombre::AsString() const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * NamedEvent
 
 NamedEvent::NamedEvent()
 	{}
@@ -126,7 +126,7 @@ string NamedEvent::AsString() const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * Delta
 
 Delta::Delta(const map<Daton, bool>& iStatements)
 :	fStatements(iStatements)
@@ -140,7 +140,7 @@ const map<Daton, bool>& Delta::GetStatements()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * Deltas
 
 Deltas::Deltas(const Map_NamedEvent_Delta_t& iMap)
 :	fMap(iMap)
@@ -154,7 +154,7 @@ const Map_NamedEvent_Delta_t& Deltas::GetMap()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * DeltasChain
 
 DeltasChain::DeltasChain(const ZRef<DeltasChain>& iParent, const ZRef<Deltas>& iDeltas)
 :	fParent(iParent)
@@ -169,7 +169,7 @@ ZRef<Deltas> DeltasChain::GetDeltas()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * Dataset
 
 Dataset::Dataset(
 	const Nombre& iNombre, const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain)

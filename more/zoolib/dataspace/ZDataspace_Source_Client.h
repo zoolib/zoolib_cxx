@@ -45,7 +45,7 @@ public:
 		const AddedSearch* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount,
 		std::vector<SearchResult>& oChanged,
-		ZRef<Stamp>& oStamp);
+		ZRef<Event>& oEvent);
 
 private:
 	class StreamerReader;

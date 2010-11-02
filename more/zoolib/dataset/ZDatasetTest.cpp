@@ -125,7 +125,7 @@ ZData sData_T<string>(const string& iT)
 void sTest(const ZStrimW& s)
 	{
 	Nombre theNombre;
-	ZRef<Stamp> theClock = ZIntervalTreeClock::Stamp::sSeed();
+	ZRef<Clock> theClock = ZIntervalTreeClock::Clock::sSeed();
 	ZRef<Dataset> dataset = new Dataset(Nombre(theNombre, 1), theClock);
 
 	ZRef<Dataset> datasetA = dataset->Fork();
@@ -181,7 +181,7 @@ void sTest3(const ZStrimW& s)
 	
 	
 	Nombre theNombre;
-	ZRef<Stamp> theClock = ZIntervalTreeClock::Stamp::sSeed();
+	ZRef<Clock> theClock = ZIntervalTreeClock::Clock::sSeed();
 	ZRef<Dataset> dataset = new Dataset(Nombre(theNombre, 1), theClock);
 
 	ZRef<Dataset> datasetA = dataset->Fork();
@@ -227,7 +227,7 @@ void sTest3(const ZStrimW& s)
 void sTest2(const ZStrimW& s)
 	{
 	Nombre theNombre;
-	ZRef<Stamp> theClock;
+	ZRef<Clock> theClock;
 	ZRef<Dataset> dataset = new Dataset(Nombre(theNombre, 1), theClock);
 
 	ZRef<Dataset> datasetA = dataset->Fork();
