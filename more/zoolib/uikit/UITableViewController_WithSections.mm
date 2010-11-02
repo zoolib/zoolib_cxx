@@ -21,165 +21,342 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(iPhone)
 
+#include "zoolib/ZLog.h"
 #include "zoolib/ZRef_NSObject.h"
 #include "zoolib/ZUtil_NSObject.h"
 
 namespace ZooLib {
 namespace UIKit {
 
+using std::vector;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Helpers
+
+NSArray* sMakeNSIndexPathArray(size_t iSectionIndex, size_t iBaseRowIndex, size_t iCount)
+	{
+	NSUInteger theIndices[2];
+	theIndices[0] = iSectionIndex;
+	NSMutableArray* theArray = [NSMutableArray arrayWithCapacity:iCount];
+	for (size_t x = 0; x < iCount; ++x)
+		{
+		theIndices[1] = iBaseRowIndex + x;
+		[theArray addObject:[NSIndexPath indexPathWithIndexes:&theIndices[0] length:2]];
+		}
+	return theArray;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Section
 
-Section::Section()
-:	fHeaderFooterShownWhenEmpty(true)
+Section::Section(ZRef<SectionBody> iBody)
+:	fBody(iBody)
 	{}
 
-void Section::SetHeaderFooterShownWhenEmpty(bool iShow)
-	{ fHeaderFooterShownWhenEmpty = iShow; }
+ZQ<CGFloat> Section::QHeaderHeight()
+	{ return fHeaderHeight; }
 
-ZQ<CGFloat> Section::HeaderHeight()
-	{
-	if (fHeaderFooterShownWhenEmpty || this->NumberOfRows())
-		return fHeaderHeight;
-	return null;
-	}
+ZQ<CGFloat> Section::QFooterHeight()
+	{ return fFooterHeight; }
 
-ZQ<CGFloat> Section::FooterHeight()
-	{
-	if (fHeaderFooterShownWhenEmpty || this->NumberOfRows())
-		return fFooterHeight;
-	return null;
-	}
-
-ZQ<string8> Section::HeaderTitle()
+ZQ<string8> Section::QHeaderTitle()
 	{ return fHeaderTitle; }
 
-ZQ<string8> Section::FooterTitle()
+ZQ<string8> Section::QFooterTitle()
 	{ return fFooterTitle; }
 
-ZRef<UIView> Section::HeaderView()
+ZRef<UIView> Section::QHeaderView()
 	{ return fHeaderView; }
 
-ZRef<UIView> Section::FooterView()
+ZRef<UIView> Section::QFooterView()
 	{ return fFooterView; }
 
-size_t Section::NumberOfRows()
-	{ return 0; }
+ZQ<UITableViewRowAnimation> Section::QSectionAnimation_Insert()
+	{ return fSectionAnimation_Insert; }
 
-ZRef<UITableViewCell> Section::UITableViewCellForRow(UITableView* iView, size_t iIndex)
-	{ return fTableViewCell; }
+ZQ<UITableViewRowAnimation> Section::QSectionAnimation_Delete()
+	{ return fSectionAnimation_Delete; }
 
-ZQ<UITableViewCellEditingStyle> Section::EditingStyle(size_t iIndex)
-	{ return fEditingStyle; }
+ZQ<UITableViewRowAnimation> Section::QSectionAnimation_Reload()
+	{ return fSectionAnimation_Reload; }
 
-ZQ<bool> Section::ShouldIndentWhileEditing(size_t iIndex)
-	{ return fShouldIndentWhileEditing; }
-
-ZQ<CGFloat> Section::RowHeight(size_t iIndex)
-	{ return fRowHeight; }
-
-void Section::AccessoryButtonTapped(size_t iIndex)
+UITableViewRowAnimation Section::SectionAnimation_Insert()
 	{
-	if (fCallable_AccessoryButtonTapped)
-		fCallable_AccessoryButtonTapped->Call(this, iIndex);
+	if (ZQ<UITableViewRowAnimation> theQ = this->QSectionAnimation_Insert())
+		return theQ.Get();
+	return UITableViewRowAnimationRight;
 	}
 
-void Section::RowSelected(size_t iIndex)
+UITableViewRowAnimation Section::SectionAnimation_Delete()
 	{
-	if (fCallable_RowSelected)
-		fCallable_RowSelected->Call(this, iIndex);
+	if (ZQ<UITableViewRowAnimation> theQ = this->QSectionAnimation_Delete())
+		return theQ.Get();
+	return UITableViewRowAnimationLeft;
+	}
+
+UITableViewRowAnimation Section::SectionAnimation_Reload()
+	{
+	if (ZQ<UITableViewRowAnimation> theQ = this->QSectionAnimation_Reload())
+		return theQ.Get();
+	return UITableViewRowAnimationFade;
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Section_WithRows
+#pragma mark * SectionBody
 
-void Section_WithRows::AddRow(ZRef<Row> iRow)
+ZRef<UITableViewCell> SectionBody::UITableViewCellForRow(UITableView* iView, size_t iRowIndex)
 	{
-	fRows.push_back(iRow);
+	// Our subclass can override UITableViewCellForRow, or
+	// fCallable_MakeTableViewCell must have been set.
+	ZAssert(fCallable_MakeTableViewCell);
+	return fCallable_MakeTableViewCell->Call(iView, iRowIndex);
 	}
 
-size_t Section_WithRows::NumberOfRows()
+ZQ<UITableViewCellEditingStyle> SectionBody::QEditingStyle(size_t iRowIndex)
+	{ return fEditingStyle; }
+
+ZQ<bool> SectionBody::QShouldIndentWhileEditing(size_t iRowIndex)
+	{ return fShouldIndentWhileEditing; }
+
+ZQ<CGFloat> SectionBody::QRowHeight(size_t iRowIndex)
+	{ return fRowHeight; }
+
+ZQ<NSInteger> SectionBody::QIndentationLevel(size_t iRowIndex)
+	{ return fIndentationLevel; }
+
+ZQ<UITableViewRowAnimation> SectionBody::QRowAnimation_Insert()
+	{ return fRowAnimation_Insert; }
+
+ZQ<UITableViewRowAnimation> SectionBody::QRowAnimation_Delete()
+	{ return fRowAnimation_Delete; }
+
+ZQ<UITableViewRowAnimation> SectionBody::QRowAnimation_Reload()
+	{ return fRowAnimation_Reload; }
+
+bool SectionBody::AccessoryButtonTapped(size_t iRowIndex)
 	{
-	return fRows.size();
+	if (fCallable_AccessoryButtonTapped)
+		return fCallable_AccessoryButtonTapped->Call(this, iRowIndex);
+	return false;
 	}
 
-ZRef<UITableViewCell> Section_WithRows::UITableViewCellForRow(UITableView* iView, size_t iIndex)
+bool SectionBody::RowSelected(size_t iRowIndex)
 	{
-	if (ZRef<Row> theRow = this->pGetRow(iIndex))
-		return theRow->UITableViewCellForRow(iView);
-	return Section::UITableViewCellForRow(iView, iIndex);
+	if (fCallable_RowSelected)
+		fCallable_RowSelected->Call(this, iRowIndex);
+	return false;
 	}
 
-ZQ<UITableViewCellEditingStyle> Section_WithRows::EditingStyle(size_t iIndex)
+UITableViewRowAnimation SectionBody::RowAnimation_Insert()
 	{
-	if (ZRef<Row> theRow = this->pGetRow(iIndex))
-		return theRow->EditingStyle();
-	return Section::EditingStyle(iIndex);
+	if (ZQ<UITableViewRowAnimation> theQ = this->QRowAnimation_Insert())
+		return theQ.Get();
+	return UITableViewRowAnimationTop;
+	return UITableViewRowAnimationRight;
 	}
 
-void Section_WithRows::AccessoryButtonTapped(size_t iIndex)
+UITableViewRowAnimation SectionBody::RowAnimation_Delete()
 	{
-	if (ZRef<Row> theRow = this->pGetRow(iIndex))
-		return theRow->AccessoryButtonTapped();
-	return Section::AccessoryButtonTapped(iIndex);
+	if (ZQ<UITableViewRowAnimation> theQ = this->QRowAnimation_Delete())
+		return theQ.Get();
+	return UITableViewRowAnimationBottom;
+	return UITableViewRowAnimationLeft;
 	}
 
-void Section_WithRows::RowSelected(size_t iIndex)
+UITableViewRowAnimation SectionBody::RowAnimation_Reload()
 	{
-	if (ZRef<Row> theRow = this->pGetRow(iIndex))
-		return theRow->RowSelected();
-	return Section::RowSelected(iIndex);
+	if (ZQ<UITableViewRowAnimation> theQ = this->QRowAnimation_Reload())
+		return theQ.Get();
+	return UITableViewRowAnimationFade;
 	}
 
-ZQ<bool> Section_WithRows::ShouldIndentWhileEditing(size_t iIndex)
+// =================================================================================================
+#pragma mark -
+#pragma mark * SectionBody_SingleRow
+
+SectionBody_SingleRow::SectionBody_SingleRow(ZRef<UITableViewCell> iCell)
+:	fCell_Pending(iCell)
+	{}
+
+size_t SectionBody_SingleRow::NumberOfRows()
+	{ return 1; }
+
+void SectionBody_SingleRow::ApplyUpdates(UITableView* iTableView, size_t iSectionIndex,
+	size_t iBaseOld, size_t iBaseNew)
 	{
-	if (ZRef<Row> theRow = this->pGetRow(iIndex))
-		return theRow->ShouldIndentWhileEditing();
-	return Section::ShouldIndentWhileEditing(iIndex);
+	if (fCell == fCell_Pending)
+		return;
+
+	fCell = fCell_Pending;
+	
+	[iTableView
+		reloadRowsAtIndexPaths:sMakeNSIndexPathArray(iSectionIndex, iBaseOld, 1)
+		withRowAnimation:this->RowAnimation_Reload()];
 	}
 
-ZQ<CGFloat> Section_WithRows::RowHeight(size_t iIndex)
+ZRef<UITableViewCell> SectionBody_SingleRow::UITableViewCellForRow(UITableView* iView, size_t iRowIndex)
+	{ return fCell; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * SectionBody_Multi
+
+size_t SectionBody_Multi::NumberOfRows()
 	{
-	if (ZRef<Row> theRow = this->pGetRow(iIndex))
-		return theRow->RowHeight();
-	return Section::RowHeight(iIndex);
+	size_t count = 0;
+	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
+		count += (*i)->NumberOfRows();
+	return count;
 	}
 
-ZRef<Section_WithRows::Row> Section_WithRows::pGetRow(size_t iIndex)
+static size_t spInsertBodies(UITableView* iTableView,
+	size_t iSectionIndex,
+	size_t iRowIndex,
+	const ZRef<SectionBody>* iBodies,
+	size_t iCount)
 	{
-	if (iIndex < fRows.size())
-		return fRows[iIndex];
+	for (size_t x = 0; x < iCount; ++x)
+		{
+		ZRef<SectionBody> theBody = iBodies[x];
+		theBody->ApplyUpdates(nil, 0, 0, 0);
+		const UITableViewRowAnimation theAnimation = theBody->RowAnimation_Insert();
+		for (size_t y = theBody->NumberOfRows(); y; --y)
+			{
+			[iTableView
+				insertRowsAtIndexPaths:sMakeNSIndexPathArray(iSectionIndex, iRowIndex, 1)
+				withRowAnimation:theAnimation];
+			++iRowIndex;
+			}
+		}
+	return iRowIndex;
+	}
+
+void SectionBody_Multi::ApplyUpdates(UITableView* iTableView, size_t iSectionIndex,
+	size_t iBaseOld, size_t iBaseNew)
+	{
+	const vector<ZRef<SectionBody> > bodiesOld = fBodies;
+	fBodies = fBodies_Pending;
+
+	size_t iterOld = 0;
+	const size_t endOld = bodiesOld.size();
+
+	size_t iterNew = 0;
+	const size_t endNew = fBodies.size();
+
+	while (iterOld < endOld)
+		{
+		const ZRef<SectionBody> bodyOld = bodiesOld[iterOld];
+		const size_t inNew = find(fBodies.begin(), fBodies.end(), bodyOld) - fBodies.begin();
+		const size_t countOld = bodyOld->NumberOfRows();
+		if (inNew == endNew)
+			{
+			// It's no longer in fBodies so delete its rows.
+			[iTableView
+				deleteRowsAtIndexPaths:sMakeNSIndexPathArray(iSectionIndex, iBaseOld, countOld)
+				withRowAnimation:this->RowAnimation_Delete()];
+			}
+		else
+			{
+			if (size_t countToInsert = inNew - iterNew)
+				iBaseNew = spInsertBodies(iTableView, iSectionIndex, iBaseNew, &fBodies[iterNew], countToInsert);
+
+			// It's still in fBodies. Give it the opportunity to apply any changes.
+			bodyOld->ApplyUpdates(iTableView, iSectionIndex, iBaseOld, iBaseNew);
+
+			iBaseNew += bodyOld->NumberOfRows();
+			iterNew = inNew + 1;
+			}
+		iBaseOld += countOld;
+		++iterOld;
+		}
+
+	// Insert remainder of pending.
+	if (size_t countToInsert = endNew - iterNew)
+		spInsertBodies(iTableView, iSectionIndex, iBaseNew, &fBodies[iterNew], countToInsert);
+	}
+
+ZRef<UITableViewCell> SectionBody_Multi::UITableViewCellForRow(UITableView* iView, size_t iRowIndex)
+	{
+	if (ZRef<SectionBody> theBody = this->pGetBody(iRowIndex))
+		{
+		if (ZRef<UITableViewCell> result = theBody->UITableViewCellForRow(iView, iRowIndex))
+			return result;
+		}
+	return SectionBody::UITableViewCellForRow(iView, iRowIndex);
+	}
+
+ZQ<UITableViewCellEditingStyle> SectionBody_Multi::QEditingStyle(size_t iRowIndex)
+	{
+	if (ZRef<SectionBody> theBody = this->pGetBody(iRowIndex))
+		{
+		if (ZQ<UITableViewCellEditingStyle> theQ = theBody->QEditingStyle(iRowIndex))
+			return theQ;
+		}
+	return SectionBody::QEditingStyle(iRowIndex);
+	}
+
+ZQ<bool> SectionBody_Multi::QShouldIndentWhileEditing(size_t iRowIndex)
+	{
+	if (ZRef<SectionBody> theBody = this->pGetBody(iRowIndex))
+		{
+		if (ZQ<bool> theQ = theBody->QShouldIndentWhileEditing(iRowIndex))
+			return theQ;
+		}
+	return SectionBody::QShouldIndentWhileEditing(iRowIndex);
+	}
+
+ZQ<CGFloat> SectionBody_Multi::QRowHeight(size_t iRowIndex)
+	{
+	if (ZRef<SectionBody> theBody = this->pGetBody(iRowIndex))
+		{
+		if (ZQ<CGFloat> theQ = theBody->QRowHeight(iRowIndex))
+			return theQ;
+		}
+	return SectionBody::QRowHeight(iRowIndex);
+	}
+
+ZQ<NSInteger> SectionBody_Multi::QIndentationLevel(size_t iRowIndex)
+	{
+	if (ZRef<SectionBody> theBody = this->pGetBody(iRowIndex))
+		{
+		if (ZQ<NSInteger> theQ = theBody->QIndentationLevel(iRowIndex))
+			return theQ;
+		}
+	return SectionBody::QIndentationLevel(iRowIndex);
+	}
+
+bool SectionBody_Multi::AccessoryButtonTapped(size_t iRowIndex)
+	{
+	if (ZRef<SectionBody> theBody = this->pGetBody(iRowIndex))
+		return theBody->AccessoryButtonTapped(iRowIndex);
+	return SectionBody::AccessoryButtonTapped(iRowIndex);
+	}
+
+bool SectionBody_Multi::RowSelected(size_t iRowIndex)
+	{
+	if (ZRef<SectionBody> theBody = this->pGetBody(iRowIndex))
+		return theBody->RowSelected(iRowIndex);
+	return SectionBody::RowSelected(iRowIndex);
+	}
+
+ZRef<SectionBody> SectionBody_Multi::pGetBody(size_t& ioIndex)
+	{
+	size_t theIndex = ioIndex;
+	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
+		{
+		ZRef<SectionBody> theBody = *i;
+		const size_t theCount = theBody->NumberOfRows();
+		if (theIndex < theCount)
+			{
+			ioIndex = theIndex;
+			return theBody;
+			}
+		theIndex -= theCount;
+		}
 	return null;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Section_WithRows::Row
-
-ZRef<UITableViewCell> Section_WithRows::Row::UITableViewCellForRow(UITableView* iView)
-	{ return fTableViewCell; }
-
-ZQ<UITableViewCellEditingStyle> Section_WithRows::Row::EditingStyle()
-	{ return fEditingStyle; }
-
-ZQ<bool> Section_WithRows::Row::ShouldIndentWhileEditing()
-	{ return fShouldIndentWhileEditing; }
-
-ZQ<CGFloat> Section_WithRows::Row::RowHeight()
-	{ return fRowHeight; }
-
-void Section_WithRows::Row::AccessoryButtonTapped()
-	{
-	if (fCallable_AccessoryButtonTapped)
-		fCallable_AccessoryButtonTapped->Call(this);
-	}
-
-void Section_WithRows::Row::RowSelected()
-	{
-	if (fCallable_RowSelected)
-		fCallable_RowSelected->Call(this);
 	}
 
 } // namespace UIKit
@@ -191,16 +368,40 @@ void Section_WithRows::Row::RowSelected()
 
 using namespace ZooLib;
 using ZooLib::UIKit::Section;
+//using ZooLib::UIKit::SectionBody;
+using std::vector;
+
+@interface UITableViewController_WithSections (Private)
+
+- (ZRef<Section>)pGetSection:(size_t)iSectionIndex;
+- (void)pDoUpdate;
+
+@end // interface UITableViewController_WithSections
 
 @implementation UITableViewController_WithSections
 
+- (id)initWithStyle:(UITableViewStyle)style
+	{
+	[super initWithStyle:style];
+
+	fNeedsUpdate = false;
+
+	return self;
+	}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
-	{ return fSections.size(); }
+	{
+	ZLOGTRACE(eDebug);
+	return fSections.size();
+	}
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
-		return theSection->NumberOfRows();
+		{
+		if (ZQ<size_t> theQ = theSection->fBody->NumberOfRows())
+			return theQ.Get();
+		}
 	return 0;
 	}
 
@@ -213,7 +414,7 @@ using ZooLib::UIKit::Section;
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
-		if (ZRef<UITableViewCell> theCell = theSection->UITableViewCellForRow(tableView, indexPath.row))
+		if (ZRef<UITableViewCell> theCell = theSection->fBody->UITableViewCellForRow(tableView, indexPath.row))
 			return [theCell.Orphan() autorelease];
 		}
 	return nullptr;
@@ -223,7 +424,7 @@ using ZooLib::UIKit::Section;
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
-		if (ZQ<CGFloat> theQ = theSection->RowHeight(indexPath.row))
+		if (ZQ<CGFloat> theQ = theSection->fBody->QRowHeight(indexPath.row))
 			return theQ.Get();
 		}
 	return tableView.rowHeight;
@@ -233,7 +434,7 @@ using ZooLib::UIKit::Section;
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
-		if (ZQ<CGFloat> theQ = theSection->HeaderHeight())
+		if (ZQ<CGFloat> theQ = theSection->QHeaderHeight())
 			return theQ.Get();
 		}
 	return tableView.sectionHeaderHeight;
@@ -243,7 +444,7 @@ using ZooLib::UIKit::Section;
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
-		if (ZQ<CGFloat> theQ = theSection->FooterHeight())
+		if (ZQ<CGFloat> theQ = theSection->QFooterHeight())
 			return theQ.Get();
 		}
 	return tableView.sectionFooterHeight;
@@ -253,7 +454,7 @@ using ZooLib::UIKit::Section;
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
-		if (ZQ<string8> theQ = theSection->HeaderTitle())
+		if (ZQ<string8> theQ = theSection->QHeaderTitle())
 			return ZUtil_NSObject::sString(theQ.Get());
 		}
 	return nullptr;
@@ -263,7 +464,7 @@ using ZooLib::UIKit::Section;
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
-		if (ZQ<string8> theQ = theSection->FooterTitle())
+		if (ZQ<string8> theQ = theSection->QFooterTitle())
 			return ZUtil_NSObject::sString(theQ.Get());
 		}
 	return nullptr;
@@ -273,7 +474,7 @@ using ZooLib::UIKit::Section;
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
-		if (ZRef<UIView> theView = theSection->HeaderView())
+		if (ZRef<UIView> theView = theSection->QHeaderView())
 			return [theView.Orphan() autorelease];
 		}
 	return nullptr;
@@ -283,7 +484,7 @@ using ZooLib::UIKit::Section;
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
-		if (ZRef<UIView> theView = theSection->FooterView())
+		if (ZRef<UIView> theView = theSection->QFooterView())
 			return [theView.Orphan() autorelease];
 		}
 	return nullptr;
@@ -292,20 +493,20 @@ using ZooLib::UIKit::Section;
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
-		theSection->AccessoryButtonTapped(indexPath.row);
+		theSection->fBody->AccessoryButtonTapped(indexPath.row);
 	}
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
-		theSection->RowSelected(indexPath.row);
+		theSection->fBody->RowSelected(indexPath.row);
 	}
 
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
-		if (ZQ<bool> theQ = theSection->ShouldIndentWhileEditing(indexPath.row))
+		if (ZQ<bool> theQ = theSection->fBody->QShouldIndentWhileEditing(indexPath.row))
 			return theQ.Get();
 		}
 	return true;
@@ -315,21 +516,110 @@ using ZooLib::UIKit::Section;
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
-		if (ZQ<UITableViewCellEditingStyle> theQ = theSection->EditingStyle(indexPath.row))
+		if (ZQ<UITableViewCellEditingStyle> theQ = theSection->fBody->QEditingStyle(indexPath.row))
 			return theQ.Get();
 		}
 	return UITableViewCellEditingStyleNone;
 	}
 
-- (void) addSection:(ZRef<Section>) iSection
+- (NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath
 	{
-	fSections.push_back(iSection);
+	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
+		{
+		if (ZQ<NSInteger> theQ = theSection->fBody->QIndentationLevel(indexPath.row))
+			return theQ.Get();
+		}
+	return 0;
 	}
 
--(ZRef<Section>)pGetSection:(size_t)iIndex
+- (void)appendSection:(ZRef<Section>) iSection
 	{
-	if (iIndex < fSections.size())
-		return fSections[iIndex];
+	fSections_Pending.push_back(iSection);
+	[self needsUpdate];
+	}
+
+static NSIndexSet* spAsIndexSet(size_t iIndex)
+	{ return [NSIndexSet indexSetWithIndex:iIndex]; }
+
+static void spInsertSections(UITableView* iTableView,
+	size_t iBaseIndex,
+	const ZRef<Section>* iSections,
+	size_t iCount)
+	{
+	for (size_t x = 0; x < iCount; ++x)
+		{
+		ZRef<Section> theSection = iSections[x];
+		theSection->fBody->ApplyUpdates(nil, 0, 0, 0);
+		[iTableView
+			insertSections:spAsIndexSet(iBaseIndex + x)
+			withRowAnimation:theSection->SectionAnimation_Insert()];
+		}
+	}
+
+- (void)pDoUpdate
+	{
+	if (!fNeedsUpdate)
+		return;
+	fNeedsUpdate = false;
+
+	[self.tableView beginUpdates];
+
+	const vector<ZRef<Section> > sectionsOld = fSections;
+	fSections = fSections_Pending;
+
+	size_t iterOld = 0;
+	const size_t endOld = sectionsOld.size();
+
+	size_t iterNew = 0;
+	const size_t endNew = fSections.size();
+
+	while (iterOld < endOld)
+		{
+		const ZRef<Section> sectionOld = sectionsOld[iterOld];
+		const size_t inNew = find(fSections.begin(), fSections.end(), sectionOld) - fSections.begin();
+		if (inNew == endNew)
+			{
+			// It's no longer in fSections, and must be deleted.
+			[self.tableView
+				deleteSections:spAsIndexSet(iterOld)
+				withRowAnimation:sectionOld->SectionAnimation_Delete()];
+			++iterOld;
+			}
+		else
+			{
+			// It's (still) in fSections. Give it the opportunity to apply any changes.
+			sectionOld->fBody->ApplyUpdates(self.tableView, iterNew, 0, 0);
+			
+			if (size_t countToInsert = inNew - iterNew)
+				{
+				// There are sections to insert prior to sectionOld.
+				spInsertSections(self.tableView, iterNew, &fSections[iterNew], countToInsert);
+				}
+
+			++iterOld;
+			iterNew = inNew + 1;
+			}
+		}
+			
+	// Insert remainder of pending.
+	if (size_t countToInsert = endNew - iterNew)
+		spInsertSections(self.tableView, iterNew, &fSections[iterNew], countToInsert);
+
+	[self.tableView endUpdates];
+	}
+
+- (void)needsUpdate
+	{
+	if (fNeedsUpdate)
+		return;
+	fNeedsUpdate = true;
+	[self performSelectorOnMainThread:@selector(pDoUpdate) withObject:nil waitUntilDone:NO];
+	}
+
+-(ZRef<Section>)pGetSection:(size_t)iSectionIndex
+	{
+	if (iSectionIndex < fSections.size())
+		return fSections[iSectionIndex];
 	return null;
 	}
 

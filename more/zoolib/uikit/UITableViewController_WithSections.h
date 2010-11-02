@@ -36,6 +36,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace UIKit {
 
+NSArray* sMakeNSIndexPathArray(size_t iSectionIndex, size_t iBaseRowIndex, size_t iCount);
+
+class SectionBody;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Section
@@ -43,31 +47,23 @@ namespace UIKit {
 class Section : public ZCounted
 	{
 public:
-	Section();
+	Section(ZRef<SectionBody> iBody);
 
-	void SetHeaderFooterShownWhenEmpty(bool iShow);
+	virtual ZQ<CGFloat> QHeaderHeight();
+	virtual ZQ<CGFloat> QFooterHeight();
 
-	virtual ZQ<CGFloat> HeaderHeight();
-	virtual ZQ<CGFloat> FooterHeight();
+	virtual ZQ<string8> QHeaderTitle();
+	virtual ZQ<string8> QFooterTitle();
 
-	virtual ZQ<string8> HeaderTitle();
-	virtual ZQ<string8> FooterTitle();
+	virtual ZRef<UIView> QHeaderView();
+	virtual ZRef<UIView> QFooterView();
 
-	virtual ZRef<UIView> HeaderView();
-	virtual ZRef<UIView> FooterView();
+	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Insert();
+	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Delete();
+	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Reload();
 
-	virtual size_t NumberOfRows();
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iIndex);
-	virtual ZQ<UITableViewCellEditingStyle> EditingStyle(size_t iIndex);
-	virtual ZQ<bool> ShouldIndentWhileEditing(size_t iIndex);
-	virtual ZQ<CGFloat> RowHeight(size_t iIndex);
-
-	virtual void AccessoryButtonTapped(size_t iIndex);
-	virtual void RowSelected(size_t iIndex);
-
-// -----
-	bool fHeaderFooterShownWhenEmpty;
-
+//##	bool fHeaderShownWhenEmpty;
+//##	bool fFooterShownWhenEmpty;
 
 	ZQ<CGFloat> fHeaderHeight;
 	ZQ<CGFloat> fFooterHeight;
@@ -78,57 +74,110 @@ public:
 	ZRef<UIView> fHeaderView;
 	ZRef<UIView> fFooterView;
 
-	ZRef<UITableViewCell> fTableViewCell;
-	ZQ<UITableViewCellEditingStyle> fEditingStyle;
-	ZQ<bool> fShouldIndentWhileEditing;
-	ZQ<CGFloat> fRowHeight;
-	ZRef<ZCallable<void(ZRef<Section>,size_t)> > fCallable_AccessoryButtonTapped;
-	ZRef<ZCallable<void(ZRef<Section>,size_t)> > fCallable_RowSelected;
+	ZQ<UITableViewRowAnimation> fSectionAnimation_Insert;
+	ZQ<UITableViewRowAnimation> fSectionAnimation_Delete;
+	ZQ<UITableViewRowAnimation> fSectionAnimation_Reload;
+
+	ZRef<SectionBody> fBody;
+
+// -----
+
+	UITableViewRowAnimation SectionAnimation_Insert();
+	UITableViewRowAnimation SectionAnimation_Delete();
+	UITableViewRowAnimation SectionAnimation_Reload();
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Section_WithRows
+#pragma mark * SectionBody
 
-class Section_WithRows : public Section
+class SectionBody : public ZCounted
 	{
 public:
-	class Row;
-	void AddRow(ZRef<Row> iRow);
+	virtual size_t NumberOfRows() = 0;
+	virtual void ApplyUpdates(UITableView* iTableView, size_t iSectionIndex,
+		size_t iBaseOld, size_t iBaseNew) = 0;
+
+// -----
+
+	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex);
+	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
+	virtual ZQ<bool> QShouldIndentWhileEditing(size_t iRowIndex);
+	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex);
+	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex);
+
+	virtual ZQ<UITableViewRowAnimation> QRowAnimation_Insert();
+	virtual ZQ<UITableViewRowAnimation> QRowAnimation_Delete();
+	virtual ZQ<UITableViewRowAnimation> QRowAnimation_Reload();
+
+	ZQ<UITableViewRowAnimation> fRowAnimation_Insert;
+	ZQ<UITableViewRowAnimation> fRowAnimation_Delete;
+	ZQ<UITableViewRowAnimation> fRowAnimation_Reload;
+
+	virtual bool AccessoryButtonTapped(size_t iRowIndex);
+	virtual bool RowSelected(size_t iRowIndex);
+
+	ZQ<UITableViewCellEditingStyle> fEditingStyle;
+	ZQ<bool> fShouldIndentWhileEditing;
+	ZQ<CGFloat> fRowHeight;
+	ZQ<NSInteger> fIndentationLevel;
+
+	ZRef<ZCallable<ZRef<UITableViewCell>(UITableView*,size_t)> > fCallable_MakeTableViewCell;
+	ZRef<ZCallable<bool(ZRef<SectionBody>,size_t)> > fCallable_AccessoryButtonTapped;
+	ZRef<ZCallable<bool(ZRef<SectionBody>,size_t)> > fCallable_RowSelected;
+
+// -----
+
+	UITableViewRowAnimation RowAnimation_Insert();
+	UITableViewRowAnimation RowAnimation_Delete();
+	UITableViewRowAnimation RowAnimation_Reload();
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * SectionBody_SingleRow
+
+class SectionBody_SingleRow : public SectionBody
+	{
+public:
+	SectionBody_SingleRow(ZRef<UITableViewCell> iCell);
 
 	virtual size_t NumberOfRows();
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iIndex);
-	virtual ZQ<UITableViewCellEditingStyle> EditingStyle(size_t iIndex);
-	virtual ZQ<bool> ShouldIndentWhileEditing(size_t iIndex);
-	virtual ZQ<CGFloat> RowHeight(size_t iIndex);
-	virtual void AccessoryButtonTapped(size_t iIndex);
-	virtual void RowSelected(size_t iIndex);
+	virtual void ApplyUpdates(UITableView* iTableView, size_t iSectionIndex,
+		size_t iBaseOld, size_t iBaseNew);
 
-	std::vector<ZRef<Row> > fRows;
+	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex);
 
-	ZRef<Row> pGetRow(size_t iIndex);
+	ZRef<UITableViewCell> fCell;
+	ZRef<UITableViewCell> fCell_Pending;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Section_WithRows::Row
+#pragma mark * SectionBody_Multi
 
-class Section_WithRows::Row : public ZCounted
+class SectionBody_Multi : public SectionBody
 	{
 public:
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView);
-	virtual ZQ<UITableViewCellEditingStyle> EditingStyle();
-	virtual ZQ<bool> ShouldIndentWhileEditing();
-	virtual ZQ<CGFloat> RowHeight();
-	virtual void AccessoryButtonTapped();
-	virtual void RowSelected();
+	virtual size_t NumberOfRows();
+	virtual void ApplyUpdates(UITableView* iTableView, size_t iSectionIndex,
+		size_t iBaseOld, size_t iBaseNew);
 
-	ZRef<UITableViewCell> fTableViewCell;
-	ZQ<UITableViewCellEditingStyle> fEditingStyle;
-	ZQ<bool> fShouldIndentWhileEditing;
-	ZQ<CGFloat> fRowHeight;
-	ZRef<ZCallable<void(ZRef<Row>)> > fCallable_AccessoryButtonTapped;
-	ZRef<ZCallable<void(ZRef<Row>)> > fCallable_RowSelected;
+// -----
+
+	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex);
+	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
+	virtual ZQ<bool> QShouldIndentWhileEditing(size_t iRowIndex);
+	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex);
+	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex);
+
+	virtual bool AccessoryButtonTapped(size_t iRowIndex);
+	virtual bool RowSelected(size_t iRowIndex);
+
+	std::vector<ZRef<SectionBody> > fBodies;
+	std::vector<ZRef<SectionBody> > fBodies_Pending;
+
+	ZRef<SectionBody> pGetBody(size_t& ioIndex);
 	};
 
 } // namespace UIKit
@@ -141,6 +190,8 @@ public:
 @interface UITableViewController_WithSections : UITableViewController
 	{
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections;
+	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Pending;
+	bool fNeedsUpdate;
 	}
 
 // From UITableViewDataSource
@@ -166,9 +217,8 @@ public:
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 // Our protocol
-- (void) addSection:(ZooLib::ZRef<ZooLib::UIKit::Section>) iSection;
-
--(ZooLib::ZRef<ZooLib::UIKit::Section>)pGetSection:(size_t)iIndex;
+- (void)appendSection:(ZooLib::ZRef<ZooLib::UIKit::Section>) iSection;
+- (void)needsUpdate;
 
 @end // interface UITableViewController_WithSections
 
