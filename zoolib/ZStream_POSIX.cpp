@@ -236,7 +236,7 @@ static ssize_t spWriteStreamW(void* iCookie, const char* iSource, size_t iCount)
 	{
 	size_t countWritten;
 	static_cast<ZStreamW*>(iCookie)->Write(iSource, iCount, &countWritten);
-	return countWritten;;
+	return countWritten;
 	}
 
 static int64 spSeekStreamRPos(const ZStreamRPos& iStreamRPos, int64 iPos, int iWhence)
@@ -294,7 +294,7 @@ static ssize_t spWriteStreamerW(void* iCookie, const char* iSource, size_t iCoun
 	{
 	size_t countWritten;
 	static_cast<ZRef<ZStreamerW>*>(iCookie)[0]->GetStreamW().Write(iSource, iCount, &countWritten);
-	return countWritten;;
+	return countWritten;
 	}
 
 static int spCloseStreamerR(void* iCookie)
@@ -419,7 +419,7 @@ static int spWriteStreamW(void* iCookie, const char* iSource, int iCount)
 	{
 	size_t countWritten;
 	static_cast<ZStreamW*>(iCookie)->Write(iSource, iCount, &countWritten);
-	return countWritten;;
+	return countWritten;
 	}
 
 static int spReadStreamerR(void* iCookie, char* oDest, int iCount)
@@ -446,7 +446,7 @@ static int spWriteStreamerW(void* iCookie, const char* iSource, int iCount)
 	{
 	size_t countWritten;
 	static_cast<ZRef<ZStreamerW>*>(iCookie)[0]->GetStreamW().Write(iSource, iCount, &countWritten);
-	return countWritten;;
+	return countWritten;
 	}
 
 static int spCloseStreamerR(void* iCookie)
