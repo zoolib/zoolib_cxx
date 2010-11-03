@@ -100,6 +100,24 @@ public:
 /// \endcond DoxygenIgnore
 	};
 
+inline bool operator==(const ZVal_Any& l, const ZVal_Any& r)
+	{ return l.Compare(r) == 0; }
+
+inline bool operator!=(const ZVal_Any& l, const ZVal_Any& r)
+	{ return l.Compare(r) != 0; }
+
+inline bool operator<(const ZVal_Any& l, const ZVal_Any& r)
+	{ return l.Compare(r) < 0; }
+
+inline bool operator<=(const ZVal_Any& l, const ZVal_Any& r)
+	{ return l.Compare(r) <= 0; }
+
+inline bool operator>(const ZVal_Any& l, const ZVal_Any& r)
+	{ return l.Compare(r) > 0; }
+
+inline bool operator>=(const ZVal_Any& l, const ZVal_Any& r)
+	{ return l.Compare(r) >= 0; }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZSeq_Any
