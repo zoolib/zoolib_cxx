@@ -96,11 +96,6 @@ void Dataspace::SetCallable_SourceUpdateNeeded(ZRef<Callable_UpdateNeeded> iCall
 
 void Dataspace::Register(ZRef<Sieve> iSieve, const SearchSpec& iSearchSpec)
 	{
-	// Perhaps we should just put the Sieve on a to_be_registered list,
-	// and do the actual hookup in Update. Otherwise there's a bit of a race
-	// where we add a Sieve to a PSieve that's going to be Sync-ed for other
-	// reasons, and some Sieve's may benefit, whereas others won't. That will
-	// mean a newly registered Sieve has no results till the next Update.
 	ZGuardRMtxR guardR_CallLocalUpdate(fMtx_CallLocalUpdate);
 	ZGuardRMtxR guardR_Structure(fMtx_Structure);
 
@@ -120,8 +115,6 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const SearchSpec& iSearchSpec)
 		thePSieve->fRefcon = 0;
 
 		fPSieves_LocalUpdate.Insert(thePSieve);
-
-		this->pTriggerLocalUpdate();
 		}
 
 	Sieve* theSieve = iSieve.Get();
@@ -129,6 +122,8 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const SearchSpec& iSearchSpec)
 	thePSieve->fSieves_Using.Insert(theSieve);
 
 	fSieves_JustRegistered.Insert(theSieve);
+
+	this->pTriggerLocalUpdate();
 	}
 
 void Dataspace::LocalUpdate()
@@ -137,11 +132,6 @@ void Dataspace::LocalUpdate()
 	ZGuardRMtxR guardR_Structure(fMtx_Structure);
 
 	fCalled_LocalUpdateNeeded = false;
-
-	if (!fPSieves_LocalUpdate && !fPSieves_Changed)
-		{
-		return;
-		}
 
 	for (DListIteratorEraseAll<PSieve, DLink_PSieve_LocalUpdate> iter = fPSieves_LocalUpdate;
 		iter; iter.Advance())
@@ -164,14 +154,13 @@ void Dataspace::LocalUpdate()
 			}
 		else
 			{
-			// It's not in use, is not known to the source, so we can toss it.
+			// It's not in use and is not known to the source, so we can toss it.
 			fPSieves_SourceUpdate.EraseIfContains(thePSieve);
 			fPSieves_Changed.EraseIfContains(thePSieve);
 			ZUtil_STL::sEraseMustContain(kDebug, fSearchSpec_To_PSieve, thePSieve->fSearchSpec);
 			}
 		}
 
-	set<ZRef<Sieve> > sievesLoaded;
 	set<ZRef<Sieve> > sievesChanged;
 	for (DListIteratorEraseAll<PSieve, DLink_PSieve_Changed> iter = fPSieves_Changed;
 		iter; iter.Advance())
@@ -184,22 +173,30 @@ void Dataspace::LocalUpdate()
 			iter; iter.Advance())
 			{
 			Sieve* theSieve = iter.Current();
-			if (fSieves_JustRegistered.Contains(theSieve))
-				{
-				fSieves_JustRegistered.Erase(theSieve);
-				sievesLoaded.insert(theSieve);
-				}
-			else
-				{
+			if (!fSieves_JustRegistered.Contains(theSieve))
 				sievesChanged.insert(theSieve);
-				}
+			}
+		}
+
+	set<ZRef<Sieve> > sievesLoaded;
+	for (DListIterator<Sieve, DLink_Sieve_JustRegistered> iter = fSieves_JustRegistered;
+		iter;)
+		{
+		Sieve* theSieve = iter.Current();
+		if (theSieve->fPSieve->fSearchRows_Local)
+			{
+			sievesLoaded.insert(theSieve);
+			iter.Advance();
+			fSieves_JustRegistered.Erase(theSieve);
+			}
+		else
+			{
+			iter.Advance();
 			}
 		}
 
 	if (!fPSieves_SourceUpdate.Empty())
-		{
 		this->pTriggerSourceUpdate();
-		}
 
 	guardR_Structure.Release();
 
@@ -214,7 +211,7 @@ void Dataspace::SourceUpdate()
 	fCalled_SourceUpdateNeeded = false;
 
 	vector<AddedSearch> addedSearches;
-	vector<int64> removedQueries;
+	vector<int64> removedSearches;
 
 	for (DListIteratorEraseAll<PSieve, DLink_PSieve_SourceUpdate> iter = fPSieves_SourceUpdate;
 		iter; iter.Advance())
@@ -235,8 +232,8 @@ void Dataspace::SourceUpdate()
 			}
 		else if (thePSieve->fRefcon)
 			{
-			// It's not in use, and is known to the source.
-			removedQueries.push_back(thePSieve->fRefcon);
+			// It's not in use and is known to the source.
+			removedSearches.push_back(thePSieve->fRefcon);
 			ZUtil_STL::sEraseMustContain(kDebug, fRefcon_To_PSieveStar, thePSieve->fRefcon);
 			thePSieve->fRefcon = 0;
 			thePSieve->fSearchRows_Source.Clear();
@@ -264,7 +261,7 @@ void Dataspace::SourceUpdate()
 	fSource->Update(
 		false,
 		ZUtil_STL::sFirstOrNil(addedSearches), addedSearches.size(),
-		ZUtil_STL::sFirstOrNil(removedQueries), removedQueries.size(),
+		ZUtil_STL::sFirstOrNil(removedSearches), removedSearches.size(),
 		theChanged,
 		theEvent);
 
@@ -276,16 +273,14 @@ void Dataspace::SourceUpdate()
 		{
 		PSieve* thePSieve = fRefcon_To_PSieveStar[i->fRefcon];
 		ZAssert(thePSieve);
-		thePSieve->fSearchRows_Source = i->fSearchRows;;
+		thePSieve->fSearchRows_Source = i->fSearchRows;
 		fPSieves_Changed.InsertIfNotContains(thePSieve);
 		}
 
 	guardR_CallSourceUpdate.Release();
 
 	if (fPSieves_LocalUpdate || fPSieves_Changed)
-		{
 		this->pTriggerLocalUpdate();
-		}
 	}
 
 void Dataspace::Updated(
