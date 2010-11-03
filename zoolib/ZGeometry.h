@@ -410,6 +410,9 @@ public:
 	bool operator!=(const ZGRectPOD_T& other) const
 		{ return origin != other.origin || extent != other.extent; }
 
+	ZGPointPOD_T<T> Origin() const;
+	ZGExtentPOD_T<T> Extent() const;
+
 	T Width() const;
 	T Height() const;
 
@@ -481,6 +484,13 @@ ZGRectPOD_T<T>& ZGRectPOD_T<T>::operator=(const ZGExtentPOD_T<U>& iExtent)
 	extent = iExtent;
 	return *this;
 	}
+template <class T>
+ZGPointPOD_T<T> ZGRectPOD_T<T>::Origin() const
+	{ return origin; }
+
+template <class T>
+ZGExtentPOD_T<T> ZGRectPOD_T<T>::Extent() const
+	{ return extent; }
 
 template <class T>
 T ZGRectPOD_T<T>::Width() const
