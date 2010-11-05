@@ -37,6 +37,7 @@ namespace ZooLib {
 namespace UIKit {
 
 NSArray* sMakeNSIndexPathArray(size_t iSectionIndex, size_t iBaseRowIndex, size_t iCount);
+NSIndexSet* sMakeIndexSet(size_t iIndex);
 
 class SectionBody;
 
@@ -192,6 +193,7 @@ public:
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections;
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Pending;
 	bool fNeedsUpdate;
+	ZooLib::ZRef<ZooLib::ZCallable<void()> > fCallable_NeedsUpdate;
 	}
 
 // From UITableViewDataSource

@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(iPhone)
 
+#include "zoolib/ZCallable_ObjC.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZRef_NSObject.h"
 #include "zoolib/ZUtil_NSObject.h"
@@ -46,6 +47,9 @@ NSArray* sMakeNSIndexPathArray(size_t iSectionIndex, size_t iBaseRowIndex, size_
 		}
 	return theArray;
 	}
+
+NSIndexSet* sMakeIndexSet(size_t iIndex)
+	{ return [NSIndexSet indexSetWithIndex:iIndex]; }
 
 // =================================================================================================
 #pragma mark -
@@ -86,14 +90,14 @@ UITableViewRowAnimation Section::SectionAnimation_Insert()
 	{
 	if (ZQ<UITableViewRowAnimation> theQ = this->QSectionAnimation_Insert())
 		return theQ.Get();
-	return UITableViewRowAnimationRight;
+	return UITableViewRowAnimationTop;
 	}
 
 UITableViewRowAnimation Section::SectionAnimation_Delete()
 	{
 	if (ZQ<UITableViewRowAnimation> theQ = this->QSectionAnimation_Delete())
 		return theQ.Get();
-	return UITableViewRowAnimationLeft;
+	return UITableViewRowAnimationBottom;
 	}
 
 UITableViewRowAnimation Section::SectionAnimation_Reload()
@@ -154,7 +158,6 @@ UITableViewRowAnimation SectionBody::RowAnimation_Insert()
 	{
 	if (ZQ<UITableViewRowAnimation> theQ = this->QRowAnimation_Insert())
 		return theQ.Get();
-	return UITableViewRowAnimationTop;
 	return UITableViewRowAnimationRight;
 	}
 
@@ -162,7 +165,6 @@ UITableViewRowAnimation SectionBody::RowAnimation_Delete()
 	{
 	if (ZQ<UITableViewRowAnimation> theQ = this->QRowAnimation_Delete())
 		return theQ.Get();
-	return UITableViewRowAnimationBottom;
 	return UITableViewRowAnimationLeft;
 	}
 
@@ -367,7 +369,7 @@ ZRef<SectionBody> SectionBody_Multi::pGetBody(size_t& ioIndex)
 #pragma mark * UITableViewController_WithSections
 
 using namespace ZooLib;
-using ZooLib::UIKit::Section;
+using namespace ZooLib::UIKit;
 //using ZooLib::UIKit::SectionBody;
 using std::vector;
 
@@ -380,18 +382,16 @@ using std::vector;
 
 @implementation UITableViewController_WithSections
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 	{
-	[super initWithStyle:style];
-
+	[super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+	fCallable_NeedsUpdate = MakeCallable<void()>(self, @selector(needsUpdate));
 	fNeedsUpdate = false;
-
 	return self;
 	}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
 	{
-	ZLOGTRACE(eDebug);
 	return fSections.size();
 	}
 
@@ -538,9 +538,6 @@ using std::vector;
 	[self needsUpdate];
 	}
 
-static NSIndexSet* spAsIndexSet(size_t iIndex)
-	{ return [NSIndexSet indexSetWithIndex:iIndex]; }
-
 static void spInsertSections(UITableView* iTableView,
 	size_t iBaseIndex,
 	const ZRef<Section>* iSections,
@@ -551,7 +548,7 @@ static void spInsertSections(UITableView* iTableView,
 		ZRef<Section> theSection = iSections[x];
 		theSection->fBody->ApplyUpdates(nil, 0, 0, 0);
 		[iTableView
-			insertSections:spAsIndexSet(iBaseIndex + x)
+			insertSections:sMakeIndexSet(iBaseIndex + x)
 			withRowAnimation:theSection->SectionAnimation_Insert()];
 		}
 	}
@@ -581,7 +578,7 @@ static void spInsertSections(UITableView* iTableView,
 			{
 			// It's no longer in fSections, and must be deleted.
 			[self.tableView
-				deleteSections:spAsIndexSet(iterOld)
+				deleteSections:sMakeIndexSet(iterOld)
 				withRowAnimation:sectionOld->SectionAnimation_Delete()];
 			++iterOld;
 			}
