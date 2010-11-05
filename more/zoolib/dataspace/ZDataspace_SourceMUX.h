@@ -31,11 +31,13 @@ namespace ZDataspace {
 #pragma mark -
 #pragma mark * SourceMUX
 
-class SourceMUX
+class SourceMUX : public SourceFactory
 	{
 public:
 	SourceMUX(Source* iSource);
 	virtual ~SourceMUX();
+
+	virtual Source* Make();
 
 private:
 	Source* fSource;

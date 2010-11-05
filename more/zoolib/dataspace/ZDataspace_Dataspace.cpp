@@ -353,6 +353,8 @@ void Dataspace::pFinalize(Sieve* iSieve)
 	if (!iSieve->FinishFinalize())
 		return;
 
+	fSieves_JustRegistered.EraseIfContains(iSieve);
+
 	PSieve* thePSieve = iSieve->fPSieve;
 	iSieve->fPSieve = nullptr;
 

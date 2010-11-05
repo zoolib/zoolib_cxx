@@ -35,11 +35,11 @@ Walker_Select::Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Logic> iExpr_Logic
 Walker_Select::~Walker_Select()
 	{}
 
-size_t Walker_Select::Count()
-	{ return fWalker->Count(); }
+size_t Walker_Select::NameCount()
+	{ return fWalker->NameCount(); }
 
-string8 Walker_Select::NameOf(size_t iIndex)
-	{ return fWalker->NameOf(iIndex); }
+string8 Walker_Select::NameAt(size_t iIndex)
+	{ return fWalker->NameAt(iIndex); }
 
 ZRef<Walker> Walker_Select::Clone()
 	{ return new Walker_Select(fWalker->Clone(), fExpr_Logic); }

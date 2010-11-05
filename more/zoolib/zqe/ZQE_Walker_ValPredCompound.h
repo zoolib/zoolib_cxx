@@ -38,9 +38,9 @@ public:
 	Walker_ValPredCompound(ZRef<Walker> iWalker, const ZValPredCompound& iValPredCompound);
 	virtual ~Walker_ValPredCompound();
 
-// Our protocol
-	virtual size_t Count();
-	virtual string8 NameOf(size_t iIndex);
+// From ZQE::Walker
+	virtual size_t NameCount();
+	virtual string8 NameAt(size_t iIndex);
 
 	virtual ZRef<Walker> Clone();
 	virtual ZRef<Row> ReadInc();

@@ -36,11 +36,11 @@ Walker_ValPredCompound::Walker_ValPredCompound(
 Walker_ValPredCompound::~Walker_ValPredCompound()
 	{}
 
-size_t Walker_ValPredCompound::Count()
-	{ return fWalker->Count(); }
+size_t Walker_ValPredCompound::NameCount()
+	{ return fWalker->NameCount(); }
 
-string8 Walker_ValPredCompound::NameOf(size_t iIndex)
-	{ return fWalker->NameOf(iIndex); }
+string8 Walker_ValPredCompound::NameAt(size_t iIndex)
+	{ return fWalker->NameAt(iIndex); }
 
 ZRef<Walker> Walker_ValPredCompound::Clone()
 	{ return new Walker_ValPredCompound(fWalker->Clone(), fValPredCompound); }
@@ -53,8 +53,8 @@ ZRef<Row> Walker_ValPredCompound::ReadInc()
 		if (ZRef<Row> theRow = fWalker->ReadInc())
 			{
 			ZMap_Any theMap;
-			for (size_t x = 0, count = fWalker->Count(); x < count; ++x)
-				theMap.Set(fWalker->NameOf(x), theRow->Get(x));
+			for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
+				theMap.Set(fWalker->NameAt(x), theRow->Get(x));
 
 			if (fValPredCompound.Matches(context, theMap))
 				return theRow;

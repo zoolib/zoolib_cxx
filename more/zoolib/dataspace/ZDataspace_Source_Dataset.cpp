@@ -87,7 +87,7 @@ ZVal_Any spAsVal(const Daton& iDaton)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator (anonymous)
+#pragma mark * Walker (anonymous)
 
 namespace { // anonymous
 
@@ -103,8 +103,8 @@ public:
 	virtual ~Walker();
 
 // From ZQE::Walker
-	virtual size_t Count();
-	virtual string8 NameOf(size_t iIndex);
+	virtual size_t NameCount();
+	virtual string8 NameAt(size_t iIndex);
 
 	virtual ZRef<ZQE::Walker> Clone();
 	virtual ZRef<ZQE::Row> ReadInc();
@@ -131,10 +131,10 @@ Walker::Walker(const vector<pair<string8, string8> >& iNames,
 Walker::~Walker()
 	{}
 
-size_t Walker::Count()
+size_t Walker::NameCount()
 	{ return fNames.size(); }
 
-string8 Walker::NameOf(size_t iIndex)
+string8 Walker::NameAt(size_t iIndex)
 	{
 	if (iIndex < fNames.size())
 		return fNames[iIndex].first;
@@ -258,8 +258,8 @@ void Source_Dataset::Update(
 			new ZQE::Walker_ValPredCompound(theWalker, i->second->fSearchSpec.fPredCompound);
 
 		vector<string8> theRowHead;
-		for (size_t x = 0; x < theWalker->Count(); ++x)
-			theRowHead.push_back(theWalker->NameOf(x));
+		for (size_t x = 0; x < theWalker->NameCount(); ++x)
+			theRowHead.push_back(theWalker->NameAt(x));
 
 		vector<ZRef<ZQE::Row> > theRows;
 
@@ -291,8 +291,6 @@ ZRef<ZQE::Walker> Source_Dataset::pMakeWalker(const RelHead& iRelHead)
 
 void Source_Dataset::pPull()
 	{
-//	using ZIntervalTreeClock::Clock;
-
 	ZRef<Deltas> theDeltas;
 	fEvent = fDataset->GetDeltas(theDeltas, fEvent);
 

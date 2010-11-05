@@ -40,9 +40,9 @@ public:
 	Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_Right_Model);
 	virtual ~Walker_Product();
 
-// Our protocol
-	virtual size_t Count();
-	virtual string8 NameOf(size_t iIndex);
+// From ZQE::Walker
+	virtual size_t NameCount();
+	virtual string8 NameAt(size_t iIndex);
 
 	virtual ZRef<Walker> Clone();
 	virtual ZRef<Row> ReadInc();

@@ -154,7 +154,7 @@ private:
 class Sieve_Callable : public Sieve
 	{
 public:
-	typedef ZCallable<void(const ZRef<Sieve>&, bool)> Callable;
+	typedef ZCallable<void(ZRef<Sieve>, bool)> Callable;
 	Sieve_Callable(ZRef<Callable> iCallable);
 
 // From Sieve

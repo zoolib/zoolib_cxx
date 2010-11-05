@@ -84,10 +84,9 @@ Source_SQLite::PQuery::PQuery(int64 iRefcon, const string8& iSQL)
 
 Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 :	fDB(iDB)
+,	fChangeCount(0)
 ,	fClock(Clock::sSeed())
 	{
-	fChangeCount = ::sqlite3_total_changes(fDB->GetDB());
-
 	for (ZRef<Iter> iterTables = new Iter(fDB, "select name from sqlite_master;");
 		iterTables->HasValue(); iterTables->Advance())
 		{
@@ -99,6 +98,7 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 			{
 			theRelHead.Insert(theTableName + "_" + iterTable->Get(1).Get_T<string8>());
 			}
+		theRelHead.Insert(theTableName + "_oid");
 
 		if (!theRelHead.empty())
 			ZUtil_STL::sInsertMustNotContain(kDebug, fMap_NameToRelHead, theTableName, theRelHead);

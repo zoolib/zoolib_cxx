@@ -38,9 +38,9 @@ public:
 	Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Logic> iExpr_Logic);
 	virtual ~Walker_Select();
 
-// Our protocol
-	virtual size_t Count();
-	virtual string8 NameOf(size_t iIndex);
+// From ZQE::Walker
+	virtual size_t NameCount();
+	virtual string8 NameAt(size_t iIndex);
 
 	virtual ZRef<Walker> Clone();
 	virtual ZRef<Row> ReadInc();

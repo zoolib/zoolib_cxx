@@ -58,7 +58,7 @@ private:
 	string8 pAsSQL(const SearchSpec& iSearchSpec);
 
 	ZRef<ZSQLite::DB> fDB;
-	int fChangeCount;
+	int64 fChangeCount;
 	ZRef<Clock> fClock;
 
 	class PQuery;

@@ -44,8 +44,8 @@ public:
 	virtual ~Walker();
 
 // Our protocol
-	virtual size_t Count() = 0;
-	virtual string8 NameOf(size_t iIndex) = 0;
+	virtual size_t NameCount() = 0;
+	virtual string8 NameAt(size_t iIndex) = 0;
 
 	virtual ZRef<Walker> Clone() = 0;
 	virtual ZRef<Row> ReadInc() = 0;

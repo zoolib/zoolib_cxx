@@ -43,16 +43,16 @@ Walker_Product::Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_R
 Walker_Product::~Walker_Product()
 	{}
 
-size_t Walker_Product::Count()
-	{ return fWalker_Left->Count() + fWalker_Right_Model->Count(); }
+size_t Walker_Product::NameCount()
+	{ return fWalker_Left->NameCount() + fWalker_Right_Model->NameCount(); }
 
-string8 Walker_Product::NameOf(size_t iIndex)
+string8 Walker_Product::NameAt(size_t iIndex)
 	{
-	const size_t leftCount = fWalker_Left->Count();
+	const size_t leftCount = fWalker_Left->NameCount();
 	if (iIndex >= leftCount)
-		return fWalker_Right_Model->NameOf(iIndex - leftCount);
+		return fWalker_Right_Model->NameAt(iIndex - leftCount);
 	else
-		return fWalker_Left->NameOf(iIndex);
+		return fWalker_Left->NameAt(iIndex);
 	}
 
 ZRef<Walker> Walker_Product::Clone()

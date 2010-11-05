@@ -67,8 +67,8 @@ public:
 	virtual ~Walker_RowVectors();
 
 // Our protocol
-	virtual size_t Count();
-	virtual string8 NameOf(size_t iIndex);
+	virtual size_t NameCount();
+	virtual string8 NameAt(size_t iIndex);
 
 	virtual ZRef<Walker> Clone();
 	virtual ZRef<Row> ReadInc();
@@ -91,10 +91,10 @@ Walker_RowVectors::Walker_RowVectors(const vector<string8>& iRowHead,
 Walker_RowVectors::~Walker_RowVectors()
 	{}
 
-size_t Walker_RowVectors::Count()
+size_t Walker_RowVectors::NameCount()
 	{ return fRowHead.size(); }
 
-string8 Walker_RowVectors::NameOf(size_t iIndex)
+string8 Walker_RowVectors::NameAt(size_t iIndex)
 	{
 	if (iIndex < fRowHead.size())
 		return fRowHead[iIndex];
@@ -131,9 +131,9 @@ public:
 
 	virtual ~Walker_SearchRows();
 
-// Our protocol
-	virtual size_t Count();
-	virtual string8 NameOf(size_t iIndex);
+// From ZQE::Walker
+	virtual size_t NameCount();
+	virtual string8 NameAt(size_t iIndex);
 
 	virtual ZRef<Walker> Clone();
 	virtual ZRef<Row> ReadInc();
@@ -151,10 +151,10 @@ Walker_SearchRows::Walker_SearchRows(ZRef<SearchRows> iSearchRows, size_t iIndex
 Walker_SearchRows::~Walker_SearchRows()
 	{}
 
-size_t Walker_SearchRows::Count()
+size_t Walker_SearchRows::NameCount()
 	{ return fSearchRows->GetRowHead().size(); }
 
-string8 Walker_SearchRows::NameOf(size_t iIndex)
+string8 Walker_SearchRows::NameAt(size_t iIndex)
 	{
 	if (iIndex < fSearchRows->GetRowHead().size())
 		return fSearchRows->GetRowHead()[iIndex];
@@ -271,9 +271,9 @@ Source_Union::PQuery::PQuery(int64 iRefcon, const SearchSpec& iSearchSpec)
 static void spGetRowHead(ZRef<Walker> iWalker, vector<string8>& oRowHead)
 	{
 	oRowHead.clear();
-	oRowHead.reserve(iWalker->Count());
-	for (size_t x = 0; x < iWalker->Count(); ++x)
-		oRowHead.push_back(iWalker->NameOf(x));
+	oRowHead.reserve(iWalker->NameCount());
+	for (size_t x = 0; x < iWalker->NameCount(); ++x)
+		oRowHead.push_back(iWalker->NameAt(x));
 	}
 
 static bool spMatches(const ZValPredCompound& iVPC, const vector<string8>& iRowHead, ZRef<Row> iRow)
