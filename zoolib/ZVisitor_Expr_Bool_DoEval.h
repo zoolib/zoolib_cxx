@@ -18,46 +18,36 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T__
-#define __ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T__
+#ifndef __ZVisitor_Expr_Bool_DoEval__
+#define __ZVisitor_Expr_Bool_DoEval__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Logic_ValPred_T.h"
-#include "zoolib/ZVisitor_Expr_Logic_DoEval.h"
+#include "zoolib/ZExpr_Bool.h"
+#include "zoolib/ZVisitor_Do_T.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T
+#pragma mark * ZVisitor_Expr_Bool_DoEval
 
-template <class Val>
-class ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T
-:	public virtual ZVisitor_Expr_Logic_DoEval
-,	public virtual ZVisitor_Expr_Logic_ValPred_T<Val>
+class ZVisitor_Expr_Bool_DoEval
+:	public virtual ZVisitor_Do_T<bool>
+,	public virtual ZVisitor_Expr_Bool_True
+,	public virtual ZVisitor_Expr_Bool_False
+,	public virtual ZVisitor_Expr_Bool_Not
+,	public virtual ZVisitor_Expr_Bool_And
+,	public virtual ZVisitor_Expr_Bool_Or
 	{
 public:
-	ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T(const Val& iVal);
-
-// From ZVisitor_Expr_Logic_ValPred_T
-	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred_T<Val> > iExpr);
-
-private:
-	ZValContext fValContext;
-	const Val& fVal;
+// From ZVisitor_Expr_Bool_XXX
+	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep);
+	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep);
+	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep);
+	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep);
+	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep);
 	};
-
-template <class Val>
-ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T<Val>::
-ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T(const Val& iVal)
-:	fVal(iVal)
-	{}
-
-template <class Val>
-void ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T<Val>::Visit_Expr_Logic_ValPred(
-	ZRef<ZExpr_Logic_ValPred_T<Val> > iExpr)
-	{ this->pSetResult(iExpr->GetValPred().Matches(fValContext, fVal)); }
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T__
+#endif // __ZVisitor_Expr_Bool_DoEval__

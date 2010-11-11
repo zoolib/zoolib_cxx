@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZUtil_Strim_ValPred.h"
-#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoToStrim.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
@@ -68,7 +68,7 @@ void spWrite_EffectiveRelHeadComment(ZRef<Expr_Rel> iExpr, const ZStrimW& iStrim
 namespace { // anonymous
 
 class Visitor_DoToStrim
-:	public virtual ZVisitor_Expr_Logic_ValPred_DoToStrim
+:	public virtual ZVisitor_Expr_Bool_ValPred_DoToStrim
 ,	public virtual Visitor_Expr_Rel_Difference
 ,	public virtual Visitor_Expr_Rel_Intersect
 ,	public virtual Visitor_Expr_Rel_Product
@@ -231,7 +231,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	this->pWriteLFIndent();
 	w << "(";
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetExpr_Logic());
+	this->pDoToStrim(iExpr->GetExpr_Bool());
 	w << ",";
 
 	this->pWriteLFIndent();

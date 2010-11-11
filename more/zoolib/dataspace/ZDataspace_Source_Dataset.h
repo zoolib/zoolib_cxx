@@ -34,6 +34,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDataspace {
 
+ZVal_Any sAsVal(const ZDataset::Daton& iDaton);
+ZDataset::Daton sAsDaton(const ZVal_Any& iVal);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Annotation_Daton
@@ -58,8 +61,6 @@ private:
 class Source_Dataset : public Source
 	{
 public:
-	enum { kDebug = 1 };
-
 	// Some kind of index specs to be passed in too.
 	Source_Dataset(ZRef<ZDataset::Dataset> iDataset);
 	virtual ~Source_Dataset();
@@ -73,17 +74,37 @@ public:
 		std::vector<SearchResult>& oChanged,
 		ZRef<Event>& oEvent);
 
+// Our protocol
+	ZRef<ZDataset::Dataset> GetDataset();
+
+	void Insert(const ZDataset::Daton& iDaton);
+	void Erase(const ZDataset::Daton& iDaton);
+
+	void Insert(const ZVal_Any& iVal);
+	void Erase(const ZVal_Any& iVal);
+
+	void Commit();
+	void Abort();
+
 	void Dump(const ZStrimW& w);
 
-	ZRef<ZQE::Walker> pMakeWalker(const RelHead& iRelHead);
-
 private:
+	void pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense);
+
+	class Walker;
+	friend class Walker;
+	ZRef<ZQE::Row> pReadInc(ZRef<Walker> iWalker);
+
 	void pPull();
 
 	ZRef<ZDataset::Dataset> fDataset;
 	ZRef<Event> fEvent;
 
-	std::map<ZDataset::Daton, std::pair<ZDataset::NamedEvent, ZVal_Any> > fMap;
+	typedef std::map<ZDataset::Daton, std::pair<ZDataset::NamedEvent, ZVal_Any> > Map_Main;
+	Map_Main fMap;
+
+	typedef std::map<ZDataset::Daton, std::pair<ZVal_Any, bool> > Map_Pending;
+	Map_Pending fMap_Pending;
 
 	class PQuery;
 	// We could have the PQuery be an in-place value in the map.

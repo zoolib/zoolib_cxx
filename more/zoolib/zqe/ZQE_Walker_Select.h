@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQE_Walker_Select__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZExpr_Bool.h"
 #include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
@@ -35,7 +35,7 @@ namespace ZQE {
 class Walker_Select : public Walker
 	{
 public:
-	Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Logic> iExpr_Logic);
+	Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool);
 	virtual ~Walker_Select();
 
 // From ZQE::Walker
@@ -47,7 +47,7 @@ public:
 
 private:
 	ZRef<Walker> fWalker;
-	ZRef<ZExpr_Logic> fExpr_Logic;
+	ZRef<ZExpr_Bool> fExpr_Bool;
 	};
 
 } // namespace ZQE

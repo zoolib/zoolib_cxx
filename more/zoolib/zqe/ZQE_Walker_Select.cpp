@@ -27,9 +27,9 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Walker_Select
 
-Walker_Select::Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Logic> iExpr_Logic)
+Walker_Select::Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool)
 :	fWalker(iWalker)
-,	fExpr_Logic(iExpr_Logic)
+,	fExpr_Bool(iExpr_Bool)
 	{}
 
 Walker_Select::~Walker_Select()
@@ -42,7 +42,7 @@ string8 Walker_Select::NameAt(size_t iIndex)
 	{ return fWalker->NameAt(iIndex); }
 
 ZRef<Walker> Walker_Select::Clone()
-	{ return new Walker_Select(fWalker->Clone(), fExpr_Logic); }
+	{ return new Walker_Select(fWalker->Clone(), fExpr_Bool); }
 
 ZRef<Row> Walker_Select::ReadInc()
 	{
@@ -53,7 +53,7 @@ ZRef<Row> Walker_Select::ReadInc()
 			if (true)
 				{
 				ZUnimplemented();
-				// Check that theRow matches fExpr_Logic;
+				// Check that theRow matches fExpr_Bool;
 				return theRow;
 				}
 			continue;

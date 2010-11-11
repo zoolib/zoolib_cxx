@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare_Vector.h"
-#include "zoolib/ZExpr_Logic_ValPred.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
 
 #include "zoolib/dataspace/ZDataspace_SearchSpec.h"
@@ -54,13 +54,13 @@ bool operator<(const SearchSpec& l, const SearchSpec& r)
 namespace { // anonymous
 
 class DoRename
-:	public virtual ZVisitor_Expr_Op_DoTransform_T<ZExpr_Logic>
-,	public virtual ZVisitor_Expr_Logic_ValPred
+:	public virtual ZVisitor_Expr_Op_DoTransform_T<ZExpr_Bool>
+,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
 public:
 	DoRename(const Rename_t& iRename);
 
-	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr);
+	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iExpr);
 private:
 	const Rename_t& fRename;
 	};
@@ -69,11 +69,11 @@ DoRename::DoRename(const Rename_t& iRename)
 :	fRename(iRename)
 	{}
 
-void DoRename::Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr)
+void DoRename::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iExpr)
 	{
 	ZValPred result;
 	if (iExpr->GetValPred().Renamed(fRename, result))
-		this->pSetResult(new ZExpr_Logic_ValPred(result));
+		this->pSetResult(new ZExpr_Bool_ValPred(result));
 	else
 		this->pSetResult(iExpr);
 	}
@@ -90,23 +90,23 @@ class Gather_t
 	{
 public:
 	Gather_t();
-	Gather_t(ZRef<ZExpr_Logic> iExpr_Logic, const RelHead& iRelHead);
-	Gather_t(ZRef<ZExpr_Logic> iExpr_Logic, const vector<NameMap>& iNameMaps);
+	Gather_t(ZRef<ZExpr_Bool> iExpr_Bool, const RelHead& iRelHead);
+	Gather_t(ZRef<ZExpr_Bool> iExpr_Bool, const vector<NameMap>& iNameMaps);
 
-	ZRef<ZExpr_Logic> fExpr_Logic;
+	ZRef<ZExpr_Bool> fExpr_Bool;
 	vector<NameMap> fNameMaps;
 	};
 
 Gather_t::Gather_t()
 	{}
 
-Gather_t::Gather_t(ZRef<ZExpr_Logic> iExpr_Logic, const RelHead& iRelHead)
-:	fExpr_Logic(iExpr_Logic)
+Gather_t::Gather_t(ZRef<ZExpr_Bool> iExpr_Bool, const RelHead& iRelHead)
+:	fExpr_Bool(iExpr_Bool)
 ,	fNameMaps(1, iRelHead)
 	{}
 
-Gather_t::Gather_t(ZRef<ZExpr_Logic> iExpr_Logic, const vector<NameMap>& iNameMaps)
-:	fExpr_Logic(iExpr_Logic)
+Gather_t::Gather_t(ZRef<ZExpr_Bool> iExpr_Bool, const vector<NameMap>& iNameMaps)
+:	fExpr_Bool(iExpr_Bool)
 ,	fNameMaps(iNameMaps)
 	{}
 
@@ -147,7 +147,7 @@ void Gather::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
 	const Gather_t g1 = this->Do(iExpr->GetOp1());
 
 	g0.fNameMaps.insert(g0.fNameMaps.end(), g1.fNameMaps.begin(), g1.fNameMaps.end());
-	g0.fExpr_Logic &= g1.fExpr_Logic;
+	g0.fExpr_Bool &= g1.fExpr_Bool;
 
 	this->pSetResult(g0);
 	}
@@ -168,7 +168,7 @@ void Gather::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	Rename_t theRename;
 	theRename[oldName] = newName;
 
-	g0.fExpr_Logic = DoRename(theRename).Do(g0.fExpr_Logic);
+	g0.fExpr_Bool = DoRename(theRename).Do(g0.fExpr_Bool);
 
 	this->pSetResult(g0);
 	}
@@ -176,14 +176,14 @@ void Gather::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 void Gather::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
 	{
 	Gather_t g0 = this->Do(iExpr->GetOp0());
-	g0.fExpr_Logic = g0.fExpr_Logic & iExpr->GetValPred();
+	g0.fExpr_Bool = g0.fExpr_Bool & iExpr->GetValPred();
 	this->pSetResult(g0);
 	}
 
 void Gather::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	{
 	Gather_t g0 = this->Do(iExpr->GetOp0());
-	g0.fExpr_Logic = g0.fExpr_Logic & iExpr->GetExpr_Logic();
+	g0.fExpr_Bool = g0.fExpr_Bool & iExpr->GetExpr_Bool();
 	this->pSetResult(g0);
 	}
 
@@ -199,7 +199,7 @@ SearchSpec sAsSearchSpec(ZRef<ZRA::Expr_Rel> iRel)
 
 	SearchSpec result;
 	result.fNameMaps = theG.fNameMaps;
-	result.fPredCompound = sAsValPredCompound(theG.fExpr_Logic);
+	result.fPredCompound = sAsValPredCompound(theG.fExpr_Bool);
 
 	return result;
 	}

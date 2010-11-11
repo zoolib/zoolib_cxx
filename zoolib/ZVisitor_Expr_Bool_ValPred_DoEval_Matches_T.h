@@ -18,28 +18,46 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Logic_ValPred_DoToStrim__
-#define __ZVisitor_Expr_Logic_ValPred_DoToStrim__
+#ifndef __ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T__
+#define __ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T__
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_Expr_Logic_DoToStrim.h"
-#include "zoolib/ZExpr_Logic_ValPred.h"
+#include "zoolib/ZExpr_Bool_ValPred_T.h"
+#include "zoolib/ZVisitor_Expr_Bool_DoEval.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_ValPred_DoToStrim
+#pragma mark * ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T
 
-class ZVisitor_Expr_Logic_ValPred_DoToStrim
-:	public virtual ZVisitor_Expr_Logic_DoToStrim
-,	public virtual ZVisitor_Expr_Logic_ValPred
+template <class Val>
+class ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T
+:	public virtual ZVisitor_Expr_Bool_DoEval
+,	public virtual ZVisitor_Expr_Bool_ValPred_T<Val>
 	{
 public:
-// From ZVisitor_Expr_Logic_ValPred
-	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iRep);
+	ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T(const Val& iVal);
+
+// From ZVisitor_Expr_Bool_ValPred_T
+	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_T<Val> > iExpr);
+
+private:
+	ZValContext fValContext;
+	const Val& fVal;
 	};
+
+template <class Val>
+ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T<Val>::
+ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T(const Val& iVal)
+:	fVal(iVal)
+	{}
+
+template <class Val>
+void ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T<Val>::Visit_Expr_Bool_ValPred(
+	ZRef<ZExpr_Bool_ValPred_T<Val> > iExpr)
+	{ this->pSetResult(iExpr->GetValPred().Matches(fValContext, fVal)); }
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_Expr_Logic_ValPred_DoToStrim__
+#endif // __ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T__

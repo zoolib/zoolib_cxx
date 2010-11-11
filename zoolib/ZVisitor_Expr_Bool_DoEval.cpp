@@ -18,36 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Logic_DoEval__
-#define __ZVisitor_Expr_Logic_DoEval__
-#include "zconfig.h"
-
-#include "zoolib/ZExpr_Logic.h"
-#include "zoolib/ZVisitor_Do_T.h"
+#include "zoolib/ZVisitor_Expr_Bool_DoEval.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_DoEval
+#pragma mark * ZVisitor_Expr_Bool_DoEval
 
-class ZVisitor_Expr_Logic_DoEval
-:	public virtual ZVisitor_Do_T<bool>
-,	public virtual ZVisitor_Expr_Logic_True
-,	public virtual ZVisitor_Expr_Logic_False
-,	public virtual ZVisitor_Expr_Logic_Not
-,	public virtual ZVisitor_Expr_Logic_And
-,	public virtual ZVisitor_Expr_Logic_Or
-	{
-public:
-// From ZVisitor_Expr_Logic_XXX
-	virtual void Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep);
-	virtual void Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep);
-	virtual void Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep);
-	virtual void Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep);
-	virtual void Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep);
-	};
+void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep)
+	{ this->pSetResult(true); }
+
+void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep)
+	{ this->pSetResult(false); }
+
+void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep)
+	{ this->pSetResult(! this->Do(iRep)); }
+
+void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep)
+	{ this->pSetResult(this->Do(iRep->GetOp0()) && this->Do(iRep->GetOp1())); }
+
+void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep)
+	{ this->pSetResult(this->Do(iRep->GetOp0()) || this->Do(iRep->GetOp1())); }
 
 } // namespace ZooLib
-
-#endif // __ZVisitor_Expr_Logic_DoEval__

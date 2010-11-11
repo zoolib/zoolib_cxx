@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Logic_ValPred.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoToStrim.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
@@ -50,13 +50,13 @@ using std::vector;
 namespace { // anonymous
 
 class DoRename
-:	public virtual ZVisitor_Expr_Op_DoTransform_T<ZExpr_Logic>
-,	public virtual ZVisitor_Expr_Logic_ValPred
+:	public virtual ZVisitor_Expr_Op_DoTransform_T<ZExpr_Bool>
+,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
 public:
 	DoRename(const Rename_t& iRename);
 
-	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr);
+	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iExpr);
 private:
 	const Rename_t& fRename;
 	};
@@ -65,11 +65,11 @@ DoRename::DoRename(const Rename_t& iRename)
 :	fRename(iRename)
 	{}
 
-void DoRename::Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr)
+void DoRename::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iExpr)
 	{
 	ZValPred result;
 	if (iExpr->GetValPred().Renamed(fRename, result))
-		this->pSetResult(new ZExpr_Logic_ValPred(result));
+		this->pSetResult(new ZExpr_Bool_ValPred(result));
 	else
 		this->pSetResult(iExpr);
 	}
@@ -210,9 +210,9 @@ static ZValPred spRenamedInverse(
 	return iValPred;
 	}
 
-static ZRef<ZExpr_Logic> spRenamedInverse(
-	ZRef<ZExpr_Logic> iExpr_Logic, const Rename_t& iRename)
-	{ return DoRename(sInverted(iRename)).Do(iExpr_Logic); }
+static ZRef<ZExpr_Bool> spRenamedInverse(
+	ZRef<ZExpr_Bool> iExpr_Bool, const Rename_t& iRename)
+	{ return DoRename(sInverted(iRename)).Do(iExpr_Bool); }
 
 void MakeSFW::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
 	{
@@ -236,7 +236,7 @@ void MakeSFW::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
 		theRename,
 		sfw0->GetRelHead(),
-		sfw0->GetCondition() & spRenamedInverse(iExpr->GetExpr_Logic(), theRename),
+		sfw0->GetCondition() & spRenamedInverse(iExpr->GetExpr_Bool(), theRename),
 		sfw0->GetRels());
 
 	this->pSetResult(result);
@@ -250,7 +250,7 @@ void MakeSFW::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 
 Expr_Rel_SFW::Expr_Rel_SFW(const Rename_t& iRename,
 	const RelHead& iRelHead,
-	ZRef<ZExpr_Logic> iCondition,
+	ZRef<ZExpr_Bool> iCondition,
 	const vector<ZRef<Expr_Rel_Concrete> >& iRels)
 :	fRename(iRename)
 ,	fRelHead(iRelHead)
@@ -264,7 +264,7 @@ RelHead Expr_Rel_SFW::GetRelHead()
 const Rename_t& Expr_Rel_SFW::GetRename()
 	{ return fRename; }
 
-ZRef<ZExpr_Logic> Expr_Rel_SFW::GetCondition()
+ZRef<ZExpr_Bool> Expr_Rel_SFW::GetCondition()
 	{ return fCondition; }
 
 const vector<ZRef<Expr_Rel_Concrete> >& Expr_Rel_SFW::GetRels()
@@ -285,36 +285,36 @@ namespace { // anonymous
 
 class ToStrim_SQL
 :	public virtual ZVisitor_DoToStrim
-,	public virtual ZVisitor_Expr_Logic_True
-,	public virtual ZVisitor_Expr_Logic_False
-,	public virtual ZVisitor_Expr_Logic_Not
-,	public virtual ZVisitor_Expr_Logic_And
-,	public virtual ZVisitor_Expr_Logic_Or
-,	public virtual ZVisitor_Expr_Logic_ValPred
+,	public virtual ZVisitor_Expr_Bool_True
+,	public virtual ZVisitor_Expr_Bool_False
+,	public virtual ZVisitor_Expr_Bool_Not
+,	public virtual ZVisitor_Expr_Bool_And
+,	public virtual ZVisitor_Expr_Bool_Or
+,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
 public:
-	virtual void Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep);
-	virtual void Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep);
-	virtual void Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep);
-	virtual void Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep);
-	virtual void Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep);
-	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iRep);
+	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep);
+	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep);
+	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep);
+	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep);
+	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep);
+	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iRep);
 	};
 
-void ToStrim_SQL::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep)
 	{ pStrimW() << "1"; }
 
-void ToStrim_SQL::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep)
 	{ pStrimW() << "0"; }
 
-void ToStrim_SQL::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep)
 	{
 	pStrimW() << " NOT (";
 	this->pDoToStrim(iRep->GetOp0());
 	pStrimW() << ")";
 	}
 
-void ToStrim_SQL::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep)
 	{
 	pStrimW() << "(";
 	this->pDoToStrim(iRep->GetOp0());
@@ -323,7 +323,7 @@ void ToStrim_SQL::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep)
 	pStrimW() << ")";
 	}
 
-void ToStrim_SQL::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep)
 	{
 	pStrimW() << "(";
 	this->pDoToStrim(iRep->GetOp0());
@@ -468,8 +468,8 @@ void spToStrim(const ZValPred& iValPred, const ZStrimW& s)
 	spToStrim(iValPred.GetRHS(), s);
 	}
 
-void ToStrim_SQL::Visit_Expr_Logic_ValPred(
-	ZRef<ZExpr_Logic_ValPred> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_ValPred(
+	ZRef<ZExpr_Bool_ValPred> iRep)
 	{ spToStrim(iRep->GetValPred(), pStrimW()); }
 
 } // anonymous namespace
@@ -537,12 +537,12 @@ string8 sAsSQL(ZRef<Expr_Rel_SFW> iSFW)
 	return result;
 	}
 
-void sAsSQL(ZRef<ZExpr_Logic> iExpr, const ZStrimW& s)
+void sAsSQL(ZRef<ZExpr_Bool> iExpr, const ZStrimW& s)
 	{
 	ToStrim_SQL().DoToStrim(ToStrim_SQL::Options(), s, iExpr);
 	}
 
-string8 sAsSQL(ZRef<ZExpr_Logic> iExpr)
+string8 sAsSQL(ZRef<ZExpr_Bool> iExpr)
 	{
 	string8 result;
 	sAsSQL(iExpr, ZStrimW_String(result));

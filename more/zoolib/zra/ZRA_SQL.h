@@ -41,7 +41,7 @@ class Expr_Rel_SFW : public Expr_Rel_Concrete
 public:
 	Expr_Rel_SFW(const Rename_t& iRename,
 		const RelHead& iRelHead,
-		ZRef<ZExpr_Logic> iCondition,
+		ZRef<ZExpr_Bool> iCondition,
 		const std::vector<ZRef<Expr_Rel_Concrete> >& iRels);
 
 // From Expr_Rel_Concrete
@@ -49,13 +49,13 @@ public:
 
 // Our protocol
 	const Rename_t& GetRename();
-	ZRef<ZExpr_Logic> GetCondition();
+	ZRef<ZExpr_Bool> GetCondition();
 	const std::vector<ZRef<Expr_Rel_Concrete> >& GetRels();
 
 public:
 	const Rename_t fRename;
 	const RelHead fRelHead;
-	const ZRef<ZExpr_Logic> fCondition;
+	const ZRef<ZExpr_Bool> fCondition;
 	const std::vector<ZRef<Expr_Rel_Concrete> > fRels;
 	};
 
@@ -68,8 +68,8 @@ ZRef<Expr_Rel_SFW> sConvert(ZRef<Expr_Rel> iExpr);
 void sAsSQL(ZRef<Expr_Rel_SFW> iSFW, const ZStrimW& s);
 string8 sAsSQL(ZRef<Expr_Rel_SFW> iSFW);
 
-void sAsSQL(ZRef<ZExpr_Logic> iExpr, const ZStrimW& s);
-string8 sAsSQL(ZRef<ZExpr_Logic> iExpr);
+void sAsSQL(ZRef<ZExpr_Bool> iExpr, const ZStrimW& s);
+string8 sAsSQL(ZRef<ZExpr_Bool> iExpr);
 
 } // namespace SQL
 } // namespace ZRA

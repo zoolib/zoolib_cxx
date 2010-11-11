@@ -80,7 +80,7 @@ Source::~Source()
 void Source::SetCallable(ZRef<Callable> iCallable)
 	{ fCallable = iCallable; }
 
-void Source::pInvokeCallables()
+void Source::pInvokeCallable()
 	{
 	if (ZRef<Callable> theCallable = fCallable)
 		theCallable->Call(this);

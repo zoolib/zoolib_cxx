@@ -18,17 +18,35 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_ValPred.h"
-#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoToStrim.h"
+#ifndef __ZVisitor_Expr_Bool_DoToStrim__
+#define __ZVisitor_Expr_Bool_DoToStrim__
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Bool.h"
+#include "zoolib/ZVisitor_DoToStrim.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_ValPred_DoToStrim
+#pragma mark * ZVisitor_Expr_Bool_DoToStrim
 
-void ZVisitor_Expr_Logic_ValPred_DoToStrim::Visit_Expr_Logic_ValPred(
-	ZRef<ZExpr_Logic_ValPred> iRep)
-	{ ZUtil_Strim_ValPred::sToStrim(iRep->GetValPred(), pStrimW()); }
+class ZVisitor_Expr_Bool_DoToStrim
+:	public virtual ZVisitor_DoToStrim
+,	public virtual ZVisitor_Expr_Bool_True
+,	public virtual ZVisitor_Expr_Bool_False
+,	public virtual ZVisitor_Expr_Bool_Not
+,	public virtual ZVisitor_Expr_Bool_And
+,	public virtual ZVisitor_Expr_Bool_Or
+	{
+public:
+	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep);
+	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep);
+	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep);
+	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep);
+	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep);
+	};
 
 } // namespace ZooLib
+
+#endif // __ZVisitor_Expr_Bool_DoToStrim__

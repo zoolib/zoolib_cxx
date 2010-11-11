@@ -92,31 +92,20 @@ public:
 	ZVal_Any Get(const string8& iName) const;
 	ZVal_Any Get(size_t iIndex) const;
 
+
 // Typename accessors
 /// \cond DoxygenIgnore
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Data, ZData_Any)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Seq, ZSeq_Any)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Map, ZMap_Any)
 /// \endcond DoxygenIgnore
+
+	bool operator==(const ZVal_Any& r) const
+		{ return this->Compare(r) == 0; }
+
+	bool operator<(const ZVal_Any& r) const
+		{ return this->Compare(r) < 0; }
 	};
-
-inline bool operator==(const ZVal_Any& l, const ZVal_Any& r)
-	{ return l.Compare(r) == 0; }
-
-inline bool operator!=(const ZVal_Any& l, const ZVal_Any& r)
-	{ return l.Compare(r) != 0; }
-
-inline bool operator<(const ZVal_Any& l, const ZVal_Any& r)
-	{ return l.Compare(r) < 0; }
-
-inline bool operator<=(const ZVal_Any& l, const ZVal_Any& r)
-	{ return l.Compare(r) <= 0; }
-
-inline bool operator>(const ZVal_Any& l, const ZVal_Any& r)
-	{ return l.Compare(r) > 0; }
-
-inline bool operator>=(const ZVal_Any& l, const ZVal_Any& r)
-	{ return l.Compare(r) >= 0; }
 
 // =================================================================================================
 #pragma mark -

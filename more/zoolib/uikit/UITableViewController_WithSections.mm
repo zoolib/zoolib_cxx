@@ -122,6 +122,9 @@ ZRef<UITableViewCell> SectionBody::UITableViewCellForRow(UITableView* iView, siz
 ZQ<UITableViewCellEditingStyle> SectionBody::QEditingStyle(size_t iRowIndex)
 	{ return fEditingStyle; }
 
+bool SectionBody::CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex)
+	{ return false; }
+
 ZQ<bool> SectionBody::QShouldIndentWhileEditing(size_t iRowIndex)
 	{ return fShouldIndentWhileEditing; }
 
@@ -180,7 +183,8 @@ UITableViewRowAnimation SectionBody::RowAnimation_Reload()
 #pragma mark * SectionBody_SingleRow
 
 SectionBody_SingleRow::SectionBody_SingleRow(ZRef<UITableViewCell> iCell)
-:	fCell_Pending(iCell)
+:	fCell(iCell)
+,	fCell_Pending(iCell)
 	{}
 
 size_t SectionBody_SingleRow::NumberOfRows()
@@ -300,6 +304,13 @@ ZQ<UITableViewCellEditingStyle> SectionBody_Multi::QEditingStyle(size_t iRowInde
 	return SectionBody::QEditingStyle(iRowIndex);
 	}
 
+bool SectionBody_Multi::CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex)
+	{
+	if (ZRef<SectionBody> theBody = this->pGetBody(iRowIndex))
+		return theBody->CommitEditingStyle(iStyle, iRowIndex);
+	return SectionBody::CommitEditingStyle(iStyle, iRowIndex);
+	}
+
 ZQ<bool> SectionBody_Multi::QShouldIndentWhileEditing(size_t iRowIndex)
 	{
 	if (ZRef<SectionBody> theBody = this->pGetBody(iRowIndex))
@@ -407,7 +418,8 @@ using std::vector;
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 	{
-	// The fact that this method is implemented is what enables "swipe to delete".
+	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
+		theSection->fBody->CommitEditingStyle(editingStyle, indexPath.row);
 	}
  
  - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath

@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/ZDataspace_Source_Dummy.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
-#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZExpr_Bool.h"
 
 #include "zoolib/ZLog.h"
 

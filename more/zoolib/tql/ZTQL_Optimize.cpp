@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Logic_ValPred.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
 
 #include "zoolib/ZValPredCompound.h"
 
@@ -42,44 +42,44 @@ namespace { // anonymous
 
 class Gather
 :	public virtual ZVisitor_Do_T<ZValPredCompound>
-,	public virtual ZVisitor_Expr_Logic_True
-,	public virtual ZVisitor_Expr_Logic_False
-,	public virtual ZVisitor_Expr_Logic_Not
-,	public virtual ZVisitor_Expr_Logic_And
-,	public virtual ZVisitor_Expr_Logic_Or
-,	public virtual ZVisitor_Expr_Logic_ValPred
+,	public virtual ZVisitor_Expr_Bool_True
+,	public virtual ZVisitor_Expr_Bool_False
+,	public virtual ZVisitor_Expr_Bool_Not
+,	public virtual ZVisitor_Expr_Bool_And
+,	public virtual ZVisitor_Expr_Bool_Or
+,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
 public:
-//	From ZVisitor_Expr_Logic_DoTransform
-	virtual void Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iExpr);
-	virtual void Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iExpr);
-	virtual void Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr);
-	virtual void Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr);
-	virtual void Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr);
+//	From ZVisitor_Expr_Bool_DoTransform
+	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iExpr);
+	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iExpr);
+	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iExpr);
+	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iExpr);
+	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iExpr);
 
-// From ZVisitor_Expr_Logic_ValPred
-	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr);
+// From ZVisitor_Expr_Bool_ValPred
+	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iExpr);
 	};
 
-void Gather::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iExpr)
+void Gather::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iExpr)
 	{ this->pSetResult(ZValPredCompound::sTrue()); }
 
-void Gather::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iExpr)
+void Gather::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iExpr)
 	{ this->pSetResult(ZValPredCompound::sFalse()); }
 
-void Gather::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr)
+void Gather::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iExpr)
 	{ ZUnimplemented(); }
 
-void Gather::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr)
+void Gather::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iExpr)
 	{ this->pSetResult(this->Do(iExpr->GetOp0()) & this->Do(iExpr->GetOp1())); }
 
-void Gather::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr)
+void Gather::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iExpr)
 	{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
 
-void Gather::Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr)
+void Gather::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iExpr)
 	{ this->pSetResult(iExpr->GetValPred()); }
 
-ZRef<Expr_Rel> spConvertSelect(ZRef<Expr_Rel> iRelation, ZRef<ZExpr_Logic> iLogical)
+ZRef<Expr_Rel> spConvertSelect(ZRef<Expr_Rel> iRelation, ZRef<ZExpr_Bool> iLogical)
 	{
 	if (!iRelation)
 		return null;
@@ -119,7 +119,7 @@ void Optimize::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	{
 	ZRef<Expr_Rel> newExpr = this->Do(iExpr->GetOp0());
 
-	this->pSetResult(spConvertSelect(newExpr, iExpr->GetExpr_Logic()));
+	this->pSetResult(spConvertSelect(newExpr, iExpr->GetExpr_Bool()));
 	}
 
 } // anonymous namespace

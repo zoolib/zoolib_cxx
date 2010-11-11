@@ -18,43 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Expr_Logic_DoToStrim.h"
+#ifndef __ZVisitor_Expr_Bool_ValPred_DoToStrim__
+#define __ZVisitor_Expr_Bool_ValPred_DoToStrim__
+#include "zconfig.h"
+
+#include "zoolib/ZVisitor_Expr_Bool_DoToStrim.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_DoToStrim
+#pragma mark * ZVisitor_Expr_Bool_ValPred_DoToStrim
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep)
-	{ pStrimW() << "true"; }
-
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep)
-	{ pStrimW() << "false"; }
-
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
+class ZVisitor_Expr_Bool_ValPred_DoToStrim
+:	public virtual ZVisitor_Expr_Bool_DoToStrim
+,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
-	pStrimW() << "~(";
-	this->pDoToStrim(iRep->GetOp0());
-	pStrimW() << ")";
-	}
-
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep)
-	{
-	pStrimW() << "(";
-	this->pDoToStrim(iRep->GetOp0());
-	pStrimW() << " & ";
-	this->pDoToStrim(iRep->GetOp1());
-	pStrimW() << ")";
-	}
-
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
-	{
-	pStrimW() << "(";
-	this->pDoToStrim(iRep->GetOp0());
-	pStrimW() << " | ";
-	this->pDoToStrim(iRep->GetOp1());
-	pStrimW() << ")";
-	}
+public:
+// From ZVisitor_Expr_Bool_ValPred
+	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iRep);
+	};
 
 } // namespace ZooLib
+
+#endif // __ZVisitor_Expr_Bool_ValPred_DoToStrim__

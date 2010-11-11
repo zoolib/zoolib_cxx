@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompare_T.h"
-#include "zoolib/ZExpr_Logic_ValPred.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
 
 #include <vector>
 
@@ -71,8 +71,8 @@ public:
 	SectUnion fSectUnion;
 	};
 
-ZValPredCompound sAsValPredCompound(ZRef<ZExpr_Logic> iExpr);
-ZRef<ZExpr_Logic> sAsExpr_Logic(const ZValPredCompound& iVCF);
+ZValPredCompound sAsValPredCompound(ZRef<ZExpr_Bool> iExpr);
+ZRef<ZExpr_Bool> sAsExpr_Bool(const ZValPredCompound& iVCF);
 
 template <> int sCompare_T(const ZValPredCompound& iL, const ZValPredCompound& iR);
 

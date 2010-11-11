@@ -18,59 +18,43 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYadSeq_Expr_Logic__
-#define __ZYadSeq_Expr_Logic__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZExpr_Logic.h"
-#include "zoolib/ZYad.h"
+#include "zoolib/ZVisitor_Expr_Bool_DoToStrim.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadSeqR_Expr_Logic
+#pragma mark * ZVisitor_Expr_Bool_DoToStrim
 
-class ZYadSeqR_Expr_Logic : public ZYadSeqR
+void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep)
+	{ pStrimW() << "true"; }
+
+void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep)
+	{ pStrimW() << "false"; }
+
+void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep)
 	{
-public:
-	ZYadSeqR_Expr_Logic(ZRef<ZYadSeqR> iYadSeqR, ZRef<ZExpr_Logic> iExpr_Logic);
-	virtual ~ZYadSeqR_Expr_Logic();
+	pStrimW() << "~(";
+	this->pDoToStrim(iRep->GetOp0());
+	pStrimW() << ")";
+	}
 
-// From ZYadSeqR
-	virtual ZRef<ZYadR> ReadInc();
-
-private:
-	ZRef<ZYadSeqR> fYadSeqR;
-	ZRef<ZExpr_Logic> fExpr_Logic;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos_Expr_Logic
-
-class ZYadSeqRPos_Expr_Logic : public ZYadSeqRPos
+void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep)
 	{
-public:
-	ZYadSeqRPos_Expr_Logic(ZRef<ZYadSeqRPos> iYadSeqRPos, ZRef<ZExpr_Logic> iExpr_Logic);
-	virtual ~ZYadSeqRPos_Expr_Logic();
+	pStrimW() << "(";
+	this->pDoToStrim(iRep->GetOp0());
+	pStrimW() << " & ";
+	this->pDoToStrim(iRep->GetOp1());
+	pStrimW() << ")";
+	}
 
-// From ZYadSeqR via ZYadSeqRPos
-	virtual ZRef<ZYadR> ReadInc();
-
-// From ZYadSeqRPos
-//##	virtual ZRef<ZYadSeqRPos> Clone();
-
-	virtual uint64 GetPosition();
-	virtual void SetPosition(uint64 iPosition);
-
-	virtual uint64 GetSize();
-
-private:
-	ZRef<ZYadSeqRPos> fYadSeqRPos;
-	ZRef<ZExpr_Logic> fExpr_Logic;
-	};
+void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep)
+	{
+	pStrimW() << "(";
+	this->pDoToStrim(iRep->GetOp0());
+	pStrimW() << " | ";
+	this->pDoToStrim(iRep->GetOp1());
+	pStrimW() << ")";
+	}
 
 } // namespace ZooLib
-
-#endif // __ZYadSeq_Expr_Logic__

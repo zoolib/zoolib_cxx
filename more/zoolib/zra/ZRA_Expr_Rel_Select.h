@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_Expr_Rel_Select__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZExpr_Bool.h"
 #include "zoolib/ZExpr_Op_T.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
@@ -41,7 +41,7 @@ class Expr_Rel_Select
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Select(ZRef<Expr_Rel> iOp0, ZRef<ZExpr_Logic> iExpr_Logic);
+	Expr_Rel_Select(ZRef<Expr_Rel> iOp0, ZRef<ZExpr_Bool> iExpr_Bool);
 	virtual ~Expr_Rel_Select();
 
 // From ZExpr_Op1_T<Expr_Rel>
@@ -56,10 +56,10 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Select(Visitor_Expr_Rel_Select& iVisitor);
 
-	ZRef<ZExpr_Logic> GetExpr_Logic();
+	ZRef<ZExpr_Bool> GetExpr_Bool();
 
 private:
-	const ZRef<ZExpr_Logic> fExpr_Logic;
+	const ZRef<ZExpr_Bool> fExpr_Bool;
 	};
 
 // =================================================================================================
@@ -79,13 +79,13 @@ public:
 #pragma mark * Relational operators
 
 ZRef<Expr_Rel_Select> sSelect(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic);
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
 
 ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic);
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
 
 ZRef<Expr_Rel> operator&(
-	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel);
+	const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel);
 
 } // namespace ZRA
 } // namespace ZooLib

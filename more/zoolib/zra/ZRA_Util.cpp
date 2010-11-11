@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Logic_ValPred.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
@@ -104,7 +104,7 @@ void Doer::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
 void Doer::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	{
 	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
-	const RelHead requiredRelHead = sGetNames(iExpr->GetExpr_Logic());
+	const RelHead requiredRelHead = sGetNames(iExpr->GetExpr_Bool());
 
 	if (!providedRelHead.Contains(requiredRelHead))
 		{

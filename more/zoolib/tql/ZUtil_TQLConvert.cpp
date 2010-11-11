@@ -39,7 +39,7 @@ ZRef<Expr_Rel> sAllID(const std::string& iIDName)
 ZRef<Expr_Rel> sAllID(const std::string& iIDName, const RelHead& iRelHead)
 	{ return ZValBase::sConcrete(); }
 
-typedef ZRef<ZExpr_Logic> Spec;
+typedef ZRef<ZExpr_Bool> Spec;
 typedef ZRef<Expr_Rel> Query;
 typedef ZMap_Expr Map;
 typedef ZVal_Expr Val;
@@ -99,7 +99,7 @@ static Spec spAsTSpec(const ZTBSpec& iTBSpec)
 			if (sisfirst)
 				{
 				sisfirst = false;
-				sect = new ZExpr_Logic_ValPred(theCondition);
+				sect = new ZExpr_Bool_ValPred(theCondition);
 				}
 			else
 				{

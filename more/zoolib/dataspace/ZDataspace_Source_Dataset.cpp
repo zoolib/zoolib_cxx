@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZLog.h"
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimU_Unreader.h"
@@ -44,10 +45,13 @@ using ZDataset::NamedEvent;
 
 using ZRA::NameMap;
 
+using std::make_pair;
 using std::map;
 using std::pair;
 using std::set;
 using std::vector;
+
+enum { kDebug = 1 };
 
 /*
 Minimally, keep an index of property names in contents -- that way we can efficiently
@@ -60,12 +64,12 @@ identify those entities that satisfy a RelHead.
 
 namespace { // anonymous
 
-ZVal_Any spAsVal(const Daton& iDaton)
+ZVal_Any spAsVal(const ZData_Any& iData)
 	{
 	try
 		{
 		ZRef<ZStreamerR> theStreamerR =
-			new ZStreamerRPos_T<ZStreamRPos_Data_T<ZData_Any> >(iDaton.GetData());
+			new ZStreamerRPos_T<ZStreamRPos_Data_T<ZData_Any> >(iData);
 
 		ZRef<ZStrimmerR> theStrimmerR_StreamUTF8 =
 			new ZStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(theStreamerR);
@@ -87,18 +91,30 @@ ZVal_Any spAsVal(const Daton& iDaton)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker (anonymous)
+#pragma mark * Daton/val conversion.
 
-namespace { // anonymous
+ZVal_Any sAsVal(const Daton& iDaton)
+	{ return spAsVal(iDaton.GetData()); }
 
-class Walker : public ZQE::Walker
+Daton sAsDaton(const ZVal_Any& iVal)
+	{
+	ZData_Any theData;
+	ZYad_ZooLibStrim::sToStrim(sMakeYadR(iVal),
+		ZStrimW_StreamUTF8(ZStreamRWPos_Data_T<ZData_Any>(theData)));
+	return theData;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Source_Dataset::Walker
+
+class Source_Dataset::Walker : public ZQE::Walker
 	{
 public:
-	typedef map<Daton, pair<NamedEvent, ZVal_Any> > Map_t;
-
-	Walker(const NameMap& iNameMap, Map_t::const_iterator iCurrent, Map_t::const_iterator iEnd);
-	Walker(const vector<pair<string8, string8> >& iNames,
-		Map_t::const_iterator iCurrent, Map_t::const_iterator iEnd);
+	Walker(Source_Dataset* iSource,
+		const vector<pair<string8, string8> >& iNames, 
+		Map_Main::const_iterator iCurrent_Main,
+		Map_Pending::const_iterator iCurrent_Pending);
 
 	virtual ~Walker();
 
@@ -109,78 +125,40 @@ public:
 	virtual ZRef<ZQE::Walker> Clone();
 	virtual ZRef<ZQE::Row> ReadInc();
 
-private:
+	Source_Dataset* fSource;
 	vector<pair<string8, string8> > fNames;
-	Map_t::const_iterator fCurrent;
-	const Map_t::const_iterator fEnd;
+	Map_Main::const_iterator fCurrent_Main;
+	Map_Pending::const_iterator fCurrent_Pending;
 	};
 
-Walker::Walker(const NameMap& iNameMap, Map_t::const_iterator iCurrent, Map_t::const_iterator iEnd)
-:	fNames(iNameMap.GetElems().begin(), iNameMap.GetElems().end())
-,	fCurrent(iCurrent)
-,	fEnd(iEnd)
+Source_Dataset::Walker::Walker(Source_Dataset* iSource,
+	const vector<pair<string8, string8> >& iNames, 
+	Map_Main::const_iterator iCurrent_Main,
+	Map_Pending::const_iterator iCurrent_Pending)
+:	fSource(iSource)
+,	fNames(iNames)
+,	fCurrent_Main(iCurrent_Main)
+,	fCurrent_Pending(iCurrent_Pending)
 	{}
 
-Walker::Walker(const vector<pair<string8, string8> >& iNames,
-	Map_t::const_iterator iCurrent, Map_t::const_iterator iEnd)
-:	fNames(iNames)
-,	fCurrent(iCurrent)
-,	fEnd(iEnd)
+Source_Dataset::Walker::~Walker()
 	{}
 
-Walker::~Walker()
-	{}
-
-size_t Walker::NameCount()
+size_t Source_Dataset::Walker::NameCount()
 	{ return fNames.size(); }
 
-string8 Walker::NameAt(size_t iIndex)
+string8 Source_Dataset::Walker::NameAt(size_t iIndex)
 	{
 	if (iIndex < fNames.size())
 		return fNames[iIndex].first;
 	return string8();
 	}
 
-ZRef<ZQE::Walker> Walker::Clone()
-	{ return new Walker(fNames, fCurrent, fEnd); }
+ZRef<ZQE::Walker> Source_Dataset::Walker::Clone()
+	{ return new Walker(fSource, fNames, fCurrent_Main, fCurrent_Pending); }
 
-ZRef<ZQE::Row> Walker::ReadInc()
-	{
-	while (fCurrent != fEnd)
-		{
-		const ZVal_Any& theVal = fCurrent->second.second;
-		if (const ZMap_Any* theMap = theVal.PGet_T<ZMap_Any>())
-			{
-			vector<ZVal_Any> theVals;
-			theVals.reserve(fNames.size());
-			bool allGood = true;
-			for (size_t x = 0; x < fNames.size(); ++x)
-				{
-				if (const ZVal_Any* theVal = theMap->PGet(fNames[x].second))
-					{
-					theVals[x] = *theVal;
-					}
-				else
-					{
-					allGood = false;
-					break;
-					}
-				}
-
-			if (allGood)
-				{
-				ZRef<ZQE::Row_Vector> theRow = new ZQE::Row_Vector(&theVals);
-				theRow->AddAnnotation(new Annotation_Daton(fCurrent->first));
-				++fCurrent;
-				return theRow;
-				}
-			}
-		++fCurrent;
-		}
-	return null;
-	}
-
-} // anonymous namespace
+ZRef<ZQE::Row> Source_Dataset::Walker::ReadInc()
+	{ return fSource->pReadInc(this); }
 
 // =================================================================================================
 #pragma mark -
@@ -199,6 +177,7 @@ public:
 
 Source_Dataset::Source_Dataset(ZRef<Dataset> iDataset)
 :	fDataset(iDataset)
+,	fEvent(Event::sZero())
 	{}
 
 Source_Dataset::~Source_Dataset()
@@ -236,45 +215,100 @@ void Source_Dataset::Update(
 	// Pick up (and index) values from dataset
 	this->pPull();
 
-	for (map<int64, PQuery*>::iterator i = fMap_RefconToPQuery.begin();
-		i != fMap_RefconToPQuery.end(); ++i)
+	for (map<int64, PQuery*>::iterator iter_RefconToPQuery = fMap_RefconToPQuery.begin();
+		iter_RefconToPQuery != fMap_RefconToPQuery.end(); ++iter_RefconToPQuery)
 		{
-		SearchResult theSearchResult;
-		theSearchResult.fRefcon = i->first;
-		const vector<NameMap>& theNM = i->second->fSearchSpec.fNameMaps;
+		const vector<NameMap>& theNM = iter_RefconToPQuery->second->fSearchSpec.fNameMaps;
 
 		ZRef<ZQE::Walker> theWalker;
 		for (vector<NameMap>::const_iterator iterNM = theNM.begin();
 			iterNM != theNM.end(); ++iterNM)
 			{
-			ZRef<ZQE::Walker> cur = new Walker(*iterNM, fMap.begin(), fMap.end());
-			if (theWalker)
-				theWalker = new ZQE::Walker_Product(theWalker, cur);
-			else
-				theWalker = cur;
+			const vector<pair<string8, string8> >
+				theNames(iterNM->GetElems().begin(), iterNM->GetElems().end());
+
+			ZRef<ZQE::Walker> cur = new Walker(this, theNames, fMap.begin(), fMap_Pending.begin());
+			theWalker = theWalker ? new ZQE::Walker_Product(theWalker, cur) : cur;
 			}
 
-		theWalker =
-			new ZQE::Walker_ValPredCompound(theWalker, i->second->fSearchSpec.fPredCompound);
+		theWalker = new ZQE::Walker_ValPredCompound(theWalker,
+			iter_RefconToPQuery->second->fSearchSpec.fPredCompound);
 
 		vector<string8> theRowHead;
-		for (size_t x = 0; x < theWalker->NameCount(); ++x)
+		for (size_t x = 0, count = theWalker->NameCount(); x < count; ++x)
 			theRowHead.push_back(theWalker->NameAt(x));
 
 		vector<ZRef<ZQE::Row> > theRows;
+		for (ZRef<ZQE::Row> theRow; theRow = theWalker->ReadInc(); /*no inc*/)
+			theRows.push_back(theRow);
 
-		for (;;)
-			{
-			if (ZRef<ZQE::Row> theRow = theWalker->ReadInc())
-				theRows.push_back(theRow);
-			else
-				break;
-			}
-
+		SearchResult theSearchResult;
+		theSearchResult.fRefcon = iter_RefconToPQuery->first;
+		theSearchResult.fSearchRows = new SearchRows(&theRowHead, new ZQE::RowVector(&theRows));
 		oChanged.push_back(theSearchResult);
 		}
 
 	oEvent = fEvent;
+	}
+
+ZRef<ZDataset::Dataset> Source_Dataset::GetDataset()
+	{
+	return fDataset;
+	}
+
+void Source_Dataset::Insert(const Daton& iDaton)
+	{ this->pModify(iDaton, sAsVal(iDaton), true); }
+
+void Source_Dataset::Erase(const Daton& iDaton)
+	{ this->pModify(iDaton, sAsVal(iDaton), false); }
+
+void Source_Dataset::Insert(const ZVal_Any& iVal)
+	{ this->pModify(sAsDaton(iVal), iVal, true); }
+
+void Source_Dataset::Erase(const ZVal_Any& iVal)
+	{ this->pModify(sAsDaton(iVal), iVal, false); }
+
+void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense)
+	{
+	Map_Pending::iterator i = fMap_Pending.find(iDaton);
+	if (fMap_Pending.end() == i)
+		{
+		fMap_Pending.insert(make_pair(iDaton, make_pair(iVal, iSense)));
+		}
+	else
+		{
+		ZAssert(i->second.second == !iSense);
+		fMap_Pending.erase(i);
+		}
+	this->pInvokeCallable();	
+	}
+
+void Source_Dataset::Commit()
+	{
+	if (fMap_Pending.empty())
+		return;
+
+	for (Map_Pending::iterator i = fMap_Pending.begin(), end = fMap_Pending.end(); i != end; ++i)
+		{
+		if (i->second.second)
+			fDataset->Insert(i->first);
+		else
+			fDataset->Erase(i->first);			
+		}
+
+	fMap_Pending.clear();
+
+	this->pInvokeCallable();
+	}
+
+void Source_Dataset::Abort()
+	{
+	if (fMap_Pending.empty())
+		return;
+
+	fMap_Pending.clear();
+
+	this->pInvokeCallable();
 	}
 
 void Source_Dataset::Dump(const ZStrimW& w)
@@ -286,14 +320,77 @@ void Source_Dataset::Dump(const ZStrimW& w)
 		}
 	}
 
-ZRef<ZQE::Walker> Source_Dataset::pMakeWalker(const RelHead& iRelHead)
-	{ return new Walker(iRelHead, fMap.begin(), fMap.end()); }
+static ZRef<ZQE::Row_Vector> spMakeRow(const ZMap_Any& iMap, const vector<pair<string8, string8> >& iNames)
+	{
+	const size_t nameCount = iNames.size();
+	vector<ZVal_Any> theVals;
+	theVals.resize(nameCount);
+	bool allGood = true;
+	for (size_t x = 0; x < nameCount; ++x)
+		{
+		if (const ZVal_Any* theVal = iMap.PGet(iNames[x].second))
+			{
+			theVals[x] = *theVal;
+			}
+		else
+			{
+			allGood = false;
+			break;
+			}
+		}
+
+	if (allGood)
+		return new ZQE::Row_Vector(&theVals);
+
+	return null;
+	}
+
+ZRef<ZQE::Row> Source_Dataset::pReadInc(ZRef<Walker> iWalker)
+	{
+	while (iWalker->fCurrent_Main != fMap.end())
+		{
+		// Ignore anything that's in pending (for now).
+		if (fMap_Pending.end() == fMap_Pending.find(iWalker->fCurrent_Main->first))
+			{
+			if (const ZMap_Any* theMap = iWalker->fCurrent_Main->second.second.PGet_T<ZMap_Any>())
+				{
+				if (ZRef<ZQE::Row_Vector> theRow = spMakeRow(*theMap, iWalker->fNames))
+					{
+					theRow->AddAnnotation(new Annotation_Daton(iWalker->fCurrent_Main->first));
+					++iWalker->fCurrent_Main;
+					return theRow;
+					}
+				}
+			}
+		++iWalker->fCurrent_Main;
+		}
+
+	// Handle anything pending
+	while (iWalker->fCurrent_Pending != fMap_Pending.end())
+		{
+		if (iWalker->fCurrent_Pending->second.second)
+			{
+			if (const ZMap_Any* theMap = iWalker->fCurrent_Pending->second.first.PGet_T<ZMap_Any>())
+				{
+				if (ZRef<ZQE::Row_Vector> theRow = spMakeRow(*theMap, iWalker->fNames))
+					{
+					theRow->AddAnnotation(new Annotation_Daton(iWalker->fCurrent_Pending->first));
+					++iWalker->fCurrent_Pending;
+					return theRow;
+					}
+				}
+			}
+		++iWalker->fCurrent_Pending;
+		}
+
+	return null;
+	}
 
 void Source_Dataset::pPull()
 	{
+	// Get our map in sync with fDataset
 	ZRef<Deltas> theDeltas;
 	fEvent = fDataset->GetDeltas(theDeltas, fEvent);
-
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
 	for (Map_NamedEvent_Delta_t::const_iterator
 		iterMNED = theMNED.begin(), endMNED = theMNED.end();
@@ -306,7 +403,7 @@ void Source_Dataset::pPull()
 			iterStmts != endStmts; ++iterStmts)
 			{
 			const Daton& theDaton = iterStmts->first;
-			const pair<NamedEvent, ZVal_Any> newPair(theNamedEvent, spAsVal(theDaton));
+			const pair<NamedEvent, ZVal_Any> newPair(theNamedEvent, sAsVal(theDaton));
 
 			map<Daton, pair<NamedEvent, ZVal_Any> >::iterator iterMap = fMap.find(theDaton);
 
@@ -325,6 +422,7 @@ void Source_Dataset::pPull()
 				}
 			}
 		}
+
 	}
 
 } // namespace ZDataspace

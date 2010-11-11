@@ -5,7 +5,7 @@
 #include "zoolib/dataspace/ZDataspace_Source_Union.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
-#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZExpr_Bool.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZUtil_STL.h"

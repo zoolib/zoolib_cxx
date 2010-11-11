@@ -216,42 +216,42 @@ namespace { // anonymous
 
 class AsValPredCompound
 :	public virtual ZVisitor_Do_T<ZValPredCompound>
-,	public virtual ZVisitor_Expr_Logic_True
-,	public virtual ZVisitor_Expr_Logic_False
-,	public virtual ZVisitor_Expr_Logic_Not
-,	public virtual ZVisitor_Expr_Logic_And
-,	public virtual ZVisitor_Expr_Logic_Or
-,	public virtual ZVisitor_Expr_Logic_ValPred
+,	public virtual ZVisitor_Expr_Bool_True
+,	public virtual ZVisitor_Expr_Bool_False
+,	public virtual ZVisitor_Expr_Bool_Not
+,	public virtual ZVisitor_Expr_Bool_And
+,	public virtual ZVisitor_Expr_Bool_Or
+,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
 public:
-// From ZVisitor_Expr_Logic_XXX
-	virtual void Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep);
-	virtual void Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep);
-	virtual void Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep);
-	virtual void Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep);
-	virtual void Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep);
+// From ZVisitor_Expr_Bool_XXX
+	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep);
+	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep);
+	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep);
+	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep);
+	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep);
 
-	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr);
+	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iExpr);
 	};
 
-void AsValPredCompound::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep)
+void AsValPredCompound::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep)
 	{ this->pSetResult(ZValPredCompound::sTrue()); }
 
-void AsValPredCompound::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep)
+void AsValPredCompound::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep)
 	{ this->pSetResult(ZValPredCompound::sFalse()); }
 
-void AsValPredCompound::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
+void AsValPredCompound::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep)
 	{
 	ZUnimplemented();
 	}
 
-void AsValPredCompound::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep)
+void AsValPredCompound::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep)
 	{ this->pSetResult(this->Do(iRep->GetOp0()) & this->Do(iRep->GetOp1())); }
 
-void AsValPredCompound::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
+void AsValPredCompound::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep)
 	{ this->pSetResult(this->Do(iRep->GetOp0()) | this->Do(iRep->GetOp1())); }
 
-void AsValPredCompound::Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr)
+void AsValPredCompound::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iExpr)
 	{ this->pSetResult(iExpr->GetValPred()); }
 
 } // anonymous namespace
@@ -260,17 +260,17 @@ void AsValPredCompound::Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr
 #pragma mark -
 #pragma mark * sAsValPredCompound
 
-ZValPredCompound sAsValPredCompound(ZRef<ZExpr_Logic> iExpr)
+ZValPredCompound sAsValPredCompound(ZRef<ZExpr_Bool> iExpr)
 	{ return AsValPredCompound().Do(iExpr); }
 
-ZRef<ZExpr_Logic> sAsExpr_Logic(const ZValPredCompound& iVCF)
+ZRef<ZExpr_Bool> sAsExpr_Bool(const ZValPredCompound& iVCF)
 	{
-	ZRef<ZExpr_Logic> result = sFalse();
+	ZRef<ZExpr_Bool> result = sFalse();
 
 	for (SectUnion::const_iterator outer = iVCF.fSectUnion.begin();
 		outer != iVCF.fSectUnion.end(); ++outer)
 		{
-		ZRef<ZExpr_Logic> temp = sTrue();
+		ZRef<ZExpr_Bool> temp = sTrue();
 		for (Sect::const_iterator inner = outer->begin();
 			inner != outer->end(); ++inner)
 			{

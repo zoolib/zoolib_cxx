@@ -59,7 +59,7 @@ void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restri
 void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr)
 	{
 	if (ZRef<Walker> theWalker = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new Walker_Select(theWalker, iExpr->GetExpr_Logic()));	
+		this->pSetResult(new Walker_Select(theWalker, iExpr->GetExpr_Bool()));	
 	}
 
 } // namespace ZQE

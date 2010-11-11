@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoToStrim.h"
 
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
@@ -48,8 +48,8 @@ const ZStrimW& operator<<(const ZStrimW& w, const SearchSpec& iSearchSpec)
 		w << *i;
 		}
 	w << ")\n";
-	ZVisitor_Expr_Logic_ValPred_DoToStrim()
-		.DoToStrim(ZVisitor_DoToStrim::Options(), w, sAsExpr_Logic(iSearchSpec.fPredCompound));
+	ZVisitor_Expr_Bool_ValPred_DoToStrim()
+		.DoToStrim(ZVisitor_DoToStrim::Options(), w, sAsExpr_Bool(iSearchSpec.fPredCompound));
 	return w;
 	}
 

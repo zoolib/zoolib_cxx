@@ -108,7 +108,7 @@ public:
 	void SetCallable(ZRef<Callable> iCallable);
 
 protected:
-	void pInvokeCallables();
+	void pInvokeCallable();
 
 private:
 	ZRef<Callable> fCallable;

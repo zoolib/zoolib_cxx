@@ -1,4 +1,4 @@
-#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoToStrim.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_JSON.h"
 
@@ -8,7 +8,7 @@
 #include "zoolib/valbase/ZValBase_SQLite.h"
 #include "zoolib/valbase/ZValBase_YadSeqR.h"
 #include "zoolib/valbase/ZValBase_YadSeqRClone.h"
-#include "zoolib/zqe/ZQE_Result_Any.h"
+//#include "zoolib/zqe/ZQE_Result_Any.h"
 #include "zoolib/zra/ZRA_Util_RelOperators.h"
 #include "zoolib/zra/ZRA_SQL.h"
 #include "zoolib/zra/ZRA_Util.h"
@@ -25,7 +25,7 @@ using std::vector;
 
 static ZYadOptions spYadOptions(true);
 
-typedef ZRef<ZExpr_Logic> Spec;
+typedef ZRef<ZExpr_Bool> Spec;
 
 //typedef ZVal_Expr ZVal;
 //typedef ZSeq_Expr ZSeq;
@@ -55,7 +55,7 @@ static void sDumpSFW(const ZStrimW& s, ZRef<SQL::Expr_Rel_SFW> iExpr)
 	s << "\n";
 
 	s << "Condition:\n";
-	ZVisitor_Expr_Logic_ValPred_DoToStrim().DoToStrim(theOptions, s, iExpr->GetCondition());
+	ZVisitor_Expr_Bool_ValPred_DoToStrim().DoToStrim(theOptions, s, iExpr->GetCondition());
 	s << "\n";
 
 	s << "Rels:\n";

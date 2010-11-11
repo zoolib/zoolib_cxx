@@ -18,27 +18,35 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Expr_Logic_DoEval.h"
+#ifndef __ZExpr_Bool_ValPred__
+#define __ZExpr_Bool_ValPred__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Bool_ValPred_T.h"
+#include "zoolib/ZValPred.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoGetNames_T.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_DoEval
+#pragma mark * ZExpr_Bool_ValPred
 
-void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep)
-	{ this->pSetResult(true); }
+typedef ZExpr_Bool_ValPred_T<ZVal_Expr> ZExpr_Bool_ValPred;
 
-void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep)
-	{ this->pSetResult(false); }
+typedef ZVisitor_Expr_Bool_ValPred_T<ZVal_Expr> ZVisitor_Expr_Bool_ValPred;
 
-void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
-	{ this->pSetResult(! this->Do(iRep)); }
 
-void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep)
-	{ this->pSetResult(this->Do(iRep->GetOp0()) && this->Do(iRep->GetOp1())); }
+inline std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr)
+	{ return ZVisitor_Expr_Bool_ValPred_DoGetNames_T<ZVal_Expr>().Do(iExpr); }
 
-void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
-	{ this->pSetResult(this->Do(iRep->GetOp0()) || this->Do(iRep->GetOp1())); }
+inline bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Expr& iVal)
+	{ return ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T<ZVal_Expr>(iVal).Do(iExpr); }
+
+inline bool sMatches(const ZValPred& iValPred, const ZVal_Expr& iVal)
+	{ return sMatches(new ZExpr_Bool_ValPred(iValPred), iVal); }
 
 } // namespace ZooLib
+
+#endif // __ZExpr_Bool_ValPred__

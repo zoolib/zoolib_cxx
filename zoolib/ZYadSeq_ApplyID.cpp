@@ -25,7 +25,7 @@ namespace ZooLib {
 // FIXME. Could return a ZYadMapR with a constant for the ID, and the actual yad for the value.
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadSeqR_Expr_Logic
+#pragma mark * ZYadSeqR_Expr_Bool
 
 ZYadSeqR_ApplyID::ZYadSeqR_ApplyID(
 	ZRef<ZYadSeqR> iYadSeqR, const std::string& iIDName, const std::string& iValName)

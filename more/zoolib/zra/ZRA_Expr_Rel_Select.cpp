@@ -27,9 +27,9 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Select
 
-Expr_Rel_Select::Expr_Rel_Select(ZRef<Expr_Rel> iOp0, ZRef<ZExpr_Logic> iExpr_Logic)
+Expr_Rel_Select::Expr_Rel_Select(ZRef<Expr_Rel> iOp0, ZRef<ZExpr_Bool> iExpr_Bool)
 :	inherited(iOp0)
-,	fExpr_Logic(iExpr_Logic)
+,	fExpr_Bool(iExpr_Bool)
 	{}
 
 Expr_Rel_Select::~Expr_Rel_Select()
@@ -52,7 +52,7 @@ ZRef<Expr_Rel> Expr_Rel_Select::Self()
 	{ return this; }
 
 ZRef<Expr_Rel> Expr_Rel_Select::Clone(ZRef<Expr_Rel> iOp0)
-	{ return new Expr_Rel_Select(iOp0, fExpr_Logic); }
+	{ return new Expr_Rel_Select(iOp0, fExpr_Bool); }
 
 void Expr_Rel_Select::Accept_Expr_Rel_Select( Visitor_Expr_Rel_Select& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Select(this); }
@@ -60,8 +60,8 @@ void Expr_Rel_Select::Accept_Expr_Rel_Select( Visitor_Expr_Rel_Select& iVisitor)
 RelHead Expr_Rel_Select::GetRelHead()
 	{ return this->GetOp0()->GetRelHead(); }
 
-ZRef<ZExpr_Logic> Expr_Rel_Select::GetExpr_Logic()
-	{ return fExpr_Logic; }
+ZRef<ZExpr_Bool> Expr_Rel_Select::GetExpr_Bool()
+	{ return fExpr_Bool; }
 
 // =================================================================================================
 #pragma mark -
@@ -71,8 +71,8 @@ void Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	{
 	this->Visit_Expr_Op1(iExpr);
 
-	if (ZRef<ZExpr_Logic> theExpr_Logic = iExpr->GetExpr_Logic())
-		theExpr_Logic->Accept(*this);
+	if (ZRef<ZExpr_Bool> theExpr_Bool = iExpr->GetExpr_Bool())
+		theExpr_Bool->Accept(*this);
 	}
 
 // =================================================================================================
@@ -80,16 +80,16 @@ void Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 #pragma mark * Relational operators
 
 ZRef<Expr_Rel_Select> sSelect(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic)
-	{ return new Expr_Rel_Select(iExpr_Rel, iExpr_Logic); }
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
+	{ return new Expr_Rel_Select(iExpr_Rel, iExpr_Bool); }
 
 ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic)
-	{ return sSelect(iExpr_Rel, iExpr_Logic); }
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
+	{ return sSelect(iExpr_Rel, iExpr_Bool); }
 
 ZRef<Expr_Rel> operator&(
-	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel)
-	{ return sSelect(iExpr_Rel, iExpr_Logic); }
+	const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel)
+	{ return sSelect(iExpr_Rel, iExpr_Bool); }
 
 } // namespace ZRA
 } // namespace ZooLib

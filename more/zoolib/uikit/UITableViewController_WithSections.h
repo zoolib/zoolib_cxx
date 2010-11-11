@@ -23,11 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#if ZCONFIG_SPI_Enabled(iPhone)
+
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZQ.h"
 #include "zoolib/ZUnicodeString.h"
-
-#if ZCONFIG_SPI_Enabled(iPhone)
 
 #import <UIKit/UITableView.h>
 
@@ -62,9 +62,6 @@ public:
 	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Insert();
 	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Delete();
 	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Reload();
-
-//##	bool fHeaderShownWhenEmpty;
-//##	bool fFooterShownWhenEmpty;
 
 	ZQ<CGFloat> fHeaderHeight;
 	ZQ<CGFloat> fFooterHeight;
@@ -103,6 +100,7 @@ public:
 
 	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex);
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
+	virtual bool CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex);
 	virtual ZQ<bool> QShouldIndentWhileEditing(size_t iRowIndex);
 	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex);
 	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex);
@@ -168,6 +166,7 @@ public:
 
 	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex);
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
+	virtual bool CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex);
 	virtual ZQ<bool> QShouldIndentWhileEditing(size_t iRowIndex);
 	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex);
 	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex);

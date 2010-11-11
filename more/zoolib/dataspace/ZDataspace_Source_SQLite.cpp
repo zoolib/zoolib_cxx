@@ -191,7 +191,7 @@ void Source_SQLite::Update(
 
 bool Source_SQLite::pCheck(ZRef<ZWorker> iWorker)
 	{
-	this->pInvokeCallables();
+	this->pInvokeCallable();
 	iWorker->WakeIn(10);
 	return true;
 	}
@@ -264,7 +264,7 @@ string8 Source_SQLite::pAsSQL(const SearchSpec& iSearchSpec)
 	if (ZLOGF(s, eDebug))
 		s << theRename;
 
-	result += ZRA::SQL::sAsSQL(sAsExpr_Logic(iSearchSpec.fPredCompound.Renamed(theRename)));
+	result += ZRA::SQL::sAsSQL(sAsExpr_Bool(iSearchSpec.fPredCompound.Renamed(theRename)));
 	
 	if (ZLOGF(s, eDebug))
 		s << result;

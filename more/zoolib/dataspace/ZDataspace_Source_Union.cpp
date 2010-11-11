@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // <<< Debugging
 
 #include "zoolib/ZCallable_PMF.h"
-#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZExpr_Bool.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_STL_set.h"
 
@@ -296,7 +296,7 @@ void Source_Union::PQuery::Regenerate()
 
 	fSearchRows.Clear();
 
-	// For each entry in fRels we have a source rel, effectively. Union the
+	// For each entry in fSearchSpecs we have a source rel, effectively. Union the
 	// results from each of the fPSourceSearches for each position. Join that
 	// with each of the other fPSourceSearches, and with each of the fPSourceProducts,
 	// and filter by fSearchSpec's fValPredCompound.
@@ -349,11 +349,8 @@ void Source_Union::PQuery::Regenerate()
 		spGetRowHead(theProduct, theRowHead);
 
 		vector<ZRef<Row> > theRows;
-		for (;;)
+		for (ZRef<ZQE::Row> theRow; theRow = theProduct->ReadInc(); /*no inc*/)
 			{
-			ZRef<Row> theRow = theProduct->ReadInc();
-			if (!theRow)
-				break;
 			if (spMatches(fSearchSpec.fPredCompound, theRowHead, theRow))
 				theRows.push_back(theRow);				
 			}
@@ -646,7 +643,7 @@ void Source_Union::pCallback(Source* iSource)
 	if (PSource* thePSource = fMap_SourceToPSource[iSource])
 		{
 		fPSource_ToUpdate.InsertIfNotContains(thePSource);
-		Source::pInvokeCallables();
+		Source::pInvokeCallable();
 		}
 	}
 

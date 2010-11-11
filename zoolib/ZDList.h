@@ -39,7 +39,6 @@ struct DListHead
 	{
 	DListHead() : fHeadL(nullptr), fSize(0) {}
 
-
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
 		DListHead, operator_bool_generator_type, operator_bool_type);
 
@@ -166,7 +165,7 @@ public:
 //	DListLink(const DListLink&); // not implemented/implementable
 //	DListLink& operator=(const DListLink&); // not implemented/implementable
 public:
-	enum { kDebug = kDebug_T };
+	static const int kDebug = kDebug_T;
 
 	DListLink() : fPrev(nullptr), fNext(nullptr) {}
 	~DListLink() { ZAssertStop(kDebug, !fPrev && !fNext); }
@@ -183,8 +182,6 @@ template <typename P, typename L>
 class DListIterator
 	{
 public:
-	enum { kDebug = L::kDebug };
-
 	DListIterator(const DListHead<L>& iDListHead)
 	:	fDListHead(iDListHead),
 		fCurrent(iDListHead.fHeadL)
@@ -200,8 +197,8 @@ public:
 
 	void Advance()
 		{
-		ZAssertStop(kDebug, fCurrent);
-		ZAssertStop(kDebug, fCurrent->fNext);
+		ZAssertStop(L::kDebug, fCurrent);
+		ZAssertStop(L::kDebug, fCurrent->fNext);
 		fCurrent = fCurrent->fNext;
 		if (fCurrent == fDListHead.fHeadL)
 			fCurrent = nullptr;
@@ -220,16 +217,14 @@ template <typename P, typename L>
 class DListIteratorEraseAll
 	{
 public:
-	enum { kDebug = L::kDebug };
-
 	DListIteratorEraseAll(DListHead<L>& ioDListHead)
 	:	fDListHead(ioDListHead),
 		fCurrent(ioDListHead.fHeadL)
 		{
 		if (fCurrent)
 			{
-			ZAssertStop(kDebug, fCurrent->fNext);
-			ZAssertStop(kDebug, fCurrent->fPrev);
+			ZAssertStop(L::kDebug, fCurrent->fNext);
+			ZAssertStop(L::kDebug, fCurrent->fPrev);
 			fNext = fCurrent->fNext;
 			fCurrent->fNext = nullptr;
 			fCurrent->fPrev = nullptr;
@@ -251,7 +246,7 @@ public:
 
 	operator operator_bool_type() const
 		{
-		ZAssertStop(kDebug, fCurrent && fNext || !fCurrent && !fNext);
+		ZAssertStop(L::kDebug, fCurrent && fNext || !fCurrent && !fNext);
 		return operator_bool_generator_type::translate(fCurrent);
 		}
 
@@ -260,8 +255,8 @@ public:
 
 	void Advance()
 		{
-		ZAssertStop(kDebug, fCurrent);
-		ZAssertStop(kDebug, fNext);
+		ZAssertStop(L::kDebug, fCurrent);
+		ZAssertStop(L::kDebug, fNext);
 		if (fNext == fDListHead.fHeadL)
 			{
 			fCurrent = nullptr;
@@ -269,7 +264,7 @@ public:
 			}
 		else
 			{
-			ZAssertStop(kDebug, fNext->fNext);
+			ZAssertStop(L::kDebug, fNext->fNext);
 			fCurrent = fNext;
 			fNext = fNext->fNext;
 			fCurrent->fNext = nullptr;
