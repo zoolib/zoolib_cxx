@@ -29,14 +29,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <AvailabilityMacros.h>
 #	include <TargetConditionals.h>
 
-#	if TARGET_OS_IPHONE
-#		define ZMACRO_IPhone 1
-#		define ZMACRO_IPhone_Device 1
-#		define ZMACRO_IPhone_Simulator 0
-#	elif TARGET_IPHONE_SIMULATOR
+#	if TARGET_IPHONE_SIMULATOR
 #		define ZMACRO_IPhone 1
 #		define ZMACRO_IPhone_Device 0
 #		define ZMACRO_IPhone_Simulator 1
+#	elif TARGET_OS_IPHONE
+#		define ZMACRO_IPhone 1
+#		define ZMACRO_IPhone_Device 1
+#		define ZMACRO_IPhone_Simulator 0
 #	endif
 
 #endif
