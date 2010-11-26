@@ -268,6 +268,38 @@ void Source_Dataset::Insert(const ZVal_Any& iVal)
 void Source_Dataset::Erase(const ZVal_Any& iVal)
 	{ this->pModify(sAsDaton(iVal), iVal, false); }
 
+size_t Source_Dataset::OpenTransaction()
+	{
+	fStack.push_back(fMap_Pending);
+	return fStack.size();
+	}
+
+void Source_Dataset::ClearTransaction(size_t iIndex)
+	{
+	ZAssert(iIndex == fStack.size());
+	fMap_Pending = fStack.back();
+
+	this->pInvokeCallable();
+	}
+
+void Source_Dataset::CloseTransaction(size_t iIndex)
+	{
+	ZAssert(iIndex == fStack.size());
+	fStack.pop_back();
+	if (fStack.empty())
+		{
+		for (Map_Pending::iterator i = fMap_Pending.begin(), end = fMap_Pending.end(); i != end; ++i)
+			{
+			if (i->second.second)
+				fDataset->Insert(i->first);
+			else
+				fDataset->Erase(i->first);			
+			}
+		fMap_Pending.clear();
+		}
+	this->pInvokeCallable();
+	}
+
 void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense)
 	{
 	Map_Pending::iterator i = fMap_Pending.find(iDaton);
@@ -281,34 +313,6 @@ void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal
 		fMap_Pending.erase(i);
 		}
 	this->pInvokeCallable();	
-	}
-
-void Source_Dataset::Commit()
-	{
-	if (fMap_Pending.empty())
-		return;
-
-	for (Map_Pending::iterator i = fMap_Pending.begin(), end = fMap_Pending.end(); i != end; ++i)
-		{
-		if (i->second.second)
-			fDataset->Insert(i->first);
-		else
-			fDataset->Erase(i->first);			
-		}
-
-	fMap_Pending.clear();
-
-	this->pInvokeCallable();
-	}
-
-void Source_Dataset::Abort()
-	{
-	if (fMap_Pending.empty())
-		return;
-
-	fMap_Pending.clear();
-
-	this->pInvokeCallable();
 	}
 
 void Source_Dataset::Dump(const ZStrimW& w)
@@ -389,15 +393,18 @@ ZRef<ZQE::Row> Source_Dataset::pReadInc(ZRef<Walker> iWalker)
 void Source_Dataset::pPull()
 	{
 	// Get our map in sync with fDataset
+	ZLOGF(s, eDebug);
 	ZRef<Deltas> theDeltas;
 	fEvent = fDataset->GetDeltas(theDeltas, fEvent);
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
+	s.Writef("theMNED.size()=%zu\n", theMNED.size());
 	for (Map_NamedEvent_Delta_t::const_iterator
 		iterMNED = theMNED.begin(), endMNED = theMNED.end();
 		iterMNED != endMNED; ++iterMNED)
 		{
 		const NamedEvent& theNamedEvent = iterMNED->first;
 		const map<Daton, bool>& theStatements = iterMNED->second->GetStatements();
+		s.Writef("theStatements.size()=%zu", theStatements.size());
 		for (map<Daton, bool>::const_iterator
 			iterStmts = theStatements.begin(), endStmts = theStatements.end();
 			iterStmts != endStmts; ++iterStmts)

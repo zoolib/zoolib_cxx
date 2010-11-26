@@ -30,6 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Walker.h"
 
 #include <map>
+#include <deque>
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -83,8 +84,9 @@ public:
 	void Insert(const ZVal_Any& iVal);
 	void Erase(const ZVal_Any& iVal);
 
-	void Commit();
-	void Abort();
+	size_t OpenTransaction();
+	void ClearTransaction(size_t iIndex);
+	void CloseTransaction(size_t iIndex);
 
 	void Dump(const ZStrimW& w);
 
@@ -105,6 +107,7 @@ private:
 
 	typedef std::map<ZDataset::Daton, std::pair<ZVal_Any, bool> > Map_Pending;
 	Map_Pending fMap_Pending;
+	std::deque<Map_Pending> fStack;
 
 	class PQuery;
 	// We could have the PQuery be an in-place value in the map.
