@@ -805,7 +805,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)> : public ZDelegate::Wr
 		P6 p6;
 		[anInvocation getArgument:&p6 atIndex:8];
 		P7 p7;
-		[anInvocation getArgument:&p6 atIndex:8];
+		[anInvocation getArgument:&p6 atIndex:9];
 
 		fCallable->Call(p0, p1, p2, p3, p4, p5, p6, p7);
 		}
