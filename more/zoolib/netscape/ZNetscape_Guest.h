@@ -39,19 +39,21 @@ class NPObjectG;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * NPPSetter
+#pragma mark * SetRestoreNPP
 
-class NPPSetter
+class SetRestoreNPP
 	{
+public:
+	SetRestoreNPP(NPP iNPP);
+	~SetRestoreNPP();
+
+	static NPP sCurrent();
+
 private:
 	NPP fPrior;
-	static NPP spNPP;
-
-public:
-	NPPSetter(NPP iNPP);
-	~NPPSetter();
-	static NPP sCurrent();
 	};
+
+typedef SetRestoreNPP NPPSetter;
 
 // =================================================================================================
 #pragma mark -

@@ -34,11 +34,11 @@ using std::min;
 using std::string;
 
 #define ZNETSCAPE_BEFORE_OBJECT(a) \
-	NPPSetter theSetter(static_cast<ObjectG*>(a)->GetNPP()); \
+	SetRestoreNPP theSetRestoreNPP(static_cast<ObjectG*>(a)->GetNPP()); \
 	try {
 
 #define ZNETSCAPE_BEFORE_GUESTMEISTER(npp) \
-	NPPSetter theSetter(npp);\
+	SetRestoreNPP theSetRestoreNPP(npp);\
 	try {
 
 namespace ZooLib {
@@ -47,18 +47,18 @@ namespace ZNetscape {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * NPPSetter
+#pragma mark * SetRestoreNPP
 
-NPP NPPSetter::spNPP;
+static NPP spNPP;
 
-NPPSetter::NPPSetter(NPP iNPP)
+SetRestoreNPP::SetRestoreNPP(NPP iNPP)
 :	fPrior(spNPP)
 	{ spNPP = iNPP; }
 
-NPPSetter::~NPPSetter()
+SetRestoreNPP::~SetRestoreNPP()
 	{ spNPP = fPrior; }
 
-NPP NPPSetter::sCurrent()
+NPP SetRestoreNPP::sCurrent()
 	{ return spNPP; }
 
 // =================================================================================================
@@ -136,52 +136,56 @@ void NPObjectG::Release()
 	{ GuestMeister::sGet()->Host_ReleaseObject(this); }
 
 bool NPObjectG::HasMethod(const string& iName)
-	{ return GuestMeister::sGet()->Host_HasMethod(NPPSetter::sCurrent(), this, sAsNPI(iName)); }
+	{ return GuestMeister::sGet()->Host_HasMethod(SetRestoreNPP::sCurrent(), this, sAsNPI(iName)); }
 
 bool NPObjectG::Invoke(
 	const string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
 	{
 	return GuestMeister::sGet()->Host_Invoke(
-		NPPSetter::sCurrent(), this, sAsNPI(iName), iArgs, iCount, &oResult);
+		SetRestoreNPP::sCurrent(), this, sAsNPI(iName), iArgs, iCount, &oResult);
 	}
 
 bool NPObjectG::InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
 	{ return GuestMeister::sGet()->Host_InvokeDefault(
-		NPPSetter::sCurrent(), this, iArgs, iCount, &oResult); }
+		SetRestoreNPP::sCurrent(), this, iArgs, iCount, &oResult); }
 
 bool NPObjectG::HasProperty(const string& iName)
-	{ return GuestMeister::sGet()->Host_HasProperty(NPPSetter::sCurrent(), this, sAsNPI(iName)); }
+	{
+	return GuestMeister::sGet()->Host_HasProperty(SetRestoreNPP::sCurrent(), this, sAsNPI(iName));
+	}
 
 bool NPObjectG::HasProperty(size_t iIndex)
-	{ return GuestMeister::sGet()->Host_HasProperty(NPPSetter::sCurrent(), this, sAsNPI(iIndex)); }
+	{
+	return GuestMeister::sGet()->Host_HasProperty(SetRestoreNPP::sCurrent(), this, sAsNPI(iIndex));
+	}
 
 bool NPObjectG::GetProperty(const string& iName, NPVariantG& oResult)
 	{ return GuestMeister::sGet()->Host_GetProperty(
-		NPPSetter::sCurrent(), this, sAsNPI(iName), &oResult); }
+		SetRestoreNPP::sCurrent(), this, sAsNPI(iName), &oResult); }
 
 bool NPObjectG::GetProperty(size_t iIndex, NPVariantG& oResult)
 	{ return GuestMeister::sGet()->Host_GetProperty(
-		NPPSetter::sCurrent(), this, sAsNPI(iIndex), &oResult); }
+		SetRestoreNPP::sCurrent(), this, sAsNPI(iIndex), &oResult); }
 
 bool NPObjectG::SetProperty(const string& iName, const NPVariantG& iValue)
 	{ return GuestMeister::sGet()->Host_SetProperty(
-		NPPSetter::sCurrent(), this, sAsNPI(iName), &iValue); }
+		SetRestoreNPP::sCurrent(), this, sAsNPI(iName), &iValue); }
 
 bool NPObjectG::SetProperty(size_t iIndex, const NPVariantG& iValue)
 	{ return GuestMeister::sGet()->Host_SetProperty(
-		NPPSetter::sCurrent(), this, sAsNPI(iIndex), &iValue); }
+		SetRestoreNPP::sCurrent(), this, sAsNPI(iIndex), &iValue); }
 
 bool NPObjectG::RemoveProperty(const string& iName)
 	{ return GuestMeister::sGet()->Host_RemoveProperty(
-		NPPSetter::sCurrent(), this, sAsNPI(iName)); }
+		SetRestoreNPP::sCurrent(), this, sAsNPI(iName)); }
 
 bool NPObjectG::RemoveProperty(size_t iIndex)
 	{ return GuestMeister::sGet()->Host_RemoveProperty(
-		NPPSetter::sCurrent(), this, sAsNPI(iIndex)); }
+		SetRestoreNPP::sCurrent(), this, sAsNPI(iIndex)); }
 
 bool NPObjectG::Enumerate(NPIdentifier*& oIdentifiers, uint32& oCount)
 	{ return GuestMeister::sGet()->Host_Enumerate(
-		NPPSetter::sCurrent(), this, &oIdentifiers, &oCount); }
+		SetRestoreNPP::sCurrent(), this, &oIdentifiers, &oCount); }
 
 // =================================================================================================
 #pragma mark -
@@ -207,7 +211,7 @@ ObjectG::ObjectG()
 	{
 	this->_class = &spNPClass;
 	this->referenceCount = 0;
-	fNPP = NPPSetter::sCurrent();
+	fNPP = SetRestoreNPP::sCurrent();
 	}
 
 ObjectG::~ObjectG()
