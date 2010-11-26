@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZValPred_T__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCallable.h"
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZUtil_STL_set.h"
@@ -47,9 +48,7 @@ template <class Val> class ZValPred_T;
 #pragma mark * ZValComparator_T
 
 template <class Val> class ZValComparator_Simple_T;
-template <class Val> class ZValComparator_StringContains_T;
-template <class Val> class ZValComparator_SeqContains_T;
-template <class Val> class ZValComparator_Regex_T;
+template <class Val> class ZValComparator_Callable_T;
 
 template <class Val>
 class ZValComparator_T : public ZCounted
@@ -66,9 +65,7 @@ public:
 
 	virtual int pRevCompare(ZValComparator_T<Val>* iOther) = 0;
 	virtual int pCompare_Simple(ZValComparator_Simple_T<Val>* iOther) = 0;
-	virtual int pCompare_StringContains(ZValComparator_StringContains_T<Val>* iOther) = 0;
-	virtual int pCompare_SeqContains(ZValComparator_SeqContains_T<Val>* iOther) = 0;
-	virtual int pCompare_Regex(ZValComparator_Regex_T<Val>* iOther) = 0;
+	virtual int pCompare_Callable(ZValComparator_Callable_T<Val>* iOther) = 0;
 	};
 
 template <class Val>
@@ -88,7 +85,7 @@ int ZValComparator_T<Val>::Compare(ZRef<ZValComparator_T> iOther)
 
 	// VERY IMPORTANT. pRevCompare returns 1 if the callee is less than
 	// the param. So we invoke it on iOther to get the sense that callers expect.
-	return iOther.Get()->pRevCompare(this);
+	return iOther->pRevCompare(this);
 	}
 
 // =================================================================================================
@@ -103,14 +100,9 @@ public:
 	virtual int pCompare_Simple(ZValComparator_Simple_T<Val>* iOther)
 		{ return -1 ;}
 
-	virtual int pCompare_StringContains(ZValComparator_StringContains_T<Val>* iOther)
+	virtual int pCompare_Callable(ZValComparator_Callable_T<Val>* iOther)
 		{ return -1 ;}
 
-	virtual int pCompare_SeqContains(ZValComparator_SeqContains_T<Val>* iOther)
-		{ return -1 ;}
-
-	virtual int pCompare_Regex(ZValComparator_Regex_T<Val>* iOther)
-		{ return -1 ;}
 	};
 
 template <class Val>
@@ -122,26 +114,10 @@ public:
 	};
 
 template <class Val>
-class ZValComparator_GT_StringContains_T : public ZValComparator_GT_Simple_T<Val>
+class ZValComparator_GT_Callable_T : public ZValComparator_GT_Simple_T<Val>
 	{
 public:
-	virtual int pCompare_StringContains(ZValComparator_StringContains_T<Val>* iOther)
-		{ return 1 ;}
-	};
-
-template <class Val>
-class ZValComparator_GT_SeqContains_T : public ZValComparator_GT_StringContains_T<Val>
-	{
-public:
-	virtual int pCompare_SeqContains(ZValComparator_SeqContains_T<Val>* iOther)
-		{ return 1 ;}
-	};
-
-template <class Val>
-class ZValComparator_GT_Regex_T : public ZValComparator_GT_SeqContains_T<Val>
-	{
-public:
-	virtual int pCompare_Regex(ZValComparator_Regex_T<Val>* iOther)
+	virtual int pCompare_Callable(ZValComparator_Callable_T<Val>* iOther)
 		{ return 1 ;}
 	};
 
@@ -213,57 +189,42 @@ int ZValComparator_Simple_T<Val>::pCompare_Simple(ZValComparator_Simple_T<Val>* 
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValComparator_StringContains_T
+#pragma mark * ZValComparator_Callable_T
 
 template <class Val>
-class ZValComparator_StringContains_T : public ZValComparator_GT_Simple_T<Val>
+class ZValComparator_Callable_T : public ZValComparator_GT_Simple_T<Val>
 	{
 public:
-	ZValComparator_StringContains_T(int iStrength);
+	typedef ZCallable<bool(const Val& iLHS, const Val& iRHS)> Callable;
+
+	ZValComparator_Callable_T(ZRef<Callable> iCallable);
 
 // From ZValComparator_T
 	virtual bool Matches(const Val& iLHS, const Val& iRHS);
 
 	virtual int pRevCompare(ZValComparator_T<Val>* iOther);
-	virtual int pCompare_StringContains(ZValComparator_StringContains_T<Val>* iOther);
+	virtual int pCompare_Callable(ZValComparator_Callable_T<Val>* iOther);
 
 private:
-	const int fStrength;
+	ZRef<Callable> fCallable;
 	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparator_SeqContains_T
 
 template <class Val>
-class ZValComparator_SeqContains_T : public ZValComparator_GT_StringContains_T<Val>
-	{
-public:
-	ZValComparator_SeqContains_T();
-
-// From ZValComparator_T
-	virtual bool Matches(const Val& iLHS, const Val& iRHS);
-
-	virtual int pRevCompare(ZValComparator_T<Val>* iOther);
-	virtual int pCompare_SeqContains(ZValComparator_SeqContains_T<Val>* iOther);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparator_Regex_T
+ZValComparator_Callable_T<Val>::ZValComparator_Callable_T(ZRef<Callable> iCallable)
+:	fCallable(iCallable)
+	{}
 
 template <class Val>
-class ZValComparator_Regex_T : public ZValComparator_GT_SeqContains_T<Val>
-	{
-public:
-	ZValComparator_Regex_T();
+bool ZValComparator_Callable_T<Val>::Matches(const Val& iLHS, const Val& iRHS)
+	{ return fCallable->Call(iLHS, iRHS); }
 
-// From ZValComparator_T
-	virtual bool Matches(const Val& iLHS, const Val& iRHS);
+template <class Val>
+int ZValComparator_Callable_T<Val>::pRevCompare(ZValComparator_T<Val>* iOther)
+	{ return iOther->pCompare_Callable(this); }
 
-	virtual int pRevCompare(ZValComparator_T<Val>* iOther);
-	virtual int pCompare_Regex(ZValComparator_Regex_T<Val>* iOther);
-	};
+template <class Val>
+int ZValComparator_Callable_T<Val>::pCompare_Callable(ZValComparator_Callable_T<Val>* iOther)
+	{ return fCallable < iOther->fCallable ? -1 : fCallable > iOther->fCallable ? 1 : 0; }
 
 // =================================================================================================
 #pragma mark -
@@ -319,7 +280,7 @@ int ZValComparand_T<Val>::Compare(ZRef<ZValComparand_T> iOther)
 
 	// VERY IMPORTANT. pRevCompare returns 1 if the callee is less than
 	// the param. So we invoke it on iOther to get the sense that callers expect.
-	return iOther.Get()->pRevCompare(this);
+	return iOther->pRevCompare(this);
 	}
 
 // =================================================================================================
