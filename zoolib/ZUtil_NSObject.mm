@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUnicode.h"
 
+#import <Foundation/NSDate.h>
 #import <Foundation/NSString.h>
 
 using std::string;
@@ -359,6 +360,18 @@ NSObject* sAsNSObject(const ZAny& iVal)
 
 -(ZAny)asAnyWithDefault:(const ZAny&)iDefault
 	{ return ZAny(int64([self longLongValue])); }
+
+@end
+
+// =================================================================================================
+@interface NSDate (ZAny_Additions)
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@end
+
+@implementation NSDate (ZAny_Additions)
+
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault
+	{ return ZAny(ZTime([self timeIntervalSince1970])); }
 
 @end
 
