@@ -30,5 +30,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict.h" // For restrict templated operators
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Explicit.h"
+
+namespace ZooLib {
+
+ZRef<ZRA::Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<ZRA::Expr_Rel>& iRel);
+ZRef<ZRA::Expr_Rel> operator*(const ZRef<ZRA::Expr_Rel>& iRel, const ZMap_Any& iMap);
+
+} // namespace ZooLib
 
 #endif // __ZRA_Util_RelOperators__

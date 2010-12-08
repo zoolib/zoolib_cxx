@@ -19,9 +19,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZUtil_Strim_ValPred.h"
+#include "zoolib/ZYad_Any.h"
+#include "zoolib/ZYad_ZooLibStrim.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_DoToStrim.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Explicit.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
@@ -78,6 +81,7 @@ class Visitor_DoToStrim
 ,	public virtual Visitor_Expr_Rel_Rename
 ,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Select
+,	public virtual Visitor_Expr_Rel_Explicit
 	{
 public:
 	virtual void Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr);
@@ -91,6 +95,8 @@ public:
 	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr);
 	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr);
 	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr);
+
+	virtual void Visit_Expr_Rel_Explicit(ZRef<Expr_Rel_Explicit> iExpr);
 
 private:
 	void pWriteBinary(const string& iFunctionName, ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr);
@@ -241,6 +247,10 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	w << ")";
 	}
 
+void Visitor_DoToStrim::Visit_Expr_Rel_Explicit(ZRef<Expr_Rel_Explicit> iExpr)
+	{
+	ZYad_ZooLibStrim::sToStrim(sMakeYadR(iExpr->GetMap()), pStrimW());
+	}
 
 void Visitor_DoToStrim::pWriteBinary(
 	const string& iFunctionName, ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr)
