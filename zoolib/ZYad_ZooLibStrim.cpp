@@ -676,7 +676,6 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 			spWriteLFIndent(s, iLevel, iOptions);
 			if (iOptions.fRawAsASCII)
 				{
-
 				for (;;)
 					{
 					uint64 lastPos = iStreamRPos.GetPosition();
