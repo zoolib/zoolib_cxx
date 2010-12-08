@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_Std.h"
 
@@ -61,10 +62,12 @@ ZRef<ZYadMapRPos> sMakeYadR(const ZMap_Any& iMap)
 
 namespace { // anonymous
 
-class Visitor_GetVal : public ZVisitor_Yad
+class Visitor_Do_GetVal
+:	public virtual ZVisitor_Do_T<ZVal_Any>
+,	public virtual ZVisitor_Yad
 	{
 public:
-	Visitor_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault);
+	Visitor_Do_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault);
 
 // From ZVisitor_Yad
 	virtual void Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR);
@@ -73,49 +76,43 @@ public:
 	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
 	virtual void Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
-// Our protocol
-	ZVal_Any GetVal(ZRef<ZYadR> iYadR);
-
 private:
 	bool fRepeatedPropsAsSeq;
 	const ZVal_Any& fDefault;
-	ZVal_Any fOutput;
 	};
 
-} // anonymous namespace
-
-Visitor_GetVal::Visitor_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault)
+Visitor_Do_GetVal::Visitor_Do_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault)
 :	fRepeatedPropsAsSeq(iRepeatedPropsAsSeq)
 ,	fDefault(iDefault)
 	{}
 
-void Visitor_GetVal::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
-	{ fOutput = iYadAtomR->AsAny(); }
+void Visitor_Do_GetVal::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+	{ this->pSetResult(iYadAtomR->AsAny()); }
 
-void Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
-	{ fOutput = sReadAll_T<ZData_Any>(iYadStreamR->GetStreamR()); }
+void Visitor_Do_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+	{ this->pSetResult(sReadAll_T<ZData_Any>(iYadStreamR->GetStreamR())); }
 
-void Visitor_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
-	{ fOutput = iYadStrimR->GetStrimR().ReadAll8(); }
+void Visitor_Do_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+	{ this->pSetResult(iYadStrimR->GetStrimR().ReadAll8()); }
 
-void Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+void Visitor_Do_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	ZSeq_Any theSeq;
 
 	while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
-		theSeq.Append(this->GetVal(theChild));
+		theSeq.Append(this->Do(theChild));
 
-	fOutput = theSeq;
+	this->pSetResult(theSeq);
 	}
 
-void Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+void Visitor_Do_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	ZMap_Any theMap;
 
 	string theName;
 	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
 		{
-		ZVal_Any theVal = this->GetVal(theChild);
+		ZVal_Any theVal = this->Do(theChild);
 		if (fRepeatedPropsAsSeq)
 			{
 			if (ZVal_Any* prior = theMap.PGet(theName))
@@ -134,19 +131,14 @@ void Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 		theMap.Set(theName, theVal);
 		}
 
-	fOutput = theMap;
+	this->pSetResult(theMap);
 	}
 
-ZVal_Any Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)
-	{
-	ZVal_Any result;
-	if (iYadR)
-		{
-		iYadR->Accept(*this);
-		std::swap(result, fOutput);
-		}
-	return result;
-	}
+} // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sFromYadR
 
 ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
 	{ return sFromYadR(false, iDefault, iYadR); }
@@ -168,7 +160,7 @@ ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYad
 	if (ZRef<ZYadSeqRPos_Any> asSeq = iYadR.DynamicCast<ZYadSeqRPos_Any>())
 		return asSeq->GetSeq();
 
-	return Visitor_GetVal(iRepeatedPropsAsSeq, iDefault).GetVal(iYadR);
+	return Visitor_Do_GetVal(iRepeatedPropsAsSeq, iDefault).Do(iYadR);
 	}
 
 } // namespace ZooLib
