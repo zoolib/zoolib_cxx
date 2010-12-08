@@ -84,20 +84,20 @@ Dataspace::~Dataspace()
 
 void Dataspace::SetCallable_LocalUpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable)
 	{
-	ZAcqMtxR guardR_Structure(fMtx_Structure);
+	ZAcqMtxR guardR_Structure(fMtxR_Structure);
 	fCallable_LocalUpdateNeeded = iCallable;
 	}
 
 void Dataspace::SetCallable_SourceUpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable)
 	{
-	ZAcqMtxR guardR_Structure(fMtx_Structure);
+	ZAcqMtxR guardR_Structure(fMtxR_Structure);
 	fCallable_SourceUpdateNeeded = iCallable;
 	}
 
 void Dataspace::Register(ZRef<Sieve> iSieve, const SearchSpec& iSearchSpec)
 	{
-	ZGuardRMtxR guardR_CallLocalUpdate(fMtx_CallLocalUpdate);
-	ZGuardRMtxR guardR_Structure(fMtx_Structure);
+	ZGuardRMtxR guardR_CallLocalUpdate(fMtxR_CallLocalUpdate);
+	ZGuardRMtxR guardR_Structure(fMtxR_Structure);
 
 	PSieve* thePSieve;
 	map<SearchSpec, PSieve>::iterator position = fSearchSpec_To_PSieve.lower_bound(iSearchSpec);
@@ -128,8 +128,8 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const SearchSpec& iSearchSpec)
 
 void Dataspace::LocalUpdate()
 	{
-	ZAcqMtxR acq_CallLocalUpdate(fMtx_CallLocalUpdate);
-	ZGuardRMtxR guardR_Structure(fMtx_Structure);
+	ZAcqMtxR acq_CallLocalUpdate(fMtxR_CallLocalUpdate);
+	ZGuardRMtxR guardR_Structure(fMtxR_Structure);
 
 	fCalled_LocalUpdateNeeded = false;
 
@@ -205,8 +205,8 @@ void Dataspace::LocalUpdate()
 
 void Dataspace::SourceUpdate()
 	{
-	ZGuardRMtxR guardR_CallSourceUpdate(fMtx_CallSourceUpdate);
-	ZGuardRMtxR guardR_Structure(fMtx_Structure);
+	ZGuardRMtxR guardR_CallSourceUpdate(fMtxR_CallSourceUpdate);
+	ZGuardRMtxR guardR_Structure(fMtxR_Structure);
 
 	fCalled_SourceUpdateNeeded = false;
 
@@ -319,7 +319,7 @@ void Dataspace::Changed(const ZRef<Sieve> & iSieve)
 
 void Dataspace::pTriggerLocalUpdate()
 	{
-	ZAcqMtxR acq(fMtx_Structure);
+	ZAcqMtxR acq(fMtxR_Structure);
 	if (!fCalled_LocalUpdateNeeded)
 		{
 		fCalled_LocalUpdateNeeded = true;
@@ -330,7 +330,7 @@ void Dataspace::pTriggerLocalUpdate()
 
 void Dataspace::pTriggerSourceUpdate()
 	{
-	ZAcqMtxR acq(fMtx_Structure);
+	ZAcqMtxR acq(fMtxR_Structure);
 	if (!fCalled_SourceUpdateNeeded)
 		{
 		fCalled_SourceUpdateNeeded = true;
@@ -341,14 +341,14 @@ void Dataspace::pTriggerSourceUpdate()
 
 void Dataspace::pCallback_Source(Source* iSource)
 	{
-	ZAcqMtxR acq(fMtx_Structure);
+	ZAcqMtxR acq(fMtxR_Structure);
 	this->pTriggerSourceUpdate();	
 	}
 
 void Dataspace::pFinalize(Sieve* iSieve)
 	{
-	ZAcqMtxR acq_CallLocalUpdate(fMtx_CallLocalUpdate);
-	ZAcqMtxR acq_Structure(fMtx_Structure);
+	ZAcqMtxR acq_CallLocalUpdate(fMtxR_CallLocalUpdate);
+	ZAcqMtxR acq_Structure(fMtxR_Structure);
 
 	if (!iSieve->FinishFinalize())
 		return;

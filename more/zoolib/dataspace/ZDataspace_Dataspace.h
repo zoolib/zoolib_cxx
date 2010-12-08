@@ -68,6 +68,8 @@ public:
 	virtual void Loaded(const ZRef<Sieve> & iSieve);
 	virtual void Changed(const ZRef<Sieve> & iSieve);
 
+	const ZMtxR& GetMtxR_CallSourceUpdate()	
+		{ return fMtxR_CallSourceUpdate; }
 private:
 	void pTriggerLocalUpdate();
 	void pTriggerSourceUpdate();
@@ -76,9 +78,9 @@ private:
 	Source* fSource;
 	ZRef<Source::Callable> fCallable_Source;
 	
-	ZMtxR fMtx_CallLocalUpdate;
-	ZMtxR fMtx_CallSourceUpdate;
-	ZMtxR fMtx_Structure;
+	ZMtxR fMtxR_CallLocalUpdate;
+	ZMtxR fMtxR_CallSourceUpdate;
+	ZMtxR fMtxR_Structure;
 
 	ZRef<ZCallable<void(Dataspace*)> > fCallable_LocalUpdateNeeded;
 	ZRef<ZCallable<void(Dataspace*)> > fCallable_SourceUpdateNeeded;

@@ -97,7 +97,7 @@ private:
 	friend class Walker;
 	ZRef<ZQE::Row> pReadInc(ZRef<Walker> iWalker);
 
-	void pPull();
+	bool pPull();
 
 	ZRef<ZDataset::Dataset> fDataset;
 	ZRef<Event> fEvent;
@@ -108,6 +108,7 @@ private:
 	typedef std::map<ZDataset::Daton, std::pair<ZVal_Any, bool> > Map_Pending;
 	Map_Pending fMap_Pending;
 	std::deque<Map_Pending> fStack;
+	bool fStackChanged;
 
 	class PQuery;
 	// We could have the PQuery be an in-place value in the map.

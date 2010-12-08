@@ -37,6 +37,7 @@ namespace ZDataspace {
 class SearchSpec
 	{
 public:
+	std::vector<ZMap_Any> fMaps;
 	std::vector<ZRA::NameMap> fNameMaps;
 	ZValPredCompound fPredCompound;
 	};
