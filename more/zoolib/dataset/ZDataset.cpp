@@ -342,8 +342,6 @@ void Dataset::pCommit()
 	{
 	if (!fPendingStatements.empty())
 		{
-		sEvent(fClock);
-
 		const NamedEvent theNE(fNombre, fClock->GetEvent());
 		const ZRef<Delta> theDelta = new Delta(&fPendingStatements);
 
@@ -353,6 +351,7 @@ void Dataset::pCommit()
 		ZRef<Deltas> theDeltas = new Deltas(&theMap);
 
 		fDeltasChain = new DeltasChain(fDeltasChain, theDeltas);
+		sEvent(fClock);
 		}
 	}
 
