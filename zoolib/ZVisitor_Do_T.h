@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZQ.h"
 #include "zoolib/ZSetRestore_T.h"
 #include "zoolib/ZVisitor.h"
 
@@ -42,24 +43,28 @@ public:
 		{}
 
 // Our protocol
-	bool Do(ZRef<ZVisitee> iRep, Result_t& oResult)
+	ZQ<Result_t> QDo(ZRef<ZVisitee> iRep)
 		{
 		if (iRep)
 			{
-			ZSetRestore_T<Result_t*> sr(fResultPtr, &oResult);
+			Result_t theResult;
+			ZSetRestore_T<Result_t*> sr(fResultPtr, &theResult);
 			iRep->Accept(*this);
-			return !fResultPtr;
+			if (!fResultPtr)
+				return theResult;
 			}
-		return false;
+		return null;
+		}
+
+	Result_t DDo(const Result_t& iDefault, ZRef<ZVisitee> iRep)
+		{
+		if (ZQ<Result_t> theQ = this->QDo(iRep))
+			return theQ.Get();
+		return iDefault;
 		}
 
 	Result_t Do(ZRef<ZVisitee> iRep)
-		{
-		Result_t result;
-		if (this->Do(iRep, result))
-			return result;
-		return Result_t();
-		}
+		{ return DDo(Result_t(), iRep); }
 
 protected:
 	void pSetResult(const Result_t& iResult)
