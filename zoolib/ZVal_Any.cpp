@@ -291,6 +291,21 @@ ZMap_Any& ZMap_Any::operator=(Map_t& iOther)
 	return *this;
 	}
 
+ZMap_Any::ZMap_Any(const char* iName, const char* iVal)
+	{
+	this->Set(iName, string8(iVal));
+	}
+
+ZMap_Any::ZMap_Any(const string8& iName, const ZVal_Any& iVal)
+	{
+	this->Set(iName, iVal);
+	}
+
+ZMap_Any::ZMap_Any(const string8& iName, const string8& iVal)
+	{
+	this->Set(iName, iVal);
+	}
+
 int ZMap_Any::Compare(const ZMap_Any& iOther) const
 	{
 	if (fRep == iOther.fRep)

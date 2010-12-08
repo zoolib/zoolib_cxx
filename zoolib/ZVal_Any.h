@@ -262,6 +262,10 @@ public:
 	template <class Iterator>
 	ZMap_Any(Iterator begin, Iterator end);
 
+	ZMap_Any(const char* iName, const char* iVal);
+	ZMap_Any(const string8& iName, const string8& iVal);
+	ZMap_Any(const string8& iName, const ZVal_Any& iVal);
+
 	int Compare(const ZMap_Any& iOther) const;
 
 // ZMap protocol
