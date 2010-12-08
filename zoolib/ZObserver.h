@@ -73,7 +73,7 @@ private:
 
 	void* fObject;
 	ZQ<std::string> fName_String;
-	ZQ<ZRef<CFStringRef> > fName_CFStringRef;
+	ZRef<CFStringRef> fName_CFStringRef;
 	ZRef<Callable> fCallable;
 	};
 
