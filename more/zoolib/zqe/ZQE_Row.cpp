@@ -66,9 +66,6 @@ ZRef<Row> RowVector::Get(size_t iIndex)
 	return null;
 	}
 
-const std::vector<ZRef<Row> >& RowVector::GetRows()
-	{ return fRows; }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Row_Pair

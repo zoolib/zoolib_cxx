@@ -18,53 +18,55 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Visitor_DoMakeWalker_Any.h"
 #include "zoolib/zqe/ZQE_Walker_Explicit.h"
-#include "zoolib/zqe/ZQE_Walker_Product.h"
-#include "zoolib/zqe/ZQE_Walker_Select.h"
 
 namespace ZooLib {
 namespace ZQE {
 
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_DoMakeWalker_Any
+#pragma mark * Walker_Explicit
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Difference(ZRef<ZRA::Expr_Rel_Difference> iExpr)
-	{ ZUnimplemented(); }
+Walker_Explicit::Walker_Explicit(const vector<string8>& iNames, const ZRef<Row>& iRow)
+:	fNames(iNames)
+,	fRow(iRow)
+	{}
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr)
-	{ ZUnimplemented(); }
-
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr)
+Walker_Explicit::Walker_Explicit(const ZMap_Any& iMap)
 	{
-	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+	vector<ZVal_Any> theVals;
+	for (ZMap_Any::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
 		{
-		if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
-			this->pSetResult(new Walker_Product(op0, op1));
+		fNames.push_back(iMap.NameOf(i));
+		theVals.push_back(iMap.Get(i));
 		}
+	fRow = new Row_Vector(&theVals);
 	}
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Union(ZRef<ZRA::Expr_Rel_Union> iExpr)
-	{ ZUnimplemented(); }
+Walker_Explicit::~Walker_Explicit()
+	{}
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr)
-	{ ZUnimplemented(); }
+size_t Walker_Explicit::NameCount()
+	{ return fNames.size(); }
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr)
-	{ ZUnimplemented(); }
-
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict> iExpr)
-	{ ZUnimplemented(); }
-
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr)
+string8 Walker_Explicit::NameAt(size_t iIndex)
 	{
-	if (ZRef<Walker> theWalker = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new Walker_Select(theWalker, iExpr->GetExpr_Bool()));	
+	if (iIndex < fNames.size())
+		return fNames.at(iIndex);
+	return string8();
 	}
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Explicit(ZRef<ZRA::Expr_Rel_Explicit> iExpr)
-	{ this->pSetResult(new Walker_Explicit(iExpr->GetMap())); }
+ZRef<Walker> Walker_Explicit::Clone()
+	{ return new Walker_Explicit(fNames, fRow); }
+
+ZRef<Row> Walker_Explicit::ReadInc()
+	{
+	ZRef<Row> result;
+	result.swap(fRow);
+	return result;
+	}
 
 } // namespace ZQE
 } // namespace ZooLib

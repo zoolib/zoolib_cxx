@@ -65,8 +65,6 @@ public:
 	size_t Count();
 	ZRef<Row> Get(size_t iIndex);
 
-	const std::vector<ZRef<Row> >& GetRows();
-
 private:
 	std::vector<ZRef<Row> > fRows;
 	};
