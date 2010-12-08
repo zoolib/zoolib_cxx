@@ -266,7 +266,7 @@ NSObject* sAsNSObject(const ZAny& iVal)
 -(ZAny)asAnyWithDefault:(const ZAny&)iDefault
 	{
 	// Hmm, log and return null or what?
-	ZDebugLogf(0, ("NSObject (ZAny_Additions) AsAny called"));
+	ZDebugLogf(0, ("NSObject (ZAny_Additions) asAnyWithDefault called"));
 	return iDefault;
 	}
 
@@ -298,8 +298,7 @@ NSObject* sAsNSObject(const ZAny& iVal)
 		(theKey = [i nextObject]); /*no inc*/)
 		{
 		const string theName = ZUtil_NSObject::sAsUTF8((NSString*)theKey);
-		const ZAny theVal =
-			[[self objectForKey:theKey] asAnyWithDefault:iDefault];
+		const ZAny theVal = [[self objectForKey:theKey] asAnyWithDefault:iDefault];
 		result.Set(theName, theVal);
 		}
 	return ZAny(result);
