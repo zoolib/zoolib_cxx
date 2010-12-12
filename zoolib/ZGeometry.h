@@ -354,18 +354,18 @@ ZGExtent_T<T>::ZGExtent_T(const ZPointPOD& iPoint)
 template <class T>
 class ZGRect_T;
 
-template <class T>
+template <class Ord>
 class ZGRectPOD_T
 	{
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGRectPOD_T<T>,
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGRectPOD_T<Ord>,
 		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(extent); }
 
-	ZGPointPOD_T<T> origin;
-	union { ZGExtentPOD_T<T> extent; ZGExtentPOD_T<T> size; };
+	ZGPointPOD_T<Ord> origin;
+	union { ZGExtentPOD_T<Ord> extent; ZGExtentPOD_T<Ord> size; };
 
 	ZGRectPOD_T& operator=(const ZRectPOD& other);
 	operator ZRectPOD() const;
@@ -410,50 +410,86 @@ public:
 	bool operator!=(const ZGRectPOD_T& other) const
 		{ return origin != other.origin || extent != other.extent; }
 
-	ZGPointPOD_T<T> Origin() const;
-	ZGExtentPOD_T<T> Extent() const;
+	ZGPointPOD_T<Ord> Origin() const;
+	ZGExtentPOD_T<Ord> Extent() const;
 
-	T Width() const;
-	T Height() const;
+	Ord Width() const;
+	Ord Height() const;
 
-	ZGRect_T<T> FlippedY(T iHeight) const;
+	Ord L() const; // aka MinX
+	Ord R() const; // aka MaxX
 
-	ZGRectPOD_T& SetMinX(T iX);
-	ZGRectPOD_T& SetMaxX(T iX);
+	Ord T() const; // aka MinY
+	Ord B() const; // aka MaxY
 
-	ZGRectPOD_T& SetMinY(T iY);
-	ZGRectPOD_T& SetMaxY(T iY);
+	ZGPoint_T<Ord> TL() const;
+	ZGPoint_T<Ord> TR() const;
+	ZGPoint_T<Ord> BL() const;
+	ZGPoint_T<Ord> BR() const;
 
-	T MinX() const;
-	T MaxX() const;
+	Ord CenterX() const;
+	Ord CenterY() const;
+	ZGPoint_T<Ord> Center() const;
 
-	T MinY() const;
-	T MaxY() const;
+	ZGRect_T<Ord> AlignedL(Ord iOrd) const;
+	ZGRect_T<Ord> AlignedT(Ord iOrd) const;
+	ZGRect_T<Ord> AlignedR(Ord iOrd) const;
+	ZGRect_T<Ord> AlignedB(Ord iOrd) const;
 
-	T CenterX() const;
-	T CenterY() const;
-	ZGPoint_T<T> Center() const;
+	ZGRect_T<Ord> WithL(Ord iOrd) const;
+	ZGRect_T<Ord> WithT(Ord iOrd) const;
+	ZGRect_T<Ord> WithR(Ord iOrd) const;
+	ZGRect_T<Ord> WithB(Ord iOrd) const;
 
-	ZGPoint_T<T> TL() const;
-	ZGPoint_T<T> TR() const;
-	ZGPoint_T<T> BL() const;
-	ZGPoint_T<T> BR() const;
+	ZGRect_T<Ord> AlignedTL(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> AlignedTR(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> AlignedBL(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> AlignedBR(ZGPoint_T<Ord> iPoint) const;
+
+	ZGRect_T<Ord> WithTL(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> WithTR(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> WithBL(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> WithBR(ZGPoint_T<Ord> iPoint) const;
+
+	ZGRect_T<Ord> CenteredX(Ord iOrd) const;
+	ZGRect_T<Ord> CenteredY(Ord iOrd) const;
+	ZGRect_T<Ord> Centered(Ord iX, Ord iY) const;
+	ZGRect_T<Ord> Centered(ZGPoint_T<Ord> iPoint) const;
+
+	ZGRect_T<Ord> InsettedH(Ord iOrd) const;
+	ZGRect_T<Ord> InsettedV(Ord iOrd) const;
+	ZGRect_T<Ord> Insetted(Ord iH, Ord iV) const;
+	ZGRect_T<Ord> Insetted(ZGExtent_T<Ord> iExtent) const;
+
+	ZGRect_T<Ord> FlippedY(Ord iHeight) const;
 
 	template <class U>
-	bool ContainsX(U iCoord) const;
+	bool ContainsX(U iOrd) const;
 
 	template <class U>
-	bool ContainsY(U iCoord) const;
+	bool ContainsY(U iOrd) const;
 
 	template <class U>
 	bool Contains(const ZGPoint_T<U>& pt) const;
 
 	template <class U>
 	bool Contains(U x, U y) const;
+
+// Min/Max API, akin to CoreGraphics
+	Ord MinX() const { return this->L(); }
+	Ord MaxX() const { return this->R(); }
+
+	Ord MinY() const { return this->T(); }
+	Ord MaxY() const { return this->B(); }
+
+	ZGRect_T<Ord> WithMinX(Ord iOrd) const { return this->WithL(iOrd); }
+	ZGRect_T<Ord> WithMinY(Ord iOrd) const { return this->WithT(iOrd); }
+	ZGRect_T<Ord> WithMaxX(Ord iOrd) const { return this->WithR(iOrd); }
+	ZGRect_T<Ord> WithMaxY(Ord iOrd) const { return this->WithB(iOrd); }
 	};
 
-template <class T>
-ZGRectPOD_T<T>& ZGRectPOD_T<T>::operator=(const ZRectPOD& other)
+template <class Ord>
+ZGRectPOD_T<Ord>& ZGRectPOD_T<Ord>::operator=(const ZRectPOD& other)
 	{
 	this->origin.x = other.left;
 	this->origin.y = other.top;
@@ -462,178 +498,279 @@ ZGRectPOD_T<T>& ZGRectPOD_T<T>::operator=(const ZRectPOD& other)
 	return *this;
 	}
 
-template <class T>
-ZGRectPOD_T<T>::operator ZRectPOD() const
+template <class Ord>
+ZGRectPOD_T<Ord>::operator ZRectPOD() const
 	{ return sRectPOD(origin.x, origin.y, origin.x + extent.h, origin.y + extent.v); }
 
-template <class T>
+template <class Ord>
 template <class U>
-ZGRectPOD_T<T>& ZGRectPOD_T<T>::operator=(const ZGRectPOD_T<U>& iOther)
+ZGRectPOD_T<Ord>& ZGRectPOD_T<Ord>::operator=(const ZGRectPOD_T<U>& iOther)
 	{
 	origin = iOther.origin;
 	extent = iOther.extent;
 	return *this;
 	}
 
-template <class T>
+template <class Ord>
 template <class U>
-ZGRectPOD_T<T>& ZGRectPOD_T<T>::operator=(const ZGExtentPOD_T<U>& iExtent)
+ZGRectPOD_T<Ord>& ZGRectPOD_T<Ord>::operator=(const ZGExtentPOD_T<U>& iExtent)
 	{
 	origin.x = T(0);
 	origin.y = T(0);
 	extent = iExtent;
 	return *this;
 	}
-template <class T>
-ZGPointPOD_T<T> ZGRectPOD_T<T>::Origin() const
+template <class Ord>
+ZGPointPOD_T<Ord> ZGRectPOD_T<Ord>::Origin() const
 	{ return origin; }
 
-template <class T>
-ZGExtentPOD_T<T> ZGRectPOD_T<T>::Extent() const
+template <class Ord>
+ZGExtentPOD_T<Ord> ZGRectPOD_T<Ord>::Extent() const
 	{ return extent; }
 
-template <class T>
-T ZGRectPOD_T<T>::Width() const
+template <class Ord>
+Ord ZGRectPOD_T<Ord>::Width() const
 	{ return extent.h; }
 
-template <class T>
-T ZGRectPOD_T<T>::Height() const
+template <class Ord>
+Ord ZGRectPOD_T<Ord>::Height() const
 	{ return extent.v; }
 
-template <class T>
-ZGRect_T<T> ZGRectPOD_T<T>::FlippedY(T iHeight) const
-	{ return ZGRect_T<T>(origin.x, iHeight - origin.y - extent.v, extent); }
-
-template <class T>
-ZGRectPOD_T<T>& ZGRectPOD_T<T>::SetMinX(T iX)
-	{
-	if (extent.h >= 0)
-		{
-		extent.h += origin.x - iX;
-		origin.x = iX;
-		}
-	else
-		{
-		extent.h = origin.x - iX;
-		}
-	return *this;
-	}
-
-template <class T>
-ZGRectPOD_T<T>& ZGRectPOD_T<T>::SetMaxX(T iX)
-	{
-	if (extent.h >= 0)
-		{
-		extent.h = iX - origin.x;
-		}
-	else
-		{
-		extent.h += iX - origin.x;
-		origin.x = iX;
-		}
-	return *this;
-	}
-
-template <class T>
-ZGRectPOD_T<T>& ZGRectPOD_T<T>::SetMinY(T iY)
-	{
-	if (extent.v >= 0)
-		{
-		extent.v += origin.x - iY;
-		origin.y = iY;
-		}
-	else
-		{
-		extent.v = origin.y - iY;
-		}
-	return *this;
-	}
-
-template <class T>
-ZGRectPOD_T<T>& ZGRectPOD_T<T>::SetMaxY(T iY)
-	{
-	if (extent.v >= 0)
-		{
-		extent.v = iY - origin.y;
-		}
-	else
-		{
-		extent.v += iY - origin.y;
-		origin.y = iY;
-		}
-	return *this;
-	}
-
-template <class T>
-T ZGRectPOD_T<T>::MinX() const
+template <class Ord>
+Ord ZGRectPOD_T<Ord>::L() const
 	{ return extent.h >= 0 ? origin.x : origin.x + extent.h; }
 
-template <class T>
-T ZGRectPOD_T<T>::MaxX() const
+template <class Ord>
+Ord ZGRectPOD_T<Ord>::R() const
 	{ return extent.h < 0 ? origin.x : origin.x + extent.h; }
 
-template <class T>
-T ZGRectPOD_T<T>::MinY() const
+template <class Ord>
+Ord ZGRectPOD_T<Ord>::T() const
 	{ return extent.v >= 0 ? origin.y : origin.y + extent.v; }
 
-template <class T>
-T ZGRectPOD_T<T>::MaxY() const
+template <class Ord>
+Ord ZGRectPOD_T<Ord>::B() const
 	{ return extent.v < 0 ? origin.y : origin.y + extent.v; }
 
-template <class T>
-T ZGRectPOD_T<T>::CenterX() const
+template <class Ord>
+ZGPoint_T<Ord> ZGRectPOD_T<Ord>::TL() const
+	{ return ZGPoint_T<Ord>(this->MinX(), this->MinY()); }
+
+template <class Ord>
+ZGPoint_T<Ord> ZGRectPOD_T<Ord>::TR() const
+	{ return ZGPoint_T<Ord>(this->MaxX(), this->MinY()); }
+
+template <class Ord>
+ZGPoint_T<Ord> ZGRectPOD_T<Ord>::BL() const
+	{ return ZGPoint_T<Ord>(this->MinX(), this->MaxY()); }
+
+template <class Ord>
+ZGPoint_T<Ord> ZGRectPOD_T<Ord>::BR() const
+	{ return ZGPoint_T<Ord>(this->MaxX(), this->MaxY()); }
+
+template <class Ord>
+Ord ZGRectPOD_T<Ord>::CenterX() const
 	{ return origin.x + extent.h / 2; }
 
-template <class T>
-T ZGRectPOD_T<T>::CenterY() const
+template <class Ord>
+Ord ZGRectPOD_T<Ord>::CenterY() const
 	{ return origin.y + extent.v / 2; }
 
-template <class T>
-ZGPoint_T<T> ZGRectPOD_T<T>::Center() const
-	{ return ZGPoint_T<T>(this->CenterX(), this->CenterY()); }
+template <class Ord>
+ZGPoint_T<Ord> ZGRectPOD_T<Ord>::Center() const
+	{ return ZGPoint_T<Ord>(this->CenterX(), this->CenterY()); }
 
-template <class T>
-ZGPoint_T<T> ZGRectPOD_T<T>::TL() const
-	{ return ZGPoint_T<T>(this->MinX(), this->MinY()); }
-
-template <class T>
-ZGPoint_T<T> ZGRectPOD_T<T>::TR() const
-	{ return ZGPoint_T<T>(this->MaxX(), this->MinY()); }
-
-template <class T>
-ZGPoint_T<T> ZGRectPOD_T<T>::BL() const
-	{ return ZGPoint_T<T>(this->MinX(), this->MaxY()); }
-
-template <class T>
-ZGPoint_T<T> ZGRectPOD_T<T>::BR() const
-	{ return ZGPoint_T<T>(this->MaxX(), this->MaxY()); }
-
-template <class T>
-template <class U>
-bool ZGRectPOD_T<T>::ContainsX(U iCoord) const
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedL(Ord iOrd) const
 	{
-	if (extent.h > 0) return iCoord >= origin.x && iCoord < origin.x + extent.h;
-	else if (extent.h < 0) return iCoord < origin.x && iCoord >= origin.x + extent.h;
+	if (extent.h >= 0)
+		return ZGRect_T<Ord>(iOrd, origin.y, extent);
+	else
+		return ZGRect_T<Ord>(iOrd - origin.x + extent.h, origin.y, extent);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedT(Ord iOrd) const
+	{
+	if (extent.v >= 0)
+		return ZGRect_T<Ord>(origin.x, iOrd, extent);
+	else
+		return ZGRect_T<Ord>(origin.x, iOrd - origin.y + extent.v, extent);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedR(Ord iOrd) const
+	{
+	if (extent.h >= 0)
+		return ZGRect_T<Ord>(iOrd - extent.h, origin.y, extent);
+	else
+		return ZGRect_T<Ord>(iOrd, origin.y, extent);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedB(Ord iOrd) const
+	{
+	if (extent.v >= 0)
+		return ZGRect_T<Ord>(origin.x, iOrd - extent.v, extent);
+	else
+		return ZGRect_T<Ord>(origin.x, iOrd, extent);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithL(Ord iOrd) const
+	{
+	if (extent.h >= 0)
+		return ZGRect_T<Ord>(iOrd, origin.y, extent.h + origin.x - iOrd, extent.v);
+	else
+		return ZGRect_T<Ord>(origin, origin.x - iOrd, extent.v);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithT(Ord iOrd) const
+	{
+	if (extent.v >= 0)
+		return ZGRect_T<Ord>(origin.x, iOrd, extent.h, extent.v + origin.y - iOrd);
+	else
+		return ZGRect_T<Ord>(origin, extent.h, origin.y - iOrd);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithR(Ord iOrd) const
+	{
+	if (extent.h >= 0)
+		return ZGRect_T<Ord>(origin, iOrd - origin.x, extent.v);
+	else
+		return ZGRect_T<Ord>(iOrd, origin.y, extent.h + iOrd - origin.x, extent.v);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithB(Ord iOrd) const
+	{
+	if (extent.v >= 0)
+		return ZGRect_T<Ord>(origin, extent.h, iOrd - origin.y);
+	else
+		return ZGRect_T<Ord>(origin.x, iOrd, extent.h, extent.v + iOrd - origin.y);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedTL(ZGPoint_T<Ord> iPoint) const
+	{ 	return this->AlignedT(iPoint.y).AlignedL(iPoint.x); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedTR(ZGPoint_T<Ord> iPoint) const
+	{ return this->AlignedT(iPoint.y).AlignedR(iPoint.x); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedBL(ZGPoint_T<Ord> iPoint) const
+	{ return this->AlignedB(iPoint.y).AlignedL(iPoint.x); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedBR(ZGPoint_T<Ord> iPoint) const
+	{ return this->AlignedB(iPoint.y).AlignedR(iPoint.x); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithTL(ZGPoint_T<Ord> iPoint) const
+	{ 	return this->WithT(iPoint.y).WithL(iPoint.x); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithTR(ZGPoint_T<Ord> iPoint) const
+	{ return this->WithT(iPoint.y).WithR(iPoint.x); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithBL(ZGPoint_T<Ord> iPoint) const
+	{ return this->WithB(iPoint.y).WithL(iPoint.x); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithBR(ZGPoint_T<Ord> iPoint) const
+	{ return this->WithB(iPoint.y).WithR(iPoint.x); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::CenteredX(Ord iOrd) const
+	{ return ZGRect_T<Ord>(iOrd - extent.h / 2, origin.y, extent); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::CenteredY(Ord iOrd) const
+	{ return ZGRect_T<Ord>(origin.x, iOrd - extent.v / 2, extent); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::Centered(Ord iX, Ord iY) const
+	{ return ZGRect_T<Ord>(iX - extent.h / 2, iY - extent.v / 2, extent); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::Centered(ZGPoint_T<Ord> iPoint) const
+	{ return this->Centered(iPoint.x, iPoint.y); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::InsettedH(Ord iOrd) const
+	{
+	if (extent.h >= 0)
+		return ZGRect_T<Ord>(origin.x + iOrd, origin.y, extent.h - iOrd - iOrd, extent.v);
+	else
+		return ZGRect_T<Ord>(origin.x - iOrd, origin.y, extent.h + iOrd + iOrd, extent.v);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::InsettedV(Ord iOrd) const
+	{
+	if (extent.v >= 0)
+		return ZGRect_T<Ord>(origin.x, origin.y + iOrd, extent.h, extent.v - iOrd - iOrd);
+	else
+		return ZGRect_T<Ord>(origin.x, origin.y - iOrd, extent.h, extent.v + iOrd + iOrd);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::Insetted(Ord iH, Ord iV) const
+	{
+	if (extent.h >= 0)
+		{
+		if (extent.v >= 0)
+			return ZGRect_T<Ord>(origin.x + iH, origin.y + iV, extent.h - iH - iH, extent.v - iV - iV);
+		else
+			return ZGRect_T<Ord>(origin.x + iH, origin.y - iV, extent.h - iH - iH, extent.v + iV + iV);
+		}
+	else
+		{
+		if (extent.v >= 0)
+			return ZGRect_T<Ord>(origin.x - iH, origin.y + iV, extent.h + iH + iH, extent.v - iV - iV);
+		else
+			return ZGRect_T<Ord>(origin.x - iH, origin.y - iV, extent.h + iH + iH, extent.v + iV + iV);
+		}
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::Insetted(ZGExtent_T<Ord> iExtent) const
+	{ return this->Insetted(iExtent.h, iExtent.v); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::FlippedY(Ord iHeight) const
+	{ return ZGRect_T<Ord>(origin.x, iHeight - origin.y - extent.v, extent); }
+
+template <class Ord>
+template <class U>
+bool ZGRectPOD_T<Ord>::ContainsX(U iOrd) const
+	{
+	if (extent.h > 0) return iOrd >= origin.x && iOrd < origin.x + extent.h;
+	else if (extent.h < 0) return iOrd < origin.x && iOrd >= origin.x + extent.h;
 	else return false;
 	}
 
-template <class T>
+template <class Ord>
 template <class U>
-bool ZGRectPOD_T<T>::ContainsY(U iCoord) const
+bool ZGRectPOD_T<Ord>::ContainsY(U iOrd) const
 	{
-	if (extent.v > 0) return iCoord >= origin.y && iCoord < origin.y + extent.v;
-	else if (extent.h < 0) return iCoord < origin.y && iCoord >= origin.y + extent.v;
+	if (extent.v > 0) return iOrd >= origin.y && iOrd < origin.y + extent.v;
+	else if (extent.h < 0) return iOrd < origin.y && iOrd >= origin.y + extent.v;
 	else return false;
 	}
 
-template <class T>
+template <class Ord>
 template <class U>
-bool ZGRectPOD_T<T>::Contains(const ZGPoint_T<U>& pt) const
+bool ZGRectPOD_T<Ord>::Contains(const ZGPoint_T<U>& pt) const
 	{ return this->ContainsX(pt.x) && this->ContainsY(pt.y); }
 
-template <class T>
+template <class Ord>
 template <class U>
-bool ZGRectPOD_T<T>::Contains(U x, U y) const
+bool ZGRectPOD_T<Ord>::Contains(U x, U y) const
 	{ return this->ContainsX(x) && this->ContainsY(y); }
 
 // =================================================================================================
