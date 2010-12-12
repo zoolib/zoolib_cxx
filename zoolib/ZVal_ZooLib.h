@@ -121,31 +121,31 @@ public:
 	void Clear();
 
 	template <class S>
-	ZQ<S> QGet_T() const
+	ZQ<S> QGet() const
 		{
 		S theVal;
-		if (this->QGet_T<S>(theVal))
+		if (this->QGet<S>(theVal))
 			return theVal;
 		return null;
 		}
 
 	template <class S>
-	bool QGet_T(S& oVal) const;
+	bool QGet(S& oVal) const;
 
 	template <class S>
-	S DGet_T(const S& iDefault) const
+	S DGet(const S& iDefault) const
 		{
-		if (ZQ<S> theQ = this->QGet_T<S>())
+		if (ZQ<S> theQ = this->QGet<S>())
 			return theQ.Get();
 		return iDefault;
 		}
 
 	template <class S>
-	S Get_T() const
-		{ return this->DGet_T(S()); }
+	S Get() const
+		{ return this->DGet(S()); }
 
 	template <class S>
-	void Set_T(const S& iVal);
+	void Set(const S& iVal);
 
 // Comparison
 	int Compare(const ZVal_ZooLib& iOther) const;
@@ -375,7 +375,7 @@ inline void ZSeq_ZooLib::GetVector_T(OutputIterator iIter, const T& iDummy) cons
 	for (std::vector<ZVal_ZooLib>::const_iterator i = theVector.begin(), theEnd = theVector.end();
 		i != theEnd; ++i)
 		{
-		*iIter++ = (*i).Get_T<T>();
+		*iIter++ = (*i).Get<T>();
 		}
 	}
 
@@ -439,10 +439,10 @@ public:
 	void Clear();
 
 	template <class S>
-	S Get_T(const string8& iName) const;
+	S Get(const string8& iName) const;
 
 	template <class S>
-	S Get_T(const Index_t& iIndex) const;
+	S Get(const Index_t& iIndex) const;
 
 	ZVal_ZooLib* PGet(Index_t iIndex);
 	ZVal_ZooLib* PGet(const char* iPropName);
@@ -523,13 +523,13 @@ protected:
 
 template <class S>
 inline
-S ZMap_Z::Get_T(const string8& iName) const
-	{ return this->Get(iName).Get_T<S>(); }
+S ZMap_Z::Get(const string8& iName) const
+	{ return this->Get(iName).Get<S>(); }
 
 template <class S>
 inline
-S ZMap_Z::Get_T(const Index_t& iIndex) const
-	{ return this->Get(iIndex).Get_T<S>(); }
+S ZMap_Z::Get(const Index_t& iIndex) const
+	{ return this->Get(iIndex).Get<S>(); }
 
 // =================================================================================================
 #pragma mark -

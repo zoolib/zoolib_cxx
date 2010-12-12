@@ -32,16 +32,16 @@ using std::string;
 
 ZRef<ZYadR> sMakeYadR(const ZAny& iVal)
 	{
-	if (const string8* theVal = iVal.PGet_T<string8>())
+	if (const string8* theVal = iVal.PGet<string8>())
 		return sMakeYadR(*theVal);
 
-	if (const ZData_Any* theVal = iVal.PGet_T<ZData_Any>())
+	if (const ZData_Any* theVal = iVal.PGet<ZData_Any>())
 		return sMakeYadR(*theVal);
 
-	if (const ZSeq_Any* theVal = iVal.PGet_T<ZSeq_Any>())
+	if (const ZSeq_Any* theVal = iVal.PGet<ZSeq_Any>())
 		return sMakeYadR(*theVal);
 
-	if (const ZMap_Any* theVal = iVal.PGet_T<ZMap_Any>())
+	if (const ZMap_Any* theVal = iVal.PGet<ZMap_Any>())
 		return sMakeYadR(*theVal);
 
 	return new ZYadAtomR_Any(iVal);
@@ -117,7 +117,7 @@ void Visitor_Do_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 			{
 			if (ZVal_Any* prior = theMap.PGet(theName))
 				{
-				if (ZSeq_Any* priorSeq = prior->PGet_T<ZSeq_Any>())
+				if (ZSeq_Any* priorSeq = prior->PGet<ZSeq_Any>())
 					{
 					priorSeq->Append(theVal);
 					continue;

@@ -320,7 +320,7 @@ void ZVal_AppleEvent::Clear()
 	{ ::AEDisposeDesc(this); }
 
 template <>
-ZQ<bool> ZVal_AppleEvent::QGet_T<bool>() const
+ZQ<bool> ZVal_AppleEvent::QGet<bool>() const
 	{
 	if (typeTrue == descriptorType)
 		{
@@ -340,7 +340,7 @@ ZQ<bool> ZVal_AppleEvent::QGet_T<bool>() const
 	}
 
 template <>
-ZQ<string> ZVal_AppleEvent::QGet_T<string>() const
+ZQ<string> ZVal_AppleEvent::QGet<string>() const
 	{
 	if (false)
 		{}
@@ -366,7 +366,7 @@ ZQ<string> ZVal_AppleEvent::QGet_T<string>() const
 	}
 
 template <>
-ZQ<ZSeq_AppleEvent> ZVal_AppleEvent::QGet_T<ZSeq_AppleEvent>() const
+ZQ<ZSeq_AppleEvent> ZVal_AppleEvent::QGet<ZSeq_AppleEvent>() const
 	{
 	if (typeAEList == descriptorType)
 		return ZSeq_AppleEvent(*static_cast<const AEDescList*>(this));
@@ -375,7 +375,7 @@ ZQ<ZSeq_AppleEvent> ZVal_AppleEvent::QGet_T<ZSeq_AppleEvent>() const
 	}
 
 template <>
-ZQ<ZMap_AppleEvent> ZVal_AppleEvent::QGet_T<ZMap_AppleEvent>() const
+ZQ<ZMap_AppleEvent> ZVal_AppleEvent::QGet<ZMap_AppleEvent>() const
 	{
 	if (spAECheckIsRecord(this))
 		return ZMap_AppleEvent(*static_cast<const AEDescList*>(this));
@@ -384,7 +384,7 @@ ZQ<ZMap_AppleEvent> ZVal_AppleEvent::QGet_T<ZMap_AppleEvent>() const
 	}
 
 template <class S>
-ZQ<S> ZVal_AppleEvent::QGet_T() const
+ZQ<S> ZVal_AppleEvent::QGet() const
 	{
 	const DescType desiredDescType = ZAELookup_CPP2Desc<S>::sDescType;
 	if (desiredDescType == descriptorType)
@@ -409,14 +409,14 @@ ZQ<S> ZVal_AppleEvent::QGet_T() const
 	}
 
 template <>
-void ZVal_AppleEvent::Set_T<bool>(const bool& iVal)
+void ZVal_AppleEvent::Set<bool>(const bool& iVal)
 	{
 	::AEDisposeDesc(this);
 	::AECreateDesc(iVal ? typeTrue : typeFalse, nullptr, 0, this);
 	}
 
 template <>
-void ZVal_AppleEvent::Set_T<std::string>(const std::string& iVal)
+void ZVal_AppleEvent::Set<std::string>(const std::string& iVal)
 	{
 	#if ZCONFIG_Has_typeUTF8Text
 		::AEReplaceDescData(typeUTF8Text, iVal.data(), iVal.size(), this);
@@ -426,21 +426,21 @@ void ZVal_AppleEvent::Set_T<std::string>(const std::string& iVal)
 	}
 
 template <>
-void ZVal_AppleEvent::Set_T<ZSeq_AppleEvent>(const ZSeq_AppleEvent& iVal)
+void ZVal_AppleEvent::Set<ZSeq_AppleEvent>(const ZSeq_AppleEvent& iVal)
 	{
 	::AEDisposeDesc(this);
 	::AEDuplicateDesc(&iVal, this);
 	}
 
 template <>
-void ZVal_AppleEvent::Set_T<ZMap_AppleEvent>(const ZMap_AppleEvent& iVal)
+void ZVal_AppleEvent::Set<ZMap_AppleEvent>(const ZMap_AppleEvent& iVal)
 	{
 	::AEDisposeDesc(this);
 	::AEDuplicateDesc(&iVal, this);
 	}
 
 template <class S>
-void ZVal_AppleEvent::Set_T(const S& iVal)
+void ZVal_AppleEvent::Set(const S& iVal)
 	{
 	const ZAEValRef_T<S> theValRef(iVal);
 	::AEReplaceDescData(theValRef.sDescType, theValRef.Ptr(), theValRef.Size(), this);

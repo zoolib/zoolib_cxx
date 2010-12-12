@@ -226,12 +226,23 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 					// looks for a closing parenthesis doesn't choke.
 					return true;
 					}
-				// Try to read a double, which is how we're representing
-				// times in text streams for now.
+
+				// Read up till the closing paren, if any.
+				const string8 theContent = sRead_Until(iStrimU, ')');
+				if (const ZTime theTime = ZUtil_Time::sFromString_ISO8601(theContent))
+					{
+					oVal = theTime;
+					return true;
+					}
+
 				double theDouble;
-				if (!sTryRead_SignedDouble(iStrimU, theDouble))
-					spThrowParseException("Expected a floating point time");
-				oVal = ZTime(theDouble);
+				if (sTryRead_SignedDouble(ZStrimU_String(theContent), theDouble))
+					{
+					oVal = ZTime(theDouble);
+					return true;
+					}
+					
+				spThrowParseException("Expected a floating point time");
 				}
 			else if (theTypeLC == "rect")
 				{
@@ -802,86 +813,86 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		{
 		s.Write("Null");
 		}
-	else if (const ZType* theValue = ZAnyCast<ZType>(&iVal))
+	else if (const ZType* theValue = iVal.PGet<ZType>())
 		{
 		s << "Type(" << ZTypeAsString(*theValue) << ")";
 		}
-	else if (const uint64* theValue = ZAnyCast<uint64>(&iVal))
+	else if (const uint64* theValue = iVal.PGet<uint64>())
 		{
 		s.Writef("ID(0x%0llX)", *theValue);
 		}
-	else if (const char* theValue = ZAnyCast<char>(&iVal))
+	else if (const char* theValue = iVal.PGet<char>())
 		{
 		s.Writef("int8(%d)", *theValue);
 		}
-	else if (const unsigned char* theValue = ZAnyCast<unsigned char>(&iVal))
+	else if (const unsigned char* theValue = iVal.PGet<unsigned char>())
 		{
 		s.Writef("int8(%d)", *theValue);
 		}
-	else if (const signed char* theValue = ZAnyCast<signed char>(&iVal))
+	else if (const signed char* theValue = iVal.PGet<signed char>())
 		{
 		s.Writef("int8(%d)", *theValue);
 		}
-	else if (const short* theValue = ZAnyCast<short>(&iVal))
+	else if (const short* theValue = iVal.PGet<short>())
 		{
 		s.Writef("int16(%d)", *theValue);
 		}
-	else if (const unsigned short* theValue = ZAnyCast<unsigned short>(&iVal))
+	else if (const unsigned short* theValue = iVal.PGet<unsigned short>())
 		{
 		s.Writef("int16(%d)", *theValue);
 		}
-	else if (const int* theValue = ZAnyCast<int>(&iVal))
+	else if (const int* theValue = iVal.PGet<int>())
 		{
 		if (ZIntIs32Bit)
 			s.Writef("int32(%d)", *theValue);
 		else
 			s.Writef("int64(%lld)", int64(*theValue));
 		}
-	else if (const unsigned int* theValue = ZAnyCast<unsigned int>(&iVal))
+	else if (const unsigned int* theValue = iVal.PGet<unsigned int>())
 		{
 		if (ZIntIs32Bit)
 			s.Writef("int32(%d)", *theValue);
 		else
 			s.Writef("int64(%lld)", int64(*theValue));
 		}
-	else if (const long* theValue = ZAnyCast<long>(&iVal))
+	else if (const long* theValue = iVal.PGet<long>())
 		{
 		if (ZLongIs32Bit)
 			s.Writef("int32(%ld)", *theValue);
 		else
 			s.Writef("int64(%lld)", int64(*theValue));
 		}
-	else if (const unsigned long* theValue = ZAnyCast<unsigned long>(&iVal))
+	else if (const unsigned long* theValue = iVal.PGet<unsigned long>())
 		{
 		if (ZLongIs32Bit)
 			s.Writef("int32(%ld)", long(*theValue));
 		else
 			s.Writef("int64(%lld)", int64(*theValue));
 		}
-	else if (const int64* theValue = ZAnyCast<int64>(&iVal))
+	else if (const int64* theValue = iVal.PGet<int64>())
 		{
 		s.Writef("int64(%lld)", *theValue);
 		}
-	else if (const bool* theValue = ZAnyCast<bool>(&iVal))
+	else if (const bool* theValue = iVal.PGet<bool>())
 		{
 		if (*theValue)
 			s << "true";
 		else
 			s << "false";
 		}
-	else if (const float* theValue = ZAnyCast<float>(&iVal))
+	else if (const float* theValue = iVal.PGet<float>())
 		{
 		s << "float(";
 		ZUtil_Strim::sWriteExact(s, *theValue);
 		s << ")";
 		}
-	else if (const double* theValue = ZAnyCast<double>(&iVal))
+	else if (const double* theValue = iVal.PGet<double>())
 		{
 		s << "double(";
 		ZUtil_Strim::sWriteExact(s, *theValue);
 		s << ")";
 		}
-	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
+	else if (const ZTime* theValue = iVal.PGet<ZTime>())
 		{
 		// For the moment I'm just writing times as a count of seconds, putting
 		// the broken-out Gregorian version in a comment. Later we can improve
@@ -900,11 +911,11 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 			s.Write("time()");
 			}
 		}
-	else if (const VoidStar_t* theValue = ZAnyCast<VoidStar_t>(&iVal))
+	else if (const VoidStar_t* theValue = iVal.PGet<VoidStar_t>())
 		{
 		s.Writef("pointer(%p)", *theValue);
 		}
-	else if (const ZRectPOD* theValue = ZAnyCast<ZRectPOD>(&iVal))
+	else if (const ZRectPOD* theValue = iVal.PGet<ZRectPOD>())
 		{
 		s.Writef("Rect(%d, %d, %d, %d)",
 			theValue->left,
@@ -912,14 +923,14 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 			theValue->right,
 			theValue->bottom);
 		}
-	else if (const ZPointPOD* theValue = ZAnyCast<ZPointPOD>(&iVal))
+	else if (const ZPointPOD* theValue = iVal.PGet<ZPointPOD>())
 		{
 		s.Writef("Point(%d, %d)",
 			theValue->h,
 			theValue->v);
 		}
 	else if (const ZRef<ZCounted>* theValue =
-		ZAnyCast<ZRef<ZCounted> >(&iVal))
+		iVal.PGet<ZRef<ZCounted> >())
 		{
 		s.Writef("RefCounted(%p)", theValue->Get());
 		}

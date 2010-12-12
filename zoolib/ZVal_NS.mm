@@ -142,7 +142,7 @@ void ZVal_NS::Clear()
 	{ inherited::Clear(); }
 
 template <>
-ZQ<int8> ZVal_NS::QGet_T<int8>() const
+ZQ<int8> ZVal_NS::QGet<int8>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
 		return [asNumber charValue];
@@ -150,7 +150,7 @@ ZQ<int8> ZVal_NS::QGet_T<int8>() const
 	}
 
 template <>
-ZQ<int16> ZVal_NS::QGet_T<int16>() const
+ZQ<int16> ZVal_NS::QGet<int16>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
 		return [asNumber shortValue];
@@ -158,7 +158,7 @@ ZQ<int16> ZVal_NS::QGet_T<int16>() const
 	}
 
 template <>
-ZQ<int32> ZVal_NS::QGet_T<int32>() const
+ZQ<int32> ZVal_NS::QGet<int32>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
 		return [asNumber intValue];
@@ -166,7 +166,7 @@ ZQ<int32> ZVal_NS::QGet_T<int32>() const
 	}
 
 template <>
-ZQ<int64> ZVal_NS::QGet_T<int64>() const
+ZQ<int64> ZVal_NS::QGet<int64>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
 		return [asNumber longLongValue];
@@ -174,7 +174,7 @@ ZQ<int64> ZVal_NS::QGet_T<int64>() const
 	}
 
 template <>
-ZQ<bool> ZVal_NS::QGet_T<bool>() const
+ZQ<bool> ZVal_NS::QGet<bool>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
 		return [asNumber boolValue];
@@ -182,7 +182,7 @@ ZQ<bool> ZVal_NS::QGet_T<bool>() const
 	}
 
 template <>
-ZQ<float> ZVal_NS::QGet_T<float>() const
+ZQ<float> ZVal_NS::QGet<float>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
 		return [asNumber floatValue];
@@ -190,7 +190,7 @@ ZQ<float> ZVal_NS::QGet_T<float>() const
 	}
 
 template <>
-ZQ<double> ZVal_NS::QGet_T<double>() const
+ZQ<double> ZVal_NS::QGet<double>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
 		return [asNumber doubleValue];
@@ -198,7 +198,7 @@ ZQ<double> ZVal_NS::QGet_T<double>() const
 	}
 
 template <>
-ZQ<string8> ZVal_NS::QGet_T<string8>() const
+ZQ<string8> ZVal_NS::QGet<string8>() const
 	{
 	if (NSString* asString = spAs_T<NSString>(inherited::Get()))
 		return sAsUTF8(asString);
@@ -206,7 +206,7 @@ ZQ<string8> ZVal_NS::QGet_T<string8>() const
 	}
 
 template <>
-ZQ<ZVal_NS::NSStringPtr> ZVal_NS::QGet_T<ZVal_NS::NSStringPtr>() const
+ZQ<ZVal_NS::NSStringPtr> ZVal_NS::QGet<ZVal_NS::NSStringPtr>() const
 	{
 	if (NSString* asString = spAs_T<NSString>(inherited::Get()))
 		return asString;
@@ -214,7 +214,7 @@ ZQ<ZVal_NS::NSStringPtr> ZVal_NS::QGet_T<ZVal_NS::NSStringPtr>() const
 	}
 
 template <>
-ZQ<ZData_NS> ZVal_NS::QGet_T<ZData_NS>() const
+ZQ<ZData_NS> ZVal_NS::QGet<ZData_NS>() const
 	{
 	if (ZRef<NSData> asData = spAs_T<NSData>(inherited::Get()))
 		return asData;
@@ -222,7 +222,7 @@ ZQ<ZData_NS> ZVal_NS::QGet_T<ZData_NS>() const
 	}
 
 template <>
-ZQ<ZSeq_NS> ZVal_NS::QGet_T<ZSeq_NS>() const
+ZQ<ZSeq_NS> ZVal_NS::QGet<ZSeq_NS>() const
 	{
 	if (NSArray* asArray = spAs_T<NSArray>(inherited::Get()))
 		return asArray;
@@ -230,7 +230,7 @@ ZQ<ZSeq_NS> ZVal_NS::QGet_T<ZSeq_NS>() const
 	}
 
 template <>
-ZQ<ZMap_NS> ZVal_NS::QGet_T<ZMap_NS>() const
+ZQ<ZMap_NS> ZVal_NS::QGet<ZMap_NS>() const
 	{
 	if (NSDictionary* asDictionary = spAs_T<NSDictionary>(inherited::Get()))
 		return asDictionary;
@@ -238,51 +238,51 @@ ZQ<ZMap_NS> ZVal_NS::QGet_T<ZMap_NS>() const
 	}
 
 template <>
-void ZVal_NS::Set_T<int8>(const int8& iVal)
+void ZVal_NS::Set<int8>(const int8& iVal)
 	{ inherited::operator=([NSNumber numberWithChar:iVal]); }
 
 template <>
-void ZVal_NS::Set_T<int16>(const int16& iVal)
+void ZVal_NS::Set<int16>(const int16& iVal)
 	{ inherited::operator=([NSNumber numberWithShort:iVal]); }
 
 template <>
-void ZVal_NS::Set_T<int32>(const int32& iVal)
+void ZVal_NS::Set<int32>(const int32& iVal)
 	{ inherited::operator=([NSNumber numberWithInt:iVal]); }
 
 template <>
-void ZVal_NS::Set_T<int64>(const int64& iVal)
+void ZVal_NS::Set<int64>(const int64& iVal)
 	{ inherited::operator=([NSNumber numberWithLongLong:iVal]); }
 
 template <>
-void ZVal_NS::Set_T<bool>(const bool& iVal)
+void ZVal_NS::Set<bool>(const bool& iVal)
 	{ inherited::operator=([NSNumber numberWithBool:iVal]); }
 
 template <>
-void ZVal_NS::Set_T<float>(const float& iVal)
+void ZVal_NS::Set<float>(const float& iVal)
 	{ inherited::operator=([NSNumber numberWithFloat:iVal]); }
 
 template <>
-void ZVal_NS::Set_T<double>(const double& iVal)
+void ZVal_NS::Set<double>(const double& iVal)
 	{ inherited::operator=([NSNumber numberWithDouble:iVal]); }
 
 template <>
-void ZVal_NS::Set_T<string8>(const string8& iVal)
+void ZVal_NS::Set<string8>(const string8& iVal)
 	{ inherited::operator=(sString(iVal)); }
 
 template <>
-void ZVal_NS::Set_T<ZVal_NS::NSStringPtr>(const ZVal_NS::NSStringPtr& iVal)
+void ZVal_NS::Set<ZVal_NS::NSStringPtr>(const ZVal_NS::NSStringPtr& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>
-void ZVal_NS::Set_T<ZData_NS>(const ZData_NS& iVal)
+void ZVal_NS::Set<ZData_NS>(const ZData_NS& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>
-void ZVal_NS::Set_T<ZSeq_NS>(const ZSeq_NS& iVal)
+void ZVal_NS::Set<ZSeq_NS>(const ZSeq_NS& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>
-void ZVal_NS::Set_T<ZMap_NS>(const ZMap_NS& iVal)
+void ZVal_NS::Set<ZMap_NS>(const ZMap_NS& iVal)
 	{ inherited::operator=(iVal); }
 
 ZVal_NS ZVal_NS::Get(const string8& iName) const

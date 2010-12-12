@@ -375,7 +375,7 @@ ZRef<ZQE::Row> Source_Dataset::pReadInc(ZRef<Walker> iWalker)
 		// Ignore anything that's in pending (for now).
 		if (fMap_Pending.end() == fMap_Pending.find(iWalker->fCurrent_Main->first))
 			{
-			if (const ZMap_Any* theMap = iWalker->fCurrent_Main->second.second.PGet_T<ZMap_Any>())
+			if (const ZMap_Any* theMap = iWalker->fCurrent_Main->second.second.PGet<ZMap_Any>())
 				{
 				if (ZRef<ZQE::Row_Vector> theRow = spMakeRow(*theMap, iWalker->fNames))
 					{
@@ -393,7 +393,7 @@ ZRef<ZQE::Row> Source_Dataset::pReadInc(ZRef<Walker> iWalker)
 		{
 		if (iWalker->fCurrent_Pending->second.second)
 			{
-			if (const ZMap_Any* theMap = iWalker->fCurrent_Pending->second.first.PGet_T<ZMap_Any>())
+			if (const ZMap_Any* theMap = iWalker->fCurrent_Pending->second.first.PGet<ZMap_Any>())
 				{
 				if (ZRef<ZQE::Row_Vector> theRow = spMakeRow(*theMap, iWalker->fNames))
 					{

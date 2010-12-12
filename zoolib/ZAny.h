@@ -199,54 +199,46 @@ public:
 	void Clear();
 
 	template <class S>
-	S* PGet_T()
+	S* PGet()
 		{ return ZAnyBaseCast<S>(this); }
 
 	template <class S>
-	const S* PGet_T() const
+	const S* PGet() const
 		{ return ZAnyBaseCast<S>(this); }
 
 	template <class S>
-	ZQ<S> QGet_T() const
+	ZQ<S> QGet() const
 		{
-		if (const S* theVal = this->PGet_T<S>())
+		if (const S* theVal = this->PGet<S>())
 			return *theVal;
 		return null;
 		}
 
 	template <class S>
-	S DGet_T(const S& iDefault) const
+	S DGet(const S& iDefault) const
 		{
-		if (const S* theVal = this->PGet_T<S>())
+		if (const S* theVal = this->PGet<S>())
 			return *theVal;
 		return iDefault;
 		}
 
 	template <class S>
-	S Get_T() const
+	S Get() const
 		{
-		if (const S* theVal = this->PGet_T<S>())
+		if (const S* theVal = this->PGet<S>())
 			return *theVal;
 		return S();
 		}
 
 	template <class S>
-	void Set_T(const S& iVal)
+	void Set(const S& iVal)
 		{ ZAnyBase::operator=(iVal); }
 
 // Our protocol
 	template <class S>
-	bool Is_T() const
-		{ return this->PGet_T<S>(); }
+	bool Is() const
+		{ return this->PGet<S>(); }
 	};
-
-template<typename ValueType>
-ValueType* ZAnyCast(ZAny* operand)
-	{ return operand->PGet_T<ValueType>(); }
-
-template<typename ValueType>
-const ValueType* ZAnyCast(const ZAny* operand)
-	{ return operand->PGet_T<ValueType>(); }
 
 inline void swap(ZAny& a, ZAny& b)
 	{ a.swap(b); }

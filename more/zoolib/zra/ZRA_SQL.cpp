@@ -351,7 +351,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		{
 		s << "null";
 		}
-	else if (const string8* theValue = iAny.PGet_T<string8>())
+	else if (const string8* theValue = iAny.PGet<string8>())
 		{
 		ZStrimW_Escaped::Options theOptions;
 		theOptions.fQuoteQuotes = true;
@@ -360,7 +360,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		ZStrimW_Escaped(theOptions, s).Write(*theValue);
 		s << "'";
 		}
-	else if (const bool* theValue = iAny.PGet_T<bool>())
+	else if (const bool* theValue = iAny.PGet<bool>())
 		{
 		if (*theValue)
 			s.Write("1");
@@ -371,15 +371,15 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		{
 		s.Writef("%lld", asInt64);
 		}
-	else if (const float* asFloat = iAny.PGet_T<float>())
+	else if (const float* asFloat = iAny.PGet<float>())
 		{
 		ZUtil_Strim::sWriteExact(s, *asFloat);
 		}
-	else if (const double* asDouble = iAny.PGet_T<double>())
+	else if (const double* asDouble = iAny.PGet<double>())
 		{
 		ZUtil_Strim::sWriteExact(s, *asDouble);
 		}
-	else if (const ZTime* asTime = iAny.PGet_T<ZTime>())
+	else if (const ZTime* asTime = iAny.PGet<ZTime>())
 		{
 		ZUtil_Strim::sWriteExact(s, asTime->fVal);
 		}

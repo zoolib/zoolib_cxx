@@ -201,116 +201,116 @@ bool ZVal_ZooLib::sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 		{
 		oVal = ZVal_ZooLib();
 		}
-	else if (const string* theValue = ZAnyCast<string>(&iAny))
+	else if (const string* theValue = iAny.PGet<string>())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const ZType* theValue = ZAnyCast<ZType>(&iAny))
+	else if (const ZType* theValue = iAny.PGet<ZType>())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const uint64* theValue = ZAnyCast<uint64>(&iAny))
+	else if (const uint64* theValue = iAny.PGet<uint64>())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const char* theValue = ZAnyCast<char>(&iAny))
+	else if (const char* theValue = iAny.PGet<char>())
 		{
 		oVal = ZVal_ZooLib(int8(*theValue));
 		}
-	else if (const unsigned char* theValue = ZAnyCast<unsigned char>(&iAny))
+	else if (const unsigned char* theValue = iAny.PGet<unsigned char>())
 		{
 		oVal = ZVal_ZooLib(int8(*theValue));
 		}
-	else if (const signed char* theValue = ZAnyCast<signed char>(&iAny))
+	else if (const signed char* theValue = iAny.PGet<signed char>())
 		{
 		oVal = ZVal_ZooLib(int8(*theValue));
 		}
-	else if (const short* theValue = ZAnyCast<short>(&iAny))
+	else if (const short* theValue = iAny.PGet<short>())
 		{
 		oVal = ZVal_ZooLib(int16(*theValue));
 		}
-	else if (const unsigned short* theValue = ZAnyCast<unsigned short>(&iAny))
+	else if (const unsigned short* theValue = iAny.PGet<unsigned short>())
 		{
 		oVal = ZVal_ZooLib(int16(*theValue));
 		}
-	else if (const int* theValue = ZAnyCast<int>(&iAny))
+	else if (const int* theValue = iAny.PGet<int>())
 		{
 		if (ZIntIs32Bit)
 			oVal = ZVal_ZooLib(int32(*theValue));
 		else
 			oVal = ZVal_ZooLib(int64(*theValue));
 		}
-	else if (const unsigned int* theValue = ZAnyCast<unsigned int>(&iAny))
+	else if (const unsigned int* theValue = iAny.PGet<unsigned int>())
 		{
 		if (ZIntIs32Bit)
 			oVal = ZVal_ZooLib(int32(*theValue));
 		else
 			oVal = ZVal_ZooLib(int64(*theValue));
 		}
-	else if (const long* theValue = ZAnyCast<long>(&iAny))
+	else if (const long* theValue = iAny.PGet<long>())
 		{
 		if (ZLongIs32Bit)
 			oVal = ZVal_ZooLib(int32(*theValue));
 		else
 			oVal = ZVal_ZooLib(int64(*theValue));
 		}
-	else if (const unsigned long* theValue = ZAnyCast<unsigned long>(&iAny))
+	else if (const unsigned long* theValue = iAny.PGet<unsigned long>())
 		{
 		if (ZLongIs32Bit)
 			oVal = ZVal_ZooLib(int32(*theValue));
 		else
 			oVal = ZVal_ZooLib(int64(*theValue));
 		}
-	else if (const int64* theValue = ZAnyCast<int64>(&iAny))
+	else if (const int64* theValue = iAny.PGet<int64>())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const bool* theValue = ZAnyCast<bool>(&iAny))
+	else if (const bool* theValue = iAny.PGet<bool>())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const float* theValue = ZAnyCast<float>(&iAny))
+	else if (const float* theValue = iAny.PGet<float>())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const double* theValue = ZAnyCast<double>(&iAny))
+	else if (const double* theValue = iAny.PGet<double>())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iAny))
+	else if (const ZTime* theValue = iAny.PGet<ZTime>())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const VoidStar_t* theValue = ZAnyCast<VoidStar_t>(&iAny))
+	else if (const VoidStar_t* theValue = iAny.PGet<VoidStar_t>())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const ZRectPOD* theValue = ZAnyCast<ZRectPOD>(&iAny))
+	else if (const ZRectPOD* theValue = iAny.PGet<ZRectPOD>())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const ZPointPOD* theValue = ZAnyCast<ZPointPOD>(&iAny))
+	else if (const ZPointPOD* theValue = iAny.PGet<ZPointPOD>())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
 	else if (const ZRef<ZCounted>* theValue =
-		ZAnyCast<ZRef<ZCounted> >(&iAny))
+		iAny.PGet<ZRef<ZCounted> >())
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const vector<char>* theValue = ZAnyCast<vector<char> >(&iAny))
+	else if (const vector<char>* theValue = iAny.PGet<vector<char> >())
 		{
 		if (size_t theSize = theValue->size())
 			oVal = ZData_ZooLib(&(*theValue)[0], theSize);
 		else
 			oVal = ZData_ZooLib();
 		}
-	else if (const ZData_Any* theValue = ZAnyCast<ZData_Any>(&iAny))
+	else if (const ZData_Any* theValue = iAny.PGet<ZData_Any>())
 		{
 		// This relies on the fact that ZData_ZooLib is a typedef of ZData_Any.
 		oVal = *theValue;
 		}
-	else if (const vector<ZAny>* theValue = ZAnyCast<vector<ZAny> >(&iAny))
+	else if (const vector<ZAny>* theValue = iAny.PGet<vector<ZAny> >())
 		{
 		ZSeq_ZooLib theSeq;
 		for (vector<ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
@@ -324,7 +324,7 @@ bool ZVal_ZooLib::sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 			}
 		oVal = theSeq;
 		}
-	else if (const ZSeq_Any* theValue = ZAnyCast<ZSeq_Any>(&iAny))
+	else if (const ZSeq_Any* theValue = iAny.PGet<ZSeq_Any>())
 		{
 		ZSeq_ZooLib theSeq;
 		for (int x = 0, count = theValue->Count(); x < count; ++x)
@@ -337,7 +337,7 @@ bool ZVal_ZooLib::sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 			}
 		oVal = theSeq;
 		}
-	else if (const map<string, ZAny>* theValue = ZAnyCast<map<string, ZAny> >(&iAny))
+	else if (const map<string, ZAny>* theValue = iAny.PGet<map<string, ZAny> >())
 		{
 		ZMap_ZooLib theMap;
 		for (map<string, ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
@@ -349,7 +349,7 @@ bool ZVal_ZooLib::sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 			}
 		oVal = theMap;
 		}
-	else if (const ZMap_Any* theValue = ZAnyCast<ZMap_Any>(&iAny))
+	else if (const ZMap_Any* theValue = iAny.PGet<ZMap_Any>())
 		{
 		ZMap_ZooLib theMap;
 		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
@@ -689,7 +689,7 @@ void ZVal_ZooLib::Clear()
 	}
 
 template <>
-ZQ<ZType> ZVal_ZooLib::QGet_T<ZType>() const
+ZQ<ZType> ZVal_ZooLib::QGet<ZType>() const
 	{
 	if (fType.fType == eZType_Type)
 		return fData.fAs_Type;
@@ -697,7 +697,7 @@ ZQ<ZType> ZVal_ZooLib::QGet_T<ZType>() const
 	}
 
 template <>
-ZQ<uint64> ZVal_ZooLib::QGet_T<uint64>() const
+ZQ<uint64> ZVal_ZooLib::QGet<uint64>() const
 	{
 	if (fType.fType == eZType_ID)
 		return fData.fAs_ID;
@@ -705,7 +705,7 @@ ZQ<uint64> ZVal_ZooLib::QGet_T<uint64>() const
 	}
 
 template <>
-ZQ<int8> ZVal_ZooLib::QGet_T<int8>() const
+ZQ<int8> ZVal_ZooLib::QGet<int8>() const
 	{
 	if (fType.fType == eZType_Int8)
 		return fData.fAs_Int8;
@@ -713,7 +713,7 @@ ZQ<int8> ZVal_ZooLib::QGet_T<int8>() const
 	}
 
 template <>
-ZQ<int16> ZVal_ZooLib::QGet_T<int16>() const
+ZQ<int16> ZVal_ZooLib::QGet<int16>() const
 	{
 	if (fType.fType == eZType_Int16)
 		return fData.fAs_Int16;
@@ -721,7 +721,7 @@ ZQ<int16> ZVal_ZooLib::QGet_T<int16>() const
 	}
 
 template <>
-ZQ<int32> ZVal_ZooLib::QGet_T<int32>() const
+ZQ<int32> ZVal_ZooLib::QGet<int32>() const
 	{
 	if (fType.fType == eZType_Int32)
 		return fData.fAs_Int32;
@@ -729,7 +729,7 @@ ZQ<int32> ZVal_ZooLib::QGet_T<int32>() const
 	}
 
 template <>
-ZQ<int64> ZVal_ZooLib::QGet_T<int64>() const
+ZQ<int64> ZVal_ZooLib::QGet<int64>() const
 	{
 	if (fType.fType == eZType_Int64)
 		return fData.fAs_Int64;
@@ -737,7 +737,7 @@ ZQ<int64> ZVal_ZooLib::QGet_T<int64>() const
 	}
 
 template <>
-ZQ<bool> ZVal_ZooLib::QGet_T<bool>() const
+ZQ<bool> ZVal_ZooLib::QGet<bool>() const
 	{
 	if (fType.fType == eZType_Bool)
 		return fData.fAs_Bool;
@@ -745,7 +745,7 @@ ZQ<bool> ZVal_ZooLib::QGet_T<bool>() const
 	}
 
 template <>
-ZQ<float> ZVal_ZooLib::QGet_T<float>() const
+ZQ<float> ZVal_ZooLib::QGet<float>() const
 	{
 	if (fType.fType == eZType_Float)
 		return fData.fAs_Float;
@@ -753,7 +753,7 @@ ZQ<float> ZVal_ZooLib::QGet_T<float>() const
 	}
 
 template <>
-ZQ<double> ZVal_ZooLib::QGet_T<double>() const
+ZQ<double> ZVal_ZooLib::QGet<double>() const
 	{
 	if (fType.fType == eZType_Double)
 		return fData.fAs_Double;
@@ -761,7 +761,7 @@ ZQ<double> ZVal_ZooLib::QGet_T<double>() const
 	}
 
 template <>
-ZQ<ZTime> ZVal_ZooLib::QGet_T<ZTime>() const
+ZQ<ZTime> ZVal_ZooLib::QGet<ZTime>() const
 	{
 	if (fType.fType == eZType_Time)
 		return fData.fAs_Time;
@@ -769,7 +769,7 @@ ZQ<ZTime> ZVal_ZooLib::QGet_T<ZTime>() const
 	}
 
 template <>
-ZQ<void*> ZVal_ZooLib::QGet_T<void*>() const
+ZQ<void*> ZVal_ZooLib::QGet<void*>() const
 	{
 	if (fType.fType == eZType_Pointer)
 		return fData.fAs_Pointer;
@@ -777,7 +777,7 @@ ZQ<void*> ZVal_ZooLib::QGet_T<void*>() const
 	}
 
 template <>
-ZQ<ZRectPOD> ZVal_ZooLib::QGet_T<ZRectPOD>() const
+ZQ<ZRectPOD> ZVal_ZooLib::QGet<ZRectPOD>() const
 	{
 	if (fType.fType == eZType_Rect)
 		return *fData.fAs_Rect;
@@ -785,7 +785,7 @@ ZQ<ZRectPOD> ZVal_ZooLib::QGet_T<ZRectPOD>() const
 	}
 
 template <>
-ZQ<ZPointPOD> ZVal_ZooLib::QGet_T<ZPointPOD>() const
+ZQ<ZPointPOD> ZVal_ZooLib::QGet<ZPointPOD>() const
 	{
 	if (fType.fType == eZType_Point)
 		return fData.fAs_Point;
@@ -793,7 +793,7 @@ ZQ<ZPointPOD> ZVal_ZooLib::QGet_T<ZPointPOD>() const
 	}
 
 template <>
-ZQ<string> ZVal_ZooLib::QGet_T<string>() const
+ZQ<string> ZVal_ZooLib::QGet<string>() const
 	{
 	if (fType.fType == eZType_String)
 		return sFetch_T<ValString>(fType.fBytes)->AsString();
@@ -803,7 +803,7 @@ ZQ<string> ZVal_ZooLib::QGet_T<string>() const
 	}
 
 template <>
-ZQ<ZData_ZooLib> ZVal_ZooLib::QGet_T<ZData_ZooLib>() const
+ZQ<ZData_ZooLib> ZVal_ZooLib::QGet<ZData_ZooLib>() const
 	{
 	if (fType.fType == eZType_Raw)
 		return *sFetch_T<ZData_ZooLib>(fType.fBytes);
@@ -811,7 +811,7 @@ ZQ<ZData_ZooLib> ZVal_ZooLib::QGet_T<ZData_ZooLib>() const
 	}
 
 template <>
-ZQ<ZSeq_ZooLib> ZVal_ZooLib::QGet_T<ZSeq_ZooLib>() const
+ZQ<ZSeq_ZooLib> ZVal_ZooLib::QGet<ZSeq_ZooLib>() const
 	{
 	if (fType.fType == eZType_Vector)
 		return *sFetch_T<ZSeq_ZooLib>(fType.fBytes);
@@ -819,7 +819,7 @@ ZQ<ZSeq_ZooLib> ZVal_ZooLib::QGet_T<ZSeq_ZooLib>() const
 	}
 
 template <>
-ZQ<ZMap_ZooLib> ZVal_ZooLib::QGet_T<ZMap_ZooLib>() const
+ZQ<ZMap_ZooLib> ZVal_ZooLib::QGet<ZMap_ZooLib>() const
 	{
 	if (fType.fType == eZType_Tuple)
 		return *sFetch_T<ZMap_ZooLib>(fType.fBytes);
@@ -827,7 +827,7 @@ ZQ<ZMap_ZooLib> ZVal_ZooLib::QGet_T<ZMap_ZooLib>() const
 	}
 
 template <>
-ZQ<ZRef<ZCounted> > ZVal_ZooLib::QGet_T<ZRef<ZCounted> >() const
+ZQ<ZRef<ZCounted> > ZVal_ZooLib::QGet<ZRef<ZCounted> >() const
 	{
 	if (fType.fType == eZType_RefCounted)
 		return *sFetch_T<ZRef<ZCounted> >(fType.fBytes);
@@ -835,7 +835,7 @@ ZQ<ZRef<ZCounted> > ZVal_ZooLib::QGet_T<ZRef<ZCounted> >() const
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<ZType>(const ZType& iVal)
+void ZVal_ZooLib::Set<ZType>(const ZType& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Type;
@@ -843,7 +843,7 @@ void ZVal_ZooLib::Set_T<ZType>(const ZType& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<uint64>(const uint64& iVal)
+void ZVal_ZooLib::Set<uint64>(const uint64& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_ID;
@@ -851,7 +851,7 @@ void ZVal_ZooLib::Set_T<uint64>(const uint64& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<int8>(const int8& iVal)
+void ZVal_ZooLib::Set<int8>(const int8& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Int8;
@@ -859,7 +859,7 @@ void ZVal_ZooLib::Set_T<int8>(const int8& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<int16>(const int16& iVal)
+void ZVal_ZooLib::Set<int16>(const int16& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Int16;
@@ -867,7 +867,7 @@ void ZVal_ZooLib::Set_T<int16>(const int16& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<int32>(const int32& iVal)
+void ZVal_ZooLib::Set<int32>(const int32& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Int32;
@@ -875,7 +875,7 @@ void ZVal_ZooLib::Set_T<int32>(const int32& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<int64>(const int64& iVal)
+void ZVal_ZooLib::Set<int64>(const int64& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Int64;
@@ -883,7 +883,7 @@ void ZVal_ZooLib::Set_T<int64>(const int64& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<bool>(const bool& iVal)
+void ZVal_ZooLib::Set<bool>(const bool& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Bool;
@@ -891,7 +891,7 @@ void ZVal_ZooLib::Set_T<bool>(const bool& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<float>(const float& iVal)
+void ZVal_ZooLib::Set<float>(const float& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Float;
@@ -899,7 +899,7 @@ void ZVal_ZooLib::Set_T<float>(const float& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<double>(const double& iVal)
+void ZVal_ZooLib::Set<double>(const double& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Double;
@@ -907,7 +907,7 @@ void ZVal_ZooLib::Set_T<double>(const double& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<ZTime>(const ZTime& iVal)
+void ZVal_ZooLib::Set<ZTime>(const ZTime& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Time;
@@ -915,7 +915,7 @@ void ZVal_ZooLib::Set_T<ZTime>(const ZTime& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<VoidStar_t>(const VoidStar_t& iVal)
+void ZVal_ZooLib::Set<VoidStar_t>(const VoidStar_t& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Pointer;
@@ -923,7 +923,7 @@ void ZVal_ZooLib::Set_T<VoidStar_t>(const VoidStar_t& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<ZRectPOD>(const ZRectPOD& iVal)
+void ZVal_ZooLib::Set<ZRectPOD>(const ZRectPOD& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Rect;
@@ -931,7 +931,7 @@ void ZVal_ZooLib::Set_T<ZRectPOD>(const ZRectPOD& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<ZPointPOD>(const ZPointPOD& iVal)
+void ZVal_ZooLib::Set<ZPointPOD>(const ZPointPOD& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_Point;
@@ -940,7 +940,7 @@ void ZVal_ZooLib::Set_T<ZPointPOD>(const ZPointPOD& iVal)
 
 typedef const char* ConstCharStar_t;
 template <>
-void ZVal_ZooLib::Set_T<ConstCharStar_t>(const ConstCharStar_t& iVal)
+void ZVal_ZooLib::Set<ConstCharStar_t>(const ConstCharStar_t& iVal)
 	{
 	this->pRelease();
 	size_t theSize = strlen(iVal);
@@ -958,7 +958,7 @@ void ZVal_ZooLib::Set_T<ConstCharStar_t>(const ConstCharStar_t& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<string>(const string& iVal)
+void ZVal_ZooLib::Set<string>(const string& iVal)
 	{
 	this->pRelease();
 	size_t theSize = iVal.size();
@@ -976,7 +976,7 @@ void ZVal_ZooLib::Set_T<string>(const string& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<ZData_ZooLib>(const ZData_ZooLib& iVal)
+void ZVal_ZooLib::Set<ZData_ZooLib>(const ZData_ZooLib& iVal)
 	{
 	this->pRelease();
 	sCtor_T<ZData_ZooLib, ZData_ZooLib>(fType.fBytes, iVal);
@@ -984,7 +984,7 @@ void ZVal_ZooLib::Set_T<ZData_ZooLib>(const ZData_ZooLib& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<ZSeq_ZooLib>(const ZSeq_ZooLib& iVal)
+void ZVal_ZooLib::Set<ZSeq_ZooLib>(const ZSeq_ZooLib& iVal)
 	{
 	this->pRelease();
 	sCtor_T<ZSeq_ZooLib, ZSeq_ZooLib>(fType.fBytes, iVal);
@@ -992,7 +992,7 @@ void ZVal_ZooLib::Set_T<ZSeq_ZooLib>(const ZSeq_ZooLib& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<ZMap_ZooLib>(const ZMap_ZooLib& iVal)
+void ZVal_ZooLib::Set<ZMap_ZooLib>(const ZMap_ZooLib& iVal)
 	{
 	this->pRelease();
 	sCtor_T<ZMap_ZooLib, ZMap_ZooLib>(fType.fBytes, iVal);
@@ -1000,7 +1000,7 @@ void ZVal_ZooLib::Set_T<ZMap_ZooLib>(const ZMap_ZooLib& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<ZRef<ZCounted> >(const ZRef<ZCounted>& iVal)
+void ZVal_ZooLib::Set<ZRef<ZCounted> >(const ZRef<ZCounted>& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_RefCounted;

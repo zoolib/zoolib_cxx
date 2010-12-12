@@ -65,6 +65,7 @@ public:
 		return *this;
 		}
 
+// Overload, so we don't pack a ZAny inside a ZAny
 	ZVal_Any(const ZAny& iOther)
 	:	ZAny(iOther)
 		{}
@@ -75,6 +76,18 @@ public:
 		return *this;
 		}
 
+// Overload, so we can init/assign from a string constant
+	ZVal_Any(const char* iVal)
+	:	ZAny(string8(iVal))
+		{}
+
+	ZVal_Any& operator=(const char* iVal)
+		{
+		ZAny::operator=(string8(iVal));
+		return *this;
+		}
+
+// Overload, as ZAny's templated constructor is explicit.
 	template <class S>
 	ZVal_Any(const S& iVal)
 	:	ZAny(iVal)
@@ -89,9 +102,68 @@ public:
 
 	int Compare(const ZVal_Any& iOther) const;
 
+	using ZAny::PGet;
+	using ZAny::QGet;
+	using ZAny::DGet;
+	using ZAny::Get;
+
+// Shortcut access to values in an enclosed Map.
+	ZVal_Any* PGet(const string8& iName);
+	const ZVal_Any* PGet(const string8& iName) const;
 	ZVal_Any Get(const string8& iName) const;
+
+	template <class S>
+	S* PGet(const string8& iName)
+		{
+		if (ZVal_Any* theVal = this->PGet(iName))
+			return theVal->PGet<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	const S* PGet(const string8& iName) const
+		{
+		if (const ZVal_Any* theVal = this->PGet(iName))
+			return theVal->PGet<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	ZQ<S> QGet(const string8& iName) const
+		{ return this->Get(iName).QGet<S>(); }
+
+	template <class S>
+	S Get(const string8& iName) const
+		{ return this->Get(iName).Get<S>(); }
+
+// Shortcut access to values in an enclosed Seq.
+	ZVal_Any* PGet(size_t iIndex);
+	const ZVal_Any* PGet(size_t iIndex) const;
 	ZVal_Any Get(size_t iIndex) const;
 
+	template <class S>
+	S* PGet(size_t iIndex)
+		{
+		if (ZVal_Any* theVal = this->PGet(iIndex))
+			return theVal->PGet<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	const S* PGet(size_t iIndex) const
+		{
+		if (const ZVal_Any* theVal = this->PGet(iIndex))
+			return theVal->PGet<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	ZQ<S> QGet(size_t iIndex) const
+		{ return this->Get(iIndex).QGet<S>(); }
+
+	template <class S>
+	S Get(size_t iIndex) const
+		{ return this->Get(iIndex).Get<S>(); }
 
 // Typename accessors
 /// \cond DoxygenIgnore
@@ -100,6 +172,9 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Map, ZMap_Any)
 /// \endcond DoxygenIgnore
 
+	// If these are free functions then our template constructor will
+	// be tried for any free use of operator== and operator<, leading
+	// to perplexing errors all over the place.
 	bool operator==(const ZVal_Any& r) const
 		{ return this->Compare(r) == 0; }
 
@@ -130,7 +205,6 @@ public:
 	ZSeq_Any& operator=(const ZSeq_Any& iOther);
 
 	ZSeq_Any(const Vector_t& iOther);
-
 	ZSeq_Any& operator=(const Vector_t& iOther);
 
 	template <class Iterator>
@@ -150,40 +224,44 @@ public:
 	const ZVal_Any& Get(size_t iIndex) const;
 
 	template <class S>
-	S* PGet_T(size_t iIndex)
+	S* PGet(size_t iIndex)
 		{
 		if (ZVal_Any* theVal = this->PGet(iIndex))
-			return theVal->PGet_T<S>();
+			return theVal->PGet<S>();
 		return nullptr;
 		}
 
 	template <class S>
-	const S* PGet_T(size_t iIndex) const
+	const S* PGet(size_t iIndex) const
 		{
 		if (const ZVal_Any* theVal = this->PGet(iIndex))
-			return theVal->PGet_T<S>();
+			return theVal->PGet<S>();
 		return nullptr;
 		}
 
 	template <class S>
-	ZQ<S> QGet_T(size_t iIndex) const
+	ZQ<S> QGet(size_t iIndex) const
 		{
-		if (ZQ<Val_t> theQ = this->QGet(iIndex))
-			return theQ.Get().QGet_T<S>();
+		if (const ZVal_Any* theVal = this->PGet(iIndex))
+			return theVal->QGet<S>();
 		return null;
 		}
 
 	template <class S>
-	S DGet_T(const S& iDefault, size_t iIndex) const
+	S DGet(const S& iDefault, size_t iIndex) const
 		{
-		if (ZQ<S> theQ = this->QGet_T<S>(iIndex))
-			return theQ.Get();
+		if (const S* theVal = this->PGet<S>(iIndex))
+			return *theVal;
 		return iDefault;
 		}
 
 	template <class S>
-	S Get_T(size_t iIndex) const
-		{ return this->DGet_T<S>(S(), iIndex); }
+	S Get(size_t iIndex) const
+		{
+		if (const S* theVal = this->PGet<S>(iIndex))
+			return *theVal;
+		return S();
+		}
 
 	ZSeq_Any& Set(size_t iIndex, const ZVal_Any& iVal);
 
@@ -192,6 +270,12 @@ public:
 	ZSeq_Any& Insert(size_t iIndex, const ZVal_Any& iVal);
 
 	ZSeq_Any& Append(const ZVal_Any& iVal);
+
+	bool operator==(const ZSeq_Any& r) const
+		{ return this->Compare(r) == 0; }
+
+	bool operator<(const ZSeq_Any& r) const
+		{ return this->Compare(r) < 0; }
 
 private:
 	void pTouch();
@@ -239,7 +323,7 @@ class ZMap_Any
 	class Rep;
 
 public:
-	typedef std::map<std::string, ZVal_Any> Map_t;
+	typedef std::map<string8, ZVal_Any> Map_t;
 	typedef Map_t::iterator Index_t;
 	typedef ZVal_Any Val_t;
 
@@ -256,15 +340,14 @@ public:
 	ZMap_Any(const Map_t& iOther);
 	ZMap_Any& operator=(Map_t& iOther);
 
+	ZMap_Any(const char* iName, const char* iVal);
+	ZMap_Any(const string8& iName, const ZVal_Any& iVal);
+
 	template <class Container>
 	ZMap_Any(const Container& iContainer);
 
 	template <class Iterator>
 	ZMap_Any(Iterator begin, Iterator end);
-
-	ZMap_Any(const char* iName, const char* iVal);
-	ZMap_Any(const string8& iName, const string8& iVal);
-	ZMap_Any(const string8& iName, const ZVal_Any& iVal);
 
 	int Compare(const ZMap_Any& iOther) const;
 
@@ -287,68 +370,84 @@ public:
 	const ZVal_Any& Get(const Index_t& iIndex) const;
 
 	template <class S>
-	S* PGet_T(const string8& iName)
+	S* PGet(const string8& iName)
 		{
 		if (ZVal_Any* theVal = this->PGet(iName))
-			return theVal->PGet_T<S>();
+			return theVal->PGet<S>();
 		return nullptr;
 		}
 
 	template <class S>
-	S* PGet_T(const Index_t& iIndex)
+	S* PGet(const Index_t& iIndex)
 		{
 		if (ZVal_Any* theVal = this->PGet(iIndex))
-			return theVal->PGet_T<S>();
+			return theVal->PGet<S>();
 		return nullptr;
 		}
 
 	template <class S>
-	const S* PGet_T(const string8& iName) const
+	const S* PGet(const string8& iName) const
 		{
 		if (const ZVal_Any* theVal = this->PGet(iName))
-			return theVal->PGet_T<S>();
+			return theVal->PGet<S>();
 		return nullptr;
 		}
 
 	template <class S>
-	const S* PGet_T(const Index_t& iIndex) const
+	const S* PGet(const Index_t& iIndex) const
 		{
 		if (const ZVal_Any* theVal = this->PGet(iIndex))
-			return theVal->PGet_T<S>();
+			return theVal->PGet<S>();
 		return nullptr;
 		}
 
 	template <class S>
-	ZQ<S> QGet_T(const string8& iName) const
+	ZQ<S> QGet(const string8& iName) const
 		{
 		if (const ZVal_Any* theVal = this->PGet(iName))
-			return theVal->QGet_T<S>();
+			return theVal->QGet<S>();
 		return null;
 		}
 
 	template <class S>
-	ZQ<S> QGet_T(const Index_t& iIndex) const
+	ZQ<S> QGet(const Index_t& iIndex) const
 		{
 		if (const ZVal_Any* theVal = this->PGet(iIndex))
-			return theVal->QGet_T<S>();
+			return theVal->QGet<S>();
 		return null;
 		}
 
 	template <class S>
-	S DGet_T(const S& iDefault, const string8& iName) const
-		{ return this->Get(iName).DGet_T<S>(iDefault); }
+	S DGet(const S& iDefault, const string8& iName) const
+		{
+		if (const S* theVal = this->PGet<S>(iName))
+			return *theVal;
+		return iDefault;
+		}
 
 	template <class S>
-	S DGet_T(const S& iDefault, const Index_t& iIndex) const
-		{ return this->Get(iIndex).DGet_T<S>(iDefault); }
+	S DGet(const S& iDefault, const Index_t& iIndex) const
+		{
+		if (const S* theVal = this->PGet<S>(iIndex))
+			return *theVal;
+		return iDefault;
+		}
 
 	template <class S>
-	S Get_T(const string8& iName) const
-		{ return this->Get(iName).Get_T<S>(); }
+	S Get(const string8& iName) const
+		{
+		if (const S* theVal = this->PGet<S>(iName))
+			return *theVal;
+		return S();
+		}
 
 	template <class S>
-	S Get_T(const Index_t& iIndex) const
-		{ return this->Get(iIndex).Get_T<S>(); }
+	S Get(const Index_t& iIndex) const
+		{
+		if (const S* theVal = this->PGet<S>(iIndex))
+			return *theVal;
+		return S();
+		}
 
 	ZMap_Any& Set(const string8& iName, const ZVal_Any& iVal);
 	ZMap_Any& Set(const Index_t& iIndex, const ZVal_Any& iVal);
@@ -364,6 +463,12 @@ public:
 	Index_t IndexOf(const string8& iName) const;
 
 	Index_t IndexOf(const ZMap_Any& iOther, const Index_t& iOtherIndex) const;
+
+	bool operator==(const ZMap_Any& r) const
+		{ return this->Compare(r) == 0; }
+
+	bool operator<(const ZMap_Any& r) const
+		{ return this->Compare(r) < 0; }
 
 private:
 	void pTouch();

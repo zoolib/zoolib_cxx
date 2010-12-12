@@ -108,27 +108,27 @@ public:
 	Variant(double iVal);
 	Variant(const string8& iVal);
 	Variant(const string16& iVal);
-	Variant(ZRef<IUnknown> iVal);
-	Variant(ZRef<IDispatch> iVal);
+	Variant(IUnknown* iVal);
+	Variant(IDispatch* iVal);
 
 // ZVal protocol
 	template <class S>
-	ZQ<S> QGet_T() const;
+	ZQ<S> QGet() const;
 
 	template <class S>
-	S DGet_T(const S& iDefault) const
+	S DGet(const S& iDefault) const
 		{
-		if (ZQ<S> theQ = this->QGet_T<S>())
+		if (ZQ<S> theQ = this->QGet<S>())
 			return theQ.Get();
 		return iDefault;
 		}
 
 	template <class S>
-	S Get_T() const
-		{ return this->DGet_T(S()); }
+	S Get() const
+		{ return this->DGet(S()); }
 
 	template <class S>
-	void Set_T(const S& iVal);
+	void Set(const S& iVal);
 
 // Our protocol
 	VARIANT& OParam();

@@ -68,9 +68,9 @@ NPP SetRestoreNPP::sCurrent()
 // Explicitly instantiate NPVariant_T<NPObjectG>, aka NPVariantG
 template class NPVariant_T<NPObjectG>;
 
-// Provide implementation of NPVariantBase::QGet_T<ZRef<NPObjectG> >
+// Provide implementation of NPVariantBase::QGet<ZRef<NPObjectG> >
 template <>
-ZQ<ZRef<NPObjectG> > NPVariantBase::QGet_T<ZRef<NPObjectG> >() const
+ZQ<ZRef<NPObjectG> > NPVariantBase::QGet<ZRef<NPObjectG> >() const
 	{
 	if (type == NPVariantType_Object)
 		return ZRef<NPObjectG>(static_cast<NPObjectG*>(value.objectValue));

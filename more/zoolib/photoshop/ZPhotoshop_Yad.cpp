@@ -83,13 +83,13 @@ typedef ZYadMapRPos_Val_T<Map> YadMapRPos;
 
 ZRef<ZYadR> sMakeYadR(const Val& iVal)
 	{
-	if (const Map* asMap = iVal.PGet_T<Map>())
+	if (const Map* asMap = iVal.PGet<Map>())
 		return new YadMapRPos(*asMap);
 
-	if (const Seq* asSeq = iVal.PGet_T<Seq>())
+	if (const Seq* asSeq = iVal.PGet<Seq>())
 		return new YadSeqRPos(*asSeq);
 
-	if (const UnitFloat* asUnitFloat = iVal.PGet_T<UnitFloat>())
+	if (const UnitFloat* asUnitFloat = iVal.PGet<UnitFloat>())
 		{
 		const ZMap_Any theMap = ZMap_Any()
 			.Set("!Type", string("UnitFloat"))
@@ -98,7 +98,7 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		return sMakeYadR(theMap);
 		}
 
-	if (const Enumerated* asEnumerated = iVal.PGet_T<Enumerated>())
+	if (const Enumerated* asEnumerated = iVal.PGet<Enumerated>())
 		{
 		const ZMap_Any theMap = ZMap_Any()
 			.Set("!Type", string("Enumerated"))
@@ -107,7 +107,7 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		return sMakeYadR(theMap);
 		}
 
-	if (const FileRef* asFileRef = iVal.PGet_T<FileRef>())
+	if (const FileRef* asFileRef = iVal.PGet<FileRef>())
 		{
 		ZTrail theTrail;
 		if (ZQ<ZTrail> theQ = asFileRef->AsTrail())
@@ -118,14 +118,14 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		return sMakeYadR(theMap);
 		}
 
-	if (/*const Spec* asSpec = */iVal.PGet_T<Spec>())
+	if (/*const Spec* asSpec = */iVal.PGet<Spec>())
 		{
 		const ZMap_Any theMap = ZMap_Any()
 			.Set("!Type", string("Spec"));
 		return sMakeYadR(theMap);
 		}
 
-	if (const string* asString = iVal.PGet_T<string>())
+	if (const string* asString = iVal.PGet<string>())
 		return ZooLib::sMakeYadR(*asString);
 
 	return new ZYadAtomR_Any(iVal.AsAny());

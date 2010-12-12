@@ -308,7 +308,6 @@ ZAny sAsAny(ZRef<CFTypeRef> iVal)
 	{ return sDAsAny(ZAny(), iVal); }
 
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
-//	{ return Adopt<CFTypeRef>(::CFNumberCreate(kCFAllocatorDefault, iType, iVal)); }
 	{ return Adopt_T<CFTypeRef>(::CFNumberCreate(kCFAllocatorDefault, iType, iVal)); }
 
 ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
@@ -324,32 +323,32 @@ ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 			return null;
 		#endif
 		}
-	else if (const string8* theValue = iVal.PGet_T<string8>())
+	else if (const string8* theValue = iVal.PGet<string8>())
 		{
 		return sString(*theValue);
 		}
-	else if (const vector<char>* theValue = iVal.PGet_T<vector<char> >())
+	else if (const vector<char>* theValue = iVal.PGet<vector<char> >())
 		{
 		if (size_t theSize = theValue->size())
 			return sData(&(*theValue)[0], theSize);
 		else
 			return sData();
 		}
-	else if (const ZData_Any* theValue = iVal.PGet_T<ZData_Any>())
+	else if (const ZData_Any* theValue = iVal.PGet<ZData_Any>())
 		{
 		if (size_t theSize = theValue->GetSize())
 			return sData(theValue->GetData(), theSize);
 		else
 			return sData();
 		}
-	else if (const ZSeq_Any* theValue = iVal.PGet_T<ZSeq_Any>())
+	else if (const ZSeq_Any* theValue = iVal.PGet<ZSeq_Any>())
 		{
 		ZRef<CFMutableArrayRef> theArray;
 		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
 			::CFArrayAppendValue(theArray, sDAsCFType(iDefault, theValue->Get(x)));
 		return theArray;
 		}
-	else if (const ZMap_Any* theValue = iVal.PGet_T<ZMap_Any>())
+	else if (const ZMap_Any* theValue = iVal.PGet<ZMap_Any>())
 		{
 		ZRef<CFMutableDictionaryRef> theDictionary = sDictionaryMutable();
 		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
@@ -360,79 +359,79 @@ ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 			}
 		return theDictionary;
 		}
-	else if (const bool* theValue = iVal.PGet_T<bool>())
+	else if (const bool* theValue = iVal.PGet<bool>())
 		{
 		if (*theValue)
 			return kCFBooleanTrue;
 		else
 			return kCFBooleanFalse;
 		}
-	else if (const ZTime* theValue = iVal.PGet_T<ZTime>())
+	else if (const ZTime* theValue = iVal.PGet<ZTime>())
 		{
 		return Adopt<CFTypeRef>(::CFDateCreate(kCFAllocatorDefault,
 			theValue->fVal - kCFAbsoluteTimeIntervalSince1970));
 		}
-	else if (const char* theValue = iVal.PGet_T<char>())
+	else if (const char* theValue = iVal.PGet<char>())
 		{
 		return spMakeNumber(kCFNumberSInt8Type, theValue);
 		}
-	else if (const unsigned char* theValue = iVal.PGet_T<unsigned char>())
+	else if (const unsigned char* theValue = iVal.PGet<unsigned char>())
 		{
 		return spMakeNumber(kCFNumberSInt8Type, theValue);
 		}
-	else if (const signed char* theValue = iVal.PGet_T<signed char>())
+	else if (const signed char* theValue = iVal.PGet<signed char>())
 		{
 		return spMakeNumber(kCFNumberSInt8Type, theValue);
 		}
-	else if (const short* theValue = iVal.PGet_T<short>())
+	else if (const short* theValue = iVal.PGet<short>())
 		{
 		return spMakeNumber(kCFNumberSInt16Type, theValue);
 		}
-	else if (const unsigned short* theValue = iVal.PGet_T<unsigned short>())
+	else if (const unsigned short* theValue = iVal.PGet<unsigned short>())
 		{
 		return spMakeNumber(kCFNumberSInt16Type, theValue);
 		}
-	else if (const int* theValue = iVal.PGet_T<int>())
+	else if (const int* theValue = iVal.PGet<int>())
 		{
 		if (ZIntIs32Bit)
 			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
 			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
-	else if (const unsigned int* theValue = iVal.PGet_T<unsigned int>())
+	else if (const unsigned int* theValue = iVal.PGet<unsigned int>())
 		{
 		if (ZIntIs32Bit)
 			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
 			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
-	else if (const long* theValue = iVal.PGet_T<long>())
+	else if (const long* theValue = iVal.PGet<long>())
 		{
 		if (ZLongIs32Bit)
 			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
 			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
-	else if (const unsigned long* theValue = iVal.PGet_T<unsigned long>())
+	else if (const unsigned long* theValue = iVal.PGet<unsigned long>())
 		{
 		if (ZLongIs32Bit)
 			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
 			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
-	else if (const int64* theValue = iVal.PGet_T<int64>())
+	else if (const int64* theValue = iVal.PGet<int64>())
 		{
 		return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
-	else if (const uint64* theValue = iVal.PGet_T<uint64>())
+	else if (const uint64* theValue = iVal.PGet<uint64>())
 		{
 		return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
-	else if (const float* theValue = iVal.PGet_T<float>())
+	else if (const float* theValue = iVal.PGet<float>())
 		{
 		return spMakeNumber(kCFNumberFloatType, theValue);
 		}
-	else if (const double* theValue = iVal.PGet_T<double>())
+	else if (const double* theValue = iVal.PGet<double>())
 		{
 		return spMakeNumber(kCFNumberDoubleType, theValue);
 		}

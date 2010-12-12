@@ -40,8 +40,6 @@ namespace ZooLib {
 
 namespace ZDebug {
 
-Function_t thing;
-
 extern void sInvoke(int iLevel, bool iStop,
 	const char* iFileName, const char* iFunctionName, int iLine,
 	const char* iConditionMessage, const char* iUserMessage, ...)

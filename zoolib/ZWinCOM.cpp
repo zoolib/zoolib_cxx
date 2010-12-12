@@ -170,22 +170,22 @@ Variant::Variant(const string16& iVal)
 	bstrVal = ::SysAllocStringLen(iVal.c_str(), iVal.length());
 	}
 
-Variant::Variant(ZRef<IUnknown> iVal)
+Variant::Variant(IUnknown* iVal)
 	{
 	::VariantInit(this);
 	vt = VT_UNKNOWN;
-	sRefCopy(&punkVal, iVal.Get());
+	sRefCopy(&punkVal, iVal);
 	}
 
-Variant::Variant(ZRef<IDispatch> iVal)
+Variant::Variant(IDispatch* iVal)
 	{
 	::VariantInit(this);
 	vt = VT_DISPATCH;
-	sRefCopy(&pdispVal, iVal.Get());
+	sRefCopy(&pdispVal, iVal);
 	}
 
 template <>
-ZQ<int8> Variant::QGet_T<int8>() const
+ZQ<int8> Variant::QGet<int8>() const
 	{
 	if (VT_I1 == vt)
 		return int8(cVal);
@@ -193,7 +193,7 @@ ZQ<int8> Variant::QGet_T<int8>() const
 	}
 
 template <>
-ZQ<uint8> Variant::QGet_T<uint8>() const
+ZQ<uint8> Variant::QGet<uint8>() const
 	{
 	if (VT_UI1 == vt)
 		return uint8(bVal);
@@ -201,7 +201,7 @@ ZQ<uint8> Variant::QGet_T<uint8>() const
 	}
 
 template <>
-ZQ<int16> Variant::QGet_T<int16>() const
+ZQ<int16> Variant::QGet<int16>() const
 	{
 	if (VT_I2 == vt)
 		return int16(iVal);
@@ -209,7 +209,7 @@ ZQ<int16> Variant::QGet_T<int16>() const
 	}
 
 template <>
-ZQ<uint16> Variant::QGet_T<uint16>() const
+ZQ<uint16> Variant::QGet<uint16>() const
 	{
 	if (VT_UI2 == vt)
 		return uint16(uiVal);
@@ -217,7 +217,7 @@ ZQ<uint16> Variant::QGet_T<uint16>() const
 	}
 
 template <>
-ZQ<int32> Variant::QGet_T<int32>() const
+ZQ<int32> Variant::QGet<int32>() const
 	{
 	if (VT_I4 == vt)
 		return int32(lVal);
@@ -225,7 +225,7 @@ ZQ<int32> Variant::QGet_T<int32>() const
 	}
 
 template <>
-ZQ<uint32> Variant::QGet_T<uint32>() const
+ZQ<uint32> Variant::QGet<uint32>() const
 	{
 	if (VT_UI4 == vt)
 		return uint32(ulVal);
@@ -233,7 +233,7 @@ ZQ<uint32> Variant::QGet_T<uint32>() const
 	}
 
 template <>
-ZQ<int64> Variant::QGet_T<int64>() const
+ZQ<int64> Variant::QGet<int64>() const
 	{
 	if (VT_I8 == vt)
 		return int64(llVal);
@@ -241,7 +241,7 @@ ZQ<int64> Variant::QGet_T<int64>() const
 	}
 
 template <>
-ZQ<uint64> Variant::QGet_T<uint64>() const
+ZQ<uint64> Variant::QGet<uint64>() const
 	{
 	if (VT_UI8 == vt)
 		return uint64(ullVal);
@@ -249,7 +249,7 @@ ZQ<uint64> Variant::QGet_T<uint64>() const
 	}
 
 template <>
-ZQ<bool> Variant::QGet_T<bool>() const
+ZQ<bool> Variant::QGet<bool>() const
 	{
 	if (VT_BOOL == vt)
 		return bool(boolVal);
@@ -257,7 +257,7 @@ ZQ<bool> Variant::QGet_T<bool>() const
 	}
 
 template <>
-ZQ<float> Variant::QGet_T<float>() const
+ZQ<float> Variant::QGet<float>() const
 	{
 	if (VT_R4 == vt)
 		return float(fltVal);
@@ -265,7 +265,7 @@ ZQ<float> Variant::QGet_T<float>() const
 	}
 
 template <>
-ZQ<double> Variant::QGet_T<double>() const
+ZQ<double> Variant::QGet<double>() const
 	{
 	if (VT_R8 == vt)
 		return double(dblVal);
@@ -273,7 +273,7 @@ ZQ<double> Variant::QGet_T<double>() const
 	}
 
 template <>
-ZQ<string8> Variant::QGet_T<string8>() const
+ZQ<string8> Variant::QGet<string8>() const
 	{
 	if (VT_BSTR == vt)
 		return ZUnicode::sAsUTF8(bstrVal, ::SysStringLen(bstrVal));
@@ -281,7 +281,7 @@ ZQ<string8> Variant::QGet_T<string8>() const
 	}
 
 template <>
-ZQ<string16> Variant::QGet_T<string16>() const
+ZQ<string16> Variant::QGet<string16>() const
 	{
 	if (VT_BSTR == vt)
 		return string16(bstrVal, ::SysStringLen(bstrVal));
@@ -289,7 +289,7 @@ ZQ<string16> Variant::QGet_T<string16>() const
 	}
 
 template <>
-ZQ<ZRef<IUnknown> > Variant::QGet_T<ZRef<IUnknown> >() const
+ZQ<ZRef<IUnknown> > Variant::QGet<ZRef<IUnknown> >() const
 	{
 	if (VT_UNKNOWN == vt)
 		return ZRef<IUnknown>(punkVal);
@@ -297,7 +297,7 @@ ZQ<ZRef<IUnknown> > Variant::QGet_T<ZRef<IUnknown> >() const
 	}
 
 template <>
-ZQ<ZRef<IDispatch> > Variant::QGet_T<ZRef<IDispatch> >() const
+ZQ<ZRef<IDispatch> > Variant::QGet<ZRef<IDispatch> >() const
 	{
 	if (VT_DISPATCH == vt)
 		return ZRef<IDispatch>(pdispVal);
@@ -305,7 +305,7 @@ ZQ<ZRef<IDispatch> > Variant::QGet_T<ZRef<IDispatch> >() const
 	}
 
 template <>
-void Variant::Set_T<int8>(const int8& iVal)
+void Variant::Set<int8>(const int8& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_I1;
@@ -313,7 +313,7 @@ void Variant::Set_T<int8>(const int8& iVal)
 	}
 
 template <>
-void Variant::Set_T<uint8>(const uint8& iVal)
+void Variant::Set<uint8>(const uint8& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_UI1;
@@ -321,7 +321,7 @@ void Variant::Set_T<uint8>(const uint8& iVal)
 	}
 
 template <>
-void Variant::Set_T<int16>(const int16& iVal)
+void Variant::Set<int16>(const int16& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_I2;
@@ -329,7 +329,7 @@ void Variant::Set_T<int16>(const int16& iVal)
 	}
 
 template <>
-void Variant::Set_T<uint16>(const uint16& iVal)
+void Variant::Set<uint16>(const uint16& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_UI2;
@@ -337,7 +337,7 @@ void Variant::Set_T<uint16>(const uint16& iVal)
 	}
 
 template <>
-void Variant::Set_T<int32>(const int32& iVal)
+void Variant::Set<int32>(const int32& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_I4;
@@ -345,7 +345,7 @@ void Variant::Set_T<int32>(const int32& iVal)
 	}
 
 template <>
-void Variant::Set_T<uint32>(const uint32& iVal)
+void Variant::Set<uint32>(const uint32& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_UI4;
@@ -353,7 +353,7 @@ void Variant::Set_T<uint32>(const uint32& iVal)
 	}
 
 template <>
-void Variant::Set_T<int64>(const int64& iVal)
+void Variant::Set<int64>(const int64& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_I8;
@@ -361,7 +361,7 @@ void Variant::Set_T<int64>(const int64& iVal)
 	}
 
 template <>
-void Variant::Set_T<uint64>(const uint64& iVal)
+void Variant::Set<uint64>(const uint64& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_UI8;
@@ -369,7 +369,7 @@ void Variant::Set_T<uint64>(const uint64& iVal)
 	}
 
 template <>
-void Variant::Set_T<bool>(const bool& iVal)
+void Variant::Set<bool>(const bool& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_BOOL;
@@ -377,7 +377,7 @@ void Variant::Set_T<bool>(const bool& iVal)
 	}
 
 template <>
-void Variant::Set_T<float>(const float& iVal)
+void Variant::Set<float>(const float& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_R4;
@@ -385,7 +385,7 @@ void Variant::Set_T<float>(const float& iVal)
 	}
 
 template <>
-void Variant::Set_T<double>(const double& iVal)
+void Variant::Set<double>(const double& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_R8;
@@ -393,7 +393,7 @@ void Variant::Set_T<double>(const double& iVal)
 	}
 
 template <>
-void Variant::Set_T<string8>(const string8& iVal)
+void Variant::Set<string8>(const string8& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_BSTR;
@@ -402,7 +402,7 @@ void Variant::Set_T<string8>(const string8& iVal)
 	}
 
 template <>
-void Variant::Set_T<string16>(const string16& iVal)
+void Variant::Set<string16>(const string16& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_BSTR;
@@ -410,7 +410,7 @@ void Variant::Set_T<string16>(const string16& iVal)
 	}
 
 template <>
-void Variant::Set_T<ZRef<IUnknown> >(const ZRef<IUnknown>& iVal)
+void Variant::Set<ZRef<IUnknown> >(const ZRef<IUnknown>& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_UNKNOWN;
@@ -418,7 +418,7 @@ void Variant::Set_T<ZRef<IUnknown> >(const ZRef<IUnknown>& iVal)
 	}
 
 template <>
-void Variant::Set_T<ZRef<IDispatch> >(const ZRef<IDispatch>& iVal)
+void Variant::Set<ZRef<IDispatch> >(const ZRef<IDispatch>& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_DISPATCH;

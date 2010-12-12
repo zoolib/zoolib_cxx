@@ -74,10 +74,10 @@ static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 	if (false)
 		{}
 	else if (iVal.Type() == typeid(void)
-		|| ZAnyCast<int64>(&iVal)
-		|| ZAnyCast<double>(&iVal)
-		|| ZAnyCast<bool>(&iVal)
-		|| ZAnyCast<string>(&iVal))
+		|| iVal.Is<int64>()
+		|| iVal.Is<double>()
+		|| iVal.Is<bool>()
+		|| iVal.Is<string>())
 		{
 		oVal = iVal;
 		}
@@ -89,7 +89,7 @@ static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 		{
 		oVal = asDouble;
 		}
-	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
+	else if (const ZTime* theValue = iVal.PGet<ZTime>())
 		{
 		oVal = double(theValue->fVal);
 		}

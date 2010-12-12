@@ -55,7 +55,7 @@ static const char LF = '\n';
 
 static void spAppend(Map& ioFields, const string& iName, const Val& iValue)
 	{
-	Seq theSeq = ioFields.Get(iName).Get_T<Seq>();
+	Seq theSeq = ioFields.Get(iName).Get<Seq>();
 	theSeq.Append(iValue);
 	ioFields.Set(iName, theSeq);
 //	ioFields.Mutable(iName).MutableSeq().Append(iValue);
@@ -217,11 +217,11 @@ bool sOrganizeRanges(size_t iSourceSize, const Val& iRangeParam,
 	vector<pair<size_t, size_t> >& oRanges)
 	{
 	const Map asMap = iRangeParam.GetMap();
-	if (ZQ<int64> reqBegin = asMap.QGet_T<int64>("begin"))
+	if (ZQ<int64> reqBegin = asMap.QGet<int64>("begin"))
 		{
 		if (reqBegin.Get() <= iSourceSize)
 			{
-			if (ZQ<int64> reqEnd = asMap.QGet_T<int64>("end"))
+			if (ZQ<int64> reqEnd = asMap.QGet<int64>("end"))
 				{
 				if (reqEnd.Get() < reqBegin.Get())
 					return false;
@@ -232,7 +232,7 @@ bool sOrganizeRanges(size_t iSourceSize, const Val& iRangeParam,
 				}
 			}
 		}
-	else if (ZQ<int64> reqLast = asMap.QGet_T<int64>("last"))
+	else if (ZQ<int64> reqLast = asMap.QGet<int64>("last"))
 		{
 		if (reqLast.Get() <= iSourceSize)
 			{
@@ -736,12 +736,12 @@ string sEncodeTrail(const ZTrail& iTrail)
 
 string sGetString0(const Val& iVal)
 	{
-	if (ZQ<string> result = iVal.QGet_T<string>())
+	if (ZQ<string> result = iVal.QGet<string>())
 		return result.Get();
 
 	const Seq& theSeq = iVal.GetSeq();
 	if (theSeq.Count())
-		return theSeq.Get(0).Get_T<string>();
+		return theSeq.Get(0).Get<string>();
 
 	return string();
 	}
@@ -757,7 +757,7 @@ static ZRef<ZStreamerR> spMakeStreamer_Transfer(
 		return new ZStreamerR_FT<StreamR_Chunked>(iStreamerR);
 		}
 
-	if (ZQ<int64> contentLength = iHeader.Get("content-length").QGet_T<int64>())
+	if (ZQ<int64> contentLength = iHeader.Get("content-length").QGet<int64>())
 		return new ZStreamerR_FT<ZStreamR_Limited>(contentLength.Get(), iStreamerR);
 
 	return iStreamerR;

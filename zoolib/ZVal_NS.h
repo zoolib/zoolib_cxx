@@ -99,22 +99,22 @@ public:
 	void Clear();
 
 	template <class S>
-	ZQ<S> QGet_T() const;
+	ZQ<S> QGet() const;
 
 	template <class S>
-	S DGet_T(const S& iDefault) const
+	S DGet(const S& iDefault) const
 		{
-		if (ZQ<S> theQ = this->QGet_T<S>())
+		if (ZQ<S> theQ = this->QGet<S>())
 			return theQ.Get();
 		return iDefault;
 		}
 
 	template <class S>
-	S Get_T() const
-		{ return this->DGet_T(S()); }
+	S Get() const
+		{ return this->DGet(S()); }
 
 	template <class S>
-	void Set_T(const S& iVal);
+	void Set(const S& iVal);
 
 	using inherited::Get;
 	ZVal_NS Get(const string8& iName) const;
@@ -172,16 +172,16 @@ public:
 	ZVal_NS Get(size_t iIndex) const;
 
 	template <class S>
-	ZQ<S> QGet_T(size_t iIndex) const
-		{ return this->Get(iIndex).QGet_T<S>(); }
+	ZQ<S> QGet(size_t iIndex) const
+		{ return this->Get(iIndex).QGet<S>(); }
 
 	template <class S>
-	S DGet_T(const S& iDefault, size_t iIndex) const
-		{ return this->Get(iIndex).DGet_T<S>(iDefault); }
+	S DGet(const S& iDefault, size_t iIndex) const
+		{ return this->Get(iIndex).DGet<S>(iDefault); }
 
 	template <class S>
-	S Get_T(size_t iIndex) const
-		{ return this->Get(iIndex).Get_T<S>(); }
+	S Get(size_t iIndex) const
+		{ return this->Get(iIndex).Get<S>(); }
 
 	ZSeq_NS& Set(size_t iIndex, const ZVal_NS& iVal);
 
@@ -239,28 +239,28 @@ public:
 	ZVal_NS Get(NSString* iName) const;
 
 	template <class S>
-	ZQ<S> QGet_T(const string8& iName) const
-		{ return this->Get(iName).QGet_T<S>(); }
+	ZQ<S> QGet(const string8& iName) const
+		{ return this->Get(iName).QGet<S>(); }
 
 	template <class S>
-	ZQ<S> QGet_T(NSString* iName) const
-		{ return this->Get(iName).QGet_T<S>(); }
+	ZQ<S> QGet(NSString* iName) const
+		{ return this->Get(iName).QGet<S>(); }
 
 	template <class S>
-	S DGet_T(const S& iDefault, const string8& iName) const
-		{ return this->Get(iName).DGet_T<S>(iDefault); }
+	S DGet(const S& iDefault, const string8& iName) const
+		{ return this->Get(iName).DGet<S>(iDefault); }
 
 	template <class S>
-	S DGet_T(const S& iDefault, NSString* iName) const
-		{ return this->Get(iName).DGet_T<S>(iDefault); }
+	S DGet(const S& iDefault, NSString* iName) const
+		{ return this->Get(iName).DGet<S>(iDefault); }
 
 	template <class S>
-	S Get_T(const string8& iName) const
-		{ return this->Get(iName).Get_T<S>(); }
+	S Get(const string8& iName) const
+		{ return this->Get(iName).Get<S>(); }
 
 	template <class S>
-	S Get_T(NSString* iName) const
-		{ return this->Get(iName).Get_T<S>(); }
+	S Get(NSString* iName) const
+		{ return this->Get(iName).Get<S>(); }
 
 	ZMap_NS& Set(const string8& iName, const ZVal_NS& iVal);
 	ZMap_NS& Set(NSString* iName, const ZVal_NS& iVal);

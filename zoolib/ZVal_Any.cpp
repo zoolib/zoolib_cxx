@@ -33,6 +33,8 @@ using std::vector;
 
 namespace ZooLib {
 
+static ZVal_Any spVal_Null;
+
 template <> int sCompare_T(const ZVal_Any& iL, const ZVal_Any& iR)
 	{ return iL.Compare(iR); }
 
@@ -65,8 +67,36 @@ int ZVal_Any::Compare(const ZVal_Any& iOther) const
 	return ZCompare::sCompare(typeName, this->VoidStar(), iOther.VoidStar());
 	}
 
+ZVal_Any* ZVal_Any::PGet(const string8& iName)
+	{
+	if (ZMap_Any* asMap = this->PGet<ZMap_Any>())
+		return asMap->PGet(iName);
+	return nullptr;
+	}
+
+const ZVal_Any* ZVal_Any::PGet(const string8& iName) const
+	{
+	if (const ZMap_Any* asMap = this->PGet<ZMap_Any>())
+		return asMap->PGet(iName);
+	return nullptr;
+	}
+
 ZVal_Any ZVal_Any::Get(const string8& iName) const
 	{ return this->GetMap().Get(iName); }
+
+ZVal_Any* ZVal_Any::PGet(size_t iIndex)
+	{
+	if (ZSeq_Any* asSeq = this->PGet<ZSeq_Any>())
+		return asSeq->PGet(iIndex);
+	return nullptr;
+	}
+
+const ZVal_Any* ZVal_Any::PGet(size_t iIndex) const
+	{
+	if (const ZSeq_Any* asSeq = this->PGet<ZSeq_Any>())
+		return asSeq->PGet(iIndex);
+	return nullptr;
+	}
 
 ZVal_Any ZVal_Any::Get(size_t iIndex) const
 	{ return this->GetSeq().Get(iIndex); }
@@ -74,8 +104,6 @@ ZVal_Any ZVal_Any::Get(size_t iIndex) const
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Data, ZData_Any)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Seq, ZSeq_Any)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Map, ZMap_Any)
-
-static ZVal_Any spVal_Null;
 
 // =================================================================================================
 #pragma mark -
@@ -292,19 +320,10 @@ ZMap_Any& ZMap_Any::operator=(Map_t& iOther)
 	}
 
 ZMap_Any::ZMap_Any(const char* iName, const char* iVal)
-	{
-	this->Set(iName, string8(iVal));
-	}
+	{ this->Set(iName, iVal); }
 
 ZMap_Any::ZMap_Any(const string8& iName, const ZVal_Any& iVal)
-	{
-	this->Set(iName, iVal);
-	}
-
-ZMap_Any::ZMap_Any(const string8& iName, const string8& iVal)
-	{
-	this->Set(iName, iVal);
-	}
+	{ this->Set(iName, iVal); }
 
 int ZMap_Any::Compare(const ZMap_Any& iOther) const
 	{
@@ -490,14 +509,6 @@ ZMap_Any& ZMap_Any::Set(const Index_t& iIndex, const ZVal_Any& iVal)
 	return *this;
 	}
 
-ZMap_Any& ZMap_Any::Erase(const Index_t& iIndex)
-	{
-	Map_t::iterator theIndex = this->pTouch(iIndex);
-	if (theIndex != this->End())
-		fRep->fMap.erase(theIndex);
-	return *this;
-	}
-
 ZMap_Any& ZMap_Any::Erase(const string8& iName)
 	{
 	if (fRep)
@@ -505,6 +516,14 @@ ZMap_Any& ZMap_Any::Erase(const string8& iName)
 		this->pTouch();
 		fRep->fMap.erase(iName);
 		}
+	return *this;
+	}
+
+ZMap_Any& ZMap_Any::Erase(const Index_t& iIndex)
+	{
+	Map_t::iterator theIndex = this->pTouch(iIndex);
+	if (theIndex != this->End())
+		fRep->fMap.erase(theIndex);
 	return *this;
 	}
 
@@ -536,8 +555,7 @@ ZMap_Any::Index_t ZMap_Any::IndexOf(const string8& iName) const
 	return spEmptyMap.end();
 	}
 
-ZMap_Any::Index_t ZMap_Any::IndexOf(
-	const ZMap_Any& iOther, const Index_t& iOtherIndex) const
+ZMap_Any::Index_t ZMap_Any::IndexOf(const ZMap_Any& iOther, const Index_t& iOtherIndex) const
 	{
 	if (this == &iOther)
 		return iOtherIndex;

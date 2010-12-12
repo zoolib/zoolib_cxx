@@ -581,9 +581,8 @@ bool Host_Std::HTTPFetcher::Work()
 
 		if (theStreamerR && fHost)
 			{
-			const ZHTTP::Map theCT = theHeaders.Get("content-type").GetMap();
-			const string theMIME = theCT.Get("type").Get_T<string>()
-				+ "/" + theCT.Get("subtype").Get_T<string>();
+			const ZHTTP::Map theCT = theHeaders.Get<ZHTTP::Map>("content-type");
+			const string theMIME = theCT.Get<string>("type") + "/" + theCT.Get<string>("subtype");
 
 			fHost->pHTTPFetcher(
 				this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerR);

@@ -38,22 +38,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define ZMACRO_ZValAccessors_Def_GetP(P, T, TYPENAME, TYPE) \
 	P ZQ<TYPE> T::QGet##TYPENAME() const \
-		{ return this->QGet_T<TYPE>(); } \
+		{ return this->QGet<TYPE>(); } \
 	P bool T::QGet##TYPENAME(TYPE& oVal) const \
 		{ \
-		if (ZQ<TYPE> theQ = this->QGet_T<TYPE>()) \
+		if (ZQ<TYPE> theQ = this->QGet<TYPE>()) \
 			{ oVal = theQ.Get(); return true; } \
 		return false; \
 		} \
 	P TYPE T::DGet##TYPENAME(const TYPE& iDefault) const \
-		{ return this->DGet_T<TYPE>(iDefault); } \
+		{ return this->DGet<TYPE>(iDefault); } \
 	P TYPE T::Get##TYPENAME() const \
-		{ return this->Get_T<TYPE>(); } \
+		{ return this->Get<TYPE>(); } \
 
 #define ZMACRO_ZValAccessors_Def_EntryP(P, T, TYPENAME, TYPE) \
 	ZMACRO_ZValAccessors_Def_GetP(P, T, TYPENAME, TYPE) \
 	P void T::Set##TYPENAME(const TYPE& iVal) \
-		{ return this->Set_T<>(iVal); } \
+		{ return this->Set<TYPE>(iVal); } \
 
 #define ZMACRO_ZValAccessors_Def_Entry(T, TYPENAME, TYPE) \
 	ZMACRO_ZValAccessors_Def_EntryP(,T,TYPENAME, TYPE)

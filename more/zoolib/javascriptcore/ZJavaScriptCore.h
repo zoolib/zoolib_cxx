@@ -158,19 +158,19 @@ public:
 
 // ZVal Get protocol
 	template <class S>
-	ZQ<S> QGet_T() const;
+	ZQ<S> QGet() const;
 
 	template <class S>
-	S DGet_T(const S& iDefault) const
+	S DGet(const S& iDefault) const
 		{
-		if (ZQ<S> theQ = this->QGet_T<S>())
+		if (ZQ<S> theQ = this->QGet<S>())
 			return theQ.Get();
 		return iDefault;
 		}
 
 	template <class S>
-	S Get_T() const
-		{ return this->DGet_T(S()); }
+	S Get() const
+		{ return this->DGet(S()); }
 
 	ZMACRO_ZValAccessors_Decl_Get(Value, Bool, bool)
 	ZMACRO_ZValAccessors_Decl_Get(Value, Double, double)

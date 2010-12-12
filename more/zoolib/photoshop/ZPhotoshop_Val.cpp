@@ -260,34 +260,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define SETTERCASES(SUITE, PARAM) \
 	if (false) \
 		{} \
-	else if (const int32* theVal = iVal.PGet_T<int32>()) \
+	else if (const int32* theVal = iVal.PGet<int32>()) \
 		{ SUITE->PutInteger(PARAM, *theVal); } \
-	else if (const float* theVal = iVal.PGet_T<float>()) \
+	else if (const float* theVal = iVal.PGet<float>()) \
 		{ SUITE->PutFloat(PARAM, *theVal); } \
-	else if (const UnitFloat* theVal = iVal.PGet_T<UnitFloat>()) \
+	else if (const UnitFloat* theVal = iVal.PGet<UnitFloat>()) \
 		{ SUITE->PutUnitFloat(PARAM, theVal->fUnitID, theVal->fValue); } \
-	else if (const string8* theVal = iVal.PGet_T<string8>()) \
+	else if (const string8* theVal = iVal.PGet<string8>()) \
 		{ SUITE->PutString(PARAM, const_cast<char*>(theVal->c_str())); } \
-	else if (const bool* theVal = iVal.PGet_T<bool>()) \
+	else if (const bool* theVal = iVal.PGet<bool>()) \
 		{ SUITE->PutBoolean(PARAM, *theVal); } \
-	else if (const Seq* theVal = iVal.PGet_T<Seq>()) \
+	else if (const Seq* theVal = iVal.PGet<Seq>()) \
 		{ SUITE->PutList(PARAM, theVal->IParam()); } \
-	else if (const Map* theVal = iVal.PGet_T<Map>()) \
+	else if (const Map* theVal = iVal.PGet<Map>()) \
 		{ SUITE->PutObject(PARAM, theVal->GetType(), theVal->IParam()); } \
 	/* global object? */ \
-	else if (const Enumerated* theVal = iVal.PGet_T<Enumerated>()) \
+	else if (const Enumerated* theVal = iVal.PGet<Enumerated>()) \
 		{ SUITE->PutEnumerated(PARAM, theVal->fEnumType, theVal->fValue); } \
-	else if (const Spec* theVal = iVal.PGet_T<Spec>()) \
+	else if (const Spec* theVal = iVal.PGet<Spec>()) \
 		{ \
 		PIActionReference tempRef = theVal->MakeRef(); \
 		SUITE->PutReference(PARAM, tempRef); \
 		spPSActionReference->Free(tempRef); \
 		} \
-/*Hmmm	else if (const ClassID* theVal = iVal.PGet_T<ClassID>()) \
+/*Hmmm	else if (const ClassID* theVal = iVal.PGet<ClassID>()) \
 		{ ZUnimplemented(); } Hmm??? SUITE->PutInteger(PARAM, *theVal); } */\
-	else if (const FileRef* theVal = iVal.PGet_T<FileRef>()) \
+	else if (const FileRef* theVal = iVal.PGet<FileRef>()) \
 		{ SUITE->PutAlias(PARAM, theVal->Get()); } \
-	else if (const Data* theVal = iVal.PGet_T<Data>()) \
+	else if (const Data* theVal = iVal.PGet<Data>()) \
 		{ SUITE->PutData(PARAM, theVal->GetSize(), const_cast<void*>(theVal->GetData())); }
 
 // =================================================================================================
@@ -370,7 +370,7 @@ static PIActionList spDuplicate(PIActionList iSource)
 			TypeID theType;
 			if (noErr != spPSActionList->GetType(iSource, x, &theType))
 				break;
-			COPYFROMTO(spPSActionList, iSource, x, theType, theDest)
+//##			COPYFROMTO(spPSActionList, iSource, x, theType, theDest)
 			}
 		}
 	return theDest;
@@ -1014,10 +1014,10 @@ ZAny Val::AsAny() const
 
 ZAny Val::DAsAny(const ZAny& iDefault) const
 	{
-	if (const Map* theVal = this->PGet_T<Map>())
+	if (const Map* theVal = this->PGet<Map>())
 		return ZAny(theVal->AsMap_Any(iDefault));
 
-	if (const Seq* theVal = this->PGet_T<Seq>())
+	if (const Seq* theVal = this->PGet<Seq>())
 		return ZAny(theVal->AsSeq_Any(iDefault));
 
 	return *this;

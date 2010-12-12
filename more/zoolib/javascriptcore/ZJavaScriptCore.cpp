@@ -307,24 +307,24 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 		{
 		oVal = Value(asDouble);
 		}
-	else if (const string* theValue = iAny.PGet_T<string>())
+	else if (const string* theValue = iAny.PGet<string>())
 		{
 		oVal = Value(*theValue);
 		}
-	else if (const ZType* theValue = iAny.PGet_T<ZType>())
+	else if (const ZType* theValue = iAny.PGet<ZType>())
 		{
 		oVal = Value(double(*theValue));
 		}
-	else if (const bool* theValue = iAny.PGet_T<bool>())
+	else if (const bool* theValue = iAny.PGet<bool>())
 		{
 		oVal = Value(*theValue);
 		}
-	else if (const ZTime* theValue = iAny.PGet_T<ZTime>())
+	else if (const ZTime* theValue = iAny.PGet<ZTime>())
 		{
 		oVal = Value(double(theValue->fVal));
 		}
 #if 0
-	else if (const vector<ZAny>* theValue = iAny.PGet_T<vector<ZAny> >())
+	else if (const vector<ZAny>* theValue = iAny.PGet<vector<ZAny> >())
 		{
 		ZSeq_ZooLib theList;
 		for (vector<ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
@@ -338,7 +338,7 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 			}
 		oVal = theList;
 		}
-	else if (const ZSeq_Any* theValue = iAny.PGet_T<ZSeq_Any>())
+	else if (const ZSeq_Any* theValue = iAny.PGet<ZSeq_Any>())
 		{
 		ZSeq_ZooLib theList;
 		for (int x = 0, count = theValue->Count(); x < count; ++x)
@@ -352,7 +352,7 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 		oVal = theList;
 		}
 #endif
-	else if (const map<string, ZAny>* theValue = iAny.PGet_T<map<string, ZAny> >())
+	else if (const map<string, ZAny>* theValue = iAny.PGet<map<string, ZAny> >())
 		{
 		ObjectRef theMap;
 		for (map<string, ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
@@ -364,7 +364,7 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 			}
 		oVal = theMap;
 		}
-	else if (const ZMap_Any* theValue = iAny.PGet_T<ZMap_Any>())
+	else if (const ZMap_Any* theValue = iAny.PGet<ZMap_Any>())
 		{
 		ObjectRef theMap;
 		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
@@ -545,7 +545,7 @@ String Value::ToString() const
 	}
 
 template <>
-ZQ<bool> Value::QGet_T<bool>() const
+ZQ<bool> Value::QGet<bool>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
@@ -556,7 +556,7 @@ ZQ<bool> Value::QGet_T<bool>() const
 	}
 
 template <>
-ZQ<double> Value::QGet_T<double>() const
+ZQ<double> Value::QGet<double>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
@@ -572,7 +572,7 @@ ZQ<double> Value::QGet_T<double>() const
 	}
 
 template <>
-ZQ<String> Value::QGet_T<String>() const
+ZQ<String> Value::QGet<String>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
@@ -587,23 +587,23 @@ ZQ<String> Value::QGet_T<String>() const
 	}
 
 template <>
-ZQ<string16> Value::QGet_T<string16>() const
+ZQ<string16> Value::QGet<string16>() const
 	{
-	if (ZQ<String> theQ = this->QGet_T<String>())
+	if (ZQ<String> theQ = this->QGet<String>())
 		return theQ.Get().AsString16();
 	return null;
 	}
 
 template <>
-ZQ<string8> Value::QGet_T<string8>() const
+ZQ<string8> Value::QGet<string8>() const
 	{
-	if (ZQ<String> theQ = this->QGet_T<String>())
+	if (ZQ<String> theQ = this->QGet<String>())
 		return theQ.Get().AsString8();
 	return null;
 	}
 
 template <>
-ZQ<ObjectRef> Value::QGet_T<ObjectRef>() const
+ZQ<ObjectRef> Value::QGet<ObjectRef>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{

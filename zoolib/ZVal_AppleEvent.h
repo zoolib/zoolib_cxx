@@ -97,22 +97,22 @@ public:
 	void Clear();
 
 	template <class S>
-	ZQ<S> QGet_T() const;
+	ZQ<S> QGet() const;
 
 	template <class S>
-	S DGet_T(const S& iDefault) const
+	S DGet(const S& iDefault) const
 		{
-		if (ZQ<S> result = this->QGet_T<S>())
+		if (ZQ<S> result = this->QGet<S>())
 			return result.Get();
 		return iDefault;
 		}
 
 	template <class S>
-	S Get_T() const
-		{ return this->DGet_T(S()); }
+	S Get() const
+		{ return this->DGet(S()); }
 
 	template <class S>
-	void Set_T(const S& iVal);
+	void Set(const S& iVal);
 
 // Our protocol
 	AEDesc& OParam();

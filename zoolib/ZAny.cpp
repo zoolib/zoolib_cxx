@@ -91,7 +91,7 @@ namespace ZooLib {
 
 ZQ<bool> sQCoerceBool(const ZAny& iAny)
 	{
-	if (const bool* pBool = iAny.PGet_T<bool>())
+	if (const bool* pBool = iAny.PGet<bool>())
 		return *pBool;
 
 	if (ZQ<int64> qInt64 = sQCoerceInt(iAny))
@@ -100,7 +100,7 @@ ZQ<bool> sQCoerceBool(const ZAny& iAny)
 	if (ZQ<double> qDouble = sQCoerceReal(iAny))
 		return (0.0 != qDouble.Get());
 
-	if (const string* pString = iAny.PGet_T<string>())
+	if (const string* pString = iAny.PGet<string>())
 		{
 		if (pString->empty())
 			return false;
@@ -150,29 +150,29 @@ ZQ<int64> sQCoerceInt(const ZAny& iAny)
 	{
 	if (false)
 		{}
-	else if (const char* theVal = iAny.PGet_T<char>())
+	else if (const char* theVal = iAny.PGet<char>())
 		return *theVal;
-	else if (const signed char* theVal = iAny.PGet_T<signed char>())
+	else if (const signed char* theVal = iAny.PGet<signed char>())
 		return *theVal;
-	else if (const unsigned char* theVal = iAny.PGet_T<unsigned char>())
+	else if (const unsigned char* theVal = iAny.PGet<unsigned char>())
 		return *theVal;
-	else if (const wchar_t* theVal = iAny.PGet_T<wchar_t>())
+	else if (const wchar_t* theVal = iAny.PGet<wchar_t>())
 		return *theVal;
-	else if (const short* theVal = iAny.PGet_T<short>())
+	else if (const short* theVal = iAny.PGet<short>())
 		return *theVal;
-	else if (const unsigned short* theVal = iAny.PGet_T<unsigned short>())
+	else if (const unsigned short* theVal = iAny.PGet<unsigned short>())
 		return *theVal;
-	else if (const int* theVal = iAny.PGet_T<int>())
+	else if (const int* theVal = iAny.PGet<int>())
 		return *theVal;
-	else if (const unsigned int* theVal = iAny.PGet_T<unsigned int>())
+	else if (const unsigned int* theVal = iAny.PGet<unsigned int>())
 		return *theVal;
-	else if (const long* theVal = iAny.PGet_T<long>())
+	else if (const long* theVal = iAny.PGet<long>())
 		return *theVal;
-	else if (const unsigned long* theVal = iAny.PGet_T<unsigned long>())
+	else if (const unsigned long* theVal = iAny.PGet<unsigned long>())
 		return *theVal;
-	else if (const int64* theVal = iAny.PGet_T<int64>())
+	else if (const int64* theVal = iAny.PGet<int64>())
 		return *theVal;
-	else if (const uint64* theVal = iAny.PGet_T<uint64>())
+	else if (const uint64* theVal = iAny.PGet<uint64>())
 		return *theVal;
 
 	return null;
@@ -202,9 +202,9 @@ ZQ<double> sQCoerceReal(const ZAny& iAny)
 	{
 	if (false)
 		{}
-	else if (const float* theVal = iAny.PGet_T<float>())
+	else if (const float* theVal = iAny.PGet<float>())
 		return *theVal;
-	else if (const double* theVal = iAny.PGet_T<double>())
+	else if (const double* theVal = iAny.PGet<double>())
 		return *theVal;
 
 	return null;

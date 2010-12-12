@@ -53,7 +53,7 @@ the types are named \c YYY::Val, \c YYY::Seq and \c YYY:Map.
 When working with a Val you may use simple assignment, or using a templated Set method:
 \code
 Val theVal = 27;
-theVal.Set_T<long>(19);
+theVal.Set<long>(19);
 \endcode
 The latter makes the stored type explicit. The actual stored type is usually important, because
 you can only retrieve the value if you know what type was used to store it (think long vs int, or
@@ -66,25 +66,25 @@ Val theVal = 27;
 // has initialized theVal.
 
 // Example 1:
-int theInt1 = theVal.Get_T<int>();
+int theInt1 = theVal.Get<int>();
 
 // Example 2:
-int theInt2 = theVal.DGet_T<int>(19);
+int theInt2 = theVal.DGet<int>(19);
 
 // Example 3: (deprecated)
 int theInt3;
-if (theVal.QGet_T<int>(theInt3))
+if (theVal.QGet<int>(theInt3))
 	{} // use theInt3
 
 // Example 4:
-if (ZQ<int> theQ = theVal.QGet_T<int>())
+if (ZQ<int> theQ = theVal.QGet<int>())
 	{} // Use theQ.Get();
 
 // Example 5:
-if (const int* theIntPtr = theVal.PGet_T<int>())
+if (const int* theIntPtr = theVal.PGet<int>())
 	{} // use *theIntptr
 \endcode
-The first style is the simplest; simply call \c Get_T<yyy>, and you'll be returned a \c yyy. The
+The first style is the simplest; simply call \c Get<yyy>, and you'll be returned a \c yyy. The
 actual value will be either the default value for a \c yyy (e.g. zero for numbers), or it will
 be the value that was stored.
 

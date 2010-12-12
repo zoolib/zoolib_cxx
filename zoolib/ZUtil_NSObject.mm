@@ -153,32 +153,32 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 		{
 		return [NSNull null];
 		}
-	else if (const string8* theValue = iVal.PGet_T<string8>())
+	else if (const string8* theValue = iVal.PGet<string8>())
 		{
 		return sString(*theValue);
 		}
-	else if (const vector<char>* theValue = iVal.PGet_T<vector<char> >())
+	else if (const vector<char>* theValue = iVal.PGet<vector<char> >())
 		{
 		if (size_t theSize = theValue->size())
 			return sData(&(*theValue)[0], theSize);
 		else
 			return sData();
 		}
-	else if (const ZData_Any* theValue = iVal.PGet_T<ZData_Any>())
+	else if (const ZData_Any* theValue = iVal.PGet<ZData_Any>())
 		{
 		if (size_t theSize = theValue->GetSize())
 			return sData(theValue->GetData(), theSize);
 		else
 			return sData();
 		}
-	else if (const ZSeq_Any* theValue = iVal.PGet_T<ZSeq_Any>())
+	else if (const ZSeq_Any* theValue = iVal.PGet<ZSeq_Any>())
 		{
 		NSMutableArray* theArray = sArrayMutable();
 		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
 			[theArray addObject:sDAsNSObject(iDefault, theValue->Get(x))];
 		return theArray;
 		}
-	else if (const ZMap_Any* theValue = iVal.PGet_T<ZMap_Any>())
+	else if (const ZMap_Any* theValue = iVal.PGet<ZMap_Any>())
 		{
 		NSMutableDictionary* theDictionary = sDictionaryMutable();
 		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
@@ -189,63 +189,63 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 			}
 		return theDictionary;
 		}
-	else if (const bool* theValue = iVal.PGet_T<bool>())
+	else if (const bool* theValue = iVal.PGet<bool>())
 		{
 		return [NSNumber numberWithBool:(BOOL)*theValue];
 		}
-	else if (const ZTime* theValue = iVal.PGet_T<ZTime>())
+	else if (const ZTime* theValue = iVal.PGet<ZTime>())
 		{
 		return [NSDate dateWithTimeIntervalSince1970:theValue->fVal];
 		}
-	else if (const char* theValue = iVal.PGet_T<char>())
+	else if (const char* theValue = iVal.PGet<char>())
 		{
 		return [NSNumber numberWithChar:*theValue];
 		}
-	else if (const unsigned char* theValue = iVal.PGet_T<unsigned char>())
+	else if (const unsigned char* theValue = iVal.PGet<unsigned char>())
 		{
 		return [NSNumber numberWithUnsignedChar:*theValue];
 		}
-	else if (const signed char* theValue = iVal.PGet_T<signed char>())
+	else if (const signed char* theValue = iVal.PGet<signed char>())
 		{
 		return [NSNumber numberWithChar:*theValue];
 		}
-	else if (const short* theValue = iVal.PGet_T<short>())
+	else if (const short* theValue = iVal.PGet<short>())
 		{
 		return [NSNumber numberWithShort:*theValue];
 		}
-	else if (const unsigned short* theValue = iVal.PGet_T<unsigned short>())
+	else if (const unsigned short* theValue = iVal.PGet<unsigned short>())
 		{
 		return [NSNumber numberWithUnsignedShort:*theValue];
 		}
-	else if (const int* theValue = iVal.PGet_T<int>())
+	else if (const int* theValue = iVal.PGet<int>())
 		{
 		return [NSNumber numberWithInt:*theValue];
 		}
-	else if (const unsigned int* theValue = iVal.PGet_T<unsigned int>())
+	else if (const unsigned int* theValue = iVal.PGet<unsigned int>())
 		{
 		return [NSNumber numberWithUnsignedInt:*theValue];
 		}
-	else if (const long* theValue = iVal.PGet_T<long>())
+	else if (const long* theValue = iVal.PGet<long>())
 		{
 		return [NSNumber numberWithLong:*theValue];
 		}
-	else if (const unsigned long* theValue = iVal.PGet_T<unsigned long>())
+	else if (const unsigned long* theValue = iVal.PGet<unsigned long>())
 		{
 		return [NSNumber numberWithUnsignedLong:*theValue];
 		}
-	else if (const int64* theValue = iVal.PGet_T<int64>())
+	else if (const int64* theValue = iVal.PGet<int64>())
 		{
 		return [NSNumber numberWithLongLong:(long long)*theValue];
 		}
-	else if (const uint64* theValue = iVal.PGet_T<uint64>())
+	else if (const uint64* theValue = iVal.PGet<uint64>())
 		{
 		return [NSNumber numberWithUnsignedLongLong:(unsigned long long)*theValue];
 		}
-	else if (const float* theValue = iVal.PGet_T<float>())
+	else if (const float* theValue = iVal.PGet<float>())
 		{
 		return [NSNumber numberWithFloat:*theValue];
 		}
-	else if (const double* theValue = iVal.PGet_T<double>())
+	else if (const double* theValue = iVal.PGet<double>())
 		{
 		return [NSNumber numberWithDouble:*theValue];
 		}
