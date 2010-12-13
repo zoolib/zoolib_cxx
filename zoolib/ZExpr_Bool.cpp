@@ -268,10 +268,7 @@ ZRef<ZExpr_Bool> operator&(const ZRef<ZExpr_Bool>& iLHS, const ZRef<ZExpr_Bool>&
 	}
 
 ZRef<ZExpr_Bool>& operator&=(ZRef<ZExpr_Bool>& iLHS, const ZRef<ZExpr_Bool>& iRHS)
-	{
-	iLHS = iLHS & iRHS;
-	return iLHS;
-	}
+	{ return iLHS = iLHS & iRHS; }
 
 ZRef<ZExpr_Bool> operator|(const ZRef<ZExpr_Bool>& iLHS, const ZRef<ZExpr_Bool>& iRHS)
 	{
@@ -285,9 +282,6 @@ ZRef<ZExpr_Bool> operator|(const ZRef<ZExpr_Bool>& iLHS, const ZRef<ZExpr_Bool>&
 	}
 
 ZRef<ZExpr_Bool>& operator|=(ZRef<ZExpr_Bool>& iLHS, const ZRef<ZExpr_Bool>& iRHS)
-	{
-	iLHS = iLHS | iRHS;
-	return iLHS;
-	}
+	{ return iLHS = iLHS | iRHS; }
 
 } // namespace ZooLib

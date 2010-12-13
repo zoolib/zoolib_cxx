@@ -45,7 +45,7 @@ typedef ZValPred_T<ZVal_Expr> ZValPred;
 typedef ZValComparandPseudo_T<ZVal_Expr> ZValComparandPseudo;
 
 inline ZValComparandPseudo CString(const std::string& iVal)
-	{ return CConst_T<ZVal_Expr>(string8(iVal)); }
+	{ return CConst_T<ZVal_Expr>(iVal); }
 
 inline ZValComparandPseudo CConst(const ZVal_Expr& iVal)
 	{ return CConst_T<ZVal_Expr>(iVal); }

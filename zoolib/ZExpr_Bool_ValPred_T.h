@@ -40,7 +40,7 @@ class ZExpr_Bool_ValPred_T
 	{
 	typedef ZExpr_Op0_T<ZExpr_Bool> inherited;
 public:
-	ZExpr_Bool_ValPred_T(const ZValPred_T<Val>& iCondition);
+	ZExpr_Bool_ValPred_T(const ZValPred_T<Val>& iValPred);
 	virtual ~ZExpr_Bool_ValPred_T();
 
 // From ZExpr_Op0
@@ -59,8 +59,7 @@ private:
 	};
 
 template <class Val>
-ZExpr_Bool_ValPred_T<Val>::ZExpr_Bool_ValPred_T(
-	const ZValPred_T<Val>& iValPred)
+ZExpr_Bool_ValPred_T<Val>::ZExpr_Bool_ValPred_T(const ZValPred_T<Val>& iValPred)
 :	fValPred(iValPred)
 	{}
 
@@ -96,8 +95,7 @@ void ZExpr_Bool_ValPred_T<Val>::Accept_Expr_Bool_ValPred(
 	{ iVisitor.Visit_Expr_Bool_ValPred(this); }
 
 template <class Val>
-const ZValPred_T<Val>&
-ZExpr_Bool_ValPred_T<Val>::GetValPred()
+const ZValPred_T<Val>& ZExpr_Bool_ValPred_T<Val>::GetValPred()
 	{ return fValPred; }
 
 // =================================================================================================
@@ -123,18 +121,18 @@ void ZVisitor_Expr_Bool_ValPred_T<Val>::Visit_Expr_Bool_ValPred(
 #pragma mark * Operators
 
 template <class Val>
-ZRef<ZExpr_Bool> sLogic(const ZValPred_T<Val>& iValPred)
+ZRef<ZExpr_Bool> sExpr_Bool(const ZValPred_T<Val>& iValPred)
 	{ return new ZExpr_Bool_ValPred_T<Val>(iValPred); }
 
 template <class Val>
 ZRef<ZExpr_Bool_Not> operator~(const ZValPred_T<Val>& iValPred)
-	{ return new ZExpr_Bool_Not(new ZExpr_Bool_ValPred_T<Val>(iValPred)); }
+	{ return new ZExpr_Bool_Not(sExpr_Bool(iValPred)); }
 
 template <class Val>
 ZRef<ZExpr_Bool> operator&(bool iBool, const ZValPred_T<Val>& iValPred)
 	{
 	if (iBool)
-		return new ZExpr_Bool_ValPred_T<Val>(iValPred);
+		return sExpr_Bool(iValPred);
 	return new ZExpr_Bool_False;
 	}
 
@@ -142,7 +140,7 @@ template <class Val>
 ZRef<ZExpr_Bool> operator&(const ZValPred_T<Val>& iValPred, bool iBool)
 	{
 	if (iBool)
-		return new ZExpr_Bool_ValPred_T<Val>(iValPred);
+		return sExpr_Bool(iValPred);
 	return new ZExpr_Bool_False;
 	}
 
@@ -151,7 +149,7 @@ ZRef<ZExpr_Bool> operator|(bool iBool, const ZValPred_T<Val>& iValPred)
 	{
 	if (iBool)
 		return new ZExpr_Bool_True;
-	return new ZExpr_Bool_ValPred_T<Val>(iValPred);
+	return sExpr_Bool(iValPred);
 	}
 
 template <class Val>
@@ -159,54 +157,40 @@ ZRef<ZExpr_Bool> operator|(const ZValPred_T<Val>& iValPred, bool iBool)
 	{
 	if (iBool)
 		return new ZExpr_Bool_True;
-	return new ZExpr_Bool_ValPred_T<Val>(iValPred);
+	return sExpr_Bool(iValPred);
 	}
 
 template <class Val>
 ZRef<ZExpr_Bool> operator&(const ZValPred_T<Val>& iLHS, const ZValPred_T<Val>& iRHS)
-	{
-	return new ZExpr_Bool_And(
-		new ZExpr_Bool_ValPred_T<Val>(iLHS),
-		new ZExpr_Bool_ValPred_T<Val>(iRHS));
-	}
+	{ return new ZExpr_Bool_And(sExpr_Bool(iLHS), sExpr_Bool(iRHS)); }
 
 template <class Val>
 ZRef<ZExpr_Bool> operator&(const ZValPred_T<Val>& iLHS, const ZRef<ZExpr_Bool>& iRHS)
-	{ return new ZExpr_Bool_And(new ZExpr_Bool_ValPred_T<Val>(iLHS), iRHS); }
+	{ return new ZExpr_Bool_And(sExpr_Bool(iLHS), iRHS); }
 
 template <class Val>
 ZRef<ZExpr_Bool> operator&(const ZRef<ZExpr_Bool>& iLHS, const ZValPred_T<Val>& iRHS)
-	{ return new ZExpr_Bool_And(new ZExpr_Bool_ValPred_T<Val>(iRHS), iLHS); }
+	{ return new ZExpr_Bool_And(iLHS, sExpr_Bool(iRHS)); }
 
 template <class Val>
 ZRef<ZExpr_Bool>& operator&=(ZRef<ZExpr_Bool>& ioLHS, const ZValPred_T<Val>& iRHS)
-	{
-	ioLHS = ioLHS & iRHS;
-	return ioLHS;
-	}
+	{ return ioLHS = ioLHS & iRHS; }
 
 template <class Val>
 ZRef<ZExpr_Bool> operator|(const ZValPred_T<Val>& iLHS, const ZValPred_T<Val>& iRHS)
-	{
-	return new ZExpr_Bool_Or(
-		new ZExpr_Bool_ValPred_T<Val>(iLHS),
-		new ZExpr_Bool_ValPred_T<Val>(iRHS));
-	}
+	{ return new ZExpr_Bool_Or(sExpr_Bool(iLHS), sExpr_Bool(iRHS)); }
 
 template <class Val>
 ZRef<ZExpr_Bool> operator|(const ZValPred_T<Val>& iLHS, const ZRef<ZExpr_Bool>& iRHS)
-	{ return new ZExpr_Bool_Or(new ZExpr_Bool_ValPred_T<Val>(iLHS), iRHS); }
+	{ return new ZExpr_Bool_Or(sExpr_Bool(iLHS), iRHS); }
 
 template <class Val>
 ZRef<ZExpr_Bool> operator|(const ZRef<ZExpr_Bool>& iLHS, const ZValPred_T<Val>& iRHS)
-	{ return new ZExpr_Bool_Or(new ZExpr_Bool_ValPred_T<Val>(iRHS), iLHS); }
+	{ return new ZExpr_Bool_Or(iLHS, sExpr_Bool(iRHS)); }
 
 template <class Val>
 ZRef<ZExpr_Bool>& operator|=(ZRef<ZExpr_Bool>& ioLHS, const ZValPred_T<Val>& iRHS)
-	{
-	ioLHS = ioLHS | iRHS;
-	return ioLHS;
-	}
+	{ return ioLHS = ioLHS | iRHS; }
 
 } // namespace ZooLib
 
