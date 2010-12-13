@@ -33,7 +33,6 @@ namespace ZooLib {
 A ZWorker derivative overrides the ZWorker::Work method, and once attached to a ZWorkerRunner
 Work will be called whenever the ZWorker has been woken, until Work returns false or allows
 an exception to propogate out.
-
 */
 
 // =================================================================================================

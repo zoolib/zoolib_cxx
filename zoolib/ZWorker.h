@@ -30,10 +30,6 @@ namespace ZooLib {
 
 class ZWorkerRunner;
 
-// CW workaround
-class ZWorker;
-typedef ZRef<ZWorker> ZRef_ZWorker;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWorker
@@ -56,6 +52,8 @@ public:
 	bool IsAwake();
 	bool IsAttached();
 
+	// CW7 workaround
+	typedef ZRef<ZWorker> ZRef_ZWorker;
 	typedef ZCallable<void(ZRef_ZWorker)> Callable_t;
 
 	ZRef<Callable_t> GetSetCallable_Attached(ZRef<Callable_t> iCallable);
