@@ -81,7 +81,12 @@ void Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 
 ZRef<Expr_Rel_Select> sSelect(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
-	{ return new Expr_Rel_Select(iExpr_Rel, iExpr_Bool); }
+	{
+	if (iExpr_Rel && iExpr_Bool)
+		return new Expr_Rel_Select(iExpr_Rel, iExpr_Bool);
+	sSemanticError("sSelect, rel and/or bool are null");
+	return null;
+	}
 
 ZRef<Expr_Rel> operator&(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)

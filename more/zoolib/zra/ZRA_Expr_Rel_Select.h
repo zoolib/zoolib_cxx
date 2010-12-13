@@ -78,6 +78,7 @@ public:
 #pragma mark -
 #pragma mark * Relational operators
 
+// The order of parameters here differes from that in sRestrict_T precisely to keep them distinct.
 ZRef<Expr_Rel_Select> sSelect(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
 
@@ -86,6 +87,10 @@ ZRef<Expr_Rel> operator&(
 
 ZRef<Expr_Rel> operator&(
 	const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel);
+
+template <class Val>
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
+	{ return ioExpr_Rel = ioExpr_Rel & iExpr_Bool; }
 
 } // namespace ZRA
 } // namespace ZooLib

@@ -69,7 +69,12 @@ void Visitor_Expr_Rel_Intersect::Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersec
 
 ZRef<Expr_Rel_Intersect> sIntersect(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
-	{ return new Expr_Rel_Intersect(iLHS, iRHS); }
+	{
+	if (iLHS && iRHS)
+		return new Expr_Rel_Intersect(iLHS, iRHS);
+	sSemanticError("sIntersect, LHS and/or RHS are null");
+	return null;
+	}
 
 ZRef<Expr_Rel> operator&(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)

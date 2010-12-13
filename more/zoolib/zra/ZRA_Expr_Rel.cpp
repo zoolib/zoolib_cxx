@@ -50,7 +50,9 @@ void sSemanticError(const string8& iMessage)
 	switch (spGet())
 		{
 		case eSemanticErrorMode_Throw:
+			{
 			throw SemanticError("ZRA Semantic Error: " + iMessage);
+			}
 		case eSemanticErrorMode_Log:
 			{
 			if (ZLOGF(s, eErr))

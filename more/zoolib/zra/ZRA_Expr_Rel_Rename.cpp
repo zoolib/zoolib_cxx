@@ -91,7 +91,12 @@ void Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 
 ZRef<Expr_Rel_Rename> sRename(const ZRef<Expr_Rel>& iExpr,
 	const RelName& iNewPropName, const RelName& iOldPropName)
-	{ return new Expr_Rel_Rename(iExpr, iNewPropName, iOldPropName); }
+	{
+	if (iExpr)
+		return new Expr_Rel_Rename(iExpr, iNewPropName, iOldPropName);
+	sSemanticError("sRename, rel is null");
+	return null;
+	}
 
 } // namespace ZRA
 } // namespace ZooLib

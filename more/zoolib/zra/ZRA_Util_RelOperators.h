@@ -33,10 +33,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Explicit.h"
 
 namespace ZooLib {
+namespace ZRA {
 
-ZRef<ZRA::Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<ZRA::Expr_Rel>& iRel);
-ZRef<ZRA::Expr_Rel> operator*(const ZRef<ZRA::Expr_Rel>& iRel, const ZMap_Any& iMap);
+ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel);
+ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZMap_Any& iMap);
+ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap);
 
+} // namespace ZRA
 } // namespace ZooLib
 
 #endif // __ZRA_Util_RelOperators__

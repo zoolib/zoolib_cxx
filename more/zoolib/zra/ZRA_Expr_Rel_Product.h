@@ -71,11 +71,11 @@ public:
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel> sProduct(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+ZRef<Expr_Rel> sProduct(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
-ZRef<Expr_Rel> operator*(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioLHS, const ZRef<Expr_Rel>& iRHS);
 
 } // namespace ZRA
 } // namespace ZooLib

@@ -131,20 +131,23 @@ void Visitor_Expr_Rel_Restrict_T<Val>::Visit_Expr_Rel_Restrict(
 #pragma mark -
 #pragma mark * Operators
 
+// The order of parameters here differes from that in sSelect precisely to keep them distinct.
 template <class Val>
 ZRef<Expr_Rel_Restrict_T<Val> > sRestrict_T(
 	const ZValPred_T<Val>& iValPred, const ZRef<Expr_Rel>& iExpr_Rel)
 	{ return new Expr_Rel_Restrict_T<Val>(iExpr_Rel, iValPred); }
 
 template <class Val>
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred_T<Val>& iValPred)
+ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred_T<Val>& iValPred)
 	{ return sRestrict_T<Val>(iValPred, iExpr_Rel); }
 
 template <class Val>
-ZRef<Expr_Rel> operator&(
-	const ZValPred_T<Val>& iValPred, const ZRef<Expr_Rel>& iExpr_Rel)
+ZRef<Expr_Rel> operator&(const ZValPred_T<Val>& iValPred, const ZRef<Expr_Rel>& iExpr_Rel)
 	{ return sRestrict_T<Val>(iValPred, iExpr_Rel); }
+
+template <class Val>
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZValPred_T<Val>& iValPred)
+	{ return ioExpr_Rel = ioExpr_Rel & iValPred; }
 
 } // namespace ZRA
 } // namespace ZooLib

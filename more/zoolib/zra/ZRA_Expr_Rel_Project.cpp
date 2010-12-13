@@ -75,7 +75,12 @@ void Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iEx
 #pragma mark * Relational operators
 
 ZRef<Expr_Rel_Project> sProject(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead)
-	{ return new Expr_Rel_Project(iExpr, iRelHead); }
+	{
+	if (iExpr)
+		return new Expr_Rel_Project(iExpr, iRelHead);
+	sSemanticError("sProject, rel is null");
+	return null;
+	}
 
 ZRef<Expr_Rel_Project> operator&(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead)
 	{ return sProject(iExpr, iRelHead); }

@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Util_RelOperators.h"
 
 namespace ZooLib {
+namespace ZRA {
 
 ZRef<ZRA::Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<ZRA::Expr_Rel>& iRel)
 	{ return sProduct(ZRA::sExplicit(iMap), iRel); }
@@ -28,4 +29,8 @@ ZRef<ZRA::Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<ZRA::Expr_Rel>& i
 ZRef<ZRA::Expr_Rel> operator*(const ZRef<ZRA::Expr_Rel>& iRel, const ZMap_Any& iMap)
 	{ return sProduct(iRel, ZRA::sExplicit(iMap)); }
 
+ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap)
+	{ return ioRel = ioRel * iMap; }
+
+} // namespace ZRA
 } // namespace ZooLib

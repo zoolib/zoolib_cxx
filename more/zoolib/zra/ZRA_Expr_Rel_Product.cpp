@@ -67,21 +67,19 @@ void Visitor_Expr_Rel_Product::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iEx
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel> sProduct(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZRef<Expr_Rel> sProduct(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
 	{
-	if (iLHS)
-		{
-		if (iRHS)
-			return new Expr_Rel_Product(iLHS, iRHS);
-		return iLHS;
-		}
-	return iRHS;
+	if (iLHS && iRHS)
+		return new Expr_Rel_Product(iLHS, iRHS);
+	sSemanticError("sProduct, LHS and/or RHS are null");
+	return null;
 	}
 
-ZRef<Expr_Rel> operator*(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
 	{ return sProduct(iLHS, iRHS); }
+
+ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioLHS, const ZRef<Expr_Rel>& iRHS)
+	{ return ioLHS = ioLHS * iRHS; }
 
 } // namespace ZRA
 } // namespace ZooLib
