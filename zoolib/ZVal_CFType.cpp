@@ -93,7 +93,7 @@ ZAny ZVal_CFType::DAsAny(const ZAny& iDefault) const
 
 ZVal_CFType::operator bool() const
 	{
-	if (CFTypeRef theVal = this->Get())
+	if (CFTypeRef theVal = inherited::Get())
 		{
 		#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
 			&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
