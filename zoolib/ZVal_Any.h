@@ -316,6 +316,12 @@ ZSeq_Any::ZSeq_Any(Iterator begin, Iterator end)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZNameVal
+
+typedef std::pair<string8, ZVal_Any> ZNameVal;
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZMap_Any
 
 class ZMap_Any
@@ -340,6 +346,7 @@ public:
 	ZMap_Any(const Map_t& iOther);
 	ZMap_Any& operator=(Map_t& iOther);
 
+	ZMap_Any(const ZNameVal& iNV);
 	ZMap_Any(const char* iName, const char* iVal);
 	ZMap_Any(const string8& iName, const ZVal_Any& iVal);
 
@@ -464,6 +471,8 @@ public:
 
 	Index_t IndexOf(const ZMap_Any& iOther, const Index_t& iOtherIndex) const;
 
+	ZMap_Any& Set(const ZNameVal& iNV);
+
 	bool operator==(const ZMap_Any& r) const
 		{ return this->Compare(r) == 0; }
 
@@ -477,6 +486,16 @@ private:
 	ZRef<Rep> fRep;
 	};
 
+ZMap_Any operator*(const ZNameVal& iNV0, const ZNameVal& iNV1);
+
+ZMap_Any& operator*=(ZMap_Any& ioMap, const ZNameVal& iNV);
+ZMap_Any operator*(const ZMap_Any& iMap, const ZNameVal& iNV);
+
+ZMap_Any operator*(const ZNameVal& iNV, const ZMap_Any& iMap);
+
+ZMap_Any& operator*=(ZMap_Any& ioMap0, const ZMap_Any& iMap1);
+ZMap_Any operator*(const ZMap_Any& iMap0, const ZMap_Any& iMap1);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMap_Any::Rep
@@ -488,6 +507,7 @@ private:
 	Rep();
 	virtual ~Rep();
 
+	Rep(const ZNameVal& iNV);
 	Rep(const Map_t& iMap);
 
 	template <class Iterator>

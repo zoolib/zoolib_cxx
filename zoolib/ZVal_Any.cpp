@@ -280,6 +280,10 @@ ZMap_Any::Rep::Rep()
 ZMap_Any::Rep::~Rep()
 	{}
 
+ZMap_Any::Rep::Rep(const ZNameVal& iNV)
+:	fMap(&iNV, &iNV + 1)
+	{}
+
 ZMap_Any::Rep::Rep(const Map_t& iMap)
 :	fMap(iMap)
 	{}
@@ -318,6 +322,10 @@ ZMap_Any& ZMap_Any::operator=(Map_t& iOther)
 	fRep = new Rep(iOther.begin(), iOther.end());
 	return *this;
 	}
+
+ZMap_Any::ZMap_Any(const ZNameVal& iNV)
+:	fRep(new Rep(iNV))
+	{}
 
 ZMap_Any::ZMap_Any(const char* iName, const char* iVal)
 	{ this->Set(iName, iVal); }
@@ -562,6 +570,9 @@ ZMap_Any::Index_t ZMap_Any::IndexOf(const ZMap_Any& iOther, const Index_t& iOthe
 	return this->IndexOf(iOther.NameOf(iOtherIndex));
 	}
 
+ZMap_Any& ZMap_Any::Set(const ZNameVal& iNV)
+	{ return this->Set(iNV.first, iNV.second); }
+
 void ZMap_Any::pTouch()
 	{
 	if (!fRep)
@@ -592,4 +603,32 @@ ZMap_Any::Map_t::iterator ZMap_Any::pTouch(const Index_t& iIndex)
 		}
 	}
 
+ZMap_Any operator*(const ZNameVal& iNV0, const ZNameVal& iNV1)
+	{
+	ZMap_Any result(iNV0);
+	result.Set(iNV1);
+	return result;
+	}
+
+ZMap_Any& operator*=(ZMap_Any& ioMap, const ZNameVal& iNV)
+	{ return ioMap.Set(iNV); }
+
+ZMap_Any operator*(const ZMap_Any& iMap, const ZNameVal& iNV)
+	{ return ZMap_Any(iMap).Set(iNV); }
+
+ZMap_Any operator*(const ZNameVal& iNV, const ZMap_Any& iMap)
+	{ return ZMap_Any(iMap).Set(iNV); }
+
+ZMap_Any& operator*=(ZMap_Any& ioMap0, const ZMap_Any& iMap1)
+	{
+	for (ZMap_Any::Index_t i = iMap1.Begin(), end = iMap1.End(); i != end; ++i)
+		ioMap0.Set(iMap1.NameOf(i), iMap1.Get(i));
+	return ioMap0;
+	}
+
+ZMap_Any operator*(const ZMap_Any& iMap0, const ZMap_Any& iMap1)
+	{
+	ZMap_Any result = iMap0;
+	return result *= iMap1;
+	}
 } // namespace ZooLib
