@@ -515,8 +515,8 @@ template <class Ord>
 template <class U>
 ZGRectPOD_T<Ord>& ZGRectPOD_T<Ord>::operator=(const ZGExtentPOD_T<U>& iExtent)
 	{
-	origin.x = T(0);
-	origin.y = T(0);
+	origin.x = T();
+	origin.y = T();
 	extent = iExtent;
 	return *this;
 	}
@@ -829,8 +829,8 @@ public:
 template <class T>
 ZGRect_T<T>::ZGRect_T()
 	{
-	this->origin = T(0);
-	this->extent = T(0);
+	this->origin = T();
+	this->extent = T();
 	}
 
 template <class T>
@@ -843,7 +843,7 @@ ZGRect_T<T>::ZGRect_T(const ZGRect_T<T>& iOther)
 template <class T>
 ZGRect_T<T>::ZGRect_T(T iWidth, T iHeight)
 	{
-	this->origin = T(0);
+	this->origin = T();
 	this->extent.h = iWidth;
 	this->extent.v = iHeight;
 	}
@@ -861,7 +861,7 @@ template <class T>
 template <class U>
 ZGRect_T<T>::ZGRect_T(const ZGExtentPOD_T<U>& iExtent)
 	{
-	this->origin = T(0);
+	this->origin = T();
 	this->extent = iExtent;
 	}
 
@@ -1108,7 +1108,7 @@ ZGRectPOD_T<T>::operator CGRect() const
 template <class T>
 ZGRect_T<T>::ZGRect_T(const CGSize& iSize)
 	{
-	this->origin = T(0);
+	this->origin = T();
 	this->extent = iSize;
 	}
 
@@ -1186,7 +1186,7 @@ ZGRectPOD_T<T>::operator NSRect() const
 template <class T>
 ZGRect_T<T>::ZGRect_T(const NSSize& iSize)
 	{
-	this->origin = T(0);
+	this->origin = T();
 	this->extent = iSize;
 	}
 
