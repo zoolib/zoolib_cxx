@@ -22,7 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_Expr_Rel__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCallable.h"
 #include "zoolib/ZExpr.h"
+#include "zoolib/ZSafe.h"
 #include "zoolib/ZUnicodeString.h"
 
 #include "zoolib/zra/ZRA_RelHead.h"
@@ -55,7 +57,7 @@ typedef ZRef<Expr_Rel> Rel;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Semantic Error Handling
+#pragma mark * SemanticError
 
 class SemanticError : public std::runtime_error
 	{
@@ -65,23 +67,23 @@ public:
 		{}
 	};
 
+typedef ZCallable<void(const string8& iMessage)> Callable_SemanticError;
+
+extern const ZRef<Callable_SemanticError> sCallable_Ignore;
+extern const ZRef<Callable_SemanticError> sCallable_Throw;
+extern ZSafe<ZRef<Callable_SemanticError> > sCallable_Default;
+
 void sSemanticError(const string8& iMessage);
 
-enum ESemanticErrorMode
-	{
-	eSemanticErrorMode_Throw,
-	eSemanticErrorMode_Log,
-	eSemanticErrorMode_Ignore
-	};
-
-class SemanticErrorModeSetter
+class SetRestore_SemanticError
 	{
 public:
-	SemanticErrorModeSetter(ESemanticErrorMode iMode);
-	~SemanticErrorModeSetter();
+	SetRestore_SemanticError(ZRef<Callable_SemanticError> iCallable);
+	~SetRestore_SemanticError();
 
 private:
-	ESemanticErrorMode fPrior;
+	ZRef<Callable_SemanticError> fCallable;
+	ZRef<Callable_SemanticError> fPrior;
 	};
 
 } // namespace ZRA

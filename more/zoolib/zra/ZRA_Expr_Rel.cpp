@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCallable_Function.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZThread.h"
 
@@ -35,41 +36,53 @@ Expr_Rel::Expr_Rel()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Semantic Error Handling
+#pragma mark * SemanticError, helpers
 
-static ZTSS::Key sKey = ZTSS::sCreate();
+static ZTSS::Key spKey = ZTSS::sCreate();
 
-static ESemanticErrorMode spGet()
-	{ return (ESemanticErrorMode)(long long)(ZTSS::sGet(sKey)); }
+static Callable_SemanticError* spGet()
+	{ return (Callable_SemanticError*)(long long)(ZTSS::sGet(spKey)); }
 
-static void spSet(ESemanticErrorMode iMode)
-	{ ZTSS::sSet(sKey, reinterpret_cast<ZTSS::Value>(iMode)); }
+static void spSet(ZRef<Callable_SemanticError> iCallable)
+	{ ZTSS::sSet(spKey, reinterpret_cast<ZTSS::Value>(iCallable.Get())); }
+
+static void spThrow(const string8& iMessage)
+	{ throw SemanticError("ZRA Semantic Error: " + iMessage); }
+
+static void spLog(const string8& iMessage)
+	{
+	if (ZLOG(s, eErr, "ZRA Semantic Error"))
+		s << iMessage;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * SemanticError, helpers
+
+const ZRef<Callable_SemanticError> sCallable_Ignore;
+const ZRef<Callable_SemanticError> sCallable_Throw = MakeCallable(spThrow);
+
+ZSafe<ZRef<Callable_SemanticError> > sCallable_Default = MakeCallable(spLog);
 
 void sSemanticError(const string8& iMessage)
 	{
-	switch (spGet())
-		{
-		case eSemanticErrorMode_Throw:
-			{
-			throw SemanticError("ZRA Semantic Error: " + iMessage);
-			}
-		case eSemanticErrorMode_Log:
-			{
-			if (ZLOGF(s, eErr))
-				s << "ZRA Semantic Error: " + iMessage;
-			break;
-			}
-		case eSemanticErrorMode_Ignore:
-			break;
-		}
+	if (ZRef<Callable_SemanticError> theCallable = spGet())
+		theCallable->Call(iMessage);
+	else if (ZRef<Callable_SemanticError> theCallable = sCallable_Default)
+		theCallable->Call(iMessage);		
 	}
 
-SemanticErrorModeSetter::SemanticErrorModeSetter(ESemanticErrorMode iMode)
-:	fPrior(spGet())
-	{ spSet(iMode); }
+SetRestore_SemanticError::SetRestore_SemanticError(ZRef<Callable_SemanticError> iCallable)
+:	fCallable(iCallable)
+,	fPrior(spGet())
+	{
+	spSet(iCallable);
+	}
 
-SemanticErrorModeSetter::~SemanticErrorModeSetter()
-	{ spSet(fPrior); }
+SetRestore_SemanticError::~SetRestore_SemanticError()
+	{
+	spSet(fPrior);
+	}
 
 } // namespace ZRA
 } // namespace ZooLib
