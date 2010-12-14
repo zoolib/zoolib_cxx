@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_Util_RelOperators__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Bool_ValPred.h" // For ValPred/Logic operators
+#include "zoolib/ZExpr_Bool_ValPred.h" // For ValPred/Bool operators
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
