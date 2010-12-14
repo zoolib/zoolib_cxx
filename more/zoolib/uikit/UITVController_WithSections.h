@@ -35,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
-@class UITableViewController_WithSections;
+@class UITVController_WithSections;
 
 namespace ZooLib {
 namespace UIKit {
@@ -54,39 +54,46 @@ class Section : public ZCounted
 public:
 	Section(ZRef<SectionBody> iBody);
 
-	virtual ZQ<CGFloat> QHeaderHeight();
-	virtual ZQ<CGFloat> QFooterHeight();
+	ZRef<SectionBody> GetBody();
 
-	virtual ZQ<string8> QHeaderTitle();
-	virtual ZQ<string8> QFooterTitle();
-
-	virtual ZRef<UIView> QHeaderView();
-	virtual ZRef<UIView> QFooterView();
-
-	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Insert();
-	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Delete();
-	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Reload();
+	bool fHideWhenEmpty;
+	virtual bool HideWhenEmpty();
 
 	ZQ<CGFloat> fHeaderHeight;
+	virtual ZQ<CGFloat> QHeaderHeight();
+
 	ZQ<CGFloat> fFooterHeight;
+	virtual ZQ<CGFloat> QFooterHeight();
 
 	ZQ<string8> fHeaderTitle;
+	virtual ZQ<string8> QHeaderTitle();
+
 	ZQ<string8> fFooterTitle;
+	virtual ZQ<string8> QFooterTitle();
 
 	ZRef<UIView> fHeaderView;
+	virtual ZRef<UIView> QHeaderView();
+
 	ZRef<UIView> fFooterView;
+	virtual ZRef<UIView> QFooterView();
 
 	ZQ<UITableViewRowAnimation> fSectionAnimation_Insert;
-	ZQ<UITableViewRowAnimation> fSectionAnimation_Delete;
-	ZQ<UITableViewRowAnimation> fSectionAnimation_Reload;
+	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Insert();
 
-	ZRef<SectionBody> fBody;
+	ZQ<UITableViewRowAnimation> fSectionAnimation_Delete;
+	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Delete();
+
+	ZQ<UITableViewRowAnimation> fSectionAnimation_Reload;
+	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Reload();
 
 // -----
 
 	UITableViewRowAnimation SectionAnimation_Insert();
 	UITableViewRowAnimation SectionAnimation_Delete();
 	UITableViewRowAnimation SectionAnimation_Reload();
+
+private:
+	ZRef<SectionBody> fBody;
 	};
 
 // =================================================================================================
@@ -96,36 +103,15 @@ public:
 class SectionBody : public ZCounted
 	{
 public:
-	class RowMeta
-		{
-	public:
-		RowMeta();
-
-		void UpdateCount(size_t iCount);
-
-		size_t fBase;
-		size_t fLimit;
-		};
-
-// -----
-
-	class RowUpdate
-		{
-	public:
-		RowUpdate(RowMeta& ioRowMeta, std::map<size_t, UITableViewRowAnimation>& ioMap);
-
-		void Add(size_t iIndex, UITableViewRowAnimation iRowAnimation);
-		void AddAll(UITableViewRowAnimation iRowAnimation);
-		void AddRange(size_t iStart, size_t iCount, UITableViewRowAnimation iRowAnimation);
-
-		RowMeta& fRowMeta;
-		std::map<size_t, UITableViewRowAnimation>& fMap;
-		};
+	class RowMeta;
+	class RowUpdate;
 
 // -----
 
 	virtual size_t NumberOfRows() = 0;
 
+	virtual void PreUpdate() = 0;
+	virtual bool WillBeEmpty() = 0;
 	virtual void Update_NOP() = 0;
 	virtual void Update_Normal(RowMeta& ioRowMeta_Old, RowMeta& ioRowMeta_New,
 		RowUpdate& ioRowUpdate_Insert, RowUpdate& ioRowUpdate_Delete, RowUpdate& ioRowUpdate_Reload) = 0;
@@ -142,22 +128,54 @@ public:
 	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex) = 0;
 	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex) = 0;
 
-	virtual bool ButtonTapped(UITableViewController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex) = 0;
+	virtual bool ButtonTapped(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex) = 0;
 	virtual ZQ<bool> HasButton(size_t iRowIndex) = 0;
 
-	virtual bool RowSelected(UITableViewController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex) = 0;
+	virtual bool RowSelected(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex) = 0;
 	virtual ZQ<bool> CanSelect(bool iIEditing, size_t iRowIndex) = 0;
 
 	typedef ZCallable<ZRef<UITableViewCell>(UITableView*,size_t)> Callable_GetCell;
 
-	typedef ZCallable<bool(UITableViewController_WithSections*,UITableView*,ZRef<SectionBody>,size_t)> Callable_ButtonTapped;
+	typedef ZCallable<bool(UITVController_WithSections*,UITableView*,ZRef<SectionBody>,size_t)> Callable_ButtonTapped;
 
-	typedef ZCallable<bool(UITableViewController_WithSections*,UITableView*,ZRef<SectionBody>,size_t)> Callable_RowSelected;
+	typedef ZCallable<bool(UITVController_WithSections*,UITableView*,ZRef<SectionBody>,size_t)> Callable_RowSelected;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * SectionBody
+#pragma mark * SectionBody::RowMeta
+
+class SectionBody::RowMeta
+	{
+public:
+	RowMeta();
+
+	void UpdateCount(size_t iCount);
+
+	size_t fBase;
+	size_t fLimit;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * SectionBody::RowUpdate
+
+class SectionBody::RowUpdate
+	{
+public:
+	RowUpdate(RowMeta& ioRowMeta, std::map<size_t, UITableViewRowAnimation>& ioMap);
+
+	void Add(size_t iIndex, UITableViewRowAnimation iRowAnimation);
+	void AddAll(UITableViewRowAnimation iRowAnimation);
+	void AddRange(size_t iStart, size_t iCount, UITableViewRowAnimation iRowAnimation);
+private:
+	RowMeta& fRowMeta;
+	std::map<size_t, UITableViewRowAnimation>& fMap;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * SectionBody_Concrete
 
 class SectionBody_Concrete : public SectionBody
 	{
@@ -178,10 +196,10 @@ public:
 	ZQ<UITableViewRowAnimation> fRowAnimation_Delete;
 	ZQ<UITableViewRowAnimation> fRowAnimation_Reload;
 
-	virtual bool ButtonTapped(UITableViewController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
+	virtual bool ButtonTapped(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
 	virtual ZQ<bool> HasButton(size_t iRowIndex);
 
-	virtual bool RowSelected(UITableViewController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
+	virtual bool RowSelected(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
 	virtual ZQ<bool> CanSelect(bool iIEditing, size_t iRowIndex);
 
 	ZQ<UITableViewCellEditingStyle> fEditingStyle;
@@ -213,6 +231,8 @@ public:
 
 	virtual size_t NumberOfRows();
 
+	virtual void PreUpdate();
+	virtual bool WillBeEmpty();
 	virtual void Update_NOP();
 	virtual void Update_Normal(RowMeta& ioRowMeta_Old, RowMeta& ioRowMeta_New,
 		RowUpdate& ioRowUpdate_Insert, RowUpdate& ioRowUpdate_Delete, RowUpdate& ioRowUpdate_Reload);
@@ -222,8 +242,10 @@ public:
 
 	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex);
 
-	ZRef<UITableViewCell> fCell;
 	ZRef<UITableViewCell> fCell_Pending;
+
+private:
+	ZRef<UITableViewCell> fCell;
 	};
 
 // =================================================================================================
@@ -235,6 +257,8 @@ class SectionBody_Multi : public SectionBody
 public:
 	virtual size_t NumberOfRows();
 
+	virtual void PreUpdate();
+	virtual bool WillBeEmpty();
 	virtual void Update_NOP();
 	virtual void Update_Normal(RowMeta& ioRowMeta_Old, RowMeta& ioRowMeta_New,
 		RowUpdate& ioRowUpdate_Insert, RowUpdate& ioRowUpdate_Delete, RowUpdate& ioRowUpdate_Reload);
@@ -251,16 +275,17 @@ public:
 	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex);
 	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex);
 
-	virtual bool ButtonTapped(UITableViewController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
+	virtual bool ButtonTapped(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
 	virtual ZQ<bool> HasButton(size_t iRowIndex);
 
-	virtual bool RowSelected(UITableViewController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
+	virtual bool RowSelected(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
 	virtual ZQ<bool> CanSelect(bool iIEditing, size_t iRowIndex);
 
-	std::vector<ZRef<SectionBody> > fBodies;
 	std::vector<ZRef<SectionBody> > fBodies_Pending;
 
+private:
 	ZRef<SectionBody> pGetBodyAndRowIndex(size_t& oIndex, size_t iIndex);
+	std::vector<ZRef<SectionBody> > fBodies;
 	};
 
 } // namespace UIKit
@@ -268,12 +293,13 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * UITableViewController_WithSections
+#pragma mark * UITVController_WithSections
 
-@interface UITableViewController_WithSections : UITableViewController
+@interface UITVController_WithSections : UITableViewController
 	{
-	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections;
-	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Pending;
+	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown;
+	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown_Pending;
+	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_All;
 	std::set<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_ToIgnore;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fInserts;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fDeletes;
@@ -311,7 +337,7 @@ public:
 - (void)appendSection:(ZooLib::ZRef<ZooLib::UIKit::Section>) iSection;
 - (void)needsUpdate;
 
-@end // interface UITableViewController_WithSections
+@end // interface UITVController_WithSections
 
 #endif // ZCONFIG_SPI_Enabled(iPhone)
 
