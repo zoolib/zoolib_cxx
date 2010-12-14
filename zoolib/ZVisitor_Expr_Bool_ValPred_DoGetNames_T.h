@@ -62,7 +62,7 @@ void ZVisitor_Expr_Bool_ValPred_DoGetNames_T<Val>::Visit_Expr_Op1(
 template <class Val>
 void ZVisitor_Expr_Bool_ValPred_DoGetNames_T<Val>::Visit_Expr_Op2(
 	ZRef<ZExpr_Op2_T<ZExpr_Bool> > iExpr)
-	{ this->pSetResult(ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp0()))); }
+	{ this->pSetResult(ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp1()))); }
 
 } // namespace ZooLib
 
