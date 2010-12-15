@@ -29,6 +29,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 
 namespace ZooLib {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Rename_t
+
+// This needs to be in ZooLib, or we get ambiguities with the one defined in ZValPred_T.h
+
+typedef std::map<std::string, std::string> Rename_t;
+
+Rename_t sInverted(const Rename_t& iRename);
+
 namespace ZRA {
 
 // =================================================================================================
@@ -67,14 +78,6 @@ inline RelHead operator^(const char* iElem, const RelHead& iRelHead)
 
 inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
 	{ return iRelHead ^ RelHead::key_type(iElem); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Rename_t
-
-typedef std::map<RelName, RelName> Rename_t;
-
-Rename_t sInverted(const Rename_t& iRename);
 
 } // namespace ZRA
 } // namespace ZooLib
