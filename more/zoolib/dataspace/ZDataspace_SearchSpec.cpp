@@ -36,6 +36,7 @@ namespace ZooLib {
 namespace ZDataspace {
 
 using namespace ZRA;
+using std::set;
 using std::vector;
 
 // =================================================================================================
@@ -129,7 +130,7 @@ class Gather
 :	public virtual ZVisitor_Do_T<Gather_t>
 ,	public virtual ZRA::Visitor_Expr_Rel_Product
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
-//,	public virtual ZRA::Visitor_Expr_Rel_Project
+,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
 ,	public virtual ZRA::Visitor_Expr_Rel_Restrict
 ,	public virtual ZRA::Visitor_Expr_Rel_Select
@@ -140,6 +141,7 @@ public:
 	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<Expr_Rel> > iExpr);
 	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr);
 
+	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
 	virtual void Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr);
 
 	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
@@ -158,6 +160,27 @@ void Gather::Visit_Expr_Op1(ZRef<ZExpr_Op1_T<Expr_Rel> > iExpr)
 
 void Gather::Visit_Expr_Op2(ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr)
 	{ ZUnimplemented(); }
+
+void Gather::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
+	{
+	Gather_t g0 = this->Do(iExpr->GetOp0());
+	const RelHead& theRH = iExpr->GetProjectRelHead();
+	for (vector<NameMap>::iterator iterNM = g0.fNameMaps.begin();
+		iterNM != g0.fNameMaps.end(); ++iterNM)
+		{
+		set<NameMap::Elem_t> newElems;
+		set<NameMap::Elem_t>& elems = iterNM->GetElems();
+		for (set<NameMap::Elem_t>::const_iterator iterElem = elems.begin();
+			iterElem != elems.end(); ++iterElem)
+			{
+			if (theRH.Contains(iterElem->first))
+				newElems.insert(*iterElem);
+			}
+		elems.swap(newElems);
+		}
+
+	this->pSetResult(g0);
+	}
 
 void Gather::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
 	{
