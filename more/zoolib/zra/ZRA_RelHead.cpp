@@ -21,6 +21,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_RelHead.h"
 
 namespace ZooLib {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Rename_t
+
+Rename_t sInverted(const Rename_t& iRename)
+	{
+	Rename_t result;
+	for (Rename_t::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
+		result[i->second] = i->first;
+	return result;
+	}
+
+} // namespace ZooLib
+
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
@@ -58,18 +74,6 @@ RelHead sPrefixRemove(const RelName& iPrefix, const RelHead& iRelHead)
 	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
 		result.insert(sPrefixRemove(iPrefix, *i));
 
-	return result;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Rename_t
-
-Rename_t sInverted(const Rename_t& iRename)
-	{
-	Rename_t result;
-	for (Rename_t::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
-		result[i->second] = i->first;
 	return result;
 	}
 
