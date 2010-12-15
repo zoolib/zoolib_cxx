@@ -588,7 +588,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 		{
 		s.Empty("nil");
 		}
-	else if (const bool* theValue = iAny.PGet<bool>())
+	else if (const bool* theValue = iVal.PGet<bool>())
 		{
 		s.Begin("boolean");
 			if (*theValue)
@@ -609,7 +609,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 			ZUtil_Strim::sWriteExact(s, asDouble);
 		s.End("double");
 		}
-	else if (const ZTime* theValue = iAny.PGet<ZTime>())
+	else if (const ZTime* theValue = iVal.PGet<ZTime>())
 		{
 		s.Begin("dateTime.iso8601");
 			s << ZUtil_Time::sAsString_ISO8601(*theValue, true);

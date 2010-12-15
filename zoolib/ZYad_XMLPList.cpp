@@ -326,7 +326,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 		{
 		s.Empty("nil");
 		}
-	else if (const bool* asBool = iVal->PGet<bool>())
+	else if (const bool* asBool = iVal.PGet<bool>())
 		{
 		if (*asBool)
 			s.Empty("true");
@@ -345,7 +345,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 			ZUtil_Strim::sWriteExact(s, asDouble);
 		s.End("real");
 		}
-	else if (const ZTime* theValue = iVal->PGet<ZTime>())
+	else if (const ZTime* theValue = iVal.PGet<ZTime>())
 		{
 		s.Begin("date");
 			s << ZUtil_Time::sAsString_ISO8601(*theValue, true);
