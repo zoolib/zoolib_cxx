@@ -210,8 +210,8 @@ void LogMeister::LogIt(
 	ZTime now = ZTime::sNow();
 
 	const size_t curLength = ZUnicode::sCUToCP(iName.begin(), iName.end());
-	if (fExtraSpace < curLength)
-		fExtraSpace = curLength;
+//	if (fExtraSpace < curLength)
+//		fExtraSpace = curLength;
 
 	// extraSpace will ensure that the message text from multiple calls lines
 	// up, so long as iName is 20 CPs or less in length.
