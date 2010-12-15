@@ -131,6 +131,9 @@ void Dataspace::LocalUpdate()
 	ZAcqMtxR acq_CallLocalUpdate(fMtxR_CallLocalUpdate);
 	ZGuardRMtxR guardR_Structure(fMtxR_Structure);
 
+	if (!fCalled_LocalUpdateNeeded)
+		return;
+
 	fCalled_LocalUpdateNeeded = false;
 
 	for (DListIteratorEraseAll<PSieve, DLink_PSieve_LocalUpdate> iter = fPSieves_LocalUpdate;
@@ -207,6 +210,9 @@ void Dataspace::SourceUpdate()
 	{
 	ZGuardRMtxR guardR_CallSourceUpdate(fMtxR_CallSourceUpdate);
 	ZGuardRMtxR guardR_Structure(fMtxR_Structure);
+
+	if (!fCalled_SourceUpdateNeeded)
+		return;
 
 	fCalled_SourceUpdateNeeded = false;
 
