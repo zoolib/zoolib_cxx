@@ -67,6 +67,7 @@ public:
 	void InsertToFrom(const RelName& iNameTo, const RelName& iNameFrom);
 	void ApplyToFrom(const RelName& iNameTo, const RelName& iNameFrom);
 
+	std::set<Elem_t>& GetElems();
 	const std::set<Elem_t>& GetElems() const;
 
 	RelHead GetRelHead_To() const;

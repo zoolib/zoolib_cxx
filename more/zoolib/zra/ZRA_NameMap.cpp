@@ -135,6 +135,9 @@ void NameMap::ApplyToFrom(const RelHead::key_type& iNameTo, const RelHead::key_t
 	fElems.swap(result);
 	}
 
+set<NameMap::Elem_t>& NameMap::GetElems()
+	{ return fElems; }
+
 const set<NameMap::Elem_t>& NameMap::GetElems() const
 	{ return fElems; }
 
