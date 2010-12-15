@@ -58,7 +58,7 @@ public:
 
 	virtual ~Channel_BBDevMgr();
 
-// From ZRefCountedWithFinalize via ZBlackBerry::Channel
+// From ZCounted via ZBlackBerry::Channel
 	virtual void Initialize();
 
 // From IUnknown via IChannelEvents
@@ -684,10 +684,10 @@ STDMETHODIMP Manager_BBDevMgr::QueryInterface(
 	}
 
 ULONG STDMETHODCALLTYPE Manager_BBDevMgr::AddRef()
-	{ return ZRefCountedWithFinalize::pCOMAddRef(); }
+	{ return ZCounted::pCOMAddRef(); }
 
 ULONG STDMETHODCALLTYPE Manager_BBDevMgr::Release()
-	{ return ZRefCountedWithFinalize::pCOMRelease(); }
+	{ return ZCounted::pCOMRelease(); }
 
 STDMETHODIMP Manager_BBDevMgr::DeviceConnect(IDevice* iDevice)
 	{
