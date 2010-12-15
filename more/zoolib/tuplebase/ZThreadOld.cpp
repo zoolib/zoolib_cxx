@@ -110,13 +110,13 @@ bool ZMutex::pWaitUntil(ZCnd& iCnd, ZTime iDeadline)
 ZSemaphore::ZSemaphore(int32 iInitialCount)
 	{
 	while (iInitialCount--)
-		ZSem::Signal();
+		ZSem::Vacate();
 	}
 
 ZSemaphore::ZSemaphore(int32 iInitialCount, const char* iName)
 	{
 	while (iInitialCount--)
-		ZSem::Signal();
+		ZSem::Vacate();
 	}
 
 ZSemaphore::~ZSemaphore()
@@ -125,7 +125,7 @@ ZSemaphore::~ZSemaphore()
 void ZSemaphore::Wait(int32 iCount)
 	{
 	while (iCount--)
-		ZSem::Wait();
+		ZSem::Procure();
 	}
 
 bool ZSemaphore::Wait(int32 iCount, int64 iMicroseconds)
@@ -134,7 +134,7 @@ bool ZSemaphore::Wait(int32 iCount, int64 iMicroseconds)
 	int32 acquired = 0;
 	while (iCount)
 		{
-		if (!ZSem::WaitUntil(deadline))
+		if (!ZSem::TryProcureUntil(deadline))
 			{
 			this->Signal(acquired);
 			return false;
@@ -151,7 +151,7 @@ bool ZSemaphore::Wait(int32 iCount, int64 iMicroseconds)
 void ZSemaphore::Signal(int32 iCount)
 	{
 	while (iCount--)
-		ZSem::Signal();
+		ZSem::Vacate();
 	}
 
 } // namespace ZooLib
