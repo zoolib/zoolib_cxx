@@ -90,13 +90,13 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 	for (ZRef<Iter> iterTables = new Iter(fDB, "select name from sqlite_master;");
 		iterTables->HasValue(); iterTables->Advance())
 		{
-		const string8 theTableName = iterTables->Get(0).Get_T<string8>();
+		const string8 theTableName = iterTables->Get(0).Get<string8>();
 		ZAssert(!theTableName.empty());
 		RelHead theRelHead;
 		for (ZRef<Iter> iterTable = new Iter(fDB, "pragma table_info(" + theTableName + ");");
 			iterTable->HasValue(); iterTable->Advance())
 			{
-			theRelHead.Insert(theTableName + "_" + iterTable->Get(1).Get_T<string8>());
+			theRelHead.Insert(theTableName + "_" + iterTable->Get(1).Get<string8>());
 			}
 		theRelHead.Insert(theTableName + "_oid");
 
