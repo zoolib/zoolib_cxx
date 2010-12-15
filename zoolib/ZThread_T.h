@@ -106,7 +106,7 @@ Andrew D. Birrell
 
 "Strategies for Implementing POSIX Condition Variables on Win32",
 Douglas C. Schmidt and Irfan Pyarali
-http://www.cse.wustl.edu/~schmidt/win32-cv-1.html
+<http://www.cse.wustl.edu/~schmidt/win32-cv-1.html>
 */
 
 template <class Mtx, class Sem>
@@ -126,7 +126,7 @@ public:
 
 		ZReleaser_T<Mtx> rel(iMtx);
 
-		fSem.Wait();
+		fSem.Procure();
 		}
 
 	bool WaitFor(Mtx& iMtx, double iTimeout)
@@ -135,7 +135,7 @@ public:
 
 		ZReleaser_T<Mtx> rel(iMtx);
 
-		if (fSem.WaitFor(iTimeout))
+		if (fSem.PFor(iTimeout))
 			return true;
 
 		ZAtomic_Dec(&fWaitingThreads);
@@ -148,7 +148,7 @@ public:
 
 		ZReleaser_T<Mtx> rel(iMtx);
 
-		if (fSem.WaitUntil(iDeadline))
+		if (fSem.PUntil(iDeadline))
 			return true;
 
 		ZAtomic_Dec(&fWaitingThreads);
@@ -164,7 +164,7 @@ public:
 				if (!ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, oldCount - 1))
 					continue;
 
-				fSem.Signal();
+				fSem.V();
 				}
 			break;
 			}
@@ -180,7 +180,7 @@ public:
 					continue;
 
 				while (oldCount--)
-					fSem.Signal();
+					fSem.V();
 				}
 			break;
 			}
@@ -225,8 +225,8 @@ public:
 	ZMtx_T(const char* iName = nullptr) { fSem.Signal(); }
 	~ZMtx_T() {}
 
-	void Acquire() { fSem.Wait(); }
-	void Release() { fSem.Signal(); }
+	void Acquire() { fSem.Procure(); }
+	void Release() { fSem.Vacate(); }
 	};
 
 // =================================================================================================
@@ -345,12 +345,18 @@ public:
 	ZSem_T() : fAvailable(0) {}
 	~ZSem_T() {}
 
-	void Wait() { this->pWait(1); }
-	bool WaitFor(double iTimeout) { return this->pWaitUntil(1, ZTime::sSystem() + iTimeout); }
-	bool WaitUntil(ZTime iDeadline) { return this->pWaitUntil(1, iDeadline); }
-	void Signal() { this->pSignal(1); }
+	void Procure()
+		{ this->pProcure(1); }
 
-	void pWait(int iCount)
+	bool TryProcureFor(double iTimeout)
+		{ return this->pTryProcureUntil(1, ZTime::sSystem() + iTimeout); }
+
+	bool TryProcureUntil(ZTime iDeadline)
+		{ return this->pTryProcureUntil(1, iDeadline); }
+
+	void Vacate() { this->pVacate(1); }
+
+	void pProcure(int iCount)
 		{
 		ZAcquirer_T<Mtx> acq(fMtx);
 
@@ -369,7 +375,7 @@ public:
 		fWaiters.Erase(&theWaiter);
 		}
 
-	bool pWaitUntil(int iCount, ZTime iDeadline)
+	bool pTryProcureUntil(int iCount, ZTime iDeadline)
 		{
 		ZAcquirer_T<Mtx> acq(fMtx);
 
@@ -389,14 +395,14 @@ public:
 
 		if (int acquired = iCount - theWaiter.fCount)
 			{
-			this->pSignal(acquired);
+			this->pVacate(acquired);
 			return false;
 			}
 
 		return true;
 		}
 
-	void pSignal(int iCount)
+	void pVacate(int iCount)
 		{
 		ZAcquirer_T<Mtx> acq(fMtx);
 

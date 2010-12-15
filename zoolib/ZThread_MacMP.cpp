@@ -123,10 +123,10 @@ ZSem_MacMP::ZSem_MacMP()
 ZSem_MacMP::~ZSem_MacMP()
 	{ ::MPDeleteSemaphore(fMPSemaphoreID); }
 
-void ZSem_MacMP::Wait()
+void ZSem_MacMP::Procure()
 	{ ::MPWaitOnSemaphore(fMPSemaphoreID, kDurationForever); }
 
-bool ZSem_MacMP::WaitFor(double iTimeout)
+bool ZSem_MacMP::TryProcureFor(double iTimeout)
 	{
 	if (iTimeout <= 0)
 		{
@@ -144,10 +144,10 @@ bool ZSem_MacMP::WaitFor(double iTimeout)
 		}
 	}
 
-bool ZSem_MacMP::WaitUntil(ZTime iDeadline)
-	{ return this->WaitFor(iDeadline - ZTime::sSystem()); }
+bool ZSem_MacMP::TryProcureUntil(ZTime iDeadline)
+	{ return this->TryProcureFor(iDeadline - ZTime::sSystem()); }
 
-void ZSem_MacMP::Signal()
+void ZSem_MacMP::Vacate()
 	{ ::MPSignalSemaphore(fMPSemaphoreID); }
 
 } // namespace ZooLib

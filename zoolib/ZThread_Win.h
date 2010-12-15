@@ -144,10 +144,10 @@ public:
 
 	~ZSem_Win();
 
-	void Wait();
-	bool WaitFor(double iTimeout);
-	bool WaitUntil(ZTime iDeadline);
-	void Signal();
+	void Procure();
+	bool TryProcureFor(double iTimeout);
+	bool TryProcureUntil(ZTime iDeadline);
+	void Vacate();
 
 protected:
 	ZThread_Win::Dummy_HANDLE fHANDLE;

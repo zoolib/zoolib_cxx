@@ -198,9 +198,9 @@ public:
 	ZSemNoTimeout_pthread();
 	~ZSemNoTimeout_pthread();
 
-	void Wait();
-	bool TryWait();
-	void Signal();
+	void Procure();
+	bool TryProcure();
+	void Vacate();
 
 protected:
 	sem_t fSem;

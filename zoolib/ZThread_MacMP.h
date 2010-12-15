@@ -127,10 +127,10 @@ public:
 	ZSem_MacMP();
 	~ZSem_MacMP();
 
-	void Wait();
-	bool WaitFor(double iTimeout);
-	bool WaitUntil(ZTime iDeadline);
-	void Signal();
+	void Procure();
+	bool TryProcureFor(double iTimeout);
+	bool TryProcureUntil(ZTime iDeadline);
+	void Vacate();
 
 protected:
 	MPSemaphoreID fMPSemaphoreID;

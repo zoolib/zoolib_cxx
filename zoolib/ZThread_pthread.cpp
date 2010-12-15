@@ -137,7 +137,7 @@ ZSemNoTimeout_pthread::ZSemNoTimeout_pthread()
 ZSemNoTimeout_pthread::~ZSemNoTimeout_pthread()
 	{ ::sem_destroy(&fSem); }
 
-void ZSemNoTimeout_pthread::Wait()
+void ZSemNoTimeout_pthread::Procure()
 	{
 	for (;;)
 		{
@@ -151,10 +151,10 @@ void ZSemNoTimeout_pthread::Wait()
 		}
 	}
 
-bool ZSemNoTimeout_pthread::TryWait()
+bool ZSemNoTimeout_pthread::TryProcure()
 	{ return 0 == ::sem_trywait(&fSem); }
 
-void ZSemNoTimeout_pthread::Signal()
+void ZSemNoTimeout_pthread::Vacate()
 	{ ::sem_post(&fSem); }
 
 } // namespace ZooLib

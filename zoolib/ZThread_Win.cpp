@@ -92,16 +92,16 @@ ZSem_Win::ZSem_Win()
 ZSem_Win::~ZSem_Win()
 	{ ::CloseHandle(fHANDLE); }
 
-void ZSem_Win::Wait()
+void ZSem_Win::Procure()
 	{ ::WaitForSingleObject(fHANDLE, INFINITE); }
 
-bool ZSem_Win::WaitFor(double iTimeout)
+bool ZSem_Win::TryProcureFor(double iTimeout)
 	{ return WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, DWORD(iTimeout * 1e3)); }
 
-bool ZSem_Win::WaitUntil(ZTime iDeadline)
-	{ return this->WaitFor(iDeadline - ZTime::sSystem()); }
+bool ZSem_Win::TryProcureUntil(ZTime iDeadline)
+	{ return this->PFor(iDeadline - ZTime::sSystem()); }
 
-void ZSem_Win::Signal()
+void ZSem_Win::Vacate()
 	{ ::ReleaseSemaphore(fHANDLE, 1, nullptr); }
 
 } // namespace ZooLib
