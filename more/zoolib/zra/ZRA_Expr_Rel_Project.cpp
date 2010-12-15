@@ -60,7 +60,7 @@ RelHead Expr_Rel_Project::GetRelHead()
 void Expr_Rel_Project::Accept_Expr_Rel_Project(Visitor_Expr_Rel_Project& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Project(this); }
 
-RelHead Expr_Rel_Project::GetProjectRelHead()
+const RelHead& Expr_Rel_Project::GetProjectRelHead()
 	{ return fRelHead; }
 
 // =================================================================================================
@@ -82,11 +82,14 @@ ZRef<Expr_Rel_Project> sProject(const ZRef<Expr_Rel>& iExpr, const RelHead& iRel
 	return null;
 	}
 
-ZRef<Expr_Rel_Project> operator&(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead)
+ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead)
 	{ return sProject(iExpr, iRelHead); }
 
-ZRef<Expr_Rel_Project> operator&(const RelHead& iRelHead, const ZRef<Expr_Rel>& iExpr)
+ZRef<Expr_Rel> operator&(const RelHead& iRelHead, const ZRef<Expr_Rel>& iExpr)
 	{ return sProject(iExpr, iRelHead); }
+
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr, const RelHead& iRelHead)
+	{ return ioExpr = ioExpr & iRelHead; }
 
 } // namespace ZRA
 } // namespace ZooLib

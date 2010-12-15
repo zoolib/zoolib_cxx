@@ -56,7 +56,7 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Project(Visitor_Expr_Rel_Project& iVisitor);
 
-	RelHead GetProjectRelHead();
+	const RelHead& GetProjectRelHead();
 
 private:
 	const RelHead fRelHead;
@@ -80,9 +80,9 @@ public:
 
 ZRef<Expr_Rel_Project> sProject(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
 
-ZRef<Expr_Rel_Project> operator&(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
-
-ZRef<Expr_Rel_Project> operator&(const RelHead& iRelHead, const ZRef<Expr_Rel>& iExpr);
+ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
+ZRef<Expr_Rel> operator&(const RelHead& iRelHead, const ZRef<Expr_Rel>& iExpr);
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr, const RelHead& iRelHead);
 
 } // namespace ZRA
 } // namespace ZooLib
