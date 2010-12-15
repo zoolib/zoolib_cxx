@@ -246,13 +246,22 @@ void Source_Dataset::Update(
 			theWalker = new ZQE::Walker_ValPredCompound(theWalker,
 				iter_RefconToPQuery->second->fSearchSpec.fPredCompound);
 
+			const size_t columnCount = theWalker->NameCount();
+
 			vector<string8> theRowHead;
-			for (size_t x = 0, count = theWalker->NameCount(); x < count; ++x)
+			for (size_t x = 0; x < columnCount; ++x)
 				theRowHead.push_back(theWalker->NameAt(x));
 
+			set<vector<ZVal_Any> > priorVals;
 			vector<ZRef<ZQE::Row> > theRows;
 			for (ZRef<ZQE::Row> theRow; theRow = theWalker->ReadInc(); /*no inc*/)
-				theRows.push_back(theRow);
+				{
+				vector<ZVal_Any> vec;
+				for (size_t x = 0; x < columnCount; ++x)
+					vec.push_back(theRow->Get(x));
+				if (ZUtil_STL::sInsertIfNotContains(priorVals, vec))
+					theRows.push_back(theRow);
+				}
 
 			SearchResult theSearchResult;
 			theSearchResult.fRefcon = iter_RefconToPQuery->first;
