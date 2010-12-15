@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::bad_alloc;
 using std::less;
@@ -1285,6 +1285,6 @@ ZXWindow* ZXWindow::sFromDisplayAndWindowNilOkay(Display* inDisplay, Window inWi
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(X11)

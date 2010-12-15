@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <X11/Xresource.h>
 #include <X11/Xutil.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZXLib {
 
@@ -170,7 +170,7 @@ void SetWMProperties(Display* a0, Window a1, XTextProperty* a2, XTextProperty* a
 
 } // namespace ZXLib
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(X11)
 

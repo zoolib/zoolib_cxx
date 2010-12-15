@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <jni.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -51,7 +51,7 @@ private:
 	JNIEnv* fEnv;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(JNI)
 

@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string.h> // For strcmp etc
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::find_first_of;
 using std::lower_bound;
@@ -382,7 +382,6 @@ void ZAssetRep_Std_Union::DoFinalization()
 void ZAssetRep_Std_Union::pResolvePaths()
 	{
 	ZMutexLocker locker(fMutex);
-	ZAssertStop(2, this->GetRefCount() > 0);
 	if (!fResolved)
 		{
 		fResolved = true;
@@ -528,7 +527,7 @@ void ZAssetTree_Std::RepBeingFinalized(ZAssetRep_Std* iRep)
 #pragma mark -
 #pragma mark * StreamerMemory
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class StreamerMemory : public ZStreamerRPos_Memory
 	{
@@ -1261,4 +1260,4 @@ ZAssetTree_Std_Memory_StaticData::~ZAssetTree_Std_Memory_StaticData()
 	ZAssetTree_Std_Memory::ShutDown();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

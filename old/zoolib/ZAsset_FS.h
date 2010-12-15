@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFile.h"
 #include "zoolib/ZThreadOld.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -78,6 +78,6 @@ protected:
 	size_t fDataSize;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZAsset_FS__

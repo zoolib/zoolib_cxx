@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZProgressWatcher.h"
 #include "zoolib/ZDebug.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -101,4 +101,4 @@ void ZProgressPusher::Pop()
 		fWatcher->Pop();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

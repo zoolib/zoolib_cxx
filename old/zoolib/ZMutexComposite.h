@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -50,6 +50,6 @@ private:
 	bool fIsLocked;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZRWLock__

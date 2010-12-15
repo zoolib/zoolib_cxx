@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmap.h"
 #include "zoolib/ZDebug.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // Because our static sGray, sBlack stuff are constructed before we've been able to call
 // InitGraf(), qd.white, qd.gray etc. will not have valid values, so we have our own
@@ -352,4 +352,4 @@ bool ZDCInk::Internal_IsSameAs(const ZDCInk& inOther) const
 	return false;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

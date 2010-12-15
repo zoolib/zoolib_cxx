@@ -22,11 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCInk__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZRGBColor.h"
 #include "zoolib/ZTypes.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -100,7 +100,7 @@ private:
 #pragma mark -
 #pragma mark * ZDCInkRep
 
-class ZDCInkRep : public ZRefCounted
+class ZDCInkRep : public ZCounted
 	{
 private:
 	ZDCInkRep() {}
@@ -172,6 +172,6 @@ inline bool ZDCInk::IsSameAs(const ZDCInk& inOther) const
 inline const ZRef<ZDCInkRep>& ZDCInk::GetRep() const
 	{ return fRep; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZDCInk__

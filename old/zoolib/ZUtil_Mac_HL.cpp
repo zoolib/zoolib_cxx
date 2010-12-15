@@ -39,7 +39,7 @@ using std::max;
 using std::runtime_error;
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 
@@ -691,7 +691,7 @@ string ZUtil_Mac_HL::sGetVersionString()
 	return version;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
@@ -705,9 +705,9 @@ NAMESPACE_ZOOLIB_END
 #include ZMACINCLUDE3(CoreServices,CarbonCore,MacMemory.h)
 #include ZMACINCLUDE3(ApplicationServices,QD,QDOffscreen.h)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 struct PixmapFromStreamPICTInfo
 	{
 	PixmapFromStreamPICTInfo* fPrev;
@@ -849,5 +849,5 @@ ZDCPixmap ZUtil_Mac_HL::sPixmapFromStreamPICT(const ZStreamR& inStream)
 	return thePixmap;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 #endif // ZCONFIG_SPI_Enabled(QuickDraw)

@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // ==================================================
 
@@ -331,4 +331,4 @@ ZRect ZUtil_Graphics::sCalcHandleBounds9(const ZRect& inBounds,
 
 // ==================================================
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

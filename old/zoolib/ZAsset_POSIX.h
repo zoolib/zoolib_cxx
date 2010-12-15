@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAsset_Std.h" // For ZAssetTree_Std_Memory
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -51,7 +51,7 @@ protected:
 	size_t fMappedLength;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(POSIX)
 

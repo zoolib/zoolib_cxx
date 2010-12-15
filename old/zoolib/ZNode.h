@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZTuple.h"
@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <string>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZNode;
 class ZNodeRep;
@@ -191,7 +191,7 @@ private:
 #pragma mark -
 #pragma mark * ZNodeRep
 
-class ZNodeRep : public ZRefCountedWithFinalize
+class ZNodeRep : public ZCounted
 	{
 protected:
 	ZNodeRep();
@@ -239,7 +239,7 @@ public:
 #pragma mark -
 #pragma mark * ZNodeIterRep
 
-class ZNodeIterRep : public ZRefCountedWithFinalize
+class ZNodeIterRep : public ZCounted
 	{
 protected:
 	ZNodeIterRep();
@@ -284,7 +284,7 @@ private:
 #pragma mark -
 #pragma mark * ZNodeIterRep_Std::RealRep
 
-class ZNodeIterRep_Std::RealRep : public ZRefCountedWithFinalize
+class ZNodeIterRep_Std::RealRep : public ZCounted
 	{
 protected:
 	RealRep() {};
@@ -295,6 +295,6 @@ public:
 	virtual std::string GetName(size_t iIndex) = 0;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZNode__

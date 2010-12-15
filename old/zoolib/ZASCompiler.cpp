@@ -29,7 +29,7 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static void spWriteCount(const ZStreamW& inStream, uint32 inCount)
 	{
@@ -436,4 +436,4 @@ ZASCompiler::NameEntry* ZASCompiler::AllocateName(const string& inName)
 	return theEntry;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

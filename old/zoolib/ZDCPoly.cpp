@@ -95,7 +95,7 @@ using ZooLib::ZCoord;
 	static const ZCoord sCoord_Min = std::numeric_limits<ZCoord>::min();
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::min;
 using std::max;
@@ -1012,4 +1012,4 @@ static void sLinkWindingEdgeList(Edge* iFirstActiveEdge)
 	currentWindingEdge->fEdge_NextForWinding = nullptr;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

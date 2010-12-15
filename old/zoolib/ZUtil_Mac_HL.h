@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZDCPattern;
 
@@ -73,7 +73,7 @@ IconRef sIconRefFromPixmaps(const ZDCPixmap& inColorPixmap, const ZDCPixmap& inM
 
 } // namespace ZUtil_Mac_HL
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
@@ -81,7 +81,7 @@ NAMESPACE_ZOOLIB_END
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZStreamR;
 
@@ -91,7 +91,7 @@ ZDCPixmap sPixmapFromStreamPICT(const ZStreamR& inStream);
 
 } // namespace ZUtil_Mac_HL
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(QuickDraw)
 

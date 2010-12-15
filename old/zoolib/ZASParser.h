@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZFileSpec;
 class ZStreamerR;
@@ -176,6 +176,6 @@ protected:
 
 } // namespace ZASParser
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZASParser__

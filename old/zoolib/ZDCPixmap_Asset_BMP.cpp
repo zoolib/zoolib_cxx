@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::runtime_error;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // From wingdi.h
 #ifndef BI_RGB
@@ -39,7 +39,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * PixmapRaster_Asset
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class PixmapRaster_Asset : public ZDCPixmapRaster
 	{
@@ -414,4 +414,4 @@ static void spReadRLE4(const ZStreamR& iStream,
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

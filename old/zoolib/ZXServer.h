@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(X11)
 
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZDCFont.h"
 #include "zoolib/ZDCPixmapNS.h"
 #include "zoolib/ZDCRgn.h"
 #include "zoolib/ZGeom.h"
-#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZRGBColor.h"
 #include "zoolib/ZThreadOld.h"
 
@@ -39,7 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <X11/extensions/XShm.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZDCPixmap;
 class ZXWindow;
@@ -48,7 +48,7 @@ class ZXWindow;
 #pragma mark -
 #pragma mark * ZXServer
 
-class ZXServer : public ZRefCountedWithFinalize
+class ZXServer : public ZCounted
 	{
 public:
 	ZXServer(const char* inDisplayName);
@@ -217,7 +217,7 @@ protected:
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(X11)
 

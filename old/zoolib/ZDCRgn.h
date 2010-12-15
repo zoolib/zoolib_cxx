@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGRgnRep_RgnHandle.h"
 #include "zoolib/ZGRgnRep_XRegion.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZDCPoly;
 
@@ -200,6 +200,6 @@ typedef ZAccumulator_T<ZDCRgn, ZDCRgnUnioner_t, std::vector<ZDCRgn> > ZDCRgnAccu
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZDCRgn__

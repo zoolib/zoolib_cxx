@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFile.h"
 #include "zoolib/ZThreadOld.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZAssetIterRep_Std_Directory;
 class ZAssetRep_Std_Directory;
@@ -42,7 +42,7 @@ public:
 	ZAssetRep_Std(ZAssetRep_Std_Directory* iParent, const char* iName, size_t iNameLength);
 	virtual ~ZAssetRep_Std();
 
-// From ZRefCountedWithFinalize via ZAssetRep
+// From ZCounted via ZAssetRep
 	virtual void Finalize();
 
 // From ZAssetRep
@@ -327,6 +327,6 @@ public:
 	virtual ~ZAssetTree_Std_Memory_StaticData();
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZAsset_Std__

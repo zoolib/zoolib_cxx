@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <X11/Xproto.h> // For definitions of request codes
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 ZMutex ZXLib::sMutex;
 
@@ -742,7 +742,7 @@ void ZXLib::SetWMProperties(Display* a0, Window a1, XTextProperty* a2,
 	::XSetWMProperties(a0, a1, a2, a3, a4, a5, a6, a7, a8);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(X11)
 

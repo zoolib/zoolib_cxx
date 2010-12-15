@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmap.h"
 #include "zoolib/ZDebug.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define kDebug_Win 2
 
@@ -133,6 +133,6 @@ HICON ZUtil_Win::sLoadIconID(bool iFromApp, int iResourceID)
 		return ::LoadIconA(theHINSTANCE, MAKEINTRESOURCEA(iResourceID));
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

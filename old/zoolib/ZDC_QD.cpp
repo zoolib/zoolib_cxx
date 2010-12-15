@@ -56,7 +56,7 @@ using std::bad_alloc;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static inline void spUseHiliteColor()
 	{
@@ -2491,7 +2491,7 @@ static ZRef<ZDCPixmapRep_QD> spGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>&
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_CreateRaster
 :	public ZFunctionChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&>
@@ -2633,6 +2633,6 @@ ZRef<ZDCCanvas> ZDCCanvasFactory_QD::CreateCanvas(ZPoint iSize, bool iBigEndian,
 	return ZRef<ZDCCanvas>();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(DC_QD)

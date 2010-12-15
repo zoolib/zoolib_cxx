@@ -24,13 +24,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * StreamerMemory
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class StreamerMemory : public ZStreamerRPos_Memory
 	{
@@ -291,4 +291,4 @@ ZRef<ZStreamerRPos> ZAssetRep_FS::OpenRPos()
 	return fSpec.Trail(ZTrail(fComps.begin(), fComps.end())).OpenRPos();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

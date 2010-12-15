@@ -25,9 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 
+#include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZDCPixmapNS.h" 
 #include "zoolib/ZGeom.h"
-#include "zoolib/ZRef_Counted.h"
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,MacMemory.h)
 #include ZMACINCLUDE3(ApplicationServices,QD,QDOffscreen.h)
@@ -41,7 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZDCPixmap;
 class ZDCPattern;
@@ -75,7 +75,7 @@ void sSetWindowManagerPort();
 #pragma mark -
 #pragma mark * ZUtil_Mac_LL::RefCountedCTabHandle
 
-class RefCountedCTabHandle : public ZRefCounted
+class RefCountedCTabHandle : public ZCountedWithoutFinalize
 	{
 public:
 	RefCountedCTabHandle(CTabHandle inCTabHandle) : fCTabHandle(inCTabHandle) {}
@@ -180,6 +180,6 @@ protected:
 
 } // namespace ZUtil_Mac_LL
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUtil_Mac_LL__

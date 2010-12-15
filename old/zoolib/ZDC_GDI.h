@@ -42,7 +42,7 @@ ZMACRO_MSVCStaticLib_Reference(DC_GDI)
 #include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZThreadOld.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -294,7 +294,7 @@ protected:
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(DC_GDI)
 

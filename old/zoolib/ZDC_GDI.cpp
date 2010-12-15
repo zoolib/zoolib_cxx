@@ -41,7 +41,7 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static short spModeLookup[] = { R2_COPYPEN, R2_MERGEPEN, R2_NOTXORPEN, R2_MASKNOTPEN };
 
@@ -2460,7 +2460,7 @@ ZRef<ZDCPixmapRep_DIB> ZDCPixmapRep_DIB::sAsPixmapRep_DIB(ZRef<ZDCPixmapRep> iRe
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_CreateRaster
 :	public ZFunctionChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&>
@@ -2512,6 +2512,6 @@ class Make_EfficientToStandard
 
 } // anonymous namespace
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(DC_GDI)

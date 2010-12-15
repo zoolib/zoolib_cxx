@@ -38,7 +38,7 @@ using std::map;
 using std::pair;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define kDebug_Mac 3
 // =================================================================================================
@@ -573,4 +573,4 @@ ZUtil_Mac_LL::SaveRestoreResFile::~SaveRestoreResFile()
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

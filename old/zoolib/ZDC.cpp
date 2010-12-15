@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using namespace std;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 /**
 \defgroup Graphics
@@ -609,4 +609,4 @@ ZDC_OffAuto::~ZDC_OffAuto()
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

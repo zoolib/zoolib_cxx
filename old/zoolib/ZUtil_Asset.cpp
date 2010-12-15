@@ -47,7 +47,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 using std::vector;
@@ -537,4 +537,4 @@ ZAsset ZUtil_Asset::sCreateOverlay(const vector<ZAsset>& iAssets, bool iLowestTo
 	return ZAsset(new ZAssetRep_Overlay(assetReps));
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

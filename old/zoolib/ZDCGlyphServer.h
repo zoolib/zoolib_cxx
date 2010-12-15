@@ -26,13 +26,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmap.h"
 #include "zoolib/ZTypes.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCGlyphServer
 
-class ZDCGlyphServer : public ZRefCountedWithFinalize
+class ZDCGlyphServer : public ZCounted
 	{
 protected:
 	ZDCGlyphServer();
@@ -48,6 +48,6 @@ public:
 		ZCoord& oAscent, ZCoord& oDescent, ZCoord& oLeading) = 0;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZDCGlyphServer__

@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFunctionChain.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -976,7 +976,7 @@ bool ZDCCanvas_X_OffScreen::IsOffScreen()
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_CreateRaster
 :	public ZFunctionChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&>
@@ -1027,6 +1027,6 @@ class Make_EfficientToStandard
 
 } // anonymous namespace
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(DC_X)

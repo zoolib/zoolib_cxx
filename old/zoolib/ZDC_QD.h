@@ -42,7 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE3(ApplicationServices,QD,QDOffscreen.h)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -319,7 +319,7 @@ protected:
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(DC_QD)
 

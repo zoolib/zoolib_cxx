@@ -43,9 +43,9 @@ using std::pair;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 // =================================================================================================
 #pragma mark -
@@ -913,4 +913,4 @@ void ZASParser::ParseHandler_Prettify::ExitCharSet(bool iWasInBlock, bool iNowIn
 	fInBlock = iNowInBlock;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

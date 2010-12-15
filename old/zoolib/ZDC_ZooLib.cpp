@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmapBlit.h"
 #include "zoolib/ZUnicode.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using ZDCPixmapNS::EFormatEfficient;
 using ZDCPixmapNS::PixelDesc;
@@ -711,4 +711,4 @@ ZRef<ZDCCanvas> ZDCCanvasFactory_ZooLib::CreateCanvas(
 	return ZRef<ZDCCanvas>();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

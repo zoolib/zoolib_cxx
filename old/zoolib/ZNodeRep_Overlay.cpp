@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include <set>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::set;
 using std::string;
@@ -387,4 +387,4 @@ ZRef<ZNodeIterRep> ZNodeIterRep_Overlay::Clone()
 	return new ZNodeIterRep_Overlay(fParent, fCurrentIterRep->Clone(), fRepsUnvisited, fNamesSeen);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

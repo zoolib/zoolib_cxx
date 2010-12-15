@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -96,7 +96,7 @@ static ZPoint spReadAsset_ZPoint(const ZAsset& iAsset)
 #pragma mark -
 #pragma mark * PixmapRaster_Asset
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class PixmapRaster_Asset : public ZDCPixmapRaster
 	{
@@ -223,4 +223,4 @@ void ZDCGlyphServer_Asset::GetFontInfo(const ZDCFont& iFont,
 		}	
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

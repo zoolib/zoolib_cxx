@@ -23,14 +23,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZStreamer.h"
 
 #include <set>
 #include <string>
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZAsset;
 class ZAssetIterRep;
@@ -112,7 +112,7 @@ private:
 
 /// Represents an entire asset tree.
 
-class ZAssetTree : public ZRefCountedWithFinalize, NonCopyable
+class ZAssetTree : public ZCounted, NonCopyable
 	{
 protected:
 	ZAssetTree() {}
@@ -128,7 +128,7 @@ public:
 #pragma mark -
 #pragma mark * ZAssetRep
 
-class ZAssetRep : public ZRefCountedWithFinalize, NonCopyable
+class ZAssetRep : public ZCounted, NonCopyable
 	{
 protected:
 	ZAssetRep() {}
@@ -158,7 +158,7 @@ public:
 #pragma mark -
 #pragma mark * ZAssetIterRep
 
-class ZAssetIterRep : public ZRefCounted
+class ZAssetIterRep : public ZCounted
 	{
 protected:
 	ZAssetIterRep();
@@ -281,6 +281,6 @@ inline ZAsset::operator operator_bool_type() const
 inline ZRef<ZAssetRep> ZAsset::GetRep() const
 	{ return fRep; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZAsset__

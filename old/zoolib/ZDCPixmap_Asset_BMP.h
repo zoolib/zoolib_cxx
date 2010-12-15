@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPixmap_Asset_BMP__ 1
 #include "zconfig.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZAsset;
 class ZDCPixmap;
@@ -33,6 +33,6 @@ ZDCPixmap sGetPixmap(const ZAsset& iAsset);
 
 } // namespace ZDCPixmap_Asset_BMP
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZDCPixmap_Asset_BMP__

@@ -22,16 +22,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDC__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZDCFont.h"
 #include "zoolib/ZDCInk.h"
 #include "zoolib/ZDCPoly.h"
 #include "zoolib/ZDCPixmap.h"
 #include "zoolib/ZDCRgn.h"
 #include "zoolib/ZGeom.h"
-#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZRGBColor.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -269,7 +269,7 @@ Exposing our canvas and state -- DO NOT MISUSE!!! */
 #pragma mark -
 #pragma mark * ZDCCanvas
 
-class ZDCCanvas : public ZRefCountedWithFinalize
+class ZDCCanvas : public ZCounted
 	{
 protected:
 	ZDCCanvas();
@@ -648,6 +648,6 @@ inline ZDCState& ZDC::GetState() const
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZDC__

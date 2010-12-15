@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZDCRgn.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZDC;
 class ZDCPattern;
@@ -63,6 +63,6 @@ ZRect sCalcHandleBounds9(const ZRect& inBounds, ZCoord inHandleSize, size_t inHa
 
 } // namespace ZUtil_Graphics
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUtil_Graphics__

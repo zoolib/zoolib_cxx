@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNode_FS.h"
 #include "zoolib/ZLog.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -414,4 +414,4 @@ std::string ZNodeIterRep_FS::CurrentName()
 ZRef<ZNodeIterRep> ZNodeIterRep_FS::Clone()
 	{ return new ZNodeIterRep_FS(fFileIter); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -24,7 +24,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 /**
 \defgroup Asset
@@ -525,7 +525,7 @@ ZAssetIter& ZAssetIter::Advance()
 	{
 	if (fRep)
 		{
-		if (fRep->GetRefCount() > 1)
+		if (fRep->IsShared())
 			fRep = fRep->Clone();
 
 		if (fRep)
@@ -817,4 +817,4 @@ ZRef<ZAssetIterRep> ZAssetIterRep_Union::Clone()
 	return new ZAssetIterRep_Union(fParent, fCurrentIterRep->Clone(), fRepsUnvisited, fNamesSeen);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_Win.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZDCPixmap;
 
@@ -43,7 +43,7 @@ HICON sLoadIconID(bool iFromApp, int iResourceID);
 
 } // namespace ZUtil_Win
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif //  ZCONFIG_SPI_Enabled(Win)
 

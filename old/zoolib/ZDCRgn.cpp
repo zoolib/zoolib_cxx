@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCRgn.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::vector;
 
@@ -290,4 +290,4 @@ ZDCRgn& ZDCRgn::operator^=(const ZDCRgn& iOther)
 ZDCRgn ZDCRgn::operator^(const ZDCRgn& iOther) const
 	{ return fGRgn ^ iOther.fGRgn; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
