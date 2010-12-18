@@ -180,6 +180,8 @@ private:
 class SectionBody_Concrete : public SectionBody
 	{
 public:
+	SectionBody_Concrete();
+
 // From SectionBody
 	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex);
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
@@ -188,20 +190,13 @@ public:
 	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex);
 	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex);
 
-	virtual ZQ<UITableViewRowAnimation> QRowAnimation_Insert();
-	virtual ZQ<UITableViewRowAnimation> QRowAnimation_Delete();
-	virtual ZQ<UITableViewRowAnimation> QRowAnimation_Reload();
-
-	ZQ<UITableViewRowAnimation> fRowAnimation_Insert;
-	ZQ<UITableViewRowAnimation> fRowAnimation_Delete;
-	ZQ<UITableViewRowAnimation> fRowAnimation_Reload;
-
 	virtual bool ButtonTapped(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
 	virtual ZQ<bool> HasButton(size_t iRowIndex);
 
 	virtual bool RowSelected(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
 	virtual ZQ<bool> CanSelect(bool iIEditing, size_t iRowIndex);
 
+//
 	ZQ<UITableViewCellEditingStyle> fEditingStyle;
 	ZQ<bool> fShouldIndentWhileEditing;
 	ZQ<CGFloat> fRowHeight;
@@ -214,10 +209,14 @@ public:
 	ZRef<Callable_RowSelected> fCallable_RowSelected;
 	ZRef<Callable_RowSelected> fCallable_RowSelected_Editing;
 
-// Helpers
-	UITableViewRowAnimation RowAnimation_Insert();
-	UITableViewRowAnimation RowAnimation_Delete();
-	UITableViewRowAnimation RowAnimation_Reload();
+// Our protocol
+	virtual UITableViewRowAnimation RowAnimation_Insert();
+	virtual UITableViewRowAnimation RowAnimation_Delete();
+	virtual UITableViewRowAnimation RowAnimation_Reload();
+
+	UITableViewRowAnimation fRowAnimation_Insert;
+	UITableViewRowAnimation fRowAnimation_Delete;
+	UITableViewRowAnimation fRowAnimation_Reload;
 	};
 
 // =================================================================================================

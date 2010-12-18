@@ -158,6 +158,12 @@ void SectionBody::RowUpdate::AddRange(size_t iStart, size_t iCount, UITableViewR
 #pragma mark -
 #pragma mark * SectionBody_Concrete
 
+SectionBody_Concrete::SectionBody_Concrete()
+:	fRowAnimation_Insert(UITableViewRowAnimationRight)
+,	fRowAnimation_Delete(UITableViewRowAnimationRight)
+,	fRowAnimation_Reload(UITableViewRowAnimationFade)
+	{}
+
 ZRef<UITableViewCell> SectionBody_Concrete::UITableViewCellForRow(UITableView* iView, size_t iRowIndex)
 	{
 	// Our subclass can override UITableViewCellForRow, or
@@ -180,15 +186,6 @@ ZQ<CGFloat> SectionBody_Concrete::QRowHeight(size_t iRowIndex)
 
 ZQ<NSInteger> SectionBody_Concrete::QIndentationLevel(size_t iRowIndex)
 	{ return fIndentationLevel; }
-
-ZQ<UITableViewRowAnimation> SectionBody_Concrete::QRowAnimation_Insert()
-	{ return fRowAnimation_Insert; }
-
-ZQ<UITableViewRowAnimation> SectionBody_Concrete::QRowAnimation_Delete()
-	{ return fRowAnimation_Delete; }
-
-ZQ<UITableViewRowAnimation> SectionBody_Concrete::QRowAnimation_Reload()
-	{ return fRowAnimation_Reload; }
 
 bool SectionBody_Concrete::ButtonTapped(
 	UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex)
@@ -237,29 +234,13 @@ ZQ<bool> SectionBody_Concrete::CanSelect(bool iEditing, size_t iRowIndex)
 	}
 
 UITableViewRowAnimation SectionBody_Concrete::RowAnimation_Insert()
-	{
-	if (ZQ<UITableViewRowAnimation> theQ = this->QRowAnimation_Insert())
-		return theQ.Get();
-	return UITableViewRowAnimationRight;
-//	return UITableViewRowAnimationNone;
-	}
+	{ return fRowAnimation_Insert; }
 
 UITableViewRowAnimation SectionBody_Concrete::RowAnimation_Delete()
-	{
-	if (ZQ<UITableViewRowAnimation> theQ = this->QRowAnimation_Delete())
-		return theQ.Get();
-	return UITableViewRowAnimationRight;
-//	return UITableViewRowAnimationTop;
-//	return UITableViewRowAnimationNone;
-	}
+	{ return fRowAnimation_Insert; }
 
 UITableViewRowAnimation SectionBody_Concrete::RowAnimation_Reload()
-	{
-	if (ZQ<UITableViewRowAnimation> theQ = this->QRowAnimation_Reload())
-		return theQ.Get();
-	return UITableViewRowAnimationFade;
-//	return UITableViewRowAnimationNone;
-	}
+	{ return fRowAnimation_Reload; }
 
 // =================================================================================================
 #pragma mark -
