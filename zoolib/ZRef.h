@@ -38,7 +38,7 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZRef
 
-template <class T>
+template <class T, bool Sense = true>
 class ZRef
 	{
 private:
@@ -62,6 +62,8 @@ private:
 public:
 	#ifdef __OBJC__
 
+		operator bool() const { return Sense == (fP && true); }
+
 		operator T*() const { return fP; }
 
 	#else
@@ -70,7 +72,8 @@ public:
 			operator_bool_generator_type, operator_bool_type);
 
 		operator operator_bool_type() const
-			{ return operator_bool_generator_type::translate(fP); }
+			{ return operator_bool_generator_type::translate(Sense == (fP && true)); }
+
 	#endif
 
 	void swap(ZRef& ioOther)
@@ -112,13 +115,13 @@ public:
 		return *this;
 		}
 
-	template <class O>
-	ZRef(const ZRef<O>& iOther)
+	template <class O, bool OtherSense>
+	ZRef(const ZRef<O, OtherSense>& iOther)
 	:	fP(iOther.Get())
 		{ spRetain(fP); }
 
-	template <class O>
-	ZRef& operator=(const ZRef<O>& iOther)
+	template <class O, bool OtherSense>
+	ZRef& operator=(const ZRef<O, OtherSense>& iOther)
 		{
 		T* theP = iOther.Get();
 		std::swap(theP, fP);
@@ -127,25 +130,25 @@ public:
 		return *this;
 		}
 
-	ZRef(const Adopt_T<T>& iNRP)
-	:	fP(iNRP.Get())
+	ZRef(const Adopt_T<T>& iAdopt)
+	:	fP(iAdopt.Get())
 		{}
 
-	ZRef& operator=(const Adopt_T<T>& iNRP)
+	ZRef& operator=(const Adopt_T<T>& iAdopt)
 		{
-		T* theP = iNRP.Get();
+		T* theP = iAdopt.Get();
 		std::swap(theP, fP);
 		spRelease(theP);
 		return *this;
 		}
 
-	ZRef(const Adopt_T<T*>& iNRP)
-	:	fP(iNRP.Get())
+	ZRef(const Adopt_T<T*>& iAdopt)
+	:	fP(iAdopt.Get())
 		{}
 
-	ZRef& operator=(const Adopt_T<T*>& iNRP)
+	ZRef& operator=(const Adopt_T<T*>& iAdopt)
 		{
-		T* theP = iNRP.Get();
+		T* theP = iAdopt.Get();
 		std::swap(theP, fP);
 		spRelease(theP);
 		return *this;
@@ -157,16 +160,16 @@ public:
 	bool operator!=(const T* iP) const
 		{ return fP != iP; }
 
-	template <class O>
-	bool operator==(const ZRef<O>& iOther) const
+	template <class O, bool OtherSense>
+	bool operator==(const ZRef<O, OtherSense>& iOther) const
 		{ return fP == iOther.Get(); }
 
-	template <class O>
-	bool operator!=(const ZRef<O>& iOther) const
+	template <class O, bool OtherSense>
+	bool operator!=(const ZRef<O, OtherSense>& iOther) const
 		{ return fP != iOther.Get(); }
 
-	template <class O>
-	bool operator<(const ZRef<O>& iOther) const
+	template <class O, bool OtherSense>
+	bool operator<(const ZRef<O, OtherSense>& iOther) const
 		{ return fP < iOther.Get(); }
 
 	T* operator->() const
@@ -181,7 +184,8 @@ public:
 		return fP;
 		}
 
-	T* Get() const { return fP; }
+	T* Get() const
+		{ return fP; }
 
 	void Clear()
 		{
@@ -198,7 +202,8 @@ public:
 		}
 
 	// Used with COM output parameters. See sCOMPtr and sCOMVoidPtr in ZWinCOM.h
-	T*& GetPtrRef() { return fP; }
+	T*& GetPtrRef()
+		{ return fP; }
 
 	template <class O>
 	O* DynamicCast() const
@@ -240,7 +245,7 @@ template <class T> void sRetain_T(T& ioPtr);
 template <class T> void sRelease_T(T iPtr);
 
 template <class T>
-class ZRef<T*>
+class ZRef<T*, true>
 	{
 private:
 	static void spRetain(T*& iP)
@@ -310,13 +315,13 @@ public:
 		return *this;
 		}
 
-	ZRef(const Adopt_T<T*>& iNRP)
-	:	fP(iNRP.Get())
+	ZRef(const Adopt_T<T*>& iAdopt)
+	:	fP(iAdopt.Get())
 		{}
 
-	ZRef& operator=(const Adopt_T<T*>& iNRP)
+	ZRef& operator=(const Adopt_T<T*>& iAdopt)
 		{
-		T* theP = iNRP.Get();
+		T* theP = iAdopt.Get();
 		std::swap(theP, fP);
 		spRelease(theP);
 		return *this;
@@ -340,9 +345,11 @@ public:
 	bool operator<(const ZRef<O>& iOther) const
 		{ return fP < iOther.Get(); }
 
-	operator T*() { return fP; }
+	operator T*()
+		{ return fP; }
 
-	operator T*() const { return fP; }
+	operator T*() const
+		{ return fP; }
 
 	T* Get() const { return fP; }
 
@@ -361,7 +368,9 @@ public:
 		}
 
 	// Used with output parameters.
-	T*& GetPtrRef() { return fP; }
+	T*& GetPtrRef()
+		{ return fP; }
+
 	T*& OParam()
 		{
 		this->Clear();
