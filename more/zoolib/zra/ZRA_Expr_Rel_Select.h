@@ -75,7 +75,7 @@ public:
 #pragma mark -
 #pragma mark * Relational operators
 
-// The order of parameters here differes from that in sRestrict_T precisely to keep them distinct.
+// The order of parameters here differs from that in sRestrict_T precisely to keep them distinct.
 ZRef<Expr_Rel_Select> sSelect(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
 
