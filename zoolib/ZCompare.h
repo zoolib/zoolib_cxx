@@ -50,8 +50,7 @@ public:
 
 #if defined(__MWERKS__) && (__MWERKS__ <= 0x2406)
 
-	// MW Pro 7 doesn't handle function template parameters properly, so
-	// we indirect through a ZCompare_T functor.
+	// CW7 doesn't handle function template parameters properly, so we indirect through a functor.
 
 	template <class T, class CompareFunctor>
 	class ZCompareRegistration_T : public ZCompare
@@ -64,8 +63,19 @@ public:
 			{ return CompareFunctor()(*static_cast<const T*>(iL), *static_cast<const T*>(iR)); }
 		};
 
+	template <class T>
+	class ZCompareRegistrationFunctor_T
+		{
+	public:
+		int operator()(const T& iL, const T& iR) const
+			{ return sCompare_T<T>(iL, iR); }
+		};
+
 	#define ZMACRO_CompareRegistration_T_Real(t, CLASS, INST) \
-		namespace { class CLASS : public ZCompareRegistration_T<t, ZCompare_T<t> > {} INST; }
+		namespace { \
+			class CLASS : public ZCompareRegistration_T<t, ZCompareRegistrationFunctor_T<t> > \
+				{} INST; \
+			}
 #else
 
 	template <class T, int (*CompareProc)(const T&, const T&)>
