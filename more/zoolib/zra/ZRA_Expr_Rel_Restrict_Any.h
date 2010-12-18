@@ -32,9 +32,9 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Restrict
 
-typedef Expr_Rel_Restrict_T<ZVal_Expr> Expr_Rel_Restrict_Any;
+typedef Expr_Rel_Restrict_T<ZVal_Any> Expr_Rel_Restrict_Any;
 
-typedef Visitor_Expr_Rel_Restrict_T<ZVal_Expr> Visitor_Expr_Rel_Restrict_Any;
+typedef Visitor_Expr_Rel_Restrict_T<ZVal_Any> Visitor_Expr_Rel_Restrict_Any;
 
 } // namespace ZRA
 } // namespace ZooLib
