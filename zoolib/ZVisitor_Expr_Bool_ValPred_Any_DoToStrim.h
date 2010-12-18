@@ -18,64 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValPredCompound__
-#define __ZValPredCompound__ 1
+#ifndef __ZVisitor_Expr_Bool_ValPred_Any_DoToStrim__
+#define __ZVisitor_Expr_Bool_ValPred_Any_DoToStrim__
 #include "zconfig.h"
 
-#include "zoolib/ZCompare_T.h"
-#include "zoolib/ZExpr_Bool_ValPred.h"
-
-#include <vector>
+#include "zoolib/ZVisitor_Expr_Bool_DoToStrim.h"
+#include "zoolib/ZExpr_Bool_ValPred_Any.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValPredCompound
+#pragma mark * ZVisitor_Expr_Bool_ValPred_Any_DoToStrim
 
-class ZValPredCompound
+class ZVisitor_Expr_Bool_ValPred_Any_DoToStrim
+:	public virtual ZVisitor_Expr_Bool_DoToStrim
+,	public virtual ZVisitor_Expr_Bool_ValPred_Any
 	{
 public:
-	typedef std::vector<ZValPred> Sect;
-	typedef std::vector<Sect> SectUnion;
-
-	static ZValPredCompound sTrue();
-	static ZValPredCompound sFalse();
-
-	ZValPredCompound();
-	ZValPredCompound(const ZValPredCompound& iOther);
-	~ZValPredCompound();
-	ZValPredCompound& operator=(const ZValPredCompound& iOther);
-
-	ZValPredCompound(SectUnion* ioSectUnion);
-
-	ZValPredCompound(const ZValPred& iValPred);
-	ZValPredCompound(const Sect& iSect);
-	ZValPredCompound(const SectUnion& iSectUnion);
-
-	bool IsAny() const;
-	bool IsNone() const;
-
-	ZValPredCompound operator&(const ZValPredCompound& iOther) const;
-	ZValPredCompound& operator&=(const ZValPredCompound& iOther);
-
-	ZValPredCompound operator|(const ZValPredCompound& iOther) const;
-	ZValPredCompound& operator|=(const ZValPredCompound& iOther);
-
-	bool Matches(ZValContext& iContext, const ZVal_Any& iVal) const;
-
-	ZValPredCompound& Rename(const Rename_t& iRename);
-	ZValPredCompound Renamed(const Rename_t& iRename) const;
-
-public:
-	SectUnion fSectUnion;
+// From ZVisitor_Expr_Bool_ValPred
+	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iRep);
 	};
-
-ZValPredCompound sAsValPredCompound(ZRef<ZExpr_Bool> iExpr);
-ZRef<ZExpr_Bool> sAsExpr_Bool(const ZValPredCompound& iVCF);
-
-template <> int sCompare_T(const ZValPredCompound& iL, const ZValPredCompound& iR);
 
 } // namespace ZooLib
 
-#endif // __ZValPredCompound__
+#endif // __ZVisitor_Expr_Bool_ValPred_DoToStrim__

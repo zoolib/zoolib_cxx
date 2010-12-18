@@ -18,44 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValPred__
-#define __ZValPred__ 1
+#ifndef __ZUtil_Strim_ValPred_Any__
+#define __ZUtil_Strim_ValPred_Any__
 #include "zconfig.h"
 
-#include "zoolib/ZValPred_T.h"
-
-#include "zoolib/ZVal_Any.h"
-//#include "zoolib/ZVal_CFType.h"
-//#include "zoolib/ZVal_Zoolib.h"
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZValPred_Any.h"
 
 namespace ZooLib {
 
-typedef ZMap_Any ZMap_Expr;
-
-//typedef ZMap_CFType ZMap_Expr;
-//typedef ZMap_ZooLib ZMap_Expr;
-
-typedef ZMap_Expr::Val_t ZVal_Expr;
+namespace ZUtil_Strim_ValPred_Any {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValPred
+#pragma mark * ZUtil_Strim_ValPred
 
-typedef ZValPred_T<ZVal_Expr> ZValPred;
-typedef ZValComparandPseudo_T<ZVal_Expr> ZValComparandPseudo;
+void sToStrim(const ZValPred_Any& iValPred, const ZStrimW& iStrimW);
 
-inline ZValComparandPseudo CString(const std::string& iVal)
-	{ return CConst_T<ZVal_Expr>(iVal); }
-
-inline ZValComparandPseudo CConst(const ZVal_Expr& iVal)
-	{ return CConst_T<ZVal_Expr>(iVal); }
-
-inline ZValComparandPseudo CName(const std::string& iName)
-	{ return CName_T<ZVal_Expr>(iName); }
-
-inline ZValComparandPseudo CVar(const std::string& iVarName)
-	{ return CVar_T<ZVal_Expr>(iVarName); }
+} // namespace ZUtil_Strim_ValPred
 
 } // namespace ZooLib
 
-#endif // __ZValPred__
+#endif // __ZUtil_Strim_ValPred_Any__

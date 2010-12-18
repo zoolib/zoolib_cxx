@@ -44,6 +44,13 @@ template <> int sCompare_T(const ZSeq_Any& iL, const ZSeq_Any& iR)
 template <> int sCompare_T(const ZMap_Any& iL, const ZMap_Any& iR)
 	{ return iL.Compare(iR); }
 
+template <> int sCompare_T(const ZNameVal& iL, const ZNameVal& iR)
+	{
+	if (int compare = sCompare_T(iL.first, iR.first))
+		return compare;
+	return sCompare_T(iL.second, iR.second);
+	}
+
 ZMACRO_CompareRegistration_T(ZVal_Any)
 ZMACRO_CompareRegistration_T(ZSeq_Any)
 ZMACRO_CompareRegistration_T(ZMap_Any)

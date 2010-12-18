@@ -224,7 +224,7 @@ int ZValComparator_Callable_T<Val>::pRevCompare(ZValComparator_T<Val>* iOther)
 
 template <class Val>
 int ZValComparator_Callable_T<Val>::pCompare_Callable(ZValComparator_Callable_T<Val>* iOther)
-	{ return fCallable < iOther->fCallable ? -1 : fCallable > iOther->fCallable ? 1 : 0; }
+	{ return fCallable < iOther->fCallable ? -1 : (iOther->fCallable < fCallable ? 1 : 0); }
 
 // =================================================================================================
 #pragma mark -
