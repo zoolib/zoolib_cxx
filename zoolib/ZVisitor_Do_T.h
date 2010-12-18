@@ -64,7 +64,11 @@ public:
 		}
 
 	Result_t Do(ZRef<ZVisitee> iRep)
-		{ return DDo(Result_t(), iRep); }
+		{
+		if (ZQ<Result_t> theQ = this->QDo(iRep))
+			return theQ.Get();
+		return Result_t();
+		}
 
 protected:
 	void pSetResult(const Result_t& iResult)
