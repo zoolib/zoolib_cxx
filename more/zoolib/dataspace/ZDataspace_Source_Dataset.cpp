@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Source_Dataset.h"
 
-#include "zoolib/zqe/ZQE_Visitor_DoMakeWalker_Any.h"
+#include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
@@ -106,7 +106,7 @@ Daton sAsDaton(const ZVal_Any& iVal)
 #pragma mark * Visitor_DoMakeWalker
 
 class Source_Dataset::Visitor_DoMakeWalker
-:	public virtual ZQE::Visitor_DoMakeWalker_Any
+:	public virtual ZQE::Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 	{
 public:
