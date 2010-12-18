@@ -33,18 +33,18 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZExpr_Bool_ValPred
 
-typedef ZExpr_Bool_ValPred_T<ZVal_Expr> ZExpr_Bool_ValPred_Any;
+typedef ZExpr_Bool_ValPred_T<ZVal_Any> ZExpr_Bool_ValPred_Any;
 
-typedef ZVisitor_Expr_Bool_ValPred_T<ZVal_Expr> ZVisitor_Expr_Bool_ValPred_Any;
+typedef ZVisitor_Expr_Bool_ValPred_T<ZVal_Any> ZVisitor_Expr_Bool_ValPred_Any;
 
 
 inline std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr)
-	{ return ZVisitor_Expr_Bool_ValPred_DoGetNames_T<ZVal_Expr>().Do(iExpr); }
+	{ return ZVisitor_Expr_Bool_ValPred_DoGetNames_T<ZVal_Any>().Do(iExpr); }
 
-inline bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Expr& iVal)
-	{ return ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T<ZVal_Expr>(iVal).Do(iExpr); }
+inline bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal)
+	{ return ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T<ZVal_Any>(iVal).Do(iExpr); }
 
-inline bool sMatches(const ZValPred_Any& iValPred, const ZVal_Expr& iVal)
+inline bool sMatches(const ZValPred_Any& iValPred, const ZVal_Any& iVal)
 	{ return sMatches(new ZExpr_Bool_ValPred_Any(iValPred), iVal); }
 
 } // namespace ZooLib

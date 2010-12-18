@@ -27,10 +27,10 @@ namespace ZUtil_Strim_ValPred_Any {
 
 using std::string;
 
-typedef ZValComparator_Simple_T<ZVal_Expr> ZValComparator_Simple;
-typedef ZValComparand_Name_T<ZVal_Expr> ZValComparand_Name;
-typedef ZValComparand_Var_T<ZVal_Expr> ZValComparand_Var;
-typedef ZValComparand_Const_T<ZVal_Expr> ZValComparand_Const;
+typedef ZValComparator_Simple_T<ZVal_Any> ZValComparator_Simple;
+typedef ZValComparand_Name_T<ZVal_Any> ZValComparand_Name;
+typedef ZValComparand_Var_T<ZVal_Any> ZValComparand_Var;
+typedef ZValComparand_Const_T<ZVal_Any> ZValComparand_Const;
 
 // =================================================================================================
 #pragma mark -

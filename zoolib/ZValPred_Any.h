@@ -22,39 +22,29 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZValPred_Any__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZValPred_T.h"
-
 #include "zoolib/ZVal_Any.h"
-//#include "zoolib/ZVal_CFType.h"
-//#include "zoolib/ZVal_Zoolib.h"
+#include "zoolib/ZValPred_T.h"
 
 namespace ZooLib {
 
-typedef ZMap_Any ZMap_Expr;
-
-//typedef ZMap_CFType ZMap_Expr;
-//typedef ZMap_ZooLib ZMap_Expr;
-
-typedef ZMap_Expr::Val_t ZVal_Expr;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValPred
+#pragma mark * ZValPred_Any
 
-typedef ZValPred_T<ZVal_Expr> ZValPred_Any;
-typedef ZValComparandPseudo_T<ZVal_Expr> ZValComparandPseudo_Any;
+typedef ZValPred_T<ZVal_Any> ZValPred_Any;
+typedef ZValComparandPseudo_T<ZVal_Any> ZValComparandPseudo_Any;
 
 inline ZValComparandPseudo_Any CString(const std::string& iVal)
-	{ return CConst_T<ZVal_Expr>(iVal); }
+	{ return CConst_T<ZVal_Any>(iVal); }
 
-inline ZValComparandPseudo_Any CConst(const ZVal_Expr& iVal)
-	{ return CConst_T<ZVal_Expr>(iVal); }
+inline ZValComparandPseudo_Any CConst(const ZVal_Any& iVal)
+	{ return CConst_T<ZVal_Any>(iVal); }
 
 inline ZValComparandPseudo_Any CName(const std::string& iName)
-	{ return CName_T<ZVal_Expr>(iName); }
+	{ return CName_T<ZVal_Any>(iName); }
 
 inline ZValComparandPseudo_Any CVar(const std::string& iVarName)
-	{ return CVar_T<ZVal_Expr>(iVarName); }
+	{ return CVar_T<ZVal_Any>(iVarName); }
 
 } // namespace ZooLib
 
