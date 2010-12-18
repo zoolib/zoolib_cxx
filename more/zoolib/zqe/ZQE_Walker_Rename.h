@@ -18,40 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Walker__
-#define __ZQE_Walker__ 1
+#ifndef __ZQE_Walker_Rename__
+#define __ZQE_Walker_Rename__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCounted.h"
-#include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal_Any.h"
-
-#include "zoolib/zqe/ZQE_Row.h"
+#include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker
+#pragma mark * Walker_Rename
 
-class Walker : public ZCounted
+class Walker_Rename : public Walker
 	{
-protected:
-	Walker();
-
 public:
-	virtual ~Walker();
+	Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const string8& iOld);
+	virtual ~Walker_Rename();
 
-// Our protocol
-	virtual size_t NameCount() = 0;
-	virtual string8 NameAt(size_t iIndex) = 0;
+// From ZQE::Walker
+	virtual size_t NameCount();
+	virtual string8 NameAt(size_t iIndex);
 
-	virtual ZRef<Walker> Clone() = 0;
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings) = 0;
+	virtual ZRef<Walker> Clone();
+	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
+
+private:
+	ZRef<Walker> fWalker;
+	const string8 fNew;
+	const string8 fOld;
 	};
 
 } // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZQE_Walker__
+#endif // __ZQE_Walker_Rename__

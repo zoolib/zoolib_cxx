@@ -18,18 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Bool_ValPred.h"
+#include "zoolib/ZExpr_Bool_ValPred_Any.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoToStrim.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 #include "zoolib/zra/ZRA_SQL.h"
 
@@ -51,12 +51,12 @@ namespace { // anonymous
 
 class DoRename
 :	public virtual ZVisitor_Expr_Op_DoTransform_T<ZExpr_Bool>
-,	public virtual ZVisitor_Expr_Bool_ValPred
+,	public virtual ZVisitor_Expr_Bool_ValPred_Any
 	{
 public:
 	DoRename(const Rename_t& iRename);
 
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iExpr);
+	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr);
 private:
 	const Rename_t& fRename;
 	};
@@ -65,11 +65,11 @@ DoRename::DoRename(const Rename_t& iRename)
 :	fRename(iRename)
 	{}
 
-void DoRename::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iExpr)
+void DoRename::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr)
 	{
-	ZValPred result;
+	ZValPred_Any result;
 	if (iExpr->GetValPred().Renamed(fRename, result))
-		this->pSetResult(new ZExpr_Bool_ValPred(result));
+		this->pSetResult(new ZExpr_Bool_ValPred_Any(result));
 	else
 		this->pSetResult(iExpr);
 	}
@@ -88,7 +88,7 @@ class MakeSFW
 ,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
-,	public virtual Visitor_Expr_Rel_Restrict
+,	public virtual Visitor_Expr_Rel_Restrict_Any
 ,	public virtual Visitor_Expr_Rel_Select
 	{
 public:
@@ -102,7 +102,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
 	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr);
-	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr);
+	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr);
 	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr);
 	};
 
@@ -130,7 +130,7 @@ void MakeSFW::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
 
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
 		theRename,
-		sfw0->GetRelHead() | sfw1->GetRelHead(),
+		sfw0->GetConcreteRelHead() | sfw1->GetConcreteRelHead(),
 		sfw0->GetCondition() & sfw1->GetCondition(),
 		rels);
 
@@ -141,7 +141,7 @@ void MakeSFW::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
 	{
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
 		Rename_t(),
-		iExpr->GetRelHead(),
+		iExpr->GetConcreteRelHead(),
 		sTrue(),
 		vector<ZRef<Expr_Rel_Concrete> >(1, iExpr));
 
@@ -155,7 +155,7 @@ void MakeSFW::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
 		sfw0->GetRename(),
-		sfw0->GetRelHead() & iExpr->GetProjectRelHead(),
+		sfw0->GetConcreteRelHead() & iExpr->GetProjectRelHead(),
 		sfw0->GetCondition(),
 		sfw0->GetRels());
 
@@ -194,17 +194,17 @@ void MakeSFW::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
 		theRename,
-		spRenamed(sfw0->GetRelHead(), oldName, newName),
+		spRenamed(sfw0->GetConcreteRelHead(), oldName, newName),
 		sfw0->GetCondition(),
 		sfw0->GetRels());
 
 	this->pSetResult(result);
 	}
 
-static ZValPred spRenamedInverse(
-	const ZValPred& iValPred, const Rename_t& iRename)
+static ZValPred_Any spRenamedInverse(
+	const ZValPred_Any& iValPred, const Rename_t& iRename)
 	{
-	ZValPred result;
+	ZValPred_Any result;
 	if (iValPred.Renamed(sInverted(iRename), result))
 		return result;
 	return iValPred;
@@ -214,14 +214,14 @@ static ZRef<ZExpr_Bool> spRenamedInverse(
 	ZRef<ZExpr_Bool> iExpr_Bool, const Rename_t& iRename)
 	{ return DoRename(sInverted(iRename)).Do(iExpr_Bool); }
 
-void MakeSFW::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
+void MakeSFW::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr)
 	{
 	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
 
 	const Rename_t& theRename = sfw0->GetRename();
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
 		theRename,
-		sfw0->GetRelHead(),
+		sfw0->GetConcreteRelHead(),
 		sfw0->GetCondition() & spRenamedInverse(iExpr->GetValPred(), theRename),
 		sfw0->GetRels());
 
@@ -235,7 +235,7 @@ void MakeSFW::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	const Rename_t& theRename = sfw0->GetRename();
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
 		theRename,
-		sfw0->GetRelHead(),
+		sfw0->GetConcreteRelHead(),
 		sfw0->GetCondition() & spRenamedInverse(iExpr->GetExpr_Bool(), theRename),
 		sfw0->GetRels());
 
@@ -258,7 +258,7 @@ Expr_Rel_SFW::Expr_Rel_SFW(const Rename_t& iRename,
 ,	fRels(iRels)
 	{}
 
-RelHead Expr_Rel_SFW::GetRelHead()
+RelHead Expr_Rel_SFW::GetConcreteRelHead()
 	{ return fRelHead; }
 
 const Rename_t& Expr_Rel_SFW::GetRename()
@@ -290,7 +290,7 @@ class ToStrim_SQL
 ,	public virtual ZVisitor_Expr_Bool_Not
 ,	public virtual ZVisitor_Expr_Bool_And
 ,	public virtual ZVisitor_Expr_Bool_Or
-,	public virtual ZVisitor_Expr_Bool_ValPred
+,	public virtual ZVisitor_Expr_Bool_ValPred_Any
 	{
 public:
 	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep);
@@ -298,7 +298,7 @@ public:
 	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep);
 	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep);
 	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep);
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred> iRep);
+	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iRep);
 	};
 
 void ToStrim_SQL::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep)
@@ -385,7 +385,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		}
 	else
 		{
-		s << "null /*!! Unhandled: " << iAny.Type().name() << " !!*/";
+		s << "null /*!!Unhandled: " << iAny.Type().name() << "!!*/";
 		}
 	}
 
@@ -394,7 +394,7 @@ static void spWrite_PropName(const string8& iName, const ZStrimW& s)
 	s << iName;
 	}
 
-static void spToStrim(const ZRef<ZValPred::Comparand>& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValPred_Any::Comparand>& iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
@@ -418,7 +418,7 @@ static void spToStrim(const ZRef<ZValPred::Comparand>& iCR, const ZStrimW& s)
 		}
 	}
 
-static void spToStrim(const ZRef<ZValPred::Comparator>& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValPred_Any::Comparator>& iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
@@ -461,7 +461,7 @@ static void spToStrim(const ZRef<ZValPred::Comparator>& iCR, const ZStrimW& s)
 		}
 	}
 
-void spToStrim(const ZValPred& iValPred, const ZStrimW& s)
+void spToStrim(const ZValPred_Any& iValPred, const ZStrimW& s)
 	{
 	spToStrim(iValPred.GetLHS(), s);
 	spToStrim(iValPred.GetComparator(), s);
@@ -469,7 +469,7 @@ void spToStrim(const ZValPred& iValPred, const ZStrimW& s)
 	}
 
 void ToStrim_SQL::Visit_Expr_Bool_ValPred(
-	ZRef<ZExpr_Bool_ValPred> iRep)
+	ZRef<ZExpr_Bool_ValPred_Any> iRep)
 	{ spToStrim(iRep->GetValPred(), pStrimW()); }
 
 } // anonymous namespace
@@ -483,7 +483,7 @@ void sAsSQL(ZRef<Expr_Rel_SFW> iSFW, const ZStrimW& s)
 	if (iSFW)
 		{
 		s << "SELECT";
-		const RelHead& theRelHead = iSFW->GetRelHead();
+		const RelHead& theRelHead = iSFW->GetConcreteRelHead();
 
 		const Rename_t theRename = sInverted(iSFW->GetRename());
 

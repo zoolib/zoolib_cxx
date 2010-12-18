@@ -54,9 +54,6 @@ ZRef<Expr_Rel> Expr_Rel_Project::Self()
 ZRef<Expr_Rel> Expr_Rel_Project::Clone(ZRef<Expr_Rel> iOp0)
 	{ return new Expr_Rel_Project(iOp0, fRelHead); }
 
-RelHead Expr_Rel_Project::GetRelHead()
-	{ return fRelHead & this->GetOp0()->GetRelHead(); }
-
 void Expr_Rel_Project::Accept_Expr_Rel_Project(Visitor_Expr_Rel_Project& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Project(this); }
 

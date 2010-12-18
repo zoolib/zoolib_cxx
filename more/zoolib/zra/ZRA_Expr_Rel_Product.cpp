@@ -50,9 +50,6 @@ ZRef<Expr_Rel> Expr_Rel_Product::Self()
 ZRef<Expr_Rel> Expr_Rel_Product::Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
 	{ return new Expr_Rel_Product(iOp0, iOp1); }
 
-ZRA::RelHead Expr_Rel_Product::GetRelHead()
-	{ return this->GetOp0()->GetRelHead() | this->GetOp1()->GetRelHead(); }
-
 void Expr_Rel_Product::Accept_Expr_Rel_Product(Visitor_Expr_Rel_Product& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Product(this); }
 

@@ -18,39 +18,37 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Walker_Select__
-#define __ZQE_Walker_Select__ 1
+#ifndef __ZQE_ResultSet__
+#define __ZQE_ResultSet__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Bool.h"
-#include "zoolib/zqe/ZQE_Walker.h"
+#include "zoolib/zqe/ZQE_Row.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Select
+#pragma mark * ResultSet
 
-class Walker_Select : public Walker
+class ResultSet : public ZCounted
 	{
 public:
-	Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool);
-	virtual ~Walker_Select();
+	ResultSet(const std::vector<string8>& iRowHead, ZRef<ZQE::RowVector> iRowVector);
+	ResultSet(std::vector<string8>* ioRowHead, ZRef<ZQE::RowVector> iRowVector);
+	ResultSet(std::vector<string8>* ioRowHead);
 
-// From ZQE::Walker
-	virtual size_t NameCount();
-	virtual string8 NameAt(size_t iIndex);
+	const std::vector<string8>& GetRowHead();
+	ZRef<ZQE::RowVector> GetRowVector();
 
-	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc();
+	int Compare(const ZRef<ResultSet>& iOther);
 
 private:
-	ZRef<Walker> fWalker;
-	ZRef<ZExpr_Bool> fExpr_Bool;
+	std::vector<string8> fRowHead;
+	ZRef<ZQE::RowVector> fRowVector;
 	};
 
 } // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZQE_Walker_Select__
+#endif // __ZQE_ResultSet__

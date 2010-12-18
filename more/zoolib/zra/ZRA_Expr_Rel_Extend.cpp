@@ -25,11 +25,43 @@ namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Extension
+
+Extension::Extension()
+	{}
+
+Extension::~Extension()
+	{}
+
+Extension_Rel::Extension_Rel(const ZRef<Expr_Rel>& iRel)
+:	fRel(iRel)
+	{}
+
+ZRef<Expr_Rel> Extension_Rel::GetRel()
+	{ return fRel; }
+
+Extension_Calculate::Extension_Calculate(const ZRef<Callable_Extend>& iCallable)
+:	fCallable(iCallable)
+	{}
+ZRef<Callable_Extend> Extension_Calculate::GetCallable()
+	{ return fCallable; }
+
+Extension_Val::Extension_Val(const ZVal_Any& iVal)
+:	fVal(iVal)
+	{}
+
+ZVal_Any Extension_Val::GetVal()
+	{ return fVal; }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Expr_Rel_Extend
 
-Expr_Rel_Extend::Expr_Rel_Extend(ZRef<Expr_Rel> iOp0, const RelHead& iRelHead)
+Expr_Rel_Extend::Expr_Rel_Extend(
+	const ZRef<Expr_Rel>& iOp0, const RelName& iRelName, const ZRef<Extension>& iExtension)
 :	inherited(iOp0)
-,	fRelHead(iRelHead)
+,	fRelName(iRelName)
+,	fExtension(iExtension)
 	{}
 
 Expr_Rel_Extend::~Expr_Rel_Extend()
@@ -52,13 +84,16 @@ ZRef<Expr_Rel> Expr_Rel_Extend::Self()
 	{ return this; }
 
 ZRef<Expr_Rel> Expr_Rel_Extend::Clone(ZRef<Expr_Rel> iOp0)
-	{ return new Expr_Rel_Extend(iOp0, fRelHead); }
+	{ return new Expr_Rel_Extend(iOp0, fRelName, fExtension); }
 
 void Expr_Rel_Extend::Accept_Expr_Rel_Extend(Visitor_Expr_Rel_Extend& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Extend(this); }
 
-RelHead Expr_Rel_Extend::GetRelHead()
-	{ return fRelHead; }
+RelName Expr_Rel_Extend::GetRelName()
+	{ return fRelName; }
+
+ZRef<Extension> Expr_Rel_Extend::GetExtension()
+	{ return fExtension; }
 
 // =================================================================================================
 #pragma mark -
@@ -71,8 +106,17 @@ void Visitor_Expr_Rel_Extend::Visit_Expr_Rel_Extend(ZRef<Expr_Rel_Extend> iExpr)
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Extend> sExtend(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead)
-	{ return new Expr_Rel_Extend(iExpr, iRelHead); }
+ZRef<Expr_Rel_Extend> sExtend(
+	const ZRef<Expr_Rel>& iParent, const RelName& iRelName, const ZRef<Expr_Rel>& iRel)
+	{ return new Expr_Rel_Extend(iParent, iRelName, new Extension_Rel(iRel)); }
+
+ZRef<Expr_Rel_Extend> sExtend(
+	const ZRef<Expr_Rel>& iParent, const RelName& iRelName, const ZRef<Callable_Extend>& iCallable)
+	{ return new Expr_Rel_Extend(iParent, iRelName, new Extension_Calculate(iCallable)); }
+
+ZRef<Expr_Rel_Extend> sExtend(
+	const ZRef<Expr_Rel>& iParent, const RelName& iRelName, const ZVal_Any& iVal)
+	{ return new Expr_Rel_Extend(iParent, iRelName, new Extension_Val(iVal)); }
 
 } // namespace ZRA
 } // namespace ZooLib

@@ -18,39 +18,74 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Walker_ValPredCompound__
-#define __ZQE_Walker_ValPredCompound__ 1
-#include "zconfig.h"
+#include "zoolib/ZCompare.h"
+#include "zoolib/ZCompare_Vector.h"
+#include "zoolib/zqe/ZQE_ResultSet.h"
 
-#include "zoolib/ZValPredCompound.h"
-#include "zoolib/zqe/ZQE_Walker.h"
+using std::vector;
 
 namespace ZooLib {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCompare
+
+template <> int sCompare_T(const ZRef<ZQE::ResultSet>& iL, const ZRef<ZQE::ResultSet>& iR)
+	{
+	if (iL)
+		{
+		if (iR)
+			return iL->Compare(iR);
+		return 1;
+		}
+	else if (iR)
+		{
+		return -1;
+		}
+	return 0;
+	}
+
+ZMACRO_CompareRegistration_T(ZRef<ZQE::ResultSet>)
+
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_ValPredCompound
+#pragma mark * ResultSet
 
-class Walker_ValPredCompound : public Walker
+ResultSet::ResultSet(const std::vector<string8>& iRowHead, ZRef<RowVector> iRowVector)
+:	fRowHead(iRowHead)
+,	fRowVector(iRowVector)
 	{
-public:
-	Walker_ValPredCompound(ZRef<Walker> iWalker, const ZValPredCompound& iValPredCompound);
-	virtual ~Walker_ValPredCompound();
+	ZAssert(fRowVector);
+	}
 
-// From ZQE::Walker
-	virtual size_t NameCount();
-	virtual string8 NameAt(size_t iIndex);
+ResultSet::ResultSet(std::vector<string8>* ioRowHead, ZRef<RowVector> iRowVector)
+:	fRowVector(iRowVector)
+	{
+	ZAssert(fRowVector);
+	ioRowHead->swap(fRowHead);
+	}
 
-	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc();
+ResultSet::ResultSet(std::vector<string8>* ioRowHead)
+	{
+	ioRowHead->swap(fRowHead);
+	fRowVector = new RowVector;
+	}
 
-private:
-	ZRef<Walker> fWalker;
-	ZValPredCompound fValPredCompound;
-	};
+const std::vector<string8>& ResultSet::GetRowHead()
+	{ return fRowHead; }
+
+ZRef<RowVector> ResultSet::GetRowVector()
+	{ return fRowVector; }
+
+int ResultSet::Compare(const ZRef<ResultSet>& iOther)
+	{
+	if (int compare = sCompare_T(fRowHead, iOther->fRowHead))
+		return compare;
+
+	return sCompare_T(fRowVector, iOther->fRowVector);
+	}
 
 } // namespace ZQE
 } // namespace ZooLib
-
-#endif // __ZQE_Walker_ValPredCompound__

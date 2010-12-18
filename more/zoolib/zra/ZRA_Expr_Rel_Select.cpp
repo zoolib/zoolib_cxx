@@ -57,9 +57,6 @@ ZRef<Expr_Rel> Expr_Rel_Select::Clone(ZRef<Expr_Rel> iOp0)
 void Expr_Rel_Select::Accept_Expr_Rel_Select( Visitor_Expr_Rel_Select& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Select(this); }
 
-RelHead Expr_Rel_Select::GetRelHead()
-	{ return this->GetOp0()->GetRelHead(); }
-
 ZRef<ZExpr_Bool> Expr_Rel_Select::GetExpr_Bool()
 	{ return fExpr_Bool; }
 
@@ -95,6 +92,9 @@ ZRef<Expr_Rel> operator&(
 ZRef<Expr_Rel> operator&(
 	const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel)
 	{ return sSelect(iExpr_Rel, iExpr_Bool); }
+
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
+	{ return ioExpr_Rel = ioExpr_Rel & iExpr_Bool; }
 
 } // namespace ZRA
 } // namespace ZooLib

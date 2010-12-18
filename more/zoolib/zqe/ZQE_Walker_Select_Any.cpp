@@ -18,40 +18,45 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Walker__
-#define __ZQE_Walker__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZCounted.h"
-#include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal_Any.h"
-
-#include "zoolib/zqe/ZQE_Row.h"
+#include "zoolib/zqe/ZQE_Walker_Select_Any.h"
+#include "zoolib/ZExpr_Bool_ValPred_Any.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker
+#pragma mark * Walker_Select_Any
 
-class Walker : public ZCounted
+Walker_Select_Any::Walker_Select_Any(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool)
+:	fWalker(iWalker)
+,	fExpr_Bool(iExpr_Bool)
+	{}
+
+Walker_Select_Any::~Walker_Select_Any()
+	{}
+
+size_t Walker_Select_Any::NameCount()
+	{ return fWalker->NameCount(); }
+
+string8 Walker_Select_Any::NameAt(size_t iIndex)
+	{ return fWalker->NameAt(iIndex); }
+
+ZRef<Walker> Walker_Select_Any::Clone()
+	{ return new Walker_Select_Any(fWalker->Clone(), fExpr_Bool); }
+
+ZRef<Row> Walker_Select_Any::ReadInc(ZMap_Any iBindings)
 	{
-protected:
-	Walker();
-
-public:
-	virtual ~Walker();
-
-// Our protocol
-	virtual size_t NameCount() = 0;
-	virtual string8 NameAt(size_t iIndex) = 0;
-
-	virtual ZRef<Walker> Clone() = 0;
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings) = 0;
-	};
+	for (ZRef<Row> theRow; theRow = fWalker->ReadInc(iBindings); /*no inc*/)
+		{
+		ZMap_Any theBindings = iBindings;
+		for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
+			theBindings.Set(fWalker->NameAt(x), theRow->Get(x));
+		if (sMatches(fExpr_Bool, theBindings))
+			return theRow;
+		}
+	return null;
+	}
 
 } // namespace ZQE
 } // namespace ZooLib
-
-#endif // __ZQE_Walker__

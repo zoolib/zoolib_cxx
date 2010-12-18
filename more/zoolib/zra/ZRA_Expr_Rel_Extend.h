@@ -22,14 +22,62 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_Expr_Rel_Extend__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCallable.h"
 #include "zoolib/ZExpr_Op_T.h"
+#include "zoolib/ZVal_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
-#include "zoolib/zra/ZRA_RelHead.h"
 
 namespace ZooLib {
 namespace ZRA {
 
 class Visitor_Expr_Rel_Extend;
+
+typedef ZCallable<ZVal_Any(ZMap_Any)> Callable_Extend;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Extension
+
+class Extension : public ZVisitee
+	{
+protected:
+	Extension();
+
+public:
+	virtual ~Extension();
+	};
+
+class Extension_Rel : public Extension
+	{
+public:
+	Extension_Rel(const ZRef<Expr_Rel>& iRel);
+
+	ZRef<Expr_Rel> GetRel();
+
+private:
+	const ZRef<Expr_Rel> fRel;
+	};
+
+class Extension_Calculate : public Extension
+	{
+public:
+	Extension_Calculate(const ZRef<Callable_Extend>& iCallable);
+	ZRef<Callable_Extend> GetCallable();	
+
+private:
+	const ZRef<Callable_Extend> fCallable;
+	};
+
+class Extension_Val : public Extension
+	{
+public:
+	Extension_Val(const ZVal_Any& iVal);
+
+	ZVal_Any GetVal();
+
+private:
+	const ZVal_Any fVal;
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -41,7 +89,9 @@ class Expr_Rel_Extend
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Extend(ZRef<Expr_Rel> iOp0, const RelHead& iRelHead);
+	Expr_Rel_Extend(
+		const ZRef<Expr_Rel>& iOp0, const RelName& iRelName, const ZRef<Extension>& iExtension);
+
 	virtual ~Expr_Rel_Extend();
 
 // From ZExpr_Op1_T<Expr_Rel>
@@ -50,14 +100,15 @@ public:
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
 
-// From Expr_Rel
-	virtual ZRA::RelHead GetRelHead();
-
 // Our protocol
 	virtual void Accept_Expr_Rel_Extend(Visitor_Expr_Rel_Extend& iVisitor);
 
+	RelName GetRelName();
+	ZRef<Extension> GetExtension();
+
 private:
-	const RelHead fRelHead;
+	const RelName fRelName;
+	const ZRef<Extension> fExtension;
 	};
 
 // =================================================================================================
@@ -76,7 +127,14 @@ public:
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Extend> sExtend(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
+ZRef<Expr_Rel_Extend> sExtend(
+	const ZRef<Expr_Rel>& iParent, const RelName& iRelName, const ZRef<Expr_Rel>& iChild);
+
+ZRef<Expr_Rel_Extend> sExtend(
+	const ZRef<Expr_Rel>& iParent, const RelName& iRelName, const ZRef<Callable_Extend>& iCallable);
+
+ZRef<Expr_Rel_Extend> sExtend(
+	const ZRef<Expr_Rel>& iParent, const RelName& iRelName, const ZVal_Any& iVal);
 
 } // namespace ZRA
 } // namespace ZooLib

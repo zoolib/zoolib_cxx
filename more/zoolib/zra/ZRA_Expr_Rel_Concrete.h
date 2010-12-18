@@ -63,6 +63,7 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor);
 
+	virtual RelHead GetConcreteRelHead() = 0;
 	virtual ZRef<ConcreteDomain> GetConcreteDomain();
 	virtual string8 GetName();
 
@@ -92,10 +93,8 @@ public:
 	Expr_Rel_Concrete_Simple(
 		ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead);
 
-// From Expr_Rel via Expr_Rel_Concrete
-	virtual RelHead GetRelHead();
-
 // From Expr_Rel_Concrete
+	virtual RelHead GetConcreteRelHead();
 	virtual ZRef<ConcreteDomain> GetConcreteDomain();
 	virtual string8 GetName();
 

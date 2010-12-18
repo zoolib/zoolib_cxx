@@ -23,11 +23,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZRA {
 
-ZRef<ZRA::Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<ZRA::Expr_Rel>& iRel)
-	{ return sProduct(ZRA::sExplicit(iMap), iRel); }
+ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel)
+	{
+	ZRef<Expr_Rel> result = iRel;
+	for (ZMap_Any::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
+		result = sExtend(result, iMap.NameOf(i), iMap.Get(i));
+	return result;
+	}
 
-ZRef<ZRA::Expr_Rel> operator*(const ZRef<ZRA::Expr_Rel>& iRel, const ZMap_Any& iMap)
-	{ return sProduct(iRel, ZRA::sExplicit(iMap)); }
+ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZMap_Any& iMap)
+	{ return iMap * iRel; }
 
 ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap)
 	{ return ioRel = ioRel * iMap; }

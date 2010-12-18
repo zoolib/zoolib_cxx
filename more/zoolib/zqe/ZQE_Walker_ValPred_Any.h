@@ -18,69 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Expr_Rel_Explicit__
-#define __ZRA_Expr_Rel_Explicit__ 1
+#ifndef __ZQE_Walker_ValPred_Any__
+#define __ZQE_Walker_ValPred_Any__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Op_T.h"
-#include "zoolib/ZVal_Any.h"
-#include "zoolib/zra/ZRA_Expr_Rel.h"
+#include "zoolib/ZValPred_Any.h"
+#include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
-namespace ZRA {
-
-class Visitor_Expr_Rel_Explicit;
+namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Explicit
+#pragma mark * Walker_ValPred_Any
 
-class Expr_Rel_Explicit
-:	public virtual Expr_Rel
-,	public virtual ZExpr_Op0_T<Expr_Rel>
+class Walker_ValPred_Any : public Walker
 	{
-	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Explicit(const ZMap_Any& iMap);
-	virtual ~Expr_Rel_Explicit();
+	Walker_ValPred_Any(ZRef<Walker> iWalker, const ZValPred_Any& iValPred);
+	virtual ~Walker_ValPred_Any();
 
-// From ZExpr_Op0_T<Expr_Rel>
-	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
+// From ZQE::Walker
+	virtual size_t NameCount();
+	virtual string8 NameAt(size_t iIndex);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone();
-
-// From Expr_Rel
-	virtual ZRA::RelHead GetRelHead();
-
-// Our protocol
-	virtual void Accept_Expr_Rel_Explicit(Visitor_Expr_Rel_Explicit& iVisitor);
-
-	ZMap_Any GetMap();
+	virtual ZRef<Walker> Clone();
+	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
 
 private:
-	const ZMap_Any fMap;
+	ZRef<Walker> fWalker;
+	ZValPred_Any fValPred;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Explicit
-
-class Visitor_Expr_Rel_Explicit
-:	public virtual ZVisitor_Expr_Op0_T<Expr_Rel>
-	{
-	typedef ZVisitor_Expr_Op0_T<Expr_Rel> inherited;
-public:
-	virtual void Visit_Expr_Rel_Explicit(ZRef<Expr_Rel_Explicit> iExpr);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Relational operators
-
-ZRef<Expr_Rel_Explicit> sExplicit(const ZMap_Any& iMap);
-
-} // namespace ZRA
+} // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZRA_Expr_Rel_Explicit__
+#endif // __ZQE_Walker_ValPred_Any__

@@ -27,13 +27,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Walker.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Explicit.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Extend.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 
 namespace ZooLib {
@@ -49,11 +49,11 @@ class Visitor_DoMakeWalker_Any
 ,	public virtual ZRA::Visitor_Expr_Rel_Intersect
 ,	public virtual ZRA::Visitor_Expr_Rel_Product
 ,	public virtual ZRA::Visitor_Expr_Rel_Union
+,	public virtual ZRA::Visitor_Expr_Rel_Extend
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
-,	public virtual ZRA::Visitor_Expr_Rel_Restrict
+,	public virtual ZRA::Visitor_Expr_Rel_Restrict_Any
 ,	public virtual ZRA::Visitor_Expr_Rel_Select
-,	public virtual ZRA::Visitor_Expr_Rel_Explicit
 	{
 public:
 	virtual void Visit_Expr_Rel_Difference(ZRef<ZRA::Expr_Rel_Difference> iExpr);
@@ -61,12 +61,11 @@ public:
 	virtual void Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr);
 	virtual void Visit_Expr_Rel_Union(ZRef<ZRA::Expr_Rel_Union> iExpr);
 
+	virtual void Visit_Expr_Rel_Extend(ZRef<ZRA::Expr_Rel_Extend> iExpr);
 	virtual void Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr);
 	virtual void Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr);
-	virtual void Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict> iExpr);
+	virtual void Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict_Any> iExpr);
 	virtual void Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr);
-
-	virtual void Visit_Expr_Rel_Explicit(ZRef<ZRA::Expr_Rel_Explicit> iExpr);
 	};
 
 } // namespace ZQE

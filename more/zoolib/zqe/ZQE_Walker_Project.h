@@ -18,39 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Walker_Explicit__
-#define __ZQE_Walker_Explicit__ 1
+#ifndef __ZQE_Walker_Project__
+#define __ZQE_Walker_Project__ 1
 #include "zconfig.h"
 
 #include "zoolib/zqe/ZQE_Walker.h"
+#include "zoolib/zra/ZRA_RelHead.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Explicit
+#pragma mark * Walker_Project
 
-class Walker_Explicit : public Walker
+class Walker_Project : public Walker
 	{
-	Walker_Explicit(const std::vector<string8>& iNames, const ZRef<Row>& iRow);
 public:
-	Walker_Explicit(const ZMap_Any& iMap);
-	virtual ~Walker_Explicit();
+	Walker_Project(ZRef<Walker> iWalker, const ZRA::RelHead& iRelHead);
+	virtual ~Walker_Project();
 
 // From ZQE::Walker
 	virtual size_t NameCount();
 	virtual string8 NameAt(size_t iIndex);
 
 	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc();
+	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
 
 private:
-	std::vector<string8> fNames;
-	ZRef<Row> fRow;
+	ZRef<Walker> fWalker;
+	const ZRA::RelHead fRelHead;
 	};
 
 } // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZQE_Walker_Explicit__
+#endif // __ZQE_Walker_Project__

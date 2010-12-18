@@ -45,7 +45,7 @@ public:
 		const std::vector<ZRef<Expr_Rel_Concrete> >& iRels);
 
 // From Expr_Rel_Concrete
-	virtual RelHead GetRelHead();
+	virtual RelHead GetConcreteRelHead();
 
 // Our protocol
 	const Rename_t& GetRename();

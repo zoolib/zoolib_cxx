@@ -18,55 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Walker_Explicit.h"
+#ifndef __ZRA_Expr_Rel_Restrict_Any__
+#define __ZRA_Expr_Rel_Restrict_Any__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZValPred_Any.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict_T.h"
 
 namespace ZooLib {
-namespace ZQE {
-
-using std::vector;
+namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Explicit
+#pragma mark * Expr_Rel_Restrict
 
-Walker_Explicit::Walker_Explicit(const vector<string8>& iNames, const ZRef<Row>& iRow)
-:	fNames(iNames)
-,	fRow(iRow)
-	{}
+typedef Expr_Rel_Restrict_T<ZVal_Expr> Expr_Rel_Restrict_Any;
 
-Walker_Explicit::Walker_Explicit(const ZMap_Any& iMap)
-	{
-	vector<ZVal_Any> theVals;
-	for (ZMap_Any::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
-		{
-		fNames.push_back(iMap.NameOf(i));
-		theVals.push_back(iMap.Get(i));
-		}
-	fRow = new Row_Vector(&theVals);
-	}
+typedef Visitor_Expr_Rel_Restrict_T<ZVal_Expr> Visitor_Expr_Rel_Restrict_Any;
 
-Walker_Explicit::~Walker_Explicit()
-	{}
-
-size_t Walker_Explicit::NameCount()
-	{ return fNames.size(); }
-
-string8 Walker_Explicit::NameAt(size_t iIndex)
-	{
-	if (iIndex < fNames.size())
-		return fNames.at(iIndex);
-	return string8();
-	}
-
-ZRef<Walker> Walker_Explicit::Clone()
-	{ return new Walker_Explicit(fNames, fRow); }
-
-ZRef<Row> Walker_Explicit::ReadInc()
-	{
-	ZRef<Row> result;
-	result.swap(fRow);
-	return result;
-	}
-
-} // namespace ZQE
+} // namespace ZRA
 } // namespace ZooLib
+
+#endif // __ZRA_Expr_Rel_Restrict_Any__

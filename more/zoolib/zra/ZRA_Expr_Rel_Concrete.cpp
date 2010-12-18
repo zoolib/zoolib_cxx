@@ -86,7 +86,7 @@ Expr_Rel_Concrete_Simple::Expr_Rel_Concrete_Simple(
 ,	fRelHead(iRelHead)
 	{}
 
-RelHead Expr_Rel_Concrete_Simple::GetRelHead()
+RelHead Expr_Rel_Concrete_Simple::GetConcreteRelHead()
 	{ return fRelHead; }
 
 ZRef<ConcreteDomain> Expr_Rel_Concrete_Simple::GetConcreteDomain()

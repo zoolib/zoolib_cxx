@@ -50,9 +50,6 @@ public:
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
 
-// From Expr_Rel
-	virtual RelHead GetRelHead();
-
 // Our protocol
 	virtual void Accept_Expr_Rel_Select(Visitor_Expr_Rel_Select& iVisitor);
 
@@ -88,9 +85,7 @@ ZRef<Expr_Rel> operator&(
 ZRef<Expr_Rel> operator&(
 	const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel);
 
-template <class Val>
-ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
-	{ return ioExpr_Rel = ioExpr_Rel & iExpr_Bool; }
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
 
 } // namespace ZRA
 } // namespace ZooLib

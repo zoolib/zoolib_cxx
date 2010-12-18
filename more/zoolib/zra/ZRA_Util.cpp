@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Bool_ValPred.h"
+#include "zoolib/ZExpr_Bool_ValPred_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 #include "zoolib/zra/ZRA_Util.h"
 
@@ -55,14 +55,14 @@ namespace { // anonymous
 class Doer
 :	public virtual ZVisitor_Do_T<RelHead>
 ,	public virtual Visitor_Expr_Rel_Project
-,	public virtual Visitor_Expr_Rel_Restrict
+,	public virtual Visitor_Expr_Rel_Restrict_Any
 ,	public virtual Visitor_Expr_Rel_Select
 	{
 public:
 	Doer(vector<Problem>& oProblems);
 
 	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
-	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr);
+	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr);
 	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr);
 
 private:
@@ -87,7 +87,7 @@ void Doer::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 	this->pSetResult(providedRelHead & requiredRelHead);
 	}
 
-void Doer::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
+void Doer::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr)
 	{
 	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
 	const RelHead requiredRelHead = iExpr->GetValPred().GetNames();

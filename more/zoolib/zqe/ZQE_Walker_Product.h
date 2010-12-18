@@ -45,7 +45,7 @@ public:
 	virtual string8 NameAt(size_t iIndex);
 
 	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc();
+	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
 
 private:
 	ZRef<Walker> fWalker_Left;

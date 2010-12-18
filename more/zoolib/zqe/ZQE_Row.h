@@ -47,6 +47,8 @@ public:
 	virtual ZVal_Any Get(size_t iIndex) = 0;
 
 	virtual void GetAnnotations(std::set<ZRef<ZCounted> >& ioAnnotations);
+
+	int Compare(const ZRef<Row>& iOther);
 	};
 
 // =================================================================================================
@@ -65,8 +67,28 @@ public:
 	size_t Count();
 	ZRef<Row> Get(size_t iIndex);
 
+	int Compare(const ZRef<RowVector>& iOther);
+
 private:
 	std::vector<ZRef<Row> > fRows;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Row_Val
+
+class Row_Val : public Row
+	{
+public:
+	Row_Val(const ZVal_Any& iVal);
+	virtual ~Row_Val();
+
+// From Row
+	virtual size_t Count();
+	virtual ZVal_Any Get(size_t iIndex);
+
+private:
+	const ZVal_Any fVal;
 	};
 
 // =================================================================================================
@@ -92,14 +114,14 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Row_Vector
+#pragma mark * Row_ValVector
 
-class Row_Vector : public Row
+class Row_ValVector : public Row
 	{
 public:
-	Row_Vector(const std::vector<ZVal_Any>& iVals);
-	Row_Vector(std::vector<ZVal_Any>* ioVals);
-	virtual ~Row_Vector();
+	Row_ValVector(const std::vector<ZVal_Any>& iVals);
+	Row_ValVector(std::vector<ZVal_Any>* ioVals);
+	virtual ~Row_ValVector();
 
 // From Row
 	virtual size_t Count();

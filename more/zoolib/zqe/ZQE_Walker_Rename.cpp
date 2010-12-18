@@ -18,40 +18,45 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Walker__
-#define __ZQE_Walker__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZCounted.h"
-#include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal_Any.h"
-
-#include "zoolib/zqe/ZQE_Row.h"
+#include "zoolib/zqe/ZQE_Walker_Rename.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker
+#pragma mark * Walker_Rename
 
-class Walker : public ZCounted
+Walker_Rename::Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const string8& iOld)
+:	fWalker(iWalker)
+,	fNew(iNew)
+,	fOld(iOld)
+	{}
+
+Walker_Rename::~Walker_Rename()
+	{}
+
+size_t Walker_Rename::NameCount()
+	{ return fWalker->NameCount(); }
+
+string8 Walker_Rename::NameAt(size_t iIndex)
+	{ return fWalker->NameAt(iIndex); }
+
+ZRef<Walker> Walker_Rename::Clone()
+	{ return new Walker_Rename(fWalker->Clone(), fNew, fOld); }
+
+ZRef<Row> Walker_Rename::ReadInc(ZMap_Any iBindings)
 	{
-protected:
-	Walker();
-
-public:
-	virtual ~Walker();
-
-// Our protocol
-	virtual size_t NameCount() = 0;
-	virtual string8 NameAt(size_t iIndex) = 0;
-
-	virtual ZRef<Walker> Clone() = 0;
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings) = 0;
-	};
+	for (ZRef<Row> theRow; theRow = fWalker->ReadInc(iBindings); /*no inc*/)
+		{
+//		ZMap_Any theBindings = iBindings;
+//		for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
+//			theBindings.Set(fWalker->NameAt(x), theRow->Get(x));
+//		if (sMatches(fExpr_Bool, theBindings))
+			return theRow;
+		}
+	return null;
+	}
 
 } // namespace ZQE
 } // namespace ZooLib
-
-#endif // __ZQE_Walker__

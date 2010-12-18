@@ -18,48 +18,43 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Walker_Select.h"
+#include "zoolib/zqe/ZQE_Walker_Project.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Select
+#pragma mark * Walker_Project
 
-Walker_Select::Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool)
+Walker_Project::Walker_Project(ZRef<Walker> iWalker, const ZRA::RelHead& iRelHead)
 :	fWalker(iWalker)
-,	fExpr_Bool(iExpr_Bool)
+,	fRelHead(iRelHead)
 	{}
 
-Walker_Select::~Walker_Select()
+Walker_Project::~Walker_Project()
 	{}
 
-size_t Walker_Select::NameCount()
+size_t Walker_Project::NameCount()
 	{ return fWalker->NameCount(); }
 
-string8 Walker_Select::NameAt(size_t iIndex)
+string8 Walker_Project::NameAt(size_t iIndex)
 	{ return fWalker->NameAt(iIndex); }
 
-ZRef<Walker> Walker_Select::Clone()
-	{ return new Walker_Select(fWalker->Clone(), fExpr_Bool); }
+ZRef<Walker> Walker_Project::Clone()
+	{ return new Walker_Project(fWalker->Clone(), fRelHead); }
 
-ZRef<Row> Walker_Select::ReadInc()
+ZRef<Row> Walker_Project::ReadInc(ZMap_Any iBindings)
 	{
-	for (;;)
+	for (ZRef<Row> theRow; theRow = fWalker->ReadInc(iBindings); /*no inc*/)
 		{
-		if (ZRef<Row> theRow = fWalker->ReadInc())
-			{
-			if (true)
-				{
-				ZUnimplemented();
-				// Check that theRow matches fExpr_Bool;
-				return theRow;
-				}
-			continue;
-			}
-		return null;
+//		ZMap_Any theBindings = iBindings;
+//		for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
+//			theBindings.Set(fWalker->NameAt(x), theRow->Get(x));
+//		if (sMatches(fExpr_Bool, theBindings))
+			return theRow;
 		}
+	return null;
 	}
 
 } // namespace ZQE

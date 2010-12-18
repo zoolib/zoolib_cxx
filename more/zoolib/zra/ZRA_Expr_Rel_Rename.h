@@ -51,9 +51,6 @@ public:
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
 
-// From Expr_Rel
-	virtual RelHead GetRelHead();
-
 // Our protocol
 	virtual void Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor);
 

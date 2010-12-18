@@ -68,19 +68,19 @@ ZRef<Walker> Walker_Product::Clone()
 		}
 	}
 
-ZRef<Row> Walker_Product::ReadInc()
+ZRef<Row> Walker_Product::ReadInc(ZMap_Any iBindings)
 	{
 	for (;;)
 		{
 		if (!fWalker_Right)
 			{
 			fWalker_Right = fWalker_Right_Model->Clone();
-			fRow_Left = fWalker_Left->ReadInc();
+			fRow_Left = fWalker_Left->ReadInc(iBindings);
 			if (!fRow_Left)
 				return null;			
 			}
 
-		if (ZRef<Row> theRow_Right = fWalker_Right->ReadInc())
+		if (ZRef<Row> theRow_Right = fWalker_Right->ReadInc(iBindings))
 			return new Row_Pair(fRow_Left, theRow_Right);
 
 		fWalker_Right.Clear();

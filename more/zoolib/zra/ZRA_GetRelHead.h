@@ -18,40 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Walker__
-#define __ZQE_Walker__ 1
+#ifndef __ZRA_GetRelHead__
+#define __ZRA_GetRelHead__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCounted.h"
-#include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal_Any.h"
-
-#include "zoolib/zqe/ZQE_Row.h"
+#include "zoolib/zra/ZRA_Expr_Rel.h"
 
 namespace ZooLib {
-namespace ZQE {
+namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker
+#pragma mark * sGetRelHead
 
-class Walker : public ZCounted
-	{
-protected:
-	Walker();
+RelHead sGetRelHead(const ZRef<Expr_Rel>& iRel);
 
-public:
-	virtual ~Walker();
-
-// Our protocol
-	virtual size_t NameCount() = 0;
-	virtual string8 NameAt(size_t iIndex) = 0;
-
-	virtual ZRef<Walker> Clone() = 0;
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings) = 0;
-	};
-
-} // namespace ZQE
+} // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZQE_Walker__
+#endif // __ZRA_GetRelHead__

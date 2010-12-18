@@ -18,52 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Walker_ValPredCompound.h"
+#ifndef __ZQE_Walker_Select_Any__
+#define __ZQE_Walker_Select_Any__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Bool.h"
+#include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_ValPredCompound
+#pragma mark * Walker_Select_Any
 
-Walker_ValPredCompound::Walker_ValPredCompound(
-	ZRef<Walker> iWalker, const ZValPredCompound& iValPredCompound)
-:	fWalker(iWalker)
-,	fValPredCompound(iValPredCompound)
-	{}
-
-Walker_ValPredCompound::~Walker_ValPredCompound()
-	{}
-
-size_t Walker_ValPredCompound::NameCount()
-	{ return fWalker->NameCount(); }
-
-string8 Walker_ValPredCompound::NameAt(size_t iIndex)
-	{ return fWalker->NameAt(iIndex); }
-
-ZRef<Walker> Walker_ValPredCompound::Clone()
-	{ return new Walker_ValPredCompound(fWalker->Clone(), fValPredCompound); }
-
-ZRef<Row> Walker_ValPredCompound::ReadInc()
+class Walker_Select_Any : public Walker
 	{
-	ZValContext context;
-	for (;;)
-		{
-		if (ZRef<Row> theRow = fWalker->ReadInc())
-			{
-			ZMap_Any theMap;
-			for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
-				theMap.Set(fWalker->NameAt(x), theRow->Get(x));
+public:
+	Walker_Select_Any(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool);
+	virtual ~Walker_Select_Any();
 
-			if (fValPredCompound.Matches(context, theMap))
-				return theRow;
+// From ZQE::Walker
+	virtual size_t NameCount();
+	virtual string8 NameAt(size_t iIndex);
 
-			continue;
-			}
-		return null;
-		}
-	}
+	virtual ZRef<Walker> Clone();
+	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
+
+private:
+	ZRef<Walker> fWalker;
+	ZRef<ZExpr_Bool> fExpr_Bool;
+	};
 
 } // namespace ZQE
 } // namespace ZooLib
+
+#endif // __ZQE_Walker_Select_Any__
