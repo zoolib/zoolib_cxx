@@ -52,7 +52,7 @@ public:
 	void SetCallable_LocalUpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable);
 	void SetCallable_SourceUpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable);
 
-	void Register(ZRef<Sieve> iSieve, const SearchSpec& iSearchSpec);
+	void Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel);
 
 	void LocalUpdate();
 	void SourceUpdate();
@@ -97,7 +97,7 @@ private:
 	DListHead<DLink_PSieve_SourceUpdate> fPSieves_SourceUpdate;
 	DListHead<DLink_PSieve_Changed> fPSieves_Changed;
 
-	std::map<SearchSpec, PSieve> fSearchSpec_To_PSieve;
+	std::map<ZRef<ZRA::Expr_Rel>, PSieve> fRel_To_PSieve;
 	std::map<int64, PSieve*> fRefcon_To_PSieveStar;
 	int64 fNextRefcon;
 

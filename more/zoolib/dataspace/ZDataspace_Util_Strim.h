@@ -33,7 +33,7 @@ namespace ZDataspace {
 #pragma mark -
 #pragma mark *
 
-const ZStrimW& operator<<(const ZStrimW& w, const SearchSpec& iSearchSpec);
+//##const ZStrimW& operator<<(const ZStrimW& w, const SearchSpec& iSearchSpec);
 const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet);
 
 } // namespace ZDataspace

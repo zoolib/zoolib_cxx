@@ -1,3 +1,4 @@
+#if 0
 /* -------------------------------------------------------------------------------------------------
 Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
@@ -55,17 +56,11 @@ bool operator<(const SearchSpec& l, const SearchSpec& r)
 
 namespace { // anonymous
 
-ZMap_Any spRename(const ZMap_Any& iMap, const RelName& iOld, const RelName& iNew)
+ZNameVal spRename(const ZNameVal& iNameVal, const RelName& iOld, const RelName& iNew)
 	{
-	ZMap_Any result = iMap;
-	ZMap_Any::Index_t theIndex = result.IndexOf(iOld);
-	if (result.End() != theIndex)
-		{
-		const ZVal_Any theVal = result.Get(theIndex);
-		result.Erase(theIndex);
-		result.Set(iNew, theVal);
-		}
-	return result;
+	if (iNameVal.first == iOld)
+		return ZNameVal(iNew, iNameVal.second);
+	return iNameVal;
 	}
 
 class DoRename
@@ -105,20 +100,20 @@ class Gather_t
 	{
 public:
 	Gather_t();
-	Gather_t(const ZMap_Any& iMap);
+	Gather_t(const ZNameVal& iNameVal);
 	Gather_t(const RelHead& iRelHead);
 
 	ZRef<ZExpr_Bool> fExpr_Bool;
 	vector<NameMap> fNameMaps;
-	vector<ZMap_Any> fMaps;
+	vector<ZNameVal> fNameVals;
 	};
 
 Gather_t::Gather_t()
 	{}
 
-Gather_t::Gather_t(const ZMap_Any& iMap)
+Gather_t::Gather_t(const ZNameVal& iNameVal)
 :	fExpr_Bool(sTrue())
-,	fMaps(1, iMap)
+,	fNameVals(1, iNameVal)
 	{}
 
 Gather_t::Gather_t(const RelHead& iRelHead)
@@ -187,7 +182,7 @@ void Gather::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
 	Gather_t g0 = this->Do(iExpr->GetOp0());
 	const Gather_t g1 = this->Do(iExpr->GetOp1());
 
-	g0.fMaps.insert(g0.fMaps.end(), g1.fMaps.begin(), g1.fMaps.end());
+	g0.fNameVals.insert(g0.fNameVals.end(), g1.fNameVals.begin(), g1.fNameVals.end());
 	g0.fNameMaps.insert(g0.fNameMaps.end(), g1.fNameMaps.begin(), g1.fNameMaps.end());
 	g0.fExpr_Bool &= g1.fExpr_Bool;
 
@@ -195,10 +190,10 @@ void Gather::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
 	}
 
 void Gather::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
-	{ this->pSetResult(Gather_t(iExpr->GetRelHead())); }
+	{ this->pSetResult(Gather_t(iExpr->GetConcreteRelHead())); }
 
 void Gather::Visit_Expr_Rel_Explicit(ZRef<Expr_Rel_Explicit> iExpr)
-	{ this->pSetResult(Gather_t(iExpr->GetMap())); }
+	{ this->pSetResult(Gather_t(ZNameVal(iExpr->GetRelName(), iExpr->GetVal()))); }
 
 void Gather::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	{
@@ -207,7 +202,7 @@ void Gather::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	const RelName& oldName = iExpr->GetOld();
 	const RelName& newName = iExpr->GetNew();
 
-	for (vector<ZMap_Any>::iterator i = g0.fMaps.begin(); i != g0.fMaps.end(); ++i)
+	for (vector<ZNameVal>::iterator i = g0.fNameVals.begin(); i != g0.fNameVals.end(); ++i)
 		*i = spRename(*i, oldName, newName);
 
 	for (vector<NameMap>::iterator i = g0.fNameMaps.begin(); i != g0.fNameMaps.end(); ++i)
@@ -246,7 +241,7 @@ SearchSpec sAsSearchSpec(ZRef<ZRA::Expr_Rel> iRel)
 	const Gather_t theG = Gather().Do(iRel);
 
 	SearchSpec result;
-	result.fMaps = theG.fMaps;
+	result.fNameVals = theG.fNameVals;
 	result.fNameMaps = theG.fNameMaps;
 	result.fPredCompound = sAsValPredCompound(theG.fExpr_Bool);
 
@@ -260,10 +255,11 @@ namespace ZooLib {
 
 template <> int sCompare_T(const ZDataspace::SearchSpec& iL, const ZDataspace::SearchSpec& iR)
 	{
-	if (int compare = sCompare_T(iL.fMaps, iR.fMaps))
+	if (int compare = sCompare_T(iL.fNameVals, iR.fNameVals))
 		return compare;
 	if (int compare = sCompare_T(iL.fNameMaps, iR.fNameMaps))
 		return compare;
 	return sCompare_T(iL.fPredCompound, iR.fPredCompound);
 	}
 } // namespace ZooLib
+#endif

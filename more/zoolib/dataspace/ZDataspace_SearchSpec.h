@@ -1,3 +1,4 @@
+#if 0
 /* -------------------------------------------------------------------------------------------------
 Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
@@ -37,7 +38,7 @@ namespace ZDataspace {
 class SearchSpec
 	{
 public:
-	std::vector<ZMap_Any> fMaps;
+	std::vector<ZNameVal> fNameVals;
 	std::vector<ZRA::NameMap> fNameMaps;
 	ZValPredCompound fPredCompound;
 	};
@@ -55,3 +56,4 @@ template <> int sCompare_T(const ZDataspace::SearchSpec& iL, const ZDataspace::S
 } // namespace ZooLib
 
 #endif // __ZDataspace_SearchSpec__
+#endif

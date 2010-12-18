@@ -37,6 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Walker_Product.h"
 #include "zoolib/zqe/ZQE_Walker_ValPredCompound.h"
 
+#include "zoolib/zra/ZRA_NameMap.h"
 #include "zoolib/zra/ZRA_Util_RelOperators.h"
 
 namespace ZooLib {
@@ -71,7 +72,7 @@ public:
 	virtual string8 NameAt(size_t iIndex);
 
 	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc();
+	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
 
 private:
 	vector<string8> fRowHead;
@@ -104,7 +105,7 @@ string8 Walker_RowVectors::NameAt(size_t iIndex)
 ZRef<Walker> Walker_RowVectors::Clone()
 	{ return new Walker_RowVectors(fRowHead, fRowVectors, fIndex1, fIndex2); }
 
-ZRef<Row> Walker_RowVectors::ReadInc()
+ZRef<Row> Walker_RowVectors::ReadInc(ZMap_Any iBindings)
 	{
 	if (fIndex1 < fRowVectors.size())
 		{
@@ -116,7 +117,6 @@ ZRef<Row> Walker_RowVectors::ReadInc()
 			}
 		return result;
 		}
-		
 	return null;
 	}
 
@@ -136,7 +136,7 @@ public:
 	virtual string8 NameAt(size_t iIndex);
 
 	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc();
+	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
 
 private:
 	ZRef<SearchRows> fSearchRows;
@@ -164,7 +164,7 @@ string8 Walker_SearchRows::NameAt(size_t iIndex)
 ZRef<Walker> Walker_SearchRows::Clone()
 	{ return new Walker_SearchRows(fSearchRows, fIndex); }
 
-ZRef<Row> Walker_SearchRows::ReadInc()
+ZRef<Row> Walker_SearchRows::ReadInc(ZMap_Any iBindings)
 	{ return fSearchRows->GetRowVector()->Get(fIndex++); }
 
 // =================================================================================================
@@ -349,7 +349,7 @@ void Source_Union::PQuery::Regenerate()
 		spGetRowHead(theProduct, theRowHead);
 
 		vector<ZRef<Row> > theRows;
-		for (ZRef<ZQE::Row> theRow; theRow = theProduct->ReadInc(); /*no inc*/)
+		for (ZRef<ZQE::Row> theRow; theRow = theProduct->ReadInc(ZMap_Any()); /*no inc*/)
 			{
 			if (spMatches(fSearchSpec.fPredCompound, theRowHead, theRow))
 				theRows.push_back(theRow);				

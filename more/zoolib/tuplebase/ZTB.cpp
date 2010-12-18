@@ -385,7 +385,7 @@ static void spCallback_AllocateID(void* iRefcon, uint64 iBaseID, size_t iCount)
 	{
 	ZAssert(iCount == 1);
 	static_cast<Callback_AllocateID_t*>(iRefcon)->fID = iBaseID;
-	static_cast<Callback_AllocateID_t*>(iRefcon)->fSem.Signal();
+	static_cast<Callback_AllocateID_t*>(iRefcon)->fSem.Vacate();
 	}
 
 struct Callback_GetTuple_t
@@ -399,14 +399,14 @@ static void spCallback_GetTuple(
 	{
 	ZAssert(iCount == 1);
 	static_cast<Callback_GetTuple_t*>(iRefcon)->fTuple = iTuples[0];
-	static_cast<Callback_GetTuple_t*>(iRefcon)->fSem.Signal();
+	static_cast<Callback_GetTuple_t*>(iRefcon)->fSem.Vacate();
 	}
 
 static ZTuple spGetTuple(ZTBRepTransaction* iTBRepTransaction, uint64 iID)
 	{
 	Callback_GetTuple_t theStruct;
 	iTBRepTransaction->GetTuples(1, &iID, spCallback_GetTuple, &theStruct);
-	theStruct.fSem.Wait();
+	theStruct.fSem.Procure();
 
 	return theStruct.fTuple;
 	}
@@ -420,14 +420,14 @@ struct Callback_Count_t
 static void spCallback_Count(void* iRefcon, size_t iResult)
 	{
 	static_cast<Callback_Count_t*>(iRefcon)->fResult = iResult;
-	static_cast<Callback_Count_t*>(iRefcon)->fSem.Signal();
+	static_cast<Callback_Count_t*>(iRefcon)->fSem.Vacate();
 	}
 
 static size_t spCount(ZTBRepTransaction* iTBRepTransaction, const ZTBQuery& iQuery)
 	{
 	Callback_Count_t theStruct;
 	iTBRepTransaction->Count(iQuery, spCallback_Count, &theStruct);
-	theStruct.fSem.Wait();
+	theStruct.fSem.Procure();
 
 	return theStruct.fResult;
 	}
@@ -462,7 +462,7 @@ uint64 ZTB::AllocateID()
 	{
 	Callback_AllocateID_t theStruct;
 	fTBRep->AllocateIDs(1, spCallback_AllocateID, &theStruct);
-	theStruct.fSem.Wait();
+	theStruct.fSem.Procure();
 	return theStruct.fID;
 	}
 
@@ -470,7 +470,7 @@ uint64 ZTB::Add(const ZTxn& iTxn, const ZTuple& iTuple)
 	{
 	Callback_AllocateID_t theStruct;
 	fTBRep->AllocateIDs(1, spCallback_AllocateID, &theStruct);
-	theStruct.fSem.Wait();
+	theStruct.fSem.Procure();
 
 	ZTBRepTransaction* theTBRepTransaction = fTBRep->FindOrCreateTransaction(iTxn);
 	theTBRepTransaction->SetTuple(theStruct.fID, iTuple);
@@ -530,7 +530,7 @@ uint64 ZTBTxn::AllocateID() const
 	{
 	Callback_AllocateID_t theStruct;
 	fTBRepTransaction->GetTBRep()->AllocateIDs(1, spCallback_AllocateID, &theStruct);
-	theStruct.fSem.Wait();
+	theStruct.fSem.Procure();
 
 	return theStruct.fID;
 	}
@@ -539,7 +539,7 @@ uint64 ZTBTxn::Add(const ZTuple& iTuple) const
 	{
 	Callback_AllocateID_t theStruct;
 	fTBRepTransaction->GetTBRep()->AllocateIDs(1, spCallback_AllocateID, &theStruct);
-	theStruct.fSem.Wait();
+	theStruct.fSem.Procure();
 
 	fTBRepTransaction->SetTuple(theStruct.fID, iTuple);
 
@@ -593,7 +593,7 @@ static void spCallback_Search(void* iRefcon, vector<uint64>& ioResults)
 	{
 	Callback_Search_Struct* theStruct = static_cast<Callback_Search_Struct*>(iRefcon);
 	theStruct->fRep->fIDs.swap(ioResults);
-	theStruct->fSem.Signal();
+	theStruct->fSem.Vacate();
 	}
 
 ZTBIterRep::ZTBIterRep(ZTBRepTransaction* iTransaction, const ZTBQuery& iQuery)
@@ -602,7 +602,7 @@ ZTBIterRep::ZTBIterRep(ZTBRepTransaction* iTransaction, const ZTBQuery& iQuery)
 	Callback_Search_Struct theStruct;
 	theStruct.fRep = this;
 	fTransaction->Search(iQuery, spCallback_Search, &theStruct);
-	theStruct.fSem.Wait();
+	theStruct.fSem.Procure();
 	}
 
 ZTBIterRep::~ZTBIterRep()

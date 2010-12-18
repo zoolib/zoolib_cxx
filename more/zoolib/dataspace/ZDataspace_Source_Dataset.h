@@ -88,10 +88,12 @@ public:
 	void ClearTransaction(size_t iIndex);
 	void CloseTransaction(size_t iIndex);
 
-	void Dump(const ZStrimW& w);
-
 private:
 	void pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense);
+
+	class Visitor_DoMakeWalker;
+	friend class Visitor_DoMakeWalker;	
+	ZRef<ZQE::Walker> pMakeWalker(const RelHead& iRelHead);
 
 	class Walker;
 	friend class Walker;

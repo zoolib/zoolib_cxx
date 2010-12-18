@@ -55,7 +55,7 @@ public:
 private:
 	bool pCheck(ZRef<ZWorker> iWorker);
 
-	string8 pAsSQL(const SearchSpec& iSearchSpec);
+//	string8 pAsSQL(const SearchSpec& iSearchSpec);
 
 	ZRef<ZSQLite::DB> fDB;
 	int64 fChangeCount;

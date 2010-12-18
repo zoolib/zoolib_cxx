@@ -26,7 +26,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZIntervalTreeClock.h"
 
 #include "zoolib/dataspace/ZDataspace_SearchSpec.h"
+#include "zoolib/zqe/ZQE_ResultSet.h"
 #include "zoolib/zqe/ZQE_Row.h"
+#include "zoolib/zra/ZRA_Expr_Rel.h"
 #include "zoolib/zra/ZRA_RelHead.h"
 
 #include <set>
@@ -47,30 +49,17 @@ using ZRA::RelHead;
 class AddedSearch
 	{
 public:
-	AddedSearch(int64 iRefcon, const SearchSpec& iSearchSpec);
+	AddedSearch(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel);
 
 	int64 fRefcon;
-	SearchSpec fSearchSpec;
+	ZRef<ZRA::Expr_Rel> fRel;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * SearchRows
 
-class SearchRows : public ZCountedWithoutFinalize
-	{
-public:
-	SearchRows(const std::vector<string8>& iRowHead, ZRef<ZQE::RowVector> iRowVector);
-	SearchRows(std::vector<string8>* ioRowHead, ZRef<ZQE::RowVector> iRowVector);
-	SearchRows(std::vector<string8>* ioRowHead);
-
-	const std::vector<string8>& GetRowHead();
-	ZRef<ZQE::RowVector> GetRowVector();
-
-private:
-	std::vector<string8> fRowHead;
-	ZRef<ZQE::RowVector> fRowVector;
-	};
+typedef ZQE::ResultSet SearchRows;
 
 // =================================================================================================
 #pragma mark -
@@ -80,7 +69,7 @@ class SearchResult
 	{
 public:
 	int64 fRefcon;
-	ZRef<SearchRows> fSearchRows;
+	ZRef<ZQE::ResultSet> fResultSet;
 	};
 
 // =================================================================================================

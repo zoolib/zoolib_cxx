@@ -28,11 +28,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_ZooLibStrim.h"
 
 #include "zoolib/dataspace/ZDataspace_Source_Dataset.h"
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
-#include "zoolib/zqe/ZQE_Walker_Product.h"
-#include "zoolib/zqe/ZQE_Walker_Explicit.h"
-#include "zoolib/zqe/ZQE_Walker_ValPredCompound.h"
+#include "zoolib/zqe/ZQE_Visitor_DoMakeWalker_Any.h"
+
+#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -42,8 +41,6 @@ using ZDataset::Daton;
 using ZDataset::Deltas;
 using ZDataset::Map_NamedEvent_Delta_t;
 using ZDataset::NamedEvent;
-
-using ZRA::NameMap;
 
 using std::make_pair;
 using std::map;
@@ -106,13 +103,32 @@ Daton sAsDaton(const ZVal_Any& iVal)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Visitor_DoMakeWalker
+
+class Source_Dataset::Visitor_DoMakeWalker
+:	public virtual ZQE::Visitor_DoMakeWalker_Any
+,	public virtual ZRA::Visitor_Expr_Rel_Concrete
+	{
+public:
+	Visitor_DoMakeWalker(Source_Dataset* iSource)
+	:	fSource(iSource)
+		{}
+
+	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
+		{ this->pSetResult(fSource->pMakeWalker(iExpr->GetConcreteRelHead())); }
+
+	Source_Dataset* fSource;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Source_Dataset::Walker
 
 class Source_Dataset::Walker : public ZQE::Walker
 	{
 public:
 	Walker(Source_Dataset* iSource,
-		const vector<pair<string8, string8> >& iNames, 
+		const vector<string8>& iNames,
 		Map_Main::const_iterator iCurrent_Main,
 		Map_Pending::const_iterator iCurrent_Pending);
 
@@ -123,16 +139,16 @@ public:
 	virtual string8 NameAt(size_t iIndex);
 
 	virtual ZRef<ZQE::Walker> Clone();
-	virtual ZRef<ZQE::Row> ReadInc();
+	virtual ZRef<ZQE::Row> ReadInc(ZMap_Any iBindings);
 
 	Source_Dataset* fSource;
-	vector<pair<string8, string8> > fNames;
+	vector<string8> fNames;
 	Map_Main::const_iterator fCurrent_Main;
 	Map_Pending::const_iterator fCurrent_Pending;
 	};
 
 Source_Dataset::Walker::Walker(Source_Dataset* iSource,
-	const vector<pair<string8, string8> >& iNames, 
+	const vector<string8>& iNames,
 	Map_Main::const_iterator iCurrent_Main,
 	Map_Pending::const_iterator iCurrent_Pending)
 :	fSource(iSource)
@@ -150,14 +166,14 @@ size_t Source_Dataset::Walker::NameCount()
 string8 Source_Dataset::Walker::NameAt(size_t iIndex)
 	{
 	if (iIndex < fNames.size())
-		return fNames[iIndex].first;
+		return fNames[iIndex];
 	return string8();
 	}
 
 ZRef<ZQE::Walker> Source_Dataset::Walker::Clone()
 	{ return new Walker(fSource, fNames, fCurrent_Main, fCurrent_Pending); }
 
-ZRef<ZQE::Row> Source_Dataset::Walker::ReadInc()
+ZRef<ZQE::Row> Source_Dataset::Walker::ReadInc(ZMap_Any iBindings)
 	{ return fSource->pReadInc(this); }
 
 // =================================================================================================
@@ -168,7 +184,7 @@ class Source_Dataset::PQuery
 	{
 public:
 	int64 fRefcon;
-	SearchSpec fSearchSpec;
+	ZRef<ZRA::Expr_Rel> fRel;
 	};
 
 // =================================================================================================
@@ -203,7 +219,7 @@ void Source_Dataset::Update(
 		{
 		PQuery* thePQuery = new PQuery;
 		thePQuery->fRefcon = iAdded->fRefcon;
-		thePQuery->fSearchSpec = iAdded->fSearchSpec;
+		thePQuery->fRel = iAdded->fRel;
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
 
@@ -211,10 +227,7 @@ void Source_Dataset::Update(
 		}
 
 	while (iRemovedCount--)
-		{
-		PQuery* thePQuery = ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPQuery, *iRemoved++);
-		delete thePQuery;
-		}
+		delete ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPQuery, *iRemoved++);
 
 	// Pick up (and index) values from dataset
 	if (this->pPull() || anyChanges)
@@ -222,50 +235,20 @@ void Source_Dataset::Update(
 		for (map<int64, PQuery*>::iterator iter_RefconToPQuery = fMap_RefconToPQuery.begin();
 			iter_RefconToPQuery != fMap_RefconToPQuery.end(); ++iter_RefconToPQuery)
 			{
-			ZRef<ZQE::Walker> theWalker;
-			
-			const vector<ZMap_Any>& theMaps = iter_RefconToPQuery->second->fSearchSpec.fMaps;
-			for (vector<ZMap_Any>::const_iterator iterMaps = theMaps.begin();
-				iterMaps != theMaps.end(); ++iterMaps)
-				{
-				ZRef<ZQE::Walker> cur = new ZQE::Walker_Explicit(*iterMaps);
-				theWalker = theWalker ? new ZQE::Walker_Product(theWalker, cur) : cur;
-				}
-			
-			const vector<NameMap>& theNM = iter_RefconToPQuery->second->fSearchSpec.fNameMaps;
-			for (vector<NameMap>::const_iterator iterNM = theNM.begin();
-				iterNM != theNM.end(); ++iterNM)
-				{
-				const vector<pair<string8, string8> >
-					theNames(iterNM->GetElems().begin(), iterNM->GetElems().end());
-
-				ZRef<ZQE::Walker> cur = new Walker(this, theNames, fMap.begin(), fMap_Pending.begin());
-				theWalker = theWalker ? new ZQE::Walker_Product(theWalker, cur) : cur;
-				}
-
-			theWalker = new ZQE::Walker_ValPredCompound(theWalker,
-				iter_RefconToPQuery->second->fSearchSpec.fPredCompound);
-
-			const size_t columnCount = theWalker->NameCount();
+			ZRef<ZQE::Walker> theWalker =
+				Visitor_DoMakeWalker(this).Do(iter_RefconToPQuery->second->fRel);
 
 			vector<string8> theRowHead;
-			for (size_t x = 0; x < columnCount; ++x)
+			for (size_t x = 0, count = theWalker->NameCount(); x < count; ++x)
 				theRowHead.push_back(theWalker->NameAt(x));
 
-			set<vector<ZVal_Any> > priorVals;
 			vector<ZRef<ZQE::Row> > theRows;
-			for (ZRef<ZQE::Row> theRow; theRow = theWalker->ReadInc(); /*no inc*/)
-				{
-				vector<ZVal_Any> vec;
-				for (size_t x = 0; x < columnCount; ++x)
-					vec.push_back(theRow->Get(x));
-				if (ZUtil_STL::sInsertIfNotContains(priorVals, vec))
-					theRows.push_back(theRow);
-				}
+			for (ZRef<ZQE::Row> theRow; theRow = theWalker->ReadInc(ZMap_Any()); /*no inc*/)
+				theRows.push_back(theRow);
 
 			SearchResult theSearchResult;
 			theSearchResult.fRefcon = iter_RefconToPQuery->first;
-			theSearchResult.fSearchRows = new SearchRows(&theRowHead, new ZQE::RowVector(&theRows));
+			theSearchResult.fResultSet = new ZQE::ResultSet(&theRowHead, new ZQE::RowVector(&theRows));
 			oChanged.push_back(theSearchResult);
 			}
 		}
@@ -342,17 +325,14 @@ void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal
 	this->pInvokeCallable();	
 	}
 
-void Source_Dataset::Dump(const ZStrimW& w)
+ZRef<ZQE::Walker> Source_Dataset::pMakeWalker(const RelHead& iRelHead)
 	{
-	for (map<Daton, pair<NamedEvent, ZVal_Any> >::iterator i = fMap.begin(); i != fMap.end(); ++i)
-		{
-		ZYad_ZooLibStrim::sToStrim(sMakeYadR(i->second.second), w);
-		w << "\n";
-		}
+	vector<string8> theNames(iRelHead.begin(), iRelHead.end());
+	return new Walker(this, theNames, fMap.begin(), fMap_Pending.begin());
 	}
 
-static ZRef<ZQE::Row_Vector> spMakeRow(
-	const ZMap_Any& iMap, const vector<pair<string8, string8> >& iNames)
+static ZRef<ZQE::Row_ValVector> spMakeRow(
+	const ZMap_Any& iMap, const vector<string8>& iNames)
 	{
 	const size_t nameCount = iNames.size();
 	vector<ZVal_Any> theVals;
@@ -360,7 +340,7 @@ static ZRef<ZQE::Row_Vector> spMakeRow(
 	bool allGood = true;
 	for (size_t x = 0; x < nameCount; ++x)
 		{
-		if (const ZVal_Any* theVal = iMap.PGet(iNames[x].second))
+		if (const ZVal_Any* theVal = iMap.PGet(iNames[x]))
 			{
 			theVals[x] = *theVal;
 			}
@@ -372,7 +352,7 @@ static ZRef<ZQE::Row_Vector> spMakeRow(
 		}
 
 	if (allGood)
-		return new ZQE::Row_Vector(&theVals);
+		return new ZQE::Row_ValVector(&theVals);
 
 	return null;
 	}
@@ -386,7 +366,7 @@ ZRef<ZQE::Row> Source_Dataset::pReadInc(ZRef<Walker> iWalker)
 			{
 			if (const ZMap_Any* theMap = iWalker->fCurrent_Main->second.second.PGet<ZMap_Any>())
 				{
-				if (ZRef<ZQE::Row_Vector> theRow = spMakeRow(*theMap, iWalker->fNames))
+				if (ZRef<ZQE::Row_ValVector> theRow = spMakeRow(*theMap, iWalker->fNames))
 					{
 					theRow->AddAnnotation(new Annotation_Daton(iWalker->fCurrent_Main->first));
 					++iWalker->fCurrent_Main;
@@ -404,7 +384,7 @@ ZRef<ZQE::Row> Source_Dataset::pReadInc(ZRef<Walker> iWalker)
 			{
 			if (const ZMap_Any* theMap = iWalker->fCurrent_Pending->second.first.PGet<ZMap_Any>())
 				{
-				if (ZRef<ZQE::Row_Vector> theRow = spMakeRow(*theMap, iWalker->fNames))
+				if (ZRef<ZQE::Row_ValVector> theRow = spMakeRow(*theMap, iWalker->fNames))
 					{
 					theRow->AddAnnotation(new Annotation_Daton(iWalker->fCurrent_Pending->first));
 					++iWalker->fCurrent_Pending;

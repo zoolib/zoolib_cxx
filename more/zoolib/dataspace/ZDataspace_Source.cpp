@@ -32,40 +32,10 @@ using std::vector;
 #pragma mark -
 #pragma mark *
 
-AddedSearch::AddedSearch(int64 iRefcon, const SearchSpec& iSearchSpec)
+AddedSearch::AddedSearch(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel)
 :	fRefcon(iRefcon)
-,	fSearchSpec(iSearchSpec)
+,	fRel(iRel)
 	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * SearchRows
-
-SearchRows::SearchRows(const std::vector<string8>& iRowHead, ZRef<ZQE::RowVector> iRowVector)
-:	fRowHead(iRowHead)
-,	fRowVector(iRowVector)
-	{
-	ZAssert(fRowVector);
-	}
-
-SearchRows::SearchRows(std::vector<string8>* ioRowHead, ZRef<ZQE::RowVector> iRowVector)
-:	fRowVector(iRowVector)
-	{
-	ZAssert(fRowVector);
-	ioRowHead->swap(fRowHead);
-	}
-
-SearchRows::SearchRows(std::vector<string8>* ioRowHead)
-	{
-	ioRowHead->swap(fRowHead);
-	fRowVector = new ZQE::RowVector;
-	}
-
-const std::vector<string8>& SearchRows::GetRowHead()
-	{ return fRowHead; }
-
-ZRef<ZQE::RowVector> SearchRows::GetRowVector()
-	{ return fRowVector; }
 
 // =================================================================================================
 #pragma mark -

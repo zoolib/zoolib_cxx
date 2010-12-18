@@ -53,7 +53,7 @@ class Dataspace::PSieve
 	{
 public:
 	Dataspace* fDataspace;
-	SearchSpec fSearchSpec;
+	ZRef<ZRA::Expr_Rel> fRel;
 	int64 fRefcon; // When zero, is not yet known to the Source
 
 	DListHead<DLink_Sieve_Using> fSieves_Using;
@@ -94,24 +94,24 @@ void Dataspace::SetCallable_SourceUpdateNeeded(ZRef<Callable_UpdateNeeded> iCall
 	fCallable_SourceUpdateNeeded = iCallable;
 	}
 
-void Dataspace::Register(ZRef<Sieve> iSieve, const SearchSpec& iSearchSpec)
+void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 	{
 	ZGuardRMtxR guardR_CallLocalUpdate(fMtxR_CallLocalUpdate);
 	ZGuardRMtxR guardR_Structure(fMtxR_Structure);
 
 	PSieve* thePSieve;
-	map<SearchSpec, PSieve>::iterator position = fSearchSpec_To_PSieve.lower_bound(iSearchSpec);
-	if (position != fSearchSpec_To_PSieve.end() && position->first == iSearchSpec)
+	map<ZRef<ZRA::Expr_Rel>, PSieve>::iterator position = fRel_To_PSieve.lower_bound(iRel);
+	if (position != fRel_To_PSieve.end() && position->first == iRel)
 		{
 		thePSieve = &position->second;
 		}
 	else
 		{
-		thePSieve = &fSearchSpec_To_PSieve.
-			insert(position, pair<SearchSpec, PSieve>(iSearchSpec, PSieve()))->second;
+		thePSieve = &fRel_To_PSieve.
+			insert(position, pair<ZRef<ZRA::Expr_Rel>, PSieve>(iRel, PSieve()))->second;
 
 		thePSieve->fDataspace = this;
-		thePSieve->fSearchSpec = iSearchSpec;
+		thePSieve->fRel = iRel;
 		thePSieve->fRefcon = 0;
 
 		fPSieves_LocalUpdate.Insert(thePSieve);
@@ -160,7 +160,7 @@ void Dataspace::LocalUpdate()
 			// It's not in use and is not known to the source, so we can toss it.
 			fPSieves_SourceUpdate.EraseIfContains(thePSieve);
 			fPSieves_Changed.EraseIfContains(thePSieve);
-			ZUtil_STL::sEraseMustContain(kDebug, fSearchSpec_To_PSieve, thePSieve->fSearchSpec);
+			ZUtil_STL::sEraseMustContain(kDebug, fRel_To_PSieve, thePSieve->fRel);
 			}
 		}
 
@@ -233,7 +233,7 @@ void Dataspace::SourceUpdate()
 				thePSieve->fRefcon = fNextRefcon++;
 				ZUtil_STL::sInsertMustNotContain(kDebug,
 					fRefcon_To_PSieveStar, thePSieve->fRefcon, thePSieve);
-				addedSearches.push_back(AddedSearch(thePSieve->fRefcon, thePSieve->fSearchSpec));
+				addedSearches.push_back(AddedSearch(thePSieve->fRefcon, thePSieve->fRel));
 				}
 			}
 		else if (thePSieve->fRefcon)
@@ -279,7 +279,7 @@ void Dataspace::SourceUpdate()
 		{
 		PSieve* thePSieve = fRefcon_To_PSieveStar[i->fRefcon];
 		ZAssert(thePSieve);
-		thePSieve->fSearchRows_Source = i->fSearchRows;
+		thePSieve->fSearchRows_Source = i->fResultSet;
 		fPSieves_Changed.InsertIfNotContains(thePSieve);
 		}
 

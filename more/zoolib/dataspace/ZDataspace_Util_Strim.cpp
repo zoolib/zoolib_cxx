@@ -19,14 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoToStrim.h"
-
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
 namespace ZooLib {
 namespace ZDataspace {
-
-using ZRA::NameMap;
 
 using std::set;
 using std::vector;
@@ -35,11 +31,13 @@ using std::vector;
 #pragma mark -
 #pragma mark *
 
+#if 0
+
 const ZStrimW& operator<<(const ZStrimW& w, const SearchSpec& iSearchSpec)
 	{
 	w << "(";
 	bool isSubsequent = false;
-	for (vector<NameMap>::const_iterator i = iSearchSpec.fNameMaps.begin();
+	for (vector<ZRA::NameMap>::const_iterator i = iSearchSpec.fNameMaps.begin();
 		i != iSearchSpec.fNameMaps.end(); ++i)
 		{
 		if (isSubsequent)
@@ -52,6 +50,8 @@ const ZStrimW& operator<<(const ZStrimW& w, const SearchSpec& iSearchSpec)
 		.DoToStrim(ZVisitor_DoToStrim::Options(), w, sAsExpr_Bool(iSearchSpec.fPredCompound));
 	return w;
 	}
+
+#endif
 
 const ZStrimW& operator<<(const ZStrimW& w, const set<RelHead>& iSet)
 	{
