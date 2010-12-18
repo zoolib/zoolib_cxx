@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Visitor_DoMakeWalker_Any__
-#define __ZQE_Visitor_DoMakeWalker_Any__ 1
+#ifndef __ZQE_Visitor_DoMakeWalker__
+#define __ZQE_Visitor_DoMakeWalker__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZVisitor_Do_T.h"
@@ -43,7 +43,7 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Visitor_DoMakeWalker_Any
 
-class Visitor_DoMakeWalker_Any
+class Visitor_DoMakeWalker
 :	public virtual ZVisitor_Do_T<ZRef<Walker> >
 ,	public virtual ZRA::Visitor_Expr_Rel_Difference
 ,	public virtual ZRA::Visitor_Expr_Rel_Intersect
@@ -71,4 +71,4 @@ public:
 } // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZQE_Visitor_DoMakeWalker_Any__
+#endif // __ZQE_Visitor_DoMakeWalker__

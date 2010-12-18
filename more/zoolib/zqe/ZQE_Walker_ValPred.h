@@ -18,47 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Bool_ValPred_Any.h"
-#include "zoolib/zqe/ZQE_Walker_ValPred_Any.h"
+#ifndef __ZQE_Walker_ValPred__
+#define __ZQE_Walker_ValPred__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZValPred_Any.h"
+#include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_ValPred_Any
+#pragma mark * Walker_ValPred
 
-Walker_ValPred_Any::Walker_ValPred_Any(
-	ZRef<Walker> iWalker, const ZValPred_Any& iValPred)
-:	fWalker(iWalker)
-,	fValPred(iValPred)
-	{}
-
-Walker_ValPred_Any::~Walker_ValPred_Any()
-	{}
-
-size_t Walker_ValPred_Any::NameCount()
-	{ return fWalker->NameCount(); }
-
-string8 Walker_ValPred_Any::NameAt(size_t iIndex)
-	{ return fWalker->NameAt(iIndex); }
-
-ZRef<Walker> Walker_ValPred_Any::Clone()
-	{ return new Walker_ValPred_Any(fWalker->Clone(), fValPred); }
-
-ZRef<Row> Walker_ValPred_Any::ReadInc(ZMap_Any iBindings)
+class Walker_ValPred : public Walker
 	{
-	for (ZRef<Row> theRow; theRow = fWalker->ReadInc(iBindings); /*no inc*/)
-		{
-		ZMap_Any theMap = iBindings;
-		for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
-			theMap.Set(fWalker->NameAt(x), theRow->Get(x));
+public:
+	Walker_ValPred(ZRef<Walker> iWalker, const ZValPred_Any& iValPred);
+	virtual ~Walker_ValPred();
 
-		if (sMatches(fValPred, theMap))
-			return theRow;
-		}
-	return null;
-	}
+// From ZQE::Walker
+	virtual size_t NameCount();
+	virtual string8 NameAt(size_t iIndex);
+
+	virtual ZRef<Walker> Clone();
+	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
+
+private:
+	ZRef<Walker> fWalker;
+	ZValPred_Any fValPred;
+	};
 
 } // namespace ZQE
 } // namespace ZooLib
+
+#endif // __ZQE_Walker_ValPred__

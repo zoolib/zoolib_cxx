@@ -18,45 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Walker_Select_Any.h"
-#include "zoolib/ZExpr_Bool_ValPred_Any.h"
+#ifndef __ZQE_Walker_Select__
+#define __ZQE_Walker_Select__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Bool.h"
+#include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Select_Any
+#pragma mark * Walker_Select
 
-Walker_Select_Any::Walker_Select_Any(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool)
-:	fWalker(iWalker)
-,	fExpr_Bool(iExpr_Bool)
-	{}
-
-Walker_Select_Any::~Walker_Select_Any()
-	{}
-
-size_t Walker_Select_Any::NameCount()
-	{ return fWalker->NameCount(); }
-
-string8 Walker_Select_Any::NameAt(size_t iIndex)
-	{ return fWalker->NameAt(iIndex); }
-
-ZRef<Walker> Walker_Select_Any::Clone()
-	{ return new Walker_Select_Any(fWalker->Clone(), fExpr_Bool); }
-
-ZRef<Row> Walker_Select_Any::ReadInc(ZMap_Any iBindings)
+class Walker_Select : public Walker
 	{
-	for (ZRef<Row> theRow; theRow = fWalker->ReadInc(iBindings); /*no inc*/)
-		{
-		ZMap_Any theBindings = iBindings;
-		for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
-			theBindings.Set(fWalker->NameAt(x), theRow->Get(x));
-		if (sMatches(fExpr_Bool, theBindings))
-			return theRow;
-		}
-	return null;
-	}
+public:
+	Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool);
+	virtual ~Walker_Select();
+
+// From ZQE::Walker
+	virtual size_t NameCount();
+	virtual string8 NameAt(size_t iIndex);
+
+	virtual ZRef<Walker> Clone();
+	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
+
+private:
+	ZRef<Walker> fWalker;
+	ZRef<ZExpr_Bool> fExpr_Bool;
+	};
 
 } // namespace ZQE
 } // namespace ZooLib
+
+#endif // __ZQE_Walker_Select__

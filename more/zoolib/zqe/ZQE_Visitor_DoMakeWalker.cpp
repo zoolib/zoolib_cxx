@@ -18,28 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Visitor_DoMakeWalker_Any.h"
+#include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
 #include "zoolib/zqe/ZQE_Walker_Extend.h"
 #include "zoolib/zqe/ZQE_Walker_Product.h"
 #include "zoolib/zqe/ZQE_Walker_Project.h"
 #include "zoolib/zqe/ZQE_Walker_Rename.h"
-#include "zoolib/zqe/ZQE_Walker_Select_Any.h"
-#include "zoolib/zqe/ZQE_Walker_ValPred_Any.h"
+#include "zoolib/zqe/ZQE_Walker_Select.h"
+#include "zoolib/zqe/ZQE_Walker_ValPred.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_DoMakeWalker_Any
+#pragma mark * Visitor_DoMakeWalker
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Difference(ZRef<ZRA::Expr_Rel_Difference> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Difference(ZRef<ZRA::Expr_Rel_Difference> iExpr)
 	{ ZUnimplemented(); }
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr)
 	{ ZUnimplemented(); }
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
@@ -48,10 +48,10 @@ void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product
 		}
 	}
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Union(ZRef<ZRA::Expr_Rel_Union> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Union(ZRef<ZRA::Expr_Rel_Union> iExpr)
 	{ ZUnimplemented(); }
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Extend(ZRef<ZRA::Expr_Rel_Extend> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Extend(ZRef<ZRA::Expr_Rel_Extend> iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
@@ -80,28 +80,28 @@ void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Extend(ZRef<ZRA::Expr_Rel_Extend> 
 		}
 	}
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Project(op0, iExpr->GetProjectRelHead()));
 	}
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Rename(op0, iExpr->GetNew(), iExpr->GetOld()));
 	}
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict_Any> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict_Any> iExpr)
 	{
 	if (ZRef<Walker> theWalker = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new Walker_ValPred_Any(theWalker, iExpr->GetValPred()));	
+		this->pSetResult(new Walker_ValPred(theWalker, iExpr->GetValPred()));	
 	}
 
-void Visitor_DoMakeWalker_Any::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new Walker_Select_Any(op0, iExpr->GetExpr_Bool()));
+		this->pSetResult(new Walker_Select(op0, iExpr->GetExpr_Bool()));
 	}
 
 } // namespace ZQE
