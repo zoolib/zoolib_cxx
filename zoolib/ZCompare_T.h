@@ -26,13 +26,6 @@ namespace ZooLib {
 
 template <class T> int sCompare_T(const T& iL, const T& iR);
 
-template <class T> class ZCompare_T
-	{
-public:
-	int operator()(const T& iL, const T& iR) const
-		{ return sCompare_T<T>(iL, iR); }
-	};
-
 template <class InputIterator>
 inline int sCompareIterators_T(
 	InputIterator leftIter, InputIterator leftEnd,
