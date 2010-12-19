@@ -58,8 +58,8 @@ public:
 
 	DListHead<DLink_Sieve_Using> fSieves_Using;
 
-	ZRef<ZQE::Result> fSearchRows_Local;
-	ZRef<ZQE::Result> fSearchRows_Source;
+	ZRef<ZQE::Result> fResult_Local;
+	ZRef<ZQE::Result> fResult_Source;
 	};
 
 // =================================================================================================
@@ -169,7 +169,7 @@ void Dataspace::LocalUpdate()
 		iter; iter.Advance())
 		{
 		PSieve* thePSieve = iter.Current();
-		thePSieve->fSearchRows_Local = thePSieve->fSearchRows_Source;
+		thePSieve->fResult_Local = thePSieve->fResult_Source;
 
 		for (DListIterator<Sieve, DLink_Sieve_Using>
 			iter = thePSieve->fSieves_Using;
@@ -186,7 +186,7 @@ void Dataspace::LocalUpdate()
 		iter;)
 		{
 		Sieve* theSieve = iter.Current();
-		if (theSieve->fPSieve->fSearchRows_Local)
+		if (theSieve->fPSieve->fResult_Local)
 			{
 			sievesLoaded.insert(theSieve);
 			iter.Advance();
@@ -242,7 +242,7 @@ void Dataspace::SourceUpdate()
 			removedSearches.push_back(thePSieve->fRefcon);
 			ZUtil_STL::sEraseMustContain(kDebug, fRefcon_To_PSieveStar, thePSieve->fRefcon);
 			thePSieve->fRefcon = 0;
-			thePSieve->fSearchRows_Source.Clear();
+			thePSieve->fResult_Source.Clear();
 			fPSieves_LocalUpdate.InsertIfNotContains(thePSieve);
 			}
 		else
@@ -279,7 +279,7 @@ void Dataspace::SourceUpdate()
 		{
 		PSieve* thePSieve = fRefcon_To_PSieveStar[i->fRefcon];
 		ZAssert(thePSieve);
-		thePSieve->fSearchRows_Source = i->fResult;
+		thePSieve->fResult_Source = i->fResult;
 		fPSieves_Changed.InsertIfNotContains(thePSieve);
 		}
 
@@ -373,11 +373,11 @@ void Dataspace::pFinalize(Sieve* iSieve)
 		}
 	}
 
-ZRef<ZQE::Result> Dataspace::pGetSearchRows(Sieve* iSieve)
+ZRef<ZQE::Result> Dataspace::pGetResult(Sieve* iSieve)
 	{
 	if (fSieves_JustRegistered.Contains(iSieve))
 		return null;
-	return iSieve->fPSieve->fSearchRows_Local;
+	return iSieve->fPSieve->fResult_Local;
 	}
 
 bool Dataspace::pIsLoaded(Sieve* iSieve)
@@ -413,10 +413,10 @@ void Sieve::Loaded()
 void Sieve::Changed(bool iIsLoad)
 	{}
 
-ZRef<ZQE::Result> Sieve::GetSearchRows()
+ZRef<ZQE::Result> Sieve::GetResult()
 	{
 	if (fPSieve)
-		return fPSieve->fDataspace->pGetSearchRows(this);
+		return fPSieve->fDataspace->pGetResult(this);
 	return null;
 	}
 

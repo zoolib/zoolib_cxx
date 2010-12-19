@@ -102,7 +102,7 @@ private:
 	int64 fNextRefcon;
 
 	void pFinalize(Sieve* iSieve);
-	ZRef<ZQE::Result> pGetSearchRows(Sieve* iSieve);
+	ZRef<ZQE::Result> pGetResult(Sieve* iSieve);
 	bool pIsLoaded(Sieve* iSieve);
 
 	DListHead<DLink_Sieve_JustRegistered> fSieves_JustRegistered;
@@ -139,7 +139,7 @@ public:
 	virtual void Loaded();
 	virtual void Changed(bool iIsLoad);
 
-	ZRef<ZQE::Result> GetSearchRows();
+	ZRef<ZQE::Result> GetResult();
 
 	bool IsLoaded();
 
