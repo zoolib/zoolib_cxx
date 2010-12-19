@@ -18,17 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZUtil_STL.h"
 #include "zoolib/zqe/ZQE_Walker_Rename.h"
 
 namespace ZooLib {
 namespace ZQE {
+
+using std::map;
+using std::set;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Walker_Rename
 
 Walker_Rename::Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const string8& iOld)
-:	fWalker(iWalker)
+:	Walker_Unary(iWalker)
 ,	fNew(iNew)
 ,	fOld(iOld)
 	{}
@@ -36,27 +40,22 @@ Walker_Rename::Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const st
 Walker_Rename::~Walker_Rename()
 	{}
 
-size_t Walker_Rename::NameCount()
-	{ return fWalker->NameCount(); }
-
-string8 Walker_Rename::NameAt(size_t iIndex)
-	{ return fWalker->NameAt(iIndex); }
-
-ZRef<Walker> Walker_Rename::Clone()
-	{ return new Walker_Rename(fWalker->Clone(), fNew, fOld); }
-
-ZRef<Row> Walker_Rename::ReadInc(ZMap_Any iBindings)
+void Walker_Rename::Prime(const std::map<string8,size_t>& iBindingOffsets, 
+	map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
 	{
-	for (ZRef<Row> theRow; theRow = fWalker->ReadInc(iBindings); /*no inc*/)
-		{
-//		ZMap_Any theBindings = iBindings;
-//		for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
-//			theBindings.Set(fWalker->NameAt(x), theRow->Get(x));
-//		if (sMatches(fExpr_Bool, theBindings))
-			return theRow;
-		}
-	return null;
+	map<string8,size_t> newBindingOffsets = iBindingOffsets;
+	newBindingOffsets[fOld] = ZUtil_STL::sEraseAndReturn(1, newBindingOffsets, fNew);
+	
+	fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
+
+	oOffsets[fNew] = ZUtil_STL::sEraseAndReturn(1, oOffsets, fOld);
 	}
+
+bool Walker_Rename::ReadInc(const ZVal_Any* iBindings,
+	ZVal_Any* oResults,
+	set<ZRef<ZCounted> >* oAnnotations)
+	{ return fWalker->ReadInc(iBindings, oResults, oAnnotations); }
 
 } // namespace ZQE
 } // namespace ZooLib

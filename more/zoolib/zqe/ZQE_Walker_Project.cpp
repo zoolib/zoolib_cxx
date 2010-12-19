@@ -23,38 +23,72 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZQE {
 
+using std::map;
+using std::set;
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Walker_Project
 
 Walker_Project::Walker_Project(ZRef<Walker> iWalker, const ZRA::RelHead& iRelHead)
-:	fWalker(iWalker)
+:	Walker_Unary(iWalker)
 ,	fRelHead(iRelHead)
 	{}
 
 Walker_Project::~Walker_Project()
 	{}
 
-size_t Walker_Project::NameCount()
-	{ return fWalker->NameCount(); }
-
-string8 Walker_Project::NameAt(size_t iIndex)
-	{ return fWalker->NameAt(iIndex); }
-
-ZRef<Walker> Walker_Project::Clone()
-	{ return new Walker_Project(fWalker->Clone(), fRelHead); }
-
-ZRef<Row> Walker_Project::ReadInc(ZMap_Any iBindings)
+void Walker_Project::Rewind()
 	{
-	for (ZRef<Row> theRow; theRow = fWalker->ReadInc(iBindings); /*no inc*/)
+	Walker_Unary::Rewind();
+	fPriors.clear();
+	}
+
+void Walker_Project::Prime(const map<string8,size_t>& iBindingOffsets,
+	map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
+	{
+	map<string8,size_t> childOffsets;
+	fWalker->Prime(iBindingOffsets, childOffsets, ioBaseOffset);
+
+	fChildMapping.reserve(fRelHead.size());
+	for (ZRA::RelHead::iterator i = fRelHead.begin(); i != fRelHead.end(); ++i)
 		{
-//		ZMap_Any theBindings = iBindings;
-//		for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
-//			theBindings.Set(fWalker->NameAt(x), theRow->Get(x));
-//		if (sMatches(fExpr_Bool, theBindings))
-			return theRow;
+		const size_t childOffset = childOffsets[*i];
+		fChildMapping.push_back(childOffset);
+		oOffsets[*i] = childOffset;
 		}
-	return null;
+	}
+
+bool Walker_Project::ReadInc(const ZVal_Any* iBindings,
+	ZVal_Any* oResults,
+	set<ZRef<ZCounted> >* oAnnotations)
+	{
+	set<ZRef<ZCounted> > localAnnotations;
+	set<ZRef<ZCounted> >* localAnnotationsPtr = nullptr;
+	if (oAnnotations)
+		localAnnotationsPtr = &localAnnotations;
+
+	for (;;)
+		{
+		if (!fWalker->ReadInc(iBindings, oResults, localAnnotationsPtr))
+			return false;
+
+		const size_t count = fRelHead.size();
+		vector<ZVal_Any> subset;
+		subset.reserve(count);
+		for (size_t x = 0; x < count; ++x)
+			subset.push_back(oResults[fChildMapping[x]]);
+
+		if (ZUtil_STL::sInsertIfNotContains(fPriors, subset))
+			{
+			if (oAnnotations)
+				oAnnotations->insert(localAnnotations.begin(), localAnnotations.end());
+			return true;
+			}
+		localAnnotations.clear();
+		}
 	}
 
 } // namespace ZQE

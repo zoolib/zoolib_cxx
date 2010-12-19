@@ -23,67 +23,80 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZQE {
 
+using std::map;
+using std::set;
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Walker_Product
 
-Walker_Product::Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_Right,
-	ZRef<Walker> iWalker_Right_Model, ZRef<Row> iRow_Left)
+Walker_Product::Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_Right)
 :	fWalker_Left(iWalker_Left)
 ,	fWalker_Right(iWalker_Right)
-,	fWalker_Right_Model(iWalker_Right_Model)
-,	fRow_Left(iRow_Left)
-	{}
-
-Walker_Product::Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_Right_Model)
-:	fWalker_Left(iWalker_Left)
-,	fWalker_Right_Model(iWalker_Right_Model)
+,	fNeedLoadLeft(true)
 	{}
 
 Walker_Product::~Walker_Product()
 	{}
 
-size_t Walker_Product::NameCount()
-	{ return fWalker_Left->NameCount() + fWalker_Right_Model->NameCount(); }
-
-string8 Walker_Product::NameAt(size_t iIndex)
+void Walker_Product::Rewind()
 	{
-	const size_t leftCount = fWalker_Left->NameCount();
-	if (iIndex >= leftCount)
-		return fWalker_Right_Model->NameAt(iIndex - leftCount);
-	else
-		return fWalker_Left->NameAt(iIndex);
+	fNeedLoadLeft = true;
+	fWalker_Left->Rewind();
+	fWalker_Right->Rewind();
 	}
 
-ZRef<Walker> Walker_Product::Clone()
+void Walker_Product::Prime(const std::map<string8,size_t>& iBindingOffsets, 
+	std::map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
 	{
-	if (fWalker_Right)
-		{
-		return new Walker_Product(fWalker_Left->Clone(), fWalker_Right->Clone(),
-			fWalker_Right_Model->Clone(), fRow_Left);
-		}
-	else
-		{
-		return new Walker_Product(fWalker_Left->Clone(), fWalker_Right_Model->Clone());
-		}
+	fBaseOffset = ioBaseOffset;
+
+	map<string8,size_t> leftOffsets;
+	size_t leftWidth = 0;
+	fWalker_Left->Prime(map<string8,size_t>(), leftOffsets, leftWidth);
+	for (map<string8,size_t>::iterator i = leftOffsets.begin(); i != leftOffsets.end(); ++i)
+		oOffsets[i->first] = fBaseOffset + i->second;
+	ioBaseOffset += leftWidth;
+	fResults_Left.resize(leftWidth);
+
+	fWalker_Right->Prime(map<string8,size_t>(), oOffsets, ioBaseOffset);
 	}
 
-ZRef<Row> Walker_Product::ReadInc(ZMap_Any iBindings)
+bool Walker_Product::ReadInc(const ZVal_Any* iBindings,
+	ZVal_Any* oResults,
+	set<ZRef<ZCounted> >* oAnnotations)
 	{
+	set<ZRef<ZCounted> > localAnnotations;
+	set<ZRef<ZCounted> >* localAnnotationsPtr = nullptr;
+	if (oAnnotations)
+		localAnnotationsPtr = &localAnnotations;
+
 	for (;;)
 		{
-		if (!fWalker_Right)
+		if (fNeedLoadLeft)
 			{
-			fWalker_Right = fWalker_Right_Model->Clone();
-			fRow_Left = fWalker_Left->ReadInc(iBindings);
-			if (!fRow_Left)
-				return null;			
+			fNeedLoadLeft = false;
+			fAnnotations_Left.clear();
+			fWalker_Right->Rewind();
+			if (!fWalker_Left->ReadInc(nullptr, &fResults_Left[0], &fAnnotations_Left))
+				return false;
 			}
 
-		if (ZRef<Row> theRow_Right = fWalker_Right->ReadInc(iBindings))
-			return new Row_Pair(fRow_Left, theRow_Right);
+		if (fWalker_Right->ReadInc(nullptr, oResults, localAnnotationsPtr))
+			{
+			if (oAnnotations)
+				{
+				oAnnotations->insert(fAnnotations_Left.begin(), fAnnotations_Left.end());
+				oAnnotations->insert(localAnnotations.begin(), localAnnotations.end());
+				}
+			std::copy(fResults_Left.begin(), fResults_Left.end(), &oResults[fBaseOffset]);
+			return true;
+			}
 
-		fWalker_Right.Clear();
+		fNeedLoadLeft = true;
+		localAnnotations.clear();
 		}
 	}
 

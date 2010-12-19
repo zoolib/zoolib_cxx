@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Walker.h"
 
 #include <map>
-#include <deque>
+#include <vector>
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -97,8 +97,19 @@ private:
 
 	class Walker;
 	friend class Walker;
-	ZRef<ZQE::Row> pReadInc(ZRef<Walker> iWalker);
 
+	void pRewind(ZRef<Walker> iWalker);
+
+	void pPrime(ZRef<Walker> iWalker,
+		const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	bool pReadInc(ZRef<Walker> iWalker,
+		const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
+	
 	bool pPull();
 
 	ZRef<ZDataset::Dataset> fDataset;
@@ -109,7 +120,7 @@ private:
 
 	typedef std::map<ZDataset::Daton, std::pair<ZVal_Any, bool> > Map_Pending;
 	Map_Pending fMap_Pending;
-	std::deque<Map_Pending> fStack;
+	std::vector<Map_Pending> fStack;
 	bool fStackChanged;
 
 	class PQuery;

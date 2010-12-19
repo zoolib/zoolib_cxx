@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable.h"
 #include "zoolib/zqe/ZQE_Walker.h"
+#include "zoolib/zra/ZRA_RelHead.h"
 
 namespace ZooLib {
 namespace ZQE {
@@ -32,19 +33,15 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Walker_Extend
 
-class Walker_Extend : public Walker
+class Walker_Extend : public Walker_Unary
 	{
 public:
 	Walker_Extend(ZRef<Walker> iWalker, const string8& iRelName);
 	virtual ~Walker_Extend();
 
-// From ZQE::Walker
-	virtual size_t NameCount();
-	virtual string8 NameAt(size_t iIndex);
-
 protected:
-	ZRef<Walker> fWalker;
 	const string8 fRelName;
+	size_t fOutputOffset;
 	};
 
 // =================================================================================================
@@ -59,11 +56,18 @@ public:
 	virtual ~Walker_Extend_Calculate();
 
 // From ZQE::Walker
-	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
 	const ZRef<ZCallable<ZVal_Any(ZMap_Any)> > fCallable;
+	std::map<string8,size_t> fBindingOffsets;
+	std::map<string8,size_t> fChildOffsets;
 	};
 
 // =================================================================================================
@@ -74,15 +78,23 @@ class Walker_Extend_Rel : public Walker_Extend
 	{
 public:
 	Walker_Extend_Rel(ZRef<Walker> iWalker, const string8& iRelName,
-		ZRef<Walker> iWalker_Child_Model);
+		ZRef<Walker> iWalker_Ext);
 	virtual ~Walker_Extend_Rel();
 
 // From ZQE::Walker
-	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
-	const ZRef<Walker> fWalker_Child_Model;
+	const ZRef<Walker> fWalker_Ext;
+	ZRA::RelHead fExtRelHead;
+	std::vector<size_t> fExtOffsets;
+	size_t fExtWidth;
 	};
 
 // =================================================================================================
@@ -91,19 +103,22 @@ private:
 
 class Walker_Extend_Val : public Walker_Extend
 	{
-	Walker_Extend_Val(ZRef<Walker> iWalker, const string8& iRelName,
-		ZRef<Row> iRow);
 public:
 	Walker_Extend_Val(ZRef<Walker> iWalker, const string8& iRelName,
 		const ZVal_Any& iVal);
 	virtual ~Walker_Extend_Val();
 
 // From ZQE::Walker
-	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
-	const ZRef<Row> fRow;
+	const ZVal_Any fVal;
 	};
 
 } // namespace ZQE

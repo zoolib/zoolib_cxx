@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZIntervalTreeClock.h"
 
 #include "zoolib/dataspace/ZDataspace_SearchSpec.h"
-#include "zoolib/zqe/ZQE_ResultSet.h"
-#include "zoolib/zqe/ZQE_Row.h"
+#include "zoolib/zqe/ZQE_Result.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 #include "zoolib/zra/ZRA_RelHead.h"
 
@@ -57,19 +56,13 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * SearchRows
-
-typedef ZQE::ResultSet SearchRows;
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * SearchResult
 
 class SearchResult
 	{
 public:
 	int64 fRefcon;
-	ZRef<ZQE::ResultSet> fResultSet;
+	ZRef<ZQE::Result> fResult;
 	};
 
 // =================================================================================================

@@ -18,12 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_ResultSet.h"
+#include "zoolib/zqe/ZQE_Result.h"
 #include "zoolib/zqe/ZQE_Walker_Extend.h"
 
 namespace ZooLib {
 namespace ZQE {
 
+using std::map;
+using std::set;
 using std::vector;
 
 // =================================================================================================
@@ -31,21 +33,12 @@ using std::vector;
 #pragma mark * Walker_Extend
 
 Walker_Extend::Walker_Extend(ZRef<Walker> iWalker, const string8& iRelName)
-:	fWalker(iWalker)
+:	Walker_Unary(iWalker)
 ,	fRelName(iRelName)
 	{}
+
 Walker_Extend::~Walker_Extend()
 	{}
-
-size_t Walker_Extend::NameCount()
-	{ return fWalker->NameCount() + 1; }
-
-string8 Walker_Extend::NameAt(size_t iIndex)
-	{
-	if (iIndex == 0)
-		return fRelName;
-	return fWalker->NameAt(iIndex - 1);
-	}
 
 // =================================================================================================
 #pragma mark -
@@ -55,25 +48,40 @@ Walker_Extend_Calculate::Walker_Extend_Calculate(ZRef<Walker> iWalker, const str
 	ZRef<ZCallable<ZVal_Any(ZMap_Any)> > iCallable)
 :	Walker_Extend(iWalker, iRelName)
 ,	fCallable(iCallable)
-	{}
+	{
+	//## Need better API on the callable, so it can look up data in bindings (and output?)
+	}
 
 Walker_Extend_Calculate::~Walker_Extend_Calculate()
 	{}
 
-ZRef<Walker> Walker_Extend_Calculate::Clone()
-	{ return new Walker_Extend_Calculate(fWalker->Clone(), fRelName, fCallable); }
-
-ZRef<Row> Walker_Extend_Calculate::ReadInc(ZMap_Any iBindings)
+void Walker_Extend_Calculate::Prime(const std::map<string8,size_t>& iBindingOffsets, 
+	std::map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
 	{
-	if (ZRef<Row, false> theRow = fWalker->ReadInc(iBindings))
-		{ return null; }
-	else
-		{
-		ZMap_Any theBindings = iBindings;
-		for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
-			theBindings.Set(fWalker->NameAt(x), theRow->Get(x));
-		return new Row_Pair(new Row_Val(fCallable->Call(theBindings)), theRow);
-		}
+	fOutputOffset = ioBaseOffset++;
+	oOffsets[fRelName] = fOutputOffset;
+
+	fBindingOffsets = iBindingOffsets;
+	fWalker->Prime(iBindingOffsets, fChildOffsets, ioBaseOffset);
+	oOffsets.insert(fChildOffsets.begin(), fChildOffsets.end());
+	}
+
+bool Walker_Extend_Calculate::ReadInc(const ZVal_Any* iBindings,
+	ZVal_Any* oResults,
+	set<ZRef<ZCounted> >* oAnnotations)
+	{
+	if (!fWalker->ReadInc(iBindings, oResults, oAnnotations))
+		return false;
+
+	ZMap_Any theMap;
+	for (map<string8,size_t>::iterator i = fBindingOffsets.begin(); i != fBindingOffsets.end(); ++i)
+		theMap.Set(i->first, iBindings[i->second]);
+	for (map<string8,size_t>::iterator i = fChildOffsets.begin(); i != fChildOffsets.end(); ++i)
+		theMap.Set(i->first, oResults[i->second]);
+
+	oResults[fOutputOffset] = fCallable->Call(theMap);
+	return true;
 	}
 
 // =================================================================================================
@@ -81,41 +89,60 @@ ZRef<Row> Walker_Extend_Calculate::ReadInc(ZMap_Any iBindings)
 #pragma mark * Walker_Extend_Rel
 
 Walker_Extend_Rel::Walker_Extend_Rel(ZRef<Walker> iWalker, const string8& iRelName,
-	ZRef<Walker> iWalker_Child_Model)
+	ZRef<Walker> iWalker_Ext)
 :	Walker_Extend(iWalker, iRelName)
-,	fWalker_Child_Model(iWalker_Child_Model)
+,	fWalker_Ext(iWalker_Ext)
+,	fExtWidth(0)
 	{}
 
 Walker_Extend_Rel::~Walker_Extend_Rel()
 	{}
 
-ZRef<Walker> Walker_Extend_Rel::Clone()
-	{ return new Walker_Extend_Rel(fWalker->Clone(), fRelName, fWalker_Child_Model); }
-
-ZRef<Row> Walker_Extend_Rel::ReadInc(ZMap_Any iBindings)
+void Walker_Extend_Rel::Prime(const std::map<string8,size_t>& iBindingOffsets, 
+	std::map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
 	{
-	if (ZRef<Row, false> theRow = fWalker->ReadInc(iBindings))
-		{ return null; }
-	else
+	fOutputOffset = ioBaseOffset++;
+	oOffsets[fRelName] = fOutputOffset;
+
+	map<string8,size_t> childOffsets;
+	fWalker->Prime(iBindingOffsets, childOffsets, ioBaseOffset);
+	oOffsets.insert(childOffsets.begin(), childOffsets.end());
+
+	map<string8,size_t> extOffsets;
+	fWalker_Ext->Prime(childOffsets, extOffsets, fExtWidth); 
+
+	fExtOffsets.reserve(extOffsets.size());
+	for (map<string8,size_t>::iterator i = extOffsets.begin(); i != extOffsets.end(); ++i)
 		{
-		ZMap_Any theBindings = iBindings;
-		for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
-			theBindings.Set(fWalker->NameAt(x), theRow->Get(x));
-
-		ZRef<Walker> theWalker = fWalker_Child_Model->Clone();
-
-		vector<string8> theRowHead;
-		for (size_t x = 0, count = theWalker->NameCount(); x < count; ++x)
-			theRowHead.push_back(theWalker->NameAt(x));
-
-		vector<ZRef<Row> > theRows;
-		for (ZRef<ZQE::Row> aRow; aRow = theWalker->ReadInc(theBindings); /*no inc*/)
-			theRows.push_back(aRow);
-
-		ZRef<ResultSet> theResultSet = new ResultSet(&theRowHead, new RowVector(&theRows));
-		
-		return new Row_Pair(new Row_Val(theResultSet), theRow);
+		fExtRelHead |= i->first;
+		fExtOffsets.push_back(i->second);
 		}
+	}
+
+bool Walker_Extend_Rel::ReadInc(const ZVal_Any* iBindings,
+	ZVal_Any* oResults,
+	set<ZRef<ZCounted> >* oAnnotations)
+	{
+	if (!fWalker->ReadInc(iBindings, oResults, oAnnotations))
+		return false;
+	
+	fWalker_Ext->Rewind();
+
+	vector<ZVal_Any> thePackedRows;
+	vector<ZVal_Any> extStorage(fExtWidth, ZVal_Any());
+	for (;;)
+		{
+		if (!fWalker_Ext->ReadInc(oResults, &extStorage[0], nullptr))
+			break;
+
+		for (vector<size_t>::iterator i = fExtOffsets.begin(); i != fExtOffsets.end(); ++i)
+			thePackedRows.push_back(extStorage[*i]);
+		}
+
+	ZRef<ZQE::Result> theResult = new ZQE::Result(fExtRelHead, &thePackedRows, nullptr);
+	oResults[fOutputOffset] = theResult;
+	return true;
 	}
 
 // =================================================================================================
@@ -123,28 +150,32 @@ ZRef<Row> Walker_Extend_Rel::ReadInc(ZMap_Any iBindings)
 #pragma mark * Walker_Extend_Val
 
 Walker_Extend_Val::Walker_Extend_Val(ZRef<Walker> iWalker, const string8& iRelName,
-	ZRef<Row> iRow)
-:	Walker_Extend(iWalker, iRelName)
-,	fRow(iRow)
-	{}
-	
-Walker_Extend_Val::Walker_Extend_Val(ZRef<Walker> iWalker, const string8& iRelName,
 	const ZVal_Any& iVal)
 :	Walker_Extend(iWalker, iRelName)
-,	fRow(new Row_Val(iVal))
+,	fVal(iVal)
 	{}
 
 Walker_Extend_Val::~Walker_Extend_Val()
 	{}
 
-ZRef<Walker> Walker_Extend_Val::Clone()
-	{ return new Walker_Extend_Val(fWalker, fRelName, fRow); }
-
-ZRef<Row> Walker_Extend_Val::ReadInc(ZMap_Any iBindings)
+void Walker_Extend_Val::Prime(const std::map<string8,size_t>& iBindingOffsets, 
+	std::map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
 	{
-	if (ZRef<Row> theRow = fWalker->ReadInc(iBindings))
-		return new Row_Pair(fRow, theRow);
-	return null;
+	fOutputOffset = ioBaseOffset++;
+	oOffsets[fRelName] = fOutputOffset;
+
+	fWalker->Prime(iBindingOffsets, oOffsets, ioBaseOffset);
+	}
+
+bool Walker_Extend_Val::ReadInc(const ZVal_Any* iBindings,
+	ZVal_Any* oResults,
+	set<ZRef<ZCounted> >* oAnnotations)
+	{
+	if (!fWalker->ReadInc(iBindings, oResults, oAnnotations))
+		return false;
+	oResults[fOutputOffset] = fVal;
+	return true;
 	}
 
 } // namespace ZQE

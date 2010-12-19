@@ -31,21 +31,22 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Walker_Rename
 
-class Walker_Rename : public Walker
+class Walker_Rename : public Walker_Unary
 	{
 public:
 	Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const string8& iOld);
 	virtual ~Walker_Rename();
 
 // From ZQE::Walker
-	virtual size_t NameCount();
-	virtual string8 NameAt(size_t iIndex);
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
 
-	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
-	ZRef<Walker> fWalker;
 	const string8 fNew;
 	const string8 fOld;
 	};

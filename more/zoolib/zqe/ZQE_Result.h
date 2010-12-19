@@ -18,47 +18,51 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Bool_ValPred_Any.h"
-#include "zoolib/zqe/ZQE_Walker_ValPred.h"
+#ifndef __ZQE_Result__
+#define __ZQE_Result__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZCounted.h"
+#include "zoolib/ZUnicodeString.h"
+#include "zoolib/ZVal_Any.h"
+
+#include "zoolib/zra/ZRA_RelHead.h"
+
+#include <set>
+#include <vector>
 
 namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_ValPred
+#pragma mark * Result
 
-Walker_ValPred::Walker_ValPred(
-	ZRef<Walker> iWalker, const ZValPred_Any& iValPred)
-:	fWalker(iWalker)
-,	fValPred(iValPred)
-	{}
-
-Walker_ValPred::~Walker_ValPred()
-	{}
-
-size_t Walker_ValPred::NameCount()
-	{ return fWalker->NameCount(); }
-
-string8 Walker_ValPred::NameAt(size_t iIndex)
-	{ return fWalker->NameAt(iIndex); }
-
-ZRef<Walker> Walker_ValPred::Clone()
-	{ return new Walker_ValPred(fWalker->Clone(), fValPred); }
-
-ZRef<Row> Walker_ValPred::ReadInc(ZMap_Any iBindings)
+class Result : public ZCounted
 	{
-	for (ZRef<Row> theRow; theRow = fWalker->ReadInc(iBindings); /*no inc*/)
-		{
-		ZMap_Any theMap = iBindings;
-		for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
-			theMap.Set(fWalker->NameAt(x), theRow->Get(x));
+public:
+	Result(const ZRA::RelHead& iRelHead,
+		std::vector<ZVal_Any>* ioPackedRows,
+		std::vector<std::vector<ZRef<ZCounted> > >* ioAnnotations);
 
-		if (sMatches(fValPred, theMap))
-			return theRow;
-		}
-	return null;
-	}
+	virtual ~Result();
+
+	const ZRA::RelHead& GetRelHead();
+
+	size_t Count();
+	const ZVal_Any* GetValsAt(size_t iIndex);
+	void GetAnnotationsAt(size_t iIndex, std::set<ZRef<ZCounted> >& oAnnotations);
+
+	int Compare(const ZRef<Result>& iOther);
+
+private:
+	ZRA::RelHead fRelHead;
+	std::vector<string8> fRowHead;
+	std::vector<ZVal_Any> fPackedRows;
+	std::vector<std::vector<ZRef<ZCounted> > > fAnnotations;
+	};
 
 } // namespace ZQE
 } // namespace ZooLib
+
+#endif // __ZQE_Result__

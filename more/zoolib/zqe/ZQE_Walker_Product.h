@@ -33,26 +33,28 @@ namespace ZQE {
 
 class Walker_Product : public Walker
 	{
-	Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_Right,
-		ZRef<Walker> iRight_Model, ZRef<Row> iRow_Left);
-
 public:
-	Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_Right_Model);
+	Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_Right);
 	virtual ~Walker_Product();
 
 // From ZQE::Walker
-	virtual size_t NameCount();
-	virtual string8 NameAt(size_t iIndex);
+	virtual void Rewind();
 
-	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
 	ZRef<Walker> fWalker_Left;
 	ZRef<Walker> fWalker_Right;
-	ZRef<Walker> fWalker_Right_Model;
-	
-	ZRef<Row> fRow_Left;
+	std::vector<ZVal_Any> fResults_Left;
+	std::set<ZRef<ZCounted> > fAnnotations_Left;
+	size_t fBaseOffset;
+	bool fNeedLoadLeft;
 	};
 
 } // namespace ZQE

@@ -32,22 +32,25 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Walker_Select
 
-class Walker_Select : public Walker
+class Walker_Select : public Walker_Unary
 	{
 public:
 	Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool);
 	virtual ~Walker_Select();
 
 // From ZQE::Walker
-	virtual size_t NameCount();
-	virtual string8 NameAt(size_t iIndex);
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
 
-	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
-	ZRef<Walker> fWalker;
 	ZRef<ZExpr_Bool> fExpr_Bool;
+	std::map<string8,size_t> fBindingOffsets;
+	std::map<string8,size_t> fChildOffsets;
 	};
 
 } // namespace ZQE

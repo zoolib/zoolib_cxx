@@ -20,8 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_Vector.h"
-#include "zoolib/zqe/ZQE_ResultSet.h"
+#include "zoolib/zqe/ZQE_Result.h"
 
+using std::set;
 using std::vector;
 
 namespace ZooLib {
@@ -30,7 +31,7 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * sCompare
 
-template <> int sCompare_T(const ZRef<ZQE::ResultSet>& iL, const ZRef<ZQE::ResultSet>& iR)
+template <> int sCompare_T(const ZRef<ZQE::Result>& iL, const ZRef<ZQE::Result>& iR)
 	{
 	if (iL)
 		{
@@ -45,46 +46,54 @@ template <> int sCompare_T(const ZRef<ZQE::ResultSet>& iL, const ZRef<ZQE::Resul
 	return 0;
 	}
 
-ZMACRO_CompareRegistration_T(ZRef<ZQE::ResultSet>)
+ZMACRO_CompareRegistration_T(ZRef<ZQE::Result>)
 
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ResultSet
+#pragma mark * Result
 
-ResultSet::ResultSet(const std::vector<string8>& iRowHead, ZRef<RowVector> iRowVector)
-:	fRowHead(iRowHead)
-,	fRowVector(iRowVector)
+Result::Result(const ZRA::RelHead& iRelHead,
+	vector<ZVal_Any>* ioPackedRows,
+	vector<vector<ZRef<ZCounted> > >* ioAnnotations)
+:	fRelHead(iRelHead)
 	{
-	ZAssert(fRowVector);
+	ioPackedRows->swap(fPackedRows);
+	const size_t theCount = fPackedRows.size() / fRelHead.size();
+	if (ioAnnotations)
+		{
+		ioAnnotations->swap(fAnnotations);
+		ZAssert(fAnnotations.size() == theCount);
+		}
+	}
+Result::~Result()
+	{}
+
+const ZRA::RelHead& Result::GetRelHead()
+	{ return fRelHead; }
+
+size_t Result::Count()
+	{ return fPackedRows.size() / fRelHead.size(); }
+
+const ZVal_Any* Result::GetValsAt(size_t iIndex)
+	{ return &fPackedRows[fRelHead.size() * iIndex]; }
+
+void Result::GetAnnotationsAt(size_t iIndex, set<ZRef<ZCounted> >& oAnnotations)
+	{
+	if (iIndex < fAnnotations.size())
+		{
+		const vector<ZRef<ZCounted> >& theAnnotations = fAnnotations[iIndex];
+		oAnnotations.insert(theAnnotations.begin(), theAnnotations.end());
+		}
 	}
 
-ResultSet::ResultSet(std::vector<string8>* ioRowHead, ZRef<RowVector> iRowVector)
-:	fRowVector(iRowVector)
-	{
-	ZAssert(fRowVector);
-	ioRowHead->swap(fRowHead);
-	}
-
-ResultSet::ResultSet(std::vector<string8>* ioRowHead)
-	{
-	ioRowHead->swap(fRowHead);
-	fRowVector = new RowVector;
-	}
-
-const std::vector<string8>& ResultSet::GetRowHead()
-	{ return fRowHead; }
-
-ZRef<RowVector> ResultSet::GetRowVector()
-	{ return fRowVector; }
-
-int ResultSet::Compare(const ZRef<ResultSet>& iOther)
+int Result::Compare(const ZRef<Result>& iOther)
 	{
 	if (int compare = sCompare_T(fRowHead, iOther->fRowHead))
 		return compare;
 
-	return sCompare_T(fRowVector, iOther->fRowVector);
+	return sCompare_T(fPackedRows, iOther->fPackedRows);
 	}
 
 } // namespace ZQE

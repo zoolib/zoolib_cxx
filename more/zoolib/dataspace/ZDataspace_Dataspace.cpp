@@ -58,8 +58,8 @@ public:
 
 	DListHead<DLink_Sieve_Using> fSieves_Using;
 
-	ZRef<SearchRows> fSearchRows_Local;
-	ZRef<SearchRows> fSearchRows_Source;
+	ZRef<ZQE::Result> fSearchRows_Local;
+	ZRef<ZQE::Result> fSearchRows_Source;
 	};
 
 // =================================================================================================
@@ -279,7 +279,7 @@ void Dataspace::SourceUpdate()
 		{
 		PSieve* thePSieve = fRefcon_To_PSieveStar[i->fRefcon];
 		ZAssert(thePSieve);
-		thePSieve->fSearchRows_Source = i->fResultSet;
+		thePSieve->fSearchRows_Source = i->fResult;
 		fPSieves_Changed.InsertIfNotContains(thePSieve);
 		}
 
@@ -373,7 +373,7 @@ void Dataspace::pFinalize(Sieve* iSieve)
 		}
 	}
 
-ZRef<SearchRows> Dataspace::pGetSearchRows(Sieve* iSieve)
+ZRef<ZQE::Result> Dataspace::pGetSearchRows(Sieve* iSieve)
 	{
 	if (fSieves_JustRegistered.Contains(iSieve))
 		return null;
@@ -413,7 +413,7 @@ void Sieve::Loaded()
 void Sieve::Changed(bool iIsLoad)
 	{}
 
-ZRef<SearchRows> Sieve::GetSearchRows()
+ZRef<ZQE::Result> Sieve::GetSearchRows()
 	{
 	if (fPSieve)
 		return fPSieve->fDataspace->pGetSearchRows(this);

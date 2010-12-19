@@ -23,8 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZQE {
 
-using std::vector;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Walker
@@ -34,6 +32,20 @@ Walker::Walker()
 
 Walker::~Walker()
 	{}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Walker_Unary
+
+Walker_Unary::Walker_Unary(ZRef<Walker> iWalker)
+:	fWalker(iWalker)
+	{}
+
+Walker_Unary::~Walker_Unary()
+	{}
+
+void Walker_Unary::Rewind()
+	{ fWalker->Rewind(); }
 
 } // namespace ZQE
 } // namespace ZooLib

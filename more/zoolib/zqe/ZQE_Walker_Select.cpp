@@ -24,38 +24,97 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZQE {
 
+using std::map;
+using std::set;
+
+class Context : public ZValContext
+	{
+public:
+	const ZVal_Any* fBindings;
+	const ZVal_Any* fResults;
+	};
+
+#if 0
+
+maybe just bodge it for now -- pack all of iBindings and oResults into a ZMap_Any.
+
+class Visitor
+:	public virtual ZVisitor_Expr_Bool_ValPred_T<ZVal_Any>
+	{
+public:
+	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_T<ZVal_Any> > iExpr);
+	};
+
+template <class Val>
+void Visitor::Visit_Expr_Bool_ValPred(
+	ZRef<ZExpr_Bool_ValPred_T<ZVal_Any> > iExpr)
+	{
+	
+	this->Visit_Expr_Op0(iExpr);
+	}
+
+#endif
+
+static bool spMatches(const ZVal_Any* iBindings, const ZVal_Any* iResults, ZRef<ZExpr_Bool> iExpr)
+	{
+	Context theContext;
+	theContext.fBindings = iBindings;
+	theContext.fResults = iResults;
+	
+	ZUnimplemented();
+	return false;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Walker_Select
 
 Walker_Select::Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool)
-:	fWalker(iWalker)
+:	Walker_Unary(iWalker)
 ,	fExpr_Bool(iExpr_Bool)
-	{}
+	{
+	}
 
 Walker_Select::~Walker_Select()
 	{}
 
-size_t Walker_Select::NameCount()
-	{ return fWalker->NameCount(); }
-
-string8 Walker_Select::NameAt(size_t iIndex)
-	{ return fWalker->NameAt(iIndex); }
-
-ZRef<Walker> Walker_Select::Clone()
-	{ return new Walker_Select(fWalker->Clone(), fExpr_Bool); }
-
-ZRef<Row> Walker_Select::ReadInc(ZMap_Any iBindings)
+void Walker_Select::Prime(const std::map<string8,size_t>& iBindingOffsets, 
+	std::map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
 	{
-	for (ZRef<Row> theRow; theRow = fWalker->ReadInc(iBindings); /*no inc*/)
+	fBindingOffsets = iBindingOffsets;
+	fWalker->Prime(iBindingOffsets, fChildOffsets, ioBaseOffset);
+	oOffsets.insert(fChildOffsets.begin(), fChildOffsets.end());
+	}
+
+bool Walker_Select::ReadInc(const ZVal_Any* iBindings,
+	ZVal_Any* oResults,
+	set<ZRef<ZCounted> >* oAnnotations)
+	{
+	set<ZRef<ZCounted> > localAnnotations;
+	set<ZRef<ZCounted> >* localAnnotationsPtr = nullptr;
+	if (oAnnotations)
+		localAnnotationsPtr = &localAnnotations;
+
+	for (;;)
 		{
-		ZMap_Any theBindings = iBindings;
-		for (size_t x = 0, count = fWalker->NameCount(); x < count; ++x)
-			theBindings.Set(fWalker->NameAt(x), theRow->Get(x));
-		if (sMatches(fExpr_Bool, theBindings))
-			return theRow;
+		if (!fWalker->ReadInc(iBindings, oResults, localAnnotationsPtr))
+			return false;
+
+		ZMap_Any theMap;
+		for (map<string8,size_t>::iterator i = fBindingOffsets.begin(); i != fBindingOffsets.end(); ++i)
+			theMap.Set(i->first, iBindings[i->second]);
+		for (map<string8,size_t>::iterator i = fChildOffsets.begin(); i != fChildOffsets.end(); ++i)
+			theMap.Set(i->first, oResults[i->second]);
+		
+		if (sMatches(fExpr_Bool, theMap))
+			{
+			if (oAnnotations)
+				oAnnotations->insert(localAnnotations.begin(), localAnnotations.end());
+			return true;
+			}
+		localAnnotations.clear();
 		}
-	return null;
 	}
 
 } // namespace ZQE

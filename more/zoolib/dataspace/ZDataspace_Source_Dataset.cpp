@@ -135,13 +135,18 @@ public:
 	virtual ~Walker();
 
 // From ZQE::Walker
-	virtual size_t NameCount();
-	virtual string8 NameAt(size_t iIndex);
+	virtual void Rewind();
 
-	virtual ZRef<ZQE::Walker> Clone();
-	virtual ZRef<ZQE::Row> ReadInc(ZMap_Any iBindings);
+	virtual void Prime(const map<string8,size_t>& iBindingOffsets, 
+		map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		set<ZRef<ZCounted> >* oAnnotations);
 
 	Source_Dataset* fSource;
+	size_t fBaseOffset;
 	vector<string8> fNames;
 	Map_Main::const_iterator fCurrent_Main;
 	Map_Pending::const_iterator fCurrent_Pending;
@@ -160,21 +165,18 @@ Source_Dataset::Walker::Walker(Source_Dataset* iSource,
 Source_Dataset::Walker::~Walker()
 	{}
 
-size_t Source_Dataset::Walker::NameCount()
-	{ return fNames.size(); }
+void Source_Dataset::Walker::Rewind()
+	{ fSource->pRewind(this); }
 
-string8 Source_Dataset::Walker::NameAt(size_t iIndex)
-	{
-	if (iIndex < fNames.size())
-		return fNames[iIndex];
-	return string8();
-	}
+void Source_Dataset::Walker::Prime(const map<string8,size_t>& iBindingOffsets, 
+	map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
+	{ fSource->pPrime(this, iBindingOffsets, oOffsets, ioBaseOffset); }
 
-ZRef<ZQE::Walker> Source_Dataset::Walker::Clone()
-	{ return new Walker(fSource, fNames, fCurrent_Main, fCurrent_Pending); }
-
-ZRef<ZQE::Row> Source_Dataset::Walker::ReadInc(ZMap_Any iBindings)
-	{ return fSource->pReadInc(this); }
+bool Source_Dataset::Walker::ReadInc(const ZVal_Any* iBindings,
+	ZVal_Any* oResults,
+	set<ZRef<ZCounted> >* oAnnotations)
+	{ return fSource->pReadInc(this, iBindings, oResults, oAnnotations); }
 
 // =================================================================================================
 #pragma mark -
@@ -237,18 +239,53 @@ void Source_Dataset::Update(
 			{
 			ZRef<ZQE::Walker> theWalker =
 				Visitor_DoMakeWalker(this).Do(iter_RefconToPQuery->second->fRel);
+			
+			map<string8,size_t> offsets;
+			size_t baseOffset = 0;
+			theWalker->Prime(map<string8,size_t>(), offsets, baseOffset);
 
-			vector<string8> theRowHead;
-			for (size_t x = 0, count = theWalker->NameCount(); x < count; ++x)
-				theRowHead.push_back(theWalker->NameAt(x));
+			RelHead theRelHead;
+			for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
+				theRelHead.insert(i->first);
 
-			vector<ZRef<ZQE::Row> > theRows;
-			for (ZRef<ZQE::Row> theRow; theRow = theWalker->ReadInc(ZMap_Any()); /*no inc*/)
-				theRows.push_back(theRow);
+			if (ZLOGF(s, eDebug))
+				{
+				for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
+					{
+					s << i->first << ": ";
+					s.Writef("%d, ", int(i->second));
+					}
+				}
+
+			vector<ZVal_Any> thePackedRows;
+			vector<vector<ZRef<ZCounted> > > theAnnotationsVector;
+			vector<ZVal_Any> theRow(baseOffset, ZVal_Any());
+			for (;;)
+				{
+				set<ZRef<ZCounted> > theAnnotations;
+				if (!theWalker->ReadInc(nullptr, &theRow[0], &theAnnotations))
+					break;
+				
+				theAnnotationsVector.push_back(vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
+				
+				for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
+					thePackedRows.push_back(theRow[i->second]);
+
+				if (ZLOGF(s, eDebug))
+					{
+					s.Writef("annotations.size(): %d\n", int(theAnnotations.size()));
+					for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
+						{
+						ZYad_ZooLibStrim::sToStrim(sMakeYadR(theRow[i->second]), s);
+						s << ", ";
+						}
+					}
+
+				}
 
 			SearchResult theSearchResult;
 			theSearchResult.fRefcon = iter_RefconToPQuery->first;
-			theSearchResult.fResultSet = new ZQE::ResultSet(&theRowHead, new ZQE::RowVector(&theRows));
+			theSearchResult.fResult = new ZQE::Result(theRelHead, &thePackedRows, &theAnnotationsVector);
 			oChanged.push_back(theSearchResult);
 			}
 		}
@@ -331,33 +368,26 @@ ZRef<ZQE::Walker> Source_Dataset::pMakeWalker(const RelHead& iRelHead)
 	return new Walker(this, theNames, fMap.begin(), fMap_Pending.begin());
 	}
 
-static ZRef<ZQE::Row_ValVector> spMakeRow(
-	const ZMap_Any& iMap, const vector<string8>& iNames)
+void Source_Dataset::pRewind(ZRef<Walker> iWalker)
 	{
-	const size_t nameCount = iNames.size();
-	vector<ZVal_Any> theVals;
-	theVals.resize(nameCount);
-	bool allGood = true;
-	for (size_t x = 0; x < nameCount; ++x)
-		{
-		if (const ZVal_Any* theVal = iMap.PGet(iNames[x]))
-			{
-			theVals[x] = *theVal;
-			}
-		else
-			{
-			allGood = false;
-			break;
-			}
-		}
-
-	if (allGood)
-		return new ZQE::Row_ValVector(&theVals);
-
-	return null;
+	iWalker->fCurrent_Main = fMap.begin();
+	iWalker->fCurrent_Pending = fMap_Pending.begin();
 	}
 
-ZRef<ZQE::Row> Source_Dataset::pReadInc(ZRef<Walker> iWalker)
+void Source_Dataset::pPrime(ZRef<Walker> iWalker,
+	const std::map<string8,size_t>& iBindingOffsets, 
+	std::map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
+	{
+	iWalker->fBaseOffset = ioBaseOffset;
+	for (size_t x = 0; x < iWalker->fNames.size(); ++x)
+		oOffsets[iWalker->fNames[x]] = ioBaseOffset++;
+	}
+
+bool Source_Dataset::pReadInc(ZRef<Walker> iWalker,
+	const ZVal_Any* iBindings,
+	ZVal_Any* oResults,
+	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	while (iWalker->fCurrent_Main != fMap.end())
 		{
@@ -366,11 +396,21 @@ ZRef<ZQE::Row> Source_Dataset::pReadInc(ZRef<Walker> iWalker)
 			{
 			if (const ZMap_Any* theMap = iWalker->fCurrent_Main->second.second.PGet<ZMap_Any>())
 				{
-				if (ZRef<ZQE::Row_ValVector> theRow = spMakeRow(*theMap, iWalker->fNames))
+				bool gotAll = true;
+				for (size_t x = 0; x < iWalker->fNames.size(); ++x)
 					{
-					theRow->AddAnnotation(new Annotation_Daton(iWalker->fCurrent_Main->first));
+					if (const ZVal_Any* theVal = theMap->PGet(iWalker->fNames[x]))
+						oResults[iWalker->fBaseOffset + x] = *theVal;
+					else
+						gotAll = false;
+					}
+
+				if (gotAll)
+					{
+					if (oAnnotations)
+						oAnnotations->insert(new Annotation_Daton(iWalker->fCurrent_Main->first));
 					++iWalker->fCurrent_Main;
-					return theRow;
+					return true;
 					}
 				}
 			}
@@ -384,18 +424,28 @@ ZRef<ZQE::Row> Source_Dataset::pReadInc(ZRef<Walker> iWalker)
 			{
 			if (const ZMap_Any* theMap = iWalker->fCurrent_Pending->second.first.PGet<ZMap_Any>())
 				{
-				if (ZRef<ZQE::Row_ValVector> theRow = spMakeRow(*theMap, iWalker->fNames))
+				bool gotAll = true;
+				for (size_t x = 0; x < iWalker->fNames.size(); ++x)
 					{
-					theRow->AddAnnotation(new Annotation_Daton(iWalker->fCurrent_Pending->first));
+					if (const ZVal_Any* theVal = theMap->PGet(iWalker->fNames[x]))
+						oResults[iWalker->fBaseOffset + x] = *theVal;
+					else
+						gotAll = false;
+					}
+
+				if (gotAll)
+					{
+					if (oAnnotations)
+						oAnnotations->insert(new Annotation_Daton(iWalker->fCurrent_Pending->first));
 					++iWalker->fCurrent_Pending;
-					return theRow;
+					return true;
 					}
 				}
 			}
 		++iWalker->fCurrent_Pending;
 		}
 
-	return null;
+	return false;
 	}
 
 bool Source_Dataset::pPull()

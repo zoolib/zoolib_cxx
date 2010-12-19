@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal_Any.h"
 
-#include "zoolib/zqe/ZQE_Row.h"
+#include <set>
 
 namespace ZooLib {
 namespace ZQE {
@@ -44,11 +44,34 @@ public:
 	virtual ~Walker();
 
 // Our protocol
-	virtual size_t NameCount() = 0;
-	virtual string8 NameAt(size_t iIndex) = 0;
+	virtual void Rewind() = 0;
 
-	virtual ZRef<Walker> Clone() = 0;
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings) = 0;
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset) = 0;
+
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations) = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Walker_Unary
+
+class Walker_Unary : public Walker
+	{
+protected:
+	Walker_Unary(ZRef<Walker> iWalker);
+
+public:
+	virtual ~Walker_Unary();
+
+// From ZQE::Walker
+	virtual void Rewind();
+
+protected:
+	ZRef<Walker> fWalker;
 	};
 
 } // namespace ZQE

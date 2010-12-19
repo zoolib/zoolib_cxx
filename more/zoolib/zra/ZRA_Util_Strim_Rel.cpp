@@ -59,8 +59,9 @@ void spWrite_RelHead(const RelHead& iRelHead, const ZStrimW& iStrimW)
 
 void spWrite_EffectiveRelHeadComment(ZRef<Expr_Rel> iExpr, const ZStrimW& iStrimW)
 	{
-	iStrimW.Write(" // ");
+	iStrimW.Write(" /*");
 	Util_Strim_RelHead::sWrite_RelHead(sGetRelHead(iExpr), iStrimW);
+	iStrimW.Write("*/");
 	}
 
 } // anonymous namespace
@@ -146,15 +147,15 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Extend(ZRef<Expr_Rel_Extend> iExpr)
 	this->pWriteLFIndent();
 	w << "(";
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp0());
-	w << ",";
-
-	this->pWriteLFIndent();
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
 	w << ",";
 
 	this->pWriteLFIndent();
 	this->pDoToStrim(iExpr->GetExtension());
+	w << ",";
+
+	this->pWriteLFIndent();
+	this->pDoToStrim(iExpr->GetOp0());
 
 	this->pWriteLFIndent();
 	w << ")";
@@ -293,7 +294,12 @@ void Visitor_DoToStrim::pWriteBinary(
 #pragma mark * ZUtil_Strim_TQL
 
 void sToStrim(const Rel& iRel, const ZStrimW& iStrimW)
-	{ sToStrim(iRel, Options(), iStrimW); }
+	{
+	Options theOptions;
+//	theOptions.fEOLString = " ";
+//	theOptions.fIndentString.clear();
+	sToStrim(iRel, theOptions, iStrimW);
+	}
 
 void sToStrim(const Rel& iRel, const Options& iOptions, const ZStrimW& iStrimW)
 	{ Visitor_DoToStrim().DoToStrim(iOptions, iStrimW, iRel); }

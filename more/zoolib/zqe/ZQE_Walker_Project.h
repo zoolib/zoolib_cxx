@@ -32,22 +32,27 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Walker_Project
 
-class Walker_Project : public Walker
+class Walker_Project : public Walker_Unary
 	{
 public:
 	Walker_Project(ZRef<Walker> iWalker, const ZRA::RelHead& iRelHead);
 	virtual ~Walker_Project();
 
 // From ZQE::Walker
-	virtual size_t NameCount();
-	virtual string8 NameAt(size_t iIndex);
+	virtual void Rewind();
 
-	virtual ZRef<Walker> Clone();
-	virtual ZRef<Row> ReadInc(ZMap_Any iBindings);
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
-	ZRef<Walker> fWalker;
 	const ZRA::RelHead fRelHead;
+	std::vector<size_t> fChildMapping;
+	std::set<std::vector<ZVal_Any> > fPriors;
 	};
 
 } // namespace ZQE
