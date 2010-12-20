@@ -174,6 +174,7 @@ bool Walker_Extend_Val::ReadInc(const ZVal_Any* iBindings,
 	{
 	if (!fWalker->ReadInc(iBindings, oResults, oAnnotations))
 		return false;
+
 	oResults[fOutputOffset] = fVal;
 	return true;
 	}

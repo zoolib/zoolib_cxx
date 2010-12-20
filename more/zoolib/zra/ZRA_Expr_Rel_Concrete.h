@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 #include "zoolib/zra/ZRA_RelHead.h"
-#include "zoolib/zra/ZRA_NameMap.h"
 
 namespace ZooLib {
 namespace ZRA {

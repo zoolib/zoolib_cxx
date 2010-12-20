@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZIntervalTreeClock.h"
 
-#include "zoolib/dataspace/ZDataspace_SearchSpec.h"
 #include "zoolib/zqe/ZQE_Result.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 #include "zoolib/zra/ZRA_RelHead.h"
@@ -36,8 +35,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDataspace {
 
-using ZIntervalTreeClock::Event;
 using ZIntervalTreeClock::Clock;
+using ZIntervalTreeClock::Event;
 
 using ZRA::RelHead;
 

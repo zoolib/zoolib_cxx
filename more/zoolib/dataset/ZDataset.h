@@ -35,8 +35,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDataset {
 
-using ZIntervalTreeClock::Event;
 using ZIntervalTreeClock::Clock;
+using ZIntervalTreeClock::Event;
 
 // =================================================================================================
 #pragma mark -

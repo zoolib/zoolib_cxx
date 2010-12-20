@@ -48,11 +48,11 @@ template <> int sCompare_T(const ZRef<ZQE::Result>& iL, const ZRef<ZQE::Result>&
 
 ZMACRO_CompareRegistration_T(ZRef<ZQE::Result>)
 
-namespace ZQE {
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * Result
+#pragma mark * ZQE::Result
+
+namespace ZQE {
 
 Result::Result(const ZRA::RelHead& iRelHead,
 	vector<ZVal_Any>* ioPackedRows,

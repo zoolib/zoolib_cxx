@@ -31,28 +31,6 @@ using std::vector;
 #pragma mark -
 #pragma mark *
 
-#if 0
-
-const ZStrimW& operator<<(const ZStrimW& w, const SearchSpec& iSearchSpec)
-	{
-	w << "(";
-	bool isSubsequent = false;
-	for (vector<ZRA::NameMap>::const_iterator i = iSearchSpec.fNameMaps.begin();
-		i != iSearchSpec.fNameMaps.end(); ++i)
-		{
-		if (isSubsequent)
-			w << ", ";
-		isSubsequent = true;
-		w << *i;
-		}
-	w << ")\n";
-	ZVisitor_Expr_Bool_ValPred_DoToStrim()
-		.DoToStrim(ZVisitor_DoToStrim::Options(), w, sAsExpr_Bool(iSearchSpec.fPredCompound));
-	return w;
-	}
-
-#endif
-
 const ZStrimW& operator<<(const ZStrimW& w, const set<RelHead>& iSet)
 	{
 	bool isSubsequent = false;

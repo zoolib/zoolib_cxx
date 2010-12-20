@@ -25,12 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDataspace {
 
-using std::set;
-using std::vector;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * AddedSearch
 
 AddedSearch::AddedSearch(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel)
 :	fRefcon(iRefcon)
@@ -39,7 +36,7 @@ AddedSearch::AddedSearch(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * Source
 
 Source::Source()
 	{}
@@ -59,57 +56,3 @@ void Source::pInvokeCallable()
 } // namespace ZDataspace
 } // namespace ZooLib
 
-// =================================================================================================
-#pragma mark -
-#pragma mark *
-
-// Notes
-
-#if 0
-
-//##typedef string ReadableBy;
-
-class DeltaReadable
-	{
-	vector<ReadableBy> fReadableBy;
-	vector<ZData> fInserted;
-	vector<DataHash> fErased;
-	};
-
-class DeltaPack
-	{
-	Timestamp fTimestamp;
-	WrittenBy fWrittenBy;
-	vector<DeltaReadable> fDRs;
-	};
-
-Source
-	{
-	void Register(ZRef<Searcher>, Rel iRel);
-
-	void Update();
-	void Commit();
-	};
-
-// Synced from elsewhere, but no writes possible.
-// Some readonly datasets will actually fetch *everything* from elsewhere,
-// which they can then pass on to others, but will only make a subset
-// usable by the database layer.
-Source_ReadOnly
-	{
-	};
-
-class Source_Client
-	{
-	// Specify the list of ReadableBys we care about for this connection.
-	// If we're readwrite on the connection we'll also need to specify our WrittenBy thing.
-	};
-
-Source_ReadWrite
-	{
-	// Specify WrittenBy thing
-	void Insert(ReadableSet iRS, ZData iData);
-	void Erase(ReadableSet iRS, ZData iData);
-	};
-
-#endif

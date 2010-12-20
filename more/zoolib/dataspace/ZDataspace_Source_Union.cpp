@@ -35,7 +35,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
 #include "zoolib/zqe/ZQE_Walker_Product.h"
-#include "zoolib/zqe/ZQE_Walker_ValPredCompound.h"
 
 #include "zoolib/zra/ZRA_NameMap.h"
 #include "zoolib/zra/ZRA_Util_RelOperators.h"
@@ -871,7 +870,7 @@ void Source_Union::pUpdate(
 		PQuery* thePQuery = iter.Current();
 		SearchResult theSearchResult;
 		theSearchResult.fRefcon = thePQuery->fRefcon;
-		theSearchResult.fSearchRows = thePQuery->fSearchRows;
+		theSearchResult.fResult = thePQuery->fResult;
 		oChanged.push_back(theSearchResult);
 		}
 
