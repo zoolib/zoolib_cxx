@@ -205,23 +205,21 @@ Source_Dataset::~Source_Dataset()
 set<RelHead> Source_Dataset::GetRelHeads()
 	{ return set<RelHead>(); }
 
-void Source_Dataset::Update(
-	bool iLocalOnly,
+void Source_Dataset::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,
-	const int64* iRemoved, size_t iRemovedCount,
-	vector<SearchResult>& oChanged,
-	ZRef<Event>& oEvent)
+	const int64* iRemoved, size_t iRemovedCount)
 	{
-	oChanged.clear();
-
-	const bool anyChanges = fStackChanged || iAddedCount || iRemovedCount;
-	fStackChanged = false;
+	if (iAddedCount || iRemovedCount)
+		{
+		fStackChanged = true;
+		this->pInvokeCallable_ResultsAvailable();
+		}
 
 	while (iAddedCount--)
 		{
 		PQuery* thePQuery = new PQuery;
-		thePQuery->fRefcon = iAdded->fRefcon;
-		thePQuery->fRel = iAdded->fRel;
+		thePQuery->fRefcon = iAdded->GetRefcon();
+		thePQuery->fRel = iAdded->GetRel();
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
 
@@ -230,9 +228,20 @@ void Source_Dataset::Update(
 
 	while (iRemovedCount--)
 		delete ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPQuery, *iRemoved++);
+	}
+
+void Source_Dataset::CollectResults(std::vector<SearchResult>& oChanged)
+	{
+	oChanged.clear();
+
+	bool anyChanges = fStackChanged;
+	fStackChanged = false;
 
 	// Pick up (and index) values from dataset
-	if (this->pPull() || anyChanges)
+	if (this->pPull())
+		anyChanges = true;
+	
+	if (anyChanges)
 		{
 		for (map<int64, PQuery*>::iterator iter_RefconToPQuery = fMap_RefconToPQuery.begin();
 			iter_RefconToPQuery != fMap_RefconToPQuery.end(); ++iter_RefconToPQuery)
@@ -266,7 +275,8 @@ void Source_Dataset::Update(
 				if (!theWalker->ReadInc(nullptr, &theRow[0], &theAnnotations))
 					break;
 				
-				theAnnotationsVector.push_back(vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
+				theAnnotationsVector.push_back(
+					vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
 				
 				for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
 					thePackedRows.push_back(theRow[i->second]);
@@ -283,20 +293,16 @@ void Source_Dataset::Update(
 
 				}
 
-			SearchResult theSearchResult;
-			theSearchResult.fRefcon = iter_RefconToPQuery->first;
-			theSearchResult.fResult = new ZQE::Result(theRelHead, &thePackedRows, &theAnnotationsVector);
+			SearchResult theSearchResult(iter_RefconToPQuery->first,
+				new ZQE::Result(theRelHead, &thePackedRows, &theAnnotationsVector),
+				fEvent);
 			oChanged.push_back(theSearchResult);
 			}
 		}
-
-	oEvent = fEvent;
 	}
 
 ZRef<ZDataset::Dataset> Source_Dataset::GetDataset()
-	{
-	return fDataset;
-	}
+	{ return fDataset; }
 
 void Source_Dataset::Insert(const Daton& iDaton)
 	{ this->pModify(iDaton, sAsVal(iDaton), true); }
@@ -323,7 +329,7 @@ void Source_Dataset::ClearTransaction(size_t iIndex)
 	ZAssert(iIndex == fStack.size());
 	fMap_Pending = fStack.back();
 
-	this->pInvokeCallable();
+	this->pInvokeCallable_ResultsAvailable();
 	}
 
 void Source_Dataset::CloseTransaction(size_t iIndex)
@@ -343,7 +349,7 @@ void Source_Dataset::CloseTransaction(size_t iIndex)
 			}
 		fMap_Pending.clear();
 		}
-	this->pInvokeCallable();
+	this->pInvokeCallable_ResultsAvailable();
 	}
 
 void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense)
@@ -359,7 +365,7 @@ void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal
 		ZAssert(i->second.second == !iSense);
 		fMap_Pending.erase(i);
 		}
-	this->pInvokeCallable();	
+	this->pInvokeCallable_ResultsAvailable();	
 	}
 
 ZRef<ZQE::Walker> Source_Dataset::pMakeWalker(const RelHead& iRelHead)

@@ -47,8 +47,17 @@ using ZRA::RelHead;
 class AddedSearch
 	{
 public:
+	AddedSearch();
+	AddedSearch(const AddedSearch& iOther);
+	~AddedSearch();
+	AddedSearch& operator=(const AddedSearch& iOther);
+
 	AddedSearch(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel);
 
+	int64 GetRefcon() const;
+	ZRef<ZRA::Expr_Rel> GetRel() const;
+
+private:
 	int64 fRefcon;
 	ZRef<ZRA::Expr_Rel> fRel;
 	};
@@ -60,15 +69,28 @@ public:
 class SearchResult
 	{
 public:
+	SearchResult();
+	SearchResult(const SearchResult& iOther);
+	~SearchResult();
+	SearchResult& operator=(const SearchResult& iOther);
+
+	SearchResult(int64 iRefcon, const ZRef<ZQE::Result>& iResult, const ZRef<Event>& iEvent);
+
+	int64 GetRefcon() const;
+	ZRef<ZQE::Result> GetResult() const;
+	ZRef<Event> GetEvent() const;
+
+private:
 	int64 fRefcon;
 	ZRef<ZQE::Result> fResult;
+	ZRef<Event> fEvent;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Source
 
-class Source
+class Source : public ZCounted
 	{
 protected:
 	Source();
@@ -78,21 +100,20 @@ public:
 
 	virtual std::set<RelHead> GetRelHeads() = 0;
 
-	virtual void Update(
-		bool iLocalOnly,
+	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,
-		const int64* iRemoved, size_t iRemovedCount,
-		std::vector<SearchResult>& oChanged,
-		ZRef<Event>& oEvent) = 0;
+		const int64* iRemoved, size_t iRemovedCount) = 0;
 
-	typedef ZCallable<void(Source*)> Callable;
-	void SetCallable(ZRef<Callable> iCallable);
+	virtual void CollectResults(std::vector<SearchResult>& oChanged) = 0;
+
+	typedef ZCallable<void(ZRef<Source>)> Callable_ResultsAvailable;
+	void SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable);
 
 protected:
-	void pInvokeCallable();
+	void pInvokeCallable_ResultsAvailable();
 
 private:
-	ZRef<Callable> fCallable;
+	ZRef<Callable_ResultsAvailable> fCallable_ResultsAvailable;
 	};
 
 // =================================================================================================
@@ -107,7 +128,7 @@ protected:
 public:
 	virtual ~SourceFactory();
 	
-	virtual Source* Make() = 0;
+	virtual ZRef<Source> Make() = 0;
 	};
 
 } // namespace ZDataspace

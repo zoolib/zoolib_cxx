@@ -68,12 +68,11 @@ public:
 
 	virtual std::set<RelHead> GetRelHeads();
 
-	virtual void Update(
-		bool iLocalOnly,
+	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,
-		const int64* iRemoved, size_t iRemovedCount,
-		std::vector<SearchResult>& oChanged,
-		ZRef<Event>& oEvent);
+		const int64* iRemoved, size_t iRemovedCount);
+
+	virtual void CollectResults(std::vector<SearchResult>& oChanged);
 
 // Our protocol
 	ZRef<ZDataset::Dataset> GetDataset();

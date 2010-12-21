@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDataspace_SourceServer__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZStreamer.h"
 #include "zoolib/dataspace/ZDataspace_Source.h"
 
 namespace ZooLib {
@@ -31,14 +32,26 @@ namespace ZDataspace {
 #pragma mark -
 #pragma mark * SourceServer
 
-class SourceServer
+class SourceServer : public ZCounted
 	{
 public:
-	SourceServer(Source* iSource);
+	SourceServer(ZRef<Source> iSource, ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~SourceServer();
 
+// From ZCounted
+	virtual void Initialize();
+
 private:
-	Source* fSource;
+	void pCallback_Source(ZRef<Source> iSource);
+	bool pRead(ZRef<ZWorker> iWorker);
+	void pWrite();
+
+	ZRef<Source> fSource;
+	ZRef<Source::Callable_ResultsAvailable> fCallable_Source;
+	ZRef<ZStreamerR> fStreamerR;
+	ZRef<ZStreamerW> fStreamerW;
+	ZMtx fMtx;
+	bool fNeedsWrite;
 	};
 
 } // namespace ZDataspace

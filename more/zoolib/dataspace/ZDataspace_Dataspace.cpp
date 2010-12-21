@@ -66,20 +66,18 @@ public:
 #pragma mark -
 #pragma mark * Dataspace
 
-Dataspace::Dataspace(Source* iSource)
+Dataspace::Dataspace(ZRef<Source> iSource)
 :	fSource(iSource)
+,	fCallable_Source(MakeCallable(this, &Dataspace::pCallback_Source))
 ,	fCalled_LocalUpdateNeeded(false)
 ,	fCalled_SourceUpdateNeeded(false)
 ,	fNextRefcon(1)
 	{
-	fCallable_Source = MakeCallable(this, &Dataspace::pCallback_Source);
-	fSource->SetCallable(fCallable_Source);
 	}
 
 Dataspace::~Dataspace()
 	{
-	fSource->SetCallable(null);
-	delete fSource;
+	fSource->SetCallable_ResultsAvailable(null);
 	}
 
 void Dataspace::SetCallable_LocalUpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable)
@@ -261,15 +259,13 @@ void Dataspace::SourceUpdate()
 
 	guardR_Structure.Release();
 
-	vector<SearchResult> theChanged;
-	ZRef<Event> theEvent;
-
-	fSource->Update(
-		false,
+	fSource->ModifyRegistrations(
 		ZUtil_STL::sFirstOrNil(addedSearches), addedSearches.size(),
-		ZUtil_STL::sFirstOrNil(removedSearches), removedSearches.size(),
-		theChanged,
-		theEvent);
+		ZUtil_STL::sFirstOrNil(removedSearches), removedSearches.size());
+
+
+	vector<SearchResult> theChanged;
+	fSource->CollectResults(theChanged);
 
 	guardR_Structure.Acquire();
 
@@ -277,9 +273,9 @@ void Dataspace::SourceUpdate()
 		theEnd = theChanged.end();
 		i != theEnd; ++i)
 		{
-		PSieve* thePSieve = fRefcon_To_PSieveStar[i->fRefcon];
+		PSieve* thePSieve = fRefcon_To_PSieveStar[i->GetRefcon()];
 		ZAssert(thePSieve);
-		thePSieve->fResult_Source = i->fResult;
+		thePSieve->fResult_Source = i->GetResult();
 		fPSieves_Changed.InsertIfNotContains(thePSieve);
 		}
 
@@ -345,7 +341,7 @@ void Dataspace::pTriggerSourceUpdate()
 		}
 	}
 
-void Dataspace::pCallback_Source(Source* iSource)
+void Dataspace::pCallback_Source(ZRef<Source> iSource)
 	{
 	ZAcqMtxR acq(fMtxR_Structure);
 	this->pTriggerSourceUpdate();	

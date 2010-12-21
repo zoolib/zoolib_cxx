@@ -22,8 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDataspace_Source_Client__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStreamerReader.h"
+#include "zoolib/ZStreamer.h"
 #include "zoolib/dataspace/ZDataspace_Source.h"
+
+#include <map>
+#include <set>
+#include <vector>
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -38,19 +42,30 @@ public:
 	Source_Client(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~Source_Client();
 
+// From ZCounted via Source
+	virtual void Initialize();
+
+// From Source
 	virtual std::set<RelHead> GetRelHeads();
 
-	virtual void Update(
-		bool iLocalOnly,
+	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,
-		const int64* iRemoved, size_t iRemovedCount,
-		std::vector<SearchResult>& oChanged,
-		ZRef<Event>& oEvent);
+		const int64* iRemoved, size_t iRemovedCount);
+
+	virtual void CollectResults(std::vector<SearchResult>& oChanged);
 
 private:
-	class StreamerReader;
-	ZRef<StreamerReader> fStreamerReader;
+	bool pRead(ZRef<ZWorker> iWorker);
+	void pWrite();
+
+	ZRef<ZStreamerR> fStreamerR;
 	ZRef<ZStreamerW> fStreamerW;
+
+	ZMtxR fMtxR;
+	bool fNeedsWrite;
+	std::map<int64, ZRef<ZRA::Expr_Rel> > fAdds;
+	std::set<int64> fRemoves;
+	std::vector<SearchResult> fResults;
 	};
 
 } // namespace ZDataspace

@@ -34,13 +34,13 @@ namespace ZDataspace {
 class SourceMUX : public SourceFactory
 	{
 public:
-	SourceMUX(Source* iSource);
+	SourceMUX(ZRef<Source> iSource);
 	virtual ~SourceMUX();
 
-	virtual Source* Make();
+	virtual ZRef<Source> Make();
 
 private:
-	Source* fSource;
+	ZRef<Source> fSource;
 	};
 
 } // namespace ZDataspace

@@ -44,16 +44,15 @@ public:
 // From Source
 	virtual std::set<RelHead> GetRelHeads();
 
-	virtual void Update(
-		bool iLocalOnly,
+	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,
-		const int64* iRemoved, size_t iRemovedCount,
-		std::vector<SearchResult>& oChanged,
-		ZRef<Event>& oEvent);
+		const int64* iRemoved, size_t iRemovedCount);
+
+	virtual void CollectResults(std::vector<SearchResult>& oChanged);
 
 // Our protocol
-	void InsertSource(Source* iSource, const string8& iPrefix);
-	void EraseSource(Source* iSource);
+	void InsertSource(ZRef<Source> iSource, const string8& iPrefix);
+	void EraseSource(ZRef<Source> iSource);
 
 private:
 	class PQuery;
@@ -77,12 +76,12 @@ private:
 	std::set<PSource*> fPSources_ToRemove;
 	DListHead<DLink_PSource_ToUpdate> fPSource_ToUpdate;
 
-	std::map<Source*, PSource*> fMap_SourceToPSource;
+	std::map<ZRef<Source>, PSource*> fMap_SourceToPSource;
 
 	ZRef<Event> fEvent;
-	ZRef<Source::Callable> fCallable;
+	ZRef<Source::Callable_ResultsAvailable> fCallable;
 
-	void pCallback(Source* iSource);
+	void pCallback(ZRef<Source> iSource);
 
 	void pUpdate(
 		const AddedSearch* iAdded, size_t iAddedCount,

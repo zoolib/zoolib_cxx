@@ -18,14 +18,101 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZWorker_Callable.h"
 #include "zoolib/dataspace/ZDataspace_SourceServer.h"
 
 namespace ZooLib {
 namespace ZDataspace {
 
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * SourceServer
+
+SourceServer::SourceServer(ZRef<Source> iSource, ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+:	fSource(iSource)
+,	fCallable_Source(MakeCallable(this, &SourceServer::pCallback_Source))
+,	fStreamerR(iStreamerR)
+,	fStreamerW(iStreamerW)
+,	fNeedsWrite(false)
+	{
+	}
+
+SourceServer::~SourceServer()
+	{
+	fSource->SetCallable_ResultsAvailable(null);
+	}
+
+void SourceServer::Initialize()
+	{
+	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(MakeRef(this), &SourceServer::pRead));
+	sStartWorkerRunner(theWorker);
+	}
+
+void SourceServer::pCallback_Source(ZRef<Source> iSource)
+	{
+	ZAcqMtx acq(fMtx);
+	if (fNeedsWrite)
+		return;
+
+	fNeedsWrite = true;
+	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(MakeRef(this), &SourceServer::pWrite));
+	sStartWorkerRunner(theWorker);
+	}
+
+bool SourceServer::pRead(ZRef<ZWorker> iWorker)
+	{
+	const ZStreamR& r = fStreamerR->GetStreamR();
+
+// need some kind of a close indication.
+
+	vector<AddedSearch> addedSearches;
+	for (uint32 theCount = r.ReadCount(); theCount; --theCount)
+		{
+		int64 theRefcon = r.ReadInt64();
+		ZRef<ZRA::Expr_Rel> theRel;
+		addedSearches.push_back(AddedSearch(theRefcon, theRel));
+		}
+
+	vector<int64> removedSearches;
+	for (uint32 theCount = r.ReadCount(); theCount; --theCount)
+		{
+		int64 theRefcon = r.ReadInt64();
+		removedSearches.push_back(theRefcon);
+		}
+
+	if (!addedSearches.empty() || !removedSearches.empty())
+		{
+		fSource->ModifyRegistrations(
+			ZUtil_STL::sFirstOrNil(addedSearches), addedSearches.size(),
+			ZUtil_STL::sFirstOrNil(removedSearches), removedSearches.size());
+		}
+
+	iWorker->Wake();//##
+	return true;
+	}
+
+void SourceServer::pWrite()
+	{
+	ZGuardRMtx guard(fMtx);
+	fNeedsWrite = false;
+	guard.Release();
+
+	vector<SearchResult> theChanged;
+	fSource->CollectResults(theChanged);
+
+	const ZStreamW& w = fStreamerW->GetStreamW();
+
+	w.WriteCount(theChanged.size());
+	for (vector<SearchResult>::iterator i = theChanged.begin(); i != theChanged.end(); ++i)
+		{
+		w.WriteInt64(i->GetRefcon());
+		// Write contents
+		}
+	w.Flush();
+	}
 
 } // namespace ZDataspace
 } // namespace ZooLib

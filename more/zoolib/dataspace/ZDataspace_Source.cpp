@@ -34,6 +34,70 @@ AddedSearch::AddedSearch(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel)
 ,	fRel(iRel)
 	{}
 
+AddedSearch::AddedSearch()
+	{}
+
+AddedSearch::AddedSearch(const AddedSearch& iOther)
+:	fRefcon(iOther.fRefcon)
+,	fRel(iOther.fRel)
+	{}
+
+AddedSearch::~AddedSearch()
+	{}
+
+AddedSearch& AddedSearch::operator=(const AddedSearch& iOther)
+	{
+	fRefcon = iOther.fRefcon;
+	fRel = iOther.fRel;
+	return *this;
+	}
+
+int64 AddedSearch::GetRefcon() const
+	{ return fRefcon; }
+
+ZRef<ZRA::Expr_Rel> AddedSearch::GetRel() const
+	{ return fRel; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * SearchResult
+
+SearchResult::SearchResult()
+	{}
+
+SearchResult::SearchResult(const SearchResult& iOther)
+:	fRefcon(iOther.fRefcon)
+,	fResult(iOther.fResult)
+,	fEvent(iOther.fEvent)
+	{}
+
+SearchResult::~SearchResult()
+	{}
+
+SearchResult& SearchResult::operator=(const SearchResult& iOther)
+	{
+	fRefcon = iOther.fRefcon;
+	fResult = iOther.fResult;
+	fEvent = iOther.fEvent;
+	return *this;
+	}
+
+SearchResult::SearchResult(
+	int64 iRefcon, const ZRef<ZQE::Result>& iResult, const ZRef<Event>& iEvent)
+:	fRefcon(iRefcon)
+,	fResult(iResult)
+,	fEvent(iEvent)
+	{}
+
+int64 SearchResult::GetRefcon() const
+	{ return fRefcon; }
+
+ZRef<ZQE::Result> SearchResult::GetResult() const
+	{ return fResult; }
+
+ZRef<Event> SearchResult::GetEvent() const
+	{ return fEvent; }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Source
@@ -44,12 +108,16 @@ Source::Source()
 Source::~Source()
 	{}
 
-void Source::SetCallable(ZRef<Callable> iCallable)
-	{ fCallable = iCallable; }
-
-void Source::pInvokeCallable()
+void Source::SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable)
 	{
-	if (ZRef<Callable> theCallable = fCallable)
+	if (iCallable)
+		ZAssert(!fCallable_ResultsAvailable);
+	fCallable_ResultsAvailable = iCallable;
+	}
+
+void Source::pInvokeCallable_ResultsAvailable()
+	{
+	if (ZRef<Callable_ResultsAvailable> theCallable = fCallable_ResultsAvailable)
 		theCallable->Call(this);
 	}
 

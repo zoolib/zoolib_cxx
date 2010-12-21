@@ -46,7 +46,7 @@ public:
 
 	typedef ZCallable<void(Dataspace*)> Callable_UpdateNeeded;
 
-	Dataspace(Source* iSource);
+	Dataspace(ZRef<Source> iSource);
 	~Dataspace();
 
 	void SetCallable_LocalUpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable);
@@ -73,10 +73,10 @@ public:
 private:
 	void pTriggerLocalUpdate();
 	void pTriggerSourceUpdate();
-	void pCallback_Source(Source* iSource);
+	void pCallback_Source(ZRef<Source> iSource);
 
-	Source* fSource;
-	ZRef<Source::Callable> fCallable_Source;
+	ZRef<Source> fSource;
+	ZRef<Source::Callable_ResultsAvailable> fCallable_Source;
 	
 	ZMtxR fMtxR_CallLocalUpdate;
 	ZMtxR fMtxR_CallSourceUpdate;

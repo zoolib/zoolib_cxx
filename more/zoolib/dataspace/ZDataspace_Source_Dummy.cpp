@@ -21,14 +21,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/ZDataspace_Source_Dummy.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
-#include "zoolib/ZExpr_Bool.h"
+//#include "zoolib/ZExpr_Bool.h"
 
 #include "zoolib/ZLog.h"
 
 namespace ZooLib {
 namespace ZDataspace {
-
-using ZRA::NameMap;
 
 using std::set;
 using std::vector;
@@ -56,9 +54,10 @@ void Source_Dummy::Update(
 	{
 	while (iAddedCount--)
 		{
-		SearchResult dummy;
-		dummy.fRefcon = iAdded->fRefcon;
+		SearchResult dummy(iAdded->GetRefcon(), null, null);
 		oChanged.push_back(dummy);
+
+#if 0
 		if (ZLOGPF(s, eDebug))
 			s << iAdded->fSearchSpec;
 		vector<string8> theRowHead;
@@ -68,10 +67,7 @@ void Source_Dummy::Update(
 			RelHead theRH = i->GetRelHead_To();
 			theRowHead.insert(theRowHead.end(), theRH.begin(), theRH.end());
 			}
-		SearchResult theSR;
-		theSR.fRefcon = iAdded->fRefcon;
-		theSR.fSearchRows = new SearchRows(&theRowHead);
-		oChanged.push_back(theSR);
+#endif
 		++iAdded;
 		}
 	oEvent = Event::sZero();
