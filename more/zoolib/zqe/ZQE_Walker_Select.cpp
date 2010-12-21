@@ -72,8 +72,7 @@ static bool spMatches(const ZVal_Any* iBindings, const ZVal_Any* iResults, ZRef<
 Walker_Select::Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool)
 :	Walker_Unary(iWalker)
 ,	fExpr_Bool(iExpr_Bool)
-	{
-	}
+	{}
 
 Walker_Select::~Walker_Select()
 	{}

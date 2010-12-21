@@ -42,9 +42,10 @@ Walker_Product::~Walker_Product()
 
 void Walker_Product::Rewind()
 	{
-	fNeedLoadLeft = true;
 	fWalker_Left->Rewind();
 	fWalker_Right->Rewind();
+	fAnnotations_Left.clear();
+	fNeedLoadLeft = true;
 	}
 
 void Walker_Product::Prime(const std::map<string8,size_t>& iBindingOffsets, 
@@ -77,9 +78,10 @@ bool Walker_Product::ReadInc(const ZVal_Any* iBindings,
 		{
 		if (fNeedLoadLeft)
 			{
-			fNeedLoadLeft = false;
-			fAnnotations_Left.clear();
 			fWalker_Right->Rewind();
+			fAnnotations_Left.clear();
+			fNeedLoadLeft = false;
+
 			if (!fWalker_Left->ReadInc(nullptr, &fResults_Left[0], &fAnnotations_Left))
 				return false;
 			}
