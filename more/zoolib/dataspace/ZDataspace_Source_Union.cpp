@@ -253,6 +253,7 @@ public:
 	PSource* fPSource;
 	int64 fRefcon;
 	ZRef<ZQE::Result> fResult;
+	ZRef<Event> fEvent;
 	};
 
 // =================================================================================================
@@ -409,9 +410,10 @@ void Source_Union::Analyze::Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iEx
 	ZRA::Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(iExpr);
 	
 	string8 theOld = iExpr->GetOld();
-	const string8 theNew = iExpr->GetNew();
 	if (ZQ<string8> theQ = ZUtil_STL::sEraseAndReturnIfContains(fRename, theOld))
 		theOld = theQ.Get();
+
+	const string8 theNew = iExpr->GetNew();
 	ZUtil_STL::sInsertMustNotContain(kDebug, fRename, theNew, theOld);
 	}
 
@@ -777,6 +779,7 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 		{
 		PSearch* thePSearch = *iterPSearch;
 		bool allOK = true;
+		ZRef<Event> theEvent;
 		for (set<ZRef<Proxy> >::iterator iterProxy = thePSearch->fProxiesDependedUpon.begin();
 			allOK && iterProxy != thePSearch->fProxiesDependedUpon.end(); ++iterProxy)
 			{
@@ -784,8 +787,18 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 			for (set<ProxyInPSource*>::iterator iterPIP = theProxy->fProxyInPSources.begin();
 				allOK && iterPIP != theProxy->fProxyInPSources.end(); ++iterPIP)
 				{
-				if (!(*iterPIP)->fResult)
+				ProxyInPSource* thePIP = *iterPIP;
+				if (!thePIP->fResult)
+					{
 					allOK = false;
+					}
+				else
+					{
+					if (theEvent)
+						theEvent = theEvent->Joined(thePIP->fEvent);
+					else
+						theEvent = thePIP->fEvent;
+					}
 				}
 			}
 
@@ -798,9 +811,7 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 		ZRef<ZQE::Walker> theWalker =
 			Visitor_DoMakeWalker(this).Do(thePSearch->fRel_Analyzed);
 		
-		// We'll need to build an event that's based off the events in depended-upon
-		// ProxyInPSource instances
-		SearchResult theSearchResult(thePSearch->fRefcon, sSearch(theWalker), null);
+		SearchResult theSearchResult(thePSearch->fRefcon, sSearch(theWalker), theEvent);
 		oChanged.push_back(theSearchResult);
 		}
 	fPSearchesThatNeedWork.clear();
@@ -933,13 +944,13 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 		iterSearchResults != theSearchResults.end(); ++iterSearchResults)
 		{
 		const int64 theRefcon = iterSearchResults->GetRefcon();
-		ZRef<ZQE::Result> theResult = iterSearchResults->GetResult();
 
 		if (ZQ<ProxyInPSource*> theQ =
 			ZUtil_STL::sGetIfContains(iPSource->fMap_RefconToProxyInPSource, theRefcon))
 			{
 			ProxyInPSource* thePIP = theQ.Get();
-			thePIP->fResult = theResult;
+			thePIP->fResult = iterSearchResults->GetResult();
+			thePIP->fEvent = iterSearchResults->GetEvent();
 			fProxiesThatNeedWork.insert(thePIP->fProxy);
 			fPSearchesThatNeedWork.insert
 				(thePIP->fProxy->fDependentPSearches.begin(),
