@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Expr_Rel_Extend__
-#define __ZRA_Expr_Rel_Extend__ 1
+#ifndef __ZRA_Expr_Rel_Calc__
+#define __ZRA_Expr_Rel_Calc__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -30,69 +30,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZRA {
 
-class Visitor_Expr_Rel_Extend;
-
-typedef ZCallable<ZVal_Any(ZMap_Any)> Callable_Extend;
+class Visitor_Expr_Rel_Calc;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Extension
+#pragma mark * Expr_Rel_Calc
 
-class Extension : public ZVisitee
-	{
-protected:
-	Extension();
-
-public:
-	virtual ~Extension();
-	};
-
-class Extension_Rel : public Extension
-	{
-public:
-	Extension_Rel(const ZRef<Expr_Rel>& iRel);
-
-	ZRef<Expr_Rel> GetRel();
-
-private:
-	const ZRef<Expr_Rel> fRel;
-	};
-
-class Extension_Calculate : public Extension
-	{
-public:
-	Extension_Calculate(const ZRef<Callable_Extend>& iCallable);
-	ZRef<Callable_Extend> GetCallable();	
-
-private:
-	const ZRef<Callable_Extend> fCallable;
-	};
-
-class Extension_Val : public Extension
-	{
-public:
-	Extension_Val(const ZVal_Any& iVal);
-
-	ZVal_Any GetVal();
-
-private:
-	const ZVal_Any fVal;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Extend
-
-class Expr_Rel_Extend
+class Expr_Rel_Calc
 :	public virtual Expr_Rel
 ,	public virtual ZExpr_Op1_T<Expr_Rel>
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Extend(
-		const ZRef<Expr_Rel>& iOp0, const RelName& iRelName, const ZRef<Extension>& iExtension);
+	typedef ZCallable<ZVal_Any(ZMap_Any)> Callable;
 
-	virtual ~Expr_Rel_Extend();
+	Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
+		const RelName& iRelName, const ZRef<Callable>& iCallable);
+
+	virtual ~Expr_Rel_Calc();
 
 // From ZExpr_Op1_T<Expr_Rel>
 	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
@@ -101,42 +56,36 @@ public:
 	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
 
 // Our protocol
-	virtual void Accept_Expr_Rel_Extend(Visitor_Expr_Rel_Extend& iVisitor);
+	virtual void Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor);
 
 	RelName GetRelName();
-	ZRef<Extension> GetExtension();
+	ZRef<Callable> GetCallable();
 
 private:
 	const RelName fRelName;
-	const ZRef<Extension> fExtension;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Extend
+#pragma mark * Visitor_Expr_Rel_Calc
 
-class Visitor_Expr_Rel_Extend
+class Visitor_Expr_Rel_Calc
 :	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
 	{
 	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
 public:
-	virtual void Visit_Expr_Rel_Extend(ZRef<Expr_Rel_Extend> iExpr);
+	virtual void Visit_Expr_Rel_Calc(ZRef<Expr_Rel_Calc> iExpr);
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Extend> sExtend(
-	const ZRef<Expr_Rel>& iParent, const RelName& iRelName, const ZRef<Expr_Rel>& iChild);
-
-ZRef<Expr_Rel_Extend> sExtend(
-	const ZRef<Expr_Rel>& iParent, const RelName& iRelName, const ZRef<Callable_Extend>& iCallable);
-
-ZRef<Expr_Rel_Extend> sExtend(
-	const ZRef<Expr_Rel>& iParent, const RelName& iRelName, const ZVal_Any& iVal);
+ZRef<Expr_Rel_Calc> sCalc(const ZRef<Expr_Rel>& iParent,
+	const RelName& iRelName, const ZRef<Expr_Rel_Calc::Callable>& iCallable);
 
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_Expr_Rel_Extend__
+#endif // __ZRA_Expr_Rel_Calc__

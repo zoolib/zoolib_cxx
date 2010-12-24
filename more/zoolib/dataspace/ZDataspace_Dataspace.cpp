@@ -34,32 +34,22 @@ using std::vector;
 #pragma mark -
 #pragma mark * PSieve
 
-class Dataspace::DLink_PSieve_LocalUpdate
-:	public DListLink<PSieve, DLink_PSieve_LocalUpdate, kDebug>
-	{};
-
-class Dataspace::DLink_PSieve_SourceUpdate
-:	public DListLink<PSieve, Dataspace::DLink_PSieve_SourceUpdate, kDebug>
-	{};
-
-class Dataspace::DLink_PSieve_Changed
-:	public DListLink<PSieve, Dataspace::DLink_PSieve_Changed, kDebug>
-	{};
-
 class Dataspace::PSieve
-:	public DLink_PSieve_LocalUpdate
-,	public DLink_PSieve_SourceUpdate
-,	public DLink_PSieve_Changed
 	{
 public:
+	PSieve()
+		{}
+		
+	~PSieve()
+		{}
+
 	Dataspace* fDataspace;
 	ZRef<ZRA::Expr_Rel> fRel;
-	int64 fRefcon; // When zero, is not yet known to the Source
+	int64 fRefcon;
 
 	DListHead<DLink_Sieve_Using> fSieves_Using;
 
-	ZRef<ZQE::Result> fResult_Local;
-	ZRef<ZQE::Result> fResult_Source;
+	ZRef<ZQE::Result> fResult;
 	};
 
 // =================================================================================================
@@ -69,10 +59,10 @@ public:
 Dataspace::Dataspace(ZRef<Source> iSource)
 :	fSource(iSource)
 ,	fCallable_Source(MakeCallable(this, &Dataspace::pCallback_Source))
-,	fCalled_LocalUpdateNeeded(false)
-,	fCalled_SourceUpdateNeeded(false)
+,	fCalled_UpdateNeeded(false)
 ,	fNextRefcon(1)
 	{
+	fSource->SetCallable_ResultsAvailable(fCallable_Source);
 	}
 
 Dataspace::~Dataspace()
@@ -80,22 +70,19 @@ Dataspace::~Dataspace()
 	fSource->SetCallable_ResultsAvailable(null);
 	}
 
-void Dataspace::SetCallable_LocalUpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable)
+void Dataspace::SetCallable_UpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable)
 	{
-	ZAcqMtxR guardR_Structure(fMtxR_Structure);
-	fCallable_LocalUpdateNeeded = iCallable;
-	}
-
-void Dataspace::SetCallable_SourceUpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable)
-	{
-	ZAcqMtxR guardR_Structure(fMtxR_Structure);
-	fCallable_SourceUpdateNeeded = iCallable;
+	ZAcqMtxR acq(fMtxR);
+	fCallable_UpdateNeeded = iCallable;
 	}
 
 void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 	{
-	ZGuardRMtxR guardR_CallLocalUpdate(fMtxR_CallLocalUpdate);
-	ZGuardRMtxR guardR_Structure(fMtxR_Structure);
+	ZAssert(!iSieve->fPSieve);
+	int64 theRefcon = 0;
+
+	{
+	ZAcqMtxR acq(fMtxR);
 
 	PSieve* thePSieve;
 	map<ZRef<ZRA::Expr_Rel>, PSieve>::iterator position = fRel_To_PSieve.lower_bound(iRel);
@@ -105,184 +92,76 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 		}
 	else
 		{
+		theRefcon = fNextRefcon++;
+
 		thePSieve = &fRel_To_PSieve.
 			insert(position, pair<ZRef<ZRA::Expr_Rel>, PSieve>(iRel, PSieve()))->second;
 
+		ZUtil_STL::sInsertMustNotContain(kDebug, fRefcon_To_PSieveStar, theRefcon, thePSieve);
+
 		thePSieve->fDataspace = this;
 		thePSieve->fRel = iRel;
-		thePSieve->fRefcon = 0;
-
-		fPSieves_LocalUpdate.Insert(thePSieve);
+		thePSieve->fRefcon = theRefcon;
 		}
 
 	Sieve* theSieve = iSieve.Get();
 	theSieve->fPSieve = thePSieve;
 	thePSieve->fSieves_Using.Insert(theSieve);
-
-	fSieves_JustRegistered.Insert(theSieve);
-
-	this->pTriggerLocalUpdate();
 	}
 
-void Dataspace::LocalUpdate()
-	{
-	ZAcqMtxR acq_CallLocalUpdate(fMtxR_CallLocalUpdate);
-	ZGuardRMtxR guardR_Structure(fMtxR_Structure);
-
-	if (!fCalled_LocalUpdateNeeded)
-		return;
-
-	fCalled_LocalUpdateNeeded = false;
-
-	for (DListIteratorEraseAll<PSieve, DLink_PSieve_LocalUpdate> iter = fPSieves_LocalUpdate;
-		iter; iter.Advance())
+	if (theRefcon)
 		{
-		PSieve* thePSieve = iter.Current();
-
-		if (thePSieve->fSieves_Using)
-			{
-			// It's in use.
-			if (!thePSieve->fRefcon)
-				{
-				// But not known to the source.
-				fPSieves_SourceUpdate.InsertIfNotContains(thePSieve);
-				}
-			}
-		else if (thePSieve->fRefcon)
-			{
-			// It's not in use and is known to the source.
-			fPSieves_SourceUpdate.InsertIfNotContains(thePSieve);
-			}
-		else
-			{
-			// It's not in use and is not known to the source, so we can toss it.
-			fPSieves_SourceUpdate.EraseIfContains(thePSieve);
-			fPSieves_Changed.EraseIfContains(thePSieve);
-			ZUtil_STL::sEraseMustContain(kDebug, fRel_To_PSieve, thePSieve->fRel);
-			}
+		AddedSearch theAddedSearch(theRefcon, iRel);
+		fSource->ModifyRegistrations(&theAddedSearch, 1, nullptr, 0);
 		}
+	}
+
+void Dataspace::Update()
+	{
+	vector<SearchResult> theSearchResults;
+	fSource->CollectResults(theSearchResults);
 
 	set<ZRef<Sieve> > sievesChanged;
-	for (DListIteratorEraseAll<PSieve, DLink_PSieve_Changed> iter = fPSieves_Changed;
-		iter; iter.Advance())
+	set<ZRef<Sieve> > sievesLoaded;
+
+	{
+	ZAcqMtxR acq(fMtxR);
+	fCalled_UpdateNeeded = false;
+
+	if (theSearchResults.empty())
+		return;
+	
+	for (vector<SearchResult>::iterator iterSearchResults = theSearchResults.begin();
+		iterSearchResults != theSearchResults.end(); ++iterSearchResults)
 		{
-		PSieve* thePSieve = iter.Current();
-		thePSieve->fResult_Local = thePSieve->fResult_Source;
+		map<int64, PSieve*>::iterator iterPSieve =
+			fRefcon_To_PSieveStar.find(iterSearchResults->GetRefcon());
+
+		if (fRefcon_To_PSieveStar.end() == iterPSieve)
+			continue;
+
+		PSieve* thePSieve = iterPSieve->second;
+		thePSieve->fResult = iterSearchResults->GetResult();
 
 		for (DListIterator<Sieve, DLink_Sieve_Using>
 			iter = thePSieve->fSieves_Using;
 			iter; iter.Advance())
 			{
 			Sieve* theSieve = iter.Current();
-			if (!fSieves_JustRegistered.Contains(theSieve))
-				sievesChanged.insert(theSieve);
-			}
-		}
-
-	set<ZRef<Sieve> > sievesLoaded;
-	for (DListIterator<Sieve, DLink_Sieve_JustRegistered> iter = fSieves_JustRegistered;
-		iter;)
-		{
-		Sieve* theSieve = iter.Current();
-		if (theSieve->fPSieve->fResult_Local)
-			{
-			sievesLoaded.insert(theSieve);
-			iter.Advance();
-			fSieves_JustRegistered.Erase(theSieve);
-			}
-		else
-			{
-			iter.Advance();
-			}
-		}
-
-	if (!fPSieves_SourceUpdate.Empty())
-		this->pTriggerSourceUpdate();
-
-	guardR_Structure.Release();
-
-	this->Updated(sievesLoaded, sievesChanged);
-	}
-
-void Dataspace::SourceUpdate()
-	{
-	ZGuardRMtxR guardR_CallSourceUpdate(fMtxR_CallSourceUpdate);
-	ZGuardRMtxR guardR_Structure(fMtxR_Structure);
-
-	if (!fCalled_SourceUpdateNeeded)
-		return;
-
-	fCalled_SourceUpdateNeeded = false;
-
-	vector<AddedSearch> addedSearches;
-	vector<int64> removedSearches;
-
-	for (DListIteratorEraseAll<PSieve, DLink_PSieve_SourceUpdate> iter = fPSieves_SourceUpdate;
-		iter; iter.Advance())
-		{
-		PSieve* thePSieve = iter.Current();
-
-		if (thePSieve->fSieves_Using)
-			{
-			// It's in use.
-			if (!thePSieve->fRefcon)
+			if (theSieve->fJustRegistered)
 				{
-				// But not known to the source.
-				thePSieve->fRefcon = fNextRefcon++;
-				ZUtil_STL::sInsertMustNotContain(kDebug,
-					fRefcon_To_PSieveStar, thePSieve->fRefcon, thePSieve);
-				addedSearches.push_back(AddedSearch(thePSieve->fRefcon, thePSieve->fRel));
+				theSieve->fJustRegistered = false;
+				sievesLoaded.insert(theSieve);
+				}
+			else
+				{
+				sievesChanged.insert(theSieve);
 				}
 			}
-		else if (thePSieve->fRefcon)
-			{
-			// It's not in use and is known to the source.
-			removedSearches.push_back(thePSieve->fRefcon);
-			ZUtil_STL::sEraseMustContain(kDebug, fRefcon_To_PSieveStar, thePSieve->fRefcon);
-			thePSieve->fRefcon = 0;
-			thePSieve->fResult_Source.Clear();
-			fPSieves_LocalUpdate.InsertIfNotContains(thePSieve);
-			}
-		else
-			{
-			// Shouldn't still be on the sync list if it's not in use and not known to the source
-//			if (ZLOG(s, eNotice, "ZTSoup"))
-//				{
-//				s << "Got a PSieve on the sync list that maybe shouldn't be there: "
-//					<< " On update list? "
-//					<< (static_cast<DLink_PSieve_LocalUpdate*>(thePSieve)->fNext ? "yes " : "no ")
-//					<< ZStringf("ID: %llX, value: ", reinterpret_cast<int64>(thePSieve))
-//					<< thePSieve->fTBQuery.AsTuple();
-//				}
-			}
 		}
+	}
 
-	guardR_Structure.Release();
-
-	fSource->ModifyRegistrations(
-		ZUtil_STL::sFirstOrNil(addedSearches), addedSearches.size(),
-		ZUtil_STL::sFirstOrNil(removedSearches), removedSearches.size());
-
-
-	vector<SearchResult> theChanged;
-	fSource->CollectResults(theChanged);
-
-	guardR_Structure.Acquire();
-
-	for (vector<SearchResult>::iterator i = theChanged.begin(),
-		theEnd = theChanged.end();
-		i != theEnd; ++i)
-		{
-		PSieve* thePSieve = fRefcon_To_PSieveStar[i->GetRefcon()];
-		ZAssert(thePSieve);
-		thePSieve->fResult_Source = i->GetResult();
-		fPSieves_Changed.InsertIfNotContains(thePSieve);
-		}
-
-	guardR_CallSourceUpdate.Release();
-
-	if (fPSieves_LocalUpdate || fPSieves_Changed)
-		this->pTriggerLocalUpdate();
+	this->Updated(sievesLoaded, sievesChanged);
 	}
 
 void Dataspace::Updated(
@@ -319,65 +198,52 @@ void Dataspace::Changed(const ZRef<Sieve> & iSieve)
 	catch (...) {}
 	}
 
-void Dataspace::pTriggerLocalUpdate()
+void Dataspace::pTriggerUpdate()
 	{
-	ZAcqMtxR acq(fMtxR_Structure);
-	if (!fCalled_LocalUpdateNeeded)
+	ZGuardRMtxR guard(fMtxR);
+	if (!fCalled_UpdateNeeded)
 		{
-		fCalled_LocalUpdateNeeded = true;
-		if (ZRef<Callable_UpdateNeeded> theCallable = fCallable_LocalUpdateNeeded)
+		fCalled_UpdateNeeded = true;
+		if (ZRef<Callable_UpdateNeeded> theCallable = fCallable_UpdateNeeded)
+			{
+			guard.Release();
 			theCallable->Call(this);
-		}
-	}
-
-void Dataspace::pTriggerSourceUpdate()
-	{
-	ZAcqMtxR acq(fMtxR_Structure);
-	if (!fCalled_SourceUpdateNeeded)
-		{
-		fCalled_SourceUpdateNeeded = true;
-		if (ZRef<Callable_UpdateNeeded> theCallable = fCallable_SourceUpdateNeeded)
-			theCallable->Call(this);
+			}
 		}
 	}
 
 void Dataspace::pCallback_Source(ZRef<Source> iSource)
-	{
-	ZAcqMtxR acq(fMtxR_Structure);
-	this->pTriggerSourceUpdate();	
-	}
+	{ this->pTriggerUpdate(); }
 
 void Dataspace::pFinalize(Sieve* iSieve)
 	{
-	ZAcqMtxR acq_CallLocalUpdate(fMtxR_CallLocalUpdate);
-	ZAcqMtxR acq_Structure(fMtxR_Structure);
+	ZGuardRMtxR guard(fMtxR);
 
 	if (!iSieve->FinishFinalize())
 		return;
 
-	fSieves_JustRegistered.EraseIfContains(iSieve);
-
-	PSieve* thePSieve = iSieve->fPSieve;
-	iSieve->fPSieve = nullptr;
-
+	PSieve* const thePSieve = iSieve->fPSieve;
+	
 	thePSieve->fSieves_Using.Erase(iSieve);
-
-	if (!thePSieve->fSieves_Using)
+	iSieve->fPSieve = nullptr;
+	delete iSieve;
+	
+	if (thePSieve->fSieves_Using.Empty())
 		{
-		fPSieves_LocalUpdate.InsertIfNotContains(thePSieve);
-		this->pTriggerLocalUpdate();
+		int64 const theRefcon = thePSieve->fRefcon;
+		ZUtil_STL::sEraseMustContain(kDebug, fRel_To_PSieve, thePSieve->fRel);
+		ZUtil_STL::sEraseMustContain(kDebug, fRefcon_To_PSieveStar, theRefcon);
+		guard.Release();
+
+		fSource->ModifyRegistrations(nullptr, 0, &theRefcon, 1);
 		}
 	}
 
 ZRef<ZQE::Result> Dataspace::pGetResult(Sieve* iSieve)
-	{
-	if (fSieves_JustRegistered.Contains(iSieve))
-		return null;
-	return iSieve->fPSieve->fResult_Local;
-	}
+	{ return iSieve->fPSieve->fResult; }
 
 bool Dataspace::pIsLoaded(Sieve* iSieve)
-	{ return ! fSieves_JustRegistered.Contains(iSieve); }
+	{ return iSieve->fPSieve->fResult; }
 
 // =================================================================================================
 #pragma mark -
@@ -385,6 +251,7 @@ bool Dataspace::pIsLoaded(Sieve* iSieve)
 
 Sieve::Sieve()
 :	fPSieve(nullptr)
+,	fJustRegistered(true)
 	{}
 
 Sieve::~Sieve()

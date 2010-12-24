@@ -18,45 +18,48 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_STL.h"
-#include "zoolib/zqe/ZQE_Walker_Rename.h"
+#ifndef __ZQE_Walker_Calc__
+#define __ZQE_Walker_Calc__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZCallable.h"
+#include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
 namespace ZQE {
 
-using std::map;
-using std::set;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Rename
+#pragma mark * Walker_Calc
 
-Walker_Rename::Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const string8& iOld)
-:	Walker_Unary(iWalker)
-,	fNew(iNew)
-,	fOld(iOld)
-	{}
-
-Walker_Rename::~Walker_Rename()
-	{}
-
-void Walker_Rename::Prime(const std::map<string8,size_t>& iBindingOffsets, 
-	map<string8,size_t>& oOffsets,
-	size_t& ioBaseOffset)
+class Walker_Calc : public Walker_Unary
 	{
-	map<string8,size_t> newBindingOffsets = iBindingOffsets;
-	if (ZQ<size_t> theQ = ZUtil_STL::sEraseAndReturnIfContains(newBindingOffsets, fNew))
-		newBindingOffsets[fOld] = theQ.Get();
+public:
+	typedef ZCallable<ZVal_Any(ZMap_Any)> Callable;
 	
-	fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
+	Walker_Calc(ZRef<Walker> iWalker,
+		const string8& iRelName, ZRef<Callable> iCallable);
 
-	oOffsets[fNew] = ZUtil_STL::sEraseAndReturn(1, oOffsets, fOld);
-	}
+	virtual ~Walker_Calc();
 
-bool Walker_Rename::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
-	set<ZRef<ZCounted> >* oAnnotations)
-	{ return fWalker->ReadInc(iBindings, oResults, oAnnotations); }
+// From ZQE::Walker
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
+
+private:
+	const string8 fRelName;
+	size_t fOutputOffset;
+	const ZRef<ZCallable<ZVal_Any(ZMap_Any)> > fCallable;
+	std::map<string8,size_t> fBindingOffsets;
+	std::map<string8,size_t> fChildOffsets;
+	};
 
 } // namespace ZQE
 } // namespace ZooLib
+
+#endif // __ZQE_Walker_Calc__

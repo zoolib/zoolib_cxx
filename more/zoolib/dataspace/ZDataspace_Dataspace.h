@@ -49,13 +49,11 @@ public:
 	Dataspace(ZRef<Source> iSource);
 	~Dataspace();
 
-	void SetCallable_LocalUpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable);
-	void SetCallable_SourceUpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable);
+	void SetCallable_UpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable);
 
 	void Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel);
 
-	void LocalUpdate();
-	void SourceUpdate();
+	void Update();
 
 // These methods *can* be overridden, but it's by no means essential.
 	virtual void Updated(
@@ -68,34 +66,23 @@ public:
 	virtual void Loaded(const ZRef<Sieve> & iSieve);
 	virtual void Changed(const ZRef<Sieve> & iSieve);
 
-	const ZMtxR& GetMtxR_CallSourceUpdate()	
-		{ return fMtxR_CallSourceUpdate; }
+	const ZMtxR& GetMtxR()	
+		{ return fMtxR; }
+
 private:
-	void pTriggerLocalUpdate();
-	void pTriggerSourceUpdate();
+	void pTriggerUpdate();
 	void pCallback_Source(ZRef<Source> iSource);
 
 	ZRef<Source> fSource;
 	ZRef<Source::Callable_ResultsAvailable> fCallable_Source;
 	
-	ZMtxR fMtxR_CallLocalUpdate;
-	ZMtxR fMtxR_CallSourceUpdate;
-	ZMtxR fMtxR_Structure;
+	ZMtxR fMtxR;
 
-	ZRef<ZCallable<void(Dataspace*)> > fCallable_LocalUpdateNeeded;
-	ZRef<ZCallable<void(Dataspace*)> > fCallable_SourceUpdateNeeded;
+	ZRef<Callable_UpdateNeeded> fCallable_UpdateNeeded;
 
-	bool fCalled_LocalUpdateNeeded;
-	bool fCalled_SourceUpdateNeeded;
+	bool fCalled_UpdateNeeded;
 
-	class DLink_PSieve_LocalUpdate;
-	class DLink_PSieve_SourceUpdate;
-	class DLink_PSieve_Changed;	
 	class PSieve;
-
-	DListHead<DLink_PSieve_LocalUpdate> fPSieves_LocalUpdate;
-	DListHead<DLink_PSieve_SourceUpdate> fPSieves_SourceUpdate;
-	DListHead<DLink_PSieve_Changed> fPSieves_Changed;
 
 	std::map<ZRef<ZRA::Expr_Rel>, PSieve> fRel_To_PSieve;
 	std::map<int64, PSieve*> fRefcon_To_PSieveStar;
@@ -104,8 +91,6 @@ private:
 	void pFinalize(Sieve* iSieve);
 	ZRef<ZQE::Result> pGetResult(Sieve* iSieve);
 	bool pIsLoaded(Sieve* iSieve);
-
-	DListHead<DLink_Sieve_JustRegistered> fSieves_JustRegistered;
 
 	friend class Sieve;
 	};
@@ -118,14 +103,9 @@ class DLink_Sieve_Using
 :	public DListLink<Sieve, DLink_Sieve_Using>
 	{};
 
-class DLink_Sieve_JustRegistered
-:	public DListLink<Sieve, DLink_Sieve_JustRegistered>
-	{};
-
 class Sieve
 :	public ZCounted
 ,	public DLink_Sieve_Using
-,	public DLink_Sieve_JustRegistered
 	{
 public:
 	Sieve();
@@ -145,6 +125,7 @@ public:
 
 private:
 	Dataspace::PSieve* fPSieve;
+	bool fJustRegistered;
 	
 	friend class Dataspace;
 	};

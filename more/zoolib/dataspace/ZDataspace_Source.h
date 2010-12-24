@@ -98,6 +98,8 @@ protected:
 public:
 	virtual ~Source();
 
+	RelHead GetRelHead();
+
 	virtual std::set<RelHead> GetRelHeads() = 0;
 
 	virtual void ModifyRegistrations(

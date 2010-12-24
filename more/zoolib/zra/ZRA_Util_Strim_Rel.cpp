@@ -22,8 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoToStrim.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Const.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Extend.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
@@ -75,10 +77,12 @@ namespace { // anonymous
 class Visitor_DoToStrim
 :	public virtual ZVisitor_Expr_Bool_ValPred_Any_DoToStrim
 ,	public virtual Visitor_Expr_Rel_Difference
+,	public virtual Visitor_Expr_Rel_Embed
 ,	public virtual Visitor_Expr_Rel_Intersect
 ,	public virtual Visitor_Expr_Rel_Product
 ,	public virtual Visitor_Expr_Rel_Union
-,	public virtual Visitor_Expr_Rel_Extend
+,	public virtual Visitor_Expr_Rel_Calc
+,	public virtual Visitor_Expr_Rel_Const
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
 ,	public virtual Visitor_Expr_Rel_Restrict_Any
@@ -87,11 +91,13 @@ class Visitor_DoToStrim
 	{
 public:
 	virtual void Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr);
+	virtual void Visit_Expr_Rel_Embed(ZRef<Expr_Rel_Embed> iExpr);
 	virtual void Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr);
 	virtual void Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr);
 	virtual void Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr);
 
-	virtual void Visit_Expr_Rel_Extend(ZRef<Expr_Rel_Extend> iExpr);
+	virtual void Visit_Expr_Rel_Calc(ZRef<Expr_Rel_Calc> iExpr);
+	virtual void Visit_Expr_Rel_Const(ZRef<Expr_Rel_Const> iExpr);
 	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
 	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr);
 	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr);
@@ -108,56 +114,86 @@ private:
 void Visitor_DoToStrim::Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr)
 	{ this->pWriteBinary("Difference", iExpr); }
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr)
-	{ this->pWriteBinary("Intersect", iExpr); }
-
-void Visitor_DoToStrim::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Embed(ZRef<Expr_Rel_Embed> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
-	w << "Product";
+	w << "Embed";
 
 	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iExpr, w);
+		spWrite_EffectiveRelHeadComment(iExpr->Self(), w);
 
-	this->pWriteLFIndent();
+//	this->pWriteLFIndent();
 	w << "(";
-
-	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp0());
-	w << ", ";
-
-	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp1());
-
-	this->pWriteLFIndent();
-	w << ")";
-	}
-
-void Visitor_DoToStrim::Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr)
-	{ this->pWriteBinary("Union", iExpr); }
-
-void Visitor_DoToStrim::Visit_Expr_Rel_Extend(ZRef<Expr_Rel_Extend> iExpr)
-	{
-	const ZStrimW& w = pStrimW();
-	w << "Extend";
-
-	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iExpr, w);
-
-	this->pWriteLFIndent();
-	w << "(";
-	this->pWriteLFIndent();
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetExtension());
+	this->pDoToStrim(iExpr->GetOp0());
+	w << ",";
+
+	this->pWriteLFIndent();
+	this->pDoToStrim(iExpr->GetOp1());
+
+//##	this->pWriteLFIndent();
+	w << ")";
+	}
+
+void Visitor_DoToStrim::Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr)
+	{ this->pWriteBinary("Intersect", iExpr); }
+
+void Visitor_DoToStrim::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
+	{ this->pWriteBinary("Product", iExpr); }
+
+void Visitor_DoToStrim::Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr)
+	{ this->pWriteBinary("Union", iExpr); }
+
+void Visitor_DoToStrim::Visit_Expr_Rel_Calc(ZRef<Expr_Rel_Calc> iExpr)
+	{
+	const ZStrimW& w = pStrimW();
+	spWrite("Calc", w);
+
+//	if (pOptions().fDebuggingOutput)
+//		spWrite_EffectiveRelHeadComment(iExpr, w);
+
+//	this->pWriteLFIndent();
+	w << "(";
+//	this->pWriteLFIndent();
+	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
+	w << ",";
+
+//	this->pWriteLFIndent();
+	w << "/*SomeFunction*/";
 	w << ",";
 
 	this->pWriteLFIndent();
 	this->pDoToStrim(iExpr->GetOp0());
 
+//##	this->pWriteLFIndent();
+	w << ")";
+	}
+
+void Visitor_DoToStrim::Visit_Expr_Rel_Const(ZRef<Expr_Rel_Const> iExpr)
+	{
+	const ZStrimW& w = pStrimW();
+	spWrite("Const", w);
+
+//	if (pOptions().fDebuggingOutput)
+//		spWrite_EffectiveRelHeadComment(iExpr, w);
+
+//	this->pWriteLFIndent();
+	w << "(";
+//	this->pWriteLFIndent();
+	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
+	w << ",";
+
+//	this->pWriteLFIndent();
+	ZYad_ZooLibStrim::sToStrim(sMakeYadR(iExpr->GetVal()), w);
+	w << ",";
+
 	this->pWriteLFIndent();
+	this->pDoToStrim(iExpr->GetOp0());
+
+//##	this->pWriteLFIndent();
 	w << ")";
 	}
 
@@ -166,21 +202,21 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 	const ZStrimW& w = pStrimW();
 	spWrite("Project", w);
 
-	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iExpr, w);
+//	if (pOptions().fDebuggingOutput)
+//		spWrite_EffectiveRelHeadComment(iExpr, w);
 
-	this->pWriteLFIndent();
-	spWrite("(", w);
+//	this->pWriteLFIndent();
+	w << "(";
 
-	this->pWriteLFIndent();
+//	this->pWriteLFIndent();
 	spWrite_RelHead(iExpr->GetProjectRelHead(), w);
-	spWrite(",", w);
+	w << ",";
 
 	this->pWriteLFIndent();
 	this->pDoToStrim(iExpr->GetOp0());
 
-	this->pWriteLFIndent();
-	spWrite(")", w);
+//##	this->pWriteLFIndent();
+	w << ")";
 	}
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
@@ -188,23 +224,23 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	const ZStrimW& w = pStrimW();
 	spWrite("Rename", w);
 
-	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iExpr, w);
+//	if (pOptions().fDebuggingOutput)
+//		spWrite_EffectiveRelHeadComment(iExpr, w);
 
-	this->pWriteLFIndent();
-	spWrite("(", w);
+//	this->pWriteLFIndent();
+	w << "(";
 
-	this->pWriteLFIndent();
+//	this->pWriteLFIndent();
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetNew(), w);
 	spWrite("<--", w);
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetOld(), w);
-	spWrite(",", w);
+	w << ",";
 
 	this->pWriteLFIndent();
 	this->pDoToStrim(iExpr->GetOp0());
 
-	this->pWriteLFIndent();
-	spWrite(")", w);
+//##	this->pWriteLFIndent();
+	w << ")";
 	}
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr)
@@ -212,19 +248,19 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExp
 	const ZStrimW& w = pStrimW();
 	w << "Restrict";
 
-	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iExpr, w);
+//	if (pOptions().fDebuggingOutput)
+//		spWrite_EffectiveRelHeadComment(iExpr, w);
 
-	this->pWriteLFIndent();
+//	this->pWriteLFIndent();
 	w << "(";
-	this->pWriteLFIndent();
+//	this->pWriteLFIndent();
 	ZUtil_Strim_ValPred_Any::sToStrim(iExpr->GetValPred(), w);
 	w << ",";
 
 	this->pWriteLFIndent();
 	this->pDoToStrim(iExpr->GetOp0());
 
-	this->pWriteLFIndent();
+//##	this->pWriteLFIndent();
 	w << ")";
 	}
 
@@ -236,19 +272,29 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	if (pOptions().fDebuggingOutput)
 		spWrite_EffectiveRelHeadComment(iExpr, w);
 
-	this->pWriteLFIndent();
+//	this->pWriteLFIndent();
 	w << "(";
-	this->pWriteLFIndent();
+//	this->pWriteLFIndent();
 	this->pDoToStrim(iExpr->GetExpr_Bool());
 	w << ",";
 
 	this->pWriteLFIndent();
 	this->pDoToStrim(iExpr->GetOp0());
 
-	this->pWriteLFIndent();
+//##	this->pWriteLFIndent();
 	w << ")";
 	}
 
+#if 1
+void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
+	{
+	const ZStrimW& w = pStrimW();
+
+	w << "Concrete(";
+	Util_Strim_RelHead::sWrite_RelHead(iExpr->GetConcreteRelHead(), w);
+	w << ")";
+	}
+#else
 void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
@@ -257,7 +303,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
 	// We always include the relhead
 	spWrite_EffectiveRelHeadComment(iExpr, w);
 
-	this->pWriteLFIndent();
+//	this->pWriteLFIndent();
 	w
 		<< "("
 		<< iExpr->GetName()
@@ -265,7 +311,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
 		<< "/*" << typeid(*iExpr.Get()).name() << "*/"
 		<< ")";
 	}
-
+#endif
 void Visitor_DoToStrim::pWriteBinary(
 	const string& iFunctionName, ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr)
 	{
@@ -275,7 +321,7 @@ void Visitor_DoToStrim::pWriteBinary(
 	if (pOptions().fDebuggingOutput)
 		spWrite_EffectiveRelHeadComment(iExpr->Self(), w);
 
-	this->pWriteLFIndent();
+//	this->pWriteLFIndent();
 	w << "(";
 
 	this->pWriteLFIndent();
@@ -285,7 +331,7 @@ void Visitor_DoToStrim::pWriteBinary(
 	this->pWriteLFIndent();
 	this->pDoToStrim(iExpr->GetOp1());
 
-	this->pWriteLFIndent();
+//##	this->pWriteLFIndent();
 	w << ")";
 	}
 
@@ -296,8 +342,8 @@ void Visitor_DoToStrim::pWriteBinary(
 void sToStrim(const Rel& iRel, const ZStrimW& iStrimW)
 	{
 	Options theOptions;
-//	theOptions.fEOLString = " ";
-//	theOptions.fIndentString.clear();
+	theOptions.fEOLString = "\n";
+	theOptions.fIndentString = "|\t";
 	sToStrim(iRel, theOptions, iStrimW);
 	}
 

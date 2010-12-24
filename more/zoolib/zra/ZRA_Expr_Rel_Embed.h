@@ -18,84 +18,65 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCompare.h"
-#include "zoolib/ZCompare_Vector.h"
-#include "zoolib/zqe/ZQE_Result.h"
+#ifndef __ZRA_Expr_Rel_Embed__
+#define __ZRA_Expr_Rel_Embed__ 1
+#include "zconfig.h"
 
-using std::set;
-using std::vector;
+#include "zoolib/ZExpr_Op_T.h"
+#include "zoolib/zra/ZRA_Expr_Rel.h"
 
 namespace ZooLib {
+namespace ZRA {
+
+class Visitor_Expr_Rel_Embed;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCompare
+#pragma mark * Expr_Rel_Embed
 
-template <> int sCompare_T(const ZRef<ZQE::Result>& iL, const ZRef<ZQE::Result>& iR)
+class Expr_Rel_Embed
+:	public virtual Expr_Rel
+,	public virtual ZExpr_Op2_T<Expr_Rel>
 	{
-	if (iL)
-		{
-		if (iR)
-			return iL->Compare(iR);
-		return 1;
-		}
-	else if (iR)
-		{
-		return -1;
-		}
-	return 0;
-	}
+	typedef ZExpr_Op2_T<Expr_Rel> inherited;
+public:
+	Expr_Rel_Embed(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1, const RelName& iRelName);
 
-ZMACRO_CompareRegistration_T(ZRef<ZQE::Result>)
+// From ZExpr_Op2_T
+	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor);
+
+	virtual ZRef<Expr_Rel> Self();
+	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1);
+
+// Our protocol
+	virtual void Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor);
+
+	const RelName& GetRelName();
+
+private:
+	const RelName fRelName;
+	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQE::Result
+#pragma mark * Visitor_Expr_Rel_Embed
 
-namespace ZQE {
-
-Result::Result(const ZRA::RelHead& iRelHead,
-	vector<ZVal_Any>* ioPackedRows,
-	vector<vector<ZRef<ZCounted> > >* ioAnnotations)
-:	fRelHead(iRelHead)
+class Visitor_Expr_Rel_Embed
+:	public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
 	{
-	ioPackedRows->swap(fPackedRows);
-	const size_t theCount = fPackedRows.size() / fRelHead.size();
-	if (ioAnnotations)
-		{
-		ioAnnotations->swap(fAnnotations);
-		ZAssert(fAnnotations.size() == theCount);
-		}
-	}
+	typedef ZVisitor_Expr_Op2_T<Expr_Rel> inherited;
+public:
+	virtual void Visit_Expr_Rel_Embed(ZRef<Expr_Rel_Embed> iExpr);
+	};
 
-Result::~Result()
-	{}
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
 
-const ZRA::RelHead& Result::GetRelHead()
-	{ return fRelHead; }
+ZRef<Expr_Rel_Embed> sEmbed(const ZRef<Expr_Rel>& iParent,
+	const RelName& iRelName, const ZRef<Expr_Rel>& iChild);
 
-size_t Result::Count()
-	{ return fPackedRows.size() / fRelHead.size(); }
-
-const ZVal_Any* Result::GetValsAt(size_t iIndex)
-	{ return &fPackedRows[fRelHead.size() * iIndex]; }
-
-void Result::GetAnnotationsAt(size_t iIndex, set<ZRef<ZCounted> >& oAnnotations)
-	{
-	if (iIndex < fAnnotations.size())
-		{
-		const vector<ZRef<ZCounted> >& theAnnotations = fAnnotations[iIndex];
-		oAnnotations.insert(theAnnotations.begin(), theAnnotations.end());
-		}
-	}
-
-int Result::Compare(const ZRef<Result>& iOther)
-	{
-	if (int compare = sCompare_T(fRowHead, iOther->fRowHead))
-		return compare;
-
-	return sCompare_T(fPackedRows, iOther->fPackedRows);
-	}
-
-} // namespace ZQE
+} // namespace ZRA
 } // namespace ZooLib
+
+#endif // __ZRA_Expr_Rel__

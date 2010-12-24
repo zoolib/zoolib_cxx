@@ -29,6 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Source_Dataset.h"
 
+#include "zoolib/zqe/ZQE_Search.h"
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
@@ -110,14 +111,14 @@ class Source_Dataset::Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 	{
 public:
-	Visitor_DoMakeWalker(Source_Dataset* iSource)
+	Visitor_DoMakeWalker(ZRef<Source_Dataset> iSource)
 	:	fSource(iSource)
 		{}
 
 	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
 		{ this->pSetResult(fSource->pMakeWalker(iExpr->GetConcreteRelHead())); }
 
-	Source_Dataset* fSource;
+	ZRef<Source_Dataset> fSource;
 	};
 
 // =================================================================================================
@@ -127,7 +128,7 @@ public:
 class Source_Dataset::Walker : public ZQE::Walker
 	{
 public:
-	Walker(Source_Dataset* iSource,
+	Walker(ZRef<Source_Dataset> iSource,
 		const vector<string8>& iNames,
 		Map_Main::const_iterator iCurrent_Main,
 		Map_Pending::const_iterator iCurrent_Pending);
@@ -145,14 +146,14 @@ public:
 		ZVal_Any* oResults,
 		set<ZRef<ZCounted> >* oAnnotations);
 
-	Source_Dataset* fSource;
+	ZRef<Source_Dataset> fSource;
 	size_t fBaseOffset;
 	vector<string8> fNames;
 	Map_Main::const_iterator fCurrent_Main;
 	Map_Pending::const_iterator fCurrent_Pending;
 	};
 
-Source_Dataset::Walker::Walker(Source_Dataset* iSource,
+Source_Dataset::Walker::Walker(ZRef<Source_Dataset> iSource,
 	const vector<string8>& iNames,
 	Map_Main::const_iterator iCurrent_Main,
 	Map_Pending::const_iterator iCurrent_Pending)
@@ -230,7 +231,7 @@ void Source_Dataset::ModifyRegistrations(
 		delete ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPQuery, *iRemoved++);
 	}
 
-void Source_Dataset::CollectResults(std::vector<SearchResult>& oChanged)
+void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 	{
 	oChanged.clear();
 
@@ -249,53 +250,8 @@ void Source_Dataset::CollectResults(std::vector<SearchResult>& oChanged)
 			ZRef<ZQE::Walker> theWalker =
 				Visitor_DoMakeWalker(this).Do(iter_RefconToPQuery->second->fRel);
 			
-			map<string8,size_t> offsets;
-			size_t baseOffset = 0;
-			theWalker->Prime(map<string8,size_t>(), offsets, baseOffset);
+			SearchResult theSearchResult(iter_RefconToPQuery->first, sSearch(theWalker), fEvent);
 
-			RelHead theRelHead;
-			for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
-				theRelHead.insert(i->first);
-
-			if (ZLOGF(s, eDebug))
-				{
-				for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
-					{
-					s << i->first << ": ";
-					s.Writef("%d, ", int(i->second));
-					}
-				}
-
-			vector<ZVal_Any> thePackedRows;
-			vector<vector<ZRef<ZCounted> > > theAnnotationsVector;
-			vector<ZVal_Any> theRow(baseOffset, ZVal_Any());
-			for (;;)
-				{
-				set<ZRef<ZCounted> > theAnnotations;
-				if (!theWalker->ReadInc(nullptr, &theRow[0], &theAnnotations))
-					break;
-				
-				theAnnotationsVector.push_back(
-					vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
-				
-				for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
-					thePackedRows.push_back(theRow[i->second]);
-
-				if (ZLOGF(s, eDebug))
-					{
-					s.Writef("annotations.size(): %d\n", int(theAnnotations.size()));
-					for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
-						{
-						ZYad_ZooLibStrim::sToStrim(sMakeYadR(theRow[i->second]), s);
-						s << ", ";
-						}
-					}
-
-				}
-
-			SearchResult theSearchResult(iter_RefconToPQuery->first,
-				new ZQE::Result(theRelHead, &thePackedRows, &theAnnotationsVector),
-				fEvent);
 			oChanged.push_back(theSearchResult);
 			}
 		}
@@ -370,8 +326,9 @@ void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal
 
 ZRef<ZQE::Walker> Source_Dataset::pMakeWalker(const RelHead& iRelHead)
 	{
-	vector<string8> theNames(iRelHead.begin(), iRelHead.end());
-	return new Walker(this, theNames, fMap.begin(), fMap_Pending.begin());
+	return new Walker(this,
+		vector<string8>(iRelHead.begin(), iRelHead.end()),
+		fMap.begin(), fMap_Pending.begin());
 	}
 
 void Source_Dataset::pRewind(ZRef<Walker> iWalker)
@@ -381,8 +338,8 @@ void Source_Dataset::pRewind(ZRef<Walker> iWalker)
 	}
 
 void Source_Dataset::pPrime(ZRef<Walker> iWalker,
-	const std::map<string8,size_t>& iBindingOffsets, 
-	std::map<string8,size_t>& oOffsets,
+	const map<string8,size_t>& iBindingOffsets, 
+	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
 	iWalker->fBaseOffset = ioBaseOffset;
@@ -477,7 +434,7 @@ bool Source_Dataset::pPull()
 			const Daton& theDaton = iterStmts->first;
 			const pair<NamedEvent, ZVal_Any> newPair(theNamedEvent, sAsVal(theDaton));
 
-			map<Daton, pair<NamedEvent, ZVal_Any> >::iterator iterMap = fMap.find(theDaton);
+			map<Daton, pair<NamedEvent, ZVal_Any> >::iterator iterMap = fMap.lower_bound(theDaton);
 
 			if (iterMap == fMap.end() || iterMap->first != theDaton)
 				{
@@ -499,7 +456,8 @@ bool Source_Dataset::pPull()
 				}
 			}
 		}
-	return true;//anyChanges;
+//	return true;//anyChanges;
+	return anyChanges;
 	}
 
 } // namespace ZDataspace

@@ -18,83 +18,60 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zra/ZRA_Expr_Rel_Select.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
 
 namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Select
+#pragma mark * Expr_Rel_Embed
 
-Expr_Rel_Select::Expr_Rel_Select(ZRef<Expr_Rel> iOp0, ZRef<ZExpr_Bool> iExpr_Bool)
-:	inherited(iOp0)
-,	fExpr_Bool(iExpr_Bool)
+Expr_Rel_Embed::Expr_Rel_Embed(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1, const RelName& iRelName)
+:	inherited(iOp0, iOp1)
+,	fRelName(iRelName)
 	{}
 
-Expr_Rel_Select::~Expr_Rel_Select()
-	{}
-
-void Expr_Rel_Select::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Embed::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Select* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Select*>(&iVisitor))
+	if (Visitor_Expr_Rel_Embed* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Embed*>(&iVisitor))
 		{
-		this->Accept_Expr_Rel_Select(*theVisitor);
+		this->Accept_Expr_Rel_Embed(*theVisitor);
 		}
 	else
 		{
-		inherited::Accept_Expr_Op1(iVisitor);
+		inherited::Accept_Expr_Op2(iVisitor);
 		}
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Select::Self()
+ZRef<Expr_Rel> Expr_Rel_Embed::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Select::Clone(ZRef<Expr_Rel> iOp0)
-	{ return new Expr_Rel_Select(iOp0, fExpr_Bool); }
+ZRef<Expr_Rel> Expr_Rel_Embed::Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+	{ return new Expr_Rel_Embed(iOp0, iOp1, fRelName); }
 
-void Expr_Rel_Select::Accept_Expr_Rel_Select( Visitor_Expr_Rel_Select& iVisitor)
-	{ iVisitor.Visit_Expr_Rel_Select(this); }
+void Expr_Rel_Embed::Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Embed(this); }
 
-ZRef<ZExpr_Bool> Expr_Rel_Select::GetExpr_Bool()
-	{ return fExpr_Bool; }
+const RelName& Expr_Rel_Embed::GetRelName()
+	{ return fRelName; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Select
+#pragma mark * Visitor_Expr_Rel_Embed
 
-void Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
-	{
-	this->Visit_Expr_Op1(iExpr);
-
-	if (ZRef<ZExpr_Bool> theExpr_Bool = iExpr->GetExpr_Bool())
-		this->CallAccept(theExpr_Bool);
-	}
+void Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(ZRef<Expr_Rel_Embed> iExpr)
+	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Select> sSelect(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
-	{
-	if (iExpr_Rel && iExpr_Bool)
-		return new Expr_Rel_Select(iExpr_Rel, iExpr_Bool);
-	sSemanticError("sSelect, rel and/or bool are null");
-	return null;
-	}
-
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
-	{ return sSelect(iExpr_Rel, iExpr_Bool); }
-
-ZRef<Expr_Rel> operator&(
-	const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel)
-	{ return sSelect(iExpr_Rel, iExpr_Bool); }
-
-ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
-	{ return ioExpr_Rel = ioExpr_Rel & iExpr_Bool; }
+ZRef<Expr_Rel_Embed> sEmbed(const ZRef<Expr_Rel>& iParent,
+	const RelName& iRelName, const ZRef<Expr_Rel>& iChild)
+	{ return new Expr_Rel_Embed(iParent, iChild, iRelName); }
+	
 
 } // namespace ZRA
 } // namespace ZooLib

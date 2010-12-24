@@ -18,45 +18,23 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_STL.h"
-#include "zoolib/zqe/ZQE_Walker_Rename.h"
+#ifndef __ZQE_Search__
+#define __ZQE_Search__ 1
+#include "zconfig.h"
+
+#include "zoolib/zqe/ZQE_Result.h"
+#include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
 namespace ZQE {
 
-using std::map;
-using std::set;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Rename
+#pragma mark * sSearch
 
-Walker_Rename::Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const string8& iOld)
-:	Walker_Unary(iWalker)
-,	fNew(iNew)
-,	fOld(iOld)
-	{}
-
-Walker_Rename::~Walker_Rename()
-	{}
-
-void Walker_Rename::Prime(const std::map<string8,size_t>& iBindingOffsets, 
-	map<string8,size_t>& oOffsets,
-	size_t& ioBaseOffset)
-	{
-	map<string8,size_t> newBindingOffsets = iBindingOffsets;
-	if (ZQ<size_t> theQ = ZUtil_STL::sEraseAndReturnIfContains(newBindingOffsets, fNew))
-		newBindingOffsets[fOld] = theQ.Get();
-	
-	fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
-
-	oOffsets[fNew] = ZUtil_STL::sEraseAndReturn(1, oOffsets, fOld);
-	}
-
-bool Walker_Rename::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
-	set<ZRef<ZCounted> >* oAnnotations)
-	{ return fWalker->ReadInc(iBindings, oResults, oAnnotations); }
+ZRef<Result> sSearch(ZRef<Walker> iWalker);
 
 } // namespace ZQE
 } // namespace ZooLib
+
+#endif // __ZQE_Search__

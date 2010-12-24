@@ -31,10 +31,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
-#include "zoolib/zra/ZRA_GetRelHead.h"
+#include "zoolib/zra/ZRA_Util_RelCompare.h"
 
 namespace ZooLib {
 namespace ZRA {
+namespace Util_RelCompare {
 
 namespace { // anonymous
 class Visitor_GetRelHead
@@ -101,8 +102,11 @@ class Visitor_GetRelHead
 #pragma mark -
 #pragma mark * sGetRelHead
 
-RelHead sGetRelHead(const ZRef<Expr_Rel>& iRel)
-	{ return Visitor_GetRelHead().Do(iRel); }
+int sCompare(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+	{
+	return iLHS < iRHS ? -1 : iRHS < iLHS ? 1 : 0;
+	}
 
+} // namespace Util_RelCompare
 } // namespace ZRA
 } // namespace ZooLib

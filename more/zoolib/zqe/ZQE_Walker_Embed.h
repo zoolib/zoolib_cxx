@@ -18,45 +18,47 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_STL.h"
-#include "zoolib/zqe/ZQE_Walker_Rename.h"
+#ifndef __ZQE_Walker_Embed__
+#define __ZQE_Walker_Embed__ 1
+#include "zconfig.h"
+
+#include "zoolib/zqe/ZQE_Walker.h"
+#include "zoolib/zra/ZRA_RelHead.h"
 
 namespace ZooLib {
 namespace ZQE {
 
-using std::map;
-using std::set;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Rename
+#pragma mark * Walker_Embed
 
-Walker_Rename::Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const string8& iOld)
-:	Walker_Unary(iWalker)
-,	fNew(iNew)
-,	fOld(iOld)
-	{}
-
-Walker_Rename::~Walker_Rename()
-	{}
-
-void Walker_Rename::Prime(const std::map<string8,size_t>& iBindingOffsets, 
-	map<string8,size_t>& oOffsets,
-	size_t& ioBaseOffset)
+class Walker_Embed : public Walker_Unary
 	{
-	map<string8,size_t> newBindingOffsets = iBindingOffsets;
-	if (ZQ<size_t> theQ = ZUtil_STL::sEraseAndReturnIfContains(newBindingOffsets, fNew))
-		newBindingOffsets[fOld] = theQ.Get();
-	
-	fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
+public:
+	Walker_Embed(ZRef<Walker> iWalker,
+		const string8& iRelName, ZRef<Walker> iWalker_Ext);
 
-	oOffsets[fNew] = ZUtil_STL::sEraseAndReturn(1, oOffsets, fOld);
-	}
+	virtual ~Walker_Embed();
 
-bool Walker_Rename::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
-	set<ZRef<ZCounted> >* oAnnotations)
-	{ return fWalker->ReadInc(iBindings, oResults, oAnnotations); }
+// From ZQE::Walker
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
+
+private:
+	const string8 fRelName;
+	size_t fOutputOffset;
+	const ZRef<Walker> fWalker_Ext;
+	ZRA::RelHead fExtRelHead;
+	std::vector<size_t> fExtOffsets;
+	size_t fExtWidth;
+	};
 
 } // namespace ZQE
 } // namespace ZooLib
+
+#endif // __ZQE_Walker_Embed__

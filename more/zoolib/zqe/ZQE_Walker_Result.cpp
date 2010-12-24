@@ -18,8 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_STL.h"
-#include "zoolib/zqe/ZQE_Walker_Rename.h"
+#include "zoolib/zqe/ZQE_Walker_Result.h"
 
 namespace ZooLib {
 namespace ZQE {
@@ -29,34 +28,49 @@ using std::set;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Rename
+#pragma mark * Walker_Result
 
-Walker_Rename::Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const string8& iOld)
-:	Walker_Unary(iWalker)
-,	fNew(iNew)
-,	fOld(iOld)
+Walker_Result::Walker_Result(ZRef<Result> iResult)
+:	fResult(iResult)
+,	fIndex(0)
 	{}
 
-Walker_Rename::~Walker_Rename()
+Walker_Result::~Walker_Result()
 	{}
 
-void Walker_Rename::Prime(const std::map<string8,size_t>& iBindingOffsets, 
+void Walker_Result::Rewind()
+	{ fIndex = 0; }
+
+void Walker_Result::Prime(const map<string8,size_t>& iBindingOffsets, 
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	map<string8,size_t> newBindingOffsets = iBindingOffsets;
-	if (ZQ<size_t> theQ = ZUtil_STL::sEraseAndReturnIfContains(newBindingOffsets, fNew))
-		newBindingOffsets[fOld] = theQ.Get();
-	
-	fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
-
-	oOffsets[fNew] = ZUtil_STL::sEraseAndReturn(1, oOffsets, fOld);
+	fBaseOffset = ioBaseOffset;
+	const ZRA::RelHead& theRH = fResult->GetRelHead();
+	for (ZRA::RelHead::const_iterator i = theRH.begin(); i != theRH.end(); ++i)
+		oOffsets[*i] = ioBaseOffset++;
 	}
 
-bool Walker_Rename::ReadInc(const ZVal_Any* iBindings,
+bool Walker_Result::ReadInc(const ZVal_Any* iBindings,
 	ZVal_Any* oResults,
 	set<ZRef<ZCounted> >* oAnnotations)
-	{ return fWalker->ReadInc(iBindings, oResults, oAnnotations); }
+	{
+	if (fIndex >= fResult->Count())
+		return false;
+
+	if (oAnnotations)
+		fResult->GetAnnotationsAt(fIndex, *oAnnotations);
+
+	const ZRA::RelHead& theRH = fResult->GetRelHead();
+	size_t theOffset = fBaseOffset;
+	const ZVal_Any* theVals = fResult->GetValsAt(fIndex);
+	for (ZRA::RelHead::const_iterator i = theRH.begin(); i != theRH.end(); ++i)
+		oResults[theOffset++] = *theVals++;
+
+	++fIndex;
+
+	return true;
+	}
 
 } // namespace ZQE
 } // namespace ZooLib

@@ -46,7 +46,7 @@ Source_Client::~Source_Client()
 
 void Source_Client::Initialize()
 	{
-	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(MakeRef(this), &Source_Client::pRead));
+	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(MakeWeakRef(this), &Source_Client::pRead));
 	sStartWorkerRunner(theWorker);
 	}
 

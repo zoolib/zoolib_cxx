@@ -18,66 +18,34 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Expr_Rel_Summarize__
-#define __ZRA_Expr_Rel_Summarize__ 1
+#ifndef __ZRA_UtilRelCompare__
+#define __ZRA_UtilRelCompare__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Op_T.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
-#include "zoolib/zra/ZRA_RelHead.h"
 
 namespace ZooLib {
 namespace ZRA {
-
-class Visitor_Expr_Rel_Summarize;
+namespace Util_RelCompare {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Summarize
+#pragma mark * sCompare
 
-class Expr_Rel_Summarize
-:	public virtual Expr_Rel
-,	public virtual ZExpr_Op1_T<Expr_Rel>
+int sCompare(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+struct Comparator
 	{
-	typedef ZExpr_Op1_T<Expr_Rel> inherited;
-public:
-	Expr_Rel_Summarize(ZRef<Expr_Rel> iOp0, const RelHead& iRelHead);
-	virtual ~Expr_Rel_Summarize();
+	bool operator()(const ZRef<ZRA::Expr_Rel>& iLeft, const ZRef<ZRA::Expr_Rel>& iRight) const
+		{ return sCompare(iLeft, iRight) < 0; }
 
-// From ZExpr_Op1_T<Expr_Rel>
-	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
-
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
-
-// Our protocol
-	virtual void Accept_Expr_Rel_Summarize(Visitor_Expr_Rel_Summarize& iVisitor);
-
-	RelHead GetRelHead();
-
-private:
-	const RelHead fRelHead;
+	typedef ZRef<ZRA::Expr_Rel> first_argument_type;
+	typedef ZRef<ZRA::Expr_Rel> second_argument_type;
+	typedef bool result_type;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Summarize
-
-class Visitor_Expr_Rel_Summarize
-:	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
-	{
-	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
-public:
-	virtual void Visit_Expr_Rel_Summarize(ZRef<Expr_Rel_Summarize> iExpr);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Relational operators
-
-ZRef<Expr_Rel_Summarize> sSummarize(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
-
+} // namespace Util_RelCompare
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_Expr_Rel_Summarize__
+#endif // __ZRA_UtilRelCompare__

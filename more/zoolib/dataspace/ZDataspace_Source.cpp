@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDataspace {
 
+using std::set;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * AddedSearch
@@ -107,6 +109,15 @@ Source::Source()
 
 Source::~Source()
 	{}
+
+RelHead Source::GetRelHead()
+	{
+	const set<RelHead>& theRelHeads = this->GetRelHeads();
+	RelHead result;
+	for (set<RelHead>::const_iterator i = theRelHeads.begin(); i != theRelHeads.end(); ++i)
+		result |= *i;
+	return result;
+	}
 
 void Source::SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable)
 	{

@@ -23,7 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool_ValPred_Any.h" // For ValPred/Bool operators
-#include "zoolib/zra/ZRA_Expr_Rel_Extend.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Const.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"

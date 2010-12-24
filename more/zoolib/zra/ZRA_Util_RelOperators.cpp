@@ -27,7 +27,7 @@ ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel)
 	{
 	ZRef<Expr_Rel> result = iRel;
 	for (ZMap_Any::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
-		result = sExtend(result, iMap.NameOf(i), iMap.Get(i));
+		result = sConst(result, iMap.NameOf(i), iMap.Get(i));
 	return result;
 	}
 

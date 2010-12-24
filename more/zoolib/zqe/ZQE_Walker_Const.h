@@ -18,45 +18,43 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_STL.h"
-#include "zoolib/zqe/ZQE_Walker_Rename.h"
+#ifndef __ZQE_Walker_Const__
+#define __ZQE_Walker_Const__ 1
+#include "zconfig.h"
+
+#include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
 namespace ZQE {
 
-using std::map;
-using std::set;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Rename
+#pragma mark * Walker_Const
 
-Walker_Rename::Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const string8& iOld)
-:	Walker_Unary(iWalker)
-,	fNew(iNew)
-,	fOld(iOld)
-	{}
-
-Walker_Rename::~Walker_Rename()
-	{}
-
-void Walker_Rename::Prime(const std::map<string8,size_t>& iBindingOffsets, 
-	map<string8,size_t>& oOffsets,
-	size_t& ioBaseOffset)
+class Walker_Const : public Walker_Unary
 	{
-	map<string8,size_t> newBindingOffsets = iBindingOffsets;
-	if (ZQ<size_t> theQ = ZUtil_STL::sEraseAndReturnIfContains(newBindingOffsets, fNew))
-		newBindingOffsets[fOld] = theQ.Get();
-	
-	fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
+public:
+	Walker_Const(ZRef<Walker> iWalker, const string8& iRelName,
+		const ZVal_Any& iVal);
+	virtual ~Walker_Const();
 
-	oOffsets[fNew] = ZUtil_STL::sEraseAndReturn(1, oOffsets, fOld);
-	}
+// From ZQE::Walker
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
 
-bool Walker_Rename::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
-	set<ZRef<ZCounted> >* oAnnotations)
-	{ return fWalker->ReadInc(iBindings, oResults, oAnnotations); }
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
+
+private:
+	const string8 fRelName;
+	size_t fOutputOffset;
+	const ZVal_Any fVal;
+	};
 
 } // namespace ZQE
 } // namespace ZooLib
+
+#endif // __ZQE_Walker_Const__

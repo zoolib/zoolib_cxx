@@ -20,7 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZExpr_Bool_ValPred_Any.h"
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
-#include "zoolib/zqe/ZQE_Walker_Extend.h"
+#include "zoolib/zqe/ZQE_Walker_Calc.h"
+#include "zoolib/zqe/ZQE_Walker_Const.h"
+#include "zoolib/zqe/ZQE_Walker_Embed.h"
 #include "zoolib/zqe/ZQE_Walker_Product.h"
 #include "zoolib/zqe/ZQE_Walker_Project.h"
 #include "zoolib/zqe/ZQE_Walker_Rename.h"
@@ -39,6 +41,15 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Difference(ZRef<ZRA::Expr_Rel_Differen
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr)
 	{ ZUnimplemented(); }
 
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(ZRef<ZRA::Expr_Rel_Embed> iExpr)
+	{
+	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+		{
+		if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
+			this->pSetResult(new Walker_Embed(op0, iExpr->GetRelName(), op1));
+		}
+	}
+
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
@@ -51,33 +62,16 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iE
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Union(ZRef<ZRA::Expr_Rel_Union> iExpr)
 	{ ZUnimplemented(); }
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Extend(ZRef<ZRA::Expr_Rel_Extend> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(ZRef<ZRA::Expr_Rel_Calc> iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
-		{
-		ZRef<ZRA::Extension> theExtension = iExpr->GetExtension();
+		this->pSetResult(new Walker_Calc(op0, iExpr->GetRelName(), iExpr->GetCallable()));
+	}
 
-		if (false)
-			{}
-		else if (ZRef<ZRA::Extension_Calculate> theExtension_Calculate =
-			theExtension.DynamicCast<ZRA::Extension_Calculate>())
-			{
-			this->pSetResult(new Walker_Extend_Calculate(
-				op0, iExpr->GetRelName(), theExtension_Calculate->GetCallable()));
-			}
-		else if (ZRef<ZRA::Extension_Rel> theExtension_Rel =
-			theExtension.DynamicCast<ZRA::Extension_Rel>())
-			{
-			if (ZRef<Walker> op1 = this->Do(theExtension_Rel->GetRel()))
-				this->pSetResult(new Walker_Extend_Rel(op0, iExpr->GetRelName(), op1));
-			}
-		else if (ZRef<ZRA::Extension_Val> theExtension_Val =
-			theExtension.DynamicCast<ZRA::Extension_Val>())
-			{
-			this->pSetResult(new Walker_Extend_Val(
-				op0, iExpr->GetRelName(), theExtension_Val->GetVal()));
-			}
-		}
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(ZRef<ZRA::Expr_Rel_Const> iExpr)
+	{
+	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+		this->pSetResult(new Walker_Const(op0, iExpr->GetRelName(), iExpr->GetVal()));
 	}
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr)

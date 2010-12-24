@@ -26,8 +26,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zqe/ZQE_Walker.h"
 
+#include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Const.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Extend.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
@@ -46,10 +48,12 @@ namespace ZQE {
 class Visitor_DoMakeWalker
 :	public virtual ZVisitor_Do_T<ZRef<Walker> >
 ,	public virtual ZRA::Visitor_Expr_Rel_Difference
+,	public virtual ZRA::Visitor_Expr_Rel_Embed
 ,	public virtual ZRA::Visitor_Expr_Rel_Intersect
 ,	public virtual ZRA::Visitor_Expr_Rel_Product
 ,	public virtual ZRA::Visitor_Expr_Rel_Union
-,	public virtual ZRA::Visitor_Expr_Rel_Extend
+,	public virtual ZRA::Visitor_Expr_Rel_Const
+,	public virtual ZRA::Visitor_Expr_Rel_Calc
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
 ,	public virtual ZRA::Visitor_Expr_Rel_Restrict_Any
@@ -57,11 +61,13 @@ class Visitor_DoMakeWalker
 	{
 public:
 	virtual void Visit_Expr_Rel_Difference(ZRef<ZRA::Expr_Rel_Difference> iExpr);
+	virtual void Visit_Expr_Rel_Embed(ZRef<ZRA::Expr_Rel_Embed> iExpr);
 	virtual void Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr);
 	virtual void Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr);
 	virtual void Visit_Expr_Rel_Union(ZRef<ZRA::Expr_Rel_Union> iExpr);
 
-	virtual void Visit_Expr_Rel_Extend(ZRef<ZRA::Expr_Rel_Extend> iExpr);
+	virtual void Visit_Expr_Rel_Calc(ZRef<ZRA::Expr_Rel_Calc> iExpr);
+	virtual void Visit_Expr_Rel_Const(ZRef<ZRA::Expr_Rel_Const> iExpr);
 	virtual void Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr);
 	virtual void Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr);
 	virtual void Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict_Any> iExpr);

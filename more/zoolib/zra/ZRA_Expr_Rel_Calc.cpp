@@ -18,29 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zra/ZRA_Expr_Rel_Summarize.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 
 namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Summarize
+#pragma mark * Expr_Rel_Calc
 
-Expr_Rel_Summarize::Expr_Rel_Summarize(ZRef<Expr_Rel> iOp0, const RelHead& iRelHead)
+Expr_Rel_Calc::Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
+	const RelName& iRelName, const ZRef<Callable>& iCallable)
 :	inherited(iOp0)
-,	fRelHead(iRelHead)
+,	fRelName(iRelName)
+,	fCallable(iCallable)
 	{}
 
-Expr_Rel_Summarize::~Expr_Rel_Summarize()
+Expr_Rel_Calc::~Expr_Rel_Calc()
 	{}
 
-void Expr_Rel_Summarize::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Calc::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Summarize* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Summarize*>(&iVisitor))
+	if (Visitor_Expr_Rel_Calc* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Calc*>(&iVisitor))
 		{
-		this->Accept_Expr_Rel_Summarize(*theVisitor);
+		this->Accept_Expr_Rel_Calc(*theVisitor);
 		}
 	else
 		{
@@ -48,31 +50,35 @@ void Expr_Rel_Summarize::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor
 		}
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Summarize::Self()
+ZRef<Expr_Rel> Expr_Rel_Calc::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Summarize::Clone(ZRef<Expr_Rel> iOp0)
-	{ return new Expr_Rel_Summarize(iOp0, fRelHead); }
+ZRef<Expr_Rel> Expr_Rel_Calc::Clone(ZRef<Expr_Rel> iOp0)
+	{ return new Expr_Rel_Calc(iOp0, fRelName, fCallable); }
 
-void Expr_Rel_Summarize::Accept_Expr_Rel_Summarize(Visitor_Expr_Rel_Summarize& iVisitor)
-	{ iVisitor.Visit_Expr_Rel_Summarize(this); }
+void Expr_Rel_Calc::Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Calc(this); }
 
-RelHead Expr_Rel_Summarize::GetRelHead()
-	{ return fRelHead; }
+RelName Expr_Rel_Calc::GetRelName()
+	{ return fRelName; }
+
+ZRef<Expr_Rel_Calc::Callable> Expr_Rel_Calc::GetCallable()
+	{ return fCallable; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Summarize
+#pragma mark * Visitor_Expr_Rel_Calc
 
-void Visitor_Expr_Rel_Summarize::Visit_Expr_Rel_Summarize(ZRef<Expr_Rel_Summarize> iExpr)
+void Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(ZRef<Expr_Rel_Calc> iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Summarize> sSummarize(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead)
-	{ return new Expr_Rel_Summarize(iExpr, iRelHead); }
+ZRef<Expr_Rel_Calc> sCalc(const ZRef<Expr_Rel>& iParent,
+	const RelName& iRelName, const ZRef<Expr_Rel_Calc::Callable>& iCallable)
+	{ return new Expr_Rel_Calc(iParent, iRelName, iCallable); }
 
 } // namespace ZRA
 } // namespace ZooLib

@@ -18,45 +18,59 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_STL.h"
-#include "zoolib/zqe/ZQE_Walker_Rename.h"
+#include "zoolib/zqe/ZQE_Walker_Calc.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 using std::map;
 using std::set;
+using std::vector;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Rename
+#pragma mark * Walker_Calc
 
-Walker_Rename::Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const string8& iOld)
+Walker_Calc::Walker_Calc(ZRef<Walker> iWalker,
+	const string8& iRelName, ZRef<Callable> iCallable)
 :	Walker_Unary(iWalker)
-,	fNew(iNew)
-,	fOld(iOld)
+,	fRelName(iRelName)
+,	fCallable(iCallable)
+	{
+	//## Need better API on the callable, so it can look up data in bindings (and output?)
+	}
+
+Walker_Calc::~Walker_Calc()
 	{}
 
-Walker_Rename::~Walker_Rename()
-	{}
-
-void Walker_Rename::Prime(const std::map<string8,size_t>& iBindingOffsets, 
+void Walker_Calc::Prime(const map<string8,size_t>& iBindingOffsets, 
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	map<string8,size_t> newBindingOffsets = iBindingOffsets;
-	if (ZQ<size_t> theQ = ZUtil_STL::sEraseAndReturnIfContains(newBindingOffsets, fNew))
-		newBindingOffsets[fOld] = theQ.Get();
-	
-	fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
+	fOutputOffset = ioBaseOffset++;
+	oOffsets[fRelName] = fOutputOffset;
 
-	oOffsets[fNew] = ZUtil_STL::sEraseAndReturn(1, oOffsets, fOld);
+	fBindingOffsets = iBindingOffsets;
+	fWalker->Prime(iBindingOffsets, fChildOffsets, ioBaseOffset);
+	oOffsets.insert(fChildOffsets.begin(), fChildOffsets.end());
 	}
 
-bool Walker_Rename::ReadInc(const ZVal_Any* iBindings,
+bool Walker_Calc::ReadInc(const ZVal_Any* iBindings,
 	ZVal_Any* oResults,
 	set<ZRef<ZCounted> >* oAnnotations)
-	{ return fWalker->ReadInc(iBindings, oResults, oAnnotations); }
+	{
+	if (!fWalker->ReadInc(iBindings, oResults, oAnnotations))
+		return false;
+
+	ZMap_Any theMap;
+	for (map<string8,size_t>::iterator i = fBindingOffsets.begin(); i != fBindingOffsets.end(); ++i)
+		theMap.Set(i->first, iBindings[i->second]);
+	for (map<string8,size_t>::iterator i = fChildOffsets.begin(); i != fChildOffsets.end(); ++i)
+		theMap.Set(i->first, oResults[i->second]);
+
+	oResults[fOutputOffset] = fCallable->Call(theMap);
+	return true;
+	}
 
 } // namespace ZQE
 } // namespace ZooLib
