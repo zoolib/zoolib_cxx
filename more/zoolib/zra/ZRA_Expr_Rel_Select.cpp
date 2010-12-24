@@ -69,7 +69,7 @@ void Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	this->Visit_Expr_Op1(iExpr);
 
 	if (ZRef<ZExpr_Bool> theExpr_Bool = iExpr->GetExpr_Bool())
-		this->CallAccept(theExpr_Bool);
+		theExpr_Bool->Accept(*this);
 	}
 
 // =================================================================================================
