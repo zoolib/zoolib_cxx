@@ -18,74 +18,44 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCompare.h"
-#include "zoolib/zra/ZRA_RelHead.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_Compare.h"
 
 namespace ZooLib {
+namespace Visitor_Expr_Bool_ValPred_Any_Compare {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCompare
+#pragma mark * ZVisitor_Expr_Bool_ValPred_Any_Compare
 
-template <> int sCompare_T(const ZRA::RelHead& iL, const ZRA::RelHead& iR)
-	{ return sCompareIterators_T(iL.begin(), iL.end(),  iR.begin(), iR.end()); }
-
-ZMACRO_CompareRegistration_T(ZRA::RelHead)
+void Comparer_Bootstrap::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr)
+	{ pSetResult(Comparer_ValPred(this, iExpr).Do(fExpr)); } 
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Rename_t
+#pragma mark * Visitor_Expr_Bool_ValPred_Any_Compare::Comparer
 
-Rename_t sInverted(const Rename_t& iRename)
-	{
-	Rename_t result;
-	for (Rename_t::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
-		result[i->second] = i->first;
-	return result;
-	}
-
-} // namespace ZooLib
-
-namespace ZooLib {
-namespace ZRA {
+void Comparer::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iRep)
+	{ pSetResult(-1); } 
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * RelHead
+#pragma mark * Visitor_Expr_Bool_ValPred_Any_Compare::Comparer_GT_ValPred
 
-RelName sPrefixAdd(const RelName& iPrefix, const RelName& iRelName)
-	{ return iPrefix + iRelName; }
+void Comparer_GT_ValPred::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any>)
+	{ pSetResult(1); }
 
-RelName sPrefixRemove(const RelName& iPrefix, const RelName& iRelName)
-	{
-	if (iRelName.substr(0, iPrefix.size()) == iPrefix)
-		return iRelName.substr(iPrefix.size(), RelName::npos);
-	return iRelName;
-	}
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Bool_ValPred_Any_Compare::Comparer_ValPred
 
-RelHead sPrefixAdd(const RelName& iPrefix, const RelHead& iRelHead)
-	{
-	if (iPrefix.empty())
-		return iRelHead;
+Comparer_ValPred::Comparer_ValPred(
+	Visitor_Expr_Bool_Compare::Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_ValPred_Any> iExpr)
+:	Comparer(iBootstrap)
+,	fExpr(iExpr)
+	{}
 
-	RelHead result;
-	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		result.insert(sPrefixAdd(iPrefix, *i));
+void Comparer_ValPred::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr)
+	{ pSetResult(sCompare_T(fExpr->GetValPred(), iExpr->GetValPred())); } 
 
-	return result;
-	}
-
-RelHead sPrefixRemove(const RelName& iPrefix, const RelHead& iRelHead)
-	{
-	if (iPrefix.empty())
-		return iRelHead;
-
-	RelHead result;
-	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		result.insert(sPrefixRemove(iPrefix, *i));
-
-	return result;
-	}
-
-} // namespace ZRA
+} // namespace Visitor_Expr_Bool_ValPred_Any_Compare
 } // namespace ZooLib

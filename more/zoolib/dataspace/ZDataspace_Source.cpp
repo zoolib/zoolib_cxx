@@ -123,6 +123,15 @@ void Source::pInvokeCallable_ResultsAvailable()
 		theCallable->Call(this);
 	}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * SourceFactory
+
+SourceFactory::SourceFactory()
+	{}
+
+SourceFactory::~SourceFactory()
+	{}
+
 } // namespace ZDataspace
 } // namespace ZooLib
-

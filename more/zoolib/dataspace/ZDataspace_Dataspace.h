@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDList.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/dataspace/ZDataspace_Source.h"
+#include "zoolib/zra/ZRA_Compare_Rel.h"
 
 #include <map>
 
@@ -84,7 +85,8 @@ private:
 
 	class PSieve;
 
-	std::map<ZRef<ZRA::Expr_Rel>, PSieve> fRel_To_PSieve;
+	typedef std::map<ZRef<ZRA::Expr_Rel>, PSieve, ZRA::Comparator_Rel> Map_RelToPSieve;
+	Map_RelToPSieve fRel_To_PSieve;
 	std::map<int64, PSieve*> fRefcon_To_PSieveStar;
 	int64 fNextRefcon;
 

@@ -91,16 +91,8 @@ void Result::GetAnnotationsAt(size_t iIndex, set<ZRef<ZCounted> >& oAnnotations)
 
 int Result::Compare(const ZRef<Result>& iOther)
 	{
-	if (int compare = sCompareIterators_T(
-		fRelHead.begin(), fRelHead.end(), 
-		iOther->fRelHead.begin(), iOther->fRelHead.end()))
-		{
+	if (int compare = sCompare_T(fRelHead, iOther->fRelHead))
 		return compare;
-		}
-
-//	if (int compare = sCompare_T(fRelHead, iOther->fRelHead))
-//		return compare;
-
 	return sCompare_T(fPackedRows, iOther->fPackedRows);
 	}
 

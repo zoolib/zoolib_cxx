@@ -456,7 +456,6 @@ bool Source_Dataset::pPull()
 				}
 			}
 		}
-//	return true;//anyChanges;
 	return anyChanges;
 	}
 

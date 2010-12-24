@@ -30,12 +30,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Search.h"
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
 
+//#include "zoolib/zra/ZRA_Compare_Rel.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
-#include "zoolib/zra/ZRA_Util_RelCompare.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
@@ -168,7 +168,7 @@ bool Source_Union::Comparator_Proxy::operator()(
 	if (iRight->fRelHead < iLeft->fRelHead)
 		return false;
 
-	return ZRA::Util_RelCompare::sCompare(iLeft->fRel, iRight->fRel) < 0;
+	return sCompare_T(iLeft->fRel, iRight->fRel) < 0;
 	}
 
 // =================================================================================================

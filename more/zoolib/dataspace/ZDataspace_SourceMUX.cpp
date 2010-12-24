@@ -33,6 +33,7 @@ SourceMUX::SourceMUX(ZRef<Source> iSource)
 ,	fCallable_ResultsAvailable(MakeCallable(MakeWeakRef(this), &SourceMUX::pResultsAvailable))
 	{
 	fSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
+	ZUnimplemented();
 	}
 
 SourceMUX::~SourceMUX()
@@ -42,6 +43,8 @@ SourceMUX::~SourceMUX()
 
 ZRef<Source> SourceMUX::Make()
 	{
+	ZUnimplemented();
+	return null;
 	}
 
 void SourceMUX::pResultsAvailable(ZRef<Source> iSource)

@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_RelHead__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZSet_T.h"
 
 #include "zoolib/zra/ZRA_RelName.h"
@@ -79,7 +80,7 @@ inline RelHead operator^(const char* iElem, const RelHead& iRelHead)
 inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
 	{ return iRelHead ^ RelHead::key_type(iElem); }
 
-} // namespace ZRA
+} // namespace ZRA	
 } // namespace ZooLib
 
 #endif // __ZRA_RelHead__

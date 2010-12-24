@@ -18,34 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_UtilRelCompare__
-#define __ZRA_UtilRelCompare__ 1
+#ifndef __ZRA_Compare_Rel__
+#define __ZRA_Compare_Rel__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompare_T.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
 namespace ZooLib {
+
+template <>
+int sCompare_T(const ZRef<ZRA::Expr_Rel>& iLHS, const ZRef<ZRA::Expr_Rel>& iRHS);
+
 namespace ZRA {
-namespace Util_RelCompare {
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * sCompare
-
-int sCompare(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
-
-struct Comparator
+struct Comparator_Rel
 	{
 	bool operator()(const ZRef<ZRA::Expr_Rel>& iLeft, const ZRef<ZRA::Expr_Rel>& iRight) const
-		{ return sCompare(iLeft, iRight) < 0; }
+		{ return sCompare_T(iLeft, iRight) < 0; }
 
 	typedef ZRef<ZRA::Expr_Rel> first_argument_type;
 	typedef ZRef<ZRA::Expr_Rel> second_argument_type;
 	typedef bool result_type;
 	};
 
-} // namespace Util_RelCompare
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_UtilRelCompare__
+#endif // __ZRA_Compare_Rel__

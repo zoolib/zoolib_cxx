@@ -85,8 +85,8 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 	ZAcqMtxR acq(fMtxR);
 
 	PSieve* thePSieve;
-	map<ZRef<ZRA::Expr_Rel>, PSieve>::iterator position = fRel_To_PSieve.lower_bound(iRel);
-	if (position != fRel_To_PSieve.end() && position->first == iRel)
+	Map_RelToPSieve::iterator position = fRel_To_PSieve.lower_bound(iRel);
+	if (position != fRel_To_PSieve.end() && 0 == sCompare_T(position->first, iRel))
 		{
 		thePSieve = &position->second;
 		}
