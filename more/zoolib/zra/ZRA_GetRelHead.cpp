@@ -18,62 +18,53 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Const.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Product.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_GetRelHead.h"
 
 namespace ZooLib {
 namespace ZRA {
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_GetRelHead (anonymous)
+
 namespace { // anonymous
+
 class Visitor_GetRelHead
 :	public virtual ZVisitor_Do_T<RelHead>
 ,	public virtual Visitor_Expr_Rel_Difference
 ,	public virtual Visitor_Expr_Rel_Embed
-,	public virtual Visitor_Expr_Rel_Intersect
-,	public virtual Visitor_Expr_Rel_Product
-,	public virtual Visitor_Expr_Rel_Union
 ,	public virtual Visitor_Expr_Rel_Calc
 ,	public virtual Visitor_Expr_Rel_Const
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
-,	public virtual Visitor_Expr_Rel_Restrict_Any
-,	public virtual Visitor_Expr_Rel_Select
 ,	public virtual Visitor_Expr_Rel_Concrete
 	{
-	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<Expr_Rel> > iExpr)
-		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
-
 	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
+
+	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<Expr_Rel> > iExpr)
+		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
 	virtual void Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
 	virtual void Visit_Expr_Rel_Embed(ZRef<Expr_Rel_Embed> iExpr)
-		{ this->pSetResult(iExpr->GetRelName()); }
-
-//	virtual void Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr);
-	virtual void Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
-		{ this->pSetResult(this->Do(iExpr->GetOp0()) & this->Do(iExpr->GetOp1())); }
-//	virtual void Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr);
+		{ this->pSetResult(this->Do(iExpr->GetOp0()) | iExpr->GetRelName()); }
 
 	virtual void Visit_Expr_Rel_Calc(ZRef<Expr_Rel_Calc> iExpr)
-		{ this->pSetResult(iExpr->GetRelName()); }
+		{ this->pSetResult(this->Do(iExpr->GetOp0()) | iExpr->GetRelName()); }
 
 	virtual void Visit_Expr_Rel_Const(ZRef<Expr_Rel_Const> iExpr)
-		{ this->pSetResult(iExpr->GetRelName()); }
+		{ this->pSetResult(this->Do(iExpr->GetOp0()) | iExpr->GetRelName()); }
 
 	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) & iExpr->GetProjectRelHead()); }
@@ -81,15 +72,10 @@ class Visitor_GetRelHead
 	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 		{
 		RelHead result = this->Do(iExpr->GetOp0());
-		if (result.Contains(iExpr->GetOld()))
-			{
-			result -= iExpr->GetOld();
+		if (ZUtil_STL::sEraseIfContains(result, iExpr->GetOld()))
 			result |= iExpr->GetNew();
-			}
 		this->pSetResult(result);
 		}
-//	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr);
-//	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr);
 
 	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
 		{ this->pSetResult(iExpr->GetConcreteRelHead()); }
