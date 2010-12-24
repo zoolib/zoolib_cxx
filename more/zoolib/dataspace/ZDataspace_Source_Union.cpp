@@ -298,9 +298,6 @@ class Source_Union::Analyze
 public:
 	Analyze(Source_Union* iSource_Union, PSearch* iPSearch);
 
-// From ZVisitor
-	virtual void CallAccept(ZRef<ZVisitee> iRep);
-
 // From ZVisitor_Expr_Op2_T via ZVisitor_Expr_Op_DoTransform_T
 	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> > iExpr);
 
@@ -324,12 +321,6 @@ Source_Union::Analyze::Analyze(Source_Union* iSource_Union, PSearch* iPSearch)
 :	fSource_Union(iSource_Union)
 ,	fPSearch(iPSearch)
 	{}
-
-void Source_Union::Analyze::CallAccept(ZRef<ZVisitee> iRep)
-	{
-	// Remember our prior state?
-	ZVisitor::CallAccept(iRep);
-	}
 
 void Source_Union::Analyze::Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> > iExpr)
 	{
