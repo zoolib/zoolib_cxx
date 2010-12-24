@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVisitor_Expr_Bool_ValPred_Any_DoToStrim__
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_Expr_Bool_DoToStrim.h"
 #include "zoolib/ZExpr_Bool_ValPred_Any.h"
+#include "zoolib/ZVisitor_Expr_Bool_DoToStrim.h"
 
 namespace ZooLib {
 
