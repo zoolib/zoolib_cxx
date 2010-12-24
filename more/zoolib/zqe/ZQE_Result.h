@@ -56,7 +56,6 @@ public:
 
 private:
 	ZRA::RelHead fRelHead;
-	std::vector<string8> fRowHead;
 	std::vector<ZVal_Any> fPackedRows;
 	std::vector<std::vector<ZRef<ZCounted> > > fAnnotations;
 	};

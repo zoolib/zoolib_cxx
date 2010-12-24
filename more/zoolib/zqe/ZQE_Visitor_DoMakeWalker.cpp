@@ -38,9 +38,6 @@ namespace ZQE {
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Difference(ZRef<ZRA::Expr_Rel_Difference> iExpr)
 	{ ZUnimplemented(); }
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr)
-	{ ZUnimplemented(); }
-
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(ZRef<ZRA::Expr_Rel_Embed> iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
@@ -49,6 +46,9 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(ZRef<ZRA::Expr_Rel_Embed> iExpr)
 			this->pSetResult(new Walker_Embed(op0, iExpr->GetRelName(), op1));
 		}
 	}
+
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr)
+	{ ZUnimplemented(); }
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr)
 	{

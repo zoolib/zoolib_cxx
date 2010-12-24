@@ -52,8 +52,8 @@ class Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Intersect
 ,	public virtual ZRA::Visitor_Expr_Rel_Product
 ,	public virtual ZRA::Visitor_Expr_Rel_Union
-,	public virtual ZRA::Visitor_Expr_Rel_Const
 ,	public virtual ZRA::Visitor_Expr_Rel_Calc
+,	public virtual ZRA::Visitor_Expr_Rel_Const
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
 ,	public virtual ZRA::Visitor_Expr_Rel_Restrict_Any
