@@ -39,7 +39,6 @@ class ZVisitor_Do_T
 	{
 public:
 	ZVisitor_Do_T()
-	:	fResultPtr(nullptr)
 		{}
 
 // Our protocol
@@ -47,11 +46,9 @@ public:
 		{
 		if (iRep)
 			{
-			Result_t theResult;
-			ZSetRestore_T<Result_t*> sr(fResultPtr, &theResult);
+			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ, null);
 			iRep->Accept(*this);
-			if (!fResultPtr)
-				return theResult;
+			return fResultQ;
 			}
 		return null;
 		}
@@ -71,15 +68,17 @@ public:
 		}
 
 protected:
+	ZQ<Result_t> QGetResult()
+		{ return fResultQ; }
+
 	void pSetResult(const Result_t& iResult)
 		{
-		ZAssert(fResultPtr);
-		*fResultPtr = iResult;
-		fResultPtr = nullptr;
+		ZAssert(!fResultQ);
+		fResultQ = iResult;
 		}
 
 private:
-	Result_t* fResultPtr;
+	ZQ<Result_t> fResultQ;
 	};
 
 } // namespace ZooLib
