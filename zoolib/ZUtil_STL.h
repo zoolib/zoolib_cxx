@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZQ.h"
 
 #include <map>
 #include <set>
@@ -286,12 +287,25 @@ Value sEraseAndReturn(const int iDebugLevel, std::map<KBase, Value>& ioMap, KDer
 
 
 template <typename KBase, typename KDerived, typename Value>
+ZQ<Value> sEraseAndReturnIfContains(std::map<KBase, Value>& ioMap, KDerived iKey)
+	{
+	typename std::map<KBase, Value>::iterator i = ioMap.find(iKey);
+	if (ioMap.end() == i)
+		return null;
+	const Value result = i->second;
+	ioMap.erase(i);
+	return result;
+	}
+
+
+template <typename KBase, typename KDerived, typename Value>
 void sInsertMustNotContain(const int iDebugLevel,
 	std::map<KBase, Value>& ioMap, KDerived iKey, Value iValue)
 	{
 	ZAssertStop(iDebugLevel, ioMap.end() == ioMap.find(iKey));
 	ioMap.insert(typename std::map<KBase, Value>::value_type(iKey, iValue));
 	}
+
 
 template <typename KBase, typename KDerived, typename Value>
 void sSetMustContain(const int iDebugLevel,
@@ -301,6 +315,7 @@ void sSetMustContain(const int iDebugLevel,
 	ZAssertStop(iDebugLevel, ioMap.end() != i);
 	i->second = iValue;
 	}
+
 
 template <typename KBase, typename KDerived, typename Value>
 bool sSetIfContains(std::map<KBase, Value>& ioMap, KDerived iKey, Value iValue)
@@ -312,12 +327,23 @@ bool sSetIfContains(std::map<KBase, Value>& ioMap, KDerived iKey, Value iValue)
 	return true;
 	}
 
+
 template <typename KBase, typename KDerived, typename Value>
 Value sGetMustContain(const int iDebugLevel,
-	std::map<KBase, Value>& ioMap, KDerived iKey)
+	const std::map<KBase, Value>& iMap, KDerived iKey)
 	{
-	typename std::map<KBase, Value>::iterator i = ioMap.find(iKey);
-	ZAssertStop(iDebugLevel, ioMap.end() != i);
+	typename std::map<KBase, Value>::const_iterator i = iMap.find(iKey);
+	ZAssertStop(iDebugLevel, iMap.end() != i);
+	return i->second;
+	}
+
+
+template <typename KBase, typename KDerived, typename Value>
+ZQ<Value> sGetIfContains(const std::map<KBase, Value>& iMap, KDerived iKey)
+	{
+	typename std::map<KBase, Value>::const_iterator i = iMap.find(iKey);
+	if (iMap.end() == i)
+		return null;
 	return i->second;
 	}
 
