@@ -894,16 +894,11 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		}
 	else if (const ZTime* theValue = iVal.PGet<ZTime>())
 		{
-		// For the moment I'm just writing times as a count of seconds, putting
-		// the broken-out Gregorian version in a comment. Later we can improve
-		// the parsing of dates, and then we can write them in human readable form.
 		if (*theValue)
 			{
 			s.Write("time(");
-			ZUtil_Strim::sWriteExact(s, theValue->fVal);
+			s << ZUtil_Time::sAsString_ISO8601(*theValue, true);
 			s.Write(")");
-			if (iOptions.fTimesHaveUserLegibleComment)
-				s << " /*" << ZUtil_Time::sAsString_ISO8601(*theValue, true) << "*/";
 			}
 		else
 			{
