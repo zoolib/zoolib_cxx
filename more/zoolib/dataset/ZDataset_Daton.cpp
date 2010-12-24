@@ -51,7 +51,7 @@ bool Daton::operator==(const Daton& iOther) const
 	{ return fData == iOther.fData; }
 
 bool Daton::operator!=(const Daton& iOther) const
-	{ return fData != iOther.fData; }
+	{ return !(fData == iOther.fData); }
 
 bool Daton::operator<(const Daton& iOther) const
 	{ return fData < iOther.fData; }
