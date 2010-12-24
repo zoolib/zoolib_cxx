@@ -574,18 +574,18 @@ Source_Union::~Source_Union()
 	{
 	}
 
-set<RelHead> Source_Union::GetRelHeads()
+RelHead Source_Union::GetRelHead()
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	set<RelHead> result;
+	RelHead result;
 	for (map<ZRef<Source>, PSource*>::iterator i = fMap_SourceToPSource.begin();
 		i != fMap_SourceToPSource.end(); ++i)
 		{
-		set<RelHead> sourceRelHeads = i->first->GetRelHeads();
-		if (sourceRelHeads.empty())
-			return sourceRelHeads;
-		result.insert(sourceRelHeads.begin(), sourceRelHeads.end());
+		const RelHead sourceRelHead = i->first->GetRelHead();
+		if (sourceRelHead.empty())
+			return sourceRelHead;
+		result |= sourceRelHead;
 		}
 	return result;
 	}

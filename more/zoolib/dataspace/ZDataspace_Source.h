@@ -98,9 +98,7 @@ protected:
 public:
 	virtual ~Source();
 
-	RelHead GetRelHead();
-
-	virtual std::set<RelHead> GetRelHeads() = 0;
+	virtual RelHead GetRelHead() = 0;
 
 	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,

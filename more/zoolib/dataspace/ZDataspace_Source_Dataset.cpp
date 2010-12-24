@@ -203,8 +203,8 @@ Source_Dataset::Source_Dataset(ZRef<Dataset> iDataset)
 Source_Dataset::~Source_Dataset()
 	{}
 
-set<RelHead> Source_Dataset::GetRelHeads()
-	{ return set<RelHead>(); }
+RelHead Source_Dataset::GetRelHead()
+	{ return RelHead(); }
 
 void Source_Dataset::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,

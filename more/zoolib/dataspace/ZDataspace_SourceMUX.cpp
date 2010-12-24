@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/dataspace/ZDataspace_SourceMUX.h"
 
 namespace ZooLib {
@@ -26,6 +27,27 @@ namespace ZDataspace {
 // =================================================================================================
 #pragma mark -
 #pragma mark * SourceMUX
+
+SourceMUX::SourceMUX(ZRef<Source> iSource)
+:	fSource(iSource)
+,	fCallable_ResultsAvailable(MakeCallable(MakeWeakRef(this), &SourceMUX::pResultsAvailable))
+	{
+	fSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
+	}
+
+SourceMUX::~SourceMUX()
+	{
+	fSource->SetCallable_ResultsAvailable(null);
+	}
+
+ZRef<Source> SourceMUX::Make()
+	{
+	}
+
+void SourceMUX::pResultsAvailable(ZRef<Source> iSource)
+	{
+	
+	}
 
 } // namespace ZDataspace
 } // namespace ZooLib

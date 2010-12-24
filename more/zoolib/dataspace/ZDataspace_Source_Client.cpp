@@ -50,11 +50,8 @@ void Source_Client::Initialize()
 	sStartWorkerRunner(theWorker);
 	}
 
-set<RelHead> Source_Client::GetRelHeads()
-	{
-	set<RelHead> result;
-	return result;
-	}
+RelHead Source_Client::GetRelHead()
+	{ return RelHead(); }
 
 void Source_Client::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,

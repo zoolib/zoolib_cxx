@@ -40,7 +40,10 @@ public:
 	virtual ZRef<Source> Make();
 
 private:
+	void pResultsAvailable(ZRef<Source> iSource);
+
 	ZRef<Source> fSource;
+	ZRef<Source::Callable_ResultsAvailable> fCallable_ResultsAvailable;
 	};
 
 } // namespace ZDataspace

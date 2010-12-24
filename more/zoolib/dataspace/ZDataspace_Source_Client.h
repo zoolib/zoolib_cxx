@@ -46,7 +46,7 @@ public:
 	virtual void Initialize();
 
 // From Source
-	virtual std::set<RelHead> GetRelHeads();
+	virtual RelHead GetRelHead();
 
 	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,
