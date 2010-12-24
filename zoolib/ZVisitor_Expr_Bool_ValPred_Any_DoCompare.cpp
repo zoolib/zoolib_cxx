@@ -18,38 +18,38 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_Compare.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoCompare.h"
 
 namespace ZooLib {
-namespace Visitor_Expr_Bool_ValPred_Any_Compare {
+namespace Visitor_Expr_Bool_ValPred_Any_DoCompare {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred_Any_Compare
+#pragma mark * ZVisitor_Expr_Bool_ValPred_Any_DoCompare
 
 void Comparer_Bootstrap::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr)
 	{ pSetResult(Comparer_ValPred(this, iExpr).Do(fExpr)); } 
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_ValPred_Any_Compare::Comparer
+#pragma mark * Visitor_Expr_Bool_ValPred_Any_DoCompare::Comparer
 
 void Comparer::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iRep)
 	{ pSetResult(-1); } 
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_ValPred_Any_Compare::Comparer_GT_ValPred
+#pragma mark * Visitor_Expr_Bool_ValPred_Any_DoCompare::Comparer_GT_ValPred
 
 void Comparer_GT_ValPred::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any>)
 	{ pSetResult(1); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_ValPred_Any_Compare::Comparer_ValPred
+#pragma mark * Visitor_Expr_Bool_ValPred_Any_DoCompare::Comparer_ValPred
 
 Comparer_ValPred::Comparer_ValPred(
-	Visitor_Expr_Bool_Compare::Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_ValPred_Any> iExpr)
+	Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_ValPred_Any> iExpr)
 :	Comparer(iBootstrap)
 ,	fExpr(iExpr)
 	{}
@@ -57,5 +57,5 @@ Comparer_ValPred::Comparer_ValPred(
 void Comparer_ValPred::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr)
 	{ pSetResult(sCompare_T(fExpr->GetValPred(), iExpr->GetValPred())); } 
 
-} // namespace Visitor_Expr_Bool_ValPred_Any_Compare
+} // namespace Visitor_Expr_Bool_ValPred_Any_DoCompare
 } // namespace ZooLib

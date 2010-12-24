@@ -19,14 +19,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZSetRestore_T.h"
-#include "zoolib/ZVisitor_Expr_Bool_Compare.h"
+#include "zoolib/ZVisitor_Expr_Bool_DoCompare.h"
 
 namespace ZooLib {
-namespace Visitor_Expr_Bool_Compare {
+namespace Visitor_Expr_Bool_DoCompare {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_Compare::Comparer_Bootstrap
+#pragma mark * Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap
 
 Comparer_Bootstrap::Comparer_Bootstrap()
 	{}
@@ -54,7 +54,7 @@ void Comparer_Bootstrap::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iExpr)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_Compare::Comparer_Bootstrap
+#pragma mark * Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap
 
 Comparer::Comparer()
 :	fBootstrap(nullptr)
@@ -93,7 +93,7 @@ int Comparer::CompareBinary(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_Compare::Comparer_GT_XXX
+#pragma mark * Visitor_Expr_Bool_DoCompare::Comparer_GT_XXX
 
 void Comparer_GT_True::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True>)
 	{ pSetResult(1); }
@@ -112,7 +112,7 @@ void Comparer_GT_Or::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or>)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_Compare::Comparer_XXX
+#pragma mark * Visitor_Expr_Bool_DoCompare::Comparer_XXX
 
 Comparer_True::Comparer_True(Comparer_Bootstrap* iBootstrap)
 :	Comparer(iBootstrap)
@@ -152,5 +152,5 @@ Comparer_Or::Comparer_Or(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_Or> iEx
 void Comparer_Or::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iExpr)
 	{ pSetResult(CompareBinary(fExpr, iExpr)); } 
 
-} // namespace Visitor_Expr_Bool_Compare
+} // namespace Visitor_Expr_Bool_DoCompare
 } // namespace ZooLib

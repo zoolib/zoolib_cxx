@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZVisitor_Do_T.h"
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_Compare.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoCompare.h"
 #include "zoolib/zra/ZRA_Compare_Rel.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
@@ -257,7 +257,7 @@ struct Comparer_Select : public Comparer_GT_Restrict
 	Comparer_Select(ZRef<Expr_Rel_Select> iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 		{
-		if (int compare = Visitor_Expr_Bool_ValPred_Any_Compare::Comparer_Bootstrap()
+		if (int compare = Visitor_Expr_Bool_ValPred_Any_DoCompare::Comparer_Bootstrap()
 			.Compare(fExpr->GetExpr_Bool(), iExpr->GetExpr_Bool()))
 			{
 			pSetResult(compare);

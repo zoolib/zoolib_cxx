@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Bool_Compare__
-#define __ZVisitor_Expr_Bool_Compare__ 1
+#ifndef __ZVisitor_Expr_Bool_DoCompare__
+#define __ZVisitor_Expr_Bool_DoCompare__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompare_T.h"
@@ -27,11 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVisitor_Do_T.h"
 
 namespace ZooLib {
-namespace Visitor_Expr_Bool_Compare {
+namespace Visitor_Expr_Bool_DoCompare {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_Compare::Comparer_Bootstrap
+#pragma mark * Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap
 
 struct Comparer_Bootstrap
 :	public virtual ZVisitor_Do_T<int>
@@ -58,9 +58,9 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_Compare::Comparer
+#pragma mark * Visitor_Expr_Bool_DoCompare::Comparer
 
-struct Comparer
+class Comparer
 :	public virtual ZVisitor_Do_T<int>
 ,	public virtual ZVisitor_Expr_Bool_True
 ,	public virtual ZVisitor_Expr_Bool_False
@@ -68,8 +68,7 @@ struct Comparer
 ,	public virtual ZVisitor_Expr_Bool_And
 ,	public virtual ZVisitor_Expr_Bool_Or
 	{
-	Comparer_Bootstrap* fBootstrap;
-
+public:
 	Comparer();
 	Comparer(Comparer_Bootstrap* iBootstrap);
 
@@ -82,11 +81,14 @@ struct Comparer
 
 	int CompareUnary(ZRef<ZExpr_Op1_T<ZExpr_Bool> > iLHS, ZRef<ZExpr_Op1_T<ZExpr_Bool> > iRHS);
 	int CompareBinary(ZRef<ZExpr_Op2_T<ZExpr_Bool> > iLHS, ZRef<ZExpr_Op2_T<ZExpr_Bool> > iRHS);
+
+private:
+	Comparer_Bootstrap* fBootstrap;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_Compare::Comparer_GT_XXX
+#pragma mark * Visitor_Expr_Bool_DoCompare::Comparer_GT_XXX
 
 struct Comparer_GT_True : public virtual Comparer
 	{ virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True>); };
@@ -105,42 +107,53 @@ struct Comparer_GT_Or : public virtual Comparer_GT_And
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_Compare::Comparer_XXX
+#pragma mark * Visitor_Expr_Bool_DoCompare::Comparer_XXX
 
-struct Comparer_True : public virtual Comparer
+class Comparer_True : public virtual Comparer
 	{
+public:
 	Comparer_True(Comparer_Bootstrap* iBootstrap);
 	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True>);
 	};
 
-struct Comparer_False : public virtual Comparer_GT_True
+class Comparer_False : public virtual Comparer_GT_True
 	{
+public:
 	Comparer_False(Comparer_Bootstrap* iBootstrap);
 	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False>);
 	};
 
-struct Comparer_Not : public virtual Comparer_GT_False
+class Comparer_Not : public virtual Comparer_GT_False
 	{
-	ZRef<ZExpr_Bool_Not> fExpr;
+public:
 	Comparer_Not(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_Not> iExpr);
 	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iExpr);
+
+private:
+	ZRef<ZExpr_Bool_Not> fExpr;
 	};
 
-struct Comparer_And : public virtual Comparer_GT_Not
+class Comparer_And : public virtual Comparer_GT_Not
 	{
-	ZRef<ZExpr_Bool_And> fExpr;
+public:
 	Comparer_And(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_And> iExpr);
 	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iExpr);
+
+private:
+	ZRef<ZExpr_Bool_And> fExpr;
 	};
 
-struct Comparer_Or : public virtual Comparer_GT_And
+class Comparer_Or : public virtual Comparer_GT_And
 	{
-	ZRef<ZExpr_Bool_Or> fExpr;
+public:
 	Comparer_Or(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_Or> iExpr);
 	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iExpr);
+
+private:
+	ZRef<ZExpr_Bool_Or> fExpr;
 	};
 
-} // namespace Visitor_Expr_Bool_Compare
+} // namespace Visitor_Expr_Bool_DoCompare
 } // namespace ZooLib
 
-#endif // __ZVisitor_Expr_Bool_Compare__
+#endif // __ZVisitor_Expr_Bool_DoCompare__
