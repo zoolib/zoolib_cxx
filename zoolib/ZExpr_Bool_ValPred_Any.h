@@ -44,9 +44,6 @@ inline std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr)
 inline bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal)
 	{ return ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T<ZVal_Any>(iVal).Do(iExpr); }
 
-//inline bool sMatches(const ZValPred_Any& iValPred, const ZVal_Any& iVal)
-//	{ return sMatches(new ZExpr_Bool_ValPred_Any(iValPred), iVal); }
-
 } // namespace ZooLib
 
 #endif // __ZExpr_Bool_ValPred_Any__
