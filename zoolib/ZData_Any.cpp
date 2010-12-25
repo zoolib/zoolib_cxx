@@ -113,7 +113,7 @@ bool ZData_Any::operator<(const ZData_Any& iOther) const
 bool ZData_Any::operator==(const ZData_Any& iOther) const
 	{
 	if (fRep == iOther.fRep)
-		return false;
+		return true;
 	return fRep->fVector == iOther.fRep->fVector;
 	}
 
