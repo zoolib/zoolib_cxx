@@ -47,13 +47,6 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Rel
-
-// A useful typedef.
-typedef ZRef<Expr_Rel> Rel;
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * SemanticError
 
 class SemanticError : public std::runtime_error

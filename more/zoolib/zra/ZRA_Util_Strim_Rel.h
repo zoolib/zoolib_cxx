@@ -35,9 +35,9 @@ namespace Util_Strim_Rel {
 
 typedef ZVisitor_DoToStrim::Options Options;
 
-void sToStrim(const Rel& iRel, const ZStrimW& iStrimW);
+void sToStrim(const ZRef<ZRA::Expr_Rel>& iRel, const ZStrimW& iStrimW);
 
-void sToStrim(const Rel& iRel, const Options& iOptions, const ZStrimW& iStrimW);
+void sToStrim(const ZRef<ZRA::Expr_Rel>& iRel, const Options& iOptions, const ZStrimW& iStrimW);
 
 } // namespace Util_Strim_Rel
 } // namespace ZRA

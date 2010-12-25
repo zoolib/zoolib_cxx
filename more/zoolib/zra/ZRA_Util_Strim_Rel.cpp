@@ -339,7 +339,7 @@ void Visitor_DoToStrim::pWriteBinary(
 #pragma mark -
 #pragma mark * ZUtil_Strim_TQL
 
-void sToStrim(const Rel& iRel, const ZStrimW& iStrimW)
+void sToStrim(const ZRef<ZRA::Expr_Rel>& iRel, const ZStrimW& iStrimW)
 	{
 	Options theOptions;
 	theOptions.fEOLString = "\n";
@@ -347,7 +347,7 @@ void sToStrim(const Rel& iRel, const ZStrimW& iStrimW)
 	sToStrim(iRel, theOptions, iStrimW);
 	}
 
-void sToStrim(const Rel& iRel, const Options& iOptions, const ZStrimW& iStrimW)
+void sToStrim(const ZRef<ZRA::Expr_Rel>& iRel, const Options& iOptions, const ZStrimW& iStrimW)
 	{ Visitor_DoToStrim().DoToStrim(iOptions, iStrimW, iRel); }
 
 } // namespace Util_Strim_Rel
