@@ -27,14 +27,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZUtil_STL_set.h"
 
-#include <map>
 #include <string>
 
 namespace ZooLib {
-
-// There is an equivalent typedef in ZRA_RelHead, and it's possible that it
-// should be promoted to its own file, but for now that seems excessive.
-typedef std::map<std::string, std::string> Rename_t;
 
 class ZValContext
 	{};
@@ -245,7 +240,6 @@ public:
 
 	virtual Val GetVal(ZValContext& iContext, const Val& iVal) = 0;
 	virtual std::set<std::string> GetNames();
-	virtual ZRef<ZValComparand_T> Renamed(const Rename_t& iRename);
 
 	int Compare(ZRef<ZValComparand_T> iOther);
 
@@ -266,10 +260,6 @@ ZValComparand_T<Val>::~ZValComparand_T()
 template <class Val>
 std::set<std::string> ZValComparand_T<Val>::GetNames()
 	{ return std::set<std::string>(); }
-
-template <class Val>
-ZRef<ZValComparand_T<Val> > ZValComparand_T<Val>::Renamed(const Rename_t& iRename)
-	{ return this; }
 
 template <class Val>
 int ZValComparand_T<Val>::Compare(ZRef<ZValComparand_T> iOther)
@@ -383,7 +373,6 @@ public:
 // From ZValComparand_T
 	virtual Val GetVal(ZValContext& iContext, const Val& iVal);
 	virtual std::set<std::string> GetNames();
-	virtual ZRef<ZValComparand_T<Val> > Renamed(const Rename_t& iRename);
 
 	virtual int pRevCompare(ZValComparand_T<Val>* iOther);
 	virtual int pCompare_Name(ZValComparand_Name_T<Val>* iOther);
@@ -411,15 +400,6 @@ std::set<std::string> ZValComparand_Name_T<Val>::GetNames()
 template <class Val>
 const std::string& ZValComparand_Name_T<Val>::GetName()
 	{ return fName; }
-
-template <class Val>
-ZRef<ZValComparand_T<Val> > ZValComparand_Name_T<Val>::Renamed(const Rename_t& iRename)
-	{
-	Rename_t::const_iterator i = iRename.find(fName);
-	if (i != iRename.end())
-		return new ZValComparand_Name_T(i->second);
-	return this;
-	}
 
 template <class Val>
 int ZValComparand_Name_T<Val>::pRevCompare(ZValComparand_T<Val>* iOther)
@@ -505,10 +485,6 @@ public:
 
 	std::set<std::string> GetNames() const;
 
-	bool Renamed(const Rename_t& iRename, ZValPred_T& oResult) const;
-
-	ZValPred_T Renamed(const Rename_t& iRename) const;
-
 private:
 	ZRef<Comparand> fLHS;
 	ZRef<Comparator> fComparator;
@@ -572,21 +548,6 @@ bool ZValPred_T<Val>::Matches(ZValContext& iContext, const Val& iVal) const
 template <class Val>
 std::set<std::string> ZValPred_T<Val>::GetNames() const
 	{ return ZUtil_STL_set::sOr(fLHS->GetNames(), fRHS->GetNames()); }
-
-template <class Val>
-bool ZValPred_T<Val>::Renamed(const Rename_t& iRename, ZValPred_T& oResult) const
-	{
-	ZRef<ZValComparand_T<Val> > newLHS = fLHS->Renamed(iRename);
-	ZRef<ZValComparand_T<Val> > newRHS = fRHS->Renamed(iRename);
-	if (newLHS == fLHS && newRHS == fRHS)
-		return false;
-	oResult = ZValPred_T(newLHS, fComparator, newRHS);
-	return true;
-	}
-
-template <class Val>
-ZValPred_T<Val> ZValPred_T<Val>::Renamed(const Rename_t& iRename) const
-	{ return ZValPred_T(fLHS->Renamed(iRename), fComparator, fRHS->Renamed(iRename)); }
 
 // =================================================================================================
 #pragma mark -

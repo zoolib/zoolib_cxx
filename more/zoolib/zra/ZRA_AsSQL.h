@@ -18,61 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_SQL__
-#define __ZRA_SQL__
+#ifndef __ZRA_AsSQL__
+#define __ZRA_AsSQL__
 #include "zconfig.h"
 
 #include "zoolib/ZStrim.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
+
+#include "zoolib/zra/ZRA_Expr_Rel.h"
+#include "zoolib/zra/ZRA_RelHead.h"
 
 #include <map>
-#include <vector>
 
 namespace ZooLib {
 namespace ZRA {
-namespace SQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRA::SQL::Expr_Rel_SFW
+#pragma mark *
 
-class Expr_Rel_SFW : public Expr_Rel_Concrete
-	{
-public:
-	Expr_Rel_SFW(const Rename_t& iRename,
-		const RelHead& iRelHead,
-		ZRef<ZExpr_Bool> iCondition,
-		const std::vector<ZRef<Expr_Rel_Concrete> >& iRels);
+bool sWriteAsSQL(const std::map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const ZStrimW& s);
 
-// From Expr_Rel_Concrete
-	virtual RelHead GetConcreteRelHead();
 
-// Our protocol
-	const Rename_t& GetRename();
-	ZRef<ZExpr_Bool> GetCondition();
-	const std::vector<ZRef<Expr_Rel_Concrete> >& GetRels();
-
-public:
-	const Rename_t fRename;
-	const RelHead fRelHead;
-	const ZRef<ZExpr_Bool> fCondition;
-	const std::vector<ZRef<Expr_Rel_Concrete> > fRels;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZRA::SQL::sConvert
-
-ZRef<Expr_Rel_SFW> sConvert(ZRef<Expr_Rel> iExpr);
-
-void sAsSQL(ZRef<Expr_Rel_SFW> iSFW, const ZStrimW& s);
-string8 sAsSQL(ZRef<Expr_Rel_SFW> iSFW);
-
-void sAsSQL(ZRef<ZExpr_Bool> iExpr, const ZStrimW& s);
-string8 sAsSQL(ZRef<ZExpr_Bool> iExpr);
-
-} // namespace SQL
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_SQL__
+#endif // __ZRA_AsSQL__

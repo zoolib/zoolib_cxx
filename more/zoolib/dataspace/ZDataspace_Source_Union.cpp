@@ -52,42 +52,6 @@ using std::vector;
 #pragma mark * Helpers (anonymous)
 
 namespace { // anonymous
-
-set<string8> spRename(const map<string8,string8>& iRename, const set<string8>& iSet)
-	{
-	if (iRename.empty())
-		return iSet;
-
-	set<string8> result;
-	for (set<string8>::const_iterator i = iSet.begin(); i != iSet.end(); ++i)
-		{
-		map<string8,string8>::const_iterator iter = iRename.find(*i);
-		if (iRename.end() == iter)
-			result.insert(*i);
-		else
-			result.insert(iter->second);
-		}
-	return result;
-	}
-
-RelHead spPrefix(const string8& iPrefix, const RelHead& iRelHead)
-	{
-	if (iPrefix.empty())
-		return iRelHead;
-	RelHead result;
-	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		result |= iPrefix + *i;
-	return result;
-	}
-
-set<RelHead> spPrefix(const string8& iPrefix, const set<RelHead>& iRelHeads)
-	{
-	set<RelHead> result;
-	for (set<RelHead>::const_iterator i = iRelHeads.begin(); i != iRelHeads.end(); ++i)
-		result.insert(spPrefix(iPrefix, *i));
-	return result;
-	}
-
 } // anonymous namespace
 
 // =================================================================================================
@@ -258,7 +222,7 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_DoMakeWalker
+#pragma mark * Source_Union::Visitor_DoMakeWalker
 
 class Source_Union::Visitor_DoMakeWalker
 :	public virtual ZQE::Visitor_DoMakeWalker
@@ -289,6 +253,9 @@ public:
 
 class Source_Union::Analyze
 :	public virtual ZVisitor_Expr_Op_DoTransform_T<ZRA::Expr_Rel>
+,	public virtual ZRA::Visitor_Expr_Rel_Embed
+,	public virtual ZRA::Visitor_Expr_Rel_Calc
+,	public virtual ZRA::Visitor_Expr_Rel_Const
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
 ,	public virtual ZRA::Visitor_Expr_Rel_Restrict_Any
@@ -303,6 +270,10 @@ public:
 	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> > iExpr);
 
 // From ZRA::Visitor_Expr_Rel_XXX
+	virtual void Visit_Expr_Rel_Embed(ZRef<ZRA::Expr_Rel_Embed> iExpr);
+
+	virtual void Visit_Expr_Rel_Calc(ZRef<ZRA::Expr_Rel_Calc> iExpr);
+	virtual void Visit_Expr_Rel_Const(ZRef<ZRA::Expr_Rel_Const> iExpr);
 	virtual void Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr);
 	virtual void Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr);
 	virtual void Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict_Any> iExpr);
@@ -314,7 +285,7 @@ public:
 
 	Source_Union* fSource_Union;
 	PSearch* fPSearch;
-	map<string8,string8> fRename;
+	ZRA::Rename fRename;
 	ZRA::RelHead fRelHead;
 	};
 
@@ -398,11 +369,29 @@ void Source_Union::Analyze::Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> > iEx
 		}
 	}
 
+void Source_Union::Analyze::Visit_Expr_Rel_Embed(ZRef<ZRA::Expr_Rel_Embed> iExpr)
+	{
+	ZRA::Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(iExpr);
+	fRelHead |= iExpr->GetRelName();
+	}
+
+void Source_Union::Analyze::Visit_Expr_Rel_Calc(ZRef<ZRA::Expr_Rel_Calc> iExpr)
+	{
+	ZRA::Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(iExpr);
+	fRelHead |= iExpr->GetRelName();
+	}
+
+void Source_Union::Analyze::Visit_Expr_Rel_Const(ZRef<ZRA::Expr_Rel_Const> iExpr)
+	{
+	ZRA::Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(iExpr);
+	fRelHead |= iExpr->GetRelName();
+	}
+
 void Source_Union::Analyze::Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr)
 	{
 	ZRA::Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(iExpr);
 
-	fRelHead &= spRename(fRename, iExpr->GetProjectRelHead());
+	fRelHead &= ZRA::sRenamed(fRename, iExpr->GetProjectRelHead());
 	}
 
 void Source_Union::Analyze::Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr)
@@ -421,14 +410,14 @@ void Source_Union::Analyze::Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict_
 	{
 	ZRA::Visitor_Expr_Rel_Restrict_Any::Visit_Expr_Rel_Restrict(iExpr);
 
-	fRelHead |= spRename(fRename, iExpr->GetValPred().GetNames());
+	fRelHead |= ZRA::sRenamed(fRename, iExpr->GetValPred().GetNames());
 	}
 
 void Source_Union::Analyze::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr)
 	{
 	ZRA::Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(iExpr);
 
-	fRelHead |= spRename(fRename, sGetNames(iExpr->GetExpr_Bool()));
+	fRelHead |= ZRA::sRenamed(fRename, sGetNames(iExpr->GetExpr_Bool()));
 	}
 
 void Source_Union::Analyze::Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
@@ -469,7 +458,7 @@ public:
 // From ZRA::Visitor_Expr_Rel_Concrete
 	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr);
 
-	string8 fPrefix;
+	const string8 fPrefix;
 	};
 
 InsertPrefix::InsertPrefix(const string8& iPrefix)
@@ -480,25 +469,10 @@ void InsertPrefix::Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
 	{
 	const RelHead& theRelHead = iExpr->GetConcreteRelHead();
 	
-	const size_t prefixLength = fPrefix.length();
-	RelHead newRelHead;
-	for (RelHead::const_iterator i = theRelHead.begin(); i != theRelHead.end(); ++i)
-		{
-		const string8& oldName = *i;
-		if (oldName.substr(0, prefixLength) == fPrefix)
-			{
-			newRelHead |= oldName.substr(prefixLength);
-			}
-		else
-			{
-			ZUnimplemented();
-			newRelHead |= oldName;
-			}
-		}
-
+	const RelHead newRelHead = ZRA::sPrefixErase(fPrefix, theRelHead);
 	ZRef<ZRA::Expr_Rel> theRel = ZRA::sConcrete(newRelHead);
 	for (RelHead::const_iterator i = newRelHead.begin(); i != newRelHead.end(); ++i)
-		theRel = sRename(theRel, fPrefix + *i, *i);
+		theRel = sRename(theRel, ZRA::sPrefixInsert(fPrefix, *i), *i);
 	
 	this->pSetResult(theRel);
 	}
@@ -675,6 +649,7 @@ void Source_Union::ModifyRegistrations(
 		ZUtil_STL::sInsertMustNotContain(kDebug, fMap_RefconToPSearch, theRefcon, thePSearch);
 
 		thePSearch->fRel_Analyzed = Analyze(this, thePSearch).TopLevelDo(thePSearch->fRel);
+		fPSearchesThatNeedWork.insert(thePSearch);//??
 
 		if (ZLOGF(s, eDebug))
 			{
@@ -684,6 +659,7 @@ void Source_Union::ModifyRegistrations(
 			ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel_Analyzed, s);
 			}
 		}
+	this->pInvokeCallable_ResultsAvailable();
 	}
 
 void Source_Union::CollectResults(vector<SearchResult>& oChanged)
@@ -709,6 +685,7 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 				delete thePIP;
 				}
 			theProxy->fProxyInPSources.clear();
+			ZUtil_STL::sEraseMustContain(kDebug, fProxies, theProxy);
 			}
 		else
 			{
@@ -833,7 +810,6 @@ void Source_Union::EraseSource(ZRef<Source> iSource)
 	PSource* thePSource = ZUtil_STL::sGetMustContain(kDebug, fMap_SourceToPSource, iSource);
 	ZUtil_STL::sInsertMustNotContain(kDebug, fPSources_ToRemove, thePSource);
 	}
-
 
 ZRef<ZQE::Walker> Source_Union::pMakeWalker(ZRef<Proxy> iProxy)
 	{ return new Walker_Proxy(this, iProxy); }

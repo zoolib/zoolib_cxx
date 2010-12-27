@@ -18,52 +18,38 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDataspace_Source_SQLite__
-#define __ZDataspace_Source_SQLite__ 1
+#ifndef __ZValPred_Rename_T__
+#define __ZValPred_Rename_T__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZWorker.h"
+#include "zoolib/ZValPred_T.h"
 
-#include "zoolib/dataspace/ZDataspace_Source.h"
-
-#include "zoolib/sqlite/ZSQLite.h"
+#include <map>
 
 namespace ZooLib {
-namespace ZDataspace {
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Source_SQLite
-
-class Source_SQLite : public Source
+template <class Val>
+ZRef<ZValComparand_T<Val> > sRenamed(
+	const std::map<std::string,std::string>& iRename,
+	const ZRef<ZValComparand_T<Val> >& iVal)
 	{
-public:
-	enum { kDebug = 1 };
+	// For some reason ZRef::DynamicCast isn't usable here.
+	if (ZRef<ZValComparand_Name_T<Val> > as = dynamic_cast<ZValComparand_Name_T<Val>*>(iVal.Get()))
+		return new ZValComparand_Name_T<Val>(iRename.find(as->GetName())->second);
+	return iVal;
+	}
 
-	Source_SQLite(ZRef<ZSQLite::DB> iDB);
-	virtual ~Source_SQLite();
+template <class Val>
+ZValPred_T<Val> sRenamed(
+	const std::map<std::string,std::string>& iRename,
+	const ZValPred_T<Val>& iValPred)
+	{
+	return ZValPred_T<Val>(
+		sRenamed(iRename, iValPred.GetLHS()),
+		iValPred.GetComparator(),
+		sRenamed(iRename, iValPred.GetRHS()));
+	}
 
-	virtual RelHead GetRelHead();
-
-	virtual void ModifyRegistrations(
-		const AddedSearch* iAdded, size_t iAddedCount,
-		const int64* iRemoved, size_t iRemovedCount);
-
-	virtual void CollectResults(std::vector<SearchResult>& oChanged);
-
-private:
-	bool pCheck(ZRef<ZWorker> iWorker);
-
-	ZRef<ZSQLite::DB> fDB;
-	int64 fChangeCount;
-	ZRef<Clock> fClock;
-
-	class PSearch;
-	std::map<int64, PSearch*> fMap_RefconToPSearch;
-	std::map<string8, RelHead> fMap_Tables;
-	};
-
-} // namespace ZDataspace
 } // namespace ZooLib
 
-#endif // __ZDataspace_Source_SQLite__
+#endif // __ZValPred_Rename_T__

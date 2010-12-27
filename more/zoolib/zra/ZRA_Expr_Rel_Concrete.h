@@ -34,17 +34,6 @@ class Visitor_Expr_Rel_Concrete;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ConcreteDomain
-
-class ConcreteDomain : public ZCounted
-	{
-public:
-	ConcreteDomain();
-	virtual ~ConcreteDomain();
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Expr_Rel_Concrete
 
 class Expr_Rel_Concrete
@@ -53,6 +42,8 @@ class Expr_Rel_Concrete
 	{
 	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
+	Expr_Rel_Concrete(const RelHead& iRelHead);
+
 // From ZExpr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
@@ -62,12 +53,10 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor);
 
-	virtual RelHead GetConcreteRelHead() = 0;
-	virtual ZRef<ConcreteDomain> GetConcreteDomain();
-	virtual string8 GetName();
+	RelHead GetConcreteRelHead();
 
-// Experimental. Perhaps should be something we ask of the ConcreteDomain?
-	virtual string8 GetDescription();
+private:
+	const RelHead fRelHead;
 	};
 
 // =================================================================================================
@@ -84,27 +73,7 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Concrete_Simple
-
-class Expr_Rel_Concrete_Simple : public Expr_Rel_Concrete
-	{
-public:
-	Expr_Rel_Concrete_Simple(
-		ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead);
-
-// From Expr_Rel_Concrete
-	virtual RelHead GetConcreteRelHead();
-	virtual ZRef<ConcreteDomain> GetConcreteDomain();
-	virtual string8 GetName();
-
-private:
-	ZRef<ConcreteDomain> fConcreteDomain;
-	const string8 fName;
-	const RelHead fRelHead;
-	};
-
-ZRef<Expr_Rel> sConcrete(
-	ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead);
+#pragma mark * Relational operators
 
 ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead);
 

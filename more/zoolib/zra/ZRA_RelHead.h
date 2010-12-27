@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_RelHead__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZSet_T.h"
 
 #include "zoolib/zra/ZRA_RelName.h"
@@ -30,18 +29,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 
 namespace ZooLib {
+namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Rename_t
+#pragma mark * Rename
 
-// This needs to be in ZooLib, or we get ambiguities with the one defined in ZValPred_T.h
+typedef std::map<RelName,RelName> Rename;
 
-typedef std::map<std::string, std::string> Rename_t;
-
-Rename_t sInverted(const Rename_t& iRename);
-
-namespace ZRA {
+Rename sInverted(const Rename& iRename);
 
 // =================================================================================================
 #pragma mark -
@@ -49,11 +45,13 @@ namespace ZRA {
 
 typedef ZSet_T<RelName> RelHead;
 
-RelName sPrefixAdd(const RelName& iPrefix, const RelName& iRelName);
-RelName sPrefixRemove(const RelName& iPrefix, const RelName& iRelName);
+RelName sPrefixInsert(const RelName& iPrefix, const RelName& iRelName);
+RelName sPrefixErase(const RelName& iPrefix, const RelName& iRelName);
 
-RelHead sPrefixAdd(const RelName& iPrefix, const RelHead& iRelHead);
-RelHead sPrefixRemove(const RelName& iPrefix, const RelHead& iRelHead);
+RelHead sPrefixInsert(const RelName& iPrefix, const RelHead& iRelHead);
+RelHead sPrefixErase(const RelName& iPrefix, const RelHead& iRelHead);
+
+RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead);
 
 // =================================================================================================
 #pragma mark -

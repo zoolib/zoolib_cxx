@@ -62,6 +62,8 @@ private:
 class Source_Dataset : public Source
 	{
 public:
+	enum { kDebug = 1 };
+
 	// Some kind of index specs to be passed in too.
 	Source_Dataset(ZRef<ZDataset::Dataset> iDataset);
 	virtual ~Source_Dataset();
@@ -122,9 +124,9 @@ private:
 	std::vector<Map_Pending> fStack;
 	bool fStackChanged;
 
-	class PQuery;
-	// We could have the PQuery be an in-place value in the map.
-	std::map<int64, PQuery*> fMap_RefconToPQuery;
+	class PSearch;
+	// We could have the PSearch be an in-place value in the map.
+	std::map<int64, PSearch*> fMap_RefconToPSearch;
 	};
 
 } // namespace ZDataspace

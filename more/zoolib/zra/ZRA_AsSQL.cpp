@@ -18,30 +18,48 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Bool_ValPred_Any.h"
-#include "zoolib/ZStrim.h"
+#include "zoolib/ZLog.h"
+//#include "zoolib/ZExpr_Bool_ValPred_Any.h"
+//#include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Escaped.h"
-#include "zoolib/ZTime.h"
+#include "zoolib/ZString.h"
+//#include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_Strim.h"
+#include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoToStrim.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
+#include "zoolib/ZValPred_Rename_T.h"
 
+#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+
+#include "zoolib/zra/ZRA_AsSQL.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
-#include "zoolib/zra/ZRA_SQL.h"
+#include "zoolib/zra/ZRA_Util_RelOperators.h"
 
-#include <map>
+#include <set>
 
 namespace ZooLib {
 namespace ZRA {
-namespace SQL {
 
 using std::map;
 using std::set;
-using std::vector;
+using std::string;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * spRenamed (anonymous)
+
+namespace { // anonymous
+
+static ZValPred_Any spRenamed(const Rename& iRename, const ZValPred_Any& iValPred)
+	{ return ZooLib::sRenamed(iRename, iValPred); }
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -54,228 +72,182 @@ class DoRename
 ,	public virtual ZVisitor_Expr_Bool_ValPred_Any
 	{
 public:
-	DoRename(const Rename_t& iRename);
+	DoRename(const Rename& iRename);
 
 	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr);
 private:
-	const Rename_t& fRename;
+	const Rename& fRename;
 	};
 
-DoRename::DoRename(const Rename_t& iRename)
+DoRename::DoRename(const Rename& iRename)
 :	fRename(iRename)
 	{}
 
 void DoRename::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr)
-	{
-	ZValPred_Any result;
-	if (iExpr->GetValPred().Renamed(fRename, result))
-		this->pSetResult(new ZExpr_Bool_ValPred_Any(result));
-	else
-		this->pSetResult(iExpr);
-	}
+	{ this->pSetResult(new ZExpr_Bool_ValPred_Any(spRenamed(fRename, iExpr->GetValPred()))); }
+
+static ZRef<ZExpr_Bool> spRenamed(const Rename& iRename, ZRef<ZExpr_Bool> iExpr_Bool)
+	{ return DoRename(iRename).Do(iExpr_Bool); }
 
 } // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeSFW (anonymous)
+#pragma mark * Thing (anonymous)
 
 namespace { // anonymous
 
-class MakeSFW
-:	public virtual ZVisitor_Expr_Op_DoTransform_T<Expr_Rel_SFW>
+struct Thing
+	{
+	RelHead fRelHead_Physical;
+	Rename fRename;
+	Rename fRename_Inverse;
+	ZRef<ZExpr_Bool> fCondition;
+	};
+
+} // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZRA::SQL::sAsSQL
+
+class MakeThing
+:	public virtual ZVisitor_Do_T<Thing>
 ,	public virtual Visitor_Expr_Rel_Product
-,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
 ,	public virtual Visitor_Expr_Rel_Restrict_Any
 ,	public virtual Visitor_Expr_Rel_Select
+,	public virtual Visitor_Expr_Rel_Concrete
 	{
 public:
-	virtual void Visit_Expr_Op0(ZRef<ZExpr_Op0_T<ZRef<Expr_Rel_SFW> > > iExpr);
-	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<ZRef<Expr_Rel_SFW> > > iExpr);
-	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRef<Expr_Rel_SFW> > > iExpr);
+	MakeThing(const map<string8,RelHead>& iTables);
+
+	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<ZRef<Expr_Rel> > > iExpr);
+	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRef<Expr_Rel> > > iExpr);
+	virtual void Visit_Expr_Op0(ZRef<ZExpr_Op0_T<ZRef<Expr_Rel> > > iExpr);
 
 	virtual void Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr);
-
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
 
 	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
 	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr);
 	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr);
 	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr);
+
+	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
+
+	const map<string8,RelHead>& fTables;
+	map<string8,int> fTablesUsed;
 	};
 
-void MakeSFW::Visit_Expr_Op0(ZRef<ZExpr_Op0_T<ZRef<Expr_Rel_SFW> > > iExpr)
-	{ ZUnimplemented(); }
-
-void MakeSFW::Visit_Expr_Op1(ZRef<ZExpr_Op1_T<ZRef<Expr_Rel_SFW> > > iExpr)
-	{ ZUnimplemented(); }
-
-void MakeSFW::Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRef<Expr_Rel_SFW> > > iExpr)
-	{ ZUnimplemented(); }
-
-void MakeSFW::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
-	{
-	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
-	ZRef<Expr_Rel_SFW> sfw1 = this->Do(iExpr->GetOp1());
-
-	Rename_t theRename = sfw0->GetRename();
-	const Rename_t& theRename1 = sfw1->GetRename();
-	theRename.insert(theRename1.begin(), theRename1.end());
-
-	vector<ZRef<Expr_Rel_Concrete> > rels = sfw0->GetRels();
-	const vector<ZRef<Expr_Rel_Concrete> > rels1 = sfw1->GetRels();
-	rels.insert(rels.end(), rels1.begin(), rels1.end());
-
-	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
-		theRename,
-		sfw0->GetConcreteRelHead() | sfw1->GetConcreteRelHead(),
-		sfw0->GetCondition() & sfw1->GetCondition(),
-		rels);
-
-	this->pSetResult(result);
-	}
-
-void MakeSFW::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
-	{
-	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
-		Rename_t(),
-		iExpr->GetConcreteRelHead(),
-		sTrue(),
-		vector<ZRef<Expr_Rel_Concrete> >(1, iExpr));
-
-	this->pSetResult(result);
-	}
-
-void MakeSFW::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
-	{
-	// Descend
-	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
-
-	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
-		sfw0->GetRename(),
-		sfw0->GetConcreteRelHead() & iExpr->GetProjectRelHead(),
-		sfw0->GetCondition(),
-		sfw0->GetRels());
-
-	this->pSetResult(result);
-	}
-
-static RelHead spRenamed(RelHead iRelHead, const RelName& iOld, const RelName& iNew)
-	{
-	if (iRelHead.Contains(iOld))
-		{
-		iRelHead -= iOld;
-		iRelHead |= iNew;
-		}
-	return iRelHead;
-	}
-
-void MakeSFW::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
-	{
-	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
-
-	const RelName& oldName = iExpr->GetOld();
-	const RelName& newName = iExpr->GetNew();
-	Rename_t theRename = sfw0->GetRename();
-	bool foundIt = false;
-	for (Rename_t::iterator i = theRename.begin(); i != theRename.end(); /*no inc*/)
-		{
-		if (i->second == oldName)
-			{
-			i->second = newName;
-			foundIt = true;
-			}
-		}
-
-	if (!foundIt)
-		theRename[oldName] = newName;
-
-	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
-		theRename,
-		spRenamed(sfw0->GetConcreteRelHead(), oldName, newName),
-		sfw0->GetCondition(),
-		sfw0->GetRels());
-
-	this->pSetResult(result);
-	}
-
-static ZValPred_Any spRenamedInverse(
-	const ZValPred_Any& iValPred, const Rename_t& iRename)
-	{
-	ZValPred_Any result;
-	if (iValPred.Renamed(sInverted(iRename), result))
-		return result;
-	return iValPred;
-	}
-
-static ZRef<ZExpr_Bool> spRenamedInverse(
-	ZRef<ZExpr_Bool> iExpr_Bool, const Rename_t& iRename)
-	{ return DoRename(sInverted(iRename)).Do(iExpr_Bool); }
-
-void MakeSFW::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr)
-	{
-	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
-
-	const Rename_t& theRename = sfw0->GetRename();
-	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
-		theRename,
-		sfw0->GetConcreteRelHead(),
-		sfw0->GetCondition() & spRenamedInverse(iExpr->GetValPred(), theRename),
-		sfw0->GetRels());
-
-	this->pSetResult(result);
-	}
-
-void MakeSFW::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
-	{
-	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
-
-	const Rename_t& theRename = sfw0->GetRename();
-	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
-		theRename,
-		sfw0->GetConcreteRelHead(),
-		sfw0->GetCondition() & spRenamedInverse(iExpr->GetExpr_Bool(), theRename),
-		sfw0->GetRels());
-
-	this->pSetResult(result);
-	}
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_SFW
-
-Expr_Rel_SFW::Expr_Rel_SFW(const Rename_t& iRename,
-	const RelHead& iRelHead,
-	ZRef<ZExpr_Bool> iCondition,
-	const vector<ZRef<Expr_Rel_Concrete> >& iRels)
-:	fRename(iRename)
-,	fRelHead(iRelHead)
-,	fCondition(iCondition)
-,	fRels(iRels)
+MakeThing::MakeThing(const map<string8,RelHead>& iTables)
+:	fTables(iTables)
 	{}
 
-RelHead Expr_Rel_SFW::GetConcreteRelHead()
-	{ return fRelHead; }
+void MakeThing::Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRef<Expr_Rel> > > iExpr)
+	{ ZUnimplemented(); }
 
-const Rename_t& Expr_Rel_SFW::GetRename()
-	{ return fRename; }
+void MakeThing::Visit_Expr_Op1(ZRef<ZExpr_Op1_T<ZRef<Expr_Rel> > > iExpr)
+	{ ZUnimplemented(); }
 
-ZRef<ZExpr_Bool> Expr_Rel_SFW::GetCondition()
-	{ return fCondition; }
+void MakeThing::Visit_Expr_Op0(ZRef<ZExpr_Op0_T<ZRef<Expr_Rel> > > iExpr)
+	{ ZUnimplemented(); }
 
-const vector<ZRef<Expr_Rel_Concrete> >& Expr_Rel_SFW::GetRels()
-	{ return fRels; }
+void MakeThing::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
+	{
+	Thing thing0 = this->Do(iExpr->GetOp0());
+	const Thing thing1 = this->Do(iExpr->GetOp1());
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZRA::SQL::sConvert
+	thing0.fRelHead_Physical |= thing1.fRelHead_Physical;
+	thing0.fRename.insert(thing1.fRename.begin(), thing1.fRename.end());
+	thing0.fRename_Inverse.insert(thing1.fRename_Inverse.begin(), thing1.fRename_Inverse.end());
+	thing0.fCondition &= thing1.fCondition;
+	
+	this->pSetResult(thing0);
+	}
 
-ZRef<Expr_Rel_SFW> sConvert(ZRef<Expr_Rel> iExpr)
-	{ return MakeSFW().Do(iExpr); }
+void MakeThing::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
+	{
+	Thing theThing = this->Do(iExpr->GetOp0());
+	const RelHead& theRH = iExpr->GetProjectRelHead();
+	RelHead newRelHead;
+	for (RelHead::iterator i = theThing.fRelHead_Physical.begin();
+		i != theThing.fRelHead_Physical.end(); ++i)
+		{
+		string theString1 = *i;
+		string theString2 = ZUtil_STL::sGetMustContain(1, theThing.fRename_Inverse, theString1);
+		if (ZUtil_STL::sContains(theRH, theString2))
+			newRelHead.insert(theString1);
+		}
+	theThing.fRelHead_Physical.swap(newRelHead);
+	this->pSetResult(theThing);
+	}
+
+void MakeThing::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr)
+	{
+	Thing theThing = this->Do(iExpr->GetOp0());
+	theThing.fCondition &= spRenamed(theThing.fRename, iExpr->GetValPred());
+	this->pSetResult(theThing);
+	}
+
+void MakeThing::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
+	{
+	Thing theThing = this->Do(iExpr->GetOp0());
+	theThing.fCondition &= spRenamed(theThing.fRename, iExpr->GetExpr_Bool());
+	this->pSetResult(theThing);
+	}
+
+void MakeThing::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
+	{
+	Thing theThing = this->Do(iExpr->GetOp0());
+	const RelName& oldName = iExpr->GetOld();
+	const RelName& newName = iExpr->GetNew();
+	const RelName orgName = ZUtil_STL::sEraseAndReturnIfContains(theThing.fRename, oldName).Get();
+	const RelName orgNameInverse = ZUtil_STL::sEraseAndReturnIfContains(theThing.fRename_Inverse, orgName).Get();
+	ZAssert(orgNameInverse == oldName);
+	ZUtil_STL::sInsertMustNotContain(1, theThing.fRename, newName, orgName);
+	ZUtil_STL::sInsertMustNotContain(1, theThing.fRename_Inverse, orgName, newName);
+
+	this->pSetResult(theThing);
+	}
+
+void MakeThing::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
+	{
+	// Identify the table.
+	const RelHead& theRH = iExpr->GetConcreteRelHead();
+
+	ZQ<map<string8,RelHead>::const_iterator> found;
+	for (map<string8,RelHead>::const_iterator iter = fTables.begin(); iter != fTables.end(); ++iter)
+		{
+		if ((sPrefixInsert(iter->first + "_", iter->second) & theRH).size())
+			{
+			found = iter;
+			break;
+			}
+		}
+	if (!found)
+		throw std::runtime_error("Couldn't find table");
+
+	const string8 realTableName = found.Get()->first;
+	const string8 realTableNameUnderscore = realTableName + "_";
+	const int numericSuffix = fTablesUsed[realTableName]++;
+	const string8 usedTableName = realTableName + ZStringf("%d",numericSuffix);
+	const string8 usedTableNameDot = usedTableName + ".";
+
+	Thing theThing;
+	theThing.fCondition = sTrue();
+	for (RelHead::const_iterator iter = theRH.begin(); iter != theRH.end(); ++iter)
+		{
+		const string8 attrName = *iter;
+		const string8 fieldName = sPrefixErase(realTableNameUnderscore, attrName);
+		const string8 physicalFieldName = usedTableNameDot + fieldName;
+		theThing.fRelHead_Physical |= physicalFieldName;
+		ZUtil_STL::sInsertMustNotContain(1, theThing.fRename, attrName, physicalFieldName);
+		ZUtil_STL::sInsertMustNotContain(1, theThing.fRename_Inverse, physicalFieldName, attrName);
+		}
+
+	this->pSetResult(theThing);
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -336,10 +308,6 @@ typedef ZValComparator_Simple_T<ZVal_Any> ZValComparator_Simple;
 typedef ZValComparand_Name_T<ZVal_Any> ZValComparand_Name;
 typedef ZValComparand_Var_T<ZVal_Any> ZValComparand_Var;
 typedef ZValComparand_Const_T<ZVal_Any> ZValComparand_Const;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Static helper functions
 
 static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 	{
@@ -476,79 +444,65 @@ void ToStrim_SQL::Visit_Expr_Bool_ValPred(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRA::SQL::sConvert
+#pragma mark * ZRA::SQL::sAsSQL
 
-void sAsSQL(ZRef<Expr_Rel_SFW> iSFW, const ZStrimW& s)
+bool sWriteAsSQL(const std::map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const ZStrimW& s)
 	{
-	if (iSFW)
+	try
 		{
-		s << "SELECT";
-		const RelHead& theRelHead = iSFW->GetConcreteRelHead();
+		MakeThing theMakeThing(iTables);
+		const Thing theThing = theMakeThing.Do(iRel);
+		
+		s << "SELECT DISTINCT ";
 
-		const Rename_t theRename = sInverted(iSFW->GetRename());
-
-		const set<string8>& names = theRelHead.GetElems();
-
-		bool isFirst = true;
-		for (set<string8>::const_iterator i = names.begin(); i != names.end(); ++i)
+		{
+		RelHead theRHLogical;
+		for (RelHead::iterator i = theThing.fRelHead_Physical.begin();
+			i != theThing.fRelHead_Physical.end(); ++i)
 			{
-			if (!isFirst)
-				s << ",";
-			isFirst = false;
-
-			const string8& theName = *i;
-			Rename_t::const_iterator alias = theRename.find(theName);
-			if (alias != theRename.end())
-				{
-				s << " " << (*alias).second << " AS '" << theName << "'";
-				}
-			else
-				{
-				s << " " << theName << " AS '" << theName << "'";
-//				s << " " << theName;
-				}
+			theRHLogical |= ZUtil_STL::sGetMustContain(1, theThing.fRename_Inverse, *i);
 			}
 
-		s << " FROM";
-
-		{
 		bool isFirst = true;
-		const vector<ZRef<Expr_Rel_Concrete> >& theRels = iSFW->GetRels();
-		for (vector<ZRef<Expr_Rel_Concrete> >::const_iterator i = theRels.begin();
-			i != theRels.end(); ++i)
+		for (RelHead::iterator i = theRHLogical.begin(); i != theRHLogical.end(); ++i)
 			{
 			if (!isFirst)
 				s << ",";
 			isFirst = false;
-			s << " " << (*i)->GetName();
+			s << ZUtil_STL::sGetMustContain(1, theThing.fRename, *i);
+			}
+		}
+
+		s << " FROM ";
+
+		{
+		bool isFirst = true;
+
+		for (map<string8,int>::iterator i = theMakeThing.fTablesUsed.begin();
+			i != theMakeThing.fTablesUsed.end(); ++i)
+			{
+			for (int x = 0; x < i->second; ++x)
+				{
+				if (!isFirst)
+					s << ",";
+				isFirst = false;
+				s << i->first << " AS " << i->first << ZStringf("%d", x);
+				}
 			}
 		}
 
 		s << " WHERE ";
-		sAsSQL(iSFW->GetCondition(), s);
-		s << ";";
+
+		ToStrim_SQL().DoToStrim(ToStrim_SQL::Options(), s, theThing.fCondition);
+		
+		s << ";\n";
+		return true;
 		}
+	catch (...)
+		{}
+
+	return false;
 	}
 
-string8 sAsSQL(ZRef<Expr_Rel_SFW> iSFW)
-	{
-	string8 result;
-	sAsSQL(iSFW, ZStrimW_String(result));
-	return result;
-	}
-
-void sAsSQL(ZRef<ZExpr_Bool> iExpr, const ZStrimW& s)
-	{
-	ToStrim_SQL().DoToStrim(ToStrim_SQL::Options(), s, iExpr);
-	}
-
-string8 sAsSQL(ZRef<ZExpr_Bool> iExpr)
-	{
-	string8 result;
-	sAsSQL(iExpr, ZStrimW_String(result));
-	return result;
-	}
-
-} // namespace SQL
 } // namespace ZRA
 } // namespace ZooLib

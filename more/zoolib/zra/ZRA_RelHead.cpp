@@ -32,18 +32,6 @@ template <> int sCompare_T(const ZRA::RelHead& iL, const ZRA::RelHead& iR)
 
 ZMACRO_CompareRegistration_T(ZRA::RelHead)
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Rename_t
-
-Rename_t sInverted(const Rename_t& iRename)
-	{
-	Rename_t result;
-	for (Rename_t::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
-		result[i->second] = i->first;
-	return result;
-	}
-
 } // namespace ZooLib
 
 namespace ZooLib {
@@ -51,39 +39,68 @@ namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Rename
+
+Rename sInverted(const Rename& iRename)
+	{
+	Rename result;
+	for (Rename::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
+		result[i->second] = i->first;
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * RelHead
 
-RelName sPrefixAdd(const RelName& iPrefix, const RelName& iRelName)
+RelName sPrefixInsert(const RelName& iPrefix, const RelName& iRelName)
 	{ return iPrefix + iRelName; }
 
-RelName sPrefixRemove(const RelName& iPrefix, const RelName& iRelName)
+RelName sPrefixErase(const RelName& iPrefix, const RelName& iRelName)
 	{
 	if (iRelName.substr(0, iPrefix.size()) == iPrefix)
 		return iRelName.substr(iPrefix.size(), RelName::npos);
 	return iRelName;
 	}
 
-RelHead sPrefixAdd(const RelName& iPrefix, const RelHead& iRelHead)
+RelHead sPrefixInsert(const RelName& iPrefix, const RelHead& iRelHead)
 	{
 	if (iPrefix.empty())
 		return iRelHead;
 
 	RelHead result;
 	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		result.insert(sPrefixAdd(iPrefix, *i));
+		result.insert(sPrefixInsert(iPrefix, *i));
 
 	return result;
 	}
 
-RelHead sPrefixRemove(const RelName& iPrefix, const RelHead& iRelHead)
+RelHead sPrefixErase(const RelName& iPrefix, const RelHead& iRelHead)
 	{
 	if (iPrefix.empty())
 		return iRelHead;
 
 	RelHead result;
 	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		result.insert(sPrefixRemove(iPrefix, *i));
+		result.insert(sPrefixErase(iPrefix, *i));
 
+	return result;
+	}
+
+RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead)
+	{
+	if (iRename.empty())
+		return iRelHead;
+
+	RelHead result;
+	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
+		{
+		Rename::const_iterator iter = iRename.find(*i);
+		if (iRename.end() == iter)
+			result.insert(*i);
+		else
+			result.insert(iter->second);
+		}
 	return result;
 	}
 

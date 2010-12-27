@@ -18,20 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZLog.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/ZWorker_Callable.h"
+#include "zoolib/ZWorkerRunner_CFRunLoop.h"
+
 #include "zoolib/dataspace/ZDataspace_Source_SQLite.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
-#include "zoolib/zra/ZRA_SQL.h"
+#include "zoolib/zra/ZRA_AsSQL.h"
+#include "zoolib/zra/ZRA_GetRelHead.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
-#include "zoolib/ZLog.h"
-
-#include "zoolib/ZCallable_PMF.h"
-#include "zoolib/ZWorker_Callable.h"
-#include "zoolib/ZWorkerRunner_CFRunLoop.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -42,14 +43,13 @@ using std::vector;
 
 using namespace ZSQLite;
 
-using ZRA::NameMap;
 using ZRA::RelName;
 
-const ZStrimW& operator<<(const ZStrimW& w, const Rename_t& iRename)
+const ZStrimW& operator<<(const ZStrimW& w, const ZRA::Rename& iRename)
 	{
 	w << "(";
 	bool isSubsequent = false;
-	for (Rename_t::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
+	for (ZRA::Rename::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
 		{
 		if (isSubsequent)
 			w << ", ";
@@ -62,19 +62,25 @@ const ZStrimW& operator<<(const ZStrimW& w, const Rename_t& iRename)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_SQLite::PQuery
+#pragma mark * Source_SQLite::PSearch
 
-class Source_SQLite::PQuery
+class Source_SQLite::PSearch
 	{
 public:
-	PQuery(int64 iRefcon, const string8& iSQL);
+	PSearch(int64 iRefcon,
+		const ZRef<ZRA::Expr_Rel>& iRel, const RelHead& iRelHead, const string8& iSQL);
 
 	const int64 fRefcon;
+	const ZRef<ZRA::Expr_Rel> fRel;
+	const RelHead fRelHead;
 	const string8 fSQL;
 	};
 
-Source_SQLite::PQuery::PQuery(int64 iRefcon, const string8& iSQL)
+Source_SQLite::PSearch::PSearch(int64 iRefcon,
+	const ZRef<ZRA::Expr_Rel>& iRel, const RelHead& iRelHead, const string8& iSQL)
 :	fRefcon(iRefcon)
+,	fRel(iRel)
+,	fRelHead(iRelHead)
 ,	fSQL(iSQL)
 	{}
 
@@ -96,180 +102,96 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 		for (ZRef<Iter> iterTable = new Iter(fDB, "pragma table_info(" + theTableName + ");");
 			iterTable->HasValue(); iterTable->Advance())
 			{
-			theRelHead.Insert(theTableName + "_" + iterTable->Get(1).Get<string8>());
+			theRelHead |= iterTable->Get(1).Get<string8>();
 			}
-		theRelHead.Insert(theTableName + "_oid");
+		theRelHead |= "oid";
 
 		if (!theRelHead.empty())
-			ZUtil_STL::sInsertMustNotContain(kDebug, fMap_NameToRelHead, theTableName, theRelHead);
+			ZUtil_STL::sInsertMustNotContain(kDebug, fMap_Tables, theTableName, theRelHead);
 		}
 
-	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(this, &Source_SQLite::pCheck));
-	ZWorkerRunner_CFRunLoop::sMain()->Attach(theWorker);
-	theWorker->Wake();
+//	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(this, &Source_SQLite::pCheck));
+//	ZWorkerRunner_CFRunLoop::sMain()->Attach(theWorker);
+//	theWorker->Wake();
 	}
 
 Source_SQLite::~Source_SQLite()
 	{}
 
-set<RelHead> Source_SQLite::GetRelHeads()
+RelHead Source_SQLite::GetRelHead()
 	{
-	set<RelHead> result;
-	for (map<string8, RelHead>::const_iterator i = fMap_NameToRelHead.begin();
-		i != fMap_NameToRelHead.end(); ++i)
+	RelHead result;
+	for (map<string8, RelHead>::const_iterator iterTables = fMap_Tables.begin();
+		iterTables != fMap_Tables.end(); ++iterTables)
 		{
-		result.insert(i->second);
+		const string8& tableName = iterTables->first;
+		const RelHead& theRH = iterTables->second;
+		for (RelHead::const_iterator iterRH = theRH.begin(); iterRH != theRH.end(); ++iterRH)
+			result |= tableName + "_" + *iterRH;
 		}
 	return result;
 	}
 
-void Source_SQLite::Update(
-	bool iLocalOnly,
+void Source_SQLite::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,
-	const int64* iRemoved, size_t iRemovedCount,
-	vector<SearchResult>& oChanged,
-	ZRef<Event>& oEvent)
+	const int64* iRemoved, size_t iRemovedCount)
 	{
-	oChanged.clear();
-
-	while (iRemovedCount--)
+	if (iAddedCount || iRemovedCount)
 		{
-		PQuery* thePQuery = ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPQuery, *iRemoved++);
-		delete thePQuery;
+//		fStackChanged = true;
+		this->pInvokeCallable_ResultsAvailable();
 		}
 
 	while (iAddedCount--)
 		{
-		if (ZLOGF(s, eDebug))
-			s << "\n" << iAdded->fSearchSpec;
-		
-		const string8 theSQL = this->pAsSQL(iAdded->fSearchSpec);
-		PQuery* thePQuery = new PQuery(iAdded->fRefcon, theSQL);
-		ZUtil_STL::sInsertMustNotContain(kDebug,
-			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
+		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
+		string8 asSQL;
+		if (ZRA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String(asSQL)))
+			{
+			if (ZLOGF(s, eDebug))
+				s << asSQL;
+			PSearch* thePSearch =
+				new PSearch(iAdded->GetRefcon(), theRel, sGetRelHead(theRel), asSQL);
+			ZUtil_STL::sInsertMustNotContain(kDebug,
+				fMap_RefconToPSearch, thePSearch->fRefcon, thePSearch);
+			}
+
 		++iAdded;
 		}
 
-	// For now, just regenerate everything every time. Later we'll only generate
-	// newly added queries, or everything if the sqlite change count increments.
-	for (map<int64, PQuery*>::iterator i = fMap_RefconToPQuery.begin();
-		i != fMap_RefconToPQuery.end(); ++i)
+	while (iRemovedCount--)
 		{
-		PQuery* thePQuery = i->second;
-
-		ZRef<Iter> theIter = new Iter(fDB, thePQuery->fSQL);
-		vector<string8> theRowHead;
-		const size_t theCount = theIter->Count();
-		for (size_t x = 0; x < theCount; ++x)
-			theRowHead.push_back(theIter->NameOf(x));
-
-		vector<ZRef<ZQE::Row> > theRows;
-		for (/*no init*/;theIter->HasValue(); theIter->Advance())
+		if (ZQ<PSearch*> thePSearch =
+			ZUtil_STL::sEraseAndReturnIfContains(fMap_RefconToPSearch, *iRemoved++))
 			{
-			vector<ZVal_Any> theVals;
-			theVals.reserve(theCount);
+			delete thePSearch.Get();
+			}
+//		delete ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPSearch, *iRemoved++);
+		}
+	}
+
+void Source_SQLite::CollectResults(std::vector<SearchResult>& oChanged)
+	{
+	oChanged.clear();
+
+	for (map<int64, PSearch*>::iterator iter_RefconToPSearch = fMap_RefconToPSearch.begin();
+		iter_RefconToPSearch != fMap_RefconToPSearch.end(); ++iter_RefconToPSearch)
+		{
+		vector<ZVal_Any> thePackedRows;
+		PSearch* thePSearch = iter_RefconToPSearch->second;
+		for (ZRef<Iter> theIter = new Iter(fDB, thePSearch->fSQL);
+			theIter->HasValue(); theIter->Advance())
+			{
+			const size_t theCount = theIter->Count();
 			for (size_t x = 0; x < theCount; ++x)
-				theVals.push_back(theIter->Get(x));
-			ZRef<ZQE::Row> theRow = new ZQE::Row_Vector(&theVals);
-			theRows.push_back(theRow);
+				thePackedRows.push_back(theIter->Get(x));
 			}
 
-		ZRef<ZQE::RowVector> theRowVector = new ZQE::RowVector(&theRows);
-		ZRef<SearchRows> theSearchRows = new SearchRows(&theRowHead, theRowVector);
-
-		SearchResult theSearchResult;
-		theSearchResult.fRefcon = thePQuery->fRefcon;
-		theSearchResult.fSearchRows = theSearchRows;
-
+		ZRef<ZQE::Result> theResult =
+			new ZQE::Result(thePSearch->fRelHead, &thePackedRows, nullptr);
+		SearchResult theSearchResult(thePSearch->fRefcon, theResult, null);
 		oChanged.push_back(theSearchResult);
 		}
-
-	sEvent(fClock);
-
-	oEvent = fClock->GetEvent();
-	}
-
-bool Source_SQLite::pCheck(ZRef<ZWorker> iWorker)
-	{
-	this->pInvokeCallable();
-	iWorker->WakeIn(10);
-	return true;
-	}
-
-string8 Source_SQLite::pAsSQL(const SearchSpec& iSearchSpec)
-	{
-	// Go through each NameMap. Use the from to identify which table it represents. Generate
-	// a distinct name for the table, for use in an AS clause. Rewrite the from to reference
-	// the distinct name.
-
-	// We can then generate an SFW formed from the reworked NameMaps and the ValPredCompound, which
-	// is written in terms of the Tos.
-
-	// We should rewrite the ValPredCompound and the AS clauses using unqiue
-	// names ("zoolib_unique_1",...) so we don't get bitten by SQL's case-insentivity
-	// and clashes with column names.
-	// We'll live with it for now.
-
-	map<string8, int> theTableSuffixes;
-	map<string8, string8> theRename;
-	string8 theFields;
-	for (vector<NameMap>::const_iterator i = iSearchSpec.fNameMaps.begin();
-		i != iSearchSpec.fNameMaps.end(); ++i)
-		{
-		const NameMap& sourceNameMap = *i;
-		const RelHead& theRH_From = sourceNameMap.GetRelHead_From();
-		if (ZLOGF(s, eDebug))
-			s << theRH_From;
-
-		for (map<string8, RelHead>::const_iterator i = fMap_NameToRelHead.begin();
-			i != fMap_NameToRelHead.end(); ++i)
-			{
-			if (ZUtil_STL_set::sIncludes(i->second, theRH_From))
-				{
-				// Found a table.
-				const RelName theTableName = i->first;
-				const int theSuffix = theTableSuffixes[theTableName]++;
-				const RelName newPrefix = theTableName + ZStringf("%d", theSuffix) + ".";
-				const RelName oldPrefix = theTableName + "_";
-
-				for (set<NameMap::Elem_t>::const_iterator i = sourceNameMap.GetElems().begin();
-					i != sourceNameMap.GetElems().end(); ++i)
-					{
-					const RelName oldFrom = i->second;
-					RelName newFrom = ZRA::sPrefixRemove(theTableName + "_", oldFrom);
-					newFrom = ZRA::sPrefixAdd(newPrefix, newFrom);
-					if (! theFields.empty())
-						theFields += ", ";
-					theFields += newFrom + " AS '" + i->first + "'";
-					ZUtil_STL::sInsertMustNotContain(1, theRename, i->first, newFrom);
-					}
-				}
-			}
-		}
-
-	string8 theTables;
-	for (map<string8, int>::const_iterator i = theTableSuffixes.begin();
-		i != theTableSuffixes.end(); ++i)
-		{
-		for (int x = 0; x < i->second; ++x)
-			{
-			if (! theTables.empty())
-				theTables += ", ";
-			theTables += i->first + " AS '" + i->first + ZStringf("%d", x) + "'";
-			}
-		}
-
-	string8 result = "SELECT " + theFields + " FROM " + theTables + " WHERE ";
-	
-	if (ZLOGF(s, eDebug))
-		s << theRename;
-
-	result += ZRA::SQL::sAsSQL(sAsExpr_Bool(iSearchSpec.fPredCompound.Renamed(theRename)));
-	
-	if (ZLOGF(s, eDebug))
-		s << result;
-
-	return result;
 	}
 
 } // namespace ZDataspace

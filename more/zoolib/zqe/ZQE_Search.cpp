@@ -41,11 +41,7 @@ ZRef<Result> sSearch(ZRef<Walker> iWalker)
 	size_t baseOffset = 0;
 	iWalker->Prime(map<string8,size_t>(), offsets, baseOffset);
 
-	RelHead theRelHead;
-	for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
-		theRelHead.insert(i->first);
-
-	ZLOGF(s, eDebug);
+	ZLOGF(s, eDebug + 1);
 
 	s << "\n";
 	for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
@@ -79,6 +75,11 @@ ZRef<Result> sSearch(ZRef<Walker> iWalker)
 		if (int theAnnoCount = theAnnotations.size())
 			s.Writef("annotations: %d", theAnnoCount);
 		}
+
+	RelHead theRelHead;
+	for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
+		theRelHead.insert(i->first);
+
 	return new ZQE::Result(theRelHead, &thePackedRows, &theAnnotationsVector);
 	}
 

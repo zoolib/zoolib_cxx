@@ -25,17 +25,11 @@ namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ConcreteDomain
-
-ConcreteDomain::ConcreteDomain()
-	{}
-
-ConcreteDomain::~ConcreteDomain()
-	{}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Expr_Rel_Concrete
+
+Expr_Rel_Concrete::Expr_Rel_Concrete(const RelHead& iRelHead)
+:	fRelHead(iRelHead)
+	{}
 
 void Expr_Rel_Concrete::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 	{
@@ -50,23 +44,17 @@ void Expr_Rel_Concrete::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 		}
 	}
 
-void Expr_Rel_Concrete::Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor)
-	{ iVisitor.Visit_Expr_Rel_Concrete(this); }
-
 ZRef<Expr_Rel> Expr_Rel_Concrete::Self()
 	{ return this; }
 
 ZRef<Expr_Rel> Expr_Rel_Concrete::Clone()
 	{ return this; }
 
-ZRef<ConcreteDomain> Expr_Rel_Concrete::GetConcreteDomain()
-	{ return null; }
+void Expr_Rel_Concrete::Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Concrete(this); }
 
-string8 Expr_Rel_Concrete::GetName()
-	{ return string8(); }
-
-string8 Expr_Rel_Concrete::GetDescription()
-	{ return string8(); }
+RelHead Expr_Rel_Concrete::GetConcreteRelHead()
+	{ return fRelHead; }
 
 // =================================================================================================
 #pragma mark -
@@ -77,34 +65,10 @@ void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> 
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Concrete_Simple
-
-Expr_Rel_Concrete_Simple::Expr_Rel_Concrete_Simple(
-	ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead)
-:	fConcreteDomain(iConcreteDomain)
-,	fName(iName)
-,	fRelHead(iRelHead)
-	{}
-
-RelHead Expr_Rel_Concrete_Simple::GetConcreteRelHead()
-	{ return fRelHead; }
-
-ZRef<ConcreteDomain> Expr_Rel_Concrete_Simple::GetConcreteDomain()
-	{ return fConcreteDomain; }
-
-string8 Expr_Rel_Concrete_Simple::GetName()
-	{ return fName; }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * sConcrete
 
-ZRef<Expr_Rel> sConcrete(
-	ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead)
-	{ return new Expr_Rel_Concrete_Simple(iConcreteDomain, iName, iRelHead); }
-
 ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead)
-	{ return new Expr_Rel_Concrete_Simple(null, string8(), iRelHead); }
+	{ return new Expr_Rel_Concrete(iRelHead); }
 
 } // namespace ZRA
 } // namespace ZooLib

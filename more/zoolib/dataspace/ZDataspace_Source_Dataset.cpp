@@ -49,8 +49,6 @@ using std::pair;
 using std::set;
 using std::vector;
 
-enum { kDebug = 1 };
-
 /*
 Minimally, keep an index of property names in contents -- that way we can efficiently
 identify those entities that satisfy a RelHead.
@@ -181,9 +179,9 @@ bool Source_Dataset::Walker::ReadInc(const ZVal_Any* iBindings,
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Dataset::PQuery
+#pragma mark * Source_Dataset::PSearch
 
-class Source_Dataset::PQuery
+class Source_Dataset::PSearch
 	{
 public:
 	int64 fRefcon;
@@ -218,17 +216,17 @@ void Source_Dataset::ModifyRegistrations(
 
 	while (iAddedCount--)
 		{
-		PQuery* thePQuery = new PQuery;
-		thePQuery->fRefcon = iAdded->GetRefcon();
-		thePQuery->fRel = iAdded->GetRel();
+		PSearch* thePSearch = new PSearch;
+		thePSearch->fRefcon = iAdded->GetRefcon();
+		thePSearch->fRel = iAdded->GetRel();
 		ZUtil_STL::sInsertMustNotContain(kDebug,
-			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
+			fMap_RefconToPSearch, thePSearch->fRefcon, thePSearch);
 
 		++iAdded;
 		}
 
 	while (iRemovedCount--)
-		delete ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPQuery, *iRemoved++);
+		delete ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPSearch, *iRemoved++);
 	}
 
 void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
@@ -244,13 +242,13 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 	
 	if (anyChanges)
 		{
-		for (map<int64, PQuery*>::iterator iter_RefconToPQuery = fMap_RefconToPQuery.begin();
-			iter_RefconToPQuery != fMap_RefconToPQuery.end(); ++iter_RefconToPQuery)
+		for (map<int64, PSearch*>::iterator iter_RefconToPSearch = fMap_RefconToPSearch.begin();
+			iter_RefconToPSearch != fMap_RefconToPSearch.end(); ++iter_RefconToPSearch)
 			{
 			ZRef<ZQE::Walker> theWalker =
-				Visitor_DoMakeWalker(this).Do(iter_RefconToPQuery->second->fRel);
+				Visitor_DoMakeWalker(this).Do(iter_RefconToPSearch->second->fRel);
 			
-			SearchResult theSearchResult(iter_RefconToPQuery->first, sSearch(theWalker), fEvent);
+			SearchResult theSearchResult(iter_RefconToPSearch->first, sSearch(theWalker), fEvent);
 
 			oChanged.push_back(theSearchResult);
 			}
@@ -432,16 +430,15 @@ bool Source_Dataset::pPull()
 			iterStmts != endStmts; ++iterStmts)
 			{
 			const Daton& theDaton = iterStmts->first;
-			const pair<NamedEvent, ZVal_Any> newPair(theNamedEvent, sAsVal(theDaton));
-
 			map<Daton, pair<NamedEvent, ZVal_Any> >::iterator iterMap = fMap.lower_bound(theDaton);
-
 			if (iterMap == fMap.end() || iterMap->first != theDaton)
 				{
 				if (iterStmts->second)
 					{
 					anyChanges = true;
-					fMap.insert(iterMap, make_pair(theDaton, newPair));
+					fMap.insert(iterMap,
+						make_pair(theDaton,
+						pair<NamedEvent, ZVal_Any>(theNamedEvent, sAsVal(theDaton))));
 					}
 				}
 			else if (iterMap->second.first < theNamedEvent)
@@ -450,7 +447,7 @@ bool Source_Dataset::pPull()
 				anyChanges = true;
 
 				if (iterStmts->second)
-					iterMap->second = newPair;
+					iterMap->second = pair<NamedEvent, ZVal_Any>(theNamedEvent, sAsVal(theDaton));
 				else
 					fMap.erase(iterMap);
 				}

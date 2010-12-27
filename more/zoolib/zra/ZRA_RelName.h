@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_RelName__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZTrail.h"
+#include "zoolib/ZUnicodeString.h"
 
 namespace ZooLib {
 namespace ZRA {

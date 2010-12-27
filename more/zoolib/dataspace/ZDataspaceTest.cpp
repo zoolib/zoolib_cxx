@@ -1,6 +1,7 @@
 
 #include "zoolib/dataspace/ZDataspace_Dataspace.h"
 #include "zoolib/dataspace/ZDataspace_Source_Dataset.h"
+#include "zoolib/dataspace/ZDataspace_Source_SQLite.h"
 #include "zoolib/dataspace/ZDataspace_Source_Union.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
@@ -21,6 +22,9 @@
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+
+#include "zoolib/zqe/ZQE_Walker_Result.h"
+#include "zoolib/zqe/ZQE_Search.h"
 
 using namespace ZooLib;
 using namespace ZRA;
@@ -88,9 +92,26 @@ ZRef<ZRA::Expr_Rel> sRel_pscripts()
 
 void spCallback(ZRef<Sieve> iSieve, bool)
 	{
+	ZRef<ZQE::Walker> theWalker = new ZQE::Walker_Result(iSieve->GetResult());
+	ZQE::sSearch(theWalker);
 	}
 
 void sDataspaceTest(const ZStrimW& w)
+	{
+	ZRef<ZSQLite::DB> theDB = new ZSQLite::DB("/Users/ag/MedMan2.db");
+	ZRef<Source_SQLite> theSource_SQLite = new Source_SQLite(theDB);
+	Dataspace theDataspace(theSource_SQLite);
+
+	ZRef<Sieve_Callable::Callable> theCallable = MakeCallable(spCallback);
+	ZRef<Sieve> theSieve = new Sieve_Callable(theCallable);
+	ZRef<ZRA::Expr_Rel> theRel = sRel_People() * sRel_pscripts();
+	theRel &= CName("pscript_person_id") == CName("person_id");
+	theRel &= sRelHead_person();
+	theDataspace.Register(theSieve, theRel);	
+	theDataspace.Update();	
+	}
+
+void sDataspaceTest2(const ZStrimW& w)
 	{
 	ZRef<Source_Union> theSource_Union = new Source_Union;
 
