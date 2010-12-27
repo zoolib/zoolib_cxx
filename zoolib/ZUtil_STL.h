@@ -58,8 +58,9 @@ const T* sFirstOrNil(const std::vector<T>& iVec)
 	return iVec.empty() ? nullptr : &iVec[0];
 	}
 
-template <typename T>
-typename std::set<T>::iterator sEraseInc(std::set<T>& ioSet, typename std::set<T>::iterator iter)
+template <typename T, typename Comparator>
+typename std::set<T,Comparator>::iterator
+sEraseInc(std::set<T,Comparator>& ioSet, typename std::set<T,Comparator>::iterator iter)
 	{
 	if (ioSet.end() != iter)
 		{
@@ -80,8 +81,8 @@ bool sContains(const std::vector<Base>& iVector, Derived iElement)
 
 
 /** Returns true if iSet contains iElement. */
-template <typename Base, typename Derived>
-bool sContains(const std::set<Base>& iSet, Derived iElement)
+template <typename Base, typename Derived, typename Comparator>
+bool sContains(const std::set<Base,Comparator>& iSet, Derived iElement)
 	{ return iSet.end() != iSet.find(iElement); }
 
 
@@ -116,8 +117,8 @@ void sPushBackMustNotContain(const int iDebugLevel, std::vector<Base>& ioVec, De
 
 /** Inserts iElement to ioSet. We first assert, controlled
 by iDebugLevel, that iElement is not already present in ioSet. */
-template <typename Base, typename Derived>
-void sInsertMustNotContain(const int iDebugLevel, std::set<Base>& ioSet, Derived iElement)
+template <typename Base, typename Derived, typename Comparator>
+void sInsertMustNotContain(const int iDebugLevel, std::set<Base,Comparator>& ioSet, Derived iElement)
 	{
 	ZAssertStop(iDebugLevel, ioSet.end() == ioSet.find(iElement));
 	ioSet.insert(iElement);
@@ -125,10 +126,10 @@ void sInsertMustNotContain(const int iDebugLevel, std::set<Base>& ioSet, Derived
 
 
 /** Inserts iElement in ioSet, if it's not already contained. */
-template <typename Base, typename Derived>
-bool sInsertIfNotContains(std::set<Base>& ioSet, Derived iElement)
+template <typename Base, typename Derived, typename Comparator>
+bool sInsertIfNotContains(std::set<Base,Comparator>& ioSet, Derived iElement)
 	{
-	typename std::set<Base>::iterator i = ioSet.lower_bound(iElement);
+	typename std::set<Base,Comparator>::iterator i = ioSet.lower_bound(iElement);
 	if (ioSet.end() != i && *i == iElement)
 		return false;
 	ioSet.insert(i, iElement);
@@ -152,10 +153,10 @@ bool sEraseIfContains(std::vector<Base>& ioVec, Derived iElement)
 
 /** If ioSet contains iElement then it is removed and true returned.
 Otherwise no change is made to ioSet and false is returned. */
-template <typename Base, typename Derived>
-bool sEraseIfContains(std::set<Base>& ioSet, Derived iElement)
+template <typename Base, typename Derived, typename Comparator>
+bool sEraseIfContains(std::set<Base,Comparator>& ioSet, Derived iElement)
 	{
-	typename std::set<Base>::iterator i = ioSet.find(iElement);
+	typename std::set<Base,Comparator>::iterator i = ioSet.find(iElement);
 	if (i == ioSet.end())
 		return false;
 	ioSet.erase(i);
@@ -176,10 +177,10 @@ typename std::vector<Base>::iterator sEraseMustContain(const int iDebugLevel,
 
 
 /** Removes iElement from ioSet, asserting that it is present. */
-template <typename Base, typename Derived>
-void sEraseMustContain(const int iDebugLevel, std::set<Base>& ioSet, Derived iElement)
+template <typename Base, typename Derived, typename Comparator>
+void sEraseMustContain(const int iDebugLevel, std::set<Base,Comparator>& ioSet, Derived iElement)
 	{
-	typename std::set<Base>::iterator i = ioSet.find(iElement);
+	typename std::set<Base,Comparator>::iterator i = ioSet.find(iElement);
 	ZAssertStop(iDebugLevel, i != ioSet.end());
 	ioSet.erase(i);
 	}
