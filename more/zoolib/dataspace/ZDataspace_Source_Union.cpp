@@ -719,8 +719,6 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	// Do work on any proxies that need it.
-	
 	// -----
 
 	for (DListIteratorEraseAll<PSource, DLink_PSource_NeedsWork>
@@ -812,10 +810,12 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 void Source_Union::InsertSource(ZRef<Source> iSource, const string8& iPrefix)
 	{
 	ZAcqMtxR acq(fMtxR);
+	ZAssertStop(kDebug, fMap_Refcon_ClientSearch.empty());
 
 	iSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
 
-	ZUtil_STL::sInsertMustNotContain(kDebug, fMap_Source_PSource, iSource, PSource(iSource, iPrefix));
+	ZUtil_STL::sInsertMustNotContain(kDebug, fMap_Source_PSource,
+		iSource, PSource(iSource, iPrefix));
 	}
 
 void Source_Union::EraseSource(ZRef<Source> iSource)
