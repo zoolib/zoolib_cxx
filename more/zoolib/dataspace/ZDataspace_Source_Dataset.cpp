@@ -179,13 +179,38 @@ bool Source_Dataset::Walker::ReadInc(const ZVal_Any* iBindings,
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Source_Dataset::ClientSearch
+
+class Source_Dataset::DLink_ClientSearch_InPSearch
+:	public DListLink<ClientSearch, DLink_ClientSearch_InPSearch, kDebug>
+	{};
+
+class Source_Dataset::ClientSearch
+:	public Source_Dataset::DLink_ClientSearch_InPSearch
+	{
+public:
+	ClientSearch(int64 iRefcon, PSearch* iPSearch)
+	:	fRefcon(iRefcon),
+		fPSearch(iPSearch)
+		{}
+
+	int64 fRefcon;
+	PSearch* fPSearch;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Source_Dataset::PSearch
 
 class Source_Dataset::PSearch
 	{
 public:
-	int64 fRefcon;
+	PSearch(ZRef<ZRA::Expr_Rel> iRel)
+	:	fRel(iRel)
+		{}
+
 	ZRef<ZRA::Expr_Rel> fRel;
+	DListHead<DLink_ClientSearch_InPSearch> fClientSearches;
 	};
 
 // =================================================================================================
@@ -214,19 +239,39 @@ void Source_Dataset::ModifyRegistrations(
 		this->pInvokeCallable_ResultsAvailable();
 		}
 
-	while (iAddedCount--)
+	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
-		PSearch* thePSearch = new PSearch;
-		thePSearch->fRefcon = iAdded->GetRefcon();
-		thePSearch->fRel = iAdded->GetRel();
-		ZUtil_STL::sInsertMustNotContain(kDebug,
-			fMap_RefconToPSearch, thePSearch->fRefcon, thePSearch);
+		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
+		Map_RelToPSearch::iterator iterPSearch =
+			fMap_RelToPSearch.insert(make_pair(theRel, PSearch(theRel))).first;
 
-		++iAdded;
+		PSearch* thePSearch = &iterPSearch->second;
+
+		const int64 theRefcon = iAdded->GetRefcon();
+
+		std::map<int64, ClientSearch>::iterator iterClientSearch =
+			fMap_RefconToClientSearch.insert(
+			make_pair(theRefcon, ClientSearch(theRefcon, thePSearch))).first;
+
+		thePSearch->fClientSearches.Insert(&iterClientSearch->second);
 		}
 
 	while (iRemovedCount--)
-		delete ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPSearch, *iRemoved++);
+		{
+		int64 theRefcon = *iRemoved++;
+
+		std::map<int64, ClientSearch>::iterator iterClientSearch =
+			fMap_RefconToClientSearch.find(theRefcon);
+		
+		ClientSearch* theClientSearch = &iterClientSearch->second;
+		
+		PSearch* thePSearch = theClientSearch->fPSearch;
+		thePSearch->fClientSearches.Erase(theClientSearch);
+		if (thePSearch->fClientSearches.Empty())
+			ZUtil_STL::sEraseMustContain(kDebug, fMap_RelToPSearch, thePSearch->fRel);
+		
+		fMap_RefconToClientSearch.erase(iterClientSearch);
+		}
 	}
 
 void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
@@ -242,15 +287,19 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 	
 	if (anyChanges)
 		{
-		for (map<int64, PSearch*>::iterator iter_RefconToPSearch = fMap_RefconToPSearch.begin();
-			iter_RefconToPSearch != fMap_RefconToPSearch.end(); ++iter_RefconToPSearch)
+		for (Map_RelToPSearch::iterator iterPSearch = fMap_RelToPSearch.begin();
+			iterPSearch != fMap_RelToPSearch.end(); ++iterPSearch)
 			{
+			PSearch* thePSearch = &iterPSearch->second;
 			ZRef<ZQE::Walker> theWalker =
-				Visitor_DoMakeWalker(this).Do(iter_RefconToPSearch->second->fRel);
+				Visitor_DoMakeWalker(this).Do(thePSearch->fRel);
 			
-			SearchResult theSearchResult(iter_RefconToPSearch->first, sSearch(theWalker), fEvent);
-
-			oChanged.push_back(theSearchResult);
+			ZRef<ZQE::Result> theResult = sSearch(theWalker);
+			for (DListIterator<ClientSearch, DLink_ClientSearch_InPSearch>
+				iterCS = thePSearch->fClientSearches; iterCS; iterCS.Advance())
+				{
+				oChanged.push_back(SearchResult(iterCS.Current()->fRefcon, theResult, fEvent));
+				}
 			}
 		}
 	}

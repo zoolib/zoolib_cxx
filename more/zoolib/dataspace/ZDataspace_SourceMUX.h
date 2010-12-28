@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Source.h"
 
+#include <set>
+
 namespace ZooLib {
 namespace ZDataspace {
 
@@ -40,10 +42,31 @@ public:
 	virtual ZRef<Source> Make();
 
 private:
+	class PSearch;
+	class ClientSearch;
+	class ClientSource;
+	friend class ClientSource;
+
+	RelHead pGetRelHead(ZRef<ClientSource> iCS);
+
+	void pModifyRegistrations(ZRef<ClientSource> iCS,
+		const AddedSearch* iAdded, size_t iAddedCount,
+		const int64* iRemoved, size_t iRemovedCount);
+
+	void pCollectResults(ZRef<ClientSource> iCS,
+		std::vector<SearchResult>& oChanged);
+
+
 	void pResultsAvailable(ZRef<Source> iSource);
+
+	void pFinalizeProxy(ClientSource* iCS);
+
+	ZMtxR fMtxR;
 
 	ZRef<Source> fSource;
 	ZRef<Source::Callable_ResultsAvailable> fCallable_ResultsAvailable;
+
+	std::set<ClientSource*> fClientSources;
 	};
 
 } // namespace ZDataspace

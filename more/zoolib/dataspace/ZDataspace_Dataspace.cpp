@@ -26,31 +26,8 @@ namespace ZooLib {
 namespace ZDataspace {
 
 using std::map;
-using std::pair;
 using std::set;
 using std::vector;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * PSieve
-
-class Dataspace::PSieve
-	{
-public:
-	PSieve()
-		{}
-		
-	~PSieve()
-		{}
-
-	Dataspace* fDataspace;
-	ZRef<ZRA::Expr_Rel> fRel;
-	int64 fRefcon;
-
-	DListHead<DLink_Sieve_Using> fSieves_Using;
-
-	ZRef<ZQE::Result> fResult;
-	};
 
 // =================================================================================================
 #pragma mark -
@@ -78,42 +55,14 @@ void Dataspace::SetCallable_UpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable)
 
 void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 	{
-	ZAssert(!iSieve->fPSieve);
-	int64 theRefcon = 0;
-
-	{
 	ZAcqMtxR acq(fMtxR);
 
-	PSieve* thePSieve;
-	Map_RelToPSieve::iterator position = fRel_To_PSieve.lower_bound(iRel);
-	if (position != fRel_To_PSieve.end() && 0 == sCompare_T(position->first, iRel))
-		{
-		thePSieve = &position->second;
-		}
-	else
-		{
-		theRefcon = fNextRefcon++;
+	iSieve->fDataspace = this;
+	iSieve->fRefcon = fNextRefcon++;
+	ZUtil_STL::sInsertMustNotContain(kDebug, fMap_RefconToSieve, iSieve->fRefcon, iSieve.Get());
 
-		thePSieve = &fRel_To_PSieve.
-			insert(position, pair<ZRef<ZRA::Expr_Rel>, PSieve>(iRel, PSieve()))->second;
-
-		ZUtil_STL::sInsertMustNotContain(kDebug, fRefcon_To_PSieveStar, theRefcon, thePSieve);
-
-		thePSieve->fDataspace = this;
-		thePSieve->fRel = iRel;
-		thePSieve->fRefcon = theRefcon;
-		}
-
-	Sieve* theSieve = iSieve.Get();
-	theSieve->fPSieve = thePSieve;
-	thePSieve->fSieves_Using.Insert(theSieve);
-	}
-
-	if (theRefcon)
-		{
-		AddedSearch theAddedSearch(theRefcon, iRel);
-		fSource->ModifyRegistrations(&theAddedSearch, 1, nullptr, 0);
-		}
+	const AddedSearch theAddedSearch(iSieve->fRefcon, iRel);
+	fSource->ModifyRegistrations(&theAddedSearch, 1, nullptr, 0);
 	}
 
 void Dataspace::Update()
@@ -134,30 +83,19 @@ void Dataspace::Update()
 	for (vector<SearchResult>::iterator iterSearchResults = theSearchResults.begin();
 		iterSearchResults != theSearchResults.end(); ++iterSearchResults)
 		{
-		map<int64, PSieve*>::iterator iterPSieve =
-			fRefcon_To_PSieveStar.find(iterSearchResults->GetRefcon());
-
-		if (fRefcon_To_PSieveStar.end() == iterPSieve)
+		Map_RefconToSieve::iterator iterSieve =
+			fMap_RefconToSieve.find(iterSearchResults->GetRefcon());
+		
+		if (fMap_RefconToSieve.end() == iterSieve)
 			continue;
 
-		PSieve* thePSieve = iterPSieve->second;
-		thePSieve->fResult = iterSearchResults->GetResult();
+		ZRef<Sieve> theSieve = iterSieve->second;
+		if (theSieve->fResult)
+			sievesChanged.insert(theSieve);
+		else
+			sievesLoaded.insert(theSieve);
 
-		for (DListIterator<Sieve, DLink_Sieve_Using>
-			iter = thePSieve->fSieves_Using;
-			iter; iter.Advance())
-			{
-			Sieve* theSieve = iter.Current();
-			if (theSieve->fJustRegistered)
-				{
-				theSieve->fJustRegistered = false;
-				sievesLoaded.insert(theSieve);
-				}
-			else
-				{
-				sievesChanged.insert(theSieve);
-				}
-			}
+		theSieve->fResult = iterSearchResults->GetResult();
 		}
 	}
 
@@ -198,22 +136,19 @@ void Dataspace::Changed(const ZRef<Sieve> & iSieve)
 	catch (...) {}
 	}
 
-void Dataspace::pTriggerUpdate()
+void Dataspace::pCallback_Source(ZRef<Source> iSource)
 	{
 	ZGuardRMtxR guard(fMtxR);
-	if (!fCalled_UpdateNeeded)
+	if (ZRef<Callable_UpdateNeeded> theCallable = fCallable_UpdateNeeded)
 		{
-		fCalled_UpdateNeeded = true;
-		if (ZRef<Callable_UpdateNeeded> theCallable = fCallable_UpdateNeeded)
+		if (!fCalled_UpdateNeeded)
 			{
+			fCalled_UpdateNeeded = true;
 			guard.Release();
 			theCallable->Call(this);
 			}
 		}
 	}
-
-void Dataspace::pCallback_Source(ZRef<Source> iSource)
-	{ this->pTriggerUpdate(); }
 
 void Dataspace::pFinalize(Sieve* iSieve)
 	{
@@ -222,47 +157,31 @@ void Dataspace::pFinalize(Sieve* iSieve)
 	if (!iSieve->FinishFinalize())
 		return;
 
-	PSieve* const thePSieve = iSieve->fPSieve;
+	ZUtil_STL::sEraseMustContain(kDebug, fMap_RefconToSieve, iSieve->fRefcon);
 	
-	thePSieve->fSieves_Using.Erase(iSieve);
-	iSieve->fPSieve = nullptr;
+	int64 const theRefcon = iSieve->fRefcon;
 	delete iSieve;
-	
-	if (thePSieve->fSieves_Using.Empty())
-		{
-		int64 const theRefcon = thePSieve->fRefcon;
-		ZUtil_STL::sEraseMustContain(kDebug, fRel_To_PSieve, thePSieve->fRel);
-		ZUtil_STL::sEraseMustContain(kDebug, fRefcon_To_PSieveStar, theRefcon);
-		guard.Release();
+	guard.Release();
 
-		fSource->ModifyRegistrations(nullptr, 0, &theRefcon, 1);
-		}
+	fSource->ModifyRegistrations(nullptr, 0, &theRefcon, 1);
 	}
-
-ZRef<ZQE::Result> Dataspace::pGetResult(Sieve* iSieve)
-	{ return iSieve->fPSieve->fResult; }
-
-bool Dataspace::pIsLoaded(Sieve* iSieve)
-	{ return iSieve->fPSieve->fResult; }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Sieve
 
 Sieve::Sieve()
-:	fPSieve(nullptr)
-,	fJustRegistered(true)
+:	fDataspace(nullptr)
+,	fRefcon(0)
 	{}
 
 Sieve::~Sieve()
-	{
-	ZAssert(!fPSieve);
-	}
+	{}
 
 void Sieve::Finalize()
 	{
-	if (fPSieve)
-		fPSieve->fDataspace->pFinalize(this);
+	if (fDataspace)
+		fDataspace->pFinalize(this);
 	else
 		ZCounted::Finalize();
 	}
@@ -277,18 +196,10 @@ void Sieve::Changed(bool iIsLoad)
 	{}
 
 ZRef<ZQE::Result> Sieve::GetResult()
-	{
-	if (fPSieve)
-		return fPSieve->fDataspace->pGetResult(this);
-	return null;
-	}
+	{ return fResult; }
 
 bool Sieve::IsLoaded()
-	{
-	if (fPSieve)
-		return fPSieve->fDataspace->pIsLoaded(this);
-	return false;
-	}
+	{ return fResult; }
 
 // =================================================================================================
 #pragma mark -

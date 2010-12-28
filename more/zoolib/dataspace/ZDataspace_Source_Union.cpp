@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZExpr_Bool_ValPred_Any.h"
-#include "zoolib/Zlog.h"
+#include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
 
@@ -30,7 +30,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Search.h"
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
 
-//#include "zoolib/zra/ZRA_Compare_Rel.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
@@ -42,6 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDataspace {
 
+using std::make_pair;
 using std::map;
 using std::pair;
 using std::set;
@@ -49,10 +49,66 @@ using std::vector;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Helpers (anonymous)
+#pragma mark * InsertPrefix (anonymous)
 
 namespace { // anonymous
+
+class InsertPrefix
+:	public virtual ZVisitor_Expr_Op_DoTransform_T<ZRA::Expr_Rel>
+,	public virtual ZRA::Visitor_Expr_Rel_Concrete
+	{
+	typedef ZVisitor_Expr_Op_DoTransform_T<ZRA::Expr_Rel> inherited;
+public:
+	InsertPrefix(const string8& iPrefix);
+
+// From ZRA::Visitor_Expr_Rel_Concrete
+	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr);
+
+	const string8 fPrefix;
+	};
+
+InsertPrefix::InsertPrefix(const string8& iPrefix)
+:	fPrefix(iPrefix)
+	{}
+
+void InsertPrefix::Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
+	{
+	const RelHead& theRelHead = iExpr->GetConcreteRelHead();
+	
+	const RelHead newRelHead = ZRA::sPrefixErase(fPrefix, theRelHead);
+	ZRef<ZRA::Expr_Rel> theRel = ZRA::sConcrete(newRelHead);
+	for (RelHead::const_iterator i = newRelHead.begin(); i != newRelHead.end(); ++i)
+		theRel = sRename(theRel, ZRA::sPrefixInsert(fPrefix, *i), *i);
+	
+	this->pSetResult(theRel);
+	}
+
 } // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Source_Union::PIP
+
+class Source_Union::DLink_PIP_InProxy
+:	public DListLink<PIP, DLink_PIP_InProxy, kDebug>
+	{};
+
+class Source_Union::DLink_PIP_NeedsWork
+:	public DListLink<PIP, DLink_PIP_NeedsWork, kDebug>
+	{};
+
+class Source_Union::PIP
+:	public DLink_PIP_InProxy
+,	public DLink_PIP_NeedsWork
+	{
+public:
+	Proxy* fProxy;
+	PSource* fPSource;
+	bool fNeedsAdd;
+	int64 fRefcon;
+	ZRef<ZQE::Result> fResult;
+	ZRef<Event> fEvent;
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -64,6 +120,11 @@ class Source_Union::Proxy
 	{
 	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
+	Proxy();
+
+// From ZCounted
+	virtual void Finalize();
+
 // From ZExpr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
@@ -73,12 +134,13 @@ public:
 // Our protocol
 	virtual void Accept_Proxy(Visitor_Proxy& iVisitor);
 
+	Source_Union* fSource;
 	RelHead fRelHead;
 	ZRef<ZRA::Expr_Rel> fRel;
 	set<PSearch*> fDependentPSearches;
 
 	// Something that ties this proxy to each Source.
-	set<ProxyInPSource*> fProxyInPSources;
+	DListHead<DLink_PIP_InProxy> fPIP_InProxy;
 	};
 
 // =================================================================================================
@@ -97,6 +159,18 @@ public:
 // =================================================================================================
 #pragma mark -
 #pragma mark * Source_Union::Proxy definition
+
+Source_Union::Proxy::Proxy()
+:	fSource(nullptr)
+	{}
+
+void Source_Union::Proxy::Finalize()
+	{
+	if (fSource)
+		fSource->pFinalizeProxy(this);
+	else
+		inherited::Finalize();
+	}
 
 void Source_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>& iVisitor)
 	{
@@ -124,8 +198,7 @@ void Source_Union::Proxy::Accept_Proxy(Visitor_Proxy& iVisitor)
 #pragma mark -
 #pragma mark * Source_Union::Comparator_Proxy
 
-bool Source_Union::Comparator_Proxy::operator()(
-	const ZRef<Proxy>& iLeft, const ZRef<Proxy>& iRight) const
+bool Source_Union::Comparator_Proxy::operator()(Proxy* iLeft, Proxy* iRight) const
 	{
 	if (iLeft->fRelHead < iRight->fRelHead)
 		return true;
@@ -159,7 +232,7 @@ public:
 	ZRef<Proxy> fProxy;
 	size_t fBaseOffset;
 
-	set<ProxyInPSource*>::const_iterator fIter_ProxyInPSource;
+	DListIterator<PIP, DLink_PIP_InProxy> fIter_PIP;
 	ZRef<ZQE::Result> fCurrentResult;
 	size_t fCurrentIndex;
 	};
@@ -167,6 +240,7 @@ public:
 Source_Union::Walker_Proxy::Walker_Proxy(ZRef<Source_Union> iSource, ZRef<Proxy> iProxy)
 :	fSource(iSource)
 ,	fProxy(iProxy)
+,	fIter_PIP(iProxy->fPIP_InProxy)
 	{}
 
 Source_Union::Walker_Proxy::~Walker_Proxy()
@@ -187,37 +261,46 @@ bool Source_Union::Walker_Proxy::ReadInc(const ZVal_Any* iBindings,
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Union::PSearch
+#pragma mark * Source_Union::ClientSearch
 
-class Source_Union::PSearch
+class Source_Union::DLink_ClientSearch_InPSearch
+:	public DListLink<ClientSearch, DLink_ClientSearch_InPSearch, kDebug>
+	{};
+
+class Source_Union::ClientSearch
+:	public DLink_ClientSearch_InPSearch
 	{
 public:
-	PSearch(int64 iRefcon, ZRef<ZRA::Expr_Rel> iRel);
+	ClientSearch(int64 iRefcon, PSearch* iPSearch)
+	:	fRefcon(iRefcon)
+	,	fPSearch(iPSearch)
+		{}
 
 	int64 fRefcon;
+	PSearch* fPSearch;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Source_Union::PSearch
+
+class Source_Union::DLink_PSearch_NeedsWork
+:	public DListLink<PSearch, DLink_PSearch_NeedsWork, kDebug>
+	{};
+
+class Source_Union::PSearch
+:	public DLink_PSearch_NeedsWork
+	{
+public:
+	PSearch(ZRef<ZRA::Expr_Rel> iRel)
+	:	fRel(iRel)
+		{}
+
 	ZRef<ZRA::Expr_Rel> fRel;
 	ZRef<ZRA::Expr_Rel> fRel_Analyzed;
 	set<ZRef<Proxy> > fProxiesDependedUpon;
 	ZRef<ZQE::Result> fResult;
-	};
-
-Source_Union::PSearch::PSearch(int64 iRefcon, ZRef<ZRA::Expr_Rel> iRel)
-:	fRefcon(iRefcon)
-,	fRel(iRel)
-	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union::ProxyInPSource
-
-class Source_Union::ProxyInPSource
-	{
-public:
-	Proxy* fProxy;
-	PSource* fPSource;
-	int64 fRefcon;
-	ZRef<ZQE::Result> fResult;
-	ZRef<Event> fEvent;
+	DListHead<DLink_ClientSearch_InPSearch> fClientSearches;
 	};
 
 // =================================================================================================
@@ -423,7 +506,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iEx
 void Source_Union::Analyze::Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
 	{
 	const ZRA::RelHead theRelHead = iExpr->GetConcreteRelHead();
-	ZAssert(fRelHead.empty());
+	ZAssertStop(kDebug, fRelHead.empty());
 
 	fRelHead |= iExpr->GetConcreteRelHead();
 
@@ -443,47 +526,19 @@ ZRef<ZRA::Expr_Rel> Source_Union::Analyze::TopLevelDo(ZRef<ZRA::Expr_Rel> iRel)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * InsertPrefix (anonymous)
-
-namespace { // anonymous
-
-class InsertPrefix
-:	public virtual ZVisitor_Expr_Op_DoTransform_T<ZRA::Expr_Rel>
-,	public virtual ZRA::Visitor_Expr_Rel_Concrete
-	{
-	typedef ZVisitor_Expr_Op_DoTransform_T<ZRA::Expr_Rel> inherited;
-public:
-	InsertPrefix(const string8& iPrefix);
-
-// From ZRA::Visitor_Expr_Rel_Concrete
-	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr);
-
-	const string8 fPrefix;
-	};
-
-InsertPrefix::InsertPrefix(const string8& iPrefix)
-:	fPrefix(iPrefix)
-	{}
-
-void InsertPrefix::Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
-	{
-	const RelHead& theRelHead = iExpr->GetConcreteRelHead();
-	
-	const RelHead newRelHead = ZRA::sPrefixErase(fPrefix, theRelHead);
-	ZRef<ZRA::Expr_Rel> theRel = ZRA::sConcrete(newRelHead);
-	for (RelHead::const_iterator i = newRelHead.begin(); i != newRelHead.end(); ++i)
-		theRel = sRename(theRel, ZRA::sPrefixInsert(fPrefix, *i), *i);
-	
-	this->pSetResult(theRel);
-	}
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Source_Union::PSource
 
+class Source_Union::DLink_PSource_NeedsWork
+:	public DListLink<PSource, DLink_PSource_NeedsWork, kDebug>
+	{};
+
+class Source_Union::DLink_PSource_ToCollectFrom
+:	public DListLink<PSource, DLink_PSource_ToCollectFrom, kDebug>
+	{};
+
 class Source_Union::PSource
+:	public DLink_PSource_NeedsWork
+,	public DLink_PSource_ToCollectFrom
 	{
 public:
 	PSource(ZRef<Source> iSource, const string8& iPrefix);
@@ -496,9 +551,8 @@ public:
 
 	int64 fNextRefcon;
 
-	map<int64, ProxyInPSource*> fMap_RefconToProxyInPSource;
-	set<ProxyInPSource*> fAdds;
-	vector<int64>  fRemoves;
+	Map_Refcon_PIP fMap_Refcon_PIP;
+	DListHead<DLink_PIP_NeedsWork> fPIP_NeedsWork;
 	};
 
 Source_Union::PSource::PSource(ZRef<Source> iSource, const string8& iPrefix)
@@ -512,7 +566,10 @@ bool Source_Union::PSource::Intersects(const RelHead& iRelHead)
 	const RelHead& sourceRelHead = fSource->GetRelHead();
 	if (fPrefix.empty())
 		{
-		if (sourceRelHead.empty() || !(iRelHead & sourceRelHead).empty())
+		if (sourceRelHead.empty())
+			return true;
+
+		if (!(iRelHead & sourceRelHead).empty())
 			return true;
 		}
 	else
@@ -522,7 +579,10 @@ bool Source_Union::PSource::Intersects(const RelHead& iRelHead)
 			{
 			if (i->substr(0, prefixLength) == fPrefix)
 				{
-				if (sourceRelHead.empty() || ZUtil_STL::sContains(sourceRelHead, i->substr(prefixLength)))
+				if (sourceRelHead.empty())
+					return true;
+
+				if (ZUtil_STL::sContains(sourceRelHead, i->substr(prefixLength)))
 					return true;
 				}
 			}
@@ -555,10 +615,12 @@ RelHead Source_Union::GetRelHead()
 	ZAcqMtxR acq(fMtxR);
 
 	RelHead result;
-	for (map<ZRef<Source>, PSource*>::iterator i = fMap_SourceToPSource.begin();
-		i != fMap_SourceToPSource.end(); ++i)
+	for (Map_Source_PSource::iterator
+		iterSource = fMap_Source_PSource.begin(),
+		endSource = fMap_Source_PSource.end();
+		iterSource != endSource; ++iterSource)
 		{
-		const RelHead sourceRelHead = i->first->GetRelHead();
+		const RelHead sourceRelHead = iterSource->first->GetRelHead();
 		if (sourceRelHead.empty())
 			return sourceRelHead;
 		result |= sourceRelHead;
@@ -572,93 +634,84 @@ void Source_Union::ModifyRegistrations(
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	// Remove any sources that need removing.
-	for (set<PSource*>::iterator iterPSource = fPSources_ToRemove.begin();
-		iterPSource != fPSources_ToRemove.end(); ++iterPSource)
-		{
-		// For each ProxyInPSource, unregister it, remove it from owning Proxy
-		// and delete it.
-		PSource* thePSource = *iterPSource;
-		vector<int64> toRemove;
-		for (map<int64, ProxyInPSource*>::iterator
-			iterPIP = thePSource->fMap_RefconToProxyInPSource.begin();
-			iterPIP != thePSource->fMap_RefconToProxyInPSource.end(); ++iterPIP)
-			{
-			ProxyInPSource* thePIP = iterPIP->second;
-			toRemove.push_back(iterPIP->first);
-			thePIP->fProxy->fProxyInPSources.erase(thePIP);
-			fProxiesThatNeedWork.insert(thePIP->fProxy);
-			delete thePIP;
-			}
-		thePSource->fMap_RefconToProxyInPSource.clear();
-		
-		ZRef<Source> theSource = thePSource->fSource;
-		theSource->ModifyRegistrations(nullptr, 0,
-			ZUtil_STL::sFirstOrNil(toRemove), toRemove.size());
-				
-		theSource->SetCallable_ResultsAvailable(null);
-		ZUtil_STL::sEraseMustContain(kDebug, fMap_SourceToPSource, theSource);
-		delete thePSource;
-		}
-	fPSources_ToRemove.clear();
-
 	// -----
 
 	// Remove any searches that need it
 	while (iRemovedCount--)
 		{
-		const int64 theRefcon = *iRemoved++;
-		// Unstitch from sources.
-		PSearch* thePSearch =
-			ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPSearch, theRefcon);
+		int64 theRefcon = *iRemoved++;
+
+		Map_Refcon_ClientSearch::iterator iterClientSearch =
+			fMap_Refcon_ClientSearch.find(theRefcon);
 		
-		for (set<ZRef<Proxy> >::iterator iterProxies = thePSearch->fProxiesDependedUpon.begin();
-			iterProxies != thePSearch->fProxiesDependedUpon.end(); ++iterProxies)
+		ClientSearch* theClientSearch = &iterClientSearch->second;
+		
+		PSearch* thePSearch = theClientSearch->fPSearch;
+		thePSearch->fClientSearches.Erase(theClientSearch);
+
+		if (thePSearch->fClientSearches.Empty())
 			{
-			ZRef<Proxy> theProxy = *iterProxies;
-			ZUtil_STL::sEraseMustContain(kDebug, theProxy->fDependentPSearches, thePSearch);
-			fProxiesThatNeedWork.insert(theProxy);
+			for (set<ZRef<Proxy> >::iterator
+				iterProxies = thePSearch->fProxiesDependedUpon.begin(),
+				endProxies = thePSearch->fProxiesDependedUpon.end();
+				iterProxies != endProxies; ++iterProxies)
+				{
+				ZRef<Proxy> theProxy = *iterProxies;
+				ZUtil_STL::sEraseMustContain(kDebug, theProxy->fDependentPSearches, thePSearch);
+				if (theProxy->fDependentPSearches.empty())
+					{
+					for (DListIteratorEraseAll<PIP, DLink_PIP_InProxy>
+						iterPIP = theProxy->fPIP_InProxy; iterPIP; iterPIP.Advance())
+						{
+						PIP* thePIP = iterPIP.Current();
+						PSource* thePSource = thePIP->fPSource;
+						thePSource->fPIP_NeedsWork.InsertIfNotContains(thePIP);
+						fPSource_NeedsWork.InsertIfNotContains(thePSource);
+						thePIP->fProxy = nullptr;
+						}
+					}
+				}
+			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PSearch, thePSearch->fRel);
 			}
-		delete thePSearch;
+		
+		fMap_Refcon_ClientSearch.erase(iterClientSearch);
 		}
-
-	// -----
-
-	// Add any sources that need it.
-	for (map<ZRef<Source>,string8>::iterator iterSources = fSources_ToAdd.begin();
-		iterSources != fSources_ToAdd.end(); ++iterSources)
-		{
-		ZRef<Source> theSource = iterSources->first;
-		theSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
-		PSource* thePSource = new PSource(theSource, iterSources->second);
-		ZUtil_STL::sInsertMustNotContain(kDebug, fMap_SourceToPSource, theSource, thePSource);
-		// Punt for now -- we will need to determine which Proxies must be reorganized
-		// as a result of this source being added. Probably best to do it en masse at some point.
-		// Alternatively, do a re-analysis of all PSearches, and clean up any Proxies that
-		// dangle.
-		}
-	fSources_ToAdd.clear();
 
 	// -----
 
 	// Add any searches
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
-		const int64 theRefcon = iAdded->GetRefcon();
-		PSearch* thePSearch = new PSearch(theRefcon, iAdded->GetRel());
-		ZUtil_STL::sInsertMustNotContain(kDebug, fMap_RefconToPSearch, theRefcon, thePSearch);
+		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
 
-		thePSearch->fRel_Analyzed = Analyze(this, thePSearch).TopLevelDo(thePSearch->fRel);
-		fPSearchesThatNeedWork.insert(thePSearch);//??
+		pair<Map_Rel_PSearch::iterator,bool> inPSearch =
+			fMap_Rel_PSearch.insert(make_pair(theRel, PSearch(theRel)));
 
-		if (ZLOGF(s, eDebug))
+		PSearch* thePSearch = &inPSearch.first->second;
+		
+		if (inPSearch.second)
 			{
-			s << "Raw, then analyzed:\n";
-			ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
-			s << "\n\n";
-			ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel_Analyzed, s);
+			thePSearch->fRel_Analyzed = Analyze(this, thePSearch).TopLevelDo(thePSearch->fRel);
+			fPSearch_NeedsWork.Insert(thePSearch);//??
+
+			if (ZLOGF(s, eDebug))
+				{
+				s << "Raw, then analyzed:\n";
+				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
+				s << "\n\n";
+				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel_Analyzed, s);
+				}
 			}
+
+		const int64 theRefcon = iAdded->GetRefcon();
+
+		Map_Refcon_ClientSearch::iterator iterClientSearch =
+			fMap_Refcon_ClientSearch.insert(
+			make_pair(theRefcon, ClientSearch(theRefcon, thePSearch))).first;
+
+		thePSearch->fClientSearches.Insert(&iterClientSearch->second);
 		}
+
 	this->pInvokeCallable_ResultsAvailable();
 	}
 
@@ -667,104 +720,65 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 	ZAcqMtxR acq(fMtxR);
 
 	// Do work on any proxies that need it.
-	for (set<ZRef<Proxy> >::iterator iterProxies = fProxiesThatNeedWork.begin();
-		iterProxies != fProxiesThatNeedWork.end(); ++iterProxies)
-		{
-		ZRef<Proxy> theProxy = *iterProxies;
-		if (theProxy->fDependentPSearches.empty())
-			{
-			// We can unregister the PIPs from their PSources.
-			for (set<ProxyInPSource*>::iterator iterPIP = theProxy->fProxyInPSources.begin();
-				iterPIP != theProxy->fProxyInPSources.end(); ++iterPIP)
-				{
-				ProxyInPSource* thePIP = *iterPIP;
-				PSource* thePSource = thePIP->fPSource;
-				ZUtil_STL::sEraseMustContain(
-					kDebug, thePSource->fMap_RefconToProxyInPSource, thePIP->fRefcon);
-				thePSource->fRemoves.push_back(thePIP->fRefcon);
-				delete thePIP;
-				}
-			theProxy->fProxyInPSources.clear();
-			ZUtil_STL::sEraseMustContain(kDebug, fProxies, theProxy);
-			}
-		else
-			{
-			if (theProxy->fProxyInPSources.empty())
-				{
-				// need to register PIPs for each PSource that's relevant.
-				for (map<ZRef<Source>, PSource*>::iterator
-					iterSources = fMap_SourceToPSource.begin();
-					iterSources != fMap_SourceToPSource.end(); ++iterSources)
-					{
-					PSource* thePSource = iterSources->second;
-					if (thePSource->Intersects(theProxy->fRelHead))
-						{
-						ProxyInPSource* aPIP = new ProxyInPSource;
-						aPIP->fPSource = thePSource;
-						aPIP->fProxy = theProxy.Get();
-						ZUtil_STL::sInsertMustNotContain(kDebug, theProxy->fProxyInPSources, aPIP);
-						aPIP->fRefcon = thePSource->fNextRefcon++;
-						ZUtil_STL::sInsertMustNotContain(
-							kDebug, thePSource->fMap_RefconToProxyInPSource, aPIP->fRefcon, aPIP);
-						ZUtil_STL::sInsertMustNotContain(kDebug, thePSource->fAdds, aPIP);
-						fPSourcesThatNeedWork.insert(thePSource);
-						}
-					}
-				}
-			}
-		}
-	fProxiesThatNeedWork.clear();
-
+	
 	// -----
 
-	for (set<PSource*>::iterator iterPSources = fPSourcesThatNeedWork.begin();
-		iterPSources != fPSourcesThatNeedWork.end(); ++iterPSources)
+	for (DListIteratorEraseAll<PSource, DLink_PSource_NeedsWork>
+		iterPSource = fPSource_NeedsWork; iterPSource; iterPSource.Advance())
 		{
-		PSource* thePSource = *iterPSources;
+		PSource* thePSource = iterPSource.Current();
 		vector<AddedSearch> theAddedSearches;
-		for (set<ProxyInPSource*>::iterator iterPIP = thePSource->fAdds.begin();
-			iterPIP != thePSource->fAdds.end(); ++iterPIP)
+		vector<int64> theRemoves;
+		for (DListIteratorEraseAll<PIP, DLink_PIP_NeedsWork>
+			iterPIP = thePSource->fPIP_NeedsWork; iterPIP; iterPIP.Advance())
 			{
-			ProxyInPSource* thePIP = *iterPIP;
-
-			theAddedSearches.push_back(
-				AddedSearch(thePIP->fRefcon, thePSource->UsableRel(thePIP->fProxy->fRel)));
+			PIP* thePIP = iterPIP.Current();
+			if (thePIP->fProxy)
+				{
+				if (thePIP->fNeedsAdd)
+					{
+					thePIP->fNeedsAdd = false;
+					theAddedSearches.push_back(
+						AddedSearch(thePIP->fRefcon, thePSource->UsableRel(thePIP->fProxy->fRel)));
+					}
+				}
+			else
+				{
+				ZAssertStop(kDebug, !thePIP->fNeedsAdd);				
+				theRemoves.push_back(thePIP->fRefcon);
+				thePSource->fMap_Refcon_PIP.erase(thePIP->fRefcon);
+				}
 			}
-		thePSource->fAdds.clear();
 		
 		thePSource->fSource->ModifyRegistrations(
 			ZUtil_STL::sFirstOrNil(theAddedSearches), theAddedSearches.size(),
-			ZUtil_STL::sFirstOrNil(thePSource->fRemoves), thePSource->fRemoves.size());
-		thePSource->fRemoves.clear();
+			ZUtil_STL::sFirstOrNil(theRemoves), theRemoves.size());
 		}
-	fPSourcesThatNeedWork.clear();
-
 
 	// -----
 
-	for (set<PSource*>::iterator iterPSources = fPSources_ToCollectFrom.begin();
-		iterPSources != fPSources_ToCollectFrom.end(); ++iterPSources)
+	for (DListIteratorEraseAll<PSource, DLink_PSource_ToCollectFrom>
+		iterPSource = fPSource_ToCollectFrom; iterPSource; iterPSource.Advance())
 		{
-		this->pCollectFrom(*iterPSources);
+		this->pCollectFrom(iterPSource.Current());
 		}
-	fPSources_ToCollectFrom.clear();
 
 	// -----
 
-	for (set<PSearch*>::iterator iterPSearch = fPSearchesThatNeedWork.begin();
-		iterPSearch != fPSearchesThatNeedWork.end(); ++iterPSearch)
+	for (DListIteratorEraseAll<PSearch, DLink_PSearch_NeedsWork>
+		iterPSearch = fPSearch_NeedsWork; iterPSearch; iterPSearch.Advance())
 		{
-		PSearch* thePSearch = *iterPSearch;
+		PSearch* thePSearch = iterPSearch.Current();
 		bool allOK = true;
 		ZRef<Event> theEvent;
 		for (set<ZRef<Proxy> >::iterator iterProxy = thePSearch->fProxiesDependedUpon.begin();
 			allOK && iterProxy != thePSearch->fProxiesDependedUpon.end(); ++iterProxy)
 			{
 			ZRef<Proxy> theProxy = *iterProxy;
-			for (set<ProxyInPSource*>::iterator iterPIP = theProxy->fProxyInPSources.begin();
-				allOK && iterPIP != theProxy->fProxyInPSources.end(); ++iterPIP)
+			for (DListIterator<PIP, DLink_PIP_InProxy> iterPIP = theProxy->fPIP_InProxy;
+				allOK && iterPIP; iterPIP.Advance())
 				{
-				ProxyInPSource* thePIP = *iterPIP;
+				PIP* thePIP = iterPIP.Current();
 				if (!thePIP->fResult)
 					{
 					allOK = false;
@@ -779,36 +793,109 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 				}
 			}
 
-		if (!allOK)
+		if (allOK)
 			{
-			++iterPSearch;
-			continue;
-			}
+			ZRef<ZQE::Walker> theWalker =
+				Visitor_DoMakeWalker(this).Do(thePSearch->fRel_Analyzed);
 
-		ZRef<ZQE::Walker> theWalker =
-			Visitor_DoMakeWalker(this).Do(thePSearch->fRel_Analyzed);
-		
-		SearchResult theSearchResult(thePSearch->fRefcon, sSearch(theWalker), theEvent);
-		oChanged.push_back(theSearchResult);
+			ZRef<ZQE::Result> theResult = sSearch(theWalker);
+			
+			for (DListIterator<ClientSearch, DLink_ClientSearch_InPSearch>
+				iterCS = thePSearch->fClientSearches; iterCS; iterCS.Advance())
+				{
+				oChanged.push_back(SearchResult(iterCS.Current()->fRefcon, theResult, theEvent));
+				}
+			}
 		}
-	fPSearchesThatNeedWork.clear();
 	}
 
 void Source_Union::InsertSource(ZRef<Source> iSource, const string8& iPrefix)
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	ZAssert(iSource);
-	ZAssert(! ZUtil_STL::sContains(fMap_SourceToPSource, iSource));
-	ZUtil_STL::sInsertMustNotContain(kDebug, fSources_ToAdd, iSource, iPrefix);
+	iSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
+
+	ZUtil_STL::sInsertMustNotContain(kDebug, fMap_Source_PSource, iSource, PSource(iSource, iPrefix));
 	}
 
 void Source_Union::EraseSource(ZRef<Source> iSource)
 	{
 	ZAcqMtxR acq(fMtxR);
+	Map_Source_PSource::iterator iterSource = fMap_Source_PSource.find(iSource);
+	PSource& thePSource = iterSource->second;
+	vector<int64> toRemove;
+	for (Map_Refcon_PIP::iterator
+		iterPIP = thePSource.fMap_Refcon_PIP.begin(),
+		endPIP = thePSource.fMap_Refcon_PIP.end();
+		iterPIP != endPIP; ++iterPIP)
+		{
+		toRemove.push_back(iterPIP->first);
+		iterPIP->second.fProxy->fPIP_InProxy.Erase(&iterPIP->second);
+		}
+	thePSource.fMap_Refcon_PIP.clear();
+	
+	iSource->ModifyRegistrations(nullptr, 0,
+		ZUtil_STL::sFirstOrNil(toRemove), toRemove.size());
+			
+	iSource->SetCallable_ResultsAvailable(null);
 
-	PSource* thePSource = ZUtil_STL::sGetMustContain(kDebug, fMap_SourceToPSource, iSource);
-	ZUtil_STL::sInsertMustNotContain(kDebug, fPSources_ToRemove, thePSource);
+	fMap_Source_PSource.erase(iterSource);
+	}
+
+ZRef<Source_Union::Proxy> Source_Union::pGetProxy(
+	PSearch* iPSearch, const RelHead& iRelHead, ZRef<ZRA::Expr_Rel> iRel)
+	{
+	ZRef<Proxy> theProxy = new Proxy;
+	theProxy->fRelHead = iRelHead;
+	theProxy->fRel = iRel;
+	ProxySet::iterator i = fProxySet.find(theProxy.Get());
+	if (fProxySet.end() != i)
+		{
+		theProxy = *i;
+		}
+	else
+		{
+		theProxy->fSource = this;
+		fProxySet.insert(theProxy.Get());
+		for (Map_Source_PSource::iterator
+			iterSources = fMap_Source_PSource.begin(),
+			endSources = fMap_Source_PSource.end();
+			iterSources != endSources; ++iterSources)
+			{
+			PSource& thePSource = iterSources->second;
+			if (thePSource.Intersects(theProxy->fRelHead))
+				{
+				int64 theRefcon = thePSource.fNextRefcon++;
+				PIP* thePIP = &thePSource.fMap_Refcon_PIP.insert(
+					make_pair(theRefcon, PIP())).first->second;
+
+				thePIP->fNeedsAdd = true;
+				thePIP->fRefcon = theRefcon;
+				thePIP->fProxy = theProxy.Get();
+				thePIP->fPSource = &thePSource;
+				theProxy->fPIP_InProxy.Insert(thePIP);
+
+				thePSource.fPIP_NeedsWork.Insert(thePIP);
+				fPSource_NeedsWork.InsertIfNotContains(&thePSource);
+				}
+			}
+		}
+
+	theProxy->fDependentPSearches.insert(iPSearch);
+	iPSearch->fProxiesDependedUpon.insert(theProxy);
+
+	return theProxy;
+	}
+
+void Source_Union::pFinalizeProxy(Proxy* iProxy)
+	{
+	if (!iProxy->FinishFinalize())
+		return;
+
+	ZAssertStop(kDebug, iProxy->fPIP_InProxy.Empty());
+
+	fProxySet.erase(iProxy);
+	delete iProxy;
 	}
 
 ZRef<ZQE::Walker> Source_Union::pMakeWalker(ZRef<Proxy> iProxy)
@@ -816,7 +903,7 @@ ZRef<ZQE::Walker> Source_Union::pMakeWalker(ZRef<Proxy> iProxy)
 
 void Source_Union::pRewind(ZRef<Walker_Proxy> iWalker)
 	{
-	iWalker->fIter_ProxyInPSource = iWalker->fProxy->fProxyInPSources.begin();
+	iWalker->fIter_PIP = iWalker->fProxy->fPIP_InProxy;
 	iWalker->fCurrentResult.Clear();
 	}
 
@@ -825,7 +912,6 @@ void Source_Union::pPrime(ZRef<Walker_Proxy> iWalker,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	iWalker->fIter_ProxyInPSource = iWalker->fProxy->fProxyInPSources.begin();
 	iWalker->fBaseOffset = ioBaseOffset;
 	const RelHead& theRelHead = iWalker->fProxy->fRelHead;
 	for (RelHead::const_iterator i = theRelHead.begin(); i != theRelHead.end(); ++i)
@@ -841,18 +927,18 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 		{
 		if (!iWalker->fCurrentResult)
 			{
-			if (iWalker->fProxy->fProxyInPSources.end() == iWalker->fIter_ProxyInPSource)
+			if (!iWalker->fIter_PIP)
 				return false;
 			iWalker->fCurrentIndex = 0;
-			iWalker->fCurrentResult = (*iWalker->fIter_ProxyInPSource)->fResult;
+			iWalker->fCurrentResult = iWalker->fIter_PIP.Current()->fResult;
 			}
 
-		ZAssert(iWalker->fCurrentResult);
+		ZAssertStop(kDebug, iWalker->fCurrentResult);
 
 		if (iWalker->fCurrentIndex >= iWalker->fCurrentResult->Count())
 			{
 			iWalker->fCurrentResult.Clear();
-			++iWalker->fIter_ProxyInPSource;
+			iWalker->fIter_PIP.Advance();
 			continue;
 			}
 
@@ -869,39 +955,16 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 		}
 	}
 
-ZRef<Source_Union::Proxy> Source_Union::pGetProxy(
-	PSearch* iPSearch, const RelHead& iRelHead, ZRef<ZRA::Expr_Rel> iRel)
-	{
-	ZRef<Proxy> theProxy = new Proxy;
-	theProxy->fRelHead = iRelHead;
-	theProxy->fRel = iRel;
-	ProxySet::iterator i = fProxies.find(theProxy);
-	if (fProxies.end() == i)
-		{
-		fProxies.insert(theProxy);
-		fProxiesThatNeedWork.insert(theProxy);
-		}
-	else
-		{
-		theProxy = *i;
-		}
-
-	// It's OK for a search to depend on a proxy multiple times.
-	theProxy->fDependentPSearches.insert(iPSearch);
-	iPSearch->fProxiesDependedUpon.insert(theProxy);
-
-	return theProxy;
-	}
-
 bool Source_Union::pIsSimple(const RelHead& iRelHead)
 	{
 	// iRelHead is simple if it references columns from zero or one sources
 	bool intersectsASource = false;
-	for (map<ZRef<Source>, PSource*>::iterator
-		i = fMap_SourceToPSource.begin(), end = fMap_SourceToPSource.end(); i != end; ++i)
+	for (Map_Source_PSource::iterator
+		iterSource = fMap_Source_PSource.begin(),
+		endSource = fMap_Source_PSource.end();
+		iterSource != endSource; ++iterSource)
 		{
-		PSource* thePSource = i->second;
-		if (thePSource->Intersects(iRelHead))
+		if (iterSource->second.Intersects(iRelHead))
 			{
 			if (intersectsASource)
 				return false;
@@ -920,25 +983,26 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 		iterSearchResults != theSearchResults.end(); ++iterSearchResults)
 		{
 		const int64 theRefcon = iterSearchResults->GetRefcon();
-
-		if (ZQ<ProxyInPSource*> theQ =
-			ZUtil_STL::sGetIfContains(iPSource->fMap_RefconToProxyInPSource, theRefcon))
+		Map_Refcon_PIP::iterator iter = iPSource->fMap_Refcon_PIP.find(theRefcon);
+		if (iPSource->fMap_Refcon_PIP.end() != iter)
 			{
-			ProxyInPSource* thePIP = theQ.Get();
+			PIP* thePIP = &iter->second;
 			thePIP->fResult = iterSearchResults->GetResult();
 			thePIP->fEvent = iterSearchResults->GetEvent();
-			fProxiesThatNeedWork.insert(thePIP->fProxy);
-			fPSearchesThatNeedWork.insert
-				(thePIP->fProxy->fDependentPSearches.begin(),
-				thePIP->fProxy->fDependentPSearches.end()); // Hmmm?
+			for (set<PSearch*>::iterator
+				i = thePIP->fProxy->fDependentPSearches.begin(),
+				end = thePIP->fProxy->fDependentPSearches.end(); i != end; ++i)
+				{
+				fPSearch_NeedsWork.InsertIfNotContains(*i);
+				}
 			}
 		}
 	}
 
 void Source_Union::pResultsAvailable(ZRef<Source> iSource)
 	{
-	PSource* thePSource = ZUtil_STL::sGetMustContain(kDebug, fMap_SourceToPSource, iSource);
-	fPSources_ToCollectFrom.insert(thePSource);
+	Map_Source_PSource::iterator iterSource = fMap_Source_PSource.find(iSource);
+	fPSource_ToCollectFrom.InsertIfNotContains(&iterSource->second);
 	this->pInvokeCallable_ResultsAvailable();
 	}
 

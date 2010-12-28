@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Source.h"
 #include "zoolib/zqe/ZQE_Walker.h"
+#include "zoolib/zra/ZRA_Compare_Rel.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -37,7 +38,7 @@ namespace ZDataspace {
 class Source_Union : public Source
 	{
 public:
-	enum { kDebug = 1 };
+	enum { kDebug = 0 };
 
 	Source_Union();
 	virtual ~Source_Union();
@@ -56,15 +57,43 @@ public:
 	void EraseSource(ZRef<Source> iSource);
 
 private:
+	ZMtxR fMtxR;
+
 	class PSearch;
+
+	// -----
+
+	class PIP;
+	class DLink_PIP_InProxy;
+	class DLink_PIP_NeedsWork;
+	typedef std::map<int64, PIP> Map_Refcon_PIP;
+
+	// -----
+
 	class Proxy;
 	class Visitor_Proxy;
-	class Visitor_DoMakeWalker;
+
+	struct Comparator_Proxy
+		{
+		bool operator()(Proxy* iLeft, Proxy* iRight) const;
+
+		typedef Proxy* first_argument_type;
+		typedef Proxy* second_argument_type;
+		typedef bool result_type;
+		};
+
+	typedef std::set<Proxy*, Comparator_Proxy> ProxySet;
+	ProxySet fProxySet;
+
 	ZRef<Proxy> pGetProxy(PSearch* iPSearch, const RelHead& iRelHead, ZRef<ZRA::Expr_Rel> iRel);
+	void pFinalizeProxy(Proxy* iProxy);
+
+	// -----
 
 	class Walker_Proxy;
 
 	ZRef<ZQE::Walker> pMakeWalker(ZRef<Proxy> iProxy);
+
 	void pRewind(ZRef<Walker_Proxy> iWalker);
 
 	void pPrime(ZRef<Walker_Proxy> iWalker,
@@ -77,44 +106,48 @@ private:
 		ZVal_Any* oResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
-	struct Comparator_Proxy
-		{
-		bool operator()(const ZRef<Proxy>& iLeft, const ZRef<Proxy>& iRight) const;
+	// -----
 
-		typedef ZRef<Proxy> first_argument_type;
-		typedef ZRef<Proxy> second_argument_type;
-		typedef bool result_type;
-		};
+	class DLink_ClientSearch_InPSearch;
+	class ClientSearch;
 
-	typedef std::set<ZRef<Proxy>, Comparator_Proxy> ProxySet;
-	ProxySet fProxies;
+	typedef std::map<int64, ClientSearch> Map_Refcon_ClientSearch;
+	Map_Refcon_ClientSearch fMap_Refcon_ClientSearch;
 
-	std::set<ZRef<Proxy> > fProxiesThatNeedWork;//Urg
+	// -----
 
-	std::set<PSearch*> fPSearchesThatNeedWork;
+	class DLink_PSearch_NeedsWork;
+	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
 
-	bool pIsSimple(const RelHead& iRelHead);
+	typedef std::map<ZRef<ZRA::Expr_Rel>, PSearch, ZRA::Comparator_Rel> Map_Rel_PSearch;
+	Map_Rel_PSearch fMap_Rel_PSearch;
+
+	// -----
+
+	class Visitor_DoMakeWalker;
+
+	// -----
 
 	class Analyze;
 	friend class Analyze;
 
-	ZMtxR fMtxR;
-
-	std::map<int64, PSearch*> fMap_RefconToPSearch;
-
-	class ProxyInPSource;
+	// -----
 
 	class PSource;
-	std::map<ZRef<Source>,string8> fSources_ToAdd;
-	std::set<PSource*> fPSources_ToRemove;
+	class DLink_PSource_NeedsWork;
+	class DLink_PSource_ToCollectFrom;
+	DListHead<DLink_PSource_ToCollectFrom> fPSource_ToCollectFrom;
+	DListHead<DLink_PSource_NeedsWork> fPSource_NeedsWork;
 
-	std::set<PSource*> fPSources_ToCollectFrom;
+	typedef std::map<ZRef<Source>, PSource> Map_Source_PSource;
+	Map_Source_PSource fMap_Source_PSource;
 
-	std::map<ZRef<Source>, PSource*> fMap_SourceToPSource;
-	std::set<PSource*> fPSourcesThatNeedWork;
+	// -----
 
 	ZRef<Event> fEvent;
 	ZRef<Source::Callable_ResultsAvailable> fCallable_ResultsAvailable;
+
+	bool pIsSimple(const RelHead& iRelHead);
 
 	void pCollectFrom(PSource* iPSource);
 	void pResultsAvailable(ZRef<Source> iSource);

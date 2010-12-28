@@ -22,19 +22,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDataspace_Dataspace__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZDList.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/dataspace/ZDataspace_Source.h"
-#include "zoolib/zra/ZRA_Compare_Rel.h"
 
 #include <map>
 
 namespace ZooLib {
 namespace ZDataspace {
 
-class Dataspace;
 class Sieve;
-class DLink_Sieve_JustRegistered;
 
 // =================================================================================================
 #pragma mark -
@@ -71,8 +67,8 @@ public:
 		{ return fMtxR; }
 
 private:
-	void pTriggerUpdate();
 	void pCallback_Source(ZRef<Source> iSource);
+	void pFinalize(Sieve* iSieve);
 
 	ZRef<Source> fSource;
 	ZRef<Source::Callable_ResultsAvailable> fCallable_Source;
@@ -80,19 +76,12 @@ private:
 	ZMtxR fMtxR;
 
 	ZRef<Callable_UpdateNeeded> fCallable_UpdateNeeded;
-
 	bool fCalled_UpdateNeeded;
 
-	class PSieve;
-
-	typedef std::map<ZRef<ZRA::Expr_Rel>, PSieve, ZRA::Comparator_Rel> Map_RelToPSieve;
-	Map_RelToPSieve fRel_To_PSieve;
-	std::map<int64, PSieve*> fRefcon_To_PSieveStar;
 	int64 fNextRefcon;
 
-	void pFinalize(Sieve* iSieve);
-	ZRef<ZQE::Result> pGetResult(Sieve* iSieve);
-	bool pIsLoaded(Sieve* iSieve);
+	typedef std::map<int64, Sieve*> Map_RefconToSieve;
+	Map_RefconToSieve fMap_RefconToSieve;
 
 	friend class Sieve;
 	};
@@ -101,13 +90,8 @@ private:
 #pragma mark -
 #pragma mark * Sieve
 
-class DLink_Sieve_Using
-:	public DListLink<Sieve, DLink_Sieve_Using>
-	{};
-
 class Sieve
 :	public ZCounted
-,	public DLink_Sieve_Using
 	{
 public:
 	Sieve();
@@ -126,8 +110,9 @@ public:
 	bool IsLoaded();
 
 private:
-	Dataspace::PSieve* fPSieve;
-	bool fJustRegistered;
+	Dataspace* fDataspace;
+	int64 fRefcon;
+	ZRef<ZQE::Result> fResult;
 	
 	friend class Dataspace;
 	};

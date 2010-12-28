@@ -26,8 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataset/ZDataset.h"
 #include "zoolib/dataspace/ZDataspace_Source.h"
-
 #include "zoolib/zqe/ZQE_Walker.h"
+#include "zoolib/zra/ZRA_Compare_Rel.h"
 
 #include <map>
 #include <vector>
@@ -124,9 +124,13 @@ private:
 	std::vector<Map_Pending> fStack;
 	bool fStackChanged;
 
+	class DLink_ClientSearch_InPSearch;
+	class ClientSearch;
 	class PSearch;
-	// We could have the PSearch be an in-place value in the map.
-	std::map<int64, PSearch*> fMap_RefconToPSearch;
+	std::map<int64, ClientSearch> fMap_RefconToClientSearch;
+
+	typedef std::map<ZRef<ZRA::Expr_Rel>, PSearch, ZRA::Comparator_Rel> Map_RelToPSearch;
+	Map_RelToPSearch fMap_RelToPSearch;
 	};
 
 } // namespace ZDataspace
