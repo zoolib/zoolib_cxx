@@ -311,7 +311,7 @@ bool sSetIfContains(std::map<KBase, Value, Comparator>& ioMap, KDerived iKey, Va
 
 
 template <typename KBase, typename KDerived, typename Value, typename Comparator>
-Value sGetMustContain(const int iDebugLevel,
+const Value& sGetMustContain(const int iDebugLevel,
 	const std::map<KBase, Value, Comparator>& iMap, KDerived iKey)
 	{
 	typename std::map<KBase, Value, Comparator>::const_iterator i = iMap.find(iKey);
