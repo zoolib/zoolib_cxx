@@ -120,21 +120,15 @@ by iDebugLevel, that iElement is not already present in ioSet. */
 template <typename Base, typename Derived, typename Comparator>
 void sInsertMustNotContain(const int iDebugLevel, std::set<Base,Comparator>& ioSet, Derived iElement)
 	{
-	ZAssertStop(iDebugLevel, ioSet.end() == ioSet.find(iElement));
-	ioSet.insert(iElement);
+	bool didInsert = ioSet.insert(iElement).second;
+	ZAssertStop(iDebugLevel, didInsert);
 	}
 
 
 /** Inserts iElement in ioSet, if it's not already contained. */
 template <typename Base, typename Derived, typename Comparator>
 bool sInsertIfNotContains(std::set<Base,Comparator>& ioSet, Derived iElement)
-	{
-	typename std::set<Base,Comparator>::iterator i = ioSet.lower_bound(iElement);
-	if (ioSet.end() != i && *i == iElement)
-		return false;
-	ioSet.insert(i, iElement);
-	return true;
-	}
+	{ return ioSet.insert(iElement).second; }
 
 
 /** If the unordered vector ioVec contains iElement then it is
@@ -155,13 +149,7 @@ bool sEraseIfContains(std::vector<Base>& ioVec, Derived iElement)
 Otherwise no change is made to ioSet and false is returned. */
 template <typename Base, typename Derived, typename Comparator>
 bool sEraseIfContains(std::set<Base,Comparator>& ioSet, Derived iElement)
-	{
-	typename std::set<Base,Comparator>::iterator i = ioSet.find(iElement);
-	if (i == ioSet.end())
-		return false;
-	ioSet.erase(i);
-	return true;
-	}
+	{ return ioSet.erase(iElement); }
 
 
 /** Removes iElement from ioVec, asserting that it is present and
@@ -180,9 +168,8 @@ typename std::vector<Base>::iterator sEraseMustContain(const int iDebugLevel,
 template <typename Base, typename Derived, typename Comparator>
 void sEraseMustContain(const int iDebugLevel, std::set<Base,Comparator>& ioSet, Derived iElement)
 	{
-	typename std::set<Base,Comparator>::iterator i = ioSet.find(iElement);
-	ZAssertStop(iDebugLevel, i != ioSet.end());
-	ioSet.erase(i);
+	size_t count = ioSet.erase(iElement);
+	ZAssertStop(iDebugLevel, count);
 	}
 
 // ==================================================
@@ -258,21 +245,14 @@ void sSortedEraseMustContain(const int iDebugLevel, std::vector<Base>& ioVec, De
 
 template <typename KBase, typename KDerived, typename Value, typename Comparator>
 bool sEraseIfContains(std::map<KBase, Value, Comparator>& ioMap, KDerived iKey)
-	{
-	typename std::map<KBase, Value, Comparator>::iterator i = ioMap.find(iKey);
-	if (i == ioMap.end())
-		return false;
-	ioMap.erase(i);
-	return true;
-	}
+	{ return ioMap.erase(iKey); }
 
 
 template <typename KBase, typename KDerived, typename Value, typename Comparator>
 void sEraseMustContain(const int iDebugLevel, std::map<KBase, Value, Comparator>& ioMap, KDerived iKey)
 	{
-	typename std::map<KBase, Value, Comparator>::iterator i = ioMap.find(iKey);
-	ZAssertStop(iDebugLevel, i != ioMap.end());
-	ioMap.erase(i);
+	size_t count = ioMap.erase(iKey);
+	ZAssertStop(iDebugLevel, count);
 	}
 
 
@@ -303,8 +283,9 @@ template <typename KBase, typename KDerived, typename Value, typename Comparator
 void sInsertMustNotContain(const int iDebugLevel,
 	std::map<KBase, Value, Comparator>& ioMap, KDerived iKey, Value iValue)
 	{
-	ZAssertStop(iDebugLevel, ioMap.end() == ioMap.find(iKey));
-	ioMap.insert(typename std::map<KBase, Value, Comparator>::value_type(iKey, iValue));
+	const bool didInsert =
+		ioMap.insert(typename std::map<KBase, Value, Comparator>::value_type(iKey, iValue)).second;
+	ZAssertStop(iDebugLevel, didInsert);
 	}
 
 
