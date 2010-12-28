@@ -182,8 +182,25 @@ template <typename P, typename L>
 class DListIterator
 	{
 public:
+	DListIterator()
+	:	fDListHead(nullptr),
+		fCurrent(nullptr)
+		{}
+
+	DListIterator(const DListIterator& iOther)
+	:	fDListHead(iOther.fDListHead),
+		fCurrent(iOther.fCurrent)
+		{}
+
+	DListIterator& operator=(const DListIterator& iOther)
+		{
+		fDListHead = iOther.fDListHead;
+		fCurrent = iOther.fCurrent;
+		return *this;
+		}
+
 	DListIterator(const DListHead<L>& iDListHead)
-	:	fDListHead(iDListHead),
+	:	fDListHead(&iDListHead),
 		fCurrent(iDListHead.fHeadL)
 		{}
 
@@ -200,12 +217,12 @@ public:
 		ZAssertStop(L::kDebug, fCurrent);
 		ZAssertStop(L::kDebug, fCurrent->fNext);
 		fCurrent = fCurrent->fNext;
-		if (fCurrent == fDListHead.fHeadL)
+		if (fCurrent == fDListHead->fHeadL)
 			fCurrent = nullptr;
 		}
 
 private:
-	const DListHead<L>& fDListHead;
+	const DListHead<L>* fDListHead;
 	L* fCurrent;
 	};
 
