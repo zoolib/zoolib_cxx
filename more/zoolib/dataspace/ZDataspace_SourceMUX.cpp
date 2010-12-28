@@ -24,71 +24,49 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDataspace {
 
+using std::make_pair;
+using std::map;
+using std::pair;
 using std::set;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * SourceMUX::PSearch
-
-class SourceMUX::PSearch
-	{
-	int64 fRefcon;
-	ZRef<ZQE::Result> fResult;
-	set<ClientSearch*> fClientSearches;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * SourceMUX::ClientSearch
-
-class SourceMUX::ClientSearch
-	{
-	ClientSource* fCS;
-	int64 fRefcon;
-	PSearch* fPSearch;
-	};
+using std::vector;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * SourceMUX::ClientSource
 
-class SourceMUX::ClientSource : public Source
+class SourceMUX::ClientSource
+:	public Source
 	{
 public:
-	ClientSource(ZRef<SourceMUX> iMUX);
+	ClientSource(ZRef<SourceMUX> iMUX)
+	:	fMUX(iMUX)
+		{}
 
 // From ZCounted via Source
-	virtual void Finalize();
+	virtual void Finalize()
+		{ fMUX->pFinalizeClientSource(this); }
 
 // From Source
-	virtual RelHead GetRelHead();
+	virtual RelHead GetRelHead()
+		{ return fMUX->pGetRelHead(this); }
 
 	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,
-		const int64* iRemoved, size_t iRemovedCount);
+		const int64* iRemoved, size_t iRemovedCount)
+		{ fMUX->pModifyRegistrations(this, iAdded, iAddedCount, iRemoved, iRemovedCount); }
 
-	virtual void CollectResults(std::vector<SearchResult>& oChanged);
+	virtual void CollectResults(vector<SearchResult>& oChanged)
+		{ fMUX->pCollectResults(this, oChanged); }
+
+// Our protocol
+	void ResultsAvailable()
+		{ this->pInvokeCallable_ResultsAvailable(); }
 
 	ZRef<SourceMUX> fMUX;
+	
+	map<int64,int64> fMap_ClientToPRefcon;
+	map<int64,ZRef<ZQE::Result> > fPendingResults;
 	};
-
-SourceMUX::ClientSource::ClientSource(ZRef<SourceMUX> iMUX)
-:	fMUX(iMUX)
-	{}
-
-void SourceMUX::ClientSource::Finalize()
-	{ fMUX->pFinalizeProxy(this); }
-
-RelHead SourceMUX::ClientSource::GetRelHead()
-	{ return fMUX->pGetRelHead(this); }
-
-void SourceMUX::ClientSource::ModifyRegistrations(
-	const AddedSearch* iAdded, size_t iAddedCount,
-	const int64* iRemoved, size_t iRemovedCount)
-	{ fMUX->pModifyRegistrations(this, iAdded, iAddedCount, iRemoved, iRemovedCount); }
-
-void SourceMUX::ClientSource::CollectResults(std::vector<SearchResult>& oChanged)
-	{ fMUX->pCollectResults(this, oChanged); }
 
 // =================================================================================================
 #pragma mark -
@@ -97,9 +75,9 @@ void SourceMUX::ClientSource::CollectResults(std::vector<SearchResult>& oChanged
 SourceMUX::SourceMUX(ZRef<Source> iSource)
 :	fSource(iSource)
 ,	fCallable_ResultsAvailable(MakeCallable(MakeWeakRef(this), &SourceMUX::pResultsAvailable))
+,	fNextPRefcon(1)
 	{
 	fSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
-	ZUnimplemented();
 	}
 
 SourceMUX::~SourceMUX()
@@ -123,31 +101,93 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 	const AddedSearch* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
+	ZGuardRMtxR guard(fMtxR);
+
+	vector<AddedSearch> theAddedSearches;
+	theAddedSearches.reserve(iAddedCount);
+	for (/*no init*/; iAddedCount--; ++iAdded)
+		{
+		const int64 theClientRefcon = iAdded->GetRefcon();
+		const int64 thePRefcon = fNextPRefcon++;
+		ZUtil_STL::sInsertMustNotContain(kDebug,
+			iCS->fMap_ClientToPRefcon, theClientRefcon, thePRefcon);
+		ZUtil_STL::sInsertMustNotContain(kDebug,
+			fPRefconToClient, thePRefcon, make_pair(iCS.Get(), theClientRefcon));
+
+		theAddedSearches.push_back(AddedSearch(thePRefcon, iAdded->GetRel()));
+		}
+	
+	vector<int64> removedSearches;
+	removedSearches.reserve(iRemovedCount);
+	while (iRemovedCount--)
+		{
+		removedSearches.push_back(ZUtil_STL::sEraseAndReturn(kDebug,
+			iCS->fMap_ClientToPRefcon, *iRemoved++));
+		}
+
+	fSource->ModifyRegistrations(
+		ZUtil_STL::sFirstOrNil(theAddedSearches), theAddedSearches.size(),
+		ZUtil_STL::sFirstOrNil(removedSearches), removedSearches.size());
 	}
 
 void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
-	std::vector<SearchResult>& oChanged)
+	vector<SearchResult>& oChanged)
 	{
+	vector<SearchResult> changes;
+	fSource->CollectResults(changes);
+
+	ZGuardRMtxR guard(fMtxR);
+
+	for (vector<SearchResult>::iterator
+		iterChanges = changes.begin(), endChanges = changes.end();
+		iterChanges != endChanges; ++iterChanges)
+		{
+		const pair<ClientSource*,int64>& thePair =
+			ZUtil_STL::sGetMustContain(kDebug, fPRefconToClient, iterChanges->GetRefcon());
+		thePair.first->fPendingResults[thePair.second] = iterChanges->GetResult();
+		}
+
+	oChanged.clear();
+	oChanged.reserve(iCS->fPendingResults.size());
+	for (map<int64,ZRef<ZQE::Result> >::iterator
+		iter = iCS->fPendingResults.begin(), end = iCS->fPendingResults.end();
+		iter != end; ++iter)
+		{ oChanged.push_back(SearchResult(iter->first, iter->second, null)); }
+
+	iCS->fPendingResults.clear();
 	}
 
 void SourceMUX::pResultsAvailable(ZRef<Source> iSource)
 	{
-	
+	ZGuardRMtxR guard(fMtxR);
+	for (set<ClientSource*>::iterator
+		iter = fClientSources.begin(), end = fClientSources.end();
+		iter != end; ++iter)
+		{ (*iter)->ResultsAvailable(); }
 	}
 
-void SourceMUX::pFinalizeProxy(ClientSource* iCS)
+void SourceMUX::pFinalizeClientSource(ClientSource* iCS)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZGuardRMtxR guard(fMtxR);
 
 	if (!iCS->FinishFinalize())
 		return;
 
-	// Detach iCS from all PSearches
-
-	
+	vector<int64> removedSearches;
+	removedSearches.reserve(iCS->fMap_ClientToPRefcon.size());
+	for (map<int64,int64>::iterator
+		iter = iCS->fMap_ClientToPRefcon.begin(), end = iCS->fMap_ClientToPRefcon.begin();
+		iter != end; ++iter)
+		{ removedSearches.push_back(iter->second); }
 
 	ZUtil_STL::sEraseMustContain(1, fClientSources, iCS);
 	delete iCS;
+
+	guard.Release();
+
+	fSource->ModifyRegistrations(
+		nullptr, 0,
+		ZUtil_STL::sFirstOrNil(removedSearches), removedSearches.size());
 	}
 
 } // namespace ZDataspace

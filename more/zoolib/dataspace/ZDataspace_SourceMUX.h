@@ -36,6 +36,8 @@ namespace ZDataspace {
 class SourceMUX : public SourceFactory
 	{
 public:
+	enum { kDebug = 1 };
+
 	SourceMUX(ZRef<Source> iSource);
 	virtual ~SourceMUX();
 
@@ -56,16 +58,18 @@ private:
 	void pCollectResults(ZRef<ClientSource> iCS,
 		std::vector<SearchResult>& oChanged);
 
-
 	void pResultsAvailable(ZRef<Source> iSource);
 
-	void pFinalizeProxy(ClientSource* iCS);
+	void pFinalizeClientSource(ClientSource* iCS);
 
 	ZMtxR fMtxR;
 
 	ZRef<Source> fSource;
 	ZRef<Source::Callable_ResultsAvailable> fCallable_ResultsAvailable;
 
+	int64 fNextPRefcon;
+
+	std::map<int64,std::pair<ClientSource*,int64> > fPRefconToClient;
 	std::set<ClientSource*> fClientSources;
 	};
 
