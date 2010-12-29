@@ -39,28 +39,18 @@ Expr_Rel_Calc::~Expr_Rel_Calc()
 
 void Expr_Rel_Calc::Accept(ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Calc* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Calc*>(&iVisitor))
-		{
+	if (Visitor_Expr_Rel_Calc* theVisitor = dynamic_cast<Visitor_Expr_Rel_Calc*>(&iVisitor))
 		this->Accept_Expr_Rel_Calc(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept(iVisitor);
-		}
 	}
 
 void Expr_Rel_Calc::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Calc* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Calc*>(&iVisitor))
-		{
+	if (Visitor_Expr_Rel_Calc* theVisitor = dynamic_cast<Visitor_Expr_Rel_Calc*>(&iVisitor))
 		this->Accept_Expr_Rel_Calc(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op1(iVisitor);
-		}
 	}
 
 ZRef<Expr_Rel> Expr_Rel_Calc::Self()

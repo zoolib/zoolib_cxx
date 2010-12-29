@@ -33,15 +33,10 @@ Expr_Rel_Union::Expr_Rel_Union(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>&
 
 void Expr_Rel_Union::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Union* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Union*>(&iVisitor))
-		{
+	if (Visitor_Expr_Rel_Union* theVisitor = dynamic_cast<Visitor_Expr_Rel_Union*>(&iVisitor))
 		this->Accept_Expr_Rel_Union(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op2(iVisitor);
-		}
 	}
 
 ZRef<Expr_Rel> Expr_Rel_Union::Self()

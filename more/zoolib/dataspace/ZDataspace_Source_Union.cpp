@@ -174,15 +174,10 @@ void Source_Union::Proxy::Finalize()
 
 void Source_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Proxy* theVisitor =
-		dynamic_cast<Visitor_Proxy*>(&iVisitor))
-		{
+	if (Visitor_Proxy* theVisitor = dynamic_cast<Visitor_Proxy*>(&iVisitor))
 		this->Accept_Proxy(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op0(iVisitor);
-		}
 	}
 
 ZRef<ZRA::Expr_Rel> Source_Union::Proxy::Self()

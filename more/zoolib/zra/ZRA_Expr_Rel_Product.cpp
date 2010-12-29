@@ -33,28 +33,18 @@ Expr_Rel_Product::Expr_Rel_Product(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_R
 
 void Expr_Rel_Product::Accept(ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Product* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Product*>(&iVisitor))
-		{
+	if (Visitor_Expr_Rel_Product* theVisitor = dynamic_cast<Visitor_Expr_Rel_Product*>(&iVisitor))
 		this->Accept_Expr_Rel_Product(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept(iVisitor);
-		}
 	}
 
 void Expr_Rel_Product::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Product* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Product*>(&iVisitor))
-		{
+	if (Visitor_Expr_Rel_Product* theVisitor = dynamic_cast<Visitor_Expr_Rel_Product*>(&iVisitor))
 		this->Accept_Expr_Rel_Product(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op2(iVisitor);
-		}
 	}
 
 ZRef<Expr_Rel> Expr_Rel_Product::Self()

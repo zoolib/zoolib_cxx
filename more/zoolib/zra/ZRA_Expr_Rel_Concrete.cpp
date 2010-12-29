@@ -33,28 +33,18 @@ Expr_Rel_Concrete::Expr_Rel_Concrete(const RelHead& iRelHead)
 
 void Expr_Rel_Concrete::Accept(ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Concrete* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Concrete*>(&iVisitor))
-		{
+	if (Visitor_Expr_Rel_Concrete* theVisitor = dynamic_cast<Visitor_Expr_Rel_Concrete*>(&iVisitor))
 		this->Accept_Expr_Rel_Concrete(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept(iVisitor);
-		}
 	}
 
 void Expr_Rel_Concrete::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Concrete* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Concrete*>(&iVisitor))
-		{
+	if (Visitor_Expr_Rel_Concrete* theVisitor = dynamic_cast<Visitor_Expr_Rel_Concrete*>(&iVisitor))
 		this->Accept_Expr_Rel_Concrete(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op0(iVisitor);
-		}
 	}
 
 ZRef<Expr_Rel> Expr_Rel_Concrete::Self()
