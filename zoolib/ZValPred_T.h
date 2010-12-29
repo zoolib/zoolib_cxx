@@ -129,6 +129,7 @@ public:
 		eLT,
 		eLE,
 		eEQ,
+		eNE,
 		eGE,
 		eGT
 		};
@@ -162,6 +163,7 @@ bool ZValComparator_Simple_T<Val>::Matches(const Val& iLHS, const Val& iRHS)
 		case eLT: return compare < 0;
 		case eLE: return compare <= 0;
 		case eEQ: return compare == 0;
+		case eNE: return compare != 0;
 		case eGE: return compare >= 0;
 		case eGT: return compare > 0;
 		}
@@ -629,6 +631,17 @@ ZValPred_T<Val> operator==(
 	return ZValPred_T<Val>
 		(iLHS,
 		new ZValComparator_Simple_T<Val>(ZValComparator_Simple_T<Val>::eEQ),
+		iRHS);
+	}
+
+template <class Val>
+ZValPred_T<Val> operator!=(
+	const ZValComparandPseudo_T<Val>& iLHS,
+	const ZValComparandPseudo_T<Val>& iRHS)
+	{
+	return ZValPred_T<Val>
+		(iLHS,
+		new ZValComparator_Simple_T<Val>(ZValComparator_Simple_T<Val>::eNE),
 		iRHS);
 	}
 
