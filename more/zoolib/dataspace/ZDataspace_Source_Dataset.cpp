@@ -33,6 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
+#include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -242,9 +243,16 @@ void Source_Dataset::ModifyRegistrations(
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
-		Map_RelToPSearch::iterator iterPSearch =
-			fMap_RelToPSearch.insert(make_pair(theRel, PSearch(theRel))).first;
+		pair<Map_RelToPSearch::iterator,bool> iterPSearchPair =
+			fMap_RelToPSearch.insert(make_pair(theRel, PSearch(theRel)));
 
+		if (!iterPSearchPair.second)
+			{
+			if (ZLOGF(s, eDebug))
+				s << "Reusing exisiting PSearch";
+			}
+
+		const Map_RelToPSearch::iterator& iterPSearch = iterPSearchPair.first;
 		PSearch* thePSearch = &iterPSearch->second;
 
 		const int64 theRefcon = iAdded->GetRefcon();
@@ -262,6 +270,8 @@ void Source_Dataset::ModifyRegistrations(
 
 		std::map<int64, ClientSearch>::iterator iterClientSearch =
 			fMap_RefconToClientSearch.find(theRefcon);
+
+		ZAssertStop(kDebug, iterClientSearch != fMap_RefconToClientSearch.end());
 		
 		ClientSearch* theClientSearch = &iterClientSearch->second;
 		
@@ -291,9 +301,17 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 			iterPSearch != fMap_RelToPSearch.end(); ++iterPSearch)
 			{
 			PSearch* thePSearch = &iterPSearch->second;
-			ZRef<ZQE::Walker> theWalker =
-				Visitor_DoMakeWalker(this).Do(thePSearch->fRel);
-			
+			ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this).Do(thePSearch->fRel);
+
+			if (!theWalker)
+				{
+				if (ZLOGF(s, eDebug))
+					{
+					s << "\n";
+					ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
+					}
+				}
+
 			ZRef<ZQE::Result> theResult = sSearch(theWalker);
 			for (DListIterator<ClientSearch, DLink_ClientSearch_InPSearch>
 				iterCS = thePSearch->fClientSearches; iterCS; iterCS.Advance())

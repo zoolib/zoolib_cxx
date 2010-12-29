@@ -957,6 +957,7 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 
 bool Source_Union::pIsSimple(const RelHead& iRelHead)
 	{
+	return false;//##
 	// iRelHead is simple if it references columns from zero or one sources
 	bool intersectsASource = false;
 	for (Map_Source_PSource::iterator

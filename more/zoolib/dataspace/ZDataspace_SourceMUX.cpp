@@ -30,6 +30,8 @@ using std::pair;
 using std::set;
 using std::vector;
 
+typedef map<int64,pair<ZRef<ZQE::Result>,ZRef<Event> > > Map_Refcon_Result;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * SourceMUX::ClientSource
@@ -65,7 +67,7 @@ public:
 	ZRef<SourceMUX> fMUX;
 	
 	map<int64,int64> fMap_ClientToPRefcon;
-	map<int64,ZRef<ZQE::Result> > fPendingResults;
+	Map_Refcon_Result fResults;
 	};
 
 // =================================================================================================
@@ -75,6 +77,7 @@ public:
 SourceMUX::SourceMUX(ZRef<Source> iSource)
 :	fSource(iSource)
 ,	fCallable_ResultsAvailable(MakeCallable(MakeWeakRef(this), &SourceMUX::pResultsAvailable))
+,	fResultsAvailable(false)
 ,	fNextPRefcon(1)
 	{
 	fSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
@@ -109,8 +112,10 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 		{
 		const int64 theClientRefcon = iAdded->GetRefcon();
 		const int64 thePRefcon = fNextPRefcon++;
+
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			iCS->fMap_ClientToPRefcon, theClientRefcon, thePRefcon);
+
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fPRefconToClient, thePRefcon, make_pair(iCS.Get(), theClientRefcon));
 
@@ -125,6 +130,8 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 			iCS->fMap_ClientToPRefcon, *iRemoved++));
 		}
 
+	guard.Release();
+
 	fSource->ModifyRegistrations(
 		ZUtil_STL::sFirstOrNil(theAddedSearches), theAddedSearches.size(),
 		ZUtil_STL::sFirstOrNil(removedSearches), removedSearches.size());
@@ -133,10 +140,16 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 	vector<SearchResult>& oChanged)
 	{
-	vector<SearchResult> changes;
-	fSource->CollectResults(changes);
-
 	ZGuardRMtxR guard(fMtxR);
+	
+	vector<SearchResult> changes;
+	if (fResultsAvailable)
+		{
+		fResultsAvailable = false;
+		guard.Release();
+		fSource->CollectResults(changes);
+		guard.Acquire();
+		}
 
 	for (vector<SearchResult>::iterator
 		iterChanges = changes.begin(), endChanges = changes.end();
@@ -144,26 +157,32 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 		{
 		const pair<ClientSource*,int64>& thePair =
 			ZUtil_STL::sGetMustContain(kDebug, fPRefconToClient, iterChanges->GetRefcon());
-		thePair.first->fPendingResults[thePair.second] = iterChanges->GetResult();
+
+		thePair.first->fResults[thePair.second] =
+			make_pair(iterChanges->GetResult(), iterChanges->GetEvent());
 		}
 
 	oChanged.clear();
-	oChanged.reserve(iCS->fPendingResults.size());
-	for (map<int64,ZRef<ZQE::Result> >::iterator
-		iter = iCS->fPendingResults.begin(), end = iCS->fPendingResults.end();
+	oChanged.reserve(iCS->fResults.size());
+	for (Map_Refcon_Result::iterator iter = iCS->fResults.begin(), end = iCS->fResults.end();
 		iter != end; ++iter)
-		{ oChanged.push_back(SearchResult(iter->first, iter->second, null)); }
+		{ oChanged.push_back(SearchResult(iter->first, iter->second.first, iter->second.second)); }
 
-	iCS->fPendingResults.clear();
+	iCS->fResults.clear();
 	}
 
 void SourceMUX::pResultsAvailable(ZRef<Source> iSource)
 	{
 	ZGuardRMtxR guard(fMtxR);
-	for (set<ClientSource*>::iterator
-		iter = fClientSources.begin(), end = fClientSources.end();
-		iter != end; ++iter)
-		{ (*iter)->ResultsAvailable(); }
+	if (!fResultsAvailable)
+		{
+		fResultsAvailable = true;
+		
+		for (set<ClientSource*>::iterator
+			iter = fClientSources.begin(), end = fClientSources.end();
+			iter != end; ++iter)
+			{ (*iter)->ResultsAvailable(); }
+		}
 	}
 
 void SourceMUX::pFinalizeClientSource(ClientSource* iCS)

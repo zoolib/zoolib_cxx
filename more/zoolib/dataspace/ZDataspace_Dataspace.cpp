@@ -124,13 +124,13 @@ void Dataspace::Changed(const set<ZRef<Sieve> >& iSieves)
 		{ this->Changed(*iter); }
 	}
 
-void Dataspace::Loaded(const ZRef<Sieve> & iSieve)
+void Dataspace::Loaded(const ZRef<Sieve>& iSieve)
 	{
 	try { iSieve->Loaded(); }
 	catch (...) {}
 	}
 
-void Dataspace::Changed(const ZRef<Sieve> & iSieve)
+void Dataspace::Changed(const ZRef<Sieve>& iSieve)
 	{
 	try { iSieve->Changed(); }
 	catch (...) {}

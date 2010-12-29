@@ -31,7 +31,8 @@ using std::vector;
 #pragma mark -
 #pragma mark * SourceServer
 
-SourceServer::SourceServer(ZRef<Source> iSource, ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+SourceServer::SourceServer(
+	ZRef<Source> iSource, ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fSource(iSource)
 ,	fCallable_Source(MakeCallable(this, &SourceServer::pCallback_Source))
 ,	fStreamerR(iStreamerR)

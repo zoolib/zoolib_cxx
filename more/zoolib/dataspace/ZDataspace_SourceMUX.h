@@ -66,6 +66,7 @@ private:
 
 	ZRef<Source> fSource;
 	ZRef<Source::Callable_ResultsAvailable> fCallable_ResultsAvailable;
+	bool fResultsAvailable;
 
 	int64 fNextPRefcon;
 

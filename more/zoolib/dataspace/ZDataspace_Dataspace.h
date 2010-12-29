@@ -60,8 +60,8 @@ public:
 	virtual void Loaded(const std::set<ZRef<Sieve> >& iSieves);
 	virtual void Changed(const std::set<ZRef<Sieve> >& iSieves);
 
-	virtual void Loaded(const ZRef<Sieve> & iSieve);
-	virtual void Changed(const ZRef<Sieve> & iSieve);
+	virtual void Loaded(const ZRef<Sieve>& iSieve);
+	virtual void Changed(const ZRef<Sieve>& iSieve);
 
 	const ZMtxR& GetMtxR()	
 		{ return fMtxR; }
