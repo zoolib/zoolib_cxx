@@ -39,6 +39,12 @@ struct DListHead
 	{
 	DListHead() : fHeadL(nullptr), fSize(0) {}
 
+	DListHead(const DListHead& iOther)
+	:	fHeadL(nullptr), fSize(0)
+		{
+		ZAssertStop(L::kDebug, !iOther.fHeadL && !iOther.fSize);
+		}
+
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
 		DListHead, operator_bool_generator_type, operator_bool_type);
 
@@ -162,12 +168,18 @@ template <typename P, typename L, int kDebug_T = 1>
 class DListLink
 	{
 public:
-//	DListLink(const DListLink&); // not implemented/implementable
 //	DListLink& operator=(const DListLink&); // not implemented/implementable
 public:
 	static const int kDebug = kDebug_T;
 
 	DListLink() : fPrev(nullptr), fNext(nullptr) {}
+
+	DListLink(const DListLink& iOther)
+	 : fPrev(nullptr), fNext(nullptr)
+		{
+		ZAssertStop(kDebug, !iOther.fPrev && !iOther.fNext);
+		}
+
 	~DListLink() { ZAssertStop(kDebug, !fPrev && !fNext); }
 
 	L* fPrev;
