@@ -27,21 +27,21 @@ namespace Visitor_Expr_Bool_ValPred_Any_DoCompare {
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_ValPred_Any_DoCompare
 
-void Comparer_Bootstrap::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr)
+void Comparer_Bootstrap::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iExpr)
 	{ pSetResult(Comparer_ValPred(this, iExpr).Do(fExpr)); } 
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Visitor_Expr_Bool_ValPred_Any_DoCompare::Comparer
 
-void Comparer::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iRep)
+void Comparer::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iRep)
 	{ pSetResult(-1); } 
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Visitor_Expr_Bool_ValPred_Any_DoCompare::Comparer_GT_ValPred
 
-void Comparer_GT_ValPred::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any>)
+void Comparer_GT_ValPred::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>&)
 	{ pSetResult(1); }
 
 // =================================================================================================
@@ -54,7 +54,7 @@ Comparer_ValPred::Comparer_ValPred(
 ,	fExpr(iExpr)
 	{}
 
-void Comparer_ValPred::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr)
+void Comparer_ValPred::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iExpr)
 	{ pSetResult(sCompare_T(fExpr->GetValPred(), iExpr->GetValPred())); } 
 
 } // namespace Visitor_Expr_Bool_ValPred_Any_DoCompare

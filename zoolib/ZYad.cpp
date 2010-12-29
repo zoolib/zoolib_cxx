@@ -364,28 +364,28 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 
 */
 
-void ZVisitor_Yad::Visit_YadR(ZRef<ZYadR> iYadR)
+void ZVisitor_Yad::Visit_YadR(const ZRef<ZYadR>& iYadR)
 	{ this->Visit(iYadR); }
 
-void ZVisitor_Yad::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+void ZVisitor_Yad::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 	{ this->Visit_YadR(iYadAtomR); }
 
-void ZVisitor_Yad::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+void ZVisitor_Yad::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
 	{ this->Visit_YadR(iYadStreamR); }
 
-void ZVisitor_Yad::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+void ZVisitor_Yad::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
 	{ this->Visit_YadR(iYadStrimR); }
 
-void ZVisitor_Yad::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+void ZVisitor_Yad::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 	{ this->Visit_YadR(iYadSeqR); }
 
-void ZVisitor_Yad::Visit_YadSeqRPos(ZRef<ZYadSeqRPos> iYadSeqRPos)
+void ZVisitor_Yad::Visit_YadSeqRPos(const ZRef<ZYadSeqRPos>& iYadSeqRPos)
 	{ this->Visit_YadSeqR(iYadSeqRPos); }
 
-void ZVisitor_Yad::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+void ZVisitor_Yad::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	{ this->Visit_YadR(iYadMapR); }
 
-void ZVisitor_Yad::Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos)
+void ZVisitor_Yad::Visit_YadMapRPos(const ZRef<ZYadMapRPos>& iYadMapRPos)
 	{ this->Visit_YadMapR(iYadMapRPos); }
 
 // =================================================================================================

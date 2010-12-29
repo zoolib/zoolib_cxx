@@ -46,7 +46,7 @@ void ZExpr::Accept_Expr(ZVisitor_Expr& iVisitor)
 #pragma mark -
 #pragma mark * ZVisitor_Expr
 
-void ZVisitor_Expr::Visit_Expr(ZRef<ZExpr> iExpr)
+void ZVisitor_Expr::Visit_Expr(const ZRef<ZExpr>& iExpr)
 	{ this->Visit(iExpr); }
 
 } // namespace ZooLib

@@ -48,7 +48,7 @@ ZVisitor_DoToStrim::ZVisitor_DoToStrim()
 ,	fIndent(0)
 	{}
 
-void ZVisitor_DoToStrim::Visit(ZRef<ZVisitee> iRep)
+void ZVisitor_DoToStrim::Visit(const ZRef<ZVisitee>& iRep)
 	{
 	if (iRep)
 		pStrimW() << "/*unhandled ZVisitee: " << typeid(*iRep.Get()).name() << "*/";
@@ -57,7 +57,7 @@ void ZVisitor_DoToStrim::Visit(ZRef<ZVisitee> iRep)
 	}
 
 void ZVisitor_DoToStrim::DoToStrim(
-	const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZVisitee> iRep)
+	const Options& iOptions, const ZStrimW& iStrimW, const ZRef<ZVisitee>& iRep)
 	{
 	ZSetRestore_T<const Options*> sr1(fOptions, &iOptions);
 	ZSetRestore_T<const ZStrimW*> sr2(fStrimW, &iStrimW);
@@ -66,7 +66,7 @@ void ZVisitor_DoToStrim::DoToStrim(
 	this->pDoToStrim(iRep);
 	}
 
-void ZVisitor_DoToStrim::pDoToStrim(ZRef<ZVisitee> iRep)
+void ZVisitor_DoToStrim::pDoToStrim(const ZRef<ZVisitee>& iRep)
 	{
 	ZAssert(fOptions && fStrimW);
 	if (iRep)

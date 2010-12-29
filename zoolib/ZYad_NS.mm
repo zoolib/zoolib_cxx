@@ -192,14 +192,14 @@ public:
 	Visitor_GetVal(ZRef<NSObject> iDefault);
 
 // From ZVisitor_Yad
-	virtual void Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR);
-	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
-	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
-	virtual void Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
+	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR);
+	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR);
+	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR);
+	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR);
+	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR);
 
 // Our protocol
-	ZRef<NSObject> GetVal(ZRef<ZYadR> iYadR);
+	ZRef<NSObject> GetVal(const ZRef<ZYadR>& iYadR);
 
 private:
 	ZRef<NSObject> fDefault;
@@ -212,20 +212,20 @@ Visitor_GetVal::Visitor_GetVal(ZRef<NSObject> iDefault)
 :	fDefault(iDefault)
 	{}
 
-void Visitor_GetVal::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+void Visitor_GetVal::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 	{ fOutput = ZUtil_NS::sDAsNSObject(fDefault, iYadAtomR->AsAny()); }
 
-void Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+void Visitor_GetVal::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
 	{ fOutput = sReadAll_T<ZData_NS>(iYadStreamR->GetStreamR()); }
 
-void Visitor_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+void Visitor_GetVal::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
 	{
 	NSMutableString* result = ZUtil_NS::sStringMutable();
 	ZStrimW_NSString(result).CopyAllFrom(iYadStrimR->GetStrimR());
 	fOutput = result;
 	}
 
-void Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+void Visitor_GetVal::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 	{
 	ZSeq_NS theSeq;
 
@@ -235,7 +235,7 @@ void Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	fOutput = theSeq;
 	}
 
-void Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+void Visitor_GetVal::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	{
 	ZMap_NS theMap;
 
@@ -246,7 +246,7 @@ void Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	fOutput = theMap;
 	}
 
-ZRef<NSObject> Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)
+ZRef<NSObject> Visitor_GetVal::GetVal(const ZRef<ZYadR>& iYadR)
 	{
 	ZRef<NSObject> result;
 	if (iYadR)

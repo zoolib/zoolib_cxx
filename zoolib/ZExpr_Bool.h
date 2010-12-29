@@ -70,7 +70,7 @@ class ZVisitor_Expr_Bool_True
 	{
 	typedef ZVisitor_Expr_Op0_T<ZExpr_Bool> inherited;
 public:
-	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iExpr);
+	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iExpr);
 	};
 
 // =================================================================================================
@@ -106,7 +106,7 @@ class ZVisitor_Expr_Bool_False
 	{
 	typedef ZVisitor_Expr_Op0_T<ZExpr_Bool> inherited;
 public:
-	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iExpr);
+	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iExpr);
 	};
 
 // =================================================================================================
@@ -127,7 +127,7 @@ public:
 	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<ZExpr_Bool>& iVisitor);
 
 	virtual ZRef<ZExpr_Bool> Self();
-	virtual ZRef<ZExpr_Bool> Clone(ZRef<ZExpr_Bool> iOp0);
+	virtual ZRef<ZExpr_Bool> Clone(const ZRef<ZExpr_Bool>& iOp0);
 
 // Our protocol
 	virtual void Accept_Expr_Bool_Not(ZVisitor_Expr_Bool_Not& iVisitor);
@@ -142,7 +142,7 @@ class ZVisitor_Expr_Bool_Not
 	{
 	typedef ZVisitor_Expr_Op1_T<ZExpr_Bool> inherited;
 public:
-	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iExpr);
+	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iExpr);
 	};
 
 // =================================================================================================
@@ -163,7 +163,7 @@ public:
 	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Bool>& iVisitor);
 
 	virtual ZRef<ZExpr_Bool> Self();
-	virtual ZRef<ZExpr_Bool> Clone(ZRef<ZExpr_Bool> iOp0, ZRef<ZExpr_Bool> iOp1);
+	virtual ZRef<ZExpr_Bool> Clone(const ZRef<ZExpr_Bool>& iOp0, const ZRef<ZExpr_Bool>& iOp1);
 
 // Our protocol
 	virtual void Accept_Expr_Bool_And(ZVisitor_Expr_Bool_And& iVisitor);
@@ -178,7 +178,7 @@ class ZVisitor_Expr_Bool_And
 	{
 	typedef ZVisitor_Expr_Op2_T<ZExpr_Bool> inherited;
 public:
-	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iExpr);
+	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iExpr);
 	};
 
 // =================================================================================================
@@ -199,7 +199,7 @@ public:
 	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Bool>& iVisitor);
 
 	virtual ZRef<ZExpr_Bool> Self();
-	virtual ZRef<ZExpr_Bool> Clone(ZRef<ZExpr_Bool> iOp0, ZRef<ZExpr_Bool> iOp1);
+	virtual ZRef<ZExpr_Bool> Clone(const ZRef<ZExpr_Bool>& iOp0, const ZRef<ZExpr_Bool>& iOp1);
 
 // Our protocol
 	virtual void Accept_Expr_Bool_Or(ZVisitor_Expr_Bool_Or& iVisitor);
@@ -214,7 +214,7 @@ class ZVisitor_Expr_Bool_Or
 	{
 	typedef ZVisitor_Expr_Op2_T<ZExpr_Bool> inherited;
 public:
-	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iExpr);
+	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iExpr);
 	};
 
 // =================================================================================================

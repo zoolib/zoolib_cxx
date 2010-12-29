@@ -27,7 +27,7 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Intersect
 
-Expr_Rel_Intersect::Expr_Rel_Intersect(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+Expr_Rel_Intersect::Expr_Rel_Intersect(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
@@ -47,7 +47,7 @@ void Expr_Rel_Intersect::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor
 ZRef<Expr_Rel> Expr_Rel_Intersect::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Intersect::Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+ZRef<Expr_Rel> Expr_Rel_Intersect::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
 	{ return new Expr_Rel_Intersect(iOp0, iOp1); }
 
 void Expr_Rel_Intersect::Accept_Expr_Rel_Intersect(Visitor_Expr_Rel_Intersect& iVisitor)
@@ -57,7 +57,7 @@ void Expr_Rel_Intersect::Accept_Expr_Rel_Intersect(Visitor_Expr_Rel_Intersect& i
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Intersect
 
-void Visitor_Expr_Rel_Intersect::Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr)
+void Visitor_Expr_Rel_Intersect::Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================

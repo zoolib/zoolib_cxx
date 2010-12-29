@@ -67,7 +67,7 @@ void Expr_Rel_Const::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 ZRef<Expr_Rel> Expr_Rel_Const::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Const::Clone(ZRef<Expr_Rel> iOp0)
+ZRef<Expr_Rel> Expr_Rel_Const::Clone(const ZRef<Expr_Rel>& iOp0)
 	{ return new Expr_Rel_Const(iOp0, fRelName, fVal); }
 
 void Expr_Rel_Const::Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor)
@@ -83,7 +83,7 @@ const ZVal_Any& Expr_Rel_Const::GetVal()
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Const
 
-void Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(ZRef<Expr_Rel_Const> iExpr)
+void Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================

@@ -238,14 +238,14 @@ class ZVisitor_Yad
 :	public virtual ZVisitor
 	{
 public:
-	virtual void Visit_YadR(ZRef<ZYadR> iYadR);
-	virtual void Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR);
-	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
-	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
-	virtual void Visit_YadSeqRPos(ZRef<ZYadSeqRPos> iYadSeqRPos);
-	virtual void Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
-	virtual void Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos);
+	virtual void Visit_YadR(const ZRef<ZYadR>& iYadR);
+	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR);
+	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR);
+	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR);
+	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR);
+	virtual void Visit_YadSeqRPos(const ZRef<ZYadSeqRPos>& iYadSeqRPos);
+	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR);
+	virtual void Visit_YadMapRPos(const ZRef<ZYadMapRPos>& iYadMapRPos);
 	};
 
 // =================================================================================================

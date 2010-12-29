@@ -70,11 +70,11 @@ public:
 	Visitor_Do_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault);
 
 // From ZVisitor_Yad
-	virtual void Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR);
-	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
-	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
-	virtual void Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
+	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR);
+	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR);
+	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR);
+	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR);
+	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR);
 
 private:
 	bool fRepeatedPropsAsSeq;
@@ -86,16 +86,16 @@ Visitor_Do_GetVal::Visitor_Do_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& i
 ,	fDefault(iDefault)
 	{}
 
-void Visitor_Do_GetVal::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+void Visitor_Do_GetVal::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 	{ this->pSetResult(iYadAtomR->AsAny()); }
 
-void Visitor_Do_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+void Visitor_Do_GetVal::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
 	{ this->pSetResult(sReadAll_T<ZData_Any>(iYadStreamR->GetStreamR())); }
 
-void Visitor_Do_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+void Visitor_Do_GetVal::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
 	{ this->pSetResult(iYadStrimR->GetStrimR().ReadAll8()); }
 
-void Visitor_Do_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+void Visitor_Do_GetVal::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 	{
 	ZSeq_Any theSeq;
 
@@ -105,7 +105,7 @@ void Visitor_Do_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	this->pSetResult(theSeq);
 	}
 
-void Visitor_Do_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+void Visitor_Do_GetVal::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	{
 	ZMap_Any theMap;
 

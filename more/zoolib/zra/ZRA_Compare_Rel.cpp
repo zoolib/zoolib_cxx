@@ -60,18 +60,18 @@ class Comparer
 ,	public virtual Visitor_Expr_Rel_Union
 	{
 public:
-	virtual void Visit_Expr_Rel_Calc(ZRef<Expr_Rel_Calc>) { pSetResult(-1); } 
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete>) { pSetResult(-1); }
-	virtual void Visit_Expr_Rel_Const(ZRef<Expr_Rel_Const>) { pSetResult(-1); }
-	virtual void Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference>) { pSetResult(-1); }
-	virtual void Visit_Expr_Rel_Embed(ZRef<Expr_Rel_Embed>) { pSetResult(-1); }
-	virtual void Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr) { pSetResult(-1); }
-	virtual void Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product>) { pSetResult(-1); }
-	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project>) { pSetResult(-1); }
-	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename>) { pSetResult(-1); }
-	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any>) { pSetResult(-1); }
-	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select>) { pSetResult(-1); }
-	virtual void Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union>) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>&) { pSetResult(-1); } 
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>&) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>&) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>&) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>&) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>&) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>&) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>&) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>&) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>&) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>&) { pSetResult(-1); }
 
 	int CompareUnary(ZRef<ZExpr_Op1_T<Expr_Rel> > iLHS, ZRef<ZExpr_Op1_T<Expr_Rel> > iRHS);
 	int CompareBinary(ZRef<ZExpr_Op2_T<Expr_Rel> > iLHS, ZRef<ZExpr_Op2_T<Expr_Rel> > iRHS);
@@ -90,40 +90,40 @@ int Comparer::CompareBinary(ZRef<ZExpr_Op2_T<Expr_Rel> > iLHS, ZRef<ZExpr_Op2_T<
 	}
 
 struct Comparer_GT_Calc : public Comparer
-	{ virtual void Visit_Expr_Rel_Calc(ZRef<Expr_Rel_Calc>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>&) { pSetResult(1); } };
 
 struct Comparer_GT_Concrete : public Comparer_GT_Calc
-	{ virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>&) { pSetResult(1); } };
 
 struct Comparer_GT_Const : public Comparer_GT_Concrete
-	{ virtual void Visit_Expr_Rel_Const(ZRef<Expr_Rel_Const>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>&) { pSetResult(1); } };
 
 struct Comparer_GT_Difference : public Comparer_GT_Const
-	{ virtual void Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>&) { pSetResult(1); } };
 
 struct Comparer_GT_Embed : public Comparer_GT_Difference
-	{ virtual void Visit_Expr_Rel_Embed(ZRef<Expr_Rel_Embed>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>&) { pSetResult(1); } };
 
 struct Comparer_GT_Intersect : public Comparer_GT_Embed
-	{ virtual void Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>&) { pSetResult(1); } };
 
 struct Comparer_GT_Product : public Comparer_GT_Intersect
-	{ virtual void Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>&) { pSetResult(1); } };
 
 struct Comparer_GT_Project : public Comparer_GT_Product
-	{ virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>&) { pSetResult(1); } };
 
 struct Comparer_GT_Rename : public Comparer_GT_Project
-	{ virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>&) { pSetResult(1); } };
 
 struct Comparer_GT_Restrict : public Comparer_GT_Rename
-	{ virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>&) { pSetResult(1); } };
 
 struct Comparer_GT_Select : public Comparer_GT_Restrict
-	{ virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>&) { pSetResult(1); } };
 
 struct Comparer_GT_Union : public Comparer_GT_Select
-	{ virtual void Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union>) { pSetResult(1); }  };
+	{ virtual void Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>&) { pSetResult(1); } };
 
 } // anonymous namespace
 
@@ -137,7 +137,7 @@ struct Comparer_Calc : public Comparer
 	{
 	ZRef<Expr_Rel_Calc> fExpr;
 	Comparer_Calc(ZRef<Expr_Rel_Calc> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Calc(ZRef<Expr_Rel_Calc> iExpr)
+	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetRelName(), iExpr->GetRelName()))
 			pSetResult(compare);
@@ -154,7 +154,7 @@ struct Comparer_Concrete : public Comparer_GT_Calc
 	{
 	ZRef<Expr_Rel_Concrete> fExpr;
 	Comparer_Concrete(ZRef<Expr_Rel_Concrete> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 		{ pSetResult(sCompare_T(fExpr->GetConcreteRelHead(), iExpr->GetConcreteRelHead())); }
 	};
 
@@ -162,7 +162,7 @@ struct Comparer_Const : public Comparer_GT_Concrete
 	{
 	ZRef<Expr_Rel_Const> fExpr;
 	Comparer_Const(ZRef<Expr_Rel_Const> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Const(ZRef<Expr_Rel_Const> iExpr)
+	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetRelName(), iExpr->GetRelName()))
 			pSetResult(compare);
@@ -177,7 +177,7 @@ struct Comparer_Difference : public Comparer_GT_Const
 	{
 	ZRef<Expr_Rel_Difference> fExpr;
 	Comparer_Difference(ZRef<Expr_Rel_Difference> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr)
+	virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
 		{ pSetResult(CompareBinary(fExpr, iExpr)); }
 	};
 
@@ -185,7 +185,7 @@ struct Comparer_Embed : public Comparer_GT_Difference
 	{
 	ZRef<Expr_Rel_Embed> fExpr;
 	Comparer_Embed(ZRef<Expr_Rel_Embed> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Embed(ZRef<Expr_Rel_Embed> iExpr)
+	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetRelName(), iExpr->GetRelName()))
 			pSetResult(compare);
@@ -198,7 +198,7 @@ struct Comparer_Intersect : public Comparer_GT_Embed
 	{
 	ZRef<Expr_Rel_Intersect> fExpr;
 	Comparer_Intersect(ZRef<Expr_Rel_Intersect> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr)
+	virtual void Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr)
 		{ pSetResult(CompareBinary(fExpr, iExpr)); }
 	};
 
@@ -206,7 +206,7 @@ struct Comparer_Product : public Comparer_GT_Intersect
 	{
 	ZRef<Expr_Rel_Product> fExpr;
 	Comparer_Product(ZRef<Expr_Rel_Product> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
+	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 		{ pSetResult(CompareBinary(fExpr, iExpr)); }
 	};
 
@@ -214,7 +214,7 @@ struct Comparer_Project : public Comparer_GT_Product
 	{
 	ZRef<Expr_Rel_Project> fExpr;
 	Comparer_Project(ZRef<Expr_Rel_Project> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
+	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetProjectRelHead(), iExpr->GetProjectRelHead()))
 			pSetResult(compare);
@@ -227,7 +227,7 @@ struct Comparer_Rename : public Comparer_GT_Project
 	{
 	ZRef<Expr_Rel_Rename> fExpr;
 	Comparer_Rename(ZRef<Expr_Rel_Rename> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
+	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetOld(), iExpr->GetOld()))
 			pSetResult(compare);
@@ -242,7 +242,7 @@ struct Comparer_Restrict : public Comparer_GT_Rename
 	{
 	ZRef<Expr_Rel_Restrict_Any> fExpr;
 	Comparer_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr)
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetValPred(), iExpr->GetValPred()))
 			pSetResult(compare);
@@ -255,7 +255,7 @@ struct Comparer_Select : public Comparer_GT_Restrict
 	{
 	ZRef<Expr_Rel_Select> fExpr;
 	Comparer_Select(ZRef<Expr_Rel_Select> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
+	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 		{
 		if (int compare = Visitor_Expr_Bool_ValPred_Any_DoCompare::Comparer_Bootstrap()
 			.Compare(fExpr->GetExpr_Bool(), iExpr->GetExpr_Bool()))
@@ -273,7 +273,7 @@ struct Comparer_Union : public Comparer_GT_Select
 	{
 	ZRef<Expr_Rel_Union> fExpr;
 	Comparer_Union(ZRef<Expr_Rel_Union> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr)
+	virtual void Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
 		{ pSetResult(CompareBinary(fExpr, iExpr)); }
 	};
 
@@ -303,40 +303,40 @@ struct Comparer_Bootstrap
 	ZRef<Expr_Rel> fExpr;
 	Comparer_Bootstrap(ZRef<Expr_Rel> iExpr) : fExpr(iExpr) {}
 
-	virtual void Visit_Expr_Rel_Calc(ZRef<Expr_Rel_Calc> iExpr)
+	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 		{ pSetResult(Comparer_Calc(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 		{ pSetResult(Comparer_Concrete(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Const(ZRef<Expr_Rel_Const> iExpr)
+	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 		{ pSetResult(Comparer_Const(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr)
+	virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
 		{ pSetResult(Comparer_Difference(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Embed(ZRef<Expr_Rel_Embed> iExpr)
+	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 		{ pSetResult(Comparer_Embed(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr)
+	virtual void Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr)
 		{ pSetResult(Comparer_Intersect(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
+	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 		{ pSetResult(Comparer_Product(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
+	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 		{ pSetResult(Comparer_Project(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
+	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 		{ pSetResult(Comparer_Rename(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr)
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr)
 		{ pSetResult(Comparer_Restrict(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
+	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 		{ pSetResult(Comparer_Select(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr)
+	virtual void Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
 		{ pSetResult(Comparer_Union(iExpr).Do(fExpr)); } 
 	};
 

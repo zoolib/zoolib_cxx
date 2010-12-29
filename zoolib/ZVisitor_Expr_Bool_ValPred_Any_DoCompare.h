@@ -37,7 +37,7 @@ struct Comparer_Bootstrap
 ,	public virtual ZVisitor_Expr_Bool_ValPred_T<ZVal_Any>
 	{
 public:
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iExpr);
 	};
 
 // =================================================================================================
@@ -48,7 +48,7 @@ struct Comparer
 :	public virtual Visitor_Expr_Bool_DoCompare::Comparer
 ,	public virtual ZVisitor_Expr_Bool_ValPred_T<ZVal_Any>
 	{
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iRep);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iRep);
 	};
 
 // =================================================================================================
@@ -59,7 +59,7 @@ struct Comparer_GT_ValPred
 :	public virtual Visitor_Expr_Bool_DoCompare::Comparer_GT_Or
 ,	public virtual ZVisitor_Expr_Bool_ValPred_T<ZVal_Any>
 	{
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any>);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>&);
 	};
 
 // =================================================================================================
@@ -74,7 +74,7 @@ public:
 	Comparer_ValPred(Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap* iBootstrap,
 		ZRef<ZExpr_Bool_ValPred_Any> iExpr);
 
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iExpr);
 
 private:
 	ZRef<ZExpr_Bool_ValPred_Any> fExpr;

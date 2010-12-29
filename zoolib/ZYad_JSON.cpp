@@ -440,27 +440,27 @@ ZVisitor_Yad_JSONWriter::ZVisitor_Yad_JSONWriter(
 	fMayNeedInitialLF(false)
 	{}
 
-void ZVisitor_Yad_JSONWriter::Visit_YadR(ZRef<ZYadR> iYadR)
+void ZVisitor_Yad_JSONWriter::Visit_YadR(const ZRef<ZYadR>& iYadR)
 	{
 	fStrimW << "null";
 	if (fOptions.fBreakStrings)
 		fStrimW << " /*!! Unhandled yad !!*/";
 	}
 
-void ZVisitor_Yad_JSONWriter::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+void ZVisitor_Yad_JSONWriter::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 	{ spToStrim_SimpleValue(fStrimW, iYadAtomR->AsAny()); }
 
-void ZVisitor_Yad_JSONWriter::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+void ZVisitor_Yad_JSONWriter::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
 	{
 	fStrimW << "null";
 	if (fOptions.fBreakStrings)
 		fStrimW << " /*!! ZYadStreamR not representable in JSON !!*/";
 	}
 
-void ZVisitor_Yad_JSONWriter::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+void ZVisitor_Yad_JSONWriter::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
 	{ spWriteString(fStrimW, iYadStrimR->GetStrimR()); }
 
-void ZVisitor_Yad_JSONWriter::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+void ZVisitor_Yad_JSONWriter::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 	{
 	bool needsIndentation = false;
 	if (fOptions.DoIndentation())
@@ -530,7 +530,7 @@ void ZVisitor_Yad_JSONWriter::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 		}
 	}
 
-void ZVisitor_Yad_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+void ZVisitor_Yad_JSONWriter::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	{
 	bool needsIndentation = false;
 	if (fOptions.DoIndentation())

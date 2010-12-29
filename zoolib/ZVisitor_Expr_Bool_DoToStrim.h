@@ -40,11 +40,11 @@ class ZVisitor_Expr_Bool_DoToStrim
 ,	public virtual ZVisitor_Expr_Bool_Or
 	{
 public:
-	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep);
-	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep);
-	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep);
-	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep);
-	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep);
+	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep);
+	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep);
+	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep);
+	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep);
+	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep);
 	};
 
 } // namespace ZooLib

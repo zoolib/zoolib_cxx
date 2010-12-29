@@ -49,11 +49,11 @@ public:
 
 	int Compare(ZRef<ZExpr_Bool> iLHS, ZRef<ZExpr_Bool> iRHS);
 
-	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True>);
-	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False>);
-	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iExpr);
-	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iExpr);
-	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iExpr);
+	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>&);
+	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>&);
+	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iExpr);
+	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iExpr);
+	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iExpr);
 	};
 
 // =================================================================================================
@@ -73,14 +73,17 @@ public:
 	Comparer(Comparer_Bootstrap* iBootstrap);
 
 // From ZVisitor_Expr_Bool_XXX
-	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True>);
-	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False>);
-	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not>);
-	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And>);
-	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or>);
+	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>&);
+	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>&);
+	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>&);
+	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>&);
+	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>&);
 
-	int CompareUnary(ZRef<ZExpr_Op1_T<ZExpr_Bool> > iLHS, ZRef<ZExpr_Op1_T<ZExpr_Bool> > iRHS);
-	int CompareBinary(ZRef<ZExpr_Op2_T<ZExpr_Bool> > iLHS, ZRef<ZExpr_Op2_T<ZExpr_Bool> > iRHS);
+	int CompareUnary(const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iLHS,
+		const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iRHS);
+
+	int CompareBinary(const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iLHS,
+		const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iRHS);
 
 private:
 	Comparer_Bootstrap* fBootstrap;
@@ -91,19 +94,19 @@ private:
 #pragma mark * Visitor_Expr_Bool_DoCompare::Comparer_GT_XXX
 
 struct Comparer_GT_True : public virtual Comparer
-	{ virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True>); };
+	{ virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>&); };
 
 struct Comparer_GT_False : public virtual Comparer_GT_True
-	{ virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False>); };
+	{ virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>&); };
 
 struct Comparer_GT_Not : public virtual Comparer_GT_False
-	{ virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not>); };
+	{ virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>&); };
 
 struct Comparer_GT_And : public virtual Comparer_GT_Not
-	{ virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And>); };
+	{ virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>&); };
 
 struct Comparer_GT_Or : public virtual Comparer_GT_And
-	{ virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or>); };
+	{ virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>&); };
 
 // =================================================================================================
 #pragma mark -
@@ -113,21 +116,21 @@ class Comparer_True : public virtual Comparer
 	{
 public:
 	Comparer_True(Comparer_Bootstrap* iBootstrap);
-	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True>);
+	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>&);
 	};
 
 class Comparer_False : public virtual Comparer_GT_True
 	{
 public:
 	Comparer_False(Comparer_Bootstrap* iBootstrap);
-	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False>);
+	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>&);
 	};
 
 class Comparer_Not : public virtual Comparer_GT_False
 	{
 public:
 	Comparer_Not(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_Not> iExpr);
-	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iExpr);
+	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iExpr);
 
 private:
 	ZRef<ZExpr_Bool_Not> fExpr;
@@ -137,7 +140,7 @@ class Comparer_And : public virtual Comparer_GT_Not
 	{
 public:
 	Comparer_And(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_And> iExpr);
-	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iExpr);
+	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iExpr);
 
 private:
 	ZRef<ZExpr_Bool_And> fExpr;
@@ -147,7 +150,7 @@ class Comparer_Or : public virtual Comparer_GT_And
 	{
 public:
 	Comparer_Or(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_Or> iExpr);
-	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iExpr);
+	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iExpr);
 
 private:
 	ZRef<ZExpr_Bool_Or> fExpr;

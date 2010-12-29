@@ -27,7 +27,7 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Project
 
-Expr_Rel_Project::Expr_Rel_Project(ZRef<Expr_Rel> iOp0, const RelHead& iRelHead)
+Expr_Rel_Project::Expr_Rel_Project(const ZRef<Expr_Rel>& iOp0, const RelHead& iRelHead)
 :	inherited(iOp0)
 ,	fRelHead(iRelHead)
 	{}
@@ -64,7 +64,7 @@ void Expr_Rel_Project::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 ZRef<Expr_Rel> Expr_Rel_Project::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Project::Clone(ZRef<Expr_Rel> iOp0)
+ZRef<Expr_Rel> Expr_Rel_Project::Clone(const ZRef<Expr_Rel>& iOp0)
 	{ return new Expr_Rel_Project(iOp0, fRelHead); }
 
 void Expr_Rel_Project::Accept_Expr_Rel_Project(Visitor_Expr_Rel_Project& iVisitor)
@@ -77,7 +77,7 @@ const RelHead& Expr_Rel_Project::GetProjectRelHead()
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Project
 
-void Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
+void Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================

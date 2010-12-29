@@ -51,7 +51,7 @@ class ZVisitor_Expr
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr(ZRef<ZExpr> iExpr);
+	virtual void Visit_Expr(const ZRef<ZExpr>& iExpr);
 	};
 
 } // namespace ZooLib

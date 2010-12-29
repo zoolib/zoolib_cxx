@@ -26,20 +26,20 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_DoToStrim
 
-void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep)
+void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep)
 	{ pStrimW() << "true"; }
 
-void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep)
+void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep)
 	{ pStrimW() << "false"; }
 
-void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep)
+void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
 	{
 	pStrimW() << "~(";
 	this->pDoToStrim(iRep->GetOp0());
 	pStrimW() << ")";
 	}
 
-void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep)
+void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
 	{
 	pStrimW() << "(";
 	this->pDoToStrim(iRep->GetOp0());
@@ -48,7 +48,7 @@ void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep
 	pStrimW() << ")";
 	}
 
-void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep)
+void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
 	{
 	pStrimW() << "(";
 	this->pDoToStrim(iRep->GetOp0());

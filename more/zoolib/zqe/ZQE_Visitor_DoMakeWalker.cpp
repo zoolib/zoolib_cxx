@@ -35,10 +35,10 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Visitor_DoMakeWalker
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Difference(ZRef<ZRA::Expr_Rel_Difference> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Difference(const ZRef<ZRA::Expr_Rel_Difference>& iExpr)
 	{ ZUnimplemented(); }
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(ZRef<ZRA::Expr_Rel_Embed> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
@@ -47,10 +47,10 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(ZRef<ZRA::Expr_Rel_Embed> iExpr)
 		}
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Intersect(const ZRef<ZRA::Expr_Rel_Intersect>& iExpr)
 	{ ZUnimplemented(); }
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
@@ -59,34 +59,34 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iE
 		}
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Union(ZRef<ZRA::Expr_Rel_Union> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>& iExpr)
 	{ ZUnimplemented(); }
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(ZRef<ZRA::Expr_Rel_Calc> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Calc(op0, iExpr->GetRelName(), iExpr->GetCallable()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(ZRef<ZRA::Expr_Rel_Const> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Const(op0, iExpr->GetRelName(), iExpr->GetVal()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Project(op0, iExpr->GetProjectRelHead()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Rename(op0, iExpr->GetNew(), iExpr->GetOld()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict_Any> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict_Any>& iExpr)
 	{
 	if (ZRef<Walker> theWalker = this->Do(iExpr->GetOp0()))
 		{
@@ -95,7 +95,7 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict_A
 		}
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Select(const ZRef<ZRA::Expr_Rel_Select>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Select(op0, iExpr->GetExpr_Bool()));

@@ -19,11 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZLog.h"
-//#include "zoolib/ZExpr_Bool_ValPred_Any.h"
-//#include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZString.h"
-//#include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoToStrim.h"
@@ -74,7 +71,7 @@ class DoRename
 public:
 	DoRename(const Rename& iRename);
 
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iExpr);
 private:
 	const Rename& fRename;
 	};
@@ -83,7 +80,7 @@ DoRename::DoRename(const Rename& iRename)
 :	fRename(iRename)
 	{}
 
-void DoRename::Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iExpr)
+void DoRename::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iExpr)
 	{ this->pSetResult(new ZExpr_Bool_ValPred_Any(spRenamed(fRename, iExpr->GetValPred()))); }
 
 static ZRef<ZExpr_Bool> spRenamed(const Rename& iRename, ZRef<ZExpr_Bool> iExpr_Bool)
@@ -123,18 +120,18 @@ class MakeThing
 public:
 	MakeThing(const map<string8,RelHead>& iTables);
 
-	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<ZRef<Expr_Rel> > > iExpr);
-	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRef<Expr_Rel> > > iExpr);
-	virtual void Visit_Expr_Op0(ZRef<ZExpr_Op0_T<ZRef<Expr_Rel> > > iExpr);
+	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<ZRef<Expr_Rel> > >& iExpr);
+	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRef<Expr_Rel> > >& iExpr);
+	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<ZRef<Expr_Rel> > >& iExpr);
 
-	virtual void Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr);
+	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
 
-	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
-	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr);
-	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr);
-	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr);
+	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
 
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
 
 	const map<string8,RelHead>& fTables;
 	map<string8,int> fTablesUsed;
@@ -144,16 +141,16 @@ MakeThing::MakeThing(const map<string8,RelHead>& iTables)
 :	fTables(iTables)
 	{}
 
-void MakeThing::Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRef<Expr_Rel> > > iExpr)
+void MakeThing::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRef<Expr_Rel> > >& iExpr)
 	{ ZUnimplemented(); }
 
-void MakeThing::Visit_Expr_Op1(ZRef<ZExpr_Op1_T<ZRef<Expr_Rel> > > iExpr)
+void MakeThing::Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<ZRef<Expr_Rel> > >& iExpr)
 	{ ZUnimplemented(); }
 
-void MakeThing::Visit_Expr_Op0(ZRef<ZExpr_Op0_T<ZRef<Expr_Rel> > > iExpr)
+void MakeThing::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<ZRef<Expr_Rel> > >& iExpr)
 	{ ZUnimplemented(); }
 
-void MakeThing::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
+void MakeThing::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 	{
 	Thing thing0 = this->Do(iExpr->GetOp0());
 	const Thing thing1 = this->Do(iExpr->GetOp1());
@@ -166,7 +163,7 @@ void MakeThing::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
 	this->pSetResult(thing0);
 	}
 
-void MakeThing::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
+void MakeThing::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	{
 	Thing theThing = this->Do(iExpr->GetOp0());
 	const RelHead& theRH = iExpr->GetProjectRelHead();
@@ -183,21 +180,21 @@ void MakeThing::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 	this->pSetResult(theThing);
 	}
 
-void MakeThing::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr)
+void MakeThing::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr)
 	{
 	Thing theThing = this->Do(iExpr->GetOp0());
 	theThing.fCondition &= spRenamed(theThing.fRename, iExpr->GetValPred());
 	this->pSetResult(theThing);
 	}
 
-void MakeThing::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
+void MakeThing::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 	{
 	Thing theThing = this->Do(iExpr->GetOp0());
 	theThing.fCondition &= spRenamed(theThing.fRename, iExpr->GetExpr_Bool());
 	this->pSetResult(theThing);
 	}
 
-void MakeThing::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
+void MakeThing::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	{
 	Thing theThing = this->Do(iExpr->GetOp0());
 	const RelName& oldName = iExpr->GetOld();
@@ -211,7 +208,7 @@ void MakeThing::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	this->pSetResult(theThing);
 	}
 
-void MakeThing::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
+void MakeThing::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{
 	// Identify the table.
 	const RelHead& theRH = iExpr->GetConcreteRelHead();
@@ -265,28 +262,28 @@ class ToStrim_SQL
 ,	public virtual ZVisitor_Expr_Bool_ValPred_Any
 	{
 public:
-	virtual void Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep);
-	virtual void Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep);
-	virtual void Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep);
-	virtual void Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep);
-	virtual void Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep);
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_Any> iRep);
+	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep);
+	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep);
+	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep);
+	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep);
+	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iRep);
 	};
 
-void ToStrim_SQL::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep)
 	{ pStrimW() << "1"; }
 
-void ToStrim_SQL::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep)
 	{ pStrimW() << "0"; }
 
-void ToStrim_SQL::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
 	{
 	pStrimW() << " NOT (";
 	this->pDoToStrim(iRep->GetOp0());
 	pStrimW() << ")";
 	}
 
-void ToStrim_SQL::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
 	{
 	pStrimW() << "(";
 	this->pDoToStrim(iRep->GetOp0());
@@ -295,7 +292,7 @@ void ToStrim_SQL::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep)
 	pStrimW() << ")";
 	}
 
-void ToStrim_SQL::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
 	{
 	pStrimW() << "(";
 	this->pDoToStrim(iRep->GetOp0());
@@ -436,8 +433,7 @@ void spToStrim(const ZValPred_Any& iValPred, const ZStrimW& s)
 	spToStrim(iValPred.GetRHS(), s);
 	}
 
-void ToStrim_SQL::Visit_Expr_Bool_ValPred(
-	ZRef<ZExpr_Bool_ValPred_Any> iRep)
+void ToStrim_SQL::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iRep)
 	{ spToStrim(iRep->GetValPred(), pStrimW()); }
 
 } // anonymous namespace

@@ -26,19 +26,19 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_DoEval
 
-void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iRep)
+void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep)
 	{ this->pSetResult(true); }
 
-void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iRep)
+void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep)
 	{ this->pSetResult(false); }
 
-void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iRep)
+void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
 	{ this->pSetResult(! this->Do(iRep)); }
 
-void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iRep)
+void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
 	{ this->pSetResult(this->Do(iRep->GetOp0()) && this->Do(iRep->GetOp1())); }
 
-void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iRep)
+void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
 	{ this->pSetResult(this->Do(iRep->GetOp0()) || this->Do(iRep->GetOp1())); }
 
 } // namespace ZooLib

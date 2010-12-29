@@ -77,7 +77,7 @@ class ZVisitor_Expr_Op0_T
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr_Op0(ZRef<ZExpr_Op0_T<T> > iExpr)
+	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<T> >& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 
@@ -93,7 +93,7 @@ class ZExpr_Op1_T
 :	public virtual ZExpr
 	{
 protected:
-	ZExpr_Op1_T(ZRef<T> iOp0)
+	ZExpr_Op1_T(const ZRef<T>& iOp0)
 	:	fOp0(iOp0)
 		{}
 
@@ -120,9 +120,9 @@ public:
 		{ iVisitor.Visit_Expr_Op1(this); }
 
 	virtual ZRef<T> Self() = 0;
-	virtual ZRef<T> Clone(ZRef<T> iOp0) = 0;
+	virtual ZRef<T> Clone(const ZRef<T>& iOp0) = 0;
 
-	ZRef<T> GetOp0()
+	const ZRef<T>& GetOp0()
 		{ return fOp0; }
 
 private:
@@ -139,7 +139,7 @@ class ZVisitor_Expr_Op1_T
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<T> > iExpr)
+	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<T> >& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 
@@ -155,7 +155,7 @@ class ZExpr_Op2_T
 :	public virtual ZExpr
 	{
 protected:
-	ZExpr_Op2_T(ZRef<T> iOp0, ZRef<T> iOp1)
+	ZExpr_Op2_T(const ZRef<T>& iOp0, const ZRef<T>& iOp1)
 	:	fOp0(iOp0)
 	,	fOp1(iOp1)
 		{}
@@ -183,12 +183,12 @@ public:
 		{ iVisitor.Visit_Expr_Op2(this); }
 
 	virtual ZRef<T> Self() = 0;
-	virtual ZRef<T> Clone(ZRef<T> iOp0, ZRef<T> iOp1) = 0;
+	virtual ZRef<T> Clone(const ZRef<T>& iOp0, const ZRef<T>& iOp1) = 0;
 
-	ZRef<T> GetOp0()
+	const ZRef<T>& GetOp0()
 		{ return fOp0; }
 
-	ZRef<T> GetOp1()
+	const ZRef<T>& GetOp1()
 		{ return fOp1; }
 
 private:
@@ -206,7 +206,7 @@ class ZVisitor_Expr_Op2_T
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<T> > iExpr)
+	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<T> >& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 

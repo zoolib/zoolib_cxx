@@ -27,7 +27,7 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Product
 
-Expr_Rel_Product::Expr_Rel_Product(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+Expr_Rel_Product::Expr_Rel_Product(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
@@ -60,7 +60,7 @@ void Expr_Rel_Product::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 ZRef<Expr_Rel> Expr_Rel_Product::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Product::Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+ZRef<Expr_Rel> Expr_Rel_Product::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
 	{ return new Expr_Rel_Product(iOp0, iOp1); }
 
 void Expr_Rel_Product::Accept_Expr_Rel_Product(Visitor_Expr_Rel_Product& iVisitor)
@@ -70,7 +70,7 @@ void Expr_Rel_Product::Accept_Expr_Rel_Product(Visitor_Expr_Rel_Product& iVisito
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Product
 
-void Visitor_Expr_Rel_Product::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
+void Visitor_Expr_Rel_Product::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================

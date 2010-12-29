@@ -27,7 +27,8 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Embed
 
-Expr_Rel_Embed::Expr_Rel_Embed(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1, const RelName& iRelName)
+Expr_Rel_Embed::Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1,
+	const RelName& iRelName)
 :	inherited(iOp0, iOp1)
 ,	fRelName(iRelName)
 	{}
@@ -61,7 +62,7 @@ void Expr_Rel_Embed::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 ZRef<Expr_Rel> Expr_Rel_Embed::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Embed::Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+ZRef<Expr_Rel> Expr_Rel_Embed::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
 	{ return new Expr_Rel_Embed(iOp0, iOp1, fRelName); }
 
 void Expr_Rel_Embed::Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor)
@@ -74,7 +75,7 @@ const RelName& Expr_Rel_Embed::GetRelName()
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Embed
 
-void Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(ZRef<Expr_Rel_Embed> iExpr)
+void Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================

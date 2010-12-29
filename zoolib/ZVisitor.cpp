@@ -33,7 +33,7 @@ void ZVisitee::Accept(ZVisitor& iVisitor)
 #pragma mark -
 #pragma mark * ZVisitor
 
-void ZVisitor::Visit(ZRef<ZVisitee> iRep)
+void ZVisitor::Visit(const ZRef<ZVisitee>& iRep)
 	{}
 
 } // namespace ZooLib

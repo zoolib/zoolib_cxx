@@ -27,7 +27,7 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Union
 
-Expr_Rel_Union::Expr_Rel_Union(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+Expr_Rel_Union::Expr_Rel_Union(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
@@ -47,7 +47,7 @@ void Expr_Rel_Union::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 ZRef<Expr_Rel> Expr_Rel_Union::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Union::Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+ZRef<Expr_Rel> Expr_Rel_Union::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
 	{ return new Expr_Rel_Union(iOp0, iOp1); }
 
 void Expr_Rel_Union::Accept_Expr_Rel_Union(Visitor_Expr_Rel_Union& iVisitor)
@@ -57,7 +57,7 @@ void Expr_Rel_Union::Accept_Expr_Rel_Union(Visitor_Expr_Rel_Union& iVisitor)
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Union
 
-void Visitor_Expr_Rel_Union::Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr)
+void Visitor_Expr_Rel_Union::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================

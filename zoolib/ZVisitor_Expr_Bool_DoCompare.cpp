@@ -37,19 +37,19 @@ int Comparer_Bootstrap::Compare(ZRef<ZExpr_Bool> iLHS, ZRef<ZExpr_Bool> iRHS)
 	return this->Do(iRHS);
 	}
 
-void Comparer_Bootstrap::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True>)
+void Comparer_Bootstrap::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>&)
 	{ pSetResult(Comparer_True(this).Do(fExpr)); } 
 	
-void Comparer_Bootstrap::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False>)
+void Comparer_Bootstrap::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>&)
 	{ pSetResult(Comparer_False(this).Do(fExpr)); }
 
-void Comparer_Bootstrap::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iExpr)
+void Comparer_Bootstrap::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iExpr)
 	{ pSetResult(Comparer_Not(this, iExpr).Do(fExpr)); } 
 	
-void Comparer_Bootstrap::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iExpr)
+void Comparer_Bootstrap::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iExpr)
 	{ pSetResult(Comparer_And(this, iExpr).Do(fExpr)); } 
 	
-void Comparer_Bootstrap::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iExpr)
+void Comparer_Bootstrap::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iExpr)
 	{ pSetResult(Comparer_Or(this, iExpr).Do(fExpr)); } 
 
 // =================================================================================================
@@ -64,27 +64,27 @@ Comparer::Comparer(Comparer_Bootstrap* iBootstrap)
 :	fBootstrap(iBootstrap)
 	{}
 
-void Comparer::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True>)
+void Comparer::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>&)
 	{ pSetResult(-1); }
 
-void Comparer::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False>)
+void Comparer::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>&)
 	{ pSetResult(-1); }
 
-void Comparer::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not>)
+void Comparer::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>&)
 	{ pSetResult(-1); }
 
-void Comparer::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And>)
+void Comparer::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>&)
 	{ pSetResult(-1); }
 
-void Comparer::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or>)
+void Comparer::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>&)
 	{ pSetResult(-1); }
 
-int Comparer::CompareUnary(
-	ZRef<ZExpr_Op1_T<ZExpr_Bool> > iLHS, ZRef<ZExpr_Op1_T<ZExpr_Bool> > iRHS)
+int Comparer::CompareUnary(const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iLHS,
+	const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iRHS)
 	{ return fBootstrap->Compare(iLHS->GetOp0(), iRHS->GetOp0()); }
 
-int Comparer::CompareBinary(
-	ZRef<ZExpr_Op2_T<ZExpr_Bool> > iLHS, ZRef<ZExpr_Op2_T<ZExpr_Bool> > iRHS)
+int Comparer::CompareBinary(const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iLHS,
+	const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iRHS)
 	{
 	if (int compare = fBootstrap->Compare(iLHS->GetOp0(), iRHS->GetOp0()))
 		return compare;
@@ -95,19 +95,19 @@ int Comparer::CompareBinary(
 #pragma mark -
 #pragma mark * Visitor_Expr_Bool_DoCompare::Comparer_GT_XXX
 
-void Comparer_GT_True::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True>)
+void Comparer_GT_True::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>&)
 	{ pSetResult(1); }
 
-void Comparer_GT_False::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False>)
+void Comparer_GT_False::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>&)
 	{ pSetResult(1); }
 
-void Comparer_GT_Not::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not>)
+void Comparer_GT_Not::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>&)
 	{ pSetResult(1); }
 
-void Comparer_GT_And::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And>)
+void Comparer_GT_And::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>&)
 	{ pSetResult(1); }
 
-void Comparer_GT_Or::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or>)
+void Comparer_GT_Or::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>&)
 	{ pSetResult(1); }
 
 // =================================================================================================
@@ -118,14 +118,14 @@ Comparer_True::Comparer_True(Comparer_Bootstrap* iBootstrap)
 :	Comparer(iBootstrap)
 	{}
 
-void Comparer_True::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True>)
+void Comparer_True::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>&)
 	{ pSetResult(0); }
 
 Comparer_False::Comparer_False(Comparer_Bootstrap* iBootstrap)
 :	Comparer(iBootstrap)
 	{}
 
-void Comparer_False::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False>)
+void Comparer_False::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>&)
 	{ pSetResult(0); }
 
 Comparer_Not::Comparer_Not(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_Not> iExpr)
@@ -133,7 +133,7 @@ Comparer_Not::Comparer_Not(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_Not> 
 ,	fExpr(iExpr)
 	{}
 
-void Comparer_Not::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iExpr)
+void Comparer_Not::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iExpr)
 	{ pSetResult(CompareUnary(fExpr, iExpr)); } 
 
 Comparer_And::Comparer_And(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_And> iExpr)
@@ -141,7 +141,7 @@ Comparer_And::Comparer_And(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_And> 
 ,	fExpr(iExpr)
 	{}
 
-void Comparer_And::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iExpr)
+void Comparer_And::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iExpr)
 	{ pSetResult(CompareBinary(fExpr, iExpr)); } 
 
 Comparer_Or::Comparer_Or(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_Or> iExpr)
@@ -149,7 +149,7 @@ Comparer_Or::Comparer_Or(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_Or> iEx
 ,	fExpr(iExpr)
 	{}
 
-void Comparer_Or::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iExpr)
+void Comparer_Or::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iExpr)
 	{ pSetResult(CompareBinary(fExpr, iExpr)); } 
 
 } // namespace Visitor_Expr_Bool_DoCompare

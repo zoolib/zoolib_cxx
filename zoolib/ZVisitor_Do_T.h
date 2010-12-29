@@ -42,7 +42,7 @@ public:
 		{}
 
 // Our protocol
-	ZQ<Result_t> QDo(ZRef<ZVisitee> iRep)
+	ZQ<Result_t> QDo(const ZRef<ZVisitee>& iRep)
 		{
 		if (iRep)
 			{
@@ -53,7 +53,7 @@ public:
 		return null;
 		}
 
-	Result_t DDo(const Result_t& iDefault, ZRef<ZVisitee> iRep)
+	Result_t DDo(const Result_t& iDefault, const ZRef<ZVisitee>& iRep)
 		{
 		if (iRep)
 			{
@@ -65,7 +65,7 @@ public:
 		return iDefault;
 		}
 
-	Result_t Do(ZRef<ZVisitee> iRep)
+	Result_t Do(const ZRef<ZVisitee>& iRep)
 		{
 		if (iRep)
 			{

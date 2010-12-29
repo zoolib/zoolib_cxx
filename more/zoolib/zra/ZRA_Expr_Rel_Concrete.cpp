@@ -73,7 +73,7 @@ RelHead Expr_Rel_Concrete::GetConcreteRelHead()
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Concrete
 
-void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
+void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================

@@ -48,13 +48,13 @@ public:
 	ZVisitor_DoToStrim();
 
 // From ZVisitor
-	virtual void Visit(ZRef<ZVisitee> iRep);
+	virtual void Visit(const ZRef<ZVisitee>& iRep);
 
 // Our protocol
-	void DoToStrim(const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZVisitee> iRep);
+	void DoToStrim(const Options& iOptions, const ZStrimW& iStrimW, const ZRef<ZVisitee>& iRep);
 
 protected:
-	void pDoToStrim(ZRef<ZVisitee> iRep);
+	void pDoToStrim(const ZRef<ZVisitee>& iRep);
 
 	const Options& pOptions();
 	const ZStrimW& pStrimW();

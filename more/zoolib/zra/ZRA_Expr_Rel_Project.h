@@ -41,7 +41,7 @@ class Expr_Rel_Project
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Project(ZRef<Expr_Rel> iOp0, const RelHead& iRelHead);
+	Expr_Rel_Project(const ZRef<Expr_Rel>& iOp0, const RelHead& iRelHead);
 	virtual ~Expr_Rel_Project();
 
 // From ZVisitee
@@ -51,7 +51,7 @@ public:
 	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
 	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
+	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Project(Visitor_Expr_Rel_Project& iVisitor);
@@ -71,7 +71,7 @@ class Visitor_Expr_Rel_Project
 	{
 	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
 public:
-	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
 	};
 
 // =================================================================================================

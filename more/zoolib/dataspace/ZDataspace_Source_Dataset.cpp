@@ -114,7 +114,7 @@ public:
 	:	fSource(iSource)
 		{}
 
-	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
 		{ this->pSetResult(fSource->pMakeWalker(iExpr->GetConcreteRelHead())); }
 
 	ZRef<Source_Dataset> fSource;

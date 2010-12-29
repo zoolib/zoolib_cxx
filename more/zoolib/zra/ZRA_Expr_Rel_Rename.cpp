@@ -29,7 +29,7 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Rename
 
-Expr_Rel_Rename::Expr_Rel_Rename(ZRef<Expr_Rel> iOp0,
+Expr_Rel_Rename::Expr_Rel_Rename(const ZRef<Expr_Rel>& iOp0,
 	const RelName& iNew, const RelName& iOld)
 :	inherited(iOp0)
 ,	fNew(iNew)
@@ -68,7 +68,7 @@ void Expr_Rel_Rename::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 ZRef<Expr_Rel> Expr_Rel_Rename::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Rename::Clone(ZRef<Expr_Rel> iOp0)
+ZRef<Expr_Rel> Expr_Rel_Rename::Clone(const ZRef<Expr_Rel>& iOp0)
 	{ return new Expr_Rel_Rename(iOp0, fNew, fOld); }
 
 void Expr_Rel_Rename::Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor)
@@ -84,7 +84,7 @@ const RelName& Expr_Rel_Rename::GetOld()
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Rename
 
-void Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
+void Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================

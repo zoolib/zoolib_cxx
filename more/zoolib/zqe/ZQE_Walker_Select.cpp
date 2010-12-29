@@ -42,7 +42,7 @@ class Visitor
 :	public virtual ZVisitor_Expr_Bool_ValPred_T<ZVal_Any>
 	{
 public:
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_T<ZVal_Any> > iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_T<ZVal_Any> >& iExpr);
 	};
 
 template <class Val>

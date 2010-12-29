@@ -46,7 +46,7 @@ public:
 class ZVisitor
 	{
 public:
-	virtual void Visit(ZRef<ZVisitee> iRep);
+	virtual void Visit(const ZRef<ZVisitee>& iRep);
 	};
 
 } // namespace ZooLib

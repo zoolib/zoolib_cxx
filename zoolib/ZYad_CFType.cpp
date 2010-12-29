@@ -208,11 +208,11 @@ public:
 	Visitor_GetVal(ZRef<CFTypeRef> iDefault);
 
 // From ZVisitor_Yad
-	virtual void Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR);
-	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
-	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
-	virtual void Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
+	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR);
+	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR);
+	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR);
+	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR);
+	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR);
 
 // Our protocol
 	ZRef<CFTypeRef> GetVal(ZRef<ZYadR> iYadR);
@@ -228,20 +228,20 @@ Visitor_GetVal::Visitor_GetVal(ZRef<CFTypeRef> iDefault)
 :	fDefault(iDefault)
 	{}
 
-void Visitor_GetVal::Visit_YadAtomR(ZRef<ZYadAtomR> iYadAtomR)
+void Visitor_GetVal::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 	{ fOutput = ZUtil_CFType::sDAsCFType(fDefault, iYadAtomR->AsAny()); }
 
-void Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+void Visitor_GetVal::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
 	{ fOutput = sReadAll_T<ZData_CFType>(iYadStreamR->GetStreamR()); }
 
-void Visitor_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+void Visitor_GetVal::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
 	{
 	ZRef<CFMutableStringRef> result = ZUtil_CFType::sStringMutable();
 	ZStrimW_CFString(result).CopyAllFrom(iYadStrimR->GetStrimR());
 	fOutput = result;
 	}
 
-void Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+void Visitor_GetVal::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 	{
 	ZSeq_CFType theSeq;
 
@@ -251,7 +251,7 @@ void Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	fOutput = theSeq;
 	}
 
-void Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+void Visitor_GetVal::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	{
 	ZMap_CFType theMap;
 

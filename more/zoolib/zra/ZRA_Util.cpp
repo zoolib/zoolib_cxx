@@ -61,9 +61,9 @@ class Doer
 public:
 	Doer(vector<Problem>& oProblems);
 
-	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
-	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr);
-	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr);
+	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
 
 private:
 	vector<Problem>& fProblems;
@@ -73,7 +73,7 @@ Doer::Doer(vector<Problem>& oProblems)
 :	fProblems(oProblems)
 	{}
 
-void Doer::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
+void Doer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	{
 	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
 	const RelHead requiredRelHead = iExpr->GetProjectRelHead();
@@ -87,7 +87,7 @@ void Doer::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 	this->pSetResult(providedRelHead & requiredRelHead);
 	}
 
-void Doer::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr)
+void Doer::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr)
 	{
 	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
 	const RelHead requiredRelHead = iExpr->GetValPred().GetNames();
@@ -101,7 +101,7 @@ void Doer::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr)
 	this->pSetResult(providedRelHead);
 	}
 
-void Doer::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
+void Doer::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 	{
 	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
 	const RelHead requiredRelHead = sGetNames(iExpr->GetExpr_Bool());

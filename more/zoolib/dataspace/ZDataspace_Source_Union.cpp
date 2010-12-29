@@ -62,7 +62,7 @@ public:
 	InsertPrefix(const string8& iPrefix);
 
 // From ZRA::Visitor_Expr_Rel_Concrete
-	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr);
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr);
 
 	const string8 fPrefix;
 	};
@@ -71,7 +71,7 @@ InsertPrefix::InsertPrefix(const string8& iPrefix)
 :	fPrefix(iPrefix)
 	{}
 
-void InsertPrefix::Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
+void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
 	{
 	const RelHead& theRelHead = iExpr->GetConcreteRelHead();
 	
@@ -152,7 +152,7 @@ class Source_Union::Visitor_Proxy
 	{
 	typedef ZVisitor_Expr_Op0_T<ZRA::Expr_Rel> inherited;
 public:
-	virtual void Visit_Proxy(ZRef<Proxy> iExpr)
+	virtual void Visit_Proxy(const ZRef<Proxy>& iExpr)
 		{ this->Visit_Expr_Op0(iExpr); }
 	};
 
@@ -317,14 +317,14 @@ public:
 	:	fSource(iSource)
 		{}
 
-	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
 		{
 		// We should never see a Concrete as we're being used to make walkers
 		// for an analyzed rel.
 		ZUnimplemented();
 		}
 
-	virtual void Visit_Proxy(ZRef<Proxy> iExpr)
+	virtual void Visit_Proxy(const ZRef<Proxy>& iExpr)
 		{ this->pSetResult(fSource->pMakeWalker(iExpr)); }
 
 	ZRef<Source_Union> fSource;
@@ -350,18 +350,18 @@ public:
 	Analyze(Source_Union* iSource_Union, PSearch* iPSearch);
 
 // From ZVisitor_Expr_Op2_T via ZVisitor_Expr_Op_DoTransform_T
-	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> > iExpr);
+	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> >& iExpr);
 
 // From ZRA::Visitor_Expr_Rel_XXX
-	virtual void Visit_Expr_Rel_Embed(ZRef<ZRA::Expr_Rel_Embed> iExpr);
+	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
 
-	virtual void Visit_Expr_Rel_Calc(ZRef<ZRA::Expr_Rel_Calc> iExpr);
-	virtual void Visit_Expr_Rel_Const(ZRef<ZRA::Expr_Rel_Const> iExpr);
-	virtual void Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr);
-	virtual void Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr);
-	virtual void Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict_Any> iExpr);
-	virtual void Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr);
-	virtual void Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr);
+	virtual void Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr);
+	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict_Any>& iExpr);
+	virtual void Visit_Expr_Rel_Select(const ZRef<ZRA::Expr_Rel_Select>& iExpr);
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr);
 
 // Our protocol
 	ZRef<ZRA::Expr_Rel> TopLevelDo(ZRef<ZRA::Expr_Rel> iRel);
@@ -377,7 +377,7 @@ Source_Union::Analyze::Analyze(Source_Union* iSource_Union, PSearch* iPSearch)
 ,	fPSearch(iPSearch)
 	{}
 
-void Source_Union::Analyze::Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> > iExpr)
+void Source_Union::Analyze::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> >& iExpr)
 	{
 	// Visit left branch
 	const ZRef<ZRA::Expr_Rel> oldOp0 = iExpr->GetOp0();
@@ -452,32 +452,32 @@ void Source_Union::Analyze::Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> > iEx
 		}
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Embed(ZRef<ZRA::Expr_Rel_Embed> iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
 	{
 	ZRA::Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(iExpr);
 	fRelHead |= iExpr->GetRelName();
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Calc(ZRef<ZRA::Expr_Rel_Calc> iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
 	{
 	ZRA::Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(iExpr);
 	fRelHead |= iExpr->GetRelName();
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Const(ZRef<ZRA::Expr_Rel_Const> iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
 	{
 	ZRA::Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(iExpr);
 	fRelHead |= iExpr->GetRelName();
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr)
 	{
 	ZRA::Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(iExpr);
 
 	fRelHead &= ZRA::sRenamed(fRename, iExpr->GetProjectRelHead());
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr)
 	{
 	ZRA::Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(iExpr);
 	
@@ -489,21 +489,21 @@ void Source_Union::Analyze::Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iEx
 	ZUtil_STL::sInsertMustNotContain(kDebug, fRename, theNew, theOld);
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict_Any> iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict_Any>& iExpr)
 	{
 	ZRA::Visitor_Expr_Rel_Restrict_Any::Visit_Expr_Rel_Restrict(iExpr);
 
 	fRelHead |= ZRA::sRenamed(fRename, iExpr->GetValPred().GetNames());
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Select(const ZRef<ZRA::Expr_Rel_Select>& iExpr)
 	{
 	ZRA::Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(iExpr);
 
 	fRelHead |= ZRA::sRenamed(fRename, sGetNames(iExpr->GetExpr_Bool()));
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
 	{
 	const ZRA::RelHead theRelHead = iExpr->GetConcreteRelHead();
 	ZAssertStop(kDebug, fRelHead.empty());

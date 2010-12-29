@@ -40,28 +40,28 @@ class ZVisitor_Expr_Bool_ValPred_DoGetNames_T
 	{
 public:
 // From ZVisitor_Expr_Bool_ValPred_T
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_T<Val> > iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_T<Val> >& iExpr);
 
 // From ZVisitor_Expr_Op1_T
-	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<ZExpr_Bool> > iExpr);
+	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr);
 
 // From ZVisitor_Expr_Op2_T
-	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZExpr_Bool> > iExpr);
+	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr);
 	};
 
 template <class Val>
 void ZVisitor_Expr_Bool_ValPred_DoGetNames_T<Val>::Visit_Expr_Bool_ValPred(
-	ZRef<ZExpr_Bool_ValPred_T<Val> > iExpr)
+	const ZRef<ZExpr_Bool_ValPred_T<Val> >& iExpr)
 	{ this->pSetResult(iExpr->GetValPred().GetNames()); }
 
 template <class Val>
 void ZVisitor_Expr_Bool_ValPred_DoGetNames_T<Val>::Visit_Expr_Op1(
-	ZRef<ZExpr_Op1_T<ZExpr_Bool> > iExpr)
+	const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr)
 	{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
 template <class Val>
 void ZVisitor_Expr_Bool_ValPred_DoGetNames_T<Val>::Visit_Expr_Op2(
-	ZRef<ZExpr_Op2_T<ZExpr_Bool> > iExpr)
+	const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr)
 	{ this->pSetResult(ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp1()))); }
 
 } // namespace ZooLib

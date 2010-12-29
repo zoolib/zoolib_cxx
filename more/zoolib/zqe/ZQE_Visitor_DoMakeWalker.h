@@ -60,18 +60,18 @@ class Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Select
 	{
 public:
-	virtual void Visit_Expr_Rel_Difference(ZRef<ZRA::Expr_Rel_Difference> iExpr);
-	virtual void Visit_Expr_Rel_Embed(ZRef<ZRA::Expr_Rel_Embed> iExpr);
-	virtual void Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr);
-	virtual void Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr);
-	virtual void Visit_Expr_Rel_Union(ZRef<ZRA::Expr_Rel_Union> iExpr);
+	virtual void Visit_Expr_Rel_Difference(const ZRef<ZRA::Expr_Rel_Difference>& iExpr);
+	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
+	virtual void Visit_Expr_Rel_Intersect(const ZRef<ZRA::Expr_Rel_Intersect>& iExpr);
+	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr);
+	virtual void Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>& iExpr);
 
-	virtual void Visit_Expr_Rel_Calc(ZRef<ZRA::Expr_Rel_Calc> iExpr);
-	virtual void Visit_Expr_Rel_Const(ZRef<ZRA::Expr_Rel_Const> iExpr);
-	virtual void Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr);
-	virtual void Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr);
-	virtual void Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict_Any> iExpr);
-	virtual void Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr);
+	virtual void Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr);
+	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict_Any>& iExpr);
+	virtual void Visit_Expr_Rel_Select(const ZRef<ZRA::Expr_Rel_Select>& iExpr);
 	};
 
 } // namespace ZQE

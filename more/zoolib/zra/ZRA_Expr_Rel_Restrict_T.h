@@ -43,7 +43,7 @@ class Expr_Rel_Restrict_T
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Restrict_T(ZRef<Expr_Rel> iOp0, const ZValPred_T<Val>& iValPred);
+	Expr_Rel_Restrict_T(const ZRef<Expr_Rel>& iOp0, const ZValPred_T<Val>& iValPred);
 	virtual ~Expr_Rel_Restrict_T();
 
 // From ZVisitee
@@ -53,7 +53,7 @@ public:
 	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
 	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
+	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict_T<Val>& iVisitor);
@@ -66,7 +66,7 @@ private:
 
 template <class Val>
 Expr_Rel_Restrict_T<Val>::Expr_Rel_Restrict_T(
-	ZRef<Expr_Rel> iOp0, const ZValPred_T<Val>& iValPred)
+	const ZRef<Expr_Rel>& iOp0, const ZValPred_T<Val>& iValPred)
 :	inherited(iOp0)
 ,	fValPred(iValPred)
 	{}
@@ -108,7 +108,7 @@ ZRef<Expr_Rel> Expr_Rel_Restrict_T<Val>::Self()
 	{ return this; }
 
 template <class Val>
-ZRef<Expr_Rel> Expr_Rel_Restrict_T<Val>::Clone(ZRef<Expr_Rel> iOp0)
+ZRef<Expr_Rel> Expr_Rel_Restrict_T<Val>::Clone(const ZRef<Expr_Rel>& iOp0)
 	{ return new Expr_Rel_Restrict_T<Val>(iOp0, fValPred); }
 
 template <class Val>
@@ -129,12 +129,12 @@ class Visitor_Expr_Rel_Restrict_T
 	{
 	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
 public:
-	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict_T<Val> > iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_T<Val> >& iExpr);
 	};
 
 template <class Val>
 void Visitor_Expr_Rel_Restrict_T<Val>::Visit_Expr_Rel_Restrict(
-	ZRef<Expr_Rel_Restrict_T<Val> > iExpr)
+	const ZRef<Expr_Rel_Restrict_T<Val> >& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================

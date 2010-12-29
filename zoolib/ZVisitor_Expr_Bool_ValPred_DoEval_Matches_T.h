@@ -40,7 +40,7 @@ public:
 	ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T(const Val& iVal);
 
 // From ZVisitor_Expr_Bool_ValPred_T
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_T<Val> > iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_T<Val> >& iExpr);
 
 private:
 	ZValContext fValContext;
@@ -55,7 +55,7 @@ ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T(const Val& iVal)
 
 template <class Val>
 void ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T<Val>::Visit_Expr_Bool_ValPred(
-	ZRef<ZExpr_Bool_ValPred_T<Val> > iExpr)
+	const ZRef<ZExpr_Bool_ValPred_T<Val> >& iExpr)
 	{ this->pSetResult(iExpr->GetValPred().Matches(fValContext, fVal)); }
 
 } // namespace ZooLib

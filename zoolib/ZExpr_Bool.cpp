@@ -62,7 +62,7 @@ void ZExpr_Bool_True::Accept_Expr_Bool_True(ZVisitor_Expr_Bool_True& iVisitor)
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_True
 
-void ZVisitor_Expr_Bool_True::Visit_Expr_Bool_True(ZRef<ZExpr_Bool_True> iExpr)
+void ZVisitor_Expr_Bool_True::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
@@ -98,7 +98,7 @@ void ZExpr_Bool_False::Accept_Expr_Bool_False(ZVisitor_Expr_Bool_False& iVisitor
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_False
 
-void ZVisitor_Expr_Bool_False::Visit_Expr_Bool_False(ZRef<ZExpr_Bool_False> iExpr)
+void ZVisitor_Expr_Bool_False::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
@@ -125,7 +125,7 @@ void ZExpr_Bool_Not::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<ZExpr_Bool>& iVisitor)
 ZRef<ZExpr_Bool> ZExpr_Bool_Not::Self()
 	{ return this; }
 
-ZRef<ZExpr_Bool> ZExpr_Bool_Not::Clone(ZRef<ZExpr_Bool> iOp0)
+ZRef<ZExpr_Bool> ZExpr_Bool_Not::Clone(const ZRef<ZExpr_Bool>& iOp0)
 	{ return new ZExpr_Bool_Not(iOp0); }
 
 void ZExpr_Bool_Not::Accept_Expr_Bool_Not(ZVisitor_Expr_Bool_Not& iVisitor)
@@ -135,7 +135,7 @@ void ZExpr_Bool_Not::Accept_Expr_Bool_Not(ZVisitor_Expr_Bool_Not& iVisitor)
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_Not
 
-void ZVisitor_Expr_Bool_Not::Visit_Expr_Bool_Not(ZRef<ZExpr_Bool_Not> iExpr)
+void ZVisitor_Expr_Bool_Not::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
@@ -162,7 +162,7 @@ void ZExpr_Bool_And::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Bool>& iVisitor)
 ZRef<ZExpr_Bool> ZExpr_Bool_And::Self()
 	{ return this; }
 
-ZRef<ZExpr_Bool> ZExpr_Bool_And::Clone(ZRef<ZExpr_Bool> iOp0, ZRef<ZExpr_Bool> iOp1)
+ZRef<ZExpr_Bool> ZExpr_Bool_And::Clone(const ZRef<ZExpr_Bool>& iOp0, const ZRef<ZExpr_Bool>& iOp1)
 	{ return new ZExpr_Bool_And(iOp0, iOp1); }
 
 void ZExpr_Bool_And::Accept_Expr_Bool_And(ZVisitor_Expr_Bool_And& iVisitor)
@@ -172,7 +172,7 @@ void ZExpr_Bool_And::Accept_Expr_Bool_And(ZVisitor_Expr_Bool_And& iVisitor)
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_And
 
-void ZVisitor_Expr_Bool_And::Visit_Expr_Bool_And(ZRef<ZExpr_Bool_And> iExpr)
+void ZVisitor_Expr_Bool_And::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
@@ -199,7 +199,7 @@ void ZExpr_Bool_Or::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Bool>& iVisitor)
 ZRef<ZExpr_Bool> ZExpr_Bool_Or::Self()
 	{ return this; }
 
-ZRef<ZExpr_Bool> ZExpr_Bool_Or::Clone(ZRef<ZExpr_Bool> iOp0, ZRef<ZExpr_Bool> iOp1)
+ZRef<ZExpr_Bool> ZExpr_Bool_Or::Clone(const ZRef<ZExpr_Bool>& iOp0, const ZRef<ZExpr_Bool>& iOp1)
 	{ return new ZExpr_Bool_Or(iOp0, iOp1); }
 
 void ZExpr_Bool_Or::Accept_Expr_Bool_Or(ZVisitor_Expr_Bool_Or& iVisitor)
@@ -209,7 +209,7 @@ void ZExpr_Bool_Or::Accept_Expr_Bool_Or(ZVisitor_Expr_Bool_Or& iVisitor)
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_Or
 
-void ZVisitor_Expr_Bool_Or::Visit_Expr_Bool_Or(ZRef<ZExpr_Bool_Or> iExpr)
+void ZVisitor_Expr_Bool_Or::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================

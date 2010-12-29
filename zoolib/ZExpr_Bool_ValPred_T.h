@@ -108,12 +108,12 @@ class ZVisitor_Expr_Bool_ValPred_T
 	{
 	typedef ZVisitor_Expr_Op0_T<ZExpr_Bool> inherited;
 public:
-	virtual void Visit_Expr_Bool_ValPred(ZRef<ZExpr_Bool_ValPred_T<Val> > iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_T<Val> >& iExpr);
 	};
 
 template <class Val>
 void ZVisitor_Expr_Bool_ValPred_T<Val>::Visit_Expr_Bool_ValPred(
-	ZRef<ZExpr_Bool_ValPred_T<Val> > iExpr)
+	const ZRef<ZExpr_Bool_ValPred_T<Val> >& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================

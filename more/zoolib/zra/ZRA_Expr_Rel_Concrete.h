@@ -71,7 +71,7 @@ class Visitor_Expr_Rel_Concrete
 	{
 	typedef ZVisitor_Expr_Op0_T<Expr_Rel> inherited;
 public:
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
 	};
 
 // =================================================================================================

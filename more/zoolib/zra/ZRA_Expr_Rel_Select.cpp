@@ -27,7 +27,7 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Select
 
-Expr_Rel_Select::Expr_Rel_Select(ZRef<Expr_Rel> iOp0, ZRef<ZExpr_Bool> iExpr_Bool)
+Expr_Rel_Select::Expr_Rel_Select(const ZRef<Expr_Rel>& iOp0, const ZRef<ZExpr_Bool>& iExpr_Bool)
 :	inherited(iOp0)
 ,	fExpr_Bool(iExpr_Bool)
 	{}
@@ -64,7 +64,7 @@ void Expr_Rel_Select::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 ZRef<Expr_Rel> Expr_Rel_Select::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Select::Clone(ZRef<Expr_Rel> iOp0)
+ZRef<Expr_Rel> Expr_Rel_Select::Clone(const ZRef<Expr_Rel>& iOp0)
 	{ return new Expr_Rel_Select(iOp0, fExpr_Bool); }
 
 void Expr_Rel_Select::Accept_Expr_Rel_Select( Visitor_Expr_Rel_Select& iVisitor)
@@ -77,7 +77,7 @@ ZRef<ZExpr_Bool> Expr_Rel_Select::GetExpr_Bool()
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Select
 
-void Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
+void Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 	{
 	this->Visit_Expr_Op1(iExpr);
 
