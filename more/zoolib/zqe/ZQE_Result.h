@@ -44,6 +44,8 @@ public:
 		std::vector<ZVal_Any>* ioPackedRows,
 		std::vector<std::vector<ZRef<ZCounted> > >* ioAnnotations);
 
+	Result(ZRef<ZQE::Result> iOther, size_t iRow);
+
 	virtual ~Result();
 
 	const ZRA::RelHead& GetRelHead();

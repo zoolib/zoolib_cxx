@@ -68,6 +68,20 @@ Result::Result(const ZRA::RelHead& iRelHead,
 		}
 	}
 
+Result::Result(ZRef<ZQE::Result> iOther, size_t iRow)
+:	fRelHead(iOther->GetRelHead())
+	{
+	if (iRow < iOther->Count())
+		{
+		const ZVal_Any* theVals = iOther->GetValsAt(iRow);
+		fPackedRows.insert(fPackedRows.end(), theVals, theVals + fRelHead.size());
+		set<ZRef<ZCounted> > annoSet;
+		iOther->GetAnnotationsAt(iRow, annoSet);
+		if (annoSet.size())
+			fAnnotations.push_back(vector<ZRef<ZCounted> >(annoSet.begin(), annoSet.end()));
+		}
+	}
+
 Result::~Result()
 	{}
 
