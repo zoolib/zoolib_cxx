@@ -87,6 +87,17 @@ public:
 		return *this;
 		}
 
+// Overload, so a null becomes a ZVal_Any()
+	ZVal_Any(const null_t&)
+	:	ZAny()
+		{}
+
+	ZVal_Any& operator=(const null_t&)
+		{
+		ZAny::Clear();
+		return *this;
+		}
+
 // Overload, as ZAny's templated constructor is explicit.
 	template <class S>
 	ZVal_Any(const S& iVal)
