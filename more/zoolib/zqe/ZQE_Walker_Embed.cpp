@@ -43,8 +43,8 @@ Walker_Embed::Walker_Embed(ZRef<Walker> iWalker,
 Walker_Embed::~Walker_Embed()
 	{}
 
-void Walker_Embed::Prime(const std::map<string8,size_t>& iBindingOffsets, 
-	std::map<string8,size_t>& oOffsets,
+void Walker_Embed::Prime(const map<string8,size_t>& iBindingOffsets, 
+	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
 	fOutputOffset = ioBaseOffset++;

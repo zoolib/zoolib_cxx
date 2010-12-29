@@ -48,8 +48,8 @@ void Walker_Product::Rewind()
 	fNeedLoadLeft = true;
 	}
 
-void Walker_Product::Prime(const std::map<string8,size_t>& iBindingOffsets, 
-	std::map<string8,size_t>& oOffsets,
+void Walker_Product::Prime(const map<string8,size_t>& iBindingOffsets, 
+	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
 	fBaseOffset = ioBaseOffset;

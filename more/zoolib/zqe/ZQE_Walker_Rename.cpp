@@ -40,7 +40,7 @@ Walker_Rename::Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const st
 Walker_Rename::~Walker_Rename()
 	{}
 
-void Walker_Rename::Prime(const std::map<string8,size_t>& iBindingOffsets, 
+void Walker_Rename::Prime(const map<string8,size_t>& iBindingOffsets, 
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{

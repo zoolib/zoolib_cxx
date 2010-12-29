@@ -77,8 +77,8 @@ Walker_Select::Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool)
 Walker_Select::~Walker_Select()
 	{}
 
-void Walker_Select::Prime(const std::map<string8,size_t>& iBindingOffsets, 
-	std::map<string8,size_t>& oOffsets,
+void Walker_Select::Prime(const map<string8,size_t>& iBindingOffsets, 
+	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
 	fBindingOffsets = iBindingOffsets;

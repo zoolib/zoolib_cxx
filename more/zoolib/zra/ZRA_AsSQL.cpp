@@ -443,7 +443,7 @@ void ToStrim_SQL::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iR
 #pragma mark -
 #pragma mark * ZRA::SQL::sAsSQL
 
-bool sWriteAsSQL(const std::map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const ZStrimW& s)
+bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const ZStrimW& s)
 	{
 	try
 		{

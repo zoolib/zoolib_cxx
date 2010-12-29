@@ -40,8 +40,8 @@ Walker_Const::Walker_Const(ZRef<Walker> iWalker,
 Walker_Const::~Walker_Const()
 	{}
 
-void Walker_Const::Prime(const std::map<string8,size_t>& iBindingOffsets, 
-	std::map<string8,size_t>& oOffsets,
+void Walker_Const::Prime(const map<string8,size_t>& iBindingOffsets, 
+	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
 	fOutputOffset = ioBaseOffset++;
