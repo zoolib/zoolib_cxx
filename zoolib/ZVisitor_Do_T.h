@@ -55,15 +55,25 @@ public:
 
 	Result_t DDo(const Result_t& iDefault, ZRef<ZVisitee> iRep)
 		{
-		if (ZQ<Result_t> theQ = this->QDo(iRep))
-			return theQ.Get();
+		if (iRep)
+			{
+			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ, null);
+			iRep->Accept(*this);
+			if (fResultQ)
+				return fResultQ.Get();
+			}
 		return iDefault;
 		}
 
 	Result_t Do(ZRef<ZVisitee> iRep)
 		{
-		if (ZQ<Result_t> theQ = this->QDo(iRep))
-			return theQ.Get();
+		if (iRep)
+			{
+			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ, null);
+			iRep->Accept(*this);
+			if (fResultQ)
+				return fResultQ.Get();
+			}
 		return Result_t();
 		}
 
