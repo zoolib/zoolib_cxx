@@ -44,6 +44,9 @@ public:
 	Expr_Rel_Project(ZRef<Expr_Rel> iOp0, const RelHead& iRelHead);
 	virtual ~Expr_Rel_Project();
 
+// From ZVisitee
+	virtual void Accept(ZVisitor& iVisitor);
+
 // From ZExpr_Op1_T<Expr_Rel>
 	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 

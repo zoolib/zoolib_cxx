@@ -44,6 +44,9 @@ class Expr_Rel_Concrete
 public:
 	Expr_Rel_Concrete(const RelHead& iRelHead);
 
+// From ZVisitee
+	virtual void Accept(ZVisitor& iVisitor);
+
 // From ZExpr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 

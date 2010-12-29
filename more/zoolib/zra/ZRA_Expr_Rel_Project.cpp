@@ -35,6 +35,19 @@ Expr_Rel_Project::Expr_Rel_Project(ZRef<Expr_Rel> iOp0, const RelHead& iRelHead)
 Expr_Rel_Project::~Expr_Rel_Project()
 	{}
 
+void Expr_Rel_Project::Accept(ZVisitor& iVisitor)
+	{
+	if (Visitor_Expr_Rel_Project* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Project*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Project(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept(iVisitor);
+		}
+	}
+
 void Expr_Rel_Project::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Project* theVisitor =

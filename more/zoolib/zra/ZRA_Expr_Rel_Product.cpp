@@ -31,6 +31,19 @@ Expr_Rel_Product::Expr_Rel_Product(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
+void Expr_Rel_Product::Accept(ZVisitor& iVisitor)
+	{
+	if (Visitor_Expr_Rel_Product* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Product*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Product(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept(iVisitor);
+		}
+	}
+
 void Expr_Rel_Product::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Product* theVisitor =

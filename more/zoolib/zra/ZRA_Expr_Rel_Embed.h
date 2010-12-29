@@ -42,6 +42,9 @@ class Expr_Rel_Embed
 public:
 	Expr_Rel_Embed(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1, const RelName& iRelName);
 
+// From ZVisitee
+	virtual void Accept(ZVisitor& iVisitor);
+
 // From ZExpr_Op2_T
 	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor);
 

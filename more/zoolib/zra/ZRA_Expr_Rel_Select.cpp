@@ -35,6 +35,19 @@ Expr_Rel_Select::Expr_Rel_Select(ZRef<Expr_Rel> iOp0, ZRef<ZExpr_Bool> iExpr_Boo
 Expr_Rel_Select::~Expr_Rel_Select()
 	{}
 
+void Expr_Rel_Select::Accept(ZVisitor& iVisitor)
+	{
+	if (Visitor_Expr_Rel_Select* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Select*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Select(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept(iVisitor);
+		}
+	}
+
 void Expr_Rel_Select::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Select* theVisitor =

@@ -366,7 +366,7 @@ static void spToStrim(const ZRef<ZValPred_Any::Comparand>& iCR, const ZStrimW& s
 	{
 	if (!iCR)
 		{
-		s << "!!Null Comparand!!";
+		s << "/*Null Comparand*/";
 		}
 	else if (ZRef<ZValComparand_Name> cr = iCR.DynamicCast<ZValComparand_Name>())
 		{
@@ -382,7 +382,7 @@ static void spToStrim(const ZRef<ZValPred_Any::Comparand>& iCR, const ZStrimW& s
 		}
 	else
 		{
-		s << "!!Unknown Comparand!!";
+		s << "/*Unknown Comparand*/";
 		}
 	}
 
@@ -390,7 +390,7 @@ static void spToStrim(const ZRef<ZValPred_Any::Comparator>& iCR, const ZStrimW& 
 	{
 	if (!iCR)
 		{
-		s << "!!Null Comparator!!";
+		s << "/*Null Comparator*/";
 		}
 	else if (ZRef<ZValComparator_Simple> cr = iCR.DynamicCast<ZValComparator_Simple>())
 		{
@@ -425,7 +425,7 @@ static void spToStrim(const ZRef<ZValPred_Any::Comparator>& iCR, const ZStrimW& 
 		}
 	else
 		{
-		s << "!!Unknown Comparator!!";
+		s << "/*Unknown Comparator*/";
 		}
 	}
 

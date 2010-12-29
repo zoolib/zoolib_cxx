@@ -29,7 +29,7 @@ namespace ZRA {
 #pragma mark * Expr_Rel_Const
 
 Expr_Rel_Const::Expr_Rel_Const(const ZRef<Expr_Rel>& iOp0,
-		const RelName& iRelName, const ZVal_Any& iVal)
+	const RelName& iRelName, const ZVal_Any& iVal)
 :	inherited(iOp0)
 ,	fRelName(iRelName)
 ,	fVal(iVal)
@@ -37,6 +37,19 @@ Expr_Rel_Const::Expr_Rel_Const(const ZRef<Expr_Rel>& iOp0,
 
 Expr_Rel_Const::~Expr_Rel_Const()
 	{}
+
+void Expr_Rel_Const::Accept(ZVisitor& iVisitor)
+	{
+	if (Visitor_Expr_Rel_Const* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Const*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Const(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept(iVisitor);
+		}
+	}
 
 void Expr_Rel_Const::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
@@ -79,7 +92,11 @@ void Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(ZRef<Expr_Rel_Const> iExpr)
 
 ZRef<Expr_Rel_Const> sConst(const ZRef<Expr_Rel>& iParent,
 	const RelName& iRelName, const ZVal_Any& iVal)
-	{ return new Expr_Rel_Const(iParent, iRelName, iVal); }
+	{
+	if (!iParent)
+		sSemanticError("sConst, iParent is null");
+	return new Expr_Rel_Const(iParent, iRelName, iVal);
+	}
 
 } // namespace ZRA
 } // namespace ZooLib

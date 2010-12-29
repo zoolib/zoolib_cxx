@@ -32,6 +32,19 @@ Expr_Rel_Embed::Expr_Rel_Embed(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1, const R
 ,	fRelName(iRelName)
 	{}
 
+void Expr_Rel_Embed::Accept(ZVisitor& iVisitor)
+	{
+	if (Visitor_Expr_Rel_Embed* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Embed*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Embed(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept(iVisitor);
+		}
+	}
+
 void Expr_Rel_Embed::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Embed* theVisitor =
@@ -70,8 +83,13 @@ void Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(ZRef<Expr_Rel_Embed> iExpr)
 
 ZRef<Expr_Rel_Embed> sEmbed(const ZRef<Expr_Rel>& iParent,
 	const RelName& iRelName, const ZRef<Expr_Rel>& iChild)
-	{ return new Expr_Rel_Embed(iParent, iChild, iRelName); }
-	
+	{
+	if (!iParent)
+		sSemanticError("sCalc, iParent is null");
+	if (!iChild)
+		sSemanticError("sCalc, iChild is null");
+	return new Expr_Rel_Embed(iParent, iChild, iRelName);
+	}
 
 } // namespace ZRA
 } // namespace ZooLib

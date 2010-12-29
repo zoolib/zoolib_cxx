@@ -37,6 +37,19 @@ Expr_Rel_Calc::Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
 Expr_Rel_Calc::~Expr_Rel_Calc()
 	{}
 
+void Expr_Rel_Calc::Accept(ZVisitor& iVisitor)
+	{
+	if (Visitor_Expr_Rel_Calc* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Calc*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Calc(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept(iVisitor);
+		}
+	}
+
 void Expr_Rel_Calc::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Calc* theVisitor =
@@ -78,7 +91,11 @@ void Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(ZRef<Expr_Rel_Calc> iExpr)
 
 ZRef<Expr_Rel_Calc> sCalc(const ZRef<Expr_Rel>& iParent,
 	const RelName& iRelName, const ZRef<Expr_Rel_Calc::Callable>& iCallable)
-	{ return new Expr_Rel_Calc(iParent, iRelName, iCallable); }
+	{
+	if (!iParent)
+		sSemanticError("sCalc, iParent is null");
+	return new Expr_Rel_Calc(iParent, iRelName, iCallable);
+	}
 
 } // namespace ZRA
 } // namespace ZooLib

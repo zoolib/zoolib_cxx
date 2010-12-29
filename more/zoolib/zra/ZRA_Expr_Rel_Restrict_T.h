@@ -46,6 +46,9 @@ public:
 	Expr_Rel_Restrict_T(ZRef<Expr_Rel> iOp0, const ZValPred_T<Val>& iValPred);
 	virtual ~Expr_Rel_Restrict_T();
 
+// From ZVisitee
+	virtual void Accept(ZVisitor& iVisitor);
+
 // From ZExpr_Op1_T<Expr_Rel>
 	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
@@ -71,6 +74,20 @@ Expr_Rel_Restrict_T<Val>::Expr_Rel_Restrict_T(
 template <class Val>
 Expr_Rel_Restrict_T<Val>::~Expr_Rel_Restrict_T()
 	{}
+
+template <class Val>
+void Expr_Rel_Restrict_T<Val>::Accept(ZVisitor& iVisitor)
+	{
+	if (Visitor_Expr_Rel_Restrict_T<Val>* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Restrict_T<Val>*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Restrict(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept(iVisitor);
+		}
+	}
 
 template <class Val>
 void Expr_Rel_Restrict_T<Val>::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
