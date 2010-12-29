@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,4 +18,34 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#ifndef __ZUtil_Any__
+#define __ZUtil_Any__
+#include "zconfig.h"
+
 #include "zoolib/ZAny.h"
+#include "zoolib/ZStdInt.h" // For int64
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAny coercion
+
+namespace ZooLib {
+
+ZQ<bool> sQCoerceBool(const ZAny& iAny);
+bool sQCoerceBool(const ZAny& iAny, bool& oVal);
+bool sDCoerceBool(bool iDefault, const ZAny& iAny);
+bool sCoerceBool(const ZAny& iAny);
+
+ZQ<int64> sQCoerceInt(const ZAny& iAny);
+bool sQCoerceInt(const ZAny& iAny, int64& oVal);
+int64 sDCoerceInt(int64 iDefault, const ZAny& iAny);
+int64 sCoerceInt(const ZAny& iAny);
+
+ZQ<double> sQCoerceReal(const ZAny& iAny);
+bool sQCoerceReal(const ZAny& iAny, double& oVal);
+double sDCoerceReal(double iDefault, const ZAny& iAny);
+double sCoerceReal(const ZAny& iAny);
+
+} // namespace ZooLib
+
+#endif // __ZUtil_Any__

@@ -53,7 +53,7 @@ public:
 		{}
 
 	ZVal_Any(const ZVal_Any& iOther)
-	:	ZAny(iOther.AsAny())
+	:	ZAny((const ZAny&)(iOther))
 		{}
 
 	~ZVal_Any()
@@ -61,7 +61,7 @@ public:
 
 	ZVal_Any& operator=(const ZVal_Any& iOther)
 		{
-		ZAny::operator=(iOther.AsAny());
+		ZAny::operator=((const ZAny&)(iOther));
 		return *this;
 		}
 
@@ -76,17 +76,6 @@ public:
 		return *this;
 		}
 
-// Overload, so we can init/assign from a string constant
-	ZVal_Any(const char* iVal)
-	:	ZAny(string8(iVal))
-		{}
-
-	ZVal_Any& operator=(const char* iVal)
-		{
-		ZAny::operator=(string8(iVal));
-		return *this;
-		}
-
 // Overload, so a null becomes a ZVal_Any()
 	ZVal_Any(const null_t&)
 	:	ZAny()
@@ -95,6 +84,37 @@ public:
 	ZVal_Any& operator=(const null_t&)
 		{
 		ZAny::Clear();
+		return *this;
+		}
+
+// Overload, so we can init/assign from a string constant
+	ZVal_Any(const UTF8* iVal)
+	:	ZAny(string8(iVal))
+		{}
+
+	ZVal_Any& operator=(const UTF8* iVal)
+		{
+		ZAny::operator=(string8(iVal));
+		return *this;
+		}
+
+	ZVal_Any(const UTF16* iVal)
+	:	ZAny(string16(iVal))
+		{}
+
+	ZVal_Any& operator=(const UTF16* iVal)
+		{
+		ZAny::operator=(string16(iVal));
+		return *this;
+		}
+
+	ZVal_Any(const UTF32* iVal)
+	:	ZAny(string32(iVal))
+		{}
+
+	ZVal_Any& operator=(const UTF32* iVal)
+		{
+		ZAny::operator=(string32(iVal));
 		return *this;
 		}
 

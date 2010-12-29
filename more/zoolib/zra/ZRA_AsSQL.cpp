@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZString.h"
+#include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoToStrim.h"

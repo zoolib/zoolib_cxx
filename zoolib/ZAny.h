@@ -21,125 +21,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZAny__
 #define __ZAny__
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZCompat_algorithm.h" // For swap
+#include "zoolib/ZCompat_algorithm.h" // For std::swap
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZQ.h"
-#include "zoolib/ZStdInt.h" // For int64
 
 #include <typeinfo>
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZAnyBase, copied/reworked from boost::any
-
-// Copyright Kevlin Henney, 2000, 2001, 2002. All rights reserved.
-//
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-
-#ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-	#if ZCONFIG(Compiler, CodeWarrior)
-		#if __MWERKS__ <= 0x3206
-			#define BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-		#endif
-	#endif
-#endif
-
-namespace ZooLib {
-
-class ZAnyBase
-	{
-public:
-	ZAnyBase();
-	ZAnyBase(const ZAnyBase& other);
-	~ZAnyBase();
-	ZAnyBase& operator=(ZAnyBase rhs);
-
-	template<typename ValueType>
-	ZAnyBase(const ValueType & value)
-	:	content(new holder<ValueType>(value))
-		{}
-
-	template<typename ValueType>
-	ZAnyBase& operator=(const ValueType & rhs)
-		{
-		ZAnyBase(rhs).swap(*this);
-		return *this;
-		}
-
-	ZAnyBase& swap(ZAnyBase& rhs);
-
-	bool empty() const;
-	const std::type_info & type() const;
-	const void* voidstar() const;
-	void* voidstar();
-
-private:
-	class placeholder
-		{
-	public:
-		virtual ~placeholder() {}
-
-		virtual const std::type_info& type() const = 0;
-		virtual placeholder* clone() const = 0;
-		virtual void* voidstar() = 0;
-		};
-
-	template<typename ValueType>
-	class holder : public placeholder
-		{
-	public:
-		holder(const ValueType& value) : held(value) {}
-
-		virtual const std::type_info& type() const
-			{ return typeid(ValueType); }
-
-		virtual placeholder* clone() const
-			{ return new holder(held); }
-
-		virtual void* voidstar()
-			{ return &held; }
-
-		ValueType held;
-
-	private: // intentionally left unimplemented
-		holder& operator=(const holder&);
-		};
-
-#ifdef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-	public: // so ZAnyBaseCast can be non-friend
-#else
-	private:
-		template<typename ValueType>
-		friend ValueType* ZAnyBaseCast(ZAnyBase*);
-
-		template<typename ValueType>
-		friend const ValueType* ZAnyBaseCast(const ZAnyBase*);
-#endif
-
-	placeholder* content;
-	};
-
-template<typename ValueType>
-ValueType* ZAnyBaseCast(ZAnyBase* operand)
-	{
-	if (!operand || operand->type() != typeid(ValueType))
-		return 0;
-	return &static_cast<ZAnyBase::holder<ValueType>*>(operand->content)->held;
-	}
-
-template<typename ValueType>
-const ValueType* ZAnyBaseCast(const ZAnyBase* operand)
-	{
-	if (!operand || operand->type() != typeid(ValueType))
-		return 0;
-	return &static_cast<ZAnyBase::holder<ValueType>*>(operand->content)->held;
-	}
-
-} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
@@ -147,64 +34,87 @@ const ValueType* ZAnyBaseCast(const ZAnyBase* operand)
 
 namespace ZooLib {
 
-class ZAny : private ZAnyBase
+class ZAny
 	{
 public:
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZAny,
 		operator_bool_generator_type, operator_bool_type);
 
-	operator operator_bool_type() const;
-
-	void swap(ZAny& rhs)
-		{ ZAnyBase::swap((ZAnyBase&)rhs); }
-
-	const std::type_info& Type() const
-		{ return ZAnyBase::type(); }
-
-	const void* VoidStar() const
-		{ return ZAnyBase::voidstar(); }
-
-	void* VoidStar()
-		{ return ZAnyBase::voidstar(); }
+	operator operator_bool_type() const
+		{ return operator_bool_generator_type::translate(fRep); }
 
 	ZAny()
+	:	fRep(0)
 		{}
 
-	ZAny(const ZAny& other)
-	:	ZAnyBase((const ZAnyBase&)other)
+	ZAny(const ZAny& iOther)
+	:	fRep(iOther.fRep ? iOther.fRep->Clone() : 0)
 		{}
-
+	
 	~ZAny()
-		{}
+		{ delete fRep; }
 
-	ZAny& operator=(const ZAny& rhs)
+	ZAny& operator=(ZAny iOther)
 		{
-		ZAnyBase::operator=((const ZAnyBase&)rhs);
+		this->swap(iOther);
 		return *this;
 		}
 
 	template <class S>
 	explicit ZAny(const S& iVal)
-	:	ZAnyBase(iVal)
+	:	fRep(new Rep_T<S>(iVal))
 		{}
 
 	template <class S>
 	ZAny& operator=(const S& iVal)
 		{
-		ZAnyBase::operator=(iVal);
+		ZAny(iVal).swap(*this);
 		return *this;
 		}
 
+	void swap(ZAny& ioOther)
+		{ std::swap(fRep, ioOther.fRep); }
+
+	const std::type_info& Type() const
+		{
+		if (fRep)
+			return fRep->Type();
+		return typeid(void);
+		}
+
+	const void* VoidStar() const
+		{
+		if (fRep)
+			return fRep->VoidStar();
+		return 0;
+		}
+
+	void* VoidStar()
+		{
+		if (fRep)
+			return fRep->VoidStar();
+		return 0;
+		}
+
 // ZVal protocol, for use by ZVal derivatives
-	void Clear();
+	void Clear()
+		{ ZAny().swap(*this); }
 
 	template <class S>
 	S* PGet()
-		{ return ZAnyBaseCast<S>(this); }
+		{
+		if (!fRep || fRep->Type() != typeid(S))
+			return 0;
+		return &static_cast<Rep_T<S>*>(fRep)->fValue;
+		}
 
 	template <class S>
 	const S* PGet() const
-		{ return ZAnyBaseCast<S>(this); }
+		{
+		if (!fRep || fRep->Type() != typeid(S))
+			return 0;
+		return &static_cast<Rep_T<S>*>(fRep)->fValue;
+		}
 
 	template <class S>
 	ZQ<S> QGet() const
@@ -232,39 +142,49 @@ public:
 
 	template <class S>
 	void Set(const S& iVal)
-		{ ZAnyBase::operator=(iVal); }
+		{ ZAny(iVal).swap(*this); }
 
 // Our protocol
 	template <class S>
 	bool Is() const
 		{ return this->PGet<S>(); }
+
+private:
+	class RepBase
+		{
+	public:
+		virtual ~RepBase() {}
+
+		virtual const std::type_info& Type() const = 0;
+		virtual RepBase* Clone() const = 0;
+		virtual void* VoidStar() = 0;
+		};
+
+	template<typename S>
+	class Rep_T : public RepBase
+		{
+	public:
+		Rep_T(const S& iValue)
+		:	fValue(iValue)
+			{}
+
+		virtual const std::type_info& Type() const
+			{ return typeid(S); }
+
+		virtual RepBase* Clone() const
+			{ return new Rep_T(fValue); }
+
+		virtual void* VoidStar()
+			{ return &fValue; }
+
+		S fValue;
+		};
+
+	RepBase* fRep;
 	};
 
 inline void swap(ZAny& a, ZAny& b)
 	{ a.swap(b); }
-
-} // namespace ZooLib
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZAny coercion
-
-namespace ZooLib {
-
-ZQ<bool> sQCoerceBool(const ZAny& iAny);
-bool sQCoerceBool(const ZAny& iAny, bool& oVal);
-bool sDCoerceBool(bool iDefault, const ZAny& iAny);
-bool sCoerceBool(const ZAny& iAny);
-
-ZQ<int64> sQCoerceInt(const ZAny& iAny);
-bool sQCoerceInt(const ZAny& iAny, int64& oVal);
-int64 sDCoerceInt(int64 iDefault, const ZAny& iAny);
-int64 sCoerceInt(const ZAny& iAny);
-
-ZQ<double> sQCoerceReal(const ZAny& iAny);
-bool sQCoerceReal(const ZAny& iAny, double& oVal);
-double sDCoerceReal(double iDefault, const ZAny& iAny);
-double sCoerceReal(const ZAny& iAny);
 
 } // namespace ZooLib
 
