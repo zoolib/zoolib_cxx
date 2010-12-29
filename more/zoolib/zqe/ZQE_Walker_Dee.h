@@ -18,32 +18,41 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Util_RelOperators__
-#define __ZRA_Util_RelOperators__ 1
+#ifndef __ZQE_Walker_Dee__
+#define __ZQE_Walker_Dee__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Bool_ValPred_Any.h" // For ValPred/Bool operators
-#include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Const.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Dee.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Product.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Union.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Project.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h" // For restrict templated operators
-#include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Select.h"
+#include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
-namespace ZRA {
+namespace ZQE {
 
-ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel);
-ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZMap_Any& iMap);
-ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap);
+// =================================================================================================
+#pragma mark -
+#pragma mark * Walker_Dee
 
-} // namespace ZRA
+class Walker_Dee : public Walker
+	{
+public:
+	Walker_Dee();
+	virtual ~Walker_Dee();
+
+// From ZQE::Walker
+	virtual void Rewind();
+
+	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool ReadInc(const ZVal_Any* iBindings,
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
+
+private:
+	bool fExhausted;
+	};
+
+} // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZRA_Util_RelOperators__
+#endif // __ZQE_Walker_Dee__

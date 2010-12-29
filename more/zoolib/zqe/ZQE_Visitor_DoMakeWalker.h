@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Const.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Dee.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
@@ -58,6 +59,7 @@ class Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
 ,	public virtual ZRA::Visitor_Expr_Rel_Restrict_Any
 ,	public virtual ZRA::Visitor_Expr_Rel_Select
+,	public virtual ZRA::Visitor_Expr_Rel_Dee
 	{
 public:
 	virtual void Visit_Expr_Rel_Difference(const ZRef<ZRA::Expr_Rel_Difference>& iExpr);
@@ -72,6 +74,8 @@ public:
 	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict_Any>& iExpr);
 	virtual void Visit_Expr_Rel_Select(const ZRef<ZRA::Expr_Rel_Select>& iExpr);
+
+	virtual void Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr);
 	};
 
 } // namespace ZQE

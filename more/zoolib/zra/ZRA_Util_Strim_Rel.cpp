@@ -23,13 +23,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_ZooLibStrim.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoToStrim.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Const.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Dee.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
@@ -88,6 +89,7 @@ class Visitor_DoToStrim
 ,	public virtual Visitor_Expr_Rel_Restrict_Any
 ,	public virtual Visitor_Expr_Rel_Select
 ,	public virtual Visitor_Expr_Rel_Concrete
+,	public virtual Visitor_Expr_Rel_Dee
 	{
 public:
 	virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr);
@@ -104,6 +106,7 @@ public:
 	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
+	virtual void Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr);
 
 private:
 	void pWriteBinary(const string& iFunctionName, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr);
@@ -124,11 +127,13 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 
 //	this->pWriteLFIndent();
 	w << "(";
-	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
+
+//####	this->pWriteLFIndent();
+	this->pDoToStrim(iExpr->GetOp0());
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp0());
+	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
 	w << ",";
 
 	this->pWriteLFIndent();
@@ -312,6 +317,13 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& i
 		<< ")";
 	}
 #endif
+
+void Visitor_DoToStrim::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
+	{
+	const ZStrimW& w = pStrimW();
+	w << "Dee()";
+	}
+
 void Visitor_DoToStrim::pWriteBinary(
 	const string& iFunctionName, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
 	{
