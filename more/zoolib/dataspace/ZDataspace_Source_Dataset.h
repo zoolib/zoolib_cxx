@@ -63,6 +63,8 @@ class Source_Dataset : public Source
 	{
 public:
 	enum { kDebug = 1 };
+	
+	void ForceUpdate();
 
 	// Some kind of index specs to be passed in too.
 	Source_Dataset(ZRef<ZDataset::Dataset> iDataset);
@@ -81,9 +83,6 @@ public:
 
 	void Insert(const ZDataset::Daton& iDaton);
 	void Erase(const ZDataset::Daton& iDaton);
-
-	void Insert(const ZVal_Any& iVal);
-	void Erase(const ZVal_Any& iVal);
 
 	size_t OpenTransaction();
 	void ClearTransaction(size_t iIndex);

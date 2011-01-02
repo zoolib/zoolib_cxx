@@ -693,8 +693,9 @@ void Source_Union::ModifyRegistrations(
 				{
 				s << "Raw, then analyzed:\n";
 				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
-				s << "\n\n";
+				s << "\n--------------------\n";
 				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel_Analyzed, s);
+				s << "\n--------------------";
 				}
 			}
 

@@ -218,6 +218,12 @@ public:
 #pragma mark -
 #pragma mark * Source_Dataset
 
+void Source_Dataset::ForceUpdate()
+	{
+	fStackChanged = true;
+	this->pInvokeCallable_ResultsAvailable();
+	}
+
 Source_Dataset::Source_Dataset(ZRef<Dataset> iDataset)
 :	fDataset(iDataset)
 ,	fEvent(Event::sZero())
@@ -330,12 +336,6 @@ void Source_Dataset::Insert(const Daton& iDaton)
 
 void Source_Dataset::Erase(const Daton& iDaton)
 	{ this->pModify(iDaton, sAsVal(iDaton), false); }
-
-void Source_Dataset::Insert(const ZVal_Any& iVal)
-	{ this->pModify(sAsDaton(iVal), iVal, true); }
-
-void Source_Dataset::Erase(const ZVal_Any& iVal)
-	{ this->pModify(sAsDaton(iVal), iVal, false); }
 
 size_t Source_Dataset::OpenTransaction()
 	{
