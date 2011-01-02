@@ -45,6 +45,10 @@ class ZMap_Any;
 
 class ZVal_Any : public ZAny
 	{
+// private, to catch the common error of passing a ZQ.
+	template <class S> ZVal_Any(const ZQ<S>&);
+	template <class S> ZVal_Any& operator=(const ZQ<S>&);
+
 public:
 	const ZAny& AsAny() const
 		{ return *this; }
