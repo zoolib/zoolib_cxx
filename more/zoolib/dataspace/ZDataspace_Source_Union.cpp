@@ -19,9 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallable_PMF.h"
-#include "zoolib/ZExpr_Bool_ValPred_Any.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZValPred_GetNames.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoGetNames.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
 
 #include "zoolib/dataspace/ZDataspace_Source_Union.h"
@@ -33,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
@@ -336,7 +338,7 @@ class Source_Union::Analyze
 ,	public virtual ZRA::Visitor_Expr_Rel_Const
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
-,	public virtual ZRA::Visitor_Expr_Rel_Restrict_Any
+,	public virtual ZRA::Visitor_Expr_Rel_Restrict
 ,	public virtual ZRA::Visitor_Expr_Rel_Select
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 	{
@@ -354,7 +356,7 @@ public:
 	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr);
 	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict_Any>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr);
 	virtual void Visit_Expr_Rel_Select(const ZRef<ZRA::Expr_Rel_Select>& iExpr);
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr);
 
@@ -484,11 +486,11 @@ void Source_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Renam
 	ZUtil_STL::sInsertMustNotContain(kDebug, fRename, theNew, theOld);
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict_Any>& iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr)
 	{
-	ZRA::Visitor_Expr_Rel_Restrict_Any::Visit_Expr_Rel_Restrict(iExpr);
+	ZRA::Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(iExpr);
 
-	fRelHead |= ZRA::sRenamed(fRename, iExpr->GetValPred().GetNames());
+	fRelHead |= ZRA::sRenamed(fRename, sGetNames(iExpr->GetValPred()));
 	}
 
 void Source_Union::Analyze::Visit_Expr_Rel_Select(const ZRef<ZRA::Expr_Rel_Select>& iExpr)
