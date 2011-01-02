@@ -61,7 +61,8 @@ inline ZPointPOD operator-(const ZPointPOD& l, ZPointPOD p)
 inline ZPointPOD& operator-=(ZPointPOD& l, ZPointPOD p)
 	{ l.h -= p.h; l.v -= p.v; return l; }
 
-template <> int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR);
+template <>
+int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR);
 
 // =================================================================================================
 #pragma mark -
@@ -156,7 +157,8 @@ inline ZRectPOD& operator&=(ZRectPOD& l, const ZRectPOD& other)
 	return l;
 	}
 
-template <> int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR);
+template <>
+int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR);
 
 } // namespace ZooLib
 

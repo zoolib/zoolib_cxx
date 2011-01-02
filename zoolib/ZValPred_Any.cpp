@@ -34,7 +34,8 @@ ZValComparand_Const_Any::ZValComparand_Const_Any(const ZVal_Any& iVal)
 const ZVal_Any& ZValComparand_Const_Any::GetVal() const
 	{ return fVal; }
 
-template <> int sCompare_T(const ZValComparand_Const_Any& iL, const ZValComparand_Const_Any& iR)
+template <>
+int sCompare_T(const ZValComparand_Const_Any& iL, const ZValComparand_Const_Any& iR)
 	{ return sCompare_T(iL.GetVal(), iR.GetVal()); }
 
 ZMACRO_CompareRegistration_T(ZValComparand_Const_Any)
@@ -50,7 +51,8 @@ ZValComparator_Callable_Any::ZValComparator_Callable_Any(ZRef<Callable> iCallabl
 const ZRef<ZValComparator_Callable_Any::Callable>& ZValComparator_Callable_Any::GetCallable() const
 	{ return fCallable; }
 
-template <> int sCompare_T(const ZValComparator_Callable_Any& iL,
+template <>
+int sCompare_T(const ZValComparator_Callable_Any& iL,
 	const ZValComparator_Callable_Any& iR)
 	{ return sCompare_T((void*)iL.GetCallable().Get(), (void*)iR.GetCallable().Get()); }
 

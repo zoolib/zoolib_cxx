@@ -444,7 +444,8 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iVal)
 
 } // namespace ZUtil_CFType
 
-template <> int sCompare_T(const ZRef<CFTypeRef>& iLHS, const ZRef<CFTypeRef>& iRHS)
+template <>
+int sCompare_T(const ZRef<CFTypeRef>& iLHS, const ZRef<CFTypeRef>& iRHS)
 	{
 	ZUnimplemented();
 	return 0;

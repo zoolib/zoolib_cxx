@@ -27,7 +27,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * sCompare
 
-template <> int sCompare_T(const ZRA::RelHead& iL, const ZRA::RelHead& iR)
+template <>
+int sCompare_T(const ZRA::RelHead& iL, const ZRA::RelHead& iR)
 	{ return sCompareIterators_T(iL.begin(), iL.end(),  iR.begin(), iR.end()); }
 
 ZMACRO_CompareRegistration_T(ZRA::RelHead)

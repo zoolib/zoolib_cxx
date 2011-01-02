@@ -31,7 +31,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * sCompare
 
-template <> int sCompare_T(const ZRef<ZQE::Result>& iL, const ZRef<ZQE::Result>& iR)
+template <>
+int sCompare_T(const ZRef<ZQE::Result>& iL, const ZRef<ZQE::Result>& iR)
 	{
 	if (iL)
 		{

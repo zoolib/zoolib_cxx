@@ -26,8 +26,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-template <> int sCompare_T(const float& iL, const float& iR);
-template <> int sCompare_T(const double& iL, const double& iR);
+template <>
+int sCompare_T(const float& iL, const float& iR);
+
+template <>
+int sCompare_T(const double& iL, const double& iR);
 
 } // namespace ZooLib
 

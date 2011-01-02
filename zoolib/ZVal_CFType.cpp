@@ -38,13 +38,16 @@ using ZUtil_CFType::sStringMutable;
 using ZUtil_CFType::sArrayMutable;
 using ZUtil_CFType::sDictionaryMutable;
 
-template <> int sCompare_T(const ZVal_CFType& iL, const ZVal_CFType& iR)
+template <>
+int sCompare_T(const ZVal_CFType& iL, const ZVal_CFType& iR)
 	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
 
-template <> int sCompare_T(const ZSeq_CFType& iL, const ZSeq_CFType& iR)
+template <>
+int sCompare_T(const ZSeq_CFType& iL, const ZSeq_CFType& iR)
 	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
 
-template <> int sCompare_T(const ZMap_CFType& iL, const ZMap_CFType& iR)
+template <>
+int sCompare_T(const ZMap_CFType& iL, const ZMap_CFType& iR)
 	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
 
 // =================================================================================================
