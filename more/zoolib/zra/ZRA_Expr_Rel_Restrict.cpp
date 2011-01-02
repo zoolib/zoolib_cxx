@@ -38,28 +38,18 @@ Expr_Rel_Restrict::~Expr_Rel_Restrict()
 
 void Expr_Rel_Restrict::Accept(ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Restrict* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Restrict*>(&iVisitor))
-		{
+	if (Visitor_Expr_Rel_Restrict* theVisitor = dynamic_cast<Visitor_Expr_Rel_Restrict*>(&iVisitor))
 		this->Accept_Expr_Rel_Restrict(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept(iVisitor);
-		}
 	}
 
 void Expr_Rel_Restrict::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Restrict* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Restrict*>(&iVisitor))
-		{
+	if (Visitor_Expr_Rel_Restrict* theVisitor = dynamic_cast<Visitor_Expr_Rel_Restrict*>(&iVisitor))
 		this->Accept_Expr_Rel_Restrict(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op1(iVisitor);
-		}
 	}
 
 ZRef<Expr_Rel> Expr_Rel_Restrict::Self()
@@ -78,8 +68,7 @@ const ZValPred& Expr_Rel_Restrict::GetValPred() const
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Restrict
 
-void Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(
-	const ZRef<Expr_Rel_Restrict >& iExpr)
+void Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict >& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================

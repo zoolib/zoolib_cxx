@@ -55,6 +55,7 @@ public:
 
 	ZValComparator_Callable_Any(ZRef<Callable> iCallable);
 
+// Our protocol
 	const ZRef<Callable>& GetCallable() const;
 
 private:

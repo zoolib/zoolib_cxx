@@ -48,15 +48,7 @@ public:
 class ZValComparator_Simple : public ZValComparator
 	{
 public:
-	enum EComparator
-		{
-		eLT,
-		eLE,
-		eEQ,
-		eNE,
-		eGE,
-		eGT
-		};
+	enum EComparator { eLT, eLE, eEQ, eNE, eGE, eGT };
 
 	ZValComparator_Simple(EComparator iEComparator);
 

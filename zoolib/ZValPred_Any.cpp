@@ -52,7 +52,10 @@ const ZRef<ZValComparator_Callable_Any::Callable>& ZValComparator_Callable_Any::
 
 template <> int sCompare_T(const ZValComparator_Callable_Any& iL,
 	const ZValComparator_Callable_Any& iR)
-	{ return sCompare_T((void*)iL.GetCallable().Get(), (void*)iR.GetCallable().Get()); }
+	{
+	ZUnimplemented(); //## just checking to see if this is ever called.
+	return sCompare_T((void*)iL.GetCallable().Get(), (void*)iR.GetCallable().Get());
+	}
 
 ZMACRO_CompareRegistration_T(ZValComparator_Callable_Any)
 

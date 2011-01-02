@@ -45,18 +45,22 @@ public:
 	virtual ~ZExpr_Op0_T()
 		{}
 
+// From ZVisitee
+	virtual void Accept(ZVisitor& iVisitor)
+		{
+		if (ZVisitor_Expr_Op0_T<T>* theVisitor = dynamic_cast<ZVisitor_Expr_Op0_T<T>*>(&iVisitor))
+			this->Accept_Expr_Op0(*theVisitor);
+		else
+			ZExpr::Accept(iVisitor);
+		}
+
 // From ZExpr
 	virtual void Accept_Expr(ZVisitor_Expr& iVisitor)
 		{
-		if (ZVisitor_Expr_Op0_T<T>* theVisitor =
-			dynamic_cast<ZVisitor_Expr_Op0_T<T>*>(&iVisitor))
-			{
+		if (ZVisitor_Expr_Op0_T<T>* theVisitor = dynamic_cast<ZVisitor_Expr_Op0_T<T>*>(&iVisitor))
 			this->Accept_Expr_Op0(*theVisitor);
-			}
 		else
-			{
 			ZExpr::Accept_Expr(iVisitor);
-			}
 		}
 
 // Our protocol
@@ -101,18 +105,22 @@ public:
 	virtual ~ZExpr_Op1_T()
 		{}
 
+// From ZVisitee
+	virtual void Accept(ZVisitor& iVisitor)
+		{
+		if (ZVisitor_Expr_Op1_T<T>* theVisitor = dynamic_cast<ZVisitor_Expr_Op1_T<T>*>(&iVisitor))
+			this->Accept_Expr_Op1(*theVisitor);
+		else
+			ZExpr::Accept(iVisitor);
+		}
+
 // From ZExpr
 	virtual void Accept_Expr(ZVisitor_Expr& iVisitor)
 		{
-		if (ZVisitor_Expr_Op1_T<T>* theVisitor =
-			dynamic_cast<ZVisitor_Expr_Op1_T<T>*>(&iVisitor))
-			{
+		if (ZVisitor_Expr_Op1_T<T>* theVisitor = dynamic_cast<ZVisitor_Expr_Op1_T<T>*>(&iVisitor))
 			this->Accept_Expr_Op1(*theVisitor);
-			}
 		else
-			{
 			ZExpr::Accept_Expr(iVisitor);
-			}
 		}
 
 // Our protocol
@@ -164,18 +172,22 @@ public:
 	virtual ~ZExpr_Op2_T()
 		{}
 
+// From ZVisitee
+	virtual void Accept(ZVisitor& iVisitor)
+		{
+		if (ZVisitor_Expr_Op2_T<T>* theVisitor = dynamic_cast<ZVisitor_Expr_Op2_T<T>*>(&iVisitor))
+			this->Accept_Expr_Op2(*theVisitor);
+		else
+			ZExpr::Accept(iVisitor);
+		}
+
 // From ZExpr
 	virtual void Accept_Expr(ZVisitor_Expr& iVisitor)
 		{
-		if (ZVisitor_Expr_Op2_T<T>* theVisitor =
-			dynamic_cast<ZVisitor_Expr_Op2_T<T>*>(&iVisitor))
-			{
+		if (ZVisitor_Expr_Op2_T<T>* theVisitor = dynamic_cast<ZVisitor_Expr_Op2_T<T>*>(&iVisitor))
 			this->Accept_Expr_Op2(*theVisitor);
-			}
 		else
-			{
 			ZExpr::Accept_Expr(iVisitor);
-			}
 		}
 
 // Our protocol

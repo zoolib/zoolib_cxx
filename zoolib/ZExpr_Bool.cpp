@@ -36,17 +36,20 @@ ZExpr_Bool::ZExpr_Bool()
 ZExpr_Bool_True::ZExpr_Bool_True()
 	{}
 
+void ZExpr_Bool_True::Accept(ZVisitor& iVisitor)
+	{
+	if (ZVisitor_Expr_Bool_True* theVisitor = dynamic_cast<ZVisitor_Expr_Bool_True*>(&iVisitor))
+		this->Accept_Expr_Bool_True(*theVisitor);
+	else
+		inherited::Accept(iVisitor);
+	}
+
 void ZExpr_Bool_True::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Bool>& iVisitor)
 	{
-	if (ZVisitor_Expr_Bool_True* theVisitor =
-		dynamic_cast<ZVisitor_Expr_Bool_True*>(&iVisitor))
-		{
+	if (ZVisitor_Expr_Bool_True* theVisitor = dynamic_cast<ZVisitor_Expr_Bool_True*>(&iVisitor))
 		this->Accept_Expr_Bool_True(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op0(iVisitor);
-		}
 	}
 
 ZRef<ZExpr_Bool> ZExpr_Bool_True::Self()
@@ -72,17 +75,20 @@ void ZVisitor_Expr_Bool_True::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& 
 ZExpr_Bool_False::ZExpr_Bool_False()
 	{}
 
+void ZExpr_Bool_False::Accept(ZVisitor& iVisitor)
+	{
+	if (ZVisitor_Expr_Bool_False* theVisitor = dynamic_cast<ZVisitor_Expr_Bool_False*>(&iVisitor))
+		this->Accept_Expr_Bool_False(*theVisitor);
+	else
+		inherited::Accept(iVisitor);
+	}
+
 void ZExpr_Bool_False::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Bool>& iVisitor)
 	{
-	if (ZVisitor_Expr_Bool_False* theVisitor =
-		dynamic_cast<ZVisitor_Expr_Bool_False*>(&iVisitor))
-		{
+	if (ZVisitor_Expr_Bool_False* theVisitor = dynamic_cast<ZVisitor_Expr_Bool_False*>(&iVisitor))
 		this->Accept_Expr_Bool_False(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op0(iVisitor);
-		}
 	}
 
 ZRef<ZExpr_Bool> ZExpr_Bool_False::Self()
@@ -109,17 +115,20 @@ ZExpr_Bool_Not::ZExpr_Bool_Not(ZRef<ZExpr_Bool> iOp0)
 :	inherited(iOp0)
 	{}
 
+void ZExpr_Bool_Not::Accept(ZVisitor& iVisitor)
+	{
+	if (ZVisitor_Expr_Bool_Not* theVisitor = dynamic_cast<ZVisitor_Expr_Bool_Not*>(&iVisitor))
+		this->Accept_Expr_Bool_Not(*theVisitor);
+	else
+		inherited::Accept(iVisitor);
+	}
+
 void ZExpr_Bool_Not::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<ZExpr_Bool>& iVisitor)
 	{
-	if (ZVisitor_Expr_Bool_Not* theVisitor =
-		dynamic_cast<ZVisitor_Expr_Bool_Not*>(&iVisitor))
-		{
+	if (ZVisitor_Expr_Bool_Not* theVisitor = dynamic_cast<ZVisitor_Expr_Bool_Not*>(&iVisitor))
 		this->Accept_Expr_Bool_Not(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op1(iVisitor);
-		}
 	}
 
 ZRef<ZExpr_Bool> ZExpr_Bool_Not::Self()
@@ -146,17 +155,20 @@ ZExpr_Bool_And::ZExpr_Bool_And(ZRef<ZExpr_Bool> iOp0, ZRef<ZExpr_Bool> iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
+void ZExpr_Bool_And::Accept(ZVisitor& iVisitor)
+	{
+	if (ZVisitor_Expr_Bool_And* theVisitor = dynamic_cast<ZVisitor_Expr_Bool_And*>(&iVisitor))
+		this->Accept_Expr_Bool_And(*theVisitor);
+	else
+		inherited::Accept(iVisitor);
+	}
+
 void ZExpr_Bool_And::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Bool>& iVisitor)
 	{
-	if (ZVisitor_Expr_Bool_And* theVisitor =
-		dynamic_cast<ZVisitor_Expr_Bool_And*>(&iVisitor))
-		{
+	if (ZVisitor_Expr_Bool_And* theVisitor = dynamic_cast<ZVisitor_Expr_Bool_And*>(&iVisitor))
 		this->Accept_Expr_Bool_And(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op2(iVisitor);
-		}
 	}
 
 ZRef<ZExpr_Bool> ZExpr_Bool_And::Self()
@@ -183,17 +195,20 @@ ZExpr_Bool_Or::ZExpr_Bool_Or(ZRef<ZExpr_Bool> iOp0, ZRef<ZExpr_Bool> iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
+void ZExpr_Bool_Or::Accept(ZVisitor& iVisitor)
+	{
+	if (ZVisitor_Expr_Bool_Or* theVisitor = dynamic_cast<ZVisitor_Expr_Bool_Or*>(&iVisitor))
+		this->Accept_Expr_Bool_Or(*theVisitor);
+	else
+		inherited::Accept(iVisitor);
+	}
+
 void ZExpr_Bool_Or::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Bool>& iVisitor)
 	{
-	if (ZVisitor_Expr_Bool_Or* theVisitor =
-		dynamic_cast<ZVisitor_Expr_Bool_Or*>(&iVisitor))
-		{
+	if (ZVisitor_Expr_Bool_Or* theVisitor = dynamic_cast<ZVisitor_Expr_Bool_Or*>(&iVisitor))
 		this->Accept_Expr_Bool_Or(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op2(iVisitor);
-		}
 	}
 
 ZRef<ZExpr_Bool> ZExpr_Bool_Or::Self()

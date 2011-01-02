@@ -41,6 +41,7 @@ public:
 	ZTagged_T(const Value& iValue) : fValue(iValue) {}
 	ZTagged_T& operator=(const Value& iValue) { fValue = iValue; return *this; }
 
+	Value& Get() { return fValue; }
 	const Value& Get() const { return fValue; }
 	};
 

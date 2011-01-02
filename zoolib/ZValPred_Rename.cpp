@@ -22,16 +22,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+using std::map;
+using std::string;
+
 ZRef<ZValComparand> sRenamed(
-	const std::map<std::string,std::string>& iRename,
-	const ZRef<ZValComparand>& iVal)
+	const map<string,string>& iRename, const ZRef<ZValComparand>& iVal)
 	{
 	if (ZRef<ZValComparand_Name> as = iVal.DynamicCast<ZValComparand_Name>())
 		return new ZValComparand_Name(iRename.find(as->GetName())->second);
 	return iVal;
 	}
 
-ZValPred sRenamed(const std::map<std::string,std::string>& iRename, const ZValPred& iValPred)
+ZValPred sRenamed(const map<string,string>& iRename, const ZValPred& iValPred)
 	{
 	return ZValPred(
 		sRenamed(iRename, iValPred.GetLHS()),

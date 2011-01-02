@@ -65,8 +65,7 @@ ZRef<ZExpr_Bool> ZExpr_Bool_ValPred::Self()
 ZRef<ZExpr_Bool> ZExpr_Bool_ValPred::Clone()
 	{ return this; }
 
-void ZExpr_Bool_ValPred::Accept_Expr_Bool_ValPred(
-	ZVisitor_Expr_Bool_ValPred& iVisitor)
+void ZExpr_Bool_ValPred::Accept_Expr_Bool_ValPred(ZVisitor_Expr_Bool_ValPred& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_ValPred(this); }
 
 const ZValPred& ZExpr_Bool_ValPred::GetValPred()
@@ -76,8 +75,7 @@ const ZValPred& ZExpr_Bool_ValPred::GetValPred()
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_ValPred
 
-void ZVisitor_Expr_Bool_ValPred::Visit_Expr_Bool_ValPred(
-	const ZRef<ZExpr_Bool_ValPred >& iExpr)
+void ZVisitor_Expr_Bool_ValPred::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred >& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
