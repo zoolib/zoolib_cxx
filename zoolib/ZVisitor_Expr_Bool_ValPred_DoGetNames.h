@@ -18,29 +18,30 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Bool_ValPred_DoGetNames_T__
-#define __ZVisitor_Expr_Bool_ValPred_DoGetNames_T__
+#ifndef __ZVisitor_Expr_Bool_ValPred_DoGetNames__
+#define __ZVisitor_Expr_Bool_ValPred_DoGetNames__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Bool_ValPred_T.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZVisitor_Do_T.h"
+
+#include <set>
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred_DoGetNames_T
+#pragma mark * ZVisitor_Expr_Bool_ValPred_DoGetNames
 
-template <class Val>
-class ZVisitor_Expr_Bool_ValPred_DoGetNames_T
+class ZVisitor_Expr_Bool_ValPred_DoGetNames
 :	public virtual ZVisitor_Do_T<std::set<std::string> >
-,	public virtual ZVisitor_Expr_Bool_ValPred_T<Val>
+,	public virtual ZVisitor_Expr_Bool_ValPred
 ,	public virtual ZVisitor_Expr_Op1_T<ZExpr_Bool>
 ,	public virtual ZVisitor_Expr_Op2_T<ZExpr_Bool>
 	{
 public:
 // From ZVisitor_Expr_Bool_ValPred_T
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_T<Val> >& iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
 
 // From ZVisitor_Expr_Op1_T
 	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr);
@@ -49,21 +50,8 @@ public:
 	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr);
 	};
 
-template <class Val>
-void ZVisitor_Expr_Bool_ValPred_DoGetNames_T<Val>::Visit_Expr_Bool_ValPred(
-	const ZRef<ZExpr_Bool_ValPred_T<Val> >& iExpr)
-	{ this->pSetResult(iExpr->GetValPred().GetNames()); }
-
-template <class Val>
-void ZVisitor_Expr_Bool_ValPred_DoGetNames_T<Val>::Visit_Expr_Op1(
-	const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr)
-	{ this->pSetResult(this->Do(iExpr->GetOp0())); }
-
-template <class Val>
-void ZVisitor_Expr_Bool_ValPred_DoGetNames_T<Val>::Visit_Expr_Op2(
-	const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr)
-	{ this->pSetResult(ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp1()))); }
+std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr);
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_Expr_Bool_ValPred_DoToStrim__
+#endif // __ZVisitor_Expr_Bool_ValPred_DoGetNames__

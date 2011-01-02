@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Bool_ValPred_Any.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
 #include "zoolib/zqe/ZQE_Walker_Calc.h"
 #include "zoolib/zqe/ZQE_Walker_Const.h"
@@ -87,12 +87,12 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename
 		this->pSetResult(new Walker_Rename(op0, iExpr->GetNew(), iExpr->GetOld()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict_Any>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr)
 	{
 	if (ZRef<Walker> theWalker = this->Do(iExpr->GetOp0()))
 		{
 		this->pSetResult(
-			new Walker_Select(theWalker, new ZExpr_Bool_ValPred_Any(iExpr->GetValPred())));	
+			new Walker_Select(theWalker, new ZExpr_Bool_ValPred(iExpr->GetValPred())));	
 		}
 	}
 

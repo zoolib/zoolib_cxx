@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,46 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T__
-#define __ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T__
+#ifndef __ZValPred_Rename__
+#define __ZValPred_Rename__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Bool_ValPred_T.h"
-#include "zoolib/ZVisitor_Expr_Bool_DoEval.h"
+#include "zoolib/ZValPred.h"
+
+#include <map>
 
 namespace ZooLib {
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T
+ZRef<ZValComparand> sRenamed(
+	const std::map<std::string,std::string>& iRename,
+	const ZRef<ZValComparand>& iVal);
 
-template <class Val>
-class ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T
-:	public virtual ZVisitor_Expr_Bool_DoEval
-,	public virtual ZVisitor_Expr_Bool_ValPred_T<Val>
-	{
-public:
-	ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T(const Val& iVal);
-
-// From ZVisitor_Expr_Bool_ValPred_T
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_T<Val> >& iExpr);
-
-private:
-	ZValContext fValContext;
-	const Val& fVal;
-	};
-
-template <class Val>
-ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T<Val>::
-ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T(const Val& iVal)
-:	fVal(iVal)
-	{}
-
-template <class Val>
-void ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T<Val>::Visit_Expr_Bool_ValPred(
-	const ZRef<ZExpr_Bool_ValPred_T<Val> >& iExpr)
-	{ this->pSetResult(iExpr->GetValPred().Matches(fValContext, fVal)); }
+ZValPred sRenamed(const std::map<std::string,std::string>& iRename, const ZValPred& iValPred);
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T__
+#endif // __ZValPred_Rename_T__

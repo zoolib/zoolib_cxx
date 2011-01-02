@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,32 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZExpr_Bool_ValPred_Any__
-#define __ZExpr_Bool_ValPred_Any__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZExpr_Bool_ValPred_T.h"
-#include "zoolib/ZValPred_Any.h"
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T.h"
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoGetNames_T.h"
+#include "zoolib/ZValPred_GetNames.h"
+#include "zoolib/ZUtil_STL_set.h"
 
 namespace ZooLib {
 
+using std::set;
+using std::string;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExpr_Bool_ValPred
+#pragma mark * ZValPred, sGetNames
 
-typedef ZExpr_Bool_ValPred_T<ZVal_Any> ZExpr_Bool_ValPred_Any;
+namespace { // anonymous
 
-typedef ZVisitor_Expr_Bool_ValPred_T<ZVal_Any> ZVisitor_Expr_Bool_ValPred_Any;
+set<string> spGetNames(const ZRef<ZValComparand>& iComparand)
+	{
+	if (ZRef<ZValComparand_Name> asName = iComparand.DynamicCast<ZValComparand_Name>())
+		{
+		const string& theName = asName->GetName();
+		return set<string>(&theName, &theName + 1);
+		}
+	return set<string>();
+	}
 
+} // anonymous namespace
 
-inline std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr)
-	{ return ZVisitor_Expr_Bool_ValPred_DoGetNames_T<ZVal_Any>().Do(iExpr); }
-
-inline bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal)
-	{ return ZVisitor_Expr_Bool_ValPred_DoEval_Matches_T<ZVal_Any>(iVal).Do(iExpr); }
+set<string> sGetNames(const ZValPred& iValPred)
+	{ return ZUtil_STL_set::sOr(spGetNames(iValPred.GetLHS()), spGetNames(iValPred.GetRHS())); }
 
 } // namespace ZooLib
-
-#endif // __ZExpr_Bool_ValPred_Any__

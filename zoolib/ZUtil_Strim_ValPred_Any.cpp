@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZUtil_Strim_ValPred_Any.h"
+#include "zoolib/ZValPred_Any.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
@@ -26,11 +27,6 @@ namespace ZooLib {
 namespace ZUtil_Strim_ValPred_Any {
 
 using std::string;
-
-typedef ZValComparator_Simple_T<ZVal_Any> ZValComparator_Simple;
-typedef ZValComparand_Name_T<ZVal_Any> ZValComparand_Name;
-typedef ZValComparand_Var_T<ZVal_Any> ZValComparand_Var;
-typedef ZValComparand_Const_T<ZVal_Any> ZValComparand_Const;
 
 // =================================================================================================
 #pragma mark -
@@ -42,7 +38,7 @@ static void spWrite_PropName(const string& iName, const ZStrimW& s)
 	ZYad_ZooLibStrim::sWrite_PropName(iName, s);
 	}
 
-static void spToStrim(const ZRef<ZValPred_Any::Comparand>& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValComparand>& iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
@@ -52,12 +48,7 @@ static void spToStrim(const ZRef<ZValPred_Any::Comparand>& iCR, const ZStrimW& s
 		{
 		spWrite_PropName(cr->GetName(), s);
 		}
-	else if (ZRef<ZValComparand_Var> cr = iCR.DynamicCast<ZValComparand_Var>())
-		{
-		s << "$";
-		ZYad_ZooLibStrim::sWrite_PropName(cr->GetVarName(), s);
-		}
-	else if (ZRef<ZValComparand_Const> cr = iCR.DynamicCast<ZValComparand_Const>())
+	else if (ZRef<ZValComparand_Const_Any> cr = iCR.DynamicCast<ZValComparand_Const_Any>())
 		{
 		ZYad_ZooLibStrim::sToStrim(sMakeYadR(cr->GetVal()), s);
 		}
@@ -67,7 +58,7 @@ static void spToStrim(const ZRef<ZValPred_Any::Comparand>& iCR, const ZStrimW& s
 		}
 	}
 
-static void spToStrim(const ZRef<ZValPred_Any::Comparator>& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValComparator>& iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
@@ -124,7 +115,7 @@ static void spToStrim(const ZRef<ZValPred_Any::Comparator>& iCR, const ZStrimW& 
 #pragma mark -
 #pragma mark * ZUtil_Strim_ValPred_Any
 
-void sToStrim(const ZValPred_Any& iValPred, const ZStrimW& s)
+void sToStrim(const ZValPred& iValPred, const ZStrimW& s)
 	{
 	spToStrim(iValPred.GetLHS(), s);
 	spToStrim(iValPred.GetComparator(), s);

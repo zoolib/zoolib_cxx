@@ -18,25 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_ValPred_Any__
-#define __ZUtil_Strim_ValPred_Any__
-#include "zconfig.h"
-
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZValPred.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches.h"
+#include "zoolib/ZValPred_Any.h"
 
 namespace ZooLib {
 
-namespace ZUtil_Strim_ValPred_Any {
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_ValPred_Any
+#pragma mark *
 
-void sToStrim(const ZValPred& iValPred, const ZStrimW& iStrimW);
+ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches::
+ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches(const ZVal_Any& iVal)
+:	fVal(iVal)
+	{}
 
-} // namespace ZUtil_Strim_ValPred_Any
+void ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches::Visit_Expr_Bool_ValPred(
+	const ZRef<ZExpr_Bool_ValPred>& iExpr)
+	{ this->pSetResult(sMatches(iExpr->GetValPred(), fVal)); }
+
+bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal)
+	{ return ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches(iVal).Do(iExpr); }
 
 } // namespace ZooLib
-
-#endif // __ZUtil_Strim_ValPred_Any__

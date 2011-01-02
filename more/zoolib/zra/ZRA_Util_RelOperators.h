@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_Util_RelOperators__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Bool_ValPred_Any.h" // For ValPred/Bool operators
+#include "zoolib/ZExpr_Bool_ValPred.h" // For ValPred/Bool operators
 #include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Const.h"
@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h" // For restrict templated operators
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 

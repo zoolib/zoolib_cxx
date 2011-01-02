@@ -18,44 +18,69 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoCompare.h"
+#ifndef __ZVisitor_Expr_Bool_ValPred_DoCompare__
+#define __ZVisitor_Expr_Bool_ValPred_DoCompare__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Bool_ValPred.h"
+#include "zoolib/ZVisitor_Expr_Bool_DoCompare.h"
 
 namespace ZooLib {
-namespace Visitor_Expr_Bool_ValPred_Any_DoCompare {
+namespace Visitor_Expr_Bool_ValPred_DoCompare {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred_Any_DoCompare
+#pragma mark * Visitor_Expr_Bool_ValPred_DoCompare::Comparer_Bootstrap
 
-void Comparer_Bootstrap::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iExpr)
-	{ pSetResult(Comparer_ValPred(this, iExpr).Do(fExpr)); } 
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Bool_ValPred_Any_DoCompare::Comparer
-
-void Comparer::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iRep)
-	{ pSetResult(-1); } 
+struct Comparer_Bootstrap
+:	public virtual Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap
+,	public virtual ZVisitor_Expr_Bool_ValPred
+	{
+public:
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
+	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_ValPred_Any_DoCompare::Comparer_GT_ValPred
+#pragma mark * Visitor_Expr_Bool_ValPred_DoCompare::Comparer
 
-void Comparer_GT_ValPred::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>&)
-	{ pSetResult(1); }
+struct Comparer
+:	public virtual Visitor_Expr_Bool_DoCompare::Comparer
+,	public virtual ZVisitor_Expr_Bool_ValPred
+	{
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iRep);
+	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Bool_ValPred_Any_DoCompare::Comparer_ValPred
+#pragma mark * Visitor_Expr_Bool_ValPred_DoCompare::Comparer_GT_ValPred
 
-Comparer_ValPred::Comparer_ValPred(
-	Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_ValPred_Any> iExpr)
-:	Comparer(iBootstrap)
-,	fExpr(iExpr)
-	{}
+struct Comparer_GT_ValPred
+:	public virtual Visitor_Expr_Bool_DoCompare::Comparer_GT_Or
+,	public virtual ZVisitor_Expr_Bool_ValPred
+	{
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>&);
+	};
 
-void Comparer_ValPred::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iExpr)
-	{ pSetResult(sCompare_T(fExpr->GetValPred(), iExpr->GetValPred())); } 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Bool_ValPred_DoCompare::Comparer_ValPred
 
-} // namespace Visitor_Expr_Bool_ValPred_Any_DoCompare
+class Comparer_ValPred
+:	public virtual Visitor_Expr_Bool_DoCompare::Comparer_GT_Or
+,	public virtual ZVisitor_Expr_Bool_ValPred
+	{
+public:
+	Comparer_ValPred(Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap* iBootstrap,
+		ZRef<ZExpr_Bool_ValPred> iExpr);
+
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
+
+private:
+	ZRef<ZExpr_Bool_ValPred> fExpr;
+	};
+
+} // namespace Visitor_Expr_Bool_ValPred_DoCompare
 } // namespace ZooLib
+
+#endif // __ZVisitor_Expr_Bool_ValPred_DoCompare__

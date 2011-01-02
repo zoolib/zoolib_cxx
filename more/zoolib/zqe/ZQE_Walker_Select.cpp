@@ -18,14 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches.h"
 #include "zoolib/zqe/ZQE_Walker_Select.h"
-#include "zoolib/ZExpr_Bool_ValPred_Any.h"
 
 namespace ZooLib {
 namespace ZQE {
 
 using std::map;
 using std::set;
+
+#if 0
 
 class Context : public ZValContext
 	{
@@ -34,7 +36,6 @@ public:
 	const ZVal_Any* fResults;
 	};
 
-#if 0
 
 maybe just bodge it for now -- pack all of iBindings and oResults into a ZMap_Any.
 
@@ -53,8 +54,6 @@ void Visitor::Visit_Expr_Bool_ValPred(
 	this->Visit_Expr_Op0(iExpr);
 	}
 
-#endif
-
 static bool spMatches(const ZVal_Any* iBindings, const ZVal_Any* iResults, ZRef<ZExpr_Bool> iExpr)
 	{
 	Context theContext;
@@ -64,6 +63,8 @@ static bool spMatches(const ZVal_Any* iBindings, const ZVal_Any* iResults, ZRef<
 	ZUnimplemented();
 	return false;
 	}
+
+#endif
 
 // =================================================================================================
 #pragma mark -

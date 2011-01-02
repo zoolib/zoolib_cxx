@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,61 +18,77 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValPred_Any__
-#define __ZValPred_Any__ 1
+#ifndef __ZRA_Expr_Rel_Restrict__
+#define __ZRA_Expr_Rel_Restrict__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
-#include "zoolib/ZVal_Any.h"
+#include "zoolib/ZExpr_Op_T.h"
 #include "zoolib/ZValPred.h"
+#include "zoolib/zra/ZRA_Expr_Rel.h"
 
 namespace ZooLib {
+namespace ZRA {
+
+class Visitor_Expr_Rel_Restrict;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValComparand_Const_Any
+#pragma mark * Expr_Rel_Restrict
 
-class ZValComparand_Const_Any : public ZValComparand
+class Expr_Rel_Restrict
+:	public virtual Expr_Rel
+,	public virtual ZExpr_Op1_T<Expr_Rel>
 	{
+	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	ZValComparand_Const_Any(const ZVal_Any& iVal);
+	Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZValPred& iValPred);
+	virtual ~Expr_Rel_Restrict();
+
+// From ZVisitee
+	virtual void Accept(ZVisitor& iVisitor);
+
+// From ZExpr_Op1_T<Expr_Rel>
+	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
+
+	virtual ZRef<Expr_Rel> Self();
+	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
 
 // Our protocol
-	const ZVal_Any& GetVal() const;
+	virtual void Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict& iVisitor);
+
+	const ZValPred& GetValPred() const;
 
 private:
-	const ZVal_Any fVal;
+	const ZValPred fValPred;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValComparator_Callable_Any
+#pragma mark * Visitor_Expr_Rel_Restrict	
 
-class ZValComparator_Callable_Any : public ZValComparator
+class Visitor_Expr_Rel_Restrict
+:	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
 	{
+	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
 public:
-	typedef ZCallable<bool(const ZVal_Any& iLHS, const ZVal_Any& iRHS)> Callable;
-
-	ZValComparator_Callable_Any(ZRef<Callable> iCallable);
-
-	const ZRef<Callable>& GetCallable() const;
-
-private:
-	ZRef<Callable> fCallable;
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Comparand pseudo constructors
+#pragma mark * Operators
 
-ZValComparandPseudo CConst(const ZVal_Any& iVal);
+// The order of parameters here differs from that in sSelect precisely to keep them distinct.
+ZRef<Expr_Rel_Restrict> sRestrict(
+	const ZValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark *
+ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred& iValPred);
 
-bool sMatches(const ZValPred& iValPred, const ZVal_Any& iVal);
+ZRef<Expr_Rel> operator&(const ZValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel);
 
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZValPred& iValPred);
+
+} // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZValPred_Any__
+#endif // __ZRA_Expr_Rel_Restrict__

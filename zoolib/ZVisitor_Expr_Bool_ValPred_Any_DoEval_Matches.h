@@ -18,38 +18,36 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValPred_Rename_T__
-#define __ZValPred_Rename_T__ 1
+#ifndef __ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches__
+#define __ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches__
 #include "zconfig.h"
 
-#include "zoolib/ZValPred_T.h"
-
-#include <map>
+#include "zoolib/ZExpr_Bool_ValPred.h"
+#include "zoolib/ZVal_Any.h"
+#include "zoolib/ZVisitor_Expr_Bool_DoEval.h"
 
 namespace ZooLib {
 
-template <class Val>
-ZRef<ZValComparand_T<Val> > sRenamed(
-	const std::map<std::string,std::string>& iRename,
-	const ZRef<ZValComparand_T<Val> >& iVal)
-	{
-	// For some reason ZRef::DynamicCast isn't usable here.
-	if (ZRef<ZValComparand_Name_T<Val> > as = dynamic_cast<ZValComparand_Name_T<Val>*>(iVal.Get()))
-		return new ZValComparand_Name_T<Val>(iRename.find(as->GetName())->second);
-	return iVal;
-	}
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches
 
-template <class Val>
-ZValPred_T<Val> sRenamed(
-	const std::map<std::string,std::string>& iRename,
-	const ZValPred_T<Val>& iValPred)
+class ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches
+:	public virtual ZVisitor_Expr_Bool_DoEval
+,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
-	return ZValPred_T<Val>(
-		sRenamed(iRename, iValPred.GetLHS()),
-		iValPred.GetComparator(),
-		sRenamed(iRename, iValPred.GetRHS()));
-	}
+public:
+	ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches(const ZVal_Any& iVal);
+
+// From ZVisitor_Expr_Bool_ValPred
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
+
+private:
+	const ZVal_Any& fVal;
+	};
+
+bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal);
 
 } // namespace ZooLib
 
-#endif // __ZValPred_Rename_T__
+#endif // __ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches__

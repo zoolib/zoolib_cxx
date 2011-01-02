@@ -18,61 +18,44 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValPred_Any__
-#define __ZValPred_Any__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZCallable.h"
-#include "zoolib/ZVal_Any.h"
-#include "zoolib/ZValPred.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoCompare.h"
 
 namespace ZooLib {
+namespace Visitor_Expr_Bool_ValPred_DoCompare {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValComparand_Const_Any
+#pragma mark * Visitor_Expr_Bool_ValPred_DoCompare::Comparer_Bootstrap
 
-class ZValComparand_Const_Any : public ZValComparand
-	{
-public:
-	ZValComparand_Const_Any(const ZVal_Any& iVal);
-
-// Our protocol
-	const ZVal_Any& GetVal() const;
-
-private:
-	const ZVal_Any fVal;
-	};
+void Comparer_Bootstrap::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
+	{ pSetResult(Comparer_ValPred(this, iExpr).Do(fExpr)); } 
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValComparator_Callable_Any
+#pragma mark * Visitor_Expr_Bool_ValPred_DoCompare::Comparer
 
-class ZValComparator_Callable_Any : public ZValComparator
-	{
-public:
-	typedef ZCallable<bool(const ZVal_Any& iLHS, const ZVal_Any& iRHS)> Callable;
-
-	ZValComparator_Callable_Any(ZRef<Callable> iCallable);
-
-	const ZRef<Callable>& GetCallable() const;
-
-private:
-	ZRef<Callable> fCallable;
-	};
+void Comparer::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iRep)
+	{ pSetResult(-1); } 
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Comparand pseudo constructors
+#pragma mark * Visitor_Expr_Bool_ValPred_DoCompare::Comparer_GT_ValPred
 
-ZValComparandPseudo CConst(const ZVal_Any& iVal);
+void Comparer_GT_ValPred::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>&)
+	{ pSetResult(1); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * Visitor_Expr_Bool_ValPred_DoCompare::Comparer_ValPred
 
-bool sMatches(const ZValPred& iValPred, const ZVal_Any& iVal);
+Comparer_ValPred::Comparer_ValPred(
+	Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_ValPred> iExpr)
+:	Comparer(iBootstrap)
+,	fExpr(iExpr)
+	{}
 
+void Comparer_ValPred::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
+	{ pSetResult(sCompare_T(fExpr->GetValPred(), iExpr->GetValPred())); } 
+
+} // namespace Visitor_Expr_Bool_ValPred_DoCompare
 } // namespace ZooLib
-
-#endif // __ZValPred_Any__

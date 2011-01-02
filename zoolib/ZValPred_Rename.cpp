@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_ValPred_Any__
-#define __ZUtil_Strim_ValPred_Any__
-#include "zconfig.h"
-
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZValPred.h"
+#include "zoolib/ZValPred_Rename.h"
 
 namespace ZooLib {
 
-namespace ZUtil_Strim_ValPred_Any {
+ZRef<ZValComparand> sRenamed(
+	const std::map<std::string,std::string>& iRename,
+	const ZRef<ZValComparand>& iVal)
+	{
+	if (ZRef<ZValComparand_Name> as = iVal.DynamicCast<ZValComparand_Name>())
+		return new ZValComparand_Name(iRename.find(as->GetName())->second);
+	return iVal;
+	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Strim_ValPred_Any
-
-void sToStrim(const ZValPred& iValPred, const ZStrimW& iStrimW);
-
-} // namespace ZUtil_Strim_ValPred_Any
+ZValPred sRenamed(const std::map<std::string,std::string>& iRename, const ZValPred& iValPred)
+	{
+	return ZValPred(
+		sRenamed(iRename, iValPred.GetLHS()),
+		iValPred.GetComparator(),
+		sRenamed(iRename, iValPred.GetRHS()));
+	}
 
 } // namespace ZooLib
-
-#endif // __ZUtil_Strim_ValPred_Any__

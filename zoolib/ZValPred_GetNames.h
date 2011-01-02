@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_ValPred_Any__
-#define __ZUtil_Strim_ValPred_Any__
+#ifndef __ZValPred_GetNames__
+#define __ZValPred_GetNames__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
 #include "zoolib/ZValPred.h"
+
+#include <set>
 
 namespace ZooLib {
 
-namespace ZUtil_Strim_ValPred_Any {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Strim_ValPred_Any
-
-void sToStrim(const ZValPred& iValPred, const ZStrimW& iStrimW);
-
-} // namespace ZUtil_Strim_ValPred_Any
+std::set<std::string> sGetNames(const ZValPred& iValPred);
 
 } // namespace ZooLib
 
-#endif // __ZUtil_Strim_ValPred_Any__
+#endif // __ZValPred_GetNames__

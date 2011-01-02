@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVisitor_Expr_Bool_ValPred_Any_DoToStrim__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Bool_ValPred_Any.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZVisitor_Expr_Bool_DoToStrim.h"
 
 namespace ZooLib {
@@ -33,11 +33,11 @@ namespace ZooLib {
 
 class ZVisitor_Expr_Bool_ValPred_Any_DoToStrim
 :	public virtual ZVisitor_Expr_Bool_DoToStrim
-,	public virtual ZVisitor_Expr_Bool_ValPred_Any
+,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
 public:
 // From ZVisitor_Expr_Bool_ValPred
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iRep);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iRep);
 	};
 
 } // namespace ZooLib

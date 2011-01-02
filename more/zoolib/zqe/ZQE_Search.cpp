@@ -76,6 +76,8 @@ ZRef<Result> sSearch(ZRef<Walker> iWalker)
 			s.Writef("annotations: %d", theAnnoCount);
 		}
 
+	s << "\n";
+
 	RelHead theRelHead;
 	for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
 		theRelHead.insert(i->first);

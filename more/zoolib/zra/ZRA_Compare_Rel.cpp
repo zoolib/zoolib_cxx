@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZVisitor_Do_T.h"
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoCompare.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoCompare.h"
 #include "zoolib/zra/ZRA_Compare_Rel.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 
 namespace ZooLib {
@@ -55,7 +55,7 @@ class Comparer
 ,	public virtual Visitor_Expr_Rel_Product
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
-,	public virtual Visitor_Expr_Rel_Restrict_Any
+,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Select
 ,	public virtual Visitor_Expr_Rel_Union
 	{
@@ -69,7 +69,7 @@ public:
 	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>&) { pSetResult(-1); }
 	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>&) { pSetResult(-1); }
 	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>&) { pSetResult(-1); }
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>&) { pSetResult(-1); }
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>&) { pSetResult(-1); }
 	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>&) { pSetResult(-1); }
 	virtual void Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>&) { pSetResult(-1); }
 
@@ -117,7 +117,7 @@ struct Comparer_GT_Rename : public Comparer_GT_Project
 	{ virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>&) { pSetResult(1); } };
 
 struct Comparer_GT_Restrict : public Comparer_GT_Rename
-	{ virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>&) { pSetResult(1); } };
+	{ virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>&) { pSetResult(1); } };
 
 struct Comparer_GT_Select : public Comparer_GT_Restrict
 	{ virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>&) { pSetResult(1); } };
@@ -240,9 +240,9 @@ struct Comparer_Rename : public Comparer_GT_Project
 
 struct Comparer_Restrict : public Comparer_GT_Rename
 	{
-	ZRef<Expr_Rel_Restrict_Any> fExpr;
-	Comparer_Restrict(ZRef<Expr_Rel_Restrict_Any> iExpr) : fExpr(iExpr) {}
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr)
+	ZRef<Expr_Rel_Restrict> fExpr;
+	Comparer_Restrict(ZRef<Expr_Rel_Restrict> iExpr) : fExpr(iExpr) {}
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetValPred(), iExpr->GetValPred()))
 			pSetResult(compare);
@@ -257,7 +257,7 @@ struct Comparer_Select : public Comparer_GT_Restrict
 	Comparer_Select(ZRef<Expr_Rel_Select> iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 		{
-		if (int compare = Visitor_Expr_Bool_ValPred_Any_DoCompare::Comparer_Bootstrap()
+		if (int compare = Visitor_Expr_Bool_ValPred_DoCompare::Comparer_Bootstrap()
 			.Compare(fExpr->GetExpr_Bool(), iExpr->GetExpr_Bool()))
 			{
 			pSetResult(compare);
@@ -296,7 +296,7 @@ struct Comparer_Bootstrap
 ,	public virtual Visitor_Expr_Rel_Product
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
-,	public virtual Visitor_Expr_Rel_Restrict_Any
+,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Select
 ,	public virtual Visitor_Expr_Rel_Union
 	{
@@ -330,7 +330,7 @@ struct Comparer_Bootstrap
 	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 		{ pSetResult(Comparer_Rename(iExpr).Do(fExpr)); } 
 
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr)
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 		{ pSetResult(Comparer_Restrict(iExpr).Do(fExpr)); } 
 
 	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)

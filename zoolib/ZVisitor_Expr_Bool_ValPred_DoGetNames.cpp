@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Expr_Rel_Restrict_Any__
-#define __ZRA_Expr_Rel_Restrict_Any__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZValPred_Any.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict_T.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoGetNames.h"
+#include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/ZValPred_GetNames.h"
 
 namespace ZooLib {
-namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Restrict
+#pragma mark * ZVisitor_Expr_Bool_ValPred_DoGetNames
 
-typedef Expr_Rel_Restrict_T<ZVal_Any> Expr_Rel_Restrict_Any;
+void ZVisitor_Expr_Bool_ValPred_DoGetNames::Visit_Expr_Bool_ValPred(
+	const ZRef<ZExpr_Bool_ValPred>& iExpr)
+	{ this->pSetResult(sGetNames(iExpr->GetValPred())); }
 
-typedef Visitor_Expr_Rel_Restrict_T<ZVal_Any> Visitor_Expr_Rel_Restrict_Any;
+void ZVisitor_Expr_Bool_ValPred_DoGetNames::Visit_Expr_Op1(
+	const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr)
+	{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
-} // namespace ZRA
+void ZVisitor_Expr_Bool_ValPred_DoGetNames::Visit_Expr_Op2(
+	const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr)
+	{ this->pSetResult(ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp1()))); }
+
+std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr)
+	{ return ZVisitor_Expr_Bool_ValPred_DoGetNames().Do(iExpr); }
+
 } // namespace ZooLib
-
-#endif // __ZRA_Expr_Rel_Restrict_Any__

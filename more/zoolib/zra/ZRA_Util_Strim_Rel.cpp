@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 #include "zoolib/zra/ZRA_GetRelHead.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
@@ -86,7 +86,7 @@ class Visitor_DoToStrim
 ,	public virtual Visitor_Expr_Rel_Const
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
-,	public virtual Visitor_Expr_Rel_Restrict_Any
+,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Select
 ,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Dee
@@ -102,7 +102,7 @@ public:
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
 	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
 	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
@@ -248,7 +248,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr
 	w << ")";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Restrict";

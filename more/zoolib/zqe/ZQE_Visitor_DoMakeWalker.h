@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 
 namespace ZooLib {
@@ -44,7 +44,7 @@ namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_DoMakeWalker_Any
+#pragma mark * Visitor_DoMakeWalker
 
 class Visitor_DoMakeWalker
 :	public virtual ZVisitor_Do_T<ZRef<Walker> >
@@ -57,7 +57,7 @@ class Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Const
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
-,	public virtual ZRA::Visitor_Expr_Rel_Restrict_Any
+,	public virtual ZRA::Visitor_Expr_Rel_Restrict
 ,	public virtual ZRA::Visitor_Expr_Rel_Select
 ,	public virtual ZRA::Visitor_Expr_Rel_Dee
 	{
@@ -72,7 +72,7 @@ public:
 	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr);
 	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict_Any>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr);
 	virtual void Visit_Expr_Rel_Select(const ZRef<ZRA::Expr_Rel_Select>& iExpr);
 
 	virtual void Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr);

@@ -26,7 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoToStrim.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
-#include "zoolib/ZValPred_Rename_T.h"
+#include "zoolib/ZValPred_Any.h"
+#include "zoolib/ZValPred_Rename.h"
 
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
@@ -35,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict_Any.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 #include "zoolib/zra/ZRA_Util_RelOperators.h"
 
@@ -54,7 +55,7 @@ using std::string;
 
 namespace { // anonymous
 
-static ZValPred_Any spRenamed(const Rename& iRename, const ZValPred_Any& iValPred)
+static ZValPred spRenamed(const Rename& iRename, const ZValPred& iValPred)
 	{ return ZooLib::sRenamed(iRename, iValPred); }
 
 } // anonymous namespace
@@ -67,12 +68,12 @@ namespace { // anonymous
 
 class DoRename
 :	public virtual ZVisitor_Expr_Op_DoTransform_T<ZExpr_Bool>
-,	public virtual ZVisitor_Expr_Bool_ValPred_Any
+,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
 public:
 	DoRename(const Rename& iRename);
 
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
 private:
 	const Rename& fRename;
 	};
@@ -81,8 +82,8 @@ DoRename::DoRename(const Rename& iRename)
 :	fRename(iRename)
 	{}
 
-void DoRename::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iExpr)
-	{ this->pSetResult(new ZExpr_Bool_ValPred_Any(spRenamed(fRename, iExpr->GetValPred()))); }
+void DoRename::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
+	{ this->pSetResult(new ZExpr_Bool_ValPred(spRenamed(fRename, iExpr->GetValPred()))); }
 
 static ZRef<ZExpr_Bool> spRenamed(const Rename& iRename, ZRef<ZExpr_Bool> iExpr_Bool)
 	{ return DoRename(iRename).Do(iExpr_Bool); }
@@ -114,7 +115,7 @@ class MakeThing
 ,	public virtual Visitor_Expr_Rel_Product
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
-,	public virtual Visitor_Expr_Rel_Restrict_Any
+,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Select
 ,	public virtual Visitor_Expr_Rel_Concrete
 	{
@@ -129,7 +130,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
 	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
@@ -181,7 +182,7 @@ void MakeThing::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	this->pSetResult(theThing);
 	}
 
-void MakeThing::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict_Any>& iExpr)
+void MakeThing::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	Thing theThing = this->Do(iExpr->GetOp0());
 	theThing.fCondition &= spRenamed(theThing.fRename, iExpr->GetValPred());
@@ -260,7 +261,7 @@ class ToStrim_SQL
 ,	public virtual ZVisitor_Expr_Bool_Not
 ,	public virtual ZVisitor_Expr_Bool_And
 ,	public virtual ZVisitor_Expr_Bool_Or
-,	public virtual ZVisitor_Expr_Bool_ValPred_Any
+,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
 public:
 	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep);
@@ -268,7 +269,7 @@ public:
 	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep);
 	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep);
 	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep);
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iRep);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iRep);
 	};
 
 void ToStrim_SQL::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep)
@@ -301,11 +302,6 @@ void ToStrim_SQL::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
 	this->pDoToStrim(iRep->GetOp1());
 	pStrimW() << ")";
 	}
-
-typedef ZValComparator_Simple_T<ZVal_Any> ZValComparator_Simple;
-typedef ZValComparand_Name_T<ZVal_Any> ZValComparand_Name;
-typedef ZValComparand_Var_T<ZVal_Any> ZValComparand_Var;
-typedef ZValComparand_Const_T<ZVal_Any> ZValComparand_Const;
 
 static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 	{
@@ -360,7 +356,7 @@ static void spWrite_PropName(const string8& iName, const ZStrimW& s)
 	s << iName;
 	}
 
-static void spToStrim(const ZRef<ZValPred_Any::Comparand>& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValComparand>& iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
@@ -370,11 +366,7 @@ static void spToStrim(const ZRef<ZValPred_Any::Comparand>& iCR, const ZStrimW& s
 		{
 		spWrite_PropName(cr->GetName(), s);
 		}
-	else if (ZRef<ZValComparand_Var> cr = iCR.DynamicCast<ZValComparand_Var>())
-		{
-		s << "$" << cr->GetVarName();
-		}
-	else if (ZRef<ZValComparand_Const> cr = iCR.DynamicCast<ZValComparand_Const>())
+	else if (ZRef<ZValComparand_Const_Any> cr = iCR.DynamicCast<ZValComparand_Const_Any>())
 		{
 		spToStrim_SimpleValue(s, cr->GetVal());
 		}
@@ -384,7 +376,7 @@ static void spToStrim(const ZRef<ZValPred_Any::Comparand>& iCR, const ZStrimW& s
 		}
 	}
 
-static void spToStrim(const ZRef<ZValPred_Any::Comparator>& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValComparator>& iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
@@ -409,6 +401,11 @@ static void spToStrim(const ZRef<ZValPred_Any::Comparator>& iCR, const ZStrimW& 
 				s << " = ";
 				break;
 				}
+			case ZValComparator_Simple::eNE:
+				{
+				s << " != ";
+				break;
+				}
 			case ZValComparator_Simple::eGE:
 				{
 				s << " >= ";
@@ -427,14 +424,14 @@ static void spToStrim(const ZRef<ZValPred_Any::Comparator>& iCR, const ZStrimW& 
 		}
 	}
 
-void spToStrim(const ZValPred_Any& iValPred, const ZStrimW& s)
+void spToStrim(const ZValPred& iValPred, const ZStrimW& s)
 	{
 	spToStrim(iValPred.GetLHS(), s);
 	spToStrim(iValPred.GetComparator(), s);
 	spToStrim(iValPred.GetRHS(), s);
 	}
 
-void ToStrim_SQL::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_Any>& iRep)
+void ToStrim_SQL::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iRep)
 	{ spToStrim(iRep->GetValPred(), pStrimW()); }
 
 } // anonymous namespace
