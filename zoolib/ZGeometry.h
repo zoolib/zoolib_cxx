@@ -422,39 +422,43 @@ public:
 	Ord T() const; // aka MinY
 	Ord B() const; // aka MaxY
 
-	ZGPoint_T<Ord> TL() const;
-	ZGPoint_T<Ord> TR() const;
-	ZGPoint_T<Ord> BL() const;
-	ZGPoint_T<Ord> BR() const;
+	ZGPoint_T<Ord> LT() const;
+	ZGPoint_T<Ord> RT() const;
+	ZGPoint_T<Ord> LB() const;
+	ZGPoint_T<Ord> RB() const;
 
 	Ord CenterX() const;
 	Ord CenterY() const;
 	ZGPoint_T<Ord> Center() const;
 
-	ZGRect_T<Ord> AlignedL(Ord iOrd) const;
-	ZGRect_T<Ord> AlignedT(Ord iOrd) const;
-	ZGRect_T<Ord> AlignedR(Ord iOrd) const;
-	ZGRect_T<Ord> AlignedB(Ord iOrd) const;
+	ZGRect_T<Ord> WithWidth(Ord iOrd) const;
+	ZGRect_T<Ord> WithHeight(Ord iOrd) const;
 
 	ZGRect_T<Ord> WithL(Ord iOrd) const;
 	ZGRect_T<Ord> WithT(Ord iOrd) const;
 	ZGRect_T<Ord> WithR(Ord iOrd) const;
 	ZGRect_T<Ord> WithB(Ord iOrd) const;
 
-	ZGRect_T<Ord> AlignedTL(ZGPoint_T<Ord> iPoint) const;
-	ZGRect_T<Ord> AlignedTR(ZGPoint_T<Ord> iPoint) const;
-	ZGRect_T<Ord> AlignedBL(ZGPoint_T<Ord> iPoint) const;
-	ZGRect_T<Ord> AlignedBR(ZGPoint_T<Ord> iPoint) const;
-
-	ZGRect_T<Ord> WithTL(ZGPoint_T<Ord> iPoint) const;
-	ZGRect_T<Ord> WithTR(ZGPoint_T<Ord> iPoint) const;
-	ZGRect_T<Ord> WithBL(ZGPoint_T<Ord> iPoint) const;
-	ZGRect_T<Ord> WithBR(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> WithLT(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> WithRT(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> WithLB(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> WithRB(ZGPoint_T<Ord> iPoint) const;
 
 	ZGRect_T<Ord> CenteredX(Ord iOrd) const;
 	ZGRect_T<Ord> CenteredY(Ord iOrd) const;
 	ZGRect_T<Ord> Centered(Ord iX, Ord iY) const;
 	ZGRect_T<Ord> Centered(ZGPoint_T<Ord> iPoint) const;
+
+	ZGRect_T<Ord> AlignedL(Ord iOrd) const;
+	ZGRect_T<Ord> AlignedT(Ord iOrd) const;
+	ZGRect_T<Ord> AlignedR(Ord iOrd) const;
+	ZGRect_T<Ord> AlignedB(Ord iOrd) const;
+
+	ZGRect_T<Ord> AlignedLT(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> AlignedRT(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> AlignedLB(ZGPoint_T<Ord> iPoint) const;
+	ZGRect_T<Ord> AlignedRB(ZGPoint_T<Ord> iPoint) const;
+
 
 	ZGRect_T<Ord> InsettedH(Ord iOrd) const;
 	ZGRect_T<Ord> InsettedV(Ord iOrd) const;
@@ -520,6 +524,7 @@ ZGRectPOD_T<Ord>& ZGRectPOD_T<Ord>::operator=(const ZGExtentPOD_T<U>& iExtent)
 	extent = iExtent;
 	return *this;
 	}
+
 template <class Ord>
 ZGPointPOD_T<Ord> ZGRectPOD_T<Ord>::Origin() const
 	{ return origin; }
@@ -553,20 +558,20 @@ Ord ZGRectPOD_T<Ord>::B() const
 	{ return extent.v < 0 ? origin.y : origin.y + extent.v; }
 
 template <class Ord>
-ZGPoint_T<Ord> ZGRectPOD_T<Ord>::TL() const
-	{ return ZGPoint_T<Ord>(this->MinX(), this->MinY()); }
+ZGPoint_T<Ord> ZGRectPOD_T<Ord>::LT() const
+	{ return ZGPoint_T<Ord>(this->L(), this->T()); }
 
 template <class Ord>
-ZGPoint_T<Ord> ZGRectPOD_T<Ord>::TR() const
-	{ return ZGPoint_T<Ord>(this->MaxX(), this->MinY()); }
+ZGPoint_T<Ord> ZGRectPOD_T<Ord>::RT() const
+	{ return ZGPoint_T<Ord>(this->R(), this->T()); }
 
 template <class Ord>
-ZGPoint_T<Ord> ZGRectPOD_T<Ord>::BL() const
-	{ return ZGPoint_T<Ord>(this->MinX(), this->MaxY()); }
+ZGPoint_T<Ord> ZGRectPOD_T<Ord>::LB() const
+	{ return ZGPoint_T<Ord>(this->L(), this->B()); }
 
 template <class Ord>
-ZGPoint_T<Ord> ZGRectPOD_T<Ord>::BR() const
-	{ return ZGPoint_T<Ord>(this->MaxX(), this->MaxY()); }
+ZGPoint_T<Ord> ZGRectPOD_T<Ord>::RB() const
+	{ return ZGPoint_T<Ord>(this->R(), this->B()); }
 
 template <class Ord>
 Ord ZGRectPOD_T<Ord>::CenterX() const
@@ -581,40 +586,12 @@ ZGPoint_T<Ord> ZGRectPOD_T<Ord>::Center() const
 	{ return ZGPoint_T<Ord>(this->CenterX(), this->CenterY()); }
 
 template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedL(Ord iOrd) const
-	{
-	if (extent.h >= 0)
-		return ZGRect_T<Ord>(iOrd, origin.y, extent);
-	else
-		return ZGRect_T<Ord>(iOrd - origin.x + extent.h, origin.y, extent);
-	}
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithWidth(Ord iOrd) const
+	{ return ZGRect_T<Ord>(origin, iOrd, extent.v); }
 
 template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedT(Ord iOrd) const
-	{
-	if (extent.v >= 0)
-		return ZGRect_T<Ord>(origin.x, iOrd, extent);
-	else
-		return ZGRect_T<Ord>(origin.x, iOrd - origin.y + extent.v, extent);
-	}
-
-template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedR(Ord iOrd) const
-	{
-	if (extent.h >= 0)
-		return ZGRect_T<Ord>(iOrd - extent.h, origin.y, extent);
-	else
-		return ZGRect_T<Ord>(iOrd, origin.y, extent);
-	}
-
-template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedB(Ord iOrd) const
-	{
-	if (extent.v >= 0)
-		return ZGRect_T<Ord>(origin.x, iOrd - extent.v, extent);
-	else
-		return ZGRect_T<Ord>(origin.x, iOrd, extent);
-	}
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithHeight(Ord iOrd) const
+	{ return ZGRect_T<Ord>(origin, extent.h, iOrd); }
 
 template <class Ord>
 ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithL(Ord iOrd) const
@@ -653,35 +630,19 @@ ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithB(Ord iOrd) const
 	}
 
 template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedTL(ZGPoint_T<Ord> iPoint) const
-	{ 	return this->AlignedT(iPoint.y).AlignedL(iPoint.x); }
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithLT(ZGPoint_T<Ord> iPoint) const
+	{ return this->WithT(iPoint.y).WithL(iPoint.x); }
 
 template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedTR(ZGPoint_T<Ord> iPoint) const
-	{ return this->AlignedT(iPoint.y).AlignedR(iPoint.x); }
-
-template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedBL(ZGPoint_T<Ord> iPoint) const
-	{ return this->AlignedB(iPoint.y).AlignedL(iPoint.x); }
-
-template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedBR(ZGPoint_T<Ord> iPoint) const
-	{ return this->AlignedB(iPoint.y).AlignedR(iPoint.x); }
-
-template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithTL(ZGPoint_T<Ord> iPoint) const
-	{ 	return this->WithT(iPoint.y).WithL(iPoint.x); }
-
-template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithTR(ZGPoint_T<Ord> iPoint) const
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithRT(ZGPoint_T<Ord> iPoint) const
 	{ return this->WithT(iPoint.y).WithR(iPoint.x); }
 
 template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithBL(ZGPoint_T<Ord> iPoint) const
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithLB(ZGPoint_T<Ord> iPoint) const
 	{ return this->WithB(iPoint.y).WithL(iPoint.x); }
 
 template <class Ord>
-ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithBR(ZGPoint_T<Ord> iPoint) const
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::WithRB(ZGPoint_T<Ord> iPoint) const
 	{ return this->WithB(iPoint.y).WithR(iPoint.x); }
 
 template <class Ord>
@@ -699,6 +660,58 @@ ZGRect_T<Ord> ZGRectPOD_T<Ord>::Centered(Ord iX, Ord iY) const
 template <class Ord>
 ZGRect_T<Ord> ZGRectPOD_T<Ord>::Centered(ZGPoint_T<Ord> iPoint) const
 	{ return this->Centered(iPoint.x, iPoint.y); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedL(Ord iOrd) const
+	{
+	if (extent.h >= 0)
+		return ZGRect_T<Ord>(iOrd, origin.y, extent);
+	else
+		return ZGRect_T<Ord>(iOrd - origin.x + extent.h, origin.y, extent);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedT(Ord iOrd) const
+	{
+	if (extent.v >= 0)
+		return ZGRect_T<Ord>(origin.x, iOrd, extent);
+	else
+		return ZGRect_T<Ord>(origin.x, iOrd - origin.y + extent.v, extent);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedR(Ord iOrd) const
+	{
+	if (extent.h >= 0)
+		return ZGRect_T<Ord>(iOrd - extent.h, origin.y, extent);
+	else
+		return ZGRect_T<Ord>(iOrd, origin.y, extent);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedB(Ord iOrd) const
+	{
+	if (extent.v >= 0)
+		return ZGRect_T<Ord>(origin.x, iOrd - extent.v, extent);
+	else
+		return ZGRect_T<Ord>(origin.x, iOrd, extent);
+	}
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedLT(ZGPoint_T<Ord> iPoint) const
+	{ return this->AlignedT(iPoint.y).AlignedL(iPoint.x); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedRT(ZGPoint_T<Ord> iPoint) const
+	{ return this->AlignedT(iPoint.y).AlignedR(iPoint.x); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedLB(ZGPoint_T<Ord> iPoint) const
+	{ return this->AlignedB(iPoint.y).AlignedL(iPoint.x); }
+
+template <class Ord>
+ZGRect_T<Ord> ZGRectPOD_T<Ord>::AlignedRB(ZGPoint_T<Ord> iPoint) const
+	{ return this->AlignedB(iPoint.y).AlignedR(iPoint.x); }
 
 template <class Ord>
 ZGRect_T<Ord> ZGRectPOD_T<Ord>::InsettedH(Ord iOrd) const
