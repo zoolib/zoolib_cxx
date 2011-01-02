@@ -55,7 +55,7 @@ public:
 	#ifdef __OBJC__
 
 	template <class Callable>
-	void Add(SEL iSEL, ZRef<Callable> iCallable);
+	void Set(SEL iSEL, ZRef<Callable> iCallable);
 
 	operator id();
 
@@ -70,46 +70,46 @@ private:
 	class Wrapper;
 
 	ZooLib_ZDelegate_Proxy* fProxy;
-	std::map<SEL, Wrapper*> fWrappers;
+	std::map<SEL, ZRef<Wrapper> > fWrappers;
 
 	#ifdef __OBJC__
 
 	template <class Signature> class Wrapper_T;
 
 	template <class R>
-	static Wrapper* spMakeWrapper(ZRef<ZCallable<R(void)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(void)> > iCallable);
 
 	template <class R,
 		class P0>
-	static Wrapper* spMakeWrapper(ZRef<ZCallable<R(P0)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0)> > iCallable);
 	
 	template <class R,
 		class P0, class P1>
-	static Wrapper* spMakeWrapper(ZRef<ZCallable<R(P0,P1)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1)> > iCallable);
 
 	template <class R,
 		class P0, class P1, class P2>
-	static Wrapper* spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2)> > iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3>
-	static Wrapper* spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4>
-	static Wrapper* spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4, class P5>
-	static Wrapper* spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4, class P5, class P6>
-	static Wrapper* spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
-	static Wrapper* spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable);
 
 	#endif // __OBJC__
 	};
@@ -121,6 +121,7 @@ private:
 #pragma mark * ZDelegate::Wrapper
 
 class ZDelegate::Wrapper
+:	public ZCounted
 	{
 	friend class ZDelegate;
 
@@ -819,42 +820,50 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)> : public ZDelegate::Wr
 
 template <class R,
 	class P0>
-ZDelegate::Wrapper* ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0)> > iCallable)
+ZRef<ZDelegate::Wrapper>
+ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0)> > iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0)>(iCallable); }
 
 template <class R,
 	class P0, class P1>
-ZDelegate::Wrapper* ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1)> > iCallable)
+ZRef<ZDelegate::Wrapper>
+ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1)> > iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2>
-ZDelegate::Wrapper* ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2)> > iCallable)
+ZRef<ZDelegate::Wrapper>
+ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2)> > iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2, class P3>
-ZDelegate::Wrapper* ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable)
+ZRef<ZDelegate::Wrapper>
+ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4>
-ZDelegate::Wrapper* ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable)
+ZRef<ZDelegate::Wrapper>
+ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4, class P5>
-ZDelegate::Wrapper* ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable)
+ZRef<ZDelegate::Wrapper>
+ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4, class P5, class P6>
-ZDelegate::Wrapper* ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable)
+ZRef<ZDelegate::Wrapper>
+ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
-ZDelegate::Wrapper* ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable)
+ZRef<ZDelegate::Wrapper>
+ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6,P7)>(iCallable); }
 
 // =================================================================================================
@@ -862,10 +871,12 @@ ZDelegate::Wrapper* ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,
 #pragma mark * ZDelegate::Add
 
 template <class Callable>
-void ZDelegate::Add(SEL iSEL, ZRef<Callable> iCallable)
+void ZDelegate::Set(SEL iSEL, ZRef<Callable> iCallable)
 	{
-	ZAssert(fWrappers.end() == fWrappers.find(iSEL));
-	fWrappers[iSEL] = spMakeWrapper(iCallable);
+	if (iCallable)
+		fWrappers[iSEL] = spMakeWrapper(iCallable);
+	else
+		fWrappers.erase(iSEL);
 	}
 
 #endif // __OBJC__

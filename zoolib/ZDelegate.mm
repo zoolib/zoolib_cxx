@@ -96,8 +96,6 @@ ZDelegate::~ZDelegate()
 	{
 	fProxy->fDelegate = nil;
 	[fProxy release];
-	for (map<SEL, Wrapper*>::iterator i = fWrappers.begin(); i != fWrappers.end(); ++i)
-		delete i->second;
 	}
 
 ZDelegate::operator id()
@@ -108,14 +106,14 @@ BOOL ZDelegate::pRespondsToSelector(SEL aSelector)
 
 void ZDelegate::pForwardInvocation(NSInvocation* anInvocation)
 	{
-	map<SEL, Wrapper*>::iterator i = fWrappers.find([anInvocation selector]);
+	map<SEL, ZRef<Wrapper> >::iterator i = fWrappers.find([anInvocation selector]);
 	if (fWrappers.end() != i)
 		i->second->ForwardInvocation(anInvocation);
 	}
 
 NSMethodSignature* ZDelegate::pMethodSignatureForSelector(SEL aSelector)
 	{
-	map<SEL, Wrapper*>::iterator i = fWrappers.find(aSelector);
+	map<SEL, ZRef<Wrapper> >::iterator i = fWrappers.find(aSelector);
 	if (fWrappers.end() != i)
 		return i->second->fNSMethodSignature;
 	return nil;
