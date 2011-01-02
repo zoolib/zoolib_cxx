@@ -187,33 +187,41 @@ ZQ<CGFloat> SectionBody_Concrete::QRowHeight(size_t iRowIndex)
 ZQ<NSInteger> SectionBody_Concrete::QIndentationLevel(size_t iRowIndex)
 	{ return fIndentationLevel; }
 
-bool SectionBody_Concrete::ButtonTapped(
-	UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex)
+bool SectionBody_Concrete::ButtonTapped(UITVController_WithSections* iTVC,
+	UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex)
 	{
 	if (fCallable_ButtonTapped)
-		return fCallable_ButtonTapped->Call(iTVC, iTableView, this, iRowIndex);
+		return fCallable_ButtonTapped->Call(iTVC, iTableView, iIndexPath, this, iRowIndex);
 	return false;
 	}
 
-ZQ<bool> SectionBody_Concrete::HasButton(size_t iRowIndex)
+ZQ<bool> SectionBody_Concrete::HasButton(bool iEditing, size_t iRowIndex)
 	{
-	if (fCallable_ButtonTapped)
-		return true;
+	if (iEditing)
+		{
+		if (fCallable_ButtonTapped_Editing)
+			return true;
+		}
+	else
+		{
+		if (fCallable_ButtonTapped)
+			return true;
+		}
 	return null;
 	}
 
-bool SectionBody_Concrete::RowSelected(
-	UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex)
+bool SectionBody_Concrete::RowSelected(UITVController_WithSections* iTVC,
+	UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex)
 	{
 	if ([iTableView isEditing])
 		{
 		if (fCallable_RowSelected_Editing)
-			return fCallable_RowSelected_Editing->Call(iTVC, iTableView, this, iRowIndex);
+			return fCallable_RowSelected_Editing->Call(iTVC, iTableView, iIndexPath, this, iRowIndex);
 		}
 	else
 		{
 		if (fCallable_RowSelected)
-			return fCallable_RowSelected->Call(iTVC, iTableView, this, iRowIndex);
+			return fCallable_RowSelected->Call(iTVC, iTableView, iIndexPath, this, iRowIndex);
 		}
 	return false;
 	}
@@ -484,35 +492,36 @@ ZQ<NSInteger> SectionBody_Multi::QIndentationLevel(size_t iRowIndex)
 	return null;
 	}
 
-bool SectionBody_Multi::ButtonTapped(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex)
+bool SectionBody_Multi::ButtonTapped(UITVController_WithSections* iTVC,
+	UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex)
 	{
 	size_t localRowIndex;
 	if (ZRef<SectionBody> theBody = this->pGetBodyAndRowIndex(localRowIndex, iRowIndex))
 		{
-		if (theBody->ButtonTapped(iTVC, iTableView, localRowIndex))
+		if (theBody->ButtonTapped(iTVC, iTableView, iIndexPath, localRowIndex))
 			return true;
 		}
 	return false;
 	}
 
-ZQ<bool> SectionBody_Multi::HasButton(size_t iRowIndex)
+ZQ<bool> SectionBody_Multi::HasButton(bool iEditing, size_t iRowIndex)
 	{
 	size_t localRowIndex;
 	if (ZRef<SectionBody> theBody = this->pGetBodyAndRowIndex(localRowIndex, iRowIndex))
 		{
-		if (ZQ<bool> theQ = theBody->HasButton(localRowIndex))
+		if (ZQ<bool> theQ = theBody->HasButton(iEditing, localRowIndex))
 			return theQ;
 		}
 	return null;
 	}
 
 bool SectionBody_Multi::RowSelected(UITVController_WithSections* iTVC,
-	UITableView* iTableView, size_t iRowIndex)
+	UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex)
 	{
 	size_t localRowIndex;
 	if (ZRef<SectionBody> theBody = this->pGetBodyAndRowIndex(localRowIndex, iRowIndex))
 		{
-		if (theBody->RowSelected(iTVC, iTableView, localRowIndex))
+		if (theBody->RowSelected(iTVC, iTableView, iIndexPath, localRowIndex))
 			return true;
 		}
 	return false;
@@ -633,31 +642,45 @@ using namespace ZooLib::UIKit;
 		if (ZRef<UITableViewCell> theCell =
 			theSection->GetBody()->UITableViewCellForRow(tableView, theRowIndex))
 			{
-			if (ZQ<bool> theQ = theSection->GetBody()->HasButton(theRowIndex))
+			UITableViewCellAccessoryType theAccessoryType = UITableViewCellAccessoryNone;
+			if (![theCell accessoryView])
 				{
-				if (theQ.Get())
-					[theCell setAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
-				else
-					[theCell setEditingAccessoryType:UITableViewCellAccessoryNone];
+				if (ZQ<bool> theQ = theSection->GetBody()->HasButton(false, theRowIndex))
+					{
+					if (theQ.Get())
+						theAccessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+					}
 				}
-			else
+
+			if (theAccessoryType == UITableViewCellAccessoryNone)
 				{
 				if (ZQ<bool> theQ = theSection->GetBody()->CanSelect(false, theRowIndex))
 					{
 					if (theQ.Get())
-						[theCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-					else
-						[theCell setAccessoryType:UITableViewCellAccessoryNone];
+						theAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
 					}
+				}
+			[theCell setAccessoryType:theAccessoryType];
 
+			UITableViewCellAccessoryType theEditingAccessoryType = UITableViewCellAccessoryNone;
+			if (![theCell editingAccessoryView])
+				{
+				if (ZQ<bool> theQ = theSection->GetBody()->HasButton(true, theRowIndex))
+					{
+					if (theQ.Get())
+						theEditingAccessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+					}
+				}
+
+			if (theEditingAccessoryType == UITableViewCellAccessoryNone)
+				{
 				if (ZQ<bool> theQ = theSection->GetBody()->CanSelect(true, theRowIndex))
 					{
 					if (theQ.Get())
-						[theCell setEditingAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-					else
-						[theCell setEditingAccessoryType:UITableViewCellAccessoryNone];
+						theEditingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
 					}
 				}
+			[theCell setEditingAccessoryType:theEditingAccessoryType];
 
 			return [theCell.Orphan() autorelease];
 			}
@@ -740,13 +763,13 @@ using namespace ZooLib::UIKit;
 	accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
-		theSection->GetBody()->ButtonTapped(self, tableView, indexPath.row);
+		theSection->GetBody()->ButtonTapped(self, tableView, indexPath, indexPath.row);
 	}
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
-		theSection->GetBody()->RowSelected(self, tableView, indexPath.row);
+		theSection->GetBody()->RowSelected(self, tableView, indexPath, indexPath.row);
 	}
 
 - (BOOL)tableView:(UITableView *)tableView

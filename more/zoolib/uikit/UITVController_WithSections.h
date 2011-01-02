@@ -128,17 +128,19 @@ public:
 	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex) = 0;
 	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex) = 0;
 
-	virtual bool ButtonTapped(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex) = 0;
-	virtual ZQ<bool> HasButton(size_t iRowIndex) = 0;
+	virtual bool ButtonTapped(UITVController_WithSections* iTVC,
+		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex) = 0;
+	virtual ZQ<bool> HasButton(bool iEditing, size_t iRowIndex) = 0;
 
-	virtual bool RowSelected(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex) = 0;
-	virtual ZQ<bool> CanSelect(bool iIEditing, size_t iRowIndex) = 0;
+	virtual bool RowSelected(UITVController_WithSections* iTVC,
+		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex) = 0;
+	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex) = 0;
 
 	typedef ZCallable<ZRef<UITableViewCell>(UITableView*,size_t)> Callable_GetCell;
 
-	typedef ZCallable<bool(UITVController_WithSections*,UITableView*,ZRef<SectionBody>,size_t)> Callable_ButtonTapped;
+	typedef ZCallable<bool(UITVController_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_ButtonTapped;
 
-	typedef ZCallable<bool(UITVController_WithSections*,UITableView*,ZRef<SectionBody>,size_t)> Callable_RowSelected;
+	typedef ZCallable<bool(UITVController_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_RowSelected;
 	};
 
 // =================================================================================================
@@ -190,11 +192,13 @@ public:
 	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex);
 	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex);
 
-	virtual bool ButtonTapped(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
-	virtual ZQ<bool> HasButton(size_t iRowIndex);
+	virtual bool ButtonTapped(UITVController_WithSections* iTVC,
+		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
+	virtual ZQ<bool> HasButton(bool iEditing, size_t iRowIndex);
 
-	virtual bool RowSelected(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
-	virtual ZQ<bool> CanSelect(bool iIEditing, size_t iRowIndex);
+	virtual bool RowSelected(UITVController_WithSections* iTVC,
+		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
+	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex);
 
 //
 	ZQ<UITableViewCellEditingStyle> fEditingStyle;
@@ -205,6 +209,7 @@ public:
 	ZRef<Callable_GetCell> fCallable_GetCell;
 
 	ZRef<Callable_ButtonTapped> fCallable_ButtonTapped;
+	ZRef<Callable_ButtonTapped> fCallable_ButtonTapped_Editing;
 
 	ZRef<Callable_RowSelected> fCallable_RowSelected;
 	ZRef<Callable_RowSelected> fCallable_RowSelected_Editing;
@@ -274,11 +279,13 @@ public:
 	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex);
 	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex);
 
-	virtual bool ButtonTapped(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
-	virtual ZQ<bool> HasButton(size_t iRowIndex);
+	virtual bool ButtonTapped(UITVController_WithSections* iTVC,
+		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
+	virtual ZQ<bool> HasButton(bool iEditing, size_t iRowIndex);
 
-	virtual bool RowSelected(UITVController_WithSections* iTVC, UITableView* iTableView, size_t iRowIndex);
-	virtual ZQ<bool> CanSelect(bool iIEditing, size_t iRowIndex);
+	virtual bool RowSelected(UITVController_WithSections* iTVC,
+		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
+	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex);
 
 	std::vector<ZRef<SectionBody> > fBodies_Pending;
 
