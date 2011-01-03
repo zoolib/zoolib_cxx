@@ -122,10 +122,18 @@ NSMutableData* sDataMutable(NSData* iNSData)
 #pragma mark * ZUtil_NSObject, conversions
 
 string8 sAsUTF8(NSString* iNSString)
-	{ return [iNSString UTF8String]; }
+	{
+	if (iNSString)
+		return [iNSString UTF8String];
+	return string8();
+	}
 
 string16 sAsUTF16(NSString* iNSString)
-	{ return ZUnicode::sAsUTF16([iNSString UTF8String]); }
+	{
+	if (iNSString)
+		return ZUnicode::sAsUTF16([iNSString UTF8String]);
+	return string16();
+	}
 
 ZAny sDAsAny(const ZAny& iDefault, NSObject* iVal)
 	{
