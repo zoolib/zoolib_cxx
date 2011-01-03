@@ -34,8 +34,6 @@ namespace ZooLib {
 \defgroup File
 General information about files and filesystems.
 
-
-
 \bug Locking is only guaranteed to work between processes. If you open a file
 with \a iPreventWriters == true and subsequently try to open the same
 file with write access it may still succeed. This could be handled in

@@ -637,7 +637,6 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5)> : public ZDelegate::Wrapper
 	ZRef<Callable> fCallable;
 	};
 
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDelegate::Wrapper_T (specialized for 7 params)

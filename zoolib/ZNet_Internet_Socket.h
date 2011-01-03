@@ -40,7 +40,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_API_Desired__Net_Internet_Socket 1
 #endif
 
-
 #if ZCONFIG_API_Enabled(Net_Internet_Socket)
 
 #include <vector>

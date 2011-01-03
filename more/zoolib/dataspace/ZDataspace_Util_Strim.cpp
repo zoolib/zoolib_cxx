@@ -43,6 +43,5 @@ const ZStrimW& operator<<(const ZStrimW& w, const set<RelHead>& iSet)
 	return w;
 	}
 
-
 } // namespace ZDataspace
 } // namespace ZooLib

@@ -50,7 +50,6 @@ class Make_NameLookup
 		}
 	} sMaker0;
 
-
 class Make_Listener
 :	public ZFunctionChain_T<ZRef<ZNetListener_Local>, ZNetListener_Local::MakeParam_t>
 	{
@@ -60,7 +59,6 @@ class Make_Listener
 		return true;
 		}
 	} sMaker1;
-
 
 class Make_Endpoint
 :	public ZFunctionChain_T<ZRef<ZNetEndpoint_Local>, ZNetEndpoint_Local::MakeParam_t>

@@ -33,7 +33,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_GetRelHead.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
-
 namespace ZooLib {
 namespace ZDataspace {
 

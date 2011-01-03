@@ -459,7 +459,6 @@ public:
 	ZGRect_T<Ord> AlignedLB(ZGPoint_T<Ord> iPoint) const;
 	ZGRect_T<Ord> AlignedRB(ZGPoint_T<Ord> iPoint) const;
 
-
 	ZGRect_T<Ord> InsettedH(Ord iOrd) const;
 	ZGRect_T<Ord> InsettedV(Ord iOrd) const;
 	ZGRect_T<Ord> Insetted(Ord iH, Ord iV) const;
@@ -925,7 +924,6 @@ template <class T>
 ZGExtentPOD_T<T>& operator+=(ZGExtentPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
 	{ l.h += r.h; l.h += r.v; return l; }
 
-
 template <class T>
 ZGExtentPOD_T<T> operator-(const ZGExtentPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
 	{ return ZGExtentPOD_T<T>(l.h - r.h, l.v - r.v); }
@@ -945,7 +943,6 @@ ZGPoint_T<T> operator+(const ZGPointPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
 template <class T>
 ZGPoint_T<T>& operator+=(ZGPoint_T<T>& l, const ZGExtentPOD_T<T>& r)
 	{ l.x += r.h; l.y += r.v; return l; }
-
 
 template <class T>
 ZGPoint_T<T> operator-(const ZGPointPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
@@ -970,7 +967,6 @@ ZGRect_T<T> operator+(const ZGRectPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
 template <class T>
 ZGRectPOD_T<T>& operator+=(ZGRectPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
 	{ l.origin += r; return l; }
-
 
 template <class T>
 ZGRect_T<T> operator-(const ZGRectPOD_T<T>& l, const ZGExtentPOD_T<T>& r)

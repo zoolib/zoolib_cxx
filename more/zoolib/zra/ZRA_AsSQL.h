@@ -38,7 +38,6 @@ namespace ZRA {
 
 bool sWriteAsSQL(const std::map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const ZStrimW& s);
 
-
 } // namespace ZRA
 } // namespace ZooLib
 

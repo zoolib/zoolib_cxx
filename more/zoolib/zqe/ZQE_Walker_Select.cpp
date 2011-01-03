@@ -36,7 +36,6 @@ public:
 	const ZVal_Any* fResults;
 	};
 
-
 maybe just bodge it for now -- pack all of iBindings and oResults into a ZMap_Any.
 
 class Visitor

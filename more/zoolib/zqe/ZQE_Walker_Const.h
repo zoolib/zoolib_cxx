@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZQE {
 
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Walker_Const

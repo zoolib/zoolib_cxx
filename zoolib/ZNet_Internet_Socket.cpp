@@ -52,7 +52,6 @@ class Make_NameLookup
 		}
 	} sMaker0;
 
-
 class Make_Listener4
 :	public ZFunctionChain_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam4_t>
 	{
@@ -63,7 +62,6 @@ class Make_Listener4
 		}
 	} sMaker1;
 
-
 class Make_Listener6
 :	public ZFunctionChain_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam6_t>
 	{
@@ -73,7 +71,6 @@ class Make_Listener6
 		return true;
 		}
 	} sMaker2;
-
 
 class Make_Endpoint4
 :	public ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam4_t>

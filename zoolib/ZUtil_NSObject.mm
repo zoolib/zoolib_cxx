@@ -82,7 +82,6 @@ NSMutableDictionary* sDictionaryMutable()
 NSMutableDictionary* sDictionaryMutable(NSDictionary* iNSDictionary)
 	{ return [NSMutableDictionary dictionaryWithDictionary:iNSDictionary]; }
 
-
 // -----
 
 NSArray* sArray()
