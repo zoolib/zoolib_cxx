@@ -54,7 +54,7 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor);
 
-	const RelName& GetRelName();
+	const RelName& GetRelName() const;
 
 private:
 	const RelName fRelName;

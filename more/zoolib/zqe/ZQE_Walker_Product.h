@@ -34,7 +34,7 @@ namespace ZQE {
 class Walker_Product : public Walker
 	{
 public:
-	Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_Right);
+	Walker_Product(const ZRef<Walker>& iWalker_Left, const ZRef<Walker>& iWalker_Right);
 	virtual ~Walker_Product();
 
 // From ZQE::Walker

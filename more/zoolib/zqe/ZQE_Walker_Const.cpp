@@ -30,7 +30,7 @@ using std::set;
 #pragma mark -
 #pragma mark * Walker_Const
 
-Walker_Const::Walker_Const(ZRef<Walker> iWalker,
+Walker_Const::Walker_Const(const ZRef<Walker>& iWalker,
 	const string8& iRelName, const ZVal_Any& iVal)
 :	Walker_Unary(iWalker)
 ,	fRelName(iRelName)

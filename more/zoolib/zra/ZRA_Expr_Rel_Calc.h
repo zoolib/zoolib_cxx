@@ -42,7 +42,7 @@ class Expr_Rel_Calc
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	typedef ZCallable<ZVal_Any(ZMap_Any)> Callable;
+	typedef ZCallable<ZVal_Any(const ZMap_Any&)> Callable;
 
 	Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
 		const RelName& iRelName, const ZRef<Callable>& iCallable);
@@ -61,8 +61,8 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor);
 
-	RelName GetRelName();
-	ZRef<Callable> GetCallable();
+	const RelName& GetRelName();
+	const ZRef<Callable>& GetCallable();
 
 private:
 	const RelName fRelName;

@@ -31,7 +31,7 @@ using std::vector;
 #pragma mark -
 #pragma mark * Walker_Product
 
-Walker_Product::Walker_Product(ZRef<Walker> iWalker_Left, ZRef<Walker> iWalker_Right)
+Walker_Product::Walker_Product(const ZRef<Walker>& iWalker_Left, const ZRef<Walker>& iWalker_Right)
 :	fWalker_Left(iWalker_Left)
 ,	fWalker_Right(iWalker_Right)
 ,	fNeedLoadLeft(true)

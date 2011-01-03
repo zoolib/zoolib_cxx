@@ -49,7 +49,8 @@ void Comparer_GT_ValPred::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>
 #pragma mark * Visitor_Expr_Bool_ValPred_DoCompare::Comparer_ValPred
 
 Comparer_ValPred::Comparer_ValPred(
-	Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_ValPred> iExpr)
+	Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap* iBootstrap,
+	const ZRef<ZExpr_Bool_ValPred>& iExpr)
 :	Comparer(iBootstrap)
 ,	fExpr(iExpr)
 	{}

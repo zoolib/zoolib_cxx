@@ -62,7 +62,7 @@ public:
 class Walker_Unary : public Walker
 	{
 protected:
-	Walker_Unary(ZRef<Walker> iWalker);
+	Walker_Unary(const ZRef<Walker>& iWalker);
 
 public:
 	virtual ~Walker_Unary();

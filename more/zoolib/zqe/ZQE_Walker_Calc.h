@@ -35,10 +35,10 @@ namespace ZQE {
 class Walker_Calc : public Walker_Unary
 	{
 public:
-	typedef ZCallable<ZVal_Any(ZMap_Any)> Callable;
+	typedef ZCallable<ZVal_Any(const ZMap_Any&)> Callable;
 	
-	Walker_Calc(ZRef<Walker> iWalker,
-		const string8& iRelName, ZRef<Callable> iCallable);
+	Walker_Calc(const ZRef<Walker>& iWalker,
+		const string8& iRelName, const ZRef<Callable>& iCallable);
 
 	virtual ~Walker_Calc();
 
@@ -54,7 +54,7 @@ public:
 private:
 	const string8 fRelName;
 	size_t fOutputOffset;
-	const ZRef<ZCallable<ZVal_Any(ZMap_Any)> > fCallable;
+	const ZRef<Callable> fCallable;
 	std::map<string8,size_t> fBindingOffsets;
 	std::map<string8,size_t> fChildOffsets;
 	};

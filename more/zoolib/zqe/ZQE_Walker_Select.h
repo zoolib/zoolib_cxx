@@ -48,7 +48,7 @@ public:
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
-	ZRef<ZExpr_Bool> fExpr_Bool;
+	const ZRef<ZExpr_Bool> fExpr_Bool;
 	std::map<string8,size_t> fBindingOffsets;
 	std::map<string8,size_t> fChildOffsets;
 	};

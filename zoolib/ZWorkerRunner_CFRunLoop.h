@@ -80,8 +80,8 @@ private:
 	void pWake(ZRef<ZWorker> iWorker, CFAbsoluteTime iAbsoluteTime);
 	void pTrigger(CFAbsoluteTime iAbsoluteTime);
 
-	void pRunLoopTimerCallBack();
-	static void spRunLoopTimerCallBack(CFRunLoopTimerRef iTimer, void* iRefcon);
+	void pCallback();
+	static void spCallback(CFRunLoopTimerRef iTimer, void* iRefcon);
 
 	ZRef<CFRunLoopRef> fRunLoop;
 	ZRef<CFRunLoopTimerRef> fRunLoopTimer;

@@ -37,7 +37,7 @@ Walker::~Walker()
 #pragma mark -
 #pragma mark * Walker_Unary
 
-Walker_Unary::Walker_Unary(ZRef<Walker> iWalker)
+Walker_Unary::Walker_Unary(const ZRef<Walker>& iWalker)
 :	fWalker(iWalker)
 	{}
 

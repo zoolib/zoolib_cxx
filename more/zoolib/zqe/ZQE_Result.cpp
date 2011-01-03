@@ -69,7 +69,7 @@ Result::Result(const ZRA::RelHead& iRelHead,
 		}
 	}
 
-Result::Result(ZRef<ZQE::Result> iOther, size_t iRow)
+Result::Result(const ZRef<ZQE::Result>& iOther, size_t iRow)
 :	fRelHead(iOther->GetRelHead())
 	{
 	if (iRow < iOther->Count())

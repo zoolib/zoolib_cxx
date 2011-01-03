@@ -62,10 +62,10 @@ ZRef<Expr_Rel> Expr_Rel_Calc::Clone(const ZRef<Expr_Rel>& iOp0)
 void Expr_Rel_Calc::Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Calc(this); }
 
-RelName Expr_Rel_Calc::GetRelName()
+const RelName& Expr_Rel_Calc::GetRelName()
 	{ return fRelName; }
 
-ZRef<Expr_Rel_Calc::Callable> Expr_Rel_Calc::GetCallable()
+const ZRef<Expr_Rel_Calc::Callable>& Expr_Rel_Calc::GetCallable()
 	{ return fCallable; }
 
 // =================================================================================================

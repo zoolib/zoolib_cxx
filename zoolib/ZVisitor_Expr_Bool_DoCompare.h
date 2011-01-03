@@ -47,7 +47,7 @@ protected:
 public:
 	Comparer_Bootstrap();
 
-	int Compare(ZRef<ZExpr_Bool> iLHS, ZRef<ZExpr_Bool> iRHS);
+	int Compare(const ZRef<ZExpr_Bool>& iLHS, const ZRef<ZExpr_Bool>& iRHS);
 
 	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>&);
 	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>&);
@@ -129,31 +129,31 @@ public:
 class Comparer_Not : public virtual Comparer_GT_False
 	{
 public:
-	Comparer_Not(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_Not> iExpr);
+	Comparer_Not(Comparer_Bootstrap* iBootstrap, const ZRef<ZExpr_Bool_Not>& iExpr);
 	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iExpr);
 
 private:
-	ZRef<ZExpr_Bool_Not> fExpr;
+	const ZRef<ZExpr_Bool_Not> fExpr;
 	};
 
 class Comparer_And : public virtual Comparer_GT_Not
 	{
 public:
-	Comparer_And(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_And> iExpr);
+	Comparer_And(Comparer_Bootstrap* iBootstrap, const ZRef<ZExpr_Bool_And>& iExpr);
 	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iExpr);
 
 private:
-	ZRef<ZExpr_Bool_And> fExpr;
+	const ZRef<ZExpr_Bool_And> fExpr;
 	};
 
 class Comparer_Or : public virtual Comparer_GT_And
 	{
 public:
-	Comparer_Or(Comparer_Bootstrap* iBootstrap, ZRef<ZExpr_Bool_Or> iExpr);
+	Comparer_Or(Comparer_Bootstrap* iBootstrap, const ZRef<ZExpr_Bool_Or>& iExpr);
 	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iExpr);
 
 private:
-	ZRef<ZExpr_Bool_Or> fExpr;
+	const ZRef<ZExpr_Bool_Or> fExpr;
 	};
 
 } // namespace Visitor_Expr_Bool_DoCompare

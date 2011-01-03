@@ -68,7 +68,7 @@ void sSemanticError(const string8& iMessage);
 class SetRestore_SemanticError
 	{
 public:
-	SetRestore_SemanticError(ZRef<Callable_SemanticError> iCallable);
+	SetRestore_SemanticError(const ZRef<Callable_SemanticError>& iCallable);
 	~SetRestore_SemanticError();
 
 private:

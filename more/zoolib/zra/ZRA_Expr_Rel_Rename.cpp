@@ -64,10 +64,10 @@ ZRef<Expr_Rel> Expr_Rel_Rename::Clone(const ZRef<Expr_Rel>& iOp0)
 void Expr_Rel_Rename::Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Rename(this); }
 
-const RelName& Expr_Rel_Rename::GetNew()
+const RelName& Expr_Rel_Rename::GetNew() const
 	{ return fNew; }
 
-const RelName& Expr_Rel_Rename::GetOld()
+const RelName& Expr_Rel_Rename::GetOld() const
 	{ return fOld; }
 
 // =================================================================================================

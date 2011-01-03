@@ -56,7 +56,7 @@ ZRef<Expr_Rel> Expr_Rel_Concrete::Clone()
 void Expr_Rel_Concrete::Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Concrete(this); }
 
-RelHead Expr_Rel_Concrete::GetConcreteRelHead()
+const RelHead& Expr_Rel_Concrete::GetConcreteRelHead() const
 	{ return fRelHead; }
 
 // =================================================================================================

@@ -56,7 +56,7 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Select(Visitor_Expr_Rel_Select& iVisitor);
 
-	ZRef<ZExpr_Bool> GetExpr_Bool();
+	const ZRef<ZExpr_Bool>& GetExpr_Bool() const;
 
 private:
 	const ZRef<ZExpr_Bool> fExpr_Bool;

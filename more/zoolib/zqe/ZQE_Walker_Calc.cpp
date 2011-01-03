@@ -31,8 +31,8 @@ using std::vector;
 #pragma mark -
 #pragma mark * Walker_Calc
 
-Walker_Calc::Walker_Calc(ZRef<Walker> iWalker,
-	const string8& iRelName, ZRef<Callable> iCallable)
+Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
+	const string8& iRelName, const ZRef<Callable>& iCallable)
 :	Walker_Unary(iWalker)
 ,	fRelName(iRelName)
 ,	fCallable(iCallable)

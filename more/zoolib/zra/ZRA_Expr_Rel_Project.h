@@ -56,7 +56,7 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Project(Visitor_Expr_Rel_Project& iVisitor);
 
-	const RelHead& GetProjectRelHead();
+	const RelHead& GetProjectRelHead() const;
 
 private:
 	const RelHead fRelHead;

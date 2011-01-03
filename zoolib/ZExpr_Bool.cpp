@@ -111,7 +111,7 @@ void ZVisitor_Expr_Bool_False::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False
 #pragma mark -
 #pragma mark * ZExpr_Bool_Not
 
-ZExpr_Bool_Not::ZExpr_Bool_Not(ZRef<ZExpr_Bool> iOp0)
+ZExpr_Bool_Not::ZExpr_Bool_Not(const ZRef<ZExpr_Bool>& iOp0)
 :	inherited(iOp0)
 	{}
 
@@ -151,7 +151,7 @@ void ZVisitor_Expr_Bool_Not::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iEx
 #pragma mark -
 #pragma mark * ZExpr_Bool_And
 
-ZExpr_Bool_And::ZExpr_Bool_And(ZRef<ZExpr_Bool> iOp0, ZRef<ZExpr_Bool> iOp1)
+ZExpr_Bool_And::ZExpr_Bool_And(const ZRef<ZExpr_Bool>& iOp0, const ZRef<ZExpr_Bool>& iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
@@ -191,7 +191,7 @@ void ZVisitor_Expr_Bool_And::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iEx
 #pragma mark -
 #pragma mark * ZExpr_Bool_Or
 
-ZExpr_Bool_Or::ZExpr_Bool_Or(ZRef<ZExpr_Bool> iOp0, ZRef<ZExpr_Bool> iOp1)
+ZExpr_Bool_Or::ZExpr_Bool_Or(const ZRef<ZExpr_Bool>& iOp0, const ZRef<ZExpr_Bool>& iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 

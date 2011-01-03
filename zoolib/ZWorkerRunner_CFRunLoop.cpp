@@ -65,7 +65,7 @@ ZWorkerRunner_CFRunLoop::ZWorkerRunner_CFRunLoop(ZRef<CFRunLoopRef> iRunLoop)
 		1000000, // interval, needs to be non-zero
 		0, // flags
 		0, // order
-		spRunLoopTimerCallBack,
+		spCallback,
 		&theContext));
 
 	::CFRunLoopAddTimer(fRunLoop, fRunLoopTimer, kCFRunLoopCommonModes);
@@ -137,7 +137,7 @@ void ZWorkerRunner_CFRunLoop::pTrigger(CFAbsoluteTime iAbsoluteTime)
 		::CFRunLoopTimerSetNextFireDate(fRunLoopTimer, iAbsoluteTime);
 	}
 
-void ZWorkerRunner_CFRunLoop::pRunLoopTimerCallBack()
+void ZWorkerRunner_CFRunLoop::pCallback()
 	{
 	const CFAbsoluteTime now = ::CFAbsoluteTimeGetCurrent();
 	// Reset our next fire date now, so any call to pTrigger has a
@@ -191,10 +191,10 @@ void ZWorkerRunner_CFRunLoop::pRunLoopTimerCallBack()
 		}
 	}
 
-void ZWorkerRunner_CFRunLoop::spRunLoopTimerCallBack(CFRunLoopTimerRef iTimer, void* iRefcon)
+void ZWorkerRunner_CFRunLoop::spCallback(CFRunLoopTimerRef iTimer, void* iRefcon)
 	{
 	if (ZRef<ZWorkerRunner_CFRunLoop> theRunner = static_cast<ZWorkerRunner_CFRunLoop*>(iRefcon))
-		theRunner->pRunLoopTimerCallBack();
+		theRunner->pCallback();
 	}
 
 } // namespace ZooLib

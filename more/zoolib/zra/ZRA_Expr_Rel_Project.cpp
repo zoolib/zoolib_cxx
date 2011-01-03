@@ -60,7 +60,7 @@ ZRef<Expr_Rel> Expr_Rel_Project::Clone(const ZRef<Expr_Rel>& iOp0)
 void Expr_Rel_Project::Accept_Expr_Rel_Project(Visitor_Expr_Rel_Project& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Project(this); }
 
-const RelHead& Expr_Rel_Project::GetProjectRelHead()
+const RelHead& Expr_Rel_Project::GetProjectRelHead() const
 	{ return fRelHead; }
 
 // =================================================================================================

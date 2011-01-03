@@ -63,10 +63,10 @@ ZRef<Expr_Rel> Expr_Rel_Const::Clone(const ZRef<Expr_Rel>& iOp0)
 void Expr_Rel_Const::Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Const(this); }
 
-RelName Expr_Rel_Const::GetRelName()
+const RelName& Expr_Rel_Const::GetRelName() const
 	{ return fRelName; }
 
-const ZVal_Any& Expr_Rel_Const::GetVal()
+const ZVal_Any& Expr_Rel_Const::GetVal() const
 	{ return fVal; }
 
 // =================================================================================================

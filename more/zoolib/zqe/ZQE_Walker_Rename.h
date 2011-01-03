@@ -34,7 +34,7 @@ namespace ZQE {
 class Walker_Rename : public Walker_Unary
 	{
 public:
-	Walker_Rename(ZRef<Walker> iWalker, const string8& iNew, const string8& iOld);
+	Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, const string8& iOld);
 	virtual ~Walker_Rename();
 
 // From ZQE::Walker

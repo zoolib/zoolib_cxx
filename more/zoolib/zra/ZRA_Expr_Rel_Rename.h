@@ -57,8 +57,8 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor);
 
-	const RelName& GetNew();
-	const RelName& GetOld();
+	const RelName& GetNew() const;
+	const RelName& GetOld() const;
 
 private:
 	const RelName fNew;

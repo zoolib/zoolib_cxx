@@ -38,6 +38,10 @@ namespace ZooLib {
 
 using namespace ZRA;
 
+//## Note that we'll need a more complex scheme, like that in ZVisitor_Expr_Bool_DoCompare
+// when we expand the range of expr_rels we're matching.
+
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Comparer and default derivations (anonymous)
@@ -73,16 +77,19 @@ public:
 	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>&) { pSetResult(-1); }
 	virtual void Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>&) { pSetResult(-1); }
 
-	int CompareUnary(ZRef<ZExpr_Op1_T<Expr_Rel> > iLHS, ZRef<ZExpr_Op1_T<Expr_Rel> > iRHS);
-	int CompareBinary(ZRef<ZExpr_Op2_T<Expr_Rel> > iLHS, ZRef<ZExpr_Op2_T<Expr_Rel> > iRHS);
+	int CompareUnary(
+		const ZRef<ZExpr_Op1_T<Expr_Rel> >& iLHS, const ZRef<ZExpr_Op1_T<Expr_Rel> >& iRHS);
+
+	int CompareBinary(
+		const ZRef<ZExpr_Op2_T<Expr_Rel> >& iLHS, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iRHS);
 	};
 
-int Comparer::CompareUnary(ZRef<ZExpr_Op1_T<Expr_Rel> > iLHS, ZRef<ZExpr_Op1_T<Expr_Rel> > iRHS)
-	{
-	return sCompare_T(iLHS->GetOp0(), iRHS->GetOp0());
-	}
+int Comparer::CompareUnary(
+	const ZRef<ZExpr_Op1_T<Expr_Rel> >& iLHS, const ZRef<ZExpr_Op1_T<Expr_Rel> >& iRHS)
+	{ return sCompare_T(iLHS->GetOp0(), iRHS->GetOp0()); }
 
-int Comparer::CompareBinary(ZRef<ZExpr_Op2_T<Expr_Rel> > iLHS, ZRef<ZExpr_Op2_T<Expr_Rel> > iRHS)
+int Comparer::CompareBinary(
+	const ZRef<ZExpr_Op2_T<Expr_Rel> >& iLHS, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iRHS)
 	{
 	if (int compare = sCompare_T(iLHS->GetOp0(), iRHS->GetOp0()))
 		return compare;
@@ -135,8 +142,8 @@ namespace { // anonymous
 
 struct Comparer_Calc : public Comparer
 	{
-	ZRef<Expr_Rel_Calc> fExpr;
-	Comparer_Calc(ZRef<Expr_Rel_Calc> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Calc> fExpr;
+	Comparer_Calc(const ZRef<Expr_Rel_Calc>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetRelName(), iExpr->GetRelName()))
@@ -152,16 +159,16 @@ struct Comparer_Calc : public Comparer
 
 struct Comparer_Concrete : public Comparer_GT_Calc
 	{
-	ZRef<Expr_Rel_Concrete> fExpr;
-	Comparer_Concrete(ZRef<Expr_Rel_Concrete> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Concrete> fExpr;
+	Comparer_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 		{ pSetResult(sCompare_T(fExpr->GetConcreteRelHead(), iExpr->GetConcreteRelHead())); }
 	};
 
 struct Comparer_Const : public Comparer_GT_Concrete
 	{
-	ZRef<Expr_Rel_Const> fExpr;
-	Comparer_Const(ZRef<Expr_Rel_Const> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Const> fExpr;
+	Comparer_Const(const ZRef<Expr_Rel_Const>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetRelName(), iExpr->GetRelName()))
@@ -175,16 +182,16 @@ struct Comparer_Const : public Comparer_GT_Concrete
 
 struct Comparer_Difference : public Comparer_GT_Const
 	{
-	ZRef<Expr_Rel_Difference> fExpr;
-	Comparer_Difference(ZRef<Expr_Rel_Difference> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Difference> fExpr;
+	Comparer_Difference(const ZRef<Expr_Rel_Difference>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
 		{ pSetResult(CompareBinary(fExpr, iExpr)); }
 	};
 
 struct Comparer_Embed : public Comparer_GT_Difference
 	{
-	ZRef<Expr_Rel_Embed> fExpr;
-	Comparer_Embed(ZRef<Expr_Rel_Embed> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Embed> fExpr;
+	Comparer_Embed(const ZRef<Expr_Rel_Embed>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetRelName(), iExpr->GetRelName()))
@@ -196,24 +203,24 @@ struct Comparer_Embed : public Comparer_GT_Difference
 
 struct Comparer_Intersect : public Comparer_GT_Embed
 	{
-	ZRef<Expr_Rel_Intersect> fExpr;
-	Comparer_Intersect(ZRef<Expr_Rel_Intersect> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Intersect> fExpr;
+	Comparer_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr)
 		{ pSetResult(CompareBinary(fExpr, iExpr)); }
 	};
 
 struct Comparer_Product : public Comparer_GT_Intersect
 	{
-	ZRef<Expr_Rel_Product> fExpr;
-	Comparer_Product(ZRef<Expr_Rel_Product> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Product> fExpr;
+	Comparer_Product(const ZRef<Expr_Rel_Product>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 		{ pSetResult(CompareBinary(fExpr, iExpr)); }
 	};
 
 struct Comparer_Project : public Comparer_GT_Product
 	{
-	ZRef<Expr_Rel_Project> fExpr;
-	Comparer_Project(ZRef<Expr_Rel_Project> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Project> fExpr;
+	Comparer_Project(const ZRef<Expr_Rel_Project>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetProjectRelHead(), iExpr->GetProjectRelHead()))
@@ -225,8 +232,8 @@ struct Comparer_Project : public Comparer_GT_Product
 
 struct Comparer_Rename : public Comparer_GT_Project
 	{
-	ZRef<Expr_Rel_Rename> fExpr;
-	Comparer_Rename(ZRef<Expr_Rel_Rename> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Rename> fExpr;
+	Comparer_Rename(const ZRef<Expr_Rel_Rename>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetOld(), iExpr->GetOld()))
@@ -240,8 +247,8 @@ struct Comparer_Rename : public Comparer_GT_Project
 
 struct Comparer_Restrict : public Comparer_GT_Rename
 	{
-	ZRef<Expr_Rel_Restrict> fExpr;
-	Comparer_Restrict(ZRef<Expr_Rel_Restrict> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Restrict> fExpr;
+	Comparer_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 		{
 		if (int compare = sCompare_T(fExpr->GetValPred(), iExpr->GetValPred()))
@@ -253,11 +260,12 @@ struct Comparer_Restrict : public Comparer_GT_Rename
 
 struct Comparer_Select : public Comparer_GT_Restrict
 	{
-	ZRef<Expr_Rel_Select> fExpr;
-	Comparer_Select(ZRef<Expr_Rel_Select> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Select> fExpr;
+	Comparer_Select(const ZRef<Expr_Rel_Select>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 		{
-		if (int compare = Visitor_Expr_Bool_ValPred_DoCompare::Comparer_Bootstrap()
+		if (int compare =
+			Visitor_Expr_Bool_ValPred_DoCompare::Comparer_Bootstrap()
 			.Compare(fExpr->GetExpr_Bool(), iExpr->GetExpr_Bool()))
 			{
 			pSetResult(compare);
@@ -271,8 +279,8 @@ struct Comparer_Select : public Comparer_GT_Restrict
 
 struct Comparer_Union : public Comparer_GT_Select
 	{
-	ZRef<Expr_Rel_Union> fExpr;
-	Comparer_Union(ZRef<Expr_Rel_Union> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel_Union> fExpr;
+	Comparer_Union(const ZRef<Expr_Rel_Union>& iExpr) : fExpr(iExpr) {}
 	virtual void Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
 		{ pSetResult(CompareBinary(fExpr, iExpr)); }
 	};
@@ -281,7 +289,7 @@ struct Comparer_Union : public Comparer_GT_Select
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Bootstrap
+#pragma mark * Comparer_Bootstrap
 
 namespace { // anonymous
 
@@ -300,8 +308,9 @@ struct Comparer_Bootstrap
 ,	public virtual Visitor_Expr_Rel_Select
 ,	public virtual Visitor_Expr_Rel_Union
 	{
-	ZRef<Expr_Rel> fExpr;
-	Comparer_Bootstrap(ZRef<Expr_Rel> iExpr) : fExpr(iExpr) {}
+	const ZRef<Expr_Rel> fExpr;
+
+	Comparer_Bootstrap(const ZRef<Expr_Rel>& iExpr) : fExpr(iExpr) {}
 
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 		{ pSetResult(Comparer_Calc(iExpr).Do(fExpr)); } 

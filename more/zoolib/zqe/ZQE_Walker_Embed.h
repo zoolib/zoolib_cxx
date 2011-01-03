@@ -35,8 +35,8 @@ namespace ZQE {
 class Walker_Embed : public Walker_Unary
 	{
 public:
-	Walker_Embed(ZRef<Walker> iWalker,
-		const string8& iRelName, ZRef<Walker> iWalker_Ext);
+	Walker_Embed(const ZRef<Walker>& iWalker,
+		const string8& iRelName, const ZRef<Walker>& iWalker_Ext);
 
 	virtual ~Walker_Embed();
 

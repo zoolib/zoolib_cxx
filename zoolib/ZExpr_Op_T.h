@@ -130,7 +130,7 @@ public:
 	virtual ZRef<T> Self() = 0;
 	virtual ZRef<T> Clone(const ZRef<T>& iOp0) = 0;
 
-	const ZRef<T>& GetOp0()
+	const ZRef<T>& GetOp0() const
 		{ return fOp0; }
 
 private:
@@ -197,10 +197,10 @@ public:
 	virtual ZRef<T> Self() = 0;
 	virtual ZRef<T> Clone(const ZRef<T>& iOp0, const ZRef<T>& iOp1) = 0;
 
-	const ZRef<T>& GetOp0()
+	const ZRef<T>& GetOp0() const
 		{ return fOp0; }
 
-	const ZRef<T>& GetOp1()
+	const ZRef<T>& GetOp1() const
 		{ return fOp1; }
 
 private:

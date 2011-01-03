@@ -58,7 +58,7 @@ ZRef<Expr_Rel> Expr_Rel_Embed::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr
 void Expr_Rel_Embed::Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Embed(this); }
 
-const RelName& Expr_Rel_Embed::GetRelName()
+const RelName& Expr_Rel_Embed::GetRelName() const
 	{ return fRelName; }
 
 // =================================================================================================

@@ -60,7 +60,7 @@ ZRef<Expr_Rel> Expr_Rel_Select::Clone(const ZRef<Expr_Rel>& iOp0)
 void Expr_Rel_Select::Accept_Expr_Rel_Select( Visitor_Expr_Rel_Select& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Select(this); }
 
-ZRef<ZExpr_Bool> Expr_Rel_Select::GetExpr_Bool()
+const ZRef<ZExpr_Bool>& Expr_Rel_Select::GetExpr_Bool() const
 	{ return fExpr_Bool; }
 
 // =================================================================================================
@@ -71,7 +71,7 @@ void Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>&
 	{
 	this->Visit_Expr_Op1(iExpr);
 
-	if (ZRef<ZExpr_Bool> theExpr_Bool = iExpr->GetExpr_Bool())
+	if (const ZRef<ZExpr_Bool>& theExpr_Bool = iExpr->GetExpr_Bool())
 		theExpr_Bool->Accept(*this);
 	}
 

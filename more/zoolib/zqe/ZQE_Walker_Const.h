@@ -35,7 +35,7 @@ namespace ZQE {
 class Walker_Const : public Walker_Unary
 	{
 public:
-	Walker_Const(ZRef<Walker> iWalker, const string8& iRelName,
+	Walker_Const(const ZRef<Walker>& iWalker, const string8& iRelName,
 		const ZVal_Any& iVal);
 	virtual ~Walker_Const();
 

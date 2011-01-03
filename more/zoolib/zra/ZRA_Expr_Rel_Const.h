@@ -59,8 +59,8 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor);
 
-	RelName GetRelName();
-	const ZVal_Any& GetVal();
+	const RelName& GetRelName() const;
+	const ZVal_Any& GetVal() const;
 
 private:
 	const RelName fRelName;

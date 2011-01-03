@@ -55,7 +55,7 @@ public:
 	#ifdef __OBJC__
 
 	template <class Callable>
-	void Set(SEL iSEL, ZRef<Callable> iCallable);
+	void Set(SEL iSEL, const ZRef<Callable>& iCallable);
 
 	operator id();
 
@@ -77,39 +77,39 @@ private:
 	template <class Signature> class Wrapper_T;
 
 	template <class R>
-	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(void)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(void)> >& iCallable);
 
 	template <class R,
 		class P0>
-	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0)> >& iCallable);
 	
 	template <class R,
 		class P0, class P1>
-	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2>
-	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3>
-	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4>
-	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4, class P5>
-	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4, class P5, class P6>
-	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
-	static ZRef<Wrapper> spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable);
+	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >& iCallable);
 
 	#endif // __OBJC__
 	};
@@ -173,7 +173,7 @@ class ZDelegate::Wrapper_T<R(void)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<R(void)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R));
@@ -199,7 +199,7 @@ class ZDelegate::Wrapper_T<void(void)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<void(void)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void));
@@ -225,7 +225,7 @@ class ZDelegate::Wrapper_T<R(P0)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<R(P0)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -255,7 +255,7 @@ class ZDelegate::Wrapper_T<void(P0)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<void(P0)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -285,7 +285,7 @@ class ZDelegate::Wrapper_T<R(P0,P1)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<R(P0,P1)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -317,7 +317,7 @@ class ZDelegate::Wrapper_T<void(P0,P1)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<void(P0,P1)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -349,7 +349,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<R(P0,P1,P2)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -383,7 +383,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<void(P0,P1,P2)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -417,7 +417,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<R(P0,P1,P2,P3)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -453,7 +453,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<void(P0,P1,P2,P3)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -489,7 +489,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<R(P0,P1,P2,P3,P4)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -528,7 +528,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<void(P0,P1,P2,P3,P4)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -567,7 +567,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<R(P0,P1,P2,P3,P4,P5)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -608,7 +608,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<void(P0,P1,P2,P3,P4,P5)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -650,7 +650,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6)> : public ZDelegate::Wrapper
 
 	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -693,7 +693,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6)> : public ZDelegate::Wrapp
 
 	typedef ZCallable<void(P0,P1,P2,P3,P4,P5,P6)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -736,7 +736,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6,P7)> : public ZDelegate::Wrapp
 
 	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -781,7 +781,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)> : public ZDelegate::Wr
 
 	typedef ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7)> Callable;
 
-	Wrapper_T(ZRef<Callable> iCallable)
+	Wrapper_T(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -821,49 +821,49 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)> : public ZDelegate::Wr
 template <class R,
 	class P0>
 ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0)> > iCallable)
+ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0)> >& iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0)>(iCallable); }
 
 template <class R,
 	class P0, class P1>
 ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1)> > iCallable)
+ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1)> >& iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2>
 ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2)> > iCallable)
+ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2)> >& iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2, class P3>
 ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable)
+ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3)> >& iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4>
 ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable)
+ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >& iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4, class P5>
 ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable)
+ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >& iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4, class P5, class P6>
 ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable)
+ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >& iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6)>(iCallable); }
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable)
+ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >& iCallable)
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6,P7)>(iCallable); }
 
 // =================================================================================================
@@ -871,7 +871,7 @@ ZDelegate::spMakeWrapper(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable)
 #pragma mark * ZDelegate::Add
 
 template <class Callable>
-void ZDelegate::Set(SEL iSEL, ZRef<Callable> iCallable)
+void ZDelegate::Set(SEL iSEL, const ZRef<Callable>& iCallable)
 	{
 	if (iCallable)
 		fWrappers[iSEL] = spMakeWrapper(iCallable);

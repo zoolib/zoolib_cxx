@@ -71,13 +71,14 @@ class Comparer_ValPred
 ,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
 public:
-	Comparer_ValPred(Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap* iBootstrap,
-		ZRef<ZExpr_Bool_ValPred> iExpr);
+	Comparer_ValPred(
+		Visitor_Expr_Bool_DoCompare::Comparer_Bootstrap* iBootstrap,
+		const ZRef<ZExpr_Bool_ValPred>& iExpr);
 
 	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
 
 private:
-	ZRef<ZExpr_Bool_ValPred> fExpr;
+	const ZRef<ZExpr_Bool_ValPred> fExpr;
 	};
 
 } // namespace Visitor_Expr_Bool_ValPred_DoCompare

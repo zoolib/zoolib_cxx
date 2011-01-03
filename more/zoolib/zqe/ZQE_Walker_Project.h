@@ -35,7 +35,7 @@ namespace ZQE {
 class Walker_Project : public Walker_Unary
 	{
 public:
-	Walker_Project(ZRef<Walker> iWalker, const ZRA::RelHead& iRelHead);
+	Walker_Project(const ZRef<Walker>& iWalker, const ZRA::RelHead& iRelHead);
 	virtual ~Walker_Project();
 
 // From ZQE::Walker

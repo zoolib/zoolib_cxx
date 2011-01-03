@@ -32,8 +32,8 @@ using std::vector;
 #pragma mark -
 #pragma mark * Walker_Embed
 
-Walker_Embed::Walker_Embed(ZRef<Walker> iWalker,
-	const string8& iRelName, ZRef<Walker> iWalker_Ext)
+Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker,
+	const string8& iRelName, const ZRef<Walker>& iWalker_Ext)
 :	Walker_Unary(iWalker)
 ,	fRelName(iRelName)
 ,	fWalker_Ext(iWalker_Ext)
