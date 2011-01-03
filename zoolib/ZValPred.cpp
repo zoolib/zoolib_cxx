@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCompare.h"
+#include "zoolib/ZCompare_Ref.h"
 #include "zoolib/ZValPred.h"
 
 namespace ZooLib {
@@ -123,40 +123,16 @@ const ZRef<ZValComparand>& ZValPred::GetRHS() const
 #pragma mark -
 #pragma mark * ZValPred, sCompare_T
 
-namespace { // anonymous
-
-int spCompare(
-	const ZRef<ZValComparand>& iLHS, const ZRef<ZValComparand>& iRHS)
-	{
-	const char* typeName = typeid(*iLHS.Get()).name();
-	if (int compare = strcmp(typeName, typeid(*iRHS.Get()).name()))
-		return compare;
-	
-	return ZCompare::sCompare(typeName, iLHS.Get(), iRHS.Get());
-	}
-
-int spCompare(
-	const ZRef<ZValComparator>& iLHS, const ZRef<ZValComparator>& iRHS)
-	{
-	const char* typeName = typeid(*iLHS.Get()).name();
-	if (int compare = strcmp(typeName, typeid(*iRHS.Get()).name()))
-		return compare;
-	
-	return ZCompare::sCompare(typeName, iLHS.Get(), iRHS.Get());
-	}
-
-} // anonymous namespace
-
 template<>
 int sCompare_T(const ZValPred& iL, const ZValPred& iR)
 	{		
-	if (int compare = spCompare(iL.GetLHS(), iR.GetLHS()))
+	if (int compare = sCompare_T(iL.GetLHS(), iR.GetLHS()))
 		return compare;
 
-	if (int compare = spCompare(iL.GetComparator(), iR.GetComparator()))
+	if (int compare = sCompare_T(iL.GetComparator(), iR.GetComparator()))
 		return compare;
 
-	return spCompare(iL.GetRHS(), iR.GetRHS());
+	return sCompare_T(iL.GetRHS(), iR.GetRHS());
 	}
 
 // =================================================================================================

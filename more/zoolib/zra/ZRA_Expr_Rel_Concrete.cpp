@@ -18,9 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare_Ref.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
 namespace ZooLib {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCompare_T
+
+template <>
+int sCompare_T(const ZRA::Expr_Rel_Concrete& iL, const ZRA::Expr_Rel_Concrete& iR)
+	{ return sCompare_T(iL.GetConcreteRelHead(), iR.GetConcreteRelHead()); }
+
+ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Concrete)
+
 namespace ZRA {
 
 // =================================================================================================

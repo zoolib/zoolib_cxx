@@ -87,6 +87,10 @@ ZRef<Expr_Rel_Const> sConst(const ZRef<Expr_Rel>& iParent,
 	const RelName& iRelName, const ZVal_Any& iVal);
 
 } // namespace ZRA
+
+template<>
+int sCompare_T(const ZRA::Expr_Rel_Const& iL, const ZRA::Expr_Rel_Const& iR);
+
 } // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel_Const__

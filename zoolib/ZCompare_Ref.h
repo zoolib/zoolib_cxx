@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,27 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Compare_Rel__
-#define __ZRA_Compare_Rel__ 1
+#ifndef __ZCompare_Ref__
+#define __ZCompare_Ref__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompare_Ref.h"
-#include "zoolib/zra/ZRA_Expr_Rel.h"
+#include "zoolib/ZCompare.h"
+#include "zoolib/ZRef.h"
 
 namespace ZooLib {
-namespace ZRA {
 
-struct Comparator_Rel
+template <class T>
+int sCompare_T(const ZRef<T>& iL, const ZRef<T>& iR)
 	{
-	bool operator()(const ZRef<ZRA::Expr_Rel>& iLeft, const ZRef<ZRA::Expr_Rel>& iRight) const
-		{ return sCompare_T(iLeft, iRight) < 0; }
+	const char* typeName = typeid(*iL.Get()).name();
+	if (int compare = strcmp(typeName, typeid(*iR.Get()).name()))
+		return compare;
+	
+	return ZCompare::sCompare(typeName, iL.Get(), iR.Get());
+	}
 
-	typedef ZRef<ZRA::Expr_Rel> first_argument_type;
-	typedef ZRef<ZRA::Expr_Rel> second_argument_type;
-	typedef bool result_type;
-	};
-
-} // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_Compare_Rel__
+#endif // __ZCompare_Ref__

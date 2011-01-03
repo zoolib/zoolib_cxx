@@ -75,6 +75,10 @@ ZRef<Expr_Rel> operator&(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
 } // namespace ZRA
+
+template<>
+int sCompare_T(const ZRA::Expr_Rel_Intersect& iL, const ZRA::Expr_Rel_Intersect& iR);
+
 } // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel__

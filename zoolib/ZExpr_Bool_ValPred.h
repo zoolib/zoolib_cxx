@@ -54,11 +54,14 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Bool_ValPred(ZVisitor_Expr_Bool_ValPred& iVisitor);
 
-	const ZValPred& GetValPred();
+	const ZValPred& GetValPred() const;
 
 private:
 	const ZValPred fValPred;
 	};
+
+template<>
+int sCompare_T(const ZExpr_Bool_ValPred& iL, const ZExpr_Bool_ValPred& iR);
 
 // =================================================================================================
 #pragma mark -

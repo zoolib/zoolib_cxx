@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQE_Result__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZVal_Any.h"
 
@@ -54,7 +55,7 @@ public:
 	const ZVal_Any* GetValsAt(size_t iIndex);
 	void GetAnnotationsAt(size_t iIndex, std::set<ZRef<ZCounted> >& oAnnotations);
 
-	int Compare(const ZRef<Result>& iOther);
+	int Compare(const Result& iOther) const;
 
 private:
 	ZRA::RelHead fRelHead;
@@ -63,6 +64,10 @@ private:
 	};
 
 } // namespace ZQE
+
+template<>
+int sCompare_T(const ZQE::Result& iL, const ZQE::Result& iR);
+
 } // namespace ZooLib
 
 #endif // __ZQE_Result__

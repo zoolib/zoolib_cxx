@@ -61,8 +61,8 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor);
 
-	const RelName& GetRelName();
-	const ZRef<Callable>& GetCallable();
+	const RelName& GetRelName() const;
+	const ZRef<Callable>& GetCallable() const;
 
 private:
 	const RelName fRelName;
@@ -89,6 +89,10 @@ ZRef<Expr_Rel_Calc> sCalc(const ZRef<Expr_Rel>& iParent,
 	const RelName& iRelName, const ZRef<Expr_Rel_Calc::Callable>& iCallable);
 
 } // namespace ZRA
+
+template<>
+int sCompare_T(const ZRA::Expr_Rel_Calc& iL, const ZRA::Expr_Rel_Calc& iR);
+
 } // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel_Calc__

@@ -85,6 +85,10 @@ ZRef<Expr_Rel_Rename> sRename(const ZRef<Expr_Rel>& iExpr,
 	const RelName& iNewPropName, const RelName& iOldPropName);
 
 } // namespace ZRA
+
+template<>
+int sCompare_T(const ZRA::Expr_Rel_Rename& iL, const ZRA::Expr_Rel_Rename& iR);
+
 } // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel_Rename__

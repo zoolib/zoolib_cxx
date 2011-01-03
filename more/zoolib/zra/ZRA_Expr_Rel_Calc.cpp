@@ -18,9 +18,32 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare_Ref.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 
 namespace ZooLib {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCompare_T
+
+template <>
+int sCompare_T(const ZRA::Expr_Rel_Calc& iL, const ZRA::Expr_Rel_Calc& iR)
+	{
+	if (int compare = sCompare_T(iL.GetRelName(), iR.GetRelName()))
+		return compare;
+
+	if (iL.GetCallable() < iR.GetCallable())
+		return -1;
+
+	if (iR.GetCallable() < iL.GetCallable())
+		return 1;
+	
+	return sCompare_T(iL.GetOp0(), iR.GetOp0());
+	}
+
+ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Calc)
+
 namespace ZRA {
 
 // =================================================================================================
@@ -62,10 +85,10 @@ ZRef<Expr_Rel> Expr_Rel_Calc::Clone(const ZRef<Expr_Rel>& iOp0)
 void Expr_Rel_Calc::Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Calc(this); }
 
-const RelName& Expr_Rel_Calc::GetRelName()
+const RelName& Expr_Rel_Calc::GetRelName() const
 	{ return fRelName; }
 
-const ZRef<Expr_Rel_Calc::Callable>& Expr_Rel_Calc::GetCallable()
+const ZRef<Expr_Rel_Calc::Callable>& Expr_Rel_Calc::GetCallable() const
 	{ return fCallable; }
 
 // =================================================================================================

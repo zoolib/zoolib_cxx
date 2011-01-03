@@ -64,6 +64,9 @@ public:
 	virtual void Accept_Expr_Bool_True(ZVisitor_Expr_Bool_True& iVisitor);
 	};
 
+template<>
+int sCompare_T(const ZExpr_Bool_True& iL, const ZExpr_Bool_True& iR);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_True
@@ -102,6 +105,9 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Bool_False(ZVisitor_Expr_Bool_False& iVisitor);
 	};
+
+template<>
+int sCompare_T(const ZExpr_Bool_False& iL, const ZExpr_Bool_False& iR);
 
 // =================================================================================================
 #pragma mark -
@@ -142,6 +148,9 @@ public:
 	virtual void Accept_Expr_Bool_Not(ZVisitor_Expr_Bool_Not& iVisitor);
 	};
 
+template<>
+int sCompare_T(const ZExpr_Bool_Not& iL, const ZExpr_Bool_Not& iR);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_Not
@@ -181,6 +190,9 @@ public:
 	virtual void Accept_Expr_Bool_And(ZVisitor_Expr_Bool_And& iVisitor);
 	};
 
+template<>
+int sCompare_T(const ZExpr_Bool_And& iL, const ZExpr_Bool_And& iR);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_And
@@ -219,6 +231,9 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Bool_Or(ZVisitor_Expr_Bool_Or& iVisitor);
 	};
+
+template<>
+int sCompare_T(const ZExpr_Bool_Or& iL, const ZExpr_Bool_Or& iR);
 
 // =================================================================================================
 #pragma mark -

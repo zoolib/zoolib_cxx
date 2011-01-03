@@ -81,6 +81,10 @@ public:
 ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead);
 
 } // namespace ZRA
+
+template<>
+int sCompare_T(const ZRA::Expr_Rel_Concrete& iL, const ZRA::Expr_Rel_Concrete& iR);
+
 } // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel_Concrete__

@@ -80,6 +80,10 @@ ZRef<Expr_Rel_Embed> sEmbed(const ZRef<Expr_Rel>& iParent,
 	const RelName& iRelName, const ZRef<Expr_Rel>& iChild);
 
 } // namespace ZRA
+
+template<>
+int sCompare_T(const ZRA::Expr_Rel_Embed& iL, const ZRA::Expr_Rel_Embed& iR);
+
 } // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel__

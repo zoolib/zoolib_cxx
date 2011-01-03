@@ -91,6 +91,10 @@ ZRef<Expr_Rel> operator&(
 ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
 
 } // namespace ZRA
+
+template<>
+int sCompare_T(const ZRA::Expr_Rel_Select& iL, const ZRA::Expr_Rel_Select& iR);
+
 } // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel_Select__

@@ -44,6 +44,9 @@ private:
 	const ZVal_Any fVal;
 	};
 
+template <>
+int sCompare_T(const ZValComparand_Const_Any& iL, const ZValComparand_Const_Any& iR);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValComparator_Callable_Any
@@ -61,6 +64,10 @@ public:
 private:
 	ZRef<Callable> fCallable;
 	};
+
+template <>
+int sCompare_T(const ZValComparator_Callable_Any& iL,
+	const ZValComparator_Callable_Any& iR);
 
 // =================================================================================================
 #pragma mark -

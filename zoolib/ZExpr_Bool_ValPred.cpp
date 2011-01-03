@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare.h"
 #include "zoolib/ZExpr_Bool_ValPred.h"
 
 namespace ZooLib {
@@ -68,8 +69,14 @@ ZRef<ZExpr_Bool> ZExpr_Bool_ValPred::Clone()
 void ZExpr_Bool_ValPred::Accept_Expr_Bool_ValPred(ZVisitor_Expr_Bool_ValPred& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_ValPred(this); }
 
-const ZValPred& ZExpr_Bool_ValPred::GetValPred()
+const ZValPred& ZExpr_Bool_ValPred::GetValPred() const
 	{ return fValPred; }
+
+template <>
+int sCompare_T(const ZExpr_Bool_ValPred& iL, const ZExpr_Bool_ValPred& iR)
+	{ return sCompare_T(iL.GetValPred(), iR.GetValPred()); }
+
+ZMACRO_CompareRegistration_T(ZExpr_Bool_ValPred)
 
 // =================================================================================================
 #pragma mark -

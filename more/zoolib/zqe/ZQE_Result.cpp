@@ -29,25 +29,13 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCompare
+#pragma mark * sCompare_T
 
 template <>
-int sCompare_T(const ZRef<ZQE::Result>& iL, const ZRef<ZQE::Result>& iR)
-	{
-	if (iL)
-		{
-		if (iR)
-			return iL->Compare(iR);
-		return 1;
-		}
-	else if (iR)
-		{
-		return -1;
-		}
-	return 0;
-	}
+int sCompare_T(const ZQE::Result& iL, const ZQE::Result& iR)
+	{ return iL.Compare(iR); }
 
-ZMACRO_CompareRegistration_T(ZRef<ZQE::Result>)
+ZMACRO_CompareRegistration_T(ZQE::Result)
 
 // =================================================================================================
 #pragma mark -
@@ -104,11 +92,11 @@ void Result::GetAnnotationsAt(size_t iIndex, set<ZRef<ZCounted> >& oAnnotations)
 		}
 	}
 
-int Result::Compare(const ZRef<Result>& iOther)
+int Result::Compare(const Result& iOther) const
 	{
-	if (int compare = sCompare_T(fRelHead, iOther->fRelHead))
+	if (int compare = sCompare_T(fRelHead, iOther.fRelHead))
 		return compare;
-	return sCompare_T(fPackedRows, iOther->fPackedRows);
+	return sCompare_T(fPackedRows, iOther.fPackedRows);
 	}
 
 } // namespace ZQE

@@ -89,6 +89,10 @@ ZRef<Expr_Rel> operator&(const ZValPred& iValPred, const ZRef<Expr_Rel>& iExpr_R
 ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZValPred& iValPred);
 
 } // namespace ZRA
+
+template<>
+int sCompare_T(const ZRA::Expr_Rel_Restrict& iL, const ZRA::Expr_Rel_Restrict& iR);
+
 } // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel_Restrict__
