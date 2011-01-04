@@ -30,16 +30,22 @@ namespace ZCallable_Function {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable0
+#pragma mark * Callable
+
+template <class Signature> class Callable;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 0 params)
 
 template <class R>
-class Callable0
+class Callable<R(void)>
 :	public ZCallable<R(void)>
 	{
 public:
 	typedef R (*FunctionPtr_t)();
 
-	Callable0(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -53,17 +59,17 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable1
+#pragma mark * Callable (specialization for 1 param)
 
 template <class R,
 	class P0>
-class Callable1
+class Callable<R(P0)>
 :	public ZCallable<R(P0)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0);
 
-	Callable1(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -77,17 +83,17 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable2
+#pragma mark * Callable (specialization for 2 params)
 
 template <class R,
 	class P0, class P1>
-class Callable2
+class Callable<R(P0,P1)>
 :	public ZCallable<R(P0,P1)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1);
 
-	Callable2(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -101,17 +107,17 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable3
+#pragma mark * Callable (specialization for 3 params)
 
 template <class R,
 	class P0, class P1, class P2>
-class Callable3
+class Callable<R(P0,P1,P2)>
 :	public ZCallable<R(P0,P1,P2)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2);
 
-	Callable3(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -125,17 +131,17 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable4
+#pragma mark * Callable (specialization for 4 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3>
-class Callable4
+class Callable<R(P0,P1,P2,P3)>
 :	public ZCallable<R(P0,P1,P2,P3)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3);
 
-	Callable4(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -149,17 +155,17 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable5
+#pragma mark * Callable (specialization for 5 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4>
-class Callable5
+class Callable<R(P0,P1,P2,P3,P4)>
 :	public ZCallable<R(P0,P1,P2,P3,P4)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4);
 
-	Callable5(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -173,18 +179,18 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable6
+#pragma mark * Callable (specialization for 6 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
-class Callable6
+class Callable<R(P0,P1,P2,P3,P4,P5)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4,P5);
 
-	Callable6(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -199,18 +205,18 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable7
+#pragma mark * Callable (specialization for 7 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
-class Callable7
+class Callable<R(P0,P1,P2,P3,P4,P5,P6)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4,P5,P6);
 
-	Callable7(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -225,18 +231,18 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable8
+#pragma mark * Callable (specialization for 8 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
-class Callable8
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4,P5,P6,P7);
 
-	Callable8(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -251,19 +257,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable9
+#pragma mark * Callable (specialization for 9 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8>
-class Callable9
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8);
 
-	Callable9(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -279,19 +285,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable10
+#pragma mark * Callable (specialization for 10 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
-class Callable10
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
 
-	Callable10(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -307,19 +313,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable11
+#pragma mark * Callable (specialization for 11 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
-class Callable11
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
 
-	Callable11(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -335,19 +341,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable12
+#pragma mark * Callable (specialization for 12 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
-class Callable12
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
 
-	Callable12(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -363,20 +369,20 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable13
+#pragma mark * Callable (specialization for 13 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC>
-class Callable13
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
 
-	Callable13(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -392,20 +398,20 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable14
+#pragma mark * Callable (specialization for 14 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
-class Callable14
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
 
-	Callable14(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -421,20 +427,20 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable15
+#pragma mark * Callable (specialization for 15 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
-class Callable15
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
 
-	Callable15(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -450,20 +456,20 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable16
+#pragma mark * Callable (specialization for 16 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
-class Callable16
+class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
 
-	Callable16(FunctionPtr_t iFunctionPtr)
+	Callable(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
@@ -479,64 +485,64 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeCallablle
+#pragma mark * MakeCallable
 
 template <class R>
 ZRef<ZCallable<R(void)> >
 MakeCallable(R (*iFunctionPtr)())
-	{ return new Callable0<R>(iFunctionPtr); }
+	{ return new Callable<R(void)>(iFunctionPtr); }
 
 template <class R,
 	class P0>
 ZRef<ZCallable<R(P0)> >
 MakeCallable(R (*iFunctionPtr)(P0))
-	{ return new Callable1<R,P0>(iFunctionPtr); }
+	{ return new Callable<R(P0)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1>
 ZRef<ZCallable<R(P0,P1)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1))
-	{ return new Callable2<R,P0,P1>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2>
 ZRef<ZCallable<R(P0,P1,P2)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2))
-	{ return new Callable3<R,P0,P1,P2>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3>
 ZRef<ZCallable<R(P0,P1,P2,P3)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3))
-	{ return new Callable4<R,P0,P1,P2,P3>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4))
-	{ return new Callable5<R,P0,P1,P2,P3,P4>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5))
-	{ return new Callable6<R,P0,P1,P2,P3,P4,P5>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4,P5)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6))
-	{ return new Callable7<R,P0,P1,P2,P3,P4,P5,P6>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7))
-	{ return new Callable8<R,P0,P1,P2,P3,P4,P5,P6,P7>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -544,7 +550,7 @@ template <class R,
 	class P8>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8))
-	{ return new Callable9<R,P0,P1,P2,P3,P4,P5,P6,P7,P8>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -552,7 +558,7 @@ template <class R,
 	class P8, class P9>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9))
-	{ return new Callable10<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -560,7 +566,7 @@ template <class R,
 	class P8, class P9, class PA>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA))
-	{ return new Callable11<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -568,7 +574,7 @@ template <class R,
 	class P8, class P9, class PA, class PB>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB))
-	{ return new Callable12<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -577,7 +583,7 @@ template <class R,
 	class PC>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC))
-	{ return new Callable13<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -586,7 +592,7 @@ template <class R,
 	class PC, class PD>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD))
-	{ return new Callable14<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -595,7 +601,7 @@ template <class R,
 	class PC, class PD, class PE>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE))
-	{ return new Callable15<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -604,7 +610,7 @@ template <class R,
 	class PC, class PD, class PE, class PF>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >
 MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
-	{ return new Callable16<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF>(iFunctionPtr); }
+	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>(iFunctionPtr); }
 
 } // namespace ZCallable_Function
 

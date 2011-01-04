@@ -124,7 +124,7 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable0
+#pragma mark * Callable
 
 template <class Signature> class Callable;
 
