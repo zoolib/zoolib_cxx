@@ -51,17 +51,6 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * spRenamed (anonymous)
-
-namespace { // anonymous
-
-static ZValPred spRenamed(const Rename& iRename, const ZValPred& iValPred)
-	{ return ZooLib::sRenamed(iRename, iValPred); }
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * DoRename (anonymous)
 
 namespace { // anonymous
@@ -83,7 +72,7 @@ DoRename::DoRename(const Rename& iRename)
 	{}
 
 void DoRename::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
-	{ this->pSetResult(new ZExpr_Bool_ValPred(spRenamed(fRename, iExpr->GetValPred()))); }
+	{ this->pSetResult(new ZExpr_Bool_ValPred(sRenamed(fRename, iExpr->GetValPred()))); }
 
 static ZRef<ZExpr_Bool> spRenamed(const Rename& iRename, ZRef<ZExpr_Bool> iExpr_Bool)
 	{ return DoRename(iRename).Do(iExpr_Bool); }
@@ -108,7 +97,9 @@ struct Thing
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRA::SQL::sAsSQL
+#pragma mark * MakeThing (anonymous)
+
+namespace { // anonymous
 
 class MakeThing
 :	public virtual ZVisitor_Do_T<Thing>
@@ -173,8 +164,8 @@ void MakeThing::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	for (RelHead::iterator i = theThing.fRelHead_Physical.begin();
 		i != theThing.fRelHead_Physical.end(); ++i)
 		{
-		string theString1 = *i;
-		string theString2 = ZUtil_STL::sGetMustContain(1, theThing.fRename_Inverse, theString1);
+		const string theString1 = *i;
+		const string theString2 = ZUtil_STL::sGetMustContain(1, theThing.fRename_Inverse, theString1);
 		if (ZUtil_STL::sContains(theRH, theString2))
 			newRelHead.insert(theString1);
 		}
@@ -185,7 +176,7 @@ void MakeThing::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 void MakeThing::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	Thing theThing = this->Do(iExpr->GetOp0());
-	theThing.fCondition &= spRenamed(theThing.fRename, iExpr->GetValPred());
+	theThing.fCondition &= sRenamed(theThing.fRename, iExpr->GetValPred());
 	this->pSetResult(theThing);
 	}
 
@@ -247,6 +238,8 @@ void MakeThing::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 
 	this->pSetResult(theThing);
 	}
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -438,7 +431,7 @@ void ToStrim_SQL::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iRep)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRA::SQL::sAsSQL
+#pragma mark * ZRA::sWriteAsSQL
 
 bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const ZStrimW& s)
 	{
