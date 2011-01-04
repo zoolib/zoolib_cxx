@@ -59,9 +59,9 @@ public:
 
 typedef ZCallable<void(const string8& iMessage)> Callable_SemanticError;
 
-extern const ZRef<Callable_SemanticError> sCallable_Ignore;
-extern const ZRef<Callable_SemanticError> sCallable_Throw;
-extern ZSafe<ZRef<Callable_SemanticError> > sCallable_Default;
+extern const ZRef<Callable_SemanticError> sCallable_SemanticError_Ignore;
+extern const ZRef<Callable_SemanticError> sCallable_SemanticError_Throw;
+extern ZSafe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default;
 
 void sSemanticError(const string8& iMessage);
 

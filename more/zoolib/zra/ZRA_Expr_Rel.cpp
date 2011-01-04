@@ -59,16 +59,16 @@ static void spLog(const string8& iMessage)
 #pragma mark -
 #pragma mark * SemanticError, helpers
 
-const ZRef<Callable_SemanticError> sCallable_Ignore;
-const ZRef<Callable_SemanticError> sCallable_Throw = MakeCallable(spThrow);
+const ZRef<Callable_SemanticError> sCallable_SemanticError_Ignore;
+const ZRef<Callable_SemanticError> sCallable_SemanticError_Throw = MakeCallable(&spThrow);
 
-ZSafe<ZRef<Callable_SemanticError> > sCallable_Default = MakeCallable(spLog);
+ZSafe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default = MakeCallable(&spLog);
 
 void sSemanticError(const string8& iMessage)
 	{
 	if (ZRef<Callable_SemanticError> theCallable = spGet())
 		theCallable->Call(iMessage);
-	else if (ZRef<Callable_SemanticError> theCallable = sCallable_Default)
+	else if (ZRef<Callable_SemanticError> theCallable = sCallable_SemanticError_Default)
 		theCallable->Call(iMessage);		
 	}
 
