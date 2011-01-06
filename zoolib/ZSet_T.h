@@ -87,6 +87,8 @@ public:
 	bool Empty() const;
 
 	const Base_t& GetElems() const;
+
+	size_t IndexOf(const T& iElem) const;
 	};
 
 // =================================================================================================
@@ -297,6 +299,10 @@ bool ZSet_T<T>::Empty() const
 template <class T>
 const std::set<T>& ZSet_T<T>::GetElems() const
 	{ return *this ; }
+
+template <class T>
+size_t ZSet_T<T>::IndexOf(const T& iElem) const
+	{ return std::distance(this->begin(), this->find(iElem)); }
 
 // =================================================================================================
 #pragma mark -
