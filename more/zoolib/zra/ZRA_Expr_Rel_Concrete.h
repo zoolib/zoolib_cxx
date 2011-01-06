@@ -78,7 +78,7 @@ public:
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead);
+ZRef<Expr_Rel_Concrete> sConcrete(const RelHead& iRelHead);
 
 } // namespace ZRA
 

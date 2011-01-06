@@ -18,43 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Expr_Bool_DoToStrim.h"
+#include "zoolib/ZUtil_Strim_ValPred_Any.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_ToStrim.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_DoToStrim
+#pragma mark * ZVisitor_Expr_Bool_ValPred_ToStrim
 
-void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep)
-	{ this->pStrimW() << "true"; }
-
-void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep)
-	{ this->pStrimW() << "false"; }
-
-void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
-	{
-	this->pStrimW() << "~(";
-	this->pDoToStrim(iRep->GetOp0());
-	this->pStrimW() << ")";
-	}
-
-void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
-	{
-	this->pStrimW() << "(";
-	this->pDoToStrim(iRep->GetOp0());
-	this->pStrimW() << " & ";
-	this->pDoToStrim(iRep->GetOp1());
-	this->pStrimW() << ")";
-	}
-
-void ZVisitor_Expr_Bool_DoToStrim::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
-	{
-	this->pStrimW() << "(";
-	this->pDoToStrim(iRep->GetOp0());
-	this->pStrimW() << " | ";
-	this->pDoToStrim(iRep->GetOp1());
-	this->pStrimW() << ")";
-	}
+void ZVisitor_Expr_Bool_ValPred_Any_ToStrim::Visit_Expr_Bool_ValPred(
+	const ZRef<ZExpr_Bool_ValPred>& iRep)
+	{ ZUtil_Strim_ValPred_Any::sToStrim(iRep->GetValPred(), pStrimW()); }
 
 } // namespace ZooLib

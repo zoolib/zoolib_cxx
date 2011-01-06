@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_Util_Strim_Rel__
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_DoToStrim.h"
+#include "zoolib/ZVisitor_ToStrim.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
 namespace ZooLib {
@@ -33,7 +33,7 @@ namespace Util_Strim_Rel {
 #pragma mark -
 #pragma mark * ZRA_Util_Strim_Rel
 
-typedef ZVisitor_DoToStrim::Options Options;
+typedef ZVisitor_ToStrim::Options Options;
 
 void sToStrim(const ZRef<ZRA::Expr_Rel>& iRel, const ZStrimW& iStrimW);
 

@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCompare.h"
+#include "zoolib/ZCompare_Ref.h"
 #include "zoolib/ZCompare_Vector.h"
 #include "zoolib/zqe/ZQE_Result.h"
 
@@ -36,6 +36,12 @@ int sCompare_T(const ZQE::Result& iL, const ZQE::Result& iR)
 	{ return iL.Compare(iR); }
 
 ZMACRO_CompareRegistration_T(ZQE::Result)
+
+template <>
+int sCompare_T<ZRef<ZQE::Result> >(const ZRef<ZQE::Result>& iL, const ZRef<ZQE::Result>& iR)
+	{ return sCompareRef_T(iL, iR); }
+
+ZMACRO_CompareRegistration_T(ZRef<ZQE::Result>)
 
 // =================================================================================================
 #pragma mark -

@@ -18,25 +18,53 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches.h"
-#include "zoolib/ZValPred_Any.h"
+#ifndef __ZVisitor_Expr_Op_Do_Transform_T__
+#define __ZVisitor_Expr_Op_Do_Transform_T__
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Op_T.h"
+#include "zoolib/ZVisitor_Do_T.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * ZVisitor_Expr_Op_Do_Transform_T
 
-ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches::
-ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches(const ZVal_Any& iVal)
-:	fVal(iVal)
-	{}
+template <class T>
+class ZVisitor_Expr_Op_Do_Transform_T
+:	public virtual ZVisitor_Do_T<ZRef<T> >
+,	public virtual ZVisitor_Expr_Op0_T<T>
+,	public virtual ZVisitor_Expr_Op1_T<T>
+,	public virtual ZVisitor_Expr_Op2_T<T>
+	{
+public:
+	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<T> >& iExpr)
+		{ this->pSetResult(iExpr->Self()); }
 
-void ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches::Visit_Expr_Bool_ValPred(
-	const ZRef<ZExpr_Bool_ValPred>& iExpr)
-	{ this->pSetResult(sMatches(iExpr->GetValPred(), fVal)); }
+	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<T> >& iExpr)
+		{
+		ZRef<T> oldOp0 = iExpr->GetOp0();
+		ZRef<T> newOp0 = this->Do(oldOp0);
+		if (oldOp0 == newOp0)
+			this->pSetResult(iExpr->Self());
+		else
+			this->pSetResult(iExpr->Clone(newOp0));
+		}
 
-bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal)
-	{ return ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches(iVal).Do(iExpr); }
+	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<T> >& iExpr)
+		{
+		ZRef<T> oldOp0 = iExpr->GetOp0();
+		ZRef<T> oldOp1 = iExpr->GetOp1();
+		ZRef<T> newOp0 = this->Do(oldOp0);
+		ZRef<T> newOp1 = this->Do(oldOp1);
+		if (oldOp0 == newOp0 && oldOp1 == newOp1)
+			this->pSetResult(iExpr->Self());
+		else
+			this->pSetResult(iExpr->Clone(newOp0, newOp1));
+		}
+	};
 
 } // namespace ZooLib
+
+#endif // __ZVisitor_Expr_Op_Do_Transform_T__

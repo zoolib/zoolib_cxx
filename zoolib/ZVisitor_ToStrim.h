@@ -18,36 +18,56 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches__
-#define __ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches__
+#ifndef __ZVisitor_ToStrim__
+#define __ZVisitor_ToStrim__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Bool_ValPred.h"
-#include "zoolib/ZVal_Any.h"
-#include "zoolib/ZVisitor_Expr_Bool_DoEval.h"
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZVisitor.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches
+#pragma mark * ZVisitor_ToStrim
 
-class ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches
-:	public virtual ZVisitor_Expr_Bool_DoEval
-,	public virtual ZVisitor_Expr_Bool_ValPred
+class ZVisitor_ToStrim
+:	public virtual ZVisitor
 	{
 public:
-	ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches(const ZVal_Any& iVal);
+	struct Options
+		{
+		Options();
 
-// From ZVisitor_Expr_Bool_ValPred
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
+		std::string fEOLString;
+		std::string fIndentString;
+		size_t fInitialIndent;
+		bool fDebuggingOutput;
+		};
+
+	ZVisitor_ToStrim();
+
+// From ZVisitor
+	virtual void Visit(const ZRef<ZVisitee>& iRep);
+
+// Our protocol
+	void ToStrim(const Options& iOptions, const ZStrimW& iStrimW, const ZRef<ZVisitee>& iRep);
+
+protected:
+	void pToStrim(const ZRef<ZVisitee>& iRep);
+
+	const Options& pOptions();
+	const ZStrimW& pStrimW();
+
+	void pWriteLFIndent();
 
 private:
-	const ZVal_Any& fVal;
-	};
+	const Options* fOptions;
+	const ZStrimW* fStrimW;
 
-bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal);
+	size_t fIndent;
+	};
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_Expr_Bool_ValPred_Any_DoEval_Matches__
+#endif // __ZVisitor_ToStrim__

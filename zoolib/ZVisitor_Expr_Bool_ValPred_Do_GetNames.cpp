@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,17 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_ValPred_Any.h"
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
+#include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/ZValPred_GetNames.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred_DoToStrim
+#pragma mark * ZVisitor_Expr_Bool_ValPred_Do_GetNames
 
-void ZVisitor_Expr_Bool_ValPred_Any_DoToStrim::Visit_Expr_Bool_ValPred(
-	const ZRef<ZExpr_Bool_ValPred>& iRep)
-	{ ZUtil_Strim_ValPred_Any::sToStrim(iRep->GetValPred(), pStrimW()); }
+void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Bool_ValPred(
+	const ZRef<ZExpr_Bool_ValPred>& iExpr)
+	{ this->pSetResult(sGetNames(iExpr->GetValPred())); }
+
+void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Op1(
+	const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr)
+	{ this->pSetResult(this->Do(iExpr->GetOp0())); }
+
+void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Op2(
+	const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr)
+	{ this->pSetResult(ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp1()))); }
+
+std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr)
+	{ return ZVisitor_Expr_Bool_ValPred_Do_GetNames().Do(iExpr); }
 
 } // namespace ZooLib

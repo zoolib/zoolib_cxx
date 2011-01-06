@@ -56,6 +56,8 @@ void Dataspace::SetCallable_UpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable)
 void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 	{
 	ZAcqMtxR acq(fMtxR);
+	ZAssert(!iSieve->fDataspace);
+	ZAssert(!iSieve->fRefcon);
 
 	iSieve->fDataspace = this;
 	iSieve->fRefcon = fNextRefcon++;

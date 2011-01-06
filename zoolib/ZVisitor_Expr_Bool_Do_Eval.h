@@ -18,27 +18,36 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Expr_Bool_DoEval.h"
+#ifndef __ZVisitor_Expr_Bool_Do_Eval__
+#define __ZVisitor_Expr_Bool_Do_Eval__
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Bool.h"
+#include "zoolib/ZVisitor_Do_T.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_DoEval
+#pragma mark * ZVisitor_Expr_Bool_Do_Eval
 
-void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep)
-	{ this->pSetResult(true); }
-
-void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep)
-	{ this->pSetResult(false); }
-
-void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
-	{ this->pSetResult(! this->Do(iRep)); }
-
-void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
-	{ this->pSetResult(this->Do(iRep->GetOp0()) && this->Do(iRep->GetOp1())); }
-
-void ZVisitor_Expr_Bool_DoEval::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
-	{ this->pSetResult(this->Do(iRep->GetOp0()) || this->Do(iRep->GetOp1())); }
+class ZVisitor_Expr_Bool_Do_Eval
+:	public virtual ZVisitor_Do_T<bool>
+,	public virtual ZVisitor_Expr_Bool_True
+,	public virtual ZVisitor_Expr_Bool_False
+,	public virtual ZVisitor_Expr_Bool_Not
+,	public virtual ZVisitor_Expr_Bool_And
+,	public virtual ZVisitor_Expr_Bool_Or
+	{
+public:
+// From ZVisitor_Expr_Bool_XXX
+	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep);
+	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep);
+	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep);
+	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep);
+	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep);
+	};
 
 } // namespace ZooLib
+
+#endif // __ZVisitor_Expr_Bool_Do_Eval__

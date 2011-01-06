@@ -18,56 +18,40 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_DoToStrim__
-#define __ZVisitor_DoToStrim__
+#ifndef __ZVisitor_Expr_Bool_ValPred_Do_GetNames__
+#define __ZVisitor_Expr_Bool_ValPred_Do_GetNames__
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZVisitor.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
+#include "zoolib/ZVisitor_Do_T.h"
+
+#include <set>
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_DoToStrim
+#pragma mark * ZVisitor_Expr_Bool_ValPred_Do_GetNames
 
-class ZVisitor_DoToStrim
-:	public virtual ZVisitor
+class ZVisitor_Expr_Bool_ValPred_Do_GetNames
+:	public virtual ZVisitor_Do_T<std::set<std::string> >
+,	public virtual ZVisitor_Expr_Bool_ValPred
+,	public virtual ZVisitor_Expr_Op1_T<ZExpr_Bool>
+,	public virtual ZVisitor_Expr_Op2_T<ZExpr_Bool>
 	{
 public:
-	struct Options
-		{
-		Options();
+// From ZVisitor_Expr_Bool_ValPred_T
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
 
-		std::string fEOLString;
-		std::string fIndentString;
-		size_t fInitialIndent;
-		bool fDebuggingOutput;
-		};
+// From ZVisitor_Expr_Op1_T
+	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr);
 
-	ZVisitor_DoToStrim();
-
-// From ZVisitor
-	virtual void Visit(const ZRef<ZVisitee>& iRep);
-
-// Our protocol
-	void DoToStrim(const Options& iOptions, const ZStrimW& iStrimW, const ZRef<ZVisitee>& iRep);
-
-protected:
-	void pDoToStrim(const ZRef<ZVisitee>& iRep);
-
-	const Options& pOptions();
-	const ZStrimW& pStrimW();
-
-	void pWriteLFIndent();
-
-private:
-	const Options* fOptions;
-	const ZStrimW* fStrimW;
-
-	size_t fIndent;
+// From ZVisitor_Expr_Op2_T
+	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr);
 	};
+
+std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr);
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_DoToStrim__
+#endif // __ZVisitor_Expr_Bool_ValPred_Do_GetNames__

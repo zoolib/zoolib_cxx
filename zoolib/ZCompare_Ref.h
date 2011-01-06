@@ -28,14 +28,32 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <class T>
-int sCompare_T(const ZRef<T>& iL, const ZRef<T>& iR)
+int sCompareRef_T(const ZRef<T>& iL, const ZRef<T>& iR)
 	{
-	const char* typeName = typeid(*iL.Get()).name();
-	if (int compare = strcmp(typeName, typeid(*iR.Get()).name()))
-		return compare;
+	if (const T* l = iL.Get())
+		{
+		if (const T* r = iR.Get())
+			{
+			const char* typeName = typeid(*l).name();
+			if (int compare = strcmp(typeName, typeid(*r).name()))
+				return compare;
 	
-	return ZCompare::sCompare(typeName, iL.Get(), iR.Get());
+			return ZCompare::sCompare(typeName, l, r);
+			}
+		else
+			{
+			return 1;
+			}
+		}
+	else if (iR.Get())
+		{ return -1; }
+	else
+		{ return 0; }
 	}
+
+template <class T>
+int sCompare_T(const ZRef<T>& iL, const ZRef<T>& iR)
+	{ return sCompareRef_T(iL, iR); }
 
 } // namespace ZooLib
 

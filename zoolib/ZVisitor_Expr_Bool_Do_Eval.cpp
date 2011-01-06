@@ -18,53 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Op_DoTransform_T__
-#define __ZVisitor_Expr_Op_DoTransform_T__
-#include "zconfig.h"
-
-#include "zoolib/ZExpr_Op_T.h"
-#include "zoolib/ZVisitor_Do_T.h"
+#include "zoolib/ZVisitor_Expr_Bool_Do_Eval.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Op_DoTransform_T
+#pragma mark * ZVisitor_Expr_Bool_Do_Eval
 
-template <class T>
-class ZVisitor_Expr_Op_DoTransform_T
-:	public virtual ZVisitor_Do_T<ZRef<T> >
-,	public virtual ZVisitor_Expr_Op0_T<T>
-,	public virtual ZVisitor_Expr_Op1_T<T>
-,	public virtual ZVisitor_Expr_Op2_T<T>
-	{
-public:
-	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<T> >& iExpr)
-		{ this->pSetResult(iExpr->Self()); }
+void ZVisitor_Expr_Bool_Do_Eval::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep)
+	{ this->pSetResult(true); }
 
-	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<T> >& iExpr)
-		{
-		ZRef<T> oldOp0 = iExpr->GetOp0();
-		ZRef<T> newOp0 = this->Do(oldOp0);
-		if (oldOp0 == newOp0)
-			this->pSetResult(iExpr->Self());
-		else
-			this->pSetResult(iExpr->Clone(newOp0));
-		}
+void ZVisitor_Expr_Bool_Do_Eval::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep)
+	{ this->pSetResult(false); }
 
-	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<T> >& iExpr)
-		{
-		ZRef<T> oldOp0 = iExpr->GetOp0();
-		ZRef<T> oldOp1 = iExpr->GetOp1();
-		ZRef<T> newOp0 = this->Do(oldOp0);
-		ZRef<T> newOp1 = this->Do(oldOp1);
-		if (oldOp0 == newOp0 && oldOp1 == newOp1)
-			this->pSetResult(iExpr->Self());
-		else
-			this->pSetResult(iExpr->Clone(newOp0, newOp1));
-		}
-	};
+void ZVisitor_Expr_Bool_Do_Eval::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
+	{ this->pSetResult(! this->Do(iRep)); }
+
+void ZVisitor_Expr_Bool_Do_Eval::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
+	{ this->pSetResult(this->Do(iRep->GetOp0()) && this->Do(iRep->GetOp1())); }
+
+void ZVisitor_Expr_Bool_Do_Eval::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
+	{ this->pSetResult(this->Do(iRep->GetOp0()) || this->Do(iRep->GetOp1())); }
 
 } // namespace ZooLib
-
-#endif // __ZVisitor_Expr_Op_DoTransform_T__

@@ -24,8 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZVisitor_Do_T.h"
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoToStrim.h"
-#include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_ToStrim.h"
+#include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
 #include "zoolib/ZValPred_Any.h"
 #include "zoolib/ZValPred_Rename.h"
 
@@ -56,7 +56,7 @@ using std::string;
 namespace { // anonymous
 
 class DoRename
-:	public virtual ZVisitor_Expr_Op_DoTransform_T<ZExpr_Bool>
+:	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZExpr_Bool>
 ,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
 public:
@@ -248,7 +248,7 @@ void MakeThing::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 namespace { // anonymous
 
 class ToStrim_SQL
-:	public virtual ZVisitor_DoToStrim
+:	public virtual ZVisitor_ToStrim
 ,	public virtual ZVisitor_Expr_Bool_True
 ,	public virtual ZVisitor_Expr_Bool_False
 ,	public virtual ZVisitor_Expr_Bool_Not
@@ -274,25 +274,25 @@ void ToStrim_SQL::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep)
 void ToStrim_SQL::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
 	{
 	pStrimW() << " NOT (";
-	this->pDoToStrim(iRep->GetOp0());
+	this->pToStrim(iRep->GetOp0());
 	pStrimW() << ")";
 	}
 
 void ToStrim_SQL::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
 	{
 	pStrimW() << "(";
-	this->pDoToStrim(iRep->GetOp0());
+	this->pToStrim(iRep->GetOp0());
 	pStrimW() << " AND ";
-	this->pDoToStrim(iRep->GetOp1());
+	this->pToStrim(iRep->GetOp1());
 	pStrimW() << ")";
 	}
 
 void ToStrim_SQL::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
 	{
 	pStrimW() << "(";
-	this->pDoToStrim(iRep->GetOp0());
+	this->pToStrim(iRep->GetOp0());
 	pStrimW() << " OR ";
-	this->pDoToStrim(iRep->GetOp1());
+	this->pToStrim(iRep->GetOp1());
 	pStrimW() << ")";
 	}
 
@@ -480,7 +480,7 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 
 		s << " WHERE ";
 
-		ToStrim_SQL().DoToStrim(ToStrim_SQL::Options(), s, theThing.fCondition);
+		ToStrim_SQL().ToStrim(ToStrim_SQL::Options(), s, theThing.fCondition);
 		
 		s << ";\n";
 		return true;

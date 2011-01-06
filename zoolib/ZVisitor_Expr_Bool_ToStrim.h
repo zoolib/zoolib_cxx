@@ -18,40 +18,35 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Bool_ValPred_DoGetNames__
-#define __ZVisitor_Expr_Bool_ValPred_DoGetNames__
+#ifndef __ZVisitor_Expr_Bool_ToStrim__
+#define __ZVisitor_Expr_Bool_ToStrim__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Bool_ValPred.h"
-#include "zoolib/ZVisitor_Do_T.h"
-
-#include <set>
+#include "zoolib/ZExpr_Bool.h"
+#include "zoolib/ZVisitor_ToStrim.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred_DoGetNames
+#pragma mark * ZVisitor_Expr_Bool_ToStrim
 
-class ZVisitor_Expr_Bool_ValPred_DoGetNames
-:	public virtual ZVisitor_Do_T<std::set<std::string> >
-,	public virtual ZVisitor_Expr_Bool_ValPred
-,	public virtual ZVisitor_Expr_Op1_T<ZExpr_Bool>
-,	public virtual ZVisitor_Expr_Op2_T<ZExpr_Bool>
+class ZVisitor_Expr_Bool_ToStrim
+:	public virtual ZVisitor_ToStrim
+,	public virtual ZVisitor_Expr_Bool_True
+,	public virtual ZVisitor_Expr_Bool_False
+,	public virtual ZVisitor_Expr_Bool_Not
+,	public virtual ZVisitor_Expr_Bool_And
+,	public virtual ZVisitor_Expr_Bool_Or
 	{
 public:
-// From ZVisitor_Expr_Bool_ValPred_T
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
-
-// From ZVisitor_Expr_Op1_T
-	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr);
-
-// From ZVisitor_Expr_Op2_T
-	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr);
+	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep);
+	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep);
+	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep);
+	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep);
+	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep);
 	};
-
-std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr);
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_Expr_Bool_ValPred_DoGetNames__
+#endif // __ZVisitor_Expr_Bool_ToStrim__

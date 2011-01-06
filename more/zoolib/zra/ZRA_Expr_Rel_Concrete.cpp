@@ -82,7 +82,7 @@ void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Conc
 #pragma mark -
 #pragma mark * sConcrete
 
-ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead)
+ZRef<Expr_Rel_Concrete> sConcrete(const RelHead& iRelHead)
 	{ return new Expr_Rel_Concrete(iRelHead); }
 
 } // namespace ZRA

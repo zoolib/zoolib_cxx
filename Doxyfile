@@ -580,6 +580,11 @@ INPUT2                 = ./zoolib/ZWinCom.h ./zoolib/ZWinCom.cpp
 INPUT                 = \
                          ./zoolib/ \
                          ./more/zoolib/blackberry/ \
+                         ./more/zoolib/dataset/ \
+                         ./more/zoolib/dataspace/ \
+                         ./more/zoolib/fileformat/ \
+                         ./more/zoolib/netscape/ \
+                         ./more/zoolib/photoshop/ \
                          ./more/zoolib/sqlite/ \
                          ./more/zoolib/zqe/ \
                          ./more/zoolib/zra/ \

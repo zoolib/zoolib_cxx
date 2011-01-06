@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim_ValPred_Any.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_ToStrim.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Const.h"
@@ -71,12 +71,12 @@ void spWrite_EffectiveRelHeadComment(ZRef<Expr_Rel> iExpr, const ZStrimW& iStrim
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_DoToStrim
+#pragma mark * Visitor_ToStrim
 
 namespace { // anonymous
 
-class Visitor_DoToStrim
-:	public virtual ZVisitor_Expr_Bool_ValPred_Any_DoToStrim
+class Visitor_ToStrim
+:	public virtual ZVisitor_Expr_Bool_ValPred_Any_ToStrim
 ,	public virtual Visitor_Expr_Rel_Difference
 ,	public virtual Visitor_Expr_Rel_Embed
 ,	public virtual Visitor_Expr_Rel_Intersect
@@ -114,10 +114,10 @@ private:
 
 } // anonymous namespace
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
 	{ this->pWriteBinary("Difference", iExpr); }
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Embed";
@@ -129,7 +129,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	w << "(";
 
 //####	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp0());
+	this->pToStrim(iExpr->GetOp0());
 	w << ",";
 
 	this->pWriteLFIndent();
@@ -137,22 +137,22 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp1());
+	this->pToStrim(iExpr->GetOp1());
 
 //##	this->pWriteLFIndent();
 	w << ")";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr)
 	{ this->pWriteBinary("Intersect", iExpr); }
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 	{ this->pWriteBinary("Product", iExpr); }
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
 	{ this->pWriteBinary("Union", iExpr); }
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	spWrite("Calc", w);
@@ -171,13 +171,13 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp0());
+	this->pToStrim(iExpr->GetOp0());
 
 //##	this->pWriteLFIndent();
 	w << ")";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	spWrite("Const", w);
@@ -196,13 +196,13 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp0());
+	this->pToStrim(iExpr->GetOp0());
 
 //##	this->pWriteLFIndent();
 	w << ")";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	spWrite("Project", w);
@@ -218,13 +218,13 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iEx
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp0());
+	this->pToStrim(iExpr->GetOp0());
 
 //##	this->pWriteLFIndent();
 	w << ")";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	spWrite("Rename", w);
@@ -242,13 +242,13 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp0());
+	this->pToStrim(iExpr->GetOp0());
 
 //##	this->pWriteLFIndent();
 	w << ")";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Restrict";
@@ -263,13 +263,13 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& i
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp0());
+	this->pToStrim(iExpr->GetOp0());
 
 //##	this->pWriteLFIndent();
 	w << ")";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Select";
@@ -280,18 +280,18 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr
 //	this->pWriteLFIndent();
 	w << "(";
 //	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetExpr_Bool());
+	this->pToStrim(iExpr->GetExpr_Bool());
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp0());
+	this->pToStrim(iExpr->GetOp0());
 
 //##	this->pWriteLFIndent();
 	w << ")";
 	}
 
 #if 1
-void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 
@@ -300,7 +300,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& i
 	w << ")";
 	}
 #else
-void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 
@@ -318,13 +318,13 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& i
 	}
 #endif
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
+void Visitor_ToStrim::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Dee()";
 	}
 
-void Visitor_DoToStrim::pWriteBinary(
+void Visitor_ToStrim::pWriteBinary(
 	const string& iFunctionName, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
@@ -337,11 +337,11 @@ void Visitor_DoToStrim::pWriteBinary(
 	w << "(";
 
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp0());
+	this->pToStrim(iExpr->GetOp0());
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->pDoToStrim(iExpr->GetOp1());
+	this->pToStrim(iExpr->GetOp1());
 
 //##	this->pWriteLFIndent();
 	w << ")";
@@ -360,7 +360,7 @@ void sToStrim(const ZRef<ZRA::Expr_Rel>& iRel, const ZStrimW& iStrimW)
 	}
 
 void sToStrim(const ZRef<ZRA::Expr_Rel>& iRel, const Options& iOptions, const ZStrimW& iStrimW)
-	{ Visitor_DoToStrim().DoToStrim(iOptions, iStrimW, iRel); }
+	{ Visitor_ToStrim().ToStrim(iOptions, iStrimW, iRel); }
 
 } // namespace Util_Strim_Rel
 } // namespace ZRA

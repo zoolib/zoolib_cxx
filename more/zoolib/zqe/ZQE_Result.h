@@ -68,6 +68,9 @@ private:
 template<>
 int sCompare_T(const ZQE::Result& iL, const ZQE::Result& iR);
 
+template <>
+int sCompare_T<ZRef<ZQE::Result> >(const ZRef<ZQE::Result>& iL, const ZRef<ZQE::Result>& iR);
+
 } // namespace ZooLib
 
 #endif // __ZQE_Result__

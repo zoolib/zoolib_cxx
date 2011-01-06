@@ -18,35 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Bool_DoToStrim__
-#define __ZVisitor_Expr_Bool_DoToStrim__
-#include "zconfig.h"
-
-#include "zoolib/ZExpr_Bool.h"
-#include "zoolib/ZVisitor_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches.h"
+#include "zoolib/ZValPred_Any.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_DoToStrim
+#pragma mark *
 
-class ZVisitor_Expr_Bool_DoToStrim
-:	public virtual ZVisitor_DoToStrim
-,	public virtual ZVisitor_Expr_Bool_True
-,	public virtual ZVisitor_Expr_Bool_False
-,	public virtual ZVisitor_Expr_Bool_Not
-,	public virtual ZVisitor_Expr_Bool_And
-,	public virtual ZVisitor_Expr_Bool_Or
-	{
-public:
-	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep);
-	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep);
-	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep);
-	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep);
-	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep);
-	};
+ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches::
+ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches(const ZVal_Any& iVal)
+:	fVal(iVal)
+	{}
+
+void ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches::Visit_Expr_Bool_ValPred(
+	const ZRef<ZExpr_Bool_ValPred>& iExpr)
+	{ this->pSetResult(sMatches(iExpr->GetValPred(), fVal)); }
+
+bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal)
+	{ return ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches(iVal).Do(iExpr); }
 
 } // namespace ZooLib
-
-#endif // __ZVisitor_Expr_Bool_DoToStrim__

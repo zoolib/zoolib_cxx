@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,29 +18,36 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoGetNames.h"
-#include "zoolib/ZUtil_STL_set.h"
-#include "zoolib/ZValPred_GetNames.h"
+#ifndef __ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches__
+#define __ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches__
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Bool_ValPred.h"
+#include "zoolib/ZVal_Any.h"
+#include "zoolib/ZVisitor_Expr_Bool_Do_Eval.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred_DoGetNames
+#pragma mark * ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches
 
-void ZVisitor_Expr_Bool_ValPred_DoGetNames::Visit_Expr_Bool_ValPred(
-	const ZRef<ZExpr_Bool_ValPred>& iExpr)
-	{ this->pSetResult(sGetNames(iExpr->GetValPred())); }
+class ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches
+:	public virtual ZVisitor_Expr_Bool_Do_Eval
+,	public virtual ZVisitor_Expr_Bool_ValPred
+	{
+public:
+	ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches(const ZVal_Any& iVal);
 
-void ZVisitor_Expr_Bool_ValPred_DoGetNames::Visit_Expr_Op1(
-	const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr)
-	{ this->pSetResult(this->Do(iExpr->GetOp0())); }
+// From ZVisitor_Expr_Bool_ValPred
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
 
-void ZVisitor_Expr_Bool_ValPred_DoGetNames::Visit_Expr_Op2(
-	const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr)
-	{ this->pSetResult(ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp1()))); }
+private:
+	const ZVal_Any& fVal;
+	};
 
-std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr)
-	{ return ZVisitor_Expr_Bool_ValPred_DoGetNames().Do(iExpr); }
+bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal);
 
 } // namespace ZooLib
+
+#endif // __ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches__

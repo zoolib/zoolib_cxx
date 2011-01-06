@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZValPred_GetNames.h"
-#include "zoolib/ZVisitor_Expr_Bool_ValPred_DoGetNames.h"
-#include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
+#include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
 
 #include "zoolib/dataspace/ZDataspace_Source_Union.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
@@ -56,10 +56,10 @@ using std::vector;
 namespace { // anonymous
 
 class InsertPrefix
-:	public virtual ZVisitor_Expr_Op_DoTransform_T<ZRA::Expr_Rel>
+:	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel>
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 	{
-	typedef ZVisitor_Expr_Op_DoTransform_T<ZRA::Expr_Rel> inherited;
+	typedef ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel> inherited;
 public:
 	InsertPrefix(const string8& iPrefix);
 
@@ -332,7 +332,7 @@ public:
 #pragma mark * Source_Union::Analyze
 
 class Source_Union::Analyze
-:	public virtual ZVisitor_Expr_Op_DoTransform_T<ZRA::Expr_Rel>
+:	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel>
 ,	public virtual ZRA::Visitor_Expr_Rel_Embed
 ,	public virtual ZRA::Visitor_Expr_Rel_Calc
 ,	public virtual ZRA::Visitor_Expr_Rel_Const
@@ -342,7 +342,7 @@ class Source_Union::Analyze
 ,	public virtual ZRA::Visitor_Expr_Rel_Select
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 	{
-	typedef ZVisitor_Expr_Op_DoTransform_T<ZRA::Expr_Rel> inherited;
+	typedef ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel> inherited;
 public:
 	Analyze(Source_Union* iSource_Union, PSearch* iPSearch);
 

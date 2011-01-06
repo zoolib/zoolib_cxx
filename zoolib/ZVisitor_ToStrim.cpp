@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZSetRestore_T.h"
-#include "zoolib/ZVisitor_DoToStrim.h"
+#include "zoolib/ZVisitor_ToStrim.h"
 
 #include <typeinfo>
 
@@ -28,9 +28,9 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_DoToStrim::Options
+#pragma mark * ZVisitor_ToStrim::Options
 
-ZVisitor_DoToStrim::Options::Options()
+ZVisitor_ToStrim::Options::Options()
 :	fEOLString("\n")
 ,	fIndentString("  ")
 ,	fInitialIndent(0)
@@ -39,16 +39,16 @@ ZVisitor_DoToStrim::Options::Options()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_DoToStrim
+#pragma mark * ZVisitor_ToStrim
 static ZStrimW_Null sNull;
 
-ZVisitor_DoToStrim::ZVisitor_DoToStrim()
+ZVisitor_ToStrim::ZVisitor_ToStrim()
 :	fOptions(nullptr)
 ,	fStrimW(nullptr)
 ,	fIndent(0)
 	{}
 
-void ZVisitor_DoToStrim::Visit(const ZRef<ZVisitee>& iRep)
+void ZVisitor_ToStrim::Visit(const ZRef<ZVisitee>& iRep)
 	{
 	if (iRep)
 		pStrimW() << "/*unhandled ZVisitee: " << typeid(*iRep.Get()).name() << "*/";
@@ -56,17 +56,17 @@ void ZVisitor_DoToStrim::Visit(const ZRef<ZVisitee>& iRep)
 		pStrimW() << "/*null ZVisitee*/";
 	}
 
-void ZVisitor_DoToStrim::DoToStrim(
+void ZVisitor_ToStrim::ToStrim(
 	const Options& iOptions, const ZStrimW& iStrimW, const ZRef<ZVisitee>& iRep)
 	{
 	ZSetRestore_T<const Options*> sr1(fOptions, &iOptions);
 	ZSetRestore_T<const ZStrimW*> sr2(fStrimW, &iStrimW);
 	ZSetRestore_T<size_t> sr3(fIndent, iOptions.fInitialIndent);
 
-	this->pDoToStrim(iRep);
+	this->pToStrim(iRep);
 	}
 
-void ZVisitor_DoToStrim::pDoToStrim(const ZRef<ZVisitee>& iRep)
+void ZVisitor_ToStrim::pToStrim(const ZRef<ZVisitee>& iRep)
 	{
 	ZAssert(fOptions && fStrimW);
 	if (iRep)
@@ -77,19 +77,19 @@ void ZVisitor_DoToStrim::pDoToStrim(const ZRef<ZVisitee>& iRep)
 		}
 	}
 
-const ZVisitor_DoToStrim::Options& ZVisitor_DoToStrim::pOptions()
+const ZVisitor_ToStrim::Options& ZVisitor_ToStrim::pOptions()
 	{
 	ZAssert(fOptions);
 	return *fOptions;
 	}
 
-const ZStrimW& ZVisitor_DoToStrim::pStrimW()
+const ZStrimW& ZVisitor_ToStrim::pStrimW()
 	{
 	ZAssert(fStrimW);
 	return *fStrimW;
 	}
 
-void ZVisitor_DoToStrim::pWriteLFIndent()
+void ZVisitor_ToStrim::pWriteLFIndent()
 	{
 	pStrimW().Write(pOptions().fEOLString);
 	for (size_t x = 0; x < fIndent; ++x)
