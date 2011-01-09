@@ -42,14 +42,12 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Event>& iEvent)
 	{
 	if (iEvent->IsLeaf())
 		{
-		w.Writef("%zu", iEvent->Value());
+		w << iEvent->Value();
 		}
 	else
 		{
-		w << "(";
-		w.Writef("%zu", iEvent->Value());
-		w << "+" << iEvent->Left() << "," << iEvent->Right();
-		w << ")";
+		w << "(" << iEvent->Value()
+			<< "+" << iEvent->Left() << "," << iEvent->Right() << ")";
 		}
 	return w;
 	}

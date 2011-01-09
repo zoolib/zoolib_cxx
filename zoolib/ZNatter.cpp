@@ -107,7 +107,7 @@ void Channel::pRemove(Exchange* iExchange)
 	guard.Release();
 
 	if (ZLOGF(s, eDebug))
-		s.Writef("%p, id: %lld", this, iExchange->fID);
+		s << this << ", id: " << iExchange->fID;
 
 	try
 		{
@@ -154,7 +154,7 @@ ZQ<ZData_Any> Channel::pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
 	guard.Release();
 
 	if (ZLOGF(s, eDebug))
-		s.Writef("%p, id: %lld", this, iExchange->fID);
+		s << this << "id: " << iExchange->fID;
 
 	try
 		{
@@ -234,7 +234,7 @@ void Channel::pRead(ZGuardRMtxR& iGuard)
 		else
 			{
 			if (ZLOGF(s, eDebug))
-				s.Writef("%p, id: %lld, type: %d", this, theID, theType);
+				s << this << ", id: " << theID << ", type: " << theType;
 
 			if (theType == 0)
 				{

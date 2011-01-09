@@ -42,7 +42,7 @@ namespace ZooLib {
 
 ZNetListener_RFCOMM_OSX::ZNetListener_RFCOMM_OSX(CFDictionaryRef iServiceDict)
 	{
-	fDelegate.Add(@selector(channelOpened:channel:),
+	fDelegate.Set(@selector(channelOpened:channel:),
 		MakeCallable(this, &ZNetListener_RFCOMM_OSX::pChannelOpened));
 
 	// iServiceDict should (must?) have an entry for "0100 - ServiceName*"
@@ -112,10 +112,10 @@ ZNetEndpoint_RFCOMM_OSX::ZNetEndpoint_RFCOMM_OSX(IOBluetoothDevice* iDevice, uin
 :	fChannel(nullptr)
 ,	fOpen(true)
 	{
-	fDelegate.Add(@selector(rfcommChannelData:data:length:),
+	fDelegate.Set(@selector(rfcommChannelData:data:length:),
 		MakeCallable(this, &ZNetEndpoint_RFCOMM_OSX::pReceived));
 
-	fDelegate.Add(@selector(rfcommChannelClosed:),
+	fDelegate.Set(@selector(rfcommChannelClosed:),
 		MakeCallable(this, &ZNetEndpoint_RFCOMM_OSX::pClosed));
 
 	if (kIOReturnSuccess
