@@ -483,7 +483,7 @@ bool Source_Dataset::pPull()
 	ZRef<Deltas> theDeltas;
 	fEvent = fDataset->GetDeltas(theDeltas, fEvent);
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
-	s.Writef("theMNED.size()=%zu", theMNED.size());
+	s << "theMNED.size()=" << theMNED.size();
 	bool anyChanges = false;
 	for (Map_NamedEvent_Delta_t::const_iterator
 		iterMNED = theMNED.begin(), endMNED = theMNED.end();
@@ -491,7 +491,7 @@ bool Source_Dataset::pPull()
 		{
 		const NamedEvent& theNamedEvent = iterMNED->first;
 		const map<Daton, bool>& theStatements = iterMNED->second->GetStatements();
-		s.Writef("\ntheStatements.size()=%zu", theStatements.size());
+		s << "\ntheStatements.size()=" << theStatements.size();
 		for (map<Daton, bool>::const_iterator
 			iterStmts = theStatements.begin(), endStmts = theStatements.end();
 			iterStmts != endStmts; ++iterStmts)
