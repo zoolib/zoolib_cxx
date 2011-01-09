@@ -34,11 +34,6 @@ using std::string;
 
 namespace ZooLib {
 
-#if ZCONFIG(Compiler, MSVC)
-#	define vsnprintf _vsnprintf
-#	define va_copy(dest,src) (dest)=(src)
-#endif
-
 #define kDebug_Strim 2
 
 /**
@@ -942,8 +937,10 @@ const ZStrimW& ZStrimW::Writef(const UTF8* iString, ...) const
 	{
 	va_list args;
 	va_start(args, iString);
-	size_t count;
-	this->pWritev(count, iString, args);
+	size_t countCU, countWritten;
+	this->pWritev(&countCU, &countWritten, iString, args);
+	if (countWritten != countCU)
+		sThrowEndOfStrim();
 	return *this;
 	}
 
@@ -951,25 +948,27 @@ const ZStrimW& ZStrimW::Writef(const UTF8* iString, ...) const
 substitution is applied to the string before writing. The number of UTF-8 code units
 successfully written is returned in \a oCount.
 */
-const ZStrimW& ZStrimW::Writef(size_t& oCount, const UTF8* iString, ...) const
+const ZStrimW& ZStrimW::Writef(size_t* oCountCU, size_t* oWritten, const UTF8* iString, ...) const
 	{
 	va_list args;
 	va_start(args, iString);
-	this->pWritev(oCount, iString, args);
+	this->pWritev(oCountCU, oWritten, iString, args);
 	va_end(args);
 	return *this;
 	}
 
 const ZStrimW& ZStrimW::Writev(const UTF8* iString, va_list iArgs) const
 	{
-	size_t count;
-	this->pWritev(count, iString, iArgs);
+	size_t countCU, countWritten;
+	this->pWritev(&countCU, &countWritten, iString, iArgs);
+	if (countWritten != countCU)
+		sThrowEndOfStrim();
 	return *this;
 	}
 
-const ZStrimW& ZStrimW::Writev(size_t& oWritten, const UTF8* iString, va_list iArgs) const
+const ZStrimW& ZStrimW::Writev(size_t* oCountCU, size_t* oWritten, const UTF8* iString, va_list iArgs) const
 	{
-	this->pWritev(oWritten, iString, iArgs);
+	this->pWritev(oCountCU, oWritten, iString, iArgs);
 	return *this;
 	}
 
@@ -1185,15 +1184,19 @@ void ZStrimW::pWrite(const UTF8* iSource, size_t iCountCU, size_t* oCountCU) con
 	const_cast<ZStrimW*>(this)->Imp_WriteUTF8(iSource, iCountCU, oCountCU);
 	}
 
-void ZStrimW::pWritev(size_t& oWritten, const UTF8* iString, va_list iArgs) const
+void ZStrimW::pWritev(size_t* oCountCU, size_t* oWritten, const UTF8* iString, va_list iArgs) const
 	{
 	string8 buffer(512, ' ');
 	for (;;)
 		{
-		va_list args;
-		va_copy(args, iArgs);
-
-		int count = vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
+		#if ZCONFIG(Compiler, MSVC)
+			va_list args = iArgs
+			int count = _vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
+		#else
+			va_list args;
+			va_copy(args, iArgs);
+			int count = vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
+		#endif
 
 		if (count < 0)
 			{
@@ -1208,13 +1211,67 @@ void ZStrimW::pWritev(size_t& oWritten, const UTF8* iString, va_list iArgs) cons
 		else
 			{
 			// The string fitted, we can now write it out.
+			if (oCountCU)
+				*oCountCU = count;
 			if (count)
-				this->Write(buffer.data(), count, nullptr);
-			oWritten = count;
+				this->Write(buffer.data(), count, oWritten);
+			else if (oWritten)
+				*oWritten = 0;
 			break;
 			}
 		}
 	}
+
+const ZStrimW& operator<<(const ZStrimW& s, bool iVal)
+	{ return s.Write(iVal ? "true" : "false"); }
+	
+const ZStrimW& operator<<(const ZStrimW& s, char iVal)
+	{ return s.Writef("%c", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, unsigned char iVal)
+	{ return s.Writef("%uc", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, signed char iVal)
+	{ return s.Writef("%c", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, wchar_t iVal)
+	{ return s.Writef("%lc", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, short iVal)
+	{ return s.Writef("%d", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, unsigned short iVal)
+	{ return s.Writef("%u", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, int iVal)
+	{ return s.Writef("%d", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, unsigned int iVal)
+	{ return s.Writef("%u", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, long iVal)
+	{ return s.Writef("%ld", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, unsigned long iVal)
+	{ return s.Writef("%lu", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, int64 iVal)
+	{ return s.Writef("%lld", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, uint64 iVal)
+	{ return s.Writef("%llu", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, float iVal)
+	{ return s.Writef("%.9g", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, double iVal)
+	{ return s.Writef("%.17g", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, const void* iVal)
+	{ return s.Writef("%p", iVal); }
+
+const ZStrimW& operator<<(const ZStrimW& s, void* iVal)
+	{ return s.Writef("%p", iVal); }
 
 // =================================================================================================
 #pragma mark -

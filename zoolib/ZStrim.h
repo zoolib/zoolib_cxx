@@ -27,11 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdarg.h> // For va_list
 #include <stdexcept> // For range_error
 
-#ifndef ZMACRO_ATTRIBUTE_FORMAT_PRINTF
+#ifndef ZMACRO_Attribute_Format_Printf
 	#if ZCONFIG(Compiler,GCC)
-		#define ZMACRO_ATTRIBUTE_FORMAT_PRINTF(m,n) __attribute__((format(printf,m,n)))
+		#define ZMACRO_Attribute_Format_Printf(m,n) __attribute__((format(printf,m,n)))
 	#else
-		#define ZMACRO_ATTRIBUTE_FORMAT_PRINTF(m,n)
+		#define ZMACRO_Attribute_Format_Printf(m,n)
 	#endif
 #endif
 
@@ -263,11 +263,12 @@ public:
 /** \name Formatted strings
 */	//@{
 	const ZStrimW& Writef(const UTF8* iString, ...) const
-		ZMACRO_ATTRIBUTE_FORMAT_PRINTF(2,3);
-	const ZStrimW& Writef(size_t& oWritten, const UTF8* iString, ...) const
-		ZMACRO_ATTRIBUTE_FORMAT_PRINTF(3,4);
+		ZMACRO_Attribute_Format_Printf(2,3);
+	const ZStrimW& Writef(size_t* oCountCU, size_t* oWritten, const UTF8* iString, ...) const
+		ZMACRO_Attribute_Format_Printf(4,5);
 	const ZStrimW& Writev(const UTF8* iString, va_list iArgs) const;
-	const ZStrimW& Writev(size_t& oWritten, const UTF8* iString, va_list iArgs) const;
+	const ZStrimW& Writev(size_t* oCountCU, size_t* oWritten,
+		const UTF8* iString, va_list iArgs) const;
 	//@}
 
 
@@ -329,7 +330,7 @@ protected:
 	void pWrite(const UTF16* iSource, size_t iCountCU, size_t* oCountCU) const;
 	void pWrite(const UTF8* iSource, size_t iCountCU, size_t* oCountCU) const;
 
-	void pWritev(size_t& oWritten, const UTF8* iString, va_list iArgs) const;
+	void pWritev(size_t* oCountCU, size_t* oWritten, const UTF8* iString, va_list iArgs) const;
 	};
 
 inline const ZStrimW& operator<<(const ZStrimW& s, const string32& iString)
@@ -352,6 +353,32 @@ inline const ZStrimW& operator<<(const ZStrimW& s, const UTF8* iString)
 
 inline const ZStrimW& operator<<(const ZStrimW& s, const ZStrimR& r)
 	{ return s.CopyAllFrom(r); }
+
+const ZStrimW& operator<<(const ZStrimW& s, bool iVal);
+const ZStrimW& operator<<(const ZStrimW& s, char iVal);
+const ZStrimW& operator<<(const ZStrimW& s, unsigned char iVal);
+const ZStrimW& operator<<(const ZStrimW& s, signed char iVal);
+const ZStrimW& operator<<(const ZStrimW& s, wchar_t iVal);
+const ZStrimW& operator<<(const ZStrimW& s, short iVal);
+const ZStrimW& operator<<(const ZStrimW& s, unsigned short iVal);
+const ZStrimW& operator<<(const ZStrimW& s, int iVal);
+const ZStrimW& operator<<(const ZStrimW& s, unsigned int iVal);
+const ZStrimW& operator<<(const ZStrimW& s, long iVal);
+const ZStrimW& operator<<(const ZStrimW& s, unsigned long iVal);
+const ZStrimW& operator<<(const ZStrimW& s, int64 iVal);
+const ZStrimW& operator<<(const ZStrimW& s, uint64 iVal);
+const ZStrimW& operator<<(const ZStrimW& s, float iVal);
+const ZStrimW& operator<<(const ZStrimW& s, double iVal);
+const ZStrimW& operator<<(const ZStrimW& s, const void* iVal);
+const ZStrimW& operator<<(const ZStrimW& s, void* iVal);
+
+template <class P>
+const ZStrimW& operator<<(const ZStrimW& s, const P* iVal)
+	{ return s << static_cast<const void*>(iVal); }
+
+template <class P>
+const ZStrimW& operator<<(const ZStrimW& s, P* iVal)
+	{ return s << static_cast<void*>(iVal); }
 
 // =================================================================================================
 #pragma mark -
@@ -502,35 +529,41 @@ public:
 
 
 	const Self_t& Writef(const UTF8* iString, ...) const
-		ZMACRO_ATTRIBUTE_FORMAT_PRINTF(2,3)
+		ZMACRO_Attribute_Format_Printf(2,3)
 		{
 		va_list args;
 		va_start(args, iString);
-		size_t count;
-		this->pWritev(count, iString, args);
+		size_t countCU, countWritten;
+		this->pWritev(&countCU, &countWritten, iString, args);
+		if (countWritten != countCU)
+			Base_t::sThrowEndOfStrim();
 		return static_cast<const Self_t&>(*this);
 		}
 
-	const Self_t& Writef(size_t& oWritten, const UTF8* iString, ...) const
-		ZMACRO_ATTRIBUTE_FORMAT_PRINTF(3,4)
+	const Self_t& Writef(size_t* oCountCU, size_t* oWritten, const UTF8* iString, ...) const
+		ZMACRO_Attribute_Format_Printf(4,5)
 		{
 		va_list args;
 		va_start(args, iString);
-		this->pWritev(oWritten, iString, args);
+		this->pWritev(oCountCU, oWritten, iString, args);
 		return static_cast<const Self_t&>(*this);
 		}
 
 	const Self_t& Writev(const UTF8* iString, va_list iArgs) const
 		{
 		size_t count;
-		this->pWritev(count, iString, iArgs);
+		size_t countCU, countWritten;
+		this->pWritev(&countCU, &countWritten, iString, iArgs);
+		if (countWritten != countCU)
+			Base_t::sThrowEndOfStrim();
 		return static_cast<const Self_t&>(*this);
 		}
 
-	const Self_t& Writev(size_t& oWritten, const UTF8* iString, va_list iArgs) const
+	const Self_t& Writev(size_t* oCountCU, size_t* oWritten,
+		const UTF8* iString, va_list iArgs) const
 		{
 		size_t count;
-		this->pWritev(oWritten, iString, iArgs);
+		this->pWritev(oCountCU, oWritten, iString, iArgs);
 		return static_cast<const Self_t&>(*this);
 		}
 	};
