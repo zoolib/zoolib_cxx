@@ -668,6 +668,7 @@ void Source_Union::ModifyRegistrations(
 						}
 					}
 				}
+			fPSearch_NeedsWork.EraseIfContains(thePSearch);
 			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PSearch, thePSearch->fRel);
 			}
 		
