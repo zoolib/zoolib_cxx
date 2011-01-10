@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZTypes.h"
+#include "zoolib/ZStdInt.h"
 
 namespace ZooLib {
 
@@ -37,13 +37,24 @@ namespace ZooLib {
 template <typename L>
 struct DListHead
 	{
-	DListHead() : fHeadL(nullptr), fSize(0) {}
+private:
+	DListHead& operator=(const DListHead&);
+
+public:
+	DListHead()
+	:	fHeadL(nullptr)
+	,	fSize(0)
+	{}
 
 	DListHead(const DListHead& iOther)
-	:	fHeadL(nullptr), fSize(0)
+	:	fHeadL(nullptr)
+	,	fSize(0)
 		{
 		ZAssertStop(L::kDebug, !iOther.fHeadL && !iOther.fSize);
 		}
+
+	~DListHead()
+		{ ZAssertStop(L::kDebug, !fHeadL && !fSize); }
 
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
 		DListHead, operator_bool_generator_type, operator_bool_type);
@@ -167,20 +178,25 @@ struct DListHead
 template <typename P, typename L, int kDebug_T = 1>
 class DListLink
 	{
-public:
-//	DListLink& operator=(const DListLink&); // not implemented/implementable
+private:
+	DListLink& operator=(const DListLink&);
+
 public:
 	static const int kDebug = kDebug_T;
 
-	DListLink() : fPrev(nullptr), fNext(nullptr) {}
+	DListLink()
+	:	fPrev(nullptr)
+	,	fNext(nullptr) {}
 
 	DListLink(const DListLink& iOther)
-	 : fPrev(nullptr), fNext(nullptr)
+	:	fPrev(nullptr)
+	,	fNext(nullptr)
 		{
 		ZAssertStop(kDebug, !iOther.fPrev && !iOther.fNext);
 		}
 
-	~DListLink() { ZAssertStop(kDebug, !fPrev && !fNext); }
+	~DListLink()
+		{ ZAssertStop(kDebug, !fPrev && !fNext); }
 
 	L* fPrev;
 	L* fNext;
@@ -195,13 +211,16 @@ class DListIterator
 	{
 public:
 	DListIterator()
-	:	fDListHead(nullptr),
-		fCurrent(nullptr)
+	:	fDListHead(nullptr)
+	,	fCurrent(nullptr)
 		{}
 
 	DListIterator(const DListIterator& iOther)
-	:	fDListHead(iOther.fDListHead),
-		fCurrent(iOther.fCurrent)
+	:	fDListHead(iOther.fDListHead)
+	,	fCurrent(iOther.fCurrent)
+		{}
+
+	~DListIterator()
 		{}
 
 	DListIterator& operator=(const DListIterator& iOther)
@@ -212,8 +231,8 @@ public:
 		}
 
 	DListIterator(const DListHead<L>& iDListHead)
-	:	fDListHead(&iDListHead),
-		fCurrent(iDListHead.fHeadL)
+	:	fDListHead(&iDListHead)
+	,	fCurrent(iDListHead.fHeadL)
 		{}
 
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
@@ -245,7 +264,22 @@ private:
 template <typename P, typename L>
 class DListIteratorEraseAll
 	{
+	DListIteratorEraseAll();
+	DListIteratorEraseAll& operator=(const DListIteratorEraseAll&);
+
 public:
+	DListIteratorEraseAll(const DListIteratorEraseAll& iOther)
+	:	fDListHead(iOther.fDListHead)
+	,	fCurrent(iOther.fCurrent)
+		{}
+		
+	~DListIteratorEraseAll()
+		{
+		ZAssertStop(L::kDebug, !fCurrent);
+		fDListHead.fHeadL = nullptr;
+		fDListHead.fSize = 0;
+		}
+
 	DListIteratorEraseAll(DListHead<L>& ioDListHead)
 	:	fDListHead(ioDListHead),
 		fCurrent(ioDListHead.fHeadL)
@@ -264,15 +298,8 @@ public:
 			}
 		}
 
-	~DListIteratorEraseAll()
-		{
-		fDListHead.fHeadL = nullptr;
-		fDListHead.fSize = 0;
-		}
-
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
 		DListIteratorEraseAll, operator_bool_generator_type, operator_bool_type);
-
 	operator operator_bool_type() const
 		{
 		ZAssertStop(L::kDebug, fCurrent && fNext || !fCurrent && !fNext);
