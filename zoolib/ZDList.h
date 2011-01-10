@@ -251,30 +251,48 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * DListIteratorEraseAll
+#pragma mark * DListEraser
 
 template <typename P, typename L>
-class DListIteratorEraseAll
+class DListEraser
 	{
-	DListIteratorEraseAll();
-	DListIteratorEraseAll& operator=(const DListIteratorEraseAll&);
+
 public:
-	DListIteratorEraseAll(const DListIteratorEraseAll& iOther)
-	:	fDListHead(iOther.fDListHead),
-		fCurrent(iOther.fCurrent)
+	DListEraser()
+	:	fCurrent(nullptr)
+	,	fNext(nullptr)
 		{}
-		
-	~DListIteratorEraseAll()
+
+	DListEraser(const DListEraser& iOther)
+	:	fCurrent(iOther.fCurrent)
+	,	fNext(iOther.fNext)
 		{
-		fDListHead.fHeadL = nullptr;
-		fDListHead.fSize = 0;
+		iOther.fCurrent = nullptr;
+		iOther.fNext = nullptr;
+		}
+		
+	~DListEraser()
+		{ ZAssertStop(L::kDebug, !fCurrent && !fNext); }
+
+	DListEraser& operator=(const DListEraser& iOther)
+		{
+		fCurrent = iOther.fCurrent;
+		fNext = iOther.fNext;
+		iOther.fCurrent = nullptr;
+		iOther.fNext = nullptr;
+		return *this;
 		}
 
-	DListIteratorEraseAll(DListHead<L>& ioDListHead)
-	:	fDListHead(ioDListHead),
-		fCurrent(ioDListHead.fHeadL)
+	DListEraser(DListHead<L>& ioDListHead)
+	:	fCurrent(ioDListHead.fHeadL)
 		{
-		if (fCurrent)
+		ioDListHead.fHeadL = nullptr;
+		ioDListHead.fSize = 0;
+		if (!fCurrent)
+			{
+			fNext = nullptr;
+			}
+		else
 			{
 			ZAssertStop(L::kDebug, fCurrent->fNext);
 			ZAssertStop(L::kDebug, fCurrent->fPrev);
@@ -282,18 +300,13 @@ public:
 			fCurrent->fNext = nullptr;
 			fCurrent->fPrev = nullptr;
 			}
-		else
-			{
-			fNext = nullptr;
-			}
 		}
 
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
-		DListIteratorEraseAll, operator_bool_generator_type, operator_bool_type);
-
+		DListEraser, operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const
 		{
-		ZAssertStop(L::kDebug, fCurrent && fNext || !fCurrent && !fNext);
+		ZAssertStop(L::kDebug, fCurrent || !fCurrent && !fNext);
 		return operator_bool_generator_type::translate(fCurrent);
 		}
 
@@ -303,26 +316,18 @@ public:
 	void Advance()
 		{
 		ZAssertStop(L::kDebug, fCurrent);
-		ZAssertStop(L::kDebug, fNext);
-		if (fNext == fDListHead.fHeadL)
+		fCurrent = fNext;
+		if (fCurrent)
 			{
-			fCurrent = nullptr;
-			fNext = nullptr;
-			}
-		else
-			{
-			ZAssertStop(L::kDebug, fNext->fNext);
-			fCurrent = fNext;
-			fNext = fNext->fNext;
+			fNext = fCurrent->fNext;
 			fCurrent->fNext = nullptr;
 			fCurrent->fPrev = nullptr;
 			}
 		}
 
 private:
-	DListHead<L>& fDListHead;
-	L* fCurrent;
-	L* fNext;
+	mutable L* fCurrent;
+	mutable L* fNext;
 	};
 
 } // namespace ZooLib
