@@ -22,9 +22,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCompare_T__ 1
 #include "zconfig.h"
 
+#include <functional> // For std::binary_function
+
 namespace ZooLib {
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCompare_T declaration
+
 template <class T> int sCompare_T(const T& iL, const T& iR);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Less_Compare_T
+
+template <class T>
+struct Less_Compare_T : public std::binary_function<T,T,bool>
+	{
+	bool operator()(const T& iLeft, const T& iRight) const
+		{ return sCompare_T(iLeft, iRight) < 0; }
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCompareIterators_T
 
 template <class InputIterator>
 inline int sCompareIterators_T(

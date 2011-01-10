@@ -19,10 +19,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallable_Function.h"
+#include "zoolib/ZCompare_Ref.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZThread.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel.h"
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCompare_T
+
+namespace ZooLib {
+
+template <>
+int sCompare_T<ZRef<ZRA::Expr_Rel> >(const ZRef<ZRA::Expr_Rel>& iL, const ZRef<ZRA::Expr_Rel>& iR)
+	{ return sCompareRef_T(iL, iR); }
+
+ZMACRO_CompareRegistration_T(ZRef<ZRA::Expr_Rel>)
+
+} // namespace ZooLib
 
 namespace ZooLib {
 namespace ZRA {
