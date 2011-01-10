@@ -57,7 +57,7 @@ void ZStrimR_Rewind::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 			{
 			size_t priorPosition = fBuffer.GetPosition();
 			// Our buffer's reached the end. Try topping it up.
-			size_t countCopied;
+			uint64 countCopied;
 			ZStrimW_StreamUTF8(fBuffer).CopyFrom(fStrimSource, countRemaining, &countCopied, nullptr);
 			if (countCopied == 0)
 				break;
