@@ -643,10 +643,10 @@ void Source_Union::ModifyRegistrations(
 				ZUtil_STL::sEraseMustContain(kDebug, theProxy->fDependentPSearches, thePSearch);
 				if (theProxy->fDependentPSearches.empty())
 					{
-					for (DListIteratorEraseAll<PIP, DLink_PIP_InProxy>
-						iterPIP = theProxy->fPIP_InProxy; iterPIP; iterPIP.Advance())
+					for (DListEraser<PIP, DLink_PIP_InProxy>
+						eraserPIP = theProxy->fPIP_InProxy; eraserPIP; eraserPIP.Advance())
 						{
-						PIP* thePIP = iterPIP.Current();
+						PIP* thePIP = eraserPIP.Current();
 						PSource* thePSource = thePIP->fPSource;
 						thePSource->fPIP_NeedsWork.InsertIfNotContains(thePIP);
 						fPSource_NeedsWork.InsertIfNotContains(thePSource);
@@ -706,16 +706,16 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 
 	// -----
 
-	for (DListIteratorEraseAll<PSource, DLink_PSource_NeedsWork>
-		iterPSource = fPSource_NeedsWork; iterPSource; iterPSource.Advance())
+	for (DListEraser<PSource, DLink_PSource_NeedsWork>
+		eraserPSource = fPSource_NeedsWork; eraserPSource; eraserPSource.Advance())
 		{
-		PSource* thePSource = iterPSource.Current();
+		PSource* thePSource = eraserPSource.Current();
 		vector<AddedSearch> theAddedSearches;
 		vector<int64> theRemoves;
-		for (DListIteratorEraseAll<PIP, DLink_PIP_NeedsWork>
-			iterPIP = thePSource->fPIP_NeedsWork; iterPIP; iterPIP.Advance())
+		for (DListEraser<PIP, DLink_PIP_NeedsWork>
+			eraserPIP = thePSource->fPIP_NeedsWork; eraserPIP; eraserPIP.Advance())
 			{
-			PIP* thePIP = iterPIP.Current();
+			PIP* thePIP = eraserPIP.Current();
 			if (thePIP->fProxy)
 				{
 				if (thePIP->fNeedsAdd)
@@ -740,18 +740,18 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 
 	// -----
 
-	for (DListIteratorEraseAll<PSource, DLink_PSource_CollectFrom>
-		iterPSource = fPSource_CollectFrom; iterPSource; iterPSource.Advance())
+	for (DListEraser<PSource, DLink_PSource_CollectFrom>
+		eraserPSource = fPSource_CollectFrom; eraserPSource; eraserPSource.Advance())
 		{
-		this->pCollectFrom(iterPSource.Current());
+		this->pCollectFrom(eraserPSource.Current());
 		}
 
 	// -----
 
-	for (DListIteratorEraseAll<PSearch, DLink_PSearch_NeedsWork>
-		iterPSearch = fPSearch_NeedsWork; iterPSearch; iterPSearch.Advance())
+	for (DListEraser<PSearch, DLink_PSearch_NeedsWork>
+		eraserPSearch = fPSearch_NeedsWork; eraserPSearch; eraserPSearch.Advance())
 		{
-		PSearch* thePSearch = iterPSearch.Current();
+		PSearch* thePSearch = eraserPSearch.Current();
 		bool allOK = true;
 		ZRef<Event> theEvent;
 		for (set<ZRef<Proxy> >::iterator iterProxy = thePSearch->fProxiesDependedUpon.begin();

@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamMUX.h"
 
 #include "zoolib/ZCommer.h"
+#include "zoolib/ZDList.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_STL.h"
@@ -1001,7 +1002,7 @@ void ZStreamMUX::Listener_Finalize(Listener* iListener)
 	ZAssert(i != fMap_NameToListener.end());
 	fMap_NameToListener.erase(i);
 
-	for (DListIteratorEraseAll<Endpoint, DLink_Endpoint_Pending>
+	for (DListEraser<Endpoint, DLink_Endpoint_Pending>
 		i = iListener->fEndpoints_Pending; i; i.Advance())
 		{
 		Endpoint* theEndpoint = i.Current();
