@@ -212,18 +212,27 @@ bool Source_Union::Comparator_Proxy::operator()(Proxy* iLeft, Proxy* iRight) con
 class Source_Union::Walker_Proxy : public ZQE::Walker
 	{
 public:
-	Walker_Proxy(ZRef<Source_Union> iSource, ZRef<Proxy> iProxy);
-	virtual ~Walker_Proxy();
+	Walker_Proxy(ZRef<Source_Union> iSource, ZRef<Proxy> iProxy)
+	:	fSource(iSource)
+	,	fProxy(iProxy)
+	,	fIter_PIP(iProxy->fPIP_InProxy)
+		{}
 
-	virtual void Rewind();
+	virtual ~Walker_Proxy()
+		{}
+
+	virtual void Rewind()
+		{ fSource->pRewind(this); }
 
 	virtual void Prime(const map<string8,size_t>& iBindingOffsets, 
 		map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
+		size_t& ioBaseOffset)
+		{ fSource->pPrime(this, iBindingOffsets, oOffsets, ioBaseOffset); }
 
 	virtual bool ReadInc(const ZVal_Any* iBindings,
 		ZVal_Any* oResults,
-		set<ZRef<ZCounted> >* oAnnotations);
+		set<ZRef<ZCounted> >* oAnnotations)
+		{ return fSource->pReadInc(this, iBindings, oResults, oAnnotations); }
 
 	ZRef<Source_Union> fSource;
 	ZRef<Proxy> fProxy;
@@ -233,28 +242,6 @@ public:
 	ZRef<ZQE::Result> fCurrentResult;
 	size_t fCurrentIndex;
 	};
-
-Source_Union::Walker_Proxy::Walker_Proxy(ZRef<Source_Union> iSource, ZRef<Proxy> iProxy)
-:	fSource(iSource)
-,	fProxy(iProxy)
-,	fIter_PIP(iProxy->fPIP_InProxy)
-	{}
-
-Source_Union::Walker_Proxy::~Walker_Proxy()
-	{}
-
-void Source_Union::Walker_Proxy::Rewind()
-	{ fSource->pRewind(this); }
-
-void Source_Union::Walker_Proxy::Prime(const map<string8,size_t>& iBindingOffsets, 
-	map<string8,size_t>& oOffsets,
-	size_t& ioBaseOffset)
-	{ fSource->pPrime(this, iBindingOffsets, oOffsets, ioBaseOffset); }
-
-bool Source_Union::Walker_Proxy::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
-	set<ZRef<ZCounted> >* oAnnotations)
-	{ return fSource->pReadInc(this, iBindings, oResults, oAnnotations); }
 
 // =================================================================================================
 #pragma mark -
@@ -529,13 +516,13 @@ class Source_Union::DLink_PSource_NeedsWork
 :	public DListLink<PSource, DLink_PSource_NeedsWork, kDebug>
 	{};
 
-class Source_Union::DLink_PSource_ToCollectFrom
-:	public DListLink<PSource, DLink_PSource_ToCollectFrom, kDebug>
+class Source_Union::DLink_PSource_CollectFrom
+:	public DListLink<PSource, DLink_PSource_CollectFrom, kDebug>
 	{};
 
 class Source_Union::PSource
 :	public DLink_PSource_NeedsWork
-,	public DLink_PSource_ToCollectFrom
+,	public DLink_PSource_CollectFrom
 	{
 public:
 	PSource(ZRef<Source> iSource, const string8& iPrefix);
@@ -604,8 +591,7 @@ Source_Union::Source_Union()
 	{}
 
 Source_Union::~Source_Union()
-	{
-	}
+	{}
 
 RelHead Source_Union::GetRelHead()
 	{
@@ -754,8 +740,8 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 
 	// -----
 
-	for (DListIteratorEraseAll<PSource, DLink_PSource_ToCollectFrom>
-		iterPSource = fPSource_ToCollectFrom; iterPSource; iterPSource.Advance())
+	for (DListIteratorEraseAll<PSource, DLink_PSource_CollectFrom>
+		iterPSource = fPSource_CollectFrom; iterPSource; iterPSource.Advance())
 		{
 		this->pCollectFrom(iterPSource.Current());
 		}
@@ -1002,7 +988,7 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 void Source_Union::pResultsAvailable(ZRef<Source> iSource)
 	{
 	Map_Source_PSource::iterator iterSource = fMap_Source_PSource.find(iSource);
-	fPSource_ToCollectFrom.InsertIfNotContains(&iterSource->second);
+	fPSource_CollectFrom.InsertIfNotContains(&iterSource->second);
 	this->pInvokeCallable_ResultsAvailable();
 	}
 

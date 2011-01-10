@@ -127,23 +127,27 @@ public:
 class Source_Dataset::Walker : public ZQE::Walker
 	{
 public:
-	Walker(ZRef<Source_Dataset> iSource,
-		const vector<string8>& iNames,
-		Map_Main::const_iterator iCurrent_Main,
-		Map_Pending::const_iterator iCurrent_Pending);
+	Walker(ZRef<Source_Dataset> iSource, const vector<string8>& iNames)
+	:	fSource(iSource)
+	,	fNames(iNames)
+		{}
 
-	virtual ~Walker();
+	virtual ~Walker()
+		{}
 
 // From ZQE::Walker
-	virtual void Rewind();
+	virtual void Rewind()
+		{ fSource->pRewind(this); }
 
 	virtual void Prime(const map<string8,size_t>& iBindingOffsets, 
 		map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
+		size_t& ioBaseOffset)
+		{ fSource->pPrime(this, iBindingOffsets, oOffsets, ioBaseOffset); }
 
 	virtual bool ReadInc(const ZVal_Any* iBindings,
 		ZVal_Any* oResults,
-		set<ZRef<ZCounted> >* oAnnotations);
+		set<ZRef<ZCounted> >* oAnnotations)
+		{ return fSource->pReadInc(this, iBindings, oResults, oAnnotations); }
 
 	ZRef<Source_Dataset> fSource;
 	size_t fBaseOffset;
@@ -151,32 +155,6 @@ public:
 	Map_Main::const_iterator fCurrent_Main;
 	Map_Pending::const_iterator fCurrent_Pending;
 	};
-
-Source_Dataset::Walker::Walker(ZRef<Source_Dataset> iSource,
-	const vector<string8>& iNames,
-	Map_Main::const_iterator iCurrent_Main,
-	Map_Pending::const_iterator iCurrent_Pending)
-:	fSource(iSource)
-,	fNames(iNames)
-,	fCurrent_Main(iCurrent_Main)
-,	fCurrent_Pending(iCurrent_Pending)
-	{}
-
-Source_Dataset::Walker::~Walker()
-	{}
-
-void Source_Dataset::Walker::Rewind()
-	{ fSource->pRewind(this); }
-
-void Source_Dataset::Walker::Prime(const map<string8,size_t>& iBindingOffsets, 
-	map<string8,size_t>& oOffsets,
-	size_t& ioBaseOffset)
-	{ fSource->pPrime(this, iBindingOffsets, oOffsets, ioBaseOffset); }
-
-bool Source_Dataset::Walker::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
-	set<ZRef<ZCounted> >* oAnnotations)
-	{ return fSource->pReadInc(this, iBindings, oResults, oAnnotations); }
 
 // =================================================================================================
 #pragma mark -
@@ -390,11 +368,7 @@ void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal
 	}
 
 ZRef<ZQE::Walker> Source_Dataset::pMakeWalker(const RelHead& iRelHead)
-	{
-	return new Walker(this,
-		vector<string8>(iRelHead.begin(), iRelHead.end()),
-		fMap.begin(), fMap_Pending.begin());
-	}
+	{ return new Walker(this, vector<string8>(iRelHead.begin(), iRelHead.end())); }
 
 void Source_Dataset::pRewind(ZRef<Walker> iWalker)
 	{
@@ -407,6 +381,8 @@ void Source_Dataset::pPrime(ZRef<Walker> iWalker,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
+	iWalker->fCurrent_Main = fMap.begin();
+	iWalker->fCurrent_Pending = fMap_Pending.begin();
 	iWalker->fBaseOffset = ioBaseOffset;
 	for (size_t x = 0; x < iWalker->fNames.size(); ++x)
 		oOffsets[iWalker->fNames[x]] = ioBaseOffset++;

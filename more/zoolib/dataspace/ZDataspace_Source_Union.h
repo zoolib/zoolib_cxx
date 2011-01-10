@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Source.h"
 #include "zoolib/zqe/ZQE_Walker.h"
-#include "zoolib/zra/ZRA_Compare_Rel.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -119,7 +118,8 @@ private:
 	class DLink_PSearch_NeedsWork;
 	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
 
-	typedef std::map<ZRef<ZRA::Expr_Rel>, PSearch, ZRA::Comparator_Rel> Map_Rel_PSearch;
+	typedef std::map<ZRef<ZRA::Expr_Rel>, PSearch, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
+		Map_Rel_PSearch;
 	Map_Rel_PSearch fMap_Rel_PSearch;
 
 	// -----
@@ -135,8 +135,8 @@ private:
 
 	class PSource;
 	class DLink_PSource_NeedsWork;
-	class DLink_PSource_ToCollectFrom;
-	DListHead<DLink_PSource_ToCollectFrom> fPSource_ToCollectFrom;
+	class DLink_PSource_CollectFrom;
+	DListHead<DLink_PSource_CollectFrom> fPSource_CollectFrom;
 	DListHead<DLink_PSource_NeedsWork> fPSource_NeedsWork;
 
 	typedef std::map<ZRef<Source>, PSource> Map_Source_PSource;

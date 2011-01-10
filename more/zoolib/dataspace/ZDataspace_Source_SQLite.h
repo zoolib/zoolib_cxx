@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZWorker.h"
 
 #include "zoolib/dataspace/ZDataspace_Source.h"
-#include "zoolib/zra/ZRA_Compare_Rel.h"
 #include "zoolib/sqlite/ZSQLite.h"
 
 namespace ZooLib {
@@ -64,7 +63,8 @@ private:
 	class PSearch;
 	std::map<int64, ClientSearch> fMap_RefconToClientSearch;
 
-	typedef std::map<ZRef<ZRA::Expr_Rel>, PSearch, ZRA::Comparator_Rel> Map_RelToPSearch;
+	typedef std::map<ZRef<ZRA::Expr_Rel>, PSearch, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
+		Map_RelToPSearch;
 	Map_RelToPSearch fMap_RelToPSearch;
 	class PSearch;
 	};
