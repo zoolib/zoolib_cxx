@@ -296,6 +296,7 @@ public:
 			{
 			ZAssertStop(L::kDebug, fCurrent->fNext);
 			ZAssertStop(L::kDebug, fCurrent->fPrev);
+			fCurrent->fPrev->fNext = nullptr;
 			fNext = fCurrent->fNext;
 			fCurrent->fNext = nullptr;
 			fCurrent->fPrev = nullptr;
