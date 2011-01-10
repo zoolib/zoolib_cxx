@@ -44,14 +44,12 @@ public:
 	DListHead()
 	:	fHeadL(nullptr)
 	,	fSize(0)
-	{}
+		{}
 
 	DListHead(const DListHead& iOther)
 	:	fHeadL(nullptr)
 	,	fSize(0)
-		{
-		ZAssertStop(L::kDebug, !iOther.fHeadL && !iOther.fSize);
-		}
+		{ ZAssertStop(L::kDebug, !iOther.fHeadL && !iOther.fSize); }
 
 	~DListHead()
 		{ ZAssertStop(L::kDebug, !fHeadL && !fSize); }
@@ -70,9 +68,7 @@ public:
 		}
 
 	bool Contains(L* iL) const
-		{
-		return iL->fNext;
-		}
+		{ return iL->fNext; }
 
 	void Insert(L* iL)
 		{
@@ -145,9 +141,7 @@ public:
 		}
 
 	void PushBack(L* iL)
-		{
-		this->Insert(iL);
-		}
+		{ this->Insert(iL); }
 
 	template <typename P>
 	P* PopFront()
@@ -191,9 +185,7 @@ public:
 	DListLink(const DListLink& iOther)
 	:	fPrev(nullptr)
 	,	fNext(nullptr)
-		{
-		ZAssertStop(kDebug, !iOther.fPrev && !iOther.fNext);
-		}
+		{ ZAssertStop(kDebug, !iOther.fPrev && !iOther.fNext); }
 
 	~DListLink()
 		{ ZAssertStop(kDebug, !fPrev && !fNext); }
@@ -266,16 +258,14 @@ class DListIteratorEraseAll
 	{
 	DListIteratorEraseAll();
 	DListIteratorEraseAll& operator=(const DListIteratorEraseAll&);
-
 public:
 	DListIteratorEraseAll(const DListIteratorEraseAll& iOther)
-	:	fDListHead(iOther.fDListHead)
-	,	fCurrent(iOther.fCurrent)
+	:	fDListHead(iOther.fDListHead),
+		fCurrent(iOther.fCurrent)
 		{}
 		
 	~DListIteratorEraseAll()
 		{
-		ZAssertStop(L::kDebug, !fCurrent);
 		fDListHead.fHeadL = nullptr;
 		fDListHead.fSize = 0;
 		}
@@ -300,6 +290,7 @@ public:
 
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
 		DListIteratorEraseAll, operator_bool_generator_type, operator_bool_type);
+
 	operator operator_bool_type() const
 		{
 		ZAssertStop(L::kDebug, fCurrent && fNext || !fCurrent && !fNext);
