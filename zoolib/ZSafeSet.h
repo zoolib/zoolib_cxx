@@ -94,7 +94,7 @@ private:
 		for (typename EntryList::iterator listIter = fList.begin();
 			listIter != fList.end(); ++listIter)
 			{
-			for (DListIteratorEraseAll<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
+			for (DListEraser<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
 				i = (*listIter).fIters; i; i.Advance())
 				{
 				ZSafeSetIterConst<T>* theIter = i.Current();
@@ -139,7 +139,7 @@ private:
 		for (typename EntryList::iterator listIter = fList.begin();
 			listIter != fList.end(); ++listIter)
 			{
-			for (DListIteratorEraseAll<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
+			for (DListEraser<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
 				i = (*listIter).fIters; i; i.Advance())
 				{
 				ZSafeSetIterConst<T>* theIter = i.Current();
@@ -441,7 +441,7 @@ ZQ<T> ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter)
 
 		result = (*ioIter.fNextEntry).fT;
 
-		for (DListIteratorEraseAll<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
+		for (DListEraser<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
 			i = (*ioIter.fNextEntry).fIters; i; i.Advance())
 			{
 			ZSafeSetIterConst<T>* theIter = i.Current();
@@ -473,7 +473,7 @@ bool ZSafeSetRep<T>::pErase(const T& iT)
 		return false;
 
 	typename EntryList::iterator& listIter = (*mapIter).second;
-	for (DListIteratorEraseAll<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
+	for (DListEraser<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
 		i = (*listIter).fIters; i; i.Advance())
 		{
 		ZSafeSetIterConst<T>* theIter = i.Current();
