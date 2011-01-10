@@ -40,16 +40,16 @@ public:
 // From ZStrimR
 	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
-	virtual void Imp_CopyToDispatch(const ZStrimW& iStrimW, size_t iCountCP,
-		size_t* oCountCPRead, size_t* oCountCPWritten);
+	virtual void Imp_CopyToDispatch(const ZStrimW& iStrimW, uint64 iCountCP,
+		uint64* oCountCPRead, uint64* oCountCPWritten);
 
-	virtual void Imp_CopyTo(const ZStrimW& iStrimW, size_t iCountCP,
-		size_t* oCountCPRead, size_t* oCountCPWritten);
+	virtual void Imp_CopyTo(const ZStrimW& iStrimW, uint64 iCountCP,
+		uint64* oCountCPRead, uint64* oCountCPWritten);
 
-	virtual void Imp_Skip(size_t iCountCP, size_t* oCountCPSkipped);
+	virtual void Imp_Skip(uint64 iCountCP, uint64* oCountCPSkipped);
 
 private:
-	size_t fRemainingCP;
+	uint64 fRemainingCP;
 	const ZStrimR& fSource;
 	};
 
@@ -62,14 +62,14 @@ private:
 class ZStrimW_Limited : public ZStrimW_NativeUTF32
 	{
 public:
-	ZStrimW_Limited(size_t iLimitCP, const ZStrimW& iSink);
+	ZStrimW_Limited(uint64 iLimitCP, const ZStrimW& iSink);
 
 // From ZStrimW via ZStrimW_NativeUTF32
 	virtual void Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU);
 	virtual void Imp_Flush();
 
 private:
-	size_t fRemainingCP;
+	uint64 fRemainingCP;
 	const ZStrimW& fSink;
 	};
 

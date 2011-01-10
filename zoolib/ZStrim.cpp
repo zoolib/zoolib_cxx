@@ -94,6 +94,7 @@ one that is at least two code units in length.
 */
 
 static const size_t kBufSize = sStackBufferSize;
+static const size_t kCopySize = 1024*1024;
 
 // =================================================================================================
 #pragma mark -
@@ -104,7 +105,7 @@ Copy data from \a iStrimR to \a iStrimW by reading it into a buffer and writing
 from that buffer.
 */
 static void spCopyReadToWrite(const ZStrimR& iStrimR, const ZStrimW& iStrimW,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten)
 	{
 	if (oCountCPRead)
 		*oCountCPRead = 0;
@@ -121,11 +122,11 @@ static void spCopyReadToWrite(const ZStrimR& iStrimR, const ZStrimW& iStrimW,
 			{
 			try
 				{
-				size_t cpRemaining = iCountCP;
+				uint64 cpRemaining = iCountCP;
 				while (cpRemaining > 0)
 					{
 					size_t cpRead;
-					iStrimR.Read(heapBuffer, min(cpRemaining, size_t(2048)), &cpRead);
+					iStrimR.Read(heapBuffer, min(cpRemaining, ZUINT64_C(2048)), &cpRead);
 					if (cpRead == 0)
 						break;
 					if (oCountCPRead)
@@ -335,7 +336,7 @@ void ZStrimR::Read(UTF8* oDest,
 /// Read data from this strim and write it to \a iStrimW until this strim reaches its end.
 void ZStrimR::CopyAllTo(const ZStrimW& iStrimW) const
 	{
-	size_t countRead, countWritten;
+	uint64 countRead, countWritten;
 	this->CopyAllTo(iStrimW, &countRead, &countWritten);
 	if (countRead > countWritten)
 		ZStrimW::sThrowEndOfStrim();
@@ -411,7 +412,7 @@ string32 ZStrimR::ReadAll32() const
 \a oCountCPRead it's a strong indication that \a iStrimW has reached its end, and a subsequent call
 to \c CopyTo or the \a iStrimW's \c Write will likely return zero in \a oCountCPWritten.
 */
-void ZStrimR::CopyAllTo(const ZStrimW& iStrimW, size_t* oCountCPRead, size_t* oCountCPWritten) const
+void ZStrimR::CopyAllTo(const ZStrimW& iStrimW, uint64* oCountCPRead, uint64* oCountCPWritten) const
 	{
 	if (oCountCPRead)
 		*oCountCPRead = 0;
@@ -421,8 +422,8 @@ void ZStrimR::CopyAllTo(const ZStrimW& iStrimW, size_t* oCountCPRead, size_t* oC
 
 	for (;;)
 		{
-		size_t cpRead, cpWritten;
-		this->CopyTo(iStrimW, 128*1024*1024, &cpRead, &cpWritten);
+		uint64 cpRead, cpWritten;
+		this->CopyTo(iStrimW, kCopySize, &cpRead, &cpWritten);
 
 		if (oCountCPRead)
 			*oCountCPRead += cpRead;
@@ -444,9 +445,9 @@ void ZStrimR::CopyAllTo(const ZStrimW& iStrimW, size_t* oCountCPRead, size_t* oC
 If \a iCount bytes could not be read then an end of read strim exception is thrown. If
 \a iCount bytes could not be written then an end of write strim exception is thrown.
 */
-void ZStrimR::CopyTo(const ZStrimW& iStrimW, size_t iCountCP) const
+void ZStrimR::CopyTo(const ZStrimW& iStrimW, uint64 iCountCP) const
 	{
-	size_t cpRead, cpWritten;
+	uint64 cpRead, cpWritten;
 	const_cast<ZStrimR*>(this)->Imp_CopyToDispatch(iStrimW, iCountCP, &cpRead, &cpWritten);
 	if (cpRead != iCountCP)
 		sThrowEndOfStrim();
@@ -463,7 +464,7 @@ void ZStrimR::CopyTo(const ZStrimW& iStrimW, size_t iCountCP) const
 \param oCountCPWritten (optional output) The number of code points that were actually written.
 */
 void ZStrimR::CopyTo(const ZStrimW& iStrimW,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten) const
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten) const
 	{
 	const_cast<ZStrimR*>(this)->Imp_CopyToDispatch(iStrimW,
 		iCountCP, oCountCPRead, oCountCPWritten);
@@ -475,9 +476,9 @@ void ZStrimR::CopyTo(const ZStrimW& iStrimW,
 \param iCountCP The number of bytes to be skipped over. If the strim reaches its
 end prematurely then an end of strim exception is thrown.
 */
-void ZStrimR::Skip(size_t iCountCP) const
+void ZStrimR::Skip(uint64 iCountCP) const
 	{
-	size_t actualCount;
+	uint64 actualCount;
 	this->Skip(iCountCP, &actualCount);
 	if (actualCount != iCountCP)
 		sThrowEndOfStrim();
@@ -485,7 +486,7 @@ void ZStrimR::Skip(size_t iCountCP) const
 
 
 /// Attempt to skip bytes, return the count actually skipped.
-void ZStrimR::Skip(size_t iCountCP, size_t* oCountCPSkipped) const
+void ZStrimR::Skip(uint64 iCountCP, uint64* oCountCPSkipped) const
 	{ const_cast<ZStrimR*>(this)->Imp_Skip(iCountCP, oCountCPSkipped); }
 
 /// Skip code points until the end of the strim is reached.
@@ -498,15 +499,15 @@ void ZStrimR::SkipAll() const
 \param oCountCPSkipped (optional output) The number of code points actually skipped. If zero
 is returned then the end of the strim had already been reached.
 */
-void ZStrimR::SkipAll(size_t* oCountCPSkipped) const
+void ZStrimR::SkipAll(uint64* oCountCPSkipped) const
 	{
 	if (oCountCPSkipped)
 		*oCountCPSkipped = 0;
 
 	for (;;)
 		{
-		size_t countSkipped;
-		this->Skip(128*1024*1024, &countSkipped);
+		uint64 countSkipped;
+		this->Skip(kCopySize, &countSkipped);
 
 		if (countSkipped == 0)
 			break;
@@ -598,7 +599,7 @@ method if your strim's data is in memory and thus can be written to \a iStrimW b
 call to its \c Write method.
 */
 void ZStrimR::Imp_CopyToDispatch(const ZStrimW& iStrimW,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten)
 	{ const_cast<ZStrimW&>(iStrimW).Imp_CopyFrom(*this, iCountCP, oCountCPRead, oCountCPWritten); }
 
 
@@ -610,7 +611,7 @@ and thus can be written to \a iStrimW by a single call to its \c Write method.
 \sa sCopyReadToWrite
 */
 void ZStrimR::Imp_CopyTo(const ZStrimW& iStrimW,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten)
 	{ spCopyReadToWrite(*this, iStrimW, iCountCP, oCountCPRead, oCountCPWritten); }
 
 
@@ -635,7 +636,7 @@ reading them.
 \param oCountCPSkipped Number of code points that were actually skipped. If iCountCP is non zero and
 oCountCPSkipped is set to zero then this indicates that the strim has reached its end.
 */
-void ZStrimR::Imp_Skip(size_t iCountCP, size_t* oCountCPSkipped)
+void ZStrimR::Imp_Skip(uint64 iCountCP, uint64* oCountCPSkipped)
 	{
 	size_t cpRemaining = iCountCP;
 	while (cpRemaining)
@@ -973,10 +974,16 @@ const ZStrimW& ZStrimW::Writev(size_t* oCountCU, size_t* oWritten, const UTF8* i
 	}
 
 const ZStrimW& ZStrimW::CopyAllFrom(const ZStrimR& iStrimR) const
-	{ return this->CopyAllFrom(iStrimR, nullptr, nullptr); }
+	{
+	uint64 countRead, countWritten;
+	this->CopyAllFrom(iStrimR, &countRead, &countWritten);
+	if (countRead > countWritten)
+		sThrowEndOfStrim();
+	return *this;
+	}
 
 const ZStrimW& ZStrimW::CopyAllFrom(const ZStrimR& iStrimR,
-	size_t* oCountCPRead, size_t* oCountCPWritten) const
+	uint64* oCountCPRead, uint64* oCountCPWritten) const
 	{
 	if (oCountCPRead)
 		*oCountCPRead = 0;
@@ -986,8 +993,8 @@ const ZStrimW& ZStrimW::CopyAllFrom(const ZStrimR& iStrimR,
 
 	for (;;)
 		{
-		size_t countRead, countWritten;
-		this->CopyFrom(iStrimR, 128*1024*1024, &countRead, &countWritten);
+		uint64 countRead, countWritten;
+		this->CopyFrom(iStrimR, kCopySize, &countRead, &countWritten);
 
 		if (oCountCPRead)
 			*oCountCPRead += countRead;
@@ -1002,9 +1009,9 @@ const ZStrimW& ZStrimW::CopyAllFrom(const ZStrimR& iStrimR,
 	return *this;
 	}
 
-const ZStrimW& ZStrimW::CopyFrom(const ZStrimR& iStrimR, size_t iCountCP) const
+const ZStrimW& ZStrimW::CopyFrom(const ZStrimR& iStrimR, uint64 iCountCP) const
 	{
-	size_t countRead, countWritten;
+	uint64 countRead, countWritten;
 	const_cast<ZStrimW*>(this)->Imp_CopyFromDispatch(iStrimR,
 		iCountCP, &countRead, &countWritten);
 
@@ -1017,7 +1024,7 @@ const ZStrimW& ZStrimW::CopyFrom(const ZStrimR& iStrimR, size_t iCountCP) const
 	}
 
 const ZStrimW& ZStrimW::CopyFrom(const ZStrimR& iStrimR,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten) const
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten) const
 	{
 	const_cast<ZStrimW*>(this)->Imp_CopyFromDispatch(iStrimR,
 		iCountCP, oCountCPRead, oCountCPWritten);
@@ -1048,7 +1055,7 @@ if your strim's data is in memory and thus \a iStrimR can have its \c Read metho
 your strim's data as its destination.
 */
 void ZStrimW::Imp_CopyFromDispatch(const ZStrimR& iStrimR,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten)
 	{ const_cast<ZStrimR&>(iStrimR).Imp_CopyTo(*this, iCountCP, oCountCPRead, oCountCPWritten); }
 
 
@@ -1060,7 +1067,7 @@ and thus can be modified by calling \a iStrimR's \c Read method.
 \sa sCopyReadToWrite
 */
 void ZStrimW::Imp_CopyFrom(const ZStrimR& iStrimR,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten)
 	{ spCopyReadToWrite(iStrimR, *this, iCountCP, oCountCPRead, oCountCPWritten); }
 
 
@@ -1221,6 +1228,27 @@ void ZStrimW::pWritev(size_t* oCountCU, size_t* oWritten, const UTF8* iString, v
 			}
 		}
 	}
+
+const ZStrimW& operator<<(const ZStrimW& s, const string32& iString)
+	{ return s.Write(iString); }
+
+const ZStrimW& operator<<(const ZStrimW& s, const UTF32* iString)
+	{ return s.Write(iString); }
+
+const ZStrimW& operator<<(const ZStrimW& s, const string16& iString)
+	{ return s.Write(iString); }
+
+const ZStrimW& operator<<(const ZStrimW& s, const UTF16* iString)
+	{ return s.Write(iString); }
+
+const ZStrimW& operator<<(const ZStrimW& s, const string8& iString)
+	{ return s.Write(iString); }
+
+const ZStrimW& operator<<(const ZStrimW& s, const UTF8* iString)
+	{ return s.Write(iString); }
+
+const ZStrimW& operator<<(const ZStrimW& s, const ZStrimR& r)
+	{ return s.CopyAllFrom(r); }
 
 const ZStrimW& operator<<(const ZStrimW& s, bool iVal)
 	{ return s.Write(iVal ? "true" : "false"); }
@@ -1569,7 +1597,7 @@ void ZStrimR_Null::Imp_ReadUTF8(UTF8* oDest,
 	}
 
 void ZStrimR_Null::Imp_CopyToDispatch(const ZStrimW& iStrimW,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten)
 	{
 	if (oCountCPRead)
 		*oCountCPRead = 0;
@@ -1578,7 +1606,7 @@ void ZStrimR_Null::Imp_CopyToDispatch(const ZStrimW& iStrimW,
 	}
 
 void ZStrimR_Null::Imp_CopyTo(const ZStrimW& iStrimW,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten)
 	{
 	if (oCountCPRead)
 		*oCountCPRead = 0;
@@ -1586,7 +1614,7 @@ void ZStrimR_Null::Imp_CopyTo(const ZStrimW& iStrimW,
 		*oCountCPWritten = 0;
 	}
 
-void ZStrimR_Null::Imp_Skip(size_t iCountCP, size_t* oCountCPSkipped)
+void ZStrimR_Null::Imp_Skip(uint64 iCountCP, uint64* oCountCPSkipped)
 	{
 	if (oCountCPSkipped)
 		*oCountCPSkipped = 0;
@@ -1617,7 +1645,7 @@ void ZStrimW_Null::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* o
 void ZStrimW_Null::Imp_CopyFromDispatch(const ZStrimR& iStrimR,
 	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
 	{
-	size_t countSkipped;
+	uint64 countSkipped;
 	iStrimR.Skip(iCountCP, &countSkipped);
 	if (oCountCPRead)
 		*oCountCPRead = countSkipped;
@@ -1628,7 +1656,7 @@ void ZStrimW_Null::Imp_CopyFromDispatch(const ZStrimR& iStrimR,
 void ZStrimW_Null::Imp_CopyFrom(const ZStrimR& iStrimR,
 	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
 	{
-	size_t countSkipped;
+	uint64 countSkipped;
 	iStrimR.Skip(iCountCP, &countSkipped);
 	if (oCountCPRead)
 		*oCountCPRead = countSkipped;
@@ -2024,7 +2052,7 @@ void ZStrimW_Indirect::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_
 	}
 
 void ZStrimW_Indirect::Imp_CopyFromDispatch(const ZStrimR& iStrimR,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten)
 	{
 	if (fSink)
 		{
@@ -2040,7 +2068,7 @@ void ZStrimW_Indirect::Imp_CopyFromDispatch(const ZStrimR& iStrimR,
 	}
 
 void ZStrimW_Indirect::Imp_CopyFrom(const ZStrimR& iStrimR,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten)
 	{
 	if (fSink)
 		{

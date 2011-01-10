@@ -41,35 +41,35 @@ ZStrimR_Limited::ZStrimR_Limited(size_t iLimitCP, const ZStrimR& iSource)
 void ZStrimR_Limited::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	size_t countRead;
-	fSource.Read(oDest, min(fRemainingCP, iCount), &countRead);
+	fSource.Read(oDest, min(uint64(iCount), fRemainingCP), &countRead);
 	fRemainingCP -= countRead;
 	if (oCount)
 		*oCount = countRead;
 	}
 
-void ZStrimR_Limited::Imp_CopyToDispatch(const ZStrimW& iStrimW, size_t iCountCP,
-	size_t* oCountCPRead, size_t* oCountCPWritten)
+void ZStrimR_Limited::Imp_CopyToDispatch(const ZStrimW& iStrimW, uint64 iCountCP,
+	uint64* oCountCPRead, uint64* oCountCPWritten)
 	{
-	size_t countCPRead;
+	uint64 countCPRead;
+	fSource.CopyTo(iStrimW, min(uint64(iCountCP), fRemainingCP), &countCPRead, oCountCPWritten);
+	fRemainingCP -= countCPRead;
+	if (oCountCPRead)
+		*oCountCPRead = countCPRead;
+	}
+
+void ZStrimR_Limited::Imp_CopyTo(const ZStrimW& iStrimW, uint64 iCountCP,
+	uint64* oCountCPRead, uint64* oCountCPWritten)
+	{
+	uint64 countCPRead;
 	fSource.CopyTo(iStrimW, min(iCountCP, fRemainingCP), &countCPRead, oCountCPWritten);
 	fRemainingCP -= countCPRead;
 	if (oCountCPRead)
 		*oCountCPRead = countCPRead;
 	}
 
-void ZStrimR_Limited::Imp_CopyTo(const ZStrimW& iStrimW, size_t iCountCP,
-	size_t* oCountCPRead, size_t* oCountCPWritten)
+void ZStrimR_Limited::Imp_Skip(uint64 iCountCP, uint64* oCountCPSkipped)
 	{
-	size_t countCPRead;
-	fSource.CopyTo(iStrimW, min(iCountCP, fRemainingCP), &countCPRead, oCountCPWritten);
-	fRemainingCP -= countCPRead;
-	if (oCountCPRead)
-		*oCountCPRead = countCPRead;
-	}
-
-void ZStrimR_Limited::Imp_Skip(size_t iCountCP, size_t* oCountCPSkipped)
-	{
-	size_t countCPSkipped;
+	uint64 countCPSkipped;
 	fSource.Skip(min(iCountCP, fRemainingCP), &countCPSkipped);
 	fRemainingCP -= countCPSkipped;
 	if (oCountCPSkipped)
@@ -80,7 +80,7 @@ void ZStrimR_Limited::Imp_Skip(size_t iCountCP, size_t* oCountCPSkipped)
 #pragma mark -
 #pragma mark * ZStrimW_Limited
 
-ZStrimW_Limited::ZStrimW_Limited(size_t iLimitCP, const ZStrimW& iSink)
+ZStrimW_Limited::ZStrimW_Limited(uint64 iLimitCP, const ZStrimW& iSink)
 :	fRemainingCP(iLimitCP),
 	fSink(iSink)
 	{}
@@ -88,7 +88,7 @@ ZStrimW_Limited::ZStrimW_Limited(size_t iLimitCP, const ZStrimW& iSink)
 void ZStrimW_Limited::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	size_t countCUWritten;
-	fSink.Write(iSource, min(fRemainingCP, iCountCU), &countCUWritten);
+	fSink.Write(iSource, min(uint64(iCountCU), fRemainingCP), &countCUWritten);
 	fRemainingCP -= ZUnicode::sCUToCP(iSource, countCUWritten);
 	if (oCountCU)
 		*oCountCU = countCUWritten;

@@ -115,22 +115,22 @@ public:
 Read code points from this strim and write them to iStrimW.
 */	//@{
 	void CopyAllTo(const ZStrimW& iStrimW) const;
-	void CopyAllTo(const ZStrimW& iStrimW, size_t* oCountCPRead, size_t* oCountCPWritten) const;
+	void CopyAllTo(const ZStrimW& iStrimW, uint64* oCountCPRead, uint64* oCountCPWritten) const;
 
-	void CopyTo(const ZStrimW& iStrimW, size_t iCountCP) const;
+	void CopyTo(const ZStrimW& iStrimW, uint64 iCountCP) const;
 
 	void CopyTo(const ZStrimW& iStrimW,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten) const;
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten) const;
 	//@}
 
 
 /** \name Skip
 Skip over code points from this strim without returning them to the caller.
 */	//@{
-	void Skip(size_t iCountCP) const;
-	void Skip(size_t iCountCP, size_t* oCountCPSkipped) const;
+	void Skip(uint64 iCountCP) const;
+	void Skip(uint64 iCountCP, uint64* oCountCPSkipped) const;
 	void SkipAll() const;
-	void SkipAll(size_t* oCountCPSkipped) const;
+	void SkipAll(uint64* oCountCPSkipped) const;
 	//@}
 
 
@@ -152,14 +152,14 @@ but particular subclasses may have more efficient implementations available.
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 	virtual void Imp_CopyToDispatch(const ZStrimW& iStrimW,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten);
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
 
 	virtual void Imp_CopyTo(const ZStrimW& iStrimW,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten);
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
 
 	virtual bool Imp_ReadCP(UTF32& oCP);
 
-	virtual void Imp_Skip(size_t iCountCP, size_t* oCountCPSkipped);
+	virtual void Imp_Skip(uint64 iCountCP, uint64* oCountCPSkipped);
 	//@}
 	};
 
@@ -277,12 +277,12 @@ Read code points from iStrimR and write it to this strim.
 */	//@{
 	const ZStrimW& CopyAllFrom(const ZStrimR& iStrimR) const;
 	const ZStrimW& CopyAllFrom(const ZStrimR& iStrimR,
-		size_t* oCountCPRead, size_t* oCountCPWritten) const;
+		uint64* oCountCPRead, uint64* oCountCPWritten) const;
 
-	const ZStrimW& CopyFrom(const ZStrimR& iStrimR, size_t iCountCP) const;
+	const ZStrimW& CopyFrom(const ZStrimR& iStrimR, uint64 iCountCP) const;
 
 	const ZStrimW& CopyFrom(const ZStrimR& iStrimR,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten) const;
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten) const;
 	//@}
 
 
@@ -304,10 +304,10 @@ These methods must be overridden by subclasses.
 /** \name Optional overrides
 */	//@{
 	virtual void Imp_CopyFromDispatch(const ZStrimR& iStrimR,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten);
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
 
 	virtual void Imp_CopyFrom(const ZStrimR& iStrimR,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten);
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
 
 	virtual void Imp_Flush();
 	//@}
@@ -333,26 +333,14 @@ protected:
 	void pWritev(size_t* oCountCU, size_t* oWritten, const UTF8* iString, va_list iArgs) const;
 	};
 
-inline const ZStrimW& operator<<(const ZStrimW& s, const string32& iString)
-	{ return s.Write(iString); }
+const ZStrimW& operator<<(const ZStrimW& s, const string32& iString);
+const ZStrimW& operator<<(const ZStrimW& s, const UTF32* iString);
+const ZStrimW& operator<<(const ZStrimW& s, const string16& iString);
+const ZStrimW& operator<<(const ZStrimW& s, const UTF16* iString);
+const ZStrimW& operator<<(const ZStrimW& s, const string8& iString);
+const ZStrimW& operator<<(const ZStrimW& s, const UTF8* iString);
 
-inline const ZStrimW& operator<<(const ZStrimW& s, const UTF32* iString)
-	{ return s.Write(iString); }
-
-inline const ZStrimW& operator<<(const ZStrimW& s, const string16& iString)
-	{ return s.Write(iString); }
-
-inline const ZStrimW& operator<<(const ZStrimW& s, const UTF16* iString)
-	{ return s.Write(iString); }
-
-inline const ZStrimW& operator<<(const ZStrimW& s, const string8& iString)
-	{ return s.Write(iString); }
-
-inline const ZStrimW& operator<<(const ZStrimW& s, const UTF8* iString)
-	{ return s.Write(iString); }
-
-inline const ZStrimW& operator<<(const ZStrimW& s, const ZStrimR& r)
-	{ return s.CopyAllFrom(r); }
+const ZStrimW& operator<<(const ZStrimW& s, const ZStrimR& r);
 
 const ZStrimW& operator<<(const ZStrimW& s, bool iVal);
 const ZStrimW& operator<<(const ZStrimW& s, char iVal);
@@ -586,12 +574,12 @@ public:
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 	virtual void Imp_CopyToDispatch(const ZStrimW& iStrimW,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten);
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
 
 	virtual void Imp_CopyTo(const ZStrimW& iStrimW,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten);
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
 
-	virtual void Imp_Skip(size_t iCountCP, size_t* oCountCPSkipped);
+	virtual void Imp_Skip(uint64 iCountCP, uint64* oCountCPSkipped);
 	};
 
 // =================================================================================================
@@ -750,10 +738,10 @@ public:
 	virtual void Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU);
 
 	virtual void Imp_CopyFromDispatch(const ZStrimR& iStrimR,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten);
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
 
 	virtual void Imp_CopyFrom(const ZStrimR& iStrimR,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten);
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
 
 	virtual void Imp_Flush();
 
