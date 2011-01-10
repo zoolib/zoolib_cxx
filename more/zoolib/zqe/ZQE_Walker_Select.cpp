@@ -101,10 +101,13 @@ bool Walker_Select::ReadInc(const ZVal_Any* iBindings,
 			return false;
 
 		ZMap_Any theMap;
-		for (map<string8,size_t>::iterator i = fBindingOffsets.begin(); i != fBindingOffsets.end(); ++i)
-			theMap.Set(i->first, iBindings[i->second]);
-		for (map<string8,size_t>::iterator i = fChildOffsets.begin(); i != fChildOffsets.end(); ++i)
-			theMap.Set(i->first, oResults[i->second]);
+		for (map<string8,size_t>::iterator i = fBindingOffsets.begin();
+			i != fBindingOffsets.end(); ++i)
+			{ theMap.Set(i->first, iBindings[i->second]); }
+
+		for (map<string8,size_t>::iterator i = fChildOffsets.begin();
+			i != fChildOffsets.end(); ++i)
+			{ theMap.Set(i->first, oResults[i->second]); }
 		
 		if (sMatches(fExpr_Bool, theMap))
 			{
