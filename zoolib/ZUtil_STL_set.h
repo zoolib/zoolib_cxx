@@ -22,93 +22,168 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_STL_set__
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZDebug.h"
 
 #include <set>
 
 namespace ZooLib {
+namespace ZUtil_STL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_STL_set
+#pragma mark * ZUtil_STL
 
-namespace ZUtil_STL_set {
+template <typename T, typename Comparator>
+typename std::set<T,Comparator>::iterator
+sEraseInc(std::set<T,Comparator>& ioSet, typename std::set<T,Comparator>::iterator iter)
+	{
+	if (ioSet.end() != iter)
+		{
+		const T theVal = *iter;
+		ioSet.erase(iter);
+		iter = ioSet.lower_bound(theVal);
+		}
+	return iter;
+	}
 
-using std::set;
 
-template <class T>
-void sOr(const set<T>& iLHS, const set<T>& iRHS, set<T>& oResult)
+/** Returns true if iSet contains iElement. */
+template <typename Base, typename Comparator, typename Derived>
+bool sContains(const std::set<Base,Comparator>& iSet, const Derived& iElement)
+	{ return iSet.end() != iSet.find(iElement); }
+
+
+/** Inserts iElement to ioSet. We first assert, controlled
+by iDebugLevel, that iElement is not already present in ioSet. */
+template <typename Base, typename Comparator, typename Derived>
+void sInsertMustNotContain(const int iDebugLevel,
+	std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{
+	bool didInsert = ioSet.insert(iElement).second;
+	ZAssertStop(iDebugLevel, didInsert);
+	}
+
+
+/** Inserts iElement in ioSet, if it's not already contained. */
+template <typename Base, typename Comparator, typename Derived>
+bool sInsertIfNotContains(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{ return ioSet.insert(iElement).second; }
+
+
+/** If ioSet contains iElement then it is removed and true returned.
+Otherwise no change is made to ioSet and false is returned. */
+template <typename Base, typename Comparator, typename Derived>
+bool sEraseIfContains(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{ return ioSet.erase(iElement); }
+
+
+/** Removes iElement from ioSet, asserting that it is present. */
+template <typename Base, typename Comparator, typename Derived>
+void sEraseMustContain(const int iDebugLevel,
+	std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{
+	size_t count = ioSet.erase(iElement);
+	ZAssertStop(iDebugLevel, count);
+	}
+
+// ==================================================
+
+
+template <typename T, typename Comparator>
+void sOr(
+	const std::set<T,Comparator>& iLHS,
+	const std::set<T,Comparator>& iRHS,
+	std::set<T,Comparator>& ioResult)
 	{
 	set_union(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
-		inserter(oResult, oResult.end()));
+		inserter(ioResult, ioResult.end()));
 	}
 
-template <class T>
-set<T> sOr(const set<T>& iLHS, const set<T>& iRHS)
+template <typename T, typename Comparator>
+std::set<T,Comparator> sOr(
+	const std::set<T,Comparator>& iLHS,
+	const std::set<T,Comparator>& iRHS)
 	{
-	set<T> result;
+	std::set<T,Comparator> result;
 	sOr(iLHS, iRHS, result);
 	return result;
 	}
 
-template <class T>
-void sAnd(const set<T>& iLHS, const set<T>& iRHS, set<T>& oResult)
+template <typename T, typename Comparator>
+void sAnd(
+	
+	const std::set<T,Comparator>& iLHS,
+	const std::set<T,Comparator>& iRHS,
+	std::set<T,Comparator>& ioResult)
 	{
 	set_intersection(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
-		inserter(oResult, oResult.end()));
+		inserter(ioResult, ioResult.end()));
 	}
 
-template <class T>
-set<T> sAnd(const set<T>& iLHS, const set<T>& iRHS)
+template <typename T, typename Comparator>
+std::set<T,Comparator> sAnd(
+	const std::set<T,Comparator>& iLHS,
+	const std::set<T,Comparator>& iRHS)
 	{
-	set<T> result;
+	std::set<T,Comparator> result;
 	sAnd(iLHS, iRHS, result);
 	return result;
 	}
 
-template <class T>
-void sMinus(const set<T>& iLHS, const set<T>& iRHS, set<T>& oResult)
+template <typename T, typename Comparator>
+void sMinus(
+	const std::set<T,Comparator>& iLHS,
+	const std::set<T,Comparator>& iRHS,
+	std::set<T,Comparator>& ioResult)
 	{
 	set_difference(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
-		inserter(oResult, oResult.end()));
+		inserter(ioResult, ioResult.end()));
 	}
 
-template <class T>
-set<T> sMinus(const set<T>& iLHS, const set<T>& iRHS)
+template <typename T, typename Comparator>
+std::set<T,Comparator> sMinus(
+	const std::set<T,Comparator>& iLHS,
+	const std::set<T,Comparator>& iRHS)
 	{
-	set<T> result;
+	std::set<T,Comparator> result;
 	sMinus(iLHS, iRHS, result);
 	return result;
 	}
 
-template <class T>
-void sXor(const set<T>& iLHS, const set<T>& iRHS, set<T>& oResult)
+template <typename T, typename Comparator>
+void sXor(
+	const std::set<T,Comparator>& iLHS,
+	const std::set<T,Comparator>& iRHS,
+	std::set<T,Comparator>& ioResult)
 	{
 	set_symmetric_difference(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
-		inserter(oResult, oResult.end()));
+		inserter(ioResult, ioResult.end()));
 	}
 
-template <class T>
-set<T> sXor(const set<T>& iLHS, const set<T>& iRHS)
+template <typename T, typename Comparator>
+std::set<T,Comparator> sXor(
+	const std::set<T,Comparator>& iLHS,
+	const std::set<T,Comparator>& iRHS)
 	{
-	set<T> result;
+	std::set<T,Comparator> result;
 	sXor(iLHS, iRHS, result);
 	return result;
 	}
 
-template <class T>
-bool sIncludes(const set<T>& iLHS, const set<T>& iRHS)
+template <typename T, typename Comparator>
+bool sIncludes(
+	const std::set<T,Comparator>& iLHS,
+	const std::set<T,Comparator>& iRHS)
 	{
 	return includes(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end());
 	}
 
-} // namespace ZUtil_STL_set
-
+} // namespace ZUtil_STL
 } // namespace ZooLib
 
 #endif // __ZUtil_STL_set__
