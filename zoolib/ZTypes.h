@@ -126,9 +126,16 @@ private:
 	T* fP;
 	};
 
-template <class P>
-Adopt_T<P> Adopt(P iP)
-	{ return Adopt_T<P>(iP); }
+// Adopt functor.
+// operator& lets you use Adopt& as a pseudo prefix operator.
+const struct Adopt_t
+	{
+	template <class T>
+	Adopt_T<T> operator()(T iT) const { return Adopt_T<T>(iT); }
+
+	template <class T>
+	Adopt_T<T> operator&(T iT) const { return Adopt_T<T>(iT); }
+	} Adopt = {};
 
 // =================================================================================================
 
@@ -144,7 +151,7 @@ template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar
 
 // =================================================================================================
 
-const bool I_KNOW_WHAT_IM_DOING = true;
+const class IKnowWhatIAmDoing_t {} IKnowWhatIAmDoing = {};
 
 } // namespace ZooLib
 

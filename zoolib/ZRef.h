@@ -28,10 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h" // For Adopt_T
 
-#ifdef __OBJC__
-	struct objc_object;
-#endif
-
 namespace ZooLib {
 
 // =================================================================================================
@@ -55,9 +51,7 @@ private:
 		}
 
 	static void spCheck(T* iP)
-		{
-		ZAssert(iP);
-		}
+		{ ZAssertStop(1, iP); }
 
 public:
 	#ifdef __OBJC__
@@ -92,10 +86,10 @@ public:
 
 	ZRef& operator=(const ZRef& iOther)
 		{
-		T* theP = iOther.Get();
-		std::swap(theP, fP);
+		T* otherP = iOther.Get();
+		std::swap(otherP, fP);
 		spRetain(fP);
-		spRelease(theP);
+		spRelease(otherP);
 		return *this;
 		}
 
@@ -123,41 +117,33 @@ public:
 	template <class O, bool OtherSense>
 	ZRef& operator=(const ZRef<O, OtherSense>& iOther)
 		{
-		T* theP = iOther.Get();
-		std::swap(theP, fP);
+		T* otherP = iOther.Get();
+		std::swap(otherP, fP);
 		spRetain(fP);
-		spRelease(theP);
+		spRelease(otherP);
 		return *this;
 		}
 
-	ZRef(const Adopt_T<T>& iAdopt)
+	template <class O>
+	ZRef(const Adopt_T<O>& iAdopt)
 	:	fP(iAdopt.Get())
 		{}
 
-	ZRef& operator=(const Adopt_T<T>& iAdopt)
+	template <class O>
+	ZRef& operator=(const Adopt_T<O>& iAdopt)
 		{
-		T* theP = iAdopt.Get();
-		std::swap(theP, fP);
-		spRelease(theP);
+		T* otherP = iAdopt.Get();
+		std::swap(otherP, fP);
+		spRelease(otherP);
 		return *this;
 		}
 
-	ZRef(const Adopt_T<T*>& iAdopt)
-	:	fP(iAdopt.Get())
-		{}
-
-	ZRef& operator=(const Adopt_T<T*>& iAdopt)
-		{
-		T* theP = iAdopt.Get();
-		std::swap(theP, fP);
-		spRelease(theP);
-		return *this;
-		}
-
-	bool operator==(const T* iP) const
+	template <class O>
+	bool operator==(O* iP) const
 		{ return fP == iP; }
 
-	bool operator!=(const T* iP) const
+	template <class O>
+	bool operator!=(O* iP) const
 		{ return fP != iP; }
 
 	template <class O, bool OtherSense>
@@ -178,32 +164,34 @@ public:
 		return fP;
 		}
 
+	T* Get() const
+		{ return fP; }
+
 	T* Copy() const
 		{
 		spRetain(fP);
 		return fP;
 		}
 
-	T* Get() const
-		{ return fP; }
+	T* Orphan()
+		{
+		T* otherP = nullptr;
+		std::swap(otherP, fP);
+		return otherP;
+		}
 
 	void Clear()
 		{
-		T* theP = nullptr;
-		std::swap(theP, fP);
-		spRelease(theP);
+		T* otherP = nullptr;
+		std::swap(otherP, fP);
+		spRelease(otherP);
 		}
 
-	T* Orphan()
+	T*& OParam()
 		{
-		T* theP = nullptr;
-		std::swap(theP, fP);
-		return theP;
+		this->Clear();
+		return fP;
 		}
-
-	// Used with COM output parameters. See sCOMPtr and sCOMVoidPtr in ZWinCOM.h
-	T*& GetPtrRef()
-		{ return fP; }
 
 	template <class O>
 	O* DynamicCast() const
@@ -241,8 +229,8 @@ void sRefCopy(void* oDest, T* iP)
 #pragma mark -
 #pragma mark * ZRef partially specialized for pointer types
 
-template <class T> void sRetain_T(T& ioPtr);
-template <class T> void sRelease_T(T iPtr);
+template <class T> void sRetain_T(T*& ioPtr);
+template <class T> void sRelease_T(T* iPtr);
 
 template <class T>
 class ZRef<T*, true>
@@ -277,10 +265,10 @@ public:
 
 	ZRef& operator=(const ZRef& iOther)
 		{
-		T* theP = iOther.Get();
-		std::swap(theP, fP);
+		T* otherP = iOther.Get();
+		std::swap(otherP, fP);
 		spRetain(fP);
-		spRelease(theP);
+		spRelease(otherP);
 		return *this;
 		}
 
@@ -301,48 +289,52 @@ public:
 		}
 
 	template <class O>
-	ZRef(const ZRef<O>& iOther)
+	ZRef(const ZRef<O*>& iOther)
 	:	fP(iOther.Get())
 		{ spRetain(fP); }
 
 	template <class O>
-	ZRef& operator=(const ZRef<O>& iOther)
+	ZRef& operator=(const ZRef<O*>& iOther)
 		{
-		T* theP = iOther.Get();
-		std::swap(theP, fP);
+		T* otherP = iOther.Get();
+		std::swap(otherP, fP);
 		spRetain(fP);
-		spRelease(theP);
+		spRelease(otherP);
 		return *this;
 		}
 
-	ZRef(const Adopt_T<T*>& iAdopt)
+	template <class O>
+	ZRef(const Adopt_T<O*>& iAdopt)
 	:	fP(iAdopt.Get())
 		{}
 
-	ZRef& operator=(const Adopt_T<T*>& iAdopt)
+	template <class O>
+	ZRef& operator=(const Adopt_T<O*>& iAdopt)
 		{
-		T* theP = iAdopt.Get();
-		std::swap(theP, fP);
-		spRelease(theP);
+		T* otherP = iAdopt.Get();
+		std::swap(otherP, fP);
+		spRelease(otherP);
 		return *this;
 		}
 
-	bool operator==(const T* iP) const
+	template <class O>
+	bool operator==(O* iP) const
 		{ return fP == iP; }
 
-	bool operator!=(const T* iP) const
+	template <class O>
+	bool operator!=(O* iP) const
 		{ return fP != iP; }
 
 	template <class O>
-	bool operator==(const ZRef<O>& iOther) const
+	bool operator==(const ZRef<O*>& iOther) const
 		{ return fP == iOther.Get(); }
 
 	template <class O>
-	bool operator!=(const ZRef<O>& iOther) const
+	bool operator!=(const ZRef<O*>& iOther) const
 		{ return fP != iOther.Get(); }
 
 	template <class O>
-	bool operator<(const ZRef<O>& iOther) const
+	bool operator<(const ZRef<O*>& iOther) const
 		{ return fP < iOther.Get(); }
 
 	operator T*()
@@ -351,30 +343,33 @@ public:
 	operator T*() const
 		{ return fP; }
 
-	T* Get() const { return fP; }
+	T* Get() const
+		{ return fP; }
 
-	void Clear()
+	T* Copy() const
 		{
-		T* theP = nullptr;
-		std::swap(theP, fP);
-		spRelease(theP);
+		spRetain(fP);
+		return fP;
 		}
 
 	T* Orphan()
 		{
-		T* theP = nullptr;
-		std::swap(theP, fP);
-		return theP;
+		T* otherP = nullptr;
+		std::swap(otherP, fP);
+		return otherP;
 		}
 
-	// Used with output parameters.
-	T*& GetPtrRef()
-		{ return fP; }
+	void Clear()
+		{
+		T* otherP = nullptr;
+		std::swap(otherP, fP);
+		spRelease(otherP);
+		}
 
 	T*& OParam()
 		{
 		this->Clear();
-		return this->GetPtrRef();
+		return fP;
 		}
 
 	template <class O>
@@ -389,25 +384,24 @@ private:
 #pragma mark -
 #pragma mark * MakeRef
 
-template <class T>
-ZRef<T> MakeRef(T* iP)
-	{ return ZRef<T>(iP); }
+const struct MakeRef_t
+	{
+	template <class T>
+	ZRef<T> operator()(T* iT) const { return ZRef<T>(iT); }
+	} MakeRef = {};
+
+const struct TempRef_t
+	{
+	template <class T>
+	ZRef<T> operator&(T* iT) const { return ZRef<T>(Adopt_T<T>(iT)); }
+	
+	template <class T>
+	ZRef<T> operator()(T* iT) const { return ZRef<T>(Adopt_T<T>(iT)); }
+	} TempRef = {};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRef casts
-
-template <class O, class T> O* ZRefDynamicCast(const ZRef<T>& iVal)
-	{ return dynamic_cast<O*>(iVal.Get()); }
-
-template <class O, class T> O* ZRefStaticCast(const ZRef<T>& iVal)
-	{ return static_cast<O*>(iVal.Get()); }
-
-template <class O, class T> O ZRefStaticCast(const ZRef<T*>& iVal)
-	{ return static_cast<O>(iVal.Get()); }
-
-template <class O, class T> O ZRefStaticCast(const ZRef<const T*>& iVal)
-	{ return static_cast<O>(iVal.Get()); }
+#pragma mark *
 
 template <class T>
 void swap(ZRef<T>& a, ZRef<T>& b)
