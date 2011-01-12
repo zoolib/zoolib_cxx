@@ -60,9 +60,19 @@ public:
 	~ZVal_NS();
 	ZVal_NS& operator=(const ZVal_NS& iOther);
 
-	ZVal_NS(id iVal) : inherited(iVal) {}
-	template <class S> ZVal_NS(const ZRef<S>& iVal) : inherited(iVal) {}
-	template <class S> ZVal_NS(const Adopt_T<S>& iVal) : inherited(iVal) {}
+	ZVal_NS(id iVal)
+	:	inherited(iVal)
+		{}
+
+	template <class S>
+	ZVal_NS(const ZRef<S>& iVal)
+	:	inherited(iVal)
+		{}
+
+	template <class S>
+	ZVal_NS(const Adopt_T<S>& iVal)
+	:	inherited(Adopt_T<NSObject*>(iVal.Get()))
+		{}
 
 	ZVal_NS(int8 iVal);
 	ZVal_NS(int16 iVal);
@@ -91,7 +101,7 @@ public:
 	template <class S>
 	ZVal_NS& operator=(const Adopt_T<S>& iVal)
 		{
-		inherited::operator=(iVal);
+		inherited::operator=(Adopt_T<NSObject*>(iVal.Get()));
 		return *this;
 		}
 
