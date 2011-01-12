@@ -25,24 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
-// The DESTROY macro from renaissance is useful. At some point, if we have
-// renaissance available, then we'll pull the definition from there.
-#ifndef DESTROY
-#	ifdef __OBJC__
-#		define DESTROY(a) do { if (a) {[a release]; a = 0; } } while(0)
-#	else
-#		define DESTROY(a) $ONLY_USE_IN_OBJECTIVE_C$
-#	endif
-#endif
-
-#ifndef AUTORELEASE
-#	ifdef __OBJC__
-#		define AUTORELEASE(a) ([a autorelease])
-#	else
-#		define AUTORELEASE(a) $ONLY_USE_IN_OBJECTIVE_C$
-#	endif
-#endif
-
 #ifdef __cplusplus
 
 #ifdef __OBJC__
