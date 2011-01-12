@@ -103,22 +103,30 @@ public:
 	static return_type true_value()
 		{ return &class_type::i; }
 
-private:
-	int i;
-public:
 	/// Returns the value representing the false condition
 	static return_type false_value()
 		{ return static_cast<return_type>(0); }
 
 	/// Does the ternary operator for you
-	template <typename U>
-	static return_type translate(U b)
+	template <typename O>
+	static return_type translate(const O& b)
 		{ return b ? true_value() : false_value(); }
 
 private:
 	void operator delete(void*);
+	int i;
 	};
 
 #endif
+
+#define ZMACRO_operator_bool(U, B) \
+    typedef operator_bool_generator<U>::class_type B##_gen; \
+    typedef B##_gen::return_type B; \
+	operator B()
+
+#define ZMACRO_operator_bool_T(U, B) \
+    typedef typename operator_bool_generator<U>::class_type B##_gen; \
+    typedef typename B##_gen::return_type B; \
+	operator B()
 
 #endif // __ZCompat_operator_bool__
