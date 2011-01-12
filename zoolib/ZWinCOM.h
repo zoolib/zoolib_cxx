@@ -75,12 +75,8 @@ namespace ZWinCOM {
 class Variant
 :	public VARIANT
 	{
-
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Variant,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const;
+	ZMACRO_operator_bool(Variant, operator_bool) const;
 
 	void swap(Variant& iOther);
 

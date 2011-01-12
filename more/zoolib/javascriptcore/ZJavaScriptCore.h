@@ -148,10 +148,8 @@ public:
 
 	String ToString() const;
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Value,
-		operator_bool_generator_type, operator_bool_type);
+	ZMACRO_operator_bool(Value, operator_bool) const;
 
-	operator operator_bool_type() const;
 	operator bool() const;
 	operator JSValueRef() const;
 	JSValueRef& OParam();

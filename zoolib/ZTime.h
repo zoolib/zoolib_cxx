@@ -47,9 +47,7 @@ public:
 	double GetVal() const
 		{ return fVal; }
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTime, operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const;
+	ZMACRO_operator_bool(ZTime, operator_bool) const;
 
 	bool operator<(const ZTime& iOther) const;
 

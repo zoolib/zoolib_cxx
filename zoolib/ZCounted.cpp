@@ -33,7 +33,7 @@ ZCountedBase::ZCountedBase()
 
 ZCountedBase::~ZCountedBase()
 	{
-	ZAssert(!fWRP);
+	ZAssertStop(1, !fWeakRefProxy);
 	ZAssertStopf(1, 0 == ZAtomic_Get(&fRefCount),
 		("Non-zero refcount at destruction, it is %d", ZAtomic_Get(&fRefCount)));
 	}
@@ -55,10 +55,10 @@ bool ZCountedBase::FinishFinalize()
 	if (!ZAtomic_DecAndTest(&fRefCount))
 		return false;
 	
-	if (fWRP)
+	if (fWeakRefProxy)
 		{
-		fWRP->Clear();
-		fWRP.Clear();
+		fWeakRefProxy->Clear();
+		fWeakRefProxy.Clear();
 		}
 
 	return true;
@@ -74,17 +74,12 @@ void ZCountedBase::Release()
 	{
 	for (;;)
 		{
-		int oldRefCount = ZAtomic_Get(&fRefCount);
+		const int oldRefCount = ZAtomic_Get(&fRefCount);
 		if (oldRefCount == 1)
-			{
 			this->Finalize();
-			break;
-			}
-		else
-			{
-			if (ZAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
-				break;
-			}
+		else if (!ZAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
+			continue;
+		return;
 		}
 	}
 
@@ -94,24 +89,24 @@ bool ZCountedBase::IsShared() const
 bool ZCountedBase::IsReferenced() const
 	{ return 0 != ZAtomic_Get(&fRefCount); }
 
-ZRef<ZCountedBase::WRP> ZCountedBase::GetWRP()
+ZRef<ZCountedBase::WeakRefProxy> ZCountedBase::GetWeakRefProxy()
 	{
-	if (!fWRP)
+	if (!fWeakRefProxy)
 		{
-		ZRef<WRP> theWRP = new WRP(this);
-		if (!fWRP.AtomicSetIfNull(theWRP.Get()))
+		ZRef<WeakRefProxy> theWeakRefProxy = new WeakRefProxy(this);
+		if (!fWeakRefProxy.AtomicSetIfNull(theWeakRefProxy.Get()))
 			{
-			// We lost the race, so (efficiently) clear theWRP's reference
-			// to us, or we'll trip an asssertion in WRP::~WRP.
-			theWRP->Clear();
+			// We lost the race, so (efficiently) clear theWeakRefProxy's reference
+			// to us, or we'll trip an asssertion in WeakRefProxy::~WeakRefProxy.
+			theWeakRefProxy->Clear();
 			}
 		}
-	return fWRP;
+	return fWeakRefProxy;
 	}
 
 int ZCountedBase::pCOMAddRef()
 	{
-	int oldRefCount = ZAtomic_Add(&fRefCount, 1);
+	const int oldRefCount = ZAtomic_Add(&fRefCount, 1);
 	if (oldRefCount == 0)
 		this->Initialize();
 	return oldRefCount + 1;
@@ -121,7 +116,7 @@ int ZCountedBase::pCOMRelease()
 	{
 	for (;;)
 		{
-		int oldRefCount = ZAtomic_Get(&fRefCount);
+		const int oldRefCount = ZAtomic_Get(&fRefCount);
 		if (oldRefCount == 1)
 			{
 			this->Finalize();
@@ -129,32 +124,31 @@ int ZCountedBase::pCOMRelease()
 			// Return zero as a sensible value.
 			return 0;
 			}
-		else
+		else if (ZAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
 			{
-			if (ZAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
-				return oldRefCount - 1;
+			return oldRefCount - 1;
 			}
 		}
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCountedBase::WRP
+#pragma mark * ZCountedBase::WeakRefProxy
 
-ZCountedBase::WRP::WRP(ZCountedBase* iCountedBase)
+ZCountedBase::WeakRefProxy::WeakRefProxy(ZCountedBase* iCountedBase)
 :	fCountedBase(iCountedBase)
 	{}
 
-ZCountedBase::WRP::~WRP()
-	{ ZAssert(!fCountedBase); }
+ZCountedBase::WeakRefProxy::~WeakRefProxy()
+	{ ZAssertStop(1, !fCountedBase); }
 
-ZRef<ZCountedBase> ZCountedBase::WRP::GetCountedBase()
+ZRef<ZCountedBase> ZCountedBase::WeakRefProxy::GetCountedBase()
 	{
 	ZAcqMtx acq(fMtx);
 	return fCountedBase;
 	}
 
-void ZCountedBase::WRP::Clear()
+void ZCountedBase::WeakRefProxy::Clear()
 	{
 	ZAcqMtx acq(fMtx);
 	fCountedBase = nullptr;

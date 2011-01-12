@@ -48,8 +48,8 @@ public:
 	bool IsShared() const;
 	bool IsReferenced() const;
 
-	class WRP;
-	ZRef<WRP> GetWRP();
+	class WeakRefProxy;
+	ZRef<WeakRefProxy> GetWeakRefProxy();
 
 protected:
 	int pCOMAddRef();
@@ -57,7 +57,7 @@ protected:
 
 private:
 	ZAtomic_t fRefCount;
-	ZRef<WRP> fWRP;
+	ZRef<WeakRefProxy> fWeakRefProxy;
 	};
 
 // =================================================================================================
@@ -79,13 +79,13 @@ class ZCounted : public virtual ZCountedBase
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCountedBase::WRP
+#pragma mark * ZCountedBase::WeakRefProxy
 
-class ZCountedBase::WRP : public ZCountedWithoutFinalize
+class ZCountedBase::WeakRefProxy : public ZCountedWithoutFinalize
 	{
 public:
-	WRP(ZCountedBase* iCountedBase);
-	virtual ~WRP();
+	WeakRefProxy(ZCountedBase* iCountedBase);
+	virtual ~WeakRefProxy();
 
 	ZRef<ZCountedBase> GetCountedBase();
 
@@ -111,18 +111,18 @@ public:
 		{}
 
 	ZWeakRef(const ZWeakRef& iOther)
-	:	fWRP(iOther.fWRP)
+	:	fWeakRefProxy(iOther.fWeakRefProxy)
 		{}
 
 	ZWeakRef& operator=(const ZWeakRef& iOther)
 		{
-		fWRP = iOther.fWRP;
+		fWeakRefProxy = iOther.fWeakRefProxy;
 		return *this;
 		}
 
 	template <class O>
 	ZWeakRef(const ZWeakRef<O>& iOther)
-	:	fWRP(iOther.fWRP)
+	:	fWeakRefProxy(iOther.fWeakRefProxy)
 		{
 		// Ensure that T is a supertype of O
 		static_cast<T*>(static_cast<O*>(0));
@@ -131,42 +131,42 @@ public:
 	template <class O>
 	ZWeakRef& operator=(const ZWeakRef<O>& iOther)
 		{
-		fWRP = iOther.fWRP;
+		fWeakRefProxy = iOther.fWeakRefProxy;
 		return *this;
 		}
 
 	ZWeakRef(const null_t&)
 		{}
 
-	ZWeakRef(const ZRef<ZCountedBase::WRP>& iWRP)
-	:	fWRP(iWRP)
+	ZWeakRef(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy)
+	:	fWeakRefProxy(iWeakRefProxy)
 		{}
 
 	template <class O>
 	ZWeakRef(const ZRef<O>& iRef)
 		{
 		if (iRef)
-			fWRP = iRef->GetWRP();
+			fWeakRefProxy = iRef->GetWeakRefProxy();
 		}
 
 	template <class O>
 	ZWeakRef& operator=(const ZRef<O>& iRef)
 		{
 		if (iRef)
-			fWRP = iRef->GetWRP();
+			fWeakRefProxy = iRef->GetWeakRefProxy();
 		else
-			fWRP.Clear();
+			fWeakRefProxy.Clear();
 		return *this;
 		}
 
 	void Clear()
-		{ fWRP.Clear(); }
+		{ fWeakRefProxy.Clear(); }
 
 	ZRef<T> Get() const
 		{
-		if (fWRP)
+		if (fWeakRefProxy)
 			{
-			if (ZRef<ZCountedBase> theCB = fWRP->GetCountedBase())
+			if (ZRef<ZCountedBase> theCB = fWeakRefProxy->GetCountedBase())
 				return theCB.DynamicCast<T>();
 			}
 		return null;
@@ -175,23 +175,23 @@ public:
 	template <class O>
 	operator ZRef<O>() const
 		{
-		if (fWRP)
+		if (fWeakRefProxy)
 			{
-			if (ZRef<ZCountedBase> theCB = fWRP->GetCountedBase())
+			if (ZRef<ZCountedBase> theCB = fWeakRefProxy->GetCountedBase())
 				return theCB.DynamicCast<O>();
 			}
 		return null;
 		}
 
 private:
-	ZRef<ZCountedBase::WRP> fWRP;
+	ZRef<ZCountedBase::WeakRefProxy> fWeakRefProxy;
 	};
 
 template <class T>
 ZWeakRef<T> MakeWeakRef(T* iP)
 	{
 	if (iP)
-		return ZWeakRef<T>(iP->GetWRP());
+		return ZWeakRef<T>(iP->GetWeakRefProxy());
 	return null;
 	}
 

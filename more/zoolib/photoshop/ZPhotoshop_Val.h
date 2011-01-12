@@ -140,10 +140,7 @@ class Spec
 	struct Entry;
 
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Spec,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const;
+	ZMACRO_operator_bool(Spec, operator_bool) const;
 
 	void swap(Spec& iOther);
 
@@ -279,10 +276,7 @@ class Seq
 public:
 	typedef Val Val_t;
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Seq,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const;
+	ZMACRO_operator_bool(Seq, operator_bool) const;
 
 	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
@@ -353,10 +347,7 @@ public:
 	typedef ZMapIndex_T<Map> Index_t;
 	typedef Val Val_t;
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Map,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const;
+	ZMACRO_operator_bool(Map, operator_bool) const;
 
 	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 

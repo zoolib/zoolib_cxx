@@ -134,9 +134,7 @@ ZNetEndpoint_RFCOMM_OSX::ZNetEndpoint_RFCOMM_OSX(IOBluetoothRFCOMMChannel* iChan
 	}
 
 ZNetEndpoint_RFCOMM_OSX::~ZNetEndpoint_RFCOMM_OSX()
-	{
-	DESTROY(fChannel);
-	}
+	{ [fChannel release]; }
 
 const ZStreamRCon& ZNetEndpoint_RFCOMM_OSX::GetStreamRCon()
 	{ return *this; }

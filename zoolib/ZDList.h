@@ -54,10 +54,8 @@ public:
 	~DListHead()
 		{ ZAssertStop(L::kDebug, !fHeadL && !fSize); }
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
-		DListHead, operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const { return operator_bool_generator_type::translate(fHeadL); }
+	ZMACRO_operator_bool_T(DListHead, operator_bool) const
+		{ return operator_bool_gen::translate(fHeadL); }
 
 	size_t Size() const { return fSize; }
 
@@ -227,10 +225,8 @@ public:
 	,	fCurrent(iDListHead.fHeadL)
 		{}
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
-		DListIterator, operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fCurrent); }
+	ZMACRO_operator_bool_T(DListIterator, operator_bool) const
+		{ return operator_bool_gen::translate(fCurrent); }
 
 	P* Current() const
 		{ return static_cast<P*>(fCurrent); }
@@ -303,12 +299,10 @@ public:
 			}
 		}
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
-		DListEraser, operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const
+	ZMACRO_operator_bool_T(DListEraser, operator_bool) const
 		{
 		ZAssertStop(L::kDebug, fCurrent || !fCurrent && !fNext);
-		return operator_bool_generator_type::translate(fCurrent);
+		return operator_bool_gen::translate(fCurrent);
 		}
 
 	P* Current() const

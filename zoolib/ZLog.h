@@ -101,8 +101,8 @@ public:
 	virtual void Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU);
 
 // Our protocol
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(StrimW, operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const;
+	ZMACRO_operator_bool(StrimW, operator_bool) const;
+
 	void Emit() const;
 
 private:

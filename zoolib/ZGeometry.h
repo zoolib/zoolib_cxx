@@ -73,7 +73,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Include these after the platform files -- cmath causes problems
 // for Mac headers ('relation' is undefined) when building with CW.
 #include "zoolib/ZCompat_algorithm.h" // For min and max
-#include "zoolib/ZCompat_operator_bool.h"
 
 namespace ZooLib {
 
@@ -85,12 +84,6 @@ template <class T>
 class ZGPointPOD_T
 	{
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGPointPOD_T<T>,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(x || y); }
-
 	T x;
 	T y;
 
@@ -220,12 +213,6 @@ template <class T>
 class ZGExtentPOD_T
 	{
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGExtentPOD_T<T>,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(h || v); }
-
 	union { T h; T width; };
 	union { T v; T height; };
 
@@ -358,12 +345,6 @@ template <class Ord>
 class ZGRectPOD_T
 	{
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGRectPOD_T<Ord>,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(extent); }
-
 	ZGPointPOD_T<Ord> origin;
 	union { ZGExtentPOD_T<Ord> extent; ZGExtentPOD_T<Ord> size; };
 
@@ -415,6 +396,8 @@ public:
 
 	Ord Width() const;
 	Ord Height() const;
+
+	bool IsEmpty() const;
 
 	Ord L() const; // aka MinX
 	Ord R() const; // aka MaxX
@@ -539,6 +522,10 @@ Ord ZGRectPOD_T<Ord>::Width() const
 template <class Ord>
 Ord ZGRectPOD_T<Ord>::Height() const
 	{ return extent.v; }
+
+template <class Ord>
+bool ZGRectPOD_T<Ord>::IsEmpty() const
+	{ return extent.h && extent.v; }
 
 template <class Ord>
 Ord ZGRectPOD_T<Ord>::L() const

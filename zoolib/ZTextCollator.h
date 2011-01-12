@@ -48,11 +48,8 @@ public:
 	ZTextCollator(const string8& iLocaleName, int iStrength);
 	ZTextCollator(const char* iLocaleName, int iStrength);
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTextCollator,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fRep && true); }
+	ZMACRO_operator_bool(ZTextCollator, operator_bool) const
+		{ return operator_bool_gen::translate(!!fRep); }
 
 	bool Equals(const string8& iLeft, const string8& iRight) const;
 	bool Equals(const string16& iLeft, const string16& iRight) const;
@@ -120,11 +117,8 @@ public:
 	ZTextCollationKey(const ZTextCollator& iCollator, const UTF16* iPattern, size_t iPatternLength);
 	ZTextCollationKey(const ZTextCollator& iCollator, const UTF32* iPattern, size_t iPatternLength);
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTextCollationKey,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fRep && true); }
+	ZMACRO_operator_bool(ZTextCollationKey, operator_bool) const
+		{ return operator_bool_gen::translate(!!fRep); }
 
 //	bool Equals(const ZTextCollationKey& iRight) const;
 	bool Equals(const string8& iRight) const;

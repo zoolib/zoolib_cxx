@@ -64,8 +64,8 @@ ZData_Any::Rep::Rep(const vector<char>& iVector)
 ZAny ZData_Any::AsAny() const
 	{ return ZAny(*this); }
 
-ZData_Any::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fRep->fVector.size()); }
+ZData_Any::operator operator_bool() const
+	{ return operator_bool_gen::translate(fRep->fVector.size()); }
 
 ZData_Any::ZData_Any()
 :	fRep(new Rep)

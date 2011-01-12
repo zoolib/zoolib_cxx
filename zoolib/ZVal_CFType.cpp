@@ -252,7 +252,7 @@ template <>
 ZQ<bool> ZVal_CFType::QGet<bool>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFBooleanGetTypeID())
-		return true &&::CFBooleanGetValue(this->StaticCast<CFBooleanRef>());
+		return !!::CFBooleanGetValue(this->StaticCast<CFBooleanRef>());
 	return null;
 	}
 

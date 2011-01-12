@@ -178,11 +178,8 @@ public:
 		return *this;
 		}
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZQ,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fHasValue == Sense); }
+	ZMACRO_operator_bool_T(ZQ, operator_bool) const
+		{ return operator_bool_gen::translate(fHasValue == Sense); }
 
 	const T& Get() const
 		{

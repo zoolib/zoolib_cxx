@@ -733,8 +733,8 @@ Spec Spec::sProperty(ClassID iClassID, KeyID iKeyID)
 Spec Spec::sProperty(ClassID iClassID, const string8& iName)
 	{ return Entry::sProperty(iClassID, spAsRuntimeTypeID(iName)); }
 
-Spec::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(!fEntries.empty()); }
+Spec::operator operator_bool() const
+	{ return operator_bool_gen::translate(!fEntries.empty()); }
 
 void Spec::swap(Spec& iOther)
 	{ fEntries.swap(iOther.fEntries); }
@@ -1114,8 +1114,8 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 \brief Encapsulates a PIActionList, implementing the ZSeq API.
 */
 
-Seq::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(this->Count()); }
+Seq::operator operator_bool() const
+	{ return operator_bool_gen::translate(this->Count()); }
 
 ZSeq_Any Seq::AsSeq_Any(const ZAny& iDefault) const
 	{
@@ -1249,8 +1249,8 @@ PIActionList Seq::Orphan()
 \brief Encapsulates a PIActionDescriptor, implementing the ZMap API.
 */
 
-Map::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(this->pCount()); }
+Map::operator operator_bool() const
+	{ return operator_bool_gen::translate(this->pCount()); }
 
 ZMap_Any Map::AsMap_Any(const ZAny& iDefault) const
 	{

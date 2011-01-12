@@ -43,8 +43,6 @@ class ZDCPixmapRaster;
 
 class ZDCPixmap
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZDCPixmap, operator_bool_generator_type, operator_bool_type);
-
 public:
 // The usual mantra: constructor, copy constructor, destructor, assignment
 	ZDCPixmap();
@@ -102,8 +100,8 @@ public:
 	bool operator==(const ZDCPixmap& other) const;
 
 	/** Are we valid, i.e. do we have any pixels at all? */
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fRep && true); }
+	ZMACRO_operator_bool(ZDCPixmap, operator_bool) const
+		{ return operator_bool_gen::translate(!!fRep); }
 
 /** \name Dimensions
 	The number of pixels horizontally and vertically.

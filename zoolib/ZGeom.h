@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZGeometry.h" // Pulls in platform types and ZGeomPOD
 
 #if ZCONFIG_SPI_Enabled(BeOS)
@@ -44,10 +45,8 @@ template <class T>
 class ZPoint_T
 	{
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZPoint_T<T>,
-		operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(h || v); }
+	ZMACRO_operator_bool_T(ZPoint_T<T>, operator_bool) const
+		{ return operator_bool_gen::translate(h || v); }
 
 	static const ZPoint_T sZero;
 
@@ -213,10 +212,8 @@ template <class T>
 class ZRect_T
 	{
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRect_T<T>,
-		operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(left < right && top < bottom); }
+	ZMACRO_operator_bool_T(ZRect_T<T>, operator_bool) const
+		{ return operator_bool_gen::translate(left < right && top < bottom); }
 
 	static const ZRect_T sZero;
 

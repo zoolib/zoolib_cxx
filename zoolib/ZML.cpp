@@ -383,8 +383,8 @@ void StrimU::Imp_Unread(UTF32 iCP)
 size_t StrimU::Imp_UnreadableLimit()
 	{ return size_t(-1); }
 
-StrimU::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fToken != eToken_Exhausted); }
+StrimU::operator operator_bool() const
+	{ return operator_bool_gen::translate(fToken != eToken_Exhausted); }
 
 EToken StrimU::Current() const
 	{

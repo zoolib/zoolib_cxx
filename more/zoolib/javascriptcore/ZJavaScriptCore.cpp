@@ -424,14 +424,14 @@ ZAny Value::AsAny() const
 	return ZAny();
 	}
 
-Value::operator operator_bool_type() const
+Value::operator operator_bool() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
 		if (kJSTypeUndefined != ::JSValueGetType(sCurrentContextRef(), theRef))
-			return operator_bool_generator_type::translate(true);
+			return operator_bool_gen::translate(true);
 		}
-	return operator_bool_generator_type::translate(false);
+	return operator_bool_gen::translate(false);
 	}
 
 Value::operator bool() const

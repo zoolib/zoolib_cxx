@@ -128,10 +128,9 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 		}
 	}
 
-StrimW::operator operator_bool_type() const
+StrimW::operator operator_bool() const
 	{
-	return operator_bool_generator_type::translate(spLogMeister
-		&& spLogMeister->Enabled(fPriority, fName));
+	return operator_bool_gen::translate(spLogMeister && spLogMeister->Enabled(fPriority, fName));
 	}
 
 void StrimW::Emit() const

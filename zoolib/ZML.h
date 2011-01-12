@@ -80,8 +80,7 @@ public:
 	virtual size_t Imp_UnreadableLimit();
 
 // Our protocol
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(StrimU, operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const;
+	ZMACRO_operator_bool(StrimU, operator_bool) const;
 	EToken Current() const;
 	ZML::StrimU& Advance();
 

@@ -97,8 +97,8 @@ ZFileSpec::ZFileSpec(const string& iPath)
 
 /** \brief Returns true if the file spec is valid, that is if it represents
 an extant or potentially extant node in the file system. */
-ZFileSpec::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fLoc && true); }
+ZFileSpec::operator operator_bool() const
+	{ return operator_bool_gen::translate(!!fLoc); }
 
 /// Returns a file spec representing the current working directory.
 /**
@@ -792,8 +792,8 @@ return false if the iterator was initialized with a file spec
 that is not an extant directory, or if the iterator has
 run off the end of the directory.
 */
-ZFileIter::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fRep && fRep->HasValue()); }
+ZFileIter::operator operator_bool() const
+	{ return operator_bool_gen::translate(fRep && fRep->HasValue()); }
 
 /**
 Updates the iterator to point to the next child of the directory.
@@ -864,8 +864,8 @@ ZFileTreeIter& ZFileTreeIter::operator=(const ZFileTreeIter& iOther)
 	return *this;
 	}
 
-ZFileTreeIter::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fCurrent && true); }
+ZFileTreeIter::operator operator_bool() const
+	{ return operator_bool_gen::translate(!!fCurrent); }
 
 ZFileTreeIter& ZFileTreeIter::Advance()
 	{

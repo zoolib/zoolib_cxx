@@ -40,10 +40,7 @@ class ZData_Any
 public:
 	ZAny AsAny() const;
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZData_Any,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const;
+	ZMACRO_operator_bool(ZData_Any, operator_bool) const;
 
 	ZData_Any();
 	ZData_Any(const ZData_Any& iOther);

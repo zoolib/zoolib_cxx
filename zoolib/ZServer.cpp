@@ -87,7 +87,8 @@ void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
 	ZAssert(iFactory);
 
 	fStreamerListener = new StreamerListener(this, iFactory);
-	fStreamerListener->GetSetCallable_Detached(MakeCallable(MakeWeakRef(this), &ZServer::pListenerFinished));
+	fStreamerListener->GetSetCallable_Detached(
+		MakeCallable(MakeWeakRef(this), &ZServer::pListenerFinished));
 
 	sStartWorkerRunner(fStreamerListener);
 	}

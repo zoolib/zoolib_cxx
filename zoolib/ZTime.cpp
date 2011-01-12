@@ -64,8 +64,8 @@ ZTime::ZTime()
 :	fVal(NAN)
 	{}
 
-ZTime::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(!isnan(fVal)); }
+ZTime::operator operator_bool() const
+	{ return operator_bool_gen::translate(!isnan(fVal)); }
 
 bool ZTime::operator<(const ZTime& iOther) const
 	{

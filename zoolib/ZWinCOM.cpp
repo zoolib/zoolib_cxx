@@ -42,8 +42,8 @@ namespace ZWinCOM {
 \brief Compatible with ZVal & VARIANT
 */
 
-Variant::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(VT_NULL != vt); }
+Variant::operator operator_bool() const
+	{ return operator_bool_gen::translate(VT_NULL != vt); }
 
 void Variant::swap(Variant& iOther)
 	{ std::swap(static_cast<Variant&>(*this), static_cast<Variant&>(iOther)); }

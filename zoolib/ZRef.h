@@ -56,17 +56,14 @@ private:
 public:
 	#ifdef __OBJC__
 
-		operator bool() const { return Sense == (fP && true); }
+		operator bool() const { return Sense == !!fP; }
 
 		operator T*() const { return fP; }
 
 	#else
 
-		ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRef,
-			operator_bool_generator_type, operator_bool_type);
-
-		operator operator_bool_type() const
-			{ return operator_bool_generator_type::translate(Sense == (fP && true)); }
+		ZMACRO_operator_bool_T(ZRef, operator_bool) const
+			{ return operator_bool_gen::translate(Sense == !!fP); }
 
 	#endif
 
@@ -387,16 +384,16 @@ private:
 const struct MakeRef_t
 	{
 	template <class T>
-	ZRef<T> operator()(T* iT) const { return ZRef<T>(iT); }
+	ZRef<T> operator()(T* iP) const { return ZRef<T>(iP); }
 	} MakeRef = {};
 
 const struct TempRef_t
 	{
 	template <class T>
-	ZRef<T> operator&(T* iT) const { return ZRef<T>(Adopt_T<T>(iT)); }
+	ZRef<T> operator&(T* iP) const { return ZRef<T>(Adopt_T<T>(iP)); }
 	
 	template <class T>
-	ZRef<T> operator()(T* iT) const { return ZRef<T>(Adopt_T<T>(iT)); }
+	ZRef<T> operator()(T* iP) const { return ZRef<T>(Adopt_T<T>(iP)); }
 	} TempRef = {};
 
 // =================================================================================================

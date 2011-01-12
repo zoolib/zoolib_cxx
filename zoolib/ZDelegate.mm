@@ -19,6 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDelegate.h"
+#include "zoolib/ZUtil_STL_map.h"
+
+#include <string>
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
@@ -80,7 +83,7 @@ using std::string;
 
 namespace ZooLib {
 
-using std::map;
+//using std::map;
 
 // =================================================================================================
 #pragma mark -
@@ -102,21 +105,27 @@ ZDelegate::operator id()
 	{ return fProxy; }
 
 BOOL ZDelegate::pRespondsToSelector(SEL aSelector)
-	{ return fWrappers.end() != fWrappers.find(aSelector); }
+	{ return ZUtil_STL::sContains(fWrappers, aSelector); }
+//	{ return fWrappers.end() != fWrappers.find(aSelector); }
 
 void ZDelegate::pForwardInvocation(NSInvocation* anInvocation)
 	{
-	map<SEL, ZRef<Wrapper> >::iterator i = fWrappers.find([anInvocation selector]);
-	if (fWrappers.end() != i)
-		i->second->ForwardInvocation(anInvocation);
+	if (ZQ<ZRef<Wrapper> > theQ = ZUtil_STL::sGetIfContains(fWrappers, [anInvocation selector]))
+		theQ.Get()->ForwardInvocation(anInvocation);
+//	map<SEL, ZRef<Wrapper> >::iterator i = fWrappers.find([anInvocation selector]);
+//	if (fWrappers.end() != i)
+//		i->second->ForwardInvocation(anInvocation);
 	}
 
 NSMethodSignature* ZDelegate::pMethodSignatureForSelector(SEL aSelector)
 	{
-	map<SEL, ZRef<Wrapper> >::iterator i = fWrappers.find(aSelector);
-	if (fWrappers.end() != i)
-		return i->second->fNSMethodSignature;
+	if (ZQ<ZRef<Wrapper> > theQ = ZUtil_STL::sGetIfContains(fWrappers, aSelector))
+		return theQ.Get()->fNSMethodSignature;
 	return nil;
+//	map<SEL, ZRef<Wrapper> >::iterator i = fWrappers.find(aSelector);
+//	if (fWrappers.end() != i)
+//		return i->second->fNSMethodSignature;
+//	return nil;
 	}
 
 // =================================================================================================

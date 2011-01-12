@@ -37,11 +37,8 @@ namespace ZooLib {
 class ZAny
 	{
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZAny,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fRep); }
+	ZMACRO_operator_bool(ZAny, operator_bool) const
+		{ return operator_bool_gen::translate(fRep); }
 
 	ZAny()
 	:	fRep(0)

@@ -100,8 +100,7 @@ public:
 
 	ZFileSpec(const std::string& iPath);
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZFileSpec, operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const;
+	ZMACRO_operator_bool(ZFileSpec, operator_bool) const;
 
 	static ZFileSpec sCWD();
 	static ZFileSpec sRoot();
@@ -187,8 +186,7 @@ public:
 	~ZFileIter();
 	ZFileIter& operator=(const ZFileIter& iOther);
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZFileIter, operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const;
+	ZMACRO_operator_bool(ZFileIter, operator_bool) const;
 	ZFileIter& Advance();
 	ZFileSpec Current() const;
 	std::string CurrentName() const;
@@ -212,9 +210,7 @@ public:
 	~ZFileTreeIter();
 	ZFileTreeIter& operator=(const ZFileTreeIter& iOther);
 
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(
-		ZFileTreeIter, operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const;
+	ZMACRO_operator_bool(ZFileTreeIter, operator_bool) const;
 	ZFileTreeIter& Advance();
 	ZFileSpec Current() const;
 	std::string CurrentName() const;

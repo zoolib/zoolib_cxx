@@ -82,11 +82,8 @@ private:
 	void pRelease();
 
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(NPVariant_T<T>,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(type != NPVariantType_Void); }
+	ZMACRO_operator_bool_T(NPVariant_T<T>, operator_bool) const
+		{ return operator_bool_gen::translate(type != NPVariantType_Void); }
 
 	typedef T Object_t;
 

@@ -97,9 +97,8 @@ public:
 class ZGRgn
 	{
 public:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZGRgn, operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fRep && !fRep->IsEmpty()); }
+	ZMACRO_operator_bool(ZGRgn, operator_bool) const
+		{ return operator_bool_gen::translate(fRep && !fRep->IsEmpty()); }
 
 	template <typename Native>
 	static ZGRgn sFromNative(Native iNative, bool iAdopt)

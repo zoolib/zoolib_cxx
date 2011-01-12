@@ -30,7 +30,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRef_NSObject.h"
 
 #include <map>
-#include <string>
 
 #ifdef __OBJC__
 	#import <Foundation/NSInvocation.h>
