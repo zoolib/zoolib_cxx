@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZWorkerRunner_EventLoop.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_map.h"
 
 namespace ZooLib {
 

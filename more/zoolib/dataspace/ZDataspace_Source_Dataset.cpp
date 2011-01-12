@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimU_Unreader.h"
 #include "zoolib/ZStrimmer_Streamer.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 

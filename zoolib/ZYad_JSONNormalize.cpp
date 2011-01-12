@@ -105,19 +105,19 @@ static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 static ZRef<ZYadR> spMakeYadR_JSONNormalize(
 	ZRef<ZYadR> iYadR, bool iPreserve, bool iPreserveSeqs, bool iPreserveMaps)
 	{
-	if (ZRef<ZYadSeqR> theYadSeqR = ZRefDynamicCast<ZYadSeqR>(iYadR))
+	if (ZRef<ZYadSeqR> theYadSeqR = iYadR.DynamicCast<ZYadSeqR>())
 		{
 		return new ZYadSeqR_JSONNormalize(theYadSeqR, iPreserveSeqs, iPreserveMaps);
 		}
-	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
+	else if (ZRef<ZYadMapR> theYadMapR = iYadR.DynamicCast<ZYadMapR>())
 		{
 		return new ZYadMapR_JSONNormalize(theYadMapR, iPreserveSeqs, iPreserveMaps);
 		}
-	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
+	else if (ZRef<ZYadStrimR> theYadStrimR = iYadR.DynamicCast<ZYadStrimR>())
 		{
 		return theYadStrimR;
 		}
-	else if (ZRef<ZYadAtomR> theYadAtomR = ZRefDynamicCast<ZYadAtomR>(iYadR))
+	else if (ZRef<ZYadAtomR> theYadAtomR = iYadR.DynamicCast<ZYadAtomR>())
 		{
 		ZAny normalized;
 		if (spNormalizeSimpleValue(theYadAtomR->AsAny(), normalized))

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(WorkerRunner_CFRunLoop)
 
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZVal_CFType.h"
 
 namespace ZooLib {
@@ -59,14 +59,14 @@ ZWorkerRunner_CFRunLoop::ZWorkerRunner_CFRunLoop(ZRef<CFRunLoopRef> iRunLoop)
 :	fRunLoop(iRunLoop)
 	{
 	CFRunLoopTimerContext theContext = { 0, this, 0, 0, 0 };
-	fRunLoopTimer = Adopt(::CFRunLoopTimerCreate(
+	fRunLoopTimer = Adopt& ::CFRunLoopTimerCreate(
 		nullptr, // allocator
 		0, // fireDate
 		1000000, // interval, needs to be non-zero
 		0, // flags
 		0, // order
 		spCallback,
-		&theContext));
+		&theContext);
 
 	::CFRunLoopAddTimer(fRunLoop, fRunLoopTimer, kCFRunLoopCommonModes);
 	}

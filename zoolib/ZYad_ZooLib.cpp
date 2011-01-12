@@ -247,7 +247,7 @@ ZVal_ZooLib Visitor_GetVal::GetVal(const ZRef<ZYadR>& iYadR)
 
 ZVal_ZooLib sFromYadR(const ZVal_ZooLib& iDefault, ZRef<ZYadR> iYadR)
 	{
-	if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iYadR))
+	if (ZRef<ZYadR_ZooLib> theYadR = iYadR.DynamicCast<ZYadR_ZooLib>())
 		return theYadR->GetVal();
 
 	return Visitor_GetVal(iDefault).GetVal(iYadR);

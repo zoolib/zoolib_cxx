@@ -366,23 +366,23 @@ void ZYad_XMLPList::sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s)
 		{
 		return;
 		}
-	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
+	else if (ZRef<ZYadMapR> theYadMapR = iYadR.DynamicCast<ZYadMapR>())
 		{
 		spToStrim_Map(s, theYadMapR);
 		}
-	else if (ZRef<ZYadSeqR> theYadSeqR = ZRefDynamicCast<ZYadSeqR>(iYadR))
+	else if (ZRef<ZYadSeqR> theYadSeqR = iYadR.DynamicCast<ZYadSeqR>())
 		{
 		spToStrim_List(s, theYadSeqR);
 		}
-	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
+	else if (ZRef<ZYadStreamR> theYadStreamR = iYadR.DynamicCast<ZYadStreamR>())
 		{
 		spToStrim_Stream(s, theYadStreamR->GetStreamR());
 		}
-	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
+	else if (ZRef<ZYadStrimR> theYadStrimR = iYadR.DynamicCast<ZYadStrimR>())
 		{
 		spToStrim_Strim(s, theYadStrimR->GetStrimR());
 		}
-	else if (ZRef<ZYadAtomR> theYadAtomR = ZRefDynamicCast<ZYadAtomR>(iYadR))
+	else if (ZRef<ZYadAtomR> theYadAtomR = iYadR.DynamicCast<ZYadAtomR>())
 		{
 		spToStrim_Any(s, theYadAtomR->AsAny());
 		}

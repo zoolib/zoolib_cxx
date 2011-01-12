@@ -1070,23 +1070,23 @@ static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		{
 		return;
 		}
-	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
+	else if (ZRef<ZYadMapR> theYadMapR = iYadR.DynamicCast<ZYadMapR>())
 		{
 		spToStrim_Map(s, theYadMapR, iLevel, iOptions, iMayNeedInitialLF);
 		}
-	else if (ZRef<ZYadSeqR> theYadSeqR = ZRefDynamicCast<ZYadSeqR>(iYadR))
+	else if (ZRef<ZYadSeqR> theYadSeqR = iYadR.DynamicCast<ZYadSeqR>())
 		{
 		spToStrim_Seq(s, theYadSeqR, iLevel, iOptions, iMayNeedInitialLF);
 		}
-	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
+	else if (ZRef<ZYadStreamR> theYadStreamR = iYadR.DynamicCast<ZYadStreamR>())
 		{
 		spToStrim_Stream(s, theYadStreamR->GetStreamR(), iLevel, iOptions, iMayNeedInitialLF);
 		}
-	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
+	else if (ZRef<ZYadStrimR> theYadStrimR = iYadR.DynamicCast<ZYadStrimR>())
 		{
 		spToStrim_Strim(s, theYadStrimR->GetStrimR(), iLevel, iOptions, iMayNeedInitialLF);
 		}
-	else if (ZRef<ZYadAtomR> theYadAtomR = ZRefDynamicCast<ZYadAtomR>(iYadR))
+	else if (ZRef<ZYadAtomR> theYadAtomR = iYadR.DynamicCast<ZYadAtomR>())
 		{
 		spToStrim_SimpleValue(s, theYadAtomR->AsAny(),
 			iLevel, iOptions, iMayNeedInitialLF);

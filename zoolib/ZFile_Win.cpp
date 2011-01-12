@@ -629,7 +629,7 @@ string ZFileLoc_Win::GetName(ZFile::Error* oErr) const
 
 ZQ<ZTrail> ZFileLoc_Win::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
 	{
-	if (ZFileLoc_Win* dest = ZRefDynamicCast<ZFileLoc_Win>(oDest))
+	if (ZFileLoc_Win* dest = oDest.DynamicCast<ZFileLoc_Win>())
 		{
 		if (fBase == dest->fBase)
 			{
@@ -871,7 +871,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::CreateDir(ZFile::Error* oErr)
 
 ZRef<ZFileLoc> ZFileLoc_Win::MoveTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr)
 	{
-	if (ZFileLoc_Win* dest = ZRefDynamicCast<ZFileLoc_Win>(oDest))
+	if (ZFileLoc_Win* dest = oDest.DynamicCast<ZFileLoc_Win>())
 		{
 		if (::MoveFileA(this->pGetPath().c_str(), dest->pGetPath().c_str()))
 			return oDest;
@@ -1217,7 +1217,7 @@ string ZFileLoc_WinNT::GetName(ZFile::Error* oErr) const
 
 ZQ<ZTrail> ZFileLoc_WinNT::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
 	{
-	if (ZFileLoc_WinNT* dest = ZRefDynamicCast<ZFileLoc_WinNT>(oDest))
+	if (ZFileLoc_WinNT* dest = oDest.DynamicCast<ZFileLoc_WinNT>())
 		{
 		if (fBase == dest->fBase)
 			{
@@ -1480,7 +1480,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::CreateDir(ZFile::Error* oErr)
 
 ZRef<ZFileLoc> ZFileLoc_WinNT::MoveTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr)
 	{
-	if (ZFileLoc_WinNT* dest = ZRefDynamicCast<ZFileLoc_WinNT>(oDest))
+	if (ZFileLoc_WinNT* dest = oDest.DynamicCast<ZFileLoc_WinNT>())
 		{
 		if (::MoveFileW(this->pGetPath().c_str(), dest->pGetPath().c_str()))
 			return oDest;

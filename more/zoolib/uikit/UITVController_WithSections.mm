@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZRef_NSObject.h"
 #include "zoolib/ZUtil_NSObject.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/ZUtil_STL_set.h"
 
 namespace ZooLib {
 namespace UIKit {
@@ -574,7 +575,7 @@ using namespace ZooLib::UIKit;
 
 @implementation UITVController_WithSections
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 	{
 	[super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	fCallable_NeedsUpdate = MakeCallable<void()>(self, @selector(needsUpdate));
@@ -611,16 +612,16 @@ using namespace ZooLib::UIKit;
 	return 0;
 	}
 
-- (void)tableView:(UITableView *)tableView
+- (void)tableView:(UITableView*)tableView
 	commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
-	forRowAtIndexPath:(NSIndexPath *)indexPath
+	forRowAtIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		theSection->GetBody()->CommitEditingStyle(editingStyle, indexPath.row);
 	}
  
-- (NSIndexPath *)tableView:(UITableView *)tableView
-	willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (NSIndexPath*)tableView:(UITableView*)tableView
+	willSelectRowAtIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
@@ -688,7 +689,7 @@ using namespace ZooLib::UIKit;
 	return nullptr;
 	}
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
@@ -699,7 +700,7 @@ using namespace ZooLib::UIKit;
 	return result;
 	}
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
@@ -709,7 +710,7 @@ using namespace ZooLib::UIKit;
 	return tableView.sectionHeaderHeight;
 	}
 
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView*)tableView heightForFooterInSection:(NSInteger)section
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
@@ -719,7 +720,7 @@ using namespace ZooLib::UIKit;
 	return tableView.sectionFooterHeight;
 	}
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
@@ -729,7 +730,7 @@ using namespace ZooLib::UIKit;
 	return nullptr;
 	}
 
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+- (NSString*)tableView:(UITableView*)tableView titleForFooterInSection:(NSInteger)section
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
@@ -739,7 +740,7 @@ using namespace ZooLib::UIKit;
 	return nullptr;
 	}
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+- (UIView*)tableView:(UITableView*)tableView viewForHeaderInSection:(NSInteger)section
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
@@ -749,7 +750,7 @@ using namespace ZooLib::UIKit;
 	return nullptr;
 	}
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+- (UIView*)tableView:(UITableView*)tableView viewForFooterInSection:(NSInteger)section
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
@@ -759,8 +760,8 @@ using namespace ZooLib::UIKit;
 	return nullptr;
 	}
 
-- (void)tableView:(UITableView *)tableView
-	accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView*)tableView
+	accessoryButtonTappedForRowWithIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		theSection->GetBody()->ButtonTapped(self, tableView, indexPath, indexPath.row);
@@ -772,8 +773,8 @@ using namespace ZooLib::UIKit;
 		theSection->GetBody()->RowSelected(self, tableView, indexPath, indexPath.row);
 	}
 
-- (BOOL)tableView:(UITableView *)tableView
-	shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
+- (BOOL)tableView:(UITableView*)tableView
+	shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
@@ -783,8 +784,8 @@ using namespace ZooLib::UIKit;
 	return true;
 	}
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
-	editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCellEditingStyle)tableView:(UITableView*)tableView
+	editingStyleForRowAtIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
@@ -794,8 +795,8 @@ using namespace ZooLib::UIKit;
 	return UITableViewCellEditingStyleNone;
 	}
 
-- (NSInteger)tableView:(UITableView *)tableView
-	indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath
+- (NSInteger)tableView:(UITableView*)tableView
+	indentationLevelForRowAtIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{

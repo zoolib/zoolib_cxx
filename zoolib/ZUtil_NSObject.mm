@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
-#include "zoolib/ZObjC.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUnicode.h"
 

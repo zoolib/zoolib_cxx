@@ -20,9 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStackCrawl.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZUtil_STL.h"
 
 #include <stdexcept>
+#include <vector>
 
 using std::min;
 using std::runtime_error;

@@ -72,14 +72,8 @@ private:
 	class Proxy;
 	class Visitor_Proxy;
 
-	struct Comparator_Proxy
-		{
-		bool operator()(Proxy* iLeft, Proxy* iRight) const;
-
-		typedef Proxy* first_argument_type;
-		typedef Proxy* second_argument_type;
-		typedef bool result_type;
-		};
+	struct Comparator_Proxy : public std::binary_function<Proxy*,Proxy*,bool>
+		{ bool operator()(Proxy* iLeft, Proxy* iRight) const; };
 
 	typedef std::set<Proxy*, Comparator_Proxy> ProxySet;
 	ProxySet fProxySet;

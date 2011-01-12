@@ -92,7 +92,7 @@ class ZNetListener_TCP_Socket
 :	public ZNetListener_TCP,
 	public ZNetListener_Socket
 	{
-	ZNetListener_TCP_Socket(int iFD, bool iKnowWhatImDoing);
+	ZNetListener_TCP_Socket(int iFD, const IKnowWhatIAmDoing_t&);
 public:
 	static ZRef<ZNetListener_TCP_Socket> sCreateWithFD(int iFD);
 

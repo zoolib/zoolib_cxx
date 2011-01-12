@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNet_Internet.h"
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZString.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZWorker.h"
 
 #include <stdlib.h> // For malloc/free

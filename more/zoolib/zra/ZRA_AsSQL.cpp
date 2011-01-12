@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Strim.h"
+#include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_ToStrim.h"
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
@@ -221,7 +222,7 @@ void MakeThing::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	const string8 realTableName = found.Get()->first;
 	const string8 realTableNameUnderscore = realTableName + "_";
 	const int numericSuffix = fTablesUsed[realTableName]++;
-	const string8 usedTableName = realTableName + ZStringf("%d",numericSuffix);
+	const string8 usedTableName = realTableName + ZStringf("%d", numericSuffix);
 	const string8 usedTableNameDot = usedTableName + ".";
 
 	Thing theThing;

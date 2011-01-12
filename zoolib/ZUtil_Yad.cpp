@@ -31,9 +31,9 @@ using std::string;
 
 static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 	{
-	if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
+	if (ZRef<ZYadMapR> theYadMapR = iYadR.DynamicCast<ZYadMapR>())
 		{
-		if (ZRef<ZYadMapRPos> theYadMapRPos = ZRefDynamicCast<ZYadMapRPos>(iYadR))
+		if (ZRef<ZYadMapRPos> theYadMapRPos = iYadR.DynamicCast<ZYadMapRPos>())
 			{
 			theYadMapRPos->SetPosition(iName);
 			string dummy;
@@ -56,12 +56,12 @@ static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 				}
 			}
 		}
-	else if (ZRef<ZYadSeqR> theYadSeqR = ZRefDynamicCast<ZYadSeqR>(iYadR))
+	else if (ZRef<ZYadSeqR> theYadSeqR = iYadR.DynamicCast<ZYadSeqR>())
 		{
 		int64 theIntIndex;
 		if (ZString::sQInt64(iName, theIntIndex) && theIntIndex >= 0)
 			{
-			if (ZRef<ZYadSeqRPos> theYadSeqPosR = ZRefDynamicCast<ZYadSeqRPos>(iYadR))
+			if (ZRef<ZYadSeqRPos> theYadSeqPosR = iYadR.DynamicCast<ZYadSeqRPos>())
 				{
 				theYadSeqPosR->SetPosition(theIntIndex);
 				return theYadSeqPosR->ReadInc();

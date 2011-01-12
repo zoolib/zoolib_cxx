@@ -130,11 +130,11 @@ void ZDCPixmapBlit::sBlit(
 	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 
-	if (PDRep_Color* sourcePDRep_Color = ZRefDynamicCast<PDRep_Color>(sourcePDRep))
+	if (PDRep_Color* sourcePDRep_Color = sourcePDRep.DynamicCast<PDRep_Color>())
 		{
-		if (PDRep_Color* mattePDRep_Color = ZRefDynamicCast<PDRep_Color>(mattePDRep))
+		if (PDRep_Color* mattePDRep_Color = mattePDRep.DynamicCast<PDRep_Color>())
 			{
-			if (PDRep_Color* destPDRep_Color = ZRefDynamicCast<PDRep_Color>(destPDRep))
+			if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 				{
 				sBlit_T(iSourceAddress, iSourceRD, *sourcePDRep_Color,
 					sourceStart,
@@ -175,11 +175,11 @@ void ZDCPixmapBlit::sBlit(
 	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 
-	if (PDRep_Color* sourcePDRep_Color = ZRefDynamicCast<PDRep_Color>(sourcePDRep))
+	if (PDRep_Color* sourcePDRep_Color = sourcePDRep.DynamicCast<PDRep_Color>())
 		{
-		if (PDRep_Color* mattePDRep_Color = ZRefDynamicCast<PDRep_Color>(mattePDRep))
+		if (PDRep_Color* mattePDRep_Color = mattePDRep.DynamicCast<PDRep_Color>())
 			{
-			if (PDRep_Color* destPDRep_Color = ZRefDynamicCast<PDRep_Color>(destPDRep))
+			if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 				{
 				sBlit_T(iSourceAddress, iSourceRD, *sourcePDRep_Color,
 					sourceStart,
@@ -203,15 +203,15 @@ void ZDCPixmapBlit::sColor(
 	EOp iOp)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
-	if (PDRep_Color* destPDRep_Color = ZRefDynamicCast<PDRep_Color>(destPDRep))
+	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
 		sColor_T(iDestAddress, iDestRD, iDestB, *destPDRep_Color, iColor, iOp);
 		}
-	else if (PDRep_Indexed* destPDRep_Indexed = ZRefDynamicCast<PDRep_Indexed>(destPDRep))
+	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
 		sColor_T(iDestAddress, iDestRD, iDestB, *destPDRep_Indexed, iColor, iOp);
 		}
-	else if (PDRep_Gray* destPDRep_Gray = ZRefDynamicCast<PDRep_Gray>(destPDRep))
+	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
 		sColor_T(iDestAddress, iDestRD, iDestB, *destPDRep_Gray, iColor, iOp);
 		}
@@ -236,9 +236,9 @@ void ZDCPixmapBlit::sColor(
 	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 
-	if (PDRep_Color* mattePDRep_Color = ZRefDynamicCast<PDRep_Color>(mattePDRep))
+	if (PDRep_Color* mattePDRep_Color = mattePDRep.DynamicCast<PDRep_Color>())
 		{
-		if (PDRep_Color* destPDRep_Color = ZRefDynamicCast<PDRep_Color>(destPDRep))
+		if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 			{
 			sColor_T(iMatteAddress, iMatteRD, *mattePDRep_Color,
 				matteStart,
@@ -248,9 +248,9 @@ void ZDCPixmapBlit::sColor(
 			return;
 			}
 		}
-	else if (PDRep_Gray* mattePDRep_Gray = ZRefDynamicCast<PDRep_Gray>(mattePDRep))
+	else if (PDRep_Gray* mattePDRep_Gray = mattePDRep.DynamicCast<PDRep_Gray>())
 		{
-		if (PDRep_Color* destPDRep_Color = ZRefDynamicCast<PDRep_Color>(destPDRep))
+		if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 			{
 			sColor_T(iMatteAddress, iMatteRD, *mattePDRep_Gray,
 				matteStart,
@@ -286,15 +286,15 @@ void ZDCPixmapBlit::sInvert(
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
-	if (PDRep_Color* destPDRep_Color = ZRefDynamicCast<PDRep_Color>(destPDRep))
+	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
 		sInvert_T(iDestAddress, iDestRD, iDestB, *destPDRep_Color);
 		}
-	else if (PDRep_Indexed* destPDRep_Indexed = ZRefDynamicCast<PDRep_Indexed>(destPDRep))
+	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
 		sInvert_T(iDestAddress, iDestRD, iDestB, *destPDRep_Indexed);
 		}
-	else if (PDRep_Gray* destPDRep_Gray = ZRefDynamicCast<PDRep_Gray>(destPDRep))
+	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
 		sInvert_T(iDestAddress, iDestRD, iDestB, *destPDRep_Gray);
 		}
@@ -308,15 +308,15 @@ void ZDCPixmapBlit::sOpaque(
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
-	if (PDRep_Color* destPDRep_Color = ZRefDynamicCast<PDRep_Color>(destPDRep))
+	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
 		sOpaque_T(iDestAddress, iDestRD, iDestB, *destPDRep_Color, iAmount);
 		}
-	else if (PDRep_Indexed* destPDRep_Indexed = ZRefDynamicCast<PDRep_Indexed>(destPDRep))
+	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
 		sOpaque_T(iDestAddress, iDestRD, iDestB, *destPDRep_Indexed, iAmount);
 		}
-	else if (PDRep_Gray* destPDRep_Gray = ZRefDynamicCast<PDRep_Gray>(destPDRep))
+	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
 		sOpaque_T(iDestAddress, iDestRD, iDestB, *destPDRep_Gray, iAmount);
 		}
@@ -330,15 +330,15 @@ void ZDCPixmapBlit::sDarken(
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
-	if (PDRep_Color* destPDRep_Color = ZRefDynamicCast<PDRep_Color>(destPDRep))
+	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
 		sDarken_T(iDestAddress, iDestRD, iDestB, *destPDRep_Color, iAmount);
 		}
-	else if (PDRep_Indexed* destPDRep_Indexed = ZRefDynamicCast<PDRep_Indexed>(destPDRep))
+	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
 		sDarken_T(iDestAddress, iDestRD, iDestB, *destPDRep_Indexed, iAmount);
 		}
-	else if (PDRep_Gray* destPDRep_Gray = ZRefDynamicCast<PDRep_Gray>(destPDRep))
+	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
 		sDarken_T(iDestAddress, iDestRD, iDestB, *destPDRep_Gray, iAmount);
 		}
@@ -352,15 +352,15 @@ void ZDCPixmapBlit::sFade(
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
-	if (PDRep_Color* destPDRep_Color = ZRefDynamicCast<PDRep_Color>(destPDRep))
+	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
 		sFade_T(iDestAddress, iDestRD, iDestB, *destPDRep_Color, iAmount);
 		}
-	else if (PDRep_Indexed* destPDRep_Indexed = ZRefDynamicCast<PDRep_Indexed>(destPDRep))
+	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
 		sFade_T(iDestAddress, iDestRD, iDestB, *destPDRep_Indexed, iAmount);
 		}
-	else if (PDRep_Gray* destPDRep_Gray = ZRefDynamicCast<PDRep_Gray>(destPDRep))
+	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
 		sFade_T(iDestAddress, iDestRD, iDestB, *destPDRep_Gray, iAmount);
 		}
@@ -385,9 +385,9 @@ void ZDCPixmapBlit::sApplyMatte(
 	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 
-	if (PDRep_Color* mattePDRep_Color = ZRefDynamicCast<PDRep_Color>(mattePDRep))
+	if (PDRep_Color* mattePDRep_Color = mattePDRep.DynamicCast<PDRep_Color>())
 		{
-		if (PDRep_Color* destPDRep_Color = ZRefDynamicCast<PDRep_Color>(destPDRep))
+		if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 			{
 			sApplyMatte_T(iMatteAddress, iMatteRD, *mattePDRep_Color,
 				matteStart,

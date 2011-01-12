@@ -294,18 +294,16 @@ ZRef<ZNetListener_TCP_Socket> ZNetListener_TCP_Socket::sCreateWithFD(int iFD)
 	{
 	try
 		{
-		return new ZNetListener_TCP_Socket(iFD, I_KNOW_WHAT_IM_DOING);
+		return new ZNetListener_TCP_Socket(iFD, IKnowWhatIAmDoing);
 		}
 	catch (...)
 		{}
 	return null;
 	}
 
-ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(int iSocketFD, bool iKnowWhatImDoing)
+ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(int iSocketFD, const IKnowWhatIAmDoing_t&)
 :	ZNetListener_Socket(spEnsureInet(iSocketFD))
-	{
-	ZAssert(iKnowWhatImDoing);
-	}
+	{}
 
 ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(ip_port iLocalPort)
 :	ZNetListener_Socket(ZNet_TCP_Socket::sListen(0, iLocalPort))

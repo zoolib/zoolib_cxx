@@ -837,7 +837,7 @@ ZQ<ZTrail> ZFileLoc_POSIX::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) con
 	if (oErr)
 		*oErr = ZFile::errorNone;
 
-	if (ZFileLoc_POSIX* dest = ZRefDynamicCast<ZFileLoc_POSIX>(oDest))
+	if (ZFileLoc_POSIX* dest = oDest.DynamicCast<ZFileLoc_POSIX>())
 		{
 		if (fIsAtRoot == dest->fIsAtRoot)
 			return ZTrail::sTrailFromTo(fComps, dest->fComps);
@@ -1072,7 +1072,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::CreateDir(ZFile::Error* oErr)
 
 ZRef<ZFileLoc> ZFileLoc_POSIX::MoveTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr)
 	{
-	ZFileLoc_POSIX* other = ZRefDynamicCast<ZFileLoc_POSIX>(oDest);
+	ZFileLoc_POSIX* other = oDest.DynamicCast<ZFileLoc_POSIX>();
 	if (!other)
 		{
 		if (oErr)

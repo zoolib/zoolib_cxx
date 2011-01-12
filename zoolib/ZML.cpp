@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_vector.h"
 
 #include <stdio.h> // For sprintf
 

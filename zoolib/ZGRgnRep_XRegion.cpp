@@ -67,7 +67,7 @@ Region sDecomposeRepIntoRegion(const ZRef<ZGRgnRep>& iRep)
 
 Region sGetRegion(const ZRef<ZGRgnRep>& iRep, bool& oDispose)
 	{
-	if (ZRef<ZGRgnRep_XRegion> other = ZRefDynamicCast<ZGRgnRep_XRegion>(iRep))
+	if (ZRef<ZGRgnRep_XRegion> other = iRep.DynamicCast<ZGRgnRep_XRegion>())
 		{
 		oDispose = false;
 		return other->GetRegion();
@@ -80,7 +80,7 @@ Region sGetRegion(const ZRef<ZGRgnRep>& iRep, bool& oDispose)
 
 Region sMakeRegion(const ZRef<ZGRgnRep>& iRep)
 	{
-	if (ZRef<ZGRgnRep_XRegion> other = ZRefDynamicCast<ZGRgnRep_XRegion>(iRep))
+	if (ZRef<ZGRgnRep_XRegion> other = iRep.DynamicCast<ZGRgnRep_XRegion>())
 		return sCopyRegion(other->GetRegion());
 
 	return sDecomposeRepIntoRegion(iRep);
@@ -119,7 +119,7 @@ ZRef<ZGRgnRep> ZGRgnRepCreator_T<Region>::sCreate(Region iNative, bool iAdopt)
 
 ZRef<ZGRgnRep_XRegion> ZGRgnRep_XRegion::sGetRep(const ZRef<ZGRgnRep>& iRep)
 	{
-	if (ZRef<ZGRgnRep_XRegion> other = ZRefDynamicCast<ZGRgnRep_XRegion>(iRep))
+	if (ZRef<ZGRgnRep_XRegion> other = iRep.DynamicCast<ZGRgnRep_XRegion>())
 		return other;
 	Region theXRegion = sDecomposeRepIntoRegion(iRep);
 	return new ZGRgnRep_XRegion(theXRegion);

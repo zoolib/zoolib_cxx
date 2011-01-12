@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZStream_Limited.h"
 #include "zoolib/ZStream_SHA1.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_vector.h"
 
 #include <deque>
 

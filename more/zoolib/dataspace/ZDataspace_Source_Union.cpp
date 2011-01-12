@@ -21,7 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZValPred_GetNames.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
@@ -127,6 +128,9 @@ public:
 // From ZCounted
 	virtual void Finalize();
 
+// From ZVisitee
+	virtual void Accept(ZVisitor& iVisitor);
+
 // From ZExpr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
@@ -172,6 +176,14 @@ void Source_Union::Proxy::Finalize()
 		fSource->pFinalizeProxy(this);
 	else
 		inherited::Finalize();
+	}
+
+void Source_Union::Proxy::Accept(ZVisitor& iVisitor)
+	{
+	if (Visitor_Proxy* theVisitor = dynamic_cast<Visitor_Proxy*>(&iVisitor))
+		this->Accept_Proxy(*theVisitor);
+	else
+		inherited::Accept(iVisitor);
 	}
 
 void Source_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>& iVisitor)
@@ -622,7 +634,7 @@ void Source_Union::ModifyRegistrations(
 	// Remove any searches that need it
 	while (iRemovedCount--)
 		{
-		int64 theRefcon = *iRemoved++;
+		const int64 theRefcon = *iRemoved++;
 
 		Map_Refcon_ClientSearch::iterator iterClientSearch =
 			fMap_Refcon_ClientSearch.find(theRefcon);
@@ -742,9 +754,7 @@ void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 
 	for (DListEraser<PSource, DLink_PSource_CollectFrom>
 		eraserPSource = fPSource_CollectFrom; eraserPSource; eraserPSource.Advance())
-		{
-		this->pCollectFrom(eraserPSource.Current());
-		}
+		{ this->pCollectFrom(eraserPSource.Current()); }
 
 	// -----
 
@@ -850,7 +860,7 @@ ZRef<Source_Union::Proxy> Source_Union::pGetProxy(
 			PSource& thePSource = iterSources->second;
 			if (thePSource.Intersects(theProxy->fRelHead))
 				{
-				int64 theRefcon = thePSource.fNextRefcon++;
+				const int64 theRefcon = thePSource.fNextRefcon++;
 				PIP* thePIP = &thePSource.fMap_Refcon_PIP.insert(
 					make_pair(theRefcon, PIP())).first->second;
 
@@ -977,10 +987,9 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 			thePIP->fEvent = iterSearchResults->GetEvent();
 			for (set<PSearch*>::iterator
 				i = thePIP->fProxy->fDependentPSearches.begin(),
-				end = thePIP->fProxy->fDependentPSearches.end(); i != end; ++i)
-				{
-				fPSearch_NeedsWork.InsertIfNotContains(*i);
-				}
+				end = thePIP->fProxy->fDependentPSearches.end();
+				i != end; ++i)
+				{ fPSearch_NeedsWork.InsertIfNotContains(*i); }
 			}
 		}
 	}

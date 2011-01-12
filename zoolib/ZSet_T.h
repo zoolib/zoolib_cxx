@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZSet_T__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_STL_set.h"
 
 namespace ZooLib {
@@ -31,8 +30,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZSet_T declaration
 
-template <class T>
-class ZSet_T : public std::set<T>
+template <class T, class Comparator = std::less<T> >
+class ZSet_T : public std::set<T,Comparator>
 	{
 public:
 	typedef std::set<T> Base_t;
@@ -95,54 +94,54 @@ public:
 #pragma mark -
 #pragma mark * ZSet_T definition
 
-template <class T>
-ZSet_T<T>::ZSet_T(Base_t* ioElems)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>::ZSet_T(Base_t* ioElems)
 	{ this->swap(*ioElems); }
 
-template <class T>
-ZSet_T<T>::ZSet_T()
+template <class T, class Comparator>
+ZSet_T<T,Comparator>::ZSet_T()
 	{}
 
-template <class T>
-ZSet_T<T>::ZSet_T(const ZSet_T& iOther)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>::ZSet_T(const ZSet_T& iOther)
 :	Base_t(iOther)
 	{}
 
-template <class T>
-ZSet_T<T>::~ZSet_T()
+template <class T, class Comparator>
+ZSet_T<T,Comparator>::~ZSet_T()
 	{}
 
-template <class T>
-ZSet_T<T>& ZSet_T<T>::operator=(const ZSet_T& iOther)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::operator=(const ZSet_T& iOther)
 	{
 	Base_t::operator=(iOther);
 	return *this;
 	}
 
-template <class T>
-ZSet_T<T>::ZSet_T(const T& iElem)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>::ZSet_T(const T& iElem)
 :	Base_t(&iElem, &iElem + 1)
 	{}
 
-template <class T>
-ZSet_T<T>::ZSet_T(const std::set<T>& iElems)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>::ZSet_T(const std::set<T>& iElems)
 :	Base_t(iElems)
 	{}
 
-template <class T>
+template <class T, class Comparator>
 template <class Iterator>
-ZSet_T<T>::ZSet_T(Iterator iBegin, Iterator iEnd)
+ZSet_T<T,Comparator>::ZSet_T(Iterator iBegin, Iterator iEnd)
 :	Base_t(iBegin, iEnd)
 	{}
 
-template <class T>
+template <class T, class Comparator>
 template <class Iterator>
-ZSet_T<T>::ZSet_T(Iterator iBegin, size_t iCount)
+ZSet_T<T,Comparator>::ZSet_T(Iterator iBegin, size_t iCount)
 :	Base_t(iBegin, iBegin + iCount)
 	{}
 
-template <class T>
-ZSet_T<T>& ZSet_T<T>::operator&=(const T& iElem)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::operator&=(const T& iElem)
 	{
 	if (ZUtil_STL::sContains(*this, iElem))
 		{
@@ -156,92 +155,92 @@ ZSet_T<T>& ZSet_T<T>::operator&=(const T& iElem)
 	return *this;
 	}
 
-template <class T>
-ZSet_T<T> ZSet_T<T>::operator&(const T& iElem) const
+template <class T, class Comparator>
+ZSet_T<T,Comparator> ZSet_T<T,Comparator>::operator&(const T& iElem) const
 	{
 	if (ZUtil_STL::sContains(*this, iElem))
-		return ZSet_T<T>(iElem);
+		return ZSet_T<T,Comparator>(iElem);
 	else
-		ZSet_T<T>();
+		ZSet_T<T,Comparator>();
 	}
 
-template <class T>
-ZSet_T<T>& ZSet_T<T>::operator&=(const Base_t& iOther)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::operator&=(const Base_t& iOther)
 	{
 	*this = *this & iOther;
 	return *this;
 	}
 
-template <class T>
-ZSet_T<T> ZSet_T<T>::operator&(const Base_t& iOther) const
+template <class T, class Comparator>
+ZSet_T<T,Comparator> ZSet_T<T,Comparator>::operator&(const Base_t& iOther) const
 	{
 	std::set<T> result;
-	ZUtil_STL_set::sAnd(*static_cast<const Base_t*>(this), iOther, result);
-	return ZSet_T<T>(&result);
+	ZUtil_STL::sAnd(*static_cast<const Base_t*>(this), iOther, result);
+	return ZSet_T<T,Comparator>(&result);
 	}
 
-template <class T>
-ZSet_T<T>& ZSet_T<T>::operator|=(const T& iElem)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::operator|=(const T& iElem)
 	{
 	this->insert(iElem);
 	return *this;
 	}
 
-template <class T>
-ZSet_T<T> ZSet_T<T>::operator|(const T& iElem) const
+template <class T, class Comparator>
+ZSet_T<T,Comparator> ZSet_T<T,Comparator>::operator|(const T& iElem) const
 	{
 	std::set<T> result = *this;
 	result.insert(iElem);
-	return ZSet_T<T>(&result);
+	return ZSet_T<T,Comparator>(&result);
 	}
 
-template <class T>
-ZSet_T<T>& ZSet_T<T>::operator|=(const Base_t& iOther)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::operator|=(const Base_t& iOther)
 	{
 	*this = *this | iOther;
 	return *this;
 	}
 
-template <class T>
-ZSet_T<T> ZSet_T<T>::operator|(const Base_t& iOther) const
+template <class T, class Comparator>
+ZSet_T<T,Comparator> ZSet_T<T,Comparator>::operator|(const Base_t& iOther) const
 	{
 	std::set<T> result;
-	ZUtil_STL_set::sOr(*this, iOther, result);
-	return ZSet_T<T>(&result);
+	ZUtil_STL::sOr(*this, iOther, result);
+	return ZSet_T<T,Comparator>(&result);
 	}
 
-template <class T>
-ZSet_T<T>& ZSet_T<T>::operator-=(const T& iElem)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::operator-=(const T& iElem)
 	{
 	this->erase(iElem);
 	return *this;
 	}
 
-template <class T>
-ZSet_T<T> ZSet_T<T>::operator-(const T& iElem) const
+template <class T, class Comparator>
+ZSet_T<T,Comparator> ZSet_T<T,Comparator>::operator-(const T& iElem) const
 	{
 	std::set<T> result = *this;
 	result.erase(iElem);
-	return ZSet_T<T>(&result);
+	return ZSet_T<T,Comparator>(&result);
 	}
 
-template <class T>
-ZSet_T<T>& ZSet_T<T>::operator-=(const Base_t& iOther)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::operator-=(const Base_t& iOther)
 	{
 	*this = *this - iOther;
 	return *this;
 	}
 
-template <class T>
-ZSet_T<T> ZSet_T<T>::operator-(const Base_t& iOther) const
+template <class T, class Comparator>
+ZSet_T<T,Comparator> ZSet_T<T,Comparator>::operator-(const Base_t& iOther) const
 	{
 	std::set<T> result;
-	ZUtil_STL_set::sMinus(*this, iOther, result);
-	return ZSet_T<T>(&result);
+	ZUtil_STL::sMinus(*this, iOther, result);
+	return ZSet_T<T,Comparator>(&result);
 	}
 
-template <class T>
-ZSet_T<T>& ZSet_T<T>::operator^=(const T& iElem)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::operator^=(const T& iElem)
 	{
 	typename std::set<T>::iterator iter = this->find(iElem);
 	if (iter == this->end() || iElem != *iter)
@@ -251,73 +250,73 @@ ZSet_T<T>& ZSet_T<T>::operator^=(const T& iElem)
 	return *this;
 	}
 
-template <class T>
-ZSet_T<T> ZSet_T<T>::operator^(const T& iElem) const
+template <class T, class Comparator>
+ZSet_T<T,Comparator> ZSet_T<T,Comparator>::operator^(const T& iElem) const
 	{ return ZSet_T(*this) ^= iElem; }
 
-template <class T>
-ZSet_T<T>& ZSet_T<T>::operator^=(const Base_t& iOther)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::operator^=(const Base_t& iOther)
 	{
 	*this = *this ^ iOther;
 	return *this;
 	}
 
-template <class T>
-ZSet_T<T> ZSet_T<T>::operator^(const Base_t& iOther) const
+template <class T, class Comparator>
+ZSet_T<T,Comparator> ZSet_T<T,Comparator>::operator^(const Base_t& iOther) const
 	{
 	std::set<T> result;
-	ZUtil_STL_set::sXor(*this, iOther, result);
-	return ZSet_T<T>(&result);
+	ZUtil_STL::sXor(*this, iOther, result);
+	return ZSet_T<T,Comparator>(&result);
 	}
 
-template <class T>
-bool ZSet_T<T>::Contains(const Base_t& iOther) const
-	{ return ZUtil_STL_set::sIncludes(*this, iOther); }
+template <class T, class Comparator>
+bool ZSet_T<T,Comparator>::Contains(const Base_t& iOther) const
+	{ return ZUtil_STL::sIncludes(*this, iOther); }
 
-template <class T>
-bool ZSet_T<T>::Contains(const T& iElem) const
+template <class T, class Comparator>
+bool ZSet_T<T,Comparator>::Contains(const T& iElem) const
 	{ return ZUtil_STL::sContains(*this, iElem); }
 
-template <class T>
-ZSet_T<T>& ZSet_T<T>::Insert(const T& iElem)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::Insert(const T& iElem)
 	{
 	this->insert(iElem);
 	return *this;
 	}
 
-template <class T>
-ZSet_T<T>& ZSet_T<T>::Erase(const T& iElem)
+template <class T, class Comparator>
+ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::Erase(const T& iElem)
 	{
 	this->erase(iElem);
 	return *this;
 	}
 
-template <class T>
-bool ZSet_T<T>::Empty() const
+template <class T, class Comparator>
+bool ZSet_T<T,Comparator>::Empty() const
 	{ return this->empty(); }
 
-template <class T>
-const std::set<T>& ZSet_T<T>::GetElems() const
+template <class T, class Comparator>
+const std::set<T>& ZSet_T<T,Comparator>::GetElems() const
 	{ return *this ; }
 
-template <class T>
-size_t ZSet_T<T>::IndexOf(const T& iElem) const
+template <class T, class Comparator>
+size_t ZSet_T<T,Comparator>::IndexOf(const T& iElem) const
 	{ return std::distance(this->begin(), this->find(iElem)); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZSet_T operators
 
-template <class T>
-inline ZSet_T<T> operator&(const T& iElem, const ZSet_T<T>& iSet)
+template <class T, class Comparator>
+inline ZSet_T<T,Comparator> operator&(const T& iElem, const ZSet_T<T,Comparator>& iSet)
 	{ return iSet & iElem; }
 
-template <class T>
-inline ZSet_T<T> operator|(const T& iElem, const ZSet_T<T>& iSet)
+template <class T, class Comparator>
+inline ZSet_T<T,Comparator> operator|(const T& iElem, const ZSet_T<T,Comparator>& iSet)
 	{ return iSet | iElem; }
 
-template <class T>
-inline void swap(ZSet_T<T>& a, ZSet_T<T>& b)
+template <class T, class Comparator>
+inline void swap(ZSet_T<T,Comparator>& a, ZSet_T<T,Comparator>& b)
 	{ a.swap(b); }
 
 } // namespace ZooLib

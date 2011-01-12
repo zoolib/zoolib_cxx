@@ -59,13 +59,13 @@ using std::string;
 	return false;
 	}
 
-- (void)forwardInvocation:(NSInvocation *)anInvocation
+- (void)forwardInvocation:(NSInvocation*)anInvocation
 	{
 	if (fDelegate)
 		fDelegate->pForwardInvocation(anInvocation);
 	}
 
-- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector;
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)aSelector;
 	{
 	if (fDelegate)
 		return fDelegate->pMethodSignatureForSelector(aSelector);

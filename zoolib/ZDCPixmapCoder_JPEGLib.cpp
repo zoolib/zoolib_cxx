@@ -352,7 +352,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 
 		ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
 
-		if (ZRefDynamicCast<PixelDescRep_Gray>(thePixelDescRep))
+		if (thePixelDescRep.DynamicCast<PixelDescRep_Gray>())
 			{
 			theJCS.input_components = 1;
 			theJCS.in_color_space = JCS_GRAYSCALE;
@@ -381,10 +381,10 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 		// Special-case RGB sources.
 		bool done = false;
 		if (PixelDescRep_Color* thePixelDescRep_Color =
-			ZRefDynamicCast<PixelDescRep_Color>(thePixelDescRep))
+			thePixelDescRep.DynamicCast<PixelDescRep_Color>())
 			{
 			PixelDescRep_Color* destPDR =
-				ZRefDynamicCast<PixelDescRep_Color>(destPixelDesc.GetRep());
+				destPixelDesc.GetRep().DynamicCast<PixelDescRep_Color>();
 
 			if (false && thePixelDescRep_Color->Matches(destPDR))
 				{

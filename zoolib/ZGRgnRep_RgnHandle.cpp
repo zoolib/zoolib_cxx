@@ -80,7 +80,7 @@ RgnHandle sDecomposeRepIntoRgnHandle(const ZRef<ZGRgnRep>& iRep)
 
 RgnHandle sGetRgnHandle(const ZRef<ZGRgnRep>& iRep, bool& oDispose)
 	{
-	if (ZRef<ZGRgnRep_RgnHandle> other = ZRefDynamicCast<ZGRgnRep_RgnHandle>(iRep))
+	if (ZRef<ZGRgnRep_RgnHandle> other = iRep.DynamicCast<ZGRgnRep_RgnHandle>())
 		{
 		oDispose = false;
 		return other->GetRgnHandle();
@@ -93,7 +93,7 @@ RgnHandle sGetRgnHandle(const ZRef<ZGRgnRep>& iRep, bool& oDispose)
 
 RgnHandle sMakeRgnHandle(const ZRef<ZGRgnRep>& iRep)
 	{
-	if (ZRef<ZGRgnRep_RgnHandle> other = ZRefDynamicCast<ZGRgnRep_RgnHandle>(iRep))
+	if (ZRef<ZGRgnRep_RgnHandle> other = iRep.DynamicCast<ZGRgnRep_RgnHandle>())
 		return sCopyRgn(other->GetRgnHandle());
 
 	return sDecomposeRepIntoRgnHandle(iRep);
@@ -131,7 +131,7 @@ ZRef<ZGRgnRep> ZGRgnRepCreator_T<RgnHandle>::sCreate(RgnHandle iNative, bool iAd
 
 ZRef<ZGRgnRep_RgnHandle> ZGRgnRep_RgnHandle::sGetRep(const ZRef<ZGRgnRep>& iRep)
 	{
-	if (ZRef<ZGRgnRep_RgnHandle> other = ZRefDynamicCast<ZGRgnRep_RgnHandle>(iRep))
+	if (ZRef<ZGRgnRep_RgnHandle> other = iRep.DynamicCast<ZGRgnRep_RgnHandle>())
 		return other;
 	RgnHandle theRgnHandle = sDecomposeRepIntoRgnHandle(iRep);
 	return new ZGRgnRep_RgnHandle(theRgnHandle);

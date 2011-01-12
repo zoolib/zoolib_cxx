@@ -75,7 +75,7 @@ HRGN sDecomposeRepIntoHRGN(const ZRef<ZGRgnRep>& iRep)
 
 HRGN sGetHRGN(const ZRef<ZGRgnRep>& iRep, bool& oDispose)
 	{
-	if (ZRef<ZGRgnRep_HRGN> other = ZRefDynamicCast<ZGRgnRep_HRGN>(iRep))
+	if (ZRef<ZGRgnRep_HRGN> other = iRep.DynamicCast<ZGRgnRep_HRGN>())
 		{
 		oDispose = false;
 		return other->GetHRGN();
@@ -88,7 +88,7 @@ HRGN sGetHRGN(const ZRef<ZGRgnRep>& iRep, bool& oDispose)
 
 HRGN sMakeHRGN(const ZRef<ZGRgnRep>& iRep)
 	{
-	if (ZRef<ZGRgnRep_HRGN> other = ZRefDynamicCast<ZGRgnRep_HRGN>(iRep))
+	if (ZRef<ZGRgnRep_HRGN> other = iRep.DynamicCast<ZGRgnRep_HRGN>())
 		return sCopyHRGN(other->GetHRGN());
 
 	return sDecomposeRepIntoHRGN(iRep);
@@ -125,7 +125,7 @@ ZRef<ZGRgnRep> ZGRgnRepCreator_T<HRGN>::sCreate(HRGN iNative, bool iAdopt)
 
 ZRef<ZGRgnRep_HRGN> ZGRgnRep_HRGN::sGetRep(const ZRef<ZGRgnRep>& iRep)
 	{
-	if (ZRef<ZGRgnRep_HRGN> other = ZRefDynamicCast<ZGRgnRep_HRGN>(iRep))
+	if (ZRef<ZGRgnRep_HRGN> other = iRep.DynamicCast<ZGRgnRep_HRGN>())
 		return other;
 	HRGN theHRGN = sDecomposeRepIntoHRGN(iRep);
 	return new ZGRgnRep_HRGN(theHRGN);

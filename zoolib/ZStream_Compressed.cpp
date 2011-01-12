@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(Stream_ZLib)
 
 #include "zoolib/ZMemory.h" // For ZMemCopy
-#include "zoolib/ZUtil_STL.h"
 
 #define kDebug_StreamRWPos_Compressed 2
 

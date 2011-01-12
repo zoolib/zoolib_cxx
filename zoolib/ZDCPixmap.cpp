@@ -425,7 +425,7 @@ void ZDCPixmap::Munge(bool iMungeColorTable, MungeProc iMungeProc, void* iRefcon
 	if (iMungeColorTable)
 		{
 		if (PixelDescRep_Indexed* thePixelDescRep_Indexed =
-			ZRefDynamicCast<PixelDescRep_Indexed>(fRep->GetPixelDesc().GetRep()))
+			fRep->GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Indexed>())
 			{
 			const ZRGBA_POD* theColors;
 			size_t theCount;

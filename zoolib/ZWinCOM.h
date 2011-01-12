@@ -59,14 +59,11 @@ static HRESULT sCOMCopy(void** oObjectRef, T* iOb)
 	}
 
 template <class T>
-static T** sCOMPtr(ZRef<T>& iRef)
-	{
-	iRef.Clear();
-	return &iRef.GetPtrRef();
-	}
+static T** sCOMPtr(ZRef<T>& ioRef)
+	{ return &ioRef.OParam(); }
 
 template <class T>
-static void** sCOMVoidPtr(ZRef<T>& iRef)
+static void** sCOMVoidPtr(ZRef<T>& ioRef)
 	{ return (void**)(sCOMPtr(iRef)); }
 
 namespace ZWinCOM {

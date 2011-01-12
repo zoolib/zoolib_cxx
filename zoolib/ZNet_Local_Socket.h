@@ -76,7 +76,7 @@ class ZNetListener_Local_Socket
 :	public ZNetListener_Local,
 	public ZNetListener_Socket
 	{
-	ZNetListener_Local_Socket(int iFD, bool iKnowWhatImDoing);
+	ZNetListener_Local_Socket(int iFD, const IKnowWhatIAmDoing_t&);
 public:
 	static ZRef<ZNetListener_Local_Socket> sCreateWithFD(int iFD);
 

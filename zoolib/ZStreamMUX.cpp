@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDList.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZTime.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/ZUtil_STL_vector.h"
 
 using std::deque;
 using std::map;
@@ -643,7 +644,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Connect(const std::string& iName, size_t iRecei
 
 uint32 ZStreamMUX::sGetConID(ZRef<ZStreamerRWCon> iCon)
 	{
-	if (ZRef<Endpoint> theEP = ZRefDynamicCast<Endpoint>(iCon))
+	if (ZRef<Endpoint> theEP = iCon.DynamicCast<Endpoint>())
 		return theEP->fEPID;
 	return 0;
 	}

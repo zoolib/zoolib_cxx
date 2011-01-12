@@ -326,7 +326,7 @@ void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 		{
 		return;
 		}
-	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
+	else if (ZRef<ZYadMapR> theYadMapR = iYadR.DynamicCast<ZYadMapR>())
 		{
 		iStreamW.WriteUInt8(0x80 | eZType_Tuple);
 		string theName;
@@ -338,9 +338,9 @@ void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 		iStreamW.WriteByte(0); // Empty name
 		iStreamW.WriteByte(0xFF); // Terminator
 		}
-	else if (ZRef<ZYadSeqR> theYadSeqR = ZRefDynamicCast<ZYadSeqR>(iYadR))
+	else if (ZRef<ZYadSeqR> theYadSeqR = iYadR.DynamicCast<ZYadSeqR>())
 		{
-		if (ZRef<ZYadSeqRPos> theYadSeqRPos = ZRefDynamicCast<ZYadSeqRPos>(iYadR))
+		if (ZRef<ZYadSeqRPos> theYadSeqRPos = iYadR.DynamicCast<ZYadSeqRPos>())
 			{
 			iStreamW.WriteUInt8(eZType_Vector);
 			size_t theCount = theYadSeqRPos->GetSize() - theYadSeqRPos->GetPosition();
@@ -356,9 +356,9 @@ void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 			iStreamW.WriteByte(0xFF); // Terminator (distinct from any value in ZType)
 			}
 		}
-	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
+	else if (ZRef<ZYadStreamR> theYadStreamR = iYadR.DynamicCast<ZYadStreamR>())
 		{
-		if (ZRef<ZStreamerRPos> theStreamerRPos = ZRefDynamicCast<ZStreamerRPos>(theYadStreamR))
+		if (ZRef<ZStreamerRPos> theStreamerRPos = iYadR.DynamicCast<ZStreamerRPos>())
 			{
 			const ZStreamRPos& theStreamRPos = theStreamerRPos->GetStreamRPos();
 			uint64 theCount = theStreamRPos.GetSize() - theStreamRPos.GetPosition();

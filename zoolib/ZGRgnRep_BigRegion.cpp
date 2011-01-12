@@ -49,7 +49,7 @@ ZGRgnRep_BigRegion* sDecomposeRepIntoBigRegion(const ZRef<ZGRgnRep>& iRep)
 
 ZGRgnRep_BigRegion* sMakeRep(const ZRef<ZGRgnRep>& iRep)
 	{
-	if (ZRef<ZGRgnRep_BigRegion> other = ZRefDynamicCast<ZGRgnRep_BigRegion>(iRep))
+	if (ZRef<ZGRgnRep_BigRegion> other = iRep.DynamicCast<ZGRgnRep_BigRegion>())
 		return new ZGRgnRep_BigRegion(other->GetBigRegion());
 
 	return sDecomposeRepIntoBigRegion(iRep);
@@ -90,7 +90,7 @@ ZRef<ZGRgnRep> ZGRgnRepCreator_T<ZBigRegion>::sCreate(ZBigRegion iNative, bool i
 
 ZRef<ZGRgnRep_BigRegion> ZGRgnRep_BigRegion::sGetRep(const ZRef<ZGRgnRep>& iRep)
 	{
-	if (ZRef<ZGRgnRep_BigRegion> other = ZRefDynamicCast<ZGRgnRep_BigRegion>(iRep))
+	if (ZRef<ZGRgnRep_BigRegion> other = iRep.DynamicCast<ZGRgnRep_BigRegion>())
 		return other;
 
 	return sDecomposeRepIntoBigRegion(iRep);

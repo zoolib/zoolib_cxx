@@ -275,7 +275,7 @@ ZRef<CFTypeRef> Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)
 
 ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR)
 	{
-	if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
+	if (ZRef<ZYadR_CFType> theYadR = iYadR.DynamicCast<ZYadR_CFType>())
 		return theYadR->GetVal();
 
 	return Visitor_GetVal(iDefault).GetVal(iYadR);

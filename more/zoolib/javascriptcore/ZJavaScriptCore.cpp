@@ -448,10 +448,7 @@ Value::operator JSValueRef() const
 	{ return inherited::Get(); }
 
 JSValueRef& Value::OParam()
-	{
-	inherited::Clear();
-	return inherited::GetPtrRef();
-	}
+	{ return inherited::OParam(); }
 
 Value::Value()
 	{}

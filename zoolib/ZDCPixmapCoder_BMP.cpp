@@ -96,7 +96,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 
 	ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
 	if (PixelDescRep_Indexed* thePixelDescRep_Indexed =
-		ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
+		thePixelDescRep.DynamicCast<PixelDescRep_Indexed>())
 		{
 		destPixvalDesc.fDepth = spNearestIndexedDepth(iRasterDesc.fPixvalDesc.fDepth);
 		destPixelDesc = thePixelDescRep_Indexed;

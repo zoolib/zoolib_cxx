@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/dataspace/ZDataspace_SourceMUX.h"
+#include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/ZUtil_STL_vector.h"
 
 namespace ZooLib {
 namespace ZDataspace {

@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h" // For ZBlockZero
 #include "zoolib/netscape/ZNetscape_Macros.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_vector.h"
 
 #include <stdexcept>
 #include <stdlib.h> // For free/malloc

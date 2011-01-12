@@ -118,7 +118,7 @@ ZRef<ZNetListener_Local_Socket> ZNetListener_Local_Socket::sCreateWithFD(int iFD
 	{
 	try
 		{
-		return new ZNetListener_Local_Socket(iFD, I_KNOW_WHAT_IM_DOING);
+		return new ZNetListener_Local_Socket(iFD, IKnowWhatIAmDoing);
 		}
 	catch (...)
 		{}
@@ -137,11 +137,9 @@ static int spEnsureLocal(int iSocketFD)
 	throw std::runtime_error("ZNetListener_Local_Socket, not a local socket");
 	}
 
-ZNetListener_Local_Socket::ZNetListener_Local_Socket(int iSocketFD, bool iKnowWhatImDoing)
+ZNetListener_Local_Socket::ZNetListener_Local_Socket(int iSocketFD, const IKnowWhatIAmDoing_t&)
 :	ZNetListener_Socket(spEnsureLocal(iSocketFD))
-	{
-	ZAssert(iKnowWhatImDoing);
-	}
+	{}
 
 static int spListen(const string& iPath)
 	{

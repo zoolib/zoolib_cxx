@@ -125,7 +125,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	const ZRectPOD& iBounds)
 	{
 	ZRef<PixelDescRep_Indexed> thePixelDescRep_Indexed =
-		ZRefDynamicCast<PixelDescRep_Indexed>(iPixelDesc.GetRep());
+		iPixelDesc.GetRep().DynamicCast<PixelDescRep_Indexed>();
 	ZAssertStop(2, thePixelDescRep_Indexed);
 
 	if (fTransparent)

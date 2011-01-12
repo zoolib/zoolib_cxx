@@ -122,7 +122,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 		ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
 
 		if (PixelDescRep_Indexed* thePixelDescRep_Indexed =
-			ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
+			thePixelDescRep.DynamicCast<PixelDescRep_Indexed>())
 			{
 			::png_set_IHDR(write_ptr, info_ptr, iBounds.Width(), iBounds.Height(), 8,
 				PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
@@ -145,7 +145,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 			destPixvalDesc.fDepth = 8;
 			destPixvalDesc.fBigEndian = true;
 			}
-		else if (ZRefDynamicCast<PixelDescRep_Color>(thePixelDescRep))
+		else if (thePixelDescRep.DynamicCast<PixelDescRep_Color>())
 			{
 			int colorType;
 			if (thePixelDescRep->HasAlpha())
@@ -163,7 +163,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 			::png_set_IHDR(write_ptr, info_ptr, iBounds.Width(), iBounds.Height(), 8,
 				colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 			}
-		else if (ZRefDynamicCast<PixelDescRep_Gray>(thePixelDescRep))
+		else if (thePixelDescRep.DynamicCast<PixelDescRep_Gray>())
 			{
 			int colorType;
 			if (thePixelDescRep->HasAlpha())
