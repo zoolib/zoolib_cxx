@@ -335,10 +335,13 @@ protected:
 
 const ZStrimW& operator<<(const ZStrimW& s, const string32& iString);
 const ZStrimW& operator<<(const ZStrimW& s, const UTF32* iString);
+const ZStrimW& operator<<(const ZStrimW& s, UTF32* iString);
 const ZStrimW& operator<<(const ZStrimW& s, const string16& iString);
 const ZStrimW& operator<<(const ZStrimW& s, const UTF16* iString);
+const ZStrimW& operator<<(const ZStrimW& s, UTF16* iString);
 const ZStrimW& operator<<(const ZStrimW& s, const string8& iString);
 const ZStrimW& operator<<(const ZStrimW& s, const UTF8* iString);
+const ZStrimW& operator<<(const ZStrimW& s, UTF8* iString);
 
 const ZStrimW& operator<<(const ZStrimW& s, const ZStrimR& r);
 
