@@ -196,10 +196,14 @@ public:
 	T& OParam()
 		{
 		if (fHasValue)
+			{
 			sDtor_T<T>(fBytes);
+			fHasValue = false;
+			}
 
 		sCtor_T<T>(fBytes);
 		fHasValue = true;
+		return *sFetch_T<T>(fBytes);
 		}
 
 	void Clear()
