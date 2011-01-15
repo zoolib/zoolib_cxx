@@ -143,6 +143,24 @@ public:
 /// \endcond DoxygenIgnore
 	};
 
+template <class S>
+ZQ<S> ZVal_NS::QGet() const
+	{
+	if (NSObject* theNSObject = inherited::Get())
+		{
+		if ([theNSObject isKindOfClass:[NSValue class]])
+			{
+			if (0 == strcmp(@encode(S), [(NSValue*)theNSObject objCType]))
+				{
+				S theS;
+				[(NSValue*)theNSObject getValue:&theS];
+				return theS;
+				}
+			}
+		}
+	return null;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZSeq_NS
