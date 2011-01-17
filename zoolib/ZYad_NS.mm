@@ -159,25 +159,25 @@ ZRef<ZYadR> sMakeYadR(const ZRef<NSObject>& iVal)
 ZRef<ZYadStrimR> sMakeYadR(NSMutableString* iString)
 	{ return new ZYadStrimR_NS(iString); }
 
-ZRef<ZYadStrimR> sMakeYadR(NSString* iString)
+ZRef<ZYadStrimR> sMakeYadR(const ZRef<NSString>& iString)
 	{ return new ZYadStrimR_NS(iString); }
 
 ZRef<ZYadStreamR> sMakeYadR(NSMutableData* iData)
 	{ return new ZYadStreamRPos_NS(iData); }
 
-ZRef<ZYadStreamR> sMakeYadR(NSData* iData)
+ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSData>& iData)
 	{ return new ZYadStreamRPos_NS(iData); }
 
-ZRef<ZYadSeqRPos> sMakeYadR(NSMutableArray* iArray)
+ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSMutableArray>& iArray)
 	{ return new ZYadSeqRPos_NS(iArray); }
 
-ZRef<ZYadSeqRPos> sMakeYadR(NSArray* iArray)
+ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSArray>& iArray)
 	{ return new ZYadSeqRPos_NS(iArray); }
 
 ZRef<ZYadMapRPos> sMakeYadR(NSMutableDictionary* iDictionary)
 	{ return new ZYadMapRPos_NS(iDictionary); }
 
-ZRef<ZYadMapRPos> sMakeYadR(NSDictionary* iDictionary)
+ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSDictionary>& iDictionary)
 	{ return new ZYadMapRPos_NS(iDictionary); }
 
 // =================================================================================================

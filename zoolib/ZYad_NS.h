@@ -141,16 +141,16 @@ private:
 ZRef<ZYadR> sMakeYadR(const ZRef<NSObject>& iVal);
 
 ZRef<ZYadStrimR> sMakeYadR(NSMutableString* iString);
-ZRef<ZYadStrimR> sMakeYadR(NSString* iString);
+ZRef<ZYadStrimR> sMakeYadR(const ZRef<NSString>& iString);
 
 ZRef<ZYadStreamR> sMakeYadR(NSMutableData* iData);
-ZRef<ZYadStreamR> sMakeYadR(NSData* iData);
+ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSData>& iData);
 
 ZRef<ZYadSeqRPos> sMakeYadR(NSMutableArray* iArray);
-ZRef<ZYadSeqRPos> sMakeYadR(NSArray* iArray);
+ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSArray>& iArray);
 
 ZRef<ZYadMapRPos> sMakeYadR(NSMutableDictionary* iDictionary);
-ZRef<ZYadMapRPos> sMakeYadR(NSDictionary* iDictionary);
+ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSDictionary>& iDictionary);
 
 // =================================================================================================
 #pragma mark -
