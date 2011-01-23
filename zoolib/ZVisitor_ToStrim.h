@@ -64,7 +64,7 @@ protected:
 private:
 	const Options* fOptions;
 	const ZStrimW* fStrimW;
-
+protected:
 	size_t fIndent;
 	};
 
