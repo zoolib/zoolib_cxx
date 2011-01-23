@@ -63,4 +63,17 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRA::RelHead& iRH)
 	return w;
 	}
 
+const ZStrimW& operator<<(const ZStrimW& w, const ZRA::Rename& iRename)
+	{
+	bool isFirst = true;
+	for (ZRA::Rename::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
+		{
+		if (!isFirst)
+			w << ", ";
+		isFirst = false;
+		w << i->second << "<--" << i->first;
+		}
+	return w;
+	}
+
 } // namespace ZooLib

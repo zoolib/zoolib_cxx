@@ -40,6 +40,7 @@ void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s);
 } // namespace ZRA
 
 const ZStrimW& operator<<(const ZStrimW& w, const ZRA::RelHead& iRH);
+const ZStrimW& operator<<(const ZStrimW& w, const ZRA::Rename& iRename);
 
 } // namespace ZooLib
 

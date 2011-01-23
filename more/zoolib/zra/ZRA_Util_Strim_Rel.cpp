@@ -128,7 +128,7 @@ void Visitor_ToStrim::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 //	this->pWriteLFIndent();
 	w << "(";
 
-//####	this->pWriteLFIndent();
+	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
 	w << ",";
 
@@ -136,8 +136,10 @@ void Visitor_ToStrim::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
 	w << ",";
 
+	++fIndent;
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp1());
+	--fIndent;
 
 //##	this->pWriteLFIndent();
 	w << ")";
