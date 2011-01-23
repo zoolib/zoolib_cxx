@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare.h"
+#include "zoolib/ZTextCollator.h"
 #include "zoolib/ZValPred_Any.h"
 
 namespace ZooLib {
@@ -52,11 +53,27 @@ const ZRef<ZValComparator_Callable_Any::Callable>& ZValComparator_Callable_Any::
 	{ return fCallable; }
 
 template <>
-int sCompare_T(const ZValComparator_Callable_Any& iL,
-	const ZValComparator_Callable_Any& iR)
+int sCompare_T(const ZValComparator_Callable_Any& iL, const ZValComparator_Callable_Any& iR)
 	{ return sCompare_T((void*)iL.GetCallable().Get(), (void*)iR.GetCallable().Get()); }
 
 ZMACRO_CompareRegistration_T(ZValComparator_Callable_Any)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZValComparator_StringContains
+
+ZValComparator_StringContains::ZValComparator_StringContains(int iStrength)
+:	fStrength(iStrength)
+	{}
+
+int ZValComparator_StringContains::GetStrength() const
+	{ return fStrength; }
+
+template <>
+int sCompare_T(const ZValComparator_StringContains& iL, const ZValComparator_StringContains& iR)
+	{ return sCompare_T(iL.GetStrength(), iR.GetStrength()); }
+
+ZMACRO_CompareRegistration_T(ZValComparator_StringContains)
 
 // =================================================================================================
 #pragma mark -
@@ -86,8 +103,7 @@ ZVal_Any spGetVal(const ZRef<ZValComparand>& iComparand, const ZVal_Any& iVal)
 	return null;
 	}
 
-bool spDoCompare(
-	const ZVal_Any& iL, const ZRef<ZValComparator>& iComparator, const ZVal_Any& iR)
+bool spDoCompare(const ZVal_Any& iL, const ZRef<ZValComparator>& iComparator, const ZVal_Any& iR)
 	{
 	if (ZRef<ZValComparator_Simple> asSimple =
 		iComparator.DynamicCast<ZValComparator_Simple>())
@@ -108,6 +124,16 @@ bool spDoCompare(
 		iComparator.DynamicCast<ZValComparator_Callable_Any>())
 		{
 		return asCallable->GetCallable()->Call(iL, iR);
+		}
+	else if (ZRef<ZValComparator_StringContains> asStringContains =
+		iComparator.DynamicCast<ZValComparator_StringContains>())
+		{
+		if (const string8* l = iL.PGet<string8>())
+			{
+			if (const string8* r = iR.PGet<string8>())
+				return ZTextCollator(asStringContains->GetStrength()).Contains(*l, *r);
+			}
+		return false;
 		}
 	ZUnimplemented();
 	return true;

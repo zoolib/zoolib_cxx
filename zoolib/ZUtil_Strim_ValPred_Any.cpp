@@ -38,17 +38,17 @@ static void spWrite_PropName(const string& iName, const ZStrimW& s)
 	ZYad_ZooLibStrim::sWrite_PropName(iName, s);
 	}
 
-static void spToStrim(const ZRef<ZValComparand>& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValComparand>& iComparand, const ZStrimW& s)
 	{
-	if (!iCR)
+	if (!iComparand)
 		{
 		s << "/*Null Comparand*/";
 		}
-	else if (ZRef<ZValComparand_Name> cr = iCR.DynamicCast<ZValComparand_Name>())
+	else if (ZRef<ZValComparand_Name> cr = iComparand.DynamicCast<ZValComparand_Name>())
 		{
 		spWrite_PropName(cr->GetName(), s);
 		}
-	else if (ZRef<ZValComparand_Const_Any> cr = iCR.DynamicCast<ZValComparand_Const_Any>())
+	else if (ZRef<ZValComparand_Const_Any> cr = iComparand.DynamicCast<ZValComparand_Const_Any>())
 		{
 		ZYad_ZooLibStrim::sToStrim(sMakeYadR(cr->GetVal()), s);
 		}
@@ -58,15 +58,16 @@ static void spToStrim(const ZRef<ZValComparand>& iCR, const ZStrimW& s)
 		}
 	}
 
-static void spToStrim(const ZRef<ZValComparator>& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValComparator>& iComparator, const ZStrimW& s)
 	{
-	if (!iCR)
+	if (!iComparator)
 		{
 		s << "/*Null Comparator*/";
 		}
-	else if (ZRef<ZValComparator_Simple> cr = iCR.DynamicCast<ZValComparator_Simple>())
+	else if (ZRef<ZValComparator_Simple> asSimple =
+		iComparator.DynamicCast<ZValComparator_Simple>())
 		{
-		switch (cr->GetEComparator())
+		switch (asSimple->GetEComparator())
 			{
 			case ZValComparator_Simple::eLT:
 				{
@@ -104,6 +105,11 @@ static void spToStrim(const ZRef<ZValComparator>& iCR, const ZStrimW& s)
 				break;
 				}
 			}
+		}
+	else if (ZRef<ZValComparator_StringContains> asStringContains =
+		iComparator.DynamicCast<ZValComparator_StringContains>())
+		{
+		s << " contains ";
 		}
 	else
 		{

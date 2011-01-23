@@ -66,8 +66,26 @@ private:
 	};
 
 template <>
-int sCompare_T(const ZValComparator_Callable_Any& iL,
-	const ZValComparator_Callable_Any& iR);
+int sCompare_T(const ZValComparator_Callable_Any& iL, const ZValComparator_Callable_Any& iR);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZValComparator_StringContains
+
+class ZValComparator_StringContains : public ZValComparator
+	{
+public:
+	ZValComparator_StringContains(int iStrength);
+
+// Our protocol
+	int GetStrength() const;
+
+private:
+	int fStrength;
+	};
+
+template <>
+int sCompare_T(const ZValComparator_StringContains& iL, const ZValComparator_StringContains& iR);
 
 // =================================================================================================
 #pragma mark -
