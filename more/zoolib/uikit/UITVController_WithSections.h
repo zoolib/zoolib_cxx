@@ -35,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
-@class UITVController_WithSections;
+@class UITVHandler_WithSections;
 
 namespace ZooLib {
 namespace UIKit {
@@ -128,19 +128,19 @@ public:
 	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex) = 0;
 	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex) = 0;
 
-	virtual bool ButtonTapped(UITVController_WithSections* iTVC,
+	virtual bool ButtonTapped(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex) = 0;
 	virtual ZQ<bool> HasButton(bool iEditing, size_t iRowIndex) = 0;
 
-	virtual bool RowSelected(UITVController_WithSections* iTVC,
+	virtual bool RowSelected(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex) = 0;
 	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex) = 0;
 
 	typedef ZCallable<ZRef<UITableViewCell>(UITableView*,size_t)> Callable_GetCell;
 
-	typedef ZCallable<bool(UITVController_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_ButtonTapped;
+	typedef ZCallable<bool(UITVHandler_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_ButtonTapped;
 
-	typedef ZCallable<bool(UITVController_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_RowSelected;
+	typedef ZCallable<bool(UITVHandler_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_RowSelected;
 	};
 
 // =================================================================================================
@@ -170,6 +170,7 @@ public:
 	void Add(size_t iIndex, UITableViewRowAnimation iRowAnimation);
 	void AddAll(UITableViewRowAnimation iRowAnimation);
 	void AddRange(size_t iStart, size_t iCount, UITableViewRowAnimation iRowAnimation);
+
 private:
 	RowMeta& fRowMeta;
 	std::map<size_t, UITableViewRowAnimation>& fMap;
@@ -192,11 +193,11 @@ public:
 	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex);
 	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex);
 
-	virtual bool ButtonTapped(UITVController_WithSections* iTVC,
+	virtual bool ButtonTapped(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
 	virtual ZQ<bool> HasButton(bool iEditing, size_t iRowIndex);
 
-	virtual bool RowSelected(UITVController_WithSections* iTVC,
+	virtual bool RowSelected(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
 	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex);
 
@@ -279,11 +280,11 @@ public:
 	virtual ZQ<CGFloat> QRowHeight(size_t iRowIndex);
 	virtual ZQ<NSInteger> QIndentationLevel(size_t iRowIndex);
 
-	virtual bool ButtonTapped(UITVController_WithSections* iTVC,
+	virtual bool ButtonTapped(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
 	virtual ZQ<bool> HasButton(bool iEditing, size_t iRowIndex);
 
-	virtual bool RowSelected(UITVController_WithSections* iTVC,
+	virtual bool RowSelected(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
 	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex);
 
@@ -299,22 +300,21 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * UITVController_WithSections
+#pragma mark * UITVHandler_WithSections
 
-@interface UITVController_WithSections : UITableViewController
+@interface UITVHandler_WithSections : NSObject <UITableViewDelegate, UITableViewDataSource>
 	{
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown;
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown_Pending;
-	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_All;
 	std::set<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_ToIgnore;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fInserts;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fDeletes;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fReloads;
 	bool fNeedsUpdate;
 	bool fUpdateInFlight;
-	bool fShown;
 @public
-	ZooLib::ZRef<ZooLib::ZCallable<void()> > fCallable_NeedsUpdate;
+	bool fShown;
+	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_All;
 	}
 
 // From UITableViewDataSource
@@ -340,10 +340,27 @@ private:
 - (UITableViewCellEditingStyle)tableView:(UITableView*)tableView editingStyleForRowAtIndexPath:(NSIndexPath*)indexPath;
 
 // Our protocol
-- (void)appendSection:(ZooLib::ZRef<ZooLib::UIKit::Section>) iSection;
-- (void)needsUpdate;
+- (void)needsUpdate:(UITableView*)tableView;
 
 @end // interface UITVController_WithSections
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * UITVHandler_WithSections
+
+@interface UITableView_WithSections : UITableView
+	{
+@public
+	ZooLib::ZRef<ZooLib::ZCallable<void()> > fCallable_NeedsUpdate;
+	ZooLib::ZRef<UITVHandler_WithSections> fHandler;
+	};
+
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style;
+- (void)appendSection:(ZooLib::ZRef<ZooLib::UIKit::Section>) iSection;
+- (void)needsUpdate;
+- (void)deselect;
+
+@end // interface UITableView_WithSections
 
 #endif // ZCONFIG_SPI_Enabled(iPhone)
 
