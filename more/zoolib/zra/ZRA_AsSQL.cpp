@@ -82,12 +82,13 @@ static ZRef<ZExpr_Bool> spRenamed(const Rename& iRename, ZRef<ZExpr_Bool> iExpr_
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Thing (anonymous)
+#pragma mark * Analysis (anonymous)
 
 namespace { // anonymous
 
-struct Thing
+struct Analysis
 	{
+	ZMap_Any fConstValues;
 	RelHead fRelHead_Physical;
 	Rename fRename;
 	Rename fRename_Inverse;
@@ -98,13 +99,14 @@ struct Thing
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeThing (anonymous)
+#pragma mark * Analyzer (anonymous)
 
 namespace { // anonymous
 
-class MakeThing
-:	public virtual ZVisitor_Do_T<Thing>
+class Analyzer
+:	public virtual ZVisitor_Do_T<Analysis>
 ,	public virtual Visitor_Expr_Rel_Product
+,	public virtual Visitor_Expr_Rel_Const
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
 ,	public virtual Visitor_Expr_Rel_Restrict
@@ -112,14 +114,15 @@ class MakeThing
 ,	public virtual Visitor_Expr_Rel_Concrete
 	{
 public:
-	MakeThing(const map<string8,RelHead>& iTables);
+	Analyzer(const map<string8,RelHead>& iTables);
 
-	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<ZRef<Expr_Rel> > >& iExpr);
-	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRef<Expr_Rel> > >& iExpr);
-	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<ZRef<Expr_Rel> > >& iExpr);
+	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr);
+	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr);
+	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr);
 
 	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
 
+	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
 	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
@@ -131,78 +134,99 @@ public:
 	map<string8,int> fTablesUsed;
 	};
 
-MakeThing::MakeThing(const map<string8,RelHead>& iTables)
+Analyzer::Analyzer(const map<string8,RelHead>& iTables)
 :	fTables(iTables)
 	{}
 
-void MakeThing::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRef<Expr_Rel> > >& iExpr)
+void Analyzer::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
 	{ ZUnimplemented(); }
 
-void MakeThing::Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<ZRef<Expr_Rel> > >& iExpr)
+void Analyzer::Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr)
 	{ ZUnimplemented(); }
 
-void MakeThing::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<ZRef<Expr_Rel> > >& iExpr)
+void Analyzer::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr)
 	{ ZUnimplemented(); }
 
-void MakeThing::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
+void Analyzer::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 	{
-	Thing thing0 = this->Do(iExpr->GetOp0());
-	const Thing thing1 = this->Do(iExpr->GetOp1());
+	Analysis analysis0 = this->Do(iExpr->GetOp0());
+	const Analysis analysis1 = this->Do(iExpr->GetOp1());
 
-	thing0.fRelHead_Physical |= thing1.fRelHead_Physical;
-	thing0.fRename.insert(thing1.fRename.begin(), thing1.fRename.end());
-	thing0.fRename_Inverse.insert(thing1.fRename_Inverse.begin(), thing1.fRename_Inverse.end());
-	thing0.fCondition &= thing1.fCondition;
+	analysis0.fRelHead_Physical |= analysis1.fRelHead_Physical;
+	analysis0.fRename.insert(analysis1.fRename.begin(), analysis1.fRename.end());
+	analysis0.fRename_Inverse.insert(
+		analysis1.fRename_Inverse.begin(), analysis1.fRename_Inverse.end());
+	analysis0.fCondition &= analysis1.fCondition;
 	
-	this->pSetResult(thing0);
+	this->pSetResult(analysis0);
 	}
 
-void MakeThing::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
+void Analyzer::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	{
-	Thing theThing = this->Do(iExpr->GetOp0());
+	Analysis theAnalysis = this->Do(iExpr->GetOp0());
+	theAnalysis.fConstValues.Set(iExpr->GetRelName(), iExpr->GetVal());
+	this->pSetResult(theAnalysis);
+	}
+
+void Analyzer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
+	{
+	Analysis theAnalysis = this->Do(iExpr->GetOp0());
 	const RelHead& theRH = iExpr->GetProjectRelHead();
 	RelHead newRelHead;
-	for (RelHead::iterator i = theThing.fRelHead_Physical.begin();
-		i != theThing.fRelHead_Physical.end(); ++i)
+	for (RelHead::iterator i = theAnalysis.fRelHead_Physical.begin();
+		i != theAnalysis.fRelHead_Physical.end(); ++i)
 		{
 		const string theString1 = *i;
-		const string theString2 = ZUtil_STL::sGetMustContain(1, theThing.fRename_Inverse, theString1);
+		const string theString2 =
+			ZUtil_STL::sGetMustContain(1, theAnalysis.fRename_Inverse, theString1);
 		if (ZUtil_STL::sContains(theRH, theString2))
 			newRelHead.insert(theString1);
 		}
-	theThing.fRelHead_Physical.swap(newRelHead);
-	this->pSetResult(theThing);
+	theAnalysis.fRelHead_Physical.swap(newRelHead);
+	this->pSetResult(theAnalysis);
 	}
 
-void MakeThing::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
+void Analyzer::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
-	Thing theThing = this->Do(iExpr->GetOp0());
-	theThing.fCondition &= sRenamed(theThing.fRename, iExpr->GetValPred());
-	this->pSetResult(theThing);
+	Analysis theAnalysis = this->Do(iExpr->GetOp0());
+	theAnalysis.fCondition &= sRenamed(theAnalysis.fRename, iExpr->GetValPred());
+	this->pSetResult(theAnalysis);
 	}
 
-void MakeThing::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
+void Analyzer::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 	{
-	Thing theThing = this->Do(iExpr->GetOp0());
-	theThing.fCondition &= spRenamed(theThing.fRename, iExpr->GetExpr_Bool());
-	this->pSetResult(theThing);
+	Analysis theAnalysis = this->Do(iExpr->GetOp0());
+	theAnalysis.fCondition &= spRenamed(theAnalysis.fRename, iExpr->GetExpr_Bool());
+	this->pSetResult(theAnalysis);
 	}
 
-void MakeThing::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
+void Analyzer::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	{
-	Thing theThing = this->Do(iExpr->GetOp0());
+	Analysis theAnalysis = this->Do(iExpr->GetOp0());
 	const RelName& oldName = iExpr->GetOld();
 	const RelName& newName = iExpr->GetNew();
-	const RelName orgName = ZUtil_STL::sEraseAndReturnIfContains(theThing.fRename, oldName).Get();
-	const RelName orgNameInverse = ZUtil_STL::sEraseAndReturnIfContains(theThing.fRename_Inverse, orgName).Get();
-	ZAssert(orgNameInverse == oldName);
-	ZUtil_STL::sInsertMustNotContain(1, theThing.fRename, newName, orgName);
-	ZUtil_STL::sInsertMustNotContain(1, theThing.fRename_Inverse, orgName, newName);
+	if (ZQ<RelName> theQ = ZUtil_STL::sEraseAndReturnIfContains(theAnalysis.fRename, oldName))
+		{
+		const RelName orgName = theQ.Get();
+		const RelName orgNameInverse =
+			ZUtil_STL::sEraseAndReturnIfContains(theAnalysis.fRename_Inverse, orgName).Get();
+		ZAssert(orgNameInverse == oldName);
+		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename, newName, orgName);
+		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename_Inverse, orgName, newName);
+		}
+	else
+		{
+		ZMap_Any::Index_t theIndex = theAnalysis.fConstValues.IndexOf(oldName);
+		ZAssert(theIndex != theAnalysis.fConstValues.End());
+		const ZVal_Any theVal = theAnalysis.fConstValues.Get(theIndex);
+		theAnalysis.fConstValues.Erase(theIndex);
+		theAnalysis.fConstValues.Set(newName, theVal);
+		}
 
-	this->pSetResult(theThing);
+	this->pSetResult(theAnalysis);
 	}
 
-void MakeThing::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
+void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{
 	// Identify the table.
 	const RelHead& theRH = iExpr->GetConcreteRelHead();
@@ -210,7 +234,7 @@ void MakeThing::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	ZQ<map<string8,RelHead>::const_iterator> found;
 	for (map<string8,RelHead>::const_iterator iter = fTables.begin(); iter != fTables.end(); ++iter)
 		{
-		if ((sPrefixInsert(iter->first + "_", iter->second) & theRH).size())
+		if ((sPrefixInsert(iter->first + "_", iter->second) & theRH).size() == theRH.size())
 			{
 			found = iter;
 			break;
@@ -225,19 +249,19 @@ void MakeThing::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	const string8 usedTableName = realTableName + ZStringf("%d", numericSuffix);
 	const string8 usedTableNameDot = usedTableName + ".";
 
-	Thing theThing;
-	theThing.fCondition = sTrue();
+	Analysis theAnalysis;
+	theAnalysis.fCondition = sTrue();
 	for (RelHead::const_iterator iter = theRH.begin(); iter != theRH.end(); ++iter)
 		{
 		const string8 attrName = *iter;
 		const string8 fieldName = sPrefixErase(realTableNameUnderscore, attrName);
 		const string8 physicalFieldName = usedTableNameDot + fieldName;
-		theThing.fRelHead_Physical |= physicalFieldName;
-		ZUtil_STL::sInsertMustNotContain(1, theThing.fRename, attrName, physicalFieldName);
-		ZUtil_STL::sInsertMustNotContain(1, theThing.fRename_Inverse, physicalFieldName, attrName);
+		theAnalysis.fRelHead_Physical |= physicalFieldName;
+		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename, attrName, physicalFieldName);
+		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename_Inverse, physicalFieldName, attrName);
 		}
 
-	this->pSetResult(theThing);
+	this->pSetResult(theAnalysis);
 	}
 
 } // anonymous namespace
@@ -299,8 +323,6 @@ void ToStrim_SQL::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
 
 static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 	{
-	int64 asInt64;
-
 	if (false)
 		{}
 	else if (!iAny)
@@ -323,9 +345,9 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		else
 			s.Write("0");
 		}
-	else if (sQCoerceInt(iAny, asInt64))
+	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
-		s.Writef("%lld", asInt64);
+		s.Writef("%lld", theQ.Get());
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
@@ -346,23 +368,22 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 	}
 
 static void spWrite_PropName(const string8& iName, const ZStrimW& s)
-	{
-	s << iName;
-	}
+	{ s << iName; }
 
-static void spToStrim(const ZRef<ZValComparand>& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValComparand>& iComparand, const ZStrimW& s)
 	{
-	if (!iCR)
+	if (!iComparand)
 		{
 		s << "/*Null Comparand*/";
 		}
-	else if (ZRef<ZValComparand_Name> cr = iCR.DynamicCast<ZValComparand_Name>())
+	else if (ZRef<ZValComparand_Name> asName = iComparand.DynamicCast<ZValComparand_Name>())
 		{
-		spWrite_PropName(cr->GetName(), s);
+		spWrite_PropName(asName->GetName(), s);
 		}
-	else if (ZRef<ZValComparand_Const_Any> cr = iCR.DynamicCast<ZValComparand_Const_Any>())
+	else if (ZRef<ZValComparand_Const_Any> asConst =
+		iComparand.DynamicCast<ZValComparand_Const_Any>())
 		{
-		spToStrim_SimpleValue(s, cr->GetVal());
+		spToStrim_SimpleValue(s, asConst->GetVal());
 		}
 	else
 		{
@@ -370,15 +391,13 @@ static void spToStrim(const ZRef<ZValComparand>& iCR, const ZStrimW& s)
 		}
 	}
 
-static void spToStrim(const ZRef<ZValComparator>& iCR, const ZStrimW& s)
+void spToStrim(const ZValPred& iValPred, const ZStrimW& s)
 	{
-	if (!iCR)
+	if (ZRef<ZValComparator_Simple> asSimple =
+		iValPred.GetComparator().DynamicCast<ZValComparator_Simple>())
 		{
-		s << "/*Null Comparator*/";
-		}
-	else if (ZRef<ZValComparator_Simple> cr = iCR.DynamicCast<ZValComparator_Simple>())
-		{
-		switch (cr->GetEComparator())
+		spToStrim(iValPred.GetLHS(), s);
+		switch (asSimple->GetEComparator())
 			{
 			case ZValComparator_Simple::eLT:
 				{
@@ -411,18 +430,36 @@ static void spToStrim(const ZRef<ZValComparator>& iCR, const ZStrimW& s)
 				break;
 				}
 			}
+		spToStrim(iValPred.GetRHS(), s);
 		}
+	else if (ZRef<ZValComparator_StringContains> asStringContains =
+		iValPred.GetComparator().DynamicCast<ZValComparator_StringContains>())
+		{
+		if (ZRef<ZValComparand_Name> asName = iValPred.GetLHS().DynamicCast<ZValComparand_Name>())
+			{
+			if (ZRef<ZValComparand_Const_Any> asConst =
+				iValPred.GetRHS().DynamicCast<ZValComparand_Const_Any>())
+				{
+				if (const string8* asString = asConst->GetVal().PGet<string8>())
+					{
+					spWrite_PropName(asName->GetName(), s);
+					s << " LIKE ";
+					ZStrimW_Escaped::Options theOptions;
+					theOptions.fQuoteQuotes = true;
+					theOptions.fEscapeHighUnicode = false;
+					s << "'%";
+					ZStrimW_Escaped(theOptions, s).Write(*asString);
+					s << "%'";
+					return;
+					}
+				}
+			}
+		s << "/*Unhandled StringContains*/";
+		}		
 	else
 		{
-		s << "/*Unknown Comparator*/";
+		s << "/*Unhandled Comparator*/";
 		}
-	}
-
-void spToStrim(const ZValPred& iValPred, const ZStrimW& s)
-	{
-	spToStrim(iValPred.GetLHS(), s);
-	spToStrim(iValPred.GetComparator(), s);
-	spToStrim(iValPred.GetRHS(), s);
 	}
 
 void ToStrim_SQL::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iRep)
@@ -438,17 +475,23 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 	{
 	try
 		{
-		MakeThing theMakeThing(iTables);
-		const Thing theThing = theMakeThing.Do(iRel);
+		Analyzer theAnalyzer(iTables);
+		const Analysis theAnalysis = theAnalyzer.Do(iRel);
 		
 		s << "SELECT DISTINCT ";
 
 		{
 		RelHead theRHLogical;
-		for (RelHead::iterator i = theThing.fRelHead_Physical.begin();
-			i != theThing.fRelHead_Physical.end(); ++i)
+		for (RelHead::iterator i = theAnalysis.fRelHead_Physical.begin();
+			i != theAnalysis.fRelHead_Physical.end(); ++i)
 			{
-			theRHLogical |= ZUtil_STL::sGetMustContain(1, theThing.fRename_Inverse, *i);
+			theRHLogical |= ZUtil_STL::sGetMustContain(1, theAnalysis.fRename_Inverse, *i);
+			}
+
+		for (ZMap_Any::Index_t i = theAnalysis.fConstValues.Begin();
+			i != theAnalysis.fConstValues.End(); ++i)
+			{
+			theRHLogical |= theAnalysis.fConstValues.NameOf(i);
 			}
 
 		bool isFirst = true;
@@ -457,7 +500,10 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 			if (!isFirst)
 				s << ",";
 			isFirst = false;
-			s << ZUtil_STL::sGetMustContain(1, theThing.fRename, *i);
+			if (ZQ<string8> theQ = ZUtil_STL::sGetIfContains(theAnalysis.fRename, *i))
+				s << theQ.Get();
+			else
+				spToStrim_SimpleValue(s, theAnalysis.fConstValues.Get(*i));
 			}
 		}
 
@@ -466,8 +512,8 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 		{
 		bool isFirst = true;
 
-		for (map<string8,int>::iterator i = theMakeThing.fTablesUsed.begin();
-			i != theMakeThing.fTablesUsed.end(); ++i)
+		for (map<string8,int>::iterator i = theAnalyzer.fTablesUsed.begin();
+			i != theAnalyzer.fTablesUsed.end(); ++i)
 			{
 			for (int x = 0; x < i->second; ++x)
 				{
@@ -481,9 +527,9 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 
 		s << " WHERE ";
 
-		ToStrim_SQL().ToStrim(ToStrim_SQL::Options(), s, theThing.fCondition);
+		ToStrim_SQL().ToStrim(ToStrim_SQL::Options(), s, theAnalysis.fCondition);
 		
-		s << ";\n";
+		s << ";";
 		return true;
 		}
 	catch (...)
