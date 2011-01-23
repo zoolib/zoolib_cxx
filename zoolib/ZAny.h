@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h" // For std::swap
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZQ.h"
+#include "zoolib/ZCountedWithoutFinalize.h"
 
 #include <typeinfo>
 
@@ -41,19 +42,18 @@ public:
 		{ return operator_bool_gen::translate(fRep); }
 
 	ZAny()
-	:	fRep(0)
 		{}
 
 	ZAny(const ZAny& iOther)
-	:	fRep(iOther.fRep ? iOther.fRep->Clone() : 0)
+	:	fRep(iOther.fRep)
 		{}
 	
 	~ZAny()
-		{ delete fRep; }
+		{}
 
-	ZAny& operator=(ZAny iOther)
+	ZAny& operator=(const ZAny& iOther)
 		{
-		this->swap(iOther);
+		fRep = iOther.fRep;
 		return *this;
 		}
 
@@ -65,18 +65,29 @@ public:
 	template <class S>
 	ZAny& operator=(const S& iVal)
 		{
-		ZAny(iVal).swap(*this);
+		fRep = new Rep_T<S>(iVal);
 		return *this;
 		}
 
 	void swap(ZAny& ioOther)
-		{ std::swap(fRep, ioOther.fRep); }
+		{ fRep.swap(ioOther.fRep); }
 
 	const std::type_info& Type() const
 		{
 		if (fRep)
 			return fRep->Type();
 		return typeid(void);
+		}
+
+	void* VoidStar()
+		{
+		if (!fRep)
+			return 0;
+
+		if (fRep->IsShared())
+			fRep = fRep->Clone();
+
+		return fRep->VoidStar();
 		}
 
 	const void* VoidStar() const
@@ -86,23 +97,18 @@ public:
 		return 0;
 		}
 
-	void* VoidStar()
-		{
-		if (fRep)
-			return fRep->VoidStar();
-		return 0;
-		}
-
 // ZVal protocol, for use by ZVal derivatives
 	void Clear()
-		{ ZAny().swap(*this); }
+		{ fRep.Clear(); }
 
 	template <class S>
 	S* PGet()
 		{
 		if (!fRep || fRep->Type() != typeid(S))
 			return 0;
-		return &static_cast<Rep_T<S>*>(fRep)->fValue;
+		if (fRep->IsShared())
+			fRep = fRep->Clone();
+		return &fRep.StaticCast<Rep_T<S> >()->fValue;
 		}
 
 	template <class S>
@@ -110,7 +116,7 @@ public:
 		{
 		if (!fRep || fRep->Type() != typeid(S))
 			return 0;
-		return &static_cast<Rep_T<S>*>(fRep)->fValue;
+		return &fRep.StaticCast<Rep_T<S> >()->fValue;
 		}
 
 	template <class S>
@@ -139,7 +145,7 @@ public:
 
 	template <class S>
 	void Set(const S& iVal)
-		{ ZAny(iVal).swap(*this); }
+		{ fRep = new Rep_T<S>(iVal); }
 
 // Our protocol
 	template <class S>
@@ -147,11 +153,9 @@ public:
 		{ return this->PGet<S>(); }
 
 private:
-	class RepBase
+	class RepBase : public ZCountedWithoutFinalize
 		{
 	public:
-		virtual ~RepBase() {}
-
 		virtual const std::type_info& Type() const = 0;
 		virtual RepBase* Clone() const = 0;
 		virtual void* VoidStar() = 0;
@@ -177,7 +181,7 @@ private:
 		S fValue;
 		};
 
-	RepBase* fRep;
+	ZRef<RepBase> fRep;
 	};
 
 inline void swap(ZAny& a, ZAny& b)
