@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZSetRestore_T__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompat_algorithm.h" // For std::swap
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -38,7 +40,7 @@ public:
 		{}
 
 	~ZSaveRestore_T()
-		{ fRef = fValPrior; }
+		{ std::swap(fRef, fValPrior); }
 
 	const T& GetPrior() const
 		{ return fValPrior; }
@@ -56,20 +58,20 @@ template <class T>
 class ZSetRestore_T
 	{
 public:
-	ZSetRestore_T(T& ioRef, T iVal)
+	ZSetRestore_T(T& ioRef, const T& iVal)
 	:	fRef(ioRef)
-	,	fValPrior(ioRef)
-		{ ioRef = iVal; }
+	,	fValPrior(iVal)
+		{ std::swap(fRef, fValPrior); }
 
 	~ZSetRestore_T()
-		{ fRef = fValPrior; }
+		{ std::swap(fRef, fValPrior); }
 
 	const T& GetPrior() const
 		{ return fValPrior; }
 
 private:
 	T& fRef;
-	const T fValPrior;
+	T fValPrior;
 	};
 
 } // namespace ZooLib
