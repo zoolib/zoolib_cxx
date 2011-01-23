@@ -88,6 +88,10 @@ public:
 	void CloseTransaction(size_t iIndex);
 
 private:
+	size_t fWalkerCount;
+	size_t fReadCount;
+	size_t fStepCount;
+
 	void pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense);
 
 	class Visitor_DoMakeWalker;

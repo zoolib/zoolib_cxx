@@ -170,6 +170,8 @@ void Source_SQLite::ModifyRegistrations(
 			{
 			string8 asSQL;
 			ZRA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String(asSQL));
+			if (ZLOGF(s, eDebug))
+				s << asSQL;
 			thePSearch->fSQL = asSQL;
 			thePSearch->fRelHead = sGetRelHead(theRel);
 			}

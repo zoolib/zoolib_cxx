@@ -68,24 +68,24 @@ private:
 	typedef std::map<int64, PIP> Map_Refcon_PIP;
 
 	// -----
+	class PSource;
 
 	class Proxy;
 	class Visitor_Proxy;
 
-	struct Comparator_Proxy : public std::binary_function<Proxy*,Proxy*,bool>
-		{ bool operator()(Proxy* iLeft, Proxy* iRight) const; };
+	typedef std::map<ZRef<ZRA::Expr_Rel>,Proxy*> ProxyMap;
+	ProxyMap fProxyMap;
 
-	typedef std::set<Proxy*, Comparator_Proxy> ProxySet;
-	ProxySet fProxySet;
-
-	ZRef<Proxy> pGetProxy(PSearch* iPSearch, const RelHead& iRelHead, ZRef<ZRA::Expr_Rel> iRel);
+	std::set<PSource*> pIdentifyPSources(const RelHead& iRelHead);
+	ZRef<Proxy> pGetProxy(PSearch* iPSearch,
+		const std::set<PSource*>& iPSources, const RelHead& iRelHead, ZRef<ZRA::Expr_Rel> iRel);
 	void pFinalizeProxy(Proxy* iProxy);
 
 	// -----
 
 	class Walker_Proxy;
 
-	ZRef<ZQE::Walker> pMakeWalker(ZRef<Proxy> iProxy);
+	ZRef<Walker_Proxy> pMakeWalker(ZRef<Proxy> iProxy);
 
 	void pRewind(ZRef<Walker_Proxy> iWalker);
 
@@ -127,7 +127,6 @@ private:
 
 	// -----
 
-	class PSource;
 	class DLink_PSource_NeedsWork;
 	class DLink_PSource_CollectFrom;
 	DListHead<DLink_PSource_CollectFrom> fPSource_CollectFrom;
@@ -140,8 +139,6 @@ private:
 
 	ZRef<Event> fEvent;
 	ZRef<Source::Callable_ResultsAvailable> fCallable_ResultsAvailable;
-
-	bool pIsSimple(const RelHead& iRelHead);
 
 	void pCollectFrom(PSource* iPSource);
 	void pResultsAvailable(ZRef<Source> iSource);

@@ -33,6 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
+#include "zoolib/zra/ZRA_Transform_ConsolidateRenames.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 
 namespace ZooLib {
@@ -169,8 +170,8 @@ class Source_Dataset::ClientSearch
 	{
 public:
 	ClientSearch(int64 iRefcon, PSearch* iPSearch)
-	:	fRefcon(iRefcon),
-		fPSearch(iPSearch)
+	:	fRefcon(iRefcon)
+	,	fPSearch(iPSearch)
 		{}
 
 	int64 fRefcon;
@@ -227,6 +228,9 @@ void Source_Dataset::ModifyRegistrations(
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
+
+		theRel = ZRA::Transform_ConsolidateRenames().Do(theRel);
+
 		pair<Map_RelToPSearch::iterator,bool> iterPSearchPair =
 			fMap_RelToPSearch.insert(make_pair(theRel, PSearch(theRel)));
 
@@ -285,18 +289,23 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 			iterPSearch != fMap_RelToPSearch.end(); ++iterPSearch)
 			{
 			PSearch* thePSearch = &iterPSearch->second;
-			ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this).Do(thePSearch->fRel);
 
-			if (!theWalker)
+			fWalkerCount = 0;
+			fReadCount = 0;
+			fStepCount = 0;
+
+			ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this).Do(thePSearch->fRel);
+			ZRef<ZQE::Result> theResult = sSearch(theWalker);
+
+			if (ZLOGF(s, eDebug - 1))
 				{
-				if (ZLOGF(s, eDebug))
-					{
-					s << "\n";
-					ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
-					}
+				s	<< "Walkers: " << fWalkerCount
+					<< ", reads: " << fReadCount
+					<< ", steps: " << fStepCount
+					<< "\n";
+				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
 				}
 
-			ZRef<ZQE::Result> theResult = sSearch(theWalker);
 			for (DListIterator<ClientSearch, DLink_ClientSearch_InPSearch>
 				iterCS = thePSearch->fClientSearches; iterCS; iterCS.Advance())
 				{
@@ -368,7 +377,10 @@ void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal
 	}
 
 ZRef<ZQE::Walker> Source_Dataset::pMakeWalker(const RelHead& iRelHead)
-	{ return new Walker(this, vector<string8>(iRelHead.begin(), iRelHead.end())); }
+	{
+	++fWalkerCount;
+	return new Walker(this, vector<string8>(iRelHead.begin(), iRelHead.end()));
+	}
 
 void Source_Dataset::pRewind(ZRef<Walker> iWalker)
 	{
@@ -393,8 +405,10 @@ bool Source_Dataset::pReadInc(ZRef<Walker> iWalker,
 	ZVal_Any* oResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
+	++fReadCount;
 	while (iWalker->fCurrent_Main != fMap.end())
 		{
+		++fStepCount;
 		// Ignore anything that's in pending (for now).
 		if (fMap_Pending.end() == fMap_Pending.find(iWalker->fCurrent_Main->first))
 			{
@@ -424,6 +438,7 @@ bool Source_Dataset::pReadInc(ZRef<Walker> iWalker,
 	// Handle anything pending
 	while (iWalker->fCurrent_Pending != fMap_Pending.end())
 		{
+		++fStepCount;
 		if (iWalker->fCurrent_Pending->second.second)
 			{
 			if (const ZMap_Any* theMap = iWalker->fCurrent_Pending->second.first.PGet<ZMap_Any>())
