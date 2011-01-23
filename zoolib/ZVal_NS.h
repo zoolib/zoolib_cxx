@@ -146,19 +146,16 @@ public:
 template <class S>
 ZQ<S> ZVal_NS::QGet() const
 	{
+	ZQ<S> result;
 	if (NSObject* theNSObject = inherited::Get())
 		{
 		if ([theNSObject isKindOfClass:[NSValue class]])
 			{
 			if (0 == strcmp(@encode(S), [(NSValue*)theNSObject objCType]))
-				{
-				S theS;
-				[(NSValue*)theNSObject getValue:&theS];
-				return theS;
-				}
+				[(NSValue*)theNSObject getValue:&result.OParam()];
 			}
 		}
-	return null;
+	return result;
 	}
 
 // =================================================================================================
