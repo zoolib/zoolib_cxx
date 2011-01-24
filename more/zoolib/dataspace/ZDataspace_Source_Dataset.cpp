@@ -212,8 +212,8 @@ Source_Dataset::Source_Dataset(ZRef<Dataset> iDataset)
 Source_Dataset::~Source_Dataset()
 	{}
 
-RelHead Source_Dataset::GetRelHead()
-	{ return RelHead(); }
+bool Source_Dataset::Intersects(const RelHead& iRelHead)
+	{ return true; }
 
 void Source_Dataset::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,

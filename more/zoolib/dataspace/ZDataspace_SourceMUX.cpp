@@ -51,8 +51,8 @@ public:
 		{ fMUX->pFinalizeClientSource(this); }
 
 // From Source
-	virtual RelHead GetRelHead()
-		{ return fMUX->pGetRelHead(this); }
+	virtual bool Intersects(const RelHead& iRelHead)
+		{ return fMUX->pIntersects(this, iRelHead); }
 
 	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,
@@ -99,8 +99,8 @@ ZRef<Source> SourceMUX::Make()
 	return theCS;
 	}
 
-RelHead SourceMUX::pGetRelHead(ZRef<ClientSource> iCS)
-	{ return fSource->GetRelHead(); }
+bool SourceMUX::pIntersects(ZRef<ClientSource> iCS, const RelHead& iRelHead)
+	{ return fSource->Intersects(iRelHead); }
 
 void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 	const AddedSearch* iAdded, size_t iAddedCount,

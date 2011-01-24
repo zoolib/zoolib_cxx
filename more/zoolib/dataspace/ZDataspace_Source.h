@@ -98,7 +98,7 @@ protected:
 public:
 	virtual ~Source();
 
-	virtual RelHead GetRelHead() = 0;
+	virtual bool Intersects(const RelHead& iRelHead) = 0;
 
 	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,

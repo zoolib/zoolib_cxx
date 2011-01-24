@@ -598,31 +598,10 @@ Source_Union::PSource::PSource(ZRef<Source> iSource, const string8& iPrefix)
 
 bool Source_Union::PSource::Intersects(const RelHead& iRelHead)
 	{
-	const RelHead& sourceRelHead = fSource->GetRelHead();
 	if (fPrefix.empty())
-		{
-		if (sourceRelHead.empty())
-			return true;
-
-		if (!(iRelHead & sourceRelHead).empty())
-			return true;
-		}
+		return fSource->Intersects(iRelHead);
 	else
-		{
-		const size_t prefixLength = fPrefix.length();
-		for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-			{
-			if (i->substr(0, prefixLength) == fPrefix)
-				{
-				if (sourceRelHead.empty())
-					return true;
-
-				if (ZUtil_STL::sContains(sourceRelHead, i->substr(prefixLength)))
-					return true;
-				}
-			}
-		}
-	return false;
+		return fSource->Intersects(ZRA::sPrefixErase(fPrefix, iRelHead));
 	}
 
 ZRef<ZRA::Expr_Rel> Source_Union::PSource::UsableRel(ZRef<ZRA::Expr_Rel> iRel)
@@ -645,22 +624,20 @@ Source_Union::Source_Union()
 Source_Union::~Source_Union()
 	{}
 
-RelHead Source_Union::GetRelHead()
+bool Source_Union::Intersects(const RelHead& iRelHead)
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	RelHead result;
 	for (Map_Source_PSource::iterator
 		iterSource = fMap_Source_PSource.begin(),
 		endSource = fMap_Source_PSource.end();
 		iterSource != endSource; ++iterSource)
 		{
-		const RelHead sourceRelHead = iterSource->first->GetRelHead();
-		if (sourceRelHead.empty())
-			return sourceRelHead;
-		result |= sourceRelHead;
+		if (iterSource->first->Intersects(iRelHead))
+			return true;
 		}
-	return result;
+
+	return false;
 	}
 
 void Source_Union::ModifyRegistrations(

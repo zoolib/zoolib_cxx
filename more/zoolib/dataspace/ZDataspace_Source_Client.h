@@ -46,7 +46,7 @@ public:
 	virtual void Initialize();
 
 // From Source
-	virtual RelHead GetRelHead();
+	virtual bool Intersects(const RelHead& iRelHead);
 
 	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,

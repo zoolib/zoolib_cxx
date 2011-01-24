@@ -49,7 +49,7 @@ private:
 	class ClientSource;
 	friend class ClientSource;
 
-	RelHead pGetRelHead(ZRef<ClientSource> iCS);
+	bool pIntersects(ZRef<ClientSource> iCS, const RelHead& iRelHead);
 
 	void pModifyRegistrations(ZRef<ClientSource> iCS,
 		const AddedSearch* iAdded, size_t iAddedCount,

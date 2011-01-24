@@ -42,7 +42,7 @@ public:
 	Source_SQLite(ZRef<ZSQLite::DB> iDB);
 	virtual ~Source_SQLite();
 
-	virtual RelHead GetRelHead();
+	virtual bool Intersects(const RelHead& iRelHead);
 
 	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,

@@ -51,8 +51,11 @@ void Source_Client::Initialize()
 	sStartWorkerRunner(theWorker);
 	}
 
-RelHead Source_Client::GetRelHead()
-	{ return RelHead(); }
+bool Source_Client::Intersects(const RelHead& iRelHead)
+	{
+	//## needs work
+	return true;
+	}
 
 void Source_Client::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,

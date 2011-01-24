@@ -133,18 +133,15 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 Source_SQLite::~Source_SQLite()
 	{}
 
-RelHead Source_SQLite::GetRelHead()
+bool Source_SQLite::Intersects(const RelHead& iRelHead)
 	{
-	RelHead result;
 	for (map<string8, RelHead>::const_iterator iterTables = fMap_Tables.begin();
 		iterTables != fMap_Tables.end(); ++iterTables)
 		{
-		const string8& tableName = iterTables->first;
-		const RelHead& theRH = iterTables->second;
-		for (RelHead::const_iterator iterRH = theRH.begin(); iterRH != theRH.end(); ++iterRH)
-			result |= tableName + "_" + *iterRH;
+		if (!(ZRA::sPrefixInsert(iterTables->first + "_", iterTables->second) & iRelHead).empty())
+			return true;
 		}
-	return result;
+	return false;
 	}
 
 void Source_SQLite::ModifyRegistrations(

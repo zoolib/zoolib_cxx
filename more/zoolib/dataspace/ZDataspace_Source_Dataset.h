@@ -69,7 +69,7 @@ public:
 	Source_Dataset(ZRef<ZDataset::Dataset> iDataset);
 	virtual ~Source_Dataset();
 
-	virtual RelHead GetRelHead();
+	virtual bool Intersects(const RelHead& iRelHead);
 
 	virtual void ModifyRegistrations(
 		const AddedSearch* iAdded, size_t iAddedCount,
