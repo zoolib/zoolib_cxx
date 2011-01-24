@@ -58,6 +58,10 @@ template <class T>
 class ZSetRestore_T
 	{
 public:
+	ZSetRestore_T(T& ioRef)
+	:	fRef(ioRef)
+		{ std::swap(fRef, fValPrior); }
+
 	ZSetRestore_T(T& ioRef, const T& iVal)
 	:	fRef(ioRef)
 	,	fValPrior(iVal)

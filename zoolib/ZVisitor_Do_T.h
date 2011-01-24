@@ -46,7 +46,7 @@ public:
 		{
 		if (iRep)
 			{
-			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ, null);
+			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ);
 			iRep->Accept(*this);
 			return fResultQ;
 			}
@@ -57,7 +57,7 @@ public:
 		{
 		if (iRep)
 			{
-			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ, null);
+			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ);
 			iRep->Accept(*this);
 			if (fResultQ)
 				return fResultQ.Get();
@@ -69,7 +69,7 @@ public:
 		{
 		if (iRep)
 			{
-			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ, null);
+			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ);
 			iRep->Accept(*this);
 			if (fResultQ)
 				return fResultQ.Get();
