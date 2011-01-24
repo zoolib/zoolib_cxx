@@ -28,22 +28,22 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Transform_ConsolidateRenames
 
-void Transform_ConsolidateRenames::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr)
 	{
-	ZSetRestore_T<Rename> sr(fRename, Rename());
-	inherited::Visit_Expr_Op2(iExpr);
+	ZSetRestore_T<Rename> sr(fRename);
+	inherited::Visit_Expr_Op0(iExpr);
 	}
 
 void Transform_ConsolidateRenames::Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr)
 	{
-	ZSetRestore_T<Rename> sr(fRename, Rename());
+	ZSetRestore_T<Rename> sr(fRename);
 	inherited::Visit_Expr_Op1(iExpr);
 	}
 
-void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
 	{
-	ZSetRestore_T<Rename> sr(fRename, Rename());
-	inherited::Visit_Expr_Op0(iExpr);
+	ZSetRestore_T<Rename> sr(fRename);
+	inherited::Visit_Expr_Op2(iExpr);
 	}
 
 void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)

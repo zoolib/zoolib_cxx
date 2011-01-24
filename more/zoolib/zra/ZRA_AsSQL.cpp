@@ -75,9 +75,6 @@ DoRename::DoRename(const Rename& iRename)
 void DoRename::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
 	{ this->pSetResult(new ZExpr_Bool_ValPred(sRenamed(fRename, iExpr->GetValPred()))); }
 
-static ZRef<ZExpr_Bool> spRenamed(const Rename& iRename, ZRef<ZExpr_Bool> iExpr_Bool)
-	{ return DoRename(iRename).Do(iExpr_Bool); }
-
 } // anonymous namespace
 
 // =================================================================================================
@@ -196,7 +193,7 @@ void Analyzer::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 void Analyzer::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 	{
 	Analysis theAnalysis = this->Do(iExpr->GetOp0());
-	theAnalysis.fCondition &= spRenamed(theAnalysis.fRename, iExpr->GetExpr_Bool());
+	theAnalysis.fCondition &= DoRename(theAnalysis.fRename).Do(iExpr->GetExpr_Bool());
 	this->pSetResult(theAnalysis);
 	}
 
