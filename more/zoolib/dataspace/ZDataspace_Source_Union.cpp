@@ -409,12 +409,12 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 			{
 			// This is the interesting scenario. With the addition of our right branch
 			// we *now* reference multiple sources. We register a proxy for the left branch.
-			ZRef<Proxy> proxy0 = fSource_Union->pGetProxy(fPSearch, leftPSources, leftRelHead, newOp0);
+			ZRef<ZRA::Expr_Rel> proxy0 = fSource_Union->pGetProxy(fPSearch, leftPSources, leftRelHead, newOp0);
 
 			if (rightPSources.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet.
-				ZRef<Proxy> proxy1 = fSource_Union->pGetProxy(fPSearch, rightPSources, rightRelHead, newOp1);
+				ZRef<ZRA::Expr_Rel> proxy1 = fSource_Union->pGetProxy(fPSearch, rightPSources, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
 			else
@@ -429,7 +429,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 		if (rightPSources.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
-			ZRef<Proxy> proxy1 = fSource_Union->pGetProxy(fPSearch, rightPSources, rightRelHead, newOp1);
+			ZRef<ZRA::Expr_Rel> proxy1 = fSource_Union->pGetProxy(fPSearch, rightPSources, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
 		else
@@ -657,6 +657,7 @@ void Source_Union::ModifyRegistrations(
 				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
 				}
 
+#if 1
 			ZRA::Transform_Thing theTT;
 			theRel = theTT.TopLevelDo(theRel);
 			if (ZLOGF(s, eDebug))
@@ -666,7 +667,6 @@ void Source_Union::ModifyRegistrations(
 				s << "\nResultingRelHead: " << theTT.fResultingRelHead;
 				}
 
-#if 1
 			theRel = ZRA::Transform_ConsolidateRenames().Do(theRel);
 
 			if (ZLOGPF(s, eDebug))
@@ -840,9 +840,12 @@ set<Source_Union::PSource*> Source_Union::pIdentifyPSources(const RelHead& iRelH
 	return result;
 	}
 
-ZRef<Source_Union::Proxy> Source_Union::pGetProxy(PSearch* iPSearch,
+ZRef<ZRA::Expr_Rel> Source_Union::pGetProxy(PSearch* iPSearch,
 	const set<PSource*>& iPSources, const RelHead& iRelHead, ZRef<ZRA::Expr_Rel> iRel)
 	{
+	if (iPSources.empty())
+		return iRel;
+
 	ZRef<Proxy> theProxyRef;
 	if (ZQ<Proxy*> theQ = ZUtil_STL::sGetIfContains(fProxyMap, iRel))
 		{

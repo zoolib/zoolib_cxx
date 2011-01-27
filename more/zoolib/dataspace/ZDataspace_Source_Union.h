@@ -77,7 +77,7 @@ private:
 	ProxyMap fProxyMap;
 
 	std::set<PSource*> pIdentifyPSources(const RelHead& iRelHead);
-	ZRef<Proxy> pGetProxy(PSearch* iPSearch,
+	ZRef<ZRA::Expr_Rel> pGetProxy(PSearch* iPSearch,
 		const std::set<PSource*>& iPSources, const RelHead& iRelHead, ZRef<ZRA::Expr_Rel> iRel);
 	void pFinalizeProxy(Proxy* iProxy);
 
