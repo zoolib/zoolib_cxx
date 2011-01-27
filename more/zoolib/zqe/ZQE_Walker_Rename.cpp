@@ -27,6 +27,8 @@ namespace ZQE {
 using std::map;
 using std::set;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Walker_Rename
@@ -46,12 +48,12 @@ ZRef<Walker> Walker_Rename::Prime(
 	size_t& ioBaseOffset)
 	{
 	map<string8,size_t> newBindingOffsets = iOffsets;
-	if (ZQ<size_t> theQ = ZUtil_STL::sEraseAndReturnIfContains(newBindingOffsets, fNew))
+	if (ZQ<size_t> theQ = sEraseAndReturnIfContains(newBindingOffsets, fNew))
 		newBindingOffsets[fOld] = theQ.Get();
 	
 	fWalker = fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
 
-	oOffsets[fNew] = ZUtil_STL::sEraseAndReturn(1, oOffsets, fOld);
+	sInsertMustNotContain(1, oOffsets, fNew, sEraseAndReturn(1, oOffsets, fOld));
 
 	return fWalker;
 	}

@@ -28,6 +28,8 @@ using std::map;
 using std::set;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Walker_Calc
@@ -52,7 +54,7 @@ ZRef<Walker> Walker_Calc::Prime(
 	{
 	for (map<string8,size_t>::const_iterator i = iOffsets.begin(); i != iOffsets.end(); ++i)
 		{
-		if (ZUtil_STL::sContains(fBindings, i->first))
+		if (sContains(fBindings, i->first))
 			fBindingOffsets.insert(*i);
 		}
 
@@ -69,12 +71,12 @@ bool Walker_Calc::ReadInc(
 		return false;
 	fExhausted = true;
 
-	// Need to make use of fBindings to build this.
 	ZMap_Any theMap;
 	for (map<string8,size_t>::iterator i = fBindingOffsets.begin(); i != fBindingOffsets.end(); ++i)
-		theMap.Set(i->first, ioResults[i->second]);
+		theMap.Set(sGetMustContain(1, fBindings, i->first), ioResults[i->second]);
 
 	ioResults[fOutputOffset] = fCallable->Call(theMap);
+
 	return true;
 	}
 

@@ -29,6 +29,8 @@ using std::map;
 using std::set;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Walker_Embed
@@ -51,8 +53,8 @@ ZRef<Walker> Walker_Embed::Prime(
 	map<string8,size_t> visibleOffsets;
 	for (map<string8,size_t>::const_iterator i = iOffsets.begin(); i != iOffsets.end(); ++i)
 		{
-		if (ZUtil_STL::sContains(fBindings, i->first))
-			visibleOffsets.insert(*i);
+		if (ZQ<string8> theQ = sGetIfContains(fBindings, i->first))
+			sInsertMustNotContain(1, visibleOffsets, theQ.Get(), i->second);
 		}
 
 	map<string8,size_t> childOffsets;
