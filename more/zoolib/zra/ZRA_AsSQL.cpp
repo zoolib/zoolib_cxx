@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Select.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Util_RelOperators.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
@@ -102,11 +102,11 @@ namespace { // anonymous
 class Analyzer
 :	public virtual ZVisitor_Do_T<Analysis>
 ,	public virtual Visitor_Expr_Rel_Product
-,	public virtual Visitor_Expr_Rel_Const
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
-,	public virtual Visitor_Expr_Rel_Select
+,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Concrete
+,	public virtual Visitor_Expr_Rel_Const
 	{
 public:
 	Analyzer(const map<string8,RelHead>& iTables);
@@ -119,7 +119,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
@@ -178,7 +178,7 @@ void Analyzer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	this->pSetResult(theAnalysis);
 	}
 
-void Analyzer::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
+void Analyzer::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	Analysis theAnalysis = this->Do(iExpr->GetOp0());
 	theAnalysis.fCondition &= DoRename(theAnalysis.fRename).Do(iExpr->GetExpr_Bool());

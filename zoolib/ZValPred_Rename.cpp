@@ -27,8 +27,8 @@ using std::map;
 using std::set;
 using std::string;
 
-ZRef<ZValComparand> sRenamed(
-	const map<string,string>& iRename, const ZRef<ZValComparand>& iVal)
+ZRef<ZValComparand> sRenamed(const map<string,string>& iRename,
+	const ZRef<ZValComparand>& iVal)
 	{
 	if (ZRef<ZValComparand_Name> as = iVal.DynamicCast<ZValComparand_Name>())
 		{
@@ -44,15 +44,6 @@ ZValPred sRenamed(const map<string,string>& iRename, const ZValPred& iValPred)
 		sRenamed(iRename, iValPred.GetLHS()),
 		iValPred.GetComparator(),
 		sRenamed(iRename, iValPred.GetRHS()));
-	}
-
-set<ZValPred> sRenamed(const map<string,string>& iRename,
-	const set<ZValPred>& iValPreds)
-	{
-	set<ZValPred> result;
-	for (set<ZValPred>::const_iterator i = iValPreds.begin(); i != iValPreds.end(); ++i)
-		result.insert(sRenamed(iRename,*i));
-	return result;
 	}
 
 } // namespace ZooLib

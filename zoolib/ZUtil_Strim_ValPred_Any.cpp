@@ -129,30 +129,5 @@ void sToStrim(const ZValPred& iValPred, const ZStrimW& s)
 	spToStrim(iValPred.GetRHS(), s);
 	}
 
-void sToStrim(const set<ZValPred>& iValPreds, const ZStrimW& iStrimW)
-	{
-	if (iValPreds.size() == 1)
-		{
-		sToStrim(*iValPreds.begin(), iStrimW);
-		}
-	else if (iValPreds.empty())
-		{
-		iStrimW << "false/*vp*/";
-		}
-	else
-		{
-		iStrimW << "(";
-		bool isFirst = true;
-		for (set<ZValPred>::const_iterator i = iValPreds.begin(); i != iValPreds.end(); ++i)
-			{
-			if (!isFirst)
-				iStrimW << " | ";
-			isFirst = false;
-			sToStrim(*i, iStrimW);
-			}
-		iStrimW << ")";
-		}
-	}
-
 } // namespace ZUtil_Strim_ValPred_Any
 } // namespace ZooLib

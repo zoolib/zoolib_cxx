@@ -36,7 +36,6 @@ namespace ZUtil_Strim_ValPred_Any {
 #pragma mark * ZUtil_Strim_ValPred_Any
 
 void sToStrim(const ZValPred& iValPred, const ZStrimW& iStrimW);
-void sToStrim(const std::set<ZValPred>& iValPreds, const ZStrimW& iStrimW);
 
 } // namespace ZUtil_Strim_ValPred_Any
 

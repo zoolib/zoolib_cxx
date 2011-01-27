@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 #include "zoolib/zra/ZRA_Util.h"
 
 namespace ZooLib {
@@ -57,14 +56,12 @@ class Doer
 :	public virtual ZVisitor_Do_T<RelHead>
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Restrict
-,	public virtual Visitor_Expr_Rel_Select
 	{
 public:
 	Doer(vector<Problem>& oProblems);
 
 	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
-	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
 
 private:
 	vector<Problem>& fProblems;
@@ -91,26 +88,12 @@ void Doer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 void Doer::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
-	const RelHead requiredRelHead = sGetNames(iExpr->GetValPred());
-
-	if (!providedRelHead.Contains(requiredRelHead))
-		{
-		fProblems.push_back(
-			Problem(iExpr, "Restrict's ValPred requires property(s) not provided by expr"));
-		}
-
-	this->pSetResult(providedRelHead);
-	}
-
-void Doer::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
-	{
-	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
 	const RelHead requiredRelHead = sGetNames(iExpr->GetExpr_Bool());
 
 	if (!providedRelHead.Contains(requiredRelHead))
 		{
 		fProblems.push_back(
-			Problem(iExpr, "Select's Logic requires property(s) not provided by expr"));
+			Problem(iExpr, "Restrict's Logic requires property(s) not provided by expr"));
 		}
 
 	this->pSetResult(providedRelHead);

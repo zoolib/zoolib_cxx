@@ -50,8 +50,6 @@ private:
 
 bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal);
 
-bool sMatches(const std::set<ZValPred>& iValPreds, const ZVal_Any& iVal);
-
 } // namespace ZooLib
 
 #endif // __ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches__

@@ -156,12 +156,12 @@ void Transform_Thing::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	sSetMustContain(1, fRename_Temp2Concrete, tempName, newName);
 	}
 
-void Transform_Thing::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
+void Transform_Thing::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 	ZRef<ZExpr_Bool> newExpr_Bool = DoRename(fRename_Concrete2Temp).Do(iExpr->GetExpr_Bool());
-	this->pSetResult(sSelect(newOp0, newExpr_Bool));
+	this->pSetResult(sRestrict(newOp0, newExpr_Bool));
 	}
 
 void Transform_Thing::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
