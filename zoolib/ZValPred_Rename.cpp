@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZValPred_Rename.h"
 
 namespace ZooLib {
@@ -29,7 +30,10 @@ ZRef<ZValComparand> sRenamed(
 	const map<string,string>& iRename, const ZRef<ZValComparand>& iVal)
 	{
 	if (ZRef<ZValComparand_Name> as = iVal.DynamicCast<ZValComparand_Name>())
-		return new ZValComparand_Name(iRename.find(as->GetName())->second);
+		{
+		if (ZQ<string> theQ = ZUtil_STL::sGetIfContains(iRename, as->GetName()))
+			return new ZValComparand_Name(theQ.Get());
+		}
 	return iVal;
 	}
 
