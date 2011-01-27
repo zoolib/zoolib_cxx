@@ -33,7 +33,7 @@ The project page itself indicates that the code is licensed under the LGPL.
 */
 
 namespace ZooLib {
-namespace ZIntervalTreeClock { 
+namespace ZIntervalTreeClock {
 
 using std::min;
 using std::max;
