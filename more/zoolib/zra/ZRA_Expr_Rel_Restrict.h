@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Expr_Rel_Select__
-#define __ZRA_Expr_Rel_Select__ 1
+#ifndef __ZRA_Expr_Rel_Restrict__
+#define __ZRA_Expr_Rel_Restrict__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool.h"
@@ -29,20 +29,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZRA {
 
-class Visitor_Expr_Rel_Select;
+class Visitor_Expr_Rel_Restrict;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Select
+#pragma mark * Expr_Rel_Restrict
 
-class Expr_Rel_Select
+class Expr_Rel_Restrict
 :	public virtual Expr_Rel
 ,	public virtual ZExpr_Op1_T<Expr_Rel>
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Select(const ZRef<Expr_Rel>& iOp0, const ZRef<ZExpr_Bool>& iExpr_Bool);
-	virtual ~Expr_Rel_Select();
+	Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZRef<ZExpr_Bool>& iExpr_Bool);
+	virtual ~Expr_Rel_Restrict();
 
 // From ZVisitee
 	virtual void Accept(ZVisitor& iVisitor);
@@ -54,7 +54,7 @@ public:
 	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
 
 // Our protocol
-	virtual void Accept_Expr_Rel_Select(Visitor_Expr_Rel_Select& iVisitor);
+	virtual void Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict& iVisitor);
 
 	const ZRef<ZExpr_Bool>& GetExpr_Bool() const;
 
@@ -64,14 +64,14 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Select
+#pragma mark * Visitor_Expr_Rel_Restrict
 
-class Visitor_Expr_Rel_Select
+class Visitor_Expr_Rel_Restrict
 :	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
 	{
 	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
 public:
-	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
 	};
 
 // =================================================================================================
@@ -79,7 +79,7 @@ public:
 #pragma mark * Relational operators
 
 // The order of parameters here differs from that in sRestrict precisely to keep them distinct.
-ZRef<Expr_Rel_Select> sSelect(
+ZRef<Expr_Rel_Restrict> sRestrict(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
 
 ZRef<Expr_Rel> operator&(
@@ -93,8 +93,8 @@ ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& i
 } // namespace ZRA
 
 template<>
-int sCompare_T(const ZRA::Expr_Rel_Select& iL, const ZRA::Expr_Rel_Select& iR);
+int sCompare_T(const ZRA::Expr_Rel_Restrict& iL, const ZRA::Expr_Rel_Restrict& iR);
 
 } // namespace ZooLib
 
-#endif // __ZRA_Expr_Rel_Select__
+#endif // __ZRA_Expr_Rel_Restrict__

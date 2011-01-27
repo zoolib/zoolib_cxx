@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches.h"
-#include "zoolib/zqe/ZQE_Walker_Select.h"
+#include "zoolib/zqe/ZQE_Walker_Restrict.h"
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZYad_Any.h"
@@ -33,17 +33,17 @@ using std::set;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Select
+#pragma mark * Walker_Restrict
 
-Walker_Select::Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool)
+Walker_Restrict::Walker_Restrict(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool)
 :	Walker_Unary(iWalker)
 ,	fExpr_Bool(iExpr_Bool)
 	{}
 
-Walker_Select::~Walker_Select()
+Walker_Restrict::~Walker_Restrict()
 	{}
 
-ZRef<Walker> Walker_Select::Prime(
+ZRef<Walker> Walker_Restrict::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
@@ -54,7 +54,7 @@ ZRef<Walker> Walker_Select::Prime(
 	return this;
 	}
 
-bool Walker_Select::ReadInc(
+bool Walker_Restrict::ReadInc(
 	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{

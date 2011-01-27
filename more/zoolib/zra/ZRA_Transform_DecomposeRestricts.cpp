@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,42 +18,40 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Walker_Select__
-#define __ZQE_Walker_Select__ 1
-#include "zconfig.h"
+#include "zoolib/ZUtil_Expr_Bool_CNF.h"
+#include "zoolib/zra/ZRA_Transform_DecomposeRestricts.h"
 
-#include "zoolib/ZExpr_Bool.h"
-#include "zoolib/zqe/ZQE_Walker.h"
+using std::set;
 
 namespace ZooLib {
-namespace ZQE {
+namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Select
+#pragma mark * Transform_DecomposeRestricts
 
-class Walker_Select : public Walker_Unary
+void Transform_DecomposeRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
-public:
-	Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool);
-	virtual ~Walker_Select();
+	using Util_Expr_Bool::CNF;
+	using Util_Expr_Bool::Disjunction;
 
-// From ZQE::Walker
-	virtual ZRef<Walker> Prime(
-		const std::map<string8,size_t>& iOffsets,
-		std::map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
+	ZRef<Expr_Rel> theRel = this->Do(iExpr->GetOp0());
+	const CNF theCNF = Util_Expr_Bool::sAsCNF(iExpr->GetExpr_Bool());
+	for (CNF::const_iterator i = theCNF.begin(); i != theCNF.end(); ++i)
+		{
+		ZRef<ZExpr_Bool> newBool;
+		for (Disjunction::const_iterator j = i->begin(); j != i->end(); ++j)
+			{
+			if (!newBool)
+				newBool = j->Get();
+			else
+				newBool |= j->Get();
+			}
+		theRel &= newBool;
+		}
 
-	virtual bool ReadInc(
-		ZVal_Any* ioResults,
-		std::set<ZRef<ZCounted> >* oAnnotations);
+	this->pSetResult(theRel);
+	}
 
-private:
-	const ZRef<ZExpr_Bool> fExpr_Bool;
-	std::map<string8,size_t> fChildOffsets;
-	};
-
-} // namespace ZQE
+} // namespace ZRA
 } // namespace ZooLib
-
-#endif // __ZQE_Walker_Select__

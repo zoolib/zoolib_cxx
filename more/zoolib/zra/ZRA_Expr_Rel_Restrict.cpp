@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare_Ref.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Select.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 
 namespace ZooLib {
 
@@ -28,7 +28,7 @@ namespace ZooLib {
 #pragma mark * sCompare_T
 
 template <>
-int sCompare_T(const ZRA::Expr_Rel_Select& iL, const ZRA::Expr_Rel_Select& iR)
+int sCompare_T(const ZRA::Expr_Rel_Restrict& iL, const ZRA::Expr_Rel_Restrict& iR)
 	{
 	if (int compare = sCompare_T(iL.GetExpr_Bool(), iR.GetExpr_Bool()))
 		return compare;
@@ -36,55 +36,55 @@ int sCompare_T(const ZRA::Expr_Rel_Select& iL, const ZRA::Expr_Rel_Select& iR)
 	return sCompare_T(iL.GetOp0(), iR.GetOp0());
 	}
 
-ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Select)
+ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Restrict)
 
 namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Select
+#pragma mark * Expr_Rel_Restrict
 
-Expr_Rel_Select::Expr_Rel_Select(const ZRef<Expr_Rel>& iOp0, const ZRef<ZExpr_Bool>& iExpr_Bool)
+Expr_Rel_Restrict::Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZRef<ZExpr_Bool>& iExpr_Bool)
 :	inherited(iOp0)
 ,	fExpr_Bool(iExpr_Bool)
 	{}
 
-Expr_Rel_Select::~Expr_Rel_Select()
+Expr_Rel_Restrict::~Expr_Rel_Restrict()
 	{}
 
-void Expr_Rel_Select::Accept(ZVisitor& iVisitor)
+void Expr_Rel_Restrict::Accept(ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Select* theVisitor = dynamic_cast<Visitor_Expr_Rel_Select*>(&iVisitor))
-		this->Accept_Expr_Rel_Select(*theVisitor);
+	if (Visitor_Expr_Rel_Restrict* theVisitor = dynamic_cast<Visitor_Expr_Rel_Restrict*>(&iVisitor))
+		this->Accept_Expr_Rel_Restrict(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
 	}
 
-void Expr_Rel_Select::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Restrict::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Select* theVisitor = dynamic_cast<Visitor_Expr_Rel_Select*>(&iVisitor))
-		this->Accept_Expr_Rel_Select(*theVisitor);
+	if (Visitor_Expr_Rel_Restrict* theVisitor = dynamic_cast<Visitor_Expr_Rel_Restrict*>(&iVisitor))
+		this->Accept_Expr_Rel_Restrict(*theVisitor);
 	else
 		inherited::Accept_Expr_Op1(iVisitor);
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Select::Self()
+ZRef<Expr_Rel> Expr_Rel_Restrict::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Select::Clone(const ZRef<Expr_Rel>& iOp0)
-	{ return new Expr_Rel_Select(iOp0, fExpr_Bool); }
+ZRef<Expr_Rel> Expr_Rel_Restrict::Clone(const ZRef<Expr_Rel>& iOp0)
+	{ return new Expr_Rel_Restrict(iOp0, fExpr_Bool); }
 
-void Expr_Rel_Select::Accept_Expr_Rel_Select( Visitor_Expr_Rel_Select& iVisitor)
-	{ iVisitor.Visit_Expr_Rel_Select(this); }
+void Expr_Rel_Restrict::Accept_Expr_Rel_Restrict( Visitor_Expr_Rel_Restrict& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Restrict(this); }
 
-const ZRef<ZExpr_Bool>& Expr_Rel_Select::GetExpr_Bool() const
+const ZRef<ZExpr_Bool>& Expr_Rel_Restrict::GetExpr_Bool() const
 	{ return fExpr_Bool; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Select
+#pragma mark * Visitor_Expr_Rel_Restrict
 
-void Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
+void Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	this->Visit_Expr_Op1(iExpr);
 
@@ -96,22 +96,22 @@ void Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>&
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Select> sSelect(
+ZRef<Expr_Rel_Restrict> sRestrict(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
 	{
 	if (iExpr_Rel && iExpr_Bool)
-		return new Expr_Rel_Select(iExpr_Rel, iExpr_Bool);
-	sSemanticError("sSelect, rel and/or bool are null");
+		return new Expr_Rel_Restrict(iExpr_Rel, iExpr_Bool);
+	sSemanticError("sRestrict, rel and/or bool are null");
 	return null;
 	}
 
 ZRef<Expr_Rel> operator&(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
-	{ return sSelect(iExpr_Rel, iExpr_Bool); }
+	{ return sRestrict(iExpr_Rel, iExpr_Bool); }
 
 ZRef<Expr_Rel> operator&(
 	const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel)
-	{ return sSelect(iExpr_Rel, iExpr_Bool); }
+	{ return sRestrict(iExpr_Rel, iExpr_Bool); }
 
 ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
 	{ return ioExpr_Rel = ioExpr_Rel & iExpr_Bool; }

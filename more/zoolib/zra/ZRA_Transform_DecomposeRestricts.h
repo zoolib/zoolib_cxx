@@ -18,29 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Transform_DecomposeSelects__
-#define __ZRA_Transform_DecomposeSelects__
+#ifndef __ZRA_Transform_DecomposeRestricts__
+#define __ZRA_Transform_DecomposeRestricts__
 #include "zconfig.h"
 
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Select.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 
 namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRA::Transform_DecomposeSelects
+#pragma mark * ZRA::Transform_DecomposeRestricts
 
-class Transform_DecomposeSelects
+class Transform_DecomposeRestricts
 :	public virtual ZVisitor_Expr_Op_Do_Transform_T<Expr_Rel>
-,	public virtual Visitor_Expr_Rel_Select
+,	public virtual Visitor_Expr_Rel_Restrict
 	{
 public:
-	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
 	};
 
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_Transform_DecomposeSelects__
+#endif // __ZRA_Transform_DecomposeRestricts__
