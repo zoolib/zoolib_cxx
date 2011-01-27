@@ -184,7 +184,9 @@ void Analyzer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 void Analyzer::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	Analysis theAnalysis = this->Do(iExpr->GetOp0());
-	theAnalysis.fCondition &= sRenamed(theAnalysis.fRename, iExpr->GetValPred());
+	const set<ZValPred>& theValPreds = iExpr->GetValPreds();
+	for (set<ZValPred>::const_iterator i = theValPreds.begin(); i != theValPreds.end(); ++i)
+		theAnalysis.fCondition &= sRenamed(theAnalysis.fRename, *i);
 	this->pSetResult(theAnalysis);
 	}
 
