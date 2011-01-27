@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,42 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTagged_T__
-#define __ZTagged_T__ 1
+#ifndef __ZUtil_Expr_Bool_CNF__
+#define __ZUtil_Expr_Bool_CNF__
 #include "zconfig.h"
 
+#include "zoolib/ZExpr_Bool.h"
+#include "zoolib/ZTagged_T.h"
+
+#include <set>
+
 namespace ZooLib {
+namespace Util_Expr_Bool {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTagged_T
+#pragma mark * Util_Expr_Bool
 
-template <class Tag, class Value>
-class ZTagged_T
-	{
-	Value fValue;
-public:
-	ZTagged_T() {}
-	ZTagged_T(const ZTagged_T& iOther) : fValue(iOther.fValue) {}
-	~ZTagged_T() {}
-	ZTagged_T& operator=(const ZTagged_T& iOther) { fValue = iOther.fValue; return *this; }
+typedef std::set<ZTagged_T<struct Disjunction_t, ZRef<ZExpr_Bool> > > Disjunction;
+typedef std::set<Disjunction> CNF;
 
-	ZTagged_T(const Value& iValue) : fValue(iValue) {}
-	ZTagged_T& operator=(const Value& iValue) { fValue = iValue; return *this; }
+ZRef<ZExpr_Bool> sFromCNF(const CNF& iCNF);
+CNF sAsCNF(const ZRef<ZExpr_Bool>& iExpr);
 
-	Value& Get() { return fValue; }
-	const Value& Get() const { return fValue; }
-
-	bool operator==(const ZTagged_T& iOther) const
-		{ return fValue == iOther.fValue; }
-
-	bool operator!=(const ZTagged_T& iOther) const
-		{ return fValue == iOther.fValue; }
-
-	bool operator<(const ZTagged_T& iOther) const
-		{ return fValue < iOther.fValue; }
-	};
-
+} // namespace Util_Expr_Bool
 } // namespace ZooLib
 
-#endif // __ZTagged_T__
+#endif // __ZUtil_Expr_Bool_CNF__
