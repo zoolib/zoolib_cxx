@@ -1261,8 +1261,8 @@ ZGRect_T<T>::ZGRect_T(const NSRect& iRect)
 	this->extent = iRect.size;
 	}
 
-#endif // ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) 
-// && !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
+#endif
+// ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) && !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 
 // =================================================================================================
 #pragma mark -

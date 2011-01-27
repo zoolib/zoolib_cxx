@@ -83,7 +83,7 @@ struct ZRectPOD
 
 	bool operator!=(const ZRectPOD& other) const
 		{
-		return top != other.top || left != other.left 
+		return top != other.top || left != other.left
 			|| bottom != other.bottom || right != other.right;
 		}
 
