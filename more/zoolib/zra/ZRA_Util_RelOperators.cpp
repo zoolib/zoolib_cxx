@@ -52,6 +52,9 @@ ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel)
 	return iRel;
 	}
 
+ZRef<Expr_Rel> operator*(const ZNameVal& iNameVal, const ZRef<Expr_Rel>& iRel)
+	{ return sConst(iNameVal.first, iNameVal.second) * iRel; }
+
 ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZMap_Any& iMap)
 	{
 	if (ZRef<Expr_Rel> asRel = spConst(iMap))

@@ -204,7 +204,7 @@ void Visitor_ToStrim::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iEx
 //	this->pWriteLFIndent();
 	w << "(";
 //	this->pWriteLFIndent();
-	ZUtil_Strim_ValPred_Any::sToStrim(iExpr->GetValPred(), w);
+	ZUtil_Strim_ValPred_Any::sToStrim(iExpr->GetValPreds(), w);
 	w << ",";
 
 	this->pWriteLFIndent();

@@ -21,6 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare_Ref.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 
+using std::set;
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -30,8 +32,14 @@ namespace ZooLib {
 template <>
 int sCompare_T(const ZRA::Expr_Rel_Restrict& iL, const ZRA::Expr_Rel_Restrict& iR)
 	{
-	if (int compare = sCompare_T(iL.GetValPred(), iR.GetValPred()))
-		return compare;
+	if (iL.GetValPreds() < iR.GetValPreds())
+		return -1;
+
+	if (iR.GetValPreds() < iL.GetValPreds())
+		return 1;
+
+//	if (int compare = sCompare_T(iL.GetValPreds(), iR.GetValPreds()))
+//		return compare;
 
 	return sCompare_T(iL.GetOp0(), iR.GetOp0());
 	}
@@ -45,9 +53,9 @@ namespace ZRA {
 #pragma mark * Expr_Rel_Restrict
 
 Expr_Rel_Restrict::Expr_Rel_Restrict(
-	const ZRef<Expr_Rel>& iOp0, const ZValPred& iValPred)
+	const ZRef<Expr_Rel>& iOp0, const std::set<ZValPred>& iValPreds)
 :	inherited(iOp0)
-,	fValPred(iValPred)
+,	fValPreds(iValPreds)
 	{}
 
 Expr_Rel_Restrict::~Expr_Rel_Restrict()
@@ -73,13 +81,13 @@ ZRef<Expr_Rel> Expr_Rel_Restrict::Self()
 	{ return this; }
 
 ZRef<Expr_Rel> Expr_Rel_Restrict::Clone(const ZRef<Expr_Rel>& iOp0)
-	{ return new Expr_Rel_Restrict(iOp0, fValPred); }
+	{ return new Expr_Rel_Restrict(iOp0, fValPreds); }
 
 void Expr_Rel_Restrict::Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Restrict(this); }
 
-const ZValPred& Expr_Rel_Restrict::GetValPred() const
-	{ return fValPred; }
+const set<ZValPred>& Expr_Rel_Restrict::GetValPreds() const
+	{ return fValPreds; }
 
 // =================================================================================================
 #pragma mark -
@@ -94,7 +102,15 @@ void Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Rest
 
 ZRef<Expr_Rel_Restrict> sRestrict(
 	const ZValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel)
-	{ return new Expr_Rel_Restrict(iExpr_Rel, iValPred); }
+	{
+	set<ZValPred> theValPreds;
+	theValPreds.insert(iValPred);
+	return new Expr_Rel_Restrict(iExpr_Rel, theValPreds);
+	}
+
+ZRef<Expr_Rel_Restrict> sRestrict(
+	const std::set<ZValPred>& iValPreds, const ZRef<Expr_Rel>& iExpr_Rel)
+	{ return new Expr_Rel_Restrict(iExpr_Rel, iValPreds); }
 
 ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred& iValPred)
 	{ return sRestrict(iValPred, iExpr_Rel); }

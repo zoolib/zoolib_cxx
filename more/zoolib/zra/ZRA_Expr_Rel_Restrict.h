@@ -41,7 +41,7 @@ class Expr_Rel_Restrict
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZValPred& iValPred);
+	Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const std::set<ZValPred>& iValPreds);
 	virtual ~Expr_Rel_Restrict();
 
 // From ZVisitee
@@ -56,10 +56,10 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict& iVisitor);
 
-	const ZValPred& GetValPred() const;
+	const std::set<ZValPred>& GetValPreds() const;
 
 private:
-	const ZValPred fValPred;
+	std::set<ZValPred> fValPreds;
 	};
 
 // =================================================================================================
@@ -81,6 +81,9 @@ public:
 // The order of parameters here differs from that in sSelect precisely to keep them distinct.
 ZRef<Expr_Rel_Restrict> sRestrict(
 	const ZValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel);
+
+ZRef<Expr_Rel_Restrict> sRestrict(
+	const std::set<ZValPred>& iValPreds, const ZRef<Expr_Rel>& iExpr_Rel);
 
 ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred& iValPred);
 
