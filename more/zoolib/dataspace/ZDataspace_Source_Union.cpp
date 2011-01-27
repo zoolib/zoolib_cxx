@@ -40,6 +40,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
+#include "zoolib/zra/ZRA_Transform_ConsolidateRenames.h"
+#include "zoolib/zra/ZRA_Transform_Thing.h"
+
 namespace ZooLib {
 namespace ZDataspace {
 
@@ -648,16 +651,35 @@ void Source_Union::ModifyRegistrations(
 		
 		if (inPSearch.second)
 			{
-			if (ZLOGF(s, eDebug))
+			if (ZLOGPF(s, eDebug))
 				{
 				s << "Raw:\n";
-				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
+				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
 				}
 
-			thePSearch->fRel_Analyzed = Analyze(this, thePSearch).TopLevelDo(thePSearch->fRel);
+			ZRA::Transform_Thing theTT;
+			theRel = theTT.TopLevelDo(theRel);
+			if (ZLOGF(s, eDebug))
+				{
+				s << "\nConcrete2Temp: " << theTT.fRename_Concrete2Temp;
+				s << "\nTemp2Concrete: " << theTT.fRename_Temp2Concrete;
+				s << "\nResultingRelHead: " << theTT.fResultingRelHead;
+				}
+
+#if 1
+			theRel = ZRA::Transform_ConsolidateRenames().Do(theRel);
+
+			if (ZLOGPF(s, eDebug))
+				{
+				s << "Thingified:\n";
+				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
+				}
+#endif
+
+			thePSearch->fRel_Analyzed = Analyze(this, thePSearch).TopLevelDo(theRel);
 			fPSearch_NeedsWork.Insert(thePSearch);//??
 
-			if (ZLOGF(s, eDebug))
+			if (ZLOGPF(s, eDebug))
 				{
 				s << "Analyzed:\n";
 				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel_Analyzed, s);

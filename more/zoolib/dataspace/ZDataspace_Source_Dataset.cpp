@@ -299,7 +299,7 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 
 			ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this).Do(thePSearch->fRel);
 
-			if (ZLOGF(s, eDebug - 1))
+			if (ZLOGPF(s, eDebug - 1))
 				{
 				s << "\n";
 				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
@@ -307,7 +307,7 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 
 			ZRef<ZQE::Result> theResult = sSearch(theWalker);
 
-			if (ZLOGF(s, eDebug - 1))
+			if (ZLOGPF(s, eDebug - 1))
 				{
 				s	<< "Walkers: " << fWalkerCount
 					<< ", reads: " << fReadCount
