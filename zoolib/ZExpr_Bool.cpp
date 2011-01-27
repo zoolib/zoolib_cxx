@@ -280,11 +280,11 @@ static ZRef<ZExpr_Bool_False> spFalse = new ZExpr_Bool_False;
 ZRef<ZExpr_Bool> sFalse()
 	{ return spFalse; }
 
-ZRef<ZExpr_Bool_Not> operator~(const ZRef<ZExpr_Bool>& iExpr_Bool)
+ZRef<ZExpr_Bool> operator~(const ZRef<ZExpr_Bool>& iExpr_Bool)
 	{ return new ZExpr_Bool_Not(iExpr_Bool); }
 
-ZRef<ZExpr_Bool> operator~(const ZRef<ZExpr_Bool_Not>& iExpr_Bool_Not)
-	{ return iExpr_Bool_Not->GetOp0(); }
+ZRef<ZExpr_Bool> sNot(const ZRef<ZExpr_Bool>& iExpr_Bool)
+	{ return new ZExpr_Bool_Not(iExpr_Bool); }
 
 ZRef<ZExpr_Bool> operator&(bool iBool, const ZRef<ZExpr_Bool>& iExpr_Bool)
 	{

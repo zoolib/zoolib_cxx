@@ -254,11 +254,9 @@ public:
 ZRef<ZExpr_Bool> sTrue();
 ZRef<ZExpr_Bool> sFalse();
 
-ZRef<ZExpr_Bool_Not> operator~(const ZRef<ZExpr_Bool>& iExpr_Bool);
-ZRef<ZExpr_Bool> operator~(const ZRef<ZExpr_Bool_Not>& iExpr_Bool_Not);
+ZRef<ZExpr_Bool> operator~(const ZRef<ZExpr_Bool>& iExpr_Bool);
 
-ZRef<ZExpr_Bool_Not> sNot(const ZRef<ZExpr_Bool>& iExpr_Bool);
-ZRef<ZExpr_Bool> sNot(const ZRef<ZExpr_Bool_Not>& iExpr_Bool_Not);
+ZRef<ZExpr_Bool> sNot(const ZRef<ZExpr_Bool>& iExpr_Bool);
 
 ZRef<ZExpr_Bool> operator&(bool iBool, const ZRef<ZExpr_Bool>& iExpr_Bool);
 ZRef<ZExpr_Bool> operator&(const ZRef<ZExpr_Bool>& iExpr_Bool, bool iBool);
