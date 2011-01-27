@@ -216,15 +216,19 @@ public:
 	virtual void Rewind()
 		{ fSource->pRewind(this); }
 
-	virtual void Prime(const map<string8,size_t>& iBindingOffsets, 
+	virtual ZRef<Walker> Prime(
+		const map<string8,size_t>& iOffsets,
 		map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset)
-		{ fSource->pPrime(this, iBindingOffsets, oOffsets, ioBaseOffset); }
+		{
+		fSource->pPrime(this, iOffsets, oOffsets, ioBaseOffset);
+		return this;
+		}
 
-	virtual bool ReadInc(const ZVal_Any* iBindings,
-		ZVal_Any* oResults,
+	virtual bool ReadInc(
+		ZVal_Any* ioResults,
 		set<ZRef<ZCounted> >* oAnnotations)
-		{ return fSource->pReadInc(this, iBindings, oResults, oAnnotations); }
+		{ return fSource->pReadInc(this, ioResults, oAnnotations); }
 
 	ZRef<Source_Union> fSource;
 	ZRef<Proxy> fProxy;
@@ -312,13 +316,13 @@ public:
 
 class Source_Union::Analyze
 :	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel>
-,	public virtual ZRA::Visitor_Expr_Rel_Embed
 ,	public virtual ZRA::Visitor_Expr_Rel_Product
-,	public virtual ZRA::Visitor_Expr_Rel_Calc
-,	public virtual ZRA::Visitor_Expr_Rel_Const
+,	public virtual ZRA::Visitor_Expr_Rel_Embed
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
+,	public virtual ZRA::Visitor_Expr_Rel_Calc
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
+,	public virtual ZRA::Visitor_Expr_Rel_Const
 	{
 	typedef ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel> inherited;
 public:
@@ -328,13 +332,14 @@ public:
 	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> >& iExpr);
 
 // From ZRA::Visitor_Expr_Rel_XXX
-	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
 	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr);
+
+	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
 
 	virtual void Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr);
 	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr);
-	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
-	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr);
 
 // Our protocol
@@ -357,81 +362,6 @@ Source_Union::Analyze::Analyze(Source_Union* iSource_Union, PSearch* iPSearch)
 void Source_Union::Analyze::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> >& iExpr)
 	{
 	ZUnimplemented();
-	}
-
-void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
-	{
-	// Visit left branch
-	const ZRef<ZRA::Expr_Rel> oldOp0 = iExpr->GetOp0();
-	const ZRef<ZRA::Expr_Rel> newOp0 = this->Do(oldOp0);
-
-	// Remember which PSources it touches.
-	set<PSource*> leftPSources;
-	leftPSources.swap(fPSources);
-	ZRA::RelHead leftRelHead;
-	leftRelHead.swap(fResultRelHead);
-	
-	// Visit right branch
-	const ZRef<ZRA::Expr_Rel> oldOp1 = iExpr->GetOp1();
-	const ZRef<ZRA::Expr_Rel> newOp1 = this->Do(oldOp1);
-	
-	// Remember its PSources.
-	set<PSource*> rightPSources;
-	rightPSources.swap(fPSources);
-	ZRA::RelHead rightRelHead;
-	rightRelHead.swap(fResultRelHead);
-
-	fPSources = ZUtil_STL::sOr(leftPSources, rightPSources);
-//	fResultRelHead = ZUtil_STL::sOr(leftRelHead, rightRelHead);
-
-	fResultRelHead = leftRelHead | iExpr->GetRelName();
-
-	if (leftPSources.size() <= 1)
-		{
-		// Our left branch is simple, it references zero or one source.
-		if (fPSources.size() <= 1)
-			{
-			// And with the addition of the right branch we still reference <= 1 source.
-			if (oldOp0 == newOp0 && oldOp1 == newOp1)
-				this->pSetResult(iExpr->Self());
-			else
-				this->pSetResult(iExpr->Clone(newOp0, newOp1));
-			}
-		else
-			{
-			// This is the interesting scenario. With the addition of our right branch
-			// we *now* reference multiple sources. We register a proxy for the left branch.
-			ZRef<Proxy> proxy0 = fSource_Union->pGetProxy(fPSearch, leftPSources, leftRelHead, newOp0);
-
-			if (rightPSources.size() <= 1)
-				{
-				// Right branch is simple, and thus won't have registered a proxy yet.
-				ZRef<Proxy> proxy1 = fSource_Union->pGetProxy(fPSearch, rightPSources, rightRelHead, newOp1);
-				this->pSetResult(iExpr->Clone(proxy0, proxy1));
-				}
-			else
-				{
-				this->pSetResult(iExpr->Clone(proxy0, newOp1));
-				}
-			}
-		}
-	else
-		{
-		// Our left branch itself references multiples sources.
-		if (rightPSources.size() <= 1)
-			{
-			// Right branch is simple, and thus won't have registered a proxy yet.
-			ZRef<Proxy> proxy1 = fSource_Union->pGetProxy(fPSearch, rightPSources, rightRelHead, newOp1);
-			this->pSetResult(iExpr->Clone(newOp0, proxy1));
-			}
-		else
-			{
-			if (oldOp0 == newOp0 && oldOp1 == newOp1)
-				this->pSetResult(iExpr->Self());
-			else
-				this->pSetResult(iExpr->Clone(newOp0, newOp1));
-			}
-		}
 	}
 
 void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr)
@@ -509,16 +439,11 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 		}
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
 	{
-	ZRA::Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(iExpr);
-	fResultRelHead |= iExpr->GetRelName();
-	}
+	ZRA::Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(iExpr);
 
-void Source_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
-	{
-	ZRA::Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(iExpr);
-	fResultRelHead |= iExpr->GetRelName();
+	fResultRelHead = iExpr->GetRelName();
 	}
 
 void Source_Union::Analyze::Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr)
@@ -536,6 +461,13 @@ void Source_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Renam
 		fResultRelHead |= iExpr->GetNew();
 	}
 
+void Source_Union::Analyze::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
+	{
+	ZRA::Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(iExpr);
+
+	fResultRelHead |= iExpr->GetRelName();
+	}
+
 void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
 	{
 	ZAssertStop(kDebug, fResultRelHead.empty());
@@ -549,6 +481,12 @@ void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Con
 		this->pSetResult(iExpr);
 	else
 		this->pSetResult(fSource_Union->pGetProxy(fPSearch, fPSources, fResultRelHead, iExpr));
+	}
+
+void Source_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
+	{
+	ZRA::Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(iExpr);
+	fResultRelHead |= iExpr->GetRelName();
 	}
 
 ZRef<ZRA::Expr_Rel> Source_Union::Analyze::TopLevelDo(ZRef<ZRA::Expr_Rel> iRel)
@@ -599,9 +537,15 @@ Source_Union::PSource::PSource(ZRef<Source> iSource, const string8& iPrefix)
 bool Source_Union::PSource::Intersects(const RelHead& iRelHead)
 	{
 	if (fPrefix.empty())
+		{
 		return fSource->Intersects(iRelHead);
+		}
 	else
-		return fSource->Intersects(ZRA::sPrefixErase(fPrefix, iRelHead));
+		{
+		if (ZRA::sHasPrefix(fPrefix, iRelHead))
+			return fSource->Intersects(ZRA::sPrefixErase(fPrefix, iRelHead));
+		}
+	return false;
 	}
 
 ZRef<ZRA::Expr_Rel> Source_Union::PSource::UsableRel(ZRef<ZRA::Expr_Rel> iRel)
@@ -940,7 +884,7 @@ void Source_Union::pRewind(ZRef<Walker_Proxy> iWalker)
 	}
 
 void Source_Union::pPrime(ZRef<Walker_Proxy> iWalker,
-	const map<string8,size_t>& iBindingOffsets, 
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
@@ -951,8 +895,7 @@ void Source_Union::pPrime(ZRef<Walker_Proxy> iWalker,
 	}
 
 bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
-	const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	for (;;)
@@ -982,7 +925,7 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 		size_t theOffset = iWalker->fBaseOffset;
 		const ZVal_Any* theVals = iWalker->fCurrentResult->GetValsAt(iWalker->fCurrentIndex);
 		for (ZRA::RelHead::const_iterator i = theRH.begin(); i != theRH.end(); ++i)
-			oResults[theOffset++] = *theVals++;
+			ioResults[theOffset++] = *theVals++;
 		++iWalker->fCurrentIndex;
 		return true;
 		}
@@ -1003,6 +946,8 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 			PIP* thePIP = &iter->second;
 			thePIP->fResult = iterSearchResults->GetResult();
 			thePIP->fEvent = iterSearchResults->GetEvent();
+			if (!thePIP->fEvent)
+				thePIP->fEvent = Event::sZero();//##
 			for (set<PSearch*>::iterator
 				i = thePIP->fProxy->fDependentPSearches.begin(),
 				end = thePIP->fProxy->fDependentPSearches.end();

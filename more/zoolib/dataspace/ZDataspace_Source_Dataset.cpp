@@ -140,15 +140,18 @@ public:
 	virtual void Rewind()
 		{ fSource->pRewind(this); }
 
-	virtual void Prime(const map<string8,size_t>& iBindingOffsets, 
+	virtual ZRef<ZQE::Walker> Prime(const map<string8,size_t>& iOffsets,
 		map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset)
-		{ fSource->pPrime(this, iBindingOffsets, oOffsets, ioBaseOffset); }
+		{
+		fSource->pPrime(this, iOffsets, oOffsets, ioBaseOffset);
+		return this;
+		}
 
-	virtual bool ReadInc(const ZVal_Any* iBindings,
-		ZVal_Any* oResults,
+	virtual bool ReadInc(
+		ZVal_Any* ioResults,
 		set<ZRef<ZCounted> >* oAnnotations)
-		{ return fSource->pReadInc(this, iBindings, oResults, oAnnotations); }
+		{ return fSource->pReadInc(this, ioResults, oAnnotations); }
 
 	ZRef<Source_Dataset> fSource;
 	size_t fBaseOffset;
@@ -295,15 +298,20 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 			fStepCount = 0;
 
 			ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this).Do(thePSearch->fRel);
+
+			if (ZLOGF(s, eDebug - 1))
+				{
+				s << "\n";
+				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
+				}
+
 			ZRef<ZQE::Result> theResult = sSearch(theWalker);
 
 			if (ZLOGF(s, eDebug - 1))
 				{
 				s	<< "Walkers: " << fWalkerCount
 					<< ", reads: " << fReadCount
-					<< ", steps: " << fStepCount
-					<< "\n";
-				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
+					<< ", steps: " << fStepCount;
 				}
 
 			for (DListIterator<ClientSearch, DLink_ClientSearch_InPSearch>
@@ -389,7 +397,7 @@ void Source_Dataset::pRewind(ZRef<Walker> iWalker)
 	}
 
 void Source_Dataset::pPrime(ZRef<Walker> iWalker,
-	const map<string8,size_t>& iBindingOffsets, 
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
@@ -401,8 +409,7 @@ void Source_Dataset::pPrime(ZRef<Walker> iWalker,
 	}
 
 bool Source_Dataset::pReadInc(ZRef<Walker> iWalker,
-	const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	++fReadCount;
@@ -418,7 +425,7 @@ bool Source_Dataset::pReadInc(ZRef<Walker> iWalker,
 				for (size_t x = 0; x < iWalker->fNames.size(); ++x)
 					{
 					if (const ZVal_Any* theVal = theMap->PGet(iWalker->fNames[x]))
-						oResults[iWalker->fBaseOffset + x] = *theVal;
+						ioResults[iWalker->fBaseOffset + x] = *theVal;
 					else
 						gotAll = false;
 					}
@@ -447,7 +454,7 @@ bool Source_Dataset::pReadInc(ZRef<Walker> iWalker,
 				for (size_t x = 0; x < iWalker->fNames.size(); ++x)
 					{
 					if (const ZVal_Any* theVal = theMap->PGet(iWalker->fNames[x]))
-						oResults[iWalker->fBaseOffset + x] = *theVal;
+						ioResults[iWalker->fBaseOffset + x] = *theVal;
 					else
 						gotAll = false;
 					}

@@ -90,13 +90,12 @@ private:
 	void pRewind(ZRef<Walker_Proxy> iWalker);
 
 	void pPrime(ZRef<Walker_Proxy> iWalker,
-		const std::map<string8,size_t>& iBindingOffsets, 
+		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
 	bool pReadInc(ZRef<Walker_Proxy> iWalker,
-		const ZVal_Any* iBindings,
-		ZVal_Any* oResults,
+		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
 	// -----
