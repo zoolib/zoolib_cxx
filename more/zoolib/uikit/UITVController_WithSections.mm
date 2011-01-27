@@ -606,7 +606,7 @@ using namespace ZooLib::UIKit;
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		theSection->GetBody()->CommitEditingStyle(editingStyle, indexPath.row);
 	}
- 
+
 - (NSIndexPath*)tableView:(UITableView*)tableView
 	willSelectRowAtIndexPath:(NSIndexPath*)indexPath
 	{
