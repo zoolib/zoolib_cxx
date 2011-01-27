@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZRA {
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Transform_ConsolidateRenames
@@ -50,38 +52,22 @@ void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Ren
 	{
 	ZRef<Expr_Rel> oldOp0 = iExpr->GetOp0();
 	const string8 oldName = iExpr->GetOld();
-	const string8 newName = iExpr->GetNew();
-	if (ZQ<string8> theQ = ZUtil_STL::sGetIfContains(fRename, newName))
-		{
-		if (theQ.Get() == oldName)
-			{
-			// An ancestor has the inverse, erase it, and
-			// our result is our child without our renaming applied.
-			ZUtil_STL::sEraseMustContain(1, fRename, newName);
-			this->pSetResult(this->Do(oldOp0));
-			return;
-			}			
-		}
+	string8 newName = iExpr->GetNew();
 
-	// Record what rename we're doing, for a descendant to look for.
-	ZUtil_STL::sInsertMustNotContain(1, fRename, oldName, newName);
+	if (ZQ<string8> theQ = sEraseAndReturnIfContains(fRename, newName))
+		newName = theQ.Get();
 
-	// Apply the transform to our wrapped expr.
+	sInsertMustNotContain(1, fRename, oldName, newName);
+
 	ZRef<Expr_Rel> newOp0 = this->Do(oldOp0);
 
-	if (!ZUtil_STL::sContains(fRename, oldName))
+	if (ZQ<string8> theQ2 = sGetIfContains(fRename, oldName))
 		{
-		// A child removed our mapping and dropped itself from the chain, so we do the same.
-		this->pSetResult(newOp0);
+		if (theQ2.Get() == newName)
+			newOp0 = sRename(newOp0, newName, oldName);
 		}
-	else
-		{
-		// No child had a compensating rename.
-		if (oldOp0 == newOp0)
-			this->pSetResult(iExpr);
-		else
-			this->pSetResult(iExpr->Clone(newOp0));
-		}
+
+	this->pSetResult(newOp0);
 	}
 
 } // namespace ZRA
