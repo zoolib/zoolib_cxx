@@ -41,7 +41,7 @@ ZRef<Result> sSearch(ZRef<Walker> iWalker)
 	size_t baseOffset = 0;
 	iWalker = iWalker->Prime(map<string8,size_t>(), offsets, baseOffset);
 
-	ZLOGF(s, eDebug+2);
+	ZLOGF(s, eDebug);
 
 	s << "\n";
 	for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)

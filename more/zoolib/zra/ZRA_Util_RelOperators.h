@@ -32,7 +32,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 
@@ -45,6 +44,12 @@ ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel);
 ZRef<Expr_Rel> operator*(const ZNameVal& iNameVal, const ZRef<Expr_Rel>& iRel);
 ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZMap_Any& iMap);
 ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap);
+
+ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred& iValPred);
+
+ZRef<Expr_Rel> operator&(const ZValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel);
+
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZValPred& iValPred);
 
 } // namespace ZRA
 } // namespace ZooLib

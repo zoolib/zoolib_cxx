@@ -36,7 +36,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 
 namespace ZooLib {
@@ -55,7 +54,6 @@ class Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Embed
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
-,	public virtual ZRA::Visitor_Expr_Rel_Restrict
 ,	public virtual ZRA::Visitor_Expr_Rel_Select
 ,	public virtual ZRA::Visitor_Expr_Rel_Calc
 ,	public virtual ZRA::Visitor_Expr_Rel_Const
@@ -70,7 +68,6 @@ public:
 	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
 	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr);
 	virtual void Visit_Expr_Rel_Select(const ZRef<ZRA::Expr_Rel_Select>& iExpr);
 
 	virtual void Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr);

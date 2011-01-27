@@ -69,5 +69,14 @@ ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap)
 	return ioRel;
 	}
 
+ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred& iValPred)
+	{ return new Expr_Rel_Select(iExpr_Rel, new ZExpr_Bool_ValPred(iValPred)); }
+
+ZRef<Expr_Rel> operator&(const ZValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel)
+	{ return new Expr_Rel_Select(iExpr_Rel, new ZExpr_Bool_ValPred(iValPred)); }
+
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZValPred& iValPred)
+	{ return ioExpr_Rel = ioExpr_Rel & iValPred; }
+
 } // namespace ZRA
 } // namespace ZooLib

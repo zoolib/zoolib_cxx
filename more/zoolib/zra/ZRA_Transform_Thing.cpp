@@ -156,14 +156,6 @@ void Transform_Thing::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	sSetMustContain(1, fRename_Temp2Concrete, tempName, newName);
 	}
 
-void Transform_Thing::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
-	{
-	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
-
-	const set<ZValPred> newValPreds = sRenamed(fRename_Concrete2Temp, iExpr->GetValPreds());
-	this->pSetResult(sRestrict(newValPreds, newOp0));
-	}
-
 void Transform_Thing::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 	{
 	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());

@@ -18,31 +18,40 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Transform_Select2Restrict__
-#define __ZRA_Transform_Select2Restrict__
-#include "zconfig.h"
+#include "zoolib/ZUtil_Expr_Bool_CNF.h"
+#include "zoolib/zra/ZRA_Transform_DecomposeSelects.h"
 
-#include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Select.h"
+using std::set;
 
 namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRA::Transform_Select2Restrict
+#pragma mark * Transform_DecomposeSelects
 
-class Transform_Select2Restrict
-:	public virtual ZVisitor_Expr_Op_Do_Transform_T<Expr_Rel>
-,	public virtual Visitor_Expr_Rel_Select
+void Transform_DecomposeSelects::Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr)
 	{
-	typedef ZVisitor_Expr_Op_Do_Transform_T<Expr_Rel> inherited;
-public:
-// From Visitor_Expr_Rel_XXX
-	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
-	};
+	using Util_Expr_Bool::CNF;
+	using Util_Expr_Bool::Disjunction;
+
+	ZRef<Expr_Rel> theRel = this->Do(iExpr->GetOp0());
+	const CNF theCNF = Util_Expr_Bool::sAsCNF(iExpr->GetExpr_Bool());
+	for (CNF::const_iterator i = theCNF.begin(); i != theCNF.end(); ++i)
+		{
+		ZRef<ZExpr_Bool> newBool;
+		for (Disjunction::const_iterator j = i->begin(); j != i->end(); ++j)
+			{
+			if (!newBool)
+				newBool = j->Get();
+			else
+				newBool |= j->Get();
+			}
+		theRel &= newBool;
+		}
+
+	this->pSetResult(theRel);
+	}
 
 } // namespace ZRA
 } // namespace ZooLib
-
-#endif // __ZRA_Transform_Select2Restrict__

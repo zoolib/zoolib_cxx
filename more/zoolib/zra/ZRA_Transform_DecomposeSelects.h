@@ -18,42 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Walker_Restrict__
-#define __ZQE_Walker_Restrict__ 1
+#ifndef __ZRA_Transform_DecomposeSelects__
+#define __ZRA_Transform_DecomposeSelects__
 #include "zconfig.h"
 
-#include "zoolib/ZValPred.h"
-#include "zoolib/zqe/ZQE_Walker.h"
+#include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 
 namespace ZooLib {
-namespace ZQE {
+namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Restrict
+#pragma mark * ZRA::Transform_DecomposeSelects
 
-class Walker_Restrict : public Walker_Unary
+class Transform_DecomposeSelects
+:	public virtual ZVisitor_Expr_Op_Do_Transform_T<Expr_Rel>
+,	public virtual Visitor_Expr_Rel_Select
 	{
 public:
-	Walker_Restrict(ZRef<Walker> iWalker, const std::set<ZValPred>& iValPreds);
-	virtual ~Walker_Restrict();
-
-// From ZQE::Walker
-	virtual ZRef<Walker> Prime(
-		const std::map<string8,size_t>& iOffsets,
-		std::map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
-
-	virtual bool ReadInc(
-		ZVal_Any* ioResults,
-		std::set<ZRef<ZCounted> >* oAnnotations);
-
-private:
-	const std::set<ZValPred> fValPreds;
-	std::map<string8,size_t> fChildOffsets;
+	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
 	};
 
-} // namespace ZQE
+} // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZQE_Walker_Restrict__
+#endif // __ZRA_Transform_DecomposeSelects__
