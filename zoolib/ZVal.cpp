@@ -97,7 +97,7 @@ increasingly being replaced by the following.
 
 Our fourth example returns a \c ZQ<int>. Evaluated in a boolean context a ZQ returns a
 true-equivalent if it had a value assigned to it, false otherwise. So we can declare space
-for the result \em and check if we got one without polluting the enclosing scope with another name. 
+for the result \em and check if we got one without polluting the enclosing scope with another name.
 
 The final example is not available in all Val suites. For those where there is an accessible
 storage location we can return a pointer to the actual value iff what's stored is of the correct
