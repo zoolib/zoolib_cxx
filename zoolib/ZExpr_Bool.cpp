@@ -37,6 +37,12 @@ ZExpr_Bool::ZExpr_Bool()
 ZExpr_Bool_True::ZExpr_Bool_True()
 	{}
 
+ZRef<ZExpr_Bool> ZExpr_Bool_True::sTrue()
+	{
+	static ZRef<ZExpr_Bool_True> spTrue = new ZExpr_Bool_True;
+	return spTrue;
+	}
+
 void ZExpr_Bool_True::Accept(ZVisitor& iVisitor)
 	{
 	if (ZVisitor_Expr_Bool_True* theVisitor = dynamic_cast<ZVisitor_Expr_Bool_True*>(&iVisitor))
@@ -81,6 +87,12 @@ void ZVisitor_Expr_Bool_True::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& 
 
 ZExpr_Bool_False::ZExpr_Bool_False()
 	{}
+
+ZRef<ZExpr_Bool> ZExpr_Bool_False::sFalse()
+	{
+	static ZRef<ZExpr_Bool> spFalse = new ZExpr_Bool_False;
+	return spFalse;
+	}
 
 void ZExpr_Bool_False::Accept(ZVisitor& iVisitor)
 	{
@@ -270,15 +282,11 @@ void ZVisitor_Expr_Bool_Or::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iExpr)
 #pragma mark -
 #pragma mark * Operators
 
-static ZRef<ZExpr_Bool_True> spTrue = new ZExpr_Bool_True;
-
 ZRef<ZExpr_Bool> sTrue()
-	{ return spTrue; }
-
-static ZRef<ZExpr_Bool_False> spFalse = new ZExpr_Bool_False;
+	{ return ZExpr_Bool_True::sTrue(); }
 
 ZRef<ZExpr_Bool> sFalse()
-	{ return spFalse; }
+	{ return ZExpr_Bool_False::sFalse(); }
 
 ZRef<ZExpr_Bool> operator~(const ZRef<ZExpr_Bool>& iExpr_Bool)
 	{ return new ZExpr_Bool_Not(iExpr_Bool); }

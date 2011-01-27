@@ -81,7 +81,7 @@ public:
 
 ZRef<ZExpr_Bool> sExpr_Bool(const ZValPred& iValPred);
 
-ZRef<ZExpr_Bool_Not> operator~(const ZValPred& iValPred);
+ZRef<ZExpr_Bool> operator~(const ZValPred& iValPred);
 
 ZRef<ZExpr_Bool> operator&(bool iBool, const ZValPred& iValPred);
 

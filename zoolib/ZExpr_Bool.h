@@ -48,8 +48,11 @@ class ZExpr_Bool_True
 ,	public virtual ZExpr_Op0_T<ZExpr_Bool>
 	{
 	typedef ZExpr_Op0_T<ZExpr_Bool> inherited;
-public:
+protected:
 	ZExpr_Bool_True();
+
+public:
+	static ZRef<ZExpr_Bool> sTrue();
 
 // From ZVisitee
 	virtual void Accept(ZVisitor& iVisitor);
@@ -90,8 +93,12 @@ class ZExpr_Bool_False
 ,	public virtual ZExpr_Op0_T<ZExpr_Bool>
 	{
 	typedef ZExpr_Op0_T<ZExpr_Bool> inherited;
-public:
+
+protected:
 	ZExpr_Bool_False();
+
+public:
+	static ZRef<ZExpr_Bool> sFalse();
 
 // From ZVisitee
 	virtual void Accept(ZVisitor& iVisitor);

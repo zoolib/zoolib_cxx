@@ -92,34 +92,34 @@ void ZVisitor_Expr_Bool_ValPred::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_V
 ZRef<ZExpr_Bool> sExpr_Bool(const ZValPred& iValPred)
 	{ return new ZExpr_Bool_ValPred(iValPred); }
 
-ZRef<ZExpr_Bool_Not> operator~(const ZValPred& iValPred)
+ZRef<ZExpr_Bool> operator~(const ZValPred& iValPred)
 	{ return new ZExpr_Bool_Not(sExpr_Bool(iValPred)); }
 
 ZRef<ZExpr_Bool> operator&(bool iBool, const ZValPred& iValPred)
 	{
 	if (iBool)
 		return sExpr_Bool(iValPred);
-	return new ZExpr_Bool_False;
+	return sFalse();
 	}
 
 ZRef<ZExpr_Bool> operator&(const ZValPred& iValPred, bool iBool)
 	{
 	if (iBool)
 		return sExpr_Bool(iValPred);
-	return new ZExpr_Bool_False;
+	return sFalse();
 	}
 
 ZRef<ZExpr_Bool> operator|(bool iBool, const ZValPred& iValPred)
 	{
 	if (iBool)
-		return new ZExpr_Bool_True;
+		return sTrue();
 	return sExpr_Bool(iValPred);
 	}
 
 ZRef<ZExpr_Bool> operator|(const ZValPred& iValPred, bool iBool)
 	{
 	if (iBool)
-		return new ZExpr_Bool_True;
+		return sTrue();
 	return sExpr_Bool(iValPred);
 	}
 
