@@ -135,6 +135,9 @@ int sCompare_T(const ZValPred& iL, const ZValPred& iR)
 	return sCompare_T(iL.GetRHS(), iR.GetRHS());
 	}
 
+bool operator<(const ZValPred& iL, const ZValPred& iR)
+	{ return sCompare_T(iL, iR) < 0; }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValComparandPseudo

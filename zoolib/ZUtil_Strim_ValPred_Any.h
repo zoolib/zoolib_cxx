@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZValPred.h"
 
+#include <set>
+
 namespace ZooLib {
 
 namespace ZUtil_Strim_ValPred_Any {
@@ -34,6 +36,7 @@ namespace ZUtil_Strim_ValPred_Any {
 #pragma mark * ZUtil_Strim_ValPred_Any
 
 void sToStrim(const ZValPred& iValPred, const ZStrimW& iStrimW);
+void sToStrim(const std::set<ZValPred>& iValPreds, const ZStrimW& iStrimW);
 
 } // namespace ZUtil_Strim_ValPred_Any
 

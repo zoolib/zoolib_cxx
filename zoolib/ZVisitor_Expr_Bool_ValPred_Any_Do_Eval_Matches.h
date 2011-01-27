@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVal_Any.h"
 #include "zoolib/ZVisitor_Expr_Bool_Do_Eval.h"
 
+#include <set>
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -47,6 +49,8 @@ private:
 	};
 
 bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal);
+
+bool sMatches(const std::set<ZValPred>& iValPreds, const ZVal_Any& iVal);
 
 } // namespace ZooLib
 

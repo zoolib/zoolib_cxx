@@ -21,6 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches.h"
 #include "zoolib/ZValPred_Any.h"
 
+using std::set;
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -38,5 +40,15 @@ void ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches::Visit_Expr_Bool_ValPred(
 
 bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal)
 	{ return ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches(iVal).Do(iExpr); }
+
+bool sMatches(const set<ZValPred>& iValPreds, const ZVal_Any& iVal)
+	{
+	for (set<ZValPred>::const_iterator i = iValPreds.begin(); i != iValPreds.end(); ++i)
+		{
+		if (sMatches(*i, iVal))
+			return true;
+		}
+	return false;
+	}
 
 } // namespace ZooLib

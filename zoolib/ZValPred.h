@@ -125,6 +125,8 @@ private:
 template<>
 int sCompare_T(const ZValPred& iL, const ZValPred& iR);
 
+bool operator<(const ZValPred& iL, const ZValPred& iR);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValComparandPseudo

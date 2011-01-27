@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 using std::map;
+using std::set;
 using std::string;
 
 ZRef<ZValComparand> sRenamed(
@@ -43,6 +44,15 @@ ZValPred sRenamed(const map<string,string>& iRename, const ZValPred& iValPred)
 		sRenamed(iRename, iValPred.GetLHS()),
 		iValPred.GetComparator(),
 		sRenamed(iRename, iValPred.GetRHS()));
+	}
+
+set<ZValPred> sRenamed(const map<string,string>& iRename,
+	const set<ZValPred>& iValPreds)
+	{
+	set<ZValPred> result;
+	for (set<ZValPred>::const_iterator i = iValPreds.begin(); i != iValPreds.end(); ++i)
+		result.insert(sRenamed(iRename,*i));
+	return result;
 	}
 
 } // namespace ZooLib
