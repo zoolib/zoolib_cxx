@@ -33,6 +33,9 @@ int sCompare_T(const ZRA::Expr_Rel_Embed& iL, const ZRA::Expr_Rel_Embed& iR)
 	if (int compare = sCompare_T(iL.GetRelName(), iR.GetRelName()))
 		return compare;
 
+	if (int compare = sCompare_T(iL.GetBindings(), iR.GetBindings()))
+		return compare;
+
 	return sCompare_T(iL.GetOp0(), iR.GetOp0());
 	}
 
@@ -44,10 +47,11 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Embed
 
-Expr_Rel_Embed::Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1,
-	const RelName& iRelName)
-:	inherited(iOp0, iOp1)
+Expr_Rel_Embed::Expr_Rel_Embed(const RelName& iRelName,
+	const Rename& iBindings, const ZRef<Expr_Rel>& iChild)
+:	inherited(iChild)
 ,	fRelName(iRelName)
+,	fBindings(iBindings)
 	{}
 
 void Expr_Rel_Embed::Accept(ZVisitor& iVisitor)
@@ -58,19 +62,19 @@ void Expr_Rel_Embed::Accept(ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Expr_Rel_Embed::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Embed::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Embed* theVisitor = dynamic_cast<Visitor_Expr_Rel_Embed*>(&iVisitor))
 		this->Accept_Expr_Rel_Embed(*theVisitor);
 	else
-		inherited::Accept_Expr_Op2(iVisitor);
+		inherited::Accept_Expr_Op1(iVisitor);
 	}
 
 ZRef<Expr_Rel> Expr_Rel_Embed::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Embed::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
-	{ return new Expr_Rel_Embed(iOp0, iOp1, fRelName); }
+ZRef<Expr_Rel> Expr_Rel_Embed::Clone(const ZRef<Expr_Rel>& iOp0)
+	{ return new Expr_Rel_Embed(fRelName, fBindings, iOp0); }
 
 void Expr_Rel_Embed::Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Embed(this); }
@@ -78,25 +82,35 @@ void Expr_Rel_Embed::Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor)
 const RelName& Expr_Rel_Embed::GetRelName() const
 	{ return fRelName; }
 
+const Rename& Expr_Rel_Embed::GetBindings() const
+	{ return fBindings; }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Embed
 
 void Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
-	{ this->Visit_Expr_Op2(iExpr); }
+	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Embed> sEmbed(const ZRef<Expr_Rel>& iParent,
-	const RelName& iRelName, const ZRef<Expr_Rel>& iChild)
+ZRef<Expr_Rel> sEmbed(const RelName& iRelName,
+	const ZRef<Expr_Rel>& iChild)
+	{ return sEmbed(iRelName, RelHead(), iChild); }
+
+ZRef<Expr_Rel> sEmbed(const RelName& iRelName,
+	const RelHead& iBindings, const ZRef<Expr_Rel>& iChild)
 	{
-	if (!iParent)
-		sSemanticError("sCalc, iParent is null");
 	if (!iChild)
 		sSemanticError("sCalc, iChild is null");
-	return new Expr_Rel_Embed(iParent, iChild, iRelName);
+
+	Rename theRename;
+	for (RelHead::const_iterator i = iBindings.begin(); i != iBindings.end(); ++i)
+		theRename[*i] = *i;
+		
+	return new Expr_Rel_Embed(iRelName, theRename, iChild);
 	}
 
 } // namespace ZRA

@@ -55,22 +55,20 @@ void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Ren
 		{
 		if (theQ.Get() == oldName)
 			{
-			// Parent has the inverse. Erase it.
+			// An ancestor has the inverse, erase it, and
+			// our result is our child without our renaming applied.
 			ZUtil_STL::sEraseMustContain(1, fRename, newName);
-			// And our result is a transform of what we wrapped.
-			ZRef<Expr_Rel> newOp0 = this->Do(oldOp0);
-			this->pSetResult(newOp0);
+			this->pSetResult(this->Do(oldOp0));
 			return;
 			}			
 		}
 
-	// Record what rename we're doing, for a child to look for.
+	// Record what rename we're doing, for a descendant to look for.
 	ZUtil_STL::sInsertMustNotContain(1, fRename, oldName, newName);
 
 	// Apply the transform to our wrapped expr.
 	ZRef<Expr_Rel> newOp0 = this->Do(oldOp0);
 
-	// If no child removed our mapping, then we should return 
 	if (!ZUtil_STL::sContains(fRename, oldName))
 		{
 		// A child removed our mapping and dropped itself from the chain, so we do the same.

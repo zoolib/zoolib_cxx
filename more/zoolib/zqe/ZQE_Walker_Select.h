@@ -39,17 +39,17 @@ public:
 	virtual ~Walker_Select();
 
 // From ZQE::Walker
-	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+	virtual ZRef<Walker> Prime(
+		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool ReadInc(const ZVal_Any* iBindings,
-		ZVal_Any* oResults,
+	virtual bool ReadInc(
+		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
 	const ZRef<ZExpr_Bool> fExpr_Bool;
-	std::map<string8,size_t> fBindingOffsets;
 	std::map<string8,size_t> fChildOffsets;
 	};
 

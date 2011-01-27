@@ -41,7 +41,8 @@ Walker_Result::~Walker_Result()
 void Walker_Result::Rewind()
 	{ fIndex = 0; }
 
-void Walker_Result::Prime(const map<string8,size_t>& iBindingOffsets, 
+ZRef<Walker> Walker_Result::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
@@ -49,9 +50,10 @@ void Walker_Result::Prime(const map<string8,size_t>& iBindingOffsets,
 	const ZRA::RelHead& theRH = fResult->GetRelHead();
 	for (ZRA::RelHead::const_iterator i = theRH.begin(); i != theRH.end(); ++i)
 		oOffsets[*i] = ioBaseOffset++;
+	return this;
 	}
 
-bool Walker_Result::ReadInc(const ZVal_Any* iBindings,
+bool Walker_Result::ReadInc(
 	ZVal_Any* oResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{

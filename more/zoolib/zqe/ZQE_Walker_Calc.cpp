@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/zqe/ZQE_Walker_Calc.h"
 
 namespace ZooLib {
@@ -31,10 +32,11 @@ using std::vector;
 #pragma mark -
 #pragma mark * Walker_Calc
 
-Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
-	const string8& iRelName, const ZRef<Callable>& iCallable)
-:	Walker_Unary(iWalker)
-,	fRelName(iRelName)
+Walker_Calc::Walker_Calc(const string8& iRelName,
+	const ZRA::Rename& iBindings,
+	const ZRef<Callable>& iCallable)
+:	fRelName(iRelName)
+,	fBindings(iBindings)
 ,	fCallable(iCallable)
 	{
 	//## Need better API on the callable, so it can look up data in bindings (and output?)
@@ -43,32 +45,36 @@ Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
 Walker_Calc::~Walker_Calc()
 	{}
 
-void Walker_Calc::Prime(const map<string8,size_t>& iBindingOffsets, 
+ZRef<Walker> Walker_Calc::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
+	for (map<string8,size_t>::const_iterator i = iOffsets.begin(); i != iOffsets.end(); ++i)
+		{
+		if (ZUtil_STL::sContains(fBindings, i->first))
+			fBindingOffsets.insert(*i);
+		}
+
 	fOutputOffset = ioBaseOffset++;
 	oOffsets[fRelName] = fOutputOffset;
-
-	fBindingOffsets = iBindingOffsets;
-	fWalker->Prime(iBindingOffsets, fChildOffsets, ioBaseOffset);
-	oOffsets.insert(fChildOffsets.begin(), fChildOffsets.end());
+	return this;
 	}
 
-bool Walker_Calc::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
+bool Walker_Calc::ReadInc(
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
-	if (!fWalker->ReadInc(iBindings, oResults, oAnnotations))
+	if (fExhausted)
 		return false;
+	fExhausted = true;
 
+	// Need to make use of fBindings to build this.
 	ZMap_Any theMap;
 	for (map<string8,size_t>::iterator i = fBindingOffsets.begin(); i != fBindingOffsets.end(); ++i)
-		theMap.Set(i->first, iBindings[i->second]);
-	for (map<string8,size_t>::iterator i = fChildOffsets.begin(); i != fChildOffsets.end(); ++i)
-		theMap.Set(i->first, oResults[i->second]);
+		theMap.Set(i->first, ioResults[i->second]);
 
-	oResults[fOutputOffset] = fCallable->Call(theMap);
+	ioResults[fOutputOffset] = fCallable->Call(theMap);
 	return true;
 	}
 

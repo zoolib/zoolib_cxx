@@ -21,49 +21,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches.h"
 #include "zoolib/zqe/ZQE_Walker_Select.h"
 
+#include "zoolib/ZLog.h"
+#include "zoolib/ZYad_Any.h"
+#include "zoolib/ZYad_ZooLibStrim.h"
+
 namespace ZooLib {
 namespace ZQE {
 
 using std::map;
 using std::set;
-
-#if 0
-
-class Context : public ZValContext
-	{
-public:
-	const ZVal_Any* fBindings;
-	const ZVal_Any* fResults;
-	};
-
-maybe just bodge it for now -- pack all of iBindings and oResults into a ZMap_Any.
-
-class Visitor
-:	public virtual ZVisitor_Expr_Bool_ValPred_T<ZVal_Any>
-	{
-public:
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred_T<ZVal_Any> >& iExpr);
-	};
-
-template <class Val>
-void Visitor::Visit_Expr_Bool_ValPred(
-	ZRef<ZExpr_Bool_ValPred_T<ZVal_Any> > iExpr)
-	{
-	
-	this->Visit_Expr_Op0(iExpr);
-	}
-
-static bool spMatches(const ZVal_Any* iBindings, const ZVal_Any* iResults, ZRef<ZExpr_Bool> iExpr)
-	{
-	Context theContext;
-	theContext.fBindings = iBindings;
-	theContext.fResults = iResults;
-	
-	ZUnimplemented();
-	return false;
-	}
-
-#endif
 
 // =================================================================================================
 #pragma mark -
@@ -77,17 +43,19 @@ Walker_Select::Walker_Select(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool)
 Walker_Select::~Walker_Select()
 	{}
 
-void Walker_Select::Prime(const map<string8,size_t>& iBindingOffsets, 
+ZRef<Walker> Walker_Select::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	fBindingOffsets = iBindingOffsets;
-	fWalker->Prime(iBindingOffsets, fChildOffsets, ioBaseOffset);
+	fWalker = fWalker->Prime(iOffsets, fChildOffsets, ioBaseOffset);
 	oOffsets.insert(fChildOffsets.begin(), fChildOffsets.end());
+	fChildOffsets.insert(iOffsets.begin(), iOffsets.end());
+	return this;
 	}
 
-bool Walker_Select::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
+bool Walker_Select::ReadInc(
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	set<ZRef<ZCounted> > localAnnotations;
@@ -97,18 +65,24 @@ bool Walker_Select::ReadInc(const ZVal_Any* iBindings,
 
 	for (;;)
 		{
-		if (!fWalker->ReadInc(iBindings, oResults, localAnnotationsPtr))
+		if (!fWalker->ReadInc(ioResults, localAnnotationsPtr))
 			return false;
 
 		ZMap_Any theMap;
-		for (map<string8,size_t>::iterator i = fBindingOffsets.begin();
-			i != fBindingOffsets.end(); ++i)
-			{ theMap.Set(i->first, iBindings[i->second]); }
-
 		for (map<string8,size_t>::iterator i = fChildOffsets.begin();
 			i != fChildOffsets.end(); ++i)
-			{ theMap.Set(i->first, oResults[i->second]); }
+			{
+			string8 theName = i->first;
+			size_t theOffset = i->second;
+			ZVal_Any theVal = ioResults[theOffset];
+			theMap.Set(theName, theVal);
+			}
 		
+#if 0
+		if (ZLOGF(s, eDebug))
+			ZYad_ZooLibStrim::sToStrim(sMakeYadR(theMap), s);
+#endif
+
 		if (sMatches(fExpr_Bool, theMap))
 			{
 			if (oAnnotations)

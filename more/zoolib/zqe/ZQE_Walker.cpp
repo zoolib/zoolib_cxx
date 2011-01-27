@@ -35,6 +35,20 @@ Walker::~Walker()
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Walker_Nullary
+
+Walker_Nullary::Walker_Nullary()
+:	fExhausted(false)
+	{}
+
+Walker_Nullary::~Walker_Nullary()
+	{}
+
+void Walker_Nullary::Rewind()
+	{ fExhausted = false; }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Walker_Unary
 
 Walker_Unary::Walker_Unary(const ZRef<Walker>& iWalker)

@@ -33,13 +33,16 @@ int sCompare_T(const ZRA::Expr_Rel_Calc& iL, const ZRA::Expr_Rel_Calc& iR)
 	if (int compare = sCompare_T(iL.GetRelName(), iR.GetRelName()))
 		return compare;
 
+	if (int compare = sCompare_T(iL.GetBindings(), iR.GetBindings()))
+		return compare;
+
 	if (iL.GetCallable() < iR.GetCallable())
 		return -1;
 
 	if (iR.GetCallable() < iL.GetCallable())
 		return 1;
 	
-	return sCompare_T(iL.GetOp0(), iR.GetOp0());
+	return 0;
 	}
 
 ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Calc)
@@ -50,12 +53,14 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Calc
 
-Expr_Rel_Calc::Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
-	const RelName& iRelName, const ZRef<Callable>& iCallable)
-:	inherited(iOp0)
-,	fRelName(iRelName)
+Expr_Rel_Calc::Expr_Rel_Calc(const RelName& iRelName,
+	const Rename& iBindings,
+	const ZRef<Callable>& iCallable)
+:	fRelName(iRelName)
+,	fBindings(iBindings)
 ,	fCallable(iCallable)
-	{}
+	{
+	}
 
 Expr_Rel_Calc::~Expr_Rel_Calc()
 	{}
@@ -68,25 +73,28 @@ void Expr_Rel_Calc::Accept(ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Expr_Rel_Calc::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Calc::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Calc* theVisitor = dynamic_cast<Visitor_Expr_Rel_Calc*>(&iVisitor))
 		this->Accept_Expr_Rel_Calc(*theVisitor);
 	else
-		inherited::Accept_Expr_Op1(iVisitor);
+		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
 ZRef<Expr_Rel> Expr_Rel_Calc::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Calc::Clone(const ZRef<Expr_Rel>& iOp0)
-	{ return new Expr_Rel_Calc(iOp0, fRelName, fCallable); }
+ZRef<Expr_Rel> Expr_Rel_Calc::Clone()
+	{ return this; }
 
 void Expr_Rel_Calc::Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Calc(this); }
 
 const RelName& Expr_Rel_Calc::GetRelName() const
 	{ return fRelName; }
+
+const Rename& Expr_Rel_Calc::GetBindings() const
+	{ return fBindings; }
 
 const ZRef<Expr_Rel_Calc::Callable>& Expr_Rel_Calc::GetCallable() const
 	{ return fCallable; }
@@ -96,18 +104,20 @@ const ZRef<Expr_Rel_Calc::Callable>& Expr_Rel_Calc::GetCallable() const
 #pragma mark * Visitor_Expr_Rel_Calc
 
 void Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
-	{ this->Visit_Expr_Op1(iExpr); }
+	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Calc> sCalc(const ZRef<Expr_Rel>& iParent,
-	const RelName& iRelName, const ZRef<Expr_Rel_Calc::Callable>& iCallable)
+ZRef<Expr_Rel> sCalc(const RelName& iRelName,
+	const RelHead& iBindings,
+	const ZRef<Expr_Rel_Calc::Callable>& iCallable)
 	{
-	if (!iParent)
-		sSemanticError("sCalc, iParent is null");
-	return new Expr_Rel_Calc(iParent, iRelName, iCallable);
+	Rename theRename;
+	for (RelHead::const_iterator i = iBindings.begin(); i != iBindings.end(); ++i)
+		theRename[*i] = *i;
+	return new Expr_Rel_Calc(iRelName, theRename, iCallable);
 	}
 
 } // namespace ZRA

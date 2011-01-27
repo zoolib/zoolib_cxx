@@ -45,24 +45,25 @@ void Walker_Project::Rewind()
 	fPriors.clear();
 	}
 
-void Walker_Project::Prime(const map<string8,size_t>& iBindingOffsets,
+ZRef<Walker> Walker_Project::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
 	map<string8,size_t> childOffsets;
-	fWalker->Prime(iBindingOffsets, childOffsets, ioBaseOffset);
+	fWalker = fWalker->Prime(iOffsets, childOffsets, ioBaseOffset);
 
-	fChildMapping.reserve(fRelHead.size());
 	for (ZRA::RelHead::iterator i = fRelHead.begin(); i != fRelHead.end(); ++i)
 		{
 		const size_t childOffset = childOffsets[*i];
 		fChildMapping.push_back(childOffset);
 		oOffsets[*i] = childOffset;
 		}
+	return this;
 	}
 
-bool Walker_Project::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
+bool Walker_Project::ReadInc(
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	set<ZRef<ZCounted> > localAnnotations;
@@ -72,14 +73,14 @@ bool Walker_Project::ReadInc(const ZVal_Any* iBindings,
 
 	for (;;)
 		{
-		if (!fWalker->ReadInc(iBindings, oResults, localAnnotationsPtr))
+		if (!fWalker->ReadInc(ioResults, localAnnotationsPtr))
 			return false;
 
 		const size_t count = fRelHead.size();
 		vector<ZVal_Any> subset;
 		subset.reserve(count);
 		for (size_t x = 0; x < count; ++x)
-			subset.push_back(oResults[fChildMapping[x]]);
+			subset.push_back(ioResults[fChildMapping[x]]);
 
 		if (ZUtil_STL::sInsertIfNotContains(fPriors, subset))
 			{

@@ -32,30 +32,32 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Walker_Embed
 
-class Walker_Embed : public Walker_Unary
+class Walker_Embed : public Walker_Nullary
 	{
 public:
-	Walker_Embed(const ZRef<Walker>& iWalker,
-		const string8& iRelName, const ZRef<Walker>& iWalker_Ext);
+	Walker_Embed(const string8& iRelName,
+		const ZRA::Rename iBindings, const ZRef<Walker>& iWalker_Child);
 
 	virtual ~Walker_Embed();
 
 // From ZQE::Walker
-	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+	virtual ZRef<Walker> Prime(
+		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool ReadInc(const ZVal_Any* iBindings,
-		ZVal_Any* oResults,
+	virtual bool ReadInc(
+		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
 	const string8 fRelName;
+	const ZRA::Rename fBindings;
+	ZRef<Walker> fWalker_Child;
+
 	size_t fOutputOffset;
-	const ZRef<Walker> fWalker_Ext;
-	ZRA::RelHead fExtRelHead;
-	std::vector<size_t> fExtOffsets;
-	size_t fExtWidth;
+	ZRA::RelHead fChildRelHead;
+	std::vector<size_t> fChildOffsets;
 	};
 
 } // namespace ZQE

@@ -43,37 +43,30 @@ Walker_Product::~Walker_Product()
 void Walker_Product::Rewind()
 	{
 	fWalker_Left->Rewind();
-	fWalker_Right->Rewind();
-	fAnnotations_Left.clear();
 	fNeedLoadLeft = true;
 	}
 
-void Walker_Product::Prime(const map<string8,size_t>& iBindingOffsets, 
+ZRef<Walker> Walker_Product::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	fBaseOffset = ioBaseOffset;
+	fWalker_Left = fWalker_Left->Prime(iOffsets, fLeftOffsets, ioBaseOffset);
+	fResults_Left.resize(ioBaseOffset);
+	oOffsets.insert(fLeftOffsets.begin(), fLeftOffsets.end());
 
-	map<string8,size_t> leftOffsets;
-	size_t leftWidth = 0;
-	fWalker_Left->Prime(map<string8,size_t>(), leftOffsets, leftWidth);
-	for (map<string8,size_t>::iterator i = leftOffsets.begin(); i != leftOffsets.end(); ++i)
-		oOffsets[i->first] = fBaseOffset + i->second;
-	ioBaseOffset += leftWidth;
-	fResults_Left.resize(leftWidth);
+	map<string8,size_t> combined = iOffsets;
+	combined.insert(fLeftOffsets.begin(), fLeftOffsets.end());
 
-	fWalker_Right->Prime(map<string8,size_t>(), oOffsets, ioBaseOffset);
+	fWalker_Right = fWalker_Right->Prime(combined, oOffsets, ioBaseOffset);
+
+	return this;
 	}
 
-bool Walker_Product::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
+bool Walker_Product::ReadInc(
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
-	set<ZRef<ZCounted> > localAnnotations;
-	set<ZRef<ZCounted> >* localAnnotationsPtr = nullptr;
-	if (oAnnotations)
-		localAnnotationsPtr = &localAnnotations;
-
 	for (;;)
 		{
 		if (fNeedLoadLeft)
@@ -82,23 +75,33 @@ bool Walker_Product::ReadInc(const ZVal_Any* iBindings,
 			fAnnotations_Left.clear();
 			fNeedLoadLeft = false;
 
-			if (!fWalker_Left->ReadInc(nullptr, &fResults_Left[0], &fAnnotations_Left))
+			if (!fWalker_Left->ReadInc(ioResults, &fAnnotations_Left))
 				return false;
+
+			std::copy(ioResults, ioResults + fResults_Left.size(), fResults_Left.begin());
+			}
+		else
+			{
+			std::copy(fResults_Left.begin(), fResults_Left.end(), ioResults);
 			}
 
-		if (fWalker_Right->ReadInc(nullptr, oResults, localAnnotationsPtr))
+		if (oAnnotations)
 			{
-			if (oAnnotations)
+			set<ZRef<ZCounted> > localAnnotations;
+			if (fWalker_Right->ReadInc(ioResults, &localAnnotations))
 				{
-				oAnnotations->insert(fAnnotations_Left.begin(), fAnnotations_Left.end());
 				oAnnotations->insert(localAnnotations.begin(), localAnnotations.end());
+				oAnnotations->insert(fAnnotations_Left.begin(), fAnnotations_Left.end());
+				return true;
 				}
-			std::copy(fResults_Left.begin(), fResults_Left.end(), &oResults[fBaseOffset]);
-			return true;
+			}
+		else
+			{
+			if (fWalker_Right->ReadInc(ioResults, nullptr))
+				return true;
 			}
 
 		fNeedLoadLeft = true;
-		localAnnotations.clear();
 		}
 	}
 

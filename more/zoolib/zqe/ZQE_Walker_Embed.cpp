@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/zqe/ZQE_Result.h"
 #include "zoolib/zqe/ZQE_Walker_Embed.h"
 
@@ -32,61 +33,65 @@ using std::vector;
 #pragma mark -
 #pragma mark * Walker_Embed
 
-Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker,
-	const string8& iRelName, const ZRef<Walker>& iWalker_Ext)
-:	Walker_Unary(iWalker)
-,	fRelName(iRelName)
-,	fWalker_Ext(iWalker_Ext)
-,	fExtWidth(0)
+Walker_Embed::Walker_Embed(const string8& iRelName,
+	const ZRA::Rename iBindings, const ZRef<Walker>& iWalker_Child)
+:	fRelName(iRelName)
+,	fBindings(iBindings)
+,	fWalker_Child(iWalker_Child)
 	{}
 
 Walker_Embed::~Walker_Embed()
 	{}
 
-void Walker_Embed::Prime(const map<string8,size_t>& iBindingOffsets, 
+ZRef<Walker> Walker_Embed::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
+	map<string8,size_t> visibleOffsets;
+	for (map<string8,size_t>::const_iterator i = iOffsets.begin(); i != iOffsets.end(); ++i)
+		{
+		if (ZUtil_STL::sContains(fBindings, i->first))
+			visibleOffsets.insert(*i);
+		}
+
+	map<string8,size_t> childOffsets;
+	fWalker_Child = fWalker_Child->Prime(visibleOffsets, childOffsets, ioBaseOffset);
+
+	for (map<string8,size_t>::iterator i = childOffsets.begin(); i != childOffsets.end(); ++i)
+		{
+		fChildRelHead |= i->first;
+		fChildOffsets.push_back(i->second);
+		}
+
 	fOutputOffset = ioBaseOffset++;
 	oOffsets[fRelName] = fOutputOffset;
 
-	map<string8,size_t> childOffsets;
-	fWalker->Prime(iBindingOffsets, childOffsets, ioBaseOffset);
-	oOffsets.insert(childOffsets.begin(), childOffsets.end());
-
-	map<string8,size_t> extOffsets;
-	fWalker_Ext->Prime(childOffsets, extOffsets, fExtWidth); 
-
-	fExtOffsets.reserve(extOffsets.size());
-	for (map<string8,size_t>::iterator i = extOffsets.begin(); i != extOffsets.end(); ++i)
-		{
-		fExtRelHead |= i->first;
-		fExtOffsets.push_back(i->second);
-		}
+	return this;
 	}
 
-bool Walker_Embed::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
+bool Walker_Embed::ReadInc(
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
-	if (!fWalker->ReadInc(iBindings, oResults, oAnnotations))
+	if (fExhausted)
 		return false;
-	
-	fWalker_Ext->Rewind();
+	fExhausted = true;
+
+	fWalker_Child->Rewind();
 
 	vector<ZVal_Any> thePackedRows;
-	vector<ZVal_Any> extStorage(fExtWidth, ZVal_Any());
 	for (;;)
 		{
-		if (!fWalker_Ext->ReadInc(oResults, &extStorage[0], nullptr))
+		if (!fWalker_Child->ReadInc(ioResults, nullptr))
 			break;
 
-		for (vector<size_t>::iterator i = fExtOffsets.begin(); i != fExtOffsets.end(); ++i)
-			thePackedRows.push_back(extStorage[*i]);
+		for (vector<size_t>::iterator i = fChildOffsets.begin(); i != fChildOffsets.end(); ++i)
+			thePackedRows.push_back(ioResults[*i]);
 		}
 
-	ZRef<ZQE::Result> theResult = new ZQE::Result(fExtRelHead, &thePackedRows, nullptr);
-	oResults[fOutputOffset] = theResult;
+	ZRef<ZQE::Result> theResult = new ZQE::Result(fChildRelHead, &thePackedRows, nullptr);
+	ioResults[fOutputOffset] = theResult;
 	return true;
 	}
 

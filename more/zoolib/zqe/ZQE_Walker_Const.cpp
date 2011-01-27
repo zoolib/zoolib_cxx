@@ -30,34 +30,33 @@ using std::set;
 #pragma mark -
 #pragma mark * Walker_Const
 
-Walker_Const::Walker_Const(const ZRef<Walker>& iWalker,
-	const string8& iRelName, const ZVal_Any& iVal)
-:	Walker_Unary(iWalker)
-,	fRelName(iRelName)
+Walker_Const::Walker_Const(const string8& iRelName, const ZVal_Any& iVal)
+:	fRelName(iRelName)
 ,	fVal(iVal)
 	{}
 
 Walker_Const::~Walker_Const()
 	{}
 
-void Walker_Const::Prime(const map<string8,size_t>& iBindingOffsets, 
+ZRef<Walker> Walker_Const::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
 	fOutputOffset = ioBaseOffset++;
 	oOffsets[fRelName] = fOutputOffset;
-
-	fWalker->Prime(iBindingOffsets, oOffsets, ioBaseOffset);
+	return this;
 	}
 
-bool Walker_Const::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
+bool Walker_Const::ReadInc(
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
-	if (!fWalker->ReadInc(iBindings, oResults, oAnnotations))
+	if (fExhausted)
 		return false;
+	fExhausted = true;
 
-	oResults[fOutputOffset] = fVal;
+	ioResults[fOutputOffset] = fVal;
 	return true;
 	}
 

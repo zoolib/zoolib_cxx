@@ -31,22 +31,19 @@ using std::set;
 #pragma mark * Walker_Dee
 
 Walker_Dee::Walker_Dee()
-:	fExhausted(false)
 	{}
 
 Walker_Dee::~Walker_Dee()
 	{}
 
-void Walker_Dee::Rewind()
-	{ fExhausted = false; }
-
-void Walker_Dee::Prime(const map<string8,size_t>& iBindingOffsets, 
+ZRef<Walker> Walker_Dee::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
-	{}
+	{ return this; }
 
-bool Walker_Dee::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
+bool Walker_Dee::ReadInc(
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	if (fExhausted)

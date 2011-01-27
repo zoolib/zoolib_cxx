@@ -113,19 +113,19 @@ class Analyzer
 public:
 	Analyzer(const map<string8,RelHead>& iTables);
 
-	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr);
-	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr);
 	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr);
+	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr);
+	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr);
 
 	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
 
-	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
 	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
 	virtual void Visit_Expr_Rel_Select(const ZRef<Expr_Rel_Select>& iExpr);
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
+	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
 
 	const map<string8,RelHead>& fTables;
 	map<string8,int> fTablesUsed;
@@ -135,13 +135,13 @@ Analyzer::Analyzer(const map<string8,RelHead>& iTables)
 :	fTables(iTables)
 	{}
 
-void Analyzer::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
+void Analyzer::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr)
 	{ ZUnimplemented(); }
 
 void Analyzer::Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr)
 	{ ZUnimplemented(); }
 
-void Analyzer::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr)
+void Analyzer::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
 	{ ZUnimplemented(); }
 
 void Analyzer::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
@@ -149,6 +149,11 @@ void Analyzer::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 	Analysis analysis0 = this->Do(iExpr->GetOp0());
 	const Analysis analysis1 = this->Do(iExpr->GetOp1());
 
+	for (ZMap_Any::Index_t i = analysis1.fConstValues.Begin();
+		i != analysis1.fConstValues.End(); ++i)
+		{
+		analysis0.fConstValues.Set(analysis1.fConstValues.NameOf(i), analysis1.fConstValues.Get(i));
+		}
 	analysis0.fRelHead_Physical |= analysis1.fRelHead_Physical;
 	analysis0.fRename.insert(analysis1.fRename.begin(), analysis1.fRename.end());
 	analysis0.fRename_Inverse.insert(
@@ -156,13 +161,6 @@ void Analyzer::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 	analysis0.fCondition &= analysis1.fCondition;
 	
 	this->pSetResult(analysis0);
-	}
-
-void Analyzer::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
-	{
-	Analysis theAnalysis = this->Do(iExpr->GetOp0());
-	theAnalysis.fConstValues.Set(iExpr->GetRelName(), iExpr->GetVal());
-	this->pSetResult(theAnalysis);
 	}
 
 void Analyzer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
@@ -258,6 +256,14 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename_Inverse, physicalFieldName, attrName);
 		}
 
+	this->pSetResult(theAnalysis);
+	}
+
+void Analyzer::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
+	{
+	Analysis theAnalysis;
+	theAnalysis.fCondition = sTrue();
+	theAnalysis.fConstValues.Set(iExpr->GetRelName(), iExpr->GetVal());
 	this->pSetResult(theAnalysis);
 	}
 

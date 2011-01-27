@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
+#include "zoolib/zra/ZRA_RelHead.h"
 #include "zoolib/zqe/ZQE_Walker.h"
 
 namespace ZooLib {
@@ -32,31 +33,33 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Walker_Calc
 
-class Walker_Calc : public Walker_Unary
+class Walker_Calc : public Walker_Nullary
 	{
 public:
 	typedef ZCallable<ZVal_Any(const ZMap_Any&)> Callable;
 	
-	Walker_Calc(const ZRef<Walker>& iWalker,
-		const string8& iRelName, const ZRef<Callable>& iCallable);
+	Walker_Calc(const string8& iRelName,
+		const ZRA::Rename& iBindings,
+		const ZRef<Callable>& iCallable);
 
 	virtual ~Walker_Calc();
 
 // From ZQE::Walker
-	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+	virtual ZRef<Walker> Prime(
+		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool ReadInc(const ZVal_Any* iBindings,
+	virtual bool ReadInc(
 		ZVal_Any* oResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
 	const string8 fRelName;
-	size_t fOutputOffset;
+	const ZRA::Rename fBindings;
 	const ZRef<Callable> fCallable;
+	size_t fOutputOffset;
 	std::map<string8,size_t> fBindingOffsets;
-	std::map<string8,size_t> fChildOffsets;
 	};
 
 } // namespace ZQE

@@ -46,13 +46,33 @@ public:
 // Our protocol
 	virtual void Rewind() = 0;
 
-	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+	virtual ZRef<Walker> Prime(
+		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset) = 0;
 
-	virtual bool ReadInc(const ZVal_Any* iBindings,
-		ZVal_Any* oResults,
+	virtual bool ReadInc(
+		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations) = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Walker_Nullary
+
+class Walker_Nullary : public Walker
+	{
+protected:
+	Walker_Nullary();
+
+public:
+	virtual ~Walker_Nullary();
+
+// From ZQE::Walker
+	virtual void Rewind();
+
+protected:
+	bool fExhausted;
 	};
 
 // =================================================================================================

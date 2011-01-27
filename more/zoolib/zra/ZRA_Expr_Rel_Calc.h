@@ -38,34 +38,37 @@ class Visitor_Expr_Rel_Calc;
 
 class Expr_Rel_Calc
 :	public virtual Expr_Rel
-,	public virtual ZExpr_Op1_T<Expr_Rel>
+,	public virtual ZExpr_Op0_T<Expr_Rel>
 	{
-	typedef ZExpr_Op1_T<Expr_Rel> inherited;
+	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
 	typedef ZCallable<ZVal_Any(const ZMap_Any&)> Callable;
 
-	Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
-		const RelName& iRelName, const ZRef<Callable>& iCallable);
+	Expr_Rel_Calc(const RelName& iRelName,
+		const Rename& iBindings,
+		const ZRef<Callable>& iCallable);
 
 	virtual ~Expr_Rel_Calc();
 
 // From ZVisitee
 	virtual void Accept(ZVisitor& iVisitor);
 
-// From ZExpr_Op1_T<Expr_Rel>
-	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
+// From ZExpr_Op0_T<Expr_Rel>
+	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
 	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
+	virtual ZRef<Expr_Rel> Clone();
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor);
 
 	const RelName& GetRelName() const;
+	const Rename& GetBindings() const;
 	const ZRef<Callable>& GetCallable() const;
 
 private:
 	const RelName fRelName;
+	const Rename fBindings;
 	const ZRef<Callable> fCallable;
 	};
 
@@ -74,9 +77,9 @@ private:
 #pragma mark * Visitor_Expr_Rel_Calc
 
 class Visitor_Expr_Rel_Calc
-:	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
+:	public virtual ZVisitor_Expr_Op0_T<Expr_Rel>
 	{
-	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
+	typedef ZVisitor_Expr_Op0_T<Expr_Rel> inherited;
 public:
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr);
 	};
@@ -85,8 +88,9 @@ public:
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Calc> sCalc(const ZRef<Expr_Rel>& iParent,
-	const RelName& iRelName, const ZRef<Expr_Rel_Calc::Callable>& iCallable);
+ZRef<Expr_Rel> sCalc(const RelName& iRelName,
+	const RelHead& iBindings,
+	const ZRef<Expr_Rel_Calc::Callable>& iCallable);
 
 } // namespace ZRA
 

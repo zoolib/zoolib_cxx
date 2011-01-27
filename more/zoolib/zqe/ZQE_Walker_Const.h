@@ -31,20 +31,20 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Walker_Const
 
-class Walker_Const : public Walker_Unary
+class Walker_Const : public Walker_Nullary
 	{
 public:
-	Walker_Const(const ZRef<Walker>& iWalker, const string8& iRelName,
-		const ZVal_Any& iVal);
+	Walker_Const(const string8& iRelName, const ZVal_Any& iVal);
 	virtual ~Walker_Const();
 
 // From ZQE::Walker
-	virtual void Prime(const std::map<string8,size_t>& iBindingOffsets, 
+	virtual ZRef<Walker> Prime(
+		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool ReadInc(const ZVal_Any* iBindings,
-		ZVal_Any* oResults,
+	virtual bool ReadInc(
+		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:

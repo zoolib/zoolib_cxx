@@ -40,23 +40,26 @@ Walker_Rename::Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, c
 Walker_Rename::~Walker_Rename()
 	{}
 
-void Walker_Rename::Prime(const map<string8,size_t>& iBindingOffsets, 
+ZRef<Walker> Walker_Rename::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	map<string8,size_t> newBindingOffsets = iBindingOffsets;
+	map<string8,size_t> newBindingOffsets = iOffsets;
 	if (ZQ<size_t> theQ = ZUtil_STL::sEraseAndReturnIfContains(newBindingOffsets, fNew))
 		newBindingOffsets[fOld] = theQ.Get();
 	
-	fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
+	fWalker = fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
 
 	oOffsets[fNew] = ZUtil_STL::sEraseAndReturn(1, oOffsets, fOld);
+
+	return fWalker;
 	}
 
-bool Walker_Rename::ReadInc(const ZVal_Any* iBindings,
-	ZVal_Any* oResults,
+bool Walker_Rename::ReadInc(
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
-	{ return fWalker->ReadInc(iBindings, oResults, oAnnotations); }
+	{ return fWalker->ReadInc(ioResults, oAnnotations); }
 
 } // namespace ZQE
 } // namespace ZooLib

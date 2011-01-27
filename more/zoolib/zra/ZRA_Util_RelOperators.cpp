@@ -23,19 +23,48 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZRA {
 
-ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel)
+static ZRef<Expr_Rel> spConst(const ZMap_Any& iMap)
 	{
-	ZRef<Expr_Rel> result = iRel;
+	ZRef<Expr_Rel> result;
 	for (ZMap_Any::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
-		result = sConst(result, iMap.NameOf(i), iMap.Get(i));
+		{
+		ZRef<Expr_Rel> cur = sConst(iMap.NameOf(i), iMap.Get(i));
+		if (!result)
+			result = cur;
+		else
+			result = result * cur;
+		}
 	return result;
 	}
 
+ZRef<Expr_Rel> sConst(const ZMap_Any& iMap)
+	{
+	if (ZRef<Expr_Rel> result = spConst(iMap))
+		return result;
+
+	return sDee();
+	}
+
+ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel)
+	{
+	if (ZRef<Expr_Rel> asRel = spConst(iMap))
+		return asRel * iRel;
+	return iRel;
+	}
+
 ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZMap_Any& iMap)
-	{ return iMap * iRel; }
+	{
+	if (ZRef<Expr_Rel> asRel = spConst(iMap))
+		return iRel * asRel;
+	return iRel;
+	}
 
 ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap)
-	{ return ioRel = ioRel * iMap; }
+	{
+	if (ZRef<Expr_Rel> asRel = spConst(iMap))
+		ioRel = ioRel * asRel;
+	return ioRel;
+	}
 
 } // namespace ZRA
 } // namespace ZooLib

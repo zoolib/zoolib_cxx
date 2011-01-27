@@ -33,10 +33,7 @@ int sCompare_T(const ZRA::Expr_Rel_Const& iL, const ZRA::Expr_Rel_Const& iR)
 	if (int compare = sCompare_T(iL.GetRelName(), iR.GetRelName()))
 		return compare;
 
-	if (int compare = sCompare_T(iL.GetVal(), iR.GetVal()))
-		return compare;
-
-	return sCompare_T(iL.GetOp0(), iR.GetOp0());
+	return sCompare_T(iL.GetVal(), iR.GetVal());
 	}
 
 ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Const)
@@ -47,10 +44,8 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * Expr_Rel_Const
 
-Expr_Rel_Const::Expr_Rel_Const(const ZRef<Expr_Rel>& iOp0,
-	const RelName& iRelName, const ZVal_Any& iVal)
-:	inherited(iOp0)
-,	fRelName(iRelName)
+Expr_Rel_Const::Expr_Rel_Const(const RelName& iRelName, const ZVal_Any& iVal)
+:	fRelName(iRelName)
 ,	fVal(iVal)
 	{}
 
@@ -65,19 +60,19 @@ void Expr_Rel_Const::Accept(ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Expr_Rel_Const::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Const::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Const* theVisitor = dynamic_cast<Visitor_Expr_Rel_Const*>(&iVisitor))
 		this->Accept_Expr_Rel_Const(*theVisitor);
 	else
-		inherited::Accept_Expr_Op1(iVisitor);
+		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
 ZRef<Expr_Rel> Expr_Rel_Const::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Const::Clone(const ZRef<Expr_Rel>& iOp0)
-	{ return new Expr_Rel_Const(iOp0, fRelName, fVal); }
+ZRef<Expr_Rel> Expr_Rel_Const::Clone()
+	{ return this; }
 
 void Expr_Rel_Const::Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Const(this); }
@@ -93,19 +88,14 @@ const ZVal_Any& Expr_Rel_Const::GetVal() const
 #pragma mark * Visitor_Expr_Rel_Const
 
 void Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
-	{ this->Visit_Expr_Op1(iExpr); }
+	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Const> sConst(const ZRef<Expr_Rel>& iParent,
-	const RelName& iRelName, const ZVal_Any& iVal)
-	{
-	if (!iParent)
-		sSemanticError("sConst, iParent is null");
-	return new Expr_Rel_Const(iParent, iRelName, iVal);
-	}
+ZRef<Expr_Rel> sConst(const RelName& iRelName, const ZVal_Any& iVal)
+	{ return new Expr_Rel_Const(iRelName, iVal); }
 
 } // namespace ZRA
 } // namespace ZooLib

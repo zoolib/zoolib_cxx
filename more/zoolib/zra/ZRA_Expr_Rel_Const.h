@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_Expr_Rel_Const__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
 #include "zoolib/ZExpr_Op_T.h"
 #include "zoolib/ZVal_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
@@ -38,23 +37,22 @@ class Visitor_Expr_Rel_Const;
 
 class Expr_Rel_Const
 :	public virtual Expr_Rel
-,	public virtual ZExpr_Op1_T<Expr_Rel>
+,	public virtual ZExpr_Op0_T<Expr_Rel>
 	{
-	typedef ZExpr_Op1_T<Expr_Rel> inherited;
+	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Const(const ZRef<Expr_Rel>& iOp0,
-		const RelName& iRelName, const ZVal_Any& iVal);
+	Expr_Rel_Const(const RelName& iRelName, const ZVal_Any& iVal);
 
 	virtual ~Expr_Rel_Const();
 
 // From ZVisitee
 	virtual void Accept(ZVisitor& iVisitor);
 
-// From ZExpr_Op1_T<Expr_Rel>
-	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
+// From ZExpr_Op0_T<Expr_Rel>
+	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
 	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
+	virtual ZRef<Expr_Rel> Clone();
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor);
@@ -72,9 +70,9 @@ private:
 #pragma mark * Visitor_Expr_Rel_Const
 
 class Visitor_Expr_Rel_Const
-:	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
+:	public virtual ZVisitor_Expr_Op0_T<Expr_Rel>
 	{
-	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
+	typedef ZVisitor_Expr_Op0_T<Expr_Rel> inherited;
 public:
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
 	};
@@ -83,8 +81,7 @@ public:
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Const> sConst(const ZRef<Expr_Rel>& iParent,
-	const RelName& iRelName, const ZVal_Any& iVal);
+ZRef<Expr_Rel> sConst(const RelName& iRelName, const ZVal_Any& iVal);
 
 } // namespace ZRA
 
