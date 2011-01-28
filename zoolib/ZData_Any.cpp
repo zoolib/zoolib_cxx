@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare_Vector.h"
 #include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZData_Any.h"
+#include "zoolib/ZMemory.h"
 #include "zoolib/ZUtil_STL_vector.h"
 
 #include <vector>
@@ -100,11 +101,33 @@ int ZData_Any::Compare(const ZData_Any& iOther) const
 	if (fRep == iOther.fRep)
 		return 0;
 
-	return sCompare_T(fRep->fVector, iOther.fRep->fVector);
+	if (const size_t thisSize = fRep->fVector.size())
+		{
+		if (const size_t otherSize = iOther.fRep->fVector.size())
+			{
+			return ZMemCompare(&fRep->fVector[0], thisSize, &iOther.fRep->fVector[0], otherSize);
+			}
+		else
+			{
+			return 1;
+			}
+		}
+	else if (const size_t otherSize = iOther.fRep->fVector.size())
+		{
+		return -1;
+		}
+	else
+		{
+		return 0;
+		}
+
+//	return sCompare_T(fRep->fVector, iOther.fRep->fVector);
 	}
 
 bool ZData_Any::operator<(const ZData_Any& iOther) const
 	{
+	return this->Compare(iOther) < 0;
+
 	if (fRep == iOther.fRep)
 		return false;
 	return fRep->fVector < iOther.fRep->fVector;
@@ -112,6 +135,8 @@ bool ZData_Any::operator<(const ZData_Any& iOther) const
 
 bool ZData_Any::operator==(const ZData_Any& iOther) const
 	{
+	return this->Compare(iOther) == 0;
+
 	if (fRep == iOther.fRep)
 		return true;
 	return fRep->fVector == iOther.fRep->fVector;
