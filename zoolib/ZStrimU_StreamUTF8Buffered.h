@@ -25,9 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZStrimmer.h"
 
-#include <string>
-#include <vector>
-
 namespace ZooLib {
 
 // =================================================================================================
@@ -49,7 +46,9 @@ public:
 
 protected:
 	const ZStreamR& fStreamR;
-	std::vector<UTF32> fBuffer;
+	size_t fBufferSize;
+	UTF32* fBuffer;
+	UTF8* fBuffer_UTF8;
 	size_t fFeedIn;
 	size_t fFeedOut;
 	};

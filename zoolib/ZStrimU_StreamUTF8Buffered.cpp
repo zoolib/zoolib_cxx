@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 
 using std::min;
-using std::vector;
 
 namespace ZooLib {
 
@@ -33,13 +32,18 @@ namespace ZooLib {
 
 ZStrimU_StreamUTF8Buffered::ZStrimU_StreamUTF8Buffered(size_t iBufferSize, const ZStreamR& iStreamR)
 :	fStreamR(iStreamR),
-	fBuffer(iBufferSize, 0),
+	fBufferSize(iBufferSize),
+	fBuffer(new UTF32[fBufferSize]),
+	fBuffer_UTF8(new UTF8[fBufferSize]),
 	fFeedIn(0),
 	fFeedOut(0)
 	{}
 
 ZStrimU_StreamUTF8Buffered::~ZStrimU_StreamUTF8Buffered()
-	{}
+	{
+	delete[] fBuffer;
+	delete[] fBuffer_UTF8;
+	}
 
 // Do a more optimal version of this?
 static void spUTF8ToUTF32(
@@ -65,9 +69,6 @@ void ZStrimU_StreamUTF8Buffered::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size
 		return;
 		}
 
-	const size_t bufSize = fBuffer.size();
-	vector<UTF8> utf8Buffer(bufSize, 0);
-
 	UTF32* localDest = oDest;
 	while (iCount)
 		{
@@ -90,25 +91,25 @@ void ZStrimU_StreamUTF8Buffered::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size
 
 				// Start writing to &fBuffer[1]
 				utf32Buffer = &fBuffer[1];
-				countToRead = bufSize - 1;
+				countToRead = fBufferSize - 1;
 				fFeedIn = 1;
 				fFeedOut = 1;
 				}
 			else
 				{
 				utf32Buffer = &fBuffer[0];
-				countToRead = bufSize;
+				countToRead = fBufferSize;
 				fFeedIn = 0;
 				fFeedOut = 0;
 				}
 
 			size_t utf8Read;
-			fStreamR.Read(&utf8Buffer[0], countToRead, &utf8Read);
+			fStreamR.Read(&fBuffer_UTF8[0], countToRead, &utf8Read);
 			if (!utf8Read)
 				break;
 
 			size_t destCU;
-			spUTF8ToUTF32(&utf8Buffer[0], utf8Read, utf32Buffer, countToRead, destCU);
+			spUTF8ToUTF32(&fBuffer_UTF8[0], utf8Read, utf32Buffer, countToRead, destCU);
 			fFeedIn += destCU;
 			}
 		}
@@ -124,6 +125,6 @@ void ZStrimU_StreamUTF8Buffered::Imp_Unread(UTF32 iCP)
 	}
 
 size_t ZStrimU_StreamUTF8Buffered::Imp_UnreadableLimit()
-	{ return fBuffer.size(); }
+	{ return fBufferSize; }
 
 } // namespace ZooLib
