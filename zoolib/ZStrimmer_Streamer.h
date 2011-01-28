@@ -70,6 +70,47 @@ protected:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZStrimmerU_Streamer_T
+
+template <class StrimU_t>
+class ZStrimmerU_Streamer_T : public ZStrimmerU
+	{
+protected:
+	ZStrimmerU_Streamer_T() {}
+
+public:
+	virtual ~ZStrimmerU_Streamer_T() {}
+
+	template <class P>
+	ZStrimmerU_Streamer_T(P& iParam, ZRef<ZStreamerR> iStreamerR)
+	:	fStreamerR(iStreamerR),
+		fStrimU(iParam, iStreamerR->GetStreamR())
+		{}
+
+	template <class P>
+	ZStrimmerU_Streamer_T(const P& iParam, ZRef<ZStreamerR> iStreamerR)
+	:	fStreamerR(iStreamerR),
+		fStrimU(iParam, iStreamerR->GetStreamR())
+		{}
+
+	ZStrimmerU_Streamer_T(ZRef<ZStreamerR> iStreamerR)
+	:	fStreamerR(iStreamerR),
+		fStrimU(iStreamerR->GetStreamR())
+		{}
+
+// From ZStrimmerU
+	virtual const ZStrimU& GetStrimU() { return fStrimU; }
+
+// Our protocol
+	StrimU_t& GetStrim() { return fStrimU; }
+
+protected:
+	ZRef<ZStreamerR> fStreamerR;
+	StrimU_t fStrimU;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZStrimmerW_Streamer_T
 
 template <class StrimW_t>
