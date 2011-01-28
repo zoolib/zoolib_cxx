@@ -1104,6 +1104,12 @@ static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 bool ZYad_ZooLibStrim::sRead_Identifier(
 	const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
 	{
+	if (oStringExact)
+		oStringExact->reserve(32);
+
+	if (oStringLC)
+		oStringLC->reserve(32);
+
 	bool gotAny = false;
 	for (;;)
 		{
