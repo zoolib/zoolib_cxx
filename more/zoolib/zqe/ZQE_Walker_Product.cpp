@@ -53,8 +53,6 @@ ZRef<Walker> Walker_Product::Prime(
 	size_t& ioBaseOffset)
 	{
 	fWalker_Left = fWalker_Left->Prime(iOffsets, fLeftOffsets, ioBaseOffset);
-	if (!fWalker_Left)
-		return null;
 
 	// Could also check for Walker_Dee.
 
@@ -65,7 +63,8 @@ ZRef<Walker> Walker_Product::Prime(
 	combined.insert(fLeftOffsets.begin(), fLeftOffsets.end());
 
 	fWalker_Right = fWalker_Right->Prime(combined, oOffsets, ioBaseOffset);
-	if (!fWalker_Right)
+
+	if (!fWalker_Left || !fWalker_Right)
 		return null;
 
 	if (fWalker_Left.DynamicCast<Walker_Dee>())

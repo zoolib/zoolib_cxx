@@ -49,10 +49,12 @@ ZRef<Walker> Walker_Restrict::Prime(
 	size_t& ioBaseOffset)
 	{
 	fWalker = fWalker->Prime(iOffsets, fChildOffsets, ioBaseOffset);
-	if (!fWalker)
-		return null;
 	oOffsets.insert(fChildOffsets.begin(), fChildOffsets.end());
 	fChildOffsets.insert(iOffsets.begin(), iOffsets.end());
+
+	if (!fWalker)
+		return null;
+
 	return this;
 	}
 
