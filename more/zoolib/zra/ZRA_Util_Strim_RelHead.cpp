@@ -65,6 +65,7 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRA::RelHead& iRH)
 
 const ZStrimW& operator<<(const ZStrimW& w, const ZRA::Rename& iRename)
 	{
+	w << "[";
 	bool isFirst = true;
 	for (ZRA::Rename::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
 		{
@@ -73,6 +74,7 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRA::Rename& iRename)
 		isFirst = false;
 		w << i->second << "<--" << i->first;
 		}
+	w << "]";
 	return w;
 	}
 

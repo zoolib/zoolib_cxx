@@ -70,7 +70,6 @@ int sCompare_T(const ZExpr_Bool_ValPred& iL, const ZExpr_Bool_ValPred& iR);
 class ZVisitor_Expr_Bool_ValPred
 :	public virtual ZVisitor_Expr_Op0_T<ZExpr_Bool>
 	{
-	typedef ZVisitor_Expr_Op0_T<ZExpr_Bool> inherited;
 public:
 	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred >& iExpr);
 	};

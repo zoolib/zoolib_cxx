@@ -39,9 +39,11 @@ class ZVisitor_Expr_Op_Do_Transform_T
 ,	public virtual ZVisitor_Expr_Op2_T<T>
 	{
 public:
+// From ZVisitor_Expr_Op0_T
 	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<T> >& iExpr)
 		{ this->pSetResult(iExpr->Self()); }
 
+// From ZVisitor_Expr_Op1_T
 	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<T> >& iExpr)
 		{
 		ZRef<T> oldOp0 = iExpr->GetOp0();
@@ -52,6 +54,7 @@ public:
 			this->pSetResult(iExpr->Clone(newOp0));
 		}
 
+// From ZVisitor_Expr_Op2_T
 	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<T> >& iExpr)
 		{
 		ZRef<T> oldOp0 = iExpr->GetOp0();
@@ -63,6 +66,7 @@ public:
 		else
 			this->pSetResult(iExpr->Clone(newOp0, newOp1));
 		}
+
 	};
 
 } // namespace ZooLib

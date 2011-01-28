@@ -79,7 +79,6 @@ private:
 class Visitor_Expr_Rel_Calc
 :	public virtual ZVisitor_Expr_Op0_T<Expr_Rel>
 	{
-	typedef ZVisitor_Expr_Op0_T<Expr_Rel> inherited;
 public:
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr);
 	};

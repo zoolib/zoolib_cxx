@@ -41,7 +41,7 @@ ZRef<Result> sSearch(ZRef<Walker> iWalker)
 	size_t baseOffset = 0;
 	iWalker = iWalker->Prime(map<string8,size_t>(), offsets, baseOffset);
 
-	ZLOGF(s, eDebug);
+	ZLOGF(s, eDebug + 1);
 
 	s << "\n";
 	for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
@@ -50,27 +50,30 @@ ZRef<Result> sSearch(ZRef<Walker> iWalker)
 	vector<ZVal_Any> thePackedRows;
 	vector<vector<ZRef<ZCounted> > > theAnnotationsVector;
 	vector<ZVal_Any> theRow(baseOffset, ZVal_Any());
-	for (;;)
+	if (iWalker)
 		{
-		set<ZRef<ZCounted> > theAnnotations;
-		if (!iWalker->ReadInc(&theRow[0], &theAnnotations))
-			break;
-		
-		theAnnotationsVector.push_back(
-			vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
-		
-		for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
-			thePackedRows.push_back(theRow[i->second]);
-
-		s << "\n";
-		for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
+		for (;;)
 			{
-			ZYad_ZooLibStrim::sToStrim(sMakeYadR(theRow[i->second]), s);
-			s << ", ";
-			}
+			set<ZRef<ZCounted> > theAnnotations;
+			if (!iWalker->ReadInc(&theRow[0], &theAnnotations))
+				break;
+			
+			theAnnotationsVector.push_back(
+				vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
+			
+			for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
+				thePackedRows.push_back(theRow[i->second]);
 
-		if (int theAnnoCount = theAnnotations.size())
-			s << "annotations: " << theAnnoCount;
+			s << "\n";
+			for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
+				{
+				ZYad_ZooLibStrim::sToStrim(sMakeYadR(theRow[i->second]), s);
+				s << ", ";
+				}
+
+			if (int theAnnoCount = theAnnotations.size())
+				s << "annotations: " << theAnnoCount;
+			}
 		}
 
 	s << "\n";

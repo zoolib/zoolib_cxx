@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/zqe/ZQE_Walker_Dee.h"
 #include "zoolib/zqe/ZQE_Walker_Product.h"
 
 namespace ZooLib {
@@ -52,6 +53,11 @@ ZRef<Walker> Walker_Product::Prime(
 	size_t& ioBaseOffset)
 	{
 	fWalker_Left = fWalker_Left->Prime(iOffsets, fLeftOffsets, ioBaseOffset);
+	if (!fWalker_Left)
+		return null;
+
+	// Could also check for Walker_Dee.
+
 	fResults_Left.resize(ioBaseOffset);
 	oOffsets.insert(fLeftOffsets.begin(), fLeftOffsets.end());
 
@@ -59,6 +65,13 @@ ZRef<Walker> Walker_Product::Prime(
 	combined.insert(fLeftOffsets.begin(), fLeftOffsets.end());
 
 	fWalker_Right = fWalker_Right->Prime(combined, oOffsets, ioBaseOffset);
+	if (!fWalker_Right)
+		return null;
+
+	if (fWalker_Left.DynamicCast<Walker_Dee>())
+		return fWalker_Right;
+	else if (fWalker_Right.DynamicCast<Walker_Dee>())
+		return fWalker_Left;
 
 	return this;
 	}

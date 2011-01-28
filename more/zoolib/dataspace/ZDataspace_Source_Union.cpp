@@ -41,6 +41,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
 #include "zoolib/zra/ZRA_Transform_ConsolidateRenames.h"
+#include "zoolib/zra/ZRA_Transform_DecomposeRestricts.h"
+#include "zoolib/zra/ZRA_Transform_PushDownRestricts.h"
 #include "zoolib/zra/ZRA_Transform_Thing.h"
 
 namespace ZooLib {
@@ -62,7 +64,6 @@ class InsertPrefix
 :	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel>
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 	{
-	typedef ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel> inherited;
 public:
 	InsertPrefix(const string8& iPrefix);
 
@@ -158,7 +159,6 @@ public:
 class Source_Union::Visitor_Proxy
 :	public virtual ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>
 	{
-	typedef ZVisitor_Expr_Op0_T<ZRA::Expr_Rel> inherited;
 public:
 	virtual void Visit_Proxy(const ZRef<Proxy>& iExpr)
 		{ this->Visit_Expr_Op0(iExpr); }
@@ -327,7 +327,6 @@ class Source_Union::Analyze
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 ,	public virtual ZRA::Visitor_Expr_Rel_Const
 	{
-	typedef ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel> inherited;
 public:
 	Analyze(Source_Union* iSource_Union, PSearch* iPSearch);
 
@@ -657,7 +656,10 @@ void Source_Union::ModifyRegistrations(
 				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
 				}
 
-#if 1
+		theRel = ZRA::Transform_DecomposeRestricts().Do(theRel);
+		theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
+#if 0
+
 			ZRA::Transform_Thing theTT;
 			theRel = theTT.TopLevelDo(theRel);
 			if (ZLOGF(s, eDebug))
@@ -668,13 +670,13 @@ void Source_Union::ModifyRegistrations(
 				}
 
 			theRel = ZRA::Transform_ConsolidateRenames().Do(theRel);
+#endif
 
 			if (ZLOGPF(s, eDebug))
 				{
 				s << "Thingified:\n";
 				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
 				}
-#endif
 
 			thePSearch->fRel_Analyzed = Analyze(this, thePSearch).TopLevelDo(theRel);
 			fPSearch_NeedsWork.Insert(thePSearch);//??

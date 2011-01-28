@@ -34,6 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Transform_ConsolidateRenames.h"
+#include "zoolib/zra/ZRA_Transform_PushDownRestricts.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 
 namespace ZooLib {
@@ -232,6 +233,7 @@ void Source_Dataset::ModifyRegistrations(
 		{
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
 
+		theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
 		theRel = ZRA::Transform_ConsolidateRenames().Do(theRel);
 
 		pair<Map_RelToPSearch::iterator,bool> iterPSearchPair =

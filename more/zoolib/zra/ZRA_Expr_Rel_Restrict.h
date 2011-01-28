@@ -69,7 +69,6 @@ private:
 class Visitor_Expr_Rel_Restrict
 :	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
 	{
-	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
 public:
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
 	};

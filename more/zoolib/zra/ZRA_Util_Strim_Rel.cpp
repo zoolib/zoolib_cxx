@@ -46,30 +46,6 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Static helpers
-
-namespace { // anonymous
-
-void spWrite(const string& iString, const ZStrimW& s)
-	{ s.Write(iString); }
-
-void spWrite(const UTF8* iString, const ZStrimW& s)
-	{ s.Write(iString); }
-
-void spWrite_RelHead(const RelHead& iRelHead, const ZStrimW& iStrimW)
-	{ Util_Strim_RelHead::sWrite_RelHead(iRelHead, iStrimW); }
-
-void spWrite_EffectiveRelHeadComment(ZRef<Expr_Rel> iExpr, const ZStrimW& iStrimW)
-	{
-	iStrimW.Write(" /*");
-	Util_Strim_RelHead::sWrite_RelHead(sGetRelHead(iExpr), iStrimW);
-	iStrimW.Write("*/");
-	}
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Visitor_ToStrim
 
 namespace { // anonymous
@@ -126,120 +102,63 @@ void Visitor_ToStrim::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
 void Visitor_ToStrim::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
-	w << "Embed";
-
-	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iExpr->Self(), w);
-
-//	this->pWriteLFIndent();
-	w << "(";
-
+	w << "Embed(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
-	w << ", ";
-	w << iExpr->GetBindings();
-	w << ",";
+	w << ", " << iExpr->GetBindings() << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
-//##	this->pWriteLFIndent();
 	w << ")";
 	}
 
 void Visitor_ToStrim::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
-	spWrite("Project", w);
-
-//	if (pOptions().fDebuggingOutput)
-//		spWrite_EffectiveRelHeadComment(iExpr, w);
-
-//	this->pWriteLFIndent();
-	w << "(";
-
-//	this->pWriteLFIndent();
-	spWrite_RelHead(iExpr->GetProjectRelHead(), w);
-	w << ",";
-
+	w << "Project(" << iExpr->GetProjectRelHead() << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
-
-//##	this->pWriteLFIndent();
 	w << ")";
 	}
 
 void Visitor_ToStrim::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
-	spWrite("Rename", w);
-
-//	if (pOptions().fDebuggingOutput)
-//		spWrite_EffectiveRelHeadComment(iExpr, w);
-
-//	this->pWriteLFIndent();
-	w << "(";
-
-//	this->pWriteLFIndent();
+	w << "Rename(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetNew(), w);
-	spWrite("<--", w);
+	w << "<--";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetOld(), w);
 	w << ",";
-
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
-
-//##	this->pWriteLFIndent();
 	w << ")";
 	}
 
 void Visitor_ToStrim::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
-	w << "Restrict";
-
-	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iExpr, w);
-
-//	this->pWriteLFIndent();
-	w << "(";
-//	this->pWriteLFIndent();
+	w << "Restrict(";
 	this->pToStrim(iExpr->GetExpr_Bool());
 	w << ",";
-
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
-
-//##	this->pWriteLFIndent();
 	w << ")";
 	}
 
 void Visitor_ToStrim::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
-	spWrite("Calc", w);
-
-	w << "(";
+	w << "Calc(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
-	w << "<--";
-
-	w << "/*Some function of*/ ";
-	w << iExpr->GetBindings();
-//	Util_Strim_RelHead::sWrite_RelHead(iExpr->GetBindings(), w);
+	w << " = /*Some function of*/ " << iExpr->GetBindings();
 	w << ")";
 	}
 
 void Visitor_ToStrim::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
-	{
-	const ZStrimW& w = pStrimW();
-
-	w << "Concrete(";
-	Util_Strim_RelHead::sWrite_RelHead(iExpr->GetConcreteRelHead(), w);
-	w << ")";
-	}
+	{ pStrimW() << "Concrete(" << iExpr->GetConcreteRelHead() << ")"; }
 
 void Visitor_ToStrim::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
-	spWrite("Const", w);
-	w << "(";
+	w << "Const(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
 	w << ",";
 	ZYad_ZooLibStrim::sToStrim(sMakeYadR(iExpr->GetVal()), w);
@@ -247,37 +166,25 @@ void Visitor_ToStrim::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	}
 
 void Visitor_ToStrim::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
-	{
-	const ZStrimW& w = pStrimW();
-	w << "Dee()";
-	}
+	{ pStrimW() << "Dee()"; }
 
 void Visitor_ToStrim::pWriteBinary(
 	const string& iFunctionName, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
-	w << iFunctionName;
-
-	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iExpr->Self(), w);
-
-//	this->pWriteLFIndent();
-	w << "(";
+	w << iFunctionName << "(";
 
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
 	w << ",";
-
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp1());
-
-//##	this->pWriteLFIndent();
 	w << ")";
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_TQL
+#pragma mark * ZRA_Util_Strim_Rel
 
 void sToStrim(const ZRef<ZRA::Expr_Rel>& iRel, const ZStrimW& iStrimW)
 	{

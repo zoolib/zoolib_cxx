@@ -52,6 +52,8 @@ ZRef<Walker> Walker_Project::Prime(
 	{
 	map<string8,size_t> childOffsets;
 	fWalker = fWalker->Prime(iOffsets, childOffsets, ioBaseOffset);
+	if (!fWalker)
+		return null;
 
 	for (ZRA::RelHead::iterator i = fRelHead.begin(); i != fRelHead.end(); ++i)
 		{

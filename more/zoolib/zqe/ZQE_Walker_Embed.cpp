@@ -80,6 +80,9 @@ bool Walker_Embed::ReadInc(
 		return false;
 	fExhausted = true;
 
+	if (!fWalker_Child)
+		return false;
+
 	fWalker_Child->Rewind();
 
 	vector<ZVal_Any> thePackedRows;

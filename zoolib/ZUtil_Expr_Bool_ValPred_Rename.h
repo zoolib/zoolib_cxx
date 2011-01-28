@@ -18,58 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/zra/ZRA_Transform_ConsolidateRenames.h"
+#ifndef __ZUtil_Expr_Bool_ValPred_Rename__
+#define __ZUtil_Expr_Bool_ValPred_Rename__
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Bool.h"
+
+#include <map>
 
 namespace ZooLib {
-namespace ZRA {
-
-using namespace ZUtil_STL;
+namespace Util_Expr_Bool {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Transform_ConsolidateRenames
+#pragma mark * Util_Expr_Bool
 
-void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr)
-	{
-	ZSetRestore_T<Rename> sr(fRename);
-	inherited::Visit_Expr_Op0(iExpr);
-	}
+ZRef<ZExpr_Bool> sRenamed(const std::map<std::string,std::string>& iRename,
+	const ZRef<ZExpr_Bool>& iExpr);
 
-void Transform_ConsolidateRenames::Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr)
-	{
-	ZSetRestore_T<Rename> sr(fRename);
-	inherited::Visit_Expr_Op1(iExpr);
-	}
-
-void Transform_ConsolidateRenames::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
-	{
-	ZSetRestore_T<Rename> sr(fRename);
-	inherited::Visit_Expr_Op2(iExpr);
-	}
-
-void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
-	{
-	ZRef<Expr_Rel> oldOp0 = iExpr->GetOp0();
-	const string8 oldName = iExpr->GetOld();
-	string8 newName = iExpr->GetNew();
-	if (ZQ<string8> theQ = sEraseAndReturnIfContains(fRename, newName))
-		newName = theQ.Get();
-
-	sInsertMustNotContain(1, fRename, oldName, newName);
-
-	ZRef<Expr_Rel> newOp0 = this->Do(oldOp0);
-
-	if (ZQ<string8> theQ2 = sGetIfContains(fRename, oldName))
-		{
-		if (theQ2.Get() == newName)
-			{
-			if (newName != oldName)
-				newOp0 = sRename(newOp0, newName, oldName);
-			}
-		}
-	this->pSetResult(newOp0);
-	}
-
-} // namespace ZRA
+} // namespace Util_Expr_Bool
 } // namespace ZooLib
+
+#endif // __ZUtil_Expr_Bool_ValPred_Rename__

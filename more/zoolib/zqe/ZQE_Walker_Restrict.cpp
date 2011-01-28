@@ -49,6 +49,8 @@ ZRef<Walker> Walker_Restrict::Prime(
 	size_t& ioBaseOffset)
 	{
 	fWalker = fWalker->Prime(iOffsets, fChildOffsets, ioBaseOffset);
+	if (!fWalker)
+		return null;
 	oOffsets.insert(fChildOffsets.begin(), fChildOffsets.end());
 	fChildOffsets.insert(iOffsets.begin(), iOffsets.end());
 	return this;
@@ -78,10 +80,11 @@ bool Walker_Restrict::ReadInc(
 			theMap.Set(theName, theVal);
 			}
 		
-#if 0
-		if (ZLOGF(s, eDebug))
+		if (ZLOGF(s, eDebug+2))
+			{
+			s << this << " ";
 			ZYad_ZooLibStrim::sToStrim(sMakeYadR(theMap), s);
-#endif
+			}
 
 		if (sMatches(fExpr_Bool, theMap))
 			{

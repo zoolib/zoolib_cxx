@@ -18,58 +18,51 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/zra/ZRA_Transform_ConsolidateRenames.h"
+#include "zoolib/ZExpr_Bool_ValPred.h"
+#include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
+#include "zoolib/ZValPred_Rename.h"
+#include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
+
+using std::map;
+using std::string;
 
 namespace ZooLib {
-namespace ZRA {
-
-using namespace ZUtil_STL;
+namespace Util_Expr_Bool {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Transform_ConsolidateRenames
+#pragma mark * DoRename (anonymous)
 
-void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr)
+namespace { // anonymous
+
+class DoRename
+:	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZExpr_Bool>
+,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
-	ZSetRestore_T<Rename> sr(fRename);
-	inherited::Visit_Expr_Op0(iExpr);
-	}
+public:
+	DoRename(const map<string,string>& iRename);
 
-void Transform_ConsolidateRenames::Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr)
-	{
-	ZSetRestore_T<Rename> sr(fRename);
-	inherited::Visit_Expr_Op1(iExpr);
-	}
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
+private:
+	const map<string,string>& fRename;
+	};
 
-void Transform_ConsolidateRenames::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
-	{
-	ZSetRestore_T<Rename> sr(fRename);
-	inherited::Visit_Expr_Op2(iExpr);
-	}
+DoRename::DoRename(const map<string,string>& iRename)
+:	fRename(iRename)
+	{}
 
-void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
-	{
-	ZRef<Expr_Rel> oldOp0 = iExpr->GetOp0();
-	const string8 oldName = iExpr->GetOld();
-	string8 newName = iExpr->GetNew();
-	if (ZQ<string8> theQ = sEraseAndReturnIfContains(fRename, newName))
-		newName = theQ.Get();
+void DoRename::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
+	{ this->pSetResult(new ZExpr_Bool_ValPred(sRenamed(fRename, iExpr->GetValPred()))); }
 
-	sInsertMustNotContain(1, fRename, oldName, newName);
+} // anonymous namespace
 
-	ZRef<Expr_Rel> newOp0 = this->Do(oldOp0);
+// =================================================================================================
+#pragma mark -
+#pragma mark * Util_Expr_Bool
 
-	if (ZQ<string8> theQ2 = sGetIfContains(fRename, oldName))
-		{
-		if (theQ2.Get() == newName)
-			{
-			if (newName != oldName)
-				newOp0 = sRename(newOp0, newName, oldName);
-			}
-		}
-	this->pSetResult(newOp0);
-	}
+ZRef<ZExpr_Bool> sRenamed(const std::map<std::string,std::string>& iRename,
+	const ZRef<ZExpr_Bool>& iExpr)
+	{ return DoRename(iRename).Do(iExpr); }
 
-} // namespace ZRA
+} // namespace Util_Expr_Bool
 } // namespace ZooLib

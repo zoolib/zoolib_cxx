@@ -22,14 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZUtil_Any.h"
+#include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_ToStrim.h"
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
 #include "zoolib/ZValPred_Any.h"
-#include "zoolib/ZValPred_Rename.h"
-
 
 #include "zoolib/zra/ZRA_AsSQL.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
@@ -49,32 +48,6 @@ using std::map;
 using std::set;
 using std::string;
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * DoRename (anonymous)
-
-namespace { // anonymous
-
-class DoRename
-:	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZExpr_Bool>
-,	public virtual ZVisitor_Expr_Bool_ValPred
-	{
-public:
-	DoRename(const Rename& iRename);
-
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
-private:
-	const Rename& fRename;
-	};
-
-DoRename::DoRename(const Rename& iRename)
-:	fRename(iRename)
-	{}
-
-void DoRename::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
-	{ this->pSetResult(new ZExpr_Bool_ValPred(sRenamed(fRename, iExpr->GetValPred()))); }
-
-} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -181,7 +154,7 @@ void Analyzer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 void Analyzer::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	Analysis theAnalysis = this->Do(iExpr->GetOp0());
-	theAnalysis.fCondition &= DoRename(theAnalysis.fRename).Do(iExpr->GetExpr_Bool());
+	theAnalysis.fCondition &= Util_Expr_Bool::sRenamed(theAnalysis.fRename, iExpr->GetExpr_Bool());
 	this->pSetResult(theAnalysis);
 	}
 

@@ -18,11 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZString.h"
+#include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
 #include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZValPred_Rename.h"
-#include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
 
 #include "zoolib/zra/ZRA_Transform_Thing.h"
 
@@ -32,33 +30,6 @@ namespace ZooLib {
 namespace ZRA {
 
 using namespace ZUtil_STL;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * DoRename (anonymous)
-
-namespace { // anonymous
-
-class DoRename
-:	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZExpr_Bool>
-,	public virtual ZVisitor_Expr_Bool_ValPred
-	{
-public:
-	DoRename(const Rename& iRename);
-
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
-private:
-	const Rename& fRename;
-	};
-
-DoRename::DoRename(const Rename& iRename)
-:	fRename(iRename)
-	{}
-
-void DoRename::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
-	{ this->pSetResult(new ZExpr_Bool_ValPred(sRenamed(fRename, iExpr->GetValPred()))); }
-
-} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -160,7 +131,8 @@ void Transform_Thing::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iEx
 	{
 	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
-	ZRef<ZExpr_Bool> newExpr_Bool = DoRename(fRename_Concrete2Temp).Do(iExpr->GetExpr_Bool());
+	ZRef<ZExpr_Bool> newExpr_Bool =
+		Util_Expr_Bool::sRenamed(fRename_Concrete2Temp, iExpr->GetExpr_Bool());
 	this->pSetResult(sRestrict(newOp0, newExpr_Bool));
 	}
 

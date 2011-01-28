@@ -77,7 +77,6 @@ int sCompare_T(const ZExpr_Bool_True& iL, const ZExpr_Bool_True& iR);
 class ZVisitor_Expr_Bool_True
 :	public virtual ZVisitor_Expr_Op0_T<ZExpr_Bool>
 	{
-	typedef ZVisitor_Expr_Op0_T<ZExpr_Bool> inherited;
 public:
 	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iExpr);
 	};
@@ -123,7 +122,6 @@ int sCompare_T(const ZExpr_Bool_False& iL, const ZExpr_Bool_False& iR);
 class ZVisitor_Expr_Bool_False
 :	public virtual ZVisitor_Expr_Op0_T<ZExpr_Bool>
 	{
-	typedef ZVisitor_Expr_Op0_T<ZExpr_Bool> inherited;
 public:
 	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iExpr);
 	};
@@ -165,7 +163,6 @@ int sCompare_T(const ZExpr_Bool_Not& iL, const ZExpr_Bool_Not& iR);
 class ZVisitor_Expr_Bool_Not
 :	public virtual ZVisitor_Expr_Op1_T<ZExpr_Bool>
 	{
-	typedef ZVisitor_Expr_Op1_T<ZExpr_Bool> inherited;
 public:
 	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iExpr);
 	};
@@ -207,7 +204,6 @@ int sCompare_T(const ZExpr_Bool_And& iL, const ZExpr_Bool_And& iR);
 class ZVisitor_Expr_Bool_And
 :	public virtual ZVisitor_Expr_Op2_T<ZExpr_Bool>
 	{
-	typedef ZVisitor_Expr_Op2_T<ZExpr_Bool> inherited;
 public:
 	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iExpr);
 	};
@@ -249,7 +245,6 @@ int sCompare_T(const ZExpr_Bool_Or& iL, const ZExpr_Bool_Or& iR);
 class ZVisitor_Expr_Bool_Or
 :	public virtual ZVisitor_Expr_Op2_T<ZExpr_Bool>
 	{
-	typedef ZVisitor_Expr_Op2_T<ZExpr_Bool> inherited;
 public:
 	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iExpr);
 	};
