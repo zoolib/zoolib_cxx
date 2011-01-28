@@ -21,7 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStrim_Stream.h"
-#include "zoolib/ZStrimU_Unreader.h"
+#include "zoolib/ZStrimU_StreamUTF8Buffered.h"
+//#include "zoolib/ZStrimU_Unreader.h"
 #include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZYad_Any.h"
@@ -70,13 +71,16 @@ ZVal_Any spAsVal(const ZData_Any& iData)
 		ZRef<ZStreamerR> theStreamerR =
 			new ZStreamerRPos_T<ZStreamRPos_Data_T<ZData_Any> >(iData);
 
-		ZRef<ZStrimmerR> theStrimmerR_StreamUTF8 =
-			new ZStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(theStreamerR);
+//		ZRef<ZStrimmerR> theStrimmerR_StreamUTF8 =
+//			new ZStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(theStreamerR);
 
-		ZRef<ZStrimmerU> theStrimmerU_Unreader =
-			new ZStrimmerU_FT<ZStrimU_Unreader>(theStrimmerR_StreamUTF8);
+//		ZRef<ZStrimmerU> theStrimmerU_Unreader =
+//			new ZStrimmerU_FT<ZStrimU_Unreader>(theStrimmerR_StreamUTF8);
 
-		ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sMakeYadR(theStrimmerU_Unreader);
+		ZRef<ZStrimmerU> theStrimmerU =
+			new ZStrimmerU_Streamer_T<ZStrimU_StreamUTF8Buffered>(1024, theStreamerR);
+
+		ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sMakeYadR(theStrimmerU);
 
 		return sFromYadR(ZVal_Any(), theYadR);
 		}
@@ -301,7 +305,7 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 
 			ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this).Do(thePSearch->fRel);
 
-			if (ZLOGPF(s, eDebug - 1))
+			if (ZLOGPF(s, eDebug))
 				{
 				s << "\n";
 				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
@@ -415,6 +419,11 @@ bool Source_Dataset::pReadInc(ZRef<Walker> iWalker,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	++fReadCount;
+
+	const vector<string8>& theNames = iWalker->fNames;
+	const string8* theNamesPtr = &theNames[0];
+	const size_t theCount = theNames.size();
+
 	while (iWalker->fCurrent_Main != fMap.end())
 		{
 		++fStepCount;
@@ -424,9 +433,9 @@ bool Source_Dataset::pReadInc(ZRef<Walker> iWalker,
 			if (const ZMap_Any* theMap = iWalker->fCurrent_Main->second.second.PGet<ZMap_Any>())
 				{
 				bool gotAll = true;
-				for (size_t x = 0; x < iWalker->fNames.size(); ++x)
+				for (size_t x = 0; x < theCount; ++x)
 					{
-					if (const ZVal_Any* theVal = theMap->PGet(iWalker->fNames[x]))
+					if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[x]))
 						ioResults[iWalker->fBaseOffset + x] = *theVal;
 					else
 						gotAll = false;
@@ -453,9 +462,9 @@ bool Source_Dataset::pReadInc(ZRef<Walker> iWalker,
 			if (const ZMap_Any* theMap = iWalker->fCurrent_Pending->second.first.PGet<ZMap_Any>())
 				{
 				bool gotAll = true;
-				for (size_t x = 0; x < iWalker->fNames.size(); ++x)
+				for (size_t x = 0; x < theCount; ++x)
 					{
-					if (const ZVal_Any* theVal = theMap->PGet(iWalker->fNames[x]))
+					if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[x]))
 						ioResults[iWalker->fBaseOffset + x] = *theVal;
 					else
 						gotAll = false;
