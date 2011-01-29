@@ -158,8 +158,8 @@ void Source_SQLite::ModifyRegistrations(
 		{
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
 
-		pair<Map_RelToPSearch::iterator,bool> inPSearch =
-			fMap_RelToPSearch.insert(make_pair(theRel, PSearch(theRel)));
+		pair<Map_Rel_PSearch::iterator,bool> inPSearch =
+			fMap_Rel_PSearch.insert(make_pair(theRel, PSearch(theRel)));
 
 		PSearch* thePSearch = &inPSearch.first->second;
 		
@@ -196,7 +196,7 @@ void Source_SQLite::ModifyRegistrations(
 		PSearch* thePSearch = theClientSearch->fPSearch;
 		thePSearch->fClientSearches.Erase(theClientSearch);
 		if (thePSearch->fClientSearches.Empty())
-			ZUtil_STL::sEraseMustContain(kDebug, fMap_RelToPSearch, thePSearch->fRel);
+			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PSearch, thePSearch->fRel);
 		
 		fMap_RefconToClientSearch.erase(iterClientSearch);
 		}
@@ -206,8 +206,8 @@ void Source_SQLite::CollectResults(std::vector<SearchResult>& oChanged)
 	{
 	oChanged.clear();
 
-	for (Map_RelToPSearch::iterator iterPSearch = fMap_RelToPSearch.begin();
-		iterPSearch != fMap_RelToPSearch.end(); ++iterPSearch)
+	for (Map_Rel_PSearch::iterator iterPSearch = fMap_Rel_PSearch.begin();
+		iterPSearch != fMap_Rel_PSearch.end(); ++iterPSearch)
 		{
 		PSearch* thePSearch = &iterPSearch->second;
 		vector<ZVal_Any> thePackedRows;

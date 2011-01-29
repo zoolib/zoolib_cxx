@@ -88,6 +88,7 @@ public:
 	void CloseTransaction(size_t iIndex);
 
 private:
+	ZMtxR fMtxR;
 	size_t fWalkerCount;
 	size_t fReadCount;
 	size_t fStepCount;
@@ -128,11 +129,11 @@ private:
 	class DLink_ClientSearch_InPSearch;
 	class ClientSearch;
 	class PSearch;
-	std::map<int64, ClientSearch> fMap_RefconToClientSearch;
+	std::map<int64, ClientSearch> fMap_Refcon_ClientSearch;
 
 	typedef std::map<ZRef<ZRA::Expr_Rel>, PSearch, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
-		Map_RelToPSearch;
-	Map_RelToPSearch fMap_RelToPSearch;
+		Map_Rel_PSearch;
+	Map_Rel_PSearch fMap_Rel_PSearch;
 	};
 
 } // namespace ZDataspace

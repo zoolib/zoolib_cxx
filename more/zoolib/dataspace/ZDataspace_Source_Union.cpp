@@ -70,6 +70,7 @@ public:
 // From ZRA::Visitor_Expr_Rel_Concrete
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr);
 
+private:
 	const string8 fPrefix;
 	};
 
@@ -143,7 +144,7 @@ public:
 // Our protocol
 	virtual void Accept_Proxy(Visitor_Proxy& iVisitor);
 
-	Source_Union* fSource;
+	Source_Union* const fSource;
 	ZRef<ZRA::Expr_Rel> fRel;
 	ZRA::RelHead fResultRelHead;
 	set<PSearch*> fDependentPSearches;
@@ -233,8 +234,8 @@ public:
 		set<ZRef<ZCounted> >* oAnnotations)
 		{ return fSource->pReadInc(this, ioResults, oAnnotations); }
 
-	ZRef<Source_Union> fSource;
-	ZRef<Proxy> fProxy;
+	ZRef<Source_Union> const fSource;
+	ZRef<Proxy> const fProxy;
 	size_t fBaseOffset;
 
 	DListIterator<PIP, DLink_PIP_InProxy> fIter_PIP;
@@ -259,8 +260,8 @@ public:
 	,	fPSearch(iPSearch)
 		{}
 
-	int64 fRefcon;
-	PSearch* fPSearch;
+	int64 const fRefcon;
+	PSearch* const fPSearch;
 	};
 
 // =================================================================================================
@@ -275,11 +276,11 @@ class Source_Union::PSearch
 :	public DLink_PSearch_NeedsWork
 	{
 public:
-	PSearch(ZRef<ZRA::Expr_Rel> iRel)
+	PSearch(const ZRef<ZRA::Expr_Rel>& iRel)
 	:	fRel(iRel)
 		{}
 
-	ZRef<ZRA::Expr_Rel> fRel;
+	ZRef<ZRA::Expr_Rel> const fRel;
 	ZRef<ZRA::Expr_Rel> fRel_Analyzed;
 	set<ZRef<Proxy> > fProxiesDependedUpon;
 	ZRef<ZQE::Result> fResult;
@@ -310,7 +311,8 @@ public:
 	virtual void Visit_Proxy(const ZRef<Proxy>& iExpr)
 		{ this->pSetResult(fSource->pMakeWalker(iExpr)); }
 
-	ZRef<Source_Union> fSource;
+private:
+	ZRef<Source_Union> const fSource;
 	};
 
 // =================================================================================================
@@ -522,31 +524,28 @@ public:
 	ZRef<ZRA::Expr_Rel> UsableRel(ZRef<ZRA::Expr_Rel> iRel);
 
 	ZRef<Source> fSource;
-	const string8 fPrefix;
-
 	int64 fNextRefcon;
 
 	Map_Refcon_PIP fMap_Refcon_PIP;
 	DListHead<DLink_PIP_NeedsWork> fPIP_NeedsWork;
+
+private:
+	const string8 fPrefix;
 	};
 
 Source_Union::PSource::PSource(ZRef<Source> iSource, const string8& iPrefix)
 :	fSource(iSource)
-,	fPrefix(iPrefix)
 ,	fNextRefcon(1)
+,	fPrefix(iPrefix)
 	{}
 
 bool Source_Union::PSource::Intersects(const RelHead& iRelHead)
 	{
 	if (fPrefix.empty())
-		{
 		return fSource->Intersects(iRelHead);
-		}
-	else
-		{
-		if (ZRA::sHasPrefix(fPrefix, iRelHead))
-			return fSource->Intersects(ZRA::sPrefixErase(fPrefix, iRelHead));
-		}
+	else if (ZRA::sHasPrefix(fPrefix, iRelHead))
+		return fSource->Intersects(ZRA::sPrefixErase(fPrefix, iRelHead));
+
 	return false;
 	}
 

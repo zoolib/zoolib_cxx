@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimU_StreamUTF8Buffered.h"
-//#include "zoolib/ZStrimU_Unreader.h"
 #include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZYad_Any.h"
@@ -71,12 +70,6 @@ ZVal_Any spAsVal(const ZData_Any& iData)
 		ZRef<ZStreamerR> theStreamerR =
 			new ZStreamerRPos_T<ZStreamRPos_Data_T<ZData_Any> >(iData);
 
-//		ZRef<ZStrimmerR> theStrimmerR_StreamUTF8 =
-//			new ZStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(theStreamerR);
-
-//		ZRef<ZStrimmerU> theStrimmerU_Unreader =
-//			new ZStrimmerU_FT<ZStrimU_Unreader>(theStrimmerR_StreamUTF8);
-
 		ZRef<ZStrimmerU> theStrimmerU =
 			new ZStrimmerU_Streamer_T<ZStrimU_StreamUTF8Buffered>(1024, theStreamerR);
 
@@ -103,7 +96,7 @@ Daton sAsDaton(const ZVal_Any& iVal)
 	{
 	ZData_Any theData;
 	ZYad_ZooLibStrim::sToStrim(sMakeYadR(iVal),
-		ZStrimW_StreamUTF8(ZStreamRWPos_Data_T<ZData_Any>(theData)));
+		ZStrimW_StreamUTF8(MakeStreamRWPos_Data_T(theData)));
 	return theData;
 	}
 
@@ -158,9 +151,9 @@ public:
 		set<ZRef<ZCounted> >* oAnnotations)
 		{ return fSource->pReadInc(this, ioResults, oAnnotations); }
 
-	ZRef<Source_Dataset> fSource;
+	const ZRef<Source_Dataset> fSource;
+	const vector<string8> fNames;
 	size_t fBaseOffset;
-	vector<string8> fNames;
 	Map_Main::const_iterator fCurrent_Main;
 	Map_Pending::const_iterator fCurrent_Pending;
 	};
@@ -182,8 +175,8 @@ public:
 	,	fPSearch(iPSearch)
 		{}
 
-	int64 fRefcon;
-	PSearch* fPSearch;
+	int64 const fRefcon;
+	PSearch* const fPSearch;
 	};
 
 // =================================================================================================
@@ -197,7 +190,7 @@ public:
 	:	fRel(iRel)
 		{}
 
-	ZRef<ZRA::Expr_Rel> fRel;
+	const ZRef<ZRA::Expr_Rel> fRel;
 	DListHead<DLink_ClientSearch_InPSearch> fClientSearches;
 	};
 
@@ -227,6 +220,7 @@ void Source_Dataset::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
+	ZAcqMtxR acq(fMtxR);
 	if (iAddedCount || iRemovedCount)
 		{
 		fStackChanged = true;
@@ -240,8 +234,8 @@ void Source_Dataset::ModifyRegistrations(
 		theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
 		theRel = ZRA::Transform_ConsolidateRenames().Do(theRel);
 
-		pair<Map_RelToPSearch::iterator,bool> iterPSearchPair =
-			fMap_RelToPSearch.insert(make_pair(theRel, PSearch(theRel)));
+		pair<Map_Rel_PSearch::iterator,bool> iterPSearchPair =
+			fMap_Rel_PSearch.insert(make_pair(theRel, PSearch(theRel)));
 
 		if (!iterPSearchPair.second)
 			{
@@ -249,13 +243,13 @@ void Source_Dataset::ModifyRegistrations(
 				s << "Reusing exisiting PSearch";
 			}
 
-		const Map_RelToPSearch::iterator& iterPSearch = iterPSearchPair.first;
+		const Map_Rel_PSearch::iterator& iterPSearch = iterPSearchPair.first;
 		PSearch* thePSearch = &iterPSearch->second;
 
 		const int64 theRefcon = iAdded->GetRefcon();
 
 		std::map<int64, ClientSearch>::iterator iterClientSearch =
-			fMap_RefconToClientSearch.insert(
+			fMap_Refcon_ClientSearch.insert(
 			make_pair(theRefcon, ClientSearch(theRefcon, thePSearch))).first;
 
 		thePSearch->fClientSearches.Insert(&iterClientSearch->second);
@@ -266,23 +260,25 @@ void Source_Dataset::ModifyRegistrations(
 		int64 theRefcon = *iRemoved++;
 
 		std::map<int64, ClientSearch>::iterator iterClientSearch =
-			fMap_RefconToClientSearch.find(theRefcon);
+			fMap_Refcon_ClientSearch.find(theRefcon);
 
-		ZAssertStop(kDebug, iterClientSearch != fMap_RefconToClientSearch.end());
+		ZAssertStop(kDebug, iterClientSearch != fMap_Refcon_ClientSearch.end());
 		
 		ClientSearch* theClientSearch = &iterClientSearch->second;
 		
 		PSearch* thePSearch = theClientSearch->fPSearch;
 		thePSearch->fClientSearches.Erase(theClientSearch);
 		if (thePSearch->fClientSearches.Empty())
-			ZUtil_STL::sEraseMustContain(kDebug, fMap_RelToPSearch, thePSearch->fRel);
+			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PSearch, thePSearch->fRel);
 		
-		fMap_RefconToClientSearch.erase(iterClientSearch);
+		fMap_Refcon_ClientSearch.erase(iterClientSearch);
 		}
 	}
 
 void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 	{
+	ZAcqMtxR acq(fMtxR);
+
 	oChanged.clear();
 
 	bool anyChanges = fStackChanged;
@@ -294,8 +290,8 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 	
 	if (anyChanges)
 		{
-		for (Map_RelToPSearch::iterator iterPSearch = fMap_RelToPSearch.begin();
-			iterPSearch != fMap_RelToPSearch.end(); ++iterPSearch)
+		for (Map_Rel_PSearch::iterator iterPSearch = fMap_Rel_PSearch.begin();
+			iterPSearch != fMap_Rel_PSearch.end(); ++iterPSearch)
 			{
 			PSearch* thePSearch = &iterPSearch->second;
 
@@ -327,19 +323,29 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 				}
 			}
 		}
+
+	if (!ZMACRO_IPhone_Device)
+		ZThread::sSleep(1);
 	}
 
 ZRef<ZDataset::Dataset> Source_Dataset::GetDataset()
 	{ return fDataset; }
 
 void Source_Dataset::Insert(const Daton& iDaton)
-	{ this->pModify(iDaton, sAsVal(iDaton), true); }
+	{
+	ZAcqMtxR acq(fMtxR);
+	this->pModify(iDaton, sAsVal(iDaton), true);
+	}
 
 void Source_Dataset::Erase(const Daton& iDaton)
-	{ this->pModify(iDaton, sAsVal(iDaton), false); }
+	{
+	ZAcqMtxR acq(fMtxR);
+	this->pModify(iDaton, sAsVal(iDaton), false);
+	}
 
 size_t Source_Dataset::OpenTransaction()
 	{
+	ZAcqMtxR acq(fMtxR);
 	fStackChanged = true;
 	fStack.push_back(fMap_Pending);
 	return fStack.size();
@@ -347,6 +353,7 @@ size_t Source_Dataset::OpenTransaction()
 
 void Source_Dataset::ClearTransaction(size_t iIndex)
 	{
+	ZAcqMtxR acq(fMtxR);
 	fStackChanged = true;
 	ZAssert(iIndex == fStack.size());
 	fMap_Pending = fStack.back();
@@ -356,6 +363,7 @@ void Source_Dataset::ClearTransaction(size_t iIndex)
 
 void Source_Dataset::CloseTransaction(size_t iIndex)
 	{
+	ZAcqMtxR acq(fMtxR);
 	fStackChanged = true;
 	ZAssert(iIndex == fStack.size());
 	fStack.pop_back();
@@ -443,6 +451,9 @@ bool Source_Dataset::pReadInc(ZRef<Walker> iWalker,
 
 				if (gotAll)
 					{
+					if (ZLOGF(s, eDebug + 2))
+						ZYad_ZooLibStrim::sToStrim(sMakeYadR(*theMap), s);
+
 					if (oAnnotations)
 						oAnnotations->insert(new Annotation_Daton(iWalker->fCurrent_Main->first));
 					++iWalker->fCurrent_Main;
@@ -472,6 +483,9 @@ bool Source_Dataset::pReadInc(ZRef<Walker> iWalker,
 
 				if (gotAll)
 					{
+					if (ZLOGF(s, eDebug + 2))
+						ZYad_ZooLibStrim::sToStrim(sMakeYadR(*theMap), s);
+
 					if (oAnnotations)
 						oAnnotations->insert(new Annotation_Daton(iWalker->fCurrent_Pending->first));
 					++iWalker->fCurrent_Pending;

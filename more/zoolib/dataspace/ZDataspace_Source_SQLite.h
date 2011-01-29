@@ -64,8 +64,8 @@ private:
 	std::map<int64, ClientSearch> fMap_RefconToClientSearch;
 
 	typedef std::map<ZRef<ZRA::Expr_Rel>, PSearch, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
-		Map_RelToPSearch;
-	Map_RelToPSearch fMap_RelToPSearch;
+		Map_Rel_PSearch;
+	Map_Rel_PSearch fMap_Rel_PSearch;
 	class PSearch;
 	};
 
