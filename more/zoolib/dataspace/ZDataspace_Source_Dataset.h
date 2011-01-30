@@ -124,8 +124,10 @@ private:
 
 	typedef std::map<ZDataset::Daton, std::pair<ZVal_Any, bool> > Map_Pending;
 	Map_Pending fMap_Pending;
-	std::vector<Map_Pending> fStack;
-	bool fStackChanged;
+	std::vector<Map_Pending> fStack_Map_Pending;
+	uint64 fChangeCount;
+	std::vector<uint64> fStack_ChangeCount;
+	bool fChanged;
 
 	class DLink_ClientSearch_InPSearch;
 	class ClientSearch;

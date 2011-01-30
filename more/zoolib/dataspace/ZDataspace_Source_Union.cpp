@@ -673,7 +673,7 @@ void Source_Union::ModifyRegistrations(
 
 			if (ZLOGPF(s, eDebug))
 				{
-				s << "Thingified:\n";
+				s << "Cooked:\n";
 				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
 				}
 

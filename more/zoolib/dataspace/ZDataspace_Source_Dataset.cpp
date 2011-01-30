@@ -203,18 +203,16 @@ void Source_Dataset::ForceUpdate()
 	ZAcqMtxR acq(fMtxR);
 	if (this->pPull())
 		{
-		fStackChanged = true;
+		fChanged = true;
 		this->pInvokeCallable_ResultsAvailable();
 		}
-
-//	fStackChanged = true;
-//	this->pInvokeCallable_ResultsAvailable();
 	}
 
 Source_Dataset::Source_Dataset(ZRef<Dataset> iDataset)
 :	fDataset(iDataset)
 ,	fEvent(Event::sZero())
-,	fStackChanged(false)
+,	fChangeCount(0)
+,	fChanged(false)
 	{}
 
 Source_Dataset::~Source_Dataset()
@@ -230,7 +228,7 @@ void Source_Dataset::ModifyRegistrations(
 	ZAcqMtxR acq(fMtxR);
 	if (iAddedCount || iRemovedCount)
 		{
-		fStackChanged = true;
+		fChanged = true;
 		this->pInvokeCallable_ResultsAvailable();
 		}
 
@@ -247,7 +245,7 @@ void Source_Dataset::ModifyRegistrations(
 		if (!iterPSearchPair.second)
 			{
 			if (ZLOGF(s, eDebug))
-				s << "Reusing exisiting PSearch";
+				s << "Reusing existing PSearch";
 			}
 
 		const Map_Rel_PSearch::iterator& iterPSearch = iterPSearchPair.first;
@@ -255,18 +253,19 @@ void Source_Dataset::ModifyRegistrations(
 
 		const int64 theRefcon = iAdded->GetRefcon();
 
-		std::map<int64, ClientSearch>::iterator iterClientSearch =
+		pair<map<int64,ClientSearch>::iterator,bool> iterClientSearchPair =
 			fMap_Refcon_ClientSearch.insert(
-			make_pair(theRefcon, ClientSearch(theRefcon, thePSearch))).first;
+			make_pair(theRefcon, ClientSearch(theRefcon, thePSearch)));
+		ZAssert(iterClientSearchPair.second);
 
-		thePSearch->fClientSearches.Insert(&iterClientSearch->second);
+		thePSearch->fClientSearches.Insert(&iterClientSearchPair.first->second);
 		}
 
 	while (iRemovedCount--)
 		{
 		int64 theRefcon = *iRemoved++;
 
-		std::map<int64, ClientSearch>::iterator iterClientSearch =
+		map<int64, ClientSearch>::iterator iterClientSearch =
 			fMap_Refcon_ClientSearch.find(theRefcon);
 
 		ZAssertStop(kDebug, iterClientSearch != fMap_Refcon_ClientSearch.end());
@@ -288,8 +287,8 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 
 	oChanged.clear();
 
-	bool anyChanges = fStackChanged;
-	fStackChanged = false;
+	bool anyChanges = fChanged;
+	fChanged = false;
 
 	// Pick up (and index) values from dataset
 	if (this->pPull())
@@ -355,34 +354,51 @@ void Source_Dataset::Erase(const Daton& iDaton)
 size_t Source_Dataset::OpenTransaction()
 	{
 	ZAcqMtxR acq(fMtxR);
-	fStackChanged = true;
-	fStack.push_back(fMap_Pending);
-	return fStack.size();
+	fStack_Map_Pending.push_back(fMap_Pending);
+	fStack_ChangeCount.push_back(fChangeCount);
+	return fStack_Map_Pending.size();
 	}
 
 void Source_Dataset::ClearTransaction(size_t iIndex)
 	{
 	ZAcqMtxR acq(fMtxR);
-	fStackChanged = true;
-	ZAssert(iIndex == fStack.size());
-	fMap_Pending = fStack.back();
+	ZAssert(iIndex == fStack_Map_Pending.size());
 
-	this->pInvokeCallable_ResultsAvailable();
+	fMap_Pending = fStack_Map_Pending.back();
+
+	if (fChangeCount != fStack_ChangeCount.back())
+		{
+		fChangeCount = fStack_ChangeCount.back();
+		fChanged = true;
+		this->pInvokeCallable_ResultsAvailable();
+		}
 	}
 
 void Source_Dataset::CloseTransaction(size_t iIndex)
 	{
 	ZAcqMtxR acq(fMtxR);
-	fStackChanged = true;
-	ZAssert(iIndex == fStack.size());
-	fStack.pop_back();
-	this->pConditionalPushDown();
-	this->pInvokeCallable_ResultsAvailable();
+
+	ZAssert(iIndex == fStack_Map_Pending.size());
+
+	if (fChangeCount != fStack_ChangeCount.back())
+		{
+		fChangeCount = fStack_ChangeCount.back();
+		fStack_Map_Pending.pop_back();
+		fStack_ChangeCount.pop_back();
+		this->pConditionalPushDown();
+		fChanged = true;
+		this->pInvokeCallable_ResultsAvailable();
+		}
+	else
+		{
+		fStack_Map_Pending.pop_back();
+		fStack_ChangeCount.pop_back();
+		}
 	}
 
 void Source_Dataset::pConditionalPushDown()
 	{
-	if (fStack.empty())
+	if (fStack_Map_Pending.empty())
 		{
 		for (Map_Pending::iterator i = fMap_Pending.begin(), end = fMap_Pending.end();
 			i != end; ++i)
@@ -398,7 +414,8 @@ void Source_Dataset::pConditionalPushDown()
 
 void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense)
 	{
-	fStackChanged = true;
+	++fChangeCount;
+	fChanged = true;
 	Map_Pending::iterator i = fMap_Pending.find(iDaton);
 	if (fMap_Pending.end() == i)
 		{
