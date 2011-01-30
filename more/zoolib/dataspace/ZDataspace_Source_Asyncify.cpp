@@ -99,6 +99,11 @@ void Source_Asyncify::CollectResults(vector<SearchResult>& oChanged)
 	fPendingResults.clear();
 	}
 
+void Source_Asyncify::ForceUpdate()
+	{
+	this->pUpdate();
+	}
+
 void Source_Asyncify::pTrigger_Client_ResultsAvailable()
 	{
 	{

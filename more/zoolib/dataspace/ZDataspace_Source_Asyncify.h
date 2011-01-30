@@ -51,6 +51,9 @@ public:
 
 	virtual void CollectResults(std::vector<SearchResult>& oChanged);
 
+// Our protocol
+	void ForceUpdate();
+
 private:
 	void pTrigger_Client_ResultsAvailable();
 

@@ -93,6 +93,7 @@ private:
 	size_t fReadCount;
 	size_t fStepCount;
 
+	void pConditionalPushDown();
 	void pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense);
 
 	class Visitor_DoMakeWalker;

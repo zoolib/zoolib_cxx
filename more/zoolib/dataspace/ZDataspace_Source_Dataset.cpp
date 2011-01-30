@@ -200,8 +200,15 @@ public:
 
 void Source_Dataset::ForceUpdate()
 	{
-	fStackChanged = true;
-	this->pInvokeCallable_ResultsAvailable();
+	ZAcqMtxR acq(fMtxR);
+	if (this->pPull())
+		{
+		fStackChanged = true;
+		this->pInvokeCallable_ResultsAvailable();
+		}
+
+//	fStackChanged = true;
+//	this->pInvokeCallable_ResultsAvailable();
 	}
 
 Source_Dataset::Source_Dataset(ZRef<Dataset> iDataset)
@@ -301,7 +308,7 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 
 			ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this).Do(thePSearch->fRel);
 
-			if (ZLOGPF(s, eDebug))
+			if (ZLOGPF(s, eDebug + 1))
 				{
 				s << "\n";
 				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
@@ -309,7 +316,7 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 
 			ZRef<ZQE::Result> theResult = sSearch(theWalker);
 
-			if (ZLOGPF(s, eDebug - 1))
+			if (ZLOGPF(s, eDebug + 1))
 				{
 				s	<< "Walkers: " << fWalkerCount
 					<< ", reads: " << fReadCount
@@ -335,12 +342,14 @@ void Source_Dataset::Insert(const Daton& iDaton)
 	{
 	ZAcqMtxR acq(fMtxR);
 	this->pModify(iDaton, sAsVal(iDaton), true);
+	this->pConditionalPushDown();
 	}
 
 void Source_Dataset::Erase(const Daton& iDaton)
 	{
 	ZAcqMtxR acq(fMtxR);
 	this->pModify(iDaton, sAsVal(iDaton), false);
+	this->pConditionalPushDown();
 	}
 
 size_t Source_Dataset::OpenTransaction()
@@ -367,6 +376,12 @@ void Source_Dataset::CloseTransaction(size_t iIndex)
 	fStackChanged = true;
 	ZAssert(iIndex == fStack.size());
 	fStack.pop_back();
+	this->pConditionalPushDown();
+	this->pInvokeCallable_ResultsAvailable();
+	}
+
+void Source_Dataset::pConditionalPushDown()
+	{
 	if (fStack.empty())
 		{
 		for (Map_Pending::iterator i = fMap_Pending.begin(), end = fMap_Pending.end();
@@ -379,7 +394,6 @@ void Source_Dataset::CloseTransaction(size_t iIndex)
 			}
 		fMap_Pending.clear();
 		}
-	this->pInvokeCallable_ResultsAvailable();
 	}
 
 void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense)
@@ -506,7 +520,8 @@ bool Source_Dataset::pPull()
 	ZRef<Deltas> theDeltas;
 	fEvent = fDataset->GetDeltas(theDeltas, fEvent);
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
-	s << "theMNED.size()=" << theMNED.size();
+	if (s)
+		s << "\ntheMNED.size()=" << theMNED.size();
 	bool anyChanges = false;
 	for (Map_NamedEvent_Delta_t::const_iterator
 		iterMNED = theMNED.begin(), endMNED = theMNED.end();
@@ -514,12 +529,21 @@ bool Source_Dataset::pPull()
 		{
 		const NamedEvent& theNamedEvent = iterMNED->first;
 		const map<Daton, bool>& theStatements = iterMNED->second->GetStatements();
-		s << "\ntheStatements.size()=" << theStatements.size();
+		if (s)
+			s << "\ntheStatements.size()=" << theStatements.size();
 		for (map<Daton, bool>::const_iterator
 			iterStmts = theStatements.begin(), endStmts = theStatements.end();
 			iterStmts != endStmts; ++iterStmts)
 			{
 			const Daton& theDaton = iterStmts->first;
+
+			if (s)
+				{
+				const ZData_Any& theData = theDaton.GetData();
+				s << "\n" << (iterStmts->second ? "+" : "-") << ": ";
+				s.Write(static_cast<const UTF8*>(theData.GetData()), theData.GetSize());
+				}
+
 			map<Daton, pair<NamedEvent, ZVal_Any> >::iterator iterMap = fMap.lower_bound(theDaton);
 			if (iterMap == fMap.end() || iterMap->first != theDaton)
 				{

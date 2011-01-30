@@ -106,6 +106,7 @@ public:
 	virtual void Changed(bool iIsLoad);
 
 	ZRef<ZQE::Result> GetResult();
+	ZRef<Event> GetEvent();
 
 	bool IsLoaded();
 
@@ -113,6 +114,7 @@ private:
 	Dataspace* fDataspace;
 	int64 fRefcon;
 	ZRef<ZQE::Result> fResult;
+	ZRef<Event> fEvent;
 	
 	friend class Dataspace;
 	};

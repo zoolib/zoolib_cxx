@@ -63,6 +63,7 @@ ZRef<ZRA::Expr_Rel> AddedSearch::GetRel() const
 #pragma mark * SearchResult
 
 SearchResult::SearchResult()
+:	fRefcon(0)
 	{}
 
 SearchResult::SearchResult(const SearchResult& iOther)

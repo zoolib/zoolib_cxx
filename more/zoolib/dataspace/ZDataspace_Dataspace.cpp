@@ -99,6 +99,7 @@ void Dataspace::Update()
 			sievesLoaded.insert(theSieve);
 
 		theSieve->fResult = iterSearchResults->GetResult();
+		theSieve->fEvent = iterSearchResults->GetEvent();
 		}
 	}
 
