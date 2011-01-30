@@ -101,21 +101,10 @@ bool NamedEvent::operator<(const NamedEvent& iRHS) const
 	const bool aleb = fEvent->LessEqual(iRHS.fEvent);
 	const bool blea = iRHS.fEvent->LessEqual(fEvent);
 
-	if (aleb)
-		{
-		if (blea)
-			return fNombre < iRHS.fNombre;
-		else
-			return true;
-		}
-	else if (blea)
-		{
-		return false;
-		}
-	else
-		{
+	if (aleb == blea)
 		return fNombre < iRHS.fNombre;
-		}
+	else
+		return aleb;
 	}
 
 ZRef<Event> NamedEvent::GetEvent() const
@@ -313,12 +302,10 @@ set<Daton> Dataset::GetComposed()
 		const size_t theX = queue.top().second;
 		queue.pop();
 
-		ZRef<Delta> theDelta = theIters[theX]->second;
-
 		if (++theIters[theX] != theEnds[theX])
 			queue.push(TSIndex_t(theIters[theX]->first, theX));
 
-		const map<Daton, bool>& theStatements = theDelta->GetStatements();
+		const map<Daton, bool>& theStatements = theIters[theX]->second->GetStatements();
 		for (map<Daton, bool>::const_iterator j = theStatements.begin();
 			j != theStatements.end(); ++j)
 			{
