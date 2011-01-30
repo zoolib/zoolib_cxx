@@ -44,9 +44,9 @@ void ZCountedWithoutFinalize::Release()
 	}
 
 bool ZCountedWithoutFinalize::IsShared() const
-	{ return 1 < ZAtomic_Get(&fRefCount); }
+	{ return 1 < ZThreadSafe_Get(fRefCount); }
 
 bool ZCountedWithoutFinalize::IsReferenced() const
-	{ return 0 != ZAtomic_Get(&fRefCount); }
+	{ return 0 < ZThreadSafe_Get(fRefCount); }
 
 } // namespace ZooLib
