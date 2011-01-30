@@ -32,6 +32,7 @@ namespace ZooLib {
 namespace UIKit {
 
 using std::map;
+using std::pair;
 using std::vector;
 
 // =================================================================================================
@@ -149,10 +150,13 @@ void SectionBody::RowUpdate::AddAll(UITableViewRowAnimation iRowAnimation)
 
 void SectionBody::RowUpdate::AddRange(size_t iStart, size_t iCount, UITableViewRowAnimation iRowAnimation)
 	{
-	ZAssert(iStart < fRowMeta.fLimit);
-	ZAssert(iStart + iCount <= fRowMeta.fLimit);
-	while (iCount--)
-		ZUtil_STL::sInsertMustNotContain(0, fMap, fRowMeta.fBase + iStart++, iRowAnimation);
+	ZAssert(iStart <= fRowMeta.fLimit);
+	if (iCount)
+		{
+		ZAssert(iStart + iCount <= fRowMeta.fLimit);
+		while (iCount--)
+			ZUtil_STL::sInsertMustNotContain(0, fMap, fRowMeta.fBase + iStart++, iRowAnimation);
+		}
 	}
 
 // =================================================================================================
@@ -891,6 +895,10 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 				spInsertSections(tableView, isShown, iterNew, &fSections_Shown[iterNew], countToInsert);
 				fSections_ToIgnore.insert(&fSections_Shown[iterNew], &fSections_Shown[iterNew + countToInsert]);
 				}
+			sectionOld->GetBody()->Update_NOP();
+			sectionOld->GetBody()->FinishUpdate();
+			fSections_ToReload.insert(sectionOld);
+
 			iterNew = inNew + 1;
 			}
 		}
@@ -932,9 +940,15 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 	fReloads.resize(fSections_Shown.size());
 
 	bool anyReloads = false;
+	vector<pair<size_t,UITableViewRowAnimation> > sectionReloads;
 	for (size_t x = 0; x < fSections_Shown.size(); ++x)
 		{
-		if (!ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[x]))
+		if (ZUtil_STL::sContains(fSections_ToReload, fSections_Shown[x]))
+			{
+			sectionReloads.push_back(std::make_pair(x, fSections_Shown[x]->SectionAnimation_Reload()));
+			anyReloads = true;
+			}
+		else if (!ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[x]))
 			{
 			SectionBody::RowMeta theRowMeta_Old;
 			SectionBody::RowMeta theRowMeta_New;
@@ -949,12 +963,28 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 		}
 	
 	fSections_ToIgnore.clear();
+	fSections_ToReload.clear();
 
-	bool anyAnimatedReloads = anyReloads;
+	bool anyAnimatedReloads = false;
 	if (anyReloads)
 		{
 		const bool isShown = fShown;
 		[tableView beginUpdates];
+		for (vector<pair<size_t,UITableViewRowAnimation> >::iterator i = sectionReloads.begin();
+			i != sectionReloads.end(); ++i)
+			{
+			// Doing any section animation whilst cell reloads are going on messes thigns up.
+			UITableViewRowAnimation theAnimation = UITableViewRowAnimationNone;
+//			if (isShown)
+//				theAnimation = UITableViewRowAnimationFade;//i->second;
+//			if (UITableViewRowAnimationNone != theAnimation)
+//				anyAnimatedReloads = true;
+
+			[tableView
+				reloadSections:sMakeIndexSet(i->first)
+				withRowAnimation:theAnimation];
+			}
+
 		for (size_t x = 0; x < fReloads.size(); ++x)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = fReloads[x];

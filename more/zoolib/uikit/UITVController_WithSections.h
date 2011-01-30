@@ -307,6 +307,7 @@ private:
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown;
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown_Pending;
 	std::set<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_ToIgnore;
+	std::set<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_ToReload;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fInserts;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fDeletes;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fReloads;
