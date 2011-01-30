@@ -840,7 +840,7 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 
 	if (!fShown)
 		{
-		ZLOGTRACE(eDebug);
+		ZLOGTRACE(eDebug + 1);
 		fSections_Shown = fSections_Shown_Pending;
 		for (size_t x = 0; x < fSections_Shown.size(); ++x)
 			{
@@ -906,7 +906,7 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 
 	if (isShown)
 		{
-		ZLOGTRACE(eDebug);
+		ZLOGTRACE(eDebug + 1);
 		[self performSelector:@selector(pDoUpdate2:)
 			 withObject:tableView
 			 afterDelay:0.35];
@@ -976,7 +976,7 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 
 	if (anyAnimatedReloads)
 		{
-		ZLOGTRACE(eDebug);
+		ZLOGTRACE(eDebug + 1);
 		[self performSelector:@selector(pDoUpdate3:)
 			 withObject:tableView
 			 afterDelay:0.2];
@@ -1045,7 +1045,7 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 
 	if (isShown && anyChanges)
 		{
-		ZLOGTRACE(eDebug);
+		ZLOGTRACE(eDebug + 1);
 		[self performSelector:@selector(pDoUpdate4:)
 			 withObject:tableView
 			 afterDelay:0.35];
