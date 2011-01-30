@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Const.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 
@@ -41,6 +42,7 @@ namespace ZRA {
 
 class Transform_PushDownRestricts
 :	public virtual ZVisitor_Expr_Op_Do_Transform_T<Expr_Rel>
+,	public virtual Visitor_Expr_Rel_Product
 ,	public virtual Visitor_Expr_Rel_Rename
 ,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Embed
@@ -50,6 +52,8 @@ class Transform_PushDownRestricts
 	{
 public:
 // From Visitor_Expr_Rel_XXX
+	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
+
 	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
@@ -68,6 +72,7 @@ protected:
 		size_t fCountSubsuming;
 		};
 	std::vector<Restrict*> fRestricts;
+	RelHead fRelHead;
 	};
 
 } // namespace ZRA

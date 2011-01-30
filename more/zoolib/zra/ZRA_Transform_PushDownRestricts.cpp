@@ -52,6 +52,54 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rena
 	for (vector<Restrict*>::iterator iter = fRestricts.begin(); iter != fRestricts.end(); ++iter)
 		(*iter)->fExpr_Bool = Util_Expr_Bool::sRenamed(old2New, (*iter)->fExpr_Bool);
 
+	if (ZUtil_STL::sEraseIfContains(fRelHead, oldName))
+		fRelHead |= newName;
+	}
+
+void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
+	{
+//	Visitor_Expr_Rel_Product::Visit_Expr_Rel_Product(iExpr);
+//	return;
+	RelHead theRelHead;
+
+	{ // Scope for sr
+	ZSetRestore_T<RelHead> sr(fRelHead);
+	ZRef<Expr_Rel> oldOp0 = iExpr->GetOp0();
+	ZRef<Expr_Rel> newOp0 = this->Do(oldOp0);
+
+	ZRef<Expr_Rel> oldOp1 = iExpr->GetOp1();
+	ZRef<Expr_Rel> newOp1 = this->Do(oldOp1);
+	
+	theRelHead = fRelHead;
+	ZRef<Expr_Rel> result = iExpr;
+	if (oldOp0 != newOp0 || oldOp1 != newOp1)
+		result = iExpr->Clone(newOp0, newOp1);
+
+	// Examine restricts, see which were touched
+	for (vector<Restrict*>::iterator iter = fRestricts.begin(); iter != fRestricts.end(); ++iter)
+		{
+		Restrict& theRestrict = **iter;
+		
+		if (theRestrict.fCountTouching != theRestrict.fCountSubsuming)
+			{
+			// Our children touched, but did not individually subsume this rel.
+			const RelHead exprNames = sGetNames(theRestrict.fExpr_Bool);
+			const RelHead intersection = exprNames & theRelHead;
+			if (intersection.size() && intersection.size() == exprNames.size())
+				{
+				// The product does touch and subsume the rel. Override whatever values
+				// were in the counts with an arbitrary matching pair.
+				theRestrict.fCountTouching = 8888;
+				theRestrict.fCountSubsuming = 8888;
+				result = result & theRestrict.fExpr_Bool;
+				}
+			}
+		
+		}
+	this->pSetResult(result);
+	}
+
+	fRelHead |= theRelHead;
 	}
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
@@ -60,7 +108,8 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed
 	ZRef<Expr_Rel> newOp0;
 	
 	{
-	ZSetRestore_T<vector<Restrict*> > sr(fRestricts);
+	ZSetRestore_T<vector<Restrict*> > sr0(fRestricts);
+	ZSetRestore_T<RelHead> sr1(fRelHead);
 	newOp0 = this->Do(oldOp0);
 	}
 
@@ -124,6 +173,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const
 
 void Transform_PushDownRestricts::pHandleIt(const RelHead& iRH, const ZRef<Expr_Rel>& iExpr)
 	{
+	fRelHead |= iRH;
 	ZRef<Expr_Rel> result = iExpr;
 	for (vector<Restrict*>::iterator iter = fRestricts.begin(); iter != fRestricts.end(); ++iter)
 		{
