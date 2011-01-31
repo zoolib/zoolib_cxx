@@ -271,20 +271,60 @@ void ToStrim_SQL::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
 
 void ToStrim_SQL::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
 	{
-	pStrimW() << "(";
-	this->pToStrim(iRep->GetOp0());
-	pStrimW() << " AND ";
-	this->pToStrim(iRep->GetOp1());
-	pStrimW() << ")";
+	ZRef<ZExpr_Bool> theFalse = sFalse();
+	ZRef<ZExpr_Bool> theTrue = sTrue();
+
+	ZRef<ZExpr_Bool> theOp0 = iRep->GetOp0();
+	ZRef<ZExpr_Bool> theOp1 = iRep->GetOp1();
+	if (theOp0 == theFalse || theOp1 == theFalse)
+		{
+		this->pToStrim(theFalse);
+		}
+	else if (theOp0 == theTrue)
+		{
+		this->pToStrim(theOp1);
+		}
+	else if (theOp1 == theTrue)
+		{
+		this->pToStrim(theOp0);
+		}
+	else
+		{
+		pStrimW() << "(";
+		this->pToStrim(iRep->GetOp0());
+		pStrimW() << " AND ";
+		this->pToStrim(iRep->GetOp1());
+		pStrimW() << ")";
+		}
 	}
 
 void ToStrim_SQL::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
 	{
-	pStrimW() << "(";
-	this->pToStrim(iRep->GetOp0());
-	pStrimW() << " OR ";
-	this->pToStrim(iRep->GetOp1());
-	pStrimW() << ")";
+	ZRef<ZExpr_Bool> theFalse = sFalse();
+	ZRef<ZExpr_Bool> theTrue = sTrue();
+
+	ZRef<ZExpr_Bool> theOp0 = iRep->GetOp0();
+	ZRef<ZExpr_Bool> theOp1 = iRep->GetOp1();
+	if (theOp0 == theTrue || theOp1 == theTrue)
+		{
+		this->pToStrim(theTrue);
+		}
+	else if (theOp0 == theFalse)
+		{
+		this->pToStrim(theOp1);
+		}
+	else if (theOp1 == theFalse)
+		{
+		this->pToStrim(theOp0);
+		}
+	else
+		{
+		pStrimW() << "(";
+		this->pToStrim(iRep->GetOp0());
+		pStrimW() << " OR ";
+		this->pToStrim(iRep->GetOp1());
+		pStrimW() << ")";
+		}
 	}
 
 static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
