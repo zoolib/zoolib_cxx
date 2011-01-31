@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDataspace_Source_Dataset__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZUtil_Expr_Bool_CNF.h"
 #include "zoolib/ZVal_Any.h"
 
 #include "zoolib/dataset/ZDataset.h"
@@ -33,6 +34,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 namespace ZDataspace {
+
+using Util_Expr_Bool::Disjunction;
 
 ZVal_Any sAsVal(const ZDataset::Daton& iDaton);
 ZDataset::Daton sAsDaton(const ZVal_Any& iVal);
@@ -72,10 +75,10 @@ public:
 	virtual bool Intersects(const RelHead& iRelHead);
 
 	virtual void ModifyRegistrations(
-		const AddedSearch* iAdded, size_t iAddedCount,
+		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount);
 
-	virtual void CollectResults(std::vector<SearchResult>& oChanged);
+	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
 // Our protocol
 	ZRef<ZDataset::Dataset> GetDataset();
@@ -88,6 +91,9 @@ public:
 	void CloseTransaction(size_t iIndex);
 
 private:
+	ZRef<ZQE::Result> pSearch(const Disjunction& iDisjunction, const RelHead& iRelHead);
+
+
 	ZMtxR fMtxR;
 	size_t fWalkerCount;
 	size_t fReadCount;
@@ -129,14 +135,14 @@ private:
 	std::vector<uint64> fStack_ChangeCount;
 	bool fChanged;
 
-	class DLink_ClientSearch_InPSearch;
-	class ClientSearch;
-	class PSearch;
-	std::map<int64, ClientSearch> fMap_Refcon_ClientSearch;
+	class DLink_ClientQuery_InPQuery;
+	class ClientQuery;
+	class PQuery;
+	std::map<int64, ClientQuery> fMap_Refcon_ClientQuery;
 
-	typedef std::map<ZRef<ZRA::Expr_Rel>, PSearch, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
-		Map_Rel_PSearch;
-	Map_Rel_PSearch fMap_Rel_PSearch;
+	typedef std::map<ZRef<ZRA::Expr_Rel>, PQuery, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
+		Map_Rel_PQuery;
+	Map_Rel_PQuery fMap_Rel_PQuery;
 	};
 
 } // namespace ZDataspace

@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
-#include "zoolib/zqe/ZQE_Search.h"
+#include "zoolib/zqe/ZQE_Query.h"
 
 namespace ZooLib {
 namespace ZQE {
@@ -33,9 +33,9 @@ using ZRA::RelHead;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sSearch
+#pragma mark * sQuery
 
-ZRef<Result> sSearch(ZRef<Walker> iWalker)
+ZRef<Result> sQuery(ZRef<Walker> iWalker)
 	{
 	map<string8,size_t> offsets;
 	size_t baseOffset = 0;

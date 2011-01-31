@@ -42,17 +42,17 @@ using ZRA::RelHead;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * AddedSearch
+#pragma mark * AddedQuery
 
-class AddedSearch
+class AddedQuery
 	{
 public:
-	AddedSearch();
-	AddedSearch(const AddedSearch& iOther);
-	~AddedSearch();
-	AddedSearch& operator=(const AddedSearch& iOther);
+	AddedQuery();
+	AddedQuery(const AddedQuery& iOther);
+	~AddedQuery();
+	AddedQuery& operator=(const AddedQuery& iOther);
 
-	AddedSearch(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel);
+	AddedQuery(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel);
 
 	int64 GetRefcon() const;
 	ZRef<ZRA::Expr_Rel> GetRel() const;
@@ -64,17 +64,17 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * SearchResult
+#pragma mark * QueryResult
 
-class SearchResult
+class QueryResult
 	{
 public:
-	SearchResult();
-	SearchResult(const SearchResult& iOther);
-	~SearchResult();
-	SearchResult& operator=(const SearchResult& iOther);
+	QueryResult();
+	QueryResult(const QueryResult& iOther);
+	~QueryResult();
+	QueryResult& operator=(const QueryResult& iOther);
 
-	SearchResult(int64 iRefcon, const ZRef<ZQE::Result>& iResult, const ZRef<Event>& iEvent);
+	QueryResult(int64 iRefcon, const ZRef<ZQE::Result>& iResult, const ZRef<Event>& iEvent);
 
 	int64 GetRefcon() const;
 	ZRef<ZQE::Result> GetResult() const;
@@ -101,10 +101,10 @@ public:
 	virtual bool Intersects(const RelHead& iRelHead) = 0;
 
 	virtual void ModifyRegistrations(
-		const AddedSearch* iAdded, size_t iAddedCount,
+		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount) = 0;
 
-	virtual void CollectResults(std::vector<SearchResult>& oChanged) = 0;
+	virtual void CollectResults(std::vector<QueryResult>& oChanged) = 0;
 
 	typedef ZCallable<void(ZRef<Source>)> Callable_ResultsAvailable;
 	void SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable);

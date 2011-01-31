@@ -56,7 +56,7 @@ bool Source_Asyncify::Intersects(const RelHead& iRelHead)
 	{ return fSource->Intersects(iRelHead); }
 
 void Source_Asyncify::ModifyRegistrations(
-	const AddedSearch* iAdded, size_t iAddedCount,
+	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	ZAcqMtxR acq(fMtxR);
@@ -83,13 +83,13 @@ void Source_Asyncify::ModifyRegistrations(
 	this->pTrigger_Update();
 	}
 
-void Source_Asyncify::CollectResults(vector<SearchResult>& oChanged)
+void Source_Asyncify::CollectResults(vector<QueryResult>& oChanged)
 	{
 	ZAcqMtxR acq(fMtxR);
 	this->pCollectResultsCalled();
 
 	oChanged.reserve(fPendingResults.size());
-	for (map<int64,SearchResult>::iterator iter = fPendingResults.begin();
+	for (map<int64,QueryResult>::iterator iter = fPendingResults.begin();
 		iter != fPendingResults.end(); ++iter)
 		{
 		// May need to filter entries on our fPendingRemoves list.
@@ -117,11 +117,11 @@ void Source_Asyncify::pUpdate()
 		{
 		bool didAnything = false;
 
-		vector<AddedSearch> theAdds;
+		vector<AddedQuery> theAdds;
 		theAdds.reserve(fPendingAdds.size());
 		for (map<int64,ZRef<ZRA::Expr_Rel> >::iterator iter = fPendingAdds.begin();
 			iter != fPendingAdds.end(); ++iter)
-			{ theAdds.push_back(AddedSearch(iter->first, iter->second)); }
+			{ theAdds.push_back(AddedQuery(iter->first, iter->second)); }
 		fPendingAdds.clear();
 
 		vector<int64> theRemoves;
@@ -145,14 +145,14 @@ void Source_Asyncify::pUpdate()
 			fNeeds_SourceCollectResults = false;
 			guard.Release();
 
-			vector<SearchResult> changes;
+			vector<QueryResult> changes;
 			fSource->CollectResults(changes);
 			if (changes.size())
 				{
 				didAnything = true;
 				guard.Acquire();
 
-				for (vector<SearchResult>::iterator iter = changes.begin();
+				for (vector<QueryResult>::iterator iter = changes.begin();
 					iter != changes.end(); ++iter)
 					{ fPendingResults[iter->GetRefcon()] = *iter; }
 

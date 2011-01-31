@@ -70,26 +70,26 @@ bool SourceServer::pRead(ZRef<ZWorker> iWorker)
 
 // need some kind of a close indication.
 
-	vector<AddedSearch> addedSearches;
+	vector<AddedQuery> addedQueries;
 	for (uint32 theCount = r.ReadCount(); theCount; --theCount)
 		{
 		int64 theRefcon = r.ReadInt64();
 		ZRef<ZRA::Expr_Rel> theRel;
-		addedSearches.push_back(AddedSearch(theRefcon, theRel));
+		addedQueries.push_back(AddedQuery(theRefcon, theRel));
 		}
 
-	vector<int64> removedSearches;
+	vector<int64> removedQueries;
 	for (uint32 theCount = r.ReadCount(); theCount; --theCount)
 		{
 		int64 theRefcon = r.ReadInt64();
-		removedSearches.push_back(theRefcon);
+		removedQueries.push_back(theRefcon);
 		}
 
-	if (!addedSearches.empty() || !removedSearches.empty())
+	if (!addedQueries.empty() || !removedQueries.empty())
 		{
 		fSource->ModifyRegistrations(
-			ZUtil_STL::sFirstOrNil(addedSearches), addedSearches.size(),
-			ZUtil_STL::sFirstOrNil(removedSearches), removedSearches.size());
+			ZUtil_STL::sFirstOrNil(addedQueries), addedQueries.size(),
+			ZUtil_STL::sFirstOrNil(removedQueries), removedQueries.size());
 		}
 
 	iWorker->Wake();//##
@@ -102,13 +102,13 @@ void SourceServer::pWrite()
 	fNeedsWrite = false;
 	guard.Release();
 
-	vector<SearchResult> theChanged;
+	vector<QueryResult> theChanged;
 	fSource->CollectResults(theChanged);
 
 	const ZStreamW& w = fStreamerW->GetStreamW();
 
 	w.WriteCount(theChanged.size());
-	for (vector<SearchResult>::iterator i = theChanged.begin(); i != theChanged.end(); ++i)
+	for (vector<QueryResult>::iterator i = theChanged.begin(); i != theChanged.end(); ++i)
 		{
 		w.WriteInt64(i->GetRefcon());
 		// Write contents

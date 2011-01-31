@@ -46,10 +46,10 @@ public:
 	virtual bool Intersects(const RelHead& iRelHead);
 
 	virtual void ModifyRegistrations(
-		const AddedSearch* iAdded, size_t iAddedCount,
+		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount);
 
-	virtual void CollectResults(std::vector<SearchResult>& oChanged);
+	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
 // Our protocol
 	void InsertSource(ZRef<Source> iSource, const string8& iPrefix);
@@ -58,7 +58,7 @@ public:
 private:
 	ZMtxR fMtxR;
 
-	class PSearch;
+	class PQuery;
 
 	// -----
 
@@ -77,7 +77,7 @@ private:
 	ProxyMap fProxyMap;
 
 	std::set<PSource*> pIdentifyPSources(const RelHead& iRelHead);
-	ZRef<ZRA::Expr_Rel> pGetProxy(PSearch* iPSearch,
+	ZRef<ZRA::Expr_Rel> pGetProxy(PQuery* iPQuery,
 		const std::set<PSource*>& iPSources, const RelHead& iRelHead, ZRef<ZRA::Expr_Rel> iRel);
 	void pFinalizeProxy(Proxy* iProxy);
 
@@ -100,20 +100,20 @@ private:
 
 	// -----
 
-	class DLink_ClientSearch_InPSearch;
-	class ClientSearch;
+	class DLink_ClientQuery_InPQuery;
+	class ClientQuery;
 
-	typedef std::map<int64, ClientSearch> Map_Refcon_ClientSearch;
-	Map_Refcon_ClientSearch fMap_Refcon_ClientSearch;
+	typedef std::map<int64, ClientQuery> Map_Refcon_ClientQuery;
+	Map_Refcon_ClientQuery fMap_Refcon_ClientQuery;
 
 	// -----
 
-	class DLink_PSearch_NeedsWork;
-	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
+	class DLink_PQuery_NeedsWork;
+	DListHead<DLink_PQuery_NeedsWork> fPQuery_NeedsWork;
 
-	typedef std::map<ZRef<ZRA::Expr_Rel>, PSearch, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
-		Map_Rel_PSearch;
-	Map_Rel_PSearch fMap_Rel_PSearch;
+	typedef std::map<ZRef<ZRA::Expr_Rel>, PQuery, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
+		Map_Rel_PQuery;
+	Map_Rel_PQuery fMap_Rel_PQuery;
 
 	// -----
 

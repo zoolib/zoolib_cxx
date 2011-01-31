@@ -45,10 +45,10 @@ public:
 	virtual bool Intersects(const RelHead& iRelHead);
 
 	virtual void ModifyRegistrations(
-		const AddedSearch* iAdded, size_t iAddedCount,
+		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount);
 
-	virtual void CollectResults(std::vector<SearchResult>& oChanged);
+	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
 private:
 	bool pCheck(ZRef<ZWorker> iWorker);
@@ -58,15 +58,15 @@ private:
 	ZRef<Clock> fClock;
 	std::map<string8, RelHead> fMap_Tables;
 
-	class DLink_ClientSearch_InPSearch;
-	class ClientSearch;
-	class PSearch;
-	std::map<int64, ClientSearch> fMap_RefconToClientSearch;
+	class DLink_ClientQuery_InPQuery;
+	class ClientQuery;
+	class PQuery;
+	std::map<int64, ClientQuery> fMap_RefconToClientQuery;
 
-	typedef std::map<ZRef<ZRA::Expr_Rel>, PSearch, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
-		Map_Rel_PSearch;
-	Map_Rel_PSearch fMap_Rel_PSearch;
-	class PSearch;
+	typedef std::map<ZRef<ZRA::Expr_Rel>, PQuery, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
+		Map_Rel_PQuery;
+	Map_Rel_PQuery fMap_Rel_PQuery;
+	class PQuery;
 	};
 
 } // namespace ZDataspace

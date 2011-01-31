@@ -55,11 +55,11 @@ public:
 		{ return fMUX->pIntersects(this, iRelHead); }
 
 	virtual void ModifyRegistrations(
-		const AddedSearch* iAdded, size_t iAddedCount,
+		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount)
 		{ fMUX->pModifyRegistrations(this, iAdded, iAddedCount, iRemoved, iRemovedCount); }
 
-	virtual void CollectResults(vector<SearchResult>& oChanged)
+	virtual void CollectResults(vector<QueryResult>& oChanged)
 		{
 		this->pCollectResultsCalled();
 		fMUX->pCollectResults(this, oChanged);
@@ -106,13 +106,13 @@ bool SourceMUX::pIntersects(ZRef<ClientSource> iCS, const RelHead& iRelHead)
 	{ return fSource->Intersects(iRelHead); }
 
 void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
-	const AddedSearch* iAdded, size_t iAddedCount,
+	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	ZGuardRMtxR guard(fMtxR);
 
-	vector<AddedSearch> theAddedSearches;
-	theAddedSearches.reserve(iAddedCount);
+	vector<AddedQuery> theAddedQueries;
+	theAddedQueries.reserve(iAddedCount);
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
 		const int64 theClientRefcon = iAdded->GetRefcon();
@@ -124,30 +124,30 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			fPRefconToClient, thePRefcon, make_pair(iCS.Get(), theClientRefcon));
 
-		theAddedSearches.push_back(AddedSearch(thePRefcon, iAdded->GetRel()));
+		theAddedQueries.push_back(AddedQuery(thePRefcon, iAdded->GetRel()));
 		}
 	
-	vector<int64> removedSearches;
-	removedSearches.reserve(iRemovedCount);
+	vector<int64> removedQueries;
+	removedQueries.reserve(iRemovedCount);
 	while (iRemovedCount--)
 		{
-		removedSearches.push_back(ZUtil_STL::sEraseAndReturn(kDebug,
+		removedQueries.push_back(ZUtil_STL::sEraseAndReturn(kDebug,
 			iCS->fMap_ClientToPRefcon, *iRemoved++));
 		}
 
 	guard.Release();
 
 	fSource->ModifyRegistrations(
-		ZUtil_STL::sFirstOrNil(theAddedSearches), theAddedSearches.size(),
-		ZUtil_STL::sFirstOrNil(removedSearches), removedSearches.size());
+		ZUtil_STL::sFirstOrNil(theAddedQueries), theAddedQueries.size(),
+		ZUtil_STL::sFirstOrNil(removedQueries), removedQueries.size());
 	}
 
 void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
-	vector<SearchResult>& oChanged)
+	vector<QueryResult>& oChanged)
 	{
 	ZGuardRMtxR guard(fMtxR);
 	
-	vector<SearchResult> changes;
+	vector<QueryResult> changes;
 	if (fResultsAvailable)
 		{
 		fResultsAvailable = false;
@@ -156,7 +156,7 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 		guard.Acquire();
 		}
 
-	for (vector<SearchResult>::iterator
+	for (vector<QueryResult>::iterator
 		iterChanges = changes.begin(), endChanges = changes.end();
 		iterChanges != endChanges; ++iterChanges)
 		{
@@ -171,7 +171,7 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 	oChanged.reserve(iCS->fResults.size());
 	for (Map_Refcon_Result::iterator iter = iCS->fResults.begin(), end = iCS->fResults.end();
 		iter != end; ++iter)
-		{ oChanged.push_back(SearchResult(iter->first, iter->second.first, iter->second.second)); }
+		{ oChanged.push_back(QueryResult(iter->first, iter->second.first, iter->second.second)); }
 
 	iCS->fResults.clear();
 	}
@@ -197,12 +197,12 @@ void SourceMUX::pFinalizeClientSource(ClientSource* iCS)
 	if (!iCS->FinishFinalize())
 		return;
 
-	vector<int64> removedSearches;
-	removedSearches.reserve(iCS->fMap_ClientToPRefcon.size());
+	vector<int64> removedQueries;
+	removedQueries.reserve(iCS->fMap_ClientToPRefcon.size());
 	for (map<int64,int64>::iterator
 		iter = iCS->fMap_ClientToPRefcon.begin(), end = iCS->fMap_ClientToPRefcon.begin();
 		iter != end; ++iter)
-		{ removedSearches.push_back(iter->second); }
+		{ removedQueries.push_back(iter->second); }
 
 	ZUtil_STL::sEraseMustContain(1, fClientSources, iCS);
 	delete iCS;
@@ -211,7 +211,7 @@ void SourceMUX::pFinalizeClientSource(ClientSource* iCS)
 
 	fSource->ModifyRegistrations(
 		nullptr, 0,
-		ZUtil_STL::sFirstOrNil(removedSearches), removedSearches.size());
+		ZUtil_STL::sFirstOrNil(removedQueries), removedQueries.size());
 	}
 
 } // namespace ZDataspace

@@ -63,40 +63,40 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRA::Rename& iRename)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_SQLite::ClientSearch
+#pragma mark * Source_SQLite::ClientQuery
 
-class Source_SQLite::DLink_ClientSearch_InPSearch
-:	public DListLink<ClientSearch, DLink_ClientSearch_InPSearch, kDebug>
+class Source_SQLite::DLink_ClientQuery_InPQuery
+:	public DListLink<ClientQuery, DLink_ClientQuery_InPQuery, kDebug>
 	{};
 
-class Source_SQLite::ClientSearch
-:	public Source_SQLite::DLink_ClientSearch_InPSearch
+class Source_SQLite::ClientQuery
+:	public Source_SQLite::DLink_ClientQuery_InPQuery
 	{
 public:
-	ClientSearch(int64 iRefcon, PSearch* iPSearch)
+	ClientQuery(int64 iRefcon, PQuery* iPQuery)
 	:	fRefcon(iRefcon),
-		fPSearch(iPSearch)
+		fPQuery(iPQuery)
 		{}
 
 	int64 fRefcon;
-	PSearch* fPSearch;
+	PQuery* fPQuery;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_SQLite::PSearch
+#pragma mark * Source_SQLite::PQuery
 
-class Source_SQLite::PSearch
+class Source_SQLite::PQuery
 	{
 public:
-	PSearch(ZRef<ZRA::Expr_Rel> iRel)
+	PQuery(ZRef<ZRA::Expr_Rel> iRel)
 	:	fRel(iRel)
 		{}
 
 	ZRef<ZRA::Expr_Rel> fRel;
 	RelHead fRelHead;
 	string8 fSQL;
-	DListHead<DLink_ClientSearch_InPSearch> fClientSearches;
+	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
 	};
 
 // =================================================================================================
@@ -145,7 +145,7 @@ bool Source_SQLite::Intersects(const RelHead& iRelHead)
 	}
 
 void Source_SQLite::ModifyRegistrations(
-	const AddedSearch* iAdded, size_t iAddedCount,
+	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	if (iAddedCount || iRemovedCount)
@@ -157,28 +157,28 @@ void Source_SQLite::ModifyRegistrations(
 		{
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
 
-		pair<Map_Rel_PSearch::iterator,bool> inPSearch =
-			fMap_Rel_PSearch.insert(make_pair(theRel, PSearch(theRel)));
+		pair<Map_Rel_PQuery::iterator,bool> inPQuery =
+			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
 
-		PSearch* thePSearch = &inPSearch.first->second;
+		PQuery* thePQuery = &inPQuery.first->second;
 		
-		if (inPSearch.second)
+		if (inPQuery.second)
 			{
 			string8 asSQL;
 			ZRA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String(asSQL));
 			if (ZLOGF(s, eDebug))
 				s << asSQL;
-			thePSearch->fSQL = asSQL;
-			thePSearch->fRelHead = sGetRelHead(theRel);
+			thePQuery->fSQL = asSQL;
+			thePQuery->fRelHead = sGetRelHead(theRel);
 			}
 
 		const int64 theRefcon = iAdded->GetRefcon();
 
-		std::map<int64, ClientSearch>::iterator iterClientSearch =
-			fMap_RefconToClientSearch.insert(
-			make_pair(theRefcon, ClientSearch(theRefcon, thePSearch))).first;
+		std::map<int64, ClientQuery>::iterator iterClientQuery =
+			fMap_RefconToClientQuery.insert(
+			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery))).first;
 
-		thePSearch->fClientSearches.Insert(&iterClientSearch->second);
+		thePQuery->fClientQueries.Insert(&iterClientQuery->second);
 
 		++iAdded;
 		}
@@ -187,31 +187,31 @@ void Source_SQLite::ModifyRegistrations(
 		{
 		int64 theRefcon = *iRemoved++;
 
-		std::map<int64, ClientSearch>::iterator iterClientSearch =
-			fMap_RefconToClientSearch.find(theRefcon);
+		std::map<int64, ClientQuery>::iterator iterClientQuery =
+			fMap_RefconToClientQuery.find(theRefcon);
 		
-		ClientSearch* theClientSearch = &iterClientSearch->second;
+		ClientQuery* theClientQuery = &iterClientQuery->second;
 		
-		PSearch* thePSearch = theClientSearch->fPSearch;
-		thePSearch->fClientSearches.Erase(theClientSearch);
-		if (thePSearch->fClientSearches.Empty())
-			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PSearch, thePSearch->fRel);
+		PQuery* thePQuery = theClientQuery->fPQuery;
+		thePQuery->fClientQueries.Erase(theClientQuery);
+		if (thePQuery->fClientQueries.Empty())
+			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 		
-		fMap_RefconToClientSearch.erase(iterClientSearch);
+		fMap_RefconToClientQuery.erase(iterClientQuery);
 		}
 	}
 
-void Source_SQLite::CollectResults(std::vector<SearchResult>& oChanged)
+void Source_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	{
 	this->pCollectResultsCalled();
 	oChanged.clear();
 
-	for (Map_Rel_PSearch::iterator iterPSearch = fMap_Rel_PSearch.begin();
-		iterPSearch != fMap_Rel_PSearch.end(); ++iterPSearch)
+	for (Map_Rel_PQuery::iterator iterPQuery = fMap_Rel_PQuery.begin();
+		iterPQuery != fMap_Rel_PQuery.end(); ++iterPQuery)
 		{
-		PSearch* thePSearch = &iterPSearch->second;
+		PQuery* thePQuery = &iterPQuery->second;
 		vector<ZVal_Any> thePackedRows;
-		for (ZRef<Iter> theIter = new Iter(fDB, thePSearch->fSQL);
+		for (ZRef<Iter> theIter = new Iter(fDB, thePQuery->fSQL);
 			theIter->HasValue(); theIter->Advance())
 			{
 			const size_t theCount = theIter->Count();
@@ -220,12 +220,12 @@ void Source_SQLite::CollectResults(std::vector<SearchResult>& oChanged)
 			}
 
 		ZRef<ZQE::Result> theResult =
-			new ZQE::Result(thePSearch->fRelHead, &thePackedRows, nullptr);
+			new ZQE::Result(thePQuery->fRelHead, &thePackedRows, nullptr);
 		
-		for (DListIterator<ClientSearch, DLink_ClientSearch_InPSearch>
-			iterCS = thePSearch->fClientSearches; iterCS; iterCS.Advance())
+		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
+			iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
 			{
-			oChanged.push_back(SearchResult(iterCS.Current()->fRefcon, theResult, null));
+			oChanged.push_back(QueryResult(iterCS.Current()->fRefcon, theResult, null));
 			}
 		}
 	}

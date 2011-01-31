@@ -27,55 +27,55 @@ using std::set;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * AddedSearch
+#pragma mark * AddedQuery
 
-AddedSearch::AddedSearch(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel)
+AddedQuery::AddedQuery(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel)
 :	fRefcon(iRefcon)
 ,	fRel(iRel)
 	{}
 
-AddedSearch::AddedSearch()
+AddedQuery::AddedQuery()
 	{}
 
-AddedSearch::AddedSearch(const AddedSearch& iOther)
+AddedQuery::AddedQuery(const AddedQuery& iOther)
 :	fRefcon(iOther.fRefcon)
 ,	fRel(iOther.fRel)
 	{}
 
-AddedSearch::~AddedSearch()
+AddedQuery::~AddedQuery()
 	{}
 
-AddedSearch& AddedSearch::operator=(const AddedSearch& iOther)
+AddedQuery& AddedQuery::operator=(const AddedQuery& iOther)
 	{
 	fRefcon = iOther.fRefcon;
 	fRel = iOther.fRel;
 	return *this;
 	}
 
-int64 AddedSearch::GetRefcon() const
+int64 AddedQuery::GetRefcon() const
 	{ return fRefcon; }
 
-ZRef<ZRA::Expr_Rel> AddedSearch::GetRel() const
+ZRef<ZRA::Expr_Rel> AddedQuery::GetRel() const
 	{ return fRel; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * SearchResult
+#pragma mark * QueryResult
 
-SearchResult::SearchResult()
+QueryResult::QueryResult()
 :	fRefcon(0)
 	{}
 
-SearchResult::SearchResult(const SearchResult& iOther)
+QueryResult::QueryResult(const QueryResult& iOther)
 :	fRefcon(iOther.fRefcon)
 ,	fResult(iOther.fResult)
 ,	fEvent(iOther.fEvent)
 	{}
 
-SearchResult::~SearchResult()
+QueryResult::~QueryResult()
 	{}
 
-SearchResult& SearchResult::operator=(const SearchResult& iOther)
+QueryResult& QueryResult::operator=(const QueryResult& iOther)
 	{
 	fRefcon = iOther.fRefcon;
 	fResult = iOther.fResult;
@@ -83,20 +83,20 @@ SearchResult& SearchResult::operator=(const SearchResult& iOther)
 	return *this;
 	}
 
-SearchResult::SearchResult(
+QueryResult::QueryResult(
 	int64 iRefcon, const ZRef<ZQE::Result>& iResult, const ZRef<Event>& iEvent)
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
 ,	fEvent(iEvent)
 	{}
 
-int64 SearchResult::GetRefcon() const
+int64 QueryResult::GetRefcon() const
 	{ return fRefcon; }
 
-ZRef<ZQE::Result> SearchResult::GetResult() const
+ZRef<ZQE::Result> QueryResult::GetResult() const
 	{ return fResult; }
 
-ZRef<Event> SearchResult::GetEvent() const
+ZRef<Event> QueryResult::GetEvent() const
 	{ return fEvent; }
 
 // =================================================================================================

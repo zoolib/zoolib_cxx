@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Source_Dataset.h"
 
-#include "zoolib/zqe/ZQE_Search.h"
+#include "zoolib/zqe/ZQE_Query.h"
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
@@ -160,38 +160,38 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Dataset::ClientSearch
+#pragma mark * Source_Dataset::ClientQuery
 
-class Source_Dataset::DLink_ClientSearch_InPSearch
-:	public DListLink<ClientSearch, DLink_ClientSearch_InPSearch, kDebug>
+class Source_Dataset::DLink_ClientQuery_InPQuery
+:	public DListLink<ClientQuery, DLink_ClientQuery_InPQuery, kDebug>
 	{};
 
-class Source_Dataset::ClientSearch
-:	public Source_Dataset::DLink_ClientSearch_InPSearch
+class Source_Dataset::ClientQuery
+:	public Source_Dataset::DLink_ClientQuery_InPQuery
 	{
 public:
-	ClientSearch(int64 iRefcon, PSearch* iPSearch)
+	ClientQuery(int64 iRefcon, PQuery* iPQuery)
 	:	fRefcon(iRefcon)
-	,	fPSearch(iPSearch)
+	,	fPQuery(iPQuery)
 		{}
 
 	int64 const fRefcon;
-	PSearch* const fPSearch;
+	PQuery* const fPQuery;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Dataset::PSearch
+#pragma mark * Source_Dataset::PQuery
 
-class Source_Dataset::PSearch
+class Source_Dataset::PQuery
 	{
 public:
-	PSearch(ZRef<ZRA::Expr_Rel> iRel)
+	PQuery(ZRef<ZRA::Expr_Rel> iRel)
 	:	fRel(iRel)
 		{}
 
 	const ZRef<ZRA::Expr_Rel> fRel;
-	DListHead<DLink_ClientSearch_InPSearch> fClientSearches;
+	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
 	};
 
 // =================================================================================================
@@ -215,7 +215,7 @@ bool Source_Dataset::Intersects(const RelHead& iRelHead)
 	{ return true; }
 
 void Source_Dataset::ModifyRegistrations(
-	const AddedSearch* iAdded, size_t iAddedCount,
+	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	ZAcqMtxR acq(fMtxR);
@@ -232,49 +232,49 @@ void Source_Dataset::ModifyRegistrations(
 		theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
 		theRel = ZRA::Transform_ConsolidateRenames().Do(theRel);
 
-		pair<Map_Rel_PSearch::iterator,bool> iterPSearchPair =
-			fMap_Rel_PSearch.insert(make_pair(theRel, PSearch(theRel)));
+		pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
+			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
 
-		if (!iterPSearchPair.second)
+		if (!iterPQueryPair.second)
 			{
 			if (ZLOGF(s, eDebug))
-				s << "Reusing existing PSearch";
+				s << "Reusing existing PQuery";
 			}
 
-		const Map_Rel_PSearch::iterator& iterPSearch = iterPSearchPair.first;
-		PSearch* thePSearch = &iterPSearch->second;
+		const Map_Rel_PQuery::iterator& iterPQuery = iterPQueryPair.first;
+		PQuery* thePQuery = &iterPQuery->second;
 
 		const int64 theRefcon = iAdded->GetRefcon();
 
-		pair<map<int64,ClientSearch>::iterator,bool> iterClientSearchPair =
-			fMap_Refcon_ClientSearch.insert(
-			make_pair(theRefcon, ClientSearch(theRefcon, thePSearch)));
-		ZAssert(iterClientSearchPair.second);
+		pair<map<int64,ClientQuery>::iterator,bool> iterClientQueryPair =
+			fMap_Refcon_ClientQuery.insert(
+			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery)));
+		ZAssert(iterClientQueryPair.second);
 
-		thePSearch->fClientSearches.Insert(&iterClientSearchPair.first->second);
+		thePQuery->fClientQueries.Insert(&iterClientQueryPair.first->second);
 		}
 
 	while (iRemovedCount--)
 		{
 		int64 theRefcon = *iRemoved++;
 
-		map<int64, ClientSearch>::iterator iterClientSearch =
-			fMap_Refcon_ClientSearch.find(theRefcon);
+		map<int64, ClientQuery>::iterator iterClientQuery =
+			fMap_Refcon_ClientQuery.find(theRefcon);
 
-		ZAssertStop(kDebug, iterClientSearch != fMap_Refcon_ClientSearch.end());
+		ZAssertStop(kDebug, iterClientQuery != fMap_Refcon_ClientQuery.end());
 		
-		ClientSearch* theClientSearch = &iterClientSearch->second;
+		ClientQuery* theClientQuery = &iterClientQuery->second;
 		
-		PSearch* thePSearch = theClientSearch->fPSearch;
-		thePSearch->fClientSearches.Erase(theClientSearch);
-		if (thePSearch->fClientSearches.Empty())
-			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PSearch, thePSearch->fRel);
+		PQuery* thePQuery = theClientQuery->fPQuery;
+		thePQuery->fClientQueries.Erase(theClientQuery);
+		if (thePQuery->fClientQueries.Empty())
+			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 		
-		fMap_Refcon_ClientSearch.erase(iterClientSearch);
+		fMap_Refcon_ClientQuery.erase(iterClientQuery);
 		}
 	}
 
-void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
+void Source_Dataset::CollectResults(vector<QueryResult>& oChanged)
 	{
 	this->pCollectResultsCalled();
 	
@@ -291,24 +291,24 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 	
 	if (anyChanges)
 		{
-		for (Map_Rel_PSearch::iterator iterPSearch = fMap_Rel_PSearch.begin();
-			iterPSearch != fMap_Rel_PSearch.end(); ++iterPSearch)
+		for (Map_Rel_PQuery::iterator iterPQuery = fMap_Rel_PQuery.begin();
+			iterPQuery != fMap_Rel_PQuery.end(); ++iterPQuery)
 			{
-			PSearch* thePSearch = &iterPSearch->second;
+			PQuery* thePQuery = &iterPQuery->second;
 
 			fWalkerCount = 0;
 			fReadCount = 0;
 			fStepCount = 0;
 
-			ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this).Do(thePSearch->fRel);
+			ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this).Do(thePQuery->fRel);
 
 			if (ZLOGPF(s, eDebug + 1))
 				{
 				s << "\n";
-				ZRA::Util_Strim_Rel::sToStrim(thePSearch->fRel, s);
+				ZRA::Util_Strim_Rel::sToStrim(thePQuery->fRel, s);
 				}
 
-			ZRef<ZQE::Result> theResult = sSearch(theWalker);
+			ZRef<ZQE::Result> theResult = sQuery(theWalker);
 
 			if (ZLOGPF(s, eDebug + 1))
 				{
@@ -317,10 +317,10 @@ void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 					<< ", steps: " << fStepCount;
 				}
 
-			for (DListIterator<ClientSearch, DLink_ClientSearch_InPSearch>
-				iterCS = thePSearch->fClientSearches; iterCS; iterCS.Advance())
+			for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
+				iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
 				{
-				oChanged.push_back(SearchResult(iterCS.Current()->fRefcon, theResult, fEvent));
+				oChanged.push_back(QueryResult(iterCS.Current()->fRefcon, theResult, fEvent));
 				}
 			}
 		}

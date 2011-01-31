@@ -44,19 +44,19 @@ public:
 	virtual ZRef<Source> Make();
 
 private:
-	class PSearch;
-	class ClientSearch;
+	class PQuery;
+	class ClientQuery;
 	class ClientSource;
 	friend class ClientSource;
 
 	bool pIntersects(ZRef<ClientSource> iCS, const RelHead& iRelHead);
 
 	void pModifyRegistrations(ZRef<ClientSource> iCS,
-		const AddedSearch* iAdded, size_t iAddedCount,
+		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount);
 
 	void pCollectResults(ZRef<ClientSource> iCS,
-		std::vector<SearchResult>& oChanged);
+		std::vector<QueryResult>& oChanged);
 
 	void pResultsAvailable(ZRef<Source> iSource);
 

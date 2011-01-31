@@ -58,7 +58,7 @@ bool Source_Client::Intersects(const RelHead& iRelHead)
 	}
 
 void Source_Client::ModifyRegistrations(
-	const AddedSearch* iAdded, size_t iAddedCount,
+	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	ZGuardRMtxR guard(fMtxR);
@@ -85,7 +85,7 @@ void Source_Client::ModifyRegistrations(
 		}
 	}
 
-void Source_Client::CollectResults(std::vector<SearchResult>& oChanged)
+void Source_Client::CollectResults(std::vector<QueryResult>& oChanged)
 	{
 	ZGuardRMtxR guard(fMtxR);
 	this->pCollectResultsCalled();
@@ -97,12 +97,12 @@ bool Source_Client::pRead(ZRef<ZWorker> iWorker)
 	{
 	const ZStreamR& r = fStreamerR->GetStreamR();
 
-	vector<SearchResult> theSRs;
+	vector<QueryResult> theSRs;
 	for (uint32 theCount = r.ReadCount(); theCount; --theCount)
 		{
 		int64 theRefcon = r.ReadInt64();
 		// Need to read a result and an Event
-		theSRs.push_back(SearchResult(theRefcon, null, null));
+		theSRs.push_back(QueryResult(theRefcon, null, null));
 		}
 	
 	ZGuardRMtxR guard(fMtxR);

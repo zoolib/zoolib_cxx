@@ -49,10 +49,10 @@ public:
 	virtual bool Intersects(const RelHead& iRelHead);
 
 	virtual void ModifyRegistrations(
-		const AddedSearch* iAdded, size_t iAddedCount,
+		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount);
 
-	virtual void CollectResults(std::vector<SearchResult>& oChanged);
+	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
 private:
 	bool pRead(ZRef<ZWorker> iWorker);
@@ -65,7 +65,7 @@ private:
 	bool fNeedsWrite;
 	std::map<int64, ZRef<ZRA::Expr_Rel> > fAdds;
 	std::set<int64> fRemoves;
-	std::vector<SearchResult> fResults;
+	std::vector<QueryResult> fResults;
 	};
 
 } // namespace ZDataspace

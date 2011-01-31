@@ -64,14 +64,14 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 	iSieve->fRefcon = fNextRefcon++;
 	ZUtil_STL::sInsertMustNotContain(kDebug, fMap_RefconToSieve, iSieve->fRefcon, iSieve.Get());
 
-	const AddedSearch theAddedSearch(iSieve->fRefcon, iRel);
-	fSource->ModifyRegistrations(&theAddedSearch, 1, nullptr, 0);
+	const AddedQuery theAddedQuery(iSieve->fRefcon, iRel);
+	fSource->ModifyRegistrations(&theAddedQuery, 1, nullptr, 0);
 	}
 
 void Dataspace::Update()
 	{
-	vector<SearchResult> theSearchResults;
-	fSource->CollectResults(theSearchResults);
+	vector<QueryResult> theQueryResults;
+	fSource->CollectResults(theQueryResults);
 
 	set<ZRef<Sieve> > sievesChanged;
 	set<ZRef<Sieve> > sievesLoaded;
@@ -80,14 +80,14 @@ void Dataspace::Update()
 	ZAcqMtxR acq(fMtxR);
 	fCalled_UpdateNeeded = false;
 
-	if (theSearchResults.empty())
+	if (theQueryResults.empty())
 		return;
 	
-	for (vector<SearchResult>::iterator iterSearchResults = theSearchResults.begin();
-		iterSearchResults != theSearchResults.end(); ++iterSearchResults)
+	for (vector<QueryResult>::iterator iterQueryResults = theQueryResults.begin();
+		iterQueryResults != theQueryResults.end(); ++iterQueryResults)
 		{
 		Map_RefconToSieve::iterator iterSieve =
-			fMap_RefconToSieve.find(iterSearchResults->GetRefcon());
+			fMap_RefconToSieve.find(iterQueryResults->GetRefcon());
 		
 		if (fMap_RefconToSieve.end() == iterSieve)
 			continue;
@@ -98,8 +98,8 @@ void Dataspace::Update()
 		else
 			sievesLoaded.insert(theSieve);
 
-		theSieve->fResult = iterSearchResults->GetResult();
-		theSieve->fEvent = iterSearchResults->GetEvent();
+		theSieve->fResult = iterQueryResults->GetResult();
+		theSieve->fEvent = iterQueryResults->GetEvent();
 		}
 	}
 
