@@ -104,6 +104,7 @@ ZRef<Event> SearchResult::GetEvent() const
 #pragma mark * Source
 
 Source::Source()
+:	fCalled_ResultsAvailable(false)
 	{}
 
 Source::~Source()
@@ -113,13 +114,23 @@ void Source::SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCalla
 	{
 	if (iCallable)
 		ZAssert(!fCallable_ResultsAvailable);
+	fCalled_ResultsAvailable = false;
 	fCallable_ResultsAvailable = iCallable;
 	}
+
+void Source::pCollectResultsCalled()
+	{ fCalled_ResultsAvailable = false; }
 
 void Source::pInvokeCallable_ResultsAvailable()
 	{
 	if (ZRef<Callable_ResultsAvailable> theCallable = fCallable_ResultsAvailable)
-		theCallable->Call(this);
+		{
+		if (!fCalled_ResultsAvailable)
+			{
+			fCalled_ResultsAvailable = true;
+			theCallable->Call(this);
+			}
+		}
 	}
 
 // =================================================================================================

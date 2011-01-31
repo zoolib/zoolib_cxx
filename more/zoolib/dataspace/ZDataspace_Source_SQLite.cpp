@@ -150,7 +150,6 @@ void Source_SQLite::ModifyRegistrations(
 	{
 	if (iAddedCount || iRemovedCount)
 		{
-//		fStackChanged = true;
 		this->pInvokeCallable_ResultsAvailable();
 		}
 
@@ -204,6 +203,7 @@ void Source_SQLite::ModifyRegistrations(
 
 void Source_SQLite::CollectResults(std::vector<SearchResult>& oChanged)
 	{
+	this->pCollectResultsCalled();
 	oChanged.clear();
 
 	for (Map_Rel_PSearch::iterator iterPSearch = fMap_Rel_PSearch.begin();

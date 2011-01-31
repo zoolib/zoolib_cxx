@@ -88,6 +88,7 @@ void Source_Client::ModifyRegistrations(
 void Source_Client::CollectResults(std::vector<SearchResult>& oChanged)
 	{
 	ZGuardRMtxR guard(fMtxR);
+	this->pCollectResultsCalled();
 	oChanged.swap(fResults);
 	fResults.clear();
 	}

@@ -51,12 +51,7 @@ public:
 
 	virtual void CollectResults(std::vector<SearchResult>& oChanged);
 
-// Our protocol
-	void ForceUpdate();
-
 private:
-	void pTrigger_Client_ResultsAvailable();
-
 	void pTrigger_Update();
 	void pUpdate();
 
@@ -66,7 +61,6 @@ private:
 	ZRef<Source> fSource;
 	ZRef<Callable_ResultsAvailable> fCallable_Source;
 
-	bool fTriggered_Client_ResultsAvailable;
 	bool fTriggered_Update;
 	bool fNeeds_SourceCollectResults;
 

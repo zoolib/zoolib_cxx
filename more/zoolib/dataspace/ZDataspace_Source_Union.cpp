@@ -701,6 +701,8 @@ void Source_Union::ModifyRegistrations(
 
 void Source_Union::CollectResults(vector<SearchResult>& oChanged)
 	{
+	this->pCollectResultsCalled();
+
 	ZAcqMtxR acq(fMtxR);
 
 	// -----

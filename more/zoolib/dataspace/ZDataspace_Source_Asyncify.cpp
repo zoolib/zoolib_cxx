@@ -41,7 +41,6 @@ using std::vector;
 Source_Asyncify::Source_Asyncify(ZRef<Source> iSource)
 :	fSource(iSource)
 ,	fCallable_Source(MakeCallable(this, &Source_Asyncify::pResultsAvailable))
-,	fTriggered_Client_ResultsAvailable(false)
 ,	fTriggered_Update(false)
 ,	fNeeds_SourceCollectResults(false)
 	{
@@ -87,7 +86,7 @@ void Source_Asyncify::ModifyRegistrations(
 void Source_Asyncify::CollectResults(vector<SearchResult>& oChanged)
 	{
 	ZAcqMtxR acq(fMtxR);
-	fTriggered_Client_ResultsAvailable = false;
+	this->pCollectResultsCalled();
 
 	oChanged.reserve(fPendingResults.size());
 	for (map<int64,SearchResult>::iterator iter = fPendingResults.begin();
@@ -97,24 +96,6 @@ void Source_Asyncify::CollectResults(vector<SearchResult>& oChanged)
 		oChanged.push_back(iter->second);
 		}
 	fPendingResults.clear();
-	}
-
-void Source_Asyncify::ForceUpdate()
-	{
-	this->pUpdate();
-	}
-
-void Source_Asyncify::pTrigger_Client_ResultsAvailable()
-	{
-	{
-	ZAcqMtxR acq(fMtxR);
-	if (fTriggered_Client_ResultsAvailable)
-		return;
-
-	fTriggered_Client_ResultsAvailable = true;
-	}
-
-	this->pInvokeCallable_ResultsAvailable();
 	}
 
 void Source_Asyncify::pTrigger_Update()
@@ -171,10 +152,11 @@ void Source_Asyncify::pUpdate()
 				didAnything = true;
 				guard.Acquire();
 
-				for (vector<SearchResult>::iterator iter = changes.begin(); iter != changes.end(); ++iter)
-					fPendingResults[iter->GetRefcon()] = *iter;
+				for (vector<SearchResult>::iterator iter = changes.begin();
+					iter != changes.end(); ++iter)
+					{ fPendingResults[iter->GetRefcon()] = *iter; }
 
-				this->pTrigger_Client_ResultsAvailable();
+				this->pInvokeCallable_ResultsAvailable();
 				}
 			}
 

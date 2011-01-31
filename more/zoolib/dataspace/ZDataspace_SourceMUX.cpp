@@ -60,7 +60,10 @@ public:
 		{ fMUX->pModifyRegistrations(this, iAdded, iAddedCount, iRemoved, iRemovedCount); }
 
 	virtual void CollectResults(vector<SearchResult>& oChanged)
-		{ fMUX->pCollectResults(this, oChanged); }
+		{
+		this->pCollectResultsCalled();
+		fMUX->pCollectResults(this, oChanged);
+		}
 
 // Our protocol
 	void ResultsAvailable()

@@ -110,9 +110,11 @@ public:
 	void SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable);
 
 protected:
+	void pCollectResultsCalled();
 	void pInvokeCallable_ResultsAvailable();
 
 private:
+	bool fCalled_ResultsAvailable;
 	ZRef<Callable_ResultsAvailable> fCallable_ResultsAvailable;
 	};
 

@@ -199,14 +199,7 @@ public:
 #pragma mark * Source_Dataset
 
 void Source_Dataset::ForceUpdate()
-	{
-	ZAcqMtxR acq(fMtxR);
-	if (this->pPull())
-		{
-		fChanged = true;
-		this->pInvokeCallable_ResultsAvailable();
-		}
-	}
+	{ this->pInvokeCallable_ResultsAvailable(); }
 
 Source_Dataset::Source_Dataset(ZRef<Dataset> iDataset)
 :	fDataset(iDataset)
@@ -283,6 +276,8 @@ void Source_Dataset::ModifyRegistrations(
 
 void Source_Dataset::CollectResults(vector<SearchResult>& oChanged)
 	{
+	this->pCollectResultsCalled();
+	
 	ZAcqMtxR acq(fMtxR);
 
 	oChanged.clear();
