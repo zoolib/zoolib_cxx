@@ -38,9 +38,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // p == priority
 // f == facility
 
-#define ZLOGPF(s, p) const ZooLib::ZLog::S& s = ZLog::S(ZLog::p, ZMACRO_PRETTY_FUNCTION)
-#define ZLOGF(s, p) const ZooLib::ZLog::S& s = ZLog::S(ZLog::p, __FUNCTION__)
-#define ZLOG(s, p, f) const ZooLib::ZLog::S& s = ZLog::S(ZLog::p, f)
+#define ZLOGPF(s, p) const ZooLib::ZLog::S& s = \
+	ZooLib::ZLog::S(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION)
+
+#define ZLOGF(s, p) const ZooLib::ZLog::S& s = \
+	ZooLib::ZLog::S(ZooLib::ZLog::p, __FUNCTION__)
+
+#define ZLOG(s, p, f) const ZooLib::ZLog::S& s = \
+	ZooLib::ZLog::S(ZooLib::ZLog::p, f)
 
 #define ZLOGFUNCTION(p) ZooLib::ZLog::FunctionEntryExit \
 	ZMACRO_CONCAT(theLogFEE_,__LINE__)(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION)
@@ -49,7 +54,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	ZooLib::ZLog::sLogTrace(ZooLib::ZLog::p, __FILE__, __LINE__, ZMACRO_PRETTY_FUNCTION)
 
 namespace ZooLib {
-
 namespace ZLog {
 
 // =================================================================================================
@@ -157,7 +161,6 @@ private:
 void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iFunctionName);
 
 } // namespace ZLog
-
 } // namespace ZooLib
 
 #endif // __ZLog__
