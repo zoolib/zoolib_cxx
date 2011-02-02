@@ -488,6 +488,14 @@ public:
 	ZMap_Any& Set(const string8& iName, const ZVal_Any& iVal);
 	ZMap_Any& Set(const Index_t& iIndex, const ZVal_Any& iVal);
 
+	template <class S>
+	ZMap_Any& Set(const string8& iName, const S& iVal)
+		{ return this->Set(iName, ZVal_Any(iVal)); }
+
+	template <class S>
+	ZMap_Any& Set(const Index_t& iIndex, const S& iVal)
+		{ return this->Set(iIndex, ZVal_Any(iVal)); }
+
 	ZMap_Any& Erase(const string8& iName);
 	ZMap_Any& Erase(const Index_t& iIndex);
 

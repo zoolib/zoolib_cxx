@@ -65,10 +65,18 @@ public:
 	template <class S> ZVal_CFType(const ZRef<S>& iVal) : inherited(iVal) {}
 	template <class S> ZVal_CFType(const Adopt_T<S>& iVal) : inherited(iVal) {}
 
-	ZVal_CFType(int8 iVal);
-	ZVal_CFType(int16 iVal);
-	ZVal_CFType(int32 iVal);
-	ZVal_CFType(int64 iVal);
+	ZVal_CFType(char iVal);
+	ZVal_CFType(signed char iVal);
+	ZVal_CFType(unsigned char iVal);
+	ZVal_CFType(wchar_t iVal);
+	ZVal_CFType(short iVal);
+	ZVal_CFType(unsigned short iVal);
+	ZVal_CFType(int iVal);
+	ZVal_CFType(unsigned int iVal);
+	ZVal_CFType(long iVal);
+	ZVal_CFType(unsigned long iVal);
+	ZVal_CFType(long long iVal);
+	ZVal_CFType(unsigned long long iVal);
 	ZVal_CFType(bool iVal);
 	ZVal_CFType(float iVal);
 	ZVal_CFType(double iVal);
@@ -286,6 +294,14 @@ public:
 
 	ZMap_CFType& Set(const string8& iName, const ZVal_CFType& iVal);
 	ZMap_CFType& Set(CFStringRef iName, const ZVal_CFType& iVal);
+
+	template <class S>
+	ZMap_CFType& Set(const string8& iName, const ZVal_CFType& iVal)
+		{ return this->Set(iName, ZVal_CFType(iVal)); }
+
+	template <class S>
+	ZMap_CFType& Set(CFStringRef iName, const S& iVal)
+		{ return this->Set(iName, ZVal_CFType(iVal)); }
 
 	ZMap_CFType& Erase(const string8& iName);
 	ZMap_CFType& Erase(CFStringRef iName);

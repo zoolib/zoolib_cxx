@@ -57,18 +57,19 @@ int sCompare_T(const ZMap_CFType& iL, const ZMap_CFType& iR)
 namespace {
 
 template <class S>
-bool spGetNumber_T(CFTypeRef iTypeRef, CFNumberType iNumberType, S& oVal)
+ZQ<S> spGetNumber_T(CFTypeRef iTypeRef, CFNumberType iNumberType)
 	{
 	if (iTypeRef && ::CFGetTypeID(iTypeRef) == ::CFNumberGetTypeID())
 		{
 		CFNumberRef theNumberRef = static_cast<CFNumberRef>(iTypeRef);
 		if (::CFNumberGetType(theNumberRef) == iNumberType)
 			{
-			::CFNumberGetValue(theNumberRef, iNumberType, &oVal);
-			return true;
+			ZQ<S> result;
+			::CFNumberGetValue(theNumberRef, iNumberType, &result.OParam());
+			return result;
 			}
 		}
-	return false;
+	return null;
 	}
 
 template <class S>
@@ -124,19 +125,51 @@ ZVal_CFType& ZVal_CFType::operator=(const ZVal_CFType& iOther)
 	return *this;
 	}
 
-ZVal_CFType::ZVal_CFType(int8 iVal)
+ZVal_CFType::ZVal_CFType(char iVal)
+:	inherited(spNumber_T(kCFNumberCharType, iVal))
+	{}
+
+ZVal_CFType::ZVal_CFType(unsigned char iVal)
 :	inherited(spNumber_T(kCFNumberSInt8Type, iVal))
 	{}
 
-ZVal_CFType::ZVal_CFType(int16 iVal)
-:	inherited(spNumber_T(kCFNumberSInt16Type, iVal))
+ZVal_CFType::ZVal_CFType(signed char iVal)
+:	inherited(spNumber_T(kCFNumberSInt8Type, iVal))
 	{}
 
-ZVal_CFType::ZVal_CFType(int32 iVal)
+ZVal_CFType::ZVal_CFType(wchar_t iVal)
 :	inherited(spNumber_T(kCFNumberSInt32Type, iVal))
 	{}
 
-ZVal_CFType::ZVal_CFType(int64 iVal)
+ZVal_CFType::ZVal_CFType(short iVal)
+:	inherited(spNumber_T(kCFNumberShortType, iVal))
+	{}
+
+ZVal_CFType::ZVal_CFType(unsigned short iVal)
+:	inherited(spNumber_T(kCFNumberSInt16Type, iVal))
+	{}
+
+ZVal_CFType::ZVal_CFType(int iVal)
+:	inherited(spNumber_T(kCFNumberIntType, iVal))
+	{}
+
+ZVal_CFType::ZVal_CFType(unsigned int iVal)
+:	inherited(spNumber_T(kCFNumberSInt32Type, iVal))
+	{}
+
+ZVal_CFType::ZVal_CFType(long iVal)
+:	inherited(spNumber_T(kCFNumberLongType, iVal))
+	{}
+
+ZVal_CFType::ZVal_CFType(unsigned long iVal)
+:	inherited(spNumber_T(kCFNumberSInt32Type, iVal))
+	{}
+
+ZVal_CFType::ZVal_CFType(long long iVal)
+:	inherited(spNumber_T(kCFNumberLongLongType, iVal))
+	{}
+
+ZVal_CFType::ZVal_CFType(unsigned long long iVal)
 :	inherited(spNumber_T(kCFNumberSInt64Type, iVal))
 	{}
 
@@ -193,58 +226,112 @@ ZVal_CFType::ZVal_CFType(CFDictionaryRef iVal)
 	{}
 
 template <>
-ZQ<int8> ZVal_CFType::QGet<int8>() const
+ZQ<char> ZVal_CFType::QGet<char>() const
 	{
-	int8 theVal;
-	if (spGetNumber_T(*this, kCFNumberSInt8Type, theVal))
-		return theVal;
-	if (spGetNumber_T(*this, kCFNumberCharType, theVal))
-		return theVal;
+	if (ZQ<char> theQ = spGetNumber_T<char>(*this, kCFNumberSInt8Type))
+		return theQ;
+	if (ZQ<char> theQ = spGetNumber_T<char>(*this, kCFNumberCharType))
+		return theQ;
 	return null;
 	}
 
 template <>
-ZQ<int16> ZVal_CFType::QGet<int16>() const
+ZQ<unsigned char> ZVal_CFType::QGet<unsigned char>() const
 	{
-	int16 theVal;
-	if (spGetNumber_T(*this, kCFNumberSInt16Type, theVal))
-		return theVal;
-	if (spGetNumber_T(*this, kCFNumberShortType, theVal))
-		return theVal;
+	if (ZQ<unsigned char> theQ = spGetNumber_T<unsigned char>(*this, kCFNumberSInt8Type))
+		return theQ;
+	if (ZQ<unsigned char> theQ = spGetNumber_T<unsigned char>(*this, kCFNumberCharType))
+		return theQ;
 	return null;
 	}
 
 template <>
-ZQ<int32> ZVal_CFType::QGet<int32>() const
+ZQ<signed char> ZVal_CFType::QGet<signed char>() const
 	{
-	int32 theVal;
-	if (spGetNumber_T(*this, kCFNumberSInt32Type, theVal))
-		return theVal;
-	if (spGetNumber_T(*this, kCFNumberIntType, theVal))
-		return theVal;
-
-	#if !ZCONFIG_Is64Bit
-		if (spGetNumber_T(*this, kCFNumberLongType, theVal))
-			return theVal;
-	#endif
-
+	if (ZQ<signed char> theQ = spGetNumber_T<signed char>(*this, kCFNumberSInt8Type))
+		return theQ;
+	if (ZQ<signed char> theQ = spGetNumber_T<signed char>(*this, kCFNumberCharType))
+		return theQ;
 	return null;
 	}
 
 template <>
-ZQ<int64> ZVal_CFType::QGet<int64>() const
+ZQ<short> ZVal_CFType::QGet<short>() const
 	{
-	int64 theVal;
-	if (spGetNumber_T(*this, kCFNumberSInt64Type, theVal))
-		return theVal;
-	if (spGetNumber_T(*this, kCFNumberLongLongType, theVal))
-		return theVal;
+	if (ZQ<short> theQ = spGetNumber_T<short>(*this, kCFNumberSInt16Type))
+		return theQ;
+	if (ZQ<short> theQ = spGetNumber_T<short>(*this, kCFNumberShortType))
+		return theQ;
+	return null;
+	}
 
-	#if ZCONFIG_Is64Bit
-		if (spGetNumber_T(*this, kCFNumberLongType, theVal))
-			return theVal;
-	#endif
+template <>
+ZQ<unsigned short> ZVal_CFType::QGet<unsigned short>() const
+	{
+	if (ZQ<unsigned short> theQ = spGetNumber_T<unsigned short>(*this, kCFNumberSInt16Type))
+		return theQ;
+	if (ZQ<unsigned short> theQ = spGetNumber_T<unsigned short>(*this, kCFNumberShortType))
+		return theQ;
+	return null;
+	}
 
+template <>
+ZQ<int> ZVal_CFType::QGet<int>() const
+	{
+	if (ZQ<int> theQ = spGetNumber_T<int>(*this, kCFNumberSInt32Type))
+		return theQ;
+	if (ZQ<int> theQ = spGetNumber_T<int>(*this, kCFNumberIntType))
+		return theQ;
+	return null;
+	}
+
+template <>
+ZQ<unsigned int> ZVal_CFType::QGet<unsigned int>() const
+	{
+	if (ZQ<unsigned int> theQ = spGetNumber_T<unsigned int>(*this, kCFNumberSInt32Type))
+		return theQ;
+	if (ZQ<unsigned int> theQ = spGetNumber_T<unsigned int>(*this, kCFNumberIntType))
+		return theQ;
+	return null;
+	}
+
+template <>
+ZQ<long> ZVal_CFType::QGet<long>() const
+	{
+	if (ZQ<long> theQ = spGetNumber_T<long>(*this, kCFNumberSInt32Type))
+		return theQ;
+	if (ZQ<long> theQ = spGetNumber_T<long>(*this, kCFNumberLongType))
+		return theQ;
+	return null;
+	}
+
+template <>
+ZQ<unsigned long> ZVal_CFType::QGet<unsigned long>() const
+	{
+	if (ZQ<unsigned long> theQ = spGetNumber_T<unsigned long>(*this, kCFNumberSInt32Type))
+		return theQ;
+	if (ZQ<unsigned long> theQ = spGetNumber_T<unsigned long>(*this, kCFNumberLongType))
+		return theQ;
+	return null;
+	}
+
+template <>
+ZQ<long long> ZVal_CFType::QGet<long long>() const
+	{
+	if (ZQ<long long> theQ = spGetNumber_T<long long>(*this, kCFNumberSInt64Type))
+		return theQ;
+	if (ZQ<long long> theQ = spGetNumber_T<long long>(*this, kCFNumberLongLongType))
+		return theQ;
+	return null;
+	}
+
+template <>
+ZQ<unsigned long long> ZVal_CFType::QGet<unsigned long long>() const
+	{
+	if (ZQ<unsigned long long> theQ = spGetNumber_T<unsigned long long>(*this, kCFNumberSInt64Type))
+		return theQ;
+	if (ZQ<unsigned long long> theQ = spGetNumber_T<unsigned long long>(*this, kCFNumberLongLongType))
+		return theQ;
 	return null;
 	}
 
@@ -259,22 +346,20 @@ ZQ<bool> ZVal_CFType::QGet<bool>() const
 template <>
 ZQ<float> ZVal_CFType::QGet<float>() const
 	{
-	float theVal;
-	if (spGetNumber_T(*this, kCFNumberFloat32Type, theVal))
-		return theVal;
-	if (spGetNumber_T(*this, kCFNumberFloatType, theVal))
-		return theVal;
+	if (ZQ<float> theQ = spGetNumber_T<float>(*this, kCFNumberFloat32Type))
+		return theQ;
+	if (ZQ<float> theQ = spGetNumber_T<float>(*this, kCFNumberFloatType))
+		return theQ;
 	return null;
 	}
 
 template <>
 ZQ<double> ZVal_CFType::QGet<double>() const
 	{
-	double theVal;
-	if (spGetNumber_T(*this, kCFNumberFloat64Type, theVal))
-		return theVal;
-	if (spGetNumber_T(*this, kCFNumberDoubleType, theVal))
-		return theVal;
+	if (ZQ<double> theQ = spGetNumber_T<double>(*this, kCFNumberFloat64Type))
+		return theQ;
+	if (ZQ<double> theQ = spGetNumber_T<double>(*this, kCFNumberDoubleType))
+		return theQ;
 	return null;
 	}
 

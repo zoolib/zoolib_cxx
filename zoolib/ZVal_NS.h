@@ -35,6 +35,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValAccessors_Std.h"
 
+// TODO Watch for CFStringRef issues in Cocotron and other non-Apple Cocoa implementations.
+typedef const struct __CFString * CFStringRef;
+
 namespace ZooLib {
 
 class ZVal_NS;
@@ -74,16 +77,25 @@ public:
 	:	inherited(Adopt_T<NSObject*>(iVal.Get()))
 		{}
 
-	ZVal_NS(int8 iVal);
-	ZVal_NS(int16 iVal);
-	ZVal_NS(int32 iVal);
-	ZVal_NS(int64 iVal);
+	ZVal_NS(char iVal);
+	ZVal_NS(signed char iVal);
+	ZVal_NS(unsigned char iVal);
+	ZVal_NS(wchar_t iVal);
+	ZVal_NS(short iVal);
+	ZVal_NS(unsigned short iVal);
+	ZVal_NS(int iVal);
+	ZVal_NS(unsigned int iVal);
+	ZVal_NS(long iVal);
+	ZVal_NS(unsigned long iVal);
+	ZVal_NS(long long iVal);
+	ZVal_NS(unsigned long long iVal);
 	ZVal_NS(bool iVal);
 	ZVal_NS(float iVal);
 	ZVal_NS(double iVal);
 	ZVal_NS(const char* iVal);
 	ZVal_NS(const string8& iVal);
 	ZVal_NS(const string16& iVal);
+	ZVal_NS(CFStringRef iVal);
 
 	ZVal_NS& operator=(id iVal)
 		{
@@ -256,12 +268,15 @@ public:
 
 	ZQ<ZVal_NS> QGet(const string8& iName) const;
 	ZQ<ZVal_NS> QGet(NSString* iName) const;
+	ZQ<ZVal_NS> QGet(CFStringRef iName) const;
 
 	ZVal_NS DGet(const ZVal_NS& iDefault, const string8& iName) const;
 	ZVal_NS DGet(const ZVal_NS& iDefault, NSString* iName) const;
+	ZVal_NS DGet(const ZVal_NS& iDefault, CFStringRef iName) const;
 
 	ZVal_NS Get(const string8& iName) const;
 	ZVal_NS Get(NSString* iName) const;
+	ZVal_NS Get(CFStringRef iName) const;
 
 	template <class S>
 	ZQ<S> QGet(const string8& iName) const
@@ -269,6 +284,10 @@ public:
 
 	template <class S>
 	ZQ<S> QGet(NSString* iName) const
+		{ return this->Get(iName).QGet<S>(); }
+
+	template <class S>
+	ZQ<S> QGet(CFStringRef iName) const
 		{ return this->Get(iName).QGet<S>(); }
 
 	template <class S>
@@ -280,6 +299,10 @@ public:
 		{ return this->Get(iName).DGet<S>(iDefault); }
 
 	template <class S>
+	S DGet(const S& iDefault, CFStringRef iName) const
+		{ return this->Get(iName).DGet<S>(iDefault); }
+
+	template <class S>
 	S Get(const string8& iName) const
 		{ return this->Get(iName).Get<S>(); }
 
@@ -287,11 +310,29 @@ public:
 	S Get(NSString* iName) const
 		{ return this->Get(iName).Get<S>(); }
 
+	template <class S>
+	S Get(CFStringRef iName) const
+		{ return this->Get(iName).Get<S>(); }
+
 	ZMap_NS& Set(const string8& iName, const ZVal_NS& iVal);
 	ZMap_NS& Set(NSString* iName, const ZVal_NS& iVal);
+	ZMap_NS& Set(CFStringRef iName, const ZVal_NS& iVal);
+
+	template <class S>
+	ZMap_NS& Set(const string8& iName, const ZVal_NS& iVal)
+		{ return this->Set(iName, ZVal_NS(iVal)); }
+
+	template <class S>
+	ZMap_NS& Set(NSString* iName, const ZVal_NS& iVal)
+		{ return this->Set(iName, ZVal_NS(iVal)); }
+
+	template <class S>
+	ZMap_NS& Set(CFStringRef iName, const S& iVal)
+		{ return this->Set(iName, ZVal_NS(iVal)); }
 
 	ZMap_NS& Erase(const string8& iName);
 	ZMap_NS& Erase(NSString* iName);
+	ZMap_NS& Erase(CFStringRef iName);
 
 private:
 	NSDictionary* pDictionary() const;

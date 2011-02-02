@@ -98,19 +98,51 @@ ZVal_NS& ZVal_NS::operator=(const ZVal_NS& iOther)
 	return *this;
 	}
 
-ZVal_NS::ZVal_NS(int8 iVal)
+ZVal_NS::ZVal_NS(char iVal)
 :	inherited([NSNumber numberWithChar:iVal])
 	{}
 
-ZVal_NS::ZVal_NS(int16 iVal)
+ZVal_NS::ZVal_NS(signed char iVal)
+:	inherited([NSNumber numberWithChar:iVal])
+	{}
+
+ZVal_NS::ZVal_NS(unsigned char iVal)
+:	inherited([NSNumber numberWithUnsignedChar:iVal])
+	{}
+
+ZVal_NS::ZVal_NS(wchar_t iVal)
+:	inherited([NSNumber numberWithUnsignedInt:iVal])
+	{}
+
+ZVal_NS::ZVal_NS(short iVal)
 :	inherited([NSNumber numberWithShort:iVal])
 	{}
 
-ZVal_NS::ZVal_NS(int32 iVal)
+ZVal_NS::ZVal_NS(unsigned short iVal)
+:	inherited([NSNumber numberWithUnsignedShort:iVal])
+	{}
+
+ZVal_NS::ZVal_NS(int iVal)
+:	inherited([NSNumber numberWithInt:iVal])
+	{}
+
+ZVal_NS::ZVal_NS(unsigned int iVal)
+:	inherited([NSNumber numberWithUnsignedInt:iVal])
+	{}
+
+ZVal_NS::ZVal_NS(long iVal)
 :	inherited([NSNumber numberWithLong:iVal])
 	{}
 
-ZVal_NS::ZVal_NS(int64 iVal)
+ZVal_NS::ZVal_NS(unsigned long iVal)
+:	inherited([NSNumber numberWithUnsignedLong:iVal])
+	{}
+
+ZVal_NS::ZVal_NS(long long iVal)
+:	inherited([NSNumber numberWithLongLong:iVal])
+	{}
+
+ZVal_NS::ZVal_NS(unsigned long long iVal)
 :	inherited([NSNumber numberWithLongLong:iVal])
 	{}
 
@@ -138,11 +170,15 @@ ZVal_NS::ZVal_NS(const string16& iVal)
 :	inherited(sString(iVal))
 	{}
 
+ZVal_NS::ZVal_NS(CFStringRef iVal)
+:	inherited((NSObject*)iVal)
+	{}
+
 void ZVal_NS::Clear()
 	{ inherited::Clear(); }
 
 template <>
-ZQ<int8> ZVal_NS::QGet<int8>() const
+ZQ<char> ZVal_NS::QGet<char>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
 		return [asNumber charValue];
@@ -150,7 +186,23 @@ ZQ<int8> ZVal_NS::QGet<int8>() const
 	}
 
 template <>
-ZQ<int16> ZVal_NS::QGet<int16>() const
+ZQ<unsigned char> ZVal_NS::QGet<unsigned char>() const
+	{
+	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
+		return [asNumber unsignedCharValue];
+	return null;
+	}
+
+template <>
+ZQ<signed char> ZVal_NS::QGet<signed char>() const
+	{
+	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
+		return [asNumber charValue];
+	return null;
+	}
+
+template <>
+ZQ<short> ZVal_NS::QGet<short>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
 		return [asNumber shortValue];
@@ -158,7 +210,15 @@ ZQ<int16> ZVal_NS::QGet<int16>() const
 	}
 
 template <>
-ZQ<int32> ZVal_NS::QGet<int32>() const
+ZQ<unsigned short> ZVal_NS::QGet<unsigned short>() const
+	{
+	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
+		return [asNumber unsignedShortValue];
+	return null;
+	}
+
+template <>
+ZQ<int> ZVal_NS::QGet<int>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
 		return [asNumber intValue];
@@ -166,10 +226,42 @@ ZQ<int32> ZVal_NS::QGet<int32>() const
 	}
 
 template <>
-ZQ<int64> ZVal_NS::QGet<int64>() const
+ZQ<unsigned int> ZVal_NS::QGet<unsigned int>() const
+	{
+	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
+		return [asNumber unsignedIntValue];
+	return null;
+	}
+
+template <>
+ZQ<long> ZVal_NS::QGet<long>() const
+	{
+	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
+		return [asNumber longValue];
+	return null;
+	}
+
+template <>
+ZQ<unsigned long> ZVal_NS::QGet<unsigned long>() const
+	{
+	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
+		return [asNumber unsignedLongValue];
+	return null;
+	}
+
+template <>
+ZQ<long long> ZVal_NS::QGet<long long>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
 		return [asNumber longLongValue];
+	return null;
+	}
+
+template <>
+ZQ<unsigned long long> ZVal_NS::QGet<unsigned long long>() const
+	{
+	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
+		return [asNumber unsignedLongLongValue];
 	return null;
 	}
 
@@ -593,6 +685,9 @@ ZVal_NS ZMap_NS::Get(const string8& iName) const
 ZVal_NS ZMap_NS::Get(NSString* iName) const
 	{ return this->DGet(ZVal_NS(), iName); }
 
+ZVal_NS ZMap_NS::Get(CFStringRef iName) const
+	{ return this->Get((NSString*)iName); }
+
 ZMap_NS& ZMap_NS::Set(const string8& iName, const ZVal_NS& iVal)
 	{
 	[this->pTouch() setValue:iVal.Get() forKey:sString(iName)];
@@ -605,6 +700,9 @@ ZMap_NS& ZMap_NS::Set(NSString* iName, const ZVal_NS& iVal)
 	return *this;
 	}
 
+ZMap_NS& ZMap_NS::Set(CFStringRef iName, const ZVal_NS& iVal)
+	{ return this->Set((NSString*)iName, iVal); }
+
 ZMap_NS& ZMap_NS::Erase(const string8& iName)
 	{
 	[this->pTouch() removeObjectForKey:sString(iName)];
@@ -616,6 +714,9 @@ ZMap_NS& ZMap_NS::Erase(NSString* iName)
 	[this->pTouch() removeObjectForKey:iName];
 	return *this;
 	}
+
+ZMap_NS& ZMap_NS::Erase(CFStringRef iName)
+	{ return this->Erase((NSString*)iName); }
 
 NSDictionary* ZMap_NS::pDictionary() const
 	{ return inherited::Get(); }
