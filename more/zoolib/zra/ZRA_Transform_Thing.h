@@ -56,7 +56,7 @@ class Transform_Thing
 public:
 	Transform_Thing();
 	
-// From ZVisitor_Expr_OpX_T via ZVisitor_Expr_Op_DoTransform_T
+// From ZVisitor_Expr_OpX_T via ZVisitor_Expr_Op_DoTransform_T and Visitor_Expr_Rel_XXX
 	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr);
 	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr);
 	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr);
