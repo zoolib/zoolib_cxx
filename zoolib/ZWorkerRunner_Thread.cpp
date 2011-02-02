@@ -137,9 +137,9 @@ void ZWorkerRunner_Thread::Start()
 
 void ZWorkerRunner_Thread::pRun()
 	{
-	ZLOGFUNCTION(eDebug);
+	ZLOGFUNCTION(eDebug + 1);
 
-	if (ZLOGF(s, eDebug))
+	if (ZLOGF(s, eDebug + 1))
 		s << typeid(*fWorker.Get()).name();
 
 	ZGuardRMtx guard(fMtx);
