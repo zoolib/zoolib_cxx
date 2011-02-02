@@ -29,8 +29,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Source_Dataset.h"
 
-#include "zoolib/zqe/ZQE_Query.h"
+#include "zoolib/zqe/ZQE_DoQuery.h"
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
+#include "zoolib/zqe/ZQE_Walker_Product.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Transform_ConsolidateRenames.h"
@@ -87,7 +88,7 @@ ZVal_Any spAsVal(const ZData_Any& iData)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Daton/val conversion.
+#pragma mark * Daton/Val conversion.
 
 ZVal_Any sAsVal(const Daton& iDaton)
 	{ return spAsVal(iDaton.GetData()); }
@@ -102,21 +103,115 @@ Daton sAsDaton(const ZVal_Any& iVal)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_DoMakeWalker
+#pragma mark * Source_Dataset::Visitor_DoMakeWalker
 
 class Source_Dataset::Visitor_DoMakeWalker
 :	public virtual ZQE::Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 	{
+	typedef ZQE::Visitor_DoMakeWalker inherited;
 public:
+	// We may be able to make this quite generic, with some kind of situation-specific
+	// implementation of Product, or an extended API to create the Product thingummy.
+	
+	// It might be helpful to have the base DoMakeWalker build and manage a current
+	// result RelHead. Or maybe that could be pushed up to another base, that
+	// GetRelHead then becomes a trivial subclass of.
+	
 	Visitor_DoMakeWalker(ZRef<Source_Dataset> iSource)
 	:	fSource(iSource)
 		{}
 
+	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr)
+		{
+		// Accumulate spec of products, and when the topmost would return, we
+		// actually produce our funky Walker_MultiProduct, which has
+		// field names and valpreds for each element of the multiproduct.
+
+		if (ZRef<ZQE::Walker> op0 = this->Do(iExpr->GetOp0()))
+			{
+			ZRA::RelHead leftRelHead;
+			leftRelHead.swap(fResultRelHead);
+			if (ZRef<ZQE::Walker> op1 = this->Do(iExpr->GetOp1()))
+				{
+				fResultRelHead |= leftRelHead;
+				this->pSetResult(new ZQE::Walker_Product(op0, op1));
+				}
+			}
+		}
+
+	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
+		{
+		// This is going to be somewhat like Calc in terms of setting up bindings,
+		// and somewhat like Product.
+		inherited::Visit_Expr_Rel_Embed(iExpr);
+
+		fResultRelHead = iExpr->GetRelName();
+		}
+
+	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr)
+		{
+		inherited::Visit_Expr_Rel_Project(iExpr);
+
+		fResultRelHead &= iExpr->GetProjectRelHead();
+		}
+
+	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr)
+		{
+		inherited::Visit_Expr_Rel_Rename(iExpr);
+
+		if (ZUtil_STL::sEraseIfContains(fResultRelHead, iExpr->GetOld()))
+			fResultRelHead |= iExpr->GetNew();
+		}
+
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr)
+		{
+		inherited::Visit_Expr_Rel_Restrict(iExpr);
+		}
+
+	virtual void Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
+		{
+		inherited::Visit_Expr_Rel_Calc(iExpr);
+
+		fResultRelHead |= iExpr->GetRelName();
+		}
+
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
-		{ this->pSetResult(fSource->pMakeWalker(iExpr->GetConcreteRelHead())); }
+		{
+		// Take the accumulated expression and return a walker that will hit the
+		// Source's pQuery API. Maybe punt on this somewhat, and fix the Calc and
+		// Restrict implementations to use offsets into ioResults rather than
+		// assembling a ZMap_Any.
+		// May need to do all this crap at the Product level, so it can assemble
+		// the bindings from the leftmost rels to generate the disjunctions for the
+		// rightmost. May need a better representation of an efficient disjunction
+		// something like a list of valpreds (or similar) with ZValComparand_Offset-s
+		// replacing any ZValComparand_Name. Bindings _could_ actually be ZValComparand_Consts
+		// rather than ZValComparand_Offset actually. So free vars are offsets, bound are const.
+		// but that won't work for using the disjunction as the key of a map -- offsets
+		// will change meaning depending on the user. Leave it with frees being names for now.
+		this->pSetResult(fSource->pMakeWalker(iExpr->GetConcreteRelHead()));
+
+		fResultRelHead = iExpr->GetConcreteRelHead();
+		}
+
+	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
+		{
+		// This is a place we can get a win -- it should be top-level, and just
+		// shoves a value into an offset.
+		inherited::Visit_Expr_Rel_Const(iExpr);
+
+		fResultRelHead |= iExpr->GetRelName();
+		}
+
+	virtual void Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr)
+		{
+		// Another win -- a total no-op.
+		inherited::Visit_Expr_Rel_Dee(iExpr);
+		}
 
 	ZRef<Source_Dataset> fSource;
+	RelHead fResultRelHead;
 	};
 
 // =================================================================================================
@@ -308,7 +403,7 @@ void Source_Dataset::CollectResults(vector<QueryResult>& oChanged)
 				ZRA::Util_Strim_Rel::sToStrim(thePQuery->fRel, s);
 				}
 
-			ZRef<ZQE::Result> theResult = sQuery(theWalker);
+			ZRef<ZQE::Result> theResult = ZQE::sDoQuery(theWalker);
 
 			if (ZLOGPF(s, eDebug + 1))
 				{
@@ -325,8 +420,8 @@ void Source_Dataset::CollectResults(vector<QueryResult>& oChanged)
 			}
 		}
 
-	if (!ZMACRO_IPhone_Device)
-		ZThread::sSleep(1);
+//##	if (!ZMACRO_IPhone_Device)
+//##		ZThread::sSleep(1);
 	}
 
 ZRef<ZDataset::Dataset> Source_Dataset::GetDataset()

@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/ZDataspace_Source_Union.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
-#include "zoolib/zqe/ZQE_Query.h"
+#include "zoolib/zqe/ZQE_DoQuery.h"
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
@@ -303,8 +303,9 @@ public:
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
 		{
-		// We should never see a Concrete as we're being used to make walkers
-		// for an analyzed rel.
+		// We'll never see a Concrete -- we're called only an a Rel that's been
+		// analyzed and where any concrete or expression incorporating a concrete
+		// will have been replaced with a Source_Union::Proxy;
 		ZUnimplemented();
 		}
 
@@ -333,7 +334,8 @@ public:
 	Analyze(Source_Union* iSource_Union, PQuery* iPQuery);
 
 // From ZVisitor_Expr_Op2_T via ZVisitor_Expr_Op_DoTransform_T
-	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> >& iExpr);
+	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> >& iExpr)
+		{ ZUnimplemented(); }
 
 // From ZRA::Visitor_Expr_Rel_XXX
 	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr);
@@ -347,14 +349,12 @@ public:
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr);
 
 // Our protocol
-	void HandleOp2(const ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> >& iExpr);
 	ZRef<ZRA::Expr_Rel> TopLevelDo(ZRef<ZRA::Expr_Rel> iRel);
 
+private:
 	Source_Union* fSource_Union;
 	PQuery* fPQuery;
 	set<PSource*> fPSources;
-
-	ZRA::Rename fRename;
 	ZRA::RelHead fResultRelHead;
 	};
 
@@ -363,16 +363,10 @@ Source_Union::Analyze::Analyze(Source_Union* iSource_Union, PQuery* iPQuery)
 ,	fPQuery(iPQuery)
 	{}
 
-void Source_Union::Analyze::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> >& iExpr)
-	{
-	ZUnimplemented();
-	}
-
 void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr)
 	{
 	// Visit left branch
-	const ZRef<ZRA::Expr_Rel> oldOp0 = iExpr->GetOp0();
-	const ZRef<ZRA::Expr_Rel> newOp0 = this->Do(oldOp0);
+	const ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 	// Remember which PSources it touches.
 	set<PSource*> leftPSources;
@@ -383,8 +377,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 	leftRelHead.swap(fResultRelHead);
 	
 	// Visit right branch
-	const ZRef<ZRA::Expr_Rel> oldOp1 = iExpr->GetOp1();
-	const ZRef<ZRA::Expr_Rel> newOp1 = this->Do(oldOp1);
+	const ZRef<ZRA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 	
 	// Remember its PSources.
 	set<PSource*> rightPSources;
@@ -401,10 +394,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 		if (fPSources.size() <= 1)
 			{
 			// And with the addition of the right branch we still reference <= 1 source.
-			if (oldOp0 == newOp0 && oldOp1 == newOp1)
-				this->pSetResult(iExpr->Self());
-			else
-				this->pSetResult(iExpr->Clone(newOp0, newOp1));
+			this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
 			}
 		else
 			{
@@ -435,10 +425,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 			}
 		else
 			{
-			if (oldOp0 == newOp0 && oldOp1 == newOp1)
-				this->pSetResult(iExpr->Self());
-			else
-				this->pSetResult(iExpr->Clone(newOp0, newOp1));
+			this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
 			}
 		}
 	}
@@ -780,9 +767,9 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 		if (allOK)
 			{
 			ZRef<ZQE::Walker> theWalker =
-				Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
+				Source_Union::Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
 
-			ZRef<ZQE::Result> theResult = sQuery(theWalker);
+			ZRef<ZQE::Result> theResult = ZQE::sDoQuery(theWalker);
 			
 			for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 				iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())

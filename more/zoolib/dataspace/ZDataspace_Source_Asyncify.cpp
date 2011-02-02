@@ -156,8 +156,10 @@ void Source_Asyncify::pUpdate()
 					iter != changes.end(); ++iter)
 					{ fPendingResults[iter->GetRefcon()] = *iter; }
 
+				guard.Release();
 				this->pInvokeCallable_ResultsAvailable();
 				}
+			guard.Acquire();
 			}
 
 		if (!didAnything)
