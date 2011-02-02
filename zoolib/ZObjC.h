@@ -23,15 +23,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#ifdef __OBJC__
+	#define ZMACRO_ObjCClass(p) @class p
+#else
+	#define ZMACRO_ObjCClass(p) typedef struct objc_##p p
+#endif
+
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
 #ifdef __cplusplus
 
-#ifdef __OBJC__
-	@class NSAutoreleasePool;
-#else
-	typedef struct objc_NSAutoreleasePool NSAutoreleasePool;
-#endif
+ZMACRO_ObjCClass(NSAutoreleasePool);
 
 namespace ZooLib {
 
@@ -52,7 +54,6 @@ private:
 } // namespace ZooLib
 
 #endif // __cplusplus
-
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
 
 #endif // __ZObjC__
