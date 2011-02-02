@@ -29,11 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Const.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Dee.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
@@ -47,10 +44,7 @@ namespace ZQE {
 
 class Visitor_DoMakeWalker
 :	public virtual ZVisitor_Do_T<ZRef<Walker> >
-,	public virtual ZRA::Visitor_Expr_Rel_Difference
-,	public virtual ZRA::Visitor_Expr_Rel_Intersect
 ,	public virtual ZRA::Visitor_Expr_Rel_Product
-,	public virtual ZRA::Visitor_Expr_Rel_Union
 ,	public virtual ZRA::Visitor_Expr_Rel_Embed
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
@@ -60,10 +54,13 @@ class Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Dee
 	{
 public:
-	virtual void Visit_Expr_Rel_Difference(const ZRef<ZRA::Expr_Rel_Difference>& iExpr);
-	virtual void Visit_Expr_Rel_Intersect(const ZRef<ZRA::Expr_Rel_Intersect>& iExpr);
+// From ZVisitor_Expr_OpX_T via ZVisitor_Expr_Op_DoTransform_T and Visitor_Expr_Rel_XXX
+	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<ZRA::Expr_Rel> >& iExpr);
+	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<ZRA::Expr_Rel> >& iExpr);
+	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> >& iExpr);
+
+// From Visitor_Expr_Rel_XXX
 	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr);
-	virtual void Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>& iExpr);
 
 	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
 	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
