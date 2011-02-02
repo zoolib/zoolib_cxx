@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Query__
-#define __ZQE_Query__ 1
+#ifndef __ZQE_DoQuery__
+#define __ZQE_DoQuery__ 1
 #include "zconfig.h"
 
 #include "zoolib/zqe/ZQE_Result.h"
@@ -32,9 +32,9 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * sQuery
 
-ZRef<Result> sQuery(ZRef<Walker> iWalker);
+ZRef<Result> sDoQuery(ZRef<Walker> iWalker);
 
 } // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZQE_Query__
+#endif // __ZQE_DoQuery__
