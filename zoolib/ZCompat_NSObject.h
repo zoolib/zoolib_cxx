@@ -22,16 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCompat_NSObject__ 1
 #include "zconfig.h"
 
-#ifdef __OBJC__
+#include "zoolib/ZObjC.h"
 
-	#import <objc/objc.h>
-	@class NSObject;
-
-#else
-
-	#include <objc/objc.h>
-	typedef struct objc_NSObject NSObject;
-
-#endif
+ZMACRO_ObjCClass(NSObject);
 
 #endif // __ZCompat_NSObject__
