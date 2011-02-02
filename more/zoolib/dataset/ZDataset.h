@@ -159,7 +159,7 @@ public:
 
 	ZRef<Dataset> Fork();
 
-	void Join(ZRef<Dataset> iOther);
+	void Join(ZRef<Dataset>& ioOther);
 
 	void GetDeltas(ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas, const ZRef<Event>& iEvent);
 	ZRef<Event> GetDeltas(ZRef<Deltas>& oDeltas, const ZRef<Event>& iEvent);

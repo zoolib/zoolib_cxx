@@ -18,7 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZLog.h"
 #include "zoolib/ZString.h"
+#include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
+
 #include "zoolib/dataset/ZDataset.h"
 
 #include <queue>
@@ -206,14 +209,26 @@ ZRef<Dataset> Dataset::Fork()
 	{
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
-	return new Dataset(Nombre(fNombre, fNextFork++), sFork(fClock), fDeltasChain);
+	ZRef<Clock> a, b;
+	fClock->Forked(a, b);
+	
+//	if (random() & 1)
+//		swap(a, b);
+	fClock = a;
+	
+	return new Dataset(Nombre(fNombre, fNextFork++), b, fDeltasChain);
 	}
 
-void Dataset::Join(ZRef<Dataset> iOther)
+void Dataset::Join(ZRef<Dataset>& ioOther)
 	{
 	ZRef<Deltas> theDeltas;
-	ZRef<Event> otherEvent = iOther->GetDeltas(theDeltas, fClock->GetEvent());
+	ZRef<Event> otherEvent = ioOther->GetDeltas(theDeltas, fClock->GetEvent());
 	this->IncorporateDeltas(otherEvent, theDeltas);
+	sJoin(fClock, ioOther->fClock);
+	ioOther->fClock.Clear();
+	ioOther->fPendingStatements.clear();
+	ioOther->fDeltasChain.Clear();
+	ioOther.Clear();
 	}
 
 void Dataset::GetDeltas(ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas, const ZRef<Event>& iEvent)
@@ -254,6 +269,9 @@ void Dataset::IncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& i
 	this->pCommit();
 	fDeltasChain = new DeltasChain(fDeltasChain, iDeltas);
 	sReceive(fClock, iEvent);
+
+	if (ZLOGF(s, eDebug))
+		s << "clk: " << fClock << "evt: " << iEvent;
 	}
 
 typedef pair<NamedEvent, size_t> TSIndex_t;
