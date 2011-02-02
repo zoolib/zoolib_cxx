@@ -126,7 +126,7 @@ public:
 	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
 		{
 		fNegating = !fNegating;
-		this->pSetResult(this->Do(iRep->GetOp0()));
+		ZVisitor_Expr_Bool_Not::Visit_Expr_Bool_Not(iRep);
 		fNegating = !fNegating;
 		}
 

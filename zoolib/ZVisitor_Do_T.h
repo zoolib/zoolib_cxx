@@ -78,7 +78,7 @@ public:
 		}
 
 protected:
-	ZQ<Result_t> QGetResult()
+	const ZQ<Result_t>& QGetResult()
 		{ return fResultQ; }
 
 	void pSetResult(const Result_t& iResult)

@@ -41,32 +41,22 @@ class ZVisitor_Expr_Op_Do_Transform_T
 public:
 // From ZVisitor_Expr_Op0_T
 	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<T> >& iExpr)
-		{ this->pSetResult(iExpr->Self()); }
+		{ this->pSetResult(iExpr->SelfOrClone()); }
 
 // From ZVisitor_Expr_Op1_T
 	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<T> >& iExpr)
 		{
-		ZRef<T> oldOp0 = iExpr->GetOp0();
-		ZRef<T> newOp0 = this->Do(oldOp0);
-		if (oldOp0 == newOp0)
-			this->pSetResult(iExpr->Self());
-		else
-			this->pSetResult(iExpr->Clone(newOp0));
+		ZRef<T> newOp0 = this->Do(iExpr->GetOp0());
+		this->pSetResult(iExpr->SelfOrClone(newOp0));
 		}
 
 // From ZVisitor_Expr_Op2_T
 	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<T> >& iExpr)
 		{
-		ZRef<T> oldOp0 = iExpr->GetOp0();
-		ZRef<T> oldOp1 = iExpr->GetOp1();
-		ZRef<T> newOp0 = this->Do(oldOp0);
-		ZRef<T> newOp1 = this->Do(oldOp1);
-		if (oldOp0 == newOp0 && oldOp1 == newOp1)
-			this->pSetResult(iExpr->Self());
-		else
-			this->pSetResult(iExpr->Clone(newOp0, newOp1));
+		ZRef<T> newOp0 = this->Do(iExpr->GetOp0());
+		ZRef<T> newOp1 = this->Do(iExpr->GetOp1());
+		this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
 		}
-
 	};
 
 } // namespace ZooLib

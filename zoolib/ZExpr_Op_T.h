@@ -69,6 +69,9 @@ public:
 
 	virtual ZRef<T> Self() = 0;
 	virtual ZRef<T> Clone() = 0;
+	
+	ZRef<T> SelfOrClone()
+		{ return this->Self(); }
 	};
 
 // =================================================================================================
@@ -129,6 +132,13 @@ public:
 
 	virtual ZRef<T> Self() = 0;
 	virtual ZRef<T> Clone(const ZRef<T>& iOp0) = 0;
+
+	ZRef<T> SelfOrClone(const ZRef<T>& iOp0)
+		{
+		if (iOp0 == fOp0)
+			return this->Self();
+		return this->Clone(iOp0);
+		}
 
 	const ZRef<T>& GetOp0() const
 		{ return fOp0; }
@@ -196,6 +206,13 @@ public:
 
 	virtual ZRef<T> Self() = 0;
 	virtual ZRef<T> Clone(const ZRef<T>& iOp0, const ZRef<T>& iOp1) = 0;
+
+	ZRef<T> SelfOrClone(const ZRef<T>& iOp0, const ZRef<T>& iOp1)
+		{
+		if (iOp0 == fOp0 && iOp1 == fOp1)
+			return this->Self();
+		return this->Clone(iOp0, iOp1);
+		}
 
 	const ZRef<T>& GetOp0() const
 		{ return fOp0; }
