@@ -30,6 +30,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE2(CoreVideo,CVPixelBuffer.h)
 
+#if !defined(MAC_OS_X_VERSION_10_5) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5
+	// Target OS is pre-10.5, so we don't have the kCVPixelFormatType_XXX enums.
+	#include ZMACINCLUDE3(ApplicationServices,QD,QuickDraw.h)
+	#define ZMACRO_CVPixelFormat(a) k##a##PixelFormat
+#else
+	#define ZMACRO_CVPixelFormat(a) kCVPixelFormatType_##a
+#endif
+
 namespace ZooLib {
 
 // =================================================================================================
