@@ -38,16 +38,11 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 
 	{ // Scope for sr
 	ZSetRestore_T<RelHead> sr(fRelHead);
-	ZRef<Expr_Rel> oldOp0 = iExpr->GetOp0();
-	ZRef<Expr_Rel> newOp0 = this->Do(oldOp0);
-
-	ZRef<Expr_Rel> oldOp1 = iExpr->GetOp1();
-	ZRef<Expr_Rel> newOp1 = this->Do(oldOp1);
+	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	ZRef<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 	
 	theRelHead = fRelHead;
-	ZRef<Expr_Rel> result = iExpr;
-	if (oldOp0 != newOp0 || oldOp1 != newOp1)
-		result = iExpr->Clone(newOp0, newOp1);
+	ZRef<Expr_Rel> result = iExpr->SelfOrClone(newOp0, newOp1);
 
 	// Examine restricts, see which were touched
 	for (vector<Restrict*>::iterator iter = fRestricts.begin(); iter != fRestricts.end(); ++iter)
@@ -78,19 +73,15 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{
-	ZRef<Expr_Rel> oldOp0 = iExpr->GetOp0();
 	ZRef<Expr_Rel> newOp0;
 	
 	{
 	ZSetRestore_T<vector<Restrict*> > sr0(fRestricts);
 	ZSetRestore_T<RelHead> sr1(fRelHead);
-	newOp0 = this->Do(oldOp0);
+	newOp0 = this->Do(iExpr->GetOp0());
 	}
 
-	if (oldOp0 == newOp0)
-		this->pHandleIt(iExpr->GetRelName(), iExpr);
-	else
-		this->pHandleIt(iExpr->GetRelName(), iExpr->Clone(newOp0));
+	this->pHandleIt(iExpr->GetRelName(), iExpr->SelfOrClone(newOp0));
 	}
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
@@ -147,15 +138,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Re
 		{
 		// Descendants may have added our restriction into the
 		// tree, but they didn't all do so.
-		if (newOp0 == oldOp0)
-			{
-			// No changes in our descendants at all.
-			this->pSetResult(iExpr->Self());
-			}
-		else
-			{
-			this->pSetResult(iExpr->Clone(newOp0));
-			}
+		this->pSetResult(iExpr->SelfOrClone(newOp0));
 		}
 	}
 
