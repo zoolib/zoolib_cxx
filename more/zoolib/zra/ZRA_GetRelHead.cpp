@@ -57,7 +57,11 @@ class Visitor_GetRelHead
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
 	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
-		{ this->pSetResult(this->Do(iExpr->GetOp0()) | iExpr->GetRelName()); }
+		{
+		// We don't walk iExpr->GetOp0() -- its content doesn't contribute to
+		// our resulting relhead.
+		this->pSetResult(iExpr->GetRelName());
+		}
 
 	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) & iExpr->GetProjectRelHead()); }
