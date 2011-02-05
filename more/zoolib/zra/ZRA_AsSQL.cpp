@@ -80,13 +80,12 @@ class Analyzer
 ,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Const
+,	public virtual Visitor_Expr_Rel_Dee
 	{
 public:
 	Analyzer(const map<string8,RelHead>& iTables);
 
-	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr);
-	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr);
-	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr);
+	virtual void Visit(const ZRef<ZVisitee>& iRep);
 
 	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
 
@@ -96,6 +95,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
+	virtual void Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr);
 
 	const map<string8,RelHead>& fTables;
 	map<string8,int> fTablesUsed;
@@ -105,13 +105,7 @@ Analyzer::Analyzer(const map<string8,RelHead>& iTables)
 :	fTables(iTables)
 	{}
 
-void Analyzer::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr)
-	{ ZUnimplemented(); }
-
-void Analyzer::Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr)
-	{ ZUnimplemented(); }
-
-void Analyzer::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
+void Analyzer::Visit(const ZRef<ZVisitee>& iRep)
 	{ ZUnimplemented(); }
 
 void Analyzer::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
@@ -227,6 +221,13 @@ void Analyzer::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	Analysis theAnalysis;
 	theAnalysis.fCondition = sTrue();
 	theAnalysis.fConstValues.Set(iExpr->GetRelName(), iExpr->GetVal());
+	this->pSetResult(theAnalysis);
+	}
+
+void Analyzer::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
+	{
+	Analysis theAnalysis;
+	theAnalysis.fCondition = sTrue();
 	this->pSetResult(theAnalysis);
 	}
 

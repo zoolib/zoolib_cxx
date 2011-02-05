@@ -50,19 +50,19 @@ void Transform_ConsolidateRenames::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Re
 
 void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	{
-	ZRef<Expr_Rel> oldOp0 = iExpr->GetOp0();
-	const string8 oldName = iExpr->GetOld();
 	string8 newName = iExpr->GetNew();
-	if (ZQ<string8> theQ = sEraseAndReturnIfContains(fRename, newName))
+	if (ZQ<string8> theQ = sQErase(fRename, newName))
 		newName = theQ.Get();
+
+	const string8 oldName = iExpr->GetOld();
 
 	sInsertMustNotContain(1, fRename, oldName, newName);
 
-	ZRef<Expr_Rel> newOp0 = this->Do(oldOp0);
+	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
-	if (ZQ<string8> theQ2 = sGetIfContains(fRename, oldName))
+	if (ZQ<string8> theQ = sQGet(fRename, oldName))
 		{
-		if (theQ2.Get() == newName)
+		if (theQ.Get() == newName)
 			{
 			if (newName != oldName)
 				newOp0 = sRename(newOp0, newName, oldName);
