@@ -36,13 +36,7 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Visitor_DoMakeWalker
 
-void Visitor_DoMakeWalker::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<ZRA::Expr_Rel> >& iExpr)
-	{ ZUnimplemented(); }
-
-void Visitor_DoMakeWalker::Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<ZRA::Expr_Rel> >& iExpr)
-	{ ZUnimplemented(); }
-
-void Visitor_DoMakeWalker::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> >& iExpr)
+void Visitor_DoMakeWalker::Visit(const ZRef<ZVisitee>& iRep)
 	{ ZUnimplemented(); }
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr)
