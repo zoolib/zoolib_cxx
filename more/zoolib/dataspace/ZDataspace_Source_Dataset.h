@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataset/ZDataset.h"
 #include "zoolib/dataspace/ZDataspace_Source.h"
+
+#include "zoolib/zqe/ZQE_Expr_Rel_Search.h"
 #include "zoolib/zqe/ZQE_Walker.h"
 
 #include <map>
@@ -99,32 +101,40 @@ private:
 	size_t fReadCount;
 	size_t fStepCount;
 
+	bool pPull();
 	void pConditionalPushDown();
 	void pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense);
 
+	class PQuery;
+
 	class Visitor_DoMakeWalker;
 	friend class Visitor_DoMakeWalker;	
-	ZRef<ZQE::Walker> pMakeWalker(const RelHead& iRelHead);
+//--
+	class Walker_Concrete;
+	friend class Walker_Concrete;
 
-	class Walker;
-	friend class Walker;
+	ZRef<ZQE::Walker> pMakeWalker_Concrete(const RelHead& iRelHead);
 
-	void pRewind(ZRef<Walker> iWalker);
+	void pRewind_Concrete(ZRef<Walker_Concrete> iWalker);
 
-	void pPrime(ZRef<Walker> iWalker,
+	void pPrime_Concrete(ZRef<Walker_Concrete> iWalker,
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc(ZRef<Walker> iWalker,
+	bool pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 	
-	bool pPull();
+//--
+	class Walker_Search;
+	friend class Walker_Search;
 
+	ZRef<ZQE::Walker> pMakeWalker_Search(PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel);
+//--
 	ZRef<ZDataset::Dataset> fDataset;
 	ZRef<Event> fEvent;
-
+//--
 	typedef std::map<ZDataset::Daton, std::pair<ZDataset::NamedEvent, ZVal_Any> > Map_Main;
 	Map_Main fMap;
 
@@ -134,15 +144,26 @@ private:
 	uint64 fChangeCount;
 	std::vector<uint64> fStack_ChangeCount;
 	bool fChanged;
-
+//--
 	class DLink_ClientQuery_InPQuery;
+	class DLink_ClientQuery_NeedsWork;
 	class ClientQuery;
-	class PQuery;
 	std::map<int64, ClientQuery> fMap_Refcon_ClientQuery;
-
+	DListHead<DLink_ClientQuery_NeedsWork> fClientQuery_NeedsWork;
+//--
+	class DLink_PQuery_NeedsWork;
 	typedef std::map<ZRef<ZRA::Expr_Rel>, PQuery, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
 		Map_Rel_PQuery;
 	Map_Rel_PQuery fMap_Rel_PQuery;
+
+	DListHead<DLink_PQuery_NeedsWork> fPQuery_NeedsWork;
+//--
+	class DLink_PSearch_NeedsWork;
+	class PSearch;
+
+	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
+//--
+	void pDetachPQuery(PQuery* iPQuery);
 	};
 
 } // namespace ZDataspace

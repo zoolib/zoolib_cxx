@@ -333,10 +333,6 @@ class Source_Union::Analyze
 public:
 	Analyze(Source_Union* iSource_Union, PQuery* iPQuery);
 
-// From ZVisitor_Expr_Op2_T via ZVisitor_Expr_Op_DoTransform_T
-	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZRA::Expr_Rel> >& iExpr)
-		{ ZUnimplemented(); }
-
 // From ZRA::Visitor_Expr_Rel_XXX
 	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr);
 
@@ -642,21 +638,8 @@ void Source_Union::ModifyRegistrations(
 				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
 				}
 
-		theRel = ZRA::Transform_DecomposeRestricts().Do(theRel);
-		theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
-#if 0
-
-			ZRA::Transform_Thing theTT;
-			theRel = theTT.TopLevelDo(theRel);
-			if (ZLOGF(s, eDebug))
-				{
-				s << "\nConcrete2Temp: " << theTT.fRename_Concrete2Temp;
-				s << "\nTemp2Concrete: " << theTT.fRename_Temp2Concrete;
-				s << "\nResultingRelHead: " << theTT.fResultingRelHead;
-				}
-
-			theRel = ZRA::Transform_ConsolidateRenames().Do(theRel);
-#endif
+			theRel = ZRA::Transform_DecomposeRestricts().Do(theRel);
+			theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
 
 			if (ZLOGPF(s, eDebug))
 				{
@@ -665,7 +648,7 @@ void Source_Union::ModifyRegistrations(
 				}
 
 			thePQuery->fRel_Analyzed = Analyze(this, thePQuery).TopLevelDo(theRel);
-			fPQuery_NeedsWork.Insert(thePQuery);//??
+			fPQuery_NeedsWork.Insert(thePQuery);
 
 			if (ZLOGPF(s, eDebug))
 				{
@@ -936,7 +919,15 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 			iWalker->fCurrentResult->GetAnnotationsAt(iWalker->fCurrentIndex, *oAnnotations);
 
 		const ZRA::RelHead& theRH = iWalker->fCurrentResult->GetRelHead();
-		ZAssert(theRH == iWalker->fProxy->fResultRelHead);
+		if (theRH != iWalker->fProxy->fResultRelHead)
+			{
+			if (ZLOGPF(s, eDebug))
+				{
+				s	<< "\n" << theRH
+					<< "\n" << iWalker->fProxy->fResultRelHead;
+				}
+			ZDebugStop(0);
+			}
 		size_t theOffset = iWalker->fBaseOffset;
 		const ZVal_Any* theVals = iWalker->fCurrentResult->GetValsAt(iWalker->fCurrentIndex);
 		for (ZRA::RelHead::const_iterator i = theRH.begin(); i != theRH.end(); ++i)
