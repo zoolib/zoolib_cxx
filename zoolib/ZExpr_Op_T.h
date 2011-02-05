@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZExpr.h"
 
+#include <vector>
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -236,6 +238,79 @@ class ZVisitor_Expr_Op2_T
 public:
 // Our protocol
 	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<T> >& iExpr)
+		{ this->Visit_Expr(iExpr); }
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZExpr_OpN_T
+
+template <class T>
+class ZVisitor_Expr_OpN_T;
+
+template <class T>
+class ZExpr_OpN_T
+:	public virtual ZExpr
+	{
+protected:
+	ZExpr_OpN_T(const std::vector<ZRef<T> >& iOps)
+	:	fOps(iOps)
+		{}
+
+public:
+	virtual ~ZExpr_OpN_T()
+		{}
+
+// From ZVisitee
+	virtual void Accept(ZVisitor& iVisitor)
+		{
+		if (ZVisitor_Expr_OpN_T<T>* theVisitor = dynamic_cast<ZVisitor_Expr_OpN_T<T>*>(&iVisitor))
+			this->Accept_Expr_OpN(*theVisitor);
+		else
+			ZExpr::Accept(iVisitor);
+		}
+
+// From ZExpr
+	virtual void Accept_Expr(ZVisitor_Expr& iVisitor)
+		{
+		if (ZVisitor_Expr_OpN_T<T>* theVisitor = dynamic_cast<ZVisitor_Expr_OpN_T<T>*>(&iVisitor))
+			this->Accept_Expr_OpN(*theVisitor);
+		else
+			ZExpr::Accept_Expr(iVisitor);
+		}
+
+// Our protocol
+	virtual void Accept_Expr_OpN(ZVisitor_Expr_OpN_T<T>& iVisitor)
+		{ iVisitor.Visit_Expr_OpN(this); }
+
+	virtual ZRef<T> Self() = 0;
+	virtual ZRef<T> Clone(const std::vector<ZRef<T> >& iOps) = 0;
+
+	ZRef<T> SelfOrClone(const std::vector<ZRef<T> >& iOps)
+		{
+		if (iOps == fOps)
+			return this->Self();
+		return this->Clone(iOps);
+		}
+
+	const std::vector<ZRef<T> >& GetOps() const
+		{ return fOps; }
+
+private:
+	std::vector<ZRef<T> > fOps;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor_Expr_OpN_T
+
+template <class T>
+class ZVisitor_Expr_OpN_T
+:	public virtual ZVisitor_Expr
+	{
+public:
+// Our protocol
+	virtual void Visit_Expr_OpN(const ZRef<ZExpr_OpN_T<T> >& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 
