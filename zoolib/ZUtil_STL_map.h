@@ -63,7 +63,7 @@ Value sEraseAndReturn(const int iDebugLevel,
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-ZQ<Value> sEraseAndReturnIfContains(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+ZQ<Value> sQErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
 	{
 	typename std::map<KBase,Value,Comparator>::iterator i = ioMap.find(iKey);
 	if (ioMap.end() == i)
@@ -74,12 +74,23 @@ ZQ<Value> sEraseAndReturnIfContains(std::map<KBase,Value,Comparator>& ioMap, con
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
+ZQ<Value> sEraseAndReturnIfContains(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{ return sQErase(ioMap, iKey); }
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
 void sInsertMustNotContain(const int iDebugLevel,
 	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
 	{
 	const bool didInsert =
 		ioMap.insert(typename std::map<KBase,Value,Comparator>::value_type(iKey, iValue)).second;
 	ZAssertStop(iDebugLevel, didInsert);
+	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+bool sInsertIfNotContains(
+	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
+	{
+	return ioMap.insert(typename std::map<KBase,Value,Comparator>::value_type(iKey, iValue)).second;
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
@@ -111,13 +122,17 @@ const Value& sGetMustContain(const int iDebugLevel,
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-ZQ<Value> sGetIfContains(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
+ZQ<Value> sQGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
 	{
 	typename std::map<KBase,Value,Comparator>::const_iterator i = iMap.find(iKey);
 	if (iMap.end() == i)
 		return null;
 	return i->second;
 	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+ZQ<Value> sGetIfContains(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
+	{ return sQGet(iMap, iKey); }
 
 } // namespace ZUtil_STL
 } // namespace ZooLib
