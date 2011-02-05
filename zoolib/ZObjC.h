@@ -29,9 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZMACRO_ObjCClass(p) typedef struct objc_##p p
 #endif
 
-#if ZCONFIG_SPI_Enabled(Cocoa)
-
-#ifdef __cplusplus
+#if ZCONFIG_SPI_Enabled(Cocoa) && __cplusplus
 
 ZMACRO_ObjCClass(NSAutoreleasePool);
 
@@ -53,7 +51,6 @@ private:
 
 } // namespace ZooLib
 
-#endif // __cplusplus
-#endif // ZCONFIG_SPI_Enabled(Cocoa)
+#endif // ZCONFIG_SPI_Enabled(Cocoa) && __cplusplus
 
 #endif // __ZObjC__
