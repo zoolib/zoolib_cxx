@@ -40,7 +40,7 @@ class ZVisitor_Expr_Bool_ValPred_Do_GetNames
 ,	public virtual ZVisitor_Expr_Op2_T<ZExpr_Bool>
 	{
 public:
-// From ZVisitor_Expr_Bool_ValPred_T
+// From ZVisitor_Expr_Bool_ValPred
 	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
 
 // From ZVisitor_Expr_Op1_T
