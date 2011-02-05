@@ -146,7 +146,7 @@ ZUniSet_T<T>& ZUniSet_T<T>::operator=(const ZUniSet_T& iOther)
 
 template <class T>
 ZUniSet_T<T> ZUniSet_T<T>::sUniversal()
-	{ return ZUniSet_T<T>(true, (std::set<T>*)(0)); }
+	{ return ZUniSet_T<T>(true, nullptr); }
 
 template <class T>
 ZUniSet_T<T>::ZUniSet_T(const std::set<T>& iElems)
@@ -227,12 +227,12 @@ ZUniSet_T<T> ZUniSet_T<T>::operator&(const ZUniSet_T& iOther) const
 		if (iOther.fUniversal)
 			{
 			resultUniversal = true;
-			ZUtil_STL_set::sOr(fElems, iOther.fElems, result);
+			ZUtil_STL::sOr(fElems, iOther.fElems, result);
 			}
 		else
 			{
 			resultUniversal = false;
-			ZUtil_STL_set::sMinus(iOther.fElems, fElems, result);
+			ZUtil_STL::sMinus(iOther.fElems, fElems, result);
 			}
 		}
 	else
@@ -240,12 +240,12 @@ ZUniSet_T<T> ZUniSet_T<T>::operator&(const ZUniSet_T& iOther) const
 		if (iOther.fUniversal)
 			{
 			resultUniversal = false;
-			ZUtil_STL_set::sMinus(fElems, iOther.fElems, result);
+			ZUtil_STL::sMinus(fElems, iOther.fElems, result);
 			}
 		else
 			{
 			resultUniversal = false;
-			ZUtil_STL_set::sAnd(iOther.fElems, fElems, result);
+			ZUtil_STL::sAnd(iOther.fElems, fElems, result);
 			}
 		}
 	return ZUniSet_T(resultUniversal, &result);
@@ -268,12 +268,12 @@ ZUniSet_T<T> ZUniSet_T<T>::operator|(const ZUniSet_T& iOther) const
 		if (iOther.fUniversal)
 			{
 			resultUniversal = true;
-			ZUtil_STL_set::sAnd(fElems, iOther.fElems, result);
+			ZUtil_STL::sAnd(fElems, iOther.fElems, result);
 			}
 		else
 			{
 			resultUniversal = true;
-			ZUtil_STL_set::sMinus(fElems, iOther.fElems, result);
+			ZUtil_STL::sMinus(fElems, iOther.fElems, result);
 			}
 		}
 	else
@@ -281,12 +281,12 @@ ZUniSet_T<T> ZUniSet_T<T>::operator|(const ZUniSet_T& iOther) const
 		if (iOther.fUniversal)
 			{
 			resultUniversal = true;
-			ZUtil_STL_set::sMinus(iOther.fElems, fElems, result);
+			ZUtil_STL::sMinus(iOther.fElems, fElems, result);
 			}
 		else
 			{
 			resultUniversal = false;
-			ZUtil_STL_set::sOr(fElems, iOther.fElems, result);
+			ZUtil_STL::sOr(fElems, iOther.fElems, result);
 			}
 		}
 	return ZUniSet_T(resultUniversal, &result);
@@ -309,12 +309,12 @@ ZUniSet_T<T> ZUniSet_T<T>::operator-(const ZUniSet_T& iOther) const
 		if (iOther.fUniversal)
 			{
 			resultUniversal = false;
-			ZUtil_STL_set::sMinus(iOther.fElems, fElems, result);
+			ZUtil_STL::sMinus(iOther.fElems, fElems, result);
 			}
 		else
 			{
 			resultUniversal = true;
-			ZUtil_STL_set::sOr(fElems, iOther.fElems, result);
+			ZUtil_STL::sOr(fElems, iOther.fElems, result);
 			}
 		}
 	else
@@ -322,12 +322,12 @@ ZUniSet_T<T> ZUniSet_T<T>::operator-(const ZUniSet_T& iOther) const
 		if (iOther.fUniversal)
 			{
 			resultUniversal = false;
-			ZUtil_STL_set::sAnd(fElems, iOther.fElems, result);
+			ZUtil_STL::sAnd(fElems, iOther.fElems, result);
 			}
 		else
 			{
 			resultUniversal = false;
-			ZUtil_STL_set::sMinus(fElems, iOther.fElems, result);
+			ZUtil_STL::sMinus(fElems, iOther.fElems, result);
 			}
 		}
 	return ZUniSet_T(resultUniversal, &result);
@@ -345,7 +345,7 @@ ZUniSet_T<T> ZUniSet_T<T>::operator^(const ZUniSet_T& iOther) const
 	{
 	std::set<T> result;
 	bool resultUniversal = fUniversal ^ iOther.fUniversal;
-	ZUtil_STL_set::sXor(fElems, iOther.fElems, result);
+	ZUtil_STL::sXor(fElems, iOther.fElems, result);
 	return ZUniSet_T(resultUniversal, &result);
 	}
 
@@ -356,12 +356,12 @@ bool ZUniSet_T<T>::Contains(const ZUniSet_T& iOther) const
 		{
 		if (iOther.fUniversal)
 			{
-			return ZUtil_STL_set::sIncludes(iOther.fElems, fElems);
+			return ZUtil_STL::sIncludes(iOther.fElems, fElems);
 			}
 		else
 			{
 			std::set<T> sect;
-			ZUtil_STL_set::sAnd(fElems, iOther.fElems, sect);
+			ZUtil_STL::sAnd(fElems, iOther.fElems, sect);
 			return sect.empty();
 			}
 		}
@@ -370,7 +370,7 @@ bool ZUniSet_T<T>::Contains(const ZUniSet_T& iOther) const
 		if (iOther.fUniversal)
 			return false;
 		else
-			return ZUtil_STL_set::sIncludes(fElems, iOther.fElems);
+			return ZUtil_STL::sIncludes(fElems, iOther.fElems);
 		}
 	}
 
