@@ -75,13 +75,13 @@ int ZVal_Any::Compare(const ZVal_Any& iOther) const
 	const char* typeName = this->Type().name();
 	if (int compare = strcmp(typeName, iOther.Type().name()))
 		return compare;
-	return ZCompare::sCompare(typeName, this->VoidStar(), iOther.VoidStar());
+	return ZCompare::sCompare(typeName, this->ConstVoidStar(), iOther.ConstVoidStar());
 	}
 
-ZVal_Any* ZVal_Any::PGet(const string8& iName)
+ZVal_Any* ZVal_Any::PGetMutable(const string8& iName)
 	{
-	if (ZMap_Any* asMap = this->PGet<ZMap_Any>())
-		return asMap->PGet(iName);
+	if (ZMap_Any* asMap = this->PGetMutable<ZMap_Any>())
+		return asMap->PGetMutable(iName);
 	return nullptr;
 	}
 
@@ -97,8 +97,8 @@ ZVal_Any ZVal_Any::Get(const string8& iName) const
 
 ZVal_Any* ZVal_Any::PGet(size_t iIndex)
 	{
-	if (ZSeq_Any* asSeq = this->PGet<ZSeq_Any>())
-		return asSeq->PGet(iIndex);
+	if (ZSeq_Any* asSeq = this->PGetMutable<ZSeq_Any>())
+		return asSeq->PGetMutable(iIndex);
 	return nullptr;
 	}
 
@@ -196,7 +196,7 @@ int ZSeq_Any::Compare(const ZSeq_Any& iOther) const
 void ZSeq_Any::Clear()
 	{ fRep.Clear(); }
 
-ZVal_Any* ZSeq_Any::PGet(size_t iIndex)
+ZVal_Any* ZSeq_Any::PGetMutable(size_t iIndex)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		{
@@ -433,7 +433,7 @@ int ZMap_Any::Compare(const ZMap_Any& iOther) const
 void ZMap_Any::Clear()
 	{ fRep.Clear(); }
 
-ZVal_Any* ZMap_Any::PGet(const string8& iName)
+ZVal_Any* ZMap_Any::PGetMutable(const string8& iName)
 	{
 	if (fRep)
 		{
@@ -445,7 +445,7 @@ ZVal_Any* ZMap_Any::PGet(const string8& iName)
 	return nullptr;
 	}
 
-ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex)
+ZVal_Any* ZMap_Any::PGetMutable(const Index_t& iIndex)
 	{
 	Map_t::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())

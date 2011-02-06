@@ -137,21 +137,22 @@ public:
 
 	int Compare(const ZVal_Any& iOther) const;
 
+	using ZAny::PGetMutable;
 	using ZAny::PGet;
 	using ZAny::QGet;
 	using ZAny::DGet;
 	using ZAny::Get;
 
 // Shortcut access to values in an enclosed Map.
-	ZVal_Any* PGet(const string8& iName);
+	ZVal_Any* PGetMutable(const string8& iName);
 	const ZVal_Any* PGet(const string8& iName) const;
 	ZVal_Any Get(const string8& iName) const;
 
 	template <class S>
-	S* PGet(const string8& iName)
+	S* PGetMutable(const string8& iName)
 		{
-		if (ZVal_Any* theVal = this->PGet(iName))
-			return theVal->PGet<S>();
+		if (ZVal_Any* theVal = this->PGetMutable(iName))
+			return theVal->PGetMutable<S>();
 		return nullptr;
 		}
 
@@ -249,7 +250,7 @@ public:
 
 	void Clear();
 
-	ZVal_Any* PGet(size_t iIndex);
+	ZVal_Any* PGetMutable(size_t iIndex);
 	const ZVal_Any* PGet(size_t iIndex) const;
 	ZQ<ZVal_Any> QGet(size_t iIndex) const;
 	ZVal_Any DGet(const ZVal_Any& iDefault, size_t iIndex) const;
@@ -390,8 +391,8 @@ public:
 // ZMap protocol
 	void Clear();
 
-	ZVal_Any* PGet(const string8& iName);
-	ZVal_Any* PGet(const Index_t& iIndex);
+	ZVal_Any* PGetMutable(const string8& iName);
+	ZVal_Any* PGetMutable(const Index_t& iIndex);
 
 	const ZVal_Any* PGet(const string8& iName) const;
 	const ZVal_Any* PGet(const Index_t& iIndex) const;
@@ -406,10 +407,10 @@ public:
 	const ZVal_Any& Get(const Index_t& iIndex) const;
 
 	template <class S>
-	S* PGet(const string8& iName)
+	S* PGetMutable(const string8& iName)
 		{
-		if (ZVal_Any* theVal = this->PGet(iName))
-			return theVal->PGet<S>();
+		if (ZVal_Any* theVal = this->PGetMutable(iName))
+			return theVal->PGetMutable<S>();
 		return nullptr;
 		}
 

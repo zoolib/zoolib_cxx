@@ -115,9 +115,9 @@ void Visitor_Do_GetVal::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 		ZVal_Any theVal = this->Do(theChild);
 		if (fRepeatedPropsAsSeq)
 			{
-			if (ZVal_Any* prior = theMap.PGet(theName))
+			if (ZVal_Any* prior = theMap.PGetMutable(theName))
 				{
-				if (ZSeq_Any* priorSeq = prior->PGet<ZSeq_Any>())
+				if (ZSeq_Any* priorSeq = prior->PGetMutable<ZSeq_Any>())
 					{
 					priorSeq->Append(theVal);
 					continue;
