@@ -181,16 +181,59 @@ public:
 	ZMACRO_operator_bool_T(ZQ, operator_bool) const
 		{ return operator_bool_gen::translate(fHasValue == Sense); }
 
-	const T& Get() const
+	void Clear()
 		{
-		ZAssert(fHasValue);
-		return *sFetch_T<T>(fBytes);
+		if (fHasValue)
+			{
+			fHasValue = false;
+			sDtor_T<T>(fBytes);
+			}
+		}
+
+	T* PGetMutable()
+		{
+		if (fHasValue)
+			return sFetch_T<T>(fBytes);
+		return nullptr;
+		}
+
+	const T* PGet() const
+		{
+		if (fHasValue)
+			return sFetch_T<T>(fBytes);
+		return nullptr;
+		}
+
+	T DGet(const T& iDefault) const
+		{
+		if (fHasValue)
+			return *sFetch_T<T>(fBytes);
+		return iDefault;
 		}
 
 	T& Get()
 		{
 		ZAssert(fHasValue);
 		return *sFetch_T<T>(fBytes);
+		}
+
+	const T& Get() const
+		{
+		ZAssert(fHasValue);
+		return *sFetch_T<T>(fBytes);
+		}
+
+	void Set(const T& iVal)
+		{
+		if (fHasValue)
+			{
+			*sFetch_T<T>(fBytes) = iVal;
+			}
+		else
+			{
+			sCtor_T<T>(fBytes, iVal);
+			fHasValue = true;
+			}
 		}
 
 	T& OParam()
@@ -204,15 +247,6 @@ public:
 		sCtor_T<T>(fBytes);
 		fHasValue = true;
 		return *sFetch_T<T>(fBytes);
-		}
-
-	void Clear()
-		{
-		if (fHasValue)
-			{
-			fHasValue = false;
-			sDtor_T<T>(fBytes);
-			}
 		}
 
 private:
