@@ -112,7 +112,7 @@ int ZData_Any::Compare(const ZData_Any& iOther) const
 			return 1;
 			}
 		}
-	else if (const size_t otherSize = iOther.fRep->fVector.size())
+	else if (iOther.fRep->fVector.size())
 		{
 		return -1;
 		}
