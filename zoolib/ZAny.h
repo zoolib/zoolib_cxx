@@ -22,9 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZAny__
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_algorithm.h" // For std::swap
-#include "zoolib/ZCompat_operator_bool.h"
-#include "zoolib/ZQ.h"
+#include "zoolib/ZQ.h" // ZQ.h transitively provides most of our dependencies
 #include "zoolib/ZCountedWithoutFinalize.h"
 
 #include <typeinfo>
@@ -38,86 +36,42 @@ namespace ZooLib {
 class ZAny
 	{
 public:
-	ZMACRO_operator_bool(ZAny, operator_bool) const
-		{ return operator_bool_gen::translate(fRep); }
-
-	ZAny()
-		{}
-
-	ZAny(const ZAny& iOther)
-	:	fRep(iOther.fRep)
-		{}
-	
-	~ZAny()
-		{}
-
-	ZAny& operator=(const ZAny& iOther)
-		{
-		fRep = iOther.fRep;
-		return *this;
-		}
+	ZAny();
+	ZAny(const ZAny& iOther);
+	~ZAny();
+	ZAny& operator=(const ZAny& iOther);
 
 	template <class S>
 	explicit ZAny(const S& iVal)
-	:	fRep(new Rep_T<S>(iVal))
-		{}
+		{ pCtorFrom_T<S>(iVal); }
 
 	template <class S>
 	ZAny& operator=(const S& iVal)
 		{
-		fRep = new Rep_T<S>(iVal);
+		pDtor();
+		pCtorFrom_T<S>(iVal);
 		return *this;
 		}
 
-	void swap(ZAny& ioOther)
-		{ fRep.swap(ioOther.fRep); }
+	ZMACRO_operator_bool(ZAny, operator_bool) const;
 
-	const std::type_info& Type() const
-		{
-		if (fRep)
-			return fRep->Type();
-		return typeid(void);
-		}
+	const std::type_info& Type() const;
 
-	void* VoidStar()
-		{
-		if (!fRep)
-			return 0;
-
-		if (fRep->IsShared())
-			fRep = fRep->Clone();
-
-		return fRep->VoidStar();
-		}
-
-	const void* VoidStar() const
-		{
-		if (fRep)
-			return fRep->VoidStar();
-		return 0;
-		}
+	void* VoidStar();
+	const void* ConstVoidStar() const;
 
 // ZVal protocol, for use by ZVal derivatives
-	void Clear()
-		{ fRep.Clear(); }
+	void swap(ZAny& ioOther);
+
+	void Clear();
 
 	template <class S>
-	S* PGet()
-		{
-		if (!fRep || fRep->Type() != typeid(S))
-			return 0;
-		if (fRep->IsShared())
-			fRep = fRep->Clone();
-		return &fRep.StaticCast<Rep_T<S> >()->fValue;
-		}
+	S* PGetMutable()
+		{ return static_cast<S*>(pGetMutable(typeid(S))); }
 
 	template <class S>
 	const S* PGet() const
-		{
-		if (!fRep || fRep->Type() != typeid(S))
-			return 0;
-		return &fRep.StaticCast<Rep_T<S> >()->fValue;
-		}
+		{ return static_cast<const S*>(pGet(typeid(S))); }
 
 	template <class S>
 	ZQ<S> QGet() const
@@ -145,7 +99,10 @@ public:
 
 	template <class S>
 	void Set(const S& iVal)
-		{ fRep = new Rep_T<S>(iVal); }
+		{
+		pDtor();
+		pCtorFrom_T<S>(iVal);
+		}
 
 // Our protocol
 	template <class S>
@@ -153,35 +110,101 @@ public:
 		{ return this->PGet<S>(); }
 
 private:
-	class RepBase : public ZCountedWithoutFinalize
+//---
+	class Holder_InPlace
+		{
+	public:
+		virtual void CtorInto(void* iOther) const = 0;
+		virtual const std::type_info& Type() const = 0;
+		virtual void* VoidStar() = 0;
+		virtual const void* ConstVoidStar() const = 0;
+		};
+
+	template<typename S>
+	class Holder_InPlace_T : public Holder_InPlace
+		{
+	public:
+		Holder_InPlace_T(const S& iValue) : fValue(iValue) {}
+
+		virtual void CtorInto(void* iOther) const { sCtor_T<Holder_InPlace_T>(iOther, fValue); }
+		virtual const std::type_info& Type() const { return typeid(S); }
+		virtual void* VoidStar() { return &fValue; }
+		virtual const void* ConstVoidStar() const { return &fValue; }
+
+		S fValue;
+		};
+//---
+	class Holder_Counted : public ZCountedWithoutFinalize
 		{
 	public:
 		virtual const std::type_info& Type() const = 0;
-		virtual RepBase* Clone() const = 0;
+		virtual Holder_Counted* Clone() const = 0;
 		virtual void* VoidStar() = 0;
 		};
 
 	template<typename S>
-	class Rep_T : public RepBase
+	class Holder_Counted_T : public Holder_Counted
 		{
 	public:
-		Rep_T(const S& iValue)
-		:	fValue(iValue)
-			{}
+		Holder_Counted_T(const S& iValue) : fValue(iValue) {}
 
-		virtual const std::type_info& Type() const
-			{ return typeid(S); }
-
-		virtual RepBase* Clone() const
-			{ return new Rep_T(fValue); }
-
-		virtual void* VoidStar()
-			{ return &fValue; }
+		virtual const std::type_info& Type() const { return typeid(S); }
+		virtual Holder_Counted* Clone() const { return new Holder_Counted_T(fValue); }
+		virtual void* VoidStar() { return &fValue; }
 
 		S fValue;
 		};
+//---
+	void* pGetMutable(const std::type_info& iTypeInfo);
+	const void* pGet(const std::type_info& iTypeInfo) const;
 
-	ZRef<RepBase> fRep;
+	template <class S>
+	void pCtorFrom_T(const S& iVal)
+		{
+		if (sizeof(S) <= sizeof(fPayload))
+			{
+			sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iVal);
+			}
+		else
+			{
+			fPtr_InPlace = 0;
+			sCtor_T<ZRef<Holder_Counted> >(fBytes_Counted, new Holder_Counted_T<S>(iVal));
+			}
+		}
+
+	void pCtorFrom(const ZAny& iOther);
+	void pDtor();
+
+	bool pIsInPlace() const;
+
+	// Pseudo field accesors, hence the 'f' prefix
+	Holder_InPlace& fHolder_InPlace();
+	const Holder_InPlace& fHolder_InPlace() const;
+
+	ZRef<Holder_Counted>& fHolder_Counted();
+	const ZRef<Holder_Counted>& fHolder_Counted() const;
+//---
+	union
+		{
+		char fBytes_InPlace[1];
+		void* fPtr_InPlace;
+		};
+
+	union
+		{
+		char fBytes_Counted[1];
+		void* fPtr_Counted;
+		union
+			{
+			// Reserves space for in-place values, and makes
+			// some types interpretible when debugging.
+			char fAsChar;
+			short fAsShort;
+			int fAsInt;
+			long fAsLong;
+			double fAsDouble;
+			} fPayload;
+		};
 	};
 
 inline void swap(ZAny& a, ZAny& b)
