@@ -449,7 +449,7 @@ ZQ<ZTrail> FileRef::AsTrail() const
 			OSErr theErr = ::FSCopyAliasInfo(
 				(AliasHandle)fHandle,
 				&targetName, &volumeName,
-				&thePath.GetPtrRef(),
+				&thePath.OParam(),
 				&theFSAIB, &theFSAI);
 
 			if ((theErr == noErr || theErr == fnfErr) && thePath)

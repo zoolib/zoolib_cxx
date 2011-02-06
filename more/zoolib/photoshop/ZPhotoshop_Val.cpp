@@ -422,7 +422,7 @@ static ZRef<ASZString> spAsASZString(const string16& iString)
 		{
 		ZRef<ASZString> result;
 		if (noErr == spASZString->MakeFromUnicode((ASUnicode*)&iString[0], theLength * 2,
-			&result.GetPtrRef()))
+			&result.OParam()))
 			{
 			return result;
 			}
@@ -939,7 +939,7 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 				{
 				#if (kPSActionReferenceSuiteVersion >= 3)
 					ZRef<ASZString> theVal;
-					if (noErr != spPSActionReference->GetNameZString(iRef, &theVal.GetPtrRef()))
+					if (noErr != spPSActionReference->GetNameZString(iRef, &theVal.OParam()))
 						allOK = false;
 					else
 						oEntries.push_back(Entry::sName(theClassID, theVal));
