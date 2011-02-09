@@ -227,7 +227,7 @@ public:
 		{
 		if (fHasValue)
 			{
-			*sFetch_T<T>(fBytes) = iVal;
+			sAssign_T<T>(fBytes, iVal);
 			}
 		else
 			{
