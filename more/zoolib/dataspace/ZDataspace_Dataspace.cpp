@@ -70,18 +70,19 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 
 void Dataspace::Update()
 	{
+	ZGuardRMtxR guard(fMtxR);
+	fCalled_UpdateNeeded = false;
+	guard.Release();
+
 	vector<QueryResult> theQueryResults;
 	fSource->CollectResults(theQueryResults);
+	if (theQueryResults.empty())
+		return;
 
 	set<ZRef<Sieve> > sievesChanged;
 	set<ZRef<Sieve> > sievesLoaded;
 
-	{
-	ZAcqMtxR acq(fMtxR);
-	fCalled_UpdateNeeded = false;
-
-	if (theQueryResults.empty())
-		return;
+	guard.Acquire();
 	
 	for (vector<QueryResult>::iterator iterQueryResults = theQueryResults.begin();
 		iterQueryResults != theQueryResults.end(); ++iterQueryResults)
@@ -101,7 +102,8 @@ void Dataspace::Update()
 		theSieve->fResult = iterQueryResults->GetResult();
 		theSieve->fEvent = iterQueryResults->GetEvent();
 		}
-	}
+
+	guard.Release();
 
 	this->Updated(sievesLoaded, sievesChanged);
 	}

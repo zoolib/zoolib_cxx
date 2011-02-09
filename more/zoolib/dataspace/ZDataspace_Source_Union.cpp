@@ -632,7 +632,7 @@ void Source_Union::ModifyRegistrations(
 		
 		if (inPQuery.second)
 			{
-			if (ZLOGPF(s, eDebug))
+			if (ZLOGPF(s, eDebug + 1))
 				{
 				s << "Raw:\n";
 				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
@@ -641,7 +641,7 @@ void Source_Union::ModifyRegistrations(
 			theRel = ZRA::Transform_DecomposeRestricts().Do(theRel);
 			theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
 
-			if (ZLOGPF(s, eDebug))
+			if (ZLOGPF(s, eDebug + 1))
 				{
 				s << "Cooked:\n";
 				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
@@ -650,7 +650,7 @@ void Source_Union::ModifyRegistrations(
 			thePQuery->fRel_Analyzed = Analyze(this, thePQuery).TopLevelDo(theRel);
 			fPQuery_NeedsWork.Insert(thePQuery);
 
-			if (ZLOGPF(s, eDebug))
+			if (ZLOGPF(s, eDebug + 1))
 				{
 				s << "Analyzed:\n";
 				ZRA::Util_Strim_Rel::sToStrim(thePQuery->fRel_Analyzed, s);

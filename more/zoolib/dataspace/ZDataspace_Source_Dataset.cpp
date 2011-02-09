@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimU_StreamUTF8Buffered.h"
 #include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
@@ -299,9 +300,9 @@ void Source_Dataset::ModifyRegistrations(
 		// Ensure restricts are as far down the tree as they can be.
 //		theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
 //		theRel = ZRA::Transform_ConsolidateRenames().Do(theRel);
-		theRel = ZQE::sTransform_Search(theRel);
+//##		theRel = ZQE::sTransform_Search(theRel);
 
-		if (ZLOGPF(s, eDebug))
+		if (ZLOGPF(s, eDebug + 1))
 			{
 			s << "\nDataset Raw:\n";
 			ZRA::Util_Strim_Rel::sToStrim(ZRA::Transform_ConsolidateRenames().Do(ZRA::Transform_PushDownRestricts().Do(iAdded->GetRel())), s);
@@ -522,7 +523,11 @@ bool Source_Dataset::pPull()
 		const NamedEvent& theNamedEvent = iterMNED->first;
 		const map<Daton, bool>& theStatements = iterMNED->second->GetStatements();
 		if (s)
+			{
 			s << "\ntheStatements.size()=" << theStatements.size();
+			s << "\nclk:" << theNamedEvent.GetEvent();
+			}
+
 		for (map<Daton, bool>::const_iterator
 			iterStmts = theStatements.begin(), endStmts = theStatements.end();
 			iterStmts != endStmts; ++iterStmts)
@@ -530,15 +535,12 @@ bool Source_Dataset::pPull()
 			const Daton& theDaton = iterStmts->first;
 
 			if (s)
-				{
-				const ZData_Any& theData = theDaton.GetData();
 				s << "\n" << (iterStmts->second ? "+" : "-") << ": ";
-				s.Write(static_cast<const UTF8*>(theData.GetData()), theData.GetSize());
-				}
 
 			map<Daton, pair<NamedEvent, ZVal_Any> >::iterator iterMap = fMap.lower_bound(theDaton);
 			if (iterMap == fMap.end() || iterMap->first != theDaton)
 				{
+				s << " NFo ";
 				if (iterStmts->second)
 					{
 					anyChanges = true;
@@ -547,15 +549,37 @@ bool Source_Dataset::pPull()
 						pair<NamedEvent, ZVal_Any>(theNamedEvent, sAsVal(theDaton))));
 					}
 				}
-			else if (iterMap->second.first < theNamedEvent)
+			else
 				{
-				// theNamedEvent is more recent than what we've got and thus supersedes it.
-				anyChanges = true;
+				const bool alb = iterMap->second.first < theNamedEvent;
+				const bool bla = theNamedEvent < iterMap->second.first;
+				if (iterMap->second.first < theNamedEvent)
+					{
+					if (s)
+						s << " MRc ";
 
-				if (iterStmts->second)
-					iterMap->second = pair<NamedEvent, ZVal_Any>(theNamedEvent, sAsVal(theDaton));
+					// theNamedEvent is more recent than what we've got and thus supersedes it.
+					anyChanges = true;
+
+					if (iterStmts->second)
+						iterMap->second = pair<NamedEvent, ZVal_Any>(theNamedEvent, sAsVal(theDaton));
+					else
+						fMap.erase(iterMap);
+					}
 				else
-					fMap.erase(iterMap);
+					{
+					if (s)
+						s << " Old ";
+					}
+				if (s)
+					s << iterMap->second.first.GetEvent() << (alb?"alb" :"") << (bla?"blb":"");
+				}
+				
+
+			if (s)
+				{
+				const ZData_Any& theData = theDaton.GetData();
+				s.Write(static_cast<const UTF8*>(theData.GetData()), theData.GetSize());
 				}
 			}
 		}
