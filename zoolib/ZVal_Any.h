@@ -230,7 +230,7 @@ public:
 	typedef std::vector<ZVal_Any> Vector_t;
 	typedef ZVal_Any Val_t;
 
-	ZMACRO_operator_bool(ZSeq_Any, operator_bool) const;
+//##	ZMACRO_operator_bool(ZSeq_Any, operator_bool) const;
 
 	ZSeq_Any();
 	ZSeq_Any(const ZSeq_Any& iOther);
@@ -366,7 +366,7 @@ public:
 	typedef Map_t::iterator Index_t;
 	typedef ZVal_Any Val_t;
 
-	ZMACRO_operator_bool(ZMap_Any, operator_bool) const;
+//##	ZMACRO_operator_bool(ZMap_Any, operator_bool) const;
 
 	ZMap_Any();
 	ZMap_Any(const ZMap_Any& iOther);
