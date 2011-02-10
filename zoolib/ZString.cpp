@@ -302,7 +302,7 @@ ZQ<uint64> ZString::sQUInt64(const string& iString)
 		{
 		uint64 result;
 		if (sscanf(iString.c_str(), "%llu", &result) > 0)
-			result;
+			return result;
 		}
 	return null;
 	}
@@ -333,7 +333,7 @@ ZQ<double> ZString::sQDouble(const string& iString)
 		{
 		double result;
 		if (sscanf(iString.c_str(), "%lf", &result) > 0)
-			result;
+			return result;
 		}
 	return null;
 	}
