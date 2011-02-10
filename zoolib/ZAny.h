@@ -134,9 +134,14 @@ private:
 		{
 	public:
 		virtual void CtorInto(void* iOther) const = 0;
+
 		virtual const std::type_info& Type() const = 0;
+
 		virtual void* VoidStar() = 0;
 		virtual const void* ConstVoidStar() const = 0;
+
+		virtual void* VoidStarIf(const std::type_info& iTI) = 0;
+		virtual const void* ConstVoidStarIf(const std::type_info& iTI) const = 0;
 		};
 
 	template<typename S>
@@ -150,9 +155,24 @@ private:
 		Holder_InPlace_T(const P0& iP0, const P1& iP1) : fValue(iP0, iP1) {}
 
 		virtual void CtorInto(void* iOther) const { sCtor_T<Holder_InPlace_T>(iOther, fValue); }
+
 		virtual const std::type_info& Type() const { return typeid(S); }
+
 		virtual void* VoidStar() { return &fValue; }
 		virtual const void* ConstVoidStar() const { return &fValue; }
+
+		virtual void* VoidStarIf(const std::type_info& iTI)
+			{
+			if (iTI == typeid(S))
+				return &fValue;
+			return 0;
+			}
+		virtual const void* ConstVoidStarIf(const std::type_info& iTI) const
+			{
+			if (iTI == typeid(S))
+				return &fValue;
+			return 0;
+			}
 
 		S fValue;
 		};
@@ -163,6 +183,7 @@ private:
 		virtual const std::type_info& Type() const = 0;
 		virtual Holder_Counted* Clone() const = 0;
 		virtual void* VoidStar() = 0;
+		virtual void* VoidStarIf(const std::type_info& iTI) = 0;
 		};
 
 	template<typename S>
@@ -178,6 +199,12 @@ private:
 		virtual const std::type_info& Type() const { return typeid(S); }
 		virtual Holder_Counted* Clone() const { return new Holder_Counted_T(fValue); }
 		virtual void* VoidStar() { return &fValue; }
+		virtual void* VoidStarIf(const std::type_info& iTI)
+			{
+			if (iTI == typeid(S))
+				return &fValue;
+			return 0;
+			}
 
 		S fValue;
 		};
@@ -269,6 +296,28 @@ private:
 			} fPayload;
 		};
 	};
+
+inline ZAny::ZAny()
+	{
+	fPtr_InPlace = 0;
+	fPtr_Counted = 0;
+	}
+
+inline ZAny::ZAny(const ZAny& iOther)
+	{ pCtorFrom(iOther); }
+
+inline ZAny::~ZAny()
+	{ pDtor(); }
+
+inline ZAny& ZAny::operator=(const ZAny& iOther)
+	{
+	if (this != & iOther)
+		{
+		pDtor();
+		pCtorFrom(iOther);
+		}
+	return *this;
+	}
 
 inline void swap(ZAny& a, ZAny& b)
 	{ a.swap(b); }
