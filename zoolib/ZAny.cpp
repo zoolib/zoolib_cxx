@@ -127,12 +127,12 @@ void ZAny::Clear()
 		{
 		sDtor_T<Holder_InPlace>(fBytes_InPlace);
 		fPtr_InPlace = 0;
-		fPtr_Counted = 0;
 		}
 	else
 		{
 		sDtor_T<ZRef<Holder_Counted> >(fBytes_Counted);
 		}
+	fPtr_Counted = 0;
 	}
 
 void* ZAny::pGetMutable(const std::type_info& iTypeInfo)

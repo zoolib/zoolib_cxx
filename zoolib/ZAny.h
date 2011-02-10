@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <typeinfo>
 
+#include <tr1/type_traits> // For is_pod
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAny
@@ -43,13 +45,21 @@ public:
 
 	template <class S>
 	explicit ZAny(const S& iVal)
-		{ pCtorFrom_T<S>(iVal); }
+		{ pCtorFrom_T<S>(false, iVal); }
+
+	template <class S, class P0>
+	ZAny(const S* dummy, bool iCounted, const P0& iP0)
+		{ pCtorFrom_T<S>(iCounted, iP0); }
+
+	template <class S, class P0, class P1>
+	ZAny(const S* dummy, bool iCounted, const P0& iP0, const P1& iP1)
+		{ pCtorFrom_T<S>(iCounted, iP0, iP1); }
 
 	template <class S>
 	ZAny& operator=(const S& iVal)
 		{
 		pDtor();
-		pCtorFrom_T<S>(iVal);
+		pCtorFrom_T<S>(false, iVal);
 		return *this;
 		}
 
@@ -101,7 +111,7 @@ public:
 	void Set(const S& iVal)
 		{
 		pDtor();
-		pCtorFrom_T<S>(iVal);
+		pCtorFrom_T<S>(false, iVal);
 		}
 
 // Our protocol
@@ -124,7 +134,11 @@ private:
 	class Holder_InPlace_T : public Holder_InPlace
 		{
 	public:
-		Holder_InPlace_T(const S& iValue) : fValue(iValue) {}
+		template <class P0>
+		Holder_InPlace_T(const P0& iP0) : fValue(iP0) {}
+
+		template <class P0, class P1>
+		Holder_InPlace_T(const P0& iP0, const P1& iP1) : fValue(iP0, iP1) {}
 
 		virtual void CtorInto(void* iOther) const { sCtor_T<Holder_InPlace_T>(iOther, fValue); }
 		virtual const std::type_info& Type() const { return typeid(S); }
@@ -146,7 +160,11 @@ private:
 	class Holder_Counted_T : public Holder_Counted
 		{
 	public:
-		Holder_Counted_T(const S& iValue) : fValue(iValue) {}
+		template <class P0>
+		Holder_Counted_T(const P0& iP0) : fValue(iP0) {}
+
+		template <class P0, class P1>
+		Holder_Counted_T(const P0& iP0, const P1& iP1) : fValue(iP0, iP1) {}
 
 		virtual const std::type_info& Type() const { return typeid(S); }
 		virtual Holder_Counted* Clone() const { return new Holder_Counted_T(fValue); }
@@ -158,17 +176,31 @@ private:
 	void* pGetMutable(const std::type_info& iTypeInfo);
 	const void* pGet(const std::type_info& iTypeInfo) const;
 
-	template <class S>
-	void pCtorFrom_T(const S& iVal)
+	template <class S, class P0, class P1>
+	void pCtorFrom_T(bool iCounted, const P0& iP0, const P1& iP1)
 		{
-		if (sizeof(S) <= sizeof(fPayload))
+		if (!iCounted && sizeof(S) <= sizeof(fPayload))
 			{
-			sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iVal);
+			sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0, iP1);
 			}
 		else
 			{
 			fPtr_InPlace = 0;
-			sCtor_T<ZRef<Holder_Counted> >(fBytes_Counted, new Holder_Counted_T<S>(iVal));
+			sCtor_T<ZRef<Holder_Counted> >(fBytes_Counted, new Holder_Counted_T<S>(iP0, iP1));
+			}
+		}
+
+	template <class S, class P0>
+	void pCtorFrom_T(bool iCounted, const P0& iP0)
+		{
+		if (!iCounted && sizeof(S) <= sizeof(fPayload))
+			{
+			sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0);
+			}
+		else
+			{
+			fPtr_InPlace = 0;
+			sCtor_T<ZRef<Holder_Counted> >(fBytes_Counted, new Holder_Counted_T<S>(iP0));
 			}
 		}
 
@@ -196,8 +228,7 @@ private:
 		void* fPtr_Counted;
 		union
 			{
-			// Reserves space for in-place values, and makes
-			// some types interpretible when debugging.
+			// Reserves space for in-place values, and makes some types legible when debugging.
 			char fAsChar;
 			short fAsShort;
 			int fAsInt;
@@ -209,6 +240,22 @@ private:
 
 inline void swap(ZAny& a, ZAny& b)
 	{ a.swap(b); }
+
+template <class S, class P0>
+ZAny sAny(const P0& iP0)
+	{ return ZAny(static_cast<S*>(0), false, iP0); }
+
+template <class S, class P0, class P1>
+ZAny sAny(const P0& iP0, const P1& iP1)
+	{ return ZAny(static_cast<S*>(0), false, iP0, iP1); }
+
+template <class S, class P0>
+ZAny sAnyCounted(const P0& iP0)
+	{ return ZAny(static_cast<S*>(0), true, iP0); }
+
+template <class S, class P0, class P1>
+ZAny sAnyCounted(const P0& iP0, const P1& iP1)
+	{ return ZAny(static_cast<S*>(0), true, iP0, iP1); }
 
 } // namespace ZooLib
 
