@@ -45,21 +45,13 @@ public:
 
 	template <class S>
 	explicit ZAny(const S& iVal)
-		{ pCtorFrom_T<S>(false, iVal); }
-
-	template <class S, class P0>
-	ZAny(const S* dummy, bool iCounted, const P0& iP0)
-		{ pCtorFrom_T<S>(iCounted, iP0); }
-
-	template <class S, class P0, class P1>
-	ZAny(const S* dummy, bool iCounted, const P0& iP0, const P1& iP1)
-		{ pCtorFrom_T<S>(iCounted, iP0, iP1); }
+		{ pCtorFrom_T<S>(iVal); }
 
 	template <class S>
 	ZAny& operator=(const S& iVal)
 		{
 		pDtor();
-		pCtorFrom_T<S>(false, iVal);
+		pCtorFrom_T<S>(iVal);
 		return *this;
 		}
 
@@ -111,13 +103,30 @@ public:
 	void Set(const S& iVal)
 		{
 		pDtor();
-		pCtorFrom_T<S>(false, iVal);
+		pCtorFrom_T<S>(iVal);
 		}
 
 // Our protocol
 	template <class S>
 	bool Is() const
 		{ return this->PGet<S>(); }
+
+// Special purpose constructors, called by sAny and sAnyCounted
+	template <class S, class P0>
+	ZAny(const S* dummy, const P0& iP0)
+		{ pCtorFrom_T<S>(iP0); }
+
+	template <class S, class P0, class P1>
+	ZAny(const S* dummy, const P0& iP0, const P1& iP1)
+		{ pCtorFrom_T<S>(iP0, iP1); }
+
+	template <class S, class P0>
+	ZAny(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&)
+		{ pCountedCtorFrom_T<S>(iP0); }
+
+	template <class S, class P0, class P1>
+	ZAny(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&)
+		{ pCountedCtorFrom_T<S>(iP0, iP1); }
 
 private:
 //---
@@ -177,37 +186,57 @@ private:
 	const void* pGet(const std::type_info& iTypeInfo) const;
 
 	template <class S, class P0, class P1>
-	void pCtorFrom_T(bool iCounted, const P0& iP0, const P1& iP1)
+	void pCtorFrom_T(const P0& iP0, const P1& iP1)
 		{
-		if (!iCounted && sizeof(S) <= sizeof(fPayload))
+		if (sizeof(S) <= sizeof(fPayload))
 			{
 			sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0, iP1);
 			}
 		else
 			{
 			fPtr_InPlace = 0;
-			sCtor_T<ZRef<Holder_Counted> >(fBytes_Counted, new Holder_Counted_T<S>(iP0, iP1));
+			sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, new Holder_Counted_T<S>(iP0, iP1));
 			}
 		}
 
-	template <class S, class P0>
-	void pCtorFrom_T(bool iCounted, const P0& iP0)
+	template <class S, class P0, class P1>
+	void pCountedCtorFrom_T(const P0& iP0, const P1& iP1)
 		{
-		if (!iCounted && sizeof(S) <= sizeof(fPayload))
+		fPtr_InPlace = 0;
+		sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, new Holder_Counted_T<S>(iP0, iP1));
+		}
+
+	template <class S, class P0>
+	void pCtorFrom_T(const P0& iP0)
+		{
+		if (sizeof(S) <= sizeof(fPayload))
 			{
-			sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0);
+			if (std::tr1::is_pod<S>::value)
+				{
+				fPtr_InPlace = (void*)(((intptr_t)&typeid(S)) | 1);
+				*((S*)fBytes_Payload) = iP0;
+				}
+			else
+				{
+				sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0);
+				}
 			}
 		else
 			{
 			fPtr_InPlace = 0;
-			sCtor_T<ZRef<Holder_Counted> >(fBytes_Counted, new Holder_Counted_T<S>(iP0));
+			sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, new Holder_Counted_T<S>(iP0));
 			}
+		}
+
+	template <class S, class P0>
+	void pCountedCtorFrom_T(const P0& iP0)
+		{
+		fPtr_InPlace = 0;
+		sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, new Holder_Counted_T<S>(iP0));
 		}
 
 	void pCtorFrom(const ZAny& iOther);
 	void pDtor();
-
-	bool pIsInPlace() const;
 
 	// Pseudo field accesors, hence the 'f' prefix
 	Holder_InPlace& fHolder_InPlace();
@@ -224,15 +253,18 @@ private:
 
 	union
 		{
-		char fBytes_Counted[1];
+		char fBytes_Payload[1];
 		void* fPtr_Counted;
 		union
 			{
 			// Reserves space for in-place values, and makes some types legible when debugging.
+			bool fAsBool;
 			char fAsChar;
 			short fAsShort;
 			int fAsInt;
 			long fAsLong;
+			long long fAsLongLong;
+			float fAsFloat;
 			double fAsDouble;
 			} fPayload;
 		};
@@ -243,19 +275,19 @@ inline void swap(ZAny& a, ZAny& b)
 
 template <class S, class P0>
 ZAny sAny(const P0& iP0)
-	{ return ZAny(static_cast<S*>(0), false, iP0); }
+	{ return ZAny(static_cast<S*>(0), iP0); }
 
 template <class S, class P0, class P1>
 ZAny sAny(const P0& iP0, const P1& iP1)
-	{ return ZAny(static_cast<S*>(0), false, iP0, iP1); }
+	{ return ZAny(static_cast<S*>(0), iP0, iP1); }
 
 template <class S, class P0>
 ZAny sAnyCounted(const P0& iP0)
-	{ return ZAny(static_cast<S*>(0), true, iP0); }
+	{ return ZAny(static_cast<S*>(0), iP0, IKnowWhatIAmDoing); }
 
 template <class S, class P0, class P1>
 ZAny sAnyCounted(const P0& iP0, const P1& iP1)
-	{ return ZAny(static_cast<S*>(0), true, iP0, iP1); }
+	{ return ZAny(static_cast<S*>(0), iP0, iP1, IKnowWhatIAmDoing); }
 
 } // namespace ZooLib
 
