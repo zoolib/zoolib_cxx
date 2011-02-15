@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZDCPixmapNS.h"
 #include "zoolib/ZByteSwap.h"
+#include "zoolib/ZDCPixmapNS.h"
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h" // For ZMemCopy
 

@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDCPixmapBlit.h"
+#include "zoolib/ZDebug.h"
 
 #if ZCONFIG(Compiler, CodeWarrior)
 // Enforce higher level of optimization for this code.
