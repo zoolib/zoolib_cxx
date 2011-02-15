@@ -22,12 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZAny__
 #include "zconfig.h"
 
-#include "zoolib/ZQ.h" // ZQ.h transitively provides most of our dependencies
 #include "zoolib/ZCountedWithoutFinalize.h"
 
-#include <typeinfo>
+// We need ZQ<> itself, and conveniently ZQ.h (transitively) provides most of our dependencies.
+#include "zoolib/ZQ.h" 
 
-#include <tr1/type_traits> // For is_pod
+#include <typeinfo> // for std::type_info
+
+#include <tr1/type_traits> // For std::tr1::is_pod
 
 // =================================================================================================
 #pragma mark -
@@ -45,15 +47,10 @@ public:
 
 	template <class S>
 	explicit ZAny(const S& iVal)
-		{ pCtorFrom_T<S>(iVal); }
+		{ pCtor_T<S>(iVal); }
 
 	template <class S>
-	ZAny& operator=(const S& iVal)
-		{
-		pDtor();
-		pCtorFrom_T<S>(iVal);
-		return *this;
-		}
+	ZAny& operator=(const S& iVal);
 
 	ZMACRO_operator_bool(ZAny, operator_bool) const;
 
@@ -62,7 +59,7 @@ public:
 	void* VoidStar();
 	const void* ConstVoidStar() const;
 
-// ZVal protocol, for use by ZVal derivatives
+// ZVal protocol, generally for use by ZVal derivatives
 	void swap(ZAny& ioOther);
 
 	void Clear();
@@ -103,7 +100,7 @@ public:
 	void Set(const S& iVal)
 		{
 		pDtor();
-		pCtorFrom_T<S>(iVal);
+		pCtor_T<S>(iVal);
 		}
 
 // Our protocol
@@ -114,25 +111,28 @@ public:
 // Special purpose constructors, called by sAny and sAnyCounted
 	template <class S, class P0>
 	ZAny(const S* dummy, const P0& iP0)
-		{ pCtorFrom_T<S>(iP0); }
+		{ pCtor_T<S>(iP0); }
 
 	template <class S, class P0, class P1>
 	ZAny(const S* dummy, const P0& iP0, const P1& iP1)
-		{ pCtorFrom_T<S>(iP0, iP1); }
+		{ pCtor_T<S>(iP0, iP1); }
 
 	template <class S, class P0>
 	ZAny(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&)
-		{ pCountedCtorFrom_T<S>(iP0); }
+		{ pCtor_Counted_T<S>(iP0); }
 
 	template <class S, class P0, class P1>
 	ZAny(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&)
-		{ pCountedCtorFrom_T<S>(iP0, iP1); }
+		{ pCtor_Counted_T<S>(iP0, iP1); }
 
 private:
-//---
+// -----------------
+
 	class Holder_InPlace
 		{
 	public:
+		virtual ~Holder_InPlace() {}
+
 		virtual void CtorInto(void* iOther) const = 0;
 
 		virtual const std::type_info& Type() const = 0;
@@ -143,6 +143,8 @@ private:
 		virtual void* VoidStarIf(const std::type_info& iTI) = 0;
 		virtual const void* ConstVoidStarIf(const std::type_info& iTI) const = 0;
 		};
+
+// -----------------
 
 	template<typename S>
 	class Holder_InPlace_T : public Holder_InPlace
@@ -176,7 +178,9 @@ private:
 
 		S fValue;
 		};
-//---
+
+// -----------------
+
 	class Holder_Counted : public ZCountedWithoutFinalize
 		{
 	public:
@@ -185,6 +189,8 @@ private:
 		virtual void* VoidStar() = 0;
 		virtual void* VoidStarIf(const std::type_info& iTI) = 0;
 		};
+
+// -----------------
 
 	template<typename S>
 	class Holder_Counted_T : public Holder_Counted
@@ -208,12 +214,33 @@ private:
 
 		S fValue;
 		};
-//---
+
+// -----------------
+
+	// Pseudo field accesors, hence the 'f' prefix
+	Holder_InPlace& fHolder_InPlace();
+	const Holder_InPlace& fHolder_InPlace() const;
+
+	ZRef<Holder_Counted>& fHolder_Ref();
+	const ZRef<Holder_Counted>& fHolder_Ref() const;
+
+// -----------------
+
 	void* pGetMutable(const std::type_info& iTypeInfo);
 	const void* pGet(const std::type_info& iTypeInfo) const;
 
+	void pCtor(const ZAny& iOther);
+	void pCtor_Complex(const ZAny& iOther);
+
+	void pDtor();
+	void pDtor_Complex();
+
+	static bool spIsPOD(const void* iPtr);
+
+// -----------------
+
 	template <class S, class P0, class P1>
-	void pCtorFrom_T(const P0& iP0, const P1& iP1)
+	void pCtor_T(const P0& iP0, const P1& iP1)
 		{
 		if (sizeof(S) <= sizeof(fPayload))
 			{
@@ -227,14 +254,14 @@ private:
 		}
 
 	template <class S, class P0, class P1>
-	void pCountedCtorFrom_T(const P0& iP0, const P1& iP1)
+	void pCtor_Counted_T(const P0& iP0, const P1& iP1)
 		{
 		fPtr_InPlace = 0;
 		sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, new Holder_Counted_T<S>(iP0, iP1));
 		}
 
 	template <class S, class P0>
-	void pCtorFrom_T(const P0& iP0)
+	void pCtor_T(const P0& iP0)
 		{
 		if (sizeof(S) <= sizeof(fPayload))
 			{
@@ -256,22 +283,14 @@ private:
 		}
 
 	template <class S, class P0>
-	void pCountedCtorFrom_T(const P0& iP0)
+	void pCtor_Counted_T(const P0& iP0)
 		{
 		fPtr_InPlace = 0;
 		sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, new Holder_Counted_T<S>(iP0));
 		}
 
-	void pCtorFrom(const ZAny& iOther);
-	void pDtor();
+// -----------------
 
-	// Pseudo field accesors, hence the 'f' prefix
-	Holder_InPlace& fHolder_InPlace();
-	const Holder_InPlace& fHolder_InPlace() const;
-
-	ZRef<Holder_Counted>& fHolder_Counted();
-	const ZRef<Holder_Counted>& fHolder_Counted() const;
-//---
 	union
 		{
 		char fBytes_InPlace[1];
@@ -284,18 +303,49 @@ private:
 		void* fPtr_Counted;
 		union
 			{
-			// Reserves space for in-place values, and makes some types legible when debugging.
+			// This union serves two purposes. It reserves space for in-place values
+			// and also makes some types legible when debugging.
 			bool fAsBool;
 			char fAsChar;
 			short fAsShort;
 			int fAsInt;
 			long fAsLong;
-			long long fAsLongLong;
+			int64 fAsLongLong;
 			float fAsFloat;
 			double fAsDouble;
 			} fPayload;
 		};
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAny, internal implementation inlines
+
+inline bool ZAny::spIsPOD(const void* iPtr)
+	{ return ((intptr_t)iPtr) & 1; }
+
+inline void ZAny::pCtor(const ZAny& iOther)
+	{
+	if (spIsPOD(iOther.fPtr_InPlace))
+		{
+		fPtr_InPlace = iOther.fPtr_InPlace;
+		fPayload = iOther.fPayload;
+		}
+	else
+		{
+		pCtor_Complex(iOther);
+		}
+	}
+
+inline void ZAny::pDtor()
+	{
+	if (!spIsPOD(fPtr_InPlace))
+		pDtor_Complex();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAny, public inlines
 
 inline ZAny::ZAny()
 	{
@@ -304,7 +354,7 @@ inline ZAny::ZAny()
 	}
 
 inline ZAny::ZAny(const ZAny& iOther)
-	{ pCtorFrom(iOther); }
+	{ pCtor(iOther); }
 
 inline ZAny::~ZAny()
 	{ pDtor(); }
@@ -314,10 +364,22 @@ inline ZAny& ZAny::operator=(const ZAny& iOther)
 	if (this != & iOther)
 		{
 		pDtor();
-		pCtorFrom(iOther);
+		pCtor(iOther);
 		}
 	return *this;
 	}
+
+template <class S>
+inline ZAny& ZAny::operator=(const S& iVal)
+	{
+	pDtor();
+	pCtor_T<S>(iVal);
+	return *this;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAny, swap and pseudo-constructors
 
 inline void swap(ZAny& a, ZAny& b)
 	{ a.swap(b); }
