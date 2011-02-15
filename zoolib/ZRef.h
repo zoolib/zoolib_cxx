@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAtomic.h" // For ZAtomic_CompareAndSwapPtr
 #include "zoolib/ZCompat_algorithm.h" // For std::swap
 #include "zoolib/ZCompat_operator_bool.h"
-#include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h" // For Adopt_T
 
 namespace ZooLib {
@@ -49,9 +48,6 @@ private:
 		if (iP)
 			sRelease(*iP);
 		}
-
-	static void spCheck(T* iP)
-		{ ZAssertStop(1, iP); }
 
 public:
 	#ifdef __OBJC__
@@ -157,7 +153,7 @@ public:
 
 	T* operator->() const
 		{
-		spCheck(fP);
+		sCheck(fP);
 		return fP;
 		}
 
@@ -246,8 +242,8 @@ private:
 		}
 
 public:
-	void swap(ZRef& iOther)
-		{ std::swap(fP, iOther.fP); }
+	void swap(ZRef& ioOther)
+		{ std::swap(fP, ioOther.fP); }
 
 	ZRef()
 	:	fP(nullptr)

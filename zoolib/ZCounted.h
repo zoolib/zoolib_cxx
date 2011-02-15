@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAtomic.h"
 #include "zoolib/ZCountedWithoutFinalize.h"
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZThread.h"
 
 namespace ZooLib {
@@ -69,6 +70,9 @@ inline void sRetain(ZCountedBase& iObject)
 
 inline void sRelease(ZCountedBase& iObject)
 	{ iObject.Release(); }
+
+inline void sCheck(ZCountedBase* iP)
+	{ ZAssertStop(1, iP); }
 
 // =================================================================================================
 #pragma mark -

@@ -56,6 +56,9 @@ inline void sRetain(ZCountedWithoutFinalize& iObject)
 inline void sRelease(ZCountedWithoutFinalize& iObject)
 	{ iObject.Release(); }
 
+inline void sCheck(ZCountedWithoutFinalize* iP)
+	{}
+
 } // namespace ZooLib
 
 #endif // __ZCountedWithoutFinalize__

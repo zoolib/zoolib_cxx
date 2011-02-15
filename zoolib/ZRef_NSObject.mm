@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZRef_NSObject.h"
+#include "zoolib/ZDebug.h"
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
@@ -35,6 +36,9 @@ void sRetain(struct objc_object& iOb)
 
 void sRelease(struct objc_object& iOb)
 	{ [&iOb release]; }
+
+void sCheck(struct objc_object* iP)
+	{ ZAssertStop(1, iP); }
 
 void sRetain(NSObject& iNSObject)
 	{ [&iNSObject retain]; }

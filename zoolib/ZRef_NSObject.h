@@ -35,6 +35,7 @@ namespace ZooLib {
 
 void sRetain(struct objc_object& iOb);
 void sRelease(struct objc_object& iOb);
+void sCheck(struct objc_object* iP);
 
 void sRetain(NSObject& iNSObject);
 void sRelease(NSObject& iNSObject);
