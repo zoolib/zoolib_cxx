@@ -221,10 +221,18 @@ ZRef<Dataset> Dataset::Fork()
 
 void Dataset::Join(ZRef<Dataset>& ioOther)
 	{
+	ZLOGF(s, eDebug + 1);
+	if (s)
+		s << "Before: " << fClock;
+
 	ZRef<Deltas> theDeltas;
 	ZRef<Event> otherEvent = ioOther->GetDeltas(theDeltas, fClock->GetEvent());
 	this->IncorporateDeltas(otherEvent, theDeltas);
+	if (s)
+		s << ", incorporate other:" << otherEvent << ", clock:" << fClock;
 	sJoin(fClock, ioOther->fClock);
+	if (s)
+		s << ", after join:" << fClock;
 	ioOther->fClock.Clear();
 	ioOther->fPendingStatements.clear();
 	ioOther->fDeltasChain.Clear();
@@ -269,9 +277,6 @@ void Dataset::IncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& i
 	this->pCommit();
 	fDeltasChain = new DeltasChain(fDeltasChain, iDeltas);
 	sReceive(fClock, iEvent);
-
-	if (ZLOGF(s, eDebug))
-		s << "clk: " << fClock << "evt: " << iEvent;
 	}
 
 typedef pair<NamedEvent, size_t> TSIndex_t;
@@ -287,10 +292,10 @@ public:
 
 set<Daton> Dataset::GetComposed()
 	{
-	// This is a bit tricky. We're effectively merge sorting from our history entries.
-
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
+
+	// This is a bit tricky. We're effectively merge sorting from our history entries.
 
 	vector<Map_NamedEvent_Delta_t::const_iterator> theIters, theEnds;
 	for (ZRef<DeltasChain> current = fDeltasChain;
@@ -345,19 +350,29 @@ ZRef<DeltasChain> Dataset::GetDeltasChain()
 
 void Dataset::pCommit()
 	{
-	if (!fPendingStatements.empty())
-		{
-		const NamedEvent theNE(fNombre, fClock->GetEvent());
-		const ZRef<Delta> theDelta = new Delta(&fPendingStatements);
+	if (fPendingStatements.empty())
+		return;
 
-		Map_NamedEvent_Delta_t theMap;
-		theMap.insert(Map_NamedEvent_Delta_t::value_type(theNE, theDelta));
+	ZLOGF(s, eDebug + 1);
+	if (s)
+		s << this << " before:" << fClock;
 
-		ZRef<Deltas> theDeltas = new Deltas(&theMap);
+	const NamedEvent theNE(fNombre, fClock->GetEvent());
+	const ZRef<Delta> theDelta = new Delta(&fPendingStatements);
 
-		fDeltasChain = new DeltasChain(fDeltasChain, theDeltas);
-		sEvent(fClock);
-		}
+	Map_NamedEvent_Delta_t theMap;
+	theMap.insert(Map_NamedEvent_Delta_t::value_type(theNE, theDelta));
+
+	ZRef<Deltas> theDeltas = new Deltas(&theMap);
+
+	fDeltasChain = new DeltasChain(fDeltasChain, theDeltas);
+	// This is a hack -- comparing (2+0,0) against 2 has them be concurrent,
+	// sEvent against (2+0,0) is 2, which might not be correct. FIXME
+	sEvent(fClock);
+	sEvent(fClock);
+
+	if (s)
+		s << ", after:"<< fClock;
 	}
 
 } // namespace ZDataset
