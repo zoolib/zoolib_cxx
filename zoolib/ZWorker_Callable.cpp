@@ -55,6 +55,7 @@ void ZWorker_Callable_Once::RunnerDetached()
 	{
 	if (ZRef<Callable_t> theCallable = fCallable)
 		fCallable->Call();
+	ZWorker::RunnerDetached();
 	}
 
 ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable_Once::Callable_t> iCallable)
