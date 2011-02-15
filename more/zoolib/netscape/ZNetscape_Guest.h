@@ -67,6 +67,8 @@ typedef NPVariant_T<NPObjectG> NPVariantG;
 
 void sRetain(NPObjectG& iOb);
 void sRelease(NPObjectG& iOb);
+inline void sCheck(NPObjectG* iOb)
+	{}
 
 class NPObjectG
 :	public NPObject_T<NPVariantG>
