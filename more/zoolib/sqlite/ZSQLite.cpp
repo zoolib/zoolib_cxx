@@ -166,22 +166,21 @@ ZAny Iter::Get(size_t iIndex)
 				{
 				case SQLITE_INTEGER:
 					{
-					return ZAny(int64(::sqlite3_column_int64(fStmt, iIndex)));
+					return sAny<int64>(::sqlite3_column_int64(fStmt, iIndex));
 					}
 				case SQLITE_FLOAT:
 					{
-					return ZAny(::sqlite3_column_double(fStmt, iIndex));
+					return sAny<double>(::sqlite3_column_double(fStmt, iIndex));
 					}
 				case SQLITE3_TEXT:
 					{
 					const unsigned char* theText = ::sqlite3_column_text(fStmt, iIndex);
-					return ZAny(
-						string8((const char*)theText, ::sqlite3_column_bytes(fStmt, iIndex)));
+					return sAnyCounted<string8>((const char*)theText, ::sqlite3_column_bytes(fStmt, iIndex));
 					}
 				case SQLITE_BLOB:
 					{
 					const void* theData = ::sqlite3_column_blob(fStmt, iIndex);
-					return ZAny(ZData_Any(theData, ::sqlite3_column_bytes(fStmt, iIndex)));
+					return sAny<ZData_Any>(theData, ::sqlite3_column_bytes(fStmt, iIndex));
 					}
 				}
 			}
