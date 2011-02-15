@@ -33,6 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_DoQuery.h"
 #include "zoolib/zqe/ZQE_Transform_Search.h"
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
+#include "zoolib/zqe/ZQE_Walker_Result.h"
 #include "zoolib/zqe/ZQE_Walker_Rename.h"
 #include "zoolib/zqe/ZQE_Walker_Restrict.h"
 
@@ -259,7 +260,11 @@ class Source_Dataset::PSearch
 public:
 	PSearch() {}
 
+	ZRA::Rename fRename;
+	RelHead fRelHead;
+	ZRef<ZExpr_Bool> fExpr_Bool;
 	set<PQuery*> fDependentPQueries;
+	ZRef<ZQE::Result> fResult;
 	};
 
 // =================================================================================================
@@ -272,8 +277,6 @@ void Source_Dataset::ForceUpdate()
 Source_Dataset::Source_Dataset(ZRef<Dataset> iDataset)
 :	fDataset(iDataset)
 ,	fEvent(Event::sZero())
-,	fChangeCount(0)
-,	fChanged(false)
 	{}
 
 Source_Dataset::~Source_Dataset()
@@ -287,11 +290,6 @@ void Source_Dataset::ModifyRegistrations(
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	ZAcqMtxR acq(fMtxR);
-	if (iAddedCount || iRemovedCount)
-		{
-		fChanged = true;
-		this->pInvokeCallable_ResultsAvailable();
-		}
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
@@ -300,7 +298,7 @@ void Source_Dataset::ModifyRegistrations(
 		// Ensure restricts are as far down the tree as they can be.
 //		theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
 //		theRel = ZRA::Transform_ConsolidateRenames().Do(theRel);
-//##		theRel = ZQE::sTransform_Search(theRel);
+		theRel = ZQE::sTransform_Search(theRel);
 
 		if (ZLOGPF(s, eDebug + 1))
 			{
@@ -361,6 +359,9 @@ void Source_Dataset::ModifyRegistrations(
 		fClientQuery_NeedsWork.EraseIfContains(theClientQuery);
 		fMap_Refcon_ClientQuery.erase(iterClientQuery);
 		}
+
+	if (!fClientQuery_NeedsWork.Empty() || !fPQuery_NeedsWork.Empty())
+		this->pInvokeCallable_ResultsAvailable();
 	}
 
 void Source_Dataset::CollectResults(vector<QueryResult>& oChanged)
@@ -371,46 +372,19 @@ void Source_Dataset::CollectResults(vector<QueryResult>& oChanged)
 
 	oChanged.clear();
 
-	bool anyChanges = fChanged;
-	fChanged = false;
-
 	// Pick up (and index) values from dataset
-	if (this->pPull())
-		anyChanges = true;
+	this->pPull();
 	
-	if (anyChanges)
+	for (DListEraser<PQuery,DLink_PQuery_NeedsWork> eraser = fPQuery_NeedsWork;
+		eraser; eraser.Advance())
 		{
-		for (Map_Rel_PQuery::iterator iterPQuery = fMap_Rel_PQuery.begin();
-			iterPQuery != fMap_Rel_PQuery.end(); ++iterPQuery)
+		PQuery* thePQuery = eraser.Current();
+		ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
+		ZRef<ZQE::Result> theResult = ZQE::sDoQuery(theWalker);
+		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
+			iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
 			{
-			PQuery* thePQuery = &iterPQuery->second;
-
-			fWalkerCount = 0;
-			fReadCount = 0;
-			fStepCount = 0;
-
-			ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
-
-			if (ZLOGPF(s, eDebug + 2))
-				{
-				s << "\n";
-				ZRA::Util_Strim_Rel::sToStrim(thePQuery->fRel, s);
-				}
-
-			ZRef<ZQE::Result> theResult = ZQE::sDoQuery(theWalker);
-
-			if (ZLOGPF(s, eDebug + 2))
-				{
-				s	<< "Walkers: " << fWalkerCount
-					<< ", reads: " << fReadCount
-					<< ", steps: " << fStepCount;
-				}
-
-			for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
-				iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
-				{
-				oChanged.push_back(QueryResult(iterCS.Current()->fRefcon, theResult, fEvent));
-				}
+			oChanged.push_back(QueryResult(iterCS.Current()->fRefcon, theResult, fEvent));
 			}
 		}
 
@@ -422,9 +396,10 @@ void Source_Dataset::CollectResults(vector<QueryResult>& oChanged)
 		if (thePSearch->fDependentPQueries.empty())
 			{
 			// Delete thePSearch
+			const PSearchKey theKey(thePSearch->fRename, thePSearch->fExpr_Bool);
+			ZUtil_STL::sEraseMustContain(1, fMap_Rel_PSearch, theKey);
 			}
 		}
-
 
 //##	if (!ZMACRO_IPhone_Device)
 //##		ZThread::sSleep(1);
@@ -451,7 +426,6 @@ size_t Source_Dataset::OpenTransaction()
 	{
 	ZAcqMtxR acq(fMtxR);
 	fStack_Map_Pending.push_back(fMap_Pending);
-	fStack_ChangeCount.push_back(fChangeCount);
 	return fStack_Map_Pending.size();
 	}
 
@@ -460,14 +434,9 @@ void Source_Dataset::ClearTransaction(size_t iIndex)
 	ZAcqMtxR acq(fMtxR);
 	ZAssert(iIndex == fStack_Map_Pending.size());
 
-	fMap_Pending = fStack_Map_Pending.back();
+	this->pChangedAll();
 
-	if (fChangeCount != fStack_ChangeCount.back())
-		{
-		fChangeCount = fStack_ChangeCount.back();
-		fChanged = true;
-		this->pInvokeCallable_ResultsAvailable();
-		}
+	fMap_Pending = fStack_Map_Pending.back();
 	}
 
 void Source_Dataset::CloseTransaction(size_t iIndex)
@@ -476,20 +445,8 @@ void Source_Dataset::CloseTransaction(size_t iIndex)
 
 	ZAssert(iIndex == fStack_Map_Pending.size());
 
-	if (fChangeCount != fStack_ChangeCount.back())
-		{
-		fChangeCount = fStack_ChangeCount.back();
-		fStack_Map_Pending.pop_back();
-		fStack_ChangeCount.pop_back();
-		this->pConditionalPushDown();
-		fChanged = true;
-		this->pInvokeCallable_ResultsAvailable();
-		}
-	else
-		{
-		fStack_Map_Pending.pop_back();
-		fStack_ChangeCount.pop_back();
-		}
+	this->pChangedAll();
+	fStack_Map_Pending.pop_back();
 	}
 
 void Source_Dataset::pDetachPQuery(PQuery* iPQuery)
@@ -498,7 +455,7 @@ void Source_Dataset::pDetachPQuery(PQuery* iPQuery)
 	for (set<PSearch*>::iterator iterPSearch = iPQuery->fDependingPSearches.begin();
 		iterPSearch != iPQuery->fDependingPSearches.end(); ++iterPSearch)
 		{
-		PSearch* thePSearch =  *iterPSearch;
+		PSearch* thePSearch = *iterPSearch;
 		ZUtil_STL::sEraseMustContain(1, thePSearch->fDependentPQueries, iPQuery);
 		if (thePSearch->fDependentPQueries.empty())
 			fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
@@ -506,16 +463,16 @@ void Source_Dataset::pDetachPQuery(PQuery* iPQuery)
 	iPQuery->fDependingPSearches.clear();
 	}
 
-bool Source_Dataset::pPull()
+void Source_Dataset::pPull()
 	{
 	// Get our map in sync with fDataset
-	ZLOGF(s, eDebug);
+	ZLOGF(s, eDebug + 1);
 	ZRef<Deltas> theDeltas;
 	fEvent = fDataset->GetDeltas(theDeltas, fEvent);
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
 	if (s)
 		s << "\ntheMNED.size()=" << theMNED.size();
-	bool anyChanges = false;
+
 	for (Map_NamedEvent_Delta_t::const_iterator
 		iterMNED = theMNED.begin(), endMNED = theMNED.end();
 		iterMNED != endMNED; ++iterMNED)
@@ -543,10 +500,12 @@ bool Source_Dataset::pPull()
 				s << " NFo ";
 				if (iterStmts->second)
 					{
-					anyChanges = true;
+					const ZVal_Any theVal = sAsVal(theDaton);
+					this->pChanged(theVal);
+
 					fMap.insert(iterMap,
 						make_pair(theDaton,
-						pair<NamedEvent, ZVal_Any>(theNamedEvent, sAsVal(theDaton))));
+						pair<NamedEvent, ZVal_Any>(theNamedEvent, theVal)));
 					}
 				}
 			else
@@ -555,14 +514,15 @@ bool Source_Dataset::pPull()
 				const bool bla = theNamedEvent < iterMap->second.first;
 				if (iterMap->second.first < theNamedEvent)
 					{
+					// theNamedEvent is more recent than what we've got and thus supersedes it.
 					if (s)
 						s << " MRc ";
 
-					// theNamedEvent is more recent than what we've got and thus supersedes it.
-					anyChanges = true;
+					const ZVal_Any theVal = sAsVal(theDaton);
+					this->pChanged(theVal);
 
 					if (iterStmts->second)
-						iterMap->second = pair<NamedEvent, ZVal_Any>(theNamedEvent, sAsVal(theDaton));
+						iterMap->second = pair<NamedEvent, ZVal_Any>(theNamedEvent, theVal);
 					else
 						fMap.erase(iterMap);
 					}
@@ -583,7 +543,6 @@ bool Source_Dataset::pPull()
 				}
 			}
 		}
-	return anyChanges;
 	}
 
 void Source_Dataset::pConditionalPushDown()
@@ -604,8 +563,6 @@ void Source_Dataset::pConditionalPushDown()
 
 void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense)
 	{
-	++fChangeCount;
-	fChanged = true;
 	Map_Pending::iterator i = fMap_Pending.find(iDaton);
 	if (fMap_Pending.end() == i)
 		{
@@ -616,7 +573,53 @@ void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal
 		ZAssert(i->second.second == !iSense);
 		fMap_Pending.erase(i);
 		}
+	this->pChanged(iVal);
 	this->pInvokeCallable_ResultsAvailable();	
+	}
+
+void Source_Dataset::pChanged(const ZVal_Any& iVal)
+	{
+	const ZMap_Any theMap = iVal.GetMap();
+	RelHead theRH;
+	for (ZMap_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
+		theRH |= theMap.NameOf(i);
+
+	for (Map_Rel_PSearch::iterator iterPSearch = fMap_Rel_PSearch.begin();
+		iterPSearch != fMap_Rel_PSearch.end(); ++iterPSearch)
+		{
+		PSearch* thePSearch = &iterPSearch->second;
+		if (!(thePSearch->fRelHead & theRH).empty())
+			{
+			for (set<PQuery*>::iterator iterPQuery = thePSearch->fDependentPQueries.begin();
+				iterPQuery != thePSearch->fDependentPQueries.end(); ++iterPQuery)
+				{
+				PQuery* thePQuery = *iterPQuery;
+				fPQuery_NeedsWork.InsertIfNotContains(thePQuery);
+				for (set<PSearch*>::iterator iterDependingPSearch = thePQuery->fDependingPSearches.begin();
+					iterDependingPSearch != thePQuery->fDependingPSearches.end(); ++iterDependingPSearch)
+					{
+					PSearch* theDependingPSearch = *iterDependingPSearch;
+					if (theDependingPSearch != thePSearch)
+						{
+						ZUtil_STL::sEraseMustContain(1, theDependingPSearch->fDependentPQueries, thePQuery);
+						if (theDependingPSearch->fDependentPQueries.empty())
+							fPSearch_NeedsWork.InsertIfNotContains(theDependingPSearch);
+						}
+					}
+				thePQuery->fDependingPSearches.clear();
+				}
+			thePSearch->fDependentPQueries.clear();
+			fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
+			thePSearch->fResult.Clear();
+			}
+		}
+	}
+
+void Source_Dataset::pChangedAll()
+	{
+	for (Map_Pending::iterator i = fMap_Pending.begin(), end = fMap_Pending.end();
+		i != end; ++i)
+		{ this->pChanged(i->second.first); }
 	}
 
 ZRef<ZQE::Walker> Source_Dataset::pMakeWalker_Concrete(const RelHead& iRelHead)
@@ -632,17 +635,36 @@ ZRef<ZQE::Walker> Source_Dataset::pMakeWalker_Search(
 	// gets PSearches from the source, they're registered against that PQuery.
 
 	const ZRA::Rename& theRename = iRel->GetRename();
-
-	ZRA::RelHead theRH;
-	for (ZRA::Rename::const_iterator iterRename = theRename.begin();
-		iterRename != theRename.end(); ++iterRename)
-		{
-		theRH |= iterRename->first;
-		}
-	
-	ZRef<ZQE::Walker> theWalker = this->pMakeWalker_Concrete(theRH);
-
 	const ZRef<ZExpr_Bool>& theExpr_Bool = iRel->GetExpr_Bool();
+
+	const PSearchKey theKey(theRename, theExpr_Bool);
+
+	PSearch* thePSearch;
+	Map_Rel_PSearch::iterator iterPSearch = fMap_Rel_PSearch.find(theKey);
+	if (iterPSearch == fMap_Rel_PSearch.end())
+		{
+		pair<Map_Rel_PSearch::iterator,bool> inPSearch =
+			fMap_Rel_PSearch.insert(make_pair(theKey, PSearch()));
+
+		thePSearch = &inPSearch.first->second;
+		thePSearch->fRename = theRename;
+		thePSearch->fExpr_Bool = theExpr_Bool;
+		for (ZRA::Rename::const_iterator i = theRename.begin(); i != theRename.end(); ++i)
+			thePSearch->fRelHead |= i->first;
+		}
+	else
+		{
+		thePSearch = &iterPSearch->second;
+		}
+
+	ZUtil_STL::sInsertMustNotContain(1, iPQuery->fDependingPSearches, thePSearch);
+	ZUtil_STL::sInsertMustNotContain(1, thePSearch->fDependentPQueries, iPQuery);
+
+	if (!thePSearch->fResult)
+		thePSearch->fResult = sDoQuery(this->pMakeWalker_Concrete(thePSearch->fRelHead));
+
+	ZRef<ZQE::Walker> theWalker = new ZQE::Walker_Result(thePSearch->fResult);
+
 	if (theExpr_Bool != sTrue())
 		theWalker = new ZQE::Walker_Restrict(theWalker, theExpr_Bool);
 

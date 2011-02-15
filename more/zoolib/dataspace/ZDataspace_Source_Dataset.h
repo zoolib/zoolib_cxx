@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDataspace_Source_Dataset__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompare_Pair.h"
+#include "zoolib/ZCompare_Ref.h"
 #include "zoolib/ZUtil_Expr_Bool_CNF.h"
 #include "zoolib/ZVal_Any.h"
 
@@ -101,9 +103,11 @@ private:
 	size_t fReadCount;
 	size_t fStepCount;
 
-	bool pPull();
+	void pPull();
 	void pConditionalPushDown();
 	void pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense);
+	void pChanged(const ZVal_Any& iVal);
+	void pChangedAll();
 
 	class PQuery;
 
@@ -141,9 +145,6 @@ private:
 	typedef std::map<ZDataset::Daton, std::pair<ZVal_Any, bool> > Map_Pending;
 	Map_Pending fMap_Pending;
 	std::vector<Map_Pending> fStack_Map_Pending;
-	uint64 fChangeCount;
-	std::vector<uint64> fStack_ChangeCount;
-	bool fChanged;
 //--
 	class DLink_ClientQuery_InPQuery;
 	class DLink_ClientQuery_NeedsWork;
@@ -160,6 +161,11 @@ private:
 //--
 	class DLink_PSearch_NeedsWork;
 	class PSearch;
+
+	typedef std::pair<ZRA::Rename,ZRef<ZExpr_Bool> > PSearchKey;
+
+	typedef std::map<PSearchKey,PSearch,Less_Compare_T<PSearchKey> > Map_Rel_PSearch;
+	Map_Rel_PSearch fMap_Rel_PSearch;
 
 	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
 //--
