@@ -307,7 +307,6 @@ private:
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown;
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown_Pending;
 	std::set<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_ToIgnore;
-	std::set<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_ToReload;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fInserts;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fDeletes;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fReloads;
@@ -325,7 +324,6 @@ private:
  - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath;
 
 // From UITableViewDelegate
-- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath;
 - (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section;
 - (CGFloat)tableView:(UITableView*)tableView heightForFooterInSection:(NSInteger)section;
 
@@ -347,7 +345,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * UITVHandler_WithSections
+#pragma mark * UITVHandler_WithSections_VariableRowHeight
+
+@interface UITVHandler_WithSections_VariableRowHeight : UITVHandler_WithSections
+	{}
+
+// From UITableViewDelegate
+- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath;
+
+@end // interface UITVHandler_WithSections_VariableRowHeight
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * UITableView_WithSections
 
 @interface UITableView_WithSections : UITableView
 	{
@@ -356,6 +366,7 @@ private:
 	ZooLib::ZRef<UITVHandler_WithSections> fHandler;
 	};
 
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style variableRowHeight:(BOOL)variableRowHeight;
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style;
 - (void)appendSection:(ZooLib::ZRef<ZooLib::UIKit::Section>) iSection;
 - (void)needsUpdate;

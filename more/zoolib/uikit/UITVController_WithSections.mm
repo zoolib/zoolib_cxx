@@ -33,6 +33,7 @@ namespace UIKit {
 
 using std::map;
 using std::pair;
+using std::set;
 using std::vector;
 
 // =================================================================================================
@@ -680,17 +681,6 @@ using namespace ZooLib::UIKit;
 	return nullptr;
 	}
 
-- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath
-	{
-	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
-		{
-		if (ZQ<CGFloat> theQ = theSection->GetBody()->QRowHeight(indexPath.row))
-			return theQ.Get();
-		}
-	CGFloat result = tableView.rowHeight;
-	return result;
-	}
-
 - (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section
 	{
 	if (ZRef<Section> theSection = [self pGetSection:section])
@@ -807,19 +797,22 @@ using namespace ZooLib::UIKit;
 		[self performSelectorOnMainThread:@selector(pDoUpdate1:) withObject:tableView waitUntilDone:NO];
 	}
 
-static void spInsertSections(UITableView* iTableView, bool iShown,
+static void spInsertSections(UITableView* iTableView,
 	size_t iBaseIndex,
 	const ZRef<Section>* iSections,
-	size_t iCount)
+	size_t iCount,
+	set<ZRef<Section> >& ioSections_ToIgnore
+	)
 	{
 	for (size_t x = 0; x < iCount; ++x)
 		{
 		ZRef<Section> theSection = iSections[x];
 		theSection->GetBody()->Update_NOP();
 		theSection->GetBody()->FinishUpdate();
+		ioSections_ToIgnore.insert(theSection);
 		[iTableView
 			insertSections:sMakeIndexSet(iBaseIndex + x)
-			withRowAnimation:iShown ? theSection->SectionAnimation_Insert() : UITableViewRowAnimationNone];
+			withRowAnimation:theSection->SectionAnimation_Insert()];
 		}
 	}
 
@@ -842,13 +835,17 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 			fSections_Shown_Pending.push_back(theSection);
 		}
 
+	// We've done PreUpdate on every section, and fSections_Shown_Pending contains
+	// those sections that will be visible.
+
 	if (!fShown)
 		{
-		ZLOGTRACE(eDebug + 1);
+		// We're not onscreen, so we can Update/Finish all sections, switch
+		// to the new list of sections, reloadData, pDoUpdate4 and return.
 		fSections_Shown = fSections_Shown_Pending;
-		for (size_t x = 0; x < fSections_Shown.size(); ++x)
+		for (size_t x = 0; x < fSections_All.size(); ++x)
 			{
-			ZRef<Section> theSection = fSections_Shown[x];
+			ZRef<Section> theSection = fSections_All[x];
 			theSection->GetBody()->Update_NOP();
 			theSection->GetBody()->FinishUpdate();
 			}
@@ -857,14 +854,14 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 		return;
 		}
 
-	// Insert and delete sections first, this will be rare.
 	if (fSections_Shown == fSections_Shown_Pending)
 		{
+		// The list of sections hasn't changed, move directly on to pUpdate2
 		[self pDoUpdate2:tableView];
 		return;
 		}
 
-	const bool isShown = fShown;
+	// We need to insert and remove sections.
 	[tableView beginUpdates];
 	
 	const vector<ZRef<Section> > sectionsOld = fSections_Shown;
@@ -882,23 +879,24 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 			find(fSections_Shown.begin(), fSections_Shown.end(), sectionOld) - fSections_Shown.begin();
 		if (inNew == endNew)
 			{
-			// It's no longer in fSections_Shown, and must be deleted.
+			// sectionOld is no longer in fSections_Shown so must be deleted.
 			[tableView
 				deleteSections:sMakeIndexSet(iterOld)
-				withRowAnimation:isShown ? sectionOld->SectionAnimation_Delete() : UITableViewRowAnimationNone];
+				withRowAnimation:sectionOld->SectionAnimation_Delete()];
+			// But it does need to be update/finished
+			sectionOld->GetBody()->Update_NOP();
+			sectionOld->GetBody()->FinishUpdate();
 			}
 		else
 			{
+			// sectionOld is still present. Don't do anything with it for now -- any cell
+			// reload/insert/delete will happen later.
 			if (size_t countToInsert = inNew - iterNew)
 				{
 				// There are sections to insert prior to sectionOld.
-				spInsertSections(tableView, isShown, iterNew, &fSections_Shown[iterNew], countToInsert);
-				fSections_ToIgnore.insert(&fSections_Shown[iterNew], &fSections_Shown[iterNew + countToInsert]);
+				spInsertSections(tableView,
+					iterNew, &fSections_Shown[iterNew], countToInsert, fSections_ToIgnore);
 				}
-			sectionOld->GetBody()->Update_NOP();
-			sectionOld->GetBody()->FinishUpdate();
-			fSections_ToReload.insert(sectionOld);
-
 			iterNew = inNew + 1;
 			}
 		}
@@ -906,23 +904,15 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 	// Insert remainder of pending.
 	if (size_t countToInsert = endNew - iterNew)
 		{
-		spInsertSections(tableView, isShown, iterNew, &fSections_Shown[iterNew], countToInsert);
-		fSections_ToIgnore.insert(&fSections_Shown[iterNew], &fSections_Shown[iterNew + countToInsert]);
+		spInsertSections(tableView,
+			iterNew, &fSections_Shown[iterNew], countToInsert, fSections_ToIgnore);
 		}
 
 	[tableView endUpdates];
 
-	if (isShown)
-		{
-		ZLOGTRACE(eDebug + 1);
-		[self performSelector:@selector(pDoUpdate2:)
-			 withObject:tableView
-			 afterDelay:0.35];
-		 }
-	else
-		{
-		[self pDoUpdate2:tableView];
-		}
+	[self performSelector:@selector(pDoUpdate2:)
+		 withObject:tableView
+		 afterDelay:0.35];
 	}
 
 - (void)pDoUpdate2:(UITableView*)tableView
@@ -940,15 +930,10 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 	fReloads.resize(fSections_Shown.size());
 
 	bool anyReloads = false;
-	vector<pair<size_t,UITableViewRowAnimation> > sectionReloads;
+
 	for (size_t x = 0; x < fSections_Shown.size(); ++x)
 		{
-		if (ZUtil_STL::sContains(fSections_ToReload, fSections_Shown[x]))
-			{
-			sectionReloads.push_back(std::make_pair(x, fSections_Shown[x]->SectionAnimation_Reload()));
-			anyReloads = true;
-			}
-		else if (!ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[x]))
+		if (!ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[x]))
 			{
 			SectionBody::RowMeta theRowMeta_Old;
 			SectionBody::RowMeta theRowMeta_New;
@@ -963,28 +948,11 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 		}
 	
 	fSections_ToIgnore.clear();
-	fSections_ToReload.clear();
 
 	bool anyAnimatedReloads = false;
 	if (anyReloads)
 		{
-		const bool isShown = fShown;
 		[tableView beginUpdates];
-		for (vector<pair<size_t,UITableViewRowAnimation> >::iterator i = sectionReloads.begin();
-			i != sectionReloads.end(); ++i)
-			{
-			// Doing any section animation whilst cell reloads are going on messes thigns up.
-			UITableViewRowAnimation theAnimation = UITableViewRowAnimationNone;
-//			if (isShown)
-//				theAnimation = UITableViewRowAnimationFade;//i->second;
-//			if (UITableViewRowAnimationNone != theAnimation)
-//				anyAnimatedReloads = true;
-
-			[tableView
-				reloadSections:sMakeIndexSet(i->first)
-				withRowAnimation:theAnimation];
-			}
-
 		for (size_t x = 0; x < fReloads.size(); ++x)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = fReloads[x];
@@ -992,7 +960,7 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 				i != theMap.end(); ++i)
 				{
 				UITableViewRowAnimation theAnimation = UITableViewRowAnimationNone;
-				if (isShown)
+				if (fShown)
 					theAnimation = i->second;
 				if (UITableViewRowAnimationNone != theAnimation)
 					anyAnimatedReloads = true;
@@ -1006,7 +974,6 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 
 	if (anyAnimatedReloads)
 		{
-		ZLOGTRACE(eDebug + 1);
 		[self performSelector:@selector(pDoUpdate3:)
 			 withObject:tableView
 			 afterDelay:0.2];
@@ -1075,7 +1042,6 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 
 	if (isShown && anyChanges)
 		{
-		ZLOGTRACE(eDebug + 1);
 		[self performSelector:@selector(pDoUpdate4:)
 			 withObject:tableView
 			 afterDelay:0.35];
@@ -1106,19 +1072,43 @@ static void spInsertSections(UITableView* iTableView, bool iShown,
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * UITVHandler_WithSections
+#pragma mark * UITVHandler_WithSections_VariableRowHeight
+
+@implementation UITVHandler_WithSections_VariableRowHeight
+
+- (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath
+	{
+	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
+		{
+		if (ZQ<CGFloat> theQ = theSection->GetBody()->QRowHeight(indexPath.row))
+			return theQ.Get();
+		}
+	return tableView.rowHeight;
+	}
+
+@end // implementation UITVHandler_WithSections_VariableRowHeight
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * UITableView_WithSections
 
 @implementation UITableView_WithSections
 
-- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style variableRowHeight:(BOOL)variableRowHeight
 	{
 	[super initWithFrame:frame style:style];
 	fCallable_NeedsUpdate = MakeCallable<void()>(self, @selector(needsUpdate));
-	fHandler = Adopt& [[UITVHandler_WithSections alloc] init];
+	if (variableRowHeight)
+		fHandler = Adopt& [[UITVHandler_WithSections_VariableRowHeight alloc] init];
+	else
+		fHandler = Adopt& [[UITVHandler_WithSections alloc] init];
 	[self setDelegate:fHandler];
 	[self setDataSource:fHandler];
 	return self;
 	}
+
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
+	{ return [self initWithFrame:frame style:style variableRowHeight:YES]; }
 
 - (void)needsUpdate
 	{
