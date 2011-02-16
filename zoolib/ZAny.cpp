@@ -58,8 +58,10 @@ const std::type_info& ZAny::Type() const
 		{
 		return theHolderRef->Type();
 		}
-
-	return typeid(void);
+	else
+		{
+		return typeid(void);
+		}
 	}
 
 void* ZAny::VoidStar()
@@ -78,8 +80,10 @@ void* ZAny::VoidStar()
 			theHolderRef = theHolderRef->Clone();
 		return theHolderRef->VoidStar();
 		}
-
-	return 0;
+	else
+		{
+		return 0;
+		}
 	}
 
 const void* ZAny::ConstVoidStar() const
@@ -96,8 +100,10 @@ const void* ZAny::ConstVoidStar() const
 		{
 		return theHolderRef->VoidStar();
 		}
-
-	return 0;
+	else
+		{
+		return 0;
+		}
 	}
 
 void ZAny::swap(ZAny& ioOther)
