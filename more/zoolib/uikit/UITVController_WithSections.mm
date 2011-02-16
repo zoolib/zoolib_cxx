@@ -266,16 +266,16 @@ SectionBody_SingleRow::SectionBody_SingleRow(ZRef<UITableViewCell> iCell)
 
 size_t SectionBody_SingleRow::NumberOfRows()
 	{
-	if (fCell)
+	if (fCell_Current)
 		return 1;
 	return 0;
 	}
 
 void SectionBody_SingleRow::PreUpdate()
-	{}
+	{ fCell_New = fCell_Pending; }
 
 bool SectionBody_SingleRow::WillBeEmpty()
-	{ return !fCell_Pending; }
+	{ return !fCell_New; }
 
 void SectionBody_SingleRow::Update_NOP()
 	{}
@@ -283,18 +283,21 @@ void SectionBody_SingleRow::Update_NOP()
 void SectionBody_SingleRow::Update_Normal(RowMeta& ioRowMeta_Old, RowMeta& ioRowMeta_New,
 	RowUpdate& ioRowUpdate_Insert, RowUpdate& ioRowUpdate_Delete, RowUpdate& ioRowUpdate_Reload)
 	{
-	if (fCell)
+	if (fCell_Current)
 		ioRowMeta_Old.UpdateCount(1);
 
-	if (fCell_Pending)
+	if (fCell_New)
 		ioRowMeta_New.UpdateCount(1);
 
-	if (fCell)
+	if (fCell_Current)
 		{
-		if (fCell_Pending)
+		if (fCell_New)
 			{
-			if (fCell != fCell_Pending)
+			if (fCell_Current != fCell_New)
+				{
+				fCell_Current = fCell_New;
 				ioRowUpdate_Reload.Add(0, this->RowAnimation_Reload());
+				}
 			}
 		else
 			{
@@ -303,14 +306,14 @@ void SectionBody_SingleRow::Update_Normal(RowMeta& ioRowMeta_Old, RowMeta& ioRow
 		}
 	else
 		{
-		if (fCell_Pending)
+		if (fCell_New)
 			ioRowUpdate_Insert.Add(0, this->RowAnimation_Insert());
 		}
 	}
 
 void SectionBody_SingleRow::Update_Insert(RowMeta& ioRowMeta_New, RowUpdate& ioRowUpdate_New)
 	{
-	if (fCell_Pending)
+	if (fCell_New)
 		{
 		ioRowMeta_New.UpdateCount(1);
 		ioRowUpdate_New.Add(0, this->RowAnimation_Insert());
@@ -319,7 +322,7 @@ void SectionBody_SingleRow::Update_Insert(RowMeta& ioRowMeta_New, RowUpdate& ioR
 
 void SectionBody_SingleRow::Update_Delete(RowMeta& ioRowMeta_Old, RowUpdate& ioRowUpdate_Old)
 	{
-	if (fCell)
+	if (fCell_Current)
 		{
 		ioRowMeta_Old.UpdateCount(1);
 		ioRowUpdate_Old.Add(0, this->RowAnimation_Delete());
@@ -327,13 +330,11 @@ void SectionBody_SingleRow::Update_Delete(RowMeta& ioRowMeta_Old, RowUpdate& ioR
 	}
 
 void SectionBody_SingleRow::FinishUpdate()
-	{
-	fCell = fCell_Pending;
-	}
+	{ fCell_Current = fCell_New; }
 
 ZRef<UITableViewCell> SectionBody_SingleRow::UITableViewCellForRow(UITableView* iView,
 	size_t iRowIndex)
-	{ return fCell; }
+	{ return fCell_Current; }
 
 // =================================================================================================
 #pragma mark -

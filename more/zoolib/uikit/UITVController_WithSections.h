@@ -250,7 +250,8 @@ public:
 	ZRef<UITableViewCell> fCell_Pending;
 
 private:
-	ZRef<UITableViewCell> fCell;
+	ZRef<UITableViewCell> fCell_New;
+	ZRef<UITableViewCell> fCell_Current;
 	};
 
 // =================================================================================================
