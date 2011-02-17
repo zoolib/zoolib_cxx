@@ -135,7 +135,7 @@ public:
 
 		ZReleaser_T<Mtx> rel(iMtx);
 
-		if (fSem.PFor(iTimeout))
+		if (fSem.TryProcureFor(iTimeout))
 			return true;
 
 		ZAtomic_Dec(&fWaitingThreads);
@@ -148,7 +148,7 @@ public:
 
 		ZReleaser_T<Mtx> rel(iMtx);
 
-		if (fSem.PUntil(iDeadline))
+		if (fSem.TryProcureUntil(iDeadline))
 			return true;
 
 		ZAtomic_Dec(&fWaitingThreads);
@@ -164,7 +164,7 @@ public:
 				if (!ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, oldCount - 1))
 					continue;
 
-				fSem.V();
+				fSem.Vacate();
 				}
 			break;
 			}
@@ -180,7 +180,7 @@ public:
 					continue;
 
 				while (oldCount--)
-					fSem.V();
+					fSem.Vacate();
 				}
 			break;
 			}

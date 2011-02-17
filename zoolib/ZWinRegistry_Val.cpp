@@ -518,12 +518,6 @@ KeyRef::Index_t KeyRef::IndexOf(const string8& iName) const
 KeyRef::Index_t KeyRef::IndexOf(const KeyRef& iOther, const Index_t& iOtherIndex) const
 	{ return iOtherIndex; }
 
-HKEY& KeyRef::OParam()
-	{
-	inherited::Clear();
-	return this->GetPtrRef();
-	}
-
 } // namespace ZWinRegistry
 
 } // namespace ZooLib

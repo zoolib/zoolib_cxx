@@ -144,9 +144,6 @@ public:
 	string8 NameOf(const Index_t& iIndex) const;
 	Index_t IndexOf(const string8& iName) const;
 	Index_t IndexOf(const KeyRef& iOther, const Index_t& iOtherIndex) const;
-
-// Our protocol
-	HKEY& OParam();
 	};
 
 inline void swap(KeyRef& a, KeyRef& b)

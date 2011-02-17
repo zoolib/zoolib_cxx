@@ -36,10 +36,10 @@ namespace ZWinRegistry {
 
 ZRef<ZYadR> sMakeYadR(const Val& iVal)
 	{
-	if (const KeyRef* theVal = iVal.PGet_T<KeyRef>())
+	if (const KeyRef* theVal = iVal.PGet<KeyRef>())
 		return sMakeYadR(*theVal);
 
-	if (const string16* theVal = iVal.PGet_T<string16>())
+	if (const string16* theVal = iVal.PGet<string16>())
 		return sMakeYadR(ZUnicode::sAsUTF8(*theVal));
 
 	return sMakeYadR(iVal.AsAny());

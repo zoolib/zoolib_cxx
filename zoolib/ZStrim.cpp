@@ -1197,7 +1197,7 @@ void ZStrimW::pWritev(size_t* oCountCU, size_t* oWritten, const UTF8* iString, v
 	for (;;)
 		{
 		#if ZCONFIG(Compiler, MSVC)
-			va_list args = iArgs
+			va_list args = iArgs;
 			int count = _vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
 		#else
 			va_list args;

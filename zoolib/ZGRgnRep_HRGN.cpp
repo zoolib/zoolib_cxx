@@ -150,7 +150,7 @@ size_t ZGRgnRep_HRGN::Decompose(DecomposeProc iProc, void* iRefcon)
 		return 0 ;
 	if (regionType == SIMPLEREGION)
 		{
-		iProc(bounds, iRefcon);
+		iProc(sRectPOD(bounds.left, bounds.top, bounds.right, bounds.bottom), iRefcon);
 		return 1;
 		}
 	if (regionType == COMPLEXREGION)
@@ -164,7 +164,7 @@ size_t ZGRgnRep_HRGN::Decompose(DecomposeProc iProc, void* iRefcon)
 		for (size_t x = 0; x < regionData->rdh.nCount; ++x)
 			{
 			++callbacksMade;
-			if (iProc(rectArray[x], iRefcon))
+			if (iProc(sRectPOD(rectArray[x].left, rectArray[x].top, rectArray[x].right, rectArray[x].bottom), iRefcon))
 				break;
 			}
 		return callbacksMade;
@@ -186,7 +186,7 @@ ZRectPOD ZGRgnRep_HRGN::Bounds()
 	{
 	RECT theRECT;
 	::GetRgnBox(fHRGN, &theRECT);
-	return theRECT;
+	return sRectPOD(theRECT.left, theRECT.top, theRECT.right, theRECT.bottom);
 	}
 
 bool ZGRgnRep_HRGN::IsSimpleRect()

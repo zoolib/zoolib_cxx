@@ -844,29 +844,33 @@ bool ZGRectPOD_T<Ord>::Contains(U x, U y) const
 #pragma mark -
 #pragma mark * ZGRect_T
 
-template <class T>
-class ZGRect_T : public ZGRectPOD_T<T>
+template <class Ord>
+class ZGRect_T : public ZGRectPOD_T<Ord>
 	{
 public:
 	ZGRect_T();
-	ZGRect_T(const ZGRect_T<T>& iOther);
-	ZGRect_T(T iWidth, T iHeight);
+	ZGRect_T(const ZGRect_T<Ord>& iOther);
+	ZGRect_T(Ord iWidth, Ord iHeight);
 
 	ZGRect_T(const ZRectPOD& iRect);
 
 	template <class U>
 	ZGRect_T(const ZGExtentPOD_T<U>& iExtent);
 
-	ZGRect_T(T iOriginX, T iOriginY, T iWidth, T iHeight);
+	ZGRect_T(Ord iOriginX, Ord iOriginY, Ord iWidth, Ord iHeight);
 
 	template <class U, class V>
-	ZGRect_T(const ZGPointPOD_T<U>& iOrigin, const ZGExtentPOD_T<V>& iExtent);
+	ZGRect_T(const ZGPointPOD_T<U>& iOrigin, const ZGExtentPOD_T<V>& iExtent)
+		{
+		this->origin = iOrigin;
+		this->extent = iExtent;
+		}
 
 	template <class U>
-	ZGRect_T(T iOriginX, T iOriginY, const ZGExtentPOD_T<U>& iExtent);
+	ZGRect_T(Ord iOriginX, Ord iOriginY, const ZGExtentPOD_T<U>& iExtent);
 
 	template <class U>
-	ZGRect_T(const ZGPointPOD_T<U>& iOrigin, T iWidth, T iHeight);
+	ZGRect_T(const ZGPointPOD_T<U>& iOrigin, Ord iWidth, Ord iHeight);
 
 // Construct from native types
 	#if ZCONFIG_SPI_Enabled(CoreGraphics)
@@ -893,30 +897,30 @@ public:
 	#endif
 	};
 
-template <class T>
-ZGRect_T<T>::ZGRect_T()
+template <class Ord>
+ZGRect_T<Ord>::ZGRect_T()
 	{
-	this->origin = T();
-	this->extent = T();
+	this->origin = Ord();
+	this->extent = Ord();
 	}
 
-template <class T>
-ZGRect_T<T>::ZGRect_T(const ZGRect_T<T>& iOther)
+template <class Ord>
+ZGRect_T<Ord>::ZGRect_T(const ZGRect_T<Ord>& iOther)
 	{
 	this->origin = iOther.origin;
 	this->extent = iOther.extent;
 	}
 
-template <class T>
-ZGRect_T<T>::ZGRect_T(T iWidth, T iHeight)
+template <class Ord>
+ZGRect_T<Ord>::ZGRect_T(Ord iWidth, Ord iHeight)
 	{
-	this->origin = T();
+	this->origin = Ord();
 	this->extent.h = iWidth;
 	this->extent.v = iHeight;
 	}
 
-template <class T>
-ZGRect_T<T>::ZGRect_T(const ZRectPOD& iRect)
+template <class Ord>
+ZGRect_T<Ord>::ZGRect_T(const ZRectPOD& iRect)
 	{
 	this->origin.x = iRect.left;
 	this->origin.y = iRect.top;
@@ -924,16 +928,16 @@ ZGRect_T<T>::ZGRect_T(const ZRectPOD& iRect)
 	this->extent.v = iRect.bottom - iRect.top;
 	}
 
-template <class T>
+template <class Ord>
 template <class U>
-ZGRect_T<T>::ZGRect_T(const ZGExtentPOD_T<U>& iExtent)
+ZGRect_T<Ord>::ZGRect_T(const ZGExtentPOD_T<U>& iExtent)
 	{
-	this->origin = T();
+	this->origin = Ord();
 	this->extent = iExtent;
 	}
 
-template <class T>
-ZGRect_T<T>::ZGRect_T(T iOriginX, T iOriginY, T iWidth, T iHeight)
+template <class Ord>
+ZGRect_T<Ord>::ZGRect_T(Ord iOriginX, Ord iOriginY, Ord iWidth, Ord iHeight)
 	{
 	this->origin.x = iOriginX;
 	this->origin.y = iOriginY;
@@ -941,26 +945,28 @@ ZGRect_T<T>::ZGRect_T(T iOriginX, T iOriginY, T iWidth, T iHeight)
 	this->extent.v = iHeight;
 	}
 
-template <class T>
+#if 0
+template <class Ord>
 template <class U, class V>
-ZGRect_T<T>::ZGRect_T(const ZGPointPOD_T<U>& iOrigin, const ZGExtentPOD_T<V>& iExtent)
+ZGRect_T<Ord>::ZGRect_T(const ZGPointPOD_T<U>& iOrigin, const ZGExtentPOD_T<V>& iExtent)
 	{
 	this->origin = iOrigin;
 	this->extent = iExtent;
 	}
+#endif
 
-template <class T>
+template <class Ord>
 template <class U>
-ZGRect_T<T>::ZGRect_T(T iOriginX, T iOriginY, const ZGExtentPOD_T<U>& iExtent)
+ZGRect_T<Ord>::ZGRect_T(Ord iOriginX, Ord iOriginY, const ZGExtentPOD_T<U>& iExtent)
 	{
 	this->origin.x = iOriginX;
 	this->origin.y = iOriginY;
 	this->extent = iExtent;
 	}
 
-template <class T>
+template <class Ord>
 template <class U>
-ZGRect_T<T>::ZGRect_T(const ZGPointPOD_T<U>& iOrigin, T iWidth, T iHeight)
+ZGRect_T<Ord>::ZGRect_T(const ZGPointPOD_T<U>& iOrigin, Ord iWidth, Ord iHeight)
 	{
 	this->origin = iOrigin;
 	this->extent.h = iWidth;

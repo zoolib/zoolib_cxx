@@ -29,7 +29,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <typeinfo> // for std::type_info
 
-#include <tr1/type_traits> // For std::tr1::is_pod
+#if ZCONFIG(Compiler,GCC)
+	#include <tr1/type_traits> // For std::tr1::is_pod
+#endif
 
 // =================================================================================================
 #pragma mark -
@@ -265,12 +267,14 @@ private:
 		{
 		if (sizeof(S) <= sizeof(fPayload))
 			{
+			#if ZCONFIG(Compiler,GCC)
 			if (std::tr1::is_pod<S>::value)
 				{
 				fPtr_InPlace = (void*)(((intptr_t)&typeid(S)) | 1);
 				*((S*)fBytes_Payload) = iP0;
 				}
 			else
+			#endif
 				{
 				sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0);
 				}
