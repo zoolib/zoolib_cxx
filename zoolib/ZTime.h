@@ -118,6 +118,7 @@ public:
 	static const uint32 kMinute = 60 * kSecond;
 	static const uint32 kHour = 60 * kMinute;
 	static const uint32 kDay = 24 * kHour;
+	static const uint32 kWeek = 7 * kDay;
 	static const uint32 kYear = 365 * kDay;
 	};
 
