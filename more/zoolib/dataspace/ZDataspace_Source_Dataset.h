@@ -89,6 +89,7 @@ public:
 
 	void Insert(const ZDataset::Daton& iDaton);
 	void Erase(const ZDataset::Daton& iDaton);
+	void Replace(const ZDataset::Daton& iOld, const ZDataset::Daton& iNew);
 
 	size_t OpenTransaction();
 	void ClearTransaction(size_t iIndex);

@@ -115,8 +115,9 @@ private:
 	int64 fRefcon;
 	ZRef<ZQE::Result> fResult;
 	ZRef<Event> fEvent;
-	
+
 	friend class Dataspace;
+protected:	ZRef<ZRA::Expr_Rel> fRel;//##
 	};
 
 // =================================================================================================

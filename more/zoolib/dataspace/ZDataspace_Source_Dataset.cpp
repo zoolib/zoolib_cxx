@@ -422,6 +422,14 @@ void Source_Dataset::Erase(const Daton& iDaton)
 	this->pConditionalPushDown();
 	}
 
+void Source_Dataset::Replace(const ZDataset::Daton& iOld, const ZDataset::Daton& iNew)
+	{
+	ZAcqMtxR acq(fMtxR);
+	this->pModify(iOld, sAsVal(iOld), false);
+	this->pModify(iNew, sAsVal(iNew), true);
+	this->pConditionalPushDown();
+	}
+
 size_t Source_Dataset::OpenTransaction()
 	{
 	ZAcqMtxR acq(fMtxR);

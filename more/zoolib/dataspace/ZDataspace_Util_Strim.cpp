@@ -38,6 +38,7 @@ const ZStrimW& operator<<(const ZStrimW& w, const set<RelHead>& iSet)
 		{
 		if (isSubsequent)
 			w << ", ";
+		isSubsequent = true;
 		w << *i;
 		}
 	return w;

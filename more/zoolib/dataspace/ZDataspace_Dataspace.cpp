@@ -62,6 +62,7 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 
 	iSieve->fDataspace = this;
 	iSieve->fRefcon = fNextRefcon++;
+	iSieve->fRel = iRel;
 	ZUtil_STL::sInsertMustNotContain(kDebug, fMap_RefconToSieve, iSieve->fRefcon, iSieve.Get());
 
 	const AddedQuery theAddedQuery(iSieve->fRefcon, iRel);
