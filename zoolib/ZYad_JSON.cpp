@@ -490,16 +490,16 @@ void ZVisitor_Yad_JSONWriter::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 		fStrimW.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZRef<ZYadR> cur = iYadSeqR->ReadInc())
+			if (ZRef<ZYadR,false> cur = iYadSeqR->ReadInc())
+				{
+				break;
+				}
+			else
 				{
 				if (!isFirst)
 					fStrimW.Write(",");
 				spWriteLFIndent(fStrimW, fIndent, fOptions);
 				cur->Accept(*this);
-				}
-			else
-				{
-				break;
 				}
 			}
 		spWriteLFIndent(fStrimW, fIndent, fOptions);
@@ -512,7 +512,11 @@ void ZVisitor_Yad_JSONWriter::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 		fStrimW.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZRef<ZYadR> cur = iYadSeqR->ReadInc())
+			if (ZRef<ZYadR,false> cur = iYadSeqR->ReadInc())
+				{
+				break;
+				}
+			else
 				{
 				if (!isFirst)
 					{
@@ -521,10 +525,6 @@ void ZVisitor_Yad_JSONWriter::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 						fStrimW.Write(" ");
 					}
 				cur->Accept(*this);
-				}
-			else
-				{
-				break;
 				}
 			}
 		fStrimW.Write("]");
@@ -552,7 +552,11 @@ void ZVisitor_Yad_JSONWriter::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			string curName;
-			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
+			if (ZRef<ZYadR,false> cur = iYadMapR->ReadInc(curName))
+				{
+				break;
+				}
+			else
 				{
 				if (!isFirst)
 					fStrimW.Write(",");
@@ -565,10 +569,6 @@ void ZVisitor_Yad_JSONWriter::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				fMayNeedInitialLF = true;
 				cur->Accept(*this);
 				}
-			else
-				{
-				break;
-				}
 			}
 		spWriteLFIndent(fStrimW, fIndent, fOptions);
 		fStrimW.Write("}");
@@ -579,7 +579,11 @@ void ZVisitor_Yad_JSONWriter::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			string curName;
-			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
+			if (ZRef<ZYadR,false> cur = iYadMapR->ReadInc(curName))
+				{
+				break;
+				}
+			else
 				{
 				if (!isFirst)
 					fStrimW.Write(",");
@@ -594,10 +598,6 @@ void ZVisitor_Yad_JSONWriter::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				fIndent = fIndent + 1;
 				fMayNeedInitialLF = true;
 				cur->Accept(*this);
-				}
-			else
-				{
-				break;
 				}
 			}
 		if (fOptions.fBreakStrings)

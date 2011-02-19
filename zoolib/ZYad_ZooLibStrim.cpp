@@ -965,16 +965,16 @@ static void spToStrim_Seq(const ZStrimW& s, ZRef<ZYadSeqR> iYadSeqR,
 		s.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZRef<ZYadR> cur = iYadSeqR->ReadInc())
+			if (ZRef<ZYadR,false> cur = iYadSeqR->ReadInc())
+				{
+				break;
+				}
+			else
 				{
 				if (!isFirst)
 					s.Write(", ");
 				spWriteLFIndent(s, iLevel, iOptions);
 				spToStrim_Yad(s, cur, iLevel, iOptions, false);
-				}
-			else
-				{
-				break;
 				}
 			}
 		spWriteLFIndent(s, iLevel, iOptions);
@@ -987,15 +987,15 @@ static void spToStrim_Seq(const ZStrimW& s, ZRef<ZYadSeqR> iYadSeqR,
 		s.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZRef<ZYadR> cur = iYadSeqR->ReadInc())
+			if (ZRef<ZYadR,false> cur = iYadSeqR->ReadInc())
+				{
+				break;
+				}
+			else
 				{
 				if (!isFirst)
 					s.Write(", ");
 				spToStrim_Yad(s, cur, iLevel, iOptions, false);
-				}
-			else
-				{
-				break;
 				}
 			}
 		s.Write("]");
@@ -1024,17 +1024,17 @@ static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 		for (;;)
 			{
 			string curName;
-			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
+			if (ZRef<ZYadR,false> cur = iYadMapR->ReadInc(curName))
+				{
+				break;
+				}
+			else
 				{
 				spWriteLFIndent(s, iLevel, iOptions);
 				ZYad_ZooLibStrim::sWrite_PropName(curName, s);
 				s << " = ";
 				spToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
 				s.Write(";");
-				}
-			else
-				{
-				break;
 				}
 			}
 		spWriteLFIndent(s, iLevel, iOptions);
@@ -1046,17 +1046,17 @@ static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 		for (;;)
 			{
 			string curName;
-			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
+			if (ZRef<ZYadR,false> cur = iYadMapR->ReadInc(curName))
+				{
+				break;
+				}
+			else
 				{
 				s.Write(" ");
 				ZYad_ZooLibStrim::sWrite_PropName(curName, s);
 				s << " = ";
 				spToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
 				s.Write(";");
-				}
-			else
-				{
-				break;
 				}
 			}
 		s.Write(" }");

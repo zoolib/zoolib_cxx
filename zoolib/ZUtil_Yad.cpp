@@ -44,14 +44,14 @@ static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 			for (;;)
 				{
 				string theName;
-				if (ZRef<ZYadR> cur = theYadMapR->ReadInc(theName))
+				if (ZRef<ZYadR,false> cur = theYadMapR->ReadInc(theName))
 					{
-					if (theName == iName)
-						return cur;
+					break;
 					}
 				else
 					{
-					break;
+					if (theName == iName)
+						return cur;
 					}
 				}
 			}
@@ -70,14 +70,14 @@ static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 				{
 				for (;;)
 					{
-					if (ZRef<ZYadR> cur = theYadSeqR->ReadInc())
+					if (ZRef<ZYadR,false> cur = theYadSeqR->ReadInc())
 						{
-						if (0 == theIntIndex--)
-							return cur;
+						break;
 						}
 					else
 						{
-						break;
+						if (0 == theIntIndex--)
+							return cur;
 						}
 					}
 				}
