@@ -39,6 +39,24 @@ namespace ZQE {
 void Visitor_DoMakeWalker::Visit(const ZRef<ZVisitee>& iRep)
 	{ ZUnimplemented(); }
 
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
+	{
+	this->pSetResult(
+		new Walker_Calc(iExpr->GetRelName(), iExpr->GetBindings(), iExpr->GetCallable()));
+	}
+
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
+	{ this->pSetResult(new Walker_Const(iExpr->GetRelName(), iExpr->GetVal())); }
+
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr)
+	{ this->pSetResult(new Walker_Dee); }
+
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
+	{
+	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+		this->pSetResult(new Walker_Embed(iExpr->GetRelName(), iExpr->GetBindings(), op0));
+	}
+
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
@@ -46,12 +64,6 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Produ
 		if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
 			this->pSetResult(new Walker_Product(op0, op1));
 		}
-	}
-
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
-	{
-	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new Walker_Embed(iExpr->GetRelName(), iExpr->GetBindings(), op0));
 	}
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr)
@@ -71,18 +83,6 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Rest
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Restrict(op0, iExpr->GetExpr_Bool()));
 	}
-
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
-	{
-	this->pSetResult(
-		new Walker_Calc(iExpr->GetRelName(), iExpr->GetBindings(), iExpr->GetCallable()));
-	}
-
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
-	{ this->pSetResult(new Walker_Const(iExpr->GetRelName(), iExpr->GetVal())); }
-
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr)
-	{ this->pSetResult(new Walker_Dee); }
 
 } // namespace ZQE
 } // namespace ZooLib

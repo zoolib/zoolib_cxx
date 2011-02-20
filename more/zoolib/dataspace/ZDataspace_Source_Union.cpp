@@ -82,10 +82,10 @@ void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& i
 	{
 	const RelHead& theRelHead = iExpr->GetConcreteRelHead();
 	
-	const RelHead newRelHead = ZRA::sPrefixErase(fPrefix, theRelHead);
+	const RelHead newRelHead = ZRA::sPrefixErased(fPrefix, theRelHead);
 	ZRef<ZRA::Expr_Rel> theRel = ZRA::sConcrete(newRelHead);
 	for (RelHead::const_iterator i = newRelHead.begin(); i != newRelHead.end(); ++i)
-		theRel = sRename(theRel, ZRA::sPrefixInsert(fPrefix, *i), *i);
+		theRel = sRename(theRel, ZRA::sPrefixInserted(fPrefix, *i), *i);
 	
 	this->pSetResult(theRel);
 	}
@@ -322,27 +322,25 @@ private:
 
 class Source_Union::Analyze
 :	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel>
-,	public virtual ZRA::Visitor_Expr_Rel_Product
-,	public virtual ZRA::Visitor_Expr_Rel_Embed
-,	public virtual ZRA::Visitor_Expr_Rel_Project
-,	public virtual ZRA::Visitor_Expr_Rel_Rename
 ,	public virtual ZRA::Visitor_Expr_Rel_Calc
+,	public virtual ZRA::Visitor_Expr_Rel_Embed
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 ,	public virtual ZRA::Visitor_Expr_Rel_Const
+,	public virtual ZRA::Visitor_Expr_Rel_Product
+,	public virtual ZRA::Visitor_Expr_Rel_Project
+,	public virtual ZRA::Visitor_Expr_Rel_Rename
 	{
 public:
 	Analyze(Source_Union* iSource_Union, PQuery* iPQuery);
 
 // From ZRA::Visitor_Expr_Rel_XXX
-	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr);
-
-	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
-	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
-	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
-
 	virtual void Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr);
 	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr);
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr);
+	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
+	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
 
 // Our protocol
 	ZRef<ZRA::Expr_Rel> TopLevelDo(ZRef<ZRA::Expr_Rel> iRel);
@@ -358,6 +356,41 @@ Source_Union::Analyze::Analyze(Source_Union* iSource_Union, PQuery* iPQuery)
 :	fSource_Union(iSource_Union)
 ,	fPQuery(iPQuery)
 	{}
+
+void Source_Union::Analyze::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
+	{
+	ZRA::Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(iExpr);
+
+	fResultRelHead |= iExpr->GetRelName();
+	}
+
+void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
+	{
+	ZAssertStop(kDebug, fResultRelHead.empty());
+
+	fResultRelHead = iExpr->GetConcreteRelHead();
+
+	// Identify which PSources can service this concrete.
+	fPSources = fSource_Union->pIdentifyPSources(fResultRelHead);
+	
+	if (fPSources.size() <= 1)
+		this->pSetResult(iExpr);
+	else
+		this->pSetResult(fSource_Union->pGetProxy(fPQuery, fPSources, fResultRelHead, iExpr));
+	}
+
+void Source_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
+	{
+	ZRA::Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(iExpr);
+	fResultRelHead |= iExpr->GetRelName();
+	}
+
+void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
+	{
+	ZRA::Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(iExpr);
+
+	fResultRelHead = iExpr->GetRelName();
+	}
 
 void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr)
 	{
@@ -426,13 +459,6 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 		}
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
-	{
-	ZRA::Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(iExpr);
-
-	fResultRelHead = iExpr->GetRelName();
-	}
-
 void Source_Union::Analyze::Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr)
 	{
 	ZRA::Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(iExpr);
@@ -446,34 +472,6 @@ void Source_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Renam
 
 	if (ZUtil_STL::sEraseIfContains(fResultRelHead, iExpr->GetOld()))
 		fResultRelHead |= iExpr->GetNew();
-	}
-
-void Source_Union::Analyze::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
-	{
-	ZRA::Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(iExpr);
-
-	fResultRelHead |= iExpr->GetRelName();
-	}
-
-void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
-	{
-	ZAssertStop(kDebug, fResultRelHead.empty());
-
-	fResultRelHead = iExpr->GetConcreteRelHead();
-
-	// Identify which PSources can service this concrete.
-	fPSources = fSource_Union->pIdentifyPSources(fResultRelHead);
-	
-	if (fPSources.size() <= 1)
-		this->pSetResult(iExpr);
-	else
-		this->pSetResult(fSource_Union->pGetProxy(fPQuery, fPSources, fResultRelHead, iExpr));
-	}
-
-void Source_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
-	{
-	ZRA::Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(iExpr);
-	fResultRelHead |= iExpr->GetRelName();
 	}
 
 ZRef<ZRA::Expr_Rel> Source_Union::Analyze::TopLevelDo(ZRef<ZRA::Expr_Rel> iRel)
@@ -527,7 +525,7 @@ bool Source_Union::PSource::Intersects(const RelHead& iRelHead)
 	if (fPrefix.empty())
 		return fSource->Intersects(iRelHead);
 	else if (ZRA::sHasPrefix(fPrefix, iRelHead))
-		return fSource->Intersects(ZRA::sPrefixErase(fPrefix, iRelHead));
+		return fSource->Intersects(ZRA::sPrefixErased(fPrefix, iRelHead));
 
 	return false;
 	}

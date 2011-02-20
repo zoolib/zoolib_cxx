@@ -80,10 +80,10 @@ Rename sInverted(const Rename& iRename)
 bool sHasPrefix(const RelName& iPrefix, const RelName& iRelName)
 	{ return iRelName.substr(0, iPrefix.size()) == iPrefix; }
 
-RelName sPrefixInsert(const RelName& iPrefix, const RelName& iRelName)
+RelName sPrefixInserted(const RelName& iPrefix, const RelName& iRelName)
 	{ return iPrefix + iRelName; }
 
-RelName sPrefixErase(const RelName& iPrefix, const RelName& iRelName)
+RelName sPrefixErased(const RelName& iPrefix, const RelName& iRelName)
 	{
 	if (iRelName.substr(0, iPrefix.size()) == iPrefix)
 		return iRelName.substr(iPrefix.size(), RelName::npos);
@@ -103,26 +103,26 @@ bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead)
 	return true;
 	}
 
-RelHead sPrefixInsert(const RelName& iPrefix, const RelHead& iRelHead)
+RelHead sPrefixInserted(const RelName& iPrefix, const RelHead& iRelHead)
 	{
 	if (iPrefix.empty())
 		return iRelHead;
 
 	RelHead result;
 	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		result.insert(sPrefixInsert(iPrefix, *i));
+		result.insert(sPrefixInserted(iPrefix, *i));
 
 	return result;
 	}
 
-RelHead sPrefixErase(const RelName& iPrefix, const RelHead& iRelHead)
+RelHead sPrefixErased(const RelName& iPrefix, const RelHead& iRelHead)
 	{
 	if (iPrefix.empty())
 		return iRelHead;
 
 	RelHead result;
 	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		result.insert(sPrefixErase(iPrefix, *i));
+		result.insert(sPrefixErased(iPrefix, *i));
 
 	return result;
 	}

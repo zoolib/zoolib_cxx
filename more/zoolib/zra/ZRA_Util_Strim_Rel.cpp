@@ -35,17 +35,33 @@ using std::string;
 #pragma mark -
 #pragma mark * ZRA::Util_Strim_Rel::Visitor
 
+void Visitor::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
+	{
+	const ZStrimW& w = pStrimW();
+	w << "Calc(";
+	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
+	w << " = /*Some function of*/ " << iExpr->GetBindings();
+	w << ")";
+	}
+
+void Visitor::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
+	{ pStrimW() << "Concrete(" << iExpr->GetConcreteRelHead() << ")"; }
+
+void Visitor::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
+	{
+	const ZStrimW& w = pStrimW();
+	w << "Const(";
+	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
+	w << ",";
+	ZYad_ZooLibStrim::sToStrim(sMakeYadR(iExpr->GetVal()), w);
+	w << ")";
+	}
+
+void Visitor::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
+	{ pStrimW() << "Dee()"; }
+
 void Visitor::Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
 	{ this->pWriteBinary("Difference", iExpr); }
-
-void Visitor::Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr)
-	{ this->pWriteBinary("Intersect", iExpr); }
-
-void Visitor::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
-	{ this->pWriteBinary("Product", iExpr); }
-
-void Visitor::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
-	{ this->pWriteBinary("Union", iExpr); }
 
 void Visitor::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{
@@ -57,6 +73,12 @@ void Visitor::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	this->pToStrim(iExpr->GetOp0());
 	w << ")";
 	}
+
+void Visitor::Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr)
+	{ this->pWriteBinary("Intersect", iExpr); }
+
+void Visitor::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
+	{ this->pWriteBinary("Product", iExpr); }
 
 void Visitor::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	{
@@ -91,30 +113,8 @@ void Visitor::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	w << ")";
 	}
 
-void Visitor::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
-	{
-	const ZStrimW& w = pStrimW();
-	w << "Calc(";
-	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
-	w << " = /*Some function of*/ " << iExpr->GetBindings();
-	w << ")";
-	}
-
-void Visitor::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
-	{ pStrimW() << "Concrete(" << iExpr->GetConcreteRelHead() << ")"; }
-
-void Visitor::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
-	{
-	const ZStrimW& w = pStrimW();
-	w << "Const(";
-	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
-	w << ",";
-	ZYad_ZooLibStrim::sToStrim(sMakeYadR(iExpr->GetVal()), w);
-	w << ")";
-	}
-
-void Visitor::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
-	{ pStrimW() << "Dee()"; }
+void Visitor::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
+	{ this->pWriteBinary("Union", iExpr); }
 
 void Visitor::pWriteBinary(
 	const string& iFunctionName, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)

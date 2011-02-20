@@ -74,28 +74,26 @@ namespace { // anonymous
 
 class Analyzer
 :	public virtual ZVisitor_Do_T<Analysis>
+,	public virtual Visitor_Expr_Rel_Concrete
+,	public virtual Visitor_Expr_Rel_Const
+,	public virtual Visitor_Expr_Rel_Dee
 ,	public virtual Visitor_Expr_Rel_Product
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
 ,	public virtual Visitor_Expr_Rel_Restrict
-,	public virtual Visitor_Expr_Rel_Concrete
-,	public virtual Visitor_Expr_Rel_Const
-,	public virtual Visitor_Expr_Rel_Dee
 	{
 public:
 	Analyzer(const map<string8,RelHead>& iTables);
 
 	virtual void Visit(const ZRef<ZVisitee>& iRep);
 
-	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
-
-	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
-	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
-
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
 	virtual void Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr);
+	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
 
 	const map<string8,RelHead>& fTables;
 	map<string8,int> fTablesUsed;
@@ -107,6 +105,59 @@ Analyzer::Analyzer(const map<string8,RelHead>& iTables)
 
 void Analyzer::Visit(const ZRef<ZVisitee>& iRep)
 	{ ZUnimplemented(); }
+
+void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
+	{
+	// Identify the table.
+	const RelHead& theRH = iExpr->GetConcreteRelHead();
+
+	ZQ<map<string8,RelHead>::const_iterator> found;
+	for (map<string8,RelHead>::const_iterator iter = fTables.begin(); iter != fTables.end(); ++iter)
+		{
+		if ((sPrefixInserted(iter->first + "_", iter->second) & theRH).size() == theRH.size())
+			{
+			found = iter;
+			break;
+			}
+		}
+	if (!found)
+		throw std::runtime_error("Couldn't find table");
+
+	const string8 realTableName = found.Get()->first;
+	const string8 realTableNameUnderscore = realTableName + "_";
+	const int numericSuffix = fTablesUsed[realTableName]++;
+	const string8 usedTableName = realTableName + ZStringf("%d", numericSuffix);
+	const string8 usedTableNameDot = usedTableName + ".";
+
+	Analysis theAnalysis;
+	theAnalysis.fCondition = sTrue();
+	for (RelHead::const_iterator iter = theRH.begin(); iter != theRH.end(); ++iter)
+		{
+		const string8 attrName = *iter;
+		const string8 fieldName = sPrefixErased(realTableNameUnderscore, attrName);
+		const string8 physicalFieldName = usedTableNameDot + fieldName;
+		theAnalysis.fRelHead_Physical |= physicalFieldName;
+		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename, attrName, physicalFieldName);
+		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename_Inverse, physicalFieldName, attrName);
+		}
+
+	this->pSetResult(theAnalysis);
+	}
+
+void Analyzer::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
+	{
+	Analysis theAnalysis;
+	theAnalysis.fCondition = sTrue();
+	theAnalysis.fConstValues.Set(iExpr->GetRelName(), iExpr->GetVal());
+	this->pSetResult(theAnalysis);
+	}
+
+void Analyzer::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
+	{
+	Analysis theAnalysis;
+	theAnalysis.fCondition = sTrue();
+	this->pSetResult(theAnalysis);
+	}
 
 void Analyzer::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 	{
@@ -175,59 +226,6 @@ void Analyzer::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 		theAnalysis.fConstValues.Set(newName, theVal);
 		}
 
-	this->pSetResult(theAnalysis);
-	}
-
-void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
-	{
-	// Identify the table.
-	const RelHead& theRH = iExpr->GetConcreteRelHead();
-
-	ZQ<map<string8,RelHead>::const_iterator> found;
-	for (map<string8,RelHead>::const_iterator iter = fTables.begin(); iter != fTables.end(); ++iter)
-		{
-		if ((sPrefixInsert(iter->first + "_", iter->second) & theRH).size() == theRH.size())
-			{
-			found = iter;
-			break;
-			}
-		}
-	if (!found)
-		throw std::runtime_error("Couldn't find table");
-
-	const string8 realTableName = found.Get()->first;
-	const string8 realTableNameUnderscore = realTableName + "_";
-	const int numericSuffix = fTablesUsed[realTableName]++;
-	const string8 usedTableName = realTableName + ZStringf("%d", numericSuffix);
-	const string8 usedTableNameDot = usedTableName + ".";
-
-	Analysis theAnalysis;
-	theAnalysis.fCondition = sTrue();
-	for (RelHead::const_iterator iter = theRH.begin(); iter != theRH.end(); ++iter)
-		{
-		const string8 attrName = *iter;
-		const string8 fieldName = sPrefixErase(realTableNameUnderscore, attrName);
-		const string8 physicalFieldName = usedTableNameDot + fieldName;
-		theAnalysis.fRelHead_Physical |= physicalFieldName;
-		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename, attrName, physicalFieldName);
-		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename_Inverse, physicalFieldName, attrName);
-		}
-
-	this->pSetResult(theAnalysis);
-	}
-
-void Analyzer::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
-	{
-	Analysis theAnalysis;
-	theAnalysis.fCondition = sTrue();
-	theAnalysis.fConstValues.Set(iExpr->GetRelName(), iExpr->GetVal());
-	this->pSetResult(theAnalysis);
-	}
-
-void Analyzer::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
-	{
-	Analysis theAnalysis;
-	theAnalysis.fCondition = sTrue();
 	this->pSetResult(theAnalysis);
 	}
 

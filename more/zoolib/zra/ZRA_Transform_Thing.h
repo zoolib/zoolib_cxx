@@ -42,32 +42,30 @@ namespace ZRA {
 
 class Transform_Thing
 :	public virtual ZVisitor_Expr_Op_Do_Transform_T<Expr_Rel>
-,	public virtual Visitor_Expr_Rel_Product
-,	public virtual Visitor_Expr_Rel_Embed
-,	public virtual Visitor_Expr_Rel_Project
-,	public virtual Visitor_Expr_Rel_Rename
-,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Calc
 ,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Const
 ,	public virtual Visitor_Expr_Rel_Dee
+,	public virtual Visitor_Expr_Rel_Embed
+,	public virtual Visitor_Expr_Rel_Product
+,	public virtual Visitor_Expr_Rel_Project
+,	public virtual Visitor_Expr_Rel_Rename
+,	public virtual Visitor_Expr_Rel_Restrict
 	{
 	typedef ZVisitor_Expr_Op_Do_Transform_T<Expr_Rel> inherited;
 public:
 	Transform_Thing();
 	
 // From Visitor_Expr_Rel_XXX
-	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
-
-	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
-	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
-	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
-
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr);
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
 	virtual void Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr);
+	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
+	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
 
 // Our protocol
 	ZRef<Expr_Rel> TopLevelDo(ZRef<Expr_Rel> iExpr);

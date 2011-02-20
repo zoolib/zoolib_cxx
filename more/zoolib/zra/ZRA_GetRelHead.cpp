@@ -39,19 +39,28 @@ namespace { // anonymous
 
 class Visitor_GetRelHead
 :	public virtual ZVisitor_Do_T<RelHead>
+,	public virtual Visitor_Expr_Rel_Calc
+,	public virtual Visitor_Expr_Rel_Concrete
+,	public virtual Visitor_Expr_Rel_Const
 ,	public virtual Visitor_Expr_Rel_Difference
 ,	public virtual Visitor_Expr_Rel_Embed
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
-,	public virtual Visitor_Expr_Rel_Calc
-,	public virtual Visitor_Expr_Rel_Concrete
-,	public virtual Visitor_Expr_Rel_Const
 	{
+	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr)
+		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
+
 	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
 
-	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr)
-		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
+	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
+		{ this->pSetResult(iExpr->GetRelName()); }
+
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
+		{ this->pSetResult(iExpr->GetConcreteRelHead()); }
+
+	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
+		{ this->pSetResult(iExpr->GetRelName()); }
 
 	virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
@@ -73,15 +82,6 @@ class Visitor_GetRelHead
 			result |= iExpr->GetNew();
 		this->pSetResult(result);
 		}
-
-	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
-		{ this->pSetResult(iExpr->GetRelName()); }
-
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
-		{ this->pSetResult(iExpr->GetConcreteRelHead()); }
-
-	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
-		{ this->pSetResult(iExpr->GetRelName()); }
 	};
 
 } // anonymous namespace

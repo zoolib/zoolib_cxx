@@ -32,6 +32,28 @@ using std::vector;
 #pragma mark -
 #pragma mark * Transform_PushDownRestricts
 
+void Transform_PushDownRestricts::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
+	{ this->pHandleIt(iExpr->GetRelName(), iExpr); }
+
+void Transform_PushDownRestricts::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
+	{ this->pHandleIt(iExpr->GetConcreteRelHead(), iExpr); }
+
+void Transform_PushDownRestricts::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
+	{ this->pHandleIt(iExpr->GetRelName(), iExpr); }
+
+void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
+	{
+	ZRef<Expr_Rel> newOp0;
+	
+	{
+	ZSetRestore_T<vector<Restrict*> > sr0(fRestricts);
+	ZSetRestore_T<RelHead> sr1(fRelHead);
+	newOp0 = this->Do(iExpr->GetOp0());
+	}
+
+	this->pHandleIt(iExpr->GetRelName(), iExpr->SelfOrClone(newOp0));
+	}
+
 void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 	{
 	RelHead theRelHead;
@@ -69,19 +91,6 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 	}
 
 	fRelHead |= theRelHead;
-	}
-
-void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
-	{
-	ZRef<Expr_Rel> newOp0;
-	
-	{
-	ZSetRestore_T<vector<Restrict*> > sr0(fRestricts);
-	ZSetRestore_T<RelHead> sr1(fRelHead);
-	newOp0 = this->Do(iExpr->GetOp0());
-	}
-
-	this->pHandleIt(iExpr->GetRelName(), iExpr->SelfOrClone(newOp0));
 	}
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
@@ -141,15 +150,6 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Re
 		this->pSetResult(iExpr->SelfOrClone(newOp0));
 		}
 	}
-
-void Transform_PushDownRestricts::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
-	{ this->pHandleIt(iExpr->GetRelName(), iExpr); }
-
-void Transform_PushDownRestricts::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
-	{ this->pHandleIt(iExpr->GetConcreteRelHead(), iExpr); }
-
-void Transform_PushDownRestricts::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
-	{ this->pHandleIt(iExpr->GetRelName(), iExpr); }
 
 void Transform_PushDownRestricts::pHandleIt(const RelHead& iRH, const ZRef<Expr_Rel>& iExpr)
 	{

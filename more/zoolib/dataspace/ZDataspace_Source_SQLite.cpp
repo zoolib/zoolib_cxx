@@ -138,7 +138,7 @@ bool Source_SQLite::Intersects(const RelHead& iRelHead)
 	for (map<string8, RelHead>::const_iterator iterTables = fMap_Tables.begin();
 		iterTables != fMap_Tables.end(); ++iterTables)
 		{
-		if (!(ZRA::sPrefixInsert(iterTables->first + "_", iterTables->second) & iRelHead).empty())
+		if (!(ZRA::sPrefixInserted(iterTables->first + "_", iterTables->second) & iRelHead).empty())
 			return true;
 		}
 	return false;
