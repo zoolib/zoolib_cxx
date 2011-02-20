@@ -244,6 +244,7 @@ public:
 	const ZRef<ZRA::Expr_Rel> fRel;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
 	set<PSearch*> fDependingPSearches;
+	ZRef<ZQE::Result> fResult;
 	};
 
 // =================================================================================================
@@ -381,11 +382,18 @@ void Source_Dataset::CollectResults(vector<QueryResult>& oChanged)
 		PQuery* thePQuery = eraser.Current();
 		ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
 		ZRef<ZQE::Result> theResult = ZQE::sDoQuery(theWalker);
+		thePQuery->fResult = theResult;
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 			iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
-			{
-			oChanged.push_back(QueryResult(iterCS.Current()->fRefcon, theResult, fEvent));
-			}
+			{ fClientQuery_NeedsWork.InsertIfNotContains(iterCS.Current()); }
+		}
+
+	for (DListEraser<ClientQuery,DLink_ClientQuery_NeedsWork> eraser = fClientQuery_NeedsWork;
+		eraser; eraser.Advance())
+		{
+		ClientQuery* theClientQuery = eraser.Current();
+		PQuery* thePQuery = theClientQuery->fPQuery;
+		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult, fEvent));
 		}
 
 	// Remove any unused PSearches
