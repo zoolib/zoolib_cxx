@@ -41,8 +41,8 @@ void Visitor_DoMakeWalker::Visit(const ZRef<ZVisitee>& iRep)
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
 	{
-	this->pSetResult(
-		new Walker_Calc(iExpr->GetRelName(), iExpr->GetBindings(), iExpr->GetCallable()));
+	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+		this->pSetResult(new Walker_Calc(op0, iExpr->GetRelName(), iExpr->GetCallable()));
 	}
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
@@ -54,7 +54,10 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iEx
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new Walker_Embed(iExpr->GetRelName(), iExpr->GetBindings(), op0));
+		{
+		if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
+			this->pSetResult(new Walker_Embed(op0, iExpr->GetRelName(), op1));
+		}
 	}
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr)

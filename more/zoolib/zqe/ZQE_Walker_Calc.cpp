@@ -34,11 +34,11 @@ using namespace ZUtil_STL;
 #pragma mark -
 #pragma mark * Walker_Calc
 
-Walker_Calc::Walker_Calc(const string8& iRelName,
-	const ZRA::Rename& iBindings,
+Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
+	const string8& iRelName,
 	const ZRef<Callable>& iCallable)
-:	fRelName(iRelName)
-,	fBindings(iBindings)
+:	Walker_Unary(iWalker)
+,	fRelName(iRelName)
 ,	fCallable(iCallable)
 	{
 	//## Need better API on the callable, so it can look up data in bindings (and output?)
@@ -52,12 +52,8 @@ ZRef<Walker> Walker_Calc::Prime(
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	for (map<string8,size_t>::const_iterator i = iOffsets.begin(); i != iOffsets.end(); ++i)
-		{
-		if (sContains(fBindings, i->first))
-			fBindingOffsets.insert(*i);
-		}
-
+	fWalker = fWalker->Prime(iOffsets, fBindings, ioBaseOffset);
+	oOffsets.insert(fBindings.begin(), fBindings.end());
 	fOutputOffset = ioBaseOffset++;
 	oOffsets[fRelName] = fOutputOffset;
 	return this;
@@ -67,13 +63,12 @@ bool Walker_Calc::ReadInc(
 	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
-	if (fExhausted)
+	if (!fWalker->ReadInc(ioResults, oAnnotations))
 		return false;
-	fExhausted = true;
 
 	ZMap_Any theMap;
-	for (map<string8,size_t>::iterator i = fBindingOffsets.begin(); i != fBindingOffsets.end(); ++i)
-		theMap.Set(sGetMustContain(1, fBindings, i->first), ioResults[i->second]);
+	for (map<string8,size_t>::const_iterator i = fBindings.begin(); i != fBindings.end(); ++i)
+		theMap.Set(i->first, ioResults[i->second]);
 
 	ioResults[fOutputOffset] = fCallable->Call(theMap);
 

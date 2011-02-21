@@ -33,13 +33,13 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Walker_Calc
 
-class Walker_Calc : public Walker_Nullary
+class Walker_Calc : public Walker_Unary
 	{
 public:
 	typedef ZCallable<ZVal_Any(const ZMap_Any&)> Callable;
 	
-	Walker_Calc(const string8& iRelName,
-		const ZRA::Rename& iBindings,
+	Walker_Calc(const ZRef<Walker>& iWalker,
+		const string8& iRelName,
 		const ZRef<Callable>& iCallable);
 
 	virtual ~Walker_Calc();
@@ -56,10 +56,9 @@ public:
 
 private:
 	const string8 fRelName;
-	const ZRA::Rename fBindings;
 	const ZRef<Callable> fCallable;
 	size_t fOutputOffset;
-	std::map<string8,size_t> fBindingOffsets;
+	std::map<string8,size_t> fBindings;
 	};
 
 } // namespace ZQE

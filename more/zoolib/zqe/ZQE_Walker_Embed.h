@@ -35,8 +35,8 @@ namespace ZQE {
 class Walker_Embed : public Walker_Nullary
 	{
 public:
-	Walker_Embed(const string8& iRelName,
-		const ZRA::Rename iBindings, const ZRef<Walker>& iWalker_Child);
+	Walker_Embed(const ZRef<Walker>& iWalker_Parent,
+		const string8& iRelName, const ZRef<Walker>& iWalker_Embedee);
 
 	virtual ~Walker_Embed();
 
@@ -51,13 +51,13 @@ public:
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
+	ZRef<Walker> fWalker_Parent;
 	const string8 fRelName;
-	const ZRA::Rename fBindings;
-	ZRef<Walker> fWalker_Child;
+	ZRef<Walker> fWalker_Embedee;
 
 	size_t fOutputOffset;
-	ZRA::RelHead fChildRelHead;
-	std::vector<size_t> fChildOffsets;
+	ZRA::RelHead fEmbedeeRelHead;
+	std::vector<size_t> fEmbedeeOffsets;
 	};
 
 } // namespace ZQE

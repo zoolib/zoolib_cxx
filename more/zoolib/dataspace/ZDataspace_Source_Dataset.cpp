@@ -296,9 +296,6 @@ void Source_Dataset::ModifyRegistrations(
 		{
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
 
-		// Ensure restricts are as far down the tree as they can be.
-//		theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
-//		theRel = ZRA::Transform_ConsolidateRenames().Do(theRel);
 		theRel = ZQE::sTransform_Search(theRel);
 
 		if (ZLOGPF(s, eDebug + 1))

@@ -329,6 +329,7 @@ class Source_Union::Analyze
 ,	public virtual ZRA::Visitor_Expr_Rel_Product
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
+,	public virtual ZRA::Visitor_Expr_Rel_Restrict
 	{
 public:
 	Analyze(Source_Union* iSource_Union, PQuery* iPQuery);
@@ -341,6 +342,7 @@ public:
 	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr);
 	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr);
 
 // Our protocol
 	ZRef<ZRA::Expr_Rel> TopLevelDo(ZRef<ZRA::Expr_Rel> iRel);
@@ -350,6 +352,7 @@ private:
 	PQuery* fPQuery;
 	set<PSource*> fPSources;
 	ZRA::RelHead fResultRelHead;
+	// bindingsRelHead?
 	};
 
 Source_Union::Analyze::Analyze(Source_Union* iSource_Union, PQuery* iPQuery)
@@ -387,9 +390,69 @@ void Source_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>
 
 void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
 	{
-	ZRA::Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(iExpr);
+	// Visit parent
+	const ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
-	fResultRelHead = iExpr->GetRelName();
+	// Remember which PSources it touches.
+	set<PSource*> leftPSources = fPSources;
+
+	// And the relhead
+	ZRA::RelHead leftRelHead;
+	leftRelHead.swap(fResultRelHead);
+	
+	// Visit embedee
+	const ZRef<ZRA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+	
+	// Remember its PSources.
+	set<PSource*> rightPSources;
+	rightPSources.swap(fPSources);
+	ZRA::RelHead rightRelHead;
+	rightRelHead.swap(fResultRelHead);
+
+	fPSources = ZUtil_STL::sOr(leftPSources, rightPSources);
+	fResultRelHead = leftRelHead | iExpr->GetRelName();
+
+	if (leftPSources.size() <= 1)
+		{
+		// Our left branch is simple, it references zero or one source.
+		if (fPSources.size() <= 1)
+			{
+			// And with the addition of the right branch we still reference <= 1 source.
+			this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
+			}
+		else
+			{
+			// With the addition of our right branch we *now* reference multiple sources.
+			// We register a proxy for the left branch.
+			ZRef<ZRA::Expr_Rel> proxy0 = fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
+
+			if (rightPSources.size() <= 1)
+				{
+				// Right branch is simple, and thus won't have registered a proxy yet. Will
+				// only happen if there's no restrict on the right branch.
+				ZRef<ZRA::Expr_Rel> proxy1 = fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+				this->pSetResult(iExpr->Clone(proxy0, proxy1));
+				}
+			else
+				{
+				this->pSetResult(iExpr->Clone(proxy0, newOp1));
+				}
+			}
+		}
+	else
+		{
+		// Our left branch itself references multiples sources.
+		if (rightPSources.size() <= 1)
+			{
+			// Right branch is simple, and thus won't have registered a proxy yet.
+			ZRef<ZRA::Expr_Rel> proxy1 = fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+			this->pSetResult(iExpr->Clone(newOp0, proxy1));
+			}
+		else
+			{
+			this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
+			}
+		}
 	}
 
 void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr)
@@ -472,6 +535,39 @@ void Source_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Renam
 
 	if (ZUtil_STL::sEraseIfContains(fResultRelHead, iExpr->GetOld()))
 		fResultRelHead |= iExpr->GetNew();
+	}
+
+void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr)
+	{
+	// If fPSources is not empty, then we're in an embed. Remember it.
+	set<PSource*> priorPSources = fPSources;
+
+	const ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+
+	if (fPSources.size() > 1)
+		{
+		// Child is complex, proxies will have been created already.
+		fPSources = ZUtil_STL::sOr(fPSources, priorPSources);
+		this->pSetResult(iExpr->SelfOrClone(newOp0));
+		}
+	else
+		{
+		// Child is simple.
+		set<PSource*> combinedPSources = ZUtil_STL::sOr(priorPSources, fPSources);
+		if (combinedPSources.size() > 1)
+			{
+			// We're complex with the addition of our prior sources.
+			// Create a proxy for the child.
+			ZRef<ZRA::Expr_Rel> proxy0 = fSource_Union->pGetProxy(fPQuery, fPSources, fResultRelHead, newOp0);
+			this->pSetResult(iExpr->Clone(proxy0));
+			}
+		else
+			{
+			// We're still simple.
+			this->pSetResult(iExpr->SelfOrClone(newOp0));
+			}
+		fPSources.swap(combinedPSources);
+		}
 	}
 
 ZRef<ZRA::Expr_Rel> Source_Union::Analyze::TopLevelDo(ZRef<ZRA::Expr_Rel> iRel)

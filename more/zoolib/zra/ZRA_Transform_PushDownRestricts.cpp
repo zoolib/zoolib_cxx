@@ -33,7 +33,7 @@ using std::vector;
 #pragma mark * Transform_PushDownRestricts
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
-	{ this->pHandleIt(iExpr->GetRelName(), iExpr); }
+	{ this->pHandleIt(iExpr->GetRelName(), iExpr->SelfOrClone(this->Do(iExpr->GetOp0()))); }
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{ this->pHandleIt(iExpr->GetConcreteRelHead(), iExpr); }
@@ -43,15 +43,16 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{
-	ZRef<Expr_Rel> newOp0;
-	
+	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+
+	ZRef<Expr_Rel> newOp1;
 	{
 	ZSetRestore_T<vector<Restrict*> > sr0(fRestricts);
 	ZSetRestore_T<RelHead> sr1(fRelHead);
-	newOp0 = this->Do(iExpr->GetOp0());
+	newOp1 = this->Do(iExpr->GetOp1());
 	}
-
-	this->pHandleIt(iExpr->GetRelName(), iExpr->SelfOrClone(newOp0));
+//##??
+	this->pHandleIt(iExpr->GetRelName(), iExpr->SelfOrClone(newOp0, newOp1));
 	}
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)

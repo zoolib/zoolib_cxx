@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZValPred_Any.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
 
 #include "zoolib/zqe/ZQE_Expr_Rel_Search.h"
@@ -58,7 +59,7 @@ namespace { // anonymous
 
 bool spHasConst(const ZRef<ZValComparand>& iComparand)
 	{
-	if (ZRef<ZValComparand_Const_Any> asConst = iComparand.DynamicCast<ZValComparand_Const_Any>())
+	if (iComparand.DynamicCast<ZValComparand_Const_Any>())
 		return true;
 	return false;
 	}
@@ -94,102 +95,189 @@ public:
 
 namespace { // anonymous
 
+/*
+Transform_Search
+
+Accumulate the rename, project and restriction on a branch, and when a concrete
+is encountered instead return a search incorporating the accumulated info.
+*/
+
 class Transform_Search
 :	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel>
-,	public virtual ZRA::Visitor_Expr_Rel_Product
-,	public virtual ZRA::Visitor_Expr_Rel_Embed
-,	public virtual ZRA::Visitor_Expr_Rel_Project
-,	public virtual ZRA::Visitor_Expr_Rel_Rename
-,	public virtual ZRA::Visitor_Expr_Rel_Restrict
 ,	public virtual ZRA::Visitor_Expr_Rel_Calc
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 ,	public virtual ZRA::Visitor_Expr_Rel_Const
 ,	public virtual ZRA::Visitor_Expr_Rel_Dee
+,	public virtual ZRA::Visitor_Expr_Rel_Embed
+,	public virtual ZRA::Visitor_Expr_Rel_Product
+,	public virtual ZRA::Visitor_Expr_Rel_Project
+,	public virtual ZRA::Visitor_Expr_Rel_Rename
+,	public virtual ZRA::Visitor_Expr_Rel_Restrict
 	{
 	typedef ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel> inherited;
 public:
 	Transform_Search()
-	:	fExpr_Bool(sTrue())
-	,	fProject(ZUniSet_T<RelName>::sUniversal())
+	:	fRestriction(sTrue())
+	,	fProjection(ZUniSet_T<RelName>::sUniversal())
 		{}
 
 	virtual void Visit(const ZRef<ZVisitee>& iRep)
 		{ ZUnimplemented(); }
 
+	virtual void Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
+		{
+		const RelName& theName = ZRA::sRenamed(fRename, iExpr->GetRelName());
+
+		// The restriction may reference the name we introduce, so don't pass it down the tree.
+		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
+		fRestriction = sTrue();
+		
+		// Similarly with projection -- we don't know what names we'll be
+		// referencing from our descendants.
+		const ZUniSet_T<RelName> priorProjection = fProjection;
+		fProjection = ZUniSet_T<RelName>::sUniversal();
+		
+		ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+		ZRef<ZRA::Expr_Rel> newCalc = new ZRA::Expr_Rel_Calc(newOp0, theName, iExpr->GetCallable());
+		
+		fRestriction = priorRestriction;
+		fProjection = priorProjection;
+		fRename.clear();
+		this->pApplyRestrictProject(newCalc);
+		}
+
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
+		{
+		// fRestriction by now is written in terms used by the concrete itself,
+		// and fRename maps from the concrete's terms to those used at the top of
+		// the containing branch. We'll pass a rename that includes only those
+		// resulting names that are in fProjection, so the passed rename is
+		// effectively a project/rename descriptor.
+
+		Rename newRename;
+		for (Rename::iterator iterRename = fRename.begin();
+			iterRename != fRename.end(); ++iterRename)
+			{
+			if (fProjection.Contains(iterRename->first))
+				newRename.insert(*iterRename);
+			}
+
+		// Add missing entries
+		const RelHead& theRH = iExpr->GetConcreteRelHead();
+		for (RelHead::const_iterator iterRH = theRH.begin();
+			iterRH != theRH.end(); ++iterRH)
+			{
+			const RelName& theRelName = *iterRH;
+			if (fProjection.Contains(theRelName))
+				ZUtil_STL::sInsertIfNotContains(newRename, theRelName, theRelName);
+			}
+
+		if (fRestriction == sTrue())
+			{
+			fLikelySize = 100;
+			}
+		else if (HasConst().Do(fRestriction))
+			{
+			fLikelySize = 1;
+			}
+		else
+			{
+			fLikelySize = 100;
+			}
+
+		ZRef<Expr_Rel_Search> theRel = new Expr_Rel_Search(newRename, fRestriction);
+		this->pSetResult(theRel);
+		}
+
+	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
+		{
+		fLikelySize = 1;
+		this->pApplyRestrictProject(iExpr->GetRelName(), iExpr);
+		}
+
+	virtual void Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr)
+		{
+		fLikelySize = 1;
+		this->pApplyRestrictProject(RelHead(), iExpr);
+		}
+
+	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
+		{
+		ZRef<Expr_Rel> newOp1;
+		
+		{
+		ZSetRestore_T<ZRef<ZExpr_Bool> > sr0(fRestriction, sTrue());
+		ZSetRestore_T<ZUniSet_T<RelName> > sr1(fProjection, ZUniSet_T<RelName>::sUniversal());
+		ZSetRestore_T<Rename> sr2(fRename);
+		newOp1 = this->Do(iExpr->GetOp1());
+		}
+
+		const RelName& theName = ZRA::sRenamed(fRename, iExpr->GetRelName());
+
+		// The restriction may reference the name we introduce, so don't pass it down the tree.
+		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
+		fRestriction = sTrue();
+
+		// Similarly with projection -- we don't know what names our embedee will be
+		// referencing from our descendants.
+		const ZUniSet_T<RelName> priorProjection = fProjection;
+		fProjection = ZUniSet_T<RelName>::sUniversal();
+		
+		ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+		ZRef<ZRA::Expr_Rel> newEmbed = new ZRA::Expr_Rel_Embed(newOp0, theName, newOp1);
+		
+		fRestriction = priorRestriction;
+		fProjection = priorProjection;
+		fRename.clear();
+		this->pApplyRestrictProject(newEmbed);
+		}
+
 	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr)
 		{
 		// Remember curent state
-		const ZRef<ZExpr_Bool> priorExpr_Bool = fExpr_Bool;
-		const ZUniSet_T<RelName> priorProject = fProject;
+		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
+		const ZUniSet_T<RelName> priorProjection = fProjection;
 		const Rename priorRename = fRename;
 
 		// We leave rename in place to be used by children,
 		// but reset the restriction and projection -- children will see only any
 		// restriction/projection that exists on their own branch.
-		fExpr_Bool = sTrue();
-		fProject = ZUniSet_T<RelName>::sUniversal();
+		fRestriction = sTrue();
+		fProjection = ZUniSet_T<RelName>::sUniversal();
 		
 		// Process the left branch.
 		ZRef<ZRA::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
-		double leftLikelySize = fLikelySize.Get();
+		const double leftLikelySize = fLikelySize.Get();
 		fLikelySize.Clear();
 
 		// Projection, rename and restriction may have been touched, so reset things
 		// to the same state for the right branch as for the left.
-		fProject = ZUniSet_T<RelName>::sUniversal();
+		fRestriction = sTrue();
+		fProjection = ZUniSet_T<RelName>::sUniversal();
 		fRename = priorRename;
-		fExpr_Bool = sTrue();
 		
 		// Process the right branch.
 		ZRef<ZRA::Expr_Rel> op1 = this->Do(iExpr->GetOp1());
-		double rightLikelySize = fLikelySize.Get();
+		const double rightLikelySize = fLikelySize.Get();
 		
-		bool canReorder = true;
-		if (leftLikelySize < 0)
-			{
-			leftLikelySize = -leftLikelySize;
-			canReorder = false;
-			}
-
-		if (rightLikelySize < 0)
-			{
-			rightLikelySize = -rightLikelySize;
-			canReorder = false;
-			}
-
 		fLikelySize = leftLikelySize * rightLikelySize;
 		
-		// Restore the restriction.
-		fExpr_Bool = priorExpr_Bool;
-		fProject = priorProject;
-		// But rename is now superfluous -- our children will have
-		// done whatever they need with them. pHandleIt will simply
-		// apply any restriction that remains.
+		// Restore the restriction and projection.
+		fRestriction = priorRestriction;
+		fProjection = priorProjection;
+		// But rename is now superfluous -- our children will have done whatever they need
+		// with it. pApplyRestrictProject will apply any restriction/projection that remains.
 		fRename.clear();
 
-		if (canReorder && rightLikelySize < leftLikelySize)
-			this->pHandleIt(new ZRA::Expr_Rel_Product(op1, op0));
+		if (rightLikelySize < leftLikelySize)
+			this->pApplyRestrictProject(new ZRA::Expr_Rel_Product(op1, op0));
 		else
-			this->pHandleIt(new ZRA::Expr_Rel_Product(op0, op1));
-		}
-
-	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
-		{
-		ZRef<Expr_Rel> newOp0;
-		
-		{
-		ZSetRestore_T<ZRef<ZExpr_Bool> > sr0(fExpr_Bool, sTrue());
-		ZSetRestore_T<ZUniSet_T<RelName> > sr1(fProject, ZUniSet_T<RelName>::sUniversal());
-		ZSetRestore_T<Rename> sr2(fRename);
-		newOp0 = this->Do(iExpr->GetOp0());
-		}
-
-		this->pHandleIt(iExpr->GetRelName(), iExpr->SelfOrClone(newOp0));
+			this->pApplyRestrictProject(new ZRA::Expr_Rel_Product(op0, op1));
 		}
 
 	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr)
 		{
-		ZSetRestore_T<ZUniSet_T<RelName> > sr(fProject, iExpr->GetProjectRelHead());
+		ZSetRestore_T<ZUniSet_T<RelName> > sr(fProjection, iExpr->GetProjectRelHead());
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 
@@ -201,13 +289,10 @@ public:
 		Rename new2Old;
 		new2Old[newName] = oldName;
 
-		fExpr_Bool = Util_Expr_Bool::sRenamed(new2Old, fExpr_Bool);
+		fRestriction = Util_Expr_Bool::sRenamed(new2Old, fRestriction);
 
-		if (fProject.Contains(newName))
-			{
-			fProject.Erase(newName);
-			fProject.Insert(oldName);
-			}
+		if (fProjection.QErase(newName))
+			fProjection.Insert(oldName);
 
 		if (ZQ<string8> theQ = ZUtil_STL::sQErase(fRename, newName))
 			newName = theQ.Get();
@@ -219,92 +304,35 @@ public:
 
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr)
 		{
-		ZRef<ZExpr_Bool> theExpr_Bool = iExpr->GetExpr_Bool();
-		if (theExpr_Bool != sTrue())
+		ZRef<ZExpr_Bool> theRestriction = iExpr->GetExpr_Bool();
+		if (theRestriction != sTrue())
 			{
-			if (fExpr_Bool != sTrue())
-				fExpr_Bool &= theExpr_Bool;
+			if (fRestriction != sTrue())
+				fRestriction &= theRestriction;
 			else
-				fExpr_Bool = theExpr_Bool;
+				fRestriction = theRestriction;
 			}
 
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 
-	virtual void Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
-		{
-		fLikelySize = -1;
-		this->pHandleIt(iExpr->GetRelName(), iExpr);
-		}
+	void pApplyRestrictProject(const ZRef<Expr_Rel>& iRel)
+		{ this->pApplyRestrictProject(nullptr, iRel); }
 
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
-		{
-		// fExpr_Bool by now is written in terms used by the concrete itself,
-		// and fRename maps from the concrete's terms to those used at the top of
-		// the containg branch. We'll pass a rename that includes only those
-		// resulting names that are in fProject, so the passed rename is
-		// effectively a project/rename descriptor.
+	void pApplyRestrictProject(const RelHead& iRH, const ZRef<Expr_Rel>& iRel)
+		{ this->pApplyRestrictProject(&iRH, iRel); }
 
-		Rename newRename;
-		for (Rename::iterator iterRename = fRename.begin();
-			iterRename != fRename.end(); ++iterRename)
+	void pApplyRestrictProject(const RelHead* iRH, ZRef<Expr_Rel> iRel)
+		{
+		// Apply any restriction that remains.
+		if (fRestriction != sTrue())
 			{
-			if (fProject.Contains(iterRename->first))
-				newRename.insert(*iterRename);
+			iRel = iRel & fRestriction;
+			fRestriction = sTrue();
 			}
 
-		// Add missing entries
-		const RelHead& theRH = iExpr->GetConcreteRelHead();
-		for (RelHead::const_iterator iterRH = theRH.begin();
-			iterRH != theRH.end(); ++iterRH)
-			{
-			const RelName& theRelName = *iterRH;
-			if (fProject.Contains(theRelName))
-				ZUtil_STL::sInsertIfNotContains(newRename, theRelName, theRelName);
-			}
-
-		if (fExpr_Bool == sTrue())
-			{
-			fLikelySize = 100;
-			}
-		else if (HasConst().Do(fExpr_Bool))
-			{
-			fLikelySize = 1;
-			}
-		else
-			{
-			fLikelySize = 100;
-			}
-
-		ZRef<Expr_Rel_Search> theRel = new Expr_Rel_Search(newRename, fExpr_Bool);
-		this->pSetResult(theRel);
-		}
-
-	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
-		{
-		fLikelySize = 1;
-		this->pHandleIt(iExpr->GetRelName(), iExpr);
-		}
-
-	virtual void Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr)
-		{
-		fLikelySize = 1;
-		this->pHandleIt(RelHead(), iExpr);
-		}
-
-	void pHandleIt(ZRef<Expr_Rel> iRel)
-		{ this->pHandleIt(nullptr, iRel); }
-
-	void pHandleIt(const RelHead& iRH, ZRef<Expr_Rel> iRel)
-		{ this->pHandleIt(&iRH, iRel); }
-
-	void pHandleIt(const RelHead* iRH, ZRef<Expr_Rel> iRel)
-		{
-		if (fExpr_Bool && fExpr_Bool != sTrue())
-			iRel = iRel & fExpr_Bool;
-			
 		bool isUniversal;
-		const RelHead projectElems = fProject.GetElems(isUniversal);
+		const RelHead& projectElems = fProjection.GetElems(isUniversal);
 
 		if (isUniversal)
 			{
@@ -332,8 +360,8 @@ public:
 		this->pSetResult(iRel);
 		}
 
-	ZRef<ZExpr_Bool> fExpr_Bool;
-	ZUniSet_T<RelName> fProject;
+	ZRef<ZExpr_Bool> fRestriction;
+	ZUniSet_T<RelName> fProjection;
 	Rename fRename;
 	ZQ<double> fLikelySize;
 	};

@@ -36,31 +36,29 @@ class Visitor_Expr_Rel_Embed;
 
 class Expr_Rel_Embed
 :	public virtual Expr_Rel
-,	public virtual ZExpr_Op1_T<Expr_Rel>
+,	public virtual ZExpr_Op2_T<Expr_Rel>
 	{
-	typedef ZExpr_Op1_T<Expr_Rel> inherited;
+	typedef ZExpr_Op2_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Embed(const RelName& iRelName,
-	const Rename& iBindings, const ZRef<Expr_Rel>& iChild);
+	Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0,
+		const RelName& iRelName, const ZRef<Expr_Rel>& iEmbedee);
 
 // From ZVisitee
 	virtual void Accept(ZVisitor& iVisitor);
 
-// From ZExpr_Op1_T
-	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
+// From ZExpr_Op2_T
+	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor);
 
 	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
+	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1);
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor);
 
 	const RelName& GetRelName() const;
-	const Rename& GetBindings() const;
 
 private:
 	const RelName fRelName;
-	const Rename fBindings;
 	};
 
 // =================================================================================================
@@ -68,7 +66,7 @@ private:
 #pragma mark * Visitor_Expr_Rel_Embed
 
 class Visitor_Expr_Rel_Embed
-:	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
+:	public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
 	{
 public:
 	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr);
@@ -78,10 +76,8 @@ public:
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel> sEmbed(const RelName& iRelName, const ZRef<Expr_Rel>& iChild);
-
-ZRef<Expr_Rel> sEmbed(const RelName& iRelName,
-	const RelHead& iBindings, const ZRef<Expr_Rel>& iChild);
+ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0,
+	const RelName& iRelName, const ZRef<Expr_Rel>& iEmbedee);
 
 } // namespace ZRA
 

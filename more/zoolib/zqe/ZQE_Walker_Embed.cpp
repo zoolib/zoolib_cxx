@@ -35,11 +35,11 @@ using namespace ZUtil_STL;
 #pragma mark -
 #pragma mark * Walker_Embed
 
-Walker_Embed::Walker_Embed(const string8& iRelName,
-	const ZRA::Rename iBindings, const ZRef<Walker>& iWalker_Child)
-:	fRelName(iRelName)
-,	fBindings(iBindings)
-,	fWalker_Child(iWalker_Child)
+Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker_Parent,
+		const string8& iRelName, const ZRef<Walker>& iWalker_Embedee)
+:	fWalker_Parent(iWalker_Parent)
+,	fRelName(iRelName)
+,	fWalker_Embedee(iWalker_Embedee)
 	{}
 
 Walker_Embed::~Walker_Embed()
@@ -50,20 +50,15 @@ ZRef<Walker> Walker_Embed::Prime(
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	map<string8,size_t> visibleOffsets;
-	for (map<string8,size_t>::const_iterator i = iOffsets.begin(); i != iOffsets.end(); ++i)
-		{
-		if (ZQ<string8> theQ = sGetIfContains(fBindings, i->first))
-			sInsertMustNotContain(1, visibleOffsets, theQ.Get(), i->second);
-		}
+	fWalker_Parent->Prime(iOffsets, oOffsets, ioBaseOffset);
 
-	map<string8,size_t> childOffsets;
-	fWalker_Child = fWalker_Child->Prime(visibleOffsets, childOffsets, ioBaseOffset);
+	map<string8,size_t> embedeeOffsets;
+	fWalker_Embedee = fWalker_Embedee->Prime(oOffsets, embedeeOffsets, ioBaseOffset);
 
-	for (map<string8,size_t>::iterator i = childOffsets.begin(); i != childOffsets.end(); ++i)
+	for (map<string8,size_t>::iterator i = embedeeOffsets.begin(); i != embedeeOffsets.end(); ++i)
 		{
-		fChildRelHead |= i->first;
-		fChildOffsets.push_back(i->second);
+		fEmbedeeRelHead |= i->first;
+		fEmbedeeOffsets.push_back(i->second);
 		}
 
 	fOutputOffset = ioBaseOffset++;
@@ -76,26 +71,22 @@ bool Walker_Embed::ReadInc(
 	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
-	if (fExhausted)
+	if (!fWalker_Parent->ReadInc(ioResults, oAnnotations))
 		return false;
-	fExhausted = true;
-
-	if (!fWalker_Child)
-		return false;
-
-	fWalker_Child->Rewind();
+	
+	fWalker_Embedee->Rewind();
 
 	vector<ZVal_Any> thePackedRows;
 	for (;;)
 		{
-		if (!fWalker_Child->ReadInc(ioResults, nullptr))
+		if (!fWalker_Embedee->ReadInc(ioResults, nullptr))
 			break;
 
-		for (vector<size_t>::iterator i = fChildOffsets.begin(); i != fChildOffsets.end(); ++i)
+		for (vector<size_t>::iterator i = fEmbedeeOffsets.begin(); i != fEmbedeeOffsets.end(); ++i)
 			thePackedRows.push_back(ioResults[*i]);
 		}
 
-	ZRef<ZQE::Result> theResult = new ZQE::Result(fChildRelHead, &thePackedRows, nullptr);
+	ZRef<ZQE::Result> theResult = new ZQE::Result(fEmbedeeRelHead, &thePackedRows, nullptr);
 	ioResults[fOutputOffset] = theResult;
 	return true;
 	}
