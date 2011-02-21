@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallableSet__
-#define __ZCallableSet__ 1
+#ifndef __ZCallable_Set__
+#define __ZCallable_Set__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -29,18 +29,25 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallableSet0
+#pragma mark * ZCallable_Set
 
-class ZCallableSet0
+template <class Signature> class ZCallable_Set;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_Set (specialization for 0 params)
+
+template <>
+class ZCallable_Set<void(void)>
 :	public ZCallable<void(void)>
 	{
 public:
 	typedef ZCallable<void(void)> Callable_t;
 
-	void Register(ZRef<Callable_t> iCallable)
+	void Insert(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
 
-	void Unregister(ZRef<Callable_t> iCallable)
+	void Erase(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
 	void Call()
@@ -60,19 +67,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallableSet1
+#pragma mark * ZCallable_Set (specialization for 1 param)
 
 template <class P0>
-class ZCallableSet1
+class ZCallable_Set<void(P0)>
 :	public ZCallable<void(P0)>
 	{
 public:
 	typedef ZCallable<void(P0)> Callable_t;
 
-	void Register(ZRef<Callable_t> iCallable)
+	void Insert(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
 
-	void Unregister(ZRef<Callable_t> iCallable)
+	void Erase(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
 	void Call(P0 i0)
@@ -92,19 +99,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallableSet2
+#pragma mark * ZCallable_Set (specialization for 2 params)
 
 template <class P0, class P1>
-class ZCallableSet2
+class ZCallable_Set<void(P0,P1)>
 :	public ZCallable<void(P0,P1)>
 	{
 public:
 	typedef ZCallable<void(P0,P1)> Callable_t;
 
-	void Register(ZRef<Callable_t> iCallable)
+	void Insert(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
 
-	void Unregister(ZRef<Callable_t> iCallable)
+	void Erase(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
 	void Call(P0 i0, P1 i1)
@@ -124,19 +131,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallableSet3
+#pragma mark * ZCallable_Set (specialization for 3 params)
 
 template <class P0, class P1, class P2>
-class ZCallableSet3
+class ZCallable_Set<void(P0,P1,P2)>
 :	public ZCallable<void(P0,P1,P2)>
 	{
 public:
 	typedef ZCallable<void(P0,P1,P2)> Callable_t;
 
-	void Register(ZRef<Callable_t> iCallable)
+	void Insert(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
 
-	void Unregister(ZRef<Callable_t> iCallable)
+	void Erase(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
 	void Call(P0 i0, P1 i1, P2 i2)
@@ -156,19 +163,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallableSet4
+#pragma mark * ZCallable_Set (specialization for 4 params)
 
 template <class P0, class P1, class P2, class P3>
-class ZCallableSet4
+class ZCallable_Set<void(P0,P1,P2,P3)>
 :	public ZCallable<void(P0,P1,P2,P3)>
 	{
 public:
 	typedef ZCallable<void(P0,P1,P2,P3)> Callable_t;
 
-	void Register(ZRef<Callable_t> iCallable)
+	void Insert(ZRef<Callable_t> iCallable)
 		{ fCallables.Insert(iCallable); }
 
-	void Unregister(ZRef<Callable_t> iCallable)
+	void Erase(ZRef<Callable_t> iCallable)
 		{ fCallables.Erase(iCallable); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3)
@@ -188,4 +195,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZCallableSet__
+#endif // __ZCallable_Set__
