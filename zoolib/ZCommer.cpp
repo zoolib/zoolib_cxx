@@ -136,15 +136,13 @@ void ZCommer::WaitTillFinished()
 ZRef<ZCommer::Callable_t> ZCommer::GetSetCallable_Started(ZRef<Callable_t> iCallable)
 	{
 	ZAcqMtx locker(fMtx);
-	fCallable_Started.swap(iCallable);
-	return iCallable;
+	return GetSet(fCallable_Started, iCallable);
 	}
 
 ZRef<ZCommer::Callable_t> ZCommer::GetSetCallable_Finished(ZRef<Callable_t> iCallable)
 	{
 	ZAcqMtx locker(fMtx);
-	fCallable_Finished.swap(iCallable);
-	return iCallable;
+	return GetSet(fCallable_Finished, iCallable);
 	}
 
 // =================================================================================================

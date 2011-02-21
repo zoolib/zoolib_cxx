@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZSafe__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZGetSet.h"
 #include "zoolib/ZThread.h"
 
 namespace ZooLib {
@@ -84,9 +85,7 @@ public:
 	T GetSet(const T& iOther)
 		{
 		ZAcqMtx acq(fMtx);
-		const T prior = fVal;
-		fVal = iOther;
-		return prior;
+		return ZooLib::GetSet(fVal, iOther);
 		}
 
 	bool CompareAndSwap(const T& iOld, const T& iNew)
@@ -105,4 +104,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZWeakRef__
+#endif // __ZSafe__
