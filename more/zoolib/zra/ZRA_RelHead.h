@@ -49,11 +49,11 @@ typedef ZSet_T<RelName> RelHead;
 bool sHasPrefix(const RelName& iPrefix, const RelName& iRelName);
 RelName sPrefixInserted(const RelName& iPrefix, const RelName& iRelName);
 RelName sPrefixErased(const RelName& iPrefix, const RelName& iRelName);
+RelName sRenamed(const Rename& iRename, const RelName& iRelName);
 
 bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead);
 RelHead sPrefixInserted(const RelName& iPrefix, const RelHead& iRelHead);
 RelHead sPrefixErased(const RelName& iPrefix, const RelHead& iRelHead);
-
 RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead);
 
 // =================================================================================================

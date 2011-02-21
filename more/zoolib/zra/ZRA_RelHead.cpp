@@ -24,7 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <>
-int sCompare_T(const std::pair<std::string,std::string>& iL, const std::pair<std::string,std::string>& iR)
+int sCompare_T(
+	const std::pair<std::string,std::string>& iL,
+	const std::pair<std::string,std::string>& iR)
 	{
 	if (int compare = sCompare_T(iL.first, iR.first))
 		return compare;
@@ -41,7 +43,6 @@ int sCompare_T(const ZRA::RelHead& iL, const ZRA::RelHead& iR)
 	{ return sCompareIterators_T(iL.begin(), iL.end(),  iR.begin(), iR.end()); }
 
 ZMACRO_CompareRegistration_T(ZRA::RelHead)
-	
 
 template <>
 int sCompare_T(const ZRA::Rename& iL, const ZRA::Rename& iR)
@@ -90,6 +91,14 @@ RelName sPrefixErased(const RelName& iPrefix, const RelName& iRelName)
 	return iRelName;
 	}
 
+RelName sRenamed(const Rename& iRename, const RelName& iRelName)
+	{
+	Rename::const_iterator iter = iRename.find(iRelName);
+	if (iRename.end() == iter)
+		return iRelName;
+	return iter->second;
+	}
+
 bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead)
 	{
 	if (iPrefix.empty())
@@ -100,6 +109,7 @@ bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead)
 		if (!sHasPrefix(iPrefix, *i))
 			return false;
 		}
+
 	return true;
 	}
 
@@ -134,13 +144,8 @@ RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead)
 
 	RelHead result;
 	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		{
-		Rename::const_iterator iter = iRename.find(*i);
-		if (iRename.end() == iter)
-			result.insert(*i);
-		else
-			result.insert(iter->second);
-		}
+		result.insert(sRenamed(iRename, *i));
+
 	return result;
 	}
 
