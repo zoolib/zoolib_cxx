@@ -211,7 +211,7 @@ public:
 		return iDefault;
 		}
 
-	T& Get()
+	T& GetMutable()
 		{
 		ZAssert(fHasValue);
 		return *sFetch_T<T>(fBytes);
