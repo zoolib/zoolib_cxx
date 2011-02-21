@@ -57,6 +57,10 @@ public:
 		{ return *this; }
 	};
 
+template <class T>
+ZRef<ZCountedWrap<T> > CopyCounted(const T& iOther)
+	{ return new ZCountedWrap<T>(iOther); }
+
 } // namespace ZooLib
 
 #endif // __ZCountedWrap__
