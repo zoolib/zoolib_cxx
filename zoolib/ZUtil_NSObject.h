@@ -23,21 +23,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(Cocoa)
+#if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
 // Urg. We need to include this before any std C++ headers when building
 // with Cocotron, otherwise va_list isn't appropriately visible to ObjC code.
 #include <Foundation/Foundation.h>
 
+#include "zoolib/ZAny.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal_Any.h"
-
-namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_NSObject
 
+namespace ZooLib {
 namespace ZUtil_NSObject {
 
 NSString* sString();
@@ -86,12 +85,18 @@ NSObject* sAsNSObject(const ZAny& iVal);
 
 } // namespace ZUtil_NSObject
 
+namespace ZUtil_NS = ZUtil_NSObject;
+
 } // namespace ZooLib
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * asAnyWithDefault
 
 @interface NSObject (ZAny_Additions)
 -(ZooLib::ZAny)asAnyWithDefault:(const ZooLib::ZAny&)iDefault;
 @end
 
-#endif // ZCONFIG_SPI_Enabled(Cocoa)
+#endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
 #endif // __ZUtil_NSObject__

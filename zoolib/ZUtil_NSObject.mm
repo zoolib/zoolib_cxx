@@ -20,15 +20,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_NSObject.h"
 
-#if ZCONFIG_SPI_Enabled(Cocoa)
+#if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUnicode.h"
+#include "zoolib/ZVal_Any.h"
 
 #import <Foundation/NSDate.h>
 #import <Foundation/NSString.h>
 
-using std::string;
 using std::vector;
 
 using namespace ZooLib;
@@ -38,7 +38,6 @@ using namespace ZooLib;
 #pragma mark * ZUtil_NSObject
 
 namespace ZooLib {
-
 namespace ZUtil_NSObject {
 
 NSString* sString()
@@ -187,10 +186,10 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 	else if (const ZMap_Any* theValue = iVal.PGet<ZMap_Any>())
 		{
 		NSMutableDictionary* theDictionary = sDictionaryMutable();
-		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
-			i != end; ++i)
+		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End(); i != end; ++i)
 			{
-			[theDictionary setObject:sDAsNSObject(iDefault, theValue->Get(i))
+			[theDictionary
+				setObject:sDAsNSObject(iDefault, theValue->Get(i))
 				forKey:sString(theValue->NameOf(i))];
 			}
 		return theDictionary;
@@ -263,7 +262,6 @@ NSObject* sAsNSObject(const ZAny& iVal)
 	{ return sDAsNSObject([NSNull null], iVal); }
 
 } // namespace ZUtil_NSObject
-
 } // namespace ZooLib
 
 // =================================================================================================
@@ -300,10 +298,9 @@ NSObject* sAsNSObject(const ZAny& iVal)
 -(ZAny)asAnyWithDefault:(const ZAny&)iDefault
 	{
 	ZMap_Any result;
-	for (id theKey, i = [self keyEnumerator];
-		(theKey = [i nextObject]); /*no inc*/)
+	for (id theKey, i = [self keyEnumerator]; (theKey = [i nextObject]); /*no inc*/)
 		{
-		const string theName = ZUtil_NSObject::sAsUTF8((NSString*)theKey);
+		const string8 theName = ZUtil_NSObject::sAsUTF8((NSString*)theKey);
 		const ZAny theVal = [[self objectForKey:theKey] asAnyWithDefault:iDefault];
 		result.Set(theName, theVal);
 		}
@@ -322,11 +319,8 @@ NSObject* sAsNSObject(const ZAny& iVal)
 -(ZAny)asAnyWithDefault:(const ZAny&)iDefault
 	{
 	ZSeq_Any result;
-	for (id theValue, i = [self objectEnumerator];
-		(theValue = [i nextObject]); /*no inc*/)
-		{
+	for (id theValue, i = [self objectEnumerator]; (theValue = [i nextObject]); /*no inc*/)
 		result.Append([theValue asAnyWithDefault:iDefault]);
-		}
 	return ZAny(result);
 	}
 
@@ -352,7 +346,7 @@ NSObject* sAsNSObject(const ZAny& iVal)
 @implementation NSString (ZAny_Additions)
 
 -(ZAny)asAnyWithDefault:(const ZAny&)iDefault
-	{ return ZAny(string([self UTF8String])); }
+	{ return ZAny(string8([self UTF8String])); }
 
 @end
 
@@ -380,4 +374,4 @@ NSObject* sAsNSObject(const ZAny& iVal)
 
 @end
 
-#endif // ZCONFIG_SPI_Enabled(Cocoa)
+#endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
