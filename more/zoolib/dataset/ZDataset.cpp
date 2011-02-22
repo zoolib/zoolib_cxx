@@ -159,6 +159,63 @@ ZRef<DeltasChain> DeltasChain::GetParent()
 ZRef<Deltas> DeltasChain::GetDeltas()
 	{ return fDeltas; }
 
+typedef pair<NamedEvent, size_t> TSIndex_t;
+
+class CompareTSReverse
+:	public std::binary_function<TSIndex_t, TSIndex_t, bool>
+	{
+public:
+	// We want oldest ts first, so we reverse the sense of the compare.
+	result_type operator()(const first_argument_type& i1, const second_argument_type& i2) const
+		{ return i2.first < i1.first; }
+	};
+
+void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed)
+	{
+	// This is a bit tricky. We're effectively merge sorting from our history entries.
+
+	vector<Map_NamedEvent_Delta_t::const_iterator> theIters, theEnds;
+	for (ZRef<DeltasChain> current = iDeltasChain;
+		current; current = current->GetParent())
+		{
+		Map_NamedEvent_Delta_t::const_iterator theBegin =
+			current->GetDeltas()->GetMap().begin();
+
+		Map_NamedEvent_Delta_t::const_iterator theEnd =
+			current->GetDeltas()->GetMap().end();
+
+		if (theBegin != theEnd)
+			{
+			theIters.push_back(theBegin);
+			theEnds.push_back(theEnd);
+			}
+		}
+
+	priority_queue<TSIndex_t, vector<TSIndex_t>, CompareTSReverse> queue;
+
+	for (size_t x = 0; x < theIters.size(); ++x)
+		queue.push(TSIndex_t(theIters[x]->first, x));
+
+	while (!queue.empty())
+		{
+		const size_t theX = queue.top().second;
+		queue.pop();
+
+		const map<Daton, bool>& theStatements = theIters[theX]->second->GetStatements();
+		for (map<Daton, bool>::const_iterator j = theStatements.begin();
+			j != theStatements.end(); ++j)
+			{
+			if (j->second)
+				oComposed.insert(j->first);
+			else
+				oComposed.erase(j->first);
+			}
+
+		if (++theIters[theX] != theEnds[theX])
+			queue.push(TSIndex_t(theIters[theX]->first, theX));
+		}
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Dataset
@@ -279,74 +336,19 @@ void Dataset::IncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& i
 	sReceive(fClock, iEvent);
 	}
 
-typedef pair<NamedEvent, size_t> TSIndex_t;
-
-class CompareTSReverse
-:	public std::binary_function<TSIndex_t, TSIndex_t, bool>
-	{
-public:
-	// We want oldest ts first, so we reverse the sense of the compare.
-	result_type operator()(const first_argument_type& i1, const second_argument_type& i2) const
-		{ return i2.first < i1.first; }
-	};
-
-set<Daton> Dataset::GetComposed()
+ZRef<DeltasChain> Dataset::GetDeltasChain(ZRef<Event>* oEvent)
 	{
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
 
-	// This is a bit tricky. We're effectively merge sorting from our history entries.
+	if (oEvent)
+		*oEvent = fClock->GetEvent();
 
-	vector<Map_NamedEvent_Delta_t::const_iterator> theIters, theEnds;
-	for (ZRef<DeltasChain> current = fDeltasChain;
-		current; current = current->GetParent())
-		{
-		Map_NamedEvent_Delta_t::const_iterator theBegin =
-			current->GetDeltas()->GetMap().begin();
-
-		Map_NamedEvent_Delta_t::const_iterator theEnd =
-			current->GetDeltas()->GetMap().end();
-
-		if (theBegin != theEnd)
-			{
-			theIters.push_back(theBegin);
-			theEnds.push_back(theEnd);
-			}
-		}
-
-	priority_queue<TSIndex_t, vector<TSIndex_t>, CompareTSReverse> queue;
-
-	for (size_t x = 0; x < theIters.size(); ++x)
-		queue.push(TSIndex_t(theIters[x]->first, x));
-
-	set<Daton> result;
-	while (!queue.empty())
-		{
-		const size_t theX = queue.top().second;
-		queue.pop();
-
-		if (++theIters[theX] != theEnds[theX])
-			queue.push(TSIndex_t(theIters[theX]->first, theX));
-
-		const map<Daton, bool>& theStatements = theIters[theX]->second->GetStatements();
-		for (map<Daton, bool>::const_iterator j = theStatements.begin();
-			j != theStatements.end(); ++j)
-			{
-			if (j->second)
-				result.insert(j->first);
-			else
-				result.erase(j->first);
-			}
-		}
-
-	return result;
+	return fDeltasChain;
 	}
 
 const Nombre& Dataset::GetNombre()
 	{ return fNombre; }
-
-ZRef<DeltasChain> Dataset::GetDeltasChain()
-	{ return fDeltasChain; }
 
 void Dataset::pCommit()
 	{

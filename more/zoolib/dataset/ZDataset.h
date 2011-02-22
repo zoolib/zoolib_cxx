@@ -142,6 +142,8 @@ private:
 	const ZRef<Deltas> fDeltas;
 	};
 
+void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Dataset
@@ -166,10 +168,9 @@ public:
 
 	void IncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& iDeltas);
 
-	std::set<Daton> GetComposed();
+	ZRef<DeltasChain> GetDeltasChain(ZRef<Event>* oEvent);
 
 	const Nombre& GetNombre();
-	ZRef<DeltasChain> GetDeltasChain();
 
 private:
 	Dataset(
