@@ -460,6 +460,7 @@ void Source_Dataset::CloseTransaction(size_t iIndex)
 
 	this->pChangedAll();
 	fStack_Map_Pending.pop_back();
+	this->pConditionalPushDown();
 	}
 
 void Source_Dataset::pDetachPQuery(PQuery* iPQuery)

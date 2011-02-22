@@ -22,8 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDataspace_Source_SQLite__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZWorker.h"
-
 #include "zoolib/dataspace/ZDataspace_Source.h"
 #include "zoolib/sqlite/ZSQLite.h"
 
@@ -51,8 +49,6 @@ public:
 	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
 private:
-	bool pCheck(ZRef<ZWorker> iWorker);
-
 	ZRef<ZSQLite::DB> fDB;
 	int64 fChangeCount;
 	ZRef<Clock> fClock;

@@ -18,20 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
-#include "zoolib/ZWorker_Callable.h"
-#include "zoolib/ZWorkerRunner_CFRunLoop.h"
 
 #include "zoolib/dataspace/ZDataspace_Source_SQLite.h"
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
 #include "zoolib/zra/ZRA_AsSQL.h"
 #include "zoolib/zra/ZRA_GetRelHead.h"
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -45,21 +40,6 @@ using std::vector;
 using namespace ZSQLite;
 
 using ZRA::RelName;
-
-const ZStrimW& operator<<(const ZStrimW& w, const ZRA::Rename& iRename)
-	{
-	w << "(";
-	bool isSubsequent = false;
-	for (ZRA::Rename::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
-		{
-		if (isSubsequent)
-			w << ", ";
-		isSubsequent = true;
-		w << i->first << "<--" << i->second;
-		}
-	w << ")";
-	return w;
-	}
 
 // =================================================================================================
 #pragma mark -
@@ -124,10 +104,6 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 		if (!theRelHead.empty())
 			ZUtil_STL::sInsertMustNotContain(kDebug, fMap_Tables, theTableName, theRelHead);
 		}
-
-//	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(this, &Source_SQLite::pCheck));
-//	ZWorkerRunner_CFRunLoop::sMain()->Attach(theWorker);
-//	theWorker->Wake();
 	}
 
 Source_SQLite::~Source_SQLite()
