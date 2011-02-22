@@ -267,14 +267,16 @@ private:
 		{
 		if (sizeof(S) <= sizeof(fPayload))
 			{
+			if (false)
+				{}
 			#if ZCONFIG(Compiler,GCC)
-			if (std::tr1::is_pod<S>::value)
+			else if (std::tr1::is_pod<S>::value)
 				{
 				fPtr_InPlace = (void*)(((intptr_t)&typeid(S)) | 1);
 				*((S*)fBytes_Payload) = iP0;
 				}
-			else
 			#endif
+			else
 				{
 				sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0);
 				}
