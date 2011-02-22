@@ -250,8 +250,14 @@ public:
 		}
 
 private:
-	char fBytes[sizeof(T)];
+	#if ZCONFIG(Compiler,GCC)
+		char fBytes[sizeof(T)] __attribute__((aligned));
+	#else
+		char fBytes[sizeof(T)];
+	#endif
+
 	bool fHasValue;
+
 	friend class ZQ<T, !Sense>;
 	};
 

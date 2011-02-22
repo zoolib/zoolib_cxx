@@ -309,8 +309,9 @@ private:
 		void* fPtr_Counted;
 		union
 			{
-			// This union serves two purposes. It reserves space for in-place values
-			// and also makes some types legible when debugging.
+			// This union serves three purposes. It reserves space for in-place
+			// values, ensures ZAny has appropriate alignment, and finally
+			// makes some types legible when debugging.
 			bool fAsBool;
 			char fAsChar;
 			short fAsShort;
