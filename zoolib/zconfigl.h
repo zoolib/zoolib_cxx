@@ -312,8 +312,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZMACINCLUDE3(a,b,c) <c>
 #endif
 
-#define ZMACRO_CONCAT_(x, y) x ## y
-#define ZMACRO_CONCAT(x, y) ZMACRO_CONCAT_(x,y)
+#define ZMACRO_Concat_(x, y) x ## y
+#define ZMACRO_Concat(x, y) ZMACRO_Concat_(x,y)
 
 #ifdef __cplusplus
 	#define ZMACRO_ExternC_Begin extern "C" {

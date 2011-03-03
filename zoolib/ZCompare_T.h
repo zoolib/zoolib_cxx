@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include <functional> // For std::binary_function
+#include <memory> // For std::pair
 
 namespace ZooLib {
 
@@ -31,6 +32,14 @@ namespace ZooLib {
 #pragma mark * sCompare_T declaration
 
 template <class T> int sCompare_T(const T& iL, const T& iR);
+
+template <class S, class T>
+inline int sCompare_T(const std::pair<S,T>& iLeft, const std::pair<S,T>& iRight)
+	{
+	if (int compare = sCompare_T(iLeft.first, iRight.first))
+		return compare;
+	return sCompare_T(iLeft.second, iRight.second);
+	}
 
 // =================================================================================================
 #pragma mark -

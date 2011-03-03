@@ -31,7 +31,7 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * CompareCharStars
+#pragma mark * CompareCharStars (anonymous)
 
 namespace { // anonymous
 
@@ -84,16 +84,18 @@ int ZCompare::sCompare(const char* iTypeName, const void* iL, const void* iR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCompareRegistration_Void
+#pragma mark * ZCompareRegistration_Void (anonymous)
 
 namespace { // anonymous
+
 class ZCompareRegistration_Void : public ZCompare
 	{
 public:
 	ZCompareRegistration_Void() : ZCompare(typeid(void).name()) {}
 	virtual int Compare(const void* iL, const void* iR)
 		{ return 0; }
-	} ZMACRO_CONCAT(sComparer_,__LINE__);
+	} ZMACRO_Concat(sComparer_,__LINE__);
+
 } // anonymous namespace
 
 } // namespace ZooLib

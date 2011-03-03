@@ -100,8 +100,8 @@ public:
 
 #define ZMACRO_CompareRegistration_T(t) \
 	ZMACRO_CompareRegistration_T_Real(t, \
-		ZMACRO_CONCAT(ZComparer_,__LINE__), \
-		ZMACRO_CONCAT(sComparer_,__LINE__))
+		ZMACRO_Concat(ZComparer_,__LINE__), \
+		ZMACRO_Concat(sComparer_,__LINE__))
 
 } // namespace ZooLib
 
