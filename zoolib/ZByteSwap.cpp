@@ -48,7 +48,7 @@ void ZByteSwap_Test()
 
 	ZAssertStop(0, 0x3412 == ZByteSwap_Read16(&value16));
 	ZAssertStop(0, 0x78563412 == ZByteSwap_Read32(&value32));
-	ZAssertStop(0, 0xF0DEBC9A78563412LL == ZByteSwap_Read64(&value64));
+	ZAssertStop(0, 0xF0DEBC9A78563412LL == uint64(ZByteSwap_Read64(&value64)));
 
 	ZByteSwap_16(&value16);
 	ZAssertStop(0, 0x3412 == value16);
@@ -57,7 +57,7 @@ void ZByteSwap_Test()
 	ZAssertStop(0, 0x78563412 == value32);
 
 	ZByteSwap_64(&value64);
-	ZAssertStop(0, 0xF0DEBC9A78563412LL == value64);
+	ZAssertStop(0, 0xF0DEBC9A78563412LL == uint64(value64));
 
 	ZByteSwap_Write16(&value16, 0x1234);
 	ZAssertStop(0, 0x3412 == value16);
@@ -66,7 +66,7 @@ void ZByteSwap_Test()
 	ZAssertStop(0, 0x78563412 == value32);
 
 	ZByteSwap_Write64(&value64, 0x123456789ABCDEF0LL);
-	ZAssertStop(0, 0xF0DEBC9A78563412LL == value64);
+	ZAssertStop(0, 0xF0DEBC9A78563412LL == uint64(value64));
 	}
 
 } // namespace ZooLib

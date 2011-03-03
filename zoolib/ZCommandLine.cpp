@@ -451,7 +451,7 @@ bool ZCommandLine::pParse(
 
 bool ZCommandLine::pParseOne(const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv)
 	{
-	int argLength = strlen(ioArgv[0]);
+	size_t argLength = strlen(ioArgv[0]);
 
 	for (Opt* i = fHead; i; i = i->fNext)
 		{

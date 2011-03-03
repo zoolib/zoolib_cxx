@@ -144,8 +144,7 @@ void ZWorkerRunner_CFRunLoop::pCallback()
 	// sensible distant value against which to be compared.
 	::CFRunLoopTimerSetNextFireDate(fRunLoopTimer, now + 30 * 1e6);
 
-	bool gotEarliestLater = false;
-	CFAbsoluteTime earliestLater;
+	ZQ<CFAbsoluteTime> earliestLater;
 
 	for (ZSafeSetIter<ZRef<ZWorker> > iter = fWorkersSet;;)
 		{
@@ -171,9 +170,8 @@ void ZWorkerRunner_CFRunLoop::pCallback()
 					ZWorkerRunner::pDetachWorker(theWorker);
 					}
 				}
-			else if (!gotEarliestLater || earliestLater > theTime)
+			else if (!earliestLater || earliestLater.Get() > theTime)
 				{
-				gotEarliestLater = true;
 				earliestLater = theTime;
 				}
 			}
@@ -181,8 +179,8 @@ void ZWorkerRunner_CFRunLoop::pCallback()
 
 	ZGuardRMtxR guard(fMtx);
 
-	if (gotEarliestLater)
-		this->pTrigger(earliestLater);
+	if (earliestLater)
+		this->pTrigger(earliestLater.Get());
 
 	if (fWorkersSet.Empty())
 		{

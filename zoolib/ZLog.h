@@ -48,7 +48,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	ZooLib::ZLog::S(ZooLib::ZLog::p, f)
 
 #define ZLOGFUNCTION(p) ZooLib::ZLog::FunctionEntryExit \
-	ZMACRO_CONCAT(theLogFEE_,__LINE__)(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION)
+	ZMACRO_Concat(theLogFEE_,__LINE__)(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION)
 
 #define ZLOGTRACE(p) \
 	ZooLib::ZLog::sLogTrace(ZooLib::ZLog::p, __FILE__, __LINE__, ZMACRO_PRETTY_FUNCTION)

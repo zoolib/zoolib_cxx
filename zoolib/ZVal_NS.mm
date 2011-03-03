@@ -38,7 +38,9 @@ using ZUtil_NS::sDictionaryMutable;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Helpers
+#pragma mark * Helpers (anonymous)
+
+namespace { // anonymous
 
 template <class T>
 T* spAs_T(NSObject* iObj)
@@ -50,6 +52,8 @@ T* spAs_T(NSObject* iObj)
 
 NSNumber* spAsNumber(NSObject* iObj)
 	{ return spAs_T<NSNumber>(iObj); }
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

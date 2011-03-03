@@ -1210,7 +1210,7 @@ void ZStrimW::pWritev(size_t* oCountCU, size_t* oWritten, const UTF8* iString, v
 			// Handle -ve result from glibc prior to version 2.1 by growing the string.
 			buffer.resize(buffer.size() * 2);
 			}
-		else if (count > buffer.size())
+		else if (size_t(count) > buffer.size())
 			{
 			// Handle C99 standard, where count indicates how much space would have been needed.
 			buffer.resize(count);
@@ -1652,7 +1652,7 @@ void ZStrimW_Null::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* o
 	}
 
 void ZStrimW_Null::Imp_CopyFromDispatch(const ZStrimR& iStrimR,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten)
 	{
 	uint64 countSkipped;
 	iStrimR.Skip(iCountCP, &countSkipped);
@@ -1663,7 +1663,7 @@ void ZStrimW_Null::Imp_CopyFromDispatch(const ZStrimR& iStrimR,
 	}
 
 void ZStrimW_Null::Imp_CopyFrom(const ZStrimR& iStrimR,
-	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
+	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten)
 	{
 	uint64 countSkipped;
 	iStrimR.Skip(iCountCP, &countSkipped);

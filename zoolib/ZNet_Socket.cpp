@@ -321,33 +321,26 @@ void ZNetEndpoint_Socket::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 	char* localDest = static_cast<char*>(oDest);
 	while (iCount)
 		{
-		int result = sReceive(fSocketFD, localDest, iCount);
+		const int result = sReceive(fSocketFD, localDest, iCount);
 
 		if (result < 0)
 			{
-			int err = errno;
+			const int err = errno;
 			if (err == EAGAIN)
-				{
 				sWaitReadable(fSocketFD, 1000);
-				}
 			else if (err != EINTR)
-				{
 				break;
-				}
+			}
+		else if (result == 0)
+			{
+			// result is zero, indicating that the other end has sent FIN.
+			break;
 			}
 		else
 			{
-			if (result == 0)
-				{
-				// result is zero, indicating that the other end has sent FIN.
-				break;
-				}
-			else
-				{
-				localDest += result;
-				iCount -= result;
-				break;
-				}
+			localDest += result;
+			iCount -= result;
+			break;
 			}
 		}
 	if (oCountRead)
@@ -365,32 +358,25 @@ void ZNetEndpoint_Socket::Imp_Write(const void* iSource, size_t iCount, size_t* 
 	const char* localSource = static_cast<const char*>(iSource);
 	while (iCount)
 		{
-		int result = sSend(fSocketFD, localSource, iCount);
+		const int result = sSend(fSocketFD, localSource, iCount);
 
 		if (result < 0)
 			{
-			int err = errno;
+			const int err = errno;
 			if (err == EAGAIN)
-				{
 				sWaitWriteable(fSocketFD);
-				}
 			else if (err != EINTR)
-				{
 				break;
-				}
+			}
+		else if (result == 0)
+			{
+			// result is zero, indicating that the other end has closed its receive side.
+			break;
 			}
 		else
 			{
-			if (result == 0)
-				{
-				// result is zero, indicating that the other end has closed its receive side.
-				break;
-				}
-			else
-				{
-				localSource += result;
-				iCount -= result;
-				}
+			localSource += result;
+			iCount -= result;
 			}
 		}
 	if (oCountWritten)
@@ -399,21 +385,19 @@ void ZNetEndpoint_Socket::Imp_Write(const void* iSource, size_t iCount, size_t* 
 
 bool ZNetEndpoint_Socket::Imp_ReceiveDisconnect(double iTimeout)
 	{
-	ZTime endTime = ZTime::sSystem() + iTimeout;
+	const ZTime endTime = ZTime::sSystem() + iTimeout;
 
-	bool gotIt = false;
 	for (;;)
 		{
-		int result = sReceive(fSocketFD, sGarbageBuffer, sizeof(sGarbageBuffer));
+		const int result = sReceive(fSocketFD, sGarbageBuffer, sizeof(sGarbageBuffer));
 		if (result == 0)
 			{
 			// result is zero, indicating that the other end has sent FIN.
-			gotIt = true;
-			break;
+			return true;
 			}
 		else if (result < 0)
 			{
-			int err = errno;
+			const int err = errno;
 			if (err == EAGAIN)
 				{
 				if (iTimeout < 0)
@@ -422,19 +406,18 @@ bool ZNetEndpoint_Socket::Imp_ReceiveDisconnect(double iTimeout)
 					}
 				else
 					{
-					ZTime now = ZTime::sSystem();
+					const ZTime now = ZTime::sSystem();
 					if (endTime < now)
-						break;
+						return false;
 					sWaitReadable(fSocketFD, endTime - now);
 					}
 				}
 			else if (err != EINTR)
 				{
-				break;
+				return false;
 				}
 			}
 		}
-	return gotIt;
 	}
 
 void ZNetEndpoint_Socket::Imp_SendDisconnect()

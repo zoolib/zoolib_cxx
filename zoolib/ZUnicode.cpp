@@ -227,7 +227,7 @@ string16 operator+(UTF32 iCP, const string16& iString)
 string16& operator+=(string16& ioString, UTF32 iCP)
 	{
 	uint32 realCP = iCP;
-	if (realCP <= ZUnicode::kCPMaxUCS2)
+	if (realCP <= uint32(ZUnicode::kCPMaxUCS2))
 		{
 		ioString += UTF16(realCP);
 		}
@@ -813,7 +813,7 @@ string16 sAsUTF16(const string8& iString)
 
 				if (okay)
 					{
-					if (result > kCPMaxUCS2)
+					if (result > uint32(kCPMaxUCS2))
 						{
 						result -= 0x10000;
 						*dest++ = result / 0x400 + kCPSurrogateHighBegin;

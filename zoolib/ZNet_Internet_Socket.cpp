@@ -233,14 +233,15 @@ void ZNetNameLookup_Internet_Socket::Start()
 	if (0 != ::getaddrinfo(fName.c_str(), nullptr, nullptr, &theAI))
 		return;
 
-	struct addrinfo* theAI_ForDispose = theAI;
-	for (;theAI && fAddresses.size() < fCountAddressesToReturn; theAI = theAI->ai_next)
+	for (struct addrinfo* iterAI = theAI;
+		iterAI && fAddresses.size() < fCountAddressesToReturn;
+		iterAI = iterAI->ai_next)
 		{
-		if (ZRef<ZNetAddress_Internet> theNA = spAsNetAddress((sockaddr*)theAI->ai_addr, fPort))
+		if (ZRef<ZNetAddress_Internet> theNA = spAsNetAddress((sockaddr*)iterAI->ai_addr, fPort))
 			fAddresses.push_back(theNA);
 		}
 
-	::freeaddrinfo(theAI_ForDispose);
+	::freeaddrinfo(theAI);
 	}
 
 bool ZNetNameLookup_Internet_Socket::Finished()

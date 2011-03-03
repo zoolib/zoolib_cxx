@@ -78,7 +78,10 @@ from smaller sources.
 */
 
 inline bool sIsValidCP(uint32 iCP)
-	{ return iCP < kCPSurrogateHighBegin || (iCP >= kCPSurrogateLowEnd && iCP <= kCPMaxUTF); }
+	{
+	return iCP < uint32(kCPSurrogateHighBegin)
+		|| (iCP >= uint32(kCPSurrogateLowEnd) && iCP <= uint32(kCPMaxUTF));
+	}
 
 inline UTF32 sUTF32FromSurrogates(uint32 hi, uint32 lo)
 	{

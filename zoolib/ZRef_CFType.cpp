@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 
-#define ZMACRO_RETAIN_RELEASE(a) \
+#define ZMACRO_Retain_Release(a) \
 	namespace ZooLib { \
 	template <> void sRetain_T(a& ioRef) { if (ioRef) ::CFRetain(ioRef); } \
 	template <> void sRelease_T(a iRef) { if (iRef) ::CFRelease(iRef); } \
@@ -34,34 +34,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 // CFTypeRef declared in CFBase.h
-ZMACRO_RETAIN_RELEASE(CFTypeRef)
+ZMACRO_Retain_Release(CFTypeRef)
 
 // =================================================================================================
-#define ZMACRO_CF_MUTABLE(a) \
+#define ZMACRO_CF_Mutable(a) \
 	typedef struct __CF##a * CF##a##Ref; \
-	ZMACRO_RETAIN_RELEASE(CF##a##Ref)
+	ZMACRO_Retain_Release(CF##a##Ref)
 
-ZMACRO_CF_MUTABLE(Bundle)
-ZMACRO_CF_MUTABLE(Error)
-ZMACRO_CF_MUTABLE(ReadStream)
-ZMACRO_CF_MUTABLE(RunLoop)
-ZMACRO_CF_MUTABLE(RunLoopTimer)
-ZMACRO_CF_MUTABLE(WriteStream)
+ZMACRO_CF_Mutable(Bundle)
+ZMACRO_CF_Mutable(Error)
+ZMACRO_CF_Mutable(ReadStream)
+ZMACRO_CF_Mutable(RunLoop)
+ZMACRO_CF_Mutable(RunLoopTimer)
+ZMACRO_CF_Mutable(WriteStream)
 
 // =================================================================================================
-#define ZMACRO_CF_CONST(a) \
+#define ZMACRO_CF_Const(a) \
 	typedef const struct __CF##a * CF##a##Ref; \
-	ZMACRO_RETAIN_RELEASE(CF##a##Ref)
+	ZMACRO_Retain_Release(CF##a##Ref)
 
-ZMACRO_CF_CONST(URL)
-ZMACRO_CF_CONST(Null)
+ZMACRO_CF_Const(URL)
+ZMACRO_CF_Const(Null)
 
 // =================================================================================================
 #define ZMACRO_CF(a) \
 	typedef const struct __CF##a * CF##a##Ref; \
 	typedef struct __CF##a * CFMutable##a##Ref; \
-	ZMACRO_RETAIN_RELEASE(CF##a##Ref) \
-	ZMACRO_RETAIN_RELEASE(CFMutable##a##Ref)
+	ZMACRO_Retain_Release(CF##a##Ref) \
+	ZMACRO_Retain_Release(CFMutable##a##Ref)
 
 ZMACRO_CF(Array)
 ZMACRO_CF(Boolean)
@@ -73,7 +73,7 @@ ZMACRO_CF(String)
 // =================================================================================================
 #define ZMACRO_CG(a) \
 	typedef struct CG##a * CG##a##Ref; \
-	ZMACRO_RETAIN_RELEASE(CG##a##Ref)
+	ZMACRO_Retain_Release(CG##a##Ref)
 
 ZMACRO_CG(Color)
 ZMACRO_CG(ColorSpace)
@@ -84,31 +84,31 @@ ZMACRO_CG(Image)
 
 // =================================================================================================
 typedef struct OpaqueSecKeychainRef *SecKeychainRef;
-ZMACRO_RETAIN_RELEASE(SecKeychainRef)
+ZMACRO_Retain_Release(SecKeychainRef)
 
 typedef struct OpaqueSecKeychainItemRef *SecKeychainItemRef;
-ZMACRO_RETAIN_RELEASE(SecKeychainItemRef)
+ZMACRO_Retain_Release(SecKeychainItemRef)
 
 typedef struct OpaqueSecKeychainSearchRef *SecKeychainSearchRef;
-ZMACRO_RETAIN_RELEASE(SecKeychainSearchRef)
+ZMACRO_Retain_Release(SecKeychainSearchRef)
 
 typedef const struct __SCDynamicStore *	SCDynamicStoreRef;
-ZMACRO_RETAIN_RELEASE(SCDynamicStoreRef)
+ZMACRO_Retain_Release(SCDynamicStoreRef)
 
 // =================================================================================================
 typedef const struct __AXUIElement *AXUIElementRef;
-ZMACRO_RETAIN_RELEASE(AXUIElementRef)
+ZMACRO_Retain_Release(AXUIElementRef)
 
 // =================================================================================================
 typedef struct __CVBuffer *CVBufferRef;
-ZMACRO_RETAIN_RELEASE(CVBufferRef)
+ZMACRO_Retain_Release(CVBufferRef)
 
 // =================================================================================================
 typedef struct OpaquePasteboardRef* PasteboardRef;
-ZMACRO_RETAIN_RELEASE(PasteboardRef)
+ZMACRO_Retain_Release(PasteboardRef)
 
 // =================================================================================================
 typedef struct __CFUserNotification * CFUserNotificationRef;
-ZMACRO_RETAIN_RELEASE(CFUserNotificationRef)
+ZMACRO_Retain_Release(CFUserNotificationRef)
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

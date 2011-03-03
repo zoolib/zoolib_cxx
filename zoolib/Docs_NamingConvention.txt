@@ -35,7 +35,6 @@ optional by non-const pointer, just as with output parameters.
 
 - \c e - enumeration value. Enumerations tend to be class public, so we don't encode the scope
 itself, just that it is an enumeration value.
-scope in the name.
 
 - \c E - enumeration type
 

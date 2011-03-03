@@ -344,7 +344,7 @@ size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent)
 		else
 			{
 			ZRef<Event> newEventLeft;
-			const int costLeft = fLeft->pGrown(identityLeft, newEventLeft);
+			const size_t costLeft = fLeft->pGrown(identityLeft, newEventLeft);
 			
 			ZRef<Event> newEventRight;
 			size_t costRight = fRight->pGrown(identityRight, newEventRight);

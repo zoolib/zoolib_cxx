@@ -85,6 +85,8 @@ ZMap_Any sAsMap_Any(const ZAny& iDefault, const ZRef<CFDictionaryRef>& iCFDictio
 
 } // namespace ZUtil_CFType
 
+namespace ZUtil_CF = ZUtil_CFType;
+
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

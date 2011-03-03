@@ -46,7 +46,7 @@ ZStrimR_CFString::~ZStrimR_CFString()
 
 void ZStrimR_CFString::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
-	const CFIndex length = ::CFStringGetLength(fStringRef);
+	const size_t length = ::CFStringGetLength(fStringRef);
 	if (0 == length)
 		{
 		if (oCount)
@@ -82,7 +82,7 @@ void ZStrimR_CFString::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 void ZStrimR_CFString::Imp_ReadUTF16(UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
-	const CFIndex length = ::CFStringGetLength(fStringRef);
+	const size_t length = ::CFStringGetLength(fStringRef);
 	if (0 == length)
 		{
 		if (oCountCP)
@@ -122,7 +122,7 @@ void ZStrimR_CFString::Imp_ReadUTF16(UTF16* oDest,
 void ZStrimR_CFString::Imp_ReadUTF8(UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
-	const CFIndex length = ::CFStringGetLength(fStringRef);
+	const size_t length = ::CFStringGetLength(fStringRef);
 	if (0 == length)
 		{
 		if (oCountCP)
@@ -162,7 +162,7 @@ void ZStrimR_CFString::Imp_ReadUTF8(UTF8* oDest,
 bool ZStrimR_CFString::Imp_ReadCP(UTF32& oCP)
 	{
 	using namespace ZUnicode;
-	const CFIndex length = ::CFStringGetLength(fStringRef);
+	const size_t length = ::CFStringGetLength(fStringRef);
 	for (;;)
 		{
 		if (fPosition >= length)

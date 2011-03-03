@@ -599,10 +599,10 @@ public:
 	virtual void Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU);
 
 	virtual void Imp_CopyFromDispatch(const ZStrimR& iStrimR,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten);
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
 
 	virtual void Imp_CopyFrom(const ZStrimR& iStrimR,
-		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten);
+		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
 	};
 
 typedef ZStrimW_Null ZStrimW_Sink; // Old name.

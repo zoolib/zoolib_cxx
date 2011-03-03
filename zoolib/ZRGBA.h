@@ -87,7 +87,7 @@ public:
 		}
 
 private:
-	uint16 fVal;
+	float fVal;
 	};
 
 class ZRGBA_POD

@@ -671,6 +671,8 @@ bool sSkip(StrimU& r, vector<string>& ioTags)
 				{
 				return false;
 				}
+			default:
+				break;
 			}
 		r.Advance();
 		}

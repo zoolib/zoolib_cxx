@@ -1570,7 +1570,7 @@ string16 Functions_Convert_T<I>::sAsUTF16(I iSource, size_t iCountCU)
 	for (UTF32 theCP; sReadInc(iSource, theEnd, theCP); /*no inc*/)
 		{
 		uint32 realCP = theCP;
-		if (realCP <= ZUnicode::kCPMaxUCS2)
+		if (realCP <= uint32(ZUnicode::kCPMaxUCS2))
 			{
 			*iter++ = UTF16(realCP);
 			}

@@ -76,7 +76,7 @@ string ZStringf(const char* iString, std::va_list iArgs)
 			// Handle -ve result from glibc prior to version 2.1 by growing the string.
 			result.resize(result.size() * 2);
 			}
-		else if (count > result.size())
+		else if (size_t(count) > result.size())
 			{
 			// Handle C99 standard, where count indicates how much space would have been needed.
 			result.resize(count);
@@ -200,7 +200,7 @@ string ZString::sSubstitute(const string& iString, const string* iParams, size_t
 		char theFollowingChar = iString[nextPos + 1];
 		if (theFollowingChar >= '0' && theFollowingChar <= '9')
 			{
-			if (theFollowingChar - '0' < iParamsCount)
+			if (size_t(theFollowingChar - '0') < iParamsCount)
 				result += iParams[theFollowingChar - '0'];
 			}
 		else

@@ -168,7 +168,7 @@ ZRef<ZYadStreamR> sMakeYadR(NSMutableData* iData)
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSData>& iData)
 	{ return new ZYadStreamRPos_NS(iData); }
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSMutableArray>& iArray)
+ZRef<ZYadSeqRPos> sMakeYadR(NSMutableArray* iArray)
 	{ return new ZYadSeqRPos_NS(iArray); }
 
 ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSArray>& iArray)

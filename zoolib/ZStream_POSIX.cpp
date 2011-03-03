@@ -449,11 +449,13 @@ static int spWriteStreamerW(void* iCookie, const char* iSource, int iCount)
 	return countWritten;
 	}
 
+#if 0
 static int spCloseStreamerR(void* iCookie)
 	{
 	delete static_cast<ZRef<ZStreamerR>*>(iCookie);
 	return 0;
 	}
+#endif
 
 static int spCloseStreamerRPos(void* iCookie)
 	{

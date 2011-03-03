@@ -66,7 +66,7 @@ public:
 		{ return fPosition; }
 
 	virtual void Imp_SetPosition(uint64 iPosition)
-		{ fPosition = iPosition; }
+		{ fPosition = size_t(iPosition); }
 
 	virtual uint64 Imp_GetSize()
 		{ return fData.GetSize(); }
@@ -77,7 +77,7 @@ public:
 
 private:
 	T fData;
-	uint64 fPosition;
+	size_t fPosition;
 	};
 
 template <class T>
@@ -165,7 +165,7 @@ public:
 		{ return fPosition; }
 
 	virtual void Imp_SetPosition(uint64 iPosition)
-		{ fPosition = iPosition; }
+		{ fPosition = ZStream::sClampedSize(iPosition); }
 
 	virtual uint64 Imp_GetSize()
 		{ return fSizeLogical; }
@@ -173,7 +173,7 @@ public:
 // From ZStreamWPos via ZStreamRWPos
 	virtual void Imp_SetSize(uint64 iSize)
 		{
-		const size_t realSize = iSize;
+		const size_t realSize = size_t(iSize);
 		if (realSize != iSize)
 			sThrowBadSize();
 
@@ -197,7 +197,7 @@ public:
 private:
 	T& fData;
 	size_t fGrowIncrement;
-	uint64 fPosition;
+	size_t fPosition;
 	size_t fSizeLogical;
 	};
 

@@ -587,8 +587,8 @@ inline uint64 ZByteSwap_64(uint64 iValue)
 		uint32 fUInt32[2];
 		} u;
 
-	u.fUInt32[1] = ZByteSwap_32(iValue & 0xffffffff);
-	u.fUInt32[0] = ZByteSwap_32(iValue >> 32);
+	u.fUInt32[1] = ZByteSwap_32(uint32(iValue & 0xffffffff));
+	u.fUInt32[0] = ZByteSwap_32(uint32(iValue >> 32));
 	return u.fUInt64;
 	}
 

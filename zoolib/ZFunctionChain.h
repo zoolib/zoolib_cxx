@@ -93,22 +93,14 @@ protected:
 	virtual bool Invoke(Result& oResult, Param iParam)
 		{ return false; }
 
-	virtual bool Invoke(bool iIsPreferred, Result& oResult, Param iParam)
-		{
-		if (fIsPreferred == iIsPreferred)
-			return this->Invoke(oResult, iParam);
-		return false;
-		}
-
 private:
 	bool pInvoke(bool iIsPreferred, Result& oResult, Param iParam)
 		{
-		try
+		if (iIsPreferred == fIsPreferred)
 			{
-			return this->Invoke(iIsPreferred, oResult, iParam);
+			try { return this->Invoke(oResult, iParam); }
+			catch (...) {}
 			}
-		catch (...)
-			{}
 		return false;
 		}
 

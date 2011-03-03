@@ -5,12 +5,12 @@ This is not gospel. These are the ideas and approaches
 that work for me, and seem to work for code I respect.
 
 There's a couple of ways to write code. We can regard it as simply the input to a compiler
-or interpreter, and hence is written to take advantage of language features, to maximize
+or interpreter, and hence it's written to take advantage of language features, to maximize
 the efficiency of object code and to minimize keystrokes and working space requirements.
 <em>We do not do this</em>.
 
 Instead we expect each line to be read and modified by unknown other people many times. They'll be
-unfamiliar with the code and working under pressure with many other responsibilities . So we write
+unfamiliar with the code and working under pressure with many other responsibilities. So we write
 code to clearly express our intent, to lead the reader through the task at hand, to educate them
 about the problem space and our understanding of it. We might even strive to write code so that
 reading it is a pleasurable and invigorating experience.

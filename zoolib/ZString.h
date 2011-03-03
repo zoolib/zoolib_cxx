@@ -28,11 +28,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZQ.h"
 #include "zoolib/ZStdInt.h" // for uint64
 
-#ifndef ZMACRO_ATTRIBUTE_FORMAT_PRINTF
+#ifndef ZMACRO_Attribute_Format_printf
 	#if ZCONFIG(Compiler,GCC)
-		#define ZMACRO_ATTRIBUTE_FORMAT_PRINTF(m,n) __attribute__((format(printf,m,n)))
+		#define ZMACRO_Attribute_Format_printf(m,n) __attribute__((format(printf,m,n)))
 	#else
-		#define ZMACRO_ATTRIBUTE_FORMAT_PRINTF(m,n)
+		#define ZMACRO_Attribute_Format_printf(m,n)
 	#endif
 #endif
 
@@ -41,7 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 std::string ZStringf(const char* iString, ...)
-	ZMACRO_ATTRIBUTE_FORMAT_PRINTF(1,2);
+	ZMACRO_Attribute_Format_printf(1,2);
 
 std::string ZStringf(const char* iString, std::va_list iArgs);
 
@@ -50,7 +50,7 @@ namespace ZString {
 using std::string;
 
 string sFormat(const char* iString, ...)
-	ZMACRO_ATTRIBUTE_FORMAT_PRINTF(1,2);
+	ZMACRO_Attribute_Format_printf(1,2);
 
 string sFormat(const char* iString, std::va_list iArgs);
 

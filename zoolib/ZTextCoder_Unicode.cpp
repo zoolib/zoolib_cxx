@@ -754,6 +754,8 @@ bool ZTextDecoder_Unicode_AutoDetect::Decode(
 					oDest, iDestCU, oDestCU);
 				}
 			}
+		default:
+			break;
 		}
 	// Can't get here.
 	ZUnimplemented();
