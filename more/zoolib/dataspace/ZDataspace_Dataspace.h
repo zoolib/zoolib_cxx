@@ -131,6 +131,7 @@ public:
 	Sieve_Callable(ZRef<Callable> iCallable);
 
 // From Sieve
+	using Sieve::Changed;
 	virtual void Changed(bool iIsLoad);
 
 private:
