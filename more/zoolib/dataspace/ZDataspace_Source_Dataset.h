@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDataspace_Source_Dataset__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompare_Pair.h"
 #include "zoolib/ZCompare_Ref.h"
 #include "zoolib/ZUtil_Expr_Bool_CNF.h"
 #include "zoolib/ZVal_Any.h"

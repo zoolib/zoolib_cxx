@@ -418,6 +418,7 @@ void Source_Dataset::Insert(const Daton& iDaton)
 	ZAcqMtxR acq(fMtxR);
 	this->pModify(iDaton, sAsVal(iDaton), true);
 	this->pConditionalPushDown();
+	this->pInvokeCallable_ResultsAvailable();	
 	}
 
 void Source_Dataset::Erase(const Daton& iDaton)
@@ -425,6 +426,7 @@ void Source_Dataset::Erase(const Daton& iDaton)
 	ZAcqMtxR acq(fMtxR);
 	this->pModify(iDaton, sAsVal(iDaton), false);
 	this->pConditionalPushDown();
+	this->pInvokeCallable_ResultsAvailable();	
 	}
 
 void Source_Dataset::Replace(const ZDataset::Daton& iOld, const ZDataset::Daton& iNew)
@@ -433,6 +435,7 @@ void Source_Dataset::Replace(const ZDataset::Daton& iOld, const ZDataset::Daton&
 	this->pModify(iOld, sAsVal(iOld), false);
 	this->pModify(iNew, sAsVal(iNew), true);
 	this->pConditionalPushDown();
+	this->pInvokeCallable_ResultsAvailable();	
 	}
 
 size_t Source_Dataset::OpenTransaction()
@@ -461,6 +464,7 @@ void Source_Dataset::CloseTransaction(size_t iIndex)
 	this->pChangedAll();
 	fStack_Map_Pending.pop_back();
 	this->pConditionalPushDown();
+	this->pInvokeCallable_ResultsAvailable();	
 	}
 
 void Source_Dataset::pDetachPQuery(PQuery* iPQuery)
@@ -480,7 +484,7 @@ void Source_Dataset::pDetachPQuery(PQuery* iPQuery)
 void Source_Dataset::pPull()
 	{
 	// Get our map in sync with fDataset
-	ZLOGF(s, eDebug + 1);
+	ZLOGF(s, eDebug);
 	ZRef<Deltas> theDeltas;
 	fEvent = fDataset->GetDeltas(theDeltas, fEvent);
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
@@ -526,7 +530,11 @@ void Source_Dataset::pPull()
 				{
 				const bool alb = iterMap->second.first < theNamedEvent;
 				const bool bla = theNamedEvent < iterMap->second.first;
-				if (iterMap->second.first < theNamedEvent)
+
+				if (s)
+					s << iterMap->second.first.GetEvent() << (alb?"alb" :"") << (bla?"blb":"");
+
+				if (alb)
 					{
 					// theNamedEvent is more recent than what we've got and thus supersedes it.
 					if (s)
@@ -545,8 +553,6 @@ void Source_Dataset::pPull()
 					if (s)
 						s << " Old ";
 					}
-				if (s)
-					s << iterMap->second.first.GetEvent() << (alb?"alb" :"") << (bla?"blb":"");
 				}
 				
 
@@ -588,7 +594,6 @@ void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal
 		fMap_Pending.erase(i);
 		}
 	this->pChanged(iVal);
-	this->pInvokeCallable_ResultsAvailable();	
 	}
 
 void Source_Dataset::pChanged(const ZVal_Any& iVal)
