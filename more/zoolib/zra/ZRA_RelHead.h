@@ -46,16 +46,6 @@ Rename sInverted(const Rename& iRename);
 
 typedef ZSet_T<RelName> RelHead;
 
-bool sHasPrefix(const RelName& iPrefix, const RelName& iRelName);
-RelName sPrefixInserted(const RelName& iPrefix, const RelName& iRelName);
-RelName sPrefixErased(const RelName& iPrefix, const RelName& iRelName);
-RelName sRenamed(const Rename& iRename, const RelName& iRelName);
-
-bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead);
-RelHead sPrefixInserted(const RelName& iPrefix, const RelHead& iRelHead);
-RelHead sPrefixErased(const RelName& iPrefix, const RelHead& iRelHead);
-RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead);
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * RelHead operators
@@ -81,7 +71,21 @@ inline RelHead operator^(const char* iElem, const RelHead& iRelHead)
 inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
 	{ return iRelHead ^ RelHead::key_type(iElem); }
 
-} // namespace ZRA	
+// =================================================================================================
+#pragma mark -
+#pragma mark * Prefix
+
+bool sHasPrefix(const RelName& iPrefix, const RelName& iRelName);
+RelName sPrefixInserted(const RelName& iPrefix, const RelName& iRelName);
+RelName sPrefixErased(const RelName& iPrefix, const RelName& iRelName);
+RelName sRenamed(const Rename& iRename, const RelName& iRelName);
+
+bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead);
+RelHead sPrefixInserted(const RelName& iPrefix, const RelHead& iRelHead);
+RelHead sPrefixErased(const RelName& iPrefix, const RelHead& iRelHead);
+RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead);
+
+} // namespace ZRA
 } // namespace ZooLib
 
 #endif // __ZRA_RelHead__

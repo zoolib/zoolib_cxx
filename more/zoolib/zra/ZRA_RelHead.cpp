@@ -19,20 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare.h"
+
 #include "zoolib/zra/ZRA_RelHead.h"
 
 namespace ZooLib {
-
-template <>
-int sCompare_T(
-	const std::pair<std::string,std::string>& iL,
-	const std::pair<std::string,std::string>& iR)
-	{
-	if (int compare = sCompare_T(iL.first, iR.first))
-		return compare;
-
-	return sCompare_T(iL.second, iR.second);
-	}
 
 // =================================================================================================
 #pragma mark -
@@ -46,14 +36,7 @@ ZMACRO_CompareRegistration_T(ZRA::RelHead)
 
 template <>
 int sCompare_T(const ZRA::Rename& iL, const ZRA::Rename& iR)
-	{
-	if (iL < iR)
-		return -1;
-	else if (iR < iL)
-		return 1;
-	return 0;
-//	return sCompareIterators_T(iL.begin(), iL.end(),  iR.begin(), iR.end());
-	}
+	{ return sCompareIterators_T(iL.begin(), iL.end(),  iR.begin(), iR.end()); }
 
 ZMACRO_CompareRegistration_T(ZRA::Rename)
 
@@ -76,7 +59,7 @@ Rename sInverted(const Rename& iRename)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * RelHead
+#pragma mark * Prefix
 
 bool sHasPrefix(const RelName& iPrefix, const RelName& iRelName)
 	{ return iRelName.substr(0, iPrefix.size()) == iPrefix; }
