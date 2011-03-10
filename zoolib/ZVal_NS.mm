@@ -438,7 +438,7 @@ ZSeq_NS::ZSeq_NS(NSArray* iOther)
 	{}
 
 ZSeq_NS::ZSeq_NS(const Adopt_T<NSMutableArray>& iOther)
-:	inherited(ZRef<NSMutableArray>(iOther))
+:	inherited(iOther.Get())
 ,	fMutable(true)
 	{}
 
