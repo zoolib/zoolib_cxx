@@ -172,15 +172,15 @@ public:
 		{ return this->Get(iName).Get<S>(); }
 
 // Shortcut access to values in an enclosed Seq.
-	ZVal_Any* PGet(size_t iIndex);
+	ZVal_Any* PGetMutable(size_t iIndex);
 	const ZVal_Any* PGet(size_t iIndex) const;
 	ZVal_Any Get(size_t iIndex) const;
 
 	template <class S>
-	S* PGet(size_t iIndex)
+	S* PGetMutable(size_t iIndex)
 		{
-		if (ZVal_Any* theVal = this->PGet(iIndex))
-			return theVal->PGet<S>();
+		if (ZVal_Any* theVal = this->PGetMutable(iIndex))
+			return theVal->PGetMutable<S>();
 		return nullptr;
 		}
 
@@ -256,10 +256,10 @@ public:
 	const ZVal_Any& Get(size_t iIndex) const;
 
 	template <class S>
-	S* PGet(size_t iIndex)
+	S* PGetMutable(size_t iIndex)
 		{
-		if (ZVal_Any* theVal = this->PGet(iIndex))
-			return theVal->PGet<S>();
+		if (ZVal_Any* theVal = this->PGetMutable(iIndex))
+			return theVal->PGetMutable<S>();
 		return nullptr;
 		}
 
@@ -414,10 +414,10 @@ public:
 		}
 
 	template <class S>
-	S* PGet(const Index_t& iIndex)
+	S* PGetMutable(const Index_t& iIndex)
 		{
-		if (ZVal_Any* theVal = this->PGet(iIndex))
-			return theVal->PGet<S>();
+		if (ZVal_Any* theVal = this->PGetMutable(iIndex))
+			return theVal->PGetMutable<S>();
 		return nullptr;
 		}
 

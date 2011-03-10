@@ -95,7 +95,7 @@ const ZVal_Any* ZVal_Any::PGet(const string8& iName) const
 ZVal_Any ZVal_Any::Get(const string8& iName) const
 	{ return this->GetMap().Get(iName); }
 
-ZVal_Any* ZVal_Any::PGet(size_t iIndex)
+ZVal_Any* ZVal_Any::PGetMutable(size_t iIndex)
 	{
 	if (ZSeq_Any* asSeq = this->PGetMutable<ZSeq_Any>())
 		return asSeq->PGetMutable(iIndex);
