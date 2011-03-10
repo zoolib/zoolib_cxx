@@ -39,16 +39,14 @@ class ZRef
 private:
 	static void spRetain(T* iP)
 		{
-		extern void sRetain(T&);
 		if (iP)
-			sRetain(*iP);
+			sRetain((T&)*iP);
 		}
 
 	static void spRelease(T* iP)
 		{
-		extern void sRelease(T&);
 		if (iP)
-			sRelease(*iP);
+			sRelease((T&)*iP);
 		}
 
 public:
@@ -155,7 +153,6 @@ public:
 
 	T* operator->() const
 		{
-		extern void sCheck(T*);
 		sCheck(fP);
 		return fP;
 		}
@@ -284,13 +281,13 @@ public:
 		return *this;
 		}
 
-	template <class O>
-	ZRef(const ZRef<O*>& iOther)
+	template <class O, bool OtherSense>
+	ZRef(const ZRef<O*,OtherSense>& iOther)
 	:	fP(iOther.Get())
 		{ spRetain(fP); }
 
-	template <class O>
-	ZRef& operator=(const ZRef<O*>& iOther)
+	template <class O, bool OtherSense>
+	ZRef& operator=(const ZRef<O*,OtherSense>& iOther)
 		{
 		T* otherP = iOther.Get();
 		std::swap(otherP, fP);
@@ -321,16 +318,16 @@ public:
 	bool operator!=(O* iP) const
 		{ return fP != iP; }
 
-	template <class O>
-	bool operator==(const ZRef<O*>& iOther) const
+	template <class O, bool OtherSense>
+	bool operator==(const ZRef<O*,OtherSense>& iOther) const
 		{ return fP == iOther.Get(); }
 
-	template <class O>
-	bool operator!=(const ZRef<O*>& iOther) const
+	template <class O, bool OtherSense>
+	bool operator!=(const ZRef<O*,OtherSense>& iOther) const
 		{ return fP != iOther.Get(); }
 
-	template <class O>
-	bool operator<(const ZRef<O*>& iOther) const
+	template <class O, bool OtherSense>
+	bool operator<(const ZRef<O*,OtherSense>& iOther) const
 		{ return fP < iOther.Get(); }
 
 //	operator T*()
@@ -383,24 +380,24 @@ private:
 const struct MakeRef_t
 	{
 	template <class T>
-	ZRef<T> operator()(T* iP) const { return ZRef<T>(iP); }
+	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(iP); }
 	} MakeRef = {};
 
 const struct TempRef_t
 	{
 	template <class T>
-	ZRef<T> operator&(T* iP) const { return ZRef<T>(Adopt_T<T>(iP)); }
+	ZRef<T,true> operator&(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
 	
 	template <class T>
-	ZRef<T> operator()(T* iP) const { return ZRef<T>(Adopt_T<T>(iP)); }
+	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
 	} TempRef = {};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark *
 
-template <class T>
-void swap(ZRef<T>& a, ZRef<T>& b)
+template <class T, bool SenseA, bool SenseB>
+void swap(ZRef<T,SenseA>& a, ZRef<T,SenseB>& b)
 	{ a.swap(b); }
 
 } // namespace ZooLib
