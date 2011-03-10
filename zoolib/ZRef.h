@@ -39,12 +39,14 @@ class ZRef
 private:
 	static void spRetain(T* iP)
 		{
+		extern void sRetain(T&);
 		if (iP)
 			sRetain(*iP);
 		}
 
 	static void spRelease(T* iP)
 		{
+		extern void sRelease(T&);
 		if (iP)
 			sRelease(*iP);
 		}
@@ -153,6 +155,7 @@ public:
 
 	T* operator->() const
 		{
+		extern void sCheck(T*);
 		sCheck(fP);
 		return fP;
 		}
@@ -330,8 +333,8 @@ public:
 	bool operator<(const ZRef<O*>& iOther) const
 		{ return fP < iOther.Get(); }
 
-	operator T*()
-		{ return fP; }
+//	operator T*()
+//		{ return fP; }
 
 	operator T*() const
 		{ return fP; }
