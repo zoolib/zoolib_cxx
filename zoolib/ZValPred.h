@@ -132,7 +132,7 @@ bool operator<(const ZValPred& iL, const ZValPred& iR);
 #pragma mark * ZValComparandPseudo
 
 // This subclass of ZRef<ZValComparand> is returned by the C-prefixed pseudo constructor
-// functions so we can use overloaded operators to construct a ZValPred.
+// functions so we can more easily use overloaded operators to construct a ZValPred.
 
 class ZValComparandPseudo
 :	public ZRef<ZValComparand>
