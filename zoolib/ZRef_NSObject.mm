@@ -32,10 +32,10 @@ namespace ZooLib {
 #pragma mark * id and NSObject, sRetain and sRelease
 
 void sRetain(struct objc_object& iOb)
-	{ [&iOb retain]; }
+	{ [((id)&iOb) retain]; }
 
 void sRelease(struct objc_object& iOb)
-	{ [&iOb release]; }
+	{ [((id)&iOb) release]; }
 
 void sCheck(struct objc_object* iP)
 	{ ZAssertStop(1, iP); }
