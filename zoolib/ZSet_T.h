@@ -161,7 +161,7 @@ ZSet_T<T,Comparator> ZSet_T<T,Comparator>::operator&(const T& iElem) const
 	if (ZUtil_STL::sContains(*this, iElem))
 		return ZSet_T<T,Comparator>(iElem);
 	else
-		ZSet_T<T,Comparator>();
+		return ZSet_T<T,Comparator>();
 	}
 
 template <class T, class Comparator>
