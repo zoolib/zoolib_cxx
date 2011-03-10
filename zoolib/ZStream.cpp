@@ -1030,7 +1030,7 @@ size_t ZStreamW::Writef(const char* iString, ...) const
 			// Handle -ve result from glibc prior to version 2.1 by growing the string.
 			buffer.resize(buffer.size() * 2);
 			}
-		else if (count > buffer.size())
+		else if (size_t(count) > buffer.size())
 			{
 			// Handle C99 standard, where count indicates how much space would have been needed.
 			buffer.resize(count);
