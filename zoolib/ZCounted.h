@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAtomic.h"
 #include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZRef.h"
 #include "zoolib/ZThread.h"
 
 namespace ZooLib {

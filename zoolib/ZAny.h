@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
-
-// We need ZQ<> itself, and conveniently ZQ.h (transitively) provides most of our dependencies.
 #include "zoolib/ZQ.h" 
+#include "zoolib/ZRef.h"
+#include "zoolib/ZTypes.h"
 
 #include <typeinfo> // for std::type_info
 
