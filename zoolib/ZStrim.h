@@ -542,7 +542,6 @@ public:
 
 	const Self_t& Writev(const UTF8* iString, va_list iArgs) const
 		{
-		size_t count;
 		size_t countCU, countWritten;
 		this->pWritev(&countCU, &countWritten, iString, iArgs);
 		if (countWritten != countCU)
@@ -553,7 +552,6 @@ public:
 	const Self_t& Writev(size_t* oCountCU, size_t* oWritten,
 		const UTF8* iString, va_list iArgs) const
 		{
-		size_t count;
 		this->pWritev(oCountCU, oWritten, iString, iArgs);
 		return static_cast<const Self_t&>(*this);
 		}
