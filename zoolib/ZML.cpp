@@ -1091,7 +1091,7 @@ const StrimW& StrimW::Attr(const string8& iName, const string8& iValue) const
 						if (theCP < 0x20)
 							{
 							char smallEntity[7];
-							sprintf(smallEntity, "&#x%02X;", theCP);
+							sprintf(smallEntity, "&#x%02X;", (unsigned int)theCP);
 							newValue->append(smallEntity);
 							}
 						else
