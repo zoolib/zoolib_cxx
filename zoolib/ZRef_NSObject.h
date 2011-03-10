@@ -22,12 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(Cocoa)
+#if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
 #include "zoolib/ZCompat_NSObject.h"
 #include "zoolib/ZRef.h"
 
-namespace ZooLib {
+//namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -35,13 +35,14 @@ namespace ZooLib {
 
 void sRetain(struct objc_object& iOb);
 void sRelease(struct objc_object& iOb);
-void sCheck(struct objc_object* iP);
+
+void sCheck(id);
 
 void sRetain(NSObject& iNSObject);
 void sRelease(NSObject& iNSObject);
 
-} // namespace ZooLib
+//} // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(Cocoa)
+#endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
 #endif // __ZRef_NSObject__

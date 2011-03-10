@@ -21,11 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRef_NSObject.h"
 #include "zoolib/ZDebug.h"
 
-#if ZCONFIG_SPI_Enabled(Cocoa)
+#if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
 #import <Foundation/NSObject.h>
 
-namespace ZooLib {
+//namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -37,7 +37,7 @@ void sRetain(struct objc_object& iOb)
 void sRelease(struct objc_object& iOb)
 	{ [((id)&iOb) release]; }
 
-void sCheck(struct objc_object* iP)
+void sCheck(id iP)
 	{ ZAssertStop(1, iP); }
 
 void sRetain(NSObject& iNSObject)
@@ -46,6 +46,6 @@ void sRetain(NSObject& iNSObject)
 void sRelease(NSObject& iNSObject)
 	{ [&iNSObject release]; }
 
-} // namespace ZooLib
+//} // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(Cocoa)
+#endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
