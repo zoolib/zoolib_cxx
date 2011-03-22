@@ -83,8 +83,6 @@ using std::string;
 
 namespace ZooLib {
 
-//using std::map;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDelegate
@@ -106,15 +104,11 @@ ZDelegate::operator id()
 
 BOOL ZDelegate::pRespondsToSelector(SEL aSelector)
 	{ return ZUtil_STL::sContains(fWrappers, aSelector); }
-//	{ return fWrappers.end() != fWrappers.find(aSelector); }
 
 void ZDelegate::pForwardInvocation(NSInvocation* anInvocation)
 	{
 	if (ZQ<ZRef<Wrapper> > theQ = ZUtil_STL::sGetIfContains(fWrappers, [anInvocation selector]))
 		theQ.Get()->ForwardInvocation(anInvocation);
-//	map<SEL, ZRef<Wrapper> >::iterator i = fWrappers.find([anInvocation selector]);
-//	if (fWrappers.end() != i)
-//		i->second->ForwardInvocation(anInvocation);
 	}
 
 NSMethodSignature* ZDelegate::pMethodSignatureForSelector(SEL aSelector)
@@ -122,10 +116,6 @@ NSMethodSignature* ZDelegate::pMethodSignatureForSelector(SEL aSelector)
 	if (ZQ<ZRef<Wrapper> > theQ = ZUtil_STL::sGetIfContains(fWrappers, aSelector))
 		return theQ.Get()->fNSMethodSignature;
 	return nil;
-//	map<SEL, ZRef<Wrapper> >::iterator i = fWrappers.find(aSelector);
-//	if (fWrappers.end() != i)
-//		return i->second->fNSMethodSignature;
-//	return nil;
 	}
 
 // =================================================================================================
