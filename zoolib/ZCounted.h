@@ -192,6 +192,10 @@ private:
 	ZRef<ZCountedBase::WeakRefProxy> fWeakRefProxy;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * MakeWeakRef
+
 template <class T>
 ZWeakRef<T> MakeWeakRef(T* iP)
 	{
