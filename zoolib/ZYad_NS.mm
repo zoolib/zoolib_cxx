@@ -49,9 +49,9 @@ ZAny ZYadAtomR_NS::AsAny()
 #pragma mark -
 #pragma mark * ZYadStreamRPos_NS
 
-ZYadStreamRPos_NS::ZYadStreamRPos_NS(NSData* iDataRef)
-:	ZYadR_NS(iDataRef)
-,	ZStreamerRPos_NS(ZRef<NSData>(iDataRef))
+ZYadStreamRPos_NS::ZYadStreamRPos_NS(NSData* iData)
+:	ZYadR_NS(iData)
+,	ZStreamerRPos_NS(iData)
 	{}
 
 ZYadStreamRPos_NS::~ZYadStreamRPos_NS()
@@ -64,7 +64,7 @@ bool ZYadStreamRPos_NS::IsSimple(const ZYadOptions& iOptions)
 #pragma mark -
 #pragma mark * ZYadStrimR_NS
 
-ZYadStrimR_NS::ZYadStrimR_NS(ZRef<NSString> iString)
+ZYadStrimR_NS::ZYadStrimR_NS(NSString* iString)
 :	ZYadR_NS(iString)
 ,	ZStrimmerR_NSString(iString)
 	{}
@@ -133,7 +133,7 @@ void ZYadMapRPos_NS::SetPosition(const std::string& iName)
 #pragma mark -
 #pragma mark * sMakeYadR
 
-ZRef<ZYadR> sMakeYadR(const ZRef<NSObject>& iVal)
+ZRef<ZYadR> sMakeYadR(NSObject* iVal)
 	{
 	const ZVal_NS theVal = iVal;
 
@@ -159,25 +159,25 @@ ZRef<ZYadR> sMakeYadR(const ZRef<NSObject>& iVal)
 ZRef<ZYadStrimR> sMakeYadR(NSMutableString* iString)
 	{ return new ZYadStrimR_NS(iString); }
 
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<NSString>& iString)
+ZRef<ZYadStrimR> sMakeYadR(NSString* iString)
 	{ return new ZYadStrimR_NS(iString); }
 
 ZRef<ZYadStreamR> sMakeYadR(NSMutableData* iData)
 	{ return new ZYadStreamRPos_NS(iData); }
 
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSData>& iData)
+ZRef<ZYadStreamR> sMakeYadR(NSData* iData)
 	{ return new ZYadStreamRPos_NS(iData); }
 
 ZRef<ZYadSeqRPos> sMakeYadR(NSMutableArray* iArray)
 	{ return new ZYadSeqRPos_NS(iArray); }
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSArray>& iArray)
+ZRef<ZYadSeqRPos> sMakeYadR(NSArray* iArray)
 	{ return new ZYadSeqRPos_NS(iArray); }
 
 ZRef<ZYadMapRPos> sMakeYadR(NSMutableDictionary* iDictionary)
 	{ return new ZYadMapRPos_NS(iDictionary); }
 
-ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSDictionary>& iDictionary)
+ZRef<ZYadMapRPos> sMakeYadR(NSDictionary* iDictionary)
 	{ return new ZYadMapRPos_NS(iDictionary); }
 
 // =================================================================================================

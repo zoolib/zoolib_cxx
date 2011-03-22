@@ -132,7 +132,11 @@ public:
 
 	template <class S>
 	S Get() const
-		{ return this->DGet(S()); }
+		{
+		if (ZQ<S> theQ = this->QGet<S>())
+			return theQ.Get();
+		return S();
+		}
 
 	template <class S>
 	void Set(const S& iVal);

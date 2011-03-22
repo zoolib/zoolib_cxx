@@ -87,7 +87,7 @@ class ZYadStrimR_NS
 ,	public ZStrimmerR_NSString
 	{
 public:
-	ZYadStrimR_NS(ZRef<NSString> iStringRef);
+	ZYadStrimR_NS(NSString* iString);
 	};
 
 // =================================================================================================
@@ -138,19 +138,19 @@ private:
 #pragma mark -
 #pragma mark * sMakeYadR
 
-ZRef<ZYadR> sMakeYadR(const ZRef<NSObject>& iVal);
+ZRef<ZYadR> sMakeYadR(NSObject* iVal);
 
 ZRef<ZYadStrimR> sMakeYadR(NSMutableString* iString);
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<NSString>& iString);
+ZRef<ZYadStrimR> sMakeYadR(NSString* iString);
 
 ZRef<ZYadStreamR> sMakeYadR(NSMutableData* iData);
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSData>& iData);
+ZRef<ZYadStreamR> sMakeYadR(NSData* iData);
 
 ZRef<ZYadSeqRPos> sMakeYadR(NSMutableArray* iArray);
-ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSArray>& iArray);
+ZRef<ZYadSeqRPos> sMakeYadR(NSArray* iArray);
 
 ZRef<ZYadMapRPos> sMakeYadR(NSMutableDictionary* iDictionary);
-ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSDictionary>& iDictionary);
+ZRef<ZYadMapRPos> sMakeYadR(NSDictionary* iDictionary);
 
 // =================================================================================================
 #pragma mark -

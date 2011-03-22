@@ -312,7 +312,7 @@ ZQ<ZVal_NS::NSStringPtr> ZVal_NS::QGet<ZVal_NS::NSStringPtr>() const
 template <>
 ZQ<ZData_NS> ZVal_NS::QGet<ZData_NS>() const
 	{
-	if (ZRef<NSData> asData = spAs_T<NSData>(inherited::Get()))
+	if (NSData* asData = spAs_T<NSData>(inherited::Get()))
 		return asData;
 	return null;
 	}
@@ -463,7 +463,7 @@ ZSeq_NS& ZSeq_NS::operator=(NSArray* iOther)
 
 ZSeq_NS& ZSeq_NS::operator=(const Adopt_T<NSMutableArray>& iOther)
 	{
-	inherited::operator=(ZRef<NSMutableArray>(iOther));
+	inherited::operator=(iOther.Get());
 	fMutable = true;
 	return *this;
 	}
@@ -614,7 +614,7 @@ ZMap_NS::ZMap_NS(const Adopt_T<NSDictionary>& iOther)
 	{}
 
 ZMap_NS::ZMap_NS(const Adopt_T<NSMutableDictionary>& iOther)
-:	inherited(ZRef<NSMutableDictionary>(iOther))
+:	inherited(iOther.Get())
 ,	fMutable(true)
 	{}
 
@@ -634,7 +634,7 @@ ZMap_NS& ZMap_NS::operator=(NSDictionary* iOther)
 
 ZMap_NS& ZMap_NS::operator=(const Adopt_T<NSMutableDictionary>& iOther)
 	{
-	inherited::operator=(ZRef<NSMutableDictionary>(iOther));
+	inherited::operator=(iOther.Get());
 	fMutable = true;
 	return *this;
 	}
