@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompare_Ref.h"
-#include "zoolib/ZUtil_Expr_Bool_CNF.h"
 #include "zoolib/ZVal_Any.h"
 
 #include "zoolib/dataset/ZDataset.h"
@@ -37,8 +36,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 namespace ZDataspace {
-
-using Util_Expr_Bool::Disjunction;
 
 ZVal_Any sAsVal(const ZDataset::Daton& iDaton);
 ZDataset::Daton sAsDaton(const ZVal_Any& iVal);
@@ -95,9 +92,6 @@ public:
 	void CloseTransaction(size_t iIndex);
 
 private:
-	ZRef<ZQE::Result> pSearch(const Disjunction& iDisjunction, const RelHead& iRelHead);
-
-
 	ZMtxR fMtxR;
 	size_t fWalkerCount;
 	size_t fReadCount;
