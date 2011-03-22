@@ -30,6 +30,9 @@ ZWorker_Callable::ZWorker_Callable(const ZRef<Callable_t>& iCallable)
 :	fCallable(iCallable)
 	{}
 
+ZWorker_Callable::~ZWorker_Callable()
+	{}
+
 bool ZWorker_Callable::Work()
 	{
 	if (ZRef<Callable_t> theCallable = fCallable)
@@ -46,6 +49,9 @@ ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable::Callable_t> iCallable)
 
 ZWorker_Callable_Once::ZWorker_Callable_Once(const ZRef<Callable_t>& iCallable)
 :	fCallable(iCallable)
+	{}
+
+ZWorker_Callable_Once::~ZWorker_Callable_Once()
 	{}
 
 bool ZWorker_Callable_Once::Work()

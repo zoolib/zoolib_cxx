@@ -38,6 +38,7 @@ public:
 	typedef ZCallable<bool(ZRef_ZWorker)> Callable_t;
 
 	ZWorker_Callable(const ZRef<Callable_t>& iCallable);
+	virtual ~ZWorker_Callable();
 
 // From ZWorker
 	virtual bool Work();
@@ -59,6 +60,7 @@ public:
 	typedef ZCallable<void(void)> Callable_t;
 
 	ZWorker_Callable_Once(const ZRef<Callable_t>& iCallable);
+	virtual ~ZWorker_Callable_Once();
 
 // From ZWorker
 	virtual void RunnerDetached();
