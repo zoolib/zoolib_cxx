@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Strim.h"
+#include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 

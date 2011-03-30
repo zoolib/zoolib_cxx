@@ -22,9 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZLog__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
-
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZUtil_Strim_Operators.h"
 
 #if ZCONFIG(Compiler, GCC)
 #	define ZMACRO_PRETTY_FUNCTION __PRETTY_FUNCTION__

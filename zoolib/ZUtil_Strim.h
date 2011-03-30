@@ -27,12 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdexcept>
 
 namespace ZooLib {
+namespace ZUtil_Strim {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Strim
-
-namespace ZUtil_Strim {
 
 class ParseException : public std::runtime_error
 	{
@@ -109,7 +108,6 @@ void sWriteExact(const ZStrimW& iStrimW, float iFloat);
 void sWriteExact(const ZStrimW& iStrimW, double iDouble);
 
 } // namespace ZUtil_Strim
-
 } // namespace ZooLib
 
 #endif // __ZUtil_Strim__
