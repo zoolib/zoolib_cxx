@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 void sRetain(struct objc_object& iOb);
 void sRelease(struct objc_object& iOb);
 
-void sCheck(id);
+void sCheck(struct objc_object*);
 
 void sRetain(NSObject& iNSObject);
 void sRelease(NSObject& iNSObject);
