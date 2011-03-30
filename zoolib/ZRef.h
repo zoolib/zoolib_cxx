@@ -40,13 +40,13 @@ private:
 	static void spRetain(T* iP)
 		{
 		if (iP)
-			sRetain((T&)*iP);
+			sRetain(*iP);
 		}
 
 	static void spRelease(T* iP)
 		{
 		if (iP)
-			sRelease((T&)*iP);
+			sRelease(*iP);
 		}
 
 public:
@@ -63,7 +63,8 @@ public:
 
 	#endif
 
-	void swap(ZRef& ioOther)
+	template <class O, bool OtherSense>
+	void swap(ZRef<O, OtherSense>& ioOther)
 		{ std::swap(fP, ioOther.fP); }
 
 	ZRef()
@@ -242,7 +243,8 @@ private:
 		}
 
 public:
-	void swap(ZRef& ioOther)
+	template <class O, bool OtherSense>
+	void swap(ZRef<O, OtherSense>& ioOther)
 		{ std::swap(fP, ioOther.fP); }
 
 	ZRef()
@@ -329,9 +331,6 @@ public:
 	template <class O, bool OtherSense>
 	bool operator<(const ZRef<O*,OtherSense>& iOther) const
 		{ return fP < iOther.Get(); }
-
-//	operator T*()
-//		{ return fP; }
 
 	operator T*() const
 		{ return fP; }
