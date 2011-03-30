@@ -333,44 +333,6 @@ protected:
 	void pWritev(size_t* oCountCU, size_t* oWritten, const UTF8* iString, va_list iArgs) const;
 	};
 
-const ZStrimW& operator<<(const ZStrimW& s, const string32& iString);
-const ZStrimW& operator<<(const ZStrimW& s, const UTF32* iString);
-const ZStrimW& operator<<(const ZStrimW& s, UTF32* iString);
-const ZStrimW& operator<<(const ZStrimW& s, const string16& iString);
-const ZStrimW& operator<<(const ZStrimW& s, const UTF16* iString);
-const ZStrimW& operator<<(const ZStrimW& s, UTF16* iString);
-const ZStrimW& operator<<(const ZStrimW& s, const string8& iString);
-const ZStrimW& operator<<(const ZStrimW& s, const UTF8* iString);
-const ZStrimW& operator<<(const ZStrimW& s, UTF8* iString);
-
-const ZStrimW& operator<<(const ZStrimW& s, const ZStrimR& r);
-
-const ZStrimW& operator<<(const ZStrimW& s, bool iVal);
-const ZStrimW& operator<<(const ZStrimW& s, char iVal);
-const ZStrimW& operator<<(const ZStrimW& s, unsigned char iVal);
-const ZStrimW& operator<<(const ZStrimW& s, signed char iVal);
-const ZStrimW& operator<<(const ZStrimW& s, wchar_t iVal);
-const ZStrimW& operator<<(const ZStrimW& s, short iVal);
-const ZStrimW& operator<<(const ZStrimW& s, unsigned short iVal);
-const ZStrimW& operator<<(const ZStrimW& s, int iVal);
-const ZStrimW& operator<<(const ZStrimW& s, unsigned int iVal);
-const ZStrimW& operator<<(const ZStrimW& s, long iVal);
-const ZStrimW& operator<<(const ZStrimW& s, unsigned long iVal);
-const ZStrimW& operator<<(const ZStrimW& s, int64 iVal);
-const ZStrimW& operator<<(const ZStrimW& s, uint64 iVal);
-const ZStrimW& operator<<(const ZStrimW& s, float iVal);
-const ZStrimW& operator<<(const ZStrimW& s, double iVal);
-const ZStrimW& operator<<(const ZStrimW& s, const void* iVal);
-const ZStrimW& operator<<(const ZStrimW& s, void* iVal);
-
-template <class P>
-const ZStrimW& operator<<(const ZStrimW& s, const P* iVal)
-	{ return s << static_cast<const void*>(iVal); }
-
-template <class P>
-const ZStrimW& operator<<(const ZStrimW& s, P* iVal)
-	{ return s << static_cast<void*>(iVal); }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStrimW::ExEndOfStrim
