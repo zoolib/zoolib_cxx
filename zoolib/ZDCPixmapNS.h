@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZGeomPOD.h"
 #include "zoolib/ZRGBA.h"
+#include "zoolib/ZRef.h"
 
 // For documentation, see ZDCPixmapNS.cpp
 
