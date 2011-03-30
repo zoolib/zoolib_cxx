@@ -188,7 +188,7 @@ public:
 		return fData;
 		}
 
-	T& GetData()
+	T& GetDataMutable()
 		{
 		fData.SetSize(fSizeLogical);
 		return fData;
