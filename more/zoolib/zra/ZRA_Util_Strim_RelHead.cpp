@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
+#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
 namespace ZooLib {
 namespace ZRA {

@@ -39,15 +39,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Util_RelOperators.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
-#include <set>
-
 namespace ZooLib {
 namespace ZRA {
 
 using std::map;
-using std::set;
-using std::string;
-
 
 // =================================================================================================
 #pragma mark -
@@ -186,8 +181,8 @@ void Analyzer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	for (RelHead::iterator i = theAnalysis.fRelHead_Physical.begin();
 		i != theAnalysis.fRelHead_Physical.end(); ++i)
 		{
-		const string theString1 = *i;
-		const string theString2 =
+		const string8 theString1 = *i;
+		const string8 theString2 =
 			ZUtil_STL::sGetMustContain(1, theAnalysis.fRename_Inverse, theString1);
 		if (ZUtil_STL::sContains(theRH, theString2))
 			newRelHead.insert(theString1);

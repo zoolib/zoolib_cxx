@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZValPred_GetNames.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
+#include "zoolib/ZUtil_Strim_Operators.h"
 
 #include "zoolib/dataspace/ZDataspace_Source_Union.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
@@ -424,13 +425,15 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>
 			{
 			// With the addition of our right branch we *now* reference multiple sources.
 			// We register a proxy for the left branch.
-			ZRef<ZRA::Expr_Rel> proxy0 = fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
+			ZRef<ZRA::Expr_Rel> proxy0 =
+				fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
 
 			if (rightPSources.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet. Will
 				// only happen if there's no restrict on the right branch.
-				ZRef<ZRA::Expr_Rel> proxy1 = fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+				ZRef<ZRA::Expr_Rel> proxy1 =
+					fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
 			else
@@ -445,7 +448,8 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>
 		if (rightPSources.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
-			ZRef<ZRA::Expr_Rel> proxy1 = fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+			ZRef<ZRA::Expr_Rel> proxy1 =
+				fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
 		else
@@ -492,12 +496,14 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 			{
 			// This is the interesting scenario. With the addition of our right branch
 			// we *now* reference multiple sources. We register a proxy for the left branch.
-			ZRef<ZRA::Expr_Rel> proxy0 = fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
+			ZRef<ZRA::Expr_Rel> proxy0 =
+				fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
 
 			if (rightPSources.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet.
-				ZRef<ZRA::Expr_Rel> proxy1 = fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+				ZRef<ZRA::Expr_Rel> proxy1 =
+					fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
 			else
@@ -512,7 +518,8 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 		if (rightPSources.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
-			ZRef<ZRA::Expr_Rel> proxy1 = fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+			ZRef<ZRA::Expr_Rel> proxy1 =
+				fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
 		else
@@ -558,7 +565,8 @@ void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Res
 			{
 			// We're complex with the addition of our prior sources.
 			// Create a proxy for the child.
-			ZRef<ZRA::Expr_Rel> proxy0 = fSource_Union->pGetProxy(fPQuery, fPSources, fResultRelHead, newOp0);
+			ZRef<ZRA::Expr_Rel> proxy0 =
+				fSource_Union->pGetProxy(fPQuery, fPSources, fResultRelHead, newOp0);
 			this->pSetResult(iExpr->Clone(proxy0));
 			}
 		else

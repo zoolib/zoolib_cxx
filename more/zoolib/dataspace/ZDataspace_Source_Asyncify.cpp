@@ -76,7 +76,7 @@ void Source_Asyncify::ModifyRegistrations(
 		if (ZUtil_STL::sEraseIfContains(fPendingResults, theRefcon))
 			{
 			// Not sure if this is actually an issue.
-			ZDebugLog(0);
+			ZLOGTRACE(eDebug);
 			}
 		}
 
@@ -105,8 +105,7 @@ void Source_Asyncify::pTrigger_Update()
 		return;
 
 	fTriggered_Update = true;
-	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(MakeRef(this), &Source_Asyncify::pUpdate));
-	sStartWorkerRunner(theWorker);
+	sStartWorkerRunner(MakeWorker(MakeCallable(MakeRef(this), &Source_Asyncify::pUpdate)));
 	}
 
 void Source_Asyncify::pUpdate()
@@ -128,17 +127,15 @@ void Source_Asyncify::pUpdate()
 		theRemoves.reserve(fPendingRemoves.size());
 		theRemoves.insert(theRemoves.end(), fPendingRemoves.begin(), fPendingRemoves.end());
 		fPendingRemoves.clear();
-
-		guard.Release();
 		
 		if (theAdds.size() || theRemoves.size())
 			{
+			guard.Release();
 			didAnything = true;
 			fSource->ModifyRegistrations(ZUtil_STL::sFirstOrNil(theAdds), theAdds.size(),
 				ZUtil_STL::sFirstOrNil(theRemoves), theRemoves.size());
+			guard.Acquire();
 			}
-
-		guard.Acquire();
 
 		if (fNeeds_SourceCollectResults)
 			{

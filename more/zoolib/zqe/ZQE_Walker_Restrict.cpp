@@ -82,7 +82,7 @@ bool Walker_Restrict::ReadInc(
 			theMap.Set(theName, theVal);
 			}
 		
-		if (ZLOGF(s, eDebug+2))
+		if (ZLOGPF(s, eDebug+2))
 			{
 			s << this << " ";
 			ZYad_ZooLibStrim::sToStrim(sMakeYadR(theMap), s);

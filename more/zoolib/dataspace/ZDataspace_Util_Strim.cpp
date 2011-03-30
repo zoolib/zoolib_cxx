@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
@@ -25,7 +26,6 @@ namespace ZooLib {
 namespace ZDataspace {
 
 using std::set;
-using std::vector;
 
 // =================================================================================================
 #pragma mark -

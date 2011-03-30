@@ -301,7 +301,10 @@ void Source_Dataset::ModifyRegistrations(
 		if (ZLOGPF(s, eDebug + 1))
 			{
 			s << "\nDataset Raw:\n";
-			ZRA::Util_Strim_Rel::sToStrim(ZRA::Transform_ConsolidateRenames().Do(ZRA::Transform_PushDownRestricts().Do(iAdded->GetRel())), s);
+			ZRA::Util_Strim_Rel::sToStrim(
+				ZRA::Transform_ConsolidateRenames().Do(
+					ZRA::Transform_PushDownRestricts().Do(iAdded->GetRel())),
+				s);
 			s << "\nDataset Cooked:\n";
 			ZRA::Util_Strim_Rel::sToStrim(theRel, s);
 			}
@@ -614,13 +617,17 @@ void Source_Dataset::pChanged(const ZVal_Any& iVal)
 				{
 				PQuery* thePQuery = *iterPQuery;
 				fPQuery_NeedsWork.InsertIfNotContains(thePQuery);
-				for (set<PSearch*>::iterator iterDependingPSearch = thePQuery->fDependingPSearches.begin();
-					iterDependingPSearch != thePQuery->fDependingPSearches.end(); ++iterDependingPSearch)
+				for (set<PSearch*>::iterator iterDependingPSearch =
+					thePQuery->fDependingPSearches.begin();
+					iterDependingPSearch != thePQuery->fDependingPSearches.end();
+					++iterDependingPSearch)
 					{
 					PSearch* theDependingPSearch = *iterDependingPSearch;
 					if (theDependingPSearch != thePSearch)
 						{
-						ZUtil_STL::sEraseMustContain(1, theDependingPSearch->fDependentPQueries, thePQuery);
+						ZUtil_STL::sEraseMustContain(
+							1, theDependingPSearch->fDependentPQueries, thePQuery);
+
 						if (theDependingPSearch->fDependentPQueries.empty())
 							fPSearch_NeedsWork.InsertIfNotContains(theDependingPSearch);
 						}
