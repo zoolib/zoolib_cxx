@@ -390,8 +390,10 @@ template struct Functions_Convert_T<string8::iterator>;
 #pragma mark -
 #pragma mark * Converting between different serializations, template functions
 
+namespace { // anonymous
+
 template <class S, class D>
-bool ConvertSToD_T(
+bool spConvert_T(
 	S iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	D oDest, size_t iDestCU,
@@ -464,19 +466,21 @@ bool ConvertSToD_T(
 	}
 
 template <class S, class D>
-bool ConvertSToD_T(
+bool spConvert_T(
 	S iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	D oDest, size_t iDestCU,
 	size_t* oDestCU)
 	{
-	return ConvertSToD_T(
+	return spConvert_T(
 		iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCU,
 		oDestCU,
 		iSourceCU, nullptr);
 	}
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -488,7 +492,7 @@ void sUTF32ToUTF32(
 	UTF32* oDest, size_t iDestCount,
 	size_t* oDestCount)
 	{
-	ConvertSToD_T(
+	spConvert_T(
 		iSource, iSourceCount,
 		oSourceCount, oSourceCountSkipped,
 		oDest, iDestCount,
@@ -502,7 +506,7 @@ void sUTF32ToUTF16(
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP)
 	{
-	ConvertSToD_T(
+	spConvert_T(
 		iSource, iSourceCount,
 		oSourceCount, oSourceCountSkipped,
 		oDest, iDestCU,
@@ -517,7 +521,7 @@ void sUTF32ToUTF8(
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP)
 	{
-	ConvertSToD_T(
+	spConvert_T(
 		iSource, iSourceCount,
 		oSourceCount, oSourceCountSkipped,
 		oDest, iDestCU,
@@ -531,7 +535,7 @@ bool sUTF16ToUTF32(
 	UTF32* oDest, size_t iDestCount,
 	size_t* oDestCount)
 	{
-	return ConvertSToD_T(
+	return spConvert_T(
 		iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCount,
@@ -545,7 +549,7 @@ bool sUTF16ToUTF16(
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP)
 	{
-	return ConvertSToD_T(
+	return spConvert_T(
 		iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCU,
@@ -560,7 +564,7 @@ bool sUTF16ToUTF8(
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP)
 	{
-	return ConvertSToD_T(
+	return spConvert_T(
 		iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCU,
@@ -574,7 +578,7 @@ bool sUTF8ToUTF32(
 	UTF32* oDest, size_t iDestCount,
 	size_t* oDestCount)
 	{
-	return ConvertSToD_T(
+	return spConvert_T(
 		iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCount,
@@ -588,7 +592,7 @@ bool sUTF8ToUTF16(
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP)
 	{
-	return ConvertSToD_T(
+	return spConvert_T(
 		iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCU,
@@ -603,7 +607,7 @@ bool sUTF8ToUTF8(
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP)
 	{
-	return ConvertSToD_T(
+	return spConvert_T(
 		iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCU,
