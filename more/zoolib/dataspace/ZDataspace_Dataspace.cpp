@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDataspace {
 
-using std::map;
 using std::set;
 using std::vector;
 
