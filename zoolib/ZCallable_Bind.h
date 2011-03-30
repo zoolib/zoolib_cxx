@@ -4706,6 +4706,7 @@ BindReturnVoid(
 	return new CallableReturn<void, typename Callable::Signature>
 		(iCallable);
 	}
+
 } // namespace ZCallable_Bind
 
 using ZCallable_Bind::BindL;
