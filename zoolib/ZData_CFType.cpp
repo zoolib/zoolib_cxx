@@ -114,7 +114,7 @@ const void* ZData_CFType::GetData() const
 	return nullptr;
 	}
 
-void* ZData_CFType::GetData()
+void* ZData_CFType::GetDataMutable()
 	{ return ::CFDataGetMutableBytePtr(this->pTouch()); }
 
 void ZData_CFType::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)

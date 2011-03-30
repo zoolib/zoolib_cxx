@@ -124,7 +124,7 @@ const void* ZData_NS::GetData() const
 	return nullptr;
 	}
 
-void* ZData_NS::GetData()
+void* ZData_NS::GetDataMutable()
 	{ return [this->pTouch() mutableBytes]; }
 
 void ZData_NS::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)

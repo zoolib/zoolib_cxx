@@ -157,7 +157,7 @@ void ZData_Any::SetSize(size_t iSize)
 const void* ZData_Any::GetData() const
 	{ return ZUtil_STL::sFirstOrNil(fRep->fVector); }
 
-void* ZData_Any::GetData()
+void* ZData_Any::GetDataMutable()
 	{
 	this->pTouch();
 	return ZUtil_STL::sFirstOrNil(fRep->fVector);
