@@ -130,7 +130,6 @@ public:
 
 	virtual bool ButtonTapped(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex) = 0;
-	virtual ZQ<bool> HasButton(bool iEditing, size_t iRowIndex) = 0;
 
 	virtual bool RowSelected(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex) = 0;
@@ -195,11 +194,15 @@ public:
 
 	virtual bool ButtonTapped(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
-	virtual ZQ<bool> HasButton(bool iEditing, size_t iRowIndex);
 
 	virtual bool RowSelected(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
 	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex);
+
+
+// Our protocol
+	bool fApplyAccessory;
+	void ApplyAccessory(size_t iRowIndex, ZRef<UITableViewCell> ioCell);
 
 //
 	ZQ<UITableViewCellEditingStyle> fEditingStyle;
@@ -283,7 +286,6 @@ public:
 
 	virtual bool ButtonTapped(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
-	virtual ZQ<bool> HasButton(bool iEditing, size_t iRowIndex);
 
 	virtual bool RowSelected(UITVHandler_WithSections* iTVC,
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
