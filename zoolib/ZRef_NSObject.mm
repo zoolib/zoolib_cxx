@@ -37,7 +37,7 @@ void sRetain(struct objc_object& iOb)
 void sRelease(struct objc_object& iOb)
 	{ [((id)&iOb) release]; }
 
-void sCheck(id iP)
+void sCheck(struct objc_object* iP)
 	{ ZAssertStop(1, iP); }
 
 void sRetain(NSObject& iNSObject)
