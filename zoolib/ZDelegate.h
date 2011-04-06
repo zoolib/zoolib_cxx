@@ -76,39 +76,48 @@ private:
 	template <class Signature> class Wrapper_T;
 
 	template <class R>
-	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(void)> >& iCallable);
+	static ZRef<Wrapper>
+	spMakeWrapper(const ZRef<ZCallable<R(void)> >& iCallable);
 
 	template <class R,
 		class P0>
-	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0)> >& iCallable);
+	static ZRef<Wrapper>
+	spMakeWrapper(const ZRef<ZCallable<R(P0)> >& iCallable);
 	
 	template <class R,
 		class P0, class P1>
-	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1)> >& iCallable);
+	static ZRef<Wrapper>
+	spMakeWrapper(const ZRef<ZCallable<R(P0,P1)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2>
-	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2)> >& iCallable);
+	static ZRef<Wrapper>
+	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3>
-	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3)> >& iCallable);
+	static ZRef<Wrapper>
+	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4>
-	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >& iCallable);
+	static ZRef<Wrapper>
+	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4, class P5>
-	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >& iCallable);
+	static ZRef<Wrapper>
+	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4, class P5, class P6>
-	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >& iCallable);
+	static ZRef<Wrapper>
+	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >& iCallable);
 
 	template <class R,
 		class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
-	static ZRef<Wrapper> spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >& iCallable);
+	static ZRef<Wrapper>
+	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >& iCallable);
 
 	#endif // __OBJC__
 	};

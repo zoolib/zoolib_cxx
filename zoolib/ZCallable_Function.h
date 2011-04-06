@@ -158,7 +158,8 @@ private:
 #pragma mark * Callable (specialization for 5 params)
 
 template <class R,
-	class P0, class P1, class P2, class P3, class P4>
+	class P0, class P1, class P2, class P3,
+	class P4>
 class Callable<R(P0,P1,P2,P3,P4)>
 :	public ZCallable<R(P0,P1,P2,P3,P4)>
 	{
