@@ -152,9 +152,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				{ \
 				Data theVal(theLength); \
 				if (0 == theLength \
-					|| noErr == SUITE->GetData(iSource, iKey, theVal.GetData())) \
+					|| noErr == SUITE->GetData(iSource, iKey, theVal.GetDataMutable())) \
 					{ \
-					SUITE->PutData(DEST, theVal.GetSize(), theVal.GetData()); \
+					SUITE->PutData(DEST, theVal.GetSize(), theVal.GetDataMutable()); \
 					} \
 				} \
 			break; \
@@ -251,7 +251,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		if (noErr == SUITE->GetDataLength(P0, P1, &theLength)) \
 			{ \
 			Data result(theLength); \
-			if (0 == theLength || noErr == SUITE->GetData(P0, P1, result.GetData())) \
+			if (0 == theLength || noErr == SUITE->GetData(P0, P1, result.GetDataMutable())) \
 				return result; \
 			} \
 		break; \
