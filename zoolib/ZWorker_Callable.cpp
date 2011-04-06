@@ -59,8 +59,13 @@ bool ZWorker_Callable_Once::Work()
 
 void ZWorker_Callable_Once::RunnerDetached()
 	{
-	if (ZRef<Callable_t> theCallable = fCallable)
-		fCallable->Call();
+	try
+		{
+		if (ZRef<Callable_t> theCallable = fCallable)
+			fCallable->Call();
+		}
+	catch (...)
+		{}
 	ZWorker::RunnerDetached();
 	}
 
