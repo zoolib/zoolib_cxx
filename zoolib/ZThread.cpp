@@ -21,8 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZThread.h"
 
-#include <cstdio>
-
 namespace ZooLib {
 
 // =================================================================================================
@@ -56,12 +54,9 @@ void sWaitTillAllThreadsExit()
 		// Second, at least .1s will elapse between the thread count hitting
 		// zero and this code exiting, so the last thread will have
 		// had a chance to fully terminate.
-			sSleep(.1);
+		sSleep(.1);
 		if (0 == count)
-			{
-//			fputs("ZThread, final exit\n", stderr);
 			break;
-			}
 		}
 
 	}
