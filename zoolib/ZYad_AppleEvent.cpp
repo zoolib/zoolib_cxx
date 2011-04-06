@@ -39,7 +39,7 @@ static ZMap_Any spAsMap(const AEDesc& iAEDesc)
 
 	const size_t theSize = ::AEGetDescDataSize(&iAEDesc);
 	ZData_Any theData(theSize);
-	::AEGetDescData(&iAEDesc, theData.GetData(), theSize);
+	::AEGetDescData(&iAEDesc, theData.GetDataMutable(), theSize);
 
 	theMap.Set("Value", theData);
 
