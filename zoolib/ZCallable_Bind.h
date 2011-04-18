@@ -51,7 +51,7 @@ template <class T> struct VT<T&>
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Signature Traits
+#pragma mark * ST (Signature Traits)
 
 struct Empty_t {};
 
