@@ -52,9 +52,8 @@ bool Walker_Const::ReadInc(
 	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
-	if (fExhausted)
+	if (fExhausted++)
 		return false;
-	fExhausted = true;
 
 	ioResults[fOutputOffset] = fVal;
 	return true;
