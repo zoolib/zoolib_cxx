@@ -73,19 +73,19 @@ string sNameFromPriority(EPriority iPriority)
 #pragma mark -
 #pragma mark * ZLog::StrimW
 
-StrimW::StrimW(EPriority iPriority, const string& iName)
+StrimW::StrimW(EPriority iPriority, const string& iName_String)
 :	fPriority(iPriority),
-	fName(iName)
+	fName_StringQ(iName_String)
 	{}
 
-StrimW::StrimW(EPriority iPriority, const char* iName)
+StrimW::StrimW(EPriority iPriority, const char* iName_CharStar)
 :	fPriority(iPriority),
-	fName(iName)
+	fName_CharStarQ(iName_CharStar)
 	{}
 
 StrimW::~StrimW()
 	{
-	if (!fMessage.empty())
+	if (fMessageQ && !fMessageQ.Get().empty())
 		this->pEmit();
 	}
 
@@ -93,7 +93,9 @@ void StrimW::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCoun
 	{
 	try
 		{
-		ZStrimW_String(fMessage).Write(iSource, iCountCU, oCountCU);
+		if (!fMessageQ)
+			fMessageQ = std::string();
+		ZStrimW_String(fMessageQ.GetMutable()).Write(iSource, iCountCU, oCountCU);
 		}
 	catch (...)
 		{
@@ -106,7 +108,9 @@ void StrimW::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCoun
 	{
 	try
 		{
-		ZStrimW_String(fMessage).Write(iSource, iCountCU, oCountCU);
+		if (!fMessageQ)
+			fMessageQ = std::string();
+		ZStrimW_String(fMessageQ.GetMutable()).Write(iSource, iCountCU, oCountCU);
 		}
 	catch (...)
 		{
@@ -119,7 +123,9 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 	{
 	try
 		{
-		ZStrimW_String(fMessage).Write(iSource, iCountCU, oCountCU);
+		if (!fMessageQ)
+			fMessageQ = std::string();
+		ZStrimW_String(fMessageQ.GetMutable()).Write(iSource, iCountCU, oCountCU);
 		}
 	catch (...)
 		{
@@ -130,15 +136,31 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 
 StrimW::operator operator_bool() const
 	{
-	return operator_bool_gen::translate(spLogMeister && spLogMeister->Enabled(fPriority, fName));
+	if (spLogMeister)
+		{
+		if (fName_StringQ)
+			{
+			return operator_bool_gen::translate(
+				spLogMeister->Enabled(fPriority, fName_StringQ.Get()));
+			}
+		else
+			{
+			return operator_bool_gen::translate(
+				spLogMeister->Enabled(fPriority, fName_CharStarQ.Get()));
+			}
+		}
+	else
+		{
+		return operator_bool_gen::translate(false);
+		}
 	}
 
 void StrimW::Emit() const
 	{
-	if (!fMessage.empty())
+	if (fMessageQ && !fMessageQ.Get().empty())
 		{
 		const_cast<StrimW*>(this)->pEmit();
-		fMessage.clear();
+		fMessageQ.GetMutable().resize(0);
 		}
 	}
 
@@ -149,7 +171,9 @@ void StrimW::pEmit()
 		{
 		try
 			{
-			spLogMeister->LogIt(fPriority, fName, fMessage);
+			if (!fName_StringQ)
+				fName_StringQ = fName_CharStarQ.Get();
+			spLogMeister->LogIt(fPriority, fName_StringQ.Get(), fMessageQ.Get());
 			}
 		catch (...)
 			{}
@@ -174,6 +198,9 @@ LogMeister::~LogMeister()
 	{}
 
 bool LogMeister::Enabled(EPriority iPriority, const string& iName)
+	{ return true; }
+
+bool LogMeister::Enabled(EPriority iPriority, const char* iName)
 	{ return true; }
 
 void sSetLogMeister(LogMeister* iLogMeister)

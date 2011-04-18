@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZQ.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
 
 #if ZCONFIG(Compiler, GCC)
@@ -94,8 +95,8 @@ std::string sNameFromPriority(EPriority iPriority);
 class StrimW : public ZStrimW
 	{
 public:
-	StrimW(EPriority iPriority, const std::string& iName);
-	StrimW(EPriority iPriority, const char* iName);
+	StrimW(EPriority iPriority, const std::string& iName_String);
+	StrimW(EPriority iPriority, const char* iName_CharStar);
 	~StrimW();
 
 // From ZStrimW
@@ -112,8 +113,9 @@ private:
 	void pEmit();
 
 	const int fPriority;
-	const std::string fName;
-	mutable std::string fMessage;
+	mutable ZQ<std::string> fName_StringQ;
+	const ZQ<const char*> fName_CharStarQ;
+	mutable ZQ<std::string> fMessageQ;
 	};
 
 typedef StrimW S;
@@ -132,6 +134,7 @@ protected:
 public:
 	virtual ~LogMeister();
 	virtual bool Enabled(EPriority iPriority, const std::string& iName);
+	virtual bool Enabled(EPriority iPriority, const char* iName);
 	virtual void LogIt(
 		EPriority iPriority, const std::string& iName, const std::string& iMessage) = 0;
 	};
