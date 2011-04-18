@@ -76,10 +76,13 @@ void ZCountedBase::Release()
 		{
 		const int oldRefCount = ZAtomic_Get(&fRefCount);
 		if (oldRefCount == 1)
+			{
 			this->Finalize();
-		else if (!ZAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
-			continue;
-		return;
+			return;
+			}
+
+		if (ZAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
+			return;
 		}
 	}
 
