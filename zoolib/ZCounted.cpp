@@ -87,10 +87,10 @@ void ZCountedBase::Release()
 	}
 
 bool ZCountedBase::IsShared() const
-	{ return 1 < ZAtomic_Get(&fRefCount); }
+	{ return ZAtomic_Get(&fRefCount) > 1; }
 
 bool ZCountedBase::IsReferenced() const
-	{ return 0 != ZAtomic_Get(&fRefCount); }
+	{ return ZAtomic_Get(&fRefCount) > 0; }
 
 ZRef<ZCountedBase::WeakRefProxy> ZCountedBase::GetWeakRefProxy()
 	{
