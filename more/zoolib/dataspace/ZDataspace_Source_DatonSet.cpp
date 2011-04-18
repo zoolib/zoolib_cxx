@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
-#include "zoolib/dataspace/ZDataspace_Source_Dataset.h"
+#include "zoolib/dataspace/ZDataspace_Source_DatonSet.h"
 
 #include "zoolib/zqe/ZQE_DoQuery.h"
 #include "zoolib/zqe/ZQE_Transform_Search.h"
@@ -39,6 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Transform_ConsolidateRenames.h"
+#include "zoolib/zra/ZRA_Transform_DecomposeRestricts.h"
 #include "zoolib/zra/ZRA_Transform_PushDownRestricts.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
@@ -46,11 +47,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDataspace {
 
-using ZDataset::Dataset;
-using ZDataset::Daton;
-using ZDataset::Deltas;
-using ZDataset::Map_NamedEvent_Delta_t;
-using ZDataset::NamedEvent;
+using ZDatonSet::DatonSet;
+using ZDatonSet::Daton;
+using ZDatonSet::Deltas;
+using ZDatonSet::Map_NamedEvent_Delta_t;
+using ZDatonSet::NamedEvent;
 
 using std::make_pair;
 using std::map;
@@ -132,16 +133,16 @@ Daton sAsDaton(const ZVal_Any& iVal)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Dataset::Visitor_DoMakeWalker
+#pragma mark * Source_DatonSet::Visitor_DoMakeWalker
 
-class Source_Dataset::Visitor_DoMakeWalker
+class Source_DatonSet::Visitor_DoMakeWalker
 :	public virtual ZQE::Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 ,	public virtual ZQE::Visitor_Expr_Rel_Search
 	{
 	typedef ZQE::Visitor_DoMakeWalker inherited;
 public:
-	Visitor_DoMakeWalker(ZRef<Source_Dataset> iSource, PQuery* iPQuery)
+	Visitor_DoMakeWalker(ZRef<Source_DatonSet> iSource, PQuery* iPQuery)
 	:	fSource(iSource)
 	,	fPQuery(iPQuery)
 		{}
@@ -156,18 +157,18 @@ public:
 		this->pSetResult(fSource->pMakeWalker_Search(fPQuery, iExpr));
 		}
 
-	ZRef<Source_Dataset> fSource;
+	ZRef<Source_DatonSet> fSource;
 	PQuery* fPQuery;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Dataset::Walker_Concrete
+#pragma mark * Source_DatonSet::Walker_Concrete
 
-class Source_Dataset::Walker_Concrete : public ZQE::Walker
+class Source_DatonSet::Walker_Concrete : public ZQE::Walker
 	{
 public:
-	Walker_Concrete(ZRef<Source_Dataset> iSource, const vector<string8>& iNames)
+	Walker_Concrete(ZRef<Source_DatonSet> iSource, const vector<string8>& iNames)
 	:	fSource(iSource)
 	,	fNames(iNames)
 		{}
@@ -192,7 +193,7 @@ public:
 		set<ZRef<ZCounted> >* oAnnotations)
 		{ return fSource->pReadInc_Concrete(this, ioResults, oAnnotations); }
 
-	const ZRef<Source_Dataset> fSource;
+	const ZRef<Source_DatonSet> fSource;
 	const vector<string8> fNames;
 	size_t fBaseOffset;
 	Map_Main::const_iterator fCurrent_Main;
@@ -201,17 +202,17 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Dataset::ClientQuery
+#pragma mark * Source_DatonSet::ClientQuery
 
-class Source_Dataset::DLink_ClientQuery_InPQuery
+class Source_DatonSet::DLink_ClientQuery_InPQuery
 :	public DListLink<ClientQuery, DLink_ClientQuery_InPQuery, kDebug>
 	{};
 
-class Source_Dataset::DLink_ClientQuery_NeedsWork
+class Source_DatonSet::DLink_ClientQuery_NeedsWork
 :	public DListLink<ClientQuery, DLink_ClientQuery_NeedsWork, kDebug>
 	{};
 
-class Source_Dataset::ClientQuery
+class Source_DatonSet::ClientQuery
 :	public DLink_ClientQuery_InPQuery
 ,	public DLink_ClientQuery_NeedsWork
 	{
@@ -227,13 +228,13 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Dataset::PQuery
+#pragma mark * Source_DatonSet::PQuery
 
-class Source_Dataset::DLink_PQuery_NeedsWork
+class Source_DatonSet::DLink_PQuery_NeedsWork
 :	public DListLink<PQuery, DLink_PQuery_NeedsWork, kDebug>
 	{};
 
-class Source_Dataset::PQuery
+class Source_DatonSet::PQuery
 :	public DLink_PQuery_NeedsWork
 	{
 public:
@@ -249,13 +250,13 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Dataset::PSearch
+#pragma mark * Source_DatonSet::PSearch
 
-class Source_Dataset::DLink_PSearch_NeedsWork
+class Source_DatonSet::DLink_PSearch_NeedsWork
 :	public DListLink<PSearch, DLink_PSearch_NeedsWork, kDebug>
 	{};
 
-class Source_Dataset::PSearch
+class Source_DatonSet::PSearch
 :	public DLink_PSearch_NeedsWork
 	{
 public:
@@ -270,42 +271,44 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Dataset
+#pragma mark * Source_DatonSet
 
-void Source_Dataset::ForceUpdate()
+void Source_DatonSet::ForceUpdate()
 	{ this->pInvokeCallable_ResultsAvailable(); }
 
-Source_Dataset::Source_Dataset(ZRef<Dataset> iDataset)
-:	fDataset(iDataset)
+Source_DatonSet::Source_DatonSet(ZRef<DatonSet> iDatonSet)
+:	fDatonSet(iDatonSet)
 ,	fEvent(Event::sZero())
 	{}
 
-Source_Dataset::~Source_Dataset()
+Source_DatonSet::~Source_DatonSet()
 	{}
 
-bool Source_Dataset::Intersects(const RelHead& iRelHead)
+bool Source_DatonSet::Intersects(const RelHead& iRelHead)
 	{ return true; }
 
-void Source_Dataset::ModifyRegistrations(
+void Source_DatonSet::ModifyRegistrations(
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZGuardRMtxR guard(fMtxR);
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
 
+		theRel = ZRA::Transform_DecomposeRestricts().Do(theRel);
+		theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
 		theRel = ZQE::sTransform_Search(theRel);
 
 		if (ZLOGPF(s, eDebug + 1))
 			{
-			s << "\nDataset Raw:\n";
+			s << "\nDatonSet Raw:\n";
 			ZRA::Util_Strim_Rel::sToStrim(
 				ZRA::Transform_ConsolidateRenames().Do(
 					ZRA::Transform_PushDownRestricts().Do(iAdded->GetRel())),
 				s);
-			s << "\nDataset Cooked:\n";
+			s << "\nDatonSet Cooked:\n";
 			ZRA::Util_Strim_Rel::sToStrim(theRel, s);
 			}
 
@@ -362,10 +365,13 @@ void Source_Dataset::ModifyRegistrations(
 		}
 
 	if (!fClientQuery_NeedsWork.Empty() || !fPQuery_NeedsWork.Empty())
+		{
+		guard.Release();
 		this->pInvokeCallable_ResultsAvailable();
+		}
 	}
 
-void Source_Dataset::CollectResults(vector<QueryResult>& oChanged)
+void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 	{
 	this->pCollectResultsCalled();
 	
@@ -413,42 +419,48 @@ void Source_Dataset::CollectResults(vector<QueryResult>& oChanged)
 //##		ZThread::sSleep(1);
 	}
 
-ZRef<ZDataset::Dataset> Source_Dataset::GetDataset()
-	{ return fDataset; }
+ZRef<ZDatonSet::DatonSet> Source_DatonSet::GetDatonSet()
+	{ return fDatonSet; }
 
-void Source_Dataset::Insert(const Daton& iDaton)
+void Source_DatonSet::Insert(const Daton& iDaton)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZGuardRMtxR guard(fMtxR);
 	this->pModify(iDaton, sAsVal(iDaton), true);
 	this->pConditionalPushDown();
+	guard.Release();
+
 	this->pInvokeCallable_ResultsAvailable();	
 	}
 
-void Source_Dataset::Erase(const Daton& iDaton)
+void Source_DatonSet::Erase(const Daton& iDaton)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZGuardRMtxR guard(fMtxR);
 	this->pModify(iDaton, sAsVal(iDaton), false);
 	this->pConditionalPushDown();
+	guard.Release();
+
 	this->pInvokeCallable_ResultsAvailable();	
 	}
 
-void Source_Dataset::Replace(const ZDataset::Daton& iOld, const ZDataset::Daton& iNew)
+void Source_DatonSet::Replace(const ZDatonSet::Daton& iOld, const ZDatonSet::Daton& iNew)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZGuardRMtxR guard(fMtxR);
 	this->pModify(iOld, sAsVal(iOld), false);
 	this->pModify(iNew, sAsVal(iNew), true);
 	this->pConditionalPushDown();
+	guard.Release();
+
 	this->pInvokeCallable_ResultsAvailable();	
 	}
 
-size_t Source_Dataset::OpenTransaction()
+size_t Source_DatonSet::OpenTransaction()
 	{
 	ZAcqMtxR acq(fMtxR);
 	fStack_Map_Pending.push_back(fMap_Pending);
 	return fStack_Map_Pending.size();
 	}
 
-void Source_Dataset::ClearTransaction(size_t iIndex)
+void Source_DatonSet::ClearTransaction(size_t iIndex)
 	{
 	ZAcqMtxR acq(fMtxR);
 	ZAssert(iIndex == fStack_Map_Pending.size());
@@ -458,19 +470,21 @@ void Source_Dataset::ClearTransaction(size_t iIndex)
 	fMap_Pending = fStack_Map_Pending.back();
 	}
 
-void Source_Dataset::CloseTransaction(size_t iIndex)
+void Source_DatonSet::CloseTransaction(size_t iIndex)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZGuardRMtxR guard(fMtxR);
 
 	ZAssert(iIndex == fStack_Map_Pending.size());
 
 	this->pChangedAll();
 	fStack_Map_Pending.pop_back();
 	this->pConditionalPushDown();
+	guard.Release();
+
 	this->pInvokeCallable_ResultsAvailable();	
 	}
 
-void Source_Dataset::pDetachPQuery(PQuery* iPQuery)
+void Source_DatonSet::pDetachPQuery(PQuery* iPQuery)
 	{
 	// Detach from any depended-upon PSearch
 	for (set<PSearch*>::iterator iterPSearch = iPQuery->fDependingPSearches.begin();
@@ -484,12 +498,12 @@ void Source_Dataset::pDetachPQuery(PQuery* iPQuery)
 	iPQuery->fDependingPSearches.clear();
 	}
 
-void Source_Dataset::pPull()
+void Source_DatonSet::pPull()
 	{
-	// Get our map in sync with fDataset
+	// Get our map in sync with fDatonSet
 	ZLOGF(s, eDebug);
 	ZRef<Deltas> theDeltas;
-	fEvent = fDataset->GetDeltas(theDeltas, fEvent);
+	fEvent = fDatonSet->GetDeltas(theDeltas, fEvent);
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
 	if (s)
 		s << "\ntheMNED.size()=" << theMNED.size();
@@ -568,7 +582,7 @@ void Source_Dataset::pPull()
 		}
 	}
 
-void Source_Dataset::pConditionalPushDown()
+void Source_DatonSet::pConditionalPushDown()
 	{
 	if (fStack_Map_Pending.empty())
 		{
@@ -576,15 +590,15 @@ void Source_Dataset::pConditionalPushDown()
 			i != end; ++i)
 			{
 			if (i->second.second)
-				fDataset->Insert(i->first);
+				fDatonSet->Insert(i->first);
 			else
-				fDataset->Erase(i->first);			
+				fDatonSet->Erase(i->first);			
 			}
 		fMap_Pending.clear();
 		}
 	}
 
-void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal, bool iSense)
+void Source_DatonSet::pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& iVal, bool iSense)
 	{
 	Map_Pending::iterator i = fMap_Pending.find(iDaton);
 	if (fMap_Pending.end() == i)
@@ -599,7 +613,7 @@ void Source_Dataset::pModify(const ZDataset::Daton& iDaton, const ZVal_Any& iVal
 	this->pChanged(iVal);
 	}
 
-void Source_Dataset::pChanged(const ZVal_Any& iVal)
+void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 	{
 	const ZMap_Any theMap = iVal.GetMap();
 	RelHead theRH;
@@ -641,20 +655,20 @@ void Source_Dataset::pChanged(const ZVal_Any& iVal)
 		}
 	}
 
-void Source_Dataset::pChangedAll()
+void Source_DatonSet::pChangedAll()
 	{
 	for (Map_Pending::iterator i = fMap_Pending.begin(), end = fMap_Pending.end();
 		i != end; ++i)
 		{ this->pChanged(i->second.first); }
 	}
 
-ZRef<ZQE::Walker> Source_Dataset::pMakeWalker_Concrete(const RelHead& iRelHead)
+ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(const RelHead& iRelHead)
 	{
 	++fWalkerCount;
 	return new Walker_Concrete(this, vector<string8>(iRelHead.begin(), iRelHead.end()));
 	}
 
-ZRef<ZQE::Walker> Source_Dataset::pMakeWalker_Search(
+ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
 	PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel)
 	{
 	// Walker_Search knows the PQuery it's operating on behalf of, and so as it
@@ -704,13 +718,13 @@ ZRef<ZQE::Walker> Source_Dataset::pMakeWalker_Search(
 	return theWalker;
 	}
 
-void Source_Dataset::pRewind_Concrete(ZRef<Walker_Concrete> iWalker)
+void Source_DatonSet::pRewind_Concrete(ZRef<Walker_Concrete> iWalker)
 	{
 	iWalker->fCurrent_Main = fMap.begin();
 	iWalker->fCurrent_Pending = fMap_Pending.begin();
 	}
 
-void Source_Dataset::pPrime_Concrete(ZRef<Walker_Concrete> iWalker,
+void Source_DatonSet::pPrime_Concrete(ZRef<Walker_Concrete> iWalker,
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
@@ -722,7 +736,7 @@ void Source_Dataset::pPrime_Concrete(ZRef<Walker_Concrete> iWalker,
 		oOffsets[iWalker->fNames[x]] = ioBaseOffset++;
 	}
 
-bool Source_Dataset::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
+bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{

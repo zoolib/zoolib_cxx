@@ -1,0 +1,172 @@
+/* -------------------------------------------------------------------------------------------------
+Copyright (c) 2010 Andrew Green
+http://www.zoolib.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+and associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+------------------------------------------------------------------------------------------------- */
+
+#ifndef __ZDataspace_Source_DatonSet__
+#define __ZDataspace_Source_DatonSet__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZCompare_Ref.h"
+#include "zoolib/ZVal_Any.h"
+
+#include "zoolib/datonset/ZDatonSet.h"
+#include "zoolib/dataspace/ZDataspace_Source.h"
+
+#include "zoolib/zqe/ZQE_Expr_Rel_Search.h"
+#include "zoolib/zqe/ZQE_Walker.h"
+
+#include <map>
+#include <vector>
+
+namespace ZooLib {
+namespace ZDataspace {
+
+ZVal_Any sAsVal(const ZDatonSet::Daton& iDaton);
+ZDatonSet::Daton sAsDaton(const ZVal_Any& iVal);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Annotation_Daton
+
+class Annotation_Daton : public ZCounted
+	{
+public:
+	Annotation_Daton(const ZDatonSet::Daton& iDaton)
+	:	fDaton(iDaton)
+		{}
+
+	const ZDatonSet::Daton& GetDaton() { return fDaton; }
+
+private:
+	const ZDatonSet::Daton fDaton;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Source_DatonSet
+
+class Source_DatonSet : public Source
+	{
+public:
+	enum { kDebug = 1 };
+	
+	void ForceUpdate();
+
+	// Some kind of index specs to be passed in too.
+	Source_DatonSet(ZRef<ZDatonSet::DatonSet> iDatonSet);
+	virtual ~Source_DatonSet();
+
+	virtual bool Intersects(const RelHead& iRelHead);
+
+	virtual void ModifyRegistrations(
+		const AddedQuery* iAdded, size_t iAddedCount,
+		const int64* iRemoved, size_t iRemovedCount);
+
+	virtual void CollectResults(std::vector<QueryResult>& oChanged);
+
+// Our protocol
+	ZRef<ZDatonSet::DatonSet> GetDatonSet();
+
+	void Insert(const ZDatonSet::Daton& iDaton);
+	void Erase(const ZDatonSet::Daton& iDaton);
+	void Replace(const ZDatonSet::Daton& iOld, const ZDatonSet::Daton& iNew);
+
+	size_t OpenTransaction();
+	void ClearTransaction(size_t iIndex);
+	void CloseTransaction(size_t iIndex);
+
+private:
+	ZMtxR fMtxR;
+	size_t fWalkerCount;
+	size_t fReadCount;
+	size_t fStepCount;
+
+	void pPull();
+	void pConditionalPushDown();
+	void pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& iVal, bool iSense);
+	void pChanged(const ZVal_Any& iVal);
+	void pChangedAll();
+
+	class PQuery;
+
+	class Visitor_DoMakeWalker;
+	friend class Visitor_DoMakeWalker;	
+//--
+	class Walker_Concrete;
+	friend class Walker_Concrete;
+
+	ZRef<ZQE::Walker> pMakeWalker_Concrete(const RelHead& iRelHead);
+
+	void pRewind_Concrete(ZRef<Walker_Concrete> iWalker);
+
+	void pPrime_Concrete(ZRef<Walker_Concrete> iWalker,
+		const std::map<string8,size_t>& iOffsets,
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	bool pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
+		ZVal_Any* ioResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
+	
+//--
+	class Walker_Search;
+	friend class Walker_Search;
+
+	ZRef<ZQE::Walker> pMakeWalker_Search(PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel);
+//--
+	ZRef<ZDatonSet::DatonSet> fDatonSet;
+	ZRef<Event> fEvent;
+//--
+	typedef std::map<ZDatonSet::Daton, std::pair<ZDatonSet::NamedEvent, ZVal_Any> > Map_Main;
+	Map_Main fMap;
+
+	typedef std::map<ZDatonSet::Daton, std::pair<ZVal_Any, bool> > Map_Pending;
+	Map_Pending fMap_Pending;
+	std::vector<Map_Pending> fStack_Map_Pending;
+//--
+	class DLink_ClientQuery_InPQuery;
+	class DLink_ClientQuery_NeedsWork;
+	class ClientQuery;
+	std::map<int64, ClientQuery> fMap_Refcon_ClientQuery;
+	DListHead<DLink_ClientQuery_NeedsWork> fClientQuery_NeedsWork;
+//--
+	class DLink_PQuery_NeedsWork;
+	typedef std::map<ZRef<ZRA::Expr_Rel>, PQuery, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
+		Map_Rel_PQuery;
+	Map_Rel_PQuery fMap_Rel_PQuery;
+
+	DListHead<DLink_PQuery_NeedsWork> fPQuery_NeedsWork;
+//--
+	class DLink_PSearch_NeedsWork;
+	class PSearch;
+
+	typedef std::pair<ZRA::Rename,ZRef<ZExpr_Bool> > PSearchKey;
+
+	typedef std::map<PSearchKey,PSearch,Less_Compare_T<PSearchKey> > Map_Rel_PSearch;
+	Map_Rel_PSearch fMap_Rel_PSearch;
+
+	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
+//--
+	void pDetachPQuery(PQuery* iPQuery);
+	};
+
+} // namespace ZDataspace
+} // namespace ZooLib
+
+#endif // __ZDataspace_Source_DatonSet__
