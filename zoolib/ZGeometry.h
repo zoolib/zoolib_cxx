@@ -123,8 +123,11 @@ public:
 	#endif
 
 // Relational operators
-	bool operator!=(const ZGPointPOD_T& other) const { return x != other.x || y != other.y; }
-	bool operator==(const ZGPointPOD_T& other) const { return x == other.x && y == other.y; }
+	bool operator==(const ZGPointPOD_T& other) const
+		{ return x == other.x && y == other.y; }
+
+	bool operator!=(const ZGPointPOD_T& other) const
+		{ return ! (*this == other); }
 	};
 
 template <class T>
@@ -182,6 +185,14 @@ public:
 	#if ZCONFIG_SPI_Enabled(X11)
 		ZGPoint_T(const XPoint& other);
 	#endif
+
+	using ZGPointPOD_T<T>::operator==;
+	bool operator==(const ZGPoint_T<T>& other) const
+		{ return ZGPointPOD_T<T>::operator==(other); }
+
+	using ZGPointPOD_T<T>::operator!=;
+	bool operator!=(const ZGPoint_T<T>& other) const
+		{ return ZGPointPOD_T<T>::operator!=(other); }
 	};
 
 template <class T>
@@ -252,8 +263,11 @@ public:
 	#endif
 
 // Relational operators
-	bool operator!=(const ZGExtentPOD_T& other) const { return h != other.h || v != other.v; }
-	bool operator==(const ZGExtentPOD_T& other) const { return h == other.h && v == other.v; }
+	bool operator==(const ZGExtentPOD_T& other) const
+		{ return h == other.h && v == other.v; }
+
+	bool operator!=(const ZGExtentPOD_T& other) const
+		{ return ! (*this == other); }
 	};
 
 template <class T>
@@ -311,6 +325,14 @@ public:
 	#if ZCONFIG_SPI_Enabled(X11)
 		ZGExtent_T(const XPoint& other);
 	#endif
+
+	using ZGExtentPOD_T<T>::operator==;
+	bool operator==(const ZGExtent_T<T>& other) const
+		{ return ZGExtentPOD_T<T>::operator==(other); }
+
+	using ZGExtentPOD_T<T>::operator!=;
+	bool operator!=(const ZGExtent_T<T>& other) const
+		{ return ZGExtentPOD_T<T>::operator!=(other); }
 	};
 
 template <class T>
@@ -521,8 +543,8 @@ template <class Ord>
 template <class U>
 ZGRectPOD_T<Ord>& ZGRectPOD_T<Ord>::operator=(const ZGExtentPOD_T<U>& iExtent)
 	{
-	origin.x = T();
-	origin.y = T();
+	origin.x = Ord();
+	origin.y = Ord();
 	extent = iExtent;
 	return *this;
 	}
@@ -895,6 +917,14 @@ public:
 	#if ZCONFIG_SPI_Enabled(X11)
 		ZGRect_T(const XRectangle& iRect);
 	#endif
+
+	using ZGRectPOD_T<Ord>::operator==;
+	bool operator==(const ZGRect_T<Ord>& other) const
+		{ return ZGRectPOD_T<Ord>::operator==(other); }
+
+	using ZGRectPOD_T<Ord>::operator!=;
+	bool operator!=(const ZGRect_T<Ord>& other) const
+		{ return ZGRectPOD_T<Ord>::operator!=(other); }
 	};
 
 template <class Ord>
