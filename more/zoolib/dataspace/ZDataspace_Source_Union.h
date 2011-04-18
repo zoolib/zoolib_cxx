@@ -100,8 +100,11 @@ private:
 
 	// -----
 
+	class DLink_ClientQuery_NeedsWork;
 	class DLink_ClientQuery_InPQuery;
 	class ClientQuery;
+
+	DListHead<DLink_ClientQuery_NeedsWork> fClientQuery_NeedsWork;
 
 	typedef std::map<int64, ClientQuery> Map_Refcon_ClientQuery;
 	Map_Refcon_ClientQuery fMap_Refcon_ClientQuery;

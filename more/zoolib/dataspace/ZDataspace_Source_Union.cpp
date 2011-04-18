@@ -248,12 +248,17 @@ public:
 #pragma mark -
 #pragma mark * Source_Union::ClientQuery
 
+class Source_Union::DLink_ClientQuery_NeedsWork
+:	public DListLink<ClientQuery, DLink_ClientQuery_NeedsWork, kDebug>
+	{};
+
 class Source_Union::DLink_ClientQuery_InPQuery
 :	public DListLink<ClientQuery, DLink_ClientQuery_InPQuery, kDebug>
 	{};
 
 class Source_Union::ClientQuery
-:	public DLink_ClientQuery_InPQuery
+:	public DLink_ClientQuery_NeedsWork
+,	public DLink_ClientQuery_InPQuery
 	{
 public:
 	ClientQuery(int64 iRefcon, PQuery* iPQuery)
@@ -284,8 +289,9 @@ public:
 	ZRef<ZRA::Expr_Rel> const fRel;
 	ZRef<ZRA::Expr_Rel> fRel_Analyzed;
 	set<ZRef<Proxy> > fProxiesDependedUpon;
-	ZRef<ZQE::Result> fResult;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
+	ZRef<ZQE::Result> fResult;
+	ZRef<Event> fEvent;
 	};
 
 // =================================================================================================
@@ -674,7 +680,7 @@ void Source_Union::ModifyRegistrations(
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZGuardRMtxR guard(fMtxR);
 
 	// -----
 
@@ -687,9 +693,9 @@ void Source_Union::ModifyRegistrations(
 			fMap_Refcon_ClientQuery.find(theRefcon);
 		
 		ClientQuery* theClientQuery = &iterClientQuery->second;
+		fClientQuery_NeedsWork.EraseIfContains(theClientQuery);
 		
 		PQuery* thePQuery = theClientQuery->fPQuery;
-		thePQuery->fClientQueries.Erase(theClientQuery);
 
 		if (thePQuery->fClientQueries.Empty())
 			{
@@ -716,7 +722,8 @@ void Source_Union::ModifyRegistrations(
 			fPQuery_NeedsWork.EraseIfContains(thePQuery);
 			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 			}
-		
+
+		thePQuery->fClientQueries.Erase(theClientQuery);
 		fMap_Refcon_ClientQuery.erase(iterClientQuery);
 		}
 
@@ -761,13 +768,16 @@ void Source_Union::ModifyRegistrations(
 
 		const int64 theRefcon = iAdded->GetRefcon();
 
-		Map_Refcon_ClientQuery::iterator iterClientQuery =
-			fMap_Refcon_ClientQuery.insert(
-			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery))).first;
+		ClientQuery* theClientQuery = &fMap_Refcon_ClientQuery.insert(
+			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery))).first->second;
 
-		thePQuery->fClientQueries.Insert(&iterClientQuery->second);
+		thePQuery->fClientQueries.Insert(theClientQuery);
+
+		if (!inPQuery.second)
+			fClientQuery_NeedsWork.Insert(theClientQuery);
 		}
 
+	guard.Release();
 	this->pInvokeCallable_ResultsAvailable();
 	}
 
@@ -854,14 +864,22 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 			ZRef<ZQE::Walker> theWalker =
 				Source_Union::Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
 
-			ZRef<ZQE::Result> theResult = ZQE::sDoQuery(theWalker);
-			
+			thePQuery->fResult = ZQE::sDoQuery(theWalker);
+			thePQuery->fEvent = theEvent;
+
 			for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 				iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
-				{
-				oChanged.push_back(QueryResult(iterCS.Current()->fRefcon, theResult, theEvent));
-				}
+				{ fClientQuery_NeedsWork.InsertIfNotContains(iterCS.Current()); }
 			}
+		}
+
+	for (DListEraser<ClientQuery, DLink_ClientQuery_NeedsWork>
+		eraserClientQuery = fClientQuery_NeedsWork; eraserClientQuery; eraserClientQuery.Advance())
+		{
+		ClientQuery* theClientQuery = eraserClientQuery.Current();
+		PQuery* thePQuery = theClientQuery->fPQuery;
+		oChanged.push_back(
+			QueryResult(theClientQuery->fRefcon, thePQuery->fResult, thePQuery->fEvent));
 		}
 	}
 
@@ -870,10 +888,10 @@ void Source_Union::InsertSource(ZRef<Source> iSource, const string8& iPrefix)
 	ZAcqMtxR acq(fMtxR);
 	ZAssertStop(kDebug, fMap_Refcon_ClientQuery.empty());
 
-	iSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
-
 	ZUtil_STL::sInsertMustNotContain(kDebug, fMap_Source_PSource,
 		iSource, PSource(iSource, iPrefix));
+
+	iSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
 	}
 
 void Source_Union::EraseSource(ZRef<Source> iSource)
@@ -1067,8 +1085,10 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 
 void Source_Union::pResultsAvailable(ZRef<Source> iSource)
 	{
+	ZGuardRMtxR guard(fMtxR);
 	Map_Source_PSource::iterator iterSource = fMap_Source_PSource.find(iSource);
 	fPSource_CollectFrom.InsertIfNotContains(&iterSource->second);
+	guard.Release();
 	this->pInvokeCallable_ResultsAvailable();
 	}
 
