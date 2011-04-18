@@ -114,6 +114,7 @@ protected:
 	void pInvokeCallable_ResultsAvailable();
 
 private:
+	ZMtx fMtx;
 	bool fCalled_ResultsAvailable;
 	ZRef<Callable_ResultsAvailable> fCallable_ResultsAvailable;
 	};

@@ -112,22 +112,25 @@ Source::~Source()
 
 void Source::SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable)
 	{
-	if (iCallable)
-		ZAssert(!fCallable_ResultsAvailable);
+	ZAcqMtx acq(fMtx);
 	fCalled_ResultsAvailable = false;
 	fCallable_ResultsAvailable = iCallable;
 	}
 
 void Source::pCollectResultsCalled()
-	{ fCalled_ResultsAvailable = false; }
+	{
+	ZAcqMtx acq(fMtx);
+	fCalled_ResultsAvailable = false;
+	}
 
 void Source::pInvokeCallable_ResultsAvailable()
 	{
-	if (ZRef<Callable_ResultsAvailable> theCallable = fCallable_ResultsAvailable)
+	ZGuardRMtx guard(fMtx);
+	if (!fCalled_ResultsAvailable++)
 		{
-		if (!fCalled_ResultsAvailable)
+		if (ZRef<Callable_ResultsAvailable> theCallable = fCallable_ResultsAvailable)
 			{
-			fCalled_ResultsAvailable = true;
+			guard.Release();
 			theCallable->Call(this);
 			}
 		}
