@@ -742,28 +742,13 @@ void Source_Union::ModifyRegistrations(
 		if (inPQuery.second)
 			{
 			if (ZLOGPF(s, eDebug + 1))
-				{
-				s << "Raw:\n";
-				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
-				}
-
-//##			theRel = ZRA::Transform_DecomposeRestricts().Do(theRel);
-//##			theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
-
-			if (ZLOGPF(s, eDebug))
-				{
-				s << "Cooked:\n";
-				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
-				}
+				s << "Raw:\n" << theRel;
 
 			thePQuery->fRel_Analyzed = Analyze(this, thePQuery).TopLevelDo(theRel);
 			fPQuery_NeedsWork.Insert(thePQuery);
 
 			if (ZLOGPF(s, eDebug + 1))
-				{
-				s << "Analyzed:\n";
-				ZRA::Util_Strim_Rel::sToStrim(thePQuery->fRel_Analyzed, s);
-				}
+				s << "Analyzed:\n" << thePQuery->fRel_Analyzed;
 			}
 
 		const int64 theRefcon = iAdded->GetRefcon();
