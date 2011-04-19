@@ -156,10 +156,8 @@ private:
 	class DLink_PSearch_NeedsWork;
 	class PSearch;
 
-	typedef std::pair<ZRA::Rename,ZRef<ZExpr_Bool> > PSearchKey;
-
-	typedef std::map<PSearchKey,PSearch,Less_Compare_T<PSearchKey> > Map_Rel_PSearch;
-	Map_Rel_PSearch fMap_Rel_PSearch;
+	typedef std::map<ZRA::RelHead,PSearch> Map_PSearch;
+	Map_PSearch fMap_PSearch;
 
 	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
 //--

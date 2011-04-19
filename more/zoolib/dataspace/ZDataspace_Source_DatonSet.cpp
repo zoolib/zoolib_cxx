@@ -127,8 +127,8 @@ public:
 	virtual void Visit_Expr_Rel_Search(const ZRef<ZQE::Expr_Rel_Search>& iExpr)
 		{ this->pSetResult(fSource->pMakeWalker_Search(fPQuery, iExpr)); }
 
-	ZRef<Source_DatonSet> fSource;
-	PQuery* fPQuery;
+	ZRef<Source_DatonSet> const fSource;
+	PQuery* const fPQuery;
 	};
 
 // =================================================================================================
@@ -213,8 +213,8 @@ public:
 		{}
 
 	const ZRef<ZRA::Expr_Rel> fRel;
-	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
-	set<PSearch*> fDependingPSearches;
+	DListHead<DLink_ClientQuery_InPQuery> fClientQuery_InPQuery;
+	set<PSearch*> fPSearch_Used;
 	ZRef<ZQE::Result> fResult;
 	};
 
@@ -232,10 +232,9 @@ class Source_DatonSet::PSearch
 public:
 	PSearch() {}
 
-	ZRA::Rename fRename;
 	RelHead fRelHead;
-	ZRef<ZExpr_Bool> fExpr_Bool;
-	set<PQuery*> fDependentPQueries;
+	set<PQuery*> fPQuery_Using;
+	ZRef<ZQE::Result> fResult;
 	};
 
 // =================================================================================================
@@ -287,7 +286,7 @@ void Source_DatonSet::ModifyRegistrations(
 		ZAssert(iterClientQueryPair.second);
 
 		ClientQuery* theClientQuery = &iterClientQueryPair.first->second;
-		thePQuery->fClientQueries.Insert(theClientQuery);
+		thePQuery->fClientQuery_InPQuery.Insert(theClientQuery);
 
 		if (iterPQueryPair.second)
 			{
@@ -313,8 +312,8 @@ void Source_DatonSet::ModifyRegistrations(
 		ClientQuery* theClientQuery = &iterClientQuery->second;
 		
 		PQuery* thePQuery = theClientQuery->fPQuery;
-		thePQuery->fClientQueries.Erase(theClientQuery);
-		if (thePQuery->fClientQueries.Empty())
+		thePQuery->fClientQuery_InPQuery.Erase(theClientQuery);
+		if (thePQuery->fClientQuery_InPQuery.Empty())
 			{
 			this->pDetachPQuery(thePQuery);
 			fPQuery_NeedsWork.EraseIfContains(thePQuery);
@@ -340,7 +339,7 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 
 	oChanged.clear();
 
-	// Pick up (and index) values from dataset
+	// Pick changes datonSet
 	this->pPull();
 	
 	ZLOGPF(s, eDebug);
@@ -373,8 +372,8 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 			}
 
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
-			iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
-			{ fClientQuery_NeedsWork.InsertIfNotContains(iterCS.Current()); }
+			iter = thePQuery->fClientQuery_InPQuery; iter; iter.Advance())
+			{ fClientQuery_NeedsWork.InsertIfNotContains(iter.Current()); }
 		}
 
 	for (DListEraser<ClientQuery,DLink_ClientQuery_NeedsWork> eraser = fClientQuery_NeedsWork;
@@ -390,12 +389,8 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 		eraser; eraser.Advance())
 		{
 		PSearch* thePSearch = eraser.Current();
-		if (thePSearch->fDependentPQueries.empty())
-			{
-			// Delete thePSearch
-			const PSearchKey theKey(thePSearch->fRename, thePSearch->fExpr_Bool);
-			ZUtil_STL::sEraseMustContain(1, fMap_Rel_PSearch, theKey);
-			}
+		if (thePSearch->fPQuery_Using.empty())
+			ZUtil_STL::sEraseMustContain(kDebug, fMap_PSearch, thePSearch->fRelHead);
 		}
 	}
 
@@ -467,15 +462,15 @@ void Source_DatonSet::CloseTransaction(size_t iIndex)
 void Source_DatonSet::pDetachPQuery(PQuery* iPQuery)
 	{
 	// Detach from any depended-upon PSearch
-	for (set<PSearch*>::iterator iterPSearch = iPQuery->fDependingPSearches.begin();
-		iterPSearch != iPQuery->fDependingPSearches.end(); ++iterPSearch)
+	for (set<PSearch*>::iterator iterPSearch = iPQuery->fPSearch_Used.begin();
+		iterPSearch != iPQuery->fPSearch_Used.end(); ++iterPSearch)
 		{
 		PSearch* thePSearch = *iterPSearch;
-		ZUtil_STL::sEraseMustContain(1, thePSearch->fDependentPQueries, iPQuery);
-		if (thePSearch->fDependentPQueries.empty())
+		ZUtil_STL::sEraseMustContain(kDebug, thePSearch->fPQuery_Using, iPQuery);
+		if (thePSearch->fPQuery_Using.empty())
 			fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
 		}
-	iPQuery->fDependingPSearches.clear();
+	iPQuery->fPSearch_Used.clear();
 	}
 
 void Source_DatonSet::pPull()
@@ -600,35 +595,35 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 	for (ZMap_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
 		theRH |= theMap.NameOf(i);
 
-	for (Map_Rel_PSearch::iterator iterPSearch = fMap_Rel_PSearch.begin();
-		iterPSearch != fMap_Rel_PSearch.end(); ++iterPSearch)
+	for (Map_PSearch::iterator iterPSearch = fMap_PSearch.begin();
+		iterPSearch != fMap_PSearch.end(); ++iterPSearch)
 		{
 		PSearch* thePSearch = &iterPSearch->second;
-		if (!(thePSearch->fRelHead & theRH).empty())
+		if (thePSearch->fRelHead.Contains(theRH))
 			{
-			for (set<PQuery*>::iterator iterPQuery = thePSearch->fDependentPQueries.begin();
-				iterPQuery != thePSearch->fDependentPQueries.end(); ++iterPQuery)
+			for (set<PQuery*>::iterator iterPQuery = thePSearch->fPQuery_Using.begin();
+				iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)
 				{
 				PQuery* thePQuery = *iterPQuery;
 				fPQuery_NeedsWork.InsertIfNotContains(thePQuery);
-				for (set<PSearch*>::iterator iterDependingPSearch =
-					thePQuery->fDependingPSearches.begin();
-					iterDependingPSearch != thePQuery->fDependingPSearches.end();
-					++iterDependingPSearch)
+				for (set<PSearch*>::iterator iterPSearch_Used =
+					thePQuery->fPSearch_Used.begin();
+					iterPSearch_Used != thePQuery->fPSearch_Used.end();
+					++iterPSearch_Used)
 					{
-					PSearch* theDependingPSearch = *iterDependingPSearch;
-					if (theDependingPSearch != thePSearch)
+					PSearch* thePSearch_Used = *iterPSearch_Used;
+					if (thePSearch_Used != thePSearch)
 						{
-						ZUtil_STL::sEraseMustContain(
-							1, theDependingPSearch->fDependentPQueries, thePQuery);
+						ZUtil_STL::sEraseMustContain(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
 
-						if (theDependingPSearch->fDependentPQueries.empty())
-							fPSearch_NeedsWork.InsertIfNotContains(theDependingPSearch);
+						if (thePSearch_Used->fPQuery_Using.empty())
+							fPSearch_NeedsWork.InsertIfNotContains(thePSearch_Used);
 						}
 					}
-				thePQuery->fDependingPSearches.clear();
+				thePQuery->fPSearch_Used.clear();
 				}
-			thePSearch->fDependentPQueries.clear();
+			thePSearch->fPQuery_Using.clear();
+			thePSearch->fResult.Clear();
 			fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
 			}
 		}
@@ -654,33 +649,34 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
 	// gets PSearches from the source, they're registered against that PQuery.
 
 	const ZRA::Rename& theRename = iRel->GetRename();
-	const ZRef<ZExpr_Bool>& theExpr_Bool = iRel->GetExpr_Bool();
-
-	const PSearchKey theKey(theRename, theExpr_Bool);
+	ZRA::RelHead theRelHead;
+	for (ZRA::Rename::const_iterator i = theRename.begin(); i != theRename.end(); ++i)
+		theRelHead |= i->first;
 
 	PSearch* thePSearch;
-	Map_Rel_PSearch::iterator iterPSearch = fMap_Rel_PSearch.find(theKey);
-	if (iterPSearch != fMap_Rel_PSearch.end())
+	Map_PSearch::iterator iterPSearch = fMap_PSearch.find(theRelHead);
+	if (iterPSearch != fMap_PSearch.end())
 		{
 		thePSearch = &iterPSearch->second;
 		}
 	else
 		{
-		pair<Map_Rel_PSearch::iterator,bool> inPSearch =
-			fMap_Rel_PSearch.insert(make_pair(theKey, PSearch()));
+		pair<Map_PSearch::iterator,bool> inPSearch =
+			fMap_PSearch.insert(make_pair(theRelHead, PSearch()));
 
 		thePSearch = &inPSearch.first->second;
-		thePSearch->fRename = theRename;
-		thePSearch->fExpr_Bool = theExpr_Bool;
-		for (ZRA::Rename::const_iterator i = theRename.begin(); i != theRename.end(); ++i)
-			thePSearch->fRelHead |= i->first;
+		thePSearch->fRelHead = theRelHead;
 		}
 
-	ZUtil_STL::sInsertMustNotContain(1, iPQuery->fDependingPSearches, thePSearch);
-	ZUtil_STL::sInsertMustNotContain(1, thePSearch->fDependentPQueries, iPQuery);
+	ZUtil_STL::sInsertMustNotContain(kDebug, iPQuery->fPSearch_Used, thePSearch);
+	ZUtil_STL::sInsertMustNotContain(kDebug, thePSearch->fPQuery_Using, iPQuery);
 
-	ZRef<ZQE::Walker> theWalker = this->pMakeWalker_Concrete(thePSearch->fRelHead);
+	if (!thePSearch->fResult)
+		thePSearch->fResult = sDoQuery(this->pMakeWalker_Concrete(thePSearch->fRelHead));
+	
+	ZRef<ZQE::Walker> theWalker = new ZQE::Walker_Result(thePSearch->fResult);
 
+	const ZRef<ZExpr_Bool>& theExpr_Bool = iRel->GetExpr_Bool();
 	if (theExpr_Bool != sTrue())
 		theWalker = new ZQE::Walker_Restrict(theWalker, theExpr_Bool);
 
