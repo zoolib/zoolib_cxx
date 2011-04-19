@@ -48,9 +48,14 @@ public:
 		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
+	class Exec;
+
 private:
 	const ZRef<ZExpr_Bool> fExpr_Bool;
 	std::map<string8,size_t> fChildOffsets;
+
+	std::vector<ZVal_Any> fConsts;
+	Exec* fExec;
 	};
 
 } // namespace ZQE

@@ -18,7 +18,6 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/zqe/ZQE_Walker_Calc.h"
 
 namespace ZooLib {
@@ -66,11 +65,7 @@ bool Walker_Calc::ReadInc(
 	if (!fWalker->ReadInc(ioResults, oAnnotations))
 		return false;
 
-	ZMap_Any theMap;
-	for (map<string8,size_t>::const_iterator i = fBindings.begin(); i != fBindings.end(); ++i)
-		theMap.Set(i->first, ioResults[i->second]);
-
-	ioResults[fOutputOffset] = fCallable->Call(theMap);
+	ioResults[fOutputOffset] = fCallable->Call(PseudoMap(fBindings, ioResults));
 
 	return true;
 	}

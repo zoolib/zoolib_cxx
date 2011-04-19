@@ -214,20 +214,14 @@ public:
 
 		const RelName& theName = ZRA::sRenamed(fRename, iExpr->GetRelName());
 
-		// The restriction may reference the name we introduce, so don't pass it down the tree.
-		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
-		fRestriction = sTrue();
-
-		// Similarly with projection -- we don't know what names our embedee will be
-		// referencing from our descendants.
-		const ZUniSet_T<RelName> priorProjection = fProjection;
-		fProjection = ZUniSet_T<RelName>::sUniversal();
-		
+		ZRef<ZRA::Expr_Rel> newEmbed;
+		{
+		ZSetRestore_T<ZRef<ZExpr_Bool> > sr0(fRestriction, sTrue());
+		ZSetRestore_T<ZUniSet_T<RelName> > sr1(fProjection, ZUniSet_T<RelName>::sUniversal());
 		ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
-		ZRef<ZRA::Expr_Rel> newEmbed = new ZRA::Expr_Rel_Embed(newOp0, theName, newOp1);
-		
-		fRestriction = priorRestriction;
-		fProjection = priorProjection;
+		newEmbed = new ZRA::Expr_Rel_Embed(newOp0, theName, newOp1);
+		}
+
 		fRename.clear();
 		this->pApplyRestrictProject(newEmbed);
 		}

@@ -49,6 +49,8 @@ ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Calc)
 
 namespace ZRA {
 
+using std::map;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Expr_Rel_Calc

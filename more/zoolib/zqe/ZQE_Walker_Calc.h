@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 #include "zoolib/zra/ZRA_RelHead.h"
 #include "zoolib/zqe/ZQE_Walker.h"
 
@@ -36,7 +37,8 @@ namespace ZQE {
 class Walker_Calc : public Walker_Unary
 	{
 public:
-	typedef ZCallable<ZVal_Any(const ZMap_Any&)> Callable;
+	typedef ZRA::Expr_Rel_Calc::Callable Callable;
+	typedef ZRA::Expr_Rel_Calc::PseudoMap PseudoMap;
 	
 	Walker_Calc(const ZRef<Walker>& iWalker,
 		const string8& iRelName,

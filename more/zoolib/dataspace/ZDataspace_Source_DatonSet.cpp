@@ -94,30 +94,6 @@ ZVal_Any spAsVal(const ZData_Any& iData)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ToStrim (anonymous)
-
-namespace { // anonymous
-
-class Visitor_ToStrim
-:	public ZRA::Util_Strim_Rel::Visitor
-,	public virtual ZQE::Visitor_Expr_Rel_Search
-	{
-public:
-	virtual void Visit_Expr_Rel_Search(const ZRef<ZQE::Expr_Rel_Search>& iExpr)
-		{
-		const ZStrimW& w = pStrimW();
-		w	<< "Search(";
-		w	<< iExpr->GetRename();
-		w	<< ",";
-		this->pToStrim(iExpr->GetExpr_Bool());
-		w	<< ")";
-		}
-	};
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Daton/Val conversion.
 
 ZVal_Any sAsVal(const Daton& iDaton)
@@ -266,7 +242,7 @@ public:
 	RelHead fRelHead;
 	ZRef<ZExpr_Bool> fExpr_Bool;
 	set<PQuery*> fDependentPQueries;
-	ZRef<ZQE::Result> fResult;
+//##	ZRef<ZQE::Result> fResult;
 	};
 
 // =================================================================================================
@@ -295,19 +271,17 @@ void Source_DatonSet::ModifyRegistrations(
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
-		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
-
-		theRel = ZRA::Transform_DecomposeRestricts().Do(theRel);
-		theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
-		theRel = ZQE::sTransform_Search(theRel);
-
-		if (ZLOGPF(s, eDebug + 1))
+		if (ZLOGPF(s, eDebug))
 			{
 			s << "\nDatonSet Raw:\n";
-			ZRA::Util_Strim_Rel::sToStrim(
-				ZRA::Transform_ConsolidateRenames().Do(
-					ZRA::Transform_PushDownRestricts().Do(iAdded->GetRel())),
-				s);
+			ZRA::Util_Strim_Rel::sToStrim(iAdded->GetRel(), s);
+			}
+
+		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
+		theRel = ZQE::sTransform_Search(theRel);
+
+		if (ZLOGPF(s, eDebug))
+			{
 			s << "\nDatonSet Cooked:\n";
 			ZRA::Util_Strim_Rel::sToStrim(theRel, s);
 			}
@@ -386,7 +360,16 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 		eraser; eraser.Advance())
 		{
 		PQuery* thePQuery = eraser.Current();
+
+		if (ZLOGPF(s, eDebug))
+			{
+			s << "\n";
+			ZRA::Util_Strim_Rel::sToStrim(thePQuery->fRel, s);
+			}
+
 		ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
+
+
 		ZRef<ZQE::Result> theResult = ZQE::sDoQuery(theWalker);
 		thePQuery->fResult = theResult;
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
@@ -650,7 +633,7 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 				}
 			thePSearch->fDependentPQueries.clear();
 			fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
-			thePSearch->fResult.Clear();
+//##			thePSearch->fResult.Clear();
 			}
 		}
 	}
@@ -681,7 +664,11 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
 
 	PSearch* thePSearch;
 	Map_Rel_PSearch::iterator iterPSearch = fMap_Rel_PSearch.find(theKey);
-	if (iterPSearch == fMap_Rel_PSearch.end())
+	if (iterPSearch != fMap_Rel_PSearch.end())
+		{
+		thePSearch = &iterPSearch->second;
+		}
+	else
 		{
 		pair<Map_Rel_PSearch::iterator,bool> inPSearch =
 			fMap_Rel_PSearch.insert(make_pair(theKey, PSearch()));
@@ -692,18 +679,11 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
 		for (ZRA::Rename::const_iterator i = theRename.begin(); i != theRename.end(); ++i)
 			thePSearch->fRelHead |= i->first;
 		}
-	else
-		{
-		thePSearch = &iterPSearch->second;
-		}
 
 	ZUtil_STL::sInsertMustNotContain(1, iPQuery->fDependingPSearches, thePSearch);
 	ZUtil_STL::sInsertMustNotContain(1, thePSearch->fDependentPQueries, iPQuery);
 
-	if (!thePSearch->fResult)
-		thePSearch->fResult = sDoQuery(this->pMakeWalker_Concrete(thePSearch->fRelHead));
-
-	ZRef<ZQE::Walker> theWalker = new ZQE::Walker_Result(thePSearch->fResult);
+	ZRef<ZQE::Walker> theWalker = this->pMakeWalker_Concrete(thePSearch->fRelHead);
 
 	if (theExpr_Bool != sTrue())
 		theWalker = new ZQE::Walker_Restrict(theWalker, theExpr_Bool);
