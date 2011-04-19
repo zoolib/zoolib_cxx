@@ -168,4 +168,11 @@ void sToStrim(const ZRef<ZRA::Expr_Rel>& iRel, const Options& iOptions, const ZS
 
 } // namespace Util_Strim_Rel
 } // namespace ZRA
+
+const ZStrimW& operator<<(const ZStrimW& w, const ZRef<ZRA::Expr_Rel>& iRel)
+	{
+	ZRA::Util_Strim_Rel::sToStrim(iRel, w);
+	return w;
+	}
+
 } // namespace ZooLib
