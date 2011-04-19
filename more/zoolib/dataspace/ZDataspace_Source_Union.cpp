@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZString.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZValPred_GetNames.h"
@@ -44,7 +45,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Transform_ConsolidateRenames.h"
 #include "zoolib/zra/ZRA_Transform_DecomposeRestricts.h"
 #include "zoolib/zra/ZRA_Transform_PushDownRestricts.h"
-#include "zoolib/zra/ZRA_Transform_Thing.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -747,10 +747,10 @@ void Source_Union::ModifyRegistrations(
 				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
 				}
 
-			theRel = ZRA::Transform_DecomposeRestricts().Do(theRel);
-			theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
+//##			theRel = ZRA::Transform_DecomposeRestricts().Do(theRel);
+//##			theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
 
-			if (ZLOGPF(s, eDebug + 1))
+			if (ZLOGPF(s, eDebug))
 				{
 				s << "Cooked:\n";
 				ZRA::Util_Strim_Rel::sToStrim(theRel, s);
@@ -831,45 +831,77 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 
 	// -----
 
-	for (DListEraser<PQuery, DLink_PQuery_NeedsWork>
-		eraserPQuery = fPQuery_NeedsWork; eraserPQuery; eraserPQuery.Advance())
+	if (!fPQuery_NeedsWork.Empty())
 		{
-		PQuery* thePQuery = eraserPQuery.Current();
-		bool allOK = true;
-		ZRef<Event> theEvent;
-		for (set<ZRef<Proxy> >::iterator iterProxy = thePQuery->fProxiesDependedUpon.begin();
-			allOK && iterProxy != thePQuery->fProxiesDependedUpon.end(); ++iterProxy)
+		ZLOGPF(s, eDebug);
+
+		const ZTime start = ZTime::sNow();
+
+		for (DListEraser<PQuery, DLink_PQuery_NeedsWork>
+			eraserPQuery = fPQuery_NeedsWork; eraserPQuery; eraserPQuery.Advance())
 			{
-			ZRef<Proxy> theProxy = *iterProxy;
-			for (DListIterator<PIP, DLink_PIP_InProxy> iterPIP = theProxy->fPIP_InProxy;
-				allOK && iterPIP; iterPIP.Advance())
+			PQuery* thePQuery = eraserPQuery.Current();
+			bool allOK = true;
+			ZRef<Event> theEvent;
+			for (set<ZRef<Proxy> >::iterator iterProxy = thePQuery->fProxiesDependedUpon.begin();
+				allOK && iterProxy != thePQuery->fProxiesDependedUpon.end(); ++iterProxy)
 				{
-				PIP* thePIP = iterPIP.Current();
-				if (!thePIP->fResult)
+				ZRef<Proxy> theProxy = *iterProxy;
+				for (DListIterator<PIP, DLink_PIP_InProxy> iterPIP = theProxy->fPIP_InProxy;
+					allOK && iterPIP; iterPIP.Advance())
 					{
-					allOK = false;
-					}
-				else
-					{
-					if (theEvent)
-						theEvent = theEvent->Joined(thePIP->fEvent);
+					PIP* thePIP = iterPIP.Current();
+					if (!thePIP->fResult)
+						{
+						allOK = false;
+						}
 					else
-						theEvent = thePIP->fEvent;
+						{
+						if (theEvent)
+							theEvent = theEvent->Joined(thePIP->fEvent);
+						else
+							theEvent = thePIP->fEvent;
+						}
 					}
+				}
+
+			if (allOK)
+				{
+				fWalkerCount = 0;
+				fReadCount = 0;
+				fStepCount = 0;
+
+				const ZTime start = ZTime::sNow();
+
+				ZRef<ZQE::Walker> theWalker =
+					Source_Union::Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
+				const ZTime afterMakeWalker = ZTime::sNow();
+
+				thePQuery->fResult = ZQE::sDoQuery(theWalker);
+				thePQuery->fEvent = theEvent;
+				const ZTime afterDoQuery = ZTime::sNow();
+
+				if (s)
+					{
+					s << "\n" << thePQuery->fRel_Analyzed
+						<< "\nWalkerCount: " << fWalkerCount
+						<< "\nReadCount: " << fReadCount
+						<< "\nStepCount: " << fStepCount
+						<< "\nMakeWalker: " << ZStringf("%gms", 1000*(afterMakeWalker-start))
+						<< "\nDoQuery: " << ZStringf("%gms", 1000*(afterDoQuery-afterMakeWalker));
+					}
+
+				for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
+					iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
+					{ fClientQuery_NeedsWork.InsertIfNotContains(iterCS.Current()); }
 				}
 			}
 
-		if (allOK)
+		const ZTime afterCollect = ZTime::sNow();
+
+		if (s)
 			{
-			ZRef<ZQE::Walker> theWalker =
-				Source_Union::Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
-
-			thePQuery->fResult = ZQE::sDoQuery(theWalker);
-			thePQuery->fEvent = theEvent;
-
-			for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
-				iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
-				{ fClientQuery_NeedsWork.InsertIfNotContains(iterCS.Current()); }
+			s << "\nOverall Elapsed: " << ZStringf("%gms", 1000*(afterCollect-start));
 			}
 		}
 
@@ -993,7 +1025,10 @@ void Source_Union::pFinalizeProxy(Proxy* iProxy)
 	}
 
 ZRef<Source_Union::Walker_Proxy> Source_Union::pMakeWalker(ZRef<Proxy> iProxy)
-	{ return new Walker_Proxy(this, iProxy); }
+	{
+	++fWalkerCount;
+	return new Walker_Proxy(this, iProxy);
+	}
 
 void Source_Union::pRewind(ZRef<Walker_Proxy> iWalker)
 	{
@@ -1016,8 +1051,10 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
+	++fReadCount;
 	for (;;)
 		{
+		++fStepCount;
 		if (!iWalker->fCurrentResult)
 			{
 			if (!iWalker->fIter_PIP)

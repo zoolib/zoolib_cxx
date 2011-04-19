@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimU_StreamUTF8Buffered.h"
 #include "zoolib/ZStrimmer_Streamer.h"
+#include "zoolib/ZString.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
 #include "zoolib/ZYad_Any.h"
@@ -38,9 +39,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Walker_Restrict.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
-#include "zoolib/zra/ZRA_Transform_ConsolidateRenames.h"
-#include "zoolib/zra/ZRA_Transform_DecomposeRestricts.h"
-#include "zoolib/zra/ZRA_Transform_PushDownRestricts.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
@@ -124,14 +122,10 @@ public:
 		{}
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
-		{
-		this->pSetResult(fSource->pMakeWalker_Concrete(iExpr->GetConcreteRelHead()));
-		}
+		{ this->pSetResult(fSource->pMakeWalker_Concrete(iExpr->GetConcreteRelHead())); }
 
 	virtual void Visit_Expr_Rel_Search(const ZRef<ZQE::Expr_Rel_Search>& iExpr)
-		{
-		this->pSetResult(fSource->pMakeWalker_Search(fPQuery, iExpr));
-		}
+		{ this->pSetResult(fSource->pMakeWalker_Search(fPQuery, iExpr)); }
 
 	ZRef<Source_DatonSet> fSource;
 	PQuery* fPQuery;
@@ -242,7 +236,6 @@ public:
 	RelHead fRelHead;
 	ZRef<ZExpr_Bool> fExpr_Bool;
 	set<PQuery*> fDependentPQueries;
-//##	ZRef<ZQE::Result> fResult;
 	};
 
 // =================================================================================================
@@ -271,20 +264,14 @@ void Source_DatonSet::ModifyRegistrations(
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
-		if (ZLOGPF(s, eDebug))
-			{
-			s << "\nDatonSet Raw:\n";
-			ZRA::Util_Strim_Rel::sToStrim(iAdded->GetRel(), s);
-			}
+		if (ZLOGPF(s, eDebug+1))
+			s << "\nDatonSet Raw:\n" << iAdded->GetRel();
 
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
 		theRel = ZQE::sTransform_Search(theRel);
 
 		if (ZLOGPF(s, eDebug))
-			{
-			s << "\nDatonSet Cooked:\n";
-			ZRA::Util_Strim_Rel::sToStrim(theRel, s);
-			}
+			s << "\nDatonSet Cooked:\n" << theRel;
 
 		const pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
@@ -356,22 +343,35 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 	// Pick up (and index) values from dataset
 	this->pPull();
 	
+	ZLOGPF(s, eDebug);
+
 	for (DListEraser<PQuery,DLink_PQuery_NeedsWork> eraser = fPQuery_NeedsWork;
 		eraser; eraser.Advance())
 		{
 		PQuery* thePQuery = eraser.Current();
 
-		if (ZLOGPF(s, eDebug))
-			{
-			s << "\n";
-			ZRA::Util_Strim_Rel::sToStrim(thePQuery->fRel, s);
-			}
+		fWalkerCount = 0;
+		fReadCount = 0;
+		fStepCount = 0;
+
+		const ZTime start = ZTime::sNow();
 
 		ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
+		const ZTime afterMakeWalker = ZTime::sNow();
 
+		thePQuery->fResult = ZQE::sDoQuery(theWalker);
+		const ZTime afterDoQuery = ZTime::sNow();
 
-		ZRef<ZQE::Result> theResult = ZQE::sDoQuery(theWalker);
-		thePQuery->fResult = theResult;
+		if (s)
+			{
+			s << "\n" << thePQuery->fRel
+				<< "\nWalkerCount: " << fWalkerCount
+				<< "\nReadCount: " << fReadCount
+				<< "\nStepCount: " << fStepCount
+				<< "\nMakeWalker: " << ZStringf("%gms", 1000*(afterMakeWalker-start))
+				<< "\nDoQuery: " << ZStringf("%gms", 1000*(afterDoQuery-afterMakeWalker));
+			}
+
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 			iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
 			{ fClientQuery_NeedsWork.InsertIfNotContains(iterCS.Current()); }
@@ -397,9 +397,6 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 			ZUtil_STL::sEraseMustContain(1, fMap_Rel_PSearch, theKey);
 			}
 		}
-
-//##	if (!ZMACRO_IPhone_Device)
-//##		ZThread::sSleep(1);
 	}
 
 ZRef<ZDatonSet::DatonSet> Source_DatonSet::GetDatonSet()
@@ -633,7 +630,6 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 				}
 			thePSearch->fDependentPQueries.clear();
 			fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
-//##			thePSearch->fResult.Clear();
 			}
 		}
 	}

@@ -98,6 +98,10 @@ private:
 		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
+	size_t fWalkerCount;
+	size_t fReadCount;
+	size_t fStepCount;
+
 	// -----
 
 	class DLink_ClientQuery_NeedsWork;

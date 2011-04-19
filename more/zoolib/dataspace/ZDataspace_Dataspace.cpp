@@ -23,6 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/dataspace/ZDataspace_Dataspace.h"
 
+#include "zoolib/zra/ZRA_Transform_DecomposeRestricts.h"
+#include "zoolib/zra/ZRA_Transform_PushDownRestricts.h"
+
 namespace ZooLib {
 namespace ZDataspace {
 
@@ -64,7 +67,9 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 	iSieve->fRel = iRel;
 	ZUtil_STL::sInsertMustNotContain(kDebug, fMap_RefconToSieve, iSieve->fRefcon, iSieve.Get());
 
-	const AddedQuery theAddedQuery(iSieve->fRefcon, iRel);
+	ZRef<ZRA::Expr_Rel> theRel = ZRA::Transform_DecomposeRestricts().Do(iRel);
+	theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
+	const AddedQuery theAddedQuery(iSieve->fRefcon, theRel);
 	fSource->ModifyRegistrations(&theAddedQuery, 1, nullptr, 0);
 	}
 
