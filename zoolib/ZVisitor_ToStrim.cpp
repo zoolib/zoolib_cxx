@@ -41,7 +41,6 @@ ZVisitor_ToStrim::Options::Options()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVisitor_ToStrim
-static ZStrimW_Null sNull;
 
 ZVisitor_ToStrim::ZVisitor_ToStrim()
 :	fOptions(nullptr)
