@@ -51,9 +51,18 @@ ZVisitor_ToStrim::ZVisitor_ToStrim()
 void ZVisitor_ToStrim::Visit(const ZRef<ZVisitee>& iRep)
 	{
 	if (iRep)
-		pStrimW() << "/*unhandled ZVisitee: " << typeid(*iRep.Get()).name() << "*/";
+		{
+		pStrimW()
+			<< "/*unhandled ZVisitee: "
+			<< (void*)iRep.Get()
+			<< "/"
+			<< typeid(*iRep.Get()).name()
+			<< "*/";
+		}
 	else
+		{
 		pStrimW() << "/*null ZVisitee*/";
+		}
 	}
 
 void ZVisitor_ToStrim::ToStrim(
