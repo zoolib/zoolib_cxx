@@ -39,6 +39,8 @@ void sToStrim(const ZValPred& iValPred, const ZStrimW& iStrimW);
 
 } // namespace ZUtil_Strim_ValPred_Any
 
+const ZStrimW& operator<<(const ZStrimW& w, const ZValPred& iValPred);
+
 } // namespace ZooLib
 
 #endif // __ZUtil_Strim_ValPred_Any__

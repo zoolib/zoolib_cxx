@@ -131,4 +131,11 @@ void sToStrim(const ZValPred& iValPred, const ZStrimW& s)
 	}
 
 } // namespace ZUtil_Strim_ValPred_Any
+
+const ZStrimW& operator<<(const ZStrimW& w, const ZValPred& iValPred)
+	{
+	ZUtil_Strim_ValPred_Any::sToStrim(iValPred, w);
+	return w;
+	}
+
 } // namespace ZooLib
