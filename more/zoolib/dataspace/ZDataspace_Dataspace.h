@@ -105,6 +105,7 @@ public:
 	virtual void Loaded();
 	virtual void Changed(bool iIsLoad);
 
+	ZRef<ZRA::Expr_Rel> GetRel();
 	ZRef<ZQE::Result> GetResult();
 	ZRef<Event> GetEvent();
 
@@ -113,11 +114,11 @@ public:
 private:
 	Dataspace* fDataspace;
 	int64 fRefcon;
+	ZRef<ZRA::Expr_Rel> fRel;
 	ZRef<ZQE::Result> fResult;
 	ZRef<Event> fEvent;
 
 	friend class Dataspace;
-protected:	ZRef<ZRA::Expr_Rel> fRel;//##
 	};
 
 // =================================================================================================

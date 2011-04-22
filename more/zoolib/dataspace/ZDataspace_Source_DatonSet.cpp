@@ -62,6 +62,13 @@ Minimally, keep an index of property names in contents -- that way we can effici
 identify those entities that satisfy a RelHead.
 */
 
+static const ZStrimW& operator<<(const ZStrimW& w, const Daton& iDaton)
+	{
+	const ZData_Any& theData = iDaton.GetData();
+	w.Write(static_cast<const UTF8*>(theData.GetData()), theData.GetSize());
+	return w;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * spAsVal (anonymous)
@@ -269,7 +276,7 @@ void Source_DatonSet::ModifyRegistrations(
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
 		theRel = ZQE::sTransform_Search(theRel);
 
-		if (ZLOGPF(s, eDebug))
+		if (ZLOGPF(s, eDebug+1))
 			s << "\nDatonSet Cooked:\n" << theRel;
 
 		const pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
@@ -342,7 +349,7 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 	// Pick changes datonSet
 	this->pPull();
 	
-	ZLOGPF(s, eDebug);
+	ZLOGPF(s, eDebug+1);
 
 	for (DListEraser<PQuery,DLink_PQuery_NeedsWork> eraser = fPQuery_NeedsWork;
 		eraser; eraser.Advance())
@@ -549,10 +556,7 @@ void Source_DatonSet::pPull()
 				
 
 			if (s)
-				{
-				const ZData_Any& theData = theDaton.GetData();
-				s.Write(static_cast<const UTF8*>(theData.GetData()), theData.GetSize());
-				}
+				s << theDaton;
 			}
 		}
 	}
@@ -580,9 +584,14 @@ void Source_DatonSet::pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& iV
 		{
 		fMap_Pending.insert(make_pair(iDaton, make_pair(iVal, iSense)));
 		}
+	else if (i->second.second == iSense)
+		{
+		if (ZLOGF(s, eDebug))
+			s << "\nDaton: " << iDaton;
+		ZDebugStop(0);
+		}
 	else
 		{
-		ZAssert(i->second.second == !iSense);
 		fMap_Pending.erase(i);
 		}
 	this->pChanged(iVal);

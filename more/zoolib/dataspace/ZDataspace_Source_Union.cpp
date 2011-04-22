@@ -818,7 +818,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 
 	if (!fPQuery_NeedsWork.Empty())
 		{
-		ZLOGPF(s, eDebug);
+		ZLOGPF(s, eDebug+1);
 
 		const ZTime start = ZTime::sNow();
 
@@ -1063,7 +1063,7 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 		const ZRA::RelHead& theRH = iWalker->fCurrentResult->GetRelHead();
 		if (theRH != iWalker->fProxy->fResultRelHead)
 			{
-			if (ZLOGPF(s, eDebug))
+			if (ZLOGPF(s, eDebug+1))
 				{
 				s	<< "\n" << theRH
 					<< "\n" << iWalker->fProxy->fResultRelHead;

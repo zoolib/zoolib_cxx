@@ -206,6 +206,9 @@ void Sieve::Loaded()
 void Sieve::Changed(bool iIsLoad)
 	{}
 
+ZRef<ZRA::Expr_Rel> Sieve::GetRel()
+	{ return fRel; }
+
 ZRef<ZQE::Result> Sieve::GetResult()
 	{ return fResult; }
 
