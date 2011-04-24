@@ -80,7 +80,7 @@ public:
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Rename> sRename(const ZRef<Expr_Rel>& iExpr,
+ZRef<Expr_Rel> sRename(const ZRef<Expr_Rel>& iExpr,
 	const RelName& iNewPropName, const RelName& iOldPropName);
 
 } // namespace ZRA
