@@ -365,12 +365,18 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 		ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
 		const ZTime afterMakeWalker = ZTime::sNow();
 
+		if (s)
+			{
+			s << "\n" << thePQuery->fRel;
+			s.Emit();
+			}
+
 		thePQuery->fResult = ZQE::sDoQuery(theWalker);
 		const ZTime afterDoQuery = ZTime::sNow();
 
-		if (s)
+		if (s && 0)
 			{
-			s << "\n" << thePQuery->fRel
+			s
 				<< "\nWalkerCount: " << fWalkerCount
 				<< "\nReadCount: " << fReadCount
 				<< "\nStepCount: " << fStepCount
@@ -693,7 +699,7 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
 		iterRename != theRename.end(); ++iterRename)
 		{
 		if (iterRename->first != iterRename->second)
-			theWalker = new ZQE::Walker_Rename(theWalker, iterRename->first, iterRename->second);
+			theWalker = new ZQE::Walker_Rename(theWalker, iterRename->second, iterRename->first);
 		}
 
 	return theWalker;
