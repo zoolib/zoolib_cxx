@@ -43,6 +43,9 @@ public:
 	:	T(iOther)
 		{}
 
+	virtual ~ZCountedWrap()
+		{}
+
 	ZRef<ZCountedWrap> Clone()
 		{ return new ZCountedWrap(*this); }
 	
@@ -58,7 +61,7 @@ public:
 	};
 
 template <class T>
-ZRef<ZCountedWrap<T> > CopyCounted(const T& iOther)
+ZRef<ZCountedWrap<T> > MakeCounted(const T& iOther)
 	{ return new ZCountedWrap<T>(iOther); }
 
 } // namespace ZooLib
