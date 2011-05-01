@@ -614,7 +614,7 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 		iterPSearch != fMap_PSearch.end(); ++iterPSearch)
 		{
 		PSearch* thePSearch = &iterPSearch->second;
-		if (thePSearch->fRelHead.Contains(theRH))
+		if (theRH.Contains(thePSearch->fRelHead))
 			{
 			for (set<PQuery*>::iterator iterPQuery = thePSearch->fPQuery_Using.begin();
 				iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)
