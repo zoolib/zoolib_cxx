@@ -764,6 +764,16 @@ using namespace ZooLib::UIKit;
 	return 0;
 	}
 
+- (void)doUpdateIfPossible:(UITableView*)tableView
+	{
+	fNeedsUpdate = true;
+
+	if (fUpdateInFlight)
+		return;
+
+	[self pDoUpdate1:tableView];
+	}
+
 - (void)needsUpdate:(UITableView*)tableView
 	{
 	ZAssert(tableView);
@@ -795,7 +805,10 @@ static void spInsertSections(UITableView* iTableView,
 
 - (void)pDoUpdate1:(UITableView*)tableView
 	{
-	ZAssert(fNeedsUpdate);
+	if (!fNeedsUpdate)
+		return;
+
+//	ZAssert(fNeedsUpdate);
 	ZAssert(!fUpdateInFlight);
 	ZAssert(tableView);
 
@@ -1086,6 +1099,12 @@ static void spInsertSections(UITableView* iTableView,
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
 	{ return [self initWithFrame:frame style:style variableRowHeight:YES]; }
+
+- (void)doUpdateIfPossible
+	{
+	if (fHandler)
+		[fHandler doUpdateIfPossible:self];
+	}
 
 - (void)needsUpdate
 	{

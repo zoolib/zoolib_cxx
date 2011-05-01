@@ -342,6 +342,7 @@ private:
 - (UITableViewCellEditingStyle)tableView:(UITableView*)tableView editingStyleForRowAtIndexPath:(NSIndexPath*)indexPath;
 
 // Our protocol
+- (void)doUpdateIfPossible:(UITableView*)tableView;
 - (void)needsUpdate:(UITableView*)tableView;
 
 @end // interface UITVController_WithSections
@@ -372,6 +373,7 @@ private:
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style variableRowHeight:(BOOL)variableRowHeight;
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style;
 - (void)appendSection:(ZooLib::ZRef<ZooLib::UIKit::Section>) iSection;
+- (void)doUpdateIfPossible;
 - (void)needsUpdate;
 - (void)deselect;
 
