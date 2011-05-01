@@ -47,6 +47,7 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 		s << "\n";
 		for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
 			s << i->first << ": " << i->second << ", ";
+		s.Emit();
 		}
 
 	vector<ZVal_Any> thePackedRows;
