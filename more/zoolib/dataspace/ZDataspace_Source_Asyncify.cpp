@@ -123,9 +123,7 @@ void Source_Asyncify::pUpdate()
 			{ theAdds.push_back(AddedQuery(iter->first, iter->second)); }
 		fPendingAdds.clear();
 
-		vector<int64> theRemoves;
-		theRemoves.reserve(fPendingRemoves.size());
-		theRemoves.insert(theRemoves.end(), fPendingRemoves.begin(), fPendingRemoves.end());
+		vector<int64> theRemoves(fPendingRemoves.begin(), fPendingRemoves.end());
 		fPendingRemoves.clear();
 		
 		if (theAdds.size() || theRemoves.size())
