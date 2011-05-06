@@ -117,7 +117,8 @@ public:
 		}
 
 // ZVal protocol
-	void Clear();
+	using inherited::Clear;
+	using inherited::Get;
 
 	template <class S>
 	ZQ<S> QGet() const;
@@ -141,7 +142,6 @@ public:
 	template <class S>
 	void Set(const S& iVal);
 
-	using inherited::Get;
 	ZVal_NS Get(const string8& iName) const;
 	ZVal_NS Get(NSString* iName) const;
 	ZVal_NS Get(size_t iIndex) const;
@@ -205,7 +205,8 @@ public:
 // ZSeq protocol
 	size_t Count() const;
 
-	void Clear();
+	using inherited::Clear;
+	using inherited::Get;
 
 	ZQ<ZVal_NS> QGet(size_t iIndex) const;
 	ZVal_NS DGet(const ZVal_NS& iDefault, size_t iIndex) const;
@@ -267,7 +268,8 @@ public:
 	ZMap_NS& operator=(const Adopt_T<NSDictionary>& iOther);
 
 // ZMap protocol
-	void Clear();
+	using inherited::Clear;
+	using inherited::Get;
 
 	ZQ<ZVal_NS> QGet(const string8& iName) const;
 	ZQ<ZVal_NS> QGet(NSString* iName) const;

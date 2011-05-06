@@ -178,9 +178,6 @@ ZVal_NS::ZVal_NS(CFStringRef iVal)
 :	inherited((NSObject*)iVal)
 	{}
 
-void ZVal_NS::Clear()
-	{ inherited::Clear(); }
-
 template <>
 ZQ<char> ZVal_NS::QGet<char>() const
 	{
@@ -482,9 +479,6 @@ size_t ZSeq_NS::Count() const
 	return 0;
 	}
 
-void ZSeq_NS::Clear()
-	{ inherited::Clear(); }
-
 ZQ<ZVal_NS> ZSeq_NS::QGet(size_t iIndex) const
 	{
 	if (NSArray* theArray = this->pArray())
@@ -645,9 +639,6 @@ ZMap_NS& ZMap_NS::operator=(const Adopt_T<NSDictionary>& iOther)
 	fMutable = false;
 	return *this;
 	}
-
-void ZMap_NS::Clear()
-	{ inherited::Clear(); }
 
 ZQ<ZVal_NS> ZMap_NS::QGet(const string8& iName) const
 	{
