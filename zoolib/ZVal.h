@@ -32,7 +32,10 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZMapIndex_T
 
-template <class T>
+// ZMapIndex_t is a wrapper around a size_t, parameterized by some class to make it
+// distinct, conventionally the Map with which it is to be used.
+
+template <class Map_t>
 class ZMapIndex_T
 	{
 public:
