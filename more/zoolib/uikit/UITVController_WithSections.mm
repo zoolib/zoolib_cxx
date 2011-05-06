@@ -168,11 +168,13 @@ SectionBody_Concrete::SectionBody_Concrete()
 :	fRowAnimation_Insert(UITableViewRowAnimationRight)
 ,	fRowAnimation_Delete(UITableViewRowAnimationRight)
 ,	fRowAnimation_Reload(UITableViewRowAnimationNone)
-//,	fRowAnimation_Reload(UITableViewRowAnimationFade)
 ,	fApplyAccessory(true)
 	{}
 
-ZRef<UITableViewCell> SectionBody_Concrete::UITableViewCellForRow(UITableView* iView, size_t iRowIndex)
+#if 0
+ZRef<UITableViewCell> SectionBody_Concrete::UITableViewCellForRow(
+	UITableView* iView, size_t iRowIndex,
+	bool& ioIsPreceded, bool& ioIsSucceeded)
 	{
 	// Our subclass can override UITableViewCellForRow, or fCallable_GetCell must be valid.
 	ZAssert(fCallable_GetCell);
@@ -182,6 +184,7 @@ ZRef<UITableViewCell> SectionBody_Concrete::UITableViewCellForRow(UITableView* i
 		this->ApplyAccessory(iRowIndex, theCell);
 	return theCell;
 	}
+#endif
 
 void SectionBody_Concrete::ApplyAccessory(size_t iRowIndex, ZRef<UITableViewCell> ioCell)
 	{
@@ -355,8 +358,9 @@ void SectionBody_SingleRow::Update_Delete(RowMeta& ioRowMeta_Old, RowUpdate& ioR
 void SectionBody_SingleRow::FinishUpdate()
 	{ fCell_Current = fCell_New; }
 
-ZRef<UITableViewCell> SectionBody_SingleRow::UITableViewCellForRow(UITableView* iView,
-	size_t iRowIndex)
+ZRef<UITableViewCell> SectionBody_SingleRow::UITableViewCellForRow(
+	UITableView* iView, size_t iRowIndex,
+	bool& ioIsPreceded, bool& ioIsSucceeded)
 	{
 	if (fApplyAccessory)
 		this->ApplyAccessory(0, fCell_Current);
@@ -460,13 +464,24 @@ void SectionBody_Multi::FinishUpdate()
 		(*i)->FinishUpdate();
 	}
 
-ZRef<UITableViewCell> SectionBody_Multi::UITableViewCellForRow(UITableView* iView, size_t iRowIndex)
+ZRef<UITableViewCell> SectionBody_Multi::UITableViewCellForRow(
+	UITableView* iView, size_t iRowIndex,
+	bool& ioIsPreceded, bool& ioIsSucceeded)
 	{
+	if (iRowIndex != 0)
+		ioIsPreceded = true;
 	size_t localRowIndex;
-	if (ZRef<SectionBody> theBody = this->pGetBodyAndRowIndex(localRowIndex, iRowIndex))
+	bool isSucceeded = false;
+	if (ZRef<SectionBody> theBody = this->pGetBodyAndRowIndex(localRowIndex, iRowIndex, &isSucceeded))
 		{
-		if (ZRef<UITableViewCell> result = theBody->UITableViewCellForRow(iView, localRowIndex))
+		bool localPreceded = false, localSucceeded = false;
+		if (ZRef<UITableViewCell> result =
+			theBody->UITableViewCellForRow(iView, localRowIndex, localPreceded, localSucceeded))
+			{
+			if (localSucceeded || isSucceeded)
+				ioIsSucceeded = true;
 			return result;
+			}
 		}
 	return null;
 	}
@@ -562,6 +577,9 @@ ZQ<bool> SectionBody_Multi::CanSelect(bool iEditing, size_t iRowIndex)
 	}
 
 ZRef<SectionBody> SectionBody_Multi::pGetBodyAndRowIndex(size_t& oIndex, size_t iIndex)
+	{ return this->pGetBodyAndRowIndex(oIndex, iIndex, nullptr); }
+
+ZRef<SectionBody> SectionBody_Multi::pGetBodyAndRowIndex(size_t& oIndex, size_t iIndex, bool* oIsSucceeded)
 	{
 	oIndex = iIndex;
 	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
@@ -569,7 +587,22 @@ ZRef<SectionBody> SectionBody_Multi::pGetBodyAndRowIndex(size_t& oIndex, size_t 
 		ZRef<SectionBody> theBody = *i;
 		const size_t theCount = theBody->NumberOfRows();
 		if (oIndex < theCount)
+			{
+			if (oIsSucceeded)
+				{
+				++i;
+				while (i != fBodies.end())
+					{
+					if ((*i)->NumberOfRows())
+						{
+						*oIsSucceeded = true;
+						break;
+						}
+					++i;
+					}
+				}
 			return theBody;
+			}
 		oIndex -= theCount;
 		}
 	return null;
@@ -607,9 +640,7 @@ using namespace ZooLib::UIKit;
 	}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
-	{
-	return fSections_Shown.size();
-	}
+	{ return fSections_Shown.size(); }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 	{
@@ -643,14 +674,22 @@ using namespace ZooLib::UIKit;
 	return indexPath;
 	}
 
+static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsSucceeded);
+
  - (UITableViewCell*)tableView:(UITableView*)tableView
 	cellForRowAtIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
+		bool isPreceded = false, isSucceeded = false;
 		if (ZRef<UITableViewCell> theCell =
-			theSection->GetBody()->UITableViewCellForRow(tableView, indexPath.row))
+			theSection->GetBody()->UITableViewCellForRow(tableView, indexPath.row, isPreceded, isSucceeded))
 			{
+			if ([tableView style] != UITableViewStylePlain)
+				{
+				if ([theCell respondsToSelector:@selector(setPosition:)])
+					spApplyPosition(theCell, isPreceded, isSucceeded);
+				}
 			return [theCell.Orphan() autorelease];
 			}
 		}
@@ -771,17 +810,103 @@ using namespace ZooLib::UIKit;
 	if (fUpdateInFlight)
 		return;
 
+	fUpdateInFlight = true;
 	[self pDoUpdate1:tableView];
 	}
 
 - (void)needsUpdate:(UITableView*)tableView
 	{
 	ZAssert(tableView);
+
 	if (fNeedsUpdate)
 		return;
 	fNeedsUpdate = true;
-	if (!fUpdateInFlight)
-		[self performSelectorOnMainThread:@selector(pDoUpdate1:) withObject:tableView waitUntilDone:NO];
+
+	if (fUpdateInFlight)
+		return;
+	fUpdateInFlight = true;
+
+	[self performSelectorOnMainThread:@selector(pDoUpdate1:) withObject:tableView waitUntilDone:NO];
+	}
+
+- (void)tableViewWillAppear:(UITableView*)tableView
+	{
+	fShown = true;
+	[tableView deselect];
+	}
+
+- (void)tableViewDidAppear:(UITableView*)tableView
+	{
+    [tableView flashScrollIndicators];
+	}
+
+- (void)tableViewWillDisappear:(UITableView*)tableView
+	{
+	}
+
+- (void)tableViewDidDisappear:(UITableView*)tableView
+	{
+	fShown = false;
+	[tableView deselect];
+	}
+
+typedef enum 
+	{
+    UACellBackgroundViewPositionSingle = 0,
+    UACellBackgroundViewPositionTop, 
+    UACellBackgroundViewPositionBottom,
+    UACellBackgroundViewPositionMiddle
+	} UACellBackgroundViewPosition;
+
+static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsSucceeded)
+	{
+	UACellBackgroundViewPosition thePosition;
+	if (iIsPreceded)
+		{
+		if (iIsSucceeded)
+			thePosition = UACellBackgroundViewPositionMiddle;
+		else
+			thePosition = UACellBackgroundViewPositionBottom;
+		}
+	else if (iIsSucceeded)
+		{
+		thePosition = UACellBackgroundViewPositionTop;
+		}
+	else
+		{
+		thePosition = UACellBackgroundViewPositionSingle;
+		}
+
+	[ioCell setPosition:thePosition];
+	}
+
+- (void)pApplyPositionToVisibleCells:(UITableView*)tableView
+	{
+	if ([tableView style] == UITableViewStylePlain)
+		return;
+
+	[tableView visibleCells];
+	const NSArray* paths = [tableView indexPathsForVisibleRows];
+	
+	size_t countInSection;
+	int lastSection = -1;
+	for (size_t x = 0, count = [paths count]; x < count; ++x)
+		{
+		NSIndexPath* thePath = [paths objectAtIndex:x];
+		UITableViewCell* cell = [tableView cellForRowAtIndexPath:thePath];
+		if ([cell respondsToSelector:@selector(setPosition:)])
+			{
+			const int section = thePath.section; 
+			if (lastSection != section)
+				{
+				lastSection = section;
+				countInSection = [self tableView:tableView numberOfRowsInSection:section];
+				}
+
+			const int row = thePath.row;
+			spApplyPosition(cell, row > 0, row < countInSection - 1);
+			}
+		}
 	}
 
 static void spInsertSections(UITableView* iTableView,
@@ -808,8 +933,7 @@ static void spInsertSections(UITableView* iTableView,
 	if (!fNeedsUpdate)
 		return;
 
-//	ZAssert(fNeedsUpdate);
-	ZAssert(!fUpdateInFlight);
+	ZAssert(fUpdateInFlight);
 	ZAssert(tableView);
 
 	fNeedsUpdate = false;
@@ -841,6 +965,7 @@ static void spInsertSections(UITableView* iTableView,
 			}
 		[tableView reloadData];
 		[self pDoUpdate4:tableView];
+//##		[self pApplyPositionToVisibleCells:tableView];
 		return;
 		}
 
@@ -899,6 +1024,7 @@ static void spInsertSections(UITableView* iTableView,
 		}
 
 	[tableView endUpdates];
+	[self pApplyPositionToVisibleCells:tableView];
 
 	[self performSelector:@selector(pDoUpdate2:)
 		 withObject:tableView
@@ -960,6 +1086,7 @@ static void spInsertSections(UITableView* iTableView,
 				}
 			}
 		[tableView endUpdates];
+		[self pApplyPositionToVisibleCells:tableView];
 		}
 
 	if (anyAnimatedReloads)
@@ -1028,6 +1155,7 @@ static void spInsertSections(UITableView* iTableView,
 		for (size_t x = 0; x < fSections_Shown.size(); ++x)
 			fSections_Shown[x]->GetBody()->FinishUpdate();
 		[tableView endUpdates];
+		[self pApplyPositionToVisibleCells:tableView];
 		}
 
 	if (isShown && anyChanges)
@@ -1047,8 +1175,11 @@ static void spInsertSections(UITableView* iTableView,
 	ZAssert(fUpdateInFlight);
 	ZAssert(tableView);
 	fUpdateInFlight = false;
-	if (fNeedsUpdate)
-		[self performSelectorOnMainThread:@selector(pDoUpdate1:) withObject:tableView waitUntilDone:NO];
+	if (!fNeedsUpdate)
+		return;
+
+	fUpdateInFlight = true;
+	[self performSelectorOnMainThread:@selector(pDoUpdate1:) withObject:tableView waitUntilDone:NO];
 	}
 
 -(ZRef<Section>)pGetSection:(size_t)iSectionIndex

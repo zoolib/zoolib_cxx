@@ -121,7 +121,8 @@ public:
 
 // -----
 
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex) = 0;
+	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
+		bool& ioIsPreceded, bool& ioIsSucceeded) = 0;
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex) = 0;
 	virtual bool CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex) = 0;
 	virtual ZQ<bool> QShouldIndentWhileEditing(size_t iRowIndex) = 0;
@@ -185,7 +186,8 @@ public:
 	SectionBody_Concrete();
 
 // From SectionBody
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex);
+//##	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
+//##		bool& ioIsPreceded, bool& ioIsSucceeded);
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
 	virtual bool CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex);
 	virtual ZQ<bool> QShouldIndentWhileEditing(size_t iRowIndex);
@@ -210,7 +212,7 @@ public:
 	ZQ<CGFloat> fRowHeight;
 	ZQ<NSInteger> fIndentationLevel;
 
-	ZRef<Callable_GetCell> fCallable_GetCell;
+//##	ZRef<Callable_GetCell> fCallable_GetCell;
 
 	ZRef<Callable_ButtonTapped> fCallable_ButtonTapped;
 	ZRef<Callable_ButtonTapped> fCallable_ButtonTapped_Editing;
@@ -248,7 +250,8 @@ public:
 	virtual void Update_Delete(RowMeta& ioRowMeta_Old, RowUpdate& ioRowUpdate_Old);
 	virtual void FinishUpdate();
 
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex);
+	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
+		bool& ioIsPreceded, bool& ioIsSucceeded);
 
 	ZRef<UITableViewCell> fCell_Pending;
 
@@ -277,7 +280,8 @@ public:
 
 // -----
 
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex);
+	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
+		bool& ioIsPreceded, bool& ioIsSucceeded);
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
 	virtual bool CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex);
 	virtual ZQ<bool> QShouldIndentWhileEditing(size_t iRowIndex);
@@ -295,6 +299,7 @@ public:
 
 private:
 	ZRef<SectionBody> pGetBodyAndRowIndex(size_t& oIndex, size_t iIndex);
+	ZRef<SectionBody> pGetBodyAndRowIndex(size_t& oIndex, size_t iIndex, bool* oIsSucceeded);
 	std::vector<ZRef<SectionBody> > fBodies;
 	};
 
@@ -315,8 +320,11 @@ private:
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fReloads;
 	bool fNeedsUpdate;
 	bool fUpdateInFlight;
-@public
+//@public
 	bool fShown;
+
+@public
+	// Public so appendSection and others can manipulate it.
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_All;
 	}
 
@@ -344,6 +352,13 @@ private:
 // Our protocol
 - (void)doUpdateIfPossible:(UITableView*)tableView;
 - (void)needsUpdate:(UITableView*)tableView;
+
+- (void)tableViewWillAppear:(UITableView*)tableView;
+- (void)tableViewDidAppear:(UITableView*)tableView;
+- (void)tableViewWillDisappear:(UITableView*)tableView;
+- (void)tableViewDidDisappear:(UITableView*)tableView;
+
+- (void)pApplyPositionToVisibleCells:(UITableView*)tableView;
 
 @end // interface UITVController_WithSections
 
