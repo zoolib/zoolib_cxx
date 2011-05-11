@@ -19,10 +19,35 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare.h"
+#include "zoolib/ZMemory.h"
 #include "zoolib/ZCompare_String.h"
 
 namespace ZooLib {
 
 ZMACRO_CompareRegistration_T(std::string)
+
+bool FastComparator_String::operator()(const std::string& iLeft, const std::string& iRight) const
+	{
+	if (const size_t lengthL = iLeft.length())
+		{
+		if (const size_t lengthR = iRight.length())
+			{
+			if (lengthL < lengthR)
+				return true;
+			else if (lengthR < lengthL)
+				return false;
+			else
+				return ZMemCompare(iLeft.data(), iRight.data(), lengthL) < 0;
+			}
+		else
+			{
+			return false;
+			}
+		}
+	else
+		{
+		return ! iRight.empty();
+		}
+	}
 
 } // namespace ZooLib

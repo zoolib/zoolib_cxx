@@ -27,73 +27,73 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <>
-int sCompare_T(const bool& iL, const bool& iR)
+inline int sCompare_T(const bool& iL, const bool& iR)
 	{ return int(iL) - int(iR); }
 
 
 template <>
-int sCompare_T(const char& iL, const char& iR)
+inline int sCompare_T(const char& iL, const char& iR)
 	{ return iL - iR; }
 
 template <>
-int sCompare_T(const unsigned char& iL, const unsigned char& iR)
+inline int sCompare_T(const unsigned char& iL, const unsigned char& iR)
 	{ return int(iL) - int(iR); }
 
 template <>
-int sCompare_T(const signed char& iL, const signed char& iR)
+inline int sCompare_T(const signed char& iL, const signed char& iR)
 	{ return iL - iR; }
 
 
 template <>
-int sCompare_T(const wchar_t& iL, const wchar_t& iR)
+inline int sCompare_T(const wchar_t& iL, const wchar_t& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 
 template <>
-int sCompare_T(const short& iL, const short& iR)
+inline int sCompare_T(const short& iL, const short& iR)
 	{ return iL - iR; }
 
 template <>
-int sCompare_T(const unsigned short& iL, const unsigned short& iR)
+inline int sCompare_T(const unsigned short& iL, const unsigned short& iR)
 	{ return int(iL) - int(iR); }
 
 
 template <>
-int sCompare_T(const int& iL, const int& iR)
+inline int sCompare_T(const int& iL, const int& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 template <>
-int sCompare_T(const unsigned int& iL, const unsigned int& iR)
+inline int sCompare_T(const unsigned int& iL, const unsigned int& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 
 template <>
-int sCompare_T(const long& iL, const long& iR)
+inline int sCompare_T(const long& iL, const long& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 template <>
-int sCompare_T(const unsigned long& iL, const unsigned long& iR)
+inline int sCompare_T(const unsigned long& iL, const unsigned long& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 
 #if ZCONFIG(Compiler, MSVC)
 
 	template <>
-	int sCompare_T(const __int64& iL, const __int64& iR)
+	inline int sCompare_T(const __int64& iL, const __int64& iR)
 		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 	template <>
-	int sCompare_T(const unsigned __int64& iL, const unsigned __int64& iR)
+	inline int sCompare_T(const unsigned __int64& iL, const unsigned __int64& iR)
 		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 #else
 
 	template <>
-	int sCompare_T(const long long& iL, const long long& iR)
+	inline int sCompare_T(const long long& iL, const long long& iR)
 		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 	template <>
-	int sCompare_T(const unsigned long long& iL, const unsigned long long& iR)
+	inline int sCompare_T(const unsigned long long& iL, const unsigned long long& iR)
 		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 #endif
