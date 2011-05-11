@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare_Ref.h"
+#include "zoolib/ZCompare_String.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
 
 using std::string;
