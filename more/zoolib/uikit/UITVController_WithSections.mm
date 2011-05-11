@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 
+#import "UIKit/UIGestureRecognizerSubclass.h"
+
 namespace ZooLib {
 namespace UIKit {
 
@@ -55,6 +57,17 @@ NSArray* sMakeNSIndexPathArray(size_t iSectionIndex, size_t iBaseRowIndex, size_
 
 NSIndexSet* sMakeIndexSet(size_t iIndex)
 	{ return [NSIndexSet indexSetWithIndex:iIndex]; }
+
+static bool spIsVersion4OrLater()
+	{
+	static ZQ<bool> resultQ;
+	if (!resultQ)
+		resultQ = [[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0;
+	return resultQ.Get();
+	}
+	
+//##(tableView.editing && spIsVersion4OrLater)
+
 
 // =================================================================================================
 #pragma mark -
@@ -162,6 +175,22 @@ void SectionBody::RowUpdate::AddRange(size_t iStart, size_t iCount, UITableViewR
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * SectionBody
+
+void SectionBody::ViewWillAppear(UITableView* iTV)
+	{}
+
+void SectionBody::ViewDidAppear(UITableView* iTV)
+	{}
+
+void SectionBody::ViewWillDisappear(UITableView* iTV)
+	{}
+
+void SectionBody::ViewDidDisappear(UITableView* iTV)
+	{}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * SectionBody_Concrete
 
 SectionBody_Concrete::SectionBody_Concrete()
@@ -170,21 +199,6 @@ SectionBody_Concrete::SectionBody_Concrete()
 ,	fRowAnimation_Reload(UITableViewRowAnimationNone)
 ,	fApplyAccessory(true)
 	{}
-
-#if 0
-ZRef<UITableViewCell> SectionBody_Concrete::UITableViewCellForRow(
-	UITableView* iView, size_t iRowIndex,
-	bool& ioIsPreceded, bool& ioIsSucceeded)
-	{
-	// Our subclass can override UITableViewCellForRow, or fCallable_GetCell must be valid.
-	ZAssert(fCallable_GetCell);
-
-	ZRef<UITableViewCell> theCell = fCallable_GetCell->Call(iView, iRowIndex);
-	if (fApplyAccessory)
-		this->ApplyAccessory(iRowIndex, theCell);
-	return theCell;
-	}
-#endif
 
 void SectionBody_Concrete::ApplyAccessory(size_t iRowIndex, ZRef<UITableViewCell> ioCell)
 	{
@@ -288,7 +302,9 @@ UITableViewRowAnimation SectionBody_Concrete::RowAnimation_Reload()
 
 SectionBody_SingleRow::SectionBody_SingleRow(ZRef<UITableViewCell> iCell)
 :	fCell_Pending(iCell)
-	{}
+	{
+	ZAssert(!fCell_Pending || ![fCell_Pending reuseIdentifier]);
+	}
 
 size_t SectionBody_SingleRow::NumberOfRows()
 	{
@@ -298,7 +314,10 @@ size_t SectionBody_SingleRow::NumberOfRows()
 	}
 
 void SectionBody_SingleRow::PreUpdate()
-	{ fCell_New = fCell_Pending; }
+	{
+	ZAssert(!fCell_Pending || ![fCell_Pending reuseIdentifier]);
+	fCell_New = fCell_Pending;
+	}
 
 bool SectionBody_SingleRow::WillBeEmpty()
 	{ return !fCell_New; }
@@ -464,6 +483,30 @@ void SectionBody_Multi::FinishUpdate()
 		(*i)->FinishUpdate();
 	}
 
+void SectionBody_Multi::ViewWillAppear(UITableView* iTV)
+	{
+	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
+		(*i)->ViewWillAppear(iTV);
+	}
+
+void SectionBody_Multi::ViewDidAppear(UITableView* iTV)
+	{
+	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
+		(*i)->ViewDidAppear(iTV);
+	}
+
+void SectionBody_Multi::ViewWillDisappear(UITableView* iTV)
+	{
+	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
+		(*i)->ViewWillDisappear(iTV);
+	}
+
+void SectionBody_Multi::ViewDidDisappear(UITableView* iTV)
+	{
+	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
+		(*i)->ViewDidDisappear(iTV);
+	}
+
 ZRef<UITableViewCell> SectionBody_Multi::UITableViewCellForRow(
 	UITableView* iView, size_t iRowIndex,
 	bool& ioIsPreceded, bool& ioIsSucceeded)
@@ -624,7 +667,6 @@ using namespace ZooLib::UIKit;
 - (void)pDoUpdate1:(UITableView*)tableview;
 - (void)pDoUpdate2:(UITableView*)tableview;
 - (void)pDoUpdate3:(UITableView*)tableview;
-- (void)pDoUpdate4:(UITableView*)tableview;
 
 @end // interface UITVHandler_WithSections
 
@@ -633,8 +675,10 @@ using namespace ZooLib::UIKit;
 - (id)init
 	{
 	[super init];
+	fTouchCount = 0;
 	fNeedsUpdate = false;
 	fUpdateInFlight = false;
+	fCheckForUpdateQueued = false;
 	fShown = false;
 	return self;
 	}
@@ -695,6 +739,16 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 		}
 
 	return nullptr;
+	}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+	{
+	[self changeTouchState:YES forTableView:(UITableView*)scrollView];
+	}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+	{
+	[self changeTouchState:NO forTableView:(UITableView*)scrollView];
 	}
 
 - (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section
@@ -767,7 +821,10 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
+		{
 		theSection->GetBody()->RowSelected(self, tableView, indexPath, indexPath.row);
+//##		[tableView deselectRowAtIndexPath:indexPath animated:YES];
+		}
 	}
 
 - (BOOL)tableView:(UITableView*)tableView
@@ -814,6 +871,35 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	[self pDoUpdate1:tableView];
 	}
 
+-(void)pCheckForUpdate:(UITableView*)tableView
+	{
+	fCheckForUpdateQueued = false;
+
+	if (fTouchCount)
+		return;
+
+	if (!fNeedsUpdate)
+		return;
+	
+	if (fUpdateInFlight)
+		return;
+	fUpdateInFlight = true;
+
+	[self pDoUpdate1:tableView];
+	}
+
+-(void)pQueueCheckForUpdate:(UITableView*)tableView
+	{
+	if (fCheckForUpdateQueued)
+		return;
+	fCheckForUpdateQueued = true;
+
+	[self
+		performSelectorOnMainThread:@selector(pCheckForUpdate:)
+		withObject:tableView
+		waitUntilDone:NO];	
+	}
+
 - (void)needsUpdate:(UITableView*)tableView
 	{
 	ZAssert(tableView);
@@ -822,32 +908,49 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 		return;
 	fNeedsUpdate = true;
 
-	if (fUpdateInFlight)
-		return;
-	fUpdateInFlight = true;
-
-	[self performSelectorOnMainThread:@selector(pDoUpdate1:) withObject:tableView waitUntilDone:NO];
+	[self pQueueCheckForUpdate:tableView];
 	}
 
 - (void)tableViewWillAppear:(UITableView*)tableView
 	{
-	fShown = true;
 	[tableView deselect];
+	for (size_t x = 0; x < fSections_All.size(); ++x)
+		fSections_All[x]->GetBody()->ViewWillAppear(tableView);
 	}
 
 - (void)tableViewDidAppear:(UITableView*)tableView
 	{
+	fShown = true;
     [tableView flashScrollIndicators];
+	for (size_t x = 0; x < fSections_All.size(); ++x)
+		fSections_All[x]->GetBody()->ViewDidAppear(tableView);
 	}
 
 - (void)tableViewWillDisappear:(UITableView*)tableView
 	{
+	fShown = false;
+	for (size_t x = 0; x < fSections_All.size(); ++x)
+		fSections_All[x]->GetBody()->ViewWillDisappear(tableView);
 	}
 
 - (void)tableViewDidDisappear:(UITableView*)tableView
 	{
-	fShown = false;
 	[tableView deselect];
+	for (size_t x = 0; x < fSections_All.size(); ++x)
+		fSections_All[x]->GetBody()->ViewDidDisappear(tableView);
+	}
+
+- (void)changeTouchState:(BOOL)touchState forTableView:(UITableView*)tableView
+	{
+	if (touchState)
+		{
+		++fTouchCount;
+		}
+	else
+		{
+		if (0 == --fTouchCount)
+			[self pQueueCheckForUpdate:tableView];
+		}
 	}
 
 typedef enum 
@@ -930,14 +1033,13 @@ static void spInsertSections(UITableView* iTableView,
 
 - (void)pDoUpdate1:(UITableView*)tableView
 	{
-	if (!fNeedsUpdate)
-		return;
-
-	ZAssert(fUpdateInFlight);
 	ZAssert(tableView);
 
+	if (!fNeedsUpdate)
+		return;
 	fNeedsUpdate = false;
-	fUpdateInFlight = true;
+
+	ZAssert(fUpdateInFlight);
 
 	fSections_ToIgnore.clear();
 	fSections_Shown_Pending.clear();
@@ -955,17 +1057,18 @@ static void spInsertSections(UITableView* iTableView,
 	if (!fShown)
 		{
 		// We're not onscreen, so we can Update/Finish all sections, switch
-		// to the new list of sections, reloadData, pDoUpdate4 and return.
-		fSections_Shown = fSections_Shown_Pending;
+		// to the new list of sections, reloadData, check for pending updates and return.
 		for (size_t x = 0; x < fSections_All.size(); ++x)
 			{
 			ZRef<Section> theSection = fSections_All[x];
 			theSection->GetBody()->Update_NOP();
 			theSection->GetBody()->FinishUpdate();
 			}
+		fSections_Shown = fSections_Shown_Pending;
 		[tableView reloadData];
-		[self pDoUpdate4:tableView];
-//##		[self pApplyPositionToVisibleCells:tableView];
+		fUpdateInFlight = false;
+		if (fNeedsUpdate)
+			[self pQueueCheckForUpdate:tableView];
 		return;
 		}
 
@@ -990,8 +1093,8 @@ static void spInsertSections(UITableView* iTableView,
 	for (size_t iterOld = 0; iterOld < endOld; ++iterOld)
 		{
 		const ZRef<Section> sectionOld = sectionsOld[iterOld];
-		const size_t inNew =
-			find(fSections_Shown.begin(), fSections_Shown.end(), sectionOld) - fSections_Shown.begin();
+		const size_t inNew = find(fSections_Shown.begin(), fSections_Shown.end(), sectionOld)
+			- fSections_Shown.begin();
 		if (inNew == endNew)
 			{
 			// sectionOld is no longer in fSections_Shown so must be deleted.
@@ -1024,7 +1127,7 @@ static void spInsertSections(UITableView* iTableView,
 		}
 
 	[tableView endUpdates];
-	[self pApplyPositionToVisibleCells:tableView];
+	{ZLOGF(w, eDebug + 1); w << self;}
 
 	[self performSelector:@selector(pDoUpdate2:)
 		 withObject:tableView
@@ -1036,6 +1139,8 @@ static void spInsertSections(UITableView* iTableView,
 	ZAssert(fUpdateInFlight);
 	ZAssert(tableView);
 
+	const bool isShown = fShown;
+
 	fInserts.clear();
 	fInserts.resize(fSections_Shown.size());
 
@@ -1045,8 +1150,7 @@ static void spInsertSections(UITableView* iTableView,
 	fReloads.clear();
 	fReloads.resize(fSections_Shown.size());
 
-	bool anyReloads = false;
-
+	bool anyDeletes = false, anyInserts, anyReloads = false;
 	for (size_t x = 0; x < fSections_Shown.size(); ++x)
 		{
 		if (!ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[x]))
@@ -1058,77 +1162,39 @@ static void spInsertSections(UITableView* iTableView,
 			SectionBody::RowUpdate theRowUpdate_Reload(theRowMeta_Old, fReloads[x]);
 			fSections_Shown[x]->GetBody()->Update_Normal(theRowMeta_Old, theRowMeta_New,
 				theRowUpdate_Insert, theRowUpdate_Delete, theRowUpdate_Reload);
+
+			if (fDeletes[x].size())
+				anyDeletes = true;
+			if (fInserts[x].size())
+				anyInserts = true;
 			if (fReloads[x].size())
 				anyReloads = true;
 			}
 		}
-	
 	fSections_ToIgnore.clear();
 
-	bool anyAnimatedReloads = false;
-	if (anyReloads)
+	if (anyDeletes || anyInserts || (anyReloads && spIsVersion4OrLater()))
 		{
 		[tableView beginUpdates];
-		for (size_t x = 0; x < fReloads.size(); ++x)
+
+		if (spIsVersion4OrLater())
 			{
-			map<size_t, UITableViewRowAnimation>& theMap = fReloads[x];
-			for (map<size_t, UITableViewRowAnimation>::iterator i = theMap.begin();
-				i != theMap.end(); ++i)
+			for (size_t x = 0; x < fReloads.size(); ++x)
 				{
-				UITableViewRowAnimation theAnimation = UITableViewRowAnimationNone;
-				if (fShown)
-					theAnimation = i->second;
-				if (UITableViewRowAnimationNone != theAnimation)
-					anyAnimatedReloads = true;
-				[tableView
-					reloadRowsAtIndexPaths:sMakeNSIndexPathArray(x, i->first, 1)
-					withRowAnimation:theAnimation];
+				map<size_t, UITableViewRowAnimation>& theMap = fReloads[x];
+				for (map<size_t, UITableViewRowAnimation>::iterator i = theMap.begin();
+					i != theMap.end(); ++i)
+					{
+					UITableViewRowAnimation theAnimation = UITableViewRowAnimationNone;
+					if (fShown)
+						theAnimation = i->second;
+					[tableView
+						reloadRowsAtIndexPaths:sMakeNSIndexPathArray(x, i->first, 1)
+						withRowAnimation:theAnimation];
+					}
 				}
 			}
-		[tableView endUpdates];
-		[self pApplyPositionToVisibleCells:tableView];
-		}
 
-	if (anyAnimatedReloads)
-		{
-		[self performSelector:@selector(pDoUpdate3:)
-			 withObject:tableView
-			 afterDelay:0.2];
-		}
-	else
-		{
-		[self pDoUpdate3:tableView];
-		}
-	}
-
-- (void)pDoUpdate3:(UITableView*)tableView
-	{
-	ZAssert(fUpdateInFlight);
-	ZAssert(tableView);
-
-	const bool isShown = fShown;
-
-	bool anyChanges = false;
-	for (size_t x = 0; x < fDeletes.size(); ++x)
-		{
-		if (fDeletes[x].size())
-			anyChanges = true;
-		}
-
-	for (size_t x = 0; x < fInserts.size(); ++x)
-		{
-		if (fInserts[x].size())
-			anyChanges = true;
-		}
-
-	if (!anyChanges)
-		{
-		for (size_t x = 0; x < fSections_Shown.size(); ++x)
-			fSections_Shown[x]->GetBody()->FinishUpdate();
-		}
-	else
-		{
-		[tableView beginUpdates];
 		for (size_t x = 0; x < fDeletes.size(); ++x)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = fDeletes[x];
@@ -1152,35 +1218,49 @@ static void spInsertSections(UITableView* iTableView,
 					withRowAnimation:isShown ? i->second : UITableViewRowAnimationNone];
 				}
 			}
-		for (size_t x = 0; x < fSections_Shown.size(); ++x)
-			fSections_Shown[x]->GetBody()->FinishUpdate();
-		[tableView endUpdates];
-		[self pApplyPositionToVisibleCells:tableView];
-		}
 
-	if (isShown && anyChanges)
-		{
-		[self performSelector:@selector(pDoUpdate4:)
-			 withObject:tableView
-			 afterDelay:0.35];
+		for (size_t x = 0; x < fSections_All.size(); ++x)
+			fSections_All[x]->GetBody()->FinishUpdate();
+
+		[tableView endUpdates];
+
+		[self pApplyPositionToVisibleCells:tableView];
+
+		[self
+			performSelector:@selector(pDoUpdate3:)
+			withObject:tableView
+			afterDelay:0.35];
 		}
 	else
 		{
-		[self pDoUpdate4:tableView];
+		[self pDoUpdate3:tableView];
 		}
 	}
 
-- (void)pDoUpdate4:(UITableView*)tableView
+- (void)pDoUpdate3:(UITableView*)tableView
 	{
 	ZAssert(fUpdateInFlight);
 	ZAssert(tableView);
-	fUpdateInFlight = false;
-	if (!fNeedsUpdate)
-		return;
 
-	fUpdateInFlight = true;
-	[self performSelectorOnMainThread:@selector(pDoUpdate1:) withObject:tableView waitUntilDone:NO];
+	if (!spIsVersion4OrLater())
+		{
+		for (size_t x = 0; x < fSections_Shown.size(); ++x)
+			{
+			if (fReloads[x].size())
+				{
+				[tableView reloadData];
+				break;
+				}
+			}
+		}
+
+	ZAssert(fUpdateInFlight);
+	ZAssert(tableView);
+	fUpdateInFlight = false;
+	if (fNeedsUpdate)
+		[self pQueueCheckForUpdate:tableView];
 	}
+
 
 -(ZRef<Section>)pGetSection:(size_t)iSectionIndex
 	{
@@ -1211,6 +1291,81 @@ static void spInsertSections(UITableView* iTableView,
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * UIGestureRecognizer_TableViewWithSections
+
+@interface UIGestureRecognizer_TableViewWithSections : UIGestureRecognizer
+	{
+@public
+	UITableView_WithSections* fTV;
+	bool fCallEnd;
+	}
+
+@end // interface UIGestureRecognizer_TableViewWithSections
+
+@implementation UIGestureRecognizer_TableViewWithSections
+
+- (id)init
+	{
+	ZLOGTRACE(eDebug + 1);
+	[super init];
+	fCallEnd = false;
+	self.delaysTouchesEnded = NO;
+	return self;
+	}
+
+- (void)reset
+	{
+	ZLOGTRACE(eDebug + 1);
+	[super reset];
+	if (fCallEnd)
+		{
+		fCallEnd = false;
+		[fTV pChangeTouchState:NO];
+		}
+	}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+	{
+	ZLOGTRACE(eDebug + 1);
+	[super touchesBegan:touches withEvent:event];
+	fCallEnd = true;
+	[fTV pChangeTouchState:YES];
+	}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+	{
+	ZLOGTRACE(eDebug + 1);
+	[super touchesMoved:touches withEvent:event];
+	}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+	{
+	ZLOGTRACE(eDebug + 1);
+	[super touchesEnded:touches withEvent:event];
+	self.state = UIGestureRecognizerStateFailed;
+	if (fCallEnd)
+		{
+		fCallEnd = false;
+		[fTV pChangeTouchState:NO];
+		}
+	}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+	{
+	ZLOGTRACE(eDebug + 1);
+	[super touchesEnded:touches withEvent:event];
+	self.state = UIGestureRecognizerStateFailed;
+	if (fCallEnd)
+		{
+		fCallEnd = false;
+		[fTV pChangeTouchState:NO];
+		}
+	}
+
+@end // UIGestureRecognizer_TableViewWithSections
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * UITableView_WithSections
 
 @implementation UITableView_WithSections
@@ -1225,11 +1380,15 @@ static void spInsertSections(UITableView* iTableView,
 		fHandler = Adopt& [[UITVHandler_WithSections alloc] init];
 	[self setDelegate:fHandler];
 	[self setDataSource:fHandler];
+	ZRef<UIGestureRecognizer_TableViewWithSections> theGR = Adopt&
+		[[UIGestureRecognizer_TableViewWithSections alloc] init];
+	theGR->fTV = self;
+	[self addGestureRecognizer:theGR];
 	return self;
 	}
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
-	{ return [self initWithFrame:frame style:style variableRowHeight:YES]; }
+	{ return [self initWithFrame:frame style:style variableRowHeight:NO]; }
 
 - (void)doUpdateIfPossible
 	{
@@ -1253,6 +1412,11 @@ static void spInsertSections(UITableView* iTableView,
 	{
 	if (NSIndexPath* thePath = [self indexPathForSelectedRow])
 		[self deselectRowAtIndexPath:thePath animated:YES];
+	}
+
+- (void)pChangeTouchState:(BOOL)touchState
+	{
+	[fHandler changeTouchState:touchState forTableView:self];
 	}
 
 @end // implementation UITableView_WithSections

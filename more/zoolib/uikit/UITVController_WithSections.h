@@ -121,6 +121,13 @@ public:
 
 // -----
 
+	virtual void ViewWillAppear(UITableView* iTV);
+	virtual void ViewDidAppear(UITableView* iTV);
+	virtual void ViewWillDisappear(UITableView* iTV);
+	virtual void ViewDidDisappear(UITableView* iTV);
+
+// -----
+
 	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
 		bool& ioIsPreceded, bool& ioIsSucceeded) = 0;
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex) = 0;
@@ -186,8 +193,6 @@ public:
 	SectionBody_Concrete();
 
 // From SectionBody
-//##	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
-//##		bool& ioIsPreceded, bool& ioIsSucceeded);
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
 	virtual bool CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex);
 	virtual ZQ<bool> QShouldIndentWhileEditing(size_t iRowIndex);
@@ -201,18 +206,14 @@ public:
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
 	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex);
 
-
 // Our protocol
 	bool fApplyAccessory;
 	void ApplyAccessory(size_t iRowIndex, ZRef<UITableViewCell> ioCell);
 
-//
 	ZQ<UITableViewCellEditingStyle> fEditingStyle;
 	ZQ<bool> fShouldIndentWhileEditing;
 	ZQ<CGFloat> fRowHeight;
 	ZQ<NSInteger> fIndentationLevel;
-
-//##	ZRef<Callable_GetCell> fCallable_GetCell;
 
 	ZRef<Callable_ButtonTapped> fCallable_ButtonTapped;
 	ZRef<Callable_ButtonTapped> fCallable_ButtonTapped_Editing;
@@ -280,6 +281,13 @@ public:
 
 // -----
 
+	virtual void ViewWillAppear(UITableView* iTV);
+	virtual void ViewDidAppear(UITableView* iTV);
+	virtual void ViewWillDisappear(UITableView* iTV);
+	virtual void ViewDidDisappear(UITableView* iTV);
+
+// -----
+
 	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
 		bool& ioIsPreceded, bool& ioIsSucceeded);
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
@@ -318,8 +326,10 @@ private:
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fInserts;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fDeletes;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fReloads;
+	int fTouchCount;
 	bool fNeedsUpdate;
 	bool fUpdateInFlight;
+	bool fCheckForUpdateQueued;
 //@public
 	bool fShown;
 
@@ -333,6 +343,10 @@ private:
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section;
 - (void)tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath;
  - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath;
+
+// From UIScrollViewDelegate via UITableViewDelegate
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 
 // From UITableViewDelegate
 - (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section;
@@ -357,6 +371,8 @@ private:
 - (void)tableViewDidAppear:(UITableView*)tableView;
 - (void)tableViewWillDisappear:(UITableView*)tableView;
 - (void)tableViewDidDisappear:(UITableView*)tableView;
+
+- (void)changeTouchState:(BOOL)touchState forTableView:(UITableView*)tableView;
 
 - (void)pApplyPositionToVisibleCells:(UITableView*)tableView;
 
@@ -391,6 +407,7 @@ private:
 - (void)doUpdateIfPossible;
 - (void)needsUpdate;
 - (void)deselect;
+- (void)pChangeTouchState:(BOOL)touchState;
 
 @end // interface UITableView_WithSections
 
