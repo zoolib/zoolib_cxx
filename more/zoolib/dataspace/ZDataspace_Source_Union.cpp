@@ -689,6 +689,9 @@ void Source_Union::ModifyRegistrations(
 		{
 		const int64 theRefcon = *iRemoved++;
 
+		if (ZLOGPF(s, eDebug+1))
+			s << "Remove: " << theRefcon;
+
 		Map_Refcon_ClientQuery::iterator iterClientQuery =
 			fMap_Refcon_ClientQuery.find(theRefcon);
 		
@@ -752,6 +755,9 @@ void Source_Union::ModifyRegistrations(
 			}
 
 		const int64 theRefcon = iAdded->GetRefcon();
+
+		if (ZLOGPF(s, eDebug+1))
+			s << "Add: " << theRefcon;
 
 		ClientQuery* theClientQuery = &fMap_Refcon_ClientQuery.insert(
 			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery))).first->second;

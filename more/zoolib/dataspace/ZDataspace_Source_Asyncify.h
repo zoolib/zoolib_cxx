@@ -51,6 +51,9 @@ public:
 
 	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
+// Our protocol
+	void CrankIt();
+
 private:
 	void pTrigger_Update();
 	void pUpdate();

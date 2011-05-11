@@ -249,7 +249,7 @@ public:
 #pragma mark * Source_DatonSet
 
 void Source_DatonSet::ForceUpdate()
-	{ this->pInvokeCallable_ResultsAvailable(); }
+	{ Source::pInvokeCallable_ResultsAvailable(); }
 
 Source_DatonSet::Source_DatonSet(ZRef<DatonSet> iDatonSet)
 :	fDatonSet(iDatonSet)
@@ -334,7 +334,7 @@ void Source_DatonSet::ModifyRegistrations(
 	if (!fClientQuery_NeedsWork.Empty() || !fPQuery_NeedsWork.Empty())
 		{
 		guard.Release();
-		this->pInvokeCallable_ResultsAvailable();
+		Source::pInvokeCallable_ResultsAvailable();
 		}
 	}
 
@@ -417,7 +417,7 @@ void Source_DatonSet::Insert(const Daton& iDaton)
 	this->pConditionalPushDown();
 	guard.Release();
 
-	this->pInvokeCallable_ResultsAvailable();	
+	Source::pInvokeCallable_ResultsAvailable();	
 	}
 
 void Source_DatonSet::Erase(const Daton& iDaton)
@@ -427,7 +427,7 @@ void Source_DatonSet::Erase(const Daton& iDaton)
 	this->pConditionalPushDown();
 	guard.Release();
 
-	this->pInvokeCallable_ResultsAvailable();	
+	Source::pInvokeCallable_ResultsAvailable();	
 	}
 
 void Source_DatonSet::Replace(const ZDatonSet::Daton& iOld, const ZDatonSet::Daton& iNew)
@@ -438,7 +438,7 @@ void Source_DatonSet::Replace(const ZDatonSet::Daton& iOld, const ZDatonSet::Dat
 	this->pConditionalPushDown();
 	guard.Release();
 
-	this->pInvokeCallable_ResultsAvailable();	
+	Source::pInvokeCallable_ResultsAvailable();	
 	}
 
 size_t Source_DatonSet::OpenTransaction()
@@ -469,7 +469,7 @@ void Source_DatonSet::CloseTransaction(size_t iIndex)
 	this->pConditionalPushDown();
 	guard.Release();
 
-	this->pInvokeCallable_ResultsAvailable();	
+	Source::pInvokeCallable_ResultsAvailable();	
 	}
 
 void Source_DatonSet::pDetachPQuery(PQuery* iPQuery)
@@ -489,7 +489,7 @@ void Source_DatonSet::pDetachPQuery(PQuery* iPQuery)
 void Source_DatonSet::pPull()
 	{
 	// Get our map in sync with fDatonSet
-	ZLOGF(s, eDebug);
+	ZLOGF(s, eDebug + 1);
 	ZRef<Deltas> theDeltas;
 	fEvent = fDatonSet->GetDeltas(theDeltas, fEvent);
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();

@@ -98,6 +98,11 @@ void Source_Asyncify::CollectResults(vector<QueryResult>& oChanged)
 	fPendingResults.clear();
 	}
 
+void Source_Asyncify::CrankIt()
+	{
+	this->pUpdate();
+	}
+
 void Source_Asyncify::pTrigger_Update()
 	{
 	ZAcqMtxR acq(fMtxR);
