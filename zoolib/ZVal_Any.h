@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZData_Any.h"
+#include "zoolib/ZCompare_String.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors.h"
@@ -361,7 +362,7 @@ class ZMap_Any
 	class Rep;
 
 public:
-	typedef std::map<string8, ZVal_Any> Map_t;
+	typedef std::map<string8, ZVal_Any, FastComparator_String> Map_t;
 	typedef Map_t::iterator Index_t;
 	typedef ZVal_Any Val_t;
 

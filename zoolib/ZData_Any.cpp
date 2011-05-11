@@ -100,12 +100,17 @@ int ZData_Any::Compare(const ZData_Any& iOther) const
 	{
 	if (fRep == iOther.fRep)
 		return 0;
-
+	
 	if (const size_t thisSize = fRep->fVector.size())
 		{
 		if (const size_t otherSize = iOther.fRep->fVector.size())
 			{
-			return ZMemCompare(&fRep->fVector[0], thisSize, &iOther.fRep->fVector[0], otherSize);
+			if (thisSize < otherSize)
+				return -1;
+			else if (otherSize < thisSize)
+				return 1;
+			else
+				return ZMemCompare(&fRep->fVector[0], &iOther.fRep->fVector[0], thisSize);
 			}
 		else
 			{
@@ -120,27 +125,13 @@ int ZData_Any::Compare(const ZData_Any& iOther) const
 		{
 		return 0;
 		}
-
-//	return sCompare_T(fRep->fVector, iOther.fRep->fVector);
 	}
 
 bool ZData_Any::operator<(const ZData_Any& iOther) const
-	{
-	return this->Compare(iOther) < 0;
-
-	if (fRep == iOther.fRep)
-		return false;
-	return fRep->fVector < iOther.fRep->fVector;
-	}
+	{ return this->Compare(iOther) < 0; }
 
 bool ZData_Any::operator==(const ZData_Any& iOther) const
-	{
-	return this->Compare(iOther) == 0;
-
-	if (fRep == iOther.fRep)
-		return true;
-	return fRep->fVector == iOther.fRep->fVector;
-	}
+	{ return this->Compare(iOther) == 0; }
 
 size_t ZData_Any::GetSize() const
 	{ return fRep->fVector.size(); }
