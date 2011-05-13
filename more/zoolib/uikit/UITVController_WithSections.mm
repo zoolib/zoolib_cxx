@@ -66,9 +66,6 @@ static bool spIsVersion4OrLater()
 	return resultQ.Get();
 	}
 	
-//##(tableView.editing && spIsVersion4OrLater)
-
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Section
@@ -1150,7 +1147,7 @@ static void spInsertSections(UITableView* iTableView,
 	fReloads.clear();
 	fReloads.resize(fSections_Shown.size());
 
-	bool anyDeletes = false, anyInserts, anyReloads = false;
+	bool anyDeletes = false, anyInserts = false, anyReloads = false;
 	for (size_t x = 0; x < fSections_Shown.size(); ++x)
 		{
 		if (!ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[x]))
@@ -1233,6 +1230,9 @@ static void spInsertSections(UITableView* iTableView,
 		}
 	else
 		{
+		for (size_t x = 0; x < fSections_All.size(); ++x)
+			fSections_All[x]->GetBody()->FinishUpdate();
+
 		[self pDoUpdate3:tableView];
 		}
 	}

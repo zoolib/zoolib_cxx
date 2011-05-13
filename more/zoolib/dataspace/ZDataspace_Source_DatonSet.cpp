@@ -489,7 +489,7 @@ void Source_DatonSet::pDetachPQuery(PQuery* iPQuery)
 void Source_DatonSet::pPull()
 	{
 	// Get our map in sync with fDatonSet
-	ZLOGF(s, eDebug + 1);
+	ZLOGF(s, eDebug);
 	ZRef<Deltas> theDeltas;
 	fEvent = fDatonSet->GetDeltas(theDeltas, fEvent);
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
