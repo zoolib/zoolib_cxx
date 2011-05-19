@@ -133,7 +133,7 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5)>
 :	public ZCallableBase<R(P0,P1,P2,P3,P4,P5)>
 	{
 public:
-	virtual R Call(P0,P1,P2,P3,P4) = 0;
+	virtual R Call(P0,P1,P2,P3,P4,P5) = 0;
 	};
 
 // =================================================================================================
