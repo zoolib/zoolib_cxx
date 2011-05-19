@@ -60,6 +60,7 @@ NSIndexSet* sMakeIndexSet(size_t iIndex)
 
 static bool spIsVersion4OrLater()
 	{
+	return false;
 	static ZQ<bool> resultQ;
 	if (!resultQ)
 		resultQ = [[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0;
@@ -428,7 +429,7 @@ void SectionBody_Multi::Update_Normal(
 		{
 		const ZRef<SectionBody> bodyOld = fBodies[iterOld];
 		const size_t inNew =
-			find(fBodies_Pending.begin(), fBodies_Pending.end(), bodyOld) - fBodies_Pending.begin();
+			find(fBodies_Pending.begin() + iterNew, fBodies_Pending.end(), bodyOld) - fBodies_Pending.begin();
 		if (inNew == endNew)
 			{
 			// It's no longer in fBodies so delete its rows.
