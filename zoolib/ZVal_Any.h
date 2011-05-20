@@ -35,6 +35,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+template <>
+struct ZAnyTraits<string8>
+	{
+	enum { eAllowInPlace = 0 };
+	};
+
 class ZVal_Any;
 class ZSeq_Any;
 class ZMap_Any;
@@ -93,22 +99,22 @@ public:
 
 // Overload, so we can init/assign from a string constant
 	ZVal_Any(const UTF8* iVal)
-	:	ZAny(string8(iVal))
+	:	ZAny(sAny<string8>(iVal))
 		{}
 
 	ZVal_Any& operator=(const UTF8* iVal)
 		{
-		ZAny::operator=(string8(iVal));
+		ZAny::operator=(sAny<string8>(iVal));
 		return *this;
 		}
 
 	ZVal_Any(const UTF16* iVal)
-	:	ZAny(string16(iVal))
+	:	ZAny(sAny<string16>(iVal))
 		{}
 
 	ZVal_Any& operator=(const UTF16* iVal)
 		{
-		ZAny::operator=(string16(iVal));
+		ZAny::operator=(sAny<string16>(iVal));
 		return *this;
 		}
 
@@ -118,7 +124,7 @@ public:
 
 	ZVal_Any& operator=(const UTF32* iVal)
 		{
-		ZAny::operator=(string32(iVal));
+		ZAny::operator=(sAny<string32>(iVal));
 		return *this;
 		}
 
@@ -142,6 +148,7 @@ public:
 	using ZAny::QGet;
 	using ZAny::DGet;
 	using ZAny::Get;
+	using ZAny::Set;
 
 // Shortcut access to values in an enclosed Map.
 	ZVal_Any* PGetMutable(const string8& iName);
@@ -504,7 +511,7 @@ public:
 	Index_t Begin() const;
 	Index_t End() const;
 
-	string8 NameOf(const Index_t& iIndex) const;
+	const string8& NameOf(const Index_t& iIndex) const;
 	Index_t IndexOf(const string8& iName) const;
 
 	Index_t IndexOf(const ZMap_Any& iOther, const Index_t& iOtherIndex) const;

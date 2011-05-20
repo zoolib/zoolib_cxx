@@ -39,6 +39,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+template <class S>
+struct ZAnyTraits
+	{
+	enum { eAllowInPlace = 1 };
+	};
+
 class ZAny
 	{
 public:
@@ -244,7 +250,7 @@ private:
 	template <class S, class P0, class P1>
 	void pCtor_T(const P0& iP0, const P1& iP1)
 		{
-		if (sizeof(S) <= sizeof(fPayload))
+		if (ZAnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
 			sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0, iP1);
 			}
@@ -265,7 +271,7 @@ private:
 	template <class S, class P0>
 	void pCtor_T(const P0& iP0)
 		{
-		if (sizeof(S) <= sizeof(fPayload))
+		if (ZAnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
 			if (false)
 				{}

@@ -303,6 +303,7 @@ ZMap_Any::Rep::Rep(const Map_t& iMap)
 #pragma mark -
 #pragma mark * ZMap_Any
 
+static string8 spEmptyString;
 static ZMap_Any::Map_t spEmptyMap;
 
 ZMap_Any::operator operator_bool() const
@@ -560,11 +561,11 @@ ZMap_Any::Index_t ZMap_Any::End() const
 	return spEmptyMap.end();
 	}
 
-string8 ZMap_Any::NameOf(const Index_t& iIndex) const
+const string8& ZMap_Any::NameOf(const Index_t& iIndex) const
 	{
 	if (fRep && iIndex != fRep->fMap.end())
 		return iIndex->first;
-	return string8();
+	return spEmptyString;
 	}
 
 ZMap_Any::Index_t ZMap_Any::IndexOf(const string8& iName) const
