@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,55 +18,49 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Walker_Calc.h"
+#ifndef __ZQE_Walker_Union__
+#define __ZQE_Walker_Union__ 1
+#include "zconfig.h"
+
+#include "zoolib/zqe/ZQE_Walker.h"
+#include "zoolib/zra/ZRA_RelHead.h"
 
 namespace ZooLib {
 namespace ZQE {
 
-using std::map;
-using std::set;
-using std::vector;
-
-using namespace ZUtil_STL;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Calc
+#pragma mark * Walker_Union
 
-Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
-	const string8& iRelName,
-	const ZRef<Callable>& iCallable)
-:	Walker_Unary(iWalker)
-,	fRelName(iRelName)
-,	fCallable(iCallable)
-	{}
-
-Walker_Calc::~Walker_Calc()
-	{}
-
-ZRef<Walker> Walker_Calc::Prime(
-	const map<string8,size_t>& iOffsets,
-	map<string8,size_t>& oOffsets,
-	size_t& ioBaseOffset)
+class Walker_Union : public Walker
 	{
-	fWalker = fWalker->Prime(iOffsets, fBindings, ioBaseOffset);
-	oOffsets.insert(fBindings.begin(), fBindings.end());
-	fOutputOffset = ioBaseOffset++;
-	oOffsets[fRelName] = fOutputOffset;
-	return this;
-	}
+public:
+	Walker_Union(const ZRef<Walker>& iWalker_Left, const ZRef<Walker>& iWalker_Right);
+	virtual ~Walker_Union();
 
-bool Walker_Calc::ReadInc(
-	ZVal_Any* ioResults,
-	set<ZRef<ZCounted> >* oAnnotations)
-	{
-	if (!fWalker->ReadInc(ioResults, oAnnotations))
-		return false;
+// From ZQE::Walker
+	virtual void Rewind();
 
-	ioResults[fOutputOffset] = fCallable->Call(PseudoMap(fBindings, ioResults));
+	virtual ZRef<Walker> Prime(
+		const std::map<string8,size_t>& iOffsets,
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
 
-	return true;
-	}
+	virtual bool ReadInc(
+		ZVal_Any* ioResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
+
+private:
+	ZRef<Walker> fWalker_Left;
+	bool fExhaustedLeft;
+	std::set<std::vector<ZVal_Any> > fPriors;
+	std::vector<size_t> fMapping_Left;
+
+	ZRef<Walker> fWalker_Right;
+	std::vector<size_t> fMapping_Right;
+	};
 
 } // namespace ZQE
 } // namespace ZooLib
+
+#endif // __ZQE_Walker_Union__

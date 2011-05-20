@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Walker_Project.h"
 #include "zoolib/zqe/ZQE_Walker_Rename.h"
 #include "zoolib/zqe/ZQE_Walker_Restrict.h"
+#include "zoolib/zqe/ZQE_Walker_Union.h"
 
 namespace ZooLib {
 namespace ZQE {
@@ -85,6 +86,15 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Rest
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Restrict(op0, iExpr->GetExpr_Bool()));
+	}
+
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>& iExpr)
+	{
+	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+		{
+		if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
+			this->pSetResult(new Walker_Union(op0, op1));
+		}
 	}
 
 } // namespace ZQE

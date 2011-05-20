@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Walker_Project.h"
+#include "zoolib/zqe/ZQE_Walker_Union.h"
 
 namespace ZooLib {
 namespace ZQE {
@@ -29,44 +29,60 @@ using std::vector;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Project
+#pragma mark * Walker_Union
 
-Walker_Project::Walker_Project(const ZRef<Walker>& iWalker, const ZRA::RelHead& iRelHead)
-:	Walker_Unary(iWalker)
-,	fRelHead(iRelHead)
+Walker_Union::Walker_Union(const ZRef<Walker>& iWalker_Left, const ZRef<Walker>& iWalker_Right)
+:	fWalker_Left(iWalker_Left)
+,	fWalker_Right(iWalker_Right)
 	{}
 
-Walker_Project::~Walker_Project()
+Walker_Union::~Walker_Union()
 	{}
 
-void Walker_Project::Rewind()
+void Walker_Union::Rewind()
 	{
-	Walker_Unary::Rewind();
+	fExhaustedLeft = false;
+	fWalker_Left->Rewind();
+	fWalker_Right->Rewind();
 	fPriors.clear();
 	}
 
-ZRef<Walker> Walker_Project::Prime(
+ZRef<Walker> Walker_Union::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	map<string8,size_t> childOffsets;
-	fWalker = fWalker->Prime(iOffsets, childOffsets, ioBaseOffset);
+	map<string8,size_t> leftOffsets;
+	fWalker_Left = fWalker_Left->Prime(iOffsets, leftOffsets, ioBaseOffset);
 
-	for (ZRA::RelHead::iterator i = fRelHead.begin(); i != fRelHead.end(); ++i)
+	if (!fWalker_Left)
+		return fWalker_Right->Prime(iOffsets, oOffsets, ioBaseOffset);
+
+	map<string8,size_t> rightOffsets;
+	fWalker_Right = fWalker_Right->Prime(iOffsets, rightOffsets, ioBaseOffset);
+
+	oOffsets.insert(leftOffsets.begin(), leftOffsets.end());
+	if (!fWalker_Right)
+		return fWalker_Left;
+
+	ZAssert(leftOffsets.size() == rightOffsets.size());
+	size_t x = 0;
+	for (map<string8,size_t>::iterator iterLeft = leftOffsets.begin(), iterRight = rightOffsets.begin();
+		iterLeft != leftOffsets.end(); ++iterLeft, ++iterRight)
 		{
-		const size_t childOffset = childOffsets[*i];
-		fChildMapping.push_back(childOffset);
-		oOffsets[*i] = childOffset;
+		const string8& leftName = iterLeft->first;
+		ZAssert(leftName == iterRight->first);
+		const size_t leftOffset = iterLeft->second;
+		fMapping_Left[x] = leftOffset;
+
+		const size_t rightOffset = iterRight->second;
+		fMapping_Right[x] = rightOffset;
 		}
-
-	if (!fWalker)
-		return null;
-
+	
 	return this;
 	}
 
-bool Walker_Project::ReadInc(
+bool Walker_Union::ReadInc(
 	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
@@ -75,20 +91,35 @@ bool Walker_Project::ReadInc(
 	if (oAnnotations)
 		localAnnotationsPtr = &localAnnotations;
 
-	const size_t count = fRelHead.size();
+	const size_t count = fMapping_Left.size();
 
 	for (;;)
 		{
-		if (!fWalker->ReadInc(ioResults, localAnnotationsPtr))
-			return false;
-
 		vector<ZVal_Any> subset;
 		subset.reserve(count);
-		for (size_t x = 0; x < count; ++x)
-			subset.push_back(ioResults[fChildMapping[x]]);
-
-		if (ZUtil_STL::sInsertIfNotContains(fPriors, subset))
+		if (!fExhaustedLeft)
 			{
+			if (fWalker_Left->ReadInc(ioResults, oAnnotations))
+				{
+				for (size_t x = 0; x < count; ++x)
+					subset.push_back(ioResults[fMapping_Left[x]]);
+
+				ZUtil_STL::sInsertMustNotContain(1, fPriors, subset);
+				return true;
+				}
+			fExhaustedLeft = true;
+			}
+
+		if (!fWalker_Right->ReadInc(ioResults, localAnnotationsPtr))
+			return false;
+
+		for (size_t x = 0; x < count; ++x)
+			subset.push_back(ioResults[fMapping_Right[x]]);
+
+		if (!ZUtil_STL::sContains(fPriors, subset))
+			{
+			for (size_t x = 0; x < count; ++x)
+				ioResults[fMapping_Left[x]] = subset[x];
 			if (oAnnotations)
 				oAnnotations->insert(localAnnotations.begin(), localAnnotations.end());
 			return true;
