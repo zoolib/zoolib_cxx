@@ -819,10 +819,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 	{
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
-		{
 		theSection->GetBody()->RowSelected(self, tableView, indexPath, indexPath.row);
-//##		[tableView deselectRowAtIndexPath:indexPath animated:YES];
-		}
 	}
 
 - (BOOL)tableView:(UITableView*)tableView
