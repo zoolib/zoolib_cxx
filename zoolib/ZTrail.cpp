@@ -32,6 +32,8 @@ using std::vector;
 
 namespace ZooLib {
 
+static string8 spEmptyString;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helper functions
@@ -210,7 +212,7 @@ void ZTrail::AppendComp(const string8& iComp)
 	{ fComps.push_back(iComp); }
 
 void ZTrail::AppendBounce()
-	{ fComps.push_back(string8()); }
+	{ fComps.push_back(spEmptyString); }
 
 void ZTrail::AppendBounces(size_t iCount)
 	{
@@ -226,7 +228,7 @@ void ZTrail::PrependComp(const string8& iComp)
 	{ fComps.insert(fComps.begin(), iComp); }
 
 void ZTrail::PrependBounce()
-	{ fComps.insert(fComps.begin(), string8()); }
+	{ fComps.insert(fComps.begin(), spEmptyString); }
 
 void ZTrail::PrependBounces(size_t iCount)
 	{
@@ -261,21 +263,21 @@ ZTrail ZTrail::Branch() const
 	return ZTrail(fComps.begin(), fComps.end() - 1);
 	}
 
-string8 ZTrail::Leaf() const
+const string8& ZTrail::Leaf() const
 	{
 	if (fComps.empty())
-		return string8();
+		return spEmptyString;
 	return fComps.back();
 	}
 
 size_t ZTrail::Count() const
 	{ return fComps.size(); }
 
-string8 ZTrail::At(size_t iIndex) const
+const string8& ZTrail::At(size_t iIndex) const
 	{
 	if (iIndex < fComps.size())
 		return fComps[iIndex];
-	return string8();
+	return spEmptyString;
 	}
 
 ZTrail ZTrail::SubTrail(size_t iBegin, size_t iEnd) const

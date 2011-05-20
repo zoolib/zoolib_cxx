@@ -80,10 +80,10 @@ public:
 	string8 AsString(const string8& iSeparator, const string8& iBounce) const;
 
 	ZTrail Branch() const;
-	string8 Leaf() const;
+	const string8& Leaf() const;
 
 	size_t Count() const;
-	string8 At(size_t iIndex) const;
+	const string8& At(size_t iIndex) const;
 	ZTrail SubTrail(size_t iBegin, size_t iEnd) const;
 	ZTrail SubTrail(size_t iBegin) const;
 
