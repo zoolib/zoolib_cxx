@@ -745,7 +745,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (!fDragging)
 		{
 		fDragging = true;
-		ZLOGTRACE(eInfo);
+		ZLOGTRACE(eDebug);
 		[self changeTouchState:YES forTableView:(UITableView*)scrollView];
 		}
 	}
@@ -755,7 +755,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (fDragging)
 		{
 		fDragging = false;
-		ZLOGTRACE(eInfo);
+		ZLOGTRACE(eDebug);
 		[self changeTouchState:NO forTableView:(UITableView*)scrollView];
 		}
 	}
