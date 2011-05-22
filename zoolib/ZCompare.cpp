@@ -52,6 +52,7 @@ static int spInitCount;
 static map<const char*, ZCompare*, CompareCharStars>* spMap;
 
 ZCompare::ZCompare(const char* iTypeName)
+:	fTypeName(iTypeName)
 	{
 	if (++spInitCount == 1)
 		{
@@ -68,6 +69,12 @@ ZCompare::~ZCompare()
 		delete spMap;
 		spMap = nullptr;
 		}
+	}
+
+int ZCompare::Compare(const void* iL, const void* iR)
+	{
+	ZDebugStopf(0, ("ZCompare::Compare not overridden type '%s'", fTypeName));
+	return 0;
 	}
 
 int ZCompare::sCompare(const char* iTypeName, const void* iL, const void* iR)

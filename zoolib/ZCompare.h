@@ -42,6 +42,7 @@ protected:
 
 public:
 	static int sCompare(const char* iTypeName, const void* iL, const void* iR);
+	const char* fTypeName;
 	};
 
 // =================================================================================================
