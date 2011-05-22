@@ -138,17 +138,20 @@ void Source_SQLite::ModifyRegistrations(
 
 		PQuery* thePQuery = &inPQuery.first->second;
 		
-		if (inPQuery.second)
-			{
+		const int64 theRefcon = iAdded->GetRefcon();
+
 			string8 asSQL;
 			ZRA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String(asSQL));
-			if (ZLOGF(s, eDebug))
-				s << asSQL;
+			if (ZLOGF(s, eDebug + 1))
+				s << "Add: " << theRefcon << " " << asSQL;
+
+		if (inPQuery.second)
+			{
+			if (ZLOGF(s, eDebug + 1))
+				s << "Really adding";
 			thePQuery->fSQL = asSQL;
 			thePQuery->fRelHead = sGetRelHead(theRel);
 			}
-
-		const int64 theRefcon = iAdded->GetRefcon();
 
 		std::map<int64, ClientQuery>::iterator iterClientQuery =
 			fMap_RefconToClientQuery.insert(
@@ -169,9 +172,15 @@ void Source_SQLite::ModifyRegistrations(
 		ClientQuery* theClientQuery = &iterClientQuery->second;
 		
 		PQuery* thePQuery = theClientQuery->fPQuery;
+		if (ZLOGF(s, eDebug + 1))
+			s << "Remove: " << theRefcon << " " << thePQuery->fSQL;
 		thePQuery->fClientQueries.Erase(theClientQuery);
 		if (thePQuery->fClientQueries.Empty())
+			{
+			if (ZLOGF(s, eDebug + 1))
+				s << "Tossing it";
 			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
+			}
 		
 		fMap_RefconToClientQuery.erase(iterClientQuery);
 		}

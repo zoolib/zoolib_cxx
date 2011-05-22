@@ -63,6 +63,8 @@ void Source_Asyncify::ModifyRegistrations(
 
 	while (iAddedCount--)
 		{
+		if (ZLOGPF(s, eDebug + 1))
+			s << "Add: " << iAdded->GetRefcon();
 		ZUtil_STL::sInsertMustNotContain(1, fPendingAdds, iAdded->GetRefcon(), iAdded->GetRel());
 		++iAdded;
 		}
@@ -70,6 +72,8 @@ void Source_Asyncify::ModifyRegistrations(
 	while (iRemovedCount--)
 		{
 		const int64 theRefcon = *iRemoved++;
+		if (ZLOGPF(s, eDebug + 1))
+			s << "Remove: " << theRefcon;
 		if (!ZUtil_STL::sEraseIfContains(fPendingAdds, theRefcon))
 			ZUtil_STL::sInsertMustNotContain(1, fPendingRemoves, theRefcon);
 
@@ -145,6 +149,8 @@ void Source_Asyncify::pUpdate()
 			fNeeds_SourceCollectResults = false;
 			guard.Release();
 
+//##			if (ZMACRO_IOS_Simulator)
+//##				ZThread::sSleep(1);
 			vector<QueryResult> changes;
 			fSource->CollectResults(changes);
 			if (changes.size())
