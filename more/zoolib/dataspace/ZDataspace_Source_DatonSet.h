@@ -111,7 +111,7 @@ private:
 	class Walker_Concrete;
 	friend class Walker_Concrete;
 
-	ZRef<ZQE::Walker> pMakeWalker_Concrete(const RelHead& iRelHead);
+	ZRef<ZQE::Walker> pMakeWalker_Concrete(PQuery* iPQuery, const RelHead& iRelHead);
 
 	void pRewind_Concrete(ZRef<Walker_Concrete> iWalker);
 

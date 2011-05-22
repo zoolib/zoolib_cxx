@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
+#include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
@@ -34,6 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_DoQuery.h"
 #include "zoolib/zqe/ZQE_Transform_Search.h"
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
+#include "zoolib/zqe/ZQE_Walker_Project.h"
 #include "zoolib/zqe/ZQE_Walker_Result.h"
 #include "zoolib/zqe/ZQE_Walker_Rename.h"
 #include "zoolib/zqe/ZQE_Walker_Restrict.h"
@@ -129,7 +131,7 @@ public:
 		{}
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
-		{ this->pSetResult(fSource->pMakeWalker_Concrete(iExpr->GetConcreteRelHead())); }
+		{ this->pSetResult(fSource->pMakeWalker_Concrete(fPQuery, iExpr->GetConcreteRelHead())); }
 
 	virtual void Visit_Expr_Rel_Search(const ZRef<ZQE::Expr_Rel_Search>& iExpr)
 		{ this->pSetResult(fSource->pMakeWalker_Search(fPQuery, iExpr)); }
@@ -175,6 +177,7 @@ public:
 	size_t fBaseOffset;
 	Map_Main::const_iterator fCurrent_Main;
 	Map_Pending::const_iterator fCurrent_Pending;
+	std::set<std::vector<ZVal_Any> > fPriors;
 	};
 
 // =================================================================================================
@@ -270,13 +273,13 @@ void Source_DatonSet::ModifyRegistrations(
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
-		if (ZLOGPF(s, eDebug+1))
+		if (ZLOGPF(s, eDebug))
 			s << "\nDatonSet Raw:\n" << iAdded->GetRel();
 
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
-		theRel = ZQE::sTransform_Search(theRel);
+//##		theRel = ZQE::sTransform_Search(theRel);
 
-		if (ZLOGPF(s, eDebug+1))
+		if (ZLOGPF(s, eDebug + 1))
 			s << "\nDatonSet Cooked:\n" << theRel;
 
 		const pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
@@ -349,7 +352,7 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 	// Pick changes datonSet
 	this->pPull();
 	
-	ZLOGPF(s, eDebug+1);
+	ZLOGPF(s, eDebug + 1);
 
 	for (DListEraser<PQuery,DLink_PQuery_NeedsWork> eraser = fPQuery_NeedsWork;
 		eraser; eraser.Advance())
@@ -651,25 +654,12 @@ void Source_DatonSet::pChangedAll()
 		{ this->pChanged(i->second.first); }
 	}
 
-ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(const RelHead& iRelHead)
+ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const RelHead& iRelHead)
 	{
 	++fWalkerCount;
-	return new Walker_Concrete(this, vector<string8>(iRelHead.begin(), iRelHead.end()));
-	}
-
-ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
-	PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel)
-	{
-	// Walker_Search knows the PQuery it's operating on behalf of, and so as it
-	// gets PSearches from the source, they're registered against that PQuery.
-
-	const ZRA::Rename& theRename = iRel->GetRename();
-	ZRA::RelHead theRelHead;
-	for (ZRA::Rename::const_iterator i = theRename.begin(); i != theRename.end(); ++i)
-		theRelHead |= i->first;
 
 	PSearch* thePSearch;
-	Map_PSearch::iterator iterPSearch = fMap_PSearch.find(theRelHead);
+	Map_PSearch::iterator iterPSearch = fMap_PSearch.find(iRelHead);
 	if (iterPSearch != fMap_PSearch.end())
 		{
 		thePSearch = &iterPSearch->second;
@@ -677,23 +667,54 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
 	else
 		{
 		pair<Map_PSearch::iterator,bool> inPSearch =
-			fMap_PSearch.insert(make_pair(theRelHead, PSearch()));
+			fMap_PSearch.insert(make_pair(iRelHead, PSearch()));
 
 		thePSearch = &inPSearch.first->second;
-		thePSearch->fRelHead = theRelHead;
+		thePSearch->fRelHead = iRelHead;
 		}
 
 	ZUtil_STL::sInsertMustNotContain(kDebug, iPQuery->fPSearch_Used, thePSearch);
 	ZUtil_STL::sInsertMustNotContain(kDebug, thePSearch->fPQuery_Using, iPQuery);
 
 	if (!thePSearch->fResult)
-		thePSearch->fResult = sDoQuery(this->pMakeWalker_Concrete(thePSearch->fRelHead));
-	
-	ZRef<ZQE::Walker> theWalker = new ZQE::Walker_Result(thePSearch->fResult);
+		{
+		ZRef<ZQE::Walker> theWalker =
+			new Walker_Concrete(this, vector<string8>(iRelHead.begin(), iRelHead.end()));
+		thePSearch->fResult = sDoQuery(theWalker);
+		}
 
+	return new ZQE::Walker_Result(thePSearch->fResult);
+	}
+
+ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
+	PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel)
+	{
+	const ZRA::Rename& theRename = iRel->GetRename();
+	ZRA::RelHead theRelHead;
+	for (ZRA::Rename::const_iterator i = theRename.begin(); i != theRename.end(); ++i)
+		theRelHead |= i->first;
+
+	ZRef<ZQE::Walker> theWalker;
 	const ZRef<ZExpr_Bool>& theExpr_Bool = iRel->GetExpr_Bool();
-	if (theExpr_Bool != sTrue())
-		theWalker = new ZQE::Walker_Restrict(theWalker, theExpr_Bool);
+	if (theExpr_Bool && theExpr_Bool != sTrue())
+		{
+		const ZRA::RelHead augmented = theRelHead | sGetNames(theExpr_Bool);
+		if (augmented.size() != theRelHead.size())
+			{
+			theWalker = this->pMakeWalker_Concrete(iPQuery, augmented);
+			theWalker = new ZQE::Walker_Restrict(theWalker, theExpr_Bool);
+			theWalker = new ZQE::Walker_Project(theWalker, theRelHead);
+			}
+		else
+			{
+			theWalker = this->pMakeWalker_Concrete(iPQuery, theRelHead);
+			theWalker = new ZQE::Walker_Restrict(theWalker, theExpr_Bool);
+			}
+		}
+	else
+		{
+		theWalker = this->pMakeWalker_Concrete(iPQuery, theRelHead);
+		}
 
 	for (ZRA::Rename::const_iterator iterRename = theRename.begin();
 		iterRename != theRename.end(); ++iterRename)
@@ -742,19 +763,26 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 			if (const ZMap_Any* theMap = iWalker->fCurrent_Main->second.second.PGet<ZMap_Any>())
 				{
 				bool gotAll = true;
+				vector<ZVal_Any> subset;
+				subset.reserve(theCount);
 				for (size_t x = 0; x < theCount; ++x)
 					{
 					if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[x]))
+						{
 						ioResults[iWalker->fBaseOffset + x] = *theVal;
+						subset.push_back(*theVal);
+						}
 					else
+						{
 						gotAll = false;
+						break;
+						}
 					}
 
-				if (gotAll)
+				if (gotAll && ZUtil_STL::sInsertIfNotContains(iWalker->fPriors, subset))
 					{
 					if (ZLOGF(s, eDebug + 2))
 						ZYad_ZooLibStrim::sToStrim(sMakeYadR(*theMap), s);
-
 					if (oAnnotations)
 						oAnnotations->insert(new Annotation_Daton(iWalker->fCurrent_Main->first));
 					++iWalker->fCurrent_Main;
@@ -773,16 +801,23 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 			{
 			if (const ZMap_Any* theMap = iWalker->fCurrent_Pending->second.first.PGet<ZMap_Any>())
 				{
+				vector<ZVal_Any> subset;
+				subset.reserve(theCount);
 				bool gotAll = true;
 				for (size_t x = 0; x < theCount; ++x)
 					{
 					if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[x]))
+						{
 						ioResults[iWalker->fBaseOffset + x] = *theVal;
+						subset.push_back(*theVal);
+						}
 					else
+						{
 						gotAll = false;
+						}
 					}
 
-				if (gotAll)
+				if (gotAll && ZUtil_STL::sInsertIfNotContains(iWalker->fPriors, subset))
 					{
 					if (ZLOGF(s, eDebug + 2))
 						ZYad_ZooLibStrim::sToStrim(sMakeYadR(*theMap), s);
