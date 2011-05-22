@@ -674,6 +674,7 @@ using namespace ZooLib::UIKit;
 	{
 	[super init];
 	fTouchCount = 0;
+	fDragging = 0;
 	fNeedsUpdate = false;
 	fUpdateInFlight = false;
 	fCheckForUpdateQueued = false;
@@ -741,12 +742,22 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 	{
-	[self changeTouchState:YES forTableView:(UITableView*)scrollView];
+	if (!fDragging)
+		{
+		fDragging = true;
+		ZLOGTRACE(eInfo);
+		[self changeTouchState:YES forTableView:(UITableView*)scrollView];
+		}
 	}
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 	{
-	[self changeTouchState:NO forTableView:(UITableView*)scrollView];
+	if (fDragging)
+		{
+		fDragging = false;
+		ZLOGTRACE(eInfo);
+		[self changeTouchState:NO forTableView:(UITableView*)scrollView];
+		}
 	}
 
 - (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section
@@ -943,6 +954,8 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 		}
 	else
 		{
+		if (fTouchCount <= 0)
+			ZLOGTRACE(eInfo);
 		if (0 == --fTouchCount)
 			[self pQueueCheckForUpdate:tableView];
 		}

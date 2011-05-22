@@ -327,6 +327,7 @@ private:
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fDeletes;
 	std::vector<std::map<size_t, UITableViewRowAnimation> > fReloads;
 	int fTouchCount;
+	bool fDragging;
 	bool fNeedsUpdate;
 	bool fUpdateInFlight;
 	bool fCheckForUpdateQueued;
