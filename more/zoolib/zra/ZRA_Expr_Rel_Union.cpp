@@ -76,13 +76,14 @@ void Visitor_Expr_Rel_Union::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iE
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Union> sUnion(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZRef<Expr_Rel_Union> sUnion(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
 	{ return new Expr_Rel_Union(iLHS, iRHS); }
 
-ZRef<Expr_Rel> operator|(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZRef<Expr_Rel> operator|(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
 	{ return sUnion(iLHS, iRHS); }
+
+ZRef<Expr_Rel>& operator|=(ZRef<Expr_Rel>& ioLHS, const ZRef<Expr_Rel>& iRHS)
+	{ return ioLHS = ioLHS | iRHS; }
 
 } // namespace ZRA
 } // namespace ZooLib
