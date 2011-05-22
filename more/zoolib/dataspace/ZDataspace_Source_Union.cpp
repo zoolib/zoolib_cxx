@@ -337,6 +337,7 @@ class Source_Union::Analyze
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
 ,	public virtual ZRA::Visitor_Expr_Rel_Restrict
+,	public virtual ZRA::Visitor_Expr_Rel_Union
 	{
 public:
 	Analyze(Source_Union* iSource_Union, PQuery* iPQuery);
@@ -350,6 +351,7 @@ public:
 	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr);
+	virtual void Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>& iExpr);
 
 // Our protocol
 	ZRef<ZRA::Expr_Rel> TopLevelDo(ZRef<ZRA::Expr_Rel> iRel);
@@ -359,7 +361,6 @@ private:
 	PQuery* fPQuery;
 	set<PSource*> fPSources;
 	ZRA::RelHead fResultRelHead;
-	// bindingsRelHead?
 	};
 
 Source_Union::Analyze::Analyze(Source_Union* iSource_Union, PQuery* iPQuery)
@@ -584,6 +585,77 @@ void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Res
 		}
 	}
 
+void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>& iExpr)
+	{
+	// Visit left branch
+	const ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+
+	// Remember which PSources it touches.
+	set<PSource*> leftPSources;
+	leftPSources.swap(fPSources);
+
+	// And the relhead
+	ZRA::RelHead leftRelHead;
+	leftRelHead.swap(fResultRelHead);
+	
+	// Visit right branch
+	const ZRef<ZRA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+	
+	// Remember its PSources.
+	set<PSource*> rightPSources;
+	rightPSources.swap(fPSources);
+	ZRA::RelHead rightRelHead;
+	rightRelHead.swap(fResultRelHead);
+
+	fPSources = ZUtil_STL::sOr(leftPSources, rightPSources);
+	ZAssert(leftRelHead == rightRelHead);
+	fResultRelHead = leftRelHead;
+
+	if (leftPSources.size() <= 1)
+		{
+		// Our left branch is simple, it references zero or one source.
+		if (fPSources.size() <= 1)
+			{
+			// And with the addition of the right branch we still reference <= 1 source.
+			this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
+			}
+		else
+			{
+			// This is the interesting scenario. With the addition of our right branch
+			// we *now* reference multiple sources. We register a proxy for the left branch.
+			ZRef<ZRA::Expr_Rel> proxy0 =
+				fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
+
+			if (rightPSources.size() <= 1)
+				{
+				// Right branch is simple, and thus won't have registered a proxy yet.
+				ZRef<ZRA::Expr_Rel> proxy1 =
+					fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+				this->pSetResult(iExpr->Clone(proxy0, proxy1));
+				}
+			else
+				{
+				this->pSetResult(iExpr->Clone(proxy0, newOp1));
+				}
+			}
+		}
+	else
+		{
+		// Our left branch itself references multiples sources.
+		if (rightPSources.size() <= 1)
+			{
+			// Right branch is simple, and thus won't have registered a proxy yet.
+			ZRef<ZRA::Expr_Rel> proxy1 =
+				fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+			this->pSetResult(iExpr->Clone(newOp0, proxy1));
+			}
+		else
+			{
+			this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
+			}
+		}
+	}
+
 ZRef<ZRA::Expr_Rel> Source_Union::Analyze::TopLevelDo(ZRef<ZRA::Expr_Rel> iRel)
 	{
 	ZRef<ZRA::Expr_Rel> result = this->Do(iRel);
@@ -689,7 +761,7 @@ void Source_Union::ModifyRegistrations(
 		{
 		const int64 theRefcon = *iRemoved++;
 
-		if (ZLOGPF(s, eDebug+1))
+		if (ZLOGPF(s, eDebug + 1))
 			s << "Remove: " << theRefcon;
 
 		Map_Refcon_ClientQuery::iterator iterClientQuery =
@@ -699,6 +771,8 @@ void Source_Union::ModifyRegistrations(
 		fClientQuery_NeedsWork.EraseIfContains(theClientQuery);
 		
 		PQuery* thePQuery = theClientQuery->fPQuery;
+
+		thePQuery->fClientQueries.Erase(theClientQuery);
 
 		if (thePQuery->fClientQueries.Empty())
 			{
@@ -726,7 +800,6 @@ void Source_Union::ModifyRegistrations(
 			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 			}
 
-		thePQuery->fClientQueries.Erase(theClientQuery);
 		fMap_Refcon_ClientQuery.erase(iterClientQuery);
 		}
 
@@ -742,6 +815,11 @@ void Source_Union::ModifyRegistrations(
 
 		PQuery* thePQuery = &inPQuery.first->second;
 		
+		const int64 theRefcon = iAdded->GetRefcon();
+
+		if (ZLOGPF(s, eDebug + 1))
+			s << "Add: " << theRefcon;
+
 		if (inPQuery.second)
 			{
 			if (ZLOGPF(s, eDebug + 1))
@@ -753,11 +831,6 @@ void Source_Union::ModifyRegistrations(
 			if (ZLOGPF(s, eDebug + 1))
 				s << "Analyzed:\n" << thePQuery->fRel_Analyzed;
 			}
-
-		const int64 theRefcon = iAdded->GetRefcon();
-
-		if (ZLOGPF(s, eDebug+1))
-			s << "Add: " << theRefcon;
 
 		ClientQuery* theClientQuery = &fMap_Refcon_ClientQuery.insert(
 			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery))).first->second;
