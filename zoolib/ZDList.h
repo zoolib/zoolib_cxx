@@ -252,7 +252,6 @@ private:
 template <typename P, typename L>
 class DListEraser
 	{
-
 public:
 	DListEraser()
 	:	fCurrent(nullptr)
