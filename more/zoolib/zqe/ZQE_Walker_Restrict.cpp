@@ -209,7 +209,7 @@ struct Functor_StringContains
 		if (const string8* theL = l.PGet<string8>())
 			{
 			if (const string8* theR = r.PGet<string8>())
-				return ZTextCollator(fStrength).Contains(*theL, *theR);
+				return ZTextCollator(fStrength).Contains(*theR, *theL);
 			}
 		return false;
 		}

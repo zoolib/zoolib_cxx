@@ -33,6 +33,7 @@ using std::vector;
 
 Walker_Union::Walker_Union(const ZRef<Walker>& iWalker_Left, const ZRef<Walker>& iWalker_Right)
 :	fWalker_Left(iWalker_Left)
+,	fExhaustedLeft(false)
 ,	fWalker_Right(iWalker_Right)
 	{}
 
@@ -66,6 +67,8 @@ ZRef<Walker> Walker_Union::Prime(
 		return fWalker_Left;
 
 	ZAssert(leftOffsets.size() == rightOffsets.size());
+	fMapping_Left.resize(leftOffsets.size());
+	fMapping_Right.resize(leftOffsets.size());
 	size_t x = 0;
 	for (map<string8,size_t>::iterator iterLeft = leftOffsets.begin(), iterRight = rightOffsets.begin();
 		iterLeft != leftOffsets.end(); ++iterLeft, ++iterRight)
