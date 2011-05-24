@@ -28,15 +28,10 @@ namespace ZooLib {
 
 void ZExpr::Accept(ZVisitor& iVisitor)
 	{
-	if (ZVisitor_Expr* theVisitor =
-		dynamic_cast<ZVisitor_Expr*>(&iVisitor))
-		{
+	if (ZVisitor_Expr* theVisitor = dynamic_cast<ZVisitor_Expr*>(&iVisitor))
 		this->Accept_Expr(*theVisitor);
-		}
 	else
-		{
 		ZVisitee::Accept(iVisitor);
-		}
 	}
 
 void ZExpr::Accept_Expr(ZVisitor_Expr& iVisitor)
