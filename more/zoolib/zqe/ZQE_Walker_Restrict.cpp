@@ -198,25 +198,6 @@ struct Functor_GT
 	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const { return sCompare_T(l, r) > 0; }
 	};
 
-struct Functor_StringContains
-	{
-	Functor_StringContains(int iStrength)
-	:	fStrength(iStrength)
-		{}
-
-	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const
-		{
-		if (const string8* theL = l.PGet<string8>())
-			{
-			if (const string8* theR = r.PGet<string8>())
-				return ZTextCollator(fStrength).Contains(*theR, *theL);
-			}
-		return false;
-		}
-
-	int fStrength;
-	};
-
 struct Functor_Callable
 	{
 	typedef ZValComparator_Callable_Any::Callable Callable;
@@ -229,6 +210,25 @@ struct Functor_Callable
 		{ return fCallable->Call(l, r); }
 
 	ZRef<Callable> fCallable;
+	};
+
+struct Functor_StringContains
+	{
+	Functor_StringContains(int iStrength)
+	:	fStrength(iStrength)
+		{}
+
+	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const
+		{
+		if (const string8* target = l.PGet<string8>())
+			{
+			if (const string8* pattern = r.PGet<string8>())
+				return ZTextCollator(fStrength).Contains(*pattern, *target);
+			}
+		return false;
+		}
+
+	int fStrength;
 	};
 
 } // anonymous namespace
@@ -262,10 +262,7 @@ public:
 		{ this->pSetResult(new Exec_False); }
 
 	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
-		{
-		Walker_Restrict::Exec* child0 = this->Do(iRep->GetOp0());
-		this->pSetResult(new Exec_Not(child0));
-		}
+		{ this->pSetResult(new Exec_Not(this->Do(iRep->GetOp0()))); }
 
 	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
 		{ this->pSetResult(new Exec_And(this->Do(iRep->GetOp0()), this->Do(iRep->GetOp1()))); }

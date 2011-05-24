@@ -129,10 +129,10 @@ bool spDoCompare(const ZVal_Any& iL, const ZRef<ZValComparator>& iComparator, co
 	else if (ZRef<ZValComparator_StringContains> asStringContains =
 		iComparator.DynamicCast<ZValComparator_StringContains>())
 		{
-		if (const string8* l = iL.PGet<string8>())
+		if (const string8* target = iL.PGet<string8>())
 			{
-			if (const string8* r = iR.PGet<string8>())
-				return ZTextCollator(asStringContains->GetStrength()).Contains(*l, *r);
+			if (const string8* pattern = iR.PGet<string8>())
+				return ZTextCollator(asStringContains->GetStrength()).Contains(*pattern, *target);
 			}
 		return false;
 		}
