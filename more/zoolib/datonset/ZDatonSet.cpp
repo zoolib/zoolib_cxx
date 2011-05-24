@@ -404,8 +404,9 @@ void DatonSet::pCommit()
 	ZRef<Deltas> theDeltas = new Deltas(&theMap);
 
 	fDeltasChain = new DeltasChain(fDeltasChain, theDeltas);
+	// TODO, fix this
 	// This is a hack -- comparing (2+0,0) against 2 has them be concurrent,
-	// sEvent against (2+0,0) is 2, which might not be correct. FIXME
+	// sEvent against (2+0,0) is 2, which might not be correct.
 	sEvent(fClock);
 	sEvent(fClock);
 
