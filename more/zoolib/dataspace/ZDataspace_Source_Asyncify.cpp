@@ -40,16 +40,24 @@ using std::vector;
 
 Source_Asyncify::Source_Asyncify(ZRef<Source> iSource)
 :	fSource(iSource)
-,	fCallable_Source(MakeCallable(this, &Source_Asyncify::pResultsAvailable))
 ,	fTriggered_Update(false)
 ,	fNeeds_SourceCollectResults(false)
-	{
-	fSource->SetCallable_ResultsAvailable(fCallable_Source);
-	}
+	{}
 
 Source_Asyncify::~Source_Asyncify()
+	{}
+
+void Source_Asyncify::Initialize()
 	{
-	fSource->SetCallable_ResultsAvailable(null);
+	Source::Initialize();
+	fSource->SetCallable_ResultsAvailable(
+		MakeCallable(MakeWeakRef(this), &Source_Asyncify::pResultsAvailable));
+	}
+
+void Source_Asyncify::Finalize()
+	{
+	fSource->SetCallable_ResultsAvailable(null);	
+	Source::Finalize();
 	}
 
 bool Source_Asyncify::Intersects(const RelHead& iRelHead)

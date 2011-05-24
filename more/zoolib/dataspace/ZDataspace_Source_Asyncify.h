@@ -42,6 +42,10 @@ public:
 	Source_Asyncify(ZRef<Source> iSource);
 	virtual ~Source_Asyncify();
 
+// From ZCounted via Source
+	virtual void Initialize();
+	virtual void Finalize();
+
 // From Source
 	virtual bool Intersects(const RelHead& iRelHead);
 
@@ -62,7 +66,6 @@ private:
 
 	ZMtxR fMtxR;
 	ZRef<Source> fSource;
-	ZRef<Callable_ResultsAvailable> fCallable_Source;
 
 	bool fTriggered_Update;
 	bool fNeeds_SourceCollectResults;

@@ -325,7 +325,17 @@ void Source_DatonSet::ModifyRegistrations(
 		thePQuery->fClientQuery_InPQuery.Erase(theClientQuery);
 		if (thePQuery->fClientQuery_InPQuery.Empty())
 			{
-			this->pDetachPQuery(thePQuery);
+			// Detach from any depended-upon PSearch
+			for (set<PSearch*>::iterator iterPSearch = thePQuery->fPSearch_Used.begin();
+				iterPSearch != thePQuery->fPSearch_Used.end(); ++iterPSearch)
+				{
+				PSearch* thePSearch = *iterPSearch;
+				ZUtil_STL::sEraseMustContain(kDebug, thePSearch->fPQuery_Using, thePQuery);
+				if (thePSearch->fPQuery_Using.empty())
+					fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
+				}
+			thePQuery->fPSearch_Used.clear();
+
 			fPQuery_NeedsWork.EraseIfContains(thePQuery);
 			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 			}
@@ -473,20 +483,6 @@ void Source_DatonSet::CloseTransaction(size_t iIndex)
 	guard.Release();
 
 	Source::pInvokeCallable_ResultsAvailable();	
-	}
-
-void Source_DatonSet::pDetachPQuery(PQuery* iPQuery)
-	{
-	// Detach from any depended-upon PSearch
-	for (set<PSearch*>::iterator iterPSearch = iPQuery->fPSearch_Used.begin();
-		iterPSearch != iPQuery->fPSearch_Used.end(); ++iterPSearch)
-		{
-		PSearch* thePSearch = *iterPSearch;
-		ZUtil_STL::sEraseMustContain(kDebug, thePSearch->fPQuery_Using, iPQuery);
-		if (thePSearch->fPQuery_Using.empty())
-			fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
-		}
-	iPQuery->fPSearch_Used.clear();
 	}
 
 void Source_DatonSet::pPull()

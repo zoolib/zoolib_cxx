@@ -85,7 +85,6 @@ public:
 
 Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
 :	fDB(iDB)
-,	fChangeCount(0)
 ,	fClock(Clock::sSeed())
 	{
 	for (ZRef<Iter> iterTables = new Iter(fDB, "select name from sqlite_master;");
@@ -124,7 +123,7 @@ void Source_SQLite::ModifyRegistrations(
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	if (iAddedCount || iRemovedCount)
+	if (iAddedCount)// || iRemovedCount)
 		{
 		this->pInvokeCallable_ResultsAvailable();
 		}
@@ -133,31 +132,24 @@ void Source_SQLite::ModifyRegistrations(
 		{
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
 
-		pair<Map_Rel_PQuery::iterator,bool> inPQuery =
+		pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
 
-		PQuery* thePQuery = &inPQuery.first->second;
+		PQuery* thePQuery = &iterPQueryPair.first->second;
 		
-		const int64 theRefcon = iAdded->GetRefcon();
-
-			string8 asSQL;
-			ZRA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String(asSQL));
-			if (ZLOGF(s, eDebug + 1))
-				s << "Add: " << theRefcon << " " << asSQL;
-
-		if (inPQuery.second)
+		if (iterPQueryPair.second)
 			{
-			if (ZLOGF(s, eDebug + 1))
-				s << "Really adding";
-			thePQuery->fSQL = asSQL;
+			ZRA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String(thePQuery->fSQL));
 			thePQuery->fRelHead = sGetRelHead(theRel);
 			}
 
-		std::map<int64, ClientQuery>::iterator iterClientQuery =
+		const int64 theRefcon = iAdded->GetRefcon();
+		pair<std::map<int64, ClientQuery>::iterator,bool> iterClientQueryPair =
 			fMap_RefconToClientQuery.insert(
-			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery))).first;
+			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery)));
+		ZAssert(iterClientQueryPair.second);
 
-		thePQuery->fClientQueries.Insert(&iterClientQuery->second);
+		thePQuery->fClientQueries.Insert(&iterClientQueryPair.first->second);
 
 		++iAdded;
 		}
@@ -172,15 +164,9 @@ void Source_SQLite::ModifyRegistrations(
 		ClientQuery* theClientQuery = &iterClientQuery->second;
 		
 		PQuery* thePQuery = theClientQuery->fPQuery;
-		if (ZLOGF(s, eDebug + 1))
-			s << "Remove: " << theRefcon << " " << thePQuery->fSQL;
 		thePQuery->fClientQueries.Erase(theClientQuery);
 		if (thePQuery->fClientQueries.Empty())
-			{
-			if (ZLOGF(s, eDebug + 1))
-				s << "Tossing it";
 			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
-			}
 		
 		fMap_RefconToClientQuery.erase(iterClientQuery);
 		}

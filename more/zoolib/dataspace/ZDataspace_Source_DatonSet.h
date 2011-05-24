@@ -161,7 +161,6 @@ private:
 
 	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
 //--
-	void pDetachPQuery(PQuery* iPQuery);
 	};
 
 } // namespace ZDataspace

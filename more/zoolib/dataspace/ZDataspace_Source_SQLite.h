@@ -50,7 +50,6 @@ public:
 
 private:
 	ZRef<ZSQLite::DB> fDB;
-	int64 fChangeCount;
 	ZRef<Clock> fClock;
 	std::map<string8, RelHead> fMap_Tables;
 
