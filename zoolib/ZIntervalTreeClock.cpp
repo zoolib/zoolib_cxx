@@ -69,30 +69,30 @@ Identity::Identity(const ZRef<Identity>& iLeft, const ZRef<Identity>& iRight)
 	ZAssert(!(fLeft->IsOne() && fRight->IsOne()));
 	}
 
-bool Identity::IsLeaf()
+bool Identity::IsLeaf() const
 	{ return !fLeft; }
 
-bool Identity::IsOne()
+bool Identity::IsOne() const
 	{ return spZero != this && !fLeft; }
 
-bool Identity::IsZero()
+bool Identity::IsZero() const
 	{ return spZero == this; }
 
-bool Identity::IsInternal()
+bool Identity::IsInternal() const
 	{ return fLeft; }
 
-ZRef<Identity> Identity::Left()
+ZRef<Identity> Identity::Left() const
 	{ return fLeft; }
 
-ZRef<Identity> Identity::Right()
+ZRef<Identity> Identity::Right() const
 	{ return fRight; }
 
-void Identity::Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight)
+void Identity::Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight) const
 	{
 	if (this->IsZero())
 		{
-		oLeft = this;
-		oRight = this;
+		oLeft = const_cast<Identity*>(this);
+		oRight = const_cast<Identity*>(this);
 		}
 	else if (this->IsOne())
 		{
@@ -122,7 +122,7 @@ void Identity::Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight)
 		}
 	}
 
-ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther)
+ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther) const
 	{
 	if (this->IsZero())
 		{
@@ -130,12 +130,12 @@ ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther)
 		}
 	else if (iOther->IsZero())
 		{
-		return this;
+		return const_cast<Identity*>(this);
 		}
 	else if (this->IsOne() || iOther->IsOne())
 		{
 		// This case is not covered in the ITC paper, but seems reasonable to me.
-		return this;
+		return const_cast<Identity*>(this);
 		}
 	else
 		{
@@ -186,22 +186,22 @@ Event::Event(bool iWithZeroChildren, size_t iValue)
 	ZAssert(iWithZeroChildren);
 	}
 
-size_t Event::Value()
+size_t Event::Value() const
 	{ return fValue; }
 
-bool Event::IsLeaf()
+bool Event::IsLeaf() const
 	{ return !fLeft; }
 
-bool Event::IsInternal()
+bool Event::IsInternal() const
 	{ return fLeft; }
 
-ZRef<Event> Event::Left()
+ZRef<Event> Event::Left() const
 	{ return fLeft; }
 
-ZRef<Event> Event::Right()
+ZRef<Event> Event::Right() const
 	{ return fRight; }
 
-bool Event::Equals(const ZRef<Event>& iOther)
+bool Event::Equals(const ZRef<Event>& iOther) const
 	{
 	if (iOther == this)
 		return true;
@@ -215,7 +215,7 @@ bool Event::Equals(const ZRef<Event>& iOther)
 	return !fLeft && !iOther->fLeft;
 	}
 
-bool Event::LessEqual(const ZRef<Event>& iOther)
+bool Event::LessEqual(const ZRef<Event>& iOther) const
 	{
 	if (fValue > iOther->fValue)
 		return false;
@@ -246,27 +246,27 @@ bool Event::LessEqual(const ZRef<Event>& iOther)
 	return false;
 	}
 
-bool Event::IsBefore(const ZRef<Event>& iOther)
-	{ return this->LessEqual(iOther) && !iOther->LessEqual(this); }
+bool Event::IsBefore(const ZRef<Event>& iOther) const
+	{ return this->LessEqual(iOther) && !iOther->LessEqual(const_cast<Event*>(this)); }
 
-bool Event::IsAfter(const ZRef<Event>& iOther)
-	{ return !this->LessEqual(iOther) && iOther->LessEqual(this); }
+bool Event::IsAfter(const ZRef<Event>& iOther) const
+	{ return !this->LessEqual(iOther) && iOther->LessEqual(const_cast<Event*>(this)); }
 
-bool Event::IsConcurrent(const ZRef<Event>& iOther)
-	{ return !this->LessEqual(iOther) && !iOther->LessEqual(this); }
+bool Event::IsConcurrent(const ZRef<Event>& iOther) const
+	{ return !this->LessEqual(iOther) && !iOther->LessEqual(const_cast<Event*>(this)); }
 
-bool Event::IsSame(const ZRef<Event>& iOther)
-	{ return this->LessEqual(iOther) && iOther->LessEqual(this); }
+bool Event::IsSame(const ZRef<Event>& iOther) const
+	{ return this->LessEqual(iOther) && iOther->LessEqual(const_cast<Event*>(this)); }
 
-ZRef<Event> Event::Evented(const ZRef<Identity>& iIdentity)
+ZRef<Event> Event::Evented(const ZRef<Identity>& iIdentity) const
 	{
 	ZRef<Event> newEvent = this->pFilled(iIdentity);
-	if (newEvent->Equals(this))
+	if (newEvent->Equals(const_cast<Event*>(this)))
 		newEvent->pGrown(iIdentity, newEvent);
 	return newEvent;
 	}
 
-ZRef<Event> Event::Joined(const ZRef<Event>& iOther)
+ZRef<Event> Event::Joined(const ZRef<Event>& iOther) const
 	{
 	if (this->IsLeaf())
 		{
@@ -307,7 +307,7 @@ ZRef<Event> Event::Joined(const ZRef<Event>& iOther)
 		}
 	}
 
-size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent)
+size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent) const
 	{
 	if (this->IsLeaf())
 		{
@@ -363,11 +363,11 @@ size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent)
 		}		
 	}
 
-ZRef<Event> Event::pFilled(const ZRef<Identity>& iIdentity)
+ZRef<Event> Event::pFilled(const ZRef<Identity>& iIdentity) const
 	{
 	if (iIdentity->IsZero())
 		{
-		return this;
+		return const_cast<Event*>(this);
 		}
 	else if (iIdentity->IsOne())
 		{
@@ -375,7 +375,7 @@ ZRef<Event> Event::pFilled(const ZRef<Identity>& iIdentity)
 		}
 	else if (this->IsLeaf())
 		{
-		return this;
+		return const_cast<Event*>(this);
 		}
 	else
 		{
@@ -404,32 +404,32 @@ ZRef<Event> Event::pFilled(const ZRef<Identity>& iIdentity)
 		}		
 	}
 
-ZRef<Event> Event::pDropped(size_t d)
+ZRef<Event> Event::pDropped(size_t d) const
 	{
 	ZAssert(fValue >= d);
 	if (d)
 		return new Event(fValue - d, fLeft, fRight);
-	return this;
+	return const_cast<Event*>(this);
 	}
 
-ZRef<Event> Event::pLifted(size_t d)
+ZRef<Event> Event::pLifted(size_t d) const
 	{
 	if (d)
 		return new Event(fValue + d, fLeft, fRight);
-	return this;
+	return const_cast<Event*>(this);
 	}
 
-ZRef<Event> Event::pNormalized()
+ZRef<Event> Event::pNormalized() const
 	{
 	if (fLeft)
 		{
 		if (const int tmp = min(fLeft->fValue, fRight->fValue))
 			return new Event(fValue + tmp, fLeft->pDropped(tmp), fRight->pDropped(tmp));
 		}
-	return this;
+	return const_cast<Event*>(this);
 	}
 
-size_t Event::pHeight()
+size_t Event::pHeight() const
 	{
 	if (fLeft)
 		return fValue + max(fLeft->pHeight(), fRight->pHeight());
@@ -473,44 +473,40 @@ Clock::Clock(const ZRef<Identity>& iIdentity, const ZRef<Clock>& iClock)
 Clock::~Clock()
 	{}
 
-ZRef<Identity> Clock::GetIdentity()
+ZRef<Identity> Clock::GetIdentity() const
 	{ return fIdentity; }
 
-ZRef<Event> Clock::GetEvent()
+ZRef<Event> Clock::GetEvent() const
 	{ return fEvent; }
 
-bool Clock::LessEqual(const ZRef<Clock>& iOther)
+bool Clock::LessEqual(const ZRef<Clock>& iOther) const
 	{ return fEvent->LessEqual(iOther->fEvent); }
 
-bool Clock::IsBefore(const ZRef<Clock>& iOther)
+bool Clock::IsBefore(const ZRef<Clock>& iOther) const
 	{ return fEvent->IsBefore(iOther->fEvent); }
 	
-bool Clock::IsAfter(const ZRef<Clock>& iOther)
+bool Clock::IsAfter(const ZRef<Clock>& iOther) const
 	{ return fEvent->IsAfter(iOther->fEvent); }
 
-bool Clock::IsConcurrent(const ZRef<Clock>& iOther)
+bool Clock::IsConcurrent(const ZRef<Clock>& iOther) const
 	{ return fEvent->IsConcurrent(iOther->fEvent); }
 
-bool Clock::IsSame(const ZRef<Clock>& iOther)
+bool Clock::IsSame(const ZRef<Clock>& iOther) const
 	{ return fEvent->IsSame(iOther->fEvent); }
 
-ZRef<Clock> Clock::Sent()
+ZRef<Clock> Clock::Sent() const
 	{ return new Clock(fIdentity, fEvent->Evented(fIdentity)); }
 
-ZRef<Clock> Clock::Received(const ZRef<Event>& iEvent)
+ZRef<Clock> Clock::Received(const ZRef<Event>& iEvent) const
 	{ return new Clock(fIdentity, fEvent->Joined(iEvent)->Evented(fIdentity)); }
 
-ZRef<Clock> Clock::Evented()
+ZRef<Clock> Clock::Evented() const
 	{ return new Clock(fIdentity, fEvent->Evented(fIdentity)); }
 
-ZRef<Clock> Clock::Joined(const ZRef<Clock>& iOther)
-	{
-	ZRef<Identity> newIdentity = fIdentity->Summed(iOther->fIdentity);
-	ZRef<Event> newEvent = fEvent->Joined(iOther->fEvent);
-	return new Clock(newIdentity, newEvent);
-	}
+ZRef<Clock> Clock::Joined(const ZRef<Clock>& iOther) const
+	{ return new Clock(fIdentity->Summed(iOther->fIdentity), fEvent->Joined(iOther->fEvent)); }
 
-void Clock::Forked(ZRef<Clock>& oLeft, ZRef<Clock>& oRight)
+void Clock::Forked(ZRef<Clock>& oLeft, ZRef<Clock>& oRight) const
 	{
 	ZRef<Identity> newLeft, newRight;
 	fIdentity->Split(newLeft, newRight);

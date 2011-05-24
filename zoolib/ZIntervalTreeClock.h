@@ -44,17 +44,17 @@ public:
 
 	Identity(const ZRef<Identity>& iLeft, const ZRef<Identity>& iRight);
 
-	bool IsLeaf();
-	bool IsOne();
-	bool IsZero();
+	bool IsLeaf() const;
+	bool IsOne() const;
+	bool IsZero() const;
 
-	bool IsInternal();
-	ZRef<Identity> Left();
-	ZRef<Identity> Right();
+	bool IsInternal() const;
+	ZRef<Identity> Left() const;
+	ZRef<Identity> Right() const;
 
-	void Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight);
+	void Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight) const;
 
-	ZRef<Identity> Summed(const ZRef<Identity>& iOther);
+	ZRef<Identity> Summed(const ZRef<Identity>& iOther) const;
 
 private:
 	const ZRef<Identity> fLeft;
@@ -79,35 +79,35 @@ public:
 	Event(bool iWithZeroChildren, size_t iValue);
 
 // Accessors, mainly for text and binary streaming.
-	size_t Value();
+	size_t Value() const;
 
-	bool IsLeaf();
+	bool IsLeaf() const;
 
-	bool IsInternal();
-	ZRef<Event> Left();
-	ZRef<Event> Right();
+	bool IsInternal() const;
+	ZRef<Event> Left() const;
+	ZRef<Event> Right() const;
 
 // Comparison
-	bool Equals(const ZRef<Event>& iOther);
-	bool LessEqual(const ZRef<Event>& iOther);
+	bool Equals(const ZRef<Event>& iOther) const;
+	bool LessEqual(const ZRef<Event>& iOther) const;
 
-	bool IsBefore(const ZRef<Event>& iOther);
-	bool IsAfter(const ZRef<Event>& iOther);
-	bool IsConcurrent(const ZRef<Event>& iOther);
-	bool IsSame(const ZRef<Event>& iOther);
+	bool IsBefore(const ZRef<Event>& iOther) const;
+	bool IsAfter(const ZRef<Event>& iOther) const;
+	bool IsConcurrent(const ZRef<Event>& iOther) const;
+	bool IsSame(const ZRef<Event>& iOther) const;
 
 // Fundamental operations
-	ZRef<Event> Evented(const ZRef<Identity>& iIdentity);
-	ZRef<Event> Joined(const ZRef<Event>& iOther);
+	ZRef<Event> Evented(const ZRef<Identity>& iIdentity) const;
+	ZRef<Event> Joined(const ZRef<Event>& iOther) const;
 
 private:
-	size_t pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent);
+	size_t pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent) const;
 
-	ZRef<Event> pFilled(const ZRef<Identity>& iIdentity);
-	ZRef<Event> pDropped(size_t d);
-	ZRef<Event> pLifted(size_t d);
-	ZRef<Event> pNormalized();
-	size_t pHeight();
+	ZRef<Event> pFilled(const ZRef<Identity>& iIdentity) const;
+	ZRef<Event> pDropped(size_t d) const;
+	ZRef<Event> pLifted(size_t d) const;
+	ZRef<Event> pNormalized() const;
+	size_t pHeight() const;
 
 	const ZRef<Event> fLeft;
 	const ZRef<Event> fRight;
@@ -137,25 +137,25 @@ public:
 	virtual ~Clock();
 
 // Accessors, mainly for text and binary streaming.
-	ZRef<Identity> GetIdentity();
-	ZRef<Event> GetEvent();
+	ZRef<Identity> GetIdentity() const;
+	ZRef<Event> GetEvent() const;
 
 // Comparison
-	bool LessEqual(const ZRef<Clock>& iOther);
+	bool LessEqual(const ZRef<Clock>& iOther) const;
 
-	bool IsBefore(const ZRef<Clock>& iOther);
-	bool IsAfter(const ZRef<Clock>& iOther);
-	bool IsConcurrent(const ZRef<Clock>& iOther);
-	bool IsSame(const ZRef<Clock>& iOther);
+	bool IsBefore(const ZRef<Clock>& iOther) const;
+	bool IsAfter(const ZRef<Clock>& iOther) const;
+	bool IsConcurrent(const ZRef<Clock>& iOther) const;
+	bool IsSame(const ZRef<Clock>& iOther) const;
 
 // Higher level operations
-	ZRef<Clock> Sent();
-	ZRef<Clock> Received(const ZRef<Event>& iEvent);
+	ZRef<Clock> Sent() const;
+	ZRef<Clock> Received(const ZRef<Event>& iEvent) const;
 
 // Fundamental operations
-	ZRef<Clock> Evented();
-	ZRef<Clock> Joined(const ZRef<Clock>& iOther);
-	void Forked(ZRef<Clock>& oLeft, ZRef<Clock>& oRight);
+	ZRef<Clock> Evented() const;
+	ZRef<Clock> Joined(const ZRef<Clock>& iOther) const;
+	void Forked(ZRef<Clock>& oLeft, ZRef<Clock>& oRight) const;
 	
 private:
 	const ZRef<Identity> fIdentity;
