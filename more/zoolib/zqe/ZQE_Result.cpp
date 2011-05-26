@@ -55,11 +55,14 @@ Result::Result(const ZRA::RelHead& iRelHead,
 :	fRelHead(iRelHead)
 	{
 	ioPackedRows->swap(fPackedRows);
-	const size_t theCount = fPackedRows.size() / fRelHead.size();
-	if (ioAnnotations)
+	if (const size_t theSize = fRelHead.size())
 		{
-		ioAnnotations->swap(fAnnotations);
-		ZAssert(fAnnotations.size() == theCount);
+		const size_t theCount = fPackedRows.size() / theSize;
+		if (ioAnnotations)
+			{
+			ioAnnotations->swap(fAnnotations);
+			ZAssert(fAnnotations.size() == theCount);
+			}
 		}
 	}
 
@@ -84,7 +87,11 @@ const ZRA::RelHead& Result::GetRelHead()
 	{ return fRelHead; }
 
 size_t Result::Count()
-	{ return fPackedRows.size() / fRelHead.size(); }
+	{
+	if (const size_t theSize = fRelHead.size())
+		return fPackedRows.size() / theSize;
+	return 0;
+	}
 
 const ZVal_Any* Result::GetValsAt(size_t iIndex)
 	{ return &fPackedRows[fRelHead.size() * iIndex]; }
