@@ -726,11 +726,16 @@ ZRef<ZRA::Expr_Rel> Source_Union::PSource::UsableRel(ZRef<ZRA::Expr_Rel> iRel)
 
 Source_Union::Source_Union()
 :	fEvent(Event::sZero())
-,	fCallable_ResultsAvailable(MakeCallable(MakeWeakRef(this), &Source_Union::pResultsAvailable))
 	{}
 
 Source_Union::~Source_Union()
 	{}
+
+void Source_Union::Initialize()
+	{
+	Source::Initialize();
+	fCallable_ResultsAvailable = MakeCallable(MakeWeakRef(this), &Source_Union::pResultsAvailable);
+	}
 
 bool Source_Union::Intersects(const RelHead& iRelHead)
 	{
@@ -842,7 +847,7 @@ void Source_Union::ModifyRegistrations(
 		}
 
 	guard.Release();
-	this->pInvokeCallable_ResultsAvailable();
+	Source::pTriggerResultsAvailable();
 	}
 
 void Source_Union::CollectResults(vector<QueryResult>& oChanged)
@@ -1173,8 +1178,6 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 			PIP* thePIP = &iter->second;
 			thePIP->fResult = iterQueryResults->GetResult();
 			thePIP->fEvent = iterQueryResults->GetEvent();
-			if (!thePIP->fEvent)
-				thePIP->fEvent = Event::sZero();//##
 			for (set<PQuery*>::iterator
 				i = thePIP->fProxy->fDependentPQueries.begin(),
 				end = thePIP->fProxy->fDependentPQueries.end();
@@ -1190,7 +1193,7 @@ void Source_Union::pResultsAvailable(ZRef<Source> iSource)
 	Map_Source_PSource::iterator iterSource = fMap_Source_PSource.find(iSource);
 	fPSource_CollectFrom.InsertIfNotContains(&iterSource->second);
 	guard.Release();
-	this->pInvokeCallable_ResultsAvailable();
+	Source::pTriggerResultsAvailable();
 	}
 
 } // namespace ZDataspace

@@ -41,6 +41,11 @@ public:
 	SourceMUX(ZRef<Source> iSource);
 	virtual ~SourceMUX();
 
+// From ZCounted via SourceFactory
+	virtual void Initialize();
+	virtual void Finalize();
+
+// Our protocol
 	virtual ZRef<Source> Make();
 
 private:
@@ -65,7 +70,6 @@ private:
 	ZMtxR fMtxR;
 
 	ZRef<Source> fSource;
-	ZRef<Source::Callable_ResultsAvailable> fCallable_ResultsAvailable;
 	bool fResultsAvailable;
 
 	int64 fNextPRefcon;

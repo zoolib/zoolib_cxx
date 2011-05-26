@@ -53,6 +53,8 @@ using ZDatonSet::Deltas;
 using ZDatonSet::Map_NamedEvent_Delta_t;
 using ZDatonSet::NamedEvent;
 
+using namespace ZUtil_STL;
+
 using std::make_pair;
 using std::map;
 using std::pair;
@@ -252,7 +254,7 @@ public:
 #pragma mark * Source_DatonSet
 
 void Source_DatonSet::ForceUpdate()
-	{ Source::pInvokeCallable_ResultsAvailable(); }
+	{ Source::pTriggerResultsAvailable(); }
 
 Source_DatonSet::Source_DatonSet(ZRef<DatonSet> iDatonSet)
 :	fDatonSet(iDatonSet)
@@ -273,7 +275,7 @@ void Source_DatonSet::ModifyRegistrations(
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
-		if (ZLOGPF(s, eDebug))
+		if (ZLOGPF(s, eDebug + 1))
 			s << "\nDatonSet Raw:\n" << iAdded->GetRel();
 
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
@@ -330,14 +332,14 @@ void Source_DatonSet::ModifyRegistrations(
 				iterPSearch != thePQuery->fPSearch_Used.end(); ++iterPSearch)
 				{
 				PSearch* thePSearch = *iterPSearch;
-				ZUtil_STL::sEraseMustContain(kDebug, thePSearch->fPQuery_Using, thePQuery);
+				sEraseMustContain(kDebug, thePSearch->fPQuery_Using, thePQuery);
 				if (thePSearch->fPQuery_Using.empty())
 					fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
 				}
 			thePQuery->fPSearch_Used.clear();
 
 			fPQuery_NeedsWork.EraseIfContains(thePQuery);
-			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
+			sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 			}
 
 		fClientQuery_NeedsWork.EraseIfContains(theClientQuery);
@@ -347,7 +349,7 @@ void Source_DatonSet::ModifyRegistrations(
 	if (!fClientQuery_NeedsWork.Empty() || !fPQuery_NeedsWork.Empty())
 		{
 		guard.Release();
-		Source::pInvokeCallable_ResultsAvailable();
+		Source::pTriggerResultsAvailable();
 		}
 	}
 
@@ -402,12 +404,16 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 			{ fClientQuery_NeedsWork.InsertIfNotContains(iter.Current()); }
 		}
 
+	ZRef<Event> theEvent = fDatonSet->GetEvent();
+	if (fDatonSet_Temp)
+		theEvent = theEvent->Joined(fDatonSet_Temp->GetEvent());
+
 	for (DListEraser<ClientQuery,DLink_ClientQuery_NeedsWork> eraser = fClientQuery_NeedsWork;
 		eraser; eraser.Advance())
 		{
 		ClientQuery* theClientQuery = eraser.Current();
 		PQuery* thePQuery = theClientQuery->fPQuery;
-		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult, fEvent));
+		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult, theEvent));
 		}
 
 	// Remove any unused PSearches
@@ -416,48 +422,58 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 		{
 		PSearch* thePSearch = eraser.Current();
 		if (thePSearch->fPQuery_Using.empty())
-			ZUtil_STL::sEraseMustContain(kDebug, fMap_PSearch, thePSearch->fRelHead);
+			sEraseMustContain(kDebug, fMap_PSearch, thePSearch->fRelHead);
 		}
 	}
 
 ZRef<ZDatonSet::DatonSet> Source_DatonSet::GetDatonSet()
 	{ return fDatonSet; }
 
-void Source_DatonSet::Insert(const Daton& iDaton)
+ZRef<Event> Source_DatonSet::Insert(const Daton& iDaton)
 	{
 	ZGuardRMtxR guard(fMtxR);
 	this->pModify(iDaton, sAsVal(iDaton), true);
-	this->pConditionalPushDown();
+	ZRef<Event> result = this->pConditionalPushDown();
 	guard.Release();
 
-	Source::pInvokeCallable_ResultsAvailable();	
+	Source::pTriggerResultsAvailable();	
+
+	return result;
 	}
 
-void Source_DatonSet::Erase(const Daton& iDaton)
+ZRef<Event> Source_DatonSet::Erase(const Daton& iDaton)
 	{
 	ZGuardRMtxR guard(fMtxR);
 	this->pModify(iDaton, sAsVal(iDaton), false);
-	this->pConditionalPushDown();
+	ZRef<Event> result = this->pConditionalPushDown();
 	guard.Release();
 
-	Source::pInvokeCallable_ResultsAvailable();	
+	Source::pTriggerResultsAvailable();	
+
+	return result;
 	}
 
-void Source_DatonSet::Replace(const ZDatonSet::Daton& iOld, const ZDatonSet::Daton& iNew)
+ZRef<Event> Source_DatonSet::Replace(const ZDatonSet::Daton& iOld, const ZDatonSet::Daton& iNew)
 	{
 	ZGuardRMtxR guard(fMtxR);
 	this->pModify(iOld, sAsVal(iOld), false);
 	this->pModify(iNew, sAsVal(iNew), true);
-	this->pConditionalPushDown();
+	ZRef<Event> result = this->pConditionalPushDown();
 	guard.Release();
 
-	Source::pInvokeCallable_ResultsAvailable();	
+	Source::pTriggerResultsAvailable();
+
+	return result;
 	}
 
 size_t Source_DatonSet::OpenTransaction()
 	{
 	ZAcqMtxR acq(fMtxR);
+	if (fStack_Map_Pending.empty())
+		fDatonSet_Temp = fDatonSet->Fork();
+
 	fStack_Map_Pending.push_back(fMap_Pending);
+
 	return fStack_Map_Pending.size();
 	}
 
@@ -480,17 +496,23 @@ void Source_DatonSet::CloseTransaction(size_t iIndex)
 	this->pChangedAll();
 	fStack_Map_Pending.pop_back();
 	this->pConditionalPushDown();
+	if (fStack_Map_Pending.empty())
+		{
+		ZAssert(fDatonSet_Temp);
+		fDatonSet->Join(fDatonSet_Temp);
+		fDatonSet_Temp.Clear();
+		}
 	guard.Release();
 
-	Source::pInvokeCallable_ResultsAvailable();	
+	Source::pTriggerResultsAvailable();	
 	}
 
 void Source_DatonSet::pPull()
 	{
 	// Get our map in sync with fDatonSet
-	ZLOGF(s, eDebug);
+	ZLOGPF(s, eDebug);
 	ZRef<Deltas> theDeltas;
-	fEvent = fDatonSet->GetDeltas(theDeltas, fEvent);
+	fDatonSet->GetDeltas(fEvent, fEvent, theDeltas);
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
 	if (s)
 		s << "\ntheMNED.size()=" << theMNED.size();
@@ -514,12 +536,12 @@ void Source_DatonSet::pPull()
 			const Daton& theDaton = iterStmts->first;
 
 			if (s)
-				s << "\n" << (iterStmts->second ? "+" : "-") << ": ";
+				s << "\n" << (iterStmts->second ? "+" : "-") << ":";
 
 			map<Daton, pair<NamedEvent, ZVal_Any> >::iterator iterMap = fMap.lower_bound(theDaton);
 			if (iterMap == fMap.end() || iterMap->first != theDaton)
 				{
-				s << " NFo ";
+				s << " NFo";
 				if (iterStmts->second)
 					{
 					const ZVal_Any theVal = sAsVal(theDaton);
@@ -536,13 +558,13 @@ void Source_DatonSet::pPull()
 				const bool bla = theNamedEvent < iterMap->second.first;
 
 				if (s)
-					s << iterMap->second.first.GetEvent() << (alb?"alb" :"") << (bla?"blb":"");
+					s << " " << iterMap->second.first.GetEvent() << (alb?" alb":"") << (bla?" blb":"");
 
 				if (alb)
 					{
 					// theNamedEvent is more recent than what we've got and thus supersedes it.
 					if (s)
-						s << " MRc ";
+						s << " MRc";
 
 					const ZVal_Any theVal = sAsVal(theDaton);
 					this->pChanged(theVal);
@@ -555,30 +577,37 @@ void Source_DatonSet::pPull()
 				else
 					{
 					if (s)
-						s << " Old ";
+						s << " Old";
 					}
 				}
 				
 
 			if (s)
-				s << theDaton;
+				s << " " << theDaton;
 			}
 		}
 	}
 
-void Source_DatonSet::pConditionalPushDown()
+ZRef<Event> Source_DatonSet::pConditionalPushDown()
 	{
-	if (fStack_Map_Pending.empty())
+	if (! fStack_Map_Pending.empty())
 		{
+		ZAssert(fDatonSet_Temp);
+		return fDatonSet->GetEvent()->Joined(fDatonSet_Temp->TickleClock());
+		}
+	else
+		{
+		ZRef<DatonSet> theDS = fDatonSet_Temp ? fDatonSet_Temp : fDatonSet;
 		for (Map_Pending::iterator i = fMap_Pending.begin(), end = fMap_Pending.end();
 			i != end; ++i)
 			{
 			if (i->second.second)
-				fDatonSet->Insert(i->first);
+				theDS->Insert(i->first);
 			else
-				fDatonSet->Erase(i->first);			
+				theDS->Erase(i->first);			
 			}
 		fMap_Pending.clear();
+		return theDS->GetEvent();
 		}
 	}
 
@@ -628,7 +657,7 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 					PSearch* thePSearch_Used = *iterPSearch_Used;
 					if (thePSearch_Used != thePSearch)
 						{
-						ZUtil_STL::sEraseMustContain(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
+						sEraseMustContain(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
 
 						if (thePSearch_Used->fPQuery_Using.empty())
 							fPSearch_NeedsWork.InsertIfNotContains(thePSearch_Used);
@@ -645,9 +674,35 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 
 void Source_DatonSet::pChangedAll()
 	{
-	for (Map_Pending::iterator i = fMap_Pending.begin(), end = fMap_Pending.end();
-		i != end; ++i)
-		{ this->pChanged(i->second.first); }
+	for (Map_PSearch::iterator iterPSearch = fMap_PSearch.begin();
+		iterPSearch != fMap_PSearch.end(); ++iterPSearch)
+		{
+		PSearch* thePSearch = &iterPSearch->second;
+		for (set<PQuery*>::iterator iterPQuery = thePSearch->fPQuery_Using.begin();
+			iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)
+			{
+			PQuery* thePQuery = *iterPQuery;
+			fPQuery_NeedsWork.InsertIfNotContains(thePQuery);
+			for (set<PSearch*>::iterator iterPSearch_Used =
+				thePQuery->fPSearch_Used.begin();
+				iterPSearch_Used != thePQuery->fPSearch_Used.end();
+				++iterPSearch_Used)
+				{
+				PSearch* thePSearch_Used = *iterPSearch_Used;
+				if (thePSearch_Used != thePSearch)
+					{
+					sEraseMustContain(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
+
+					if (thePSearch_Used->fPQuery_Using.empty())
+						fPSearch_NeedsWork.InsertIfNotContains(thePSearch_Used);
+					}
+				}
+			thePQuery->fPSearch_Used.clear();
+			}
+		thePSearch->fPQuery_Using.clear();
+		thePSearch->fResult.Clear();
+		fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
+		}
 	}
 
 ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const RelHead& iRelHead)
@@ -669,8 +724,8 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const R
 		thePSearch->fRelHead = iRelHead;
 		}
 
-	ZUtil_STL::sInsertMustNotContain(kDebug, iPQuery->fPSearch_Used, thePSearch);
-	ZUtil_STL::sInsertMustNotContain(kDebug, thePSearch->fPQuery_Using, iPQuery);
+	sInsertMustNotContain(kDebug, iPQuery->fPSearch_Used, thePSearch);
+	sInsertMustNotContain(kDebug, thePSearch->fPQuery_Using, iPQuery);
 
 	if (!thePSearch->fResult)
 		{
@@ -775,7 +830,7 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 						}
 					}
 
-				if (gotAll && ZUtil_STL::sInsertIfNotContains(iWalker->fPriors, subset))
+				if (gotAll && sInsertIfNotContains(iWalker->fPriors, subset))
 					{
 					if (ZLOGF(s, eDebug + 2))
 						ZYad_ZooLibStrim::sToStrim(sMakeYadR(*theMap), s);
@@ -813,7 +868,7 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 						}
 					}
 
-				if (gotAll && ZUtil_STL::sInsertIfNotContains(iWalker->fPriors, subset))
+				if (gotAll && sInsertIfNotContains(iWalker->fPriors, subset))
 					{
 					if (ZLOGF(s, eDebug + 2))
 						ZYad_ZooLibStrim::sToStrim(sMakeYadR(*theMap), s);

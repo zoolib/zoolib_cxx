@@ -123,7 +123,7 @@ void Source::pCollectResultsCalled()
 	fCalled_ResultsAvailable = false;
 	}
 
-void Source::pInvokeCallable_ResultsAvailable()
+void Source::pTriggerResultsAvailable()
 	{
 	ZGuardRMtx guard(fMtx);
 	if (!fCalled_ResultsAvailable++)

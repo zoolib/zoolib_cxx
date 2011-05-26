@@ -108,7 +108,7 @@ bool Source_Client::pRead(ZRef<ZWorker> iWorker)
 	ZGuardRMtxR guard(fMtxR);
 	fResults.insert(fResults.end(), theSRs.begin(), theSRs.end());
 	guard.Release();
-	this->pInvokeCallable_ResultsAvailable();
+	Source::pTriggerResultsAvailable();
 
 	iWorker->Wake();//##
 	return true;

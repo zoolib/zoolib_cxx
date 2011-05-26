@@ -37,7 +37,7 @@ class Source_SQLite : public Source
 public:
 	enum { kDebug = 1 };
 
-	Source_SQLite(ZRef<ZSQLite::DB> iDB);
+	Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock);
 	virtual ~Source_SQLite();
 
 	virtual bool Intersects(const RelHead& iRelHead);

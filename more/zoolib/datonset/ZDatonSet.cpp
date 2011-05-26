@@ -100,14 +100,6 @@ Nombre::Nombre(const Nombre& iOther, uint64 iFork)
 bool Nombre::operator<(const Nombre& iRHS) const
 	{ return fForks < iRHS.fForks; }
 
-string Nombre::AsString() const
-	{
-	string result;
-	for (vector<uint64>::const_iterator i = fForks.begin(); i != fForks.end(); ++i)
-		result += "/" + ZStringf("%llu", *i);
-	return result;
-	}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * NamedEvent
@@ -149,9 +141,6 @@ bool NamedEvent::operator<(const NamedEvent& iRHS) const
 ZRef<Event> NamedEvent::GetEvent() const
 	{ return fEvent; }
 
-string NamedEvent::AsString() const
-	{ return fNombre.AsString() + ":" /*+ ZStringf("%llu", fClock)*/; }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Delta
@@ -163,7 +152,7 @@ Delta::Delta(const map<Daton, bool>& iStatements)
 Delta::Delta(map<Daton, bool>* ioStatements)
 	{ ioStatements->swap(fStatements); }
 
-const map<Daton, bool>& Delta::GetStatements()
+const map<Daton, bool>& Delta::GetStatements() const
 	{ return fStatements; }
 
 // =================================================================================================
@@ -177,7 +166,7 @@ Deltas::Deltas(const Map_NamedEvent_Delta_t& iMap)
 Deltas::Deltas(Map_NamedEvent_Delta_t* ioMap)
 	{ ioMap->swap(fMap); }
 
-const Map_NamedEvent_Delta_t& Deltas::GetMap()
+const Map_NamedEvent_Delta_t& Deltas::GetMap() const
 	{ return fMap; }
 
 // =================================================================================================
@@ -189,10 +178,10 @@ DeltasChain::DeltasChain(const ZRef<DeltasChain>& iParent, const ZRef<Deltas>& i
 ,	fDeltas(iDeltas)
 	{}
 
-ZRef<DeltasChain> DeltasChain::GetParent()
+ZRef<DeltasChain> DeltasChain::GetParent() const
 	{ return fParent; }
 
-ZRef<Deltas> DeltasChain::GetDeltas()
+ZRef<Deltas> DeltasChain::GetDeltas() const
 	{ return fDeltas; }
 
 typedef pair<NamedEvent, size_t> TSIndex_t;
@@ -298,6 +287,21 @@ ZRef<Event> DatonSet::GetEvent()
 	return fClock->GetEvent();
 	}
 
+ZRef<Event> DatonSet::TickleClock()
+	{
+	ZAcqMtx acq(fMtx);
+	if (fPendingStatements.empty())
+		{
+		sEvent(fClock);
+		sEvent(fClock);
+		}
+	else
+		{
+		this->pCommit();
+		}
+	return fClock->GetEvent();
+	}
+
 ZRef<DatonSet> DatonSet::Fork()
 	{
 	ZAcqMtx acq(fMtx);
@@ -318,8 +322,9 @@ void DatonSet::Join(ZRef<DatonSet>& ioOther)
 	if (s)
 		s << "Before: " << fClock;
 
+	ZRef<Event> otherEvent;
 	ZRef<Deltas> theDeltas;
-	ZRef<Event> otherEvent = ioOther->GetDeltas(theDeltas, fClock->GetEvent());
+	ioOther->GetDeltas(fClock->GetEvent(), otherEvent, theDeltas);
 	this->IncorporateDeltas(otherEvent, theDeltas);
 	if (s)
 		s << ", incorporate other:" << otherEvent << ", clock:" << fClock;
@@ -332,7 +337,7 @@ void DatonSet::Join(ZRef<DatonSet>& ioOther)
 	ioOther.Clear();
 	}
 
-void DatonSet::GetDeltas(ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas, const ZRef<Event>& iEvent)
+void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas)
 	{
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
@@ -347,8 +352,7 @@ void DatonSet::GetDeltas(ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas, const ZRef<
 		for (Map_NamedEvent_Delta_t::const_iterator
 			i = theMap.lower_bound(neLower), theEnd = theMap.end(); i != theEnd; ++i)
 			{
-			const ZRef<Event> candidate = i->first.GetEvent();
-			if (! candidate->LessEqual(iEvent) || iEvent->LessEqual(candidate))
+			if (! i->first.GetEvent()->IsBefore(iEvent))
 				resultMap.insert(*i);
 			}
 		}
@@ -357,18 +361,12 @@ void DatonSet::GetDeltas(ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas, const ZRef<
 	oEvent = fClock->GetEvent();
 	}
 
-ZRef<Event> DatonSet::GetDeltas(ZRef<Deltas>& oDeltas, const ZRef<Event>& iEvent)
-	{
-	ZRef<Event> result;
-	this->GetDeltas(result, oDeltas, iEvent);
-	return result;
-	}
-
 void DatonSet::IncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& iDeltas)
 	{
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
-	fDeltasChain = new DeltasChain(fDeltasChain, iDeltas);
+	if (iDeltas && iDeltas->GetMap().size())
+		fDeltasChain = new DeltasChain(fDeltasChain, iDeltas);
 	sReceive(fClock, iEvent);
 	}
 

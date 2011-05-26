@@ -81,8 +81,6 @@ public:
 
 	bool operator<(const Nombre& iRHS) const;
 
-	std::string AsString() const;
-
 private:
 	std::vector<uint64> fForks;
 	};
@@ -103,8 +101,6 @@ public:
 
 	bool operator<(const NamedEvent& iRHS) const;
 
-	std::string AsString() const;
-
 	ZRef<Event> GetEvent() const;
 
 private:
@@ -122,7 +118,7 @@ public:
 	Delta(const std::map<Daton, bool>& iStatements);
 	Delta(std::map<Daton, bool>* ioStatements);
 
-	const std::map<Daton, bool>& GetStatements();
+	const std::map<Daton, bool>& GetStatements() const;
 
 private:
 	std::map<Daton, bool> fStatements;
@@ -144,7 +140,7 @@ public:
 	Deltas(const Map_NamedEvent_Delta_t& iMap);
 	Deltas(Map_NamedEvent_Delta_t* ioMap);
 
-	const Map_NamedEvent_Delta_t& GetMap();
+	const Map_NamedEvent_Delta_t& GetMap() const;
 
 private:
 	Map_NamedEvent_Delta_t fMap;
@@ -159,8 +155,8 @@ class DeltasChain : public ZCountedWithoutFinalize
 public:
 	DeltasChain(const ZRef<DeltasChain>& iParent, const ZRef<Deltas>& iDeltas);
 
-	ZRef<DeltasChain> GetParent();
-	ZRef<Deltas> GetDeltas();
+	ZRef<DeltasChain> GetParent() const;
+	ZRef<Deltas> GetDeltas() const;
 
 private:
 	// When we do consolidation of Deltas, fParent will need to be mutable.
@@ -185,12 +181,13 @@ public:
 	ZRef<Clock> GetClock();
 	ZRef<Event> GetEvent();
 
+	ZRef<Event> TickleClock();
+
 	ZRef<DatonSet> Fork();
 
 	void Join(ZRef<DatonSet>& ioOther);
 
-	void GetDeltas(ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas, const ZRef<Event>& iEvent);
-	ZRef<Event> GetDeltas(ZRef<Deltas>& oDeltas, const ZRef<Event>& iEvent);
+	void GetDeltas(ZRef<Event> iEvent, ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas);
 
 	void IncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& iDeltas);
 

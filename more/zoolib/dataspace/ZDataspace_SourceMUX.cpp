@@ -32,6 +32,8 @@ using std::pair;
 using std::set;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 typedef map<int64,pair<ZRef<ZQE::Result>,ZRef<Event> > > Map_Refcon_Result;
 
 // =================================================================================================
@@ -67,7 +69,7 @@ public:
 
 // Our protocol
 	void ResultsAvailable()
-		{ this->pInvokeCallable_ResultsAvailable(); }
+		{ Source::pTriggerResultsAvailable(); }
 
 	ZRef<SourceMUX> fMUX;
 	
@@ -81,16 +83,24 @@ public:
 
 SourceMUX::SourceMUX(ZRef<Source> iSource)
 :	fSource(iSource)
-,	fCallable_ResultsAvailable(MakeCallable(MakeWeakRef(this), &SourceMUX::pResultsAvailable))
 ,	fResultsAvailable(false)
 ,	fNextPRefcon(1)
-	{
-	fSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
-	}
+	{}
 
 SourceMUX::~SourceMUX()
+	{}
+
+void SourceMUX::Initialize()
 	{
-	fSource->SetCallable_ResultsAvailable(null);
+	SourceFactory::Initialize();
+	fSource->SetCallable_ResultsAvailable(
+		MakeCallable(MakeWeakRef(this), &SourceMUX::pResultsAvailable));
+	}
+
+void SourceMUX::Finalize()
+	{
+	fSource->SetCallable_ResultsAvailable(null);	
+	SourceFactory::Finalize();
 	}
 
 ZRef<Source> SourceMUX::Make()
@@ -118,10 +128,10 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 		const int64 theClientRefcon = iAdded->GetRefcon();
 		const int64 thePRefcon = fNextPRefcon++;
 
-		ZUtil_STL::sInsertMustNotContain(kDebug,
+		sInsertMustNotContain(kDebug,
 			iCS->fMap_ClientToPRefcon, theClientRefcon, thePRefcon);
 
-		ZUtil_STL::sInsertMustNotContain(kDebug,
+		sInsertMustNotContain(kDebug,
 			fPRefconToClient, thePRefcon, make_pair(iCS.Get(), theClientRefcon));
 
 		theAddedQueries.push_back(AddedQuery(thePRefcon, iAdded->GetRel()));
@@ -131,15 +141,15 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 	removedQueries.reserve(iRemovedCount);
 	while (iRemovedCount--)
 		{
-		removedQueries.push_back(ZUtil_STL::sEraseAndReturn(kDebug,
+		removedQueries.push_back(sEraseAndReturn(kDebug,
 			iCS->fMap_ClientToPRefcon, *iRemoved++));
 		}
 
 	guard.Release();
 
 	fSource->ModifyRegistrations(
-		ZUtil_STL::sFirstOrNil(theAddedQueries), theAddedQueries.size(),
-		ZUtil_STL::sFirstOrNil(removedQueries), removedQueries.size());
+		sFirstOrNil(theAddedQueries), theAddedQueries.size(),
+		sFirstOrNil(removedQueries), removedQueries.size());
 	}
 
 void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
@@ -161,7 +171,7 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 		iterChanges != endChanges; ++iterChanges)
 		{
 		const pair<ClientSource*,int64>& thePair =
-			ZUtil_STL::sGetMustContain(kDebug, fPRefconToClient, iterChanges->GetRefcon());
+			sGetMustContain(kDebug, fPRefconToClient, iterChanges->GetRefcon());
 
 		thePair.first->fResults[thePair.second] =
 			make_pair(iterChanges->GetResult(), iterChanges->GetEvent());
@@ -204,14 +214,14 @@ void SourceMUX::pFinalizeClientSource(ClientSource* iCS)
 		iter != end; ++iter)
 		{ removedQueries.push_back(iter->second); }
 
-	ZUtil_STL::sEraseMustContain(1, fClientSources, iCS);
+	sEraseMustContain(1, fClientSources, iCS);
 	delete iCS;
 
 	guard.Release();
 
 	fSource->ModifyRegistrations(
 		nullptr, 0,
-		ZUtil_STL::sFirstOrNil(removedQueries), removedQueries.size());
+		sFirstOrNil(removedQueries), removedQueries.size());
 	}
 
 } // namespace ZDataspace

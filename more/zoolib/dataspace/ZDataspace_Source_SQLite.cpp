@@ -83,9 +83,9 @@ public:
 #pragma mark -
 #pragma mark * Source_SQLite
 
-Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB)
+Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
 :	fDB(iDB)
-,	fClock(Clock::sSeed())
+,	fClock(iClock)
 	{
 	for (ZRef<Iter> iterTables = new Iter(fDB, "select name from sqlite_master;");
 		iterTables->HasValue(); iterTables->Advance())
@@ -125,7 +125,7 @@ void Source_SQLite::ModifyRegistrations(
 	{
 	if (iAddedCount)// || iRemovedCount)
 		{
-		this->pInvokeCallable_ResultsAvailable();
+		Source::pTriggerResultsAvailable();
 		}
 
 	while (iAddedCount--)
@@ -177,6 +177,7 @@ void Source_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	this->pCollectResultsCalled();
 	oChanged.clear();
 
+	ZRef<Event> theEvent = fClock->GetEvent();
 	for (Map_Rel_PQuery::iterator iterPQuery = fMap_Rel_PQuery.begin();
 		iterPQuery != fMap_Rel_PQuery.end(); ++iterPQuery)
 		{
@@ -196,7 +197,7 @@ void Source_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 			iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
 			{
-			oChanged.push_back(QueryResult(iterCS.Current()->fRefcon, theResult, null));
+			oChanged.push_back(QueryResult(iterCS.Current()->fRefcon, theResult, theEvent));
 			}
 		}
 	}

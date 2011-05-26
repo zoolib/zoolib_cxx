@@ -157,10 +157,10 @@ void Source_Asyncify::pUpdate()
 			fNeeds_SourceCollectResults = false;
 			guard.Release();
 
-//##			if (ZMACRO_IOS_Simulator)
-//##				ZThread::sSleep(1);
 			vector<QueryResult> changes;
 			fSource->CollectResults(changes);
+			if (ZMACRO_IOS_Simulator)
+				ZThread::sSleep(1);
 			if (changes.size())
 				{
 				didAnything = true;
@@ -171,7 +171,7 @@ void Source_Asyncify::pUpdate()
 					{ fPendingResults[iter->GetRefcon()] = *iter; }
 
 				guard.Release();
-				this->pInvokeCallable_ResultsAvailable();
+				Source::pTriggerResultsAvailable();
 				}
 			guard.Acquire();
 			}

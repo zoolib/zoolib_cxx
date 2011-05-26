@@ -212,6 +212,9 @@ ZRef<ZRA::Expr_Rel> Sieve::GetRel()
 ZRef<ZQE::Result> Sieve::GetResult()
 	{ return fResult; }
 
+ZRef<Event> Sieve::GetEvent()
+	{ return fEvent; }
+
 bool Sieve::IsLoaded()
 	{ return fResult; }
 

@@ -83,9 +83,9 @@ public:
 // Our protocol
 	ZRef<ZDatonSet::DatonSet> GetDatonSet();
 
-	void Insert(const ZDatonSet::Daton& iDaton);
-	void Erase(const ZDatonSet::Daton& iDaton);
-	void Replace(const ZDatonSet::Daton& iOld, const ZDatonSet::Daton& iNew);
+	ZRef<Event> Insert(const ZDatonSet::Daton& iDaton);
+	ZRef<Event> Erase(const ZDatonSet::Daton& iDaton);
+	ZRef<Event> Replace(const ZDatonSet::Daton& iOld, const ZDatonSet::Daton& iNew);
 
 	size_t OpenTransaction();
 	void ClearTransaction(size_t iIndex);
@@ -98,7 +98,7 @@ private:
 	size_t fStepCount;
 
 	void pPull();
-	void pConditionalPushDown();
+	ZRef<Event> pConditionalPushDown();
 	void pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& iVal, bool iSense);
 	void pChanged(const ZVal_Any& iVal);
 	void pChangedAll();
@@ -107,7 +107,9 @@ private:
 
 	class Visitor_DoMakeWalker;
 	friend class Visitor_DoMakeWalker;	
+
 //--
+
 	class Walker_Concrete;
 	friend class Walker_Concrete;
 
@@ -123,36 +125,48 @@ private:
 	bool pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
-	
+
 //--
+
 	class Walker_Search;
 	friend class Walker_Search;
 
 	ZRef<ZQE::Walker> pMakeWalker_Search(PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel);
+
 //--
+
 	ZRef<ZDatonSet::DatonSet> fDatonSet;
+	ZRef<ZDatonSet::DatonSet> fDatonSet_Temp;
 	ZRef<Event> fEvent;
+
 //--
+
 	typedef std::map<ZDatonSet::Daton, std::pair<ZDatonSet::NamedEvent, ZVal_Any> > Map_Main;
 	Map_Main fMap;
 
 	typedef std::map<ZDatonSet::Daton, std::pair<ZVal_Any, bool> > Map_Pending;
 	Map_Pending fMap_Pending;
 	std::vector<Map_Pending> fStack_Map_Pending;
+
 //--
+
 	class DLink_ClientQuery_InPQuery;
 	class DLink_ClientQuery_NeedsWork;
 	class ClientQuery;
 	std::map<int64, ClientQuery> fMap_Refcon_ClientQuery;
 	DListHead<DLink_ClientQuery_NeedsWork> fClientQuery_NeedsWork;
+
 //--
+
 	class DLink_PQuery_NeedsWork;
 	typedef std::map<ZRef<ZRA::Expr_Rel>, PQuery, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
 		Map_Rel_PQuery;
 	Map_Rel_PQuery fMap_Rel_PQuery;
 
 	DListHead<DLink_PQuery_NeedsWork> fPQuery_NeedsWork;
+
 //--
+
 	class DLink_PSearch_NeedsWork;
 	class PSearch;
 
@@ -160,7 +174,6 @@ private:
 	Map_PSearch fMap_PSearch;
 
 	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
-//--
 	};
 
 } // namespace ZDataspace

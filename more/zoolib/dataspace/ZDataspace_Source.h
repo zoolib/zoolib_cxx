@@ -111,7 +111,7 @@ public:
 
 protected:
 	void pCollectResultsCalled();
-	void pInvokeCallable_ResultsAvailable();
+	void pTriggerResultsAvailable();
 
 private:
 	ZMtx fMtx;

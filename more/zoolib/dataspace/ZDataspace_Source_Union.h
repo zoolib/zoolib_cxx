@@ -42,6 +42,9 @@ public:
 	Source_Union();
 	virtual ~Source_Union();
 
+// From ZCounted via Source
+	virtual void Initialize();
+
 // From Source
 	virtual bool Intersects(const RelHead& iRelHead);
 
