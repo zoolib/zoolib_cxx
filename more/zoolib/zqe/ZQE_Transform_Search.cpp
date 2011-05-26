@@ -35,6 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Const.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Dee.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Dum.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
@@ -108,6 +109,7 @@ class Transform_Search
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 ,	public virtual ZRA::Visitor_Expr_Rel_Const
 ,	public virtual ZRA::Visitor_Expr_Rel_Dee
+,	public virtual ZRA::Visitor_Expr_Rel_Dum
 ,	public virtual ZRA::Visitor_Expr_Rel_Embed
 ,	public virtual ZRA::Visitor_Expr_Rel_Product
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
@@ -198,6 +200,12 @@ public:
 	virtual void Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr)
 		{
 		fLikelySize = 1;
+		this->pApplyRestrictProject(RelHead(), iExpr);
+		}
+
+	virtual void Visit_Expr_Rel_Dum(const ZRef<ZRA::Expr_Rel_Dum>& iExpr)
+		{
+		fLikelySize = 0;
 		this->pApplyRestrictProject(RelHead(), iExpr);
 		}
 

@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Walker_Calc.h"
 #include "zoolib/zqe/ZQE_Walker_Const.h"
 #include "zoolib/zqe/ZQE_Walker_Dee.h"
+#include "zoolib/zqe/ZQE_Walker_Dum.h"
 #include "zoolib/zqe/ZQE_Walker_Embed.h"
 #include "zoolib/zqe/ZQE_Walker_Product.h"
 #include "zoolib/zqe/ZQE_Walker_Project.h"
@@ -51,6 +52,9 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>&
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr)
 	{ this->pSetResult(new Walker_Dee); }
+
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Dum(const ZRef<ZRA::Expr_Rel_Dum>& iExpr)
+	{ this->pSetResult(new Walker_Dum); }
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
 	{

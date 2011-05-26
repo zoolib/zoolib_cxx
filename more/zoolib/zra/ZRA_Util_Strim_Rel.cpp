@@ -67,6 +67,9 @@ void Visitor::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
 void Visitor::Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
 	{ this->pWriteBinary("Difference", iExpr); }
 
+void Visitor::Visit_Expr_Rel_Dum(const ZRef<Expr_Rel_Dum>& iExpr)
+	{ pStrimW() << "Dum()"; }
+
 void Visitor::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();

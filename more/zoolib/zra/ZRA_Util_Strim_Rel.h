@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Const.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Dee.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Dum.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
@@ -53,8 +54,9 @@ class Visitor
 ,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Const
 ,	public virtual Visitor_Expr_Rel_Dee
-,	public virtual Visitor_Expr_Rel_Embed
 ,	public virtual Visitor_Expr_Rel_Difference
+,	public virtual Visitor_Expr_Rel_Dum
+,	public virtual Visitor_Expr_Rel_Embed
 ,	public virtual Visitor_Expr_Rel_Intersect
 ,	public virtual Visitor_Expr_Rel_Product
 ,	public virtual Visitor_Expr_Rel_Project
@@ -69,6 +71,7 @@ public:
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
 	virtual void Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr);
 	virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr);
+	virtual void Visit_Expr_Rel_Dum(const ZRef<Expr_Rel_Dum>& iExpr);
 	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr);
 	virtual void Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr);
 	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);

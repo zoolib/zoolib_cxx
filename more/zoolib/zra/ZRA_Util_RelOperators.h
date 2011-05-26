@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Const.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Dee.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Dum.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Product.h"
