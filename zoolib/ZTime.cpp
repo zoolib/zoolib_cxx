@@ -68,55 +68,13 @@ ZTime::operator operator_bool() const
 	{ return operator_bool_gen::translate(!isnan(fVal)); }
 
 bool ZTime::operator<(const ZTime& iOther) const
-	{
-	if (isnan(fVal))
-		{
-		if (isnan(iOther.fVal))
-			return false;
-		return true;
-		}
-
-	if (isnan(iOther.fVal))
-		return false;
-
-	return fVal < iOther.fVal;
-	}
+	{ return sCompare_T(fVal, iOther.fVal) < 0; }
 
 bool ZTime::operator==(const ZTime& iOther) const
-	{
-	if (isnan(fVal))
-		{
-		if (isnan(iOther.fVal))
-			return true;
-		return false;
-		}
-
-	if (isnan(iOther.fVal))
-		return false;
-
-	return fVal == iOther.fVal;
-	}
+	{ return sCompare_T(fVal, iOther.fVal) == 0; }
 
 int ZTime::Compare(const ZTime& iOther) const
-	{
-	if (isnan(fVal))
-		{
-		if (isnan(iOther.fVal))
-			return 0;
-		return -1;
-		}
-
-	if (isnan(iOther.fVal))
-		return 1;
-
-	if (fVal < iOther.fVal)
-		return -1;
-
-	if (fVal > iOther.fVal)
-		return 1;
-
-	return 0;
-	}
+	{ return sCompare_T(fVal, iOther.fVal); }
 
 ZTime ZTime::sNow()
 	{

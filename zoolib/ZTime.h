@@ -98,28 +98,28 @@ public:
 
 	double fVal;
 
-	static const uint32 kEpochDelta_1900_To_1904 =
-		4U * 365 * 24 * 60 * 60; // 126,144,000
+	static const double kEpochDelta_1900_To_1904 =
+		4.0 * 365 * 24 * 60 * 60; // 126,144,000
 
-	static const uint32 kEpochDelta_1904_To_1970 =
-		((66U * 365) + 17) * 24 * 60 * 60; // 2,082,844,800
+	static const double kEpochDelta_1904_To_1970 =
+		((66.0 * 365) + 17) * 24 * 60 * 60; // 2,082,844,800
 
-	static const uint32 kEpochDelta_1900_To_1970 =
-		((70U * 365) + 17) * 24 * 60 * 60; // 2,208,988,800
+	static const double kEpochDelta_1900_To_1970 =
+		((70.0 * 365) + 17) * 24 * 60 * 60; // 2,208,988,800
 
-	static const uint64 kEpochDelta_1601_To_1970 =
-		((ZUINT64_C(369) * 365) + 89) * 24 * 60 * 60; // == 11,644,473,600
+	static const double kEpochDelta_1601_To_1970 =
+		((369.0 * 365) + 89) * 24 * 60 * 60; // == 11,644,473,600
 
-	static const int32 kEpochDelta_1970_To_2001 = -978307200;
+	static const double kEpochDelta_1970_To_2001 = -978307200.0;
 
-	static const uint32 kEpochDelta_2001_To_1970 = 978307200U;
+	static const double kEpochDelta_2001_To_1970 = 978307200.0;
 
-	static const uint32 kSecond = 1;
-	static const uint32 kMinute = 60 * kSecond;
-	static const uint32 kHour = 60 * kMinute;
-	static const uint32 kDay = 24 * kHour;
-	static const uint32 kWeek = 7 * kDay;
-	static const uint32 kYear = 365 * kDay;
+	static const double kSecond = 1;
+	static const double kMinute = 60;
+	static const double kHour = 3600;
+	static const double kDay = 86400;
+	static const double kWeek = 604800;
+	static const double kYear = 31536000;
 	};
 
 inline ZTime operator+(double iInterval, const ZTime& iTime)
