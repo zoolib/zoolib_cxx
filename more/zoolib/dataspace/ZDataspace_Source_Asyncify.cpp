@@ -115,6 +115,15 @@ void Source_Asyncify::CrankIt()
 	this->pUpdate();
 	}
 
+void Source_Asyncify::Shutdown()
+	{
+	ZAcqMtxR acq(fMtxR);
+	while (fTriggered_Update)
+		fCnd.Wait(fMtxR);
+	// Fake, to prevent pTrigger_Update from operating
+	fTriggered_Update = true;
+	}
+
 void Source_Asyncify::pTrigger_Update()
 	{
 	ZAcqMtxR acq(fMtxR);
@@ -159,7 +168,7 @@ void Source_Asyncify::pUpdate()
 
 			vector<QueryResult> changes;
 			fSource->CollectResults(changes);
-			if (ZMACRO_IOS_Simulator)
+			if (0 && ZMACRO_IOS_Simulator)
 				ZThread::sSleep(1);
 			if (changes.size())
 				{
@@ -180,6 +189,7 @@ void Source_Asyncify::pUpdate()
 			break;
 		}
 	fTriggered_Update = false;
+	fCnd.Broadcast();
 	}
 
 void Source_Asyncify::pResultsAvailable(ZRef<Source> iSource)

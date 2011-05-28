@@ -57,6 +57,7 @@ public:
 
 // Our protocol
 	void CrankIt();
+	void Shutdown();
 
 private:
 	void pTrigger_Update();
@@ -65,6 +66,7 @@ private:
 	void pResultsAvailable(ZRef<Source> iSource);
 
 	ZMtxR fMtxR;
+	ZCnd fCnd;
 	ZRef<Source> fSource;
 
 	bool fTriggered_Update;
