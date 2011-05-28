@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(WorkerRunner_CFRunLoop)
 
 #include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZVal_CFType.h"
 
 namespace ZooLib {
 
@@ -92,8 +91,9 @@ void ZWorkerRunner_CFRunLoop::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
 bool ZWorkerRunner_CFRunLoop::IsAwake(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtxR acq(fMtx);
-	return ZUtil_STL::sContains(fWorkersMap, iWorker)
-		&& fWorkersMap[iWorker] <= ::CFAbsoluteTimeGetCurrent();
+	if (ZQ<CFAbsoluteTime> theTime = ZUtil_STL::sQGet(fWorkersMap, iWorker))
+		return theTime.Get() < ::CFAbsoluteTimeGetCurrent();
+	return false;
 	}
 
 bool ZWorkerRunner_CFRunLoop::IsAttached(ZRef<ZWorker> iWorker)
