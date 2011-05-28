@@ -262,7 +262,14 @@ Source_DatonSet::Source_DatonSet(ZRef<DatonSet> iDatonSet)
 	{}
 
 Source_DatonSet::~Source_DatonSet()
-	{}
+	{
+	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
+		eraser; eraser.Advance())
+		{}
+	for (DListEraser<ClientQuery,DLink_ClientQuery_NeedsWork> eraser = fClientQuery_NeedsWork;
+		eraser; eraser.Advance())
+		{}
+	}
 
 bool Source_DatonSet::Intersects(const RelHead& iRelHead)
 	{ return true; }
