@@ -31,10 +31,14 @@ using std::set;
 #pragma mark * Walker_Dee
 
 Walker_Dee::Walker_Dee()
+:	fExhausted(false)
 	{}
 
 Walker_Dee::~Walker_Dee()
 	{}
+
+void Walker_Dee::Rewind()
+	{ fExhausted = false; }
 
 ZRef<Walker> Walker_Dee::Prime(
 	const map<string8,size_t>& iOffsets,

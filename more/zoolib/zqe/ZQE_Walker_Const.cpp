@@ -31,12 +31,16 @@ using std::set;
 #pragma mark * Walker_Const
 
 Walker_Const::Walker_Const(const string8& iRelName, const ZVal_Any& iVal)
-:	fRelName(iRelName)
+:	fExhausted(false)
+,	fRelName(iRelName)
 ,	fVal(iVal)
 	{}
 
 Walker_Const::~Walker_Const()
 	{}
+
+void Walker_Const::Rewind()
+	{ fExhausted = false; }
 
 ZRef<Walker> Walker_Const::Prime(
 	const map<string8,size_t>& iOffsets,

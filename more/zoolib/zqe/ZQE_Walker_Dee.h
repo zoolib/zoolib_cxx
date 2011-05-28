@@ -31,13 +31,15 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Walker_Dee
 
-class Walker_Dee : public Walker_Nullary
+class Walker_Dee : public Walker
 	{
 public:
 	Walker_Dee();
 	virtual ~Walker_Dee();
 
 // From ZQE::Walker
+	virtual void Rewind();
+
 	virtual ZRef<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
@@ -46,6 +48,9 @@ public:
 	virtual bool ReadInc(
 		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
+
+private:
+	bool fExhausted;
 	};
 
 } // namespace ZQE

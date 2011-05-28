@@ -32,7 +32,7 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Walker_Embed
 
-class Walker_Embed : public Walker_Nullary
+class Walker_Embed : public Walker
 	{
 public:
 	Walker_Embed(const ZRef<Walker>& iWalker_Parent,
@@ -41,6 +41,8 @@ public:
 	virtual ~Walker_Embed();
 
 // From ZQE::Walker
+	virtual void Rewind();
+
 	virtual ZRef<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,

@@ -45,12 +45,17 @@ Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker_Parent,
 Walker_Embed::~Walker_Embed()
 	{}
 
+void Walker_Embed::Rewind()
+	{ fWalker_Parent->Rewind(); }
+
 ZRef<Walker> Walker_Embed::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	fWalker_Parent->Prime(iOffsets, oOffsets, ioBaseOffset);
+	fWalker_Parent = fWalker_Parent->Prime(iOffsets, oOffsets, ioBaseOffset);
+	if (!fWalker_Parent)
+		return null;
 
 	map<string8,size_t> embedeeOffsets;
 	fWalker_Embedee = fWalker_Embedee->Prime(oOffsets, embedeeOffsets, ioBaseOffset);
@@ -74,20 +79,24 @@ bool Walker_Embed::ReadInc(
 	if (!fWalker_Parent->ReadInc(ioResults, oAnnotations))
 		return false;
 	
-	fWalker_Embedee->Rewind();
-
-	vector<ZVal_Any> thePackedRows;
-	for (;;)
+	if (fWalker_Embedee)
 		{
-		if (!fWalker_Embedee->ReadInc(ioResults, nullptr))
-			break;
+		fWalker_Embedee->Rewind();
 
-		for (vector<size_t>::iterator i = fEmbedeeOffsets.begin(); i != fEmbedeeOffsets.end(); ++i)
-			thePackedRows.push_back(ioResults[*i]);
+		vector<ZVal_Any> thePackedRows;
+		for (;;)
+			{
+			if (!fWalker_Embedee->ReadInc(ioResults, nullptr))
+				break;
+
+			for (vector<size_t>::iterator i = fEmbedeeOffsets.begin(); i != fEmbedeeOffsets.end(); ++i)
+				thePackedRows.push_back(ioResults[*i]);
+			}
+
+		ZRef<ZQE::Result> theResult = new ZQE::Result(fEmbedeeRelHead, &thePackedRows, nullptr);
+		ioResults[fOutputOffset] = theResult;
 		}
 
-	ZRef<ZQE::Result> theResult = new ZQE::Result(fEmbedeeRelHead, &thePackedRows, nullptr);
-	ioResults[fOutputOffset] = theResult;
 	return true;
 	}
 

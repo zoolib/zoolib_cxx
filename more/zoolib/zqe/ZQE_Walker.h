@@ -58,25 +58,6 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Walker_Nullary
-
-class Walker_Nullary : public Walker
-	{
-protected:
-	Walker_Nullary();
-
-public:
-	virtual ~Walker_Nullary();
-
-// From ZQE::Walker
-	virtual void Rewind();
-
-protected:
-	bool fExhausted;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Walker_Unary
 
 class Walker_Unary : public Walker

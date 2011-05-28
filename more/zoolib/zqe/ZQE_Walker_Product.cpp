@@ -54,8 +54,6 @@ ZRef<Walker> Walker_Product::Prime(
 	{
 	fWalker_Left = fWalker_Left->Prime(iOffsets, fLeftOffsets, ioBaseOffset);
 
-	// Could also check for Walker_Dee.
-
 	fResults_Left.resize(ioBaseOffset);
 	oOffsets.insert(fLeftOffsets.begin(), fLeftOffsets.end());
 

@@ -53,6 +53,10 @@ ZRef<Walker> Walker_Calc::Prime(
 	oOffsets.insert(fBindings.begin(), fBindings.end());
 	fOutputOffset = ioBaseOffset++;
 	oOffsets[fRelName] = fOutputOffset;
+	
+	if (!fWalker)
+		return null;
+	
 	return this;
 	}
 
