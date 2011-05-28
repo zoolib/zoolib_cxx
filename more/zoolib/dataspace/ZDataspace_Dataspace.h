@@ -71,7 +71,6 @@ private:
 	void pFinalize(Sieve* iSieve);
 
 	ZRef<Source> fSource;
-	ZRef<Source::Callable_ResultsAvailable> fCallable_Source;
 	
 	ZMtxR fMtxR;
 

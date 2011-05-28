@@ -38,11 +38,10 @@ using std::vector;
 
 Dataspace::Dataspace(ZRef<Source> iSource)
 :	fSource(iSource)
-,	fCallable_Source(MakeCallable(this, &Dataspace::pCallback_Source))
 ,	fCalled_UpdateNeeded(false)
 ,	fNextRefcon(1)
 	{
-	fSource->SetCallable_ResultsAvailable(fCallable_Source);
+	fSource->SetCallable_ResultsAvailable(MakeCallable(this, &Dataspace::pCallback_Source));
 	}
 
 Dataspace::~Dataspace()
