@@ -745,7 +745,6 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (!fDragging)
 		{
 		fDragging = true;
-		ZLOGTRACE(eDebug);
 		[self changeTouchState:YES forTableView:(UITableView*)scrollView];
 		}
 	}
@@ -755,7 +754,6 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (fDragging)
 		{
 		fDragging = false;
-		ZLOGTRACE(eDebug);
 		[self changeTouchState:NO forTableView:(UITableView*)scrollView];
 		}
 	}
@@ -1135,7 +1133,6 @@ static void spInsertSections(UITableView* iTableView,
 		}
 
 	[tableView endUpdates];
-	{ZLOGF(w, eDebug + 1); w << self;}
 
 	[self performSelector:@selector(pDoUpdate2:)
 		 withObject:tableView
@@ -1317,7 +1314,6 @@ static void spInsertSections(UITableView* iTableView,
 
 - (id)init
 	{
-	ZLOGTRACE(eDebug + 1);
 	[super init];
 	fCallEnd = false;
 	self.delaysTouchesEnded = NO;
@@ -1326,7 +1322,6 @@ static void spInsertSections(UITableView* iTableView,
 
 - (void)reset
 	{
-	ZLOGTRACE(eDebug + 1);
 	[super reset];
 	if (fCallEnd)
 		{
@@ -1337,7 +1332,6 @@ static void spInsertSections(UITableView* iTableView,
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 	{
-	ZLOGTRACE(eDebug + 1);
 	[super touchesBegan:touches withEvent:event];
 	fCallEnd = true;
 	[fTV pChangeTouchState:YES];
@@ -1345,13 +1339,11 @@ static void spInsertSections(UITableView* iTableView,
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 	{
-	ZLOGTRACE(eDebug + 1);
 	[super touchesMoved:touches withEvent:event];
 	}
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 	{
-	ZLOGTRACE(eDebug + 1);
 	[super touchesEnded:touches withEvent:event];
 	self.state = UIGestureRecognizerStateFailed;
 	if (fCallEnd)
@@ -1363,7 +1355,6 @@ static void spInsertSections(UITableView* iTableView,
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 	{
-	ZLOGTRACE(eDebug + 1);
 	[super touchesEnded:touches withEvent:event];
 	self.state = UIGestureRecognizerStateFailed;
 	if (fCallEnd)
