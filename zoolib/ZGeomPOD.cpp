@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZGeomPOD.h"
+#include "zoolib/ZCompare_Integer.h"
 
 namespace ZooLib {
 
