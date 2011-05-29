@@ -237,7 +237,7 @@ ZQ<Data> Device_Client::GetAttribute(uint16 iObject, uint16 iAttribute)
 			if (r.ReadBool())
 				{
 				Data theMB(r.ReadCount());
-				r.Read(theMB.GetData(), theMB.GetSize());
+				r.Read(theMB.GetDataMutable(), theMB.GetSize());
 				return theMB;
 				}
 			}

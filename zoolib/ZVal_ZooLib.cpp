@@ -1679,7 +1679,7 @@ void ZVal_ZooLib::pFromStream(ZType iType, const ZStreamR& iStreamR)
 				{
 				try
 					{
-					iStreamR.Read(theRaw->GetData(), size);
+					iStreamR.Read(theRaw->GetDataMutable(), size);
 					}
 				catch (...)
 					{

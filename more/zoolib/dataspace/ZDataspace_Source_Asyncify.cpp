@@ -168,8 +168,7 @@ void Source_Asyncify::pUpdate()
 
 			vector<QueryResult> changes;
 			fSource->CollectResults(changes);
-			if (0 && ZMACRO_IOS_Simulator)
-				ZThread::sSleep(1);
+
 			if (changes.size())
 				{
 				didAnything = true;
