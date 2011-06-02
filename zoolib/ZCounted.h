@@ -178,7 +178,18 @@ public:
 		}
 
 	template <class O>
-	operator ZRef<O>() const
+	operator ZRef<O,false>() const
+		{
+		if (fWeakRefProxy)
+			{
+			if (ZRef<ZCountedBase> theCB = fWeakRefProxy->GetCountedBase())
+				return theCB.DynamicCast<O>();
+			}
+		return null;
+		}
+
+	template <class O>
+	operator ZRef<O,true>() const
 		{
 		if (fWeakRefProxy)
 			{
