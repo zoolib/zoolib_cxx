@@ -120,7 +120,7 @@ void ZUSBWatcher::SetCallable(ZRef<CB_DeviceAttached> iCallable)
 
 void ZUSBWatcher::pDeviceAdded(io_iterator_t iIterator)
 	{
-	for (io_service_t iter; iter = ::IOIteratorNext(iIterator); /*no inc*/)
+	for (io_service_t iter; (iter = ::IOIteratorNext(iIterator)); /*no inc*/)
 		{
 		if (ZLOG(s, eInfo, "ZUSBWatcher"))
 			s.Writef("Device added, iterator: 0x%08x.", iter);
