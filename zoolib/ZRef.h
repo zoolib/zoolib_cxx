@@ -380,15 +380,18 @@ const struct MakeRef_t
 	{
 	template <class T>
 	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(iP); }
+
+	template <class T, bool Sense>
+	ZRef<T,true> operator()(const ZRef<T,Sense>& iP) const { return iP; }
 	} MakeRef = {};
 
 const struct TempRef_t
 	{
 	template <class T>
-	ZRef<T,true> operator&(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
+	ZRef<T,true> operator&(T iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
 	
 	template <class T>
-	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
+	ZRef<T,true> operator()(T iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
 	} TempRef = {};
 
 // =================================================================================================
