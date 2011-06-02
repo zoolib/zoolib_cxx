@@ -142,11 +142,16 @@ const ZStreamWPos& ZStreamerRWPos::GetStreamWPos()
 #pragma mark -
 #pragma mark * ZStreamerRWCon
 
-void ZStreamerRWCon::Disconnect()
+void ZStreamerRWCon::DisconnectWithTimeout(double iTimeout)
 	{
 	this->GetStreamWCon().SendDisconnect();
+	this->GetStreamRCon().ReceiveDisconnect(iTimeout);
+	}
+
+void ZStreamerRWCon::Disconnect()
+	{
 	// Wait for five minutes (effectively infinite);
-	this->GetStreamRCon().ReceiveDisconnect(300);
+	this->DisconnectWithTimeout(300);
 	}
 
 void ZStreamerRWCon::Abort()

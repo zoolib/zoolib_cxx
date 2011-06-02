@@ -36,20 +36,21 @@ class ZStreamerCopier
 	{
 public:
 	ZStreamerCopier(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon);
-
-	ZStreamerCopier(
-		ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize);
-
 	virtual ~ZStreamerCopier();
 
 // From ZWorker
 	virtual bool Work();
 	virtual void Kill();
 
+// Our protocol
+	void SetChunkSize(size_t iChunkSize);
+	void SetDisconnectTimeout(double iDisconnectTimeout);
+
 private:
 	ZRef<ZStreamerRCon> fStreamerRCon;
 	ZRef<ZStreamerWCon> fStreamerWCon;
 	size_t fChunkSize;
+	double fDisconnectTimeout;
 	};
 
 } // namespace ZooLib

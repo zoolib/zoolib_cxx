@@ -32,7 +32,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 class ZStreamR;
+class ZStreamRCon;
 class ZStreamW;
+class ZStreamWCon;
 
 // =================================================================================================
 #pragma mark -
@@ -43,8 +45,16 @@ namespace ZStream {
 /** Helper function used internally by ZStreamR and ZStreamW,
 but made available in case it's needed by application code. */
 
-void sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStreamW, uint64 iCount,
-						uint64* oCountRead, uint64* oCountWritten);
+void sCopyReadToWrite(
+	const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten);
+
+bool sCopyCon(
+	const ZStreamRCon& iStreamRCon,
+	size_t iChunkSize,
+	const ZStreamWCon& iStreamWCon,
+	double iDisconnectTimeout);
 
 static inline uint64 sClampedCount(uint64 iSize, uint64 iPosition)
 	{ return iPosition > iSize ? 0 : iSize - iPosition; }

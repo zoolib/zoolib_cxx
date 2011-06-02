@@ -210,6 +210,7 @@ class ZStreamerRWCon
 	public ZStreamerWCon
 	{
 public:
+	void DisconnectWithTimeout(double iTimeout);
 	void Disconnect();
 	void Abort();
 	};

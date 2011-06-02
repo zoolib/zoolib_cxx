@@ -20,53 +20,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamerCopier.h"
 
-#include <vector>
-
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamerCopier
 
-static bool spCopy(
-	const ZStreamRCon& iStreamRCon,
-	void* iBuffer, size_t iBufferSize,
-	const ZStreamWCon& iStreamWCon)
-	{
-	size_t countRead;
-	iStreamRCon.Read(iBuffer, iBufferSize, &countRead);
-
-	if (countRead == 0)
-		{
-		iStreamRCon.ReceiveDisconnect(-1);
-		iStreamWCon.SendDisconnect();
-
-		return false;
-		}
-
-	size_t countWritten;
-	iStreamWCon.Write(iBuffer, countRead, &countWritten);
-	if (countWritten != countRead)
-		{
-		iStreamRCon.Abort();
-		iStreamWCon.Abort();
-		return false;
-		}
-	return true;
-	}
-
 ZStreamerCopier::ZStreamerCopier(
 	ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon)
-:	fStreamerRCon(iStreamerRCon),
-	fStreamerWCon(iStreamerWCon),
-	fChunkSize(sStackBufferSize)
-	{}
-
-ZStreamerCopier::ZStreamerCopier(
-	ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize)
-:	fStreamerRCon(iStreamerRCon),
-	fStreamerWCon(iStreamerWCon),
-	fChunkSize(iChunkSize)
+:	fStreamerRCon(iStreamerRCon)
+,	fStreamerWCon(iStreamerWCon)
+,	fChunkSize(sStackBufferSize)
+,	fDisconnectTimeout(-1)
 	{}
 
 ZStreamerCopier::~ZStreamerCopier()
@@ -75,18 +40,12 @@ ZStreamerCopier::~ZStreamerCopier()
 bool ZStreamerCopier::Work()
 	{
 	ZWorker::Wake();//##
-	if (fChunkSize <= sStackBufferSize)
-		{
-		char buffer[sStackBufferSize];
-		return spCopy(fStreamerRCon->GetStreamRCon(),
-			buffer, sStackBufferSize, fStreamerWCon->GetStreamWCon());
-		}
-	else
-		{
-		std::vector<char> buffer(fChunkSize);
-		return spCopy(fStreamerRCon->GetStreamRCon(),
-			&buffer[0], fChunkSize, fStreamerWCon->GetStreamWCon());
-		}
+
+	return ZStream::sCopyCon(
+		fStreamerRCon->GetStreamRCon(),
+		sStackBufferSize,
+		fStreamerWCon->GetStreamWCon(),
+		fDisconnectTimeout);
 	}
 
 void ZStreamerCopier::Kill()
@@ -94,5 +53,11 @@ void ZStreamerCopier::Kill()
 	fStreamerRCon->GetStreamRCon().Abort();
 	fStreamerWCon->GetStreamWCon().Abort();
 	}
+
+void ZStreamerCopier::SetChunkSize(size_t iChunkSize)
+	{ fChunkSize = iChunkSize; }
+
+void ZStreamerCopier::SetDisconnectTimeout(double iDisconnectTimeout)
+	{ fDisconnectTimeout = iDisconnectTimeout; }
 
 } // namespace ZooLib

@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdio.h>
 #include <string.h> // For strlen
 #include <string> // because range_error may require it
+#include <vector>
 
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf
@@ -182,13 +183,62 @@ void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStream
 	// We'll get to here if we need to move 8192 bytes or less, or if
 	// allocation of the heap buffer failed.
 
-	// Use a stack-based 1024 byte buffer if we're moving less than 8K and thus will iterate
+	// Use a stack-based buffer if we're moving less than 8K and thus will iterate
 	// fewer than 8 times. Previously we'd unconditionally used one of size 4096, but that's
 	// fairly large and can contribute to blowing the stack on MacOS.
-	uint8 localBuffer[1024];
+	uint8 localBuffer[sStackBufferSize];
 	spCopyReadToWrite(localBuffer, sizeof(localBuffer),
 		iStreamR, iStreamW, iCount,
 		oCountRead, oCountWritten);
+	}
+
+static void spCopy(const ZStreamR& iStreamR,
+	uint64 iChunkSize,
+	const ZStreamW& iStreamW,
+	size_t& oCountRead, size_t& oCountWritten)
+	{
+	try
+		{
+		if (iChunkSize > sStackBufferSize)
+			{
+			std::vector<uint8> buffer(iChunkSize, 0);
+			iStreamR.Read(&buffer[0], buffer.size(), &oCountRead);
+			iStreamW.Write(&buffer[0], oCountRead, &oCountWritten);
+			return;
+			}
+		}
+	catch (...)
+		{}
+
+	char buffer[sStackBufferSize];
+	iStreamR.Read(buffer, sStackBufferSize, &oCountRead);
+	iStreamW.Write(buffer, oCountRead, &oCountWritten);
+	}
+
+bool ZStream::sCopyCon(
+	const ZStreamRCon& iStreamRCon,
+	size_t iChunkSize,
+	const ZStreamWCon& iStreamWCon,
+	double iDisconnectTimeout)
+	{
+	size_t countRead, countWritten;
+	spCopy(iStreamRCon, iChunkSize, iStreamWCon, countRead, countWritten);
+
+	if (countRead == 0)
+		{
+		iStreamRCon.ReceiveDisconnect(iDisconnectTimeout);
+		iStreamWCon.SendDisconnect();
+		return false;
+		}
+
+	if (countRead != countWritten)
+		{
+		iStreamRCon.Abort();
+		iStreamWCon.Abort();
+		return false;
+		}
+
+	return true;
 	}
 
 ZStream::ExEndOfStream::ExEndOfStream(const char* iWhat)
