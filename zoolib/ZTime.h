@@ -98,28 +98,19 @@ public:
 
 	double fVal;
 
-	static const double kEpochDelta_1900_To_1904 =
-		4.0 * 365 * 24 * 60 * 60; // 126,144,000
+	static const double kSecond;
+	static const double kMinute;
+	static const double kHour;
+	static const double kDay;
+	static const double kWeek;
+	static const double kYear;
 
-	static const double kEpochDelta_1904_To_1970 =
-		((66.0 * 365) + 17) * 24 * 60 * 60; // 2,082,844,800
-
-	static const double kEpochDelta_1900_To_1970 =
-		((70.0 * 365) + 17) * 24 * 60 * 60; // 2,208,988,800
-
-	static const double kEpochDelta_1601_To_1970 =
-		((369.0 * 365) + 89) * 24 * 60 * 60; // == 11,644,473,600
-
-	static const double kEpochDelta_1970_To_2001 = -978307200.0;
-
-	static const double kEpochDelta_2001_To_1970 = 978307200.0;
-
-	static const double kSecond = 1;
-	static const double kMinute = 60;
-	static const double kHour = 3600;
-	static const double kDay = 86400;
-	static const double kWeek = 604800;
-	static const double kYear = 31536000;
+	static const double kEpochDelta_1900_To_1904;
+	static const double kEpochDelta_1904_To_1970;
+	static const double kEpochDelta_1900_To_1970;
+	static const double kEpochDelta_1601_To_1970;
+	static const double kEpochDelta_1970_To_2001;
+	static const double kEpochDelta_2001_To_1970;
 	};
 
 inline ZTime operator+(double iInterval, const ZTime& iTime)

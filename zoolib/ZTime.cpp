@@ -58,6 +58,25 @@ ZMACRO_CompareRegistration_T(ZTime)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZTime constatnts
+
+const double ZTime::kSecond = 1;
+const double ZTime::kMinute = 60.0 * kSecond;
+const double ZTime::kHour = 60 * kMinute;
+const double ZTime::kDay = 24 * kHour;
+const double ZTime::kWeek = 7 * kDay;
+const double ZTime::kYear = 365 * kDay;
+
+const double ZTime::kEpochDelta_1900_To_1904 = 4 * kYear; // 126,144,000
+const double ZTime::kEpochDelta_1904_To_1970 = 66 * kYear + 17 * kDay; // 2,082,844,800
+const double ZTime::kEpochDelta_1900_To_1970 = 70 * kYear + 17 * kDay; // 2,208,988,800
+const double ZTime::kEpochDelta_1601_To_1970 = 369 * kYear + 89 * kDay; // 11,644,473,600
+
+const double ZTime::kEpochDelta_1970_To_2001 = -978307200.0;
+const double ZTime::kEpochDelta_2001_To_1970 = 978307200.0;
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZTime
 
 ZTime::ZTime()
