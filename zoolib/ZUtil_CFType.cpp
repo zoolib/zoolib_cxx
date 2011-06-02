@@ -292,6 +292,8 @@ ZAny sDAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
 				::CFNumberGetValue(theNumberRef, kCFNumberFloat64Type, &theValue);
 				return ZAny(theValue);
 				}
+			default:
+				break;
 			}
 		}
 
