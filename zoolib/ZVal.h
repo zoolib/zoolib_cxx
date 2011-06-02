@@ -75,12 +75,12 @@ private:
 bool sEquali(const std::string& iLeft, const std::string& iRight);
 
 template <class Map_t>
-typename Map_t::Val_t* sPGeti(Map_t& iMap, const std::string& iNamei)
+typename Map_t::Val_t* sPGetMutablei(Map_t& iMap, const std::string& iNamei)
 	{
 	for (typename Map_t::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
 		{
 		if (sEquali(iMap.NameOf(i), iNamei))
-			return iMap.PGet(i);
+			return iMap.PGetMutable(i);
 		}
 	return nullptr;
 	}
