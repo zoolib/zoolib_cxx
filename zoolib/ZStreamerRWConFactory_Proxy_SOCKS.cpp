@@ -20,8 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamerRWConFactory_Proxy_SOCKS.h"
 
-#include "zoolib/ZHTTP.h"
-
 namespace ZooLib {
 
 using std::string;
@@ -46,7 +44,7 @@ ZRef<ZStreamerRWCon> ZStreamerRWConFactory_Proxy_SOCKS::MakeStreamerRWCon()
 	if (ZRef<ZStreamerRWCon> theSRWCon = fProxyFactory->MakeStreamerRWCon())
 		{
 		const ZStreamW& theStreamW = theSRWCon->GetStreamW();
-		theStreamW.WriteUInt8(4); // SOCKS 4
+		theStreamW.WriteUInt8(4); // Version, use 4 for now
 		theStreamW.WriteUInt8(1); // Open TCP connection
 		theStreamW.WriteUInt16(fPort);
 		theStreamW.WriteUInt32(1); // 0.0.0.1, indicates that host name will follow
@@ -62,8 +60,8 @@ ZRef<ZStreamerRWCon> ZStreamerRWConFactory_Proxy_SOCKS::MakeStreamerRWCon()
 		const ZStreamR& theStreamR = theSRWCon->GetStreamR();
 		theStreamR.ReadUInt8(); // null byte
 		const uint8 status = theStreamR.ReadUInt8();
-		const uint16 port = theStreamR.ReadUInt16();
-		const uint16 address = theStreamR.ReadUInt32();
+		/*const uint16 port = */theStreamR.ReadUInt16();
+		/*const uint16 address = */theStreamR.ReadUInt32();
 		
 		if (status == 0x5a)
 			return theSRWCon;
