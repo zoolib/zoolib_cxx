@@ -114,13 +114,11 @@ void ZWorkerRunner_EventLoop::pCallback()
 
 	for (ZSafeSetIter<ZRef<ZWorker> > iter = fWorkersSet;;)
 		{
-		if (ZQ<ZRef<ZWorker>, false> theNotQ = iter.QReadInc())
-			{
-			break;
-			}
+		if (ZQ<ZRef<ZWorker>, false> theNQ = iter.QReadInc())
+			{ break; }
 		else
 			{
-			ZRef<ZWorker> theWorker = theNotQ.Get();
+			ZRef<ZWorker> theWorker = theNQ.Get();
 			guard.Acquire();
 			const ZTime theTime = ZUtil_STL::sGetMustContain(1, fWorkersMap, theWorker);
 			guard.Release();
