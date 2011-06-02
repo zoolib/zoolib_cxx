@@ -62,10 +62,14 @@ public:
 // From ZStreamR
 	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
+// Our protocol
+	void Reset();
+
 private:
 	const ZStreamR& fStreamR;
 	enum EState
 		{
+		eInitial,
 		eReturn_LF_X,
 		eReturn_X,
 		eNormal,

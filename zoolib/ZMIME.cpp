@@ -89,10 +89,7 @@ bool ZMIME::sReadFieldName(const ZStreamR& iStream, std::string* oName, std::str
 
 ZMIME::StreamR_Header::StreamR_Header(const ZStreamR& iStream)
 :	fStreamR(iStream),
-	fState(eNormal)
-//#warning "check this"
-// Should we *start* in eSeen_LF, so an empty header ends up in eSeen_LF_LF? Or should
-// we have some other initial state?
+	fState(eInitial)
 	{}
 
 void ZMIME::StreamR_Header::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
@@ -131,12 +128,20 @@ void ZMIME::StreamR_Header::Imp_Read(void* oDest, size_t iCount, size_t* oCountR
 
 		switch (fState)
 			{
+			case eInitial:
+				{
+				if (fX == LF)
+					fState = eSeen_LF_LF;
+				else
+					fState = eReturn_X;
+				break;
+				}
 			case eNormal:
 				{
 				if (fX == LF)
 					fState = eSeen_LF;
 				else
-					*localDest++ = fX;
+					fState = eReturn_X;
 				break;
 				}
 			case eSeen_LF:
@@ -157,6 +162,9 @@ void ZMIME::StreamR_Header::Imp_Read(void* oDest, size_t iCount, size_t* oCountR
 	if (oCountRead)
 		*oCountRead = localDest - static_cast<uint8*>(oDest);
 	}
+
+void ZMIME::StreamR_Header::Reset()
+	{ fState = eInitial; }
 
 // =================================================================================================
 #pragma mark -
