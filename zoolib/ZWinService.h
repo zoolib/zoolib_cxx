@@ -39,6 +39,7 @@ namespace ZooLib {
 class ZWinService
 	{
 public:
+	static bool sIsService();
 	static void sRunDispatcher();
 
 	ZWinService(
