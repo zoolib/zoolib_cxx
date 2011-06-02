@@ -38,7 +38,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <ctype.h> // For isalnum
 
 namespace ZooLib {
-
 namespace ZHTTP {
 
 using std::string;
@@ -347,6 +346,8 @@ static ZRef<ZStrimmerR> spCreateStrimmerR(const Map& iHeader, const ZStreamR& iS
 		return new ZStrimmerR_StreamR_T<ZStrimR_StreamUTF8>(iStreamR);
 	}
 
+#if 0
+
 static bool spReadName(const ZStreamU& iStreamU, string& oName)
 	{
 	bool gotAny = false;
@@ -365,6 +366,8 @@ static bool spReadName(const ZStreamU& iStreamU, string& oName)
 		}
 	return gotAny;
 	}
+
+#endif
 
 static bool spReadPOST(const ZStreamR& iStreamR, const Map& iHeader, Val& oVal)
 	{
@@ -458,5 +461,4 @@ static bool spReadPOST(const ZStreamR& iStreamR, const Map& iHeader, Val& oVal)
 	}
 
 } // namespace ZHTTP
-
 } // namespace ZooLib

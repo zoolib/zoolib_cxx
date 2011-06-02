@@ -34,6 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdio.h> // For sprintf
 
 namespace ZooLib {
+namespace ZHTTP {
 
 using std::max;
 using std::min;
@@ -43,8 +44,6 @@ using std::string;
 using std::vector;
 
 #define kDebug_HTTP 2
-
-namespace ZHTTP {
 
 static const char CR = '\r';
 static const char LF = '\n';
@@ -1350,9 +1349,9 @@ bool sParseURL(const string& iURL,
 	const size_t dividerOffset = iURL.find(schemeDivider);
 	if (string::npos == dividerOffset)
 		{
-		if (oPath)
-			*oPath = iURL;
-		return true;
+//		if (oPath)
+//			*oPath = iURL;
+//		return true;
 		}
 	else
 		{
@@ -1885,5 +1884,4 @@ void StreamW_Chunked::pFlush()
 	}
 
 } // namespace ZHTTP
-
 } // namespace ZooLib

@@ -25,12 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZHTTP.h"
 
 namespace ZooLib {
+namespace ZHTTP {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZHTTP
-
-namespace ZHTTP {
 
 ZRef<ZStreamerR> sRequest(
 	const std::string& iMethod, std::string& ioURL,
@@ -49,7 +48,6 @@ ZRef<ZStreamerR> sPostRaw(
 	int32* oResultCode, Map* oFields, Data* oRawHeader);
 
 } // namespace ZHTTP
-
 } // namespace ZooLib
 
 #endif // __ZHTTP_Requests__

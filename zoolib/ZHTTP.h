@@ -30,16 +30,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-
 namespace ZHTTP {
 
 typedef ZData_Any Data;
 typedef ZVal_Any Val;
 typedef ZSeq_Any Seq;
 typedef ZMap_Any Map;
-
-class StreamR_Chunked;
-class StreamW_Chunked;
 
 // =================================================================================================
 // Response
@@ -219,13 +215,11 @@ bool sIs_ctext(char iChar);
 
 bool sIs_qdtext(char iChar);
 
-} // namespace ZHTTP
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZHTTP::StreamR_Chunked
+#pragma mark * StreamR_Chunked
 
-class ZHTTP::StreamR_Chunked : public ZStreamR
+class StreamR_Chunked : public ZStreamR
 	{
 public:
 	StreamR_Chunked(const ZStreamR& iStreamSource);
@@ -244,9 +238,9 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZHTTP::StreamW_Chunked
+#pragma mark * StreamW_Chunked
 
-class ZHTTP::StreamW_Chunked : public ZStreamW
+class StreamW_Chunked : public ZStreamW
 	{
 public:
 	StreamW_Chunked(size_t iBufferSize, const ZStreamW& iStreamSink);
@@ -266,6 +260,7 @@ private:
 	size_t fBufferUsed;
 	};
 
+} // namespace ZHTTP
 } // namespace ZooLib
 
 #endif // __ZHTTP__
