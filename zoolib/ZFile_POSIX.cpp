@@ -538,6 +538,9 @@ static void spSplit(
 		}
 	}
 
+#if ZCONFIG(Compiler,GCC)
+__attribute__((unused))
+#endif
 static void spSplit(char iSep, bool iIncludeEmpties, const string& iPath, vector<string>& oComps)
 	{
 	if (size_t length = iPath.length())
