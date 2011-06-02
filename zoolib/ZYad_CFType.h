@@ -139,24 +139,30 @@ private:
 #pragma mark * sMakeYadR
 
 ZRef<ZYadR> sMakeYadR(CFTypeRef iVal);
+ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal);
 
 ZRef<ZYadStrimR> sMakeYadR(CFMutableStringRef iString);
 ZRef<ZYadStrimR> sMakeYadR(CFStringRef iString);
+ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFStringRef>& iString);
 
 ZRef<ZYadStreamR> sMakeYadR(CFMutableDataRef iData);
 ZRef<ZYadStreamR> sMakeYadR(CFDataRef iData);
+ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData);
 
 ZRef<ZYadSeqRPos> sMakeYadR(CFMutableArrayRef iArray);
 ZRef<ZYadSeqRPos> sMakeYadR(CFArrayRef iArray);
+ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<CFArrayRef>& iArray);
 
 ZRef<ZYadMapRPos> sMakeYadR(CFMutableDictionaryRef iDictionary);
 ZRef<ZYadMapRPos> sMakeYadR(CFDictionaryRef iDictionary);
+ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sFromYadR
 
 ZRef<CFTypeRef> sFromYadR(CFTypeRef iDefault, ZRef<ZYadR> iYadR);
+ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR);
 
 } // namespace ZooLib
 

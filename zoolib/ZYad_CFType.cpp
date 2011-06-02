@@ -172,11 +172,17 @@ ZRef<ZYadR> sMakeYadR(CFTypeRef iVal)
 	return new ZYadAtomR_CFType(iVal);
 	}
 
+ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
+	{ return sMakeYadR(iVal.Get()); }
+
 ZRef<ZYadStrimR> sMakeYadR(CFMutableStringRef iString)
 	{ return new ZYadStrimR_CFType(iString); }
 
 ZRef<ZYadStrimR> sMakeYadR(CFStringRef iString)
 	{ return new ZYadStrimR_CFType(iString); }
+
+ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFStringRef>& iString)
+	{ return sMakeYadR(iString.Get()); }
 
 ZRef<ZYadStreamR> sMakeYadR(CFMutableDataRef iData)
 	{ return new ZYadStreamRPos_CFType(iData); }
@@ -184,17 +190,26 @@ ZRef<ZYadStreamR> sMakeYadR(CFMutableDataRef iData)
 ZRef<ZYadStreamR> sMakeYadR(CFDataRef iData)
 	{ return new ZYadStreamRPos_CFType(iData); }
 
+ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData)
+	{ return sMakeYadR(iData.Get()); }
+
 ZRef<ZYadSeqRPos> sMakeYadR(CFMutableArrayRef iArray)
 	{ return new ZYadSeqRPos_CFType(iArray); }
 
 ZRef<ZYadSeqRPos> sMakeYadR(CFArrayRef iArray)
 	{ return new ZYadSeqRPos_CFType(iArray); }
 
+ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<CFArrayRef>& iArray)
+	{ return sMakeYadR(iArray.Get()); }
+
 ZRef<ZYadMapRPos> sMakeYadR(CFMutableDictionaryRef iDictionary)
 	{ return new ZYadMapRPos_CFType(iDictionary); }
 
 ZRef<ZYadMapRPos> sMakeYadR(CFDictionaryRef iDictionary)
 	{ return new ZYadMapRPos_CFType(iDictionary); }
+
+ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary)
+	{ return sMakeYadR(iDictionary.Get()); }
 
 // =================================================================================================
 #pragma mark -
@@ -280,6 +295,9 @@ ZRef<CFTypeRef> sFromYadR(CFTypeRef iDefault, ZRef<ZYadR> iYadR)
 
 	return Visitor_GetVal(iDefault).GetVal(iYadR);
 	}
+
+ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR)
+	{ return sFromYadR(iDefault.Get(), iYadR); }
 
 } // namespace ZooLib
 
