@@ -45,6 +45,7 @@ ZMACRO_CF_Mutable(Bundle)
 ZMACRO_CF_Mutable(Error)
 ZMACRO_CF_Mutable(ReadStream)
 ZMACRO_CF_Mutable(RunLoop)
+ZMACRO_CF_Mutable(RunLoopSource)
 ZMACRO_CF_Mutable(RunLoopTimer)
 ZMACRO_CF_Mutable(WriteStream)
 
@@ -92,8 +93,11 @@ ZMACRO_Retain_Release(SecKeychainItemRef)
 typedef struct OpaqueSecKeychainSearchRef *SecKeychainSearchRef;
 ZMACRO_Retain_Release(SecKeychainSearchRef)
 
-typedef const struct __SCDynamicStore *	SCDynamicStoreRef;
+typedef const struct __SCDynamicStore *SCDynamicStoreRef;
 ZMACRO_Retain_Release(SCDynamicStoreRef)
+
+typedef const struct __SCPreferences *SCPreferencesRef;
+ZMACRO_Retain_Release(SCPreferencesRef)
 
 // =================================================================================================
 typedef const struct __AXUIElement *AXUIElementRef;
