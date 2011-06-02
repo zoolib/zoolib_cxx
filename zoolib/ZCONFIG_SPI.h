@@ -535,6 +535,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 // =================================================================================================
+#pragma mark SystemConfiguration
+#ifndef ZCONFIG_SPI_Avail__SystemConfiguration
+#	if __MACH__
+#		define ZCONFIG_SPI_Avail__SystemConfiguration 1
+#	elif ZCONFIG_SPI_Avail__Carbon64
+#		define ZCONFIG_SPI_Avail__SystemConfiguration 1
+#	endif
+#endif
+
+#ifndef ZCONFIG_SPI_Avail__SystemConfiguration
+#	define ZCONFIG_SPI_Avail__SystemConfiguration 0
+#endif
+
+#ifndef ZCONFIG_SPI_Desired__SystemConfiguration
+#	define ZCONFIG_SPI_Desired__SystemConfiguration 1
+#endif
+
+
+// =================================================================================================
 #pragma mark Win
 #ifndef ZCONFIG_SPI_Avail__Win
 #	if defined(WIN32) || defined(_WIN32) || defined(WINDOWS)
