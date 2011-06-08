@@ -216,6 +216,14 @@ bool sIs_ctext(char iChar);
 bool sIs_qdtext(char iChar);
 
 // =================================================================================================
+// Writing
+
+void sWrite_HeaderLine(const ZStreamW& w, const std::string& iName, const std::string& iBody);
+void sWrite_Header(const ZStreamW& w, const Map& iHeader);
+void sWrite_MinimalResponse(const ZStreamW& w, int iResult);
+void sWrite_MinimalResponse_ErrorInBody(const ZStreamW& w, int iError);
+
+// =================================================================================================
 #pragma mark -
 #pragma mark * StreamR_Chunked
 

@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZHTTP_Requests__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCallable.h"
 #include "zoolib/ZHTTP.h"
 
 namespace ZooLib {
@@ -31,21 +32,27 @@ namespace ZHTTP {
 #pragma mark -
 #pragma mark * ZHTTP
 
-ZRef<ZStreamerR> sRequest(
+typedef ZCallable<ZRef<ZStreamerRWCon>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
+	Callable_Connect;
+
+ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iMethod, std::string& ioURL,
 	int32* oResultCode, Map* oFields, Data* oRawHeader);
 
-ZRef<ZStreamerR> sPost(
+ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iURL, const Map* iFields, const ZStreamR& iBody,
 	int32* oResultCode, Map* oFields, Data* oRawHeader);
 
-ZRef<ZStreamerR> sPost(
+ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iURL, const ZStreamR& iBody,
 	int32* oResultCode, Map* oFields, Data* oRawHeader);
 
-ZRef<ZStreamerR> sPostRaw(
+ZRef<ZStreamerR> sPostRaw(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iURL, const ZStreamR& iBody,
 	int32* oResultCode, Map* oFields, Data* oRawHeader);
+
+bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
+	const std::string& iAddress, const Map* iHeader);
 
 } // namespace ZHTTP
 } // namespace ZooLib

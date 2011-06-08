@@ -31,7 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 
 #include <ctype.h>
-#include <stdio.h> // For sprintf
 
 namespace ZooLib {
 namespace ZHTTP {
@@ -42,8 +41,6 @@ using std::pair;
 using std::replace;
 using std::string;
 using std::vector;
-
-#define kDebug_HTTP 2
 
 static const char CR = '\r';
 static const char LF = '\n';
@@ -714,10 +711,7 @@ string sEncodeComponent(const string& iString)
 			result.append(iString, lastGood, nextProb - lastGood);
 		lastGood = nextProb + 1;
 
-		char probChar = iString[nextProb];
-		char p[4];
-		sprintf(p,"%%%02hhX", probChar);
-		result.append(p);
+		result += ZStringf("%%%02hhX", iString[nextProb]);
 		}
 	return result;
 	}
@@ -1347,13 +1341,7 @@ bool sParseURL(const string& iURL,
 	size_t start = 0;
 	const char schemeDivider[] = "://";
 	const size_t dividerOffset = iURL.find(schemeDivider);
-	if (string::npos == dividerOffset)
-		{
-//		if (oPath)
-//			*oPath = iURL;
-//		return true;
-		}
-	else
+	if (string::npos != dividerOffset)
 		{
 		start = dividerOffset + std::strlen(schemeDivider);
 		if (oScheme)
@@ -1705,6 +1693,53 @@ bool sIs_ctext(char iChar)
 bool sIs_qdtext(char iChar)
 	{
 	return sIs_TEXT(iChar) && iChar != '\"';
+	}
+
+// =================================================================================================
+// Writing
+
+void sWrite_HeaderLine(const ZStreamW& w, const string& iName, const string& iBody)
+	{
+	w.WriteString(iName);
+	w.WriteString(": ");
+	w.WriteString(iBody);
+	w.WriteString("\r\n");
+	}
+
+void sWrite_Header(const ZStreamW& w, const Map& iHeader)
+	{
+	for (Map::Index_t i = iHeader.Begin(); i != iHeader.End(); ++i)
+		{
+		const string name = iHeader.NameOf(i);
+		const Val& theVal = *iHeader.PGet(i);
+
+		if (ZQ<Seq> asSeqQ = theVal.QGetSeq())
+			{
+			const Seq asSeq = asSeqQ.Get();
+			for (size_t x = 0, count = asSeq.Count(); x < count; ++x)
+				{
+				if (ZQ<string> bodyQ = asSeq.QGet<string>(x))
+					sWrite_HeaderLine(w, name, bodyQ.Get());
+				}
+			}
+		else if (ZQ<string> asStringQ = theVal.QGet<string>())
+			{
+			sWrite_HeaderLine(w, name, asStringQ.Get());
+			}
+		}
+	}
+
+void sWrite_MinimalResponse(const ZStreamW& w, int iResult)
+	{
+	w.Writef("HTTP/1.1 %d\r\n\r\n", iResult);
+	}
+
+void sWrite_MinimalResponse_ErrorInBody(const ZStreamW& w, int iError)
+	{
+	w.Writef("HTTP/1.1 %d\r\n", iError);
+	w.WriteString("Content-Type: text/plain\r\n");
+	w.WriteString("\r\n");
+	w.Writef("Error %d", iError);
 	}
 
 // =================================================================================================
