@@ -215,7 +215,7 @@ static void spCopy(const ZStreamR& iStreamR,
 	iStreamW.Write(buffer, oCountRead, &oCountWritten);
 	}
 
-bool ZStream::sCopyCon(
+bool ZStream::sCopyAllCon(
 	const ZStreamRCon& iStreamRCon,
 	size_t iChunkSize,
 	const ZStreamWCon& iStreamWCon,

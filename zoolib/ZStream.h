@@ -50,7 +50,7 @@ void sCopyReadToWrite(
 	uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten);
 
-bool sCopyCon(
+bool sCopyAllCon(
 	const ZStreamRCon& iStreamRCon,
 	size_t iChunkSize,
 	const ZStreamWCon& iStreamWCon,
