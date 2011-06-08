@@ -41,9 +41,9 @@ bool ZStreamerCopier::Work()
 	{
 	ZWorker::Wake();//##
 
-	return ZStream::sCopyCon(
+	return ZStream::sCopyAllCon(
 		fStreamerRCon->GetStreamRCon(),
-		sStackBufferSize,
+		fChunkSize,
 		fStreamerWCon->GetStreamWCon(),
 		fDisconnectTimeout);
 	}
