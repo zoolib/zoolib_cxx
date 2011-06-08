@@ -387,9 +387,6 @@ public:
 	ZMap_Any(const char* iName, const char* iVal);
 	ZMap_Any(const string8& iName, const ZVal_Any& iVal);
 
-	template <class Container>
-	ZMap_Any(const Container& iContainer);
-
 	template <class Iterator>
 	ZMap_Any(Iterator begin, Iterator end);
 
@@ -567,11 +564,6 @@ private:
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMap_Any, inline templated constructor
-
-template <class Container>
-ZMap_Any::ZMap_Any(const Container& iContainer)
-:	fRep(new Rep(iContainer.begin(), iContainer.end()))
-	{}
 
 template <class Iterator>
 ZMap_Any::ZMap_Any(Iterator begin, Iterator end)

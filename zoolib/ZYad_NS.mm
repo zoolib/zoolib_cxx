@@ -24,11 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStrim_NSString.h"
-#include "zoolib/ZUtil_NSObject.h"
+#include "zoolib/ZUtil_NS.h"
 
 namespace ZooLib {
-
-namespace ZUtil_NS = ZUtil_NSObject;
 
 using std::min;
 using std::string;

@@ -56,14 +56,14 @@ public:
 	const std::wstring& Name();
 
 protected:
-	void Started();
-	void Paused();
-	void Continued();
+	void pStarted();
+	void pPaused();
+	void pContinued();
 
 	void pServiceMain(DWORD argc, LPWSTR* argv);
 
 private:
-	static DWORD WINAPI sServiceCtrlHandlerEx(
+	static DWORD WINAPI spServiceCtrlHandlerEx(
 		DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext);
 
 	std::wstring fServiceName;
@@ -82,19 +82,17 @@ class ZWinService_T : public ZWinService
 	{
 protected:
 	ZWinService_T(const wchar_t* iServiceName, bool iAllowPause)
-	:	ZWinService(iServiceName, sServiceMain, iAllowPause)
+	:	ZWinService(iServiceName, spServiceMain, iAllowPause)
 		{
-		ZAssert(!sInstance());
-		sInstance() = this;
+		ZAssert(!spInstance());
+		spInstance() = this;
 		}
 
 private:
-	static void WINAPI sServiceMain(DWORD argc, LPWSTR *argv)
-		{
-		sInstance()->pServiceMain(argc, argv);
-		}
+	static void WINAPI spServiceMain(DWORD argc, LPWSTR *argv)
+		{ spInstance()->pServiceMain(argc, argv); }
 
-	static ZWinService_T*& sInstance()
+	static ZWinService_T*& spInstance()
 		{
 		// This method is a sneaky way to have static storage
 		// for a template class.

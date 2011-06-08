@@ -84,14 +84,10 @@ ZWinService::ZWinService(
 	}
 
 void ZWinService::Pause()
-	{
-	this->Paused();
-	}
+	{ this->pPaused(); }
 
 void ZWinService::Continue()
-	{
-	this->Continued();
-	}
+	{ this->pContinued(); }
 
 DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData)
 	{
@@ -161,19 +157,19 @@ DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVO
 	return ERROR_CALL_NOT_IMPLEMENTED;
 	}
 
-void ZWinService::Started()
+void ZWinService::pStarted()
 	{
 	fServiceStatus.dwCurrentState = SERVICE_RUNNING;
 	::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);
 	}
 
-void ZWinService::Paused()
+void ZWinService::pPaused()
 	{
 	fServiceStatus.dwCurrentState = SERVICE_PAUSED;
 	::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);
 	}
 
-void ZWinService::Continued()
+void ZWinService::pContinued()
 	{
 	fServiceStatus.dwCurrentState = SERVICE_RUNNING;
 	::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);
@@ -191,7 +187,7 @@ void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	fServiceStatus.dwWaitHint = 0;
 
 	fServiceStatusHandle = ::RegisterServiceCtrlHandlerExW(
-		const_cast<wchar_t*>(fServiceName.c_str()), sServiceCtrlHandlerEx, this);
+		const_cast<wchar_t*>(fServiceName.c_str()), spServiceCtrlHandlerEx, this);
 
 	if (!fServiceStatusHandle)
 		{
@@ -214,11 +210,11 @@ void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);
 	}
 
-DWORD WINAPI ZWinService::sServiceCtrlHandlerEx(
+DWORD WINAPI ZWinService::spServiceCtrlHandlerEx(
 	DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext)
 	{
-	return static_cast<ZWinService*>(lpContext)
-		->ServiceCtrlHandlerEx(dwControl, dwEventType, lpEventData);
+	return static_cast<ZWinService*>(lpContext)->
+		ServiceCtrlHandlerEx(dwControl, dwEventType, lpEventData);
 	}
 
 } // namespace ZooLib

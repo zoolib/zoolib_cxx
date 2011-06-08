@@ -28,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 
 namespace ZooLib {
-
 namespace ZWinCOM {
 
 // =================================================================================================
@@ -585,7 +584,6 @@ bool operator==(const string16& l, const String& r)
 	{ return l == r.GetPtrRef(); };
 
 } // namespace ZWinCOM
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

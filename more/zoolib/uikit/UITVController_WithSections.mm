@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable_ObjC.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZRef_NSObject.h"
-#include "zoolib/ZUtil_NSObject.h"
+#include "zoolib/ZRef_NS.h"
+#include "zoolib/ZUtil_NS.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 
@@ -783,7 +783,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<string8> theQ = theSection->QHeaderTitle())
-			return ZUtil_NSObject::sString(theQ.Get());
+			return ZUtil_NS::sString(theQ.Get());
 		}
 	return nullptr;
 	}
@@ -793,7 +793,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<string8> theQ = theSection->QFooterTitle())
-			return ZUtil_NSObject::sString(theQ.Get());
+			return ZUtil_NS::sString(theQ.Get());
 		}
 	return nullptr;
 	}

@@ -109,7 +109,7 @@ ZYadMapR_ML::ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU, const ZML::Attrs_t& iA
 ZRef<ZYadR> ZYadMapR_ML::Meta()
 	{
 	if (!fAttrs.empty())
-		return new ZYadMapRPos_Any(fAttrs);
+		return new ZYadMapRPos_Any(ZMap_Any(fAttrs.begin(), fAttrs.end()));
 
 	return null;
 	}

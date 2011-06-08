@@ -118,8 +118,8 @@ ZNetEndpoint_RFCOMM_OSX::ZNetEndpoint_RFCOMM_OSX(IOBluetoothDevice* iDevice, uin
 	fDelegate.Set(@selector(rfcommChannelClosed:),
 		MakeCallable(this, &ZNetEndpoint_RFCOMM_OSX::pClosed));
 
-	if (kIOReturnSuccess
-		!= [iDevice openRFCOMMChannelSync:&fChannel withChannelID:iChannelID delegate:fDelegate])
+	if (kIOReturnSuccess !=
+		[iDevice openRFCOMMChannelSync:&fChannel withChannelID:iChannelID delegate:fDelegate])
 		{
 		throw runtime_error("ZNetEndpoint_RFCOMM_OSX, couldn't connect");
 		}

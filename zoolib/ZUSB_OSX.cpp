@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZUtil_Strim_Data.h"
-#include "zoolib/ZVal_CFType.h"
+#include "zoolib/ZVal_CF.h"
 
 #include <IOKit/IOMessage.h>
 #include <IOKit/IOCFPlugIn.h>
@@ -96,7 +96,7 @@ ZUSBWatcher::ZUSBWatcher(
 :	fIONotificationPortRef(iIONotificationPortRef)
 ,	fNotification(0)
 	{
-	ZMap_CF theMap(Adopt(::IOServiceMatching(kIOUSBDeviceClassName)));
+	ZMap_CF theMap = Adopt& ::IOServiceMatching(kIOUSBDeviceClassName);
 	theMap.Set(kUSBVendorID, int32(iUSBVendor));
 	theMap.Set(kUSBProductID, int32(iUSBProduct));
 

@@ -454,8 +454,9 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				w.WriteUInt32(writeSize);
 				w.Flush();
 				// Use a standard copier for the device-->client direction
-				ZRef<ZWorker> deviceToClient =
-					new ZStreamerCopier(deviceCon, iSRWCon, readSize);
+				ZRef<ZStreamerCopier> deviceToClient =
+					new ZStreamerCopier(deviceCon, iSRWCon);
+				deviceToClient->SetChunkSize(readSize);
 				sStartWorkerRunner(deviceToClient);
 
 				// And our specialized copier for the client-->device direction.

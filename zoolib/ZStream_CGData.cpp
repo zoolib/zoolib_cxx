@@ -63,8 +63,8 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential =
 
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer)
 	{
-	return Adopt(::CGDataProviderCreateSequential(
-		new ZRef<ZStreamerR>(iStreamer), &spCallbacksSequential));
+	return Adopt& ::CGDataProviderCreateSequential(
+		new ZRef<ZStreamerR>(iStreamer), &spCallbacksSequential);
 	}
 
 #else // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
@@ -81,7 +81,7 @@ static CGDataProviderCallbacks spCallbacks_R =
 	};
 
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer)
-	{ return Adopt(::CGDataProviderCreate(new ZRef<ZStreamerR>(iStreamer), &spCallbacks_R)); }
+	{ return Adopt& ::CGDataProviderCreate(new ZRef<ZStreamerR>(iStreamer), &spCallbacks_R); }
 
 #endif //  MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
@@ -125,8 +125,8 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential_RPos =
 
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer)
 	{
-	return Adopt(::CGDataProviderCreateSequential(
-		new ZRef<ZStreamerRPos>(iStreamer), &spCallbacksSequential_RPos));
+	return Adopt& ::CGDataProviderCreateSequential(
+		new ZRef<ZStreamerRPos>(iStreamer), &spCallbacksSequential_RPos);
 	}
 
 #else // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
@@ -141,7 +141,7 @@ static CGDataProviderCallbacks spCallbacks_RPos =
 
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer)
 	{
-	return Adopt(::CGDataProviderCreate(new ZRef<ZStreamerRPos>(iStreamer), &spCallbacks_RPos));
+	return Adopt& ::CGDataProviderCreate(new ZRef<ZStreamerRPos>(iStreamer), &spCallbacks_RPos);
 	}
 
 #endif // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
@@ -171,7 +171,7 @@ CGDataConsumerCallbacks spCallbacks_W =
 } // anonymous namespace
 
 ZRef<CGDataConsumerRef> ZStream_CGData::sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer)
-	{ return Adopt(::CGDataConsumerCreate(new ZRef<ZStreamerW>(iStreamer), &spCallbacks_W)); }
+	{ return Adopt& ::CGDataConsumerCreate(new ZRef<ZStreamerW>(iStreamer), &spCallbacks_W); }
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)
 
