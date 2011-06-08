@@ -35,7 +35,6 @@ using std::vector;
 SourceServer::SourceServer(
 	ZRef<Source> iSource, ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fSource(iSource)
-,	fCallable_Source(MakeCallable(this, &SourceServer::pCallback_Source))
 ,	fStreamerR(iStreamerR)
 ,	fStreamerW(iStreamerW)
 ,	fNeedsWrite(false)
@@ -49,6 +48,7 @@ SourceServer::~SourceServer()
 
 void SourceServer::Initialize()
 	{
+	fSource->SetCallable_ResultsAvailable(MakeCallable(this, &SourceServer::pCallback_Source));
 	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(MakeRef(this), &SourceServer::pRead));
 	sStartWorkerRunner(theWorker);
 	}
@@ -56,12 +56,12 @@ void SourceServer::Initialize()
 void SourceServer::pCallback_Source(ZRef<Source> iSource)
 	{
 	ZAcqMtx acq(fMtx);
-	if (fNeedsWrite)
-		return;
-
-	fNeedsWrite = true;
-	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(MakeRef(this), &SourceServer::pWrite));
-	sStartWorkerRunner(theWorker);
+	if (!fNeedsWrite)
+		{
+		fNeedsWrite = true;
+		ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(MakeRef(this), &SourceServer::pWrite));
+		sStartWorkerRunner(theWorker);
+		}
 	}
 
 bool SourceServer::pRead(ZRef<ZWorker> iWorker)

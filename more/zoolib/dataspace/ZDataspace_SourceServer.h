@@ -47,7 +47,6 @@ private:
 	void pWrite();
 
 	ZRef<Source> fSource;
-	ZRef<Source::Callable_ResultsAvailable> fCallable_Source;
 	ZRef<ZStreamerR> fStreamerR;
 	ZRef<ZStreamerW> fStreamerW;
 	ZMtx fMtx;
