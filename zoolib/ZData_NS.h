@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
 #include "zoolib/ZAny.h"
-#include "zoolib/ZRef_NSObject.h"
+#include "zoolib/ZRef_NS.h"
 
 #import <Foundation/NSData.h>
 

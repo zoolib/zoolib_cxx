@@ -270,11 +270,11 @@ String::String(const ZRef<JSStringRef>& iJSStringRef)
 	{}
 
 String::String(const string8& iString8)
-:	fRep(Adopt(::JSStringCreateWithUTF8CString(iString8.c_str())))
+:	fRep(Adopt& ::JSStringCreateWithUTF8CString(iString8.c_str()))
 	{}
 
 String::String(const string16& iString16)
-:	fRep(Adopt(::JSStringCreateWithCharacters(iString16.c_str(), iString16.length())))
+:	fRep(Adopt& ::JSStringCreateWithCharacters(iString16.c_str(), iString16.length()))
 	{}
 
 String::operator JSStringRef() const
@@ -412,7 +412,7 @@ ZAny Value::AsAny() const
 			case kJSTypeString:
 				{
 				ZRef<JSStringRef> theStringRef =
-					Adopt(::JSValueToStringCopy(sCurrentContextRef(), theRef, nullptr));
+					Adopt& ::JSValueToStringCopy(sCurrentContextRef(), theRef, nullptr);
 				return ZAny(spAsString8(theStringRef));
 				}
 			case kJSTypeObject:
@@ -537,7 +537,7 @@ Value& Value::operator=(const ObjectRef& iValue)
 String Value::ToString() const
 	{
 	if (JSValueRef theRef = inherited::Get())
-		return Adopt(::JSValueToStringCopy(sCurrentContextRef(), theRef, nullptr));
+		return Adopt& ::JSValueToStringCopy(sCurrentContextRef(), theRef, nullptr);
 
 	return String();
 	}
@@ -577,7 +577,7 @@ ZQ<String> Value::QGet<String>() const
 		if (kJSTypeString == ::JSValueGetType(sCurrentContextRef(), theRef))
 			{
 			if (ZRef<JSStringRef> theStringRef =
-				Adopt(::JSValueToStringCopy(sCurrentContextRef(), theRef, nullptr)))
+				Adopt& ::JSValueToStringCopy(sCurrentContextRef(), theRef, nullptr))
 				return theStringRef;
 			}
 		}
@@ -637,7 +637,7 @@ ZAny ObjectRef::AsAny() const
 			{
 			ZMap_Any result;
 			ZRef<JSPropertyNameArrayRef> theNames =
-				Adopt(::JSObjectCopyPropertyNames(sCurrentContextRef(), thisRef));
+				Adopt& ::JSObjectCopyPropertyNames(sCurrentContextRef(), thisRef);
 			for (size_t x = 0, count = ::JSPropertyNameArrayGetCount(theNames); x < count; ++x)
 				{
 				const string8 theName =

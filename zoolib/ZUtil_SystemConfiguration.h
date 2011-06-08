@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(SystemConfiguration)
 
 #include "zoolib/ZCallable.h"
-#include "zoolib/ZRef_CFType.h"
+#include "zoolib/ZRef_CF.h"
 #include "zoolib/ZSafe.h"
 #include "zoolib/ZYad.h"
 
@@ -68,7 +68,6 @@ private:
 ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys);
 ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef, const std::string& iPattern);
 ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef);
-
 
 } // namespace ZUtil_SystemConfiguration
 } // namespace ZooLib

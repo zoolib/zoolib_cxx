@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(SystemConfiguration)
 
 #include "zoolib/ZCompare_T.h"
-#include "zoolib/ZUtil_CFType.h"
-#include "zoolib/ZYad_CFType.h"
+#include "zoolib/ZUtil_CF.h"
+#include "zoolib/ZYad_CF.h"
 
 namespace ZooLib {
 namespace ZUtil_SystemConfiguration {
@@ -36,17 +36,17 @@ using namespace ZUtil_CF;
 #pragma mark * ZUtil_SystemConfiguration::Store
 
 Store::Store()
-	{
-	}
+	{}
 
 Store::~Store()
-	{
-	}
+	{}
 
 void Store::Initialize()
 	{
 	ZCounted::Initialize();
+
 	ZRef<WeakRefProxy> theWRP = this->GetWeakRefProxy();
+
 	SCDynamicStoreContext context =
 		{
 		0,
@@ -85,7 +85,7 @@ void Store::spCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Yad
+#pragma mark * YadMapRPos (anonymous)
 
 namespace { // anonymous 
 
@@ -113,7 +113,7 @@ public:
 			if (ZQ<ZRef<CFStringRef> > theQName = fKeys.QGet<ZRef<CFStringRef> >(fPosition++))
 				{
 				oName = ZUtil_CF::sAsUTF8(theQName.Get());
-				if (ZVal_CFType theVal = ::SCDynamicStoreCopyValue(fStoreRef, theQName.Get()))
+				if (ZVal_CF theVal = ::SCDynamicStoreCopyValue(fStoreRef, theQName.Get()))
 					return sMakeYadR(theVal);
 				}
 			}
@@ -153,7 +153,8 @@ ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys)
 
 ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef, const std::string& iPattern)
 	{
-	return new YadMapRPos(iStoreRef, TempRef& ::SCDynamicStoreCopyKeyList(iStoreRef, ZUtil_CF::sString(iPattern)));
+	return new YadMapRPos(iStoreRef,
+		TempCF& ::SCDynamicStoreCopyKeyList(iStoreRef, ZUtil_CF::sString(iPattern)));
 	}
 
 ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef)

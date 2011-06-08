@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZData_NS.h"
-#include "zoolib/ZRef_NSObject.h"
+#include "zoolib/ZRef_NS.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZValAccessors_Std.h"
 

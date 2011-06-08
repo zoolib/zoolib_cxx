@@ -22,11 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
-#include "zoolib/ZUtil_NSObject.h"
+#include "zoolib/ZUtil_NS.h"
 
 namespace ZooLib {
-
-namespace ZUtil_NS = ZUtil_NSObject;
 
 using std::type_info;
 

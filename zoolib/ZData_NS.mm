@@ -19,13 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZData_NS.h"
-#include "zoolib/ZUtil_NSObject.h"
+#include "zoolib/ZUtil_NS.h"
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
 namespace ZooLib {
-
-namespace ZUtil_NS = ZUtil_NSObject;
 
 using ZUtil_NS::sDataMutable;
 

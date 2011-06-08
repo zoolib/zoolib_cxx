@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZUnicode.h"
-#include "zoolib/ZUtil_CFType.h"
+#include "zoolib/ZUtil_CF.h"
 #include "zoolib/ZUtil_MacOSX.h"
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
@@ -471,10 +471,10 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iN
 		#endif
 
 		#if ZCONFIG_SPI_Enabled(CoreFoundation)
-			if (ZRef<CFURLRef> theURL = Adopt(::CFURLCreateWithFileSystemPath(
-				nullptr, ZUtil_CFType::sString(iNativePath), kCFURLPOSIXPathStyle, true)))
+			if (ZRef<CFURLRef> theURL = Adopt& ::CFURLCreateWithFileSystemPath(
+				nullptr, ZUtil_CF::sString(iNativePath), kCFURLPOSIXPathStyle, true))
 				{
-				if (ZRef<CFPlugInRef> thePlugInRef = Adopt(::CFPlugInCreate(nullptr, theURL)))
+				if (ZRef<CFPlugInRef> thePlugInRef = Adopt& ::CFPlugInCreate(nullptr, theURL))
 					{
 					#if __MACH__
 						return new GuestFactory_HostMachO(thePlugInRef);

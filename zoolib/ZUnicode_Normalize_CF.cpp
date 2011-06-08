@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(CFType)
 
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZUtil_CFType.h"
+#include "zoolib/ZUtil_CF.h"
 
 #include ZMACINCLUDE2(CoreFoundation,CFString.h)
 
@@ -88,9 +88,9 @@ class Function
 				case eNormForm_KC: theNF = kCFStringNormalizationFormKC; break;
 				}
 
-			ZRef<CFMutableStringRef> srm = ZUtil_CFType::sStringMutable(iParam.fString);
+			ZRef<CFMutableStringRef> srm = ZUtil_CF::sStringMutable(iParam.fString);
 			spCFStringNormalize(srm, theNF);
-			oResult = ZUtil_CFType::sAsUTF16(srm);
+			oResult = ZUtil_CF::sAsUTF16(srm);
 			}
 		return true;
 		}

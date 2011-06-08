@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZRef_NSObject.h"
+#include "zoolib/ZRef_NS.h"
 
 #include <map>
 
@@ -45,7 +45,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZDelegate
 
-class ZDelegate : ZooLib::NonCopyable
+class ZDelegate
+:	ZooLib::NonCopyable
 	{
 public:
 	ZDelegate();

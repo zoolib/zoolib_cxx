@@ -27,12 +27,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZData_CFType.h"
+#include "zoolib/ZData_CF.h"
 
 namespace ZooLib {
 
-typedef ZStreamRPos_Data_T<ZData_CFType> ZStreamRPos_CFData;
-typedef ZStreamRWPos_Data_T<ZData_CFType> ZStreamRWPos_CFData;
+typedef ZStreamRPos_Data_T<ZData_CF> ZStreamRPos_CFData;
+typedef ZStreamRWPos_Data_T<ZData_CF> ZStreamRWPos_CFData;
 
 } // namespace ZooLib
 
