@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_NSObject.h"
+#include "zoolib/ZUtil_NS.h"
 
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
@@ -35,10 +35,10 @@ using namespace ZooLib;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_NSObject
+#pragma mark * ZUtil_NS
 
 namespace ZooLib {
-namespace ZUtil_NSObject {
+namespace ZUtil_NS {
 
 NSString* sString()
 	{ return [NSString string]; }
@@ -117,7 +117,7 @@ NSMutableData* sDataMutable(NSData* iNSData)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_NSObject, conversions
+#pragma mark * ZUtil_NS, conversions
 
 string8 sAsUTF8(NSString* iNSString)
 	{
@@ -261,7 +261,7 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 NSObject* sAsNSObject(const ZAny& iVal)
 	{ return sDAsNSObject([NSNull null], iVal); }
 
-} // namespace ZUtil_NSObject
+} // namespace ZUtil_NS
 } // namespace ZooLib
 
 // =================================================================================================
@@ -300,7 +300,7 @@ NSObject* sAsNSObject(const ZAny& iVal)
 	ZMap_Any result;
 	for (id theKey, i = [self keyEnumerator]; (theKey = [i nextObject]); /*no inc*/)
 		{
-		const string8 theName = ZUtil_NSObject::sAsUTF8((NSString*)theKey);
+		const string8 theName = ZUtil_NS::sAsUTF8((NSString*)theKey);
 		const ZAny theVal = [[self objectForKey:theKey] asAnyWithDefault:iDefault];
 		result.Set(theName, theVal);
 		}

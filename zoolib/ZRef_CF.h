@@ -18,71 +18,44 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZData_CFType__
-#define __ZData_CFType__ 1
+#ifndef __ZRef_CF__
+#define __ZRef_CF__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZAny.h"
-#include "zoolib/ZRef_CFType.h"
+#include "zoolib/ZRef.h"
+
+typedef const void * CFTypeRef;
+
+typedef const struct __CFNull * CFNullRef;
+
+typedef const struct __CFArray * CFArrayRef;
+typedef struct __CFArray * CFMutableArrayRef;
+
+typedef const struct __CFData * CFDataRef;
+typedef struct __CFData * CFMutableDataRef;
+
+typedef const struct __CFDictionary * CFDictionaryRef;
+typedef struct __CFDictionary * CFMutableDictionaryRef;
+
+typedef const struct __CFString * CFStringRef;
+typedef struct __CFString * CFMutableStringRef;
 
 namespace ZooLib {
 
-class ZData_CFType;
-typedef ZData_CFType ZData_CF;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZData_CFType
-
-class ZData_CFType
-:	public ZRef<CFDataRef>
+const struct TempCF_t
 	{
-	typedef ZRef<CFDataRef> inherited;
-
-	class Rep;
-public:
-	ZAny AsAny() const;
-
-	operator bool() const;
-
-	ZData_CFType();
-	ZData_CFType(const ZData_CFType& iOther);
-	~ZData_CFType();
-	ZData_CFType& operator=(const ZData_CFType& iOther);
-
-	ZData_CFType(const ZRef<CFMutableDataRef>& iOther);
-	ZData_CFType(const ZRef<CFDataRef>& iOther);
-
-	ZData_CFType& operator=(const ZRef<CFMutableDataRef>& iOther);
-	ZData_CFType& operator=(const ZRef<CFDataRef>& iOther);
-
-	ZData_CFType(size_t iSize);
-	ZData_CFType(const void* iSource, size_t iSize);
-
-// ZData protocol
-	size_t GetSize() const;
-	void SetSize(size_t iSize);
-
-	const void* GetData() const;
-	void* GetDataMutable();
-
-	void CopyFrom(size_t iOffset, const void* iSource, size_t iCount);
-	void CopyFrom(const void* iSource, size_t iCount);
-
-	void CopyTo(size_t iOffset, void* oDest, size_t iCount) const;
-	void CopyTo(void* oDest, size_t iCount) const;
-
-private:
-	CFDataRef pData() const;
-	CFMutableDataRef pTouch();
-	bool fMutable;
-	};
+	template <class T>
+	ZRef<T*,true> operator&(T* iP) const { return ZRef<T*,true>(Adopt_T<T*>(iP)); }
+	
+	template <class T>
+	ZRef<T*,true> operator()(T* iP) const { return ZRef<T*,true>(Adopt_T<T*>(iP)); }
+	} TempCF = {};
 
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZData_CFType__
+#endif // __ZRef_CF__

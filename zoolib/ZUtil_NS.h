@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_NSObject__
-#define __ZUtil_NSObject__ 1
+#ifndef __ZUtil_NS__
+#define __ZUtil_NS__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -34,10 +34,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_NSObject
+#pragma mark * ZUtil_NS
 
 namespace ZooLib {
-namespace ZUtil_NSObject {
+namespace ZUtil_NS {
 
 NSString* sString();
 NSString* sString(const string8& iString8);
@@ -83,10 +83,7 @@ ZAny sAsAny(NSObject* iVal);
 NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal);
 NSObject* sAsNSObject(const ZAny& iVal);
 
-} // namespace ZUtil_NSObject
-
-namespace ZUtil_NS = ZUtil_NSObject;
-
+} // namespace ZUtil_NS
 } // namespace ZooLib
 
 // =================================================================================================
@@ -99,4 +96,4 @@ namespace ZUtil_NS = ZUtil_NSObject;
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-#endif // __ZUtil_NSObject__
+#endif // __ZUtil_NS__

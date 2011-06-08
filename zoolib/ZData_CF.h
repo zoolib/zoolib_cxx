@@ -18,34 +18,68 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZRef_NSObject.h"
-#include "zoolib/ZDebug.h"
+#ifndef __ZData_CF__
+#define __ZData_CF__ 1
+#include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(CocoaFoundation)
+#if ZCONFIG_SPI_Enabled(CFType)
 
-#import <Foundation/NSObject.h>
+#include "zoolib/ZAny.h"
+#include "zoolib/ZRef_CF.h"
 
-//namespace ZooLib {
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * id and NSObject, sRetain and sRelease
+#pragma mark * ZData_CF
 
-void sRetain(struct objc_object& iOb)
-	{ [((id)&iOb) retain]; }
+class ZData_CF
+:	public ZRef<CFDataRef>
+	{
+	typedef ZRef<CFDataRef> inherited;
 
-void sRelease(struct objc_object& iOb)
-	{ [((id)&iOb) release]; }
+	class Rep;
+public:
+	ZAny AsAny() const;
 
-void sCheck(struct objc_object* iP)
-	{ ZAssertStop(1, iP); }
+	operator bool() const;
 
-void sRetain(NSObject& iNSObject)
-	{ [&iNSObject retain]; }
+	ZData_CF();
+	ZData_CF(const ZData_CF& iOther);
+	~ZData_CF();
+	ZData_CF& operator=(const ZData_CF& iOther);
 
-void sRelease(NSObject& iNSObject)
-	{ [&iNSObject release]; }
+	ZData_CF(const ZRef<CFMutableDataRef>& iOther);
+	ZData_CF(const ZRef<CFDataRef>& iOther);
 
-//} // namespace ZooLib
+	ZData_CF& operator=(const ZRef<CFMutableDataRef>& iOther);
+	ZData_CF& operator=(const ZRef<CFDataRef>& iOther);
 
-#endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
+	ZData_CF(size_t iSize);
+	ZData_CF(const void* iSource, size_t iSize);
+
+// ZData protocol
+	size_t GetSize() const;
+	void SetSize(size_t iSize);
+
+	const void* GetData() const;
+	void* GetDataMutable();
+
+	void CopyFrom(size_t iOffset, const void* iSource, size_t iCount);
+	void CopyFrom(const void* iSource, size_t iCount);
+
+	void CopyTo(size_t iOffset, void* oDest, size_t iCount) const;
+	void CopyTo(void* oDest, size_t iCount) const;
+
+private:
+	CFDataRef pData() const;
+	CFMutableDataRef pTouch();
+	bool fMutable;
+	};
+
+} // namespace ZooLib
+
+#endif // ZCONFIG_SPI_Enabled(CFType)
+
+#endif // __ZData_CF__

@@ -18,24 +18,23 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_CFType__
-#define __ZUtil_CFType__ 1
+#ifndef __ZUtil_CF__
+#define __ZUtil_CF__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZRef_CFType.h"
+#include "zoolib/ZRef_CF.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal_Any.h"
 
 namespace ZooLib {
+namespace ZUtil_CF {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_CFType
-
-namespace ZUtil_CFType {
+#pragma mark * ZUtil_CF
 
 ZRef<CFStringRef> sString();
 ZRef<CFStringRef> sString(const string8& iString8);
@@ -83,12 +82,9 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iVal);
 ZSeq_Any sAsSeq_Any(const ZAny& iDefault, const ZRef<CFArrayRef>& iCFArray);
 ZMap_Any sAsMap_Any(const ZAny& iDefault, const ZRef<CFDictionaryRef>& iCFDictionary);
 
-} // namespace ZUtil_CFType
-
-namespace ZUtil_CF = ZUtil_CFType;
-
+} // namespace ZUtil_CF
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZUtil_CFType__
+#endif // __ZUtil_CF__

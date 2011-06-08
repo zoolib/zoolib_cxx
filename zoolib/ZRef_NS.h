@@ -17,31 +17,32 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
-#ifndef __ZRef_CFType__
-#define __ZRef_CFType__ 1
+#ifndef __ZRef_NS__
+#define __ZRef_NS__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(CFType)
+#if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
+#include "zoolib/ZCompat_NSObject.h"
 #include "zoolib/ZRef.h"
 
-typedef const void * CFTypeRef;
+//namespace ZooLib {
 
-typedef const struct __CFNull * CFNullRef;
+// =================================================================================================
+#pragma mark -
+#pragma mark * id and NSObject, sRetain and sRelease
 
-typedef const struct __CFArray * CFArrayRef;
-typedef struct __CFArray * CFMutableArrayRef;
+void sRetain(struct objc_object& iOb);
+void sRelease(struct objc_object& iOb);
 
-typedef const struct __CFData * CFDataRef;
-typedef struct __CFData * CFMutableDataRef;
+void sCheck(struct objc_object*);
 
-typedef const struct __CFDictionary * CFDictionaryRef;
-typedef struct __CFDictionary * CFMutableDictionaryRef;
+void sRetain(NSObject& iNSObject);
+void sRelease(NSObject& iNSObject);
 
-typedef const struct __CFString * CFStringRef;
-typedef struct __CFString * CFMutableStringRef;
+//} // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(CFType)
+#endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-#endif // __ZRef_CFType__
+#endif // __ZRef_NS__

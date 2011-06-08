@@ -18,35 +18,30 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVal_CFType__
-#define __ZVal_CFType__ 1
+#ifndef __ZVal_CF__
+#define __ZVal_CF__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
 #include "zoolib/ZCompat_operator_bool.h"
-#include "zoolib/ZData_CFType.h"
-#include "zoolib/ZRef_CFType.h"
+#include "zoolib/ZData_CF.h"
+#include "zoolib/ZRef_CF.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValAccessors_Std.h"
 
 namespace ZooLib {
 
-class ZVal_CFType;
-class ZSeq_CFType;
-class ZMap_CFType;
-
-typedef ZVal_CFType ZVal_CF;
-typedef ZSeq_CFType ZSeq_CF;
-typedef ZMap_CFType ZMap_CF;
+class ZSeq_CF;
+class ZMap_CF;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVal_CFType
+#pragma mark * ZVal_CF
 
-class ZVal_CFType
+class ZVal_CF
 :	public ZRef<CFTypeRef>
 	{
 	typedef ZRef<CFTypeRef> inherited;
@@ -56,58 +51,58 @@ public:
 
 	operator bool() const;
 
-	ZVal_CFType();
-	ZVal_CFType(const ZVal_CFType& iOther);
-	~ZVal_CFType();
-	ZVal_CFType& operator=(const ZVal_CFType& iOther);
+	ZVal_CF();
+	ZVal_CF(const ZVal_CF& iOther);
+	~ZVal_CF();
+	ZVal_CF& operator=(const ZVal_CF& iOther);
 
-	ZVal_CFType(CFTypeRef iVal) : inherited(iVal) {}
-	template <class S> ZVal_CFType(const ZRef<S>& iVal) : inherited(iVal) {}
-	template <class S> ZVal_CFType(const Adopt_T<S>& iVal) : inherited(iVal) {}
+	ZVal_CF(CFTypeRef iVal) : inherited(iVal) {}
+	template <class S> ZVal_CF(const ZRef<S>& iVal) : inherited(iVal) {}
+	template <class S> ZVal_CF(const Adopt_T<S>& iVal) : inherited(iVal) {}
 
-	ZVal_CFType(char iVal);
-	ZVal_CFType(signed char iVal);
-	ZVal_CFType(unsigned char iVal);
-	ZVal_CFType(wchar_t iVal);
-	ZVal_CFType(short iVal);
-	ZVal_CFType(unsigned short iVal);
-	ZVal_CFType(int iVal);
-	ZVal_CFType(unsigned int iVal);
-	ZVal_CFType(long iVal);
-	ZVal_CFType(unsigned long iVal);
-	ZVal_CFType(long long iVal);
-	ZVal_CFType(unsigned long long iVal);
-	ZVal_CFType(bool iVal);
-	ZVal_CFType(float iVal);
-	ZVal_CFType(double iVal);
-	ZVal_CFType(const char* iVal);
-	ZVal_CFType(const string8& iVal);
-	ZVal_CFType(const string16& iVal);
-	ZVal_CFType(CFStringRef iVal);
+	ZVal_CF(char iVal);
+	ZVal_CF(signed char iVal);
+	ZVal_CF(unsigned char iVal);
+	ZVal_CF(wchar_t iVal);
+	ZVal_CF(short iVal);
+	ZVal_CF(unsigned short iVal);
+	ZVal_CF(int iVal);
+	ZVal_CF(unsigned int iVal);
+	ZVal_CF(long iVal);
+	ZVal_CF(unsigned long iVal);
+	ZVal_CF(long long iVal);
+	ZVal_CF(unsigned long long iVal);
+	ZVal_CF(bool iVal);
+	ZVal_CF(float iVal);
+	ZVal_CF(double iVal);
+	ZVal_CF(const char* iVal);
+	ZVal_CF(const string8& iVal);
+	ZVal_CF(const string16& iVal);
+	ZVal_CF(CFStringRef iVal);
 
-	ZVal_CFType(const ZData_CFType& iVal);
-	ZVal_CFType(const ZSeq_CFType& iVal);
-	ZVal_CFType(const ZMap_CFType& iVal);
+	ZVal_CF(const ZData_CF& iVal);
+	ZVal_CF(const ZSeq_CF& iVal);
+	ZVal_CF(const ZMap_CF& iVal);
 
-	explicit ZVal_CFType(CFDataRef iVal);
-	explicit ZVal_CFType(CFArrayRef iVal);
-	explicit ZVal_CFType(CFDictionaryRef iVal);
+	explicit ZVal_CF(CFDataRef iVal);
+	explicit ZVal_CF(CFArrayRef iVal);
+	explicit ZVal_CF(CFDictionaryRef iVal);
 
-	ZVal_CFType& operator=(CFTypeRef iVal)
+	ZVal_CF& operator=(CFTypeRef iVal)
 		{
 		inherited::operator=(iVal);
 		return *this;
 		}
 
 	template <class S>
-	ZVal_CFType& operator=(const ZRef<S>& iVal)
+	ZVal_CF& operator=(const ZRef<S>& iVal)
 		{
 		inherited::operator=(iVal);
 		return *this;
 		}
 
 	template <class S>
-	ZVal_CFType& operator=(const Adopt_T<S>& iVal)
+	ZVal_CF& operator=(const Adopt_T<S>& iVal)
 		{
 		inherited::operator=(iVal);
 		return *this;
@@ -139,52 +134,52 @@ public:
 	template <class S>
 	void Set(const S& iVal);
 
-	ZVal_CFType Get(const string8& iName) const;
-	ZVal_CFType Get(CFStringRef iName) const;
-	ZVal_CFType Get(size_t iIndex) const;
+	ZVal_CF Get(const string8& iName) const;
+	ZVal_CF Get(CFStringRef iName) const;
+	ZVal_CF Get(size_t iIndex) const;
 
 // Typename accessors
 /// \cond DoxygenIgnore
-	ZMACRO_ZValAccessors_Decl_Std(ZVal_CFType)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, CFString, ZRef<CFStringRef>)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Data, ZData_CFType)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Seq, ZSeq_CFType)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Map, ZMap_CFType)
+	ZMACRO_ZValAccessors_Decl_Std(ZVal_CF)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CF, CFString, ZRef<CFStringRef>)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CF, Data, ZData_CF)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CF, Seq, ZSeq_CF)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CF, Map, ZMap_CF)
 /// \endcond DoxygenIgnore
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSeq_CFType
+#pragma mark * ZSeq_CF
 
-class ZSeq_CFType
+class ZSeq_CF
 :	public ZRef<CFArrayRef>
 	{
 	typedef ZRef<CFArrayRef> inherited;
 
 public:
-	typedef ZVal_CFType Val_t;
+	typedef ZVal_CF Val_t;
 
 	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
 	operator bool() const;
 
-	ZSeq_CFType();
-	ZSeq_CFType(const ZSeq_CFType& iOther);
-	~ZSeq_CFType();
-	ZSeq_CFType& operator=(const ZSeq_CFType& iOther);
+	ZSeq_CF();
+	ZSeq_CF(const ZSeq_CF& iOther);
+	~ZSeq_CF();
+	ZSeq_CF& operator=(const ZSeq_CF& iOther);
 
-	ZSeq_CFType(CFMutableArrayRef iOther);
-	ZSeq_CFType(CFArrayRef iOther);
+	ZSeq_CF(CFMutableArrayRef iOther);
+	ZSeq_CF(CFArrayRef iOther);
 
-	ZSeq_CFType(const Adopt_T<CFMutableArrayRef>& iOther);
-	ZSeq_CFType(const Adopt_T<CFArrayRef>& iOther);
+	ZSeq_CF(const Adopt_T<CFMutableArrayRef>& iOther);
+	ZSeq_CF(const Adopt_T<CFArrayRef>& iOther);
 
-	ZSeq_CFType& operator=(CFMutableArrayRef iOther);
-	ZSeq_CFType& operator=(CFArrayRef iOther);
+	ZSeq_CF& operator=(CFMutableArrayRef iOther);
+	ZSeq_CF& operator=(CFArrayRef iOther);
 
-	ZSeq_CFType& operator=(const Adopt_T<CFMutableArrayRef>& iOther);
-	ZSeq_CFType& operator=(const Adopt_T<CFArrayRef>& iOther);
+	ZSeq_CF& operator=(const Adopt_T<CFMutableArrayRef>& iOther);
+	ZSeq_CF& operator=(const Adopt_T<CFArrayRef>& iOther);
 
 // ZSeq protocol
 	size_t Count() const;
@@ -192,9 +187,9 @@ public:
 	using inherited::Clear;
 	using inherited::Get;
 
-	ZQ<ZVal_CFType> QGet(size_t iIndex) const;
-	ZVal_CFType DGet(const ZVal_CFType& iDefault, size_t iIndex) const;
-	ZVal_CFType Get(size_t iIndex) const;
+	ZQ<ZVal_CF> QGet(size_t iIndex) const;
+	ZVal_CF DGet(const ZVal_CF& iDefault, size_t iIndex) const;
+	ZVal_CF Get(size_t iIndex) const;
 
 	template <class S>
 	ZQ<S> QGet(size_t iIndex) const
@@ -208,13 +203,13 @@ public:
 	S Get(size_t iIndex) const
 		{ return this->Get(iIndex).Get<S>(); }
 
-	ZSeq_CFType& Set(size_t iIndex, const ZVal_CFType& iVal);
+	ZSeq_CF& Set(size_t iIndex, const ZVal_CF& iVal);
 
-	ZSeq_CFType& Erase(size_t iIndex);
+	ZSeq_CF& Erase(size_t iIndex);
 
-	ZSeq_CFType& Insert(size_t iIndex, const ZVal_CFType& iVal);
+	ZSeq_CF& Insert(size_t iIndex, const ZVal_CF& iVal);
 
-	ZSeq_CFType& Append(const ZVal_CFType& iVal);
+	ZSeq_CF& Append(const ZVal_CF& iVal);
 
 private:
 	CFArrayRef pArray() const;
@@ -224,49 +219,49 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZMap_CFType
+#pragma mark * ZMap_CF
 
-class ZMap_CFType
+class ZMap_CF
 :	public ZRef<CFDictionaryRef>
 	{
 	typedef ZRef<CFDictionaryRef> inherited;
 
 public:
-	typedef ZVal_CFType Val_t;
+	typedef ZVal_CF Val_t;
 
 	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 
 	operator bool() const;
 
-	ZMap_CFType();
-	ZMap_CFType(const ZMap_CFType& iOther);
-	~ZMap_CFType();
-	ZMap_CFType& operator=(const ZMap_CFType& iOther);
+	ZMap_CF();
+	ZMap_CF(const ZMap_CF& iOther);
+	~ZMap_CF();
+	ZMap_CF& operator=(const ZMap_CF& iOther);
 
-	ZMap_CFType(CFMutableDictionaryRef iOther);
-	ZMap_CFType(CFDictionaryRef iOther);
+	ZMap_CF(CFMutableDictionaryRef iOther);
+	ZMap_CF(CFDictionaryRef iOther);
 
-	ZMap_CFType(const Adopt_T<CFMutableDictionaryRef>& iOther);
-	ZMap_CFType(const Adopt_T<CFDictionaryRef>& iOther);
+	ZMap_CF(const Adopt_T<CFMutableDictionaryRef>& iOther);
+	ZMap_CF(const Adopt_T<CFDictionaryRef>& iOther);
 
-	ZMap_CFType& operator=(CFMutableDictionaryRef iOther);
-	ZMap_CFType& operator=(CFDictionaryRef iOther);
+	ZMap_CF& operator=(CFMutableDictionaryRef iOther);
+	ZMap_CF& operator=(CFDictionaryRef iOther);
 
-	ZMap_CFType& operator=(const Adopt_T<CFMutableDictionaryRef>& iOther);
-	ZMap_CFType& operator=(const Adopt_T<CFDictionaryRef>& iOther);
+	ZMap_CF& operator=(const Adopt_T<CFMutableDictionaryRef>& iOther);
+	ZMap_CF& operator=(const Adopt_T<CFDictionaryRef>& iOther);
 
 // ZMap protocol
 	using inherited::Clear;
 	using inherited::Get;
 
-	ZQ<ZVal_CFType> QGet(const string8& iName) const;
-	ZQ<ZVal_CFType> QGet(CFStringRef iName) const;
+	ZQ<ZVal_CF> QGet(const string8& iName) const;
+	ZQ<ZVal_CF> QGet(CFStringRef iName) const;
 
-	ZVal_CFType DGet(const ZVal_CFType& iDefault, const string8& iName) const;
-	ZVal_CFType DGet(const ZVal_CFType& iDefault, CFStringRef iName) const;
+	ZVal_CF DGet(const ZVal_CF& iDefault, const string8& iName) const;
+	ZVal_CF DGet(const ZVal_CF& iDefault, CFStringRef iName) const;
 
-	ZVal_CFType Get(const string8& iName) const;
-	ZVal_CFType Get(CFStringRef iName) const;
+	ZVal_CF Get(const string8& iName) const;
+	ZVal_CF Get(CFStringRef iName) const;
 
 	template <class S>
 	ZQ<S> QGet(const string8& iName) const
@@ -292,19 +287,19 @@ public:
 	S Get(CFStringRef iName) const
 		{ return this->Get(iName).Get<S>(); }
 
-	ZMap_CFType& Set(const string8& iName, const ZVal_CFType& iVal);
-	ZMap_CFType& Set(CFStringRef iName, const ZVal_CFType& iVal);
+	ZMap_CF& Set(const string8& iName, const ZVal_CF& iVal);
+	ZMap_CF& Set(CFStringRef iName, const ZVal_CF& iVal);
 
 	template <class S>
-	ZMap_CFType& Set(const string8& iName, const ZVal_CFType& iVal)
-		{ return this->Set(iName, ZVal_CFType(iVal)); }
+	ZMap_CF& Set(const string8& iName, const ZVal_CF& iVal)
+		{ return this->Set(iName, ZVal_CF(iVal)); }
 
 	template <class S>
-	ZMap_CFType& Set(CFStringRef iName, const S& iVal)
-		{ return this->Set(iName, ZVal_CFType(iVal)); }
+	ZMap_CF& Set(CFStringRef iName, const S& iVal)
+		{ return this->Set(iName, ZVal_CF(iVal)); }
 
-	ZMap_CFType& Erase(const string8& iName);
-	ZMap_CFType& Erase(CFStringRef iName);
+	ZMap_CF& Erase(const string8& iName);
+	ZMap_CF& Erase(CFStringRef iName);
 
 private:
 	CFDictionaryRef pDictionary() const;
@@ -316,4 +311,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZVal_CFType__
+#endif // __ZVal_CF__

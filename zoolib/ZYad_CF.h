@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_CFType__
-#define __ZYad_CFType__ 1
+#ifndef __ZYad_CF__
+#define __ZYad_CF__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_CFData.h"
 #include "zoolib/ZStrim_CFString.h"
-#include "zoolib/ZVal_CFType.h"
+#include "zoolib/ZVal_CF.h"
 #include "zoolib/ZYad_Val_T.h"
 
 #include <vector>
@@ -37,20 +37,20 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadR_CFType
+#pragma mark * ZYadR_CF
 
-typedef ZYadR_Val_T<ZRef<CFTypeRef> > ZYadR_CFType;
+typedef ZYadR_Val_T<ZRef<CFTypeRef> > ZYadR_CF;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadAtomR_CFType
+#pragma mark * ZYadAtomR_CF
 
-class ZYadAtomR_CFType
-:	public ZYadR_CFType
+class ZYadAtomR_CF
+:	public ZYadR_CF
 ,	public ZYadAtomR
 	{
 public:
-	ZYadAtomR_CFType(CFTypeRef iVal);
+	ZYadAtomR_CF(CFTypeRef iVal);
 
 // From ZYadAtomR
 	virtual ZAny AsAny();
@@ -58,18 +58,18 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStreamRPos_CFType
+#pragma mark * ZYadStreamRPos_CF
 
-typedef ZStreamerRPos_T<ZStreamRPos_CFData> ZStreamerRPos_CFType;
+typedef ZStreamerRPos_T<ZStreamRPos_CFData> ZStreamerRPos_CF;
 
-class ZYadStreamRPos_CFType
-:	public ZYadR_CFType
+class ZYadStreamRPos_CF
+:	public ZYadR_CF
 ,	public ZYadStreamR
-,	public ZStreamerRPos_CFType
+,	public ZStreamerRPos_CF
 	{
 public:
-	ZYadStreamRPos_CFType(CFDataRef iData);
-	virtual ~ZYadStreamRPos_CFType();
+	ZYadStreamRPos_CF(CFDataRef iData);
+	virtual ~ZYadStreamRPos_CF();
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
@@ -77,47 +77,47 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStrimR_CFType
+#pragma mark * ZYadStrimR_CF
 
 typedef ZStrimmerR_T<ZStrimR_CFString> ZStrimmerR_CFString;
 
-class ZYadStrimR_CFType
-:	public ZYadR_CFType
+class ZYadStrimR_CF
+:	public ZYadR_CF
 ,	public ZYadStrimR
 ,	public ZStrimmerR_CFString
 	{
 public:
-	ZYadStrimR_CFType(CFStringRef iStringRef);
+	ZYadStrimR_CF(CFStringRef iStringRef);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadSeqRPos_CFType
+#pragma mark * ZYadSeqRPos_CF
 
-class ZYadSeqRPos_CFType
-:	public ZYadR_CFType
-,	public ZYadSeqRPos_Val_Self_T<ZYadSeqRPos_CFType, ZSeq_CFType>
+class ZYadSeqRPos_CF
+:	public ZYadR_CF
+,	public ZYadSeqRPos_Val_Self_T<ZYadSeqRPos_CF, ZSeq_CF>
 	{
 public:
-	ZYadSeqRPos_CFType(CFArrayRef iArray);
-	ZYadSeqRPos_CFType(CFArrayRef iArray, uint64 iPosition);
+	ZYadSeqRPos_CF(CFArrayRef iArray);
+	ZYadSeqRPos_CF(CFArrayRef iArray, uint64 iPosition);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapRPos_CFType
+#pragma mark * ZYadMapRPos_CF
 
-class ZYadMapRPos_CFType
-:	public ZYadR_CFType
+class ZYadMapRPos_CF
+:	public ZYadR_CF
 ,	public ZYadMapRPos
 	{
-	ZYadMapRPos_CFType(CFDictionaryRef iDictionary,
+	ZYadMapRPos_CF(CFDictionaryRef iDictionary,
 		uint64 iPosition,
 		const std::vector<CFStringRef>& iNames,
 		const std::vector<CFTypeRef>& iValues);
 
 public:
-	ZYadMapRPos_CFType(CFDictionaryRef iDictionary);
+	ZYadMapRPos_CF(CFDictionaryRef iDictionary);
 
 // From ZYadMapR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
@@ -168,4 +168,4 @@ ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR);
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZYad_CFType__
+#endif // __ZYad_CF__

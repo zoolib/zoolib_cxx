@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_CFType.h"
+#include "zoolib/ZUtil_CF.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
@@ -36,12 +36,11 @@ using std::pair;
 using std::vector;
 
 namespace ZooLib {
-
-namespace ZUtil_CFType {
+namespace ZUtil_CF {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_CFType
+#pragma mark * ZUtil_CF
 
 static CFStringRef spEmptyCFString = CFSTR("");
 
@@ -131,7 +130,7 @@ ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_CFType, conversions
+#pragma mark * ZUtil_CF, conversions
 
 string8 sAsUTF8(CFStringRef iCFString)
 	{
@@ -437,7 +436,7 @@ ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 ZRef<CFTypeRef> sAsCFType(const ZAny& iVal)
 	{ return sDAsCFType(null, iVal); }
 
-} // namespace ZUtil_CFType
+} // namespace ZUtil_CF
 
 template <>
 int sCompare_T(const ZRef<CFTypeRef>& iLHS, const ZRef<CFTypeRef>& iRHS)

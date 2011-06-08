@@ -17,32 +17,31 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
-#ifndef __ZRef_NSObject__
-#define __ZRef_NSObject__ 1
-#include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
+
+#include "zoolib/ZRef_NS.h"
+#include "zoolib/ZDebug.h"
 
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-#include "zoolib/ZCompat_NSObject.h"
-#include "zoolib/ZRef.h"
-
-//namespace ZooLib {
+#import <Foundation/NSObject.h>
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * id and NSObject, sRetain and sRelease
 
-void sRetain(struct objc_object& iOb);
-void sRelease(struct objc_object& iOb);
+void sRetain(struct objc_object& iOb)
+	{ [((id)&iOb) retain]; }
 
-void sCheck(struct objc_object*);
+void sRelease(struct objc_object& iOb)
+	{ [((id)&iOb) release]; }
 
-void sRetain(NSObject& iNSObject);
-void sRelease(NSObject& iNSObject);
+void sCheck(struct objc_object* iP)
+	{ ZAssertStop(1, iP); }
 
-//} // namespace ZooLib
+void sRetain(NSObject& iNSObject)
+	{ [&iNSObject retain]; }
+
+void sRelease(NSObject& iNSObject)
+	{ [&iNSObject release]; }
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
-
-#endif // __ZRef_NSObject__
