@@ -18,37 +18,24 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamerRWConFactory_Proxy_SOCKS__
-#define __ZStreamerRWConFactory_Proxy_SOCKS__ 1
+#ifndef __ZSOCKS__
+#define __ZSOCKS__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStreamer.h"
+#include "zoolib/ZStream.h"
+
+#include <string>
 
 namespace ZooLib {
+namespace ZSOCKS {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamerRWConFactory_Proxy_SOCKS
+#pragma mark * ZSOCKS
 
-class ZStreamerRWConFactory_Proxy_SOCKS
-:	public ZStreamerRWConFactory
-	{
-public:
-	ZStreamerRWConFactory_Proxy_SOCKS(
-		ZRef<ZStreamerRWConFactory> iProxyFactory,
-		const std::string& iHost, uint16 iPort);
+bool sConnect(const ZStreamR& r, const ZStreamW& w, const std::string& iHost, uint16 iPort);
 
-	virtual ~ZStreamerRWConFactory_Proxy_SOCKS();
-
-// From ZStreamerRWConFactory
-	virtual ZRef<ZStreamerRWCon> MakeStreamerRWCon();
-
-private:
-	ZRef<ZStreamerRWConFactory> fProxyFactory;
-	const std::string fHost;
-	const uint16 fPort;
-	};
-
+} // namespace ZSOCKS
 } // namespace ZooLib
 
-#endif // __ZStreamerRWConFactory_Proxy_SOCKS__
+#endif // __ZSOCKS__

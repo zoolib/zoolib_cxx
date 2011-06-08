@@ -18,57 +18,42 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStreamerRWConFactory_Proxy_SOCKS.h"
+#include "zoolib/socks/ZSOCKS.h"
 
 namespace ZooLib {
+namespace ZSOCKS {
 
 using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamerRWConFactory_Proxy_SOCKS
+#pragma mark * ZSOCKS::sConnect
 
-ZStreamerRWConFactory_Proxy_SOCKS::ZStreamerRWConFactory_Proxy_SOCKS(
-	ZRef<ZStreamerRWConFactory> iProxyFactory,
-	const std::string& iHost, uint16 iPort)
-:	fProxyFactory(iProxyFactory)
-,	fHost(iHost)
-,	fPort(iPort)
-	{}
-
-ZStreamerRWConFactory_Proxy_SOCKS::~ZStreamerRWConFactory_Proxy_SOCKS()
-	{}
-
-ZRef<ZStreamerRWCon> ZStreamerRWConFactory_Proxy_SOCKS::MakeStreamerRWCon()
+bool sConnect(const ZStreamR& r, const ZStreamW& w, const std::string& iHost, uint16 iPort)
 	{
-	if (ZRef<ZStreamerRWCon> theSRWCon = fProxyFactory->MakeStreamerRWCon())
-		{
-		const ZStreamW& theStreamW = theSRWCon->GetStreamW();
-		theStreamW.WriteUInt8(4); // Version, use 4 for now
-		theStreamW.WriteUInt8(1); // Open TCP connection
-		theStreamW.WriteUInt16(fPort);
-		theStreamW.WriteUInt32(1); // 0.0.0.1, indicates that host name will follow
+	w.WriteUInt8(4); // Version, use 4 for now
+	w.WriteUInt8(1); // Open TCP connection
+	w.WriteUInt16(iPort);
+	w.WriteUInt32(1); // 0.0.0.1, indicates that host name will follow
 
-		// user ID, terminated by zero
-		theStreamW.WriteUInt8(0);
+	// user ID, terminated by zero
+	w.WriteUInt8(0);
 
-		theStreamW.WriteString(fHost); // Host name
-		theStreamW.WriteUInt8(0);
+	w.WriteString(iHost); // Host name
+	w.WriteUInt8(0);
 
-		theStreamW.Flush();
+	w.Flush();
 
-		const ZStreamR& theStreamR = theSRWCon->GetStreamR();
-		theStreamR.ReadUInt8(); // null byte
-		const uint8 status = theStreamR.ReadUInt8();
-		/*const uint16 port = */theStreamR.ReadUInt16();
-		/*const uint16 address = */theStreamR.ReadUInt32();
-		
-		if (status == 0x5a)
-			return theSRWCon;
+	r.ReadUInt8(); // null byte
+	const uint8 status = r.ReadUInt8();
+	/*const uint16 port = */r.ReadUInt16();
+	/*const uint16 address = */r.ReadUInt32();
+	
+	if (status == 0x5a)
+		return true;
 
-		theSRWCon->Disconnect();
-		}
-	return null;
+	return false;
 	}
 
+} // namespace ZSOCKS
 } // namespace ZooLib
