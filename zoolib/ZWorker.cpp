@@ -47,13 +47,13 @@ an exception to propogate out.
 
 void ZWorker::RunnerAttached()
 	{
-	if (ZRef<Callable_t> theCallable = fCallable_Attached)
+	if (ZRef<Callable> theCallable = fCallable_Attached)
 		theCallable->Call(this);
 	}
 
 void ZWorker::RunnerDetached()
 	{
-	if (ZRef<Callable_t> theCallable = fCallable_Detached)
+	if (ZRef<Callable> theCallable = fCallable_Detached)
 		theCallable->Call(this);
 	}
 
@@ -92,10 +92,10 @@ bool ZWorker::IsAttached()
 	return false;
 	}
 
-ZRef<ZWorker::Callable_t> ZWorker::GetSetCallable_Attached(ZRef<Callable_t> iCallable)
+ZRef<ZWorker::Callable> ZWorker::GetSetCallable_Attached(ZRef<Callable> iCallable)
 	{ return fCallable_Attached.GetSet(iCallable); }
 
-ZRef<ZWorker::Callable_t> ZWorker::GetSetCallable_Detached(ZRef<Callable_t> iCallable)
+ZRef<ZWorker::Callable> ZWorker::GetSetCallable_Detached(ZRef<Callable> iCallable)
 	{ return fCallable_Detached.GetSet(iCallable); }
 
 // =================================================================================================
@@ -113,7 +113,7 @@ bool ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 	ZAssert(iWorker);
 	ZAssert(! iWorker->fRunner.Get());
 
-	iWorker->fRunner = ZRef<ZWorkerRunner>(this);
+	iWorker->fRunner = MakeRef(this);
 
 	try
 		{

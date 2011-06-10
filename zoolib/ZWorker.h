@@ -54,15 +54,15 @@ public:
 
 	// CW7 workaround
 	typedef ZRef<ZWorker> ZRef_ZWorker;
-	typedef ZCallable<void(ZRef_ZWorker)> Callable_t;
+	typedef ZCallable<void(ZRef_ZWorker)> Callable;
 
-	ZRef<Callable_t> GetSetCallable_Attached(ZRef<Callable_t> iCallable);
-	ZRef<Callable_t> GetSetCallable_Detached(ZRef<Callable_t> iCallable);
+	ZRef<Callable> GetSetCallable_Attached(ZRef<Callable> iCallable);
+	ZRef<Callable> GetSetCallable_Detached(ZRef<Callable> iCallable);
 
 private:
 	ZWeakRef<ZWorkerRunner> fRunner;
-	ZSafe<ZRef<Callable_t> > fCallable_Attached;
-	ZSafe<ZRef<Callable_t> > fCallable_Detached;
+	ZSafe<ZRef<Callable> > fCallable_Attached;
+	ZSafe<ZRef<Callable> > fCallable_Detached;
 	friend class ZWorkerRunner;
 	};
 
