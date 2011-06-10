@@ -1696,7 +1696,8 @@ bool sIs_qdtext(char iChar)
 	}
 
 // =================================================================================================
-// Writing
+#pragma mark -
+#pragma mark * Writing
 
 void sWrite_HeaderLine(const ZStreamW& w, const string& iName, const string& iBody)
 	{
@@ -1730,13 +1731,11 @@ void sWrite_Header(const ZStreamW& w, const Map& iHeader)
 	}
 
 void sWrite_MinimalResponse(const ZStreamW& w, int iResult)
-	{
-	w.Writef("HTTP/1.1 %d\r\n\r\n", iResult);
-	}
+	{ w.Writef("HTTP/1.1 %d OK\r\n\r\n", iResult); }
 
 void sWrite_MinimalResponse_ErrorInBody(const ZStreamW& w, int iError)
 	{
-	w.Writef("HTTP/1.1 %d\r\n", iError);
+	w.Writef("HTTP/1.1 %d ERROR\r\n", iError);
 	w.WriteString("Content-Type: text/plain\r\n");
 	w.WriteString("\r\n");
 	w.Writef("Error %d", iError);
