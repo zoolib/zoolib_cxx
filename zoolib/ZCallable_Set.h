@@ -42,27 +42,27 @@ class ZCallable_Set<void(void)>
 :	public ZCallable<void(void)>
 	{
 public:
-	typedef ZCallable<void(void)> Callable_t;
+	typedef ZCallable<void(void)> Callable;
 
-	void Insert(ZRef<Callable_t> iCallable)
+	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
-	void Erase(ZRef<Callable_t> iCallable)
+	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
 	void Call()
 		{
-		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables; /*no test*/; /*no inc*/)
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
-			if (ZQ<ZRef<Callable_t>,false> theQ = iter.QReadInc())
+			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable_t> theCB = theQ.Get())
+			else if (ZRef<Callable> theCB = theQ.Get())
 				theCB->Call();
 			}
 		}
 
 private:
-	ZSafeSet<ZRef<Callable_t> > fCallables;
+	ZSafeSet<ZRef<Callable> > fCallables;
 	};
 
 // =================================================================================================
@@ -74,27 +74,27 @@ class ZCallable_Set<void(P0)>
 :	public ZCallable<void(P0)>
 	{
 public:
-	typedef ZCallable<void(P0)> Callable_t;
+	typedef ZCallable<void(P0)> Callable;
 
-	void Insert(ZRef<Callable_t> iCallable)
+	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
-	void Erase(ZRef<Callable_t> iCallable)
+	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
 	void Call(P0 i0)
 		{
-		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables; /*no test*/; /*no inc*/)
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
-			if (ZQ<ZRef<Callable_t>,false> theQ = iter.QReadInc())
+			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable_t> theCB = theQ.Get())
+			else if (ZRef<Callable> theCB = theQ.Get())
 				theCB->Call(i0);
 			}
 		}
 
 private:
-	ZSafeSet<ZRef<Callable_t> > fCallables;
+	ZSafeSet<ZRef<Callable> > fCallables;
 	};
 
 // =================================================================================================
@@ -106,27 +106,27 @@ class ZCallable_Set<void(P0,P1)>
 :	public ZCallable<void(P0,P1)>
 	{
 public:
-	typedef ZCallable<void(P0,P1)> Callable_t;
+	typedef ZCallable<void(P0,P1)> Callable;
 
-	void Insert(ZRef<Callable_t> iCallable)
+	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
-	void Erase(ZRef<Callable_t> iCallable)
+	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
 	void Call(P0 i0, P1 i1)
 		{
-		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables; /*no test*/; /*no inc*/)
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
-			if (ZQ<ZRef<Callable_t>,false> theQ = iter.QReadInc())
+			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable_t> theCB = theQ.Get())
+			else if (ZRef<Callable> theCB = theQ.Get())
 				theCB->Call(i0, i1);
 			}
 		}
 
 private:
-	ZSafeSet<ZRef<Callable_t> > fCallables;
+	ZSafeSet<ZRef<Callable> > fCallables;
 	};
 
 // =================================================================================================
@@ -138,27 +138,27 @@ class ZCallable_Set<void(P0,P1,P2)>
 :	public ZCallable<void(P0,P1,P2)>
 	{
 public:
-	typedef ZCallable<void(P0,P1,P2)> Callable_t;
+	typedef ZCallable<void(P0,P1,P2)> Callable;
 
-	void Insert(ZRef<Callable_t> iCallable)
+	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
-	void Erase(ZRef<Callable_t> iCallable)
+	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
 	void Call(P0 i0, P1 i1, P2 i2)
 		{
-		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables; /*no test*/; /*no inc*/)
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
-			if (ZQ<ZRef<Callable_t>,false> theQ = iter.QReadInc())
+			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable_t> theCB = theQ.Get())
+			else if (ZRef<Callable> theCB = theQ.Get())
 				theCB->Call(i0, i1, i2);
 			}
 		}
 
 private:
-	ZSafeSet<ZRef<Callable_t> > fCallables;
+	ZSafeSet<ZRef<Callable> > fCallables;
 	};
 
 // =================================================================================================
@@ -170,27 +170,155 @@ class ZCallable_Set<void(P0,P1,P2,P3)>
 :	public ZCallable<void(P0,P1,P2,P3)>
 	{
 public:
-	typedef ZCallable<void(P0,P1,P2,P3)> Callable_t;
+	typedef ZCallable<void(P0,P1,P2,P3)> Callable;
 
-	void Insert(ZRef<Callable_t> iCallable)
+	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
-	void Erase(ZRef<Callable_t> iCallable)
+	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		for (ZSafeSetIterConst<ZRef<Callable_t> > iter = fCallables; /*no test*/; /*no inc*/)
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
-			if (ZQ<ZRef<Callable_t>,false> theQ = iter.QReadInc())
+			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable_t> theCB = theQ.Get())
+			else if (ZRef<Callable> theCB = theQ.Get())
 				theCB->Call(i0, i1, i2, i3);
 			}
 		}
 
 private:
-	ZSafeSet<ZRef<Callable_t> > fCallables;
+	ZSafeSet<ZRef<Callable> > fCallables;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_Set (specialization for 5 params)
+
+template <class P0, class P1, class P2, class P3, class P4>
+class ZCallable_Set<void(P0,P1,P2,P3,P4)>
+:	public ZCallable<void(P0,P1,P2,P3,P4)>
+	{
+public:
+	typedef ZCallable<void(P0,P1,P2,P3,P4)> Callable;
+
+	void Insert(ZRef<Callable> iCallable)
+		{ fCallables.Insert(iCallable); }
+
+	void Erase(ZRef<Callable> iCallable)
+		{ fCallables.Erase(iCallable); }
+
+	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
+				break;
+			else if (ZRef<Callable> theCB = theQ.Get())
+				theCB->Call(i0, i1, i2, i3, i4);
+			}
+		}
+
+private:
+	ZSafeSet<ZRef<Callable> > fCallables;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_Set (specialization for 6 params)
+
+template <class P0, class P1, class P2, class P3, class P4, class P5>
+class ZCallable_Set<void(P0,P1,P2,P3,P4,P5)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5)>
+	{
+public:
+	typedef ZCallable<void(P0,P1,P2,P3,P4,P5)> Callable;
+
+	void Insert(ZRef<Callable> iCallable)
+		{ fCallables.Insert(iCallable); }
+
+	void Erase(ZRef<Callable> iCallable)
+		{ fCallables.Erase(iCallable); }
+
+	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
+				break;
+			else if (ZRef<Callable> theCB = theQ.Get())
+				theCB->Call(i0, i1, i2, i3, i4, i5);
+			}
+		}
+
+private:
+	ZSafeSet<ZRef<Callable> > fCallables;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_Set (specialization for 7 params)
+
+template <class P0, class P1, class P2, class P3, class P4, class P5, class P6>
+class ZCallable_Set<void(P0,P1,P2,P3,P4,P5,P6)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6)>
+	{
+public:
+	typedef ZCallable<void(P0,P1,P2,P3,P4,P5,P6)> Callable;
+
+	void Insert(ZRef<Callable> iCallable)
+		{ fCallables.Insert(iCallable); }
+
+	void Erase(ZRef<Callable> iCallable)
+		{ fCallables.Erase(iCallable); }
+
+	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
+				break;
+			else if (ZRef<Callable> theCB = theQ.Get())
+				theCB->Call(i0, i1, i2, i3, i4, i5, i6);
+			}
+		}
+
+private:
+	ZSafeSet<ZRef<Callable> > fCallables;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_Set (specialization for 8 params)
+
+template <class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
+class ZCallable_Set<void(P0,P1,P2,P3,P4,P5,P6,P7)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7)>
+	{
+public:
+	typedef ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7)> Callable;
+
+	void Insert(ZRef<Callable> iCallable)
+		{ fCallables.Insert(iCallable); }
+
+	void Erase(ZRef<Callable> iCallable)
+		{ fCallables.Erase(iCallable); }
+
+	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
+				break;
+			else if (ZRef<Callable> theCB = theQ.Get())
+				theCB->Call(i0, i1, i2, i3, i4, i5, i6, i7);
+			}
+		}
+
+private:
+	ZSafeSet<ZRef<Callable> > fCallables;
 	};
 
 } // namespace ZooLib
