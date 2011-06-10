@@ -30,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "UIKit/UIGestureRecognizerSubclass.h"
 
+extern void sUpdatePopovers();
+
 namespace ZooLib {
 namespace UIKit {
 
@@ -187,6 +189,9 @@ void SectionBody::ViewWillDisappear(UITableView* iTV)
 void SectionBody::ViewDidDisappear(UITableView* iTV)
 	{}
 
+bool SectionBody::FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow)
+	{ return iSB == this; }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * SectionBody_Concrete
@@ -197,6 +202,14 @@ SectionBody_Concrete::SectionBody_Concrete()
 ,	fRowAnimation_Reload(UITableViewRowAnimationNone)
 ,	fApplyAccessory(true)
 	{}
+
+bool SectionBody_Concrete::FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow)
+	{
+	if (iSB == this)
+		return true;
+	ioRow += this->NumberOfRows();
+	return false;
+	}
 
 void SectionBody_Concrete::ApplyAccessory(size_t iRowIndex, ZRef<UITableViewCell> ioCell)
 	{
@@ -503,6 +516,16 @@ void SectionBody_Multi::ViewDidDisappear(UITableView* iTV)
 	{
 	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
 		(*i)->ViewDidDisappear(iTV);
+	}
+
+bool SectionBody_Multi::FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow)
+	{
+	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
+		{
+		if ((*i)->FindSectionBody(iSB, ioRow))
+			return true;
+		}
+	return false;
 	}
 
 ZRef<UITableViewCell> SectionBody_Multi::UITableViewCellForRow(
@@ -915,6 +938,17 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	[self pQueueCheckForUpdate:tableView];
 	}
 
+- (NSIndexPath*)indexPathForSectionBody:(ZooLib::ZRef<ZooLib::UIKit::SectionBody>)iSB
+	{
+	for (size_t theSection = 0; theSection < fSections_Shown.size(); ++theSection)
+		{
+		size_t theRow = 0;
+		if (fSections_Shown[theSection]->GetBody()->FindSectionBody(iSB, theRow))
+			return [NSIndexPath indexPathForRow:theRow inSection:theSection];
+		}
+	return nil;
+	}
+	
 - (void)tableViewWillAppear:(UITableView*)tableView
 	{
 	[tableView deselect];
@@ -1134,6 +1168,8 @@ static void spInsertSections(UITableView* iTableView,
 
 	[tableView endUpdates];
 
+	sUpdatePopovers();
+
 	[self performSelector:@selector(pDoUpdate2:)
 		 withObject:tableView
 		 afterDelay:0.35];
@@ -1229,6 +1265,8 @@ static void spInsertSections(UITableView* iTableView,
 
 		[tableView endUpdates];
 
+		sUpdatePopovers();
+
 		[self pApplyPositionToVisibleCells:tableView];
 
 		[self
@@ -1265,6 +1303,7 @@ static void spInsertSections(UITableView* iTableView,
 	ZAssert(fUpdateInFlight);
 	ZAssert(tableView);
 	fUpdateInFlight = false;
+	sUpdatePopovers();
 	if (fNeedsUpdate)
 		[self pQueueCheckForUpdate:tableView];
 	}
@@ -1409,6 +1448,9 @@ static void spInsertSections(UITableView* iTableView,
 	fHandler->fSections_All.push_back(iSection);
 	[self needsUpdate];
 	}
+
+- (NSIndexPath*)indexPathForSectionBody:(ZooLib::ZRef<ZooLib::UIKit::SectionBody>)iSB
+	{ return [fHandler indexPathForSectionBody:iSB]; }
 
 - (void)deselect
 	{

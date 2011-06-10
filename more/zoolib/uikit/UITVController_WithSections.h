@@ -121,6 +121,10 @@ public:
 
 // -----
 
+	virtual bool FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow) = 0;
+
+// -----
+
 	virtual void ViewWillAppear(UITableView* iTV);
 	virtual void ViewDidAppear(UITableView* iTV);
 	virtual void ViewWillDisappear(UITableView* iTV);
@@ -193,6 +197,8 @@ public:
 	SectionBody_Concrete();
 
 // From SectionBody
+	virtual bool FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow);
+
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
 	virtual bool CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex);
 	virtual ZQ<bool> QShouldIndentWhileEditing(size_t iRowIndex);
@@ -254,6 +260,10 @@ public:
 	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
 		bool& ioIsPreceded, bool& ioIsSucceeded);
 
+// Our protocol
+	ZRef<UITableViewCell> GetCurrent()
+		{ return fCell_Current; }
+
 	ZRef<UITableViewCell> fCell_Pending;
 
 private:
@@ -268,6 +278,8 @@ private:
 class SectionBody_Multi : public SectionBody
 	{
 public:
+	virtual bool FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow);
+
 	virtual size_t NumberOfRows();
 
 	virtual void PreUpdate();
@@ -367,6 +379,7 @@ private:
 // Our protocol
 - (void)doUpdateIfPossible:(UITableView*)tableView;
 - (void)needsUpdate:(UITableView*)tableView;
+- (NSIndexPath*)indexPathForSectionBody:(ZooLib::ZRef<ZooLib::UIKit::SectionBody>)iSB;
 
 - (void)tableViewWillAppear:(UITableView*)tableView;
 - (void)tableViewDidAppear:(UITableView*)tableView;
@@ -404,6 +417,7 @@ private:
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style variableRowHeight:(BOOL)variableRowHeight;
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style;
+- (NSIndexPath*)indexPathForSectionBody:(ZooLib::ZRef<ZooLib::UIKit::SectionBody>)iSB;
 - (void)appendSection:(ZooLib::ZRef<ZooLib::UIKit::Section>) iSection;
 - (void)doUpdateIfPossible;
 - (void)needsUpdate;
