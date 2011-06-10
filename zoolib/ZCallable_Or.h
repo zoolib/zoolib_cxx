@@ -25,26 +25,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable.h"
 
 namespace ZooLib {
-namespace ZCallable_Or {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable
+#pragma mark * ZCallable_Or
 
-template <class Signature> class Callable;
+template <class Signature> class ZCallable_Or;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 0 params)
+#pragma mark * ZCallable_Or (specialization for 0 params)
 
 template <>
-class Callable<bool(void)>
+class ZCallable_Or<bool(void)>
 :	public ZCallable<bool(void)>
 	{
 public:
-	typedef ZCallable<bool(void)> Callable_t;
+	typedef ZCallable<bool(void)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -58,23 +57,23 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 1 param)
+#pragma mark * ZCallable_Or (specialization for 1 param)
 
 template <
 	class P0>
-class Callable<bool(P0)>
+class ZCallable_Or<bool(P0)>
 :	public ZCallable<bool(P0)>
 	{
 public:
-	typedef ZCallable<bool(P0)> Callable_t;
+	typedef ZCallable<bool(P0)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -88,23 +87,23 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 2 params)
+#pragma mark * ZCallable_Or (specialization for 2 params)
 
 template <
 	class P0, class P1>
-class Callable<bool(P0,P1)>
+class ZCallable_Or<bool(P0,P1)>
 :	public ZCallable<bool(P0,P1)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1)> Callable_t;
+	typedef ZCallable<bool(P0,P1)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -118,23 +117,23 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 3 params)
+#pragma mark * ZCallable_Or (specialization for 3 params)
 
 template <
 	class P0, class P1, class P2>
-class Callable<bool(P0,P1,P2)>
+class ZCallable_Or<bool(P0,P1,P2)>
 :	public ZCallable<bool(P0,P1,P2)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -148,23 +147,23 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 4 params)
+#pragma mark * ZCallable_Or (specialization for 4 params)
 
 template <
 	class P0, class P1, class P2, class P3>
-class Callable<bool(P0,P1,P2,P3)>
+class ZCallable_Or<bool(P0,P1,P2,P3)>
 :	public ZCallable<bool(P0,P1,P2,P3)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -178,24 +177,24 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 5 params)
+#pragma mark * ZCallable_Or (specialization for 5 params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4>
-class Callable<bool(P0,P1,P2,P3,P4)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -209,31 +208,30 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 6 params)
+#pragma mark * ZCallable_Or (specialization for 6 params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
-class Callable<bool(P0,P1,P2,P3,P4,P5)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4,P5)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4,P5)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
 
 	// From ZCallable
-	virtual bool Call
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
+	virtual bool Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
 		if (fCallable0->Call(i0, i1, i2, i3, i4, i5))
 			return true;
@@ -241,31 +239,30 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 7 params)
+#pragma mark * ZCallable_Or (specialization for 7 params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
-class Callable<bool(P0,P1,P2,P3,P4,P5,P6)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4,P5,P6)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4,P5,P6)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
 
 	// From ZCallable
-	virtual bool Call
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+	virtual bool Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
 		if (fCallable0->Call(i0, i1, i2, i3, i4, i5, i6))
 			return true;
@@ -273,31 +270,30 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 8 params)
+#pragma mark * ZCallable_Or (specialization for 8 params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
-class Callable<bool(P0,P1,P2,P3,P4,P5,P6,P7)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4,P5,P6,P7)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
 
 	// From ZCallable
-	virtual bool Call
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+	virtual bool Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
 		if (fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7))
 			return true;
@@ -305,25 +301,25 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 9 params)
+#pragma mark * ZCallable_Or (specialization for 9 params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8>
-class Callable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -339,25 +335,25 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 10 params)
+#pragma mark * ZCallable_Or (specialization for 10 params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
-class Callable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -373,25 +369,25 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 11 params)
+#pragma mark * ZCallable_Or (specialization for 11 params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
-class Callable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -407,25 +403,25 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 12 params)
+#pragma mark * ZCallable_Or (specialization for 12 params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
-class Callable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -441,26 +437,26 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 13 params)
+#pragma mark * ZCallable_Or (specialization for 13 params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC>
-class Callable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -476,26 +472,26 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 14 params)
+#pragma mark * ZCallable_Or (specialization for 14 params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
-class Callable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -511,26 +507,26 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 15 params)
+#pragma mark * ZCallable_Or (specialization for 15 params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
-class Callable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -546,26 +542,26 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 16 params) params)
+#pragma mark * ZCallable_Or (specialization for 16 params) params)
 
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
-class Callable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
+class ZCallable_Or<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 :	public ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 	{
 public:
-	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> Callable_t;
+	typedef ZCallable<bool(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable0, const ZRef<Callable_t>& iCallable1)
+	ZCallable_Or(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -581,11 +577,9 @@ public:
 		}
 
 private:
-	ZRef<Callable_t> fCallable0;
-	ZRef<Callable_t> fCallable1;
+	ZRef<Callable> fCallable0;
+	ZRef<Callable> fCallable1;
 	};
-
-} // namespace ZCallable_Or
 
 // =================================================================================================
 #pragma mark -
@@ -594,7 +588,7 @@ private:
 template <class Sig>
 ZRef<ZCallable<Sig> > MakeCallable_Or(
 	const ZRef<ZCallable<Sig> >& iCallable0, const ZRef<ZCallable<Sig> >& iCallable1)
-	{ return new ZCallable_Or::Callable<Sig>(iCallable0, iCallable1); }
+	{ return new ZCallable_Or<Sig>(iCallable0, iCallable1); }
 
 } // namespace ZooLib
 

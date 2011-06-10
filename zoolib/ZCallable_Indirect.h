@@ -26,350 +26,319 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZSafe.h"
 
 namespace ZooLib {
-namespace ZCallable_Indirect {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable
+#pragma mark * ZCallable_Indirect
 
-template <class Signature> class Callable;
+template <class Signature> class ZCallable_Indirect;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 0 params)
+#pragma mark * ZCallable_Indirect (specialization for 0 params)
 
 template <class R>
-class Callable<R(void)>
+class ZCallable_Indirect<R(void)>
 :	public ZCallable<R(void)>
 	{
 public:
-	typedef ZCallable<R(void)> Callable_t;
+	typedef ZCallable<R(void)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	// From ZCallable
 	virtual R Call()
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
-			{
-			return theCallable->Call
-				();
-			}
+		if (ZRef<Callable> theCallable = fCallable)
+			return theCallable->Call();
 		return R();
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 1 param)
+#pragma mark * ZCallable_Indirect (specialization for 1 param)
 
 template <class R,
 	class P0>
-class Callable<R(P0)>
+class ZCallable_Indirect<R(P0)>
 :	public ZCallable<R(P0)>
 	{
 public:
-	typedef ZCallable<R(P0)> Callable_t;
+	typedef ZCallable<R(P0)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	// From ZCallable
 	virtual R Call(P0 i0)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0);
-			}
+		if (ZRef<Callable> theCallable = fCallable)
+			return theCallable->Call(i0);
 		return R();
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 2 params)
+#pragma mark * ZCallable_Indirect (specialization for 2 params)
 
 template <class R,
 	class P0, class P1>
-class Callable<R(P0,P1)>
+class ZCallable_Indirect<R(P0,P1)>
 :	public ZCallable<R(P0,P1)>
 	{
 public:
-	typedef ZCallable<R(P0,P1)> Callable_t;
+	typedef ZCallable<R(P0,P1)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	// From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1);
-			}
+		if (ZRef<Callable> theCallable = fCallable)
+			return theCallable->Call(i0, i1);
 		return R();
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 3 params)
+#pragma mark * ZCallable_Indirect (specialization for 3 params)
 
 template <class R,
 	class P0, class P1, class P2>
-class Callable<R(P0,P1,P2)>
+class ZCallable_Indirect<R(P0,P1,P2)>
 :	public ZCallable<R(P0,P1,P2)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2);
-			}
+		if (ZRef<Callable> theCallable = fCallable)
+			return theCallable->Call(i0, i1, i2);
 		return R();
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 4 params)
+#pragma mark * ZCallable_Indirect (specialization for 4 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3>
-class Callable<R(P0,P1,P2,P3)>
+class ZCallable_Indirect<R(P0,P1,P2,P3)>
 :	public ZCallable<R(P0,P1,P2,P3)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3);
-			}
+		if (ZRef<Callable> theCallable = fCallable)
+			return theCallable->Call(i0, i1, i2, i3);
 		return R();
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 5 params)
+#pragma mark * ZCallable_Indirect (specialization for 5 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4>
-class Callable<R(P0,P1,P2,P3,P4)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4)>
 :	public ZCallable<R(P0,P1,P2,P3,P4)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4);
-			}
+		if (ZRef<Callable> theCallable = fCallable)
+			return theCallable->Call(i0, i1, i2, i3, i4);
 		return R();
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 6 params)
+#pragma mark * ZCallable_Indirect (specialization for 6 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
-class Callable<R(P0,P1,P2,P3,P4,P5)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4,P5)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4,P5)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	// From ZCallable
-	virtual R Call
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
+	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4, i5);
-			}
+		if (ZRef<Callable> theCallable = fCallable)
+			return theCallable->Call(i0, i1, i2, i3, i4, i5);
 		return R();
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 7 params)
+#pragma mark * ZCallable_Indirect (specialization for 7 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
-class Callable<R(P0,P1,P2,P3,P4,P5,P6)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4,P5,P6)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	// From ZCallable
-	virtual R Call
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4, i5, i6);
-			}
+		if (ZRef<Callable> theCallable = fCallable)
+			return theCallable->Call(i0, i1, i2, i3, i4, i5, i6);
 		return R();
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 8 params)
+#pragma mark * ZCallable_Indirect (specialization for 8 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
-class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	// From ZCallable
-	virtual R Call
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4, i5, i6, i7);
-			}
+		if (ZRef<Callable> theCallable = fCallable)
+			return theCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7);
 		return R();
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 9 params)
+#pragma mark * ZCallable_Indirect (specialization for 9 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8>
-class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -378,7 +347,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
+		if (ZRef<Callable> theCallable = fCallable)
 			{
 			return theCallable->Call
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8);
@@ -387,28 +356,28 @@ public:
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 10 params)
+#pragma mark * ZCallable_Indirect (specialization for 10 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
-class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -417,7 +386,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
+		if (ZRef<Callable> theCallable = fCallable)
 			{
 			return theCallable->Call
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
@@ -426,28 +395,28 @@ public:
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 11 params)
+#pragma mark * ZCallable_Indirect (specialization for 11 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
-class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -456,7 +425,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
+		if (ZRef<Callable> theCallable = fCallable)
 			{
 			return theCallable->Call
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
@@ -465,28 +434,28 @@ public:
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 12 params)
+#pragma mark * ZCallable_Indirect (specialization for 12 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
-class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -495,7 +464,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
+		if (ZRef<Callable> theCallable = fCallable)
 			{
 			return theCallable->Call
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
@@ -504,29 +473,29 @@ public:
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 13 params)
+#pragma mark * ZCallable_Indirect (specialization for 13 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC>
-class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -535,7 +504,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
+		if (ZRef<Callable> theCallable = fCallable)
 			{
 			return theCallable->Call
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
@@ -544,29 +513,29 @@ public:
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 14 params)
+#pragma mark * ZCallable_Indirect (specialization for 14 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
-class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -575,7 +544,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
+		if (ZRef<Callable> theCallable = fCallable)
 			{
 			return theCallable->Call
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
@@ -584,29 +553,29 @@ public:
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 15 params)
+#pragma mark * ZCallable_Indirect (specialization for 15 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
-class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -615,7 +584,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
+		if (ZRef<Callable> theCallable = fCallable)
 			{
 			return theCallable->Call
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
@@ -624,29 +593,29 @@ public:
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 16 params) params)
+#pragma mark * ZCallable_Indirect (specialization for 16 params) params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
-class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
+class ZCallable_Indirect<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 	{
 public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> Callable_t;
+	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> Callable;
 
-	Callable(const ZRef<Callable_t>& iCallable)
+	ZCallable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -655,7 +624,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		if (ZRef<Callable_t> theCallable = fCallable)
+		if (ZRef<Callable> theCallable = fCallable)
 			{
 			return theCallable->Call
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
@@ -664,166 +633,21 @@ public:
 		}
 
 	// Our protocol
-	ZRef<Callable_t> GetSet(const ZRef<Callable_t>& iCallable)
+	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
 		{ return fCallable.GetSet(iCallable); }
 
 private:
-	ZSafe<ZRef<Callable_t> > fCallable;
+	ZSafe<ZRef<Callable> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * MakeCallable_Indirect
 
-template <class R>
-ZRef<ZCallable<R(void)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(void)> >& iCallable)
-	{ return new Callable<R(void)>(iCallable); }
-
-template <class R,
-	class P0>
-ZRef<ZCallable<R(P0)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0)> >& iCallable)
-	{ return new Callable<R(P0)>(iCallable); }
-
-template <class R,
-	class P0, class P1>
-ZRef<ZCallable<R(P0,P1)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1)> >& iCallable)
-	{ return new Callable<R(P0,P1)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2>
-ZRef<ZCallable<R(P0,P1,P2)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3>
-ZRef<ZCallable<R(P0,P1,P2,P3)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA, class PB>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA, class PB,
-	class PC>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA, class PB,
-	class PC, class PD>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA, class PB,
-	class PC, class PD, class PE>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA, class PB,
-	class PC, class PD, class PE, class PF>
-ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >
-MakeCallable_Indirect(
-	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >& iCallable)
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>(iCallable); }
-
-} // namespace ZCallable_Indirect
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * MakeCallable
-
-using ZCallable_Indirect::MakeCallable_Indirect;
+template <class Sig>
+ZRef<ZCallable<Sig> > MakeCallable_Indirect(
+	const ZRef<ZCallable<Sig> >& iCallable0, const ZRef<ZCallable<Sig> >& iCallable1)
+	{ return new ZCallable_Indirect<Sig>(iCallable0, iCallable1); }
 
 } // namespace ZooLib
 

@@ -250,8 +250,7 @@ public:
 		{ Block_release(fBlockPtr); }
 
 	// From ZCallable
-	virtual R Call
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6); }
 
 private:
@@ -279,8 +278,7 @@ public:
 		{ Block_release(fBlockPtr); }
 
 	// From ZCallable
-	virtual R Call
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7); }
 
 private:

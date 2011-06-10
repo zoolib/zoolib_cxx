@@ -308,8 +308,7 @@ public:
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
 	// From ZCallable
-	virtual R Call
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
 		return MsgSend<R, FunctionPtr_t>::sMsgSend()
 			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6);
@@ -333,8 +332,7 @@ public:
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
 	// From ZCallable
-	virtual R Call
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
 		return MsgSend<R, FunctionPtr_t>::sMsgSend()
 			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7);
@@ -565,18 +563,16 @@ public:
 #pragma mark -
 #pragma mark * MakeCallable
 
-template <class Signature>
-ZRef<ZCallable<Signature> >
-MakeCallable(id iObj, SEL iSEL)
-	{ return new Callable<Signature>(iObj, iSEL); }
-
 } // namespace ZCallable_ObjC
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * MakeCallable
 
-using ZCallable_ObjC::MakeCallable;
+template <class Signature>
+ZRef<ZCallable<Signature> >
+MakeCallable(id iObj, SEL iSEL)
+	{ return new ZCallable_ObjC::Callable<Signature>(iObj, iSEL); }
 
 } // namespace ZooLib
 
