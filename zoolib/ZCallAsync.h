@@ -91,6 +91,10 @@ private:
 	ZRef<Callable> fCallable;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * CallAsync
+
 inline
 ZRef<ZFuture<void> > CallAsync(ZRef<ZCallable<void()> > iCallable)
 	{
