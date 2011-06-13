@@ -38,6 +38,7 @@ class ZWorker_Async
 	{
 public:
 	typedef ZCallable<T()> Callable;
+
 	ZWorker_Async(ZRef<ZPromise<T> > iPromise, ZRef<Callable> iCallable)
 	:	fPromise(iPromise)
 	,	fCallable(iCallable)
@@ -68,6 +69,7 @@ class ZWorker_Async<void>
 	{
 public:
 	typedef ZCallable<void()> Callable;
+
 	ZWorker_Async(ZRef<ZPromise<void> > iPromise, ZRef<Callable> iCallable)
 	:	fPromise(iPromise)
 	,	fCallable(iCallable)

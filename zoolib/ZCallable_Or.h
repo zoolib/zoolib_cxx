@@ -548,7 +548,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Or (specialization for 16 params) params)
+#pragma mark * ZCallable_Or (specialization for 16 params)
 
 template <
 	class P0, class P1, class P2, class P3,

@@ -602,7 +602,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 16 params) params)
+#pragma mark * ZCallable_Indirect (specialization for 16 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -646,8 +646,8 @@ private:
 
 template <class Sig>
 ZRef<ZCallable<Sig> > MakeCallable_Indirect(
-	const ZRef<ZCallable<Sig> >& iCallable0, const ZRef<ZCallable<Sig> >& iCallable1)
-	{ return new ZCallable_Indirect<Sig>(iCallable0, iCallable1); }
+	const ZRef<ZCallable<Sig> >& iCallable)
+	{ return new ZCallable_Indirect<Sig>(iCallable); }
 
 } // namespace ZooLib
 

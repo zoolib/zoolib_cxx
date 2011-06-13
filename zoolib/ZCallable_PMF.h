@@ -640,7 +640,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callable (specialization for 16 params) params)
+#pragma mark * Callable (specialization for 16 params)
 
 template <class Class_t, class Object_t,
 	class R,

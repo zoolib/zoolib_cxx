@@ -865,6 +865,16 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	return true;
 	}
 
+- (void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath
+	{
+	[self changeTouchState:YES forTableView:tableView];
+	}
+
+- (void)tableView:(UITableView*)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath
+	{
+	[self changeTouchState:NO forTableView:tableView];
+	}
+
 - (UITableViewCellEditingStyle)tableView:(UITableView*)tableView
 	editingStyleForRowAtIndexPath:(NSIndexPath*)indexPath
 	{

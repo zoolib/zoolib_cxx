@@ -150,7 +150,7 @@ void ZWorkerRunner_Thread::pRun()
 			const ZTime now = ZTime::sSystem();
 			if (fNextWake <= now)
 				{
-				fNextWake = now + 3600;
+				fNextWake = now + ZTime::kHour;
 				break;
 				}
 

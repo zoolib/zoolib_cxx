@@ -72,17 +72,15 @@ bool sQCoerceBool(const ZAny& iAny, bool& oVal)
 
 bool sDCoerceBool(bool iDefault, const ZAny& iAny)
 	{
-	bool result;
-	if (sQCoerceBool(iAny, result))
-		return result;
+	if (ZQ<bool> qBool = sQCoerceBool(iAny))
+		return qBool.Get();
 	return iDefault;
 	}
 
 bool sCoerceBool(const ZAny& iAny)
 	{
-	bool result;
-	if (sQCoerceBool(iAny, result))
-		return result;
+	if (ZQ<bool> qBool = sQCoerceBool(iAny))
+		return qBool.Get();
 	return false;
 	}
 
@@ -136,7 +134,11 @@ int64 sDCoerceInt(int64 iDefault, const ZAny& iAny)
 	}
 
 int64 sCoerceInt(const ZAny& iAny)
-	{ return sDCoerceInt(0, iAny); }
+	{
+	if (ZQ<int64> qInt = sQCoerceInt(iAny))
+		return qInt.Get();
+	return 0;
+	}
 
 ZQ<double> sQCoerceReal(const ZAny& iAny)
 	{
@@ -168,6 +170,10 @@ double sDCoerceReal(double iDefault, const ZAny& iAny)
 	}
 
 double sCoerceReal(const ZAny& iAny)
-	{ return sDCoerceReal(0.0, iAny); }
+	{
+	if (ZQ<double> qDouble = sQCoerceReal(iAny))
+		return qDouble.Get();
+	return 0.0;
+	}
 
 } // namespace ZooLib
