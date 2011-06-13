@@ -91,10 +91,12 @@ public:
 	bool CompareAndSwap(const T& iOld, const T& iNew)
 		{
 		ZAcqMtx acq(fMtx);
-		if (fVal != iOld)
-			return false;
-		fVal = iNew;
-		return true;
+		if (fVal == iOld)
+			{
+			fVal = iNew;
+			return true;
+			}
+		return false;
 		}
 
 private:
