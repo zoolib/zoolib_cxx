@@ -22,97 +22,44 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCallAsync__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/ZCallable_Bind.h"
+#include "zoolib/ZCallable_Function.h"
 #include "zoolib/ZFuture.h"
-#include "zoolib/ZWorker.h"
+#include "zoolib/ZWorker_Callable.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorker_Async
-
-template <class T>
-class ZWorker_Async
-:	public ZWorker
-	{
-public:
-	typedef ZCallable<T()> Callable;
-
-	ZWorker_Async(ZRef<ZPromise<T> > iPromise, ZRef<Callable> iCallable)
-	:	fPromise(iPromise)
-	,	fCallable(iCallable)
-		{}
-
-	virtual ~ZWorker_Async()
-		{}
-
-// From ZWorker
-	virtual void RunnerDetached()
-		{ fPromise->Set(fCallable->Call()); }
-
-	virtual bool Work()
-		{ return false; }
-
-private:
-	ZRef<ZPromise<T> > fPromise;
-	ZRef<Callable> fCallable;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZWorker_Async<void>
-
-template <>
-class ZWorker_Async<void>
-:	public ZWorker
-	{
-public:
-	typedef ZCallable<void()> Callable;
-
-	ZWorker_Async(ZRef<ZPromise<void> > iPromise, ZRef<Callable> iCallable)
-	:	fPromise(iPromise)
-	,	fCallable(iCallable)
-		{}
-
-	virtual ~ZWorker_Async()
-		{}
-
-// From ZWorker
-	virtual void RunnerDetached()
-		{
-		fCallable->Call();
-		fPromise->Set();
-		}
-
-	virtual bool Work()
-		{ return false; }
-
-private:
-	ZRef<ZPromise<void> > fPromise;
-	ZRef<Callable> fCallable;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * CallAsync
 
-inline
-ZRef<ZFuture<void> > CallAsync(ZRef<ZCallable<void()> > iCallable)
-	{
-	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
-	sStartWorkerRunner(new ZWorker_Async<void>(thePromise, iCallable));
-	return thePromise->Get();
-	}
+template <class T>
+void DoCallAsync_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T()> > iCallable)
+	{ iPromise->Set(iCallable->Call()); }
 
 template <class T>
 ZRef<ZFuture<T> > CallAsync(ZRef<ZCallable<T()> > iCallable)
 	{
 	ZRef<ZPromise<T> > thePromise = new ZPromise<T>;
-	sStartWorkerRunner(new ZWorker_Async<T>(thePromise, iCallable));
+	sStartWorkerRunner(MakeWorker(BindL(thePromise, iCallable, MakeCallable(DoCallAsync_T<T>))));
+	return thePromise->Get();
+	}
+
+inline
+void DoCallAsyncVoid(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void()> > iCallable)
+	{
+	iCallable->Call();
+	iPromise->Set();
+	}
+
+inline
+ZRef<ZFuture<void> > CallAsync(ZRef<ZCallable<void()> > iCallable)
+	{
+	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
+	sStartWorkerRunner(MakeWorker(BindL(thePromise, iCallable, MakeCallable(DoCallAsyncVoid))));
 	return thePromise->Get();
 	}
 
 } // namespace ZooLib
 
-#endif // __ZWorker_Callable__
+#endif // __ZCallAsync__
