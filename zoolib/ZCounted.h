@@ -86,19 +86,45 @@ class ZCounted : public virtual ZCountedBase
 #pragma mark -
 #pragma mark * ZCountedBase::WeakRefProxy
 
-class ZCountedBase::WeakRefProxy : public ZCountedWithoutFinalize
+class ZCountedBase::WeakRefProxy
+:	public ZCountedWithoutFinalize
 	{
-public:
+private:
 	WeakRefProxy(ZCountedBase* iCountedBase);
 	virtual ~WeakRefProxy();
 
-	ZRef<ZCountedBase> GetCountedBase();
+	ZRef<ZCountedBase> pGetCountedBase();
+	void pClear();
 
-	void Clear();
-
-private:
 	ZMtx fMtx;
 	ZCountedBase* fCountedBase;
+
+	friend class ZCountedBase;
+	friend class ZWeakRefBase;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWeakRefBase
+
+class ZWeakRefBase
+	{
+protected:
+	ZWeakRefBase();
+	~ZWeakRefBase();
+	ZWeakRefBase(const ZWeakRefBase& iOther);
+	ZWeakRefBase& operator=(const ZWeakRefBase& iOther);
+
+	ZWeakRefBase(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy);
+
+	void pAssign(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy);
+	void pClear();
+
+	ZRef<ZCountedBase> pGet() const;
+	ZRef<ZCountedBase::WeakRefProxy> pGetWeakRefProxy() const;
+
+private:
+	ZRef<ZCountedBase::WeakRefProxy> fWeakRefProxy;
 	};
 
 // =================================================================================================
@@ -107,6 +133,7 @@ private:
 
 template <class T>
 class ZWeakRef
+:	protected ZWeakRefBase
 	{
 public:
 	ZWeakRef()
@@ -116,91 +143,94 @@ public:
 		{}
 
 	ZWeakRef(const ZWeakRef& iOther)
-	:	fWeakRefProxy(iOther.fWeakRefProxy)
+	:	ZWeakRefBase(iOther)
 		{}
 
 	ZWeakRef& operator=(const ZWeakRef& iOther)
 		{
-		fWeakRefProxy = iOther.fWeakRefProxy;
-		return *this;
-		}
-
-	template <class O>
-	ZWeakRef(const ZWeakRef<O>& iOther)
-	:	fWeakRefProxy(iOther.fWeakRefProxy)
-		{
-		// Ensure that T is a supertype of O
-		static_cast<T*>(static_cast<O*>(0));
-		}
-
-	template <class O>
-	ZWeakRef& operator=(const ZWeakRef<O>& iOther)
-		{
-		fWeakRefProxy = iOther.fWeakRefProxy;
+		ZWeakRefBase::operator=(iOther);
 		return *this;
 		}
 
 	ZWeakRef(const null_t&)
 		{}
 
+	template <class O>
+	ZWeakRef(const ZWeakRef<O>& iOther)
+	:	ZWeakRefBase(iOther)
+		{
+		// Ensure that T is a supertype of O
+		(void)static_cast<T*>(static_cast<O*>(0));
+		}
+
+	template <class O>
+	ZWeakRef& operator=(const ZWeakRef<O>& iOther)
+		{
+		(void)static_cast<T*>(static_cast<O*>(0));
+		ZWeakRefBase::operator=(iOther);
+		return *this;
+		}
+
 	ZWeakRef(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy)
-	:	fWeakRefProxy(iWeakRefProxy)
+	:	ZWeakRefBase(iWeakRefProxy)
 		{}
+
+	ZWeakRef& operator=(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy)
+		{
+		ZWeakRefBase::pAssign(iWeakRefProxy);
+		return *this;
+		}
+
+	ZWeakRef(ZCountedBase::WeakRefProxy* iWeakRefProxy)
+	:	ZWeakRefBase(iWeakRefProxy)
+		{}
+
+	ZWeakRef& operator=(ZCountedBase::WeakRefProxy* iWeakRefProxy)
+		{
+		ZWeakRefBase::pAssign(iWeakRefProxy);
+		return *this;
+		}
 
 	template <class O>
 	ZWeakRef(const ZRef<O>& iRef)
-		{
-		if (iRef)
-			fWeakRefProxy = iRef->GetWeakRefProxy();
-		}
+	:	ZWeakRefBase(iRef ? iRef->GetWeakRefProxy() : null)
+		{ (void)static_cast<T*>(static_cast<O*>(0)); }
 
 	template <class O>
 	ZWeakRef& operator=(const ZRef<O>& iRef)
 		{
-		if (iRef)
-			fWeakRefProxy = iRef->GetWeakRefProxy();
-		else
-			fWeakRefProxy.Clear();
+		(void)static_cast<T*>(static_cast<O*>(0));
+		ZWeakRefBase::pAssign(iRef ? iRef->GetWeakRefProxy() : null);
 		return *this;
 		}
 
 	void Clear()
-		{ fWeakRefProxy.Clear(); }
+		{ ZWeakRefBase::pClear(); }
+
+	ZRef<ZCountedBase::WeakRefProxy> GetWeakRefProxy() const
+		{ return ZWeakRefBase::pGetWeakRefProxy(); }
 
 	ZRef<T> Get() const
 		{
-		if (fWeakRefProxy)
-			{
-			if (ZRef<ZCountedBase> theCB = fWeakRefProxy->GetCountedBase())
-				return theCB.DynamicCast<T>();
-			}
-		return null;
+		ZRef<ZCountedBase> theCB = ZWeakRefBase::pGet();
+		return theCB.DynamicCast<T>();
 		}
 
 	template <class O>
 	operator ZRef<O,false>() const
 		{
-		if (fWeakRefProxy)
-			{
-			if (ZRef<ZCountedBase> theCB = fWeakRefProxy->GetCountedBase())
-				return theCB.DynamicCast<O>();
-			}
-		return null;
+		(void)static_cast<T*>(static_cast<O*>(0));
+		ZRef<ZCountedBase> theCB = ZWeakRefBase::pGet();
+		return theCB.DynamicCast<O>();
 		}
 
 	template <class O>
 	operator ZRef<O,true>() const
 		{
-		if (fWeakRefProxy)
-			{
-			if (ZRef<ZCountedBase> theCB = fWeakRefProxy->GetCountedBase())
-				return theCB.DynamicCast<O>();
-			}
-		return null;
+		(void)static_cast<T*>(static_cast<O*>(0));
+		ZRef<ZCountedBase> theCB = ZWeakRefBase::pGet();
+		return theCB.DynamicCast<O>();
 		}
-
-private:
-	ZRef<ZCountedBase::WeakRefProxy> fWeakRefProxy;
 	};
 
 // =================================================================================================

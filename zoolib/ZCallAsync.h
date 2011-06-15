@@ -34,19 +34,19 @@ namespace ZooLib {
 #pragma mark * CallAsync
 
 template <class T>
-void DoCallAsync_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T()> > iCallable)
+void sCallAsync_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T()> > iCallable)
 	{ iPromise->Set(iCallable->Call()); }
 
 template <class T>
 ZRef<ZFuture<T> > CallAsync(ZRef<ZCallable<T()> > iCallable)
 	{
 	ZRef<ZPromise<T> > thePromise = new ZPromise<T>;
-	sStartWorkerRunner(MakeWorker(BindL(thePromise, iCallable, MakeCallable(DoCallAsync_T<T>))));
+	sStartWorkerRunner(MakeWorker(BindL(thePromise, iCallable, MakeCallable(sCallAsync_T<T>))));
 	return thePromise->Get();
 	}
 
 inline
-void DoCallAsyncVoid(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void()> > iCallable)
+void sCallAsyncVoid(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void()> > iCallable)
 	{
 	iCallable->Call();
 	iPromise->Set();
@@ -56,7 +56,7 @@ inline
 ZRef<ZFuture<void> > CallAsync(ZRef<ZCallable<void()> > iCallable)
 	{
 	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
-	sStartWorkerRunner(MakeWorker(BindL(thePromise, iCallable, MakeCallable(DoCallAsyncVoid))));
+	sStartWorkerRunner(MakeWorker(BindL(thePromise, iCallable, MakeCallable(sCallAsyncVoid))));
 	return thePromise->Get();
 	}
 

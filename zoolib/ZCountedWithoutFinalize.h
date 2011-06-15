@@ -41,9 +41,6 @@ public:
 	bool IsShared() const;
 	bool IsReferenced() const;
 
-	static void* sRetain(ZCountedWithoutFinalize* iObject);
-	static void sRelease(ZCountedWithoutFinalize* iObject);
-
 private:
 	ZThreadSafe_t fRefCount;
 	};

@@ -207,6 +207,18 @@ public:
 	bool AtomicSetIfNull(T* iNew)
 		{ return this->AtomicCompareAndSwap(0, iNew); }
 
+	static T* sCFRetain(T* iP)
+		{
+		if (iP)
+			sRetain(*iP);
+		return iP;
+		}
+
+	static void sCFRelease(T* iP)
+		{
+		if (iP)
+			sRelease(*iP);
+		}
 private:
 	T* fP;
 	};
@@ -368,6 +380,19 @@ public:
 	O StaticCast() const
 		{ return static_cast<O>(fP); }
 
+
+	static T* sCFRetain(T* iP)
+		{
+		if (iP)
+			sRetain_T(iP);
+		return iP;
+		}
+
+	static T* sCFRelease(T* iP)
+		{
+		if (iP)
+			sRelease_T(iP);
+		}
 private:
 	T* fP;
 	};

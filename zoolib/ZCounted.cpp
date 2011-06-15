@@ -57,7 +57,7 @@ bool ZCountedBase::FinishFinalize()
 	
 	if (fWeakRefProxy)
 		{
-		fWeakRefProxy->Clear();
+		fWeakRefProxy->pClear();
 		fWeakRefProxy.Clear();
 		}
 
@@ -99,9 +99,9 @@ ZRef<ZCountedBase::WeakRefProxy> ZCountedBase::GetWeakRefProxy()
 		ZRef<WeakRefProxy> theWeakRefProxy = new WeakRefProxy(this);
 		if (!fWeakRefProxy.AtomicSetIfNull(theWeakRefProxy.Get()))
 			{
-			// We lost the race, so (efficiently) clear theWeakRefProxy's reference
+			// We lost the race, so clear theWeakRefProxy's reference
 			// to us, or we'll trip an asssertion in WeakRefProxy::~WeakRefProxy.
-			theWeakRefProxy->Clear();
+			theWeakRefProxy->pClear();
 			}
 		}
 	return fWeakRefProxy;
@@ -145,16 +145,56 @@ ZCountedBase::WeakRefProxy::WeakRefProxy(ZCountedBase* iCountedBase)
 ZCountedBase::WeakRefProxy::~WeakRefProxy()
 	{ ZAssertStop(1, !fCountedBase); }
 
-ZRef<ZCountedBase> ZCountedBase::WeakRefProxy::GetCountedBase()
+ZRef<ZCountedBase> ZCountedBase::WeakRefProxy::pGetCountedBase()
 	{
 	ZAcqMtx acq(fMtx);
 	return fCountedBase;
 	}
 
-void ZCountedBase::WeakRefProxy::Clear()
+void ZCountedBase::WeakRefProxy::pClear()
 	{
 	ZAcqMtx acq(fMtx);
 	fCountedBase = nullptr;
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWeakRefBase
+
+ZWeakRefBase::ZWeakRefBase()
+	{}
+
+ZWeakRefBase::~ZWeakRefBase()
+	{}
+
+ZWeakRefBase::ZWeakRefBase(const ZWeakRefBase& iOther)
+:	fWeakRefProxy(iOther.fWeakRefProxy)
+	{}
+
+ZWeakRefBase& ZWeakRefBase::operator=(const ZWeakRefBase& iOther)
+	{
+	fWeakRefProxy = iOther.fWeakRefProxy;
+	return *this;
+	}
+
+ZWeakRefBase::ZWeakRefBase(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy)
+:	fWeakRefProxy(iWeakRefProxy)
+	{}
+
+void ZWeakRefBase::pAssign(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy)
+	{ fWeakRefProxy = iWeakRefProxy; }
+
+void ZWeakRefBase::pClear()
+	{ fWeakRefProxy.Clear(); }
+
+ZRef<ZCountedBase> ZWeakRefBase::pGet() const
+	{
+	if (fWeakRefProxy)
+		return fWeakRefProxy->pGetCountedBase();
+	return null;
+	}
+
+ZRef<ZCountedBase::WeakRefProxy> ZWeakRefBase::pGetWeakRefProxy() const
+	{ return fWeakRefProxy; }
 
 } // namespace ZooLib

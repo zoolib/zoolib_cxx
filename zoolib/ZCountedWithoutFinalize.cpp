@@ -49,17 +49,4 @@ bool ZCountedWithoutFinalize::IsShared() const
 bool ZCountedWithoutFinalize::IsReferenced() const
 	{ return ZThreadSafe_Get(fRefCount) > 0; }
 
-void* ZCountedWithoutFinalize::sRetain(ZCountedWithoutFinalize* iObject)
-	{
-	if (iObject)
-		iObject->Retain();
-	return iObject;
-	}
-
-void ZCountedWithoutFinalize::sRelease(ZCountedWithoutFinalize* iObject)
-	{
-	if (iObject)
-		iObject->Release();
-	}
-
 } // namespace ZooLib
