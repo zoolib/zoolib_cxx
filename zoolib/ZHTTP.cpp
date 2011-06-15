@@ -745,10 +745,9 @@ static ZRef<ZStreamerR> spMakeStreamer_Transfer(
 	// According to the spec, if content is chunked, content-length must be ignored.
 	// I've seen some pages being returned with transfer-encoding "chunked, chunked", which
 	// is either a mistake, or is nested chunking. I'm assuming the former for now.
+
 	if (ZString::sContainsi(sGetString0(iHeader.Get("transfer-encoding")), "chunked"))
-		{
 		return new ZStreamerR_FT<StreamR_Chunked>(iStreamerR);
-		}
 
 	if (ZQ<int64> contentLength = iHeader.Get("content-length").QGet<int64>())
 		return new ZStreamerR_FT<ZStreamR_Limited>(contentLength.Get(), iStreamerR);
