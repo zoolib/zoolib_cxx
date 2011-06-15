@@ -34,7 +34,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 
 namespace ZooLib {
-
 namespace ZJavaScriptCore {
 
 class ObjectImp;
@@ -115,7 +114,7 @@ private:
 #pragma mark * ZJavaScriptCore::Value
 
 class Value
-:	private ZRef<JSValueRef>
+:	public ZRef<JSValueRef>
 	{
 	typedef ZRef<JSValueRef> inherited;
 public:
@@ -168,7 +167,11 @@ public:
 
 	template <class S>
 	S Get() const
-		{ return this->DGet(S()); }
+		{
+		if (ZQ<S> theQ = this->QGet<S>())
+			return theQ.Get();
+		return S();
+		}
 
 	ZMACRO_ZValAccessors_Decl_Get(Value, Bool, bool)
 	ZMACRO_ZValAccessors_Decl_Get(Value, Double, double)
@@ -232,7 +235,8 @@ public:
 	ObjectImp();
 	virtual ~ObjectImp();
 
-// From ZRefCountedWithFinalize
+// From ZCounted
+	virtual void Initialize();
 	virtual void Finalize();
 
 // Our protocol
@@ -286,7 +290,6 @@ private:
 	};
 
 } // namespace ZJavaScriptCore
-
 } // namespace ZooLib
 
 #endif // __ZJavaScriptCore__

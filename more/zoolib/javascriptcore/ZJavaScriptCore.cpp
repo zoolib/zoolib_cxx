@@ -419,6 +419,9 @@ ZAny Value::AsAny() const
 				{
 				return ObjectRef(const_cast<JSObjectRef>(theRef)).AsAny();
 				}
+			case kJSTypeUndefined:
+			case kJSTypeNull:
+				break;
 			}
 		}
 	return ZAny();
@@ -781,9 +784,14 @@ ObjectImp::~ObjectImp()
 	ZAssert(!fJSObjectRef);
 	}
 
+void ObjectImp::Initialize()
+	{
+	ZCounted::Initialize();
+	}
+
 void ObjectImp::Finalize()
 	{
-	this->FinishFinalize();
+	ZCounted::FinishFinalize();
 	this->pTossIfAppropriate();
 	}
 
@@ -951,5 +959,4 @@ JSClassRef ObjectImp::spGetJSClass()
 	}
 
 } // namespace ZJavaScriptCore
-
 } // namespace ZooLib
