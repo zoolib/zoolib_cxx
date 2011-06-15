@@ -211,6 +211,12 @@ void ZMIME::StreamR_Line::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 		*oCountRead = localDest - static_cast<uint8*>(oDest);
 	}
 
+void ZMIME::StreamR_Line::Reset()
+	{
+	fState = eNormal;
+	fEmpty = true;
+	}
+
 bool ZMIME::StreamR_Line::HitLF() const
 	{ return fState == eSeen_LF; }
 

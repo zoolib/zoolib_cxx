@@ -95,6 +95,7 @@ public:
 	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 // Our protocol
+	void Reset();
 	bool HitLF() const;
 	bool WasEmpty() const;
 
