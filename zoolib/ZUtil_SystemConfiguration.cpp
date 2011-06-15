@@ -46,14 +46,6 @@ void Store::Initialize()
 	{
 	ZCounted::Initialize();
 
-	{
-	ZUtil_CF::Context<SCDynamicStoreContext> context1 = this->GetWeakRefProxy();
-
-	ZUtil_CF::Context<SCDynamicStoreContext> context2;
-
-	context2 = context1;
-	}
-
 	fStoreRef = Adopt& ::SCDynamicStoreCreate(nullptr,
 		CFSTR("ZUtil_SystemConfiguration"),
 		&Store::spCallback,
