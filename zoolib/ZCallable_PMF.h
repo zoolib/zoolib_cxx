@@ -77,7 +77,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call()
 		{
 		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
@@ -111,7 +111,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0)
 		{
 		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
@@ -145,7 +145,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{
 		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
@@ -179,7 +179,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{
 		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
@@ -213,7 +213,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
@@ -248,7 +248,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
 		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
@@ -283,7 +283,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
 		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
@@ -318,7 +318,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
 		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
@@ -353,7 +353,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
 		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
@@ -389,7 +389,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
@@ -427,7 +427,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
@@ -465,7 +465,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
@@ -503,7 +503,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
@@ -542,7 +542,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
@@ -581,7 +581,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
@@ -620,7 +620,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
@@ -659,7 +659,7 @@ public:
 	,	fMethod(iMethod)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)

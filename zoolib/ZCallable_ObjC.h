@@ -142,7 +142,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call()
 		{
 		return MsgSend<R, FunctionPtr_t>::sMsgSend()
@@ -165,7 +165,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0)
 		{
 		return MsgSend<R, FunctionPtr_t>::sMsgSend()
@@ -188,7 +188,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{
 		return MsgSend<R, FunctionPtr_t>::sMsgSend()
@@ -211,7 +211,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{
 		return MsgSend<R, FunctionPtr_t>::sMsgSend()
@@ -234,7 +234,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		return MsgSend<R, FunctionPtr_t>::sMsgSend()
@@ -258,7 +258,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
 		return MsgSend<R, FunctionPtr_t>::sMsgSend()
@@ -282,7 +282,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
@@ -307,7 +307,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
 		return MsgSend<R, FunctionPtr_t>::sMsgSend()
@@ -331,7 +331,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
 		return MsgSend<R, FunctionPtr_t>::sMsgSend()
@@ -356,7 +356,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
@@ -383,7 +383,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
@@ -410,7 +410,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
@@ -437,7 +437,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
@@ -465,7 +465,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
@@ -493,7 +493,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
@@ -521,7 +521,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
@@ -549,7 +549,7 @@ public:
 
 	Callable(id iObj, SEL iSEL) : Base(iObj, iSEL) {}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)

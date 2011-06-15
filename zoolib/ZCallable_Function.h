@@ -49,7 +49,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call()
 		{ return fFunctionPtr(); }
 
@@ -73,7 +73,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0)
 		{ return fFunctionPtr(i0); }
 
@@ -97,7 +97,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{ return fFunctionPtr(i0, i1); }
 
@@ -121,7 +121,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{ return fFunctionPtr(i0, i1, i2); }
 
@@ -145,7 +145,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{ return fFunctionPtr(i0, i1, i2, i3); }
 
@@ -170,7 +170,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{ return fFunctionPtr(i0, i1, i2, i3, i4); }
 
@@ -195,7 +195,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5); }
 
@@ -220,7 +220,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6); }
 
@@ -245,7 +245,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7); }
 
@@ -271,7 +271,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
@@ -299,7 +299,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
@@ -327,7 +327,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
@@ -355,7 +355,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
@@ -384,7 +384,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
@@ -413,7 +413,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
@@ -442,7 +442,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
@@ -471,7 +471,7 @@ public:
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)

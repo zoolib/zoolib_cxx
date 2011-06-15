@@ -48,7 +48,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call()
 		{
 		if (fCallable0->Call())
@@ -78,7 +78,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call(P0 i0)
 		{
 		if (fCallable0->Call(i0))
@@ -108,7 +108,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call(P0 i0, P1 i1)
 		{
 		if (fCallable0->Call(i0, i1))
@@ -138,7 +138,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call(P0 i0, P1 i1, P2 i2)
 		{
 		if (fCallable0->Call(i0, i1, i2))
@@ -168,7 +168,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		if (fCallable0->Call(i0, i1, i2, i3))
@@ -199,7 +199,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
 		if (fCallable0->Call(i0, i1, i2, i3, i4))
@@ -230,7 +230,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
 		if (fCallable0->Call(i0, i1, i2, i3, i4, i5))
@@ -261,7 +261,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
 		if (fCallable0->Call(i0, i1, i2, i3, i4, i5, i6))
@@ -292,7 +292,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
 		if (fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7))
@@ -324,7 +324,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
@@ -358,7 +358,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
@@ -392,7 +392,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
@@ -426,7 +426,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
@@ -461,7 +461,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
@@ -496,7 +496,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
@@ -531,7 +531,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
@@ -566,7 +566,7 @@ public:
 	,	fCallable1(iCallable1)
 		{}
 
-	// From ZCallable
+// From ZCallable
 	virtual bool Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)

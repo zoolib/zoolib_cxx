@@ -81,7 +81,7 @@ private:
 	virtual ~ZSafeSetRep()
 		{}
 
-	// From ZCounted
+// From ZCounted
 	virtual void Finalize()
 		{
 		{ // Scope for guard

@@ -56,7 +56,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call()
 		{ return fBlockPtr(); }
 
@@ -83,7 +83,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0)
 		{ return fBlockPtr(i0); }
 
@@ -110,7 +110,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{ return fBlockPtr(i0, i1); }
 
@@ -137,7 +137,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{ return fBlockPtr(i0, i1, i2); }
 
@@ -164,7 +164,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{ return fBlockPtr(i0, i1, i2, i3); }
 
@@ -192,7 +192,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{ return fBlockPtr(i0, i1, i2, i3, i4); }
 
@@ -220,7 +220,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{ return fBlockPtr(i0, i1, i2, i3, i4, i5); }
@@ -249,7 +249,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6); }
 
@@ -277,7 +277,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7); }
 
@@ -306,7 +306,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
@@ -337,7 +337,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
@@ -368,7 +368,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
@@ -399,7 +399,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
@@ -431,7 +431,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
@@ -463,7 +463,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
@@ -495,7 +495,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
@@ -527,7 +527,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
@@ -688,7 +688,7 @@ public:
 	virtual ~Callable()
 		{ Block_release(fBlockPtr); }
 
-	// From ZCallable
+// From ZCallable
 	virtual void Call()
 		{ return fBlockPtr(); }
 
