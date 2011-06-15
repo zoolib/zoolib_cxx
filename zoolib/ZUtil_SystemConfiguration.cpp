@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZUtil_CF.h"
+#include "zoolib/ZUtil_CF_Context.h"
 #include "zoolib/ZYad_CF.h"
 
 namespace ZooLib {
@@ -45,21 +46,18 @@ void Store::Initialize()
 	{
 	ZCounted::Initialize();
 
-	ZRef<WeakRefProxy> theWRP = this->GetWeakRefProxy();
+	{
+	ZUtil_CF::Context<SCDynamicStoreContext> context1 = this->GetWeakRefProxy();
 
-	SCDynamicStoreContext context =
-		{
-		0,
-		theWRP.Get(),
-		(CFAllocatorRetainCallBack)&ZCountedWithoutFinalize::sRetain,
-		(CFAllocatorReleaseCallBack)ZCountedWithoutFinalize::sRelease,
-		nullptr
-		};
+	ZUtil_CF::Context<SCDynamicStoreContext> context2;
+
+	context2 = context1;
+	}
 
 	fStoreRef = Adopt& ::SCDynamicStoreCreate(nullptr,
 		CFSTR("ZUtil_SystemConfiguration"),
 		&Store::spCallback,
-		&context);
+		ZUtil_CF::Context<SCDynamicStoreContext>(this->GetWeakRefProxy()).IParam());
 	}
 
 SCDynamicStoreRef Store::GetStoreRef()
@@ -70,16 +68,10 @@ ZRef<Store::Callable> Store::GetSet_Callback(ZRef<Callable> iCallable)
 
 void Store::spCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
 	{
-	if (ZRef<WeakRefProxy> theWRP = static_cast<WeakRefProxy*>(info))
+	if (ZRef<Store> theStore = ZWeakRef<Store>(static_cast<WeakRefProxy*>(info)))
 		{
-		if (ZRef<ZCountedBase> theCB = theWRP->GetCountedBase())
-			{
-			if (ZRef<Store> theStore = theCB.DynamicCast<Store>())
-				{
-				if (ZRef<Callable> theCallable = theStore->fCallable)
-					theCallable->Call(theStore, changedKeys);
-				}
-			}
+		if (ZRef<Callable> theCallable = theStore->fCallable)
+			theCallable->Call(theStore, changedKeys);
 		}
 	}
 
@@ -112,9 +104,11 @@ public:
 			{
 			if (ZQ<ZRef<CFStringRef> > theQName = fKeys.QGet<ZRef<CFStringRef> >(fPosition++))
 				{
-				oName = ZUtil_CF::sAsUTF8(theQName.Get());
 				if (ZVal_CF theVal = ::SCDynamicStoreCopyValue(fStoreRef, theQName.Get()))
+					{
+					oName = ZUtil_CF::sAsUTF8(theQName.Get());
 					return sMakeYadR(theVal);
+					}
 				}
 			}
 		return null;
