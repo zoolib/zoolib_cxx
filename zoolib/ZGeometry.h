@@ -224,8 +224,19 @@ template <class T>
 class ZGExtentPOD_T
 	{
 public:
-	union { T h; T width; };
-	union { T v; T height; };
+	union
+		{
+		struct
+			{
+			T h;
+			T v;
+			};
+		struct
+			{
+			T width;
+			T height;
+			};
+		};
 
 	ZGExtentPOD_T& operator=(T iVal);
 
@@ -367,8 +378,21 @@ template <class Ord>
 class ZGRectPOD_T
 	{
 public:
-	ZGPointPOD_T<Ord> origin;
-	union { ZGExtentPOD_T<Ord> extent; ZGExtentPOD_T<Ord> size; };
+	union
+		{
+		struct
+			{
+			Ord x;
+			Ord y;
+			Ord h;
+			Ord v;
+			};
+		struct
+			{
+			ZGPointPOD_T<Ord> origin;
+			union { ZGExtentPOD_T<Ord> extent; ZGExtentPOD_T<Ord> size; };
+			};
+		};
 
 	ZGRectPOD_T& operator=(const ZRectPOD& other);
 	operator ZRectPOD() const;
