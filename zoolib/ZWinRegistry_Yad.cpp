@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Val_T.h"
 
 namespace ZooLib {
-
 namespace ZWinRegistry {
 
 // =================================================================================================
@@ -49,7 +48,6 @@ ZRef<ZYadMapRPos> sMakeYadR(const KeyRef& iKeyRef)
 	{ return new ZYadMapRPos_Val_T<KeyRef>(iKeyRef); }
 
 } // namespace ZWinRegistry
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)
