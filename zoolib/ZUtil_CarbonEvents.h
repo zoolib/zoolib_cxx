@@ -55,12 +55,11 @@ enum {
 #include <string>
 
 namespace ZooLib {
+namespace ZUtil_CarbonEvents {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_CarbonEvents
-
-namespace ZUtil_CarbonEvents {
 
 bool sQGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, void* oBuffer);
@@ -101,7 +100,6 @@ std::string sEventAsString(EventClass iEC, EventKind iEK);
 std::string sEventTypeAsString(UInt16 iEventType);
 
 } // namespace ZUtil_CarbonEvents
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Carbon64)

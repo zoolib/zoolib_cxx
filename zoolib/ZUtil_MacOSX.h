@@ -28,12 +28,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
+namespace ZUtil_MacOSX {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_MacOSX
-
-namespace ZUtil_MacOSX {
 
 #if ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)
 
@@ -54,7 +53,6 @@ void sCreateThunks_MachOCalledByCFM(void* ioFuncs, size_t iCount, std::vector<ch
 #endif // ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)
 
 } // namespace ZUtil_MacOSX
-
 } // namespace ZooLib
 
 #endif // __ZUtil_MacOSX__

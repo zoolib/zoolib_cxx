@@ -27,12 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 
 namespace ZooLib {
+namespace ZUtil_Time {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Time
-
-namespace ZUtil_Time {
 
 std::string sAsStringUTC(ZTime iTime, const std::string& iFormat);
 std::string sAsStringLocal(ZTime iTime, const std::string& iFormat);
@@ -50,7 +49,6 @@ std::string sAsString_ISO8601_us(ZTime iTime, bool iIncludeT);
 ZTime sFromString_ISO8601(const std::string& iString);
 
 } // namespace ZUtil_Time
-
 } // namespace ZooLib
 
 #endif // __ZUtil_Time__

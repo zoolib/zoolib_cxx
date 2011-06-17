@@ -81,7 +81,7 @@ ZRef<Walker> Walker_Union::Prime(
 		const size_t rightOffset = iterRight->second;
 		fMapping_Right[x] = rightOffset;
 		}
-	
+
 	return this;
 	}
 

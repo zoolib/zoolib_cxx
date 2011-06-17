@@ -387,7 +387,7 @@ Walker_Restrict::Exec* AsExec::pMakeExec(const ZValPred& iValPred)
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
 			}
-		}	
+		}
 	else if (ZRef<ZValComparator_Callable_Any> asCallable =
 		theComparator.DynamicCast<ZValComparator_Callable_Any>())
 		{

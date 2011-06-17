@@ -29,12 +29,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStdInt.h" // For size_t
 
 namespace ZooLib {
+namespace ZUtil_WinFile {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_WinFile
-
-namespace ZUtil_WinFile {
 
 #if 0
 bool sWaitReadable(HANDLE iHANDLE, double iTimeout);
@@ -60,7 +59,6 @@ DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
 	const void* iSource, size_t iCount, size_t* oCountWritten);
 
 } // namespace ZUtil_WinFile
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

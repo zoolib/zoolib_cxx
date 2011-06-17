@@ -242,7 +242,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 					oVal = ZTime(theDouble);
 					return true;
 					}
-					
+
 				spThrowParseException("Expected a floating point time");
 				}
 			else if (theTypeLC == "rect")

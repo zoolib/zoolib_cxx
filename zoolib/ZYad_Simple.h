@@ -63,7 +63,6 @@ namespace ZYad_Simple {
 ZRef<ZYadR> sMakeYadR(ZRef<ZStrimmerU> iStrimmerU);
 
 } // namespace ZYad_Simple
-
 } // namespace ZooLib
 
 #endif // __ZYad_Simple__

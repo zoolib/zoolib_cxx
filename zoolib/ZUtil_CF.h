@@ -43,21 +43,21 @@ ZRef<CFStringRef> sString(const string16& iString16);
 ZRef<CFMutableStringRef> sStringMutable();
 ZRef<CFMutableStringRef> sStringMutable(const string8& iString8);
 ZRef<CFMutableStringRef> sStringMutable(const string16& iString16);
-ZRef<CFMutableStringRef> sStringMutable(const ZRef<CFStringRef>& iCFString);
+ZRef<CFMutableStringRef> sStringMutable(CFStringRef iCFString);
 
 // -----
 
 ZRef<CFDictionaryRef> sDictionary();
 
 ZRef<CFMutableDictionaryRef> sDictionaryMutable();
-ZRef<CFMutableDictionaryRef> sDictionaryMutable(const ZRef<CFDictionaryRef>& iCFDictionary);
+ZRef<CFMutableDictionaryRef> sDictionaryMutable(CFDictionaryRef iCFDictionary);
 
 // -----
 
 ZRef<CFArrayRef> sArray();
 
 ZRef<CFMutableArrayRef> sArrayMutable();
-ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray);
+ZRef<CFMutableArrayRef> sArrayMutable(CFArrayRef iCFArray);
 
 // -----
 
@@ -66,7 +66,7 @@ ZRef<CFDataRef> sData(const void* iSource, size_t iSize);
 
 ZRef<CFMutableDataRef> sDataMutable();
 ZRef<CFMutableDataRef> sDataMutable(size_t iSize);
-ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData);
+ZRef<CFMutableDataRef> sDataMutable(CFDataRef iCFData);
 
 // -----
 
@@ -76,11 +76,11 @@ string16 sAsUTF16(CFStringRef iCFString);
 ZAny sDAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal);
 ZAny sAsAny(ZRef<CFTypeRef> iVal);
 
-ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal);
+ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal);
 ZRef<CFTypeRef> sAsCFType(const ZAny& iVal);
 
-ZSeq_Any sAsSeq_Any(const ZAny& iDefault, const ZRef<CFArrayRef>& iCFArray);
-ZMap_Any sAsMap_Any(const ZAny& iDefault, const ZRef<CFDictionaryRef>& iCFDictionary);
+ZSeq_Any sAsSeq_Any(const ZAny& iDefault, CFArrayRef iCFArray);
+ZMap_Any sAsMap_Any(const ZAny& iDefault, CFDictionaryRef iCFDictionary);
 
 } // namespace ZUtil_CF
 } // namespace ZooLib

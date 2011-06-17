@@ -27,12 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimmer.h"
 
 namespace ZooLib {
+namespace ZUtil_Debug {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Debug
-
-namespace ZUtil_Debug {
 
 #if ZCONFIG_API_Enabled(StackCrawl)
 	void sDumpStackCrawl(const ZStackCrawl& iCrawl, const ZStrimW& s);
@@ -71,7 +70,6 @@ void sSetLogPriority(ZLog::EPriority iLogPriority);
 ZLog::EPriority sGetLogPriority();
 
 } // namespace ZUtil_Debug
-
 } // namespace ZooLib
 
 #endif // __ZUtil_Debug__

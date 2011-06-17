@@ -114,13 +114,15 @@ public:
 /** \name Copy To
 Read code points from this strim and write them to iStrimW.
 */	//@{
-	void CopyAllTo(const ZStrimW& iStrimW) const;
-	void CopyAllTo(const ZStrimW& iStrimW, uint64* oCountCPRead, uint64* oCountCPWritten) const;
+	const ZStrimR& CopyAllTo(const ZStrimW& iStrimW) const;
 
-	void CopyTo(const ZStrimW& iStrimW, uint64 iCountCP) const;
+	const ZStrimR& CopyAllTo(const ZStrimW& iStrimW,
+		uint64* oCountCPRead, uint64* oCountCPWritten) const;
 
-	void CopyTo(const ZStrimW& iStrimW,
-		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten) const;
+	const ZStrimR& CopyTo(const ZStrimW& iStrimW, uint64 iCountCP) const;
+
+	const ZStrimR& CopyTo(const ZStrimW& iStrimW, uint64 iCountCP,
+		uint64* oCountCPRead, uint64* oCountCPWritten) const;
 	//@}
 
 
@@ -276,13 +278,14 @@ public:
 Read code points from iStrimR and write it to this strim.
 */	//@{
 	const ZStrimW& CopyAllFrom(const ZStrimR& iStrimR) const;
+
 	const ZStrimW& CopyAllFrom(const ZStrimR& iStrimR,
 		uint64* oCountCPRead, uint64* oCountCPWritten) const;
 
 	const ZStrimW& CopyFrom(const ZStrimR& iStrimR, uint64 iCountCP) const;
 
-	const ZStrimW& CopyFrom(const ZStrimR& iStrimR,
-		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten) const;
+	const ZStrimW& CopyFrom(const ZStrimR& iStrimR, uint64 iCountCP,
+		uint64* oCountCPRead, uint64* oCountCPWritten) const;
 	//@}
 
 

@@ -334,12 +334,13 @@ void ZStrimR::Read(UTF8* oDest,
 
 
 /// Read data from this strim and write it to \a iStrimW until this strim reaches its end.
-void ZStrimR::CopyAllTo(const ZStrimW& iStrimW) const
+const ZStrimR& ZStrimR::CopyAllTo(const ZStrimW& iStrimW) const
 	{
 	uint64 countRead, countWritten;
 	this->CopyAllTo(iStrimW, &countRead, &countWritten);
 	if (countRead > countWritten)
 		ZStrimW::sThrowEndOfStrim();
+	return *this;
 	}
 
 /**
@@ -412,7 +413,8 @@ string32 ZStrimR::ReadAll32() const
 \a oCountCPRead it's a strong indication that \a iStrimW has reached its end, and a subsequent call
 to \c CopyTo or the \a iStrimW's \c Write will likely return zero in \a oCountCPWritten.
 */
-void ZStrimR::CopyAllTo(const ZStrimW& iStrimW, uint64* oCountCPRead, uint64* oCountCPWritten) const
+const ZStrimR& ZStrimR::CopyAllTo(const ZStrimW& iStrimW,
+	uint64* oCountCPRead, uint64* oCountCPWritten) const
 	{
 	if (oCountCPRead)
 		*oCountCPRead = 0;
@@ -434,6 +436,7 @@ void ZStrimR::CopyAllTo(const ZStrimW& iStrimW, uint64* oCountCPRead, uint64* oC
 		if (cpRead != cpWritten || cpRead == 0 || cpWritten == 0)
 			break;
 		}
+	return *this;
 	}
 
 
@@ -445,7 +448,7 @@ void ZStrimR::CopyAllTo(const ZStrimW& iStrimW, uint64* oCountCPRead, uint64* oC
 If \a iCount bytes could not be read then an end of read strim exception is thrown. If
 \a iCount bytes could not be written then an end of write strim exception is thrown.
 */
-void ZStrimR::CopyTo(const ZStrimW& iStrimW, uint64 iCountCP) const
+const ZStrimR& ZStrimR::CopyTo(const ZStrimW& iStrimW, uint64 iCountCP) const
 	{
 	uint64 cpRead, cpWritten;
 	const_cast<ZStrimR*>(this)->Imp_CopyToDispatch(iStrimW, iCountCP, &cpRead, &cpWritten);
@@ -453,6 +456,7 @@ void ZStrimR::CopyTo(const ZStrimW& iStrimW, uint64 iCountCP) const
 		sThrowEndOfStrim();
 	if (cpWritten != iCountCP)
 		ZStrimW::sThrowEndOfStrim();
+	return *this;
 	}
 
 
@@ -463,11 +467,12 @@ void ZStrimR::CopyTo(const ZStrimW& iStrimW, uint64 iCountCP) const
 \param oCountCPRead (optional output) The number of code points that were actually read.
 \param oCountCPWritten (optional output) The number of code points that were actually written.
 */
-void ZStrimR::CopyTo(const ZStrimW& iStrimW,
-	uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten) const
+const ZStrimR& ZStrimR::CopyTo(const ZStrimW& iStrimW, uint64 iCountCP,
+	uint64* oCountCPRead, uint64* oCountCPWritten) const
 	{
-	const_cast<ZStrimR*>(this)->Imp_CopyToDispatch(iStrimW,
-		iCountCP, oCountCPRead, oCountCPWritten);
+	const_cast<ZStrimR*>(this)->Imp_CopyToDispatch(iStrimW, iCountCP,
+		oCountCPRead, oCountCPWritten);
+	return *this;
 	}
 
 

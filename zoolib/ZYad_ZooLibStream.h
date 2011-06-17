@@ -54,7 +54,6 @@ ZRef<ZYadR> sMakeYadR(ZRef<ZStreamerR> iStreamerR);
 void sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR);
 
 } // namespace ZYad_ZooLibStream
-
 } // namespace ZooLib
 
 #endif // __ZYad_ZooLibStream__

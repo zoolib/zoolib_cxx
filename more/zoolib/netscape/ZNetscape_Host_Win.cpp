@@ -138,7 +138,7 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 	{
 	bool callPlugin = false;
 	bool callDefault = false;
-	
+
 	switch (iMessage)
 		{
 		case WM_TIMER:

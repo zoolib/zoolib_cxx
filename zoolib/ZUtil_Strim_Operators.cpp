@@ -55,7 +55,7 @@ const ZStrimW& operator<<(const ZStrimW& s, const ZStrimR& r)
 
 const ZStrimW& operator<<(const ZStrimW& s, bool iVal)
 	{ return s.Write(iVal ? "true" : "false"); }
-	
+
 const ZStrimW& operator<<(const ZStrimW& s, char iVal)
 	{ return s.Writef("%c", iVal); }
 

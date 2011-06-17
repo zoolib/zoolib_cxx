@@ -37,7 +37,7 @@ int sCompareRef_T(const ZRef<T>& iL, const ZRef<T>& iR)
 			const char* typeName = typeid(*l).name();
 			if (int compare = strcmp(typeName, typeid(*r).name()))
 				return compare;
-	
+
 			return ZCompare::sCompare(typeName, l, r);
 			}
 		else

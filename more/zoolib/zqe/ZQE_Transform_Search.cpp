@@ -133,15 +133,15 @@ public:
 		// The restriction may reference the name we introduce, so don't pass it down the tree.
 		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
 		fRestriction = sTrue();
-		
+
 		// Similarly with projection -- we don't know what names we'll be
 		// referencing from our descendants.
 		const ZUniSet_T<RelName> priorProjection = fProjection;
 		fProjection = ZUniSet_T<RelName>::sUniversal();
-		
+
 		ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 		ZRef<ZRA::Expr_Rel> newCalc = new ZRA::Expr_Rel_Calc(newOp0, theName, iExpr->GetCallable());
-		
+
 		fRestriction = priorRestriction;
 		fProjection = priorProjection;
 		fRename.clear();
@@ -212,7 +212,7 @@ public:
 	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
 		{
 		ZRef<Expr_Rel> newOp1;
-		
+
 		{
 		ZSetRestore_T<ZRef<ZExpr_Bool> > sr0(fRestriction, sTrue());
 		ZSetRestore_T<ZUniSet_T<RelName> > sr1(fProjection, ZUniSet_T<RelName>::sUniversal());
@@ -246,7 +246,7 @@ public:
 		// restriction/projection that exists on their own branch.
 		fRestriction = sTrue();
 		fProjection = ZUniSet_T<RelName>::sUniversal();
-		
+
 		// Process the left branch.
 		ZRef<ZRA::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
 		const double leftLikelySize = fLikelySize.Get();
@@ -257,13 +257,13 @@ public:
 		fRestriction = sTrue();
 		fProjection = ZUniSet_T<RelName>::sUniversal();
 		fRename = priorRename;
-		
+
 		// Process the right branch.
 		ZRef<ZRA::Expr_Rel> op1 = this->Do(iExpr->GetOp1());
 		const double rightLikelySize = fLikelySize.Get();
-		
+
 		fLikelySize = leftLikelySize * rightLikelySize;
-		
+
 		// Restore the restriction and projection.
 		fRestriction = priorRestriction;
 		fProjection = priorProjection;
@@ -301,7 +301,7 @@ public:
 
 		ZUtil_STL::sInsertMustNotContain(1, fRename, oldName, newName);
 
-		this->pSetResult(this->Do(iExpr->GetOp0()));		
+		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr)

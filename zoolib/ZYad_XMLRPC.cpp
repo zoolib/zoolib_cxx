@@ -767,5 +767,4 @@ void sToStrim(const Response_t& iResponse, const ZML::StrimW& s)
 	}
 
 } // namespace ZYad_XMLRPC
-
 } // namespace ZooLib

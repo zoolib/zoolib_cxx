@@ -87,13 +87,13 @@ void Dataspace::Update()
 	set<ZRef<Sieve> > sievesLoaded;
 
 	guard.Acquire();
-	
+
 	for (vector<QueryResult>::iterator iterQueryResults = theQueryResults.begin();
 		iterQueryResults != theQueryResults.end(); ++iterQueryResults)
 		{
 		Map_RefconToSieve::iterator iterSieve =
 			fMap_RefconToSieve.find(iterQueryResults->GetRefcon());
-		
+
 		if (fMap_RefconToSieve.end() == iterSieve)
 			continue;
 
@@ -168,7 +168,7 @@ void Dataspace::pFinalize(Sieve* iSieve)
 		return;
 
 	ZUtil_STL::sEraseMustContain(kDebug, fMap_RefconToSieve, iSieve->fRefcon);
-	
+
 	int64 const theRefcon = iSieve->fRefcon;
 	delete iSieve;
 	guard.Release();

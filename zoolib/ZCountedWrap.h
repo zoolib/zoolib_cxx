@@ -48,7 +48,7 @@ public:
 
 	ZRef<ZCountedWrap> Clone()
 		{ return new ZCountedWrap(*this); }
-	
+
 	ZRef<ZCountedWrap> Fresh()
 		{
 		if (this->IsShared())

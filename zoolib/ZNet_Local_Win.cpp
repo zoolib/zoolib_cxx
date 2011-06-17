@@ -96,7 +96,7 @@ static ZRef<HANDLE> spConnect(const string& iName)
 	for (;;)
 		{
 		HANDLE theHANDLE = ::CreateFileW(
-			thePipeName.c_str(),   // pipe name
+			thePipeName.c_str(), // pipe name
 			GENERIC_READ | GENERIC_WRITE, // read and write access
 			0, // no sharing
 			nullptr, // default security attributes

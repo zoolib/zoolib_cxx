@@ -31,12 +31,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamerFactory_Precon.h"
 
 namespace ZooLib {
+namespace ZUtil_BlackBerry {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_BlackBerry
-
-namespace ZUtil_BlackBerry {
 
 ZRef<ZBlackBerry::Manager> sMakeManager(ZRef<ZStreamerRWConFactory> iFactory)
 	{
@@ -112,5 +111,4 @@ ZRef<ZBlackBerry::Manager> sMakeManager()
 	}
 
 } // namespace ZUtil_BlackBerry
-
 } // namespace ZooLib

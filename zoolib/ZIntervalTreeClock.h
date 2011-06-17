@@ -156,7 +156,7 @@ public:
 	ZRef<Clock> Evented() const;
 	ZRef<Clock> Joined(const ZRef<Clock>& iOther) const;
 	void Forked(ZRef<Clock>& oLeft, ZRef<Clock>& oRight) const;
-	
+
 private:
 	const ZRef<Identity> fIdentity;
 	const ZRef<Event> fEvent;

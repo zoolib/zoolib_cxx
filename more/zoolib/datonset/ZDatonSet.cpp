@@ -308,11 +308,11 @@ ZRef<DatonSet> DatonSet::Fork()
 	this->pCommit();
 	ZRef<Clock> a, b;
 	fClock->Forked(a, b);
-	
+
 //	if (random() & 1)
 //		swap(a, b);
 	fClock = a;
-	
+
 	return new DatonSet(Nombre(fNombre, fNextFork++), b, fDeltasChain);
 	}
 

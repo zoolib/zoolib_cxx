@@ -63,7 +63,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 	ZSetRestore_T<RelHead> sr(fRelHead);
 	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 	ZRef<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
-	
+
 	theRelHead = fRelHead;
 	ZRef<Expr_Rel> result = iExpr->SelfOrClone(newOp0, newOp1);
 
@@ -71,7 +71,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 	for (vector<Restrict*>::iterator iter = fRestricts.begin(); iter != fRestricts.end(); ++iter)
 		{
 		Restrict& theRestrict = **iter;
-		
+
 		if (theRestrict.fCountTouching != theRestrict.fCountSubsuming)
 			{
 			// Our children touched, but did not individually subsume this rel.
@@ -86,7 +86,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 				result = result & theRestrict.fExpr_Bool;
 				}
 			}
-		
+
 		}
 	this->pSetResult(result);
 	}

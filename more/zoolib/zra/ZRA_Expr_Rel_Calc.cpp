@@ -41,7 +41,7 @@ int sCompare_T(const ZRA::Expr_Rel_Calc& iL, const ZRA::Expr_Rel_Calc& iR)
 
 	if (iR.GetCallable() < iL.GetCallable())
 		return 1;
-	
+
 	return 0;
 	}
 

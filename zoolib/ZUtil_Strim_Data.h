@@ -26,12 +26,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim.h"
 
 namespace ZooLib {
+namespace ZUtil_Strim_Data {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Strim_Data
-
-namespace ZUtil_Strim_Data {
 
 void sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s);
 void sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s, uint64 iMax);
@@ -42,7 +41,6 @@ void sDumpData(const ZStrimW& s, bool iShowSize, const void* iSource, uint64 iCo
 void sDumpData(const ZStrimW& s, bool iShowSize, const void* iSource, uint64 iCount, uint64 iMax);
 
 } // ZUtil_Strim_Data
-
 } // namespace ZooLib
 
 #endif // __ZUtil_Strim_Data__

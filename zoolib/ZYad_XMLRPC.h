@@ -63,7 +63,6 @@ void sToStrim(const Request_t& iRequest, const ZML::StrimW& s);
 void sToStrim(const Response_t& iResponse, const ZML::StrimW& s);
 
 } // namespace ZYad_XMLRPC
-
 } // namespace ZooLib
 
 #endif // __ZYad_XMLRPC__

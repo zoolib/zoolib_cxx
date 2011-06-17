@@ -26,12 +26,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstddef> // For std::size_t
 
 namespace ZooLib {
+namespace ZDebug {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDebug
-
-namespace ZDebug {
 
 struct Params_t
 	{
@@ -106,7 +105,6 @@ template <> struct AssertCompile<true> { typedef bool IsValid; };
 #define ZAssert(a) ZAssertStop(0, a)
 
 } // namespace ZDebug
-
 } // namespace ZooLib
 
 #endif // __ZDebug__

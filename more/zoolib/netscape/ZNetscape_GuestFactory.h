@@ -27,17 +27,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 
 namespace ZooLib {
+namespace ZNetscape {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetscape
 
-namespace ZNetscape {
-
 ZRef<GuestFactory> sMakeGuestFactory(const std::string& iNativePath);
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // __ZNetscape_GuestFactory__

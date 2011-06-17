@@ -82,12 +82,12 @@ InsertPrefix::InsertPrefix(const string8& iPrefix)
 void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
 	{
 	const RelHead& theRelHead = iExpr->GetConcreteRelHead();
-	
+
 	const RelHead newRelHead = ZRA::sPrefixErased(fPrefix, theRelHead);
 	ZRef<ZRA::Expr_Rel> theRel = ZRA::sConcrete(newRelHead);
 	for (RelHead::const_iterator i = newRelHead.begin(); i != newRelHead.end(); ++i)
 		theRel = sRename(theRel, ZRA::sPrefixInserted(fPrefix, *i), *i);
-	
+
 	this->pSetResult(theRel);
 	}
 
@@ -383,7 +383,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Con
 
 	// Identify which PSources can service this concrete.
 	fPSources = fSource_Union->pIdentifyPSources(fResultRelHead);
-	
+
 	if (fPSources.size() <= 1)
 		this->pSetResult(iExpr);
 	else
@@ -407,10 +407,10 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>
 	// And the relhead
 	ZRA::RelHead leftRelHead;
 	leftRelHead.swap(fResultRelHead);
-	
+
 	// Visit embedee
 	const ZRef<ZRA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
-	
+
 	// Remember its PSources.
 	set<PSource*> rightPSources;
 	rightPSources.swap(fPSources);
@@ -478,10 +478,10 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 	// And the relhead
 	ZRA::RelHead leftRelHead;
 	leftRelHead.swap(fResultRelHead);
-	
+
 	// Visit right branch
 	const ZRef<ZRA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
-	
+
 	// Remember its PSources.
 	set<PSource*> rightPSources;
 	rightPSources.swap(fPSources);
@@ -597,10 +597,10 @@ void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>
 	// And the relhead
 	ZRA::RelHead leftRelHead;
 	leftRelHead.swap(fResultRelHead);
-	
+
 	// Visit right branch
 	const ZRef<ZRA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
-	
+
 	// Remember its PSources.
 	set<PSource*> rightPSources;
 	rightPSources.swap(fPSources);
@@ -771,10 +771,10 @@ void Source_Union::ModifyRegistrations(
 
 		Map_Refcon_ClientQuery::iterator iterClientQuery =
 			fMap_Refcon_ClientQuery.find(theRefcon);
-		
+
 		ClientQuery* theClientQuery = &iterClientQuery->second;
 		fClientQuery_NeedsWork.EraseIfContains(theClientQuery);
-		
+
 		PQuery* thePQuery = theClientQuery->fPQuery;
 
 		thePQuery->fClientQueries.Erase(theClientQuery);
@@ -819,7 +819,7 @@ void Source_Union::ModifyRegistrations(
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
 
 		PQuery* thePQuery = &inPQuery.first->second;
-		
+
 		const int64 theRefcon = iAdded->GetRefcon();
 
 		if (ZLOGPF(s, eDebug + 1))
@@ -886,7 +886,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 					}
 				}
 			}
-		
+
 		thePSource->fSource->ModifyRegistrations(
 			ZUtil_STL::sFirstOrNil(theAddedQueries), theAddedQueries.size(),
 			ZUtil_STL::sFirstOrNil(theRemoves), theRemoves.size());
@@ -1010,10 +1010,10 @@ void Source_Union::EraseSource(ZRef<Source> iSource)
 		iterPIP->second.fProxy->fPIP_InProxy.Erase(&iterPIP->second);
 		}
 	thePSource.fMap_Refcon_PIP.clear();
-	
+
 	iSource->ModifyRegistrations(nullptr, 0,
 		ZUtil_STL::sFirstOrNil(toRemove), toRemove.size());
-			
+
 	iSource->SetCallable_ResultsAvailable(null);
 
 	fMap_Source_PSource.erase(iterSource);
@@ -1167,7 +1167,7 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 	{
 	vector<QueryResult> theQueryResults;
 	iPSource->fSource->CollectResults(theQueryResults);
-	
+
 	for (vector<QueryResult>::iterator iterQueryResults = theQueryResults.begin();
 		iterQueryResults != theQueryResults.end(); ++iterQueryResults)
 		{

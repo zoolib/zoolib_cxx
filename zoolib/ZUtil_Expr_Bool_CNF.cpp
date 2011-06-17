@@ -171,7 +171,7 @@ public:
 		else
 			{
 			this->pSetResult(spCrossMultiply(theCNF0, theCNF1));
-			}		
+			}
 		}
 
 protected:

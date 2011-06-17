@@ -39,7 +39,7 @@ class Walker_Calc : public Walker_Unary
 public:
 	typedef ZRA::Expr_Rel_Calc::Callable Callable;
 	typedef ZRA::Expr_Rel_Calc::PseudoMap PseudoMap;
-	
+
 	Walker_Calc(const ZRef<Walker>& iWalker,
 		const string8& iRelName,
 		const ZRef<Callable>& iCallable);

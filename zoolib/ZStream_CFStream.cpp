@@ -48,7 +48,7 @@ void ZStreamR_CFStream::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			*oCountRead = result;
 		}
 	}
-	
+
 size_t ZStreamR_CFStream::Imp_CountReadable()
 	{
 	if (fCFStream && ::CFReadStreamHasBytesAvailable(fCFStream))

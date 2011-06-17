@@ -788,7 +788,7 @@ parameters = {
   parameterName1 = string(parameterValue1);
   parameterName2 = string(parameterValue2);
   // ...
-  parameterNameX = string(parameterValueX);			
+  parameterNameX = string(parameterValueX);
   }
 }
 <\endcode>

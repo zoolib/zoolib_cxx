@@ -863,7 +863,6 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 #endif // defined(XP_MACOSX)
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // ! ZCONFIG_Is64Bit

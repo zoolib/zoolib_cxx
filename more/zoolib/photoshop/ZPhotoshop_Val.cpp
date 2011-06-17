@@ -1501,5 +1501,4 @@ size_t Map::pCount() const
 	}
 
 } // namespace ZPhotoshop
-
 } // namespace ZooLib

@@ -26,17 +26,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad.h"
 
 namespace ZooLib {
+namespace ZUtil_Yad {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Yad
 
-namespace ZUtil_Yad {
-
 ZRef<ZYadR> sWalk(ZRef<ZYadR> iYadR, const ZTrail& iTrail);
 
 } // namespace ZUtil_Yad
-
 } // namespace ZooLib
 
 #endif // __ZUtil_Yad__

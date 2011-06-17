@@ -31,13 +31,13 @@ namespace ZooLib {
 
 template <>
 int sCompare_T(const ZRA::RelHead& iL, const ZRA::RelHead& iR)
-	{ return sCompareIterators_T(iL.begin(), iL.end(),  iR.begin(), iR.end()); }
+	{ return sCompareIterators_T(iL.begin(), iL.end(), iR.begin(), iR.end()); }
 
 ZMACRO_CompareRegistration_T(ZRA::RelHead)
 
 template <>
 int sCompare_T(const ZRA::Rename& iL, const ZRA::Rename& iR)
-	{ return sCompareIterators_T(iL.begin(), iL.end(),  iR.begin(), iR.end()); }
+	{ return sCompareIterators_T(iL.begin(), iL.end(), iR.begin(), iR.end()); }
 
 ZMACRO_CompareRegistration_T(ZRA::Rename)
 

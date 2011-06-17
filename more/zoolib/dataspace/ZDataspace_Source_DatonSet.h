@@ -65,7 +65,7 @@ class Source_DatonSet : public Source
 	{
 public:
 	enum { kDebug = 1 };
-	
+
 	void ForceUpdate();
 
 	// Some kind of index specs to be passed in too.
@@ -106,7 +106,7 @@ private:
 	class PQuery;
 
 	class Visitor_DoMakeWalker;
-	friend class Visitor_DoMakeWalker;	
+	friend class Visitor_DoMakeWalker;
 
 //--
 

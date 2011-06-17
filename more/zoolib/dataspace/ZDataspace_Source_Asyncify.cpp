@@ -56,7 +56,7 @@ void Source_Asyncify::Initialize()
 
 void Source_Asyncify::Finalize()
 	{
-	fSource->SetCallable_ResultsAvailable(null);	
+	fSource->SetCallable_ResultsAvailable(null);
 	Source::Finalize();
 	}
 
@@ -151,7 +151,7 @@ void Source_Asyncify::pUpdate()
 
 		vector<int64> theRemoves(fPendingRemoves.begin(), fPendingRemoves.end());
 		fPendingRemoves.clear();
-		
+
 		if (theAdds.size() || theRemoves.size())
 			{
 			guard.Release();

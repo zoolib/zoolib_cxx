@@ -25,17 +25,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad.h"
 
 namespace ZooLib {
+namespace ZYad_JSONNormalize {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYad_JSONNormalize
 
-namespace ZYad_JSONNormalize {
-
 ZRef<ZYadR> sMakeYadR(ZRef<ZYadR> iYadR, bool iPreserveSeqs, bool iPreserveMaps);
 
 } // namespace ZYad_JSONNormalize
-
 } // namespace ZooLib
 
 #endif // __ZYad_JSON__

@@ -30,12 +30,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
+namespace ZML {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZML
-
-namespace ZML {
 
 using std::pair;
 using std::string;
@@ -314,7 +313,6 @@ protected:
 	};
 
 } // namespace ZML
-
 } // namespace ZooLib
 
 #endif // __ZML__

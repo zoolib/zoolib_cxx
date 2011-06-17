@@ -84,7 +84,7 @@ void sSemanticError(const string8& iMessage)
 	if (ZRef<Callable_SemanticError> theCallable = spGet())
 		theCallable->Call(iMessage);
 	else if (ZRef<Callable_SemanticError> theCallable = sCallable_SemanticError_Default)
-		theCallable->Call(iMessage);		
+		theCallable->Call(iMessage);
 	}
 
 SetRestore_SemanticError::SetRestore_SemanticError(const ZRef<Callable_SemanticError>& iCallable)

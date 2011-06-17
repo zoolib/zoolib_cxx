@@ -127,7 +127,7 @@ const ZRef<ZValComparand>& ZValPred::GetRHS() const
 
 template<>
 int sCompare_T(const ZValPred& iL, const ZValPred& iR)
-	{		
+	{
 	if (int compare = sCompare_T(iL.GetLHS(), iR.GetLHS()))
 		return compare;
 

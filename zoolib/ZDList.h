@@ -265,7 +265,7 @@ public:
 		iOther.fCurrent = nullptr;
 		iOther.fNext = nullptr;
 		}
-		
+
 	~DListEraser()
 		{ ZAssertStop(L::kDebug, !fCurrent && !fNext); }
 

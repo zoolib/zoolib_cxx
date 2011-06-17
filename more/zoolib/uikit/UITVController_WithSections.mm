@@ -68,7 +68,7 @@ static bool spIsVersion4OrLater()
 		resultQ = [[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0;
 	return resultQ.Get();
 	}
-	
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Section
@@ -917,7 +917,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 
 	if (!fNeedsUpdate)
 		return;
-	
+
 	if (fUpdateInFlight)
 		return;
 	fUpdateInFlight = true;
@@ -934,7 +934,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	[self
 		performSelectorOnMainThread:@selector(pCheckForUpdate:)
 		withObject:tableView
-		waitUntilDone:NO];	
+		waitUntilDone:NO];
 	}
 
 - (void)needsUpdate:(UITableView*)tableView
@@ -958,7 +958,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 		}
 	return nil;
 	}
-	
+
 - (void)tableViewWillAppear:(UITableView*)tableView
 	{
 	[tableView deselect];
@@ -969,7 +969,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 - (void)tableViewDidAppear:(UITableView*)tableView
 	{
 	fShown = true;
-    [tableView flashScrollIndicators];
+	[tableView flashScrollIndicators];
 	for (size_t x = 0; x < fSections_All.size(); ++x)
 		fSections_All[x]->GetBody()->ViewDidAppear(tableView);
 	}
@@ -1005,10 +1005,10 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 
 typedef enum 
 	{
-    UACellBackgroundViewPositionSingle = 0,
-    UACellBackgroundViewPositionTop, 
-    UACellBackgroundViewPositionBottom,
-    UACellBackgroundViewPositionMiddle
+	UACellBackgroundViewPositionSingle = 0,
+	UACellBackgroundViewPositionTop, 
+	UACellBackgroundViewPositionBottom,
+	UACellBackgroundViewPositionMiddle
 	} UACellBackgroundViewPosition;
 
 static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsSucceeded)
@@ -1040,7 +1040,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 
 	[tableView visibleCells];
 	const NSArray* paths = [tableView indexPathsForVisibleRows];
-	
+
 	size_t countInSection;
 	int lastSection = -1;
 	for (size_t x = 0, count = [paths count]; x < count; ++x)
@@ -1131,7 +1131,7 @@ static void spInsertSections(UITableView* iTableView,
 
 	// We need to insert and remove sections.
 	[tableView beginUpdates];
-	
+
 	const vector<ZRef<Section> > sectionsOld = fSections_Shown;
 	fSections_Shown = fSections_Shown_Pending;
 
@@ -1168,7 +1168,7 @@ static void spInsertSections(UITableView* iTableView,
 			iterNew = inNew + 1;
 			}
 		}
-			
+
 	// Insert remainder of pending.
 	if (size_t countToInsert = endNew - iterNew)
 		{

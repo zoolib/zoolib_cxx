@@ -137,7 +137,7 @@ void ZDelegate::Wrapper::pSetSignature(const char* R,
 	const string signature = R + kRcvrSEL + P0;
 	fNSMethodSignature = [NSMethodSignature signatureWithObjCTypes:signature.c_str()];
 	}
-	
+
 void ZDelegate::Wrapper::pSetSignature(const char* R,
 	const char* P0, const char* P1)
 	{

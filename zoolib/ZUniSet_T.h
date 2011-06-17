@@ -397,7 +397,7 @@ bool ZUniSet_T<T>::QInsert(const T& iElem)
 	if (fUniversal)
 		return fElems.erase(iElem);
 	else
-		return fElems.insert(iElem).second;	
+		return fElems.insert(iElem).second;
 	}
 
 template <class T>

@@ -320,7 +320,7 @@ void Host_Cocoa::pDoSetWindow()
 	fNPWindow.clipRect.top = 0;
 	fNPWindow.clipRect.right = width;
 	fNPWindow.clipRect.bottom = height;
-	
+
 	this->Guest_SetWindow(&fNPWindow);
 	}
 
@@ -346,7 +346,7 @@ void Host_Cocoa::Draw(const NSRect& iRect)
 	event.data.draw.y = iRect.origin.y;
 	event.data.draw.width = iRect.size.width;
 	event.data.draw.height = iRect.size.height;
-	
+
 	this->Guest_HandleEvent(&event);
 	}
 
@@ -369,7 +369,7 @@ void Host_Cocoa::SendText(NSEvent* iEvent)
 	NPCocoaEvent event;
 	spInitialize(event, NPCocoaEventTextInput);
 	event.data.text.text = (NPNSString *)[iEvent characters];
- 	
+ 
 	this->Guest_HandleEvent(&event);
 	}
 
@@ -385,9 +385,9 @@ bool Host_Cocoa::SendKeyEvent(NSEvent* iEvent, NPCocoaEventType iType)
 	event.data.key.charactersIgnoringModifiers = (NPNSString*)[iEvent charactersIgnoringModifiers];
 
 	int result = this->Guest_HandleEvent(&event);
-	
+
 	ZAssert(result == 0 || result == 1);
-	
+
 	return result != 0;
 	}
 
@@ -395,9 +395,9 @@ bool Host_Cocoa::SendMouseEvent(NSEvent* iEvent, NPCocoaEventType iType)
 	{
 	NPCocoaEvent event;
 	spInitialize(event, iType);
-	
+
 	NSPoint point = [fView convertPoint:[iEvent locationInWindow] fromView:nil];
-	
+
 	int clickCount;
 	if (iType == NPCocoaEventMouseEntered
 		|| iType == NPCocoaEventMouseExited
@@ -409,7 +409,7 @@ bool Host_Cocoa::SendMouseEvent(NSEvent* iEvent, NPCocoaEventType iType)
 		{
 		clickCount = [iEvent clickCount];
 		}
-	
+
 	event.data.mouse.modifierFlags = [iEvent modifierFlags];
 	event.data.mouse.buttonNumber = [iEvent buttonNumber];
 	event.data.mouse.clickCount = clickCount;
@@ -418,7 +418,7 @@ bool Host_Cocoa::SendMouseEvent(NSEvent* iEvent, NPCocoaEventType iType)
 	event.data.mouse.deltaX = [iEvent deltaX];
 	event.data.mouse.deltaY = [iEvent deltaY];
 	event.data.mouse.deltaZ = [iEvent deltaZ];
-	
+
 	return this->Guest_HandleEvent(&event);
 	}
 
@@ -427,7 +427,7 @@ void Host_Cocoa::FocusChanged(bool hasFocus)
 	NPCocoaEvent event;
 	spInitialize(event, NPCocoaEventFocusChanged);
 	event.data.focus.hasFocus = hasFocus;
-	this->Guest_HandleEvent(&event);	
+	this->Guest_HandleEvent(&event);
 	}
 
 void Host_Cocoa::WindowFocusChanged(bool hasFocus)
@@ -435,7 +435,7 @@ void Host_Cocoa::WindowFocusChanged(bool hasFocus)
 	NPCocoaEvent event;
 	spInitialize(event, NPCocoaEventWindowFocusChanged);
 	event.data.focus.hasFocus = hasFocus;
-	this->Guest_HandleEvent(&event);	
+	this->Guest_HandleEvent(&event);
 	}
 
 void Host_Cocoa::Timer()

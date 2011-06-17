@@ -39,17 +39,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 namespace ZooLib {
+namespace ZDCPixmap_CoreVideo {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCPixmap_CoreVideo
 
-namespace ZDCPixmap_CoreVideo {
-
 ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR);
 
 } // namespace ZDCPixmap_CoreVideo
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)

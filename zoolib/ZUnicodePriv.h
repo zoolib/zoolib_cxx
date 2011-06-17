@@ -113,7 +113,7 @@ struct Functions_CountCU_T<const UTF8*>
 		{
 		if (!iString)
 			return 0;
-			
+
 		#if defined(__GNUC__) && __GNUC__ == 2 && __GNUC_MINOR__ <= 9
 			return std::string_char_traits<UTF8>::length(iString);
 		#else

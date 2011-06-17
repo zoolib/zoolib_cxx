@@ -134,7 +134,6 @@ void sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
 	ZRef<ZYadR> iYadR, const ZStrimW& s);
 
 } // namespace ZYad_JSON
-
 } // namespace ZooLib
 
 #endif // __ZYad_JSON__

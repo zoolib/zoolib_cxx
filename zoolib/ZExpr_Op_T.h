@@ -71,7 +71,7 @@ public:
 
 	virtual ZRef<T> Self() = 0;
 	virtual ZRef<T> Clone() = 0;
-	
+
 	ZRef<T> SelfOrClone()
 		{ return this->Self(); }
 	};

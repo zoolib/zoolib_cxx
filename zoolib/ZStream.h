@@ -119,11 +119,14 @@ Read data from this stream into memory.
 /** \name Copy To
 Read data from this stream and write it to iStreamW.
 */	//@{
-	void CopyAllTo(const ZStreamW& iStreamW) const;
-	void CopyAllTo(const ZStreamW& iStreamW, uint64* oCountRead, uint64* oCountWritten) const;
+	const ZStreamR& CopyAllTo(const ZStreamW& iStreamW) const;
 
-	void CopyTo(const ZStreamW& iStreamW, uint64 iCount) const;
-	void CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+	const ZStreamR& CopyAllTo(const ZStreamW& iStreamW,
+		uint64* oCountRead, uint64* oCountWritten) const;
+
+	const ZStreamR& CopyTo(const ZStreamW& iStreamW, uint64 iCount) const;
+
+	const ZStreamR& CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten) const;
 	//@}
 
@@ -380,11 +383,14 @@ Write data from memory into this stream.
 /** \name Copy from
 Read data from iStreamR and write it to this stream.
 */	//@{
-	void CopyAllFrom(const ZStreamR& iStreamR) const;
-	void CopyAllFrom(const ZStreamR& iStreamR, uint64* oCountRead, uint64* oCountWritten) const;
+	const ZStreamW& CopyAllFrom(const ZStreamR& iStreamR) const;
 
-	void CopyFrom(const ZStreamR& iStreamR, uint64 iCount) const;
-	void CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
+	const ZStreamW& CopyAllFrom(const ZStreamR& iStreamR,
+		uint64* oCountRead, uint64* oCountWritten) const;
+
+	const ZStreamW& CopyFrom(const ZStreamR& iStreamR, uint64 iCount) const;
+
+	const ZStreamW& CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten) const;
 	//@}
 

@@ -63,7 +63,7 @@ public:
 	virtual void Loaded(const ZRef<Sieve>& iSieve);
 	virtual void Changed(const ZRef<Sieve>& iSieve);
 
-	const ZMtxR& GetMtxR()	
+	const ZMtxR& GetMtxR()
 		{ return fMtxR; }
 
 private:
@@ -71,7 +71,7 @@ private:
 	void pFinalize(Sieve* iSieve);
 
 	ZRef<Source> fSource;
-	
+
 	ZMtxR fMtxR;
 
 	ZRef<Callable_UpdateNeeded> fCallable_UpdateNeeded;

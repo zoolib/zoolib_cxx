@@ -130,7 +130,7 @@ protected:
 
 public:
 	virtual ~SourceFactory();
-	
+
 	virtual ZRef<Source> Make() = 0;
 	};
 

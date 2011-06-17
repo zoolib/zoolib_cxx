@@ -42,12 +42,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE3(ApplicationServices,QD,QD.h)
 
 namespace ZooLib {
+namespace ZUtil_ATSUI {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_ATSUI
-
-namespace ZUtil_ATSUI {
 
 ATSUStyle sAsATSUStyle(const ZDCFont& iFont, float iFontSize);
 
@@ -76,7 +75,6 @@ private:
 	};
 
 } // namespace ZUtil_ATSUI
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Util_ATSUI)

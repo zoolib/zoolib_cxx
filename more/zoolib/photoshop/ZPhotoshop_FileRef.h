@@ -79,7 +79,6 @@ private:
 	};
 
 } // namespace ZPhotoshop
-
 } // namespace ZooLib
 
 #endif // __ZPhotoshop_FileRef__

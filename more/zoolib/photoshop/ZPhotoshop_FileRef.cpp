@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTextCoder_Win.h"
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZUnicode.h"
-#include "zoolib/ZUtil_CFType.h"
+#include "zoolib/ZUtil_CF.h"
 
 #include <stdexcept> // For runtime_error
 #include <cstdio> // For sscanf
@@ -453,7 +453,7 @@ ZQ<ZTrail> FileRef::AsTrail() const
 				&theFSAIB, &theFSAI);
 
 			if ((theErr == noErr || theErr == fnfErr) && thePath)
-				return ZTrail(ZUtil_CFType::sAsUTF8(thePath));
+				return ZTrail(ZUtil_CF::sAsUTF8(thePath));
 
 		#else
 
@@ -528,5 +528,4 @@ Handle& FileRef::OParam()
 	}
 
 } // namespace ZPhotoshop
-
 } // namespace ZooLib

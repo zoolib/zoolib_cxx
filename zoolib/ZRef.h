@@ -414,7 +414,7 @@ const struct TempRef_t
 	{
 	template <class T>
 	ZRef<T,true> operator&(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
-	
+
 	template <class T>
 	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
 	} TempRef = {};

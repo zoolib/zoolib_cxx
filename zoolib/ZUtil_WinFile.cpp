@@ -23,12 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(Win)
 
 namespace ZooLib {
+namespace ZUtil_WinFile {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_WinFile
-
-namespace ZUtil_WinFile {
 
 DWORD sFlush(HANDLE iHANDLE)
 	{
@@ -75,11 +74,11 @@ DWORD sWrite(HANDLE iHANDLE, const void* iSource, size_t iCount, size_t* oCountW
 
 DWORD sRead(HANDLE iHANDLE, const uint64* iOffset,
 	void* oDest, size_t iCount, size_t* oCountRead)
-	{ return sRead(iHANDLE, iOffset, nullptr, oDest, iCount, oCountRead);  }
+	{ return sRead(iHANDLE, iOffset, nullptr, oDest, iCount, oCountRead); }
 
 DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset,
 	const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ return sWrite(iHANDLE, iOffset, nullptr, iSource, iCount, oCountWritten);  }
+	{ return sWrite(iHANDLE, iOffset, nullptr, iSource, iCount, oCountWritten); }
 
 DWORD sRead(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
 	void* oDest, size_t iCount, size_t* oCountRead)
@@ -158,7 +157,6 @@ DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
 	}
 
 } // namespace ZUtil_WinFile
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

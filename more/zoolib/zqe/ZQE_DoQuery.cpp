@@ -60,10 +60,10 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 			set<ZRef<ZCounted> > theAnnotations;
 			if (!iWalker->ReadInc(&theRow[0], &theAnnotations))
 				break;
-			
+
 			theAnnotationsVector.push_back(
 				vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
-			
+
 			for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
 				thePackedRows.push_back(theRow[i->second]);
 

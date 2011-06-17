@@ -78,7 +78,7 @@ bool Walker_Embed::ReadInc(
 	{
 	if (!fWalker_Parent->ReadInc(ioResults, oAnnotations))
 		return false;
-	
+
 	if (fWalker_Embedee)
 		{
 		fWalker_Embedee->Rewind();

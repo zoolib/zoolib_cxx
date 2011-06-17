@@ -100,7 +100,7 @@ int ZData_Any::Compare(const ZData_Any& iOther) const
 	{
 	if (fRep == iOther.fRep)
 		return 0;
-	
+
 	if (const size_t thisSize = fRep->fVector.size())
 		{
 		if (const size_t otherSize = iOther.fRep->fVector.size())

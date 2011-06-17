@@ -28,19 +28,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStdInt.h" // For size_t
 
 namespace ZooLib {
+namespace ZUtil_POSIXFD {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_POSIXFD
-
-namespace ZUtil_POSIXFD {
 
 bool sWaitReadable(int iFD, double iTimeout);
 void sWaitWriteable(int iFD);
 size_t sCountReadable(int iFD);
 
 } // namespace ZUtil_POSIXFD
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(POSIX)

@@ -163,7 +163,6 @@ void sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
 void sWrite_PropName(const std::string& iPropName, const ZStrimW& s);
 
 } // namespace ZYad_ZooLibStrim
-
 } // namespace ZooLib
 
 #endif // __ZYad_ZooLibStrim__

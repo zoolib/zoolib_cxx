@@ -146,7 +146,7 @@ ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther) const
 		if (newLeft->IsZero() && newRight->IsZero() || newLeft->IsOne() && newRight->IsOne())
 			return newLeft; // or equivalently newRight.
 
-		return new Identity(newLeft, newRight);		
+		return new Identity(newLeft, newRight);
 		}
 	}
 
@@ -345,7 +345,7 @@ size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent) const
 			{
 			ZRef<Event> newEventLeft;
 			const size_t costLeft = fLeft->pGrown(identityLeft, newEventLeft);
-			
+
 			ZRef<Event> newEventRight;
 			size_t costRight = fRight->pGrown(identityRight, newEventRight);
 
@@ -360,7 +360,7 @@ size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent) const
 				return 1 + costRight;
 				}
 			}
-		}		
+		}
 	}
 
 ZRef<Event> Event::pFilled(const ZRef<Identity>& iIdentity) const
@@ -401,7 +401,7 @@ ZRef<Event> Event::pFilled(const ZRef<Identity>& iIdentity) const
 				new Event(fValue, fLeft->pFilled(identityLeft), fRight->pFilled(identityRight));
 			return result->pNormalized();
 			}
-		}		
+		}
 	}
 
 ZRef<Event> Event::pDropped(size_t d) const
@@ -484,7 +484,7 @@ bool Clock::LessEqual(const ZRef<Clock>& iOther) const
 
 bool Clock::IsBefore(const ZRef<Clock>& iOther) const
 	{ return fEvent->IsBefore(iOther->fEvent); }
-	
+
 bool Clock::IsAfter(const ZRef<Clock>& iOther) const
 	{ return fEvent->IsAfter(iOther->fEvent); }
 

@@ -85,12 +85,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * ////////////////////////////////////////////////////////////////////////// */
 
 #define ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(U, G, B) \
-    typedef operator_bool_generator<U>::class_type G; \
-    typedef G::return_type B
+	typedef operator_bool_generator<U>::class_type G; \
+	typedef G::return_type B
 
 #define ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(U, G, B) \
-    typedef typename operator_bool_generator<U>::class_type G; \
-    typedef typename G::return_type B
+	typedef typename operator_bool_generator<U>::class_type G; \
+	typedef typename G::return_type B
 
 template <typename T>
 struct operator_bool_generator
@@ -120,13 +120,13 @@ private:
 #endif
 
 #define ZMACRO_operator_bool(U, B) \
-    typedef operator_bool_generator<U>::class_type B##_gen; \
-    typedef B##_gen::return_type B; \
+	typedef operator_bool_generator<U>::class_type B##_gen; \
+	typedef B##_gen::return_type B; \
 	operator B()
 
 #define ZMACRO_operator_bool_T(U, B) \
-    typedef typename operator_bool_generator<U>::class_type B##_gen; \
-    typedef typename B##_gen::return_type B; \
+	typedef typename operator_bool_generator<U>::class_type B##_gen; \
+	typedef typename B##_gen::return_type B; \
 	operator B()
 
 #endif // __ZCompat_operator_bool__

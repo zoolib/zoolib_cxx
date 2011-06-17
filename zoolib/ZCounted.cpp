@@ -54,7 +54,7 @@ bool ZCountedBase::FinishFinalize()
 	{
 	if (!ZAtomic_DecAndTest(&fRefCount))
 		return false;
-	
+
 	if (fWeakRefProxy)
 		{
 		fWeakRefProxy->pClear();

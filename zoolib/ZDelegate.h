@@ -84,7 +84,7 @@ private:
 		class P0>
 	static ZRef<Wrapper>
 	spMakeWrapper(const ZRef<ZCallable<R(P0)> >& iCallable);
-	
+
 	template <class R,
 		class P0, class P1>
 	static ZRef<Wrapper>
@@ -188,7 +188,7 @@ class ZDelegate::Wrapper_T<R(void)>
 		{
 		this->pSetSignature(@encode(R));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		R result = fCallable->Call();
@@ -215,7 +215,7 @@ class ZDelegate::Wrapper_T<void(void)>
 		{
 		this->pSetSignature(@encode(void));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		fCallable->Call();
@@ -243,7 +243,7 @@ class ZDelegate::Wrapper_T<R(P0)>
 		this->pSetSignature(@encode(R),
 			@encode(P0));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -274,7 +274,7 @@ class ZDelegate::Wrapper_T<void(P0)>
 		this->pSetSignature(@encode(void),
 			@encode(P0));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -371,7 +371,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2)>
 		this->pSetSignature(@encode(R),
 			@encode(P0), @encode(P1), @encode(P2));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -406,7 +406,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2)>
 		this->pSetSignature(@encode(void),
 			@encode(P0), @encode(P1), @encode(P2));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -441,7 +441,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3)>
 		this->pSetSignature(@encode(R),
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -478,7 +478,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3)>
 		this->pSetSignature(@encode(void),
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -516,7 +516,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4)>
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3),
 			@encode(P4));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -556,7 +556,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4)>
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3),
 			@encode(P4));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -596,7 +596,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5)>
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3),
 			@encode(P4), @encode(P5));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -638,7 +638,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5)>
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3),
 			@encode(P4), @encode(P5));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -680,7 +680,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6)>
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3),
 			@encode(P4), @encode(P5), @encode(P6));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -724,7 +724,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6)>
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3),
 			@encode(P4), @encode(P5), @encode(P6));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -768,7 +768,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3),
 			@encode(P4), @encode(P5), @encode(P6), @encode(P7));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;
@@ -814,7 +814,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)>
 			@encode(P0), @encode(P1), @encode(P2), @encode(P3),
 			@encode(P4), @encode(P5), @encode(P6), @encode(P7));
 		}
-	
+
 	virtual void ForwardInvocation(NSInvocation* anInvocation)
 		{
 		P0 p0;

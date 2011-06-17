@@ -156,7 +156,7 @@ public:
 		}
 
 	void Set(const T& iVal)
-		{		
+		{
 		ZAcqMtx acq(fFuture->fMtx);
 		fFuture->fVal = iVal;
 		fFuture->fCnd.Broadcast();
@@ -190,7 +190,7 @@ public:
 		}
 
 	void Set()
-		{		
+		{
 		ZAcqMtx acq(fFuture->fMtx);
 		fFuture->fSet = true;
 		fFuture->fCnd.Broadcast();

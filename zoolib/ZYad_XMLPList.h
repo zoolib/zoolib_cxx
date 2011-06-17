@@ -129,7 +129,6 @@ ZRef<ZYadR> sMakeYadR(ZRef<ZML::StrimmerU> iR);
 void sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s);
 
 } // namespace ZYad_XMLPList
-
 } // namespace ZooLib
 
 #endif // __ZYad_XMLPList__

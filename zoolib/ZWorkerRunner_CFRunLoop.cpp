@@ -127,7 +127,7 @@ void ZWorkerRunner_CFRunLoop::pWake(ZRef<ZWorker> iWorker, CFAbsoluteTime iAbsol
 		{
 		fWorkersMap[iWorker] = iAbsoluteTime;
 		this->pTrigger(iAbsoluteTime);
-		}	
+		}
 	}
 
 void ZWorkerRunner_CFRunLoop::pTrigger(CFAbsoluteTime iAbsoluteTime)

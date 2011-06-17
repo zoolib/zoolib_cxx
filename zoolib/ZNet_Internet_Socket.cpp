@@ -205,7 +205,7 @@ ZNetNameLookup_Internet_Socket::ZNetNameLookup_Internet_Socket(
 		{
 		fAddresses.push_back(new ZNetAddress_IP6(fPort, theAddr6));
 		return;
-		}		
+		}
 
 	ip4_addr theAddr4;
 	if (1 == ::inet_pton(AF_INET, fName.c_str(), &theAddr4))

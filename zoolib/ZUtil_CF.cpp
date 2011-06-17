@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZTime.h"
 
 #include ZMACINCLUDE2(CoreFoundation,CFArray.h)
@@ -79,7 +78,7 @@ ZRef<CFMutableStringRef> sStringMutable(const string8& iString8)
 ZRef<CFMutableStringRef> sStringMutable(const string16& iString16)
 	{ return sStringMutable(sString(iString16)); }
 
-ZRef<CFMutableStringRef> sStringMutable(const ZRef<CFStringRef>& iCFString)
+ZRef<CFMutableStringRef> sStringMutable(CFStringRef iCFString)
 	{ return Adopt& ::CFStringCreateMutableCopy(nullptr, 0, iCFString); }
 
 ZRef<CFDictionaryRef> sDictionary()
@@ -94,7 +93,7 @@ ZRef<CFMutableDictionaryRef> sDictionaryMutable()
 		&kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 	}
 
-ZRef<CFMutableDictionaryRef> sDictionaryMutable(const ZRef<CFDictionaryRef>& iCFDictionary)
+ZRef<CFMutableDictionaryRef> sDictionaryMutable(CFDictionaryRef iCFDictionary)
 	{
 	return Adopt& ::CFDictionaryCreateMutableCopy(nullptr,
 		::CFDictionaryGetCount(iCFDictionary), iCFDictionary);
@@ -106,7 +105,7 @@ ZRef<CFArrayRef> sArray()
 ZRef<CFMutableArrayRef> sArrayMutable()
 	{ return Adopt& ::CFArrayCreateMutable(nullptr, 0, &kCFTypeArrayCallBacks); }
 
-ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray)
+ZRef<CFMutableArrayRef> sArrayMutable(CFArrayRef iCFArray)
 	{ return Adopt& ::CFArrayCreateMutableCopy(nullptr, ::CFArrayGetCount(iCFArray), iCFArray); }
 
 ZRef<CFDataRef> sData()
@@ -125,7 +124,7 @@ ZRef<CFMutableDataRef> sDataMutable(size_t iSize)
 	return theData;
 	}
 
-ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData)
+ZRef<CFMutableDataRef> sDataMutable(CFDataRef iCFData)
 	{ return Adopt& ::CFDataCreateMutableCopy(nullptr, 0, iCFData); }
 
 // =================================================================================================
@@ -174,14 +173,14 @@ string16 sAsUTF16(CFStringRef iCFString)
 	return result;
 	}
 
-static ZData_Any spAsData_Any(const ZRef<CFDataRef>& iCFData)
+static ZData_Any spAsData_Any(CFDataRef iCFData)
 	{
 	if (size_t theLength = ::CFDataGetLength(iCFData))
 		return ZData_Any(::CFDataGetBytePtr(iCFData), theLength);
 	return ZData_Any();
 	}
 
-ZSeq_Any sAsSeq_Any(const ZAny& iDefault, const ZRef<CFArrayRef>& iCFArray)
+ZSeq_Any sAsSeq_Any(const ZAny& iDefault, CFArrayRef iCFArray)
 	{
 	ZSeq_Any theSeq;
 
@@ -202,7 +201,7 @@ static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon
 	thePair->first->Set(sAsUTF8(theKey), sDAsAny(*thePair->second, theValue));
 	}
 
-ZMap_Any sAsMap_Any(const ZAny& iDefault, const ZRef<CFDictionaryRef>& iCFDictionary)
+ZMap_Any sAsMap_Any(const ZAny& iDefault, CFDictionaryRef iCFDictionary)
 	{
 	ZMap_Any theMap;
 	pair<ZMap_Any*, const ZAny*> thePair(&theMap, &iDefault);
@@ -305,7 +304,7 @@ ZAny sAsAny(ZRef<CFTypeRef> iVal)
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
 	{ return Adopt& ::CFNumberCreate(nullptr, iType, iVal); }
 
-ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
+ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal)
 	{
 	if (false)
 		{}
@@ -434,17 +433,9 @@ ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 	}
 
 ZRef<CFTypeRef> sAsCFType(const ZAny& iVal)
-	{ return sDAsCFType(null, iVal); }
+	{ return sDAsCFType(nullptr, iVal); }
 
 } // namespace ZUtil_CF
-
-template <>
-int sCompare_T(const ZRef<CFTypeRef>& iLHS, const ZRef<CFTypeRef>& iRHS)
-	{
-	ZUnimplemented();
-	return 0;
-	}
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

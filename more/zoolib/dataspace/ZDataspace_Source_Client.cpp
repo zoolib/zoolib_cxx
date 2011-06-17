@@ -104,7 +104,7 @@ bool Source_Client::pRead(ZRef<ZWorker> iWorker)
 		// Need to read a result and an Event
 		theSRs.push_back(QueryResult(theRefcon, null, null));
 		}
-	
+
 	ZGuardRMtxR guard(fMtxR);
 	fResults.insert(fResults.end(), theSRs.begin(), theSRs.end());
 	guard.Release();

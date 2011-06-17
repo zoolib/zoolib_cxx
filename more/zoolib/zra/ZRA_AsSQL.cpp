@@ -169,7 +169,7 @@ void Analyzer::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 	analysis0.fRename_Inverse.insert(
 		analysis1.fRename_Inverse.begin(), analysis1.fRename_Inverse.end());
 	analysis0.fCondition &= analysis1.fCondition;
-	
+
 	this->pSetResult(analysis0);
 	}
 
@@ -455,7 +455,7 @@ void spToStrim(const ZValPred& iValPred, const ZStrimW& s)
 				}
 			}
 		s << "/*Unhandled StringContains*/";
-		}		
+		}
 	else
 		{
 		s << "/*Unhandled Comparator*/";
@@ -477,7 +477,7 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 		{
 		Analyzer theAnalyzer(iTables);
 		const Analysis theAnalysis = theAnalyzer.Do(iRel);
-		
+
 		s << "SELECT DISTINCT ";
 
 		{
@@ -528,7 +528,7 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 		s << " WHERE ";
 
 		ToStrim_SQL().ToStrim(ToStrim_SQL::Options(), s, theAnalysis.fCondition);
-		
+
 		s << ";";
 		return true;
 		}

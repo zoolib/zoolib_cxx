@@ -309,12 +309,13 @@ void ZStreamR::ReadAll(void* oDest, size_t iCount, size_t* oCountRead) const
 /** \brief Read data from this stream and write it
 to \a iStreamW until this stream reaches its end.
 */
-void ZStreamR::CopyAllTo(const ZStreamW& iStreamW) const
+const ZStreamR& ZStreamR::CopyAllTo(const ZStreamW& iStreamW) const
 	{
 	uint64 countRead, countWritten;
 	this->CopyAllTo(iStreamW, &countRead, &countWritten);
 	if (countRead > countWritten)
 		ZStreamW::sThrowEndOfStream();
+	return *this;
 	}
 
 
@@ -331,7 +332,8 @@ than \a oCountRead it's a strong indication that \a iStreamW has reached its end
 subsequent call to \c CopyTo or the \a iStreamW's \c Write will likely return zero in
 \a oCountWritten.
 */
-void ZStreamR::CopyAllTo(const ZStreamW& iStreamW, uint64* oCountRead, uint64* oCountWritten) const
+const ZStreamR& ZStreamR::CopyAllTo(const ZStreamW& iStreamW,
+	uint64* oCountRead, uint64* oCountWritten) const
 	{
 	if (oCountRead)
 		*oCountRead = 0;
@@ -353,6 +355,8 @@ void ZStreamR::CopyAllTo(const ZStreamW& iStreamW, uint64* oCountRead, uint64* o
 		if (countRead != countWritten || countRead == 0 || countWritten == 0)
 			break;
 		}
+
+	return *this;
 	}
 
 
@@ -364,7 +368,7 @@ void ZStreamR::CopyAllTo(const ZStreamW& iStreamW, uint64* oCountRead, uint64* o
 If \a iCount bytes could not be read then an end of read stream exception is thrown. If
 \a iCount bytes could not be written then an end of write stream exception is thrown.
 */
-void ZStreamR::CopyTo(const ZStreamW& iStreamW, uint64 iCount) const
+const ZStreamR& ZStreamR::CopyTo(const ZStreamW& iStreamW, uint64 iCount) const
 	{
 	uint64 countRead, countWritten;
 	const_cast<ZStreamR*>(this)->Imp_CopyToDispatch(iStreamW, iCount, &countRead, &countWritten);
@@ -372,6 +376,7 @@ void ZStreamR::CopyTo(const ZStreamW& iStreamW, uint64 iCount) const
 		ZStreamR::sThrowEndOfStream();
 	if (countWritten != iCount)
 		ZStreamW::sThrowEndOfStream();
+	return *this;
 	}
 
 
@@ -382,10 +387,11 @@ void ZStreamR::CopyTo(const ZStreamW& iStreamW, uint64 iCount) const
 \param oCountRead (optional output) The number of bytes that were actually read.
 \param oCountWritten (optional output) The number of bytes that were actually written.
 */
-void ZStreamR::CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+const ZStreamR& ZStreamR::CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten) const
 	{
 	const_cast<ZStreamR*>(this)->Imp_CopyToDispatch(iStreamW, iCount, oCountRead, oCountWritten);
+	return *this;
 	}
 
 
@@ -839,12 +845,13 @@ void ZStreamW::Write(const void* iSource, size_t iCount, size_t* oCountWritten) 
 /** \brief Read data from \a iStreamR and write it to this stream until
 one or the other reaches its end.
 */
-void ZStreamW::CopyAllFrom(const ZStreamR& iStreamR) const
+const ZStreamW& ZStreamW::CopyAllFrom(const ZStreamR& iStreamR) const
 	{
 	uint64 countRead, countWritten;
 	this->CopyAllFrom(iStreamR, &countRead, &countWritten);
 	if (countRead > countWritten)
 		ZStreamW::sThrowEndOfStream();
+	return *this;
 	}
 
 
@@ -858,7 +865,7 @@ one or other reaches its end.
 
 \a oCountWritten will be less than or equal to \a oCountRead.
 */
-void ZStreamW::CopyAllFrom(const ZStreamR& iStreamR,
+const ZStreamW& ZStreamW::CopyAllFrom(const ZStreamR& iStreamR,
 	uint64* oCountRead, uint64* oCountWritten) const
 	{
 	if (oCountRead)
@@ -881,6 +888,8 @@ void ZStreamW::CopyAllFrom(const ZStreamR& iStreamR,
 		if (countRead != countWritten || countRead == 0 || countWritten == 0)
 			break;
 		}
+
+	return *this;
 	}
 
 
@@ -892,7 +901,7 @@ void ZStreamW::CopyAllFrom(const ZStreamR& iStreamR,
 If \a iCount bytes could not be read then an end of read stream exception is thrown. If
 \a iCount bytes could not be written then an end of write stream exception is thrown.
 */
-void ZStreamW::CopyFrom(const ZStreamR& iStreamR, uint64 iCount) const
+const ZStreamW& ZStreamW::CopyFrom(const ZStreamR& iStreamR, uint64 iCount) const
 	{
 	uint64 countRead, countWritten;
 	this->CopyFrom(iStreamR, iCount, &countRead, &countWritten);
@@ -900,6 +909,7 @@ void ZStreamW::CopyFrom(const ZStreamR& iStreamR, uint64 iCount) const
 		ZStreamR::sThrowEndOfStream();
 	if (countWritten != iCount)
 		ZStreamW::sThrowEndOfStream();
+	return *this;
 	}
 
 
@@ -910,10 +920,11 @@ void ZStreamW::CopyFrom(const ZStreamR& iStreamR, uint64 iCount) const
 \param oCountRead (optional output) The number of bytes that were actually read.
 \param oCountWritten (optional output) The number of bytes that were actually written.
 */
-void ZStreamW::CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
+const ZStreamW& ZStreamW::CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten) const
 	{
 	const_cast<ZStreamW*>(this)->Imp_CopyFromDispatch(iStreamR, iCount, oCountRead, oCountWritten);
+	return *this;
 	}
 
 /**

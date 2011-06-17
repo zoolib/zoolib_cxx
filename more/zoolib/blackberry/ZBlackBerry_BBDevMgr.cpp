@@ -31,14 +31,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <oleauto.h>
 
 namespace ZooLib {
+namespace ZBlackBerry {
 
 using std::string;
 using std::vector;
 using std::wstring;
 using namespace ZBlackBerryCOM;
 using namespace ZWinCOM;
-
-namespace ZBlackBerry {
 
 // =================================================================================================
 #pragma mark -
@@ -762,7 +761,6 @@ ZRef<Device> Manager_BBDevMgr::Open(uint64 iDeviceID)
 	}
 
 } // namespace ZBlackBerry
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(BlackBerry_BBDevMgr)

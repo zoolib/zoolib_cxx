@@ -112,7 +112,6 @@ std::set<T,Comparator> sOr(
 
 template <typename T, typename Comparator>
 void sAnd(
-	
 	const std::set<T,Comparator>& iLHS,
 	const std::set<T,Comparator>& iRHS,
 	std::set<T,Comparator>& ioResult)

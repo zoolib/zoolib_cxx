@@ -28,12 +28,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 
 namespace ZooLib {
+namespace ZUnicode {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUnicode, code unit stuff
-
-namespace ZUnicode {
 
 /** \name Useful constants and lookup tables
 *///@{
@@ -507,7 +506,6 @@ int sHexValue(UTF32 iCP);
 //@}
 
 } // namespace ZUnicode
-
 } // namespace ZooLib
 
 #endif // __ZUnicode__

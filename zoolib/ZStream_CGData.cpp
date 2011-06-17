@@ -58,7 +58,7 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential =
 	spGetBytes_R,
 	spSkipForward_R,
 	spUnimplemented,
-	spReleaseProvider_R	
+	spReleaseProvider_R
 	};
 
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer)
@@ -86,7 +86,7 @@ ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> i
 	return Adopt& ::CGDataProviderCreate(iStreamer, &spCallbacks_R);
 	}
 
-#endif //  MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#endif // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 // =================================================================================================
 #pragma mark -

@@ -136,7 +136,7 @@ void Source_SQLite::ModifyRegistrations(
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
 
 		PQuery* thePQuery = &iterPQueryPair.first->second;
-		
+
 		if (iterPQueryPair.second)
 			{
 			ZRA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String(thePQuery->fSQL));
@@ -160,14 +160,14 @@ void Source_SQLite::ModifyRegistrations(
 
 		std::map<int64, ClientQuery>::iterator iterClientQuery =
 			fMap_RefconToClientQuery.find(theRefcon);
-		
+
 		ClientQuery* theClientQuery = &iterClientQuery->second;
-		
+
 		PQuery* thePQuery = theClientQuery->fPQuery;
 		thePQuery->fClientQueries.Erase(theClientQuery);
 		if (thePQuery->fClientQueries.Empty())
 			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
-		
+
 		fMap_RefconToClientQuery.erase(iterClientQuery);
 		}
 	}
@@ -193,7 +193,7 @@ void Source_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 
 		ZRef<ZQE::Result> theResult =
 			new ZQE::Result(thePQuery->fRelHead, &thePackedRows, nullptr);
-		
+
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 			iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
 			{

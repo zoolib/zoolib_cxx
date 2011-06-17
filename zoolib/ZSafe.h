@@ -47,7 +47,7 @@ public:
 		const T newVal = iOther;
 		ZAcqMtx acq(fMtx);
 		fVal = newVal;
-		return *this;		
+		return *this;
 		}
 
 	~ZSafe()

@@ -72,7 +72,7 @@ public:
 		{ Source::pTriggerResultsAvailable(); }
 
 	ZRef<SourceMUX> fMUX;
-	
+
 	map<int64,int64> fMap_ClientToPRefcon;
 	Map_Refcon_Result fResults;
 	};
@@ -99,7 +99,7 @@ void SourceMUX::Initialize()
 
 void SourceMUX::Finalize()
 	{
-	fSource->SetCallable_ResultsAvailable(null);	
+	fSource->SetCallable_ResultsAvailable(null);
 	SourceFactory::Finalize();
 	}
 
@@ -136,7 +136,7 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 
 		theAddedQueries.push_back(AddedQuery(thePRefcon, iAdded->GetRel()));
 		}
-	
+
 	vector<int64> removedQueries;
 	removedQueries.reserve(iRemovedCount);
 	while (iRemovedCount--)
@@ -156,7 +156,7 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 	vector<QueryResult>& oChanged)
 	{
 	ZGuardRMtxR guard(fMtxR);
-	
+
 	vector<QueryResult> changes;
 	if (fResultsAvailable)
 		{
@@ -192,7 +192,7 @@ void SourceMUX::pResultsAvailable(ZRef<Source> iSource)
 	if (!fResultsAvailable)
 		{
 		fResultsAvailable = true;
-		
+
 		for (set<ClientSource*>::iterator
 			iter = fClientSources.begin(), end = fClientSources.end();
 			iter != end; ++iter)
