@@ -32,12 +32,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamer.h"
 
 namespace ZooLib {
+namespace ZStream_CGData {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStream_CGData
 
-namespace ZStream_CGData {
 
 ZRef<CGDataProviderRef> sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer);
 
@@ -46,7 +46,6 @@ ZRef<CGDataProviderRef> sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreame
 ZRef<CGDataConsumerRef> sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer);
 
 } // namespace ZStream_CGData
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)
