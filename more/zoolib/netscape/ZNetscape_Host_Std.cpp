@@ -570,13 +570,14 @@ bool Host_Std::HTTPFetcher::Work()
 		ZRef<ZStreamerR> theStreamerR;
 		if (fIsPOST)
 			{
-			theStreamerR = ZHTTP::sPostRaw(
+			theStreamerR = ZHTTP::sPostRaw(null,
 				theURL, ZStreamRPos_Data_T<ZHTTP::Data>(fData), nullptr,
 				&theHeaders, &theRawHeaders);
 			}
 		else
 			{
-			theStreamerR = ZHTTP::sRequest("GET", theURL, nullptr, &theHeaders, &theRawHeaders);
+			theStreamerR = ZHTTP::sRequest(null,
+				"GET", theURL, nullptr, &theHeaders, &theRawHeaders);
 			}
 
 		if (theStreamerR && fHost)
