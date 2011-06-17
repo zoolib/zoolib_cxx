@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,42 +18,42 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTagged_T__
-#define __ZTagged_T__ 1
+#ifndef __ZTag__
+#define __ZTag__ 1
 #include "zconfig.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTagged_T
+#pragma mark * ZTag
 
 template <class Tag, class Value>
-class ZTagged_T
+class ZTag
 	{
 	Value fValue;
 public:
-	ZTagged_T() {}
-	ZTagged_T(const ZTagged_T& iOther) : fValue(iOther.fValue) {}
-	~ZTagged_T() {}
-	ZTagged_T& operator=(const ZTagged_T& iOther) { fValue = iOther.fValue; return *this; }
+	ZTag() {}
+	ZTag(const ZTag& iOther) : fValue(iOther.fValue) {}
+	~ZTag() {}
+	ZTag& operator=(const ZTag& iOther) { fValue = iOther.fValue; return *this; }
 
-	ZTagged_T(const Value& iValue) : fValue(iValue) {}
-	ZTagged_T& operator=(const Value& iValue) { fValue = iValue; return *this; }
+	ZTag(const Value& iValue) : fValue(iValue) {}
+	ZTag& operator=(const Value& iValue) { fValue = iValue; return *this; }
 
-	Value& Get() { return fValue; }
+	Value& GetMutable() { return fValue; }
 	const Value& Get() const { return fValue; }
 
-	bool operator==(const ZTagged_T& iOther) const
+	bool operator==(const ZTag& iOther) const
 		{ return fValue == iOther.fValue; }
 
-	bool operator!=(const ZTagged_T& iOther) const
+	bool operator!=(const ZTag& iOther) const
 		{ return fValue == iOther.fValue; }
 
-	bool operator<(const ZTagged_T& iOther) const
+	bool operator<(const ZTag& iOther) const
 		{ return fValue < iOther.fValue; }
 	};
 
 } // namespace ZooLib
 
-#endif // __ZTagged_T__
+#endif // __ZTag__
