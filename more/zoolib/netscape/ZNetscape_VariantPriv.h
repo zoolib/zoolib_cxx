@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstring>
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -375,7 +374,6 @@ ZMACRO_ZValAccessors_Def_GetP(template <class T>, NPVariant_T<T>, String, std::s
 ZMACRO_ZValAccessors_Def_GetP(template <class T>, NPVariant_T<T>, Object, ZRef<T>)
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // __ZNetscape_VariantPriv__

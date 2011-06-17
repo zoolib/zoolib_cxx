@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCommer.h"
 
 namespace ZooLib {
-
 namespace ZBlackBerry {
 
 class Commer_Streamer;
@@ -62,7 +61,6 @@ private:
 	};
 
 } // namespace ZBlackBerry
-
 } // namespace ZooLib
 
 #endif // __ZBlackBerry_Streamer__

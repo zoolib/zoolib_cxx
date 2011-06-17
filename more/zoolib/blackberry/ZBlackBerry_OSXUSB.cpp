@@ -35,7 +35,6 @@ using std::runtime_error;
 using std::vector;
 
 namespace ZooLib {
-
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -475,7 +474,6 @@ void Manager_OSXUSB::pDeviceDetached(ZRef<ZUSBDevice> iUSBDevice)
 // =================================================================================================
 
 } // namespace ZBlackBerry
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(BlackBerry_OSXUSB)

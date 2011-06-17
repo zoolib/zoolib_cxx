@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 
 namespace ZooLib {
-
 namespace ZUnicode {
 
 // =================================================================================================
@@ -1640,7 +1639,6 @@ string8 Functions_Convert_T<I>::sAsUTF8(I iSource, I iEnd)
 	}
 
 } // namespace ZUnicode
-
 } // namespace ZooLib
 
 #endif // __ZUnicodePrivB__

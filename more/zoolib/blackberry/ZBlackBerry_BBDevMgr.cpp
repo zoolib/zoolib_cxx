@@ -170,7 +170,7 @@ STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oO
 	if (iInterfaceID == IID_IUnknown)
 		return sCOMCopy<IUnknown>(oObjectRef, this);
 
-	if (iInterfaceID == ZUUIDOF(IChannelEvents))
+	if (iInterfaceID == ZMACRO_IIDOf(IChannelEvents))
 		return sCOMCopy<IChannelEvents>(oObjectRef, this);
 
 	return E_NOINTERFACE;
@@ -627,7 +627,7 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 		IDeviceManager::sCLSID,
 		nullptr,
 		CLSCTX_ALL,
-		ZUUIDOF(IDeviceManager),
+		ZMACRO_IIDOf(IDeviceManager),
 		sCOMVoidPtr(fDeviceManager));
 
 	if (fDeviceManager)
@@ -677,7 +677,7 @@ STDMETHODIMP Manager_BBDevMgr::QueryInterface(
 	if (iInterfaceID == IID_IUnknown)
 		return sCOMCopy<IUnknown>(oObjectRef, this);
 
-	if (iInterfaceID == ZUUIDOF(IDeviceManagerEvents))
+	if (iInterfaceID == ZMACRO_IIDOf(IDeviceManagerEvents))
 		return sCOMCopy<IDeviceManagerEvents>(oObjectRef, this);
 
 	return E_NOINTERFACE;

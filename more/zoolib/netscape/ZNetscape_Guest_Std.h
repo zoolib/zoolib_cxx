@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/netscape/ZNetscape_Guest.h"
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 class Guest_Std;
@@ -122,7 +121,6 @@ public:
 	};
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // __ZNetscape_Guest__

@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/netscape/ZNetscape_Variant.h"
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -65,5 +64,4 @@ ZQ<std::string> NPVariantBase::QGet<std::string>() const
 	}
 
 } // namespace ZNetscape
-
 } // namespace ZooLib

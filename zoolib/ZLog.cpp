@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 
 namespace ZooLib {
-
 namespace ZLog {
 
 static ZMtx spMutex;
@@ -253,5 +252,4 @@ void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iF
 	}
 
 } // namespace ZLog
-
 } // namespace ZooLib

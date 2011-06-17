@@ -28,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/photoshop/ZPhotoshop_Val.h"
 
 namespace ZooLib {
-
 namespace ZPhotoshop {
 
 // =================================================================================================
@@ -42,7 +41,6 @@ ZRef<ZYadSeqRPos> sMakeYadR(const Seq& iSeq);
 ZRef<ZYadMapRPos> sMakeYadR(const Map& iMap);
 
 } // namespace ZPhotoshop
-
 } // namespace ZooLib
 
 #endif // __ZPhotoshop_Yad__

@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "PITerminology.h"
 
 namespace ZooLib {
-
 namespace ZPhotoshop {
 
 using namespace ZPhotoshop;
@@ -64,5 +63,4 @@ int sGetHostVersion_Major()
 	}
 
 } // namespace ZUtil_Photoshop
-
 } // namespace ZooLib

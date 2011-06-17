@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 
 namespace ZooLib {
-
 namespace ZMIME {
 
 // Character classification.
@@ -41,8 +40,6 @@ bool sReadFieldName(const ZStreamR& iStream, std::string* oName, std::string* oN
 class StreamR_Header;
 class StreamR_Line;
 
-} // namespace
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMIME::StreamR_Header
@@ -54,7 +51,7 @@ bare LF and CR sequences within lines. However I'm unclear on how useful or impo
 So this class completely strips CRs from the source stream. It also unfolds LF LWS sequences,
 replacing them with LWS */
 
-class ZMIME::StreamR_Header : public ZStreamR
+class StreamR_Header : public ZStreamR
 	{
 public:
 	StreamR_Header(const ZStreamR& iStream);
@@ -86,7 +83,7 @@ private:
 
 /// Returns bytes from the real stream until an end of line is detected.
 
-class ZMIME::StreamR_Line : public ZStreamR
+class StreamR_Line : public ZStreamR
 	{
 public:
 	StreamR_Line(const ZStreamR& iStream);
@@ -112,6 +109,7 @@ private:
 	char fX;
 	};
 
+} // namespace ZMIME
 } // namespace ZooLib
 
 #endif // __ZMIME__

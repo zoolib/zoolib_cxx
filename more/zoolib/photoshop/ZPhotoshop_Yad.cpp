@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Any.h"
 
 namespace ZooLib {
-
 namespace ZPhotoshop {
 
 // =================================================================================================
@@ -138,5 +137,4 @@ ZRef<ZYadMapRPos> sMakeYadR(const Map& iMap)
 	{ return new YadMapRPos(iMap); }
 
 } // namespace ZPhotoshop
-
 } // namespace ZooLib

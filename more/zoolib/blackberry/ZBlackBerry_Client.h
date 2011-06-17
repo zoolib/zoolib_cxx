@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/blackberry/ZBlackBerry.h"
 
 namespace ZooLib {
-
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -66,7 +65,6 @@ private:
 	};
 
 } // namespace ZBlackBerry
-
 } // namespace ZooLib
 
 #endif // __ZBlackBerry_Client__

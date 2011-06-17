@@ -50,7 +50,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <mach/mach.h> // For mach_port_t
 
 namespace ZooLib {
-
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -109,7 +108,6 @@ private:
 	};
 
 } // namespace ZBlackBerry
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(BlackBerry_OSXUSB)

@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/netscape/ZNetscape_Object.h"
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -190,7 +189,6 @@ bool NPObject_T<Variant_t>::Erase(size_t iIndex)
 	{ return static_cast<Self_t*>(this)->RemoveProperty(iIndex); }
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // __ZNetscape_ObjectPriv__

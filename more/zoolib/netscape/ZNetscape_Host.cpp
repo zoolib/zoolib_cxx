@@ -30,11 +30,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdexcept>
 #include <stdlib.h> // For free/malloc
 
-#define ZNETSCAPE_BEFORE_OBJECT(a) \
+#define ZMACRO_Netscape_Before_Object(a) \
 	try {
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -248,63 +247,63 @@ NPObject* ObjectH::spAllocate(NPP npp, NPClass *aClass)
 
 void ObjectH::spDeallocate(NPObject* npobj)
 	{
-	ZNETSCAPE_BEFORE_OBJECT(npobj)
+	ZMACRO_Netscape_Before_Object(npobj)
 		delete static_cast<ObjectH*>(npobj);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 void ObjectH::spInvalidate(NPObject* npobj)
 	{
-	ZNETSCAPE_BEFORE_OBJECT(npobj)
+	ZMACRO_Netscape_Before_Object(npobj)
 		static_cast<ObjectH*>(npobj)->Imp_Invalidate();
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 bool ObjectH::spHasMethod(NPObject* npobj, NPIdentifier name)
 	{
-	ZNETSCAPE_BEFORE_OBJECT(npobj)
+	ZMACRO_Netscape_Before_Object(npobj)
 		return static_cast<ObjectH*>(npobj)->Imp_HasMethod(sAsString(name));
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool ObjectH::spInvoke(NPObject* npobj,
 	NPIdentifier name, const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
-	ZNETSCAPE_BEFORE_OBJECT(npobj)
+	ZMACRO_Netscape_Before_Object(npobj)
 		return static_cast<ObjectH*>(npobj)->Imp_Invoke(
 			sAsString(name),
 			static_cast<const NPVariantH*>(args),
 			argCount,
 			*static_cast<NPVariantH*>(result));
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool ObjectH::spInvokeDefault(NPObject* npobj,
 	const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
-	ZNETSCAPE_BEFORE_OBJECT(npobj)
+	ZMACRO_Netscape_Before_Object(npobj)
 		return static_cast<ObjectH*>(npobj)->Imp_InvokeDefault(
 			static_cast<const NPVariantH*>(args),
 			argCount,
 			*static_cast<NPVariantH*>(result));
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool ObjectH::spHasProperty(NPObject* npobj, NPIdentifier name)
 	{
-	ZNETSCAPE_BEFORE_OBJECT(npobj)
+	ZMACRO_Netscape_Before_Object(npobj)
 		{
 		if (sIsString(name))
 			return static_cast<ObjectH*>(npobj)->Imp_HasProperty(sAsString(name));
 		else
 			return static_cast<ObjectH*>(npobj)->Imp_HasProperty(sAsInt(name));
 		}
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool ObjectH::spGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
 	{
-	ZNETSCAPE_BEFORE_OBJECT(npobj)
+	ZMACRO_Netscape_Before_Object(npobj)
 		if (sIsString(name))
 			{
 			return static_cast<ObjectH*>(npobj)->Imp_GetProperty(
@@ -317,12 +316,12 @@ bool ObjectH::spGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* resul
 				sAsInt(name),
 				*static_cast<NPVariantH*>(result));
 			}
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool ObjectH::spSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
 	{
-	ZNETSCAPE_BEFORE_OBJECT(npobj)
+	ZMACRO_Netscape_Before_Object(npobj)
 		if (sIsString(name))
 			{
 			return static_cast<ObjectH*>(npobj)->Imp_SetProperty(
@@ -335,24 +334,24 @@ bool ObjectH::spSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant*
 				sAsInt(name),
 				*static_cast<const NPVariantH*>(value));
 			}
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool ObjectH::spRemoveProperty(NPObject* npobj, NPIdentifier name)
 	{
-	ZNETSCAPE_BEFORE_OBJECT(npobj)
+	ZMACRO_Netscape_Before_Object(npobj)
 		if (sIsString(name))
 			return static_cast<ObjectH*>(npobj)->Imp_RemoveProperty(sAsString(name));
 		else
 			return static_cast<ObjectH*>(npobj)->Imp_RemoveProperty(sAsInt(name));
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool ObjectH::spEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount)
 	{
-	ZNETSCAPE_BEFORE_OBJECT(npobj)
+	ZMACRO_Netscape_Before_Object(npobj)
 		return static_cast<ObjectH*>(npobj)->Imp_Enumerate(*oIdentifiers, *(uint32*)oCount);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 // =================================================================================================
@@ -500,354 +499,354 @@ string HostMeister::StringFromIdentifier(NPIdentifier identifier)
 
 NPError HostMeister::spGetURL(NPP npp, const char* URL, const char* window)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->GetURL(npp, URL, window);
-	ZNETSCAPE_AFTER_NPERROR
+	ZMACRO_Netscape_After_NPError
 	}
 
 NPError HostMeister::spPostURL(NPP npp,
 	const char* URL, const char* window, ::uint32 len, const char* buf, NPBool file)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->PostURL(npp, URL, window, len, buf, file);
-	ZNETSCAPE_AFTER_NPERROR
+	ZMACRO_Netscape_After_NPError
 	}
 
 NPError HostMeister::spRequestRead(NPStream* stream, NPByteRange* rangeList)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->RequestRead(stream, rangeList);
-	ZNETSCAPE_AFTER_NPERROR
+	ZMACRO_Netscape_After_NPError
 	}
 
 NPError HostMeister::spNewStream(NPP npp,
 	NPMIMEType type, const char* window, NPStream** stream)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->NewStream(npp, type, window, stream);
-	ZNETSCAPE_AFTER_NPERROR
+	ZMACRO_Netscape_After_NPError
 	}
 
 ::int32 HostMeister::spWrite(NPP npp, NPStream* stream, ::int32 len, void* buffer)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->Write(npp, stream, len, buffer);
-	ZNETSCAPE_AFTER_RETURN(-1)
+	ZMACRO_Netscape_After_Return(-1)
 	}
 
 NPError HostMeister::spDestroyStream(NPP npp, NPStream* stream, NPReason reason)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->DestroyStream(npp, stream, reason);
-	ZNETSCAPE_AFTER_NPERROR
+	ZMACRO_Netscape_After_NPError
 	}
 
 void HostMeister::spStatus(NPP npp, const char* message)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->Status(npp, message);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 const char* HostMeister::spUserAgent(NPP npp)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->UserAgent(npp);
-	ZNETSCAPE_AFTER_RETURN_NIL
+	ZMACRO_Netscape_After_Return_Nil
 	}
 
 void* HostMeister::spMemAlloc(::uint32 size)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->MemAlloc(size);
-	ZNETSCAPE_AFTER_RETURN_NIL
+	ZMACRO_Netscape_After_Return_Nil
 	}
 
 void HostMeister::spMemFree(void* ptr)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		sGet()->MemFree(ptr);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 ::uint32 HostMeister::spMemFlush(::uint32 size)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->MemFlush(size);
-	ZNETSCAPE_AFTER_RETURN(0)
+	ZMACRO_Netscape_After_Return(0)
 	}
 
 void HostMeister::spReloadPlugins(NPBool reloadPages)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		sGet()->ReloadPlugins(reloadPages);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 void* HostMeister::spGetJavaEnv()
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->GetJavaEnv();
-	ZNETSCAPE_AFTER_RETURN_NIL
+	ZMACRO_Netscape_After_Return_Nil
 	}
 
 void* HostMeister::spGetJavaPeer(NPP npp)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->GetJavaPeer(npp);
-	ZNETSCAPE_AFTER_RETURN_NIL
+	ZMACRO_Netscape_After_Return_Nil
 	}
 
 NPError HostMeister::spGetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->GetURLNotify(npp, URL, window, notifyData);
-	ZNETSCAPE_AFTER_NPERROR
+	ZMACRO_Netscape_After_NPError
 	}
 
 NPError HostMeister::spPostURLNotify(NPP npp,
 	const char* URL, const char* window,
 	::uint32 len, const char* buf, NPBool file, void* notifyData)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->PostURLNotify(npp, URL, window, len, buf, file, notifyData);
-	ZNETSCAPE_AFTER_NPERROR
+	ZMACRO_Netscape_After_NPError
 	}
 
 NPError HostMeister::spGetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->GetValue(npp, variable, ret_value);
-	ZNETSCAPE_AFTER_NPERROR
+	ZMACRO_Netscape_After_NPError
 	}
 
 NPError HostMeister::spSetValue(NPP npp, NPPVariable variable, void* value)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->SetValue(npp, variable, value);
-	ZNETSCAPE_AFTER_NPERROR
+	ZMACRO_Netscape_After_NPError
 	}
 
 void HostMeister::spInvalidateRect(NPP npp, NPRect* rect)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->InvalidateRect(npp, rect);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 void HostMeister::spInvalidateRegion(NPP npp, NPRegion region)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->InvalidateRegion(npp, region);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 void HostMeister::spForceRedraw(NPP npp)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->ForceRedraw(npp);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 NPIdentifier HostMeister::spGetStringIdentifier(const NPUTF8* name)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->GetStringIdentifier(name);
-	ZNETSCAPE_AFTER_RETURN_NIL
+	ZMACRO_Netscape_After_Return_Nil
 	}
 
 void HostMeister::spGetStringIdentifiers(
 	const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		sGet()->GetStringIdentifiers(names, nameCount, identifiers);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 NPIdentifier HostMeister::spGetIntIdentifier(int32_t intid)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->GetIntIdentifier(intid);
-	ZNETSCAPE_AFTER_RETURN_NIL
+	ZMACRO_Netscape_After_Return_Nil
 	}
 
 bool HostMeister::spIdentifierIsString(NPIdentifier identifier)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->IdentifierIsString(identifier);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 NPUTF8* HostMeister::spUTF8FromIdentifier(NPIdentifier identifier)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->UTF8FromIdentifier(identifier);
-	ZNETSCAPE_AFTER_RETURN_NIL
+	ZMACRO_Netscape_After_Return_Nil
 	}
 
 int32_t HostMeister::spIntFromIdentifier(NPIdentifier identifier)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->IntFromIdentifier(identifier);
-	ZNETSCAPE_AFTER_RETURN(0xFFFFFFFF)
+	ZMACRO_Netscape_After_Return(0xFFFFFFFF)
 	}
 
 NPObject* HostMeister::spCreateObject(NPP npp, NPClass* aClass)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->CreateObject(npp, aClass);
-	ZNETSCAPE_AFTER_RETURN_NIL
+	ZMACRO_Netscape_After_Return_Nil
 	}
 
 NPObject* HostMeister::spRetainObject(NPObject* obj)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->RetainObject(obj);
-	ZNETSCAPE_AFTER_RETURN_NIL
+	ZMACRO_Netscape_After_Return_Nil
 	}
 
 void HostMeister::spReleaseObject(NPObject* obj)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		sGet()->ReleaseObject(obj);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 bool HostMeister::spInvoke(NPP npp,
 	NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
 	NPVariant* result)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->Invoke(npp, obj, methodName, args, argCount, result);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool HostMeister::spInvokeDefault(NPP npp,
 	NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->InvokeDefault(npp, obj, args, argCount, result);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool HostMeister::spEvaluate(NPP npp,
 	NPObject* obj, NPString* script, NPVariant* result)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->Evaluate(npp, obj, script, result);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool HostMeister::spGetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, NPVariant* result)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->GetProperty(npp, obj, propertyName, result);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool HostMeister::spSetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, const NPVariant* value)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->SetProperty(npp, obj, propertyName, value);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool HostMeister::spRemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->RemoveProperty(npp, obj, propertyName);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool HostMeister::spHasProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->HasProperty(npp, npobj, propertyName);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 bool HostMeister::spHasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->HasMethod(npp, npobj, methodName);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 void HostMeister::spReleaseVariantValue(NPVariant* variant)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		sGet()->ReleaseVariantValue(variant);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 void HostMeister::spSetException(NPObject* obj, const NPUTF8* message)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		sGet()->SetException(obj, message);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 void HostMeister::spSetExceptionNPString(NPObject* obj, NPString* message)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		sGet()->SetException(obj, sNPStringChars(*message));
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 void HostMeister::spPushPopupsEnabledState(NPP npp, NPBool enabled)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		sGet()->PushPopupsEnabledState(npp, enabled);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 void HostMeister::spPopPopupsEnabledState(NPP npp)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		sGet()->PopPopupsEnabledState(npp);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 bool HostMeister::spEnumerate
 	(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->Enumerate(npp, npobj, identifier, (uint32*)count);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 void HostMeister::spPluginThreadAsyncCall
 	(NPP npp, void (*func)(void *), void *userData)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		sGet()->PluginThreadAsyncCall(npp, func, userData);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 bool HostMeister::spConstruct
 	(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		sGet()->Construct(npp, obj, args, argCount, result);
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	ZMACRO_Netscape_After_Return_False
 	}
 
 uint32 HostMeister::spScheduleTimer
 	(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID))
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->ScheduleTimer(npp, interval, repeat, timerFunc);
-	ZNETSCAPE_AFTER_RETURN(0)
+	ZMACRO_Netscape_After_Return(0)
 	}
 
 void HostMeister::spUnscheduleTimer(NPP npp, uint32 timerID)
 	{
-	ZNETSCAPE_BEFORE
+	ZMACRO_Netscape_Before
 		return sGet()->UnscheduleTimer(npp, timerID);
-	ZNETSCAPE_AFTER_VOID
+	ZMACRO_Netscape_After_Void
 	}
 
 // =================================================================================================
@@ -944,5 +943,4 @@ NPError Host::Guest_SetValue(NPNVariable iNPNVariable, void* iValue)
 	}
 
 } // namespace ZNetscape
-
 } // namespace ZooLib

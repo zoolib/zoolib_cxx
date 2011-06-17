@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 extern int ZMain(int argc, char** argv);
 
 namespace ZooLib {
-
 namespace ZMainNS {
 
 extern int sArgC;
@@ -35,7 +34,6 @@ extern char** sArgV;
 void sDaemonize(bool iForceFDClose = false);
 
 } // namespace ZMainNS
-
 } // namespace ZooLib
 
 #endif // __ZMain__

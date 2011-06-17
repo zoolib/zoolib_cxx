@@ -39,7 +39,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/blackberry/ZBlackBerryCOM.h"
 
 namespace ZooLib {
-
 namespace ZBlackBerry {
 
 class Device_BBDevMgr;
@@ -92,7 +91,6 @@ private:
 	};
 
 } // namespace ZBlackBerry
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(BlackBerry_BBDevMgr)

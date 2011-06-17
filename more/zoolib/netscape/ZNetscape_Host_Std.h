@@ -30,7 +30,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 class Host_Std;
@@ -265,7 +264,6 @@ private:
 	};
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // __ZNetscape_Host_Std__

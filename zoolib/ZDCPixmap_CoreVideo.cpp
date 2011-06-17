@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(MacOSX)
 
 namespace ZooLib {
-
 namespace ZDCPixmap_CoreVideo {
 
 using namespace ZDCPixmapNS;
@@ -102,7 +101,6 @@ ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR)
 	}
 
 } // namespace ZDCPixmap_CoreVideo
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)

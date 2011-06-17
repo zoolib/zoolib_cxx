@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/photoshop/ZPhotoshop.h"
 
 namespace ZooLib {
-
 namespace ZPhotoshop {
 
 // =================================================================================================
@@ -29,5 +28,4 @@ namespace ZPhotoshop {
 #pragma mark * ZooLib::ZPhotoshop
 
 } // namespace ZPhotoshop
-
 } // namespace ZooLib

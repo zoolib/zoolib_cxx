@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h" // For ZAssertCompile
 
 namespace ZooLib {
-
 namespace ZUtil_ATSUI {
 
 ZAssertCompile(sizeof(UTF16) == sizeof(UniChar));
@@ -164,7 +163,6 @@ bool Attributes::Apply(ATSUStyle iStyle)
 	}
 
 } // namespace ZUtil_ATSUI
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Util_ATSUI)

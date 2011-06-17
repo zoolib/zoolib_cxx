@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 
 namespace ZooLib {
-
 namespace ZWinRegistry {
 
 // =================================================================================================
@@ -519,7 +518,6 @@ KeyRef::Index_t KeyRef::IndexOf(const KeyRef& iOther, const Index_t& iOtherIndex
 	{ return iOtherIndex; }
 
 } // namespace ZWinRegistry
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

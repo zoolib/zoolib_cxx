@@ -23,13 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 namespace ZooLib {
-
 namespace ZMacOSX {
 
 bool sIsMacOSX();
 
 } // namespace ZMacOSX
-
 } // namespace ZooLib
 
 #endif // __ZMacOSX__

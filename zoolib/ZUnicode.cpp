@@ -284,7 +284,6 @@ string8& operator+=(string8& ioString, UTF32 iCP)
 // =================================================================================================
 
 namespace ZooLib {
-
 namespace ZUnicode {
 
 // =================================================================================================
@@ -836,5 +835,4 @@ string16 sAsUTF16(const string8& iString)
 	}
 
 } // namespace ZUnicode
-
 } // namespace ZooLib

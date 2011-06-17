@@ -24,19 +24,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG(Compiler, MSVC) || ZCONFIG(Compiler, CodeWarrior)
 
-	#define ZWinCOM_STRINGIFY(a) #a
-
-	#define ZWinCOM_CLASS_(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
-		MIDL_INTERFACE(ZWinCOM_STRINGIFY(l##-##w0##-##w1##-##b0##b1##-##b2##b3##b4##b5##b6##b7))\
+	#define ZMACRO_WinCOM_Class(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
+		MIDL_INTERFACE(ZMACRO_Stringify(l##-##w0##-##w1##-##b0##b1##-##b2##b3##b4##b5##b6##b7))\
 		className : public baseClass {
 
-	#define ZWinCOM_DEFINITION(className)
+	#define ZMACRO_WinCOM_Definition(className)
 
-	#define ZUUIDOF(className) __uuidof(className)
+	#define ZMACRO_IIDOf(className) __uuidof(className)
 
 #else
 
-	#define ZWinCOM_CLASS_(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
+	#define ZMACRO_WinCOM_Class(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
 		struct className : public baseClass {\
 		enum { ZIID_l=0x##l,\
 			ZIID_w0=0x##w0,ZIID_w1=0x##w1,\
@@ -44,13 +42,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			ZIID_b4=0x##b4,ZIID_b5=0x##b5,ZIID_b6=0x##b6,ZIID_b7=0x##b7};\
 		static const IID sIID;
 
-	#define ZWinCOM_DEFINITION(className)\
+	#define ZMACRO_WinCOM_Definition(className)\
 		const IID className::sIID = {ZIID_l,\
 			ZIID_w0,ZIID_w1,\
 			{ZIID_b0,ZIID_b1,ZIID_b2,ZIID_b3,\
 			ZIID_b4,ZIID_b5,ZIID_b6,ZIID_b7}};
 
-	#define ZUUIDOF(className) (className::sIID)
+	#define ZMACRO_IIDOf(className) (className::sIID)
 
 #endif
 

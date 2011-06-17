@@ -36,7 +36,6 @@ using std::string;
 using std::vector;
 
 namespace ZooLib {
-
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -1621,5 +1620,4 @@ void Device_Streamer::pCommerFinished(ZRef<ZCommer> iCommer)
 	}
 
 } // namespace ZBlackBerry
-
 } // namespace ZooLib

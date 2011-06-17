@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h"
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -169,5 +168,4 @@ ZRef<NPObjectG> Guest_Std::Guest_GetNPObject()
 	{ return null; }
 
 } // namespace ZNetscape
-
 } // namespace ZooLib

@@ -23,23 +23,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(Win)
 
 namespace ZooLib {
-
 namespace ZBlackBerryCOM {
 
-ZWinCOM_DEFINITION(IChannelEvents)
-ZWinCOM_DEFINITION(IChannel)
-ZWinCOM_DEFINITION(IDeviceProperty)
-ZWinCOM_DEFINITION(IDeviceProperties)
-ZWinCOM_DEFINITION(IDevice)
-ZWinCOM_DEFINITION(IDevices)
-ZWinCOM_DEFINITION(IDeviceManagerEvents)
-ZWinCOM_DEFINITION(IDeviceManagerNotification)
-ZWinCOM_DEFINITION(IDeviceManager)
+ZMACRO_WinCOM_Definition(IChannelEvents)
+ZMACRO_WinCOM_Definition(IChannel)
+ZMACRO_WinCOM_Definition(IDeviceProperty)
+ZMACRO_WinCOM_Definition(IDeviceProperties)
+ZMACRO_WinCOM_Definition(IDevice)
+ZMACRO_WinCOM_Definition(IDevices)
+ZMACRO_WinCOM_Definition(IDeviceManagerEvents)
+ZMACRO_WinCOM_Definition(IDeviceManagerNotification)
+ZMACRO_WinCOM_Definition(IDeviceManager)
 const GUID IDeviceManager::sCLSID =
 	{0xBA3D0120,0xE617,0x4F66,{0xAD,0xCA,0x58,0x5C,0xC2,0xFB,0x86,0xDB}};
 
 } // namespace ZBlackBerryCOM
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

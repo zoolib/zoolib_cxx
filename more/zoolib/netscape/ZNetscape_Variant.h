@@ -29,7 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/netscape/ZNetscape.h"
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -147,7 +146,6 @@ private:
 	};
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // __ZNetscape_Variant__

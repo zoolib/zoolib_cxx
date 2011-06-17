@@ -35,14 +35,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 
 namespace ZooLib {
-
 namespace ZBlackBerryCOM {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * IChannelEvents
 
-ZWinCOM_CLASS_(IChannelEvents, IUnknown,
+ZMACRO_WinCOM_Class(IChannelEvents, IUnknown,
 	C7168312,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
 
 	virtual STDMETHODIMP CheckClientStatus(uint16 iRHS) = 0;
@@ -64,7 +63,7 @@ struct ChannelParams
 	uint16 fDroppedPacketCount;
 	};
 
-ZWinCOM_CLASS_(IChannel, IUnknown,
+ZMACRO_WinCOM_Class(IChannel, IUnknown,
 	C7168311,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
 
 	virtual STDMETHODIMP Params(ChannelParams* oParams) = 0;
@@ -78,7 +77,7 @@ ZWinCOM_CLASS_(IChannel, IUnknown,
 #pragma mark -
 #pragma mark * IDeviceProperty
 
-ZWinCOM_CLASS_(IDeviceProperty, IUnknown,
+ZMACRO_WinCOM_Class(IDeviceProperty, IUnknown,
 	C7168310,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
 
 	virtual STDMETHODIMP Name(BSTR* oName) = 0;
@@ -89,7 +88,7 @@ ZWinCOM_CLASS_(IDeviceProperty, IUnknown,
 #pragma mark -
 #pragma mark * IDeviceProperties
 
-ZWinCOM_CLASS_(IDeviceProperties, IUnknown,
+ZMACRO_WinCOM_Class(IDeviceProperties, IUnknown,
 	C716830F,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
 
 	virtual STDMETHODIMP Count(uint32* oCount) = 0;
@@ -100,7 +99,7 @@ ZWinCOM_CLASS_(IDeviceProperties, IUnknown,
 #pragma mark -
 #pragma mark * IDevice
 
-ZWinCOM_CLASS_(IDevice, IUnknown,
+ZMACRO_WinCOM_Class(IDevice, IUnknown,
 	C716830E,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
 
 	virtual STDMETHODIMP Properties(IDeviceProperties** oDeviceProperties) = 0;
@@ -117,7 +116,7 @@ ZWinCOM_CLASS_(IDevice, IUnknown,
 #pragma mark -
 #pragma mark * IDevices
 
-ZWinCOM_CLASS_(IDevices, IUnknown,
+ZMACRO_WinCOM_Class(IDevices, IUnknown,
 	C716830D,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
 
 	virtual STDMETHODIMP Count(uint32* oCount) = 0;
@@ -128,7 +127,7 @@ ZWinCOM_CLASS_(IDevices, IUnknown,
 #pragma mark -
 #pragma mark * IDeviceManagerEvents
 
-ZWinCOM_CLASS_(IDeviceManagerEvents, IUnknown,
+ZMACRO_WinCOM_Class(IDeviceManagerEvents, IUnknown,
 	C716830C,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
 
 	virtual STDMETHODIMP DeviceConnect(IDevice* iDevice) = 0;
@@ -139,7 +138,7 @@ ZWinCOM_CLASS_(IDeviceManagerEvents, IUnknown,
 #pragma mark -
 #pragma mark * IDeviceManagerNotification
 
-ZWinCOM_CLASS_(IDeviceManagerNotification, IDeviceManagerEvents,
+ZMACRO_WinCOM_Class(IDeviceManagerNotification, IDeviceManagerEvents,
 	5F67EACC,D387,4B71,96,37,59,69,01,D0,0C,E0)
 
 	virtual STDMETHODIMP SuspendRequest() = 0;
@@ -151,7 +150,7 @@ ZWinCOM_CLASS_(IDeviceManagerNotification, IDeviceManagerEvents,
 #pragma mark -
 #pragma mark * IDeviceManager
 
-ZWinCOM_CLASS_(IDeviceManager, IUnknown,
+ZMACRO_WinCOM_Class(IDeviceManager, IUnknown,
 	C716830B,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
 
 	static const GUID sCLSID;
@@ -165,7 +164,6 @@ ZWinCOM_CLASS_(IDeviceManager, IUnknown,
 	};
 
 } // namespace ZBlackBerryCOM
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

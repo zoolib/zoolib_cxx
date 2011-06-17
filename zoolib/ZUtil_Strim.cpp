@@ -29,7 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-
 namespace ZUtil_Strim {
 
 static void spThrowParseException(const std::string& iWhat)
@@ -616,5 +615,4 @@ void sWriteExact(const ZStrimW& iStrimW, double iDouble)
 	}
 
 } // namespace ZUtil_Strim
-
 } // namespace ZooLib

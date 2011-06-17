@@ -323,4 +323,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZMACRO_ExternC_End
 #endif
 
+#define ZMACRO_Stringify(a) #a
+
 #endif // __zconfigl__

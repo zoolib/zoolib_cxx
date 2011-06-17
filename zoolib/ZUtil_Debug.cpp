@@ -39,7 +39,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 namespace ZooLib {
-
 namespace ZUtil_Debug {
 
 using std::min;
@@ -307,5 +306,4 @@ ZLog::EPriority sGetLogPriority()
 	}
 
 } // namespace ZUtil_Debug
-
 } // namespace ZooLib

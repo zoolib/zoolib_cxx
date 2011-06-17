@@ -26,7 +26,6 @@ using std::pair;
 using std::vector;
 
 namespace ZooLib {
-
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -155,5 +154,4 @@ ZRef<Device> Manager_Union::Open(uint64 iDeviceID)
 	}
 
 } // namespace ZBlackBerry
-
 } // namespace ZooLib

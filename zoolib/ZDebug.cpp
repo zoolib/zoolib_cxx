@@ -37,7 +37,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark * ZDebug
 
 namespace ZooLib {
-
 namespace ZDebug {
 
 extern void sInvoke(int iLevel, bool iStop,
@@ -274,6 +273,5 @@ public:
 #endif // ZCONFIG_SPI_Enabled(POSIX)
 
 } // namespace ZDebug
-
 } // namespace ZooLib
 

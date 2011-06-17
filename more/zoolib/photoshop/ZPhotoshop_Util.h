@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/photoshop/ZPhotoshop.h"
 
 namespace ZooLib {
-
 namespace ZPhotoshop {
 
 // =================================================================================================
@@ -37,7 +36,6 @@ void sGetHostVersion(int& oMajor, int& oMinor, int& oFix);
 int sGetHostVersion_Major();
 
 } // namespace ZUtil_Photoshop
-
 } // namespace ZooLib
 
 #endif // __ZUtil_Photoshop__

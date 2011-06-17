@@ -31,7 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-
 namespace ZBlackBerry {
 
 typedef ZData_Any Data;
@@ -130,7 +129,6 @@ public:
 	};
 
 } // namespace ZBlackBerry
-
 } // namespace ZooLib
 
 #endif // __ZBlackBerry__

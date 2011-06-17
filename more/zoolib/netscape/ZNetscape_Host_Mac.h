@@ -28,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/netscape/ZNetscape_Host_Std.h"
 
 namespace ZooLib {
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -160,7 +159,6 @@ private:
 #endif // defined(XP_MACOSX)
 
 } // namespace ZNetscape
-
 } // namespace ZooLib
 
 #endif // ! ZCONFIG_Is64Bit

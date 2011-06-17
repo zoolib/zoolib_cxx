@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 
 namespace ZooLib {
-
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -109,5 +108,4 @@ size_t Channel::GetIdealSize_Write()
 	}
 
 } // namespace ZBlackBerry
-
 } // namespace ZooLib

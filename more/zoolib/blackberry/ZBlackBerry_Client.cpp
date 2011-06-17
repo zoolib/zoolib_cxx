@@ -29,7 +29,6 @@ using std::string;
 using std::vector;
 
 namespace ZooLib {
-
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -522,5 +521,4 @@ void Manager_Client::pStartCommer(ZRef<ZStreamerRWCon> iSRWCon)
 	}
 
 } // namespace ZBlackBerry
-
 } // namespace ZooLib

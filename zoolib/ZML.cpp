@@ -31,7 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdio.h> // For sprintf
 
 namespace ZooLib {
-
 namespace ZML {
 
 #define kDebug_StrimW_ML 1
@@ -1416,5 +1415,4 @@ ZML::StrimW& StrimmerW::GetStrim()
 	{ return fStrimW; }
 
 } // namespace ZML
-
 } // namespace ZooLib
