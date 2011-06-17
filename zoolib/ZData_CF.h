@@ -50,11 +50,17 @@ public:
 	~ZData_CF();
 	ZData_CF& operator=(const ZData_CF& iOther);
 
-	ZData_CF(const ZRef<CFMutableDataRef>& iOther);
-	ZData_CF(const ZRef<CFDataRef>& iOther);
+	ZData_CF(CFMutableDataRef iOther);
+	ZData_CF(CFDataRef iOther);
 
-	ZData_CF& operator=(const ZRef<CFMutableDataRef>& iOther);
-	ZData_CF& operator=(const ZRef<CFDataRef>& iOther);
+	ZData_CF(const Adopt_T<CFMutableDataRef>& iOther);
+	ZData_CF(const Adopt_T<CFDataRef>& iOther);
+
+	ZData_CF& operator=(CFMutableDataRef iOther);
+	ZData_CF& operator=(CFDataRef iOther);
+
+	ZData_CF& operator=(const Adopt_T<CFMutableDataRef>& iOther);
+	ZData_CF& operator=(const Adopt_T<CFDataRef>& iOther);
 
 	ZData_CF(size_t iSize);
 	ZData_CF(const void* iSource, size_t iSize);

@@ -52,7 +52,7 @@ ZAny ZYadAtomR_CF::AsAny()
 
 ZYadStreamRPos_CF::ZYadStreamRPos_CF(CFDataRef iDataRef)
 :	ZYadR_CF(iDataRef)
-,	ZStreamerRPos_CF(ZRef<CFDataRef>(iDataRef))
+,	ZStreamerRPos_CF(iDataRef)
 	{}
 
 ZYadStreamRPos_CF::~ZYadStreamRPos_CF()

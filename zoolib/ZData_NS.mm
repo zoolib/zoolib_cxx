@@ -56,7 +56,12 @@ ZData_NS& ZData_NS::operator=(const ZData_NS& iOther)
 	return *this;
 	}
 
-ZData_NS::ZData_NS(const ZRef<NSData>& iOther)
+ZData_NS::ZData_NS(const Adopt_T<NSMutableData>& iOther)
+:	inherited(iOther)
+,	fMutable(true)
+	{}
+
+ZData_NS::ZData_NS(const Adopt_T<NSData>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
@@ -71,7 +76,14 @@ ZData_NS::ZData_NS(NSData* iOther)
 ,	fMutable(false)
 	{}
 
-ZData_NS& ZData_NS::operator=(const ZRef<NSData>& iOther)
+ZData_NS& ZData_NS::operator=(const Adopt_T<NSMutableData>& iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = true;
+	return *this;
+	}
+
+ZData_NS& ZData_NS::operator=(const Adopt_T<NSData>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;

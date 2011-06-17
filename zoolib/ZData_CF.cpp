@@ -60,24 +60,48 @@ ZData_CF& ZData_CF::operator=(const ZData_CF& iOther)
 	return *this;
 	}
 
-ZData_CF::ZData_CF(const ZRef<CFMutableDataRef>& iOther)
+ZData_CF::ZData_CF(CFMutableDataRef iOther)
 :	inherited(iOther)
 ,	fMutable(true)
 	{}
 
-ZData_CF::ZData_CF(const ZRef<CFDataRef>& iOther)
+ZData_CF::ZData_CF(CFDataRef iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZData_CF& ZData_CF::operator=(const ZRef<CFMutableDataRef>& iOther)
+ZData_CF::ZData_CF(const Adopt_T<CFMutableDataRef>& iOther)
+:	inherited(iOther)
+,	fMutable(true)
+	{}
+
+ZData_CF::ZData_CF(const Adopt_T<CFDataRef>& iOther)
+:	inherited(iOther)
+,	fMutable(false)
+	{}
+
+ZData_CF& ZData_CF::operator=(CFMutableDataRef iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZData_CF& ZData_CF::operator=(const ZRef<CFDataRef>& iOther)
+ZData_CF& ZData_CF::operator=(CFDataRef iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = false;
+	return *this;
+	}
+
+ZData_CF& ZData_CF::operator=(const Adopt_T<CFMutableDataRef>& iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = true;
+	return *this;
+	}
+
+ZData_CF& ZData_CF::operator=(const Adopt_T<CFDataRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;

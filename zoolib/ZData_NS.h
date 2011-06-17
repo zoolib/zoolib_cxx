@@ -52,13 +52,17 @@ public:
 	~ZData_NS();
 	ZData_NS& operator=(const ZData_NS& iOther);
 
-	ZData_NS(const ZRef<NSData>& iOther);
 	ZData_NS(NSMutableData* iOther);
 	ZData_NS(NSData* iOther);
 
-	ZData_NS& operator=(const ZRef<NSData>& iOther);
+	ZData_NS(const Adopt_T<NSMutableData>& iOther);
+	ZData_NS(const Adopt_T<NSData>& iOther);
+
 	ZData_NS& operator=(NSMutableData* iOther);
 	ZData_NS& operator=(NSData* iOther);
+
+	ZData_NS& operator=(const Adopt_T<NSMutableData>& iOther);
+	ZData_NS& operator=(const Adopt_T<NSData>& iOther);
 
 	ZData_NS(size_t iSize);
 	ZData_NS(const void* iSource, size_t iSize);
