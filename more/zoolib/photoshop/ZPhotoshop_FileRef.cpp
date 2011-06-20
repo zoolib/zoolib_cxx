@@ -27,11 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamRWPos_RAM.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStdInt.h"
-#include "zoolib/ZString.h"
 #include "zoolib/ZTextCoder_Win.h"
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_CF.h"
+#include "zoolib/ZUtil_string.h"
 
 #include <stdexcept> // For runtime_error
 #include <cstdio> // For sscanf
@@ -190,7 +190,7 @@ static ZTrail spMacAsTrail(short iVRefNum, long iDirID, const unsigned char* iNa
 			thePB.volumeParam.ioVolIndex = 0;
 
 			if (noErr == PBHGetVInfoSync(&thePB))
-				theResult.PrependComp(ZString::sFromPString(&volumeName[0]));
+				theResult.PrependComp(ZUtil_string::sFromPString(&volumeName[0]));
 			break;
 			}
 		else
@@ -208,7 +208,7 @@ static ZTrail spMacAsTrail(short iVRefNum, long iDirID, const unsigned char* iNa
 			if (noErr != PBGetCatInfoSync(&thePB))
 				break;
 
-			theResult.PrependComp(ZString::sFromPString(&directoryName[0]));
+			theResult.PrependComp(ZUtil_string::sFromPString(&directoryName[0]));
 
 			iDirID = thePB.dirInfo.ioDrParID;
 			}
@@ -216,7 +216,7 @@ static ZTrail spMacAsTrail(short iVRefNum, long iDirID, const unsigned char* iNa
 
 	// By handling fName here we avoid cases 2, 4, 6 above.
 	if (iName[0])
-		theResult.AppendComp(ZString::sFromPString(&iName[0]));
+		theResult.AppendComp(ZUtil_string::sFromPString(&iName[0]));
 
 	theResult.PrependComp("Volumes");
 

@@ -334,8 +334,8 @@ equivalent of command-line options.
 
 #include "zoolib/ZCommandLine.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZString.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
+#include "zoolib/ZUtil_string.h"
 
 #include <stdio.h>
 #include <string.h> // For strlen
@@ -628,7 +628,11 @@ void ZCommandLine::Int64::WriteDefault(const ZStrimW& s)
 
 bool ZCommandLine::Int64::Parse(const char* iLexeme, const ZStrimW* iStrimErrors)
 	{
-	if (!ZString::sQInt64(iLexeme, fValue))
+	if (ZQ<int64> theQ = ZUtil_string::sQInt64(iLexeme))
+		{
+		fValue = theQ.Get();
+		}
+	else
 		{
 		if (iStrimErrors)
 			*iStrimErrors << "Could not parse parameter to option " << fName << "\n";

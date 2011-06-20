@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZString.h"
+#include "zoolib/ZUtil_string.h"
 #include "zoolib/ZUtil_Yad.h"
 
 namespace ZooLib {
@@ -39,46 +39,33 @@ static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 			string dummy;
 			return theYadMapRPos->ReadInc(dummy);
 			}
-		else
+		else for (;;)
 			{
-			for (;;)
-				{
-				string theName;
-				if (ZRef<ZYadR,false> cur = theYadMapR->ReadInc(theName))
-					{
-					break;
-					}
-				else
-					{
-					if (theName == iName)
-						return cur;
-					}
-				}
+			string theName;
+			if (ZRef<ZYadR,false> cur = theYadMapR->ReadInc(theName))
+				break;
+			else if (theName == iName)
+				return cur;
 			}
 		}
 	else if (ZRef<ZYadSeqR> theYadSeqR = iYadR.DynamicCast<ZYadSeqR>())
 		{
-		int64 theIntIndex;
-		if (ZString::sQInt64(iName, theIntIndex) && theIntIndex >= 0)
+		if (ZQ<int64> theQ = ZUtil_string::sQInt64(iName))
 			{
-			if (ZRef<ZYadSeqRPos> theYadSeqPosR = iYadR.DynamicCast<ZYadSeqRPos>())
+			int64 theIntIndex = theQ.Get();
+			if (theIntIndex >= 0)
 				{
-				theYadSeqPosR->SetPosition(theIntIndex);
-				return theYadSeqPosR->ReadInc();
-				}
-			else
-				{
-				for (;;)
+				if (ZRef<ZYadSeqRPos> theYadSeqPosR = iYadR.DynamicCast<ZYadSeqRPos>())
+					{
+					theYadSeqPosR->SetPosition(theIntIndex);
+					return theYadSeqPosR->ReadInc();
+					}
+				else for (;;)
 					{
 					if (ZRef<ZYadR,false> cur = theYadSeqR->ReadInc())
-						{
 						break;
-						}
-					else
-						{
-						if (0 == theIntIndex--)
-							return cur;
-						}
+					else if (0 == theIntIndex--)
+						return cur;
 					}
 				}
 			}

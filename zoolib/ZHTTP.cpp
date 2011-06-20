@@ -29,6 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZString.h"
+#include "zoolib/ZUtil_string.h"
 
 #include <ctype.h>
 
@@ -184,7 +185,7 @@ void Response::Send(const ZStreamW& s) const
 		s.WriteString("HTTP/1.1 ");
 	else
 		s.WriteString("HTTP/1.0 ");
-	s.WriteString(ZString::sFromInt(fResult));
+	s.Writef("%d", fResult);
 	if (!fMessage.empty())
 		{
 		s.WriteString(" ");
@@ -746,7 +747,7 @@ static ZRef<ZStreamerR> spMakeStreamer_Transfer(
 	// I've seen some pages being returned with transfer-encoding "chunked, chunked", which
 	// is either a mistake, or is nested chunking. I'm assuming the former for now.
 
-	if (ZString::sContainsi(sGetString0(iHeader.Get("transfer-encoding")), "chunked"))
+	if (ZUtil_string::sContainsi("chunked", sGetString0(iHeader.Get("transfer-encoding"))))
 		return new ZStreamerR_FT<StreamR_Chunked>(iStreamerR);
 
 	if (ZQ<int64> contentLength = iHeader.Get("content-length").QGet<int64>())
@@ -1367,7 +1368,7 @@ bool sParseURL(const string& iURL,
 	if (string::npos != colonOffset)
 		{
 		if (oPort)
-			*oPort = ZString::sAsInt(hostAndPort.substr(colonOffset + 1));
+			*oPort = ZUtil_string::sInt64(hostAndPort.substr(colonOffset + 1));
 		if (oHost)
 			*oHost = hostAndPort.substr(0, colonOffset);
 		}

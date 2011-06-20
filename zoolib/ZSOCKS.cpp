@@ -48,7 +48,7 @@ bool sConnect(const ZStreamR& r, const ZStreamW& w, const std::string& iHost, ui
 	const uint8 status = r.ReadUInt8();
 	/*const uint16 port = */r.ReadUInt16();
 	/*const uint16 address = */r.ReadUInt32();
-	
+
 	if (status == 0x5a)
 		return true;
 

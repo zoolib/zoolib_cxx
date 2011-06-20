@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_STL_vector.h"
+#include "zoolib/ZUtil_string.h"
 
 #include <stdio.h> // For sprintf
 
@@ -1150,7 +1151,7 @@ const StrimW& StrimW::Attr(const string8& iName, const UTF8* iValue) const
 
 const StrimW& StrimW::Attr(const string8& iName, int iValue) const
 	{
-	string8 theValue = ZString::sFromInt(iValue);
+	string8 theValue = ZStringf("%d", iValue);
 	const_cast<StrimW*>(this)->pAttr(iName, new string8(theValue));
 
 	return *this;

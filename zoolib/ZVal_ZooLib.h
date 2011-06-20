@@ -59,6 +59,40 @@ typedef ZSeq_ZooLib ZSeq_Z;
 typedef ZMap_ZooLib ZMap_Z;
 
 // =================================================================================================
+
+enum ZType
+	{
+	eZType_Null = 0,
+	eZType_String = 1,
+//	eZType_CString = 2,
+	eZType_Int8 = 3,
+	eZType_Int16 = 4,
+	eZType_Int32 = 5,
+	eZType_Int64 = 6,
+	eZType_Float = 7,
+	eZType_Double = 8,
+	eZType_Bool = 9,
+	eZType_Pointer = 10,
+	eZType_Raw = 11,
+	eZType_Tuple = 12,
+	eZType_RefCounted = 13,
+	eZType_Rect = 14,
+	eZType_Point = 15,
+	eZType_Region = 16,
+	eZType_ID = 17,
+	eZType_Vector = 18,
+	eZType_Type = 19,
+	eZType_Time = 20,
+//##	eZType_Name = 21
+	eZType_Max
+	};
+
+template <> inline int sCompare_T(const ZType& iL, const ZType& iR)
+	{ return int(iL) - int(iR); }
+
+const char* ZTypeAsString(ZType iType);
+
+// =================================================================================================
 #pragma mark -
 #pragma mark * ZVal_ZooLib
 

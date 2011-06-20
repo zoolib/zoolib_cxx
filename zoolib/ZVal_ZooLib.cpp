@@ -48,6 +48,44 @@ static ZSeq_ZooLib spNilSeq;
 static vector<ZVal_ZooLib> spNilVector;
 
 // =================================================================================================
+
+/**
+Provides standard textual versions of ZType values.
+*/
+static const char* const spZTypeAsString[eZType_Max] =
+	{
+	"Null",
+	"String",
+	"!!NOTVALID!!", // Needed to maintain correct offsets.
+	"Int8",
+	"Int16",
+	"Int32",
+	"Int64",
+	"Float",
+	"Double",
+	"Bool",
+	"Pointer",
+	"Raw",
+	"Tuple",
+	"RefCounted",
+	"Rect",
+	"Point",
+	"Region",
+	"ID",
+	"Vector",
+	"Type",
+	"Time",
+//##	"Name"
+	};
+
+const char* ZTypeAsString(ZType iType)
+	{
+	if (iType <= eZType_Time)
+		return spZTypeAsString[iType];
+	return "Unknown";
+	}
+
+// =================================================================================================
 #pragma mark -
 #pragma mark * Helper functions
 

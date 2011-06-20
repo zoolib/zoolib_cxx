@@ -118,6 +118,10 @@ void sRelease_T(JSObjectRef iRef)
 		::JSValueUnprotect(ZJavaScriptCore::sCurrentContextRef(), iRef);
 	}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZJavaScriptCore
+
 namespace ZJavaScriptCore {
 
 static string8 spAsString8(JSStringRef iRef)
@@ -311,10 +315,6 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 	else if (const string* theValue = iAny.PGet<string>())
 		{
 		oVal = Value(*theValue);
-		}
-	else if (const ZType* theValue = iAny.PGet<ZType>())
-		{
-		oVal = Value(double(*theValue));
 		}
 	else if (const bool* theValue = iAny.PGet<bool>())
 		{

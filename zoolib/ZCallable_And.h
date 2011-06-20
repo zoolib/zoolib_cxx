@@ -51,9 +51,8 @@ public:
 // From ZCallable
 	virtual bool Call()
 		{
-		if (!fCallable0->Call())
-			return false;
-		return fCallable1->Call();
+		return fCallable0->Call()
+			&& fCallable1->Call();
 		}
 
 private:
@@ -81,9 +80,8 @@ public:
 // From ZCallable
 	virtual bool Call(P0 i0)
 		{
-		if (!fCallable0->Call(i0))
-			return false;
-		return fCallable1->Call(i0);
+		return fCallable0->Call(i0)
+			&& fCallable1->Call(i0);
 		}
 
 private:
@@ -111,9 +109,8 @@ public:
 // From ZCallable
 	virtual bool Call(P0 i0, P1 i1)
 		{
-		if (!fCallable0->Call(i0, i1))
-			return false;
-		return fCallable1->Call(i0, i1);
+		return fCallable0->Call(i0, i1)
+			&& fCallable1->Call(i0, i1);
 		}
 
 private:
@@ -141,9 +138,8 @@ public:
 // From ZCallable
 	virtual bool Call(P0 i0, P1 i1, P2 i2)
 		{
-		if (!fCallable0->Call(i0, i1, i2))
-			return false;
-		return fCallable1->Call(i0, i1, i2);
+		return fCallable0->Call(i0, i1, i2)
+			&& fCallable1->Call(i0, i1, i2);
 		}
 
 private:
@@ -171,9 +167,8 @@ public:
 // From ZCallable
 	virtual bool Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3);
+		return fCallable0->Call(i0, i1, i2, i3)
+			&& fCallable1->Call(i0, i1, i2, i3);
 		}
 
 private:
@@ -202,9 +197,8 @@ public:
 // From ZCallable
 	virtual bool Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4);
+		return fCallable0->Call(i0, i1, i2, i3, i4)
+			&& fCallable1->Call(i0, i1, i2, i3, i4);
 		}
 
 private:
@@ -234,9 +228,8 @@ public:
 	virtual bool Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4, i5))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4, i5);
+		return fCallable0->Call(i0, i1, i2, i3, i4, i5)
+			&& fCallable1->Call(i0, i1, i2, i3, i4, i5);
 		}
 
 private:
@@ -266,9 +259,8 @@ public:
 	virtual bool Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4, i5, i6))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4, i5, i6);
+		return fCallable0->Call(i0, i1, i2, i3, i4, i5, i6)
+			&& fCallable1->Call(i0, i1, i2, i3, i4, i5, i6);
 		}
 
 private:
@@ -298,9 +290,8 @@ public:
 	virtual bool Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7);
+		return fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7)
+			&& fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7);
 		}
 
 private:
@@ -332,9 +323,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		return fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8)
+			&& fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8);
 		}
 
 private:
@@ -366,9 +356,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		return fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9)
+			&& fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
 		}
 
 private:
@@ -400,9 +389,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		return fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA)
+			&& fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
 		}
 
 private:
@@ -434,9 +422,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		return fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB)
+			&& fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
 		}
 
 private:
@@ -469,9 +456,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		return fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC)
+			&& fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
 		}
 
 private:
@@ -504,9 +490,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		return fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD)
+			&& fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
 		}
 
 private:
@@ -539,9 +524,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		return fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE)
+			&& fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
 		}
 
 private:
@@ -574,9 +558,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		if (!fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF))
-			return false;
-		return fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+		return fCallable0->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF)
+			&& fCallable1->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
 		}
 
 private:

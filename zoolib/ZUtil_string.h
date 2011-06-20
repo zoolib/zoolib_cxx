@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,28 +18,54 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_Simple__
-#define __ZYad_Simple__ 1
+#ifndef __ZUtil_string__
+#define __ZUtil_string__
 #include "zconfig.h"
 
-#include "zoolib/ZYad_Basic.h"
+#include "zoolib/ZQ.h"
+#include "zoolib/ZStdInt.h" // for uint64
+
+#include <string>
+#include <vector>
 
 namespace ZooLib {
-namespace ZYad_Simple {
+namespace ZUtil_string {
+
+using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ParseException
+#pragma mark * ZUtil_string
 
-typedef ZYad_Basic::ParseException ParseException;
+ZQ<int64> sQInt64(const string& iString);
+int64 sDInt64(int64 iDefault, const string& iString);
+int64 sInt64(const string& iString);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_Simple
+ZQ<uint64> sQUInt64(const string& iString);
+uint64 sDUInt64(uint64 iDefault, const string& iString);
+uint64 sUInt64(const string& iString);
 
-ZRef<ZYadMapR> sMakeYadR(ZRef<ZStrimmerU> iStrimmerU);
+ZQ<double> sQDouble(const string& iString);
+double sDDouble(double iDefault, const string& iString);
+double sDouble(const string& iString);
 
-} // namespace ZYad_Simple
+// --
+
+int sComparei(const string& iLeft, const string& iRight);
+bool sEquali(const string& iLeft, const string& iRight);
+bool sContainsi(const string& iTarget, const string& iCandidate);
+
+// --
+
+string sFromPString(const unsigned char* iPString);
+void sToPString(const string& iString, unsigned char* oPString, size_t iMaxLength);
+void sToPString(const char* iString, unsigned char* oPString, size_t iMaxLength);
+
+// --
+
+std::vector<string> sSplit(const string& iString, char iChar);
+
+} // namespace ZUtil_string
 } // namespace ZooLib
 
-#endif // __ZYad_Simple__
+#endif // __ZUtil_string__

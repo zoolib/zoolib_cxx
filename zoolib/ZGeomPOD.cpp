@@ -23,6 +23,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+/** \typedef ZPointPOD
+\ingroup Types
+ZPointPOD is used in circumstances where a ZPoint would present
+difficulties because of its ctor/dtor (in unions, mainly.).
+*/
+
+/** \typedef ZRectPOD
+\ingroup Types
+ZRectPOD is used in circumstances where a ZRect would present
+difficulties because of its ctor/dtor (in unions, mainly.).
+*/
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZPointPOD

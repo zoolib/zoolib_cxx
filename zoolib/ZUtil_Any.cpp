@@ -19,7 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZUtil_Any.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZUtil_string.h"
+//#include "zoolib/ZString.h"
 
 using std::string;
 
@@ -45,16 +46,16 @@ ZQ<bool> sQCoerceBool(const ZAny& iAny)
 		if (pString->empty())
 			return false;
 
-		if (ZQ<double> qDouble = ZString::sQDouble(*pString))
+		if (ZQ<double> qDouble = ZUtil_string::sQDouble(*pString))
 			return (0.0 != qDouble.Get());
 
-		if (ZQ<int64> qInt64 = ZString::sQInt64(*pString))
+		if (ZQ<int64> qInt64 = ZUtil_string::sQInt64(*pString))
 			return (0 != qInt64.Get());
 
-		if (ZString::sEquali(*pString, "t") || ZString::sEquali(*pString, "true"))
+		if (ZUtil_string::sEquali(*pString, "t") || ZUtil_string::sEquali(*pString, "true"))
 			return true;
 
-		if (ZString::sEquali(*pString, "f") || ZString::sEquali(*pString, "false"))
+		if (ZUtil_string::sEquali(*pString, "f") || ZUtil_string::sEquali(*pString, "false"))
 			return false;
 		}
 	return null;

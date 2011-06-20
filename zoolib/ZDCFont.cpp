@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 //#include "zoolib/ZStream.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZUtil_string.h"
 #include "zoolib/ZUnicode.h"
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
@@ -130,7 +130,7 @@ ZDCFont::ZDCFont(const TextStyle& inStyle)
 	{
 	Str255 fontName;
 	::GetFontName(inStyle.tsFont, fontName);
-	fFontName = ZString::sFromPString(fontName);
+	fFontName = ZUtil_string::sFromPString(fontName);
 
 	fStyle = (Style)inStyle.tsFace;
 	fSize = inStyle.tsSize;
@@ -140,7 +140,7 @@ ZDCFont::ZDCFont(int16 inFontID, Style inStyle, int16 inSize)
 	{
 	Str255 fontName;
 	::GetFontName(inFontID, fontName);
-	fFontName = ZString::sFromPString(fontName);
+	fFontName = ZUtil_string::sFromPString(fontName);
 
 	fStyle = inStyle;
 	fSize = inSize;
@@ -151,7 +151,7 @@ TextStyle ZDCFont::GetTextStyle() const
 	TextStyle theTextStyle;
 
 	Str255 theName;
-	ZString::sToPString(fFontName, theName, 255);
+	ZUtil_string::sToPString(fFontName, theName, 255);
 	#if ZCONFIG_SPI_Enabled(Carbon)
 		theTextStyle.tsFont = ::FMGetFontFamilyFromName(theName);
 	#else
@@ -169,7 +169,7 @@ TextStyle ZDCFont::GetTextStyle() const
 int16 ZDCFont::GetFontID() const
 	{
 	Str255 theName;
-	ZString::sToPString(fFontName, theName, 255);
+	ZUtil_string::sToPString(fFontName, theName, 255);
 
 	#if ZCONFIG_SPI_Enabled(Carbon)
 		return ::FMGetFontFamilyFromName(theName);
@@ -184,7 +184,7 @@ void ZDCFont::SetFontID(int16 inID)
 	{
 	Str255 fontName;
 	::GetFontName(inID, fontName);
-	fFontName = ZString::sFromPString(fontName);
+	fFontName = ZUtil_string::sFromPString(fontName);
 	}
 #endif // ZCONFIG_SPI_Enabled(QuickDraw)
 

@@ -32,8 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimmer.h"
 #include "zoolib/ZStrimmer_Stream.h"
 #include "zoolib/ZStrimmer_Streamer.h"
-#include "zoolib/ZString.h"
 #include "zoolib/ZTextCoder.h"
+#include "zoolib/ZUtil_string.h"
 
 #include <ctype.h> // For isalnum
 
@@ -94,12 +94,12 @@ static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 	{
 	if (false)
 		{}
-	else if (ZString::sEquali("http", iScheme))
+	else if (ZUtil_string::sEquali("http", iScheme))
 		{
 		if (!iPort)
 			iPort = 80;
 		}
-	else if (ZString::sEquali("https", iScheme))
+	else if (ZUtil_string::sEquali("https", iScheme))
 		{
 		if (!iPort)
 			iPort = 443;
@@ -109,7 +109,7 @@ static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 		return null;
 		}
 
-	const bool useSSL = ZString::sEquali("https", iScheme);
+	const bool useSSL = ZUtil_string::sEquali("https", iScheme);
 
 	if (iCallable_Connect)
 		{
