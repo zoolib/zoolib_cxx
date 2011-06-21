@@ -18,14 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallAsync__
-#define __ZCallAsync__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZCallable_Bind.h"
-#include "zoolib/ZCallable_Function.h"
-#include "zoolib/ZFuture.h"
-#include "zoolib/ZWorker_Callable.h"
+#include "zoolib/ZCallAsync.h"
 
 namespace ZooLib {
 
@@ -33,20 +26,17 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * CallAsync
 
-template <class T>
-void sCallAsync_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T()> > iCallable)
-	{ iPromise->Set(iCallable->Call()); }
-
-template <class T>
-ZRef<ZFuture<T> > CallAsync(ZRef<ZCallable<T()> > iCallable)
+static void spCallAsyncVoid(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void()> > iCallable)
 	{
-	ZRef<ZPromise<T> > thePromise = new ZPromise<T>;
-	sStartWorkerRunner(MakeWorker(BindL(thePromise, iCallable, MakeCallable(sCallAsync_T<T>))));
+	iCallable->Call();
+	iPromise->Set();
+	}
+
+ZRef<ZFuture<void> > CallAsync(ZRef<ZCallable<void()> > iCallable)
+	{
+	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
+	sStartWorkerRunner(MakeWorker(BindL(thePromise, iCallable, MakeCallable(spCallAsyncVoid))));
 	return thePromise->Get();
 	}
 
-ZRef<ZFuture<void> > CallAsync(ZRef<ZCallable<void()> > iCallable);
-
 } // namespace ZooLib
-
-#endif // __ZCallAsync__

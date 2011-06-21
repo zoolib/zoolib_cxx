@@ -71,22 +71,22 @@ class ZCallable_And
 :	public ZCallable_Bool
 	{
 public:
-	ZCallable_And(const ZRef<ZCallable_Bool>& iCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+	ZCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 // From ZCallable
 	virtual bool Call();
 
 private:
-	const ZRef<ZCallable_Bool> fCallable0;
-	const ZRef<ZCallable_Bool> fCallable1;
+	const ZRef<ZCallable_Bool> f0;
+	const ZRef<ZCallable_Bool> f1;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * MakeCallable_And
 
-ZRef<ZCallable_Bool> MakeCallable_And(
-	const ZRef<ZCallable_Bool>& iCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+ZRef<ZCallable_Bool>
+MakeCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 // =================================================================================================
 #pragma mark -
@@ -96,22 +96,22 @@ class ZCallable_Or
 :	public ZCallable_Bool
 	{
 public:
-	ZCallable_Or(const ZRef<ZCallable_Bool>& iCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+	ZCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 // From ZCallable
 	virtual bool Call();
 
 private:
-	const ZRef<ZCallable_Bool> fCallable0;
-	const ZRef<ZCallable_Bool> fCallable1;
+	const ZRef<ZCallable_Bool> f0;
+	const ZRef<ZCallable_Bool> f1;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * MakeCallable_Or
 
-ZRef<ZCallable_Bool> MakeCallable_Or(
-	const ZRef<ZCallable_Bool>& iCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+ZRef<ZCallable_Bool>
+MakeCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 // =================================================================================================
 #pragma mark -
@@ -121,24 +121,24 @@ class ZCallable_If
 :	public ZCallable_Bool
 	{
 public:
-	ZCallable_If(const ZRef<ZCallable_Bool>& iCallable_Condition,
-		const ZRef<ZCallable_Bool>& iCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+	ZCallable_If(const ZRef<ZCallable_Bool>& iCondition,
+		const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 // From ZCallable
 	virtual bool Call();
 
 private:
-	const ZRef<ZCallable_Bool> fCallable_Condition;
-	const ZRef<ZCallable_Bool> fCallable0;
-	const ZRef<ZCallable_Bool> fCallable1;
+	const ZRef<ZCallable_Bool> fCondition;
+	const ZRef<ZCallable_Bool> f0;
+	const ZRef<ZCallable_Bool> f1;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * MakeCallable_If
 
-ZRef<ZCallable_Bool> MakeCallable_If(const ZRef<ZCallable_Bool>& iCallable_Condition,
-	const ZRef<ZCallable_Bool>& iCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+ZRef<ZCallable_Bool> MakeCallable_If(const ZRef<ZCallable_Bool>& iCondition,
+	const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 // =================================================================================================
 #pragma mark -
@@ -191,20 +191,18 @@ ZRef<ZCallable_Bool> MakeCallable_Repeat(size_t iCount, const ZRef<ZCallable_Boo
 #pragma mark -
 #pragma mark * Shorter callable ctors
 
-ZRef<ZCallable_Bool> True();
+ZRef<ZCallable_Bool> Callable_True();
 
-ZRef<ZCallable_Bool> False();
+ZRef<ZCallable_Bool> Callable_False();
 
 ZRef<ZCallable_Bool> Not(const ZRef<ZCallable_Bool>& iCallable);
 
-ZRef<ZCallable_Bool> And(
-	const ZRef<ZCallable_Bool>& iCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+ZRef<ZCallable_Bool> And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
-ZRef<ZCallable_Bool> Or(
-	const ZRef<ZCallable_Bool>& iCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+ZRef<ZCallable_Bool> Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
-ZRef<ZCallable_Bool> If(const ZRef<ZCallable_Bool>& iCallable_Condition,
-	const ZRef<ZCallable_Bool>& iCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+ZRef<ZCallable_Bool> If(const ZRef<ZCallable_Bool>& iCondition,
+	const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 ZRef<ZCallable_Bool> While(const ZRef<ZCallable_Bool>& iCallable);
 
@@ -214,17 +212,13 @@ ZRef<ZCallable_Bool> Repeat(size_t iCount, const ZRef<ZCallable_Bool>& iCallable
 #pragma mark -
 #pragma mark * Infix notation
 
-ZRef<ZCallable_Bool> operator&(
-	const ZRef<ZCallable_Bool>& iCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+ZRef<ZCallable_Bool> operator&(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
-ZRef<ZCallable_Bool>& operator&=(
-	ZRef<ZCallable_Bool>& ioCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+ZRef<ZCallable_Bool>& operator&=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1);
 
-ZRef<ZCallable_Bool> operator|(
-	const ZRef<ZCallable_Bool>& iCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+ZRef<ZCallable_Bool> operator|(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
-ZRef<ZCallable_Bool>& operator|=(
-	ZRef<ZCallable_Bool>& ioCallable0, const ZRef<ZCallable_Bool>& iCallable1);
+ZRef<ZCallable_Bool>& operator|=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1);
 
 ZRef<ZCallable_Bool> operator~(const ZRef<ZCallable_Bool>& iCallable);
 

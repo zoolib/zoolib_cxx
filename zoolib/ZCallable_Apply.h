@@ -18,35 +18,51 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallAsync__
-#define __ZCallAsync__ 1
+#ifndef __ZCallable_Apply__
+#define __ZCallable_Apply__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable_Bind.h"
-#include "zoolib/ZCallable_Function.h"
-#include "zoolib/ZFuture.h"
-#include "zoolib/ZWorker_Callable.h"
+#include "zoolib/ZCallable.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * CallAsync
+#pragma mark * ZCallable_Apply
 
-template <class T>
-void sCallAsync_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T()> > iCallable)
-	{ iPromise->Set(iCallable->Call()); }
-
-template <class T>
-ZRef<ZFuture<T> > CallAsync(ZRef<ZCallable<T()> > iCallable)
+template <class A, class B, class C>
+class ZCallable_Apply
+:	public ZCallable<A(C)>
 	{
-	ZRef<ZPromise<T> > thePromise = new ZPromise<T>;
-	sStartWorkerRunner(MakeWorker(BindL(thePromise, iCallable, MakeCallable(sCallAsync_T<T>))));
-	return thePromise->Get();
-	}
+public:
+	ZCallable_Apply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)> >& iCallable)
+	:	fApply(iApply)
+	,	fCallable(iCallable)
+		{}
 
-ZRef<ZFuture<void> > CallAsync(ZRef<ZCallable<void()> > iCallable);
+// From ZCallable
+	virtual A Call(C iC)
+		{ return fApply->Call(fCallable->Call(iC)); }
+
+private:
+	const ZRef<ZCallable<A(B)> > fApply;
+	const ZRef<ZCallable<B(C)> > fCallable;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * MakeCallable_Apply
+
+template <class A, class B, class C>
+ZRef<ZCallable<A(C)> >
+MakeCallable_Apply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)> >& iCallable)
+	{ return new ZCallable_Apply<A,B,C>(iApply, iCallable); }
+
+template <class A, class B, class C>
+ZRef<ZCallable<A(C)> >
+Apply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)> >& iCallable)
+	{ return new ZCallable_Apply<A,B,C>(iApply, iCallable); }
 
 } // namespace ZooLib
 
-#endif // __ZCallAsync__
+#endif // __ZCallable_Apply__
