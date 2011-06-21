@@ -43,6 +43,14 @@ bool ZWorker_Callable::Work()
 ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable::Callable_t> iCallable)
 	{ return new ZWorker_Callable(iCallable); }
 
+ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable::Callable_t> iCallable,
+	ZRef<ZWorker::Callable_Detached_t> iCallable_Detached)
+	{
+	ZRef<ZWorker> theWorker = new ZWorker_Callable(iCallable);
+	theWorker->GetSetCallable_Detached(iCallable_Detached);
+	return theWorker;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWorker_Callable_Once

@@ -47,13 +47,13 @@ an exception to propogate out.
 
 void ZWorker::RunnerAttached()
 	{
-	if (ZRef<Callable> theCallable = fCallable_Attached)
+	if (ZRef<Callable_Attached_t> theCallable = fCallable_Attached)
 		theCallable->Call(this);
 	}
 
 void ZWorker::RunnerDetached()
 	{
-	if (ZRef<Callable> theCallable = fCallable_Detached)
+	if (ZRef<Callable_Detached_t> theCallable = fCallable_Detached)
 		theCallable->Call(this);
 	}
 
@@ -92,10 +92,12 @@ bool ZWorker::IsAttached()
 	return false;
 	}
 
-ZRef<ZWorker::Callable> ZWorker::GetSetCallable_Attached(ZRef<Callable> iCallable)
+ZRef<ZWorker::Callable_Attached_t>
+	ZWorker::GetSetCallable_Attached(ZRef<Callable_Attached_t> iCallable)
 	{ return fCallable_Attached.GetSet(iCallable); }
 
-ZRef<ZWorker::Callable> ZWorker::GetSetCallable_Detached(ZRef<Callable> iCallable)
+ZRef<ZWorker::Callable_Detached_t>
+ZWorker::GetSetCallable_Detached(ZRef<Callable_Detached_t> iCallable)
 	{ return fCallable_Detached.GetSet(iCallable); }
 
 // =================================================================================================

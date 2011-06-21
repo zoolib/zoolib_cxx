@@ -49,6 +49,9 @@ private:
 
 ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable::Callable_t> iCallable);
 
+ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable::Callable_t> iCallable,
+	ZRef<ZWorker::Callable_Detached_t> iCallable_Detached);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWorker_Callable_Once
