@@ -298,7 +298,11 @@ inline string32 sAsUTF32(I iSource, I iEnd)
 	{ return Functions_Convert_T<I>::sAsUTF32(iSource, iEnd); }
 
 inline string32 sAsUTF32(const UTF32* iString)
-	{ return string32(iString); }
+	{
+	if (iString)
+		return string32(iString);
+	return string32();
+	}
 
 inline string32 sAsUTF32(const UTF32* iString, size_t iCountCU)
 	{ return string32(iString, iCountCU); }
@@ -329,7 +333,11 @@ inline string16 sAsUTF16(I iSource, I iEnd)
 	{ return Functions_Convert_T<I>::sAsUTF16(iSource, iEnd); }
 
 inline string16 sAsUTF16(const UTF16* iString)
-	{ return string16(iString); }
+	{
+	if (iString)
+		return string16(iString);
+	return string16();
+	}
 
 inline string16 sAsUTF16(const UTF16* iString, size_t iCountCU)
 	{ return string16(iString, iCountCU); }
@@ -365,7 +373,11 @@ inline string8 sAsUTF8(I iSource, I iEnd)
 	{ return Functions_Convert_T<I>::sAsUTF8(iSource, iEnd); }
 
 inline string8 sAsUTF8(const UTF8* iString)
-	{ return string8(iString); }
+	{
+	if (iString)
+		return string8(iString);
+	return string8();
+	}
 
 inline string8 sAsUTF8(const UTF8* iString, size_t iCountCU)
 	{ return string8(iString, iCountCU); }
