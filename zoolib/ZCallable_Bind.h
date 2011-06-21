@@ -27,27 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZCallable_Bind {
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * VT (Value Traits)
-
-template <class T> struct VT
-	{
-	typedef const T F; // Field
-	typedef const T& P; // Paramater
-	};
-
-template <class T> struct VT<const T&>
-	{
-	typedef const T F;
-	typedef const T& P;
-	};
-
-template <class T> struct VT<T&>
-	{
-	typedef const T F;
-	typedef const T& P;
-	};
+using namespace ZCallableUtil;
 
 // =================================================================================================
 #pragma mark -
