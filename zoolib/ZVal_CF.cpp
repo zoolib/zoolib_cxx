@@ -38,6 +38,8 @@ using ZUtil_CF::sStringMutable;
 using ZUtil_CF::sArrayMutable;
 using ZUtil_CF::sDictionaryMutable;
 
+#if 0
+// Not usable till I figure out compare for CFTypeRef
 template <>
 int sCompare_T(const ZVal_CF& iL, const ZVal_CF& iR)
 	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
@@ -49,6 +51,7 @@ int sCompare_T(const ZSeq_CF& iL, const ZSeq_CF& iR)
 template <>
 int sCompare_T(const ZMap_CF& iL, const ZMap_CF& iR)
 	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
+#endif
 
 // =================================================================================================
 #pragma mark -
