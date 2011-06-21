@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQE_Walker_Calc__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 #include "zoolib/zra/ZRA_RelHead.h"
 #include "zoolib/zqe/ZQE_Walker.h"

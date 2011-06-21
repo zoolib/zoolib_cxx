@@ -27,8 +27,6 @@ using std::map;
 using std::set;
 using std::vector;
 
-using namespace ZUtil_STL;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Walker_Calc
