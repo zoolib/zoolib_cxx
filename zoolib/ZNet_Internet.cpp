@@ -52,6 +52,15 @@ ZNetAddress_IP4::ZNetAddress_IP4(
 ZRef<ZNetEndpoint> ZNetAddress_IP4::Connect() const
 	{ return ZNetEndpoint_TCP::sCreateConnected(fAddr, fPort); }
 
+std::string ZNetAddress_IP4::sAsString(ip4_addr iAddr)
+	{
+	return ZStringf("%d.%d.%d.%d",
+		((iAddr >> 24) & 0xFF),
+		((iAddr >> 16) & 0xFF),
+		((iAddr >> 8) & 0xFF),
+		(iAddr & 0xFF));
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetAddress_IP6

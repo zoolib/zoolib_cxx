@@ -85,6 +85,8 @@ public:
 	static const ip4_addr sLoopback = 0x7F000001u;
 	static const ip4_addr sAny = 0;
 
+	static std::string sAsString(ip4_addr iAddr);
+
 private:
 	const ip4_addr fAddr;
 	};
