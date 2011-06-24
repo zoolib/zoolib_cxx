@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	#define ZMACRO_WinCOM_Definition(className)
 
-	#define ZMACRO_IIDOf(className) __uuidof(className)
+	#define ZMACRO_UUID(className) __uuidof(className)
 
 #else
 
@@ -48,7 +48,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			{ZIID_b0,ZIID_b1,ZIID_b2,ZIID_b3,\
 			ZIID_b4,ZIID_b5,ZIID_b6,ZIID_b7}};
 
-	#define ZMACRO_IIDOf(className) (className::sIID)
+	#define ZMACRO_UUID(className) (className::sIID)
 
 #endif
 

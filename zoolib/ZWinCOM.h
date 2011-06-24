@@ -42,12 +42,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
+#pragma mark -
+#pragma mark * ZRef support
 
 inline void sRetain(IUnknown& iObject)
 	{ iObject.AddRef(); }
 
 inline void sRelease(IUnknown& iObject)
 	{ iObject.Release(); }
+
+inline void sCheck(IUnknown* iP)
+	{ ZAssertStop(1, iP); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Support for QueryInterface and output-param APIs
 
 template <class T>
 static HRESULT sCOMCopy(void** oObjectRef, T* iOb)
@@ -64,9 +73,31 @@ static T** sCOMPtr(ZRef<T>& ioRef)
 
 template <class T>
 static void** sCOMVoidPtr(ZRef<T>& ioRef)
-	{ return (void**)(sCOMPtr(iRef)); }
+	{ return (void**)(sCOMPtr(ioRef)); }
 
 namespace ZWinCOM {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWinCOM::Success& pseudo prefix operator
+
+const struct Success_t
+	{
+	bool operator()(HRESULT iResult) const { return SUCCEEDED(iResult); }
+
+	bool operator&(HRESULT iResult) const { return SUCCEEDED(iResult); }
+	} Success = {};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWinCOM::Failure& pseudo prefix operator
+
+const struct Failure_t
+	{
+	bool operator()(HRESULT iResult) const { return FAILED(iResult); }
+
+	bool operator&(HRESULT iResult) const { return FAILED(iResult); }
+	} Failure = {};
 
 // =================================================================================================
 #pragma mark -
@@ -168,12 +199,18 @@ public:
 	String(const string16& iOther);
 	String& operator=(const string16& iOther);
 
+	String(const string8& iOther);
+	String& operator=(const string8& iOther);
+
 	operator string16() const;
+	operator string8() const;
 
 	void Clear();
 
-	BSTR& GetPtrRef();
-	const BSTR& GetPtrRef() const;
+	operator const BSTR&() const;
+
+	BSTR& OParam();
+	const BSTR& IParam() const;
 
 private:
 	BSTR fBSTR;

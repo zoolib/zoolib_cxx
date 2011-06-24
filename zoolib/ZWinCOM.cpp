@@ -535,6 +535,32 @@ String& String::operator=(const string16& iOther)
 	return *this;
 	}
 
+String::String(const string8& iOther)
+:	fBSTR(nullptr)
+	{
+	if (! iOther.empty())
+		{
+		const string16 other = ZUnicode::sAsUTF16(iOther);
+		fBSTR = ::SysAllocStringLen(other.data(), other.length());
+		}
+	}
+
+String& String::operator=(const string8& iOther)
+	{
+	BSTR newBSTR = nullptr;
+	if (! iOther.empty())
+		{
+		const string16 other = ZUnicode::sAsUTF16(iOther);
+		newBSTR = ::SysAllocStringLen(other.data(), other.length());
+		}
+
+	if (fBSTR)
+		::SysFreeString(fBSTR);
+	fBSTR = newBSTR;
+
+	return *this;
+	}
+
 String::operator string16() const
 	{
 	if (fBSTR)
@@ -542,24 +568,40 @@ String::operator string16() const
 	return string16();
 	}
 
+String::operator string8() const
+	{
+	if (fBSTR)
+		return ZUnicode::sAsUTF8(fBSTR, ::SysStringLen(fBSTR));
+	return string8();
+	}
+
 void String::Clear()
 	{
 	if (fBSTR)
+		{
 		::SysFreeString(fBSTR);
-	fBSTR = nullptr;
+		fBSTR = nullptr;
+		}
 	}
 
-BSTR& String::GetPtrRef()
+String::operator const BSTR&() const
 	{ return fBSTR; }
 
-const BSTR& String::GetPtrRef() const
+BSTR& String::OParam()
+	{
+	if (fBSTR)
+		{
+		::SysFreeString(fBSTR);
+		fBSTR = nullptr;
+		}
+	return fBSTR;
+	}
+
+const BSTR& String::IParam() const
 	{ return fBSTR; }
 
 BSTR* sCOMPtr(String& iStr)
-	{
-	iStr.Clear();
-	return &iStr.GetPtrRef();
-	}
+	{ return &iStr.OParam(); }
 
 bool operator==(const BSTR& iBSTR, const string16& iString)
 	{
@@ -578,10 +620,10 @@ bool operator==(const string16& iString, const BSTR& iBSTR)
 	}
 
 bool operator==(const String& l, const string16& r)
-	{ return l.GetPtrRef() == r; };
+	{ return l.IParam() == r; };
 
 bool operator==(const string16& l, const String& r)
-	{ return l == r.GetPtrRef(); };
+	{ return l == r.IParam(); };
 
 } // namespace ZWinCOM
 } // namespace ZooLib
