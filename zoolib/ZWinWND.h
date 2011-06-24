@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,82 +18,61 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWND__
-#define __ZWND__ 1
+#ifndef __ZWinWND__
+#define __ZWinWND__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCallable.h"
 #include "zoolib/ZCompat_Win.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 
 namespace ZooLib {
+namespace ZWinWND {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWNDW
+#pragma mark * ZWinWND::ClassRegistration
 
-class ZWNDW
+class ClassRegistration
 	{
 public:
-	static HWND sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam);
+	ClassRegistration(WNDPROC iWNDPROC, const WCHAR* iClassName);
+	~ClassRegistration();
 
-	ZWNDW(WNDPROC iWNDPROC);
-	virtual ~ZWNDW();
+	const WCHAR* GetClassName() const;
 
-	void Create(HWND iParent, DWORD iStyle);
-
-	HWND GetHWND();
-
-	virtual void HWNDDestroyed(HWND iHWND);
-
-	virtual LRESULT WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-	LRESULT CallBase(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-	static LRESULT CALLBACK sWindowProcW(
-		HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-protected:
-	static ZWNDW* sFromHWNDNilOkayW(HWND iHWND);
-
-	HWND fHWND;
-	WNDPROC fWNDPROC;
-	bool fDestructorEntered;
+private:
+	const WCHAR* fClassName;
+	ATOM fATOM;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWNDSubClassW
+#pragma mark * ZWinWND
 
-class ZWNDSubClassW
-	{
-public:
-	ZWNDSubClassW();
-	virtual ~ZWNDSubClassW();
+typedef ZCallable<LRESULT(WNDPROC,HWND,UINT,WPARAM,LPARAM)> Callable_WNDPROC;
 
-	void Attach(HWND iHWND);
-	void Detach();
+HWND sCreate(
+	DWORD dwExStyle,
+	LPCWSTR lpWindowName,
+	DWORD dwStyle,
+	int X,
+	int Y,
+	int nWidth,
+	int nHeight,
+	HWND hWndParent,
+	HMENU hMenu,
+	WNDPROC iWNDPROC,
+	ZRef<Callable_WNDPROC> iCallable);
 
-	HWND GetHWND();
+HWND sCreate(HWND iParent, ZRef<Callable_WNDPROC> iCallable);
 
-	virtual void HWNDDestroyed();
+bool sAttach(HWND iHWND, ZRef<Callable_WNDPROC> iCallable);
 
-	virtual LRESULT WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-	LRESULT CallBase(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-	static LRESULT CALLBACK sWindowProcW(
-		HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-protected:
-	static ZWNDSubClassW* sFromHWNDNilOkayW(HWND iHWND);
-
-	HWND fHWND;
-	WNDPROC fWNDPROC;
-	};
-
+} // namespace ZWinWND
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZWND__
+#endif // __ZWinWND__

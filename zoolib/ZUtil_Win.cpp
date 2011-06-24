@@ -85,6 +85,20 @@ bool ZUtil_Win::sUseWAPI()
 void ZUtil_Win::sDisallowWAPI()
 	{ spFlag_DisallowWAPI = true; }
 
+HINSTANCE ZUtil_Win::sGetModuleHandle()
+	{
+	#if ZCONFIG(Compiler, CodeWarrior)
+		return ::GetModuleHandleW(nullptr);
+	#else
+		HMODULE theHINSTANCE;
+		bool result = ::GetModuleHandleExW(
+			GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
+			reinterpret_cast<LPCWSTR>(sGetModuleHandle),
+			&theHINSTANCE);
+		return theHINSTANCE;
+	#endif
+	}
+
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

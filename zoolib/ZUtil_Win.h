@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Win__
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZCompat_Win.h"
 
 namespace ZooLib {
 
@@ -34,6 +35,8 @@ bool sIsWin95OSR2();
 bool sUseWAPI();
 
 void sDisallowWAPI();
+
+HINSTANCE sGetModuleHandle();
 
 } // namespace ZUtil_Win
 

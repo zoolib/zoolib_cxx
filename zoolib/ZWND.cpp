@@ -18,38 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-// Recent windows headers conditionalize visibility of GetModuleHandleExW on 
-// _WIN32_WINNT being > 0x0500, not >= 0x0500.
-// However it's also visible if WINBASE_DECLARE_GET_MODULE_HANDLE_EX is defined.
-#define WINBASE_DECLARE_GET_MODULE_HANDLE_EX
-
 #include "zoolib/ZWND.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZUnicode.h"
+#include "zoolib/ZUtil_Win.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWindowClassRegistrationW
-
-HINSTANCE ZWNDW::sGetModuleHandle()
-	{
-	#if ZCONFIG(Compiler, CodeWarrior)
-		return ::GetModuleHandleW(nullptr);
-	#else
-		HMODULE theHINSTANCE;
-		bool result = ::GetModuleHandleExW(
-			GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
-			reinterpret_cast<LPCWSTR>(sGetModuleHandle),
-			&theHINSTANCE);
-		ZAssert(result);
-		return theHINSTANCE;
-	#endif
-	}
 
 class ZWindowClassRegistrationW
 	{
@@ -72,7 +53,7 @@ ZWindowClassRegistrationW::ZWindowClassRegistrationW(WNDPROC iWNDPROC, const WCH
 	windowClass.lpfnWndProc = iWNDPROC;
 	windowClass.cbClsExtra = 0;
 	windowClass.cbWndExtra = 0;
-	windowClass.hInstance = ZWNDW::sGetModuleHandle();
+	windowClass.hInstance = ZUtil_Win::sGetModuleHandle();
 	windowClass.hIcon = nullptr;
 	windowClass.hCursor = ::LoadCursorW(nullptr, MAKEINTRESOURCEW(IDC_ARROW));
 	windowClass.hbrBackground = 0;//(HBRUSH)COLOR_WINDOW;
@@ -84,7 +65,7 @@ ZWindowClassRegistrationW::ZWindowClassRegistrationW(WNDPROC iWNDPROC, const WCH
 
 ZWindowClassRegistrationW::~ZWindowClassRegistrationW()
 	{
-	bool result = ::UnregisterClassW(fWNDCLASSName, ZWNDW::sGetModuleHandle());
+	bool result = ::UnregisterClassW(fWNDCLASSName, ZUtil_Win::sGetModuleHandle());
 	ZAssert(result);
 	}
 
@@ -111,7 +92,7 @@ HWND ZWNDW::sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam)
 		10, // initial y size
 		iParent, // Parent window
 		nullptr,
-		sGetModuleHandle(),
+		ZUtil_Win::sGetModuleHandle(),
 		iCreateParam); // creation parameters
 	}
 
@@ -147,7 +128,7 @@ void ZWNDW::Create(HWND iParent, DWORD iStyle)
 		10, // initial y size
 		iParent, // Parent window
 		nullptr,
-		sGetModuleHandle(),
+		ZUtil_Win::sGetModuleHandle(),
 		this); // creation parameters
 
 	ZAssert(fHWND == theHWND);
