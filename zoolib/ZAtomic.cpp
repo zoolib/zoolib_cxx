@@ -278,7 +278,8 @@ namespace ZooLib {
 bool ZAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
 	{
 	return iOldValue
-		== ::InterlockedCompareExchangePointer((volatile PVOID*)iPtrAddress, iNewValue, iOldValue);
+		== ::InterlockedCompareExchangePointer((PVOID*)iPtrAddress, iNewValue, iOldValue);
+//		== ::InterlockedCompareExchangePointer((volatile PVOID*)iPtrAddress, iNewValue, iOldValue);
 	}
 
 #endif
