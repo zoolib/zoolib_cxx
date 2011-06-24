@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZWND.h"
+#include "zoolib/ZWinWND.h"
 
 namespace ZooLib {
 
@@ -37,7 +37,6 @@ namespace ZooLib {
 
 class ZWorkerRunner_EventLoop_Win
 :	public ZWorkerRunner_EventLoop
-,	private ZWNDW
 	{
 public:
 	ZWorkerRunner_EventLoop_Win();
@@ -45,16 +44,18 @@ public:
 
 // From ZCounted via ZWorkerRunner_EventLoop
 	virtual void Initialize();
+	virtual void Finalize();
 
 // From ZWorkerRunner_EventLoop
 	virtual void pQueueCallback();
 
 // Our protocol
-	static void sAttach(ZRef<ZWorker> iWorker);
+	void Attach(ZRef<ZWorker> iWorker);
 
 private:
-// From ZWNDW
-	LRESULT WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
+	LRESULT pWindowProc(WNDPROC iWNDPROC,
+		HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
+	HWND fHWND;
 	};
 
 } // namespace ZooLib

@@ -22,22 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZSafe.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
-
-namespace { // anonymous
-
-ZSafe<ZRef<ZWorkerRunner_EventLoop_Win> > spRunner(new ZWorkerRunner_EventLoop_Win);
-
-ZRef<ZWorkerRunner_EventLoop_Win> spGetRunner()
-	{ return spRunner; }
-
-} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -50,7 +38,7 @@ ZRef<ZWorkerRunner_EventLoop_Win> spGetRunner()
 */
 
 ZWorkerRunner_EventLoop_Win::ZWorkerRunner_EventLoop_Win()
-:	ZWNDW(::DefWindowProcW)
+:	fHWND(nullptr)
 	{}
 
 ZWorkerRunner_EventLoop_Win::~ZWorkerRunner_EventLoop_Win()
@@ -59,21 +47,26 @@ ZWorkerRunner_EventLoop_Win::~ZWorkerRunner_EventLoop_Win()
 void ZWorkerRunner_EventLoop_Win::Initialize()
 	{
 	ZWorkerRunner_EventLoop::Initialize();
-	ZWNDW::Create(0, 0);
+	fHWND = ZWinWND::sCreate(nullptr,
+		MakeCallable(MakeWeakRef(this), &ZWorkerRunner_EventLoop_Win::pWindowProc));
+	}
+
+void ZWorkerRunner_EventLoop_Win::Finalize()
+	{
+	if (fHWND)
+		::DestroyWindow(fHWND);
+	ZWorkerRunner_EventLoop::Finalize();
 	}
 
 static UINT spMSG_Invoke = ::RegisterWindowMessageW(L"ZWorkerRunner_EventLoop_Win::Invoke");
 
 void ZWorkerRunner_EventLoop_Win::pQueueCallback()
-	{ ::PostMessageW(this->GetHWND(), spMSG_Invoke, 0, 0); }
+	{ ::PostMessageW(fHWND, spMSG_Invoke, 0, 0); }
 
-void ZWorkerRunner_EventLoop_Win::sAttach(ZRef<ZWorker> iWorker)
-	{
-	if (ZRef<ZWorkerRunner_EventLoop_Win> theRunner = spGetRunner())
-		theRunner->pAttach(iWorker);
-	}
+void ZWorkerRunner_EventLoop_Win::Attach(ZRef<ZWorker> iWorker)
+	{ this->pAttach(iWorker); }
 
-LRESULT ZWorkerRunner_EventLoop_Win::WindowProc(
+LRESULT ZWorkerRunner_EventLoop_Win::pWindowProc(WNDPROC iWNDPROC,
 	HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	if (iMessage == spMSG_Invoke)
@@ -81,7 +74,11 @@ LRESULT ZWorkerRunner_EventLoop_Win::WindowProc(
 		ZWorkerRunner_EventLoop::pCallback();
 		return 0;
 		}
-	return ZWNDW::WindowProc(iHWND, iMessage, iWPARAM, iLPARAM);
+	else if (iMessage == WM_NCDESTROY)
+		{
+		fHWND = nullptr;
+		}
+	return CallWindowProcW(iWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
 	}
 
 } // namespace ZooLib
