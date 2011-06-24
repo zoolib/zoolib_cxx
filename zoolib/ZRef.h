@@ -50,7 +50,7 @@ private:
 		}
 
 public:
-	#ifdef __OBJC__
+	#if 1 || defined(__OBJC__)
 
 		operator bool() const { return Sense == !!fP; }
 
