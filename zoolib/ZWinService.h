@@ -42,6 +42,9 @@ public:
 	static bool sIsService();
 	static void sRunDispatcher();
 
+	static const bool kAllowPause = true;
+	static const bool kDontAllowPause = false;
+
 	ZWinService(
 		const std::wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW iServiceMain, bool iAllowPause);
 
@@ -70,7 +73,7 @@ private:
 	SERVICE_STATUS fServiceStatus;
 	SERVICE_STATUS_HANDLE fServiceStatusHandle;
 	bool fAllowPause;
-	ZMtx fMutex_State;
+	ZMtxR fMtx;
 	};
 
 // =================================================================================================

@@ -1,4 +1,4 @@
-/* -------------------------------------------------------------------------------------------------
+ /* -------------------------------------------------------------------------------------------------
 Copyright (c) 2005 Andrew Green and Learning in Motion, Inc.
 http://www.zoolib.org
 
@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(Win)
 
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMemory.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
 
 #include <vector>
@@ -77,6 +78,8 @@ ZWinService::ZWinService(
 	{
 	ZLOGFUNCTION(eDebug);
 
+	ZMemZero_T(fServiceStatus);
+
 	SERVICE_TABLE_ENTRYW theEntry;
 	theEntry.lpServiceName = const_cast<wchar_t*>(fServiceName.c_str());
 	theEntry.lpServiceProc = iServiceMain;
@@ -100,7 +103,7 @@ DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVO
 			{
 			if (fAllowPause)
 				{
-				ZAcqMtx acq(fMutex_State);
+				ZAcqMtxR acq(fMtx);
 				if (fServiceStatus.dwCurrentState == SERVICE_RUNNING)
 					{
 					fServiceStatus.dwCurrentState = SERVICE_PAUSE_PENDING;
@@ -120,7 +123,7 @@ DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVO
 			{
 			if (fAllowPause)
 				{
-				ZAcqMtx acq(fMutex_State);
+				ZAcqMtxR acq(fMtx);
 				if (fServiceStatus.dwCurrentState == SERVICE_PAUSED)
 					{
 					fServiceStatus.dwCurrentState = SERVICE_CONTINUE_PENDING;
@@ -138,7 +141,7 @@ DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVO
 			}
 		case SERVICE_CONTROL_STOP:
 			{
-			ZAcqMtx acq(fMutex_State);
+			ZAcqMtxR acq(fMtx);
 			if (fServiceStatus.dwCurrentState == SERVICE_PAUSED
 				|| fServiceStatus.dwCurrentState == SERVICE_RUNNING)
 				{
@@ -159,32 +162,34 @@ DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVO
 
 void ZWinService::pStarted()
 	{
+	ZAcqMtxR acq(fMtx);
 	fServiceStatus.dwCurrentState = SERVICE_RUNNING;
 	::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);
 	}
 
 void ZWinService::pPaused()
 	{
+	ZAcqMtxR acq(fMtx);
 	fServiceStatus.dwCurrentState = SERVICE_PAUSED;
 	::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);
 	}
 
 void ZWinService::pContinued()
 	{
+	ZAcqMtxR acq(fMtx);
 	fServiceStatus.dwCurrentState = SERVICE_RUNNING;
 	::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);
 	}
 
 void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	{
-	ZGuardRMtx guard(fMutex_State);
+	ZGuardRMtxR guard(fMtx);
+	ZMemZero_T(fServiceStatus);
 	fServiceStatus.dwServiceType = SERVICE_WIN32;
 	fServiceStatus.dwCurrentState = SERVICE_START_PENDING;
-	fServiceStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_PAUSE_CONTINUE;
-	fServiceStatus.dwWin32ExitCode = 0;
-	fServiceStatus.dwServiceSpecificExitCode = 0;
-	fServiceStatus.dwCheckPoint = 0;
-	fServiceStatus.dwWaitHint = 0;
+	fServiceStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP;
+	if (fAllowPause)
+		fServiceStatus.dwControlsAccepted |= SERVICE_ACCEPT_PAUSE_CONTINUE;
 
 	fServiceStatusHandle = ::RegisterServiceCtrlHandlerExW(
 		const_cast<wchar_t*>(fServiceName.c_str()), spServiceCtrlHandlerEx, this);
@@ -192,7 +197,7 @@ void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	if (!fServiceStatusHandle)
 		{
 		if (ZLOGPF(s, eErr))
-			s << "RegisterServiceCtrlHandlerExW failed";
+			s << "RegisterServiceCtrlHandlerExW failed with error: " << ::GetLastError();
 		return;
 		}
 	guard.Release();
