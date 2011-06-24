@@ -54,7 +54,8 @@ public:
 
 	void WaitTillFinished();
 
-	typedef ZCallable<void(ZRef<ZCommer>)> Callable_t;
+	typedef ZRef<ZCommer> ZRef_ZCommer;
+	typedef ZCallable<void(ZRef_ZCommer)> Callable_t;
 	ZRef<Callable_t> GetSetCallable_Started(ZRef<Callable_t> iCallable);
 	ZRef<Callable_t> GetSetCallable_Finished(ZRef<Callable_t> iCallable);
 
