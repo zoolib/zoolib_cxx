@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUnicode.h"
+#include "zoolib/ZUtil_Strim_Operators.h"
 
 #include <oleauto.h>
 
@@ -138,8 +139,7 @@ Channel_BBDevMgr::Channel_BBDevMgr(ZRef<IDevice> iDevice,
 
 Channel_BBDevMgr::~Channel_BBDevMgr()
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "~Channel_BBDevMgr";
+	ZLOGTRACE(eDebug + 3);
 	}
 
 void Channel_BBDevMgr::Initialize()
@@ -147,7 +147,7 @@ void Channel_BBDevMgr::Initialize()
 	wstring wideName = ZUnicode::sAsWString(fName);
 	HRESULT theResult = fDevice->OpenChannel(wideName.c_str(), this, sCOMPtr(fChannel));
 
-	if (SUCCEEDED(theResult) && fChannel)
+	if (Success& theResult && fChannel)
 		{
 		fChannel->Params(&fChannelParams);
 		// Allow for two extra bytes, just in case we're preserving boundaries.
@@ -169,7 +169,7 @@ STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oO
 	if (iInterfaceID == IID_IUnknown)
 		return sCOMCopy<IUnknown>(oObjectRef, this);
 
-	if (iInterfaceID == ZMACRO_IIDOf(IChannelEvents))
+	if (iInterfaceID == ZMACRO_UUID(IChannelEvents))
 		return sCOMCopy<IChannelEvents>(oObjectRef, this);
 
 	return E_NOINTERFACE;
@@ -183,8 +183,7 @@ ULONG STDMETHODCALLTYPE Channel_BBDevMgr::Release()
 
 STDMETHODIMP Channel_BBDevMgr::CheckClientStatus(uint16 iRHS)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s.Writef("CheckClientStatus, iRHS: %d", iRHS);
+	ZLOGTRACE(eDebug + 3);
 	// Not implemented - what does this do?
 
 	return S_OK;
@@ -192,8 +191,7 @@ STDMETHODIMP Channel_BBDevMgr::CheckClientStatus(uint16 iRHS)
 
 STDMETHODIMP Channel_BBDevMgr::OnChallenge(int32 iAttemptsRemaining, uint8 oPasswordHash[20])
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "OnChallenge";
+	ZLOGTRACE(eDebug + 3);
 
 	//#warning "not working yet"
 	if (false && fHasPasswordHash && iAttemptsRemaining > 6)
@@ -209,8 +207,7 @@ STDMETHODIMP Channel_BBDevMgr::OnChallenge(int32 iAttemptsRemaining, uint8 oPass
 
 STDMETHODIMP Channel_BBDevMgr::OnNewData()
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "OnNewData";
+	ZLOGTRACE(eDebug + 3);
 
 	ZGuardRMtxR locker(fMutex);
 	fCondition_Reader.Broadcast();
@@ -220,8 +217,7 @@ STDMETHODIMP Channel_BBDevMgr::OnNewData()
 
 STDMETHODIMP Channel_BBDevMgr::OnClose()
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "OnClose";
+	ZLOGTRACE(eDebug + 3);
 
 	// Close initiated by device removal or the other side. An abort
 	// here seems to deadlock, hence our use of the fClosed flag.
@@ -247,8 +243,8 @@ const ZStreamWCon& Channel_BBDevMgr::GetStreamWCon()
 
 void Channel_BBDevMgr::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s.Writef("Imp_Read, iCount: %d", iCount);
+	if (ZLOGPF(s, eDebug + 3))
+		s << "iCount: " << iCount;
 
 	uint8* localDest = static_cast<uint8*>(oDest);
 
@@ -265,8 +261,8 @@ void Channel_BBDevMgr::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			ZMemCopy(localDest, &fBuffer[fStart], countToCopy);
 			localDest += countToCopy;
 			fStart += countToCopy;
-			if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-				s.Writef("Imp_Read, countToCopy: %d", countToCopy);
+			if (ZLOGPF(s, eDebug + 3))
+				s << "countToCopy: " << countToCopy;
 			break;
 			}
 		else
@@ -286,8 +282,7 @@ void Channel_BBDevMgr::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 
 size_t Channel_BBDevMgr::Imp_CountReadable()
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "Imp_CountReadable";
+	ZLOGTRACE(eDebug + 3);
 
 	ZGuardRMtxR locker(fMutex);
 	if (fEnd <= fStart)
@@ -304,8 +299,7 @@ size_t Channel_BBDevMgr::Imp_CountReadable()
 
 bool Channel_BBDevMgr::Imp_WaitReadable(double iTimeout)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "Imp_WaitReadable";
+	ZLOGTRACE(eDebug + 3);
 
 	ZGuardRMtxR locker(fMutex);
 
@@ -328,8 +322,7 @@ bool Channel_BBDevMgr::Imp_WaitReadable(double iTimeout)
 
 bool Channel_BBDevMgr::Imp_ReceiveDisconnect(double iTimeout)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "Imp_ReceiveDisconnect";
+	ZLOGTRACE(eDebug + 3);
 
 	ZGuardRMtxR locker(fMutex);
 
@@ -352,8 +345,8 @@ bool Channel_BBDevMgr::Imp_ReceiveDisconnect(double iTimeout)
 
 void Channel_BBDevMgr::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s.Writef("Imp_Write, iCount: %d", iCount);
+	if (ZLOGPF(s, eDebug + 3))
+		s << "iCount: " << iCount;
 
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 
@@ -364,14 +357,14 @@ void Channel_BBDevMgr::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 		locker.Release();
 		const size_t countToWrite = std::min(iCount, size_t(fChannelParams.fMaxTransmitUnit));
 
-		if (SUCCEEDED(theChannel->WritePacket(localSource, countToWrite)))
+		if (Success& theChannel->WritePacket(localSource, countToWrite))
 			{
 			localSource += countToWrite;
 			}
 		else
 			{
-			if (ZLOG(s, eDebug + 2, "ZBlackBerry::Channel_BBDevMgr"))
-				s.Writef("Write failed, count: %d, %d", iCount, countToWrite);
+			if (ZLOGPF(s, eDebug + 2))
+				s << "Write failed, countToWrite: " << countToWrite;
 			}
 		}
 
@@ -381,38 +374,34 @@ void Channel_BBDevMgr::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 
 void Channel_BBDevMgr::Imp_SendDisconnect()
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "Imp_SendDisconnect";
+	ZLOGTRACE(eDebug + 3);
 
 	this->pAbort();
 	}
 
 void Channel_BBDevMgr::Imp_Abort()
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "Imp_Abort";
+	ZLOGTRACE(eDebug + 3);
 
 	this->pAbort();
 	}
 
 bool Channel_BBDevMgr::pRefill(ZGuardRMtxR& iLocker, ZRef<IChannel> iChannel, double* ioTimeout)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s.Writef("pRefill");
+	ZLOGTRACE(eDebug + 3);
 
 	ZAssert(iChannel);
 	ZAssert(fEnd <= fStart);
 
-	bool result = false;
 	for (;;)
 		{
 		if (fClosed)
-			break;
+			return false;
 
 		int32 packetsAvailable;
-		if (FAILED(iChannel->PacketsAvailable(&packetsAvailable)))
+		if (Failure& iChannel->PacketsAvailable(&packetsAvailable))
 			{
-			break;
+			return false;
 			}
 		else if (packetsAvailable)
 			{
@@ -421,7 +410,7 @@ bool Channel_BBDevMgr::pRefill(ZGuardRMtxR& iLocker, ZRef<IChannel> iChannel, do
 			int32 countRead;
 			if (fPreserveBoundaries)
 				{
-				if (FAILED(iChannel->ReadPacket(&fBuffer[2], fBuffer.size() - 2, &countRead)))
+				if (Failure& iChannel->ReadPacket(&fBuffer[2], fBuffer.size() - 2, &countRead))
 					{
 					countRead = 0;
 					}
@@ -433,21 +422,18 @@ bool Channel_BBDevMgr::pRefill(ZGuardRMtxR& iLocker, ZRef<IChannel> iChannel, do
 				}
 			else
 				{
-				if (FAILED(iChannel->ReadPacket(&fBuffer[0], fBuffer.size(), &countRead)))
+				if (Failure& iChannel->ReadPacket(&fBuffer[0], fBuffer.size(), &countRead))
 					countRead = 0;
 				}
 
-			if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-				s.Writef("pRefill, countRead: %d", countRead);
+			if (ZLOGPF(s, eDebug + 3))
+				s << "countRead: " << countRead;
 
 			iLocker.Acquire();
 			fStart = 0;
 			fEnd = countRead;
 			if (countRead)
-				{
-				result = true;
-				break;
-				}
+				return true;
 			}
 		else if (ioTimeout)
 			{
@@ -459,7 +445,6 @@ bool Channel_BBDevMgr::pRefill(ZGuardRMtxR& iLocker, ZRef<IChannel> iChannel, do
 			fCondition_Reader.WaitFor(fMutex, 1.0);
 			}
 		}
-	return result;
 	}
 
 void Channel_BBDevMgr::pAbort()
@@ -488,7 +473,7 @@ public:
 // From ZBlackBerry::Device
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const string& iName, const PasswordHash* iPasswordHash, Error* oError);
-	virtual Data GetAttribute(uint16 iObject, uint16 iAttribute);
+	virtual ZQ<Data> GetAttribute(uint16 iObject, uint16 iAttribute);
 	virtual uint32 GetPIN();
 
 // Called by Manager_BBDevMgr
@@ -513,8 +498,8 @@ Device_BBDevMgr::~Device_BBDevMgr()
 ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 	const string& iName, const PasswordHash* iPasswordHash, Error* oError)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Device_BBDevMgr"))
-		s << "Open, iName: " << iName;
+	if (ZLOGPF(s, eDebug + 3))
+		s << "iName: " << iName;
 
 	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
@@ -540,18 +525,16 @@ ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 	return null;
 	}
 
-Data Device_BBDevMgr::GetAttribute(uint16 iObject, uint16 iAttribute)
+ZQ<Data> Device_BBDevMgr::GetAttribute(uint16 iObject, uint16 iAttribute)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Device_BBDevMgr"))
-		s << "GetAttribute";
+	ZLOGTRACE(eDebug + 3);
 
-	return Data();
+	return null;
 	}
 
 uint32 Device_BBDevMgr::GetPIN()
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Device_BBDevMgr"))
-		s << "GetPIN";
+	ZLOGTRACE(eDebug + 3);
 
 	Variant thePIN;
 	if (this->pGetProperty(ZUnicode::sAsUTF16("BBPIN"), thePIN))
@@ -565,7 +548,7 @@ bool Device_BBDevMgr::Matches(IDevice* iDevice)
 	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
 		int32 result;
-		if (SUCCEEDED(theDevice->Equals(iDevice, &result)))
+		if (Success& theDevice->Equals(iDevice, &result))
 			return result == 1;
 		}
 
@@ -584,21 +567,21 @@ bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
 		ZRef<IDeviceProperties> theDPs;
-		if (SUCCEEDED(theDevice->Properties(sCOMPtr(theDPs))))
+		if (Success& theDevice->Properties(sCOMPtr(theDPs)))
 			{
 			uint32 dpCount;
 			theDPs->Count(&dpCount);
 			for (uint32 x = 0; x < dpCount; ++x)
 				{
 				ZRef<IDeviceProperty> theDP;
-				if (SUCCEEDED(theDPs->Item(Variant(x), sCOMPtr(theDP))))
+				if (Success& theDPs->Item(Variant(x), sCOMPtr(theDP)))
 					{
 					ZWinCOM::String theName;
-					if (SUCCEEDED(theDP->Name(sCOMPtr(theName))))
+					if (Success& theDP->Name(sCOMPtr(theName)))
 						{
 						if (iName == theName)
 							{
-							if (SUCCEEDED(theDP->Value(&oValue)))
+							if (Success& theDP->Value(&oValue))
 								return true;
 							}
 						}
@@ -626,7 +609,7 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 		IDeviceManager::sCLSID,
 		nullptr,
 		CLSCTX_ALL,
-		ZMACRO_IIDOf(IDeviceManager),
+		ZMACRO_UUID(IDeviceManager),
 		sCOMVoidPtr(fDeviceManager));
 
 	if (fDeviceManager)
@@ -637,7 +620,7 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 		ZGuardRMtxR locker(fMutex);
 
 		ZRef<IDevices> theDevices;
-		if (SUCCEEDED(fDeviceManager->Devices(sCOMPtr(theDevices)) && theDevices))
+		if (Success& fDeviceManager->Devices(sCOMPtr(theDevices)) && theDevices)
 			{
 			uint32 theCount;
 			theDevices->Count(&theCount);
@@ -645,7 +628,7 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 			for (uint32 x = 0; x < theCount; ++x)
 				{
 				ZRef<IDevice> theDevice;
-				if (SUCCEEDED(theDevices->Item(x, sCOMPtr(theDevice))))
+				if (Success& theDevices->Item(x, sCOMPtr(theDevice)))
 					{
 					Entry_t anEntry;
 					anEntry.fID = fNextID++;
@@ -676,7 +659,7 @@ STDMETHODIMP Manager_BBDevMgr::QueryInterface(
 	if (iInterfaceID == IID_IUnknown)
 		return sCOMCopy<IUnknown>(oObjectRef, this);
 
-	if (iInterfaceID == ZMACRO_IIDOf(IDeviceManagerEvents))
+	if (iInterfaceID == ZMACRO_UUID(IDeviceManagerEvents))
 		return sCOMCopy<IDeviceManagerEvents>(oObjectRef, this);
 
 	return E_NOINTERFACE;
@@ -735,8 +718,7 @@ STDMETHODIMP Manager_BBDevMgr::DeviceDisconnect(IDevice* iDevice)
 
 void Manager_BBDevMgr::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Manager_BBDevMgr"))
-		s << "GetDeviceIDs";
+	ZLOGTRACE(eDebug + 3);
 
 	ZGuardRMtxR locker(fMutex);
 
@@ -746,8 +728,7 @@ void Manager_BBDevMgr::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 
 ZRef<Device> Manager_BBDevMgr::Open(uint64 iDeviceID)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Manager_BBDevMgr"))
-		s << "Open";
+	ZLOGTRACE(eDebug + 3);
 
 	ZGuardRMtxR locker(fMutex);
 
