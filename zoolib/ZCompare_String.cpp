@@ -19,8 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare.h"
-#include "zoolib/ZMemory.h"
 #include "zoolib/ZCompare_String.h"
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZStdInt.h"
 
 namespace ZooLib {
 
