@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_string.h"
 
+#include <stdio.h>
+
 #if ZCONFIG(Compiler, MSVC)
 #	define strncasecmp _strnicmp
 #endif
@@ -199,7 +201,7 @@ vector<string> sSplit(const string& iString, char iChar)
 	for (;;)
 		{
 		const size_t next = iString.find(iChar, index);
-		result.push_back(iString.substr(index, next));
+		result.push_back(iString.substr(index, next - index));
 		if (next == string::npos)
 			break;
 		index = next + 1;
