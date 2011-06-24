@@ -42,6 +42,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define STRICT
 #endif
 
+// Recent windows headers conditionalize visibility of GetModuleHandleExW on 
+// _WIN32_WINNT being > 0x0500, not >= 0x0500.
+// However it's also visible if WINBASE_DECLARE_GET_MODULE_HANDLE_EX is defined.
+#define WINBASE_DECLARE_GET_MODULE_HANDLE_EX
+
 #include <windows.h>
 
 
