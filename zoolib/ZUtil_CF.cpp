@@ -209,7 +209,7 @@ ZMap_Any sAsMap_Any(const ZAny& iDefault, CFDictionaryRef iCFDictionary)
 	return theMap;
 	}
 
-ZAny sDAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
+ZAny sDAsAny(const ZAny& iDefault, CFTypeRef iVal)
 	{
 	if (not iVal)
 		return ZAny();
@@ -298,7 +298,7 @@ ZAny sDAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
 	return iDefault;
 	}
 
-ZAny sAsAny(ZRef<CFTypeRef> iVal)
+ZAny sAsAny(CFTypeRef iVal)
 	{ return sDAsAny(ZAny(), iVal); }
 
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
