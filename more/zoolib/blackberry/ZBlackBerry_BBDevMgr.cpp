@@ -142,10 +142,14 @@ Channel_BBDevMgr::~Channel_BBDevMgr()
 	ZLOGTRACE(eDebug + 3);
 	}
 
+// Experimental
+
+
 void Channel_BBDevMgr::Initialize()
 	{
 	wstring wideName = ZUnicode::sAsWString(fName);
-	HRESULT theResult = fDevice->OpenChannel(wideName.c_str(), this, sCOMPtr(fChannel));
+
+	HRESULT theResult = fDevice->OpenChannel(wideName.c_str(), this, sPtr(fChannel));
 
 	if (Success& theResult && fChannel)
 		{
@@ -167,10 +171,10 @@ STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oO
 	*oObjectRef = nullptr;
 
 	if (iInterfaceID == IID_IUnknown)
-		return sCOMCopy<IUnknown>(oObjectRef, this);
+		return sCopy<IUnknown>(oObjectRef, this);
 
 	if (iInterfaceID == ZMACRO_UUID(IChannelEvents))
-		return sCOMCopy<IChannelEvents>(oObjectRef, this);
+		return sCopy<IChannelEvents>(oObjectRef, this);
 
 	return E_NOINTERFACE;
 	}
@@ -567,17 +571,17 @@ bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
 		ZRef<IDeviceProperties> theDPs;
-		if (Success& theDevice->Properties(sCOMPtr(theDPs)))
+		if (Success& theDevice->Properties(sPtr(theDPs)))
 			{
 			uint32 dpCount;
 			theDPs->Count(&dpCount);
 			for (uint32 x = 0; x < dpCount; ++x)
 				{
 				ZRef<IDeviceProperty> theDP;
-				if (Success& theDPs->Item(Variant(x), sCOMPtr(theDP)))
+				if (Success& theDPs->Item(Variant(x), sPtr(theDP)))
 					{
 					ZWinCOM::String theName;
-					if (Success& theDP->Name(sCOMPtr(theName)))
+					if (Success& theDP->Name(sPtr(theName)))
 						{
 						if (iName == theName)
 							{
@@ -604,35 +608,35 @@ ZRef<IDevice> Device_BBDevMgr::pUseDevice()
 
 Manager_BBDevMgr::Manager_BBDevMgr()
 :	fNextID(1)
+,	fDeviceManager(ZWinCOM::sCreate<IDeviceManager>(IDeviceManager::sCLSID))
 	{
-	/*HRESULT theHRESULT = */::CoCreateInstance(
-		IDeviceManager::sCLSID,
-		nullptr,
-		CLSCTX_ALL,
-		ZMACRO_UUID(IDeviceManager),
-		sCOMVoidPtr(fDeviceManager));
+	if (!fDeviceManager)
+		throw std::runtime_error("Couldn't instantiate IDeviceManager");
+	}
 
-	if (fDeviceManager)
+Manager_BBDevMgr::~Manager_BBDevMgr()
+	{}
+
+void Manager_BBDevMgr::Initialize()
+	{
+	Manager::Initialize();
+
+	fDeviceManager->Advise(this, &fCookie);
+
+	// Build the initial list
+	ZGuardRMtxR locker(fMutex);
+
+	if (OParam<ZRef<IDevices> > theDevices = fDeviceManager->Devices(theDevices))
 		{
-		fDeviceManager->Advise(this, &fCookie);
-
-		// Build the initial list
-		ZGuardRMtxR locker(fMutex);
-
-		ZRef<IDevices> theDevices;
-		if (Success& fDeviceManager->Devices(sCOMPtr(theDevices)) && theDevices)
+		if (OParam<uint32> theCount = theDevices.Get()->Count(theCount))
 			{
-			uint32 theCount;
-			theDevices->Count(&theCount);
-
-			for (uint32 x = 0; x < theCount; ++x)
+			for (uint32 x = 0; x < theCount.Get(); ++x)
 				{
-				ZRef<IDevice> theDevice;
-				if (Success& theDevices->Item(x, sCOMPtr(theDevice)))
+				if (OParam<ZRef<IDevice> > theDevice = theDevices.Get()->Item(x, theDevice))
 					{
 					Entry_t anEntry;
 					anEntry.fID = fNextID++;
-					anEntry.fDevice = new Device_BBDevMgr(theDevice);
+					anEntry.fDevice = new Device_BBDevMgr(theDevice.Get());
 					fEntries.push_back(anEntry);
 					}
 				}
@@ -640,12 +644,12 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 		}
 	}
 
-Manager_BBDevMgr::~Manager_BBDevMgr()
+void Manager_BBDevMgr::Finalize()
 	{
+	fDeviceManager->Unadvise(fCookie);
 	fEntries.clear();
-
-	if (fDeviceManager)
-		fDeviceManager->Unadvise(fCookie);
+	
+	Manager::Finalize();
 	}
 
 STDMETHODIMP Manager_BBDevMgr::QueryInterface(
@@ -657,10 +661,10 @@ STDMETHODIMP Manager_BBDevMgr::QueryInterface(
 	*oObjectRef = nullptr;
 
 	if (iInterfaceID == IID_IUnknown)
-		return sCOMCopy<IUnknown>(oObjectRef, this);
+		return sCopy<IUnknown>(oObjectRef, this);
 
 	if (iInterfaceID == ZMACRO_UUID(IDeviceManagerEvents))
-		return sCOMCopy<IDeviceManagerEvents>(oObjectRef, this);
+		return sCopy<IDeviceManagerEvents>(oObjectRef, this);
 
 	return E_NOINTERFACE;
 	}

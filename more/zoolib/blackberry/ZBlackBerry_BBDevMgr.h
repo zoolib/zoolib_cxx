@@ -60,6 +60,10 @@ public:
 
 	virtual ~Manager_BBDevMgr();
 
+// From ZCounted via Manager
+	virtual void Initialize();
+	virtual void Finalize();
+
 // From IUnknown via IDeviceManagerEvents
 	virtual STDMETHODIMP QueryInterface(const IID& inInterfaceID, void** outObjectRef);
 	virtual ULONG STDMETHODCALLTYPE AddRef();
