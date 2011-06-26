@@ -600,7 +600,7 @@ BSTR& String::OParam()
 const BSTR& String::IParam() const
 	{ return fBSTR; }
 
-BSTR* sCOMPtr(String& iStr)
+BSTR* sPtr(String& iStr)
 	{ return &iStr.OParam(); }
 
 bool operator==(const BSTR& iBSTR, const string16& iString)

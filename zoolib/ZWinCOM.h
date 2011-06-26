@@ -54,12 +54,14 @@ inline void sRelease(IUnknown& iObject)
 inline void sCheck(IUnknown* iP)
 	{ ZAssertStop(1, iP); }
 
+namespace ZWinCOM {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Support for QueryInterface and output-param APIs
 
 template <class T>
-static HRESULT sCOMCopy(void** oObjectRef, T* iOb)
+static HRESULT sCopy(void** oObjectRef, T* iOb)
 	{
 	*oObjectRef = iOb;
 	if (iOb)
@@ -68,14 +70,154 @@ static HRESULT sCOMCopy(void** oObjectRef, T* iOb)
 	}
 
 template <class T>
-static T** sCOMPtr(ZRef<T>& ioRef)
+static T** sPtr(ZRef<T>& ioRef)
 	{ return &ioRef.OParam(); }
 
 template <class T>
-static void** sCOMVoidPtr(ZRef<T>& ioRef)
-	{ return (void**)(sCOMPtr(ioRef)); }
+static void** sVoidPtr(ZRef<T>& ioRef)
+	{ return (void**)(&ioRef.OParam()); }
 
-namespace ZWinCOM {
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWinCOM::OParam
+
+template <class T>
+class OParam
+	{
+// Private and unimplemented
+	OParam();
+	OParam& operator=(const OParam&);
+public:
+// Public, but unimplemented
+	OParam(const OParam&);
+
+	OParam(HRESULT iHRESULT)
+		{
+		ZAssert(fHasValue);
+		if (FAILED(iHRESULT))
+			{
+			fHasValue = false;
+			sDtor_T<T>(fBytes);
+			}
+		}
+	
+	~OParam()
+		{
+		if (fHasValue)
+			sDtor_T<T>(fBytes);
+		}
+
+	operator bool() const
+		{ return fHasValue; }
+
+	operator T*() const
+		{
+		sCtor_T<T>(fBytes);
+		fHasValue = true;
+		return sFetch_T<T>(fBytes);
+		}
+
+	const T& Get() const
+		{
+		ZAssert(fHasValue);
+		return *sFetch_T<T>(fBytes);
+		}
+
+private:
+	#if ZCONFIG(Compiler,GCC)
+		mutable char fBytes[sizeof(T)] __attribute__((aligned));
+	#else
+		mutable char fBytes[sizeof(T)];
+	#endif
+
+	mutable bool fHasValue;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWinCOM::OParam specialized for ZRef<T>
+
+template <class T>
+class OParam<ZRef<T> >
+	{
+// Private and unimplemented
+	OParam();
+	OParam& operator=(const OParam&);
+public:
+// Public, but unimplemented
+	OParam(const OParam&);
+
+	OParam(HRESULT iHRESULT)
+		{
+		if (FAILED(iHRESULT) && fT)
+			{
+			sRelease(*fT);
+			fT = 0;
+			}
+		}
+
+	~OParam()
+		{
+		if (fT)
+			sRelease(*fT);
+		}
+	
+	operator bool() const
+		{ return fT ? true : false; }
+
+	operator T**() const
+		{
+		fT = 0;
+		return &fT;
+		}
+
+	ZRef<T> Get() const
+		{
+		ZAssert(fT);
+		return fT;
+		}
+
+private:
+	mutable T* fT;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWinCOM::sCreate
+
+template <class Class, class Interface>
+ZRef<Interface> sCreate()
+	{
+	ZRef<Interface> result;
+
+	if (SUCCEEDED(::CoCreateInstance(
+		ZMACRO_UUID(Class),
+		nullptr,
+		CLSCTX_INPROC_SERVER,
+		ZMACRO_UUID(Interface),
+		sVoidPtr(result)))
+		&& result)
+		{ return result; }
+
+	return null;
+	}
+
+template <class Interface>
+ZRef<Interface> sCreate(CLSID iCLSID)
+	{
+	ZRef<Interface> result;
+
+	if (SUCCEEDED(::CoCreateInstance(
+		iCLSID,
+		nullptr,
+		CLSCTX_INPROC_SERVER,
+		ZMACRO_UUID(Interface),
+		sVoidPtr(result)))
+		&& result)
+		{ return result; }
+
+	return null;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -216,7 +358,7 @@ private:
 	BSTR fBSTR;
 	};
 
-BSTR* sCOMPtr(String& iStr);
+BSTR* sPtr(String& iStr);
 
 bool operator==(const BSTR& l, const string16& r);
 bool operator==(const string16& r, const BSTR& l);
