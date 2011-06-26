@@ -226,6 +226,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #		define for if (0) {} else for
 #	endif
 
+	// Support for operator synonyms
+#	include <iso646.h>
+
 	// "illegal pragma" -- we use pragma mark fairly extensively
 #	pragma warning(disable:4068)
 
