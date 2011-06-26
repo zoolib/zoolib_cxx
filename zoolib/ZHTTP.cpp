@@ -51,12 +51,7 @@ static const char LF = '\n';
 #pragma mark * Utility stuff
 
 static void spAppend(Map& ioFields, const string& iName, const Val& iValue)
-	{
-	Seq theSeq = ioFields.Get(iName).Get<Seq>();
-	theSeq.Append(iValue);
-	ioFields.Set(iName, theSeq);
-//	ioFields.Mutable(iName).MutableSeq().Append(iValue);
-	}
+	{ ioFields.Set(iName, ioFields.Get<Seq>(iName).Append(iValue)); }
 
 static uint32 spHexCharToUInt(char iChar)
 	{
@@ -735,7 +730,7 @@ string sGetString0(const Val& iVal)
 
 	const Seq& theSeq = iVal.GetSeq();
 	if (theSeq.Count())
-		return theSeq.Get(0).Get<string>();
+		return theSeq.Get<string>(0);
 
 	return string();
 	}
@@ -750,7 +745,7 @@ static ZRef<ZStreamerR> spMakeStreamer_Transfer(
 	if (ZUtil_string::sContainsi("chunked", sGetString0(iHeader.Get("transfer-encoding"))))
 		return new ZStreamerR_FT<StreamR_Chunked>(iStreamerR);
 
-	if (ZQ<int64> contentLength = iHeader.Get("content-length").QGet<int64>())
+	if (ZQ<int64> contentLength = iHeader.QGet<int64>("content-length"))
 		return new ZStreamerR_FT<ZStreamR_Limited>(contentLength.Get(), iStreamerR);
 
 	return iStreamerR;
