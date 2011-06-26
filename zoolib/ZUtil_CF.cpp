@@ -223,29 +223,29 @@ ZAny sDAsAny(const ZAny& iDefault, CFTypeRef iVal)
 	#endif
 
 	if (theTypeID == ::CFStringGetTypeID())
-		return ZAny(sAsUTF8(iVal.StaticCast<CFStringRef>()));
+		return ZAny(sAsUTF8((CFStringRef)iVal));
 
 	if (theTypeID == ::CFDictionaryGetTypeID())
-		return ZAny(sAsMap_Any(iDefault, iVal.StaticCast<CFDictionaryRef>()));
+		return ZAny(sAsMap_Any(iDefault, (CFDictionaryRef)iVal));
 
 	if (theTypeID == ::CFArrayGetTypeID())
-		return ZAny(sAsSeq_Any(iDefault, iVal.StaticCast<CFArrayRef>()));
+		return ZAny(sAsSeq_Any(iDefault, (CFArrayRef)iVal));
 
 	if (theTypeID == ::CFBooleanGetTypeID())
-		return ZAny(bool(::CFBooleanGetValue(iVal.StaticCast<CFBooleanRef>())));
+		return ZAny(bool(::CFBooleanGetValue((CFBooleanRef)iVal)));
 
 	if (theTypeID == ::CFDateGetTypeID())
 		{
 		return ZAny(ZTime(kCFAbsoluteTimeIntervalSince1970
-			+ ::CFDateGetAbsoluteTime(iVal.StaticCast<CFDateRef>())));
+			+ ::CFDateGetAbsoluteTime((CFDateRef)iVal)));
 		}
 
 	if (theTypeID == ::CFDataGetTypeID())
-		return ZAny(spAsData_Any(iVal.StaticCast<CFDataRef>()));
+		return ZAny(spAsData_Any((CFDataRef)iVal));
 
 	if (theTypeID == ::CFNumberGetTypeID())
 		{
-		const CFNumberRef theNumberRef = iVal.StaticCast<CFNumberRef>();
+		const CFNumberRef theNumberRef = (CFNumberRef)iVal;
 		switch (::CFNumberGetType(theNumberRef))
 			{
 			case kCFNumberSInt8Type:
