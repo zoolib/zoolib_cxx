@@ -339,7 +339,7 @@ static void spMBToWC_CanFail(
 				// Either we don't have enough destination space or there's bad data in the source.
 				// Halve the source amount we're going to try to decode.
 				iSourceCU /= 2;
-				if (!iSourceCU)
+				if (not iSourceCU)
 					{
 					// iSourceCU went to zero.
 					oSourceCU = 0;
@@ -490,7 +490,7 @@ static void spWCToMB(UINT iDestCodePage, const WCHAR* iSource, size_t iSourceCU,
 				// Just halve the source amount.
 				iSourceCU /= 2;
 				ZAssertStopf(0, iSourceCU, ("iSourceCU went to zero."));
-				if (!iSourceCU)
+				if (not iSourceCU)
 					break;
 				}
 			else

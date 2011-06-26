@@ -284,86 +284,43 @@ String::String(const string16& iString16)
 String::operator JSStringRef() const
 	{ return fRep.Get(); }
 
-string8 String::AsString8() const
+String::operator string8() const
 	{ return spAsString8(fRep); }
 
-string16 String::AsString16() const
+String::operator string16() const
 	{ return spAsString16(fRep); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZJavaScriptCore::Value
 
-bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
+ZQ<Value> Value::sQFromAny(const ZAny& iAny)
 	{
-	int64 asInt64;
-	double asDouble;
 	if (false)
 		{}
-	else if (! iAny)
+	else if (not iAny)
 		{
-		oVal = Value();
+		return Value();
 		}
-	else if (sQCoerceInt(iAny, asInt64))
+	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
-		oVal = Value(double(asInt64));
+		return Value(double(theQ.Get()));
 		}
-	else if (sQCoerceReal(iAny, asDouble))
+	else if (ZQ<double> theQ = sQCoerceReal(iAny))
 		{
-		oVal = Value(asDouble);
+		return Value(theQ.Get());
 		}
 	else if (const string* theValue = iAny.PGet<string>())
 		{
-		oVal = Value(*theValue);
+		return Value(*theValue);
 		}
 	else if (const bool* theValue = iAny.PGet<bool>())
 		{
-		oVal = Value(*theValue);
+		return Value(*theValue);
 		}
 	else if (const ZTime* theValue = iAny.PGet<ZTime>())
 		{
-		oVal = Value(double(theValue->fVal));
-		}
-#if 0
-	else if (const vector<ZAny>* theValue = iAny.PGet<vector<ZAny> >())
-		{
-		ZSeq_ZooLib theList;
-		for (vector<ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
-			i != end; ++i)
-			{
-			ZVal_ZooLib local;
-			if (sQFromAny(*i, local))
-				theList.Append(local);
-			else
-				theList.Append(ZVal_ZooLib());
-			}
-		oVal = theList;
-		}
-	else if (const ZSeq_Any* theValue = iAny.PGet<ZSeq_Any>())
-		{
-		ZSeq_ZooLib theList;
-		for (int x = 0, count = theValue->Count(); x < count; ++x)
-			{
-			ZVal_ZooLib local;
-			if (sQFromAny(theValue->Get(x), local))
-				theList.Append(local);
-			else
-				theList.Append(ZVal_ZooLib());
-			}
-		oVal = theList;
-		}
-#endif
-	else if (const map<string, ZAny>* theValue = iAny.PGet<map<string, ZAny> >())
-		{
-		ObjectRef theMap;
-		for (map<string, ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
-			i != end; ++i)
-			{
-			Value local;
-			if (sQFromAny((*i).second, local))
-				theMap.Set((*i).first, local);
-			}
-		oVal = theMap;
+		return Value(double(theValue->fVal));
 		}
 	else if (const ZMap_Any* theValue = iAny.PGet<ZMap_Any>())
 		{
@@ -371,29 +328,27 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
 			i != end; ++i)
 			{
-			Value local;
-			if (sQFromAny(theValue->Get(i), local))
-				theMap.Set(theValue->NameOf(i), local);
+			if (ZQ<Value> theQ = sQFromAny(theValue->Get(i)))
+				theMap.Set(theValue->NameOf(i), theQ.Get());
 			}
-		oVal = theMap;
+		return theMap;
 		}
-	else
-		{
-		return false;
-		}
-	return true;
+	return null;
 	}
 
 Value Value::sDFromAny(const Value& iDefault, const ZAny& iAny)
 	{
-	Value result;
-	if (sQFromAny(iAny, result))
-		return result;
+	if (ZQ<Value> theQ = sQFromAny(iAny))
+		return theQ.Get();
 	return iDefault;
 	}
 
 Value Value::sFromAny(const ZAny& iAny)
-	{ return sDFromAny(Value(), iAny); }
+	{
+	if (ZQ<Value> theQ = sQFromAny(iAny))
+		return theQ.Get();
+	return Value();
+	}
 
 ZAny Value::AsAny() const
 	{
@@ -581,25 +536,9 @@ ZQ<String> Value::QGet<String>() const
 			{
 			if (ZRef<JSStringRef> theStringRef =
 				Adopt& ::JSValueToStringCopy(sCurrentContextRef(), theRef, nullptr))
-				return theStringRef;
+				{ return theStringRef; }
 			}
 		}
-	return null;
-	}
-
-template <>
-ZQ<string16> Value::QGet<string16>() const
-	{
-	if (ZQ<String> theQ = this->QGet<String>())
-		return theQ.Get().AsString16();
-	return null;
-	}
-
-template <>
-ZQ<string8> Value::QGet<string8>() const
-	{
-	if (ZQ<String> theQ = this->QGet<String>())
-		return theQ.Get().AsString8();
 	return null;
 	}
 
@@ -617,8 +556,6 @@ ZQ<ObjectRef> Value::QGet<ObjectRef>() const
 ZMACRO_ZValAccessors_Def_GetP(,Value, Bool, bool)
 ZMACRO_ZValAccessors_Def_GetP(,Value, Double, double)
 ZMACRO_ZValAccessors_Def_GetP(,Value, String, String)
-ZMACRO_ZValAccessors_Def_GetP(,Value, String16, string16)
-ZMACRO_ZValAccessors_Def_GetP(,Value, String8, string8)
 ZMACRO_ZValAccessors_Def_GetP(,Value, ObjectRef, ObjectRef)
 
 // =================================================================================================
@@ -781,7 +718,7 @@ ObjectImp::ObjectImp()
 
 ObjectImp::~ObjectImp()
 	{
-	ZAssert(!fJSObjectRef);
+	ZAssert(not fJSObjectRef);
 	}
 
 void ObjectImp::Initialize()
@@ -806,7 +743,7 @@ JSObjectRef ObjectImp::GetJSObjectRef()
 
 void ObjectImp::Initialize(JSContextRef iJSContextRef, JSObjectRef iJSObjectRef)
 	{
-	ZAssert(!fJSObjectRef);
+	ZAssert(not fJSObjectRef);
 	fJSObjectRef = iJSObjectRef;
 	}
 

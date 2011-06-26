@@ -252,7 +252,7 @@ static int spCreate(const char* iPath,
 	else
 		flags |= O_WRONLY;
 
-	if (!iOpenExisting)
+	if (not iOpenExisting)
 		flags |= O_EXCL;
 
 	int theFD = ::open(iPath, flags, 0666);
@@ -904,7 +904,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::GetDescendant(
 	if (oErr)
 		*oErr = ZFile::errorNone;
 
-	if (!iCount)
+	if (not iCount)
 		return this;
 
 	vector<string> newComps = fComps;

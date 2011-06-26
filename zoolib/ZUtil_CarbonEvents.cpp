@@ -127,7 +127,7 @@ Handler::~Handler()
 
 void Handler::InvokeOnMainThread(bool iAlwaysDelayed, CallbackProc_t iCallbackProc, void* iRefcon)
 	{
-	if (!iAlwaysDelayed && fMainID == ZThread::sID())
+	if (not iAlwaysDelayed && fMainID == ZThread::sID())
 		{
 		iCallbackProc(iRefcon);
 		}

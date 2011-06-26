@@ -131,7 +131,7 @@ static void spReadUTF32_UTF8(const ZStreamR& iStreamR,
 		{
 		if (!gotByte)
 			{
-			if (!iStreamR.ReadByte(curByte))
+			if (not iStreamR.ReadByte(curByte))
 				break;
 			}
 
@@ -152,7 +152,7 @@ static void spReadUTF32_UTF8(const ZStreamR& iStreamR,
 			gotByte = false;
 			while (--sequenceLength)
 				{
-				if (!iStreamR.ReadByte(curByte))
+				if (not iStreamR.ReadByte(curByte))
 					break;
 				if ((curByte & 0xC0) != 0x80)
 					{
@@ -186,7 +186,7 @@ static void spReadUTF8_UTF8(const ZStreamR& iStreamR, UTF8* oDest,
 		{
 		if (!gotByte)
 			{
-			if (!iStreamR.ReadByte(curByte))
+			if (not iStreamR.ReadByte(curByte))
 				break;
 			}
 
@@ -213,7 +213,7 @@ static void spReadUTF8_UTF8(const ZStreamR& iStreamR, UTF8* oDest,
 			gotByte = false;
 			while (--sequenceLength)
 				{
-				if (!iStreamR.ReadByte(curByte))
+				if (not iStreamR.ReadByte(curByte))
 					break;
 				if ((curByte & 0xC0) != 0x80)
 					{

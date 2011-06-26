@@ -96,12 +96,12 @@ static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 		{}
 	else if (ZUtil_string::sEquali("http", iScheme))
 		{
-		if (!iPort)
+		if (not iPort)
 			iPort = 80;
 		}
 	else if (ZUtil_string::sEquali("https", iScheme))
 		{
-		if (!iPort)
+		if (not iPort)
 			iPort = 443;
 		}
 	else
@@ -351,9 +351,9 @@ static bool spReadName(const ZStreamU& iStreamU, string& oName)
 	for (;;)
 		{
 		char curChar;
-		if (!iStreamU.ReadChar(curChar))
+		if (not iStreamU.ReadChar(curChar))
 			break;
-		if (!isalnum(curChar) && curChar != '_')
+		if (not isalnum(curChar) && curChar != '_')
 			{
 			iStreamU.Unread();
 			break;

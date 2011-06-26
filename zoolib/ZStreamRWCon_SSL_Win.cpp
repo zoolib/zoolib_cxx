@@ -132,9 +132,9 @@ static bool spAcquireCredentials(bool iVerify, bool iCheckName, CredHandle& oCre
 
 	theSCC.dwFlags = SCH_CRED_NO_DEFAULT_CREDS;
 
-	if (!iVerify)
+	if (not iVerify)
 		theSCC.dwFlags |= SCH_CRED_MANUAL_CRED_VALIDATION;
-	else if (!iCheckName)
+	else if (not iCheckName)
 		theSCC.dwFlags |= SCH_CRED_NO_SERVERNAME_CHECK;
 
 	return SEC_E_OK == spPSFT->AcquireCredentialsHandleA(

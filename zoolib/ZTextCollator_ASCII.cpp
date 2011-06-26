@@ -135,10 +135,10 @@ bool ZTextCollatorRep_ASCII::Equals(const string8& iLeft, const string8& iRight)
 bool ZTextCollatorRep_ASCII::Equals(const UTF8* iLeft, size_t iLeftLength, const
 	UTF8* iRight, size_t iRightLength)
 	{
-	if (!iLeftLength)
+	if (not iLeftLength)
 		return !iRightLength;
 
-	if (!iRightLength)
+	if (not iRightLength)
 		return false;
 
 	return 0 == spCompare(fStrength, iLeft, iLeftLength, iRight, iRightLength);
@@ -162,14 +162,14 @@ int ZTextCollatorRep_ASCII::Compare(const string8& iLeft, const string8& iRight)
 int ZTextCollatorRep_ASCII::Compare(const UTF8* iLeft, size_t iLeftLength,
 	const UTF8* iRight, size_t iRightLength)
 	{
-	if (!iLeftLength)
+	if (not iLeftLength)
 		{
-		if (!iRightLength)
+		if (not iRightLength)
 			return 0;
 		return -1;
 		}
 
-	if (!iRightLength)
+	if (not iRightLength)
 		return 1;
 
 	return spCompare(fStrength, iLeft, iLeftLength, iRight, iRightLength);
@@ -189,7 +189,7 @@ bool ZTextCollatorRep_ASCII::Contains(const string8& iPattern, const string8& iT
 bool ZTextCollatorRep_ASCII::Contains(const UTF8* iPattern, size_t iPatternLength,
 	const UTF8* iTarget, size_t iTargetLength)
 	{
-	if (!iPatternLength)
+	if (not iPatternLength)
 		return true;
 
 	if (iPatternLength > iTargetLength)

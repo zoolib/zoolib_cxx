@@ -41,7 +41,7 @@ namespace { // anonymous
 static string16 spNormalized_C_Win(const string16& iString, ENormForm iNormForm)
 	{
 	string16 result = iString;
-	if (!iString.empty())
+	if (not iString.empty())
 		{
 		NORM_FORM theNF;
 		switch (iNormForm)
@@ -82,7 +82,7 @@ static string16 spNormalized_C_Win(const string16& iString, ENormForm iNormForm)
 	{
 	// Note that FoldString uses old tables which do not match the unicode standard behavior.
 	string16 result = iString;
-	if (!iString.empty())
+	if (not iString.empty())
 		{
 		DWORD theFlags;
 		switch (iNormForm)

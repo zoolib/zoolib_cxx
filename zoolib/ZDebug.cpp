@@ -215,7 +215,7 @@ static bool spIsDebuggerPresent()
 				}
 
 			const uint32* processDatabase = reinterpret_cast<const uint32*>(processID ^ obfuscator);
-			if (!IsBadReadPtr(processDatabase, kProcessDatabaseBytes))
+			if (not IsBadReadPtr(processDatabase, kProcessDatabaseBytes))
 				{
 				uint32 flags = processDatabase[kOffsetFlags];
 				return (flags & kDebuggerPresentFlag) != 0;

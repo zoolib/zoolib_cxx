@@ -985,7 +985,7 @@ void ZTSoup::pCheckSieveDiffs(PSieve* iPSieve)
 	{
 	ASSERTLOCKED(fMutex_Structure);
 
-	if (!iPSieve->fHasDiffs)
+	if (not iPSieve->fHasDiffs)
 		{
 		iPSieve->fHasDiffs = true;
 		ZAssertStop(kDebug, iPSieve->fAdded.empty());

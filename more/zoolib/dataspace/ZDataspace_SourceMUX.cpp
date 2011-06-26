@@ -204,7 +204,7 @@ void SourceMUX::pFinalizeClientSource(ClientSource* iCS)
 	{
 	ZGuardRMtxR guard(fMtxR);
 
-	if (!iCS->FinishFinalize())
+	if (not iCS->FinishFinalize())
 		return;
 
 	vector<int64> removedQueries;

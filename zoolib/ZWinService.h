@@ -87,7 +87,7 @@ protected:
 	ZWinService_T(const wchar_t* iServiceName, bool iAllowPause)
 	:	ZWinService(iServiceName, spServiceMain, iAllowPause)
 		{
-		ZAssert(!spInstance());
+		ZAssert(not spInstance());
 		spInstance() = this;
 		}
 

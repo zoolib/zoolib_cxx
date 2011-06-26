@@ -61,7 +61,7 @@ bool ZCommandLine::TValue::Parse(const char* iLexeme, const ZStrimW* iStrimError
 	{
 	try
 		{
-		if (!ZUtil_Strim_Tuple::sFromStrim(
+		if (not ZUtil_Strim_Tuple::sFromStrim(
 			ZStrimU_Unreader(
 			ZStrimR_StreamUTF8(
 			ZStreamRPos_Memory(iLexeme, strlen(iLexeme)))),

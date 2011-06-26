@@ -82,7 +82,7 @@ void Source_Asyncify::ModifyRegistrations(
 		const int64 theRefcon = *iRemoved++;
 		if (ZLOGPF(s, eDebug + 1))
 			s << "Remove: " << theRefcon;
-		if (!ZUtil_STL::sEraseIfContains(fPendingAdds, theRefcon))
+		if (not ZUtil_STL::sEraseIfContains(fPendingAdds, theRefcon))
 			ZUtil_STL::sInsertMustNotContain(1, fPendingRemoves, theRefcon);
 
 		if (ZUtil_STL::sEraseIfContains(fPendingResults, theRefcon))
@@ -184,7 +184,7 @@ void Source_Asyncify::pUpdate()
 			guard.Acquire();
 			}
 
-		if (!didAnything)
+		if (not didAnything)
 			break;
 		}
 	fTriggered_Update = false;

@@ -365,7 +365,7 @@ void Manager_OSXUSB::pDeviceAttached(ZRef<ZUSBDevice> iUSBDevice)
 	{
 	ZLOGFUNCTION(eDebug);
 
-	if (!iUSBDevice)
+	if (not iUSBDevice)
 		{
 		// Watcher fired, but could not create a USBDevice.
 		if (ZLOG(s, eNotice, "ZBlackBerry::Manager_OSXUSB"))

@@ -535,7 +535,7 @@ void ZTSWatcher_Latent::pRegisterAQC(AddedQueryCombo& ioAQC)
 	{
 	ioAQC.fPrefetch = false;
 
-	if (!ioAQC.fTBQuery)
+	if (not ioAQC.fTBQuery)
 		{
 		ZAssertStop(kDebug, ioAQC.fMemoryBlock);
 		ioAQC.fTBQuery = ZTBQuery(ZStreamRPos_MemoryBlock(ioAQC.fMemoryBlock));

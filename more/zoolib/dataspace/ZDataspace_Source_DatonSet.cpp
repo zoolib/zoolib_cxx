@@ -597,7 +597,7 @@ void Source_DatonSet::pPull()
 
 ZRef<Event> Source_DatonSet::pConditionalPushDown()
 	{
-	if (! fStack_Map_Pending.empty())
+	if (not fStack_Map_Pending.empty())
 		{
 		ZAssert(fDatonSet_Temp);
 		return fDatonSet->GetEvent()->Joined(fDatonSet_Temp->TickleClock());

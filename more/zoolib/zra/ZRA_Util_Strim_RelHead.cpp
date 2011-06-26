@@ -47,7 +47,7 @@ void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
 	bool isFirst = true;
 	for (RelHead::Base_t::const_iterator i = names.begin(); i != names.end(); ++i)
 		{
-		if (!isFirst)
+		if (not isFirst)
 			s.Write(", ");
 		isFirst = false;
 		sWrite_PropName(*i, s);
@@ -70,7 +70,7 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRA::Rename& iRename)
 	bool isFirst = true;
 	for (ZRA::Rename::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
 		{
-		if (!isFirst)
+		if (not isFirst)
 			w << ", ";
 		isFirst = false;
 		w << i->second << "<--" << i->first;

@@ -94,7 +94,7 @@ public:
 
 	void InsertIfNotContains(L* iL)
 		{
-		if (!iL->fNext)
+		if (not iL->fNext)
 			this->Insert(iL);
 		}
 

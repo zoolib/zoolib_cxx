@@ -197,7 +197,7 @@ public:
 
 	bool AtomicCompareAndSwap(T* iPrior, T* iNew)
 		{
-		if (!ZAtomic_CompareAndSwapPtr(&fP, iPrior, iNew))
+		if (not ZAtomic_CompareAndSwapPtr(&fP, iPrior, iNew))
 			return false;
 		spRetain(iNew);
 		spRelease(iPrior);

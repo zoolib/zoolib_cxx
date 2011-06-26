@@ -368,7 +368,7 @@ int ZMap_Any::Compare(const ZMap_Any& iOther) const
 			}
 		}
 
-	if (!iOther.fRep)
+	if (not iOther.fRep)
 		{
 		// iOther has no rep.
 		if (fRep->fMap.empty())

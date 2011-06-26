@@ -56,7 +56,7 @@ static int spTupleValueComp(ZTextCollator* ioTextCollators, int iStrength,
 		// so we need to use a collator to do the comparison.
 		if (iStrength <= 4)
 			{
-			if (!ioTextCollators[iStrength - 1])
+			if (not ioTextCollators[iStrength - 1])
 				ioTextCollators[iStrength - 1] = ZTextCollator(iStrength);
 			return ioTextCollators[iStrength - 1].Compare(iLeft.GetString(), iRight.GetString());
 			}

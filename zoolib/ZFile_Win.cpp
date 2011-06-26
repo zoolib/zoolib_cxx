@@ -113,7 +113,7 @@ static HANDLE spCreate(
 	if (iRead)
 		realAccess |= GENERIC_READ;
 
-	if (!iPreventWriters)
+	if (not iPreventWriters)
 		realSharing |= FILE_SHARE_WRITE;
 
 	DWORD realFlags = FILE_ATTRIBUTE_NORMAL;
@@ -148,7 +148,7 @@ static HANDLE spCreateNT(
 	if (iRead)
 		realAccess |= GENERIC_READ;
 
-	if (!iPreventWriters)
+	if (not iPreventWriters)
 		realSharing |= FILE_SHARE_WRITE;
 
 	DWORD realFlags = FILE_ATTRIBUTE_NORMAL;
@@ -183,7 +183,7 @@ static HANDLE spOpen(
 	if (iRead)
 		realAccess |= GENERIC_READ;
 
-	if (!iPreventWriters)
+	if (not iPreventWriters)
 		realSharing |= FILE_SHARE_WRITE;
 
 	if (iWrite)
@@ -221,7 +221,7 @@ static HANDLE spOpenNT(
 	if (iRead)
 		realAccess |= GENERIC_READ;
 
-	if (!iPreventWriters)
+	if (not iPreventWriters)
 		realSharing |= FILE_SHARE_WRITE;
 
 	if (iWrite)
@@ -670,7 +670,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::GetDescendant(const string* iComps, size_t iCount, 
 	if (oErr)
 		*oErr = ZFile::errorNone;
 
-	if (!iCount)
+	if (not iCount)
 		return this;
 
 	if (fComps.size())
@@ -1267,7 +1267,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::GetDescendant(
 	if (oErr)
 		*oErr = ZFile::errorNone;
 
-	if (!iCount)
+	if (not iCount)
 		return this;
 
 	if (fComps.size())

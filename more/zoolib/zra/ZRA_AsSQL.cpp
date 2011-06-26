@@ -325,7 +325,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 	{
 	if (false)
 		{}
-	else if (!iAny)
+	else if (not iAny)
 		{
 		s << "null";
 		}
@@ -372,7 +372,7 @@ static void spWrite_PropName(const string8& iName, const ZStrimW& s)
 
 static void spToStrim(const ZRef<ZValComparand>& iComparand, const ZStrimW& s)
 	{
-	if (!iComparand)
+	if (not iComparand)
 		{
 		s << "/*Null Comparand*/";
 		}
@@ -497,7 +497,7 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 		bool isFirst = true;
 		for (RelHead::iterator i = theRHLogical.begin(); i != theRHLogical.end(); ++i)
 			{
-			if (!isFirst)
+			if (not isFirst)
 				s << ",";
 			isFirst = false;
 			if (ZQ<string8> theQ = ZUtil_STL::sGetIfContains(theAnalysis.fRename, *i))
@@ -517,7 +517,7 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 			{
 			for (int x = 0; x < i->second; ++x)
 				{
-				if (!isFirst)
+				if (not isFirst)
 					s << ",";
 				isFirst = false;
 				s << i->first << " AS " << i->first << ZStringf("%d", x);

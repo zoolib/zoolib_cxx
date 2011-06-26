@@ -161,7 +161,7 @@ public:
 			{
 			if (int oldCount = ZAtomic_Get(&fWaitingThreads))
 				{
-				if (!ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, oldCount - 1))
+				if (not ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, oldCount - 1))
 					continue;
 
 				fSem.Vacate();
@@ -176,7 +176,7 @@ public:
 			{
 			if (int oldCount = ZAtomic_Get(&fWaitingThreads))
 				{
-				if (!ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, 0))
+				if (not ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, 0))
 					continue;
 
 				while (oldCount--)

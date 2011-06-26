@@ -79,7 +79,7 @@ struct Functions_CountCU_T<const UTF32*>
 	{
 	static size_t sCountCU(const UTF32* iString)
 		{
-		if (!iString)
+		if (not iString)
 			return 0;
 
 		#if defined(__GNUC__) && __GNUC__ == 2 && __GNUC_MINOR__ <= 9
@@ -95,7 +95,7 @@ struct Functions_CountCU_T<const UTF16*>
 	{
 	static size_t sCountCU(const UTF16* iString)
 		{
-		if (!iString)
+		if (not iString)
 			return 0;
 
 		#if defined(__GNUC__) && __GNUC__ == 2 && __GNUC_MINOR__ <= 9
@@ -111,7 +111,7 @@ struct Functions_CountCU_T<const UTF8*>
 	{
 	static size_t sCountCU(const UTF8* iString)
 		{
-		if (!iString)
+		if (not iString)
 			return 0;
 
 		#if defined(__GNUC__) && __GNUC__ == 2 && __GNUC_MINOR__ <= 9
@@ -127,7 +127,7 @@ struct Functions_CountCU_T<UTF32*>
 	{
 	static size_t sCountCU(UTF32* iString)
 		{
-		if (!iString)
+		if (not iString)
 			return 0;
 
 		#if defined(__GNUC__) && __GNUC__ == 2 && __GNUC_MINOR__ <= 9
@@ -143,7 +143,7 @@ struct Functions_CountCU_T<UTF16*>
 	{
 	static size_t sCountCU(UTF16* iString)
 		{
-		if (!iString)
+		if (not iString)
 			return 0;
 
 		#if defined(__GNUC__) && __GNUC__ == 2 && __GNUC_MINOR__ <= 9
@@ -159,7 +159,7 @@ struct Functions_CountCU_T<UTF8*>
 	{
 	static size_t sCountCU(UTF8* iString)
 		{
-		if (!iString)
+		if (not iString)
 			return 0;
 
 		#if defined(__GNUC__) && __GNUC__ == 2 && __GNUC_MINOR__ <= 9

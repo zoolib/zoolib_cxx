@@ -120,7 +120,7 @@ void ZTextEncoder_ASCII::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
 		{
 		UTF32 theCP;
-		if (!ZUnicode::sReadInc(localSource, localSourceEnd, theCP))
+		if (not ZUnicode::sReadInc(localSource, localSourceEnd, theCP))
 			break;
 		if (uint32(theCP) <= 0x7F)
 			*localDest++ = theCP;
@@ -172,7 +172,7 @@ void ZTextEncoder_ISO8859_1::Encode(const UTF32* iSource, size_t iSourceCU, size
 	while (localSource < localSourceEnd && localDest < localDestEnd)
 		{
 		UTF32 theCP;
-		if (!ZUnicode::sReadInc(localSource, localSourceEnd, theCP))
+		if (not ZUnicode::sReadInc(localSource, localSourceEnd, theCP))
 			break;
 		if (uint32(theCP) <= 0xFF)
 			*localDest++ = theCP;
@@ -337,7 +337,7 @@ void ZTextEncoder_MacRoman::Encode(const UTF32* iSource, size_t iSourceCU, size_
 	while (localSource < localSourceEnd && localDest < localDestEnd)
 		{
 		UnicodeToMac_t codeLookup;
-		if (!ZUnicode::sReadInc(localSource, localSourceEnd, codeLookup.fUnicode))
+		if (not ZUnicode::sReadInc(localSource, localSourceEnd, codeLookup.fUnicode))
 			break;
 
 		const UnicodeToMac_t* iter = std::lower_bound(

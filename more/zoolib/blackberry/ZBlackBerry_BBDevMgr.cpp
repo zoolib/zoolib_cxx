@@ -699,7 +699,7 @@ STDMETHODIMP Manager_BBDevMgr::DeviceDisconnect(IDevice* iDevice)
 
 	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); /*no inc*/)
 		{
-		if (! i->fDevice->Matches(iDevice))
+		if (not i->fDevice->Matches(iDevice))
 			{
 			++i;
 			}

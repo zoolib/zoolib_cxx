@@ -101,8 +101,8 @@ public:
 
 	operator JSStringRef() const;
 
-	string8 AsString8() const;
-	string16 AsString16() const;
+	operator string16() const;
+	operator string8() const;
 
 private:
 	ZRef<JSStringRef> fRep;
@@ -117,7 +117,7 @@ class Value
 	{
 	typedef ZRef<JSValueRef> inherited;
 public:
-	static bool sQFromAny(const ZAny& iAny, Value& oVal);
+	static ZQ<Value> sQFromAny(const ZAny& iAny);
 	static Value sDFromAny(const Value& iDefault, const ZAny& iAny);
 	static Value sFromAny(const ZAny& iAny);
 
@@ -175,8 +175,6 @@ public:
 	ZMACRO_ZValAccessors_Decl_Get(Value, Bool, bool)
 	ZMACRO_ZValAccessors_Decl_Get(Value, Double, double)
 	ZMACRO_ZValAccessors_Decl_Get(Value, String, String)
-	ZMACRO_ZValAccessors_Decl_Get(Value, String16, string16)
-	ZMACRO_ZValAccessors_Decl_Get(Value, String8, string8)
 	ZMACRO_ZValAccessors_Decl_Get(Value, ObjectRef, ObjectRef)
 	};
 

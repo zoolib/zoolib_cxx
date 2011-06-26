@@ -134,7 +134,7 @@ bool ZSemaphore::Wait(int32 iCount, int64 iMicroseconds)
 	int32 acquired = 0;
 	while (iCount)
 		{
-		if (!ZSem::TryProcureUntil(deadline))
+		if (not ZSem::TryProcureUntil(deadline))
 			{
 			this->Signal(acquired);
 			return false;

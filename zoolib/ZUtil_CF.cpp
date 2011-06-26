@@ -211,7 +211,7 @@ ZMap_Any sAsMap_Any(const ZAny& iDefault, CFDictionaryRef iCFDictionary)
 
 ZAny sDAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
 	{
-	if (!iVal)
+	if (not iVal)
 		return ZAny();
 
 	const CFTypeID theTypeID = ::CFGetTypeID(iVal);
@@ -308,7 +308,7 @@ ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal)
 	{
 	if (false)
 		{}
-	else if (!iVal)
+	else if (not iVal)
 		{
 		#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
 			&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2

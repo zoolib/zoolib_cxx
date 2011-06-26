@@ -45,7 +45,7 @@ bool sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP)
 	ZAssertStop(2, ZUnicode::sIsValid(iCP));
 
 	UTF32 theCP;
-	if (!iStrimU.ReadCP(theCP))
+	if (not iStrimU.ReadCP(theCP))
 		return false;
 
 	if (theCP == iCP)
@@ -66,14 +66,14 @@ bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget)
 	for (;;)
 		{
 		UTF32 targetCP;
-		if (!ZUnicode::sReadInc(targetIter, targetEnd, targetCP))
+		if (not ZUnicode::sReadInc(targetIter, targetEnd, targetCP))
 			{
 			// Exhausted target, and thus successful.
 			return true;
 			}
 
 		UTF32 candidateCP;
-		if (!iStrimU.ReadCP(candidateCP))
+		if (not iStrimU.ReadCP(candidateCP))
 			{
 			// Exhausted strim.
 			break;
@@ -100,7 +100,7 @@ bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget)
 bool sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit)
 	{
 	UTF32 theCP;
-	if (!iStrimU.ReadCP(theCP))
+	if (not iStrimU.ReadCP(theCP))
 		return false;
 
 	if (theCP >= '0' && theCP <= '9')
@@ -116,7 +116,7 @@ bool sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit)
 bool sTryRead_HexDigit(const ZStrimU& iStrimU, int& oDigit)
 	{
 	UTF32 theCP;
-	if (!iStrimU.ReadCP(theCP))
+	if (not iStrimU.ReadCP(theCP))
 		return false;
 
 	if (theCP >= '0' && theCP <= '9')
@@ -149,7 +149,7 @@ bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64)
 	if (sTryRead_CP(iStrimU, '0'))
 		{
 		UTF32 theCP;
-		if (!iStrimU.ReadCP(theCP))
+		if (not iStrimU.ReadCP(theCP))
 			{
 			oInt64 = 0;
 			return true;
@@ -167,7 +167,7 @@ bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64)
 			}
 
 		iStrimU.Unread(theCP);
-		if (!ZUnicode::sIsDigit(theCP))
+		if (not ZUnicode::sIsDigit(theCP))
 			{
 			oInt64 = 0;
 			return true;
@@ -382,9 +382,9 @@ void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& oDest)
 	for (;;)
 		{
 		UTF32 theCP;
-		if (!iStrimU.ReadCP(theCP))
+		if (not iStrimU.ReadCP(theCP))
 			break;
-		if (!ZUnicode::sIsWhitespace(theCP))
+		if (not ZUnicode::sIsWhitespace(theCP))
 			{
 			iStrimU.Unread(theCP);
 			break;
@@ -398,9 +398,9 @@ void sSkip_WS(const ZStrimU& iStrimU)
 	for (;;)
 		{
 		UTF32 theCP;
-		if (!iStrimU.ReadCP(theCP))
+		if (not iStrimU.ReadCP(theCP))
 			break;
-		if (!ZUnicode::sIsWhitespace(theCP))
+		if (not ZUnicode::sIsWhitespace(theCP))
 			{
 			iStrimU.Unread(theCP);
 			break;
@@ -457,7 +457,7 @@ void sCopy_Line(const ZStrimR& iStrimR, const ZStrimW& oDest)
 	for (;;)
 		{
 		UTF32 theCP;
-		if (!iStrimR.ReadCP(theCP))
+		if (not iStrimR.ReadCP(theCP))
 			break;
 		if (ZUnicode::sIsEOL(theCP))
 			break;
@@ -482,7 +482,7 @@ bool sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& oDest
 	for (;;)
 		{
 		UTF32 theCP;
-		if (!iStrimR.ReadCP(theCP))
+		if (not iStrimR.ReadCP(theCP))
 			return false;
 		if (theCP == iTerminator)
 			return true;
@@ -563,10 +563,10 @@ bool sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& o
 bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& oDest)
 	{
 	UTF32 theCP;
-	if (!iStrimU.ReadCP(theCP))
+	if (not iStrimU.ReadCP(theCP))
 		return false;
 
-	if (!ZUnicode::sIsAlpha(theCP) && theCP != '_')
+	if (not ZUnicode::sIsAlpha(theCP) && theCP != '_')
 		{
 		iStrimU.Unread(theCP);
 		return false;
@@ -577,10 +577,10 @@ bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& oDest)
 	for (;;)
 		{
 		UTF32 theCP;
-		if (!iStrimU.ReadCP(theCP))
+		if (not iStrimU.ReadCP(theCP))
 			break;
 
-		if (!ZUnicode::sIsAlphaDigit(theCP) && theCP != '_')
+		if (not ZUnicode::sIsAlphaDigit(theCP) && theCP != '_')
 			{
 			iStrimU.Unread(theCP);
 			break;

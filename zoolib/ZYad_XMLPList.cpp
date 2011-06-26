@@ -81,7 +81,7 @@ static bool spTryRead_Any(ZML::StrimU& r, ZAny& oVal)
 	else if (tagName == "integer")
 		{
 		int64 theInt64;
-		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(r, theInt64))
+		if (not ZUtil_Strim::sTryRead_SignedDecimalInteger(r, theInt64))
 			spThrowParseException("Expected valid integer");
 
 		oVal = int32(theInt64);
@@ -89,7 +89,7 @@ static bool spTryRead_Any(ZML::StrimU& r, ZAny& oVal)
 	else if (tagName == "real")
 		{
 		double theDouble;
-		if (!ZUtil_Strim::sTryRead_SignedDouble(r, theDouble))
+		if (not ZUtil_Strim::sTryRead_SignedDouble(r, theDouble))
 			spThrowParseException("Expected valid real");
 
 		oVal = theDouble;
@@ -324,7 +324,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 
 	if (false)
 		{}
-	else if (!iVal)
+	else if (not iVal)
 		{
 		s.Empty("nil");
 		}
@@ -363,7 +363,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 
 void ZYad_XMLPList::sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s)
 	{
-	if (!iYadR)
+	if (not iYadR)
 		{
 		return;
 		}

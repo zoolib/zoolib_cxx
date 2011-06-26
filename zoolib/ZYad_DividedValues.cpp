@@ -44,7 +44,7 @@ static bool spReadValues(vector<string8>& oValues,
 	for (;;)
 		{
 		UTF32 theCP;
-		if (!iStrimR.ReadCP(theCP))
+		if (not iStrimR.ReadCP(theCP))
 			{
 			oValues.push_back(curValue);
 			break;

@@ -144,7 +144,7 @@ void sToStream(uint64 iNextUnusedID, Source& iSource, const ZStreamWPos& iStream
 		{
 		uint64 anID;
 		ZTuple aTuple;
-		if (!iSource.Get(anID, aTuple))
+		if (not iSource.Get(anID, aTuple))
 			break;
 		theSWB.WriteUInt64(anID);
 		aTuple.ToStream(theSWB);
@@ -190,7 +190,7 @@ void sFromStream(Sink& iSink, uint64& oNextUnusedID, const ZStreamR& iStreamR)
 //		if (theID <= priorID)
 //			throw Ex_IDOutOfSequence();
 
-		if (!iSink.Set(theID, theTuple))
+		if (not iSink.Set(theID, theTuple))
 			throw Ex_IDDuplicate();
 
 		priorID = theID;
@@ -216,7 +216,7 @@ void sToStrim(uint64 iNextUnusedID, Source& iSource, const ZStrimW& iStrimW)
 		{
 		uint64 anID;
 		ZTuple aTuple;
-		if (!iSource.Get(anID, aTuple))
+		if (not iSource.Get(anID, aTuple))
 			break;
 		iStrimW.Writef("0x%llX /*%lld*/:\t", anID, anID);
 		ZYad_ZooLibStrim::sToStrim(0, theOptions, sMakeYadR(aTuple), iStrimW);
@@ -259,7 +259,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 
 			ZTuple theTuple;
 			ZTValue theTValue;
-			if (!ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue)
+			if (not ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue)
 				|| !theTValue.QGetTuple(theTuple))
 				{
 				throw Ex_MalformedText("Expected tuple after 'tuple ID:'");
@@ -274,7 +274,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 //			if (theID <= priorID)
 //				throw Ex_IDOutOfSequence();
 
-			if (!iSink.Set(theID, theTuple))
+			if (not iSink.Set(theID, theTuple))
 				throw Ex_IDDuplicate();
 
 			priorID = theID;
@@ -313,7 +313,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 
 			ZTuple theTuple;
 			ZTValue theTValue;
-			if (!ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue)
+			if (not ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue)
 				|| !theTValue.QGetTuple(theTuple))
 				{
 				throw Ex_MalformedText("Expected tuple after 'tuple ID:'");
@@ -328,7 +328,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 //			if (theID <= priorID)
 //				throw Ex_IDOutOfSequence();
 
-			if (!iSink.Set(theID, theTuple))
+			if (not iSink.Set(theID, theTuple))
 				throw Ex_IDDuplicate();
 
 			priorID = theID;

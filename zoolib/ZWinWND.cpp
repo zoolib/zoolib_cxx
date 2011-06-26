@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(Win)
 
 #include "zoolib/ZDebug.h"
-//#include "zoolib/ZUnicode.h"
+#include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_Win.h"
 
 namespace ZooLib {
@@ -78,32 +78,25 @@ LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 			}
 		else
 			{
+			// Until we allow a callable to be detached we'll never get here.
 			return ::CallWindowProcW(baseProc, iHWND, iMessage, iWPARAM, iLPARAM);
 			}
 		}
+	else if (iMessage == WM_GETMINMAXINFO)
+		{
+		// We're being created, but the *very* first message sent to a window
+		// is (go figure) WM_GETMINMAXINFO. We don't have access to our CREATESTRUCTW,
+		// so we'll handle it specially.
+		return ::DefWindowProcW(iHWND, iMessage, iWPARAM, iLPARAM);
+		}
 	else
 		{
-		// We're in the process of being created.
-		if (iMessage == WM_GETMINMAXINFO)
-			{
-			// The *very* first message sent to a window is (go figure) WM_GETMINMAXINFO.
-			// We don't have access to our CREATESTRUCTW, so we have to handle it specially.
-			return ::DefWindowProcW(iHWND, iMessage, iWPARAM, iLPARAM);
-			}
-		else if (iMessage == WM_NCCREATE)
-			{
-			// This is the second message sent to a window, and is where we're
-			// able to attach to our Callable.
-			CreateStruct* theCS = (CreateStruct*)((CREATESTRUCTW*)iLPARAM)->lpCreateParams;
-			spAttach(iHWND, theCS->fWNDPROC, theCS->fCallable);
-			return theCS->fCallable->Call(theCS->fWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
-			}
-		else
-			{
-			// Can't get here
-			ZUnimplemented();
-			return 0;
-			}
+		ZAssert(iMessage == WM_NCCREATE);
+		// This is the second message sent to a window, and is where we're able to
+		// attach to our Callable. All subsequent calls will go through the callable.
+		CreateStruct* theCS = (CreateStruct*)((CREATESTRUCTW*)iLPARAM)->lpCreateParams;
+		spAttach(iHWND, theCS->fWNDPROC, theCS->fCallable);
+		return theCS->fCallable->Call(theCS->fWNDPROC, iHWND, WM_NCCREATE, iWPARAM, iLPARAM);
 		}
 	}
 
@@ -133,9 +126,11 @@ ClassRegistration::ClassRegistration(WNDPROC iWNDPROC, const WCHAR* iClassName)
 
 ClassRegistration::~ClassRegistration()
 	{
-	bool result = ::UnregisterClassW(fClassName, ZUtil_Win::sGetModuleHandle());
-	// Result will be false if there are still windows using this class.
-	// ZAssert(result);
+	if (not ::UnregisterClassW(fClassName, ZUtil_Win::sGetModuleHandle()))
+		{
+		if (ZLOGPF(s, eInfo))
+			s << "Failed for << " << fClassName;
+		}
 	}
 
 const WCHAR* ClassRegistration::GetClassName() const
@@ -143,7 +138,7 @@ const WCHAR* ClassRegistration::GetClassName() const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWinWND
+#pragma mark * ZWinWND Callable stuff
 
 static ClassRegistration spClassRegistration(spWindowProcW, L"ZWinWND ClassRegistration");
 

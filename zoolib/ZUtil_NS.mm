@@ -154,7 +154,7 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 	{
 	if (false)
 		{}
-	else if (!iVal)
+	else if (not iVal)
 		{
 		return [NSNull null];
 		}

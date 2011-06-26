@@ -60,7 +60,7 @@ bool ZBitReaderBE::ReadBits(const ZStreamR& iStream, size_t iCountBits, uint32& 
 		{
 		if (fAvailBits == 0)
 			{
-			if (!iStream.ReadByte(fBuffer))
+			if (not iStream.ReadByte(fBuffer))
 				return false;
 			fAvailBits = 8;
 			}
@@ -143,7 +143,7 @@ bool ZBitReaderLE::ReadBits(const ZStreamR& iStream, size_t iCountBits, uint32& 
 		{
 		if (fAvailBits-- == 0)
 			{
-			if (!iStream.ReadByte(fBuffer))
+			if (not iStream.ReadByte(fBuffer))
 				return false;
 			fAvailBits = 7;
 			}

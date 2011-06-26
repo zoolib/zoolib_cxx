@@ -164,7 +164,7 @@ void Dataspace::pFinalize(Sieve* iSieve)
 	{
 	ZGuardRMtxR guard(fMtxR);
 
-	if (!iSieve->FinishFinalize())
+	if (not iSieve->FinishFinalize())
 		return;
 
 	ZUtil_STL::sEraseMustContain(kDebug, fMap_RefconToSieve, iSieve->fRefcon);

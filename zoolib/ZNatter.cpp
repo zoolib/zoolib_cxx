@@ -100,7 +100,7 @@ void Channel::pRemove(Exchange* iExchange)
 	{
 	ZGuardRMtxR guard(fMtxR_Structure);
 
-	if (!iExchange->fID)
+	if (not iExchange->fID)
 		return;
 
 	ZUtil_STL::sInsertMustNotContain(1, fRetired, iExchange->fID);
@@ -244,7 +244,7 @@ void Channel::pRead(ZGuardRMtxR& iGuard)
 				}
 			else if (theType == 1)
 				{
-				if (!ZUtil_STL::sEraseIfContains(fRetired, theID))
+				if (not ZUtil_STL::sEraseIfContains(fRetired, theID))
 					{
 					ZRef<Exchange> theExchange = ZUtil_STL::sEraseAndReturn(1, fPending, theID);
 					ZAssert(theExchange->fWaiting);

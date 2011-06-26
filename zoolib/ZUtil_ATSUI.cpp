@@ -104,10 +104,10 @@ static ATSUFontFallbacks spATSUFontFallbacks = spCreate_ATSUFontFallbacks();
 ATSUTextLayout sCreateLayout(
 	const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle, bool iUseFallbacks)
 	{
-	if (!iStyle)
+	if (not iStyle)
 		return nullptr;
 
-	if (!iTextLength)
+	if (not iTextLength)
 		return nullptr;
 
 	UniCharCount runLengths = kATSUToTextEnd;

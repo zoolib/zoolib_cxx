@@ -93,7 +93,7 @@ bool ZWorker::IsAttached()
 	}
 
 ZRef<ZWorker::Callable_Attached_t>
-	ZWorker::GetSetCallable_Attached(ZRef<Callable_Attached_t> iCallable)
+ZWorker::GetSetCallable_Attached(ZRef<Callable_Attached_t> iCallable)
 	{ return fCallable_Attached.GetSet(iCallable); }
 
 ZRef<ZWorker::Callable_Detached_t>
@@ -113,7 +113,7 @@ ZWorker::GetSetCallable_Detached(ZRef<Callable_Detached_t> iCallable)
 bool ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 	{
 	ZAssert(iWorker);
-	ZAssert(! iWorker->fRunner.Get());
+	ZAssert(not iWorker->fRunner.Get());
 
 	iWorker->fRunner = MakeRef(this);
 

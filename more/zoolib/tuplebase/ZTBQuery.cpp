@@ -64,7 +64,7 @@ inline ZTBQueryNode::~ZTBQueryNode()
 inline int ZTBQueryNode::Compare(const ZRef<ZTBQueryNode>& iOther)
 	{
 	// An extant node is greater than an absent node.
-	if (!iOther)
+	if (not iOther)
 		return 1;
 
 	// VERY IMPORTANT. pRevCompare returns 1 if the callee is less than
@@ -188,7 +188,7 @@ ZTBQuery::ZTBQuery(const uint64* iIDs, size_t iCount)
 */
 ZTBQuery::ZTBQuery(const vector<uint64>& iIDs)
 	{
-	if (!iIDs.empty())
+	if (not iIDs.empty())
 		fNode = new ZTBQueryNode_ID_Constant(iIDs);
 	}
 
@@ -198,7 +198,7 @@ ZTBQuery::ZTBQuery(const vector<uint64>& iIDs)
 */
 ZTBQuery::ZTBQuery(const set<uint64>& iIDs)
 	{
-	if (!iIDs.empty())
+	if (not iIDs.empty())
 		fNode = new ZTBQueryNode_ID_Constant(iIDs);
 	}
 
@@ -279,7 +279,7 @@ ZTBQuery& ZTBQuery::operator&=(const ZTBSpec& iSpec)
 		{
 		fNode.Clear();
 		}
-	else if (!iSpec.IsAny())
+	else if (not iSpec.IsAny())
 		{
 		if (ZRef<ZTBQueryNode_Combo> qnc = ZRefDynamicCast<ZTBQueryNode_Combo>(fNode))
 			{
@@ -325,7 +325,7 @@ ZTBQuery& ZTBQuery::operator&=(const ZTBQuery& iQuery)
 	{
 	if (!fNode)
 		{}
-	else if (!iQuery.fNode)
+	else if (not iQuery.fNode)
 		{
 		fNode.Clear();
 		}
@@ -419,7 +419,7 @@ ZTBQuery& ZTBQuery::operator|=(const ZTBQuery& iQuery)
 		{
 		fNode = iQuery.fNode;
 		}
-	else if (!iQuery.fNode)
+	else if (not iQuery.fNode)
 		{}
 	else
 		{

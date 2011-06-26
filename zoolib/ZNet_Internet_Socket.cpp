@@ -105,7 +105,7 @@ static ZRef<ZNetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_p
 	if (theFamily == AF_INET)
 		{
 		const sockaddr_in* in = (const sockaddr_in*)iSockAddr;
-		if (!iPort)
+		if (not iPort)
 			iPort = ntohs(in->sin_port);
 		return new ZNetAddress_IP4(
 			ntohl(in->sin_addr.s_addr),
@@ -115,7 +115,7 @@ static ZRef<ZNetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_p
 	if (theFamily == AF_INET6)
 		{
 		const sockaddr_in6* in = (const sockaddr_in6*)iSockAddr;
-		if (!iPort)
+		if (not iPort)
 			iPort = ntohs(in->sin6_port);
 		return new ZNetAddress_IP6(
 			iPort,

@@ -340,7 +340,7 @@ ZRef<ZTSWatcher> ZTS_Watchable::NewWatcher()
 void ZTS_Watchable::Watcher_Finalize(Watcher* iWatcher)
 	{
 	ZMutexLocker locker(fMutex_Structure);
-	if (!iWatcher->FinishFinalize())
+	if (not iWatcher->FinishFinalize())
 		return;
 
 	ZUtil_STL::sEraseMustContain(kDebug, fWatchers, iWatcher);
@@ -873,7 +873,7 @@ void ZTS_Watchable::pReleasePTuple(PTuple* iPTuple)
 	{
 	ASSERTLOCKED(fMutex_Structure);
 
-	if (!iPTuple->fUsingWatchers.empty())
+	if (not iPTuple->fUsingWatchers.empty())
 		return;
 
 	ZUtil_STL::sEraseMustContain(kDebug, fID_To_PTuple, iPTuple->fID);
@@ -917,7 +917,7 @@ void ZTS_Watchable::pReleasePSpec(PSpec* iPSpec)
 	{
 	ASSERTLOCKED(fMutex_Structure);
 
-	if (!iPSpec->fUsingPQueries.empty())
+	if (not iPSpec->fUsingPQueries.empty())
 		return;
 
 	const set<ZTName>& propNames = iPSpec->GetPropNames();

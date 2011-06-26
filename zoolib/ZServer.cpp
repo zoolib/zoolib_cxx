@@ -66,7 +66,7 @@ ZServer::ZServer()
 ZServer::~ZServer()
 	{
 	ZAssert(fResponders.Empty());
-	ZAssert(!fStreamerListener);
+	ZAssert(not fStreamerListener);
 	}
 
 void ZServer::Finalize()
@@ -83,7 +83,7 @@ void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
 	{
 	ZAcqMtx acq(fMtx);
 
-	ZAssert(!fStreamerListener);
+	ZAssert(not fStreamerListener);
 	ZAssert(iFactory);
 
 	fStreamerListener = new StreamerListener(this, iFactory);

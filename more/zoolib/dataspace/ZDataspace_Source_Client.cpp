@@ -73,7 +73,7 @@ void Source_Client::ModifyRegistrations(
 	while (iRemovedCount--)
 		{
 		const int64 theRefcon = *iRemoved++;
-		if (!ZUtil_STL::sEraseIfContains(fAdds, theRefcon))
+		if (not ZUtil_STL::sEraseIfContains(fAdds, theRefcon))
 			ZUtil_STL::sInsertMustNotContain(1, fRemoves, theRefcon);
 		}
 

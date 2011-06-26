@@ -842,7 +842,7 @@ void Source_Union::ModifyRegistrations(
 
 		thePQuery->fClientQueries.Insert(theClientQuery);
 
-		if (!inPQuery.second)
+		if (not inPQuery.second)
 			fClientQuery_NeedsWork.Insert(theClientQuery);
 		}
 
@@ -1083,7 +1083,7 @@ ZRef<ZRA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
 
 void Source_Union::pFinalizeProxy(Proxy* iProxy)
 	{
-	if (!iProxy->FinishFinalize())
+	if (not iProxy->FinishFinalize())
 		return;
 
 	ZAssertStop(kDebug, iProxy->fPIP_InProxy.Empty());
@@ -1124,9 +1124,9 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 	for (;;)
 		{
 		++fStepCount;
-		if (!iWalker->fCurrentResult)
+		if (not iWalker->fCurrentResult)
 			{
-			if (!iWalker->fIter_PIP)
+			if (not iWalker->fIter_PIP)
 				return false;
 			iWalker->fCurrentIndex = 0;
 			iWalker->fCurrentResult = iWalker->fIter_PIP.Current()->fResult;

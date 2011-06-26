@@ -270,7 +270,7 @@ ZGRgn ZGRgn::Including(const ZGRgn& iOther) const
 
 void ZGRgn::Intersect(const ZGRgn& iOther)
 	{
-	if (!iOther.fRep)
+	if (not iOther.fRep)
 		{
 		fRep.Clear();
 		}

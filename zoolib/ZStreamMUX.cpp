@@ -817,7 +817,7 @@ bool ZStreamMUX::Endpoint_Finalize(Endpoint* iEP)
 			this, iEP->fEPID);
 		}
 
-	if (!iEP->FinishFinalize())
+	if (not iEP->FinishFinalize())
 		return false;
 
 	if (iEP->fStateSend == eStateSend_Open)
@@ -894,7 +894,7 @@ bool ZStreamMUX::Endpoint_WaitReadable(Endpoint* iEP, double iTimeout)
 			return true;
 			}
 
-		if (!iEP->fCondition_Receive.WaitUntil(fMutex, deadline))
+		if (not iEP->fCondition_Receive.WaitUntil(fMutex, deadline))
 			return false;
 		}
 	}
@@ -955,7 +955,7 @@ bool ZStreamMUX::Endpoint_ReceiveDisconnect(Endpoint* iEP, double iTimeout)
 			return true;
 			}
 
-		if (!iEP->fCondition_Receive.WaitUntil(fMutex, deadline))
+		if (not iEP->fCondition_Receive.WaitUntil(fMutex, deadline))
 			return false;
 		}
 	}
@@ -996,7 +996,7 @@ void ZStreamMUX::Endpoint_Abort(Endpoint* iEP)
 void ZStreamMUX::Listener_Finalize(Listener* iListener)
 	{
 	ZGuardRMtxR locker(fMutex);
-	if (!iListener->FinishFinalize())
+	if (not iListener->FinishFinalize())
 		return;
 
 	map<std::string, Listener*>::iterator i = fMap_NameToListener.find(iListener->fName);
@@ -1018,7 +1018,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Listener_Listen(Listener* iListener)
 	{
 	ZGuardRMtxR locker(fMutex);
 
-	if (!iListener->fCancelled && iListener->fEndpoints_Pending.Empty())
+	if (not iListener->fCancelled && iListener->fEndpoints_Pending.Empty())
 		iListener->fCondition.Wait(fMutex);
 
 	if (iListener->fEndpoints_Pending.Empty())

@@ -49,7 +49,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWinWND
+#pragma mark * ZWinWND Callable stuff
 
 typedef ZCallable<LRESULT(WNDPROC,HWND,UINT,WPARAM,LPARAM)> Callable_WNDPROC;
 

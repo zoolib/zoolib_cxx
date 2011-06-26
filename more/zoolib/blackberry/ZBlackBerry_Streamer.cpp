@@ -767,7 +767,7 @@ bool Commer_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 	{
 	ZGuardRMtxR locker(fMutex);
 
-	if (!iChannel->FinishFinalize())
+	if (not iChannel->FinishFinalize())
 		return false;
 
 	switch (iChannel->fState)
@@ -884,7 +884,7 @@ bool Commer_Streamer::Channel_WaitReadable(Channel_Streamer* iChannel, double iT
 		{
 		if (iChannel->fState != eState_Connected || iChannel->fReceive_Buffer.size())
 			return true;
-		if (!iChannel->fCondition_Receive.WaitUntil(fMutex, deadline))
+		if (not iChannel->fCondition_Receive.WaitUntil(fMutex, deadline))
 			return false;
 		}
 	}

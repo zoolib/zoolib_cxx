@@ -51,7 +51,7 @@ bool ZMIME::sReadFieldName(const ZStreamR& iStream, std::string* oName, std::str
 	for (;;)
 		{
 		char readChar;
-		if (!iStream.ReadChar(readChar))
+		if (not iStream.ReadChar(readChar))
 			return gotAny;
 
 		gotAny = true;

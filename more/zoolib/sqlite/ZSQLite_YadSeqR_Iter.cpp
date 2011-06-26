@@ -73,7 +73,7 @@ YadSeqR_Iter::~YadSeqR_Iter()
 
 void YadSeqR_Iter::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
-	if (!iIsFirst)
+	if (not iIsFirst)
 		fIter->Advance();
 
 	if (fIter->HasValue())

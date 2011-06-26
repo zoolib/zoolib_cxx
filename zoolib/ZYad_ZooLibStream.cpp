@@ -322,7 +322,7 @@ void ZYadMapR_ZooLibStreamOld::Imp_ReadInc(
 
 void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 	{
-	if (!iYadR)
+	if (not iYadR)
 		{
 		return;
 		}

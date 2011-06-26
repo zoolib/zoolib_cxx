@@ -73,7 +73,7 @@ static uint32 spHexCharToUInt(char iChar)
 static bool spReadDigit(const ZStreamU& iStream, int& oDigit)
 	{
 	char readChar;
-	if (!iStream.ReadChar(readChar))
+	if (not iStream.ReadChar(readChar))
 		return false;
 
 	if (readChar < '0' || readChar > '9')
@@ -302,7 +302,7 @@ bool sReadResponse(const ZStreamU& iStream, int32* oResultCode, string* oResultM
 	for (;;)
 		{
 		char readChar;
-		if (!iStream.ReadChar(readChar))
+		if (not iStream.ReadChar(readChar))
 			break;
 		if (readChar == LF)
 			break;
@@ -599,7 +599,7 @@ bool sParseQuery(const ZStreamU& iStream, Map& oTuple)
 		string name;
 		for (;;)
 			{
-			if (!iStream.ReadChar(readChar))
+			if (not iStream.ReadChar(readChar))
 				break;
 
 			if (readChar == '=')
@@ -616,7 +616,7 @@ bool sParseQuery(const ZStreamU& iStream, Map& oTuple)
 		string value;
 		for (;;)
 			{
-			if (!iStream.ReadChar(readChar))
+			if (not iStream.ReadChar(readChar))
 				break;
 
 			if (readChar == '&')
@@ -1146,7 +1146,7 @@ bool sReadURI(const ZStreamU& iStream, string* oURI)
 	for (;;)
 		{
 		char readChar;
-		if (!iStream.ReadChar(readChar))
+		if (not iStream.ReadChar(readChar))
 			break;
 
 		if (sIs_LWS(readChar))
@@ -1294,7 +1294,7 @@ bool sReadLanguageTag(const ZStreamU& iStream, string* oLanguageTag)
 		oLanguageTag->resize(0);
 
 	char readChar;
-	if (!iStream.ReadChar(readChar))
+	if (not iStream.ReadChar(readChar))
 		return false;
 
 	if (!sIs_ALPHA(readChar))
@@ -1308,7 +1308,7 @@ bool sReadLanguageTag(const ZStreamU& iStream, string* oLanguageTag)
 
 	for (;;)
 		{
-		if (!iStream.ReadChar(readChar))
+		if (not iStream.ReadChar(readChar))
 			return true;
 
 		if (!sIs_ALPHA(readChar) && readChar != '-')
@@ -1393,7 +1393,7 @@ bool sReadToken(const ZStreamU& iStream, string* oTokenLC, string* oTokenExact)
 	for (;;)
 		{
 		char readChar;
-		if (!iStream.ReadChar(readChar))
+		if (not iStream.ReadChar(readChar))
 			break;
 
 		if (!sIs_token(readChar))
@@ -1441,7 +1441,7 @@ bool sReadToken_Cookie(const ZStreamU& iStream, string* oTokenLC, string* oToken
 	for (;;)
 		{
 		char readChar;
-		if (!iStream.ReadChar(readChar))
+		if (not iStream.ReadChar(readChar))
 			break;
 
 		if (!sIs_token(readChar))
@@ -1498,7 +1498,7 @@ bool sReadQuotedString(const ZStreamU& iStream, string* oString, string* oString
 	for (;;)
 		{
 		char readChar;
-		if (!iStream.ReadChar(readChar))
+		if (not iStream.ReadChar(readChar))
 			break;
 
 		if (!sIs_qdtext(readChar))
@@ -1522,7 +1522,7 @@ bool sReadQuotedString(const ZStreamU& iStream, string* oString, string* oString
 bool sReadChar(const ZStreamU& iStream, char iChar)
 	{
 	char readChar;
-	if (!iStream.ReadChar(readChar))
+	if (not iStream.ReadChar(readChar))
 		return false;
 
 	if (readChar != iChar)
@@ -1539,7 +1539,7 @@ bool sReadChars(const ZStreamU& iStream, const char* iString)
 	while (*iString)
 		{
 		char readChar;
-		if (!iStream.ReadChar(readChar))
+		if (not iStream.ReadChar(readChar))
 			return false;
 		if (*iString != readChar)
 			return false;
@@ -1553,7 +1553,7 @@ void sSkipLWS(const ZStreamU& iStream)
 	for (;;)
 		{
 		char readChar;
-		if (!iStream.ReadChar(readChar))
+		if (not iStream.ReadChar(readChar))
 			break;
 
 		if (!sIs_LWS(readChar))
@@ -1567,10 +1567,10 @@ void sSkipLWS(const ZStreamU& iStream)
 bool sReadDecodedChars(const ZStreamU& iStream, string& ioString)
 	{
 	char readChar;
-	if (!iStream.ReadChar(readChar))
+	if (not iStream.ReadChar(readChar))
 		return false;
 
-	if (!isxdigit(readChar))
+	if (not isxdigit(readChar))
 		{
 		iStream.Unread();
 		ioString.append(1, '%');
@@ -1578,10 +1578,10 @@ bool sReadDecodedChars(const ZStreamU& iStream, string& ioString)
 	else
 		{
 		char readChar2;
-		if (!iStream.ReadChar(readChar2))
+		if (not iStream.ReadChar(readChar2))
 			return false;
 
-		if (!isxdigit(readChar2))
+		if (not isxdigit(readChar2))
 			{
 			iStream.Unread();
 

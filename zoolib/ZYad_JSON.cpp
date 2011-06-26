@@ -266,7 +266,7 @@ void ZYadSeqR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 		return;
 		}
 
-	if (!iIsFirst)
+	if (not iIsFirst)
 		{
 		// Must read a separator
 		if (!sTryRead_CP(theStrimU, ','))
@@ -300,7 +300,7 @@ void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& 
 		return;
 		}
 
-	if (!iIsFirst)
+	if (not iIsFirst)
 		{
 		// Must read a separator
 		if (!sTryRead_CP(theStrimU, ','))
@@ -370,7 +370,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 
 	if (false)
 		{}
-	else if (!iAny)
+	else if (not iAny)
 		{
 		s << "null";
 		}
@@ -497,7 +497,7 @@ void ZVisitor_Yad_JSONWriter::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 				}
 			else
 				{
-				if (!isFirst)
+				if (not isFirst)
 					fStrimW.Write(",");
 				spWriteLFIndent(fStrimW, fIndent, fOptions);
 				cur->Accept(*this);
@@ -519,7 +519,7 @@ void ZVisitor_Yad_JSONWriter::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 				}
 			else
 				{
-				if (!isFirst)
+				if (not isFirst)
 					{
 					fStrimW.Write(",");
 					if (fOptions.fBreakStrings)
@@ -559,7 +559,7 @@ void ZVisitor_Yad_JSONWriter::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				}
 			else
 				{
-				if (!isFirst)
+				if (not isFirst)
 					fStrimW.Write(",");
 				spWriteLFIndent(fStrimW, fIndent, fOptions);
 				spWriteString(fStrimW, curName);
@@ -586,7 +586,7 @@ void ZVisitor_Yad_JSONWriter::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				}
 			else
 				{
-				if (!isFirst)
+				if (not isFirst)
 					fStrimW.Write(",");
 				if (fOptions.fBreakStrings)
 					fStrimW.Write(" ");

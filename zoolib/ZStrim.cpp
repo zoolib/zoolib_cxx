@@ -1254,7 +1254,7 @@ void ZStrimW_NativeUTF32::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, 
 		UTF32 buffer[kBufSize];
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		if (!ZUnicode::sUTF16ToUTF32(
+		if (not ZUnicode::sUTF16ToUTF32(
 			localSource, iCountCU,
 			&utf16Consumed, nullptr,
 			buffer, kBufSize,
@@ -1294,7 +1294,7 @@ void ZStrimW_NativeUTF32::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 		UTF32 buffer[kBufSize];
 		size_t utf8Consumed;
 		size_t utf32Generated;
-		if (!ZUnicode::sUTF8ToUTF32(
+		if (not ZUnicode::sUTF8ToUTF32(
 			localSource, iCountCU,
 			&utf8Consumed, nullptr,
 			buffer, kBufSize,
@@ -1375,7 +1375,7 @@ void ZStrimW_NativeUTF16::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 		UTF16 buffer[kBufSize];
 		size_t utf8Consumed;
 		size_t utf16Generated;
-		if (!ZUnicode::sUTF8ToUTF16(
+		if (not ZUnicode::sUTF8ToUTF16(
 			localSource, iCountCU,
 			&utf8Consumed, nullptr,
 			buffer, kBufSize,
@@ -1463,7 +1463,7 @@ void ZStrimW_NativeUTF8::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, s
 		UTF8 buffer[kBufSize];
 		size_t utf16Consumed;
 		size_t utf8Generated;
-		if (!ZUnicode::sUTF16ToUTF8(
+		if (not ZUnicode::sUTF16ToUTF8(
 			localSource, iCountCU,
 			&utf16Consumed, nullptr,
 			buffer, kBufSize,

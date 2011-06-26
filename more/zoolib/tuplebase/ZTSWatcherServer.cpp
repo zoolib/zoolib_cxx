@@ -86,7 +86,7 @@ static bool spAllocateIDs(ZRef<ZTSWatcher> iWatcher, const ZTuple& iReq, const Z
 	size_t theCount = iReq.GetInt32("Count");
 	uint64 baseID;
 	size_t countIssued;
-	if (!iWatcher->AllocateIDs(theCount, baseID, countIssued))
+	if (not iWatcher->AllocateIDs(theCount, baseID, countIssued))
 		return false;
 	ZTuple response;
 	response.SetInt64("BaseID", baseID);
@@ -221,7 +221,7 @@ static bool spSync1(
 
 	ZTime beforeSync = ZTime::sSystem();
 
-	if (!iWatcher->Sync(
+	if (not iWatcher->Sync(
 		&removedIDs[0], removedIDs.size(),
 		&addedIDs[0], addedIDs.size(),
 		&removedQueries[0], removedQueries.size(),
@@ -485,7 +485,7 @@ static bool spSync2(
 
 	ZTime beforeSync = ZTime::sSystem();
 
-	if (!iWatcher->Sync(
+	if (not iWatcher->Sync(
 		&removedIDs[0], removedIDs.size(),
 		&addedIDs[0], addedIDs.size(),
 		&removedQueries[0], removedQueries.size(),
@@ -616,7 +616,7 @@ static bool spSync3(
 
 	ZTime beforeSync = ZTime::sSystem();
 
-	if (!iWatcher->Sync(
+	if (not iWatcher->Sync(
 		&removedIDs[0], removedIDs.size(),
 		&addedIDs[0], addedIDs.size(),
 		&removedQueries[0], removedQueries.size(),
@@ -748,7 +748,7 @@ static bool spSync4(
 
 	ZTime beforeSync = ZTime::sSystem();
 
-	if (!iWatcher->Sync(
+	if (not iWatcher->Sync(
 		&removedIDs[0], removedIDs.size(),
 		&addedIDs[0], addedIDs.size(),
 		&removedQueries[0], removedQueries.size(),

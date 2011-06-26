@@ -71,7 +71,7 @@ static string spReadReference(const ZStrimU& iStrim, ZRef<Callable_Entity> iCall
 		for (;;)
 			{
 			UTF32 theCP;
-			if (!iStrim.ReadCP(theCP))
+			if (not iStrim.ReadCP(theCP))
 				{
 				theEntity.clear();
 				break;
@@ -119,7 +119,7 @@ static bool spReadMLIdentifier(const ZStrimU& s, string& oText)
 	if (!s.ReadCP(curCP))
 		return false;
 
-	if (!ZUnicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
+	if (not ZUnicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
 		{
 		s.Unread(curCP);
 		return false;
@@ -133,7 +133,7 @@ static bool spReadMLIdentifier(const ZStrimU& s, string& oText)
 			{
 			break;
 			}
-		else if (!ZUnicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
+		else if (not ZUnicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
 			{
 			s.Unread(curCP);
 			break;
@@ -211,7 +211,7 @@ static bool spReadMLAttributeName(const ZStrimU& s, string& oName)
 		}
 	else
 		{
-		if (!ZUnicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
+		if (not ZUnicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
 			{
 			s.Unread(curCP);
 			return false;
@@ -223,7 +223,7 @@ static bool spReadMLAttributeName(const ZStrimU& s, string& oName)
 			if (!s.ReadCP(curCP))
 				break;
 
-			if (!ZUnicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
+			if (not ZUnicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
 				{
 				s.Unread(curCP);
 				break;
@@ -442,14 +442,14 @@ static bool spTryRead_String(const ZStrimR& iStrimR, const string8& iPattern)
 		/*no test*/;/*no inc*/)
 		{
 		UTF32 patternCP;
-		if (!ZUnicode::sReadInc(iter, iterEnd, patternCP))
+		if (not ZUnicode::sReadInc(iter, iterEnd, patternCP))
 			{
 			// Exhausted the pattern, we've matched everything.
 			return true;
 			}
 
 		UTF32 targetCP;
-		if (!iStrimR.ReadCP(targetCP))
+		if (not iStrimR.ReadCP(targetCP))
 			{
 			// Exhausted the target before seeing the pattern.
 			return false;
@@ -892,7 +892,7 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 			{
 			priorToEntity = current;
 			UTF32 theCP;
-			if (!ZUnicode::sReadInc(current, localSourceEnd, theCP))
+			if (not ZUnicode::sReadInc(current, localSourceEnd, theCP))
 				break;
 			switch (theCP)
 				{
@@ -1072,7 +1072,7 @@ const StrimW& StrimW::Attr(const string8& iName, const string8& iValue) const
 		for (;;)
 			{
 			UTF32 theCP;
-			if (!ZUnicode::sReadInc(current, end, theCP))
+			if (not ZUnicode::sReadInc(current, end, theCP))
 				break;
 
 			if (newValue)

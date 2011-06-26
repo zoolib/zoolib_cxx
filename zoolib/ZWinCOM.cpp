@@ -538,7 +538,7 @@ String& String::operator=(const string16& iOther)
 String::String(const string8& iOther)
 :	fBSTR(nullptr)
 	{
-	if (! iOther.empty())
+	if (not iOther.empty())
 		{
 		const string16 other = ZUnicode::sAsUTF16(iOther);
 		fBSTR = ::SysAllocStringLen(other.data(), other.length());
@@ -548,7 +548,7 @@ String::String(const string8& iOther)
 String& String::operator=(const string8& iOther)
 	{
 	BSTR newBSTR = nullptr;
-	if (! iOther.empty())
+	if (not iOther.empty())
 		{
 		const string16 other = ZUnicode::sAsUTF16(iOther);
 		newBSTR = ::SysAllocStringLen(other.data(), other.length());

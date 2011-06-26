@@ -1204,7 +1204,7 @@ static void spInsertSections(UITableView* iTableView,
 	bool anyDeletes = false, anyInserts = false, anyReloads = false;
 	for (size_t x = 0; x < fSections_Shown.size(); ++x)
 		{
-		if (!ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[x]))
+		if (not ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[x]))
 			{
 			SectionBody::RowMeta theRowMeta_Old;
 			SectionBody::RowMeta theRowMeta_New;

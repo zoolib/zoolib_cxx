@@ -148,7 +148,7 @@ static bool spRead_Comparator(const ZStrimU& iStrimU, ZTBSpec::Comparator& oComp
 		return false;
 
 	int64 theInteger;
-	if (!ZUtil_Strim::sTryRead_SignedGenericInteger(iStrimU, theInteger))
+	if (not ZUtil_Strim::sTryRead_SignedGenericInteger(iStrimU, theInteger))
 		oComparator.fStrength = 0;
 	else
 		oComparator.fStrength = theInteger;
@@ -183,7 +183,7 @@ static bool spRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 			{
 			if (!sTryRead_EscapedString(iStrimU, '\'', thePropertyName))
 				{
-				if (!ZYad_ZooLibStrim::sRead_Identifier(
+				if (not ZYad_ZooLibStrim::sRead_Identifier(
 					iStrimU, &thePropertyNameLC, &thePropertyName))
 					{
 					return false;
@@ -216,7 +216,7 @@ static bool spRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 		sSkip_WSAndCPlusPlusComments(iStrimU);
 
 		ZTValue theTV;
-		if (!ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTV))
+		if (not ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTV))
 			throw ParseException("Expected a value after a relationship");
 
 		oSpec = ZTBSpec(ZTName(thePropertyName), theComparator, theTV);

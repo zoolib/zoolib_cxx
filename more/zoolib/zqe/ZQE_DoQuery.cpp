@@ -58,7 +58,7 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 		for (;;)
 			{
 			set<ZRef<ZCounted> > theAnnotations;
-			if (!iWalker->ReadInc(&theRow[0], &theAnnotations))
+			if (not iWalker->ReadInc(&theRow[0], &theAnnotations))
 				break;
 
 			theAnnotationsVector.push_back(

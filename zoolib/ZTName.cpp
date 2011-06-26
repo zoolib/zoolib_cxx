@@ -90,7 +90,7 @@ static inline bool spDifferent(const PNRep* iPNRep, const char* iName, size_t iL
 
 static const PNRep* spLookupAndTag(const char* iName, size_t iLength)
 	{
-	if (!iLength)
+	if (not iLength)
 		return reinterpret_cast<const PNRep*>(1);
 
 	if (!spNames)

@@ -42,7 +42,7 @@ static void spWrite_PropName(const string& iName, const ZStrimW& s)
 
 static void spToStrim(const ZRef<ZValComparand>& iComparand, const ZStrimW& s)
 	{
-	if (!iComparand)
+	if (not iComparand)
 		{
 		s << "/*Null Comparand*/";
 		}
@@ -62,7 +62,7 @@ static void spToStrim(const ZRef<ZValComparand>& iComparand, const ZStrimW& s)
 
 static void spToStrim(const ZRef<ZValComparator>& iComparator, const ZStrimW& s)
 	{
-	if (!iComparator)
+	if (not iComparator)
 		{
 		s << "/*Null Comparator*/";
 		}

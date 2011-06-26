@@ -351,7 +351,7 @@ void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Event>& oEvent, ZRef<Deltas>& 
 		for (Map_NamedEvent_Delta_t::const_iterator
 			i = theMap.lower_bound(neLower), theEnd = theMap.end(); i != theEnd; ++i)
 			{
-			if (! i->first.GetEvent()->IsBefore(iEvent))
+			if (not i->first.GetEvent()->IsBefore(iEvent))
 				resultMap.insert(*i);
 			}
 		}

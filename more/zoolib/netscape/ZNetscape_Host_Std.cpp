@@ -844,7 +844,7 @@ static string spFixURL(const string& iBaseURL, const string& iRelativeURL)
 	string relHost;
 	ip_port relPort;
 	string relPath;
-	if (!ZHTTP::sParseURL(iRelativeURL, &relScheme, &relHost, &relPort, &relPath))
+	if (not ZHTTP::sParseURL(iRelativeURL, &relScheme, &relHost, &relPort, &relPath))
 		return string();
 
 	if (!relScheme.empty())
@@ -857,7 +857,7 @@ static string spFixURL(const string& iBaseURL, const string& iRelativeURL)
 		string baseHost;
 		ip_port basePort = relPort;
 		string basePath;
-		if (!ZHTTP::sParseURL(iBaseURL, &baseScheme, &baseHost, &basePort, &basePath))
+		if (not ZHTTP::sParseURL(iBaseURL, &baseScheme, &baseHost, &basePort, &basePath))
 			return string();
 
 		if (!basePort)

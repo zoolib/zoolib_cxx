@@ -119,7 +119,7 @@ bool Walker_Union::ReadInc(
 		for (size_t x = 0; x < count; ++x)
 			subset.push_back(ioResults[fMapping_Right[x]]);
 
-		if (!ZUtil_STL::sContains(fPriors, subset))
+		if (not ZUtil_STL::sContains(fPriors, subset))
 			{
 			for (size_t x = 0; x < count; ++x)
 				ioResults[fMapping_Left[x]] = subset[x];

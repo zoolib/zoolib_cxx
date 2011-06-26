@@ -2647,7 +2647,7 @@ void ZDCPixmapNS::sBlit(
 		if (PixelDescRep_Color* destPixelDescRep_Color =
 			destPixelDescRep.DynamicCast<PixelDescRep_Color>())
 			{
-			if (!iInvertColors && sourcePixelDescRep_Color->Matches(destPixelDescRep_Color))
+			if (not iInvertColors && sourcePixelDescRep_Color->Matches(destPixelDescRep_Color))
 				{
 				sBlitPixvals(iSourceBase, iSourceRasterDesc,
 					iDestBase, iDestRasterDesc,
@@ -2695,7 +2695,7 @@ void ZDCPixmapNS::sBlit(
 		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
 			destPixelDescRep.DynamicCast<PixelDescRep_Indexed>())
 			{
-			if (!iInvertColors && sourcePixelDescRep_Indexed->Matches(destPixelDescRep_Indexed))
+			if (not iInvertColors && sourcePixelDescRep_Indexed->Matches(destPixelDescRep_Indexed))
 				{
 				sBlitPixvals(iSourceBase, iSourceRasterDesc,
 					iDestBase, iDestRasterDesc,
@@ -2744,7 +2744,7 @@ void ZDCPixmapNS::sBlit(
 		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
 			destPixelDescRep.DynamicCast<PixelDescRep_Gray>())
 			{
-			if (!iInvertColors && sourcePixelDescRep_Gray->Matches(destPixelDescRep_Gray))
+			if (not iInvertColors && sourcePixelDescRep_Gray->Matches(destPixelDescRep_Gray))
 				{
 				sBlitPixvals(iSourceBase, iSourceRasterDesc,
 					iDestBase, iDestRasterDesc,
@@ -2873,7 +2873,7 @@ void ZDCPixmapNS::sBlitRow(
 		if (PixelDescRep_Color* destPixelDescRep_Color =
 			destPixelDescRep.DynamicCast<PixelDescRep_Color>())
 			{
-			if (!iInvertColors && sourcePixelDescRep_Color->Matches(destPixelDescRep_Color))
+			if (not iInvertColors && sourcePixelDescRep_Color->Matches(destPixelDescRep_Color))
 				{
 				sBlitRowPixvals(
 					iSourceBase, iSourcePixvalDesc,
@@ -2937,7 +2937,7 @@ void ZDCPixmapNS::sBlitRow(
 		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
 			destPixelDescRep.DynamicCast<PixelDescRep_Indexed>())
 			{
-			if (!iInvertColors && sourcePixelDescRep_Indexed->Matches(destPixelDescRep_Indexed))
+			if (not iInvertColors && sourcePixelDescRep_Indexed->Matches(destPixelDescRep_Indexed))
 				{
 				sBlitRowPixvals(
 					iSourceBase, iSourcePixvalDesc,
@@ -3004,7 +3004,7 @@ void ZDCPixmapNS::sBlitRow(
 		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
 			destPixelDescRep.DynamicCast<PixelDescRep_Gray>())
 			{
-			if (!iInvertColors && sourcePixelDescRep_Gray->Matches(destPixelDescRep_Gray))
+			if (not iInvertColors && sourcePixelDescRep_Gray->Matches(destPixelDescRep_Gray))
 				{
 				sBlitRowPixvals(
 					iSourceBase, iSourcePixvalDesc,

@@ -54,7 +54,7 @@ static bool spTryRead_PropertyName(const ZStrimU& iStrimU, string& oName)
 		{
 		if (!sTryRead_EscapedString(iStrimU, '\'', oName))
 			{
-			if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nullptr, &oName))
+			if (not ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nullptr, &oName))
 				return false;
 			}
 		}
@@ -99,7 +99,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 			{
 			if (!sTryRead_EscapedString(iStrimU, '\'', propertyName))
 				{
-				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nullptr, &propertyName))
+				if (not ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nullptr, &propertyName))
 					spThrowParseException("Expected a property name after '#'");
 				}
 			}
@@ -109,7 +109,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 	else
 		{
 		string theTypeLC, theType;
-		if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &theTypeLC, &theType))
+		if (not ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &theTypeLC, &theType))
 			{
 			// We couldn't find any of the special characters, nor could
 			// we read a type designator, so we fail to read a value,
@@ -140,7 +140,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 			if (theTypeLC == "type")
 				{
 				string typeValueLC, typeValue;
-				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &typeValueLC, &typeValue))
+				if (not ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &typeValueLC, &typeValue))
 					spThrowParseException("Expected a type name");
 
 				if (typeValueLC == "null") oVal = eZType_Null;
@@ -193,7 +193,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 			else if (theTypeLC == "bool")
 				{
 				string theBool;
-				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &theBool, nullptr))
+				if (not ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &theBool, nullptr))
 					spThrowParseException("Expected 'false' or 'true'");
 
 				if (theBool == "true")
@@ -455,7 +455,7 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* oDest, size_t iCount, si
 					{
 					fQuotesSeen = 3;
 					UTF32 theCP = theStrimU.ReadCP();
-					if (!ZUnicode::sIsEOL(theCP))
+					if (not ZUnicode::sIsEOL(theCP))
 						theStrimU.Unread(theCP);
 					}
 				else
@@ -507,7 +507,7 @@ void ZYadSeqR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	sSkip_WSAndCPlusPlusComments(theStrimU);
 
 	bool gotSeparator = true;
-	if (!iIsFirst)
+	if (not iIsFirst)
 		{
 		if (!sTryRead_CP(theStrimU, ',') && !sTryRead_CP(theStrimU, ';'))
 			gotSeparator = false;
@@ -549,7 +549,7 @@ void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<Z
 
 	sSkip_WSAndCPlusPlusComments(theStrimU);
 
-	if (!iIsFirst)
+	if (not iIsFirst)
 		{
 		if (!sTryRead_CP(theStrimU, ',') && !sTryRead_CP(theStrimU, ';'))
 			spThrowParseException("Expected ';' or ',' after property");
@@ -973,7 +973,7 @@ static void spToStrim_Seq(const ZStrimW& s, ZRef<ZYadSeqR> iYadSeqR,
 				}
 			else
 				{
-				if (!isFirst)
+				if (not isFirst)
 					s.Write(", ");
 				spWriteLFIndent(s, iLevel, iOptions);
 				spToStrim_Yad(s, cur, iLevel, iOptions, false);
@@ -995,7 +995,7 @@ static void spToStrim_Seq(const ZStrimW& s, ZRef<ZYadSeqR> iYadSeqR,
 				}
 			else
 				{
-				if (!isFirst)
+				if (not isFirst)
 					s.Write(", ");
 				spToStrim_Yad(s, cur, iLevel, iOptions, false);
 				}
@@ -1068,7 +1068,7 @@ static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
-	if (!iYadR)
+	if (not iYadR)
 		{
 		return;
 		}
@@ -1116,9 +1116,9 @@ bool ZYad_ZooLibStrim::sRead_Identifier(
 	for (;;)
 		{
 		UTF32 theCP;
-		if (!iStrimU.ReadCP(theCP))
+		if (not iStrimU.ReadCP(theCP))
 			break;
-		if (!ZUnicode::sIsAlphaDigit(theCP) && theCP != '_')
+		if (not ZUnicode::sIsAlphaDigit(theCP) && theCP != '_')
 			{
 			iStrimU.Unread(theCP);
 			break;
@@ -1156,9 +1156,9 @@ static bool spContainsProblemChars(const string& iString)
 	for (string::const_iterator i = iString.begin(), end = iString.end();;)
 		{
 		UTF32 theCP;
-		if (!ZUnicode::sReadInc(i, end, theCP))
+		if (not ZUnicode::sReadInc(i, end, theCP))
 			break;
-		if (!ZUnicode::sIsAlphaDigit(theCP) && '_' != theCP)
+		if (not ZUnicode::sIsAlphaDigit(theCP) && '_' != theCP)
 			return true;
 		}
 

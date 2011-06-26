@@ -99,7 +99,7 @@ size_t Functions_Count_T<I>::sCPToCU(I iSource, size_t iCountCU, size_t iCountCP
 		++countRemaining;
 		while (--countRemaining)
 			{
-			if (!Functions_Read_T<I>::sInc(localSource, localEnd))
+			if (not Functions_Read_T<I>::sInc(localSource, localEnd))
 				break;
 			}
 		}
@@ -118,7 +118,7 @@ size_t Functions_Count_T<I>::sCPToCU(I iSource, I iEnd, size_t iCountCP, size_t*
 		++countRemaining;
 		while (--countRemaining)
 			{
-			if (!Functions_Read_T<I>::sInc(localSource, iEnd))
+			if (not Functions_Read_T<I>::sInc(localSource, iEnd))
 				break;
 			}
 		}
@@ -134,7 +134,7 @@ size_t Functions_Count_T<I>::sCUToCP(I iSource, size_t iCountCU)
 	I localEnd = iSource + iCountCU;
 	for (;;)
 		{
-		if (!Functions_Read_T<I>::sInc(iSource, localEnd))
+		if (not Functions_Read_T<I>::sInc(iSource, localEnd))
 			break;
 		++countCP;
 		}
@@ -147,7 +147,7 @@ size_t Functions_Count_T<I>::sCUToCP(I iSource, I iEnd)
 	size_t countCP = 0;
 	for (;;)
 		{
-		if (!Functions_Read_T<I>::sInc(iSource, iEnd))
+		if (not Functions_Read_T<I>::sInc(iSource, iEnd))
 			break;
 		++countCP;
 		}

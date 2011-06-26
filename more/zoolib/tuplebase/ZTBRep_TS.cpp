@@ -535,7 +535,7 @@ void ZTBRep_TS::Trans_Search(Transaction* iTransaction, const ZTBSpec& iSpec, se
 	// Now augment the results with those matching tuples written by this transaction.
 	const ZTBSpec::CriterionUnion& theCriterionUnion = iSpec.GetCriterionUnion();
 	vector<ZTupleIndex*> indicesToUse;
-	if (!ZTupleIndex::sMatchIndices(theCriterionUnion, iTransaction->fIndices, indicesToUse))
+	if (not ZTupleIndex::sMatchIndices(theCriterionUnion, iTransaction->fIndices, indicesToUse))
 		{
 		#if ZCONFIG_TBRep_TS_Logging
 			s << "\nAt least one clause doesn't have a usable index\n";
@@ -785,7 +785,7 @@ void ZTBRep_TS::Trans_Commit(Transaction* iTransaction)
 	// with the changed values, and update referencing TransTuples with the time at which
 	// the value got changed.
 
-	if (!iTransaction->fSet_Written.empty())
+	if (not iTransaction->fSet_Written.empty())
 		{
 		ZLocker locker_Write(fTS->GetWriteLock());
 		ZMutexLocker lockerStructure(fMutex_Structure);
@@ -793,7 +793,7 @@ void ZTBRep_TS::Trans_Commit(Transaction* iTransaction)
 		// It is commit operations that advance our clock.
 		++fClock;
 
-		if (!iTransaction->fSet_Written.empty())
+		if (not iTransaction->fSet_Written.empty())
 			{
 			uint64 latestStart;
 			uint64 earliestEnd = fClock;
@@ -957,7 +957,7 @@ bool ZTBRep_TS::pAcquireLockOrQueue(Transaction* iTransaction, TupleInUse& iTIU,
 	if (iTIU.fTransaction_Waiting)
 		{
 		// Other transactions are already waiting.
-		if (!iWrite)
+		if (not iWrite)
 			{
 			// We're a reader. Try to find another one already in the queue.
 			Transaction* current = iTIU.fTransaction_Waiting;

@@ -2189,7 +2189,7 @@ uint32 ZBlockStore_PhaseTree::AllocateSlotNumber(bool iForImmediateUse)
 			}
 		}
 
-	if (!iForImmediateUse)
+	if (not iForImmediateUse)
 		fSlots_Forked.insert(theSlotNumber);
 
 	return theSlotNumber;

@@ -289,7 +289,7 @@ static string spFormatTimeLocal(const struct tm& iTM, const string& iFormat, int
 of the date/time in UTC. */
 string ZUtil_Time::sAsStringUTC(ZTime iTime, const string& iFormat)
 	{
-	if (!iTime)
+	if (not iTime)
 		return "invalid";
 
 	struct tm theTM;
@@ -384,7 +384,7 @@ static int spUTCToLocalDelta()
 of the date/time in the local time zone. */
 string ZUtil_Time::sAsStringLocal(ZTime iTime, const string& iFormat)
 	{
-	if (!iTime)
+	if (not iTime)
 		return "invalid";
 
 	struct tm theTM;

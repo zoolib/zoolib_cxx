@@ -138,7 +138,7 @@ size_t UseHandle::Size() const
 
 static Handle spHandleDuplicate(Handle iHandle)
 	{
-	if (!iHandle)
+	if (not iHandle)
 		return nullptr;
 
 	size_t theSize = spPSHandle->GetSize(iHandle);

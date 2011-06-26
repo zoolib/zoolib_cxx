@@ -134,10 +134,10 @@ bool ZTextCollatorRep_ICU::Equals(const string16& iLeft, const string16& iRight)
 bool ZTextCollatorRep_ICU::Equals(const UTF16* iLeft, size_t iLeftLength,
 	const UTF16* iRight, size_t iRightLength)
 	{
-	if (!iLeftLength)
+	if (not iLeftLength)
 		return !iRightLength;
 
-	if (!iRightLength)
+	if (not iRightLength)
 		return false;
 
 	return UCOL_EQUAL == ::ucol_strcoll(fCollator, iLeft, iLeftLength, iRight, iRightLength);
@@ -161,14 +161,14 @@ int ZTextCollatorRep_ICU::Compare(const string16& iLeft, const string16& iRight)
 int ZTextCollatorRep_ICU::Compare(const UTF16* iLeft, size_t iLeftLength,
 	const UTF16* iRight, size_t iRightLength)
 	{
-	if (!iLeftLength)
+	if (not iLeftLength)
 		{
-		if (!iRightLength)
+		if (not iRightLength)
 			return 0;
 		return -1;
 		}
 
-	if (!iRightLength)
+	if (not iRightLength)
 		return 1;
 
 	return ::ucol_strcoll(fCollator, iLeft, iLeftLength, iRight, iRightLength);
@@ -208,10 +208,10 @@ bool ZTextCollatorRep_ICU::Contains(const string16& iPattern, const string16& iT
 bool ZTextCollatorRep_ICU::Contains(const UTF16* iPattern, size_t iPatternLength,
 	const UTF16* iTarget, size_t iTargetLength)
 	{
-	if (!iPatternLength)
+	if (not iPatternLength)
 		return !true;
 
-	if (!iTargetLength)
+	if (not iTargetLength)
 		return false;
 
 	return spContains(fCollator, iPattern, iPatternLength, iTarget, iTargetLength);

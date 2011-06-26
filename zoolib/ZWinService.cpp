@@ -47,7 +47,7 @@ bool ZWinService::sIsService()
 		if (::GetUserObjectInformation(
 			theHWINSTA, UOI_FLAGS, &theUSEROBJECTFLAGS, sizeof(theUSEROBJECTFLAGS), nullptr))
 			{
-			if (! theUSEROBJECTFLAGS.dwFlags & WSF_VISIBLE)
+			if (not theUSEROBJECTFLAGS.dwFlags & WSF_VISIBLE)
 				return true;
 			}
 		}

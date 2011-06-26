@@ -352,7 +352,7 @@ ZRef<ZTSWatcher> ZTSWatcherMUX::NewWatcher(bool iAlwaysForceSync)
 void ZTSWatcherMUX::Watcher_Finalize(Watcher* iWatcher)
 	{
 	ZMutexLocker locker(fMutex_Structure);
-	if (!iWatcher->FinishFinalize())
+	if (not iWatcher->FinishFinalize())
 		return;
 
 	for (map<int64, WQuery>::iterator i = iWatcher->fWQueries.begin();
@@ -714,7 +714,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 		}
 
 
-	if (!iWatcher->fAlwaysForceSync && !fForceNextSync && !iWaitForSync)
+	if (not iWatcher->fAlwaysForceSync && !fForceNextSync && !iWaitForSync)
 		{
 		// We're not being forced to call Sync, nor does our caller
 		// want us to wait for Sync.
@@ -759,7 +759,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 		addedPTuples.swap(newAddedPTuples);
 		}
 
-	if (!iWatcher->fAlwaysForceSync && !fForceNextSync)
+	if (not iWatcher->fAlwaysForceSync && !fForceNextSync)
 		{
 		// We're not being forced to call Sync.
 		if (removedIDs.empty()

@@ -736,7 +736,7 @@ void ZTS_DB::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint6
 	// Find the best index to satisfy iSpec.
 	const ZTBSpec::CriterionUnion& theCriterionUnion = iSpec.GetCriterionUnion();
 	vector<ZTupleIndex*> indicesToUse;
-	if (!ZTupleIndex::sMatchIndices(theCriterionUnion, fIndices, indicesToUse))
+	if (not ZTupleIndex::sMatchIndices(theCriterionUnion, fIndices, indicesToUse))
 		{
 		if (iSpec.IsAny())
 			{

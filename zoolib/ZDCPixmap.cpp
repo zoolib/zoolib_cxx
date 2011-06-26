@@ -60,7 +60,7 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource1, const ZDCPixmap& iSource2, const
 	{
 	// An undersized or missing image is considered to be all black, so a
 	// missing mask means we're an exact copy of iSource1.
-	if (!iMask)
+	if (not iMask)
 		{
 		fRep = iSource1.GetRep();
 		return;

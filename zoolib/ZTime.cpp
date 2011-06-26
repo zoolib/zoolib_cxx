@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare.h"
-#include "zoolib/ZCompat_cmath.h" // For NAN, isnan etc.
+#include "zoolib/ZCompat_cmath.h" // For NAN and isnan
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTypes.h" // For countof
 
@@ -61,7 +61,7 @@ ZMACRO_CompareRegistration_T(ZTime)
 #pragma mark * ZTime constatnts
 
 const double ZTime::kSecond = 1;
-const double ZTime::kMinute = 60.0 * kSecond;
+const double ZTime::kMinute = 60 * kSecond;
 const double ZTime::kHour = 60 * kMinute;
 const double ZTime::kDay = 24 * kHour;
 const double ZTime::kWeek = 7 * kDay;

@@ -68,7 +68,7 @@ void ZStrimR_CRLFRemove::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCou
 		for (;;)
 			{
 			UTF32 currCP;
-			if (!ZUnicode::sReadInc(readFrom, readFromEnd, currCP))
+			if (not ZUnicode::sReadInc(readFrom, readFromEnd, currCP))
 				break;
 
 			switch (currCP)

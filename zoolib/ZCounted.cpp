@@ -52,7 +52,7 @@ void ZCountedBase::Finalize()
 
 bool ZCountedBase::FinishFinalize()
 	{
-	if (!ZAtomic_DecAndTest(&fRefCount))
+	if (not ZAtomic_DecAndTest(&fRefCount))
 		return false;
 
 	if (fWeakRefProxy)

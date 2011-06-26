@@ -235,7 +235,7 @@ bool ZVal_ZooLib::sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 	{
 	if (false)
 		{}
-	else if (! iAny)
+	else if (not iAny)
 		{
 		oVal = ZVal_ZooLib();
 		}
@@ -2309,7 +2309,7 @@ int ZMap_ZooLib::Compare(const ZMap_ZooLib& iOther) const
 			}
 		}
 
-	if (!iOther.fRep)
+	if (not iOther.fRep)
 		{
 		// iOther has no rep.
 		if (fRep->fProperties.empty())

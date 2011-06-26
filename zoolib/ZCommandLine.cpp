@@ -381,12 +381,12 @@ void ZCommandLine::WriteUsage(const ZStrimW& s) const
 		if (i != fHead)
 			s << " ";
 
-		if (!i->fIsRequired)
+		if (not i->fIsRequired)
 			s << "[";
 
 		s << i->fName;
 
-		if (!i->fIsRequired)
+		if (not i->fIsRequired)
 			s << "]";
 		}
 	}
@@ -405,7 +405,7 @@ void ZCommandLine::WriteUsageExtended(const ZStrimW& s, const string& iIndent) c
 		if (i->fDescription.size())
 			s << " \"" << i->fDescription << "\"";
 
-		if (!i->fIsRequired)
+		if (not i->fIsRequired)
 			{
 			if (i->fHasDefault)
 				{

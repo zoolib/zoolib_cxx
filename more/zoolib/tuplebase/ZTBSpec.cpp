@@ -689,7 +689,7 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 				return true;
 
 			string target;
-			if (!iTuple.QGetString(propIter, target) || target.empty())
+			if (not iTuple.QGetString(propIter, target) || target.empty())
 				return false;
 
 			if (!fRep->fTextCollator)
@@ -708,7 +708,7 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			{
 			#if ZCONFIG_API_Enabled(Regex)
 				string target;
-				if (!iTuple.GetString(propIter, target) || target.empty())
+				if (not iTuple.GetString(propIter, target) || target.empty())
 					return false;
 
 				if (!fRep->fRegex)
@@ -1047,7 +1047,7 @@ int ZTBSpec::Compare(const ZTBSpec& iOther) const
 		// We don't have a rep, but iOther must have.
 		return -1;
 		}
-	else if (!iOther.fRep)
+	else if (not iOther.fRep)
 		{
 		// We do have a rep, but iOther doesn't.
 		return 1;
@@ -1168,7 +1168,7 @@ bool ZTBSpec::Matches(const ZTuple& iTuple) const
 				{
 				if (spIsCheap(inner->GetComparator().fRel))
 					{
-					if (!inner->Matches(iTuple))
+					if (not inner->Matches(iTuple))
 						{
 						allOkay = false;
 						break;
@@ -1183,7 +1183,7 @@ bool ZTBSpec::Matches(const ZTuple& iTuple) const
 					{
 					if (!spIsCheap(inner->GetComparator().fRel))
 						{
-						if (!inner->Matches(iTuple))
+						if (not inner->Matches(iTuple))
 							{
 							allOkay = false;
 							break;

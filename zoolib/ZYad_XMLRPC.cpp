@@ -186,7 +186,7 @@ static bool spTryRead_SimpleValue(ZML::StrimU& r, ZAny& oVal)
 	else if (tagName == "i4" || tagName == "int")
 		{
 		int64 theInt64;
-		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(r, theInt64))
+		if (not ZUtil_Strim::sTryRead_SignedDecimalInteger(r, theInt64))
 			spThrowParseException("Expected valid integer");
 
 		oVal = int32(theInt64);
@@ -194,7 +194,7 @@ static bool spTryRead_SimpleValue(ZML::StrimU& r, ZAny& oVal)
 	else if (tagName == "boolean")
 		{
 		int64 theInt64;
-		if (!ZUtil_Strim::sTryRead_DecimalInteger(r, theInt64)
+		if (not ZUtil_Strim::sTryRead_DecimalInteger(r, theInt64)
 			|| (theInt64 != 0 && theInt64 != 1))
 			{
 			spThrowParseException("Expected 1 or 0 for boolean");
@@ -205,7 +205,7 @@ static bool spTryRead_SimpleValue(ZML::StrimU& r, ZAny& oVal)
 	else if (tagName == "double")
 		{
 		double theDouble;
-		if (!ZUtil_Strim::sTryRead_SignedDouble(r, theDouble))
+		if (not ZUtil_Strim::sTryRead_SignedDouble(r, theDouble))
 			spThrowParseException("Expected valid double");
 
 		oVal = theDouble;
@@ -341,7 +341,7 @@ void ZYadSeqR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 
 	sSkipText(theR);
 
-	if (!iIsFirst)
+	if (not iIsFirst)
 		{
 		spEnd(theR, "value");
 
@@ -393,7 +393,7 @@ void ZYadSeqR_XMLRPC_Params::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 
 	sSkipText(theR);
 
-	if (!iIsFirst)
+	if (not iIsFirst)
 		{
 		spEnd(theR, "value");
 
@@ -454,7 +454,7 @@ void ZYadSeqR_XMLRPC_Fault::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 
 	sSkipText(theR);
 
-	if (!iIsFirst)
+	if (not iIsFirst)
 		{
 		spEnd(theR, "value");
 
@@ -491,7 +491,7 @@ void ZYadMapR_XMLRPC::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>
 
 	sSkipText(theR);
 
-	if (!iIsFirst)
+	if (not iIsFirst)
 		{
 		spEnd(theR, "value");
 
@@ -625,7 +625,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 
 static void spToStrim(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 	{
-	if (!iYadR)
+	if (not iYadR)
 		{
 		return;
 		}

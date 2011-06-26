@@ -188,7 +188,7 @@ void ZTS_RAM::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint
 	// Find the best index to satisfy iSpec.
 	const ZTBSpec::CriterionUnion& theCriterionUnion = iSpec.GetCriterionUnion();
 	vector<ZTupleIndex*> indicesToUse;
-	if (!ZTupleIndex::sMatchIndices(theCriterionUnion, fIndices, indicesToUse))
+	if (not ZTupleIndex::sMatchIndices(theCriterionUnion, fIndices, indicesToUse))
 		{
 		if (ZCONFIG_TS_RAM_WarnWhenScanningAllTuples)
 			{

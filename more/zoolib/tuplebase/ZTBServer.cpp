@@ -513,7 +513,7 @@ void ZTBServer::spCallback_GetTupleForSearch(
 			{
 			uint64 theID = *iIDs++;
 			const ZTuple& theTuple = *iTuples++;
-			if (!ZUtil_STL::sContains(theTransaction->fTuplesSent, theID))
+			if (not ZUtil_STL::sContains(theTransaction->fTuplesSent, theID))
 				{
 				theTransaction->fTuplesSent.insert(theID);
 				theTransaction->fTuplesToSend_LowPriority.insert(
@@ -722,7 +722,7 @@ void ZTBServer::spCallback_GetTuple(
 		while (iCount--)
 			{
 			uint64 theID = *iIDs++;
-			if (!ZUtil_STL::sContains(theTransaction->fTuplesSent, theID))
+			if (not ZUtil_STL::sContains(theTransaction->fTuplesSent, theID))
 				{
 				theTransaction->fTuplesSent.insert(theID);
 				const ZTuple& theTuple = *iTuples++;
