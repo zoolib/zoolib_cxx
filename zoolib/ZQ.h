@@ -66,7 +66,7 @@ public:
 	:	fHasValue(false)
 		{}
 
-	ZQ(const ZQ& iOther)
+	ZQ(const ZQ<T,Sense>& iOther)
 	:	fHasValue(iOther.fHasValue)
 		{
 		if (fHasValue)
@@ -79,7 +79,7 @@ public:
 			sDtor_T<T>(fBytes);
 		}
 
-	ZQ& operator=(const ZQ& iOther)
+	ZQ& operator=(const ZQ<T,Sense>& iOther)
 		{
 		if (this != &iOther)
 			{
@@ -104,16 +104,14 @@ public:
 		return *this;
 		}
 
-	template <bool OtherSense>
-	ZQ(const ZQ<T, OtherSense>& iOther)
+	ZQ(const ZQ<T,!Sense>& iOther)
 	:	fHasValue(iOther.fHasValue)
 		{
 		if (fHasValue)
 			sCtorFromVoidStar_T<T>(fBytes, iOther.fBytes);
 		}
 
-	template <bool OtherSense>
-	ZQ& operator=(const ZQ<T, OtherSense>& iOther)
+	ZQ& operator=(const ZQ<T,!Sense>& iOther)
 		{
 		if (this != &iOther)
 			{
