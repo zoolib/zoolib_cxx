@@ -55,7 +55,7 @@ static void spRead(FILE* iFILE, void* oDest, size_t iCount, size_t* oCountRead)
 			}
 		}
 	if (oCountRead)
-		*oCountRead = reinterpret_cast<char*>(oDest) - localDest;
+		*oCountRead = localDest - reinterpret_cast<char*>(oDest);
 	}
 
 static void spWrite(FILE* iFILE, const void* iSource, size_t iCount, size_t* oCountWritten)
