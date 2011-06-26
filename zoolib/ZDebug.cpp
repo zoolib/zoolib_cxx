@@ -210,7 +210,10 @@ static bool spIsDebuggerPresent()
 				mov	eax, 0x18
 				mov	eax, es:[eax]
 				sub	eax, 0x10
-				xor	eax, [threadID]
+#ifdef xor
+#undef xor
+#endif
+				xor eax, [threadID]
 				mov	[obfuscator], eax
 				}
 
