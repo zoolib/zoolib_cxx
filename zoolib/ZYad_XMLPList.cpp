@@ -393,4 +393,20 @@ void ZYad_XMLPList::sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s)
 		}
 	}
 
+void ZYad_XMLPList::sWritePreamble(const ZML::StrimW& s)
+	{
+	s.PI("xml");
+		s.Attr("version", "1.0");
+		s.Attr("encoding", "UTF-8");
+
+	s.Tag("!DOCTYPE");
+		s.Attr("plist");
+		s.Attr("PUBLIC");
+		s.Attr("\"-//Apple Computer//DTD PLIST 1.0//EN\"");
+		s.Attr("\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"");
+
+	s.Tag("plist");
+		s.Attr("version", "1.0");
+	}
+
 } // namespace ZooLib
