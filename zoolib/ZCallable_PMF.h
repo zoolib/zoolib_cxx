@@ -59,20 +59,20 @@ template <class T> struct Traits<ZWeakRef<T> >
 #pragma mark -
 #pragma mark * Callable
 
-template <class Class_t, class Object_t, class Signature> class Callable;
+template <class Class_p, class Object_p, class Signature> class Callable;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 0 params)
 
-template <class Class_t, class Object_t, class R>
-class Callable<Class_t,Object_t,R(void)>
+template <class Class_p, class Object_p, class R>
+class Callable<Class_p,Object_p,R(void)>
 :	public ZCallable<R(void)>
 	{
 public:
-	typedef R (Class_t::*Method_t)();
+	typedef R (Class_p::*Method_t)();
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -80,16 +80,16 @@ public:
 // From ZCallable
 	virtual R Call()
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				();
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -97,16 +97,16 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 1 param)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0>
-class Callable<Class_t,Object_t,R(P0)>
+class Callable<Class_p,Object_p,R(P0)>
 :	public ZCallable<R(P0)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0);
+	typedef R (Class_p::*Method_t)(P0);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -114,16 +114,16 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -131,16 +131,16 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 2 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1>
-class Callable<Class_t,Object_t,R(P0,P1)>
+class Callable<Class_p,Object_p,R(P0,P1)>
 :	public ZCallable<R(P0,P1)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1);
+	typedef R (Class_p::*Method_t)(P0,P1);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -148,16 +148,16 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -165,16 +165,16 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 3 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2>
-class Callable<Class_t,Object_t,R(P0,P1,P2)>
+class Callable<Class_p,Object_p,R(P0,P1,P2)>
 :	public ZCallable<R(P0,P1,P2)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2);
+	typedef R (Class_p::*Method_t)(P0,P1,P2);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -182,16 +182,16 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -199,16 +199,16 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 4 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3)>
 :	public ZCallable<R(P0,P1,P2,P3)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -216,16 +216,16 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -233,17 +233,17 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 5 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4)>
 :	public ZCallable<R(P0,P1,P2,P3,P4)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -251,16 +251,16 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -268,17 +268,17 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 6 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4,P5);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4,P5);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -286,16 +286,16 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -303,17 +303,17 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 7 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4,P5,P6);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4,P5,P6);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -321,16 +321,16 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -338,17 +338,17 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 8 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -356,16 +356,16 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -373,18 +373,18 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 9 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -394,16 +394,16 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -411,18 +411,18 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 10 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -432,16 +432,16 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -449,18 +449,18 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 11 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -470,16 +470,16 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -487,18 +487,18 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 12 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -508,16 +508,16 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -525,19 +525,19 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 13 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -547,16 +547,16 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -564,19 +564,19 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 14 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -586,16 +586,16 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -603,19 +603,19 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 15 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -625,16 +625,16 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -642,19 +642,19 @@ private:
 #pragma mark -
 #pragma mark * Callable (specialization for 16 params)
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
-class Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
+class Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 :	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 	{
 public:
-	typedef R (Class_t::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
+	typedef R (Class_p::*Method_t)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
 
-	Callable(const Object_t& iObject, Method_t iMethod)
+	Callable(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
@@ -664,16 +664,16 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		if (typename Traits<Object_t>::Temp_t temp = Traits<Object_t>::sGetTemp(fObject))
+		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
 			{
-			return (Traits<Object_t>::sGetPtr(temp)->*fMethod)
+			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
 			}
 		return R();
 		}
 
 private:
-	Object_t fObject;
+	Object_p fObject;
 	Method_t fMethod;
 	};
 
@@ -681,137 +681,137 @@ private:
 #pragma mark -
 #pragma mark * MakeCallable
 
-template <class Class_t, class Object_t, class R>
+template <class Class_p, class Object_p, class R>
 ZRef<ZCallable<R(void)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)())
-	{ return new Callable<Class_t,Object_t,R(void)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)())
+	{ return new Callable<Class_p,Object_p,R(void)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0>
 ZRef<ZCallable<R(P0)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0))
-	{ return new Callable<Class_t,Object_t,R(P0)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0))
+	{ return new Callable<Class_p,Object_p,R(P0)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1>
 ZRef<ZCallable<R(P0,P1)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1))
-	{ return new Callable<Class_t,Object_t,R(P0,P1)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1))
+	{ return new Callable<Class_p,Object_p,R(P0,P1)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2>
 ZRef<ZCallable<R(P0,P1,P2)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2))
-	{ return new Callable<Class_t,Object_t,R(P0,P1,P2)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2))
+	{ return new Callable<Class_p,Object_p,R(P0,P1,P2)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3>
 ZRef<ZCallable<R(P0,P1,P2,P3)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3))
-	{ return new Callable<Class_t,Object_t,R(P0,P1,P2,P3)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3))
+	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4))
-	{ return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4))
+	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5))
-	{ return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5))
+	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5,P6))
-	{ return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6))
+	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7))
-	{ return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7))
+	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8))
-	{ return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8))
+	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9))
-	{ return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9))
+	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA))
-	{ return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>(iObject, iMethod); }
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA))
+	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>(iObject, iMethod); }
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB))
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB))
 	{
-	return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
+	return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 		(iObject, iMethod);
 	}
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
@@ -819,14 +819,14 @@ template <class Class_t, class Object_t,
 	class PC>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC))
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC))
 	{
-	return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
+	return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 		(iObject, iMethod);
 	}
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
@@ -834,38 +834,38 @@ template <class Class_t, class Object_t,
 	class PC, class PD>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> >
 MakeCallable(
-	const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD))
+	const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD))
 	{
-	return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
+	return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 		(iObject, iMethod);
 	}
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> >
-MakeCallable(const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE))
+MakeCallable(const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE))
 	{
-	return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
+	return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 		(iObject, iMethod);
 	}
 
-template <class Class_t, class Object_t,
+template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >
-MakeCallable(const Object_t& iObject,
-	R (Class_t::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
+MakeCallable(const Object_p& iObject,
+	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
 	{
-	return new Callable<Class_t,Object_t,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
+	return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 		(iObject, iMethod);
 	}
 
