@@ -171,6 +171,12 @@ public:
 		return &fT;
 		}
 
+	ZRef<T> operator->() const
+		{
+		ZAssert(fT);
+		return fT;
+		}
+
 	ZRef<T> Get() const
 		{
 		ZAssert(fT);
