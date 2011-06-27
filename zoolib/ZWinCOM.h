@@ -81,7 +81,7 @@ static void** sVoidPtr(ZRef<T>& ioRef)
 #pragma mark -
 #pragma mark * ZWinCOM::OParam
 
-template <class T>
+template <class T, bool Sense = true>
 class OParam
 	{
 // Private and unimplemented
@@ -92,6 +92,7 @@ public:
 	OParam(const OParam&);
 
 	OParam(HRESULT iHRESULT)
+	:	fHRESULT(iHRESULT)
 		{
 		ZAssert(fHasValue);
 		if (FAILED(iHRESULT))
@@ -108,7 +109,7 @@ public:
 		}
 
 	operator bool() const
-		{ return fHasValue; }
+		{ return fHasValue == Sense; }
 
 	operator T*() const
 		{
@@ -123,6 +124,9 @@ public:
 		return *sFetch_T<T>(fBytes);
 		}
 
+	HRESULT GetHRESULT() const
+		{ return fHRESULT; }
+
 private:
 	#if ZCONFIG(Compiler,GCC)
 		mutable char fBytes[sizeof(T)] __attribute__((aligned));
@@ -131,14 +135,15 @@ private:
 	#endif
 
 	mutable bool fHasValue;
+	const HRESULT fHRESULT;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWinCOM::OParam specialized for ZRef<T>
 
-template <class T>
-class OParam<ZRef<T> >
+template <class T, bool Sense>
+class OParam<ZRef<T>, Sense>
 	{
 // Private and unimplemented
 	OParam();
@@ -148,6 +153,7 @@ public:
 	OParam(const OParam&);
 
 	OParam(HRESULT iHRESULT)
+	:	fHRESULT(iHRESULT)
 		{
 		if (FAILED(iHRESULT) && fT)
 			{
@@ -163,7 +169,7 @@ public:
 		}
 	
 	operator bool() const
-		{ return fT ? true : false; }
+		{ return (Sense && fT) || (!Sense && !fT); }
 
 	operator T**() const
 		{
@@ -183,8 +189,12 @@ public:
 		return fT;
 		}
 
+	HRESULT GetHRESULT() const
+		{ return fHRESULT; }
+
 private:
 	mutable T* fT;
+	const HRESULT fHRESULT;
 	};
 
 // =================================================================================================
