@@ -35,13 +35,13 @@ namespace ZWinWND {
 
 namespace { // anonymous
 
-ZRef<Callable_WNDPROC> spGetCallable(HWND iHWND)
+ZRef<Callable> spGetCallable(HWND iHWND)
 	{
 	DWORD windowProcessID;
 	::GetWindowThreadProcessId(iHWND, &windowProcessID);
 
 	if (windowProcessID == ::GetCurrentProcessId())
-		return (Callable_WNDPROC*)::GetPropW(iHWND, L"WinWND Callable");
+		return (Callable*)::GetPropW(iHWND, L"WinWND Callable");
 
 	return null;
 	}
@@ -49,7 +49,7 @@ ZRef<Callable_WNDPROC> spGetCallable(HWND iHWND)
 WNDPROC spGetBasePROC(HWND iHWND)
 	{ return (WNDPROC)::GetPropW(iHWND, L"ZWinWND BasePROC"); }
 
-void spAttach(HWND iHWND, WNDPROC basePROC, ZRef<Callable_WNDPROC> iCallable)
+void spAttach(HWND iHWND, WNDPROC basePROC, ZRef<Callable> iCallable)
 	{
 	::SetPropW(iHWND, L"ZWinWND BasePROC", basePROC);
 
@@ -60,14 +60,14 @@ void spAttach(HWND iHWND, WNDPROC basePROC, ZRef<Callable_WNDPROC> iCallable)
 struct CreateStruct
 	{
 	WNDPROC fWNDPROC;
-	ZRef<Callable_WNDPROC> fCallable;
+	ZRef<Callable> fCallable;
 	};
 
 LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	if (WNDPROC baseProc = spGetBasePROC(iHWND))
 		{
-		if (ZRef<Callable_WNDPROC> theCallable = spGetCallable(iHWND))
+		if (ZRef<Callable> theCallable = spGetCallable(iHWND))
 			{
 			if (iMessage == WM_NCDESTROY)
 				{
@@ -153,7 +153,7 @@ HWND sCreate(
 	HWND hWndParent,
 	HMENU hMenu,
 	WNDPROC iWNDPROC,
-	ZRef<Callable_WNDPROC> iCallable)
+	ZRef<Callable> iCallable)
 	{
 	CreateStruct theCS = { iWNDPROC, iCallable };
 	
@@ -172,7 +172,7 @@ HWND sCreate(
 		&theCS); // creation parameters
 	}
 
-HWND sCreate(HWND iParent, ZRef<Callable_WNDPROC> iCallable)
+HWND sCreate(HWND iParent, ZRef<Callable> iCallable)
 	{
 	return sCreate(
 		0, // Extended attributes
@@ -188,7 +188,7 @@ HWND sCreate(HWND iParent, ZRef<Callable_WNDPROC> iCallable)
 		iCallable);
 	}
 
-bool sAttach(HWND iHWND, ZRef<Callable_WNDPROC> iCallable)
+bool sAttach(HWND iHWND, ZRef<Callable> iCallable)
 	{
 	if (iCallable)
 		{

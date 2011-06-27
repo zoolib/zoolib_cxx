@@ -51,7 +51,7 @@ private:
 #pragma mark -
 #pragma mark * ZWinWND Callable stuff
 
-typedef ZCallable<LRESULT(WNDPROC,HWND,UINT,WPARAM,LPARAM)> Callable_WNDPROC;
+typedef ZCallable<LRESULT(WNDPROC,HWND,UINT,WPARAM,LPARAM)> Callable;
 
 HWND sCreate(
 	DWORD dwExStyle,
@@ -64,11 +64,11 @@ HWND sCreate(
 	HWND hWndParent,
 	HMENU hMenu,
 	WNDPROC iWNDPROC,
-	ZRef<Callable_WNDPROC> iCallable);
+	ZRef<Callable> iCallable);
 
-HWND sCreate(HWND iParent, ZRef<Callable_WNDPROC> iCallable);
+HWND sCreate(HWND iParent, ZRef<Callable> iCallable);
 
-bool sAttach(HWND iHWND, ZRef<Callable_WNDPROC> iCallable);
+bool sAttach(HWND iHWND, ZRef<Callable> iCallable);
 
 } // namespace ZWinWND
 } // namespace ZooLib
