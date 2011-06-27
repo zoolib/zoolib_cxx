@@ -25,13 +25,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_set.h"
 
 namespace ZooLib {
-namespace ZNatter {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Channel
+#pragma mark * ZNatter
 
-Channel::Channel(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+ZNatter::ZNatter(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fStreamerR(iStreamerR)
 ,	fStreamerW(iStreamerW)
 ,	fReadBusy(false)
@@ -39,10 +38,10 @@ Channel::Channel(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 ,	fError(false)
 	{}
 
-Channel::~Channel()
+ZNatter::~ZNatter()
 	{}
 
-ZQ<ZData_Any> Channel::Receive(ZRef<Exchange>* oExchange)
+ZQ<ZData_Any> ZNatter::Receive(ZRef<Exchange>* oExchange)
 	{
 	ZRef<Exchange> theExchange = new Exchange(this);
 
@@ -82,21 +81,21 @@ ZQ<ZData_Any> Channel::Receive(ZRef<Exchange>* oExchange)
 	return this->pReadFor(guard, theExchange);
 	}
 
-void Channel::Send(ZData_Any iData)
+void ZNatter::Send(ZData_Any iData)
 	{ (new Exchange(this))->SendReceive(iData); }
 
-void Channel::pAdd(Exchange* iExchange)
+void ZNatter::pAdd(Exchange* iExchange)
 	{
 	// Be careful in here -- do *NOT* pulse iExchange's refcount.
 
 	ZGuardRMtxR guard(fMtxR_Structure);
 
-	iExchange->fChannel = this;
+	iExchange->fNatter = this;
 	iExchange->fID = 0;
 	iExchange->fWaiting = false;
 	}
 
-void Channel::pRemove(Exchange* iExchange)
+void ZNatter::pRemove(Exchange* iExchange)
 	{
 	ZGuardRMtxR guard(fMtxR_Structure);
 
@@ -126,7 +125,7 @@ void Channel::pRemove(Exchange* iExchange)
 		}
 	}
 
-ZQ<ZData_Any> Channel::pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
+ZQ<ZData_Any> ZNatter::pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
 	{
 	ZGuardRMtxR guard(fMtxR_Structure);
 
@@ -181,7 +180,7 @@ ZQ<ZData_Any> Channel::pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
 	return this->pReadFor(guard, iExchange);
 	}
 
-ZQ<ZData_Any> Channel::pReadFor(ZGuardRMtxR& iGuard, ZRef<Exchange> iExchange)
+ZQ<ZData_Any> ZNatter::pReadFor(ZGuardRMtxR& iGuard, ZRef<Exchange> iExchange)
 	{
 	while (!fError && iExchange->fWaiting)
 		this->pRead(iGuard);
@@ -209,7 +208,7 @@ static bool spReadPacket(uint8& oType, int64& oID, ZData_Any& oData, const ZStre
 	return false;
 	}
 
-void Channel::pRead(ZGuardRMtxR& iGuard)
+void ZNatter::pRead(ZGuardRMtxR& iGuard)
 	{
 	if (fReadBusy)
 		{
@@ -269,16 +268,15 @@ void Channel::pRead(ZGuardRMtxR& iGuard)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Channel
+#pragma mark * ZNatter::Exchange
 
-Exchange::Exchange(ZRef<Channel> iChannel)
-	{ iChannel->pAdd(this); }
+ZNatter::Exchange::Exchange(ZRef<ZNatter> iNatter)
+	{ iNatter->pAdd(this); }
 
-Exchange::~Exchange()
-	{ fChannel->pRemove(this); }
+ZNatter::Exchange::~Exchange()
+	{ fNatter->pRemove(this); }
 
-ZQ<ZData_Any> Exchange::SendReceive(const ZData_Any& iData)
-	{ return fChannel->pSendReceive(this, iData); }
+ZQ<ZData_Any> ZNatter::Exchange::SendReceive(const ZData_Any& iData)
+	{ return fNatter->pSendReceive(this, iData); }
 
-} // namespace ZNatter
 } // namespace ZooLib
