@@ -24,27 +24,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZQ.h"
-#include "zoolib/ZStreamerReader.h"
+#include "zoolib/ZStreamer.h"
 
 #include <deque>
 #include <map>
 #include <set>
 
 namespace ZooLib {
-namespace ZNatter {
-
-class Exchange;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Channel
+#pragma mark * ZNatter
 
-class Channel
+class ZNatter
 :	public ZCounted
 	{
 public:
-	Channel(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
-	virtual ~Channel();
+	class Exchange;
+
+	ZNatter(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+	virtual ~ZNatter();
 
 	ZQ<ZData_Any> Receive(ZRef<Exchange>* oExchange);
 	void Send(ZData_Any iData);
@@ -67,44 +66,36 @@ private:
 	ZCnd fCnd;
 
 	bool fReadBusy;
-
 	int64 fNextLocalID;
-
 	bool fError;
-
 	std::deque<int64> fRemoteIDs;
-
 	std::set<int64> fRetired;
-
 	std::map<int64, ZRef<Exchange> > fPending;
-
-	friend class Exchange;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Exchange
+#pragma mark * ZNatter::Exchange
 
-class Exchange
+class ZNatter::Exchange
 :	public ZCounted
 	{
 public:
-	Exchange(ZRef<Channel> iChannel);
+	Exchange(ZRef<ZNatter> iNatter);
 	virtual ~Exchange();
 
 // Our protocol
 	ZQ<ZData_Any> SendReceive(const ZData_Any& iData);
 
 private:
-	ZRef<Channel> fChannel;
+	ZRef<ZNatter> fNatter;
 	int64 fID;
 	bool fWaiting;
 	ZQ<ZData_Any> fDataQ;
 
-	friend class Channel;
+	friend class ZNatter;
 	};
 
-} // namespace ZNatter
 } // namespace ZooLib
 
 #endif // __ZNatter__
