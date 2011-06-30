@@ -52,7 +52,9 @@ ZRef<ZStreamerR> sPostRaw(ZRef<Callable_Connect> iCallable_Connect,
 	int32* oResultCode, Map* oFields, Data* oRawHeader);
 
 bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
-	const std::string& iAddress, const Map* iHeader);
+	const std::string& iAddress,
+	const Map* iHeader,
+	int32* oResultCode, Map* oHeader);
 
 } // namespace ZHTTP
 } // namespace ZooLib

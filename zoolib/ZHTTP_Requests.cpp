@@ -453,8 +453,14 @@ static ZQ<Val> spReadPOST(const ZStreamR& iStreamR, const Map& iHeader)
 	return sReadAll_T<Data>(iStreamR);
 	}
 
-bool sCONNECT(const ZStreamR& r, const ZStreamW& w, const string& iAddress, const Map* iHeader)
+bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
+	const string& iAddress,
+	const Map* iHeader,
+	int32* oResultCode, Map* oHeader)
 	{
+	if (oResultCode)
+		*oResultCode = 0;
+
 	w.WriteString("CONNECT ");
 	w.WriteString(iAddress);
 	w.WriteString(" HTTP/1.0\r\n");
@@ -469,12 +475,13 @@ bool sCONNECT(const ZStreamR& r, const ZStreamW& w, const string& iAddress, cons
 	int32 serverResultCode;
 	if (ZHTTP::sReadResponse(ZStreamU_Unreader(r), &serverResultCode, nullptr))
 		{
-		if (serverResultCode == 200)
-			{
-			if (ZHTTP::sReadHeader(r, nullptr))
-				return true;
-			}
+		if (oResultCode)
+			*oResultCode = serverResultCode;
+
+		if (ZHTTP::sReadHeader(r, oHeader))
+			return serverResultCode == 200;
 		}
+
 	return false;
 	}
 
