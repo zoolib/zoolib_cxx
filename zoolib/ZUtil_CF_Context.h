@@ -59,7 +59,8 @@ public:
 
 	~Context()
 		{
-		T::release(T::info);
+		if (T::release)
+			T::release(T::info);
 		}
 
 	Context& operator=(const Context& iOther)
