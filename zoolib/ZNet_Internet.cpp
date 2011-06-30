@@ -55,10 +55,10 @@ ZRef<ZNetEndpoint> ZNetAddress_IP4::Connect() const
 std::string ZNetAddress_IP4::sAsString(ip4_addr iAddr)
 	{
 	return ZStringf("%d.%d.%d.%d",
-		((iAddr >> 24) & 0xFF),
-		((iAddr >> 16) & 0xFF),
-		((iAddr >> 8) & 0xFF),
-		(iAddr & 0xFF));
+		int((iAddr >> 24) & 0xFF),
+		int((iAddr >> 16) & 0xFF),
+		int((iAddr >> 8) & 0xFF),
+		int(iAddr & 0xFF));
 	}
 
 // =================================================================================================
