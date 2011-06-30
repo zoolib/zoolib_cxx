@@ -76,14 +76,14 @@ namespace { // anonymous
 class YadMapRPos
 :	public ZYadMapRPos
 	{
-	YadMapRPos::YadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys, uint64 iPosition)
+	YadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys, size_t iPosition)
 	:	fStoreRef(iStoreRef)
 	,	fKeys(iKeys)
 	,	fPosition(iPosition)
 		{}
 
 public:
-	YadMapRPos::YadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys)
+	YadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys)
 	:	fStoreRef(iStoreRef)
 	,	fKeys(iKeys)
 	,	fPosition(0)
@@ -125,7 +125,7 @@ public:
 private:
 	const ZRef<SCDynamicStoreRef> fStoreRef;
 	const ZSeq_CF fKeys;
-	uint64 fPosition;
+	size_t fPosition;
 	};
 
 } // anonymous namespace 
