@@ -324,7 +324,7 @@ public:
 	ZMap_NS& Set(CFStringRef iName, const ZVal_NS& iVal);
 
 	template <class S>
-	ZMap_NS& Set(const string8& iName, const ZVal_NS& iVal)
+	ZMap_NS& Set(const string8& iName, const S& iVal)
 		{ return this->Set(iName, ZVal_NS(iVal)); }
 
 	template <class S>
