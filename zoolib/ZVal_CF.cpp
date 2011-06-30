@@ -228,6 +228,12 @@ ZVal_CF::ZVal_CF(CFDictionaryRef iVal)
 :	inherited(iVal)
 	{}
 
+ZVal_CF& ZVal_CF::operator=(CFTypeRef iVal)
+	{
+	inherited::operator=(iVal);
+	return *this;
+	}
+
 template <>
 ZQ<char> ZVal_CF::QGet<char>() const
 	{

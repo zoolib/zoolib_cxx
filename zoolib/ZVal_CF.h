@@ -88,11 +88,7 @@ public:
 	explicit ZVal_CF(CFArrayRef iVal);
 	explicit ZVal_CF(CFDictionaryRef iVal);
 
-	ZVal_CF& operator=(CFTypeRef iVal)
-		{
-		inherited::operator=(iVal);
-		return *this;
-		}
+	ZVal_CF& operator=(CFTypeRef iVal);
 
 	template <class S>
 	ZVal_CF& operator=(const ZRef<S>& iVal)
@@ -291,7 +287,7 @@ public:
 	ZMap_CF& Set(CFStringRef iName, const ZVal_CF& iVal);
 
 	template <class S>
-	ZMap_CF& Set(const string8& iName, const ZVal_CF& iVal)
+	ZMap_CF& Set(const string8& iName, const S& iVal)
 		{ return this->Set(iName, ZVal_CF(iVal)); }
 
 	template <class S>
