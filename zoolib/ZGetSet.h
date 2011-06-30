@@ -22,11 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZGetSet__ 1
 #include "zconfig.h"
 
-#if defined(__MWERKS__)
-	#include <algorithm> // For std::swap
-#else
-	namespace std { template <class T> void swap(T&,T&); }
-#endif
+#include <algorithm> // For std::swap
 
 namespace ZooLib {
 
