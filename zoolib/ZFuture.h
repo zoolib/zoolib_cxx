@@ -34,6 +34,13 @@ template <class T> class ZPromise;
 #pragma mark -
 #pragma mark * ZFuture
 
+enum EFuture
+	{
+	eFuture_Failed,
+	eFuture_Timeout,
+	eFuture_Succeeded
+	};
+
 template <class T>
 class ZFuture
 :	public ZCountedWithoutFinalize
@@ -46,28 +53,55 @@ public:
 	virtual ~ZFuture()
 		{}
 
-	bool Wait()
+	EFuture Wait()
 		{
 		ZAcqMtx acq(fMtx);
-		while (fPromiseExists && !fVal)
+		for (;;)
+			{
+			if (fVal)
+				return eFuture_Succeeded;
+			if (!fPromiseExists)
+				return eFuture_Failed;
 			fCnd.Wait(fMtx);
-		return fVal;
+			}
 		}
 
-	bool WaitFor(double iTimeout)
+	EFuture WaitFor(double iTimeout)
 		{
 		ZAcqMtx acq(fMtx);
-		if (fPromiseExists && !fVal)
-			fCnd.WaitFor(fMtx, iTimeout);
-		return fVal;
+
+		if (fVal)
+			return eFuture_Succeeded;
+		if (!fPromiseExists)
+			return eFuture_Failed;
+
+		fCnd.WaitFor(fMtx, iTimeout);
+
+		if (fVal)
+			return eFuture_Succeeded;
+		if (!fPromiseExists)
+			return eFuture_Failed;
+
+		return eFuture_Timeout;
 		}
 
-	bool WaitUntil(ZTime iDeadline)
+	EFuture WaitUntil(ZTime iDeadline)
 		{
 		ZAcqMtx acq(fMtx);
-		if (fPromiseExists && !fVal)
-			fCnd.WaitUntil(fMtx, iDeadline);
-		return fVal;
+
+		if (fVal)
+			return eFuture_Succeeded;
+		if (!fPromiseExists)
+			return eFuture_Failed;
+
+		fCnd.WaitUntil(fMtx, iDeadline);
+
+		if (fVal)
+			return eFuture_Succeeded;
+		if (!fPromiseExists)
+			return eFuture_Failed;
+
+		return eFuture_Timeout;
 		}
 
 	ZQ<T> Get()
