@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,66 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZWorkerRunner_EventLoop_Win.h"
-
-#if ZCONFIG_SPI_Enabled(Win)
-
-#include "zoolib/ZCallable_PMF.h"
-#include "zoolib/ZSafe.h"
+#include "zoolib/ZCallFrom.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_EventLoop_Win
+#pragma mark * CallFrom
 
-/**
-\class ZWorkerRunner_EventLoop_Win
-\ingroup Worker
-\sa Worker
-*/
-
-ZWorkerRunner_EventLoop_Win::ZWorkerRunner_EventLoop_Win()
-:	fHWND(nullptr)
-	{}
-
-ZWorkerRunner_EventLoop_Win::~ZWorkerRunner_EventLoop_Win()
-	{}
-
-void ZWorkerRunner_EventLoop_Win::Initialize()
+static void spCallFromVoid(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void()> > iCallable)
 	{
-	ZWorkerRunner_EventLoop::Initialize();
-	fHWND = ZWinWND::sCreate(nullptr,
-		MakeCallable(MakeWeakRef(this), &ZWorkerRunner_EventLoop_Win::pWindowProc));
+	iCallable->Call();
+	iPromise->Set();
 	}
 
-void ZWorkerRunner_EventLoop_Win::Finalize()
+ZRef<ZFuture<void> > CallFrom(ZRef<ZWorkerRunner_Crowd> iRunner, ZRef<ZCallable<void()> > iCallable)
 	{
-	if (fHWND)
-		::DestroyWindow(fHWND);
-	ZWorkerRunner_EventLoop::Finalize();
-	}
-
-static UINT spMSG_Invoke = ::RegisterWindowMessageW(L"ZWorkerRunner_EventLoop_Win::Invoke");
-
-void ZWorkerRunner_EventLoop_Win::pQueueCallback()
-	{ ::PostMessageW(fHWND, spMSG_Invoke, 0, 0); }
-
-LRESULT ZWorkerRunner_EventLoop_Win::pWindowProc(WNDPROC iWNDPROC,
-	HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
-	{
-	if (iMessage == spMSG_Invoke)
-		{
-		ZWorkerRunner_EventLoop::pCallback();
-		return 0;
-		}
-	else if (iMessage == WM_NCDESTROY)
-		{
-		fHWND = nullptr;
-		}
-	return CallWindowProcW(iWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
+	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
+	ZRef<ZWorker> theWorker = MakeWorker(BindL(thePromise, iCallable, MakeCallable(spCallFromVoid)));
+	iRunner->Attach(theWorker);
+	theWorker->Wake();
+	return thePromise->Get();
 	}
 
 } // namespace ZooLib
-
-#endif // ZCONFIG_SPI_Enabled(Win)

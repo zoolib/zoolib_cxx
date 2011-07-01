@@ -93,6 +93,17 @@ protected:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZWorkerRunner_Crowd
+
+class ZWorkerRunner_Crowd
+:	public ZWorkerRunner
+	{
+public:
+	virtual void Attach(ZRef<ZWorker> iWorker) = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Utility methods
 
 void sStartWorkerRunner(ZRef<ZWorker> iWorker);

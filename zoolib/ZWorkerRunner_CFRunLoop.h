@@ -55,7 +55,7 @@ namespace ZooLib {
 #pragma mark * ZWorkerRunner_CFRunLoop
 
 class ZWorkerRunner_CFRunLoop
-:	public ZWorkerRunner
+:	public ZWorkerRunner_Crowd
 	{
 public:
 	ZWorkerRunner_CFRunLoop(ZRef<CFRunLoopRef> iRunLoop);
@@ -71,9 +71,10 @@ public:
 	virtual bool IsAwake(ZRef<ZWorker> iWorker);
 	virtual bool IsAttached(ZRef<ZWorker> iWorker);
 
-// Our protocol
-	void Attach(ZRef<ZWorker> iWorker);
+// From ZWorkerRunner_Crowd
+	virtual void Attach(ZRef<ZWorker> iWorker);
 
+// Our protocol
 	static ZRef<ZWorkerRunner_CFRunLoop> sMain();
 
 private:

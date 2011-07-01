@@ -62,6 +62,7 @@ ZWorker_Callable_Once::ZWorker_Callable_Once(const ZRef<Callable_t>& iCallable)
 ZWorker_Callable_Once::~ZWorker_Callable_Once()
 	{}
 
+#if 0
 void ZWorker_Callable_Once::RunnerDetached()
 	{
 	try
@@ -73,6 +74,7 @@ void ZWorker_Callable_Once::RunnerDetached()
 		{}
 	ZWorker::RunnerDetached();
 	}
+#endif
 
 bool ZWorker_Callable_Once::Work()
 	{ return false; }

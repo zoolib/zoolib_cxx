@@ -49,9 +49,6 @@ public:
 // From ZWorkerRunner_EventLoop
 	virtual void pQueueCallback();
 
-// Our protocol
-	void Attach(ZRef<ZWorker> iWorker);
-
 private:
 	LRESULT pWindowProc(WNDPROC iWNDPROC,
 		HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);

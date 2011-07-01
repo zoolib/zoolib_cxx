@@ -92,7 +92,7 @@ bool ZWorkerRunner_EventLoop::IsAttached(ZRef<ZWorker> iWorker)
 	return ZUtil_STL::sContains(fWorkersMap, iWorker);
 	}
 
-void ZWorkerRunner_EventLoop::pAttach(ZRef<ZWorker> iWorker)
+void ZWorkerRunner_EventLoop::Attach(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtxR acq(fMtx);
 	if (ZWorkerRunner::pAttachWorker(iWorker))

@@ -35,7 +35,7 @@ namespace ZooLib {
 #pragma mark * ZWorkerRunner_EventLoop
 
 class ZWorkerRunner_EventLoop
-:	public ZWorkerRunner
+:	public ZWorkerRunner_Crowd
 	{
 public:
 	ZWorkerRunner_EventLoop();
@@ -48,12 +48,14 @@ public:
 	virtual bool IsAwake(ZRef<ZWorker> iWorker);
 	virtual bool IsAttached(ZRef<ZWorker> iWorker);
 
+// From ZWorkerRunner_Crowd
+	virtual void Attach(ZRef<ZWorker> iWorker);
+
 protected:
 // Must be implemented by subclasses
 	virtual void pQueueCallback() = 0;
 
 // Called by subclasses
-	void pAttach(ZRef<ZWorker> iWorker);
 	void pCallback();
 
 private:
