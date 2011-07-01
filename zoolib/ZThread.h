@@ -149,18 +149,12 @@ private:
 			const ZThread::ID theThreadID = ZThread::sID();
 		#endif
 
-		ProxyParam localProxyParam = *iProxyParam;
-
-		delete iProxyParam;
-
 		sStarted();
 
-		try
-			{
-			localProxyParam.fProc(localProxyParam.fParam);
-			}
-		catch (...)
-			{}
+		try { iProxyParam->fProc(iProxyParam->fParam); }
+		catch (...) {}
+
+		delete iProxyParam;
 
 		sFinished();
 
