@@ -99,8 +99,8 @@ private:
 class ZVisitor_Yad_JSONWriter : public ZVisitor_Yad
 	{
 public:
-	ZVisitor_Yad_JSONWriter(
-		size_t iIndent, const ZYadOptions& iOptions, const ZStrimW& iStrimW);
+	ZVisitor_Yad_JSONWriter
+		(size_t iIndent, const ZYadOptions& iOptions, const ZStrimW& iStrimW);
 
 // From ZVisitor_Yad
 	virtual void Visit_YadR(const ZRef<ZYadR>& iYadR);

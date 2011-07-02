@@ -115,8 +115,8 @@ void NPObjectH::Release()
 bool NPObjectH::HasMethod(const string& iName)
 	{ return HostMeister::sGet()->HasMethod(fake, this, sAsNPI(iName)); }
 
-bool NPObjectH::Invoke(
-	const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
+bool NPObjectH::Invoke
+	(const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
 	{ return HostMeister::sGet()->Invoke(fake, this, sAsNPI(iName), iArgs, iCount, &oResult); }
 
 bool NPObjectH::InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
@@ -153,8 +153,8 @@ bool NPObjectH::Enumerate(NPIdentifier*& oIdentifiers, uint32& oCount)
 #pragma mark -
 #pragma mark * ObjectH
 
-NPClass_Z ObjectH::spNPClass(
-	spAllocate,
+NPClass_Z ObjectH::spNPClass
+	(spAllocate,
 	spDeallocate,
 	spInvalidate,
 	spHasMethod,
@@ -181,8 +181,8 @@ void ObjectH::Imp_Invalidate()
 bool ObjectH::Imp_HasMethod(const string& iName)
 	{ return false; }
 
-bool ObjectH::Imp_Invoke(
-	const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
+bool ObjectH::Imp_Invoke
+	(const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
 	{ return false; }
 
 bool ObjectH::Imp_InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
@@ -270,8 +270,8 @@ bool ObjectH::spInvoke(NPObject* npobj,
 	NPIdentifier name, const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
 	ZMACRO_Netscape_Before_Object(npobj)
-		return static_cast<ObjectH*>(npobj)->Imp_Invoke(
-			sAsString(name),
+		return static_cast<ObjectH*>(npobj)->Imp_Invoke
+			(sAsString(name),
 			static_cast<const NPVariantH*>(args),
 			argCount,
 			*static_cast<NPVariantH*>(result));
@@ -282,8 +282,8 @@ bool ObjectH::spInvokeDefault(NPObject* npobj,
 	const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
 	ZMACRO_Netscape_Before_Object(npobj)
-		return static_cast<ObjectH*>(npobj)->Imp_InvokeDefault(
-			static_cast<const NPVariantH*>(args),
+		return static_cast<ObjectH*>(npobj)->Imp_InvokeDefault
+			(static_cast<const NPVariantH*>(args),
 			argCount,
 			*static_cast<NPVariantH*>(result));
 	ZMACRO_Netscape_After_Return_False
@@ -306,14 +306,14 @@ bool ObjectH::spGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* resul
 	ZMACRO_Netscape_Before_Object(npobj)
 		if (sIsString(name))
 			{
-			return static_cast<ObjectH*>(npobj)->Imp_GetProperty(
-				sAsString(name),
+			return static_cast<ObjectH*>(npobj)->Imp_GetProperty
+				(sAsString(name),
 				*static_cast<NPVariantH*>(result));
 			}
 		else
 			{
-			return static_cast<ObjectH*>(npobj)->Imp_GetProperty(
-				sAsInt(name),
+			return static_cast<ObjectH*>(npobj)->Imp_GetProperty
+				(sAsInt(name),
 				*static_cast<NPVariantH*>(result));
 			}
 	ZMACRO_Netscape_After_Return_False
@@ -324,14 +324,14 @@ bool ObjectH::spSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant*
 	ZMACRO_Netscape_Before_Object(npobj)
 		if (sIsString(name))
 			{
-			return static_cast<ObjectH*>(npobj)->Imp_SetProperty(
-				sAsString(name),
+			return static_cast<ObjectH*>(npobj)->Imp_SetProperty
+				(sAsString(name),
 				*static_cast<const NPVariantH*>(value));
 			}
 		else
 			{
-			return static_cast<ObjectH*>(npobj)->Imp_SetProperty(
-				sAsInt(name),
+			return static_cast<ObjectH*>(npobj)->Imp_SetProperty
+				(sAsInt(name),
 				*static_cast<const NPVariantH*>(value));
 			}
 	ZMACRO_Netscape_After_Return_False
@@ -656,8 +656,8 @@ NPIdentifier HostMeister::spGetStringIdentifier(const NPUTF8* name)
 	ZMACRO_Netscape_After_Return_Nil
 	}
 
-void HostMeister::spGetStringIdentifiers(
-	const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers)
+void HostMeister::spGetStringIdentifiers
+	(const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers)
 	{
 	ZMACRO_Netscape_Before
 		sGet()->GetStringIdentifiers(names, nameCount, identifiers);

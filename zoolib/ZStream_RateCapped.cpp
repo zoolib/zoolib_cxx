@@ -54,8 +54,8 @@ size_t RateLimiter::GetCount(size_t iLastCount, size_t iCount)
 #pragma mark -
 #pragma mark * ZStreamR_RateCapped
 
-ZStreamR_RateCapped::ZStreamR_RateCapped(
-	double iRate, size_t iQuantum, const ZStreamR& iStreamReal)
+ZStreamR_RateCapped::ZStreamR_RateCapped
+	(double iRate, size_t iQuantum, const ZStreamR& iStreamReal)
 :	ZStreamR_Filter(iStreamReal),
 	fLimiter(iRate, iQuantum),
 	fLastCount(0)
@@ -76,8 +76,8 @@ void ZStreamR_RateCapped::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 #pragma mark -
 #pragma mark * ZStreamerR_RateCapped
 
-ZStreamerR_RateCapped::ZStreamerR_RateCapped(
-	double iRate, size_t iQuantum, ZRef<ZStreamerR> iStreamerReal)
+ZStreamerR_RateCapped::ZStreamerR_RateCapped
+	(double iRate, size_t iQuantum, ZRef<ZStreamerR> iStreamerReal)
 :	fStreamerReal(iStreamerReal),
 	fStream(iRate, iQuantum, iStreamerReal->GetStreamR())
 	{}
@@ -92,8 +92,8 @@ const ZStreamR& ZStreamerR_RateCapped::GetStreamR()
 #pragma mark -
 #pragma mark * ZStreamU_RateCapped
 
-ZStreamU_RateCapped::ZStreamU_RateCapped(
-	double iRate, size_t iQuantum, const ZStreamU& iStreamReal)
+ZStreamU_RateCapped::ZStreamU_RateCapped
+	(double iRate, size_t iQuantum, const ZStreamU& iStreamReal)
 :	ZStreamU_Filter(iStreamReal),
 	fLimiter(iRate, iQuantum),
 	fLastCount(0)
@@ -114,8 +114,8 @@ void ZStreamU_RateCapped::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 #pragma mark -
 #pragma mark * ZStreamerU_RateCapped
 
-ZStreamerU_RateCapped::ZStreamerU_RateCapped(
-	double iRate, size_t iQuantum, ZRef<ZStreamerU> iStreamerReal)
+ZStreamerU_RateCapped::ZStreamerU_RateCapped
+	(double iRate, size_t iQuantum, ZRef<ZStreamerU> iStreamerReal)
 :	fStreamerReal(iStreamerReal),
 	fStream(iRate, iQuantum, iStreamerReal->GetStreamU())
 	{}
@@ -130,8 +130,8 @@ const ZStreamU& ZStreamerU_RateCapped::GetStreamU()
 #pragma mark -
 #pragma mark * ZStreamRPos_RateCapped
 
-ZStreamRPos_RateCapped::ZStreamRPos_RateCapped(
-	double iRate, size_t iQuantum, const ZStreamRPos& iStreamReal)
+ZStreamRPos_RateCapped::ZStreamRPos_RateCapped
+	(double iRate, size_t iQuantum, const ZStreamRPos& iStreamReal)
 :	ZStreamRPos_Filter(iStreamReal),
 	fLimiter(iRate, iQuantum),
 	fLastCount(0)
@@ -152,8 +152,8 @@ void ZStreamRPos_RateCapped::Imp_Read(void* oDest, size_t iCount, size_t* oCount
 #pragma mark -
 #pragma mark * ZStreamerRPos_RateCapped
 
-ZStreamerRPos_RateCapped::ZStreamerRPos_RateCapped(
-	double iRate, size_t iQuantum, ZRef<ZStreamerRPos> iStreamerReal)
+ZStreamerRPos_RateCapped::ZStreamerRPos_RateCapped
+	(double iRate, size_t iQuantum, ZRef<ZStreamerRPos> iStreamerReal)
 :	fStreamerReal(iStreamerReal),
 	fStream(iRate, iQuantum, iStreamerReal->GetStreamRPos())
 	{}
@@ -168,8 +168,8 @@ const ZStreamRPos& ZStreamerRPos_RateCapped::GetStreamRPos()
 #pragma mark -
 #pragma mark * ZStreamW_RateCapped
 
-ZStreamW_RateCapped::ZStreamW_RateCapped(
-	double iRate, size_t iQuantum, const ZStreamW& iStreamReal)
+ZStreamW_RateCapped::ZStreamW_RateCapped
+	(double iRate, size_t iQuantum, const ZStreamW& iStreamReal)
 :	ZStreamW_Filter(iStreamReal),
 	fLimiter(iRate, iQuantum),
 	fLastCount(0)
@@ -190,8 +190,8 @@ void ZStreamW_RateCapped::Imp_Write(const void* iSource, size_t iCount, size_t* 
 #pragma mark -
 #pragma mark * ZStreamerW_RateCapped
 
-ZStreamerW_RateCapped::ZStreamerW_RateCapped(
-	double iRate, size_t iQuantum, ZRef<ZStreamerW> iStreamerReal)
+ZStreamerW_RateCapped::ZStreamerW_RateCapped
+	(double iRate, size_t iQuantum, ZRef<ZStreamerW> iStreamerReal)
 :	fStreamerReal(iStreamerReal),
 	fStream(iRate, iQuantum, iStreamerReal->GetStreamW())
 	{}
@@ -206,8 +206,8 @@ const ZStreamW& ZStreamerW_RateCapped::GetStreamW()
 #pragma mark -
 #pragma mark * ZStreamWPos_RateCapped
 
-ZStreamWPos_RateCapped::ZStreamWPos_RateCapped(
-	double iRate, size_t iQuantum, const ZStreamWPos& iStreamReal)
+ZStreamWPos_RateCapped::ZStreamWPos_RateCapped
+	(double iRate, size_t iQuantum, const ZStreamWPos& iStreamReal)
 :	ZStreamWPos_Filter(iStreamReal),
 	fLimiter(iRate, iQuantum),
 	fLastCount(0)
@@ -228,8 +228,8 @@ void ZStreamWPos_RateCapped::Imp_Write(const void* iSource, size_t iCount, size_
 #pragma mark -
 #pragma mark * ZStreamerWPos_RateCapped
 
-ZStreamerWPos_RateCapped::ZStreamerWPos_RateCapped(
-	double iRate, size_t iQuantum, ZRef<ZStreamerWPos> iStreamerReal)
+ZStreamerWPos_RateCapped::ZStreamerWPos_RateCapped
+	(double iRate, size_t iQuantum, ZRef<ZStreamerWPos> iStreamerReal)
 :	fStreamerReal(iStreamerReal),
 	fStream(iRate, iQuantum, iStreamerReal->GetStreamWPos())
 	{}

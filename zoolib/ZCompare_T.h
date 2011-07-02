@@ -57,8 +57,8 @@ struct Less_Compare_T : public std::binary_function<T,T,bool>
 #pragma mark * sCompareIterators_T
 
 template <class InputIterator>
-inline int sCompareIterators_T(
-	InputIterator leftIter, InputIterator leftEnd,
+inline int sCompareIterators_T
+	(InputIterator leftIter, InputIterator leftEnd,
 	InputIterator rightIter, InputIterator rightEnd)
 	{
 	for (/*no init*/; /*no test*/; ++leftIter, ++rightIter)

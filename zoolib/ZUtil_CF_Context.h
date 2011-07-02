@@ -59,7 +59,7 @@ public:
 		{
 		if (iOther.fT.retain)
 			iOther.fT.retain(iOther.fT.info);
-		
+
 		if (fT.release)
 			fT.release(fT.info);
 

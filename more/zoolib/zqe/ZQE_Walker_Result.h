@@ -42,13 +42,13 @@ public:
 // From ZQE::Walker
 	virtual void Rewind();
 
-	virtual ZRef<Walker> Prime(
-		const std::map<string8,size_t>& iOffsets,
+	virtual ZRef<Walker> Prime
+		(const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool ReadInc(
-		ZVal_Any* oResults,
+	virtual bool ReadInc
+		(ZVal_Any* oResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
 	ZRef<Result> fResult;

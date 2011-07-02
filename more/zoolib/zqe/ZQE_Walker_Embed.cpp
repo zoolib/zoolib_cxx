@@ -48,8 +48,8 @@ Walker_Embed::~Walker_Embed()
 void Walker_Embed::Rewind()
 	{ fWalker_Parent->Rewind(); }
 
-ZRef<Walker> Walker_Embed::Prime(
-	const map<string8,size_t>& iOffsets,
+ZRef<Walker> Walker_Embed::Prime
+	(const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
@@ -72,8 +72,8 @@ ZRef<Walker> Walker_Embed::Prime(
 	return this;
 	}
 
-bool Walker_Embed::ReadInc(
-	ZVal_Any* ioResults,
+bool Walker_Embed::ReadInc
+	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	if (!fWalker_Parent->ReadInc(ioResults, oAnnotations))

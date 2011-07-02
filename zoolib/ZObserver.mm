@@ -55,8 +55,8 @@ void ZObserver::Initialize()
 	{
 	ZCounted::Initialize();
 
-	::CFNotificationCenterAddObserver(
-		::CFNotificationCenterGetLocalCenter(),
+	::CFNotificationCenterAddObserver
+		(::CFNotificationCenterGetLocalCenter(),
 		this,
 		spCallback,
 		this->GetName_CFStringRef(),

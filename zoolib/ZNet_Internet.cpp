@@ -43,8 +43,8 @@ ZNetAddress_IP4::ZNetAddress_IP4(ip4_addr iAddr, ip_port iPort)
 ,	fAddr(iAddr)
 	{}
 
-ZNetAddress_IP4::ZNetAddress_IP4(
-	uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, uint8 iAddr4, ip_port iPort)
+ZNetAddress_IP4::ZNetAddress_IP4
+	(uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, uint8 iAddr4, ip_port iPort)
 :	ZNetAddress_Internet(iPort)
 ,	fAddr((iAddr1 << 24) | (iAddr2 << 16) | (iAddr3 << 8) | iAddr4)
 	{}
@@ -116,15 +116,15 @@ ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(ip_port iPort)
 		::sInvoke(MakeParam_t(iPort));
 	}
 
-ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
-	ip4_addr iAddress, ip_port iPort)
+ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate
+	(ip4_addr iAddress, ip_port iPort)
 	{
 	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam4_t>
 		::sInvoke(MakeParam4_t(iAddress, iPort));
 	}
 
-ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
-	ip6_addr iAddress, ip_port iPort)
+ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate
+	(ip6_addr iAddress, ip_port iPort)
 	{
 	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam6_t>
 		::sInvoke(MakeParam6_t(iAddress, iPort));
@@ -134,15 +134,15 @@ ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
 #pragma mark -
 #pragma mark * ZNetEndpoint_TCP
 
-ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected(
-	ip4_addr iRemoteAddr, ip_port iRemotePort)
+ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected
+	(ip4_addr iRemoteAddr, ip_port iRemotePort)
 	{
 	return ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam4_t>
 		::sInvoke(MakeParam4_t(iRemoteAddr, iRemotePort));
 	}
 
-ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected(
-	ip6_addr iRemoteAddr, ip_port iRemotePort)
+ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected
+	(ip6_addr iRemoteAddr, ip_port iRemotePort)
 	{
 	return ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam6_t>
 		::sInvoke(MakeParam6_t(iRemoteAddr, iRemotePort));

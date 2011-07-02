@@ -107,8 +107,8 @@ static ZRef<ZNetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_p
 		const sockaddr_in* in = (const sockaddr_in*)iSockAddr;
 		if (not iPort)
 			iPort = ntohs(in->sin_port);
-		return new ZNetAddress_IP4(
-			ntohl(in->sin_addr.s_addr),
+		return new ZNetAddress_IP4
+			(ntohl(in->sin_addr.s_addr),
 			iPort);
 		}
 
@@ -117,8 +117,8 @@ static ZRef<ZNetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_p
 		const sockaddr_in6* in = (const sockaddr_in6*)iSockAddr;
 		if (not iPort)
 			iPort = ntohs(in->sin6_port);
-		return new ZNetAddress_IP6(
-			iPort,
+		return new ZNetAddress_IP6
+			(iPort,
 			*((const struct ip6_addr*)(&in->sin6_addr)));
 		}
 
@@ -189,8 +189,8 @@ int ZNet_TCP_Socket::sListen(ip6_addr iLocalAddress, ip_port iLocalPort)
 #pragma mark -
 #pragma mark * ZNetNameLookup_Internet_Socket
 
-ZNetNameLookup_Internet_Socket::ZNetNameLookup_Internet_Socket(
-	const string& iName, ip_port iPort, size_t iMaxAddresses)
+ZNetNameLookup_Internet_Socket::ZNetNameLookup_Internet_Socket
+	(const string& iName, ip_port iPort, size_t iMaxAddresses)
 :	fName(iName)
 ,	fPort(iPort)
 ,	fCountAddressesToReturn(iMaxAddresses)

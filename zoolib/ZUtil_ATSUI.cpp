@@ -90,8 +90,8 @@ static ATSUFontFallbacks spCreate_ATSUFontFallbacks()
 	ATSUFontFallbacks result = nullptr;
 	if (noErr == ::ATSUCreateFontFallbacks(&result))
 		{
-		if (noErr == ::ATSUSetObjFontFallbacks(
-			result, 0, nullptr, kATSUDefaultFontFallbacks))
+		if (noErr == ::ATSUSetObjFontFallbacks
+			(result, 0, nullptr, kATSUDefaultFontFallbacks))
 			{
 			return result;
 			}
@@ -101,8 +101,8 @@ static ATSUFontFallbacks spCreate_ATSUFontFallbacks()
 
 static ATSUFontFallbacks spATSUFontFallbacks = spCreate_ATSUFontFallbacks();
 
-ATSUTextLayout sCreateLayout(
-	const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle, bool iUseFallbacks)
+ATSUTextLayout sCreateLayout
+	(const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle, bool iUseFallbacks)
 	{
 	if (not iStyle)
 		return nullptr;
@@ -142,8 +142,8 @@ Attributes::Attributes()
 Attributes::~Attributes()
 	{}
 
-void Attributes::Add(
-	const ATSUAttributeTag& iTag, const void* iValue, size_t iSize)
+void Attributes::Add
+	(const ATSUAttributeTag& iTag, const void* iValue, size_t iSize)
 	{
 	fTags.push_back(iTag);
 	fSizes.push_back(iSize);

@@ -97,8 +97,8 @@ void ZNetListener_RFCOMM_OSX::CancelListen()
 	fCondition.Broadcast();
 	}
 
-void ZNetListener_RFCOMM_OSX::pChannelOpened(
-	IOBluetoothUserNotification*, IOBluetoothRFCOMMChannel* iChannel)
+void ZNetListener_RFCOMM_OSX::pChannelOpened
+	(IOBluetoothUserNotification*, IOBluetoothRFCOMMChannel* iChannel)
 	{
 	ZAcqMtx acq(fMutex);
 	[iChannel release]; // ??

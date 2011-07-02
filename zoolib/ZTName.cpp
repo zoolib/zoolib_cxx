@@ -113,8 +113,8 @@ static const PNRep* spLookupAndTag(const string& iName)
 	if (!spNames)
 		return nullptr;
 
-	vector<const PNRep*>::iterator theIter = lower_bound(
-		spNames->begin(), spNames->end(), Key(iName.data(), iName.length()),
+	vector<const PNRep*>::iterator theIter = lower_bound
+		(spNames->begin(), spNames->end(), Key(iName.data(), iName.length()),
 		Compare_PNRep_Key_t());
 
 	if (theIter == spNames->end() || spDifferent(*theIter, iName.data(), iName.length()))
@@ -187,8 +187,8 @@ int ZTName::sPreRegister(const char* const* iNames, size_t iCount)
 			// like a marker byte followed by 4 bytes of length, and things will break.
 			if (theLength < 255)
 				{
-				vector<const PNRep*>::iterator theIter = lower_bound(
-					spNames->begin(), spNames->end(), Key(theName, theLength),
+				vector<const PNRep*>::iterator theIter = lower_bound
+					(spNames->begin(), spNames->end(), Key(theName, theLength),
 					Compare_PNRep_Key_t());
 
 				if (theIter == spNames->end() || spDifferent(*theIter, theName, theLength))

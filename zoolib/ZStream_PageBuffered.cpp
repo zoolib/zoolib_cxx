@@ -39,8 +39,8 @@ struct ZStreamRPos_PageBuffered::Buffer
 	uint64 fStartPosition;
 	};
 
-ZStreamRPos_PageBuffered::ZStreamRPos_PageBuffered(
-	size_t iBufferCount, size_t iBufferSize, const ZStreamRPos& iStreamReal)
+ZStreamRPos_PageBuffered::ZStreamRPos_PageBuffered
+	(size_t iBufferCount, size_t iBufferSize, const ZStreamRPos& iStreamReal)
 :	fStreamReal(iStreamReal)
 	{
 	fBuffer_Head = nullptr;
@@ -184,8 +184,8 @@ uint64 ZStreamRPos_PageBuffered::Imp_GetSize()
 #pragma mark -
 #pragma mark * ZStreamerRPos_PageBuffered
 
-ZStreamerRPos_PageBuffered::ZStreamerRPos_PageBuffered(
-	size_t iBufferCount, size_t iBufferSize, ZRef<ZStreamerRPos> iStreamerSource)
+ZStreamerRPos_PageBuffered::ZStreamerRPos_PageBuffered
+	(size_t iBufferCount, size_t iBufferSize, ZRef<ZStreamerRPos> iStreamerSource)
 :	fStreamerSource(iStreamerSource),
 	fStream(iBufferCount, iBufferSize, iStreamerSource->GetStreamRPos())
 	{}
@@ -209,8 +209,8 @@ struct ZStreamRWPos_PageBuffered::Buffer
 	bool fDirty;
 	};
 
-ZStreamRWPos_PageBuffered::ZStreamRWPos_PageBuffered(
-	size_t iBufferCount, size_t iBufferSize, const ZStreamRWPos& iStreamReal)
+ZStreamRWPos_PageBuffered::ZStreamRWPos_PageBuffered
+	(size_t iBufferCount, size_t iBufferSize, const ZStreamRWPos& iStreamReal)
 :	fStreamReal(iStreamReal)
 	{
 	fBuffer_Head = nullptr;
@@ -490,8 +490,8 @@ void ZStreamRWPos_PageBuffered::Imp_SetSize(uint64 iSize)
 #pragma mark -
 #pragma mark * ZStreamerRWPos_PageBuffered
 
-ZStreamerRWPos_PageBuffered::ZStreamerRWPos_PageBuffered(
-	size_t iBufferCount, size_t iBufferSize, ZRef<ZStreamerRWPos> iStreamerReal)
+ZStreamerRWPos_PageBuffered::ZStreamerRWPos_PageBuffered
+	(size_t iBufferCount, size_t iBufferSize, ZRef<ZStreamerRWPos> iStreamerReal)
 :	fStreamerReal(iStreamerReal),
 	fStream(iBufferCount, iBufferSize, iStreamerReal->GetStreamRWPos())
 	{}

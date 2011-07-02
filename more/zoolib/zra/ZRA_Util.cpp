@@ -78,8 +78,8 @@ void Doer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 
 	if (!providedRelHead.Contains(requiredRelHead))
 		{
-		fProblems.push_back(
-			Problem(iExpr, "Project references property(s) not provided by expr"));
+		fProblems.push_back
+			(Problem(iExpr, "Project references property(s) not provided by expr"));
 		}
 
 	this->pSetResult(providedRelHead & requiredRelHead);
@@ -92,8 +92,8 @@ void Doer::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 
 	if (!providedRelHead.Contains(requiredRelHead))
 		{
-		fProblems.push_back(
-			Problem(iExpr, "Restrict's Logic requires property(s) not provided by expr"));
+		fProblems.push_back
+			(Problem(iExpr, "Restrict's Logic requires property(s) not provided by expr"));
 		}
 
 	this->pSetResult(providedRelHead);

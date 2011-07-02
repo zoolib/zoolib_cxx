@@ -92,8 +92,8 @@ static void spExtractConstraint(const ZTName& iPropName,
 	ZUnimplemented();
 	}
 
-static bool spCheckForConstraint(
-	const ZTName& iPropName, const ZTBSpec::CriterionSect& iCriterionSect)
+static bool spCheckForConstraint
+	(const ZTName& iPropName, const ZTBSpec::CriterionSect& iCriterionSect)
 	{
 	for (ZTBSpec::CriterionSect::const_iterator critIter = iCriterionSect.begin(),
 		theEnd = iCriterionSect.end();

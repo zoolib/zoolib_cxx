@@ -85,8 +85,8 @@ public:
 	void Purge();
 
 // These methods *can* be overridden, but it's by no means essential.
-	virtual void Updated(
-		const std::set<ZRef<ZTSieve> >& iSievesLoaded,
+	virtual void Updated
+		(const std::set<ZRef<ZTSieve> >& iSievesLoaded,
 		const std::set<ZRef<ZTSieve> >& iSievesChanged,
 		const std::set<ZRef<ZTCrouton> >& iCroutonsLoaded,
 		const std::set<ZRef<ZTCrouton> >& iCroutonsChanged);

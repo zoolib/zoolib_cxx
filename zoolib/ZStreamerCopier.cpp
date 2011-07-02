@@ -26,8 +26,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZStreamerCopier
 
-ZStreamerCopier::ZStreamerCopier(
-	ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon)
+ZStreamerCopier::ZStreamerCopier
+	(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon)
 :	fStreamerRCon(iStreamerRCon)
 ,	fStreamerWCon(iStreamerWCon)
 ,	fChunkSize(sStackBufferSize)
@@ -41,8 +41,8 @@ bool ZStreamerCopier::Work()
 	{
 	ZWorker::Wake();//##
 
-	return ZStream::sCopyAllCon(
-		fStreamerRCon->GetStreamRCon(),
+	return ZStream::sCopyAllCon
+		(fStreamerRCon->GetStreamRCon(),
 		fChunkSize,
 		fStreamerWCon->GetStreamWCon(),
 		fDisconnectTimeout);

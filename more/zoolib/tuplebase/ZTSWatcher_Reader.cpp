@@ -136,8 +136,8 @@ bool ZTSWatcher_Reader::pAllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCo
 	return fStreamsOkay;
 	}
 
-bool ZTSWatcher_Reader::Sync(
-	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+bool ZTSWatcher_Reader::Sync
+	(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 	const AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
@@ -148,8 +148,8 @@ bool ZTSWatcher_Reader::Sync(
 	{
 	try
 		{
-		return this->pSync(
-			iRemovedIDs, iRemovedIDsCount,
+		return this->pSync
+			(iRemovedIDs, iRemovedIDsCount,
 			iAddedIDs, iAddedIDsCount,
 			iRemovedQueries, iRemovedQueriesCount,
 			iAddedQueries, iAddedQueriesCount,
@@ -167,8 +167,8 @@ bool ZTSWatcher_Reader::Sync(
 	return false;
 	}
 
-bool ZTSWatcher_Reader::pSync(
-	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+bool ZTSWatcher_Reader::pSync
+	(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 	const AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
@@ -367,8 +367,8 @@ void ZTSWatcher_Reader::SetCallback(Callback_t iCallback, void* iRefcon)
 #pragma mark -
 #pragma mark * ZTSWatcherFactory_Reader
 
-ZTSWatcherFactory_Reader::ZTSWatcherFactory_Reader(
-	ZRef<ZStreamerRWFactory> iStreamerRWFactory)
+ZTSWatcherFactory_Reader::ZTSWatcherFactory_Reader
+	(ZRef<ZStreamerRWFactory> iStreamerRWFactory)
 :	fStreamerRWFactory(iStreamerRWFactory)
 	{}
 

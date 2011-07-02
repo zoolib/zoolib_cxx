@@ -28,8 +28,8 @@ using std::vector;
 
 namespace std {
 
-inline void swap(
-	pair<ZStdInt::uint64, vector<const ZooLib::ZTValue*> >& a,
+inline void swap
+	(pair<ZStdInt::uint64, vector<const ZooLib::ZTValue*> >& a,
 	pair<ZStdInt::uint64, vector<const ZooLib::ZTValue*> >& b)
 	{
 	swap(a.first, b.first);
@@ -121,8 +121,8 @@ struct CompareTuples_t
 	ZTextCollator* fTextCollators;
 	};
 
-CompareTuples_t::CompareTuples_t(
-	ZTextCollator* ioTextCollators, const vector<ZTBQuery::SortSpec>& iSort)
+CompareTuples_t::CompareTuples_t
+	(ZTextCollator* ioTextCollators, const vector<ZTBQuery::SortSpec>& iSort)
 :	fSort(iSort),
 	fTextCollators(ioTextCollators)
 	{}
@@ -298,8 +298,8 @@ static void spFirst(ZTextCollator* ioTextCollators, const ZTName& iFirst,
 			}
 		else
 			{
-			int compare = spComparePrefix(
-				ioTextCollators, firstOffset, iSort, curProps, *foundIter);
+			int compare = spComparePrefix
+				(ioTextCollators, firstOffset, iSort, curProps, *foundIter);
 
 			if (compare == 0)
 				{
@@ -367,8 +367,8 @@ static void spFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilte
 		else
 			{
 			size_t foundOffset = foundIter - sortedProps.begin();
-			int compare = spComparePrefix(
-				ioTextCollators, firstOffset, iSort, curProps, *foundIter);
+			int compare = spComparePrefix
+				(ioTextCollators, firstOffset, iSort, curProps, *foundIter);
 
 			if (compare == 0)
 				{
@@ -398,8 +398,8 @@ static void spFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilte
 
 // =================================================================================================
 
-void ZTupleQuisitioner::Query_Unordered(
-	const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iFilter, set<uint64>& ioIDs)
+void ZTupleQuisitioner::Query_Unordered
+	(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iFilter, set<uint64>& ioIDs)
 	{
 	if (ZRefDynamicCast<ZTBQueryNode_All>(iNode))
 		{
@@ -634,8 +634,8 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode,
 
 // =================================================================================================
 
-void ZTupleQuisitioner::Query_Combo_Unordered(
-	const vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
+void ZTupleQuisitioner::Query_Combo_Unordered
+	(const vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
 	const ZTBSpec* iFilter, set<uint64>& ioIDs)
 	{
 	if (iIntersections.empty())
@@ -767,8 +767,8 @@ void ZTupleQuisitioner::Query_Combo_First(const ZTName& iFirst,
 
 // =================================================================================================
 
-void ZTupleQuisitioner::Query_Intersection_Unordered(
-	const ZTBQueryNode_Combo::Intersection& iIntersection,
+void ZTupleQuisitioner::Query_Intersection_Unordered
+	(const ZTBQueryNode_Combo::Intersection& iIntersection,
 	const ZTBSpec* iFilter, set<uint64>& ioIDs)
 	{
 	if (iIntersection.fNodes.empty())

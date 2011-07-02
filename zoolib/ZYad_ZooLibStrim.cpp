@@ -596,8 +596,8 @@ static void spWriteLFIndent(const ZStrimW& iStrimW,
 	spWriteIndent(iStrimW, iCount, iOptions);
 	}
 
-static void spWriteString(
-	const ZStrimW& s, const ZYadOptions& iOptions, const string& iString)
+static void spWriteString
+	(const ZStrimW& s, const ZYadOptions& iOptions, const string& iString)
 	{
 	if (iOptions.fBreakStrings
 		&& iOptions.DoIndentation()
@@ -1103,8 +1103,8 @@ static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 #pragma mark -
 #pragma mark * ZYad_ZooLibStrim
 
-bool ZYad_ZooLibStrim::sRead_Identifier(
-	const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
+bool ZYad_ZooLibStrim::sRead_Identifier
+	(const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
 	{
 	if (oStringExact)
 		oStringExact->reserve(32);

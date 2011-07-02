@@ -60,8 +60,8 @@ the source stream. The default value is 1024 bytes which should be okay for most
 your source stream has poor latency then use a larger value or interpose a ZStreamR_Buffered.
 \param iStreamSource The stream from which compressed data will be read.
 */
-ZStreamR_ZLibDecode::ZStreamR_ZLibDecode(
-	ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
+ZStreamR_ZLibDecode::ZStreamR_ZLibDecode
+	(ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
 	const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
 	{
@@ -161,8 +161,8 @@ ZStreamerR_ZLibDecode::ZStreamerR_ZLibDecode(ZRef<ZStreamerR> iStreamer)
 	fStream(iStreamer->GetStreamR())
 	{}
 
-ZStreamerR_ZLibDecode::ZStreamerR_ZLibDecode(
-	ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
+ZStreamerR_ZLibDecode::ZStreamerR_ZLibDecode
+	(ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
 	ZRef<ZStreamerR> iStreamer)
 :	fStreamer(iStreamer),
 	fStream(iFormatR, iBufferSize, iStreamer->GetStreamR())
@@ -204,8 +204,8 @@ use less than 1024. If your destination stream has poor latency then use a (much
 value, or interpose a ZStreamW_Buffered or ZStreamW_DynamicBuffered.
 \param iStreamSink The stream to which compressed data should be written.
 */
-ZStreamW_ZLibEncode::ZStreamW_ZLibEncode(
-	ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
+ZStreamW_ZLibEncode::ZStreamW_ZLibEncode
+	(ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
 	const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)
 	{
@@ -282,8 +282,8 @@ void ZStreamW_ZLibEncode::Imp_Flush()
 	fStreamSink.Flush();
 	}
 
-void ZStreamW_ZLibEncode::pInit(
-	ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize)
+void ZStreamW_ZLibEncode::pInit
+	(ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize)
 	{
 	fBufferSize = max(size_t(1024), iBufferSize);
 	fBuffer = new Bytef[fBufferSize];
@@ -348,8 +348,8 @@ ZStreamerW_ZLibEncode::ZStreamerW_ZLibEncode(ZRef<ZStreamerW> iStreamer)
 	fStream(iStreamer->GetStreamW())
 	{}
 
-ZStreamerW_ZLibEncode::ZStreamerW_ZLibEncode(
-	ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
+ZStreamerW_ZLibEncode::ZStreamerW_ZLibEncode
+	(ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
 	ZRef<ZStreamerW> iStreamer)
 :	fStreamer(iStreamer),
 	fStream(iFormatW, iCompressionLevel, iBufferSize, iStreamer->GetStreamW())

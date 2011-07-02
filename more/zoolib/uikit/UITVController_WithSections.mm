@@ -388,8 +388,8 @@ void SectionBody_SingleRow::Update_Delete(RowMeta& ioRowMeta_Old, RowUpdate& ioR
 void SectionBody_SingleRow::FinishUpdate()
 	{ fCell_Current = fCell_New; }
 
-ZRef<UITableViewCell> SectionBody_SingleRow::UITableViewCellForRow(
-	UITableView* iView, size_t iRowIndex,
+ZRef<UITableViewCell> SectionBody_SingleRow::UITableViewCellForRow
+	(UITableView* iView, size_t iRowIndex,
 	bool& ioIsPreceded, bool& ioIsSucceeded)
 	{
 	if (fApplyAccessory)
@@ -431,8 +431,8 @@ void SectionBody_Multi::Update_NOP()
 		(*i)->Update_NOP();
 	}
 
-void SectionBody_Multi::Update_Normal(
-	RowMeta& ioRowMeta_Old, RowMeta& ioRowMeta_New,
+void SectionBody_Multi::Update_Normal
+	(RowMeta& ioRowMeta_Old, RowMeta& ioRowMeta_New,
 	RowUpdate& ioRowUpdate_Insert, RowUpdate& ioRowUpdate_Delete, RowUpdate& ioRowUpdate_Reload)
 	{
 	const size_t endOld = fBodies.size();
@@ -528,8 +528,8 @@ bool SectionBody_Multi::FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow)
 	return false;
 	}
 
-ZRef<UITableViewCell> SectionBody_Multi::UITableViewCellForRow(
-	UITableView* iView, size_t iRowIndex,
+ZRef<UITableViewCell> SectionBody_Multi::UITableViewCellForRow
+	(UITableView* iView, size_t iRowIndex,
 	bool& ioIsPreceded, bool& ioIsSucceeded)
 	{
 	if (iRowIndex != 0)

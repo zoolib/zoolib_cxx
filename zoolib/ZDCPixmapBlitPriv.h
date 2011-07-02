@@ -173,8 +173,8 @@ struct Compose_Plus
 #pragma mark * Tile variants
 
 template <class S, class D>
-void sTile_SD_T(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
+void sTile_SD_T
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD)
 	{
@@ -194,15 +194,15 @@ void sTile_SD_T(
 
 	int sourceV = sourceVStart;
 	const void* sourceRowAddress = iSourceRD.CalcRowAddress(iSourceAddress, sourceV);
-	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
+	PixelIterR_T<S> sourceIter
+		(sourceRowAddress,
 		iSourceRD.fPixvalDesc,
 		sourceHStart,
 		iSourcePD);
 
 	int currentDestV = iDestB.top;
-	PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
+	PixelIterW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -241,8 +241,8 @@ void sTile_SD_T(
 	}
 
 template <class S, class D, class O>
-void sTile_SDO_T(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
+void sTile_SDO_T
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const O& iOp)
@@ -264,15 +264,15 @@ void sTile_SDO_T(
 	int sourceV = sourceVStart;
 
 	const void* sourceRowAddress = iSourceRD.CalcRowAddress(iSourceAddress, sourceV);
-	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
+	PixelIterR_T<S> sourceIter
+		(sourceRowAddress,
 		iSourceRD.fPixvalDesc,
 		sourceHStart,
 		iSourcePD);
 
 	int currentDestV = iDestB.top;
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -317,8 +317,8 @@ void sTile_SDO_T(
 	}
 
 template <class S, class M, class D>
-void sTile_SMD_T(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
+void sTile_SMD_T
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
 	ZPointPOD iMatteOrigin,
@@ -355,22 +355,22 @@ void sTile_SMD_T(
 	int matteV = matteVStart;
 
 	const void* sourceRowAddress = iSourceRD.CalcRowAddress(iSourceAddress, sourceV);
-	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
+	PixelIterR_T<S> sourceIter
+		(sourceRowAddress,
 		iSourceRD.fPixvalDesc,
 		sourceHStart,
 		iSourcePD);
 
 	const void* matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
-	PixelIterR_T<M> matteIter(
-		matteRowAddress,
+	PixelIterR_T<M> matteIter
+		(matteRowAddress,
 		iMatteRD.fPixvalDesc,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
-	PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
+	PixelIterW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -455,8 +455,8 @@ void sTile_SMD_T(
 	}
 
 template <class S, class M, class D, class O>
-void sTile_SMDO_T(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
+void sTile_SMDO_T
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
 	ZPointPOD iMatteOrigin,
@@ -493,22 +493,22 @@ void sTile_SMDO_T(
 	int matteV = matteVStart;
 
 	const void* sourceRowAddress = iSourceRD.CalcRowAddress(iSourceAddress, sourceV);
-	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
+	PixelIterR_T<S> sourceIter
+		(sourceRowAddress,
 		iSourceRD.fPixvalDesc,
 		sourceHStart,
 		iSourcePD);
 
 	const void* matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
-	PixelIterR_T<M> matteIter(
-		matteRowAddress,
+	PixelIterR_T<M> matteIter
+		(matteRowAddress,
 		iMatteRD.fPixvalDesc,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -609,19 +609,19 @@ void sTile_SMDO_T(
 #pragma mark * Copy variants
 
 template <class S, class D>
-void sCopy_SD_T(
-	const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
+void sCopy_SD_T
+	(const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
 	ZPointPOD iSourceStart,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD)
 	{
-	PixelIterR_T<S> sourceIter(
-		iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v),
+	PixelIterR_T<S> sourceIter
+		(iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v),
 		iSourceRD.fPixvalDesc,
 		iSourceStart.h,
 		iSourcePD);
 
-	PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -644,29 +644,29 @@ void sCopy_SD_T(
 		if (row >= destHeight)
 			break;
 
-		sourceIter.Reset(
-			iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v + row), iSourceStart.h);
+		sourceIter.Reset
+			(iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v + row), iSourceStart.h);
 
-		destIter.Reset(
-			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset
+			(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
 template <class S, class D, class O>
-void sCopy_SDO_T(
-	const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
+void sCopy_SDO_T
+	(const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
 	ZPointPOD iSourceStart,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const O& iOp)
 	{
-	PixelIterR_T<S> sourceIter(
-		iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v),
+	PixelIterR_T<S> sourceIter
+		(iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v),
 		iSourceRD.fPixvalDesc,
 		iSourceStart.h,
 		iSourcePD);
 
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -695,37 +695,37 @@ void sCopy_SDO_T(
 		if (row >= destHeight)
 			break;
 
-		sourceIter.Reset(
-			iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v + row), iSourceStart.h);
+		sourceIter.Reset
+			(iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v + row), iSourceStart.h);
 
-		destIter.Reset(
-			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset
+			(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
 template <class S, class M, class D>
-void sCopy_SMD_T(
-	const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
+void sCopy_SMD_T
+	(const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
 	ZPointPOD iSourceStart,
 	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPointPOD iMatteStart,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	bool iSourcePremultiplied)
 	{
-	PixelIterR_T<S> sourceIter(
-		iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v),
+	PixelIterR_T<S> sourceIter
+		(iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v),
 		iSourceRD.fPixvalDesc,
 		iSourceStart.h,
 		iSourcePD);
 
-	PixelIterR_T<M> matteIter(
-		iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v),
+	PixelIterR_T<M> matteIter
+		(iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v),
 		iMatteRD.fPixvalDesc,
 		iMatteStart.h,
 		iMattePD);
 
-	PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -768,20 +768,20 @@ void sCopy_SMD_T(
 		if (row >= destHeight)
 			break;
 
-		sourceIter.Reset(
-			iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v + row), iSourceStart.h);
+		sourceIter.Reset
+			(iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v + row), iSourceStart.h);
 
-		matteIter.Reset(
-			iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
+		matteIter.Reset
+			(iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
 
-		destIter.Reset(
-			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset
+			(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
 template <class S, class M, class D, class O>
-void sCopy_SMDO_T(
-	const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
+void sCopy_SMDO_T
+	(const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
 	ZPointPOD iSourceStart,
 	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPointPOD iMatteStart,
@@ -789,20 +789,20 @@ void sCopy_SMDO_T(
 	bool iSourcePremultiplied,
 	const O& iOp)
 	{
-	PixelIterR_T<S> sourceIter(
-		iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v),
+	PixelIterR_T<S> sourceIter
+		(iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v),
 		iSourceRD.fPixvalDesc,
 		iSourceStart.h,
 		iSourcePD);
 
-	PixelIterR_T<M> matteIter(
-		iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v),
+	PixelIterR_T<M> matteIter
+		(iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v),
 		iMatteRD.fPixvalDesc,
 		iMatteStart.h,
 		iMattePD);
 
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -858,14 +858,14 @@ void sCopy_SMDO_T(
 		if (row >= destHeight)
 			break;
 
-		sourceIter.Reset(
-			iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v + row), iSourceStart.h);
+		sourceIter.Reset
+			(iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v + row), iSourceStart.h);
 
-		matteIter.Reset(
-			iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
+		matteIter.Reset
+			(iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
 
-		destIter.Reset(
-			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset
+			(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -874,8 +874,8 @@ void sCopy_SMDO_T(
 #pragma mark * Tile source, untiled matte
 
 template <class S, class M, class D>
-void sTileSource_SMD_T(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
+void sTileSource_SMD_T
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPointPOD iMatteStart,
@@ -899,22 +899,22 @@ void sTileSource_SMD_T(
 	int sourceV = sourceVStart;
 
 	const void* sourceRowAddress = iSourceRD.CalcRowAddress(iSourceAddress, sourceV);
-	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
+	PixelIterR_T<S> sourceIter
+		(sourceRowAddress,
 		iSourceRD.fPixvalDesc,
 		sourceHStart,
 		iSourcePD);
 
 	int matteV = iMatteStart.v;
-	PixelIterR_T<M> matteIter(
-		iMatteRD.CalcRowAddress(iMatteAddress, matteV),
+	PixelIterR_T<M> matteIter
+		(iMatteRD.CalcRowAddress(iMatteAddress, matteV),
 		iMatteRD.fPixvalDesc,
 		iMatteStart.h,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
-	PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
+	PixelIterW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -983,8 +983,8 @@ void sTileSource_SMD_T(
 	}
 
 template <class S, class M, class D, class O>
-void sTileSource_SMDO_T(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
+void sTileSource_SMDO_T
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPointPOD iMatteStart,
@@ -1009,22 +1009,22 @@ void sTileSource_SMDO_T(
 	int sourceV = sourceVStart;
 
 	const void* sourceRowAddress = iSourceRD.CalcRowAddress(iSourceAddress, sourceV);
-	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
+	PixelIterR_T<S> sourceIter
+		(sourceRowAddress,
 		iSourceRD.fPixvalDesc,
 		sourceHStart,
 		iSourcePD);
 
 	int matteV = iMatteStart.v;
-	PixelIterR_T<M> matteIter(
-		iMatteRD.CalcRowAddress(iMatteAddress, matteV),
+	PixelIterR_T<M> matteIter
+		(iMatteRD.CalcRowAddress(iMatteAddress, matteV),
 		iMatteRD.fPixvalDesc,
 		iMatteStart.h,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1109,8 +1109,8 @@ void sTileSource_SMDO_T(
 #pragma mark * Tile matte, untiled source
 
 template <class S, class M, class D>
-void sTileMatte_SMD_T(
-	const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
+void sTileMatte_SMD_T
+	(const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
 	ZPointPOD iSourceStart,
 	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
 	ZPointPOD iMatteOrigin,
@@ -1132,23 +1132,23 @@ void sTileMatte_SMD_T(
 	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int sourceV = iSourceStart.v;
-	PixelIterR_T<S> sourceIter(
-		iSourceRD.CalcRowAddress(iSourceAddress, sourceV),
+	PixelIterR_T<S> sourceIter
+		(iSourceRD.CalcRowAddress(iSourceAddress, sourceV),
 		iSourceRD.fPixvalDesc,
 		iSourceStart.h,
 		iSourcePD);
 
 	int matteV = matteVStart;
 	const void* matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
-	PixelIterR_T<M> matteIter(
-		matteRowAddress,
+	PixelIterR_T<M> matteIter
+		(matteRowAddress,
 		iMatteRD.fPixvalDesc,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1218,8 +1218,8 @@ void sTileMatte_SMD_T(
 
 // Trinary with operation
 template <class S, class M, class D, class O>
-void sTileMatte_SMDO_T(
-	const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
+void sTileMatte_SMDO_T
+	(const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
 	ZPointPOD iSourceStart,
 	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
 	ZPointPOD iMatteOrigin,
@@ -1241,23 +1241,23 @@ void sTileMatte_SMDO_T(
 	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int sourceV = iSourceStart.v;
-	PixelIterR_T<S> sourceIter(
-		iSourceRD.CalcRowAddress(iSourceAddress, sourceV),
+	PixelIterR_T<S> sourceIter
+		(iSourceRD.CalcRowAddress(iSourceAddress, sourceV),
 		iSourceRD.fPixvalDesc,
 		iSourceStart.h,
 		iSourcePD);
 
 	int matteV = matteVStart;
 	const void* matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
-	PixelIterR_T<M> matteIter(
-		matteRowAddress,
+	PixelIterR_T<M> matteIter
+		(matteRowAddress,
 		iMatteRD.fPixvalDesc,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1344,8 +1344,8 @@ void sTileMatte_SMDO_T(
 static void sFillPixval(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB,
 			uint32 iPixval)
 	{
-	ZDCPixmapNS::PixvalIterW destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	ZDCPixmapNS::PixvalIterW destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left);
 
@@ -1363,19 +1363,19 @@ static void sFillPixval(void* iDestAddress, const RD& iDestRD, const ZRectPOD& i
 		if (row >= destHeight)
 			break;
 
-		destIter.Reset(
-			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset
+			(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
 template <class D, class O>
-void sColor_DO_T(
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
+void sColor_DO_T
+	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const ZRGBA_POD& iColor,
 	const O& iOp)
 	{
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1399,26 +1399,26 @@ void sColor_DO_T(
 		if (row >= destHeight)
 			break;
 
-		destIter.Reset(
-			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset
+			(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
 template <class M, class D>
-void sColor_MD_T(
-	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
+void sColor_MD_T
+	(const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPointPOD iMatteStart,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const ZRGBA_POD& iColor)
 	{
-	PixelIterR_T<M> matteIter(
-		iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v),
+	PixelIterR_T<M> matteIter
+		(iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v),
 		iMatteRD.fPixvalDesc,
 		iMatteStart.h,
 		iMattePD);
 
-	PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1448,30 +1448,30 @@ void sColor_MD_T(
 		if (row >= destHeight)
 			break;
 
-		matteIter.Reset(
-			iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
+		matteIter.Reset
+			(iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
 
-		destIter.Reset(
-			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset
+			(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
 template <class M, class D, class O>
-void sColor_MDO_T(
-	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
+void sColor_MDO_T
+	(const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPointPOD iMatteStart,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const ZRGBA_POD& iColor,
 	const O& iOp)
 	{
-	PixelIterR_T<M> matteIter(
-		iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v),
+	PixelIterR_T<M> matteIter
+		(iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v),
 		iMatteRD.fPixvalDesc,
 		iMatteStart.h,
 		iMattePD);
 
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1504,17 +1504,17 @@ void sColor_MDO_T(
 		if (row >= destHeight)
 			break;
 
-		matteIter.Reset(
-			iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
+		matteIter.Reset
+			(iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
 
-		destIter.Reset(
-			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset
+			(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
 template <class M, class D>
-void sColorTile_MD_T(
-	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
+void sColorTile_MD_T
+	(const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
 	ZPointPOD iMatteOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const ZRGBA_POD& iColor)
@@ -1535,15 +1535,15 @@ void sColorTile_MD_T(
 
 	int matteV = matteVStart;
 	const void* matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
-	PixelIterR_T<M> matteIter(
-		matteRowAddress,
+	PixelIterR_T<M> matteIter
+		(matteRowAddress,
 		iMatteRD.fPixvalDesc,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
-	PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
+	PixelIterW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1590,8 +1590,8 @@ void sColorTile_MD_T(
 	}
 
 template <class M, class D, class O>
-void sColorTile_MDO_T(
-	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
+void sColorTile_MDO_T
+	(const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
 	ZPointPOD iMatteOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const ZRGBA_POD& iColor, const O& iOp)
@@ -1612,15 +1612,15 @@ void sColorTile_MDO_T(
 
 	int matteV = matteVStart;
 	const void* matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
-	PixelIterR_T<M> matteIter(
-		matteRowAddress,
+	PixelIterR_T<M> matteIter
+		(matteRowAddress,
 		iMatteRD.fPixvalDesc,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1675,8 +1675,8 @@ void sColorTile_MDO_T(
 
 // Replicate iSourceB over iDestB, aligning iSourceOrigin with iDestB.TopLeft()
 template <class S, class D>
-void sBlit_T(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
+void sBlit_T
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	EOp iOp)
@@ -1712,8 +1712,8 @@ void sBlit_T(
 // Copy source to iDestB without replication. Actual drawn rectangle will be smaller
 // than iDestB if iSourceB is smaller.
 template <class S, class D>
-void sBlit_T(
-	const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
+void sBlit_T
+	(const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
 	ZPointPOD iSourceStart,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	EOp iOp)
@@ -1748,8 +1748,8 @@ void sBlit_T(
 
 // Replicate iSourceB masked by replicated iMatteB.
 template <class S, class M, class D>
-void sBlit_T(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
+void sBlit_T
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
 	ZPointPOD iMatteOrigin,
@@ -1795,8 +1795,8 @@ void sBlit_T(
 
 // Replicate iSourceB masked by iMatteB.
 template <class S, class M, class D>
-void sBlit_T(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
+void sBlit_T
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const S& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPointPOD iMatteStart,
@@ -1842,8 +1842,8 @@ void sBlit_T(
 
 // Draw iSourceB masked by replicated iMatteB.
 template <class S, class M, class D>
-void sBlit_T(
-	const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
+void sBlit_T
+	(const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
 	ZPointPOD iSourceStart,
 	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
 	ZPointPOD iMatteOrigin,
@@ -1889,8 +1889,8 @@ void sBlit_T(
 
 // Draw iSourceB masked by iMatteB into iDestB.
 template <class S, class M, class D>
-void sBlit_T(
-	const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
+void sBlit_T
+	(const void* iSourceAddress, const RD& iSourceRD, const S& iSourcePD,
 	ZPointPOD iSourceStart,
 	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPointPOD iMatteStart,
@@ -1936,8 +1936,8 @@ void sBlit_T(
 
 // Fill iDestB with iColor
 template <class D>
-void sColor_T(
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
+void sColor_T
+	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const ZRGBA_POD& iColor,
 	EOp iOp)
 	{
@@ -1967,8 +1967,8 @@ void sColor_T(
 
 // Fill iDestB matted
 template <class M, class D>
-void sColor_T(
-	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
+void sColor_T
+	(const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPointPOD iMatteStart,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const ZRGBA_POD& iColor,
@@ -2007,8 +2007,8 @@ void sColor_T(
 
 // Fill iDestbounds with tiled matte
 template <class M, class D>
-void sColorTile_T(
-	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
+void sColorTile_T
+	(const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const M& iMattePD,
 	ZPointPOD iMatteOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const ZRGBA_POD& iColor,
@@ -2049,8 +2049,8 @@ void sColorTile_T(
 template <class D>
 void sInvert_T(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD)
 	{
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -2082,11 +2082,11 @@ void sInvert_T(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, co
 
 // Multiply r,g, b & alpha by iAmount/65536
 template <class D>
-void sOpaque_T(
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD, uint16 iAmount)
+void sOpaque_T
+	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD, uint16 iAmount)
 	{
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -2119,11 +2119,11 @@ void sOpaque_T(
 
 // Multiply r, g, b by iAmount/65536, leaving alpha alone.
 template <class D>
-void sDarken_T(
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD, uint16 iAmount)
+void sDarken_T
+	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD, uint16 iAmount)
 	{
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -2155,11 +2155,11 @@ void sDarken_T(
 
 // Multiply alpha by iAmount/65536, leaving r,g,b alone
 template <class D>
-void sFade_T(
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD, uint16 iAmount)
+void sFade_T
+	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD, uint16 iAmount)
 	{
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -2189,19 +2189,19 @@ void sFade_T(
 
 // Apply the alpha values in matte to dest
 template <class M, class D>
-void sApplyMatte_T(
-	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
+void sApplyMatte_T
+	(const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPointPOD iMatteStart,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD)
 	{
-	PixelIterR_T<M> matteIter(
-		iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v),
+	PixelIterR_T<M> matteIter
+		(iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v),
 		iMatteRD.fPixvalDesc,
 		iMatteStart.h,
 		iMattePD);
 
-	PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
+	PixelIterRW_T<D> destIter
+		(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -2231,11 +2231,11 @@ void sApplyMatte_T(
 		if (row >= destHeight)
 			break;
 
-		matteIter.Reset(
-			iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
+		matteIter.Reset
+			(iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
 
-		destIter.Reset(
-			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset
+			(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 

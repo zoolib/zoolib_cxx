@@ -204,8 +204,8 @@ OSStatus ZStreamRWCon_OpenSSL::pWrite(const void* iSource, size_t* ioCount)
 		}
 	}
 
-OSStatus ZStreamRWCon_OpenSSL::spWrite(
-	SSLConnectionRef iRefcon, const void* iSource, size_t* ioCount)
+OSStatus ZStreamRWCon_OpenSSL::spWrite
+	(SSLConnectionRef iRefcon, const void* iSource, size_t* ioCount)
 	{
 	ZStreamRWCon_OpenSSL* theS =
 		const_cast<ZStreamRWCon_OpenSSL*>(static_cast<const ZStreamRWCon_OpenSSL*>(iRefcon));
@@ -217,8 +217,8 @@ OSStatus ZStreamRWCon_OpenSSL::spWrite(
 #pragma mark -
 #pragma mark * ZStreamRWCon_OpenSSL
 
-ZStreamerRWCon_OpenSSL::ZStreamerRWCon_OpenSSL(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+ZStreamerRWCon_OpenSSL::ZStreamerRWCon_OpenSSL
+	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fStreamerR(iStreamerR)
 ,	fStreamerW(iStreamerW)
 ,	fStream(fStreamerR->GetStreamR(), fStreamerW->GetStreamW())

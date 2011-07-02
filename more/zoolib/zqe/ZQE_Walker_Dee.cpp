@@ -40,14 +40,14 @@ Walker_Dee::~Walker_Dee()
 void Walker_Dee::Rewind()
 	{ fExhausted = false; }
 
-ZRef<Walker> Walker_Dee::Prime(
-	const map<string8,size_t>& iOffsets,
+ZRef<Walker> Walker_Dee::Prime
+	(const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{ return this; }
 
-bool Walker_Dee::ReadInc(
-	ZVal_Any* ioResults,
+bool Walker_Dee::ReadInc
+	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{ return !fExhausted++; }
 

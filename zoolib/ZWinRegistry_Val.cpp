@@ -38,8 +38,8 @@ static bool spCount(const ZRef<HKEY>& iHKEY,
 	{
 	if (iHKEY)
 		{
-		if (ERROR_SUCCESS == ::RegQueryInfoKeyW(
-			iHKEY,
+		if (ERROR_SUCCESS == ::RegQueryInfoKeyW
+			(iHKEY,
 			nullptr, // lpClass
 			nullptr, // lpcClass
 			nullptr, // lpReserved,
@@ -150,8 +150,8 @@ static ZQ<Val> spQGet(DWORD iType, const void* iBuffer, DWORD iLength)
 static string8 spKeyName(const ZRef<HKEY>& iHKEY, DWORD iMaxLengthKeyName, size_t iIndex)
 	{
 	vector<WCHAR> theName(iMaxLengthKeyName);
-	if (ERROR_SUCCESS == ::RegEnumKeyExW(
-		iHKEY,
+	if (ERROR_SUCCESS == ::RegEnumKeyExW
+		(iHKEY,
 		iIndex,
 		&theName[0],
 		&iMaxLengthKeyName,
@@ -169,8 +169,8 @@ static string8 spKeyName(const ZRef<HKEY>& iHKEY, DWORD iMaxLengthKeyName, size_
 static string8 spValueName(const ZRef<HKEY>& iHKEY, DWORD iMaxLengthValueName, size_t iIndex)
 	{
 	vector<WCHAR> theName(iMaxLengthValueName);
-	if (ERROR_SUCCESS == ::RegEnumValueW(
-		iHKEY,
+	if (ERROR_SUCCESS == ::RegEnumValueW
+		(iHKEY,
 		iIndex,
 		&theName[0],
 		&iMaxLengthValueName,
@@ -323,8 +323,8 @@ ZQ<Val> KeyRef::QGet(const string16& iName) const
 	if (iName[0] != '!')
 		{
 		KeyRef subKey;
-		if (ERROR_SUCCESS == ::RegOpenKeyExW(
-			*this,
+		if (ERROR_SUCCESS == ::RegOpenKeyExW
+			(*this,
 			iName.c_str(),
 			0, // ulOptions
 			KEY_READ,
@@ -341,8 +341,8 @@ ZQ<Val> KeyRef::QGet(const string16& iName) const
 		DWORD type;
 		vector<BYTE> bufferVec(curLength);
 		DWORD length = curLength;
-		LONG result = ::RegQueryValueExW(
-			*this,
+		LONG result = ::RegQueryValueExW
+			(*this,
 			&iName.c_str()[1],
 			nullptr, // lpReserved
 			&type,
@@ -377,8 +377,8 @@ ZQ<Val> KeyRef::QGet(const Index_t& iIndex) const
 	if (offset < countKeys)
 		{
 		vector<WCHAR> theName(maxLengthKeyName);
-		if (ERROR_SUCCESS == ::RegEnumKeyExW(
-			*this,
+		if (ERROR_SUCCESS == ::RegEnumKeyExW
+			(*this,
 			offset,
 			&theName[0],
 			&maxLengthKeyName,
@@ -389,8 +389,8 @@ ZQ<Val> KeyRef::QGet(const Index_t& iIndex) const
 			))
 			{
 			KeyRef subKey;
-			if (ERROR_SUCCESS == ::RegOpenKeyExW(
-				*this,
+			if (ERROR_SUCCESS == ::RegOpenKeyExW
+				(*this,
 				&theName[0],
 				0, // ulOptions
 				KEY_READ,
@@ -414,8 +414,8 @@ ZQ<Val> KeyRef::QGet(const Index_t& iIndex) const
 		DWORD type;
 		vector<BYTE> bufferVec(curLength);
 		DWORD length = curLength;
-		LONG result = ::RegEnumValueW(
-			*this,
+		LONG result = ::RegEnumValueW
+			(*this,
 			offset,
 			&theName[0], // lpValueName
 			&nameLength, // lpcbValueName

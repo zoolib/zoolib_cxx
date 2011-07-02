@@ -73,13 +73,13 @@ class ZStrimmerR_Boundary : public ZStrimmerR
 public:
 	ZStrimmerR_Boundary(const string8& iBoundary, ZRef<ZStrimmerR> iStrimmerSource);
 
-	ZStrimmerR_Boundary(
-		const UTF8* iBoundary, size_t iBoundarySize, ZRef<ZStrimmerR> iStrimmerSource);
+	ZStrimmerR_Boundary
+		(const UTF8* iBoundary, size_t iBoundarySize, ZRef<ZStrimmerR> iStrimmerSource);
 
 	ZStrimmerR_Boundary(const string32& iBoundary, ZRef<ZStrimmerR> iStrimmerSource);
 
-	ZStrimmerR_Boundary(
-		const UTF32* iBoundary, size_t iBoundarySize, ZRef<ZStrimmerR> iStrimmerSource);
+	ZStrimmerR_Boundary
+		(const UTF32* iBoundary, size_t iBoundarySize, ZRef<ZStrimmerR> iStrimmerSource);
 
 	virtual ~ZStrimmerR_Boundary();
 

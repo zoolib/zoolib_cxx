@@ -150,8 +150,8 @@ private:
 
 namespace ZYad_ZooLibStrim {
 
-bool sRead_Identifier(
-	const ZStrimU& iStrimU, std::string* oStringLC, std::string* oStringExact);
+bool sRead_Identifier
+	(const ZStrimU& iStrimU, std::string* oStringLC, std::string* oStringExact);
 
 ZRef<ZYadR> sMakeYadR(ZRef<ZStrimmerU> iStrimmerU);
 

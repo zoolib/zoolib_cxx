@@ -83,8 +83,8 @@ QueryResult& QueryResult::operator=(const QueryResult& iOther)
 	return *this;
 	}
 
-QueryResult::QueryResult(
-	int64 iRefcon, const ZRef<ZQE::Result>& iResult, const ZRef<Event>& iEvent)
+QueryResult::QueryResult
+	(int64 iRefcon, const ZRef<ZQE::Result>& iResult, const ZRef<Event>& iEvent)
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
 ,	fEvent(iEvent)

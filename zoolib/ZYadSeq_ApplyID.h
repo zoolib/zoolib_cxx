@@ -33,8 +33,8 @@ namespace ZooLib {
 class ZYadSeqR_ApplyID : public ZYadSeqR
 	{
 public:
-	ZYadSeqR_ApplyID(
-		ZRef<ZYadSeqR> iYadSeqR, const std::string& iIDName, const std::string& iValName);
+	ZYadSeqR_ApplyID
+		(ZRef<ZYadSeqR> iYadSeqR, const std::string& iIDName, const std::string& iValName);
 
 	virtual ~ZYadSeqR_ApplyID();
 
@@ -55,8 +55,8 @@ private:
 class ZYadSeqRPos_ApplyID : public ZYadSeqRPos
 	{
 public:
-	ZYadSeqRPos_ApplyID(
-		ZRef<ZYadSeqRPos> iYadSeqRPos, const std::string& iIDName, const std::string& iValName);
+	ZYadSeqRPos_ApplyID
+		(ZRef<ZYadSeqRPos> iYadSeqRPos, const std::string& iIDName, const std::string& iValName);
 
 	virtual ~ZYadSeqRPos_ApplyID();
 

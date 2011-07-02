@@ -248,8 +248,8 @@ static UINT spSystemCodePage()
 	if (!sFetched)
 		{
 		char theCP[10];
-		int length = ::GetLocaleInfoA(
-			::GetSystemDefaultLCID(),
+		int length = ::GetLocaleInfoA
+			(::GetSystemDefaultLCID(),
 			LOCALE_IDEFAULTANSICODEPAGE,
 			theCP,
 			countof(theCP));
@@ -357,8 +357,8 @@ FileRef::FileRef(const ZTrail& iTrail)
 	#ifdef __PIMac__
 
 		FSRef parentFSRef;
-		if (noErr != ::FSPathMakeRef(
-			(const UInt8*)(("/" + iTrail.Branch().AsString()).c_str()),
+		if (noErr != ::FSPathMakeRef
+			((const UInt8*)(("/" + iTrail.Branch().AsString()).c_str()),
 			&parentFSRef, nullptr))
 			{
 			throw std::runtime_error("FileRef::FileRef, couldn't get parentFSRef");
@@ -366,8 +366,8 @@ FileRef::FileRef(const ZTrail& iTrail)
 
 		const string16 leaf = ZUnicode::sAsUTF16(iTrail.Leaf());
 
-		OSErr result = ::FSNewAliasMinimalUnicode(
-			&parentFSRef,
+		OSErr result = ::FSNewAliasMinimalUnicode
+			(&parentFSRef,
 			leaf.size(), (const UniChar*)leaf.c_str(),
 			(AliasHandle*)&fHandle, nullptr);
 
@@ -446,8 +446,8 @@ ZQ<ZTrail> FileRef::AsTrail() const
 			FSAliasInfoBitmap theFSAIB;
 			FSAliasInfo theFSAI;
 
-			OSErr theErr = ::FSCopyAliasInfo(
-				(AliasHandle)fHandle,
+			OSErr theErr = ::FSCopyAliasInfo
+				((AliasHandle)fHandle,
 				&targetName, &volumeName,
 				&thePath.OParam(),
 				&theFSAIB, &theFSAI);

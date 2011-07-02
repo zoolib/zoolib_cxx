@@ -86,8 +86,8 @@ public:
 
 	IOUSBDeviceInterface182** GetIOUSBDeviceInterface();
 
-	ZRef<ZUSBInterfaceInterface> CreateInterfaceInterface(
-		CFRunLoopRef iRunLoopRef, uint8 iProtocol);
+	ZRef<ZUSBInterfaceInterface> CreateInterfaceInterface
+		(CFRunLoopRef iRunLoopRef, uint8 iProtocol);
 
 	uint16 GetIDVendor();
 	uint16 GetIDProduct();
@@ -97,11 +97,11 @@ public:
 private:
 	void pFetchDeviceDescriptor();
 
-	void pDeviceNotification(
-		io_service_t iService, natural_t iMessageType, void* iMessageArgument);
+	void pDeviceNotification
+		(io_service_t iService, natural_t iMessageType, void* iMessageArgument);
 
-	static void spDeviceNotification(
-		void* iRefcon, io_service_t iService, natural_t iMessageType, void* iMessageArgument);
+	static void spDeviceNotification
+		(void* iRefcon, io_service_t iService, natural_t iMessageType, void* iMessageArgument);
 
 	IOUSBDeviceInterface182** fIOUSBDeviceInterface;
 	io_object_t fNotification;

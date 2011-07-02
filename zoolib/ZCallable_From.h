@@ -44,8 +44,8 @@ class Callable<R(void)>
 public:
 	typedef R (Signature)();
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -81,8 +81,8 @@ class Callable<R(P0)>
 public:
 	typedef R (Signature)(P0);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -118,8 +118,8 @@ class Callable<R(P0,P1)>
 public:
 	typedef R (Signature)(P0,P1);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -155,8 +155,8 @@ class Callable<R(P0,P1,P2)>
 public:
 	typedef R (Signature)(P0,P1,P2);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -192,8 +192,8 @@ class Callable<R(P0,P1,P2,P3)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -230,8 +230,8 @@ class Callable<R(P0,P1,P2,P3,P4)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -268,8 +268,8 @@ class Callable<R(P0,P1,P2,P3,P4,P5)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -306,8 +306,8 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -344,8 +344,8 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -383,8 +383,8 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -424,8 +424,8 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -465,8 +465,8 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -506,8 +506,8 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -548,8 +548,8 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -590,8 +590,8 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -632,8 +632,8 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -674,8 +674,8 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
 
-	Callable(
-		ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
+	Callable
+		(ZRef<ZWorkerRunner_Crowd> iRunner, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
 	:	fRunner(iRunner)
 	,	fDefault(iDefault)
 	,	fCallable(iCallable)
@@ -711,14 +711,14 @@ template <class Signature>
 ZRef<ZCallable<Signature> >
 MakeCallable_From(ZRef<ZWorkerRunner_Crowd> iRunner, ZRef<ZCallable<Signature> > iCallable)
 	{
-	return new ZCallable_From::Callable<Signature>(
-		iRunner, typename ZCallable_Bind::ST_T<Signature>::R(), iCallable);
+	return new ZCallable_From::Callable<Signature>
+		(iRunner, typename ZCallable_Bind::ST_T<Signature>::R(), iCallable);
 	}
 
 template <class Signature>
 ZRef<ZCallable<Signature> >
-MakeCallable_From(
-	ZRef<ZWorkerRunner_Crowd> iRunner,
+MakeCallable_From
+	(ZRef<ZWorkerRunner_Crowd> iRunner,
 	const typename ZCallable_Bind::ST_T<Signature>::R& iDefault,
 	ZRef<ZCallable<Signature> > iCallable)
 	{ return new ZCallable_From::Callable<Signature>(iRunner, iDefault, iCallable); }

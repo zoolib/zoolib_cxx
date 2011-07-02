@@ -724,8 +724,8 @@ ZVal_AppleEvent ZMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, AEKeyword
 	return iDefault;
 	}
 
-ZVal_AppleEvent ZMap_AppleEvent::DGet(
-	const ZVal_AppleEvent& iDefault, const std::string& iName) const
+ZVal_AppleEvent ZMap_AppleEvent::DGet
+	(const ZVal_AppleEvent& iDefault, const std::string& iName) const
 	{
 	if (ZQ<ZVal_AppleEvent> theVal = this->QGet(iName))
 		return theVal.Get();
@@ -855,8 +855,8 @@ ZMap_AppleEvent::Index_t ZMap_AppleEvent::IndexOf(AEKeyword iName) const
 ZMap_AppleEvent::Index_t ZMap_AppleEvent::IndexOf(const std::string& iName) const
 	{ return this->IndexOf(spAsAEKeyword(iName)); }
 
-ZMap_AppleEvent::Index_t ZMap_AppleEvent::IndexOf(
-	const ZMap_AppleEvent& iOther, const Index_t& iOtherIndex) const
+ZMap_AppleEvent::Index_t ZMap_AppleEvent::IndexOf
+	(const ZMap_AppleEvent& iOther, const Index_t& iOtherIndex) const
 	{
 	if (this == &iOther)
 		return iOtherIndex;

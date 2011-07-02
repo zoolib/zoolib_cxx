@@ -45,12 +45,12 @@ using std::string;
 bool ZUtil_CarbonEvents::sQGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, void* oBuffer)
 	{
-	return noErr == ::GetEventParameter(
-		iEventRef, iName, iType, nullptr, iBufferSize, nullptr, oBuffer);
+	return noErr == ::GetEventParameter
+		(iEventRef, iName, iType, nullptr, iBufferSize, nullptr, oBuffer);
 	}
 
-size_t ZUtil_CarbonEvents::sGetParamLength(
-	EventRef iEventRef, EventParamName iName, EventParamType iType)
+size_t ZUtil_CarbonEvents::sGetParamLength
+	(EventRef iEventRef, EventParamName iName, EventParamType iType)
 	{
 	ByteCount theLength;
 	if (noErr == ::GetEventParameter(iEventRef, iName, iType, nullptr, 0, &theLength, nullptr))
@@ -85,8 +85,8 @@ public:
 
 private:
 	static EventHandlerUPP spEventHandlerUPP;
-	static pascal OSStatus spEventHandler(
-		EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
+	static pascal OSStatus spEventHandler
+		(EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
 	OSStatus EventHandler(EventHandlerCallRef iCallRef, EventRef iEventRef);
 
 	EventQueueRef fEventQueueRef;
@@ -149,8 +149,8 @@ void Handler::InvokeOnMainThread(bool iAlwaysDelayed, CallbackProc_t iCallbackPr
 
 EventHandlerUPP Handler::spEventHandlerUPP = NewEventHandlerUPP(spEventHandler);
 
-pascal OSStatus Handler::spEventHandler(
-	EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon)
+pascal OSStatus Handler::spEventHandler
+	(EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon)
 	{
 	try
 		{
@@ -195,8 +195,8 @@ Handler spHandler;
 
 } // anonymous namespace
 
-void ZUtil_CarbonEvents::sInvokeOnMainThread(
-	bool iAlwaysDelayed, CallbackProc_t iCallback, void* iRefcon)
+void ZUtil_CarbonEvents::sInvokeOnMainThread
+	(bool iAlwaysDelayed, CallbackProc_t iCallback, void* iRefcon)
 	{ spHandler.InvokeOnMainThread(iAlwaysDelayed, iCallback, iRefcon); }
 
 void ZUtil_CarbonEvents::sInvokeOnMainThread(CallbackProc_t iCallback, void* iRefcon)

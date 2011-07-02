@@ -130,8 +130,8 @@ static void spSort(vector<uint64>& ioWrittenTupleIDs, vector<ZTuple>& ioWrittenT
 
 // Unpacks a request in a ZTuple, and returns the results in a tuple.
 
-static bool spSync1(
-	double iReadTime, ZRef<ZTSWatcher> iWatcher, const ZTuple& iReq, const ZStreamW& iStreamW)
+static bool spSync1
+	(double iReadTime, ZRef<ZTSWatcher> iWatcher, const ZTuple& iReq, const ZStreamW& iStreamW)
 	{
 	ZTime start = ZTime::sSystem();
 
@@ -221,8 +221,8 @@ static bool spSync1(
 
 	ZTime beforeSync = ZTime::sSystem();
 
-	if (not iWatcher->Sync(
-		&removedIDs[0], removedIDs.size(),
+	if (not iWatcher->Sync
+		(&removedIDs[0], removedIDs.size(),
 		&addedIDs[0], addedIDs.size(),
 		&removedQueries[0], removedQueries.size(),
 		&addedQueries[0], addedQueries.size(),
@@ -434,8 +434,8 @@ static void spSync_LastBit(const ZStreamW& iStreamW,
 #pragma mark -
 #pragma mark * spSync2
 
-static bool spSync2(
-	ZRef<ZTSWatcher> iWatcher, const ZStreamR& iStreamR_Real, const ZStreamW& iStreamW_Real)
+static bool spSync2
+	(ZRef<ZTSWatcher> iWatcher, const ZStreamR& iStreamR_Real, const ZStreamW& iStreamW_Real)
 	{
 	ZTime start = ZTime::sSystem();
 
@@ -464,8 +464,8 @@ static bool spSync2(
 			// This next line instantiates a ZTBQuery from iStreamR and assigns it to fTBQuery.
 			// It pulls it from a ZStreamR_Tee that's reading from iStreamR, and writing to
 			// a ZStreamRWPos_MemoryBlock whose output is fMemoryBlock.
-			theCombo.fTBQuery = ZTBQuery(ZStreamR_Tee(
-				iStreamR, ZStreamRWPos_MemoryBlock(theCombo.fMemoryBlock)));
+			theCombo.fTBQuery = ZTBQuery(ZStreamR_Tee
+				(iStreamR, ZStreamRWPos_MemoryBlock(theCombo.fMemoryBlock)));
 
 			theCombo.fPrefetch = false;
 			addedQueries.push_back(theCombo);
@@ -485,8 +485,8 @@ static bool spSync2(
 
 	ZTime beforeSync = ZTime::sSystem();
 
-	if (not iWatcher->Sync(
-		&removedIDs[0], removedIDs.size(),
+	if (not iWatcher->Sync
+		(&removedIDs[0], removedIDs.size(),
 		&addedIDs[0], addedIDs.size(),
 		&removedQueries[0], removedQueries.size(),
 		&addedQueries[0], addedQueries.size(),
@@ -561,8 +561,8 @@ static bool spSync2(
 #pragma mark -
 #pragma mark * spSync3
 
-static bool spSync3(
-	ZRef<ZTSWatcher> iWatcher, const ZStreamR& iStreamR_Real, const ZStreamW& iStreamW_Real)
+static bool spSync3
+	(ZRef<ZTSWatcher> iWatcher, const ZStreamR& iStreamR_Real, const ZStreamW& iStreamW_Real)
 	{
 	ZTime start = ZTime::sSystem();
 
@@ -616,8 +616,8 @@ static bool spSync3(
 
 	ZTime beforeSync = ZTime::sSystem();
 
-	if (not iWatcher->Sync(
-		&removedIDs[0], removedIDs.size(),
+	if (not iWatcher->Sync
+		(&removedIDs[0], removedIDs.size(),
 		&addedIDs[0], addedIDs.size(),
 		&removedQueries[0], removedQueries.size(),
 		&addedQueries[0], addedQueries.size(),
@@ -695,8 +695,8 @@ static bool spSync3(
 #pragma mark -
 #pragma mark * spSync4
 
-static bool spSync4(
-	ZRef<ZTSWatcher> iWatcher, const ZStreamR& iStreamR_Real, const ZStreamW& iStreamW_Real)
+static bool spSync4
+	(ZRef<ZTSWatcher> iWatcher, const ZStreamR& iStreamR_Real, const ZStreamW& iStreamW_Real)
 	{
 	ZTime start = ZTime::sSystem();
 
@@ -748,8 +748,8 @@ static bool spSync4(
 
 	ZTime beforeSync = ZTime::sSystem();
 
-	if (not iWatcher->Sync(
-		&removedIDs[0], removedIDs.size(),
+	if (not iWatcher->Sync
+		(&removedIDs[0], removedIDs.size(),
 		&addedIDs[0], addedIDs.size(),
 		&removedQueries[0], removedQueries.size(),
 		&addedQueries[0], addedQueries.size(),

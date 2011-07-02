@@ -394,8 +394,8 @@ struct Callback_GetTuple_t
 	ZTuple fTuple;
 	};
 
-static void spCallback_GetTuple(
-	void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
+static void spCallback_GetTuple
+	(void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 	{
 	ZAssert(iCount == 1);
 	static_cast<Callback_GetTuple_t*>(iRefcon)->fTuple = iTuples[0];

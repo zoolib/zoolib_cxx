@@ -137,8 +137,8 @@ static bool spAcquireCredentials(bool iVerify, bool iCheckName, CredHandle& oCre
 	else if (not iCheckName)
 		theSCC.dwFlags |= SCH_CRED_NO_SERVERNAME_CHECK;
 
-	return SEC_E_OK == spPSFT->AcquireCredentialsHandleA(
-		nullptr,
+	return SEC_E_OK == spPSFT->AcquireCredentialsHandleA
+		(nullptr,
 		const_cast<SEC_CHAR*>(UNISP_NAME_A),
 		SECPKG_CRED_OUTBOUND,
 		nullptr,
@@ -349,8 +349,8 @@ void ZStreamRWCon_SSL_Win::Imp_Write(const void* iSource, size_t iCount, size_t*
 		*oCountWritten = 0;
 
 	SecPkgContext_StreamSizes theSizes;
-	if (FAILED(spPSFT->QueryContextAttributesA(
-		&fCtxtHandle, SECPKG_ATTR_STREAM_SIZES, &theSizes)))
+	if (FAILED(spPSFT->QueryContextAttributesA
+		(&fCtxtHandle, SECPKG_ATTR_STREAM_SIZES, &theSizes)))
 		{
 		// QueryContextAttributesA really shouldn't ever fail.
 		ZAssert(false);
@@ -424,8 +424,8 @@ void ZStreamRWCon_SSL_Win::Imp_SendDisconnect()
 	outSBD.ulVersion = SECBUFFER_VERSION;
 
 	DWORD attributes;
-	SECURITY_STATUS scRet = spPSFT->InitializeSecurityContextA(
-		&fCredHandle,
+	SECURITY_STATUS scRet = spPSFT->InitializeSecurityContextA
+		(&fCredHandle,
 		&fCtxtHandle,
 		nullptr,
 		spRequirements,
@@ -463,8 +463,8 @@ bool ZStreamRWCon_SSL_Win::pConnect()
 	outSBD.ulVersion = SECBUFFER_VERSION;
 
 	DWORD attributes;
-	if (SEC_I_CONTINUE_NEEDED != spPSFT->InitializeSecurityContextA(
-		&fCredHandle,
+	if (SEC_I_CONTINUE_NEEDED != spPSFT->InitializeSecurityContextA
+		(&fCredHandle,
 		nullptr,
 		nullptr, // other party, needed if we're verifying
 		spRequirements,
@@ -518,8 +518,8 @@ bool ZStreamRWCon_SSL_Win::pHandshake()
 		outSBD.ulVersion = SECBUFFER_VERSION;
 
 		DWORD attributes;
-		const SECURITY_STATUS result = spPSFT->InitializeSecurityContextA(
-			&fCredHandle,
+		const SECURITY_STATUS result = spPSFT->InitializeSecurityContextA
+			(&fCredHandle,
 			&fCtxtHandle,
 			nullptr,
 			spRequirements,
@@ -564,8 +564,8 @@ bool ZStreamRWCon_SSL_Win::pHandshake()
 #pragma mark -
 #pragma mark * ZStreamRWCon_SSL_Win
 
-ZStreamerRWCon_SSL_Win::ZStreamerRWCon_SSL_Win(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+ZStreamerRWCon_SSL_Win::ZStreamerRWCon_SSL_Win
+	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fStreamerR(iStreamerR)
 ,	fStreamerW(iStreamerW)
 ,	fStream(fStreamerR->GetStreamR(), fStreamerW->GetStreamW())

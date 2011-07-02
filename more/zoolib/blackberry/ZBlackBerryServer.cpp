@@ -60,8 +60,8 @@ private:
 	EState fState;
 	};
 
-ZBlackBerryServer::Handler_ManagerChanged::Handler_ManagerChanged(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+ZBlackBerryServer::Handler_ManagerChanged::Handler_ManagerChanged
+	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 	ZBlackBerryServer* iServer)
 :	ZCommer(iStreamerR, iStreamerW),
 	fServer(iServer),
@@ -174,8 +174,8 @@ private:
 	bool fOpen;
 	};
 
-ZBlackBerryServer::Handler_DeviceFinished::Handler_DeviceFinished(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+ZBlackBerryServer::Handler_DeviceFinished::Handler_DeviceFinished
+	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 	ZBlackBerryServer* iServer)
 :	ZCommer(iStreamerR, iStreamerW),
 	fServer(iServer),
@@ -254,8 +254,8 @@ private:
 	ZRef<ZStreamerWCon> fStreamerWCon;
 	};
 
-StreamerCopier_Chunked::StreamerCopier_Chunked(
-	ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon)
+StreamerCopier_Chunked::StreamerCopier_Chunked
+	(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon)
 :	fStreamerRCon(iStreamerRCon),
 	fStreamerWCon(iStreamerWCon)
 	{}

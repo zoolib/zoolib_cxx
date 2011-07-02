@@ -94,8 +94,8 @@ bool ZTSWatcher_AutoReconnect::AllocateIDs(size_t iCount, uint64& oBaseID, size_
 		}
 	}
 
-bool ZTSWatcher_AutoReconnect::Sync(
-	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+bool ZTSWatcher_AutoReconnect::Sync
+	(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 	const AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
@@ -248,8 +248,8 @@ bool ZTSWatcher_AutoReconnect::pEstablishConnection()
 	return true;
 	}
 
-void ZTSWatcher_AutoReconnect::pUpdateRegistrations(
-	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+void ZTSWatcher_AutoReconnect::pUpdateRegistrations
+	(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 	const AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount)
@@ -332,8 +332,8 @@ bool ZTSWatcher_AutoReconnect::pAllocateIDs(size_t iCount, uint64& oBaseID, size
 	return false;
 	}
 
-bool ZTSWatcher_AutoReconnect::pSync(
-	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+bool ZTSWatcher_AutoReconnect::pSync
+	(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 	const AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
@@ -342,8 +342,8 @@ bool ZTSWatcher_AutoReconnect::pSync(
 	const uint64* iWrittenTupleIDs, const ZTuple* iWrittenTuples, size_t iWrittenTuplesCount,
 	map<int64, vector<uint64> >& oChangedQueries)
 	{
-	if (fTSWatcher && fTSWatcher->Sync(
-		iRemovedIDs, iRemovedIDsCount,
+	if (fTSWatcher && fTSWatcher->Sync
+		(iRemovedIDs, iRemovedIDsCount,
 		iAddedIDs, iAddedIDsCount,
 		iRemovedQueries, iRemovedQueriesCount,
 		iAddedQueries, iAddedQueriesCount,

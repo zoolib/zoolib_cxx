@@ -184,8 +184,8 @@ protected:
 #pragma mark -
 #pragma mark * Util_Expr_Bool
 
-static ZRef<ZExpr_Bool> spFromDisjunction(
-	const Disjunction& iDisjunction,
+static ZRef<ZExpr_Bool> spFromDisjunction
+	(const Disjunction& iDisjunction,
 	const ZRef<ZExpr_Bool>& iTrue,
 	const ZRef<ZExpr_Bool>& iFalse)
 	{

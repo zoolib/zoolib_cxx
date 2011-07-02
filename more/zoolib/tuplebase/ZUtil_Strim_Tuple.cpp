@@ -29,8 +29,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * Format
 
-ZUtil_Strim_Tuple::Format::Format(
-	const ZTValue& iTV, int iInitialIndent, const ZYadOptions& iOptions)
+ZUtil_Strim_Tuple::Format::Format
+	(const ZTValue& iTV, int iInitialIndent, const ZYadOptions& iOptions)
 :	fTValue(iTV),
 	fInitialIndent(iInitialIndent),
 	fOptions(iOptions)

@@ -176,8 +176,8 @@ static void spGetSymNameAndOffset(const void* iAddress, string& oSymName, size_t
 		char moduleFileName[MAX_PATH];
 		::GetModuleFileNameA(::GetModuleHandleA(nullptr), moduleFileName, sizeof(moduleFileName));
 
-		bool inited2 = ::SymLoadModule(
-						currentProcess, // process handle
+		bool inited2 = ::SymLoadModule
+						(currentProcess, // process handle
 						nullptr, // file handle
 						moduleFileName, // path to exe
 						nullptr, // module name

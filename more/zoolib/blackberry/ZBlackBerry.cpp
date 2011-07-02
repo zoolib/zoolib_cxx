@@ -66,8 +66,8 @@ Device::Device()
 Device::~Device()
 	{}
 
-ZRef<Channel> Device::Open(
-	const string& iName, const PasswordHash* iPasswordHash, Error* oError)
+ZRef<Channel> Device::Open
+	(const string& iName, const PasswordHash* iPasswordHash, Error* oError)
 	{ return this->Open(false, iName, iPasswordHash, oError); }
 
 uint32 Device::GetPIN()

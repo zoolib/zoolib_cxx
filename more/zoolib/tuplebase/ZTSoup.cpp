@@ -361,8 +361,8 @@ bool ZTSoup::Sync()
 			if (thePCrouton->fHasValue_ForWatcher)
 				{
 				thePCrouton->fHasValue_ForWatcher = false;
-				writtenTupleMap.insert(
-					pair<uint64, ZTuple>(thePCrouton->fID, thePCrouton->fValue_ForWatcher));
+				writtenTupleMap.insert
+					(pair<uint64, ZTuple>(thePCrouton->fID, thePCrouton->fValue_ForWatcher));
 
 				if (!thePCrouton->fWatcherKnown)
 					{
@@ -474,8 +474,8 @@ bool ZTSoup::Sync()
 	vector<ZTuple> changedTuples;
 	map<int64, vector<uint64> > changedQueries;
 
-	if (!theTSWatcher->Sync(
-		sFirstOrNil(removedIDs), removedIDs.size(),
+	if (!theTSWatcher->Sync
+		(sFirstOrNil(removedIDs), removedIDs.size(),
 		sFirstOrNil(addedIDs), addedIDs.size(),
 		sFirstOrNil(removedQueries), removedQueries.size(),
 		sFirstOrNil(addedQueries), addedQueries.size(),
@@ -796,8 +796,8 @@ void ZTSoup::Purge()
 	fID_To_PCrouton.clear();
 	}
 
-void ZTSoup::Updated(
-	const set<ZRef<ZTSieve> >& iSievesLoaded,
+void ZTSoup::Updated
+	(const set<ZRef<ZTSieve> >& iSievesLoaded,
 	const set<ZRef<ZTSieve> >& iSievesChanged,
 	const set<ZRef<ZTCrouton> >& iCroutonsLoaded,
 	const set<ZRef<ZTCrouton> >& iCroutonsChanged)
@@ -991,11 +991,11 @@ void ZTSoup::pCheckSieveDiffs(PSieve* iPSieve)
 		ZAssertStop(kDebug, iPSieve->fAdded.empty());
 		ZAssertStop(kDebug, iPSieve->fRemoved.empty());
 
-		set<uint64> current(
-			iPSieve->fResults_Local_Current.begin(), iPSieve->fResults_Local_Current.end());
+		set<uint64> current
+			(iPSieve->fResults_Local_Current.begin(), iPSieve->fResults_Local_Current.end());
 
-		set<uint64> prior(
-			iPSieve->fResults_Local_Prior.begin(), iPSieve->fResults_Local_Prior.end());
+		set<uint64> prior
+			(iPSieve->fResults_Local_Prior.begin(), iPSieve->fResults_Local_Prior.end());
 
 		set_difference(current.begin(), current.end(),
 					prior.begin(), prior.end(),

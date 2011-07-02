@@ -84,8 +84,8 @@ const ZRef<ZExpr_Bool>& Expr_Rel_Search::GetExpr_Bool() const
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Search
 
-void Visitor_Expr_Rel_Search::Visit_Expr_Rel_Search(
-	const ZRef<Expr_Rel_Search>& iExpr)
+void Visitor_Expr_Rel_Search::Visit_Expr_Rel_Search
+	(const ZRef<Expr_Rel_Search>& iExpr)
 	{ this->Visit_Expr(iExpr); }
 
 } // namespace ZQE

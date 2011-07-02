@@ -74,8 +74,8 @@ public:
 	bool HasMethod(const string& iName);
 
 	using Base_t::Invoke;
-	bool Invoke(
-		const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+	bool Invoke
+		(const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 
 	using Base_t::InvokeDefault;
 	bool InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
@@ -108,8 +108,8 @@ protected:
 	virtual void Imp_Invalidate();
 	virtual bool Imp_HasMethod(const string& iName);
 
-	virtual bool Imp_Invoke(
-		const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+	virtual bool Imp_Invoke
+		(const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 
 	virtual bool Imp_InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 	virtual bool Imp_HasProperty(const string& iName);
@@ -213,8 +213,8 @@ public:
 
 	virtual NPIdentifier GetStringIdentifier(const NPUTF8* name) = 0;
 
-	virtual void GetStringIdentifiers(
-		const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers) = 0;
+	virtual void GetStringIdentifiers
+		(const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers) = 0;
 
 	virtual NPIdentifier GetIntIdentifier(int32 intid) = 0;
 
@@ -324,8 +324,8 @@ private:
 
 	static NPIdentifier spGetStringIdentifier(const NPUTF8* name);
 
-	static void spGetStringIdentifiers(
-		const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers);
+	static void spGetStringIdentifiers
+		(const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers);
 
 	static NPIdentifier spGetIntIdentifier(int32_t intid);
 
@@ -427,8 +427,8 @@ public:
 
 	NPError Guest_SetWindow(NPWindow* window);
 
-	NPError Guest_NewStream(
-		NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
+	NPError Guest_NewStream
+		(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
 
 	NPError Guest_DestroyStream(NPStream* stream, NPReason reason);
 

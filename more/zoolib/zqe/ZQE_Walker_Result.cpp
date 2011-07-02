@@ -41,8 +41,8 @@ Walker_Result::~Walker_Result()
 void Walker_Result::Rewind()
 	{ fIndex = 0; }
 
-ZRef<Walker> Walker_Result::Prime(
-	const map<string8,size_t>& iOffsets,
+ZRef<Walker> Walker_Result::Prime
+	(const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
@@ -53,8 +53,8 @@ ZRef<Walker> Walker_Result::Prime(
 	return this;
 	}
 
-bool Walker_Result::ReadInc(
-	ZVal_Any* oResults,
+bool Walker_Result::ReadInc
+	(ZVal_Any* oResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	if (fIndex >= fResult->Count())

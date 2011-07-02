@@ -44,8 +44,8 @@ bool ZCnd_boost::Wait(boost::mutex& iMtx, double iTimeout)
 	{
 	boost::mutex::scoped_lock theLock(iMtx, boost::adopt_lock);
 
-	return condition_variable::timed_wait(
-		theLock, boost::posix_time::microseconds(iTimeout * 1e6));
+	return condition_variable::timed_wait
+		(theLock, boost::posix_time::microseconds(iTimeout * 1e6));
 	}
 
 void ZCnd_boost::Signal()

@@ -657,8 +657,8 @@ do this, but others might need to.
 \param iSourceCU The number UTF-32 code units that are available to be encoded.
 \param oSourceCU (optional output) The number of UTF-32 code units that were consumed.
 */
-void ZTextEncoder::Encode(
-	const ZStreamW& iStreamW, const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU)
+void ZTextEncoder::Encode
+	(const ZStreamW& iStreamW, const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU)
 	{
 	uint8 buffer[kBufSize];
 	const UTF32* localSource = iSource;

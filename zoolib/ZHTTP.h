@@ -71,8 +71,8 @@ private:
 bool sOrganizeRanges(size_t iSourceSize,
 	const Val& iRangeParam, std::vector<std::pair<size_t, size_t> >& oRanges);
 
-bool sReadRequest(
-	const ZStreamR& iStreamR, std::string* oMethod, std::string* oURL, std::string* oErrorString);
+bool sReadRequest
+	(const ZStreamR& iStreamR, std::string* oMethod, std::string* oURL, std::string* oErrorString);
 
 bool sReadResponse(const ZStreamU& iStream, int32* oResultCode, std::string* oResultMessage);
 
@@ -146,8 +146,8 @@ bool sRead_content_range(const ZStreamU& iStream, Map* ioFields);
 bool sRead_content_range(const ZStreamU& iStream, int64& oBegin, int64& oEnd, int64& oMaxLength);
 
 bool sRead_content_type(const ZStreamU& iStream, Map* ioFields);
-bool sRead_content_type(
-	const ZStreamU& iStream, std::string& oType, std::string& oSubType, Map& oParameters);
+bool sRead_content_type
+	(const ZStreamU& iStream, std::string& oType, std::string& oSubType, Map& oParameters);
 
 // =================================================================================================
 
@@ -157,11 +157,11 @@ bool sReadURI(const ZStreamU& iStream, std::string* oURI);
 
 bool sReadFieldName(const ZStreamU& iStream, std::string* oName, std::string* oNameExact);
 
-bool sReadParameter(
-	const ZStreamU& iStream, std::string* oName, std::string* oValue, std::string* oNameExact);
+bool sReadParameter
+	(const ZStreamU& iStream, std::string* oName, std::string* oValue, std::string* oNameExact);
 
-bool sReadParameter_Cookie(
-	const ZStreamU& iStream, std::string* oName, std::string* oValue, std::string* oNameExact);
+bool sReadParameter_Cookie
+	(const ZStreamU& iStream, std::string* oName, std::string* oValue, std::string* oNameExact);
 
 bool sReadMediaType(const ZStreamU& iStream,
 	std::string* oType, std::string* oSubtype, Map* oParameters,

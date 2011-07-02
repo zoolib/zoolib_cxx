@@ -105,8 +105,8 @@ ZTextDecoder_ICU::~ZTextDecoder_ICU()
 	::ucnv_close(fConverter);
 	}
 
-bool ZTextDecoder_ICU::Decode(
-	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+bool ZTextDecoder_ICU::Decode
+	(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	UChar utf16Buffer[kBufSize];
@@ -134,8 +134,8 @@ bool ZTextDecoder_ICU::Decode(
 
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		ZUnicode::sUTF16ToUTF32(
-			reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
+		ZUnicode::sUTF16ToUTF32
+			(reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
 			&utf16Consumed, nullptr,
 			localDest, iDestCU,
 			&utf32Generated);
@@ -201,8 +201,8 @@ void ZTextEncoder_ICU::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		{
 		size_t utf32Consumed;
 		size_t utf16Generated;
-		ZUnicode::sUTF32ToUTF16(
-			localSource, iSourceCU,
+		ZUnicode::sUTF32ToUTF16
+			(localSource, iSourceCU,
 			&utf32Consumed, nullptr,
 			reinterpret_cast<UTF16*>(utf16Buffer), min(kBufSize, iDestBytes),
 			&utf16Generated,
@@ -223,8 +223,8 @@ void ZTextEncoder_ICU::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 			// We were not able to consume all the intermediary UTF-16 that was generated.
 			// Turn the number of complete code points consumed back into the number of
 			// corresponding UTF-32 code units.
-			size_t codePoints = ZUnicode::sCUToCP(
-				reinterpret_cast<const UTF16*>(utf16Buffer), utf16Consumed);
+			size_t codePoints = ZUnicode::sCUToCP
+				(reinterpret_cast<const UTF16*>(utf16Buffer), utf16Consumed);
 
 			utf32Consumed = ZUnicode::sCPToCU(localSource, codePoints);
 			}

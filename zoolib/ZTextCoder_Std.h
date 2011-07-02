@@ -38,8 +38,8 @@ class ZTextDecoder_ASCII : public ZTextDecoder
 public:
 	using ZTextDecoder::Decode;
 
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	virtual bool Decode
+		(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 	};
 
@@ -65,8 +65,8 @@ class ZTextDecoder_ISO8859_1 : public ZTextDecoder
 public:
 	using ZTextDecoder::Decode;
 
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	virtual bool Decode
+		(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 	};
 
@@ -92,8 +92,8 @@ class ZTextDecoder_MacRoman : public ZTextDecoder
 public:
 	using ZTextDecoder::Decode;
 
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	virtual bool Decode
+		(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 	};
 
@@ -119,8 +119,8 @@ class ZTextDecoder_CP1252 : public ZTextDecoder
 public:
 	using ZTextDecoder::Decode;
 
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	virtual bool Decode
+		(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 	};
 
@@ -146,8 +146,8 @@ class ZTextDecoder_CP850 : public ZTextDecoder
 public:
 	using ZTextDecoder::Decode;
 
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	virtual bool Decode
+		(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 	};
 

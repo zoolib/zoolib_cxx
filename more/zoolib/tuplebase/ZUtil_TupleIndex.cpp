@@ -51,8 +51,8 @@ ZRef<ZTupleIndexFactory> ZUtil_TupleIndex::sCreate_General(const string& iPropNa
 		}
 	}
 
-ZRef<ZTupleIndexFactory> ZUtil_TupleIndex::sCreate_General(
-	const string& iPropName0,
+ZRef<ZTupleIndexFactory> ZUtil_TupleIndex::sCreate_General
+	(const string& iPropName0,
 	const string& iPropName1)
 	{
 	vector<string> propNames;
@@ -66,8 +66,8 @@ ZRef<ZTupleIndexFactory> ZUtil_TupleIndex::sCreate_General(
 		return new ZTupleIndexFactory_T<2>(&propNames[0]);
 	}
 
-ZRef<ZTupleIndexFactory> ZUtil_TupleIndex::sCreate_General(
-	const string& iPropName0,
+ZRef<ZTupleIndexFactory> ZUtil_TupleIndex::sCreate_General
+	(const string& iPropName0,
 	const string& iPropName1,
 	const string& iPropName2)
 	{

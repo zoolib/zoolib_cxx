@@ -49,8 +49,8 @@ namespace ZooLib {
 class ZNetNameLookup_Internet_MacOT_OSX : public ZNetNameLookup
 	{
 public:
-	ZNetNameLookup_Internet_MacOT_OSX(
-		const std::string& iName, ip_port iPort, size_t iMaxAddresses);
+	ZNetNameLookup_Internet_MacOT_OSX
+		(const std::string& iName, ip_port iPort, size_t iMaxAddresses);
 	virtual ~ZNetNameLookup_Internet_MacOT_OSX();
 
 // From ZNetNameLookup

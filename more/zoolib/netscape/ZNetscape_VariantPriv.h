@@ -56,8 +56,8 @@ ZAny NPVariant_T<T>::AsAny(const ZAny& iDefault) const
 			}
 		case NPVariantType_String:
 			{
-			return ZAny(std::string(
-				sNPStringCharsConst(value.stringValue),
+			return ZAny(std::string
+				(sNPStringCharsConst(value.stringValue),
 				sNPStringLengthConst(value.stringValue)));
 			}
 		case NPVariantType_Object:
@@ -93,8 +93,8 @@ void NPVariant_T<T>::pCopyFrom(const NPVariant& iOther)
 			}
 		case NPVariantType_String:
 			{
-			this->pSetString(
-				sNPStringCharsConst(iOther.value.stringValue),
+			this->pSetString
+				(sNPStringCharsConst(iOther.value.stringValue),
 				sNPStringLengthConst(iOther.value.stringValue));
 			break;
 			}

@@ -137,16 +137,16 @@ void NPObjectG::Release()
 bool NPObjectG::HasMethod(const string& iName)
 	{ return GuestMeister::sGet()->Host_HasMethod(SetRestoreNPP::sCurrent(), this, sAsNPI(iName)); }
 
-bool NPObjectG::Invoke(
-	const string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
+bool NPObjectG::Invoke
+	(const string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
 	{
-	return GuestMeister::sGet()->Host_Invoke(
-		SetRestoreNPP::sCurrent(), this, sAsNPI(iName), iArgs, iCount, &oResult);
+	return GuestMeister::sGet()->Host_Invoke
+		(SetRestoreNPP::sCurrent(), this, sAsNPI(iName), iArgs, iCount, &oResult);
 	}
 
 bool NPObjectG::InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
-	{ return GuestMeister::sGet()->Host_InvokeDefault(
-		SetRestoreNPP::sCurrent(), this, iArgs, iCount, &oResult); }
+	{ return GuestMeister::sGet()->Host_InvokeDefault
+		(SetRestoreNPP::sCurrent(), this, iArgs, iCount, &oResult); }
 
 bool NPObjectG::HasProperty(const string& iName)
 	{
@@ -159,39 +159,39 @@ bool NPObjectG::HasProperty(size_t iIndex)
 	}
 
 bool NPObjectG::GetProperty(const string& iName, NPVariantG& oResult)
-	{ return GuestMeister::sGet()->Host_GetProperty(
-		SetRestoreNPP::sCurrent(), this, sAsNPI(iName), &oResult); }
+	{ return GuestMeister::sGet()->Host_GetProperty
+		(SetRestoreNPP::sCurrent(), this, sAsNPI(iName), &oResult); }
 
 bool NPObjectG::GetProperty(size_t iIndex, NPVariantG& oResult)
-	{ return GuestMeister::sGet()->Host_GetProperty(
-		SetRestoreNPP::sCurrent(), this, sAsNPI(iIndex), &oResult); }
+	{ return GuestMeister::sGet()->Host_GetProperty
+		(SetRestoreNPP::sCurrent(), this, sAsNPI(iIndex), &oResult); }
 
 bool NPObjectG::SetProperty(const string& iName, const NPVariantG& iValue)
-	{ return GuestMeister::sGet()->Host_SetProperty(
-		SetRestoreNPP::sCurrent(), this, sAsNPI(iName), &iValue); }
+	{ return GuestMeister::sGet()->Host_SetProperty
+		(SetRestoreNPP::sCurrent(), this, sAsNPI(iName), &iValue); }
 
 bool NPObjectG::SetProperty(size_t iIndex, const NPVariantG& iValue)
-	{ return GuestMeister::sGet()->Host_SetProperty(
-		SetRestoreNPP::sCurrent(), this, sAsNPI(iIndex), &iValue); }
+	{ return GuestMeister::sGet()->Host_SetProperty
+		(SetRestoreNPP::sCurrent(), this, sAsNPI(iIndex), &iValue); }
 
 bool NPObjectG::RemoveProperty(const string& iName)
-	{ return GuestMeister::sGet()->Host_RemoveProperty(
-		SetRestoreNPP::sCurrent(), this, sAsNPI(iName)); }
+	{ return GuestMeister::sGet()->Host_RemoveProperty
+		(SetRestoreNPP::sCurrent(), this, sAsNPI(iName)); }
 
 bool NPObjectG::RemoveProperty(size_t iIndex)
-	{ return GuestMeister::sGet()->Host_RemoveProperty(
-		SetRestoreNPP::sCurrent(), this, sAsNPI(iIndex)); }
+	{ return GuestMeister::sGet()->Host_RemoveProperty
+		(SetRestoreNPP::sCurrent(), this, sAsNPI(iIndex)); }
 
 bool NPObjectG::Enumerate(NPIdentifier*& oIdentifiers, uint32& oCount)
-	{ return GuestMeister::sGet()->Host_Enumerate(
-		SetRestoreNPP::sCurrent(), this, &oIdentifiers, &oCount); }
+	{ return GuestMeister::sGet()->Host_Enumerate
+		(SetRestoreNPP::sCurrent(), this, &oIdentifiers, &oCount); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ObjectG
 
-NPClass_Z ObjectG::spNPClass(
-	spAllocate,
+NPClass_Z ObjectG::spNPClass
+	(spAllocate,
 	spDeallocate,
 	spInvalidate,
 	spHasMethod,
@@ -222,8 +222,8 @@ void ObjectG::Imp_Invalidate()
 bool ObjectG::Imp_HasMethod(const std::string& iName)
 	{ return false; }
 
-bool ObjectG::Imp_Invoke(
-	const std::string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
+bool ObjectG::Imp_Invoke
+	(const std::string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
 	{ return false; }
 
 bool ObjectG::Imp_InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
@@ -313,8 +313,8 @@ bool ObjectG::spInvoke(NPObject* npobj,
 	NPIdentifier name, const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
 	ZMACRO_Netscape_Before_Object(npobj)
-		return static_cast<ObjectG*>(npobj)->Imp_Invoke(
-			sAsString(name),
+		return static_cast<ObjectG*>(npobj)->Imp_Invoke
+			(sAsString(name),
 			static_cast<const NPVariantG*>(args),
 			argCount,
 			*static_cast<NPVariantG*>(result));
@@ -325,8 +325,8 @@ bool ObjectG::spInvokeDefault(NPObject* npobj,
 	const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
 	ZMACRO_Netscape_Before_Object(npobj)
-		return static_cast<ObjectG*>(npobj)->Imp_InvokeDefault(
-			static_cast<const NPVariantG*>(args),
+		return static_cast<ObjectG*>(npobj)->Imp_InvokeDefault
+			(static_cast<const NPVariantG*>(args),
 			argCount,
 			*static_cast<NPVariantG*>(result));
 	ZMACRO_Netscape_After_Return_False
@@ -349,14 +349,14 @@ bool ObjectG::spGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* resul
 	ZMACRO_Netscape_Before_Object(npobj)
 		if (sIsString(name))
 			{
-			return static_cast<ObjectG*>(npobj)->Imp_GetProperty(
-				sAsString(name),
+			return static_cast<ObjectG*>(npobj)->Imp_GetProperty
+				(sAsString(name),
 				*static_cast<NPVariantG*>(result));
 			}
 		else
 			{
-			return static_cast<ObjectG*>(npobj)->Imp_GetProperty(
-				sAsInt(name),
+			return static_cast<ObjectG*>(npobj)->Imp_GetProperty
+				(sAsInt(name),
 				*static_cast<NPVariantG*>(result));
 			}
 	ZMACRO_Netscape_After_Return_False
@@ -367,14 +367,14 @@ bool ObjectG::spSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant*
 	ZMACRO_Netscape_Before_Object(npobj)
 		if (sIsString(name))
 			{
-			return static_cast<ObjectG*>(npobj)->Imp_SetProperty(
-				sAsString(name),
+			return static_cast<ObjectG*>(npobj)->Imp_SetProperty
+				(sAsString(name),
 				*static_cast<const NPVariantG*>(value));
 			}
 		else
 			{
-			return static_cast<ObjectG*>(npobj)->Imp_SetProperty(
-				sAsInt(name),
+			return static_cast<ObjectG*>(npobj)->Imp_SetProperty
+				(sAsInt(name),
 				*static_cast<const NPVariantG*>(value));
 			}
 	ZMACRO_Netscape_After_Return_False
@@ -592,8 +592,8 @@ void GuestMeister::Host_ForceRedraw(NPP npp)
 NPIdentifier GuestMeister::Host_GetStringIdentifier(const NPUTF8* name)
 	{ return fNPNF.getstringidentifier(name); }
 
-void GuestMeister::Host_GetStringIdentifiers(
-	const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers)
+void GuestMeister::Host_GetStringIdentifiers
+	(const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers)
 	{ return fNPNF.getstringidentifiers(names, nameCount, identifiers); }
 
 NPIdentifier GuestMeister::Host_GetIntIdentifier(int32 intid)
@@ -750,8 +750,8 @@ bool GuestMeister::Host_Construct
 	return false;
 	}
 
-NPError GuestMeister::spNew(
-	NPMIMEType pluginType, NPP npp, uint16 mode,
+NPError GuestMeister::spNew
+	(NPMIMEType pluginType, NPP npp, uint16 mode,
 	int16 argc, char* argn[], char* argv[], NPSavedData* saved)
 	{
 	ZMACRO_Netscape_Before_GuestMeister(npp)
@@ -773,8 +773,8 @@ NPError GuestMeister::spSetWindow(NPP npp, NPWindow* window)
 	ZMACRO_Netscape_After_NPError
 	}
 
-NPError GuestMeister::spNewStream(
-	NPP npp, NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
+NPError GuestMeister::spNewStream
+	(NPP npp, NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
 	{
 	ZMACRO_Netscape_Before_GuestMeister(npp)
 		return sGet()->NewStream(npp, type, stream, seekable, stype);
@@ -911,8 +911,8 @@ NPP Guest::GetNPP()
 NPError Guest::Host_GetURL(const char* url, const char* target)
 	{ return GuestMeister::sGet()->Host_GetURL(fNPP, url, target); }
 
-NPError Guest::Host_PostURL(
-	const char* url, const char* target, uint32 len, const char* buf, NPBool file)
+NPError Guest::Host_PostURL
+	(const char* url, const char* target, uint32 len, const char* buf, NPBool file)
 	{ return GuestMeister::sGet()->Host_PostURL(fNPP, url, target, len, buf, file); }
 
 NPError Guest::Host_RequestRead(NPStream* stream, NPByteRange* rangeList)
@@ -978,8 +978,8 @@ void Guest::Host_ForceRedraw()
 NPIdentifier Guest::Host_GetStringIdentifier(const NPUTF8* name)
 	{ return GuestMeister::sGet()->Host_GetStringIdentifier(name); }
 
-void Guest::Host_GetStringIdentifiers(
-	const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers)
+void Guest::Host_GetStringIdentifiers
+	(const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers)
 	{ return GuestMeister::sGet()->Host_GetStringIdentifiers(names, nameCount, identifiers); }
 
 NPIdentifier Guest::Host_GetIntIdentifier(int32 intid)
@@ -1007,8 +1007,8 @@ bool Guest::Host_Invoke(NPObject* obj,
 	NPIdentifier methodName, const NPVariant* args, unsigned argCount, NPVariant* result)
 	{ return GuestMeister::sGet()->Host_Invoke(fNPP, obj, methodName, args, argCount, result); }
 
-bool Guest::Host_InvokeDefault(
-	NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result)
+bool Guest::Host_InvokeDefault
+	(NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result)
 	{ return GuestMeister::sGet()->Host_InvokeDefault(fNPP, obj, args, argCount, result); }
 
 bool Guest::Host_Evaluate(NPObject* obj, NPString* script, NPVariant* result)

@@ -43,9 +43,6 @@ public:
 // From ZWorkerRunner_EventLoop
 	virtual void pQueueCallback();
 
-// Our protocol
-	static void sAttach(ZRef<ZWorker> iWorker);
-
 private:
 	static void spCallback(void* iRefcon);
 	};

@@ -61,8 +61,8 @@ public:
 	virtual void AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCount);
 	virtual void SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
 	virtual void GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples);
-	virtual void Search(
-		const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& ioIDs);
+	virtual void Search
+		(const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& ioIDs);
 	virtual ZMutexBase& GetReadLock();
 	virtual ZMutexBase& GetWriteLock();
 

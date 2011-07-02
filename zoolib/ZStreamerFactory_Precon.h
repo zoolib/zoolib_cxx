@@ -51,8 +51,8 @@ private:
 class ZStreamerRWConFactory_Precon : public ZStreamerRWConFactory
 	{
 public:
-	ZStreamerRWConFactory_Precon(
-		ZRef<ZStreamerRWCon> iSRWCon, ZRef<ZStreamerRWConFactory> iFactory);
+	ZStreamerRWConFactory_Precon
+		(ZRef<ZStreamerRWCon> iSRWCon, ZRef<ZStreamerRWConFactory> iFactory);
 	virtual ~ZStreamerRWConFactory_Precon();
 
 // From ZStreamerRWConFactory

@@ -53,8 +53,8 @@ public:
 	void Update();
 
 // These methods *can* be overridden, but it's by no means essential.
-	virtual void Updated(
-		const std::set<ZRef<Sieve> >& iSievesLoaded,
+	virtual void Updated
+		(const std::set<ZRef<Sieve> >& iSievesLoaded,
 		const std::set<ZRef<Sieve> >& iSievesChanged);
 
 	virtual void Loaded(const std::set<ZRef<Sieve> >& iSieves);

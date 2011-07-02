@@ -128,8 +128,8 @@ static string8 spAsString8(JSStringRef iRef)
 	{
 	if (iRef)
 		{
-		return ZUnicode::sAsUTF8(
-			static_cast<const UTF16*>(::JSStringGetCharactersPtr(iRef)),
+		return ZUnicode::sAsUTF8
+			(static_cast<const UTF16*>(::JSStringGetCharactersPtr(iRef)),
 			::JSStringGetLength(iRef));
 		}
 	return string8();
@@ -139,8 +139,8 @@ static string16 spAsString16(JSStringRef iRef)
 	{
 	if (iRef)
 		{
-		return string16(
-			::JSStringGetCharactersPtr(iRef),
+		return string16
+			(::JSStringGetCharactersPtr(iRef),
 			::JSStringGetLength(iRef));
 		}
 	return string16();
@@ -757,18 +757,18 @@ void ObjectImp::Finalize(JSObjectRef iJSObjectRef)
 bool ObjectImp::HasProperty(const ObjectRef& iThis, const String& iPropName)
 	{ return false; }
 
-Value ObjectImp::GetProperty(
-	const ObjectRef& iThis, const String& iPropName, Value& oEx)
+Value ObjectImp::GetProperty
+	(const ObjectRef& iThis, const String& iPropName, Value& oEx)
 	{
 	return Value();
 	}
 
-bool ObjectImp::SetProperty(
-	const ObjectRef& iThis, const String& iPropName, const Value& iVal, Value& oEx)
+bool ObjectImp::SetProperty
+	(const ObjectRef& iThis, const String& iPropName, const Value& iVal, Value& oEx)
 	{ return false; }
 
-void ObjectImp::GetPropertyNames(
-	const ObjectRef& iThis, JSPropertyNameAccumulatorRef propertyNames)
+void ObjectImp::GetPropertyNames
+	(const ObjectRef& iThis, JSPropertyNameAccumulatorRef propertyNames)
 	{}
 
 Value ObjectImp::CallAsFunction(const ObjectRef& iFunction, const ObjectRef& iThis,

@@ -169,8 +169,8 @@ public:
 		return this;
 		}
 
-	virtual bool ReadInc(
-		ZVal_Any* ioResults,
+	virtual bool ReadInc
+		(ZVal_Any* ioResults,
 		set<ZRef<ZCounted> >* oAnnotations)
 		{ return fSource->pReadInc_Concrete(this, ioResults, oAnnotations); }
 
@@ -274,8 +274,8 @@ Source_DatonSet::~Source_DatonSet()
 bool Source_DatonSet::Intersects(const RelHead& iRelHead)
 	{ return true; }
 
-void Source_DatonSet::ModifyRegistrations(
-	const AddedQuery* iAdded, size_t iAddedCount,
+void Source_DatonSet::ModifyRegistrations
+	(const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	ZGuardRMtxR guard(fMtxR);
@@ -300,8 +300,8 @@ void Source_DatonSet::ModifyRegistrations(
 		const int64 theRefcon = iAdded->GetRefcon();
 
 		const pair<map<int64,ClientQuery>::iterator,bool> iterClientQueryPair =
-			fMap_Refcon_ClientQuery.insert(
-			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery)));
+			fMap_Refcon_ClientQuery.insert
+			(make_pair(theRefcon, ClientQuery(theRefcon, thePQuery)));
 		ZAssert(iterClientQueryPair.second);
 
 		ClientQuery* theClientQuery = &iterClientQueryPair.first->second;
@@ -327,9 +327,9 @@ void Source_DatonSet::ModifyRegistrations(
 			fMap_Refcon_ClientQuery.find(theRefcon);
 
 		ZAssertStop(kDebug, iterClientQuery != fMap_Refcon_ClientQuery.end());
-		
+
 		ClientQuery* theClientQuery = &iterClientQuery->second;
-		
+
 		PQuery* thePQuery = theClientQuery->fPQuery;
 		thePQuery->fClientQuery_InPQuery.Erase(theClientQuery);
 		if (thePQuery->fClientQuery_InPQuery.Empty())
@@ -363,14 +363,14 @@ void Source_DatonSet::ModifyRegistrations(
 void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 	{
 	this->pCollectResultsCalled();
-	
+
 	ZAcqMtxR acq(fMtxR);
 
 	oChanged.clear();
 
 	// Pick changes datonSet
 	this->pPull();
-	
+
 	ZLOGPF(s, eDebug + 1);
 
 	for (DListEraser<PQuery,DLink_PQuery_NeedsWork> eraser = fPQuery_NeedsWork;
@@ -443,7 +443,7 @@ ZRef<Event> Source_DatonSet::Insert(const Daton& iDaton)
 	ZRef<Event> result = this->pConditionalPushDown();
 	guard.Release();
 
-	Source::pTriggerResultsAvailable();	
+	Source::pTriggerResultsAvailable();
 
 	return result;
 	}
@@ -455,7 +455,7 @@ ZRef<Event> Source_DatonSet::Erase(const Daton& iDaton)
 	ZRef<Event> result = this->pConditionalPushDown();
 	guard.Release();
 
-	Source::pTriggerResultsAvailable();	
+	Source::pTriggerResultsAvailable();
 
 	return result;
 	}
@@ -511,7 +511,7 @@ void Source_DatonSet::CloseTransaction(size_t iIndex)
 		}
 	guard.Release();
 
-	Source::pTriggerResultsAvailable();	
+	Source::pTriggerResultsAvailable();
 	}
 
 void Source_DatonSet::pPull()
@@ -587,7 +587,7 @@ void Source_DatonSet::pPull()
 						s << " Old";
 					}
 				}
-				
+
 
 			if (s)
 				s << " " << theDaton;
@@ -611,7 +611,7 @@ ZRef<Event> Source_DatonSet::pConditionalPushDown()
 			if (i->second.second)
 				theDS->Insert(i->first);
 			else
-				theDS->Erase(i->first);			
+				theDS->Erase(i->first);
 			}
 		fMap_Pending.clear();
 		return theDS->GetEvent();
@@ -744,8 +744,8 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const R
 	return new ZQE::Walker_Result(thePSearch->fResult);
 	}
 
-ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
-	PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel)
+ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search
+	(PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel)
 	{
 	const ZRA::Rename& theRename = iRel->GetRename();
 	ZRA::RelHead theRelHead;

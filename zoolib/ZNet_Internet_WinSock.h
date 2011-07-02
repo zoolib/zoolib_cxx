@@ -62,8 +62,8 @@ public:
 class ZNetNameLookup_Internet_WinSock : public ZNetNameLookup
 	{
 public:
-	ZNetNameLookup_Internet_WinSock(
-		const std::string& inName, ip_port inPort, size_t inMaxAddresses);
+	ZNetNameLookup_Internet_WinSock
+		(const std::string& inName, ip_port inPort, size_t inMaxAddresses);
 	virtual ~ZNetNameLookup_Internet_WinSock();
 
 // From ZNetNameLookup

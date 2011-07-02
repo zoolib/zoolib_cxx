@@ -42,8 +42,8 @@ Walker_Rename::Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, c
 Walker_Rename::~Walker_Rename()
 	{}
 
-ZRef<Walker> Walker_Rename::Prime(
-	const map<string8,size_t>& iOffsets,
+ZRef<Walker> Walker_Rename::Prime
+	(const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
@@ -58,8 +58,8 @@ ZRef<Walker> Walker_Rename::Prime(
 	return fWalker;
 	}
 
-bool Walker_Rename::ReadInc(
-	ZVal_Any* ioResults,
+bool Walker_Rename::ReadInc
+	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{ return fWalker->ReadInc(ioResults, oAnnotations); }
 

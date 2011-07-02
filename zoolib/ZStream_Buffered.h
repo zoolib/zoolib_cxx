@@ -179,8 +179,8 @@ protected:
 class ZStreamerW_DynamicBuffered : public ZStreamerW
 	{
 public:
-	ZStreamerW_DynamicBuffered(
-		ZRef<ZStreamerW> iStreamerReal, ZRef<ZStreamerRWPos> iStreamerBuffer);
+	ZStreamerW_DynamicBuffered
+		(ZRef<ZStreamerW> iStreamerReal, ZRef<ZStreamerRWPos> iStreamerBuffer);
 
 	virtual ~ZStreamerW_DynamicBuffered();
 

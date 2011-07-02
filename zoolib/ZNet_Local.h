@@ -85,8 +85,8 @@ class ZNetListener_Local : public virtual ZNetListener
 public:
 	typedef ZMulti_T1<std::string> MakeParam_t;
 
-	static ZRef<ZNetListener_Local> sCreate(
-		const std::string& iPath);
+	static ZRef<ZNetListener_Local> sCreate
+		(const std::string& iPath);
 	};
 
 // =================================================================================================

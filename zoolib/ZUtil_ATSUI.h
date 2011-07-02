@@ -50,8 +50,8 @@ namespace ZUtil_ATSUI {
 
 ATSUStyle sAsATSUStyle(const ZDCFont& iFont, float iFontSize);
 
-ATSUTextLayout sCreateLayout(
-	const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle, bool iUseFallbacks);
+ATSUTextLayout sCreateLayout
+	(const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle, bool iUseFallbacks);
 
 class Attributes
 	{

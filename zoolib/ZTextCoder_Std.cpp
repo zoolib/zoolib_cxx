@@ -80,8 +80,8 @@ class Make_Encoder
 #pragma mark -
 #pragma mark * ZTextDecoder_ASCII
 
-bool ZTextDecoder_ASCII::Decode(
-	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+bool ZTextDecoder_ASCII::Decode
+	(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const uint8* localSource = static_cast<const uint8*>(iSource);
@@ -136,8 +136,8 @@ void ZTextEncoder_ASCII::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 #pragma mark -
 #pragma mark * ZTextDecoder_ISO8859_1
 
-bool ZTextDecoder_ISO8859_1::Decode(
-	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+bool ZTextDecoder_ISO8859_1::Decode
+	(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const uint8* localSource = static_cast<const uint8*>(iSource);
@@ -224,8 +224,8 @@ static const UTF32 spMacToUnicode[256] =
 	0x00AF, 0x02D8, 0x02D9, 0x02DA, 0x00B8, 0x02DD, 0x02DB, 0x02C7
 	};
 
-bool ZTextDecoder_MacRoman::Decode(
-	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+bool ZTextDecoder_MacRoman::Decode
+	(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const uint8* localSource = static_cast<const uint8*>(iSource);
@@ -340,8 +340,8 @@ void ZTextEncoder_MacRoman::Encode(const UTF32* iSource, size_t iSourceCU, size_
 		if (not ZUnicode::sReadInc(localSource, localSourceEnd, codeLookup.fUnicode))
 			break;
 
-		const UnicodeToMac_t* iter = std::lower_bound(
-			spUnicodeToMac, spUnicodeToMac + 256, codeLookup);
+		const UnicodeToMac_t* iter = std::lower_bound
+			(spUnicodeToMac, spUnicodeToMac + 256, codeLookup);
 
 		if (iter < spUnicodeToMac + 256 && *iter == codeLookup)
 			*localDest++ = iter->fMac;
@@ -370,8 +370,8 @@ static const UTF32 spCP1252ToUnicode[128] =
 	0x02dc, 0x2122, 0x0161, 0x203a, 0x0153, 0xfffd, 0x017e, 0x0178,
 	};
 
-bool ZTextDecoder_CP1252::Decode(
-	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+bool ZTextDecoder_CP1252::Decode
+	(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const uint8* localSource = static_cast<const uint8*>(iSource);
@@ -470,8 +470,8 @@ static const UTF32 spCP850ToUnicode[128] =
 	0x02dc, 0x2122, 0x0161, 0x203a, 0x0153, 0xfffd, 0x017e, 0x0178,
 	};
 
-bool ZTextDecoder_CP850::Decode(
-	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+bool ZTextDecoder_CP850::Decode
+	(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const uint8* localSource = static_cast<const uint8*>(iSource);

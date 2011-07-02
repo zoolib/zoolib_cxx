@@ -362,8 +362,8 @@ public:
 
 	explicit ZTBQueryNode_Combo(const ZStreamR& iStreamR);
 
-	ZTBQueryNode_Combo(
-		std::vector<ZTBQuery::SortSpec>& ioSort, std::vector<Intersection>& ioIntersections);
+	ZTBQueryNode_Combo
+		(std::vector<ZTBQuery::SortSpec>& ioSort, std::vector<Intersection>& ioIntersections);
 
 	virtual ~ZTBQueryNode_Combo();
 
@@ -409,8 +409,8 @@ public:
 	};
 
 template <>
-inline int sCompare_T(
-	const ZTBQueryNode_Combo::Intersection& iL, const ZTBQueryNode_Combo::Intersection& iR)
+inline int sCompare_T
+	(const ZTBQueryNode_Combo::Intersection& iL, const ZTBQueryNode_Combo::Intersection& iR)
 	{ return iL.Compare(iR); }
 
 // =================================================================================================
@@ -509,8 +509,8 @@ class ZTBQueryNode_ID_FromSource : public ZTBQueryNode_GT_ID_Constant
 public:
 	explicit ZTBQueryNode_ID_FromSource(const ZStreamR& iStreamR);
 
-	ZTBQueryNode_ID_FromSource(
-		const ZRef<ZTBQueryNode>& iSourceNode, const ZTName& iSourcePropName);
+	ZTBQueryNode_ID_FromSource
+		(const ZRef<ZTBQueryNode>& iSourceNode, const ZTName& iSourcePropName);
 
 	virtual ~ZTBQueryNode_ID_FromSource();
 

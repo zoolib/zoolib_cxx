@@ -374,8 +374,8 @@ protected:
 	MapPixvalToRGB_Gray& operator=(const MapPixvalToRGB_Gray&) { return *this; }
 
 public:
-	static uint32 sConvert(
-		uint32 iPixval, uint32 iMask, int32 iShift, uint32 iMultiplier, uint32 iAdd)
+	static uint32 sConvert
+		(uint32 iPixval, uint32 iMask, int32 iShift, uint32 iMultiplier, uint32 iAdd)
 		{
 		return iAdd + (((iPixval & iMask) >> iShift) * iMultiplier);
 		}
@@ -420,8 +420,8 @@ protected:
 	MapPixvalToRGB_Color& operator=(const MapPixvalToRGB_Color&) { return *this; }
 
 public:
-	static uint32 sConvert(
-		uint32 iPixval, uint32 iMask, int32 iShift, uint32 iMultiplier, uint32 iAdd)
+	static uint32 sConvert
+		(uint32 iPixval, uint32 iMask, int32 iShift, uint32 iMultiplier, uint32 iAdd)
 		{
 		return iAdd + (((iPixval & iMask) >> iShift) * iMultiplier);
 		}
@@ -629,8 +629,8 @@ public:
 	virtual ZRef<PixelDescRep> WithoutAlpha();
 
 	virtual void Imp_AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const;
-	virtual void Imp_AsRGBAs(
-		const uint32* iPixvals, size_t iCount, ZRGBA_POD* oColors) const;
+	virtual void Imp_AsRGBAs
+		(const uint32* iPixvals, size_t iCount, ZRGBA_POD* oColors) const;
 	virtual uint16 Imp_AsAlpha(uint32 iPixval) const;
 
 	virtual uint32 Imp_AsPixval(const ZRGBA_POD& iRGBA) const;
@@ -665,8 +665,8 @@ public:
 	virtual ZRef<PixelDescRep> WithoutAlpha();
 
 	virtual void Imp_AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const;
-	virtual void Imp_AsRGBAs(
-		const uint32* iPixvals, size_t iCount, ZRGBA_POD* oColors) const;
+	virtual void Imp_AsRGBAs
+		(const uint32* iPixvals, size_t iCount, ZRGBA_POD* oColors) const;
 	virtual uint16 Imp_AsAlpha(uint32 iPixval) const;
 
 	virtual uint32 Imp_AsPixval(const ZRGBA_POD& iRGBA) const;
@@ -695,8 +695,8 @@ public:
 	virtual ZRef<PixelDescRep> WithoutAlpha();
 
 	virtual void Imp_AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const;
-	virtual void Imp_AsRGBAs(
-		const uint32* iPixvals, size_t iCount, ZRGBA_POD* oColors) const;
+	virtual void Imp_AsRGBAs
+		(const uint32* iPixvals, size_t iCount, ZRGBA_POD* oColors) const;
 	virtual uint16 Imp_AsAlpha(uint32 iPixval) const;
 
 	virtual uint32 Imp_AsPixval(const ZRGBA_POD& iRGBA) const;
@@ -873,23 +873,23 @@ void sMunge(void* iBaseAddress,
 
 // ==================================================
 
-void sBlitPixvals(
-	const void* iSourceBase, const RasterDesc& iSourceRasterDesc,
+void sBlitPixvals
+	(const void* iSourceBase, const RasterDesc& iSourceRasterDesc,
 	void* iDestBase, const RasterDesc& iDestRasterDesc,
 	const ZRectPOD& iSourceBounds, ZPointPOD iDestLocation);
 
-void sBlit(
-	const void* iSourceBase, const RasterDesc& iSourceRasterDesc, const PixelDesc& iSourcePixelDesc,
+void sBlit
+	(const void* iSourceBase, const RasterDesc& iSourceRasterDesc, const PixelDesc& iSourcePixelDesc,
 	void* iDestBase, const RasterDesc& iDestRasterDesc, const PixelDesc& iDestPixelDesc,
 	const ZRectPOD& iSourceBounds, ZPointPOD iDestLocation);
 
-void sBlitRowPixvals(
-	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, int32 iSourceH,
+void sBlitRowPixvals
+	(const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, int32 iSourceH,
 	void* iDestBase, const PixvalDesc& iDestPixvalDesc, int32 iDestH,
 	int32 iCount);
 
-void sBlitRow(
-	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, const PixelDesc& iSourcePixelDesc,
+void sBlitRow
+	(const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, const PixelDesc& iSourcePixelDesc,
 	int32 iSourceH,
 	void* iDestBase, const PixvalDesc& iDestPixvalDesc, const PixelDesc& iDestPixelDesc,
 	int32 iDestH,

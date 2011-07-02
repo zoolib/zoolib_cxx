@@ -270,8 +270,8 @@ NPIdentifier HostMeister_Std::GetStringIdentifier(const NPUTF8* name)
 	return static_cast<NPIdentifier>(const_cast<string*>(&*iter));
 	}
 
-void HostMeister_Std::GetStringIdentifiers(
-	const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers)
+void HostMeister_Std::GetStringIdentifiers
+	(const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers)
 	{
 	while (--nameCount)
 		*identifiers++ = this->GetStringIdentifier(*names++);
@@ -543,8 +543,8 @@ private:
 	bool fIsPOST;
 	};
 
-Host_Std::HTTPFetcher::HTTPFetcher(
-	Host_Std* iHost, const string& iURL, ZHTTP::Data* iData, void* iNotifyData)
+Host_Std::HTTPFetcher::HTTPFetcher
+	(Host_Std* iHost, const string& iURL, ZHTTP::Data* iData, void* iNotifyData)
 :	fHost(iHost),
 	fURL(iURL),
 	fNotifyData(iNotifyData)
@@ -585,8 +585,8 @@ bool Host_Std::HTTPFetcher::Work()
 			const ZHTTP::Map theCT = theHeaders.Get<ZHTTP::Map>("content-type");
 			const string theMIME = theCT.Get<string>("type") + "/" + theCT.Get<string>("subtype");
 
-			fHost->pHTTPFetcher(
-				this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerR);
+			fHost->pHTTPFetcher
+				(this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerR);
 			return false;
 			}
 		}
@@ -596,8 +596,8 @@ bool Host_Std::HTTPFetcher::Work()
 	// This causes async delivery of an error.
 	if (fHost)
 		{
-		fHost->pHTTPFetcher(
-			this, fNotifyData, fURL, "", ZHTTP::Data(), null);
+		fHost->pHTTPFetcher
+			(this, fNotifyData, fURL, "", ZHTTP::Data(), null);
 		}
 
 	return false;
@@ -676,8 +676,8 @@ bool Host_Std::Sender::DeliverData()
 			}
 
 		uint16 theStreamType = NP_NORMAL;
-		if (fHost->Guest_NewStream(
-			const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
+		if (fHost->Guest_NewStream
+			(const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
 			{
 			// Failed -- what result should we pass?
 			fHost->Guest_URLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
@@ -989,8 +989,8 @@ void Host_Std::pHTTPFetcher(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
 	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
 	}
 
-void Host_Std::CreateAndLoad(
-	const std::string& iURL, const std::string& iMIME,
+void Host_Std::CreateAndLoad
+	(const std::string& iURL, const std::string& iMIME,
 	const Param_t* iParams, size_t iCount)
 	{
 	fURL = iURL;
@@ -1003,8 +1003,8 @@ void Host_Std::CreateAndLoad(
 		values.push_back(const_cast<char*>(iParams[x].second.c_str()));
 		}
 
-	this->Guest_New(
-		const_cast<char*>(iMIME.c_str()), NP_EMBED,
+	this->Guest_New
+		(const_cast<char*>(iMIME.c_str()), NP_EMBED,
 		iCount, ZUtil_STL::sFirstOrNil(names), ZUtil_STL::sFirstOrNil(values),
 		nullptr);
 
@@ -1028,8 +1028,8 @@ void Host_Std::Destroy()
 		}
 	}
 
-void Host_Std::SendDataAsync(
-	void* iNotifyData,
+void Host_Std::SendDataAsync
+	(void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZHTTP::Data& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 	{
@@ -1039,8 +1039,8 @@ void Host_Std::SendDataAsync(
 	fSenders.Insert(theSender);
 	}
 
-void Host_Std::SendDataSync(
-	void* iNotifyData,
+void Host_Std::SendDataSync
+	(void* iNotifyData,
 	const string& iURL, const string& iMIME,
 	const ZStreamR& iStreamR)
 	{
@@ -1055,8 +1055,8 @@ void Host_Std::SendDataSync(
 
 	uint16 theStreamType = NP_NORMAL;
 
-	if (0 == this->Guest_NewStream(
-		const_cast<char*>(iMIME.c_str()), &theNPStream, false, &theStreamType))
+	if (0 == this->Guest_NewStream
+		(const_cast<char*>(iMIME.c_str()), &theNPStream, false, &theStreamType))
 		{
 		for (bool keepGoing = true; keepGoing; /*no inc*/)
 			{
@@ -1078,8 +1078,8 @@ void Host_Std::SendDataSync(
 
 			for (size_t start = 0; start < countRead; /*no inc*/)
 				{
-				int countWritten = this->Guest_Write(
-					&theNPStream, 0, countRead - start, &buffer[start]);
+				int countWritten = this->Guest_Write
+					(&theNPStream, 0, countRead - start, &buffer[start]);
 
 				if (countWritten < 0)
 					{

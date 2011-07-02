@@ -31,8 +31,8 @@ using std::vector;
 ZStreamerRWFactory_Fallback::ZStreamerRWFactory_Fallback()
 	{}
 
-ZStreamerRWFactory_Fallback::ZStreamerRWFactory_Fallback(
-	const ZRef<ZStreamerRWFactory>* iFactories, size_t iCount)
+ZStreamerRWFactory_Fallback::ZStreamerRWFactory_Fallback
+	(const ZRef<ZStreamerRWFactory>* iFactories, size_t iCount)
 :	fFactories(iFactories, iFactories + iCount)
 	{}
 

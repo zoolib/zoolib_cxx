@@ -27,8 +27,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZStreamerRWFactory_Buffered
 
-ZStreamerRWFactory_Buffered::ZStreamerRWFactory_Buffered(
-	ZRef<ZStreamerRWFactory> iStreamerRWFactory, size_t iReadBufferSize, size_t iWriteBufferSize)
+ZStreamerRWFactory_Buffered::ZStreamerRWFactory_Buffered
+	(ZRef<ZStreamerRWFactory> iStreamerRWFactory, size_t iReadBufferSize, size_t iWriteBufferSize)
 :	fStreamerRWFactory(iStreamerRWFactory),
 	fReadBufferSize(iReadBufferSize),
 	fWriteBufferSize(iWriteBufferSize)

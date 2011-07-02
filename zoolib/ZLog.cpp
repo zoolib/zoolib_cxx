@@ -140,13 +140,13 @@ StrimW::operator operator_bool() const
 		{
 		if (fName_StringQ)
 			{
-			return operator_bool_gen::translate(
-				spLogMeister->Enabled(fPriority, fName_StringQ.Get()));
+			return operator_bool_gen::translate
+				(spLogMeister->Enabled(fPriority, fName_StringQ.Get()));
 			}
 		else
 			{
-			return operator_bool_gen::translate(
-				spLogMeister->Enabled(fPriority, fName_CharStarQ.Get()));
+			return operator_bool_gen::translate
+				(spLogMeister->Enabled(fPriority, fName_CharStarQ.Get()));
 			}
 		}
 	else

@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-ZRef<ZStreamerRWCon> sMake_StreamerRWCon_SSL(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+ZRef<ZStreamerRWCon> sMake_StreamerRWCon_SSL
+	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 	{
 	MakeSSLParam_t theParam;
 	theParam.fStreamerR = iStreamerR;

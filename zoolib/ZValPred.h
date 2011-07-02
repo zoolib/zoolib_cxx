@@ -107,8 +107,8 @@ public:
 
 	ZValPred& operator=(const ZValPred& iOther);
 
-	ZValPred(
-		const ZRef<ZValComparand>& iLHS,
+	ZValPred
+		(const ZRef<ZValComparand>& iLHS,
 		const ZRef<ZValComparator>& iComparator,
 		const ZRef<ZValComparand>& iRHS);
 

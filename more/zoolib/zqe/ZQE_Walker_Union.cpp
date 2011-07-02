@@ -48,8 +48,8 @@ void Walker_Union::Rewind()
 	fPriors.clear();
 	}
 
-ZRef<Walker> Walker_Union::Prime(
-	const map<string8,size_t>& iOffsets,
+ZRef<Walker> Walker_Union::Prime
+	(const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
@@ -85,8 +85,8 @@ ZRef<Walker> Walker_Union::Prime(
 	return this;
 	}
 
-bool Walker_Union::ReadInc(
-	ZVal_Any* ioResults,
+bool Walker_Union::ReadInc
+	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	set<ZRef<ZCounted> > localAnnotations;

@@ -100,8 +100,8 @@ protected:
 
 	Slot* CreateBlockImp(BlockID iBlockID, BlockID& oBlockID);
 
-	bool DeleteBlockRecurse(
-		Slot* iParentSlot, int iHeight, BlockID iBlockID, Slot*& oBlockSlot, Slot** oNewRoot);
+	bool DeleteBlockRecurse
+		(Slot* iParentSlot, int iHeight, BlockID iBlockID, Slot*& oBlockSlot, Slot** oNewRoot);
 
 	BlockID GetNextBlockIDRecurse(Slot* iParentSlot, int iHeight, BlockID iBlockID);
 
@@ -122,8 +122,8 @@ protected:
 
 	Slot* UseSlot(uint32 iSlotNumber);
 
-	Slot* UseSlotReal(
-		bool iDirtied, uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber);
+	Slot* UseSlotReal
+		(bool iDirtied, uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber);
 	Slot* UseSlotForked(uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber);
 	Slot* UseSlotDirty(uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber);
 

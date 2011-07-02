@@ -2453,8 +2453,8 @@ ZMap_ZooLib::Index_t ZMap_ZooLib::IndexOf(const ZTName& iPropName) const
 	return spEmptyProperties.end();
 	}
 
-ZMap_ZooLib::Index_t ZMap_ZooLib::IndexOf(
-	const ZMap_ZooLib& iOther, const Index_t& iOtherIndex) const
+ZMap_ZooLib::Index_t ZMap_ZooLib::IndexOf
+	(const ZMap_ZooLib& iOther, const Index_t& iOtherIndex) const
 	{
 	if (fRep == iOther.fRep)
 		return iOtherIndex;

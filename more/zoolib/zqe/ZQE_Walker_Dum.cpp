@@ -39,14 +39,14 @@ Walker_Dum::~Walker_Dum()
 void Walker_Dum::Rewind()
 	{}
 
-ZRef<Walker> Walker_Dum::Prime(
-	const map<string8,size_t>& iOffsets,
+ZRef<Walker> Walker_Dum::Prime
+	(const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{ return this; }
 
-bool Walker_Dum::ReadInc(
-	ZVal_Any* ioResults,
+bool Walker_Dum::ReadInc
+	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{ return false; }
 

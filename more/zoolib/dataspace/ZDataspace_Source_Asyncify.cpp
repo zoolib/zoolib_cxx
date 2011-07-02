@@ -50,8 +50,8 @@ Source_Asyncify::~Source_Asyncify()
 void Source_Asyncify::Initialize()
 	{
 	Source::Initialize();
-	fSource->SetCallable_ResultsAvailable(
-		MakeCallable(MakeWeakRef(this), &Source_Asyncify::pResultsAvailable));
+	fSource->SetCallable_ResultsAvailable
+		(MakeCallable(MakeWeakRef(this), &Source_Asyncify::pResultsAvailable));
 	}
 
 void Source_Asyncify::Finalize()
@@ -63,8 +63,8 @@ void Source_Asyncify::Finalize()
 bool Source_Asyncify::Intersects(const RelHead& iRelHead)
 	{ return fSource->Intersects(iRelHead); }
 
-void Source_Asyncify::ModifyRegistrations(
-	const AddedQuery* iAdded, size_t iAddedCount,
+void Source_Asyncify::ModifyRegistrations
+	(const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	ZAcqMtxR acq(fMtxR);

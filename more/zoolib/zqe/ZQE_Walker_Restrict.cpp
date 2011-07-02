@@ -277,8 +277,8 @@ public:
 	Walker_Restrict::Exec* pMakeExec(const ZValPred& iValPred);
 
 	template <class Functor_p>
-	Walker_Restrict::Exec* pMakeExec_T(
-		const Functor_p& iFunctor,
+	Walker_Restrict::Exec* pMakeExec_T
+		(const Functor_p& iFunctor,
 		const ZRef<ZValComparand>& iLHS, const ZRef<ZValComparand>& iRHS);
 
 	const map<string8,size_t>& fVars;
@@ -289,8 +289,8 @@ void AsExec::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
 	{ this->pSetResult(this->pMakeExec(iExpr->GetValPred())); }
 
 template <class Functor_p>
-Walker_Restrict::Exec* AsExec::pMakeExec_T(
-	const Functor_p& iFunctor,
+Walker_Restrict::Exec* AsExec::pMakeExec_T
+	(const Functor_p& iFunctor,
 	const ZRef<ZValComparand>& iLHS, const ZRef<ZValComparand>& iRHS)
 	{
 	if (ZRef<ZValComparand_Name> asNameL =
@@ -352,38 +352,38 @@ Walker_Restrict::Exec* AsExec::pMakeExec(const ZValPred& iValPred)
 			{
 			case ZValComparator_Simple::eLT:
 				{
-				return pMakeExec_T<>(
-					Functor_LT(),
+				return pMakeExec_T<>
+					(Functor_LT(),
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
 			case ZValComparator_Simple::eLE:
 				{
-				return pMakeExec_T<>(
-					Functor_LE(),
+				return pMakeExec_T<>
+					(Functor_LE(),
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
 			case ZValComparator_Simple::eEQ:
 				{
-				return pMakeExec_T<>(
-					Functor_EQ(),
+				return pMakeExec_T<>
+					(Functor_EQ(),
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
 			case ZValComparator_Simple::eNE:
 				{
-				return pMakeExec_T<>(
-					Functor_NE(),
+				return pMakeExec_T<>
+					(Functor_NE(),
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
 			case ZValComparator_Simple::eGE:
 				{
-				return pMakeExec_T<>(
-					Functor_GE(),
+				return pMakeExec_T<>
+					(Functor_GE(),
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
 			case ZValComparator_Simple::eGT:
 				{
-				return pMakeExec_T<>(
-					Functor_GT(),
+				return pMakeExec_T<>
+					(Functor_GT(),
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
 			}
@@ -391,15 +391,15 @@ Walker_Restrict::Exec* AsExec::pMakeExec(const ZValPred& iValPred)
 	else if (ZRef<ZValComparator_Callable_Any> asCallable =
 		theComparator.DynamicCast<ZValComparator_Callable_Any>())
 		{
-		return pMakeExec_T<>(
-			Functor_Callable(asCallable->GetCallable()),
+		return pMakeExec_T<>
+			(Functor_Callable(asCallable->GetCallable()),
 			iValPred.GetLHS(), iValPred.GetRHS());
 		}
 	else if (ZRef<ZValComparator_StringContains> asStringContains =
 		theComparator.DynamicCast<ZValComparator_StringContains>())
 		{
-		return pMakeExec_T<>(
-			Functor_StringContains(asStringContains->GetStrength()),
+		return pMakeExec_T<>
+			(Functor_StringContains(asStringContains->GetStrength()),
 			iValPred.GetLHS(), iValPred.GetRHS());
 		}
 
@@ -422,8 +422,8 @@ Walker_Restrict::Walker_Restrict(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bo
 Walker_Restrict::~Walker_Restrict()
 	{ delete fExec; }
 
-ZRef<Walker> Walker_Restrict::Prime(
-	const map<string8,size_t>& iOffsets,
+ZRef<Walker> Walker_Restrict::Prime
+	(const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
@@ -439,8 +439,8 @@ ZRef<Walker> Walker_Restrict::Prime(
 	return this;
 	}
 
-bool Walker_Restrict::ReadInc(
-	ZVal_Any* ioResults,
+bool Walker_Restrict::ReadInc
+	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	set<ZRef<ZCounted> > localAnnotations;

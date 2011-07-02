@@ -28,8 +28,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZStreamerRWFactory_Retry
 
-ZStreamerRWFactory_Retry::ZStreamerRWFactory_Retry(
-	ZRef<ZStreamerRWFactory> iStreamerRWFactory, size_t iCount, double iInterval)
+ZStreamerRWFactory_Retry::ZStreamerRWFactory_Retry
+	(ZRef<ZStreamerRWFactory> iStreamerRWFactory, size_t iCount, double iInterval)
 :	fStreamerRWFactory(iStreamerRWFactory),
 	fCount(iCount),
 	fInterval(iInterval)

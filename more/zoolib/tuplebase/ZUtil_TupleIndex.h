@@ -34,12 +34,12 @@ namespace ZUtil_TupleIndex {
 
 ZRef<ZTupleIndexFactory> sCreate_General(const std::string& iPropName0);
 
-ZRef<ZTupleIndexFactory> sCreate_General(
-	const std::string& iPropName0,
+ZRef<ZTupleIndexFactory> sCreate_General
+	(const std::string& iPropName0,
 	const std::string& iPropName1);
 
-ZRef<ZTupleIndexFactory> sCreate_General(
-	const std::string& iPropName0,
+ZRef<ZTupleIndexFactory> sCreate_General
+	(const std::string& iPropName0,
 	const std::string& iPropName1,
 	const std::string& iPropName2);
 

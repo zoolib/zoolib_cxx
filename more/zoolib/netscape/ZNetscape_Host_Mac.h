@@ -99,8 +99,8 @@ protected:
 class Host_WindowRef : public Host_Mac
 	{
 public:
-	Host_WindowRef(
-		ZRef<GuestFactory> iGF, bool iAllowCG, WindowRef iWindowRef);
+	Host_WindowRef
+		(ZRef<GuestFactory> iGF, bool iAllowCG, WindowRef iWindowRef);
 	virtual ~Host_WindowRef();
 
 // From Host_Std
@@ -116,8 +116,8 @@ protected:
 
 private:
 	static EventHandlerUPP sEventHandlerUPP_Window;
-	static pascal OSStatus sEventHandler_Window(
-		EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
+	static pascal OSStatus sEventHandler_Window
+		(EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
 	OSStatus EventHandler_Window(EventHandlerCallRef iCallRef, EventRef iEventRef);
 
 	EventTargetRef fEventTargetRef_Window;
@@ -135,8 +135,8 @@ private:
 class Host_HIViewRef : public Host_Mac
 	{
 public:
-	Host_HIViewRef(
-		ZRef<GuestFactory> iGF, bool iAllowCG, HIViewRef iHIViewRef);
+	Host_HIViewRef
+		(ZRef<GuestFactory> iGF, bool iAllowCG, HIViewRef iHIViewRef);
 	virtual ~Host_HIViewRef();
 
 // From Host_Std
@@ -148,8 +148,8 @@ protected:
 
 private:
 	static EventHandlerUPP sEventHandlerUPP_View;
-	static pascal OSStatus sEventHandler_View(
-		EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
+	static pascal OSStatus sEventHandler_View
+		(EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
 	OSStatus EventHandler_View(EventHandlerCallRef iCallRef, EventRef iEventRef);
 
 	EventTargetRef fEventTargetRef_View;

@@ -129,8 +129,8 @@ StreamR_Chunk::StreamR_Chunk(uint32& oChunkType, const ZStreamR& iStream)
 :	fStream(iStream)
 	{ this->pInit(oChunkType, true, true, 2); }
 
-StreamR_Chunk::StreamR_Chunk(
-	uint32& oChunkType, bool iSkipOnDestroy, const ZStreamR& iStream)
+StreamR_Chunk::StreamR_Chunk
+	(uint32& oChunkType, bool iSkipOnDestroy, const ZStreamR& iStream)
 :	fStream(iStream)
 	{ this->pInit(oChunkType, iSkipOnDestroy, true, 2); }
 
@@ -240,8 +240,8 @@ StreamRPos_Chunk::StreamRPos_Chunk(uint32& oChunkType, const ZStreamRPos& iStrea
 	this->pInit(oChunkType, true, true, 2);
 	}
 
-StreamRPos_Chunk::StreamRPos_Chunk(
-	uint32& oChunkType, bool iSkipOnDestroy, const ZStreamRPos& iStream)
+StreamRPos_Chunk::StreamRPos_Chunk
+	(uint32& oChunkType, bool iSkipOnDestroy, const ZStreamRPos& iStream)
 :	fStream(iStream)
 	{
 	this->pInit(oChunkType, iSkipOnDestroy, true, 2);
@@ -371,12 +371,12 @@ StreamWPos_Chunk::~StreamWPos_Chunk()
 	fStream.SetPosition(position + spAligned(size, fPadMultiple));
 	}
 
-void StreamWPos_Chunk::Imp_Write(
-	const void* iSource, size_t iCount, size_t* oCountWritten)
+void StreamWPos_Chunk::Imp_Write
+	(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{ fStream.Write(iSource, iCount, oCountWritten); }
 
-void StreamWPos_Chunk::Imp_CopyFromDispatch(
-	const ZStreamR& iStreamR, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
+void StreamWPos_Chunk::Imp_CopyFromDispatch
+	(const ZStreamR& iStreamR, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
 	{ fStream.CopyFrom(iStreamR, iCount, oCountRead, oCountWritten); }
 
 void StreamWPos_Chunk::Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCount,

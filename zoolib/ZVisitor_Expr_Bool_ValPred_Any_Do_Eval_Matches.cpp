@@ -34,8 +34,8 @@ ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches(const ZVal_Any& iVal)
 :	fVal(iVal)
 	{}
 
-void ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches::Visit_Expr_Bool_ValPred(
-	const ZRef<ZExpr_Bool_ValPred>& iExpr)
+void ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches::Visit_Expr_Bool_ValPred
+	(const ZRef<ZExpr_Bool_ValPred>& iExpr)
 	{ this->pSetResult(sMatches(iExpr->GetValPred(), fVal)); }
 
 bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal)

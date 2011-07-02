@@ -46,8 +46,8 @@ public:
 // From ZTSWatcher
 	virtual bool AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCountIssued);
 
-	virtual bool Sync(
-		const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+	virtual bool Sync
+		(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 		const uint64* iAddedIDs, size_t iAddedIDsCount,
 		const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 		const AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,

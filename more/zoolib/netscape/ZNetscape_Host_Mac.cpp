@@ -223,8 +223,8 @@ void Host_Mac::DoEvent(const EventRecord& iEvent)
 
 void Host_Mac::DoSetWindow(const ZGRectf& iWinFrame)
 	{
-	this->DoSetWindow(
-		iWinFrame.origin.x, iWinFrame.origin.y, iWinFrame.extent.h, iWinFrame.extent.v);
+	this->DoSetWindow
+		(iWinFrame.origin.x, iWinFrame.origin.y, iWinFrame.extent.h, iWinFrame.extent.v);
 	}
 
 void Host_Mac::DoSetWindow(int iX, int iY, int iWidth, int iHeight)
@@ -311,8 +311,8 @@ void Host_Mac::EventLoopTimer_Idle(EventLoopTimerRef iTimer)
 
 #if defined(XP_MAC) || defined(XP_MACOSX)
 
-Host_WindowRef::Host_WindowRef(
-	ZRef<ZNetscape::GuestFactory> iGF, bool iAllowCG, WindowRef iWindowRef)
+Host_WindowRef::Host_WindowRef
+	(ZRef<ZNetscape::GuestFactory> iGF, bool iAllowCG, WindowRef iWindowRef)
 :	Host_Mac(iGF, iAllowCG),
 	fWindowRef(iWindowRef),
 	fEventTargetRef_Window(nullptr),
@@ -430,8 +430,8 @@ void Host_WindowRef::DoEvent(const EventRecord& iEvent)
 EventHandlerUPP Host_WindowRef::sEventHandlerUPP_Window =
 	NewEventHandlerUPP(sEventHandler_Window);
 
-pascal OSStatus Host_WindowRef::sEventHandler_Window(
-	EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon)
+pascal OSStatus Host_WindowRef::sEventHandler_Window
+	(EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon)
 	{ return static_cast<Host_WindowRef*>(iRefcon)->EventHandler_Window(iCallRef, iEventRef); }
 
 OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, EventRef iEventRef)
@@ -574,8 +574,8 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 
 #if defined(XP_MACOSX)
 
-Host_HIViewRef::Host_HIViewRef(
-	ZRef<ZNetscape::GuestFactory> iGF, bool iAllowCG, HIViewRef iHIViewRef)
+Host_HIViewRef::Host_HIViewRef
+	(ZRef<ZNetscape::GuestFactory> iGF, bool iAllowCG, HIViewRef iHIViewRef)
 :	Host_Mac(iGF, iAllowCG),
 	fHIViewRef(iHIViewRef),
 	fEventTargetRef_View(nullptr),
@@ -675,16 +675,16 @@ void Host_HIViewRef::PostCreateAndLoad()
 
 EventHandlerUPP Host_HIViewRef::sEventHandlerUPP_View = NewEventHandlerUPP(sEventHandler_View);
 
-pascal OSStatus Host_HIViewRef::sEventHandler_View(
-	EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon)
+pascal OSStatus Host_HIViewRef::sEventHandler_View
+	(EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon)
 	{ return static_cast<Host_HIViewRef*>(iRefcon)->EventHandler_View(iCallRef, iEventRef); }
 
 OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRef iEventRef)
 	{
 	if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
 		{
-		s << ZUtil_CarbonEvents::sEventAsString(
-			::GetEventClass(iEventRef), ::GetEventKind(iEventRef));
+		s << ZUtil_CarbonEvents::sEventAsString
+			(::GetEventClass(iEventRef), ::GetEventKind(iEventRef));
 		}
 
 	switch (::GetEventClass(iEventRef))
@@ -714,8 +714,8 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 				case kEventControlSetFocusPart:
 					{
 					bool isFocused =
-						kControlFocusNoPart != sDGetParam_T<ControlFocusPart>(
-						kControlFocusNoPart,
+						kControlFocusNoPart != sDGetParam_T<ControlFocusPart>
+						(kControlFocusNoPart,
 						iEventRef, kEventParamControlPart, typeControlPartCode);
 
 					Host_Mac::DoFocus(isFocused);
@@ -756,8 +756,8 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 						{
 						MouseTrackingResult	theResult;
 						UInt32 theModifiers;
-						::TrackMouseLocationWithOptions(
-							(CGrafPtr)-1, 0, 0.02, &theER.where, &theModifiers, &theResult);
+						::TrackMouseLocationWithOptions
+							((CGrafPtr)-1, 0, 0.02, &theER.where, &theModifiers, &theResult);
 						theER.when = ::EventTimeToTicks(::GetCurrentEventTime());
 						ZLOG(s, eDebug + 1, "Host_ViewRef");
 						if (theResult == kMouseTrackingMouseReleased)

@@ -27,8 +27,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZYadSeqR_Expr_Bool
 
-ZYadSeqR_ApplyID::ZYadSeqR_ApplyID(
-	ZRef<ZYadSeqR> iYadSeqR, const std::string& iIDName, const std::string& iValName)
+ZYadSeqR_ApplyID::ZYadSeqR_ApplyID
+	(ZRef<ZYadSeqR> iYadSeqR, const std::string& iIDName, const std::string& iValName)
 :	fYadSeqR(iYadSeqR)
 ,	fIDName(iIDName)
 ,	fValName(iValName)
@@ -55,8 +55,8 @@ ZRef<ZYadR> ZYadSeqR_ApplyID::ReadInc()
 #pragma mark -
 #pragma mark * ZYadSeqRPos_ApplyID
 
-ZYadSeqRPos_ApplyID::ZYadSeqRPos_ApplyID(
-	ZRef<ZYadSeqRPos> iYadSeqRPos, const std::string& iIDName, const std::string& iValName)
+ZYadSeqRPos_ApplyID::ZYadSeqRPos_ApplyID
+	(ZRef<ZYadSeqRPos> iYadSeqRPos, const std::string& iIDName, const std::string& iValName)
 :	fYadSeqRPos(iYadSeqRPos)
 ,	fIDName(iIDName)
 ,	fValName(iValName)

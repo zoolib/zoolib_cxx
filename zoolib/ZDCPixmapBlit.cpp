@@ -48,8 +48,8 @@ typedef ZDCPixmapNS::PixelDescRep_Color PDRep_Color;
 #pragma mark -
 #pragma mark * Public API
 
-void ZDCPixmapBlit::sBlit(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+void ZDCPixmapBlit::sBlit
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	EOp iOp)
@@ -60,8 +60,8 @@ void ZDCPixmapBlit::sBlit(
 		iOp);
 	}
 
-void ZDCPixmapBlit::sBlit(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+void ZDCPixmapBlit::sBlit
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	EOp iOp)
 	{
@@ -77,8 +77,8 @@ void ZDCPixmapBlit::sBlit(
 
 	}
 
-void ZDCPixmapBlit::sBlit(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+void ZDCPixmapBlit::sBlit
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
 	ZPointPOD iMatteOrigin,
@@ -93,8 +93,8 @@ void ZDCPixmapBlit::sBlit(
 		iSourcePremultiplied, iOp);
 	}
 
-void ZDCPixmapBlit::sBlit(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+void ZDCPixmapBlit::sBlit
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
 	ZPointPOD iSourceOrigin,
 	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
@@ -114,8 +114,8 @@ void ZDCPixmapBlit::sBlit(
 		iSourcePremultiplied, iOp);
 	}
 
-void ZDCPixmapBlit::sBlit(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+void ZDCPixmapBlit::sBlit
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
 	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
 	ZPointPOD iMatteOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
@@ -156,8 +156,8 @@ void ZDCPixmapBlit::sBlit(
 		iSourcePremultiplied, iOp);
 	}
 
-void ZDCPixmapBlit::sBlit(
-	const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+void ZDCPixmapBlit::sBlit
+	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
 	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
@@ -198,8 +198,8 @@ void ZDCPixmapBlit::sBlit(
 			iSourcePremultiplied, iOp);
 	}
 
-void ZDCPixmapBlit::sColor(
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
+void ZDCPixmapBlit::sColor
+	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	const ZRGBA_POD& iColor,
 	EOp iOp)
 	{
@@ -222,8 +222,8 @@ void ZDCPixmapBlit::sColor(
 		}
 	}
 
-void ZDCPixmapBlit::sColor(
-	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
+void ZDCPixmapBlit::sColor
+	(const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	const ZRGBA_POD& iColor,
 	EOp iOp)
@@ -269,8 +269,8 @@ void ZDCPixmapBlit::sColor(
 		iOp);
 	}
 
-void ZDCPixmapBlit::sColor(
-	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
+void ZDCPixmapBlit::sColor
+	(const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
 	ZPointPOD iMatteOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	const ZRGBA_POD& iColor,
@@ -283,8 +283,8 @@ void ZDCPixmapBlit::sColor(
 		iOp);
 	}
 
-void ZDCPixmapBlit::sInvert(
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD)
+void ZDCPixmapBlit::sInvert
+	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
@@ -305,8 +305,8 @@ void ZDCPixmapBlit::sInvert(
 		}
 	}
 
-void ZDCPixmapBlit::sOpaque(
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
+void ZDCPixmapBlit::sOpaque
+	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
@@ -327,8 +327,8 @@ void ZDCPixmapBlit::sOpaque(
 		}
 	}
 
-void ZDCPixmapBlit::sDarken(
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
+void ZDCPixmapBlit::sDarken
+	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
@@ -349,8 +349,8 @@ void ZDCPixmapBlit::sDarken(
 		}
 	}
 
-void ZDCPixmapBlit::sFade(
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
+void ZDCPixmapBlit::sFade
+	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
@@ -371,8 +371,8 @@ void ZDCPixmapBlit::sFade(
 		}
 	}
 
-void ZDCPixmapBlit::sApplyMatte(
-	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
+void ZDCPixmapBlit::sApplyMatte
+	(const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
 	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD)
 	{
 	ZAssertStop(1, iMattePD.HasAlpha());

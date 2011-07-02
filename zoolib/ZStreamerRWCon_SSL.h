@@ -32,8 +32,8 @@ struct MakeSSLParam_t
 	ZRef<ZStreamerW> fStreamerW;
 	};
 
-ZRef<ZStreamerRWCon> sMake_StreamerRWCon_SSL(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+ZRef<ZStreamerRWCon> sMake_StreamerRWCon_SSL
+	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 
 } // namespace ZooLib
 

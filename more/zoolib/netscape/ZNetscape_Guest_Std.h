@@ -42,8 +42,8 @@ public:
 	virtual ~GuestMeister_Std();
 
 // From GuestMeister
-	virtual NPError New(
-		NPMIMEType pluginType, NPP iNPP, uint16 mode,
+	virtual NPError New
+		(NPMIMEType pluginType, NPP iNPP, uint16 mode,
 		int16 argc, char* argn[], char* argv[], NPSavedData* saved);
 
 	virtual NPError Destroy(NPP iNPP, NPSavedData** save);
@@ -74,8 +74,8 @@ public:
 	virtual NPError SetValue(NPP iNPP, NPNVariable variable, void *value);
 
 // Our protocol
-	virtual Guest_Std* MakeGuest(
-		NPMIMEType pluginType, NPP iNPP, uint16 mode,
+	virtual Guest_Std* MakeGuest
+		(NPMIMEType pluginType, NPP iNPP, uint16 mode,
 		int16 argc, char* argn[], char* argv[], NPSavedData* saved) = 0;
 	};
 
@@ -96,8 +96,8 @@ public:
 
 	virtual NPError Guest_SetWindow(NPWindow* window);
 
-	virtual NPError Guest_NewStream(
-		NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
+	virtual NPError Guest_NewStream
+		(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
 
 	virtual NPError Guest_DestroyStream(NPStream* stream, NPReason reason);
 

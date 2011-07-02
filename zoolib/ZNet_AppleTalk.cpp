@@ -58,8 +58,8 @@ ZNetName_AppleTalk::ZNetName_AppleTalk(const string& iName, const string& iType)
 	fType(iType)
 	{}
 
-ZNetName_AppleTalk::ZNetName_AppleTalk(
-	const string& iName, const string& iType, const string& iZone)
+ZNetName_AppleTalk::ZNetName_AppleTalk
+	(const string& iName, const string& iType, const string& iZone)
 :	fName(iName),
 	fType(iType),
 	fZone(iZone)
@@ -130,8 +130,8 @@ ZRef<ZNetListener_ADSP> ZNetListener_ADSP::sCreateListener()
 #pragma mark -
 #pragma mark * ZNetEndpoint_ADSP
 
-ZRef<ZNetEndpoint_ADSP> ZNetEndpoint_ADSP::sCreateConnectedEndpoint(
-	int16 iNet, uint8 iNode, int8 iSocket)
+ZRef<ZNetEndpoint_ADSP> ZNetEndpoint_ADSP::sCreateConnectedEndpoint
+	(int16 iNet, uint8 iNode, int8 iSocket)
 	{
 	try
 		{

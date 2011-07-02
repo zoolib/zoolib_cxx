@@ -196,8 +196,8 @@ public:
 	const Nombre& GetNombre();
 
 private:
-	DatonSet(
-		const Nombre& iNombre, const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain);
+	DatonSet
+		(const Nombre& iNombre, const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain);
 
 	void pCommit();
 

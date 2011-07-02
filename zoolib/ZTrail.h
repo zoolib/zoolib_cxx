@@ -97,13 +97,13 @@ public:
 	static ZTrail sTrailFromTo(const std::vector<string8>& iSource,
 		const std::vector<string8>& oDest);
 
-	static void sParseStringAndAppend(
-		const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
+	static void sParseStringAndAppend
+		(const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
 		const UTF8* iPath, size_t iPathSize,
 		std::vector<string8>& ioComps);
 
-	static void sParseStringAndAppend(
-		const UTF16* iSeparator, const UTF16* iIgnore, const UTF16* iBounce,
+	static void sParseStringAndAppend
+		(const UTF16* iSeparator, const UTF16* iIgnore, const UTF16* iBounce,
 		const UTF16* iPath, size_t iPathSize,
 		std::vector<string16>& ioComps);
 

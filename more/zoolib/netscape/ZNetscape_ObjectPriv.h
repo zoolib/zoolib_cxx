@@ -36,8 +36,8 @@ NPObject_T<Variant_t>::NPObject_T()
 	{}
 
 template <class Variant_t>
-Variant_t NPObject_T<Variant_t>::Invoke(
-	const std::string& iName, const Variant_t* iArgs, size_t iCount)
+Variant_t NPObject_T<Variant_t>::Invoke
+	(const std::string& iName, const Variant_t* iArgs, size_t iCount)
 	{
 	Variant_t result;
 	static_cast<Self_t*>(this)->Invoke(iName, iArgs, iCount, result);
@@ -89,13 +89,13 @@ Variant_t NPObject_T<Variant_t>::InvokeDefault()
 	{ return static_cast<Self_t*>(this)->InvokeDefault(nullptr, 0); }
 
 template <class Variant_t>
-Variant_t NPObject_T<Variant_t>::InvokeDefault(
-	const Variant_t& i0)
+Variant_t NPObject_T<Variant_t>::InvokeDefault
+	(const Variant_t& i0)
 	{ return static_cast<Self_t*>(this)->InvokeDefault(&i0, 1); }
 
 template <class Variant_t>
-Variant_t NPObject_T<Variant_t>::InvokeDefault(
-	const Variant_t& i0,
+Variant_t NPObject_T<Variant_t>::InvokeDefault
+	(const Variant_t& i0,
 	const Variant_t& i1)
 	{
 	Variant_t arr[] = { i0, i1 };
@@ -103,8 +103,8 @@ Variant_t NPObject_T<Variant_t>::InvokeDefault(
 	}
 
 template <class Variant_t>
-Variant_t NPObject_T<Variant_t>::InvokeDefault(
-	const Variant_t& i0,
+Variant_t NPObject_T<Variant_t>::InvokeDefault
+	(const Variant_t& i0,
 	const Variant_t& i1,
 	const Variant_t& i2)
 	{

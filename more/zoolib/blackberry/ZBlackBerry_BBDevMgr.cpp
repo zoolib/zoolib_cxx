@@ -648,12 +648,12 @@ void Manager_BBDevMgr::Finalize()
 	{
 	fDeviceManager->Unadvise(fCookie);
 	fEntries.clear();
-	
+
 	Manager::Finalize();
 	}
 
-STDMETHODIMP Manager_BBDevMgr::QueryInterface(
-	const IID& iInterfaceID, void** oObjectRef)
+STDMETHODIMP Manager_BBDevMgr::QueryInterface
+	(const IID& iInterfaceID, void** oObjectRef)
 	{
 	if (ZLOG(s, eDebug + 4, "ZBlackBerry::Manager_BBDevMgr"))
 		s << "QueryInterface";

@@ -97,8 +97,8 @@ public:
 
 	virtual NPIdentifier GetStringIdentifier(const NPUTF8* name);
 
-	virtual void GetStringIdentifiers(
-		const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers);
+	virtual void GetStringIdentifiers
+		(const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers);
 
 	virtual NPIdentifier GetIntIdentifier(int32 intid);
 
@@ -222,19 +222,19 @@ public:
 
 // Our protocol
 	typedef std::pair<std::string, std::string> Param_t;
-	void CreateAndLoad(
-		const std::string& iURL, const std::string& iMIME,
+	void CreateAndLoad
+		(const std::string& iURL, const std::string& iMIME,
 		const Param_t* iParams, size_t iCount);
 	virtual void PostCreateAndLoad();
 	void Destroy();
 
-	void SendDataAsync(
-		void* iNotifyData,
+	void SendDataAsync
+		(void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZData_Any& iHeaders,
 		ZRef<ZStreamerR> iStreamerR);
 
-	void SendDataSync(
-		void* iNotifyData,
+	void SendDataSync
+		(void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME,
 		const ZStreamR& iStreamR);
 

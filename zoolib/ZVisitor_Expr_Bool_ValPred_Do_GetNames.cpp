@@ -28,16 +28,16 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Bool_ValPred_Do_GetNames
 
-void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Bool_ValPred(
-	const ZRef<ZExpr_Bool_ValPred>& iExpr)
+void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Bool_ValPred
+	(const ZRef<ZExpr_Bool_ValPred>& iExpr)
 	{ this->pSetResult(sGetNames(iExpr->GetValPred())); }
 
-void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Op1(
-	const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr)
+void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Op1
+	(const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr)
 	{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
-void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Op2(
-	const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr)
+void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Op2
+	(const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr)
 	{ this->pSetResult(ZUtil_STL::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp1()))); }
 
 std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr)

@@ -127,8 +127,8 @@ ZNet::Error ZNet_Internet_WinSock::sTranslateError(int inNativeError)
 #pragma mark -
 #pragma mark * ZNetNameLookup_Internet_WinSock
 
-ZNetNameLookup_Internet_WinSock::ZNetNameLookup_Internet_WinSock(
-	const string& inName, ip_port inPort, size_t inMaxAddresses)
+ZNetNameLookup_Internet_WinSock::ZNetNameLookup_Internet_WinSock
+	(const string& inName, ip_port inPort, size_t inMaxAddresses)
 :	fName(inName),
 	fPort(inPort),
 	fStarted(false),
@@ -214,8 +214,8 @@ ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock(ip_port iLocalPort)
 	this->pInit(INADDR_ANY, iLocalPort);
 	}
 
-ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock(
-	ip4_addr iLocalAddress, ip_port iLocalPort)
+ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock
+	(ip4_addr iLocalAddress, ip_port iLocalPort)
 	{
 	this->pInit(iLocalAddress, iLocalPort);
 	}
@@ -273,8 +273,8 @@ ip_port ZNetListener_TCP_WinSock::GetPort()
 	return 0;
 	}
 
-void ZNetListener_TCP_WinSock::pInit(
-	ip4_addr iLocalAddress, ip_port iLocalPort)
+void ZNetListener_TCP_WinSock::pInit
+	(ip4_addr iLocalAddress, ip_port iLocalPort)
 	{
 	fSOCKET = ::socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (fSOCKET == INVALID_SOCKET)
@@ -368,8 +368,8 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetLocalAddress()
 		{
 		if (localSockAddr.sin_family == AF_INET)
 			{
-			return new ZNetAddress_IP4(
-				ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
+			return new ZNetAddress_IP4
+				(ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
 			}
 		}
 
@@ -382,8 +382,8 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetRemoteAddress()
 	int length = sizeof(remoteSockAddr);
 	if (::getpeername(fSOCKET, (sockaddr*)&remoteSockAddr, &length) >= 0)
 		{
-		return new ZNetAddress_IP4(
-			ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));
+		return new ZNetAddress_IP4
+			(ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));
 		}
 
 	return null;

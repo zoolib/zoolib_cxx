@@ -58,7 +58,7 @@ public:
 // Our protocol
 	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs) = 0;
 	virtual ZRef<Device> Open(uint64 iDeviceID) = 0;
-	
+
 	typedef ZRef<Manager> ZRef_Manager;
 	typedef ZCallable<void(ZRef_Manager)> CB_ManagerChanged;
 	void SetCallable(ZRef<CB_ManagerChanged> iCallable);
@@ -93,8 +93,8 @@ public:
 		error_Generic
 		};
 
-	virtual ZRef<Channel> Open(
-		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError);
+	virtual ZRef<Channel> Open
+		(const std::string& iName, const PasswordHash* iPasswordHash, Error* oError);
 
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError) = 0;

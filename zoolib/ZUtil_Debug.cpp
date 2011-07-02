@@ -197,8 +197,8 @@ bool LogMeister::Enabled(ZLog::EPriority iPriority, const string& iName)
 bool LogMeister::Enabled(ZLog::EPriority iPriority, const char* iName)
 	{ return iPriority <= fLogPriority; }
 
-void LogMeister::LogIt(
-	ZLog::EPriority iPriority, const string& iName, const string& iMessage)
+void LogMeister::LogIt
+	(ZLog::EPriority iPriority, const string& iName, const string& iMessage)
 	{
 	if (iPriority > fLogPriority)
 		return;

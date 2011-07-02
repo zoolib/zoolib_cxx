@@ -91,8 +91,8 @@ HINSTANCE ZUtil_Win::sGetModuleHandle()
 		return ::GetModuleHandleW(nullptr);
 	#else
 		HMODULE theHINSTANCE;
-		bool result = ::GetModuleHandleExW(
-			GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
+		bool result = ::GetModuleHandleExW
+			(GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
 			reinterpret_cast<LPCWSTR>(sGetModuleHandle),
 			&theHINSTANCE);
 		return theHINSTANCE;

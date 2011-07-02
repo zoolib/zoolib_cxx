@@ -87,8 +87,8 @@ void sInsertMustNotContain(const int iDebugLevel,
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-bool sInsertIfNotContains(
-	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
+bool sInsertIfNotContains
+	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
 	{
 	return ioMap.insert(typename std::map<KBase,Value,Comparator>::value_type(iKey, iValue)).second;
 	}

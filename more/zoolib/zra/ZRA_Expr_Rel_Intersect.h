@@ -67,11 +67,11 @@ public:
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Intersect> sIntersect(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+ZRef<Expr_Rel_Intersect> sIntersect
+	(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+ZRef<Expr_Rel> operator&
+	(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
 } // namespace ZRA
 

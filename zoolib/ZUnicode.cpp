@@ -392,8 +392,8 @@ template struct Functions_Convert_T<string8::iterator>;
 namespace { // anonymous
 
 template <class S, class D>
-bool spConvert_T(
-	S iSource, size_t iSourceCU,
+bool spConvert_T
+	(S iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	D oDest, size_t iDestCU,
 	size_t* oDestCU,
@@ -465,14 +465,14 @@ bool spConvert_T(
 	}
 
 template <class S, class D>
-bool spConvert_T(
-	S iSource, size_t iSourceCU,
+bool spConvert_T
+	(S iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	D oDest, size_t iDestCU,
 	size_t* oDestCU)
 	{
-	return spConvert_T(
-		iSource, iSourceCU,
+	return spConvert_T
+		(iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCU,
 		oDestCU,
@@ -485,129 +485,129 @@ bool spConvert_T(
 #pragma mark -
 #pragma mark * Converting between different serializations
 
-void sUTF32ToUTF32(
-	const UTF32* iSource, size_t iSourceCount,
+void sUTF32ToUTF32
+	(const UTF32* iSource, size_t iSourceCount,
 	size_t* oSourceCount, size_t* oSourceCountSkipped,
 	UTF32* oDest, size_t iDestCount,
 	size_t* oDestCount)
 	{
-	spConvert_T(
-		iSource, iSourceCount,
+	spConvert_T
+		(iSource, iSourceCount,
 		oSourceCount, oSourceCountSkipped,
 		oDest, iDestCount,
 		oDestCount);
 	}
 
-void sUTF32ToUTF16(
-	const UTF32* iSource, size_t iSourceCount,
+void sUTF32ToUTF16
+	(const UTF32* iSource, size_t iSourceCount,
 	size_t* oSourceCount, size_t* oSourceCountSkipped,
 	UTF16* oDest, size_t iDestCU,
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP)
 	{
-	spConvert_T(
-		iSource, iSourceCount,
-		oSourceCount, oSourceCountSkipped,
-		oDest, iDestCU,
-		oDestCU,
-		iMaxCP, oCountCP);
-	}
-
-void sUTF32ToUTF8(
-	const UTF32* iSource, size_t iSourceCount,
-	size_t* oSourceCount, size_t* oSourceCountSkipped,
-	UTF8* oDest, size_t iDestCU,
-	size_t* oDestCU,
-	size_t iMaxCP, size_t* oCountCP)
-	{
-	spConvert_T(
-		iSource, iSourceCount,
+	spConvert_T
+		(iSource, iSourceCount,
 		oSourceCount, oSourceCountSkipped,
 		oDest, iDestCU,
 		oDestCU,
 		iMaxCP, oCountCP);
 	}
 
-bool sUTF16ToUTF32(
-	const UTF16* iSource, size_t iSourceCU,
+void sUTF32ToUTF8
+	(const UTF32* iSource, size_t iSourceCount,
+	size_t* oSourceCount, size_t* oSourceCountSkipped,
+	UTF8* oDest, size_t iDestCU,
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP)
+	{
+	spConvert_T
+		(iSource, iSourceCount,
+		oSourceCount, oSourceCountSkipped,
+		oDest, iDestCU,
+		oDestCU,
+		iMaxCP, oCountCP);
+	}
+
+bool sUTF16ToUTF32
+	(const UTF16* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	UTF32* oDest, size_t iDestCount,
 	size_t* oDestCount)
 	{
-	return spConvert_T(
-		iSource, iSourceCU,
+	return spConvert_T
+		(iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCount,
 		oDestCount);
 	}
 
-bool sUTF16ToUTF16(
-	const UTF16* iSource, size_t iSourceCU,
+bool sUTF16ToUTF16
+	(const UTF16* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	UTF16* oDest, size_t iDestCU,
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP)
 	{
-	return spConvert_T(
-		iSource, iSourceCU,
+	return spConvert_T
+		(iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCU,
 		oDestCU,
 		iMaxCP, oCountCP);
 	}
 
-bool sUTF16ToUTF8(
-	const UTF16* iSource, size_t iSourceCU,
+bool sUTF16ToUTF8
+	(const UTF16* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	UTF8* oDest, size_t iDestCU,
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP)
 	{
-	return spConvert_T(
-		iSource, iSourceCU,
+	return spConvert_T
+		(iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCU,
 		oDestCU,
 		iMaxCP, oCountCP);
 	}
 
-bool sUTF8ToUTF32(
-	const UTF8* iSource, size_t iSourceCU,
+bool sUTF8ToUTF32
+	(const UTF8* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	UTF32* oDest, size_t iDestCount,
 	size_t* oDestCount)
 	{
-	return spConvert_T(
-		iSource, iSourceCU,
+	return spConvert_T
+		(iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCount,
 		oDestCount);
 	}
 
-bool sUTF8ToUTF16(
-	const UTF8* iSource, size_t iSourceCU,
+bool sUTF8ToUTF16
+	(const UTF8* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	UTF16* oDest, size_t iDestCU,
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP)
 	{
-	return spConvert_T(
-		iSource, iSourceCU,
+	return spConvert_T
+		(iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCU,
 		oDestCU,
 		iMaxCP, oCountCP);
 	}
 
-bool sUTF8ToUTF8(
-	const UTF8* iSource, size_t iSourceCU,
+bool sUTF8ToUTF8
+	(const UTF8* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	UTF8* oDest, size_t iDestCU,
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP)
 	{
-	return spConvert_T(
-		iSource, iSourceCU,
+	return spConvert_T
+		(iSource, iSourceCU,
 		oSourceCU, oSourceCUSkipped,
 		oDest, iDestCU,
 		oDestCU,

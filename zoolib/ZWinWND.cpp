@@ -142,8 +142,8 @@ const WCHAR* ClassRegistration::GetClassName() const
 
 static ClassRegistration spClassRegistration(spWindowProcW, L"ZWinWND ClassRegistration");
 
-HWND sCreate(
-	DWORD dwExStyle,
+HWND sCreate
+	(DWORD dwExStyle,
 	LPCWSTR lpWindowName,
 	DWORD dwStyle,
 	int X,
@@ -156,9 +156,9 @@ HWND sCreate(
 	ZRef<Callable> iCallable)
 	{
 	CreateStruct theCS = { iWNDPROC, iCallable };
-	
-	return ::CreateWindowExW(
-		dwExStyle,
+
+	return ::CreateWindowExW
+		(dwExStyle,
 		spClassRegistration.GetClassName(),
 		lpWindowName,
 		dwStyle,
@@ -174,8 +174,8 @@ HWND sCreate(
 
 HWND sCreate(HWND iParent, ZRef<Callable> iCallable)
 	{
-	return sCreate(
-		0, // Extended attributes
+	return sCreate
+		(0, // Extended attributes
 		nullptr, // window caption
 		0, // window style
 		0, // initial x position

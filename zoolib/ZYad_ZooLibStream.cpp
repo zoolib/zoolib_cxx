@@ -289,8 +289,8 @@ ZYadMapR_ZooLibStreamNew::ZYadMapR_ZooLibStreamNew(ZRef<ZStreamerR> iStreamerR)
 :	fStreamerR(iStreamerR)
 	{}
 
-void ZYadMapR_ZooLibStreamNew::Imp_ReadInc(
-	bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+void ZYadMapR_ZooLibStreamNew::Imp_ReadInc
+	(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	oName = spStringFromStream(fStreamerR->GetStreamR());
 	oYadR = spMakeYadR_ZooLibStream(fStreamerR);
@@ -305,8 +305,8 @@ ZYadMapR_ZooLibStreamOld::ZYadMapR_ZooLibStreamOld(ZRef<ZStreamerR> iStreamerR)
 	fCountRemaining(fStreamerR->GetStreamR().ReadCount())
 	{}
 
-void ZYadMapR_ZooLibStreamOld::Imp_ReadInc(
-	bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+void ZYadMapR_ZooLibStreamOld::Imp_ReadInc
+	(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	if (fCountRemaining)
 		{

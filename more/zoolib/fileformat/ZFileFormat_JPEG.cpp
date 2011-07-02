@@ -202,8 +202,8 @@ StreamR_Segment::StreamR_Segment(uint8& oSegmentType, const ZStreamR& iStreamR)
 	this->pInit(oSegmentType, true);
 	}
 
-StreamR_Segment::StreamR_Segment(
-	uint8& oSegmentType, bool iSkipOnDestroy, const ZStreamR& iStreamR)
+StreamR_Segment::StreamR_Segment
+	(uint8& oSegmentType, bool iSkipOnDestroy, const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{
 	this->pInit(oSegmentType, iSkipOnDestroy);

@@ -173,8 +173,8 @@ OSStatus ZStreamRWCon_SSL_OSX::pWrite(const void* iSource, size_t* ioCount)
 	return ioErr;
 	}
 
-OSStatus ZStreamRWCon_SSL_OSX::spWrite(
-	SSLConnectionRef iRefcon, const void* iSource, size_t* ioCount)
+OSStatus ZStreamRWCon_SSL_OSX::spWrite
+	(SSLConnectionRef iRefcon, const void* iSource, size_t* ioCount)
 	{
 	ZStreamRWCon_SSL_OSX* theS =
 		const_cast<ZStreamRWCon_SSL_OSX*>(static_cast<const ZStreamRWCon_SSL_OSX*>(iRefcon));
@@ -186,8 +186,8 @@ OSStatus ZStreamRWCon_SSL_OSX::spWrite(
 #pragma mark -
 #pragma mark * ZStreamRWCon_SSL_OSX
 
-ZStreamerRWCon_SSL_OSX::ZStreamerRWCon_SSL_OSX(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+ZStreamerRWCon_SSL_OSX::ZStreamerRWCon_SSL_OSX
+	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fStreamerR(iStreamerR)
 ,	fStreamerW(iStreamerW)
 ,	fStream(fStreamerR->GetStreamR(), fStreamerW->GetStreamW())

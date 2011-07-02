@@ -32,8 +32,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZUtil_MacOSX
 
-void ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
-	void* ioFuncs, size_t iCount, vector<char>& ioStorage)
+void ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO
+	(void* ioFuncs, size_t iCount, vector<char>& ioStorage)
 	{
 	ioStorage.resize(iCount * sizeof(Thunk_CFMCalledByMachO));
 	Thunk_CFMCalledByMachO* localDest = reinterpret_cast<Thunk_CFMCalledByMachO*>(&ioStorage[0]);
@@ -46,8 +46,8 @@ void ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
 		}
 	}
 
-void ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
-	void* ioFuncs, size_t iCount, vector<char>& ioStorage)
+void ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM
+	(void* ioFuncs, size_t iCount, vector<char>& ioStorage)
 	{
 	ioStorage.resize(iCount * sizeof(Thunk_MachOCalledByCFM));
 	Thunk_MachOCalledByCFM* localDest = reinterpret_cast<Thunk_MachOCalledByCFM*>(&ioStorage[0]);

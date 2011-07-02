@@ -38,8 +38,8 @@ class ZTextDecoder_UTF32BE : public ZTextDecoder
 public:
 	using ZTextDecoder::Decode;
 
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	virtual bool Decode
+		(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 	};
 
@@ -65,8 +65,8 @@ class ZTextDecoder_UTF32LE : public ZTextDecoder
 public:
 	using ZTextDecoder::Decode;
 
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	virtual bool Decode
+		(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 	};
 
@@ -92,8 +92,8 @@ class ZTextDecoder_UTF16BE : public ZTextDecoder
 public:
 	using ZTextDecoder::Decode;
 
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	virtual bool Decode
+		(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 	};
 
@@ -119,8 +119,8 @@ class ZTextDecoder_UTF16LE : public ZTextDecoder
 public:
 	using ZTextDecoder::Decode;
 
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	virtual bool Decode
+		(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 	};
 
@@ -146,8 +146,8 @@ class ZTextDecoder_UTF8 : public ZTextDecoder
 public:
 	using ZTextDecoder::Decode;
 
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	virtual bool Decode
+		(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 	};
 
@@ -178,8 +178,8 @@ public:
 
 	using ZTextDecoder::Decode;
 
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	virtual bool Decode
+		(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 
 	virtual void Reset();

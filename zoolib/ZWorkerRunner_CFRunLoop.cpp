@@ -66,8 +66,8 @@ void ZWorkerRunner_CFRunLoop::Initialize()
 	{
 	ZWorkerRunner::Initialize();
 
-	fRunLoopTimer = Adopt& ::CFRunLoopTimerCreate(
-		nullptr, // allocator
+	fRunLoopTimer = Adopt& ::CFRunLoopTimerCreate
+		(nullptr, // allocator
 		0, // fireDate
 		1000000, // interval, needs to be non-zero
 		0, // flags

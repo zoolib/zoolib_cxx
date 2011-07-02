@@ -120,8 +120,8 @@ private:
 	bool pSendMessage(const ZStreamW& iStreamW, uint8 iMessage);
 	bool pSendMessage_Param(const ZStreamW& iStreamW, uint8 iMessage, uint32 iEPID, uint32 iParam);
 	bool pSendMessage_Open(const ZStreamW& iStreamW, Endpoint* iEP);
-	bool pSendMessage_Data(
-		const ZStreamW& iStreamW, uint32 iEPID, const void* iSource, size_t iCount);
+	bool pSendMessage_Data
+		(const ZStreamW& iStreamW, uint32 iEPID, const void* iSource, size_t iCount);
 	void pFlush(const ZStreamW& iStreamW);
 	bool pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP);
 

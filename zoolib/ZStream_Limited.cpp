@@ -116,8 +116,8 @@ void ZStreamW_Limited::Imp_Flush()
 #pragma mark -
 #pragma mark * ZStreamRPos_Limited
 
-ZStreamRPos_Limited::ZStreamRPos_Limited(
-	uint64 iOffset, uint64 iLimit, const ZStreamRPos& iStreamSource)
+ZStreamRPos_Limited::ZStreamRPos_Limited
+	(uint64 iOffset, uint64 iLimit, const ZStreamRPos& iStreamSource)
 :	fStreamSource(iStreamSource),
 	fOffset(iOffset),
 	fLimit(min(iLimit, ZUINT64_C(0xFFFFFFFFFFFFFFFF) - fOffset))
@@ -148,8 +148,8 @@ uint64 ZStreamRPos_Limited::Imp_GetSize()
 #pragma mark -
 #pragma mark * ZStreamerRPos_Limited
 
-ZStreamerRPos_Limited::ZStreamerRPos_Limited(
-	uint64 iOffset, uint64 iLimit, ZRef<ZStreamerRPos> iStreamer)
+ZStreamerRPos_Limited::ZStreamerRPos_Limited
+	(uint64 iOffset, uint64 iLimit, ZRef<ZStreamerRPos> iStreamer)
 :	fStreamer(iStreamer),
 	fStream(iOffset, iLimit, iStreamer->GetStreamRPos())
 	{}

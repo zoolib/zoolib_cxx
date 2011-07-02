@@ -148,8 +148,8 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 
 			int32 theResponseCode;
 			Map theHeaders;
-			if (!spRequest(
-				theEP->GetStreamW(), theEP->GetStreamR(),
+			if (!spRequest
+				(theEP->GetStreamW(), theEP->GetStreamR(),
 				iMethod, theHost, thePath,
 				true,
 				&theResponseCode, &theHeaders, oRawHeader))
@@ -418,8 +418,8 @@ static ZQ<Val> spReadPOST(const ZStreamR& iStreamR, const Map& iHeader)
 
 			// We parse it into the Map called 'header'.
 			Map header;
-			sReadHeader(
-				ZStreamR_SkipAllOnDestroy(ZMIME::StreamR_Header(streamPart)), &header);
+			sReadHeader
+				(ZStreamR_SkipAllOnDestroy(ZMIME::StreamR_Header(streamPart)), &header);
 
 			Map contentDisposition = header.Get<Map>("content-disposition");
 			if (contentDisposition.Get<string>("value") == "form-data")

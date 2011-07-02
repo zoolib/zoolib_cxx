@@ -154,8 +154,8 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource, const ZRectPOD& iSourceBounds)
 	if (realBounds.IsEmpty())
 		return;
 
-	fRep = ZDCPixmapRep::sCreate(
-		sourceRep->GetRaster(), realBounds, sourceRep->GetPixelDesc());
+	fRep = ZDCPixmapRep::sCreate
+		(sourceRep->GetRaster(), realBounds, sourceRep->GetPixelDesc());
 	}
 
 ZDCPixmap::ZDCPixmap(ZPointPOD iSize, const uint8* iPixvals,
@@ -452,8 +452,8 @@ void ZDCPixmap::Munge(bool iMungeColorTable, MungeProc iMungeProc, void* iRefcon
 
 	this->pTouch();
 
-	sMunge(
-		fRep->GetRaster()->GetBaseAddress(),
+	sMunge
+		(fRep->GetRaster()->GetBaseAddress(),
 		fRep->GetRaster()->GetRasterDesc(),
 		fRep->GetPixelDesc(),
 		fRep->GetBounds(),
@@ -588,8 +588,8 @@ ZDCPixmapCache::~ZDCPixmapCache()
 #pragma mark -
 #pragma mark * ZDCPixmapRep
 
-ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
-	const ZRef<ZDCPixmapRaster>& iRaster,
+ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate
+	(const ZRef<ZDCPixmapRaster>& iRaster,
 	const ZRectPOD& iBounds,
 	const PixelDesc& iPixelDesc)
 	{
@@ -602,8 +602,8 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 	return new ZDCPixmapRep(iRaster, iBounds, iPixelDesc);
 	}
 
-ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
-	const RasterDesc& iRasterDesc,
+ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate
+	(const RasterDesc& iRasterDesc,
 	const ZRectPOD& iBounds,
 	const PixelDesc& iPixelDesc)
 	{
@@ -676,8 +676,8 @@ void ZDCPixmapRep::CopyFrom(ZPointPOD iDestLocation,
 		ZAssertStop(kDebug_Pixmap, destBounds == (destBounds & fBounds));
 		}
 
-	ZDCPixmapNS::sBlit(
-		iSourceRep->GetRaster()->GetBaseAddress(),
+	ZDCPixmapNS::sBlit
+		(iSourceRep->GetRaster()->GetBaseAddress(),
 		iSourceRep->GetRaster()->GetRasterDesc(),
 		iSourceRep->GetPixelDesc(),
 		fRaster->GetBaseAddress(),
@@ -699,8 +699,8 @@ void ZDCPixmapRep::CopyFrom(ZPointPOD iDestLocation,
 		ZAssertStop(kDebug_Pixmap, destBounds == (destBounds & fBounds));
 		}
 
-	ZDCPixmapNS::sBlit(
-		iSourceBaseAddress, iSourceRasterDesc, iSourcePixelDesc,
+	ZDCPixmapNS::sBlit
+		(iSourceBaseAddress, iSourceRasterDesc, iSourcePixelDesc,
 		fRaster->GetBaseAddress(), fRaster->GetRasterDesc(), this->GetPixelDesc(),
 		iSourceBounds, iDestLocation);
 	}
@@ -713,8 +713,8 @@ void ZDCPixmapRep::CopyTo(ZPointPOD iDestLocation,
 	{
 	ZAssertStop(kDebug_Pixmap, iSourceBounds == (iSourceBounds & fBounds));
 
-	ZDCPixmapNS::sBlit(
-		fRaster->GetBaseAddress(), fRaster->GetRasterDesc(), this->GetPixelDesc(),
+	ZDCPixmapNS::sBlit
+		(fRaster->GetBaseAddress(), fRaster->GetRasterDesc(), this->GetPixelDesc(),
 		iDestBaseAddress, iDestRasterDesc, iDestPixelDesc,
 		iSourceBounds, iDestLocation);
 	}

@@ -27,8 +27,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZTBRep_Client_StreamerRWFactory
 
-ZTBRep_Client_StreamerRWFactory::ZTBRep_Client_StreamerRWFactory(
-	ZRef<ZStreamerRWFactory> iStreamerRWFactory)
+ZTBRep_Client_StreamerRWFactory::ZTBRep_Client_StreamerRWFactory
+	(ZRef<ZStreamerRWFactory> iStreamerRWFactory)
 :	fStreamerRWFactory(iStreamerRWFactory)
 	{}
 

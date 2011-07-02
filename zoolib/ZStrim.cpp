@@ -540,8 +540,8 @@ void ZStrimR::Imp_ReadUTF16(UTF16* oDest,
 		size_t utf32Consumed;
 		size_t utf16Generated;
 		size_t cpGenerated;
-		ZUnicode::sUTF32ToUTF16(
-			utf32Buffer, utf32Read,
+		ZUnicode::sUTF32ToUTF16
+			(utf32Buffer, utf32Read,
 			&utf32Consumed, nullptr,
 			localDest, iCountCU,
 			&utf16Generated,
@@ -577,8 +577,8 @@ void ZStrimR::Imp_ReadUTF8(UTF8* oDest,
 		size_t utf32Consumed;
 		size_t utf8Generated;
 		size_t cpGenerated;
-		ZUnicode::sUTF32ToUTF8(
-			utf32Buffer, utf32Read,
+		ZUnicode::sUTF32ToUTF8
+			(utf32Buffer, utf32Read,
 			&utf32Consumed, nullptr,
 			localDest, iCountCU,
 			&utf8Generated,
@@ -1254,8 +1254,8 @@ void ZStrimW_NativeUTF32::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, 
 		UTF32 buffer[kBufSize];
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		if (not ZUnicode::sUTF16ToUTF32(
-			localSource, iCountCU,
+		if (not ZUnicode::sUTF16ToUTF32
+			(localSource, iCountCU,
 			&utf16Consumed, nullptr,
 			buffer, kBufSize,
 			&utf32Generated))
@@ -1294,8 +1294,8 @@ void ZStrimW_NativeUTF32::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 		UTF32 buffer[kBufSize];
 		size_t utf8Consumed;
 		size_t utf32Generated;
-		if (not ZUnicode::sUTF8ToUTF32(
-			localSource, iCountCU,
+		if (not ZUnicode::sUTF8ToUTF32
+			(localSource, iCountCU,
 			&utf8Consumed, nullptr,
 			buffer, kBufSize,
 			&utf32Generated))
@@ -1339,8 +1339,8 @@ void ZStrimW_NativeUTF16::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, 
 
 		size_t utf32Consumed;
 		size_t utf16Generated;
-		ZUnicode::sUTF32ToUTF16(
-			localSource, iCountCU,
+		ZUnicode::sUTF32ToUTF16
+			(localSource, iCountCU,
 			&utf32Consumed, nullptr,
 			buffer, kBufSize,
 			&utf16Generated,
@@ -1375,8 +1375,8 @@ void ZStrimW_NativeUTF16::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 		UTF16 buffer[kBufSize];
 		size_t utf8Consumed;
 		size_t utf16Generated;
-		if (not ZUnicode::sUTF8ToUTF16(
-			localSource, iCountCU,
+		if (not ZUnicode::sUTF8ToUTF16
+			(localSource, iCountCU,
 			&utf8Consumed, nullptr,
 			buffer, kBufSize,
 			&utf16Generated,
@@ -1424,8 +1424,8 @@ void ZStrimW_NativeUTF8::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, s
 
 		size_t utf32Consumed;
 		size_t utf8Generated;
-		ZUnicode::sUTF32ToUTF8(
-			localSource, iCountCU,
+		ZUnicode::sUTF32ToUTF8
+			(localSource, iCountCU,
 			&utf32Consumed, nullptr,
 			buffer, kBufSize,
 			&utf8Generated,
@@ -1463,8 +1463,8 @@ void ZStrimW_NativeUTF8::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, s
 		UTF8 buffer[kBufSize];
 		size_t utf16Consumed;
 		size_t utf8Generated;
-		if (not ZUnicode::sUTF16ToUTF8(
-			localSource, iCountCU,
+		if (not ZUnicode::sUTF16ToUTF8
+			(localSource, iCountCU,
 			&utf16Consumed, nullptr,
 			buffer, kBufSize,
 			&utf8Generated,
@@ -1620,8 +1620,8 @@ void ZStrimU_String32::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF32ToUTF32(
-			fString.data() + fPosition, theLength - fPosition,
+		ZUnicode::sUTF32ToUTF32
+			(fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCount,
 			oCount);
@@ -1643,8 +1643,8 @@ void ZStrimU_String32::Imp_ReadUTF16(UTF16* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF32ToUTF16(
-			fString.data() + fPosition, theLength - fPosition,
+		ZUnicode::sUTF32ToUTF16
+			(fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
 			oCountCU,
@@ -1667,8 +1667,8 @@ void ZStrimU_String32::Imp_ReadUTF8(UTF8* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF32ToUTF8(
-			fString.data() + fPosition, theLength - fPosition,
+		ZUnicode::sUTF32ToUTF8
+			(fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
 			oCountCU,
@@ -1721,8 +1721,8 @@ void ZStrimU_String16::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF16ToUTF32(
-			fString.data() + fPosition, theLength - fPosition,
+		ZUnicode::sUTF16ToUTF32
+			(fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCount,
 			oCount);
@@ -1744,8 +1744,8 @@ void ZStrimU_String16::Imp_ReadUTF16(UTF16* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF16ToUTF16(
-			fString.data() + fPosition, theLength - fPosition,
+		ZUnicode::sUTF16ToUTF16
+			(fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
 			oCountCU,
@@ -1768,8 +1768,8 @@ void ZStrimU_String16::Imp_ReadUTF8(UTF8* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF16ToUTF8(
-			fString.data() + fPosition, theLength - fPosition,
+		ZUnicode::sUTF16ToUTF8
+			(fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
 			oCountCU,
@@ -1824,8 +1824,8 @@ void ZStrimU_String8::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF8ToUTF32(
-			fString.data() + fPosition, theLength - fPosition,
+		ZUnicode::sUTF8ToUTF32
+			(fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCount,
 			oCount);
@@ -1847,8 +1847,8 @@ void ZStrimU_String8::Imp_ReadUTF16(UTF16* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF8ToUTF16(
-			fString.data() + fPosition, theLength - fPosition,
+		ZUnicode::sUTF8ToUTF16
+			(fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
 			oCountCU,
@@ -1871,8 +1871,8 @@ void ZStrimU_String8::Imp_ReadUTF8(UTF8* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF8ToUTF8(
-			fString.data() + fPosition, theLength - fPosition,
+		ZUnicode::sUTF8ToUTF8
+			(fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
 			oCountCU,

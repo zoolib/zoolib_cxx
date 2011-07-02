@@ -54,8 +54,8 @@ static HANDLE spDuplicateHandle(HANDLE iHANDLE)
 	if (iHANDLE)
 		{
 		HANDLE result;
-		if (::DuplicateHandle(
-			::GetCurrentProcess(), // hSourceProcessHandle
+		if (::DuplicateHandle
+			(::GetCurrentProcess(), // hSourceProcessHandle
 			iHANDLE, // hSourceHandle
 			::GetCurrentProcess(), // hTargetProcessHandle
 			(LPHANDLE)&result, // lpTargetHandle

@@ -183,8 +183,8 @@ static bool spRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 			{
 			if (!sTryRead_EscapedString(iStrimU, '\'', thePropertyName))
 				{
-				if (not ZYad_ZooLibStrim::sRead_Identifier(
-					iStrimU, &thePropertyNameLC, &thePropertyName))
+				if (not ZYad_ZooLibStrim::sRead_Identifier
+					(iStrimU, &thePropertyNameLC, &thePropertyName))
 					{
 					return false;
 					}

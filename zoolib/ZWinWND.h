@@ -53,8 +53,8 @@ private:
 
 typedef ZCallable<LRESULT(WNDPROC,HWND,UINT,WPARAM,LPARAM)> Callable;
 
-HWND sCreate(
-	DWORD dwExStyle,
+HWND sCreate
+	(DWORD dwExStyle,
 	LPCWSTR lpWindowName,
 	DWORD dwStyle,
 	int X,

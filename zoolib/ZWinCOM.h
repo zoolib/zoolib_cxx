@@ -101,7 +101,7 @@ public:
 			sDtor_T<T>(fBytes);
 			}
 		}
-	
+
 	~OParam()
 		{
 		if (fHasValue)
@@ -167,7 +167,7 @@ public:
 		if (fT)
 			sRelease(*fT);
 		}
-	
+
 	operator bool() const
 		{ return (Sense && fT) || (!Sense && !fT); }
 
@@ -206,8 +206,8 @@ ZRef<Interface> sCreate()
 	{
 	ZRef<Interface> result;
 
-	if (SUCCEEDED(::CoCreateInstance(
-		ZMACRO_UUID(Class),
+	if (SUCCEEDED(::CoCreateInstance
+		(ZMACRO_UUID(Class),
 		nullptr,
 		CLSCTX_INPROC_SERVER,
 		ZMACRO_UUID(Interface),
@@ -223,8 +223,8 @@ ZRef<Interface> sCreate(CLSID iCLSID)
 	{
 	ZRef<Interface> result;
 
-	if (SUCCEEDED(::CoCreateInstance(
-		iCLSID,
+	if (SUCCEEDED(::CoCreateInstance
+		(iCLSID,
 		nullptr,
 		CLSCTX_INPROC_SERVER,
 		ZMACRO_UUID(Interface),

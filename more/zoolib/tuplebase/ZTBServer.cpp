@@ -109,8 +109,8 @@ public:
 	size_t fResult;
 	};
 
-ZTBServer::ZTBServer(
-	ZRef<ZTaskMaster> iTaskMaster,
+ZTBServer::ZTBServer
+	(ZRef<ZTaskMaster> iTaskMaster,
 	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 	ZRef<ZTBRep> iTBRep, const std::string& iLogFacility)
 :	ZTask(iTaskMaster),
@@ -331,8 +331,8 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 					// Remove it from our low priority list too
 					// Actually, this shouldn't be necessary. fTuplesSent should
 					// stop this from happening. Probably should make this an assertion.
-					ZUtil_STL::sEraseIfContains(
-						theTransaction->fTuplesToSend_LowPriority, (*j).first);
+					ZUtil_STL::sEraseIfContains
+						(theTransaction->fTuplesToSend_LowPriority, (*j).first);
 					}
 				theTransaction->fTuplesToSend_HighPriority.clear();
 				vectorTransactionTuples.push_back(theTransactionTuple);
@@ -501,8 +501,8 @@ void ZTBServer::Handle_Create(const ZTuple& iReq)
 		}
 	}
 
-void ZTBServer::spCallback_GetTupleForSearch(
-	void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
+void ZTBServer::spCallback_GetTupleForSearch
+	(void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 	{
 	if (iCount)
 		{
@@ -516,8 +516,8 @@ void ZTBServer::spCallback_GetTupleForSearch(
 			if (not ZUtil_STL::sContains(theTransaction->fTuplesSent, theID))
 				{
 				theTransaction->fTuplesSent.insert(theID);
-				theTransaction->fTuplesToSend_LowPriority.insert(
-					pair<uint64, ZTuple>(theID, theTuple));
+				theTransaction->fTuplesToSend_LowPriority.insert
+					(pair<uint64, ZTuple>(theID, theTuple));
 				}
 			}
 
@@ -711,8 +711,8 @@ void ZTBServer::Handle_Commit(const ZTuple& iReq)
 		}
 	}
 
-void ZTBServer::spCallback_GetTuple(
-	void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
+void ZTBServer::spCallback_GetTuple
+	(void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 	{
 	if (iCount)
 		{
@@ -726,8 +726,8 @@ void ZTBServer::spCallback_GetTuple(
 				{
 				theTransaction->fTuplesSent.insert(theID);
 				const ZTuple& theTuple = *iTuples++;
-				theTransaction->fTuplesToSend_HighPriority.insert(
-					pair<uint64, ZTuple>(theID, theTuple));
+				theTransaction->fTuplesToSend_HighPriority.insert
+					(pair<uint64, ZTuple>(theID, theTuple));
 				}
 			}
 
@@ -743,8 +743,8 @@ void ZTBServer::Handle_Actions(const ZTuple& iReq)
 	vector<uint64> vectorGets;
 	iReq.Get("Gets").GetSeq().GetVector_T(back_inserter(vectorGets), uint64());
 
-	theTransaction->fTBRepTransaction->GetTuples(
-		vectorGets.size(), &vectorGets[0], spCallback_GetTuple, theTransaction);
+	theTransaction->fTBRepTransaction->GetTuples
+		(vectorGets.size(), &vectorGets[0], spCallback_GetTuple, theTransaction);
 
 	const vector<ZTValue>& vectorWrites = iReq.Get("Writes").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorWrites.begin(); i != vectorWrites.end(); ++i)

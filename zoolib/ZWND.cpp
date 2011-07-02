@@ -81,8 +81,8 @@ static ZWindowClassRegistrationW
 
 HWND ZWNDW::sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam)
 	{
-	return ::CreateWindowExW(
-		0, // Extended attributes
+	return ::CreateWindowExW
+		(0, // Extended attributes
 		spWindowClassRegistrationW_Default.GetWNDCLASSName(),
 		nullptr, // window caption
 		iStyle, // window style
@@ -117,8 +117,8 @@ void ZWNDW::Create(HWND iParent, DWORD iStyle)
 	{
 	ZAssert(!fHWND && fWNDPROC);
 
-	HWND theHWND = ::CreateWindowExW(
-		0, // Extended attributes
+	HWND theHWND = ::CreateWindowExW
+		(0, // Extended attributes
 		spWindowClassRegistrationW_Other.GetWNDCLASSName(),
 		nullptr, // window caption
 		iStyle, // window style
@@ -276,8 +276,8 @@ LRESULT ZWNDSubClassW::CallBase(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARA
 	return ::CallWindowProcW(fWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
 	}
 
-LRESULT CALLBACK ZWNDSubClassW::sWindowProcW(
-	HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+LRESULT CALLBACK ZWNDSubClassW::sWindowProcW
+	(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	if (ZWNDSubClassW* theZWND = sFromHWNDNilOkayW(iHWND))
 		{

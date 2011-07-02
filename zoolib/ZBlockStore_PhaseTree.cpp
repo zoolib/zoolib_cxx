@@ -197,8 +197,8 @@ private:
 	uint64 fPosition;
 	};
 
-ZBlockStore_PhaseTree::StreamRPos::StreamRPos(
-	ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
+ZBlockStore_PhaseTree::StreamRPos::StreamRPos
+	(ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
 	{
 	fBlockStore = iBlockStore;
 	fBlockID = iBlockID;
@@ -249,8 +249,8 @@ protected:
 	ZBlockStore_PhaseTree::StreamRPos fStream;
 	};
 
-ZBlockStore_PhaseTree::StreamerRPos::StreamerRPos(
-	ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
+ZBlockStore_PhaseTree::StreamerRPos::StreamerRPos
+	(ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
 :	fStream(iBlockStore, iBlockID, iBlockSlot)
 	{}
 
@@ -294,8 +294,8 @@ private:
 	size_t fPosition;
 	};
 
-ZBlockStore_PhaseTree::StreamRWPos::StreamRWPos(
-	ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
+ZBlockStore_PhaseTree::StreamRWPos::StreamRWPos
+	(ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
 	{
 	fBlockStore = iBlockStore;
 	fBlockID = iBlockID;
@@ -317,8 +317,8 @@ void ZBlockStore_PhaseTree::StreamRWPos::Imp_Read(void* oDest, size_t iCount, si
 	fPosition += countRead;
 	}
 
-void ZBlockStore_PhaseTree::StreamRWPos::Imp_Write(
-	const void* iSource, size_t iCount, size_t* oCountWritten)
+void ZBlockStore_PhaseTree::StreamRWPos::Imp_Write
+	(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	size_t countWritten;
 	fBlockStore->WriteToBlock(fBlockID, fBlockSlot, fPosition, iSource, iCount, countWritten);
@@ -373,8 +373,8 @@ protected:
 	ZBlockStore_PhaseTree::StreamRWPos fStream;
 	};
 
-ZBlockStore_PhaseTree::StreamerRWPos::StreamerRWPos(
-	ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
+ZBlockStore_PhaseTree::StreamerRWPos::StreamerRWPos
+	(ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
 :	fStream(iBlockStore, iBlockID, iBlockSlot)
 	{}
 
@@ -480,8 +480,8 @@ void ZBlockStore_PhaseTree::ValidateSlot(Slot* iSlot, const char* iFunctionName,
 	}
 #else // ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
 #define VALIDATESLOT(a)
-inline void ZBlockStore_PhaseTree::ValidateSlot(
-	Slot* iSlot, const char* iFunctionName, int iLineNumber)
+inline void ZBlockStore_PhaseTree::ValidateSlot
+	(Slot* iSlot, const char* iFunctionName, int iLineNumber)
 	{}
 #endif // ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
 
@@ -512,8 +512,8 @@ PT_INLINE bool ZBlockStore_PhaseTree::Index_IsFull(Slot* iSlot, bool iIsLeaf)
 		}
 	}
 
-PT_INLINE ZBlockStore_PhaseTree::BlockID ZBlockStore_PhaseTree::Index_GetKey(
-	Slot* iSlot, bool iIsLeaf, size_t iOffset)
+PT_INLINE ZBlockStore_PhaseTree::BlockID ZBlockStore_PhaseTree::Index_GetKey
+	(Slot* iSlot, bool iIsLeaf, size_t iOffset)
 	{
 	if (iIsLeaf)
 		ZAssertStop(ZCONFIG_PhaseTree_Debug, iOffset < ReadField(iSlot, 0));
@@ -574,8 +574,8 @@ uint32 -- slot number of the head of the free list
 uint32 -- count of number of slots in the free list
 */
 
-ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(
-	ZRef<ZFileRW> iFile, size_t iSlotSize, size_t iUserHeaderSize)
+ZBlockStore_PhaseTree::ZBlockStore_PhaseTree
+	(ZRef<ZFileRW> iFile, size_t iSlotSize, size_t iUserHeaderSize)
 :	fUserHeaderSize(iUserHeaderSize),
 	fSlotSize(iSlotSize),
 	fCount_Writes(0),
@@ -1291,8 +1291,8 @@ size_t ZBlockStore_PhaseTree::EfficientSize()
 	return fSlotSize - sizeof(uint32);
 	}
 
-ZRef<ZStreamerRWPos> ZBlockStore_PhaseTree::CreateWithSpecificID(
-	BlockID iDesiredBlockID, BlockID& oActualBlockID)
+ZRef<ZStreamerRWPos> ZBlockStore_PhaseTree::CreateWithSpecificID
+	(BlockID iDesiredBlockID, BlockID& oActualBlockID)
 	{
 	if (fFileRW && iDesiredBlockID)
 		{
@@ -1433,8 +1433,8 @@ void ZBlockStore_PhaseTree::DumpBlock(Slot* iSlot, int iIndent)
 	fprintf(stdout, "Slot: %d, Size: %d\n", iSlot->fSlotNumber, this->ReadField(iSlot, 0));
 	}
 
-size_t ZBlockStore_PhaseTree::ValidateOne(
-	Slot* iSlot, int iHeight, uint32 iMinKeyMinusOne, uint32 iMaxKey)
+size_t ZBlockStore_PhaseTree::ValidateOne
+	(Slot* iSlot, int iHeight, uint32 iMinKeyMinusOne, uint32 iMaxKey)
 	{
 	size_t count = this->Index_GetCount(iSlot);
 	uint32 priorKey = iMinKeyMinusOne;
@@ -1559,8 +1559,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::FindBlockSlotForWrite(BlockI
 		bool isLeafNode = (currentHeight == 0);
 		size_t offset;
 		uint32 newChildSlotNumber;
-		Slot* childSlot = this->Index_FindChildForked(
-			parentSlot, isLeafNode, iBlockID, offset, newChildSlotNumber);
+		Slot* childSlot = this->Index_FindChildForked
+			(parentSlot, isLeafNode, iBlockID, offset, newChildSlotNumber);
 
 		if (!childSlot)
 			{
@@ -1682,8 +1682,8 @@ void ZBlockStore_PhaseTree::WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot,
 	this->WriteFinish(ioBlockSlot);
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(
-	BlockID iBlockID, BlockID& oBlockID)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp
+	(BlockID iBlockID, BlockID& oBlockID)
 	{
 	BlockID smallestKeyLessThan = 0;
 	BlockID largestKeyGreaterOrEqual = 0xFFFFFFFF;
@@ -1701,8 +1701,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(
 
 		++fHeight;
 
-		Slot* newRoot = this->Index_CreateRoot(
-			rootSlot, leftSubTreeSize, medianKey, newChild, rightSubTreeSize);
+		Slot* newRoot = this->Index_CreateRoot
+			(rootSlot, leftSubTreeSize, medianKey, newChild, rightSubTreeSize);
 
 		this->UnuseSlot(newChild);
 		this->UnuseSlot(rootSlot);
@@ -1783,8 +1783,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(
 				}
 
 			uint32 newSlotNumber;
-			Slot* childSlot = this->UseSlotDirty(
-				this->Index_GetChild(currentSlot, false, offset), true, newSlotNumber);
+			Slot* childSlot = this->UseSlotDirty
+				(this->Index_GetChild(currentSlot, false, offset), true, newSlotNumber);
 
 			if (newSlotNumber)
 				this->Index_SetChild(currentSlot, false, offset, newSlotNumber);
@@ -1817,8 +1817,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(
 					{
 					this->Index_InternalMakeOneSpaceBefore(currentSlot, offset + 1);
 
-					this->Index_SetKey(
-						currentSlot, false, offset + 1,
+					this->Index_SetKey
+						(currentSlot, false, offset + 1,
 						this->Index_GetKey(currentSlot, false, offset));
 
 					this->Index_SetKey(currentSlot, false, offset, medianKey);
@@ -1849,8 +1849,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(
 			else
 				{
 				// Update the sub tree size, doing so *after* any split of the child.
-				this->Index_SetSubTreeSize(
-					currentSlot, offset, this->Index_GetSubTreeSize(currentSlot, offset) + 1);
+				this->Index_SetSubTreeSize
+					(currentSlot, offset, this->Index_GetSubTreeSize(currentSlot, offset) + 1);
 				this->UnuseSlot(currentSlot);
 				--currentHeight;
 				currentSlot = childSlot;
@@ -1901,8 +1901,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(
 		}
 	}
 
-bool ZBlockStore_PhaseTree::DeleteBlockRecurse(
-	Slot* iParentSlot, int iHeight, BlockID iBlockID, Slot*& oBlockSlot, Slot** oNewRoot)
+bool ZBlockStore_PhaseTree::DeleteBlockRecurse
+	(Slot* iParentSlot, int iHeight, BlockID iBlockID, Slot*& oBlockSlot, Slot** oNewRoot)
 	{
 	if (oNewRoot)
 		*oNewRoot = iParentSlot;
@@ -1933,8 +1933,8 @@ bool ZBlockStore_PhaseTree::DeleteBlockRecurse(
 		{
 		size_t offset;
 		uint32 newChildSlotNumber;
-		Slot* childSlot = this->Index_FindChildForked(
-			iParentSlot, false, iBlockID, offset, newChildSlotNumber);
+		Slot* childSlot = this->Index_FindChildForked
+			(iParentSlot, false, iBlockID, offset, newChildSlotNumber);
 
 		ZAssertStop(ZCONFIG_PhaseTree_Debug, childSlot);
 		if (newChildSlotNumber)
@@ -1972,8 +1972,8 @@ bool ZBlockStore_PhaseTree::DeleteBlockRecurse(
 				size_t otherOffset = (offset == 0) ? 1 : offset - 1;
 
 				uint32 newOtherChildSlotNumber;
-				Slot* otherChild = this->UseSlotForked(
-					this->Index_GetChild(iParentSlot, false, otherOffset),
+				Slot* otherChild = this->UseSlotForked
+					(this->Index_GetChild(iParentSlot, false, otherOffset),
 					true, newOtherChildSlotNumber);
 
 				if (newOtherChildSlotNumber)
@@ -2007,8 +2007,8 @@ bool ZBlockStore_PhaseTree::DeleteBlockRecurse(
 		}
 	}
 
-ZBlockStore::BlockID ZBlockStore_PhaseTree::GetNextBlockIDRecurse(
-	Slot* iParentSlot, int iHeight, BlockID iBlockID)
+ZBlockStore::BlockID ZBlockStore_PhaseTree::GetNextBlockIDRecurse
+	(Slot* iParentSlot, int iHeight, BlockID iBlockID)
 	{
 	const size_t count = this->Index_GetCount(iParentSlot);
 	const uint32* firstKey = this->Index_GetKeysAddress(iParentSlot);
@@ -2068,8 +2068,8 @@ void ZBlockStore_PhaseTree::SetBlockSize(BlockID iBlockID, Slot*& ioBlockSlot, s
 	this->WriteFinish(ioBlockSlot);
 	}
 
-void ZBlockStore_PhaseTree::SetBlockSizeIfLessThan(
-	BlockID iBlockID, Slot*& ioBlockSlot, size_t iSize)
+void ZBlockStore_PhaseTree::SetBlockSizeIfLessThan
+	(BlockID iBlockID, Slot*& ioBlockSlot, size_t iSize)
 	{
 	this->WriteStart(iBlockID, ioBlockSlot);
 
@@ -2372,8 +2372,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlot(uint32 iSlotNumber)
 	return theSlot;
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(
-	bool iDirtied, uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal
+	(bool iDirtied, uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
 	{
 	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlotNumber);
 
@@ -2429,8 +2429,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(
 
 			if (iReadOriginalContent)
 				{
-				ZFile::Error err = fFileRW->ReadAt(
-					fUserHeaderSize + uint64(iSlotNumber) * fSlotSize,
+				ZFile::Error err = fFileRW->ReadAt
+					(fUserHeaderSize + uint64(iSlotNumber) * fSlotSize,
 					theSlot->fData, fSlotSize, nullptr);
 
 				ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
@@ -2523,14 +2523,14 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(
 	return theSlot;
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotForked(
-	uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotForked
+	(uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
 	{
 	return this->UseSlotReal(false, iSlotNumber, iReadOriginalContent, oForkedSlotNumber);
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotDirty(
-	uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotDirty
+	(uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
 	{
 	return this->UseSlotReal(true, iSlotNumber, iReadOriginalContent, oForkedSlotNumber);
 	}
@@ -2548,8 +2548,8 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 		{
 		iSlot->fState = eStateForked;
 		fMutex_Slots.Release();
-		ZFile::Error err = fFileRW->WriteAt(
-			fUserHeaderSize + uint64(iSlot->fSlotNumber) * fSlotSize, iSlot->fData, fSlotSize, nullptr);
+		ZFile::Error err = fFileRW->WriteAt
+			(fUserHeaderSize + uint64(iSlot->fSlotNumber) * fSlotSize, iSlot->fData, fSlotSize, nullptr);
 		ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 		fMutex_Slots.Acquire();
 		ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fSlotNumber);
@@ -2892,8 +2892,8 @@ void ZBlockStore_PhaseTree::ReadFinish(Slot* iBlockSlot)
 #pragma mark -
 #pragma mark * ZBlockStore_PhaseTree. Index node manipulation.
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChild(
-	Slot* iSlot, bool iIsLeaf, BlockID iBlockID, size_t& oOffset)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChild
+	(Slot* iSlot, bool iIsLeaf, BlockID iBlockID, size_t& oOffset)
 	{
 	const size_t count = this->Index_GetCount(iSlot);
 	uint32* firstKey = this->Index_GetKeysAddress(iSlot);
@@ -2910,8 +2910,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChild(
 	return this->UseSlot(theSlotNumber);
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChildForked(
-	Slot* iSlot, bool iIsLeaf, BlockID iBlockID, size_t& oOffset, uint32& oForkedChildSlotNumber)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChildForked
+	(Slot* iSlot, bool iIsLeaf, BlockID iBlockID, size_t& oOffset, uint32& oForkedChildSlotNumber)
 	{
 	const size_t count = this->Index_GetCount(iSlot);
 	uint32* firstKey = this->Index_GetKeysAddress(iSlot);
@@ -2929,8 +2929,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChildForked(
 	return this->UseSlotForked(theSlotNumber, true, oForkedChildSlotNumber);
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_CreateRoot(
-	Slot* iLeftChild, size_t iLeftSubTreeSize,
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_CreateRoot
+	(Slot* iLeftChild, size_t iLeftSubTreeSize,
 	BlockID iKey, Slot* iRightChild, size_t iRightSubTreeSize)
 	{
 	Slot* newRoot = this->AllocateSlotDirty();
@@ -3508,8 +3508,8 @@ void ZBlockStore_PhaseTree::Index_LeafDeleteToEnd(Slot* iSlot, size_t iOffset)
 #pragma mark -
 #pragma mark * ZBlockStore_PhaseTree. Block node manipulation.
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlot(
-	Slot* iSlot, size_t iPosition)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlot
+	(Slot* iSlot, size_t iPosition)
 	{
 	// Figure out how high the tree is.
 	size_t blockSize = ReadField(iSlot, 0);
@@ -3542,8 +3542,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlot(
 	return currentSlot;
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlotForWrite(
-	Slot* iSlot, size_t iPosition, bool iNeedOriginalContent)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlotForWrite
+	(Slot* iSlot, size_t iPosition, bool iNeedOriginalContent)
 	{
 	size_t blockSize = ReadField(iSlot, 0);
 
@@ -3640,8 +3640,8 @@ void ZBlockStore_PhaseTree::Block_KillTree(Slot* iSlot)
 
 	countInLastOfLevels.push_back(countInLastOfLevel);
 
-	this->Extent_RecursiveDeletePartial(
-		iSlot, 1, countInLastOfLevels, countInLastOfLevels.size() - 1);
+	this->Extent_RecursiveDeletePartial
+		(iSlot, 1, countInLastOfLevels, countInLastOfLevels.size() - 1);
 	}
 
 void ZBlockStore_PhaseTree::Block_GrowTree(Slot* iSlot, size_t iNewSize)
@@ -3691,8 +3691,8 @@ void ZBlockStore_PhaseTree::Block_GrowTree(Slot* iSlot, size_t iNewSize)
 	WriteField(iSlot, 0, iNewSize);
 	}
 
-void ZBlockStore_PhaseTree::Block_GrowTreeRecurse(
-	Slot* iSlot, size_t iFieldOffset, size_t iMaxChildren,
+void ZBlockStore_PhaseTree::Block_GrowTreeRecurse
+	(Slot* iSlot, size_t iFieldOffset, size_t iMaxChildren,
 	vector<size_t>& ioCountInLastOfLevels, int iHeight, size_t& ioAdditional)
 	{
 	// Called by Block_GrowTree and Block_GrowTreeRecurse
@@ -3909,8 +3909,8 @@ void ZBlockStore_PhaseTree::Extent_RecursiveDelete(Slot* iSlot, int iHeight)
 		}
 	}
 
-void ZBlockStore_PhaseTree::Extent_RecursiveDeletePartial(
-	Slot* iSlot, size_t iFieldOffset, const vector<size_t>& iCountInLastOfLevels, int iHeight)
+void ZBlockStore_PhaseTree::Extent_RecursiveDeletePartial
+	(Slot* iSlot, size_t iFieldOffset, const vector<size_t>& iCountInLastOfLevels, int iHeight)
 	{
 	// Called by Block_KillTree, and self
 

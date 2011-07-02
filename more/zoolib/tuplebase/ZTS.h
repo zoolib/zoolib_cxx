@@ -54,8 +54,8 @@ public:
 	virtual void SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples) = 0;
 	virtual void GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples) = 0;
 
-	virtual void Search(
-		const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& oIDs) = 0;
+	virtual void Search
+		(const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& oIDs) = 0;
 
 	virtual void Flush();
 	virtual ZMutexBase& GetReadLock() = 0;

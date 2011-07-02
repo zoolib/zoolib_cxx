@@ -683,8 +683,8 @@ private:
 
 template <class Class_p, class Object_p, class R>
 ZRef<ZCallable<R(void)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)())
 	{ return new Callable<Class_p,Object_p,R(void)>(iObject, iMethod); }
 
@@ -692,8 +692,8 @@ template <class Class_p, class Object_p,
 	class R,
 	class P0>
 ZRef<ZCallable<R(P0)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0))
 	{ return new Callable<Class_p,Object_p,R(P0)>(iObject, iMethod); }
 
@@ -701,8 +701,8 @@ template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1>
 ZRef<ZCallable<R(P0,P1)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1))
 	{ return new Callable<Class_p,Object_p,R(P0,P1)>(iObject, iMethod); }
 
@@ -710,8 +710,8 @@ template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2>
 ZRef<ZCallable<R(P0,P1,P2)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2))
 	{ return new Callable<Class_p,Object_p,R(P0,P1,P2)>(iObject, iMethod); }
 
@@ -719,8 +719,8 @@ template <class Class_p, class Object_p,
 	class R,
 	class P0, class P1, class P2, class P3>
 ZRef<ZCallable<R(P0,P1,P2,P3)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2,P3))
 	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3)>(iObject, iMethod); }
 
@@ -729,8 +729,8 @@ template <class Class_p, class Object_p,
 	class P0, class P1, class P2, class P3,
 	class P4>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2,P3,P4))
 	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4)>(iObject, iMethod); }
 
@@ -739,8 +739,8 @@ template <class Class_p, class Object_p,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5))
 	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5)>(iObject, iMethod); }
 
@@ -749,8 +749,8 @@ template <class Class_p, class Object_p,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6))
 	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6)>(iObject, iMethod); }
 
@@ -759,8 +759,8 @@ template <class Class_p, class Object_p,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7))
 	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7)>(iObject, iMethod); }
 
@@ -770,8 +770,8 @@ template <class Class_p, class Object_p,
 	class P4, class P5, class P6, class P7,
 	class P8>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8))
 	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>(iObject, iMethod); }
 
@@ -781,8 +781,8 @@ template <class Class_p, class Object_p,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9))
 	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>(iObject, iMethod); }
 
@@ -792,8 +792,8 @@ template <class Class_p, class Object_p,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA))
 	{ return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>(iObject, iMethod); }
 
@@ -803,8 +803,8 @@ template <class Class_p, class Object_p,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB))
 	{
 	return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
@@ -818,8 +818,8 @@ template <class Class_p, class Object_p,
 	class P8, class P9, class PA, class PB,
 	class PC>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC))
 	{
 	return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
@@ -833,8 +833,8 @@ template <class Class_p, class Object_p,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> >
-MakeCallable(
-	const Object_p& iObject,
+MakeCallable
+	(const Object_p& iObject,
 	R (Class_p::*iMethod)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD))
 	{
 	return new Callable<Class_p,Object_p,R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>

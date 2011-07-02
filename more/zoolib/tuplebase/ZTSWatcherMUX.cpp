@@ -207,8 +207,8 @@ private:
 // From ZTSWatcher
 	virtual bool AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCountIssued);
 
-	virtual bool Sync(
-		const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+	virtual bool Sync
+		(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 		const uint64* iAddedIDs, size_t iAddedIDsCount,
 		const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 		const AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
@@ -254,8 +254,8 @@ bool ZTSWatcherMUX::Watcher::AllocateIDs(size_t iCount, uint64& oBaseID, size_t&
 	return fMUX->Watcher_AllocateIDs(this, iCount, oBaseID, oCountIssued);
 	}
 
-bool ZTSWatcherMUX::Watcher::Sync(
-	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+bool ZTSWatcherMUX::Watcher::Sync
+	(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 	const AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
@@ -532,8 +532,8 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 		WQuery* theWQuery = iter.Current();
 		PQuery* thePQuery = theWQuery->fPQuery;
 		allResults.insert(thePQuery->fResults.begin(), thePQuery->fResults.end());
-		oChangedQueries.insert(
-			pair<int64, vector<uint64> >(theWQuery->fRefcon, thePQuery->fResults));
+		oChangedQueries.insert
+			(pair<int64, vector<uint64> >(theWQuery->fRefcon, thePQuery->fResults));
 		}
 
 	// Walk every ID returned by a changed query and see if it
@@ -789,8 +789,8 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 	vector<ZTuple> changedTuples;
 	map<int64, vector<uint64> > changedQueries;
 
-	if (!localTSWatcherRef->Sync(
-			sFirstOrNil(removedIDs), removedIDs.size(),
+	if (!localTSWatcherRef->Sync
+			(sFirstOrNil(removedIDs), removedIDs.size(),
 			sFirstOrNil(addedIDs), addedIDs.size(),
 			sFirstOrNil(removedQueries), removedQueries.size(),
 			sFirstOrNil(addedQueries), addedQueries.size(),
@@ -995,8 +995,8 @@ void ZTSWatcherMUX::spCallback(void* iRefcon)
 #pragma mark -
 #pragma mark * ZTSWatcherFactory_TSWatcherMUX
 
-ZTSWatcherFactory_TSWatcherMUX::ZTSWatcherFactory_TSWatcherMUX(
-	ZRef<ZTSWatcherMUX> iMUX, bool iAlwaysForceSync)
+ZTSWatcherFactory_TSWatcherMUX::ZTSWatcherFactory_TSWatcherMUX
+	(ZRef<ZTSWatcherMUX> iMUX, bool iAlwaysForceSync)
 :	fMUX(iMUX),
 	fAlwaysForceSync(iAlwaysForceSync)
 	{}

@@ -45,8 +45,8 @@ public:
 // From ZLog::LogMeister
 	virtual bool Enabled(ZLog::EPriority iPriority, const std::string& iName);
 	virtual bool Enabled(ZLog::EPriority iPriority, const char* iName);
-	virtual void LogIt(
-		ZLog::EPriority iPriority, const std::string& iName, const std::string& iMessage);
+	virtual void LogIt
+		(ZLog::EPriority iPriority, const std::string& iName, const std::string& iMessage);
 
 // Our protocol
 	void SetStrimmer(ZRef<ZStrimmerW> iStrimmerW);

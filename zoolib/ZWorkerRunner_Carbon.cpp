@@ -29,19 +29,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Helpers
-
-namespace { // anonymous
-
-ZSafe<ZRef<ZWorkerRunner_Carbon> > spRunner(new ZWorkerRunner_Carbon);
-
-ZRef<ZWorkerRunner_Carbon> spGetRunner()
-	{ return spRunner; }
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZWorkerRunner_Carbon
 
 /**
@@ -62,12 +49,6 @@ void ZWorkerRunner_Carbon::pQueueCallback()
 	// on the main thread, because that may be because we're handling workers and
 	// an infinite recursion will be the result.
 	ZUtil_CarbonEvents::sInvokeOnMainThread(true, spCallback, this);
-	}
-
-void ZWorkerRunner_Carbon::sAttach(ZRef<ZWorker> iWorker)
-	{
-	if (ZRef<ZWorkerRunner_Carbon> theRunner = spGetRunner())
-		theRunner->pAttach(iWorker);
 	}
 
 void ZWorkerRunner_Carbon::spCallback(void* iRefcon)

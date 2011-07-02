@@ -70,8 +70,8 @@ private:
 	size_t fIdealWriteSize;
 	};
 
-Channel_Client::Channel_Client(
-	ZRef<ZStreamerRWCon> iSRWCon, size_t iIdealReadSize, size_t iIdealWriteSize)
+Channel_Client::Channel_Client
+	(ZRef<ZStreamerRWCon> iSRWCon, size_t iIdealReadSize, size_t iIdealWriteSize)
 :	fSRWCon(iSRWCon),
 	fIdealReadSize(fIdealReadSize),
 	fIdealWriteSize(fIdealWriteSize)
@@ -335,8 +335,8 @@ private:
 	friend class Manager_Client;
 	};
 
-Manager_Client::Commer_Changed::Commer_Changed(
-	ZRef<ZStreamerRWCon> iSRWCon, ZRef<Manager_Client> iManager)
+Manager_Client::Commer_Changed::Commer_Changed
+	(ZRef<ZStreamerRWCon> iSRWCon, ZRef<Manager_Client> iManager)
 :	ZCommer(iSRWCon, iSRWCon),
 	fManager(iManager),
 	fSendNotificationRequest(true),

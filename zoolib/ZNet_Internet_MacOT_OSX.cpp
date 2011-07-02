@@ -286,8 +286,8 @@ static OTResult spSetFourByteOption(EndpointRef ep, OTXTILevel level, OTXTIName 
 #pragma mark -
 #pragma mark * ZNetNameLookup_Internet_MacOT_OSX
 
-ZNetNameLookup_Internet_MacOT_OSX::ZNetNameLookup_Internet_MacOT_OSX(
-	const string& iName, ip_port iPort, size_t iMaxAddresses)
+ZNetNameLookup_Internet_MacOT_OSX::ZNetNameLookup_Internet_MacOT_OSX
+	(const string& iName, ip_port iPort, size_t iMaxAddresses)
 :	fName(iName),
 	fPort(iPort),
 	fStarted(false),
@@ -378,14 +378,14 @@ void ZNetNameLookup_Internet_MacOT_OSX::sMP_Lookup(void* iParam)
 	MPLookup_t* theStruct = static_cast<MPLookup_t*>(iParam);
 
 	OSStatus theErr;
-	InetSvcRef theInetSvcRef = ::OTOpenInternetServicesInContext(
-		kDefaultInternetServicesPath, 0, &theErr, spOTClientContextPtr);
+	InetSvcRef theInetSvcRef = ::OTOpenInternetServicesInContext
+		(kDefaultInternetServicesPath, 0, &theErr, spOTClientContextPtr);
 
 	if (noErr != theErr)
 		return;
 
-	/*OTResult theResult = */::OTInetStringToAddress(
-		theInetSvcRef, theStruct->fName, theStruct->fInetHostInfo);
+	/*OTResult theResult = */::OTInetStringToAddress
+		(theInetSvcRef, theStruct->fName, theStruct->fInetHostInfo);
 
 	::OTCloseProvider(theInetSvcRef);
 	}
@@ -424,8 +424,8 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 	{
 	ListenerConstruct_t* theStruct = static_cast<ListenerConstruct_t*>(iParam);
 
-	theStruct->fListener->fEndpointRef = ::OTOpenEndpointInContext(
-		::OTCreateConfiguration("tilisten, tcp"),
+	theStruct->fListener->fEndpointRef = ::OTOpenEndpointInContext
+		(::OTCreateConfiguration("tilisten, tcp"),
 		0, nullptr, &theStruct->fResult, spOTClientContextPtr);
 
 	if (theStruct->fResult == noErr)
@@ -537,8 +537,8 @@ ZRef<ZNetEndpoint> ZNetListener_TCP_MacOT_OSX::Listen()
 	ZMacMP::sInvokeInMP(sMP_Listen, &theStruct);
 	if (theStruct.fAcceptedEndpointRef)
 		{
-		return new ZNetEndpoint_TCP_MacOT_OSX(
-			theStruct.fAcceptedEndpointRef, theStruct.fInetAddress);
+		return new ZNetEndpoint_TCP_MacOT_OSX
+			(theStruct.fAcceptedEndpointRef, theStruct.fInetAddress);
 		}
 
 	return null;
@@ -556,16 +556,16 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Listen(void* iParam)
 	OTResult theOTResult = ::OTListen(theStruct->fListener->fEndpointRef, &theTCall);
 	if (theOTResult == noErr)
 		{
-		EndpointRef acceptedEndpointRef = ::OTOpenEndpointInContext(
-			::OTCreateConfiguration("tcp"),
+		EndpointRef acceptedEndpointRef = ::OTOpenEndpointInContext
+			(::OTCreateConfiguration("tcp"),
 			0, nullptr, &theOTResult, spOTClientContextPtr);
 
 		if (acceptedEndpointRef)
 			{
 			theOTResult = ::OTSetBlocking(acceptedEndpointRef);
 			if (theOTResult == noErr)
-				theOTResult = spOTAcceptQ(
-					theStruct->fListener->fEndpointRef, acceptedEndpointRef, &theTCall);
+				theOTResult = spOTAcceptQ
+					(theStruct->fListener->fEndpointRef, acceptedEndpointRef, &theTCall);
 
 			if (theOTResult == noErr)
 				{
@@ -605,8 +605,8 @@ ip_port ZNetListener_TCP_MacOT_OSX::GetPort()
 #pragma mark -
 #pragma mark * ZNetEndpoint_TCP_MacOT_OSX
 
-ZNetEndpoint_TCP_MacOT_OSX::ZNetEndpoint_TCP_MacOT_OSX(
-	EndpointRef iEndpointRef, InetAddress& iRemoteInetAddress)
+ZNetEndpoint_TCP_MacOT_OSX::ZNetEndpoint_TCP_MacOT_OSX
+	(EndpointRef iEndpointRef, InetAddress& iRemoteInetAddress)
 	{
 	fEndpointRef = iEndpointRef;
 	fRemoteHost = iRemoteInetAddress.fHost;
@@ -641,8 +641,8 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 	{
 	EndpointConstruct_t* theStruct = static_cast<EndpointConstruct_t*>(iParam);
 
-	theStruct->fEndpoint->fEndpointRef = ::OTOpenEndpointInContext(
-		::OTCreateConfiguration(kTCPName),
+	theStruct->fEndpoint->fEndpointRef = ::OTOpenEndpointInContext
+		(::OTCreateConfiguration(kTCPName),
 		0, nullptr, &theStruct->fResult, spOTClientContextPtr);
 
 	if (theStruct->fResult == noErr)
@@ -674,8 +674,8 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 		theSndCall.udata.len = 0;
 		theSndCall.udata.maxlen = 0;
 
-		OTResult theResult = ::OTConnect(
-			theStruct->fEndpoint->fEndpointRef, &theSndCall, nullptr);
+		OTResult theResult = ::OTConnect
+			(theStruct->fEndpoint->fEndpointRef, &theSndCall, nullptr);
 
 		if (theResult == kOTLookErr)
 			theResult = ::OTLook(theStruct->fEndpoint->fEndpointRef);
@@ -814,8 +814,8 @@ struct Imp_Write_t
 	size_t* fCountWritten;
 	};
 
-void ZNetEndpoint_TCP_MacOT_OSX::Imp_Write(
-	const void* iSource, size_t iCount, size_t* oCountWritten)
+void ZNetEndpoint_TCP_MacOT_OSX::Imp_Write
+	(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	Imp_Write_t theStruct;
 	theStruct.fEndpointRef = fEndpointRef;

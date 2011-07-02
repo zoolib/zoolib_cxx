@@ -87,7 +87,7 @@ protected:
 	ZRef<Worker_Timer> fWorker_Timer;
 
 	NPWindow fNPWindow;
-	
+
 	NP_CGContext fNP_CGContext;
 	NP_CGContext fNP_CGContext_Prior;
 

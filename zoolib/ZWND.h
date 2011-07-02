@@ -50,8 +50,8 @@ public:
 
 	LRESULT CallBase(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
 
-	static LRESULT CALLBACK sWindowProcW(
-		HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
+	static LRESULT CALLBACK sWindowProcW
+		(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
 
 protected:
 	static ZWNDW* sFromHWNDNilOkayW(HWND iHWND);
@@ -82,8 +82,8 @@ public:
 
 	LRESULT CallBase(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
 
-	static LRESULT CALLBACK sWindowProcW(
-		HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
+	static LRESULT CALLBACK sWindowProcW
+		(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
 
 protected:
 	static ZWNDSubClassW* sFromHWNDNilOkayW(HWND iHWND);

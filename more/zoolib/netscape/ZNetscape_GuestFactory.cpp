@@ -90,8 +90,8 @@ static NSModule spLoadNSModule(CFBundleRef iBundleRef)
 			NSObjectFileImage image;
 			if (NSObjectFileImageSuccess == ::NSCreateObjectFileImageFromFile(buff, &image))
 				{
-				NSModule result = ::NSLinkModule(
-					image, buff,
+				NSModule result = ::NSLinkModule
+					(image, buff,
 					NSLINKMODULE_OPTION_BINDNOW
 					| NSLINKMODULE_OPTION_PRIVATE
 					| NSLINKMODULE_OPTION_RETURN_ON_ERROR);
@@ -299,8 +299,8 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 
 		#if ZCONFIG(Processor,PPC)
 			// Rework fNPNF as CFM-callable thunks
-			ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
-				&fNPNF.geturl,
+			ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM
+				(&fNPNF.geturl,
 				(fNPNF.size - offsetof(NPNetscapeFuncs, geturl)) / sizeof(void*),
 				fGlue_NPNF);
 		#endif
@@ -319,8 +319,8 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 
 		#if ZCONFIG(Processor,PPC)
 			// Rework fNPPluginFuncs and fShutdown as MachO-Callable thunks.
-			ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
-				&fNPPluginFuncs.newp,
+			ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO
+				(&fNPPluginFuncs.newp,
 				(fNPPluginFuncs.size - offsetof(NPPluginFuncs, newp)) / sizeof(void*),
 				fGlue_PluginFuncs);
 
@@ -408,8 +408,8 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 		{
 		// We're running as CFM, but the plugin will be using MachO.
 		// Rework fNPNF as MachO-callable thunks.
-		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
-			&fNPNF.geturl,
+		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO
+			(&fNPNF.geturl,
 			(fNPNF.size - offsetof(NPNetscapeFuncs_Z, geturl)) / sizeof(void*),
 			fGlue_NPNF);
 
@@ -429,8 +429,8 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 		theEntryPoints(&fNPPluginFuncs);
 
 		// Rework fNPPluginFuncs and fShutDown as CFM-Callable thunks.
-		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
-			&fNPPluginFuncs.newp,
+		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM
+			(&fNPPluginFuncs.newp,
 			(fNPPluginFuncs.size - offsetof(NPPluginFuncs, newp)) / sizeof(void*),
 			fGlue_PluginFuncs);
 		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(&fShutdown, 1, fGlue_Shutdown);
@@ -456,8 +456,8 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iN
 	try
 		{
 		#if ZCONFIG_SPI_Enabled(Win)
-			if (HMODULE theHMODULE = ::LoadLibraryW(
-				ZUnicode::sAsUTF16(iNativePath).c_str()))
+			if (HMODULE theHMODULE = ::LoadLibraryW
+				(ZUnicode::sAsUTF16(iNativePath).c_str()))
 				{
 				try
 					{
@@ -471,8 +471,8 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iN
 		#endif
 
 		#if ZCONFIG_SPI_Enabled(CoreFoundation)
-			if (ZRef<CFURLRef> theURL = Adopt& ::CFURLCreateWithFileSystemPath(
-				nullptr, ZUtil_CF::sString(iNativePath), kCFURLPOSIXPathStyle, true))
+			if (ZRef<CFURLRef> theURL = Adopt& ::CFURLCreateWithFileSystemPath
+				(nullptr, ZUtil_CF::sString(iNativePath), kCFURLPOSIXPathStyle, true))
 				{
 				if (ZRef<CFPlugInRef> thePlugInRef = Adopt& ::CFPlugInCreate(nullptr, theURL))
 					{
