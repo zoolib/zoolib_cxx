@@ -36,66 +36,56 @@ namespace ZUtil_CF {
 
 template <class T>
 class Context
-:	public T
 	{
 public:
 	Context()
-		{
-		T::version = 0;
-		T::info = nullptr;
-		T::retain = nullptr;
-		T::release = nullptr;
-		T::copyDescription = nullptr;
-		}
+	:	fT(T())
+		{}
 
 	Context(const Context& iOther)
+	:	fT(iOther.fT)
 		{
-		T::version = iOther.version;
-		T::info = iOther.info;
-		T::retain = iOther.retain;
-		T::release = iOther.release;
-		T::copyDescription = iOther.copyDescription;
+		if (fT.retain)
+			fT.retain(fT.info);
 		}
 
 	~Context()
 		{
-		if (T::release)
-			T::release(T::info);
+		if (fT.release)
+			fT.release(fT.info);
 		}
 
 	Context& operator=(const Context& iOther)
 		{
-		if (iOther.retain)
-			iOther.retain(iOther.info);
+		if (iOther.fT.retain)
+			iOther.fT.retain(iOther.fT.info);
 		
-		if (T::release)
-			T::release(T::info);
+		if (fT.release)
+			fT.release(fT.info);
 
-		T::version = iOther.version;
-		T::info = iOther.info;
-		T::retain = iOther.retain;
-		T::release = iOther.release;
-		T::copyDescription = iOther.copyDescription;
+		fT = iOther.fT;
 
 		return *this;
 		}
 
 	template <class O>
 	Context(const ZRef<O>& iRef)
+	:	fT(T())
 		{
-		T::version = 0;
-		T::info = iRef.Get();
-		T::retain = (CFAllocatorRetainCallBack)&ZRef<O>::sCFRetain;
-		T::release = (CFAllocatorReleaseCallBack)&ZRef<O>::sCFRelease;
-		T::copyDescription = nullptr;
-		T::retain(T::info);
+		fT.info = iRef.Get();
+		fT.retain = (CFAllocatorRetainCallBack)&ZRef<O>::sCFRetain;
+		fT.release = (CFAllocatorReleaseCallBack)&ZRef<O>::sCFRelease;
+		fT.retain(fT.info);
 		}
 
 	const T* IParam() const
-		{ return this; }
+		{ return &fT; }
 
 	T* IParam()
-		{ return this; }
+		{ return &fT; }
+
+private:
+	T fT;
 	};
 
 } // namespace ZUtil_CF
