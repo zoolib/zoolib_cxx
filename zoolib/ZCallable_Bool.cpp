@@ -39,7 +39,7 @@ public:
 
 // From ZCallable
 	virtual bool Call()
-		{ return ! fCallable->Call(); }
+		{ return not fCallable->Call(); }
 
 private:
 	const ZRef<ZCallable_Bool> fCallable;
@@ -99,6 +99,26 @@ public:
 // From ZCallable
 	virtual bool Call()
 		{ return f0->Call() ^ f1->Call(); }
+
+private:
+	const ZRef<ZCallable_Bool> f0;
+	const ZRef<ZCallable_Bool> f1;
+	};
+
+//---
+
+class Callable_Comma
+:	public ZCallable_Bool
+	{
+public:
+	Callable_Comma(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+	:	f0(i0)
+	,	f1(i1)
+		{}
+
+// From ZCallable
+	virtual bool Call()
+		{ return f0->Call() , f1->Call(); }
 
 private:
 	const ZRef<ZCallable_Bool> f0;
@@ -199,6 +219,9 @@ ZRef<ZCallable_Bool> MakeCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<
 ZRef<ZCallable_Bool> MakeCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return new Callable_Xor(i0, i1); }
 
+ZRef<ZCallable_Bool> MakeCallable_Comma(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+	{ return new Callable_Comma(i0, i1); }
+
 ZRef<ZCallable_Bool> MakeCallable_If(const ZRef<ZCallable_Bool>& iCondition,
 	const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{
@@ -234,6 +257,9 @@ ZRef<ZCallable_Bool> Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Boo
 ZRef<ZCallable_Bool> Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return MakeCallable_Xor(i0, i1); }
 
+ZRef<ZCallable_Bool> Comma(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+	{ return MakeCallable_Comma(i0, i1); }
+
 ZRef<ZCallable_Bool> If(const ZRef<ZCallable_Bool>& iCondition,
 	const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return MakeCallable_If(iCondition, i0, i1); }
@@ -268,5 +294,8 @@ ZRef<ZCallable_Bool> operator^(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCalla
 
 ZRef<ZCallable_Bool>& operator^=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1)
 	{ return io0 = io0 ^ i1; }
+
+ZRef<ZCallable_Bool> operator,(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+	{ return Comma(i0, i1); }
 
 } // namespace ZooLib

@@ -47,6 +47,9 @@ MakeCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 ZRef<ZCallable_Bool>
 MakeCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
+ZRef<ZCallable_Bool>
+MakeCallable_Comma(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+
 ZRef<ZCallable_Bool> MakeCallable_If(const ZRef<ZCallable_Bool>& iCondition,
 	const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
@@ -69,6 +72,8 @@ ZRef<ZCallable_Bool> And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bo
 ZRef<ZCallable_Bool> Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 ZRef<ZCallable_Bool> Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+
+ZRef<ZCallable_Bool> Comma(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 ZRef<ZCallable_Bool> If(const ZRef<ZCallable_Bool>& iCondition,
 	const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
@@ -94,6 +99,8 @@ ZRef<ZCallable_Bool>& operator|=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable
 ZRef<ZCallable_Bool> operator^(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 ZRef<ZCallable_Bool>& operator^=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1);
+
+ZRef<ZCallable_Bool> operator,(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 } // namespace ZooLib
 
