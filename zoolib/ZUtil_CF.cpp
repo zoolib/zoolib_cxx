@@ -195,16 +195,16 @@ static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon
 	CFStringRef theKey = static_cast<CFStringRef>(iKey);
 	CFTypeRef theValue = static_cast<CFTypeRef>(iValue);
 
-	pair<ZMap_Any*, const ZAny*>* thePair =
-		static_cast<pair<ZMap_Any*, const ZAny*>*>(iRefcon);
+	pair<const ZAny*,ZMap_Any*>* thePair =
+		static_cast<pair<const ZAny*,ZMap_Any*>*>(iRefcon);
 
-	thePair->first->Set(sAsUTF8(theKey), sDAsAny(*thePair->second, theValue));
+	thePair->second->Set(sAsUTF8(theKey), sDAsAny(*thePair->first, theValue));
 	}
 
 ZMap_Any sAsMap_Any(const ZAny& iDefault, CFDictionaryRef iCFDictionary)
 	{
 	ZMap_Any theMap;
-	pair<ZMap_Any*, const ZAny*> thePair(&theMap, &iDefault);
+	pair<const ZAny*, ZMap_Any*> thePair(&iDefault, &theMap);
 	::CFDictionaryApplyFunction(iCFDictionary, spGatherContents, &thePair);
 	return theMap;
 	}
