@@ -62,16 +62,12 @@ ZWorker_Callable_Once::ZWorker_Callable_Once(const ZRef<Callable_t>& iCallable)
 ZWorker_Callable_Once::~ZWorker_Callable_Once()
 	{}
 
-#if 0
+#if 1
 void ZWorker_Callable_Once::RunnerDetached()
 	{
-	try
-		{
-		if (ZRef<Callable_t> theCallable = fCallable)
-			fCallable->Call();
-		}
-	catch (...)
-		{}
+	if (ZRef<Callable_t> theCallable = fCallable)
+		fCallable->Call();
+
 	ZWorker::RunnerDetached();
 	}
 #endif

@@ -46,16 +46,10 @@ an exception to propogate out.
 */
 
 void ZWorker::RunnerAttached()
-	{
-	if (ZRef<Callable_Attached_t> theCallable = fCallable_Attached)
-		theCallable->Call(this);
-	}
+	{}
 
 void ZWorker::RunnerDetached()
-	{
-	if (ZRef<Callable_Detached_t> theCallable = fCallable_Detached)
-		theCallable->Call(this);
-	}
+	{}
 
 void ZWorker::Kill()
 	{}
@@ -119,13 +113,29 @@ bool ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 
 	try
 		{
-		iWorker->RunnerAttached();
-		return true;
+		if (ZRef<ZWorker::Callable_Attached_t> theCallable = iWorker->fCallable_Attached)
+			theCallable->Call(iWorker);
+
+		try
+			{
+			iWorker->RunnerAttached();
+			return true;
+			}
+		catch (...)
+			{
+			try
+				{
+				if (ZRef<ZWorker::Callable_Detached_t> theCallable = iWorker->fCallable_Detached)
+					theCallable->Call(iWorker);
+				}
+			catch (...)
+				{}
+			}
 		}
 	catch (...)
-		{
-		iWorker->fRunner.Clear();
-		}
+		{}
+
+	iWorker->fRunner.Clear();
 
 	return false;
 	}
@@ -139,6 +149,14 @@ void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
 
 	try { iWorker->RunnerDetached(); }
 	catch (...) {}
+
+	try
+		{
+		if (ZRef<ZWorker::Callable_Detached_t> theCallable = iWorker->fCallable_Detached)
+			theCallable->Call(iWorker);
+		}
+	catch (...)
+		{}
 	}
 
 bool ZWorkerRunner::pInvokeWork(ZRef<ZWorker> iWorker)
