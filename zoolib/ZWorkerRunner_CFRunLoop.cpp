@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(WorkerRunner_CFRunLoop)
 
+#include "zoolib/ZUtil_CF_Context.h"
 #include "zoolib/ZUtil_STL_map.h"
 
 namespace ZooLib {
@@ -56,8 +57,15 @@ CFAbsoluteTime spDelayAsAbsoluteTime(double iDelay)
 
 ZWorkerRunner_CFRunLoop::ZWorkerRunner_CFRunLoop(ZRef<CFRunLoopRef> iRunLoop)
 :	fRunLoop(iRunLoop)
+	{}
+
+ZWorkerRunner_CFRunLoop::~ZWorkerRunner_CFRunLoop()
+	{}
+
+void ZWorkerRunner_CFRunLoop::Initialize()
 	{
-	CFRunLoopTimerContext theContext = { 0, this, 0, 0, 0 };
+	ZWorkerRunner::Initialize();
+
 	fRunLoopTimer = Adopt& ::CFRunLoopTimerCreate(
 		nullptr, // allocator
 		0, // fireDate
@@ -65,13 +73,10 @@ ZWorkerRunner_CFRunLoop::ZWorkerRunner_CFRunLoop(ZRef<CFRunLoopRef> iRunLoop)
 		0, // flags
 		0, // order
 		spCallback,
-		&theContext);
+		ZUtil_CF::Context<CFRunLoopTimerContext>(this->GetWeakRefProxy()).IParam());
 
 	::CFRunLoopAddTimer(fRunLoop, fRunLoopTimer, kCFRunLoopCommonModes);
 	}
-
-ZWorkerRunner_CFRunLoop::~ZWorkerRunner_CFRunLoop()
-	{}
 
 void ZWorkerRunner_CFRunLoop::Finalize()
 	{
@@ -191,8 +196,9 @@ void ZWorkerRunner_CFRunLoop::pCallback()
 
 void ZWorkerRunner_CFRunLoop::spCallback(CFRunLoopTimerRef iTimer, void* iRefcon)
 	{
-	if (ZRef<ZWorkerRunner_CFRunLoop> theRunner = static_cast<ZWorkerRunner_CFRunLoop*>(iRefcon))
-		theRunner->pCallback();
+	if (ZRef<ZWorkerRunner_CFRunLoop> theRunner =
+		ZWeakRef<ZWorkerRunner_CFRunLoop>(static_cast<WeakRefProxy*>(iRefcon)))
+		{ theRunner->pCallback(); }
 	}
 
 } // namespace ZooLib

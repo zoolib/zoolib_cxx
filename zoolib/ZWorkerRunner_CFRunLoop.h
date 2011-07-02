@@ -62,6 +62,7 @@ public:
 	virtual ~ZWorkerRunner_CFRunLoop();
 
 // From ZCounted via ZWorkerRunner
+	virtual void Initialize();
 	virtual void Finalize();
 
 // From ZWorkerRunner
