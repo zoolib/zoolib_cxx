@@ -1559,7 +1559,7 @@ private:
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
-	typename VT<typename ST::L1>::F f2;
+	typename VT<typename ST::L2>::F f2;
 	ZRef<Callable> fCallable;
 	};
 
