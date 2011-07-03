@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,63 +18,75 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorker__
-#define __ZWorker__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZCallable.h"
-#include "zoolib/ZSafe.h"
-#include "zoolib/ZTime.h"
 #include "zoolib/ZWorkerRunner.h"
 
 namespace ZooLib {
 
-class ZWorkerRunner;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorker
+#pragma mark * ZWorkerRunner
 
-class ZWorker
-:	public ZCounted
+bool ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 	{
-public:
-	virtual void RunnerAttached();
-	virtual void RunnerDetached();
+	ZAssert(iWorker);
+	ZAssert(not iWorker->fRunner.Get());
 
-	virtual bool Work() = 0;
+	iWorker->fRunner = MakeRef(this);
 
-	virtual void Kill();
+	try
+		{
+		if (ZRef<ZWorker::Callable_Attached_t> theCallable = iWorker->fCallable_Attached)
+			theCallable->Call(iWorker);
 
-	void Wake();
-	void WakeAt(ZTime iSystemTime);
-	void WakeIn(double iInterval);
+		try
+			{
+			iWorker->RunnerAttached();
+			return true;
+			}
+		catch (...)
+			{}
 
-	bool IsAwake();
-	bool IsAttached();
+		try
+			{
+			if (ZRef<ZWorker::Callable_Detached_t> theCallable = iWorker->fCallable_Detached)
+				theCallable->Call(iWorker);
+			}
+		catch (...)
+			{}
+		}
+	catch (...)
+		{}
 
-	// CW7 workaround
-	typedef ZRef<ZWorker> ZRef_ZWorker;
+	iWorker->fRunner.Clear();
 
-	typedef ZCallable<void(ZRef_ZWorker)> Callable_Attached_t;
-	typedef ZCallable<void(ZRef_ZWorker)> Callable_Detached_t;
+	return false;
+	}
 
-	ZRef<Callable_Attached_t> GetSetCallable_Attached(ZRef<Callable_Attached_t> iCallable);
-	ZRef<Callable_Detached_t> GetSetCallable_Detached(ZRef<Callable_Detached_t> iCallable);
+void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
+	{
+	ZAssert(iWorker);
+	ZAssert(iWorker->fRunner.Get() == this);
 
-private:
-	ZWeakRef<ZWorkerRunner> fRunner;
-	ZSafe<ZRef<Callable_Attached_t> > fCallable_Attached;
-	ZSafe<ZRef<Callable_Detached_t> > fCallable_Detached;
-	friend class ZWorkerRunner;
-	};
+	iWorker->fRunner.Clear();
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Utility methods
+	try { iWorker->RunnerDetached(); }
+	catch (...) {}
 
-void sStartWorkerRunner(ZRef<ZWorker> iWorker);
+	try
+		{
+		if (ZRef<ZWorker::Callable_Detached_t> theCallable = iWorker->fCallable_Detached)
+			theCallable->Call(iWorker);
+		}
+	catch (...)
+		{}
+	}
+
+bool ZWorkerRunner::pInvokeWork(ZRef<ZWorker> iWorker)
+	{
+	try { return iWorker->Work(); }
+	catch (...) {}
+
+	return false;
+	}
 
 } // namespace ZooLib
-
-#endif // __ZWorker__

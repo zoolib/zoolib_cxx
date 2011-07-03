@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,63 +18,50 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorker__
-#define __ZWorker__ 1
+#ifndef __ZWorkerRunner__
+#define __ZWorkerRunner__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
-#include "zoolib/ZSafe.h"
-#include "zoolib/ZTime.h"
-#include "zoolib/ZWorkerRunner.h"
+#include "zoolib/ZWorker.h"
 
 namespace ZooLib {
 
-class ZWorkerRunner;
+class ZWorker;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorker
+#pragma mark * ZWorkerRunner
 
-class ZWorker
+class ZWorkerRunner
 :	public ZCounted
 	{
-public:
-	virtual void RunnerAttached();
-	virtual void RunnerDetached();
+protected:
+// Called by subclasses
+	bool pAttachWorker(ZRef<ZWorker> iWorker);
+	void pDetachWorker(ZRef<ZWorker> iWorker);
+	bool pInvokeWork(ZRef<ZWorker> iWorker);
 
-	virtual bool Work() = 0;
+// Called by ZWorker instances.
+	virtual void Wake(ZRef<ZWorker> iWorker) = 0;
+	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime) = 0;
+	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval) = 0;
+	virtual bool IsAwake(ZRef<ZWorker> iWorker) = 0;
+	virtual bool IsAttached(ZRef<ZWorker> iWorker) = 0;
 
-	virtual void Kill();
-
-	void Wake();
-	void WakeAt(ZTime iSystemTime);
-	void WakeIn(double iInterval);
-
-	bool IsAwake();
-	bool IsAttached();
-
-	// CW7 workaround
-	typedef ZRef<ZWorker> ZRef_ZWorker;
-
-	typedef ZCallable<void(ZRef_ZWorker)> Callable_Attached_t;
-	typedef ZCallable<void(ZRef_ZWorker)> Callable_Detached_t;
-
-	ZRef<Callable_Attached_t> GetSetCallable_Attached(ZRef<Callable_Attached_t> iCallable);
-	ZRef<Callable_Detached_t> GetSetCallable_Detached(ZRef<Callable_Detached_t> iCallable);
-
-private:
-	ZWeakRef<ZWorkerRunner> fRunner;
-	ZSafe<ZRef<Callable_Attached_t> > fCallable_Attached;
-	ZSafe<ZRef<Callable_Detached_t> > fCallable_Detached;
-	friend class ZWorkerRunner;
+	friend class ZWorker;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Utility methods
+#pragma mark * ZWorkerRunner_Crowd
 
-void sStartWorkerRunner(ZRef<ZWorker> iWorker);
+class ZWorkerRunner_Crowd
+:	public ZWorkerRunner
+	{
+public:
+	virtual void Attach(ZRef<ZWorker> iWorker) = 0;
+	};
 
 } // namespace ZooLib
 
-#endif // __ZWorker__
+#endif // __ZWorkerRunner__
