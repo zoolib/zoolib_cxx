@@ -65,7 +65,8 @@ template <class Class_p, class Object_p, class Signature> class Callable;
 #pragma mark -
 #pragma mark * Callable (specialization for 0 params)
 
-template <class Class_p, class Object_p, class R>
+template <class Class_p, class Object_p,
+	class R>
 class Callable<Class_p,Object_p,R(void)>
 :	public ZCallable<R(void)>
 	{
@@ -681,7 +682,8 @@ private:
 #pragma mark -
 #pragma mark * MakeCallable
 
-template <class Class_p, class Object_p, class R>
+template <class Class_p, class Object_p,
+	class R>
 ZRef<ZCallable<R(void)> >
 MakeCallable
 	(const Object_p& iObject,
