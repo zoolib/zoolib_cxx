@@ -73,7 +73,7 @@ class ZNetAddress_IP4 : public ZNetAddress_Internet
 	{
 public:
 	ZNetAddress_IP4(ip4_addr iAddr, ip_port iPort);
-	ZNetAddress_IP4(uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, uint8 iAddr4, ip_port iPort);
+	ZNetAddress_IP4(uint8 iAddr0, uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, ip_port iPort);
 
 // From ZNetAddress
 	virtual ZRef<ZNetEndpoint> Connect() const;
@@ -86,6 +86,7 @@ public:
 	static const ip4_addr sAny = 0;
 
 	static std::string sAsString(ip4_addr iAddr);
+	static ip4_addr sAddr(uint8 iAddr0, uint8 iAddr1, uint8 iAddr2, uint8 iAddr3);
 
 private:
 	const ip4_addr fAddr;

@@ -44,9 +44,9 @@ ZNetAddress_IP4::ZNetAddress_IP4(ip4_addr iAddr, ip_port iPort)
 	{}
 
 ZNetAddress_IP4::ZNetAddress_IP4
-	(uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, uint8 iAddr4, ip_port iPort)
+	(uint8 iAddr0, uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, ip_port iPort)
 :	ZNetAddress_Internet(iPort)
-,	fAddr((iAddr1 << 24) | (iAddr2 << 16) | (iAddr3 << 8) | iAddr4)
+,	fAddr(sAddr(iAddr0, iAddr1, iAddr2, iAddr3))
 	{}
 
 ZRef<ZNetEndpoint> ZNetAddress_IP4::Connect() const
@@ -60,6 +60,9 @@ std::string ZNetAddress_IP4::sAsString(ip4_addr iAddr)
 		int((iAddr >> 8) & 0xFF),
 		int(iAddr & 0xFF));
 	}
+
+ip4_addr ZNetAddress_IP4::sAddr(uint8 iAddr0, uint8 iAddr1, uint8 iAddr2, uint8 iAddr3)
+	{ return (iAddr0 << 24) | (iAddr1 << 16) | (iAddr2 << 8) | iAddr3; }
 
 // =================================================================================================
 #pragma mark -
