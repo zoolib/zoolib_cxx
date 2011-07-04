@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable_Function.h"
 #include "zoolib/ZFuture.h"
 #include "zoolib/ZWorker_Callable.h"
+#include "zoolib/ZWorkerRunner_Crowd.h"
 
 namespace ZooLib {
 
