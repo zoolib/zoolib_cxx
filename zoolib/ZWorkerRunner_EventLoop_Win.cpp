@@ -47,8 +47,8 @@ ZWorkerRunner_EventLoop_Win::~ZWorkerRunner_EventLoop_Win()
 void ZWorkerRunner_EventLoop_Win::Initialize()
 	{
 	ZWorkerRunner_EventLoop::Initialize();
-	fHWND = ZWinWND::sCreate(nullptr,
-		MakeCallable(MakeWeakRef(this), &ZWorkerRunner_EventLoop_Win::pWindowProc));
+	fHWND = ZWinWND::sCreate
+		(nullptr, MakeCallable(MakeWeakRef(this), &ZWorkerRunner_EventLoop_Win::pWindowProc));
 	}
 
 void ZWorkerRunner_EventLoop_Win::Finalize()

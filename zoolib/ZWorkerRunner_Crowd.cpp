@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,62 +18,26 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorkerRunner_EventLoop__
-#define __ZWorkerRunner_EventLoop__ 1
-#include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
-
-#include "zoolib/ZSafeSet.h"
 #include "zoolib/ZWorkerRunner_Crowd.h"
-
-#include <map>
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_EventLoop
+#pragma mark * ZWorkerRunnerRegistration
 
-class ZWorkerRunner_EventLoop
-:	public ZWorkerRunner_Crowd
-	{
-public:
-	ZWorkerRunner_EventLoop();
-	virtual ~ZWorkerRunner_EventLoop();
+static ZTSS::Key spKey = ZTSS::sCreate();
 
-// From ZWorkerRunner
-	virtual void Wake(ZRef<ZWorker> iWorker);
-	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
-	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
-	virtual bool IsAwake(ZRef<ZWorker> iWorker);
-	virtual bool IsAttached(ZRef<ZWorker> iWorker);
+ZWorkerRunnerRegistration::ZWorkerRunnerRegistration(ZRef<ZWorkerRunner_Crowd> iWR)
+:	fCurrent(iWR)
+,	fPrior((ZWorkerRunner_Crowd*)(long long)(ZTSS::sGet(spKey)))
+	{ ZTSS::sSet(spKey, (ZTSS::Value)(iWR.Get())); }
 
-// From ZWorkerRunner_Crowd
-	virtual void Attach(ZRef<ZWorker> iWorker);
+ZWorkerRunnerRegistration::~ZWorkerRunnerRegistration()
+	{ ZTSS::sSet(spKey, (ZTSS::Value)(fPrior.Get())); }
 
-protected:
-// Must be implemented by subclasses
-	virtual void pQueueCallback() = 0;
-
-// Called by subclasses
-	void pCallback();
-
-private:
-	class Worker_Waker;
-	friend class Worker_Waker;
-
-	bool pTriggerCallback();
-
-	void pWake(ZRef<ZWorker> iWorker, ZTime iSystemTime);
-
-	ZMtxR fMtx;
-	ZCnd fCnd;
-	bool fCallbackTriggered;
-	ZRef<Worker_Waker> fWorker_Waker;
-	std::map<ZRef<ZWorker>, ZTime> fWorkersMap;
-	ZSafeSet<ZRef<ZWorker> > fWorkersSet;
-	};
+ZRef<ZWorkerRunner_Crowd> ZWorkerRunnerRegistration::sCurrent()
+	{ return (ZWorkerRunner_Crowd*)(ZTSS::sGet(spKey)); }
+//	{ return (ZWorkerRunner_Crowd*)(long long)(ZTSS::sGet(spKey)); }
 
 } // namespace ZooLib
-
-#endif // __ZWorkerRunner_EventLoop__

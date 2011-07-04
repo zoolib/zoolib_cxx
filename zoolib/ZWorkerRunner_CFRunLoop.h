@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_API.h"
 
 #include "zoolib/ZSafeSet.h"
-#include "zoolib/ZWorker.h"
+#include "zoolib/ZWorkerRunner_Crowd.h"
 
 #include <map>
 
