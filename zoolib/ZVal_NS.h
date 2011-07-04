@@ -62,7 +62,7 @@ public:
 	~ZVal_NS();
 	ZVal_NS& operator=(const ZVal_NS& iOther);
 
-	ZVal_NS(id iVal)
+	ZVal_NS(NSObject* iVal)
 	:	inherited(iVal)
 		{}
 
