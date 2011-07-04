@@ -175,7 +175,7 @@ CFMutableDataRef ZData_CF::pTouch()
 	ZRef<CFMutableDataRef> theMutableData;
 	if (CFDataRef theData = this->pData())
 		{
-		if (!fMutable || ::CFGetRetainCount(theData) > 1)
+		if (not fMutable || ::CFGetRetainCount(theData) > 1)
 			{
 			theMutableData = sDataMutable(theData);
 			inherited::operator=(theMutableData);

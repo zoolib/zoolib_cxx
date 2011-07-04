@@ -94,10 +94,10 @@ bool ZCountedBase::IsReferenced() const
 
 ZRef<ZCountedBase::WeakRefProxy> ZCountedBase::GetWeakRefProxy()
 	{
-	if (!fWeakRefProxy)
+	if (not fWeakRefProxy)
 		{
 		ZRef<WeakRefProxy> theWeakRefProxy = new WeakRefProxy(this);
-		if (!fWeakRefProxy.AtomicSetIfNull(theWeakRefProxy.Get()))
+		if (not fWeakRefProxy.AtomicSetIfNull(theWeakRefProxy.Get()))
 			{
 			// We lost the race, so clear theWeakRefProxy's reference
 			// to us, or we'll trip an asssertion in WeakRefProxy::~WeakRefProxy.
