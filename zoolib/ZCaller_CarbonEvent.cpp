@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,35 +18,38 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorkerRunner_libdispatch__
-#define __ZWorkerRunner_libdispatch__ 1
-#include "zconfig.h"
+#include "zoolib/ZCaller_Thread.h"
+#include "zoolib/ZThread.h"
 
-#include "zoolib/ZWorker.h"
+#if ZCONFIG_SPI_Enabled(Carbon64)
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_libdispatch
+#pragma mark * ZCaller_CarbonEvent
 
-class ZWorkerRunner_libdispatch : public ZWorkerRunner
+ZCaller_CarbonEvent::ZCaller_CarbonEvent()
+	{}
+
+ZCaller_CarbonEvent::~ZCaller_CarbonEvent()
+	{}
+
+void ZCaller_CarbonEvent::pTrigger()
 	{
-public:
-	ZWorkerRunner_libdispatch(ZRef<ZWorker> iWorker);
+	this->Retain();
+	ZUtil_CarbonEvents::sInvokeOnMainThread(true, spCallback, this);	
+	}
 
-// From ZWorkerRunner
-	virtual void Wake(ZRef<ZWorker> iWorker);
-	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
-	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
-	virtual bool IsAwake(ZRef<ZWorker> iWorker);
-
-// Our protocol
-	void Start();
-
-private:
-	};
+void ZCaller_CarbonEvent::spCallback(void* iRefcon)
+	{
+	if (ZRef<ZCaller_CarbonEvent> theCaller = static_cast<ZCaller_CarbonEvent*>(iRefcon))
+		{
+		theCaller->Release();
+		theCaller->pCallback();
+		}
+	}
 
 } // namespace ZooLib
 
-#endif // __ZWorkerRunner_libdispatch__
+#endif // ZCONFIG_SPI_Enabled(Carbon64)

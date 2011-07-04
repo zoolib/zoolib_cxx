@@ -18,26 +18,45 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZWorkerRunner_Crowd.h"
+#include "zoolib/ZCaller_EventLoop.h"
 
 namespace ZooLib {
 
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunnerRegistration
+#pragma mark * ZCaller_EventLoop
 
-static ZTSS::Key spKey = ZTSS::sCreate();
+ZCaller_EventLoop::ZCaller_EventLoop()
+:	fTriggered(false)
+	{}
 
-ZWorkerRunnerRegistration::ZWorkerRunnerRegistration(ZRef<ZWorkerRunner_Crowd> iWR)
-:	fCurrent(iWR)
-,	fPrior((ZWorkerRunner_Crowd*)(long long)(ZTSS::sGet(spKey)))
-	{ ZTSS::sSet(spKey, (ZTSS::Value)(iWR.Get())); }
+ZCaller_EventLoop::~ZCaller_EventLoop()
+	{}
 
-ZWorkerRunnerRegistration::~ZWorkerRunnerRegistration()
-	{ ZTSS::sSet(spKey, (ZTSS::Value)(fPrior.Get())); }
+void ZCaller_EventLoop::Queue(ZRef<ZCallable_Caller> iCallable)
+	{
+	ZAcqMtx acq(fMtx);
+	fCallables.push_back(iCallable);
+	if (!fTriggered)
+		{
+		fTriggered = true;
+		this->pTrigger();
+		}
+	}
 
-ZRef<ZWorkerRunner_Crowd> ZWorkerRunnerRegistration::sCurrent()
-	{ return (ZWorkerRunner_Crowd*)(ZTSS::sGet(spKey)); }
-//	{ return (ZWorkerRunner_Crowd*)(long long)(ZTSS::sGet(spKey)); }
+void ZCaller_EventLoop::pCall()
+	{
+	ZGuardRMtx guard(fMtx);
+	fTriggered = false;
+	vector<ZRef<ZCallable_Caller> > theCallables;
+	theCallables.swap(fCallables);
+	guard.Release();
+
+	for (vector<ZRef<ZCallable_Caller> >::iterator iter = theCallables.begin();
+		iter != theCallables.end(); ++iter)
+		{ (*iter)->Call(); }
+	}
 
 } // namespace ZooLib

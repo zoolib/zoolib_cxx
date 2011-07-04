@@ -18,42 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorkerRunner_Crowd__
-#define __ZWorkerRunner_Crowd__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZWorkerRunner.h"
+#include "zoolib/ZCaller.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_Crowd
+#pragma mark * ZCaller
 
-class ZWorkerRunner_Crowd
-:	public ZWorkerRunner
-	{
-public:
-	virtual void Attach(ZRef<ZWorker> iWorker) = 0;
-	};
+ZCaller::ZCaller()
+	{}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZWorkerRunnerRegistration
-
-class ZWorkerRunnerRegistration
-	{
-public:
-	ZWorkerRunnerRegistration(ZRef<ZWorkerRunner_Crowd> iWR);
-	~ZWorkerRunnerRegistration();
-
-	static ZRef<ZWorkerRunner_Crowd> sCurrent();
-
-private:
-	ZRef<ZWorkerRunner_Crowd> fCurrent;
-	ZRef<ZWorkerRunner_Crowd> fPrior;
-	};
+ZCaller::~ZCaller()
+	{}
 
 } // namespace ZooLib
-
-#endif // __ZWorkerRunner_Crowd__

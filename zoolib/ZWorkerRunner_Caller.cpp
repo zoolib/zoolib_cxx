@@ -18,47 +18,49 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZWorkerRunner_EventLoop.h"
+#include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZWorkerRunner_Caller.h"
 #include "zoolib/ZUtil_STL_map.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_EventLoop::Worker_Waker
+#pragma mark * ZWorkerRunner_Caller::Worker_Waker
 
-class ZWorkerRunner_EventLoop::Worker_Waker : public ZWorker
+class ZWorkerRunner_Caller::Worker_Waker : public ZWorker
 	{
 public:
-	Worker_Waker(ZRef<ZWorkerRunner_EventLoop> iRunner)
+	Worker_Waker(ZRef<ZWorkerRunner_Caller> iRunner)
 	:	fRunner(iRunner)
 		{}
 
 	virtual bool Work()
 		{
-		if (ZRef<ZWorkerRunner_EventLoop> theRunner = fRunner)
+		if (ZRef<ZWorkerRunner_Caller> theRunner = fRunner)
 			return theRunner->pTriggerCallback();
 		return false;
 		}
 
-	ZWeakRef<ZWorkerRunner_EventLoop> fRunner;
+	ZWeakRef<ZWorkerRunner_Caller> fRunner;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_EventLoop
+#pragma mark * ZWorkerRunner_Caller
 
 /**
-\class ZWorkerRunner_EventLoop
+\class ZWorkerRunner_Caller
 \ingroup Worker
 \sa Worker
 */
 
-ZWorkerRunner_EventLoop::ZWorkerRunner_EventLoop()
-:	fCallbackTriggered(false)
+ZWorkerRunner_Caller::ZWorkerRunner_Caller(ZRef<ZCaller> iCaller)
+:	fCaller(iCaller)
+,	fCallbackTriggered(false)
 	{}
 
-ZWorkerRunner_EventLoop::~ZWorkerRunner_EventLoop()
+ZWorkerRunner_Caller::~ZWorkerRunner_Caller()
 	{
 	ZAcqMtxR acq(fMtx);
 	if (ZRef<ZWorker> theWorker = fWorker_Waker)
@@ -68,16 +70,16 @@ ZWorkerRunner_EventLoop::~ZWorkerRunner_EventLoop()
 		}
 	}
 
-void ZWorkerRunner_EventLoop::Wake(ZRef<ZWorker> iWorker)
+void ZWorkerRunner_Caller::Wake(ZRef<ZWorker> iWorker)
 	{ this->pWake(iWorker, 0); }
 
-void ZWorkerRunner_EventLoop::WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
+void ZWorkerRunner_Caller::WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
 	{ this->pWake(iWorker, iSystemTime); }
 
-void ZWorkerRunner_EventLoop::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
+void ZWorkerRunner_Caller::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
 	{ this->pWake(iWorker, ZTime::sSystem() + iInterval); }
 
-bool ZWorkerRunner_EventLoop::IsAwake(ZRef<ZWorker> iWorker)
+bool ZWorkerRunner_Caller::IsAwake(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtxR acq(fMtx);
 	std::map<ZRef<ZWorker>, ZTime>::iterator i = fWorkersMap.find(iWorker);
@@ -86,13 +88,13 @@ bool ZWorkerRunner_EventLoop::IsAwake(ZRef<ZWorker> iWorker)
 	return i->second <= ZTime::sSystem();
 	}
 
-bool ZWorkerRunner_EventLoop::IsAttached(ZRef<ZWorker> iWorker)
+bool ZWorkerRunner_Caller::IsAttached(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtxR acq(fMtx);
 	return ZUtil_STL::sContains(fWorkersMap, iWorker);
 	}
 
-void ZWorkerRunner_EventLoop::Attach(ZRef<ZWorker> iWorker)
+void ZWorkerRunner_Caller::Attach(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtxR acq(fMtx);
 	if (ZWorkerRunner::pAttachWorker(iWorker))
@@ -103,10 +105,10 @@ void ZWorkerRunner_EventLoop::Attach(ZRef<ZWorker> iWorker)
 		}
 	}
 
-void ZWorkerRunner_EventLoop::pCallback()
+void ZWorkerRunner_Caller::pCallback()
 	{
 	// Not all subclasses invoke this through a ZRef, so ensure our reference remains valid.
-	ZRef<ZWorkerRunner_EventLoop> self = this;
+	ZRef<ZWorkerRunner_Caller> self = this;
 
 	ZGuardRMtxR guard(fMtx);
 	fCallbackTriggered = false;
@@ -148,18 +150,18 @@ void ZWorkerRunner_EventLoop::pCallback()
 		}
 	}
 
-bool ZWorkerRunner_EventLoop::pTriggerCallback()
+bool ZWorkerRunner_Caller::pTriggerCallback()
 	{
 	ZAcqMtxR acq(fMtx);
 	if (!fCallbackTriggered)
 		{
 		fCallbackTriggered = true;
-		this->pQueueCallback();
+		fCaller->Queue(MakeCallable(MakeRef(this), &ZWorkerRunner_Caller::pCallback));
 		}
 	return true;
 	}
 
-void ZWorkerRunner_EventLoop::pWake(ZRef<ZWorker> iWorker, ZTime iSystemTime)
+void ZWorkerRunner_Caller::pWake(ZRef<ZWorker> iWorker, ZTime iSystemTime)
 	{
 	ZAcqMtxR acq(fMtx);
 	if (ZUtil_STL::sSetIfContains(fWorkersMap, iWorker, iSystemTime))

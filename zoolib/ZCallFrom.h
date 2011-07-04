@@ -22,11 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCallFrom__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCaller.h"
 #include "zoolib/ZCallable_Bind.h"
 #include "zoolib/ZCallable_Function.h"
 #include "zoolib/ZFuture.h"
-#include "zoolib/ZWorker_Callable.h"
-#include "zoolib/ZWorkerRunner_Crowd.h"
 
 namespace ZooLib {
 
@@ -39,16 +38,14 @@ void sCallFrom_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T()> > iCallable)
 	{ iPromise->Set(iCallable->Call()); }
 
 template <class T>
-ZRef<ZFuture<T> > CallFrom(ZRef<ZWorkerRunner_Crowd> iRunner, ZRef<ZCallable<T()> > iCallable)
+ZRef<ZFuture<T> > CallFrom(ZRef<ZCaller> iCaller, ZRef<ZCallable<T()> > iCallable)
 	{
 	ZRef<ZPromise<T> > thePromise = new ZPromise<T>;
-	ZRef<ZWorker> theWorker = MakeWorker(BindL(thePromise, iCallable, MakeCallable(sCallFrom_T<T>)));
-	iRunner->Attach(theWorker);
-	theWorker->Wake();
+	iCaller->Queue(BindL(thePromise, iCallable, MakeCallable(sCallFrom_T<T>)));
 	return thePromise->Get();
 	}
 
-ZRef<ZFuture<void> > CallFrom(ZRef<ZWorkerRunner_Crowd> iRunner, ZRef<ZCallable<void()> > iCallable);
+ZRef<ZFuture<void> > CallFrom(ZRef<ZCaller> iCaller, ZRef<ZCallable<void()> > iCallable);
 
 } // namespace ZooLib
 

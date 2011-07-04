@@ -32,12 +32,10 @@ static void spCallFromVoid(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void()
 	iPromise->Set();
 	}
 
-ZRef<ZFuture<void> > CallFrom(ZRef<ZWorkerRunner_Crowd> iRunner, ZRef<ZCallable<void()> > iCallable)
+ZRef<ZFuture<void> > CallFrom(ZRef<ZCaller> iCaller, ZRef<ZCallable<void()> > iCallable)
 	{
 	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
-	ZRef<ZWorker> theWorker = MakeWorker(BindL(thePromise, iCallable, MakeCallable(spCallFromVoid)));
-	iRunner->Attach(theWorker);
-	theWorker->Wake();
+	iCaller->Queue(BindL(thePromise, iCallable, MakeCallable(spCallFromVoid)));
 	return thePromise->Get();
 	}
 

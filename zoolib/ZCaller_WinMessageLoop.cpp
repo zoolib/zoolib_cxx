@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,45 +18,60 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZWorkerRunner_Carbon.h"
+#include "zoolib/ZCaller_WinMessageLoop.h"
 
-#if ZCONFIG_SPI_Enabled(Carbon64)
+#if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZSafe.h"
-#include "zoolib/ZUtil_CarbonEvents.h"
+#include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZWinWND.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_Carbon
+#pragma mark * ZCaller_WinMessageLoop
 
-/**
-\class ZWorkerRunner_Carbon
-\ingroup Worker
-\sa Worker
-*/
-
-ZWorkerRunner_Carbon::ZWorkerRunner_Carbon()
+ZCaller_WinMessageLoop::ZCaller_WinMessageLoop()
+:	fHWND(nullptr)
 	{}
 
-ZWorkerRunner_Carbon::~ZWorkerRunner_Carbon()
+ZCaller_WinMessageLoop::~ZCaller_WinMessageLoop()
 	{}
 
-void ZWorkerRunner_Carbon::pQueueCallback()
+void ZCaller_WinMessageLoop::Initialize()
 	{
-	// We want the callback to be queued, not made immediately if we're running
-	// on the main thread, because that may be because we're handling workers and
-	// an infinite recursion will be the result.
-	ZUtil_CarbonEvents::sInvokeOnMainThread(true, spCallback, this);
+	ZCaller_EventLoop::Initialize();
+	fHWND = ZWinWND::sCreate
+		(nullptr, MakeCallable(MakeWeakRef(this), &ZCaller_WinMessageLoop::pWindowProc));
 	}
 
-void ZWorkerRunner_Carbon::spCallback(void* iRefcon)
+void ZCaller_WinMessageLoop::Finalize()
 	{
-	if (ZRef<ZWorkerRunner_Carbon> theRunner = static_cast<ZWorkerRunner_Carbon*>(iRefcon))
-		theRunner->pCallback();
+	if (fHWND)
+		::DestroyWindow(fHWND);
+	ZCaller_EventLoop::Finalize();
+	}
+
+static UINT spMSG_Invoke = ::RegisterWindowMessageW(L"ZCaller_WinMessageLoop::Invoke");
+
+void ZCaller_WinMessageLoop::pTrigger()
+	{ ::PostMessageW(fHWND, spMSG_Invoke, 0, 0); }
+
+LRESULT ZCaller_WinMessageLoop::pWindowProc(WNDPROC iWNDPROC,
+	HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+	{
+	if (iMessage == spMSG_Invoke)
+		{
+		ZCaller_EventLoop::pCall();
+		return 0;
+		}
+	else if (iMessage == WM_NCDESTROY)
+		{
+		fHWND = nullptr;
+		}
+	return CallWindowProcW(iWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
 	}
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(Carbon64)
+#endif // ZCONFIG_SPI_Enabled(Win)

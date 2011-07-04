@@ -1,10 +1,10 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
+including without limitation the rights to use, copy, modify, merge,Publish, distribute,
 sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
 is furnished to do so, subject to the following conditions:
 
@@ -18,37 +18,32 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorkerRunner_Carbon__
-#define __ZWorkerRunner_Carbon__ 1
+#ifndef __ZCaller__
+#define __ZCaller__ 1
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZWorkerRunner_EventLoop.h"
-
-#if ZCONFIG_SPI_Enabled(Carbon64)
+#include "zoolib/ZCallable.h"
 
 namespace ZooLib {
 
+typedef ZCallable<void()> ZCallable_Caller;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_Carbon
+#pragma mark * ZCaller
 
-class ZWorkerRunner_Carbon
-:	public ZWorkerRunner_EventLoop
+class ZCaller
+:	public ZCounted
 	{
+protected:
+	ZCaller();
+
 public:
-	ZWorkerRunner_Carbon();
-	virtual ~ZWorkerRunner_Carbon();
+	virtual ~ZCaller();
 
-// From ZWorkerRunner_EventLoop
-	virtual void pQueueCallback();
-
-private:
-	static void spCallback(void* iRefcon);
+	virtual void Queue(ZRef<ZCallable_Caller> iCallable) = 0;
 	};
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(Carbon64)
-
-#endif // __ZWorkerRunner_Carbon__
+#endif // __ZCaller__

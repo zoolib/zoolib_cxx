@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,29 +18,73 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorkerRunner_CFRunLoop__
-#define __ZWorkerRunner_CFRunLoop__ 1
-#include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
-
 #include "zoolib/ZCaller_CFRunLoop.h"
 
 #if ZCONFIG_API_Enabled(Caller_CFRunLoop)
 
-#include "ZWorkerRunner_Caller.h"
+#include "zoolib/ZUtil_CF_Context.h"
 
 namespace ZooLib {
-namespace ZWorkerRunner_CFRunLoop {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_CFRunLoop
+#pragma mark * ZCaller_CFRunLoop
 
-ZRef<ZWorkerRunner_Caller> sMain();
+// Usable pre 10.5
+static CFRunLoopRef spRunLoopMain = ::CFRunLoopGetCurrent();
 
-} // namespace ZWorkerRunner_CFRunLoop
+static ZRef<ZCaller_CFRunLoop> spCaller;
+
+ZRef<ZCaller_CFRunLoop> ZCaller_CFRunLoop::sMain()
+	{
+	if (!spCaller)
+		{
+		ZRef<ZCaller_CFRunLoop> theCaller = new ZCaller_CFRunLoop(::CFRunLoopGetMain());
+		spCaller.AtomicSetIfNull(theCaller.Get());
+		}
+	return spCaller;
+	}
+
+ZCaller_CFRunLoop::ZCaller_CFRunLoop(CFRunLoopRef iRunLoop)
+:	fRunLoop(iRunLoop)
+	{}
+
+ZCaller_CFRunLoop::~ZCaller_CFRunLoop()
+	{}
+
+void ZCaller_CFRunLoop::Initialize()
+	{
+	ZCaller::Initialize();
+
+	fObserver = Adopt& ::CFRunLoopObserverCreate
+		(nullptr, // allocator
+		kCFRunLoopBeforeTimers, // activities
+		true, // repeats
+		0, // order
+		spCallback,
+		ZUtil_CF::Context<CFRunLoopObserverContext>(this->GetWeakRefProxy()).IParam());
+
+	::CFRunLoopAddObserver(fRunLoop, fObserver, kCFRunLoopCommonModes);
+	}
+
+void ZCaller_CFRunLoop::Finalize()
+	{
+	::CFRunLoopObserverInvalidate(fObserver);
+
+	ZCaller::Finalize();
+	}
+
+void ZCaller_CFRunLoop::pTrigger()
+	{ ::CFRunLoopWakeUp(fRunLoop); }
+
+void ZCaller_CFRunLoop::spCallback
+	(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info)
+	{
+	if (ZRef<ZCaller_CFRunLoop> theCaller =
+		ZWeakRef<ZCaller_CFRunLoop>(static_cast<WeakRefProxy*>(info)))
+		{ theCaller->pCall(); }
+	}
+
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Caller_CFRunLoop)
-
-#endif // __ZWorkerRunner_CFRunLoop__

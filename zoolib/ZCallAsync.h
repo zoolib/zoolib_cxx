@@ -22,10 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCallAsync__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable_Bind.h"
-#include "zoolib/ZCallable_Function.h"
-#include "zoolib/ZFuture.h"
-#include "zoolib/ZWorker_Callable.h"
+#include "zoolib/ZCallFrom.h"
+#include "zoolib/ZCaller_Thread.h"
 
 namespace ZooLib {
 
@@ -34,18 +32,8 @@ namespace ZooLib {
 #pragma mark * CallAsync
 
 template <class T>
-void sCallAsync_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T()> > iCallable)
-	{ iPromise->Set(iCallable->Call()); }
-
-template <class T>
 ZRef<ZFuture<T> > CallAsync(ZRef<ZCallable<T()> > iCallable)
-	{
-	ZRef<ZPromise<T> > thePromise = new ZPromise<T>;
-	sStartWorkerRunner(MakeWorker(BindL(thePromise, iCallable, MakeCallable(sCallAsync_T<T>))));
-	return thePromise->Get();
-	}
-
-ZRef<ZFuture<void> > CallAsync(ZRef<ZCallable<void()> > iCallable);
+	{ return CallFrom(new ZCaller_Thread, iCallable); }
 
 } // namespace ZooLib
 

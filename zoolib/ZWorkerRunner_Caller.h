@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,12 +18,58 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZWorkerRunner_ThreadPool.h"
+#ifndef __ZWorkerRunner_Caller__
+#define __ZWorkerRunner_Caller__ 1
+#include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#include "zoolib/ZCaller.h"
+#include "zoolib/ZSafeSet.h"
+#include "zoolib/ZWorkerRunner.h"
+
+#include <map>
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_ThreadPool
+#pragma mark * ZWorkerRunner_Caller
+
+class ZWorkerRunner_Caller
+:	public ZWorkerRunner
+	{
+public:
+	ZWorkerRunner_Caller(ZRef<ZCaller> iCaller);
+	virtual ~ZWorkerRunner_Caller();
+
+// From ZWorkerRunner
+	virtual void Wake(ZRef<ZWorker> iWorker);
+	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
+	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
+	virtual bool IsAwake(ZRef<ZWorker> iWorker);
+	virtual bool IsAttached(ZRef<ZWorker> iWorker);
+
+// Our protocol
+	virtual void Attach(ZRef<ZWorker> iWorker);
+
+private:
+	class Worker_Waker;
+	friend class Worker_Waker;
+
+	void pCallback();
+	bool pTriggerCallback();
+
+	void pWake(ZRef<ZWorker> iWorker, ZTime iSystemTime);
+
+	ZMtxR fMtx;
+	ZCnd fCnd;
+	ZRef<ZCaller> fCaller;
+	bool fCallbackTriggered;
+	ZRef<Worker_Waker> fWorker_Waker;
+	std::map<ZRef<ZWorker>, ZTime> fWorkersMap;
+	ZSafeSet<ZRef<ZWorker> > fWorkersSet;
+	};
 
 } // namespace ZooLib
+
+#endif // __ZWorkerRunner_Caller__

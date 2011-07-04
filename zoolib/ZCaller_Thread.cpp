@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,30 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorkerRunner_ThreadPool__
-#define __ZWorkerRunner_ThreadPool__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZWorker.h"
+#include "zoolib/ZCaller_Thread.h"
+#include "zoolib/ZThread.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_ThreadPool
+#pragma mark * Helpers (anonymous)
 
-class ZWorkerRunner_ThreadPool : public ZWorkerRunner
-	{
-public:
-	ZWorkerRunner_ThreadPool(ZRef<ZWorker> iWorker);
+namespace { // anonymous 
 
-// From ZWorkerRunner
-	virtual void Wake(ZRef<ZWorker> iWorker);
-	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
-	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
-	virtual bool IsAwake(ZRef<ZWorker> iWorker);
-	};
+void spRun(ZRef<ZCallable_Caller> iParam)
+	{ iParam->Call(); }
+
+} // anonymous  namespace
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCaller_Thread
+
+ZCaller_Thread::ZCaller_Thread()
+	{}
+
+ZCaller_Thread::~ZCaller_Thread()
+	{}
+
+void ZCaller_Thread::Queue(ZRef<ZCallable_Caller> iCallable)
+	{ ZThread::sCreate_T<ZRef<ZCallable_Caller> >(spRun, iCallable); }
 
 } // namespace ZooLib
-
-#endif // __ZWorkerRunner_ThreadPool__

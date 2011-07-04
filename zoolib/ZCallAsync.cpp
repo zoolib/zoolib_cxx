@@ -19,24 +19,3 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallAsync.h"
-
-namespace ZooLib {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * CallAsync
-
-static void spCallAsyncVoid(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void()> > iCallable)
-	{
-	iCallable->Call();
-	iPromise->Set();
-	}
-
-ZRef<ZFuture<void> > CallAsync(ZRef<ZCallable<void()> > iCallable)
-	{
-	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
-	sStartWorkerRunner(MakeWorker(BindL(thePromise, iCallable, MakeCallable(spCallAsyncVoid))));
-	return thePromise->Get();
-	}
-
-} // namespace ZooLib

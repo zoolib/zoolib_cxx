@@ -1,10 +1,10 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
+including without limitation the rights to use, copy, modify, merge,Publish, distribute,
 sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
 is furnished to do so, subject to the following conditions:
 
@@ -18,66 +18,47 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZWorkerRunner_EventLoop_Win.h"
+#ifndef __ZCaller_WinMessageLoop__
+#define __ZCaller_WinMessageLoop__ 1
+#include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#include "zoolib/ZCaller_EventLoop.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZCallable_PMF.h"
-#include "zoolib/ZSafe.h"
+#include "zoolib/ZCompat_Win.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_EventLoop_Win
+#pragma mark * ZCaller_WinMessageLoop
 
-/**
-\class ZWorkerRunner_EventLoop_Win
-\ingroup Worker
-\sa Worker
-*/
-
-ZWorkerRunner_EventLoop_Win::ZWorkerRunner_EventLoop_Win()
-:	fHWND(nullptr)
-	{}
-
-ZWorkerRunner_EventLoop_Win::~ZWorkerRunner_EventLoop_Win()
-	{}
-
-void ZWorkerRunner_EventLoop_Win::Initialize()
+class ZCaller_WinMessageLoop
+:	public ZCaller_EventLoop
 	{
-	ZWorkerRunner_EventLoop::Initialize();
-	fHWND = ZWinWND::sCreate
-		(nullptr, MakeCallable(MakeWeakRef(this), &ZWorkerRunner_EventLoop_Win::pWindowProc));
-	}
+public:
+	ZCaller_WinMessageLoop();
+	virtual ~ZCaller_WinMessageLoop();
 
-void ZWorkerRunner_EventLoop_Win::Finalize()
-	{
-	if (fHWND)
-		::DestroyWindow(fHWND);
-	ZWorkerRunner_EventLoop::Finalize();
-	}
+// From ZCounted via ZCaller
+	virtual void Initialize();
+	virtual void Finalize();
 
-static UINT spMSG_Invoke = ::RegisterWindowMessageW(L"ZWorkerRunner_EventLoop_Win::Invoke");
+protected:
+// From ZCaller_EventLoop
+	virtual void pTrigger();
 
-void ZWorkerRunner_EventLoop_Win::pQueueCallback()
-	{ ::PostMessageW(fHWND, spMSG_Invoke, 0, 0); }
+private:
+	LRESULT pWindowProc
+		(WNDPROC iWNDPROC, HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
 
-LRESULT ZWorkerRunner_EventLoop_Win::pWindowProc(WNDPROC iWNDPROC,
-	HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
-	{
-	if (iMessage == spMSG_Invoke)
-		{
-		ZWorkerRunner_EventLoop::pCallback();
-		return 0;
-		}
-	else if (iMessage == WM_NCDESTROY)
-		{
-		fHWND = nullptr;
-		}
-	return CallWindowProcW(iWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
-	}
+	HWND fHWND;
+	};
 
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)
+
+#endif // __ZCaller_WinMessageLoop__

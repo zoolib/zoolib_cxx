@@ -137,27 +137,62 @@ public:
 	virtual ~ZFuture()
 		{}
 
-	bool Wait()
+	EFuture Wait()
+		{
+		ZAcqMtx acq(fMtx);
+		for (;;)
+			{
+			if (fSet)
+				return eFuture_Succeeded;
+			if (!fPromiseExists)
+				return eFuture_Failed;
+			fCnd.Wait(fMtx);
+			}
+		}
+
+	EFuture WaitFor(double iTimeout)
+		{
+		ZAcqMtx acq(fMtx);
+
+		if (fSet)
+			return eFuture_Succeeded;
+		if (!fPromiseExists)
+			return eFuture_Failed;
+
+		fCnd.WaitFor(fMtx, iTimeout);
+
+		if (fSet)
+			return eFuture_Succeeded;
+		if (!fPromiseExists)
+			return eFuture_Failed;
+
+		return eFuture_Timeout;
+		}
+
+	EFuture WaitUntil(ZTime iDeadline)
+		{
+		ZAcqMtx acq(fMtx);
+
+		if (fSet)
+			return eFuture_Succeeded;
+		if (!fPromiseExists)
+			return eFuture_Failed;
+
+		fCnd.WaitUntil(fMtx, iDeadline);
+
+		if (fSet)
+			return eFuture_Succeeded;
+		if (!fPromiseExists)
+			return eFuture_Failed;
+
+		return eFuture_Timeout;
+		}
+
+	bool Get()
 		{
 		ZAcqMtx acq(fMtx);
 		while (fPromiseExists && !fSet)
 			fCnd.Wait(fMtx);
-		return fSet;
-		}
-
-	bool WaitFor(double iTimeout)
-		{
-		ZAcqMtx acq(fMtx);
-		if (fPromiseExists && !fSet)
-			fCnd.WaitFor(fMtx, iTimeout);
-		return fSet;
-		}
-
-	bool WaitUntil(ZTime iDeadline)
-		{
-		ZAcqMtx acq(fMtx);
-		if (fPromiseExists && !fSet)
-			fCnd.WaitUntil(fMtx, iDeadline);
 		return fSet;
 		}
 

@@ -51,6 +51,8 @@ ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable::Callable_t> iCallable,
 	return theWorker;
 	}
 
+#if 0
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWorker_Callable_Once
@@ -62,7 +64,6 @@ ZWorker_Callable_Once::ZWorker_Callable_Once(const ZRef<Callable_t>& iCallable)
 ZWorker_Callable_Once::~ZWorker_Callable_Once()
 	{}
 
-#if 1
 void ZWorker_Callable_Once::RunnerDetached()
 	{
 	if (ZRef<Callable_t> theCallable = fCallable)
@@ -70,7 +71,6 @@ void ZWorker_Callable_Once::RunnerDetached()
 
 	ZWorker::RunnerDetached();
 	}
-#endif
 
 bool ZWorker_Callable_Once::Work()
 	{ return false; }
@@ -80,5 +80,7 @@ ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable_Once::Callable_t> iCallable)
 
 ZRef<ZWorker> MakeWorkerOnce(ZRef<ZWorker_Callable_Once::Callable_t> iCallable)
 	{ return new ZWorker_Callable_Once(iCallable); }
+
+#endif
 
 } // namespace ZooLib
