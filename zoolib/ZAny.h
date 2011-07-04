@@ -352,7 +352,7 @@ inline void ZAny::pCtor(const ZAny& iOther)
 
 inline void ZAny::pDtor()
 	{
-	if (!spIsPOD(fPtr_InPlace))
+	if (not spIsPOD(fPtr_InPlace))
 		pDtor_Complex();
 	}
 
