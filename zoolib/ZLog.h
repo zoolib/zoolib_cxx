@@ -27,11 +27,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim_Operators.h"
 
 #if ZCONFIG(Compiler, GCC)
-#	define ZMACRO_PRETTY_FUNCTION __PRETTY_FUNCTION__
+	#define ZMACRO_PRETTY_FUNCTION __PRETTY_FUNCTION__
 #elif ZCONFIG(Compiler, MSVC)
-#	define ZMACRO_PRETTY_FUNCTION __FUNCDNAME__
+	// __FUNCDNAME__ is wordy and unintelligible
+	#define ZMACRO_PRETTY_FUNCTION __FUNCTION__
 #else
-#	define ZMACRO_PRETTY_FUNCTION __FUNCTION__
+	#define ZMACRO_PRETTY_FUNCTION __FUNCTION__
 #endif
 
 // s == strim name
