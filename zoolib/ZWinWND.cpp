@@ -100,6 +100,31 @@ LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 		}
 	}
 
+INT_PTR CALLBACK spDialogProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+	{
+	if (ZRef<Callable_Dialog> theCallable =
+		reinterpret_cast<Callable_Dialog*>((long long)::GetWindowLongPtrW(iHWND, GWLP_USERDATA)))
+		{
+		if (iMessage == WM_NCDESTROY)
+			{
+			// Undo the Retain we did in WM_INITDIALOG.
+			theCallable->Release();
+			}
+		return theCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM);
+		}
+	else if (iMessage == WM_INITDIALOG)
+		{
+		::SetWindowLongPtrW(iHWND, GWLP_USERDATA, iLPARAM);
+		theCallable = (Callable_Dialog*)iLPARAM;
+		theCallable->Retain();
+		return theCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM);
+		}
+	else
+		{
+		return false;
+		}
+	}
+	
 } // anonymous namespace
 
 // =================================================================================================
@@ -138,7 +163,7 @@ const WCHAR* ClassRegistration::GetClassName() const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWinWND Callable stuff
+#pragma mark * ZWinWND, Callable <--> Regular window
 
 static ClassRegistration spClassRegistration(spWindowProcW, L"ZWinWND ClassRegistration");
 
@@ -206,6 +231,47 @@ bool sAttach(HWND iHWND, ZRef<Callable> iCallable)
 			}
 		}
 	return false;
+	}
+
+bool sDoOneMessage()
+	{
+	MSG theMSG;
+	if (!::GetMessageW(&theMSG, nullptr, 0, 0))
+		return false;
+
+	::TranslateMessage(&theMSG);
+	::DispatchMessageW(&theMSG);
+
+	return true;	
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWinWND, Callable <--> Dialog
+
+HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iCallable)
+	{
+	return ::CreateDialogParamW
+		(ZUtil_Win::sGetModuleHandle(),
+		lpTemplate,
+		hWndParent,
+		spDialogProcW,
+		(LPARAM)iCallable.Get());
+	}
+
+bool sDoOneMessageForDialog(HWND iHWND)
+	{
+	MSG theMSG;
+	if (!::GetMessageW(&theMSG, nullptr, 0, 0))
+		return false;
+
+	if (!::IsDialogMessageW(iHWND, &theMSG))
+		{
+		::TranslateMessage(&theMSG);
+		::DispatchMessageW(&theMSG);
+		}
+
+	return true;	
 	}
 
 } // namespace ZWinWND

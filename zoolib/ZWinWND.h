@@ -49,7 +49,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWinWND Callable stuff
+#pragma mark * ZWinWND, Callable <--> Regular window
 
 typedef ZCallable<LRESULT(WNDPROC,HWND,UINT,WPARAM,LPARAM)> Callable;
 
@@ -69,6 +69,18 @@ HWND sCreate
 HWND sCreate(HWND iParent, ZRef<Callable> iCallable);
 
 bool sAttach(HWND iHWND, ZRef<Callable> iCallable);
+
+bool sDoOneMessage();
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWinWND, Callable <--> Dialog
+
+typedef ZCallable<INT_PTR(HWND,UINT,WPARAM,LPARAM)> Callable_Dialog;
+
+HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iCallable);
+
+bool sDoOneMessageForDialog(HWND iHWND);
 
 } // namespace ZWinWND
 } // namespace ZooLib
