@@ -70,6 +70,12 @@ ZWorkerRunner_Caller::~ZWorkerRunner_Caller()
 		}
 	}
 
+void ZWorkerRunner_Caller::Initialize()
+	{
+	ZWorkerRunner::Initialize();
+	fCallable_Callback = MakeCallable(MakeWeakRef(this), &ZWorkerRunner_Caller::pCallback);
+	}
+
 void ZWorkerRunner_Caller::Wake(ZRef<ZWorker> iWorker)
 	{ this->pWake(iWorker, 0); }
 
@@ -104,6 +110,9 @@ void ZWorkerRunner_Caller::Attach(ZRef<ZWorker> iWorker)
 			fWorkersMap, iWorker, ZTime::sSystem() + ZTime::kYear);
 		}
 	}
+
+ZRef<ZCaller> ZWorkerRunner_Caller::GetCaller()
+	{ return fCaller; }
 
 void ZWorkerRunner_Caller::pCallback()
 	{
@@ -156,7 +165,7 @@ bool ZWorkerRunner_Caller::pTriggerCallback()
 	if (!fCallbackTriggered)
 		{
 		fCallbackTriggered = true;
-		fCaller->Queue(MakeCallable(MakeRef(this), &ZWorkerRunner_Caller::pCallback));
+		fCaller->Queue(fCallable_Callback);
 		}
 	return true;
 	}

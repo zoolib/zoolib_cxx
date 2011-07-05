@@ -42,6 +42,9 @@ public:
 	ZWorkerRunner_Caller(ZRef<ZCaller> iCaller);
 	virtual ~ZWorkerRunner_Caller();
 
+// From ZCounted via ZWorkerRunner
+	virtual void Initialize();
+
 // From ZWorkerRunner
 	virtual void Wake(ZRef<ZWorker> iWorker);
 	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
@@ -51,6 +54,8 @@ public:
 
 // Our protocol
 	virtual void Attach(ZRef<ZWorker> iWorker);
+
+	ZRef<ZCaller> GetCaller();
 
 private:
 	class Worker_Waker;
@@ -66,6 +71,7 @@ private:
 	ZRef<ZCaller> fCaller;
 	bool fCallbackTriggered;
 	ZRef<Worker_Waker> fWorker_Waker;
+	ZRef<ZCallable_Void> fCallable_Callback;
 	std::map<ZRef<ZWorker>, ZTime> fWorkersMap;
 	ZSafeSet<ZRef<ZWorker> > fWorkersSet;
 	};
