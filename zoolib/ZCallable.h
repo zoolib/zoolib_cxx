@@ -316,10 +316,18 @@ public:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * sCall
+
+template <class T>
+T sCall(ZRef<ZCallable<T(void)> > iCallable)
+	{ return iCallable->Call(); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * sCallIgnoreReturn
 
 template <class T>
-void sCallIgnoreReturn(ZRef<ZCallable<T(void)> > iCallable)
+void sCallReturnVoid(ZRef<ZCallable<T(void)> > iCallable)
 	{ iCallable->Call(); }
 
 } // namespace ZooLib
