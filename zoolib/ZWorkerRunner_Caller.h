@@ -44,6 +44,7 @@ public:
 
 // From ZCounted via ZWorkerRunner
 	virtual void Initialize();
+	virtual void Finalize();
 
 // From ZWorkerRunner
 	virtual void Wake(ZRef<ZWorker> iWorker);

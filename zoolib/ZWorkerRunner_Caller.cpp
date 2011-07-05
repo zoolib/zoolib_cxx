@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+using std::map;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWorkerRunner_Caller::Worker_Waker
@@ -61,19 +63,28 @@ ZWorkerRunner_Caller::ZWorkerRunner_Caller(ZRef<ZCaller> iCaller)
 	{}
 
 ZWorkerRunner_Caller::~ZWorkerRunner_Caller()
+	{}
+
+void ZWorkerRunner_Caller::Initialize()
+	{
+	ZWorkerRunner::Initialize();
+
+	fCallable_Callback = MakeCallable(MakeWeakRef(this), &ZWorkerRunner_Caller::pCallback);
+	}
+
+void ZWorkerRunner_Caller::Finalize()
+	{
 	{
 	ZAcqMtxR acq(fMtx);
 	if (ZRef<ZWorker> theWorker = fWorker_Waker)
 		{
+		fWorker_Waker->fRunner.Clear();
 		fWorker_Waker.Clear();
 		theWorker->Wake();
 		}
 	}
 
-void ZWorkerRunner_Caller::Initialize()
-	{
-	ZWorkerRunner::Initialize();
-	fCallable_Callback = MakeCallable(MakeWeakRef(this), &ZWorkerRunner_Caller::pCallback);
+	ZWorkerRunner::Finalize();
 	}
 
 void ZWorkerRunner_Caller::Wake(ZRef<ZWorker> iWorker)
@@ -88,10 +99,9 @@ void ZWorkerRunner_Caller::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
 bool ZWorkerRunner_Caller::IsAwake(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtxR acq(fMtx);
-	std::map<ZRef<ZWorker>, ZTime>::iterator i = fWorkersMap.find(iWorker);
-	if (i == fWorkersMap.end())
-		return false;
-	return i->second <= ZTime::sSystem();
+	if (ZQ<ZTime> theQ = ZUtil_STL::sQGet(fWorkersMap, iWorker))
+		return theQ.Get() <= ZTime::sSystem();
+	return false;
 	}
 
 bool ZWorkerRunner_Caller::IsAttached(ZRef<ZWorker> iWorker)
