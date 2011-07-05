@@ -107,73 +107,6 @@ private:
 
 //---
 
-class Callable_If
-:	public ZCallable_Bool
-	{
-public:
-	Callable_If(const ZRef<ZCallable_Bool>& iCondition,
-		const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	:	fCondition(iCondition)
-	,	f0(i0)
-	,	f1(i1)
-		{}
-
-// From ZCallable
-	virtual bool Call()
-		{ return fCondition->Call() ? f0->Call() : f1->Call(); }
-
-private:
-	const ZRef<ZCallable_Bool> fCondition;
-	const ZRef<ZCallable_Bool> f0;
-	const ZRef<ZCallable_Bool> f1;
-	};
-
-//---
-
-class Callable_While
-:	public ZCallable_Bool
-	{
-public:
-	Callable_While(const ZRef<ZCallable_Bool>& iCallable)
-	:	fCallable(iCallable)
-		{}
-
-// From ZCallable
-	virtual bool Call()
-		{
-		while (fCallable->Call())
-			{}
-		return false;
-		}
-
-private:
-	const ZRef<ZCallable_Bool> fCallable;
-	};
-
-//---
-
-class Callable_Repeat
-:	public ZCallable_Bool
-	{
-public:
-	Callable_Repeat(size_t iCount, const ZRef<ZCallable_Bool>& iCallable)
-	:	fCount(iCount)
-	,	fCallable(iCallable)
-		{}
-
-// From ZCallable
-	virtual bool Call()
-		{
-		for (size_t theCount = fCount; theCount; --theCount)
-			fCallable->Call();
-		return false;
-		}
-
-private:
-	const size_t fCount;
-	const ZRef<ZCallable_Bool> fCallable;
-	};
-
 } // anonymous namespace
 
 // =================================================================================================
@@ -199,19 +132,6 @@ ZRef<ZCallable_Bool> MakeCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<
 ZRef<ZCallable_Bool> MakeCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return new Callable_Xor(i0, i1); }
 
-ZRef<ZCallable_Bool> MakeCallable_If(const ZRef<ZCallable_Bool>& iCondition,
-	const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	{
-	return MakeCallable_Or(MakeCallable_And(iCondition, i0), i1);
-//	return new ZCallable_If(iCondition, i0, i1);
-	}
-
-ZRef<ZCallable_Bool> MakeCallable_While(const ZRef<ZCallable_Bool>& iCallable)
-	{ return new Callable_While(iCallable); }
-
-ZRef<ZCallable_Bool> MakeCallable_Repeat(size_t iCount, const ZRef<ZCallable_Bool>& iCallable)
-	{ return new Callable_Repeat(iCount, iCallable); }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * More concise Makers
@@ -233,16 +153,6 @@ ZRef<ZCallable_Bool> Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Boo
 
 ZRef<ZCallable_Bool> Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return MakeCallable_Xor(i0, i1); }
-
-ZRef<ZCallable_Bool> If(const ZRef<ZCallable_Bool>& iCondition,
-	const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	{ return MakeCallable_If(iCondition, i0, i1); }
-
-ZRef<ZCallable_Bool> While(const ZRef<ZCallable_Bool>& iCallable)
-	{ return MakeCallable_While(iCallable); }
-
-ZRef<ZCallable_Bool> Repeat(size_t iCount, const ZRef<ZCallable_Bool>& iCallable)
-	{ return MakeCallable_Repeat(iCount, iCallable); }
 
 // =================================================================================================
 #pragma mark -

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallable_Bool__
-#define __ZCallable_Bool__ 1
+#ifndef __ZCallable_Apply__
+#define __ZCallable_Apply__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -28,57 +28,82 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Makers
+#pragma mark * ZCallable_DelayFor
 
-ZRef<ZCallable_Bool> MakeCallable_True();
+template <class R>
+class ZCallable_DelayFor
+:	public ZCallable<R(void)>
+	{
+public:
+	ZCallable_DelayFor(double iTimeout, ZRef<ZCallable<R(void)> > iCallable)
+	:	fTimeout(iTimeout)
+	,	fCallable(iCallable)
+		{}
 
-ZRef<ZCallable_Bool> MakeCallable_False();
+// From ZCallable
+	virtual R Call()
+		{
+		const ZTime deadline = ZTime::sSystem() + fTimeout;
+		for (;;)
+			{
+			const double delta = deadline - ZTime::sSystem();
+			if (delta <= 0)
+				return fCallable->Call();
+			ZThread::sSleep(delta);
+			}
+		}
 
-ZRef<ZCallable_Bool> MakeCallable_Not(const ZRef<ZCallable_Bool>& iCallable);
-
-ZRef<ZCallable_Bool>
-MakeCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
-
-ZRef<ZCallable_Bool>
-MakeCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
-
-ZRef<ZCallable_Bool>
-MakeCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * More concise Makers
-
-ZRef<ZCallable_Bool> Callable_True();
-
-ZRef<ZCallable_Bool> Callable_False();
-
-ZRef<ZCallable_Bool> Not(const ZRef<ZCallable_Bool>& iCallable);
-
-ZRef<ZCallable_Bool> And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
-
-ZRef<ZCallable_Bool> Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
-
-ZRef<ZCallable_Bool> Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+private:
+	const double fTimeout;
+	const ZRef<ZCallable<R(void)> > fCallable;
+	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Infix notation
+#pragma mark * ZCallable_DelayUntil
 
-ZRef<ZCallable_Bool> operator~(const ZRef<ZCallable_Bool>& iCallable);
+template <class R>
+class ZCallable_DelayUntil
+:	public ZCallable<R(void)>
+	{
+public:
+	ZCallable_DelayUntil(ZTime iDeadline, ZRef<ZCallable<R(void)> > iCallable)
+	:	fDeadline(iDeadline)
+	,	fCallable(iCallable)
+		{}
 
-ZRef<ZCallable_Bool> operator&(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+// From ZCallable
+	virtual R Call()
+		{
+		for (;;)
+			{
+			const double delta = fDeadline - ZTime::sSystem();
+			if (delta <= 0)
+				return fCallable->Call();
+			ZThread::sSleep(delta);
+			}
+		}
 
-ZRef<ZCallable_Bool>& operator&=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1);
+private:
+	const ZTime fDeadline;
+	const ZRef<ZCallable<R(void)> > fCallable;
+	};
 
-ZRef<ZCallable_Bool> operator|(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+// =================================================================================================
+#pragma mark -
+#pragma mark * MakeCallable_Delay
 
-ZRef<ZCallable_Bool>& operator|=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1);
+template <class R>
+ZRef<ZCallable<R(void)> >
+MakeCallable_DelayFor(double iTimeout, ZRef<ZCallable<R(void)> > iCallable)
+	{ return new ZCallable_DelayFor<R>(iTimeout, iCallable); }
 
-ZRef<ZCallable_Bool> operator^(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
-
-ZRef<ZCallable_Bool>& operator^=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1);
+template <class R>
+ZRef<ZCallable<R(void)> >
+MakeCallable_DelayUntil(ZTime iDeadline, ZRef<ZCallable<R(void)> > iCallable)
+	{ return new ZCallable_DelayUntil<R>(iDeadline, iCallable); }
 
 } // namespace ZooLib
 
-#endif // __ZCallable_Bool__
+#endif // __ZCallable_Apply__
+

@@ -352,6 +352,13 @@ template <class T>
 void sCallReturnVoid(ZRef<ZCallable<T(void)> > iCallable)
 	{ iCallable->Call(); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Useful typedefs
+
+typedef ZCallable<bool(void)> ZCallable_Bool;
+typedef ZCallable<void(void)> ZCallable_Void;
+
 } // namespace ZooLib
 
 #endif // __ZCallable__
