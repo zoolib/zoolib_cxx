@@ -25,8 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/blackberry/ZBlackBerry_Streamer.h"
 
 #include "zoolib/ZByteSwap.h"
-#include "zoolib/ZCallable.h"
-#include "zoolib/ZCallable_PMF.h" // For MakeCallable
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStream_Memory.h"
@@ -191,8 +190,8 @@ void Manager_OSXUSB::Initialize()
 	ZLOGFUNCTION(eDebug);
 
 	// Now we have MakeWeakRef, this could be moved into the constructor.
-	fCB_DeviceAttached = MakeCallable(MakeWeakRef(this), &Manager_OSXUSB::pDeviceAttached);
-	fCB_DeviceDetached = MakeCallable(MakeWeakRef(this), &Manager_OSXUSB::pDeviceDetached);
+	fCB_DeviceAttached = sCallable(sWeakRef(this), &Manager_OSXUSB::pDeviceAttached);
+	fCB_DeviceDetached = sCallable(sWeakRef(this), &Manager_OSXUSB::pDeviceDetached);
 
 	fIONotificationPortRef = ::IONotificationPortCreate(fMasterPort);
 

@@ -136,26 +136,26 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(CFTypeRef iVal);
-ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal);
+ZRef<ZYadR> sYadR(CFTypeRef iVal);
+ZRef<ZYadR> sYadR(const ZRef<CFTypeRef>& iVal);
 
-ZRef<ZYadStrimR> sMakeYadR(CFMutableStringRef iString);
-ZRef<ZYadStrimR> sMakeYadR(CFStringRef iString);
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFStringRef>& iString);
+ZRef<ZYadStrimR> sYadR(CFMutableStringRef iString);
+ZRef<ZYadStrimR> sYadR(CFStringRef iString);
+ZRef<ZYadStrimR> sYadR(const ZRef<CFStringRef>& iString);
 
-ZRef<ZYadStreamR> sMakeYadR(CFMutableDataRef iData);
-ZRef<ZYadStreamR> sMakeYadR(CFDataRef iData);
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData);
+ZRef<ZYadStreamR> sYadR(CFMutableDataRef iData);
+ZRef<ZYadStreamR> sYadR(CFDataRef iData);
+ZRef<ZYadStreamR> sYadR(const ZRef<CFDataRef>& iData);
 
-ZRef<ZYadSeqRPos> sMakeYadR(CFMutableArrayRef iArray);
-ZRef<ZYadSeqRPos> sMakeYadR(CFArrayRef iArray);
-ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<CFArrayRef>& iArray);
+ZRef<ZYadSeqRPos> sYadR(CFMutableArrayRef iArray);
+ZRef<ZYadSeqRPos> sYadR(CFArrayRef iArray);
+ZRef<ZYadSeqRPos> sYadR(const ZRef<CFArrayRef>& iArray);
 
-ZRef<ZYadMapRPos> sMakeYadR(CFMutableDictionaryRef iDictionary);
-ZRef<ZYadMapRPos> sMakeYadR(CFDictionaryRef iDictionary);
-ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary);
+ZRef<ZYadMapRPos> sYadR(CFMutableDictionaryRef iDictionary);
+ZRef<ZYadMapRPos> sYadR(CFDictionaryRef iDictionary);
+ZRef<ZYadMapRPos> sYadR(const ZRef<CFDictionaryRef>& iDictionary);
 
 // =================================================================================================
 #pragma mark -

@@ -113,23 +113,23 @@ private:
 #pragma mark -
 #pragma mark * Makers
 
-ZRef<ZCallable_Bool> MakeCallable_True()
-	{ return MakeCallable_Const(true); }
+ZRef<ZCallable_Bool> sCallable_True()
+	{ return sCallable_Const(true); }
 
-ZRef<ZCallable_Bool> MakeCallable_False()
-	{ return MakeCallable_Const(false); }
+ZRef<ZCallable_Bool> sCallable_False()
+	{ return sCallable_Const(false); }
 
-ZRef<ZCallable_Bool> MakeCallable_Not(const ZRef<ZCallable_Bool>& iCallable)
+ZRef<ZCallable_Bool> sCallable_Not(const ZRef<ZCallable_Bool>& iCallable)
 	{ return new Callable_Not(iCallable); }
 
 ZRef<ZCallable_Bool>
-MakeCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+sCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return new Callable_And(i0, i1); }
 
-ZRef<ZCallable_Bool> MakeCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+ZRef<ZCallable_Bool> sCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return new Callable_Or(i0, i1); }
 
-ZRef<ZCallable_Bool> MakeCallable_Xor
+ZRef<ZCallable_Bool> sCallable_Xor
 	(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return new Callable_Xor(i0, i1); }
 

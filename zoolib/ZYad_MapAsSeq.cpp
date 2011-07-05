@@ -60,7 +60,7 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 		{
 		fReturnedPropName = true;
 		oName = fNamePropName;
-		return sMakeYadR(fPropName);
+		return sYadR(fPropName);
 		}
 	return fYadMapR->ReadInc(oName);
 	}

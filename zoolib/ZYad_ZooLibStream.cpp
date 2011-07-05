@@ -390,7 +390,7 @@ void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 		}
 	}
 
-ZRef<ZYadR> ZYad_ZooLibStream::sMakeYadR(ZRef<ZStreamerR> iStreamerR)
+ZRef<ZYadR> ZYad_ZooLibStream::sYadR(ZRef<ZStreamerR> iStreamerR)
 	{ return spMakeYadR_ZooLibStream(iStreamerR); }
 
 ZRef<ZYadR> spMakeYadR_ZooLibStream(ZRef<ZStreamerR> iStreamerR)

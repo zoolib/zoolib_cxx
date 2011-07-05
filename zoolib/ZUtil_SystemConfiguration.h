@@ -63,11 +63,11 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadMapRPos
+#pragma mark * sYadMapRPos
 
-ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys);
-ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef, const std::string& iPattern);
-ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef);
+ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys);
+ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef, const std::string& iPattern);
+ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef);
 
 } // namespace ZUtil_SystemConfiguration
 } // namespace ZooLib

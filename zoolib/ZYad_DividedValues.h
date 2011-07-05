@@ -44,7 +44,7 @@ public:
 
 namespace ZYad_DividedValues {
 
-ZRef<ZYadR> sMakeYadR(UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ZStrimmerR> iStrimmerR);
+ZRef<ZYadR> sYadR(UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ZStrimmerR> iStrimmerR);
 
 } // namespace ZYad_DividedValues
 } // namespace ZooLib

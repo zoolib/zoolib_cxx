@@ -75,9 +75,9 @@ static void spLog(const string8& iMessage)
 #pragma mark * SemanticError, helpers
 
 const ZRef<Callable_SemanticError> sCallable_SemanticError_Ignore;
-const ZRef<Callable_SemanticError> sCallable_SemanticError_Throw = MakeCallable(&spThrow);
+const ZRef<Callable_SemanticError> sCallable_SemanticError_Throw = sCallable(&spThrow);
 
-ZSafe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default = MakeCallable(&spLog);
+ZSafe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default = sCallable(&spLog);
 
 void sSemanticError(const string8& iMessage)
 	{

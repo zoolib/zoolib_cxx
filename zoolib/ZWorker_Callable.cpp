@@ -40,10 +40,10 @@ bool ZWorker_Callable::Work()
 	return false;
 	}
 
-ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable::Callable_t> iCallable)
+ZRef<ZWorker> sWorker(ZRef<ZWorker_Callable::Callable_t> iCallable)
 	{ return new ZWorker_Callable(iCallable); }
 
-ZRef<ZWorker> MakeWorker(ZRef<ZWorker_Callable::Callable_t> iCallable,
+ZRef<ZWorker> sWorker(ZRef<ZWorker_Callable::Callable_t> iCallable,
 	ZRef<ZWorker::Callable_Detached_t> iCallable_Detached)
 	{
 	ZRef<ZWorker> theWorker = new ZWorker_Callable(iCallable);

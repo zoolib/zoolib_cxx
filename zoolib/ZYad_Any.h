@@ -33,15 +33,15 @@ typedef ZYadMapRPos_Val_T<ZMap_Any> ZYadMapRPos_Any;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(const ZAny& iVal);
+ZRef<ZYadR> sYadR(const ZAny& iVal);
 
-ZRef<ZYadStreamR> sMakeYadR(const ZData_Any& iData);
+ZRef<ZYadStreamR> sYadR(const ZData_Any& iData);
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_Any& iSeq);
+ZRef<ZYadSeqRPos> sYadR(const ZSeq_Any& iSeq);
 
-ZRef<ZYadMapRPos> sMakeYadR(const ZMap_Any& iMap);
+ZRef<ZYadMapRPos> sYadR(const ZMap_Any& iMap);
 
 // =================================================================================================
 #pragma mark -

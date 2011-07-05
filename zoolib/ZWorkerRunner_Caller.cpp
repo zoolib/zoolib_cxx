@@ -72,7 +72,7 @@ void ZWorkerRunner_Caller::Initialize()
 	{
 	ZWorkerRunner::Initialize();
 
-	fCallable_Callback = MakeCallable(MakeWeakRef(this), &ZWorkerRunner_Caller::pCallback);
+	fCallable_Callback = sCallable(sWeakRef(this), &ZWorkerRunner_Caller::pCallback);
 	}
 
 void ZWorkerRunner_Caller::Finalize()

@@ -89,7 +89,7 @@ ZVal_Any spAsVal(const ZData_Any& iData)
 		ZRef<ZStrimmerU> theStrimmerU =
 			new ZStrimmerU_Streamer_T<ZStrimU_StreamUTF8Buffered>(1024, theStreamerR);
 
-		ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sMakeYadR(theStrimmerU);
+		ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sYadR(theStrimmerU);
 
 		return sFromYadR(ZVal_Any(), theYadR);
 		}
@@ -111,7 +111,7 @@ ZVal_Any sAsVal(const Daton& iDaton)
 Daton sAsDaton(const ZVal_Any& iVal)
 	{
 	ZData_Any theData;
-	ZYad_ZooLibStrim::sToStrim(sMakeYadR(iVal),
+	ZYad_ZooLibStrim::sToStrim(sYadR(iVal),
 		ZStrimW_StreamUTF8(MakeStreamRWPos_Data_T(theData)));
 	return theData;
 	}
@@ -840,7 +840,7 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 				if (gotAll && sInsertIfNotContains(iWalker->fPriors, subset))
 					{
 					if (ZLOGF(s, eDebug + 2))
-						ZYad_ZooLibStrim::sToStrim(sMakeYadR(*theMap), s);
+						ZYad_ZooLibStrim::sToStrim(sYadR(*theMap), s);
 					if (oAnnotations)
 						oAnnotations->insert(new Annotation_Daton(iWalker->fCurrent_Main->first));
 					++iWalker->fCurrent_Main;
@@ -878,7 +878,7 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 				if (gotAll && sInsertIfNotContains(iWalker->fPriors, subset))
 					{
 					if (ZLOGF(s, eDebug + 2))
-						ZYad_ZooLibStrim::sToStrim(sMakeYadR(*theMap), s);
+						ZYad_ZooLibStrim::sToStrim(sYadR(*theMap), s);
 
 					if (oAnnotations)
 						oAnnotations->insert(new Annotation_Daton(iWalker->fCurrent_Pending->first));

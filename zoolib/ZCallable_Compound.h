@@ -51,16 +51,16 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeCallable_Apply
+#pragma mark * sCallable_Apply
 
 template <class A, class B, class C>
 ZRef<ZCallable<A(C)> >
-MakeCallable_Apply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)> >& iCallable)
+sCallable_Apply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)> >& iCallable)
 	{ return new ZCallable_Apply<A,B,C>(iApply, iCallable); }
 
 template <class A, class B, class C>
 ZRef<ZCallable<A(C)> >
-Apply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)> >& iCallable)
+sApply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)> >& iCallable)
 	{ return new ZCallable_Apply<A,B,C>(iApply, iCallable); }
 
 // =================================================================================================
@@ -92,18 +92,18 @@ private:
 
 template <class R0, class R1>
 ZRef<ZCallable<R1(void)> >
-MakeCallable_Comma(const ZRef<ZCallable<R0(void)> >& i0, const ZRef<ZCallable<R1(void)> >& i1)
+sCallable_Comma(const ZRef<ZCallable<R0(void)> >& i0, const ZRef<ZCallable<R1(void)> >& i1)
 	{ return new ZCallable_Comma<R0,R1>(i0, i1); }
 
 template <class R0, class R1>
 ZRef<ZCallable<R1(void)> >
-Comma(const ZRef<ZCallable<R0(void)> >& i0, const ZRef<ZCallable<R1(void)> >& i1)
-	{ return MakeCallable_Comma(i0, i1); }
+sComma(const ZRef<ZCallable<R0(void)> >& i0, const ZRef<ZCallable<R1(void)> >& i1)
+	{ return sCallable_Comma(i0, i1); }
 
 template <class R0, class R1>
 ZRef<ZCallable<R1(void)> >
 operator,(const ZRef<ZCallable<R0(void)> >& i0, const ZRef<ZCallable<R1(void)> >& i1)
-	{ return MakeCallable_Comma(i0, i1); }
+	{ return sCallable_Comma(i0, i1); }
 
 // =================================================================================================
 #pragma mark -
@@ -145,13 +145,13 @@ private:
 	};
 
 template <class R_Init, class R_Inc>
-ZRef<ZCallable_Void> MakeCallable_For(const ZRef<ZCallable<R_Init(void)> >& iInit,
+ZRef<ZCallable_Void> sCallable_For(const ZRef<ZCallable<R_Init(void)> >& iInit,
 	const ZRef<ZCallable_Bool>& iCondition,
 	const ZRef<ZCallable<R_Inc(void)> >& iInc)
 	{ return new ZCallable_For<R_Init,R_Inc>(iInit, iCondition, iInc); }
 
 template <class R_Init, class R_Inc>
-ZRef<ZCallable_Void> For(const ZRef<ZCallable<R_Init(void)> >& iInit,
+ZRef<ZCallable_Void> sFor(const ZRef<ZCallable<R_Init(void)> >& iInit,
 	const ZRef<ZCallable_Bool>& iCondition,
 	const ZRef<ZCallable<R_Inc(void)> >& iInc)
 	{ return new ZCallable_For<R_Init,R_Inc>(iInit, iCondition, iInc); }
@@ -188,12 +188,12 @@ private:
 	};
 
 template <class R>
-ZRef<ZCallable<R(void)> > MakeCallable_If(const ZRef<ZCallable_Bool>& iCondition,
+ZRef<ZCallable<R(void)> > sCallable_If(const ZRef<ZCallable_Bool>& iCondition,
 	const ZRef<ZCallable<R(void)> >& i0, const ZRef<ZCallable<R(void)> >& i1)
 	{ return new ZCallable_If<R>(iCondition, i0, i1); }
 
 template <class R>
-ZRef<ZCallable<R(void)> > If(const ZRef<ZCallable_Bool>& iCondition,
+ZRef<ZCallable<R(void)> > sIf(const ZRef<ZCallable_Bool>& iCondition,
 	const ZRef<ZCallable<R(void)> >& i0, const ZRef<ZCallable<R(void)> >& i1)
 	{ return new ZCallable_If<R>(iCondition, i0, i1); }
 
@@ -239,11 +239,11 @@ private:
 	};
 
 template <class R>
-ZRef<ZCallable_Void> MakeCallable_Repeat(size_t iCount, const ZRef<ZCallable<R(void)> >& iCallable)
+ZRef<ZCallable_Void> sCallable_Repeat(size_t iCount, const ZRef<ZCallable<R(void)> >& iCallable)
 	{ return new ZCallable_Repeat<R>(iCount, iCallable); }
 
 template <class R>
-ZRef<ZCallable_Void> Repeat(size_t iCount, const ZRef<ZCallable<R(void)> >& iCallable)
+ZRef<ZCallable_Void> sRepeat(size_t iCount, const ZRef<ZCallable<R(void)> >& iCallable)
 	{ return new ZCallable_Repeat<R>(iCount, iCallable); }
 
 // =================================================================================================
@@ -280,18 +280,18 @@ private:
 	};
 
 template <class R>
-ZRef<ZCallable_Void> MakeCallable_While
+ZRef<ZCallable_Void> sCallable_While
 	(const ZRef<ZCallable_Bool>& iCondition, const ZRef<ZCallable<R(void)> >& iCallable)
 	{ return new ZCallable_While<R>(iCondition, iCallable); }
 
 template <class R>
-ZRef<ZCallable_Void> While
+ZRef<ZCallable_Void> sWhile
 	(const ZRef<ZCallable_Bool>& iCondition, const ZRef<ZCallable<R(void)> >& iCallable)
 	{ return new ZCallable_While<R>(iCondition, iCallable); }
 
-ZRef<ZCallable_Void> MakeCallable_While(const ZRef<ZCallable_Bool>& iCallable);
+ZRef<ZCallable_Void> sCallable_While(const ZRef<ZCallable_Bool>& iCallable);
 
-ZRef<ZCallable_Void> While(const ZRef<ZCallable_Bool>& iCallable);
+ZRef<ZCallable_Void> sWhile(const ZRef<ZCallable_Bool>& iCallable);
 
 } // namespace ZooLib
 

@@ -126,7 +126,7 @@ private:
 
 namespace ZYad_JSON {
 
-ZRef<ZYadR> sMakeYadR(ZRef<ZStrimmerU> iStrimmerU);
+ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU);
 
 void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s);
 

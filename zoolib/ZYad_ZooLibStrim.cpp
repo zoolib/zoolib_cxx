@@ -1134,7 +1134,7 @@ bool ZYad_ZooLibStrim::sRead_Identifier
 	return gotAny;
 	}
 
-ZRef<ZYadR> ZYad_ZooLibStrim::sMakeYadR(ZRef<ZStrimmerU> iStrimmerU)
+ZRef<ZYadR> ZYad_ZooLibStrim::sYadR(ZRef<ZStrimmerU> iStrimmerU)
 	{ return spMakeYadR_ZooLibStrim(iStrimmerU); }
 
 void ZYad_ZooLibStrim::sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)

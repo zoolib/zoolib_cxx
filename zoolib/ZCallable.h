@@ -366,6 +366,18 @@ typedef ZCallable<bool(void)> ZCallable_Bool;
 
 typedef ZCallable<void(ZRef<ZCallable_Void>)> ZCaller;
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCaller_Null
+
+class ZCaller_Null
+:	public ZCaller
+	{
+public:
+// From ZCaller
+	virtual void Call(ZRef<ZCallable_Void> iCallable);
+	};
+
 } // namespace ZooLib
 
 #endif // __ZCallable__

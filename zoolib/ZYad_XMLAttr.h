@@ -44,7 +44,7 @@ public:
 
 namespace ZYad_XMLAttr {
 
-ZRef<ZYadR> sMakeYadR(ZRef<ZML::StrimmerU> iStrimmerU);
+ZRef<ZYadR> sYadR(ZRef<ZML::StrimmerU> iStrimmerU);
 
 //void sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s);
 

@@ -1576,7 +1576,7 @@ void Device_Streamer::Initialize()
 	{
 	Device::Initialize();
 	fCommer = new Commer_Streamer(fStreamerR, fStreamerW);
-	fCommer->GetSetCallable_Finished(MakeCallable(MakeWeakRef(this), &Device_Streamer::pCommerFinished));
+	fCommer->GetSetCallable_Finished(sCallable(sWeakRef(this), &Device_Streamer::pCommerFinished));
 	sStartCommerRunners(fCommer);
 	}
 

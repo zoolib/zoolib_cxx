@@ -238,7 +238,7 @@ public:
 #pragma mark * MakeWeakRef
 
 template <class T>
-ZWeakRef<T> MakeWeakRef(T* iP)
+ZWeakRef<T> sWeakRef(T* iP)
 	{
 	if (iP)
 		return ZWeakRef<T>(iP->GetWeakRefProxy());

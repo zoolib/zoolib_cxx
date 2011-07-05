@@ -72,7 +72,7 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 				s << "\n";
 				for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
 					{
-					ZYad_ZooLibStrim::sToStrim(sMakeYadR(theRow[i->second]), s);
+					ZYad_ZooLibStrim::sToStrim(sYadR(theRow[i->second]), s);
 					s << ", ";
 					}
 				if (int theAnnoCount = theAnnotations.size())

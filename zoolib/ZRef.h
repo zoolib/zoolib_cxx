@@ -399,16 +399,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeRef
+#pragma mark * sRef
 
-const struct MakeRef_t
-	{
-	template <class T>
-	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(iP); }
+template <class T>
+ZRef<T,true> sRef(T* iP)
+	{ return ZRef<T,true>(iP); }
 
-	template <class T, bool Sense>
-	ZRef<T,true> operator()(const ZRef<T,Sense>& iP) const { return iP; }
-	} MakeRef = {};
+template <class T, bool Sense>
+ZRef<T,true> sRef(const ZRef<T,Sense>& iP)
+	{ return iP; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sTempRef
 
 const struct TempRef_t
 	{
@@ -417,7 +420,7 @@ const struct TempRef_t
 
 	template <class T>
 	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
-	} TempRef = {};
+	} sTempRef = {};
 
 // =================================================================================================
 #pragma mark -

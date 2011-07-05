@@ -33,7 +33,7 @@ namespace ZooLib {
 
 namespace ZYad_FS {
 
-ZRef<ZYadR> sMakeYadR(const ZFileSpec& iFS);
+ZRef<ZYadR> sYadR(const ZFileSpec& iFS);
 
 } // namespace ZYad_FS
 

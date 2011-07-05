@@ -122,14 +122,14 @@ ZRef<ZYadR> YadSeqR::ReadInc()
 	ZMap_Any theMap;
 	for (size_t x = 0; x < fNames.size() && x < theValues.size(); ++x)
 		theMap.Set(fNames[x], theValues[x]);
-	return sMakeYadR(theMap);
+	return sYadR(theMap);
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(UTF32 iDivider_Value, UTF32 iDividerLine, ZRef<ZStrimmerR> iStrimmerR)
+ZRef<ZYadR> sYadR(UTF32 iDivider_Value, UTF32 iDividerLine, ZRef<ZStrimmerR> iStrimmerR)
 	{
 	// Read the first line and build list of property names.
 	vector<string8> values;

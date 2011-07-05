@@ -92,16 +92,16 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeCallable_Delay
+#pragma mark * sCallable_Delay
 
 template <class R>
 ZRef<ZCallable<R(void)> >
-MakeCallable_DelayFor(double iTimeout, ZRef<ZCallable<R(void)> > iCallable)
+sCallable_DelayFor(double iTimeout, ZRef<ZCallable<R(void)> > iCallable)
 	{ return new ZCallable_DelayFor<R>(iTimeout, iCallable); }
 
 template <class R>
 ZRef<ZCallable<R(void)> >
-MakeCallable_DelayUntil(ZTime iDeadline, ZRef<ZCallable<R(void)> > iCallable)
+sCallable_DelayUntil(ZTime iDeadline, ZRef<ZCallable<R(void)> > iCallable)
 	{ return new ZCallable_DelayUntil<R>(iDeadline, iCallable); }
 
 } // namespace ZooLib

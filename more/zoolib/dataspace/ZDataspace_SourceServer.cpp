@@ -48,8 +48,8 @@ SourceServer::~SourceServer()
 
 void SourceServer::Initialize()
 	{
-	fSource->SetCallable_ResultsAvailable(MakeCallable(this, &SourceServer::pCallback_Source));
-	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(MakeRef(this), &SourceServer::pRead));
+	fSource->SetCallable_ResultsAvailable(sCallable(this, &SourceServer::pCallback_Source));
+	ZRef<ZWorker> theWorker = sWorker(sCallable(sRef(this), &SourceServer::pRead));
 	sStartWorkerRunner(theWorker);
 	}
 
@@ -59,7 +59,7 @@ void SourceServer::pCallback_Source(ZRef<Source> iSource)
 	if (!fNeedsWrite)
 		{
 		fNeedsWrite = true;
-		sCallOnNewThread(MakeCallable(MakeRef(this), &SourceServer::pWrite));
+		sCallOnNewThread(sCallable(sRef(this), &SourceServer::pWrite));
 		}
 	}
 

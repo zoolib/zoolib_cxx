@@ -31,7 +31,7 @@ namespace ZYad_JSONNormalize {
 #pragma mark -
 #pragma mark * ZYad_JSONNormalize
 
-ZRef<ZYadR> sMakeYadR(ZRef<ZYadR> iYadR, bool iPreserveSeqs, bool iPreserveMaps);
+ZRef<ZYadR> sYadR(ZRef<ZYadR> iYadR, bool iPreserveSeqs, bool iPreserveMaps);
 
 } // namespace ZYad_JSONNormalize
 } // namespace ZooLib

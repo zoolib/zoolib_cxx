@@ -36,9 +36,9 @@ namespace ZWinRegistry {
 #pragma mark -
 #pragma mark * ZWinRegistry
 
-ZRef<ZYadR> sMakeYadR(const Val& iVal);
+ZRef<ZYadR> sYadR(const Val& iVal);
 
-ZRef<ZYadMapRPos> sMakeYadR(const KeyRef& iKeyRef);
+ZRef<ZYadMapRPos> sYadR(const KeyRef& iKeyRef);
 
 } // namespace ZWinRegistry
 } // namespace ZooLib

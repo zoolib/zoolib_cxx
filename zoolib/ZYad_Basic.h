@@ -53,7 +53,7 @@ struct Options
 	// Perhaps should make sure we differentiate terminator and separator?
 	};
 
-ZRef<ZYadMapR> sMakeYadR(const Options& iOptions, ZRef<ZStrimmerU> iStrimmerU);
+ZRef<ZYadMapR> sYadR(const Options& iOptions, ZRef<ZStrimmerU> iStrimmerU);
 
 } // namespace ZYad_Basic
 } // namespace ZooLib

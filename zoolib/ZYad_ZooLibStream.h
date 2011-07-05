@@ -49,7 +49,7 @@ private:
 
 namespace ZYad_ZooLibStream {
 
-ZRef<ZYadR> sMakeYadR(ZRef<ZStreamerR> iStreamerR);
+ZRef<ZYadR> sYadR(ZRef<ZStreamerR> iStreamerR);
 
 void sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR);
 

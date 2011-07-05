@@ -153,7 +153,7 @@ namespace ZYad_ZooLibStrim {
 bool sRead_Identifier
 	(const ZStrimU& iStrimU, std::string* oStringLC, std::string* oStringExact);
 
-ZRef<ZYadR> sMakeYadR(ZRef<ZStrimmerU> iStrimmerU);
+ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU);
 
 void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s);
 

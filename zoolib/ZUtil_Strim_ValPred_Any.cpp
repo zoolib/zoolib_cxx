@@ -52,7 +52,7 @@ static void spToStrim(const ZRef<ZValComparand>& iComparand, const ZStrimW& s)
 		}
 	else if (ZRef<ZValComparand_Const_Any> cr = iComparand.DynamicCast<ZValComparand_Const_Any>())
 		{
-		ZYad_ZooLibStrim::sToStrim(sMakeYadR(cr->GetVal()), s);
+		ZYad_ZooLibStrim::sToStrim(sYadR(cr->GetVal()), s);
 		}
 	else
 		{

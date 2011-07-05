@@ -94,7 +94,7 @@ void SourceMUX::Initialize()
 	{
 	SourceFactory::Initialize();
 	fSource->SetCallable_ResultsAvailable
-		(MakeCallable(MakeWeakRef(this), &SourceMUX::pResultsAvailable));
+		(sCallable(sWeakRef(this), &SourceMUX::pResultsAvailable));
 	}
 
 void SourceMUX::Finalize()

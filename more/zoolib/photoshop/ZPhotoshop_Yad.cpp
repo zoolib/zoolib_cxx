@@ -80,7 +80,7 @@ typedef ZYadMapRPos_Val_T<Map> YadMapRPos;
 #pragma mark -
 #pragma mark * ZPhotoshop::MakeYadR
 
-ZRef<ZYadR> sMakeYadR(const Val& iVal)
+ZRef<ZYadR> sYadR(const Val& iVal)
 	{
 	if (const Map* asMap = iVal.PGet<Map>())
 		return new YadMapRPos(*asMap);
@@ -94,7 +94,7 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 			.Set("!Type", string("UnitFloat"))
 			.Set("UnitID", spIntAsVal(asUnitFloat->fUnitID))
 			.Set("Value", asUnitFloat->fValue);
-		return sMakeYadR(theMap);
+		return sYadR(theMap);
 		}
 
 	if (const Enumerated* asEnumerated = iVal.PGet<Enumerated>())
@@ -103,7 +103,7 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 			.Set("!Type", string("Enumerated"))
 			.Set("UnitID", spIntAsVal(asEnumerated->fEnumType))
 			.Set("Value", spIntAsVal(asEnumerated->fValue));
-		return sMakeYadR(theMap);
+		return sYadR(theMap);
 		}
 
 	if (const FileRef* asFileRef = iVal.PGet<FileRef>())
@@ -114,26 +114,26 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		const ZMap_Any theMap = ZMap_Any()
 			.Set("!Type", string("FileRef"))
 			.Set("PathTrail", theTrail.AsString());
-		return sMakeYadR(theMap);
+		return sYadR(theMap);
 		}
 
 	if (/*const Spec* asSpec = */iVal.PGet<Spec>())
 		{
 		const ZMap_Any theMap = ZMap_Any()
 			.Set("!Type", string("Spec"));
-		return sMakeYadR(theMap);
+		return sYadR(theMap);
 		}
 
 	if (const string* asString = iVal.PGet<string>())
-		return ZooLib::sMakeYadR(*asString);
+		return ZooLib::sYadR(*asString);
 
 	return new ZYadAtomR_Any(iVal.AsAny());
 	}
 
-ZRef<ZYadSeqRPos> sMakeYadR(const Seq& iSeq)
+ZRef<ZYadSeqRPos> sYadR(const Seq& iSeq)
 	{ return new YadSeqRPos(iSeq); }
 
-ZRef<ZYadMapRPos> sMakeYadR(const Map& iMap)
+ZRef<ZYadMapRPos> sYadR(const Map& iMap)
 	{ return new YadMapRPos(iMap); }
 
 } // namespace ZPhotoshop

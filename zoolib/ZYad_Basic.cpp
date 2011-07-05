@@ -102,7 +102,7 @@ public:
 		if (spRead_Until(theStrimU, fOptions.fSeparator_EntryFromEntry, theValue))
 			theStrimU.Unread(fOptions.fSeparator_EntryFromEntry);
 
-		oYadR = ZooLib::sMakeYadR(theValue);
+		oYadR = ZooLib::sYadR(theValue);
 		}
 
 private:
@@ -121,9 +121,9 @@ Options::Options(UTF32 iNameFromValue, UTF32 iEntryFromEntry)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadMapR> sMakeYadR(const Options& iOptions, ZRef<ZStrimmerU> iStrimmerU)
+ZRef<ZYadMapR> sYadR(const Options& iOptions, ZRef<ZStrimmerU> iStrimmerU)
 	{ return new MapR(iOptions, iStrimmerU); }
 
 } // namespace ZYad_Basic

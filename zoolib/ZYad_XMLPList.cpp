@@ -266,7 +266,7 @@ void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, string& oName, ZRef<ZYadR>& o
 #pragma mark -
 #pragma mark * ZYad_XMLPList
 
-ZRef<ZYadR> ZYad_XMLPList::sMakeYadR(ZRef<ZML::StrimmerU> iStrimmerU)
+ZRef<ZYadR> ZYad_XMLPList::sYadR(ZRef<ZML::StrimmerU> iStrimmerU)
 	{
 	ZML::StrimU& theR = iStrimmerU->GetStrim();
 

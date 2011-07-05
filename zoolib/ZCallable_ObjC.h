@@ -621,16 +621,16 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeCallable
+#pragma mark * sCallable
 
 template <class Signature>
 ZRef<ZCallable<Signature> >
-MakeCallable(id iObj, SEL iSEL)
+sCallable(id iObj, SEL iSEL)
 	{ return new ZCallable_ObjC::Callable<id,Signature>(iObj, iSEL); }
 
 template <class Signature,class T>
 ZRef<ZCallable<Signature> >
-MakeCallable(const ZRef<T>& iObj, SEL iSEL)
+sCallable(const ZRef<T>& iObj, SEL iSEL)
 	{ return new ZCallable_ObjC::Callable<ZRef<NSObject>,Signature>(iObj, iSEL); }
 
 } // namespace ZooLib

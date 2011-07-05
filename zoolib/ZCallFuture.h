@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,40 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorker_Callable__
-#define __ZWorker_Callable__ 1
+#ifndef __ZCallFuture__
+#define __ZCallFuture__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
-#include "zoolib/ZWorker.h"
+#include "zoolib/ZCallable_Bind.h"
+#include "zoolib/ZCallable_Function.h"
+#include "zoolib/ZFuture.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorker_Callable
+#pragma mark * CallFrom
 
-class ZWorker_Callable
-:	public ZWorker
+template <class T>
+void sCallFuture_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T(void)> > iCallable)
 	{
-public:
-	typedef ZCallable<bool(ZRef_ZWorker)> Callable_t;
+	if (iCallable)
+		iPromise->Set(iCallable->Call());
+	}
 
-	ZWorker_Callable(const ZRef<Callable_t>& iCallable);
-	virtual ~ZWorker_Callable();
+template <class T>
+ZRef<ZFuture<T> > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable<T(void)> > iCallable)
+	{
+	ZRef<ZPromise<T> > thePromise = new ZPromise<T>;
+	if (iCaller)
+		iCaller->Call(sBindR(sCallable(sCallFuture_T<T>), thePromise, iCallable));
+	return thePromise->Get();
+	}
 
-// From ZWorker
-	virtual bool Work();
-
-private:
-	ZRef<Callable_t> fCallable;
-	};
-
-ZRef<ZWorker> sWorker(ZRef<ZWorker_Callable::Callable_t> iCallable);
-
-ZRef<ZWorker> sWorker(ZRef<ZWorker_Callable::Callable_t> iCallable,
-	ZRef<ZWorker::Callable_Detached_t> iCallable_Detached);
+ZRef<ZFuture<void> > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
 
 } // namespace ZooLib
 
-#endif // __ZWorker_Callable__
+#endif // __ZCallFuture__

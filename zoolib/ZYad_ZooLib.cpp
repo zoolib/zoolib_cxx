@@ -151,25 +151,25 @@ bool ZYadMapRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal)
+ZRef<ZYadR> sYadR(const ZVal_ZooLib& iVal)
 	{
 	switch (iVal.TypeOf())
 		{
-		case eZType_Vector: return sMakeYadR(iVal.GetSeq());
-		case eZType_Tuple: return sMakeYadR(iVal.GetMap());
+		case eZType_Vector: return sYadR(iVal.GetSeq());
+		case eZType_Tuple: return sYadR(iVal.GetMap());
 		case eZType_Raw: return new ZYadStreamRPos_ZooLib(iVal.GetData());
-		case eZType_String: return sMakeYadR(iVal.GetString());
+		case eZType_String: return sYadR(iVal.GetString());
 		}
 
 	return new ZYadAtomR_ZooLib(iVal);
 	}
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_ZooLib& iSeq)
+ZRef<ZYadSeqRPos> sYadR(const ZSeq_ZooLib& iSeq)
 	{ return new ZYadSeqRPos_ZooLib(iSeq); }
 
-ZRef<ZYadMapRPos> sMakeYadR(const ZMap_ZooLib& iMap)
+ZRef<ZYadMapRPos> sYadR(const ZMap_ZooLib& iMap)
 	{ return new ZYadMapRPos_ZooLib(iMap); }
 
 // =================================================================================================

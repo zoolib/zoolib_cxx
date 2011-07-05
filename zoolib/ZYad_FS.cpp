@@ -91,7 +91,7 @@ ZRef<ZYadR> ZYadMapRPos_Dir::ReadInc(std::string& oName)
 		ZFileSpec cur = fFileIter.Current();
 		string curName = fFileIter.CurrentName();
 		fFileIter.Advance();
-		if (ZRef<ZYadR> result = ZYad_FS::sMakeYadR(cur))
+		if (ZRef<ZYadR> result = ZYad_FS::sYadR(cur))
 			{
 			oName = curName;
 			return result;
@@ -154,9 +154,9 @@ const ZStreamRPos& ZYadStreamRPos_File::GetStreamRPos()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_FS::sMakeYadR
+#pragma mark * ZYad_FS::sYadR
 
-ZRef<ZYadR> ZYad_FS::sMakeYadR(const ZFileSpec& iFS)
+ZRef<ZYadR> ZYad_FS::sYadR(const ZFileSpec& iFS)
 	{
 	if (iFS.IsDir())
 		{

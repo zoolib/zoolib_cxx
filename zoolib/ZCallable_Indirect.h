@@ -642,10 +642,10 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeCallable_Indirect
+#pragma mark * sCallable_Indirect
 
 template <class Sig>
-ZRef<ZCallable<Sig> > MakeCallable_Indirect(const ZRef<ZCallable<Sig> >& iCallable)
+ZRef<ZCallable<Sig> > sCallable_Indirect(const ZRef<ZCallable<Sig> >& iCallable)
 	{ return new ZCallable_Indirect<Sig>(iCallable); }
 
 } // namespace ZooLib

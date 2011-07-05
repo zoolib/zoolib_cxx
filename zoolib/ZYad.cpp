@@ -418,9 +418,9 @@ bool ZYadStrimU_String::IsSimple(const ZYadOptions& iOptions)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(const string& iVal)
+ZRef<ZYadR> sYadR(const string& iVal)
 	{ return new ZYadStrimU_String(iVal); }
 
 } // namespace ZooLib

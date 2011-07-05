@@ -31,7 +31,7 @@ bool ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 	ZAssert(iWorker);
 	ZAssert(not iWorker->fRunner.Get());
 
-	iWorker->fRunner = MakeRef(this);
+	iWorker->fRunner = sRef(this);
 
 	try
 		{

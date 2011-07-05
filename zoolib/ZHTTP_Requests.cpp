@@ -118,7 +118,7 @@ static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 	else if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
 		{
 		if (useSSL)
-			return sMake_StreamerRWCon_SSL(theEP, theEP);
+			return sStreamerRWCon_SSL(theEP, theEP);
 		return theEP;
 		}
 	else

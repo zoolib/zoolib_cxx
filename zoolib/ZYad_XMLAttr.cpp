@@ -123,7 +123,7 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 	if (fIter != fAttrs.end())
 		{
 		oName = fIter->first;
-		ZRef<ZYadR> result = ZooLib::sMakeYadR(fIter->second);
+		ZRef<ZYadR> result = ZooLib::sYadR(fIter->second);
 		++fIter;
 		return result;
 		}
@@ -174,7 +174,7 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 		if (theAttrs.empty())
 			{
 			theR.Advance();
-			return ZooLib::sMakeYadR(theText);
+			return ZooLib::sYadR(theText);
 			}
 		else if (!theText.empty())
 			{
@@ -187,9 +187,9 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(ZRef<ZML::StrimmerU> iStrimmerU)
+ZRef<ZYadR> sYadR(ZRef<ZML::StrimmerU> iStrimmerU)
 	{
 	sSkipText(iStrimmerU->GetStrim());
 	if (iStrimmerU->GetStrim().Current() != ZML::eToken_Exhausted)

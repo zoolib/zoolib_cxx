@@ -47,7 +47,7 @@ Source_Client::~Source_Client()
 
 void Source_Client::Initialize()
 	{
-	ZRef<ZWorker> theWorker = MakeWorker(MakeCallable(MakeWeakRef(this), &Source_Client::pRead));
+	ZRef<ZWorker> theWorker = sWorker(sCallable(sWeakRef(this), &Source_Client::pRead));
 	sStartWorkerRunner(theWorker);
 	}
 
@@ -80,7 +80,7 @@ void Source_Client::ModifyRegistrations
 	if (!fNeedsWrite)
 		{
 		fNeedsWrite = true;
-		sCallOnNewThread(MakeCallable(MakeRef(this), &Source_Client::pWrite));
+		sCallOnNewThread(sCallable(sRef(this), &Source_Client::pWrite));
 		}
 	}
 

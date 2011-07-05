@@ -41,7 +41,7 @@ Dataspace::Dataspace(ZRef<Source> iSource)
 ,	fCalled_UpdateNeeded(false)
 ,	fNextRefcon(1)
 	{
-	fSource->SetCallable_ResultsAvailable(MakeCallable(this, &Dataspace::pCallback_Source));
+	fSource->SetCallable_ResultsAvailable(sCallable(this, &Dataspace::pCallback_Source));
 	}
 
 Dataspace::~Dataspace()

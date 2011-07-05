@@ -286,9 +286,9 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(const std::string& iVal);
+ZRef<ZYadR> sYadR(const std::string& iVal);
 
 } // namespace ZooLib
 

@@ -37,7 +37,7 @@ typedef ZYad_Basic::ParseException ParseException;
 #pragma mark -
 #pragma mark * ZYad_Simple
 
-ZRef<ZYadMapR> sMakeYadR(ZRef<ZStrimmerU> iStrimmerU);
+ZRef<ZYadMapR> sYadR(ZRef<ZStrimmerU> iStrimmerU);
 
 } // namespace ZYad_Simple
 } // namespace ZooLib

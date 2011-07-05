@@ -27,8 +27,8 @@ namespace ZYad_Simple {
 #pragma mark -
 #pragma mark * ZYad_Simple
 
-ZRef<ZYadMapR> sMakeYadR(ZRef<ZStrimmerU> iStrimmerU)
-	{ return sMakeYadR(ZYad_Basic::Options('=', ','), iStrimmerU); }
+ZRef<ZYadMapR> sYadR(ZRef<ZStrimmerU> iStrimmerU)
+	{ return sYadR(ZYad_Basic::Options('=', ','), iStrimmerU); }
 
 } // namespace ZYad_Simple
 } // namespace ZooLib

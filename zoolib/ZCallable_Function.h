@@ -482,63 +482,63 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeCallable
+#pragma mark * sCallable
 
 template <class R>
 ZRef<ZCallable<R(void)> >
-MakeCallable(R (*iFunctionPtr)())
+sCallable(R (*iFunctionPtr)())
 	{ return new Callable<R(void)>(iFunctionPtr); }
 
 template <class R,
 	class P0>
 ZRef<ZCallable<R(P0)> >
-MakeCallable(R (*iFunctionPtr)(P0))
+sCallable(R (*iFunctionPtr)(P0))
 	{ return new Callable<R(P0)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1>
 ZRef<ZCallable<R(P0,P1)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1))
+sCallable(R (*iFunctionPtr)(P0,P1))
 	{ return new Callable<R(P0,P1)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2>
 ZRef<ZCallable<R(P0,P1,P2)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2))
+sCallable(R (*iFunctionPtr)(P0,P1,P2))
 	{ return new Callable<R(P0,P1,P2)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3>
 ZRef<ZCallable<R(P0,P1,P2,P3)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3))
 	{ return new Callable<R(P0,P1,P2,P3)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4))
 	{ return new Callable<R(P0,P1,P2,P3,P4)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6)>(iFunctionPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)>(iFunctionPtr); }
 
 template <class R,
@@ -546,7 +546,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>(iFunctionPtr); }
 
 template <class R,
@@ -554,7 +554,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>(iFunctionPtr); }
 
 template <class R,
@@ -562,7 +562,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>(iFunctionPtr); }
 
 template <class R,
@@ -570,7 +570,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>(iFunctionPtr); }
 
 template <class R,
@@ -579,7 +579,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>(iFunctionPtr); }
 
 template <class R,
@@ -588,7 +588,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>(iFunctionPtr); }
 
 template <class R,
@@ -597,7 +597,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>(iFunctionPtr); }
 
 template <class R,
@@ -606,16 +606,16 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >
-MakeCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
+sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>(iFunctionPtr); }
 
 } // namespace ZCallable_Function
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeCallable
+#pragma mark * sCallable
 
-using ZCallable_Function::MakeCallable;
+using ZCallable_Function::sCallable;
 
 } // namespace ZooLib
 

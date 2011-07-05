@@ -43,7 +43,7 @@ ZUtil_Strim_Tuple::Format::Format
 bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV)
 	{
 	ZRef<ZStrimmerU> theStrimmerU = new ZStrimmerU_Strim(iStrimU);
-	if (ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sMakeYadR(theStrimmerU))
+	if (ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sYadR(theStrimmerU))
 		{
 		oTV = sFromYadR(ZTValue(), theYadR);
 		return true;
@@ -57,14 +57,14 @@ bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV)
 
 const ZStrimW& operator<<(const ZStrimW& s, const ZTValue& iTV)
 	{
-	ZRef<ZYadR> theYadR = sMakeYadR(iTV);
+	ZRef<ZYadR> theYadR = sYadR(iTV);
 	ZYad_ZooLibStrim::sToStrim(0, ZYadOptions(), theYadR, s);
 	return s;
 	}
 
 const ZStrimW& operator<<(const ZStrimW& s, const ZUtil_Strim_Tuple::Format& iFormat)
 	{
-	ZRef<ZYadR> theYadR = sMakeYadR(iFormat.fTValue);
+	ZRef<ZYadR> theYadR = sYadR(iFormat.fTValue);
 	ZYad_ZooLibStrim::sToStrim(0, ZYadOptions(), theYadR, s);
 	return s;
 	}

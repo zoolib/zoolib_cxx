@@ -36,13 +36,13 @@ typedef ZYadMapRPos_Val_T<ZMap_AppleEvent> ZYadMapRPos_AppleEvent;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal);
+ZRef<ZYadR> sYadR(const ZVal_AppleEvent& iVal);
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_AppleEvent& iSeq);
+ZRef<ZYadSeqRPos> sYadR(const ZSeq_AppleEvent& iSeq);
 
-ZRef<ZYadMapRPos> sMakeYadR(const ZMap_AppleEvent& iMap);
+ZRef<ZYadMapRPos> sYadR(const ZMap_AppleEvent& iMap);
 
 } // namespace ZooLib
 

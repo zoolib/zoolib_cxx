@@ -101,7 +101,7 @@ public:
 	virtual ZRef<ZYadR> ReadInc()
 		{
 		if (fPosition < fSeq.Count())
-			return sMakeYadR(fSeq.Get(fPosition++));
+			return sYadR(fSeq.Get(fPosition++));
 		return null;
 		}
 
@@ -156,7 +156,7 @@ public:
 	virtual ZRef<ZYadR> ReadInc()
 		{
 		if (fPosition < fSeq.Count())
-			return sMakeYadR(fSeq.Get(fPosition++));
+			return sYadR(fSeq.Get(fPosition++));
 		return null;
 		}
 
@@ -205,7 +205,7 @@ public:
 		if (fIndex != fMap.End())
 			{
 			oName = fMap.NameOf(fIndex);
-			return sMakeYadR(fMap.Get(fIndex++));
+			return sYadR(fMap.Get(fIndex++));
 			}
 		return null;
 		}
@@ -256,7 +256,7 @@ public:
 		if (fIndex != fMap.End())
 			{
 			oName = fMap.NameOf(fIndex);
-			return sMakeYadR(fMap.Get(fIndex++));
+			return sYadR(fMap.Get(fIndex++));
 			}
 		return null;
 		}

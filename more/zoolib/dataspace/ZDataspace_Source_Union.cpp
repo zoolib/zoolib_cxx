@@ -734,7 +734,7 @@ Source_Union::~Source_Union()
 void Source_Union::Initialize()
 	{
 	Source::Initialize();
-	fCallable_ResultsAvailable = MakeCallable(MakeWeakRef(this), &Source_Union::pResultsAvailable);
+	fCallable_ResultsAvailable = sCallable(sWeakRef(this), &Source_Union::pResultsAvailable);
 	}
 
 bool Source_Union::Intersects(const RelHead& iRelHead)

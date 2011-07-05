@@ -125,11 +125,11 @@ static ZRef<ZYadR> spReadStringish(const ZStreamU& s)
 	if (countSkipped == 0)
 		{
 		// We skipped no code units, so theString is valid UTF8.
-		return sMakeYadR(theString);
+		return sYadR(theString);
 		}
 	else
 		{
-		return sMakeYadR(ZData_Any(theString.data(), theLength));
+		return sYadR(ZData_Any(theString.data(), theLength));
 		}
 	}
 
@@ -219,7 +219,7 @@ void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR
 #pragma mark -
 #pragma mark * ZYad_Bencode
 
-ZRef<ZYadR> ZYad_Bencode::sMakeYadR(ZRef<ZStreamerU> iStreamerU)
+ZRef<ZYadR> ZYad_Bencode::sYadR(ZRef<ZStreamerU> iStreamerU)
 	{ return spMakeYadR_Bencode(iStreamerU); }
 
 } // namespace ZooLib

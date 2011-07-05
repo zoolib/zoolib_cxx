@@ -109,7 +109,7 @@ ZRef<ZYadR> ZYadMapRPos_NS::ReadInc(string& oName)
 	if (fPosition < fNames.Count())
 		{
 		oName = fNames.Get(fPosition).GetString();
-		return sMakeYadR(fValues.Get(fPosition++));
+		return sYadR(fValues.Get(fPosition++));
 		}
 	return null;
 	}
@@ -129,9 +129,9 @@ void ZYadMapRPos_NS::SetPosition(const std::string& iName)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(NSObject* iVal)
+ZRef<ZYadR> sYadR(NSObject* iVal)
 	{
 	const ZVal_NS theVal = iVal;
 
@@ -154,28 +154,28 @@ ZRef<ZYadR> sMakeYadR(NSObject* iVal)
 	return new ZYadAtomR_NS(iVal);
 	}
 
-ZRef<ZYadStrimR> sMakeYadR(NSMutableString* iString)
+ZRef<ZYadStrimR> sYadR(NSMutableString* iString)
 	{ return new ZYadStrimR_NS(iString); }
 
-ZRef<ZYadStrimR> sMakeYadR(NSString* iString)
+ZRef<ZYadStrimR> sYadR(NSString* iString)
 	{ return new ZYadStrimR_NS(iString); }
 
-ZRef<ZYadStreamR> sMakeYadR(NSMutableData* iData)
+ZRef<ZYadStreamR> sYadR(NSMutableData* iData)
 	{ return new ZYadStreamRPos_NS(iData); }
 
-ZRef<ZYadStreamR> sMakeYadR(NSData* iData)
+ZRef<ZYadStreamR> sYadR(NSData* iData)
 	{ return new ZYadStreamRPos_NS(iData); }
 
-ZRef<ZYadSeqRPos> sMakeYadR(NSMutableArray* iArray)
+ZRef<ZYadSeqRPos> sYadR(NSMutableArray* iArray)
 	{ return new ZYadSeqRPos_NS(iArray); }
 
-ZRef<ZYadSeqRPos> sMakeYadR(NSArray* iArray)
+ZRef<ZYadSeqRPos> sYadR(NSArray* iArray)
 	{ return new ZYadSeqRPos_NS(iArray); }
 
-ZRef<ZYadMapRPos> sMakeYadR(NSMutableDictionary* iDictionary)
+ZRef<ZYadMapRPos> sYadR(NSMutableDictionary* iDictionary)
 	{ return new ZYadMapRPos_NS(iDictionary); }
 
-ZRef<ZYadMapRPos> sMakeYadR(NSDictionary* iDictionary)
+ZRef<ZYadMapRPos> sYadR(NSDictionary* iDictionary)
 	{ return new ZYadMapRPos_NS(iDictionary); }
 
 // =================================================================================================

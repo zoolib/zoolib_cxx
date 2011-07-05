@@ -30,48 +30,40 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * Makers
 
-ZRef<ZCallable_Bool> MakeCallable_True();
+ZRef<ZCallable_Bool> sCallable_True();
 
-ZRef<ZCallable_Bool> MakeCallable_False();
+ZRef<ZCallable_Bool> sCallable_False();
 
-ZRef<ZCallable_Bool> MakeCallable_Not(const ZRef<ZCallable_Bool>& iCallable);
-
-ZRef<ZCallable_Bool>
-MakeCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+ZRef<ZCallable_Bool> sCallable_Not(const ZRef<ZCallable_Bool>& iCallable);
 
 ZRef<ZCallable_Bool>
-MakeCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+sCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 ZRef<ZCallable_Bool>
-MakeCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+sCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+
+ZRef<ZCallable_Bool>
+sCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Concise Makers
 
 inline
-ZRef<ZCallable_Bool> Callable_True()
-	{ return MakeCallable_True(); }
+ZRef<ZCallable_Bool> sNot(const ZRef<ZCallable_Bool>& iCallable)
+	{ return sCallable_Not(iCallable); }
 
 inline
-ZRef<ZCallable_Bool> Callable_False()
-	{ return MakeCallable_False(); }
+ZRef<ZCallable_Bool> sAnd(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+	{ return sCallable_And(i0, i1); }
 
 inline
-ZRef<ZCallable_Bool> Not(const ZRef<ZCallable_Bool>& iCallable)
-	{ return MakeCallable_Not(iCallable); }
+ZRef<ZCallable_Bool> sOr(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+	{ return sCallable_Or(i0, i1); }
 
 inline
-ZRef<ZCallable_Bool> And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	{ return MakeCallable_And(i0, i1); }
-
-inline
-ZRef<ZCallable_Bool> Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	{ return MakeCallable_Or(i0, i1); }
-
-inline
-ZRef<ZCallable_Bool> Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	{ return MakeCallable_Xor(i0, i1); }
+ZRef<ZCallable_Bool> sXor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+	{ return sCallable_Xor(i0, i1); }
 
 // =================================================================================================
 #pragma mark -
@@ -79,11 +71,11 @@ ZRef<ZCallable_Bool> Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bo
 
 inline
 ZRef<ZCallable_Bool> operator~(const ZRef<ZCallable_Bool>& iCallable)
-	{ return Not(iCallable); }
+	{ return sNot(iCallable); }
 
 inline
 ZRef<ZCallable_Bool> operator&(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	{ return And(i0, i1); }
+	{ return sAnd(i0, i1); }
 
 inline
 ZRef<ZCallable_Bool>& operator&=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1)
@@ -91,7 +83,7 @@ ZRef<ZCallable_Bool>& operator&=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable
 
 inline
 ZRef<ZCallable_Bool> operator|(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	{ return Or(i0, i1); }
+	{ return sOr(i0, i1); }
 
 inline
 ZRef<ZCallable_Bool>& operator|=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1)
@@ -99,7 +91,7 @@ ZRef<ZCallable_Bool>& operator|=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable
 
 inline
 ZRef<ZCallable_Bool> operator^(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	{ return Xor(i0, i1); }
+	{ return sXor(i0, i1); }
 
 inline
 ZRef<ZCallable_Bool>& operator^=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1)

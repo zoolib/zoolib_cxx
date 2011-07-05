@@ -539,64 +539,64 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeCallable
+#pragma mark * sCallable
 
 template <class R
 	>
 ZRef<ZCallable<R(void)> >
-MakeCallable(R (^iBlockPtr)())
+sCallable(R (^iBlockPtr)())
 	{ return new Callable<R(void)>(iBlockPtr); }
 
 template <class R,
 	class P0>
 ZRef<ZCallable<R(P0)> >
-MakeCallable(R (^iBlockPtr)(P0))
+sCallable(R (^iBlockPtr)(P0))
 	{ return new Callable<R(P0)>(iBlockPtr); }
 
 template <class R,
 	class P0, class P1>
 ZRef<ZCallable<R(P0,P1)> >
-MakeCallable(R (^iBlockPtr)(P0,P1))
+sCallable(R (^iBlockPtr)(P0,P1))
 	{ return new Callable<R(P0,P1)>(iBlockPtr); }
 
 template <class R,
 	class P0, class P1, class P2>
 ZRef<ZCallable<R(P0,P1,P2)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2))
+sCallable(R (^iBlockPtr)(P0,P1,P2))
 	{ return new Callable<R(P0,P1,P2)>(iBlockPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3>
 ZRef<ZCallable<R(P0,P1,P2,P3)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3))
 	{ return new Callable<R(P0,P1,P2,P3)>(iBlockPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4))
 	{ return new Callable<R(P0,P1,P2,P3,P4)>(iBlockPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5)>(iBlockPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6)>(iBlockPtr); }
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)>(iBlockPtr); }
 
 template <class R,
@@ -604,7 +604,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>(iBlockPtr); }
 
 template <class R,
@@ -612,7 +612,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>(iBlockPtr); }
 
 template <class R,
@@ -620,7 +620,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>(iBlockPtr); }
 
 template <class R,
@@ -628,7 +628,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>(iBlockPtr); }
 
 template <class R,
@@ -637,7 +637,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>(iBlockPtr); }
 
 template <class R,
@@ -646,7 +646,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>(iBlockPtr); }
 
 template <class R,
@@ -655,7 +655,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>(iBlockPtr); }
 
 template <class R,
@@ -664,7 +664,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >
-MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
+sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>(iBlockPtr); }
 
 #else // defined(__clang_major__) && __clang_major__ >= 2
@@ -698,7 +698,7 @@ private:
 
 inline
 ZRef<ZCallable<void(void)> >
-MakeCallable(void (^iBlockPtr)())
+sCallable(void (^iBlockPtr)())
 	{ return new Callable(iBlockPtr); }
 
 #endif // defined(__clang_major__) && __clang_major__ >= 2
@@ -707,9 +707,9 @@ MakeCallable(void (^iBlockPtr)())
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeCallable
+#pragma mark * sCallable
 
-using ZCallable_Block::MakeCallable;
+using ZCallable_Block::sCallable;
 
 } // namespace ZooLib
 

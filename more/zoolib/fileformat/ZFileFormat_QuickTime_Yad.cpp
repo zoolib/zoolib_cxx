@@ -321,9 +321,9 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(ZRef<ZStreamerR> iStreamerR)
+ZRef<ZYadR> sYadR(ZRef<ZStreamerR> iStreamerR)
 	{
 	if (ZRef<ZStreamerRPos> theSRPos = iStreamerR.DynamicCast<ZStreamerRPos>())
 		{

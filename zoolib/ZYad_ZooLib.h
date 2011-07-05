@@ -98,13 +98,13 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal);
+ZRef<ZYadR> sYadR(const ZVal_ZooLib& iVal);
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_ZooLib& iSeq);
+ZRef<ZYadSeqRPos> sYadR(const ZSeq_ZooLib& iSeq);
 
-ZRef<ZYadMapRPos> sMakeYadR(const ZMap_ZooLib& iMap);
+ZRef<ZYadMapRPos> sYadR(const ZMap_ZooLib& iMap);
 
 // =================================================================================================
 #pragma mark -

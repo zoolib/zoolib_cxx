@@ -611,7 +611,7 @@ void ZVisitor_Yad_JSONWriter::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 #pragma mark -
 #pragma mark * ZYad_JSON
 
-ZRef<ZYadR> ZYad_JSON::sMakeYadR(ZRef<ZStrimmerU> iStrimmerU)
+ZRef<ZYadR> ZYad_JSON::sYadR(ZRef<ZStrimmerU> iStrimmerU)
 	{ return spMakeYadR_JSON(iStrimmerU); }
 
 void ZYad_JSON::sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)

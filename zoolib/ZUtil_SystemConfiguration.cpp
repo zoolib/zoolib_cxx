@@ -99,7 +99,7 @@ public:
 				if (ZVal_CF theVal = ::SCDynamicStoreCopyValue(fStoreRef, theQName.Get()))
 					{
 					oName = ZUtil_CF::sAsUTF8(theQName.Get());
-					return sMakeYadR(theVal);
+					return sYadR(theVal);
 					}
 				}
 			}
@@ -132,19 +132,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadMapRPos
+#pragma mark * sYadMapRPos
 
-ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys)
+ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys)
 	{ return new YadMapRPos(iStoreRef, iKeys); }
 
-ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef, const std::string& iPattern)
+ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef, const std::string& iPattern)
 	{
 	return new YadMapRPos(iStoreRef,
 		TempCF& ::SCDynamicStoreCopyKeyList(iStoreRef, ZUtil_CF::sString(iPattern)));
 	}
 
-ZRef<ZYadMapRPos> sMakeYadMapRPos(SCDynamicStoreRef iStoreRef)
-	{ return sMakeYadMapRPos(iStoreRef, ".+"); }
+ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef)
+	{ return sYadMapRPos(iStoreRef, ".+"); }
 
 } // namespace ZUtil_SystemConfiguration
 } // namespace ZooLib

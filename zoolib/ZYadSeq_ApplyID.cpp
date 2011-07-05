@@ -45,7 +45,7 @@ ZRef<ZYadR> ZYadSeqR_ApplyID::ReadInc()
 		ZMap_Any theMap;
 		theMap.Set(fIDName, ++fNextID);
 		theMap.Set(fValName, sFromYadR(ZVal_Any(), theYadR));
-		return sMakeYadR(theMap);
+		return sYadR(theMap);
 		}
 
 	return null;
@@ -73,7 +73,7 @@ ZRef<ZYadR> ZYadSeqRPos_ApplyID::ReadInc()
 		ZMap_Any theMap;
 		theMap.Set(fIDName, thePosition);
 		theMap.Set(fValName, sFromYadR(ZVal_Any(), theYadR));
-		return sMakeYadR(theMap);
+		return sYadR(theMap);
 		}
 
 	return null;

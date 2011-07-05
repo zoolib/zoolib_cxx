@@ -48,9 +48,9 @@ static ZMap_Any spAsMap(const AEDesc& iAEDesc)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
+ZRef<ZYadR> sYadR(const ZVal_AppleEvent& iVal)
 	{
 	if (ZQ<ZMap_AppleEvent> theQ = iVal.QGet<ZMap_AppleEvent>())
 		return new ZYadMapRPos_AppleEvent(theQ.Get());
@@ -59,7 +59,7 @@ ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 		return new ZYadSeqRPos_AppleEvent(theQ.Get());
 
 	if (ZQ<string8> theQ = iVal.QGet<string8>())
-		return sMakeYadR(theQ.Get());
+		return sYadR(theQ.Get());
 
 //	if (iVal.QGetData(asData))
 //		return new ZYadStreamRPos_AppleEvent(asData);
@@ -67,10 +67,10 @@ ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 	return new ZYadMapRPos_Any(spAsMap(iVal));
 	}
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_AppleEvent& iSeq)
+ZRef<ZYadSeqRPos> sYadR(const ZSeq_AppleEvent& iSeq)
 	{ return new ZYadSeqRPos_AppleEvent(iSeq); }
 
-ZRef<ZYadMapRPos> sMakeYadR(const ZMap_AppleEvent& iMap)
+ZRef<ZYadMapRPos> sYadR(const ZMap_AppleEvent& iMap)
 	{ return new ZYadMapRPos_AppleEvent(iMap); }
 
 } // namespace ZooLib

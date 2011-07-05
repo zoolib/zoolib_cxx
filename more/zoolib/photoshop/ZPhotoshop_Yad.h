@@ -34,11 +34,11 @@ namespace ZPhotoshop {
 #pragma mark -
 #pragma mark * ZPhotoshop::MakeYadR
 
-ZRef<ZYadR> sMakeYadR(const Val& iVal);
+ZRef<ZYadR> sYadR(const Val& iVal);
 
-ZRef<ZYadSeqRPos> sMakeYadR(const Seq& iSeq);
+ZRef<ZYadSeqRPos> sYadR(const Seq& iSeq);
 
-ZRef<ZYadMapRPos> sMakeYadR(const Map& iMap);
+ZRef<ZYadMapRPos> sYadR(const Map& iMap);
 
 } // namespace ZPhotoshop
 } // namespace ZooLib

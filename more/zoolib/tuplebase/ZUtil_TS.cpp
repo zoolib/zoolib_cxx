@@ -219,7 +219,7 @@ void sToStrim(uint64 iNextUnusedID, Source& iSource, const ZStrimW& iStrimW)
 		if (not iSource.Get(anID, aTuple))
 			break;
 		iStrimW.Writef("0x%llX /*%lld*/:\t", anID, anID);
-		ZYad_ZooLibStrim::sToStrim(0, theOptions, sMakeYadR(aTuple), iStrimW);
+		ZYad_ZooLibStrim::sToStrim(0, theOptions, sYadR(aTuple), iStrimW);
 		iStrimW.Write("\n");
 		}
 	}

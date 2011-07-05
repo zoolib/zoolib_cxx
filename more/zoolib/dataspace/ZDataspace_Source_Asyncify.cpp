@@ -51,7 +51,7 @@ void Source_Asyncify::Initialize()
 	{
 	Source::Initialize();
 	fSource->SetCallable_ResultsAvailable
-		(MakeCallable(MakeWeakRef(this), &Source_Asyncify::pResultsAvailable));
+		(sCallable(sWeakRef(this), &Source_Asyncify::pResultsAvailable));
 	}
 
 void Source_Asyncify::Finalize()
@@ -131,7 +131,7 @@ void Source_Asyncify::pTrigger_Update()
 		return;
 
 	fTriggered_Update = true;
-	sCallOnNewThread(MakeCallable(MakeRef(this), &Source_Asyncify::pUpdate));
+	sCallOnNewThread(sCallable(sRef(this), &Source_Asyncify::pUpdate));
 	}
 
 void Source_Asyncify::pUpdate()

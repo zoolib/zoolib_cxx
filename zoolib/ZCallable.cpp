@@ -18,39 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallFromCaller__
-#define __ZCallFromCaller__ 1
-#include "zconfig.h"
-
 #include "zoolib/ZCallable.h"
-#include "zoolib/ZCallable_Bind.h"
-#include "zoolib/ZCallable_Function.h"
-#include "zoolib/ZFuture.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * CallFrom
+#pragma mark * ZCaller_Null
 
-template <class T>
-void sCallFromCaller_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T(void)> > iCallable)
-	{
-	if (iCallable)
-		iPromise->Set(iCallable->Call());
-	}
-
-template <class T>
-ZRef<ZFuture<T> > CallFromCaller(ZRef<ZCaller> iCaller, ZRef<ZCallable<T(void)> > iCallable)
-	{
-	ZRef<ZPromise<T> > thePromise = new ZPromise<T>;
-	if (iCaller)
-		iCaller->Call(BindL(thePromise, iCallable, MakeCallable(sCallFromCaller_T<T>)));
-	return thePromise->Get();
-	}
-
-ZRef<ZFuture<void> > CallFromCaller(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
+void ZCaller_Null::Call(ZRef<ZCallable_Void> iCallable)
+	{ iCallable->Call(); }
 
 } // namespace ZooLib
-
-#endif // __ZCallFromCaller__

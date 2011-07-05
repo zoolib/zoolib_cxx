@@ -52,10 +52,10 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeCallable_Const
+#pragma mark * sCallable_Const
 
 template <class R>
-ZRef<ZCallable<R(void)> > MakeCallable_Const(R iR)
+ZRef<ZCallable<R(void)> > sCallable_Const(R iR)
 	{ return new ZCallable_Const<R>(iR); }
 
 } // namespace ZooLib

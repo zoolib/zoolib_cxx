@@ -76,7 +76,7 @@ private:
 
 namespace ZYad_Bencode {
 
-ZRef<ZYadR> sMakeYadR(ZRef<ZStreamerU> iStreamerU);
+ZRef<ZYadR> sYadR(ZRef<ZStreamerU> iStreamerU);
 
 } // namespace ZYad_Bencode
 

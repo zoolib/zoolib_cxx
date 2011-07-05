@@ -1424,7 +1424,7 @@ static void spInsertSections(UITableView* iTableView,
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style variableRowHeight:(BOOL)variableRowHeight
 	{
 	[super initWithFrame:frame style:style];
-	fCallable_NeedsUpdate = MakeCallable<void()>(self, @selector(needsUpdate));
+	fCallable_NeedsUpdate = sCallable<void()>(self, @selector(needsUpdate));
 	if (variableRowHeight)
 		fHandler = Adopt& [[UITVHandler_WithSections_VariableRowHeight alloc] init];
 	else

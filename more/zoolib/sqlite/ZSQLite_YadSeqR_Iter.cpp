@@ -53,7 +53,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	if (fIndex < fIter->Count())
 		{
 		oName = fIter->NameOf(fIndex);
-		oYadR = sMakeYadR(fIter->Get(fIndex));
+		oYadR = sYadR(fIter->Get(fIndex));
 		++fIndex;
 		}
 	}

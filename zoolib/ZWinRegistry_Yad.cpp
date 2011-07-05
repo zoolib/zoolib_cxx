@@ -33,18 +33,18 @@ namespace ZWinRegistry {
 #pragma mark -
 #pragma mark * ZWinRegistry
 
-ZRef<ZYadR> sMakeYadR(const Val& iVal)
+ZRef<ZYadR> sYadR(const Val& iVal)
 	{
 	if (const KeyRef* theVal = iVal.PGet<KeyRef>())
-		return sMakeYadR(*theVal);
+		return sYadR(*theVal);
 
 	if (const string16* theVal = iVal.PGet<string16>())
-		return sMakeYadR(ZUnicode::sAsUTF8(*theVal));
+		return sYadR(ZUnicode::sAsUTF8(*theVal));
 
-	return sMakeYadR(iVal.AsAny());
+	return sYadR(iVal.AsAny());
 	}
 
-ZRef<ZYadMapRPos> sMakeYadR(const KeyRef& iKeyRef)
+ZRef<ZYadMapRPos> sYadR(const KeyRef& iKeyRef)
 	{ return new ZYadMapRPos_Val_T<KeyRef>(iKeyRef); }
 
 } // namespace ZWinRegistry

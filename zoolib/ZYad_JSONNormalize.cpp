@@ -188,7 +188,7 @@ void ZYadMapR_JSONNormalize::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef
 #pragma mark -
 #pragma mark * ZYad_JSONNormalize
 
-ZRef<ZYadR> ZYad_JSONNormalize::sMakeYadR
+ZRef<ZYadR> ZYad_JSONNormalize::sYadR
 	(ZRef<ZYadR> iYadR, bool iPreserveSeqs, bool iPreserveMaps)
 	{ return spMakeYadR_JSONNormalize(iYadR, true, iPreserveSeqs, iPreserveMaps); }
 

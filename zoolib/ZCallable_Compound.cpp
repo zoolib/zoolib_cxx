@@ -56,10 +56,10 @@ private:
 #pragma mark -
 #pragma mark * Makers
 
-ZRef<ZCallable<void(void)> > MakeCallable_While(const ZRef<ZCallable_Bool>& iCallable)
+ZRef<ZCallable<void(void)> > sCallable_While(const ZRef<ZCallable_Bool>& iCallable)
 	{ return new Callable_While(iCallable); }
 
-ZRef<ZCallable<void(void)> > While(const ZRef<ZCallable_Bool>& iCallable)
+ZRef<ZCallable<void(void)> > sWhile(const ZRef<ZCallable_Bool>& iCallable)
 	{ return new Callable_While(iCallable); }
 
 } // namespace ZooLib

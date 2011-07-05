@@ -132,7 +132,7 @@ ZRef<ZYadR> ZYadMapRPos_CF::ReadInc(string& oName)
 	if (fPosition < fNames.size())
 		{
 		oName = ZUtil_CF::sAsUTF8(fNames.at(fPosition));
-		return sMakeYadR(fValues[fPosition++]);
+		return sYadR(fValues[fPosition++]);
 		}
 	return null;
 	}
@@ -151,9 +151,9 @@ void ZYadMapRPos_CF::SetPosition(const std::string& iName)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMakeYadR
+#pragma mark * sYadR
 
-ZRef<ZYadR> sMakeYadR(CFTypeRef iVal)
+ZRef<ZYadR> sYadR(CFTypeRef iVal)
 	{
 	const ZVal_CF theVal = iVal;
 
@@ -167,49 +167,49 @@ ZRef<ZYadR> sMakeYadR(CFTypeRef iVal)
 		return new ZYadStreamRPos_CF(theQ.Get());
 
 	if (ZQ<ZRef<CFStringRef> > theQ = theVal.QGet<ZRef<CFStringRef> >())
-		return sMakeYadR(theQ.Get().Get());
+		return sYadR(theQ.Get().Get());
 
 	return new ZYadAtomR_CF(iVal);
 	}
 
-ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
-	{ return sMakeYadR(iVal.Get()); }
+ZRef<ZYadR> sYadR(const ZRef<CFTypeRef>& iVal)
+	{ return sYadR(iVal.Get()); }
 
-ZRef<ZYadStrimR> sMakeYadR(CFMutableStringRef iString)
+ZRef<ZYadStrimR> sYadR(CFMutableStringRef iString)
 	{ return new ZYadStrimR_CF(iString); }
 
-ZRef<ZYadStrimR> sMakeYadR(CFStringRef iString)
+ZRef<ZYadStrimR> sYadR(CFStringRef iString)
 	{ return new ZYadStrimR_CF(iString); }
 
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFStringRef>& iString)
-	{ return sMakeYadR(iString.Get()); }
+ZRef<ZYadStrimR> sYadR(const ZRef<CFStringRef>& iString)
+	{ return sYadR(iString.Get()); }
 
-ZRef<ZYadStreamR> sMakeYadR(CFMutableDataRef iData)
+ZRef<ZYadStreamR> sYadR(CFMutableDataRef iData)
 	{ return new ZYadStreamRPos_CF(iData); }
 
-ZRef<ZYadStreamR> sMakeYadR(CFDataRef iData)
+ZRef<ZYadStreamR> sYadR(CFDataRef iData)
 	{ return new ZYadStreamRPos_CF(iData); }
 
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData)
-	{ return sMakeYadR(iData.Get()); }
+ZRef<ZYadStreamR> sYadR(const ZRef<CFDataRef>& iData)
+	{ return sYadR(iData.Get()); }
 
-ZRef<ZYadSeqRPos> sMakeYadR(CFMutableArrayRef iArray)
+ZRef<ZYadSeqRPos> sYadR(CFMutableArrayRef iArray)
 	{ return new ZYadSeqRPos_CF(iArray); }
 
-ZRef<ZYadSeqRPos> sMakeYadR(CFArrayRef iArray)
+ZRef<ZYadSeqRPos> sYadR(CFArrayRef iArray)
 	{ return new ZYadSeqRPos_CF(iArray); }
 
-ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<CFArrayRef>& iArray)
-	{ return sMakeYadR(iArray.Get()); }
+ZRef<ZYadSeqRPos> sYadR(const ZRef<CFArrayRef>& iArray)
+	{ return sYadR(iArray.Get()); }
 
-ZRef<ZYadMapRPos> sMakeYadR(CFMutableDictionaryRef iDictionary)
+ZRef<ZYadMapRPos> sYadR(CFMutableDictionaryRef iDictionary)
 	{ return new ZYadMapRPos_CF(iDictionary); }
 
-ZRef<ZYadMapRPos> sMakeYadR(CFDictionaryRef iDictionary)
+ZRef<ZYadMapRPos> sYadR(CFDictionaryRef iDictionary)
 	{ return new ZYadMapRPos_CF(iDictionary); }
 
-ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary)
-	{ return sMakeYadR(iDictionary.Get()); }
+ZRef<ZYadMapRPos> sYadR(const ZRef<CFDictionaryRef>& iDictionary)
+	{ return sYadR(iDictionary.Get()); }
 
 // =================================================================================================
 #pragma mark -

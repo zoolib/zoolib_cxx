@@ -57,7 +57,7 @@ void Visitor::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	w << "Const(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
 	w << ",";
-	ZYad_ZooLibStrim::sToStrim(sMakeYadR(iExpr->GetVal()), w);
+	ZYad_ZooLibStrim::sToStrim(sYadR(iExpr->GetVal()), w);
 	w << ")";
 	}
 

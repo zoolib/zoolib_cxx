@@ -18,27 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCallFromCaller.h"
+#ifndef __ZCallFuture__
+#define __ZCallFuture__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZCallable.h"
+#include "zoolib/ZCallable_Bind.h"
+#include "zoolib/ZCallable_Function.h"
+#include "zoolib/ZFuture.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * CallFromCaller
+#pragma mark * CallFrom
 
-static void spCallFromCaller(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable_Void> iCallable)
+template <class T>
+void sCallFuture_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T(void)> > iCallable)
 	{
 	if (iCallable)
-		iCallable->Call();
-	iPromise->Set();
+		iPromise->Set(iCallable->Call());
 	}
 
-ZRef<ZFuture<void> > CallFromCaller(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable)
+template <class T>
+ZRef<ZFuture<T> > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable<T(void)> > iCallable)
 	{
-	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
+	ZRef<ZPromise<T> > thePromise = new ZPromise<T>;
 	if (iCaller)
-		iCaller->Call(BindL(thePromise, iCallable, MakeCallable(spCallFromCaller)));
+		iCaller->Call(sBindL(thePromise, iCallable, MakeCallable(sCallFuture_T<T>)));
 	return thePromise->Get();
 	}
 
+ZRef<ZFuture<void> > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
+
 } // namespace ZooLib
+
+#endif // __ZCallFuture__
