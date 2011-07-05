@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCaller.h"
+#include "zoolib/ZThread.h"
 
 namespace ZooLib {
 
@@ -32,7 +33,7 @@ namespace ZooLib {
 
 template <class T>
 void sCallOnNewThread(ZRef<ZCallable<T(void)> > iCallable)
-	{ ZThread::sCreate_T<ZRef<ZCallable_Caller> >(sCallIgnoreReturn<T>, iCallable); }
+	{ ZThread::sCreate_T<ZRef<ZCallable<T(void)> > >(sCallIgnoreReturn<T>, iCallable); }
 
 // =================================================================================================
 #pragma mark -

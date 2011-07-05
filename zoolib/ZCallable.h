@@ -322,7 +322,6 @@ template <class T>
 void sCallIgnoreReturn(ZRef<ZCallable<T(void)> > iCallable)
 	{ iCallable->Call(); }
 
-
 } // namespace ZooLib
 
 #endif // __ZCallable__
