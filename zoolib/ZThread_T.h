@@ -233,7 +233,7 @@ public:
 #pragma mark -
 #pragma mark * ZMtxR_T
 
-template <class Mtx, class Cnd, class ThreadID, ThreadID (*GetThreadIDProc)()>
+template <class Mtx, class Cnd, class ThreadID, ThreadID (*GetThreadIDProc)(void)>
 class ZMtxR_T : NonCopyable
 	{
 public:
