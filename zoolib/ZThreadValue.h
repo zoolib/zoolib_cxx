@@ -30,13 +30,13 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZThreadValue
 
-template <class T>
+template <class T, class Tag = T>
 class ZThreadValue
 	{
 public:
 	ZThreadValue(const T& iValue)
 	:	fValue(iValue)
-	,	fPrior((ZThreadValue*)(ZTSS::sGet(spKey())))
+	,	fPrior(spGet())
 		{ ZTSS::sSet(spKey(), this); }
 
 	~ZThreadValue()
@@ -49,12 +49,15 @@ public:
 		{ return fValue; }
 	
 	static T& sGetMutable()
-		{ return ((ZThreadValue*)(ZTSS::sGet(spKey())))->GetMutable(); }
+		{ return spGet()->GetMutable(); }
 
 	static const T& sGet()
-		{ return ((const ZThreadValue*)(ZTSS::sGet(spKey())))->Get(); }
+		{ return spGet()->Get(); }
 
 private:
+	static ZThreadValue* spGet()
+		{ return ((ZThreadValue*)(ZTSS::sGet(spKey()))); }
+
 	static ZTSS::Key& spKey()
 		{
 		// This method is a sneaky way to have static storage for a template class.
