@@ -39,8 +39,7 @@ SourceServer::SourceServer
 ,	fStreamerR(iStreamerR)
 ,	fStreamerW(iStreamerW)
 ,	fNeedsWrite(false)
-	{
-	}
+	{}
 
 SourceServer::~SourceServer()
 	{

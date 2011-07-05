@@ -40,8 +40,7 @@ Source_Client::Source_Client(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStre
 :	fStreamerR(iStreamerR)
 ,	fStreamerW(iStreamerW)
 ,	fNeedsWrite(false)
-	{
-	}
+	{}
 
 Source_Client::~Source_Client()
 	{}
