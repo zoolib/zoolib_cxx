@@ -4,7 +4,7 @@ http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge,Publish, distribute,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
 sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
 is furnished to do so, subject to the following conditions:
 
@@ -18,38 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCaller_CarbonEvent__
-#define __ZCaller_CarbonEvent__ 1
-#include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
-
-#include "zoolib/ZCaller_EventLoop.h"
+#include "zoolib/ZCaller_CarbonEvents.h"
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
+
+#include "zoolib/ZUtil_CarbonEvents.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCaller_CarbonEvent
+#pragma mark * ZCaller_CarbonEvents
 
-class ZCaller_CarbonEvent
-:	public ZCaller_EventLoop
+ZCaller_CarbonEvents::ZCaller_CarbonEvents()
+	{}
+
+ZCaller_CarbonEvents::~ZCaller_CarbonEvents()
+	{}
+
+void ZCaller_CarbonEvents::pTrigger()
 	{
-public:
-	ZCaller_CarbonEvent();
-	virtual ~ZCaller_CarbonEvent();
+	this->Retain();
+	ZUtil_CarbonEvents::sInvokeOnMainThread(true, spCallback, this);	
+	}
 
-protected:
-// From ZCaller_EventLoop
-	virtual void pTrigger();
-
-private:
-	void spCallback(void* iRefcon);
-	};
+void ZCaller_CarbonEvents::spCallback(void* iRefcon)
+	{
+	if (ZRef<ZCaller_CarbonEvents> theCaller = static_cast<ZCaller_CarbonEvents*>(iRefcon))
+		{
+		theCaller->Release();
+		theCaller->pCall();
+		}
+	}
 
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Carbon64)
-
-#endif // __ZCaller_CarbonEvent__
