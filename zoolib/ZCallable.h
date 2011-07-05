@@ -314,6 +314,15 @@ public:
 	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF) = 0;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCallIgnoreReturn
+
+template <class T>
+void sCallIgnoreReturn(ZRef<ZCallable<T(void)> > iCallable)
+	{ iCallable->Call(); }
+
+
 } // namespace ZooLib
 
 #endif // __ZCallable__

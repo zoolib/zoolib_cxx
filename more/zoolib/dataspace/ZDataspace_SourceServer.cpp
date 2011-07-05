@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCallAsync.h"
 #include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZCaller_Thread.h"
 #include "zoolib/ZWorker_Callable.h"
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/dataspace/ZDataspace_SourceServer.h"
@@ -60,7 +60,7 @@ void SourceServer::pCallback_Source(ZRef<Source> iSource)
 	if (!fNeedsWrite)
 		{
 		fNeedsWrite = true;
-		CallAsync(MakeCallable(MakeRef(this), &SourceServer::pWrite));
+		sCallOnNewThread(MakeCallable(MakeRef(this), &SourceServer::pWrite));
 		}
 	}
 

@@ -18,14 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallable_From__
-#define __ZCallable_From__ 1
+#ifndef __ZCallable_FromCaller__
+#define __ZCallable_FromCaller__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallFrom.h"
+#include "zoolib/ZCallFromCaller.h"
 
 namespace ZooLib {
-namespace ZCallable_From {
+namespace ZCallable_FromCaller {
 
 // =================================================================================================
 #pragma mark -
@@ -61,7 +61,7 @@ public:
 // From ZCallable
 	virtual R Call()
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			fCallable)->Get().DGet(fDefault);
 		}
 
@@ -91,7 +91,7 @@ public:
 // From ZCallable
 	virtual void Call()
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			fCallable)->Wait();
 		}
 
@@ -129,7 +129,7 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -160,7 +160,7 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, fCallable))->Wait();
 		}
 
@@ -198,7 +198,7 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -229,7 +229,7 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, fCallable))->Wait();
 		}
 
@@ -267,7 +267,7 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -298,7 +298,7 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, fCallable))->Wait();
 		}
 
@@ -336,7 +336,7 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -367,7 +367,7 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, fCallable))->Wait();
 		}
 
@@ -406,7 +406,7 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -438,7 +438,7 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, fCallable))->Wait();
 		}
 
@@ -477,7 +477,7 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -509,7 +509,7 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, fCallable))->Wait();
 		}
 
@@ -548,7 +548,7 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -580,7 +580,7 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, fCallable))->Wait();
 		}
 
@@ -619,7 +619,7 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -651,7 +651,7 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, fCallable))->Wait();
 		}
 
@@ -693,7 +693,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -728,7 +728,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, fCallable))->Wait();
 		}
 
@@ -770,7 +770,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -805,7 +805,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, fCallable))->Wait();
 		}
 
@@ -847,7 +847,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -882,7 +882,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, fCallable))->Wait();
 		}
 
@@ -924,7 +924,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, fCallable))->Get().DGet(fDefault);
 		}
 
@@ -959,7 +959,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, fCallable))->Wait();
 		}
 
@@ -1002,7 +1002,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7,
 			i8, i9, iA, iB, iC, fCallable))->Get().DGet(fDefault);
 		}
@@ -1039,7 +1039,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, fCallable))->Wait();
 		}
 
@@ -1082,7 +1082,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7,
 			i8, i9, iA, iB, iC, iD, fCallable))->Get().DGet(fDefault);
 		}
@@ -1119,7 +1119,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, fCallable))->Wait();
 		}
 
@@ -1162,7 +1162,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7,
 			i8, i9, iA, iB, iC, iD, iE, fCallable))->Get().DGet(fDefault);
 		}
@@ -1199,7 +1199,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, fCallable))->Wait();
 		}
 
@@ -1242,7 +1242,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		return CallFrom(fCaller,
+		return CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7,
 			i8, i9, iA, iB, iC, iD, iE, iF, fCallable))->Get().DGet(fDefault);
 		}
@@ -1279,7 +1279,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		CallFrom(fCaller,
+		CallFromCaller(fCaller,
 			BindL(i0, i1, i2, i3, i4, i5, i6, i7,
 			i8, i9, iA, iB, iC, iD, iE, iF, fCallable))->Wait();
 		}
@@ -1289,25 +1289,25 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
-} // namespace ZCallable_From
+} // namespace ZCallable_FromCaller
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * MakeCallable_From
+#pragma mark * MakeCallable_FromCaller
 
 template <class Signature>
 ZRef<ZCallable<Signature> >
-MakeCallable_From(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
-	{ return new ZCallable_From::Callable<Signature> (iCaller, iCallable); }
+MakeCallable_FromCaller(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	{ return new ZCallable_FromCaller::Callable<Signature> (iCaller, iCallable); }
 
 template <class Signature>
 ZRef<ZCallable<Signature> >
-MakeCallable_From
+MakeCallable_FromCaller
 	(ZRef<ZCaller> iCaller,
 	const typename ZCallable_Bind::ST_T<Signature>::R& iDefault,
 	ZRef<ZCallable<Signature> > iCallable)
-	{ return new ZCallable_From::Callable<Signature>(iCaller, iDefault, iCallable); }
+	{ return new ZCallable_FromCaller::Callable<Signature>(iCaller, iDefault, iCallable); }
 
 } // namespace ZooLib
 
-#endif // __ZCallable_From__
+#endif // __ZCallable_FromCaller__

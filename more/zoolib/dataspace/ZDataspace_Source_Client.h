@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
+#include "zoolib/ZWorker.h"
 #include "zoolib/dataspace/ZDataspace_Source.h"
 
 #include <map>

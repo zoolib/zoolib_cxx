@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCallAsync.h"
 #include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZCaller_Thread.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
@@ -131,7 +131,7 @@ void Source_Asyncify::pTrigger_Update()
 		return;
 
 	fTriggered_Update = true;
-	CallAsync(MakeCallable(MakeRef(this), &Source_Asyncify::pUpdate));
+	sCallOnNewThread(MakeCallable(MakeRef(this), &Source_Asyncify::pUpdate));
 	}
 
 void Source_Asyncify::pUpdate()

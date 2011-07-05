@@ -28,6 +28,14 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * sCallOnNewThread
+
+template <class T>
+void sCallOnNewThread(ZRef<ZCallable<T(void)> > iCallable)
+	{ ZThread::sCreate_T<ZRef<ZCallable_Caller> >(sCallIgnoreReturn<T>, iCallable); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZCaller_Thread
 
 class ZCaller_Thread

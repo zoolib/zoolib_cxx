@@ -25,17 +25,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Helpers (anonymous)
-
-namespace { // anonymous 
-
-void spRun(ZRef<ZCallable_Caller> iParam)
-	{ iParam->Call(); }
-
-} // anonymous  namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZCaller_Thread
 
 ZCaller_Thread::ZCaller_Thread()
@@ -45,6 +34,7 @@ ZCaller_Thread::~ZCaller_Thread()
 	{}
 
 void ZCaller_Thread::Queue(ZRef<ZCallable_Caller> iCallable)
-	{ ZThread::sCreate_T<ZRef<ZCallable_Caller> >(spRun, iCallable); }
+	{ sCallOnNewThread(iCallable); }
+
 
 } // namespace ZooLib

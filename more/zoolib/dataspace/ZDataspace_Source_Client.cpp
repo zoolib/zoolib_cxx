@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCallAsync.h"
 #include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZCaller_Thread.h"
 #include "zoolib/ZWorker_Callable.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
@@ -81,7 +81,7 @@ void Source_Client::ModifyRegistrations
 	if (!fNeedsWrite)
 		{
 		fNeedsWrite = true;
-		CallAsync(MakeCallable(MakeRef(this), &Source_Client::pWrite));
+		sCallOnNewThread(MakeCallable(MakeRef(this), &Source_Client::pWrite));
 		}
 	}
 
