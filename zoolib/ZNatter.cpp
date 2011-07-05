@@ -43,7 +43,7 @@ ZNatter::~ZNatter()
 
 ZQ<ZData_Any> ZNatter::Receive(ZRef<Exchange>* oExchange)
 	{
-	ZRef<Exchange> theExchange = new Exchange(this);
+	ZRef<Exchange> theExchange = this->MakeExchange();
 
 	ZGuardRMtxR guard(fMtxR_Structure);
 	const int64 theID = fNextLocalID;
@@ -81,18 +81,16 @@ ZQ<ZData_Any> ZNatter::Receive(ZRef<Exchange>* oExchange)
 	return this->pReadFor(guard, theExchange);
 	}
 
-void ZNatter::Send(ZData_Any iData)
-	{ (new Exchange(this))->SendReceive(iData); }
-
-void ZNatter::pAdd(Exchange* iExchange)
+ZRef<ZNatter::Exchange> ZNatter::MakeExchange()
 	{
-	// Be careful in here -- do *NOT* pulse iExchange's refcount.
-
 	ZGuardRMtxR guard(fMtxR_Structure);
+	ZRef<Exchange> theExchange = new Exchange;
 
-	iExchange->fNatter = this;
-	iExchange->fID = 0;
-	iExchange->fWaiting = false;
+	theExchange->fNatter = this;
+	theExchange->fID = 0;
+	theExchange->fWaiting = false;
+
+	return theExchange;
 	}
 
 void ZNatter::pRemove(Exchange* iExchange)
@@ -270,8 +268,8 @@ void ZNatter::pRead(ZGuardRMtxR& iGuard)
 #pragma mark -
 #pragma mark * ZNatter::Exchange
 
-ZNatter::Exchange::Exchange(ZRef<ZNatter> iNatter)
-	{ iNatter->pAdd(this); }
+ZNatter::Exchange::Exchange()
+	{}
 
 ZNatter::Exchange::~Exchange()
 	{ fNatter->pRemove(this); }

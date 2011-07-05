@@ -46,11 +46,11 @@ public:
 	virtual ~ZNatter();
 
 	ZQ<ZData_Any> Receive(ZRef<Exchange>* oExchange);
-	void Send(ZData_Any iData);
+
+	ZRef<Exchange> MakeExchange();
 
 private:
 	// Called by Exchange instances
-	void pAdd(Exchange* iExchange);
 	void pRemove(Exchange* iExchange);
 	ZQ<ZData_Any> pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData);
 
@@ -80,8 +80,10 @@ private:
 class ZNatter::Exchange
 :	public ZCounted
 	{
+private:
+	Exchange();
+
 public:
-	Exchange(ZRef<ZNatter> iNatter);
 	virtual ~Exchange();
 
 // Our protocol
