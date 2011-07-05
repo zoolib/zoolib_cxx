@@ -54,18 +54,6 @@ template <class T> struct VT<T&>
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallableBase
-
-template <class Signature_p>
-class ZCallableBase
-:	public ZCounted
-	{
-public:
-	typedef Signature_p Signature;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZCallable
 
 template <class Signature> class ZCallable;
@@ -76,9 +64,11 @@ template <class Signature> class ZCallable;
 
 template <class R>
 class ZCallable<R(void)>
-:	public ZCallableBase<R(void)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(void);
+
 	virtual R Call() = 0;
 	};
 
@@ -89,9 +79,11 @@ public:
 template <class R,
 	class P0>
 class ZCallable<R(P0)>
-:	public ZCallableBase<R(P0)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0);
+
 	virtual R Call(P0) = 0;
 	};
 
@@ -102,9 +94,11 @@ public:
 template <class R,
 	class P0, class P1>
 class ZCallable<R(P0,P1)>
-:	public ZCallableBase<R(P0,P1)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1);
+
 	virtual R Call(P0,P1) = 0;
 	};
 
@@ -115,9 +109,11 @@ public:
 template <class R,
 	class P0, class P1, class P2>
 class ZCallable<R(P0,P1,P2)>
-:	public ZCallableBase<R(P0,P1,P2)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2);
+
 	virtual R Call(P0,P1,P2) = 0;
 	};
 
@@ -128,9 +124,11 @@ public:
 template <class R,
 	class P0, class P1, class P2, class P3>
 class ZCallable<R(P0,P1,P2,P3)>
-:	public ZCallableBase<R(P0,P1,P2,P3)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3);
+
 	virtual R Call(P0,P1,P2,P3) = 0;
 	};
 
@@ -142,9 +140,11 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4>
 class ZCallable<R(P0,P1,P2,P3,P4)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4);
+
 	virtual R Call(P0,P1,P2,P3,P4) = 0;
 	};
 
@@ -156,9 +156,11 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
 class ZCallable<R(P0,P1,P2,P3,P4,P5)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4,P5)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4,P5);
+
 	virtual R Call(P0,P1,P2,P3,P4,P5) = 0;
 	};
 
@@ -170,9 +172,11 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4,P5,P6)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6);
+
 	virtual R Call(P0,P1,P2,P3,P4,P5,P6) = 0;
 	};
 
@@ -184,9 +188,11 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4,P5,P6,P7)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7);
+
 	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7) = 0;
 	};
 
@@ -199,9 +205,11 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8);
+
 	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8) = 0;
 	};
 
@@ -214,9 +222,11 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
+
 	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9) = 0;
 	};
 
@@ -229,9 +239,11 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
+
 	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA) = 0;
 	};
 
@@ -244,9 +256,11 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
+
 	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB) = 0;
 	};
 
@@ -260,9 +274,11 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
+
 	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC) = 0;
 	};
 
@@ -276,9 +292,11 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
+
 	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD) = 0;
 	};
 
@@ -292,9 +310,11 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
+
 	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE) = 0;
 	};
 
@@ -308,9 +328,11 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
-:	public ZCallableBase<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
+:	public ZCounted
 	{
 public:
+	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
+
 	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF) = 0;
 	};
 
@@ -324,7 +346,7 @@ T sCall(ZRef<ZCallable<T(void)> > iCallable)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCallIgnoreReturn
+#pragma mark * sCallReturnVoid
 
 template <class T>
 void sCallReturnVoid(ZRef<ZCallable<T(void)> > iCallable)
