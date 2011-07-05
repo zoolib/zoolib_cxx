@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCaller_Thread.h"
-#include "zoolib/ZThread.h"
 
 namespace ZooLib {
 
@@ -27,14 +26,7 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZCaller_Thread
 
-ZCaller_Thread::ZCaller_Thread()
-	{}
-
-ZCaller_Thread::~ZCaller_Thread()
-	{}
-
-void ZCaller_Thread::Queue(ZRef<ZCallable_Void> iCallable)
+void ZCaller_Thread::Call(ZRef<ZCallable_Void> iCallable)
 	{ sCallOnNewThread(iCallable); }
-
 
 } // namespace ZooLib

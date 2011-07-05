@@ -26,16 +26,18 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * CallFromCaller
 
-static void spCallFromCaller(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void(void)> > iCallable)
+static void spCallFromCaller(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable_Void> iCallable)
 	{
-	iCallable->Call();
+	if (iCallable)
+		iCallable->Call();
 	iPromise->Set();
 	}
 
-ZRef<ZFuture<void> > CallFromCaller(ZRef<ZCaller> iCaller, ZRef<ZCallable<void(void)> > iCallable)
+ZRef<ZFuture<void> > CallFromCaller(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable)
 	{
 	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
-	iCaller->Queue(BindL(thePromise, iCallable, MakeCallable(spCallFromCaller)));
+	if (iCaller)
+		iCaller->Call(BindL(thePromise, iCallable, MakeCallable(spCallFromCaller)));
 	return thePromise->Get();
 	}
 

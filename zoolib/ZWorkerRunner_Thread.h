@@ -50,6 +50,8 @@ public:
 	void Start();
 
 private:
+	void pWakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
+
 	void pRun();
 	static void spRun(ZRef<ZWorkerRunner_Thread> iParam);
 

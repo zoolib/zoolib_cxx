@@ -20,7 +20,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZWorkerRunner.h"
 
+/*
+If you get duplicate symbol errors when linking, check that you're not including both
+this file and ZWorkerRunner.cpp. The cpp file is what you should use in most circumstances,
+but if you're building for the older ObjC runtime (i.e Mac 32 bit, Cocotron) then it can
+be a good idea to use this file *instead* -- it guards against the unruly propogation of
+unhandled ObjC exceptions which bypass the C++ dtor chain.
+*/
+
 #if !defined(__OBJC2__)
+
+#include <Foundation/NSException.h>
 
 namespace ZooLib {
 

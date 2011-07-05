@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCaller_EventLoop__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCaller.h"
+#include "zoolib/ZCallable.h"
 #include "zoolib/ZThread.h"
 
 #include <vector>
@@ -41,7 +41,7 @@ public:
 	virtual ~ZCaller_EventLoop();
 
 // From ZCaller
-	virtual void Queue(ZRef<ZCallable_Void> iCallable);
+	virtual void Call(ZRef<ZCallable_Void> iCallable);
 
 protected:
 // Called by concrete subclass

@@ -356,8 +356,15 @@ void sCallReturnVoid(ZRef<ZCallable<T(void)> > iCallable)
 #pragma mark -
 #pragma mark * Useful typedefs
 
-typedef ZCallable<bool(void)> ZCallable_Bool;
 typedef ZCallable<void(void)> ZCallable_Void;
+
+typedef ZCallable<bool(void)> ZCallable_Bool;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCaller
+
+typedef ZCallable<void(ZRef<ZCallable_Void>)> ZCaller;
 
 } // namespace ZooLib
 

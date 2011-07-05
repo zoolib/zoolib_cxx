@@ -67,41 +67,13 @@ ZWorkerRunner_Thread::ZWorkerRunner_Thread(ZRef<ZWorker> iWorker)
 	{}
 
 void ZWorkerRunner_Thread::Wake(ZRef<ZWorker> iWorker)
-	{
-	ZAcqMtx acq(fMtx);
-	if (fWorker)
-		{
-		fNextWake = 0;
-		fCnd.Broadcast();
-		}
-	}
+	{ this->pWakeAt(iWorker, 0); }
 
 void ZWorkerRunner_Thread::WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
-	{
-	ZAcqMtx acq(fMtx);
-	if (fWorker)
-		{
-		if (fNextWake > iSystemTime)
-			{
-			fNextWake = iSystemTime;
-			fCnd.Broadcast();
-			}
-		}
-	}
+	{ this->pWakeAt(iWorker, iSystemTime); }
 
 void ZWorkerRunner_Thread::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
-	{
-	ZAcqMtx acq(fMtx);
-	if (fWorker)
-		{
-		ZTime newWake = ZTime::sSystem() + iInterval;
-		if (fNextWake > newWake)
-			{
-			fNextWake = newWake;
-			fCnd.Broadcast();
-			}
-		}
-	}
+	{ this->pWakeAt(iWorker, ZTime::sSystem() + iInterval); }
 
 bool ZWorkerRunner_Thread::IsAwake(ZRef<ZWorker> iWorker)
 	{
@@ -131,6 +103,19 @@ void ZWorkerRunner_Thread::Start()
 			fWorker.Clear();
 			ZWorkerRunner::pDetachWorker(theWorker);
 			throw;
+			}
+		}
+	}
+
+void ZWorkerRunner_Thread::pWakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
+	{
+	ZAcqMtx acq(fMtx);
+	if (fWorker)
+		{
+		if (fNextWake > iSystemTime)
+			{
+			fNextWake = iSystemTime;
+			fCnd.Broadcast();
 			}
 		}
 	}

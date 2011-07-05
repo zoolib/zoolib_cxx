@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZCaller.h"
+#include "zoolib/ZCallable.h"
 #include "zoolib/ZSafeSet.h"
 #include "zoolib/ZWorkerRunner.h"
 
@@ -59,18 +59,18 @@ public:
 	ZRef<ZCaller> GetCaller();
 
 private:
+	void pWakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
+
 	class Worker_Waker;
 	friend class Worker_Waker;
 
 	void pCallback();
-	bool pTriggerCallback();
-
-	void pWake(ZRef<ZWorker> iWorker, ZTime iSystemTime);
+	void pTrigger();
 
 	ZMtxR fMtx;
 	ZCnd fCnd;
 	ZRef<ZCaller> fCaller;
-	bool fCallbackTriggered;
+	bool fTriggered;
 	ZRef<Worker_Waker> fWorker_Waker;
 	ZRef<ZCallable_Void> fCallable_Callback;
 	std::map<ZRef<ZWorker>, ZTime> fWorkersMap;
