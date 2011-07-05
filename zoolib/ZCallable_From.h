@@ -61,13 +61,8 @@ public:
 // From ZCallable
 	virtual R Call()
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			fCallable);
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			fCallable)->Get().DGet(fDefault);
 		}
 
 private:
@@ -96,10 +91,8 @@ public:
 // From ZCallable
 	virtual void Call()
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			fCallable);
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			fCallable)->Wait();
 		}
 
 private:
@@ -136,13 +129,8 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -172,10 +160,8 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, fCallable))->Wait();
 		}
 
 private:
@@ -212,13 +198,8 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -248,10 +229,8 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, fCallable))->Wait();
 		}
 
 private:
@@ -288,13 +267,8 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -324,10 +298,8 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, fCallable))->Wait();
 		}
 
 private:
@@ -364,13 +336,8 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -400,10 +367,8 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, fCallable))->Wait();
 		}
 
 private:
@@ -441,13 +406,8 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -478,10 +438,8 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, fCallable))->Wait();
 		}
 
 private:
@@ -519,13 +477,8 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -556,10 +509,8 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, fCallable))->Wait();
 		}
 
 private:
@@ -597,13 +548,8 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -634,10 +580,8 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, fCallable))->Wait();
 		}
 
 private:
@@ -675,13 +619,8 @@ public:
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -712,10 +651,8 @@ public:
 // From ZCallable
 	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, fCallable))->Wait();
 		}
 
 private:
@@ -756,13 +693,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -796,10 +728,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, fCallable))->Wait();
 		}
 
 private:
@@ -840,13 +770,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -880,10 +805,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, fCallable))->Wait();
 		}
 
 private:
@@ -924,13 +847,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -964,10 +882,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, fCallable))->Wait();
 		}
 
 private:
@@ -1008,13 +924,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -1048,10 +959,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, fCallable))->Wait();
 		}
 
 private:
@@ -1093,13 +1002,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7,
+			i8, i9, iA, iB, iC, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -1134,10 +1039,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, fCallable))->Wait();
 		}
 
 private:
@@ -1179,13 +1082,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7,
+			i8, i9, iA, iB, iC, iD, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -1220,10 +1119,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, fCallable))->Wait();
 		}
 
 private:
@@ -1265,13 +1162,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7,
+			i8, i9, iA, iB, iC, iD, iE, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -1306,10 +1199,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, fCallable))->Wait();
 		}
 
 private:
@@ -1351,13 +1242,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		ZRef<ZFuture<R> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF, fCallable));
-
-		if (ZQ<R> theQ = theFuture->Get())
-			return theQ.Get();
-
-		return fDefault;
+		return CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7,
+			i8, i9, iA, iB, iC, iD, iE, iF, fCallable))->Get().DGet(fDefault);
 		}
 
 private:
@@ -1392,10 +1279,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		ZRef<ZFuture<void> > theFuture = CallFrom(fCaller,
-			BindL(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF, fCallable));
-
-		theFuture->Wait();
+		CallFrom(fCaller,
+			BindL(i0, i1, i2, i3, i4, i5, i6, i7,
+			i8, i9, iA, iB, iC, iD, iE, iF, fCallable))->Wait();
 		}
 
 private:
