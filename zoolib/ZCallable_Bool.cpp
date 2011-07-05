@@ -39,7 +39,7 @@ public:
 
 // From ZCallable
 	virtual bool Call()
-		{ return not fCallable->Call(); }
+		{ return not sCall(fCallable); }
 
 private:
 	const ZRef<ZCallable_Bool> fCallable;
@@ -58,7 +58,7 @@ public:
 
 // From ZCallable
 	virtual bool Call()
-		{ return f0->Call() && f1->Call(); }
+		{ return sCall(f0) && sCall(f1); }
 
 private:
 	const ZRef<ZCallable_Bool> f0;
@@ -78,7 +78,7 @@ public:
 
 // From ZCallable
 	virtual bool Call()
-		{ return f0->Call() || f1->Call(); }
+		{ return sCall(f0) || sCall(f1); }
 
 private:
 	const ZRef<ZCallable_Bool> f0;
@@ -98,7 +98,7 @@ public:
 
 // From ZCallable
 	virtual bool Call()
-		{ return f0->Call() ^ f1->Call(); }
+		{ return sCall(f0) ^ sCall(f1); }
 
 private:
 	const ZRef<ZCallable_Bool> f0;
@@ -129,7 +129,8 @@ MakeCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 ZRef<ZCallable_Bool> MakeCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return new Callable_Or(i0, i1); }
 
-ZRef<ZCallable_Bool> MakeCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+ZRef<ZCallable_Bool> MakeCallable_Xor
+	(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return new Callable_Xor(i0, i1); }
 
 // =================================================================================================
@@ -178,5 +179,12 @@ ZRef<ZCallable_Bool> operator^(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCalla
 
 ZRef<ZCallable_Bool>& operator^=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1)
 	{ return io0 = io0 ^ i1; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall
+
+bool sCall(const ZRef<ZCallable_Bool>& iCallable)
+	{ return iCallable && iCallable->Call(); }
 
 } // namespace ZooLib

@@ -32,19 +32,22 @@ class Callable_While
 :	public ZCallable<void(void)>
 	{
 public:
-	Callable_While(const ZRef<ZCallable_Bool >& iCallable)
+	Callable_While(const ZRef<ZCallable_Bool>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
 // From ZCallable
 	virtual void Call()
 		{
-		while (fCallable->Call())
-			{}
+		if (fCallable)
+			{
+			while (fCallable->Call())
+				{}
+			}
 		}
 
 private:
-	const ZRef<ZCallable_Bool > fCallable;
+	const ZRef<ZCallable_Bool> fCallable;
 	};
 
 } // anonymous namespace
@@ -53,10 +56,10 @@ private:
 #pragma mark -
 #pragma mark * Makers
 
-ZRef<ZCallable<void(void)> > MakeCallable_While(const ZRef<ZCallable_Bool >& iCallable)
+ZRef<ZCallable<void(void)> > MakeCallable_While(const ZRef<ZCallable_Bool>& iCallable)
 	{ return new Callable_While(iCallable); }
 
-ZRef<ZCallable<void(void)> > While(const ZRef<ZCallable_Bool >& iCallable)
+ZRef<ZCallable<void(void)> > While(const ZRef<ZCallable_Bool>& iCallable)
 	{ return new Callable_While(iCallable); }
 
 } // namespace ZooLib

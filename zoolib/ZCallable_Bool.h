@@ -79,6 +79,12 @@ ZRef<ZCallable_Bool> operator^(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCalla
 
 ZRef<ZCallable_Bool>& operator^=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1);
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall
+
+bool sCall(const ZRef<ZCallable_Bool>& iCallable);
+
 } // namespace ZooLib
 
 #endif // __ZCallable_Bool__
