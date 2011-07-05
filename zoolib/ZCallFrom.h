@@ -34,18 +34,18 @@ namespace ZooLib {
 #pragma mark * CallFrom
 
 template <class T>
-void sCallFrom_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T()> > iCallable)
+void sCallFrom_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T(void)> > iCallable)
 	{ iPromise->Set(iCallable->Call()); }
 
 template <class T>
-ZRef<ZFuture<T> > CallFrom(ZRef<ZCaller> iCaller, ZRef<ZCallable<T()> > iCallable)
+ZRef<ZFuture<T> > CallFrom(ZRef<ZCaller> iCaller, ZRef<ZCallable<T(void)> > iCallable)
 	{
 	ZRef<ZPromise<T> > thePromise = new ZPromise<T>;
 	iCaller->Queue(BindL(thePromise, iCallable, MakeCallable(sCallFrom_T<T>)));
 	return thePromise->Get();
 	}
 
-ZRef<ZFuture<void> > CallFrom(ZRef<ZCaller> iCaller, ZRef<ZCallable<void()> > iCallable);
+ZRef<ZFuture<void> > CallFrom(ZRef<ZCaller> iCaller, ZRef<ZCallable<void(void)> > iCallable);
 
 } // namespace ZooLib
 

@@ -43,8 +43,8 @@ template <class Signature> class Callable;
 #pragma mark * Callable (specialization for 0 params)
 
 template <class R>
-class Callable<R()>
-:	public ZCallable<R()>
+class Callable<R(void)>
+:	public ZCallable<R(void)>
 	{
 public:
 	typedef R (^BlockPtr_t)();
@@ -543,9 +543,9 @@ private:
 
 template <class R
 	>
-ZRef<ZCallable<R()> >
+ZRef<ZCallable<R(void)> >
 MakeCallable(R (^iBlockPtr)())
-	{ return new Callable<R()>(iBlockPtr); }
+	{ return new Callable<R(void)>(iBlockPtr); }
 
 template <class R,
 	class P0>
@@ -676,7 +676,7 @@ MakeCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
 // Only variant usable before clang 2.0
 
 class Callable
-:	public ZCallable<void()>
+:	public ZCallable<void(void)>
 	{
 public:
 	typedef void (^BlockPtr_t)();
@@ -697,7 +697,7 @@ private:
 	};
 
 inline
-ZRef<ZCallable<void()> >
+ZRef<ZCallable<void(void)> >
 MakeCallable(void (^iBlockPtr)())
 	{ return new Callable(iBlockPtr); }
 

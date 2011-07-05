@@ -45,8 +45,6 @@ public:
 // From ZCaller
 	virtual void Queue(ZRef<ZCallable_Caller> iCallable);
 
-	class Registration;
-
 protected:
 // Called by concrete subclass
 	void pCall();
@@ -58,15 +56,6 @@ private:
 	ZMtx fMtx;
 	bool fTriggered;
 	std::vector<ZRef<ZCallable_Caller> > fCallables;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCaller_EventLoop
-
-class ZCaller_EventLoop::Registration
-	{
-public:
 	};
 
 } // namespace ZooLib

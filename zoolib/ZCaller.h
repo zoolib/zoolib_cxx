@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-typedef ZCallable<void()> ZCallable_Caller;
+typedef ZCallable<void(void)> ZCallable_Caller;
 
 // =================================================================================================
 #pragma mark -

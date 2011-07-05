@@ -32,7 +32,7 @@ namespace ZooLib {
 
 template <class R>
 class ZCallable_Const
-:	public ZCallable<R()>
+:	public ZCallable<R(void)>
 	{
 public:
 	typedef typename ZCallableUtil::VT<R>::P Param_t;
@@ -55,7 +55,7 @@ private:
 #pragma mark * MakeCallable_Const
 
 template <class R>
-ZRef<ZCallable<R()> > MakeCallable_Const(R iR)
+ZRef<ZCallable<R(void)> > MakeCallable_Const(R iR)
 	{ return new ZCallable_Const<R>(iR); }
 
 } // namespace ZooLib

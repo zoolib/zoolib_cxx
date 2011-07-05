@@ -32,7 +32,7 @@ namespace ZooLib {
 #pragma mark * CallAsync
 
 template <class T>
-ZRef<ZFuture<T> > CallAsync(ZRef<ZCallable<T()> > iCallable)
+ZRef<ZFuture<T> > CallAsync(ZRef<ZCallable<T(void)> > iCallable)
 	{ return CallFrom(new ZCaller_Thread, iCallable); }
 
 } // namespace ZooLib
