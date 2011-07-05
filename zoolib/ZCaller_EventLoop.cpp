@@ -35,7 +35,7 @@ ZCaller_EventLoop::ZCaller_EventLoop()
 ZCaller_EventLoop::~ZCaller_EventLoop()
 	{}
 
-void ZCaller_EventLoop::Queue(ZRef<ZCallable_Caller> iCallable)
+void ZCaller_EventLoop::Queue(ZRef<ZCallable_Void> iCallable)
 	{
 	ZAcqMtx acq(fMtx);
 	fCallables.push_back(iCallable);
@@ -50,11 +50,11 @@ void ZCaller_EventLoop::pCall()
 	{
 	ZGuardRMtx guard(fMtx);
 	fTriggered = false;
-	vector<ZRef<ZCallable_Caller> > theCallables;
+	vector<ZRef<ZCallable_Void> > theCallables;
 	theCallables.swap(fCallables);
 	guard.Release();
 
-	for (vector<ZRef<ZCallable_Caller> >::iterator iter = theCallables.begin();
+	for (vector<ZRef<ZCallable_Void> >::iterator iter = theCallables.begin();
 		iter != theCallables.end(); ++iter)
 		{ (*iter)->Call(); }
 	}

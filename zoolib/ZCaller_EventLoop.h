@@ -36,14 +36,12 @@ namespace ZooLib {
 class ZCaller_EventLoop
 :	public ZCaller
 	{
-protected:
-	ZCaller_EventLoop();
-
 public:
+	ZCaller_EventLoop();
 	virtual ~ZCaller_EventLoop();
 
 // From ZCaller
-	virtual void Queue(ZRef<ZCallable_Caller> iCallable);
+	virtual void Queue(ZRef<ZCallable_Void> iCallable);
 
 protected:
 // Called by concrete subclass
@@ -55,7 +53,7 @@ protected:
 private:
 	ZMtx fMtx;
 	bool fTriggered;
-	std::vector<ZRef<ZCallable_Caller> > fCallables;
+	std::vector<ZRef<ZCallable_Void> > fCallables;
 	};
 
 } // namespace ZooLib

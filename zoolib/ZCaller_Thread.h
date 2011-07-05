@@ -47,7 +47,7 @@ public:
 	virtual ~ZCaller_Thread();
 
 // From ZCaller
-	virtual void Queue(ZRef<ZCallable_Caller> iCallable);
+	virtual void Queue(ZRef<ZCallable_Void> iCallable);
 	};
 
 } // namespace ZooLib

@@ -33,7 +33,7 @@ ZCaller_Thread::ZCaller_Thread()
 ZCaller_Thread::~ZCaller_Thread()
 	{}
 
-void ZCaller_Thread::Queue(ZRef<ZCallable_Caller> iCallable)
+void ZCaller_Thread::Queue(ZRef<ZCallable_Void> iCallable)
 	{ sCallOnNewThread(iCallable); }
 
 

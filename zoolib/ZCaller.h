@@ -28,24 +28,16 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Caller
-
-typedef ZCallable<void(void)> ZCallable_Caller;
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZCaller
 
 class ZCaller
 :	public ZCounted
 	{
-protected:
-	ZCaller();
-
 public:
+	ZCaller();
 	virtual ~ZCaller();
 
-	virtual void Queue(ZRef<ZCallable_Caller> iCallable) = 0;
+	virtual void Queue(ZRef<ZCallable_Void> iCallable) = 0;
 	};
 
 } // namespace ZooLib
