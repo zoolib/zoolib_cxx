@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZUtil_Strim_Data.h"
+#include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ZVal_CF.h"
 
 #include <IOKit/IOMessage.h>
@@ -122,8 +123,8 @@ void ZUSBWatcher::pDeviceAdded(io_iterator_t iIterator)
 	{
 	for (io_service_t iter; (iter = ::IOIteratorNext(iIterator)); /*no inc*/)
 		{
-		if (ZLOG(s, eInfo, "ZUSBWatcher"))
-			s.Writef("Device added, iterator: 0x%08x.", iter);
+		if (ZLOGPF(s, eInfo))
+			s << "iterator: " << iter;
 
 		try
 			{
@@ -133,7 +134,7 @@ void ZUSBWatcher::pDeviceAdded(io_iterator_t iIterator)
 			}
 		catch (exception& ex)
 			{
-			if (ZLOG(s, eInfo, "ZUSBWatcher"))
+			if (ZLOGPF(s, eInfo))
 				s << "Couldn't instantiate ZUSBDevice, caught exception: " << ex.what();
 
 			if (ZRef<CB_DeviceAttached> theCallable = fCallable)
@@ -163,8 +164,8 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 		fIOUSBDeviceInterface = spCreate_USBDeviceInterface(iUSBDevice);
 		if (!fIOUSBDeviceInterface)
 			{
-			if (ZLOG(s, eDebug, "ZUSBDevice"))
-				s.Writef("sCreate_USBDeviceInterface returned null");
+			if (ZLOGPF(s, eDebug))
+				s << "sCreate_USBDeviceInterface returned null";
 			throw runtime_error("Couldn't create fIOUSBDeviceInterface");
 			}
 
@@ -181,8 +182,8 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 
 		if (result)
 			{
-			if (ZLOG(s, eInfo, "ZUSBDevice"))
-				s.Writef("ZUSBDevice, USBDeviceOpen failed: %d", result);
+			if (ZLOGPF(s, eInfo))
+				s << "USBDeviceOpen failed: " << result;
 			throw runtime_error("ZUSBDevice, USBDeviceOpen failed");
 			}
 
@@ -192,8 +193,8 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 
 		if (!numConf)
 			{
-			if (ZLOG(s, eDebug, "ZUSBDevice"))
-				s.Writef("Got zero configurations");
+			if (ZLOGPF(s, eDebug))
+				s << "Got zero configurations";
 			throw runtime_error("Got zero configurations");
 			}
 
@@ -269,9 +270,7 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface
 	io_iterator_t iterator;
 	if (kIOReturnSuccess != fIOUSBDeviceInterface[0]->CreateInterfaceIterator
 		(fIOUSBDeviceInterface, &request, &iterator))
-		{
-		iterator = 0;
-		}
+		{ iterator = 0; }
 
 	while (iterator)
 		{
@@ -285,13 +284,11 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface
 
 		SInt32 score;
 		IOCFPlugInInterface** plugInInterface;
-		if (kIOReturnSuccess != ::IOCreatePlugInInterfaceForService(usbInterface,
-			kIOUSBInterfaceUserClientTypeID,
-			kIOCFPlugInInterfaceID,
+		if (kIOReturnSuccess != ::IOCreatePlugInInterfaceForService
+			(usbInterface, kIOUSBInterfaceUserClientTypeID, kIOCFPlugInInterfaceID,
 			&plugInInterface, &score))
-			{
-			plugInInterface = nullptr;
-			}
+			{ plugInInterface = nullptr; }
+
 		::IOObjectRelease(usbInterface);
 
 		if (plugInInterface)
@@ -314,8 +311,8 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface
 					{
 					if (protocol == iProtocol)
 						{
-						if (kIOReturnSuccess == theIOUSBInterfaceInterface[0]->
-							USBInterfaceOpen(theIOUSBInterfaceInterface))
+						if (kIOReturnSuccess == theIOUSBInterfaceInterface[0]->USBInterfaceOpen
+							(theIOUSBInterfaceInterface))
 							{
 							::IOObjectRelease(iterator);
 							return new ZUSBInterfaceInterface(this,
@@ -335,8 +332,8 @@ void ZUSBDevice::pDeviceNotification
 	{
 	if (iMessageType == kIOMessageServiceIsTerminated)
 		{
-		if (ZLOG(s, eInfo, "ZUSBDevice"))
-			s.Writef("Device removed, service: 0x%08x.", iService);
+		if (ZLOGPF(s, eInfo))
+			s << "Device removed, service: " << iService;
 
 		fDetached = true;
 		if (ZRef<CB_DeviceDetached> theCallable = fCallable)
@@ -497,7 +494,7 @@ bool StreamerR_TO::pRefill(double iTimeout)
 	if (kIOUSBTransactionTimeout == result)
 		{
 		fII[0]->ClearPipeStallBothEnds(fII, fPipeRefR);
-		if (ZLOG(s, eDebug + 2, "StreamerR_TO"))
+		if (ZLOGPF(s, eDebug + 2))
 			{
 			s << "pRefill, Timeout";
 			}
@@ -505,9 +502,9 @@ bool StreamerR_TO::pRefill(double iTimeout)
 		}
 	else if (0 == result)
 		{
-		if (ZLOG(s, eDebug + 2, "StreamerR_TO"))
+		if (ZLOGPF(s, eDebug + 2))
 			{
-			s.Writef("pRefill, pipe: %d, ", fPipeRefR);
+			s << "pipe: "<< fPipeRefR << ", ";
 			ZUtil_Strim_Data::sDumpData(s, fBuffer, localCount);
 			}
 		fEnd = localCount;
@@ -515,7 +512,7 @@ bool StreamerR_TO::pRefill(double iTimeout)
 		}
 	else
 		{
-		if (ZLOG(s, eDebug, "StreamerR_TO"))
+		if (ZLOGPF(s, eDebug))
 			{
 			s << "pRefill, Got result: " << spErrorAsString(result);
 			}
@@ -728,9 +725,9 @@ void StreamerW::Imp_Write
 //	if (size_t countToWrite = min(size_t(1024), iCount))
 	if (size_t countToWrite = iCount)
 		{
-		if (ZLOG(s, eDebug + 2, "ZUSBInterfaceInterface::StreamerW"))
+		if (ZLOGPF(s, eDebug + 2))
 			{
-			s.Writef("Imp_Write, pipe: %d, ", fPipeRefW);
+			s << "Imp_Write, pipe: " << fPipeRefW << ", ";
 			ZUtil_Strim_Data::sDumpData(s, iSource, countToWrite);
 			}
 
