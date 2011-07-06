@@ -375,7 +375,8 @@ class ZCaller_Null
 	{
 public:
 // From ZCaller
-	virtual void Call(ZRef<ZCallable_Void> iCallable);
+	virtual void Call(ZRef<ZCallable_Void> iCallable)
+		{ iCallable->Call(); }
 	};
 
 } // namespace ZooLib
