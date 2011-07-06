@@ -36,10 +36,6 @@ namespace ZooLib {
 class ZCaller_CarbonEvents
 :	public ZCaller_EventLoop
 	{
-public:
-	ZCaller_CarbonEvents();
-	virtual ~ZCaller_CarbonEvents();
-
 protected:
 // From ZCaller_EventLoop
 	virtual void pTrigger();

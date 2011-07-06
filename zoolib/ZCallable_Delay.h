@@ -59,6 +59,11 @@ private:
 	const ZRef<ZCallable<R(void)> > fCallable;
 	};
 
+template <class R>
+ZRef<ZCallable<R(void)> >
+sCallable_DelayFor(double iTimeout, ZRef<ZCallable<R(void)> > iCallable)
+	{ return new ZCallable_DelayFor<R>(iTimeout, iCallable); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCallable_DelayUntil
@@ -89,15 +94,6 @@ private:
 	const ZTime fDeadline;
 	const ZRef<ZCallable<R(void)> > fCallable;
 	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * sCallable_Delay
-
-template <class R>
-ZRef<ZCallable<R(void)> >
-sCallable_DelayFor(double iTimeout, ZRef<ZCallable<R(void)> > iCallable)
-	{ return new ZCallable_DelayFor<R>(iTimeout, iCallable); }
 
 template <class R>
 ZRef<ZCallable<R(void)> >

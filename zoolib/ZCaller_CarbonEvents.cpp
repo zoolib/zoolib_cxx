@@ -30,12 +30,6 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZCaller_CarbonEvents
 
-ZCaller_CarbonEvents::ZCaller_CarbonEvents()
-	{}
-
-ZCaller_CarbonEvents::~ZCaller_CarbonEvents()
-	{}
-
 void ZCaller_CarbonEvents::pTrigger()
 	{
 	this->Retain();

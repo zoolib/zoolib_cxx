@@ -41,6 +41,7 @@ ZCaller_WinMessageLoop::~ZCaller_WinMessageLoop()
 void ZCaller_WinMessageLoop::Initialize()
 	{
 	ZCaller_EventLoop::Initialize();
+
 	fHWND = ZWinWND::sCreate
 		(nullptr, sCallable(MakeWeakRef(this), &ZCaller_WinMessageLoop::pWindowProc));
 	}
@@ -49,6 +50,7 @@ void ZCaller_WinMessageLoop::Finalize()
 	{
 	if (fHWND)
 		::DestroyWindow(fHWND);
+
 	ZCaller_EventLoop::Finalize();
 	}
 
