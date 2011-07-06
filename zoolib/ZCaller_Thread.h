@@ -44,7 +44,8 @@ class ZCaller_Thread
 	{
 public:
 // From ZCaller
-	virtual void Call(ZRef<ZCallable_Void> iCallable);
+	virtual void Call(ZRef<ZCallable_Void> iCallable)
+		{ sCallOnNewThread(iCallable); }
 	};
 
 } // namespace ZooLib
