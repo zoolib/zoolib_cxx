@@ -31,7 +31,7 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * CallFrom
+#pragma mark * sCallFuture
 
 template <class T>
 void sCallFuture_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T(void)> > iCallable)
@@ -49,7 +49,22 @@ ZRef<ZFuture<T> > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable<T(void)> > i
 	return thePromise->Get();
 	}
 
-ZRef<ZFuture<void> > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
+inline
+void sCallFutureVoid(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void(void)> > iCallable)
+	{
+	if (iCallable)
+		iCallable->Call();
+	iPromise->Set();
+	}
+
+inline
+ZRef<ZFuture<void> > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable<void(void)> > iCallable)
+	{
+	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
+	if (iCaller)
+		iCaller->Call(sBindR(sCallable(sCallFutureVoid), thePromise, iCallable));
+	return thePromise->Get();
+	}
 
 } // namespace ZooLib
 
