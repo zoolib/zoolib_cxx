@@ -34,25 +34,70 @@ template <class T, class Tag = T>
 class ZThreadValue
 	{
 public:
-	ZThreadValue(const T& iValue)
-	:	fValue(iValue)
+	ZThreadValue()
+	:	fValue(T())
+	,	fPrior(spGet())
+		{ ZTSS::sSet(spKey(), this); }
+
+	ZThreadValue(const ZThreadValue& iOther)
+	:	fValue(iOther.fValue)
 	,	fPrior(spGet())
 		{ ZTSS::sSet(spKey(), this); }
 
 	~ZThreadValue()
 		{ ZTSS::sSet(spKey(), fPrior); }
 
+	ZThreadValue& operator=(const ZThreadValue& iOther)
+		{
+		fValue = iOther.fValue;
+		return *this;
+		}
+
+	ZThreadValue(const T& iValue)
+	:	fValue(iValue)
+	,	fPrior(spGet())
+		{ ZTSS::sSet(spKey(), this); }
+
+	ZThreadValue& operator=(const T& iValue)
+		{
+		fValue = iValue;
+		return *this;
+		}
+
 	T& GetMutable()
 		{ return fValue; }
 
 	const T& Get() const
 		{ return fValue; }
-	
+
+	void Set(const T& iValue) const
+		{ fValue = iValue; }
+
+	//--
+
 	static T& sGetMutable()
 		{ return spGet()->GetMutable(); }
 
-	static const T& sGet()
-		{ return spGet()->Get(); }
+	static ZQ<T> sQGet()
+		{
+		if (ZThreadValue* theTV = spGet())
+			return theTV->Get();
+		return null;
+		}
+
+	static T sDGet(const T& iDefault)
+		{
+		if (ZThreadValue* theTV = spGet())
+			return theTV->Get();
+		return iDefault;
+		}
+
+	static T sGet()
+		{
+		if (ZThreadValue* theTV = spGet())
+			return theTV->Get();
+		return T();
+		}
 
 private:
 	static ZThreadValue* spGet()
