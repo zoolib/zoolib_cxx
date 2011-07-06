@@ -53,7 +53,8 @@ protected:
 private:
 	ZMtx fMtx;
 	bool fTriggered;
-	std::vector<ZRef<ZCallable_Void> > fCallables;
+	std::vector<ZRef<ZCallable_Void> > fCallables_Pending;
+	std::vector<ZRef<ZCallable_Void> > fCallables_Calling;
 	};
 
 } // namespace ZooLib
