@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZServer.h"
-#include "zoolib/ZStreamerListener.h"
 
 namespace ZooLib {
 
@@ -30,31 +29,49 @@ namespace ZooLib {
 #pragma mark * ZServer::StreamerListener
 
 class ZServer::StreamerListener
-:	public ZStreamerListener
+:	public ZWorker
 	{
 public:
-	StreamerListener(ZRef<ZServer> iServer, ZRef<ZStreamerRWFactory> iFactory);
-	virtual ~StreamerListener();
+	StreamerListener(ZRef<ZServer> iServer, ZRef<ZStreamerRWFactory> iFactory)
+	:	fFactory(iFactory)
+	,	fServer(iServer)
+		{}
 
-// From ZStreamerListener
-	virtual bool Connected(ZRef<ZStreamerRW> iStreamer);
+	virtual ~StreamerListener()
+		{}
+
+// From ZWorker
+	void RunnerDetached()
+		{
+		ZWorker::RunnerDetached();
+
+		fServer->pListenerFinished(this);
+		}
+
+	bool Work()
+		{
+		ZWorker::Wake();
+		if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+			{
+			fServer->pConnected(theFactory->MakeStreamerRW());
+			return true;
+			}
+		return false;
+		}
+
+	void Kill()
+		{
+		if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+			{
+			fFactory = null;
+			theFactory->Cancel();
+			}
+		ZWorker::Wake();
+		}
+
 	ZRef<ZServer> fServer;
+	ZSafe<ZRef<ZStreamerRWFactory> > fFactory;
 	};
-
-ZServer::StreamerListener::StreamerListener
-	(ZRef<ZServer> iServer, ZRef<ZStreamerRWFactory> iFactory)
-:	ZStreamerListener(iFactory)
-,	fServer(iServer)
-	{}
-
-ZServer::StreamerListener::~StreamerListener()
-	{}
-
-bool ZServer::StreamerListener::Connected(ZRef<ZStreamerRW> iStreamerRW)
-	{
-	fServer->pConnected(iStreamerRW);
-	return true;
-	}
 
 // =================================================================================================
 #pragma mark -
@@ -87,9 +104,6 @@ void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
 	ZAssert(iFactory);
 
 	fStreamerListener = new StreamerListener(this, iFactory);
-	fStreamerListener->GetSetCallable_Detached
-		(sCallable(sWeakRef(this), &ZServer::pListenerFinished));
-
 	sStartWorkerRunner(fStreamerListener);
 	}
 
@@ -136,7 +150,7 @@ ZRef<ZStreamerRWFactory> ZServer::GetFactory()
 	{
 	ZAcqMtx acq(fMtx);
 	if (ZRef<StreamerListener> theStreamerListener = fStreamerListener)
-		return theStreamerListener->GetFactory();
+		return theStreamerListener->fFactory;
 	return null;
 	}
 
