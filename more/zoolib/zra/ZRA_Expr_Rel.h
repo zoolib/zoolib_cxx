@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZExpr.h"
 #include "zoolib/ZSafe.h"
+#include "zoolib/ZThreadValue.h"
 #include "zoolib/ZUnicodeString.h"
 
 #include "zoolib/zra/ZRA_RelHead.h"
@@ -52,9 +53,7 @@ protected:
 class SemanticError : public std::runtime_error
 	{
 public:
-	SemanticError(const string8& iMessage)
-	:	runtime_error(iMessage)
-		{}
+	SemanticError(const string8& iMessage);
 	};
 
 typedef ZCallable<void(const string8& iMessage)> Callable_SemanticError;
@@ -65,16 +64,7 @@ extern ZSafe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default;
 
 void sSemanticError(const string8& iMessage);
 
-class SetRestore_SemanticError
-	{
-public:
-	SetRestore_SemanticError(const ZRef<Callable_SemanticError>& iCallable);
-	~SetRestore_SemanticError();
-
-private:
-	ZRef<Callable_SemanticError> fCallable;
-	ZRef<Callable_SemanticError> fPrior;
-	};
+typedef ZThreadValue<ZRef<Callable_SemanticError> > ThreadValue_SemanticError;
 
 } // namespace ZRA
 } // namespace ZooLib
