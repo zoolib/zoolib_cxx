@@ -50,7 +50,7 @@ ZRef<ZFuture<T> > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable<T(void)> > i
 	}
 
 inline
-void sCallFutureVoid(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void(void)> > iCallable)
+void sCallFuture_Void(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void(void)> > iCallable)
 	{
 	if (iCallable)
 		iCallable->Call();
@@ -62,7 +62,7 @@ ZRef<ZFuture<void> > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable<void(void
 	{
 	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
 	if (iCaller)
-		iCaller->Call(sBindR(sCallable(sCallFutureVoid), thePromise, iCallable));
+		iCaller->Call(sBindR(sCallable(sCallFuture_Void), thePromise, iCallable));
 	return thePromise->Get();
 	}
 
