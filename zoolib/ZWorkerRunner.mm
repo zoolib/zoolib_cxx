@@ -48,8 +48,7 @@ bool ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 	NS_DURING
 	try
 		{
-		if (ZRef<ZWorker::Callable_Attached_t> theCallable = iWorker->fCallable_Attached)
-			theCallable->Call(iWorker);
+		sCall(iWorker->fCallable_Attached.Get(), iWorker);
 
 		NS_DURING
 		try
@@ -65,8 +64,7 @@ bool ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 		NS_DURING
 		try
 			{
-			if (ZRef<ZWorker::Callable_Detached_t> theCallable = iWorker->fCallable_Detached)
-				theCallable->Call(iWorker);
+			sCall(iWorker->fCallable_Detached.Get(), iWorker);
 			}
 		catch (...)
 			{}
@@ -100,8 +98,7 @@ void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
 	NS_DURING
 	try
 		{
-		if (ZRef<ZWorker::Callable_Detached_t> theCallable = iWorker->fCallable_Detached)
-			theCallable->Call(iWorker);
+		sCall(iWorker->fCallable_Detached.Get(), iWorker);
 		}
 	catch (...)
 		{}

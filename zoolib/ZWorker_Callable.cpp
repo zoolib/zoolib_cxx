@@ -34,11 +34,7 @@ ZWorker_Callable::~ZWorker_Callable()
 	{}
 
 bool ZWorker_Callable::Work()
-	{
-	if (ZRef<Callable_t> theCallable = fCallable)
-		return fCallable->Call(this);
-	return false;
-	}
+	{ return sCall(fCallable, this); }
 
 ZRef<ZWorker> sWorker(ZRef<ZWorker_Callable::Callable_t> iCallable)
 	{ return new ZWorker_Callable(iCallable); }
