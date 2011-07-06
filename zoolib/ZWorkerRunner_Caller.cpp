@@ -150,9 +150,6 @@ void ZWorkerRunner_Caller::pWakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
 
 void ZWorkerRunner_Caller::pCallback()
 	{
-	// Not all subclasses invoke this through a ZRef, so ensure our reference remains valid.
-	ZRef<ZWorkerRunner_Caller> self = this;
-
 	ZGuardRMtxR guard(fMtx);
 	fTriggered = false;
 	guard.Release();
