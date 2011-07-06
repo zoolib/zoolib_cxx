@@ -289,9 +289,13 @@ ZRef<ZCallable_Void> sWhile
 	(const ZRef<ZCallable_Bool>& iCondition, const ZRef<ZCallable<R(void)> >& iCallable)
 	{ return new ZCallable_While<R>(iCondition, iCallable); }
 
-ZRef<ZCallable_Void> sCallable_While(const ZRef<ZCallable_Bool>& iCallable);
+inline
+ZRef<ZCallable<void(void)> > sCallable_While(const ZRef<ZCallable_Bool>& iCallable)
+	{ return new ZCallable_While<void>(iCallable, null); }
 
-ZRef<ZCallable_Void> sWhile(const ZRef<ZCallable_Bool>& iCallable);
+inline
+ZRef<ZCallable<void(void)> > sWhile(const ZRef<ZCallable_Bool>& iCallable)
+	{ return new ZCallable_While<void>(iCallable, null); }
 
 } // namespace ZooLib
 
