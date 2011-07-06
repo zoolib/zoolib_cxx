@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCounted.h"
+#include "zoolib/ZQ.h"
 
 namespace ZooLib {
 
@@ -338,11 +339,1075 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCall
+#pragma mark * sCall variants (specialization for 0 params)
 
-template <class T>
-T sCall(ZRef<ZCallable<T(void)> > iCallable)
-	{ return iCallable->Call(); }
+template <class R>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(void)> > iCallable)
+	{
+	if (iCallable)
+		return iCallable->Call();
+	return null;
+	}
+
+template <class R>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(void)> > iCallable)
+	{
+	if (iCallable)
+		return iCallable->Call();
+	return iDefault;
+	}
+
+template <class R>
+R sCall
+	(ZRef<ZCallable<R(void)> > iCallable)
+	{
+	if (iCallable)
+		return iCallable->Call();
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 1 param)
+
+template <class R,
+	class P0>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0)
+	{
+	if (iCallable)
+		return iCallable->Call(i0);
+	return null;
+	}
+
+template <class R,
+	class P0>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0)
+	{
+	if (iCallable)
+		return iCallable->Call(i0);
+	return iDefault;
+	}
+
+template <class R,
+	class P0>
+R sCall
+	(ZRef<ZCallable<R(P0)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0)
+	{
+	if (iCallable)
+		return iCallable->Call(i0);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 2 params)
+
+template <class R,
+	class P0, class P1>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1>
+R sCall
+	(ZRef<ZCallable<R(P0,P1)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 3 params)
+
+template <class R,
+	class P0, class P1, class P2>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 4 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 5 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 6 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 7 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 8 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 9 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 10 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 11 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 12 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 13 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 14 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC,
+	typename ZCallableUtil::VT<PD>::P iD)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC,
+	typename ZCallableUtil::VT<PD>::P iD)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC,
+	typename ZCallableUtil::VT<PD>::P iD)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 15 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC,
+	typename ZCallableUtil::VT<PD>::P iD,
+	typename ZCallableUtil::VT<PE>::P iE)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC,
+	typename ZCallableUtil::VT<PD>::P iD,
+	typename ZCallableUtil::VT<PE>::P iE)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC,
+	typename ZCallableUtil::VT<PD>::P iD,
+	typename ZCallableUtil::VT<PE>::P iE)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+	return R();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCall variants (specialization for 16 params)
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE, class PF>
+ZQ<R> sQCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC,
+	typename ZCallableUtil::VT<PD>::P iD,
+	typename ZCallableUtil::VT<PE>::P iE,
+	typename ZCallableUtil::VT<PF>::P iF)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+	return null;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE, class PF>
+R sDCall
+	(typename ZCallableUtil::VT<R>::P iDefault,
+	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC,
+	typename ZCallableUtil::VT<PD>::P iD,
+	typename ZCallableUtil::VT<PE>::P iE,
+	typename ZCallableUtil::VT<PF>::P iF)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+	return iDefault;
+	}
+
+template <class R,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE, class PF>
+R sCall
+	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> > iCallable,
+	typename ZCallableUtil::VT<P0>::P i0,
+	typename ZCallableUtil::VT<P1>::P i1,
+	typename ZCallableUtil::VT<P2>::P i2,
+	typename ZCallableUtil::VT<P3>::P i3,
+	typename ZCallableUtil::VT<P4>::P i4,
+	typename ZCallableUtil::VT<P5>::P i5,
+	typename ZCallableUtil::VT<P6>::P i6,
+	typename ZCallableUtil::VT<P7>::P i7,
+	typename ZCallableUtil::VT<P8>::P i8,
+	typename ZCallableUtil::VT<P9>::P i9,
+	typename ZCallableUtil::VT<PA>::P iA,
+	typename ZCallableUtil::VT<PB>::P iB,
+	typename ZCallableUtil::VT<PC>::P iC,
+	typename ZCallableUtil::VT<PD>::P iD,
+	typename ZCallableUtil::VT<PE>::P iE,
+	typename ZCallableUtil::VT<PF>::P iF)
+	{
+	if (iCallable)
+		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+	return R();
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -350,7 +1415,10 @@ T sCall(ZRef<ZCallable<T(void)> > iCallable)
 
 template <class T>
 void sCallReturnVoid(ZRef<ZCallable<T(void)> > iCallable)
-	{ iCallable->Call(); }
+	{
+	if (iCallable)
+		iCallable->Call();
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -361,6 +1429,19 @@ typedef ZCallable<void(void)> ZCallable_Void;
 typedef ZRef<ZCallable_Void> ZRef_ZCallable_Void;
 
 typedef ZCallable<bool(void)> ZCallable_Bool;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable_Null
+
+class ZCallable_Null
+:	public ZCallable_Void
+	{
+public:
+// From ZCallable
+	virtual void Call()
+		{}
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -378,7 +1459,7 @@ class ZCaller_Null
 public:
 // From ZCaller
 	virtual void Call(ZRef<ZCallable_Void> iCallable)
-		{ iCallable->Call(); }
+		{ sCall(iCallable); }
 	};
 
 } // namespace ZooLib

@@ -1316,59 +1316,59 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0); }
+		{ return sCall(fCallable, f0); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, i0); }
+		{ return sCall(fCallable, f0, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, i0, i1); }
+		{ return sCall(fCallable, f0, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, i0, i1, i2); }
+		{ return sCall(fCallable, f0, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3, i4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3, i4, i5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
-		{ return fCallable->Call(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE); }
+		{ return sCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE); }
 
 	typename VT<typename ST::L0>::F f0;
 	ZRef<Callable> fCallable;
@@ -1415,55 +1415,55 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1); }
+		{ return sCall(fCallable, f0, f1); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, i0); }
+		{ return sCall(fCallable, f0, f1, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, i0, i1); }
+		{ return sCall(fCallable, f0, f1, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2, i3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2, i3, i4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ return fCallable->Call(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
+		{ return sCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1511,51 +1511,51 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2); }
+		{ return sCall(fCallable, f0, f1, f2); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, i0); }
+		{ return sCall(fCallable, f0, f1, f2, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1, i2, i3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return fCallable->Call(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
+		{ return sCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1604,47 +1604,47 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3); }
+		{ return sCall(fCallable, f0, f1, f2, f3); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ return sCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1694,43 +1694,43 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1781,39 +1781,39 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1865,35 +1865,35 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1946,31 +1946,31 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5, i6); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5, i6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2025,28 +2025,28 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4, i5); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4, i5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4, i5, i6); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4, i5, i6); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2102,25 +2102,25 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3, i4); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3, i4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3, i4, i5); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3, i4, i5); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2177,22 +2177,22 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2, i3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2, i3, i4); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2, i3, i4); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2250,19 +2250,19 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1, i2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1, i2, i3); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1, i2, i3); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2321,16 +2321,16 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0, i1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0, i1, i2); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0, i1, i2); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2390,13 +2390,13 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, i0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, i0, i1); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, i0, i1); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2457,10 +2457,10 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, i0); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, i0); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2522,7 +2522,7 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, fF); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, fF); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2884,59 +2884,59 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0); }
+		{ return sCall(fCallable, f0); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0); }
+		{ return sCall(fCallable, i0, f0); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0); }
+		{ return sCall(fCallable, i0, i1, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0); }
+		{ return sCall(fCallable, i0, i1, i2, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, f0); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, f0); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, f0); }
 
 	typename VT<typename ST::R0>::F f0;
 	ZRef<Callable> fCallable;
@@ -2983,55 +2983,55 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1); }
+		{ return sCall(fCallable, f0, f1); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1); }
+		{ return sCall(fCallable, i0, f0, f1); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1); }
+		{ return sCall(fCallable, i0, i1, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0, f1); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, f0, f1); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, f0, f1); }
 
 	typename VT<typename ST::R1>::F f0;
 	typename VT<typename ST::R0>::F f1;
@@ -3079,51 +3079,51 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2); }
+		{ return sCall(fCallable, f0, f1, f2); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2); }
+		{ return sCall(fCallable, i0, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1, f2); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0, f1, f2); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0, f1, f2); }
 
 	typename VT<typename ST::R2>::F f0;
 	typename VT<typename ST::R1>::F f1;
@@ -3172,47 +3172,47 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3); }
+		{ return sCall(fCallable, f0, f1, f2, f3); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2, f3); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1, f2, f3); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1, f2, f3); }
 
 	typename VT<typename ST::R3>::F f0;
 	typename VT<typename ST::R2>::F f1;
@@ -3262,43 +3262,43 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3, f4); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2, f3, f4); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2, f3, f4); }
 
 	typename VT<typename ST::R4>::F f0;
 	typename VT<typename ST::R3>::F f1;
@@ -3349,39 +3349,39 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4, f5); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3, f4, f5); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3, f4, f5); }
 
 	typename VT<typename ST::R5>::F f0;
 	typename VT<typename ST::R4>::F f1;
@@ -3433,35 +3433,35 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5, f6); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5, f6); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4, f5, f6); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4, f5, f6); }
 
 	typename VT<typename ST::R6>::F f0;
 	typename VT<typename ST::R5>::F f1;
@@ -3514,31 +3514,31 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	typename VT<typename ST::R7>::F f0;
 	typename VT<typename ST::R6>::F f1;
@@ -3593,28 +3593,28 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	typename VT<typename ST::R8>::F f0;
 	typename VT<typename ST::R7>::F f1;
@@ -3670,25 +3670,25 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	typename VT<typename ST::R9>::F f0;
 	typename VT<typename ST::R8>::F f1;
@@ -3745,22 +3745,22 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return sCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	typename VT<typename ST::RA>::F f0;
 	typename VT<typename ST::R9>::F f1;
@@ -3818,19 +3818,19 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
+		{ return sCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	typename VT<typename ST::RB>::F f0;
 	typename VT<typename ST::RA>::F f1;
@@ -3889,16 +3889,16 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
+		{ return sCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	typename VT<typename ST::RC>::F f0;
 	typename VT<typename ST::RB>::F f1;
@@ -3958,13 +3958,13 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
+		{ return sCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
 
 	typename VT<typename ST::RD>::F f0;
 	typename VT<typename ST::RC>::F f1;
@@ -4025,10 +4025,10 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
+		{ return sCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
 
 	typename VT<typename ST::RE>::F f0;
 	typename VT<typename ST::RD>::F f1;
@@ -4090,7 +4090,7 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, fF); }
+		{ return sCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, fF); }
 
 	typename VT<typename ST::RF>::F f0;
 	typename VT<typename ST::RE>::F f1;
@@ -4450,63 +4450,63 @@ public:
 
 private:
 	R Call()
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
-		{ return fCallable->Call(); }
+		{ return sCall(fCallable); }
 
 	ZRef<Callable> fCallable;
 	};
@@ -4560,111 +4560,111 @@ public:
 private:
 	R Call()
 		{
-		fCallable->Call();
+		sCall(fCallable);
 		return fR;
 		}
 
 	R Call(P0 i0)
 		{
-		fCallable->Call(i0);
+		sCall(fCallable, i0);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1)
 		{
-		fCallable->Call(i0, i1);
+		sCall(fCallable, i0, i1);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2)
 		{
-		fCallable->Call(i0, i1, i2);
+		sCall(fCallable, i0, i1, i2);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		fCallable->Call(i0, i1, i2, i3);
+		sCall(fCallable, i0, i1, i2, i3);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4);
+		sCall(fCallable, i0, i1, i2, i3, i4);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4, i5);
+		sCall(fCallable, i0, i1, i2, i3, i4, i5);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4, i5, i6);
+		sCall(fCallable, i0, i1, i2, i3, i4, i5, i6);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7);
+		sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
 		return fR;
 		}
 
 	R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+		sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
 		return fR;
 		}
 
@@ -4710,63 +4710,63 @@ public:
 
 private:
 	void Call()
-		{ fCallable->Call(); }
+		{ sCall(fCallable); }
 
 	void Call(P0 i0)
-		{ fCallable->Call(i0); }
+		{ sCall(fCallable, i0); }
 
 	void Call(P0 i0, P1 i1)
-		{ fCallable->Call(i0, i1); }
+		{ sCall(fCallable, i0, i1); }
 
 	void Call(P0 i0, P1 i1, P2 i2)
-		{ fCallable->Call(i0, i1, i2); }
+		{ sCall(fCallable, i0, i1, i2); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ fCallable->Call(i0, i1, i2, i3); }
+		{ sCall(fCallable, i0, i1, i2, i3); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ fCallable->Call(i0, i1, i2, i3, i4); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ fCallable->Call(i0, i1, i2, i3, i4, i5); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4, i5); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ fCallable->Call(i0, i1, i2, i3, i4, i5, i6); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4, i5, i6); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
-		{ fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE); }
 
 	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
-		{ fCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF); }
+		{ sCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF); }
 
 	ZRef<Callable> fCallable;
 	};

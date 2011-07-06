@@ -49,7 +49,7 @@ public:
 			{
 			const double delta = deadline - ZTime::sSystem();
 			if (delta <= 0)
-				return fCallable->Call();
+				return sCall(fCallable);
 			ZThread::sSleep(delta);
 			}
 		}
@@ -85,7 +85,7 @@ public:
 			{
 			const double delta = fDeadline - ZTime::sSystem();
 			if (delta <= 0)
-				return fCallable->Call();
+				return sCall(fCallable);
 			ZThread::sSleep(delta);
 			}
 		}

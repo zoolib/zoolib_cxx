@@ -42,7 +42,7 @@ public:
 
 // From ZCallable
 	virtual A Call(C iC)
-		{ return fApply->Call(fCallable->Call(iC)); }
+		{ return sCall(fApply, sCall(fCallable, iC)); }
 
 private:
 	const ZRef<ZCallable<A(B)> > fApply;
@@ -80,9 +80,8 @@ public:
 // From ZCallable
 	virtual R1 Call()
 		{
-		if (f0)
-			f0->Call();
-		return f1->Call();
+		sCall(f0);
+		return sCall(f1);
 		}
 
 private:
@@ -125,17 +124,8 @@ public:
 // From ZCallable
 	virtual void Call()
 		{
-		if (fInit)
-			fInit->Call();
-
-		if (fCondition)
-			{
-			while (fCondition->Call())
-				{
-				if (fInc)
-					fInc->Call();
-				}
-			}
+		for (sCall(fInit); sCall(fCondition); sCall(fInc))
+			{}
 		}
 
 private:
@@ -175,10 +165,10 @@ public:
 // From ZCallable
 	virtual R Call()
 		{
-		if (fCondition && fCondition->Call())
-			return f0->Call();
+		if (sCall(fCondition))
+			return sCall(f0);
 		else
-			return f1->Call();
+			return sCall(f1);
 		}
 
 private:
@@ -196,18 +186,6 @@ template <class R>
 ZRef<ZCallable<R(void)> > sIf(const ZRef<ZCallable_Bool>& iCondition,
 	const ZRef<ZCallable<R(void)> >& i0, const ZRef<ZCallable<R(void)> >& i1)
 	{ return new ZCallable_If<R>(iCondition, i0, i1); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Null
-
-class ZCallable_Null
-:	public ZCallable_Void
-	{
-public:
-	virtual void Call()
-		{}
-	};
 
 // =================================================================================================
 #pragma mark -
@@ -264,14 +242,8 @@ public:
 // From ZCallable
 	virtual void Call()
 		{
-		if (fCondition)
-			{
-			while (fCondition->Call())
-				{
-				if (fCallable)
-					fCallable->Call();
-				}
-			}
+		while (sCall(fCondition))
+			sCall(fCallable);
 		}
 
 private:

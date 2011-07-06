@@ -50,11 +50,7 @@ public:
 
 // From ZCallable
 	virtual R Call()
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			return theCallable->Call();
-		return R();
-		}
+		{ return sCall(fCallable.Get()); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -82,11 +78,7 @@ public:
 
 // From ZCallable
 	virtual R Call(P0 i0)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			return theCallable->Call(i0);
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -114,11 +106,7 @@ public:
 
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			return theCallable->Call(i0, i1);
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -146,11 +134,7 @@ public:
 
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			return theCallable->Call(i0, i1, i2);
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1, i2); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -178,11 +162,7 @@ public:
 
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			return theCallable->Call(i0, i1, i2, i3);
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1, i2, i3); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -211,11 +191,7 @@ public:
 
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			return theCallable->Call(i0, i1, i2, i3, i4);
-		return R();
-		}
+		{ return sCall(fCallable, i0, i1, i2, i3, i4); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -244,11 +220,7 @@ public:
 
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			return theCallable->Call(i0, i1, i2, i3, i4, i5);
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1, i2, i3, i4, i5); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -277,11 +249,7 @@ public:
 
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			return theCallable->Call(i0, i1, i2, i3, i4, i5, i6);
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -310,11 +278,7 @@ public:
 
 // From ZCallable
 	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			return theCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7);
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -346,14 +310,7 @@ public:
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4, i5, i6, i7, i8);
-			}
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -385,14 +342,7 @@ public:
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
-			}
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -424,14 +374,7 @@ public:
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
-			}
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -463,14 +406,7 @@ public:
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
-			}
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -503,14 +439,7 @@ public:
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
-			}
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -543,14 +472,7 @@ public:
 	virtual R Call
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{
-		if (ZRef<Callable> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
-			}
-		return R();
-		}
+		{ return sCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
 
 // Our protocol
 	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
@@ -584,12 +506,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		if (ZRef<Callable> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
-			}
-		return R();
+		return sCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
 		}
 
 // Our protocol
@@ -624,12 +541,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		if (ZRef<Callable> theCallable = fCallable)
-			{
-			return theCallable->Call
-				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
-			}
-		return R();
+		return sCall
+			(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
 		}
 
 // Our protocol

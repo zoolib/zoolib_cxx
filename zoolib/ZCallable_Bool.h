@@ -97,14 +97,6 @@ inline
 ZRef<ZCallable_Bool>& operator^=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1)
 	{ return io0 = io0 ^ i1; }
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * sCall
-
-inline
-bool sCall(const ZRef<ZCallable_Bool>& iCallable)
-	{ return iCallable && iCallable->Call(); }
-
 } // namespace ZooLib
 
 #endif // __ZCallable_Bool__

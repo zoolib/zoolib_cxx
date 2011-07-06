@@ -34,7 +34,7 @@ namespace ZooLib {
 #pragma mark * sCallFuture
 
 template <class T>
-void sCallFuture_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T(void)> > iCallable)
+void sCallWithPromise_T(ZRef<ZPromise<T> > iPromise, ZRef<ZCallable<T(void)> > iCallable)
 	{
 	if (iCallable)
 		iPromise->Set(iCallable->Call());
@@ -44,25 +44,25 @@ template <class T>
 ZRef<ZFuture<T> > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable<T(void)> > iCallable)
 	{
 	ZRef<ZPromise<T> > thePromise = new ZPromise<T>;
-	if (iCaller)
-		iCaller->Call(sBindR(sCallable(sCallFuture_T<T>), thePromise, iCallable));
+	sCall(iCaller, sBindR(sCallable(sCallWithPromise_T<T>), thePromise, iCallable));
 	return thePromise->Get();
 	}
 
 inline
-void sCallFuture_Void(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void(void)> > iCallable)
+void sCallWithPromise_Void(ZRef<ZPromise<void> > iPromise, ZRef<ZCallable<void(void)> > iCallable)
 	{
 	if (iCallable)
+		{
 		iCallable->Call();
-	iPromise->Set();
+		iPromise->Set();
+		}
 	}
 
 inline
 ZRef<ZFuture<void> > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable<void(void)> > iCallable)
 	{
 	ZRef<ZPromise<void> > thePromise = new ZPromise<void>;
-	if (iCaller)
-		iCaller->Call(sBindR(sCallable(sCallFuture_Void), thePromise, iCallable));
+	sCall(iCaller, sBindR(sCallable(sCallWithPromise_Void), thePromise, iCallable));
 	return thePromise->Get();
 	}
 

@@ -37,10 +37,13 @@ ZCaller_EventLoop::~ZCaller_EventLoop()
 
 void ZCaller_EventLoop::Call(ZRef<ZCallable_Void> iCallable)
 	{
-	ZAcqMtx acq(fMtx);
-	fCallables_Pending.push_back(iCallable);
-	if (not fTriggered++)
-		this->pTrigger();
+	if (iCallable)
+		{
+		ZAcqMtx acq(fMtx);
+		fCallables_Pending.push_back(iCallable);
+		if (not fTriggered++)
+			this->pTrigger();
+		}
 	}
 
 void ZCaller_EventLoop::pCall()

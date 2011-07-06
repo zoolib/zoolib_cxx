@@ -56,8 +56,8 @@ public:
 			{
 			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable> theCB = theQ.Get())
-				theCB->Call();
+			else
+				sCall(theQ.Get());
 			}
 		}
 
@@ -88,8 +88,8 @@ public:
 			{
 			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable> theCB = theQ.Get())
-				theCB->Call(i0);
+			else
+				sCall(theQ.Get(), i0);
 			}
 		}
 
@@ -120,8 +120,8 @@ public:
 			{
 			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable> theCB = theQ.Get())
-				theCB->Call(i0, i1);
+			else
+				sCall(theQ.Get(), i0, i1);
 			}
 		}
 
@@ -152,8 +152,8 @@ public:
 			{
 			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable> theCB = theQ.Get())
-				theCB->Call(i0, i1, i2);
+			else
+				sCall(theQ.Get(), i0, i1, i2);
 			}
 		}
 
@@ -184,8 +184,8 @@ public:
 			{
 			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable> theCB = theQ.Get())
-				theCB->Call(i0, i1, i2, i3);
+			else
+				sCall(theQ.Get(), i0, i1, i2, i3);
 			}
 		}
 
@@ -216,8 +216,8 @@ public:
 			{
 			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable> theCB = theQ.Get())
-				theCB->Call(i0, i1, i2, i3, i4);
+			else
+				sCall(theQ.Get(), i0, i1, i2, i3, i4);
 			}
 		}
 
@@ -248,8 +248,8 @@ public:
 			{
 			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable> theCB = theQ.Get())
-				theCB->Call(i0, i1, i2, i3, i4, i5);
+			else
+				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5);
 			}
 		}
 
@@ -280,8 +280,8 @@ public:
 			{
 			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable> theCB = theQ.Get())
-				theCB->Call(i0, i1, i2, i3, i4, i5, i6);
+			else
+				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5, i6);
 			}
 		}
 
@@ -312,8 +312,8 @@ public:
 			{
 			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
 				break;
-			else if (ZRef<Callable> theCB = theQ.Get())
-				theCB->Call(i0, i1, i2, i3, i4, i5, i6, i7);
+			else
+				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5, i6, i7);
 			}
 		}
 
