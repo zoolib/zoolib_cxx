@@ -20,11 +20,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/blackberry/ZBlackBerryServer.h"
 
+#include "zoolib/ZCallable_Bind.h"
+#include "zoolib/ZCallable_Function.h"
 #include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZCaller_Thread.h"
 #include "zoolib/ZCommer.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZStreamerCopier.h"
 #include "zoolib/ZUtil_STL_vector.h"
 
 using std::string;
@@ -235,73 +237,6 @@ void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * StreamCopier_Chunked
-
-namespace { // anonymous
-
-class StreamerCopier_Chunked : public ZWorker
-	{
-public:
-	StreamerCopier_Chunked(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon);
-
-	~StreamerCopier_Chunked();
-
-// From ZWorker
-	virtual bool Work();
-
-private:
-	ZRef<ZStreamerRCon> fStreamerRCon;
-	ZRef<ZStreamerWCon> fStreamerWCon;
-	};
-
-StreamerCopier_Chunked::StreamerCopier_Chunked
-	(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon)
-:	fStreamerRCon(iStreamerRCon),
-	fStreamerWCon(iStreamerWCon)
-	{}
-
-StreamerCopier_Chunked::~StreamerCopier_Chunked()
-	{}
-
-bool StreamerCopier_Chunked::Work()
-	{
-	ZWorker::Wake();//##
-	const ZStreamRCon& r = fStreamerRCon->GetStreamRCon();
-	const ZStreamWCon& w = fStreamerWCon->GetStreamWCon();
-
-	try
-		{
-		const size_t theSize = r.ReadUInt16LE();
-
-		if (theSize == 0)
-			{
-			// End of stream
-			r.ReceiveDisconnect(-1);
-			w.SendDisconnect();
-			return false;
-			}
-		else
-			{
-			std::vector<char> buffer(theSize);
-
-			r.Read(&buffer[0], theSize);
-			w.Write(&buffer[0], theSize);
-
-			return true;
-			}
-		}
-	catch (...)
-		{
-		r.Abort();
-		w.Abort();
-		throw;
-		}
-	}
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZBlackBerryServer
 
 static string spReadString(const ZStreamR& r)
@@ -328,6 +263,47 @@ ZBlackBerryServer::~ZBlackBerryServer()
 		ZAssert(i->fHandlers.empty());
 
 	fManager->SetCallable(null);
+	}
+
+static void spCopyChunked(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon)
+	{
+	const ZStreamRCon& r = iStreamerRCon->GetStreamRCon();
+	const ZStreamWCon& w = iStreamerWCon->GetStreamWCon();
+	try
+		{
+		while (true)
+			{
+			const size_t theSize = r.ReadUInt16LE();
+
+			if (theSize == 0)
+				{
+				// End of stream
+				r.ReceiveDisconnect(-1);
+				w.SendDisconnect();
+				break;
+				}
+			else
+				{
+				std::vector<char> buffer(theSize);
+
+				r.Read(&buffer[0], theSize);
+				w.Write(&buffer[0], theSize);
+				}
+			}
+		}
+	catch (...)
+		{
+		r.Abort();
+		w.Abort();
+		}
+	}
+
+static void spCopyAllCon
+	(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize)
+	{
+	while (ZStream::sCopyAllCon
+		(iStreamerRCon->GetStreamRCon(), iChunkSize, iStreamerWCon->GetStreamWCon(), 10))
+		{}
 	}
 
 void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
@@ -453,17 +429,14 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				w.WriteUInt32(readSize);
 				w.WriteUInt32(writeSize);
 				w.Flush();
+
 				// Use a standard copier for the device-->client direction
-				ZRef<ZStreamerCopier> deviceToClient =
-					new ZStreamerCopier(deviceCon, iSRWCon);
-				deviceToClient->SetChunkSize(readSize);
-				sStartWorkerRunner(deviceToClient);
+				sCallOnNewThread
+					(sBindR(sCallable(&spCopyAllCon), deviceCon, iSRWCon, readSize));
 
 				// And our specialized copier for the client-->device direction.
-				ZRef<ZWorker> clientToDevice =
-					new StreamerCopier_Chunked(iSRWCon, deviceCon);
-				sStartWorkerRunner(clientToDevice);
-
+				sCallOnNewThread
+					(sBindR(sCallable(&spCopyChunked), iSRWCon, deviceCon));
 				return;
 				}
 			}
