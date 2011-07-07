@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <class S, class T>
-inline S GetSet(S& ioLoc, T iVal)
+inline S sGetSet(S& ioLoc, T iVal)
 	{
 	std::swap(iVal, ioLoc);
 	return iVal;

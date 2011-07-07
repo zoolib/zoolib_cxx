@@ -85,7 +85,7 @@ public:
 	T GetSet(const T& iOther)
 		{
 		ZAcqMtx acq(fMtx);
-		return ZooLib::GetSet(fVal, iOther);
+		return ZooLib::sGetSet(fVal, iOther);
 		}
 
 	bool CompareAndSwap(const T& iOld, const T& iNew)
