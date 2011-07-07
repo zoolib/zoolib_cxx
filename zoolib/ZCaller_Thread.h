@@ -35,6 +35,10 @@ template <class T>
 void sCallOnNewThread(ZRef<ZCallable<T(void)> > iCallable)
 	{ ZThread::sCreate_T<ZRef<ZCallable<T(void)> > >(sCallReturnVoid<T>, iCallable); }
 
+inline
+void sCallOnNewThread(ZRef<ZCallable_Void> iCallable)
+	{ ZThread::sCreate_T<ZRef<ZCallable_Void> >(sCall<void>, iCallable); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCaller_Thread
