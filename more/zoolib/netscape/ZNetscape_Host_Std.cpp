@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZNetscape_Host_Std.h"
 
+#include "zoolib/ZCaller_Thread.h"
 #include "zoolib/ZCompat_string.h" // For strdup
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZHTTP_Requests.h"
@@ -522,16 +523,16 @@ void HostMeister_Std::UnscheduleTimer(NPP npp, uint32 timerID)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Host_Std::HTTPer
+#pragma mark * Host_Std::HTTPFetcher
 
 class Host_Std::HTTPFetcher
-:	public ZWorker
+:	public ZCallable_Void
 	{
 public:
 	HTTPFetcher(Host_Std* iHost, const string& iURL, ZHTTP::Data* iData, void* iNotifyData);
 
-// From ZWorker
-	virtual bool Work();
+// From ZCallable_Void
+	virtual void Call();
 
 	void Cancel();
 
@@ -560,7 +561,7 @@ Host_Std::HTTPFetcher::HTTPFetcher
 		}
 	}
 
-bool Host_Std::HTTPFetcher::Work()
+void Host_Std::HTTPFetcher::Call()
 	{
 	try
 		{
@@ -587,7 +588,7 @@ bool Host_Std::HTTPFetcher::Work()
 
 			fHost->pHTTPFetcher
 				(this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerR);
-			return false;
+			return;
 			}
 		}
 	catch (...)
@@ -599,8 +600,6 @@ bool Host_Std::HTTPFetcher::Work()
 		fHost->pHTTPFetcher
 			(this, fNotifyData, fURL, "", ZHTTP::Data(), null);
 		}
-
-	return false;
 	}
 
 void Host_Std::HTTPFetcher::Cancel()
@@ -894,7 +893,7 @@ NPError Host_Std::Host_GetURLNotify(NPP npp,
 		{
 		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, nullptr, notifyData);
 		fHTTPFetchers.Insert(theFetcher);
-		sStartWorkerRunner(theFetcher);
+		sCallOnNewThread(theFetcher);
 		return NPERR_NO_ERROR;
 		}
 
@@ -917,7 +916,7 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 		ZHTTP::Data theData(buf, len);
 		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, &theData, notifyData);
 		fHTTPFetchers.Insert(theFetcher);
-		sStartWorkerRunner(theFetcher);
+		sCallOnNewThread(theFetcher);
 		return NPERR_NO_ERROR;
 		}
 

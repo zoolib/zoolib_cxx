@@ -25,13 +25,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <AppKit/NSEvent.h>
 #include <AppKit/NSGraphicsContext.h>
 
+#include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZCaller_CFRunLoop.h"
+#include "zoolib/ZCallScheduler.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZRGBA.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZUtil_Strim_Geom.h"
 #include "zoolib/ZWorker.h"
-#include "zoolib/ZWorkerRunner_CFRunLoop.h"
 
 // =================================================================================================
 #pragma mark -
@@ -172,44 +174,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZNetscape {
 
-class Host_Cocoa::Worker_Timer : public ZWorker
-	{
-public:
-	Worker_Timer(Host_Cocoa* iHost)
-	:	fHost(iHost)
-		{}
-
-	virtual bool Work()
-		{
-		if (fHost)
-			{
-			fHost->Timer();
-			this->WakeIn(50e-3); // 50ms
-			return true;
-			}
-		return false;
-		}
-
-	virtual void Kill()
-		{
-		fHost = nullptr;
-		}
-
-	Host_Cocoa* fHost;
-	};
-
 Host_Cocoa::Host_Cocoa(ZRef<GuestFactory> iGuestFactory, NSView_NetscapeHost* iView)
 :	Host_Std(iGuestFactory)
 ,	fView(iView)
+,	fCallable_Timer(sCallable(this, &Host_Cocoa::Timer))
 	{
 	ZMemZero_T(fNP_CGContext);
 	ZMemZero_T(fNP_CGContext_Prior);
 	if (fView)
 		fView->fHost = this;
 
-	fWorker_Timer = new Worker_Timer(this);
-	ZWorkerRunner_CFRunLoop::sMain()->Attach(fWorker_Timer);
-	fWorker_Timer->Wake();
+	ZCallScheduler::sGet()->NextCallIn(50e-3, ZCaller_CFRunLoop::sMain(), fCallable_Timer);
 
 //	fNPWindow.type = NPWindowTypeWindow;
 	fNPWindow.type = NPWindowTypeDrawable;//NPWindowTypeWindow;
@@ -226,11 +201,7 @@ Host_Cocoa::Host_Cocoa(ZRef<GuestFactory> iGuestFactory, NSView_NetscapeHost* iV
 
 Host_Cocoa::~Host_Cocoa()
 	{
-	if (ZRef<ZWorker> theWorker = fWorker_Timer)
-		{
-		fWorker_Timer.Clear();
-		theWorker->Kill();
-		}
+	fCallable_Timer.Clear();
 
 	if (fView)
 		ZAssert(fView->fHost == this);
@@ -440,7 +411,11 @@ void Host_Cocoa::WindowFocusChanged(bool hasFocus)
 
 void Host_Cocoa::Timer()
 	{
-	Host_Std::DeliverData();
+	if (fCallable_Timer)
+		{
+		Host_Std::DeliverData();
+		ZCallScheduler::sGet()->NextCallIn(50e-3, ZCaller_CFRunLoop::sMain(), fCallable_Timer);
+		}
 	}
 
 void Host_Cocoa::FrameChanged()

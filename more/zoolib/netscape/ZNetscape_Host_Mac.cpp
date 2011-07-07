@@ -32,6 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZUtil_CarbonEvents.h"
 #include "zoolib/ZUtil_Strim_Geom.h"
+#include "zoolib/ZUtil_Strim_Operators.h"
 
 #if UNIVERSAL_INTERFACES_VERSION <= 0x0341
 enum
@@ -56,10 +57,11 @@ namespace ZNetscape {
 
 static void spWriteEvent(const ZStrimW&s, const EventRecord& iER)
 	{
-	s << "what: " << ZUtil_CarbonEvents::sEventTypeAsString(iER.what) << ", ";
-
-	s.Writef("message: %u, when: %u, where: (%d, %d), modifiers: %u",
-		iER.message, iER.when, iER.where.h, iER.where.v, iER.modifiers);
+	s	<< "what: " << ZUtil_CarbonEvents::sEventTypeAsString(iER.what)
+		<< ", message: " << iER.message
+		<< ", when: " << iER.when
+		<< ", where: (" << iER.where.h << ", " << iER.where.v
+		<< ", modifiers: " << iER.modifiers;
 	}
 
 #if defined(XP_MACOSX)

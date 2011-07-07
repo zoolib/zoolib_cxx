@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if defined(__OBJC__)
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
+#include "zoolib/ZCallable.h"
 #include "zoolib/netscape/ZNetscape_Host_Std.h"
 
 #include <AppKit/NSView.h>
@@ -83,8 +84,7 @@ protected:
 	void pDoSetWindow();
 	NSView_NetscapeHost* fView;
 
-	class Worker_Timer;
-	ZRef<Worker_Timer> fWorker_Timer;
+	ZRef<ZCallable_Void> fCallable_Timer;
 
 	NPWindow fNPWindow;
 
