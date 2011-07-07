@@ -129,16 +129,14 @@ void ZUSBWatcher::pDeviceAdded(io_iterator_t iIterator)
 		try
 			{
 			ZRef<ZUSBDevice> theUSBDevice = new ZUSBDevice(fIONotificationPortRef, iter);
-			if (ZRef<CB_DeviceAttached> theCallable = fCallable)
-				theCallable->Call(theUSBDevice);
+			sCall(fCallable.Get(), theUSBDevice);
 			}
 		catch (exception& ex)
 			{
 			if (ZLOGPF(s, eInfo))
 				s << "Couldn't instantiate ZUSBDevice, caught exception: " << ex.what();
 
-			if (ZRef<CB_DeviceAttached> theCallable = fCallable)
-				theCallable->Call(null);
+			sCall(fCallable.Get(), null);
 			}
 
 		::IOObjectRelease(iter);
@@ -249,10 +247,7 @@ void ZUSBDevice::SetCallable(ZRef<CB_DeviceDetached> iCallable)
 	{
 	fCallable = iCallable;
 	if (fDetached)
-		{
-		if (ZRef<CB_DeviceDetached> theCallable = fCallable)
-			theCallable->Call(this);
-		}
+		sCall(fCallable.Get(), this);
 	}
 
 IOUSBDeviceInterface182** ZUSBDevice::GetIOUSBDeviceInterface()
@@ -336,8 +331,7 @@ void ZUSBDevice::pDeviceNotification
 			s << "Device removed, service: " << iService;
 
 		fDetached = true;
-		if (ZRef<CB_DeviceDetached> theCallable = fCallable)
-			theCallable->Call(this);
+		sCall(fCallable.Get(), this);
 		}
 	}
 
