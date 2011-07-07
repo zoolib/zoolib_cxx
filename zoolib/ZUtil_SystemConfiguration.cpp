@@ -61,10 +61,7 @@ ZRef<Store::Callable> Store::GetSet_Callback(ZRef<Callable> iCallable)
 void Store::spCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
 	{
 	if (ZRef<Store> theStore = ZWeakRef<Store>(static_cast<WeakRefProxy*>(info)))
-		{
-		if (ZRef<Callable> theCallable = theStore->fCallable)
-			theCallable->Call(theStore, changedKeys);
-		}
+		sCall(theStore->fCallable.Get(), theStore, changedKeys);
 	}
 
 // =================================================================================================
