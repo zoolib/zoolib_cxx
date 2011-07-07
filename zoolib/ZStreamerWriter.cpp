@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZStreamerWriter.h"
 
 namespace ZooLib {
@@ -27,30 +28,12 @@ namespace ZooLib {
 #pragma mark * ZStreamerWriter
 
 ZStreamerWriter::ZStreamerWriter(ZRef<ZStreamerW> iStreamerW)
-:	fStreamerW(iStreamerW)
+:	ZWorker
+		(sCallable(this, &ZStreamerWriter::pWriteStarted),
+		sCallable(this, &ZStreamerWriter::pWork),
+		sCallable(this, &ZStreamerWriter::pWriteFinished))
+,	fStreamerW(iStreamerW)
 	{}
-
-void ZStreamerWriter::RunnerAttached()
-	{
-	ZWorker::RunnerAttached();
-	this->WriteStarted();
-	}
-
-void ZStreamerWriter::RunnerDetached()
-	{
-	this->WriteFinished();
-	ZWorker::RunnerDetached();
-	}
-
-bool ZStreamerWriter::Work()
-	{
-	const bool result = this->Write(fStreamerW);
-
-	if (!result || !this->IsAwake())
-		fStreamerW->GetStreamW().Flush();
-
-	return result;
-	}
 
 void ZStreamerWriter::WriteStarted()
 	{}
@@ -63,5 +46,21 @@ bool ZStreamerWriter::Write(const ZRef<ZStreamerW>& iStreamerW)
 
 bool ZStreamerWriter::Write(const ZStreamW& iStreamW)
 	{ return false; }
+
+void ZStreamerWriter::pWriteStarted(ZRef<ZWorker> iWorker)
+	{ this->WriteStarted(); }
+
+bool ZStreamerWriter::pWork(ZRef<ZWorker> iWorker)
+	{
+	const bool result = this->Write(fStreamerW);
+
+	if (!result || !this->IsAwake())
+		fStreamerW->GetStreamW().Flush();
+
+	return result;
+	}
+
+void ZStreamerWriter::pWriteFinished(ZRef<ZWorker> iWorker)
+	{ this->WriteFinished(); }
 
 } // namespace ZooLib

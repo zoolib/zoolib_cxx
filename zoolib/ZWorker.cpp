@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZDebug.h"
-#include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZLog.h"
+#include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZCallScheduler.h"
+#include "zoolib/ZGetSet.h"
 #include "zoolib/ZWorker.h"
 
 namespace ZooLib {
@@ -30,7 +30,7 @@ namespace ZooLib {
 
 \brief ZWorker provides a disciplined lifecycle for long-lived repetitive jobs.
 
-A ZWorker derivative overrides the ZWorker::Work method, and once attached to a ZWorkerRunner
+A ZWorker derivative overrides the ZWorker::Work method, and once attached to a ZCaller
 Work will be called whenever the ZWorker has been woken, until Work returns false or allows
 an exception to propogate out.
 */
@@ -45,64 +45,175 @@ an exception to propogate out.
 \sa Worker
 */
 
-void ZWorker::RunnerAttached()
+static const ZTime kDistantFuture = 1000 * ZTime::kYear;
+
+ZWorker::ZWorker(ZRef<Callable_Attached> iCallable_Attached,
+	ZRef<Callable_Work> iCallable_Work,
+	ZRef<Callable_Detached> iCallable_Detached)
+:	fWorking(false)
+,	fCallable_Attached(iCallable_Attached)
+,	fCallable_Work(iCallable_Work)
+,	fCallable_Detached(iCallable_Detached)
 	{}
 
-void ZWorker::RunnerDetached()
+ZWorker::ZWorker(ZRef<Callable_Attached> iCallable_Attached,
+	ZRef<Callable_Work> iCallable_Work)
+:	fWorking(false)
+,	fCallable_Attached(iCallable_Attached)
+,	fCallable_Work(iCallable_Work)
 	{}
 
-void ZWorker::Kill()
+ZWorker::ZWorker(ZRef<Callable_Work> iCallable_Work,
+	ZRef<Callable_Detached> iCallable_Detached)
+:	fWorking(false)
+,	fCallable_Work(iCallable_Work)
+,	fCallable_Detached(iCallable_Detached)
 	{}
+
+ZWorker::ZWorker(ZRef<Callable_Work> iCallable_Work)
+:	fWorking(false)
+,	fCallable_Work(iCallable_Work)
+	{}
+
+void ZWorker::Call()
+	{
+	ZGuardRMtx guard(fMtx);
+
+	fWorking = true;
+	fNextWake = kDistantFuture;
+
+	bool result = false;
+
+	if (ZRef<Callable_Work> theCallable = fCallable_Work)
+		{
+		guard.Release();
+
+		try { result = theCallable->Call(this); }
+		catch (...) {}
+
+		guard.Acquire();
+		}
+
+	fWorking = false;
+
+	if (result)
+		{
+		if (fNextWake < kDistantFuture)
+			ZCallScheduler::sGet()->NextCallAt(fNextWake, fCaller, this);
+		}
+	else
+		{
+		if (ZRef<Callable_Detached> theCallable = fCallable_Detached)
+			{
+			guard.Release();
+			try { theCallable->Call(this); }
+			catch (...) {}
+			guard.Acquire();
+			}
+
+		fCaller.Clear();
+		}
+	}
 
 void ZWorker::Wake()
-	{
-	if (ZRef<ZWorkerRunner> theRunner = fRunner)
-		theRunner->Wake(this);
-	}
+	{ this->pWakeAt(ZTime::sSystem()); }
 
 void ZWorker::WakeIn(double iInterval)
-	{
-	if (ZRef<ZWorkerRunner> theRunner = fRunner)
-		theRunner->WakeIn(this, iInterval);
-	}
+	{ this->pWakeAt(ZTime::sSystem() + iInterval); }
 
 void ZWorker::WakeAt(ZTime iSystemTime)
+	{ this->pWakeAt(iSystemTime); }
+
+void ZWorker::pWakeAt(ZTime iSystemTime)
 	{
-	if (ZRef<ZWorkerRunner> theRunner = fRunner)
-		theRunner->WakeAt(this, iSystemTime);
+	ZAcqMtx acq(fMtx);
+	if (fCaller)
+		{
+		if (fWorking)
+			{
+			if (fNextWake > iSystemTime)
+				fNextWake = iSystemTime;
+			}
+		else
+			{
+			ZCallScheduler::sGet()->NextCallAt(iSystemTime, fCaller, this);
+			}
+		}
 	}
 
 bool ZWorker::IsAwake()
 	{
-	if (ZRef<ZWorkerRunner> theRunner = fRunner)
-		return theRunner->IsAwake(this);
+	ZAcqMtx acq(fMtx);
+	if (fCaller)
+		{
+		if (fWorking)
+			return fNextWake >= ZTime::sSystem();
+		else
+			return ZCallScheduler::sGet()->IsAwake(fCaller, this);
+		}
+	return false;
+	}
+
+bool ZWorker::Attach(ZRef<ZCaller> iCaller)
+	{
+	ZGuardRMtx guard(fMtx);
+	if (!fCaller)
+		{
+		fCaller = iCaller;
+
+		if (ZRef<Callable_Attached,false> theCallable = fCallable_Attached)
+			{
+			return true;
+			}
+		else
+			{
+			guard.Release();
+			try
+				{
+				theCallable->Call(this);
+				return true;
+				}
+			catch (...) {}
+			guard.Acquire();
+			}
+
+		guard.Release();
+
+		if (ZRef<Callable_Detached> theCallable = fCallable_Detached)
+			{
+			guard.Release();
+			try { theCallable->Call(this); }
+			catch (...) {}
+			guard.Acquire();
+			}
+
+		fCaller.Clear();
+		}
 	return false;
 	}
 
 bool ZWorker::IsAttached()
 	{
-	if (ZRef<ZWorkerRunner> theRunner = fRunner)
-		return theRunner->IsAttached(this);
-	return false;
+	ZAcqMtx acq(fMtx);
+	return fCaller;
 	}
 
-ZRef<ZWorker::Callable_Attached_t>
-ZWorker::GetSetCallable_Attached(ZRef<Callable_Attached_t> iCallable)
-	{ return fCallable_Attached.GetSet(iCallable); }
-
-ZRef<ZWorker::Callable_Detached_t>
-ZWorker::GetSetCallable_Detached(ZRef<Callable_Detached_t> iCallable)
-	{ return fCallable_Detached.GetSet(iCallable); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Utility methods
-
-void sStartWorkerRunner(ZRef<ZWorker> iWorker)
+ZRef<ZWorker::Callable_Attached> ZWorker::GetSetCallable_Attached(ZRef<Callable_Attached> iCallable)
 	{
-	bool result = ZFunctionChain_T<ZRef<ZWorkerRunner>, ZRef<ZWorker> >::sInvoke(iWorker);
-	ZAssert(result);
-	iWorker->Wake();
+	ZAcqMtx acq(fMtx);
+	return sGetSet(fCallable_Attached, iCallable);
+	}
+
+ZRef<ZWorker::Callable_Work> ZWorker::GetSetCallable_Work(ZRef<Callable_Work> iCallable)
+	{
+	ZAcqMtx acq(fMtx);
+	return sGetSet(fCallable_Work, iCallable);
+	}
+
+ZRef<ZWorker::Callable_Detached> ZWorker::GetSetCallable_Detached(ZRef<Callable_Detached> iCallable)
+	{
+	ZAcqMtx acq(fMtx);
+	return sGetSet(fCallable_Detached, iCallable);
 	}
 
 } // namespace ZooLib

@@ -34,11 +34,11 @@ template <class T> class ZPromise;
 #pragma mark -
 #pragma mark * ZFuture
 
-enum EFuture
+enum EFutureResult
 	{
-	eFuture_Failed,
-	eFuture_Timeout,
-	eFuture_Succeeded
+	eFutureResult_Failed,
+	eFutureResult_Timeout,
+	eFutureResult_Succeeded
 	};
 
 template <class T>
@@ -53,55 +53,55 @@ public:
 	virtual ~ZFuture()
 		{}
 
-	EFuture Wait()
+	EFutureResult Wait()
 		{
 		ZAcqMtx acq(fMtx);
 		for (;;)
 			{
 			if (fVal)
-				return eFuture_Succeeded;
+				return eFutureResult_Succeeded;
 			if (!fPromiseExists)
-				return eFuture_Failed;
+				return eFutureResult_Failed;
 			fCnd.Wait(fMtx);
 			}
 		}
 
-	EFuture WaitFor(double iTimeout)
+	EFutureResult WaitFor(double iTimeout)
 		{
 		ZAcqMtx acq(fMtx);
 
 		if (fVal)
-			return eFuture_Succeeded;
+			return eFutureResult_Succeeded;
 		if (!fPromiseExists)
-			return eFuture_Failed;
+			return eFutureResult_Failed;
 
 		fCnd.WaitFor(fMtx, iTimeout);
 
 		if (fVal)
-			return eFuture_Succeeded;
+			return eFutureResult_Succeeded;
 		if (!fPromiseExists)
-			return eFuture_Failed;
+			return eFutureResult_Failed;
 
-		return eFuture_Timeout;
+		return eFutureResult_Timeout;
 		}
 
-	EFuture WaitUntil(ZTime iDeadline)
+	EFutureResult WaitUntil(ZTime iDeadline)
 		{
 		ZAcqMtx acq(fMtx);
 
 		if (fVal)
-			return eFuture_Succeeded;
+			return eFutureResult_Succeeded;
 		if (!fPromiseExists)
-			return eFuture_Failed;
+			return eFutureResult_Failed;
 
 		fCnd.WaitUntil(fMtx, iDeadline);
 
 		if (fVal)
-			return eFuture_Succeeded;
+			return eFutureResult_Succeeded;
 		if (!fPromiseExists)
-			return eFuture_Failed;
+			return eFutureResult_Failed;
 
-		return eFuture_Timeout;
+		return eFutureResult_Timeout;
 		}
 
 	ZQ<T> Get()
@@ -137,55 +137,55 @@ public:
 	virtual ~ZFuture()
 		{}
 
-	EFuture Wait()
+	EFutureResult Wait()
 		{
 		ZAcqMtx acq(fMtx);
 		for (;;)
 			{
 			if (fSet)
-				return eFuture_Succeeded;
+				return eFutureResult_Succeeded;
 			if (!fPromiseExists)
-				return eFuture_Failed;
+				return eFutureResult_Failed;
 			fCnd.Wait(fMtx);
 			}
 		}
 
-	EFuture WaitFor(double iTimeout)
+	EFutureResult WaitFor(double iTimeout)
 		{
 		ZAcqMtx acq(fMtx);
 
 		if (fSet)
-			return eFuture_Succeeded;
+			return eFutureResult_Succeeded;
 		if (!fPromiseExists)
-			return eFuture_Failed;
+			return eFutureResult_Failed;
 
 		fCnd.WaitFor(fMtx, iTimeout);
 
 		if (fSet)
-			return eFuture_Succeeded;
+			return eFutureResult_Succeeded;
 		if (!fPromiseExists)
-			return eFuture_Failed;
+			return eFutureResult_Failed;
 
-		return eFuture_Timeout;
+		return eFutureResult_Timeout;
 		}
 
-	EFuture WaitUntil(ZTime iDeadline)
+	EFutureResult WaitUntil(ZTime iDeadline)
 		{
 		ZAcqMtx acq(fMtx);
 
 		if (fSet)
-			return eFuture_Succeeded;
+			return eFutureResult_Succeeded;
 		if (!fPromiseExists)
-			return eFuture_Failed;
+			return eFutureResult_Failed;
 
 		fCnd.WaitUntil(fMtx, iDeadline);
 
 		if (fSet)
-			return eFuture_Succeeded;
+			return eFutureResult_Succeeded;
 		if (!fPromiseExists)
-			return eFuture_Failed;
+			return eFutureResult_Failed;
 
-		return eFuture_Timeout;
+		return eFutureResult_Timeout;
 		}
 
 	bool Get()

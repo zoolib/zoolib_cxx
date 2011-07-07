@@ -48,7 +48,7 @@ public:
 // Our protocol
 	virtual ZRef<Responder> MakeResponder() = 0;
 
-	void StartListener(ZRef<ZStreamerRWFactory> iFactory);
+	void StartListener(ZRef<ZCaller> iCaller, ZRef<ZStreamerRWFactory> iFactory);
 
 	void StopListener();
 	void StopListenerWait();
@@ -61,22 +61,16 @@ public:
 	ZSafeSetIterConst<ZRef<Responder> > GetResponders();
 
 private:
-	void pListenerFinished(ZRef<ZWorker> iWorker);
+	bool pListener_Work(ZRef<ZWorker> iWorker);
+	void pListener_Finished(ZRef<ZWorker> iWorker);
+
 	void pResponderFinished(ZRef<Responder> iResponder);
-
-	class StreamerListener;
-	friend class StreamerListener;
-
-	class StreamerResponder;
-	friend class StreamerResponder;
-
-// Called by StreamerListener
-	void pConnected(ZRef<ZStreamerRW> iStreamer);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 
-	ZRef<StreamerListener> fStreamerListener;
+	ZRef<ZWorker> fWorker;
+	ZRef<ZStreamerRWFactory> fFactory;
 	ZSafeSet<ZRef<Responder> > fResponders;
 	};
 

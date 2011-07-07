@@ -18,7 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCaller_Thread.h"
 #include "zoolib/ZCommer.h"
+#include "zoolib/ZGetSet.h"
 
 #include "zoolib/ZLog.h"
 
@@ -136,13 +138,13 @@ void ZCommer::WaitTillFinished()
 ZRef<ZCommer::Callable_t> ZCommer::GetSetCallable_Started(ZRef<Callable_t> iCallable)
 	{
 	ZAcqMtx locker(fMtx);
-	return GetSet(fCallable_Started, iCallable);
+	return sGetSet(fCallable_Started, iCallable);
 	}
 
 ZRef<ZCommer::Callable_t> ZCommer::GetSetCallable_Finished(ZRef<Callable_t> iCallable)
 	{
 	ZAcqMtx locker(fMtx);
-	return GetSet(fCallable_Finished, iCallable);
+	return sGetSet(fCallable_Finished, iCallable);
 	}
 
 // =================================================================================================
@@ -151,8 +153,9 @@ ZRef<ZCommer::Callable_t> ZCommer::GetSetCallable_Finished(ZRef<Callable_t> iCal
 
 void sStartCommerRunners(ZRef<ZCommer> iCommer)
 	{
-	sStartWorkerRunner(iCommer.StaticCast<ZStreamerReader>());
-	sStartWorkerRunner(iCommer.StaticCast<ZStreamerWriter>());
+	ZRef<ZCaller> theCaller = new ZCaller_Thread;
+	iCommer.StaticCast<ZStreamerReader>()->Attach(theCaller);
+	iCommer.StaticCast<ZStreamerWriter>()->Attach(theCaller);
 	}
 
 } // namespace ZooLib

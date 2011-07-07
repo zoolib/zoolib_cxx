@@ -37,12 +37,6 @@ public:
 	ZStreamerReader(ZRef<ZStreamerR> iStreamerR);
 	virtual ~ZStreamerReader();
 
-// From ZWorker
-	virtual void RunnerAttached();
-	virtual void RunnerDetached();
-
-	virtual bool Work();
-
 // Our protocol
 	virtual void ReadStarted();
 	virtual void ReadFinished();
@@ -51,6 +45,9 @@ public:
 	virtual bool Read(const ZStreamR& iStreamR);
 
 protected:
+	void pReadStarted(ZRef<ZWorker> iWorker);
+	bool pWork(ZRef<ZWorker> iWorker);
+	void pReadFinished(ZRef<ZWorker> iWorker);
 	ZRef<ZStreamerR> fStreamerR;
 	};
 

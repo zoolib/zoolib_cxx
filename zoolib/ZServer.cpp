@@ -19,59 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallable_PMF.h"
-#include "zoolib/ZLog.h"
 #include "zoolib/ZServer.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZServer::StreamerListener
-
-class ZServer::StreamerListener
-:	public ZWorker
-	{
-public:
-	StreamerListener(ZRef<ZServer> iServer, ZRef<ZStreamerRWFactory> iFactory)
-	:	fFactory(iFactory)
-	,	fServer(iServer)
-		{}
-
-	virtual ~StreamerListener()
-		{}
-
-// From ZWorker
-	void RunnerDetached()
-		{
-		ZWorker::RunnerDetached();
-
-		fServer->pListenerFinished(this);
-		}
-
-	bool Work()
-		{
-		ZWorker::Wake();
-		if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
-			{
-			fServer->pConnected(theFactory->MakeStreamerRW());
-			return true;
-			}
-		return false;
-		}
-
-	void Kill()
-		{
-		if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
-			{
-			fFactory = null;
-			theFactory->Cancel();
-			}
-		ZWorker::Wake();
-		}
-
-	ZRef<ZServer> fServer;
-	ZSafe<ZRef<ZStreamerRWFactory> > fFactory;
-	};
 
 // =================================================================================================
 #pragma mark -
@@ -83,7 +33,7 @@ ZServer::ZServer()
 ZServer::~ZServer()
 	{
 	ZAssert(fResponders.Empty());
-	ZAssert(not fStreamerListener);
+	ZAssert(not fWorker);
 	}
 
 void ZServer::Finalize()
@@ -96,24 +46,31 @@ void ZServer::Finalize()
 		delete this;
 	}
 
-void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
+void ZServer::StartListener(ZRef<ZCaller> iCaller, ZRef<ZStreamerRWFactory> iFactory)
 	{
 	ZAcqMtx acq(fMtx);
 
-	ZAssert(not fStreamerListener);
+	ZAssert(iCaller);
 	ZAssert(iFactory);
+	ZAssert(not fWorker);
+	ZAssert(not fFactory);
 
-	fStreamerListener = new StreamerListener(this, iFactory);
-	sStartWorkerRunner(fStreamerListener);
+	fFactory = iFactory;
+	fWorker = new ZWorker
+		(sCallable(sWeakRef(this), &ZServer::pListener_Work),
+		(sCallable(sWeakRef(this), &ZServer::pListener_Finished)));
+
+	fWorker->Attach(iCaller);
+	fWorker->Wake();
 	}
 
 void ZServer::StopListener()
 	{
 	ZGuardRMtx guard(fMtx);
-	if (ZRef<StreamerListener> theSL = fStreamerListener)
+	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
 		{
-		guard.Release();
-		theSL->Kill();
+		fFactory.Clear();
+		theFactory->Cancel();
 		}
 	}
 
@@ -122,7 +79,7 @@ void ZServer::StopListenerWait()
 	this->StopListener();
 
 	ZAcqMtx acq(fMtx);
-	while (fStreamerListener)
+	while (fWorker)
 		fCnd.Wait(fMtx);
 	}
 
@@ -149,18 +106,37 @@ void ZServer::KillRespondersWait()
 ZRef<ZStreamerRWFactory> ZServer::GetFactory()
 	{
 	ZAcqMtx acq(fMtx);
-	if (ZRef<StreamerListener> theStreamerListener = fStreamerListener)
-		return theStreamerListener->fFactory;
-	return null;
+	return fFactory;
 	}
 
 ZSafeSetIterConst<ZRef<ZServer::Responder> > ZServer::GetResponders()
 	{ return fResponders; }
 
-void ZServer::pListenerFinished(ZRef<ZWorker> iWorker)
+bool ZServer::pListener_Work(ZRef<ZWorker> iWorker)
+	{
+	iWorker->Wake();
+	ZGuardRMtx guard(fMtx);
+	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+		{
+		guard.Release();
+		if (ZRef<ZStreamerRW> iStreamerRW = theFactory->MakeStreamerRW())
+			{
+			if (ZRef<Responder> theResponder = this->MakeResponder())
+				{
+				fResponders.Insert(theResponder);
+				theResponder->Respond(iStreamerRW);
+				}
+			}
+		return true;
+		}
+	return false;
+	}
+
+void ZServer::pListener_Finished(ZRef<ZWorker> iWorker)
 	{
 	ZAcqMtx acq(fMtx);
-	fStreamerListener.Clear();
+	ZAssert(!fFactory);
+	fWorker.Clear();
 	fCnd.Broadcast();
 	}
 
@@ -169,18 +145,6 @@ void ZServer::pResponderFinished(ZRef<Responder> iResponder)
 	ZAcqMtx acq(fMtx);
 	fResponders.Erase(iResponder);
 	fCnd.Broadcast();
-	}
-
-void ZServer::pConnected(ZRef<ZStreamerRW> iStreamerRW)
-	{
-	if (iStreamerRW)
-		{
-		if (ZRef<Responder> theResponder = this->MakeResponder())
-			{
-			fResponders.Insert(theResponder);
-			theResponder->Respond(iStreamerRW);
-			}
-		}
 	}
 
 // =================================================================================================

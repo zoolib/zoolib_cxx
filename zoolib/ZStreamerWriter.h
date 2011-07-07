@@ -36,12 +36,6 @@ class ZStreamerWriter : public ZWorker
 public:
 	ZStreamerWriter(ZRef<ZStreamerW> iStreamerW);
 
-// From ZWorker
-	virtual void RunnerAttached();
-	virtual void RunnerDetached();
-
-	virtual bool Work();
-
 // Our protocol
 	virtual void WriteStarted();
 	virtual void WriteFinished();
@@ -50,6 +44,9 @@ public:
 	virtual bool Write(const ZStreamW& iStreamW);
 
 protected:
+	void pWriteStarted(ZRef<ZWorker> iWorker);
+	bool pWork(ZRef<ZWorker> iWorker);
+	void pWriteFinished(ZRef<ZWorker> iWorker);
 	ZRef<ZStreamerW> fStreamerW;
 	};
 

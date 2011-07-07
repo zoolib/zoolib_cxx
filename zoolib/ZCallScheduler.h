@@ -1,10 +1,10 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
+including without limitation the rights to use, copy, modify, merge,Publish, distribute,
 sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
 is furnished to do so, subject to the following conditions:
 
@@ -18,40 +18,52 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorker_Callable__
-#define __ZWorker_Callable__ 1
+#ifndef __ZCallScheduler__
+#define __ZCallScheduler__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
-#include "zoolib/ZWorker.h"
+#include "zoolib/ZThread.h"
+
+#include <set>
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorker_Callable
+#pragma mark * ZCallScheduler
 
-class ZWorker_Callable
-:	public ZWorker
+class ZCallScheduler
 	{
+	ZCallScheduler();
+
 public:
-	typedef ZCallable<bool(ZRef_ZWorker)> Callable_t;
+	static ZCallScheduler* sGet();
 
-	ZWorker_Callable(const ZRef<Callable_t>& iCallable);
-	virtual ~ZWorker_Callable();
+	void Cancel(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
 
-// From ZWorker
-	virtual bool Work();
+	void NextCallAt(ZTime iSystemTime, ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
+	void NextCallIn(double iInterval, ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
+
+	bool IsAwake(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
 
 private:
-	ZRef<Callable_t> fCallable;
+	typedef std::pair<ZRef<ZCaller>,ZRef<ZCallable_Void> > Job;
+
+	void pNextCallAt(ZTime iSystemTime, const Job& iJob);
+
+	void pRun();
+	static void spRun(ZCallScheduler*);
+
+	ZMtxR fMtxR;
+	ZCnd fCnd;
+
+	typedef std::pair<ZTime,Job> TimeJob;
+	typedef std::pair<Job,ZTime> JobTime;
+	std::set<TimeJob> fTimeJobs;
+	std::set<JobTime> fJobTimes;
 	};
-
-ZRef<ZWorker> sWorker(ZRef<ZWorker_Callable::Callable_t> iCallable);
-
-ZRef<ZWorker> sWorker(ZRef<ZWorker_Callable::Callable_t> iCallable,
-	ZRef<ZWorker::Callable_Detached_t> iCallable_Detached);
 
 } // namespace ZooLib
 
-#endif // __ZWorker_Callable__
+#endif // __ZCallScheduler__

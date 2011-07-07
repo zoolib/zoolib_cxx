@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZStreamerReader.h"
 
 namespace ZooLib {
@@ -27,25 +28,32 @@ namespace ZooLib {
 #pragma mark * ZStreamerReader
 
 ZStreamerReader::ZStreamerReader(ZRef<ZStreamerR> iStreamerR)
-:	fStreamerR(iStreamerR)
+:	ZWorker
+		(sCallable(this, &ZStreamerReader::pReadStarted),
+		sCallable(this, &ZStreamerReader::pWork),
+		sCallable(this, &ZStreamerReader::pReadFinished))
+,	fStreamerR(iStreamerR)
 	{}
 
 ZStreamerReader::~ZStreamerReader()
 	{}
 
-void ZStreamerReader::RunnerAttached()
-	{
-	ZWorker::RunnerAttached();
-	this->ReadStarted();
-	}
+void ZStreamerReader::ReadStarted()
+	{}
 
-void ZStreamerReader::RunnerDetached()
-	{
-	this->ReadFinished();
-	ZWorker::RunnerDetached();
-	}
+void ZStreamerReader::ReadFinished()
+	{}
 
-bool ZStreamerReader::Work()
+bool ZStreamerReader::Read(ZRef<ZStreamerR> iStreamerR)
+	{ return this->Read(iStreamerR->GetStreamR()); }
+
+bool ZStreamerReader::Read(const ZStreamR& iStreamR)
+	{ return false; }
+
+void ZStreamerReader::pReadStarted(ZRef<ZWorker> iWorker)
+	{ this->ReadStarted(); }
+
+bool ZStreamerReader::pWork(ZRef<ZWorker> iWorker)
 	{
 	if (this->Read(fStreamerR))
 		{
@@ -61,16 +69,7 @@ bool ZStreamerReader::Work()
 	return false;
 	}
 
-void ZStreamerReader::ReadStarted()
-	{}
-
-void ZStreamerReader::ReadFinished()
-	{}
-
-bool ZStreamerReader::Read(ZRef<ZStreamerR> iStreamerR)
-	{ return this->Read(iStreamerR->GetStreamR()); }
-
-bool ZStreamerReader::Read(const ZStreamR& iStreamR)
-	{ return false; }
+void ZStreamerReader::pReadFinished(ZRef<ZWorker> iWorker)
+	{ this->ReadFinished(); }
 
 } // namespace ZooLib
