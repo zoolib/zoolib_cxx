@@ -1415,10 +1415,7 @@ R sCall
 
 template <class T>
 void sCallReturnVoid(ZRef<ZCallable<T(void)> > iCallable)
-	{
-	if (iCallable)
-		iCallable->Call();
-	}
+	{ sCall(iCallable); }
 
 // =================================================================================================
 #pragma mark -
