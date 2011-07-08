@@ -35,10 +35,7 @@ class ZCallable_Const
 :	public ZCallable<R(void)>
 	{
 public:
-	typedef typename ZCallableUtil::VT<R>::P Param_t;
-	typedef typename ZCallableUtil::VT<R>::F Field_t;
-
-	ZCallable_Const(Param_t iR)
+	ZCallable_Const(typename ZCallableUtil::VT<R>::Param iR)
 	:	fR(iR)
 		{}
 
@@ -47,7 +44,7 @@ public:
 		{ return fR; }
 
 private:
-	Field_t fR;
+	typename ZCallableUtil::VT<R>::Field fR;
 	};
 
 // =================================================================================================

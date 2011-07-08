@@ -35,20 +35,29 @@ namespace ZCallableUtil {
 
 template <class T> struct VT
 	{
-	typedef const T F; // Field
-	typedef const T& P; // Parameter
+	typedef const T F;
+	typedef const T& P;
+
+	typedef F Field;
+	typedef F Param;
 	};
 
 template <class T> struct VT<const T&>
 	{
 	typedef const T F;
 	typedef const T& P;
+
+	typedef F Field;
+	typedef F Param;
 	};
 
 template <class T> struct VT<T&>
 	{
 	typedef T& F;
 	typedef T& P;
+
+	typedef F Field;
+	typedef F Param;
 	};
 
 } // namespace ZCallableUtil
