@@ -59,8 +59,8 @@ static UINT spMSG_Invoke = ::RegisterWindowMessageW(L"ZCaller_WinMessageLoop::In
 void ZCaller_WinMessageLoop::pTrigger()
 	{ ::PostMessageW(fHWND, spMSG_Invoke, 0, 0); }
 
-LRESULT ZCaller_WinMessageLoop::pWindowProc(WNDPROC iWNDPROC,
-	HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+LRESULT ZCaller_WinMessageLoop::pWindowProc
+	(WNDPROC iWNDPROC, HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	if (iMessage == spMSG_Invoke)
 		{
