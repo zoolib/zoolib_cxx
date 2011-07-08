@@ -25,15 +25,17 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Callables (anonymous)
+#pragma mark * anonymous
 
 namespace { // anonymous
 
-struct Base_Binary : public ZCallable_Bool
+typedef ZCallable_Bool ZCB;
+
+struct Base : public ZCB
 	{
-	Base_Binary(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1) : f0(i0) , f1(i1) {}
-	const ZRef<ZCallable_Bool> f0;
-	const ZRef<ZCallable_Bool> f1;	
+	Base(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1) : f0(i0) , f1(i1) {}
+	const ZRef<ZCB> f0;
+	const ZRef<ZCB> f1;	
 	};
 
 } // anonymous namespace
@@ -42,51 +44,48 @@ struct Base_Binary : public ZCallable_Bool
 #pragma mark -
 #pragma mark * Makers
 
-ZRef<ZCallable_Bool> sCallable_True()
+ZRef<ZCB> sCallable_True()
 	{ return sCallable_Const(true); }
 
-ZRef<ZCallable_Bool> sCallable_False()
+ZRef<ZCB> sCallable_False()
 	{ return sCallable_Const(false); }
 
-ZRef<ZCallable_Bool> sCallable_Not(const ZRef<ZCallable_Bool>& iCallable)
+ZRef<ZCB> sCallable_Not(const ZRef<ZCB>& iCallable)
 	{
-	struct Callable : public ZCallable_Bool
+	struct Callable : public ZCB
 		{
-		Callable(const ZRef<ZCallable_Bool>& iCallable) : fCallable(iCallable) {}
+		Callable(const ZRef<ZCB>& iCallable) : fCallable(iCallable) {}
 		virtual bool Call() { return not sCall(fCallable); }
-		const ZRef<ZCallable_Bool> fCallable;
+		const ZRef<ZCB> fCallable;
 		};
 	return new Callable(iCallable);
 	}
 
-ZRef<ZCallable_Bool> sCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+ZRef<ZCB> sCallable_And(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1)
 	{
-	struct Callable : public Base_Binary
+	struct Callable : public Base
 		{
-		Callable(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-		:	Base_Binary(i0, i1) {}
+		Callable(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1) : Base(i0, i1) {}
 		virtual bool Call() { return sCall(f0) && sCall(f1); }
 		};
 	return new Callable(i0, i1);
 	}
 
-ZRef<ZCallable_Bool> sCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+ZRef<ZCB> sCallable_Or(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1)
 	{
-	struct Callable : public Base_Binary
+	struct Callable : public Base
 		{
-		Callable(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-		:	Base_Binary(i0, i1) {}
+		Callable(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1) : Base(i0, i1) {}
 		virtual bool Call() { return sCall(f0) || sCall(f1); }
 		};
 	return new Callable(i0, i1);
 	}
 
-ZRef<ZCallable_Bool> sCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+ZRef<ZCB> sCallable_Xor(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1)
 	{
-	struct Callable : public Base_Binary
+	struct Callable : public Base
 		{
-		Callable(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-		:	Base_Binary(i0, i1) {}
+		Callable(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1) : Base(i0, i1) {}
 		virtual bool Call() { return sCall(f0) ^ sCall(f1); }
 		};
 	return new Callable(i0, i1);
