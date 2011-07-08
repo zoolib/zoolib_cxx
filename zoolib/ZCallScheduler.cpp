@@ -44,9 +44,6 @@ ZCallScheduler* ZCallScheduler::sGet()
 	return spScheduler;
 	}
 
-ZCallScheduler::ZCallScheduler()
-	{}
-
 void ZCallScheduler::Cancel(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable)
 	{
 	using namespace ZUtil_STL;
