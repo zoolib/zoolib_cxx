@@ -36,18 +36,18 @@ class ZCallable_DelayFor
 :	public ZCallable<R(void)>
 	{
 public:
-	ZCallable_DelayFor(double iTimeout, ZRef<ZCallable<R(void)> > iCallable)
-	:	fTimeout(iTimeout)
+	ZCallable_DelayFor(double iInterval, ZRef<ZCallable<R(void)> > iCallable)
+	:	fInterval(iInterval)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
 	virtual R Call()
 		{
-		const ZTime deadline = ZTime::sSystem() + fTimeout;
+		const ZTime systemTime = ZTime::sSystem() + fInterval;
 		for (;;)
 			{
-			const double delta = deadline - ZTime::sSystem();
+			const double delta = systemTime - ZTime::sSystem();
 			if (delta <= 0)
 				return sCall(fCallable);
 			ZThread::sSleep(delta);
@@ -55,14 +55,14 @@ public:
 		}
 
 private:
-	const double fTimeout;
+	const double fInterval;
 	const ZRef<ZCallable<R(void)> > fCallable;
 	};
 
 template <class R>
 ZRef<ZCallable<R(void)> >
-sCallable_DelayFor(double iTimeout, ZRef<ZCallable<R(void)> > iCallable)
-	{ return new ZCallable_DelayFor<R>(iTimeout, iCallable); }
+sCallable_DelayFor(double iInterval, ZRef<ZCallable<R(void)> > iCallable)
+	{ return new ZCallable_DelayFor<R>(iInterval, iCallable); }
 
 // =================================================================================================
 #pragma mark -
@@ -73,8 +73,8 @@ class ZCallable_DelayUntil
 :	public ZCallable<R(void)>
 	{
 public:
-	ZCallable_DelayUntil(ZTime iDeadline, ZRef<ZCallable<R(void)> > iCallable)
-	:	fDeadline(iDeadline)
+	ZCallable_DelayUntil(ZTime iSystemTime, ZRef<ZCallable<R(void)> > iCallable)
+	:	fSystemTime(iSystemTime)
 	,	fCallable(iCallable)
 		{}
 
@@ -83,7 +83,7 @@ public:
 		{
 		for (;;)
 			{
-			const double delta = fDeadline - ZTime::sSystem();
+			const double delta = fSystemTime - ZTime::sSystem();
 			if (delta <= 0)
 				return sCall(fCallable);
 			ZThread::sSleep(delta);
@@ -91,14 +91,14 @@ public:
 		}
 
 private:
-	const ZTime fDeadline;
+	const ZTime fSystemTime;
 	const ZRef<ZCallable<R(void)> > fCallable;
 	};
 
 template <class R>
 ZRef<ZCallable<R(void)> >
-sCallable_DelayUntil(ZTime iDeadline, ZRef<ZCallable<R(void)> > iCallable)
-	{ return new ZCallable_DelayUntil<R>(iDeadline, iCallable); }
+sCallable_DelayUntil(ZTime iSystemTime, ZRef<ZCallable<R(void)> > iCallable)
+	{ return new ZCallable_DelayUntil<R>(iSystemTime, iCallable); }
 
 } // namespace ZooLib
 
