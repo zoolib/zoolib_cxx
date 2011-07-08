@@ -206,7 +206,7 @@ public:
 		{
 		if (fCallable)
 			{
-			for (size_t theCount = fCount; theCount; --theCount)
+			for (size_t theCount = fCount; theCount--; /*no inc*/)
 				fCallable->Call();
 			}
 		}
