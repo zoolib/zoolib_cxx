@@ -40,7 +40,7 @@ void ZCaller_EventLoop::Call(ZRef<ZCallable_Void> iCallable)
 	if (iCallable)
 		{
 		ZAcqMtx acq(fMtx);
-		fCallables_Pending.push_back(iCallable);
+		fCallables.push_back(iCallable);
 		if (not fTriggered++)
 			this->pTrigger();
 		}
@@ -48,16 +48,17 @@ void ZCaller_EventLoop::Call(ZRef<ZCallable_Void> iCallable)
 
 void ZCaller_EventLoop::pCall()
 	{
-	ZGuardRMtx guard(fMtx);
+	vector<ZRef<ZCallable_Void> > calling;
+
+	{
+	ZAcqMtx acq(fMtx);
 	fTriggered = false;
-	fCallables_Pending.swap(fCallables_Calling);
-	guard.Release();
+	fCallables.swap(calling);
+	}
 
-	for (vector<ZRef<ZCallable_Void> >::iterator iter = fCallables_Calling.begin();
-		iter != fCallables_Calling.end(); ++iter)
+	for (vector<ZRef<ZCallable_Void> >::iterator iter = calling.begin();
+		iter != calling.end(); ++iter)
 		{ (*iter)->Call(); }
-
-	fCallables_Calling.resize(0);
 	}
 
 } // namespace ZooLib
