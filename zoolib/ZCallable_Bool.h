@@ -31,19 +31,11 @@ namespace ZooLib {
 #pragma mark * Makers
 
 ZRef<ZCallable_Bool> sCallable_True();
-
 ZRef<ZCallable_Bool> sCallable_False();
-
 ZRef<ZCallable_Bool> sCallable_Not(const ZRef<ZCallable_Bool>& iCallable);
-
-ZRef<ZCallable_Bool>
-sCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
-
-ZRef<ZCallable_Bool>
-sCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
-
-ZRef<ZCallable_Bool>
-sCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+ZRef<ZCallable_Bool> sCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+ZRef<ZCallable_Bool> sCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
+ZRef<ZCallable_Bool> sCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 // =================================================================================================
 #pragma mark -
