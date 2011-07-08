@@ -52,14 +52,14 @@ struct ip6_addr
 #pragma mark -
 #pragma mark * ZNetAddress_Internet
 
-class ZNetAddress_Internet : public ZNetAddress
+class ZNetAddress_Internet
+:	public ZNetAddress
 	{
 protected:
 	ZNetAddress_Internet(ip_port iPort);
 
 // Our protocol
-	ip_port GetPort() const
-		{ return fPort; }
+	ip_port GetPort() const;
 
 protected:
 	const ip_port fPort;
@@ -69,7 +69,8 @@ protected:
 #pragma mark -
 #pragma mark * ZNetAddress_IP4
 
-class ZNetAddress_IP4 : public ZNetAddress_Internet
+class ZNetAddress_IP4
+:	public ZNetAddress_Internet
 	{
 public:
 	ZNetAddress_IP4(ip4_addr iAddr, ip_port iPort);
@@ -79,8 +80,7 @@ public:
 	virtual ZRef<ZNetEndpoint> Connect() const;
 
 // Our protocol
-	ip4_addr GetAddr() const
-		{ return fAddr; }
+	ip4_addr GetAddr() const;
 
 	static const ip4_addr sLoopback = 0x7F000001u;
 	static const ip4_addr sAny = 0;
@@ -96,7 +96,8 @@ private:
 #pragma mark -
 #pragma mark * ZNetAddress_IP6
 
-class ZNetAddress_IP6 : public ZNetAddress_Internet
+class ZNetAddress_IP6
+:	public ZNetAddress_Internet
 	{
 public:
 	ZNetAddress_IP6(ip_port iPort, ip6_addr iAddr);
@@ -105,8 +106,7 @@ public:
 	virtual ZRef<ZNetEndpoint> Connect() const;
 
 // Our protocol
-	const ip6_addr& GetAddr() const
-		{ return fAddr; }
+	const ip6_addr& GetAddr() const;
 
 	static const ip6_addr sLoopback;
 	static const ip6_addr sAny;
@@ -119,7 +119,8 @@ private:
 #pragma mark -
 #pragma mark * ZNetName_Internet
 
-class ZNetName_Internet : public ZNetName
+class ZNetName_Internet
+:	public ZNetName
 	{
 public:
 	typedef ZMulti_T3<std::string, ip_port, size_t> LookupParam_t;
@@ -144,7 +145,8 @@ private:
 #pragma mark -
 #pragma mark * ZNetListener_TCP
 
-class ZNetListener_TCP : public virtual ZNetListener
+class ZNetListener_TCP
+:	public virtual ZNetListener
 	{
 public:
 	typedef ZMulti_T1<ip_port> MakeParam_t;
@@ -162,7 +164,8 @@ public:
 #pragma mark -
 #pragma mark * ZNetEndpoint_TCP
 
-class ZNetEndpoint_TCP : public virtual ZNetEndpoint
+class ZNetEndpoint_TCP
+:	public virtual ZNetEndpoint
 	{
 public:
 	typedef ZMulti_T2<ip4_addr, ip_port> MakeParam4_t;

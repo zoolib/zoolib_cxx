@@ -34,6 +34,9 @@ ZNetAddress_Internet::ZNetAddress_Internet(ip_port iPort)
 :	fPort(iPort)
 	{}
 
+ip_port ZNetAddress_Internet::GetPort() const
+	{ return fPort; }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetAddress_IP4
@@ -51,6 +54,9 @@ ZNetAddress_IP4::ZNetAddress_IP4
 
 ZRef<ZNetEndpoint> ZNetAddress_IP4::Connect() const
 	{ return ZNetEndpoint_TCP::sCreateConnected(fAddr, fPort); }
+
+ip4_addr ZNetAddress_IP4::GetAddr() const
+	{ return fAddr; }
 
 std::string ZNetAddress_IP4::sAsString(ip4_addr iAddr)
 	{
@@ -75,6 +81,9 @@ ZNetAddress_IP6::ZNetAddress_IP6(ip_port iPort, ip6_addr iAddr)
 
 ZRef<ZNetEndpoint> ZNetAddress_IP6::Connect() const
 	{ return ZNetEndpoint_TCP::sCreateConnected(fAddr, fPort); }
+
+const ip6_addr& ZNetAddress_IP6::GetAddr() const
+	{ return fAddr; }
 
 const ip6_addr ZNetAddress_IP6::sLoopback = {0};
 
