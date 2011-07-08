@@ -41,20 +41,16 @@ ZRef<ZCallable_Bool> sCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZC
 #pragma mark -
 #pragma mark * Concise Makers
 
-inline
-ZRef<ZCallable_Bool> sNot(const ZRef<ZCallable_Bool>& iCallable)
+inline ZRef<ZCallable_Bool> sNot(const ZRef<ZCallable_Bool>& iCallable)
 	{ return sCallable_Not(iCallable); }
 
-inline
-ZRef<ZCallable_Bool> sAnd(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+inline ZRef<ZCallable_Bool> sAnd(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return sCallable_And(i0, i1); }
 
-inline
-ZRef<ZCallable_Bool> sOr(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+inline ZRef<ZCallable_Bool> sOr(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return sCallable_Or(i0, i1); }
 
-inline
-ZRef<ZCallable_Bool> sXor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
+inline ZRef<ZCallable_Bool> sXor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{ return sCallable_Xor(i0, i1); }
 
 // =================================================================================================
@@ -63,31 +59,31 @@ ZRef<ZCallable_Bool> sXor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_B
 
 inline
 ZRef<ZCallable_Bool> operator~(const ZRef<ZCallable_Bool>& iCallable)
-	{ return sNot(iCallable); }
+	{ return sCallable_Not(iCallable); }
 
 inline
 ZRef<ZCallable_Bool> operator&(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	{ return sAnd(i0, i1); }
+	{ return sCallable_And(i0, i1); }
 
 inline
 ZRef<ZCallable_Bool>& operator&=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1)
-	{ return io0 = io0 & i1; }
+	{ return io0 = sCallable_And(io0, i1); }
 
 inline
 ZRef<ZCallable_Bool> operator|(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	{ return sOr(i0, i1); }
+	{ return sCallable_Or(i0, i1); }
 
 inline
 ZRef<ZCallable_Bool>& operator|=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1)
-	{ return io0 = io0 | i1; }
+	{ return io0 = sCallable_Or(io0, i1); }
 
 inline
 ZRef<ZCallable_Bool> operator^(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
-	{ return sXor(i0, i1); }
+	{ return sCallable_Xor(i0, i1); }
 
 inline
 ZRef<ZCallable_Bool>& operator^=(ZRef<ZCallable_Bool>& io0, const ZRef<ZCallable_Bool>& i1)
-	{ return io0 = io0 ^ i1; }
+	{ return io0 = sCallable_Xor(io0, i1); }
 
 } // namespace ZooLib
 
