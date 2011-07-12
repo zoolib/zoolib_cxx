@@ -521,6 +521,12 @@ public:
 	bool operator<(const ZMap_Any& r) const
 		{ return this->Compare(r) < 0; }
 
+	ZVal_Any& operator[](const string8& iName);
+	const ZVal_Any& operator[](const string8& iName) const;
+
+	ZVal_Any& operator[](const Index_t& iIndex);
+	const ZVal_Any& operator[](const Index_t& iIndex) const;
+
 private:
 	void pTouch();
 	Map_t::iterator pTouch(const Index_t& iIndex);

@@ -585,6 +585,42 @@ ZMap_Any::Index_t ZMap_Any::IndexOf(const ZMap_Any& iOther, const Index_t& iOthe
 ZMap_Any& ZMap_Any::Set(const ZNameVal& iNV)
 	{ return this->Set(iNV.first, iNV.second); }
 
+ZVal_Any& ZMap_Any::operator[](const string8& iName)
+	{
+	if (ZVal_Any* theVal = this->PGetMutable(iName))
+		{ return *theVal; }
+	else
+		{
+		this->Set(iName, ZVal_Any());
+		return *this->PGetMutable(iName);
+		}
+	}
+
+const ZVal_Any& ZMap_Any::operator[](const string8& iName) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iName))
+		return *theVal;
+	return spVal_Null;
+	}
+
+ZVal_Any& ZMap_Any::operator[](const Index_t& iIndex)
+	{
+	if (ZVal_Any* theVal = this->PGetMutable(iIndex))
+		{ return *theVal; }
+	else
+		{
+		ZDebugStop(0);
+		return *theVal;
+		}
+	}
+
+const ZVal_Any& ZMap_Any::operator[](const Index_t& iIndex) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iIndex))
+		return *theVal;
+	return spVal_Null;
+	}
+
 void ZMap_Any::pTouch()
 	{
 	if (!fRep)
