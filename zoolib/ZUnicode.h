@@ -392,6 +392,13 @@ inline string8 sAsUTF8(const string16& iString)
 	return Functions_Convert_T<string16::const_iterator>::sAsUTF8(iString.begin(), iString.size());
 	}
 
+inline string8 sAsUTF8(const UTF16* iString)
+	{
+	if (iString)
+		return sAsUTF8(string16(iString));
+	return string8();
+	}
+
 inline string8 sAsUTF8(const string8& iString)
 	{ return iString; }
 //@}
