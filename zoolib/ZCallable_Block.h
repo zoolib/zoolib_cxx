@@ -30,13 +30,51 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZCallable_Block {
 
-#if defined(__clang_major__) && __clang_major__ >= 2
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable
 
 template <class Signature> class Callable;
+
+#if defined(__clang_major__) && __clang_major__ < 2
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 0 params)
+
+// Only variant usable before clang 2.0
+
+class Callable
+:	public ZCallable<void(void)>
+	{
+public:
+	typedef void (^BlockPtr_t)();
+
+	Callable(BlockPtr_t iBlockPtr)
+	:	fBlockPtr(Block_copy(iBlockPtr))
+		{}
+
+	virtual ~Callable()
+		{ Block_release(fBlockPtr); }
+
+// From ZCallable
+	virtual void Call()
+		{ return fBlockPtr(); }
+
+private:
+	BlockPtr_t fBlockPtr;
+	};
+
+inline
+ZRef<ZCallable<void(void)> >
+sCallable(void (^iBlockPtr)())
+	{ return new Callable(iBlockPtr); }
+
+#endif // defined(__clang_major__) && __clang_major__ < 2
+
+// =================================================================================================
+
+#if defined(__clang_major__) && __clang_major__ >= 2
 
 // =================================================================================================
 #pragma mark -
@@ -666,40 +704,6 @@ template <class R,
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >
 sCallable(R (^iBlockPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
 	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>(iBlockPtr); }
-
-#else // defined(__clang_major__) && __clang_major__ >= 2
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 0 params)
-
-// Only variant usable before clang 2.0
-
-class Callable
-:	public ZCallable<void(void)>
-	{
-public:
-	typedef void (^BlockPtr_t)();
-
-	Callable(BlockPtr_t iBlockPtr)
-	:	fBlockPtr(Block_copy(iBlockPtr))
-		{}
-
-	virtual ~Callable()
-		{ Block_release(fBlockPtr); }
-
-// From ZCallable
-	virtual void Call()
-		{ return fBlockPtr(); }
-
-private:
-	BlockPtr_t fBlockPtr;
-	};
-
-inline
-ZRef<ZCallable<void(void)> >
-sCallable(void (^iBlockPtr)())
-	{ return new Callable(iBlockPtr); }
 
 #endif // defined(__clang_major__) && __clang_major__ >= 2
 
