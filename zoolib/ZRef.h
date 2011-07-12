@@ -212,6 +212,7 @@ public:
 		if (iP)
 			sRelease(*iP);
 		}
+
 private:
 	T* fP;
 	};
@@ -231,8 +232,8 @@ void sRefCopy(void* oDest, T* iP)
 template <class T> void sRetain_T(T*& ioPtr);
 template <class T> void sRelease_T(T* iPtr);
 
-template <class T>
-class ZRef<T*, true>
+template <class T, bool Sense>
+class ZRef<T*,Sense>
 	{
 private:
 	static void spRetain(T*& iP)
@@ -339,6 +340,8 @@ public:
 	bool operator<(const ZRef<O*,OtherSense>& iOther) const
 		{ return fP < iOther.Get(); }
 
+	operator bool() const { return Sense == !!fP; }
+
 	operator T*() const
 		{ return fP; }
 
@@ -374,7 +377,6 @@ public:
 	template <class O>
 	O StaticCast() const
 		{ return static_cast<O>(fP); }
-
 
 	static T* sCFRetain(T* iP)
 		{
