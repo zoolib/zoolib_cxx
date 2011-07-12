@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(AppleEvent)
 
 #include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYad_Std.h"
+//#include "zoolib/ZYad_Std.h"
 
 namespace ZooLib {
 
