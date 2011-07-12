@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCountedWrap__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCountedWithoutFinalize.h"
+#include "zoolib/ZCounted.h"
 
 namespace ZooLib {
 
@@ -30,10 +30,10 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZCountedWrap
 
-template <class T>
+template <class T, class Tag = T>
 class ZCountedWrap
 :	public T
-,	public ZCountedWithoutFinalize
+,	public ZCounted
 	{
 public:
 	ZCountedWrap()
@@ -56,12 +56,18 @@ public:
 		return this;
 		}
 
-	T& GetWrap()
+	T& Get()
 		{ return *this; }
+
+	T& GetMutable()
+		{ return *this; }
+
+	void Set(const T& iOther)
+		{ *this = iOther; }
 	};
 
 template <class T>
-ZRef<ZCountedWrap<T> > MakeCounted(const T& iOther)
+ZRef<ZCountedWrap<T> > sCountedWrap(const T& iOther)
 	{ return new ZCountedWrap<T>(iOther); }
 
 } // namespace ZooLib
