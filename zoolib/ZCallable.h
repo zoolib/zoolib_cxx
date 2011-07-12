@@ -2440,8 +2440,6 @@ void sCallReturnVoid(ZRef<ZCallable<T(void)> > iCallable)
 
 typedef ZCallable<void(void)> ZCallable_Void;
 
-typedef ZRef<ZCallable_Void> ZRef_ZCallable_Void;
-
 typedef ZCallable<bool(void)> ZCallable_Bool;
 
 // =================================================================================================
