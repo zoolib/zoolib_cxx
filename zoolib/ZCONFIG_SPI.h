@@ -537,11 +537,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark SystemConfiguration
 #ifndef ZCONFIG_SPI_Avail__SystemConfiguration
-#	if __MACH__
-#		define ZCONFIG_SPI_Avail__SystemConfiguration 1
-#	elif ZCONFIG_SPI_Avail__Carbon64
-#		define ZCONFIG_SPI_Avail__SystemConfiguration 1
-#	endif
+#	define ZCONFIG_SPI_Avail__SystemConfiguration ZCONFIG_SPI_Avail__MacOSX
 #endif
 
 #ifndef ZCONFIG_SPI_Avail__SystemConfiguration
