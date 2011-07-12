@@ -136,7 +136,6 @@ public:
 		return *this;
 		}
 
-
 	ZQ(const null_t&)
 	:	fHasValue(false)
 		{}
@@ -258,6 +257,83 @@ private:
 
 	friend class ZQ<T, !Sense>;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZQ (specialized for void)
+
+template <bool Sense>
+class ZQ<void,Sense>
+	{
+public:
+	void swap(ZQ& iOther)
+		{ swap(fHasValue, iOther.fHasValue); }
+
+	ZQ(void)
+	:	fHasValue(false)
+		{}
+
+	ZQ(const ZQ<void,Sense>& iOther)
+	:	fHasValue(iOther.fHasValue)
+		{}
+
+	~ZQ()
+		{}
+
+	ZQ& operator=(const ZQ<void,Sense>& iOther)
+		{
+		fHasValue = iOther.fHasValue;
+		return *this;
+		}
+
+	ZQ(const ZQ<void,!Sense>& iOther)
+	:	fHasValue(iOther.fHasValue)
+		{}
+
+	ZQ& operator=(const ZQ<void,!Sense>& iOther)
+		{
+		fHasValue = iOther.fHasValue;
+		return *this;
+		}
+
+	ZQ(const null_t&)
+	:	fHasValue(false)
+		{}
+
+	ZQ& operator=(const null_t&)
+		{
+		fHasValue = false;
+		return *this;
+		}
+
+	ZQ(bool iBool)
+	:	fHasValue(iBool)
+		{}
+
+	ZQ& operator=(bool iBool)
+		{
+		fHasValue = iBool;
+		return *this;
+		}
+
+	ZMACRO_operator_bool_T(ZQ, operator_bool) const
+		{ return operator_bool_gen::translate(fHasValue == Sense); }
+
+	void Clear()
+		{ fHasValue = false; }
+
+	void Set()
+		{ fHasValue = true; }
+
+private:
+	bool fHasValue;
+
+	friend class ZQ<void, !Sense>;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * swap
 
 template <class T>
 inline void swap(ZQ<T>& a, ZQ<T>& b)
