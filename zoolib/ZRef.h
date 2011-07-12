@@ -50,22 +50,15 @@ private:
 		}
 
 public:
-	#if 1 || defined(__OBJC__)
+	operator bool() const { return Sense == !!fP; }
 
-		operator bool() const { return Sense == !!fP; }
-
-		operator T*() const { return fP; }
-
-	#else
-
-		ZMACRO_operator_bool_T(ZRef, operator_bool) const
-			{ return operator_bool_gen::translate(Sense == !!fP); }
-
-	#endif
+	operator T*() const { return fP; }
 
 	template <class O, bool OtherSense>
 	void swap(ZRef<O, OtherSense>& ioOther)
 		{ std::swap(fP, ioOther.fP); }
+
+	typedef T Type_t;
 
 	ZRef()
 	:	fP(nullptr)
@@ -259,6 +252,8 @@ public:
 	void swap(ZRef<O, OtherSense>& ioOther)
 		{ std::swap(fP, ioOther.fP); }
 
+	typedef T* Type_t;
+
 	ZRef()
 	:	fP(nullptr)
 		{}
@@ -413,7 +408,7 @@ ZRef<T,true> sRef(const ZRef<T,Sense>& iP)
 #pragma mark -
 #pragma mark * sTempRef
 
-const struct TempRef_t
+const struct
 	{
 	template <class T>
 	ZRef<T,true> operator&(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
