@@ -96,14 +96,26 @@ private:
 
 // Adopt functor.
 // operator& lets you use Adopt& as a pseudo prefix operator.
-const struct Adopt_t
+const struct
 	{
 	template <class T>
 	Adopt_T<T> operator()(T iT) const { return Adopt_T<T>(iT); }
 
 	template <class T>
 	Adopt_T<T> operator&(T iT) const { return Adopt_T<T>(iT); }
-	} Adopt = {};
+	} Adopt = {}, sAdopt = {};
+
+// =================================================================================================
+
+template <class T, class S>
+bool sAssignIfUnequal(T& output, const S& input)
+	{
+	if (output == input)
+		return false;
+
+	output = input;
+	return true;
+	}
 
 // =================================================================================================
 
