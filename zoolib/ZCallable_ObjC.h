@@ -133,10 +133,44 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call()
+	virtual ZQ<R> QCall()
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 0 params, void return)
+
+template <class Obj>
+class Callable<Obj,void(void)>
+:	public ZCallable<void(void)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall()
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -160,10 +194,45 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call(P0 i0)
+	virtual ZQ<R> QCall(P0 i0)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 1 param, void return)
+
+template <class Obj,
+	class P0>
+class Callable<Obj,void(P0)>
+:	public ZCallable<void(P0)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall(P0 i0)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -187,10 +256,45 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1)
+	virtual ZQ<R> QCall(P0 i0, P1 i1)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 2 params, void return)
+
+template <class Obj,
+	class P0, class P1>
+class Callable<Obj,void(P0,P1)>
+:	public ZCallable<void(P0,P1)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall(P0 i0, P1 i1)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -214,10 +318,45 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 3 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2>
+class Callable<Obj,void(P0,P1,P2)>
+:	public ZCallable<void(P0,P1,P2)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -241,10 +380,45 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 4 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3>
+class Callable<Obj,void(P0,P1,P2,P3)>
+:	public ZCallable<void(P0,P1,P2,P3)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -269,10 +443,46 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 5 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4>
+class Callable<Obj,void(P0,P1,P2,P3,P4)>
+:	public ZCallable<void(P0,P1,P2,P3,P4)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -297,11 +507,46 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4, i5);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 6 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5>
+class Callable<Obj,void(P0,P1,P2,P3,P4,P5)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -326,10 +571,46 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 7 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6>
+class Callable<Obj,void(P0,P1,P2,P3,P4,P5,P6)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -354,10 +635,46 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 8 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7>
+class Callable<Obj,void(P0,P1,P2,P3,P4,P5,P6,P7)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -383,12 +700,51 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 9 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8>
+class Callable<Obj,void(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -414,12 +770,51 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 10 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9>
+class Callable<Obj,void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -445,12 +840,51 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 11 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA>
+class Callable<Obj,void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -476,12 +910,51 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 12 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB>
+class Callable<Obj,void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA, PB iB)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -508,12 +981,52 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 13 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC>
+class Callable<Obj,void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA, PB iB, PC iC)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -540,12 +1053,52 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 14 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD>
+class Callable<Obj,void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -572,12 +1125,52 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 15 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE>
+class Callable<Obj,void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+			return true;
+			}
+		return null;
 		}
 
 private:
@@ -604,12 +1197,52 @@ public:
 	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		return MsgSend<R, FunctionPtr_t>::sMsgSend()
-			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+		if (fObj)
+			{
+			return MsgSend<R, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+			}
+		return null;
+		}
+
+private:
+	Obj fObj;
+	SEL fSEL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable (specialization for 16 params, void return)
+
+template <class Obj,
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE, class PF>
+class Callable<Obj,void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
+:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
+	{
+public:
+	typedef void (*FunctionPtr_t)(id,SEL,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
+
+	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+
+// From ZCallable
+	virtual ZQ<void> QCall
+		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
+		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
+		{
+		if (fObj)
+			{
+			MsgSend<void, FunctionPtr_t>::sMsgSend()
+				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+			return true;
+			}
+		return null;
 		}
 
 private:

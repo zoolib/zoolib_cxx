@@ -40,7 +40,7 @@ public:
 		{}
 
 // From ZCallable
-	virtual R Call()
+	virtual ZQ<R> QCall()
 		{ return fR; }
 
 private:

@@ -41,8 +41,12 @@ public:
 		{}
 
 // From ZCallable
-	virtual A Call(C iC)
-		{ return sCall(fApply, sCall(fCallable, iC)); }
+	virtual ZQ<A> QCall(C iC)
+		{
+		if (ZQ<B> theB = sQCall(fCallable, iC))
+			return sQCall(fApply, theB.Get());
+		return null;
+		}
 
 private:
 	const ZRef<ZCallable<A(B)> > fApply;
@@ -78,10 +82,10 @@ public:
 		{}
 
 // From ZCallable
-	virtual R1 Call()
+	virtual ZQ<R1> QCall()
 		{
 		sCall(f0);
-		return sCall(f1);
+		return sQCall(f1);
 		}
 
 private:
@@ -122,10 +126,11 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call()
+	virtual ZQ<void> QCall()
 		{
 		for (sCall(fInit); sCall(fCondition); sCall(fInc))
 			{}
+		return true;
 		}
 
 private:
@@ -163,12 +168,16 @@ public:
 		{}
 
 // From ZCallable
-	virtual R Call()
+	virtual ZQ<R> QCall()
 		{
-		if (sCall(fCondition))
-			return sCall(f0);
-		else
-			return sCall(f1);
+		if (ZQ<bool> theQ = sQCall(fCondition))
+			{
+			if (theQ.Get())
+				return sQCall(f0);
+			else
+				return sQCall(f1);
+			}
+		return null;
 		}
 
 private:
@@ -202,13 +211,15 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call()
+	virtual ZQ<void> QCall()
 		{
 		if (fCallable)
 			{
 			for (size_t theCount = fCount; theCount--; /*no inc*/)
 				fCallable->Call();
+			return true;
 			}
+		return null;
 		}
 
 private:
@@ -240,10 +251,11 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call()
+	virtual ZQ<void> QCall()
 		{
 		while (sCall(fCondition))
 			sCall(fCallable);
+		return true;
 		}
 
 private:

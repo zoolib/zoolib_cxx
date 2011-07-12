@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZCaller_Thread.h"
-#include "zoolib/ZWorker_Callable.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/dataspace/ZDataspace_Source_Client.h"
@@ -47,6 +46,7 @@ Source_Client::~Source_Client()
 
 void Source_Client::Initialize()
 	{
+//	sCallOnNewThread(sCallable(sWeakRef(this), &Source_Client::pRead));
 	ZRef<ZWorker> theWorker = sWorker(sCallable(sWeakRef(this), &Source_Client::pRead));
 	sStartWorkerRunner(theWorker);
 	}

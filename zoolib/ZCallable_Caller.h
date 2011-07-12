@@ -46,33 +46,25 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call()
+	virtual ZQ<R> QCall()
 		{
 		return sCallFuture(fCaller,
-			fCallable)->Get().DGet(fDefault);
+			fCallable)->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 0 params, void return)
-
+#if 0
 template <>
 class Callable<void(void)>
 :	public ZCallable<void(void)>
@@ -86,7 +78,7 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call()
+	virtual ZQ<void> QCall()
 		{
 		sCallFuture(fCaller,
 			fCallable)->Wait();
@@ -97,6 +89,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 1 param)
@@ -111,33 +104,25 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call(P0 i0)
+	virtual ZQ<R> QCall(P0 i0)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0))->Get().DGet(fDefault);
+			sBindR(fCallable, i0))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 1 param, void return)
-
+#if 0
 template <
 	class P0>
 class Callable<void(P0)>
@@ -152,7 +137,7 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call(P0 i0)
+	virtual ZQ<void> QCall(P0 i0)
 		{
 		sCallFuture(fCaller,
 			sBindR(fCallable, i0))->Wait();
@@ -163,6 +148,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 2 params)
@@ -177,33 +163,25 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1)
+	virtual ZQ<R> QCall(P0 i0, P1 i1)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0, i1))->Get().DGet(fDefault);
+			sBindR(fCallable, i0, i1))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 2 params, void return)
-
+#if 0
 template <
 	class P0, class P1>
 class Callable<void(P0,P1)>
@@ -218,7 +196,7 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call(P0 i0, P1 i1)
+	virtual ZQ<void> QCall(P0 i0, P1 i1)
 		{
 		sCallFuture(fCaller,
 			sBindR(fCallable, i0, i1))->Wait();
@@ -229,6 +207,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 3 params)
@@ -243,33 +222,25 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0, i1, i2))->Get().DGet(fDefault);
+			sBindR(fCallable, i0, i1, i2))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 3 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2>
 class Callable<void(P0,P1,P2)>
@@ -284,7 +255,7 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call(P0 i0, P1 i1, P2 i2)
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2)
 		{
 		sCallFuture(fCaller,
 			sBindR(fCallable, i0, i1, i2))->Wait();
@@ -295,6 +266,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 4 params)
@@ -309,33 +281,25 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3))->Get().DGet(fDefault);
+			sBindR(fCallable, i0, i1, i2, i3))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 4 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3>
 class Callable<void(P0,P1,P2,P3)>
@@ -350,7 +314,7 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3)
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		sCallFuture(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3))->Wait();
@@ -361,6 +325,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 5 params)
@@ -376,33 +341,25 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4))->Get().DGet(fDefault);
+			sBindR(fCallable, i0, i1, i2, i3, i4))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 5 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4>
@@ -418,7 +375,7 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
 		sCallFuture(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4))->Wait();
@@ -429,6 +386,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 6 params)
@@ -444,33 +402,25 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5))->Get().DGet(fDefault);
+			sBindR(fCallable, i0, i1, i2, i3, i4, i5))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 6 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
@@ -486,7 +436,7 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
 		sCallFuture(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5))->Wait();
@@ -497,6 +447,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 7 params)
@@ -512,33 +463,25 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6))->Get().DGet(fDefault);
+			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 7 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
@@ -554,7 +497,7 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
 		sCallFuture(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6))->Wait();
@@ -565,6 +508,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 8 params)
@@ -580,33 +524,25 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7))->Get().DGet(fDefault);
+			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 8 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
@@ -622,7 +558,7 @@ public:
 		{}
 
 // From ZCallable
-	virtual void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
 		sCallFuture(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7))->Wait();
@@ -633,6 +569,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 9 params)
@@ -649,35 +586,27 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8))->Get().DGet(fDefault);
+			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 9 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
@@ -707,6 +636,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 10 params)
@@ -723,35 +653,27 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))->Get().DGet(fDefault);
+			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 10 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
@@ -781,6 +703,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 11 params)
@@ -797,35 +720,27 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))->Get().DGet(fDefault);
+			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 11 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
@@ -855,6 +770,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 12 params)
@@ -871,35 +787,27 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
 		return sCallFuture(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))->Get().DGet(fDefault);
+			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 12 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
@@ -929,6 +837,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 13 params)
@@ -946,36 +855,28 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
 		return sCallFuture(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC))->Get().DGet(fDefault);
+			i8, i9, iA, iB, iC))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 13 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
@@ -1006,6 +907,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 14 params)
@@ -1023,36 +925,28 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
 		return sCallFuture(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD))->Get().DGet(fDefault);
+			i8, i9, iA, iB, iC, iD))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 14 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
@@ -1083,6 +977,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 15 params)
@@ -1100,36 +995,28 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
 		return sCallFuture(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD, iE))->Get().DGet(fDefault);
+			i8, i9, iA, iB, iC, iD, iE))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 15 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
@@ -1160,6 +1047,7 @@ private:
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 16 params)
@@ -1177,36 +1065,28 @@ public:
 
 	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	:	fCaller(iCaller)
-	,	fDefault(R())
-	,	fCallable(iCallable)
-		{}
-
-	Callable(ZRef<ZCaller> iCaller, const R& iDefault, ZRef<ZCallable<Signature> > iCallable)
-	:	fCaller(iCaller)
-	,	fDefault(iDefault)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
 		return sCallFuture(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD, iE, iF))->Get().DGet(fDefault);
+			i8, i9, iA, iB, iC, iD, iE, iF))->Get().DGet(null);
 		}
 
 private:
 	ZRef<ZCaller> fCaller;
-	const R fDefault;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Callable (specialization for 16 params, void return)
-
+#if 0
 template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7,
@@ -1237,7 +1117,7 @@ private:
 	ZRef<ZCaller> fCaller;
 	ZRef<ZCallable<Signature> > fCallable;
 	};
-
+#endif
 } // namespace ZCallable_Caller
 
 // =================================================================================================

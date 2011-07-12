@@ -74,20 +74,20 @@ ZWorker::ZWorker()
 :	fWorking(false)
 	{}
 
-void ZWorker::Call()
+ZQ<void> ZWorker::QCall()
 	{
 	ZGuardRMtx guard(fMtx);
 
 	fWorking = true;
 	fNextWake = kDistantFuture;
 
-	bool result = false;
+	ZQ<bool> result;
 
 	if (ZRef<Callable_Work> theCallable = fCallable_Work)
 		{
 		guard.Release();
 
-		try { result = theCallable->Call(this); }
+		try { result = theCallable->QCall(this); }
 		catch (...) {}
 
 		guard.Acquire();
@@ -95,10 +95,11 @@ void ZWorker::Call()
 
 	fWorking = false;
 
-	if (result)
+	if (result && result.Get())
 		{
 		if (fNextWake < kDistantFuture)
 			ZCallScheduler::sGet()->NextCallAt(fNextWake, fCaller, this);
+		return true;
 		}
 	else
 		{
@@ -114,6 +115,7 @@ void ZWorker::Call()
 
 		fCaller.Clear();
 		}
+	return null;
 	}
 
 void ZWorker::Wake()

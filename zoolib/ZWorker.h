@@ -55,7 +55,7 @@ public:
 	ZWorker();
 
 // From ZCallable_Void
-	void Call();
+	ZQ<void> QCall();
 
 // Our protocol
 	void Wake();

@@ -41,7 +41,7 @@ public:
 	virtual ~ZCaller_EventLoop();
 
 // From ZCaller
-	virtual void Call(ZRef<ZCallable_Void> iCallable);
+	virtual ZQ<void> QCall(ZRef<ZCallable_Void> iCallable);
 
 protected:
 // Called by concrete subclass

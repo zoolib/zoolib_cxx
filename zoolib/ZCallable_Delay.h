@@ -42,14 +42,14 @@ public:
 		{}
 
 // From ZCallable
-	virtual R Call()
+	virtual ZQ<R> QCall()
 		{
 		const ZTime systemTime = ZTime::sSystem() + fInterval;
 		for (;;)
 			{
 			const double delta = systemTime - ZTime::sSystem();
 			if (delta <= 0)
-				return sCall(fCallable);
+				return sQCall(fCallable);
 			ZThread::sSleep(delta);
 			}
 		}
@@ -79,13 +79,13 @@ public:
 		{}
 
 // From ZCallable
-	virtual R Call()
+	virtual ZQ<R> QCall()
 		{
 		for (;;)
 			{
 			const double delta = fSystemTime - ZTime::sSystem();
 			if (delta <= 0)
-				return sCall(fCallable);
+				return sQCall(fCallable);
 			ZThread::sSleep(delta);
 			}
 		}

@@ -58,8 +58,15 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual void Call()
-		{ return fBlockPtr(); }
+	virtual ZQ<void> QCall()
+		{
+		if (fBlockPtr)
+			{
+			fBlockPtr();
+			return true;
+			}
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -75,6 +82,8 @@ sCallable(void (^iBlockPtr)())
 // =================================================================================================
 
 #if defined(__clang_major__) && __clang_major__ >= 2
+
+// BUG Still need to do void return variants.
 
 // =================================================================================================
 #pragma mark -
@@ -95,8 +104,12 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call()
-		{ return fBlockPtr(); }
+	virtual ZQ<R> QCall()
+		{
+		if (fBlockPtr)
+			return fBlockPtr();
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -122,8 +135,12 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call(P0 i0)
-		{ return fBlockPtr(i0); }
+	virtual ZQ<R> QCall(P0 i0)
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -149,8 +166,12 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1)
-		{ return fBlockPtr(i0, i1); }
+	virtual ZQ<R> QCall(P0 i0, P1 i1)
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -176,8 +197,12 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2)
-		{ return fBlockPtr(i0, i1, i2); }
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -203,8 +228,12 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return fBlockPtr(i0, i1, i2, i3); }
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -231,8 +260,12 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return fBlockPtr(i0, i1, i2, i3, i4); }
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -259,9 +292,13 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return fBlockPtr(i0, i1, i2, i3, i4, i5); }
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4, i5);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -288,8 +325,12 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6); }
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4, i5, i6);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -316,8 +357,12 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7); }
+	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -345,10 +390,14 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -376,10 +425,14 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -407,10 +460,14 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -438,10 +495,14 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -470,10 +531,14 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -502,10 +567,14 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -534,10 +603,14 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
-		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE); }
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;
@@ -566,10 +639,14 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
-	virtual R Call
+	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
-		{ return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF); }
+		{
+		if (fBlockPtr)
+			return fBlockPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+		return null;
+		}
 
 private:
 	BlockPtr_t fBlockPtr;

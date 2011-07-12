@@ -79,7 +79,40 @@ class ZCallable<R(void)>
 public:
 	typedef R(Signature)(void);
 
-	virtual R Call() = 0;
+	virtual ZQ<R> QCall() = 0;
+
+	R DCall(const R& iDefault)
+		{
+		if (ZQ<R> theQ = this->QCall())
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call()
+		{
+		if (ZQ<R> theQ = this->QCall())
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 0 params, void return)
+
+template <>
+class ZCallable<void(void)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(void);
+
+	virtual ZQ<void> QCall() = 0;
+
+	void Call()
+		{
+		this->QCall();
+		}
 	};
 
 // =================================================================================================
@@ -94,7 +127,42 @@ class ZCallable<R(P0)>
 public:
 	typedef R(Signature)(P0);
 
-	virtual R Call(P0) = 0;
+	virtual ZQ<R> QCall(P0) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0)
+		{
+		if (ZQ<R> theQ = this->QCall(i0))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call(typename ZCallableUtil::VT<P0>::P i0)
+		{
+		if (ZQ<R> theQ = this->QCall(i0))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 1 param, void return)
+
+template <
+	class P0>
+class ZCallable<void(P0)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0);
+
+	virtual ZQ<void> QCall(P0) = 0;
+
+	void Call(typename ZCallableUtil::VT<P0>::P i0)
+		{
+		this->QCall(i0);
+		}
 	};
 
 // =================================================================================================
@@ -109,7 +177,48 @@ class ZCallable<R(P0,P1)>
 public:
 	typedef R(Signature)(P0,P1);
 
-	virtual R Call(P0,P1) = 0;
+	virtual ZQ<R> QCall(P0,P1) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 2 params, void return)
+
+template <
+	class P0, class P1>
+class ZCallable<void(P0,P1)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1);
+
+	virtual ZQ<void> QCall(P0,P1) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1)
+		{
+		this->QCall(i0, i1);
+		}
 	};
 
 // =================================================================================================
@@ -124,7 +233,50 @@ class ZCallable<R(P0,P1,P2)>
 public:
 	typedef R(Signature)(P0,P1,P2);
 
-	virtual R Call(P0,P1,P2) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 3 params, void return)
+
+template <
+	class P0, class P1, class P2>
+class ZCallable<void(P0,P1,P2)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2);
+
+	virtual ZQ<void> QCall(P0,P1,P2) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2)
+		{
+		this->QCall(i0, i1, i2);
+		}
 	};
 
 // =================================================================================================
@@ -139,7 +291,53 @@ class ZCallable<R(P0,P1,P2,P3)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3);
 
-	virtual R Call(P0,P1,P2,P3) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 4 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3>
+class ZCallable<void(P0,P1,P2,P3)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3)
+		{
+		this->QCall(i0, i1, i2, i3);
+		}
 	};
 
 // =================================================================================================
@@ -155,7 +353,57 @@ class ZCallable<R(P0,P1,P2,P3,P4)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4);
 
-	virtual R Call(P0,P1,P2,P3,P4) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 5 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4>
+class ZCallable<void(P0,P1,P2,P3,P4)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4) = 0;
+	
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4)
+		{
+		this->QCall(i0, i1, i2, i3, i4);
+		}
 	};
 
 // =================================================================================================
@@ -171,7 +419,60 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5);
 
-	virtual R Call(P0,P1,P2,P3,P4,P5) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 6 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4, class P5>
+class ZCallable<void(P0,P1,P2,P3,P4,P5)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4,P5);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5)
+		{
+		this->QCall(i0, i1, i2, i3, i4, i5);
+		}
 	};
 
 // =================================================================================================
@@ -187,7 +488,63 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5,P6)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6);
 
-	virtual R Call(P0,P1,P2,P3,P4,P5,P6) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 7 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6>
+class ZCallable<void(P0,P1,P2,P3,P4,P5,P6)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6)
+		{
+		this->QCall(i0, i1, i2, i3, i4, i5, i6);
+		}
 	};
 
 // =================================================================================================
@@ -203,7 +560,66 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7);
 
-	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 8 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7>
+class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7)
+		{
+		this->QCall(i0, i1, i2, i3, i4, i5, i6, i7);
+		}
 	};
 
 // =================================================================================================
@@ -220,7 +636,70 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8);
 
-	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 9 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8>
+class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8)
+		{
+		this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		}
 	};
 
 // =================================================================================================
@@ -237,7 +716,73 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
 
-	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 10 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9>
+class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9)
+		{
+		this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		}
 	};
 
 // =================================================================================================
@@ -254,7 +799,76 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
 
-	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 11 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA>
+class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA)
+		{
+		this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		}
 	};
 
 // =================================================================================================
@@ -271,7 +885,79 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
 
-	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 12 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB>
+class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB)
+		{
+		this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		}
 	};
 
 // =================================================================================================
@@ -289,7 +975,83 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
 
-	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 13 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC>
+class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC)
+		{
+		this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		}
 	};
 
 // =================================================================================================
@@ -307,7 +1069,86 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
 
-	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC,
+		typename ZCallableUtil::VT<PD>::P iD)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC,
+		typename ZCallableUtil::VT<PD>::P iD)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 14 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD>
+class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC,
+		typename ZCallableUtil::VT<PD>::P iD)
+		{
+		this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		}
 	};
 
 // =================================================================================================
@@ -325,7 +1166,89 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
 
-	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC,
+		typename ZCallableUtil::VT<PD>::P iD,
+		typename ZCallableUtil::VT<PE>::P iE)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC,
+		typename ZCallableUtil::VT<PD>::P iD,
+		typename ZCallableUtil::VT<PE>::P iE)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 15 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE>
+class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC,
+		typename ZCallableUtil::VT<PD>::P iD,
+		typename ZCallableUtil::VT<PE>::P iE)
+		{
+		this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		}
 	};
 
 // =================================================================================================
@@ -343,7 +1266,92 @@ class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
 
-	virtual R Call(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF) = 0;
+	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF) = 0;
+
+	R DCall(const R& iDefault,
+		typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC,
+		typename ZCallableUtil::VT<PD>::P iD,
+		typename ZCallableUtil::VT<PE>::P iE,
+		typename ZCallableUtil::VT<PF>::P iF)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF))
+			return theQ.Get();
+		return iDefault;
+		}
+	
+	R Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC,
+		typename ZCallableUtil::VT<PD>::P iD,
+		typename ZCallableUtil::VT<PE>::P iE,
+		typename ZCallableUtil::VT<PF>::P iF)
+		{
+		if (ZQ<R> theQ = this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF))
+			return theQ.Get();
+		return R();
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallable (specialization for 16 params, void return)
+
+template <
+	class P0, class P1, class P2, class P3,
+	class P4, class P5, class P6, class P7,
+	class P8, class P9, class PA, class PB,
+	class PC, class PD, class PE, class PF>
+class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
+:	public ZCounted
+	{
+public:
+	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
+
+	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF) = 0;
+
+	void Call
+		(typename ZCallableUtil::VT<P0>::P i0,
+		typename ZCallableUtil::VT<P1>::P i1,
+		typename ZCallableUtil::VT<P2>::P i2,
+		typename ZCallableUtil::VT<P3>::P i3,
+		typename ZCallableUtil::VT<P4>::P i4,
+		typename ZCallableUtil::VT<P5>::P i5,
+		typename ZCallableUtil::VT<P6>::P i6,
+		typename ZCallableUtil::VT<P7>::P i7,
+		typename ZCallableUtil::VT<P8>::P i8,
+		typename ZCallableUtil::VT<P9>::P i9,
+		typename ZCallableUtil::VT<PA>::P iA,
+		typename ZCallableUtil::VT<PB>::P iB,
+		typename ZCallableUtil::VT<PC>::P iC,
+		typename ZCallableUtil::VT<PD>::P iD,
+		typename ZCallableUtil::VT<PE>::P iE,
+		typename ZCallableUtil::VT<PF>::P iF)
+		{
+		this->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+		}
 	};
 
 // =================================================================================================
@@ -355,7 +1363,7 @@ ZQ<R> sQCall
 	(ZRef<ZCallable<R(void)> > iCallable)
 	{
 	if (iCallable)
-		return iCallable->Call();
+		return iCallable->QCall();
 	return null;
 	}
 
@@ -365,7 +1373,7 @@ R sDCall
 	ZRef<ZCallable<R(void)> > iCallable)
 	{
 	if (iCallable)
-		return iCallable->Call();
+		return iCallable->DCall(iDefault);
 	return iDefault;
 	}
 
@@ -389,7 +1397,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<P0>::P i0)
 	{
 	if (iCallable)
-		return iCallable->Call(i0);
+		return iCallable->QCall(i0);
 	return null;
 	}
 
@@ -401,7 +1409,7 @@ R sDCall
 	typename ZCallableUtil::VT<P0>::P i0)
 	{
 	if (iCallable)
-		return iCallable->Call(i0);
+		return iCallable->DCall(iDefault, i0);
 	return iDefault;
 	}
 
@@ -428,7 +1436,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<P1>::P i1)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1);
+		return iCallable->QCall(i0, i1);
 	return null;
 	}
 
@@ -441,7 +1449,7 @@ R sDCall
 	typename ZCallableUtil::VT<P1>::P i1)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1);
+		return iCallable->DCall(iDefault, i0, i1);
 	return iDefault;
 	}
 
@@ -470,7 +1478,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<P2>::P i2)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2);
+		return iCallable->QCall(i0, i1, i2);
 	return null;
 	}
 
@@ -484,7 +1492,7 @@ R sDCall
 	typename ZCallableUtil::VT<P2>::P i2)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2);
+		return iCallable->DCall(iDefault, i0, i1, i2);
 	return iDefault;
 	}
 
@@ -515,7 +1523,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<P3>::P i3)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3);
+		return iCallable->QCall(i0, i1, i2, i3);
 	return null;
 	}
 
@@ -530,7 +1538,7 @@ R sDCall
 	typename ZCallableUtil::VT<P3>::P i3)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3);
 	return iDefault;
 	}
 
@@ -564,7 +1572,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<P4>::P i4)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4);
+		return iCallable->QCall(i0, i1, i2, i3, i4);
 	return null;
 	}
 
@@ -581,7 +1589,7 @@ R sDCall
 	typename ZCallableUtil::VT<P4>::P i4)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4);
 	return iDefault;
 	}
 
@@ -618,7 +1626,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<P5>::P i5)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5);
+		return iCallable->QCall(i0, i1, i2, i3, i4, i5);
 	return null;
 	}
 
@@ -636,7 +1644,7 @@ R sDCall
 	typename ZCallableUtil::VT<P5>::P i5)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5);
 	return iDefault;
 	}
 
@@ -675,7 +1683,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<P6>::P i6)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6);
+		return iCallable->QCall(i0, i1, i2, i3, i4, i5, i6);
 	return null;
 	}
 
@@ -694,7 +1702,7 @@ R sDCall
 	typename ZCallableUtil::VT<P6>::P i6)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6);
 	return iDefault;
 	}
 
@@ -735,7 +1743,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<P7>::P i7)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7);
+		return iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7);
 	return null;
 	}
 
@@ -755,7 +1763,7 @@ R sDCall
 	typename ZCallableUtil::VT<P7>::P i7)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7);
 	return iDefault;
 	}
 
@@ -799,7 +1807,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<P8>::P i8)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		return iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8);
 	return null;
 	}
 
@@ -821,7 +1829,7 @@ R sDCall
 	typename ZCallableUtil::VT<P8>::P i8)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8);
 	return iDefault;
 	}
 
@@ -868,7 +1876,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<P9>::P i9)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		return iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
 	return null;
 	}
 
@@ -891,7 +1899,7 @@ R sDCall
 	typename ZCallableUtil::VT<P9>::P i9)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
 	return iDefault;
 	}
 
@@ -940,7 +1948,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<PA>::P iA)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		return iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
 	return null;
 	}
 
@@ -964,7 +1972,7 @@ R sDCall
 	typename ZCallableUtil::VT<PA>::P iA)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
 	return iDefault;
 	}
 
@@ -1015,7 +2023,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<PB>::P iB)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		return iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
 	return null;
 	}
 
@@ -1040,7 +2048,7 @@ R sDCall
 	typename ZCallableUtil::VT<PB>::P iB)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
 	return iDefault;
 	}
 
@@ -1094,7 +2102,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<PC>::P iC)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		return iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
 	return null;
 	}
 
@@ -1121,7 +2129,7 @@ R sDCall
 	typename ZCallableUtil::VT<PC>::P iC)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
 	return iDefault;
 	}
 
@@ -1178,7 +2186,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<PD>::P iD)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		return iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
 	return null;
 	}
 
@@ -1206,7 +2214,7 @@ R sDCall
 	typename ZCallableUtil::VT<PD>::P iD)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
 	return iDefault;
 	}
 
@@ -1265,7 +2273,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<PE>::P iE)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		return iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
 	return null;
 	}
 
@@ -1294,7 +2302,7 @@ R sDCall
 	typename ZCallableUtil::VT<PE>::P iE)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
 	return iDefault;
 	}
 
@@ -1355,7 +2363,7 @@ ZQ<R> sQCall
 	typename ZCallableUtil::VT<PF>::P iF)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+		return iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
 	return null;
 	}
 
@@ -1385,7 +2393,7 @@ R sDCall
 	typename ZCallableUtil::VT<PF>::P iF)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
 	return iDefault;
 	}
 
@@ -1445,8 +2453,8 @@ class ZCallable_Null
 	{
 public:
 // From ZCallable
-	virtual void Call()
-		{}
+	virtual ZQ<void> QCall()
+		{ return true; }
 	};
 
 // =================================================================================================
@@ -1464,8 +2472,8 @@ class ZCaller_Null
 	{
 public:
 // From ZCaller
-	virtual void Call(ZRef<ZCallable_Void> iCallable)
-		{ sCall(iCallable); }
+	virtual ZQ<void> QCall(ZRef<ZCallable_Void> iCallable)
+		{ return sQCall(iCallable); }
 	};
 
 } // namespace ZooLib

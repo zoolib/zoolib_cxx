@@ -50,7 +50,7 @@ public:
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Call()
+	ZQ<void> QCall()
 		{
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
@@ -59,6 +59,7 @@ public:
 			else
 				sCall(theQ.Get());
 			}
+		return true;
 		}
 
 private:
@@ -82,7 +83,7 @@ public:
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Call(P0 i0)
+	ZQ<void> QCall(P0 i0)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
@@ -91,6 +92,7 @@ public:
 			else
 				sCall(theQ.Get(), i0);
 			}
+		return true;
 		}
 
 private:
@@ -114,7 +116,7 @@ public:
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Call(P0 i0, P1 i1)
+	ZQ<void> QCall(P0 i0, P1 i1)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
@@ -123,6 +125,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1);
 			}
+		return true;
 		}
 
 private:
@@ -146,7 +149,7 @@ public:
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Call(P0 i0, P1 i1, P2 i2)
+	ZQ<void> QCall(P0 i0, P1 i1, P2 i2)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
@@ -155,6 +158,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2);
 			}
+		return true;
 		}
 
 private:
@@ -178,7 +182,7 @@ public:
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Call(P0 i0, P1 i1, P2 i2, P3 i3)
+	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
@@ -187,6 +191,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2, i3);
 			}
+		return true;
 		}
 
 private:
@@ -210,7 +215,7 @@ public:
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
+	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
@@ -219,6 +224,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2, i3, i4);
 			}
+		return true;
 		}
 
 private:
@@ -242,7 +248,7 @@ public:
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
+	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
@@ -251,6 +257,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5);
 			}
+		return true;
 		}
 
 private:
@@ -274,7 +281,7 @@ public:
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
+	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
@@ -283,6 +290,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5, i6);
 			}
+		return true;
 		}
 
 private:
@@ -306,7 +314,7 @@ public:
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
 
-	void Call(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
@@ -315,6 +323,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5, i6, i7);
 			}
+		return true;
 		}
 
 private:
