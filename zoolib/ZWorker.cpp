@@ -30,9 +30,6 @@ namespace ZooLib {
 
 \brief ZWorker provides a disciplined lifecycle for long-lived repetitive jobs.
 
-A ZWorker derivative overrides the ZWorker::Work method, and once attached to a ZCaller
-Work will be called whenever the ZWorker has been woken, until Work returns false or allows
-an exception to propogate out.
 */
 
 // =================================================================================================
@@ -56,15 +53,13 @@ ZWorker::ZWorker(ZRef<Callable_Attached> iCallable_Attached,
 ,	fCallable_Detached(iCallable_Detached)
 	{}
 
-ZWorker::ZWorker(ZRef<Callable_Attached> iCallable_Attached,
-	ZRef<Callable_Work> iCallable_Work)
+ZWorker::ZWorker(ZRef<Callable_Attached> iCallable_Attached, ZRef<Callable_Work> iCallable_Work)
 :	fWorking(false)
 ,	fCallable_Attached(iCallable_Attached)
 ,	fCallable_Work(iCallable_Work)
 	{}
 
-ZWorker::ZWorker(ZRef<Callable_Work> iCallable_Work,
-	ZRef<Callable_Detached> iCallable_Detached)
+ZWorker::ZWorker(ZRef<Callable_Work> iCallable_Work, ZRef<Callable_Detached> iCallable_Detached)
 :	fWorking(false)
 ,	fCallable_Work(iCallable_Work)
 ,	fCallable_Detached(iCallable_Detached)
@@ -73,6 +68,10 @@ ZWorker::ZWorker(ZRef<Callable_Work> iCallable_Work,
 ZWorker::ZWorker(ZRef<Callable_Work> iCallable_Work)
 :	fWorking(false)
 ,	fCallable_Work(iCallable_Work)
+	{}
+
+ZWorker::ZWorker()
+:	fWorking(false)
 	{}
 
 void ZWorker::Call()
@@ -106,8 +105,10 @@ void ZWorker::Call()
 		if (ZRef<Callable_Detached> theCallable = fCallable_Detached)
 			{
 			guard.Release();
+
 			try { theCallable->Call(this); }
 			catch (...) {}
+
 			guard.Acquire();
 			}
 

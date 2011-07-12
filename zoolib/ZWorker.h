@@ -46,13 +46,13 @@ public:
 		ZRef<Callable_Work> iCallable_Work,
 		ZRef<Callable_Detached> iCallable_Detached);
 
-	ZWorker(ZRef<Callable_Attached> iCallable_Attached,
-		ZRef<Callable_Work> iCallable_Work);
+	ZWorker(ZRef<Callable_Attached> iCallable_Attached, ZRef<Callable_Work> iCallable_Work);
 
-	ZWorker(ZRef<Callable_Work> iCallable_Work,
-		ZRef<Callable_Detached> iCallable_Detached);
+	ZWorker(ZRef<Callable_Work> iCallable_Work, ZRef<Callable_Detached> iCallable_Detached);
 
 	ZWorker(ZRef<Callable_Work> iCallable_Work);
+
+	ZWorker();
 
 // From ZCallable_Void
 	void Call();
