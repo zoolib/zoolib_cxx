@@ -35,10 +35,7 @@ namespace ZooLib {
 
 template <class T>
 void sCallWithPromise_T(ZRef<ZPromise<ZQ<T> > > iPromise, ZRef<ZCallable<T(void)> > iCallable)
-	{
-	if (iCallable)
-		iPromise->Set(iCallable->QCall());
-	}
+	{ iPromise->Set(sQCall(iCallable)); }
 
 template <class T>
 ZRef<ZFuture<ZQ<T> > > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable<T(void)> > iCallable)
