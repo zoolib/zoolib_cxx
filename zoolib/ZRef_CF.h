@@ -45,14 +45,14 @@ typedef struct __CFString * CFMutableStringRef;
 
 namespace ZooLib {
 
-const struct TempCF_t
+const struct
 	{
 	template <class T>
 	ZRef<T*,true> operator&(T* iP) const { return ZRef<T*,true>(Adopt_T<T*>(iP)); }
 
 	template <class T>
 	ZRef<T*,true> operator()(T* iP) const { return ZRef<T*,true>(Adopt_T<T*>(iP)); }
-	} TempCF = {};
+	} sTempCF = {};
 
 } // namespace ZooLib
 
