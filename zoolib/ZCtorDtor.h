@@ -31,6 +31,10 @@ namespace ZooLib {
 template <class T>
 inline T* sCtor_T(void* oBytes)
 	{
+#if ZCONFIG(Compiler,MSVC)
+	#pragma warning(disable:4345)
+	// We *want* POD types to be default initialized.
+#endif
 	new(oBytes) T();
 	return static_cast<T*>(oBytes);
 	}
