@@ -1362,10 +1362,18 @@ bool sParseURL(const string& iURL,
 	const size_t colonOffset = hostAndPort.find(':');
 	if (string::npos != colonOffset)
 		{
-		if (oPort)
-			*oPort = ZUtil_string::sInt64(hostAndPort.substr(colonOffset + 1));
-		if (oHost)
-			*oHost = hostAndPort.substr(0, colonOffset);
+		if (ZQ<int64> theQ = ZUtil_string::sQInt64(hostAndPort.substr(colonOffset + 1)))
+			{
+			if (oPort)
+				*oPort = theQ.Get();
+			if (oHost)
+				*oHost = hostAndPort.substr(0, colonOffset);
+			}
+		else
+			{
+			if (oHost)
+				*oHost = hostAndPort;
+			}
 		}
 	else
 		{
