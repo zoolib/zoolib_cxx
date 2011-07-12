@@ -101,7 +101,7 @@ private:
 #pragma mark -
 #pragma mark * ZServer_T
 
-template <class R, class P>
+template <class R, class P = void>
 class ZServer_T : public ZServer
 	{
 public:
@@ -114,6 +114,21 @@ public:
 
 private:
 	P fParam;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZServer_T (specialized for void Param)
+
+template <class R>
+class ZServer_T<R,void> : public ZServer
+	{
+public:
+	ZServer_T() {}
+
+// From ZServer
+	virtual ZRef<Responder> MakeResponder()
+		{ return new R(this); }
 	};
 
 } // namespace ZooLib
