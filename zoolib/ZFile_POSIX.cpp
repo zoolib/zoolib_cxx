@@ -696,7 +696,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 	return null;
 	}
 
-#elif ZCONFIG_SPI_Enabled(MacOSX)
+#elif ZCONFIG_SPI_Enabled(MacOSX)// || ZCONFIG_SPI_Enabled(iPhone)
 
 // From <http://www.oroboro.com/rafael/docserv.php/article/news/entry/52/num_entries/1>
 
@@ -729,52 +729,55 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 
 ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 	{
-	const string name = ZMainNS::sArgV[0];
-
-	if (name.size())
+	if (ZMainNS::sArgC > 0)
 		{
-		if (name[0] == '/')
+		const string name = ZMainNS::sArgV[0];
+
+		if (name.size())
 			{
-			// It starts with a separator and so is an absolute path.
-			vector<string> comps;
-			spSplit('/', false, name, comps);
-			return new ZFileLoc_POSIX(true, comps);
-			}
-		else if (string::npos != name.find("/"))
-			{
-			// It contains at least one separator and so should be interpreted
-			// as a path relative to the current working directory.
-			vector<string> comps;
-			spSplit('/', false, name, comps);
-			return new ZFileLoc_POSIX(false, comps);
-			}
-		else
-			{
-			// It's an unadorned name, so we probe for a file
-			// in directories listed in $PATH.
-			if (const char* pEnv = ::getenv("PATH"))
+			if (name[0] == '/')
 				{
-				vector<string> paths;
-				spSplit(':', true, pEnv, paths);
-
-				for (vector<string>::const_iterator i = paths.begin(); i != paths.end(); ++i)
+				// It starts with a separator and so is an absolute path.
+				vector<string> comps;
+				spSplit('/', false, name, comps);
+				return new ZFileLoc_POSIX(true, comps);
+				}
+			else if (string::npos != name.find("/"))
+				{
+				// It contains at least one separator and so should be interpreted
+				// as a path relative to the current working directory.
+				vector<string> comps;
+				spSplit('/', false, name, comps);
+				return new ZFileLoc_POSIX(false, comps);
+				}
+			else
+				{
+				// It's an unadorned name, so we probe for a file
+				// in directories listed in $PATH.
+				if (const char* pEnv = ::getenv("PATH"))
 					{
-					string trial = *i;
-					if (trial.size())
-						trial += '/' + name;
-					else
-						trial = name;
+					vector<string> paths;
+					spSplit(':', true, pEnv, paths);
 
-					struct stat theStat;
-					if (0 <= ::stat(trial.c_str(), &theStat))
+					for (vector<string>::const_iterator i = paths.begin(); i != paths.end(); ++i)
 						{
-						// Should we also check that it's executable? We'll need our
-						// UID and GID to tell if the U and G X bits are applicable.
-						if (S_ISREG(theStat.st_mode))
+						string trial = *i;
+						if (trial.size())
+							trial += '/' + name;
+						else
+							trial = name;
+
+						struct stat theStat;
+						if (0 <= ::stat(trial.c_str(), &theStat))
 							{
-							vector<string> comps;
-							spSplit('/', false, trial, comps);
-							return new ZFileLoc_POSIX(trial[0] == '/', comps);
+							// Should we also check that it's executable? We'll need our
+							// UID and GID to tell if the U and G X bits are applicable.
+							if (S_ISREG(theStat.st_mode))
+								{
+								vector<string> comps;
+								spSplit('/', false, trial, comps);
+								return new ZFileLoc_POSIX(trial[0] == '/', comps);
+								}
 							}
 						}
 					}
