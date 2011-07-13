@@ -1284,7 +1284,6 @@ class Callable_L01
 :	public ZCallable<typename ST_T<Signature_p>::SL01>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -1385,7 +1384,6 @@ class Callable_L02
 :	public ZCallable<typename ST_T<Signature_p>::SL02>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -1483,7 +1481,6 @@ class Callable_L03
 :	public ZCallable<typename ST_T<Signature_p>::SL03>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -1578,7 +1575,6 @@ class Callable_L04
 :	public ZCallable<typename ST_T<Signature_p>::SL04>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -1670,7 +1666,6 @@ class Callable_L05
 :	public ZCallable<typename ST_T<Signature_p>::SL05>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -1759,7 +1754,6 @@ class Callable_L06
 :	public ZCallable<typename ST_T<Signature_p>::SL06>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -1845,7 +1839,6 @@ class Callable_L07
 :	public ZCallable<typename ST_T<Signature_p>::SL07>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -1928,7 +1921,6 @@ class Callable_L08
 :	public ZCallable<typename ST_T<Signature_p>::SL08>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -2008,7 +2000,6 @@ class Callable_L09
 :	public ZCallable<typename ST_T<Signature_p>::SL09>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -2087,7 +2078,6 @@ class Callable_L10
 :	public ZCallable<typename ST_T<Signature_p>::SL10>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -2164,7 +2154,6 @@ class Callable_L11
 :	public ZCallable<typename ST_T<Signature_p>::SL11>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -2239,7 +2228,6 @@ class Callable_L12
 :	public ZCallable<typename ST_T<Signature_p>::SL12>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -2312,7 +2300,6 @@ class Callable_L13
 :	public ZCallable<typename ST_T<Signature_p>::SL13>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -2383,7 +2370,6 @@ class Callable_L14
 :	public ZCallable<typename ST_T<Signature_p>::SL14>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -2452,7 +2438,6 @@ class Callable_L15
 :	public ZCallable<typename ST_T<Signature_p>::SL15>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -2519,7 +2504,6 @@ class Callable_L16
 :	public ZCallable<typename ST_T<Signature_p>::SL16>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -2884,7 +2868,6 @@ class Callable_R01
 :	public ZCallable<typename ST_T<Signature_p>::SR01>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -2985,7 +2968,6 @@ class Callable_R02
 :	public ZCallable<typename ST_T<Signature_p>::SR02>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3083,7 +3065,6 @@ class Callable_R03
 :	public ZCallable<typename ST_T<Signature_p>::SR03>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3178,7 +3159,6 @@ class Callable_R04
 :	public ZCallable<typename ST_T<Signature_p>::SR04>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3270,7 +3250,6 @@ class Callable_R05
 :	public ZCallable<typename ST_T<Signature_p>::SR05>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3359,7 +3338,6 @@ class Callable_R06
 :	public ZCallable<typename ST_T<Signature_p>::SR06>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3445,7 +3423,6 @@ class Callable_R07
 :	public ZCallable<typename ST_T<Signature_p>::SR07>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3528,7 +3505,6 @@ class Callable_R08
 :	public ZCallable<typename ST_T<Signature_p>::SR08>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3608,7 +3584,6 @@ class Callable_R09
 :	public ZCallable<typename ST_T<Signature_p>::SR09>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3687,7 +3662,6 @@ class Callable_R10
 :	public ZCallable<typename ST_T<Signature_p>::SR10>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3764,7 +3738,6 @@ class Callable_R11
 :	public ZCallable<typename ST_T<Signature_p>::SR11>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3838,7 +3811,6 @@ class Callable_R12
 :	public ZCallable<typename ST_T<Signature_p>::SR12>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3911,7 +3883,6 @@ class Callable_R13
 :	public ZCallable<typename ST_T<Signature_p>::SR13>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -3982,7 +3953,6 @@ class Callable_R14
 :	public ZCallable<typename ST_T<Signature_p>::SR14>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -4051,7 +4021,6 @@ class Callable_R15
 :	public ZCallable<typename ST_T<Signature_p>::SR15>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -4118,7 +4087,6 @@ class Callable_R16
 :	public ZCallable<typename ST_T<Signature_p>::SR16>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
@@ -4483,7 +4451,6 @@ class Callable_IgnoreParams
 :	public ZCallable<Signature_p>
 	{
 public:
-	typedef Signature_p Signature;
 	typedef ZCallable<Signature_p> Callable;
 	typedef ST_T<Signature_p> ST;
 
