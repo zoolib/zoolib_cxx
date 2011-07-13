@@ -237,25 +237,25 @@ ZRef<Interface> sCreate(CLSID iCLSID)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWinCOM::Success& pseudo prefix operator
+#pragma mark * ZWinCOM::sSuccess& pseudo prefix operator
 
-const struct Success_t
+const struct
 	{
 	bool operator()(HRESULT iResult) const { return SUCCEEDED(iResult); }
 
 	bool operator&(HRESULT iResult) const { return SUCCEEDED(iResult); }
-	} Success = {};
+	} sSuccess = {};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWinCOM::Failure& pseudo prefix operator
+#pragma mark * ZWinCOM::sFailure& pseudo prefix operator
 
-const struct Failure_t
+const struct
 	{
 	bool operator()(HRESULT iResult) const { return FAILED(iResult); }
 
 	bool operator&(HRESULT iResult) const { return FAILED(iResult); }
-	} Failure = {};
+	} sFailure = {};
 
 // =================================================================================================
 #pragma mark -

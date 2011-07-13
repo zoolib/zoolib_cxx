@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool.h"
-#include "zoolib/ZTag.h"
+#include "zoolib/ZTagVal.h"
 
 #include <set>
 
@@ -34,7 +34,7 @@ namespace Util_Expr_Bool {
 #pragma mark -
 #pragma mark * Util_Expr_Bool
 
-typedef std::set<ZTag<struct Disjunction_t, ZRef<ZExpr_Bool> > > Disjunction;
+typedef std::set<ZTagVal<ZRef<ZExpr_Bool>,struct Disjunction_t> > Disjunction;
 typedef std::set<Disjunction> CNF;
 
 ZRef<ZExpr_Bool> sFromCNF(const CNF& iCNF);

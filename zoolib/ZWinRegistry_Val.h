@@ -47,8 +47,8 @@ using namespace std;
 #pragma mark -
 #pragma mark * Types
 
-typedef ZTag<struct Env, string16> String_Env;
-typedef ZTag<struct Link, string16> String_Link;
+typedef ZTag<string16, struct Env> String_Env;
+typedef ZTag<string16, struct Link> String_Link;
 typedef vector<string16> StringList;
 typedef ZData_Any Data;
 class KeyRef;

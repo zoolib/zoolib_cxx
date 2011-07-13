@@ -22,51 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVal__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStdInt.h" // For size_t
-
 #include <string>
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMapIndex_T
-
-// ZMapIndex_t is a wrapper around a size_t, parameterized by some class to make it
-// distinct, conventionally the Map with which it is to be used.
-
-template <class Map_t>
-class ZMapIndex_T
-	{
-public:
-	ZMapIndex_T() : fVal(0) {}
-	ZMapIndex_T(const ZMapIndex_T& iOther) : fVal(iOther.fVal) {}
-	~ZMapIndex_T() {}
-	ZMapIndex_T& operator=(const ZMapIndex_T& iOther)
-		{
-		fVal = iOther.fVal;
-		return *this;
-		}
-
-	explicit ZMapIndex_T(size_t iVal) : fVal(iVal) {}
-
-	ZMapIndex_T& operator++()
-		{
-		++fVal;
-		return *this;
-		}
-
-	ZMapIndex_T operator++(int)
-		{ return ZMapIndex_T(fVal++); }
-
-	bool operator==(const ZMapIndex_T& iOther) const { return fVal == iOther.fVal; }
-	bool operator!=(const ZMapIndex_T& iOther) const { return fVal != iOther.fVal; }
-
-	size_t GetIndex() const { return fVal; }
-
-private:
-	size_t fVal;
-	};
 
 // =================================================================================================
 #pragma mark -

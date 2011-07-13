@@ -532,7 +532,7 @@ public:
 	HTTPFetcher(Host_Std* iHost, const string& iURL, ZHTTP::Data* iData, void* iNotifyData);
 
 // From ZCallable_Void
-	virtual void Call();
+	virtual ZQ<void> QCall();
 
 	void Cancel();
 
@@ -561,7 +561,7 @@ Host_Std::HTTPFetcher::HTTPFetcher
 		}
 	}
 
-void Host_Std::HTTPFetcher::Call()
+ZQ<void> Host_Std::HTTPFetcher::QCall()
 	{
 	try
 		{
@@ -588,7 +588,7 @@ void Host_Std::HTTPFetcher::Call()
 
 			fHost->pHTTPFetcher
 				(this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerR);
-			return;
+			return true;
 			}
 		}
 	catch (...)
@@ -600,6 +600,7 @@ void Host_Std::HTTPFetcher::Call()
 		fHost->pHTTPFetcher
 			(this, fNotifyData, fURL, "", ZHTTP::Data(), null);
 		}
+	return true;
 	}
 
 void Host_Std::HTTPFetcher::Cancel()

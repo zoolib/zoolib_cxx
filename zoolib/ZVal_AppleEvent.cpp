@@ -709,7 +709,7 @@ ZQ<ZVal_AppleEvent> ZMap_AppleEvent::QGet(const string& iName) const
 ZQ<ZVal_AppleEvent> ZMap_AppleEvent::QGet(Index_t iIndex) const
 	{
 	ZVal_AppleEvent result;
-	if (noErr == ::AEGetNthDesc(this, iIndex.GetIndex() + 1, typeWildCard,
+	if (noErr == ::AEGetNthDesc(this, iIndex.Get() + 1, typeWildCard,
 		nullptr, &result.OParam()))
 		{
 		return result;
@@ -762,7 +762,7 @@ ZMap_AppleEvent& ZMap_AppleEvent::Set(const string& iName, const AEDesc& iVal)
 
 ZMap_AppleEvent& ZMap_AppleEvent::Set(Index_t iIndex, const AEDesc& iVal)
 	{
-	::AEPutDesc(this, iIndex.GetIndex() + 1, &iVal);
+	::AEPutDesc(this, iIndex.Get() + 1, &iVal);
 	return *this;
 	}
 
@@ -780,7 +780,7 @@ ZMap_AppleEvent& ZMap_AppleEvent::Erase(const string& iName)
 
 ZMap_AppleEvent& ZMap_AppleEvent::Erase(Index_t iIndex)
 	{
-	::AEDeleteItem(this, iIndex.GetIndex() + 1);
+	::AEDeleteItem(this, iIndex.Get() + 1);
 	return *this;
 	}
 
@@ -823,7 +823,7 @@ ZMap_AppleEvent::Index_t ZMap_AppleEvent::End() const
 AEKeyword ZMap_AppleEvent::KeyOf(Index_t iIndex) const
 	{
 	AEKeyword theKey;
-	if (noErr == ::AEGetNthPtr(this, iIndex.GetIndex() + 1, typeWildCard, &theKey,
+	if (noErr == ::AEGetNthPtr(this, iIndex.Get() + 1, typeWildCard, &theKey,
 		nullptr, nullptr, 0, nullptr))
 		{
 		return theKey;
@@ -834,7 +834,7 @@ AEKeyword ZMap_AppleEvent::KeyOf(Index_t iIndex) const
 string ZMap_AppleEvent::NameOf(Index_t iIndex) const
 	{
 	AEKeyword theKey;
-	if (noErr == ::AEGetNthPtr(this, iIndex.GetIndex() + 1, typeWildCard, &theKey,
+	if (noErr == ::AEGetNthPtr(this, iIndex.Get() + 1, typeWildCard, &theKey,
 		nullptr, nullptr, 0, nullptr))
 		{
 		return sAEKeywordAsString(theKey);

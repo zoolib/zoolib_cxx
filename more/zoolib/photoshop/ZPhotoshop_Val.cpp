@@ -1436,10 +1436,10 @@ Map::Index_t Map::End() const
 
 KeyID Map::KeyOf(Index_t iIndex) const
 	{
-	if (iIndex.GetIndex() < this->pCount())
+	if (iIndex.Get() < this->pCount())
 		{
 		KeyID result;
-		if (noErr == spPSActionDescriptor->GetKey(fAD, iIndex.GetIndex(), &result))
+		if (noErr == spPSActionDescriptor->GetKey(fAD, iIndex.Get(), &result))
 			return result;
 		}
 	return 0;

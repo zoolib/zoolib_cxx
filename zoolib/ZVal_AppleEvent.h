@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(AppleEvent)
 
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZTagVal.h"
 #include "zoolib/ZUtil_AppleEvent.h"
 #include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValAccessors.h"
@@ -193,7 +194,7 @@ class ZMap_AppleEvent
 :	public AERecord
 	{
 public:
-	typedef ZMapIndex_T<ZMap_AppleEvent> Index_t;
+	typedef ZTagVal<size_t,ZMap_AppleEvent> Index_t;
 	typedef ZVal_AppleEvent Val_t;
 
 	ZMap_Any AsMap_Any(const ZAny& iDefault) const;

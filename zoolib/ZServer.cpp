@@ -42,8 +42,7 @@ void ZServer::Finalize()
 
 	fResponders.Clear();
 
-	if (this->FinishFinalize())
-		delete this;
+	ZCounted::Finalize();
 	}
 
 void ZServer::StartListener(ZRef<ZCaller> iCaller, ZRef<ZStreamerRWFactory> iFactory)
@@ -56,11 +55,13 @@ void ZServer::StartListener(ZRef<ZCaller> iCaller, ZRef<ZStreamerRWFactory> iFac
 	ZAssert(not fFactory);
 
 	fFactory = iFactory;
+
 	fWorker = new ZWorker
 		(sCallable(sWeakRef(this), &ZServer::pListener_Work),
 		(sCallable(sWeakRef(this), &ZServer::pListener_Finished)));
 
 	fWorker->Attach(iCaller);
+
 	fWorker->Wake();
 	}
 

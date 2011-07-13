@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZFile.h"
 #include "zoolib/ZRef.h"
+#include "zoolib/ZTagVal.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValAccessors_Std.h"
@@ -344,7 +345,7 @@ inline void swap(Seq& a, Seq& b)
 class Map
 	{
 public:
-	typedef ZMapIndex_T<Map> Index_t;
+	typedef ZTagVal<size_t,Map> Index_t;
 	typedef Val Val_t;
 
 	ZMACRO_operator_bool(Map, operator_bool) const;

@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZExpr.h"
 #include "zoolib/ZSafe.h"
-#include "zoolib/ZThreadValue.h"
+#include "zoolib/ZThreadVal.h"
 #include "zoolib/ZUnicodeString.h"
 
 #include "zoolib/zra/ZRA_RelHead.h"
@@ -64,7 +64,7 @@ extern ZSafe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default;
 
 void sSemanticError(const string8& iMessage);
 
-typedef ZThreadValue<ZRef<Callable_SemanticError> > ThreadValue_SemanticError;
+typedef ZThreadVal<ZRef<Callable_SemanticError> > ThreadValue_SemanticError;
 
 } // namespace ZRA
 } // namespace ZooLib
