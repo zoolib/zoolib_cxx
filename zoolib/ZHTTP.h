@@ -98,7 +98,6 @@ std::string sEncodeTrail(const ZTrail& iTrail);
 std::string sGetString0(const Val& iVal);
 
 ZRef<ZStreamerR> sMakeContentStreamer(const Map& iHeader, ZRef<ZStreamerR> iStreamerR);
-ZRef<ZStreamerR> sMakeContentStreamer(const Map& iHeader, const ZStreamR& iStreamR);
 
 // =================================================================================================
 // Request headers

@@ -760,11 +760,6 @@ ZRef<ZStreamerR> sMakeContentStreamer(const Map& iHeader, ZRef<ZStreamerR> iStre
 	return iStreamerR;
 	}
 
-ZRef<ZStreamerR> sMakeContentStreamer(const Map& iHeader, const ZStreamR& iStreamR)
-	{
-	return sMakeContentStreamer(iHeader, new ZStreamerR_Stream(iStreamR));
-	}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZHTTP, request headers
