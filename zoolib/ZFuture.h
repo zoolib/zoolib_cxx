@@ -122,90 +122,6 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZFuture<void>
-
-template <>
-class ZFuture<void>
-:	public ZCountedWithoutFinalize
-	{
-	ZFuture()
-	:	fPromiseExists(true)
-	,	fSet(false)
-		{}
-
-public:
-	virtual ~ZFuture()
-		{}
-
-	EFutureResult Wait()
-		{
-		ZAcqMtx acq(fMtx);
-		for (;;)
-			{
-			if (fSet)
-				return eFutureResult_Succeeded;
-			if (!fPromiseExists)
-				return eFutureResult_Failed;
-			fCnd.Wait(fMtx);
-			}
-		}
-
-	EFutureResult WaitFor(double iTimeout)
-		{
-		ZAcqMtx acq(fMtx);
-
-		if (fSet)
-			return eFutureResult_Succeeded;
-		if (!fPromiseExists)
-			return eFutureResult_Failed;
-
-		fCnd.WaitFor(fMtx, iTimeout);
-
-		if (fSet)
-			return eFutureResult_Succeeded;
-		if (!fPromiseExists)
-			return eFutureResult_Failed;
-
-		return eFutureResult_Timeout;
-		}
-
-	EFutureResult WaitUntil(ZTime iDeadline)
-		{
-		ZAcqMtx acq(fMtx);
-
-		if (fSet)
-			return eFutureResult_Succeeded;
-		if (!fPromiseExists)
-			return eFutureResult_Failed;
-
-		fCnd.WaitUntil(fMtx, iDeadline);
-
-		if (fSet)
-			return eFutureResult_Succeeded;
-		if (!fPromiseExists)
-			return eFutureResult_Failed;
-
-		return eFutureResult_Timeout;
-		}
-
-	bool Get()
-		{
-		ZAcqMtx acq(fMtx);
-		while (fPromiseExists && !fSet)
-			fCnd.Wait(fMtx);
-		return fSet;
-		}
-
-private:
-	friend class ZPromise<void>;
-	ZMtx fMtx;
-	ZCnd fCnd;
-	bool fPromiseExists;
-	bool fSet;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZPromise
 
 template <class T>
@@ -227,7 +143,7 @@ public:
 	void Set(const T& iVal)
 		{
 		ZAcqMtx acq(fFuture->fMtx);
-		fFuture->fVal = iVal;
+		fFuture->fVal.Set(iVal);
 		fFuture->fCnd.Broadcast();
 		}
 
@@ -261,7 +177,7 @@ public:
 	void Set()
 		{
 		ZAcqMtx acq(fFuture->fMtx);
-		fFuture->fSet = true;
+		fFuture->fVal.Set();
 		fFuture->fCnd.Broadcast();
 		}
 
