@@ -577,16 +577,9 @@ private:
 
 template <class Signature>
 ZRef<ZCallable<Signature> >
-sCallable_Caller(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
-	{ return new ZCallable_Caller::Callable<Signature> (iCaller, iCallable); }
-
-template <class Signature>
-ZRef<ZCallable<Signature> >
 sCallable_Caller
-	(ZRef<ZCaller> iCaller,
-	const typename ZCallable_Bind::ST_T<Signature>::R& iDefault,
-	ZRef<ZCallable<Signature> > iCallable)
-	{ return new ZCallable_Caller::Callable<Signature>(iCaller, iDefault, iCallable); }
+	(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	{ return new ZCallable_Caller::Callable<Signature> (iCaller, iCallable); }
 
 } // namespace ZooLib
 
