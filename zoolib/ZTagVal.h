@@ -18,42 +18,82 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTag__
-#define __ZTag__ 1
+#ifndef __ZTagVal__
+#define __ZTagVal__ 1
 #include "zconfig.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTag
+#pragma mark * ZTagVal
 
-template <class Tag, class Value>
-class ZTag
+template <class Value, class Tag>
+class ZTagVal
 	{
-	Value fValue;
 public:
-	ZTag() {}
-	ZTag(const ZTag& iOther) : fValue(iOther.fValue) {}
-	~ZTag() {}
-	ZTag& operator=(const ZTag& iOther) { fValue = iOther.fValue; return *this; }
+	ZTagVal()
+	:	fValue(Value())
+		{}
 
-	ZTag(const Value& iValue) : fValue(iValue) {}
-	ZTag& operator=(const Value& iValue) { fValue = iValue; return *this; }
+	ZTagVal(const ZTagVal& iOther)
+	:	fValue(iOther.fValue)
+		{}
 
-	Value& GetMutable() { return fValue; }
-	const Value& Get() const { return fValue; }
+	~ZTagVal()
+		{}
 
-	bool operator==(const ZTag& iOther) const
+	ZTagVal& operator=(const ZTagVal& iOther)
+		{
+		fValue = iOther.fValue;
+		return *this;
+		}
+
+	ZTagVal(const Value& iValue)
+	:	fValue(iValue)
+		{}
+
+	ZTagVal& operator=(const Value& iValue)
+		{
+		fValue = iValue;
+		return *this;
+		}
+
+	template <class P0>
+	ZTagVal(const P0& i0)
+	:	fValue(i0)
+		{}
+
+	template <class P0, class P1>
+	ZTagVal(const P0& i0, const P1& i1)
+	:	fValue(i0, i1)
+		{}
+
+	operator Value&()
+		{ return fValue; }
+
+	Value& GetMutable()
+		{ return fValue; }
+
+	const Value& Get() const
+		{ return fValue; }
+
+	void Set(const Value& iValue) const
+		{ fValue = iValue; }
+
+	bool operator==(const ZTagVal& iOther) const
 		{ return fValue == iOther.fValue; }
 
-	bool operator!=(const ZTag& iOther) const
+	bool operator!=(const ZTagVal& iOther) const
 		{ return fValue == iOther.fValue; }
 
-	bool operator<(const ZTag& iOther) const
+	bool operator<(const ZTagVal& iOther) const
 		{ return fValue < iOther.fValue; }
+
+protected:
+	Value fValue;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZTag__
+#endif // __ZTagVal__

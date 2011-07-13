@@ -18,90 +18,83 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZThreadValue__
-#define __ZThreadValue__ 1
+#ifndef __ZThreadVal__
+#define __ZThreadVal__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZTagVal.h"
 #include "zoolib/ZThread.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZThreadValue
+#pragma mark * ZThreadVal
 
-template <class T, class Tag = T>
-class ZThreadValue
+template <class Value, class Tag = Value>
+class ZThreadVal
+:	public ZTagVal<Value,Tag>
 	{
+	typedef ZTagVal<Value,Tag> inherited;
 public:
-	ZThreadValue()
-	:	fValue(T())
+	ZThreadVal()
+	:	fPrior(spGet())
+		{ ZTSS::sSet(spKey(), this); }
+
+	ZThreadVal(const ZThreadVal& iOther)
+	:	inherited(iOther)
 	,	fPrior(spGet())
 		{ ZTSS::sSet(spKey(), this); }
 
-	ZThreadValue(const ZThreadValue& iOther)
-	:	fValue(iOther.fValue)
-	,	fPrior(spGet())
-		{ ZTSS::sSet(spKey(), this); }
-
-	~ZThreadValue()
+	~ZThreadVal()
 		{ ZTSS::sSet(spKey(), fPrior); }
 
-	ZThreadValue& operator=(const ZThreadValue& iOther)
+	ZThreadVal& operator=(const ZThreadVal& iOther)
 		{
-		fValue = iOther.fValue;
+		inherited::operator=(iOther);
 		return *this;
 		}
 
-	ZThreadValue(const T& iValue)
-	:	fValue(iValue)
+	ZThreadVal(const Value& iValue)
+	:	inherited(iValue)
 	,	fPrior(spGet())
 		{ ZTSS::sSet(spKey(), this); }
 
-	ZThreadValue& operator=(const T& iValue)
+	ZThreadVal& operator=(const Value& iValue)
 		{
-		fValue = iValue;
+		inherited::operator=(iValue);
 		return *this;
 		}
-
-	T& GetMutable()
-		{ return fValue; }
-
-	const T& Get() const
-		{ return fValue; }
-
-	void Set(const T& iValue) const
-		{ fValue = iValue; }
 
 	//--
 
-	static T& sGetMutable()
+	static Value& sGetMutable()
 		{ return spGet()->GetMutable(); }
 
-	static ZQ<T> sQGet()
+	static ZQ<Value> sQGet()
 		{
-		if (ZThreadValue* theTV = spGet())
+		if (ZThreadVal* theTV = spGet())
 			return theTV->Get();
 		return null;
 		}
 
-	static T sDGet(const T& iDefault)
+	static Value sDGet(const Value& iDefault)
 		{
-		if (ZThreadValue* theTV = spGet())
+		if (ZThreadVal* theTV = spGet())
 			return theTV->Get();
 		return iDefault;
 		}
 
-	static T sGet()
+	static Value sGet()
 		{
-		if (ZThreadValue* theTV = spGet())
+		if (ZThreadVal* theTV = spGet())
 			return theTV->Get();
-		return T();
+		return Value();
 		}
 
 private:
-	static ZThreadValue* spGet()
-		{ return ((ZThreadValue*)(ZTSS::sGet(spKey()))); }
+	static ZThreadVal* spGet()
+		{ return ((ZThreadVal*)(ZTSS::sGet(spKey()))); }
 
 	static ZTSS::Key& spKey()
 		{
@@ -110,10 +103,9 @@ private:
 		return spKey;
 		}
 
-	T fValue;
-	ZThreadValue* fPrior;
+	ZThreadVal* fPrior;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZThreadValue__
+#endif // __ZThreadVal__

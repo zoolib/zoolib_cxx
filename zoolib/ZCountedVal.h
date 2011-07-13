@@ -18,58 +18,73 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCountedWrap__
-#define __ZCountedWrap__ 1
+#ifndef __ZCountedVal__
+#define __ZCountedVal__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCounted.h"
+#include "zoolib/ZTagVal.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCountedWrap
+#pragma mark * ZCountedVal
 
-template <class T, class Tag = T>
-class ZCountedWrap
-:	public T
+template <class Value, class Tag = Value>
+class ZCountedVal
+:	public ZTagVal<Value,Tag>
 ,	public ZCounted
 	{
+	typedef ZTagVal<Value,Tag> inherited;
 public:
-	ZCountedWrap()
+	ZCountedVal()
 		{}
 
-	ZCountedWrap(const T& iOther)
-	:	T(iOther)
+	ZCountedVal(const ZCountedVal& iOther)
+	:	inherited(iOther)
 		{}
 
-	virtual ~ZCountedWrap()
+	virtual ~ZCountedVal()
 		{}
 
-	ZRef<ZCountedWrap> Clone()
-		{ return new ZCountedWrap(*this); }
+	template <class P0>
+	ZCountedVal(const P0& i0)
+	:	inherited(i0)
+		{}
 
-	ZRef<ZCountedWrap> Fresh()
+	template <class P0, class P1>
+	ZCountedVal(const P0& i0, const P1& i1)
+	:	inherited(i0, i1)
+		{}
+
+	ZRef<ZCountedVal> Clone()
+		{ return new ZCountedVal(*this); }
+
+	ZRef<ZCountedVal> Fresh()
 		{
 		if (this->IsShared())
 			return this->Clone();
 		return this;
 		}
-
-	T& Get()
-		{ return *this; }
-
-	T& GetMutable()
-		{ return *this; }
-
-	void Set(const T& iOther)
-		{ *this = iOther; }
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCountedVal
+
 template <class T>
-ZRef<ZCountedWrap<T> > sCountedWrap(const T& iOther)
-	{ return new ZCountedWrap<T>(iOther); }
+ZRef<ZCountedVal<T> > sCountedVal(const T& iOther)
+	{ return new ZCountedVal<T>(iOther); }
+
+template <class T, class P0>
+ZRef<ZCountedVal<T> > sCountedVal(const P0& i0)
+	{ return new ZCountedVal<T>(i0); }
+
+template <class T,class P0, class P1>
+ZRef<ZCountedVal<T> > sCountedVal(const P0& i0, const P1& i1)
+	{ return new ZCountedVal<T>(i0, i1); }
 
 } // namespace ZooLib
 
-#endif // __ZCountedWrap__
+#endif // __ZCountedVal__
