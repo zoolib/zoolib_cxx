@@ -72,6 +72,9 @@ public:
 	operator Value&()
 		{ return fValue; }
 
+	operator const Value&() const
+		{ return fValue; }
+
 	Value& GetMutable()
 		{ return fValue; }
 

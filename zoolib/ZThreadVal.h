@@ -69,26 +69,30 @@ public:
 	//--
 
 	static Value& sGetMutable()
-		{ return spGet()->GetMutable(); }
+		{
+		ZThreadVal* theTV = spGet();
+		ZAssert(theTV);
+		return *theTV;
+		}
 
 	static ZQ<Value> sQGet()
 		{
 		if (ZThreadVal* theTV = spGet())
-			return theTV->Get();
+			return *theTV;
 		return null;
 		}
 
 	static Value sDGet(const Value& iDefault)
 		{
 		if (ZThreadVal* theTV = spGet())
-			return theTV->Get();
+			return *theTV;
 		return iDefault;
 		}
 
 	static Value sGet()
 		{
 		if (ZThreadVal* theTV = spGet())
-			return theTV->Get();
+			return *theTV;
 		return Value();
 		}
 

@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAny.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZRef_WinHANDLE.h"
-#include "zoolib/ZTag.h"
+#include "zoolib/ZTagVal.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZValAccessors.h"
 #include "zoolib/ZVal_Any.h"
@@ -47,8 +47,8 @@ using namespace std;
 #pragma mark -
 #pragma mark * Types
 
-typedef ZTag<string16, struct Env> String_Env;
-typedef ZTag<string16, struct Link> String_Link;
+typedef ZTagVal<string16, struct Env> String_Env;
+typedef ZTagVal<string16, struct Link> String_Link;
 typedef vector<string16> StringList;
 typedef ZData_Any Data;
 class KeyRef;
