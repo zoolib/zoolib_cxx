@@ -48,6 +48,8 @@ public:
 // Our protocol
 	virtual ZRef<Responder> MakeResponder() = 0;
 
+	ZRef<ZStreamerRWFactory> GetListener();
+
 	void StartListener(ZRef<ZCaller> iCaller, ZRef<ZStreamerRWFactory> iFactory);
 
 	void StopListener();

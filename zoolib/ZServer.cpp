@@ -45,6 +45,12 @@ void ZServer::Finalize()
 	ZCounted::Finalize();
 	}
 
+ZRef<ZStreamerRWFactory> ZServer::GetListener()
+	{
+	ZAcqMtx acq(fMtx);
+	return fFactory;
+	}
+
 void ZServer::StartListener(ZRef<ZCaller> iCaller, ZRef<ZStreamerRWFactory> iFactory)
 	{
 	ZAcqMtx acq(fMtx);
