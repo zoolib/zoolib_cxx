@@ -178,6 +178,30 @@ public:
 	ZMACRO_operator_bool_T(ZQ, operator_bool) const
 		{ return operator_bool_gen::translate(fHasValue == Sense); }
 
+	T& operator*()
+		{
+		ZAssert(fHasValue);
+		return *sFetch_T<T>(fBytes);
+		}
+	
+	const T& operator*() const
+		{
+		ZAssert(fHasValue);
+		return *sFetch_T<T>(fBytes);
+		}
+	
+	T* operator->()
+		{
+		ZAssert(fHasValue);
+		return sFetch_T<T>(fBytes);
+		}
+
+	const T* operator->() const
+		{
+		ZAssert(fHasValue);
+		return sFetch_T<T>(fBytes);
+		}
+
 	void Clear()
 		{
 		if (fHasValue)
@@ -321,6 +345,9 @@ public:
 
 	void Clear()
 		{ fHasValue = false; }
+
+	void Get() const
+		{}
 
 	void Set()
 		{ fHasValue = true; }
