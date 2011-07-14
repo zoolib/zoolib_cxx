@@ -102,6 +102,9 @@ public:
 
 	virtual ~ZNetListener_TCP_Socket();
 
+// From ZNetListener via ZNetListener_TCP
+	virtual ZRef<ZNetAddress> GetAddress();
+
 // From ZNetListener_TCP
 	virtual ip_port GetPort();
 

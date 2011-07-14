@@ -93,7 +93,8 @@ public:
 	ZNetListener_TCP_WinSock(ip4_addr iLocalAddress, ip_port iLocalPort);
 	virtual ~ZNetListener_TCP_WinSock();
 
-// From ZNetListener_TCP
+// From ZNetListener via ZNetListener_TCP
+	virtual ZRef<ZNetAddress> GetAddress();
 	virtual ZRef<ZNetEndpoint> Listen();
 	virtual void CancelListen();
 

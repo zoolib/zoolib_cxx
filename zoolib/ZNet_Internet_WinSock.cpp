@@ -225,6 +225,22 @@ ZNetListener_TCP_WinSock::~ZNetListener_TCP_WinSock()
 	::closesocket(fSOCKET);
 	}
 
+ZRef<ZNetAddress> ZNetListener_TCP_WinSock::GetAddress()
+	{
+	sockaddr_in localSockAddr;
+	int length = sizeof(localSockAddr);
+	if (::getsockname(fSOCKET, (sockaddr*)&localSockAddr, &length) >= 0)
+		{
+		if (localSockAddr.sin_family == AF_INET)
+			{
+			return new ZNetAddress_IP4
+				(ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
+			}
+		}
+
+	return null;
+	}
+
 ZRef<ZNetEndpoint> ZNetListener_TCP_WinSock::Listen()
 	{
 	fd_set readSet;
@@ -262,6 +278,22 @@ void ZNetListener_TCP_WinSock::CancelListen()
 	// supposed to retry their call to Listen if they get a nil endpoint back and have
 	// CancelListen do nothing at all -- any pending call to Listen will return in at
 	// most one second anyway.
+	}
+
+ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetLocalAddress()
+	{
+	sockaddr_in localSockAddr;
+	int length = sizeof(localSockAddr);
+	if (::getsockname(fSOCKET, (sockaddr*)&localSockAddr, &length) >= 0)
+		{
+		if (localSockAddr.sin_family == AF_INET)
+			{
+			return new ZNetAddress_IP4
+				(ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
+			}
+		}
+
+	return null;
 	}
 
 ip_port ZNetListener_TCP_WinSock::GetPort()

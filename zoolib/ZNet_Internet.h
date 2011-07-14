@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMulti_T.h"
 #include "zoolib/ZNet.h"
+#include "zoolib/ZQ.h"
 #include "zoolib/ZStdInt.h"
 
 #include <string>
@@ -84,7 +85,9 @@ public:
 
 	static const ip4_addr sLoopback = 0x7F000001u;
 	static const ip4_addr sAny = 0;
+	static const ip4_addr sNone = 0xFFFFFFFFu;
 
+	static ZQ<ip4_addr> sFromString(const std::string& iString);
 	static std::string sAsString(ip4_addr iAddr);
 	static ip4_addr sAddr(uint8 iAddr0, uint8 iAddr1, uint8 iAddr2, uint8 iAddr3);
 

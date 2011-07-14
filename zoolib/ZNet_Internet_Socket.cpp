@@ -338,6 +338,16 @@ ip_port ZNetListener_TCP_Socket::GetPort()
 	return 0;
 	}
 
+ZRef<ZNetAddress> ZNetListener_TCP_Socket::GetAddress()
+	{
+	uint8 buffer[SOCK_MAXADDRLEN];
+	socklen_t length = sizeof(buffer);
+	if (::getsockname(this->GetSocketFD(), (sockaddr*)buffer, &length) >= 0)
+		return spAsNetAddress((sockaddr*)buffer, 0);
+
+	return null;
+	}
+
 ZRef<ZNetEndpoint> ZNetListener_TCP_Socket::Imp_MakeEndpoint(int iSocketFD)
 	{ return new ZNetEndpoint_TCP_Socket(iSocketFD); }
 

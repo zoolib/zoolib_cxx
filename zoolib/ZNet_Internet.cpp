@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNet_Internet.h"
 #include "zoolib/ZString.h"
 
+#include <arpa/inet.h> // For inet_addr
+
 using std::string;
 
 namespace ZooLib {
@@ -57,6 +59,14 @@ ZRef<ZNetEndpoint> ZNetAddress_IP4::Connect() const
 
 ip4_addr ZNetAddress_IP4::GetAddr() const
 	{ return fAddr; }
+
+ZQ<ip4_addr> ZNetAddress_IP4::sFromString(const std::string& iString)
+	{
+	const ip4_addr theAddr = ntohl(inet_addr(iString.c_str()));
+	if (theAddr == INADDR_NONE)
+		return null;
+	return theAddr;
+	}
 
 std::string ZNetAddress_IP4::sAsString(ip4_addr iAddr)
 	{

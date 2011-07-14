@@ -174,6 +174,7 @@ public:
 	virtual void Cancel();
 
 // Our protocol
+	virtual ZRef<ZNetAddress> GetAddress() = 0;
 	virtual ZRef<ZNetEndpoint> Listen() = 0;
 	virtual void CancelListen() = 0;
 	};
