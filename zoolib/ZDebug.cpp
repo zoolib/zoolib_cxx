@@ -217,6 +217,7 @@ static bool spIsDebuggerPresent()
 				mov	[obfuscator], eax
 				}
 
+			#pragma warning(disable: 4312)
 			const uint32* processDatabase = reinterpret_cast<const uint32*>(processID ^ obfuscator);
 			if (not IsBadReadPtr(processDatabase, kProcessDatabaseBytes))
 				{
