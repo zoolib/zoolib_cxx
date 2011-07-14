@@ -64,7 +64,7 @@ extern ZSafe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default;
 
 void sSemanticError(const string8& iMessage);
 
-typedef ZThreadVal<ZRef<Callable_SemanticError> > ThreadValue_SemanticError;
+typedef ZThreadVal<ZRef<Callable_SemanticError> > ThreadVal_SemanticError;
 
 } // namespace ZRA
 } // namespace ZooLib

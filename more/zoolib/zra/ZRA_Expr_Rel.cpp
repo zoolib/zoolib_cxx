@@ -81,7 +81,7 @@ ZSafe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default = sCallable
 
 void sSemanticError(const string8& iMessage)
 	{
-	if (ZRef<Callable_SemanticError> theCallable = ThreadValue_SemanticError::sGet())
+	if (ZRef<Callable_SemanticError> theCallable = ThreadVal_SemanticError::sGet())
 		theCallable->Call(iMessage);
 	else if (ZRef<Callable_SemanticError> theCallable = sCallable_SemanticError_Default)
 		theCallable->Call(iMessage);
