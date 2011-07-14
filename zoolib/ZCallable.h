@@ -1373,7 +1373,10 @@ R sDCall
 	ZRef<ZCallable<R(void)> > iCallable)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault);
+		{
+		if (ZQ<R> theQ = iCallable->QCall())
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1382,7 +1385,10 @@ R sCall
 	(ZRef<ZCallable<R(void)> > iCallable)
 	{
 	if (iCallable)
-		return iCallable->Call();
+		{
+		if (ZQ<R> theQ = iCallable->QCall())
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -1409,7 +1415,10 @@ R sDCall
 	typename ZCallableUtil::VT<P0>::P i0)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1420,7 +1429,10 @@ R sCall
 	typename ZCallableUtil::VT<P0>::P i0)
 	{
 	if (iCallable)
-		return iCallable->Call(i0);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -1449,7 +1461,10 @@ R sDCall
 	typename ZCallableUtil::VT<P1>::P i1)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1461,7 +1476,10 @@ R sCall
 	typename ZCallableUtil::VT<P1>::P i1)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -1492,7 +1510,10 @@ R sDCall
 	typename ZCallableUtil::VT<P2>::P i2)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1505,7 +1526,10 @@ R sCall
 	typename ZCallableUtil::VT<P2>::P i2)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -1538,7 +1562,10 @@ R sDCall
 	typename ZCallableUtil::VT<P3>::P i3)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1552,7 +1579,10 @@ R sCall
 	typename ZCallableUtil::VT<P3>::P i3)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -1589,7 +1619,10 @@ R sDCall
 	typename ZCallableUtil::VT<P4>::P i4)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1605,7 +1638,10 @@ R sCall
 	typename ZCallableUtil::VT<P4>::P i4)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -1644,7 +1680,10 @@ R sDCall
 	typename ZCallableUtil::VT<P5>::P i5)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1661,7 +1700,10 @@ R sCall
 	typename ZCallableUtil::VT<P5>::P i5)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -1702,7 +1744,10 @@ R sDCall
 	typename ZCallableUtil::VT<P6>::P i6)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1720,7 +1765,10 @@ R sCall
 	typename ZCallableUtil::VT<P6>::P i6)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -1763,7 +1811,10 @@ R sDCall
 	typename ZCallableUtil::VT<P7>::P i7)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1782,7 +1833,10 @@ R sCall
 	typename ZCallableUtil::VT<P7>::P i7)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -1829,7 +1883,10 @@ R sDCall
 	typename ZCallableUtil::VT<P8>::P i8)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1850,7 +1907,10 @@ R sCall
 	typename ZCallableUtil::VT<P8>::P i8)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -1899,7 +1959,10 @@ R sDCall
 	typename ZCallableUtil::VT<P9>::P i9)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1921,7 +1984,10 @@ R sCall
 	typename ZCallableUtil::VT<P9>::P i9)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -1972,7 +2038,10 @@ R sDCall
 	typename ZCallableUtil::VT<PA>::P iA)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -1995,7 +2064,10 @@ R sCall
 	typename ZCallableUtil::VT<PA>::P iA)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -2048,7 +2120,10 @@ R sDCall
 	typename ZCallableUtil::VT<PB>::P iB)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -2072,7 +2147,10 @@ R sCall
 	typename ZCallableUtil::VT<PB>::P iB)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -2129,7 +2207,10 @@ R sDCall
 	typename ZCallableUtil::VT<PC>::P iC)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -2155,7 +2236,10 @@ R sCall
 	typename ZCallableUtil::VT<PC>::P iC)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -2214,7 +2298,10 @@ R sDCall
 	typename ZCallableUtil::VT<PD>::P iD)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD))
+			return theQ.Get();
+		}
 	return iDefault;
 	}
 
@@ -2241,7 +2328,10 @@ R sCall
 	typename ZCallableUtil::VT<PD>::P iD)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		{
+		if (ZQ<R> theQ = iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD))
+			return theQ.Get();
+		}
 	return R();
 	}
 
@@ -2302,7 +2392,11 @@ R sDCall
 	typename ZCallableUtil::VT<PE>::P iE)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		{
+		if (ZQ<R> theQ =
+			iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE))
+			{ return theQ.Get(); }
+		}
 	return iDefault;
 	}
 
@@ -2330,7 +2424,11 @@ R sCall
 	typename ZCallableUtil::VT<PE>::P iE)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		{
+		if (ZQ<R> theQ =
+			iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE))
+			{ return theQ.Get(); }
+		}
 	return R();
 	}
 
@@ -2393,7 +2491,11 @@ R sDCall
 	typename ZCallableUtil::VT<PF>::P iF)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+		{
+		if (ZQ<R> theQ =
+			iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF))
+			{ return theQ.Get(); }
+		}
 	return iDefault;
 	}
 
@@ -2422,7 +2524,11 @@ R sCall
 	typename ZCallableUtil::VT<PF>::P iF)
 	{
 	if (iCallable)
-		return iCallable->Call(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+		{
+		if (ZQ<R> theQ =
+			iCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF))
+			{ return theQ.Get(); }
+		}
 	return R();
 	}
 
