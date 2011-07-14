@@ -85,7 +85,7 @@ StrimW::StrimW(EPriority iPriority, const char* iName_CharStar)
 
 StrimW::~StrimW()
 	{
-	if (fMessageQ && !fMessageQ.Get().empty())
+	if (fMessageQ && !fMessageQ->empty())
 		this->pEmit();
 	}
 
@@ -157,7 +157,7 @@ StrimW::operator operator_bool() const
 
 void StrimW::Emit() const
 	{
-	if (fMessageQ && !fMessageQ.Get().empty())
+	if (fMessageQ && !fMessageQ->empty())
 		{
 		const_cast<StrimW*>(this)->pEmit();
 		fMessageQ.GetMutable().resize(0);

@@ -167,7 +167,7 @@ ZRef<ZYadR> sYadR(CFTypeRef iVal)
 		return new ZYadStreamRPos_CF(theQ.Get());
 
 	if (ZQ<ZRef<CFStringRef> > theQ = theVal.QGet<ZRef<CFStringRef> >())
-		return sYadR(theQ.Get().Get());
+		return sYadR(theQ.Get());
 
 	return new ZYadAtomR_CF(iVal);
 	}
