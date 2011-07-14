@@ -280,22 +280,6 @@ void ZNetListener_TCP_WinSock::CancelListen()
 	// most one second anyway.
 	}
 
-ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetLocalAddress()
-	{
-	sockaddr_in localSockAddr;
-	int length = sizeof(localSockAddr);
-	if (::getsockname(fSOCKET, (sockaddr*)&localSockAddr, &length) >= 0)
-		{
-		if (localSockAddr.sin_family == AF_INET)
-			{
-			return new ZNetAddress_IP4
-				(ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
-			}
-		}
-
-	return null;
-	}
-
 ip_port ZNetListener_TCP_WinSock::GetPort()
 	{
 	sockaddr_in localSockAddr;

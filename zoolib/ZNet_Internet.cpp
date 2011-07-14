@@ -22,7 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNet_Internet.h"
 #include "zoolib/ZString.h"
 
-#include <arpa/inet.h> // For inet_addr
+#if ZCONFIG_SPI_Enabled(Win)
+	#include <winsock.h>
+#else
+	#include <arpa/inet.h> // For inet_addr
+#endif
 
 using std::string;
 

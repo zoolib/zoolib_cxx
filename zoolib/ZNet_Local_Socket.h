@@ -84,6 +84,7 @@ public:
 	virtual ~ZNetListener_Local_Socket();
 
 // From ZNetListener_Socket
+	virtual ZRef<ZNetAddress> GetAddress();
 	virtual ZRef<ZNetEndpoint> Imp_MakeEndpoint(int iSocketFD);
 
 private:

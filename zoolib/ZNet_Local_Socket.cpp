@@ -74,6 +74,24 @@ class Make_Endpoint
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Helpers
+
+static ZRef<ZNetAddress_Local> spAsNetAddress(const sockaddr* iSockAddr)
+	{
+	const sa_family_t theFamily = ((sockaddr*)iSockAddr)->sa_family;
+
+	if (theFamily == AF_LOCAL)
+		{
+		const sockaddr_un* local = (const sockaddr_un*)iSockAddr;
+		if (local->sun_path)
+			return new ZNetAddress_Local(local->sun_path);
+		}
+
+	return null;
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZNetNameLookup_Local_Socket
 
 ZNetNameLookup_Local_Socket::ZNetNameLookup_Local_Socket(const std::string& iPath)
@@ -179,6 +197,18 @@ ZNetListener_Local_Socket::~ZNetListener_Local_Socket()
 	{
 	if (!fPath.empty())
 		::unlink(fPath.c_str());
+	}
+
+ZRef<ZNetAddress> ZNetListener_Local_Socket::GetAddress()
+	{
+	uint8 buffer[SOCK_MAXADDRLEN];
+	socklen_t length = sizeof(buffer);
+	if (::getsockname(this->GetSocketFD(), (sockaddr*)buffer, &length) >= 0)
+		{
+		return spAsNetAddress((sockaddr*)buffer);
+		}
+
+	return null;
 	}
 
 ZRef<ZNetEndpoint> ZNetListener_Local_Socket::Imp_MakeEndpoint(int iSocketFD)
