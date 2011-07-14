@@ -105,6 +105,22 @@ private:
 		delete this;
 		}
 
+	bool pWaitFor(double iTimeout, size_t iCount)
+		{
+		ZAcqMtx acq(fMtx);
+		if (fList.size() == iCount)
+			fCnd.WaitFor(fMtx, iTimeout);
+		return fList.size() != iCount;
+		}
+
+	bool pWaitUntil(ZTime iDeadline, size_t iCount)
+		{
+		ZAcqMtx acq(fMtx);
+		if (fList.size() == iCount)
+			fCnd.WaitUntil(fMtx, iDeadline);
+		return fList.size() != iCount;
+		}
+
 	size_t pSize() const
 		{
 		ZAcqMtx acq(fMtx);
@@ -127,6 +143,9 @@ private:
 
 		typename EntryList::iterator listIter = fList.insert(fList.end(), Entry(iT));
 		fMap.insert(mapIter, typename EntryMap::value_type(iT, listIter));
+
+		fCnd.Broadcast();
+
 		return true;
 		}
 
@@ -148,6 +167,7 @@ private:
 			}
 		fMap.clear();
 		fList.clear();
+		fCnd.Broadcast();
 		}
 
 	void pInit(ZRef<ZSafeSetRep> iSelf,
@@ -190,6 +210,7 @@ private:
 	ZQ<T> pReadErase(ZSafeSetIter<T>& ioIter);
 
 	ZMtx fMtx;
+	ZCnd fCnd;
 	EntryList fList;
 	EntryMap fMap;
 
@@ -239,6 +260,12 @@ public:
 
 	void Clear()
 		{ fRep->pClear(); }
+
+	bool WaitFor(double iTimeout, size_t iCount)
+		{ return fRep->pWaitFor(iTimeout, iCount); }
+
+	bool WaitUntil(ZTime iDeadline, size_t iCount)
+		{ return fRep->pWaitUntil(iDeadline, iCount); }
 
 	ZRef<ZSafeSetRep<T> > GetRep() const
 		{ return fRep; }
@@ -430,6 +457,7 @@ template <class T>
 ZQ<T> ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter)
 	{
 	ZAcqMtx acq(fMtx);
+	fCnd.Broadcast();
 	ZQ<T> result;
 	if (ioIter.fNextEntry == fList.end())
 		{
@@ -467,6 +495,7 @@ template <class T>
 bool ZSafeSetRep<T>::pErase(const T& iT)
 	{
 	ZAcqMtx acq(fMtx);
+	fCnd.Broadcast();
 
 	typename EntryMap::iterator mapIter = fMap.lower_bound(iT);
 	if (mapIter == fMap.end() || (*mapIter).first != iT)
