@@ -47,38 +47,38 @@ static const ZTime kDistantFuture = 1000 * ZTime::kYear;
 ZWorker::ZWorker(ZRef<Callable_Attached> iCallable_Attached,
 	ZRef<Callable_Work> iCallable_Work,
 	ZRef<Callable_Detached> iCallable_Detached)
-:	fWorking(false)
+:	fWorking(0)
 ,	fCallable_Attached(iCallable_Attached)
 ,	fCallable_Work(iCallable_Work)
 ,	fCallable_Detached(iCallable_Detached)
 	{}
 
 ZWorker::ZWorker(ZRef<Callable_Attached> iCallable_Attached, ZRef<Callable_Work> iCallable_Work)
-:	fWorking(false)
+:	fWorking(0)
 ,	fCallable_Attached(iCallable_Attached)
 ,	fCallable_Work(iCallable_Work)
 	{}
 
 ZWorker::ZWorker(ZRef<Callable_Work> iCallable_Work, ZRef<Callable_Detached> iCallable_Detached)
-:	fWorking(false)
+:	fWorking(0)
 ,	fCallable_Work(iCallable_Work)
 ,	fCallable_Detached(iCallable_Detached)
 	{}
 
 ZWorker::ZWorker(ZRef<Callable_Work> iCallable_Work)
-:	fWorking(false)
+:	fWorking(0)
 ,	fCallable_Work(iCallable_Work)
 	{}
 
 ZWorker::ZWorker()
-:	fWorking(false)
+:	fWorking(0)
 	{}
 
 ZQ<void> ZWorker::QCall()
 	{
 	ZGuardRMtx guard(fMtx);
 
-	fWorking = true;
+	fWorking = ZThread::sID();
 	fNextWake = kDistantFuture;
 
 	ZQ<bool> result;
@@ -93,7 +93,7 @@ ZQ<void> ZWorker::QCall()
 		guard.Acquire();
 		}
 
-	fWorking = false;
+	fWorking = 0;
 
 	if (result && result.Get())
 		{
@@ -127,21 +127,10 @@ void ZWorker::WakeIn(double iInterval)
 void ZWorker::WakeAt(ZTime iSystemTime)
 	{ this->pWakeAt(iSystemTime); }
 
-void ZWorker::pWakeAt(ZTime iSystemTime)
+bool ZWorker::IsWorking()
 	{
 	ZAcqMtx acq(fMtx);
-	if (fCaller)
-		{
-		if (fWorking)
-			{
-			if (fNextWake > iSystemTime)
-				fNextWake = iSystemTime;
-			}
-		else
-			{
-			ZCallScheduler::sGet()->NextCallAt(iSystemTime, fCaller, this);
-			}
-		}
+	return ZThread::sID() == fWorking;
 	}
 
 bool ZWorker::IsAwake()
@@ -217,6 +206,23 @@ ZRef<ZWorker::Callable_Detached> ZWorker::GetSetCallable_Detached(ZRef<Callable_
 	{
 	ZAcqMtx acq(fMtx);
 	return sGetSet(fCallable_Detached, iCallable);
+	}
+
+void ZWorker::pWakeAt(ZTime iSystemTime)
+	{
+	ZAcqMtx acq(fMtx);
+	if (fCaller)
+		{
+		if (fWorking)
+			{
+			if (fNextWake > iSystemTime)
+				fNextWake = iSystemTime;
+			}
+		else
+			{
+			ZCallScheduler::sGet()->NextCallAt(iSystemTime, fCaller, this);
+			}
+		}
 	}
 
 } // namespace ZooLib

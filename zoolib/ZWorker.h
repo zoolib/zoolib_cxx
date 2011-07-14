@@ -63,6 +63,8 @@ public:
 	void WakeIn(double iInterval);
 	bool IsAwake();
 
+	bool IsWorking();
+
 	bool Attach(ZRef<ZCaller> iCaller);
 	bool IsAttached();
 
@@ -75,7 +77,7 @@ private:
 
 	ZMtx fMtx;
 	ZRef<ZCaller> fCaller;
-	bool fWorking;
+	ZThread::ID fWorking;
 	ZTime fNextWake;
 
 	ZRef<Callable_Attached> fCallable_Attached;
