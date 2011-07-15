@@ -78,42 +78,55 @@ ZQ<void> ZWorker::QCall()
 	{
 	ZGuardRMtx guard(fMtx);
 
-	fWorking = ZThread::sID();
-	fNextWake = kDistantFuture;
 
-	ZQ<bool> result;
-
-	if (ZRef<Callable_Work> theCallable = fCallable_Work)
+	for (;;)
 		{
-		guard.Release();
+		fWorking = ZThread::sID();
 
-		try { result = theCallable->QCall(this); }
-		catch (...) {}
+		fNextWake = kDistantFuture;
 
-		guard.Acquire();
-		}
+		ZQ<bool> result;
 
-	fWorking = 0;
-
-	if (result && result.Get())
-		{
-		if (fNextWake < kDistantFuture)
-			ZCallScheduler::sGet()->NextCallAt(fNextWake, fCaller, this);
-		return true;
-		}
-	else
-		{
-		if (ZRef<Callable_Detached> theCallable = fCallable_Detached)
+		if (ZRef<Callable_Work> theCallable = fCallable_Work)
 			{
 			guard.Release();
 
-			try { theCallable->Call(this); }
+			try { result = theCallable->QCall(this); }
 			catch (...) {}
 
 			guard.Acquire();
 			}
 
-		fCaller.Clear();
+		fWorking = 0;
+
+		if (result && result.Get())
+			{
+			if (fNextWake < kDistantFuture)
+				{
+				if (ZTime::sSystem() >= fNextWake)
+					{
+					// If we're awake, just go around again.
+					puts("sdfsdfs\n");
+					continue;
+					}
+				ZCallScheduler::sGet()->NextCallAt(fNextWake, fCaller, this);
+				}
+			return true;
+			}
+		else
+			{
+			if (ZRef<Callable_Detached> theCallable = fCallable_Detached)
+				{
+				guard.Release();
+
+				try { theCallable->Call(this); }
+				catch (...) {}
+
+				guard.Acquire();
+				}
+
+			fCaller.Clear();
+			}
 		}
 	return null;
 	}
@@ -139,7 +152,7 @@ bool ZWorker::IsAwake()
 	if (fCaller)
 		{
 		if (fWorking)
-			return fNextWake >= ZTime::sSystem();
+			return fNextWake <= ZTime::sSystem();
 		else
 			return ZCallScheduler::sGet()->IsAwake(fCaller, this);
 		}
