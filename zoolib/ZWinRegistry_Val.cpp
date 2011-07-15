@@ -251,12 +251,11 @@ Val::Val(const KeyRef& iVal)
 :	inherited(iVal)
 	{}
 
-#if 0 //##
-ZQ<Val> Val::QGet(const string8& iName) const
+Val Val::Get(const string16& iName) const
 	{
 	if (ZQ<KeyRef> theKey = this->GetKeyRef())
-		return theKey->QGet(iName);
-	return null;
+		return theKey->Get(iName);
+	return Val();
 	}
 
 Val Val::Get(const string8& iName) const
@@ -265,7 +264,6 @@ Val Val::Get(const string8& iName) const
 		return theKey->Get(iName);
 	return Val();
 	}
-#endif
 
 ZMACRO_ZValAccessors_Def_GetP(,Val, String16, string16)
 ZMACRO_ZValAccessors_Def_GetP(,Val, StringList, vector<string16>)
@@ -298,9 +296,6 @@ KeyRef KeyRef::sHKLM()
 
 KeyRef KeyRef::sHKU()
 	{ return KeyRef(HKEY_USERS); }
-
-//KeyRef::operator operator_bool_type() const
-//	{ return operator_bool_generator_type::translate(fHKEY); }
 
 void KeyRef::swap(KeyRef& rhs)
 	{ inherited::swap(rhs); }
