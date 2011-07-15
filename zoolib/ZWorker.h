@@ -42,15 +42,20 @@ public:
 	typedef ZCallable<bool(ZRef_ZWorker)> Callable_Work;
 	typedef ZCallable<void(ZRef_ZWorker)> Callable_Detached;
 
-	ZWorker(ZRef<Callable_Attached> iCallable_Attached,
-		ZRef<Callable_Work> iCallable_Work,
-		ZRef<Callable_Detached> iCallable_Detached);
+	ZWorker
+		(const ZRef<Callable_Attached>& iCallable_Attached,
+		const ZRef<Callable_Work>& iCallable_Work,
+		const ZRef<Callable_Detached>& iCallable_Detached);
 
-	ZWorker(ZRef<Callable_Attached> iCallable_Attached, ZRef<Callable_Work> iCallable_Work);
+	ZWorker
+		(const ZRef<Callable_Attached>& iCallable_Attached,
+		const ZRef<Callable_Work>& iCallable_Work);
 
-	ZWorker(ZRef<Callable_Work> iCallable_Work, ZRef<Callable_Detached> iCallable_Detached);
+	ZWorker
+		(const ZRef<Callable_Work>& iCallable_Work,
+		const ZRef<Callable_Detached>& iCallable_Detached);
 
-	ZWorker(ZRef<Callable_Work> iCallable_Work);
+	ZWorker(const ZRef<Callable_Work>& iCallable_Work);
 
 	ZWorker();
 
@@ -68,9 +73,20 @@ public:
 	bool Attach(ZRef<ZCaller> iCaller);
 	bool IsAttached();
 
-	ZRef<Callable_Attached> GetSetCallable_Attached(ZRef<Callable_Attached> iCallable);
-	ZRef<Callable_Work> GetSetCallable_Work(ZRef<Callable_Work> iCallable);
-	ZRef<Callable_Detached> GetSetCallable_Detached(ZRef<Callable_Detached> iCallable);
+	ZRef<Callable_Attached> Get_Callable_Attached();
+	void Set_Callable_Attached(const ZRef<Callable_Attached>& iCallable);
+	bool AtomicCompareAndSwap_Callable_Attached
+		(ZRef<Callable_Attached> iPrior, ZRef<Callable_Attached> iNew);
+
+	ZRef<Callable_Work> Get_Callable_Work();
+	void Set_Callable_Work(const ZRef<Callable_Work>& iCallable);
+	bool AtomicCompareAndSwap_Callable_Work
+		(ZRef<Callable_Work> iPrior, ZRef<Callable_Work> iNew);
+
+	ZRef<Callable_Detached> Get_Callable_Detached();
+	void Set_Callable_Detached(const ZRef<Callable_Detached>& iCallable);
+	bool AtomicCompareAndSwap_Callable_Detached
+		(ZRef<Callable_Detached> iPrior, ZRef<Callable_Detached> iNew);
 
 private:
 	void pWakeAt(ZTime iSystemTime);

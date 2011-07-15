@@ -18,9 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZCallScheduler.h"
-#include "zoolib/ZGetSet.h"
 #include "zoolib/ZWorker.h"
 
 namespace ZooLib {
@@ -44,28 +42,33 @@ namespace ZooLib {
 
 static const ZTime kDistantFuture = 1000 * ZTime::kYear;
 
-ZWorker::ZWorker(ZRef<Callable_Attached> iCallable_Attached,
-	ZRef<Callable_Work> iCallable_Work,
-	ZRef<Callable_Detached> iCallable_Detached)
+ZWorker::ZWorker
+	(const ZRef<Callable_Attached>& iCallable_Attached,
+	const ZRef<Callable_Work>& iCallable_Work,
+	const ZRef<Callable_Detached>& iCallable_Detached)
 :	fWorking(0)
 ,	fCallable_Attached(iCallable_Attached)
 ,	fCallable_Work(iCallable_Work)
 ,	fCallable_Detached(iCallable_Detached)
 	{}
 
-ZWorker::ZWorker(ZRef<Callable_Attached> iCallable_Attached, ZRef<Callable_Work> iCallable_Work)
+ZWorker::ZWorker
+	(const ZRef<Callable_Attached>& iCallable_Attached,
+	const ZRef<Callable_Work>& iCallable_Work)
 :	fWorking(0)
 ,	fCallable_Attached(iCallable_Attached)
 ,	fCallable_Work(iCallable_Work)
 	{}
 
-ZWorker::ZWorker(ZRef<Callable_Work> iCallable_Work, ZRef<Callable_Detached> iCallable_Detached)
+ZWorker::ZWorker
+	(const ZRef<Callable_Work>& iCallable_Work,
+	const ZRef<Callable_Detached>& iCallable_Detached)
 :	fWorking(0)
 ,	fCallable_Work(iCallable_Work)
 ,	fCallable_Detached(iCallable_Detached)
 	{}
 
-ZWorker::ZWorker(ZRef<Callable_Work> iCallable_Work)
+ZWorker::ZWorker(const ZRef<Callable_Work>& iCallable_Work)
 :	fWorking(0)
 ,	fCallable_Work(iCallable_Work)
 	{}
@@ -80,51 +83,44 @@ ZQ<void> ZWorker::QCall()
 
 	for (;;)
 		{
-		fWorking = ZThread::sID();
-
-		fNextWake = kDistantFuture;
-
 		ZQ<bool> result;
 
 		if (ZRef<Callable_Work> theCallable = fCallable_Work)
 			{
+			fWorking = ZThread::sID();
+			fNextWake = kDistantFuture;
 			guard.Release();
 
 			try { result = theCallable->QCall(this); }
 			catch (...) {}
 
 			guard.Acquire();
+			fWorking = 0;
 			}
-
-		fWorking = 0;
 
 		if (result && result.Get())
 			{
 			if (fNextWake < kDistantFuture)
 				{
 				if (ZTime::sSystem() >= fNextWake)
-					{
-					// If we're awake, just go around again.
 					continue;
-					}
 				ZCallScheduler::sGet()->NextCallAt(fNextWake, fCaller, this);
 				}
 			return true;
 			}
-		else
+
+		fCaller.Clear();
+
+		if (ZRef<Callable_Detached> theCallable = fCallable_Detached)
 			{
-			if (ZRef<Callable_Detached> theCallable = fCallable_Detached)
-				{
-				guard.Release();
+			guard.Release();
 
-				try { theCallable->Call(this); }
-				catch (...) {}
+			try { theCallable->Call(this); }
+			catch (...) {}
 
-				guard.Acquire();
-				}
-
-			fCaller.Clear();
+			guard.Acquire();
 			}
+
 		return null;
 		}
 	}
@@ -165,9 +161,7 @@ bool ZWorker::Attach(ZRef<ZCaller> iCaller)
 		fCaller = iCaller;
 
 		if (ZRef<Callable_Attached,false> theCallable = fCallable_Attached)
-			{
-			return true;
-			}
+			{ return true; }
 		else
 			{
 			guard.Release();
@@ -180,7 +174,7 @@ bool ZWorker::Attach(ZRef<ZCaller> iCaller)
 			guard.Acquire();
 			}
 
-		guard.Release();
+		fCaller.Clear();
 
 		if (ZRef<Callable_Detached> theCallable = fCallable_Detached)
 			{
@@ -189,8 +183,6 @@ bool ZWorker::Attach(ZRef<ZCaller> iCaller)
 			catch (...) {}
 			guard.Acquire();
 			}
-
-		fCaller.Clear();
 		}
 	return false;
 	}
@@ -201,22 +193,70 @@ bool ZWorker::IsAttached()
 	return fCaller;
 	}
 
-ZRef<ZWorker::Callable_Attached> ZWorker::GetSetCallable_Attached(ZRef<Callable_Attached> iCallable)
+ZRef<ZWorker::Callable_Attached> ZWorker::Get_Callable_Attached()
 	{
 	ZAcqMtx acq(fMtx);
-	return sGetSet(fCallable_Attached, iCallable);
+	return fCallable_Attached;
 	}
 
-ZRef<ZWorker::Callable_Work> ZWorker::GetSetCallable_Work(ZRef<Callable_Work> iCallable)
+void ZWorker::Set_Callable_Attached(const ZRef<Callable_Attached>& iCallable)
 	{
 	ZAcqMtx acq(fMtx);
-	return sGetSet(fCallable_Work, iCallable);
+	fCallable_Attached = iCallable;
 	}
 
-ZRef<ZWorker::Callable_Detached> ZWorker::GetSetCallable_Detached(ZRef<Callable_Detached> iCallable)
+bool ZWorker::AtomicCompareAndSwap_Callable_Attached
+	(ZRef<Callable_Attached> iPrior, ZRef<Callable_Attached> iNew)
 	{
 	ZAcqMtx acq(fMtx);
-	return sGetSet(fCallable_Detached, iCallable);
+	if (fCallable_Attached != iPrior)
+		return false;
+	fCallable_Attached = iNew;
+	return true;
+	}
+
+ZRef<ZWorker::Callable_Work> ZWorker::Get_Callable_Work()
+	{
+	ZAcqMtx acq(fMtx);
+	return fCallable_Work;
+	}
+
+void ZWorker::Set_Callable_Work(const ZRef<Callable_Work>& iCallable)
+	{
+	ZAcqMtx acq(fMtx);
+	fCallable_Work = iCallable;
+	}
+
+bool ZWorker::AtomicCompareAndSwap_Callable_Work
+	(ZRef<Callable_Work> iPrior, ZRef<Callable_Work> iNew)
+	{
+	ZAcqMtx acq(fMtx);
+	if (fCallable_Work != iPrior)
+		return false;
+	fCallable_Work = iNew;
+	return true;
+	}
+
+ZRef<ZWorker::Callable_Detached> ZWorker::Get_Callable_Detached()
+	{
+	ZAcqMtx acq(fMtx);
+	return fCallable_Detached;
+	}
+
+void ZWorker::Set_Callable_Detached(const ZRef<Callable_Detached>& iCallable)
+	{
+	ZAcqMtx acq(fMtx);
+	fCallable_Detached = iCallable;
+	}
+
+bool ZWorker::AtomicCompareAndSwap_Callable_Detached
+	(ZRef<Callable_Detached> iPrior, ZRef<Callable_Detached> iNew)
+	{
+	ZAcqMtx acq(fMtx);
+	if (fCallable_Detached != iPrior)
+		return false;
+	fCallable_Detached = iNew;
+	return true;
 	}
 
 void ZWorker::pWakeAt(ZTime iSystemTime)
