@@ -56,34 +56,55 @@ void ZRoster::Finalize()
 		{
 		guard.Release();
 		for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
-			sCall((*i)->fCallable_RosterGone.Get());
+			{
+			ZGuardRMtx guard((*i)->fMtx);
+			if (ZRef<ZCallable_Void> theCallable = (*i)->fCallable_RosterGone)
+				{
+				guard.Release();
+				theCallable->Call();
+				guard.Acquire();
+				}
+			}
 		}
 	}
 
 ZRef<ZRoster::Entry> ZRoster::MakeEntry()
+	{ return this->MakeEntry(null); }
+
+ZRef<ZRoster::Entry> ZRoster::MakeEntry(ZRef<ZCallable_Void> iCallable_Broadcast)
 	{
+	ZRef<ZRoster> thisRef = this;
 	ZGuardRMtx guard(fMtx);
-	ZRef<Entry> theEntry = new Entry;
-	theEntry->fRoster = sWeakRef(this);
-	ZUtil_STL::sInsertMustNotContain(1, fEntries, theEntry);
+
+	ZRef<Entry> theEntry = new Entry(thisRef, iCallable_Broadcast, null, null);
+	ZUtil_STL::sInsertMustNotContain(1, fEntries, theEntry.Get());
 	fCnd.Broadcast();
-	if (ZRef<Callable_Change> theCallable = fCallable_Change)
+
+	if (ZRef<ZCallable_Void> theCallable = fCallable_Change)
 		{
 		guard.Release();
 		theCallable->Call();
 		}
+
 	return theEntry;
 	}
 
 void ZRoster::Broadcast()
 	{
 	ZGuardRMtx guard(fMtx);
-	vector<ZRef<Entry> > theEntries(fEntries.begin(), fEntries.end());
+	vector<ZRef<Entry> > local(fEntries.begin(), fEntries.end());
 	guard.Release();
 
-	for (vector<ZRef<Entry> >::const_iterator iter = theEntries.begin();
-		iter != theEntries.end(); ++iter)
-		{ sCall((*iter)->fCallable_Broadcast.Get()); }
+	for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
+		{
+		ZGuardRMtx guard((*i)->fMtx);
+		if (ZRef<ZCallable_Void> theCallable = (*i)->fCallable_Broadcast)
+			{
+			guard.Release();
+			theCallable->Call();
+			guard.Acquire();
+			}
+		}
 	}
 
 size_t ZRoster::Count()
@@ -115,13 +136,51 @@ bool ZRoster::WaitUntil(ZTime iDeadline, size_t iCount)
 	return fEntries.size() != iCount;
 	}
 
-ZRef<ZRoster::Callable_Change> ZRoster::GetSet_Callable_Change(ZRef<Callable_Change> iCallable)
+ZRef<ZCallable_Void> ZRoster::Get_Callable_Change()
 	{
 	ZAcqMtx acq(fMtx);
-	return sGetSet(fCallable_Change, iCallable);
+	return fCallable_Change;
 	}
 
-void ZRoster::pFinalizeEntry(Entry* iEntry)
+void ZRoster::Set_Callable_Change(const ZRef<ZCallable_Void>& iCallable)
+	{
+	ZAcqMtx acq(fMtx);
+	fCallable_Change = iCallable;
+	}
+
+bool ZRoster::AtomicCompareAndSwap_Callable_Change
+	(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
+	{
+	ZAcqMtx acq(fMtx);
+	if (fCallable_Change != iPrior)
+		return false;
+	fCallable_Change = iNew;
+	return true;
+	}
+
+ZRef<ZCallable_Void> ZRoster::Get_Callable_Gone()
+	{
+	ZAcqMtx acq(fMtx);
+	return fCallable_Gone;
+	}
+
+void ZRoster::Set_Callable_Gone(const ZRef<ZCallable_Void>& iCallable)
+	{
+	ZAcqMtx acq(fMtx);
+	fCallable_Gone = iCallable;
+	}
+
+bool ZRoster::AtomicCompareAndSwap_Callable_Gone
+	(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
+	{
+	ZAcqMtx acq(fMtx);
+	if (fCallable_Gone != iPrior)
+		return false;
+	fCallable_Gone = iNew;
+	return true;
+	}
+
+void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallable_Gone)
 	{
 	ZGuardRMtx guard(fMtx);
 	
@@ -130,11 +189,14 @@ void ZRoster::pFinalizeEntry(Entry* iEntry)
 		ZUtil_STL::sEraseMustContain(1, fEntries, iEntry);
 		delete iEntry;
 		fCnd.Broadcast();
-		if (ZRef<Callable_Change> theCallable = fCallable_Change)
-			{
-			guard.Release();
-			theCallable->Call();
-			}
+		ZRef<ZCallable_Void> theCallable_Change = fCallable_Change;
+		guard.Release();
+		
+		if (theCallable_Change)
+			theCallable_Change->Call();
+
+		if (iCallable_Gone)
+			iCallable_Gone->Call();
 		}
 	}
 
@@ -142,26 +204,111 @@ void ZRoster::pFinalizeEntry(Entry* iEntry)
 #pragma mark -
 #pragma mark * ZRoster::Entry
 
-ZRoster::Entry::Entry()
+ZRoster::Entry::Entry
+	(const ZRef<ZRoster>& iRoster,
+	const ZRef<ZCallable_Void>& iCallable_Broadcast,
+	const ZRef<ZCallable_Void>& iCallable_Gone,
+	const ZRef<ZCallable_Void>& iCallable_RosterGone)
+:	fRoster(iRoster)
+,	fCallable_Broadcast(iCallable_Broadcast)
+,	fCallable_Gone(iCallable_Gone)
+,	fCallable_RosterGone(iCallable_RosterGone)
 	{}
 
 ZRoster::Entry::~Entry()
 	{}
 
 void ZRoster::Entry::Finalize()
-	{
+	{	
+	ZGuardRMtx guard(fMtx);
+	ZRef<ZCallable_Void> theCallable = fCallable_Gone;
+	guard.Release();
+
 	if (ZRef<ZRoster> theRoster = fRoster)
-		theRoster->pFinalizeEntry(this);
+		{
+		theRoster->pFinalizeEntry(this, theCallable);
+		}
 	else
-		ZCounted::Finalize();
+		{
+		if (theCallable)
+			{
+			if (this->FinishFinalize())
+				{
+				delete this;
+				theCallable->Call();
+				}
+			}
+		else
+			{
+			ZCounted::Finalize();
+			}
+		}
 	}
 
-ZRef<ZRoster::Entry::Callable_Broadcast>
-ZRoster::Entry::GetSet_Callable_Broadcast(ZRef<Callable_Broadcast> iCallable)
-	{ return fCallable_Broadcast.GetSet(iCallable); }
+ZRef<ZCallable_Void> ZRoster::Entry::Get_Callable_Broadcast()
+	{
+	ZAcqMtx acq(fMtx);
+	return fCallable_Broadcast;
+	}
 
-ZRef<ZRoster::Entry::Callable_RosterGone>
-ZRoster::Entry::GetSet_Callable_RosterGone(ZRef<Callable_RosterGone> iCallable)
-	{ return fCallable_RosterGone.GetSet(iCallable); }
+void ZRoster::Entry::Set_Callable_Broadcast(const ZRef<ZCallable_Void>& iCallable)
+	{
+	ZAcqMtx acq(fMtx);
+	fCallable_Broadcast = iCallable;
+	}
+
+bool ZRoster::Entry::AtomicCompareAndSwap_Callable_Broadcast
+	(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
+	{
+	ZAcqMtx acq(fMtx);
+	if (fCallable_Broadcast != iPrior)
+		return false;
+	fCallable_Broadcast = iNew;
+	return true;
+	}
+
+ZRef<ZCallable_Void> ZRoster::Entry::Get_Callable_Gone()
+	{
+	ZAcqMtx acq(fMtx);
+	return fCallable_Gone;
+	}
+
+void ZRoster::Entry::Set_Callable_Gone(const ZRef<ZCallable_Void>& iCallable)
+	{
+	ZAcqMtx acq(fMtx);
+	fCallable_Gone = iCallable;
+	}
+
+bool ZRoster::Entry::AtomicCompareAndSwap_Callable_Gone
+	(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
+	{
+	ZAcqMtx acq(fMtx);
+	if (fCallable_Gone != iPrior)
+		return false;
+	fCallable_Gone = iNew;
+	return true;
+	}
+
+ZRef<ZCallable_Void> ZRoster::Entry::Get_Callable_RosterGone()
+	{
+	ZAcqMtx acq(fMtx);
+	return fCallable_RosterGone;
+	}
+
+void ZRoster::Entry::Set_Callable_RosterGone(const ZRef<ZCallable_Void>& iCallable)
+	{
+	ZAcqMtx acq(fMtx);
+	fCallable_RosterGone = iCallable;
+	}
+
+bool ZRoster::Entry::AtomicCompareAndSwap_Callable_RosterGone
+	(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
+	{
+	ZAcqMtx acq(fMtx);
+	if (fCallable_RosterGone != iPrior)
+		return false;
+	fCallable_RosterGone = iNew;
+	return true;
+	}
 
 } // namespace ZooLib

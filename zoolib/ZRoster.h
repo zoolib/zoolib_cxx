@@ -49,6 +49,7 @@ public:
 
 // Our protocol
 	ZRef<Entry> MakeEntry();
+	ZRef<Entry> MakeEntry(ZRef<ZCallable_Void> iCallable_Broadcast);
 	
 	void Broadcast();
 
@@ -57,16 +58,24 @@ public:
 	bool WaitFor(double iTimeout, size_t iCount);
 	bool WaitUntil(ZTime iDeadline, size_t iCount);
 
-	typedef ZCallable_Void Callable_Change;
-	ZRef<Callable_Change> GetSet_Callable_Change(ZRef<Callable_Change> iCallable);
+	ZRef<ZCallable_Void> Get_Callable_Change();
+	void Set_Callable_Change(const ZRef<ZCallable_Void>& iCallable);
+	bool AtomicCompareAndSwap_Callable_Change
+		(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
+
+	ZRef<ZCallable_Void> Get_Callable_Gone();
+	void Set_Callable_Gone(const ZRef<ZCallable_Void>& iCallable);
+	bool AtomicCompareAndSwap_Callable_Gone
+		(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
 
 private:
-	void pFinalizeEntry(Entry* iEntry);
+	void pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallable_Gone);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 	std::set<Entry*> fEntries;
-	ZRef<Callable_Change> fCallable_Change;
+	ZRef<ZCallable_Void> fCallable_Change;
+	ZRef<ZCallable_Void> fCallable_Gone;
 
 	friend class Entry;
 	};
@@ -80,7 +89,11 @@ class ZRoster::Entry
 ,	NonCopyable
 	{
 private:
-	Entry();
+	Entry
+		(const ZRef<ZRoster>& iRoster,
+		const ZRef<ZCallable_Void>& iCallable_Broadcast,
+		const ZRef<ZCallable_Void>& iCallable_Gone,
+		const ZRef<ZCallable_Void>& iCallable_RosterGone);
 
 public:
 	virtual ~Entry();
@@ -89,16 +102,28 @@ public:
 	virtual void Finalize();
 
 // Our protocol
-	typedef ZCallable_Void Callable_Broadcast;
-	typedef ZCallable_Void Callable_RosterGone;
+	ZRef<ZCallable_Void> Get_Callable_Broadcast();
+	void Set_Callable_Broadcast(const ZRef<ZCallable_Void>& iCallable);
+	bool AtomicCompareAndSwap_Callable_Broadcast
+		(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
 
-	ZRef<Callable_Broadcast> GetSet_Callable_Broadcast(ZRef<Callable_Broadcast> iCallable);
-	ZRef<Callable_RosterGone> GetSet_Callable_RosterGone(ZRef<Callable_RosterGone> iCallable);
+	ZRef<ZCallable_Void> Get_Callable_Gone();
+	void Set_Callable_Gone(const ZRef<ZCallable_Void>& iCallable);
+	bool AtomicCompareAndSwap_Callable_Gone
+		(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
+
+	ZRef<ZCallable_Void> Get_Callable_RosterGone();
+	void Set_Callable_RosterGone(const ZRef<ZCallable_Void>& iCallable);
+	bool AtomicCompareAndSwap_Callable_RosterGone
+		(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
 
 private:
 	ZWeakRef<ZRoster> fRoster;
-	ZSafe<ZRef<Callable_Broadcast> > fCallable_Broadcast;
-	ZSafe<ZRef<Callable_RosterGone> > fCallable_RosterGone;
+
+	ZMtx fMtx;
+	ZRef<ZCallable_Void> fCallable_Broadcast;
+	ZRef<ZCallable_Void> fCallable_Gone;
+	ZRef<ZCallable_Void> fCallable_RosterGone;
 
 	friend class ZRoster;
 	};
