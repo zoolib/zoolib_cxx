@@ -78,7 +78,6 @@ ZQ<void> ZWorker::QCall()
 	{
 	ZGuardRMtx guard(fMtx);
 
-
 	for (;;)
 		{
 		fWorking = ZThread::sID();
@@ -106,7 +105,6 @@ ZQ<void> ZWorker::QCall()
 				if (ZTime::sSystem() >= fNextWake)
 					{
 					// If we're awake, just go around again.
-					puts("sdfsdfs\n");
 					continue;
 					}
 				ZCallScheduler::sGet()->NextCallAt(fNextWake, fCaller, this);
@@ -127,8 +125,8 @@ ZQ<void> ZWorker::QCall()
 
 			fCaller.Clear();
 			}
+		return null;
 		}
-	return null;
 	}
 
 void ZWorker::Wake()
