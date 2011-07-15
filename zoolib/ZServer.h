@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -22,8 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZServer__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
-#include "zoolib/ZSafeSet.h"
+#include "zoolib/ZRoster.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZWorker.h"
 
@@ -33,11 +32,11 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZServer
 
-class ZServer : public ZCounted
+class ZServer
+:	public ZCounted
 	{
 public:
-	class Responder;
-	friend class Responder;
+	typedef ZCallable<void(ZRef<ZRoster::Entry>,ZRef<ZStreamerRW>)> Callable_Connection;
 
 	ZServer();
 	virtual ~ZServer();
@@ -46,93 +45,33 @@ public:
 	virtual void Finalize();
 
 // Our protocol
-	virtual ZRef<Responder> MakeResponder() = 0;
+	void Start(ZRef<ZCaller> iCaller,
+		ZRef<ZStreamerRWFactory> iFactory,
+		ZRef<Callable_Connection> iCallable_Connection);
 
-	ZRef<ZStreamerRWFactory> GetListener();
+	void Stop();
+	void StopWait();
 
-	void StartListener(ZRef<ZCaller> iCaller, ZRef<ZStreamerRWFactory> iFactory);
-
-	void StopListener();
-	void StopListenerWait();
-
-	void KillResponders();
-	void KillRespondersWait();
+	void KillConnections();
+	void KillConnectionsWait();
 
 	ZRef<ZStreamerRWFactory> GetFactory();
 
-	ZSafeSetIterConst<ZRef<Responder> > GetResponders();
+	ZRef<Callable_Connection> GetSet_Callable_Connection
+		(ZRef<Callable_Connection> iCallable_Connection);
 
 private:
-	bool pListener_Work(ZRef<ZWorker> iWorker);
-	void pListener_Finished(ZRef<ZWorker> iWorker);
-
-	void pResponderFinished(ZRef<Responder> iResponder);
+	bool pWork(ZRef<ZWorker> iWorker);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 
-	ZRef<ZWorker> fWorker;
 	ZRef<ZStreamerRWFactory> fFactory;
-	ZSafeSet<ZRef<Responder> > fResponders;
+	ZRef<Callable_Connection> fCallable_Connection;
+	ZRef<ZRoster> fRoster;
+
+	ZRef<ZWorker> fWorker;
 	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZServer::Responder
-
-class ZServer::Responder : public ZCounted
-	{
-public:
-	Responder(ZRef<ZServer> iServer);
-	virtual ~Responder();
-
-	virtual void Respond(ZRef<ZStreamerRW> iStreamerRW) = 0;
-
-	virtual void Kill();
-
-	ZRef<ZServer> GetServer();
-
-protected:
-	void pFinished();
-
-private:
-	ZWeakRef<ZServer> fServer;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZServer_T
-
-template <class R, class P = void>
-class ZServer_T : public ZServer
-	{
-public:
-	ZServer_T() {}
-	ZServer_T(const P& iParam) : fParam(iParam) {}
-
-// From ZServer
-	virtual ZRef<Responder> MakeResponder()
-		{ return new R(this, fParam); }
-
-private:
-	P fParam;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZServer_T (specialized for void Param)
-
-template <class R>
-class ZServer_T<R,void> : public ZServer
-	{
-public:
-	ZServer_T() {}
-
-// From ZServer
-	virtual ZRef<Responder> MakeResponder()
-		{ return new R(this); }
-	};
-
 } // namespace ZooLib
 
 #endif // __ZServer__

@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCallable_Bind.h"
+#include "zoolib/ZCallable_Function.h"
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZServer.h"
 
@@ -31,83 +33,74 @@ ZServer::ZServer()
 	{}
 
 ZServer::~ZServer()
-	{
-	ZAssert(fResponders.Empty());
-	ZAssert(not fWorker);
-	}
+	{}
 
 void ZServer::Finalize()
 	{
-	this->StopListenerWait();
-
-	fResponders.Clear();
+	ZGuardRMtx guard(fMtx);
+	ZAssert(!fWorker);
+	ZAssert(!fFactory);
+	fRoster.Clear();
+	fCallable_Connection.Clear();
+	guard.Release();
 
 	ZCounted::Finalize();
 	}
 
-ZRef<ZStreamerRWFactory> ZServer::GetListener()
+void ZServer::Start(ZRef<ZCaller> iCaller,
+	ZRef<ZStreamerRWFactory> iFactory,
+	ZRef<Callable_Connection> iCallable_Connection)
 	{
-	ZAcqMtx acq(fMtx);
-	return fFactory;
-	}
-
-void ZServer::StartListener(ZRef<ZCaller> iCaller, ZRef<ZStreamerRWFactory> iFactory)
-	{
-	ZAcqMtx acq(fMtx);
-
 	ZAssert(iCaller);
 	ZAssert(iFactory);
+	ZAssert(iCallable_Connection);
+
+	ZRef<ZRoster> priorRoster;
+
+	ZAcqMtx acq(fMtx);
+
 	ZAssert(not fWorker);
 	ZAssert(not fFactory);
+	ZAssert(not fCallable_Connection);
+
+	priorRoster = fRoster;
+	fRoster = new ZRoster;
 
 	fFactory = iFactory;
+	fCallable_Connection = iCallable_Connection;
 
 	fWorker = new ZWorker
-		(sCallable(sWeakRef(this), &ZServer::pListener_Work),
-		(sCallable(sWeakRef(this), &ZServer::pListener_Finished)));
+		(sCallable(sWeakRef(this), &ZServer::pWork));
 
 	fWorker->Attach(iCaller);
 
 	fWorker->Wake();
 	}
 
-void ZServer::StopListener()
+void ZServer::Stop()
 	{
-	ZGuardRMtx guard(fMtx);
-	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
-		{
-		fFactory.Clear();
-		theFactory->Cancel();
-		}
+	ZAcqMtx acq(fMtx);
+	fFactory.Clear();
+	fCallable_Connection.Clear();
+	fCnd.Broadcast();
 	}
 
-void ZServer::StopListenerWait()
+void ZServer::StopWait()
 	{
-	this->StopListener();
-
 	ZAcqMtx acq(fMtx);
+	fFactory.Clear();
+	fCnd.Broadcast();
 	while (fWorker)
 		fCnd.Wait(fMtx);
 	}
 
-void ZServer::KillResponders()
-	{
-	for (ZSafeSetIterConst<ZRef<Responder> > i = fResponders; /*no test*/; /*no inc*/)
-		{
-		if (ZQ<ZRef<Responder>,false> theNQ = i.QReadInc())
-			break;
-		else
-			theNQ.Get()->Kill();
-		}
-	}
+void ZServer::KillConnections()
+	{ fRoster->Broadcast(); }
 
-void ZServer::KillRespondersWait()
+void ZServer::KillConnectionsWait()
 	{
-	this->KillResponders();
-
-	ZAcqMtx acq(fMtx);
-	while (!fResponders.Empty())
-		fCnd.Wait(fMtx);
+	fRoster->Broadcast();
+	fRoster->Wait(0);
 	}
 
 ZRef<ZStreamerRWFactory> ZServer::GetFactory()
@@ -116,65 +109,44 @@ ZRef<ZStreamerRWFactory> ZServer::GetFactory()
 	return fFactory;
 	}
 
-ZSafeSetIterConst<ZRef<ZServer::Responder> > ZServer::GetResponders()
-	{ return fResponders; }
-
-bool ZServer::pListener_Work(ZRef<ZWorker> iWorker)
+ZRef<ZServer::Callable_Connection> ZServer::GetSet_Callable_Connection
+	(ZRef<Callable_Connection> iCallable_Connection)
 	{
-	iWorker->Wake();
+	ZAcqMtx acq(fMtx);
+	return sGetSet(fCallable_Connection, iCallable_Connection);
+	}
+
+static void spKill(ZRef<ZStreamerRWCon> iSRWCon)
+	{ iSRWCon->Abort(); }
+
+bool ZServer::pWork(ZRef<ZWorker> iWorker)
+	{
 	ZGuardRMtx guard(fMtx);
-	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+
+	if (ZRef<ZStreamerRWFactory,false> theFactory = fFactory)
+		{
+		fWorker.Clear();
+		fCnd.Broadcast();
+		return false;
+		}
+	else
 		{
 		guard.Release();
-		if (ZRef<ZStreamerRW> iStreamerRW = theFactory->MakeStreamerRW())
+		if (ZRef<ZStreamerRW> theSRW = theFactory->MakeStreamerRW())
 			{
-			if (ZRef<Responder> theResponder = this->MakeResponder())
+			guard.Acquire();
+			if (ZRef<Callable_Connection> theCallable = fCallable_Connection)
 				{
-				fResponders.Insert(theResponder);
-				theResponder->Respond(iStreamerRW);
+				ZRef<ZRoster::Entry> theEntry = fRoster->MakeEntry();
+				if (ZRef<ZStreamerRWCon> theSRWCon = theSRW.DynamicCast<ZStreamerRWCon>())
+					theEntry->GetSet_Callable_Broadcast(sBindR(sCallable(spKill), theSRWCon));
+				guard.Release();
+				theCallable->Call(theEntry, theSRW);
 				}
 			}
-		return true;
 		}
-	return false;
-	}
-
-void ZServer::pListener_Finished(ZRef<ZWorker> iWorker)
-	{
-	ZAcqMtx acq(fMtx);
-	ZAssert(!fFactory);
-	fWorker.Clear();
-	fCnd.Broadcast();
-	}
-
-void ZServer::pResponderFinished(ZRef<Responder> iResponder)
-	{
-	ZAcqMtx acq(fMtx);
-	fResponders.Erase(iResponder);
-	fCnd.Broadcast();
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZServer::Responder
-
-ZServer::Responder::Responder(ZRef<ZServer> iServer)
-:	fServer(iServer)
-	{}
-
-ZServer::Responder::~Responder()
-	{}
-
-void ZServer::Responder::Kill()
-	{}
-
-ZRef<ZServer> ZServer::Responder::GetServer()
-	{ return fServer.Get(); }
-
-void ZServer::Responder::pFinished()
-	{
-	if (ZRef<ZServer> theServer = fServer.Get())
-		theServer->pResponderFinished(this);
+	iWorker->Wake();
+	return true;
 	}
 
 } // namespace ZooLib
