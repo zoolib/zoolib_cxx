@@ -79,6 +79,9 @@ public:
 	Val(const Data& iVal);
 	Val(const KeyRef& iVal);
 
+//##	ZQ<Val> QGet(const string8& iName) const;
+//##	Val Get(const string8& iName) const;
+
 	ZMACRO_ZValAccessors_Decl_Get(Val, String16, string16)
 	ZMACRO_ZValAccessors_Decl_Get(Val, StringList, vector<string16>)
 	ZMACRO_ZValAccessors_Decl_Get(Val, String_Env, String_Env)

@@ -251,6 +251,22 @@ Val::Val(const KeyRef& iVal)
 :	inherited(iVal)
 	{}
 
+#if 0 //##
+ZQ<Val> Val::QGet(const string8& iName) const
+	{
+	if (ZQ<KeyRef> theKey = this->GetKeyRef())
+		return theKey->QGet(iName);
+	return null;
+	}
+
+Val Val::Get(const string8& iName) const
+	{
+	if (ZQ<KeyRef> theKey = this->GetKeyRef())
+		return theKey->Get(iName);
+	return Val();
+	}
+#endif
+
 ZMACRO_ZValAccessors_Def_GetP(,Val, String16, string16)
 ZMACRO_ZValAccessors_Def_GetP(,Val, StringList, vector<string16>)
 ZMACRO_ZValAccessors_Def_GetP(,Val, String_Env, String_Env)
@@ -395,9 +411,7 @@ ZQ<Val> KeyRef::QGet(const Index_t& iIndex) const
 				0, // ulOptions
 				KEY_READ,
 				&subKey.OParam()))
-				{
-				return subKey;
-				}
+				{ return subKey; }
 			}
 		return null;
 		}
