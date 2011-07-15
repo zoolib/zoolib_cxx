@@ -76,7 +76,7 @@ bool ZCallScheduler::IsAwake(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallab
 
 	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(theJob, 0.0));
 	if (iterJT != fJobTimes.end() && iterJT->first == theJob)
-		return ZTime::sSystem() <= iterJT->second;
+		return ZTime::sSystem() >= iterJT->second;
 
 	return false;
 	}
