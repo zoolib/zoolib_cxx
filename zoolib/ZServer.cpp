@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -53,7 +53,6 @@ void ZServer::Start(ZRef<ZCaller> iCaller,
 	{
 	ZAssert(iCaller);
 	ZAssert(iFactory);
-	ZAssert(iCallable_Connection);
 
 	ZRef<ZRoster> priorRoster;
 
@@ -69,8 +68,7 @@ void ZServer::Start(ZRef<ZCaller> iCaller,
 	fFactory = iFactory;
 	fCallable_Connection = iCallable_Connection;
 
-	fWorker = new ZWorker
-		(sCallable(sWeakRef(this), &ZServer::pWork));
+	fWorker = new ZWorker(sCallable(sWeakRef(this), &ZServer::pWork));
 
 	fWorker->Attach(iCaller);
 
@@ -109,11 +107,26 @@ ZRef<ZStreamerRWFactory> ZServer::GetFactory()
 	return fFactory;
 	}
 
-ZRef<ZServer::Callable_Connection> ZServer::GetSet_Callable_Connection
-	(ZRef<Callable_Connection> iCallable_Connection)
+ZRef<ZServer::Callable_Connection> ZServer::Get_Callable_Connection()
 	{
 	ZAcqMtx acq(fMtx);
-	return sGetSet(fCallable_Connection, iCallable_Connection);
+	return fCallable_Connection;
+	}
+
+void ZServer::Set_Callable_Connection(const ZRef<Callable_Connection>& iCallable)
+	{
+	ZAcqMtx acq(fMtx);
+	fCallable_Connection = iCallable;
+	}
+
+bool ZServer::CAS_Callable_Connection
+	(ZRef<Callable_Connection> iPrior, ZRef<Callable_Connection> iNew)
+	{
+	ZAcqMtx acq(fMtx);
+	if (fCallable_Connection != iPrior)
+		return false;
+	fCallable_Connection = iNew;
+	return true;
 	}
 
 static void spKill(ZRef<ZStreamerRWCon> iSRWCon)
@@ -139,7 +152,7 @@ bool ZServer::pWork(ZRef<ZWorker> iWorker)
 				{
 				ZRef<ZRoster::Entry> theEntry = fRoster->MakeEntry();
 				if (ZRef<ZStreamerRWCon> theSRWCon = theSRW.DynamicCast<ZStreamerRWCon>())
-					theEntry->GetSet_Callable_Broadcast(sBindR(sCallable(spKill), theSRWCon));
+					theEntry->Set_Callable_Broadcast(sBindR(sCallable(spKill), theSRWCon));
 				guard.Release();
 				theCallable->Call(theEntry, theSRW);
 				}

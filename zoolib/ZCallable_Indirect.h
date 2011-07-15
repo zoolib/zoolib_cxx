@@ -53,8 +53,14 @@ public:
 		{ return sQCall(fCallable.Get()); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -81,8 +87,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -109,8 +121,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -137,8 +155,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -165,8 +189,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2, i3); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -194,8 +224,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2, i3, i4); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -223,8 +259,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2, i3, i4, i5); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -252,8 +294,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -281,8 +329,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -313,8 +367,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -345,8 +405,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -377,8 +443,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -409,8 +481,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -442,8 +520,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -475,8 +559,14 @@ public:
 		{ return sQCall(fCallable.Get(), i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -510,8 +600,14 @@ public:
 		}
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;
@@ -546,8 +642,14 @@ public:
 		}
 
 // Our protocol
-	ZRef<Callable> GetSet(const ZRef<Callable>& iCallable)
-		{ return fCallable.GetSet(iCallable); }
+	ZRef<Callable> Get()
+		{ return fCallable.Get(); }
+
+	void Set(const ZRef<Callable>& iCallable)
+		{ return fCallable.Set(iCallable); }
+
+	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+		{ return fCallable.CAS(iPrior, iNew); }
 
 private:
 	ZSafe<ZRef<Callable> > fCallable;

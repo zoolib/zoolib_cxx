@@ -205,8 +205,7 @@ void ZWorker::Set_Callable_Attached(const ZRef<Callable_Attached>& iCallable)
 	fCallable_Attached = iCallable;
 	}
 
-bool ZWorker::AtomicCompareAndSwap_Callable_Attached
-	(ZRef<Callable_Attached> iPrior, ZRef<Callable_Attached> iNew)
+bool ZWorker::CAS_Callable_Attached(ZRef<Callable_Attached> iPrior, ZRef<Callable_Attached> iNew)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fCallable_Attached != iPrior)
@@ -227,8 +226,7 @@ void ZWorker::Set_Callable_Work(const ZRef<Callable_Work>& iCallable)
 	fCallable_Work = iCallable;
 	}
 
-bool ZWorker::AtomicCompareAndSwap_Callable_Work
-	(ZRef<Callable_Work> iPrior, ZRef<Callable_Work> iNew)
+bool ZWorker::CAS_Callable_Work(ZRef<Callable_Work> iPrior, ZRef<Callable_Work> iNew)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fCallable_Work != iPrior)
@@ -249,8 +247,7 @@ void ZWorker::Set_Callable_Detached(const ZRef<Callable_Detached>& iCallable)
 	fCallable_Detached = iCallable;
 	}
 
-bool ZWorker::AtomicCompareAndSwap_Callable_Detached
-	(ZRef<Callable_Detached> iPrior, ZRef<Callable_Detached> iNew)
+bool ZWorker::CAS_Callable_Detached(ZRef<Callable_Detached> iPrior, ZRef<Callable_Detached> iNew)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fCallable_Detached != iPrior)

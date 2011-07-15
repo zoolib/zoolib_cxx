@@ -75,18 +75,15 @@ public:
 
 	ZRef<Callable_Attached> Get_Callable_Attached();
 	void Set_Callable_Attached(const ZRef<Callable_Attached>& iCallable);
-	bool AtomicCompareAndSwap_Callable_Attached
-		(ZRef<Callable_Attached> iPrior, ZRef<Callable_Attached> iNew);
+	bool CAS_Callable_Attached(ZRef<Callable_Attached> iPrior, ZRef<Callable_Attached> iNew);
 
 	ZRef<Callable_Work> Get_Callable_Work();
 	void Set_Callable_Work(const ZRef<Callable_Work>& iCallable);
-	bool AtomicCompareAndSwap_Callable_Work
-		(ZRef<Callable_Work> iPrior, ZRef<Callable_Work> iNew);
+	bool CAS_Callable_Work(ZRef<Callable_Work> iPrior, ZRef<Callable_Work> iNew);
 
 	ZRef<Callable_Detached> Get_Callable_Detached();
 	void Set_Callable_Detached(const ZRef<Callable_Detached>& iCallable);
-	bool AtomicCompareAndSwap_Callable_Detached
-		(ZRef<Callable_Detached> iPrior, ZRef<Callable_Detached> iNew);
+	bool CAS_Callable_Detached(ZRef<Callable_Detached> iPrior, ZRef<Callable_Detached> iNew);
 
 private:
 	void pWakeAt(ZTime iSystemTime);

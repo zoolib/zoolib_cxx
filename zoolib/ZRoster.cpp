@@ -148,8 +148,7 @@ void ZRoster::Set_Callable_Change(const ZRef<ZCallable_Void>& iCallable)
 	fCallable_Change = iCallable;
 	}
 
-bool ZRoster::AtomicCompareAndSwap_Callable_Change
-	(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
+bool ZRoster::CAS_Callable_Change(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fCallable_Change != iPrior)
@@ -170,8 +169,7 @@ void ZRoster::Set_Callable_Gone(const ZRef<ZCallable_Void>& iCallable)
 	fCallable_Gone = iCallable;
 	}
 
-bool ZRoster::AtomicCompareAndSwap_Callable_Gone
-	(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
+bool ZRoster::CAS_Callable_Gone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fCallable_Gone != iPrior)
@@ -257,8 +255,7 @@ void ZRoster::Entry::Set_Callable_Broadcast(const ZRef<ZCallable_Void>& iCallabl
 	fCallable_Broadcast = iCallable;
 	}
 
-bool ZRoster::Entry::AtomicCompareAndSwap_Callable_Broadcast
-	(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
+bool ZRoster::Entry::CAS_Callable_Broadcast(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fCallable_Broadcast != iPrior)
@@ -279,8 +276,7 @@ void ZRoster::Entry::Set_Callable_Gone(const ZRef<ZCallable_Void>& iCallable)
 	fCallable_Gone = iCallable;
 	}
 
-bool ZRoster::Entry::AtomicCompareAndSwap_Callable_Gone
-	(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
+bool ZRoster::Entry::CAS_Callable_Gone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fCallable_Gone != iPrior)
@@ -301,8 +297,7 @@ void ZRoster::Entry::Set_Callable_RosterGone(const ZRef<ZCallable_Void>& iCallab
 	fCallable_RosterGone = iCallable;
 	}
 
-bool ZRoster::Entry::AtomicCompareAndSwap_Callable_RosterGone
-	(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
+bool ZRoster::Entry::CAS_Callable_RosterGone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fCallable_RosterGone != iPrior)

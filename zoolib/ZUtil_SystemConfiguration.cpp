@@ -55,8 +55,8 @@ void Store::Initialize()
 SCDynamicStoreRef Store::GetStoreRef()
 	{ return fStoreRef; }
 
-ZRef<Store::Callable> Store::GetSet_Callback(ZRef<Callable> iCallable)
-	{ return fCallable.GetSet(iCallable); }
+void Store::Set_Callback(ZRef<Callable> iCallable)
+	{ return fCallable.Set(iCallable); }
 
 void Store::spCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
 	{

@@ -88,7 +88,7 @@ public:
 		return ZooLib::sGetSet(fVal, iOther);
 		}
 
-	bool CompareAndSwap(const T& iOld, const T& iNew)
+	bool CAS(const T& iOld, const T& iNew)
 		{
 		ZAcqMtx acq(fMtx);
 		if (fVal == iOld)

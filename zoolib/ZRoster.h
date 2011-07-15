@@ -60,13 +60,11 @@ public:
 
 	ZRef<ZCallable_Void> Get_Callable_Change();
 	void Set_Callable_Change(const ZRef<ZCallable_Void>& iCallable);
-	bool AtomicCompareAndSwap_Callable_Change
-		(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
+	bool CAS_Callable_Change(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
 
 	ZRef<ZCallable_Void> Get_Callable_Gone();
 	void Set_Callable_Gone(const ZRef<ZCallable_Void>& iCallable);
-	bool AtomicCompareAndSwap_Callable_Gone
-		(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
+	bool CAS_Callable_Gone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
 
 private:
 	void pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallable_Gone);
@@ -104,18 +102,15 @@ public:
 // Our protocol
 	ZRef<ZCallable_Void> Get_Callable_Broadcast();
 	void Set_Callable_Broadcast(const ZRef<ZCallable_Void>& iCallable);
-	bool AtomicCompareAndSwap_Callable_Broadcast
-		(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
+	bool CAS_Callable_Broadcast(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
 
 	ZRef<ZCallable_Void> Get_Callable_Gone();
 	void Set_Callable_Gone(const ZRef<ZCallable_Void>& iCallable);
-	bool AtomicCompareAndSwap_Callable_Gone
-		(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
+	bool CAS_Callable_Gone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
 
 	ZRef<ZCallable_Void> Get_Callable_RosterGone();
 	void Set_Callable_RosterGone(const ZRef<ZCallable_Void>& iCallable);
-	bool AtomicCompareAndSwap_Callable_RosterGone
-		(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
+	bool CAS_Callable_RosterGone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
 
 private:
 	ZWeakRef<ZRoster> fRoster;

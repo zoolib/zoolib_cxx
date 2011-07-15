@@ -52,7 +52,7 @@ public:
 
 // Our protocol
 	SCDynamicStoreRef GetStoreRef();
-	ZRef<Callable> GetSet_Callback(ZRef<Callable> iCallable);
+	void Set_Callback(ZRef<Callable> iCallable);
 
 private:
 	static void spCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info);
