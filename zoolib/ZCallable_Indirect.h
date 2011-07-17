@@ -57,7 +57,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -91,7 +91,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -125,7 +125,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -159,7 +159,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -193,7 +193,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -228,7 +228,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -263,7 +263,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -298,7 +298,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -333,7 +333,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -371,7 +371,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -409,7 +409,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -447,7 +447,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -485,7 +485,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -524,7 +524,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -563,7 +563,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -604,7 +604,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
@@ -646,7 +646,7 @@ public:
 		{ return fCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ return fCallable.Set(iCallable); }
+		{ fCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
 		{ return fCallable.CAS(iPrior, iNew); }
