@@ -656,8 +656,7 @@ private:
 #pragma mark -
 #pragma mark * sCallable
 
-template <class R
-	>
+template <class R>
 ZRef<ZCallable<R(void)> >
 sCallable(R (^iBlockPtr)())
 	{ return new Callable<R(void)>(iBlockPtr); }
