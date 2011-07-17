@@ -85,7 +85,7 @@ public:
 	T GetSet(const T& iOther)
 		{
 		ZAcqMtx acq(fMtx);
-		return ZooLib::sGetSet(fVal, iOther);
+		return sGetSet(fVal, iOther);
 		}
 
 	bool CAS(const T& iOld, const T& iNew)
