@@ -78,7 +78,11 @@ void ZServer::Start(ZRef<ZCaller> iCaller,
 void ZServer::Stop()
 	{
 	ZAcqMtx acq(fMtx);
-	fFactory.Clear();
+	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+		{
+		fFactory.Clear();
+		theFactory->Cancel();
+		}
 	fCallable_Connection.Clear();
 	fCnd.Broadcast();
 	}
