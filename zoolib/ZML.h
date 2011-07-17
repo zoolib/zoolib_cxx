@@ -139,6 +139,8 @@ bool sSkip(StrimU& r, vector<string>& ioTags);
 
 bool sTryRead_Begin(StrimU& r, const string& iTagName);
 
+bool sTryRead_Empty(StrimU& r, const string& iTagName);
+
 bool sTryRead_End(StrimU& r, const string& iTagName);
 
 // =================================================================================================

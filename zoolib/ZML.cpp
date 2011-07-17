@@ -688,6 +688,15 @@ bool sTryRead_Begin(StrimU& r, const string& iTagName)
 	return true;
 	}
 
+bool sTryRead_Empty(StrimU& r, const string& iTagName)
+	{
+	if (r.Current() != eToken_TagEmpty || r.Name() != iTagName)
+		return false;
+
+	r.Advance();
+	return true;
+	}
+
 bool sTryRead_End(StrimU& r, const string& iTagName)
 	{
 	if (r.Current() != eToken_TagEnd || r.Name() != iTagName)
