@@ -47,10 +47,10 @@ void ZRoster::Finalize()
 
 	if (not this->FinishFinalize())
 		{
-		// Someone snagged a strong reference, reinstate weak references.
+		// Rare/impossible? Someone snagged a strong reference, reinstate entries' weak references.
 		ZRef<ZRoster> thisRef = this;
 		for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
-			(*i)->fRoster = sRef(thisRef);
+			(*i)->fRoster = thisRef;
 		}
 	else
 		{
@@ -74,6 +74,7 @@ ZRef<ZRoster::Entry> ZRoster::MakeEntry()
 ZRef<ZRoster::Entry> ZRoster::MakeEntry(ZRef<ZCallable_Void> iCallable_Broadcast)
 	{
 	ZRef<ZRoster> thisRef = this;
+
 	ZGuardRMtx guard(fMtx);
 
 	ZRef<Entry> theEntry = new Entry(thisRef, iCallable_Broadcast, null, null);
@@ -91,6 +92,8 @@ ZRef<ZRoster::Entry> ZRoster::MakeEntry(ZRef<ZCallable_Void> iCallable_Broadcast
 
 void ZRoster::Broadcast()
 	{
+	ZRef<ZRoster> thisRef = this;
+
 	ZGuardRMtx guard(fMtx);
 	vector<ZRef<Entry> > local(fEntries.begin(), fEntries.end());
 	guard.Release();
@@ -115,6 +118,8 @@ size_t ZRoster::Count()
 
 void ZRoster::Wait(size_t iCount)
 	{
+	ZRef<ZRoster> thisRef = this;
+
 	ZAcqMtx acq(fMtx);
 	while (fEntries.size() != iCount)
 		fCnd.Wait(fMtx);
@@ -122,6 +127,8 @@ void ZRoster::Wait(size_t iCount)
 
 bool ZRoster::WaitFor(double iTimeout, size_t iCount)
 	{
+	ZRef<ZRoster> thisRef = this;
+
 	ZAcqMtx acq(fMtx);
 	if (fEntries.size() != iCount)
 		fCnd.WaitFor(fMtx, iTimeout);
@@ -130,6 +137,8 @@ bool ZRoster::WaitFor(double iTimeout, size_t iCount)
 
 bool ZRoster::WaitUntil(ZTime iDeadline, size_t iCount)
 	{
+	ZRef<ZRoster> thisRef = this;
+
 	ZAcqMtx acq(fMtx);
 	if (fEntries.size() != iCount)
 		fCnd.WaitUntil(fMtx, iDeadline);
