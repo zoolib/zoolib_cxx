@@ -57,12 +57,12 @@ void ZRoster::Finalize()
 		guard.Release();
 		for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
 			{
-			ZGuardRMtx guard((*i)->fMtx);
+			ZGuardRMtx guardEntry((*i)->fMtx);
 			if (ZRef<ZCallable_Void> theCallable = (*i)->fCallable_RosterGone)
 				{
-				guard.Release();
+				guardEntry.Release();
 				theCallable->Call();
-				guard.Acquire();
+				guardEntry.Acquire();
 				}
 			}
 		}
@@ -97,12 +97,12 @@ void ZRoster::Broadcast()
 
 	for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
 		{
-		ZGuardRMtx guard((*i)->fMtx);
+		ZGuardRMtx guardEntry((*i)->fMtx);
 		if (ZRef<ZCallable_Void> theCallable = (*i)->fCallable_Broadcast)
 			{
-			guard.Release();
+			guardEntry.Release();
 			theCallable->Call();
-			guard.Acquire();
+			guardEntry.Acquire();
 			}
 		}
 	}
@@ -226,20 +226,17 @@ void ZRoster::Entry::Finalize()
 		{
 		theRoster->pFinalizeEntry(this, theCallable);
 		}
+	else if (theCallable)
+		{
+		if (this->FinishFinalize())
+			{
+			delete this;
+			theCallable->Call();
+			}
+		}
 	else
 		{
-		if (theCallable)
-			{
-			if (this->FinishFinalize())
-				{
-				delete this;
-				theCallable->Call();
-				}
-			}
-		else
-			{
-			ZCounted::Finalize();
-			}
+		ZCounted::Finalize();
 		}
 	}
 
