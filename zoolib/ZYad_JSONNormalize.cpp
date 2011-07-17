@@ -69,9 +69,6 @@ private:
 
 static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 	{
-	int64 asInt64;
-	double asDouble;
-
 	if (false)
 		{}
 	else if (iVal.Type() == typeid(void)
@@ -82,13 +79,13 @@ static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 		{
 		oVal = iVal;
 		}
-	else if (sQCoerceInt(iVal, asInt64))
+	else if (ZQ<int64> theQ = sQCoerceInt(iVal))
 		{
-		oVal = asInt64;
+		oVal = theQ.Get();
 		}
-	else if (sQCoerceReal(iVal, asDouble))
+	else if (ZQ<double> theQ = sQCoerceReal(iVal))
 		{
-		oVal = asDouble;
+		oVal = theQ.Get();
 		}
 	else if (const ZTime* theValue = iVal.PGet<ZTime>())
 		{
