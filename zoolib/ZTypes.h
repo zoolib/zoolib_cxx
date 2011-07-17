@@ -108,12 +108,12 @@ const struct
 // =================================================================================================
 
 template <class T, class S>
-bool sAssignIfUnequal(T& output, const S& input)
+bool sCompareAndSet(T& out, const S& in)
 	{
-	if (output == input)
+	if (out == in)
 		return false;
 
-	output = input;
+	out = in;
 	return true;
 	}
 
