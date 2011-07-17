@@ -72,27 +72,27 @@ public:
 		{
 		ZThreadVal* theTV = spGet();
 		ZAssert(theTV);
-		return *theTV;
+		return theTV->GetMutable();
 		}
 
 	static ZQ<Value> sQGet()
 		{
 		if (ZThreadVal* theTV = spGet())
-			return *theTV;
+			return theTV->Get();
 		return null;
 		}
 
 	static Value sDGet(const Value& iDefault)
 		{
 		if (ZThreadVal* theTV = spGet())
-			return *theTV;
+			return theTV->Get();
 		return iDefault;
 		}
 
 	static Value sGet()
 		{
 		if (ZThreadVal* theTV = spGet())
-			return *theTV;
+			return theTV->Get();
 		return Value();
 		}
 
@@ -109,6 +109,15 @@ private:
 
 	ZThreadVal* fPrior;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sThreadVal
+
+// Not sure about this one yet.
+template <class T>
+T sThreadVal()
+	{ return ZThreadVal<T>::sGet(); }
 
 } // namespace ZooLib
 
