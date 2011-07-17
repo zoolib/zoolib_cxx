@@ -91,12 +91,10 @@ public:
 	bool CAS(const T& iOld, const T& iNew)
 		{
 		ZAcqMtx acq(fMtx);
-		if (fVal == iOld)
-			{
-			fVal = iNew;
-			return true;
-			}
-		return false;
+		if (not (fVal == iOld))
+			return false;
+		fVal = iNew;
+		return true;
 		}
 
 private:
