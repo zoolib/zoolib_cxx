@@ -38,6 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 
 namespace ZooLib {
+namespace ZDCPixmapBlit {
 
 typedef ZDCPixmapNS::PixelDescRep PDRep;
 typedef ZDCPixmapNS::PixelDescRep_Indexed PDRep_Indexed;
@@ -48,21 +49,21 @@ typedef ZDCPixmapNS::PixelDescRep_Color PDRep_Color;
 #pragma mark -
 #pragma mark * Public API
 
-void ZDCPixmapBlit::sBlit
-	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+void sBlit
+	(const void* iSource, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
 	ZPointPOD iSourceOrigin,
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
+	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	EOp iOp)
 	{
-	sBlit_T(iSourceAddress, iSourceRD, iSourceB, iSourcePD,
+	sBlit_T(iSource, iSourceRD, iSourceB, iSourcePD,
 		iSourceOrigin,
-		iDestAddress, iDestRD, iDestB, iDestPD,
+		oDest, iDestRD, iDestB, iDestPD,
 		iOp);
 	}
 
-void ZDCPixmapBlit::sBlit
-	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
+void sBlit
+	(const void* iSource, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	EOp iOp)
 	{
 	ZRectPOD realDest = iDestB;
@@ -70,34 +71,34 @@ void ZDCPixmapBlit::sBlit
 	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + iSourceB.Height()));
 
 	ZPointPOD sourceStart = iSourceB.TopLeft();
-	sBlit_T(iSourceAddress, iSourceRD, iSourcePD,
+	sBlit_T(iSource, iSourceRD, iSourcePD,
 		sourceStart,
-		iDestAddress, iDestRD, realDest, iDestPD,
+		oDest, iDestRD, realDest, iDestPD,
 		iOp);
 
 	}
 
-void ZDCPixmapBlit::sBlit
-	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+void sBlit
+	(const void* iSource, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
 	ZPointPOD iSourceOrigin,
-	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
+	const void* iMatte, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
 	ZPointPOD iMatteOrigin,
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
+	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
-	sBlit_T(iSourceAddress, iSourceRD, iSourceB, iSourcePD,
+	sBlit_T(iSource, iSourceRD, iSourceB, iSourcePD,
 		iSourceOrigin,
-		iMatteAddress, iMatteRD, iMatteB, iMattePD,
+		iMatte, iMatteRD, iMatteB, iMattePD,
 		iMatteOrigin,
-		iDestAddress, iDestRD, iDestB, iDestPD,
+		oDest, iDestRD, iDestB, iDestPD,
 		iSourcePremultiplied, iOp);
 	}
 
-void ZDCPixmapBlit::sBlit
-	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+void sBlit
+	(const void* iSource, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
 	ZPointPOD iSourceOrigin,
-	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
+	const void* iMatte, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
+	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
 	ZRectPOD realDest = iDestB;
@@ -106,19 +107,19 @@ void ZDCPixmapBlit::sBlit
 
 	ZPointPOD matteStart = iMatteB.TopLeft();
 
-	sBlit_T(iSourceAddress, iSourceRD, iSourceB, iSourcePD,
+	sBlit_T(iSource, iSourceRD, iSourceB, iSourcePD,
 		iSourceOrigin,
-		iMatteAddress, iMatteRD, iMattePD,
+		iMatte, iMatteRD, iMattePD,
 		matteStart,
-		iDestAddress, iDestRD, realDest, iDestPD,
+		oDest, iDestRD, realDest, iDestPD,
 		iSourcePremultiplied, iOp);
 	}
 
-void ZDCPixmapBlit::sBlit
-	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
-	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
+void sBlit
+	(const void* iSource, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+	const void* iMatte, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
 	ZPointPOD iMatteOrigin,
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
+	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
 	ZRectPOD realDest = iDestB;
@@ -137,29 +138,29 @@ void ZDCPixmapBlit::sBlit
 			{
 			if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 				{
-				sBlit_T(iSourceAddress, iSourceRD, *sourcePDRep_Color,
+				sBlit_T(iSource, iSourceRD, *sourcePDRep_Color,
 					sourceStart,
-					iMatteAddress, iMatteRD, iMatteB, *mattePDRep_Color,
+					iMatte, iMatteRD, iMatteB, *mattePDRep_Color,
 					iMatteOrigin,
-					iDestAddress, iDestRD, realDest, *destPDRep_Color,
+					oDest, iDestRD, realDest, *destPDRep_Color,
 					iSourcePremultiplied, iOp);
 				return;
 				}
 			}
 		}
 
-	sBlit_T(iSourceAddress, iSourceRD, iSourcePD,
+	sBlit_T(iSource, iSourceRD, iSourcePD,
 		sourceStart,
-		iMatteAddress, iMatteRD, iMatteB, iMattePD,
+		iMatte, iMatteRD, iMatteB, iMattePD,
 		iMatteOrigin,
-		iDestAddress, iDestRD, realDest, iDestPD,
+		oDest, iDestRD, realDest, iDestPD,
 		iSourcePremultiplied, iOp);
 	}
 
-void ZDCPixmapBlit::sBlit
-	(const void* iSourceAddress, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
-	const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
+void sBlit
+	(const void* iSource, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,
+	const void* iMatte, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
+	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
 	ZRectPOD realDest = iDestB;
@@ -182,49 +183,49 @@ void ZDCPixmapBlit::sBlit
 			{
 			if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 				{
-				sBlit_T(iSourceAddress, iSourceRD, *sourcePDRep_Color,
+				sBlit_T(iSource, iSourceRD, *sourcePDRep_Color,
 					sourceStart,
-					iMatteAddress, iMatteRD, *mattePDRep_Color,
+					iMatte, iMatteRD, *mattePDRep_Color,
 					matteStart,
-					iDestAddress, iDestRD, realDest, *destPDRep_Color,
+					oDest, iDestRD, realDest, *destPDRep_Color,
 					iSourcePremultiplied, iOp);
 				return;
 				}
 			}
 		}
-	sBlit_T(iSourceAddress, iSourceRD, iSourcePD, sourceStart,
-			iMatteAddress, iMatteRD, iMattePD, matteStart,
-			iDestAddress, iDestRD, realDest, iDestPD,
+	sBlit_T(iSource, iSourceRD, iSourcePD, sourceStart,
+			iMatte, iMatteRD, iMattePD, matteStart,
+			oDest, iDestRD, realDest, iDestPD,
 			iSourcePremultiplied, iOp);
 	}
 
-void ZDCPixmapBlit::sColor
-	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
+void sColor
+	(void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	const ZRGBA_POD& iColor,
 	EOp iOp)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
-		sColor_T(iDestAddress, iDestRD, iDestB, *destPDRep_Color, iColor, iOp);
+		sColor_T(oDest, iDestRD, iDestB, *destPDRep_Color, iColor, iOp);
 		}
 	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
-		sColor_T(iDestAddress, iDestRD, iDestB, *destPDRep_Indexed, iColor, iOp);
+		sColor_T(oDest, iDestRD, iDestB, *destPDRep_Indexed, iColor, iOp);
 		}
 	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
-		sColor_T(iDestAddress, iDestRD, iDestB, *destPDRep_Gray, iColor, iOp);
+		sColor_T(oDest, iDestRD, iDestB, *destPDRep_Gray, iColor, iOp);
 		}
 	else
 		{
-		sColor_T(iDestAddress, iDestRD, iDestB, iDestPD, iColor, iOp);
+		sColor_T(oDest, iDestRD, iDestB, iDestPD, iColor, iOp);
 		}
 	}
 
-void ZDCPixmapBlit::sColor
-	(const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
+void sColor
+	(const void* iMatte, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
+	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	const ZRGBA_POD& iColor,
 	EOp iOp)
 	{
@@ -241,9 +242,9 @@ void ZDCPixmapBlit::sColor
 		{
 		if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 			{
-			sColor_T(iMatteAddress, iMatteRD, *mattePDRep_Color,
+			sColor_T(iMatte, iMatteRD, *mattePDRep_Color,
 				matteStart,
-				iDestAddress, iDestRD, realDest, *destPDRep_Color,
+				oDest, iDestRD, realDest, *destPDRep_Color,
 				iColor,
 				iOp);
 			return;
@@ -253,127 +254,127 @@ void ZDCPixmapBlit::sColor
 		{
 		if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 			{
-			sColor_T(iMatteAddress, iMatteRD, *mattePDRep_Gray,
+			sColor_T(iMatte, iMatteRD, *mattePDRep_Gray,
 				matteStart,
-				iDestAddress, iDestRD, realDest, *destPDRep_Color,
+				oDest, iDestRD, realDest, *destPDRep_Color,
 				iColor,
 				iOp);
 			return;
 			}
 		}
 
-	sColor_T(iMatteAddress, iMatteRD, iMattePD,
+	sColor_T(iMatte, iMatteRD, iMattePD,
 		matteStart,
-		iDestAddress, iDestRD, realDest, iDestPD,
+		oDest, iDestRD, realDest, iDestPD,
 		iColor,
 		iOp);
 	}
 
-void ZDCPixmapBlit::sColor
-	(const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
+void sColor
+	(const void* iMatte, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
 	ZPointPOD iMatteOrigin,
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
+	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD,
 	const ZRGBA_POD& iColor,
 	EOp iOp)
 	{
-	sColorTile_T(iMatteAddress, iMatteRD, iMatteB, iMattePD,
+	sColorTile_T(iMatte, iMatteRD, iMatteB, iMattePD,
 		iMatteOrigin,
-		iDestAddress, iDestRD, iDestB, iDestPD,
+		oDest, iDestRD, iDestB, iDestPD,
 		iColor,
 		iOp);
 	}
 
-void ZDCPixmapBlit::sInvert
-	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD)
+void sInvert
+	(void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
-		sInvert_T(iDestAddress, iDestRD, iDestB, *destPDRep_Color);
+		sInvert_T(oDest, iDestRD, iDestB, *destPDRep_Color);
 		}
 	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
-		sInvert_T(iDestAddress, iDestRD, iDestB, *destPDRep_Indexed);
+		sInvert_T(oDest, iDestRD, iDestB, *destPDRep_Indexed);
 		}
 	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
-		sInvert_T(iDestAddress, iDestRD, iDestB, *destPDRep_Gray);
+		sInvert_T(oDest, iDestRD, iDestB, *destPDRep_Gray);
 		}
 	else
 		{
-		sInvert_T(iDestAddress, iDestRD, iDestB, iDestPD);
+		sInvert_T(oDest, iDestRD, iDestB, iDestPD);
 		}
 	}
 
-void ZDCPixmapBlit::sOpaque
-	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
+void sOpaque
+	(void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
-		sOpaque_T(iDestAddress, iDestRD, iDestB, *destPDRep_Color, iAmount);
+		sOpaque_T(oDest, iDestRD, iDestB, *destPDRep_Color, iAmount);
 		}
 	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
-		sOpaque_T(iDestAddress, iDestRD, iDestB, *destPDRep_Indexed, iAmount);
+		sOpaque_T(oDest, iDestRD, iDestB, *destPDRep_Indexed, iAmount);
 		}
 	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
-		sOpaque_T(iDestAddress, iDestRD, iDestB, *destPDRep_Gray, iAmount);
+		sOpaque_T(oDest, iDestRD, iDestB, *destPDRep_Gray, iAmount);
 		}
 	else
 		{
-		sOpaque_T(iDestAddress, iDestRD, iDestB, iDestPD, iAmount);
+		sOpaque_T(oDest, iDestRD, iDestB, iDestPD, iAmount);
 		}
 	}
 
-void ZDCPixmapBlit::sDarken
-	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
+void sDarken
+	(void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
-		sDarken_T(iDestAddress, iDestRD, iDestB, *destPDRep_Color, iAmount);
+		sDarken_T(oDest, iDestRD, iDestB, *destPDRep_Color, iAmount);
 		}
 	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
-		sDarken_T(iDestAddress, iDestRD, iDestB, *destPDRep_Indexed, iAmount);
+		sDarken_T(oDest, iDestRD, iDestB, *destPDRep_Indexed, iAmount);
 		}
 	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
-		sDarken_T(iDestAddress, iDestRD, iDestB, *destPDRep_Gray, iAmount);
+		sDarken_T(oDest, iDestRD, iDestB, *destPDRep_Gray, iAmount);
 		}
 	else
 		{
-		sDarken_T(iDestAddress, iDestRD, iDestB, iDestPD, iAmount);
+		sDarken_T(oDest, iDestRD, iDestB, iDestPD, iAmount);
 		}
 	}
 
-void ZDCPixmapBlit::sFade
-	(void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
+void sFade
+	(void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
-		sFade_T(iDestAddress, iDestRD, iDestB, *destPDRep_Color, iAmount);
+		sFade_T(oDest, iDestRD, iDestB, *destPDRep_Color, iAmount);
 		}
 	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
-		sFade_T(iDestAddress, iDestRD, iDestB, *destPDRep_Indexed, iAmount);
+		sFade_T(oDest, iDestRD, iDestB, *destPDRep_Indexed, iAmount);
 		}
 	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
-		sFade_T(iDestAddress, iDestRD, iDestB, *destPDRep_Gray, iAmount);
+		sFade_T(oDest, iDestRD, iDestB, *destPDRep_Gray, iAmount);
 		}
 	else
 		{
-		sFade_T(iDestAddress, iDestRD, iDestB, iDestPD, iAmount);
+		sFade_T(oDest, iDestRD, iDestB, iDestPD, iAmount);
 		}
 	}
 
-void ZDCPixmapBlit::sApplyMatte
-	(const void* iMatteAddress, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
-	void* iDestAddress, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD)
+void sApplyMatte
+	(const void* iMatte, const RD& iMatteRD, const ZRectPOD& iMatteB, const PD& iMattePD,
+	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const PD& iDestPD)
 	{
 	ZAssertStop(1, iMattePD.HasAlpha());
 	ZAssertStop(1, iDestPD.HasAlpha());
@@ -390,16 +391,17 @@ void ZDCPixmapBlit::sApplyMatte
 		{
 		if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 			{
-			sApplyMatte_T(iMatteAddress, iMatteRD, *mattePDRep_Color,
+			sApplyMatte_T(iMatte, iMatteRD, *mattePDRep_Color,
 				matteStart,
-				iDestAddress, iDestRD, realDest, *destPDRep_Color);
+				oDest, iDestRD, realDest, *destPDRep_Color);
 			return;
 			}
 		}
 
-	sApplyMatte_T(iMatteAddress, iMatteRD, iMattePD,
+	sApplyMatte_T(iMatte, iMatteRD, iMattePD,
 		matteStart,
-		iDestAddress, iDestRD, iDestB, iDestPD);
+		oDest, iDestRD, iDestB, iDestPD);
 	}
 
+} // namespace ZDCPixmapBlit
 } // namespace ZooLib
