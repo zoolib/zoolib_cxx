@@ -40,15 +40,22 @@ public:
 	ZYadParseException_XMLPList(const char* iWhat);
 	};
 
+class ZYadR_XMLPlist
+	{
+public:
+	enum ERead { eRead_EndTag, eRead_EmptyTag, eRead_NoTag };
+	};
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadStreamR_XMLPList
 
 class ZYadStreamR_XMLPList
 :	public ZYadStreamR
+,	ZYadR_XMLPlist
 	{
 public:
-	ZYadStreamR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag);
+	ZYadStreamR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
 
 // From ZYadR
 	virtual void Finish();
@@ -58,7 +65,7 @@ public:
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
-	bool fMustReadEndTag;
+	ERead fRead;
 	ZStreamR_ASCIIStrim fStreamR_ASCIIStrim;
 	ZStreamR_Base64Decode fStreamR_Base64Decode;
 	};
@@ -69,9 +76,10 @@ private:
 
 class ZYadStrimR_XMLPList
 :	public ZYadStrimR
+,	ZYadR_XMLPlist
 	{
 public:
-	ZYadStrimR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag);
+	ZYadStrimR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
 
 // From ZYadR
 	virtual void Finish();
@@ -81,41 +89,45 @@ public:
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
-	bool fMustReadEndTag;
+	ERead fRead;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadSeqR_XMLPList
 
-class ZYadSeqR_XMLPList : public ZYadSeqR_Std
+class ZYadSeqR_XMLPList
+:	public ZYadSeqR_Std
+,	ZYadR_XMLPlist
 	{
 public:
-	ZYadSeqR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag);
+	ZYadSeqR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
 
 // From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
-	bool fMustReadEndTag;
+	ERead fRead;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapR_XMLPList
 
-class ZYadMapR_XMLPList : public ZYadMapR_Std
+class ZYadMapR_XMLPList
+:	public ZYadMapR_Std
+,	ZYadR_XMLPlist
 	{
 public:
-	ZYadMapR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag);
+	ZYadMapR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
-	bool fMustReadEndTag;
+	ERead fRead;
 	};
 
 // =================================================================================================

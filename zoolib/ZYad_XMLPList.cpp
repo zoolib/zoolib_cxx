@@ -113,27 +113,46 @@ static ZRef<ZYadR> spMakeYadR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU)
 	ZML::StrimU& theR = iStrimmerU->GetStrim();
 	sSkipText(theR);
 
-	if (theR.Current() == ZML::eToken_TagBegin)
+	if (theR.Current() == ZML::eToken_TagEmpty)
+		{
+		if (theR.Name() == "dict")
+			{
+			return new ZYadMapR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
+			}
+		else if (theR.Name() == "array")
+			{
+			return new ZYadSeqR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
+			}
+		else if (theR.Name() == "data")
+			{
+			return new ZYadStreamR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
+			}
+		else if (theR.Name() == "string")
+			{
+			return new ZYadStrimR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
+			}
+		}
+	else if (theR.Current() == ZML::eToken_TagBegin)
 		{
 		if (theR.Name() == "dict")
 			{
 			theR.Advance();
-			return new ZYadMapR_XMLPList(iStrimmerU, true);
+			return new ZYadMapR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
 			}
 		else if (theR.Name() == "array")
 			{
 			theR.Advance();
-			return new ZYadSeqR_XMLPList(iStrimmerU, true);
+			return new ZYadSeqR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
 			}
 		else if (theR.Name() == "data")
 			{
 			theR.Advance();
-			return new ZYadStreamR_XMLPList(iStrimmerU, true);
+			return new ZYadStreamR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
 			}
 		else if (theR.Name() == "string")
 			{
 			theR.Advance();
-			return new ZYadStrimR_XMLPList(iStrimmerU, true);
+			return new ZYadStrimR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
 			}
 		}
 
@@ -160,18 +179,25 @@ ZYadParseException_XMLPList::ZYadParseException_XMLPList(const char* iWhat)
 #pragma mark -
 #pragma mark * ZYadStreamR_XMLPList
 
-ZYadStreamR_XMLPList::ZYadStreamR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag)
+ZYadStreamR_XMLPList::ZYadStreamR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
 :	fStrimmerU(iStrimmerU),
-	fMustReadEndTag(iMustReadEndTag),
+	fRead(iRead),
 	fStreamR_ASCIIStrim(fStrimmerU->GetStrimR()),
 	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
 	{}
 
 void ZYadStreamR_XMLPList::Finish()
 	{
+	if (fRead == eRead_EmptyTag)
+		{
+		if (!sTryRead_Empty(fStrimmerU->GetStrim(), "data"))
+			spThrowParseException("Expected </data>");
+		return;
+		}
+	
 	fStreamR_Base64Decode.SkipAll();
 
-	if (fMustReadEndTag)
+	if (fRead == eRead_EndTag)
 		spEnd(fStrimmerU->GetStrim(), "data");
 	}
 
@@ -182,15 +208,23 @@ const ZStreamR& ZYadStreamR_XMLPList::GetStreamR()
 #pragma mark -
 #pragma mark * ZYadStrimR_XMLPList
 
-ZYadStrimR_XMLPList::ZYadStrimR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag)
+ZYadStrimR_XMLPList::ZYadStrimR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
 :	fStrimmerU(iStrimmerU),
-	fMustReadEndTag(iMustReadEndTag)
+	fRead(iRead)
 	{}
 
 void ZYadStrimR_XMLPList::Finish()
 	{
+	if (fRead == eRead_EmptyTag)
+		{
+		if (sTryRead_Empty(fStrimmerU->GetStrim(), "string"))
+			return;
+		spThrowParseException("Expected </string>");
+		}
+
 	fStrimmerU->GetStrim().Advance();
-	if (fMustReadEndTag)
+
+	if (fRead == eRead_EndTag)
 		spEnd(fStrimmerU->GetStrim(), "string");
 	}
 
@@ -201,18 +235,25 @@ const ZStrimR& ZYadStrimR_XMLPList::GetStrimR()
 #pragma mark -
 #pragma mark * ZYadReaderRep_XMLPList
 
-ZYadSeqR_XMLPList::ZYadSeqR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag)
+ZYadSeqR_XMLPList::ZYadSeqR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
 :	fStrimmerU(iStrimmerU),
-	fMustReadEndTag(iMustReadEndTag)
+	fRead(iRead)
 	{}
 
 void ZYadSeqR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
+	if (fRead == eRead_EmptyTag)
+		{
+		if (sTryRead_Empty(theR, "array"))
+			return;
+		spThrowParseException("Expected </array>");
+		}
+	
 	sSkipText(theR);
 
-	if (fMustReadEndTag)
+	if (fRead == eRead_EndTag)
 		{
 		if (sTryRead_End(theR, "array"))
 			return;
@@ -220,7 +261,7 @@ void ZYadSeqR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 
 	if (!(oYadR = spMakeYadR_XMLPList(fStrimmerU)))
 		{
-		if (!fMustReadEndTag)
+		if (fRead == eRead_NoTag)
 			return;
 		spThrowParseException("Expected a value");
 		}
@@ -230,18 +271,25 @@ void ZYadSeqR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 #pragma mark -
 #pragma mark * ZYadMapR_XMLPList
 
-ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag)
+ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
 :	fStrimmerU(iStrimmerU),
-	fMustReadEndTag(iMustReadEndTag)
+	fRead(iRead)
 	{}
 
 void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, string& oName, ZRef<ZYadR>& oYadR)
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
+	if (fRead == eRead_EmptyTag)
+		{
+		if (sTryRead_Empty(theR, "dict"))
+			return;
+		spThrowParseException("Expected </dict>");
+		}
+	
 	sSkipText(theR);
 
-	if (fMustReadEndTag)
+	if (fRead == eRead_EndTag)
 		{
 		if (sTryRead_End(theR, "dict"))
 			return;
@@ -249,7 +297,7 @@ void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, string& oName, ZRef<ZYadR>& o
 
 	if (!sTryRead_Begin(theR, "key"))
 		{
-		if (!fMustReadEndTag)
+		if (fRead == eRead_NoTag)
 			return;
 		spThrowParseException("Expected <key>");
 		}
