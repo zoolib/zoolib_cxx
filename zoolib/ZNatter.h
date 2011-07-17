@@ -41,6 +41,7 @@ class ZNatter
 	{
 public:
 	class Exchange;
+	friend class Exchange;
 
 	ZNatter(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~ZNatter();
@@ -50,10 +51,11 @@ public:
 	ZRef<Exchange> MakeExchange();
 
 private:
-	// Called by Exchange instances
+// Called by Exchange instances
 	void pRemove(Exchange* iExchange);
 	ZQ<ZData_Any> pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData);
 
+// Internals
 	ZQ<ZData_Any> pReadFor(ZGuardRMtxR& iGuard, ZRef<Exchange> iExchange);
 	void pRead(ZGuardRMtxR& iGuard);
 
