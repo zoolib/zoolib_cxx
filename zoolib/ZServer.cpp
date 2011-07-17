@@ -54,6 +54,8 @@ void ZServer::Start(ZRef<ZCaller> iCaller,
 	ZAssert(iCaller);
 	ZAssert(iFactory);
 
+	// Declared before the acq, so it goes out of scope
+	// after it, and any callable is invoked with our mutex released.
 	ZRef<ZRoster> priorRoster;
 
 	ZAcqMtx acq(fMtx);
@@ -90,7 +92,11 @@ void ZServer::Stop()
 void ZServer::StopWait()
 	{
 	ZAcqMtx acq(fMtx);
-	fFactory.Clear();
+	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+		{
+		fFactory.Clear();
+		theFactory->Cancel();
+		}
 	fCnd.Broadcast();
 	while (fWorker)
 		fCnd.Wait(fMtx);
