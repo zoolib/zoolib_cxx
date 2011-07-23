@@ -41,6 +41,12 @@ bool sQCoerceInt(const ZAny& iAny, int64& oVal);
 int64 sDCoerceInt(int64 iDefault, const ZAny& iAny);
 int64 sCoerceInt(const ZAny& iAny);
 
+ZQ<double> sQCoerceRat(const ZAny& iAny);
+bool sQCoerceRat(const ZAny& iAny, double& oVal);
+double sDCoerceRat(double iDefault, const ZAny& iAny);
+double sCoerceRat(const ZAny& iAny);
+
+// Old names
 ZQ<double> sQCoerceReal(const ZAny& iAny);
 bool sQCoerceReal(const ZAny& iAny, double& oVal);
 double sDCoerceReal(double iDefault, const ZAny& iAny);

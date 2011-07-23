@@ -140,6 +140,42 @@ int64 sCoerceInt(const ZAny& iAny)
 	return 0;
 	}
 
+ZQ<double> sQCoerceRat(const ZAny& iAny)
+	{
+	if (false)
+		{}
+	else if (const float* theVal = iAny.PGet<float>())
+		return *theVal;
+	else if (const double* theVal = iAny.PGet<double>())
+		return *theVal;
+
+	return null;
+	}
+
+bool sQCoerceRat(const ZAny& iAny, double& oVal)
+	{
+	if (ZQ<double> qDouble = sQCoerceRat(iAny))
+		{
+		oVal = qDouble.Get();
+		return true;
+		}
+	return false;
+	}
+
+double sDCoerceRat(double iDefault, const ZAny& iAny)
+	{
+	if (ZQ<double> qDouble = sQCoerceRat(iAny))
+		return qDouble.Get();
+	return iDefault;
+	}
+
+double sCoerceRat(const ZAny& iAny)
+	{
+	if (ZQ<double> qDouble = sQCoerceRat(iAny))
+		return qDouble.Get();
+	return 0.0;
+	}
+
 ZQ<double> sQCoerceReal(const ZAny& iAny)
 	{
 	if (false)
