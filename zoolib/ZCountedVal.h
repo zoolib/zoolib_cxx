@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCountedVal__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCounted.h"
+#include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZTagVal.h"
 
 namespace ZooLib {
@@ -34,7 +34,7 @@ namespace ZooLib {
 template <class Value, class Tag = Value>
 class ZCountedVal
 :	public ZTagVal<Value,Tag>
-,	public ZCounted
+,	public ZCountedWithoutFinalize
 	{
 	typedef ZTagVal<Value,Tag> inherited;
 public:
