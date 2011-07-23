@@ -83,6 +83,7 @@ public:
 	virtual ~ZNetListener_TCP_MacOT_OSX();
 
 // From ZNetListener via ZNetListener_TCP
+	virtual ZRef<ZNetAddress> GetAddress();
 	virtual ZRef<ZNetEndpoint> Listen();
 	virtual void CancelListen();
 

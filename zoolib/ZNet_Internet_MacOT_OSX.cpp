@@ -598,6 +598,9 @@ void ZNetListener_TCP_MacOT_OSX::sMP_CancelListen(void* iParam)
 	::OTCancelSynchronousCalls(theStruct->fEndpointRef, kOTCanceledErr);
 	}
 
+ZRef<ZNetAddress> ZNetListener_TCP_MacOT_OSX::GetAddress()
+	{ return null; }
+
 ip_port ZNetListener_TCP_MacOT_OSX::GetPort()
 	{ return fLocalPort; }
 
