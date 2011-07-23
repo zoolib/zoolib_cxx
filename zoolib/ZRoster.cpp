@@ -45,26 +45,16 @@ void ZRoster::Finalize()
 	for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
 		(*i)->fRoster.Clear();
 
-	if (not this->FinishFinalize())
+	if (this->FinishFinalize())
+		{
+		delete this;
+		}
+	else
 		{
 		// Rare/impossible? Someone snagged a strong reference, reinstate entries' weak references.
 		ZRef<ZRoster> thisRef = this;
 		for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
 			(*i)->fRoster = thisRef;
-		}
-	else
-		{
-		guard.Release();
-		for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
-			{
-			ZGuardRMtx guardEntry((*i)->fMtx);
-			if (ZRef<ZCallable_Void> theCallable = (*i)->fCallable_RosterGone)
-				{
-				guardEntry.Release();
-				theCallable->Call();
-				guardEntry.Acquire();
-				}
-			}
 		}
 	}
 
@@ -77,7 +67,7 @@ ZRef<ZRoster::Entry> ZRoster::MakeEntry(ZRef<ZCallable_Void> iCallable_Broadcast
 
 	ZGuardRMtx guard(fMtx);
 
-	ZRef<Entry> theEntry = new Entry(thisRef, iCallable_Broadcast, null, null);
+	ZRef<Entry> theEntry = new Entry(thisRef, iCallable_Broadcast, null);
 	ZUtil_STL::sInsertMustNotContain(1, fEntries, theEntry.Get());
 	fCnd.Broadcast();
 
@@ -121,7 +111,7 @@ void ZRoster::Wait(size_t iCount)
 	ZRef<ZRoster> thisRef = this;
 
 	ZAcqMtx acq(fMtx);
-	while (fEntries.size() != iCount)
+	while (fEntries.size() == iCount)
 		fCnd.Wait(fMtx);
 	}
 
@@ -130,7 +120,7 @@ bool ZRoster::WaitFor(double iTimeout, size_t iCount)
 	ZRef<ZRoster> thisRef = this;
 
 	ZAcqMtx acq(fMtx);
-	if (fEntries.size() != iCount)
+	if (fEntries.size() == iCount)
 		fCnd.WaitFor(fMtx, iTimeout);
 	return fEntries.size() != iCount;
 	}
@@ -140,7 +130,7 @@ bool ZRoster::WaitUntil(ZTime iDeadline, size_t iCount)
 	ZRef<ZRoster> thisRef = this;
 
 	ZAcqMtx acq(fMtx);
-	if (fEntries.size() != iCount)
+	if (fEntries.size() == iCount)
 		fCnd.WaitUntil(fMtx, iDeadline);
 	return fEntries.size() != iCount;
 	}
@@ -214,12 +204,10 @@ void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallabl
 ZRoster::Entry::Entry
 	(const ZRef<ZRoster>& iRoster,
 	const ZRef<ZCallable_Void>& iCallable_Broadcast,
-	const ZRef<ZCallable_Void>& iCallable_Gone,
-	const ZRef<ZCallable_Void>& iCallable_RosterGone)
+	const ZRef<ZCallable_Void>& iCallable_Gone)
 :	fRoster(iRoster)
 ,	fCallable_Broadcast(iCallable_Broadcast)
 ,	fCallable_Gone(iCallable_Gone)
-,	fCallable_RosterGone(iCallable_RosterGone)
 	{}
 
 ZRoster::Entry::~Entry()
@@ -288,27 +276,6 @@ bool ZRoster::Entry::CAS_Callable_Gone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallab
 	if (fCallable_Gone != iPrior)
 		return false;
 	fCallable_Gone = iNew;
-	return true;
-	}
-
-ZRef<ZCallable_Void> ZRoster::Entry::Get_Callable_RosterGone()
-	{
-	ZAcqMtx acq(fMtx);
-	return fCallable_RosterGone;
-	}
-
-void ZRoster::Entry::Set_Callable_RosterGone(const ZRef<ZCallable_Void>& iCallable)
-	{
-	ZAcqMtx acq(fMtx);
-	fCallable_RosterGone = iCallable;
-	}
-
-bool ZRoster::Entry::CAS_Callable_RosterGone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew)
-	{
-	ZAcqMtx acq(fMtx);
-	if (fCallable_RosterGone != iPrior)
-		return false;
-	fCallable_RosterGone = iNew;
 	return true;
 	}
 

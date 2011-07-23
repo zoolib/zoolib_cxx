@@ -90,8 +90,7 @@ private:
 	Entry
 		(const ZRef<ZRoster>& iRoster,
 		const ZRef<ZCallable_Void>& iCallable_Broadcast,
-		const ZRef<ZCallable_Void>& iCallable_Gone,
-		const ZRef<ZCallable_Void>& iCallable_RosterGone);
+		const ZRef<ZCallable_Void>& iCallable_Gone);
 
 public:
 	virtual ~Entry();
@@ -108,17 +107,12 @@ public:
 	void Set_Callable_Gone(const ZRef<ZCallable_Void>& iCallable);
 	bool CAS_Callable_Gone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
 
-	ZRef<ZCallable_Void> Get_Callable_RosterGone();
-	void Set_Callable_RosterGone(const ZRef<ZCallable_Void>& iCallable);
-	bool CAS_Callable_RosterGone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
-
 private:
 	ZWeakRef<ZRoster> fRoster;
 
 	ZMtx fMtx;
 	ZRef<ZCallable_Void> fCallable_Broadcast;
 	ZRef<ZCallable_Void> fCallable_Gone;
-	ZRef<ZCallable_Void> fCallable_RosterGone;
 
 	friend class ZRoster;
 	};
