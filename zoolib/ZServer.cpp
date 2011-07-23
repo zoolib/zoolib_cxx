@@ -108,7 +108,13 @@ void ZServer::KillConnections()
 void ZServer::KillConnectionsWait()
 	{
 	fRoster->Broadcast();
-	fRoster->Wait(0);
+	for (;;)
+		{
+		if (const size_t theCount = fRoster->Count())
+			fRoster->Wait(theCount);
+		else
+			break;
+		}
 	}
 
 ZRef<ZStreamerRWFactory> ZServer::GetFactory()
