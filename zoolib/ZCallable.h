@@ -2558,7 +2558,7 @@ class ZCallable_Null
 public:
 // From ZCallable
 	virtual ZQ<void> QCall()
-		{ return true; }
+		{ return notnull; }
 	};
 
 // =================================================================================================

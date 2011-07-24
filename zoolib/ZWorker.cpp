@@ -106,7 +106,7 @@ ZQ<void> ZWorker::QCall()
 					continue;
 				ZCallScheduler::sGet()->NextCallAt(fNextWake, fCaller, this);
 				}
-			return true;
+			return notnull;
 			}
 
 		fCaller.Clear();

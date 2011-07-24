@@ -117,7 +117,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				();
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -185,7 +185,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -253,7 +253,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -321,7 +321,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -389,7 +389,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -459,7 +459,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -529,7 +529,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -599,7 +599,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -669,7 +669,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -745,7 +745,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -821,7 +821,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -897,7 +897,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -973,7 +973,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -1051,7 +1051,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -1129,7 +1129,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -1207,7 +1207,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -1285,7 +1285,7 @@ public:
 			{
 			(Traits<Object_p>::sGetPtr(temp)->*fMethod)
 				(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
-			return true;
+			return notnull;
 			}
 		return null;
 		}

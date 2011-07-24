@@ -4742,63 +4742,63 @@ private:
 	ZQ<void> QCall()
 		{
 		if (sQCall(fCallable))
-			return true;
+			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0)
 		{
 		if (sQCall(fCallable, i0))
-			return true;
+			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1)
 		{
 		if (sQCall(fCallable, i0, i1))
-			return true;
+			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2)
 		{
 		if (sQCall(fCallable, i0, i1, i2))
-			return true;
+			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3))
-			return true;
+			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4))
-			return true;
+			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5))
-			return true;
+			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6))
-			return true;
+			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7))
-			return true;
+			return notnull;
 		return null;
 		}
 
@@ -4806,7 +4806,7 @@ private:
 		P8 i8)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8))
-			return true;
+			return notnull;
 		return null;
 		}
 
@@ -4814,7 +4814,7 @@ private:
 		P8 i8, P9 i9)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))
-			return true;
+			return notnull;
 		return null;
 		}
 
@@ -4822,7 +4822,7 @@ private:
 		P8 i8, P9 i9, PA iA)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))
-			return true;
+			return notnull;
 		return null;
 		}
 
@@ -4830,7 +4830,7 @@ private:
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))
-			return true;
+			return notnull;
 		return null;
 		}
 
@@ -4838,7 +4838,7 @@ private:
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC))
-			return true;
+			return notnull;
 		return null;
 		}
 
@@ -4846,7 +4846,7 @@ private:
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD))
-			return true;
+			return notnull;
 		return null;
 		}
 
@@ -4854,7 +4854,7 @@ private:
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE))
-			return true;
+			return notnull;
 		return null;
 		}
 
@@ -4862,7 +4862,7 @@ private:
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
 		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF))
-			return true;
+			return notnull;
 		return null;
 		}
 

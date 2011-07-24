@@ -115,7 +115,7 @@ public:
 		{
 		for (sCall(fInit); sCall(fCondition); sCall(fInc))
 			{}
-		return true;
+		return notnull;
 		}
 
 private:
@@ -191,7 +191,7 @@ public:
 			{
 			for (size_t theCount = fCount; theCount--; /*no inc*/)
 				fCallable->Call();
-			return true;
+			return notnull;
 			}
 		return null;
 		}
@@ -225,7 +225,7 @@ public:
 		{
 		while (sCall(fCondition))
 			sCall(fCallable);
-		return true;
+		return notnull;
 		}
 
 private:

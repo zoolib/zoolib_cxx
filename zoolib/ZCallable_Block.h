@@ -63,7 +63,7 @@ public:
 		if (fBlockPtr)
 			{
 			fBlockPtr();
-			return true;
+			return notnull;
 			}
 		return null;
 		}

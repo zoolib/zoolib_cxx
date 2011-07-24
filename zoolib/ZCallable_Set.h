@@ -59,7 +59,7 @@ public:
 			else
 				sCall(theQ.Get());
 			}
-		return true;
+		return notnull;
 		}
 
 private:
@@ -92,7 +92,7 @@ public:
 			else
 				sCall(theQ.Get(), i0);
 			}
-		return true;
+		return notnull;
 		}
 
 private:
@@ -125,7 +125,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1);
 			}
-		return true;
+		return notnull;
 		}
 
 private:
@@ -158,7 +158,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2);
 			}
-		return true;
+		return notnull;
 		}
 
 private:
@@ -191,7 +191,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2, i3);
 			}
-		return true;
+		return notnull;
 		}
 
 private:
@@ -224,7 +224,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2, i3, i4);
 			}
-		return true;
+		return notnull;
 		}
 
 private:
@@ -257,7 +257,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5);
 			}
-		return true;
+		return notnull;
 		}
 
 private:
@@ -290,7 +290,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5, i6);
 			}
-		return true;
+		return notnull;
 		}
 
 private:
@@ -323,7 +323,7 @@ public:
 			else
 				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5, i6, i7);
 			}
-		return true;
+		return notnull;
 		}
 
 private:
