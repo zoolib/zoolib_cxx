@@ -31,7 +31,9 @@ namespace ZooLib {
 #pragma mark * ZCaller_CFRunLoop
 
 // Usable pre 10.5
-static CFRunLoopRef spRunLoopMain = ::CFRunLoopGetCurrent();
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
+	static CFRunLoopRef spRunLoopMain = ::CFRunLoopGetCurrent();
+#endif
 
 static ZRef<ZCaller_CFRunLoop> spCaller;
 
@@ -39,7 +41,11 @@ ZRef<ZCaller_CFRunLoop> ZCaller_CFRunLoop::sMain()
 	{
 	if (!spCaller)
 		{
-		ZRef<ZCaller_CFRunLoop> theCaller = new ZCaller_CFRunLoop(::CFRunLoopGetMain());
+		#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
+			ZRef<ZCaller_CFRunLoop> theCaller = new ZCaller_CFRunLoop(spRunLoopMain);
+		#else
+			ZRef<ZCaller_CFRunLoop> theCaller = new ZCaller_CFRunLoop(::CFRunLoopGetMain());
+		#endif
 		spCaller.AtomicSetIfNull(theCaller.Get());
 		}
 	return spCaller;
