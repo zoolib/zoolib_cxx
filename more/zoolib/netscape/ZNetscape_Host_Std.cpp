@@ -588,7 +588,7 @@ ZQ<void> Host_Std::HTTPFetcher::QCall()
 
 			fHost->pHTTPFetcher
 				(this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerR);
-			return true;
+			return notnull;
 			}
 		}
 	catch (...)
@@ -600,7 +600,7 @@ ZQ<void> Host_Std::HTTPFetcher::QCall()
 		fHost->pHTTPFetcher
 			(this, fNotifyData, fURL, "", ZHTTP::Data(), null);
 		}
-	return true;
+	return notnull;
 	}
 
 void Host_Std::HTTPFetcher::Cancel()

@@ -369,7 +369,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 
 	if (false)
 		{}
-	// ----------------------------------------
+	// -----------------
 	// Request headers
 	else if (fieldName == "accept") sRead_accept(iStream, ioFields);
 	else if (fieldName == "accept-charset")
@@ -445,7 +445,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 				break;
 			}
 		}
-	// ----------------------------------------
+	// -----------------
 	// Response headers
 //	else if (fieldName == "age")
 //	else if (fieldName == "location")
@@ -456,7 +456,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 //	else if (fieldName == "vary")
 //	else if (fieldName == "warning")
 //	else if (fieldName == "www-authenticate")
-	// ----------------------------------------
+	// -----------------
 	// Request/Response headers
 	else if (fieldName == "connection")
 		{
@@ -469,7 +469,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 			}
 		}
 //	else if (fieldName == "transfer-encoding")
-	// ----------------------------------------
+	// -----------------
 	// Entity headers
 //	else if (fieldName == "allow")
 //	else if (fieldName == "content-base")

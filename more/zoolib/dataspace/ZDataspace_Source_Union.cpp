@@ -759,7 +759,7 @@ void Source_Union::ModifyRegistrations
 	{
 	ZGuardRMtxR guard(fMtxR);
 
-	// -----
+	// -----------------
 
 	// Remove any Queries that need it
 	while (iRemovedCount--)
@@ -808,7 +808,7 @@ void Source_Union::ModifyRegistrations
 		fMap_Refcon_ClientQuery.erase(iterClientQuery);
 		}
 
-	// -----
+	// -----------------
 
 	// Add any Queries
 	for (/*no init*/; iAddedCount--; ++iAdded)
@@ -856,7 +856,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 
 	ZAcqMtxR acq(fMtxR);
 
-	// -----
+	// -----------------
 
 	for (DListEraser<PSource, DLink_PSource_NeedsWork>
 		eraserPSource = fPSource_NeedsWork; eraserPSource; eraserPSource.Advance())
@@ -892,13 +892,13 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 			ZUtil_STL::sFirstOrNil(theRemoves), theRemoves.size());
 		}
 
-	// -----
+	// -----------------
 
 	for (DListEraser<PSource, DLink_PSource_CollectFrom>
 		eraserPSource = fPSource_CollectFrom; eraserPSource; eraserPSource.Advance())
 		{ this->pCollectFrom(eraserPSource.Current()); }
 
-	// -----
+	// -----------------
 
 	if (!fPQuery_NeedsWork.Empty())
 		{
