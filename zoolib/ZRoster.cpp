@@ -48,6 +48,7 @@ void ZRoster::Finalize()
 
 	if (this->FinishFinalize())
 		{
+		guard.Release();
 		if (theCallable)
 			theCallable->Call();
 		delete this;
@@ -220,23 +221,17 @@ void ZRoster::Entry::Finalize()
 	{	
 	ZGuardRMtx guard(fMtx);
 	ZRef<ZCallable_Void> theCallable = fCallable_Gone;
-	guard.Release();
 
 	if (ZRef<ZRoster> theRoster = fRoster)
 		{
+		guard.Release();
 		theRoster->pFinalizeEntry(this, theCallable);
 		}
-	else if (theCallable)
+	else if (this->FinishFinalize())
 		{
-		if (this->FinishFinalize())
-			{
-			delete this;
-			theCallable->Call();
-			}
-		}
-	else
-		{
-		ZCounted::Finalize();
+		guard.Release();
+		delete this;
+		theCallable->Call();
 		}
 	}
 
