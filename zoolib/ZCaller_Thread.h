@@ -53,7 +53,7 @@ public:
 		if (iCallable)
 			{
 			sCallOnNewThread(iCallable);
-			return true;
+			return notnull;
 			}
 		return null;
 		}

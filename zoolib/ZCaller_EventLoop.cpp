@@ -43,7 +43,7 @@ ZQ<void> ZCaller_EventLoop::QCall(ZRef<ZCallable_Void> iCallable)
 		fCallables.push_back(iCallable);
 		if (not fTriggered++)
 			this->pTrigger();
-		return true;
+		return notnull;
 		}
 	return null;
 	}
