@@ -45,21 +45,21 @@ ZRef<CFMutableStringRef> sStringMutable(const string8& iString8);
 ZRef<CFMutableStringRef> sStringMutable(const string16& iString16);
 ZRef<CFMutableStringRef> sStringMutable(CFStringRef iCFString);
 
-// -----
+// -----------------
 
 ZRef<CFDictionaryRef> sDictionary();
 
 ZRef<CFMutableDictionaryRef> sDictionaryMutable();
 ZRef<CFMutableDictionaryRef> sDictionaryMutable(CFDictionaryRef iCFDictionary);
 
-// -----
+// -----------------
 
 ZRef<CFArrayRef> sArray();
 
 ZRef<CFMutableArrayRef> sArrayMutable();
 ZRef<CFMutableArrayRef> sArrayMutable(CFArrayRef iCFArray);
 
-// -----
+// -----------------
 
 ZRef<CFDataRef> sData();
 ZRef<CFDataRef> sData(const void* iSource, size_t iSize);
@@ -68,7 +68,7 @@ ZRef<CFMutableDataRef> sDataMutable();
 ZRef<CFMutableDataRef> sDataMutable(size_t iSize);
 ZRef<CFMutableDataRef> sDataMutable(CFDataRef iCFData);
 
-// -----
+// -----------------
 
 string8 sAsUTF8(CFStringRef iCFString);
 string16 sAsUTF16(CFStringRef iCFString);

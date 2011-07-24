@@ -309,8 +309,6 @@ asm inline void ZByteSwap_Write32(volatile void* ioValueAddress : __A0, int32 iV
 
 #endif // ZCONFIG(Compiler)
 
-// ------------------------------
-
 inline int16 ZByteSwap_16(int16 iValue)
 	{ return ZByteSwap_Read16(&iValue); }
 
@@ -334,7 +332,6 @@ inline void ZByteSwap_32(volatile void* ioValueAddress)
 
 #define ZByteSwap_EndianBig 0
 
-// ------------------------------
 #if ZCONFIG(Compiler, CodeWarrior)
 
 	// Just as in ZAtomic I've found that CodeWarrior sucks rocks when it comes to reliably

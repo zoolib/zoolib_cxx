@@ -48,21 +48,21 @@ NSMutableString* sStringMutable(const string8& iString8);
 NSMutableString* sStringMutable(const string16& iString16);
 NSMutableString* sStringMutable(NSString* iNSString);
 
-// -----
+// -----------------
 
 NSDictionary* sDictionary();
 
 NSMutableDictionary* sDictionaryMutable();
 NSMutableDictionary* sDictionaryMutable(NSDictionary* iNSDictionary);
 
-// -----
+// -----------------
 
 NSArray* sArray();
 
 NSMutableArray* sArrayMutable();
 NSMutableArray* sArrayMutable(NSArray* iNSArray);
 
-// -----
+// -----------------
 
 NSData* sData();
 NSData* sData(const void* iSource, size_t iSize);
@@ -72,7 +72,7 @@ NSMutableData* sDataMutable(size_t iSize);
 NSMutableData* sDataMutable(const void* iSource, size_t iSize);
 NSMutableData* sDataMutable(NSData* iNSData);
 
-// -----
+// -----------------
 
 string8 sAsUTF8(NSString* iNSString);
 string16 sAsUTF16(NSString* iNSString);

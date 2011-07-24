@@ -55,7 +55,7 @@ bool sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP)
 	return false;
 	}
 
-// ----------
+// -----------------
 
 bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget)
 	{
@@ -95,7 +95,7 @@ bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget)
 	return false;
 	}
 
-// ----------
+// -----------------
 
 bool sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit)
 	{
@@ -375,7 +375,7 @@ bool sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble)
 	return sTryRead_SignedDecimalNumber(iStrimU, dummyInt64, oDouble, isDouble);
 	}
 
-// ----------
+// -----------------
 
 void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& oDest)
 	{
@@ -408,7 +408,7 @@ void sSkip_WS(const ZStrimU& iStrimU)
 		}
 	}
 
-// ----------
+// -----------------
 
 void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& oDest)
 	{
@@ -450,7 +450,7 @@ void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& oDest)
 void sSkip_WSAndCPlusPlusComments(const ZStrimU& iStrimU)
 	{ sCopy_WSAndCPlusPlusComments(iStrimU, ZStrimW_Null()); }
 
-// ----------
+// -----------------
 
 void sCopy_Line(const ZStrimR& iStrimR, const ZStrimW& oDest)
 	{
@@ -475,7 +475,7 @@ string8 sRead_Line(const ZStrimR& iStrimR)
 	return result;
 	}
 
-// ----------
+// -----------------
 
 bool sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& oDest)
 	{
@@ -500,7 +500,7 @@ string8 sRead_Until(const ZStrimR& iStrimR, UTF32 iTerminator)
 	return result;
 	}
 
-// ----------
+// -----------------
 
 bool sCopy_Until(const ZStrimR& iStrimR,
 	const string8& iTerminator, const ZStrimW& oDest)
@@ -520,7 +520,7 @@ string8 sRead_Until(const ZStrimR& iStrimR, const string8& iTerminator)
 	return result;
 	}
 
-// ----------
+// -----------------
 
 void sCopy_EscapedString
 	(const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& oDest)
@@ -535,7 +535,7 @@ void sRead_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, string8& oSt
 	sCopy_EscapedString(iStrimU, iTerminator, ZStrimW_String(oString));
 	}
 
-// ----------
+// -----------------
 
 bool sTryCopy_EscapedString(const ZStrimU& iStrimU,
 	UTF32 iDelimiter, const ZStrimW& oDest)
@@ -558,7 +558,8 @@ bool sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& o
 	return sTryCopy_EscapedString(iStrimU, iDelimiter, ZStrimW_String(oString));
 	}
 
-// ----------
+// -----------------
+
 
 bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& oDest)
 	{
@@ -598,7 +599,7 @@ bool sTryRead_Identifier(const ZStrimU& iStrimU, string8& oString)
 	return sTryCopy_Identifier(iStrimU, ZStrimW_String(oString));
 	}
 
-// ----------
+// -----------------
 
 void sWriteExact(const ZStrimW& iStrimW, float iFloat)
 	{

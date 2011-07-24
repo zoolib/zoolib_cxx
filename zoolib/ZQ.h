@@ -62,11 +62,13 @@ public:
 			}
 		}
 
+// -----------------
+
 	ZQ()
 	:	fHasValue(false)
 		{}
 
-	ZQ(const ZQ<T,Sense>& iOther)
+	ZQ(const ZQ& iOther)
 	:	fHasValue(iOther.fHasValue)
 		{
 		if (fHasValue)
@@ -79,7 +81,7 @@ public:
 			sDtor_T<T>(fBytes);
 		}
 
-	ZQ& operator=(const ZQ<T,Sense>& iOther)
+	ZQ& operator=(const ZQ& iOther)
 		{
 		if (this != &iOther)
 			{
@@ -103,6 +105,8 @@ public:
 			}
 		return *this;
 		}
+
+// -----------------
 
 	ZQ(const ZQ<T,!Sense>& iOther)
 	:	fHasValue(iOther.fHasValue)
@@ -136,6 +140,8 @@ public:
 		return *this;
 		}
 
+// -----------------
+
 	ZQ(const null_t&)
 	:	fHasValue(false)
 		{}
@@ -150,15 +156,12 @@ public:
 		return *this;
 		}
 
+// -----------------
+
 	template <class P0>
 	ZQ(const P0& i0)
 	:	fHasValue(true)
 		{ sCtor_T<T, P0>(fBytes, i0); }
-
-	template <class P0, class P1>
-	ZQ(const P0& i0, const P1& i1)
-	:	fHasValue(true)
-		{ sCtor_T<T, P0, P1>(fBytes, i0, i1); }
 
 	template <class P0>
 	ZQ& operator=(const P0& iValue)
@@ -174,6 +177,15 @@ public:
 			}
 		return *this;
 		}
+
+// -----------------
+
+	template <class P0, class P1>
+	ZQ(const P0& i0, const P1& i1)
+	:	fHasValue(true)
+		{ sCtor_T<T, P0, P1>(fBytes, i0, i1); }
+
+// -----------------
 
 	ZMACRO_operator_bool_T(ZQ, operator_bool) const
 		{ return operator_bool_gen::translate(fHasValue == Sense); }
@@ -293,22 +305,26 @@ public:
 	void swap(ZQ& iOther)
 		{ swap(fHasValue, iOther.fHasValue); }
 
+// -----------------
+
 	ZQ(void)
 	:	fHasValue(false)
 		{}
 
-	ZQ(const ZQ<void,Sense>& iOther)
+	ZQ(const ZQ& iOther)
 	:	fHasValue(iOther.fHasValue)
 		{}
 
 	~ZQ()
 		{}
 
-	ZQ& operator=(const ZQ<void,Sense>& iOther)
+	ZQ& operator=(const ZQ& iOther)
 		{
 		fHasValue = iOther.fHasValue;
 		return *this;
 		}
+
+// -----------------
 
 	ZQ(const ZQ<void,!Sense>& iOther)
 	:	fHasValue(iOther.fHasValue)
@@ -320,6 +336,8 @@ public:
 		return *this;
 		}
 
+// -----------------
+
 	ZQ(const null_t&)
 	:	fHasValue(false)
 		{}
@@ -330,15 +348,19 @@ public:
 		return *this;
 		}
 
-	ZQ(bool iBool)
-	:	fHasValue(iBool)
+// -----------------
+
+	ZQ(const notnull_t&)
+	:	fHasValue(true)
 		{}
 
-	ZQ& operator=(bool iBool)
+	ZQ& operator=(const notnull_t&)
 		{
-		fHasValue = iBool;
+		fHasValue = true;
 		return *this;
 		}
+
+// -----------------
 
 	ZMACRO_operator_bool_T(ZQ, operator_bool) const
 		{ return operator_bool_gen::translate(fHasValue == Sense); }

@@ -69,7 +69,7 @@ NSMutableString* sStringMutable(const string16& iString16)
 NSMutableString* sStringMutable(NSString* iNSString)
 	{ return [NSMutableString stringWithString:iNSString]; }
 
-// -----
+// -----------------
 
 NSDictionary* sDictionary()
 	{ return [NSDictionary dictionary]; }
@@ -80,7 +80,7 @@ NSMutableDictionary* sDictionaryMutable()
 NSMutableDictionary* sDictionaryMutable(NSDictionary* iNSDictionary)
 	{ return [NSMutableDictionary dictionaryWithDictionary:iNSDictionary]; }
 
-// -----
+// -----------------
 
 NSArray* sArray()
 	{ return [NSArray array]; }
@@ -91,7 +91,7 @@ NSMutableArray* sArrayMutable()
 NSMutableArray* sArrayMutable(NSArray* iNSArray)
 	{ return [NSMutableArray arrayWithArray:iNSArray]; }
 
-// -----
+// -----------------
 
 NSData* sData()
 	{ return [NSData data]; }
