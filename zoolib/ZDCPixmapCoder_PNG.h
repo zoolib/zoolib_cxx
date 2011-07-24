@@ -22,11 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPixmapCoder_PNG__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCONFIG_SPI.h"
-
 #include "zoolib/ZDCPixmapCoder.h"
-
-#if ZCONFIG_SPI_Enabled(libpng)
 
 namespace ZooLib {
 
@@ -69,7 +65,5 @@ private:
 	};
 
 } // namespace ZooLib
-
-#endif // ZCONFIG_SPI_Enabled(libpng)
 
 #endif // __ZDCPixmapCoder_PNG__

@@ -372,28 +372,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 // =================================================================================================
-#pragma mark JPEGLib
-#ifndef ZCONFIG_SPI_Avail__JPEGLib
-#	define ZCONFIG_SPI_Avail__JPEGLib 0
-#endif
-
-#ifndef ZCONFIG_SPI_Desired__JPEGLib
-#	define ZCONFIG_SPI_Desired__JPEGLib 1
-#endif
-
-
-// =================================================================================================
-#pragma mark libpng
-#ifndef ZCONFIG_SPI_Avail__libpng
-#	define ZCONFIG_SPI_Avail__libpng 0
-#endif
-
-#ifndef ZCONFIG_SPI_Desired__libpng
-#	define ZCONFIG_SPI_Desired__libpng 1
-#endif
-
-
-// =================================================================================================
 #pragma mark Linux
 #ifndef ZCONFIG_SPI_Avail__Linux
 #	ifdef linux

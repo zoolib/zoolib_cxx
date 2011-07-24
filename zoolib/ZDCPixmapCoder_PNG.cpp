@@ -20,10 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmapCoder_PNG.h"
 
-#if ZCONFIG_SPI_Enabled(libpng)
-
 #include <vector>
-#include <png.h>
+#include "png.h"
 
 using std::runtime_error;
 using std::vector;
@@ -41,11 +39,11 @@ static void spThrowToStream()
 	throw runtime_error("ZDCPixmapCoder_PNG, to stream");
 	}
 
-static void spPNG_Write(png_structp png_ptr, png_bytep iDestAddress, png_size_t iSize)
+static void spPNG_Write(png_structp png_ptr, png_bytep iSource, png_size_t iSize)
 	{
 	try
 		{
-		static_cast<ZStreamW*>(png_ptr->io_ptr)->Write(iDestAddress, iSize);
+		static_cast<ZStreamW*>(png_ptr->io_ptr)->Write(iSource, iSize);
 		return;
 		}
 	catch (...)
@@ -367,5 +365,3 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	}
 
 } // namespace ZooLib
-
-#endif // ZCONFIG_SPI_Enabled(libpng)
