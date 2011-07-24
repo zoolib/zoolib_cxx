@@ -41,12 +41,15 @@ void ZRoster::Finalize()
 	{
 	ZGuardRMtx guard(fMtx);
 	vector<ZRef<Entry> > local(fEntries.begin(), fEntries.end());
+	ZRef<ZCallable_Void> theCallable = fCallable_Gone;
 
 	for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
 		(*i)->fRoster.Clear();
 
 	if (this->FinishFinalize())
 		{
+		if (theCallable)
+			theCallable->Call();
 		delete this;
 		}
 	else
