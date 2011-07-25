@@ -53,8 +53,11 @@ double sDouble(const string& iString);
 
 int sComparei(const string& iLeft, const string& iRight);
 bool sEquali(const string& iLeft, const string& iRight);
-bool sContainsi(const string& iTarget, const string& iCandidate);
+bool sContainsi(const string& iPattern, const string& iTarget);
 
+// --
+
+bool sEndsWith(const string& iPattern, const string& iTarget);
 // --
 
 string sFromPString(const unsigned char* iPString);

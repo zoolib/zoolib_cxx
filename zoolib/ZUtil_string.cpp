@@ -170,6 +170,23 @@ bool sContainsi(const string& iPattern, const string& iTarget)
 	return string::npos != ZUnicode::sToLower(iTarget).find(ZUnicode::sToLower(iPattern));
 	}
 
+bool sEndsWith(const string& iPattern, const string& iTarget)
+	{
+	if (size_t patternLength = iPattern.length())
+		{
+		if (size_t targetLength = iTarget.length())
+			{
+			if (patternLength <= targetLength)
+				{
+				if (iTarget.substr(targetLength - patternLength) == iPattern)
+					return true;
+				}
+			}
+		return false;
+		}
+	return true;
+	}
+
 // =================================================================================================
 
 string sFromPString(const unsigned char* inPString)
