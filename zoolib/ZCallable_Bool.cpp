@@ -75,9 +75,9 @@ ZRef<ZCB> sCallable_And(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1)
 			{
 			if (ZQ<bool> theQ0 = sQCall(f0))
 				{
-				if (!theQ0.Get())
-					return false;
-				return sQCall(f1);
+				if (theQ0.Get())
+					return sQCall(f1);
+				return false;
 				}
 			return null;
 			}
@@ -92,13 +92,9 @@ ZRef<ZCB> sCallable_Or(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1)
 		Callable(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1) : Base(i0, i1) {}
 		virtual ZQ<bool> QCall()
 			{
-			if (ZQ<bool> theQ0 = sQCall(f0))
-				{
-				if (theQ0.Get())
-					return true;
-				return sQCall(f1);
-				}
-			return null;
+			if (ZQ<bool> theQ0 = sQCall(f0) && theQ0.Get())
+				return true;
+			return sQCall(f1);
 			}
 		};
 	return new Callable(i0, i1);
