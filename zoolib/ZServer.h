@@ -36,7 +36,8 @@ class ZServer
 :	public ZCounted
 	{
 public:
-	typedef ZCallable<void(ZRef<ZRoster::Entry>,ZRef<ZStreamerRW>)> Callable_Connection;
+	typedef ZRef<ZRoster::Entry> ZRef_ZRoster_Entry; // CW7
+	typedef ZCallable<void(ZRef_ZRoster_Entry,ZRef<ZStreamerRW>)> Callable_Connection;
 
 	ZServer();
 	virtual ~ZServer();
