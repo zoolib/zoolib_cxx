@@ -2542,6 +2542,14 @@ void sCallReturnVoid(ZRef<ZCallable<T(void)> > iCallable)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * sCallVoid
+
+inline
+void sCallVoid(ZRef<ZCallable<void(void)> > iCallable)
+	{ sCall(iCallable); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Useful typedefs
 
 typedef ZCallable<void(void)> ZCallable_Void;
@@ -2565,7 +2573,9 @@ public:
 #pragma mark -
 #pragma mark * ZCaller
 
-typedef ZCallable<void(ZRef<ZCallable_Void>)> ZCaller;
+typedef ZRef<ZCallable_Void> ZRef_ZCallable_Void; // CW7
+
+typedef ZCallable<void(ZRef_ZCallable_Void)> ZCaller;
 
 // =================================================================================================
 #pragma mark -
