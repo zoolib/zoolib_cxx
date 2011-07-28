@@ -86,8 +86,6 @@ ZRef<ZRoster::Entry> ZRoster::MakeEntry(ZRef<ZCallable_Void> iCallable_Broadcast
 
 void ZRoster::Broadcast()
 	{
-	ZRef<ZRoster> thisRef = this;
-
 	ZGuardRMtx guard(fMtx);
 	vector<ZRef<Entry> > local(fEntries.begin(), fEntries.end());
 	guard.Release();
@@ -112,8 +110,6 @@ size_t ZRoster::Count()
 
 void ZRoster::Wait(size_t iCount)
 	{
-	ZRef<ZRoster> thisRef = this;
-
 	ZAcqMtx acq(fMtx);
 	while (fEntries.size() == iCount)
 		fCnd.Wait(fMtx);
@@ -121,8 +117,6 @@ void ZRoster::Wait(size_t iCount)
 
 bool ZRoster::WaitFor(double iTimeout, size_t iCount)
 	{
-	ZRef<ZRoster> thisRef = this;
-
 	ZAcqMtx acq(fMtx);
 	if (fEntries.size() == iCount)
 		fCnd.WaitFor(fMtx, iTimeout);
@@ -131,8 +125,6 @@ bool ZRoster::WaitFor(double iTimeout, size_t iCount)
 
 bool ZRoster::WaitUntil(ZTime iDeadline, size_t iCount)
 	{
-	ZRef<ZRoster> thisRef = this;
-
 	ZAcqMtx acq(fMtx);
 	if (fEntries.size() == iCount)
 		fCnd.WaitUntil(fMtx, iDeadline);
