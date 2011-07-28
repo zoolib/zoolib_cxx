@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/blackberry/ZBlackBerry_Client.h"
 
+#include "zoolib/ZCommer.h"
 #include "zoolib/ZLog.h"
 
 using std::max;
@@ -276,7 +277,7 @@ bool Device_Client::Read(const ZStreamR& r)
 	ZAssert(!req);
 
 	fOpen = false;
-	ZStreamerWriter::Wake();
+//##	ZStreamerWriter::Wake();
 	return false;
 	}
 
@@ -307,7 +308,7 @@ void Device_Client::Finished()
 void Device_Client::Stop()
 	{
 	fOpen = false;
-	ZStreamerWriter::Wake();
+//##	ZStreamerWriter::Wake();
 	}
 
 // =================================================================================================
@@ -347,9 +348,9 @@ void Manager_Client::Commer_Changed::ReadFinished()
 	{
 	// Force the writer to attempt to close, and thus to exit.
 	fSendClose = true;
-	ZStreamerWriter::Wake();
+	this->WakeWrite();
 
-	ZCommer::ReadFinished();
+//##	ZCommer::ReadFinished();
 	}
 
 bool Manager_Client::Commer_Changed::Read(const ZStreamR& r)
@@ -361,7 +362,7 @@ bool Manager_Client::Commer_Changed::Read(const ZStreamR& r)
 			theManager->pChanged();
 
 		fSendNotificationRequest = true;
-		ZStreamerWriter::Wake();
+		this->WakeWrite();
 		return true;
 		}
 	else
@@ -428,7 +429,7 @@ void Manager_Client::Finalize()
 		{
 		fCommer_Changed.Clear();
 		theCommer_Changed->fManager.Clear();
-		theCommer_Changed->ZStreamerWriter::Wake();
+		//##theCommer_Changed->ZStreamerWriter::Wake();
 		}
 
 	Manager::Finalize();

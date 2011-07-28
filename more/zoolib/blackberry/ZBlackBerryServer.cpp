@@ -38,7 +38,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZBlackBerryServer::Handler_ManagerChanged
 
-class ZBlackBerryServer::Handler_ManagerChanged : public ZCommer
+class ZBlackBerryServer::Handler_ManagerChanged
+:	public ZCommer
 	{
 public:
 	Handler_ManagerChanged(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
@@ -84,7 +85,7 @@ bool ZBlackBerryServer::Handler_ManagerChanged::Read(const ZStreamR& r)
 		{
 		fState = eState_SendClosed;
 		locker.Release();
-		ZStreamerWriter::Wake();
+		//##ZStreamerWriter::Wake();
 		return false;
 		}
 
@@ -99,7 +100,7 @@ bool ZBlackBerryServer::Handler_ManagerChanged::Read(const ZStreamR& r)
 			{
 			fState = eState_SendChanged;
 			locker.Release();
-			ZStreamerWriter::Wake();
+			//##ZStreamerWriter::Wake();
 			return true;
 			}
 		}
@@ -147,7 +148,7 @@ void ZBlackBerryServer::Handler_ManagerChanged::TripIt()
 
 	locker.Release();
 
-	ZStreamerWriter::Wake();
+	//##ZStreamerWriter::Wake();
 	}
 
 // =================================================================================================
@@ -198,7 +199,7 @@ bool ZBlackBerryServer::Handler_DeviceFinished::Read(const ZStreamR& r)
 	ZAssert(!req);
 
 	fOpen = false;
-	ZStreamerWriter::Wake();
+	//##ZStreamerWriter::Wake();
 	return false;
 	}
 
@@ -232,7 +233,7 @@ void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
 	ZLOGFUNCTION(eDebug + 2);
 
 	fOpen = false;
-	ZStreamerWriter::Wake();
+	//##ZStreamerWriter::Wake();
 	}
 
 // =================================================================================================

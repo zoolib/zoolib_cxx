@@ -144,9 +144,8 @@ const char* HostMeister_Std::UserAgent(NPP npp)
 	#elif ZCONFIG(Processor, PPC)
 		return "Mozilla/5.0 (Macintosh; U; PPC Mac OS X)";
 	#else
-		return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-us) AppleWebKit/533.18.1 (KHTML, like Gecko) Version/5.0.2 Safari/533.18.5";
-//		return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X)";
-//		return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X)";
+		// per Jethro Villegas at Adobe, this makes Flash 11 happy.
+		return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X)";
 	#endif
 	}
 
@@ -178,11 +177,10 @@ void* HostMeister_Std::GetJavaPeer(NPP npp)
 NPError HostMeister_Std::GetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
+	if (ZLOGF(s, eDebug))
 		{
-		s << "GetURLNotify: ";
-		s.Writef(" notifyData: %p", notifyData);
-		s << ", iRelativeURL: " << URL;
+		s	<< URL << ", notifyData: " << notifyData
+			<< ", iRelativeURL: " << URL;
 		if (window)
 			s << ", target: " << window;
 		}
@@ -197,11 +195,9 @@ NPError HostMeister_Std::PostURLNotify(NPP npp,
 	const char* URL, const char* window,
 	uint32 len, const char* buf, NPBool file, void* notifyData)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
+	if (ZLOGF(s, eDebug))
 		{
-		s << "PostURLNotify: " << URL;
-		s.Writef(" notifyData: %p", notifyData);
-		s << ", URL: " << URL;
+		s << URL << ", notifyData: " << notifyData;
 		if (window)
 			s << ", target: " << window;
 		}
@@ -214,8 +210,8 @@ NPError HostMeister_Std::PostURLNotify(NPP npp,
 
 NPError HostMeister_Std::GetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "GetValue, " << ZNetscape::sAsString(variable);
+	if (ZLOGF(s, eDebug))
+		s << ZNetscape::sAsString(variable);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_GetValue(npp, variable, ret_value);
@@ -225,8 +221,8 @@ NPError HostMeister_Std::GetValue(NPP npp, NPNVariable variable, void* ret_value
 
 NPError HostMeister_Std::SetValue(NPP npp, NPPVariable variable, void* value)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "SetValue, " << ZNetscape::sAsString(variable);
+	if (ZLOGF(s, eDebug))
+		s << ZNetscape::sAsString(variable);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_SetValue(npp, variable, value);
@@ -238,8 +234,8 @@ void HostMeister_Std::InvalidateRect(NPP npp, NPRect* rect)
 	{
 	if (ZLOGF(s, eDebug + 1))
 		{
-		s.Writef("InvalidateRect, (%u, %u, %u, %u)",
-			rect->left, rect->top, rect->right, rect->bottom);
+		s	<< "(" << rect->left << ", " << rect->top
+			<< ", " << rect->right << ", " << rect->bottom << ")";
 		}
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
@@ -340,8 +336,8 @@ bool HostMeister_Std::Invoke(NPP npp,
 	NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32 argCount,
 	NPVariant* result)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "Invoke: " << this->StringFromIdentifier(methodName);
+	if (ZLOGF(s, eDebug))
+		s << this->StringFromIdentifier(methodName);
 
 	if (NPClass_Z* theClass = sGetClass(obj))
 		{
@@ -369,8 +365,8 @@ bool HostMeister_Std::InvokeDefault(NPP npp,
 bool HostMeister_Std::Evaluate(NPP npp,
 	NPObject* obj, NPString* script, NPVariant* result)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "Evaluate: " << sAsString(*script);
+	if (ZLOGF(s, eDebug))
+		s << sAsString(*script);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_Evaluate(npp, obj, script, result);
@@ -381,8 +377,8 @@ bool HostMeister_Std::Evaluate(NPP npp,
 bool HostMeister_Std::GetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, NPVariant* result)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "GetProperty: " << this->StringFromIdentifier(propertyName);
+	if (ZLOGF(s, eDebug))
+		s << this->StringFromIdentifier(propertyName);
 
 	if (NPClass_Z* theClass = sGetClass(obj))
 		{
@@ -688,15 +684,13 @@ bool Host_Std::Sender::DeliverData()
 	if (this->pDeliverData())
 		return true;
 
-	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-		{
-		s << "DeliverData, Calling Guest_URLNotify on " << fURL;
-		}
+	if (ZLOGF(s, eDebug + 1))
+		s << "Calling Guest_URLNotify on " << fURL;
 
 	fHost->Guest_URLNotify(fURL.c_str(), NPRES_DONE, fNotifyData);
 
-	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-		s << "DeliverData, Calling Guest_DestroyStream";
+	if (ZLOGF(s, eDebug + 1))
+		s << "Calling Guest_DestroyStream";
 
 	fHost->Guest_DestroyStream(&fNPStream, NPRES_DONE);
 
@@ -709,23 +703,23 @@ bool Host_Std::Sender::pDeliverData()
 
 	if (!theStreamR.WaitReadable(0))
 		{
-		if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-			s.Writef("waitReadable is false");
+		if (ZLOGF(s, eDebug + 1))
+			s << "waitReadable is false";
 		return true;
 		}
 
 	const size_t countReadable = theStreamR.CountReadable();
 
-	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-		s.Writef("countReadable = %llu", (uint64)countReadable);
+	if (ZLOGF(s, eDebug + 1))
+		s << "countReadable=" << countReadable;
 
 	if (countReadable == 0)
 		return false;
 
 	int32 countPossible = fHost->Guest_WriteReady(&fNPStream);
 
-	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-		s.Writef("countPossible = %d", countPossible);
+	if (ZLOGF(s, eDebug + 1))
+		s << "countPossible=" << countPossible;
 
 	if (countPossible < 0)
 		{
@@ -742,18 +736,15 @@ bool Host_Std::Sender::pDeliverData()
 		if (countRead == 0)
 			return false;
 
-		if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-			s.Writef("countRead = %llu", (uint64)countRead);
+		if (ZLOGF(s, eDebug + 1))
+			s << "countRead=" << countRead;
 
 		for (size_t start = 0; start < countRead; /*no inc*/)
 			{
 			int countWritten = fHost->Guest_Write(&fNPStream, 0, countRead - start, &buffer[start]);
 
-			if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-				{
-				s.Writef("countWritten = %d, to ", countWritten);
-				s << fURL;
-				}
+			if (ZLOGF(s, eDebug + 1))
+				s << "countWritten=" << countWritten << " to " << fURL;
 
 			if (countWritten < 0)
 				return false;
@@ -898,8 +889,8 @@ NPError Host_Std::Host_GetURLNotify(NPP npp,
 		return NPERR_NO_ERROR;
 		}
 
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "Host_GetURLNotify, invalid URL";
+	if (ZLOGF(s, eDebug))
+		s << "invalid URL";
 
 	return NPERR_INVALID_URL;
 	}
@@ -1084,9 +1075,7 @@ void Host_Std::SendDataSync
 				if (countWritten < 0)
 					{
 					if (ZLOG(s, eDebug, "Host"))
-						{
 						s << "write failure";
-						}
 					keepGoing = false;
 					break;
 					}

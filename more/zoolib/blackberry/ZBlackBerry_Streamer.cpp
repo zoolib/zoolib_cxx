@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZCommer.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZStream_Limited.h"
@@ -502,7 +503,7 @@ bool Commer_Streamer::Read(const ZStreamR& iStreamR)
 			{
 			locker.Acquire();
 			fLifecycle = eLifecycle_StreamsDead;
-			ZStreamerWriter::Wake();
+			this->WakeWrite();
 			}
 		}
 
@@ -671,7 +672,7 @@ void Commer_Streamer::Stop()
 				theChannel->fCondition_Send.Broadcast();
 				}
 			}
-		ZStreamerWriter::Wake();
+		this->WakeWrite();
 		}
 	else
 		{
@@ -695,7 +696,7 @@ ZRef<Channel> Commer_Streamer::Open(bool iPreserveBoundaries,
 		fChannels.push_back(theChannel.Get());
 		theChannel->fState = eState_LookupNeeded;
 
-		ZStreamerWriter::Wake();
+		this->WakeWrite();
 
 		while (theChannel->fState != eState_Dead
 			&& theChannel->fState != eState_Connected)
@@ -747,7 +748,7 @@ Data Commer_Streamer::GetAttribute(uint16 iObject, uint16 iAttribute)
 
 	fGetAttribute = &theGA;
 
-	ZStreamerWriter::Wake();
+	this->WakeWrite();
 
 	while (!theGA.fFinished)
 		fCondition.Wait(fMutex);
@@ -781,7 +782,7 @@ bool Commer_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 				}
 
 			iChannel->fState = eState_CloseNeeded;
-			ZStreamerWriter::Wake();
+			this->WakeWrite();
 			break;
 			}
 		case eState_Dead:
@@ -855,7 +856,7 @@ void Commer_Streamer::Channel_Read
 			localDest += countToRead;
 			iCount -= countToRead;
 			theBuffer.erase(theBuffer.begin(), theBuffer.begin() + countToRead);
-			ZStreamerWriter::Wake();
+			this->WakeWrite();
 			break;
 			}
 		else
@@ -903,7 +904,7 @@ void Commer_Streamer::Channel_Write
 		{
 		iChannel->fSend_Data = localSource;
 		iChannel->fSend_Size = iCount;
-		ZStreamerWriter::Wake();
+		this->WakeWrite();
 
 		while (iChannel->fSend_Size)
 			iChannel->fCondition_Send.Wait(fMutex);
@@ -931,7 +932,7 @@ void Commer_Streamer::Channel_SendDisconnect(Channel_Streamer* iChannel)
 	if (iChannel->fState == eState_Connected)
 		{
 		iChannel->fState = eState_CloseNeeded;
-		ZStreamerWriter::Wake();
+		this->WakeWrite();
 		}
 	}
 
@@ -966,7 +967,7 @@ void Commer_Streamer::Channel_Abort(Channel_Streamer* iChannel)
 		iChannel->fReceive_Buffer.clear();
 		iChannel->fCondition_Receive.Broadcast();
 		iChannel->fCondition_Send.Broadcast();
-		ZStreamerWriter::Wake();
+		this->WakeWrite();
 		}
 	}
 
@@ -1012,7 +1013,7 @@ bool Commer_Streamer::pDetachIfUnused(Channel_Streamer* iChannel)
 		return false;
 
 	ZUtil_STL::sEraseMustContain(1, fChannels, iChannel);
-	ZStreamerWriter::Wake();
+	this->WakeWrite();
 	return true;
 	}
 
@@ -1121,7 +1122,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 						iStreamR.Skip(2);
 						theChannel->fSend_ChunkSize = iStreamR.ReadUInt16LE();
 
-						ZStreamerWriter::Wake();
+						this->WakeWrite();
 						}
 					else
 						{
@@ -1157,19 +1158,19 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 						{
 						theChannel->fState = eState_CloseNeeded;
 						theChannel->fError = Device::error_PasswordNeeded;
-						ZStreamerWriter::Wake();
+						this->WakeWrite();
 						}
 					else if (remainingTries <= 3)
 						{
 						theChannel->fState = eState_CloseNeeded;
 						theChannel->fError = Device::error_PasswordExhausted;
-						ZStreamerWriter::Wake();
+						this->WakeWrite();
 						}
 					else
 						{
 						theChannel->fState = eState_ChallengeRcvd;
 						theChannel->fChallenge = challenge;
-						ZStreamerWriter::Wake();
+						this->WakeWrite();
 						}
 					}
 				break;
@@ -1188,7 +1189,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					{
 					theChannel->fState = eState_CloseNeeded;
 					theChannel->fError = Device::error_PasswordIncorrect;
-					ZStreamerWriter::Wake();
+					this->WakeWrite();
 					}
 				break;
 				}
@@ -1248,7 +1249,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					theChannel->fReceive_Buffer.clear();
 					theChannel->fCondition_Receive.Broadcast();
 					theChannel->fCondition_Send.Broadcast();
-					ZStreamerWriter::Wake();
+					this->WakeWrite();
 					}
 				break;
 				}
@@ -1326,7 +1327,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					theChannel->fWaitingForSequence = false;
 					theChannel->fNextSequence = sequence + 1;
 					theChannel->fCondition_Send.Broadcast();
-					ZStreamerWriter::Wake();
+					this->WakeWrite();
 					}
 				break;
 				}
@@ -1576,7 +1577,7 @@ void Device_Streamer::Initialize()
 	{
 	Device::Initialize();
 	fCommer = new Commer_Streamer(fStreamerR, fStreamerW);
-	fCommer->GetSetCallable_Finished(sCallable(sWeakRef(this), &Device_Streamer::pCommerFinished));
+	fCommer->SetCallable_Finished(sCallable(sWeakRef(this), &Device_Streamer::pCommerFinished));
 	sStartCommerRunners(fCommer);
 	}
 
