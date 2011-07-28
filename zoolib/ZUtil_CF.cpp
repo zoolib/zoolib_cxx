@@ -50,7 +50,7 @@ ZRef<CFStringRef> sString(const string8& iString8)
 	{
 	if (CFIndex sourceSize = iString8.size())
 		{
-		return Adopt& ::CFStringCreateWithBytes(nullptr,
+		return sAdopt& ::CFStringCreateWithBytes(nullptr,
 			reinterpret_cast<const UInt8*>(iString8.data()), sourceSize,
 			kCFStringEncodingUTF8, false);
 		}
@@ -62,7 +62,7 @@ ZRef<CFStringRef> sString(const string16& iString16)
 	{
 	if (CFIndex sourceSize = iString16.size())
 		{
-		return Adopt& ::CFStringCreateWithCharacters(nullptr,
+		return sAdopt& ::CFStringCreateWithCharacters(nullptr,
 			reinterpret_cast<const UniChar*>(iString16.data()), sourceSize);
 		}
 
@@ -70,7 +70,7 @@ ZRef<CFStringRef> sString(const string16& iString16)
 	}
 
 ZRef<CFMutableStringRef> sStringMutable()
-	{ return Adopt& ::CFStringCreateMutable(nullptr, 0); }
+	{ return sAdopt& ::CFStringCreateMutable(nullptr, 0); }
 
 ZRef<CFMutableStringRef> sStringMutable(const string8& iString8)
 	{ return sStringMutable(sString(iString8)); }
@@ -79,53 +79,53 @@ ZRef<CFMutableStringRef> sStringMutable(const string16& iString16)
 	{ return sStringMutable(sString(iString16)); }
 
 ZRef<CFMutableStringRef> sStringMutable(CFStringRef iCFString)
-	{ return Adopt& ::CFStringCreateMutableCopy(nullptr, 0, iCFString); }
+	{ return sAdopt& ::CFStringCreateMutableCopy(nullptr, 0, iCFString); }
 
 ZRef<CFDictionaryRef> sDictionary()
 	{
-	return Adopt& ::CFDictionaryCreate(nullptr, nullptr, nullptr, 0,
+	return sAdopt& ::CFDictionaryCreate(nullptr, nullptr, nullptr, 0,
 		&kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 	}
 
 ZRef<CFMutableDictionaryRef> sDictionaryMutable()
 	{
-	return Adopt& ::CFDictionaryCreateMutable(nullptr, 0,
+	return sAdopt& ::CFDictionaryCreateMutable(nullptr, 0,
 		&kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 	}
 
 ZRef<CFMutableDictionaryRef> sDictionaryMutable(CFDictionaryRef iCFDictionary)
 	{
-	return Adopt& ::CFDictionaryCreateMutableCopy(nullptr,
+	return sAdopt& ::CFDictionaryCreateMutableCopy(nullptr,
 		::CFDictionaryGetCount(iCFDictionary), iCFDictionary);
 	}
 
 ZRef<CFArrayRef> sArray()
-	{ return Adopt& ::CFArrayCreate(nullptr, nullptr, 0, &kCFTypeArrayCallBacks); }
+	{ return sAdopt& ::CFArrayCreate(nullptr, nullptr, 0, &kCFTypeArrayCallBacks); }
 
 ZRef<CFMutableArrayRef> sArrayMutable()
-	{ return Adopt& ::CFArrayCreateMutable(nullptr, 0, &kCFTypeArrayCallBacks); }
+	{ return sAdopt& ::CFArrayCreateMutable(nullptr, 0, &kCFTypeArrayCallBacks); }
 
 ZRef<CFMutableArrayRef> sArrayMutable(CFArrayRef iCFArray)
-	{ return Adopt& ::CFArrayCreateMutableCopy(nullptr, ::CFArrayGetCount(iCFArray), iCFArray); }
+	{ return sAdopt& ::CFArrayCreateMutableCopy(nullptr, ::CFArrayGetCount(iCFArray), iCFArray); }
 
 ZRef<CFDataRef> sData()
-	{ return Adopt& ::CFDataCreate(nullptr, 0, 0); }
+	{ return sAdopt& ::CFDataCreate(nullptr, 0, 0); }
 
 ZRef<CFDataRef> sData(const void* iSource, size_t iSize)
-	{ return Adopt& ::CFDataCreate(nullptr, static_cast<const UInt8*>(iSource), iSize); }
+	{ return sAdopt& ::CFDataCreate(nullptr, static_cast<const UInt8*>(iSource), iSize); }
 
 ZRef<CFMutableDataRef> sDataMutable()
-	{ return Adopt& ::CFDataCreateMutable(nullptr, 0); }
+	{ return sAdopt& ::CFDataCreateMutable(nullptr, 0); }
 
 ZRef<CFMutableDataRef> sDataMutable(size_t iSize)
 	{
-	ZRef<CFMutableDataRef> theData = Adopt& ::CFDataCreateMutable(nullptr, 0);
+	ZRef<CFMutableDataRef> theData = sAdopt& ::CFDataCreateMutable(nullptr, 0);
 	::CFDataSetLength(theData, iSize);
 	return theData;
 	}
 
 ZRef<CFMutableDataRef> sDataMutable(CFDataRef iCFData)
-	{ return Adopt& ::CFDataCreateMutableCopy(nullptr, 0, iCFData); }
+	{ return sAdopt& ::CFDataCreateMutableCopy(nullptr, 0, iCFData); }
 
 // =================================================================================================
 #pragma mark -
@@ -302,7 +302,7 @@ ZAny sAsAny(CFTypeRef iVal)
 	{ return sDAsAny(ZAny(), iVal); }
 
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
-	{ return Adopt& ::CFNumberCreate(nullptr, iType, iVal); }
+	{ return sAdopt& ::CFNumberCreate(nullptr, iType, iVal); }
 
 ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal)
 	{
@@ -362,7 +362,7 @@ ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal)
 		}
 	else if (const ZTime* theValue = iVal.PGet<ZTime>())
 		{
-		return Adopt& ::CFDateCreate(nullptr, theValue->fVal - kCFAbsoluteTimeIntervalSince1970);
+		return sAdopt& ::CFDateCreate(nullptr, theValue->fVal - kCFAbsoluteTimeIntervalSince1970);
 		}
 	else if (const char* theValue = iVal.PGet<char>())
 		{

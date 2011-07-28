@@ -92,6 +92,7 @@ public:
 
 	ZMap_CFPreferences& Erase(const string8& iName);
 	ZMap_CFPreferences& Erase(CFStringRef iName);
+
 private:
 	ZRef<CFStringRef> fApplicationID;
 	};

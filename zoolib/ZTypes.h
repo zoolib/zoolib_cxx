@@ -95,7 +95,7 @@ private:
 	};
 
 // Adopt functor.
-// operator& lets you use Adopt& as a pseudo prefix operator.
+// operator& lets you use sAdopt& as a pseudo prefix operator.
 const struct
 	{
 	template <class T>
