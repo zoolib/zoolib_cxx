@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCommer__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStreamerReader.h"
-#include "zoolib/ZStreamerWriter.h"
+#include "zoolib/ZCallable.h"
+#include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 
 namespace ZooLib {
@@ -33,39 +33,32 @@ namespace ZooLib {
 #pragma mark * ZCommer
 
 class ZCommer
-:	public ZStreamerReader,
-	public ZStreamerWriter
+:	public ZCounted
 	{
 public:
 	ZCommer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~ZCommer();
 
-// From ZStreamerReader
-	virtual void ReadStarted();
-	virtual void ReadFinished();
-
-// From ZStreamerWriter
-	virtual void WriteStarted();
-	virtual void WriteFinished();
-
 // Our protocol
-	virtual void Started();
-	virtual void Finished();
+	virtual bool Read(const ZStreamR& iStreamR);
+	virtual bool Write(const ZStreamW& iStreamW);
 
 	void WaitTillFinished();
 
+	void WakeWrite();
+
 	typedef ZRef<ZCommer> ZRef_ZCommer;
 	typedef ZCallable<void(ZRef_ZCommer)> Callable_t;
-	ZRef<Callable_t> GetSetCallable_Started(ZRef<Callable_t> iCallable);
-	ZRef<Callable_t> GetSetCallable_Finished(ZRef<Callable_t> iCallable);
+	void SetCallable_Finished(ZRef<Callable_t> iCallable);
 
 private:
 	ZMtx fMtx;
 	ZCnd fCnd;
 	bool fReadStarted;
 	bool fWriteStarted;
-	ZRef<Callable_t> fCallable_Started;
 	ZRef<Callable_t> fCallable_Finished;
+	ZRef<ZStreamerR> fStreamerR;
+	ZRef<ZStreamerW> fStreamerW;
 	};
 
 // =================================================================================================
