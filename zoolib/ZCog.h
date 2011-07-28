@@ -61,18 +61,6 @@ public:
 
 //--
 
-	ZCog(const inherited& iOther)
-	:	inherited(iOther)
-		{}
-	
-	ZCog& operator=(const inherited& iOther)
-		{
-		inherited::operator=(iOther);
-		return *this;
-		}
-
-//--
-
 	ZCog(Callable* iCallable)
 	:	inherited(iCallable)
 		{}
@@ -80,6 +68,18 @@ public:
 	ZCog& operator=(Callable* iCallable)
 		{
 		inherited::operator=(iCallable);
+		return *this;
+		}
+
+//--
+
+	ZCog(const ZRef<Callable>& iOther)
+	:	inherited(iOther)
+		{}
+	
+	ZCog& operator=(const ZRef<Callable>& iOther)
+		{
+		inherited::operator=(iOther);
 		return *this;
 		}
 
@@ -259,6 +259,23 @@ ZCog<Param> operator|(const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 template <class Param>
 ZCog<Param>& operator|=(ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{ return iCog0 = sSeq(iCog0, iCog1); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sOnce
+
+template <class Param>
+ZCog<Param> sOnce_Fun(const ZCog<Param>& iSelf, Param iParam,
+	ZCog<Param> iCog)
+	{
+	if (iCog)
+		iCog->Call(iCog, iParam);
+	return null;
+	}
+
+template <class Param>
+ZCog<Param> sOnce(ZCog<Param> iCog)
+	{ return sBindR(sCallable(sOnce_Fun<Param>), iCog); }
 
 // =================================================================================================
 #pragma mark -
