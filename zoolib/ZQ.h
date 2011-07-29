@@ -33,6 +33,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZQ
 
+// c.f. Haskell's Data.Maybe, Scala's Option.
+
 template <class T, bool Sense = true>
 class ZQ
 	{
