@@ -2553,6 +2553,7 @@ void sCallVoid(ZRef<ZCallable<void(void)> > iCallable)
 #pragma mark * Useful typedefs
 
 typedef ZCallable<void(void)> ZCallable_Void;
+typedef ZRef<ZCallable_Void> ZRef_ZCallable_Void;
 
 typedef ZCallable<bool(void)> ZCallable_Bool;
 
@@ -2567,27 +2568,6 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall()
 		{ return notnull; }
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCaller
-
-typedef ZRef<ZCallable_Void> ZRef_ZCallable_Void; // CW7
-
-typedef ZCallable<void(ZRef_ZCallable_Void)> ZCaller;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCaller_Null
-
-class ZCaller_Null
-:	public ZCaller
-	{
-public:
-// From ZCaller
-	virtual ZQ<void> QCall(ZRef<ZCallable_Void> iCallable)
-		{ return sQCall(iCallable); }
 	};
 
 } // namespace ZooLib

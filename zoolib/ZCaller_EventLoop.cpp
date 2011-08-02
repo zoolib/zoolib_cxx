@@ -35,7 +35,7 @@ ZCaller_EventLoop::ZCaller_EventLoop()
 ZCaller_EventLoop::~ZCaller_EventLoop()
 	{}
 
-ZQ<void> ZCaller_EventLoop::QCall(ZRef<ZCallable_Void> iCallable)
+bool ZCaller_EventLoop::Queue(ZRef<ZCallable_Void> iCallable)
 	{
 	if (iCallable)
 		{
@@ -43,10 +43,10 @@ ZQ<void> ZCaller_EventLoop::QCall(ZRef<ZCallable_Void> iCallable)
 		if (fTriggered++ || this->pTrigger())
 			{
 			fCallables.push_back(iCallable);
-			return notnull;
+			return true;
 			}
 		}
-	return null;
+	return false;
 	}
 
 void ZCaller_EventLoop::pCall()

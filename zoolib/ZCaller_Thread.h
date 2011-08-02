@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCaller_Thread__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/ZCaller.h"
 #include "zoolib/ZThread.h"
 
 namespace ZooLib {
@@ -48,14 +48,14 @@ class ZCaller_Thread
 	{
 public:
 // From ZCaller
-	virtual ZQ<void> QCall(ZRef<ZCallable_Void> iCallable)
+	virtual bool Queue(ZRef<ZCallable_Void> iCallable)
 		{
 		if (iCallable)
 			{
 			sCallOnNewThread(iCallable);
-			return notnull;
+			return true;
 			}
-		return null;
+		return false;
 		}
 	};
 
