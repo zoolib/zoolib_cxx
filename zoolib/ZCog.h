@@ -104,12 +104,12 @@ const struct
 	template <class Param>
 	ZCog<Param> operator()
 		(ZCallable<ZCog<Param>(const ZCog<Param>&,Param)>* iCallable) const
-		{ return ZCog<Param>(iCallable); }
+		{ return iCallable; }
 
 	template <class Param>
 	ZCog<Param> operator()
 		(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable) const
-		{ return ZCog<Param>(iCallable); }
+		{ return iCallable; }
 
 	template <class Param>
 	ZCog<Param> operator()
@@ -119,12 +119,12 @@ const struct
 	template <class Param>
 	ZCog<Param> operator&
 		(ZCallable<ZCog<Param>(const ZCog<Param>&,Param)>* iCallable) const
-		{ return ZCog<Param>(iCallable); }
+		{ return iCallable; }
 
 	template <class Param>
 	ZCog<Param> operator&
 		(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable) const
-		{ return ZCog<Param>(iCallable); }
+		{ return iCallable; }
 
 	template <class Param>
 	ZCog<Param> operator&
