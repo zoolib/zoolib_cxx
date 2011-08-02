@@ -47,8 +47,10 @@ protected:
 // Called by concrete subclass
 	void pCall();
 
+	void pDiscardPending();
+
 // Implemented by concrete subclass
-	virtual void pTrigger() = 0;
+	virtual bool pTrigger() = 0;
 
 private:
 	ZMtx fMtx;

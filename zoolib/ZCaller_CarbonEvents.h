@@ -38,7 +38,7 @@ class ZCaller_CarbonEvents
 	{
 protected:
 // From ZCaller_EventLoop
-	virtual void pTrigger();
+	virtual bool pTrigger();
 
 private:
 	static void spCallback(void* iRefcon);

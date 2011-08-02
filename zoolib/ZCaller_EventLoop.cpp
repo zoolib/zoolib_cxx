@@ -40,10 +40,11 @@ ZQ<void> ZCaller_EventLoop::QCall(ZRef<ZCallable_Void> iCallable)
 	if (iCallable)
 		{
 		ZAcqMtx acq(fMtx);
-		fCallables.push_back(iCallable);
-		if (not fTriggered++)
-			this->pTrigger();
-		return notnull;
+		if (fTriggered++ || this->pTrigger())
+			{
+			fCallables.push_back(iCallable);
+			return notnull;
+			}
 		}
 	return null;
 	}
@@ -61,6 +62,12 @@ void ZCaller_EventLoop::pCall()
 	for (vector<ZRef<ZCallable_Void> >::iterator iter = calling.begin();
 		iter != calling.end(); ++iter)
 		{ (*iter)->Call(); }
+	}
+
+void ZCaller_EventLoop::pDiscardPending()
+	{
+	ZAcqMtx acq(fMtx);
+	fCallables.clear();
 	}
 
 } // namespace ZooLib

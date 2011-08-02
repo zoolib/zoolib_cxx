@@ -46,9 +46,12 @@ public:
 	virtual void Initialize();
 	virtual void Finalize();
 
+// Our protocol
+	void Disable();
+
 protected:
 // From ZCaller_EventLoop
-	virtual void pTrigger();
+	virtual bool pTrigger();
 
 private:
 	LRESULT pWindowProc

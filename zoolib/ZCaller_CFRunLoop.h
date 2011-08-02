@@ -66,7 +66,7 @@ public:
 
 protected:
 // From ZCaller_EventLoop
-	virtual void pTrigger();
+	virtual bool pTrigger();
 
 private:
 	static void spCallback(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info);

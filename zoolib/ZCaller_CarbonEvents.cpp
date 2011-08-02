@@ -30,10 +30,11 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZCaller_CarbonEvents
 
-void ZCaller_CarbonEvents::pTrigger()
+bool ZCaller_CarbonEvents::pTrigger()
 	{
 	this->Retain();
-	ZUtil_CarbonEvents::sInvokeOnMainThread(true, spCallback, this);	
+	ZUtil_CarbonEvents::sInvokeOnMainThread(true, spCallback, this);
+	return true;
 	}
 
 void ZCaller_CarbonEvents::spCallback(void* iRefcon)

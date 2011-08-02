@@ -80,8 +80,11 @@ void ZCaller_CFRunLoop::Finalize()
 	ZCaller::Finalize();
 	}
 
-void ZCaller_CFRunLoop::pTrigger()
-	{ ::CFRunLoopWakeUp(fRunLoop); }
+bool ZCaller_CFRunLoop::pTrigger()
+	{
+	::CFRunLoopWakeUp(fRunLoop);
+	return true;
+	}
 
 void ZCaller_CFRunLoop::spCallback
 	(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info)

@@ -49,15 +49,35 @@ void ZCaller_WinMessageLoop::Initialize()
 void ZCaller_WinMessageLoop::Finalize()
 	{
 	if (fHWND)
+		{
 		::DestroyWindow(fHWND);
+		fHWND = nullptr;
+		}
 
 	ZCaller_EventLoop::Finalize();
 	}
 
+void ZCaller_WinMessageLoop::Disable()
+	{
+	if (fHWND)
+		{
+		::DestroyWindow(fHWND);
+		fHWND = nullptr;
+		}
+	ZCaller_EventLoop::pDiscardPending();
+	}
+
 static UINT spMSG_Invoke = ::RegisterWindowMessageW(L"ZCaller_WinMessageLoop::Invoke");
 
-void ZCaller_WinMessageLoop::pTrigger()
-	{ ::PostMessageW(fHWND, spMSG_Invoke, 0, 0); }
+bool ZCaller_WinMessageLoop::pTrigger()
+	{
+	if (fHWND)
+		{
+		::PostMessageW(fHWND, spMSG_Invoke, 0, 0);
+		return true;
+		}
+	return false;
+	}
 
 LRESULT ZCaller_WinMessageLoop::pWindowProc
 	(WNDPROC iWNDPROC, HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
