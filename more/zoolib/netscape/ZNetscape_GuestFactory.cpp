@@ -81,7 +81,7 @@ static NSModule spLoadNSModule(CFBundleRef iBundleRef)
 	{
 	// FIXME
 	// On 10.3+ we should use dlopen with RTLD_LOCAL.
-	if (ZRef<CFURLRef> executableURL = ::CFBundleCopyExecutableURL(iBundleRef))
+	if (ZRef<CFURLRef> executableURL = sAdopt& ::CFBundleCopyExecutableURL(iBundleRef))
 		{
 		char buff[PATH_MAX];
 
@@ -471,10 +471,10 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iN
 		#endif
 
 		#if ZCONFIG_SPI_Enabled(CoreFoundation)
-			if (ZRef<CFURLRef> theURL = Adopt& ::CFURLCreateWithFileSystemPath
+			if (ZRef<CFURLRef> theURL = sAdopt& ::CFURLCreateWithFileSystemPath
 				(nullptr, ZUtil_CF::sString(iNativePath), kCFURLPOSIXPathStyle, true))
 				{
-				if (ZRef<CFPlugInRef> thePlugInRef = Adopt& ::CFPlugInCreate(nullptr, theURL))
+				if (ZRef<CFPlugInRef> thePlugInRef = sAdopt& ::CFPlugInCreate(nullptr, theURL))
 					{
 					#if __MACH__
 						return new GuestFactory_HostMachO(thePlugInRef);
