@@ -581,6 +581,50 @@ sCallable_Caller
 	(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
 	{ return new ZCallable_Caller::Callable<Signature> (iCaller, iCallable); }
 
+namespace ZCallable_Caller {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Callable_NoWait (specialization for 0 params)
+
+template <class Signature> class Callable_NoWait;
+
+template <>
+class Callable_NoWait<void(void)>
+:	public ZCallable<void(void)>
+	{
+public:
+	typedef void (Signature)();
+
+	Callable_NoWait(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	:	fCaller(iCaller)
+	,	fCallable(iCallable)
+		{}
+
+// From ZCallable
+	virtual ZQ<void> QCall()
+		{
+		sCall(fCaller, fCallable);
+		return notnull;
+		}
+
+private:
+	ZRef<ZCaller> fCaller;
+	ZRef<ZCallable<Signature> > fCallable;
+	};
+
+} // namespace ZCallable_Caller
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCallable_Caller_NoWait
+
+template <class Signature>
+ZRef<ZCallable<Signature> >
+sCallable_Caller_NoWait
+	(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	{ return new ZCallable_Caller::Callable_NoWait<Signature> (iCaller, iCallable); }
+
 } // namespace ZooLib
 
 #endif // __ZCallable_Caller__
