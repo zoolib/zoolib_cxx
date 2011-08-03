@@ -170,7 +170,24 @@ bool sContainsi(const string& iPattern, const string& iTarget)
 	return string::npos != ZUnicode::sToLower(iTarget).find(ZUnicode::sToLower(iPattern));
 	}
 
-bool sEndsWith(const string& iPattern, const string& iTarget)
+ZQ<string> sWithoutPrefix(const string& iPattern, const string& iTarget)
+	{
+	if (size_t patternLength = iPattern.length())
+		{
+		if (size_t targetLength = iTarget.length())
+			{
+			if (patternLength <= targetLength)
+				{
+				if (iTarget.substr(0, patternLength) == iPattern)
+					return iTarget.substr(patternLength);
+				}
+			}
+		return null;
+		}
+	return iTarget;
+	}
+
+ZQ<string> sWithoutSuffix(const string& iPattern, const string& iTarget)
 	{
 	if (size_t patternLength = iPattern.length())
 		{
@@ -179,13 +196,19 @@ bool sEndsWith(const string& iPattern, const string& iTarget)
 			if (patternLength <= targetLength)
 				{
 				if (iTarget.substr(targetLength - patternLength) == iPattern)
-					return true;
+					return iTarget.substr(0, targetLength - patternLength);
 				}
 			}
-		return false;
+		return null;
 		}
-	return true;
+	return iTarget;
 	}
+
+bool sStartsWith(const string& iPattern, const string& iTarget)
+	{ return sWithoutPrefix(iPattern, iTarget); }
+
+bool sEndsWith(const string& iPattern, const string& iTarget)
+	{ return sWithoutSuffix(iPattern, iTarget); }
 
 // =================================================================================================
 
