@@ -338,11 +338,16 @@ ZQ<Val> KeyRef::QGet(const string16& iName) const
 			(*this,
 			iName.c_str(),
 			0, // ulOptions
+			KEY_ALL_ACCESS,
+			&subKey.OParam()))
+			{ return subKey; }
+		else if (ERROR_SUCCESS == ::RegOpenKeyExW
+			(*this,
+			iName.c_str(),
+			0, // ulOptions
 			KEY_READ,
 			&subKey.OParam()))
-			{
-			return subKey;
-			}
+			{ return subKey; }
 		return null;
 		}
 
@@ -401,6 +406,13 @@ ZQ<Val> KeyRef::QGet(const Index_t& iIndex) const
 			{
 			KeyRef subKey;
 			if (ERROR_SUCCESS == ::RegOpenKeyExW
+				(*this,
+				&theName[0],
+				0, // ulOptions
+				KEY_ALL_ACCESS,
+				&subKey.OParam()))
+				{ return subKey; }
+			else if (ERROR_SUCCESS == ::RegOpenKeyExW
 				(*this,
 				&theName[0],
 				0, // ulOptions
