@@ -345,27 +345,53 @@ ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock(SOCKET iSOCKET)
 	::setsockopt(fSOCKET, IPPROTO_TCP, TCP_NODELAY, (char*)&noDelayFlag, sizeof(noDelayFlag));
 	}
 
-ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock(ip4_addr iRemoteHost, ip_port iRemotePort)
+static SOCKET spConnect(ip4_addr iLocalHost, ip_port iLocalPort,
+	ip4_addr iRemoteHost, ip_port iRemotePort)
 	{
-	fSOCKET = ::socket(AF_INET, SOCK_STREAM, 0);
-	if (fSOCKET == INVALID_SOCKET)
+	SOCKET theSOCKET = ::socket(AF_INET, SOCK_STREAM, 0);
+	if (theSOCKET == INVALID_SOCKET)
 		{
 		int err = ::WSAGetLastError();
-		throw ZNetEx(sTranslateError(err));
+		throw ZNetEx(ZNet_Internet_WinSock::sTranslateError(err));
 		}
 
-	sockaddr_in remoteSockAddr;
-	ZMemZero_T(remoteSockAddr);
+	if (iLocalHost || iLocalPort)
+		{
+		sockaddr_in localSockAddr = {0};
+		localSockAddr.sin_family = AF_INET;
+		localSockAddr.sin_port = htons(iLocalPort);
+		localSockAddr.sin_addr.s_addr = htonl(iLocalHost);
+
+		if (::bind(theSOCKET, (struct sockaddr*)&localSockAddr, sizeof(localSockAddr)))
+			{
+			int err = ::WSAGetLastError();
+			::closesocket(theSOCKET);
+			throw ZNetEx(ZNet_Internet_WinSock::sTranslateError(err));
+			}
+		}
+
+	sockaddr_in remoteSockAddr = {0};
 	remoteSockAddr.sin_family = AF_INET;
 	remoteSockAddr.sin_port = htons(iRemotePort);
 	remoteSockAddr.sin_addr.s_addr = htonl(iRemoteHost);
-	if (::connect(fSOCKET, (sockaddr*)&remoteSockAddr, sizeof(remoteSockAddr)) < 0)
+	if (::connect(theSOCKET, (sockaddr*)&remoteSockAddr, sizeof(remoteSockAddr)) < 0)
 		{
 		int err = ::WSAGetLastError();
-		::closesocket(fSOCKET);
-		throw ZNetEx(sTranslateError(err));
+		::closesocket(theSOCKET);
+		throw ZNetEx(ZNet_Internet_WinSock::sTranslateError(err));
 		}
+
+	return theSOCKET;
 	}
+
+ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock(ip4_addr iRemoteHost, ip_port iRemotePort)
+:	fSOCKET(spConnect(0, 0, iRemoteHost, iRemotePort))
+	{}
+
+ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock
+	(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort)
+:	fSOCKET(spConnect(iLocalHost, iLocalPort, iRemoteHost, iRemotePort))
+	{}
 
 ZNetEndpoint_TCP_WinSock::~ZNetEndpoint_TCP_WinSock()
 	{ ::closesocket(fSOCKET); }

@@ -367,11 +367,26 @@ static void spSetSocketOptions(int iSocketFD)
 	::setsockopt(iSocketFD, IPPROTO_TCP, TCP_NODELAY, (char*)&noDelayFlag, sizeof(noDelayFlag));
 	}
 
-static int spConnect4(ip4_addr iRemoteHost, ip_port iRemotePort)
+static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort)
 	{
 	int socketFD = ::socket(PF_INET, SOCK_STREAM, 0);
 	if (socketFD < 0)
 		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
+
+	if (iLocalHost || iLocalPort)
+		{
+		sockaddr_in localSockAddr = {0};
+		localSockAddr.sin_len = sizeof(sockaddr_in);
+		localSockAddr.sin_family = AF_INET;
+		localSockAddr.sin_port = htons(iLocalPort);
+		localSockAddr.sin_addr.s_addr = htonl(iLocalHost);
+		if (::bind(socketFD, (sockaddr*)&localSockAddr, sizeof(localSockAddr)) < 0)
+			{
+			int err = errno;
+			::close(socketFD);
+			throw ZNetEx(ZNet_Socket::sTranslateError(err));
+			}
+		}
 
 	sockaddr_in remoteSockAddr = {0};
 	remoteSockAddr.sin_len = sizeof(sockaddr_in);
@@ -413,8 +428,15 @@ ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket(int iSocketFD)
 	spSetSocketOptions(this->GetSocketFD());
 	}
 
+ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket
+	(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort)
+:	ZNetEndpoint_Socket(spConnect4(iLocalHost, iLocalPort, iRemoteHost, iRemotePort))
+	{
+	spSetSocketOptions(this->GetSocketFD());
+	}
+
 ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket(ip4_addr iRemoteHost, ip_port iRemotePort)
-:	ZNetEndpoint_Socket(spConnect4(iRemoteHost, iRemotePort))
+:	ZNetEndpoint_Socket(spConnect4(ZNetAddress_IP4::sAny, 0, iRemoteHost, iRemotePort))
 	{
 	spSetSocketOptions(this->GetSocketFD());
 	}

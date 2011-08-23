@@ -120,6 +120,8 @@ class ZNetEndpoint_TCP_WinSock
 public:
 	ZNetEndpoint_TCP_WinSock(SOCKET iSOCKET);
 	ZNetEndpoint_TCP_WinSock(ip4_addr iRemoteHost, ip_port iRemotePort);
+	ZNetEndpoint_TCP_WinSock
+		(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort);
 	virtual ~ZNetEndpoint_TCP_WinSock();
 
 // From ZStreamerRCon via ZNetEndpoint_TCP
