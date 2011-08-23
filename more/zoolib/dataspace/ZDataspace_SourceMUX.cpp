@@ -140,10 +140,7 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 	vector<int64> removedQueries;
 	removedQueries.reserve(iRemovedCount);
 	while (iRemovedCount--)
-		{
-		removedQueries.push_back(sEraseAndReturn(kDebug,
-			iCS->fMap_ClientToPRefcon, *iRemoved++));
-		}
+		removedQueries.push_back(sEraseAndReturn(kDebug, iCS->fMap_ClientToPRefcon, *iRemoved++));
 
 	guard.Release();
 
