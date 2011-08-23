@@ -2534,6 +2534,14 @@ R sCall
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * sCallable
+
+template <class Signature>
+ZRef<ZCallable<Signature> > sCallable(const ZRef<ZCallable<Signature> >& iCallable)
+	{ return iCallable; }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * sCallReturnVoid
 
 template <class T>
