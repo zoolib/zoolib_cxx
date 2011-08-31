@@ -27,19 +27,19 @@ namespace ZGameEngine {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Mat_T
+#pragma mark * Matrix
 
-template <class E, size_t R, size_t C> class Mat_T;
+template <class E, size_t R, size_t C> class Matrix;
 
 template <class E_p, size_t R_p, size_t C_p>
-class Mat_T
+class Matrix
 	{
 public:
 	typedef E_p E;
 	static const size_t R = R_p;
 	static const size_t C = C_p;
 
-	Mat_T()
+	Matrix()
 		{
 		for (size_t r = 0; r < R; ++r)
 			{
@@ -48,7 +48,7 @@ public:
 			}
 		}
 
-	Mat_T(const Mat_T& iOther)
+	Matrix(const Matrix& iOther)
 		{
 		for (size_t r = 0; r < R; ++r)
 			{
@@ -57,7 +57,7 @@ public:
 			}
 		}
 
-	Mat_T& operator=(const Mat_T& iOther)
+	Matrix& operator=(const Matrix& iOther)
 		{
 		for (size_t r = 0; r < R; ++r)
 			{
@@ -78,28 +78,28 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Mat_T, specialized for column vector
+#pragma mark * Matrix, specialized for column vector
 
 template <class E_p, size_t R_p>
-class Mat_T<E_p, R_p, 1>
+class Matrix<E_p, R_p, 1>
 	{
 public:
 	typedef E_p E;
 	static const size_t R = R_p;
 
-	Mat_T()
+	Matrix()
 		{
 		for (size_t r = 0; r < R; ++r)
 			fE[r][0] = E(0);
 		}
 
-	Mat_T(const Mat_T& iOther)
+	Matrix(const Matrix& iOther)
 		{
 		for (size_t r = 0; r < R; ++r)
 			fE[r][0] = iOther.fE[r][0];
 		}
 
-	Mat_T& operator=(const Mat_T& iOther)
+	Matrix& operator=(const Matrix& iOther)
 		{
 		for (size_t r = 0; r < R; ++r)
 			fE[r][0] = iOther.fE[r][0];
@@ -117,28 +117,28 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Mat_T, specialized for row vector
+#pragma mark * Matrix, specialized for row vector
 
 template <class E_p, size_t C_p>
-class Mat_T<E_p, 1, C_p>
+class Matrix<E_p, 1, C_p>
 	{
 public:
 	typedef E_p E;
 	static const size_t C = C_p;
 
-	Mat_T()
+	Matrix()
 		{
 		for (size_t c = 0; c < C; ++c)
 			fE[c] = E(0);
 		}
 
-	Mat_T(const Mat_T& iOther)
+	Matrix(const Matrix& iOther)
 		{
 		for (size_t c = 0; c < C; ++c)
 			fE[c] = iOther.fE[c];
 		}
 
-	Mat_T& operator=(const Mat_T& iOther)
+	Matrix& operator=(const Matrix& iOther)
 		{
 		for (size_t c = 0; c < C; ++c)
 			fE[c] = iOther.fE[c];
@@ -159,9 +159,9 @@ public:
 #pragma mark * sHomogenous
 
 template <class E, size_t R>
-Mat_T<E,R+1,1> sHomogenous(const Mat_T<E,R,1>& iMat)
+Matrix<E,R+1,1> sHomogenous(const Matrix<E,R,1>& iMat)
 	{
-	Mat_T<E,R+1,1> result;
+	Matrix<E,R+1,1> result;
 	for (size_t r = 0; r < R; ++r)
 		result.fE[r] = iMat.fE[r];
 	result.fE[R] = 1;
@@ -169,9 +169,9 @@ Mat_T<E,R+1,1> sHomogenous(const Mat_T<E,R,1>& iMat)
 	}
 
 template <class E, size_t C>
-Mat_T<E,1,C+1> sHomogenous(const Mat_T<E,1,C>& iMat)
+Matrix<E,1,C+1> sHomogenous(const Matrix<E,1,C>& iMat)
 	{
-	Mat_T<E,1,C+1> result;
+	Matrix<E,1,C+1> result;
 	for (size_t c = 0; c < C; ++c)
 		result.fE[c] = iMat.fE[c];
 	result.fE[C] = 1;
@@ -183,18 +183,18 @@ Mat_T<E,1,C+1> sHomogenous(const Mat_T<E,1,C>& iMat)
 #pragma mark * sCartesian
 
 template <class E, size_t R>
-Mat_T<E,R-1,1> sCartesian(const Mat_T<E,R,1>& iMat)
+Matrix<E,R-1,1> sCartesian(const Matrix<E,R,1>& iMat)
 	{
-	Mat_T<E,R-1,1> result;
+	Matrix<E,R-1,1> result;
 	for (size_t x = 0; x < R - 1; ++x)
 		result.fE[x][0] = iMat[x][0];
 	return result;
 	}
 
 template <class E, size_t C>
-Mat_T<E,1,C-1> sCartesian(const Mat_T<E,1,C>& iMat)
+Matrix<E,1,C-1> sCartesian(const Matrix<E,1,C>& iMat)
 	{
-	Mat_T<E,1,C-1> result;
+	Matrix<E,1,C-1> result;
 	for (size_t x = 0; x < C - 1; ++x)
 		result.fE[0][x] = iMat[0][x];
 	return result;
@@ -205,9 +205,9 @@ Mat_T<E,1,C-1> sCartesian(const Mat_T<E,1,C>& iMat)
 #pragma mark * sIdentity
 
 template <class E, size_t Dim>
-Mat_T<E,Dim,Dim> sIdentity()
+Matrix<E,Dim,Dim> sIdentity()
 	{
-	Mat_T<E,Dim,Dim> result;
+	Matrix<E,Dim,Dim> result;
 	for (size_t x = 0; x < Dim; ++x)
 		result.fE[x][x] = E(1);
 	return result;
@@ -222,9 +222,9 @@ Mat sIdentity()
 #pragma mark * sTransposed
 
 template <class E, size_t R, size_t C>
-Mat_T<E,C,R> sTransposed(const Mat_T<E,R,C>& iMat)
+Matrix<E,C,R> sTransposed(const Matrix<E,R,C>& iMat)
 	{
-	Mat_T<E,C,R> result;
+	Matrix<E,C,R> result;
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
@@ -238,9 +238,9 @@ Mat_T<E,C,R> sTransposed(const Mat_T<E,R,C>& iMat)
 #pragma mark * sNonZero
 
 template <class E, size_t R, size_t C>
-Mat_T<E,R,C> sNonZero(const Mat_T<E,R,C>& iMat)
+Matrix<E,R,C> sNonZero(const Matrix<E,R,C>& iMat)
 	{
-	Mat_T<E,R,C> result;
+	Matrix<E,R,C> result;
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
@@ -254,9 +254,9 @@ Mat_T<E,R,C> sNonZero(const Mat_T<E,R,C>& iMat)
 #pragma mark * Multiplication (aka composition)
 
 template <class E, size_t RL, size_t Common, size_t CR>
-Mat_T<E,RL,CR> operator*(const Mat_T<E,RL,Common>& iLeft, const Mat_T<E,Common,CR>& iRight)
+Matrix<E,RL,CR> operator*(const Matrix<E,RL,Common>& iLeft, const Matrix<E,Common,CR>& iRight)
 	{
-	Mat_T<E,RL,CR> result;
+	Matrix<E,RL,CR> result;
 	for (size_t r = 0; r < RL; ++r)
 		{
 		for (size_t c = 0; c < CR; ++c)
@@ -271,7 +271,7 @@ Mat_T<E,RL,CR> operator*(const Mat_T<E,RL,Common>& iLeft, const Mat_T<E,Common,C
 	}
 
 template <class E, size_t Dim>
-Mat_T<E,Dim,Dim>& operator*=(Mat_T<E,Dim,Dim>& ioLeft, const Mat_T<E,Dim,Dim>& iRight)
+Matrix<E,Dim,Dim>& operator*=(Matrix<E,Dim,Dim>& ioLeft, const Matrix<E,Dim,Dim>& iRight)
 	{ return ioLeft = ioLeft * iRight; }
 
 // =================================================================================================
@@ -279,9 +279,9 @@ Mat_T<E,Dim,Dim>& operator*=(Mat_T<E,Dim,Dim>& ioLeft, const Mat_T<E,Dim,Dim>& i
 #pragma mark * Element-by-element multiplication
 
 template <class E, size_t R, size_t C>
-Mat_T<E,R,C> sTimes(const Mat_T<E,R,C>& iLeft, const Mat_T<E,R,C>& iRight)
+Matrix<E,R,C> sTimes(const Matrix<E,R,C>& iLeft, const Matrix<E,R,C>& iRight)
 	{
-	Mat_T<E,R,C> result;
+	Matrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -295,9 +295,9 @@ Mat_T<E,R,C> sTimes(const Mat_T<E,R,C>& iLeft, const Mat_T<E,R,C>& iRight)
 #pragma mark * Addition
 
 template <class E, size_t R, size_t C>
-Mat_T<E,R,C> operator+(const Mat_T<E,R,C>& iLeft, const Mat_T<E,R,C>& iRight)
+Matrix<E,R,C> operator+(const Matrix<E,R,C>& iLeft, const Matrix<E,R,C>& iRight)
 	{
-	Mat_T<E,R,C> result;
+	Matrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -307,7 +307,7 @@ Mat_T<E,R,C> operator+(const Mat_T<E,R,C>& iLeft, const Mat_T<E,R,C>& iRight)
 	}
 
 template <class E, size_t R, size_t C>
-Mat_T<E,R,C>& operator+=(Mat_T<E,R,C>& ioLeft, const Mat_T<E,R,C>& iRight)
+Matrix<E,R,C>& operator+=(Matrix<E,R,C>& ioLeft, const Matrix<E,R,C>& iRight)
 	{ return ioLeft = ioLeft + iRight; }
 
 // =================================================================================================
@@ -315,9 +315,9 @@ Mat_T<E,R,C>& operator+=(Mat_T<E,R,C>& ioLeft, const Mat_T<E,R,C>& iRight)
 #pragma mark * Subtraction
 
 template <class E, size_t R, size_t C>
-Mat_T<E,R,C> operator-(const Mat_T<E,R,C>& iLeft, const Mat_T<E,R,C>& iRight)
+Matrix<E,R,C> operator-(const Matrix<E,R,C>& iLeft, const Matrix<E,R,C>& iRight)
 	{
-	Mat_T<E,R,C> result;
+	Matrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -327,7 +327,7 @@ Mat_T<E,R,C> operator-(const Mat_T<E,R,C>& iLeft, const Mat_T<E,R,C>& iRight)
 	}
 
 template <class E, size_t R, size_t C>
-Mat_T<E,R,C>& operator-=(Mat_T<E,R,C>& ioLeft, const Mat_T<E,R,C>& iRight)
+Matrix<E,R,C>& operator-=(Matrix<E,R,C>& ioLeft, const Matrix<E,R,C>& iRight)
 	{ return ioLeft = ioLeft - iRight; }
 
 // =================================================================================================
@@ -335,9 +335,9 @@ Mat_T<E,R,C>& operator-=(Mat_T<E,R,C>& ioLeft, const Mat_T<E,R,C>& iRight)
 #pragma mark * Scalar multiplication
 
 template <class E, size_t R, size_t C, class T>
-Mat_T<E,R,C> operator*(const Mat_T<E,R,C>& iLeft, T iRight)
+Matrix<E,R,C> operator*(const Matrix<E,R,C>& iLeft, T iRight)
 	{
-	Mat_T<E,R,C> result;
+	Matrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -347,7 +347,7 @@ Mat_T<E,R,C> operator*(const Mat_T<E,R,C>& iLeft, T iRight)
 	}
 
 template <class E, size_t R, size_t C, class T>
-Mat_T<E,R,C>& operator*=(Mat_T<E,R,C>& ioLeft, T iRight)
+Matrix<E,R,C>& operator*=(Matrix<E,R,C>& ioLeft, T iRight)
 	{ return ioLeft = ioLeft * iRight; }
 
 // =================================================================================================
@@ -355,9 +355,9 @@ Mat_T<E,R,C>& operator*=(Mat_T<E,R,C>& ioLeft, T iRight)
 #pragma mark * Scalar division
 
 template <class E, size_t R, size_t C, class T>
-Mat_T<E,R,C> operator/(const Mat_T<E,R,C>& iLeft, T iRight)
+Matrix<E,R,C> operator/(const Matrix<E,R,C>& iLeft, T iRight)
 	{
-	Mat_T<E,R,C> result;
+	Matrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -367,7 +367,7 @@ Mat_T<E,R,C> operator/(const Mat_T<E,R,C>& iLeft, T iRight)
 	}
 
 template <class E, size_t R, size_t C, class T>
-Mat_T<E,R,C>& operator/=(Mat_T<E,R,C>& ioLeft, T iRight)
+Matrix<E,R,C>& operator/=(Matrix<E,R,C>& ioLeft, T iRight)
 	{ return ioLeft = ioLeft / E(iRight); }
 
 // =================================================================================================
@@ -375,9 +375,9 @@ Mat_T<E,R,C>& operator/=(Mat_T<E,R,C>& ioLeft, T iRight)
 #pragma mark * Scalar addition
 
 template <class E, size_t R, size_t C, class T>
-Mat_T<E,R,C> operator+(const Mat_T<E,R,C>& iLeft, T iRight)
+Matrix<E,R,C> operator+(const Matrix<E,R,C>& iLeft, T iRight)
 	{
-	Mat_T<E,R,C> result;
+	Matrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -387,7 +387,7 @@ Mat_T<E,R,C> operator+(const Mat_T<E,R,C>& iLeft, T iRight)
 	}
 
 template <class E, size_t R, size_t C, class T>
-Mat_T<E,R,C>& operator+=(Mat_T<E,R,C>& ioLeft, T iRight)
+Matrix<E,R,C>& operator+=(Matrix<E,R,C>& ioLeft, T iRight)
 	{ return ioLeft = ioLeft + iRight; }
 
 // =================================================================================================
@@ -395,9 +395,9 @@ Mat_T<E,R,C>& operator+=(Mat_T<E,R,C>& ioLeft, T iRight)
 #pragma mark * Scalar subtraction
 
 template <class E, size_t R, size_t C, class T>
-Mat_T<E,R,C> operator-(const Mat_T<E,R,C>& iLeft, T iRight)
+Matrix<E,R,C> operator-(const Matrix<E,R,C>& iLeft, T iRight)
 	{
-	Mat_T<E,R,C> result;
+	Matrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -407,7 +407,7 @@ Mat_T<E,R,C> operator-(const Mat_T<E,R,C>& iLeft, T iRight)
 	}
 
 template <class E, size_t R, size_t C, class T>
-Mat_T<E,R,C>& operator-=(Mat_T<E,R,C>& ioLeft, T iRight)
+Matrix<E,R,C>& operator-=(Matrix<E,R,C>& ioLeft, T iRight)
 	{ return ioLeft = ioLeft - iRight; }
 
 // =================================================================================================
@@ -415,9 +415,9 @@ Mat_T<E,R,C>& operator-=(Mat_T<E,R,C>& ioLeft, T iRight)
 #pragma mark * sScale
 
 template <class E, size_t Dim>
-Mat_T<E,Dim,Dim> sScale(const Mat_T<E,Dim,1>& iVec)
+Matrix<E,Dim,Dim> sScale(const Matrix<E,Dim,1>& iVec)
 	{
-	Mat_T<E,Dim,Dim> result;
+	Matrix<E,Dim,Dim> result;
 	for (size_t x = 0; x < Dim; ++x)
 		result.fE[x][x] = iVec.fE[x][0];
 	return result;
@@ -428,9 +428,9 @@ Mat_T<E,Dim,Dim> sScale(const Mat_T<E,Dim,1>& iVec)
 #pragma mark * sTranslate
 
 template <class E, size_t Dim>
-Mat_T<E,Dim+1,Dim+1> sTranslate(const Mat_T<E,Dim,1>& iVec)
+Matrix<E,Dim+1,Dim+1> sTranslate(const Matrix<E,Dim,1>& iVec)
 	{
-	Mat_T<E,Dim+1,Dim+1> result = sIdentity<E,Dim+1>();
+	Matrix<E,Dim+1,Dim+1> result = sIdentity<E,Dim+1>();
 	for (size_t x = 0; x < Dim; ++x)
 		result.fE[Dim][x] = iVec.fE[x][0];
 	return result;
