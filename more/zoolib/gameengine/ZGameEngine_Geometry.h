@@ -1,0 +1,150 @@
+/* -------------------------------------------------------------------------------------------------
+Copyright (c) 2011 Andrew Green
+http://www.zoolib.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+and associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+------------------------------------------------------------------------------------------------- */
+
+#ifndef __ZGameEngine_Geometry__
+#define __ZGameEngine_Geometry__ 1
+#include "zconfig.h"
+
+#include "zoolib/gameengine/ZGameEngine_Matrix.h"
+
+namespace ZooLib {
+namespace ZGameEngine {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark *
+
+template <class Val>
+Mat_T<Val,3,1> sCVec3(Val x, Val y, Val z)
+	{
+	Mat_T<Val,3,1> result;
+	result[0] = x;
+	result[1] = y;
+	result[2] = z;
+	return result;
+	}
+
+template <class Val>
+Mat_T<Val,3,1> sCVec3(Val iVal)
+	{ return sCVec3(iVal, iVal, iVal); }
+
+template <class Val>
+Mat_T<Val,3,1> sCVec3()
+	{ return Mat_T<Val,3,1>(); }
+
+template <class Val>
+Mat_T<Val,1,3> sRVec3(Val x, Val y, Val z)
+	{
+	Mat_T<Val,1,3> result;
+	result[0] = x;
+	result[1] = y;
+	result[2] = z;
+	return result;
+	}
+
+template <class Val>
+Mat_T<Val,1,3> sRVec3(Val iVal)
+	{ return sRVec3(iVal, iVal, iVal); }
+
+template <class Val>
+Mat_T<Val,1,3> sRVec3()
+	{ return Mat_T<Val,1,3>(); }
+
+template <class Val>
+Mat_T<Val,4,4> sScale(Val x, Val y, Val z)
+	{
+	Mat_T<Val,4,4> result;
+	result[0][0] = x;
+	result[1][1] = y;
+	result[2][2] = z;
+	return result;
+	}
+
+template <class Val>
+Mat_T<Val,4,4> sTranslate(Val x, Val y, Val z)
+	{
+	Mat_T<Val,4,4> result = sIdentity<Mat_T<Val,4,4> >();
+	result[0][3] = x;
+	result[1][3] = y;
+	result[2][3] = z;
+	return result;
+	}
+
+template <class Val>
+Mat_T<Val,4,4> sTranslateX(Val x)
+	{ return sTranslate<Val>(x, 0, 0); }
+
+template <class Val>
+Mat_T<Val,4,4> sTranslateY(Val y)
+	{ return sTranslate<Val>(0, y, 0); }
+
+template <class Val>
+Mat_T<Val,4,4> sTranslateZ(Val z)
+	{ return sTranslate<Val>(0, 0, z); }
+
+template <class Val>
+Mat_T<Val,4,4> sRotateX(Val radians)
+	{
+	Val s = sin(radians);
+	Val c = cos(radians);
+	Mat_T<Val,4,4> result;
+	result[0][0] = 1;
+	result[1][1] = c;
+	result[2][1] = s;
+	result[1][2] = -s;
+	result[2][2] = c;
+	result[3][3] = 1;
+	return result;
+	}
+
+template <class Val>
+Mat_T<Val,4,4> sRotateY(Val radians)
+	{
+	Val s = sin(radians);
+	Val c = cos(radians);
+	Mat_T<Val,4,4> result;
+	result[0][0] = c;
+	result[1][1] = 1;
+	result[2][0] = s;
+	result[0][2] = -s;
+	result[2][2] = c;
+	result[3][3] = 1;
+	return result;
+	}
+
+template <class Val>
+Mat_T<Val,4,4> sRotateZ(Val radians)
+	{
+	Val s = sin(radians);
+	Val c = cos(radians);
+	Mat_T<Val,4,4> result;
+	result[0][0] = c;
+	result[1][0] = s;
+	result[0][1] = -s;
+	result[1][1] = c;
+	result[2][2] = 1;
+	result[3][3] = 1;
+	return result;
+	}
+
+} // namespace ZGameEngine
+} // namespace ZooLib
+
+#endif // __ZGameEngine_Geometry__
