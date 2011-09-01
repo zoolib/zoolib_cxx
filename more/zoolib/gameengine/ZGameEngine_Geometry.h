@@ -29,7 +29,42 @@ namespace ZGameEngine {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * Quaternion -- a beginning.
+
+template <class Val>
+class Quaternion
+	{
+public:
+	typedef Matrix<Val,3,1> CVec3;
+
+	Quaternion()
+	:	fS(0)
+		{}
+
+	Quaternion(const Quaternion& iOther)
+	:	fS(iOther.fS)
+	,	fV(iOther.fV)
+		{}
+	
+	Quaternion& operator=(const Quaternion& iOther)
+		{
+		fS = iOther.fS;
+		fV = iOther.fV;
+		return *this;
+		}
+
+	Quaternion(Val iS, const CVec3& iV)
+	:	fS(iS)
+	,	fV(iV)
+		{}
+
+	Val fS;
+	CVec3 fV;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * CVec3 ctors
 
 template <class Val>
 Matrix<Val,3,1> sCVec3(Val x, Val y, Val z)
@@ -49,6 +84,10 @@ template <class Val>
 Matrix<Val,3,1> sCVec3()
 	{ return Matrix<Val,3,1>(); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * RVec3 ctors
+
 template <class Val>
 Matrix<Val,1,3> sRVec3(Val x, Val y, Val z)
 	{
@@ -67,6 +106,10 @@ template <class Val>
 Matrix<Val,1,3> sRVec3()
 	{ return Matrix<Val,1,3>(); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sScale
+
 template <class Val>
 Matrix<Val,4,4> sScale(Val x, Val y, Val z)
 	{
@@ -76,6 +119,10 @@ Matrix<Val,4,4> sScale(Val x, Val y, Val z)
 	result[2][2] = z;
 	return result;
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sTranslate
 
 template <class Val>
 Matrix<Val,4,4> sTranslate(Val x, Val y, Val z)
@@ -99,6 +146,10 @@ template <class Val>
 Matrix<Val,4,4> sTranslateZ(Val z)
 	{ return sTranslate<Val>(0, 0, z); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sRotateX
+
 template <class Val>
 Matrix<Val,4,4> sRotateX(Val radians)
 	{
@@ -114,6 +165,10 @@ Matrix<Val,4,4> sRotateX(Val radians)
 	return result;
 	}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sRotateY
+
 template <class Val>
 Matrix<Val,4,4> sRotateY(Val radians)
 	{
@@ -128,6 +183,10 @@ Matrix<Val,4,4> sRotateY(Val radians)
 	result[3][3] = 1;
 	return result;
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sRotateZ
 
 template <class Val>
 Matrix<Val,4,4> sRotateZ(Val radians)

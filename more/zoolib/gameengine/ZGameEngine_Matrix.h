@@ -156,7 +156,7 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sHomogenous
+#pragma mark * sHomogenous (column vector)
 
 template <class E, size_t R>
 Matrix<E,R+1,1> sHomogenous(const Matrix<E,R,1>& iMat)
@@ -167,6 +167,10 @@ Matrix<E,R+1,1> sHomogenous(const Matrix<E,R,1>& iMat)
 	result.fE[R] = 1;
 	return result;
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sHomogenous (row vector)
 
 template <class E, size_t C>
 Matrix<E,1,C+1> sHomogenous(const Matrix<E,1,C>& iMat)
@@ -180,23 +184,103 @@ Matrix<E,1,C+1> sHomogenous(const Matrix<E,1,C>& iMat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCartesian
+#pragma mark * sCartesian (column vector)
 
 template <class E, size_t R>
 Matrix<E,R-1,1> sCartesian(const Matrix<E,R,1>& iMat)
 	{
 	Matrix<E,R-1,1> result;
-	for (size_t x = 0; x < R - 1; ++x)
-		result.fE[x][0] = iMat[x][0];
+	for (size_t r = 0; r < R - 1; ++r)
+		result.fE[r][0] = iMat[r][0];
 	return result;
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCartesian (row vector)
 
 template <class E, size_t C>
 Matrix<E,1,C-1> sCartesian(const Matrix<E,1,C>& iMat)
 	{
 	Matrix<E,1,C-1> result;
-	for (size_t x = 0; x < C - 1; ++x)
-		result.fE[0][x] = iMat[0][x];
+	for (size_t c = 0; c < C - 1; ++c)
+		result.fE[0][c] = iMat[0][c];
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sDot (column vector)
+
+template <class E, size_t R>
+E sDot(const Matrix<E,R,1>& i0, const Matrix<E,R,1>& i1)
+	{
+	E result = 0;
+	for (size_t r = 0; r < R; ++r)
+		result += i0.fE[r][0] * i1.fE[r][0];
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sDot (row vector)
+
+template <class E, size_t C>
+E sDot(const Matrix<E,1,C>& i0, const Matrix<E,1,C>& i1)
+	{
+	E result = 0;
+	for (size_t c = 0; c < C; ++c)
+		result += i0.fE[0][C] * i1.fE[0][C];
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCross (column vector)
+
+template <class E, size_t R>
+Matrix<E,R,1> sCross(const Matrix<E,R,1>& i0, const Matrix<E,R,1>& i1)
+	{
+	Matrix<E,R,1> result;
+	for (size_t r = 0; r < R; ++r)
+		{
+		for (size_t r0 = 0; r0 < R; ++r0)
+			{
+			if (r0 != r)
+				{
+				for (size_t r1 = 0; r1 < R; ++r1)
+					{
+					if (r1 != r)
+						result[r] += i0[r0][0] * i0[r1][0];
+					}
+				}
+			}
+		}
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCross (row vector)
+
+template <class E, size_t C>
+Matrix<E,1,C> sCross(const Matrix<E,1,C>& i0, const Matrix<E,1,C>& i1)
+	{
+	Matrix<E,1,C> result;
+	for (size_t c = 0; c < C; ++c)
+		{
+		for (size_t c0 = 0; c0 < C; ++c0)
+			{
+			if (c0 != c)
+				{
+				for (size_t c1 = 0; c1 < C; ++c1)
+					{
+					if (c1 != c)
+						result[0][c] += i0[0][c0] * i0[0][c1];
+					}
+				}
+			}
+		}
 	return result;
 	}
 
@@ -235,6 +319,92 @@ Matrix<E,C,R> sTransposed(const Matrix<E,R,C>& iMat)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * sLength (row vector)
+
+template <class E, size_t C>
+E sLength(const Matrix<E,1,C>& iVec)
+	{
+	E result = 0;
+	for (size_t c = 0; c < C; ++c)
+		result += iVec[0][c] * iVec[0][c];
+	return sqrt(result);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sLength (column vector)
+
+template <class E, size_t R>
+E sLength(const Matrix<E,R,1>& iVec)
+	{
+	E result = 0;
+	for (size_t r = 0; r < R; ++r)
+		result += iVec[r][0] * iVec[r][0];
+	return sqrt(result);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sNormalized (row vector)
+
+template <class E, size_t C>
+E sNormalized(const Matrix<E,1,C>& iVec)
+	{
+	const E length = sLength(iVec);
+	Matrix<E,1,C> result;
+	for (size_t c = 0; c < C; ++c)
+		result = iVec[0][c] / length;
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sNormalized (column vector)
+
+template <class E, size_t R>
+E sNormalized(const Matrix<E,R,1>& iVec)
+	{
+	const E length = sLength(iVec);
+	Matrix<E,R,1> result;
+	for (size_t r = 0; r < R; ++r)
+		result = iVec[r][0] / length;
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sApply (binary function)
+
+template <class Fun, class E, size_t R, size_t C>
+Matrix<E,R,C> sApply(Fun iFun, const Matrix<E,R,C>& i0, const Matrix<E,R,C>& i1)
+	{
+	Matrix<E,R,C> result;
+	for (size_t c = 0; c < C; ++c)
+		{
+		for (size_t r = 0; r < R; ++r)
+			result.fE[r][c] = iFun(i0.fE[r][c], i1.fE[r][c]);
+		}
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sApply (unary function)
+
+template <class Fun, class E, size_t R, size_t C>
+Matrix<E,R,C> sApply(Fun iFun, const Matrix<E,R,C>& iMat)
+	{
+	Matrix<E,R,C> result;
+	for (size_t c = 0; c < C; ++c)
+		{
+		for (size_t r = 0; r < R; ++r)
+			result.fE[r][c] = iFun(iMat.fE[r][c]);
+		}
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * sNonZero
 
 template <class E, size_t R, size_t C>
@@ -261,10 +431,8 @@ Matrix<E,RL,CR> operator*(const Matrix<E,RL,Common>& iLeft, const Matrix<E,Commo
 		{
 		for (size_t c = 0; c < CR; ++c)
 			{
-			E val = 0;
 			for (size_t o = 0; o < Common; ++o)
-				val += iLeft.fE[r][o] * iRight.fE[o][c];
-			result.fE[r][c] = val;
+				result.fE[r][c] += iLeft.fE[r][o] * iRight.fE[o][c];
 			}
 		}
 	return result;
