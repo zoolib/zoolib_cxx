@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZGameEngine_Geometry__ 1
 #include "zconfig.h"
 
-#include "zoolib/gameengine/ZGameEngine_Matrix.h"
+#include "zoolib/ZMatrix.h"
 
 namespace ZooLib {
 namespace ZGameEngine {
@@ -35,7 +35,7 @@ template <class Val>
 class Quaternion
 	{
 public:
-	typedef Matrix<Val,3,1> CVec3;
+	typedef ZMatrix<Val,3,1> CVec3;
 
 	Quaternion()
 	:	fS(0)
@@ -67,9 +67,9 @@ public:
 #pragma mark * CVec3 ctors
 
 template <class Val>
-Matrix<Val,3,1> sCVec3(Val x, Val y, Val z)
+ZMatrix<Val,3,1> sCVec3(Val x, Val y, Val z)
 	{
-	Matrix<Val,3,1> result;
+	ZMatrix<Val,3,1> result;
 	result[0] = x;
 	result[1] = y;
 	result[2] = z;
@@ -77,21 +77,21 @@ Matrix<Val,3,1> sCVec3(Val x, Val y, Val z)
 	}
 
 template <class Val>
-Matrix<Val,3,1> sCVec3(Val iVal)
+ZMatrix<Val,3,1> sCVec3(Val iVal)
 	{ return sCVec3(iVal, iVal, iVal); }
 
 template <class Val>
-Matrix<Val,3,1> sCVec3()
-	{ return Matrix<Val,3,1>(); }
+ZMatrix<Val,3,1> sCVec3()
+	{ return ZMatrix<Val,3,1>(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * RVec3 ctors
 
 template <class Val>
-Matrix<Val,1,3> sRVec3(Val x, Val y, Val z)
+ZMatrix<Val,1,3> sRVec3(Val x, Val y, Val z)
 	{
-	Matrix<Val,1,3> result;
+	ZMatrix<Val,1,3> result;
 	result[0] = x;
 	result[1] = y;
 	result[2] = z;
@@ -99,21 +99,21 @@ Matrix<Val,1,3> sRVec3(Val x, Val y, Val z)
 	}
 
 template <class Val>
-Matrix<Val,1,3> sRVec3(Val iVal)
+ZMatrix<Val,1,3> sRVec3(Val iVal)
 	{ return sRVec3(iVal, iVal, iVal); }
 
 template <class Val>
-Matrix<Val,1,3> sRVec3()
-	{ return Matrix<Val,1,3>(); }
+ZMatrix<Val,1,3> sRVec3()
+	{ return ZMatrix<Val,1,3>(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sScale
 
 template <class Val>
-Matrix<Val,4,4> sScale(Val x, Val y, Val z)
+ZMatrix<Val,4,4> sScale(Val x, Val y, Val z)
 	{
-	Matrix<Val,4,4> result;
+	ZMatrix<Val,4,4> result;
 	result[0][0] = x;
 	result[1][1] = y;
 	result[2][2] = z;
@@ -125,25 +125,25 @@ Matrix<Val,4,4> sScale(Val x, Val y, Val z)
 #pragma mark * sTranslate
 
 template <class Val>
-Matrix<Val,4,4> sTranslate(Val x, Val y, Val z)
+ZMatrix<Val,4,4> sTranslate(Val x, Val y, Val z)
 	{
-	Matrix<Val,4,4> result = sIdentity<Matrix<Val,4,4> >();
-	result[0][3] = x;
-	result[1][3] = y;
-	result[2][3] = z;
+	ZMatrix<Val,4,4> result = sIdentity<Val,4>();
+	result[3][0] = x;
+	result[3][1] = y;
+	result[3][2] = z;
 	return result;
 	}
 
 template <class Val>
-Matrix<Val,4,4> sTranslateX(Val x)
+ZMatrix<Val,4,4> sTranslateX(Val x)
 	{ return sTranslate<Val>(x, 0, 0); }
 
 template <class Val>
-Matrix<Val,4,4> sTranslateY(Val y)
+ZMatrix<Val,4,4> sTranslateY(Val y)
 	{ return sTranslate<Val>(0, y, 0); }
 
 template <class Val>
-Matrix<Val,4,4> sTranslateZ(Val z)
+ZMatrix<Val,4,4> sTranslateZ(Val z)
 	{ return sTranslate<Val>(0, 0, z); }
 
 // =================================================================================================
@@ -151,11 +151,11 @@ Matrix<Val,4,4> sTranslateZ(Val z)
 #pragma mark * sRotateX
 
 template <class Val>
-Matrix<Val,4,4> sRotateX(Val radians)
+ZMatrix<Val,4,4> sRotateX(Val radians)
 	{
 	Val s = sin(radians);
 	Val c = cos(radians);
-	Matrix<Val,4,4> result;
+	ZMatrix<Val,4,4> result;
 	result[0][0] = 1;
 	result[1][1] = c;
 	result[2][1] = s;
@@ -170,11 +170,11 @@ Matrix<Val,4,4> sRotateX(Val radians)
 #pragma mark * sRotateY
 
 template <class Val>
-Matrix<Val,4,4> sRotateY(Val radians)
+ZMatrix<Val,4,4> sRotateY(Val radians)
 	{
 	Val s = sin(radians);
 	Val c = cos(radians);
-	Matrix<Val,4,4> result;
+	ZMatrix<Val,4,4> result;
 	result[0][0] = c;
 	result[1][1] = 1;
 	result[2][0] = s;
@@ -189,11 +189,11 @@ Matrix<Val,4,4> sRotateY(Val radians)
 #pragma mark * sRotateZ
 
 template <class Val>
-Matrix<Val,4,4> sRotateZ(Val radians)
+ZMatrix<Val,4,4> sRotateZ(Val radians)
 	{
 	Val s = sin(radians);
 	Val c = cos(radians);
-	Matrix<Val,4,4> result;
+	ZMatrix<Val,4,4> result;
 	result[0][0] = c;
 	result[1][0] = s;
 	result[0][1] = -s;
