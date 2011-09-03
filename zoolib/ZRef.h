@@ -423,6 +423,10 @@ const struct
 #pragma mark -
 #pragma mark *
 
+template <class T>
+void swap(ZRef<T>& a, ZRef<T>& b)
+	{ a.swap(b); }
+
 template <class T, bool SenseA, bool SenseB>
 void swap(ZRef<T,SenseA>& a, ZRef<T,SenseB>& b)
 	{ a.swap(b); }
