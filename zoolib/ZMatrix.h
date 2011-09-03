@@ -18,28 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGameEngine_Matrix__
-#define __ZGameEngine_Matrix__ 1
+#ifndef __ZMatrix__
+#define __ZMatrix__ 1
 #include "zconfig.h"
 
 namespace ZooLib {
-namespace ZGameEngine {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Matrix
+#pragma mark * ZMatrix
 
-template <class E, size_t R, size_t C> class Matrix;
+template <class E, size_t R, size_t C> class ZMatrix;
 
 template <class E_p, size_t R_p, size_t C_p>
-class Matrix
+class ZMatrix
 	{
 public:
 	typedef E_p E;
 	static const size_t R = R_p;
 	static const size_t C = C_p;
 
-	Matrix()
+	ZMatrix()
 		{
 		for (size_t r = 0; r < R; ++r)
 			{
@@ -48,7 +47,7 @@ public:
 			}
 		}
 
-	Matrix(const Matrix& iOther)
+	ZMatrix(const ZMatrix& iOther)
 		{
 		for (size_t r = 0; r < R; ++r)
 			{
@@ -57,7 +56,7 @@ public:
 			}
 		}
 
-	Matrix& operator=(const Matrix& iOther)
+	ZMatrix& operator=(const ZMatrix& iOther)
 		{
 		for (size_t r = 0; r < R; ++r)
 			{
@@ -78,28 +77,28 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Matrix, specialized for column vector
+#pragma mark * ZMatrix, specialized for column vector
 
 template <class E_p, size_t R_p>
-class Matrix<E_p, R_p, 1>
+class ZMatrix<E_p, R_p, 1>
 	{
 public:
 	typedef E_p E;
 	static const size_t R = R_p;
 
-	Matrix()
+	ZMatrix()
 		{
 		for (size_t r = 0; r < R; ++r)
 			fE[r][0] = E(0);
 		}
 
-	Matrix(const Matrix& iOther)
+	ZMatrix(const ZMatrix& iOther)
 		{
 		for (size_t r = 0; r < R; ++r)
 			fE[r][0] = iOther.fE[r][0];
 		}
 
-	Matrix& operator=(const Matrix& iOther)
+	ZMatrix& operator=(const ZMatrix& iOther)
 		{
 		for (size_t r = 0; r < R; ++r)
 			fE[r][0] = iOther.fE[r][0];
@@ -117,31 +116,31 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Matrix, specialized for row vector
+#pragma mark * ZMatrix, specialized for row vector
 
 template <class E_p, size_t C_p>
-class Matrix<E_p, 1, C_p>
+class ZMatrix<E_p, 1, C_p>
 	{
 public:
 	typedef E_p E;
 	static const size_t C = C_p;
 
-	Matrix()
+	ZMatrix()
 		{
 		for (size_t c = 0; c < C; ++c)
-			fE[c] = E(0);
+			fE[0][c] = E(0);
 		}
 
-	Matrix(const Matrix& iOther)
+	ZMatrix(const ZMatrix& iOther)
 		{
 		for (size_t c = 0; c < C; ++c)
-			fE[c] = iOther.fE[c];
+			fE[0][c] = iOther.fE[0][c];
 		}
 
-	Matrix& operator=(const Matrix& iOther)
+	ZMatrix& operator=(const ZMatrix& iOther)
 		{
 		for (size_t c = 0; c < C; ++c)
-			fE[c] = iOther.fE[c];
+			fE[0][c] = iOther.fE[0][c];
 		return *this;
 		}
 
@@ -159,12 +158,12 @@ public:
 #pragma mark * sHomogenous (column vector)
 
 template <class E, size_t R>
-Matrix<E,R+1,1> sHomogenous(const Matrix<E,R,1>& iMat)
+ZMatrix<E,R+1,1> sHomogenous(const ZMatrix<E,R,1>& iMat)
 	{
-	Matrix<E,R+1,1> result;
+	ZMatrix<E,R+1,1> result;
 	for (size_t r = 0; r < R; ++r)
-		result.fE[r] = iMat.fE[r];
-	result.fE[R] = 1;
+		result.fE[r][0] = iMat.fE[r][0];
+	result.fE[R][0] = 1;
 	return result;
 	}
 
@@ -173,12 +172,12 @@ Matrix<E,R+1,1> sHomogenous(const Matrix<E,R,1>& iMat)
 #pragma mark * sHomogenous (row vector)
 
 template <class E, size_t C>
-Matrix<E,1,C+1> sHomogenous(const Matrix<E,1,C>& iMat)
+ZMatrix<E,1,C+1> sHomogenous(const ZMatrix<E,1,C>& iMat)
 	{
-	Matrix<E,1,C+1> result;
+	ZMatrix<E,1,C+1> result;
 	for (size_t c = 0; c < C; ++c)
-		result.fE[c] = iMat.fE[c];
-	result.fE[C] = 1;
+		result.fE[0][c] = iMat.fE[0][c];
+	result.fE[0][C] = 1;
 	return result;
 	}
 
@@ -187,9 +186,9 @@ Matrix<E,1,C+1> sHomogenous(const Matrix<E,1,C>& iMat)
 #pragma mark * sCartesian (column vector)
 
 template <class E, size_t R>
-Matrix<E,R-1,1> sCartesian(const Matrix<E,R,1>& iMat)
+ZMatrix<E,R-1,1> sCartesian(const ZMatrix<E,R,1>& iMat)
 	{
-	Matrix<E,R-1,1> result;
+	ZMatrix<E,R-1,1> result;
 	for (size_t r = 0; r < R - 1; ++r)
 		result.fE[r][0] = iMat[r][0];
 	return result;
@@ -200,9 +199,9 @@ Matrix<E,R-1,1> sCartesian(const Matrix<E,R,1>& iMat)
 #pragma mark * sCartesian (row vector)
 
 template <class E, size_t C>
-Matrix<E,1,C-1> sCartesian(const Matrix<E,1,C>& iMat)
+ZMatrix<E,1,C-1> sCartesian(const ZMatrix<E,1,C>& iMat)
 	{
-	Matrix<E,1,C-1> result;
+	ZMatrix<E,1,C-1> result;
 	for (size_t c = 0; c < C - 1; ++c)
 		result.fE[0][c] = iMat[0][c];
 	return result;
@@ -213,7 +212,7 @@ Matrix<E,1,C-1> sCartesian(const Matrix<E,1,C>& iMat)
 #pragma mark * sDot (column vector)
 
 template <class E, size_t R>
-E sDot(const Matrix<E,R,1>& i0, const Matrix<E,R,1>& i1)
+E sDot(const ZMatrix<E,R,1>& i0, const ZMatrix<E,R,1>& i1)
 	{
 	E result = 0;
 	for (size_t r = 0; r < R; ++r)
@@ -226,7 +225,7 @@ E sDot(const Matrix<E,R,1>& i0, const Matrix<E,R,1>& i1)
 #pragma mark * sDot (row vector)
 
 template <class E, size_t C>
-E sDot(const Matrix<E,1,C>& i0, const Matrix<E,1,C>& i1)
+E sDot(const ZMatrix<E,1,C>& i0, const ZMatrix<E,1,C>& i1)
 	{
 	E result = 0;
 	for (size_t c = 0; c < C; ++c)
@@ -239,9 +238,9 @@ E sDot(const Matrix<E,1,C>& i0, const Matrix<E,1,C>& i1)
 #pragma mark * sCross (column vector)
 
 template <class E, size_t R>
-Matrix<E,R,1> sCross(const Matrix<E,R,1>& i0, const Matrix<E,R,1>& i1)
+ZMatrix<E,R,1> sCross(const ZMatrix<E,R,1>& i0, const ZMatrix<E,R,1>& i1)
 	{
-	Matrix<E,R,1> result;
+	ZMatrix<E,R,1> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t r0 = 0; r0 < R; ++r0)
@@ -264,9 +263,9 @@ Matrix<E,R,1> sCross(const Matrix<E,R,1>& i0, const Matrix<E,R,1>& i1)
 #pragma mark * sCross (row vector)
 
 template <class E, size_t C>
-Matrix<E,1,C> sCross(const Matrix<E,1,C>& i0, const Matrix<E,1,C>& i1)
+ZMatrix<E,1,C> sCross(const ZMatrix<E,1,C>& i0, const ZMatrix<E,1,C>& i1)
 	{
-	Matrix<E,1,C> result;
+	ZMatrix<E,1,C> result;
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t c0 = 0; c0 < C; ++c0)
@@ -289,9 +288,9 @@ Matrix<E,1,C> sCross(const Matrix<E,1,C>& i0, const Matrix<E,1,C>& i1)
 #pragma mark * sIdentity
 
 template <class E, size_t Dim>
-Matrix<E,Dim,Dim> sIdentity()
+ZMatrix<E,Dim,Dim> sIdentity()
 	{
-	Matrix<E,Dim,Dim> result;
+	ZMatrix<E,Dim,Dim> result;
 	for (size_t x = 0; x < Dim; ++x)
 		result.fE[x][x] = E(1);
 	return result;
@@ -306,9 +305,9 @@ Mat sIdentity()
 #pragma mark * sTransposed
 
 template <class E, size_t R, size_t C>
-Matrix<E,C,R> sTransposed(const Matrix<E,R,C>& iMat)
+ZMatrix<E,C,R> sTransposed(const ZMatrix<E,R,C>& iMat)
 	{
-	Matrix<E,C,R> result;
+	ZMatrix<E,C,R> result;
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
@@ -319,15 +318,28 @@ Matrix<E,C,R> sTransposed(const Matrix<E,R,C>& iMat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sLength (row vector)
+#pragma mark * sMagSquared (column vector)
+
+template <class E, size_t R>
+E sMagSquared(const ZMatrix<E,R,1>& iVec)
+	{
+	E result = 0;
+	for (size_t r = 0; r < R; ++r)
+		result += iVec.fE[r][0] * iVec.fE[r][0];
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sMagSquared (row vector)
 
 template <class E, size_t C>
-E sLength(const Matrix<E,1,C>& iVec)
+E sMagSquared(const ZMatrix<E,1,C>& iVec)
 	{
 	E result = 0;
 	for (size_t c = 0; c < C; ++c)
-		result += iVec[0][c] * iVec[0][c];
-	return sqrt(result);
+		result += iVec.fE[0][c] * iVec.fE[0][c];
+	return result;
 	}
 
 // =================================================================================================
@@ -335,23 +347,26 @@ E sLength(const Matrix<E,1,C>& iVec)
 #pragma mark * sLength (column vector)
 
 template <class E, size_t R>
-E sLength(const Matrix<E,R,1>& iVec)
-	{
-	E result = 0;
-	for (size_t r = 0; r < R; ++r)
-		result += iVec[r][0] * iVec[r][0];
-	return sqrt(result);
-	}
+E sLength(const ZMatrix<E,R,1>& iVec)
+	{ return sqrt(sMagSquared(iVec)); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sLength (row vector)
+
+template <class E, size_t C>
+E sLength(const ZMatrix<E,1,C>& iVec)
+	{ return sqrt(sMagSquared(iVec)); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sNormalized (row vector)
 
 template <class E, size_t C>
-E sNormalized(const Matrix<E,1,C>& iVec)
+E sNormalized(const ZMatrix<E,1,C>& iVec)
 	{
 	const E length = sLength(iVec);
-	Matrix<E,1,C> result;
+	ZMatrix<E,1,C> result;
 	for (size_t c = 0; c < C; ++c)
 		result = iVec[0][c] / length;
 	return result;
@@ -362,10 +377,10 @@ E sNormalized(const Matrix<E,1,C>& iVec)
 #pragma mark * sNormalized (column vector)
 
 template <class E, size_t R>
-E sNormalized(const Matrix<E,R,1>& iVec)
+E sNormalized(const ZMatrix<E,R,1>& iVec)
 	{
 	const E length = sLength(iVec);
-	Matrix<E,R,1> result;
+	ZMatrix<E,R,1> result;
 	for (size_t r = 0; r < R; ++r)
 		result = iVec[r][0] / length;
 	return result;
@@ -376,9 +391,9 @@ E sNormalized(const Matrix<E,R,1>& iVec)
 #pragma mark * sApply (binary function)
 
 template <class Fun, class E, size_t R, size_t C>
-Matrix<E,R,C> sApply(Fun iFun, const Matrix<E,R,C>& i0, const Matrix<E,R,C>& i1)
+ZMatrix<E,R,C> sApply(Fun iFun, const ZMatrix<E,R,C>& i0, const ZMatrix<E,R,C>& i1)
 	{
-	Matrix<E,R,C> result;
+	ZMatrix<E,R,C> result;
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
@@ -392,9 +407,9 @@ Matrix<E,R,C> sApply(Fun iFun, const Matrix<E,R,C>& i0, const Matrix<E,R,C>& i1)
 #pragma mark * sApply (unary function)
 
 template <class Fun, class E, size_t R, size_t C>
-Matrix<E,R,C> sApply(Fun iFun, const Matrix<E,R,C>& iMat)
+ZMatrix<E,R,C> sApply(Fun iFun, const ZMatrix<E,R,C>& iMat)
 	{
-	Matrix<E,R,C> result;
+	ZMatrix<E,R,C> result;
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
@@ -408,13 +423,13 @@ Matrix<E,R,C> sApply(Fun iFun, const Matrix<E,R,C>& iMat)
 #pragma mark * sNonZero
 
 template <class E, size_t R, size_t C>
-Matrix<E,R,C> sNonZero(const Matrix<E,R,C>& iMat)
+ZMatrix<E,R,C> sNonZero(const ZMatrix<E,R,C>& iMat)
 	{
-	Matrix<E,R,C> result;
+	ZMatrix<E,R,C> result;
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			result.fE[4][c] = iMat.fE[r][c] ? E(1) : E(0);
+			result.fE[r][c] = iMat.fE[r][c] ? E(1) : E(0);
 		}
 	return result;
 	}
@@ -424,9 +439,9 @@ Matrix<E,R,C> sNonZero(const Matrix<E,R,C>& iMat)
 #pragma mark * Multiplication (aka composition)
 
 template <class E, size_t RL, size_t Common, size_t CR>
-Matrix<E,RL,CR> operator*(const Matrix<E,RL,Common>& iLeft, const Matrix<E,Common,CR>& iRight)
+ZMatrix<E,RL,CR> operator*(const ZMatrix<E,RL,Common>& iLeft, const ZMatrix<E,Common,CR>& iRight)
 	{
-	Matrix<E,RL,CR> result;
+	ZMatrix<E,RL,CR> result;
 	for (size_t r = 0; r < RL; ++r)
 		{
 		for (size_t c = 0; c < CR; ++c)
@@ -439,7 +454,7 @@ Matrix<E,RL,CR> operator*(const Matrix<E,RL,Common>& iLeft, const Matrix<E,Commo
 	}
 
 template <class E, size_t Dim>
-Matrix<E,Dim,Dim>& operator*=(Matrix<E,Dim,Dim>& ioLeft, const Matrix<E,Dim,Dim>& iRight)
+ZMatrix<E,Dim,Dim>& operator*=(ZMatrix<E,Dim,Dim>& ioLeft, const ZMatrix<E,Dim,Dim>& iRight)
 	{ return ioLeft = ioLeft * iRight; }
 
 // =================================================================================================
@@ -447,9 +462,9 @@ Matrix<E,Dim,Dim>& operator*=(Matrix<E,Dim,Dim>& ioLeft, const Matrix<E,Dim,Dim>
 #pragma mark * Element-by-element multiplication
 
 template <class E, size_t R, size_t C>
-Matrix<E,R,C> sTimes(const Matrix<E,R,C>& iLeft, const Matrix<E,R,C>& iRight)
+ZMatrix<E,R,C> sTimes(const ZMatrix<E,R,C>& iLeft, const ZMatrix<E,R,C>& iRight)
 	{
-	Matrix<E,R,C> result;
+	ZMatrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -463,9 +478,9 @@ Matrix<E,R,C> sTimes(const Matrix<E,R,C>& iLeft, const Matrix<E,R,C>& iRight)
 #pragma mark * Addition
 
 template <class E, size_t R, size_t C>
-Matrix<E,R,C> operator+(const Matrix<E,R,C>& iLeft, const Matrix<E,R,C>& iRight)
+ZMatrix<E,R,C> operator+(const ZMatrix<E,R,C>& iLeft, const ZMatrix<E,R,C>& iRight)
 	{
-	Matrix<E,R,C> result;
+	ZMatrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -475,7 +490,7 @@ Matrix<E,R,C> operator+(const Matrix<E,R,C>& iLeft, const Matrix<E,R,C>& iRight)
 	}
 
 template <class E, size_t R, size_t C>
-Matrix<E,R,C>& operator+=(Matrix<E,R,C>& ioLeft, const Matrix<E,R,C>& iRight)
+ZMatrix<E,R,C>& operator+=(ZMatrix<E,R,C>& ioLeft, const ZMatrix<E,R,C>& iRight)
 	{ return ioLeft = ioLeft + iRight; }
 
 // =================================================================================================
@@ -483,9 +498,9 @@ Matrix<E,R,C>& operator+=(Matrix<E,R,C>& ioLeft, const Matrix<E,R,C>& iRight)
 #pragma mark * Subtraction
 
 template <class E, size_t R, size_t C>
-Matrix<E,R,C> operator-(const Matrix<E,R,C>& iLeft, const Matrix<E,R,C>& iRight)
+ZMatrix<E,R,C> operator-(const ZMatrix<E,R,C>& iLeft, const ZMatrix<E,R,C>& iRight)
 	{
-	Matrix<E,R,C> result;
+	ZMatrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -495,7 +510,7 @@ Matrix<E,R,C> operator-(const Matrix<E,R,C>& iLeft, const Matrix<E,R,C>& iRight)
 	}
 
 template <class E, size_t R, size_t C>
-Matrix<E,R,C>& operator-=(Matrix<E,R,C>& ioLeft, const Matrix<E,R,C>& iRight)
+ZMatrix<E,R,C>& operator-=(ZMatrix<E,R,C>& ioLeft, const ZMatrix<E,R,C>& iRight)
 	{ return ioLeft = ioLeft - iRight; }
 
 // =================================================================================================
@@ -503,9 +518,9 @@ Matrix<E,R,C>& operator-=(Matrix<E,R,C>& ioLeft, const Matrix<E,R,C>& iRight)
 #pragma mark * Scalar multiplication
 
 template <class E, size_t R, size_t C, class T>
-Matrix<E,R,C> operator*(const Matrix<E,R,C>& iLeft, T iRight)
+ZMatrix<E,R,C> operator*(const ZMatrix<E,R,C>& iLeft, T iRight)
 	{
-	Matrix<E,R,C> result;
+	ZMatrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -515,7 +530,7 @@ Matrix<E,R,C> operator*(const Matrix<E,R,C>& iLeft, T iRight)
 	}
 
 template <class E, size_t R, size_t C, class T>
-Matrix<E,R,C>& operator*=(Matrix<E,R,C>& ioLeft, T iRight)
+ZMatrix<E,R,C>& operator*=(ZMatrix<E,R,C>& ioLeft, T iRight)
 	{ return ioLeft = ioLeft * iRight; }
 
 // =================================================================================================
@@ -523,9 +538,9 @@ Matrix<E,R,C>& operator*=(Matrix<E,R,C>& ioLeft, T iRight)
 #pragma mark * Scalar division
 
 template <class E, size_t R, size_t C, class T>
-Matrix<E,R,C> operator/(const Matrix<E,R,C>& iLeft, T iRight)
+ZMatrix<E,R,C> operator/(const ZMatrix<E,R,C>& iLeft, T iRight)
 	{
-	Matrix<E,R,C> result;
+	ZMatrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -535,7 +550,7 @@ Matrix<E,R,C> operator/(const Matrix<E,R,C>& iLeft, T iRight)
 	}
 
 template <class E, size_t R, size_t C, class T>
-Matrix<E,R,C>& operator/=(Matrix<E,R,C>& ioLeft, T iRight)
+ZMatrix<E,R,C>& operator/=(ZMatrix<E,R,C>& ioLeft, T iRight)
 	{ return ioLeft = ioLeft / E(iRight); }
 
 // =================================================================================================
@@ -543,9 +558,9 @@ Matrix<E,R,C>& operator/=(Matrix<E,R,C>& ioLeft, T iRight)
 #pragma mark * Scalar addition
 
 template <class E, size_t R, size_t C, class T>
-Matrix<E,R,C> operator+(const Matrix<E,R,C>& iLeft, T iRight)
+ZMatrix<E,R,C> operator+(const ZMatrix<E,R,C>& iLeft, T iRight)
 	{
-	Matrix<E,R,C> result;
+	ZMatrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -555,7 +570,7 @@ Matrix<E,R,C> operator+(const Matrix<E,R,C>& iLeft, T iRight)
 	}
 
 template <class E, size_t R, size_t C, class T>
-Matrix<E,R,C>& operator+=(Matrix<E,R,C>& ioLeft, T iRight)
+ZMatrix<E,R,C>& operator+=(ZMatrix<E,R,C>& ioLeft, T iRight)
 	{ return ioLeft = ioLeft + iRight; }
 
 // =================================================================================================
@@ -563,9 +578,9 @@ Matrix<E,R,C>& operator+=(Matrix<E,R,C>& ioLeft, T iRight)
 #pragma mark * Scalar subtraction
 
 template <class E, size_t R, size_t C, class T>
-Matrix<E,R,C> operator-(const Matrix<E,R,C>& iLeft, T iRight)
+ZMatrix<E,R,C> operator-(const ZMatrix<E,R,C>& iLeft, T iRight)
 	{
-	Matrix<E,R,C> result;
+	ZMatrix<E,R,C> result;
 	for (size_t r = 0; r < R; ++r)
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -575,7 +590,7 @@ Matrix<E,R,C> operator-(const Matrix<E,R,C>& iLeft, T iRight)
 	}
 
 template <class E, size_t R, size_t C, class T>
-Matrix<E,R,C>& operator-=(Matrix<E,R,C>& ioLeft, T iRight)
+ZMatrix<E,R,C>& operator-=(ZMatrix<E,R,C>& ioLeft, T iRight)
 	{ return ioLeft = ioLeft - iRight; }
 
 // =================================================================================================
@@ -583,9 +598,9 @@ Matrix<E,R,C>& operator-=(Matrix<E,R,C>& ioLeft, T iRight)
 #pragma mark * sScale
 
 template <class E, size_t Dim>
-Matrix<E,Dim,Dim> sScale(const Matrix<E,Dim,1>& iVec)
+ZMatrix<E,Dim,Dim> sScale(const ZMatrix<E,Dim,1>& iVec)
 	{
-	Matrix<E,Dim,Dim> result;
+	ZMatrix<E,Dim,Dim> result;
 	for (size_t x = 0; x < Dim; ++x)
 		result.fE[x][x] = iVec.fE[x][0];
 	return result;
@@ -596,15 +611,14 @@ Matrix<E,Dim,Dim> sScale(const Matrix<E,Dim,1>& iVec)
 #pragma mark * sTranslate
 
 template <class E, size_t Dim>
-Matrix<E,Dim+1,Dim+1> sTranslate(const Matrix<E,Dim,1>& iVec)
+ZMatrix<E,Dim+1,Dim+1> sTranslate(const ZMatrix<E,Dim,1>& iVec)
 	{
-	Matrix<E,Dim+1,Dim+1> result = sIdentity<E,Dim+1>();
+	ZMatrix<E,Dim+1,Dim+1> result = sIdentity<E,Dim+1>();
 	for (size_t x = 0; x < Dim; ++x)
 		result.fE[Dim][x] = iVec.fE[x][0];
 	return result;
 	}
 
-} // namespace ZGameEngine
 } // namespace ZooLib
 
-#endif // __ZGameEngine_Matrix__
+#endif // __ZMatrix__
