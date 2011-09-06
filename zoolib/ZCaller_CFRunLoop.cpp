@@ -46,7 +46,7 @@ ZRef<ZCaller_CFRunLoop> ZCaller_CFRunLoop::sMain()
 		#else
 			ZRef<ZCaller_CFRunLoop> theCaller = new ZCaller_CFRunLoop(::CFRunLoopGetMain());
 		#endif
-		spCaller.AtomicSetIfNull(theCaller.Get());
+		spCaller.AtomicCAS(nullptr, theCaller.Get());
 		}
 	return spCaller;
 	}
