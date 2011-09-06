@@ -88,10 +88,10 @@ struct ZRectPOD
 		}
 
 	bool Contains(int32 h, int32 v) const
-		{ return h >= left && h < right && v >= top && h < bottom; }
+		{ return h >= left && h < right && v >= top && v < bottom; }
 
 	bool Contains(ZPointPOD p) const
-		{ return p.h >= left && p.h < right && p.v >= top && p.h < bottom; }
+		{ return p.h >= left && p.h < right && p.v >= top && p.v < bottom; }
 
 	bool IsEmpty() const
 		{ return left >= right || top >= bottom; }
