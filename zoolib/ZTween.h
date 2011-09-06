@@ -203,9 +203,9 @@ public:
 // From ZTween
 	virtual Val ValAt(double iTime)
 		{
-		if (iTime < 0)
+		if (iTime <= 0)
 			{
-			return f0->ValAt(0);
+			return f0->ValAt(iTime);
 			}
 		else
 			{

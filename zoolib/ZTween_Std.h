@@ -71,24 +71,24 @@ private:
 #pragma mark * sTween_OneMinus
 
 template <class Val>
-Val sFun_OneMinus(Val iVal)
+Val sTweenFun_OneMinus(Val iVal)
 	{ return 1 - iVal; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_OneMinus(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<Val,Val,sFun_OneMinus>(iTween); }
+	{ return new ZTween_Filter_Fun<Val,Val,sTweenFun_OneMinus>(iTween); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_SawTooth
 
 template <class Val>
-Val sFun_SawTooth(double iTime)
+Val sTweenFun_SawTooth(double iTime)
 	{ return sMinMax(0.0, iTime, 1.0); }	
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_SawTooth()
-	{ return new ZTween_Fun<Val,sFun_SawTooth>; }
+	{ return new ZTween_Fun<Val,sTweenFun_SawTooth>; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_SawTooth(double iDuration)
@@ -99,12 +99,12 @@ ZRef<ZTween<Val> > sTween_SawTooth(double iDuration)
 #pragma mark * sTween_Triangle
 
 template <class Val>
-Val sFun_Triangle(double iTime)
+Val sTweenFun_Triangle(double iTime)
 	{ return 1 - fabs(sMinMax(0.0, iTime, 1.0) * 2 - 1); }	
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Triangle()
-	{ return new ZTween_Fun<Val,sFun_Triangle>; }
+	{ return new ZTween_Fun<Val,sTweenFun_Triangle>; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Triangle(double iDuration)
@@ -115,12 +115,12 @@ ZRef<ZTween<Val> > sTween_Triangle(double iDuration)
 #pragma mark * sTween_Square
 
 template <class Val>
-Val sFun_Square(double iTime)
+Val sTweenFun_Square(double iTime)
 	{ return iTime < 0.5 ? 0.0 : 1.0; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Square()
-	{ return new ZTween_Fun<Val,sFun_Square>; }
+	{ return new ZTween_Fun<Val,sTweenFun_Square>; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Square(double iDuration)
@@ -131,12 +131,12 @@ ZRef<ZTween<Val> > sTween_Square(double iDuration)
 #pragma mark * sTween_Sin
 
 template <class Val>
-Val sFun_Sin(double iTime)
+Val sTweenFun_Sin(double iTime)
 	{ return sin(sMinMax(0.0, iTime, 1.0) * M_PI); }	
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Sin()
-	{ return new ZTween_Fun<Val,sFun_Sin>; }
+	{ return new ZTween_Fun<Val,sTweenFun_Sin>; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Sin(double iDuration)
@@ -147,12 +147,12 @@ ZRef<ZTween<Val> > sTween_Sin(double iDuration)
 #pragma mark * sTween_Cos
 
 template <class Val>
-Val sFun_Cos(double iTime)
+Val sTweenFun_Cos(double iTime)
 	{ return cos(sMinMax(0.0, iTime, 1.0) * M_PI); }	
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Cos()
-	{ return new ZTween_Fun<Val,sFun_Cos>; }
+	{ return new ZTween_Fun<Val,sTweenFun_Cos>; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Cos(double iDuration)
