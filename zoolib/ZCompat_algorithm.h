@@ -28,4 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <algorithm>
 #endif
 
+namespace ZooLib {
+
+template <class T>
+const T& sMinMax(const T& iMin, const T& iVal, const T& iMax)
+	{ return std::min(std::max(iMin, iVal), iMax); }	
+
+} // namespace ZooLib
+
 #endif // __ZCompat_algorithm__
