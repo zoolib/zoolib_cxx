@@ -188,7 +188,7 @@ public:
 	O* StaticCast() const
 		{ return static_cast<O*>(fP); }
 
-	bool AtomicCompareAndSwap(T* iPrior, T* iNew)
+	bool AtomicCAS(T* iPrior, T* iNew)
 		{
 		if (not ZAtomic_CompareAndSwapPtr(&fP, iPrior, iNew))
 			return false;
@@ -197,8 +197,15 @@ public:
 		return true;
 		}
 
-	bool AtomicSetIfNull(T* iNew)
-		{ return this->AtomicCompareAndSwap(0, iNew); }
+	bool CAS(T* iPrior, T* iNew)
+		{
+		if (fP != iPrior)
+			return false;
+		fP = iNew;
+		spRetain(iNew);
+		spRelease(iPrior);
+		return true;
+		}
 
 	static T* sCFRetain(T* iP)
 		{
@@ -377,6 +384,25 @@ public:
 	template <class O>
 	O StaticCast() const
 		{ return static_cast<O>(fP); }
+
+	bool AtomicCAS(T* iPrior, T* iNew)
+		{
+		if (not ZAtomic_CompareAndSwapPtr(&fP, iPrior, iNew))
+			return false;
+		spRetain(iNew);
+		spRelease(iPrior);
+		return true;
+		}
+
+	bool CAS(T* iPrior, T* iNew)
+		{
+		if (fP != iPrior)
+			return false;
+		fP = iNew;
+		spRetain(iNew);
+		spRelease(iPrior);
+		return true;
+		}
 
 	static T* sCFRetain(T* iP)
 		{
