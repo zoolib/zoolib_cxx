@@ -120,6 +120,18 @@ ZMatrix<Val,4,4> sScale(Val x, Val y, Val z)
 	return result;
 	}
 
+template <class Val>
+ZMatrix<Val,4,4> sScaleX(Val x)
+	{ return sScale<Val>(x, 0, 0); }
+
+template <class Val>
+ZMatrix<Val,4,4> sScaleY(Val y)
+	{ return sScale<Val>(0, y, 0); }
+
+template <class Val>
+ZMatrix<Val,4,4> sScaleZ(Val z)
+	{ return sScale<Val>(0, 0, z); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTranslate
