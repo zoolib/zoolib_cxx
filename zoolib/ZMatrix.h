@@ -363,12 +363,12 @@ E sLength(const ZMatrix<E,1,C>& iVec)
 #pragma mark * sNormalized (row vector)
 
 template <class E, size_t C>
-E sNormalized(const ZMatrix<E,1,C>& iVec)
+ZMatrix<E,1,C> sNormalized(const ZMatrix<E,1,C>& iVec)
 	{
 	const E length = sLength(iVec);
 	ZMatrix<E,1,C> result;
 	for (size_t c = 0; c < C; ++c)
-		result = iVec[0][c] / length;
+		result.fE[0][c] = iVec.fE[0][c] / length;
 	return result;
 	}
 
@@ -377,12 +377,12 @@ E sNormalized(const ZMatrix<E,1,C>& iVec)
 #pragma mark * sNormalized (column vector)
 
 template <class E, size_t R>
-E sNormalized(const ZMatrix<E,R,1>& iVec)
+ZMatrix<E,R,1> sNormalized(const ZMatrix<E,R,1>& iVec)
 	{
 	const E length = sLength(iVec);
 	ZMatrix<E,R,1> result;
 	for (size_t r = 0; r < R; ++r)
-		result = iVec[r][0] / length;
+		result.fE[r][0] = iVec.fE[r][0] / length;
 	return result;
 	}
 
