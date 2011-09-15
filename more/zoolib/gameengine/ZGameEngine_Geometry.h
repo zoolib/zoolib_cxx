@@ -117,20 +117,21 @@ ZMatrix<Val,4,4> sScale(Val x, Val y, Val z)
 	result[0][0] = x;
 	result[1][1] = y;
 	result[2][2] = z;
+	result[3][3] = 1;
 	return result;
 	}
 
 template <class Val>
 ZMatrix<Val,4,4> sScaleX(Val x)
-	{ return sScale<Val>(x, 0, 0); }
+	{ return sScale<Val>(x, 1, 1); }
 
 template <class Val>
 ZMatrix<Val,4,4> sScaleY(Val y)
-	{ return sScale<Val>(0, y, 0); }
+	{ return sScale<Val>(1, y, 1); }
 
 template <class Val>
 ZMatrix<Val,4,4> sScaleZ(Val z)
-	{ return sScale<Val>(0, 0, z); }
+	{ return sScale<Val>(1, 1, z); }
 
 // =================================================================================================
 #pragma mark -
