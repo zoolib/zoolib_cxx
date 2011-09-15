@@ -34,11 +34,13 @@ namespace ZooLib {
 #pragma mark * sCallFuture
 
 template <class T>
-void sCallWithPromise_T(ZRef<ZPromise<ZQ<T> > > iPromise, ZRef<ZCallable<T(void)> > iCallable)
+void sCallWithPromise_T
+	(const ZRef<ZPromise<ZQ<T> > >& iPromise, const ZRef<ZCallable<T(void)> >& iCallable)
 	{ iPromise->Set(sQCall(iCallable)); }
 
 template <class T>
-ZRef<ZFuture<ZQ<T> > > sCallFuture(ZRef<ZCaller> iCaller, ZRef<ZCallable<T(void)> > iCallable)
+ZRef<ZFuture<ZQ<T> > > sCallFuture
+	(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<T(void)> >& iCallable)
 	{
 	ZRef<ZPromise<ZQ<T> > > thePromise = new ZPromise<ZQ<T> >;
 	if (iCaller)
