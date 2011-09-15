@@ -161,15 +161,17 @@ ZCog<Param> sCogFun_Either(const ZCog<Param>& iSelf, Param iParam,
 	ZCog<Param> iCog0, ZCog<Param> iCog1);
 
 template <class Param>
-ZCog<Param> sCog_Either(const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
+ZCog<Param> sCog_Either
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
-	if (iCog0)
+	if (iCallable0)
 		{
-		if (iCog1)
-			return sBindR(sCallable(sCogFun_Either<Param>), iCog0, iCog1);
-		return iCog0;
+		if (iCallable1)
+			return sBindR(sCallable(sCogFun_Either<Param>), iCallable0, iCallable1);
+		return iCallable0;
 		}
-	return iCog1;
+	return iCallable1;
 	}
 
 template <class Param>
@@ -210,10 +212,12 @@ ZCog<Param> sCogFun_Both(const ZCog<Param>& iSelf, Param iParam,
 	ZCog<Param> iCog0, ZCog<Param> iCog1);
 
 template <class Param>
-ZCog<Param> sCog_Both(const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
+ZCog<Param> sCog_Both
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
-	if (iCog0 && iCog1)
-		return sBindR(sCallable(sCogFun_Both<Param>), iCog0, iCog1);
+	if (iCallable0 && iCallable1)
+		return sBindR(sCallable(sCogFun_Both<Param>), iCallable0, iCallable1);
 	return null;
 	}
 
@@ -255,15 +259,17 @@ ZCog<Param> sCogFun_Each(const ZCog<Param>& iSelf, Param iParam,
 	ZCog<Param> iCog0, ZCog<Param> iCog1);
 
 template <class Param>
-ZCog<Param> sCog_Each(const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
+ZCog<Param> sCog_Each
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
-	if (iCog0)
+	if (iCallable0)
 		{
-		if (iCog1)
-			return sBindR(sCallable(sCogFun_Each<Param>), iCog0, iCog1);
-		return iCog0;
+		if (iCallable1)
+			return sBindR(sCallable(sCogFun_Each<Param>), iCallable0, iCallable1);
+		return iCallable0;
 		}
-	return iCog1;
+	return iCallable1;
 	}
 
 template <class Param>
@@ -392,23 +398,23 @@ ZCog<Param> sCog_DelayFor(double iDelay)
 
 template <class Param>
 ZCog<Param> sCog_StartAt(ZTime iSystemTime,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCog)
-	{ return sCog_DelayUntil<Param>(iSystemTime) | iCog; }
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
+	{ return sCog_DelayUntil<Param>(iSystemTime) | iCallable; }
 
 template <class Param>
 ZCog<Param> sCog_StopAt(ZTime iSystemTime,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCog)
-	{ return sCog_DelayUntil<Param>(iSystemTime) * iCog; }
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
+	{ return sCog_DelayUntil<Param>(iSystemTime) * iCallable; }
 
 template <class Param>
 ZCog<Param> sCog_StartAfter(double iDelay,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCog)
-	{ return sCog_DelayFor<Param>(iDelay) | iCog; }
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >iCallable)
+	{ return sCog_DelayFor<Param>(iDelay) | iCallable; }
 
 template <class Param>
 ZCog<Param> sCog_StopAfter(double iDelay,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCog)
-	{ return sCog_DelayFor<Param>(iDelay) * iCog; }
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >iCallable)
+	{ return sCog_DelayFor<Param>(iDelay) * iCallable; }
 
 } // namespace ZooLib
 
