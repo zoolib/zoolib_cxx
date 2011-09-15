@@ -44,7 +44,7 @@ ZCallScheduler* ZCallScheduler::sGet()
 	return spScheduler;
 	}
 
-void ZCallScheduler::Cancel(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable)
+void ZCallScheduler::Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
 	{
 	using namespace ZUtil_STL;
 
@@ -61,14 +61,14 @@ void ZCallScheduler::Cancel(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallabl
 	}
 
 void ZCallScheduler::NextCallAt
-	(ZTime iSystemTime, ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable)
+	(ZTime iSystemTime, const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
 	{ this->pNextCallAt(iSystemTime, Job(iCaller, iCallable)); }
 
 void ZCallScheduler::NextCallIn
-	(double iInterval, ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable)
+	(double iInterval, const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
 	{ this->pNextCallAt(ZTime::sSystem() + iInterval, Job(iCaller, iCallable)); }
 
-bool ZCallScheduler::IsAwake(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable)
+bool ZCallScheduler::IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
 	{
 	ZAcqMtxR acq(fMtxR);
 

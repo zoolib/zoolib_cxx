@@ -36,7 +36,7 @@ class ZCallable_DelayFor
 :	public ZCallable<R(void)>
 	{
 public:
-	ZCallable_DelayFor(double iInterval, ZRef<ZCallable<R(void)> > iCallable)
+	ZCallable_DelayFor(double iInterval, const ZRef<ZCallable<R(void)> >& iCallable)
 	:	fInterval(iInterval)
 	,	fCallable(iCallable)
 		{}
@@ -61,7 +61,7 @@ private:
 
 template <class R>
 ZRef<ZCallable<R(void)> >
-sCallable_DelayFor(double iInterval, ZRef<ZCallable<R(void)> > iCallable)
+sCallable_DelayFor(double iInterval, const ZRef<ZCallable<R(void)> >& iCallable)
 	{ return new ZCallable_DelayFor<R>(iInterval, iCallable); }
 
 // =================================================================================================
@@ -73,7 +73,7 @@ class ZCallable_DelayUntil
 :	public ZCallable<R(void)>
 	{
 public:
-	ZCallable_DelayUntil(ZTime iSystemTime, ZRef<ZCallable<R(void)> > iCallable)
+	ZCallable_DelayUntil(ZTime iSystemTime, const ZRef<ZCallable<R(void)> >& iCallable)
 	:	fSystemTime(iSystemTime)
 	,	fCallable(iCallable)
 		{}
@@ -97,7 +97,7 @@ private:
 
 template <class R>
 ZRef<ZCallable<R(void)> >
-sCallable_DelayUntil(ZTime iSystemTime, ZRef<ZCallable<R(void)> > iCallable)
+sCallable_DelayUntil(ZTime iSystemTime, const ZRef<ZCallable<R(void)> >& iCallable)
 	{ return new ZCallable_DelayUntil<R>(iSystemTime, iCallable); }
 
 } // namespace ZooLib

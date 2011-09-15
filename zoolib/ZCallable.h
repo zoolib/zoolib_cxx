@@ -1360,7 +1360,7 @@ public:
 
 template <class R>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(void)> > iCallable)
+	(const ZRef<ZCallable<R(void)> >& iCallable)
 	{
 	if (iCallable)
 		return iCallable->QCall();
@@ -1370,7 +1370,7 @@ ZQ<R> sQCall
 template <class R>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(void)> > iCallable)
+	const ZRef<ZCallable<R(void)> >& iCallable)
 	{
 	if (iCallable)
 		{
@@ -1382,7 +1382,7 @@ R sDCall
 
 template <class R>
 R sCall
-	(ZRef<ZCallable<R(void)> > iCallable)
+	(const ZRef<ZCallable<R(void)> >& iCallable)
 	{
 	if (iCallable)
 		{
@@ -1399,7 +1399,7 @@ R sCall
 template <class R,
 	class P0>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0)> > iCallable,
+	(const ZRef<ZCallable<R(P0)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0)
 	{
 	if (iCallable)
@@ -1411,7 +1411,7 @@ template <class R,
 	class P0>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0)> > iCallable,
+	const ZRef<ZCallable<R(P0)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0)
 	{
 	if (iCallable)
@@ -1425,7 +1425,7 @@ R sDCall
 template <class R,
 	class P0>
 R sCall
-	(ZRef<ZCallable<R(P0)> > iCallable,
+	(const ZRef<ZCallable<R(P0)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0)
 	{
 	if (iCallable)
@@ -1443,7 +1443,7 @@ R sCall
 template <class R,
 	class P0, class P1>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1)
 	{
@@ -1456,7 +1456,7 @@ template <class R,
 	class P0, class P1>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1)
 	{
@@ -1471,7 +1471,7 @@ R sDCall
 template <class R,
 	class P0, class P1>
 R sCall
-	(ZRef<ZCallable<R(P0,P1)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1)
 	{
@@ -1490,7 +1490,7 @@ R sCall
 template <class R,
 	class P0, class P1, class P2>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2)
@@ -1504,7 +1504,7 @@ template <class R,
 	class P0, class P1, class P2>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2)
@@ -1520,7 +1520,7 @@ R sDCall
 template <class R,
 	class P0, class P1, class P2>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2)
@@ -1540,7 +1540,7 @@ R sCall
 template <class R,
 	class P0, class P1, class P2, class P3>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1555,7 +1555,7 @@ template <class R,
 	class P0, class P1, class P2, class P3>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1572,7 +1572,7 @@ R sDCall
 template <class R,
 	class P0, class P1, class P2, class P3>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1594,7 +1594,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1611,7 +1611,7 @@ template <class R,
 	class P4>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1630,7 +1630,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1653,7 +1653,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1671,7 +1671,7 @@ template <class R,
 	class P4, class P5>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1691,7 +1691,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1715,7 +1715,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1734,7 +1734,7 @@ template <class R,
 	class P4, class P5, class P6>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1755,7 +1755,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1780,7 +1780,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1800,7 +1800,7 @@ template <class R,
 	class P4, class P5, class P6, class P7>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1822,7 +1822,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1849,7 +1849,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1871,7 +1871,7 @@ template <class R,
 	class P8>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1895,7 +1895,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1923,7 +1923,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1946,7 +1946,7 @@ template <class R,
 	class P8, class P9>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -1971,7 +1971,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2000,7 +2000,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2024,7 +2024,7 @@ template <class R,
 	class P8, class P9, class PA>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2050,7 +2050,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2080,7 +2080,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2105,7 +2105,7 @@ template <class R,
 	class P8, class P9, class PA, class PB>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2132,7 +2132,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2164,7 +2164,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2191,7 +2191,7 @@ template <class R,
 	class PC>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2220,7 +2220,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2253,7 +2253,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2281,7 +2281,7 @@ template <class R,
 	class PC, class PD>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2311,7 +2311,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2345,7 +2345,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2374,7 +2374,7 @@ template <class R,
 	class PC, class PD, class PE>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2406,7 +2406,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2442,7 +2442,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
 ZQ<R> sQCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2472,7 +2472,7 @@ template <class R,
 	class PC, class PD, class PE, class PF>
 R sDCall
 	(typename ZCallableUtil::VT<R>::P iDefault,
-	ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> > iCallable,
+	const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,
@@ -2505,7 +2505,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
 R sCall
-	(ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> > iCallable,
+	(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >& iCallable,
 	typename ZCallableUtil::VT<P0>::P i0,
 	typename ZCallableUtil::VT<P1>::P i1,
 	typename ZCallableUtil::VT<P2>::P i2,

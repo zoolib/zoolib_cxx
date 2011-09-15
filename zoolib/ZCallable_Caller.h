@@ -44,7 +44,7 @@ class Callable<R(void)>
 public:
 	typedef R (Signature)();
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -57,8 +57,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -73,7 +73,7 @@ class Callable<R(P0)>
 public:
 	typedef R (Signature)(P0);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -86,8 +86,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -102,7 +102,7 @@ class Callable<R(P0,P1)>
 public:
 	typedef R (Signature)(P0,P1);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -115,8 +115,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -131,7 +131,7 @@ class Callable<R(P0,P1,P2)>
 public:
 	typedef R (Signature)(P0,P1,P2);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -144,8 +144,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -160,7 +160,7 @@ class Callable<R(P0,P1,P2,P3)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -173,8 +173,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -190,7 +190,7 @@ class Callable<R(P0,P1,P2,P3,P4)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -203,8 +203,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -220,7 +220,7 @@ class Callable<R(P0,P1,P2,P3,P4,P5)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -233,8 +233,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -250,7 +250,7 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -263,8 +263,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -280,7 +280,7 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -293,8 +293,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -311,7 +311,7 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -326,8 +326,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -344,7 +344,7 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -359,8 +359,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -377,7 +377,7 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -392,8 +392,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -410,7 +410,7 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -425,8 +425,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -444,7 +444,7 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -460,8 +460,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -479,7 +479,7 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -495,8 +495,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -514,7 +514,7 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -530,8 +530,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -549,7 +549,7 @@ class Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 public:
 	typedef R (Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
 
-	Callable(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
@@ -565,8 +565,8 @@ public:
 		}
 
 private:
-	ZRef<ZCaller> fCaller;
-	ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<ZCaller> fCaller;
+	const ZRef<ZCallable<Signature> > fCallable;
 	};
 
 } // namespace ZCallable_Caller
@@ -578,7 +578,7 @@ private:
 template <class Signature>
 ZRef<ZCallable<Signature> >
 sCallable_Caller
-	(ZRef<ZCaller> iCaller, ZRef<ZCallable<Signature> > iCallable)
+	(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
 	{ return new ZCallable_Caller::Callable<Signature> (iCaller, iCallable); }
 
 } // namespace ZooLib

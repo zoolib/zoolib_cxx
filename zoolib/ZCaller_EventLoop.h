@@ -41,7 +41,7 @@ public:
 	virtual ~ZCaller_EventLoop();
 
 // From ZCaller
-	virtual bool Queue(ZRef<ZCallable_Void> iCallable);
+	virtual bool Queue(const ZRef<ZCallable_Void>& iCallable);
 
 protected:
 // Called by concrete subclass

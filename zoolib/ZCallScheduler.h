@@ -40,12 +40,15 @@ class ZCallScheduler
 public:
 	static ZCallScheduler* sGet();
 
-	void Cancel(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
+	void Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
-	void NextCallAt(ZTime iSystemTime, ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
-	void NextCallIn(double iInterval, ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
+	void NextCallAt(ZTime iSystemTime,
+		const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
-	bool IsAwake(ZRef<ZCaller> iCaller, ZRef<ZCallable_Void> iCallable);
+	void NextCallIn(double iInterval,
+		const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
+
+	bool IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
 private:
 	typedef std::pair<ZRef<ZCaller>,ZRef<ZCallable_Void> > Job;

@@ -34,7 +34,7 @@ class ZCaller
 :	public ZCounted
 	{
 public:
-	virtual bool Queue(ZRef<ZCallable_Void> iCallable) = 0;
+	virtual bool Queue(const ZRef<ZCallable_Void>& iCallable) = 0;
 	};
 
 // =================================================================================================
@@ -46,7 +46,7 @@ class ZCaller_Null
 	{
 public:
 // From ZCaller
-	virtual bool Queue(ZRef<ZCallable_Void> iCallable)
+	virtual bool Queue(const ZRef<ZCallable_Void>& iCallable)
 		{ return sQCall(iCallable); }
 	};
 
