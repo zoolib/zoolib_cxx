@@ -26,23 +26,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad.h"
 
 namespace ZooLib {
+namespace ZYad_DividedValues {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadParseException_DividedValues
+#pragma mark * ParseException
 
-class ZYadParseException_DividedValues : public ZYadParseException
+class ParseException : public ZYadParseException
 	{
 public:
-	ZYadParseException_DividedValues(const std::string& iWhat);
-	ZYadParseException_DividedValues(const char* iWhat);
+	ParseException(const std::string& iWhat);
+	ParseException(const char* iWhat);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_DividedValues
-
-namespace ZYad_DividedValues {
+#pragma mark * sYadR
 
 ZRef<ZYadR> sYadR(UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ZStrimmerR> iStrimmerR);
 

@@ -21,12 +21,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZTime.h"
+#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ZYad_JSON.h"
 
 namespace ZooLib {
+namespace ZYad_JSON {
 
 using std::string;
 
@@ -92,7 +94,38 @@ type             -
 
 static void spThrowParseException(const string& iMessage)
 	{
-	throw ZYadParseException_JSON(iMessage);
+	throw ParseException(iMessage);
+	}
+
+static bool spRead_Identifier
+	(const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
+	{
+	if (oStringExact)
+		oStringExact->reserve(32);
+
+	if (oStringLC)
+		oStringLC->reserve(32);
+
+	bool gotAny = false;
+	for (;;)
+		{
+		UTF32 theCP;
+		if (not iStrimU.ReadCP(theCP))
+			break;
+		if (not ZUnicode::sIsAlphaDigit(theCP) && theCP != '_')
+			{
+			iStrimU.Unread(theCP);
+			break;
+			}
+
+		gotAny = true;
+
+		if (oStringLC)
+			*oStringLC += ZUnicode::sToLower(theCP);
+		if (oStringExact)
+			*oStringExact += theCP;
+		}
+	return gotAny;
 	}
 
 static bool spTryRead_JSONString(const ZStrimU& s, string& oString)
@@ -141,6 +174,22 @@ static bool spTryRead_JSONString(const ZStrimU& s, string& oString)
 	return false;
 	}
 
+static bool spTryRead_PropertyName(const ZStrimU& iStrimU, string& oName, bool iAllowUnquoted)
+	{
+	using namespace ZUtil_Strim;
+
+	if (sTryRead_EscapedString(iStrimU, '"', oName))
+		return true;
+
+	if (sTryRead_EscapedString(iStrimU, '\'', oName))
+		return true;
+
+	if (iAllowUnquoted && spRead_Identifier(iStrimU, nullptr, &oName))
+		return true;
+
+	return false;
+	}
+
 static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 	{
 	using namespace ZUtil_Strim;
@@ -182,7 +231,8 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 	return true;
 	}
 
-static ZRef<ZYadR> spMakeYadR_JSON(ZRef<ZStrimmerU> iStrimmerU)
+static ZRef<ZYadR> spMakeYadR_JSON
+	(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
 	{
 	using namespace ZUtil_Strim;
 
@@ -192,15 +242,15 @@ static ZRef<ZYadR> spMakeYadR_JSON(ZRef<ZStrimmerU> iStrimmerU)
 
 	if (sTryRead_CP(theStrimU, '['))
 		{
-		return new ZYadSeqR_JSON(iStrimmerU);
+		return new YadSeqR(iStrimmerU, iReadOptions);
 		}
 	else if (sTryRead_CP(theStrimU, '{'))
 		{
-		return new ZYadMapR_JSON(iStrimmerU);
+		return new YadMapR(iStrimmerU, iReadOptions);
 		}
 	else if (sTryRead_CP(theStrimU, '"'))
 		{
-		return new ZYadStrimR_JSON(iStrimmerU);
+		return new YadStrimR(iStrimmerU);
 		}
 	else
 		{
@@ -214,26 +264,26 @@ static ZRef<ZYadR> spMakeYadR_JSON(ZRef<ZStrimmerU> iStrimmerU)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadParseException_JSON
+#pragma mark * ParseException
 
-ZYadParseException_JSON::ZYadParseException_JSON(const string& iWhat)
+ParseException::ParseException(const string& iWhat)
 :	ZYadParseException_Std(iWhat)
 	{}
 
-ZYadParseException_JSON::ZYadParseException_JSON(const char* iWhat)
+ParseException::ParseException(const char* iWhat)
 :	ZYadParseException_Std(iWhat)
 	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStrimR_JSON
+#pragma mark * YadStrimR
 
-ZYadStrimR_JSON::ZYadStrimR_JSON(ZRef<ZStrimmerU> iStrimmerU)
+YadStrimR::YadStrimR(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU),
 	fStrimR(iStrimmerU->GetStrimU(), '"')
 	{}
 
-void ZYadStrimR_JSON::Finish()
+void YadStrimR::Finish()
 	{
 	using namespace ZUtil_Strim;
 	fStrimR.SkipAll();
@@ -241,18 +291,19 @@ void ZYadStrimR_JSON::Finish()
 		throw ParseException("Missing string delimiter");
 	}
 
-const ZStrimR& ZYadStrimR_JSON::GetStrimR()
+const ZStrimR& YadStrimR::GetStrimR()
 	{ return fStrimR; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadSeqR_JSON
+#pragma mark * YadSeqR
 
-ZYadSeqR_JSON::ZYadSeqR_JSON(ZRef<ZStrimmerU> iStrimmerU)
+YadSeqR::YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
 :	fStrimmerU(iStrimmerU)
+,	fReadOptions(iReadOptions)
 	{}
 
-void ZYadSeqR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void YadSeqR::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -270,23 +321,34 @@ void ZYadSeqR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 		{
 		// Must read a separator
 		if (!sTryRead_CP(theStrimU, ','))
-			spThrowParseException("Require ',' to separate array elements");
+			{
+			if (!fReadOptions.fAllowSemiColons.DGet(false) || !sTryRead_CP(theStrimU, ';'))
+				spThrowParseException("Require ',' to separate array elements");
+			}
+
 		sSkip_WSAndCPlusPlusComments(theStrimU);
+
+		if (fReadOptions.fAllowTerminators.DGet(false) && sTryRead_CP(theStrimU, ']'))
+			{
+			// The separator was actually a terminator, and we're done.
+			return;
+			}
 		}
 
-	if (!(oYadR = spMakeYadR_JSON(fStrimmerU)))
+	if (!(oYadR = spMakeYadR_JSON(fStrimmerU, fReadOptions)))
 		spThrowParseException("Expected a value");
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapR_JSON
+#pragma mark * YadMapR
 
-ZYadMapR_JSON::ZYadMapR_JSON(ZRef<ZStrimmerU> iStrimmerU)
+YadMapR::YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
 :	fStrimmerU(iStrimmerU)
+,	fReadOptions(iReadOptions)
 	{}
 
-void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -296,7 +358,7 @@ void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& 
 
 	if (sTryRead_CP(theStrimU, '}'))
 		{
-		// Reached end.
+		// Reached end, with no terminator
 		return;
 		}
 
@@ -304,19 +366,32 @@ void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& 
 		{
 		// Must read a separator
 		if (!sTryRead_CP(theStrimU, ','))
-			spThrowParseException("Require ',' to separate object elements");
+			{
+			if (!fReadOptions.fAllowSemiColons.DGet(false) || !sTryRead_CP(theStrimU, ';'))
+				spThrowParseException("Require ',' to separate object elements");
+			}
+
 		sSkip_WSAndCPlusPlusComments(theStrimU);
+
+		if (fReadOptions.fAllowTerminators.DGet(false) && sTryRead_CP(theStrimU, '}'))
+			{
+			// The separator was actually a terminator, and we're done.
+			return;
+			}
 		}
 
-	if (!spTryRead_JSONString(theStrimU, oName))
+	if (!spTryRead_PropertyName(theStrimU, oName, fReadOptions.fAllowUnquotedPropertyNames.DGet(false)))
 		spThrowParseException("Expected a member name");
 
 	sSkip_WSAndCPlusPlusComments(theStrimU);
 
 	if (!sTryRead_CP(theStrimU, ':'))
-		spThrowParseException("Expected ':' after a member name");
+		{
+		if (!fReadOptions.fAllowEquals.DGet(false) || !sTryRead_CP(theStrimU, '='))
+			spThrowParseException("Expected ':' after a member name");
+		}
 
-	if (!(oYadR = spMakeYadR_JSON(fStrimmerU)))
+	if (!(oYadR = spMakeYadR_JSON(fStrimmerU, fReadOptions)))
 		spThrowParseException("Expected value after ':'");
 	}
 
@@ -366,8 +441,6 @@ static void spWriteString(const ZStrimW& s, const ZStrimR& iStrimR)
 
 static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 	{
-	int64 asInt64;
-
 	if (false)
 		{}
 	else if (not iAny)
@@ -377,13 +450,13 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 	else if (const bool* theValue = iAny.PGet<bool>())
 		{
 		if (*theValue)
-			s.Write("true");
+			s << "true";
 		else
-			s.Write("false");
+			s << "false";
 		}
-	else if (sQCoerceInt(iAny, asInt64))
+	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
-		s.Writef("%lld", asInt64);
+		s << *theQ;
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
@@ -405,26 +478,26 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Yad_JSONWriter::SaveState
+#pragma mark * Visitor_Writer::SaveState
 
-class ZVisitor_Yad_JSONWriter::SaveState
+class Visitor_Writer::SaveState
 	{
 public:
-	SaveState(ZVisitor_Yad_JSONWriter* iVisitor);
+	SaveState(Visitor_Writer* iVisitor);
 	~SaveState();
 
-	ZVisitor_Yad_JSONWriter* fVisitor;
+	Visitor_Writer* fVisitor;
 	size_t fIndent;
 	bool fMayNeedInitialLF;
 	};
 
-ZVisitor_Yad_JSONWriter::SaveState::SaveState(ZVisitor_Yad_JSONWriter* iVisitor)
+Visitor_Writer::SaveState::SaveState(Visitor_Writer* iVisitor)
 :	fVisitor(iVisitor),
 	fIndent(fVisitor->fIndent),
 	fMayNeedInitialLF(fVisitor->fMayNeedInitialLF)
 	{}
 
-ZVisitor_Yad_JSONWriter::SaveState::~SaveState()
+Visitor_Writer::SaveState::~SaveState()
 	{
 	fVisitor->fIndent = fIndent;
 	fVisitor->fMayNeedInitialLF = fMayNeedInitialLF;
@@ -432,9 +505,9 @@ ZVisitor_Yad_JSONWriter::SaveState::~SaveState()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Yad_JSONWriter
+#pragma mark * Visitor_Writer
 
-ZVisitor_Yad_JSONWriter::ZVisitor_Yad_JSONWriter
+Visitor_Writer::Visitor_Writer
 	(size_t iIndent, const ZYadOptions& iOptions, const ZStrimW& iStrimW)
 :	fIndent(iIndent),
 	fOptions(iOptions),
@@ -442,27 +515,27 @@ ZVisitor_Yad_JSONWriter::ZVisitor_Yad_JSONWriter
 	fMayNeedInitialLF(false)
 	{}
 
-void ZVisitor_Yad_JSONWriter::Visit_YadR(const ZRef<ZYadR>& iYadR)
+void Visitor_Writer::Visit_YadR(const ZRef<ZYadR>& iYadR)
 	{
 	fStrimW << "null";
 	if (fOptions.fBreakStrings)
 		fStrimW << " /*!! Unhandled yad !!*/";
 	}
 
-void ZVisitor_Yad_JSONWriter::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
+void Visitor_Writer::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 	{ spToStrim_SimpleValue(fStrimW, iYadAtomR->AsAny()); }
 
-void ZVisitor_Yad_JSONWriter::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
+void Visitor_Writer::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
 	{
 	fStrimW << "null";
 	if (fOptions.fBreakStrings)
 		fStrimW << " /*!! ZYadStreamR not representable in JSON !!*/";
 	}
 
-void ZVisitor_Yad_JSONWriter::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
+void Visitor_Writer::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
 	{ spWriteString(fStrimW, iYadStrimR->GetStrimR()); }
 
-void ZVisitor_Yad_JSONWriter::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
+void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 	{
 	bool needsIndentation = false;
 	if (fOptions.DoIndentation())
@@ -532,7 +605,7 @@ void ZVisitor_Yad_JSONWriter::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 		}
 	}
 
-void ZVisitor_Yad_JSONWriter::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
+void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	{
 	bool needsIndentation = false;
 	if (fOptions.DoIndentation())
@@ -609,19 +682,23 @@ void ZVisitor_Yad_JSONWriter::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_JSON
+#pragma mark * sYadR and sToStrim
 
-ZRef<ZYadR> ZYad_JSON::sYadR(ZRef<ZStrimmerU> iStrimmerU)
-	{ return spMakeYadR_JSON(iStrimmerU); }
+ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU)
+	{ return spMakeYadR_JSON(iStrimmerU, ReadOptions()); }
 
-void ZYad_JSON::sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)
+ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
+	{ return spMakeYadR_JSON(iStrimmerU, iReadOptions); }
+
+void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)
 	{ sToStrim(0, ZYadOptions(), iYadR, s); }
 
-void ZYad_JSON::sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
+void sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
 	ZRef<ZYadR> iYadR, const ZStrimW& s)
 	{
-	ZVisitor_Yad_JSONWriter theWriter(iInitialIndent, iOptions, s);
+	Visitor_Writer theWriter(iInitialIndent, iOptions, s);
 	iYadR->Accept(theWriter);
 	}
 
+} // namespace ZYad_JSON
 } // namespace ZooLib

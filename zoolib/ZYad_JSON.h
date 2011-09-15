@@ -27,27 +27,40 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Std.h"
 
 namespace ZooLib {
+namespace ZYad_JSON {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadParseException_JSON
+#pragma mark * ReadOptions
 
-class ZYadParseException_JSON : public ZYadParseException_Std
+struct ReadOptions
 	{
-public:
-	ZYadParseException_JSON(const std::string& iWhat);
-	ZYadParseException_JSON(const char* iWhat);
+	ZQ<bool> fAllowUnquotedPropertyNames;
+	ZQ<bool> fAllowEquals;
+	ZQ<bool> fAllowSemiColons;
+	ZQ<bool> fAllowTerminators;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStrimR_JSON
+#pragma mark * ParseException
 
-class ZYadStrimR_JSON
+class ParseException : public ZYadParseException_Std
+	{
+public:
+	ParseException(const std::string& iWhat);
+	ParseException(const char* iWhat);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * YadStrimR
+
+class YadStrimR
 :	public ZYadStrimR
 	{
 public:
-	ZYadStrimR_JSON(ZRef<ZStrimmerU> iStrimmerU);
+	YadStrimR(ZRef<ZStrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
@@ -62,44 +75,46 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadSeqR_JSON
+#pragma mark * YadSeqR
 
-class ZYadSeqR_JSON : public ZYadSeqR_Std
+class YadSeqR : public ZYadSeqR_Std
 	{
 public:
-	ZYadSeqR_JSON(ZRef<ZStrimmerU> iStrimmerU);
+	YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions);
 
 // From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZStrimmerU> fStrimmerU;
+	const ReadOptions fReadOptions;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapR_JSON
+#pragma mark * YadMapR
 
-class ZYadMapR_JSON : public ZYadMapR_Std
+class YadMapR : public ZYadMapR_Std
 	{
 public:
-	ZYadMapR_JSON(ZRef<ZStrimmerU> iStrimmerU);
+	YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZStrimmerU> fStrimmerU;
+	const ReadOptions fReadOptions;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Yad_JSONWriter
+#pragma mark * Visitor_Writer
 
-class ZVisitor_Yad_JSONWriter : public ZVisitor_Yad
+class Visitor_Writer : public ZVisitor_Yad
 	{
 public:
-	ZVisitor_Yad_JSONWriter
+	Visitor_Writer
 		(size_t iIndent, const ZYadOptions& iOptions, const ZStrimW& iStrimW);
 
 // From ZVisitor_Yad
@@ -115,18 +130,17 @@ private:
 	friend class SaveState;
 
 	size_t fIndent;
-	ZYadOptions fOptions;
+	const ZYadOptions fOptions;
 	const ZStrimW& fStrimW;
 	bool fMayNeedInitialLF;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_JSON
-
-namespace ZYad_JSON {
+#pragma mark * sYadR and sToStrim
 
 ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU);
+ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions);
 
 void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s);
 

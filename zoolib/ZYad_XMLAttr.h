@@ -26,23 +26,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad.h"
 
 namespace ZooLib {
+namespace ZYad_XMLAttr {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadParseException_XMLAttr
+#pragma mark * ParseException
 
-class ZYadParseException_XMLAttr : public ZYadParseException
+class ParseException : public ZYadParseException
 	{
 public:
-	ZYadParseException_XMLAttr(const std::string& iWhat);
-	ZYadParseException_XMLAttr(const char* iWhat);
+	ParseException(const std::string& iWhat);
+	ParseException(const char* iWhat);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_XMLAttr
-
-namespace ZYad_XMLAttr {
+#pragma mark * sYadR
 
 ZRef<ZYadR> sYadR(ZRef<ZML::StrimmerU> iStrimmerU);
 

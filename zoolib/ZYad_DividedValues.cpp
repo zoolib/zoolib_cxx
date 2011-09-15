@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_DividedValues.h"
 
 namespace ZooLib {
+namespace ZYad_DividedValues {
 
 using std::string;
 using std::vector;
@@ -32,7 +33,7 @@ using std::vector;
 
 static void spThrowParseException(const string& iMessage)
 	{
-	throw ZYadParseException_DividedValues(iMessage);
+	throw ParseException(iMessage);
 	}
 
 static bool spReadValues(vector<string8>& oValues,
@@ -73,17 +74,15 @@ static bool spReadValues(vector<string8>& oValues,
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadParseException_DividedValues
+#pragma mark * ParseException
 
-ZYadParseException_DividedValues::ZYadParseException_DividedValues(const string& iWhat)
+ParseException::ParseException(const string& iWhat)
 :	ZYadParseException(iWhat)
 	{}
 
-ZYadParseException_DividedValues::ZYadParseException_DividedValues(const char* iWhat)
+ParseException::ParseException(const char* iWhat)
 :	ZYadParseException(iWhat)
 	{}
-
-namespace ZYad_DividedValues {
 
 // =================================================================================================
 #pragma mark -
@@ -139,5 +138,4 @@ ZRef<ZYadR> sYadR(UTF32 iDivider_Value, UTF32 iDividerLine, ZRef<ZStrimmerR> iSt
 	}
 
 } // namespace ZYad_DividedValues
-
 } // namespace ZooLib

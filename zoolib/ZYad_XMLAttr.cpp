@@ -52,6 +52,7 @@ into this:
 */
 
 namespace ZooLib {
+namespace ZYad_XMLAttr {
 
 using std::pair;
 using std::string;
@@ -62,22 +63,20 @@ using std::string;
 
 static void spThrowParseException(const string& iMessage)
 	{
-	throw ZYadParseException_XMLAttr(iMessage);
+	throw ParseException(iMessage);
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadParseException_XMLAttr
+#pragma mark * ParseException
 
-ZYadParseException_XMLAttr::ZYadParseException_XMLAttr(const string& iWhat)
+ParseException::ParseException(const string& iWhat)
 :	ZYadParseException(iWhat)
 	{}
 
-ZYadParseException_XMLAttr::ZYadParseException_XMLAttr(const char* iWhat)
+ParseException::ParseException(const char* iWhat)
 :	ZYadParseException(iWhat)
 	{}
-
-namespace ZYad_XMLAttr {
 
 // =================================================================================================
 #pragma mark -

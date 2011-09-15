@@ -65,7 +65,7 @@ public:
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
-	ERead fRead;
+	const ERead fRead;
 	ZStreamR_ASCIIStrim fStreamR_ASCIIStrim;
 	ZStreamR_Base64Decode fStreamR_Base64Decode;
 	};
@@ -89,7 +89,7 @@ public:
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
-	ERead fRead;
+	const ERead fRead;
 	};
 
 // =================================================================================================
@@ -108,7 +108,7 @@ public:
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
-	ERead fRead;
+	const ERead fRead;
 	};
 
 // =================================================================================================
@@ -127,7 +127,7 @@ public:
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
-	ERead fRead;
+	const ERead fRead;
 	};
 
 // =================================================================================================
