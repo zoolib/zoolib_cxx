@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_STL_vector__
 #include "zconfig.h"
 
+#include "zoolib/ZCompat_algorithm.h" // find
 #include "zoolib/ZDebug.h"
 
 #include <vector>
