@@ -34,7 +34,7 @@ namespace Util_Expr_Bool {
 #pragma mark -
 #pragma mark * Util_Expr_Bool
 
-typedef std::set<ZTagVal<ZRef<ZExpr_Bool>,struct Disjunction_t> > Disjunction;
+typedef std::set<ZTagVal<ZRef<ZExpr_Bool>,struct Tag_Disjunction> > Disjunction;
 typedef std::set<Disjunction> CNF;
 
 ZRef<ZExpr_Bool> sFromCNF(const CNF& iCNF);
