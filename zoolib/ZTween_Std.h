@@ -617,7 +617,10 @@ public:
 	ZTween_Fun_BackIn(Val iFactor) : fFactor(iFactor) {}
 
 	virtual Val ValAt(double iTime)
-		{ return iTime * iTime * ((fFactor + 1 ) * iTime - fFactor); }
+		{
+		iTime = sMinMax(0.0, iTime, 1.0);
+		return iTime * iTime * ((fFactor + 1 ) * iTime - fFactor);
+		}
 
 	virtual double Duration()
 		{ return 1; }
@@ -647,6 +650,7 @@ public:
 
 	virtual Val ValAt(double iTime)
 		{
+		iTime = sMinMax(0.0, iTime, 1.0);
 		iTime -= 1;
 		return iTime * iTime * ((fFactor + 1) * iTime + fFactor) + 1;
 		}

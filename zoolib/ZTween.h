@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
+#include "zoolib/ZCompat_algorithm.h" // for std::binary_function
 #include "zoolib/ZCompat_cmath.h" // for fmod
 #include "zoolib/ZRef.h"
 
@@ -30,6 +31,13 @@ namespace ZooLib {
 
 template <class Val0, class Val1>
 Val0 sCombineTweenVals(const Val0& iVal0, const Val1& iVal1);
+
+template <class Val0, class Val1>
+struct TweenCombiner : public std::binary_function<Val0, Val1, Val0>
+	{
+	Val0 operator()(const Val0& i0, const Val1& i1) const
+		{ return sCombineTweenVals<Val0,Val1>(i0, i1); }
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -117,7 +125,7 @@ private:
 #pragma mark -
 #pragma mark * sTween_Either
 
-template <class Val0, class Val1>
+template <class Val0, class Val1, class Combiner = TweenCombiner<Val0,Val1> >
 class ZTween_Either
 :	public ZTween<Val0>
 	{
@@ -129,12 +137,13 @@ public:
 
 // From ZTween
 	virtual Val0 ValAt(double iTime)
-		{ return sCombineTweenVals<Val0,Val1>(f0->ValAt(iTime), f1->ValAt(iTime)); }
+		{ return fCombiner(f0->ValAt(iTime), f1->ValAt(iTime)); }
 
 	virtual double Duration()
 		{ return std::max(f0->Duration(), f1->Duration()); }
 
 private:
+	Combiner fCombiner;
 	const ZRef<ZTween<Val0> > f0;
 	const ZRef<ZTween<Val1> > f1;
 	};
@@ -158,7 +167,7 @@ ZRef<ZTween<Val0> >& operator+=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1
 #pragma mark -
 #pragma mark * sTween_Both
 
-template <class Val0, class Val1>
+template <class Val0, class Val1, class Combiner = TweenCombiner<Val0,Val1> >
 class ZTween_Both
 :	public ZTween<Val0>
 	{
@@ -170,12 +179,13 @@ public:
 
 // From ZTween
 	virtual Val0 ValAt(double iTime)
-		{ return sCombineTweenVals<Val0,Val1>(f0->ValAt(iTime), f1->ValAt(iTime)); }
+		{ return fCombiner(f0->ValAt(iTime), f1->ValAt(iTime)); }
 
 	virtual double Duration()
 		{ return std::min(f0->Duration(), f1->Duration()); }
 
 private:
+	Combiner fCombiner;
 	const ZRef<ZTween<Val0> > f0;
 	const ZRef<ZTween<Val1> > f1;
 	};

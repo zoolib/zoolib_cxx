@@ -696,7 +696,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 	return null;
 	}
 
-#elif ZCONFIG_SPI_Enabled(MacOSX)// || ZCONFIG_SPI_Enabled(iPhone)
+#elif ZCONFIG_SPI_Enabled(MacOSX)
 
 // From <http://www.oroboro.com/rafael/docserv.php/article/news/entry/52/num_entries/1>
 
@@ -722,6 +722,11 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 		}
 	return null;
 	}
+
+#elif ZCONFIG_SPI_Enabled(iPhone)
+
+ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
+	{ return null; }
 
 #else
 
