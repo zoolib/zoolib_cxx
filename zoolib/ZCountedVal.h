@@ -82,7 +82,7 @@ template <class T, class P0>
 ZRef<ZCountedVal<T> > sCountedVal(const P0& i0)
 	{ return new ZCountedVal<T>(i0); }
 
-template <class T,class P0, class P1>
+template <class T, class P0, class P1>
 ZRef<ZCountedVal<T> > sCountedVal(const P0& i0, const P1& i1)
 	{ return new ZCountedVal<T>(i0, i1); }
 
