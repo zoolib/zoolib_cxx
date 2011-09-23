@@ -190,7 +190,7 @@ ZMatrix<E,R-1,1> sCartesian(const ZMatrix<E,R,1>& iMat)
 	{
 	ZMatrix<E,R-1,1> result;
 	for (size_t r = 0; r < R - 1; ++r)
-		result.fE[r][0] = iMat[r][0];
+		result.fE[r][0] = iMat.fE[r][0];
 	return result;
 	}
 
@@ -203,7 +203,7 @@ ZMatrix<E,1,C-1> sCartesian(const ZMatrix<E,1,C>& iMat)
 	{
 	ZMatrix<E,1,C-1> result;
 	for (size_t c = 0; c < C - 1; ++c)
-		result.fE[0][c] = iMat[0][c];
+		result.fE[0][c] = iMat.fE[0][c];
 	return result;
 	}
 
@@ -318,29 +318,19 @@ ZMatrix<E,C,R> sTransposed(const ZMatrix<E,R,C>& iMat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMagSquared (column vector)
+#pragma mark * sLengthSquared (column vector)
 
 template <class E, size_t R>
-E sMagSquared(const ZMatrix<E,R,1>& iVec)
-	{
-	E result = 0;
-	for (size_t r = 0; r < R; ++r)
-		result += iVec.fE[r][0] * iVec.fE[r][0];
-	return result;
-	}
+E sLengthSquared(const ZMatrix<E,R,1>& iVec)
+	{ return sDot(iVec, iVec); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sMagSquared (row vector)
+#pragma mark * sLengthSquared (row vector)
 
 template <class E, size_t C>
-E sMagSquared(const ZMatrix<E,1,C>& iVec)
-	{
-	E result = 0;
-	for (size_t c = 0; c < C; ++c)
-		result += iVec.fE[0][c] * iVec.fE[0][c];
-	return result;
-	}
+E sLengthSquared(const ZMatrix<E,1,C>& iVec)
+	{ return sDot(iVec, iVec); }
 
 // =================================================================================================
 #pragma mark -
@@ -348,7 +338,7 @@ E sMagSquared(const ZMatrix<E,1,C>& iVec)
 
 template <class E, size_t R>
 E sLength(const ZMatrix<E,R,1>& iVec)
-	{ return sqrt(sMagSquared(iVec)); }
+	{ return sqrt(sLengthSquared(iVec)); }
 
 // =================================================================================================
 #pragma mark -
@@ -356,7 +346,7 @@ E sLength(const ZMatrix<E,R,1>& iVec)
 
 template <class E, size_t C>
 E sLength(const ZMatrix<E,1,C>& iVec)
-	{ return sqrt(sMagSquared(iVec)); }
+	{ return sqrt(sLengthSquared(iVec)); }
 
 // =================================================================================================
 #pragma mark -
@@ -366,6 +356,7 @@ template <class E, size_t C>
 ZMatrix<E,1,C> sNormalized(const ZMatrix<E,1,C>& iVec)
 	{
 	const E length = sLength(iVec);
+	ZAssert(length > 0);
 	ZMatrix<E,1,C> result;
 	for (size_t c = 0; c < C; ++c)
 		result.fE[0][c] = iVec.fE[0][c] / length;
@@ -380,6 +371,7 @@ template <class E, size_t R>
 ZMatrix<E,R,1> sNormalized(const ZMatrix<E,R,1>& iVec)
 	{
 	const E length = sLength(iVec);
+	ZAssert(length > 0);
 	ZMatrix<E,R,1> result;
 	for (size_t r = 0; r < R; ++r)
 		result.fE[r][0] = iVec.fE[r][0] / length;
