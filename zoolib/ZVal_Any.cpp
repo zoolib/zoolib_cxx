@@ -669,8 +669,8 @@ ZMap_Any operator*(const ZNameVal& iNV, const ZMap_Any& iMap)
 
 ZMap_Any& operator*=(ZMap_Any& ioMap0, const ZMap_Any& iMap1)
 	{
-	for (ZMap_Any::Index_t i = iMap1.Begin(), end = iMap1.End(); i != end; ++i)
-		ioMap0.Set(iMap1.NameOf(i), iMap1.Get(i));
+	for (ZMap_Any::Index_t ii = iMap1.Begin(), end = iMap1.End(); ii != end; ++ii)
+		ioMap0.Set(iMap1.NameOf(ii), iMap1.Get(ii));
 	return ioMap0;
 	}
 

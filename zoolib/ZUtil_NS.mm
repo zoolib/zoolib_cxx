@@ -186,11 +186,11 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 	else if (const ZMap_Any* theValue = iVal.PGet<ZMap_Any>())
 		{
 		NSMutableDictionary* theDictionary = sDictionaryMutable();
-		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End(); i != end; ++i)
+		for (ZMap_Any::Index_t ii = theValue->Begin(), end = theValue->End(); ii != end; ++ii)
 			{
 			[theDictionary
-				setObject:sDAsNSObject(iDefault, theValue->Get(i))
-				forKey:sString(theValue->NameOf(i))];
+				setObject:sDAsNSObject(iDefault, theValue->Get(ii))
+				forKey:sString(theValue->NameOf(ii))];
 			}
 		return theDictionary;
 		}
@@ -298,7 +298,7 @@ NSObject* sAsNSObject(const ZAny& iVal)
 -(ZAny)asAnyWithDefault:(const ZAny&)iDefault
 	{
 	ZMap_Any result;
-	for (id theKey, i = [self keyEnumerator]; (theKey = [i nextObject]); /*no inc*/)
+	for (id theKey, ii = [self keyEnumerator]; (theKey = [ii nextObject]); /*no inc*/)
 		{
 		const string8 theName = ZUtil_NS::sAsUTF8((NSString*)theKey);
 		const ZAny theVal = [[self objectForKey:theKey] asAnyWithDefault:iDefault];
@@ -319,7 +319,7 @@ NSObject* sAsNSObject(const ZAny& iVal)
 -(ZAny)asAnyWithDefault:(const ZAny&)iDefault
 	{
 	ZSeq_Any result;
-	for (id theValue, i = [self objectEnumerator]; (theValue = [i nextObject]); /*no inc*/)
+	for (id theValue, ii = [self objectEnumerator]; (theValue = [ii nextObject]); /*no inc*/)
 		result.Append([theValue asAnyWithDefault:iDefault]);
 	return ZAny(result);
 	}

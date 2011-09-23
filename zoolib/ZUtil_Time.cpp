@@ -209,30 +209,30 @@ static string spFormatTimeUTC(const struct tm& iTM, const string& iFormat)
 	string realFormat;
 	realFormat.reserve(iFormat.size());
 
-	for (string::const_iterator i = iFormat.begin(); i != iFormat.end(); ++i)
+	for (string::const_iterator ii = iFormat.begin(); ii != iFormat.end(); ++ii)
 		{
-		if (*i == '%')
+		if (*ii == '%')
 			{
-			++i;
-			if (i == iFormat.end())
+			++ii;
+			if (ii == iFormat.end())
 				break;
-			if (*i == 'z')
+			if (*v == 'z')
 				{
 				realFormat+= "+0000";
 				}
-			else if (*i == 'Z')
+			else if (*ii == 'Z')
 				{
 				realFormat += "UTC";
 				}
 			else
 				{
 				realFormat += '%';
-				realFormat += *i;
+				realFormat += *ii;
 				}
 			}
 		else
 			{
-			realFormat += *i;
+			realFormat += *ii;
 			}
 		}
 
@@ -246,14 +246,14 @@ static string spFormatTimeLocal(const struct tm& iTM, const string& iFormat, int
 	string realFormat;
 	realFormat.reserve(iFormat.size());
 
-	for (string::const_iterator i = iFormat.begin(); i != iFormat.end(); ++i)
+	for (string::const_iterator ii = iFormat.begin(); ii != iFormat.end(); ++ii)
 		{
-		if (*i == '%')
+		if (*ii == '%')
 			{
-			++i;
-			if (i == iFormat.end())
+			++ii;
+			if (ii == iFormat.end())
 				break;
-			if (*i == 'z')
+			if (*ii == 'z')
 				{
 				int deltaMinutes = iDeltaSeconds / 60;
 				char buf[6];
@@ -263,19 +263,19 @@ static string spFormatTimeLocal(const struct tm& iTM, const string& iFormat, int
 					sprintf(buf, "+%02d%02d", deltaMinutes / 60, deltaMinutes % 60);
 				realFormat += buf;
 				}
-			else if (*i == 'Z')
+			else if (*ii == 'Z')
 				{
 				// Ignore the Z field, just like MSL.
 				}
 			else
 				{
 				realFormat += '%';
-				realFormat += *i;
+				realFormat += *ii;
 				}
 			}
 		else
 			{
-			realFormat += *i;
+			realFormat += *ii;
 			}
 		}
 

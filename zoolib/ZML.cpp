@@ -1180,8 +1180,8 @@ const StrimW& StrimW::Attrf(const string8& iName, const UTF8* iValue, ...) const
 
 const StrimW& StrimW::Attrs(const Attrs_t& iMap) const
 	{
-	for (Attrs_t::const_iterator i = iMap.begin(); i != iMap.end(); ++i)
-		this->Attr(i->first, i->second);
+	for (Attrs_t::const_iterator ii = iMap.begin(); ii != iMap.end(); ++ii)
+		this->Attr(ii->first, ii->second);
 
 	return *this;
 	}

@@ -206,11 +206,11 @@ static void spPost_Prefix(const ZStreamW& w,
 		w.WriteString("Connection: close\r\n");
 	if (iFields)
 		{
-		for (Map::Index_t i = iFields->Begin(); i != iFields->End(); ++i)
+		for (Map::Index_t ii = iFields->Begin(); ii != iFields->End(); ++ii)
 			{
-			w.WriteString(iFields->NameOf(i));
+			w.WriteString(iFields->NameOf(ii));
 			w.WriteString(": ");
-			w.WriteString(iFields->Get<string>(i));
+			w.WriteString(iFields->Get<string>(ii));
 			w.WriteString("\r\n");
 			}
 		}

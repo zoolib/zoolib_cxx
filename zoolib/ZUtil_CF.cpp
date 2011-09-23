@@ -345,11 +345,11 @@ ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal)
 	else if (const ZMap_Any* theValue = iVal.PGet<ZMap_Any>())
 		{
 		ZRef<CFMutableDictionaryRef> theDictionary = sDictionaryMutable();
-		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
-			i != end; ++i)
+		for (ZMap_Any::Index_t ii = theValue->Begin(), end = theValue->End();
+			ii != end; ++ii)
 			{
 			::CFDictionarySetValue(theDictionary,
-				sString(theValue->NameOf(i)), sDAsCFType(iDefault, theValue->Get(i)));
+				sString(theValue->NameOf(ii)), sDAsCFType(iDefault, theValue->Get(ii)));
 			}
 		return theDictionary;
 		}

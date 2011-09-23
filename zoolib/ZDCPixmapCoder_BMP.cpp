@@ -510,18 +510,18 @@ static void spReadRLE4(const ZStreamR& iStream,
 			uint8 hi = command >> 4;
 			uint8 lo = command & 0x0F;
 
-			for (int i = 0; i < count; ++i)
+			for (int ii = 0; ii < count; ++ii)
 				{
 				if ((currentCol & 1) == 0)
 					{
-					if ((i & 1) == 0)
+					if ((ii & 1) == 0)
 						rowStart[currentCol / 2] = hi << 4;
 					else
 						rowStart[currentCol / 2] = lo << 4;
 					}
 				else
 					{
-					if ((i & 1) == 0)
+					if ((ii & 1) == 0)
 						rowStart[currentCol / 2] |= hi;
 					else
 						rowStart[currentCol / 2] |= lo;

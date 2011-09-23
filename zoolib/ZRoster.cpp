@@ -43,8 +43,8 @@ void ZRoster::Finalize()
 	vector<ZRef<Entry> > local(fEntries.begin(), fEntries.end());
 	ZRef<ZCallable_Void> theCallable = fCallable_Gone;
 
-	for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
-		(*i)->fRoster.Clear();
+	for (vector<ZRef<Entry> >::const_iterator ii = local.begin(); ii != local.end(); ++ii)
+		(*ii)->fRoster.Clear();
 
 	if (this->FinishFinalize())
 		{
@@ -57,8 +57,8 @@ void ZRoster::Finalize()
 		{
 		// Rare/impossible? Someone snagged a strong reference, reinstate entries' weak references.
 		ZRef<ZRoster> thisRef = this;
-		for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
-			(*i)->fRoster = thisRef;
+		for (vector<ZRef<Entry> >::const_iterator ii = local.begin(); ii != local.end(); ++ii)
+			(*ii)->fRoster = thisRef;
 		}
 	}
 
@@ -90,10 +90,10 @@ void ZRoster::Broadcast()
 	vector<ZRef<Entry> > local(fEntries.begin(), fEntries.end());
 	guard.Release();
 
-	for (vector<ZRef<Entry> >::const_iterator i = local.begin(); i != local.end(); ++i)
+	for (vector<ZRef<Entry> >::const_iterator ii = local.begin(); ii != local.end(); ++ii)
 		{
-		ZGuardRMtx guardEntry((*i)->fMtx);
-		if (ZRef<ZCallable_Void> theCallable = (*i)->fCallable_Broadcast)
+		ZGuardRMtx guardEntry((*ii)->fMtx);
+		if (ZRef<ZCallable_Void> theCallable = (*ii)->fCallable_Broadcast)
 			{
 			guardEntry.Release();
 			theCallable->Call();

@@ -764,9 +764,9 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 					vector<string> paths;
 					spSplit(':', true, pEnv, paths);
 
-					for (vector<string>::const_iterator i = paths.begin(); i != paths.end(); ++i)
+					for (vector<string>::const_iterator ii = paths.begin(); ii != paths.end(); ++ii)
 						{
-						string trial = *i;
+						string trial = *ii;
 						if (trial.size())
 							trial += '/' + name;
 						else
@@ -802,14 +802,14 @@ ZFileLoc_POSIX::ZFileLoc_POSIX(bool iIsAtRoot)
 ZFileLoc_POSIX::ZFileLoc_POSIX(bool iIsAtRoot, const vector<string>& iComps)
 :	fIsAtRoot(iIsAtRoot)
 	{
-	for (vector<string>::const_iterator i = iComps.begin(); i != iComps.end(); ++i)
+	for (vector<string>::const_iterator ii = iComps.begin(); ii != iComps.end(); ++ii)
 		{
-		if (size_t length = (*i).size())
+		if (size_t length = ii->size())
 			{
-			if (length != 1 || (*i)[0] != '.')
+			if (length != 1 || (*ii)[0] != '.')
 				{
 				// It's longer than one char, or that char is not a dot.
-				fComps.push_back(*i);
+				fComps.push_back(*ii);
 				}
 			}
 		}

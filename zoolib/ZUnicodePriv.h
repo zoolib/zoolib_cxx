@@ -279,7 +279,7 @@ inline bool std::char_traits<charT>::lt(const char_type& c1, const char_type& c2
 template <class charT>
 int std::char_traits<charT>::compare(const char_type* s1, const char_type* s2, size_t n)
 	{
-	for (size_t i = 0; i < n; ++i, ++s1, ++s2)
+	for (size_t ii = 0; ii < n; ++ii, ++s1, ++s2)
 		{
 		if (lt(*s1, *s2))
 			return -1;
@@ -308,11 +308,11 @@ std::char_traits<charT>::find(const char_type* s, size_t n, const char_type& a)
 	if (n == 0)
 		return 0;
 	const char_type* p = s;
-	size_t i = 0;
+	size_t ii = 0;
 	while (!eq(*p, a))
 		{
-		++i;
-		if (i == n)
+		++ii;
+		if (ii == n)
 			return 0;
 		++p;
 		}
@@ -326,7 +326,7 @@ std::char_traits<charT>::move(char_type* s1, const char_type* s2, size_t n)
 	char_type* r = s1;
 	if (s1 < s2)
 		{
-		for (size_t i = 0; i < n; ++i)
+		for (size_t ii = 0; ii < n; ++ii)
 			assign(*s1++, *s2++);
 		}
 	else if (s2 < s1)
@@ -344,7 +344,7 @@ inline typename std::char_traits<charT>::char_type*
 std::char_traits<charT>::copy(char_type* s1, const char_type* s2, size_t n)
 	{
 	char_type* r = s1;
-	for (size_t i = 0; i < n; ++i)
+	for (size_t ii = 0; ii < n; ++ii)
 		assign(*s1++, *s2++);
 	return r;
 	}
@@ -354,7 +354,7 @@ inline typename std::char_traits<charT>::char_type*
 std::char_traits<charT>::assign(char_type* s, size_t n, char_type a)
 	{
 	char_type* r = s;
-	for (size_t i = 0; i < n; ++i)
+	for (size_t ii = 0; ii < n; ++ii)
 		assign(*s++, a);
 	return r;
 	}

@@ -43,8 +43,8 @@ void ZStreamRWPos_RAM::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	const size_t count = ZStream::sClampedSize(iCount, fDeque.size(), fPosition);
 	if (count)
 		{
-		const std::deque<char>::const_iterator i = fDeque.begin() + fPosition;
-		copy(i, i + count, static_cast<char*>(oDest));
+		const std::deque<char>::const_iterator ii = fDeque.begin() + fPosition;
+		copy(ii, ii + count, static_cast<char*>(oDest));
 		fPosition += count;
 		}
 

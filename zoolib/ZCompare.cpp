@@ -81,9 +81,9 @@ int ZCompare::sCompare(const char* iTypeName, const void* iL, const void* iR)
 	{
 	ZAssert(spMap);
 
-	map<const char*, ZCompare*, CompareCharStars>::iterator i = spMap->find(iTypeName);
-	if (i != spMap->end())
-		return i->second->Compare(iL, iR);
+	map<const char*, ZCompare*, CompareCharStars>::iterator ii = spMap->find(iTypeName);
+	if (ii != spMap->end())
+		return ii->second->Compare(iL, iR);
 
 	ZDebugStopf(0, ("ZCompare::sCompare called on unsupported type '%s'", iTypeName));
 	return iL < iR ? -1 : iL > iR ? 1 : 0;

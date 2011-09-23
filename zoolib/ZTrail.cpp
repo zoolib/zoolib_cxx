@@ -243,15 +243,15 @@ string8 ZTrail::AsString() const
 string8 ZTrail::AsString(const string8& iSeparator, const string8& iBounce) const
 	{
 	string8 result;
-	for (vector<string8>::const_iterator i = fComps.begin(); i != fComps.end(); ++i)
+	for (vector<string8>::const_iterator ii = fComps.begin(); ii != fComps.end(); ++ii)
 		{
 		if (!result.empty())
 			result += iSeparator;
 
-		if ((*i).empty())
+		if (ii->empty())
 			result += iBounce;
 		else
-			result += *i;
+			result += *ii;
 		}
 	return result;
 	}
@@ -319,18 +319,18 @@ by zero or more regular components.
 */
 bool ZTrail::IsNormalized() const
 	{
-	vector<string8>::const_iterator i = fComps.begin();
+	vector<string8>::const_iterator ii = fComps.begin();
 
 	// Skip any leading bounces.
-	while (i != fComps.end() && (*i).empty())
-		++i;
+	while (ii != fComps.end() && ii->empty())
+		++ii;
 
 	// Skip any regular components.
-	while (i != fComps.end() && !(*i).empty())
-		++i;
+	while (ii != fComps.end() && not ii->empty())
+		++ii;
 
 	// If we hit the end then there were no bounces following a regular component.
-	return i== fComps.end();
+	return ii== fComps.end();
 	}
 
 /**

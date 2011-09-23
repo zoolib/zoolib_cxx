@@ -187,12 +187,12 @@ void Response::Send(const ZStreamW& s) const
 		s.WriteString(fMessage);
 		}
 	s.WriteString("\r\n");
-	for (vector<pair<string, string> >::const_iterator i = fHeaders.begin();
-		i != fHeaders.end(); ++i)
+	for (vector<pair<string, string> >::const_iterator ii = fHeaders.begin();
+		ii != fHeaders.end(); ++ii)
 		{
-		s.WriteString((*i).first);
+		s.WriteString(ii->first);
 		s.WriteString(": ");
-		s.WriteString((*i).second);
+		s.WriteString(ii->second);
 		s.WriteString("\r\n");
 		}
 	s.WriteString("\r\n");
@@ -541,12 +541,12 @@ static string spDecode_URI(const string& iString)
 	while ((pos = result.find_first_of('%',pos)) != string::npos)
 		{
 		char hexVal = 0;
-		for (size_t k = 0; (k < 2) && (isxdigit(result[pos + k + 1])); ++k)
+		for (size_t ii = 0; (ii < 2) && (isxdigit(result[pos + ii + 1])); ++ii)
 			{
-			if (isdigit(result[pos + k + 1]))
-				hexVal = 16 * hexVal + (result[pos + k + 1] - '0');
+			if (isdigit(result[pos + ii + 1]))
+				hexVal = 16 * hexVal + (result[pos + ii + 1] - '0');
 			else
-				hexVal = 16 * hexVal + (10 + toupper(result[pos + k + 1]) - 'A');
+				hexVal = 16 * hexVal + (10 + toupper(result[pos + ii + 1]) - 'A');
 			}
 		result.erase(pos, 3);
 		result.insert(pos, 1, hexVal);
@@ -1707,10 +1707,10 @@ void sWrite_HeaderLine(const ZStreamW& w, const string& iName, const string& iBo
 
 void sWrite_Header(const ZStreamW& w, const Map& iHeader)
 	{
-	for (Map::Index_t i = iHeader.Begin(); i != iHeader.End(); ++i)
+	for (Map::Index_t ii = iHeader.Begin(); ii != iHeader.End(); ++ii)
 		{
-		const string name = iHeader.NameOf(i);
-		const Val& theVal = *iHeader.PGet(i);
+		const string name = iHeader.NameOf(ii);
+		const Val& theVal = *iHeader.PGet(ii);
 
 		if (ZQ<Seq> asSeqQ = theVal.QGetSeq())
 			{

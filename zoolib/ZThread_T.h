@@ -412,9 +412,9 @@ public:
 			}
 		else
 			{
-			for (DListIterator<Waiter, DLink_Waiter> i = fWaiters; i && iCount > 0; i.Advance())
+			for (DListIterator<Waiter, DLink_Waiter> ii = fWaiters; ii && iCount > 0; ii.Advance())
 				{
-				Waiter* current = i.Current();
+				Waiter* current = ii.Current();
 				if (iCount >= current->fCount)
 					{
 					iCount -= current->fCount;
