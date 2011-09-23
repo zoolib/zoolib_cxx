@@ -374,14 +374,14 @@ ZRef<ZTween<Val> > sTween_Duration(double iDuration, const ZRef<ZTween<Val> >& i
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sTween_AtMost
+#pragma mark * sTween_ForAtMost
 
 template <class Val>
-class ZTween_AtMost
+class ZTween_ForAtMost
 :	public ZTween<Val>
 	{
 public:
-	ZTween_AtMost(const ZRef<ZTween<Val> >& iTween, double iAtMost)
+	ZTween_ForAtMost(const ZRef<ZTween<Val> >& iTween, double iAtMost)
 	:	fTween(iTween)
 	,	fAtMost(iAtMost)
 		{}
@@ -399,23 +399,23 @@ private:
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_AtMost(double iAtMost, const ZRef<ZTween<Val> >& iTween)
+ZRef<ZTween<Val> > sTween_ForAtMost(double iAtMost, const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_AtMost<Val>(iTween, iAtMost);
+		return new ZTween_ForAtMost<Val>(iTween, iAtMost);
 	return null;
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sTween_AtLeast
+#pragma mark * sTween_ForAtLeast
 
 template <class Val>
-class ZTween_AtLeast
+class ZTween_ForAtLeast
 :	public ZTween<Val>
 	{
 public:
-	ZTween_AtLeast(const ZRef<ZTween<Val> >& iTween, double iAtLeast)
+	ZTween_ForAtLeast(const ZRef<ZTween<Val> >& iTween, double iAtLeast)
 	:	fTween(iTween)
 	,	fAtLeast(iAtLeast)
 		{}
@@ -433,10 +433,10 @@ private:
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_AtLeast(double iAtLeast, const ZRef<ZTween<Val> >& iTween)
+ZRef<ZTween<Val> > sTween_ForAtLeast(double iAtLeast, const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_AtLeast<Val>(iTween, iAtLeast);
+		return new ZTween_ForAtLeast<Val>(iTween, iAtLeast);
 	return null;
 	}
 
@@ -554,39 +554,79 @@ ZRef<ZTween<Val> > sTween_Const(const Val& iVal, double iDuration)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sTween_Range
+#pragma mark * sTween_Scale
 
 template <class Val>
-class ZTween_Range
+class ZTween_Scale
 :	public ZTween<Val>
 	{
 public:
-	ZTween_Range(const ZRef<ZTween<Val> >& iTween, Val iZeroVal, Val iOneVal)
+	ZTween_Scale(const ZRef<ZTween<Val> >& iTween, Val iScale)
 	:	fTween(iTween)
-	,	fZeroVal(iZeroVal)
-	,	fOneVal(iOneVal)
+	,	fScale(iScale)
 		{}
 
 // From ZTween
 	virtual Val ValAt(double iTime)
-		{ return fZeroVal + (fOneVal - fZeroVal) * fTween->ValAt(iTime); }
+		{ return fScale * fTween->ValAt(iTime); }
 
 	virtual double Duration()
 		{ return fTween->Duration(); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	const Val fZeroVal;
-	const Val fOneVal;
+	const Val fScale;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Range(Val iZeroVal, Val iOneVal, const ZRef<ZTween<Val> >& iTween)
+ZRef<ZTween<Val> > sTween_Scale(Val iScale, const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Range<Val>(iTween, iZeroVal, iOneVal);
+		return new ZTween_Scale<Val>(iTween, iScale);
 	return null;
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sTween_Offset
+
+template <class Val>
+class ZTween_Offset
+:	public ZTween<Val>
+	{
+public:
+	ZTween_Offset(const ZRef<ZTween<Val> >& iTween, Val iOffset)
+	:	fTween(iTween)
+	,	fOffset(iOffset)
+		{}
+
+// From ZTween
+	virtual Val ValAt(double iTime)
+		{ return fOffset + fTween->ValAt(iTime); }
+
+	virtual double Duration()
+		{ return fTween->Duration(); }
+
+private:
+	const ZRef<ZTween<Val> > fTween;
+	const Val fOffset;
+	};
+
+template <class Val>
+ZRef<ZTween<Val> > sTween_Offset(Val iOffset, const ZRef<ZTween<Val> >& iTween)
+	{
+	if (iTween)
+		return new ZTween_Offset<Val>(iTween, iOffset);
+	return null;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sTween_Range
+
+template <class Val>
+ZRef<ZTween<Val> > sTween_Range(Val iZeroVal, Val iOneVal, const ZRef<ZTween<Val> >& iTween)
+	{ return sTween_Offset(iZeroVal, sTween_Scale(iOneVal - iZeroVal, iTween)); }
 
 } // namespace ZooLib
 
