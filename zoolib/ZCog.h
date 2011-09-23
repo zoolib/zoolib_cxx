@@ -97,7 +97,7 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCallCog
+#pragma mark * sCallCog variants
 
 template <class Cog>
 Cog sCallCog(const Cog& iCog, const typename Cog::Param iParam)
@@ -113,6 +113,25 @@ ZCog<const Param&> sCallCog
 	(const ZRef<ZCallable<ZCog<const Param&>(const ZCog<const Param&>&,const Param&)> >& iCallable,
 	const Param& iParam)
 	{ return sCall(iCallable, iCallable, iParam); }
+
+template <class Cog>
+bool sCallCogChanged(Cog& ioCog, const typename Cog::Param iParam)
+	{
+	if (ioCog)
+		{
+		Cog result = ioCog->Call(ioCog, iParam);
+		if (ioCog != result)
+			{
+			ioCog = result;
+			return true;
+			}
+		}
+	return false;
+	}
+
+template <class Cog>
+bool sCallCogUnchanged(Cog& ioCog, const typename Cog::Param iParam)
+	{ return not sCallCogChanged(ioCog, iParam); }
 
 // =================================================================================================
 #pragma mark -
@@ -158,7 +177,7 @@ const struct
 
 template <class Param>
 ZCog<Param> sCogFun_Either(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> iCog0, ZCog<Param> iCog1);
+	ZCog<Param> lCog0, ZCog<Param> lCog1);
 
 template <class Param>
 ZCog<Param> sCog_Either
@@ -176,19 +195,19 @@ ZCog<Param> sCog_Either
 
 template <class Param>
 ZCog<Param> sCogFun_Either(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> iCog0, ZCog<Param> iCog1)
+	ZCog<Param> lCog0, ZCog<Param> lCog1)
 	{
-	if (iCog0 && not sCompareAndSet(iCog0, iCog0->Call(iCog0, iParam)))
+	if (sCallCogUnchanged(lCog0, iParam))
 		{
-		if (iCog1 && not sCompareAndSet(iCog1, iCog1->Call(iCog1, iParam)))
+		if (sCallCogUnchanged(lCog1, iParam))
 			return iSelf;
 		}
-	else if (iCog1)
+	else if (lCog1)
 		{
-		iCog1 = iCog1->Call(iCog1, iParam);
+		lCog1 = lCog1->Call(lCog1, iParam);
 		}
 
-	return sCog_Either(iCog0, iCog1);
+	return sCog_Either(lCog0, lCog1);
 	}
 
 template <class Param>
@@ -209,7 +228,7 @@ ZCog<Param>& operator+=
 
 template <class Param>
 ZCog<Param> sCogFun_Both(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> iCog0, ZCog<Param> iCog1);
+	ZCog<Param> lCog0, ZCog<Param> lCog1);
 
 template <class Param>
 ZCog<Param> sCog_Both
@@ -223,19 +242,19 @@ ZCog<Param> sCog_Both
 
 template <class Param>
 ZCog<Param> sCogFun_Both(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> iCog0, ZCog<Param> iCog1)
+	ZCog<Param> lCog0, ZCog<Param> lCog1)
 	{
-	if (iCog0 && not sCompareAndSet(iCog0, iCog0->Call(iCog0, iParam)))
+	if (sCallCogUnchanged(lCog0, iParam))
 		{
-		if (iCog1 && not sCompareAndSet(iCog1, iCog1->Call(iCog1, iParam)))
+		if (sCallCogUnchanged(lCog1, iParam))
 			return iSelf;
 		}
-	else if (iCog0 && iCog1)
+	else if (lCog0 && lCog1)
 		{
-		iCog1 = iCog1->Call(iCog1, iParam);
+		lCog1 = lCog1->Call(lCog1, iParam);
 		}
 
-	return sCog_Both(iCog0, iCog1);
+	return sCog_Both(lCog0, lCog1);
 	}
 
 template <class Param>
@@ -256,7 +275,7 @@ ZCog<Param>& operator*=
 
 template <class Param>
 ZCog<Param> sCogFun_Each(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> iCog0, ZCog<Param> iCog1);
+	ZCog<Param> lCog0, ZCog<Param> lCog1);
 
 template <class Param>
 ZCog<Param> sCog_Each
@@ -274,15 +293,15 @@ ZCog<Param> sCog_Each
 
 template <class Param>
 ZCog<Param> sCogFun_Each(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> iCog0, ZCog<Param> iCog1)
+	ZCog<Param> lCog0, ZCog<Param> lCog1)
 	{
-	if (iCog0 && not sCompareAndSet(iCog0, iCog0->Call(iCog0, iParam)))
+	if (lCog0 && not sCompareAndSet(lCog0, lCog0->Call(lCog0, iParam)))
 		return iSelf;
 
-	if (!iCog0 && iCog1)
-		iCog1 = iCog1->Call(iCog1, iParam);
+	if (not lCog0 && lCog1)
+		lCog1 = lCog1->Call(lCog1, iParam);
 
-	return sCog_Each(iCog0, iCog1);
+	return sCog_Each(lCog0, lCog1);
 	}
 
 template <class Param>
@@ -319,13 +338,13 @@ ZCog<Param> sCog_Once(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)
 
 template <class Param>
 ZCog<Param> sCogFun_Repeat(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> iCog_Init, ZCog<Param> iCog)
+	ZCog<Param> iCog_Init, ZCog<Param> lCog)
 	{
-	if (not iCog || not sCompareAndSet(iCog, iCog->Call(iCog, iParam)))
+	if (sCallCogUnchanged(lCog, iParam))
 		return iSelf;
 
-	if (iCog)
-		return sBindR(sCallable(sCogFun_Repeat<Param>), iCog_Init, iCog);
+	if (lCog)
+		return sBindR(sCallable(sCogFun_Repeat<Param>), iCog_Init, lCog);
 
 	return sBindR(sCallable(sCogFun_Repeat<Param>), iCog_Init, iCog_Init);
 	}
@@ -340,16 +359,16 @@ ZCog<Param> sCog_Repeat(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Para
 
 template <class Param>
 ZCog<Param> sCogFun_Repeat_Count(const ZCog<Param>& iSelf, Param iParam,
-	size_t iCount, ZCog<Param> iCog_Init, ZCog<Param> iCog)
+	size_t iCount, ZCog<Param> iCog_Init, ZCog<Param> lCog)
 	{
 	if (not iCount)
 		return null;
 
-	if (iCog && not sCompareAndSet(iCog, iCog->Call(iCog, iParam)))
+	if (sCallCogUnchanged(lCog, iParam))
 		return iSelf;
 
-	if (iCog)
-		return sBindR(sCallable(sCogFun_Repeat_Count<Param>), iCount, iCog_Init, iCog);
+	if (lCog)
+		return sBindR(sCallable(sCogFun_Repeat_Count<Param>), iCount, iCog_Init, lCog);
 
 	if (--iCount)
 		return sBindR(sCallable(sCogFun_Repeat_Count<Param>), iCount, iCog_Init, iCog_Init);
