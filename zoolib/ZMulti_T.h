@@ -39,6 +39,10 @@ public:
 	T0 f0;
 	};
 
+template <class T0>
+ZMulti_T1<T0> sMulti(const T0& i0)
+	{ return ZMulti_T1<T0>(i0); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMulti_T2
@@ -55,6 +59,10 @@ public:
 	T0 f0;
 	T1 f1;
 	};
+
+template <class T0, class T1>
+ZMulti_T2<T0,T1> sMulti(const T0& i0, const T1& i1)
+	{ return ZMulti_T2<T0,T1>(i0, i1); }
 
 // =================================================================================================
 #pragma mark -
@@ -74,6 +82,10 @@ public:
 	T1 f1;
 	T2 f2;
 	};
+
+template <class T0, class T1, class T2>
+ZMulti_T3<T0,T1,T2> sMulti(const T0& i0, const T1& i1, const T2& i2)
+	{ return ZMulti_T3<T0,T1,T2>(i0, i1, i2); }
 
 // =================================================================================================
 #pragma mark -
@@ -95,6 +107,10 @@ public:
 	T2 f2;
 	T3 f3;
 	};
+
+template <class T0, class T1, class T2, class T3>
+ZMulti_T3<T0,T1,T2> sMulti(const T0& i0, const T1& i1, const T2& i2, const T3& i3)
+	{ return ZMulti_T4<T0,T1,T2,T3>(i0, i1, i2, i3); }
 
 } // namespace ZooLib
 
