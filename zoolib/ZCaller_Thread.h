@@ -36,7 +36,7 @@ void sCallOnNewThread(const ZRef<ZCallable<T(void)> >& iCallable)
 	{ ZThread::sCreate_T<ZRef<ZCallable<T(void)> > >(sCallReturnVoid<T>, iCallable); }
 
 inline
-void sCallOnNewThread(ZRef_ZCallable_Void iCallable)
+void sCallOnNewThread(const ZRef_ZCallable_Void& iCallable)
  	{ ZThread::sCreate_T<ZRef_ZCallable_Void>(sCallVoid, iCallable); }
 
 // =================================================================================================
