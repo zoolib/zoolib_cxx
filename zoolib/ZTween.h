@@ -67,9 +67,16 @@ public:
 		if (iWrap)
 			{
 			const double duration = this->Duration();
-			iTime = fmod(iTime, duration);
-			if (iTime < 0)
-				iTime += duration;
+			if (duration <= 0)
+				{
+				iTime = 0;
+				}
+			else
+				{
+				iTime = fmod(iTime, duration);
+				if (iTime < 0)
+					iTime += duration;
+				}
 			}
 		return this->ValAt(iTime);
 		}
@@ -340,14 +347,14 @@ ZRef<ZTween<Val> > sTween_RepeatFor(double iDuration, const ZRef<ZTween<Val> >& 
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sTween_Duration
+#pragma mark * sTween_ForExactly
 
 template <class Val>
-class ZTween_Duration
+class ZTween_ForExactly
 :	public ZTween<Val>
 	{
 public:
-	ZTween_Duration(const ZRef<ZTween<Val> >& iTween, double iDuration)
+	ZTween_ForExactly(const ZRef<ZTween<Val> >& iTween, double iDuration)
 	:	fTween(iTween)
 	,	fDuration(iDuration)
 		{}
@@ -365,10 +372,10 @@ private:
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Duration(double iDuration, const ZRef<ZTween<Val> >& iTween)
+ZRef<ZTween<Val> > sTween_ForExactly(double iDuration, const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Duration<Val>(iTween, iDuration);
+		return new ZTween_ForExactly<Val>(iTween, iDuration);
 	return null;
 	}
 
