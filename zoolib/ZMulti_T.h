@@ -32,6 +32,8 @@ template <class T0>
 class ZMulti_T1
 	{
 public:
+	ZMulti_T1() {};
+
 	ZMulti_T1(const T0& i0)
 	:	f0(i0)
 		{}
@@ -51,6 +53,8 @@ template <class T0, class T1>
 class ZMulti_T2
 	{
 public:
+	ZMulti_T2() {};
+
 	ZMulti_T2(const T0& i0, const T1& i1)
 	:	f0(i0)
 	,	f1(i1)
@@ -72,6 +76,8 @@ template <class T0, class T1, class T2>
 class ZMulti_T3
 	{
 public:
+	ZMulti_T3() {};
+
 	ZMulti_T3(const T0& i0, const T1& i1, const T2& i2)
 	:	f0(i0)
 	,	f1(i1)
@@ -95,6 +101,8 @@ template <class T0, class T1, class T2, class T3>
 class ZMulti_T4
 	{
 public:
+	ZMulti_T4() {};
+
 	ZMulti_T4(const T0& i0, const T1& i1, const T2& i2, const T3& i3)
 	:	f0(i0)
 	,	f1(i1)
