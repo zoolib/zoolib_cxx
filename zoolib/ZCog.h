@@ -116,26 +116,15 @@ ZCog<const Param&> sCallCog
 
 template <class Cog>
 bool sCallCogChanged(Cog& ioCog, const typename Cog::Param iParam)
-	{
-	if (ioCog)
-		{
-		Cog result = ioCog->Call(ioCog, iParam);
-		if (ioCog != result)
-			{
-			ioCog = result;
-			return true;
-			}
-		}
-	return false;
-	}
+	{ return ioCog && sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
 
 template <class Cog>
 bool sCallCogUnchanged(Cog& ioCog, const typename Cog::Param iParam)
-	{ return not sCallCogChanged(ioCog, iParam); }
+	{ return not ioCog || not sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCog
+#pragma mark * sCog function and pseudo operator
 
 const struct
 	{
