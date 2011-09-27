@@ -39,6 +39,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDebug {
 
+using std::va_list;
+
 extern void sInvoke(int iLevel, bool iStop,
 	const char* iFileName, const char* iFunctionName, int iLine,
 	const char* iConditionMessage, const char* iUserMessage, ...)
