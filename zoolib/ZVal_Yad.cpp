@@ -83,6 +83,9 @@ ZQ<ZMap_Yad> ZVal_Yad::QGet() const
 	return null;
 	}
 
+ZRef<ZYadR> ZVal_Yad::GetYad() const
+	{ return fYad; }
+
 ZAny ZVal_Yad::pAsAny() const
 	{
 	if (fYad)
@@ -139,8 +142,7 @@ ZQ<ZVal_Yad> ZSeq_Yad::QGet(size_t iIndex) const
 		{
 		if (fYad->IsShared())
 			fYad = fYad->Clone().DynamicCast<ZYadSeqRPos>();
-		fYad->SetPosition(iIndex);
-		if (ZRef<ZYadR> theYad = fYad->ReadInc())
+		if (ZRef<ZYadR> theYad = fYad->ReadAt(iIndex))
 			return ZVal_Yad(theYad);
 		}
 	return null;
@@ -159,6 +161,9 @@ ZVal_Yad ZSeq_Yad::Get(size_t iIndex) const
 		return theQ.Get();
 	return ZVal_Yad();
 	}
+
+ZRef<ZYadSeqRPos> ZSeq_Yad::GetYad() const
+	{ return fYad; }
 
 // =================================================================================================
 #pragma mark -
@@ -199,13 +204,8 @@ ZQ<ZVal_Yad> ZMap_Yad::QGet(const string8& iName) const
 		{
 		if (fYad->IsShared())
 			fYad = fYad->Clone().DynamicCast<ZYadMapRPos>();
-		fYad->SetPosition(iName);
-		string8 readName;
-		if (ZRef<ZYadR> theYad = fYad->ReadInc(readName))
-			{
-			if (iName == readName)
-				return ZVal_Yad(theYad);
-			}
+		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
+			return ZVal_Yad(theYad);
 		}
 	return null;
 	}
@@ -223,5 +223,8 @@ ZVal_Yad ZMap_Yad::Get(const string8& iName) const
 		return theQ.Get();
 	return ZVal_Yad();
 	}
+
+ZRef<ZYadMapRPos> ZMap_Yad::GetYad() const
+	{ return fYad; }
 
 } // namespace ZooLib

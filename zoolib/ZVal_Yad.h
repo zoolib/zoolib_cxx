@@ -97,6 +97,9 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Yad, Map, ZMap_Yad)
 /// \endcond DoxygenIgnore
 
+// Our protocol
+	ZRef<ZYadR> GetYad() const;
+
 private:
 	ZAny pAsAny() const;
 	ZRef<ZYadR> fYad;
@@ -152,6 +155,9 @@ public:
 	S Get(size_t iIndex) const
 		{ return this->Get(iIndex).Get<S>(); }
 
+// Our protocol
+	ZRef<ZYadSeqRPos> GetYad() const;
+
 private:
 	mutable ZRef<ZYadSeqRPos> fYad;
 	};
@@ -189,6 +195,9 @@ public:
 	template <class S>
 	S Get(const string8& iName) const
 		{ return this->Get(iName).Get<S>(); }
+
+// Our protocol
+	ZRef<ZYadMapRPos> GetYad() const;
 
 private:
 	mutable ZRef<ZYadMapRPos> fYad;
