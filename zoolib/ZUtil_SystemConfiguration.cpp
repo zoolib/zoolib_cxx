@@ -103,10 +103,11 @@ public:
 		return null;
 		}
 
-// From ZYadMapRPos
-	virtual ZRef<ZYadMapRPos> Clone()
+// From ZYadMapRClone via ZYadMapRPos
+	virtual ZRef<ZYadMapRClone> Clone()
 		{ return new YadMapRPos(fStoreRef, fKeys, fPosition); }
 
+// From ZYadMapRPos
 	virtual void SetPosition(const std::string& iName)
 		{
 		for (/*no init*/; fPosition < fKeys.Count(); ++fPosition)
