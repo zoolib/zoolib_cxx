@@ -216,7 +216,7 @@ static string spFormatTimeUTC(const struct tm& iTM, const string& iFormat)
 			++ii;
 			if (ii == iFormat.end())
 				break;
-			if (*v == 'z')
+			if (*ii == 'z')
 				{
 				realFormat+= "+0000";
 				}
