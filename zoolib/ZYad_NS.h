@@ -122,9 +122,10 @@ public:
 // From ZYadMapR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
-// From ZYadMapRPos
-	virtual ZRef<ZYadMapRPos> Clone();
+// From ZYadMapRClone via ZYadMapRPos
+	virtual ZRef<ZYadMapRClone> Clone();
 
+// From ZYadMapRPos
 	virtual void SetPosition(const std::string& iName);
 
 private:

@@ -65,9 +65,10 @@ public:
 // From ZYadMapR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
-// From ZYadMapRPos
-	virtual ZRef<ZYadMapRPos> Clone();
+// From ZYadMapRClone via ZYadMapRPos
+	virtual ZRef<ZYadMapRClone> Clone();
 
+// From ZYadMapRPos
 	virtual void SetPosition(const std::string& iName);
 
 private:
@@ -100,7 +101,7 @@ ZRef<ZYadR> ZYadMapRPos_Dir::ReadInc(std::string& oName)
 	return null;
 	}
 
-ZRef<ZYadMapRPos> ZYadMapRPos_Dir::Clone()
+ZRef<ZYadMapRClone> ZYadMapRPos_Dir::Clone()
 	{ return new ZYadMapRPos_Dir(fFS, fFileIter); }
 
 void ZYadMapRPos_Dir::SetPosition(const std::string& iName)

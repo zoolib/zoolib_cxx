@@ -276,6 +276,12 @@ bool ZYadSeqRPos::Skip()
 void ZYadSeqRPos::SkipAll()
 	{ this->SetPosition(this->GetSize()); }
 
+ZRef<ZYadR> ZYadSeqRPos::ReadAt(uint64 iPosition)
+	{
+	this->SetPosition(iPosition);
+	return this->ReadInc();
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapR
@@ -304,6 +310,13 @@ void ZYadMapR::SkipAll()
 	while (this->Skip())
 		{}
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadMapRClone
+
+void ZYadMapRClone::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadMapRClone(this); }
 
 // =================================================================================================
 #pragma mark -
@@ -353,6 +366,18 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 	}
 #endif //##
 
+ZRef<ZYadR> ZYadMapRPos::ReadAt(const std::string& iName)
+	{
+	this->SetPosition(iName);
+	string8 theName;
+	if (ZRef<ZYadR> result = this->ReadInc(theName))
+		{
+		if (theName == iName)
+			return result;
+		}
+	return null;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVisitor_Yad
@@ -379,14 +404,20 @@ void ZVisitor_Yad::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
 void ZVisitor_Yad::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 	{ this->Visit_YadR(iYadSeqR); }
 
+void ZVisitor_Yad::Visit_YadSeqRClone(const ZRef<ZYadSeqRClone>& iYadSeqRClone)
+	{ this->Visit_YadSeqR(iYadSeqRClone); }
+
 void ZVisitor_Yad::Visit_YadSeqRPos(const ZRef<ZYadSeqRPos>& iYadSeqRPos)
-	{ this->Visit_YadSeqR(iYadSeqRPos); }
+	{ this->Visit_YadSeqRClone(iYadSeqRPos); }
 
 void ZVisitor_Yad::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	{ this->Visit_YadR(iYadMapR); }
 
+void ZVisitor_Yad::Visit_YadMapRClone(const ZRef<ZYadMapRClone>& iYadMapRClone)
+	{ this->Visit_YadMapR(iYadMapRClone); }
+
 void ZVisitor_Yad::Visit_YadMapRPos(const ZRef<ZYadMapRPos>& iYadMapRPos)
-	{ this->Visit_YadMapR(iYadMapRPos); }
+	{ this->Visit_YadMapRClone(iYadMapRPos); }
 
 // =================================================================================================
 #pragma mark -

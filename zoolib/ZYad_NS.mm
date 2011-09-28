@@ -114,7 +114,7 @@ ZRef<ZYadR> ZYadMapRPos_NS::ReadInc(string& oName)
 	return null;
 	}
 
-ZRef<ZYadMapRPos> ZYadMapRPos_NS::Clone()
+ZRef<ZYadMapRClone> ZYadMapRPos_NS::Clone()
 	{ return new ZYadMapRPos_NS(fDictionary, fPosition, fNames, fValues); }
 
 void ZYadMapRPos_NS::SetPosition(const std::string& iName)

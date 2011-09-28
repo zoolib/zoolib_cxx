@@ -105,10 +105,11 @@ public:
 		return null;
 		}
 
-// From ZYadSeqRPos
-	virtual ZRef<ZYadSeqRPos> Clone()
+// From ZYadSeqRClone via ZYadSeqRPos
+	virtual ZRef<ZYadSeqRClone> Clone()
 		{ return new ZYadSeqRPos_Val_T(fSeq, fPosition); }
 
+// From ZYadSeqRPos
 	virtual uint64 GetPosition()
 		{ return fPosition; }
 
@@ -160,10 +161,11 @@ public:
 		return null;
 		}
 
-// From ZYadSeqRPos
-	virtual ZRef<ZYadSeqRPos> Clone()
+// From ZYadSeqRClone via ZYadSeqRPos
+	virtual ZRef<ZYadSeqRClone> Clone()
 		{ return new Self_t(fSeq, fPosition); }
 
+// From ZYadSeqRPos
 	virtual uint64 GetPosition()
 		{ return fPosition; }
 
@@ -199,7 +201,7 @@ public:
 	,	fIndex(fMap.IndexOf(iMap, iIndex))
 		{}
 
-// From ZYadMapR
+// From ZYadMapR via ZYadMapRPos
 	ZRef<ZYadR> ReadInc(std::string& oName)
 		{
 		if (fIndex != fMap.End())
@@ -210,12 +212,13 @@ public:
 		return null;
 		}
 
+// From ZYadMapRClone via ZYadMapRPos
+	virtual ZRef<ZYadMapRClone> Clone()
+		{ return new ZYadMapRPos_Val_T(fMap, fIndex); }
+
 // From ZYadMapRPos
 	void SetPosition(const std::string& iName)
 		{ fIndex = fMap.IndexOf(iName); }
-
-	virtual ZRef<ZYadMapRPos> Clone()
-		{ return new ZYadMapRPos_Val_T(fMap, fIndex); }
 
 // Our protocol
 	const Map_t& GetMap()
@@ -250,7 +253,7 @@ protected:
 		{}
 
 public:
-// From ZYadMapR
+// From ZYadMapR via ZYadMapRPos
 	ZRef<ZYadR> ReadInc(std::string& oName)
 		{
 		if (fIndex != fMap.End())
@@ -261,12 +264,13 @@ public:
 		return null;
 		}
 
+// From ZYadMapRClone via ZYadMapRPos
+	virtual ZRef<ZYadMapRClone> Clone()
+		{ return new Self_t(fMap, fIndex); }
+
 // From ZYadMapRPos
 	void SetPosition(const std::string& iName)
 		{ fIndex = fMap.IndexOf(iName); }
-
-	virtual ZRef<ZYadMapRPos> Clone()
-		{ return new Self_t(fMap, fIndex); }
 
 // Our protocol
 	const Map_t& GetMap()

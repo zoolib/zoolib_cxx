@@ -174,7 +174,7 @@ public:
 #pragma mark * ZYadSeqRPos
 
 class ZYadSeqRPos
-:	public virtual ZYadSeqR
+:	public virtual ZYadSeqRClone
 	{
 public:
 // From ZYadR
@@ -186,12 +186,13 @@ public:
 	virtual void SkipAll();
 
 // Our protocol
-//##	virtual ZRef<ZYadSeqRPos> Clone() = 0;
-
 	virtual uint64 GetPosition() = 0;
 	virtual void SetPosition(uint64 iPosition) = 0;
 
 	virtual uint64 GetSize() = 0;
+
+// Hmmm??
+	virtual ZRef<ZYadR> ReadAt(uint64 iPosition);
 	};
 
 // =================================================================================================
@@ -214,20 +215,35 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapRPos
+#pragma mark * ZYadMapRClone
 
-class ZYadMapRPos
+class ZYadMapRClone
 :	public virtual ZYadMapR
 	{
 public:
 // From ZYadR
 	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
-//##	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
-//##	virtual ZRef<ZYadMapRPos> Clone() = 0;
+	virtual ZRef<ZYadMapRClone> Clone() = 0;
+	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadMapRPos
+
+class ZYadMapRPos
+:	public virtual ZYadMapRClone
+	{
+public:
+// From ZYadR
+	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
+
+// Our protocol
 	virtual void SetPosition(const std::string& iName) = 0;
+
+// Hmmm??
+	virtual ZRef<ZYadR> ReadAt(const std::string& iName);
 	};
 
 // =================================================================================================
@@ -242,9 +258,13 @@ public:
 	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR);
 	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR);
 	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR);
+
 	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR);
+	virtual void Visit_YadSeqRClone(const ZRef<ZYadSeqRClone>& iYadSeqRClone);
 	virtual void Visit_YadSeqRPos(const ZRef<ZYadSeqRPos>& iYadSeqRPos);
+
 	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR);
+	virtual void Visit_YadMapRClone(const ZRef<ZYadMapRClone>& iYadMapRClone);
 	virtual void Visit_YadMapRPos(const ZRef<ZYadMapRPos>& iYadMapRPos);
 	};
 
