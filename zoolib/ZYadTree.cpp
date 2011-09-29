@@ -29,7 +29,7 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Chain
+#pragma mark * Chain declaration
 
 class Chain
 :	public ZCounted
@@ -49,6 +49,60 @@ private:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * YadSeqRPos declaration
+
+class YadSeqRPos
+:	public ZYadSeqRPos
+	{
+public:
+	YadSeqRPos(const ZRef<Chain>& iChain, const ZRef<ZYadSeqRPos>& iYadSeqRPos);
+
+// From ZYadSeqR via ZYadSeqRPos
+	virtual ZRef<ZYadR> ReadInc();
+
+// From ZYadSeqRClone via ZYadSeqRPos
+	virtual ZRef<ZYadSeqRClone> Clone();
+
+// From ZYadSeqRPos
+	virtual uint64 GetPosition();
+	virtual void SetPosition(uint64 iPosition);
+	virtual uint64 GetSize();
+
+	virtual ZRef<ZYadR> ReadAt(uint64 iPosition);
+
+private:
+	ZRef<Chain> fChain;
+	ZRef<ZYadSeqRPos> fYadSeqRPos;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * YadMapRPos declaration
+
+class YadMapRPos
+:	public ZYadMapRPos
+	{
+public:
+	YadMapRPos(const ZRef<Chain>& iChain, const std::string& iPosition);
+	YadMapRPos(const ZRef<ZYadMapRPos>& iYad);
+
+// From ZYadMapR via ZYadMapRPos
+	ZRef<ZYadR> ReadInc(std::string& oName);
+
+// From ZYadMapRClone via ZYadMapRPos
+	virtual ZRef<ZYadMapRClone> Clone();
+
+// From ZYadMapRPos
+	virtual void SetPosition(const std::string& iName);
+	virtual ZRef<ZYadR> ReadAt(const std::string& iName);
+
+private:
+	ZRef<Chain> fChain;
+	std::string fPosition;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Helpers
 
 static ZRef<ZYadR> spWrap(ZRef<Chain> iChain, ZRef<ZYadR> iYad)
@@ -64,7 +118,7 @@ static ZRef<ZYadR> spWrap(ZRef<Chain> iChain, ZRef<ZYadR> iYad)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Chain
+#pragma mark * Chain definition
 
 Chain::Chain(const ZRef<Chain>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos)
 :	fParent(iParent)
@@ -132,9 +186,12 @@ ZRef<ZYadR> Chain::ReadAt(const string& iName)
 	return null;
 	}
 
+class Chain;
+
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * YadSeqRPos
+#pragma mark * YadSeqRPos definition
 
 YadSeqRPos::YadSeqRPos(const ZRef<Chain>& iChain, const ZRef<ZYadSeqRPos>& iYadSeqRPos)
 :	fChain(iChain)
@@ -156,9 +213,12 @@ void YadSeqRPos::SetPosition(uint64 iPosition)
 uint64 YadSeqRPos::GetSize()
 	{ return fYadSeqRPos->GetSize(); }
 
+ZRef<ZYadR> YadSeqRPos::ReadAt(uint64 iPosition)
+	{ return spWrap(fChain, fYadSeqRPos->ReadAt(iPosition)); }
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * YadMapRPos
+#pragma mark * YadMapRPos definition
 
 YadMapRPos::YadMapRPos(const ZRef<Chain>& iChain, const string& iPosition)
 :	fChain(iChain)
@@ -181,6 +241,14 @@ ZRef<ZYadR> YadMapRPos::ReadInc(std::string& oName)
 	return fChain->ReadAt(sGetSet(fPosition, string()));
 	}
 
+ZRef<ZYadR> YadMapRPos::ReadAt(const std::string& iName)
+	{
+	if (fChain->IsShared())
+		fChain = fChain->Clone();
+	fPosition.clear();
+	return fChain->ReadAt(iName);
+	}
+
 ZRef<ZYadMapRClone> YadMapRPos::Clone()
 	{ return new YadMapRPos(fChain->Clone(), fPosition); }
 
@@ -188,4 +256,12 @@ void YadMapRPos::SetPosition(const std::string& iName)
 	{ fPosition = iName; }
 
 } // namespace YadTree
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * YadMapRPos definition
+
+ZRef<ZYadMapRPos> sYadTree(const ZRef<ZYadMapRPos>& iYadMapRPos)
+	{ return new YadTree::YadMapRPos(iYadMapRPos); }
+
 } // namespace ZooLib

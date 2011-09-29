@@ -25,62 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad.h"
 
 namespace ZooLib {
-namespace YadTree {
 
-class Chain;
+ZRef<ZYadMapRPos> sYadTree(const ZRef<ZYadMapRPos>& iYadMapRPos);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * YadSeqRPos
-
-class YadSeqRPos
-:	public ZYadSeqRPos
-	{
-public:
-	YadSeqRPos(const ZRef<Chain>& iChain, const ZRef<ZYadSeqRPos>& iYadSeqRPos);
-
-// From ZYadSeqR via ZYadSeqRPos
-	virtual ZRef<ZYadR> ReadInc();
-
-// From ZYadSeqRClone via ZYadSeqRPos
-	virtual ZRef<ZYadSeqRClone> Clone();
-
-// From ZYadSeqRPos
-	virtual uint64 GetPosition();
-	virtual void SetPosition(uint64 iPosition);
-	virtual uint64 GetSize();
-
-private:
-	ZRef<Chain> fChain;
-	ZRef<ZYadSeqRPos> fYadSeqRPos;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * YadMapRPos
-
-class YadMapRPos
-:	public ZYadMapRPos
-	{
-public:
-	YadMapRPos(const ZRef<Chain>& iChain, const std::string& iPosition);
-	YadMapRPos(const ZRef<ZYadMapRPos>& iYad);
-
-// From ZYadMapR via ZYadMapRPos
-	ZRef<ZYadR> ReadInc(std::string& oName);
-
-// From ZYadMapRClone via ZYadMapRPos
-	virtual ZRef<ZYadMapRClone> Clone();
-
-// From ZYadMapRPos
-	void SetPosition(const std::string& iName);
-
-private:
-	ZRef<Chain> fChain;
-	std::string fPosition;
-	};
-
-} // namespace YadTree
 } // namespace ZooLib
 
 #endif // __ZYadTree__
