@@ -307,6 +307,51 @@ ZCog<Param>& operator|=
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * sCog_WhileUnchanged
+
+// Call second cog so long as the calling the first cog is unchanged.
+
+template <class Param>
+ZCog<Param> sCogFun_WhileUnchanged(const ZCog<Param>& iSelf, Param iParam,
+	ZCog<Param> iCog0, ZCog<Param> iCog1);
+
+template <class Param>
+ZCog<Param> sCog_WhileUnchanged
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{
+	if (iCallable0 && iCallable1)
+		return sBindR(sCallable(sCogFun_WhileUnchanged<Param>), iCallable0, iCallable1);
+	return null;
+	}
+
+template <class Param>
+ZCog<Param> sCogFun_WhileUnchanged(const ZCog<Param>& iSelf, Param iParam,
+	ZCog<Param> lCog0, ZCog<Param> lCog1)
+	{
+	if (sCallCogChanged(lCog0, iParam))
+		return lCog0;
+
+	if (sCallCogChanged(lCog1, iParam))
+		return sCog_WhileUnchanged(lCog0, lCog1);
+
+	return iSelf;
+	}
+
+template <class Param>
+ZCog<Param> operator%
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return sCog_WhileUnchanged<Param>(iCallable0, iCallable1); }
+
+template <class Param>
+ZCog<Param>& operator%=
+	(ZCog<Param>& ioCog0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return ioCog0 = sCog_WhileUnchanged<Param>(ioCog0, iCallable1); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * sCog_Once
 
 template <class Param>
