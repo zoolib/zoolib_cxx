@@ -49,8 +49,7 @@ void ZRoster::Finalize()
 	if (this->FinishFinalize())
 		{
 		guard.Release();
-		if (theCallable)
-			theCallable->Call();
+		sCall(theCallable);
 		delete this;
 		}
 	else
@@ -72,7 +71,7 @@ ZRef<ZRoster::Entry> ZRoster::MakeEntry(ZRef<ZCallable_Void> iCallable_Broadcast
 	ZGuardRMtx guard(fMtx);
 
 	ZRef<Entry> theEntry = new Entry(thisRef, iCallable_Broadcast, null);
-	ZUtil_STL::sInsertMustNotContain(1, fEntries, theEntry.Get());
+	ZUtil_STL::sInsertMustNotContain(fEntries, theEntry.Get());
 	fCnd.Broadcast();
 
 	if (ZRef<ZCallable_Void> theCallable = fCallable_Change)
@@ -179,17 +178,14 @@ void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallabl
 	
 	if (iEntry->FinishFinalize())
 		{
-		ZUtil_STL::sEraseMustContain(1, fEntries, iEntry);
+		ZUtil_STL::sEraseMustContain(fEntries, iEntry);
 		delete iEntry;
 		fCnd.Broadcast();
 		ZRef<ZCallable_Void> theCallable_Change = fCallable_Change;
 		guard.Release();
 		
-		if (theCallable_Change)
-			theCallable_Change->Call();
-
-		if (iCallable_Gone)
-			iCallable_Gone->Call();
+		sCall(theCallable_Change);
+		sCall(iCallable_Gone);
 		}
 	}
 
@@ -223,7 +219,7 @@ void ZRoster::Entry::Finalize()
 		{
 		guard.Release();
 		delete this;
-		theCallable->Call();
+		sCall(theCallable);
 		}
 	}
 
