@@ -679,4 +679,42 @@ ZMap_Any operator*(const ZMap_Any& iMap0, const ZMap_Any& iMap1)
 	ZMap_Any result = iMap0;
 	return result *= iMap1;
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * 
+
+ZMap_Any sAugment(const ZMap_Any& iUnder, const ZMap_Any& iOver)
+	{
+	ZMap_Any result = iUnder;
+	for (ZMap_Any::Index_t ii = iOver.Begin(); ii != iOver.End(); ++ii)
+		{
+		const string8& theName = iOver.NameOf(ii);
+		const ZVal_Any& theOverVal = iOver.Get(ii);
+		if (ZVal_Any* theResultVal = result.PGetMutable(theName))
+			{
+			// Already have a val in result
+			if (const ZMap_Any* theOverMap = theOverVal.PGet<ZMap_Any>())
+				{
+				// Over is a map
+				if (ZMap_Any* theResultMap = theResultVal->PGetMutable<ZMap_Any>())
+					{
+					// And result is a map, so we augment, and continue so as to skip
+					// the default replacement operation below.
+					*theResultMap *= *theOverMap;
+					continue;
+					}
+				}
+			// If we don't have two maps, replace existing result with over's.
+			*theResultVal = theOverVal;
+			}
+		else
+			{
+			// No existing val in result, just shove in over's.
+			result.Set(theName, theOverVal);
+			}
+		}
+	return result;
+	}
+
 } // namespace ZooLib

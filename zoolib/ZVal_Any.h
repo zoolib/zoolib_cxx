@@ -576,6 +576,12 @@ ZMap_Any::ZMap_Any(Iterator begin, Iterator end)
 :	fRep(new Rep(begin, end))
 	{}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * 
+
+ZMap_Any sAugment(const ZMap_Any& iUnder, const ZMap_Any& iOver);
+
 } // namespace ZooLib
 
 #endif // __ZVal_Any__
