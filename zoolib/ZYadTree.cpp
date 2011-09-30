@@ -136,14 +136,10 @@ ZRef<ZYadR> Chain::ReadAt(const string& iName)
 	if (ZRef<ZYadR> theYad = fYadMapRPos->ReadAt(iName))
 		return spWrap(this, theYad);
 	
-	if (ZRef<ZYadStrimR,false> theProtoYad = fYadMapRPos->ReadAt("_proto").DynamicCast<ZYadStrimR>())
-		{}
-	else
+	if (ZRef<ZYadStrimR> theProtoYad = fYadMapRPos->ReadAt("_").DynamicCast<ZYadStrimR>())
 		{
 		const string8 theTrailString = theProtoYad->GetStrimR().ReadAll8();
-		if (theTrailString.empty())
-			{}
-		else
+		if (theTrailString.size())
 			{
 			size_t index = 0;
 			const ZTrail theTrail = ZTrail(theTrailString).Normalized();
