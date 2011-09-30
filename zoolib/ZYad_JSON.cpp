@@ -696,8 +696,11 @@ void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)
 void sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
 	ZRef<ZYadR> iYadR, const ZStrimW& s)
 	{
-	Visitor_Writer theWriter(iInitialIndent, iOptions, s);
-	iYadR->Accept(theWriter);
+	if (iYadR)
+		{
+		Visitor_Writer theWriter(iInitialIndent, iOptions, s);
+		iYadR->Accept(theWriter);
+		}
 	}
 
 } // namespace ZYad_JSON
