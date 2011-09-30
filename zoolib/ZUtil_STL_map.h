@@ -52,6 +52,10 @@ void sEraseMustContain(const int iDebugLevel,
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
+void sEraseMustContain(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{ sEraseMustContain(1, ioMap, iKey); }
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
 Value sEraseAndReturn(const int iDebugLevel,
 	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
 	{
@@ -61,6 +65,10 @@ Value sEraseAndReturn(const int iDebugLevel,
 	ioMap.erase(iter);
 	return result;
 	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+Value sEraseAndReturn(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{ return sEraseAndReturn(1, ioMap, iKey); }
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
 ZQ<Value> sQErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
@@ -87,6 +95,11 @@ void sInsertMustNotContain(const int iDebugLevel,
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
+void sInsertMustNotContain
+	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
+	{ sInsertMustNotContain(1, ioMap, iKey, iValue);}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
 bool sInsertIfNotContains
 	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
 	{
@@ -101,6 +114,11 @@ void sSetMustContain(const int iDebugLevel,
 	ZAssertStop(iDebugLevel, ioMap.end() != i);
 	i->second = iValue;
 	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+void sSetMustContain
+	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
+	{ sSetMustContain(1, ioMap, iKey, iValue); }
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
 bool sSetIfContains(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
@@ -120,6 +138,10 @@ const Value& sGetMustContain(const int iDebugLevel,
 	ZAssertStop(iDebugLevel, iMap.end() != i);
 	return i->second;
 	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+const Value& sGetMustContain(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
+	{ return sGetMustContain(1, iMap, iKey); }
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
 ZQ<Value> sQGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)

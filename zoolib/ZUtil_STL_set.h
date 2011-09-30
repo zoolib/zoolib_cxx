@@ -63,6 +63,10 @@ void sInsertMustNotContain(const int iDebugLevel,
 	ZAssertStop(iDebugLevel, didInsert);
 	}
 
+template <typename Base, typename Comparator, typename Derived>
+void sInsertMustNotContain(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{ sInsertMustNotContain(1, ioSet, iElement); }
+
 
 /** Inserts iElement in ioSet, if it's not already contained. */
 template <typename Base, typename Comparator, typename Derived>
@@ -85,6 +89,10 @@ void sEraseMustContain(const int iDebugLevel,
 	size_t count = ioSet.erase(iElement);
 	ZAssertStop(iDebugLevel, count);
 	}
+
+template <typename Base, typename Comparator, typename Derived>
+void sEraseMustContain(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{ sEraseMustContain(1, ioSet,  iElement); }
 
 // ==================================================
 

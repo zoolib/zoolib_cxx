@@ -74,6 +74,10 @@ void sPushBackMustNotContain(const int iDebugLevel,
 	ioVec.push_back(iElement);
 	}
 
+template <typename Base, typename Derived>
+void sPushBackMustNotContain(std::vector<Base>& ioVec, const Derived& iElement)
+	{ sPushBackMustNotContain(1, ioVec, iElement); }
+
 
 /** If the unordered vector ioVec contains iElement then it is
 removed and true returned. Otherwise no change is made to ioVec and
@@ -100,6 +104,10 @@ typename std::vector<Base>::iterator sEraseMustContain(const int iDebugLevel,
 	return ioVec.erase(i);
 	}
 
+template <typename Base, typename Derived>
+typename std::vector<Base>::iterator sEraseMustContain
+	(std::vector<Base>& ioVec, const Derived& iElement)
+	{ return sEraseMustContain(1, ioVec, iElement); }
 
 // ==================================================
 
@@ -159,6 +167,10 @@ void sSortedInsertMustNotContain(const int iDebugLevel,
 	ioVec.insert(i, iElement);
 	}
 
+template <typename Base, typename Derived>
+void sSortedInsertMustNotContain(std::vector<Base>& ioVec, const Derived& iElement)
+	{ sSortedInsertMustNotContain(1, ioVec, iElement); } 
+
 
 /** The contents of ioVec are assumed to be sorted by less<Base>. We first
 assert, under the control of iDebugLevel, that ioVec contains iElement.
@@ -171,6 +183,10 @@ void sSortedEraseMustContain(const int iDebugLevel,
 	ZAssertStop(iDebugLevel, i != ioVec.end() && *i == iElement);
 	ioVec.erase(i);
 	}
+
+template <typename Base, typename Derived>
+void sSortedEraseMustContain(std::vector<Base>& ioVec, const Derived& iElement)
+	{ return sSortedEraseMustContain(1, ioVec, iElement); }
 
 } // namespace ZUtil_STL
 } // namespace ZooLib
