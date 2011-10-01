@@ -55,7 +55,7 @@ void ZCallScheduler::Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_V
 	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(theJob, 0.0));
 	if (iterJT != fJobTimes.end() && iterJT->first == theJob)
 		{
-		sEraseMustContain(1, fTimeJobs, make_pair(iterJT->second, theJob));
+		sEraseMustContain(fTimeJobs, make_pair(iterJT->second, theJob));
 		fJobTimes.erase(iterJT);
 		}
 	}
@@ -92,18 +92,18 @@ void ZCallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 		{
 		if (iSystemTime < iterJT->second)
 			{
-			sEraseMustContain(1, fTimeJobs, make_pair(iterJT->second, iJob));
+			sEraseMustContain(fTimeJobs, make_pair(iterJT->second, iJob));
 			fJobTimes.erase(iterJT);
 
-			sInsertMustNotContain(1, fTimeJobs, make_pair(iSystemTime, iJob));
-			sInsertMustNotContain(1, fJobTimes, make_pair(iJob, iSystemTime));
+			sInsertMustNotContain(fTimeJobs, make_pair(iSystemTime, iJob));
+			sInsertMustNotContain(fJobTimes, make_pair(iJob, iSystemTime));
 			fCnd.Broadcast();
 			}
 		}
 	else
 		{
-		sInsertMustNotContain(1, fJobTimes, make_pair(iJob, iSystemTime));
-		sInsertMustNotContain(1, fTimeJobs, make_pair(iSystemTime, iJob));
+		sInsertMustNotContain(fJobTimes, make_pair(iJob, iSystemTime));
+		sInsertMustNotContain(fTimeJobs, make_pair(iSystemTime, iJob));
 		fCnd.Broadcast();
 		}
 	}
@@ -132,7 +132,7 @@ void ZCallScheduler::pRun()
 				ZRef<ZCaller> theCaller = front->second.first;
 				ZRef<ZCallable_Void> theCallable = front->second.second;
 
-				ZUtil_STL::sEraseMustContain(1, fJobTimes, make_pair(front->second, front->first));
+				ZUtil_STL::sEraseMustContain(fJobTimes, make_pair(front->second, front->first));
 				fTimeJobs.erase(front);
 
 				guard.Release();
