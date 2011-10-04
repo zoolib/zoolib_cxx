@@ -83,7 +83,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateZ(const ZRef<ZTween<Val> >& iTw
 
 template <class Val>
 ZMatrix<Val,4,4> sTweenFun_Rotate2PiX(Val iVal)
-	{ return sRotateX<Val>(iVal * 2 * M_PI); }
+	{ return sRotateX<Val>(2 * M_PI * iVal); }
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateX(const ZRef<ZTween<Val> >& iTween)
@@ -95,7 +95,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateX(const ZRef<ZTween<Val> >& iTween
 
 template <class Val>
 ZMatrix<Val,4,4> sTweenFun_Rotate2PiY(Val iVal)
-	{ return sRotateY<Val>(iVal * 2 * M_PI); }
+	{ return sRotateY<Val>(2 * M_PI * iVal); }
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateY(const ZRef<ZTween<Val> >& iTween)
@@ -107,7 +107,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateY(const ZRef<ZTween<Val> >& iTween
 
 template <class Val>
 ZMatrix<Val,4,4> sTweenFun_Rotate2PiZ(Val iVal)
-	{ return sRotateZ<Val>(iVal * 2 * M_PI); }
+	{ return sRotateZ<Val>(2 * M_PI * iVal); }
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateZ(const ZRef<ZTween<Val> >& iTween)
