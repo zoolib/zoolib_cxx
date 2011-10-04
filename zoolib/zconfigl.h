@@ -333,4 +333,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define ZMACRO_Stringify(a) #a
 
+#define ZMACRO_typedef(typename,expr) typedef __typeof__(expr) typename
+#define ZMACRO_auto(name,expr) __typeof__(expr) name(expr)
+#define ZMACRO_auto_(name,expr) __typeof__(expr) name = (expr)
+
 #endif // __zconfigl__
