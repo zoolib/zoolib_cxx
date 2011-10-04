@@ -41,6 +41,8 @@ class ZMap_Yad;
 class ZVal_Yad
 	{
 public:
+	ZAny AsAny() const;
+
 	ZVal_Yad();
 	ZVal_Yad(const ZVal_Yad& iOther);
 	~ZVal_Yad();

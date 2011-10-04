@@ -27,6 +27,9 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZVal_Yad
 
+ZAny ZVal_Yad::AsAny() const
+	{ return this->pAsAny(); }
+
 ZVal_Yad::ZVal_Yad()
 	{}
 
@@ -89,7 +92,7 @@ ZRef<ZYadR> ZVal_Yad::GetYad() const
 ZAny ZVal_Yad::pAsAny() const
 	{
 	if (fYad)
-		sFromYadR(false, ZVal_Any(), fYad);
+		return sFromYadR(false, ZVal_Any(), fYad);
 	return ZAny();
 	}
 
