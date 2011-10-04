@@ -579,7 +579,7 @@ template <class Signature>
 ZRef<ZCallable<Signature> >
 sCallable_Caller
 	(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
-	{ return new ZCallable_Caller::Callable<Signature> (iCaller, iCallable); }
+	{ return new ZCallable_Caller::Callable<Signature>(iCaller, iCallable); }
 
 } // namespace ZooLib
 

@@ -4156,7 +4156,7 @@ sBindR
 		(iCallable,
 		i0);
 	}
-// We need to reverse the order of these params
+
 template <class Callable>
 ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR02> >
 sBindR
@@ -4876,7 +4876,7 @@ private:
 template <class R, class Callable>
 ZRef<ZCallable<typename STReturn<R, typename Callable::Signature>::Signature> >
 sBind_Return(R iR, const ZRef<Callable>& iCallable)
-	{ return new Callable_Return<R, typename Callable::Signature> (iR, iCallable); }
+	{ return new Callable_Return<R, typename Callable::Signature>(iR, iCallable); }
 
 template <class Callable>
 ZRef<ZCallable<typename STReturn<void, typename Callable::Signature>::Signature> >
