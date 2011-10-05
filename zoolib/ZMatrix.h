@@ -445,8 +445,8 @@ ZMatrix<E,RL,CR> operator*(const ZMatrix<E,RL,Common>& iLeft, const ZMatrix<E,Co
 	return result;
 	}
 
-template <class E, size_t Dim>
-ZMatrix<E,Dim,Dim>& operator*=(ZMatrix<E,Dim,Dim>& ioLeft, const ZMatrix<E,Dim,Dim>& iRight)
+template <class E, size_t RL, size_t Common, size_t CR>
+ZMatrix<E,RL,CR>& operator*=(ZMatrix<E,RL,Common>& ioLeft, const ZMatrix<E,Common,CR>& iRight)
 	{ return ioLeft = ioLeft * iRight; }
 
 // =================================================================================================
