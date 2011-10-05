@@ -31,6 +31,8 @@ namespace ZGameEngine {
 #pragma mark -
 #pragma mark * Quaternion -- a beginning.
 
+#if 0
+
 template <class Val>
 class Quaternion
 	{
@@ -62,19 +64,57 @@ public:
 	CVec3 fV;
 	};
 
+#endif // 0
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * CVec ctors
+
+template <class Val>
+ZMatrix<Val,1,1> sCVec(Val i0)
+	{
+	ZMatrix<Val,1,1> result;
+	result.fE[0][0] = i0;
+	return result;
+	}
+
+template <class Val>
+ZMatrix<Val,2,1> sCVec(Val i0, Val i1)
+	{
+	ZMatrix<Val,2,1> result;
+	result.fE[0][0] = i0;
+	result.fE[1][0] = i1;
+	return result;
+	}
+
+template <class Val>
+ZMatrix<Val,3,1> sCVec(Val i0, Val i1, Val i2)
+	{
+	ZMatrix<Val,3,1> result;
+	result.fE[0][0] = i0;
+	result.fE[1][0] = i1;
+	result.fE[2][0] = i2;
+	return result;
+	}
+
+template <class Val>
+ZMatrix<Val,4,1> sCVec(Val i0, Val i1, Val i2, Val i3)
+	{
+	ZMatrix<Val,4,1> result;
+	result.fE[0][0] = i0;
+	result.fE[1][0] = i1;
+	result.fE[2][0] = i2;
+	result.fE[3][0] = i3;
+	return result;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * CVec3 ctors
 
 template <class Val>
 ZMatrix<Val,3,1> sCVec3(Val x, Val y, Val z)
-	{
-	ZMatrix<Val,3,1> result;
-	result[0] = x;
-	result[1] = y;
-	result[2] = z;
-	return result;
-	}
+	{ return sCVec(x, y, z); }
 
 template <class Val>
 ZMatrix<Val,3,1> sCVec3(Val iVal)
@@ -86,17 +126,53 @@ ZMatrix<Val,3,1> sCVec3()
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * RVec ctors
+
+template <class Val>
+ZMatrix<Val,1,1> sRVec(Val i0)
+	{
+	ZMatrix<Val,1,1> result;
+	result.fE[0][0] = i0;
+	return result;
+	}
+
+template <class Val>
+ZMatrix<Val,1,2> sRVec(Val i0, Val i1)
+	{
+	ZMatrix<Val,1,2> result;
+	result.fE[0][0] = i0;
+	result.fE[0][1] = i1;
+	return result;
+	}
+
+template <class Val>
+ZMatrix<Val,1,3> sRVec(Val i0, Val i1, Val i2)
+	{
+	ZMatrix<Val,1,3> result;
+	result.fE[0][0] = i0;
+	result.fE[0][1] = i1;
+	result.fE[0][2] = i2;
+	return result;
+	}
+
+template <class Val>
+ZMatrix<Val,1,4> sRVec(Val i0, Val i1, Val i2, Val i3)
+	{
+	ZMatrix<Val,1,4> result;
+	result.fE[0][0] = i0;
+	result.fE[0][1] = i1;
+	result.fE[0][2] = i2;
+	result.fE[0][3] = i3;
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * RVec3 ctors
 
 template <class Val>
 ZMatrix<Val,1,3> sRVec3(Val x, Val y, Val z)
-	{
-	ZMatrix<Val,1,3> result;
-	result[0] = x;
-	result[1] = y;
-	result[2] = z;
-	return result;
-	}
+	{ return sRVec(x, y, z); }
 
 template <class Val>
 ZMatrix<Val,1,3> sRVec3(Val iVal)
