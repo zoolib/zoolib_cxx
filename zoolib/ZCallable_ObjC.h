@@ -135,12 +135,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall()
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL);
 		}
 
 private:
@@ -164,13 +160,9 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall()
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL);
+		return notnull;
 		}
 
 private:
@@ -196,12 +188,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0);
 		}
 
 private:
@@ -226,13 +214,9 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0);
+		return notnull;
 		}
 
 private:
@@ -258,12 +242,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1);
 		}
 
 private:
@@ -288,13 +268,9 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1);
+		return notnull;
 		}
 
 private:
@@ -320,12 +296,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2);
 		}
 
 private:
@@ -350,13 +322,9 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2);
+		return notnull;
 		}
 
 private:
@@ -382,12 +350,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3);
 		}
 
 private:
@@ -412,13 +376,9 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3);
+		return notnull;
 		}
 
 private:
@@ -445,12 +405,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4);
 		}
 
 private:
@@ -476,13 +432,9 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4);
+		return notnull;
 		}
 
 private:
@@ -509,12 +461,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5);
 		}
 
 private:
@@ -540,13 +488,9 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5);
+		return notnull;
 		}
 
 private:
@@ -573,12 +517,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6);
 		}
 
 private:
@@ -604,13 +544,9 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6);
+		return notnull;
 		}
 
 private:
@@ -637,12 +573,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7);
 		}
 
 private:
@@ -668,13 +600,9 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7);
+		return notnull;
 		}
 
 private:
@@ -704,12 +632,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8);
 		}
 
 private:
@@ -738,13 +662,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		return notnull;
 		}
 
 private:
@@ -774,12 +694,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
 		}
 
 private:
@@ -808,13 +724,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		return notnull;
 		}
 
 private:
@@ -844,12 +756,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
 		}
 
 private:
@@ -878,13 +786,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		return notnull;
 		}
 
 private:
@@ -914,12 +818,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
 		}
 
 private:
@@ -948,13 +848,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		return notnull;
 		}
 
 private:
@@ -985,12 +881,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
 		}
 
 private:
@@ -1020,13 +912,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		return notnull;
 		}
 
 private:
@@ -1057,12 +945,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
 		}
 
 private:
@@ -1092,13 +976,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		return notnull;
 		}
 
 private:
@@ -1129,12 +1009,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
 		}
 
 private:
@@ -1164,13 +1040,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		return notnull;
 		}
 
 private:
@@ -1201,12 +1073,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		if (fObj)
-			{
-			return MsgSend<R, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
-			}
-		return null;
+		return MsgSend<R, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
 		}
 
 private:
@@ -1236,13 +1104,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		if (fObj)
-			{
-			MsgSend<void, FunctionPtr_t>::sMsgSend()
-				(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
-			return notnull;
-			}
-		return null;
+		MsgSend<void, FunctionPtr_t>::sMsgSend()
+			(fObj, fSEL, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+		return notnull;
 		}
 
 private:
@@ -1259,12 +1123,20 @@ private:
 template <class Signature>
 ZRef<ZCallable<Signature> >
 sCallable(id iObj, SEL iSEL)
-	{ return new ZCallable_ObjC::Callable<id,Signature>(iObj, iSEL); }
+	{
+	if (not iObj || not iSEL)
+		return null;
+	return new ZCallable_ObjC::Callable<id,Signature>(iObj, iSEL);
+	}
 
 template <class Signature,class T>
 ZRef<ZCallable<Signature> >
 sCallable(const ZRef<T>& iObj, SEL iSEL)
-	{ return new ZCallable_ObjC::Callable<ZRef<NSObject>,Signature>(iObj, iSEL); }
+	{
+	if (not iObj || not iSEL)
+		return null;
+	return new ZCallable_ObjC::Callable<ZRef<NSObject>,Signature>(iObj, iSEL);
+	}
 
 } // namespace ZooLib
 

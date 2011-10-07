@@ -1315,61 +1315,59 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0); }
+		{ return fCallable->QCall(f0); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, i0); }
+		{ return fCallable->QCall(f0, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, i0, i1); }
+		{ return fCallable->QCall(f0, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, i0, i1, i2); }
+		{ return fCallable->QCall(f0, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, f0, i0, i1, i2, i3); }
+		{ return fCallable->QCall(f0, i0, i1, i2, i3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, f0, i0, i1, i2, i3, i4); }
+		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, f0, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4, i5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4, i5, i6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return sQCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return sQCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return sQCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return sQCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
+		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ return sQCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
+		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
-		{
-		return sQCall(fCallable, f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
-		}
+		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE); }
 
 	typename VT<typename ST::L0>::F f0;
 	ZRef<Callable> fCallable;
@@ -1415,57 +1413,55 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1); }
+		{ return fCallable->QCall(f0, f1); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, i0); }
+		{ return fCallable->QCall(f0, f1, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, i0, i1); }
+		{ return fCallable->QCall(f0, f1, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, f1, i0, i1, i2); }
+		{ return fCallable->QCall(f0, f1, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, f0, f1, i0, i1, i2, i3); }
+		{ return fCallable->QCall(f0, f1, i0, i1, i2, i3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, f0, f1, i0, i1, i2, i3, i4); }
+		{ return fCallable->QCall(f0, f1, i0, i1, i2, i3, i4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->QCall(f0, f1, i0, i1, i2, i3, i4, i5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->QCall(f0, f1, i0, i1, i2, i3, i4, i5, i6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->QCall(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->QCall(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return sQCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return fCallable->QCall(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return sQCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return fCallable->QCall(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return sQCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ return fCallable->QCall(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return sQCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
+		{ return fCallable->QCall(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{
-		return sQCall(fCallable, f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
-		}
+		{ return fCallable->QCall(f0, f1, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1512,53 +1508,51 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2); }
+		{ return fCallable->QCall(f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, i0); }
+		{ return fCallable->QCall(f0, f1, f2, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, f2, i0, i1); }
+		{ return fCallable->QCall(f0, f1, f2, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, f1, f2, i0, i1, i2); }
+		{ return fCallable->QCall(f0, f1, f2, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, f0, f1, f2, i0, i1, i2, i3); }
+		{ return fCallable->QCall(f0, f1, f2, i0, i1, i2, i3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4); }
+		{ return fCallable->QCall(f0, f1, f2, i0, i1, i2, i3, i4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->QCall(f0, f1, f2, i0, i1, i2, i3, i4, i5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->QCall(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->QCall(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->QCall(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return sQCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return fCallable->QCall(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return sQCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return fCallable->QCall(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return sQCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
+		{ return fCallable->QCall(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{
-		return sQCall(fCallable, f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
-		}
+		{ return fCallable->QCall(f0, f1, f2, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1606,49 +1600,47 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3); }
+		{ return fCallable->QCall(f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, f3, i0); }
+		{ return fCallable->QCall(f0, f1, f2, f3, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, f2, f3, i0, i1); }
+		{ return fCallable->QCall(f0, f1, f2, f3, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, f1, f2, f3, i0, i1, i2); }
+		{ return fCallable->QCall(f0, f1, f2, f3, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3); }
+		{ return fCallable->QCall(f0, f1, f2, f3, i0, i1, i2, i3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4); }
+		{ return fCallable->QCall(f0, f1, f2, f3, i0, i1, i2, i3, i4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->QCall(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->QCall(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->QCall(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->QCall(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return sQCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return fCallable->QCall(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return sQCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
+		{ return fCallable->QCall(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1697,45 +1689,43 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, i0); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, i0, i1); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, i0, i1, i2, i3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1785,41 +1775,39 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, i0); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1870,37 +1858,35 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6, i7); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6, i7, i8);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -1952,33 +1938,31 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5, i6); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5, i6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5, i6, i7);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, i0, i1, i2, i3, i4, i5, i6, i7); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2032,30 +2016,28 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4, i5); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4, i5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4, i5, i6);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, i0, i1, i2, i3, i4, i5, i6); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2110,27 +2092,25 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3, i4); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3, i4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3, i4, i5);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, i0, i1, i2, i3, i4, i5); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2186,24 +2166,22 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2, i3); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2, i3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2, i3, i4);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, i0, i1, i2, i3, i4); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2260,21 +2238,19 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1, i2); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1, i2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1, i2, i3);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, i0, i1, i2, i3); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2332,18 +2308,16 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0, i1); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0, i1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0, i1, i2);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, i0, i1, i2); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2402,15 +2376,13 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, i0); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, i0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, i0, i1);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, i0, i1); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2470,12 +2442,10 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
 
 	ZQ<R> QCall(P0 i0)
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, i0);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, i0); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2536,9 +2506,7 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, fF);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, fF); }
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
@@ -2569,6 +2537,8 @@ sBindL
 	(typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L01<typename Callable::Signature>
 		(i0,
 		iCallable);
@@ -2581,6 +2551,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L02<typename Callable::Signature>
 		(i0, i1,
 		iCallable);
@@ -2594,6 +2566,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L03<typename Callable::Signature>
 		(i0, i1, i2,
 		iCallable);
@@ -2608,6 +2582,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L04<typename Callable::Signature>
 		(i0, i1, i2, i3,
 		iCallable);
@@ -2623,6 +2599,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L05<typename Callable::Signature>
 		(i0, i1, i2, i3, i4,
 		iCallable);
@@ -2639,6 +2617,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L06<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5,
 		iCallable);
@@ -2656,6 +2636,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::L6>::P i6,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L07<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5, i6,
 		iCallable);
@@ -2674,6 +2656,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::L7>::P i7,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L08<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5, i6, i7,
 		iCallable);
@@ -2693,6 +2677,10 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::L8>::P i8,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
+	if (not iCallable)
+		return null;
 	return new Callable_L09<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5, i6, i7, i8,
 		iCallable);
@@ -2713,6 +2701,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::L9>::P i9,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L10<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9,
 		iCallable);
@@ -2734,6 +2724,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::LA>::P iA,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L11<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA,
 		iCallable);
@@ -2756,6 +2748,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::LB>::P iB,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L12<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB,
 		iCallable);
@@ -2779,6 +2773,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::LC>::P iC,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L13<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC,
 		iCallable);
@@ -2803,6 +2799,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::LD>::P iD,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L14<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD,
 		iCallable);
@@ -2828,6 +2826,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::LE>::P iE,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L15<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE,
 		iCallable);
@@ -2854,6 +2854,8 @@ sBindL
 	typename VT<typename ST_T<typename Callable::Signature>::LF>::P iF,
 	const ZRef<Callable>& iCallable)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_L16<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF,
 		iCallable);
@@ -2899,61 +2901,59 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0); }
+		{ return fCallable->QCall(f0); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0); }
+		{ return fCallable->QCall(i0, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0); }
+		{ return fCallable->QCall(i0, i1, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0); }
+		{ return fCallable->QCall(i0, i1, i2, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, i0, i1, i2, i3, f0); }
+		{ return fCallable->QCall(i0, i1, i2, i3, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, f0); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, f0); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, f0); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, f0); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
-		{
-		return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, f0);
-		}
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, f0); }
 
 	typename VT<typename ST::R0>::F f0;
 	ZRef<Callable> fCallable;
@@ -2999,57 +2999,55 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1); }
+		{ return fCallable->QCall(f0, f1); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1); }
+		{ return fCallable->QCall(i0, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1); }
+		{ return fCallable->QCall(i0, i1, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0, f1); }
+		{ return fCallable->QCall(i0, i1, i2, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, i0, i1, i2, i3, f0, f1); }
+		{ return fCallable->QCall(i0, i1, i2, i3, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, f0, f1); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0, f1); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0, f1); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{
-		return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, f0, f1);
-		}
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, f0, f1); }
 
 	typename VT<typename ST::R1>::F f0;
 	typename VT<typename ST::R0>::F f1;
@@ -3096,53 +3094,51 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2); }
+		{ return fCallable->QCall(f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2); }
+		{ return fCallable->QCall(i0, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1, f2); }
+		{ return fCallable->QCall(i0, i1, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0, f1, f2); }
+		{ return fCallable->QCall(i0, i1, i2, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, i0, i1, i2, i3, f0, f1, f2); }
+		{ return fCallable->QCall(i0, i1, i2, i3, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1, f2); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1, f2); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{
-		return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0, f1, f2);
-		}
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, f0, f1, f2); }
 
 	typename VT<typename ST::R2>::F f0;
 	typename VT<typename ST::R1>::F f1;
@@ -3190,49 +3186,47 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3); }
+		{ return fCallable->QCall(f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2, f3); }
+		{ return fCallable->QCall(i0, f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1, f2, f3); }
+		{ return fCallable->QCall(i0, i1, f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0, f1, f2, f3); }
+		{ return fCallable->QCall(i0, i1, i2, f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3); }
+		{ return fCallable->QCall(i0, i1, i2, i3, f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2, f3); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2, f3); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{
-		return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1, f2, f3);
-		}
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, f0, f1, f2, f3); }
 
 	typename VT<typename ST::R3>::F f0;
 	typename VT<typename ST::R2>::F f1;
@@ -3281,45 +3275,43 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(i0, f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(i0, i1, f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(i0, i1, i2, f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(i0, i1, i2, i3, f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3, f4); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3, f4); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{
-		return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2, f3, f4);
-		}
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, f0, f1, f2, f3, f4); }
 
 	typename VT<typename ST::R4>::F f0;
 	typename VT<typename ST::R3>::F f1;
@@ -3369,41 +3361,39 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2, f3, f4, f5); }
+		{ return fCallable->QCall(i0, f0, f1, f2, f3, f4, f5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5); }
+		{ return fCallable->QCall(i0, i1, f0, f1, f2, f3, f4, f5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5); }
+		{ return fCallable->QCall(i0, i1, i2, f0, f1, f2, f3, f4, f5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5); }
+		{ return fCallable->QCall(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4, f5); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4, f5); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{
-		return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3, f4, f5);
-		}
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, f0, f1, f2, f3, f4, f5); }
 
 	typename VT<typename ST::R5>::F f0;
 	typename VT<typename ST::R4>::F f1;
@@ -3454,37 +3444,35 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6); }
+		{ return fCallable->QCall(i0, f0, f1, f2, f3, f4, f5, f6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6); }
+		{ return fCallable->QCall(i0, i1, f0, f1, f2, f3, f4, f5, f6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6); }
+		{ return fCallable->QCall(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6); }
+		{ return fCallable->QCall(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5, f6); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5, f6); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{
-		return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4, f5, f6);
-		}
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, f0, f1, f2, f3, f4, f5, f6); }
 
 	typename VT<typename ST::R6>::F f0;
 	typename VT<typename ST::R5>::F f1;
@@ -3536,33 +3524,31 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return fCallable->QCall(i0, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return fCallable->QCall(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return fCallable->QCall(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return fCallable->QCall(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6, f7); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{
-		return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5, f6, f7);
-		}
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, f0, f1, f2, f3, f4, f5, f6, f7); }
 
 	typename VT<typename ST::R7>::F f0;
 	typename VT<typename ST::R6>::F f1;
@@ -3616,30 +3602,28 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return fCallable->QCall(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return fCallable->QCall(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return fCallable->QCall(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return fCallable->QCall(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{
-		return sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6, f7, f8);
-		}
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, f0, f1, f2, f3, f4, f5, f6, f7, f8); }
 
 	typename VT<typename ST::R8>::F f0;
 	typename VT<typename ST::R7>::F f1;
@@ -3694,27 +3678,25 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return fCallable->QCall(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return fCallable->QCall(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return fCallable->QCall(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return fCallable->QCall(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{
-		return sQCall(fCallable, i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9);
-		}
+		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9); }
 
 	typename VT<typename ST::R9>::F f0;
 	typename VT<typename ST::R8>::F f1;
@@ -3770,23 +3752,22 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return fCallable->QCall(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return fCallable->QCall(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return fCallable->QCall(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
+		{ return fCallable->QCall(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{return sQCall(fCallable, i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA);
-		}
+		{return fCallable->QCall(i0, i1, i2, i3, i4, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA); }
 
 	typename VT<typename ST::RA>::F f0;
 	typename VT<typename ST::R9>::F f1;
@@ -3843,21 +3824,19 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
+		{ return fCallable->QCall(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
+		{ return fCallable->QCall(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
+		{ return fCallable->QCall(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{
-		return sQCall(fCallable, i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB);
-		}
+		{ return fCallable->QCall(i0, i1, i2, i3, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB); }
 
 	typename VT<typename ST::RB>::F f0;
 	typename VT<typename ST::RA>::F f1;
@@ -3915,18 +3894,16 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
+		{ return fCallable->QCall(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
+		{ return fCallable->QCall(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{
-		return sQCall(fCallable, i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC);
-		}
+		{ return fCallable->QCall(i0, i1, i2, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC); }
 
 	typename VT<typename ST::RC>::F f0;
 	typename VT<typename ST::RB>::F f1;
@@ -3985,15 +3962,13 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
+		{ return fCallable->QCall(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{
-		return sQCall(fCallable, i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD);
-		}
+		{ return fCallable->QCall(i0, i1, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD); }
 
 	typename VT<typename ST::RD>::F f0;
 	typename VT<typename ST::RC>::F f1;
@@ -4053,12 +4028,10 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
 
 	ZQ<R> QCall(P0 i0)
-		{
-		return sQCall(fCallable, i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE);
-		}
+		{ return fCallable->QCall(i0, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
 
 	typename VT<typename ST::RE>::F f0;
 	typename VT<typename ST::RD>::F f1;
@@ -4119,9 +4092,7 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{
-		return sQCall(fCallable, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, fF);
-		}
+		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE, fF); }
 
 	typename VT<typename ST::RF>::F f0;
 	typename VT<typename ST::RE>::F f1;
@@ -4152,6 +4123,8 @@ sBindR
 	(const ZRef<Callable>& iCallable,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i0)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R01<typename Callable::Signature>
 		(iCallable,
 		i0);
@@ -4164,6 +4137,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i0,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i1)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R02<typename Callable::Signature>
 		(iCallable,
 		i0, i1);
@@ -4177,6 +4152,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i1,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i2)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R03<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2);
@@ -4191,6 +4168,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i2,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i3)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R04<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3);
@@ -4206,6 +4185,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i3,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i4)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R05<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4);
@@ -4222,6 +4203,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i4,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i5)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R06<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4, i5);
@@ -4239,6 +4222,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i5,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i6)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R07<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4, i5, i6);
@@ -4257,6 +4242,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i6,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i7)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R08<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7);
@@ -4276,6 +4263,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i7,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i8)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R09<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8);
@@ -4296,6 +4285,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i8,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i9)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R10<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
@@ -4317,6 +4308,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i9,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iA)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R11<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
@@ -4339,6 +4332,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P iA,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iB)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R12<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
@@ -4362,6 +4357,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P iB,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iC)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R13<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
@@ -4386,6 +4383,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P iC,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iD)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R14<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
@@ -4411,6 +4410,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P iD,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iE)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R15<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
@@ -4437,6 +4438,8 @@ sBindR
 	typename VT<typename ST_T<typename Callable::Signature>::R1>::P iE,
 	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iF)
 	{
+	if (not iCallable)
+		return null;
 	return new Callable_R16<typename Callable::Signature>
 		(iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
@@ -4480,63 +4483,63 @@ public:
 
 private:
 	ZQ<R> QCall()
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
-		{ return sQCall(fCallable); }
+		{ return fCallable->QCall(fCallable); }
 
 	ZRef<Callable> fCallable;
 	};
@@ -4547,7 +4550,11 @@ private:
 
 template <class Callable>
 ZRef<Callable> sBind_IgnoreParams(const ZRef<Callable>& iCallable)
-	{ return new Callable_IgnoreParams<typename Callable::Signature>(iCallable); }
+	{
+	if (not iCallable)
+		return null;
+	return new Callable_IgnoreParams<typename Callable::Signature>(iCallable);
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -4741,63 +4748,63 @@ public:
 private:
 	ZQ<void> QCall()
 		{
-		if (sQCall(fCallable))
+		if (fCallable->QCall(fCallable))
 			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0)
 		{
-		if (sQCall(fCallable, i0))
+		if (fCallable->QCall(i0))
 			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1)
 		{
-		if (sQCall(fCallable, i0, i1))
+		if (fCallable->QCall(i0, i1))
 			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2)
 		{
-		if (sQCall(fCallable, i0, i1, i2))
+		if (fCallable->QCall(i0, i1, i2))
 			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3))
+		if (fCallable->QCall(i0, i1, i2, i3))
 			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4))
+		if (fCallable->QCall(i0, i1, i2, i3, i4))
 			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5))
+		if (fCallable->QCall(i0, i1, i2, i3, i4, i5))
 			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6))
+		if (fCallable->QCall(i0, i1, i2, i3, i4, i5, i6))
 			return notnull;
 		return null;
 		}
 
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7))
+		if (fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7))
 			return notnull;
 		return null;
 		}
@@ -4805,7 +4812,7 @@ private:
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8))
+		if (fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8))
 			return notnull;
 		return null;
 		}
@@ -4813,7 +4820,7 @@ private:
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))
+		if (fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))
 			return notnull;
 		return null;
 		}
@@ -4821,7 +4828,7 @@ private:
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))
+		if (fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))
 			return notnull;
 		return null;
 		}
@@ -4829,7 +4836,7 @@ private:
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))
+		if (fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))
 			return notnull;
 		return null;
 		}
@@ -4837,7 +4844,7 @@ private:
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC))
+		if (fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC))
 			return notnull;
 		return null;
 		}
@@ -4845,7 +4852,7 @@ private:
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD))
+		if (fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD))
 			return notnull;
 		return null;
 		}
@@ -4853,7 +4860,7 @@ private:
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE))
+		if (fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE))
 			return notnull;
 		return null;
 		}
@@ -4861,7 +4868,7 @@ private:
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		if (sQCall(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF))
+		if (fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF))
 			return notnull;
 		return null;
 		}
@@ -4876,12 +4883,20 @@ private:
 template <class R, class Callable>
 ZRef<ZCallable<typename STReturn<R, typename Callable::Signature>::Signature> >
 sBind_Return(R iR, const ZRef<Callable>& iCallable)
-	{ return new Callable_Return<R, typename Callable::Signature>(iR, iCallable); }
+	{
+	if (not iCallable)
+		return null;
+	return new Callable_Return<R, typename Callable::Signature>(iR, iCallable);
+	}
 
 template <class Callable>
 ZRef<ZCallable<typename STReturn<void, typename Callable::Signature>::Signature> >
 sBind_ReturnVoid(const ZRef<Callable>& iCallable)
-	{ return new Callable_Return<void, typename Callable::Signature>(iCallable); }
+	{
+	if (not iCallable)
+		return null;
+	return new Callable_Return<void, typename Callable::Signature>(iCallable);
+	}
 
 } // namespace ZCallable_Bind
 

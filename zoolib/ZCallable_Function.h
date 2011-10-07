@@ -50,11 +50,7 @@ public:
 
 // From ZCallable
 	virtual ZQ<R> QCall()
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr();
-		return null;
-		}
+		{ return fFunctionPtr(); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -78,12 +74,8 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall()
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr();
-			return notnull;
-			}
-		return null;
+		fFunctionPtr();
+		return notnull;
 		}
 
 private:
@@ -108,11 +100,7 @@ public:
 
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0);
-		return null;
-		}
+		{ return fFunctionPtr(i0); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -137,12 +125,8 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0);
+		return notnull;
 		}
 
 private:
@@ -167,11 +151,7 @@ public:
 
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -196,12 +176,8 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1);
+		return notnull;
 		}
 
 private:
@@ -226,11 +202,7 @@ public:
 
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -255,12 +227,8 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2);
+		return notnull;
 		}
 
 private:
@@ -285,11 +253,7 @@ public:
 
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -314,12 +278,8 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3);
+		return notnull;
 		}
 
 private:
@@ -345,11 +305,7 @@ public:
 
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -375,12 +331,8 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4);
+		return notnull;
 		}
 
 private:
@@ -406,11 +358,7 @@ public:
 
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4, i5);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -436,12 +384,8 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4, i5);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4, i5);
+		return notnull;
 		}
 
 private:
@@ -467,11 +411,7 @@ public:
 
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -497,12 +437,8 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4, i5, i6);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4, i5, i6);
+		return notnull;
 		}
 
 private:
@@ -528,11 +464,7 @@ public:
 
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -558,12 +490,8 @@ public:
 // From ZCallable
 	virtual ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7);
+		return notnull;
 		}
 
 private:
@@ -592,11 +520,7 @@ public:
 	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -625,12 +549,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8);
+		return notnull;
 		}
 
 private:
@@ -659,11 +579,7 @@ public:
 	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -692,12 +608,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
+		return notnull;
 		}
 
 private:
@@ -726,11 +638,7 @@ public:
 	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -759,12 +667,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
+		return notnull;
 		}
 
 private:
@@ -793,11 +697,7 @@ public:
 	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -826,12 +726,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
+		return notnull;
 		}
 
 private:
@@ -861,11 +757,7 @@ public:
 	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -895,12 +787,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
+		return notnull;
 		}
 
 private:
@@ -930,11 +818,7 @@ public:
 	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -964,12 +848,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
+		return notnull;
 		}
 
 private:
@@ -999,11 +879,7 @@ public:
 	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -1033,12 +909,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
+		return notnull;
 		}
 
 private:
@@ -1068,11 +940,7 @@ public:
 	virtual ZQ<R> QCall
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
-		{
-		if (fFunctionPtr)
-			return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
-		return null;
-		}
+		{ return fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF); }
 
 private:
 	FunctionPtr_t fFunctionPtr;
@@ -1102,12 +970,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		if (fFunctionPtr)
-			{
-			fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
-			return notnull;
-			}
-		return null;
+		fFunctionPtr(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
+		return notnull;
 		}
 
 private:
@@ -1121,59 +985,95 @@ private:
 template <class R>
 ZRef<ZCallable<R(void)> >
 sCallable(R (*iFunctionPtr)())
-	{ return new Callable<R(void)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(void)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0>
 ZRef<ZCallable<R(P0)> >
 sCallable(R (*iFunctionPtr)(P0))
-	{ return new Callable<R(P0)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1>
 ZRef<ZCallable<R(P0,P1)> >
 sCallable(R (*iFunctionPtr)(P0,P1))
-	{ return new Callable<R(P0,P1)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2>
 ZRef<ZCallable<R(P0,P1,P2)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2))
-	{ return new Callable<R(P0,P1,P2)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3>
 ZRef<ZCallable<R(P0,P1,P2,P3)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3))
-	{ return new Callable<R(P0,P1,P2,P3)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4))
-	{ return new Callable<R(P0,P1,P2,P3,P4)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5))
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4,P5)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6))
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4,P5,P6)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7))
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1181,7 +1081,11 @@ template <class R,
 	class P8>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8))
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1189,7 +1093,11 @@ template <class R,
 	class P8, class P9>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9))
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1197,7 +1105,11 @@ template <class R,
 	class P8, class P9, class PA>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA))
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1205,7 +1117,11 @@ template <class R,
 	class P8, class P9, class PA, class PB>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB))
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1214,7 +1130,11 @@ template <class R,
 	class PC>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC))
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1223,7 +1143,11 @@ template <class R,
 	class PC, class PD>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD))
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1232,7 +1156,11 @@ template <class R,
 	class PC, class PD, class PE>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE))
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>(iFunctionPtr);
+	}
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1241,7 +1169,11 @@ template <class R,
 	class PC, class PD, class PE, class PF>
 ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> >
 sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
-	{ return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>(iFunctionPtr); }
+	{
+	if (not iFunctionPtr)
+		return null;
+	return new Callable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>(iFunctionPtr);
+	}
 
 } // namespace ZCallable_Function
 
