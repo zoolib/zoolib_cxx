@@ -29,45 +29,6 @@ namespace ZGameEngine {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Quaternion -- a beginning.
-
-#if 0
-
-template <class Val>
-class Quaternion
-	{
-public:
-	typedef ZMatrix<Val,3,1> CVec3;
-
-	Quaternion()
-	:	fS(0)
-		{}
-
-	Quaternion(const Quaternion& iOther)
-	:	fS(iOther.fS)
-	,	fV(iOther.fV)
-		{}
-	
-	Quaternion& operator=(const Quaternion& iOther)
-		{
-		fS = iOther.fS;
-		fV = iOther.fV;
-		return *this;
-		}
-
-	Quaternion(Val iS, const CVec3& iV)
-	:	fS(iS)
-	,	fV(iV)
-		{}
-
-	Val fS;
-	CVec3 fV;
-	};
-
-#endif // 0
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * CVec ctors
 
 template <class Val>
@@ -83,7 +44,7 @@ ZMatrix<Val,2,1> sCVec(Val i0, Val i1)
 	{
 	ZMatrix<Val,2,1> result;
 	result.fE[0][0] = i0;
-	result.fE[1][0] = i1;
+	result.fE[0][1] = i1;
 	return result;
 	}
 
@@ -92,8 +53,8 @@ ZMatrix<Val,3,1> sCVec(Val i0, Val i1, Val i2)
 	{
 	ZMatrix<Val,3,1> result;
 	result.fE[0][0] = i0;
-	result.fE[1][0] = i1;
-	result.fE[2][0] = i2;
+	result.fE[0][1] = i1;
+	result.fE[0][2] = i2;
 	return result;
 	}
 
@@ -102,9 +63,9 @@ ZMatrix<Val,4,1> sCVec(Val i0, Val i1, Val i2, Val i3)
 	{
 	ZMatrix<Val,4,1> result;
 	result.fE[0][0] = i0;
-	result.fE[1][0] = i1;
-	result.fE[2][0] = i2;
-	result.fE[3][0] = i3;
+	result.fE[0][1] = i1;
+	result.fE[0][2] = i2;
+	result.fE[0][3] = i3;
 	return result;
 	}
 
@@ -141,7 +102,7 @@ ZMatrix<Val,1,2> sRVec(Val i0, Val i1)
 	{
 	ZMatrix<Val,1,2> result;
 	result.fE[0][0] = i0;
-	result.fE[0][1] = i1;
+	result.fE[1][0] = i1;
 	return result;
 	}
 
@@ -150,8 +111,8 @@ ZMatrix<Val,1,3> sRVec(Val i0, Val i1, Val i2)
 	{
 	ZMatrix<Val,1,3> result;
 	result.fE[0][0] = i0;
-	result.fE[0][1] = i1;
-	result.fE[0][2] = i2;
+	result.fE[1][0] = i1;
+	result.fE[2][0] = i2;
 	return result;
 	}
 
@@ -160,9 +121,9 @@ ZMatrix<Val,1,4> sRVec(Val i0, Val i1, Val i2, Val i3)
 	{
 	ZMatrix<Val,1,4> result;
 	result.fE[0][0] = i0;
-	result.fE[0][1] = i1;
-	result.fE[0][2] = i2;
-	result.fE[0][3] = i3;
+	result.fE[1][0] = i1;
+	result.fE[2][0] = i2;
+	result.fE[3][0] = i3;
 	return result;
 	}
 
@@ -245,12 +206,12 @@ ZMatrix<Val,4,4> sRotateX(Val radians)
 	Val s = sin(radians);
 	Val c = cos(radians);
 	ZMatrix<Val,4,4> result;
-	result[0][0] = 1;
-	result[1][1] = c;
-	result[2][1] = s;
-	result[1][2] = -s;
-	result[2][2] = c;
-	result[3][3] = 1;
+	result.fE[0][0] = 1;
+	result.fE[1][1] = c;
+	result.fE[1][2] = s;
+	result.fE[2][1] = -s;
+	result.fE[2][2] = c;
+	result.fE[3][3] = 1;
 	return result;
 	}
 
@@ -264,12 +225,12 @@ ZMatrix<Val,4,4> sRotateY(Val radians)
 	Val s = sin(radians);
 	Val c = cos(radians);
 	ZMatrix<Val,4,4> result;
-	result[0][0] = c;
-	result[1][1] = 1;
-	result[2][0] = s;
-	result[0][2] = -s;
-	result[2][2] = c;
-	result[3][3] = 1;
+	result.fE[0][0] = c;
+	result.fE[1][1] = 1;
+	result.fE[0][2] = s;
+	result.fE[2][0] = -s;
+	result.fE[2][2] = c;
+	result.fE[3][3] = 1;
 	return result;
 	}
 
@@ -283,12 +244,12 @@ ZMatrix<Val,4,4> sRotateZ(Val radians)
 	Val s = sin(radians);
 	Val c = cos(radians);
 	ZMatrix<Val,4,4> result;
-	result[0][0] = c;
-	result[1][0] = s;
-	result[0][1] = -s;
-	result[1][1] = c;
-	result[2][2] = 1;
-	result[3][3] = 1;
+	result.fE[0][0] = c;
+	result.fE[0][1] = s;
+	result.fE[1][0] = -s;
+	result.fE[1][1] = c;
+	result.fE[2][2] = 1;
+	result.fE[3][3] = 1;
 	return result;
 	}
 
