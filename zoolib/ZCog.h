@@ -421,10 +421,10 @@ ZCog<Param> spCogFun_Each(const ZCog<Param>& iSelf, Param iParam,
 		}
 	else if (sCallValidCogUnchanged(lCog0, iParam))
 		{
-		if (sIsTerm(lCog1) || sCallValidCogUnchanged(lCog1, iParam))
+//		if (sIsTerm(lCog1) || sCallValidCogUnchanged(lCog1, iParam))
 			return iSelf;
-		if (not lCog1)
-			return lCog0;
+//		if (not lCog1)
+//			return lCog0;
 		return spCog_Each(lCog0, lCog1);
 		}
 	else if (not lCog0)
@@ -653,7 +653,7 @@ ZCog<Param> spCogFun_While(const ZCog<Param>& iSelf, Param iParam,
 		return null;
 
 	if (sIsTerm(lCog))
-		return sCog_While(iCog_Init, iCog_Init);
+		return sCallCog(sCog_While(iCog_Init, iCog_Init), iParam); //## Dangerous?
 	else
 		return sCog_While(iCog_Init, lCog);
 	}
@@ -702,7 +702,7 @@ ZCog<Param> spCogFun_Repeat_Count(const ZCog<Param>& iSelf, Param iParam,
 		return sCog_Repeat(iCount, iCog_Init, lCog);
 
 	if (--iCount)
-		return sCog_Repeat(iCount, iCog_Init, iCog_Init);
+		return sCallCog(sCog_Repeat(iCount, iCog_Init, iCog_Init), iParam); //## Dangerous?
 
 	return null;
 	}
