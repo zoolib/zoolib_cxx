@@ -21,8 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZCog__
 #define __ZCog__ 1
 
-#include "zoolib/ZLog.h"
-
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZCallable_Bind.h"
 #include "zoolib/ZCallable_Function.h"
@@ -99,41 +97,6 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCallCog variants
-
-template <class Cog>
-Cog sCallCog(const Cog& iCog, const typename Cog::Param iParam)
-	{ return sCall(iCog, iCog, iParam); }
-
-template <class Param>
-ZCog<Param> sCallCog
-	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable, Param iParam)
-	{ return sCall(iCallable, iCallable, iParam); }
-
-template <class Param>
-ZCog<const Param&> sCallCog
-	(const ZRef<ZCallable<ZCog<const Param&>(const ZCog<const Param&>&,const Param&)> >& iCallable,
-	const Param& iParam)
-	{ return sCall(iCallable, iCallable, iParam); }
-
-template <class Cog>
-bool sCallValidCogChanged(Cog& ioCog, const typename Cog::Param iParam)
-	{ return sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
-
-template <class Cog>
-bool sCallCogChanged(Cog& ioCog, const typename Cog::Param iParam)
-	{ return ioCog && sCallValidCogChanged(ioCog, iParam); }
-
-template <class Cog>
-bool sCallValidCogUnchanged(Cog& ioCog, const typename Cog::Param iParam)
-	{ return not sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
-
-template <class Cog>
-bool sCallCogUnchanged(Cog& ioCog, const typename Cog::Param iParam)
-	{ return not ioCog || sCallValidCogUnchanged(ioCog, iParam); }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * sCog function and pseudo operator
 
 const struct
@@ -178,7 +141,7 @@ template <class Param>
 ZCog<Param> spCogFun_Term(const ZCog<Param>& iSelf, Param iParam)
 	{
 	// Shouldn't ever call this.
-	ZLOGTRACE(eDebug);
+	ZUnimplemented();
 	return null;
 	}
 
@@ -195,8 +158,55 @@ const ZCog<Param>& sCog_Term
 	{ return sCog_Term<Param>(); }
 
 template <class Param>
-bool sIsTerm(const ZCog<Param>& iCog)
-	{ return sCog_Term<Param>() == iCog; }
+bool sIsTerm(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
+	{ return sCog_Term<Param>() == iCallable; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCallCog variants
+
+template <class Cog>
+Cog sCallCog(const Cog& iCog, const typename Cog::Param iParam)
+	{
+	if (not iCog || sIsTerm(iCog))
+		return iCog;
+	return sCall(iCog, iCog, iParam);
+	}
+
+template <class Param>
+ZCog<Param> sCallCog
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable, Param iParam)
+	{
+	if (not iCallable || sIsTerm(iCallable))
+		return iCallable;
+	return sCall(iCallable, iCallable, iParam);
+	}
+
+template <class Param>
+ZCog<const Param&> sCallCog
+	(const ZRef<ZCallable<ZCog<const Param&>(const ZCog<const Param&>&,const Param&)> >& iCallable,
+	const Param& iParam)
+	{
+	if (not iCallable || sIsTerm(iCallable))
+		return iCallable;
+	return sCall(iCallable, iCallable, iParam);
+	}
+
+template <class Cog>
+bool sCallValidCogChanged(Cog& ioCog, const typename Cog::Param iParam)
+	{ return sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
+
+template <class Cog>
+bool sCallCogChanged(Cog& ioCog, const typename Cog::Param iParam)
+	{ return ioCog && not sIsTerm(ioCog) && sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
+
+template <class Cog>
+bool sCallValidCogUnchanged(Cog& ioCog, const typename Cog::Param iParam)
+	{ return not sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
+
+template <class Cog>
+bool sCallCogUnchanged(Cog& ioCog, const typename Cog::Param iParam)
+	{ return not ioCog || sIsTerm(ioCog) || not sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
 
 // =================================================================================================
 #pragma mark -
@@ -421,11 +431,7 @@ ZCog<Param> spCogFun_Each(const ZCog<Param>& iSelf, Param iParam,
 		}
 	else if (sCallValidCogUnchanged(lCog0, iParam))
 		{
-//		if (sIsTerm(lCog1) || sCallValidCogUnchanged(lCog1, iParam))
-			return iSelf;
-//		if (not lCog1)
-//			return lCog0;
-		return spCog_Each(lCog0, lCog1);
+		return iSelf;
 		}
 	else if (not lCog0)
 		{
@@ -510,6 +516,7 @@ ZCog<Param> spCogFun_FollowedBy_Subsequent(const ZCog<Param>& iSelf, Param iPara
 	ZCog<Param> lCog0, const ZCog<Param>& iCog1)
 	{
 	ZAssert(lCog0 && iCog1);
+
 	if (sCallValidCogUnchanged(lCog0, iParam))
 		return iSelf;
 
@@ -527,6 +534,7 @@ ZCog<Param> spCogFun_FollowedBy_First(const ZCog<Param>& iSelf, Param iParam,
 	ZCog<Param> lCog0, const ZCog<Param>& iCog1)
 	{
 	ZAssert(lCog0 && iCog1);
+
 	if (sIsTerm(lCog0))
 		{
 		if (sIsTerm(iCog1))
@@ -728,7 +736,8 @@ ZCog<Param> spCogFun_DelayUntil(const ZCog<Param>& iSelf, Param iParam,
 	ZTime iSystemTime)
 	{
 	if (ZTime::sSystem() > iSystemTime)
-		return null;
+		return sCog_Term(iSelf);
+//		return null;
 	return iSelf;
 	}
 
