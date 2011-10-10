@@ -89,8 +89,8 @@ ZRef<ZYadR> ZYadMapRPos_Dir::ReadInc(std::string& oName)
 	{
 	while (fFileIter)
 		{
-		ZFileSpec cur = fFileIter.Current();
-		string curName = fFileIter.CurrentName();
+		const ZFileSpec cur = fFileIter.Current();
+		const string curName = fFileIter.CurrentName();
 		fFileIter.Advance();
 		if (ZRef<ZYadR> result = ZYad_FS::sYadR(cur))
 			{
@@ -141,9 +141,7 @@ ZYadStreamRPos_File::~ZYadStreamRPos_File()
 	{}
 
 bool ZYadStreamRPos_File::IsSimple(const ZYadOptions& iOptions)
-	{
-	return false;
-	}
+	{ return false; }
 
 const ZStreamRPos& ZYadStreamRPos_File::GetStreamRPos()
 	{
@@ -159,15 +157,9 @@ const ZStreamRPos& ZYadStreamRPos_File::GetStreamRPos()
 
 ZRef<ZYadR> ZYad_FS::sYadR(const ZFileSpec& iFS)
 	{
-	if (iFS.IsDir())
-		{
-		return new ZYadMapRPos_Dir(iFS);
-		}
-	else if (iFS.IsFile())
-		{
-		return new ZYadStreamRPos_File(iFS);
-		}
-	return null;
+	if (iFS.IsDir()) return new ZYadMapRPos_Dir(iFS);
+	else if (iFS.IsFile()) return new ZYadStreamRPos_File(iFS);
+	else return null;
 	}
 
 } // namespace ZooLib
