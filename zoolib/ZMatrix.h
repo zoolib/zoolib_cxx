@@ -644,11 +644,12 @@ ZMatrix<E,R,C>& operator-=(ZMatrix<E,R,C>& ioLeft, T iRight)
 #pragma mark * sScale (taking column vector)
 
 template <class E, size_t Dim>
-ZMatrix<E,Dim,Dim> sScale(const ZMatrix<E,Dim,1>& iVec)
+ZMatrix<E,Dim+1,Dim+1> sScale(const ZMatrix<E,Dim,1>& iVec)
 	{
-	ZMatrix<E,Dim,Dim> result;
+	ZMatrix<E,Dim+1,Dim+1> result;
 	for (size_t ii = 0; ii < Dim; ++ii)
 		result.fE[ii][ii] = iVec.fE[0][ii];
+	result.fE[Dim][Dim] = 1;
 	return result;
 	}
 
