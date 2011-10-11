@@ -61,7 +61,7 @@ void Manager_Union::Finalize()
 Manager_Union::~Manager_Union()
 	{}
 
-void Manager_Union::Invoke(ZRef<ZBlackBerry::Manager> iManager)
+ZQ<void> Manager_Union::QCall(ZRef<ZBlackBerry::Manager> iManager)
 	{
 	ZGuardRMtxR locker(fMutex);
 	for (vector<Entry_t>::iterator iterEntries = fEntries.begin();
@@ -74,6 +74,8 @@ void Manager_Union::Invoke(ZRef<ZBlackBerry::Manager> iManager)
 	locker.Release();
 
 	Manager::pChanged();
+
+	return notnull;
 	}
 
 void Manager_Union::GetDeviceIDs(vector<uint64>& oDeviceIDs)

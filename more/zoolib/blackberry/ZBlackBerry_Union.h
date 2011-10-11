@@ -44,7 +44,7 @@ public:
 	virtual void Finalize();
 
 // From Manager::CB_ManagerChanged
-	virtual void Invoke(ZRef<ZBlackBerry::Manager> iManager);
+	virtual ZQ<void> QCall(ZRef<ZBlackBerry::Manager> iManager);
 
 // From Manager
 	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs);
