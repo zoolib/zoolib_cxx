@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
 
+#error unfinished
+
 namespace ZooLib {
 
 // =================================================================================================
