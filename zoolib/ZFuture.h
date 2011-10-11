@@ -104,7 +104,7 @@ public:
 		return eFutureResult_Timeout;
 		}
 
-	ZQ<T> Get()
+	ZQ<T> QGet()
 		{
 		ZAcqMtx acq(fMtx);
 		while (fPromiseExists && !fVal)
@@ -140,11 +140,27 @@ public:
 		fFuture->fCnd.Broadcast();
 		}
 
+	bool IsSet()
+		{
+		ZAcqMtx acq(fFuture->fMtx);
+		return fFuture->fVal;
+		}
+
 	void Set(const T& iVal)
 		{
 		ZAcqMtx acq(fFuture->fMtx);
 		fFuture->fVal.Set(iVal);
 		fFuture->fCnd.Broadcast();
+		}
+
+	bool SetIfNotSet(const T& iVal)
+		{
+		ZAcqMtx acq(fFuture->fMtx);
+		if (fFuture->fVal)
+			return false;
+		fFuture->fVal.Set(iVal);
+		fFuture->fCnd.Broadcast();
+		return true;
 		}
 
 	ZRef<ZFuture<T> > Get()
@@ -174,11 +190,27 @@ public:
 		fFuture->fCnd.Broadcast();
 		}
 
+	bool IsSet()
+		{
+		ZAcqMtx acq(fFuture->fMtx);
+		return fFuture->fVal;
+		}
+
 	void Set()
 		{
 		ZAcqMtx acq(fFuture->fMtx);
 		fFuture->fVal.Set();
 		fFuture->fCnd.Broadcast();
+		}
+
+	bool SetIfNotSet()
+		{
+		ZAcqMtx acq(fFuture->fMtx);
+		if (fFuture->fVal)
+			return false;
+		fFuture->fVal.Set();
+		fFuture->fCnd.Broadcast();
+		return true;
 		}
 
 	ZRef<ZFuture<void> > Get()
