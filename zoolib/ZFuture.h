@@ -34,13 +34,6 @@ template <class T> class ZPromise;
 #pragma mark -
 #pragma mark * ZFuture
 
-enum EFutureResult
-	{
-	eFutureResult_Failed,
-	eFutureResult_Timeout,
-	eFutureResult_Succeeded
-	};
-
 template <class T>
 class ZFuture
 :	public ZCountedWithoutFinalize
@@ -53,61 +46,51 @@ public:
 	virtual ~ZFuture()
 		{}
 
-	EFutureResult Wait()
+	void Wait()
 		{
 		ZAcqMtx acq(fMtx);
 		for (;;)
 			{
-			if (fVal)
-				return eFutureResult_Succeeded;
-			if (!fPromiseExists)
-				return eFutureResult_Failed;
+			if (fVal || not fPromiseExists)
+				return;
 			fCnd.Wait(fMtx);
 			}
 		}
 
-	EFutureResult WaitFor(double iTimeout)
+	bool WaitFor(double iTimeout)
 		{
 		ZAcqMtx acq(fMtx);
 
-		if (fVal)
-			return eFutureResult_Succeeded;
-		if (!fPromiseExists)
-			return eFutureResult_Failed;
+		if (fVal || not fPromiseExists)
+			return true;
 
 		fCnd.WaitFor(fMtx, iTimeout);
 
-		if (fVal)
-			return eFutureResult_Succeeded;
-		if (!fPromiseExists)
-			return eFutureResult_Failed;
+		if (fVal || not fPromiseExists)
+			return true;
 
-		return eFutureResult_Timeout;
+		return false;
 		}
 
-	EFutureResult WaitUntil(ZTime iDeadline)
+	bool WaitUntil(ZTime iDeadline)
 		{
 		ZAcqMtx acq(fMtx);
 
-		if (fVal)
-			return eFutureResult_Succeeded;
-		if (!fPromiseExists)
-			return eFutureResult_Failed;
+		if (fVal || not fPromiseExists)
+			return true;
 
 		fCnd.WaitUntil(fMtx, iDeadline);
 
-		if (fVal)
-			return eFutureResult_Succeeded;
-		if (!fPromiseExists)
-			return eFutureResult_Failed;
+		if (fVal || not fPromiseExists)
+			return true;
 
-		return eFutureResult_Timeout;
+		return false;
 		}
 
 	ZQ<T> QGet()
 		{
 		ZAcqMtx acq(fMtx);
-		while (fPromiseExists && !fVal)
+		while (fPromiseExists && not fVal)
 			fCnd.Wait(fMtx);
 		return fVal;
 		}
@@ -219,6 +202,26 @@ public:
 private:
 	ZRef<ZFuture<void> > fFuture;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sPromise
+
+template <class T>
+ZRef<ZPromise<T> > sPromise()
+	{ return new ZPromise<T>; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sGetClear
+
+template <class T>
+ZRef<ZFuture<T> > sGetClear(ZRef<ZPromise<T> >& ioPromise)
+	{
+	ZRef<ZFuture<T> > theFuture = ioPromise->Get();
+	ioPromise.Clear();
+	return theFuture;
+	}
 
 } // namespace ZooLib
 

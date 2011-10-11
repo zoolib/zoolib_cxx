@@ -333,8 +333,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define ZMACRO_Stringify(a) #a
 
-#define ZMACRO_typedef(typename,expr) typedef __typeof__(expr) typename
-#define ZMACRO_auto(name,expr) __typeof__(expr) name(expr)
-#define ZMACRO_auto_(name,expr) __typeof__(expr) name = (expr)
+#if defined(_MSC_VER)
+	#include "zoolib/ZMACRO_typeof.h"
+#else
+	// Asssume GCC for now.
+	#define ZMACRO_typeof(expr) __typeof__(expr)
+	#define ZMACRO_typedef(typename,expr) typedef ZMACRO_typeof(expr) typename
+	#define ZMACRO_auto(name,expr) ZMACRO_typeof(expr) name(expr)
+	#define ZMACRO_auto_(name,expr) ZMACRO_typeof(expr) name = (expr)
+#endif
+
 
 #endif // __zconfigl__

@@ -42,7 +42,7 @@ template <class T>
 ZRef<ZFuture<ZQ<T> > > sCallFuture
 	(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<T(void)> >& iCallable)
 	{
-	ZRef<ZPromise<ZQ<T> > > thePromise = new ZPromise<ZQ<T> >;
+	ZRef<ZPromise<ZQ<T> > > thePromise = sPromise<ZQ<T> >();
 	if (iCaller)
 		iCaller->Queue(sBindR(sCallable(sCallWithPromise_T<T>), thePromise, iCallable));
 	return thePromise->Get();

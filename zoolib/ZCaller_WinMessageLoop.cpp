@@ -51,7 +51,8 @@ void ZCaller_WinMessageLoop::Finalize()
 	if (fHWND)
 		{
 		::DestroyWindow(fHWND);
-		fHWND = nullptr;
+		ZAssert(not fHWND);
+		//fHWND = nullptr;
 		}
 
 	ZCaller_EventLoop::Finalize();
@@ -62,7 +63,8 @@ void ZCaller_WinMessageLoop::Disable()
 	if (fHWND)
 		{
 		::DestroyWindow(fHWND);
-		fHWND = nullptr;
+		ZAssert(not fHWND);
+		//fHWND = nullptr;
 		}
 	ZCaller_EventLoop::pDiscardPending();
 	}
