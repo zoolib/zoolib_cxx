@@ -30,7 +30,7 @@ namespace ZooLib {
 \class ZStreamR_Count
 \ingroup stream
 Every read is satisfied by calling through to the real stream, and the number of bytes
-succesfully read is accumulated. Call GetCount to find how many bytes have been read.
+successfully read is accumulated. Call GetCount to find how many bytes have been read.
 Call ZeroCount to reset that count.
 \note GetCount returns the number of bytes that have been read by calling Read/Skip/CopyTo against
 the ZStreamR_Count itself. It obviously has no way of knowing how many bytes have been read from
@@ -108,7 +108,7 @@ void ZStreamR_Count::ZeroCount()
 \class ZStreamW_Count
 \ingroup stream
 Writes are satisfied by calling through to the real stream and the number of bytes
-succesfully written is accumulated. Call GetCount to find how many bytes have been written.
+successfully written is accumulated. Call GetCount to find how many bytes have been written.
 Call ZeroCount to reset that count.
 \note GetCount returns the number of bytes that have been written by calling
 Write/SkipWrite/CopyFrom against the ZStreamW_Count itself. It obviously has no way of knowing

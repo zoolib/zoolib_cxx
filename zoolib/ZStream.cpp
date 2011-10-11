@@ -72,7 +72,7 @@ an entity that bytes can be written to. Again we pass it the address of a
 buffer, this time the buffer contains the bytes we want written. We also
 pass it a count, indicating how many bytes from the buffer should be
 written, and we pass the address of a count which will be modified to
-indicate how many bytes were succesfully written. Just as with the read
+indicate how many bytes were successfully written. Just as with the read
 stream, the write stream has no 'position' and no size, and it also might
 (will) be finite. This is an important point; something that is finite
 obviously *must* have a size (curved space notwithstanding), but in the case
@@ -599,7 +599,7 @@ string ZStreamR::ReadString(size_t iSize) const
 	}
 
 /**
-Read \a iSize bytes from the stream into \a oString. If succesful then
+Read \a iSize bytes from the stream into \a oString. If successful then
 return true. If fewer than \a iSize bytes can be read \a oString is
 resized to match and false returned.
 */

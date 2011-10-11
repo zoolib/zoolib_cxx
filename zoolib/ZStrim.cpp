@@ -793,7 +793,7 @@ const ZStrimW& ZStrimW::Write(const UTF8* iSource, size_t iCountCU) const
 	}
 
 /** Write the UTF-32 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
-Report the number of code units succesfully written in the optional output parameter \a oCountCU.
+Report the number of code units successfully written in the optional output parameter \a oCountCU.
 */
 const ZStrimW& ZStrimW::Write(const UTF32* iSource, size_t iCountCU, size_t* oCountCU) const
 	{
@@ -802,7 +802,7 @@ const ZStrimW& ZStrimW::Write(const UTF32* iSource, size_t iCountCU, size_t* oCo
 	}
 
 /** Write the UTF-16 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
-Report the number of code units succesfully written in the optional output parameter \a oCountCU.
+Report the number of code units successfully written in the optional output parameter \a oCountCU.
 */
 const ZStrimW& ZStrimW::Write(const UTF16* iSource, size_t iCountCU, size_t* oCountCU) const
 	{
@@ -811,7 +811,7 @@ const ZStrimW& ZStrimW::Write(const UTF16* iSource, size_t iCountCU, size_t* oCo
 	}
 
 /** Write the UTF-8 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
-Report the number of code units succesfully written in the optional output parameter \a oCountCU.
+Report the number of code units successfully written in the optional output parameter \a oCountCU.
 */
 const ZStrimW& ZStrimW::Write(const UTF8* iSource, size_t iCountCU, size_t* oCountCU) const
 	{
@@ -821,7 +821,7 @@ const ZStrimW& ZStrimW::Write(const UTF8* iSource, size_t iCountCU, size_t* oCou
 
 /** Write the UTF-32 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
 Do not write more code units than those required to represent \a iCountCP code points.
-Report the number of code units and code points succesfully written in the optional output
+Report the number of code units and code points successfully written in the optional output
 parameters \a oCountCU and \a oCountCP.
 */
 const ZStrimW& ZStrimW::Write(const UTF32* iSource,
@@ -860,7 +860,7 @@ const ZStrimW& ZStrimW::Write(const UTF32* iSource,
 
 /** Write the UTF-16 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
 Do not write more code units than those required to represent \a iCountCP code points.
-Report the number of code units and code points succesfully written in the optional output
+Report the number of code units and code points successfully written in the optional output
 parameters \a oCountCU and \a oCountCP.
 */
 const ZStrimW& ZStrimW::Write(const UTF16* iSource,
@@ -899,7 +899,7 @@ const ZStrimW& ZStrimW::Write(const UTF16* iSource,
 
 /** Write the UTF-8 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
 Do not write more code units than those required to represent \a iCountCP code points.
-Report the number of code units and code points succesfully written in the optional output
+Report the number of code units and code points successfully written in the optional output
 parameters \a oCountCU and \a oCountCP.
 */
 const ZStrimW& ZStrimW::Write(const UTF8* iSource,
