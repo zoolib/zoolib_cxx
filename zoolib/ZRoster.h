@@ -42,6 +42,10 @@ public:
 	class Entry;
 
 	ZRoster();
+
+	ZRoster(const ZRef<ZCallable_Void>& iCallable_Change,
+		const ZRef<ZCallable_Void>& iCallable_Gone);
+
 	virtual ~ZRoster();
 
 // From ZCounted
@@ -49,7 +53,9 @@ public:
 
 // Our protocol
 	ZRef<Entry> MakeEntry();
-	ZRef<Entry> MakeEntry(ZRef<ZCallable_Void> iCallable_Broadcast);
+
+	ZRef<Entry> MakeEntry(const ZRef<ZCallable_Void>& iCallable_Broadcast,
+		const ZRef<ZCallable_Void>& iCallable_Gone);
 	
 	void Broadcast();
 
@@ -57,14 +63,6 @@ public:
 	void Wait(size_t iCount);
 	bool WaitFor(double iTimeout, size_t iCount);
 	bool WaitUntil(ZTime iDeadline, size_t iCount);
-
-	ZRef<ZCallable_Void> Get_Callable_Change();
-	void Set_Callable_Change(const ZRef<ZCallable_Void>& iCallable);
-	bool CAS_Callable_Change(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
-
-	ZRef<ZCallable_Void> Get_Callable_Gone();
-	void Set_Callable_Gone(const ZRef<ZCallable_Void>& iCallable);
-	bool CAS_Callable_Gone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
 
 private:
 	void pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallable_Gone);
@@ -97,15 +95,6 @@ public:
 
 // From ZCounted
 	virtual void Finalize();
-
-// Our protocol
-	ZRef<ZCallable_Void> Get_Callable_Broadcast();
-	void Set_Callable_Broadcast(const ZRef<ZCallable_Void>& iCallable);
-	bool CAS_Callable_Broadcast(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
-
-	ZRef<ZCallable_Void> Get_Callable_Gone();
-	void Set_Callable_Gone(const ZRef<ZCallable_Void>& iCallable);
-	bool CAS_Callable_Gone(ZRef<ZCallable_Void> iPrior, ZRef<ZCallable_Void> iNew);
 
 private:
 	ZWeakRef<ZRoster> fRoster;

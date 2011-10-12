@@ -58,9 +58,7 @@ public:
 
 	ZRef<ZStreamerRWFactory> GetFactory();
 
-	ZRef<Callable_Connection> Get_Callable_Connection();
-	void Set_Callable_Connection(const ZRef<Callable_Connection>& iCallable);
-	bool CAS_Callable_Connection(ZRef<Callable_Connection> iPrior, ZRef<Callable_Connection> iNew);
+	ZRef<Callable_Connection> GetCallable_Connection();
 
 private:
 	bool pWork(ZRef<ZWorker> iWorker);

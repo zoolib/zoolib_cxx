@@ -123,30 +123,17 @@ ZRef<ZStreamerRWFactory> ZServer::GetFactory()
 	return fFactory;
 	}
 
-ZRef<ZServer::Callable_Connection> ZServer::Get_Callable_Connection()
+ZRef<ZServer::Callable_Connection> ZServer::GetCallable_Connection()
 	{
 	ZAcqMtx acq(fMtx);
 	return fCallable_Connection;
 	}
 
-void ZServer::Set_Callable_Connection(const ZRef<Callable_Connection>& iCallable)
-	{
-	ZAcqMtx acq(fMtx);
-	fCallable_Connection = iCallable;
-	}
-
-bool ZServer::CAS_Callable_Connection
-	(ZRef<Callable_Connection> iPrior, ZRef<Callable_Connection> iNew)
-	{
-	ZAcqMtx acq(fMtx);
-	if (fCallable_Connection != iPrior)
-		return false;
-	fCallable_Connection = iNew;
-	return true;
-	}
-
 static void spKill(ZRef<ZStreamerRWCon> iSRWCon)
-	{ iSRWCon->Abort(); }
+	{
+	if (iSRWCon)
+		iSRWCon->Abort();
+	}
 
 bool ZServer::pWork(ZRef<ZWorker> iWorker)
 	{
@@ -166,9 +153,9 @@ bool ZServer::pWork(ZRef<ZWorker> iWorker)
 			guard.Acquire();
 			if (ZRef<Callable_Connection> theCallable = fCallable_Connection)
 				{
-				ZRef<ZRoster::Entry> theEntry = fRoster->MakeEntry();
-				if (ZRef<ZStreamerRWCon> theSRWCon = theSRW.DynamicCast<ZStreamerRWCon>())
-					theEntry->Set_Callable_Broadcast(sBindR(sCallable(spKill), theSRWCon));
+				ZRef<ZStreamerRWCon> theSRWCon = theSRW.DynamicCast<ZStreamerRWCon>();
+				ZRef<ZRoster::Entry> theEntry =
+					fRoster->MakeEntry(sBindR(sCallable(spKill), theSRWCon), null);
 				guard.Release();
 				theCallable->Call(theEntry, theSRW);
 				}
