@@ -605,10 +605,7 @@ ZCog<Param> spCogFun_WhileUnchanged(const ZCog<Param>& iSelf, Param iParam,
 	{
 	ZAssert(lCog0 && lCog1);
 
-	if (sIsTerm(lCog0))
-		return lCog0;
-
-	if (sCallValidCogChanged(lCog0, iParam))
+	if (sIsTerm(lCog0) || sCallValidCogChanged(lCog0, iParam))
 		return lCog0;
 
 	if (sCallValidCogChanged(lCog1, iParam))
@@ -654,14 +651,14 @@ ZCog<Param> spCogFun_While(const ZCog<Param>& iSelf, Param iParam,
 	{
 	ZAssert(iCog_Init && lCog);
 
-	if (sCallValidCogUnchanged(lCog, iParam))
+	if (sIsTerm(lCog) || sCallValidCogUnchanged(lCog, iParam))
 		return iSelf;
 
 	if (not lCog)
 		return null;
 
 	if (sIsTerm(lCog))
-		return sCallCog(sCog_While(iCog_Init, iCog_Init), iParam); //## Dangerous?
+		return sCallCog(sCog_While(iCog_Init, iCog_Init), iParam); //## Dangerous
 	else
 		return sCog_While(iCog_Init, lCog);
 	}
@@ -675,7 +672,15 @@ ZCog<Param> sCog_While(const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog)
 
 template <class Param>
 ZCog<Param> sCog_While(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
-	{ return sCog_While<Param>(iCallable, iCallable); }
+	{
+	if (iCallable)
+		{
+		if (sIsTerm(iCallable))
+			return iCallable;
+		return sCog_While<Param>(iCallable, iCallable);
+		}
+	return null;
+	}
 
 template <class Param>
 ZCog<Param> operator*(const ZCog<Param>& iCog)
@@ -683,49 +688,44 @@ ZCog<Param> operator*(const ZCog<Param>& iCog)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCog_Repeat
-
-template <class Param>
-ZCog<Param> sCog_Repeat(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
-	{ return sCog_While(iCallable | sCog_Term(iCallable)); }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * sCog_Repeat (count)
 
 template <class Param>
-ZCog<Param> sCog_Repeat(size_t iCount, const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog);
+ZCog<Param> spCog_Repeat(size_t iCount, const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog);
 
 template <class Param>
-ZCog<Param> spCogFun_Repeat_Count(const ZCog<Param>& iSelf, Param iParam,
+ZCog<Param> spCogFun_Repeat(const ZCog<Param>& iSelf, Param iParam,
 	size_t iCount, const ZCog<Param>& iCog_Init, ZCog<Param> lCog)
 	{
-	if (not iCount)
-		return null;
-
 	if (sCallCogUnchanged(lCog, iParam))
 		return iSelf;
 
-	if (lCog && not sIsTerm(lCog))
-		return sCog_Repeat(iCount, iCog_Init, lCog);
+	if (not lCog)
+		return null;
 
-	if (--iCount)
-		return sCallCog(sCog_Repeat(iCount, iCog_Init, iCog_Init), iParam); //## Dangerous?
-
-	return null;
+	if (sIsTerm(lCog))
+		return sCallCog(spCog_Repeat(iCount - 1, iCog_Init, iCog_Init), iParam);
+	else
+		return spCog_Repeat(iCount, iCog_Init, lCog);
 	}
 
 template <class Param>
-ZCog<Param> sCog_Repeat(size_t iCount, const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog)
+ZCog<Param> spCog_Repeat(size_t iCount, const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog)
 	{
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_Repeat_Count<Param>));
-	return sBindR(spCallable, iCount, iCog_Init, iCog);
+	static ZMACRO_auto(spCallable, sCallable(spCogFun_Repeat<Param>));
+	if (iCount && iCog_Init)
+		{
+		if (sIsTerm(iCog_Init))
+			return iCog_Init;
+		return sBindR(spCallable, iCount, iCog_Init, iCog);
+		}
+	return null;
 	}
 
 template <class Param>
 ZCog<Param> sCog_Repeat(size_t iCount,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
-	{ return sCog_Repeat<Param>(iCount, iCallable, iCallable); }
+	{ return spCog_Repeat<Param>(iCount, iCallable, iCallable); }
 
 // =================================================================================================
 #pragma mark -
@@ -736,8 +736,7 @@ ZCog<Param> spCogFun_DelayUntil(const ZCog<Param>& iSelf, Param iParam,
 	ZTime iSystemTime)
 	{
 	if (ZTime::sSystem() > iSystemTime)
-		return sCog_Term(iSelf);
-//		return null;
+		return sCog_Term<Param>();
 	return iSelf;
 	}
 
