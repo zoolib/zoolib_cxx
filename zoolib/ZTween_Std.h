@@ -76,19 +76,11 @@ Val sTweenFun_OneMinus(Val iVal)
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_OneMinus(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<Val,Val,sTweenFun_OneMinus>(iTween); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * sTween_Squared
-
-template <class Val>
-Val sTweenFun_Squared(Val iVal)
-	{ return iVal * iVal; }
-
-template <class Val>
-ZRef<ZTween<Val> > sTween_Squared(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<Val,Val,sTweenFun_Squared>(iTween); }
+	{
+	if (iTween)
+		return new ZTween_Filter_Fun<Val,Val,sTweenFun_OneMinus>(iTween);
+	return null;
+	}
 
 // =================================================================================================
 #pragma mark -
