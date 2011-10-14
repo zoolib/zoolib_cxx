@@ -64,6 +64,9 @@ public:
 	virtual void Initialize();
 	virtual void Finalize();
 
+// Our protocol
+	void AddMode(CFStringRef iMode);
+
 protected:
 // From ZCaller_EventLoop
 	virtual bool pTrigger();

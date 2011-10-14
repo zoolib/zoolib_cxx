@@ -64,7 +64,7 @@ void ZCaller_CFRunLoop::Initialize()
 
 	fObserver = sAdopt& ::CFRunLoopObserverCreate
 		(nullptr, // allocator
-		kCFRunLoopBeforeTimers, // activities
+kCFRunLoopAllActivities,//		kCFRunLoopBeforeTimers, // activities
 		true, // repeats
 		0, // order
 		spCallback,
@@ -78,6 +78,11 @@ void ZCaller_CFRunLoop::Finalize()
 	::CFRunLoopObserverInvalidate(fObserver);
 
 	ZCaller::Finalize();
+	}
+
+void ZCaller_CFRunLoop::AddMode(CFStringRef iMode)
+	{
+	::CFRunLoopAddObserver(fRunLoop, fObserver, iMode);
 	}
 
 bool ZCaller_CFRunLoop::pTrigger()
