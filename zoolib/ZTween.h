@@ -128,6 +128,14 @@ private:
 	ZRef<ZTween<Val> > fTween;
 	};
 
+template <class Val>
+ZRef<ZTween_Indirect<Val> > sTween_Indirect(const ZRef<ZTween<Val> >& iTween)
+	{ return new ZTween_Indirect<Val>(iTween); }
+
+template <class Val>
+ZRef<ZTween_Indirect<Val> > sTween_Indirect()
+	{ return new ZTween_Indirect<Val>(); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_Either
@@ -158,8 +166,13 @@ private:
 template <class Val0, class Val1>
 ZRef<ZTween<Val0> > sTween_Either(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
 	{
-	ZAssert(i0 && i1);
-	return new ZTween_Either<Val0,Val1>(i0, i1);
+	if (i0)
+		{
+		if (i1)
+			return new ZTween_Either<Val0,Val1>(i0, i1);
+		return i0;
+		}
+	return null;
 	}
 
 template <class Val0, class Val1>
@@ -200,8 +213,9 @@ private:
 template <class Val0, class Val1>
 ZRef<ZTween<Val0> > sTween_Both(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
 	{
-	ZAssert(i0 && i1);
-	return new ZTween_Both<Val0,Val1>(i0, i1);
+	if (i0 && i1)
+		return new ZTween_Both<Val0,Val1>(i0, i1);
+	return null;
 	}
 
 template <class Val0, class Val1>
@@ -269,6 +283,56 @@ ZRef<ZTween<Val> > operator|(const ZRef<ZTween<Val> >& i0, const ZRef<ZTween<Val
 template <class Val>
 ZRef<ZTween<Val> >& operator|=(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1)
 	{ return io0 = io0 | i1; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sTween_Applied
+
+template <class Val0, class Val1, class Combiner = TweenCombiner<Val0,Val1> >
+class ZTween_Applied
+:	public ZTween<Val0>
+	{
+public:
+	ZTween_Applied(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+	:	f0(i0)
+	,	f1(i1)
+		{}
+
+// From ZTween
+	virtual Val0 ValAt(double iTime)
+		{
+		const double time1 = iTime / f0->Duration() * f1->Duration();
+		return fCombiner(f0->ValAt(iTime), f1->ValAt(time1));
+		}
+
+	virtual double Duration()
+		{ return f0->Duration(); }
+
+private:
+	Combiner fCombiner;
+	const ZRef<ZTween<Val0> > f0;
+	const ZRef<ZTween<Val1> > f1;
+	};
+
+template <class Val0, class Val1>
+ZRef<ZTween<Val0> > sTween_Applied(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+	{
+	if (i0)
+		{
+		if (i1)
+			return new ZTween_Applied<Val0,Val1>(i0, i1);
+		return i0;
+		}
+	return null;
+	}
+
+template <class Val0, class Val1>
+ZRef<ZTween<Val0> > operator^(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+	{ return sTween_Applied(i0, i1); }
+
+template <class Val0, class Val1>
+ZRef<ZTween<Val0> >& operator^=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1> >& i1)
+	{ return io0 = io0 ^ i1; }
 
 // =================================================================================================
 #pragma mark -
