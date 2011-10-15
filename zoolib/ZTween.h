@@ -183,6 +183,18 @@ template <class Val0, class Val1>
 ZRef<ZTween<Val0> >& operator+=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1> >& i1)
 	{ return io0 = io0 + i1; }
 
+template <class Val>
+struct ZTweenCombiner_Either
+	{
+	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
+		{
+		if (io0)
+			io0 = sTween_Either(io0, i1);
+		else
+			io0 = i1;
+		}
+	};
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_Both
@@ -225,6 +237,18 @@ ZRef<ZTween<Val0> > operator*(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<V
 template <class Val0, class Val1>
 ZRef<ZTween<Val0> >& operator*=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1> >& i1)
 	{ return io0 = io0 * i1; }
+
+template <class Val>
+struct ZTweenCombiner_Both
+	{
+	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
+		{
+		if (io0)
+			io0 = sTween_Both(io0, i1);
+		else
+			io0 = i1;
+		}
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -284,6 +308,18 @@ template <class Val>
 ZRef<ZTween<Val> >& operator|=(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1)
 	{ return io0 = io0 | i1; }
 
+template <class Val>
+struct ZTweenCombiner_Each
+	{
+	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
+		{
+		if (io0)
+			io0 = sTween_Each(io0, i1);
+		else
+			io0 = i1;
+		}
+	};
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_Applied
@@ -333,6 +369,18 @@ ZRef<ZTween<Val0> > operator^(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<V
 template <class Val0, class Val1>
 ZRef<ZTween<Val0> >& operator^=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1> >& i1)
 	{ return io0 = io0 ^ i1; }
+
+template <class Val>
+struct ZTweenCombiner_Applied
+	{
+	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
+		{
+		if (io0)
+			io0 = sTween_Applied(io0, i1);
+		else
+			io0 = i1;
+		}
+	};
 
 // =================================================================================================
 #pragma mark -
