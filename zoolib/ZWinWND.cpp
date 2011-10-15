@@ -236,7 +236,7 @@ bool sAttach(HWND iHWND, ZRef<Callable> iCallable)
 bool sDoOneMessage()
 	{
 	MSG theMSG;
-	if (!::GetMessageW(&theMSG, nullptr, 0, 0))
+	if (not ::GetMessageW(&theMSG, nullptr, 0, 0))
 		return false;
 
 	::TranslateMessage(&theMSG);
@@ -262,10 +262,10 @@ HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iC
 bool sDoOneMessageForDialog(HWND iHWND)
 	{
 	MSG theMSG;
-	if (!::GetMessageW(&theMSG, nullptr, 0, 0))
+	if (not ::GetMessageW(&theMSG, nullptr, 0, 0))
 		return false;
 
-	if (!::IsDialogMessageW(iHWND, &theMSG))
+	if (not ::IsDialogMessageW(iHWND, &theMSG))
 		{
 		::TranslateMessage(&theMSG);
 		::DispatchMessageW(&theMSG);
