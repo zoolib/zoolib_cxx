@@ -84,14 +84,14 @@ public:
 	void Set(const Value& iValue) const
 		{ fValue = iValue; }
 
-	bool operator==(const ZTagVal& iOther) const
-		{ return fValue == iOther.fValue; }
+//	bool operator==(const ZTagVal& iOther) const
+//		{ return fValue == iOther.fValue; }
 
-	bool operator!=(const ZTagVal& iOther) const
-		{ return fValue == iOther.fValue; }
+//	bool operator!=(const ZTagVal& iOther) const
+//		{ return fValue == iOther.fValue; }
 
-	bool operator<(const ZTagVal& iOther) const
-		{ return fValue < iOther.fValue; }
+//	bool operator<(const ZTagVal& iOther) const
+//		{ return fValue < iOther.fValue; }
 
 protected:
 	Value fValue;

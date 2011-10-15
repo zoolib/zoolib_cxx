@@ -33,85 +33,85 @@ namespace ZGameEngine {
 #pragma mark -
 #pragma mark * sTween_ScaleX
 
-template <class Val>
-ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleX(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sScaleX>(iTween); }
+template <class Val, class Tag>
+ZRef<ZTween<ZMatrix<Val,4,4,Tag> > > sTween_ScaleX(const ZRef<ZTween<Val> >& iTween)
+	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4,Tag>,Val,sScaleX<Val> >(iTween); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_ScaleY
 
-template <class Val>
-ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleY(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sScaleY>(iTween); }
+template <class Val, class Tag>
+ZRef<ZTween<ZMatrix<Val,4,4,Tag> > > sTween_ScaleY(const ZRef<ZTween<Val> >& iTween)
+	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4,Tag>,Val,sScaleY<Val> >(iTween); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_ScaleZ
 
-template <class Val>
-ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleZ(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sScaleZ>(iTween); }
+template <class Val, class Tag>
+ZRef<ZTween<ZMatrix<Val,4,4,Tag> > > sTween_ScaleZ(const ZRef<ZTween<Val> >& iTween)
+	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4,Tag>,Val,sScaleZ<Val> >(iTween); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_TranslateX
 
-template <class Val>
-ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateX(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTranslateX>(iTween); }
+template <class Val, class Tag>
+ZRef<ZTween<ZMatrix<Val,4,4,Tag> > > sTween_TranslateX(const ZRef<ZTween<Val> >& iTween)
+	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4,Tag>,Val,sTranslateX<Val> >(iTween); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_TranslateY
 
-template <class Val>
-ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateY(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTranslateY>(iTween); }
+template <class Val, class Tag>
+ZRef<ZTween<ZMatrix<Val,4,4,Tag> > > sTween_TranslateY(const ZRef<ZTween<Val> >& iTween)
+	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4,Tag>,Val,sTranslateY<Val> >(iTween); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_TranslateZ
 
-template <class Val>
-ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateZ(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTranslateZ>(iTween); }
+template <class Val, class Tag>
+ZRef<ZTween<ZMatrix<Val,4,4,Tag> > > sTween_TranslateZ(const ZRef<ZTween<Val> >& iTween)
+	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4,Tag>,Val,sTranslateZ<Val> >(iTween); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_RotateX
 
-template <class Val>
-ZMatrix<Val,4,4> sTweenFun_Rotate2PiX(Val iVal)
-	{ return sRotateX<Val>(2 * M_PI * iVal); }
+template <class Val,class Tag>
+ZMatrix<Val,4,4,Tag> sTweenFun_Rotate2PiX(Val iVal)
+	{ return sRotateX<Val,Tag>(2 * M_PI * iVal); }
 
-template <class Val>
-ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateX(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTweenFun_Rotate2PiX>(iTween); }
+template <class Val, class Tag>
+ZRef<ZTween<ZMatrix<Val,4,4,Tag> > > sTween_RotateX(const ZRef<ZTween<Val> >& iTween)
+	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4,Tag>,Val,sTweenFun_Rotate2PiX<Val,Tag> >(iTween); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_RotateY
 
-template <class Val>
-ZMatrix<Val,4,4> sTweenFun_Rotate2PiY(Val iVal)
-	{ return sRotateY<Val>(2 * M_PI * iVal); }
+template <class Val, class Tag>
+ZMatrix<Val,4,4,Tag> sTweenFun_Rotate2PiY(Val iVal)
+	{ return sRotateY<Val,Tag>(2 * M_PI * iVal); }
 
-template <class Val>
-ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateY(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTweenFun_Rotate2PiY>(iTween); }
+template <class Val, class Tag>
+ZRef<ZTween<ZMatrix<Val,4,4,Tag> > > sTween_RotateY(const ZRef<ZTween<Val> >& iTween)
+	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4,Tag>,Val,sTweenFun_Rotate2PiY<Val,Tag> >(iTween); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * sTween_RotateZ
 
-template <class Val>
-ZMatrix<Val,4,4> sTweenFun_Rotate2PiZ(Val iVal)
-	{ return sRotateZ<Val>(2 * M_PI * iVal); }
+template <class Val, class Tag>
+ZMatrix<Val,4,4,Tag> sTweenFun_Rotate2PiZ(Val iVal)
+	{ return sRotateZ<Val,Tag>(2 * M_PI * iVal); }
 
-template <class Val>
-ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateZ(const ZRef<ZTween<Val> >& iTween)
-	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTweenFun_Rotate2PiZ>(iTween); }
+template <class Val, class Tag>
+ZRef<ZTween<ZMatrix<Val,4,4,Tag> > > sTween_RotateZ(const ZRef<ZTween<Val> >& iTween)
+	{ return new ZTween_Filter_Fun<ZMatrix<Val,4,4,Tag>,Val,sTweenFun_Rotate2PiZ<Val> >(iTween); }
 
 } // namespace ZGameEngine
 } // namespace ZooLib

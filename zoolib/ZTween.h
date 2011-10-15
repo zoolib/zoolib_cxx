@@ -745,7 +745,7 @@ ZRef<ZTween<Val> > sTween_Offset(Val iOffset, const ZRef<ZTween<Val> >& iTween)
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Range(Val iZeroVal, Val iOneVal, const ZRef<ZTween<Val> >& iTween)
-	{ return sTween_Offset(iZeroVal, sTween_Scale(iOneVal - iZeroVal, iTween)); }
+	{ return sTween_Offset(iZeroVal, sTween_Scale<Val>(iOneVal - iZeroVal, iTween)); }
 
 } // namespace ZooLib
 
