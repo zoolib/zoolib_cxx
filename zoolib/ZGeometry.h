@@ -862,8 +862,8 @@ template <class Ord>
 template <class U>
 bool ZGRectPOD_T<Ord>::ContainsX(U iOrd) const
 	{
-	if (extent.h > 0) return iOrd >= origin.x && iOrd < origin.x + extent.h;
-	else if (extent.h < 0) return iOrd < origin.x && iOrd >= origin.x + extent.h;
+	if (extent.h > 0) return Ord(iOrd) >= origin.x && Ord(iOrd) < origin.x + extent.h;
+	else if (extent.h < 0) return Ord(iOrd) < origin.x && Ord(iOrd) >= origin.x + extent.h;
 	else return false;
 	}
 
@@ -871,8 +871,8 @@ template <class Ord>
 template <class U>
 bool ZGRectPOD_T<Ord>::ContainsY(U iOrd) const
 	{
-	if (extent.v > 0) return iOrd >= origin.y && iOrd < origin.y + extent.v;
-	else if (extent.h < 0) return iOrd < origin.y && iOrd >= origin.y + extent.v;
+	if (extent.v > 0) return Ord(iOrd) >= origin.y && Ord(iOrd) < origin.y + extent.v;
+	else if (extent.h < 0) return Ord(iOrd) < origin.y && Ord(iOrd) >= origin.y + extent.v;
 	else return false;
 	}
 
