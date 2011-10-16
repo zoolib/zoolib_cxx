@@ -47,6 +47,8 @@ public:
 	ZRef<ZYadR> ReadAt(const ZRef<CountedString>& iProto, const string& iName);
 
 private:
+	ZRef<ZYadR> pReadAt(const string& iName);
+
 	const ZRef<Chain> fParent;
 	ZRef<ZYadMapRPos> fYadMapRPos;
 	};
@@ -133,7 +135,9 @@ static ZRef<ZYadR> spWrap(const ZRef<CountedString>& iProto,
 Chain::Chain(const ZRef<Chain>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos)
 :	fParent(iParent)
 ,	fYadMapRPos(iYadMapRPos)
-	{}
+	{
+	ZAssert(not iYadMapRPos.DynamicCast<YadMapRPos>());
+	}
 
 ZRef<Chain> Chain::Clone()
 	{ return new Chain(fParent, fYadMapRPos->Clone().DynamicCast<ZYadMapRPos>()); }
@@ -141,9 +145,12 @@ ZRef<Chain> Chain::Clone()
 ZRef<ZYadR> Chain::ReadInc(string& oName)
 	{ return fYadMapRPos->ReadInc(oName); }
 
+ZRef<ZYadR> Chain::pReadAt(const string& iName)
+	{ return fYadMapRPos->ReadAt(iName); }
+
 ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProto, const string& iName)
 	{
-	if (ZRef<ZYadR> theYad = fYadMapRPos->ReadAt(iName))
+	if (ZRef<ZYadR> theYad = this->pReadAt(iName))
 		return spWrap(iProto, this, theYad);
 	
 	if (ZRef<ZYadStrimR> theProtoYad = fYadMapRPos->ReadAt(iProto->Get()).DynamicCast<ZYadStrimR>())
@@ -178,22 +185,24 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProto, const string& iName
 			while (index < theTrail.Count())
 				{
 				if (ZRef<ZYadMapRPos,false> theYadMapRPos =
-					cur->ReadAt(iProto, theTrail.At(index)).DynamicCast<ZYadMapRPos>())
+					cur->pReadAt(theTrail.At(index)).DynamicCast<ZYadMapRPos>())
 					{ break; }
 				else
 					{
 					cur = new Chain(cur, theYadMapRPos);
 					if (++index == theTrail.Count())
-						return spWrap(iProto, cur, theYadMapRPos->ReadAt(iName));
+						return cur->ReadAt(iProto, iName);
 					}
 				}
 			}
 		}
+
+	// Yay, lexical scoping, disabled for now.
+	if (false && fParent)
+		return spWrap(iProto, fParent, fParent->pReadAt(iName));
+
 	return null;
 	}
-
-class Chain;
-
 
 // =================================================================================================
 #pragma mark -
