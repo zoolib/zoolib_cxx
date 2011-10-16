@@ -555,7 +555,7 @@ void ZNetEndpoint_TCP_WinSock::Imp_Abort()
 	{
 	struct linger theLinger;
 	theLinger.l_onoff = 1;
-	theLinger.l_linger = 1;
+	theLinger.l_linger = 0;
 	::setsockopt(fSOCKET, SOL_SOCKET, SO_LINGER, (char*)&theLinger, sizeof(theLinger));
 	::shutdown(fSOCKET, 2);
 	}
