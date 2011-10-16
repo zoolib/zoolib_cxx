@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZCompat_algorithm.h" // for std::binary_function
 #include "zoolib/ZCompat_cmath.h" // for fmod
+#include "zoolib/ZDebug.h" // for fmod
 #include "zoolib/ZRef.h"
 
 namespace ZooLib {
@@ -605,7 +606,7 @@ public:
 	ZTween_Rate(const ZRef<ZTween<Val> >& iTween, double iRate)
 	:	fTween(iTween)
 	,	fRate(iRate)
-		{}
+		{ ZAssert(fRate); }
 
 // From ZTween
 	virtual Val ValAt(double iTime)
@@ -613,7 +614,7 @@ public:
 		if (fRate > 0)
 			return fTween->ValAt(iTime / fRate);
 		else
-			return fTween->ValAt((fTween->Duration() - iTime) / -fRate);
+			return fTween->ValAt(fTween->Duration() + iTime/fRate);
 		}
 
 	virtual double Duration()
@@ -634,6 +635,38 @@ ZRef<ZTween<Val> > sTween_Rate(double iRate, const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
 		return new ZTween_Rate<Val>(iTween, iRate);
+	return null;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sTween_Normalize
+
+template <class Val>
+class ZTween_Normalize
+:	public ZTween<Val>
+	{
+public:
+	ZTween_Normalize(const ZRef<ZTween<Val> >& iTween, double iNormalize)
+	:	fTween(iTween)
+		{}
+
+// From ZTween
+	virtual Val ValAt(double iTime)
+		{ return fTween->ValAt(iTime / fTween->Duration); }
+
+	virtual double Duration()
+		{ return 1; }
+
+private:
+	const ZRef<ZTween<Val> > fTween;
+	};
+
+template <class Val>
+ZRef<ZTween<Val> > sTween_Normalize(const ZRef<ZTween<Val> >& iTween)
+	{
+	if (iTween)
+		return new ZTween_Normalize<Val>(iTween);
 	return null;
 	}
 
