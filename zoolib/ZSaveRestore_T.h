@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZSetRestore_T__
-#define __ZSetRestore_T__ 1
+#ifndef __ZSaveRestore_T__
+#define __ZSaveRestore_T__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_algorithm.h" // For std::swap
@@ -28,22 +28,18 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSetRestore_T
+#pragma mark * ZSaveRestore_T
 
 template <class T>
-class ZSetRestore_T
+class ZSaveRestore_T
 	{
 public:
-	ZSetRestore_T(T& ioRef)
+	ZSaveRestore_T(T& ioRef)
 	:	fRef(ioRef)
-		{ std::swap(fRef, fValPrior); }
+	,	fValPrior(ioRef)
+		{}
 
-	ZSetRestore_T(T& ioRef, const T& iVal)
-	:	fRef(ioRef)
-	,	fValPrior(iVal)
-		{ std::swap(fRef, fValPrior); }
-
-	~ZSetRestore_T()
+	~ZSaveRestore_T()
 		{ std::swap(fRef, fValPrior); }
 
 	const T& GetPrior() const
@@ -56,4 +52,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZSetRestore_T__
+#endif // __ZSaveRestore_T__
