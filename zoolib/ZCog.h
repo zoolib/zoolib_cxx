@@ -294,15 +294,10 @@ ZCog<Param>& operator+=
 	{ return ioCog0 = sCog_Either<Param>(ioCog0, iCallable1); }
 
 template <class Param>
-struct ZCogCombiner_Either
+struct ZCogAccumulatorCombiner_Either
 	{
 	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
-		{
-		if (io0)
-			io0 = sCog_Either(io0, i1);
-		else
-			io0 = i1;
-		}
+		{ sCog_Either(io0, i1); }
 	};
 
 // =================================================================================================
@@ -398,7 +393,7 @@ ZCog<Param>& operator*=
 	{ return ioCog0 = sCog_Both<Param>(ioCog0, iCallable1); }
 
 template <class Param>
-struct ZCogCombiner_Both
+struct ZCogAccumulatorCombiner_Both
 	{
 	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
 		{
@@ -490,15 +485,10 @@ ZCog<Param>& operator|=
 	{ return ioCog0 = sCog_Each<Param>(ioCog0, iCallable1); }
 
 template <class Param>
-struct ZCogCombiner_Each
+struct ZCogAccumulatorCombiner_Each
 	{
 	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
-		{
-		if (io0)
-			io0 = sCog_Each(io0, i1);
-		else
-			io0 = i1;
-		}
+		{ io0 = sCog_Each(io0, i1); }
 	};
 
 // =================================================================================================
