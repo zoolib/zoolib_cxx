@@ -161,16 +161,12 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProto, const string& iName
 			size_t index = 0;
 			const ZTrail theTrail = ZTrail(theTrailString).Normalized();
 			ZRef<Chain> cur = this;
+
 			if (theTrailString[0] == '/')
 				{
 				// Walk up to the root.
-				for (;;)
-					{
-					if (ZRef<Chain> next = cur->fParent)
-						cur = next;
-					else
-						break;
-					}
+				for (ZRef<Chain> next = null; next = cur->fParent; cur = next)
+					{}
 				}
 			else
 				{
@@ -184,7 +180,7 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProto, const string& iName
 			// Walk down the remainder of the trail
 			while (index < theTrail.Count())
 				{
-				if (ZRef<ZYadMapRPos,false> theYadMapRPos =
+				if (ZRef<ZYadMapRPos,0> theYadMapRPos =
 					cur->pReadAt(theTrail.At(index)).DynamicCast<ZYadMapRPos>())
 					{ break; }
 				else
