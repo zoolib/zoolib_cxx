@@ -59,6 +59,26 @@ ZVal_Yad& ZVal_Yad::operator=(const ZRef<ZYadR>& iYad)
 	return *this;
 	}
 
+ZVal_Yad::ZVal_Yad(const ZSeq_Yad& iSeq)
+:	fYad(iSeq.GetYad())
+	{}
+
+ZVal_Yad& ZVal_Yad::operator=(const ZSeq_Yad& iSeq)
+	{
+	fYad = iSeq.GetYad();
+	return *this;
+	}
+
+ZVal_Yad::ZVal_Yad(const ZMap_Yad& iMap)
+:	fYad(iMap.GetYad())
+	{}
+
+ZVal_Yad& ZVal_Yad::operator=(const ZMap_Yad& iMap)
+	{
+	fYad = iMap.GetYad();
+	return *this;
+	}
+
 ZVal_Yad ZVal_Yad::Get(const string8& iName) const
 	{
 	if (ZRef<ZYadMapRPos> theYad = fYad.DynamicCast<ZYadMapRPos>())

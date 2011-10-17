@@ -52,6 +52,12 @@ public:
 	ZVal_Yad(const ZRef<ZYadR>& iYad);
 	ZVal_Yad& operator=(const ZRef<ZYadR>& iYad);
 
+	ZVal_Yad(const ZSeq_Yad& iSeq);
+	ZVal_Yad& operator=(const ZSeq_Yad& iSeq);
+
+	ZVal_Yad(const ZMap_Yad& iMap);
+	ZVal_Yad& operator=(const ZMap_Yad& iMap);
+
 // ZVal protocol
 	template <class S>
 	ZQ<S> QGet() const;
