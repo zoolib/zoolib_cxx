@@ -117,7 +117,13 @@ public:
 	E& operator[](size_t r)
 		{ return fE[0][r]; }
 
-	const E operator[](size_t r) const
+	E operator[](size_t r) const
+		{ return fE[0][r]; }
+
+	E& GetMutable(size_t r)
+		{ return fE[0][r]; }
+
+	E Get(size_t r) const
 		{ return fE[0][r]; }
 
 	E fE[1][R];
@@ -159,7 +165,13 @@ public:
 	E& operator[](size_t c)
 		{ return fE[c][0]; }
 
-	const E operator[](size_t c) const
+	E operator[](size_t c) const
+		{ return fE[c][0]; }
+
+	E& GetMutable(size_t c)
+		{ return fE[c][0]; }
+
+	E Get(size_t c) const
 		{ return fE[c][0]; }
 
 	E fE[C][1];
