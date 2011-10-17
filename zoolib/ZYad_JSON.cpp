@@ -140,14 +140,14 @@ static bool spTryRead_JSONString(const ZStrimU& s, string& oString)
 			string tempString;
 			sRead_EscapedString(s, '"', tempString);
 
-			if (!sTryRead_CP(s, '"'))
+			if (not sTryRead_CP(s, '"'))
 				throw ParseException("Expected '\"' to close a string");
 
 			oString += tempString;
 
 			sSkip_WSAndCPlusPlusComments(s);
 
-			if (!sTryRead_CP(s, '"'))
+			if (not sTryRead_CP(s, '"'))
 				return true;
 			}
 		}
@@ -159,14 +159,14 @@ static bool spTryRead_JSONString(const ZStrimU& s, string& oString)
 			string tempString;
 			sRead_EscapedString(s, '\'', tempString);
 
-			if (!sTryRead_CP(s, '\''))
+			if (not sTryRead_CP(s, '\''))
 				throw ParseException("Expected \"'\" to close a string");
 
 			oString += tempString;
 
 			sSkip_WSAndCPlusPlusComments(s);
 
-			if (!sTryRead_CP(s, '\''))
+			if (not sTryRead_CP(s, '\''))
 				return true;
 			}
 		}
@@ -287,7 +287,7 @@ void YadStrimR::Finish()
 	{
 	using namespace ZUtil_Strim;
 	fStrimR.SkipAll();
-	if (!sTryRead_CP(fStrimmerU->GetStrimU(), '"'))
+	if (not sTryRead_CP(fStrimmerU->GetStrimU(), '"'))
 		throw ParseException("Missing string delimiter");
 	}
 
@@ -320,9 +320,9 @@ void YadSeqR::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	if (not iIsFirst)
 		{
 		// Must read a separator
-		if (!sTryRead_CP(theStrimU, ','))
+		if (not sTryRead_CP(theStrimU, ','))
 			{
-			if (!fReadOptions.fAllowSemiColons.DGet(false) || !sTryRead_CP(theStrimU, ';'))
+			if (not fReadOptions.fAllowSemiColons.DGet(false) || not sTryRead_CP(theStrimU, ';'))
 				spThrowParseException("Require ',' to separate array elements");
 			}
 
@@ -335,7 +335,7 @@ void YadSeqR::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 			}
 		}
 
-	if (!(oYadR = spMakeYadR_JSON(fStrimmerU, fReadOptions)))
+	if (not (oYadR = spMakeYadR_JSON(fStrimmerU, fReadOptions)))
 		spThrowParseException("Expected a value");
 	}
 
@@ -365,10 +365,13 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	if (not iIsFirst)
 		{
 		// Must read a separator
-		if (!sTryRead_CP(theStrimU, ','))
+		if (not sTryRead_CP(theStrimU, ','))
 			{
-			if (!fReadOptions.fAllowSemiColons.DGet(false) || !sTryRead_CP(theStrimU, ';'))
-				spThrowParseException("Require ',' to separate object elements");
+			if (not fReadOptions.fAllowSemiColons.DGet(false) || not sTryRead_CP(theStrimU, ';'))
+				{
+				if (not fReadOptions.fLooseSeparators.DGet(false))
+					spThrowParseException("Require ',' to separate object elements");
+				}
 			}
 
 		sSkip_WSAndCPlusPlusComments(theStrimU);
@@ -380,18 +383,18 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 			}
 		}
 
-	if (!spTryRead_PropertyName(theStrimU, oName, fReadOptions.fAllowUnquotedPropertyNames.DGet(false)))
+	if (not spTryRead_PropertyName(theStrimU, oName, fReadOptions.fAllowUnquotedPropertyNames.DGet(false)))
 		spThrowParseException("Expected a member name");
 
 	sSkip_WSAndCPlusPlusComments(theStrimU);
 
-	if (!sTryRead_CP(theStrimU, ':'))
+	if (not sTryRead_CP(theStrimU, ':'))
 		{
-		if (!fReadOptions.fAllowEquals.DGet(false) || !sTryRead_CP(theStrimU, '='))
+		if (not fReadOptions.fAllowEquals.DGet(false) || not sTryRead_CP(theStrimU, '='))
 			spThrowParseException("Expected ':' after a member name");
 		}
 
-	if (!(oYadR = spMakeYadR_JSON(fStrimmerU, fReadOptions)))
+	if (not (oYadR = spMakeYadR_JSON(fStrimmerU, fReadOptions)))
 		spThrowParseException("Expected value after ':'");
 	}
 
@@ -545,7 +548,7 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 		// 2. A non-empty tuple.
 		// or if iOptions.fBreakStrings is true, any element is a string with embedded
 		// line breaks or more than iOptions.fStringLineLength characters.
-		needsIndentation = ! iYadSeqR->IsSimple(fOptions);
+		needsIndentation = not iYadSeqR->IsSimple(fOptions);
 		}
 
 	if (needsIndentation)
@@ -610,7 +613,7 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	bool needsIndentation = false;
 	if (fOptions.DoIndentation())
 		{
-		needsIndentation = ! iYadMapR->IsSimple(fOptions);
+		needsIndentation = not iYadMapR->IsSimple(fOptions);
 		}
 
 	if (needsIndentation)

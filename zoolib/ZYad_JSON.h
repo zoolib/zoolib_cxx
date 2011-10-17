@@ -39,6 +39,7 @@ struct ReadOptions
 	ZQ<bool> fAllowEquals;
 	ZQ<bool> fAllowSemiColons;
 	ZQ<bool> fAllowTerminators;
+	ZQ<bool> fLooseSeparators;
 	};
 
 // =================================================================================================
