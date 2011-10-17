@@ -293,6 +293,18 @@ ZCog<Param>& operator+=
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_Either<Param>(ioCog0, iCallable1); }
 
+template <class Param>
+struct ZCogCombiner_Either
+	{
+	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
+		{
+		if (io0)
+			io0 = sCog_Either(io0, i1);
+		else
+			io0 = i1;
+		}
+	};
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * sCog_Both
@@ -385,6 +397,18 @@ ZCog<Param>& operator*=
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_Both<Param>(ioCog0, iCallable1); }
 
+template <class Param>
+struct ZCogCombiner_Both
+	{
+	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
+		{
+		if (io0)
+			io0 = sCog_Both(io0, i1);
+		else
+			io0 = i1;
+		}
+	};
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * sCog_Each
@@ -464,6 +488,18 @@ ZCog<Param>& operator|=
 	(ZCog<Param>& ioCog0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_Each<Param>(ioCog0, iCallable1); }
+
+template <class Param>
+struct ZCogCombiner_Each
+	{
+	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
+		{
+		if (io0)
+			io0 = sCog_Each(io0, i1);
+		else
+			io0 = i1;
+		}
+	};
 
 // =================================================================================================
 #pragma mark -
