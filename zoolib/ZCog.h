@@ -297,7 +297,7 @@ template <class Param>
 struct ZCogAccumulatorCombiner_Either
 	{
 	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
-		{ sCog_Either(io0, i1); }
+		{ io0 = sCog_Either(io0, i1); }
 	};
 
 // =================================================================================================
