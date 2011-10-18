@@ -224,7 +224,6 @@ bool sTryRead_Sign(const ZStrimU& iStrimU, bool& oIsNegative)
 		{
 		oIsNegative = false;
 		return true;
-		return true;
 		}
 	return false;
 	}
