@@ -208,9 +208,10 @@ template <class Val>
 ZRef<ZTween<Val> >& operator+=(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1)
 	{ return io0 = io0 + i1; }
 
-template <class Val>
+template <class Val_p>
 struct ZTweenAccumulatorCombiner_Either
 	{
+	typedef Val_p Val;
 	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
 		{ io0 = sTween_Either<Val>(io0, i1); }
 	};
@@ -258,9 +259,10 @@ template <class Val0, class Val1>
 ZRef<ZTween<Val0> >& operator*=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1> >& i1)
 	{ return io0 = io0 * i1; }
 
-template <class Val>
+template <class Val_p>
 struct ZTweenAccumulatorCombiner_Both
 	{
+	typedef Val_p Val;
 	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
 		{
 		if (io0)
@@ -328,9 +330,10 @@ template <class Val>
 ZRef<ZTween<Val> >& operator|=(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1)
 	{ return io0 = io0 | i1; }
 
-template <class Val>
+template <class Val_p>
 struct ZTweenAccumulatorCombiner_Each
 	{
+	typedef Val_p Val;
 	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
 		{ io0 = sTween_Each(io0, i1); }
 	};
@@ -385,9 +388,10 @@ template <class Val0, class Val1>
 ZRef<ZTween<Val0> >& operator^=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1> >& i1)
 	{ return io0 = io0 ^ i1; }
 
-template <class Val>
+template <class Val_p>
 struct ZTweenAccumulatorCombiner_Applied
 	{
+	typedef Val_p Val;
 	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
 		{
 		if (io0)
