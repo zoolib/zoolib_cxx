@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMatrix__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZDebug.h"
+
 namespace ZooLib {
 
 // For compatibility with OpenGL we store in column-major order.
