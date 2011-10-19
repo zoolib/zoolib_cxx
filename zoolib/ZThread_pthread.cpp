@@ -145,7 +145,6 @@ void ZSemNoTimeout_pthread::Procure()
 			{
 			if (EINTR == result)
 				continue;
-//##			ZUnimplemented();
 			}
 		break;
 		}
