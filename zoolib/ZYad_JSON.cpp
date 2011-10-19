@@ -323,7 +323,10 @@ void YadSeqR::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 		if (not sTryRead_CP(theStrimU, ','))
 			{
 			if (not fReadOptions.fAllowSemiColons.DGet(false) || not sTryRead_CP(theStrimU, ';'))
-				spThrowParseException("Require ',' to separate array elements");
+				{
+				if (not fReadOptions.fLooseSeparators.DGet(false))
+					spThrowParseException("Require ',' to separate array elements");
+				}
 			}
 
 		sSkip_WSAndCPlusPlusComments(theStrimU);
