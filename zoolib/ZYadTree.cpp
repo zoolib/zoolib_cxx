@@ -18,10 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCountedVal.h"
 #include "zoolib/ZGetSet.h"
 #include "zoolib/ZTrail.h"
+#include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZYadTree.h"
-#include "zoolib/ZCountedVal.h"
 
 using std::string;
 
@@ -37,6 +38,9 @@ typedef ZCountedVal<string> CountedString;
 class Chain
 :	public ZCounted
 	{
+private:
+	Chain(const Chain& iOther);
+
 public:
 	Chain
 		(const ZRef<Chain>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos);
@@ -51,6 +55,9 @@ private:
 
 	const ZRef<Chain> fParent;
 	ZRef<ZYadMapRPos> fYadMapRPos;
+	
+	std::map<string8, ZRef<Chain> > fCacheByName;
+	std::map<string8, ZRef<Chain> > fCacheByTrail;
 	};
 
 // =================================================================================================
@@ -132,6 +139,13 @@ static ZRef<ZYadR> spWrap(const ZRef<CountedString>& iProto,
 #pragma mark -
 #pragma mark * Chain definition
 
+Chain::Chain(const Chain& iOther)
+:	fParent(iOther.fParent)
+,	fYadMapRPos(iOther.fYadMapRPos->Clone().DynamicCast<ZYadMapRPos>())
+,	fCacheByName(iOther.fCacheByName)
+,	fCacheByTrail(iOther.fCacheByTrail)
+	{}
+
 Chain::Chain(const ZRef<Chain>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos)
 :	fParent(iParent)
 ,	fYadMapRPos(iYadMapRPos)
@@ -140,7 +154,7 @@ Chain::Chain(const ZRef<Chain>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos)
 	}
 
 ZRef<Chain> Chain::Clone()
-	{ return new Chain(fParent, fYadMapRPos->Clone().DynamicCast<ZYadMapRPos>()); }
+	{ return new Chain(*this); }
 
 ZRef<ZYadR> Chain::ReadInc(string& oName)
 	{ return fYadMapRPos->ReadInc(oName); }
@@ -153,45 +167,66 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProto, const string& iName
 	if (ZRef<ZYadR> theYad = this->pReadAt(iName))
 		return spWrap(iProto, this, theYad);
 	
-	if (ZRef<ZYadStrimR> theProtoYad = fYadMapRPos->ReadAt(iProto->Get()).DynamicCast<ZYadStrimR>())
+	ZRef<Chain> theChain;
+	if (ZQ<ZRef<Chain> > theByNameQ = ZUtil_STL::sQGet(fCacheByName, iName))
+		{
+		theChain = *theByNameQ;
+		}
+	else if (ZRef<ZYadStrimR> theProtoYad = this->pReadAt(iProto->Get()).DynamicCast<ZYadStrimR>())
 		{
 		const string theTrailString = theProtoYad->GetStrimR().ReadAll8();
-		if (theTrailString.size())
+		if (ZQ<ZRef<Chain> > theByTrailQ = ZUtil_STL::sQGet(fCacheByTrail, theTrailString))
 			{
-			size_t index = 0;
-			const ZTrail theTrail = ZTrail(theTrailString).Normalized();
-			ZRef<Chain> cur = this;
+			theChain = *theByTrailQ;
+			}
+		else
+			{
+			if (theTrailString.size())
+				{
+				size_t index = 0;
+				const ZTrail theTrail = ZTrail(theTrailString).Normalized();
+				ZRef<Chain> cur = this;
 
-			if (theTrailString[0] == '/')
-				{
-				// Walk up to the root.
-				for (ZRef<Chain> next = null; next = cur->fParent; cur = next)
-					{}
-				}
-			else
-				{
-				// Follow leading bounces.
-				for (/*no init*/;
-					cur && index < theTrail.Count() && theTrail.At(index).empty();
-					++index, cur = cur->fParent)
-					{}
-				}
-
-			// Walk down the remainder of the trail
-			while (index < theTrail.Count())
-				{
-				if (ZRef<ZYadMapRPos,0> theYadMapRPos =
-					cur->pReadAt(theTrail.At(index)).DynamicCast<ZYadMapRPos>())
-					{ break; }
+				if (theTrailString[0] == '/')
+					{
+					// Walk up to the root.
+					for (ZRef<Chain> next = null; next = cur->fParent; cur = next)
+						{}
+					}
 				else
 					{
-					cur = new Chain(cur, theYadMapRPos);
-					if (++index == theTrail.Count())
-						return cur->ReadAt(iProto, iName);
+					// Follow leading bounces.
+					for (/*no init*/;
+						cur && index < theTrail.Count() && theTrail.At(index).empty();
+						++index, cur = cur->fParent)
+						{}
+					}
+
+				// Walk down the remainder of the trail
+				ZRef<Chain> result;
+				while (index < theTrail.Count())
+					{
+					if (ZRef<ZYadMapRPos,0> theYadMapRPos =
+						cur->pReadAt(theTrail.At(index)).DynamicCast<ZYadMapRPos>())
+						{ break; }
+					else
+						{
+						cur = new Chain(cur, theYadMapRPos);
+						if (++index == theTrail.Count())
+							{
+							theChain = cur;
+							break;
+							}
+						}
 					}
 				}
+			ZUtil_STL::sInsertMustNotContain(fCacheByTrail, theTrailString, theChain);
 			}
+		ZUtil_STL::sInsertMustNotContain(fCacheByName, iName, theChain);
 		}
+
+	if (theChain)
+		return theChain->ReadAt(iProto, iName);
 
 	// Yay, lexical scoping, disabled for now.
 	if (false && fParent)
