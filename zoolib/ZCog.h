@@ -214,7 +214,7 @@ bool sCallCogUnchanged(Cog& ioCog, const typename Cog::Param iParam)
 
 template <class Param>
 ZCog<Param> spCogFun_Either(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, ZCog<Param> lCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_Either
@@ -242,42 +242,52 @@ ZCog<Param> sCog_Either
 
 template <class Param>
 ZCog<Param> spCogFun_Either(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, ZCog<Param> lCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{
-	ZAssert(lCog0 && lCog1);
+	ZAssert(iCog0 && iCog1);
 	
-	if (sIsTerm(lCog0))
+	if (sIsTerm(iCog0))
 		{
-		if (sIsTerm(lCog1))
-			return lCog0;
-		if ((lCog1 = lCog1->Call(lCog1, iParam)))
-			return lCog1;
-		return lCog0;
-		}
-	else if (sCallValidCogUnchanged(lCog0, iParam))
-		{
-		if (sIsTerm(lCog1))
-			return lCog0;
-		if (sCallValidCogUnchanged(lCog1, iParam))
-			return iSelf;
-		if (not lCog1 || sIsTerm(lCog1))
-			return lCog0;
-		return spCog_Either(lCog0, lCog1);
-		}
-	else if (not lCog0)
-		{
-		if (sIsTerm(lCog1))
-			return lCog1;
-
-		return lCog1->Call(lCog1, iParam);
-		}
-	else if (sIsTerm(lCog1) || (lCog1 = lCog1->Call(lCog1, iParam)))
-		{
-		return spCog_Either(lCog0, lCog1);
+		if (sIsTerm(iCog1))
+			return iCog0;
+		if (const ZCog<Param> newCog1 = iCog1->Call(iCog1, iParam))
+			return newCog1;
+		return iCog0;
 		}
 	else
 		{
-		return lCog0;
+		ZCog<Param> newCog0 = iCog0;
+		if (sCallValidCogUnchanged(newCog0, iParam))
+			{
+			if (sIsTerm(iCog1))
+				return newCog0;
+			
+			ZCog<Param> newCog1 = iCog1;
+			if (sCallValidCogUnchanged(newCog1, iParam))
+				return iSelf;
+			if (not newCog1 || sIsTerm(newCog1))
+				return newCog0;
+			return spCog_Either(newCog0, newCog1);
+			}
+		else if (not newCog0)
+			{
+			if (sIsTerm(iCog1))
+				return iCog1;
+
+			return iCog1->Call(iCog1, iParam);
+			}
+		else if (sIsTerm(iCog1))
+			{
+			return spCog_Either(newCog0, iCog1);
+			}
+		else if (const ZCog<Param> newCog1 = iCog1->Call(iCog1, iParam))
+			{
+			return spCog_Either(newCog0, newCog1);
+			}
+		else
+			{
+			return newCog0;
+			}
 		}
 	}
 
@@ -306,7 +316,7 @@ struct ZCogAccumulatorCombiner_Either
 
 template <class Param>
 ZCog<Param> spCogFun_Both(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, ZCog<Param> lCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_Both
@@ -330,9 +340,11 @@ ZCog<Param> sCog_Both
 
 template <class Param>
 ZCog<Param> spCogFun_Both(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, ZCog<Param> lCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{
-	ZAssert(lCog0 && lCog1);
+	ZAssert(iCog0 && iCog1);
+	ZCog<Param> lCog0 = iCog0;
+	ZCog<Param> lCog1 = iCog1;
 
 	if (sIsTerm(lCog0))
 		{
@@ -410,7 +422,7 @@ struct ZCogAccumulatorCombiner_Both
 
 template <class Param>
 ZCog<Param> spCogFun_Each(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, ZCog<Param> lCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_Each
@@ -438,37 +450,41 @@ ZCog<Param> sCog_Each
 
 template <class Param>
 ZCog<Param> spCogFun_Each(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, ZCog<Param> lCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{
-	ZAssert(lCog0 && lCog1);
+	ZAssert(iCog0 && iCog1);
 
-	if (sIsTerm(lCog0))
+	if (sIsTerm(iCog0))
 		{
-		if (sIsTerm(lCog1))
-			return lCog1;
-		return lCog1->Call(lCog1, iParam);
-		}
-	else if (sCallValidCogUnchanged(lCog0, iParam))
-		{
-		return iSelf;
-		}
-	else if (not lCog0)
-		{
-		if (sIsTerm(lCog1))
-			return lCog1;
-		return lCog1->Call(lCog1, iParam);
-		}
-	else if (sIsTerm(lCog0))
-		{
-		if (sIsTerm(lCog1))
-			return lCog1;
-		if ((lCog1 = lCog1->Call(lCog1, iParam)))
-			return spCog_Each(lCog0, lCog1);
-		return lCog0;
+		if (sIsTerm(iCog1))
+			return iCog1;
+		return iCog1->Call(iCog1, iParam);
 		}
 	else
 		{
-		return spCog_Each(lCog0, lCog1);
+		ZCog<Param> newCog0 = iCog0;
+		if (sCallValidCogUnchanged(newCog0, iParam))
+			{
+			return iSelf;
+			}
+		else if (not newCog0)
+			{
+			if (sIsTerm(iCog1))
+				return iCog1;
+			return iCog1->Call(iCog1, iParam);
+			}
+		else if (sIsTerm(newCog0))
+			{
+			if (sIsTerm(iCog1))
+				return iCog1;
+			if (const ZCog<Param> newCog1 = iCog1->Call(iCog1, iParam))
+				return spCog_Each(newCog0, newCog1);
+			return newCog0;
+			}
+		else
+			{
+			return spCog_Each(newCog0, iCog1);
+			}
 		}
 	}
 
@@ -497,7 +513,7 @@ struct ZCogAccumulatorCombiner_Each
 
 template <class Param>
 ZCog<Param> spCogFun_FollowedBy_First(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_FollowedBy_First
@@ -525,7 +541,7 @@ ZCog<Param> sCog_FollowedBy_First
 
 template <class Param>
 ZCog<Param> spCogFun_FollowedBy_Subsequent(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_FollowedBy_Subsequent
@@ -539,15 +555,16 @@ ZCog<Param> spCog_FollowedBy_Subsequent
 
 template <class Param>
 ZCog<Param> spCogFun_FollowedBy_Subsequent(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{
-	ZAssert(lCog0 && iCog1);
+	ZAssert(iCog0 && iCog1);
 
-	if (sCallValidCogUnchanged(lCog0, iParam))
+	ZCog<Param> newCog0 = iCog0;
+	if (sCallValidCogUnchanged(newCog0, iParam))
 		return iSelf;
 
-	if (lCog0 && not sIsTerm(lCog0))
-		return spCog_FollowedBy_Subsequent(lCog0, iCog1);
+	if (newCog0 && not sIsTerm(newCog0))
+		return spCog_FollowedBy_Subsequent(newCog0, iCog1);
 	
 	if (not sIsTerm(iCog1))
 		return iCog1->Call(iCog1, iParam);
@@ -557,25 +574,25 @@ ZCog<Param> spCogFun_FollowedBy_Subsequent(const ZCog<Param>& iSelf, Param iPara
 
 template <class Param>
 ZCog<Param> spCogFun_FollowedBy_First(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{
-	ZAssert(lCog0 && iCog1);
+	ZAssert(iCog0 && iCog1);
 
-	if (sIsTerm(lCog0))
+	if (sIsTerm(iCog0))
 		{
 		if (sIsTerm(iCog1))
 			return iCog1;
 		return iCog1->Call(iCog1, iParam);
 		}
-	else if ((lCog0 = lCog0->Call(lCog0, iParam)))
+	else if (const ZCog<Param> newCog0 = iCog0->Call(iCog0, iParam))
 		{
-		if (sIsTerm(lCog0))
+		if (sIsTerm(newCog0))
 			{
 			if (sIsTerm(iCog1))
 				return iCog1;
 			return iCog1->Call(iCog1, iParam);
 			}
-		return spCog_FollowedBy_Subsequent(lCog0, iCog1);
+		return spCog_FollowedBy_Subsequent(newCog0, iCog1);
 		}
 	else
 		{
@@ -603,7 +620,7 @@ ZCog<Param>& operator/=
 
 template <class Param>
 ZCog<Param> spCogFun_WhileUnchanged(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> iCog0, ZCog<Param> iCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_WhileUnchanged
@@ -627,18 +644,23 @@ ZCog<Param> sCog_WhileUnchanged
 
 template <class Param>
 ZCog<Param> spCogFun_WhileUnchanged(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, ZCog<Param> lCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{
-	ZAssert(lCog0 && lCog1);
+	ZAssert(iCog0 && iCog1);
 
-	if (sIsTerm(lCog0) || sCallValidCogChanged(lCog0, iParam))
-		return lCog0;
+	if (sIsTerm(iCog0))
+		return iCog0;
 
-	if (sCallValidCogChanged(lCog1, iParam))
+	ZCog<Param> newCog0 = iCog0;
+	if (sCallValidCogChanged(newCog0, iParam))
+		return newCog0;
+
+	ZCog<Param> newCog1 = iCog1;
+	if (sCallValidCogChanged(newCog1, iParam))
 		{
-		if (lCog1 && not sIsTerm(lCog1))
-			return spCog_WhileUnchanged(lCog0, lCog1);
-		return lCog0;
+		if (newCog1 && not sIsTerm(newCog1))
+			return spCog_WhileUnchanged(newCog0, newCog1);
+		return newCog0;
 		}
 
 	return iSelf;
@@ -673,20 +695,24 @@ ZCog<Param> sCog_While(const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog);
 
 template <class Param>
 ZCog<Param> spCogFun_While(const ZCog<Param>& iSelf, Param iParam,
-	const ZCog<Param>& iCog_Init, ZCog<Param> lCog)
+	const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog)
 	{
-	ZAssert(iCog_Init && lCog);
+	ZAssert(iCog_Init && iCog);
 
-	if (sIsTerm(lCog) || sCallValidCogUnchanged(lCog, iParam))
+	if (sIsTerm(iCog))
 		return iSelf;
 
-	if (not lCog)
+	ZCog<Param> newCog = iCog;
+	if (sCallValidCogUnchanged(newCog, iParam))
+		return iSelf;
+
+	if (not newCog)
 		return null;
 
-	if (sIsTerm(lCog))
+	if (sIsTerm(newCog))
 		return sCallCog(sCog_While(iCog_Init, iCog_Init), iParam); //## Dangerous
 	else
-		return sCog_While(iCog_Init, lCog);
+		return sCog_While(iCog_Init, newCog);
 	}
 
 template <class Param>
@@ -721,18 +747,18 @@ ZCog<Param> spCog_Repeat(size_t iCount, const ZCog<Param>& iCog_Init, const ZCog
 
 template <class Param>
 ZCog<Param> spCogFun_Repeat(const ZCog<Param>& iSelf, Param iParam,
-	size_t iCount, const ZCog<Param>& iCog_Init, ZCog<Param> lCog)
+	size_t iCount, const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog)
 	{
-	if (sCallCogUnchanged(lCog, iParam))
+	if (sCallCogUnchanged(iCog, iParam))
 		return iSelf;
 
-	if (not lCog)
+	if (not iCog)
 		return null;
 
-	if (sIsTerm(lCog))
+	if (sIsTerm(iCog))
 		return sCallCog(spCog_Repeat(iCount - 1, iCog_Init, iCog_Init), iParam);
 	else
-		return spCog_Repeat(iCount, iCog_Init, lCog);
+		return spCog_Repeat(iCount, iCog_Init, iCog);
 	}
 
 template <class Param>
