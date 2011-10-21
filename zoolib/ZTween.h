@@ -26,17 +26,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h" // for std::binary_function
 #include "zoolib/ZCompat_cmath.h" // for fmod
 #include "zoolib/ZDebug.h" // for fmod
+#include "zoolib/ZQ.h"
 #include "zoolib/ZRef.h"
 
 namespace ZooLib {
 
 template <class Val0, class Val1>
-Val0 sCombineTweenVals(const Val0& iVal0, const Val1& iVal1);
+ZQ<Val0> sCombineTweenVals(const ZQ<Val0>& iVal0Q, const ZQ<Val1>& iVal1Q);
 
 template <class Val0, class Val1>
-struct TweenCombiner : public std::binary_function<Val0, Val1, Val0>
+struct TweenCombiner : public std::binary_function<ZQ<Val0>, ZQ<Val1>, ZQ<Val0> >
 	{
-	Val0 operator()(const Val0& i0, const Val1& i1) const
+	ZQ<Val0> operator()(const ZQ<Val0>& i0, const ZQ<Val1>& i1) const
 		{ return sCombineTweenVals<Val0,Val1>(i0, i1); }
 	};
 
@@ -63,26 +64,23 @@ public:
 	virtual ~ZTween() {}
 
 // Our protocol
-	Val ValAt(bool iWrap, double iTime)
+	Val ValAtWrapped(double iTime)
 		{
-		if (iWrap)
+		const double duration = this->Duration();
+		if (duration <= 0)
 			{
-			const double duration = this->Duration();
-			if (duration <= 0)
-				{
-				iTime = 0;
-				}
-			else
-				{
-				iTime = fmod(iTime, duration);
-				if (iTime < 0)
-					iTime += duration;
-				}
+			iTime = 0;
 			}
-		return this->ValAt(iTime);
+		else
+			{
+			iTime = fmod(iTime, duration);
+			if (iTime < 0)
+				iTime += duration;
+			}
+		return this->QValAt(iTime).Get();
 		}
 
-	virtual Val ValAt(double iTime) = 0;
+	virtual ZQ<Val> QValAt(double iTime) = 0;
 	virtual double Duration() = 0;
 	};
 
@@ -109,8 +107,8 @@ public:
 		{}
 
 // From ZTween
-	virtual Val0 ValAt(double iTime)
-		{ return fCombiner(f0->ValAt(iTime), f1->ValAt(iTime)); }
+	virtual ZQ<Val0> QValAt(double iTime)
+		{ return fCombiner(f0->QValAt(iTime), f1->QValAt(iTime)); }
 
 	virtual double Duration()
 		{ return std::max(sGetDuration(f0, fD0), sGetDuration(f1, fD1)); }
@@ -192,8 +190,8 @@ public:
 		{}
 
 // From ZTween
-	virtual Val0 ValAt(double iTime)
-		{ return fCombiner(f0->ValAt(iTime), f1->ValAt(iTime)); }
+	virtual ZQ<Val0> QValAt(double iTime)
+		{ return fCombiner(f0->QValAt(iTime), f1->QValAt(iTime)); }
 
 	virtual double Duration()
 		{ return std::min(sGetDuration(f0, fD0), sGetDuration(f1, fD1)); }
@@ -252,14 +250,12 @@ public:
 		{}
 
 // From ZTween
-	virtual Val ValAt(double iTime)
+	virtual ZQ<Val> QValAt(double iTime)
 		{
-		if (iTime <= 0)
-			return f0->ValAt(iTime);
-		else if (iTime < sGetDuration(f0, fD0))
-			return f0->ValAt(iTime);
+		if (iTime < sGetDuration(f0, fD0))
+			return f0->QValAt(iTime);
 		else
-			return f1->ValAt(iTime - sGetDuration(f0, fD0));
+			return f1->QValAt(iTime - sGetDuration(f0, fD0));
 		}
 
 	virtual double Duration()
@@ -313,10 +309,10 @@ public:
 		{}
 
 // From ZTween
-	virtual Val0 ValAt(double iTime)
+	virtual ZQ<Val0> QValAt(double iTime)
 		{
 		const double time1 = iTime / sGetDuration(f0, fD0) * sGetDuration(f1, fD1);
-		return fCombiner(f0->ValAt(iTime), f1->ValAt(time1));
+		return fCombiner(f0->QValAt(iTime), f1->QValAt(time1));
 		}
 
 	virtual double Duration()
@@ -380,11 +376,11 @@ public:
 		{}
 
 // From ZTween
-	virtual Val ValAt(double iTime)
+	virtual ZQ<Val> QValAt(double iTime)
 		{
 		const double childDuration = sGetDuration(fTween, fTweenDuration);
 		iTime = sMinMax(0.0, iTime, childDuration * fCount);
-		return fTween->ValAt(fmod(iTime, childDuration));
+		return fTween->QValAt(fmod(iTime, childDuration));
 		}
 
 	virtual double Duration()
@@ -419,10 +415,11 @@ public:
 		{}
 
 // From ZTween
-	virtual Val ValAt(double iTime)
+	virtual ZQ<Val> QValAt(double iTime)
 		{
-		const double theTime = sMinMax(0.0, iTime, fDuration);
-		return fTween->ValAt(fmod(theTime, sGetDuration(fTween, fTweenDuration)));
+		if (iTime < 0 || iTime > fDuration)
+			return null;
+		return fTween->QValAt(fmod(iTime, sGetDuration(fTween, fTweenDuration)));
 		}
 
 	virtual double Duration()
@@ -457,8 +454,12 @@ public:
 		{}
 
 // From ZTween
-	virtual Val ValAt(double iTime)
-		{ return fTween->ValAt(iTime); }
+	virtual ZQ<Val> QValAt(double iTime)
+		{
+		if (iTime > fDuration)
+			return null;
+		return fTween->QValAt(iTime);
+		}
 
 	virtual double Duration()
 		{ return fDuration; }
@@ -491,8 +492,12 @@ public:
 		{}
 
 // From ZTween
-	virtual Val ValAt(double iTime)
-		{ return fTween->ValAt(iTime); }
+	virtual ZQ<Val> QValAt(double iTime)
+		{
+		if (iTime > this->Duration())
+			return null;
+		return fTween->QValAt(iTime);
+		}
 
 	virtual double Duration()
 		{ return std::min(fAtMost, sGetDuration(fTween, fTweenDuration)); }
@@ -526,8 +531,12 @@ public:
 		{}
 
 // From ZTween
-	virtual Val ValAt(double iTime)
-		{ return fTween->ValAt(iTime); }
+	virtual ZQ<Val> QValAt(double iTime)
+		{
+		if (iTime > fAtLeast)
+			return null;
+		return fTween->QValAt(std::min(iTime, sGetDuration(fTween, fTweenDuration)));
+		}
 
 	virtual double Duration()
 		{ return std::max(fAtLeast, sGetDuration(fTween, fTweenDuration)); }
@@ -561,8 +570,8 @@ public:
 		{}
 
 // From ZTween
-	virtual Val ValAt(double iTime)
-		{ return fTween->ValAt(iTime - fDelay); }
+	virtual ZQ<Val> QValAt(double iTime)
+		{ return fTween->QValAt(iTime - fDelay); }
 
 	virtual double Duration()
 		{ return std::max(0.0, sGetDuration(fTween, fTweenDuration) + fDelay); }
@@ -596,12 +605,12 @@ public:
 		{ ZAssert(fRate); }
 
 // From ZTween
-	virtual Val ValAt(double iTime)
+	virtual ZQ<Val> QValAt(double iTime)
 		{
 		if (fRate > 0)
-			return fTween->ValAt(iTime / fRate);
+			return fTween->QValAt(iTime / fRate);
 		else
-			return fTween->ValAt(sGetDuration(fTween, fTweenDuration) + iTime/fRate);
+			return fTween->QValAt(sGetDuration(fTween, fTweenDuration) + iTime/fRate);
 		}
 
 	virtual double Duration()
@@ -640,8 +649,8 @@ public:
 		{}
 
 // From ZTween
-	virtual Val ValAt(double iTime)
-		{ return fTween->ValAt(iTime / sGetDuration(fTween, fTweenDuration)); }
+	virtual ZQ<Val> QValAt(double iTime)
+		{ return fTween->QValAt(iTime / sGetDuration(fTween, fTweenDuration)); }
 
 	virtual double Duration()
 		{ return 1; }
@@ -674,8 +683,12 @@ public:
 		{}
 
 // From ZTween
-	virtual Val ValAt(double iTime)
-		{ return fVal; }
+	virtual ZQ<Val> QValAt(double iTime)
+		{
+		if (iTime < 0 || iTime > fDuration)
+			return null;
+		return fVal;
+		}
 
 	virtual double Duration()
 		{ return fDuration; }
@@ -716,8 +729,12 @@ public:
 		{}
 
 // From ZTween
-	virtual Val ValAt(double iTime)
-		{ return fOffset + fTween->ValAt(iTime); }
+	virtual ZQ<Val> QValAt(double iTime)
+		{
+		if (ZQ<Val> theQ = fTween->QValAt(iTime))
+			return *theQ + fOffset;
+		return null;
+		}
 
 	virtual double Duration()
 		{ return sGetDuration(fTween, fTweenDuration); }

@@ -36,8 +36,12 @@ class ZTween_Fun
 :	public ZTween<Val>
 	{
 public:
-	virtual Val ValAt(double iTime)
-		{ return Fun(sMinMax(0.0, iTime, 1.0)); }
+	virtual ZQ<Val> QValAt(double iTime)
+		{
+		if (iTime < 0 || iTime >= 1.0)
+			return null;
+		return Fun(iTime);
+		}
 
 	virtual double Duration()
 		{ return 1; }
@@ -56,8 +60,12 @@ public:
 	:	fTween(iTween)
 		{}
 
-	virtual Val ValAt(double iTime)
-		{ return Fun(fTween->ValAt(iTime)); }
+	virtual ZQ<Val> QValAt(double iTime)
+		{
+		if (ZQ<Param> theQ = fTween->QValAt(iTime))
+			return Fun(*theQ);
+		return null;
+		}
 
 	virtual double Duration()
 		{ return fTween->Duration(); }
@@ -79,8 +87,12 @@ public:
 	:	fTween(iTween)
 		{}
 
-	virtual Val ValAt(double iTime)
-		{ return Val(fTween->ValAt(iTime)); }
+	virtual ZQ<Val> QValAt(double iTime)
+		{
+		if (ZQ<Param> theQ = fTween->QValAt(iTime))
+			return Val(*theQ);
+		return null;
+		}
 
 	virtual double Duration()
 		{ return fTween->Duration(); }
@@ -631,9 +643,10 @@ class ZTween_Fun_BackIn
 public:
 	ZTween_Fun_BackIn(Val iFactor) : fFactor(iFactor) {}
 
-	virtual Val ValAt(double iTime)
+	virtual ZQ<Val> QValAt(double iTime)
 		{
-		iTime = sMinMax(0.0, iTime, 1.0);
+		if (iTime < 0 || iTime > 1.0)
+			return null;
 		return iTime * iTime * ((fFactor + 1 ) * iTime - fFactor);
 		}
 
@@ -663,9 +676,10 @@ class ZTween_Fun_BackOut
 public:
 	ZTween_Fun_BackOut(Val iFactor) : fFactor(iFactor) {}
 
-	virtual Val ValAt(double iTime)
+	virtual ZQ<Val> QValAt(double iTime)
 		{
-		iTime = sMinMax(0.0, iTime, 1.0);
+		if (iTime < 0 || iTime > 1.0)
+			return null;
 		iTime -= 1;
 		return iTime * iTime * ((fFactor + 1) * iTime + fFactor) + 1;
 		}
