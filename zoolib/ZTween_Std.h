@@ -576,11 +576,6 @@ ZRef<ZTween<Val> > sTween_CircOut(Val iZeroVal, Val iOneVal, double iDuration)
 template <class Val>
 Val spTweenFun_ElasticIn(double iTime)
 	{
-	if (iTime <= 0)
-		return 0;
-	else if (iTime >= 1)
-		return 1;
-
 	iTime -= 1;
 	return -1 * (pow(2, 10*iTime) * sin((iTime-0.3)*2*M_PI/0.3));
 	}
@@ -607,14 +602,7 @@ ZRef<ZTween<Val> > sTween_ElasticIn(Val iZeroVal, Val iOneVal, double iDuration)
 
 template <class Val>
 Val spTweenFun_ElasticOut(double iTime)
-	{
-	if (iTime <= 0)
-		return 0;
-	else if (iTime >= 1)
-		return 1;
-
-	return pow(2, -10*iTime) * sin((iTime-0.3)*2*M_PI/0.3) + 1;
-	}
+	{ return pow(2, -10*iTime) * sin((iTime-0.3)*2*M_PI/0.3) + 1; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_ElasticOut()
@@ -645,7 +633,7 @@ public:
 
 	virtual ZQ<Val> QValAt(double iTime)
 		{
-		if (iTime < 0 || iTime > 1.0)
+		if (iTime < 0 || iTime >= 1.0)
 			return null;
 		return iTime * iTime * ((fFactor + 1 ) * iTime - fFactor);
 		}
@@ -678,7 +666,7 @@ public:
 
 	virtual ZQ<Val> QValAt(double iTime)
 		{
-		if (iTime < 0 || iTime > 1.0)
+		if (iTime < 0 || iTime >= 1.0)
 			return null;
 		iTime -= 1;
 		return iTime * iTime * ((fFactor + 1) * iTime + fFactor) + 1;
