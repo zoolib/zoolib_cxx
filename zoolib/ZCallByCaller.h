@@ -37,7 +37,7 @@ namespace ZooLib {
 template <class T>
 void spCallWithPromise_T
 	(const ZRef<ZPromise<ZQ<T> > >& iPromise, const ZRef<ZCallable<T(void)> >& iCallable)
-	{ iPromise->Set(sQCall(iCallable)); }
+	{ iPromise->Deliver(sQCall(iCallable)); }
 
 template <class T>
 ZRef<ZDelivery<ZQ<T> > > sCallByCaller
@@ -46,7 +46,7 @@ ZRef<ZDelivery<ZQ<T> > > sCallByCaller
 	ZRef<ZPromise<ZQ<T> > > thePromise = sPromise<ZQ<T> >();
 	if (iCaller)
 		iCaller->Queue(sBindR(sCallable(spCallWithPromise_T<T>), thePromise, iCallable));
-	return thePromise->Get();
+	return thePromise->GetDelivery();
 	}
 
 } // namespace ZooLib

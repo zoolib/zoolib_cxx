@@ -108,7 +108,7 @@ private:
 #pragma mark -
 #pragma mark * ZPromise
 
-template <class T>
+template <class T = void>
 class ZPromise
 :	public ZCountedWithoutFinalize
 	{
@@ -124,20 +124,20 @@ public:
 		fDelivery->fCnd.Broadcast();
 		}
 
-	bool IsSet()
+	bool IsDelivered()
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
 		return fDelivery->fVal;
 		}
 
-	void Set(const T& iVal)
+	void Deliver(const T& iVal)
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
 		fDelivery->fVal.Set(iVal);
 		fDelivery->fCnd.Broadcast();
 		}
 
-	bool SetIfNotSet(const T& iVal)
+	bool QDeliver(const T& iVal)
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
 		if (fDelivery->fVal)
@@ -147,7 +147,7 @@ public:
 		return true;
 		}
 
-	ZRef<ZDelivery<T> > Get()
+	ZRef<ZDelivery<T> > GetDelivery()
 		{ return fDelivery; }
 
 private:
@@ -174,20 +174,20 @@ public:
 		fDelivery->fCnd.Broadcast();
 		}
 
-	bool IsSet()
+	bool IsDelivered()
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
 		return fDelivery->fVal;
 		}
 
-	void Set()
+	void Deliver()
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
 		fDelivery->fVal.Set();
 		fDelivery->fCnd.Broadcast();
 		}
 
-	bool SetIfNotSet()
+	bool QDeliver()
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
 		if (fDelivery->fVal)
@@ -197,7 +197,7 @@ public:
 		return true;
 		}
 
-	ZRef<ZDelivery<void> > Get()
+	ZRef<ZDelivery<void> > GetDelivery()
 		{ return fDelivery; }
 
 private:
@@ -208,6 +208,10 @@ private:
 #pragma mark -
 #pragma mark * sPromise
 
+inline
+ZRef<ZPromise<void> > sPromise()
+	{ return new ZPromise<void>; }
+
 template <class T>
 ZRef<ZPromise<T> > sPromise()
 	{ return new ZPromise<T>; }
@@ -217,9 +221,9 @@ ZRef<ZPromise<T> > sPromise()
 #pragma mark * sGetClear
 
 template <class T>
-ZRef<ZDelivery<T> > sGetClear(ZRef<ZPromise<T> >& ioPromise)
+ZRef<ZDelivery<T> > sGetDeliveryClearPromise(ZRef<ZPromise<T> >& ioPromise)
 	{
-	ZRef<ZDelivery<T> > theDelivery = ioPromise->Get();
+	ZRef<ZDelivery<T> > theDelivery = ioPromise->GetDelivery();
 	ioPromise.Clear();
 	return theDelivery;
 	}
