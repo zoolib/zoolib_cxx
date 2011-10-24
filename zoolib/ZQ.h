@@ -271,6 +271,15 @@ public:
 			}
 		}
 
+	bool QSet(const T& iVal)
+		{
+		if (fHasValue)
+			return false;
+		sCtor_T<T>(fBytes, iVal);
+		fHasValue = true;
+		return true;
+		}
+
 	T& OParam()
 		{
 		if (fHasValue)
@@ -375,6 +384,14 @@ public:
 
 	void Set()
 		{ fHasValue = true; }
+
+	bool QSet()
+		{
+		if (fHasValue)
+			return false;
+		fHasValue = true;
+		return true;
+		}
 
 private:
 	bool fHasValue;
