@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZFuture__
-#define __ZFuture__ 1
+#ifndef __ZPromise__
+#define __ZPromise__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
@@ -33,18 +33,18 @@ template <class T> class ZPromise;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZFuture
+#pragma mark * ZDelivery
 
 template <class T>
-class ZFuture
+class ZDelivery
 :	public ZCountedWithoutFinalize
 	{
-	ZFuture()
+	ZDelivery()
 	:	fPromiseExists(true)
 		{}
 
 public:
-	virtual ~ZFuture()
+	virtual ~ZDelivery()
 		{}
 
 	void Wait()
@@ -114,44 +114,44 @@ class ZPromise
 	{
 public:
 	ZPromise()
-	:	fFuture(new ZFuture<T>)
+	:	fDelivery(new ZDelivery<T>)
 		{}
 
 	virtual ~ZPromise()
 		{
-		ZAcqMtx acq(fFuture->fMtx);
-		fFuture->fPromiseExists = false;
-		fFuture->fCnd.Broadcast();
+		ZAcqMtx acq(fDelivery->fMtx);
+		fDelivery->fPromiseExists = false;
+		fDelivery->fCnd.Broadcast();
 		}
 
 	bool IsSet()
 		{
-		ZAcqMtx acq(fFuture->fMtx);
-		return fFuture->fVal;
+		ZAcqMtx acq(fDelivery->fMtx);
+		return fDelivery->fVal;
 		}
 
 	void Set(const T& iVal)
 		{
-		ZAcqMtx acq(fFuture->fMtx);
-		fFuture->fVal.Set(iVal);
-		fFuture->fCnd.Broadcast();
+		ZAcqMtx acq(fDelivery->fMtx);
+		fDelivery->fVal.Set(iVal);
+		fDelivery->fCnd.Broadcast();
 		}
 
 	bool SetIfNotSet(const T& iVal)
 		{
-		ZAcqMtx acq(fFuture->fMtx);
-		if (fFuture->fVal)
+		ZAcqMtx acq(fDelivery->fMtx);
+		if (fDelivery->fVal)
 			return false;
-		fFuture->fVal.Set(iVal);
-		fFuture->fCnd.Broadcast();
+		fDelivery->fVal.Set(iVal);
+		fDelivery->fCnd.Broadcast();
 		return true;
 		}
 
-	ZRef<ZFuture<T> > Get()
-		{ return fFuture; }
+	ZRef<ZDelivery<T> > Get()
+		{ return fDelivery; }
 
 private:
-	ZRef<ZFuture<T> > fFuture;
+	ZRef<ZDelivery<T> > fDelivery;
 	};
 
 // =================================================================================================
@@ -164,44 +164,44 @@ class ZPromise<void>
 	{
 public:
 	ZPromise()
-	:	fFuture(new ZFuture<void>)
+	:	fDelivery(new ZDelivery<void>)
 		{}
 
 	virtual ~ZPromise()
 		{
-		ZAcqMtx acq(fFuture->fMtx);
-		fFuture->fPromiseExists = false;
-		fFuture->fCnd.Broadcast();
+		ZAcqMtx acq(fDelivery->fMtx);
+		fDelivery->fPromiseExists = false;
+		fDelivery->fCnd.Broadcast();
 		}
 
 	bool IsSet()
 		{
-		ZAcqMtx acq(fFuture->fMtx);
-		return fFuture->fVal;
+		ZAcqMtx acq(fDelivery->fMtx);
+		return fDelivery->fVal;
 		}
 
 	void Set()
 		{
-		ZAcqMtx acq(fFuture->fMtx);
-		fFuture->fVal.Set();
-		fFuture->fCnd.Broadcast();
+		ZAcqMtx acq(fDelivery->fMtx);
+		fDelivery->fVal.Set();
+		fDelivery->fCnd.Broadcast();
 		}
 
 	bool SetIfNotSet()
 		{
-		ZAcqMtx acq(fFuture->fMtx);
-		if (fFuture->fVal)
+		ZAcqMtx acq(fDelivery->fMtx);
+		if (fDelivery->fVal)
 			return false;
-		fFuture->fVal.Set();
-		fFuture->fCnd.Broadcast();
+		fDelivery->fVal.Set();
+		fDelivery->fCnd.Broadcast();
 		return true;
 		}
 
-	ZRef<ZFuture<void> > Get()
-		{ return fFuture; }
+	ZRef<ZDelivery<void> > Get()
+		{ return fDelivery; }
 
 private:
-	ZRef<ZFuture<void> > fFuture;
+	ZRef<ZDelivery<void> > fDelivery;
 	};
 
 // =================================================================================================
@@ -217,13 +217,13 @@ ZRef<ZPromise<T> > sPromise()
 #pragma mark * sGetClear
 
 template <class T>
-ZRef<ZFuture<T> > sGetClear(ZRef<ZPromise<T> >& ioPromise)
+ZRef<ZDelivery<T> > sGetClear(ZRef<ZPromise<T> >& ioPromise)
 	{
-	ZRef<ZFuture<T> > theFuture = ioPromise->Get();
+	ZRef<ZDelivery<T> > theDelivery = ioPromise->Get();
 	ioPromise.Clear();
-	return theFuture;
+	return theDelivery;
 	}
 
 } // namespace ZooLib
 
-#endif // __ZFuture__
+#endif // __ZPromise__

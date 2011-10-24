@@ -18,37 +18,37 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallFuture__
-#define __ZCallFuture__ 1
+#ifndef __ZCallByCaller__
+#define __ZCallByCaller__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCaller.h"
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZCallable_Bind.h"
 #include "zoolib/ZCallable_Function.h"
-#include "zoolib/ZFuture.h"
+#include "zoolib/ZPromise.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCallFuture
+#pragma mark * sCallByCaller
 
 template <class T>
-void sCallWithPromise_T
+void spCallWithPromise_T
 	(const ZRef<ZPromise<ZQ<T> > >& iPromise, const ZRef<ZCallable<T(void)> >& iCallable)
 	{ iPromise->Set(sQCall(iCallable)); }
 
 template <class T>
-ZRef<ZFuture<ZQ<T> > > sCallFuture
+ZRef<ZDelivery<ZQ<T> > > sCallByCaller
 	(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<T(void)> >& iCallable)
 	{
 	ZRef<ZPromise<ZQ<T> > > thePromise = sPromise<ZQ<T> >();
 	if (iCaller)
-		iCaller->Queue(sBindR(sCallable(sCallWithPromise_T<T>), thePromise, iCallable));
+		iCaller->Queue(sBindR(sCallable(spCallWithPromise_T<T>), thePromise, iCallable));
 	return thePromise->Get();
 	}
 
 } // namespace ZooLib
 
-#endif // __ZCallFuture__
+#endif // __ZCallByCaller__

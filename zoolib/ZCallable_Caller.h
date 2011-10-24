@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCallable_Caller__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallFuture.h"
+#include "zoolib/ZCallByCaller.h"
 
 namespace ZooLib {
 namespace ZCallable_Caller {
@@ -52,7 +52,7 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall()
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			fCallable)->QGet().DGet(null);
 		}
 
@@ -81,7 +81,7 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0))->QGet().DGet(null);
 		}
 
@@ -110,7 +110,7 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1))->QGet().DGet(null);
 		}
 
@@ -139,7 +139,7 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2))->QGet().DGet(null);
 		}
 
@@ -168,7 +168,7 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3))->QGet().DGet(null);
 		}
 
@@ -198,7 +198,7 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4))->QGet().DGet(null);
 		}
 
@@ -228,7 +228,7 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5))->QGet().DGet(null);
 		}
 
@@ -258,7 +258,7 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6))->QGet().DGet(null);
 		}
 
@@ -288,7 +288,7 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7))->QGet().DGet(null);
 		}
 
@@ -321,7 +321,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8))->QGet().DGet(null);
 		}
 
@@ -354,7 +354,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))->QGet().DGet(null);
 		}
 
@@ -387,7 +387,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))->QGet().DGet(null);
 		}
 
@@ -420,7 +420,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))->QGet().DGet(null);
 		}
 
@@ -454,7 +454,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
 			i8, i9, iA, iB, iC))->QGet().DGet(null);
 		}
@@ -489,7 +489,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
 			i8, i9, iA, iB, iC, iD))->QGet().DGet(null);
 		}
@@ -524,7 +524,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
 			i8, i9, iA, iB, iC, iD, iE))->QGet().DGet(null);
 		}
@@ -559,7 +559,7 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		return sCallFuture(fCaller,
+		return sCallByCaller(fCaller,
 			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
 			i8, i9, iA, iB, iC, iD, iE, iF))->QGet().DGet(null);
 		}
