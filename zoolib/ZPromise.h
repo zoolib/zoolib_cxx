@@ -140,9 +140,8 @@ public:
 	bool QDeliver(const T& iVal)
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
-		if (fDelivery->fVal)
+		if (not fDelivery->fVal.QSet(iVal))
 			return false;
-		fDelivery->fVal.Set(iVal);
 		fDelivery->fCnd.Broadcast();
 		return true;
 		}
@@ -190,9 +189,8 @@ public:
 	bool QDeliver()
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
-		if (fDelivery->fVal)
+		if (not fDelivery->fVal.QSet())
 			return false;
-		fDelivery->fVal.Set();
 		fDelivery->fCnd.Broadcast();
 		return true;
 		}

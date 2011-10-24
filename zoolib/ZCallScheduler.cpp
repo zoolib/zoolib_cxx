@@ -121,19 +121,19 @@ void ZCallScheduler::pRun()
 			}
 		else
 			{
-			set<TimeJob>::iterator front = fTimeJobs.begin();
-			const double delta = front->first - ZTime::sSystem();
+			set<TimeJob>::iterator begin = fTimeJobs.begin();
+			const double delta = begin->first - ZTime::sSystem();
 			if (delta > 0)
 				{
 				fCnd.WaitFor(fMtxR, delta);
 				}
 			else
 				{
-				ZRef<ZCaller> theCaller = front->second.first;
-				ZRef<ZCallable_Void> theCallable = front->second.second;
+				ZRef<ZCaller> theCaller = begin->second.first;
+				ZRef<ZCallable_Void> theCallable = begin->second.second;
 
-				ZUtil_STL::sEraseMustContain(fJobTimes, make_pair(front->second, front->first));
-				fTimeJobs.erase(front);
+				ZUtil_STL::sEraseMustContain(fJobTimes, make_pair(begin->second, begin->first));
+				fTimeJobs.erase(begin);
 
 				guard.Release();
 

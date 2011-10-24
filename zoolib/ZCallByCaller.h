@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCaller.h"
-#include "zoolib/ZCallable.h"
 #include "zoolib/ZCallable_Bind.h"
 #include "zoolib/ZCallable_Function.h"
 #include "zoolib/ZPromise.h"
