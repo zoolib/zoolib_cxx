@@ -40,8 +40,9 @@ bool ZCaller_EventLoop::Queue(const ZRef<ZCallable_Void>& iCallable)
 	if (iCallable)
 		{
 		ZAcqMtx acq(fMtx);
-		if (fTriggered++ || this->pTrigger())
+		if (fTriggered || this->pTrigger())
 			{
+			fTriggered = true;
 			fCallables.push_back(iCallable);
 			return true;
 			}
@@ -68,6 +69,7 @@ void ZCaller_EventLoop::pDiscardPending()
 	{
 	ZAcqMtx acq(fMtx);
 	fCallables.clear();
+	fTriggered = false;
 	}
 
 } // namespace ZooLib
