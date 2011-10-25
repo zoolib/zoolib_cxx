@@ -33,6 +33,7 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZQ
 
+// The 'Q' stands for 'Questionable' or 'Queryable'
 // c.f. Haskell's Data.Maybe, Scala's Option.
 
 template <class T, bool Sense = true>
