@@ -44,23 +44,24 @@ class ZCallable_Set<void(void)>
 public:
 	typedef ZCallable<void(void)> Callable;
 
+// From ZCallable
+	ZQ<void> QCall()
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
+				sCall(theQ.Get());
+			else
+				return notnull;
+			}
+		}
+
+// Our protocol
 	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
-
-	ZQ<void> QCall()
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
-				break;
-			else
-				sCall(theQ.Get());
-			}
-		return notnull;
-		}
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -77,23 +78,24 @@ class ZCallable_Set<void(P0)>
 public:
 	typedef ZCallable<void(P0)> Callable;
 
+// From ZCallable
+	ZQ<void> QCall(P0 i0)
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
+				sCall(theQ.Get(), i0);
+			else
+				return notnull;
+			}
+		}
+
+// Our protocol
 	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
-
-	ZQ<void> QCall(P0 i0)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
-				break;
-			else
-				sCall(theQ.Get(), i0);
-			}
-		return notnull;
-		}
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -110,23 +112,24 @@ class ZCallable_Set<void(P0,P1)>
 public:
 	typedef ZCallable<void(P0,P1)> Callable;
 
+// From ZCallable
+	ZQ<void> QCall(P0 i0, P1 i1)
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
+				sCall(theQ.Get(), i0, i1);
+			else
+				return notnull;
+			}
+		}
+
+// Our protocol
 	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
-
-	ZQ<void> QCall(P0 i0, P1 i1)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
-				break;
-			else
-				sCall(theQ.Get(), i0, i1);
-			}
-		return notnull;
-		}
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -143,23 +146,24 @@ class ZCallable_Set<void(P0,P1,P2)>
 public:
 	typedef ZCallable<void(P0,P1,P2)> Callable;
 
+// From ZCallable
+	ZQ<void> QCall(P0 i0, P1 i1, P2 i2)
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
+				sCall(theQ.Get(), i0, i1, i2);
+			else
+				return notnull;
+			}
+		}
+
+// Our protocol
 	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
-
-	ZQ<void> QCall(P0 i0, P1 i1, P2 i2)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
-				break;
-			else
-				sCall(theQ.Get(), i0, i1, i2);
-			}
-		return notnull;
-		}
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -176,23 +180,24 @@ class ZCallable_Set<void(P0,P1,P2,P3)>
 public:
 	typedef ZCallable<void(P0,P1,P2,P3)> Callable;
 
+// From ZCallable
+	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
+				sCall(theQ.Get(), i0, i1, i2, i3);
+			else
+				return notnull;
+			}
+		}
+
+// Our protocol
 	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
-
-	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
-				break;
-			else
-				sCall(theQ.Get(), i0, i1, i2, i3);
-			}
-		return notnull;
-		}
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -209,23 +214,24 @@ class ZCallable_Set<void(P0,P1,P2,P3,P4)>
 public:
 	typedef ZCallable<void(P0,P1,P2,P3,P4)> Callable;
 
+// From ZCallable
+	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
+				sCall(theQ.Get(), i0, i1, i2, i3, i4);
+			else
+				return notnull;
+			}
+		}
+
+// Our protocol
 	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
-
-	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
-				break;
-			else
-				sCall(theQ.Get(), i0, i1, i2, i3, i4);
-			}
-		return notnull;
-		}
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -242,23 +248,24 @@ class ZCallable_Set<void(P0,P1,P2,P3,P4,P5)>
 public:
 	typedef ZCallable<void(P0,P1,P2,P3,P4,P5)> Callable;
 
+// From ZCallable
+	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
+				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5);
+			else
+				return notnull;
+			}
+		}
+
+// Our protocol
 	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
-
-	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
-				break;
-			else
-				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5);
-			}
-		return notnull;
-		}
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -275,22 +282,16 @@ class ZCallable_Set<void(P0,P1,P2,P3,P4,P5,P6)>
 public:
 	typedef ZCallable<void(P0,P1,P2,P3,P4,P5,P6)> Callable;
 
-	void Insert(ZRef<Callable> iCallable)
-		{ fCallables.Insert(iCallable); }
-
-	void Erase(ZRef<Callable> iCallable)
-		{ fCallables.Erase(iCallable); }
-
+// From ZCallable
 	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
-			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
-				break;
-			else
+			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
 				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5, i6);
+			else
+				return notnull;
 			}
-		return notnull;
 		}
 
 private:
@@ -308,23 +309,24 @@ class ZCallable_Set<void(P0,P1,P2,P3,P4,P5,P6,P7)>
 public:
 	typedef ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7)> Callable;
 
+// From ZCallable
+	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
+		{
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+			{
+			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
+				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5, i6, i7);
+			else
+				return notnull;
+			}
+		}
+
+// Our protocol
 	void Insert(ZRef<Callable> iCallable)
 		{ fCallables.Insert(iCallable); }
 
 	void Erase(ZRef<Callable> iCallable)
 		{ fCallables.Erase(iCallable); }
-
-	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable>,false> theQ = iter.QReadInc())
-				break;
-			else
-				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5, i6, i7);
-			}
-		return notnull;
-		}
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;

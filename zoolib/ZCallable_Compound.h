@@ -28,7 +28,7 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Apply
+#pragma mark * sCallable_Apply
 
 template <class A, class B, class C>
 class ZCallable_Apply
@@ -53,10 +53,6 @@ private:
 	const ZRef<ZCallable<B(C)> > fCallable;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * sCallable_Apply
-
 template <class A, class B, class C>
 ZRef<ZCallable<A(C)> >
 sCallable_Apply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)> >& iCallable)
@@ -64,7 +60,7 @@ sCallable_Apply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)>
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_Seq
+#pragma mark * sCallable_Seq
 
 template <class R0, class R1>
 class ZCallable_Seq
@@ -95,7 +91,7 @@ sCallable_Seq(const ZRef<ZCallable<R0(void)> >& i0, const ZRef<ZCallable<R1(void
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_For
+#pragma mark * sCallable_For
 
 template <class R_Init, class R_Inc>
 class ZCallable_For
@@ -132,7 +128,7 @@ ZRef<ZCallable_Void> sCallable_For(const ZRef<ZCallable<R_Init(void)> >& iInit,
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallable_If
+#pragma mark * sCallable_If
 
 template <class R>
 class ZCallable_If
@@ -172,7 +168,7 @@ ZRef<ZCallable<R(void)> > sCallable_If(const ZRef<ZCallable_Bool>& iCondition,
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Makers
+#pragma mark * sCallable_Repeat
 
 template<class R>
 class ZCallable_Repeat
@@ -207,7 +203,7 @@ ZRef<ZCallable_Void> sCallable_Repeat(size_t iCount, const ZRef<ZCallable<R(void
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Makers
+#pragma mark * sCallable_While
 
 template <class R>
 class ZCallable_While
