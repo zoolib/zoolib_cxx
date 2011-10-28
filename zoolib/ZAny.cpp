@@ -119,7 +119,7 @@ void ZAny::swap(ZAny& ioOther)
 	}
 
 bool ZAny::IsNull() const
-	{ return fPtr_InPlace || fHolder_Ref(); }
+	{ return not fPtr_InPlace && not fHolder_Ref(); }
 
 void ZAny::Clear()
 	{
