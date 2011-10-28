@@ -425,6 +425,9 @@ int ZMap_Any::Compare(const ZMap_Any& iOther) const
 		}
 	}
 
+bool ZMap_Any::IsEmpty() const
+	{ return not fRep || fRep->fMap.empty(); }
+
 void ZMap_Any::Clear()
 	{ fRep.Clear(); }
 
