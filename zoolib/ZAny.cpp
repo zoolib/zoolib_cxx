@@ -41,9 +41,6 @@ inline ZRef<ZAny::Holder_Counted>& ZAny::fHolder_Ref()
 inline const ZRef<ZAny::Holder_Counted>& ZAny::fHolder_Ref() const
 	{ return *sFetch_T<ZRef<Holder_Counted> >(fBytes_Payload); }
 
-ZAny::operator operator_bool() const
-	{ return operator_bool_gen::translate(fPtr_InPlace || fHolder_Ref()); }
-
 const std::type_info& ZAny::Type() const
 	{
 	if (spIsPOD(fPtr_InPlace))
@@ -120,6 +117,9 @@ void ZAny::swap(ZAny& ioOther)
 		fHolder_Ref().swap(ioOther.fHolder_Ref());
 		}
 	}
+
+bool ZAny::IsNull() const
+	{ return fPtr_InPlace || fHolder_Ref(); }
 
 void ZAny::Clear()
 	{

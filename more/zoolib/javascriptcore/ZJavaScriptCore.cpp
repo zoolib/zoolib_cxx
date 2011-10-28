@@ -298,7 +298,7 @@ ZQ<Value> Value::sQFromAny(const ZAny& iAny)
 	{
 	if (false)
 		{}
-	else if (not iAny)
+	else if (iAny.IsNull())
 		{
 		return Value();
 		}

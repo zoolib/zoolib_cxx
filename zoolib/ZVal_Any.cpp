@@ -134,9 +134,6 @@ ZSeq_Any::Rep::Rep(const Vector_t& iVector)
 #pragma mark -
 #pragma mark * ZSeq_Any
 
-ZSeq_Any::operator operator_bool() const
-	{ return operator_bool_gen::translate(fRep && !fRep->fVector.empty()); }
-
 ZSeq_Any::ZSeq_Any()
 	{}
 
@@ -305,9 +302,6 @@ ZMap_Any::Rep::Rep(const Map_t& iMap)
 
 static string8 spEmptyString;
 static ZMap_Any::Map_t spEmptyMap;
-
-ZMap_Any::operator operator_bool() const
-	{ return operator_bool_gen::translate(fRep && !fRep->fMap.empty()); }
 
 ZMap_Any::ZMap_Any()
 	{}

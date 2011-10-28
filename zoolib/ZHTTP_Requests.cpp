@@ -441,7 +441,7 @@ static ZQ<Val> spReadPOST(const ZStreamR& iStreamR, const Map& iHeader)
 		// strimmer, which it does by examining values in iHeader.
 		return spCreateStrimmerR(iHeader, iStreamR)->GetStrimR().ReadAll8();
 		}
-	else if (!content_type)
+	else if (content_type.IsEmpty())
 		{
 		// There was no content type specified, so assume text.
 		string theString;

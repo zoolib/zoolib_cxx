@@ -294,6 +294,8 @@ public:
 	Variant(IDispatch* iVal);
 
 // ZVal protocol
+	bool IsNull() const;
+
 	template <class S>
 	ZQ<S> QGet() const;
 

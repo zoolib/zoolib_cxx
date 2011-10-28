@@ -45,8 +45,6 @@ class ZData_NS
 public:
 	ZAny AsAny() const;
 
-	operator bool() const;
-
 	ZData_NS();
 	ZData_NS(const ZData_NS& iOther);
 	~ZData_NS();

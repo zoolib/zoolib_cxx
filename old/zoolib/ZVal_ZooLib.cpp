@@ -235,7 +235,7 @@ bool ZVal_ZooLib::sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 	{
 	if (false)
 		{}
-	else if (not iAny)
+	else if (iAny.IsNull())
 		{
 		oVal = ZVal_ZooLib();
 		}

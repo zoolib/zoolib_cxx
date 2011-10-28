@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZCompare_T.h"
-#include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZRef.h"
 
 namespace ZooLib {
@@ -39,8 +38,6 @@ class ZData_Any
 
 public:
 	ZAny AsAny() const;
-
-	ZMACRO_operator_bool(ZData_Any, operator_bool) const;
 
 	ZData_Any();
 	ZData_Any(const ZData_Any& iOther);

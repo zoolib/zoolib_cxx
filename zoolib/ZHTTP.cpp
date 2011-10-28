@@ -795,7 +795,7 @@ bool sRead_accept(const ZStreamU& iStream, Map* ioFields)
 		Map temp;
 		temp.Set("type", type);
 		temp.Set("subtype", subtype);
-		if (parameters)
+		if (not parameters.IsEmpty())
 			temp.Set("parameters", parameters);
 		if (ioFields)
 			spAppend(*ioFields, "accept", temp);
@@ -838,7 +838,7 @@ bool sRead_accept_language(const ZStreamU& iStream, Map* ioFields)
 			parameters.Set(name, value);
 			}
 
-		if (parameters)
+		if (not parameters.IsEmpty())
 			temp.Set("parameters", parameters);
 
 		if (ioFields)
@@ -998,7 +998,7 @@ bool sRead_content_disposition(const ZStreamU& iStream, Map& oTuple)
 
 		sSkipLWS(iStream);
 
-		if (parameters)
+		if (not parameters.IsEmpty())
 			oTuple.Set("parameters", parameters);
 		return true;
 		}
@@ -1095,7 +1095,7 @@ bool sRead_content_type(const ZStreamU& iStream, Map* ioFields)
 		Map temp;
 		temp.Set("type", type);
 		temp.Set("subtype", subType);
-		if (parameters)
+		if (not parameters.IsEmpty())
 			temp.Set("parameters", parameters);
 		ioFields->Set("content-type", temp);
 		}

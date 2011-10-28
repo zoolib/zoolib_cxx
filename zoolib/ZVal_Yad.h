@@ -42,7 +42,7 @@ class ZVal_Yad
 	{
 public:
 	ZAny AsAny() const;
-	ZMACRO_operator_bool(ZVal_Yad, operator_bool) const;
+	//##ZMACRO_operator_bool(ZVal_Yad, operator_bool) const;
 
 	ZVal_Yad();
 	ZVal_Yad(const ZVal_Yad& iOther);
@@ -59,6 +59,8 @@ public:
 	ZVal_Yad& operator=(const ZMap_Yad& iMap);
 
 // ZVal protocol
+	bool IsNull() const;
+
 	template <class S>
 	ZQ<S> QGet() const;
 

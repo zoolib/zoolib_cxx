@@ -484,9 +484,6 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSRef, FSRef)
 ZSeq_Any ZSeq_AppleEvent::AsSeq_Any(const ZAny& iDefault) const
 	{ return spAsSeq_Any(iDefault, *this); }
 
-ZSeq_AppleEvent::operator operator_bool() const
-	{ return operator_bool_gen::translate(this->Count()); }
-
 void ZSeq_AppleEvent::swap(ZSeq_AppleEvent& iOther)
 	{ std::swap(static_cast<AEDesc&>(*this), static_cast<AEDesc&>(iOther)); }
 
@@ -615,9 +612,6 @@ ZSeq_AppleEvent& ZSeq_AppleEvent::Append(const ZVal_AppleEvent& iVal)
 
 ZMap_Any ZMap_AppleEvent::AsMap_Any(const ZAny& iDefault) const
 	{ return spAsMap_Any(iDefault, *this); }
-
-ZMap_AppleEvent::operator operator_bool() const
-	{ return operator_bool_gen::translate(this->pCount()); }
 
 void ZMap_AppleEvent::swap(ZMap_AppleEvent& iOther)
 	{ std::swap(static_cast<AEDesc&>(*this), static_cast<AEDesc&>(iOther)); }

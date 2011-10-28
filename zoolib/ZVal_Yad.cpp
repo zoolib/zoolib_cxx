@@ -30,8 +30,8 @@ namespace ZooLib {
 ZAny ZVal_Yad::AsAny() const
 	{ return this->pAsAny(); }
 
-ZVal_Yad::operator operator_bool() const
-	{ return operator_bool_gen::translate(fYad); }
+//##ZVal_Yad::operator operator_bool() const
+//##	{ return operator_bool_gen::translate(fYad); }
 
 ZVal_Yad::ZVal_Yad()
 	{}
@@ -78,6 +78,9 @@ ZVal_Yad& ZVal_Yad::operator=(const ZMap_Yad& iMap)
 	fYad = iMap.GetYad();
 	return *this;
 	}
+
+bool ZVal_Yad::IsNull() const
+	{ return fYad; }
 
 ZVal_Yad ZVal_Yad::Get(const string8& iName) const
 	{

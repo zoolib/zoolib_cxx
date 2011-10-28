@@ -34,9 +34,6 @@ using ZUtil_NS::sDataMutable;
 ZAny ZData_NS::AsAny() const
 	{ return ZUtil_NS::sAsAny(this->pData()); }
 
-ZData_NS::operator bool() const
-	{ return this->GetSize(); }
-
 ZData_NS::ZData_NS()
 :	inherited(sDataMutable())
 	{}

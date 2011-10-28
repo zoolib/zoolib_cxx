@@ -461,7 +461,7 @@ ZMatrix<E,RL,CR> operator*(const ZMatrix<E,RL,Common>& iLeft, const ZMatrix<E,Co
 	{
 	ZMatrix<E,RL,CR> result;
 	for (size_t rl = 0; rl < RL; ++rl)
-		{//###
+		{
 		for (size_t cr = 0; cr < CR; ++cr)
 			{
 			for (size_t o = 0; o < Common; ++o)
@@ -473,6 +473,18 @@ ZMatrix<E,RL,CR> operator*(const ZMatrix<E,RL,Common>& iLeft, const ZMatrix<E,Co
 
 template <class E, size_t RL, size_t Common, size_t CR>
 ZMatrix<E,RL,CR>& operator*=(ZMatrix<E,RL,Common>& ioLeft, const ZMatrix<E,Common,CR>& iRight)
+	{ return ioLeft = ioLeft * iRight; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Composition
+
+template <class E, size_t RL, size_t Common>
+ZMatrix<E,Common,1> operator*(const ZMatrix<E,RL,Common+1>& iLeft, const ZMatrix<E,Common,1>& iRight)
+	{ return sCartesian(iLeft * sHomogenous(iRight)); }
+
+template <class E, size_t RL, size_t Common>
+ZMatrix<E,Common,1>& operator*=(ZMatrix<E,RL,Common+1>& ioLeft, const ZMatrix<E,Common,1>& iRight)
 	{ return ioLeft = ioLeft * iRight; }
 
 // =================================================================================================

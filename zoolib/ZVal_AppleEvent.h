@@ -152,8 +152,6 @@ public:
 
 	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
-	ZMACRO_operator_bool(ZSeq_AppleEvent, operator_bool) const;
-
 	void swap(ZSeq_AppleEvent& iOther);
 
 	ZSeq_AppleEvent();
@@ -198,8 +196,6 @@ public:
 	typedef ZVal_AppleEvent Val_t;
 
 	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
-
-	ZMACRO_operator_bool(ZMap_AppleEvent, operator_bool) const;
 
 	void swap(ZMap_AppleEvent& iOther);
 

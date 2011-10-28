@@ -325,7 +325,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 	{
 	if (false)
 		{}
-	else if (not iAny)
+	else if (iAny.IsNull())
 		{
 		s << "null";
 		}

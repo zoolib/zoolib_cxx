@@ -277,8 +277,6 @@ class Seq
 public:
 	typedef Val Val_t;
 
-	ZMACRO_operator_bool(Seq, operator_bool) const;
-
 	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
 	void swap(Seq& iOther);
@@ -348,8 +346,6 @@ public:
 	typedef ZTagVal<size_t,Map> Index_t;
 	typedef Val Val_t;
 
-	ZMACRO_operator_bool(Map, operator_bool) const;
-
 	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 
 	void swap(Map& iOther);
@@ -369,6 +365,8 @@ public:
 	Map(const string8& iType, Adopt_T<PIActionDescriptor> iOther);
 
 // ZMap protocol
+	bool IsEmpty() const;
+
 	void Clear();
 
 	ZQ<Val> QGet(KeyID iKey) const;

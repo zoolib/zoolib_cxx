@@ -60,8 +60,6 @@ public:
 	template <class S>
 	ZAny& operator=(const S& iVal);
 
-	ZMACRO_operator_bool(ZAny, operator_bool) const;
-
 	const std::type_info& Type() const;
 
 	void* VoidStar();
@@ -69,6 +67,8 @@ public:
 
 // ZVal protocol, generally for use by ZVal derivatives
 	void swap(ZAny& ioOther);
+
+	bool IsNull() const;
 
 	void Clear();
 

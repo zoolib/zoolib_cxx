@@ -308,7 +308,7 @@ ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal)
 	{
 	if (false)
 		{}
-	else if (not iVal)
+	else if (iVal.IsNull())
 		{
 		#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
 			&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2

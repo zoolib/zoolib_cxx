@@ -183,6 +183,9 @@ Variant::Variant(IDispatch* iVal)
 	sRefCopy(&pdispVal, iVal);
 	}
 
+bool Variant::IsNull() const
+	{ return VT_NULL == vt; }
+
 template <>
 ZQ<int8> Variant::QGet<int8>() const
 	{

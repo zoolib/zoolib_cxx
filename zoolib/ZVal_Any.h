@@ -237,8 +237,6 @@ public:
 	typedef std::vector<ZVal_Any> Vector_t;
 	typedef ZVal_Any Val_t;
 
-	ZMACRO_operator_bool(ZSeq_Any, operator_bool) const;
-
 	ZSeq_Any();
 	ZSeq_Any(const ZSeq_Any& iOther);
 	~ZSeq_Any();
@@ -373,8 +371,6 @@ public:
 	typedef Map_t::iterator Index_t;
 	typedef ZVal_Any Val_t;
 
-	ZMACRO_operator_bool(ZMap_Any, operator_bool) const;
-
 	ZMap_Any();
 	ZMap_Any(const ZMap_Any& iOther);
 	~ZMap_Any();
@@ -393,6 +389,8 @@ public:
 	int Compare(const ZMap_Any& iOther) const;
 
 // ZMap protocol
+	bool IsEmpty() const;
+
 	void Clear();
 
 	ZVal_Any* PGetMutable(const string8& iName);

@@ -43,8 +43,6 @@ class ZData_CF
 public:
 	ZAny AsAny() const;
 
-	operator bool() const;
-
 	ZData_CF();
 	ZData_CF(const ZData_CF& iOther);
 	~ZData_CF();

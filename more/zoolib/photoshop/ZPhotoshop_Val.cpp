@@ -1114,9 +1114,6 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 \brief Encapsulates a PIActionList, implementing the ZSeq API.
 */
 
-Seq::operator operator_bool() const
-	{ return operator_bool_gen::translate(this->Count()); }
-
 ZSeq_Any Seq::AsSeq_Any(const ZAny& iDefault) const
 	{
 	ZSeq_Any theSeq;
@@ -1249,9 +1246,6 @@ PIActionList Seq::Orphan()
 \brief Encapsulates a PIActionDescriptor, implementing the ZMap API.
 */
 
-Map::operator operator_bool() const
-	{ return operator_bool_gen::translate(this->pCount()); }
-
 ZMap_Any Map::AsMap_Any(const ZAny& iDefault) const
 	{
 	ZMap_Any theMap;
@@ -1318,6 +1312,9 @@ Map::Map(const string8& iType, Adopt_T<PIActionDescriptor> iOther)
 :	fType(spAsKeyID(iType))
 ,	fAD(iOther.Get())
 	{}
+
+bool Map::IsEmpty() const
+	{ return 0 == this->pCount(); }
 
 void Map::Clear()
 	{ spPSActionDescriptor->Clear(fAD); }

@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
-#include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZData_NS.h"
 #include "zoolib/ZRef_NS.h"
 #include "zoolib/ZUnicodeString.h"

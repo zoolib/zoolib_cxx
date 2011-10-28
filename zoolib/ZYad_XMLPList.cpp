@@ -372,7 +372,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 
 	if (false)
 		{}
-	else if (not iVal)
+	else if (iVal.IsNull())
 		{
 		s.Empty("nil");
 		}

@@ -38,9 +38,6 @@ using ZUtil_CF::sDataMutable;
 ZAny ZData_CF::AsAny() const
 	{ return ZUtil_CF::sAsAny(this->pData()); }
 
-ZData_CF::operator bool() const
-	{ return this->GetSize(); }
-
 ZData_CF::ZData_CF()
 :	inherited(sDataMutable())
 	{}
