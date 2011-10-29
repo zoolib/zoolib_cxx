@@ -691,7 +691,7 @@ ZCog<Param> sCog_Once(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)
 #pragma mark * sCog_While
 
 template <class Param>
-ZCog<Param> sCog_While(const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog);
+ZCog<Param> spCog_While(const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog);
 
 template <class Param>
 ZCog<Param> spCogFun_While(const ZCog<Param>& iSelf, Param iParam,
@@ -709,14 +709,20 @@ ZCog<Param> spCogFun_While(const ZCog<Param>& iSelf, Param iParam,
 	if (not newCog)
 		return null;
 
-	if (sIsTerm(newCog))
-		return sCallCog(sCog_While(iCog_Init, iCog_Init), iParam); //## Dangerous
+	if (not sIsTerm(newCog))
+		return spCog_While(iCog_Init, newCog);
+
+	// To get unbroken repetition on hitting a term we need to call the new cog.
+	// Only do so if this was not the first time, otherwise we're likely to
+	// recurse indefinitely and blow the stack.
+	if (iCog_Init == iCog)
+		return spCog_While(iCog_Init, iCog_Init);
 	else
-		return sCog_While(iCog_Init, newCog);
+		return sCallCog(spCog_While(iCog_Init, iCog_Init), iParam);
 	}
 
 template <class Param>
-ZCog<Param> sCog_While(const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog)
+ZCog<Param> spCog_While(const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog)
 	{
 	static ZMACRO_auto(spCallable, sCallable(spCogFun_While<Param>));
 	return sBindR(spCallable, iCog_Init, iCog);
@@ -729,7 +735,7 @@ ZCog<Param> sCog_While(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param
 		{
 		if (sIsTerm(iCallable))
 			return iCallable;
-		return sCog_While<Param>(iCallable, iCallable);
+		return spCog_While<Param>(iCallable, iCallable);
 		}
 	return null;
 	}
@@ -778,66 +784,6 @@ template <class Param>
 ZCog<Param> sCog_Repeat(size_t iCount,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
 	{ return spCog_Repeat<Param>(iCount, iCallable, iCallable); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * sCog_DelayUntil
-
-template <class Param>
-ZCog<Param> spCogFun_DelayUntil(const ZCog<Param>& iSelf, Param iParam,
-	ZTime iSystemTime)
-	{
-	if (ZTime::sSystem() > iSystemTime)
-		return sCog_Term<Param>();
-	return iSelf;
-	}
-
-template <class Param>
-ZCog<Param> sCog_DelayUntil(ZTime iSystemTime)
-	{
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_DelayUntil<Param>));
-	return sBindR(spCallable, iSystemTime);
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * sCog_DelayFor
-
-template <class Param>
-ZCog<Param> spCogFun_DelayFor(const ZCog<Param>& iSelf, Param iParam,
-	double iDelay)
-	{ return sCallCog(sCog_DelayUntil<Param>(ZTime::sSystem() + iDelay), iParam); }
-
-template <class Param>
-ZCog<Param> sCog_DelayFor(double iDelay)
-	{
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_DelayFor<Param>));
-	return sBindR(spCallable, iDelay);
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * sCog_StartAt, sCog_StopAt, sCog_StartAfter, sCog_StopAfter
-
-template <class Param>
-ZCog<Param> sCog_StartAt(ZTime iSystemTime,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
-	{ return sCog_DelayUntil<Param>(iSystemTime) | iCallable; }
-
-template <class Param>
-ZCog<Param> sCog_StopAt(ZTime iSystemTime,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
-	{ return sCog_DelayUntil<Param>(iSystemTime) * iCallable; }
-
-template <class Param>
-ZCog<Param> sCog_StartAfter(double iDelay,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >iCallable)
-	{ return sCog_DelayFor<Param>(iDelay) | iCallable; }
-
-template <class Param>
-ZCog<Param> sCog_StopAfter(double iDelay,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >iCallable)
-	{ return sCog_DelayFor<Param>(iDelay) * iCallable; }
 
 } // namespace ZooLib
 
