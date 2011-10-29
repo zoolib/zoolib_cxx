@@ -58,7 +58,7 @@ ZMACRO_CompareRegistration_T(ZTime)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTime constatnts
+#pragma mark * ZTime constants
 
 const double ZTime::kSecond = 1;
 const double ZTime::kMinute = 60 * kSecond;
