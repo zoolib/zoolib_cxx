@@ -99,6 +99,8 @@ public:
 #pragma mark -
 #pragma mark * sCog function and pseudo operator
 
+#if 0
+
 const struct
 	{
 	template <class Param>
@@ -132,6 +134,8 @@ const struct
 		{ return iCog; }
 
 	} sCog = {};
+
+#endif
 
 // =================================================================================================
 #pragma mark -
@@ -616,7 +620,7 @@ ZCog<Param>& operator/=
 #pragma mark -
 #pragma mark * sCog_WhileUnchanged
 
-// Call second cog so long as the calling the first cog is unchanged.
+// Call cog1 so long as cog0 is unchanged.
 
 template <class Param>
 ZCog<Param> spCogFun_WhileUnchanged(const ZCog<Param>& iSelf, Param iParam,
