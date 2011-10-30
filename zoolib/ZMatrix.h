@@ -559,6 +559,22 @@ ZMatrix<E,R,C>& operator-=(ZMatrix<E,R,C>& ioLeft, const ZMatrix<E,R,C>& iRight)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Negate
+
+template <class E, size_t R, size_t C>
+ZMatrix<E,R,C> operator-(const ZMatrix<E,R,C>& iMat)
+	{
+	ZMatrix<E,R,C> result(null);
+	for (size_t c = 0; c < C; ++c)
+		{
+		for (size_t r = 0; r < R; ++r)
+			result.fE[c][r] = -iMat.fE[c][r];
+		}
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Scalar multiplication
 
 template <class E, size_t R, size_t C, class T>
