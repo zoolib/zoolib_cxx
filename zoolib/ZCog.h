@@ -641,8 +641,12 @@ ZCog<Param> sCog_WhileUnchanged
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
-	if (iCallable0 && iCallable1)
-		return spCog_WhileUnchanged(iCallable0, iCallable1);
+	if (iCallable0)
+		{
+		if (iCallable1)
+			return spCog_WhileUnchanged(iCallable0, iCallable1);
+		return iCallable0;
+		}
 	return null;
 	}
 
