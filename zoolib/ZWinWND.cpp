@@ -251,8 +251,23 @@ bool sDoOneMessage()
 
 HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iCallable)
 	{
+	HMODULE theHMODULE = ZUtil_Win::sGetModuleHandle();
+
+	LCID theLCID = ::GetThreadLocale();
+	
+	if (HRSRC theHRSRC = ::FindResourceExW(theHMODULE, (LPCWSTR)RT_DIALOG, lpTemplate, theLCID))
+		{
+		HGLOBAL theHGLOBAL = ::LoadResource(theHMODULE, theHRSRC);
+		return ::CreateDialogIndirectParam
+			(theHMODULE,
+			(LPCDLGTEMPLATE)::LockResource(theHGLOBAL),
+			hWndParent,
+			spDialogProcW,
+			(LPARAM)iCallable.Get());
+		}
+
 	return ::CreateDialogParamW
-		(ZUtil_Win::sGetModuleHandle(),
+		(theHMODULE,
 		lpTemplate,
 		hWndParent,
 		spDialogProcW,
