@@ -40,18 +40,18 @@ ZMatrix<Val,1,1> sCVec(Val i0)
 	}
 
 template <class Val>
-ZMatrix<Val,2,1> sCVec(Val i0, Val i1)
+ZMatrix<Val,1,2> sCVec(Val i0, Val i1)
 	{
-	ZMatrix<Val,2,1> result;
+	ZMatrix<Val,1,2> result;
 	result.fE[0][0] = i0;
 	result.fE[0][1] = i1;
 	return result;
 	}
 
 template <class Val>
-ZMatrix<Val,3,1> sCVec(Val i0, Val i1, Val i2)
+ZMatrix<Val,1,3> sCVec(Val i0, Val i1, Val i2)
 	{
-	ZMatrix<Val,3,1> result;
+	ZMatrix<Val,1,3> result;
 	result.fE[0][0] = i0;
 	result.fE[0][1] = i1;
 	result.fE[0][2] = i2;
@@ -59,9 +59,9 @@ ZMatrix<Val,3,1> sCVec(Val i0, Val i1, Val i2)
 	}
 
 template <class Val>
-ZMatrix<Val,4,1> sCVec(Val i0, Val i1, Val i2, Val i3)
+ZMatrix<Val,1,4> sCVec(Val i0, Val i1, Val i2, Val i3)
 	{
-	ZMatrix<Val,4,1> result;
+	ZMatrix<Val,1,4> result;
 	result.fE[0][0] = i0;
 	result.fE[0][1] = i1;
 	result.fE[0][2] = i2;
@@ -74,16 +74,16 @@ ZMatrix<Val,4,1> sCVec(Val i0, Val i1, Val i2, Val i3)
 #pragma mark * CVec3 ctors
 
 template <class Val>
-ZMatrix<Val,3,1> sCVec3(Val x, Val y, Val z)
+ZMatrix<Val,1,3> sCVec3(Val x, Val y, Val z)
 	{ return sCVec(x, y, z); }
 
 template <class Val>
-ZMatrix<Val,3,1> sCVec3(Val iVal)
+ZMatrix<Val,1,3> sCVec3(Val iVal)
 	{ return sCVec3(iVal, iVal, iVal); }
 
 template <class Val>
-ZMatrix<Val,3,1> sCVec3()
-	{ return ZMatrix<Val,3,1>(); }
+ZMatrix<Val,1,3> sCVec3()
+	{ return ZMatrix<Val,1,3>(); }
 
 // =================================================================================================
 #pragma mark -
@@ -98,7 +98,7 @@ ZMatrix<Val,1,1> sRVec(Val i0)
 	}
 
 template <class Val>
-ZMatrix<Val,1,2> sRVec(Val i0, Val i1)
+ZMatrix<Val,2,1> sRVec(Val i0, Val i1)
 	{
 	ZMatrix<Val,1,2> result;
 	result.fE[0][0] = i0;
@@ -107,7 +107,7 @@ ZMatrix<Val,1,2> sRVec(Val i0, Val i1)
 	}
 
 template <class Val>
-ZMatrix<Val,1,3> sRVec(Val i0, Val i1, Val i2)
+ZMatrix<Val,3,1> sRVec(Val i0, Val i1, Val i2)
 	{
 	ZMatrix<Val,1,3> result;
 	result.fE[0][0] = i0;
@@ -117,7 +117,7 @@ ZMatrix<Val,1,3> sRVec(Val i0, Val i1, Val i2)
 	}
 
 template <class Val>
-ZMatrix<Val,1,4> sRVec(Val i0, Val i1, Val i2, Val i3)
+ZMatrix<Val,4,1> sRVec(Val i0, Val i1, Val i2, Val i3)
 	{
 	ZMatrix<Val,1,4> result;
 	result.fE[0][0] = i0;
@@ -132,16 +132,16 @@ ZMatrix<Val,1,4> sRVec(Val i0, Val i1, Val i2, Val i3)
 #pragma mark * RVec3 ctors
 
 template <class Val>
-ZMatrix<Val,1,3> sRVec3(Val x, Val y, Val z)
+ZMatrix<Val,3,1> sRVec3(Val x, Val y, Val z)
 	{ return sRVec(x, y, z); }
 
 template <class Val>
-ZMatrix<Val,1,3> sRVec3(Val iVal)
+ZMatrix<Val,3,1> sRVec3(Val iVal)
 	{ return sRVec3(iVal, iVal, iVal); }
 
 template <class Val>
-ZMatrix<Val,1,3> sRVec3()
-	{ return ZMatrix<Val,1,3>(); }
+ZMatrix<Val,3,1> sRVec3()
+	{ return ZMatrix<Val,3,1>(); }
 
 // =================================================================================================
 #pragma mark -

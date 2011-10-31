@@ -28,35 +28,35 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <class E, size_t R>
-const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,R,1>& mat)
+const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,1,R>& mat)
 	{
 	w << "C[";
 	for (size_t r = 0; r < R; ++r)
 		{
 		if (r)
 			w << ", ";
-		w << mat.fE[r][0];
+		w << mat.fE[0][r];
 		}
 	w << "]";
 	return w;
 	}
 
 template <class E, size_t C>
-const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,1,C>& mat)
+const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,C,1>& mat)
 	{
 	w << "R[";
 	for (size_t c = 0; c < C; ++c)
 		{
 		if (c)
 			w << ", ";
-		w << mat.fE[0][c];
+		w << mat.fE[c][0];
 		}
 	w << "]";
 	return w;
 	}
 
-template <class E, size_t R, size_t C>
-const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,R,C>& mat)
+template <class E, size_t C, size_t R>
+const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,C,R>& mat)
 	{
 	w << "[";
 	for (size_t r = 0; r < R; ++r)
@@ -66,7 +66,7 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,R,C>& mat)
 			{
 			if (c)
 				w << ", ";
-			w << mat.fE[r][c];
+			w << mat.fE[c][r];
 			}
 		w << "]";
 		}
