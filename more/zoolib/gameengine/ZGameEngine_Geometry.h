@@ -203,8 +203,8 @@ ZMatrix<Val,4,4> sTranslateZ(Val z)
 template <class Val>
 ZMatrix<Val,4,4> sRotateX(Val radians)
 	{
-	Val s = sin(radians);
-	Val c = cos(radians);
+	const Val s = sin(radians);
+	const Val c = cos(radians);
 	ZMatrix<Val,4,4> result;
 	result.fE[0][0] = 1;
 	result.fE[1][1] = c;
@@ -222,8 +222,8 @@ ZMatrix<Val,4,4> sRotateX(Val radians)
 template <class Val>
 ZMatrix<Val,4,4> sRotateY(Val radians)
 	{
-	Val s = sin(radians);
-	Val c = cos(radians);
+	const Val s = sin(radians);
+	const Val c = cos(radians);
 	ZMatrix<Val,4,4> result;
 	result.fE[0][0] = c;
 	result.fE[1][1] = 1;
@@ -241,14 +241,44 @@ ZMatrix<Val,4,4> sRotateY(Val radians)
 template <class Val>
 ZMatrix<Val,4,4> sRotateZ(Val radians)
 	{
-	Val s = sin(radians);
-	Val c = cos(radians);
+	const Val s = sin(radians);
+	const Val c = cos(radians);
 	ZMatrix<Val,4,4> result;
 	result.fE[0][0] = c;
 	result.fE[0][1] = s;
 	result.fE[1][0] = -s;
 	result.fE[1][1] = c;
 	result.fE[2][2] = 1;
+	result.fE[3][3] = 1;
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sShear
+
+template <class Val>
+ZMatrix<Val,4,4> sShear(Val xy, Val xz, Val yx, Val yz, Val zx, Val zy)
+	{
+	ZMatrix<Val,4,4> result(null);
+	result.fE[0][0] = 1;
+	result.fE[0][1] = xy;
+	result.fE[0][2] = xz;
+	result.fE[0][3] = 0;
+
+	result.fE[1][0] = yx;
+	result.fE[1][1] = 1;
+	result.fE[1][2] = yz;
+	result.fE[1][3] = 0;
+
+	result.fE[2][0] = zx;
+	result.fE[2][1] = zy;
+	result.fE[2][2] = 1;
+	result.fE[2][3] = 0;
+
+	result.fE[3][0] = 0;
+	result.fE[3][1] = 0;
+	result.fE[3][2] = 0;
 	result.fE[3][3] = 1;
 	return result;
 	}
