@@ -86,6 +86,9 @@ public:
 	const string& Name() const;
 	Attrs_t Attrs() const;
 
+	ZQ<string> QAttr(const string& iAttrName) const;
+	string Attr(const string& iAttrName) const;
+
 private:
 	void pAdvance() const;
 	void pAdvance();

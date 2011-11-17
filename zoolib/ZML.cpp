@@ -434,6 +434,29 @@ Attrs_t StrimU::Attrs() const
 	return Attrs_t();
 	}
 
+ZQ<string> StrimU::QAttr(const string& iAttrName) const
+	{
+	if (fToken == eToken_Fresh)
+		this->pAdvance();
+
+	if (fToken == eToken_TagBegin || fToken == eToken_TagEmpty)
+		{
+		for (Attrs_t::const_iterator ii = fTagAttributes.begin(); ii != fTagAttributes.end(); ++ii)
+			{
+			if (ii->first == iAttrName)
+				return ii->second;
+			}
+		}
+	return null;
+	}
+
+string StrimU::Attr(const string& iAttrName) const
+	{
+	if (ZQ<string> theAttr = this->QAttr(iAttrName))
+		return *theAttr;
+	return string();
+	}
+
 // The semantics of this do not precisely match those of other sTryRead_XXX methods.
 // We will consume code points from \a s up to and including the failing code point.
 static bool spTryRead_String(const ZStrimR& iStrimR, const string8& iPattern)
@@ -866,25 +889,6 @@ static void spWriteIndent(const ZStrimW& iStrim, const string8& iString, size_t 
 		iStrim.Write(iString);
 	}
 
-namespace { // anonymous
-
-struct Entity_t
-	{
-	const UTF8* fText;
-	size_t fLength;
-	};
-
-const Entity_t spEntities[] =
-	{
-	{ "&quot;", 6 },
-	{ "&amp;", 5 },
-	{ "&lt;", 4 },
-	{ "&gt;", 4 },
-	{ "&nbsp;", 6 },
-	};
-
-} // anonymous namespace
-
 void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	this->pPreText();
@@ -894,31 +898,49 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 	for (;;)
 		{
 		// Walk forward through the source till we find a entity CP.
-		const Entity_t* entity = nullptr;
+		ZQ<UTF32> theEntityCPQ;
 		const UTF8* current = localSource;
 		const UTF8* priorToEntity;
-		while (!entity)
+		while (not theEntityCPQ)
 			{
 			priorToEntity = current;
 			UTF32 theCP;
 			if (not ZUnicode::sReadInc(current, localSourceEnd, theCP))
 				break;
+
 			switch (theCP)
 				{
-				case '"': entity = &spEntities[0]; break;
-				case '&': entity = &spEntities[1]; break;
-				case '<': entity = &spEntities[2]; break;
-				case '>': entity = &spEntities[3]; break;
-				case 0x00A0: entity = &spEntities[4]; break;
+				case '\t':
+				case '\n':
+				case '\r':
+					{
+					// These whitespace characters are fine
+					break;
+					}
+				case '"':
+				case '&':
+				case '<':
+				case '>':
+				case 0x00A0:
+				case 0x007F:
+					{
+					theEntityCPQ = theCP;
+					break;
+					}
+				default:
+					{
+					if (theCP < 0x20)
+						theEntityCPQ = theCP;
+					}
 				}
 			}
 
-		size_t countWritten;
-		if (entity)
+		if (theEntityCPQ)
 			{
 			// Write everything prior to the entity.
 			if (size_t countToWrite = priorToEntity - localSource)
 				{
+				size_t countWritten;
 				fStrimSink.Write(localSource, countToWrite, &countWritten);
 				if (!countWritten)
 					break;
@@ -933,12 +955,16 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 				}
 
 			// Write the substitution text.
-			fStrimSink.Write(entity->fText, entity->fLength, &countWritten);
-			if (!countWritten)
-				break;
+			switch (*theEntityCPQ)
+				{
+				case '"': fStrimSink.Write("&quot;"); break;
+				case '&': fStrimSink.Write("&amp;"); break;
+				case '<': fStrimSink.Write("&lt;"); break;
+				case '>': fStrimSink.Write("&gt;"); break;
+				case 0x00A0: fStrimSink.Write("&nbsp;"); break;
+				default: fStrimSink.Writef("&#x%02X;", (unsigned int)*theEntityCPQ);
+				}
 
-			// fStrimSink consumed the subsitution text, so advance localSource
-			// past the entity code point.
 			localSource = current;
 			}
 		else
@@ -946,6 +972,7 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 			size_t countToWrite = current - localSource;
 			if (!countToWrite)
 				break;
+			size_t countWritten;
 			fStrimSink.Write(localSource, countToWrite, &countWritten);
 			if (!countWritten)
 				break;
