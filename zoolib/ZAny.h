@@ -53,6 +53,9 @@ public:
 	~ZAny();
 	ZAny& operator=(const ZAny& iOther);
 
+	ZAny(const null_t&);
+	ZAny& operator=(const null_t&);
+
 	template <class S>
 	explicit ZAny(const S& iVal)
 		{ pCtor_T<S>(iVal); }
@@ -379,6 +382,15 @@ inline ZAny& ZAny::operator=(const ZAny& iOther)
 		pDtor();
 		pCtor(iOther);
 		}
+	return *this;
+	}
+
+inline ZAny::ZAny(const null_t&)
+	{}
+
+inline ZAny& ZAny::operator=(const null_t&)
+	{
+	this->Clear();
 	return *this;
 	}
 
