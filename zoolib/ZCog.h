@@ -97,48 +97,6 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCog function and pseudo operator
-
-#if 0
-
-const struct
-	{
-	template <class Param>
-	ZCog<Param> operator()
-		(ZCallable<ZCog<Param>(const ZCog<Param>&,Param)>* iCallable) const
-		{ return iCallable; }
-
-	template <class Param>
-	ZCog<Param> operator()
-		(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable) const
-		{ return iCallable; }
-
-	template <class Param>
-	const ZCog<Param>& operator()
-		(const ZCog<Param>& iCog) const
-		{ return iCog; }
-
-	template <class Param>
-	ZCog<Param> operator&
-		(ZCallable<ZCog<Param>(const ZCog<Param>&,Param)>* iCallable) const
-		{ return iCallable; }
-
-	template <class Param>
-	ZCog<Param> operator&
-		(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable) const
-		{ return iCallable; }
-
-	template <class Param>
-	const ZCog<Param>& operator&
-		(const ZCog<Param>& iCog) const
-		{ return iCog; }
-
-	} sCog = {};
-
-#endif
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * sCog_Term
 
 template <class Param>
@@ -211,6 +169,36 @@ bool sCallValidCogUnchanged(Cog& ioCog, const typename Cog::Param iParam)
 template <class Cog>
 bool sCallCogUnchanged(Cog& ioCog, const typename Cog::Param iParam)
 	{ return not ioCog || sIsTerm(ioCog) || not sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sCog_Not
+
+template <class Param>
+ZCog<Param> spCogFun_Not(const ZCog<Param>& iSelf, Param iParam,
+	const ZCog<Param>& iCog)
+	{
+	if (iCog && not sIsTerm(iCog))
+		{
+		const ZCog<Param> newCog = iCog->Call(iCog, iParam);
+		if (not newCog || sIsTerm(newCog))
+			return iCog;
+		}
+	return iSelf;
+	}
+
+template <class Param>
+const ZCog<Param>& sCog_Not
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
+	{
+	static ZMACRO_auto(spCallable, sCallable(spCogFun_Not<Param>));
+	return sBindR(spCallable, iCallable);
+	}
+
+template <class Param>
+ZCog<Param> operator~
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
+	{ return sCog_Not<Param>(iCallable); }
 
 // =================================================================================================
 #pragma mark -
