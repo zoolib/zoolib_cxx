@@ -59,22 +59,6 @@ ZYadParseException_ML::ZYadParseException_ML(const char* iWhat)
 #pragma mark -
 #pragma mark * ZYadStrimR_ML
 
-class ZYadStrimR_ML
-:	public ZYadStrimR
-	{
-public:
-	ZYadStrimR_ML(ZRef<ZML::StrimmerU> iStrimmerU);
-
-// From ZYadR
-	virtual void Finish();
-
-// From ZStrimmerU via ZYadStrimR
-	virtual const ZStrimR& GetStrimR();
-
-private:
-	ZRef<ZML::StrimmerU> fStrimmerU;
-	};
-
 ZYadStrimR_ML::ZYadStrimR_ML(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 	{}
@@ -84,6 +68,9 @@ void ZYadStrimR_ML::Finish()
 
 const ZStrimR& ZYadStrimR_ML::GetStrimR()
 	{ return fStrimmerU->GetStrimR(); }
+
+ZML::StrimU& ZYadStrimR_ML::GetStrim()
+	{ return fStrimmerU->GetStrim(); }
 
 // =================================================================================================
 #pragma mark -

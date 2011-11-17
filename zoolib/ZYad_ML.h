@@ -40,9 +40,33 @@ public:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadStrimR_ML
+
+class ZYadStrimR_ML
+:	public virtual ZYadStrimR
+	{
+public:
+	ZYadStrimR_ML(ZRef<ZML::StrimmerU> iStrimmerU);
+
+// From ZYadR
+	virtual void Finish();
+
+// From ZStrimmerU via ZYadStrimR
+	virtual const ZStrimR& GetStrimR();
+
+// Our protocol
+	ZML::StrimU& GetStrim();
+
+private:
+	ZRef<ZML::StrimmerU> fStrimmerU;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadMapR_ML
 
-class ZYadMapR_ML : public ZYadMapR_Std
+class ZYadMapR_ML
+:	public virtual ZYadMapR_Std
 	{
 public:
 	ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU);
