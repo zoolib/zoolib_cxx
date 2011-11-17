@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompat_cmath.h"
+#include "zoolib/ZSetRestore_T.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUnicode.h"
@@ -213,7 +214,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 		}
 	else if (sTryRead_CaselessString(iStrimU, "null"))
 		{
-		oVal = ZAny();
+		oVal = null; //## Watch this
 		}
 	else if (sTryRead_CaselessString(iStrimU, "false"))
 		{
@@ -484,33 +485,6 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Writer::SaveState
-
-class Visitor_Writer::SaveState
-	{
-public:
-	SaveState(Visitor_Writer* iVisitor);
-	~SaveState();
-
-	Visitor_Writer* fVisitor;
-	size_t fIndent;
-	bool fMayNeedInitialLF;
-	};
-
-Visitor_Writer::SaveState::SaveState(Visitor_Writer* iVisitor)
-:	fVisitor(iVisitor),
-	fIndent(fVisitor->fIndent),
-	fMayNeedInitialLF(fVisitor->fMayNeedInitialLF)
-	{}
-
-Visitor_Writer::SaveState::~SaveState()
-	{
-	fVisitor->fIndent = fIndent;
-	fVisitor->fMayNeedInitialLF = fMayNeedInitialLF;
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Visitor_Writer
 
 Visitor_Writer::Visitor_Writer
@@ -564,8 +538,7 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 			spWriteLFIndent(fStrimW, fIndent, fOptions);
 			}
 
-		SaveState save(this);
-		fMayNeedInitialLF = false;
+		ZSetRestore_T<bool> theSR_MayNeedInitialLF(fMayNeedInitialLF, false);
 
 		fStrimW.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
@@ -644,9 +617,8 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				spWriteString(fStrimW, curName);
 				fStrimW << ": ";
 
-				SaveState save(this);
-				fIndent = fIndent + 1;
-				fMayNeedInitialLF = true;
+				ZSetRestore_T<size_t> theSR_Indent(fIndent, fIndent + 1);
+				ZSetRestore_T<bool> theSR_MayNeedInitialLF(fMayNeedInitialLF, true);
 				cur->Accept(*this);
 				}
 			}
@@ -674,7 +646,8 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				if (fOptions.fBreakStrings)
 					fStrimW.Write(" ");
 
-				SaveState save(this);
+				ZSetRestore_T<size_t> theSR_Indent(fIndent, fIndent + 1);
+				ZSetRestore_T<bool> theSR_MayNeedInitialLF(fMayNeedInitialLF, true);
 				fIndent = fIndent + 1;
 				fMayNeedInitialLF = true;
 				cur->Accept(*this);

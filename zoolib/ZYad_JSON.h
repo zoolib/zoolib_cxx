@@ -127,9 +127,6 @@ public:
 	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR);
 
 private:
-	class SaveState;
-	friend class SaveState;
-
 	size_t fIndent;
 	const ZYadOptions fOptions;
 	const ZStrimW& fStrimW;
