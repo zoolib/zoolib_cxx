@@ -273,7 +273,7 @@ HWND sCreateDialog(LPCWSTR lpTemplate, LCID iLCID, HWND hWndParent, ZRef<Callabl
 	}
 
 HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iCallable)
-	{ return sCreateDialog(lpTemplate, ::GetThreadLocale(), hWndParent, iCallable) }
+	{ return sCreateDialog(lpTemplate, ::GetThreadLocale(), hWndParent, iCallable); }
 
 bool sDoOneMessageForDialog(HWND iHWND)
 	{
