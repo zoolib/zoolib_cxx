@@ -39,9 +39,9 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCaller_Null
+#pragma mark * ZCaller_Trivial
 
-class ZCaller_Null
+class ZCaller_Trivial
 :	public ZCaller
 	{
 public:
