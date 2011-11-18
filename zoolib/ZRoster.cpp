@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+using std::set;
 using std::vector;
 
 // =================================================================================================
@@ -46,46 +47,37 @@ ZRoster::~ZRoster()
 void ZRoster::Finalize()
 	{
 	ZGuardRMtx guard(fMtx);
-	vector<ZRef<Entry> > local(fEntries.begin(), fEntries.end());
-	ZRef<ZCallable_Void> theCallable = fCallable_Gone;
 
-	for (vector<ZRef<Entry> >::const_iterator ii = local.begin(); ii != local.end(); ++ii)
+	if (not	this->FinishFinalize())
+		return;
+
+	for (set<Entry*>::const_iterator ii = fEntries.begin(); ii != fEntries.end(); ++ii)
 		(*ii)->fRoster.Clear();
 
-	if (this->FinishFinalize())
-		{
-		guard.Release();
-		sCall(theCallable);
-		delete this;
-		}
-	else
-		{
-		// Rare/impossible? Someone snagged a strong reference, reinstate entries' weak references.
-		ZRef<ZRoster> thisRef = this;
-		for (vector<ZRef<Entry> >::const_iterator ii = local.begin(); ii != local.end(); ++ii)
-			(*ii)->fRoster = thisRef;
-		}
+	ZRef<ZCallable_Void> theCallable = fCallable_Gone;
+
+	guard.Release();
+
+	delete this;
+
+	sCall(theCallable);
 	}
 
 ZRef<ZRoster::Entry> ZRoster::MakeEntry()
 	{ return this->MakeEntry(null, null); }
 
-ZRef<ZRoster::Entry> ZRoster::MakeEntry
-	(const ZRef<ZCallable_Void>& iCallable_Broadcast, const ZRef<ZCallable_Void>& iCallable_Gone)
+ZRef<ZRoster::Entry> ZRoster::MakeEntry(const ZRef<ZCallable_Void>& iCallable_Broadcast,
+	const ZRef<ZCallable_Void>& iCallable_Gone)
 	{
-	ZRef<ZRoster> thisRef = this;
+	ZRef<Entry> theEntry = new Entry(this, iCallable_Broadcast, iCallable_Gone);
 
-	ZGuardRMtx guard(fMtx);
-
-	ZRef<Entry> theEntry = new Entry(thisRef, iCallable_Broadcast, null);
+	{
+	ZAcqMtx acq(fMtx);
 	ZUtil_STL::sInsertMustNotContain(fEntries, theEntry.Get());
 	fCnd.Broadcast();
+	}
 
-	if (ZRef<ZCallable_Void> theCallable = fCallable_Change)
-		{
-		guard.Release();
-		theCallable->Call();
-		}
+	sCall(fCallable_Change);
 
 	return theEntry;
 	}
@@ -97,15 +89,7 @@ void ZRoster::Broadcast()
 	guard.Release();
 
 	for (vector<ZRef<Entry> >::const_iterator ii = local.begin(); ii != local.end(); ++ii)
-		{
-		ZGuardRMtx guardEntry((*ii)->fMtx);
-		if (ZRef<ZCallable_Void> theCallable = (*ii)->fCallable_Broadcast)
-			{
-			guardEntry.Release();
-			theCallable->Call();
-			guardEntry.Acquire();
-			}
-		}
+		sCall((*ii)->fCallable_Broadcast);
 	}
 
 size_t ZRoster::Count()
@@ -139,19 +123,19 @@ bool ZRoster::WaitUntil(ZTime iDeadline, size_t iCount)
 
 void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallable_Gone)
 	{
-	ZGuardRMtx guard(fMtx);
+	{
+	ZAcqMtx acq(fMtx);
 	
-	if (iEntry->FinishFinalize())
-		{
-		ZUtil_STL::sEraseMustContain(fEntries, iEntry);
-		delete iEntry;
-		fCnd.Broadcast();
-		ZRef<ZCallable_Void> theCallable_Change = fCallable_Change;
-		guard.Release();
-		
-		sCall(theCallable_Change);
-		sCall(iCallable_Gone);
-		}
+	if (not iEntry->FinishFinalize())
+		return;
+
+	ZUtil_STL::sEraseMustContain(fEntries, iEntry);
+	delete iEntry;
+	fCnd.Broadcast();
+	}
+	
+	sCall(fCallable_Change);
+	sCall(iCallable_Gone);
 	}
 
 // =================================================================================================
@@ -171,18 +155,15 @@ ZRoster::Entry::~Entry()
 	{}
 
 void ZRoster::Entry::Finalize()
-	{	
-	ZGuardRMtx guard(fMtx);
+	{
 	ZRef<ZCallable_Void> theCallable = fCallable_Gone;
 
 	if (ZRef<ZRoster> theRoster = fRoster)
 		{
-		guard.Release();
 		theRoster->pFinalizeEntry(this, theCallable);
 		}
 	else if (this->FinishFinalize())
 		{
-		guard.Release();
 		delete this;
 		sCall(theCallable);
 		}

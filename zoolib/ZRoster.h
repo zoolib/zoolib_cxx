@@ -70,8 +70,8 @@ private:
 	ZMtx fMtx;
 	ZCnd fCnd;
 	std::set<Entry*> fEntries;
-	ZRef<ZCallable_Void> fCallable_Change;
-	ZRef<ZCallable_Void> fCallable_Gone;
+	const ZRef<ZCallable_Void> fCallable_Change;
+	const ZRef<ZCallable_Void> fCallable_Gone;
 
 	friend class Entry;
 	};
@@ -99,9 +99,8 @@ public:
 private:
 	ZWeakRef<ZRoster> fRoster;
 
-	ZMtx fMtx;
-	ZRef<ZCallable_Void> fCallable_Broadcast;
-	ZRef<ZCallable_Void> fCallable_Gone;
+	const ZRef<ZCallable_Void> fCallable_Broadcast;
+	const ZRef<ZCallable_Void> fCallable_Gone;
 
 	friend class ZRoster;
 	};
