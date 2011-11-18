@@ -249,13 +249,11 @@ bool sDoOneMessage()
 #pragma mark -
 #pragma mark * ZWinWND, Callable <--> Dialog
 
-HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iCallable)
+HWND sCreateDialog(LPCWSTR lpTemplate, LCID iLCID, HWND hWndParent, ZRef<Callable_Dialog> iCallable)
 	{
 	HMODULE theHMODULE = ZUtil_Win::sGetModuleHandle();
 
-	LCID theLCID = ::GetThreadLocale();
-	
-	if (HRSRC theHRSRC = ::FindResourceExW(theHMODULE, (LPCWSTR)RT_DIALOG, lpTemplate, theLCID))
+	if (HRSRC theHRSRC = ::FindResourceExW(theHMODULE, (LPCWSTR)RT_DIALOG, lpTemplate, iLCID))
 		{
 		HGLOBAL theHGLOBAL = ::LoadResource(theHMODULE, theHRSRC);
 		return ::CreateDialogIndirectParam
@@ -273,6 +271,9 @@ HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iC
 		spDialogProcW,
 		(LPARAM)iCallable.Get());
 	}
+
+HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iCallable)
+	{ return sCreateDialog(lpTemplate, ::GetThreadLocale(), hWndParent, iCallable) }
 
 bool sDoOneMessageForDialog(HWND iHWND)
 	{
