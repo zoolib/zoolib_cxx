@@ -56,8 +56,7 @@ then false is returned and no change is made to ioVec. */
 template <typename Base, typename Derived>
 bool sPushBackIfNotContains(std::vector<Base>& ioVec, const Derived& iElement)
 	{
-	typename std::vector<Base>::iterator i = std::find(ioVec.begin(), ioVec.end(), iElement);
-	if (i != ioVec.end())
+	if (ioVec.end() == std::find(ioVec.begin(), ioVec.end(), iElement))
 		return false;
 	ioVec.push_back(iElement);
 	return true;
