@@ -501,6 +501,111 @@ struct ZCogAccumulatorCombiner_Each
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * sCog_Applied
+
+template <class Param>
+ZCog<Param> spCogFun_Applied(const ZCog<Param>& iSelf, Param iParam,
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
+
+template <class Param>
+ZCog<Param> spCog_Applied
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{
+	ZAssert(iCallable0 && iCallable1);
+	static ZMACRO_auto(spCallable, sCallable(spCogFun_Applied<Param>));
+	return sBindR(spCallable, iCallable0, iCallable1);
+	}
+
+template <class Param>
+ZCog<Param> sCog_Applied
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{
+	if (iCallable0)
+		{
+		if (iCallable1)
+			return spCog_Applied(iCallable0, iCallable1);
+		return iCallable0;
+		}
+	return null;
+	}
+
+template <class Param>
+ZCog<Param> spCogFun_Applied(const ZCog<Param>& iSelf, Param iParam,
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
+	{
+	ZAssert(iCog0 && iCog1);
+	ZCog<Param> lCog0 = iCog0;
+	ZCog<Param> lCog1 = iCog1;
+
+	if (sIsTerm(lCog0))
+		{
+		if (not sIsTerm(lCog1) && not lCog1->Call(lCog1, iParam))
+			return null;
+		return lCog0;
+		}
+	else if (sCallValidCogUnchanged(lCog0, iParam))
+		{
+		if (sIsTerm(lCog1))
+			return lCog0;
+		if (sCallValidCogUnchanged(lCog1, iParam))
+			return iSelf;
+		if (not lCog1)
+			return lCog0;
+		if (sIsTerm(lCog1))
+			return lCog0;
+		return spCog_Both(lCog0, lCog1);
+		}
+	else if (not lCog0)
+		{
+		return null;
+		}
+	else if (sIsTerm(lCog0))
+		{
+		if (sIsTerm(lCog1))
+			return lCog1;
+		if ((lCog1 = lCog1->Call(lCog1, iParam)) && sIsTerm(lCog1))
+			return lCog1;
+		return null;
+		}
+	else if (sIsTerm(lCog1))
+		{
+		return lCog0;
+		}
+	else if ((lCog1 = lCog1->Call(lCog1, iParam)))
+		{
+		if (sIsTerm(lCog1))
+			return lCog0;
+		return spCog_Both(lCog0, lCog1);
+		}
+	else
+		{
+		return null;
+		}
+	}
+
+template <class Param>
+ZCog<Param> operator^
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return sCog_Applied<Param>(iCallable0, iCallable1); }
+
+template <class Param>
+ZCog<Param>& operator^=
+	(ZCog<Param>& ioCog0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return ioCog0 = sCog_Applied<Param>(ioCog0, iCallable1); }
+
+template <class Param>
+struct ZCogAccumulatorCombiner_Applied
+	{
+	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
+		{ io0 = sCog_Applied(io0, i1); }
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * sCog_FollowedBy
 
 template <class Param>
