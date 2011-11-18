@@ -57,6 +57,12 @@ public:
 			}
 		return false;
 		}
+	
+	static ZRef<ZCaller_Thread> sCaller()
+		{
+		static ZRef<ZCaller_Thread> spCaller = new ZCaller_Thread;
+		return spCaller;
+		}
 	};
 
 } // namespace ZooLib
