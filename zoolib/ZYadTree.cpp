@@ -48,9 +48,15 @@ public:
 	ZRef<Chain> Clone();
 
 	ZRef<ZYadR> ReadInc(string& oName);
-	ZRef<ZYadR> ReadAt(const ZRef<CountedString>& iProto, const string& iName);
+	ZRef<ZYadR> ReadAt
+		(const ZRef<CountedString>& iProtoName, const ZRef<CountedString>& iLexicalScopeName,
+		const string& iName);
 
 private:
+	ZRef<ZYadR> pReadAt
+		(const ZRef<CountedString>& iProtoName, const ZRef<CountedString>& iLexicalScopeName,
+		const string& iName, bool iAllowLexicalScope);
+
 	ZRef<ZYadR> pReadAt(const string& iName);
 
 	const ZRef<Chain> fParent;
@@ -68,7 +74,7 @@ class YadSeqRPos
 :	public ZYadSeqRPos
 	{
 public:
-	YadSeqRPos(const ZRef<CountedString>& iProto,
+	YadSeqRPos(const ZRef<CountedString>& iProtoName, const ZRef<CountedString>& iLexicalScopeName,
 		const ZRef<Chain>& iChain, const ZRef<ZYadSeqRPos>& iYadSeqRPos);
 
 // From ZYadSeqR via ZYadSeqRPos
@@ -85,7 +91,8 @@ public:
 	virtual ZRef<ZYadR> ReadAt(uint64 iPosition);
 
 private:
-	const ZRef<CountedString> fProto;
+	const ZRef<CountedString> fProtoName;
+	const ZRef<CountedString> fLexicalScopeName;
 	const ZRef<Chain> fChain;
 	const ZRef<ZYadSeqRPos> fYadSeqRPos;
 	};
@@ -98,10 +105,11 @@ class YadMapRPos
 :	public ZYadMapRPos
 	{
 public:
-	YadMapRPos(const ZRef<CountedString>& iProto,
+	YadMapRPos(const ZRef<CountedString>& iProtoName, const ZRef<CountedString>& iLexicalScopeName,
 		const ZRef<Chain>& iChain, const string& iPosition);
 
-	YadMapRPos(const ZRef<CountedString>& iProto, const ZRef<ZYadMapRPos>& iYad);
+	YadMapRPos(const ZRef<CountedString>& iProtoName, const ZRef<CountedString>& iLexicalScopeName,
+		const ZRef<ZYadMapRPos>& iYad);
 
 // From ZYadMapR via ZYadMapRPos
 	ZRef<ZYadR> ReadInc(string& oName);
@@ -114,7 +122,8 @@ public:
 	virtual ZRef<ZYadR> ReadAt(const string& iName);
 
 private:
-	const ZRef<CountedString> fProto;
+	const ZRef<CountedString> fProtoName;
+	const ZRef<CountedString> fLexicalScopeName;
 	ZRef<Chain> fChain;
 	string fPosition;
 	};
@@ -123,14 +132,18 @@ private:
 #pragma mark -
 #pragma mark * Helpers
 
-static ZRef<ZYadR> spWrap(const ZRef<CountedString>& iProto,
+static ZRef<ZYadR> spWrap
+	(const ZRef<CountedString>& iProtoName, const ZRef<CountedString>& iLexicalScopeName,
 	const ZRef<Chain>& iChain, const ZRef<ZYadR>& iYad)
 	{
 	if (ZRef<ZYadSeqRPos> theYadSeqRPos = iYad.DynamicCast<ZYadSeqRPos>())
-		return new YadSeqRPos(iProto, iChain, theYadSeqRPos);
+		return new YadSeqRPos(iProtoName, iLexicalScopeName, iChain, theYadSeqRPos);
 
 	if (ZRef<ZYadMapRPos> theYadMapRPos = iYad.DynamicCast<ZYadMapRPos>())
-		return new YadMapRPos(iProto, new Chain(iChain, theYadMapRPos), string());
+		{
+		return new YadMapRPos
+			(iProtoName, iLexicalScopeName, new Chain(iChain, theYadMapRPos), string());
+		}
 
 	return iYad;
 	}
@@ -162,17 +175,24 @@ ZRef<ZYadR> Chain::ReadInc(string& oName)
 ZRef<ZYadR> Chain::pReadAt(const string& iName)
 	{ return fYadMapRPos->ReadAt(iName); }
 
-ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProto, const string& iName)
+ZRef<ZYadR> Chain::ReadAt
+	(const ZRef<CountedString>& iProtoName, const ZRef<CountedString>& iLexicalScopeName,
+	const string& iName)
+	{ return this->pReadAt(iProtoName, iLexicalScopeName, iName, false); }
+
+ZRef<ZYadR> Chain::pReadAt
+	(const ZRef<CountedString>& iProtoName, const ZRef<CountedString>& iLexicalScopeName,
+	const string& iName, bool iAllowLexicalScope)
 	{
 	if (ZRef<ZYadR> theYad = this->pReadAt(iName))
-		return spWrap(iProto, this, theYad);
+		return spWrap(iProtoName, iLexicalScopeName, this, theYad);
 	
 	ZRef<Chain> theChain;
 	if (ZQ<ZRef<Chain> > theByNameQ = ZUtil_STL::sQGet(fCacheByName, iName))
 		{
 		theChain = *theByNameQ;
 		}
-	else if (ZRef<ZYadStrimR> theProtoYad = this->pReadAt(iProto->Get()).DynamicCast<ZYadStrimR>())
+	else if (ZRef<ZYadStrimR> theProtoYad = this->pReadAt(iProtoName->Get()).DynamicCast<ZYadStrimR>())
 		{
 		const string theTrailString = theProtoYad->GetStrimR().ReadAll8();
 		if (ZQ<ZRef<Chain> > theByTrailQ = ZUtil_STL::sQGet(fCacheByTrail, theTrailString))
@@ -226,11 +246,19 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProto, const string& iName
 		}
 
 	if (theChain)
-		return theChain->ReadAt(iProto, iName);
+		{
+		if (ZRef<ZYadR> theYadR =
+			theChain->pReadAt(iProtoName, iLexicalScopeName, iName, iAllowLexicalScope))
+			{ return theYadR; }
+		}
 
 	// Yay, lexical scoping, disabled for now.
-	if (false && fParent)
-		return spWrap(iProto, fParent, fParent->pReadAt(iName));
+	if (iAllowLexicalScope || (iLexicalScopeName && this->pReadAt(iLexicalScopeName->Get())))
+		{
+		return spWrap
+			(iProtoName, iLexicalScopeName,
+			fParent, fParent->pReadAt(iProtoName, iLexicalScopeName, iName, true));
+		}
 
 	return null;
 	}
@@ -239,18 +267,23 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProto, const string& iName
 #pragma mark -
 #pragma mark * YadSeqRPos definition
 
-YadSeqRPos::YadSeqRPos(const ZRef<CountedString>& iProto,
+YadSeqRPos::YadSeqRPos
+	(const ZRef<CountedString>& iProtoName, const ZRef<CountedString>& iLexicalScopeName,
 	const ZRef<Chain>& iChain, const ZRef<ZYadSeqRPos>& iYadSeqRPos)
-:	fProto(iProto)
+:	fProtoName(iProtoName)
+,	fLexicalScopeName(iLexicalScopeName)
 ,	fChain(iChain)
 ,	fYadSeqRPos(iYadSeqRPos)
 	{}
 
 ZRef<ZYadR> YadSeqRPos::ReadInc()
-	{ return spWrap(fProto, fChain, fYadSeqRPos->ReadInc()); }
+	{ return spWrap(fProtoName, fLexicalScopeName, fChain, fYadSeqRPos->ReadInc()); }
 
 ZRef<ZYadSeqRClone> YadSeqRPos::Clone()
-	{ return new YadSeqRPos(fProto, fChain, fYadSeqRPos->Clone().DynamicCast<ZYadSeqRPos>()); }
+	{
+	return new YadSeqRPos
+		(fProtoName, fLexicalScopeName, fChain, fYadSeqRPos->Clone().DynamicCast<ZYadSeqRPos>());
+	}
 
 uint64 YadSeqRPos::GetPosition()
 	{ return fYadSeqRPos->GetPosition(); }
@@ -262,21 +295,26 @@ uint64 YadSeqRPos::GetSize()
 	{ return fYadSeqRPos->GetSize(); }
 
 ZRef<ZYadR> YadSeqRPos::ReadAt(uint64 iPosition)
-	{ return spWrap(fProto, fChain, fYadSeqRPos->ReadAt(iPosition)); }
+	{ return spWrap(fProtoName, fLexicalScopeName, fChain, fYadSeqRPos->ReadAt(iPosition)); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * YadMapRPos definition
 
-YadMapRPos::YadMapRPos(const ZRef<CountedString>& iProto,
+YadMapRPos::YadMapRPos
+	(const ZRef<CountedString>& iProtoName, const ZRef<CountedString>& iLexicalScopeName,
 	const ZRef<Chain>& iChain, const string& iPosition)
-:	fProto(iProto)
+:	fProtoName(iProtoName)
+,	fLexicalScopeName(iLexicalScopeName)
 ,	fChain(iChain)
 ,	fPosition(iPosition)
 	{}
 
-YadMapRPos::YadMapRPos(const ZRef<CountedString>& iProto, const ZRef<ZYadMapRPos>& iYad)
-:	fProto(iProto)
+YadMapRPos::YadMapRPos
+	(const ZRef<CountedString>& iProtoName, const ZRef<CountedString>& iLexicalScopeName,
+		const ZRef<ZYadMapRPos>& iYad)
+:	fProtoName(iProtoName)
+,	fLexicalScopeName(iLexicalScopeName)
 ,	fChain(new Chain(null, iYad))
 	{}
 
@@ -289,7 +327,7 @@ ZRef<ZYadR> YadMapRPos::ReadInc(string& oName)
 		return fChain->ReadInc(oName);
 	
 	oName = fPosition;
-	return fChain->ReadAt(fProto, sGetSet(fPosition, string()));
+	return fChain->ReadAt(fProtoName, fLexicalScopeName, sGetSet(fPosition, string()));
 	}
 
 ZRef<ZYadR> YadMapRPos::ReadAt(const string& iName)
@@ -297,11 +335,11 @@ ZRef<ZYadR> YadMapRPos::ReadAt(const string& iName)
 	if (fChain->IsShared())
 		fChain = fChain->Clone();
 	fPosition.clear();
-	return fChain->ReadAt(fProto, iName);
+	return fChain->ReadAt(fProtoName, fLexicalScopeName, iName);
 	}
 
 ZRef<ZYadMapRClone> YadMapRPos::Clone()
-	{ return new YadMapRPos(fProto, fChain->Clone(), fPosition); }
+	{ return new YadMapRPos(fProtoName, fLexicalScopeName, fChain->Clone(), fPosition); }
 
 void YadMapRPos::SetPosition(const string& iName)
 	{ fPosition = iName; }
@@ -312,10 +350,16 @@ void YadMapRPos::SetPosition(const string& iName)
 #pragma mark -
 #pragma mark * YadMapRPos definition
 
-ZRef<ZYadMapRPos> sYadTree(const ZRef<ZYadMapRPos>& iYadMapRPos, const string& iProtoName)
-	{ return new YadTree::YadMapRPos(new YadTree::CountedString(iProtoName), iYadMapRPos); }
+ZRef<ZYadMapRPos> sYadTree(const ZRef<ZYadMapRPos>& iYadMapRPos,
+	const string& iProtoName,
+	const string& iLexicalScopeName)
+	{
+	return new YadTree::YadMapRPos(new YadTree::CountedString(iProtoName),
+		new YadTree::CountedString(iLexicalScopeName),
+		iYadMapRPos);
+	}
 
 ZRef<ZYadMapRPos> sYadTree(const ZRef<ZYadMapRPos>& iYadMapRPos)
-	{ return sYadTree(iYadMapRPos, "_"); }
+	{ return sYadTree(iYadMapRPos, "_", "__"); }
 
 } // namespace ZooLib
