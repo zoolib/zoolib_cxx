@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 
 #include <map>
+#include <iterator>
 #include <string.h>
 #include <typeinfo>
 
