@@ -962,7 +962,7 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 				case '<': fStrimSink.Write("&lt;"); break;
 				case '>': fStrimSink.Write("&gt;"); break;
 				case 0x00A0: fStrimSink.Write("&nbsp;"); break;
-				default: fStrimSink.Writef("&#x%02X;", (unsigned int)*theEntityCPQ);
+				default: fStrimSink.Writef("&#%u;", (unsigned int)*theEntityCPQ);
 				}
 
 			localSource = current;
