@@ -403,9 +403,9 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 		}
 	else
 		{
-		s.Raw() << "<nil/> <!--!! Unhandled: */";
-		s << iVal.Type().name();
-		s.Raw() << " !!-->";
+		s.Begin("nil");
+			s.Raw() << "<!--!! Unhandled: */" << iVal.Type().name() << " !!-->";
+		s.End("nil");
 		}
 	}
 
@@ -437,7 +437,9 @@ void ZYad_XMLPList::sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s)
 		}
 	else
 		{
-		s.Raw() << "<nil/> <!--!! Unhandled Yad !!-->";
+		s.Begin("nil");
+			s.Raw() << "<!--!! Unhandled Yad !!-->";
+		s.End("nil");
 		}
 	}
 
