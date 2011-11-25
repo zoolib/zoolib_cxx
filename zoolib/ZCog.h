@@ -178,17 +178,18 @@ template <class Param>
 ZCog<Param> spCogFun_Not(const ZCog<Param>& iSelf, Param iParam,
 	const ZCog<Param>& iCog)
 	{
-	if (iCog && not sIsTerm(iCog))
-		{
-		const ZCog<Param> newCog = iCog->Call(iCog, iParam);
-		if (not newCog || sIsTerm(newCog))
-			return iCog;
-		}
-	return iSelf;
+	if (not iCog || sIsTerm(iCog))
+		return iSelf;
+
+	const ZCog<Param> newCog = iCog->Call(iCog, iParam);
+	if (not newCog || sIsTerm(newCog))
+		return iSelf;
+
+	return null;
 	}
 
 template <class Param>
-const ZCog<Param>& sCog_Not
+ZCog<Param> sCog_Not
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
 	{
 	static ZMACRO_auto(spCallable, sCallable(spCogFun_Not<Param>));
