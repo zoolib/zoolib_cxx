@@ -269,16 +269,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Objective C we're switching to use the soon-to-be standardized nullptr.
 
 #ifdef __cplusplus
-	#ifndef __MWERKS__
-		const class nullptr_t
-			{
-		public:
-			template <class T> operator T*() const { return 0; }
-			template <class C, class T> operator T C::*() const { return 0; }
-		private:
-			void operator&() const;
-			} nullptr = {};
-	#else
+	#ifdef __MWERKS__
 		class nullptr_t
 			{
 		public:
@@ -287,6 +278,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			void operator&() const;
 			};
 		#define nullptr nullptr_t()
+	#elif _MSC_VER >= 1600
+		// nullptr is naturally available
+	#else
+		const class nullptr_t
+			{
+		public:
+			template <class T> operator T*() const { return 0; }
+			template <class C, class T> operator T C::*() const { return 0; }
+		private:
+			void operator&() const;
+			} nullptr = {};
 	#endif
 #else
 	#ifndef nullptr
