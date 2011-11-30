@@ -40,6 +40,22 @@ struct ReadOptions
 	ZQ<bool> fAllowSemiColons;
 	ZQ<bool> fAllowTerminators;
 	ZQ<bool> fLooseSeparators;
+	ZQ<bool> fAllowBinary;
+	};
+
+ReadOptions sReadOptions_Extended();
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * WriteOptions
+
+struct WriteOptions : ZYadOptions
+	{
+	WriteOptions();
+	WriteOptions(const ZYadOptions& iOther);
+	WriteOptions(const WriteOptions& iOther);
+
+	ZQ<bool> fUseExtendedNotation;
 	};
 
 // =================================================================================================
@@ -116,7 +132,7 @@ class Visitor_Writer : public ZVisitor_Yad
 	{
 public:
 	Visitor_Writer
-		(size_t iIndent, const ZYadOptions& iOptions, const ZStrimW& iStrimW);
+		(size_t iIndent, const WriteOptions& iOptions, const ZStrimW& iStrimW);
 
 // From ZVisitor_Yad
 	virtual void Visit_YadR(const ZRef<ZYadR>& iYadR);
@@ -128,7 +144,7 @@ public:
 
 private:
 	size_t fIndent;
-	const ZYadOptions fOptions;
+	const WriteOptions fOptions;
 	const ZStrimW& fStrimW;
 	bool fMayNeedInitialLF;
 	};
@@ -142,7 +158,7 @@ ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions);
 
 void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s);
 
-void sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
+void sToStrim(size_t iInitialIndent, const WriteOptions& iOptions,
 	ZRef<ZYadR> iYadR, const ZStrimW& s);
 
 } // namespace ZYad_JSON
