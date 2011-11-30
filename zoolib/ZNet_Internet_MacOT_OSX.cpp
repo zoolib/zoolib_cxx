@@ -177,7 +177,7 @@ public:
 		if (spInitCount++ == 0)
 			{
 			::InitOpenTransportInContext(kInitOTForExtensionMask, &spOTClientContextPtr);
-			MPLibraryIsLoaded();
+			(void)MPLibraryIsLoaded();
 			}
 		}
 

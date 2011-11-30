@@ -78,7 +78,7 @@ void ZStreamR_LZWEncodeNoPatent::Imp_Read(void* oDest, size_t iCount, size_t* oC
 	while (!fFinished && iCount)
 		{
 		size_t countRead;
-		if (fCountSinceClear == (1 << fCodeSize_Alphabet) - 2)
+		if (fCountSinceClear == (1U << fCodeSize_Alphabet) - 2)
 			{
 			fBitWriter.WriteBits(localDest, fCodeSize_Emitted, fCode_Clear, &countRead);
 			fCountSinceClear = 0;

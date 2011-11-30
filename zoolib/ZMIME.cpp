@@ -172,8 +172,8 @@ void ZMIME::StreamR_Header::Reset()
 
 ZMIME::StreamR_Line::StreamR_Line(const ZStreamR& iStream)
 :	fStreamR(iStream),
-	fState(eNormal),
-	fEmpty(true)
+	fEmpty(true),
+	fState(eNormal)
 	{}
 
 void ZMIME::StreamR_Line::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)

@@ -209,7 +209,7 @@ thus put the data onto the stream in little endian order.
 bool ZBitWriterBE::WriteBits(const ZStreamW& iStream, size_t iCountBits, uint32 iBits)
 	{
 	ZAssertStop(kDebug_BitStream, iCountBits <= 32);
-	ZAssertStop(kDebug_BitStream, iBits < (1 << iCountBits));
+	ZAssertStop(kDebug_BitStream, iBits < (1U << iCountBits));
 	while (iCountBits)
 		{
 		if (fAvailBits == 0)
@@ -243,7 +243,7 @@ void ZBitWriterBE::WriteBits
 	(void* oDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten)
 	{
 	ZAssertStop(kDebug_BitStream, iCountBits <= 32);
-	ZAssertStop(kDebug_BitStream, iBits < (1 << iCountBits));
+	ZAssertStop(kDebug_BitStream, iBits < (1U << iCountBits));
 
 	uint8* localDest = static_cast<uint8*>(oDest);
 	while (iCountBits)
@@ -317,7 +317,7 @@ low within consecutive bytes, but are passed in from low to high.
 bool ZBitWriterLE::WriteBits(const ZStreamW& iStream, size_t iCountBits, uint32 iBits)
 	{
 	ZAssertStop(kDebug_BitStream, iCountBits <= 32);
-	ZAssertStop(kDebug_BitStream, iBits < (1 << iCountBits));
+	ZAssertStop(kDebug_BitStream, iBits < (1U << iCountBits));
 	while (iCountBits--)
 		{
 		if (fAvailBits-- == 0)
@@ -346,7 +346,7 @@ void ZBitWriterLE::WriteBits
 	(void* oDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten)
 	{
 	ZAssertStop(kDebug_BitStream, iCountBits <= 32);
-	ZAssertStop(kDebug_BitStream, iBits < (1 << iCountBits));
+	ZAssertStop(kDebug_BitStream, iBits < (1U << iCountBits));
 
 	uint8* localDest = static_cast<uint8*>(oDest);
 	while (iCountBits--)

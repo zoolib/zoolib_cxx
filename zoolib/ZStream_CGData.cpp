@@ -99,8 +99,8 @@ static size_t spGetBytes_RPos(void* iInfo, void* oBuffer, size_t iCount)
 	return countRead;
 	}
 
-static void spSkipBytes_RPos(void* iInfo, size_t iCount)
-	{ static_cast<ZStreamerRPos*>(iInfo)->GetStreamR().Skip(iCount); }
+//static void spSkipBytes_RPos(void* iInfo, size_t iCount)
+//	{ static_cast<ZStreamerRPos*>(iInfo)->GetStreamR().Skip(iCount); }
 
 static void spRewind_RPos(void* iInfo)
 	{ static_cast<ZStreamerRPos*>(iInfo)->GetStreamRPos().SetPosition(0); }

@@ -307,9 +307,9 @@ restricted and the nominal starting size of the stream.
 */
 ZStreamWPos_Memory::ZStreamWPos_Memory(void* iAddress, size_t iSize)
 :	fAddress(static_cast<char*>(iAddress)),
+	fPosition(0),
 	fSize(iSize),
-	fCapacity(iSize),
-	fPosition(0)
+	fCapacity(iSize)
 	{}
 
 /**
@@ -320,9 +320,9 @@ size to which the stream can grow.
 */
 ZStreamWPos_Memory::ZStreamWPos_Memory(void* iAddress, size_t iSize, size_t iCapacity)
 :	fAddress(static_cast<char*>(iAddress)),
+	fPosition(0),
 	fSize(iSize),
-	fCapacity(iCapacity),
-	fPosition(0)
+	fCapacity(iCapacity)
 	{}
 
 void ZStreamWPos_Memory::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)

@@ -137,6 +137,8 @@ void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oY
 			oYadR = new ZYadStrimR_ML(fStrimmerU);
 			break;
 			}
+		default:
+			break;
 		}
 
 	if (!oYadR && !fTagName.empty())

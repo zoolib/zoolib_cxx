@@ -135,7 +135,7 @@ static ZSeq_Any spAsSeq_Any(const ZAny& iDefault, const AEDesc& iDesc)
 	long count;
 	if (noErr == ::AECountItems(&iDesc, &count))
 		{
-		for (size_t x = 0; x < count; ++x)
+		for (long x = 0; x < count; ++x)
 			{
 			ZVal_AppleEvent result;
 			if (noErr == ::AEGetNthDesc(&iDesc, x + 1, typeWildCard, nullptr, &result.OParam()))
@@ -155,7 +155,7 @@ static ZMap_Any spAsMap_Any(const ZAny& iDefault, const AEDesc& iDesc)
 	long count;
 	if (noErr == ::AECountItems(&iDesc, &count))
 		{
-		for (size_t x = 0; x < count; ++x)
+		for (long x = 0; x < count; ++x)
 			{
 			AEKeyword key;
 			ZVal_AppleEvent result;

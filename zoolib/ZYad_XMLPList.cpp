@@ -38,14 +38,6 @@ static void spThrowParseException(const string& iMessage)
 	throw ZYadParseException_XMLPList(iMessage);
 	}
 
-static void spBegin(ZML::StrimU& r, const string& iTagName)
-	{
-	sSkipText(r);
-
-	if (!sTryRead_Begin(r, iTagName))
-		spThrowParseException("Expected begin tag '" + iTagName + "'");
-	}
-
 static void spEnd(ZML::StrimU& r, const string& iTagName)
 	{
 	sSkipText(r);

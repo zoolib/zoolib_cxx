@@ -75,8 +75,8 @@ ZDCFont::ZDCFont()
 
 ZDCFont::ZDCFont(const ZDCFont& inOther)
 :	fFontName(inOther.fFontName),
-	fStyle(inOther.fStyle),
-	fSize(inOther.fSize)
+	fSize(inOther.fSize),
+	fStyle(inOther.fStyle)
 	{}
 
 ZDCFont::ZDCFont(const string8& inFontName, Style inStyle, int16 inSize)

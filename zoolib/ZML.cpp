@@ -296,18 +296,18 @@ static bool spReadMLAttributeValue
 
 StrimU::StrimU(const ZStrimU& iStrim)
 :	fStrim(iStrim),
+	fRecognizeEntitiesInAttributeValues(false),
 	fBufferStart(0),
-	fToken(eToken_Fresh),
-	fRecognizeEntitiesInAttributeValues(false)
+	fToken(eToken_Fresh)
 	{}
 
 StrimU::StrimU(const ZStrimU& iStrim,
 	bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable)
 :	fStrim(iStrim),
-	fBufferStart(0),
-	fToken(eToken_Fresh),
 	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues),
-	fCallable(iCallable)
+	fCallable(iCallable),
+	fBufferStart(0),
+	fToken(eToken_Fresh)
 	{}
 
 StrimU::~StrimU()

@@ -27,8 +27,8 @@ namespace ZooLib {
 #pragma mark * ZNetEx
 
 ZNetEx::ZNetEx(ZNet::Error iError)
-:	fError(iError),
-	runtime_error("ZNetEx")
+:	runtime_error("ZNetEx"),
+	fError(iError)
 	{}
 
 // =================================================================================================

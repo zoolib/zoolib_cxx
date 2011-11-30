@@ -74,11 +74,8 @@ ZVal_NS::operator bool() const
 	{
 	if (NSObject* theVal = inherited::Get())
 		{
-//		#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
-//			&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
-			if ([theVal isMemberOfClass:[NSNull class]])
-				return false;
-//		#endif
+		if ([theVal isMemberOfClass:[NSNull class]])
+			return false;
 		return true;
 		}
 	return false;

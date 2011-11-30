@@ -1482,8 +1482,8 @@ void ZStreamW_Null::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 #pragma mark * ZStreamWPos_Null
 
 ZStreamWPos_Null::ZStreamWPos_Null()
-:	fSize(0),
-	fPosition(0)
+:	fPosition(0),
+	fSize(0)
 	{}
 
 ZStreamWPos_Null::~ZStreamWPos_Null()

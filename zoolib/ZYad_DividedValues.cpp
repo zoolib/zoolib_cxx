@@ -31,11 +31,6 @@ using std::vector;
 #pragma mark -
 #pragma mark * Static parsing functions
 
-static void spThrowParseException(const string& iMessage)
-	{
-	throw ParseException(iMessage);
-	}
-
 static bool spReadValues(vector<string8>& oValues,
 	UTF32 iDivider_Value, UTF32 iDivider_Line, const ZStrimR& iStrimR)
 	{

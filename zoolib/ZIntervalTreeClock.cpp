@@ -171,17 +171,17 @@ Event::Event(size_t iValue)
 	{}
 
 Event::Event(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
-:	fValue(iValue)
-,	fLeft(iLeft)
+:	fLeft(iLeft)
 ,	fRight(iRight)
+,	fValue(iValue)
 	{
 	ZAssert(fLeft && fRight || !fLeft && !fRight);
 	}
 
 Event::Event(bool iWithZeroChildren, size_t iValue)
-:	fValue(iValue)
-,	fLeft(spEventZero)
+:	fLeft(spEventZero)
 ,	fRight(spEventZero)
+,	fValue(iValue)
 	{
 	ZAssert(iWithZeroChildren);
 	}

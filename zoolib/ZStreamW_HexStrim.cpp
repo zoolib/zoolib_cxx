@@ -43,8 +43,8 @@ ZStreamW_HexStrim::ZStreamW_HexStrim(const std::string& iByteSeparator,
 	fChunkSeparator(iChunkSeparator),
 	fChunkSize(iChunkSize),
 	fCurrentChunkLength(0),
-	fHexDigits(spHexDigits),
-	fWrittenAny(false)
+	fWrittenAny(false),
+	fHexDigits(spHexDigits)
 	{}
 
 /**

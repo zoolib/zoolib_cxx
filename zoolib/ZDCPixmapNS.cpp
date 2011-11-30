@@ -291,6 +291,7 @@ EFormatStandard ZDCPixmapNS::sMapEfficientToStandard(EFormatEfficient iFormat)
 		case eFormatEfficient_Color_16: return eFormatStandard_RGB_16_BE;
 		case eFormatEfficient_Color_24: return eFormatStandard_RGB_24;
 		case eFormatEfficient_Color_32: return eFormatStandard_ARGB_32;
+		default: break;
 		}
 
 	return eFormatStandard_Invalid;
@@ -1042,7 +1043,8 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 							cumuMask8 |= destMask8;
 							destMask8 = destMask8 >> 1;
 							}
-						*localDest8++ = (*localDest8 & (0xFF ^ cumuMask8)) | destVal8;
+						*localDest8 = (*localDest8 & (0xFF ^ cumuMask8)) | destVal8;
+						++localDest8;
 						}
 
 					while (localCount >= 8)
@@ -1096,7 +1098,8 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 							destVal8 |= (*iPixvals++ & 0x03) << sourceShift;
 							sourceShift -= 2;
 							}
-						*localDest8++ = *localDest8 & (0xFF ^ cumuMask8) | destVal8;
+						*localDest8 = *localDest8 & (0xFF ^ cumuMask8) | destVal8;
+						++localDest8;						
 						}
 
 					while (localCount >= 4)
@@ -1133,7 +1136,8 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 					if (iStartH & 0x01)
 						{
 						--localCount;
-						*localDest8++ = (*localDest8 & 0xF0) | (*iPixvals++ & 0x0F);
+						*localDest8 = (*localDest8 & 0xF0) | (*iPixvals++ & 0x0F);
+						++localDest8;
 						}
 
 					while (localCount >= 2)
@@ -1175,7 +1179,8 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 							cumuMask8 |= destMask8;
 							destMask8 = destMask8 << 1;
 							}
-						*localDest8++ = *localDest8 & (0xFF ^ cumuMask8) | destVal8;
+						*localDest8 = *localDest8 & (0xFF ^ cumuMask8) | destVal8;
+						++localDest8;
 						}
 
 					while (localCount >= 8)
@@ -1229,7 +1234,8 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 							destVal8 |= (*iPixvals++ & 0x03) << sourceShift;
 							sourceShift += 2;
 							}
-						*localDest8++ = (*localDest8 & (0xFF ^ cumuMask8)) | destVal8;
+						*localDest8 = (*localDest8 & (0xFF ^ cumuMask8)) | destVal8;
+						++localDest8;
 						}
 
 					while (localCount >= 4)
@@ -1266,7 +1272,8 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 					if (iStartH & 0x01)
 						{
 						--localCount;
-						*localDest8++ = (*localDest8 & 0x0F) | ((*iPixvals++ & 0x0F) << 4);
+						*localDest8 = (*localDest8 & 0x0F) | ((*iPixvals++ & 0x0F) << 4);
+						++localDest8;
 						}
 
 					while (localCount >= 2)
