@@ -65,7 +65,7 @@ const ZStrimW& operator<<(const ZStrimW& s, unsigned char iVal)
 const ZStrimW& operator<<(const ZStrimW& s, signed char iVal)
 	{ return s.Writef("%c", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, wchar_t iVal)
+const ZStrimW& operator<<(const ZStrimW& s, __wchar_t iVal)
 	{ return s.Writef("%lc", iVal); }
 
 const ZStrimW& operator<<(const ZStrimW& s, short iVal)

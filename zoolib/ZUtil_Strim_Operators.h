@@ -45,7 +45,7 @@ const ZStrimW& operator<<(const ZStrimW& s, bool iVal);
 const ZStrimW& operator<<(const ZStrimW& s, char iVal);
 const ZStrimW& operator<<(const ZStrimW& s, unsigned char iVal);
 const ZStrimW& operator<<(const ZStrimW& s, signed char iVal);
-const ZStrimW& operator<<(const ZStrimW& s, wchar_t iVal);
+const ZStrimW& operator<<(const ZStrimW& s, __wchar_t iVal);
 const ZStrimW& operator<<(const ZStrimW& s, short iVal);
 const ZStrimW& operator<<(const ZStrimW& s, unsigned short iVal);
 const ZStrimW& operator<<(const ZStrimW& s, int iVal);
