@@ -45,7 +45,7 @@ inline int sCompare_T(const signed char& iL, const signed char& iR)
 
 
 template <>
-inline int sCompare_T(const wchar_t& iL, const wchar_t& iR)
+inline int sCompare_T(const __wchar_t& iL, const __wchar_t& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 
