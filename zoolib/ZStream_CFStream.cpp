@@ -82,6 +82,6 @@ void ZStreamW_CFStream::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 		}
 	}
 
-#endif // ZCONFIG_SPI_Enabled(CoreFoundation)
-
 } // namespace ZooLib
+
+#endif // ZCONFIG_SPI_Enabled(CoreFoundation)
