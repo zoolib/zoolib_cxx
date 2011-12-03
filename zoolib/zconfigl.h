@@ -254,6 +254,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	// inherits 'XXX' via dominance
 #	pragma warning(disable:4250)
+#else
+
+	typedef wchar_t __wchar_t;
 
 #endif
 
