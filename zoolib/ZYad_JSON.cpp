@@ -742,7 +742,7 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 				{
 				break;
 				}
-			else if (fOptions.fUseExtendedNotation.DGet(false))
+			else if (false && fOptions.fUseExtendedNotation.DGet(false))
 				{
 				spWriteLFIndent(fStrimW, fIndent, fOptions);
 				cur->Accept(*this);
@@ -770,7 +770,7 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 				{
 				break;
 				}
-			else if (fOptions.fUseExtendedNotation.DGet(false))
+			else if (false && fOptions.fUseExtendedNotation.DGet(false))
 				{
 				if (not isFirst && fOptions.fBreakStrings)
 					fStrimW.Write(" ");
