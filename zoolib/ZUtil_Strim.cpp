@@ -38,6 +38,17 @@ static void spThrowParseException(const std::string& iWhat)
 #pragma mark -
 #pragma mark * ZUtil_Strim
 
+static bool spIsWhitespace(UTF32 iCP)
+	{
+	if (ZUnicode::sIsWhitespace(iCP))
+		return true;
+
+	if (iCP == 0xFEFF)
+		return true;
+
+	return false;
+	}
+
 bool sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP)
 	{
 	// Ensure that we only try to read a valid CP, one that
@@ -383,7 +394,7 @@ void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& oDest)
 		UTF32 theCP;
 		if (not iStrimU.ReadCP(theCP))
 			break;
-		if (not ZUnicode::sIsWhitespace(theCP))
+		if (not spIsWhitespace(theCP))
 			{
 			iStrimU.Unread(theCP);
 			break;
@@ -399,7 +410,7 @@ void sSkip_WS(const ZStrimU& iStrimU)
 		UTF32 theCP;
 		if (not iStrimU.ReadCP(theCP))
 			break;
-		if (not ZUnicode::sIsWhitespace(theCP))
+		if (not spIsWhitespace(theCP))
 			{
 			iStrimU.Unread(theCP);
 			break;
@@ -418,7 +429,7 @@ void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& oDest)
 		UTF32 firstCP;
 		if (iStrimU.ReadCP(firstCP))
 			{
-			if (ZUnicode::sIsWhitespace(firstCP))
+			if (spIsWhitespace(firstCP))
 				{
 				oDest.WriteCP(firstCP);
 				continue;
