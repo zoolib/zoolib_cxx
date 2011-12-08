@@ -32,10 +32,10 @@ namespace ZooLib {
 
 using std::string;
 
-#if !defined(UNIVERSAL_INTERFACES_VERSION) || UNIVERSAL_INTERFACES_VERSION <= 0x0341
-	#define USING_ANCIENT_HEADERS 1
-#else
+#if defined(UNIVERSAL_INTERFACES_VERSION) && UNIVERSAL_INTERFACES_VERSION > 0x0341
 	#define USING_ANCIENT_HEADERS 0
+#else
+	#define USING_ANCIENT_HEADERS 1
 #endif
 
 // =================================================================================================
@@ -68,7 +68,7 @@ void ZUtil_CarbonEvents::sSetParam(EventRef iEventRef, EventParamName iName, Eve
 #pragma mark -
 #pragma mark * Handler
 
-namespace {
+namespace { // anonymous
 
 using namespace ZUtil_CarbonEvents;
 
@@ -158,13 +158,13 @@ pascal OSStatus Handler::spEventHandler
 		}
 	catch (std::exception& ex)
 		{
-		if (ZLOG(s, eNotice, "Handler"))
-			s << "spEventHandler, uncaught exception: " << ex.what();
+		if (ZLOGPF(s, eNotice))
+			s << "Uncaught exception: " << ex.what();
 		}
 	catch (...)
 		{
-		if (ZLOG(s, eNotice, "Handler"))
-			s << "spEventHandler, uncaught exception, not derived fron std::exception";
+		if (ZLOGPF(s, eNotice))
+			s << "uncaught exception, not derived fron std::exception";
 		}
 	return noErr;
 	}
