@@ -62,6 +62,7 @@ public:
 
 private:
 	bool pWork(ZRef<ZWorker> iWorker);
+	void pWorkDetached(ZRef<ZWorker> iWorker);
 
 	ZMtx fMtx;
 	ZCnd fCnd;

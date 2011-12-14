@@ -38,8 +38,8 @@ ZServer::~ZServer()
 void ZServer::Finalize()
 	{
 	ZGuardRMtx guard(fMtx);
-	ZAssert(!fWorker);
-	ZAssert(!fFactory);
+	ZAssert(not fWorker);
+	ZAssert(not fFactory);
 	fRoster.Clear();
 	fCallable_Connection.Clear();
 	guard.Release();
@@ -70,7 +70,9 @@ void ZServer::Start(ZRef<ZCaller> iCaller,
 	fFactory = iFactory;
 	fCallable_Connection = iCallable_Connection;
 
-	fWorker = new ZWorker(sCallable(sWeakRef(this), &ZServer::pWork));
+	fWorker = new ZWorker
+		(sCallable(sWeakRef(this), &ZServer::pWork),
+		sCallable(sWeakRef(this), &ZServer::pWorkDetached));
 
 	fWorker->Attach(iCaller);
 
@@ -92,14 +94,19 @@ void ZServer::Stop()
 void ZServer::StopWait()
 	{
 	ZAcqMtx acq(fMtx);
+
 	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
 		{
 		fFactory.Clear();
 		theFactory->Cancel();
 		}
-	fCnd.Broadcast();
-	while (fWorker)
-		fCnd.Wait(fMtx);
+
+	if (fWorker)
+		{
+		fWorker->Wake();
+		while (fWorker)
+			fCnd.Wait(fMtx);
+		}
 	}
 
 void ZServer::KillConnections()
@@ -139,13 +146,7 @@ bool ZServer::pWork(ZRef<ZWorker> iWorker)
 	{
 	ZGuardRMtx guard(fMtx);
 
-	if (ZRef<ZStreamerRWFactory,false> theFactory = fFactory)
-		{
-		fWorker.Clear();
-		fCnd.Broadcast();
-		return false;
-		}
-	else
+	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
 		{
 		guard.Release();
 		if (ZRef<ZStreamerRW> theSRW = theFactory->MakeStreamerRW())
@@ -153,16 +154,28 @@ bool ZServer::pWork(ZRef<ZWorker> iWorker)
 			guard.Acquire();
 			if (ZRef<Callable_Connection> theCallable = fCallable_Connection)
 				{
-				ZRef<ZStreamerRWCon> theSRWCon = theSRW.DynamicCast<ZStreamerRWCon>();
-				ZRef<ZRoster::Entry> theEntry =
-					fRoster->MakeEntry(sBindR(sCallable(spKill), theSRWCon), null);
 				guard.Release();
-				theCallable->Call(theEntry, theSRW);
+				try
+					{
+					ZRef<ZCallable_Void> theCallable_Kill =
+						sBindR(sCallable(spKill), theSRW.DynamicCast<ZStreamerRWCon>());
+					theCallable->Call(fRoster->MakeEntry(theCallable_Kill, null), theSRW);
+					}
+				catch (...)
+					{}
 				}
 			}
+		iWorker->Wake();
+		return true;
 		}
-	iWorker->Wake();
-	return true;
+	return false;
+	}
+
+void ZServer::pWorkDetached(ZRef<ZWorker> iWorker)
+	{
+	ZAcqMtx acq(fMtx);
+	fWorker.Clear();
+	fCnd.Broadcast();
 	}
 
 } // namespace ZooLib
