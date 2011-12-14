@@ -60,7 +60,7 @@ static void spWriteEvent(const ZStrimW&s, const EventRecord& iER)
 	s	<< "what: " << ZUtil_CarbonEvents::sEventTypeAsString(iER.what)
 		<< ", message: " << iER.message
 		<< ", when: " << iER.when
-		<< ", where: (" << iER.where.h << ", " << iER.where.v
+		<< ", where: (" << iER.where.h << ", " << iER.where.v << ")"
 		<< ", modifiers: " << iER.modifiers;
 	}
 
@@ -143,7 +143,7 @@ NPError Host_Mac::Host_SetValue(NPP npp, NPPVariable variable, void* value)
 		#if defined(XP_MACOSX)
 		case NPPVpluginDrawingModel:
 			{
-			if (ZLOG(s, eDebug, "Host_Mac"))
+			if (ZLOGPF(s, eDebug))
 				s << "Host_SetValue, NPPVpluginDrawingModel";
 			if (reinterpret_cast<intptr_t>(value) == NPDrawingModelCoreGraphics)
 				fUseCoreGraphics = true;
@@ -214,7 +214,7 @@ void Host_Mac::DoEvent(const EventRecord& iEvent)
 	EventRecord theER = iEvent;
 	if (theER.what != nullEvent)
 		{
-		if (ZLOG(s, eDebug + 1, "Host_Mac"))
+		if (ZLOGPF(s, eDebug+1))
 			{
 			s << "DoEvent, ";
 			spWriteEvent(s, theER);
@@ -231,7 +231,7 @@ void Host_Mac::DoSetWindow(const ZGRectf& iWinFrame)
 
 void Host_Mac::DoSetWindow(int iX, int iY, int iWidth, int iHeight)
 	{
-	if (ZLOG(s, eDebug + 1, "Host_Mac"))
+	if (ZLOGPF(s, eDebug + 1))
 		s.Writef("DoSetWindow, (%d, %d, %d, %d)", iX, iY, iX + iWidth, iY + iHeight);
 
 	#if !defined(NP_NO_QUICKDRAW)
@@ -464,7 +464,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 					ZGRectf winFrame(winFrameRect.right - winFrameRect.left,
 						winFrameRect.bottom - winFrameRect.top);
 
-					if (ZLOG(s, eDebug + 1, "Host_WindowRef"))
+					if (ZLOGPF(s, eDebug + 1))
 						{
 						s << "kEventWindowDrawContent: " << winFrame;
 						}
@@ -543,7 +543,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 						ZGRectf newFrame = sGetParam_T<Rect>(iEventRef,
 							kEventParamCurrentBounds, typeQDRectangle);
 
-						if (ZLOG(s, eDebug + 1, "Host_WindowRef"))
+						if (ZLOGPF(s, eDebug + 1))
 							s << "kEventWindowBoundsChanged"
 							<< ", newFrame: " << newFrame;
 
@@ -683,7 +683,7 @@ pascal OSStatus Host_HIViewRef::sEventHandler_View
 
 OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRef iEventRef)
 	{
-	if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
+	if (ZLOGPF(s, eDebug + 1))
 		{
 		s << ZUtil_CarbonEvents::sEventAsString
 			(::GetEventClass(iEventRef), ::GetEventKind(iEventRef));
@@ -705,12 +705,12 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 				{
 				case kEventControlActivate:
 					{
-					this->DoActivate(true);
+					Host_Mac::DoActivate(true);
 					break;
 					}
 				case kEventControlDeactivate:
 					{
-					this->DoActivate(false);
+					Host_Mac::DoActivate(false);
 					break;
 					}
 				case kEventControlSetFocusPart:
@@ -748,7 +748,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					theER.modifiers = sGetParam_T<UInt32>(iEventRef,
 						kEventParamKeyModifiers, typeUInt32);
 
-					if (ZLOG(s, eDebug + 1, "Host_ViewRef"))
+					if (ZLOGPF(s, eDebug + 1))
 						{
 						spWriteEvent(s, theER);
 						}
@@ -761,7 +761,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 						::TrackMouseLocationWithOptions
 							((CGrafPtr)-1, 0, 0.02, &theER.where, &theModifiers, &theResult);
 						theER.when = ::EventTimeToTicks(::GetCurrentEventTime());
-						ZLOG(s, eDebug + 1, "Host_ViewRef");
+						ZLOGPF(s, eDebug + 1);
 						if (theResult == kMouseTrackingMouseReleased)
 							{
 							theER.what = mouseUp;
@@ -797,7 +797,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 
 					ZGRectf winFrame = theFrame;
 
-					if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
+					if (ZLOGPF(s, eDebug + 1))
 						s << "draw, winFrame: " << winFrame;
 
 					if (fUseCoreGraphics)
@@ -836,7 +836,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					ZGRectf newFrame = sGetParam_T<Rect>(iEventRef,
 						kEventParamCurrentBounds, typeQDRectangle);
 
-					if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
+					if (ZLOGPF(s, eDebug + 1))
 						s << "kEventControlBoundsChanged"
 						<< ", newFrame1: " << newFrame;
 
@@ -848,7 +848,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					this->pApplyInsets(newFrame);
 
 
-					if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
+					if (ZLOGPF(s, eDebug + 1))
 						s << "kEventControlBoundsChanged, newFrame2: " << newFrame;
 
 					this->DoSetWindow(newFrame);

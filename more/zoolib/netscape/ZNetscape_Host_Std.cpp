@@ -1074,7 +1074,7 @@ void Host_Std::SendDataSync
 
 				if (countWritten < 0)
 					{
-					if (ZLOG(s, eDebug, "Host"))
+					if (ZLOGPF(s, eDebug))
 						s << "write failure";
 					keepGoing = false;
 					break;
