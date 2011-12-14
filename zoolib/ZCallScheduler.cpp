@@ -27,18 +27,26 @@ using std::set;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCallScheduler
+#pragma mark * Helpers
 
 static ZCallScheduler* spScheduler;
 
+namespace { // anonymous
+
+struct Deleter { ~Deleter() { delete spScheduler; } } spDeleter;
+
+} // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCallScheduler
+
 ZCallScheduler* ZCallScheduler::sGet()
 	{
-	if (!spScheduler)
+	if (not spScheduler)
 		{
 		ZCallScheduler* theScheduler = new ZCallScheduler;
-		if (ZAtomic_CompareAndSwapPtr(&spScheduler, nullptr, theScheduler))
-			ZThread::sCreate_T<ZCallScheduler*>(spRun, theScheduler);
-		else
+		if (not ZAtomic_CompareAndSwapPtr(&spScheduler, nullptr, theScheduler))
 			delete theScheduler;
 		}
 	return spScheduler;
@@ -48,7 +56,7 @@ void ZCallScheduler::Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_V
 	{
 	using namespace ZUtil_STL;
 
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	const Job theJob(iCaller, iCallable);
 
@@ -70,7 +78,7 @@ void ZCallScheduler::NextCallIn
 
 bool ZCallScheduler::IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	const Job theJob(iCaller, iCallable);
 
@@ -81,11 +89,15 @@ bool ZCallScheduler::IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_
 	return false;
 	}
 
+ZCallScheduler::ZCallScheduler()
+:	fThreadRunning(false)
+	{}
+
 void ZCallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 	{
 	using namespace ZUtil_STL;
 
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(iJob, 0.0));
 	if (iterJT != fJobTimes.end() && iterJT->first == iJob)
@@ -104,6 +116,11 @@ void ZCallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 		{
 		sInsertMustNotContain(fJobTimes, make_pair(iJob, iSystemTime));
 		sInsertMustNotContain(fTimeJobs, make_pair(iSystemTime, iJob));
+		if (not fThreadRunning)
+			{
+			fThreadRunning = true;
+			ZThread::sCreate_T<ZCallScheduler*>(spRun, this);
+			}
 		fCnd.Broadcast();
 		}
 	}
@@ -112,12 +129,19 @@ void ZCallScheduler::pRun()
 	{
 	using namespace ZUtil_STL;
 
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardRMtx guard(fMtx);
 	for (;;)
 		{
 		if (fTimeJobs.empty())
 			{
-			fCnd.Wait(fMtxR);
+			// Nothing pending, wait 100ms in case something else comes along.
+			fCnd.WaitFor(fMtx, 0.1);
+			if (fTimeJobs.empty())
+				{
+				// Still nothing pending, exit thread.
+				fThreadRunning = false;
+				break;
+				}
 			}
 		else
 			{
@@ -125,7 +149,7 @@ void ZCallScheduler::pRun()
 			const double delta = begin->first - ZTime::sSystem();
 			if (delta > 0)
 				{
-				fCnd.WaitFor(fMtxR, delta);
+				fCnd.WaitFor(fMtx, delta);
 				}
 			else
 				{

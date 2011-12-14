@@ -51,6 +51,8 @@ public:
 	bool IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
 private:
+	ZCallScheduler();
+
 	typedef std::pair<ZRef<ZCaller>,ZRef<ZCallable_Void> > Job;
 
 	void pNextCallAt(ZTime iSystemTime, const Job& iJob);
@@ -58,8 +60,10 @@ private:
 	void pRun();
 	static void spRun(ZCallScheduler*);
 
-	ZMtxR fMtxR;
+	ZMtx fMtx;
 	ZCnd fCnd;
+
+	bool fThreadRunning;
 
 	typedef std::pair<ZTime,Job> TimeJob;
 	typedef std::pair<Job,ZTime> JobTime;
