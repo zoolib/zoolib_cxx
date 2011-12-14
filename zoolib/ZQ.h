@@ -34,7 +34,8 @@ namespace ZooLib {
 #pragma mark * ZQ
 
 // The 'Q' stands for 'Questionable', 'Queryable', 'Quibble' or perhaps 'Quib'
-// c.f. Haskell's Data.Maybe, Scala's Option.
+
+// c.f. Haskell's 'Data.Maybe', Scala's 'Option'.
 
 template <class T, bool Sense = true>
 class ZQ
@@ -86,59 +87,60 @@ public:
 
 	ZQ& operator=(const ZQ& iOther)
 		{
-		if (this != &iOther)
+		if (fHasValue)
 			{
-			if (fHasValue)
+			if (iOther.fHasValue)
 				{
-				if (iOther.fHasValue)
-					{
-					sAssignFromVoidStar_T<T>(fBytes, iOther.fBytes);
-					}
-				else
-					{
-					fHasValue = false;
-					sDtor_T<T>(fBytes);
-					}
+				sAssignFromVoidStar_T<T>(fBytes, iOther.fBytes);
 				}
-			else if (iOther.fHasValue)
+			else
 				{
-				sCtorFromVoidStar_T<T>(fBytes, iOther.fBytes);
-				fHasValue = true;
+				fHasValue = false;
+				sDtor_T<T>(fBytes);
 				}
+			}
+		else if (iOther.fHasValue)
+			{
+			sCtorFromVoidStar_T<T>(fBytes, iOther.fBytes);
+			fHasValue = true;
 			}
 		return *this;
 		}
 
 // -----------------
 
-	ZQ(const ZQ<T,!Sense>& iOther)
-	:	fHasValue(iOther.fHasValue)
+	template <class OtherT, bool OtherSense>
+	ZQ(const ZQ<OtherT, OtherSense>& iOther)
 		{
-		if (fHasValue)
-			sCtorFromVoidStar_T<T>(fBytes, iOther.fBytes);
+		if (const OtherT* theOther = iOther.PGet())
+			{
+			sCtor_T<T,OtherT>(fBytes, *theOther);
+			fHasValue = true;
+			}
+		else
+			{
+			fHasValue = false;
+			}
 		}
 
-	ZQ& operator=(const ZQ<T,!Sense>& iOther)
+	template <class OtherT, bool OtherSense>
+	ZQ& operator=(const ZQ<OtherT, OtherSense>& iOther)
 		{
-		if (this != &iOther)
+		if (fHasValue)
 			{
-			if (fHasValue)
+			if (const OtherT* theOther = iOther.PGet())
 				{
-				if (iOther.fHasValue)
-					{
-					sAssignFromVoidStar_T<T>(fBytes, iOther.fBytes);
-					}
-				else
-					{
-					fHasValue = false;
-					sDtor_T<T>(fBytes);
-					}
+				sAssign_T<T>(fBytes, *theOther);
 				}
-			else if (iOther.fHasValue)
+			else
 				{
-				sCtorFromVoidStar_T<T>(fBytes, iOther.fBytes);
-				fHasValue = true;
-				}
+				fHasValue = false;
+				sDtor_T<T>(fBytes);
+				}			
+			}
+		else if (const OtherT* theOther = iOther.PGet())
+			{
+			sCtor_T<T,OtherT>(fBytes, *theOther);
 			}
 		return *this;
 		}
@@ -285,8 +287,8 @@ public:
 		{
 		if (fHasValue)
 			{
-			sDtor_T<T>(fBytes);
 			fHasValue = false;
+			sDtor_T<T>(fBytes);
 			}
 
 		sCtor_T<T>(fBytes);
@@ -302,8 +304,6 @@ private:
 	#endif
 
 	bool fHasValue;
-
-	friend class ZQ<T, !Sense>;
 	};
 
 // =================================================================================================
