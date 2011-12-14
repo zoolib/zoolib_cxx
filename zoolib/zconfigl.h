@@ -261,13 +261,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-// Define _REENTRANT for all platforms, although it's only significant for POSIX.
-
-#ifndef _REENTRANT
-#	define _REENTRANT
-#endif
-
-// =================================================================================================
 // Previously we've used 'nil' for the null pointer. With our increasing use of
 // Objective C we're switching to use the soon-to-be standardized nullptr.
 
@@ -293,10 +286,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			void operator&() const;
 			} nullptr = {};
 	#endif
-#else
-	#ifndef nullptr
-		#define nullptr 0
-	#endif
+#elif not defined(nullptr)
+	#define nullptr 0
 #endif
 
 // =================================================================================================
