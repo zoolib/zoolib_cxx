@@ -256,7 +256,7 @@ HWND sCreateDialog(LPCWSTR lpTemplate, LCID iLCID, HWND hWndParent, ZRef<Callabl
 	if (HRSRC theHRSRC = ::FindResourceExW(theHMODULE, (LPCWSTR)RT_DIALOG, lpTemplate, iLCID))
 		{
 		HGLOBAL theHGLOBAL = ::LoadResource(theHMODULE, theHRSRC);
-		return ::CreateDialogIndirectParam
+		return ::CreateDialogIndirectParamW
 			(theHMODULE,
 			(LPCDLGTEMPLATE)::LockResource(theHGLOBAL),
 			hWndParent,
