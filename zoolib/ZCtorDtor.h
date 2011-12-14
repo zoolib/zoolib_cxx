@@ -32,10 +32,17 @@ template <class T>
 inline T* sCtor_T(void* oBytes)
 	{
 #if ZCONFIG(Compiler,MSVC)
-	#pragma warning(disable:4345)
 	// We *want* POD types to be default initialized.
+	#pragma warning(push)
+	#pragma warning(disable:4345)
 #endif
+
 	new(oBytes) T();
+
+#if ZCONFIG(Compiler,MSVC)
+	#pragma warning(pop)
+#endif
+
 	return static_cast<T*>(oBytes);
 	}
 
