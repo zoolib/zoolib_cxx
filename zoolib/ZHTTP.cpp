@@ -1339,9 +1339,11 @@ bool sParseURL(const string& iURL,
 		}
 
 	string hostAndPort;
-	const size_t slashOffset = iURL.find('/', start);
+	size_t slashOffset = iURL.find('/', start);
 	if (string::npos != slashOffset)
 		{
+		if (start == 0)
+			slashOffset = 0;
 		hostAndPort = iURL.substr(start, slashOffset - start);
 		if (oPath)
 			*oPath = iURL.substr(min(iURL.size(), slashOffset));
