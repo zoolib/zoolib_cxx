@@ -791,17 +791,17 @@ Spec& Spec::operator+=(const Spec& iOther)
 	return *this;
 	}
 
-Map Spec::Get() const
+ZQ<Map> Spec::QGet() const
 	{
-	Map result;
 	if (PIActionReference theRef = this->MakeRef())
 		{
+		Map result;
 		OSErr theErr = spPSActionControl->Get(&result.OParam(), theRef);
-		if (noErr != theErr)
-			result.Clear();
 		spPSActionReference->Free(theRef);
+		if (noErr == theErr)
+			return result;
 		}
-	return result;
+	return null;
 	}
 
 PIActionReference Spec::MakeRef() const

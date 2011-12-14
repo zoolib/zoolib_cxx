@@ -171,7 +171,7 @@ public:
 	Spec operator+(const Spec& iOther);
 	Spec& operator+=(const Spec& iOther);
 
-	Map Get() const;
+	ZQ<Map> QGet() const;
 
 	PIActionReference MakeRef() const;
 
