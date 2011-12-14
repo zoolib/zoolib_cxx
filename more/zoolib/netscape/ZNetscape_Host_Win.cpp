@@ -77,15 +77,15 @@ NPError Host_Win::Host_SetValue(NPP npp, NPPVariable variable, void* value)
 		{
 		case NPPVpluginWindowBool:
 			{
-			if (ZLOG(s, eDebug - 1, "Host_Win"))
-				s << "Host_SetValue, NPPVpluginWindowBool: " << (value ? "true" : "false");
+			if (ZLOGPF(s, eDebug - 1))
+				s << "NPPVpluginWindowBool: " << (value ? "true" : "false");
 			fIsWindowed = value;
 			return NPERR_NO_ERROR;
 			}
 		case NPPVpluginTransparentBool:
 			{
-			if (ZLOG(s, eDebug - 1, "Host_Win"))
-				s << "Host_SetValue, NPPVpluginTransparentBool: " << (value ? "true" : "false");
+			if (ZLOGPF(s, eDebug - 1))
+				s << "NPPVpluginTransparentBool: " << (value ? "true" : "false");
 			fIsTransparent = value;
 			return NPERR_NO_ERROR;
 			}
