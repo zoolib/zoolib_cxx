@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_Win.h"
 
+#include <vector>
+
 namespace ZooLib {
 
 // From Whisper 1.3
@@ -97,6 +99,24 @@ HINSTANCE ZUtil_Win::sGetModuleHandle()
 			&theHINSTANCE);
 		return theHINSTANCE;
 	#endif
+	}
+
+ZQ<uint64> ZUtil_Win::sQGetVersion_File(const WCHAR* iPath)
+	{
+	DWORD dummy;
+	if (DWORD theSize = ::GetFileVersionInfoSizeW(iPath, &dummy))
+		{
+		std::vector<char> buffer(theSize);
+		if (::GetFileVersionInfoW(iPath, 0, theSize, &buffer[0]))
+			{
+			VS_FIXEDFILEINFO* info;
+			UINT infoSize;
+			if (::VerQueryValueW(&buffer[0], const_cast<WCHAR*>(L"\\"), (void**)&info, &infoSize)
+				&& infoSize >= sizeof(VS_FIXEDFILEINFO))
+				{ return (uint64(info->dwFileVersionMS) << 32) | info->dwFileVersionLS; }
+			}
+		}
+	return null;
 	}
 
 } // namespace ZooLib

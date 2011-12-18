@@ -23,11 +23,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZCompat_Win.h"
-
-namespace ZooLib {
+#include "zoolib/ZQ.h"
+#include "zoolib/ZStdInt.h" // For uint64
 
 #if ZCONFIG_SPI_Enabled(Win)
 
+namespace ZooLib {
 namespace ZUtil_Win {
 
 bool sIsWinNT();
@@ -38,10 +39,10 @@ void sDisallowWAPI();
 
 HINSTANCE sGetModuleHandle();
 
+ZQ<uint64> sQGetVersion_File(const WCHAR* iPath);
+
 } // namespace ZUtil_Win
-
-#endif // ZCONFIG_SPI_Enabled(Win)
-
 } // namespace ZooLib
 
+#endif // ZCONFIG_SPI_Enabled(Win)
 #endif // __ZUtil_Win__
