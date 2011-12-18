@@ -402,6 +402,8 @@ public:
 	void GetNPNF(NPNetscapeFuncs_Z& oNPNF);
 
 	virtual const NPPluginFuncs& GetEntryPoints() = 0;
+
+	virtual ZQ<int> QGetMajorVersion() = 0;
 	};
 
 // =================================================================================================

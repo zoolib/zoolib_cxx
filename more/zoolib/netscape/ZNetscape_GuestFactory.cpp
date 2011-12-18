@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_CF.h"
 #include "zoolib/ZUtil_MacOSX.h"
+#include "zoolib/ZVal_CF.h"
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 	#include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
@@ -126,6 +127,30 @@ template <typename P>
 P sLookup_T(CFBundleRef iBundleRef, CFStringRef iName)
 	{ return reinterpret_cast<P>(::CFBundleGetFunctionPointerForName(iBundleRef, iName)); }
 
+ZQ<int> spQGetMajorVersion(const ZRef<CFStringRef>& iStringRef)
+	{
+	if (iStringRef)
+		{
+		if (SInt32 theVal = ::CFStringGetIntValue(iStringRef))
+			return theVal;
+		}
+	return null;
+	}
+
+ZQ<int> spQGetMajorVersion(const ZMap_CF& iMap)
+	{ return spQGetMajorVersion(iMap.Get(kCFBundleVersionKey).GetCFString()); }
+
+ZQ<int> spQGetMajorVersion(const ZRef<CFBundleRef>& iBundleRef)
+	{
+	if (iBundleRef)
+		{
+		if (ZRef<CFStringRef> theStringRef =
+			(CFStringRef)::CFBundleGetValueForInfoDictionaryKey(iBundleRef, kCFBundleVersionKey))
+			{ return spQGetMajorVersion(theStringRef); }
+		}
+	return null;
+	}
+
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
 // =================================================================================================
@@ -141,6 +166,8 @@ public:
 	virtual ~GuestFactory_Win();
 
 	virtual const NPPluginFuncs& GetEntryPoints();
+
+	virtual ZQ<int> QGetMajorVersion();
 
 private:
 	HMODULE fHMODULE;
@@ -195,6 +222,9 @@ GuestFactory_Win::~GuestFactory_Win()
 const NPPluginFuncs& GuestFactory_Win::GetEntryPoints()
 	{ return fNPPluginFuncs; }
 
+ZQ<int> GuestFactory_Win::QGetMajorVersion()
+	{ return spQGetMajorVersion(fHMODULE); }
+
 #endif // ZCONFIG_SPI_Enabled(Win)
 
 // =================================================================================================
@@ -215,6 +245,8 @@ public:
 	virtual ~GuestFactory_HostMachO();
 
 	virtual const NPPluginFuncs& GetEntryPoints();
+
+	virtual ZQ<int> QGetMajorVersion();
 
 private:
 	ZRef<CFPlugInRef> fPlugInRef;
@@ -240,7 +272,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 	// If the plugin contains ObjC code then unloading it will kill the
 	// host application. So (for now at least) we do an extra retain, leaving
 	// the rest of the plugin management as it should be.
-	::CFRetain(fPlugInRef);
+	//##::CFRetain(fPlugInRef);
 
 	// Get our own copies of our host's function pointers
 	GuestFactory::GetNPNF(fNPNF);
@@ -343,6 +375,9 @@ GuestFactory_HostMachO::~GuestFactory_HostMachO()
 const NPPluginFuncs& GuestFactory_HostMachO::GetEntryPoints()
 	{ return fNPPluginFuncs; }
 
+ZQ<int> GuestFactory_HostMachO::QGetMajorVersion()
+	{ return spQGetMajorVersion(fPlugInRef); }
+
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation) && __MACH__
 
 // =================================================================================================
@@ -386,7 +421,7 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 	// If the plugin contains ObjC code then unloading it will kill the
 	// host application. So (for now at least) we do an extra retain, leaving
 	// the rest of the plugin management as it should be.
-	::CFRetain(fPlugInRef);
+	//##::CFRetain(fPlugInRef);
 
 	// Get local copies of our host's function pointers
 	GuestFactory::GetNPNF(fNPNF);
@@ -451,22 +486,29 @@ const NPPluginFuncs& GuestFactory_HostCFM::GetEntryPoints()
 #pragma mark -
 #pragma mark * ZNetscape
 
-ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iNativePath)
+ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory
+	(ZQ<int> iEarliest, ZQ<int> iLatest, const std::string& iNativePath)
 	{
 	try
 		{
 		#if ZCONFIG_SPI_Enabled(Win)
-			if (HMODULE theHMODULE = ::LoadLibraryW
-				(ZUnicode::sAsUTF16(iNativePath).c_str()))
+			if (iEarliest || iLatest)
 				{
-				try
+				if (ZQ<uint64,false> theQ = sQGetVersion_File(iNativePath))
+					{ return null; }
+				else
 					{
-					return new GuestFactory_Win(theHMODULE);
-					}
-				catch (...)
-					{
-					::FreeLibrary(theHMODULE);
-					}
+					int theMajor = *theQ;
+					if (iEarliest && *iEarliest > theMajor)
+						{ return null; }
+					else if (iLatest && *iLatest < theMajor)
+						{ return null; }
+				}
+
+			if (HMODULE theHMODULE = ::LoadLibraryW(ZUnicode::sAsUTF16(iNativePath).c_str()))
+				{
+				try { return new GuestFactory_Win(theHMODULE); }
+				catch (...) { ::FreeLibrary(theHMODULE); }
 				}
 		#endif
 
@@ -474,12 +516,22 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iN
 			if (ZRef<CFURLRef> theURL = sAdopt& ::CFURLCreateWithFileSystemPath
 				(nullptr, ZUtil_CF::sString(iNativePath), kCFURLPOSIXPathStyle, true))
 				{
-				if (ZRef<CFPlugInRef> thePlugInRef = sAdopt& ::CFPlugInCreate(nullptr, theURL))
+				if (ZMap_CF theMap = sAdopt& ::CFBundleCopyInfoDictionaryInDirectory(theURL))
+					{
+					if (ZQ<int,false> theQ = spQGetMajorVersion(theMap))
+						{ return null; }
+					else if (iEarliest && *iEarliest > *theQ)
+						{ return null; }
+					else if (iLatest && *iLatest < *theQ)
+						{ return null; }
+					}
+						
+				if (ZRef<CFBundleRef> theBundleRef = sAdopt& ::CFBundleCreate(nullptr, theURL))
 					{
 					#if __MACH__
-						return new GuestFactory_HostMachO(thePlugInRef);
+						return new GuestFactory_HostMachO(theBundleRef);
 					#elif ZCONFIG(Processor,PPC)
-						return new GuestFactory_HostCFM(thePlugInRef);
+						return new GuestFactory_HostCFM(theBundleRef);
 					#endif
 					}
 				}
@@ -490,5 +542,8 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iN
 
 	return null;
 	}
+
+ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iNativePath)
+	{ return sMakeGuestFactory(null, null, iNativePath); }
 
 } // namespace ZooLib

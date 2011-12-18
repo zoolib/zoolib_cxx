@@ -33,6 +33,9 @@ namespace ZNetscape {
 #pragma mark -
 #pragma mark * ZNetscape
 
+ZRef<GuestFactory> sMakeGuestFactory
+	(ZQ<int> iEarliest, ZQ<int> iLatest, const std::string& iNativePath);
+
 ZRef<GuestFactory> sMakeGuestFactory(const std::string& iNativePath);
 
 } // namespace ZNetscape
