@@ -255,6 +255,10 @@ static ZRef<ZYadR> spMakeYadR_JSON
 		{
 		return new YadStrimR(iStrimmerU);
 		}
+	else if (iReadOptions.fAllowBinary.DGet(false) && sTryRead_CP(theStrimU, '('))
+		{
+		return new YadStreamR(iStrimmerU);
+		}
 	else
 		{
 		ZAny theVal;
@@ -312,6 +316,26 @@ ParseException::ParseException(const string& iWhat)
 ParseException::ParseException(const char* iWhat)
 :	ZYadParseException_Std(iWhat)
 	{}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * YadStreamR
+
+YadStreamR::YadStreamR(ZRef<ZStrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU)
+,	fStreamR(iStrimmerU->GetStrimU())
+	{}
+
+void YadStreamR::Finish()
+	{
+	using namespace ZUtil_Strim;
+	fStreamR.SkipAll();
+	if (not sTryRead_CP(fStrimmerU->GetStrimU(), ')'))
+		spThrowParseException("Expected ')' to close a binary data");	
+	}
+
+const ZStreamR& YadStreamR::GetStreamR()
+	{ return fStreamR; }
 
 // =================================================================================================
 #pragma mark -

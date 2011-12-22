@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_JSON__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZStreamR_HexStrim.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZYad_Std.h"
@@ -67,6 +68,27 @@ class ParseException : public ZYadParseException_Std
 public:
 	ParseException(const std::string& iWhat);
 	ParseException(const char* iWhat);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * YadStreamR
+
+class YadStreamR
+:	public ZYadStreamR
+	{
+public:
+	YadStreamR(ZRef<ZStrimmerU> iStrimmerU);
+
+// From ZYadR
+	virtual void Finish();
+
+// From ZStreamerR via ZYadStreamR
+	const ZStreamR& GetStreamR();
+
+private:
+	ZRef<ZStrimmerU> fStrimmerU;
+	ZStreamR_HexStrim fStreamR;
 	};
 
 // =================================================================================================
