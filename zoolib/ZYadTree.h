@@ -30,6 +30,9 @@ ZRef<ZYadMapRPos> sYadTree(const ZRef<ZYadMapRPos>& iYadMapRPos, const std::stri
 
 ZRef<ZYadMapRPos> sYadTree(const ZRef<ZYadMapRPos>& iYadMapRPos);
 
+ZRef<ZYadMapRPos> sParameterizedYadTree(const ZRef<ZYadMapRPos>& iBase,
+	const std::string& iRootAugmentName, const ZRef<ZYadMapRPos>& iRootAugment);
+
 } // namespace ZooLib
 
 #endif // __ZYadTree__

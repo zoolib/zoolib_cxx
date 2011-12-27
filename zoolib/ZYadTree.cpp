@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZYadTree.h"
 
+#include "zoolib/ZLog.h"
+
 using std::string;
 
 namespace ZooLib {
@@ -43,11 +45,16 @@ private:
 
 public:
 	Chain(const ZRef<Chain>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos);
+	Chain(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment,
+		const ZRef<ZYadMapRPos>& iYadMapRPos);
 
 	ZRef<Chain> Clone();
 
 	ZRef<ZYadR> ReadInc(string& oName);
 	ZRef<ZYadR> ReadAt(const ZRef<CountedString>& iProtoName, const string& iName);
+
+	ZRef<Chain> WithRootAugment
+		(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment);
 
 private:
 	ZRef<ZYadR> pReadAt(const string& iName);
@@ -112,6 +119,11 @@ public:
 	virtual void SetPosition(const string& iName);
 	virtual ZRef<ZYadR> ReadAt(const string& iName);
 
+// Our protocol
+	ZRef<Chain> GetChain();
+	ZRef<YadMapRPos> WithRootAugment
+		(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment);
+
 private:
 	const ZRef<CountedString> fProtoName;
 	ZRef<Chain> fChain;
@@ -151,6 +163,13 @@ Chain::Chain(const ZRef<Chain>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos)
 	{
 	// It's an error and a problem if iYadMapRPos is a YadTree::YadMapRPos.
 	ZAssert(not iYadMapRPos.DynamicCast<YadMapRPos>());
+	}
+
+Chain::Chain(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment,
+	const ZRef<ZYadMapRPos>& iYadMapRPos)
+:	fYadMapRPos(iYadMapRPos->Clone().DynamicCast<ZYadMapRPos>())
+	{
+	ZUtil_STL::sInsertMustNotContain(fCacheByName, iRootAugmentName, iRootAugment);	
 	}
 
 ZRef<Chain> Chain::Clone()
@@ -205,15 +224,25 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProtoName, const string& i
 					}
 
 				// Walk down the remainder of the trail
-				ZRef<Chain> result;
-				while (index < theTrail.Count())
+				
+				if (index < theTrail.Count())
 					{
-					if (ZRef<ZYadMapRPos,0> theYadMapRPos =
-						cur->pReadAt(theTrail.At(index)).DynamicCast<ZYadMapRPos>())
-						{ break; }
-					else
+					for (;;)
 						{
-						cur = new Chain(cur, theYadMapRPos);
+						const string theComp = theTrail.At(index);
+						if (ZQ<ZRef<Chain> > aChain = sQGet(cur->fCacheByName, theComp))
+							{
+							cur = *aChain;
+							}
+						else if (ZRef<ZYadMapRPos,0> theYadMapRPos =
+							cur->pReadAt(theComp).DynamicCast<ZYadMapRPos>())
+							{
+							break;
+							}
+						else
+							{
+							cur = new Chain(cur, theYadMapRPos);
+							}
 						if (++index == theTrail.Count())
 							{
 							theChain = cur;
@@ -235,6 +264,15 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProtoName, const string& i
 		return spWrap(iProtoName, fParent, fParent->pReadAt(iName));
 
 	return null;
+	}
+
+ZRef<Chain> Chain::WithRootAugment
+	(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment)
+	{
+	ZRef<ZYadMapRPos> newYad = fYadMapRPos->Clone().DynamicCast<ZYadMapRPos>();
+	if (fParent)
+		return new Chain(fParent->WithRootAugment(iRootAugmentName, iRootAugment), newYad);
+	return new Chain(iRootAugmentName, iRootAugment, newYad);
 	}
 
 // =================================================================================================
@@ -308,16 +346,38 @@ ZRef<ZYadMapRClone> YadMapRPos::Clone()
 void YadMapRPos::SetPosition(const string& iName)
 	{ fPosition = iName; }
 
+ZRef<Chain> YadMapRPos::GetChain()
+	{ return fChain; }
+
+ZRef<YadMapRPos> YadMapRPos::WithRootAugment
+	(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment)
+	{
+	ZRef<Chain> newChain = fChain->WithRootAugment(iRootAugmentName, iRootAugment);
+	return new YadMapRPos(fProtoName, newChain, string()); }
+
 } // namespace YadTree
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * YadMapRPos definition
 
+using namespace YadTree;
+
 ZRef<ZYadMapRPos> sYadTree(const ZRef<ZYadMapRPos>& iYadMapRPos, const string& iProtoName)
-	{ return new YadTree::YadMapRPos(new YadTree::CountedString(iProtoName), iYadMapRPos); }
+	{ return new YadMapRPos(new CountedString(iProtoName), iYadMapRPos); }
 
 ZRef<ZYadMapRPos> sYadTree(const ZRef<ZYadMapRPos>& iYadMapRPos)
 	{ return sYadTree(iYadMapRPos, "_"); }
+
+ZRef<ZYadMapRPos> sParameterizedYadTree(const ZRef<ZYadMapRPos>& iBase,
+	const std::string& iRootAugmentName, const ZRef<ZYadMapRPos>& iRootAugment)
+	{
+	if (ZRef<YadMapRPos> theBase = iBase.DynamicCast<YadMapRPos>())
+		{
+		if (ZRef<YadMapRPos> theRootAugment = iRootAugment.DynamicCast<YadMapRPos>())
+			return theBase->WithRootAugment(iRootAugmentName, theRootAugment->GetChain());
+		}
+	return iBase;
+	}
 
 } // namespace ZooLib
