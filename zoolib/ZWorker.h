@@ -73,18 +73,6 @@ public:
 	bool Attach(ZRef<ZCaller> iCaller);
 	bool IsAttached();
 
-	ZRef<Callable_Attached> Get_Callable_Attached();
-	void Set_Callable_Attached(const ZRef<Callable_Attached>& iCallable);
-	bool CAS_Callable_Attached(ZRef<Callable_Attached> iPrior, ZRef<Callable_Attached> iNew);
-
-	ZRef<Callable_Work> Get_Callable_Work();
-	void Set_Callable_Work(const ZRef<Callable_Work>& iCallable);
-	bool CAS_Callable_Work(ZRef<Callable_Work> iPrior, ZRef<Callable_Work> iNew);
-
-	ZRef<Callable_Detached> Get_Callable_Detached();
-	void Set_Callable_Detached(const ZRef<Callable_Detached>& iCallable);
-	bool CAS_Callable_Detached(ZRef<Callable_Detached> iPrior, ZRef<Callable_Detached> iNew);
-
 private:
 	void pWakeAt(ZTime iSystemTime);
 
@@ -93,9 +81,9 @@ private:
 	ZThread::ID fWorking;
 	ZTime fNextWake;
 
-	ZRef<Callable_Attached> fCallable_Attached;
-	ZRef<Callable_Work> fCallable_Work;
-	ZRef<Callable_Detached> fCallable_Detached;
+	const ZRef<Callable_Attached> fCallable_Attached;
+	const ZRef<Callable_Work> fCallable_Work;
+	const ZRef<Callable_Detached> fCallable_Detached;
 	};
 
 } // namespace ZooLib
