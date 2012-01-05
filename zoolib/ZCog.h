@@ -502,39 +502,39 @@ struct ZCogAccumulatorCombiner_Each
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sCog_Applied
+#pragma mark * sCog_With
 
 template <class Param>
-ZCog<Param> spCogFun_Applied(const ZCog<Param>& iSelf, Param iParam,
+ZCog<Param> spCogFun_With(const ZCog<Param>& iSelf, Param iParam,
 	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1_Init, const ZCog<Param>& iCog1);
 
 template <class Param>
-ZCog<Param> spCog_Applied
+ZCog<Param> spCog_With
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1_Init,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
 	ZAssert(iCallable0 && iCallable1_Init && iCallable1);
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_Applied<Param>));
+	static ZMACRO_auto(spCallable, sCallable(spCogFun_With<Param>));
 	return sBindR(spCallable, iCallable0, iCallable1_Init, iCallable1);
 	}
 
 template <class Param>
-ZCog<Param> sCog_Applied
+ZCog<Param> sCog_With
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
 	if (iCallable0)
 		{
 		if (iCallable1 && not sIsTerm(iCallable1))
-			return spCog_Applied(iCallable0, iCallable1, iCallable1);
+			return spCog_With(iCallable0, iCallable1, iCallable1);
 		return iCallable0;
 		}
 	return null;
 	}
 
 template <class Param>
-ZCog<Param> spCogFun_Applied(const ZCog<Param>& iSelf, Param iParam,
+ZCog<Param> spCogFun_With(const ZCog<Param>& iSelf, Param iParam,
 	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1_Init, const ZCog<Param>& iCog1)
 	{
 	ZAssert(iCog0 && iCog1);
@@ -558,9 +558,9 @@ ZCog<Param> spCogFun_Applied(const ZCog<Param>& iSelf, Param iParam,
 			return lCog0;
 
 		if (sIsTerm(lCog1))
-			return spCog_Applied(lCog0, iCog1_Init, iCog1_Init);
+			return spCog_With(lCog0, iCog1_Init, iCog1_Init);
 
-		return spCog_Applied(lCog0, iCog1_Init, lCog1);			
+		return spCog_With(lCog0, iCog1_Init, lCog1);			
 		}
 	else if (not lCog0)
 		{
@@ -579,9 +579,9 @@ ZCog<Param> spCogFun_Applied(const ZCog<Param>& iSelf, Param iParam,
 			return lCog0;
 
 		if (sIsTerm(lCog1))
-			return spCog_Applied(lCog0, iCog1_Init, iCog1_Init);
+			return spCog_With(lCog0, iCog1_Init, iCog1_Init);
 
-		return spCog_Applied(lCog0, iCog1_Init, lCog1);
+		return spCog_With(lCog0, iCog1_Init, lCog1);
 		}
 	}
 
@@ -589,19 +589,19 @@ template <class Param>
 ZCog<Param> operator^
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
-	{ return sCog_Applied<Param>(iCallable0, iCallable1); }
+	{ return sCog_With<Param>(iCallable0, iCallable1); }
 
 template <class Param>
 ZCog<Param>& operator^=
 	(ZCog<Param>& ioCog0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
-	{ return ioCog0 = sCog_Applied<Param>(ioCog0, iCallable1); }
+	{ return ioCog0 = sCog_With<Param>(ioCog0, iCallable1); }
 
 template <class Param>
-struct ZCogAccumulatorCombiner_Applied
+struct ZCogAccumulatorCombiner_With
 	{
 	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
-		{ io0 = sCog_Applied(io0, i1); }
+		{ io0 = sCog_With(io0, i1); }
 	};
 
 // =================================================================================================

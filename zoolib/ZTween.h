@@ -325,14 +325,14 @@ struct ZTweenAccumulatorCombiner_Each
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sTween_Applied
+#pragma mark * sTween_With
 
 template <class Val0, class Val1, class Combiner = TweenCombiner<Val0,Val1> >
-class ZTween_Applied
+class ZTween_With
 :	public ZTween<Val0>
 	{
 public:
-	ZTween_Applied(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+	ZTween_With(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
 	:	f0(i0)
 	,	f1(i1)
 		{}
@@ -358,12 +358,12 @@ private:
 	};
 
 template <class Val0, class Val1>
-ZRef<ZTween<Val0> > sTween_Applied(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+ZRef<ZTween<Val0> > sTween_With(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
 	{
 	if (i0)
 		{
 		if (i1)
-			return new ZTween_Applied<Val0,Val1>(i0, i1);
+			return new ZTween_With<Val0,Val1>(i0, i1);
 		return i0;
 		}
 	return null;
@@ -371,20 +371,20 @@ ZRef<ZTween<Val0> > sTween_Applied(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTw
 
 template <class Val0, class Val1>
 ZRef<ZTween<Val0> > operator^(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
-	{ return sTween_Applied(i0, i1); }
+	{ return sTween_With(i0, i1); }
 
 template <class Val0, class Val1>
 ZRef<ZTween<Val0> >& operator^=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1> >& i1)
 	{ return io0 = io0 ^ i1; }
 
 template <class Val_p>
-struct ZTweenAccumulatorCombiner_Applied
+struct ZTweenAccumulatorCombiner_With
 	{
 	typedef Val_p Val;
 	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
 		{
 		if (io0)
-			io0 = sTween_Applied(io0, i1);
+			io0 = sTween_With(io0, i1);
 		else
 			io0 = i1;
 		}
