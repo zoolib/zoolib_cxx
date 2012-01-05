@@ -84,6 +84,7 @@ public:
 	virtual ~ZNetListener_Local_Win();
 
 // From ZNetListener via ZNetListener_Local
+	virtual ZRef<ZNetAddress> GetAddress();
 	virtual ZRef<ZNetEndpoint> Listen();
 	virtual void CancelListen();
 

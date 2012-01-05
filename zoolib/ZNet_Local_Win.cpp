@@ -89,6 +89,9 @@ class Make_Endpoint
 static string16 spAsPipeName(const string8& iName)
 	{ return ZUnicode::sAsUTF16("\\\\.\\pipe\\" + iName); }
 
+static string8 spAsName(const string16& iName)
+	{ return ZUnicode::sAsUTF8(iName).substr(9); }
+
 static ZRef<HANDLE> spConnect(const string& iName)
 	{
 	const string16 thePipeName = spAsPipeName(iName);
@@ -202,6 +205,9 @@ ZNetListener_Local_Win::ZNetListener_Local_Win(const string& iName)
 
 ZNetListener_Local_Win::~ZNetListener_Local_Win()
 	{}
+
+ZRef<ZNetAddress> ZNetListener_Local_Win::GetAddress()
+	{ return new ZNetAddress_Local(spAsName(fPath)); }
 
 ZRef<ZNetEndpoint> ZNetListener_Local_Win::Listen()
 	{
