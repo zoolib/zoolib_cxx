@@ -506,16 +506,17 @@ struct ZCogAccumulatorCombiner_Each
 
 template <class Param>
 ZCog<Param> spCogFun_Applied(const ZCog<Param>& iSelf, Param iParam,
-	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1_Init, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_Applied
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1_Init,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
-	ZAssert(iCallable0 && iCallable1);
+	ZAssert(iCallable0 && iCallable1_Init && iCallable1);
 	static ZMACRO_auto(spCallable, sCallable(spCogFun_Applied<Param>));
-	return sBindR(spCallable, iCallable0, iCallable1);
+	return sBindR(spCallable, iCallable0, iCallable1_Init, iCallable1);
 	}
 
 template <class Param>
@@ -525,8 +526,8 @@ ZCog<Param> sCog_Applied
 	{
 	if (iCallable0)
 		{
-		if (iCallable1)
-			return spCog_Applied(iCallable0, iCallable1);
+		if (iCallable1 && not sIsTerm(iCallable1))
+			return spCog_Applied(iCallable0, iCallable1, iCallable1);
 		return iCallable0;
 		}
 	return null;
@@ -534,29 +535,32 @@ ZCog<Param> sCog_Applied
 
 template <class Param>
 ZCog<Param> spCogFun_Applied(const ZCog<Param>& iSelf, Param iParam,
-	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1_Init, const ZCog<Param>& iCog1)
 	{
 	ZAssert(iCog0 && iCog1);
+	ZAssert(not sIsTerm(iCog1));
+
 	ZCog<Param> lCog0 = iCog0;
 	ZCog<Param> lCog1 = iCog1;
 
 	if (sIsTerm(lCog0))
 		{
-		if (not sIsTerm(lCog1) && not lCog1->Call(lCog1, iParam))
+		if (not lCog1->Call(lCog1, iParam))
 			return null;
 		return lCog0;
 		}
 	else if (sCallValidCogUnchanged(lCog0, iParam))
 		{
-		if (sIsTerm(lCog1))
-			return lCog0;
 		if (sCallValidCogUnchanged(lCog1, iParam))
 			return iSelf;
+
 		if (not lCog1)
 			return lCog0;
+
 		if (sIsTerm(lCog1))
-			return lCog0;
-		return spCog_Both(lCog0, lCog1);
+			return spCog_Applied(lCog0, iCog1_Init, iCog1_Init);
+
+		return spCog_Applied(lCog0, iCog1_Init, lCog1);			
 		}
 	else if (not lCog0)
 		{
@@ -564,25 +568,20 @@ ZCog<Param> spCogFun_Applied(const ZCog<Param>& iSelf, Param iParam,
 		}
 	else if (sIsTerm(lCog0))
 		{
-		if (sIsTerm(lCog1))
-			return lCog1;
-		if ((lCog1 = lCog1->Call(lCog1, iParam)) && sIsTerm(lCog1))
-			return lCog1;
-		return null;
-		}
-	else if (sIsTerm(lCog1))
-		{
+		lCog1->Call(lCog1, iParam);
 		return lCog0;
-		}
-	else if ((lCog1 = lCog1->Call(lCog1, iParam)))
-		{
-		if (sIsTerm(lCog1))
-			return lCog0;
-		return spCog_Both(lCog0, lCog1);
 		}
 	else
 		{
-		return null;
+		lCog1 = lCog1->Call(lCog1, iParam);
+
+		if (not lCog1)
+			return lCog0;
+
+		if (sIsTerm(lCog1))
+			return spCog_Applied(lCog0, iCog1_Init, iCog1_Init);
+
+		return spCog_Applied(lCog0, iCog1_Init, lCog1);
 		}
 	}
 
