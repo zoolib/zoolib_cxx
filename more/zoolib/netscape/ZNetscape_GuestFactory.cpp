@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_CF.h"
 #include "zoolib/ZUtil_MacOSX.h"
+#include "zoolib/ZUtil_Win.h"
 #include "zoolib/ZVal_CF.h"
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
@@ -69,6 +70,13 @@ static void spThrowMissingEntryPoint()
 template <typename P>
 P sLookup_T(HMODULE iHMODULE, const char* iName)
 	{ return reinterpret_cast<P>(::GetProcAddress(iHMODULE, iName)); }
+
+static ZQ<int> spQGetMajorVersion(const UTF16* iNativePath)
+	{
+	if (ZQ<uint64> theQ = ZUtil_Win::sQGetVersion_File(iNativePath))
+		return (*theQ) >> 48;
+	return null;
+	}
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
@@ -223,7 +231,12 @@ const NPPluginFuncs& GuestFactory_Win::GetEntryPoints()
 	{ return fNPPluginFuncs; }
 
 ZQ<int> GuestFactory_Win::QGetMajorVersion()
-	{ return spQGetMajorVersion(fHMODULE); }
+	{
+	vector<UTF16> buffer(1024);
+	if (0 <::GetModuleFileNameW(::GetModuleHandleW(nullptr), &buffer[0], buffer.size()))
+		return spQGetMajorVersion(&buffer[0]);
+	return null;
+	}
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
@@ -494,15 +507,15 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory
 		#if ZCONFIG_SPI_Enabled(Win)
 			if (iEarliest || iLatest)
 				{
-				if (ZQ<uint64,false> theQ = sQGetVersion_File(iNativePath))
+				if (ZQ<int,false> theQ = spQGetMajorVersion(ZUnicode::sAsUTF16(iNativePath).c_str()))
 					{ return null; }
 				else
 					{
-					int theMajor = *theQ;
-					if (iEarliest && *iEarliest > theMajor)
+					if (iEarliest && *iEarliest > *theQ)
 						{ return null; }
-					else if (iLatest && *iLatest < theMajor)
+					else if (iLatest && *iLatest < *theQ)
 						{ return null; }
+					}
 				}
 
 			if (HMODULE theHMODULE = ::LoadLibraryW(ZUnicode::sAsUTF16(iNativePath).c_str()))
