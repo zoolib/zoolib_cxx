@@ -42,11 +42,14 @@ void sGetHostVersion(int& oMajor, int& oMinor, int& oFix)
 		theSpec += Spec::sEnum(classApplication, Enumerated(typeOrdinal, enumTarget));
 		theSpec += Spec::sProperty(classProperty, keyHostVersion);
 
-		if (const Map& versionMap = theSpec.Get().Get(keyHostVersion).GetMap())
+		if (const ZQ<Map> theQ = theSpec.QGet())
 			{
-			sMajor = versionMap.Get(keyVersionMajor).GetInt32();
-			sMinor = versionMap.Get(keyVersionMinor).GetInt32();
-			sFix = versionMap.Get(keyVersionFix).GetInt32();
+			if (ZQ<Map> versionMapQ = theQ->Get(keyHostVersion).QGetMap())
+				{
+				sMajor = versionMapQ->Get(keyVersionMajor).GetInt32();
+				sMinor = versionMapQ->Get(keyVersionMinor).GetInt32();
+				sFix = versionMapQ->Get(keyVersionFix).GetInt32();
+				}
 			}
 		sFetched = true;
 		}
