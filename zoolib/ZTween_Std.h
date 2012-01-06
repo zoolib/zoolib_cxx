@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTween_Std__
-#define __ZTween_Std__ 1
+#ifndef __ZTween_Std_h__
+#define __ZTween_Std_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_algorithm.h" // for sMinMax
@@ -757,4 +757,4 @@ ZRef<ZTween<Val> > sTween_BounceOut(Val iZeroVal, Val iOneVal, double iDuration)
 
 } // namespace ZooLib
 
-#endif // __ZTween_Std__
+#endif // __ZTween_Std_h__

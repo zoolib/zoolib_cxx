@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZAccumulator_T__
-#define __ZAccumulator_T__ 1
+#ifndef __ZAccumulator_T_h__
+#define __ZAccumulator_T_h__ 1
 #include "zconfig.h"
 
 namespace ZooLib {
@@ -92,4 +92,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZAccumulator_T__
+#endif // __ZAccumulator_T_h__

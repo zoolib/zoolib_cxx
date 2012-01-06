@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamW_HexStrim__
-#define __ZStreamW_HexStrim__ 1
+#ifndef __ZStreamW_HexStrim_h__
+#define __ZStreamW_HexStrim_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -60,4 +60,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZStreamW_HexStrim__
+#endif // __ZStreamW_HexStrim_h__

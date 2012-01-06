@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Walker_Project__
-#define __ZQE_Walker_Project__ 1
+#ifndef __ZQE_Walker_Project_h__
+#define __ZQE_Walker_Project_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/zqe/ZQE_Walker.h"
@@ -59,4 +59,4 @@ private:
 } // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZQE_Walker_Project__
+#endif // __ZQE_Walker_Project_h__

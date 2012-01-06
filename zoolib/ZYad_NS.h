@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_NS__
-#define __ZYad_NS__ 1
+#ifndef __ZYad_NS_h__
+#define __ZYad_NS_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -163,4 +163,4 @@ ZRef<NSObject> sFromYadR(NSObject* iDefault, ZRef<ZYadR> iYadR);
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
 
-#endif // __ZYad_NS__
+#endif // __ZYad_NS_h__

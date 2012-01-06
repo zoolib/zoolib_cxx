@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZThreadSafe__
-#define __ZThreadSafe__ 1
+#ifndef __ZThreadSafe_h__
+#define __ZThreadSafe_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZAtomic.h"
@@ -83,4 +83,4 @@ typedef ZAtomic_t ZThreadSafe_t;
 
 } // namespace ZooLib
 
-#endif // __ZThreadSafe__
+#endif // __ZThreadSafe_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Util_Strim_Rel__
-#define __ZRA_Util_Strim_Rel__
+#ifndef __ZRA_Util_Strim_Rel_h__
+#define __ZRA_Util_Strim_Rel_h__
 #include "zconfig.h"
 
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_ToStrim.h"
@@ -99,4 +99,4 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRef<ZRA::Expr_Rel>& iRel);
 
 } // namespace ZooLib
 
-#endif // __ZRA_Util_Strim_Rel__
+#endif // __ZRA_Util_Strim_Rel_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCPixmapNS__
-#define __ZDCPixmapNS__ 1
+#ifndef __ZDCPixmapNS_h__
+#define __ZDCPixmapNS_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
@@ -901,4 +901,4 @@ void sBlitRow
 
 } // namespace ZooLib
 
-#endif // __ZDCPixmapNS__
+#endif // __ZDCPixmapNS_h__

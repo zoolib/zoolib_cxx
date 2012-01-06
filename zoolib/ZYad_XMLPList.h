@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_XMLPList__
-#define __ZYad_XMLPList__ 1
+#ifndef __ZYad_XMLPList_h__
+#define __ZYad_XMLPList_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZML.h"
@@ -145,4 +145,4 @@ void sWritePreamble(const ZML::StrimW& s);
 } // namespace ZYad_XMLPList
 } // namespace ZooLib
 
-#endif // __ZYad_XMLPList__
+#endif // __ZYad_XMLPList_h__

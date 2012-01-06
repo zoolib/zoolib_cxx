@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGRgnRep_BigZBigRegion__
-#define __ZGRgnRep_ZBigRegion__ 1
+#ifndef __ZGRgnRep_BigZBigRegion_h__
+#define __ZGRgnRep_ZBigRegion_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZBigRegion.h"
@@ -85,4 +85,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZGRgnRep_BigRegion__
+#endif // __ZGRgnRep_BigRegion_h__

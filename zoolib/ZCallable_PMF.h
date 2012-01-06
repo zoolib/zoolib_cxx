@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallable_PMF__
-#define __ZCallable_PMF__ 1
+#ifndef __ZCallable_PMF_h__
+#define __ZCallable_PMF_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -1498,4 +1498,4 @@ using ZCallable_PMF::sCallable;
 
 } // namespace ZooLib
 
-#endif // __ZCallable_PMF__
+#endif // __ZCallable_PMF_h__

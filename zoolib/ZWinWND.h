@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWinWND__
-#define __ZWinWND__ 1
+#ifndef __ZWinWND_h__
+#define __ZWinWND_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -88,4 +88,4 @@ bool sDoOneMessageForDialog(HWND iHWND);
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZWinWND__
+#endif // __ZWinWND_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Graphics__
-#define __ZUtil_Graphics__ 1
+#ifndef __ZUtil_Graphics_h__
+#define __ZUtil_Graphics_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZGeom.h"
@@ -65,4 +65,4 @@ ZRect sCalcHandleBounds9(const ZRect& inBounds, ZCoord inHandleSize, size_t inHa
 
 } // namespace ZooLib
 
-#endif // __ZUtil_Graphics__
+#endif // __ZUtil_Graphics_h__

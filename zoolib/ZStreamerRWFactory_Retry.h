@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamerRWFactory_Retry__
-#define __ZStreamerRWFactory_Retry__ 1
+#ifndef __ZStreamerRWFactory_Retry_h__
+#define __ZStreamerRWFactory_Retry_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZSafe.h"
@@ -52,4 +52,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZStreamerRWFactory_Retry__
+#endif // __ZStreamerRWFactory_Retry_h__

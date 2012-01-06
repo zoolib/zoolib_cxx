@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZASCompiler__
-#define __ZASCompiler__ 1
+#ifndef __ZASCompiler_h__
+#define __ZASCompiler_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZASParser.h"
@@ -69,4 +69,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZASCompiler__
+#endif // __ZASCompiler_h__

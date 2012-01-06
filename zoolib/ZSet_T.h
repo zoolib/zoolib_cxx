@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZSet_T__
-#define __ZSet_T__ 1
+#ifndef __ZSet_T_h__
+#define __ZSet_T_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZUtil_STL_set.h"
@@ -321,4 +321,4 @@ inline void swap(ZSet_T<T,Comparator>& a, ZSet_T<T,Comparator>& b)
 
 } // namespace ZooLib
 
-#endif // __ZSet_T__
+#endif // __ZSet_T_h__

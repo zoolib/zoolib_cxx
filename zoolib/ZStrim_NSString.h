@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrim_NSString__
-#define __ZStrim_NSString__ 1
+#ifndef __ZStrim_NSString_h__
+#define __ZStrim_NSString_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -80,4 +80,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
 
-#endif // __ZStrim_NSString__
+#endif // __ZStrim_NSString_h__

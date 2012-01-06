@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_Compressed__
-#define __ZStream_Compressed__ 1
+#ifndef __ZStream_Compressed_h__
+#define __ZStream_Compressed_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream_ZLib.h"
@@ -84,4 +84,4 @@ private:
 
 #endif // ZCONFIG_API_Enabled(Stream_ZLib)
 
-#endif // __ZStream_Compressed__
+#endif // __ZStream_Compressed_h__

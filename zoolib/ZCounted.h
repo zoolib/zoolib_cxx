@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCounted__
-#define __ZCounted__ 1
+#ifndef __ZCounted_h__
+#define __ZCounted_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZAtomic.h"
@@ -247,4 +247,4 @@ ZWeakRef<T> sWeakRef(ZRef<T,Sense> iP)
 
 } // namespace ZooLib
 
-#endif // __ZCounted__
+#endif // __ZCounted_h__

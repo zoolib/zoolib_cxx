@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_CFStream__
-#define __ZStream_CFStream__ 1
+#ifndef __ZStream_CFStream_h__
+#define __ZStream_CFStream_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -74,4 +74,4 @@ typedef ZStreamerW_T<ZStreamW_CFStream> ZStreamerW_CFStream;
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
-#endif // __ZStream_MacOSX__
+#endif // __ZStream_MacOSX_h__

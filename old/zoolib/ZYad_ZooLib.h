@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_ZooLib__
-#define __ZYad_ZooLib__ 1
+#ifndef __ZYad_ZooLib_h__
+#define __ZYad_ZooLib_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream_Data_T.h"
@@ -114,4 +114,4 @@ ZVal_ZooLib sFromYadR(const ZVal_ZooLib& iDefault, ZRef<ZYadR> iYadR);
 
 } // namespace ZooLib
 
-#endif // __ZYad_ZooLib__
+#endif // __ZYad_ZooLib_h__

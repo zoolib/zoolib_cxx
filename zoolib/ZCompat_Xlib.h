@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompat_XLib__
-#define __ZCompat_XLib__
+#ifndef __ZCompat_XLib_h__
+#define __ZCompat_XLib_h__
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -31,4 +31,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	undef Cursor
 #endif
 
-#endif // __ZCompat_XLib__
+#endif // __ZCompat_XLib_h__

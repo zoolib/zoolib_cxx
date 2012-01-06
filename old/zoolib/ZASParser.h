@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZASParser__
-#define __ZASParser__ 1
+#ifndef __ZASParser_h__
+#define __ZASParser_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZRef.h"
@@ -178,4 +178,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZASParser__
+#endif // __ZASParser_h__

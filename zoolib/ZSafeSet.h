@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZSafeSet__
-#define __ZSafeSet__ 1
+#ifndef __ZSafeSet_h__
+#define __ZSafeSet_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCounted.h"
@@ -520,4 +520,4 @@ bool ZSafeSetRep<T>::pErase(const T& iT)
 
 } // namespace ZooLib
 
-#endif // __ZSafeSet__
+#endif // __ZSafeSet_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches__
-#define __ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches__
+#ifndef __ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches_h__
+#define __ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches_h__
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool_ValPred.h"
@@ -52,4 +52,4 @@ bool sMatches(const ZRef<ZExpr_Bool>& iExpr, const ZVal_Any& iVal);
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches__
+#endif // __ZVisitor_Expr_Bool_ValPred_Any_Do_Eval_Matches_h__

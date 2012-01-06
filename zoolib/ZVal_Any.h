@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVal_Any__
-#define __ZVal_Any__ 1
+#ifndef __ZVal_Any_h__
+#define __ZVal_Any_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -582,4 +582,4 @@ ZMap_Any sAugment(const ZMap_Any& iUnder, const ZMap_Any& iOver);
 
 } // namespace ZooLib
 
-#endif // __ZVal_Any__
+#endif // __ZVal_Any_h__

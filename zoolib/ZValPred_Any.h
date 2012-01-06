@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValPred_Any__
-#define __ZValPred_Any__ 1
+#ifndef __ZValPred_Any_h__
+#define __ZValPred_Any_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -101,4 +101,4 @@ bool sMatches(const ZValPred& iValPred, const ZVal_Any& iVal);
 
 } // namespace ZooLib
 
-#endif // __ZValPred_Any__
+#endif // __ZValPred_Any_h__

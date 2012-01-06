@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZAsset_POSIX__
-#define __ZAsset_POSIX__ 1
+#ifndef __ZAsset_POSIX_h__
+#define __ZAsset_POSIX_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -55,4 +55,4 @@ protected:
 
 #endif // ZCONFIG_SPI_Enabled(POSIX)
 
-#endif // __ZAsset_POSIX__
+#endif // __ZAsset_POSIX_h__

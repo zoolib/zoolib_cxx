@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWinRegistry_Val__
-#define __ZWinRegistry_Val__ 1
+#ifndef __ZWinRegistry_Val_h__
+#define __ZWinRegistry_Val_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -158,4 +158,4 @@ inline void swap(KeyRef& a, KeyRef& b)
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZWinRegistry_Val__
+#endif // __ZWinRegistry_Val_h__

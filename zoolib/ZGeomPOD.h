@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGeomPOD__
-#define __ZGeomPOD__
+#ifndef __ZGeomPOD_h__
+#define __ZGeomPOD_h__
 #include "zconfig.h"
 
 #include "zoolib/ZCompare_T.h"

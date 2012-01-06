@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCaller_Thread__
-#define __ZCaller_Thread__ 1
+#ifndef __ZCaller_Thread_h__
+#define __ZCaller_Thread_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCaller.h"
@@ -67,4 +67,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZCaller_Thread__
+#endif // __ZCaller_Thread_h__

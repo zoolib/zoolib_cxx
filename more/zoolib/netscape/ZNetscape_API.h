@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNetscape_API__
-#define __ZNetscape_API__ 1
+#ifndef __ZNetscape_API_h__
+#define __ZNetscape_API_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -967,4 +967,4 @@ typedef ZNetscape_API_EXPORTED_CALLBACK(void, NPP_ShutdownProcPtr)(void);
 	typedef ZNetscape_API_EXPORTED_CALLBACK(NPError, NP_InitializeFuncPtr)(NPNetscapeFuncs*);
 #endif
 
-#endif // __ZNetscape_API__
+#endif // __ZNetscape_API_h__

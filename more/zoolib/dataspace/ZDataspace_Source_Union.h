@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDataspace_Source_Union__
-#define __ZDataspace_Source_Union__ 1
+#ifndef __ZDataspace_Source_Union_h__
+#define __ZDataspace_Source_Union_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZDList.h"
@@ -156,4 +156,4 @@ private:
 } // namespace ZDataspace
 } // namespace ZooLib
 
-#endif // __ZDataspace_Source_Union__
+#endif // __ZDataspace_Source_Union_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNet_Local_Socket__
-#define __ZNet_Local_Socket__ 1
+#ifndef __ZNet_Local_Socket_h__
+#define __ZNet_Local_Socket_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -115,4 +115,4 @@ public:
 
 #endif // ZCONFIG_API_Enabled(Net_Local_Socket)
 
-#endif // __ZNet_Local_Socket__
+#endif // __ZNet_Local_Socket_h__

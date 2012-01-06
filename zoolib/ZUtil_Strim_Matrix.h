@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_Matrix__
-#define __ZUtil_Strim_Matrix__ 1
+#ifndef __ZUtil_Strim_Matrix_h__
+#define __ZUtil_Strim_Matrix_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZMatrix.h"
@@ -76,4 +76,4 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,C,R>& mat)
 
 } // namespace ZooLib
 
-#endif // __ZUtil_Strim_Matrix__
+#endif // __ZUtil_Strim_Matrix_h__

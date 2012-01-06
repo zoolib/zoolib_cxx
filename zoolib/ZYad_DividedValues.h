@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_DividedValues__
-#define __ZYad_DividedValues__ 1
+#ifndef __ZYad_DividedValues_h__
+#define __ZYad_DividedValues_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZML.h"
@@ -48,4 +48,4 @@ ZRef<ZYadR> sYadR(UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ZStrimmerR> iS
 } // namespace ZYad_DividedValues
 } // namespace ZooLib
 
-#endif // __ZYad_DividedValues__
+#endif // __ZYad_DividedValues_h__

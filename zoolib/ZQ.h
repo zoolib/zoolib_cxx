@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQ__
-#define __ZQ__
+#ifndef __ZQ_h__
+#define __ZQ_h__
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
@@ -410,4 +410,4 @@ inline void swap(ZQ<T>& a, ZQ<T>& b)
 
 } // namespace ZooLib
 
-#endif // __ZQ__
+#endif // __ZQ_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZFunctionChain__
-#define __ZFunctionChain__ 1
+#ifndef __ZFunctionChain_h__
+#define __ZFunctionChain_h__ 1
 #include "zconfig.h"
 
 namespace ZooLib {
@@ -116,4 +116,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZFunctionChain__
+#endif // __ZFunctionChain_h__

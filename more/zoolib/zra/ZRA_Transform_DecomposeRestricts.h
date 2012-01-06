@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Transform_DecomposeRestricts__
-#define __ZRA_Transform_DecomposeRestricts__
+#ifndef __ZRA_Transform_DecomposeRestricts_h__
+#define __ZRA_Transform_DecomposeRestricts_h__
 #include "zconfig.h"
 
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
@@ -43,4 +43,4 @@ public:
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_Transform_DecomposeRestricts__
+#endif // __ZRA_Transform_DecomposeRestricts_h__

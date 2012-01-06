@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValAccessors_Std__
-#define __ZValAccessors_Std__ 1
+#ifndef __ZValAccessors_Std_h__
+#define __ZValAccessors_Std_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZTypes.h"
@@ -51,4 +51,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	ZMACRO_ZValAccessors_Def_Entry(T, Double, double) \
 	ZMACRO_ZValAccessors_Def_Entry(T, String, std::string) \
 
-#endif // __ZValAccessors_Std__
+#endif // __ZValAccessors_Std_h__

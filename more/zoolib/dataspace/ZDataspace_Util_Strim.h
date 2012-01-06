@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDataspace_Util_Strim__
-#define __ZDataspace_Util_Strim__
+#ifndef __ZDataspace_Util_Strim_h__
+#define __ZDataspace_Util_Strim_h__
 #include "zconfig.h"
 
 #include "zoolib/ZStrim.h"
@@ -38,4 +38,4 @@ const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet);
 } // namespace ZDataspace
 } // namespace ZooLib
 
-#endif // __ZDataspace_Util_Strim__
+#endif // __ZDataspace_Util_Strim_h__

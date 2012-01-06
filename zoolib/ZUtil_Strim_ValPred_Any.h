@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_ValPred_Any__
-#define __ZUtil_Strim_ValPred_Any__
+#ifndef __ZUtil_Strim_ValPred_Any_h__
+#define __ZUtil_Strim_ValPred_Any_h__
 #include "zconfig.h"
 
 #include "zoolib/ZStrim.h"
@@ -42,4 +42,4 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZValPred& iValPred);
 
 } // namespace ZooLib
 
-#endif // __ZUtil_Strim_ValPred_Any__
+#endif // __ZUtil_Strim_ValPred_Any_h__

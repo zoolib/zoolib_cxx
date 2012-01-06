@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZXServer__
-#define __ZXServer__ 1
+#ifndef __ZXServer_h__
+#define __ZXServer_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -221,4 +221,4 @@ protected:
 
 #endif // ZCONFIG_SPI_Enabled(X11)
 
-#endif // __ZXServer__
+#endif // __ZXServer_h__

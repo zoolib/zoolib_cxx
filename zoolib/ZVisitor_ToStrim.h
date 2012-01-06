@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_ToStrim__
-#define __ZVisitor_ToStrim__
+#ifndef __ZVisitor_ToStrim_h__
+#define __ZVisitor_ToStrim_h__
 #include "zconfig.h"
 
 #include "zoolib/ZStrim.h"
@@ -70,4 +70,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_ToStrim__
+#endif // __ZVisitor_ToStrim_h__

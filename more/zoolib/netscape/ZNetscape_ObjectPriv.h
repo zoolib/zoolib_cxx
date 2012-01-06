@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNetscape_ObjectPriv__
-#define __ZNetscape_ObjectPriv__ 1
+#ifndef __ZNetscape_ObjectPriv_h__
+#define __ZNetscape_ObjectPriv_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/netscape/ZNetscape_Object.h"
@@ -191,4 +191,4 @@ bool NPObject_T<Variant_t>::Erase(size_t iIndex)
 } // namespace ZNetscape
 } // namespace ZooLib
 
-#endif // __ZNetscape_ObjectPriv__
+#endif // __ZNetscape_ObjectPriv_h__

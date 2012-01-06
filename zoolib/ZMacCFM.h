@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMacCFM__
-#define __ZMacCFM__ 1
+#ifndef __ZMacCFM_h__
+#define __ZMacCFM_h__ 1
 #include "zconfig.h"
 
 #define ZCONFIG_CFM_Use_UPP (TARGET_RT_MAC_CFM && !TARGET_API_MAC_CARBON)
@@ -413,4 +413,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	ZMacCFM_Priv_DefineProcPtr7(void, upp, arg1, arg2, arg3, arg4, arg5, arg6, arg7); \
 	ZMacCFM_Priv_DefineUPP7_Void(upp, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 
-#endif // __ZMacCFM__
+#endif // __ZMacCFM_h__

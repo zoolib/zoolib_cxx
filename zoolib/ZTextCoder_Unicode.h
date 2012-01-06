@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTextCoder_Unicode__
-#define __ZTextCoder_Unicode__ 1
+#ifndef __ZTextCoder_Unicode_h__
+#define __ZTextCoder_Unicode_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZTextCoder.h"
@@ -191,4 +191,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZTextCoder_Unicode__
+#endif // __ZTextCoder_Unicode_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Op_Do_Transform_T__
-#define __ZVisitor_Expr_Op_Do_Transform_T__
+#ifndef __ZVisitor_Expr_Op_Do_Transform_T_h__
+#define __ZVisitor_Expr_Op_Do_Transform_T_h__
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Op_T.h"
@@ -65,4 +65,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_Expr_Op_Do_Transform_T__
+#endif // __ZVisitor_Expr_Op_Do_Transform_T_h__

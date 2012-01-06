@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZByteSwap__
-#define __ZByteSwap__ 1
+#ifndef __ZByteSwap_h__
+#define __ZByteSwap_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStdInt.h"
@@ -867,4 +867,4 @@ inline void ZByteSwap_WriteLittle64(volatile void* oValueAddress, int64 iValue)
 
 } // namespace ZooLib
 
-#endif // __ZByteSwap__
+#endif // __ZByteSwap_h__

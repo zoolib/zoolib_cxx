@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWinCOM__
-#define __ZWinCOM__ 1
+#ifndef __ZWinCOM_h__
+#define __ZWinCOM_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -389,4 +389,4 @@ bool operator==(const string16& l, const String& r);
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZWinCOM__
+#endif // __ZWinCOM_h__

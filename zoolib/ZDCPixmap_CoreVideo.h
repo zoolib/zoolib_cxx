@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCPixmap_CoreVideo__
-#define __ZDCPixmap_CoreVideo__ 1
+#ifndef __ZDCPixmap_CoreVideo_h__
+#define __ZDCPixmap_CoreVideo_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -52,4 +52,4 @@ ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR);
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)
 
-#endif // __ZDCPixmap_CoreVideo__
+#endif // __ZDCPixmap_CoreVideo_h__

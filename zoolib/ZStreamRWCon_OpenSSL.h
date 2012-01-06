@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamRWCon_OpenSSL__
-#define __ZStreamRWCon_OpenSSL__ 1
+#ifndef __ZStreamRWCon_OpenSSL_h__
+#define __ZStreamRWCon_OpenSSL_h__ 1
 #include "zconfig.h"
 #include "ZConfig_SPI.h"
 
@@ -105,4 +105,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZStreamRWCon_OpenSSL__
+#endif // __ZStreamRWCon_OpenSSL_h__

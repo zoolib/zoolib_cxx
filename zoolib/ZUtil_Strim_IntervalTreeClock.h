@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_IntervalTreeClock__
-#define __ZUtil_Strim_IntervalTreeClock__ 1
+#ifndef __ZUtil_Strim_IntervalTreeClock_h__
+#define __ZUtil_Strim_IntervalTreeClock_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStrim.h"
@@ -39,4 +39,4 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Clock>& iClock);
 } // namespace ZIntervalTreeClock
 } // namespace ZooLib
 
-#endif // __ZUtil_Strim_IntervalTreeClock__
+#endif // __ZUtil_Strim_IntervalTreeClock_h__

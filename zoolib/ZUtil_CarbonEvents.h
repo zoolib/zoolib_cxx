@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_CarbonEvents__
-#define __ZUtil_CarbonEvents__ 1
+#ifndef __ZUtil_CarbonEvents_h__
+#define __ZUtil_CarbonEvents_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -104,4 +104,4 @@ std::string sEventTypeAsString(UInt16 iEventType);
 
 #endif // ZCONFIG_SPI_Enabled(Carbon64)
 
-#endif // __ZUtil_CarbonEvents__
+#endif // __ZUtil_CarbonEvents_h__

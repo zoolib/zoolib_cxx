@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompat_algorithm__
-#define __ZCompat_algorithm__
+#ifndef __ZCompat_algorithm_h__
+#define __ZCompat_algorithm_h__
 #include "zconfig.h"
 
 #if !defined(__MWERKS__) && defined(_MSC_VER) && (_MSC_VER < 1200)
@@ -36,4 +36,4 @@ const T& sMinMax(const T& iMin, const T& iVal, const T& iMax)
 
 } // namespace ZooLib
 
-#endif // __ZCompat_algorithm__
+#endif // __ZCompat_algorithm_h__

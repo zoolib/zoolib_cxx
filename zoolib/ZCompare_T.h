@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompare_T__
-#define __ZCompare_T__ 1
+#ifndef __ZCompare_T_h__
+#define __ZCompare_T_h__ 1
 #include "zconfig.h"
 
 #include <functional> // For std::binary_function
@@ -103,4 +103,4 @@ inline int sCompareIterators_T
 
 } // namespace ZooLib
 
-#endif // __ZCompare_Vector__
+#endif // __ZCompare_Vector_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamRWPos_RAM__
-#define __ZStreamRWPos_RAM__ 1
+#ifndef __ZStreamRWPos_RAM_h__
+#define __ZStreamRWPos_RAM_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -64,4 +64,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZStreamRWPos_RAM__
+#endif // __ZStreamRWPos_RAM_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZThread_boost__
-#define __ZThread_boost__ 1
+#ifndef __ZThread_boost_h__
+#define __ZThread_boost_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_API.h"
@@ -95,4 +95,4 @@ typedef ZSem_T<ZMtx_boost, ZCnd_boost> ZSem_boost;
 
 #endif // ZCONFIG_API_Enabled(Thread_boost)
 
-#endif // __ZThread_boost__
+#endif // __ZThread_boost_h__

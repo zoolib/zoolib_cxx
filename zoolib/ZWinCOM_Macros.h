@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWinCOM_Macros__
-#define __ZWinCOM_Macros__ 1
+#ifndef __ZWinCOM_Macros_h__
+#define __ZWinCOM_Macros_h__ 1
 #include "zconfig.h"
 
 #if ZCONFIG(Compiler, MSVC) || ZCONFIG(Compiler, CodeWarrior)
@@ -52,4 +52,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #endif
 
-#endif // __ZWinCOM_Macros__
+#endif // __ZWinCOM_Macros_h__

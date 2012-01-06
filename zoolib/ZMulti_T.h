@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMulti_T__
-#define __ZMulti_T__ 1
+#ifndef __ZMulti_T_h__
+#define __ZMulti_T_h__ 1
 #include "zconfig.h"
 
 namespace ZooLib {
@@ -122,4 +122,4 @@ ZMulti_T3<T0,T1,T2> sMulti(const T0& i0, const T1& i1, const T2& i2, const T3& i
 
 } // namespace ZooLib
 
-#endif // __ZMulti_T__
+#endif // __ZMulti_T_h__

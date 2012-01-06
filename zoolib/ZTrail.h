@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTrail__
-#define __ZTrail__ 1
+#ifndef __ZTrail_h__
+#define __ZTrail_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
@@ -118,4 +118,4 @@ ZTrail operator+(const string8& iPOSIXTrail, const ZTrail& iTrail);
 
 } // namespace ZooLib
 
-#endif // __ZTrail__
+#endif // __ZTrail_h__

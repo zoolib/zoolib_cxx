@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrimW_WinDebug__
-#define __ZStrimW_WinDebug__ 1
+#ifndef __ZStrimW_WinDebug_h__
+#define __ZStrimW_WinDebug_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -43,4 +43,4 @@ public:
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZStrimW_WinDebug__
+#endif // __ZStrimW_WinDebug_h__

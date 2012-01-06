@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_WinFile__
-#define __ZUtil_WinFile__ 1
+#ifndef __ZUtil_WinFile_h__
+#define __ZUtil_WinFile_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -63,4 +63,4 @@ DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZUtil_WinFile__
+#endif // __ZUtil_WinFile_h__

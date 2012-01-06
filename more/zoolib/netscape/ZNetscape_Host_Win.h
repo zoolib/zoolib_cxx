@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNetscape_Host_Win__
-#define __ZNetscape_Host_Win__ 1
+#ifndef __ZNetscape_Host_Win_h__
+#define __ZNetscape_Host_Win_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/netscape/ZNetscape_Host_Std.h"
@@ -73,4 +73,4 @@ protected:
 
 #endif // defined(XP_WIN)
 
-#endif // __ZNetscape_Host_Win__
+#endif // __ZNetscape_Host_Win_h__

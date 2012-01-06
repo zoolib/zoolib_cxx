@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMatrix__
-#define __ZMatrix__ 1
+#ifndef __ZMatrix_h__
+#define __ZMatrix_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZDebug.h"
@@ -814,4 +814,4 @@ ZMatrix<E,Dim,Dim> sInverse(const ZMatrix<E,Dim,Dim>& iMat)
 
 } // namespace ZooLib
 
-#endif // __ZMatrix__
+#endif // __ZMatrix_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTS_Umbrella__
-#define __ZTS_Umbrella__
+#ifndef __ZTS_Umbrella_h__
+#define __ZTS_Umbrella_h__
 #include "zconfig.h"
 
 #include "zoolib/ZTS.h"
@@ -73,4 +73,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZTS_Umbrella__
+#endif // __ZTS_Umbrella_h__

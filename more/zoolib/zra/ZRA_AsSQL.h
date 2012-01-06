@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_AsSQL__
-#define __ZRA_AsSQL__
+#ifndef __ZRA_AsSQL_h__
+#define __ZRA_AsSQL_h__
 #include "zconfig.h"
 
 #include "zoolib/ZStrim.h"
@@ -41,4 +41,4 @@ bool sWriteAsSQL(const std::map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, 
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_AsSQL__
+#endif // __ZRA_AsSQL_h__

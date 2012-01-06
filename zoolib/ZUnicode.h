@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUnicode__
-#define __ZUnicode__ 1
+#ifndef __ZUnicode_h__
+#define __ZUnicode_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZTypes.h"
@@ -527,4 +527,4 @@ int sHexValue(UTF32 iCP);
 } // namespace ZUnicode
 } // namespace ZooLib
 
-#endif // __ZUnicode__
+#endif // __ZUnicode_h__

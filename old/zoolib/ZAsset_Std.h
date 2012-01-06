@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZAsset_Std__
-#define __ZAsset_Std__ 1
+#ifndef __ZAsset_Std_h__
+#define __ZAsset_Std_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZAsset.h"
@@ -329,4 +329,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZAsset_Std__
+#endif // __ZAsset_Std_h__

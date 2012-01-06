@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGeom__
-#define __ZGeom__
+#ifndef __ZGeom_h__
+#define __ZGeom_h__
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -877,4 +877,4 @@ inline ZRect_T<T>::operator ZRectPOD() const
 
 } // namespace ZooLib
 
-#endif // __ZGeom__
+#endif // __ZGeom_h__

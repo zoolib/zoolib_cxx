@@ -1,5 +1,5 @@
-#ifndef __ZStdIO__
-#define __ZStdIO__ 1
+#ifndef __ZStdIO_h__
+#define __ZStdIO_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -19,4 +19,4 @@ extern const ZStrimW& strim_err;
 } // namespace ZStdIO
 } // namespace ZooLib
 
-#endif // __ZStdIO__
+#endif // __ZStdIO_h__

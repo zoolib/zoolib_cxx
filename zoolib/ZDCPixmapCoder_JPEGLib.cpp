@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmapCoder_JPEGLib.h"
 
-#if ZCONFIG_SPI_Enabled(Win) && defined(__ZCompat_Win__)
+#if ZCONFIG_SPI_Enabled(Win) && defined(__ZCompat_Win_h__)
 	// Fix up some stuff that breaks jpeglib's jmorecfg.h when we've also already pulled in
 	// the Windows Headers. That happens when we're compiling for Windows using ZCompat_Win
 	// and CodeWarrior's precompiled headers.

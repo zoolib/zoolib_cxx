@@ -17,8 +17,8 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
-#ifndef __ZRef_NS__
-#define __ZRef_NS__ 1
+#ifndef __ZRef_NS_h__
+#define __ZRef_NS_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -45,4 +45,4 @@ void sRelease(NSObject& iNSObject);
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-#endif // __ZRef_NS__
+#endif // __ZRef_NS_h__

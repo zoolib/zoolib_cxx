@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTime__
-#define __ZTime__ 1
+#ifndef __ZTime_h__
+#define __ZTime_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompare_T.h"
@@ -122,4 +122,4 @@ inline int sCompare_T(const ZTime& iL, const ZTime& iR)
 
 } // namespace ZooLib
 
-#endif // __ZTime__
+#endif // __ZTime_h__

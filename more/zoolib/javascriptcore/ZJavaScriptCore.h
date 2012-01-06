@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZJavaScriptCore__
-#define __ZJavaScriptCore__ 1
+#ifndef __ZJavaScriptCore_h__
+#define __ZJavaScriptCore_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZAny.h"
@@ -289,4 +289,4 @@ private:
 } // namespace ZJavaScriptCore
 } // namespace ZooLib
 
-#endif // __ZJavaScriptCore__
+#endif // __ZJavaScriptCore_h__

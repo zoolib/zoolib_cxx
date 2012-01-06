@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZBlackBerry_OSXUSB__
-#define __ZBlackBerry_OSXUSB__ 1
+#ifndef __ZBlackBerry_OSXUSB_h__
+#define __ZBlackBerry_OSXUSB_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -112,4 +112,4 @@ private:
 
 #endif // ZCONFIG_API_Enabled(BlackBerry_OSXUSB)
 
-#endif // __ZBlackBerry_OSXUSB__
+#endif // __ZBlackBerry_OSXUSB_h__

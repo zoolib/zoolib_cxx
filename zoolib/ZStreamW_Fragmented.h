@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamW_Fragmented__
-#define __ZStreamW_Fragmented__ 1
+#ifndef __ZStreamW_Fragmented_h__
+#define __ZStreamW_Fragmented_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -48,4 +48,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZStreamW_Fragmented__
+#endif // __ZStreamW_Fragmented_h__

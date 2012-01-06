@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZSaveRestore_T__
-#define __ZSaveRestore_T__ 1
+#ifndef __ZSaveRestore_T_h__
+#define __ZSaveRestore_T_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_algorithm.h" // For std::swap
@@ -52,4 +52,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZSaveRestore_T__
+#endif // __ZSaveRestore_T_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamRWCon_SSL_OSX__
-#define __ZStreamRWCon_SSL_OSX__ 1
+#ifndef __ZStreamRWCon_SSL_OSX_h__
+#define __ZStreamRWCon_SSL_OSX_h__ 1
 #include "zconfig.h"
 #include "ZConfig_SPI.h"
 
@@ -103,4 +103,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)
 
-#endif // __ZStreamRWCon_SSL_OSX__
+#endif // __ZStreamRWCon_SSL_OSX_h__

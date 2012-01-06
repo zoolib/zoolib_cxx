@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZPromise__
-#define __ZPromise__ 1
+#ifndef __ZPromise_h__
+#define __ZPromise_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
@@ -228,4 +228,4 @@ ZRef<ZDelivery<T> > sGetDeliveryClearPromise(ZRef<ZPromise<T> >& ioPromise)
 
 } // namespace ZooLib
 
-#endif // __ZPromise__
+#endif // __ZPromise_h__

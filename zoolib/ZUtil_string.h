@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_string__
-#define __ZUtil_string__
+#ifndef __ZUtil_string_h__
+#define __ZUtil_string_h__
 #include "zconfig.h"
 
 #include "zoolib/ZQ.h"
@@ -76,4 +76,4 @@ std::vector<string> sSplit(const string& iString, char iChar);
 } // namespace ZUtil_string
 } // namespace ZooLib
 
-#endif // __ZUtil_string__
+#endif // __ZUtil_string_h__

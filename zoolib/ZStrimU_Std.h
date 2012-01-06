@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrimU_Std__
-#define __ZStrimU_Std__ 1
+#ifndef __ZStrimU_Std_h__
+#define __ZStrimU_Std_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStrim_CRLF.h" // For ZStrimR_CRLFRemove
@@ -60,4 +60,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZStrimU_Std__
+#endif // __ZStrimU_Std_h__

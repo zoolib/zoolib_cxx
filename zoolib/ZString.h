@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZString__
-#define __ZString__ 1
+#ifndef __ZString_h__
+#define __ZString_h__ 1
 #include "zconfig.h"
 
 #include <cstdarg>
@@ -44,4 +44,4 @@ std::string ZStringf(const char* iString, std::va_list iArgs);
 
 } // namespace ZooLib
 
-#endif // __ZString__
+#endif // __ZString_h__

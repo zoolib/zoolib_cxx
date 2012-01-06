@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrimR_Rewind__
-#define __ZStrimR_Rewind__ 1
+#ifndef __ZStrimR_Rewind_h__
+#define __ZStrimR_Rewind_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStrim.h"
@@ -58,4 +58,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZStrimR_Rewind__
+#endif // __ZStrimR_Rewind_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNetscape_Macros__
-#define __ZNetscape_Macros__ 1
+#ifndef __ZNetscape_Macros_h__
+#define __ZNetscape_Macros_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZLog.h"
@@ -67,4 +67,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZMACRO_Netscape_After_Return_False \
 	ZMACRO_Netscape_After_Return(false)
 
-#endif // __ZNetscape_Macros__
+#endif // __ZNetscape_Macros_h__

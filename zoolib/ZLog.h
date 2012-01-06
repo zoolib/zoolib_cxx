@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZLog__
-#define __ZLog__ 1
+#ifndef __ZLog_h__
+#define __ZLog_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
@@ -166,4 +166,4 @@ void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iF
 } // namespace ZLog
 } // namespace ZooLib
 
-#endif // __ZLog__
+#endif // __ZLog_h__

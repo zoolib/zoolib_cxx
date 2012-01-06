@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_RelName__
-#define __ZRA_RelName__ 1
+#ifndef __ZRA_RelName_h__
+#define __ZRA_RelName_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZUnicodeString.h"
@@ -36,4 +36,4 @@ typedef string8 RelName;
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_RelName__
+#endif // __ZRA_RelName_h__

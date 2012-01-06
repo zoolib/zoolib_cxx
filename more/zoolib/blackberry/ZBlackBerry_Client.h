@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZBlackBerry_Client__
-#define __ZBlackBerry_Client__ 1
+#ifndef __ZBlackBerry_Client_h__
+#define __ZBlackBerry_Client_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/blackberry/ZBlackBerry.h"
@@ -66,4 +66,4 @@ private:
 } // namespace ZBlackBerry
 } // namespace ZooLib
 
-#endif // __ZBlackBerry_Client__
+#endif // __ZBlackBerry_Client_h__

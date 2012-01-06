@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_Simple__
-#define __ZYad_Simple__ 1
+#ifndef __ZYad_Simple_h__
+#define __ZYad_Simple_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZYad_Basic.h"
@@ -42,4 +42,4 @@ ZRef<ZYadMapR> sYadR(ZRef<ZStrimmerU> iStrimmerU);
 } // namespace ZYad_Simple
 } // namespace ZooLib
 
-#endif // __ZYad_Simple__
+#endif // __ZYad_Simple_h__

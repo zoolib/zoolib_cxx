@@ -18,10 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCONFIG_API__
-#define __ZCONFIG_API__ 1
+#ifndef __ZCONFIG_API_h__
+#define __ZCONFIG_API_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_API_Definitions.h"
 
-#endif // __ZCONFIG_API__
+#endif // __ZCONFIG_API_h__

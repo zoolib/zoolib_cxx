@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Expr_Rel_Rename__
-#define __ZRA_Expr_Rel_Rename__ 1
+#ifndef __ZRA_Expr_Rel_Rename_h__
+#define __ZRA_Expr_Rel_Rename_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Op_T.h"
@@ -90,4 +90,4 @@ int sCompare_T(const ZRA::Expr_Rel_Rename& iL, const ZRA::Expr_Rel_Rename& iR);
 
 } // namespace ZooLib
 
-#endif // __ZRA_Expr_Rel_Rename__
+#endif // __ZRA_Expr_Rel_Rename_h__

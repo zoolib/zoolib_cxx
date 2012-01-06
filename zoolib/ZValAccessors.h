@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValAccessors__
-#define __ZValAccessors__ 1
+#ifndef __ZValAccessors_h__
+#define __ZValAccessors_h__ 1
 #include "zconfig.h"
 
 // =================================================================================================
@@ -58,4 +58,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZMACRO_ZValAccessors_Def_Entry(T, TYPENAME, TYPE) \
 	ZMACRO_ZValAccessors_Def_EntryP(,T,TYPENAME, TYPE)
 
-#endif // __ZValAccessors__
+#endif // __ZValAccessors_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZAsset_Win__
-#define __ZAsset_Win__ 1
+#ifndef __ZAsset_Win_h__
+#define __ZAsset_Win_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_Win.h"
@@ -71,4 +71,4 @@ protected:
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZAsset_Win__
+#endif // __ZAsset_Win_h__

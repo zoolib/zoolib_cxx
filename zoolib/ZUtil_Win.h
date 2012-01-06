@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Win__
-#define __ZUtil_Win__
+#ifndef __ZUtil_Win_h__
+#define __ZUtil_Win_h__
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZCompat_Win.h"
@@ -45,4 +45,4 @@ ZQ<uint64> sQGetVersion_File(const WCHAR* iPath);
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)
-#endif // __ZUtil_Win__
+#endif // __ZUtil_Win_h__

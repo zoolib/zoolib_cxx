@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZFileFormat_AppleDouble__
-#define __ZFileFormat_AppleDouble__ 1
+#ifndef __ZFileFormat_AppleDouble_h__
+#define __ZFileFormat_AppleDouble_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
@@ -80,4 +80,4 @@ private:
 } // namespace FileFormat
 } // namespace ZooLib
 
-#endif // __ZFileFormat_AppleDouble__
+#endif // __ZFileFormat_AppleDouble_h__

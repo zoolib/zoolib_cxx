@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Util__
-#define __ZRA_Util__
+#ifndef __ZRA_Util_h__
+#define __ZRA_Util_h__
 #include "zconfig.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel.h"
@@ -57,4 +57,4 @@ bool sValidate(std::vector<Problem>& oProblems, ZRef<Expr_Rel> iRel);
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_Util__
+#endif // __ZRA_Util_h__

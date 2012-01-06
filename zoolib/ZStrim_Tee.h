@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrim_Tee__
-#define __ZStrim_Tee__ 1
+#ifndef __ZStrim_Tee_h__
+#define __ZStrim_Tee_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStrim.h"
@@ -110,4 +110,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZStrim_Tee__
+#endif // __ZStrim_Tee_h__

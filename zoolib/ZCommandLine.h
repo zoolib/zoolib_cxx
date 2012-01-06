@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCommandLine__
-#define __ZCommandLine__ 1
+#ifndef __ZCommandLine_h__
+#define __ZCommandLine_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStrim.h"
@@ -172,4 +172,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZCommandLine__
+#endif // __ZCommandLine_h__

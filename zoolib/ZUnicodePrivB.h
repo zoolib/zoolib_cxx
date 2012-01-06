@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUnicodePrivB__
-#define __ZUnicodePrivB__ 1
+#ifndef __ZUnicodePrivB_h__
+#define __ZUnicodePrivB_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZUnicode.h"
@@ -1641,4 +1641,4 @@ string8 Functions_Convert_T<I>::sAsUTF8(I iSource, I iEnd)
 } // namespace ZUnicode
 } // namespace ZooLib
 
-#endif // __ZUnicodePrivB__
+#endif // __ZUnicodePrivB_h__

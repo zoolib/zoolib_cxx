@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDebug__
-#define __ZDebug__ 1
+#ifndef __ZDebug_h__
+#define __ZDebug_h__ 1
 #include "zconfig.h"
 
 #include <cstdarg> // For std::va_list
@@ -107,4 +107,4 @@ template <> struct AssertCompile<true> { typedef bool IsValid; };
 } // namespace ZDebug
 } // namespace ZooLib
 
-#endif // __ZDebug__
+#endif // __ZDebug_h__

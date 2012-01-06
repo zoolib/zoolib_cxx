@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZBlockStore_PhaseTree__
-#define __ZBlockStore_PhaseTree__ 1
+#ifndef __ZBlockStore_PhaseTree_h__
+#define __ZBlockStore_PhaseTree_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZBlockStore.h"
@@ -277,4 +277,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZBlockStore_PhaseTree__
+#endif // __ZBlockStore_PhaseTree_h__

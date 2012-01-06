@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNatter__
-#define __ZNatter__ 1
+#ifndef __ZNatter_h__
+#define __ZNatter_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZData_Any.h"
@@ -102,4 +102,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZNatter__
+#endif // __ZNatter_h__

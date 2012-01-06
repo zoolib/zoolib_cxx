@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Util_RelOperators__
-#define __ZRA_Util_RelOperators__ 1
+#ifndef __ZRA_Util_RelOperators_h__
+#define __ZRA_Util_RelOperators_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool_ValPred.h" // For ValPred/Bool operators
@@ -56,4 +56,4 @@ ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZValPred& iValPred)
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_Util_RelOperators__
+#endif // __ZRA_Util_RelOperators_h__

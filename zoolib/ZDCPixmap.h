@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCPixmap__
-#define __ZDCPixmap__ 1
+#ifndef __ZDCPixmap_h__
+#define __ZDCPixmap_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
@@ -411,4 +411,4 @@ inline const ZRef<ZDCPixmapRaster>& ZDCPixmapRep::GetRaster()
 
 } // namespace ZooLib
 
-#endif // __ZDCPixmap__
+#endif // __ZDCPixmap_h__

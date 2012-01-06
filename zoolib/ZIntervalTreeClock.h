@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZIntervalTreeClock__
-#define __ZIntervalTreeClock__ 1
+#ifndef __ZIntervalTreeClock_h__
+#define __ZIntervalTreeClock_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
@@ -176,4 +176,4 @@ ZRef<Clock> sFork(ZRef<Clock>& ioClock);
 } // namespace ZIntervalTreeClock
 } // namespace ZooLib
 
-#endif // __ZIntervalTreeClock__
+#endif // __ZIntervalTreeClock_h__

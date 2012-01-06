@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCountedWithoutFinalize__
-#define __ZCountedWithoutFinalize__ 1
+#ifndef __ZCountedWithoutFinalize_h__
+#define __ZCountedWithoutFinalize_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZThreadSafe.h"
@@ -60,4 +60,4 @@ inline void sCheck(ZCountedWithoutFinalize* iP)
 
 } // namespace ZooLib
 
-#endif // __ZCountedWithoutFinalize__
+#endif // __ZCountedWithoutFinalize_h__

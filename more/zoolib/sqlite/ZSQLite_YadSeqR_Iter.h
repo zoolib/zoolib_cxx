@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZSQLite_YadSeqR_Iter__
-#define __ZSQLite_YadSeqR_Iter__ 1
+#ifndef __ZSQLite_YadSeqR_Iter_h__
+#define __ZSQLite_YadSeqR_Iter_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZYad_Std.h"
@@ -48,4 +48,4 @@ private:
 } // namespace ZSQLite
 } // namespace ZooLib
 
-#endif // __ZSQLite_YadSeqR_Iter__
+#endif // __ZSQLite_YadSeqR_Iter_h__

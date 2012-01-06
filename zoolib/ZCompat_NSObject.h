@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompat_NSObject__
-#define __ZCompat_NSObject__ 1
+#ifndef __ZCompat_NSObject_h__
+#define __ZCompat_NSObject_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZObjC.h"
 
 ZMACRO_ObjCClass(NSObject);
 
-#endif // __ZCompat_NSObject__
+#endif // __ZCompat_NSObject_h__

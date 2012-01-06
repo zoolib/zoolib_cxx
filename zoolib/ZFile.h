@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZFile__
-#define __ZFile__ 1
+#ifndef __ZFile_h__
+#define __ZFile_h__ 1
 
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZQ.h"
@@ -623,4 +623,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZFile__
+#endif // __ZFile_h__

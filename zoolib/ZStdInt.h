@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStdInt__
-#define __ZStdInt__ 1
+#ifndef __ZStdInt_h__
+#define __ZStdInt_h__ 1
 #include "zconfig.h"
 
 #include <cstddef> // For std::size_t
@@ -167,4 +167,4 @@ enum { ZIntIs64Bit = ZIntTrait_T<sizeof(int)>::eIs64Bit };
 
 } // namespace ZooLib
 
-#endif // __ZStdInt__
+#endif // __ZStdInt_h__

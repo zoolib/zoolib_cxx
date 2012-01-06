@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_JSON__
-#define __ZYad_JSON__ 1
+#ifndef __ZYad_JSON_h__
+#define __ZYad_JSON_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStreamR_HexStrim.h"
@@ -186,4 +186,4 @@ void sToStrim(size_t iInitialIndent, const WriteOptions& iOptions,
 } // namespace ZYad_JSON
 } // namespace ZooLib
 
-#endif // __ZYad_JSON__
+#endif // __ZYad_JSON_h__

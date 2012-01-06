@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZFileFormat_IFF__
-#define __ZFileFormat_IFF__ 1
+#ifndef __ZFileFormat_IFF_h__
+#define __ZFileFormat_IFF_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -172,4 +172,4 @@ private:
 } // namespace FileFormat
 } // namespace ZooLib
 
-#endif // __ZFileFormat_IFF__
+#endif // __ZFileFormat_IFF_h__

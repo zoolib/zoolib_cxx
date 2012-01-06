@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCog__
-#define __ZCog__ 1
+#ifndef __ZCog_h__
+#define __ZCog_h__ 1
 
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZCallable_Bind.h"
@@ -888,4 +888,4 @@ ZCog<Param> sCog_Repeat(size_t iCount,
 
 } // namespace ZooLib
 
-#endif // __ZCog__
+#endif // __ZCog_h__

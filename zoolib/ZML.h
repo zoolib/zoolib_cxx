@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZML__
-#define __ZML__ 1
+#ifndef __ZML_h__
+#define __ZML_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -320,4 +320,4 @@ protected:
 } // namespace ZML
 } // namespace ZooLib
 
-#endif // __ZML__
+#endif // __ZML_h__

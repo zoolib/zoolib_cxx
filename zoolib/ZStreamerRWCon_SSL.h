@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamerRWCon_SSL__
-#define __ZStreamerRWCon_SSL__ 1
+#ifndef __ZStreamerRWCon_SSL_h__
+#define __ZStreamerRWCon_SSL_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
@@ -37,4 +37,4 @@ ZRef<ZStreamerRWCon> sStreamerRWCon_SSL
 
 } // namespace ZooLib
 
-#endif // __ZStreamerRWCon_SSL__
+#endif // __ZStreamerRWCon_SSL_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRGBA__
-#define __ZRGBA__ 1
+#ifndef __ZRGBA_h__
+#define __ZRGBA_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -456,4 +456,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZRGBA__
+#endif // __ZRGBA_h__

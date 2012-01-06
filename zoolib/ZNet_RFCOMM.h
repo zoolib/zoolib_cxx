@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNet_RFCOMM__
-#define __ZNet_RFCOMM__ 1
+#ifndef __ZNet_RFCOMM_h__
+#define __ZNet_RFCOMM_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZNet.h"
@@ -103,4 +103,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZNet_RFCOMM__
+#endif // __ZNet_RFCOMM_h__

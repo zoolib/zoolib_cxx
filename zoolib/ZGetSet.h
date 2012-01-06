@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGetSet__
-#define __ZGetSet__ 1
+#ifndef __ZGetSet_h__
+#define __ZGetSet_h__ 1
 #include "zconfig.h"
 
 #include <algorithm> // For std::swap
@@ -42,4 +42,4 @@ inline S sGetSet(S& ioLoc, T iVal)
 
 } // namespace ZooLib
 
-#endif // __ZGetSet__
+#endif // __ZGetSet_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_AppleEvent__
-#define __ZYad_AppleEvent__ 1
+#ifndef __ZYad_AppleEvent_h__
+#define __ZYad_AppleEvent_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -48,4 +48,4 @@ ZRef<ZYadMapRPos> sYadR(const ZMap_AppleEvent& iMap);
 
 #endif // ZCONFIG_SPI_Enabled(AppleEvent)
 
-#endif // __ZYad_AppleEvent__
+#endif // __ZYad_AppleEvent_h__

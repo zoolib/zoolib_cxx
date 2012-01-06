@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVal_ZooLib__
-#define __ZVal_ZooLib__ 1
+#ifndef __ZVal_ZooLib_h__
+#define __ZVal_ZooLib_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZAny.h"
@@ -586,4 +586,4 @@ template <> inline int sCompare_T(const ZMap_ZooLib& iL, const ZMap_ZooLib& iR)
 
 } // namespace ZooLib
 
-#endif // __ZVal_ZooLib__
+#endif // __ZVal_ZooLib_h__

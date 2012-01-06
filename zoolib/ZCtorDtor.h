@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCtorDtor__
-#define __ZCtorDtor__ 1
+#ifndef __ZCtorDtor_h__
+#define __ZCtorDtor_h__ 1
 #include "zconfig.h"
 
 namespace ZooLib {
@@ -93,4 +93,4 @@ inline T* sFetch_T(void* iBytes)
 
 } // namespace ZooLib
 
-#endif // __ZCtorDtor__
+#endif // __ZCtorDtor_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_STL_vector__
-#define __ZUtil_STL_vector__
+#ifndef __ZUtil_STL_vector_h__
+#define __ZUtil_STL_vector_h__
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_algorithm.h" // find
@@ -190,4 +190,4 @@ void sSortedEraseMustContain(std::vector<Base>& ioVec, const Derived& iElement)
 } // namespace ZUtil_STL
 } // namespace ZooLib
 
-#endif // __ZUtil_STL_vector__
+#endif // __ZUtil_STL_vector_h__

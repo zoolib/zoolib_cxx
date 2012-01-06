@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Transform_Search__
-#define __ZQE_Transform_Search__ 1
+#ifndef __ZQE_Transform_Search_h__
+#define __ZQE_Transform_Search_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool.h"
@@ -37,4 +37,4 @@ ZRef<ZRA::Expr_Rel> sTransform_Search(const ZRef<ZRA::Expr_Rel>& iExpr);
 } // namespace ZQE
 } // namespace ZooLib
 
-#endif // __ZQE_Transform_Search__
+#endif // __ZQE_Transform_Search_h__

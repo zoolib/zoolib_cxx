@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Expr_Rel__
-#define __ZRA_Expr_Rel__ 1
+#ifndef __ZRA_Expr_Rel_h__
+#define __ZRA_Expr_Rel_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -69,4 +69,4 @@ typedef ZThreadVal<ZRef<Callable_SemanticError> > ThreadVal_SemanticError;
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_Expr_Rel__
+#endif // __ZRA_Expr_Rel_h__

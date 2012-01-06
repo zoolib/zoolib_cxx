@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZSOCKS__
-#define __ZSOCKS__ 1
+#ifndef __ZSOCKS_h__
+#define __ZSOCKS_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -38,4 +38,4 @@ bool sConnect(const ZStreamR& r, const ZStreamW& w, const std::string& iHost, ui
 } // namespace ZSOCKS
 } // namespace ZooLib
 
-#endif // __ZSOCKS__
+#endif // __ZSOCKS_h__

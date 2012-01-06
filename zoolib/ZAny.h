@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZAny__
-#define __ZAny__
+#ifndef __ZAny_h__
+#define __ZAny_h__
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
@@ -427,4 +427,4 @@ ZAny sAnyCounted(const P0& iP0, const P1& iP1)
 
 } // namespace ZooLib
 
-#endif // __ZAny__
+#endif // __ZAny_h__

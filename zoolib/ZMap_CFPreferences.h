@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMap_CFPreferences__
-#define __ZMap_CFPreferences__ 1
+#ifndef __ZMap_CFPreferences_h__
+#define __ZMap_CFPreferences_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZVal_CF.h"
@@ -101,4 +101,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
-#endif // __ZMap_CFPreferences__
+#endif // __ZMap_CFPreferences_h__

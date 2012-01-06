@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Transform_PushDownRestricts__
-#define __ZRA_Transform_PushDownRestricts__
+#ifndef __ZRA_Transform_PushDownRestricts_h__
+#define __ZRA_Transform_PushDownRestricts_h__
 #include "zconfig.h"
 
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
@@ -76,4 +76,4 @@ protected:
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_Transform_PushDownRestricts__
+#endif // __ZRA_Transform_PushDownRestricts_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNetscape_VariantPriv__
-#define __ZNetscape_VariantPriv__ 1
+#ifndef __ZNetscape_VariantPriv_h__
+#define __ZNetscape_VariantPriv_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/netscape/ZNetscape_Variant.h"
@@ -376,4 +376,4 @@ ZMACRO_ZValAccessors_Def_GetP(template <class T>, NPVariant_T<T>, Object, ZRef<T
 } // namespace ZNetscape
 } // namespace ZooLib
 
-#endif // __ZNetscape_VariantPriv__
+#endif // __ZNetscape_VariantPriv_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVal_NS__
-#define __ZVal_NS__ 1
+#ifndef __ZVal_NS_h__
+#define __ZVal_NS_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -348,4 +348,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
 
-#endif // __ZVal_NS__
+#endif // __ZVal_NS_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_Data__
-#define __ZUtil_Strim_Data__ 1
+#ifndef __ZUtil_Strim_Data_h__
+#define __ZUtil_Strim_Data_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -43,4 +43,4 @@ void sDumpData(const ZStrimW& s, bool iShowSize, const void* iSource, uint64 iCo
 } // ZUtil_Strim_Data
 } // namespace ZooLib
 
-#endif // __ZUtil_Strim_Data__
+#endif // __ZUtil_Strim_Data_h__

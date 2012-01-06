@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZAsset__
-#define __ZAsset__ 1
+#ifndef __ZAsset_h__
+#define __ZAsset_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
@@ -283,4 +283,4 @@ inline ZRef<ZAssetRep> ZAsset::GetRep() const
 
 } // namespace ZooLib
 
-#endif // __ZAsset__
+#endif // __ZAsset_h__

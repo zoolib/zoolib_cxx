@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Debug__
-#define __ZUtil_Debug__ 1
+#ifndef __ZUtil_Debug_h__
+#define __ZUtil_Debug_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZLog.h"
@@ -72,4 +72,4 @@ ZLog::EPriority sGetLogPriority();
 } // namespace ZUtil_Debug
 } // namespace ZooLib
 
-#endif // __ZUtil_Debug__
+#endif // __ZUtil_Debug_h__

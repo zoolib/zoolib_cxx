@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_GetRelHead__
-#define __ZRA_GetRelHead__ 1
+#ifndef __ZRA_GetRelHead_h__
+#define __ZRA_GetRelHead_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel.h"
@@ -36,4 +36,4 @@ RelHead sGetRelHead(const ZRef<Expr_Rel>& iRel);
 } // namespace ZRA
 } // namespace ZooLib
 
-#endif // __ZRA_GetRelHead__
+#endif // __ZRA_GetRelHead_h__

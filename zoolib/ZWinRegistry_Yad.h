@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWinRegistry_Yad__
-#define __ZWinRegistry_Yad__ 1
+#ifndef __ZWinRegistry_Yad_h__
+#define __ZWinRegistry_Yad_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -45,4 +45,4 @@ ZRef<ZYadMapRPos> sYadR(const KeyRef& iKeyRef);
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZWinRegistry_Yad__
+#endif // __ZWinRegistry_Yad_h__

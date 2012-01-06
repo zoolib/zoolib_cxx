@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRef__
-#define __ZRef__ 1
+#ifndef __ZRef_h__
+#define __ZRef_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZAtomic.h" // For ZAtomic_CompareAndSwapPtr
@@ -459,4 +459,4 @@ void swap(ZRef<T,SenseA>& a, ZRef<T,SenseB>& b)
 
 } // namespace ZooLib
 
-#endif // __ZRef__
+#endif // __ZRef_h__

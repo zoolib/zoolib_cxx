@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_ATSUI__
-#define __ZUtil_ATSUI__ 1
+#ifndef __ZUtil_ATSUI_h__
+#define __ZUtil_ATSUI_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -79,4 +79,4 @@ private:
 
 #endif // ZCONFIG_API_Enabled(Util_ATSUI)
 
-#endif // __ZUtil_ATSUI__
+#endif // __ZUtil_ATSUI_h__

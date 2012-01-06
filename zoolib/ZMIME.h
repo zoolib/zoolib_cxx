@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMIME__
-#define __ZMIME__ 1
+#ifndef __ZMIME_h__
+#define __ZMIME_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -112,4 +112,4 @@ private:
 } // namespace ZMIME
 } // namespace ZooLib
 
-#endif // __ZMIME__
+#endif // __ZMIME_h__

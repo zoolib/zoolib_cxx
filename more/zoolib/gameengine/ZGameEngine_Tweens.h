@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGameEngine_Tweens__
-#define __ZGameEngine_Tweens__ 1
+#ifndef __ZGameEngine_Tweens_h__
+#define __ZGameEngine_Tweens_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_algorithm.h"
@@ -152,4 +152,4 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateZ(const ZRef<ZTween<Val> >& iTween
 } // namespace ZGameEngine
 } // namespace ZooLib
 
-#endif // __ZGameEngine_Tweens__
+#endif // __ZGameEngine_Tweens_h__

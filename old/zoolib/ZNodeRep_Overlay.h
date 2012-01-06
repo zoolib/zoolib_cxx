@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNodeRep_Overlay__
-#define __ZNodeRep_Overlay__ 1
+#ifndef __ZNodeRep_Overlay_h__
+#define __ZNodeRep_Overlay_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZNode.h"
@@ -78,4 +78,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZNodeRep_Overlay__
+#endif // __ZNodeRep_Overlay_h__

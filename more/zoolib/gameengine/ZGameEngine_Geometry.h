@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGameEngine_Geometry__
-#define __ZGameEngine_Geometry__ 1
+#ifndef __ZGameEngine_Geometry_h__
+#define __ZGameEngine_Geometry_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZMatrix.h"
@@ -286,4 +286,4 @@ ZMatrix<Val,4,4> sShear(Val xy, Val xz, Val yx, Val yz, Val zx, Val zy)
 } // namespace ZGameEngine
 } // namespace ZooLib
 
-#endif // __ZGameEngine_Geometry__
+#endif // __ZGameEngine_Geometry_h__

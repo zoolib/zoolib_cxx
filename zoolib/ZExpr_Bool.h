@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZExpr_Bool__
-#define __ZExpr_Bool__ 1
+#ifndef __ZExpr_Bool_h__
+#define __ZExpr_Bool_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Op_T.h"
@@ -274,4 +274,4 @@ ZRef<ZExpr_Bool>& operator|=(ZRef<ZExpr_Bool>& iLHS, const ZRef<ZExpr_Bool>& iRH
 
 } // namespace ZooLib
 
-#endif // __ZExpr_Bool__
+#endif // __ZExpr_Bool_h__

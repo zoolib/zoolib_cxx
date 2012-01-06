@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrim_CFString__
-#define __ZStrim_CFString__ 1
+#ifndef __ZStrim_CFString_h__
+#define __ZStrim_CFString_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -80,4 +80,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZStrim_CFString__
+#endif // __ZStrim_CFString_h__

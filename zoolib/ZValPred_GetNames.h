@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValPred_GetNames__
-#define __ZValPred_GetNames__ 1
+#ifndef __ZValPred_GetNames_h__
+#define __ZValPred_GetNames_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZValPred.h"
@@ -32,4 +32,4 @@ std::set<std::string> sGetNames(const ZValPred& iValPred);
 
 } // namespace ZooLib
 
-#endif // __ZValPred_GetNames__
+#endif // __ZValPred_GetNames_h__

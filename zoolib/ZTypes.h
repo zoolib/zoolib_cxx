@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTypes__
-#define __ZTypes__
+#ifndef __ZTypes_h__
+#define __ZTypes_h__
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -135,4 +135,4 @@ const class IKnowWhatIAmDoing_t {} IKnowWhatIAmDoing = {};
 
 } // namespace ZooLib
 
-#endif // __ZTypes__
+#endif // __ZTypes_h__

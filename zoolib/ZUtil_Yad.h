@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Yad__
-#define __ZUtil_Yad__ 1
+#ifndef __ZUtil_Yad_h__
+#define __ZUtil_Yad_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZTrail.h"
@@ -37,4 +37,4 @@ ZRef<ZYadR> sWalk(ZRef<ZYadR> iYadR, const ZTrail& iTrail);
 } // namespace ZUtil_Yad
 } // namespace ZooLib
 
-#endif // __ZUtil_Yad__
+#endif // __ZUtil_Yad_h__

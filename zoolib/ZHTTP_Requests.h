@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZHTTP_Requests__
-#define __ZHTTP_Requests__ 1
+#ifndef __ZHTTP_Requests_h__
+#define __ZHTTP_Requests_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -59,4 +59,4 @@ bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
 } // namespace ZHTTP
 } // namespace ZooLib
 
-#endif // __ZHTTP_Requests__
+#endif // __ZHTTP_Requests_h__

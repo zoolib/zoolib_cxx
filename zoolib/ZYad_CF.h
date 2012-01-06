@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_CF__
-#define __ZYad_CF__ 1
+#ifndef __ZYad_CF_h__
+#define __ZYad_CF_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -169,4 +169,4 @@ ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR);
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZYad_CF__
+#endif // __ZYad_CF_h__

@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUnicode_Normalize_CF__
-#define __ZUnicode_Normalize_CF__ 1
+#ifndef __ZUnicode_Normalize_CF_h__
+#define __ZUnicode_Normalize_CF_h__ 1
 #include "zconfig.h"
 #include "ZUnicode_Normalize.h"
 
-#endif // __ZUnicode_Normalize_CF__
+#endif // __ZUnicode_Normalize_CF_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUnicodePriv__
-#define __ZUnicodePriv__ 1
+#ifndef __ZUnicodePriv_h__
+#define __ZUnicodePriv_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZUnicodeString.h"
@@ -394,4 +394,4 @@ inline typename std::char_traits<charT>::int_type std::char_traits<charT>::eof()
 
 #endif // defined(__GNUC__) && __GNUC__ >= 3 && __GNUC_MINOR__ >= 2
 
-#endif // __ZUnicodePriv__
+#endif // __ZUnicodePriv_h__

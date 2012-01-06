@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_STL__
-#define __ZUtil_STL__
+#ifndef __ZUtil_STL_h__
+#define __ZUtil_STL_h__
 #include "zconfig.h"
 
 namespace ZooLib {
@@ -43,4 +43,4 @@ void sDeleteAll(InputIterator begin, InputIterator end)
 } // namespace ZUtil_STL
 } // namespace ZooLib
 
-#endif // __ZUtil_STL__
+#endif // __ZUtil_STL_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Win_UI__
-#define __ZUtil_Win_UI__
+#ifndef __ZUtil_Win_UI_h__
+#define __ZUtil_Win_UI_h__
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -47,4 +47,4 @@ HICON sLoadIconID(bool iFromApp, int iResourceID);
 
 #endif //  ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZUtil_Win_UI__
+#endif // __ZUtil_Win_UI_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTName__
-#define __ZTName__ 1
+#ifndef __ZTName_h__
+#define __ZTName_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZMemory.h" // For ZMemCopy
@@ -176,4 +176,4 @@ inline bool ZTName::Equals(const ZTName& iOther) const
 
 } // namespace ZooLib
 
-#endif // __ZTName__
+#endif // __ZTName_h__

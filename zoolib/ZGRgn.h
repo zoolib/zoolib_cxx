@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGRgn__
-#define __ZGRgn__ 1
+#ifndef __ZGRgn_h__
+#define __ZGRgn_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZAccumulator_T.h"
@@ -272,4 +272,4 @@ typedef ZAccumulator_T<ZGRgn, ZGRgnUnioner_t, std::vector<ZGRgn> > ZGRgnAccumula
 
 } // namespace ZooLib
 
-#endif // __ZGRgn__
+#endif // __ZGRgn_h__

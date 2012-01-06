@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamMUX__
-#define __ZStreamMUX__ 1
+#ifndef __ZStreamMUX_h__
+#define __ZStreamMUX_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
@@ -169,4 +169,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZStreamMUX__
+#endif // __ZStreamMUX_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMacFixup__
-#define __ZMacFixup__ 1
+#ifndef __ZMacFixup_h__
+#define __ZMacFixup_h__ 1
 
 #if defined(__APPLE__)
 	#include <AvailabilityMacros.h>
@@ -27,4 +27,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define DEPRECATED_ATTRIBUTE
 #endif
 
-#endif // __ZMacFixup__
+#endif // __ZMacFixup_h__

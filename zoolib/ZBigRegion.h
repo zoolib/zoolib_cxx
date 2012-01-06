@@ -66,8 +66,8 @@ SOFTWARE.
 
 ************************************************************************/
 
-#ifndef __ZBigRegion__
-#define __ZBigRegion__ 1
+#ifndef __ZBigRegion_h__
+#define __ZBigRegion_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZAccumulator_T.h"
@@ -249,4 +249,4 @@ typedef ZAccumulator_T<ZBigRegion, ZBigRegionUnioner_t, std::vector<ZBigRegion> 
 
 } // namespace ZooLib
 
-#endif // __ZBigRegion__
+#endif // __ZBigRegion_h__

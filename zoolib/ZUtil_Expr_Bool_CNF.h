@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Expr_Bool_CNF__
-#define __ZUtil_Expr_Bool_CNF__
+#ifndef __ZUtil_Expr_Bool_CNF_h__
+#define __ZUtil_Expr_Bool_CNF_h__
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool.h"
@@ -43,4 +43,4 @@ CNF sAsCNF(const ZRef<ZExpr_Bool>& iExpr);
 } // namespace Util_Expr_Bool
 } // namespace ZooLib
 
-#endif // __ZUtil_Expr_Bool_CNF__
+#endif // __ZUtil_Expr_Bool_CNF_h__

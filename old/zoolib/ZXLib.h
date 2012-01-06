@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZXLib__
-#define __ZXLib__ 1
+#ifndef __ZXLib_h__
+#define __ZXLib_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -176,4 +176,4 @@ void SetWMProperties(Display* a0, Window a1, XTextProperty* a2, XTextProperty* a
 
 // =================================================================================================
 
-#endif // __ZXLib__
+#endif // __ZXLib_h__

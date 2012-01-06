@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZBlockStore__
-#define __ZBlockStore__ 1
+#ifndef __ZBlockStore_h__
+#define __ZBlockStore_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h" // For ZStreamerRWPos
@@ -58,4 +58,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZBlockStore__
+#endif // __ZBlockStore_h__

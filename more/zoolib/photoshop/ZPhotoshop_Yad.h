@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZPhotoshop_Yad__
-#define __ZPhotoshop_Yad__ 1
+#ifndef __ZPhotoshop_Yad_h__
+#define __ZPhotoshop_Yad_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZYad.h"
@@ -43,4 +43,4 @@ ZRef<ZYadMapRPos> sYadR(const Map& iMap);
 } // namespace ZPhotoshop
 } // namespace ZooLib
 
-#endif // __ZPhotoshop_Yad__
+#endif // __ZPhotoshop_Yad_h__

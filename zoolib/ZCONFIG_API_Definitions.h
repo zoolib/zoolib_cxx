@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCONFIG_API_Definitions__
-#define __ZCONFIG_API_Definitions__ 1
+#ifndef __ZCONFIG_API_Definitions_h__
+#define __ZCONFIG_API_Definitions_h__ 1
 #include "zconfig.h"
 
 #define ZCONFIG_API_Avail(facility) (ZCONFIG_API_Avail__##facility)
@@ -29,4 +29,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	(ZCONFIG_API_Avail__##facility && ZCONFIG_API_Desired__##facility)
 
 
-#endif // __ZCONFIG_API_Definitions__
+#endif // __ZCONFIG_API_Definitions_h__

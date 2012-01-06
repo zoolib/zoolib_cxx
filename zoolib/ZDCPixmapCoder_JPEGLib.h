@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCPixmapCoder_JPEGLib__
-#define __ZDCPixmapCoder_JPEGLib__ 1
+#ifndef __ZDCPixmapCoder_JPEGLib_h__
+#define __ZDCPixmapCoder_JPEGLib_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZDCPixmapCoder.h"
@@ -67,4 +67,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZDCPixmapCoder_JPEGLib__
+#endif // __ZDCPixmapCoder_JPEGLib_h__

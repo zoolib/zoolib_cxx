@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValPred__
-#define __ZValPred__ 1
+#ifndef __ZValPred_h__
+#define __ZValPred_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCounted.h"
@@ -160,4 +160,4 @@ ZValPred operator>(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& i
 
 } // namespace ZooLib
 
-#endif // __ZValPred__
+#endif // __ZValPred_h__

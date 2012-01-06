@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZProgressWatcher__
-#define __ZProgressWatcher__ 1
+#ifndef __ZProgressWatcher_h__
+#define __ZProgressWatcher_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZTypes.h"
 #include <string>
@@ -69,4 +69,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZProgressWatcher__
+#endif // __ZProgressWatcher_h__

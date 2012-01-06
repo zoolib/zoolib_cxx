@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Bool_ValPred_Any_ToStrim__
-#define __ZVisitor_Expr_Bool_ValPred_Any_ToStrim__
+#ifndef __ZVisitor_Expr_Bool_ValPred_Any_ToStrim_h__
+#define __ZVisitor_Expr_Bool_ValPred_Any_ToStrim_h__
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool_ValPred.h"
@@ -42,4 +42,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_Expr_Bool_ValPred_ToStrim__
+#endif // __ZVisitor_Expr_Bool_ValPred_ToStrim_h__

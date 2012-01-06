@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompat_npapi__
-#define __ZCompat_npapi__
+#ifndef __ZCompat_npapi_h__
+#define __ZCompat_npapi_h__
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -361,4 +361,4 @@ enum
 
 // =================================================================================================
 
-#endif // __ZCompat_npapi__
+#endif // __ZCompat_npapi_h__

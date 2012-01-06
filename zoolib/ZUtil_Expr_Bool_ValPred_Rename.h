@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Expr_Bool_ValPred_Rename__
-#define __ZUtil_Expr_Bool_ValPred_Rename__
+#ifndef __ZUtil_Expr_Bool_ValPred_Rename_h__
+#define __ZUtil_Expr_Bool_ValPred_Rename_h__
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool.h"
@@ -39,4 +39,4 @@ ZRef<ZExpr_Bool> sRenamed(const std::map<std::string,std::string>& iRename,
 } // namespace Util_Expr_Bool
 } // namespace ZooLib
 
-#endif // __ZUtil_Expr_Bool_ValPred_Rename__
+#endif // __ZUtil_Expr_Bool_ValPred_Rename_h__

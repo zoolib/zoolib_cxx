@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamerRWFactory_Fallback__
-#define __ZStreamerRWFactory_Fallback__ 1
+#ifndef __ZStreamerRWFactory_Fallback_h__
+#define __ZStreamerRWFactory_Fallback_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
@@ -53,4 +53,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZStreamerRWFactory_Fallback__
+#endif // __ZStreamerRWFactory_Fallback_h__

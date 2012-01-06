@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_JSON__
-#define __ZYad_JSON__ 1
+#ifndef __ZYad_JSON_h__
+#define __ZYad_JSON_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZYad.h"
@@ -36,4 +36,4 @@ ZRef<ZYadR> sYadR(ZRef<ZYadR> iYadR, bool iPreserveSeqs, bool iPreserveMaps);
 } // namespace ZYad_JSONNormalize
 } // namespace ZooLib
 
-#endif // __ZYad_JSON__
+#endif // __ZYad_JSON_h__

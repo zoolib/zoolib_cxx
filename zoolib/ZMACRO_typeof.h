@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMACRO_typeof__
-#define __ZMACRO_typeof__ 1
+#ifndef __ZMACRO_typeof_h__
+#define __ZMACRO_typeof_h__ 1
 
 #if defined(_MSC_VER)
 
@@ -141,4 +141,4 @@ typename sized<type_id(const volatile T)> VarTypeID(const volatile T&);
 #endif // _MSV_VER
 #endif // defined(_MSC_VER)
 
-#endif // __ZMACRO_typeof__
+#endif // __ZMACRO_typeof_h__

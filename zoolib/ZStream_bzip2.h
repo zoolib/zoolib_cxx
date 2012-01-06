@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_bzip2__
-#define __ZStream_bzip2__ 1
+#ifndef __ZStream_bzip2_h__
+#define __ZStream_bzip2_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -132,4 +132,4 @@ void sAnalyze(const ZStreamR& iStreamR, vector<pair<uint64, uint32> >& oOffsets)
 
 #endif // ZCONFIG_API_Enabled(Stream_bzip2)
 
-#endif // __ZStream_bzip2__
+#endif // __ZStream_bzip2_h__

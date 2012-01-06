@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCFont__
-#define __ZDCFont__ 1
+#ifndef __ZDCFont_h__
+#define __ZDCFont_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -111,4 +111,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZDCFont__
+#endif // __ZDCFont_h__

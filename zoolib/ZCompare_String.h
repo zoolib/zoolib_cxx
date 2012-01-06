@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompare_String__
-#define __ZCompare_String__ 1
+#ifndef __ZCompare_String_h__
+#define __ZCompare_String_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompare_T.h"
@@ -43,4 +43,4 @@ struct FastComparator_String : public std::binary_function<std::string,std::stri
 
 } // namespace ZooLib
 
-#endif // __ZCompare_String__
+#endif // __ZCompare_String_h__

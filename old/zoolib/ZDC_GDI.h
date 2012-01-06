@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDC_GDI__
-#define __ZDC_GDI__ 1
+#ifndef __ZDC_GDI_h__
+#define __ZDC_GDI_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -298,4 +298,4 @@ protected:
 
 #endif // ZCONFIG_API_Enabled(DC_GDI)
 
-#endif // __ZDC_GDI__
+#endif // __ZDC_GDI_h__

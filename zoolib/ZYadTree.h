@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYadTree__
-#define __ZYadTree__ 1
+#ifndef __ZYadTree_h__
+#define __ZYadTree_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZYad.h"
@@ -35,4 +35,4 @@ ZRef<ZYadMapRPos> sParameterizedYadTree(const ZRef<ZYadMapRPos>& iBase,
 
 } // namespace ZooLib
 
-#endif // __ZYadTree__
+#endif // __ZYadTree_h__

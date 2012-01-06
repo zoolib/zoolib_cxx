@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZFileFormat_QuickTime_Val__
-#define __ZFileFormat_QuickTime_Val__ 1
+#ifndef __ZFileFormat_QuickTime_Val_h__
+#define __ZFileFormat_QuickTime_Val_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZTagVal.h"
@@ -47,4 +47,4 @@ ZQ<ZVal_Any> sAsVal(const ZStreamR& iStreamR);
 } // namespace FileFormat
 } // namespace ZooLib
 
-#endif // __ZFileFormat_QuickTime_Val__
+#endif // __ZFileFormat_QuickTime_Val_h__

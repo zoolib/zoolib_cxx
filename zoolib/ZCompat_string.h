@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompat_string__
-#define __ZCompat_string__ 1
+#ifndef __ZCompat_string_h__
+#define __ZCompat_string_h__ 1
 #include "zconfig.h"
 
 #include <string.h>
@@ -29,4 +29,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <extras.h>
 #endif
 
-#endif // __ZCompat_string__
+#endif // __ZCompat_string_h__

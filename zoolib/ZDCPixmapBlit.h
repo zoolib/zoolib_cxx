@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCPixmapBlit__
-#define __ZDCPixmapBlit__ 1
+#ifndef __ZDCPixmapBlit_h__
+#define __ZDCPixmapBlit_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZDCPixmapNS.h"
@@ -139,4 +139,4 @@ void sApplyMatte
 } // namespace ZDCPixmapBlit
 } // namespace ZooLib
 
-#endif // __ZDCPixmapBlit__
+#endif // __ZDCPixmapBlit_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_AppleEvent__
-#define __ZUtil_AppleEvent__ 1
+#ifndef __ZUtil_AppleEvent_h__
+#define __ZUtil_AppleEvent_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -162,4 +162,4 @@ public:
 
 #endif // ZCONFIG_SPI_Enabled(AppleEvent)
 
-#endif // __ZUtil_AppleEvent__
+#endif // __ZUtil_AppleEvent_h__

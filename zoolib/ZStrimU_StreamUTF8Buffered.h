@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrimU_StreamUTF8Buffered__
-#define __ZStrimU_StreamUTF8Buffered__ 1
+#ifndef __ZStrimU_StreamUTF8Buffered_h__
+#define __ZStrimU_StreamUTF8Buffered_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -55,4 +55,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZStrimU_StreamUTF8Buffered__
+#endif // __ZStrimU_StreamUTF8Buffered_h__

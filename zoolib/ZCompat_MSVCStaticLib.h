@@ -17,8 +17,8 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
-#ifndef __ZCompat_MSVCStaticLib__
-#define __ZCompat_MSVCStaticLib__ 1
+#ifndef __ZCompat_MSVCStaticLib_h__
+#define __ZCompat_MSVCStaticLib_h__ 1
 #include "zconfig.h"
 
 /**
@@ -117,4 +117,4 @@ cause a non-executing reference to occur, and things will work as expected.
 	#define ZMACRO_MSVCStaticLib_cpp(a)
 #endif
 
-#endif // __ZCompat_MSVCStaticLib__
+#endif // __ZCompat_MSVCStaticLib_h__

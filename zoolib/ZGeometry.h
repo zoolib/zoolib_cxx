@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGeometry__
-#define __ZGeometry__
+#ifndef __ZGeometry_h__
+#define __ZGeometry_h__
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -1595,4 +1595,4 @@ typedef ZGRect_T<float> ZGRectf;
 
 } // namespace ZooLib
 
-#endif // __ZGeometry__
+#endif // __ZGeometry_h__

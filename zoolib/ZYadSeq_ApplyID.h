@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYadSeq_ApplyID__
-#define __ZYadSeq_ApplyID__ 1
+#ifndef __ZYadSeq_ApplyID_h__
+#define __ZYadSeq_ApplyID_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZYad.h"
@@ -79,4 +79,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZYadSeq_ApplyID__
+#endif // __ZYadSeq_ApplyID_h__

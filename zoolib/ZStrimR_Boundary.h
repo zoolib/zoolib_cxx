@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrimR_Boundary__
-#define __ZStrimR_Boundary__ 1
+#ifndef __ZStrimR_Boundary_h__
+#define __ZStrimR_Boundary_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStrimmer.h"
@@ -97,4 +97,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZStrimR_Boundary__
+#endif // __ZStrimR_Boundary_h__

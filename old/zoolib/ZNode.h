@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNode__
-#define __ZNode__ 1
+#ifndef __ZNode_h__
+#define __ZNode_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
@@ -297,4 +297,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZNode__
+#endif // __ZNode_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNet_RFCOMM_OSX__
-#define __ZNet_RFCOMM_OSX__ 1
+#ifndef __ZNet_RFCOMM_OSX_h__
+#define __ZNet_RFCOMM_OSX_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -162,4 +162,4 @@ private:
 
 #endif // ZCONFIG_API_Enabled(Net_RFCOMM_OSX)
 
-#endif // __ZNet_RFCOMM_OSX__
+#endif // __ZNet_RFCOMM_OSX_h__

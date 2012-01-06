@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTween__
-#define __ZTween__ 1
+#ifndef __ZTween_h__
+#define __ZTween_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
@@ -792,4 +792,4 @@ ZRef<ZTween<Val> > sTween_Range(Val iZeroVal, Val iOneVal, const ZRef<ZTween<Val
 
 } // namespace ZooLib
 
-#endif // __ZTween__
+#endif // __ZTween_h__

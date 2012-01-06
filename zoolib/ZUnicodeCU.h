@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUnicodeCU__
-#define __ZUnicodeCU__ 1
+#ifndef __ZUnicodeCU_h__
+#define __ZUnicodeCU_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStdInt.h" // For uint16, uint32
@@ -56,4 +56,4 @@ typedef char UTF8;
 
 } // namespace ZooLib
 
-#endif // __ZUnicodeCU__
+#endif // __ZUnicodeCU_h__

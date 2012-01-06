@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_STL_map__
-#define __ZUtil_STL_map__
+#ifndef __ZUtil_STL_map_h__
+#define __ZUtil_STL_map_h__
 #include "zconfig.h"
 
 #include "zoolib/ZDebug.h"
@@ -159,4 +159,4 @@ ZQ<Value> sGetIfContains(const std::map<KBase,Value,Comparator>& iMap, const KDe
 } // namespace ZUtil_STL
 } // namespace ZooLib
 
-#endif // __ZUtil_STL_map__
+#endif // __ZUtil_STL_map_h__

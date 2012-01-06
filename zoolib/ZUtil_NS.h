@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_NS__
-#define __ZUtil_NS__ 1
+#ifndef __ZUtil_NS_h__
+#define __ZUtil_NS_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -96,4 +96,4 @@ NSObject* sAsNSObject(const ZAny& iVal);
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-#endif // __ZUtil_NS__
+#endif // __ZUtil_NS_h__

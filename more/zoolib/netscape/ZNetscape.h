@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNetscape__
-#define __ZNetscape__ 1
+#ifndef __ZNetscape_h__
+#define __ZNetscape_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -115,4 +115,4 @@ std::string sAsString(NPPVariable iVar);
 } // namespace ZNetscape
 } // namespace ZooLib
 
-#endif // __ZNetscape__
+#endif // __ZNetscape_h__

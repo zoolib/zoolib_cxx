@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZFile_Win__
-#define __ZFile_Win__ 1
+#ifndef __ZFile_Win_h__
+#define __ZFile_Win_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -468,4 +468,4 @@ private:
 
 #endif // ZCONFIG_API_Enabled(File_Win)
 
-#endif // __ZFile_Win__
+#endif // __ZFile_Win_h__

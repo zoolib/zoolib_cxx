@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Time__
-#define __ZUtil_Time__ 1
+#ifndef __ZUtil_Time_h__
+#define __ZUtil_Time_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZTime.h"
@@ -51,4 +51,4 @@ ZTime sFromString_ISO8601(const std::string& iString);
 } // namespace ZUtil_Time
 } // namespace ZooLib
 
-#endif // __ZUtil_Time__
+#endif // __ZUtil_Time_h__

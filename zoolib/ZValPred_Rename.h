@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValPred_Rename__
-#define __ZValPred_Rename__ 1
+#ifndef __ZValPred_Rename_h__
+#define __ZValPred_Rename_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZValPred.h"
@@ -37,4 +37,4 @@ ZValPred sRenamed(const std::map<std::string,std::string>& iRename,
 
 } // namespace ZooLib
 
-#endif // __ZValPred_Rename_T__
+#endif // __ZValPred_Rename_T_h__

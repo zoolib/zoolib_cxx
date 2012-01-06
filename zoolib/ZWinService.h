@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWinService__
-#define __ZWinService__ 1
+#ifndef __ZWinService_h__
+#define __ZWinService_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -108,4 +108,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZWinService__
+#endif // __ZWinService_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZThreadVal__
-#define __ZThreadVal__ 1
+#ifndef __ZThreadVal_h__
+#define __ZThreadVal_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZTagVal.h"
@@ -121,4 +121,4 @@ T sThreadVal()
 
 } // namespace ZooLib
 
-#endif // __ZThreadVal__
+#endif // __ZThreadVal_h__

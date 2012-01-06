@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCONFIG_SPI_Definitions__
-#define __ZCONFIG_SPI_Definitions__ 1
+#ifndef __ZCONFIG_SPI_Definitions_h__
+#define __ZCONFIG_SPI_Definitions_h__ 1
 #include "zconfig.h"
 
 #define ZCONFIG_SPI_Desired(facility) (ZCONFIG_SPI_Desired__##facility)
@@ -28,4 +28,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZCONFIG_SPI_Enabled(facility) \
 	(ZCONFIG_SPI_Avail__##facility && ZCONFIG_SPI_Desired__##facility)
 
-#endif // __ZCONFIG_SPI_Definitions__
+#endif // __ZCONFIG_SPI_Definitions_h__

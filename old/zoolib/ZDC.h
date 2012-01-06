@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDC__
-#define __ZDC__ 1
+#ifndef __ZDC_h__
+#define __ZDC_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCounted.h"
@@ -650,4 +650,4 @@ inline ZDCState& ZDC::GetState() const
 
 } // namespace ZooLib
 
-#endif // __ZDC__
+#endif // __ZDC_h__

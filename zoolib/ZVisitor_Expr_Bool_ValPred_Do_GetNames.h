@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Bool_ValPred_Do_GetNames__
-#define __ZVisitor_Expr_Bool_ValPred_Do_GetNames__
+#ifndef __ZVisitor_Expr_Bool_ValPred_Do_GetNames_h__
+#define __ZVisitor_Expr_Bool_ValPred_Do_GetNames_h__
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool_ValPred.h"
@@ -54,4 +54,4 @@ std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr);
 
 } // namespace ZooLib
 
-#endif // __ZVisitor_Expr_Bool_ValPred_Do_GetNames__
+#endif // __ZVisitor_Expr_Bool_ValPred_Do_GetNames_h__

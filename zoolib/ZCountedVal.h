@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCountedVal__
-#define __ZCountedVal__ 1
+#ifndef __ZCountedVal_h__
+#define __ZCountedVal_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
@@ -88,4 +88,4 @@ ZRef<ZCountedVal<T> > sCountedVal(const P0& i0, const P1& i1)
 
 } // namespace ZooLib
 
-#endif // __ZCountedVal__
+#endif // __ZCountedVal_h__

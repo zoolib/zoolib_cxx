@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZPhotoshop_FileRef__
-#define __ZPhotoshop_FileRef__ 1
+#ifndef __ZPhotoshop_FileRef_h__
+#define __ZPhotoshop_FileRef_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -81,4 +81,4 @@ private:
 } // namespace ZPhotoshop
 } // namespace ZooLib
 
-#endif // __ZPhotoshop_FileRef__
+#endif // __ZPhotoshop_FileRef_h__

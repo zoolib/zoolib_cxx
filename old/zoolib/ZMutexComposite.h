@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMutexComposite__
-#define __ZMutexComposite__ 1
+#ifndef __ZMutexComposite_h__
+#define __ZMutexComposite_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZThreadOld.h"
@@ -52,4 +52,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZRWLock__
+#endif // __ZRWLock_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Mac_LL__
-#define __ZUtil_Mac_LL__ 1
+#ifndef __ZUtil_Mac_LL_h__
+#define __ZUtil_Mac_LL_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -182,4 +182,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZUtil_Mac_LL__
+#endif // __ZUtil_Mac_LL_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZPhotoshop__
-#define __ZPhotoshop__ 1
+#ifndef __ZPhotoshop_h__
+#define __ZPhotoshop_h__ 1
 #include "zconfig.h"
 
 // When building for Windows, PITypes.h pulls in Windows.h, and pollutes
@@ -54,4 +54,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_Photoshop_SDKVersion ZCONFIG_Photoshop_SDKVersion_PS7
 #endif
 
-#endif // __ZPhotoshop__
+#endif // __ZPhotoshop_h__

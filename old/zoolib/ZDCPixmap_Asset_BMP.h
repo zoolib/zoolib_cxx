@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCPixmap_Asset_BMP__
-#define __ZDCPixmap_Asset_BMP__ 1
+#ifndef __ZDCPixmap_Asset_BMP_h__
+#define __ZDCPixmap_Asset_BMP_h__ 1
 #include "zconfig.h"
 
 namespace ZooLib {
@@ -35,4 +35,4 @@ ZDCPixmap sGetPixmap(const ZAsset& iAsset);
 
 } // namespace ZooLib
 
-#endif // __ZDCPixmap_Asset_BMP__
+#endif // __ZDCPixmap_Asset_BMP_h__

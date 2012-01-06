@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUnicode_Normalize_Win__
-#define __ZUnicode_Normalize_Win__ 1
+#ifndef __ZUnicode_Normalize_Win_h__
+#define __ZUnicode_Normalize_Win_h__ 1
 #include "zconfig.h"
 #include "ZUnicode_Normalize.h"
 
 #include "zoolib/ZCompat_MSVCStaticLib.h"
 ZMACRO_MSVCStaticLib_Reference(Unicode_Normalize_Win)
 
-#endif // __ZUnicode_Normalize_Win__
+#endif // __ZUnicode_Normalize_Win_h__

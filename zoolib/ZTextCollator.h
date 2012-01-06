@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTextCollator__
-#define __ZTextCollator__ 1
+#ifndef __ZTextCollator_h__
+#define __ZTextCollator_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
@@ -371,4 +371,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZTextCollator__
+#endif // __ZTextCollator_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTextCoder_Mac__
-#define __ZTextCoder_Mac__ 1
+#ifndef __ZTextCoder_Mac_h__
+#define __ZTextCoder_Mac_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -94,4 +94,4 @@ private:
 
 #endif // ZCONFIG_API_Enabled(TextCoder_Mac)
 
-#endif // __ZTextCoder_Mac__
+#endif // __ZTextCoder_Mac_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_FS__
-#define __ZYad_FS__ 1
+#ifndef __ZYad_FS_h__
+#define __ZYad_FS_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZFile.h"
@@ -39,4 +39,4 @@ ZRef<ZYadR> sYadR(const ZFileSpec& iFS);
 
 } // namespace ZooLib
 
-#endif // __ZYad_FS__
+#endif // __ZYad_FS_h__

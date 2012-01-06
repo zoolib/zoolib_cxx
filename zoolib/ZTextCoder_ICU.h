@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTextCoder_ICU__
-#define __ZTextCoder_ICU__ 1
+#ifndef __ZTextCoder_ICU_h__
+#define __ZTextCoder_ICU_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -97,4 +97,4 @@ private:
 
 #endif // ZCONFIG_API_Enabled(TextCoder_ICU)
 
-#endif // __ZTextCoder_ICU__
+#endif // __ZTextCoder_ICU_h__

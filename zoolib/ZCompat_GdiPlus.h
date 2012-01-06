@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompat_GdiPlus__
-#define __ZCompat_GdiPlus__ 1
+#ifndef __ZCompat_GdiPlus_h__
+#define __ZCompat_GdiPlus_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_Win.h"
@@ -41,4 +41,4 @@ using std::max;
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZCompat_GdiPlus__
+#endif // __ZCompat_GdiPlus_h__

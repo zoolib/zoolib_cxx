@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRGBColor__
-#define __ZRGBColor__ 1
+#ifndef __ZRGBColor_h__
+#define __ZRGBColor_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZRGBA.h"
@@ -36,4 +36,4 @@ typedef ZRGBAMap ZRGBColorMap;
 
 } // namespace ZooLib
 
-#endif // __ZRGBColor__
+#endif // __ZRGBColor_h__

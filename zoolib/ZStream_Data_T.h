@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_Data_T__
-#define __ZStream_Data_T__ 1
+#ifndef __ZStream_Data_T_h__
+#define __ZStream_Data_T_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -243,4 +243,4 @@ T sRead_T(const ZStreamR& iStreamR, size_t iSize)
 
 } // namespace ZooLib
 
-#endif // __ZStream_Data_T__
+#endif // __ZStream_Data_T_h__

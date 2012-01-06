@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCog_Std__
-#define __ZCog_Std__ 1
+#ifndef __ZCog_Std_h__
+#define __ZCog_Std_h__ 1
 
 #include "zoolib/ZCog.h"
 #include "zoolib/ZTime.h"
@@ -88,4 +88,4 @@ ZCog<Param> sCog_StopAfter(double iDelay,
 
 } // namespace ZooLib
 
-#endif // __ZCog_Std__
+#endif // __ZCog_Std_h__

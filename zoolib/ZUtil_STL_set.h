@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_STL_set__
-#define __ZUtil_STL_set__
+#ifndef __ZUtil_STL_set_h__
+#define __ZUtil_STL_set_h__
 #include "zconfig.h"
 
 #include "zoolib/ZDebug.h"
@@ -193,4 +193,4 @@ bool sIncludes
 } // namespace ZUtil_STL
 } // namespace ZooLib
 
-#endif // __ZUtil_STL_set__
+#endif // __ZUtil_STL_set_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamRWCon_SSL_Win__
-#define __ZStreamRWCon_SSL_Win__ 1
+#ifndef __ZStreamRWCon_SSL_Win_h__
+#define __ZStreamRWCon_SSL_Win_h__ 1
 #include "zconfig.h"
 #include "ZConfig_SPI.h"
 
@@ -113,4 +113,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZStreamRWCon_SSL_Win__
+#endif // __ZStreamRWCon_SSL_Win_h__

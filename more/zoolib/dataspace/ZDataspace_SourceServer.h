@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDataspace_SourceServer__
-#define __ZDataspace_SourceServer__ 1
+#ifndef __ZDataspace_SourceServer_h__
+#define __ZDataspace_SourceServer_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
@@ -57,4 +57,4 @@ private:
 } // namespace ZDataspace
 } // namespace ZooLib
 
-#endif // __ZDataspace_SourceServer__
+#endif // __ZDataspace_SourceServer_h__

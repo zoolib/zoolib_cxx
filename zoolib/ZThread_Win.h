@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZThread_Win__
-#define __ZThread_Win__ 1
+#ifndef __ZThread_Win_h__
+#define __ZThread_Win_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_API.h"
@@ -157,4 +157,4 @@ protected:
 
 #endif // ZCONFIG_API_Enabled(Thread_Win)
 
-#endif // __ZThread_Win__
+#endif // __ZThread_Win_h__

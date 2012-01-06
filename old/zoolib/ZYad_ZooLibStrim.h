@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_ZooLibStrim__
-#define __ZYad_ZooLibStrim__ 1
+#ifndef __ZYad_ZooLibStrim_h__
+#define __ZYad_ZooLibStrim_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStreamR_HexStrim.h"
@@ -165,4 +165,4 @@ void sWrite_PropName(const std::string& iPropName, const ZStrimW& s);
 } // namespace ZYad_ZooLibStrim
 } // namespace ZooLib
 
-#endif // __ZYad_ZooLibStrim__
+#endif // __ZYad_ZooLibStrim_h__

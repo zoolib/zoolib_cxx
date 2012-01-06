@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompat_operator_bool__
-#define __ZCompat_operator_bool__
+#ifndef __ZCompat_operator_bool_h__
+#define __ZCompat_operator_bool_h__
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -129,4 +129,4 @@ private:
 	typedef typename B##_gen::return_type B; \
 	operator B()
 
-#endif // __ZCompat_operator_bool__
+#endif // __ZCompat_operator_bool_h__

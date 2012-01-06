@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZBitStream__
-#define __ZBitStream__ 1
+#ifndef __ZBitStream_h__
+#define __ZBitStream_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -126,4 +126,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZBitStream__
+#endif // __ZBitStream_h__

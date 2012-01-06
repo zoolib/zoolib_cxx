@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZThread__
-#define __ZThread__ 1
+#ifndef __ZThread_h__
+#define __ZThread_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZThread_boost.h"
@@ -188,4 +188,4 @@ void sCreateVoid(ProcVoid_t iProcVoid);
 
 } // namespace ZooLib
 
-#endif // __ZThread__
+#endif // __ZThread_h__
