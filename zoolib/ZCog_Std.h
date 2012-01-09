@@ -35,7 +35,7 @@ ZCog<Param> spCogFun_DelayUntil(const ZCog<Param>& iSelf, Param iParam,
 	ZTime iSystemTime)
 	{
 	if (ZTime::sSystem() > iSystemTime)
-		return sCog_Term<Param>();
+		return true;
 	return iSelf;
 	}
 
@@ -69,22 +69,22 @@ ZCog<Param> sCog_DelayFor(double iDelay)
 template <class Param>
 ZCog<Param> sCog_StartAt(ZTime iSystemTime,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
-	{ return sCog_DelayUntil<Param>(iSystemTime) | iCallable; }
+	{ return sCog_DelayUntil<Param>(iSystemTime) >> iCallable; }
 
 template <class Param>
 ZCog<Param> sCog_StopAt(ZTime iSystemTime,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
-	{ return sCog_DelayUntil<Param>(iSystemTime) * iCallable; }
+	{ return sCog_DelayUntil<Param>(iSystemTime) | iCallable; }
 
 template <class Param>
 ZCog<Param> sCog_StartAfter(double iDelay,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >iCallable)
-	{ return sCog_DelayFor<Param>(iDelay) | iCallable; }
+	{ return sCog_DelayFor<Param>(iDelay) >> iCallable; }
 
 template <class Param>
 ZCog<Param> sCog_StopAfter(double iDelay,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >iCallable)
-	{ return sCog_DelayFor<Param>(iDelay) * iCallable; }
+	{ return sCog_DelayFor<Param>(iDelay) | iCallable; }
 
 } // namespace ZooLib
 
