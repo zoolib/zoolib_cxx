@@ -64,7 +64,7 @@ ZYadStrimR_ML::ZYadStrimR_ML(ZRef<ZML::StrimmerU> iStrimmerU)
 	{}
 
 void ZYadStrimR_ML::Finish()
-	{ fStrimmerU->GetStrim().Advance(); }
+	{ sSkipText(fStrimmerU->GetStrim()); }
 
 const ZStrimR& ZYadStrimR_ML::GetStrimR()
 	{ return fStrimmerU->GetStrimR(); }
