@@ -415,7 +415,7 @@ ZCog<Param> operator*(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Binary linear, sCog_Then
+#pragma mark * Binary sequential, sCog_Then
 
 // Call cog0 till it finishes, if true then call cog1
 
@@ -487,7 +487,7 @@ ZCog<Param>& operator>>=
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Binary linear, sCog_Each
+#pragma mark * Binary sequential, sCog_Each
 
 // Call cog0 till it finishes, then call cog1
 
