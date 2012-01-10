@@ -500,13 +500,9 @@ ZCog<Param> sCog_Each
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
-	if (sIsPending(iCallable0))
-		{
-		if (sIsPending(iCallable1))
-			return +iCallable0 >> iCallable1;
-		return iCallable0;
-		}
-	return iCallable1;
+	if (sIsFinished(iCallable0))
+		return iCallable1;
+	return +iCallable0 >> iCallable1;
 	}
 
 template <class Param>
