@@ -145,15 +145,17 @@ ZQ<int> spQGetMajorVersion(const ZRef<CFStringRef>& iStringRef)
 	return null;
 	}
 
+// Note that the use of CFBundleShortVersionString here is because it's where Flash
+// reliably puts a usable major version number.
+
 ZQ<int> spQGetMajorVersion(const ZMap_CF& iMap)
-	{ return spQGetMajorVersion(iMap.Get(kCFBundleVersionKey).GetCFString()); }
+	{ return spQGetMajorVersion(iMap.Get(CFSTR("CFBundleShortVersionString")).GetCFString()); }
 
 ZQ<int> spQGetMajorVersion(const ZRef<CFBundleRef>& iBundleRef)
 	{
 	if (iBundleRef)
 		{
-		if (ZRef<CFStringRef> theStringRef =
-			(CFStringRef)::CFBundleGetValueForInfoDictionaryKey(iBundleRef, kCFBundleVersionKey))
+		if (ZRef<CFStringRef> theStringRef = (CFStringRef)::CFBundleGetValueForInfoDictionaryKey(iBundleRef, CFSTR("CFBundleShortVersionString")))
 			{ return spQGetMajorVersion(theStringRef); }
 		}
 	return null;
