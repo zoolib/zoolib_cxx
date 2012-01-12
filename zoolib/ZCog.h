@@ -827,17 +827,19 @@ ZCog<Param> spCogFun_WithUnchanged(const ZCog<Param>& iSelf, Param iParam,
 	{
 	ZAssert(sIsPending(lCog0) && sIsPending(iCog1));
 
-	if (sCallPendingCog_Changed(lCog0, iParam))
-		return lCog0;
+	if (sCallPendingCog_Unchanged(lCog0, iParam))
+		{
+		ZCog<Param> newCog1 = iCog1;
+		if (sCallPendingCog_Unchanged(newCog1, iParam))
+			return iSelf;
 
-	ZCog<Param> newCog1 = iCog1;
-	if (sCallPendingCog_Unchanged(newCog1, iParam))
-		return iSelf;
+		if (sIsFinished(newCog1))
+			return lCog0;
 
-	if (sIsFinished(newCog1))
-		return lCog0;
+		return spCog_WithUnchanged(lCog0, newCog1);		
+		}
 
-	return spCog_WithUnchanged(lCog0, newCog1);		
+	return lCog0;
 	}
 
 template <class Param>
