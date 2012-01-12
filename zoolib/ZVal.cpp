@@ -50,13 +50,14 @@ In each suite the types are named \c ZVal_XXX, \c ZSeq_XXX and \c ZMap_XXX, wher
 appropriate distinguishing string. Some of the suites are placed within a namespace YYY, wherein
 the types are named \c YYY::Val, \c YYY::Seq and \c YYY:Map.
 
-When working with a Val you may use simple assignment, or using a templated Set method:
+When working with a Val you may use simple assignment or a templated Set method:
 \code
 Val theVal = 27;
 theVal.Set<long>(19);
 \endcode
 The latter makes the stored type explicit. The actual stored type is usually important, because
-you can only retrieve the value if you know what type was used to store it (think long vs int, or
+oftentimes you can only retrieve the value if you know what type was used to store it (think
+long vs int, or
 even unsigned vs signed).
 
 There are several ways to get a value. Which you use depends on what you're doing:
@@ -107,8 +108,8 @@ For those APIs with a fixed repertoire of supported types, methods named \c SetX
 \c DGetXXX and \c QGetXXX are often provided, where \c XXX is the generalized typename
 (eg \c Int32, \c Int64, \c Float etc).
 
-The Get/Set API for Seq is based on that for Val, but with an initial index parameter. In addition
-it adds a \c Count method returning the number of Vals in the Seq, and generally has
+The Get/Set API for Seq is based on that for Val, but with an initial index parameter. It
+has a \c Count method returning the number of Vals in the Seq, and generally has
 \c Erase, \c Insert and \c Append methods.
 
 Map is similar, but here the initial parameter is a name of some sort. Generally a std::string can
