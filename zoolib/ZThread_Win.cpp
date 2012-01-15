@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZThread_Win
+// MARK: - ZThread_Win
 
 void ZThread_Win::sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
 	{
@@ -51,8 +50,7 @@ void ZThread_Win::sSleep(double iDuration)
 ZAssertCompile(sizeof(ZThread_Win::Dummy_CRITICAL_SECTION) == sizeof(CRITICAL_SECTION));
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTSS_Win
+// MARK: - ZTSS_Win
 
 ZTSS_Win::Key ZTSS_Win::sCreate()
 	{ return ::TlsAlloc(); }
@@ -67,8 +65,7 @@ ZTSS_Win::Value ZTSS_Win::sGet(Key iKey)
 	{ return ::TlsGetValue(iKey); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMtx_Win
+// MARK: - ZMtx_Win
 
 ZMtx_Win::ZMtx_Win()
 	{ ::InitializeCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&fCRITICAL_SECTION)); }
@@ -83,8 +80,7 @@ void ZMtx_Win::Release()
 	{ ::LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&fCRITICAL_SECTION)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSem_Win
+// MARK: - ZSem_Win
 
 ZSem_Win::ZSem_Win()
 	{ fHANDLE = ::CreateSemaphore(nullptr, 0, 0x7FFFFFFF, nullptr); }

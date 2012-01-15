@@ -32,8 +32,7 @@ namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_GetRelHead (anonymous)
+// MARK: - Visitor_GetRelHead (anonymous)
 
 namespace { // anonymous
 
@@ -83,8 +82,7 @@ class Visitor_GetRelHead
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sGetRelHead
+// MARK: - sGetRelHead
 
 RelHead sGetRelHead(const ZRef<Expr_Rel>& iRel)
 	{ return Visitor_GetRelHead().Do(iRel); }

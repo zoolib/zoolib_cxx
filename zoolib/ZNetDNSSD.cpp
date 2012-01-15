@@ -33,8 +33,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetNameRegistered_DNSSD
+// MARK: - ZNetNameRegistered_DNSSD
 
 void ZNetNameRegistered_DNSSD::pInit(ip_port iPort,
 	const char* iName, const string& iRegType,

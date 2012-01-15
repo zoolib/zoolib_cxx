@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <Foundation/NSObject.h>
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * id and NSObject, sRetain and sRelease
+// MARK: - id and NSObject, sRetain and sRelease
 
 void sRetain(struct objc_object& iOb)
 	{ [((id)&iOb) retain]; }

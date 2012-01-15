@@ -26,8 +26,7 @@ namespace ZDataspace {
 using std::set;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * AddedQuery
+// MARK: - AddedQuery
 
 AddedQuery::AddedQuery(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel)
 :	fRefcon(iRefcon)
@@ -59,8 +58,7 @@ ZRef<ZRA::Expr_Rel> AddedQuery::GetRel() const
 	{ return fRel; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * QueryResult
+// MARK: - QueryResult
 
 QueryResult::QueryResult()
 :	fRefcon(0)
@@ -100,8 +98,7 @@ ZRef<Event> QueryResult::GetEvent() const
 	{ return fEvent; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source
+// MARK: - Source
 
 Source::Source()
 :	fCalled_ResultsAvailable(false)
@@ -137,8 +134,7 @@ void Source::pTriggerResultsAvailable()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SourceFactory
+// MARK: - SourceFactory
 
 SourceFactory::SourceFactory()
 	{}

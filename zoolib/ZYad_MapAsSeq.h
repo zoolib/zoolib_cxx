@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sMapAsSeq
+// MARK: - sMapAsSeq
 
 ZRef<ZYadSeqR> sMapAsSeq(const std::string& iNamePropName, ZRef<ZYadMapR> iYadMap);
 

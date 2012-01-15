@@ -84,8 +84,7 @@ static const uint8 spBase64DecodeTable[] =
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Base64Encode
+// MARK: - ZStreamR_Base64Encode
 
 ZStreamR_Base64Encode::ZStreamR_Base64Encode(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
@@ -135,8 +134,7 @@ void ZStreamR_Base64Encode::Imp_Read(void* oDest, size_t iCount, size_t* oCountR
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Base64Decode
+// MARK: - ZStreamR_Base64Decode
 
 ZStreamR_Base64Decode::ZStreamR_Base64Decode(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
@@ -202,8 +200,7 @@ void ZStreamR_Base64Decode::Imp_Read(void* oDest, size_t iCount, size_t* oCountR
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Base64Encode
+// MARK: - ZStreamW_Base64Encode
 
 ZStreamW_Base64Encode::ZStreamW_Base64Encode(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)
@@ -265,8 +262,7 @@ void ZStreamW_Base64Encode::Imp_Flush()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Base64Decode
+// MARK: - ZStreamW_Base64Decode
 
 ZStreamW_Base64Decode::ZStreamW_Base64Decode(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)

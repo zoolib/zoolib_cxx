@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadR_Val_T
+// MARK: - ZYadR_Val_T
 
 template <class Val_t>
 class ZYadR_Val_T
@@ -60,8 +59,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamRPos_Val_T
+// MARK: - ZYadStreamRPos_Val_T
 
 template <class Data_t>
 class ZYadStreamRPos_Val_T
@@ -79,8 +77,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos_Val_T
+// MARK: - ZYadSeqRPos_Val_T
 
 template <class Seq_t>
 class ZYadSeqRPos_Val_T
@@ -129,8 +126,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos_Val_Self_T
+// MARK: - ZYadSeqRPos_Val_Self_T
 
 // Urgh, quite an ugly name.
 
@@ -181,8 +177,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos_Val_T
+// MARK: - ZYadMapRPos_Val_T
 
 template <class Map_t, class Index_P = typename Map_t::Index_t>
 class ZYadMapRPos_Val_T
@@ -230,8 +225,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos_Val_Self_T
+// MARK: - ZYadMapRPos_Val_Self_T
 
 template <class Self_t, class Map_t, class Index_P = typename Map_t::Index_t>
 class ZYadMapRPos_Val_Self_T

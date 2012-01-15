@@ -107,8 +107,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * npapi and npruntime header and macro fixups
+// MARK: - npapi and npruntime header and macro fixups
 
 #ifndef NPVERS_HAS_XPCONNECT_SCRIPTING
 	#define NPVERS_HAS_XPCONNECT_SCRIPTING 13

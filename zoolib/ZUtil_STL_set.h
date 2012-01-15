@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace ZUtil_STL {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_STL
+// MARK: - ZUtil_STL
 
 template <typename T, typename Comparator>
 typename std::set<T,Comparator>::iterator

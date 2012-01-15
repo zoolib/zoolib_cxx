@@ -29,8 +29,7 @@ namespace FileFormat {
 namespace QuickTime {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(ZRef<ZStreamerR> iStreamerR);
 

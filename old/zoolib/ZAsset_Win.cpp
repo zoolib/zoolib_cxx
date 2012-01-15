@@ -33,8 +33,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Win_MemoryMapped
+// MARK: - ZAssetTree_Win_MemoryMapped
 
 ZAssetTree_Win_MemoryMapped::ZAssetTree_Win_MemoryMapped(
 	HANDLE iFileHandle, bool iAdopt, size_t iStart, size_t iLength)
@@ -115,8 +114,7 @@ void ZAssetTree_Win_MemoryMapped::LoadUp(HANDLE iFileHandle, size_t iStart, size
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Win_MultiResource
+// MARK: - ZAssetTree_Win_MultiResource
 
 ZAssetTree_Win_MultiResource::ZAssetTree_Win_MultiResource(
 	HMODULE iHMODULE, const string& iType, const string& iName)

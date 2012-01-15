@@ -30,15 +30,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Forward declarations
+// MARK: - Forward declarations
 
 class ZStreamR;
 class ZStreamW;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTName
+// MARK: - ZTName
 
 class ZTName
 	{
@@ -95,8 +93,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTName::String
+// MARK: - ZTName::String
 
 class ZTName::String
 	{
@@ -130,8 +127,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTName inline methods
+// MARK: - ZTName inline methods
 
 inline bool ZTName::sIsPNRep(const void* iData)
 	{ return reinterpret_cast<intptr_t>(iData) & 1; }

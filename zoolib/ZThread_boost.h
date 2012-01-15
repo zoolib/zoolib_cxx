@@ -54,8 +54,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCnd_boost
+// MARK: - ZCnd_boost
 
 class ZCnd_boost : public boost::condition_variable
 	{
@@ -72,8 +71,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMtx_boost
+// MARK: - ZMtx_boost
 
 class ZMtx_boost : public boost::mutex
 	{
@@ -86,8 +84,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSem_boost
+// MARK: - ZSem_boost
 
 typedef ZSem_T<ZMtx_boost, ZCnd_boost> ZSem_boost;
 

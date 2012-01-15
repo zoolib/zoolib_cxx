@@ -37,8 +37,7 @@ namespace ZooLib {
 namespace ZBlackBerry {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * BlackBerry USB stuff
+// MARK: - BlackBerry USB stuff
 
 static bool spSendControlMessage(IOUSBDeviceInterface182** iUDI,
 	uint8_t bRequestType, uint8_t bRequest,
@@ -158,8 +157,7 @@ static void spChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Manager_OSXUSB
+// MARK: - ZBlackBerry::Manager_OSXUSB
 
 Manager_OSXUSB::Manager_OSXUSB(CFRunLoopRef iRunLoopRef, bool iAllowMassStorage)
 :	fRunLoopRef(iRunLoopRef),

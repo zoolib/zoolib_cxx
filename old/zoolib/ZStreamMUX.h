@@ -34,8 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamMUX
+// MARK: - ZStreamMUX
 
 class ZStreamMUX
 :	public ZCounted
@@ -154,8 +153,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamMUX::Options
+// MARK: - ZStreamMUX::Options
 
 class ZStreamMUX::Options
 	{

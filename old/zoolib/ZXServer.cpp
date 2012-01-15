@@ -42,8 +42,7 @@ using std::vector;
 static XContext sXContext_Window = 0;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * kDebug
+// MARK: - kDebug
 
 #define kDebug_X 2
 
@@ -51,8 +50,7 @@ static XContext sXContext_Window = 0;
 
 #if 0
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZXServerDummyWindow
+// MARK: - ZXServerDummyWindow
 
 class ZXServerDummyWindow : public ZXWindow
 	{
@@ -82,8 +80,7 @@ void ZXServerDummyWindow::HandleXEvent(const XEvent& inEvent)
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZXServer
+// MARK: - ZXServer
 
 ZXServer::ZXServer(const char* inDisplayName)
 	{
@@ -1223,8 +1220,7 @@ void ZXServer::InitGraphics()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZXWindow
+// MARK: - ZXWindow
 
 ZXWindow::ZXWindow()
 	{

@@ -50,8 +50,7 @@ using std::vector;
 #define kDebug_WebDAV 1
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * DAVIter
+// MARK: - DAVIter
 
 namespace { // anonymous
 
@@ -126,8 +125,7 @@ ZNode DAVIter::Current()
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static ZRef<ZStrimmerR> spMakeStrimmer(const ZTuple& iHeader, ZRef<ZStreamerR> iStreamerR)
 	{
@@ -482,8 +480,7 @@ static ZTrail spStripPrefix(const ZTrail& iPrefix, const ZTrail& iTrail)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWebDAV
+// MARK: - ZWebDAV
 
 bool ZWebDAV::sHandle_DELETE(
 	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, const ZStreamW& iStreamW,

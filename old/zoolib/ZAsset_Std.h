@@ -33,8 +33,7 @@ class ZAssetRep_Std_Directory;
 class ZAssetTree_Std;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Std
+// MARK: - ZAssetRep_Std
 
 class ZAssetRep_Std : public ZAssetRep
 	{
@@ -71,8 +70,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Std_Directory
+// MARK: - ZAssetRep_Std_Directory
 
 class ZAssetRep_Std_Directory : public ZAssetRep_Std
 	{
@@ -105,8 +103,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Std_Union
+// MARK: - ZAssetRep_Std_Union
 
 class ZAssetRep_Std_Union : public ZAssetRep_Std
 	{
@@ -139,8 +136,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetIterRep_Std_Directory
+// MARK: - ZAssetIterRep_Std_Directory
 
 class ZAssetIterRep_Std_Directory : public ZAssetIterRep
 	{
@@ -160,8 +156,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std
+// MARK: - ZAssetTree_Std
 
 class ZAssetTree_Std : public ZAssetTree
 	{
@@ -192,8 +187,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_Stream
+// MARK: - ZAssetTree_Std_Stream
 
 class ZAssetRep_Std_Data_Stream;
 
@@ -235,8 +229,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_Streamer
+// MARK: - ZAssetTree_Std_Streamer
 
 class ZAssetTree_Std_Streamer : public ZAssetTree_Std_Stream
 	{
@@ -250,8 +243,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_File
+// MARK: - ZAssetTree_Std_File
 
 class ZAssetRep_Std_Data_File;
 
@@ -286,8 +278,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_Memory
+// MARK: - ZAssetTree_Std_Memory
 
 class ZAssetRep_Std_Data_Memory;
 
@@ -317,8 +308,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_Memory_StaticData
+// MARK: - ZAssetTree_Std_Memory_StaticData
 
 class ZAssetTree_Std_Memory_StaticData : public ZAssetTree_Std_Memory
 	{

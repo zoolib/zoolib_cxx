@@ -33,8 +33,7 @@ namespace ZDataspace {
 class Sieve;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Dataspace
+// MARK: - Dataspace
 
 class Dataspace
 	{
@@ -86,8 +85,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Sieve
+// MARK: - Sieve
 
 class Sieve
 :	public ZCounted
@@ -121,8 +119,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Sieve_Callable
+// MARK: - Sieve_Callable
 
 class Sieve_Callable : public Sieve
 	{

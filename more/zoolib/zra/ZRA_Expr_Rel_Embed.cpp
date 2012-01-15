@@ -25,8 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCompare_T
+// MARK: - sCompare_T
 
 template <>
 int sCompare_T(const ZRA::Expr_Rel_Embed& iL, const ZRA::Expr_Rel_Embed& iR)
@@ -45,8 +44,7 @@ ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Embed)
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Embed
+// MARK: - Expr_Rel_Embed
 
 Expr_Rel_Embed::Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0,
 	const RelName& iRelName, const ZRef<Expr_Rel>& iEmbedee)
@@ -83,15 +81,13 @@ const RelName& Expr_Rel_Embed::GetRelName() const
 	{ return fRelName; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Embed
+// MARK: - Visitor_Expr_Rel_Embed
 
 void Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Relational operators
+// MARK: - Relational operators
 
 ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0,
 	const RelName& iRelName, const ZRef<Expr_Rel>& iEmbedee)

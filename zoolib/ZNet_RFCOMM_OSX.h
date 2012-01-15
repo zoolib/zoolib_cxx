@@ -76,8 +76,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_RFCOMM_OSX
+// MARK: - ZNetListener_RFCOMM_OSX
 
 class ZNetListener_RFCOMM_OSX : public ZNetListener_RFCOMM
 	{
@@ -104,8 +103,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_RFCOMM_OSX
+// MARK: - ZNetEndpoint_RFCOMM_OSX
 
 class ZNetEndpoint_RFCOMM_OSX
 :	public ZNetEndpoint_RFCOMM,

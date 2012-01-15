@@ -37,8 +37,7 @@ It also holds drawing state: ink, pen width, origin, pattern origin.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC
+// MARK: - ZDC
 
 ZDC::ZDC()
 	{
@@ -257,8 +256,7 @@ void ZDC::OffsetPatternOrigin(const ZPoint& delta)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas
+// MARK: - ZDCCanvas
 
 ZDCCanvas::ZDCCanvas()
 	{}
@@ -486,8 +484,7 @@ static ZDCRgn spCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvasFactory
+// MARK: - ZDCCanvasFactory
 
 ZDCCanvasFactory* ZDCCanvasFactory::spHead = nullptr;
 
@@ -516,8 +513,7 @@ ZRef<ZDCCanvas> ZDCCanvasFactory::sCreateCanvas(ZPoint iSize,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCScratch
+// MARK: - ZDCScratch
 
 static ZDC spScratchDC;
 
@@ -532,8 +528,7 @@ void ZDCScratch::sSet(ZRef<ZDCCanvas> inCanvas)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC_Off
+// MARK: - ZDC_Off
 
 ZDC_Off::ZDC_Off(const ZDC& inOther, bool inForceOffscreen)
 :	ZDC(inOther)
@@ -583,8 +578,7 @@ ZDC_Off::ZDC_Off(const ZDC& inOther, ZPoint inDimensions, ZDCPixmapNS::EFormatEf
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC_OffAuto
+// MARK: - ZDC_OffAuto
 
 ZDC_OffAuto::ZDC_OffAuto(const ZDC& inOther, bool inCopyFromOther)
 :	ZDC_Off(inOther, false), fDest(inOther)

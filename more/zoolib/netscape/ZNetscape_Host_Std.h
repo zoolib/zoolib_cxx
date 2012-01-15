@@ -35,8 +35,7 @@ namespace ZNetscape {
 class Host_Std;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * HostMeister_Std
+// MARK: - HostMeister_Std
 
 class HostMeister_Std : public HostMeister
 	{
@@ -163,8 +162,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_Std
+// MARK: - Host_Std
 
 class Host_Std : public Host
 	{

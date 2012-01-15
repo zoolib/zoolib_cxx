@@ -30,8 +30,7 @@ using std::pair;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * CompareCharStars (anonymous)
+// MARK: - CompareCharStars (anonymous)
 
 namespace { // anonymous
 
@@ -45,8 +44,7 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCompare
+// MARK: - ZCompare
 
 static int spInitCount;
 static map<const char*, ZCompare*, CompareCharStars>* spMap;
@@ -90,8 +88,7 @@ int ZCompare::sCompare(const char* iTypeName, const void* iL, const void* iR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCompareRegistration_Void (anonymous)
+// MARK: - ZCompareRegistration_Void (anonymous)
 
 namespace { // anonymous
 

@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+// MARK: - Helper functions
 
 namespace { // anonymous
 
@@ -102,8 +101,7 @@ RgnHandle sMakeRgnHandle(const ZRef<ZGRgnRep>& iRep)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 
@@ -126,8 +124,7 @@ ZRef<ZGRgnRep> ZGRgnRepCreator_T<RgnHandle>::sCreate(RgnHandle iNative, bool iAd
 	{ return new ZGRgnRep_RgnHandle(iNative, iAdopt); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgnRep_RgnHandle
+// MARK: - ZGRgnRep_RgnHandle
 
 ZRef<ZGRgnRep_RgnHandle> ZGRgnRep_RgnHandle::sGetRep(const ZRef<ZGRgnRep>& iRep)
 	{

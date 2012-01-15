@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZGameEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * CVec ctors
+// MARK: - CVec ctors
 
 template <class Val>
 ZMatrix<Val,1,1> sCVec(Val i0)
@@ -70,8 +69,7 @@ ZMatrix<Val,1,4> sCVec(Val i0, Val i1, Val i2, Val i3)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * CVec3 ctors
+// MARK: - CVec3 ctors
 
 template <class Val>
 ZMatrix<Val,1,3> sCVec3(Val x, Val y, Val z)
@@ -86,8 +84,7 @@ ZMatrix<Val,1,3> sCVec3()
 	{ return ZMatrix<Val,1,3>(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * RVec ctors
+// MARK: - RVec ctors
 
 template <class Val>
 ZMatrix<Val,1,1> sRVec(Val i0)
@@ -128,8 +125,7 @@ ZMatrix<Val,4,1> sRVec(Val i0, Val i1, Val i2, Val i3)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * RVec3 ctors
+// MARK: - RVec3 ctors
 
 template <class Val>
 ZMatrix<Val,3,1> sRVec3(Val x, Val y, Val z)
@@ -144,8 +140,7 @@ ZMatrix<Val,3,1> sRVec3()
 	{ return ZMatrix<Val,3,1>(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sScale
+// MARK: - sScale
 
 template <class Val>
 ZMatrix<Val,4,4> sScale(Val x, Val y, Val z)
@@ -171,8 +166,7 @@ ZMatrix<Val,4,4> sScaleZ(Val z)
 	{ return sScale<Val>(1, 1, z); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sTranslate
+// MARK: - sTranslate
 
 template <class Val>
 ZMatrix<Val,4,4> sTranslate(Val x, Val y, Val z)
@@ -197,8 +191,7 @@ ZMatrix<Val,4,4> sTranslateZ(Val z)
 	{ return sTranslate<Val>(0, 0, z); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sRotateX
+// MARK: - sRotateX
 
 template <class Val>
 ZMatrix<Val,4,4> sRotateX(Val radians)
@@ -216,8 +209,7 @@ ZMatrix<Val,4,4> sRotateX(Val radians)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sRotateY
+// MARK: - sRotateY
 
 template <class Val>
 ZMatrix<Val,4,4> sRotateY(Val radians)
@@ -235,8 +227,7 @@ ZMatrix<Val,4,4> sRotateY(Val radians)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sRotateZ
+// MARK: - sRotateZ
 
 template <class Val>
 ZMatrix<Val,4,4> sRotateZ(Val radians)
@@ -254,8 +245,7 @@ ZMatrix<Val,4,4> sRotateZ(Val radians)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sShear
+// MARK: - sShear
 
 template <class Val>
 ZMatrix<Val,4,4> sShear(Val xy, Val xz, Val yx, Val yz, Val zx, Val zy)

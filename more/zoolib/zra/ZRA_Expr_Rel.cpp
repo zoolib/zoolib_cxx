@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCompare_T
+// MARK: - sCompare_T
 
 namespace ZooLib {
 
@@ -43,23 +42,20 @@ namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel
+// MARK: - Expr_Rel
 
 Expr_Rel::Expr_Rel()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SemanticError
+// MARK: - SemanticError
 
 SemanticError::SemanticError(const string8& iMessage)
 :	runtime_error(iMessage)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SemanticError, helpers
+// MARK: - SemanticError, helpers
 
 static void spThrow(const string8& iMessage)
 	{ throw SemanticError("ZRA Semantic Error: " + iMessage); }
@@ -71,8 +67,7 @@ static void spLog(const string8& iMessage)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SemanticError, global and per-thread handlers
+// MARK: - SemanticError, global and per-thread handlers
 
 const ZRef<Callable_SemanticError> sCallable_SemanticError_Ignore;
 const ZRef<Callable_SemanticError> sCallable_SemanticError_Throw = sCallable(&spThrow);

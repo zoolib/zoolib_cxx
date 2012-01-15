@@ -47,8 +47,7 @@ static const char CR = '\r';
 static const char LF = '\n';
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Utility stuff
+// MARK: - Utility stuff
 
 static void spAppend(Map& ioFields, const string& iName, const Val& iValue)
 	{ ioFields.Set(iName, ioFields.Get<Seq>(iName).Append(iValue)); }
@@ -124,8 +123,7 @@ static bool spReadInt64(const ZStreamU& iStream, int64* oInt64)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP::Response
+// MARK: - ZHTTP::Response
 
 Response::Response()
 	{
@@ -199,8 +197,7 @@ void Response::Send(const ZStreamW& s) const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP, high level parsing
+// MARK: - ZHTTP, high level parsing
 
 // This method should look at all the range entries in iRangeParam
 // and turn them into a list of ascending, non overlapping start/finish
@@ -761,8 +758,7 @@ ZRef<ZStreamerR> sMakeContentStreamer(const Map& iHeader, ZRef<ZStreamerR> iStre
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP, request headers
+// MARK: - ZHTTP, request headers
 
 /// Extracts type and subtype into properties named 'type' and 'subtype' of ioFields.
 /**
@@ -926,14 +922,12 @@ bool sRead_range(const ZStreamU& iStream, Map& oRange)
 //bool sRead_referer(const ZStreamU& iStream, Map* ioFields);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP, response headers
+// MARK: - ZHTTP, response headers
 
 bool sRead_www_authenticate(const ZStreamU& iStream, Map* ioFields);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP, request or response headers
+// MARK: - ZHTTP, request or response headers
 
 bool sRead_transfer_encoding(const ZStreamU& iStream, Map* ioFields)
 	{
@@ -958,8 +952,7 @@ bool sRead_transfer_encoding(const ZStreamU& iStream, string& oEncoding)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP, entity headers
+// MARK: - ZHTTP, entity headers
 
 bool sRead_content_disposition(const ZStreamU& iStream, Map* ioFields)
 	{
@@ -1313,8 +1306,7 @@ bool sReadLanguageTag(const ZStreamU& iStream, string* oLanguageTag)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP, Lower level parsing
+// MARK: - ZHTTP, Lower level parsing
 
 bool sParseURL(const string& iURL,
 	string* oScheme, string* oHost, uint16* oPort, string* oPath)
@@ -1597,8 +1589,7 @@ bool sReadDecodedChars(const ZStreamU& iStream, string& ioString)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP, Lexical classification
+// MARK: - ZHTTP, Lexical classification
 
 bool sIs_CHAR(char iChar)
 	{
@@ -1696,8 +1687,7 @@ bool sIs_qdtext(char iChar)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Writing
+// MARK: - Writing
 
 void sWrite_HeaderLine(const ZStreamW& w, const string& iName, const string& iBody)
 	{
@@ -1742,8 +1732,7 @@ void sWrite_MinimalResponse_ErrorInBody(const ZStreamW& w, int iError)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP::StreamR_Chunked
+// MARK: - ZHTTP::StreamR_Chunked
 
 static uint64 spReadChunkSize(const ZStreamR& s)
 	{
@@ -1831,8 +1820,7 @@ bool StreamR_Chunked::Imp_WaitReadable(double iTimeout)
 	{ return fStreamSource.WaitReadable(iTimeout); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP::StreamW_Chunked
+// MARK: - ZHTTP::StreamW_Chunked
 
 StreamW_Chunked::StreamW_Chunked(size_t iBufferSize, const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink),

@@ -28,8 +28,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static void spThrowParseException(const string& iMessage)
 	{
@@ -172,8 +171,7 @@ static ZRef<ZYadR> spMakeYadR_Bencode(ZRef<ZStreamerU> iStreamerU)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException_Bencode
+// MARK: - ZYadParseException_Bencode
 
 ZYadParseException_Bencode::ZYadParseException_Bencode(const string& iWhat)
 :	ZYadParseException_Std(iWhat)
@@ -184,8 +182,7 @@ ZYadParseException_Bencode::ZYadParseException_Bencode(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_Bencode
+// MARK: - ZYadSeqR_Bencode
 
 ZYadSeqR_Bencode::ZYadSeqR_Bencode(ZRef<ZStreamerU> iStreamerU)
 :	fStreamerU(iStreamerU)
@@ -198,8 +195,7 @@ void ZYadSeqR_Bencode::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_Bencode
+// MARK: - ZYadMapR_Bencode
 
 ZYadMapR_Bencode::ZYadMapR_Bencode(ZRef<ZStreamerU> iStreamerU)
 :	fStreamerU(iStreamerU)
@@ -216,8 +212,7 @@ void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_Bencode
+// MARK: - ZYad_Bencode
 
 ZRef<ZYadR> ZYad_Bencode::sYadR(ZRef<ZStreamerU> iStreamerU)
 	{ return spMakeYadR_Bencode(iStreamerU); }

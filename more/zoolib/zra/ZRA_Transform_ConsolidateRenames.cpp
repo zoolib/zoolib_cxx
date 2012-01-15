@@ -27,8 +27,7 @@ namespace ZRA {
 using namespace ZUtil_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Transform_ConsolidateRenames
+// MARK: - Transform_ConsolidateRenames
 
 void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr)
 	{

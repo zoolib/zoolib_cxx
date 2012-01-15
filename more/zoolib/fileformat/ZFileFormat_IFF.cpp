@@ -36,8 +36,7 @@ using std::min;
 using std::pair;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static helper functions
+// MARK: - Static helper functions
 
 static const uint8 spZeroes[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -55,8 +54,7 @@ static size_t spAligned(size_t iCount, size_t iMultiple)
 	{ return (iMultiple - (iCount % iMultiple)) % iMultiple; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Writer
+// MARK: - Writer
 
 Writer::Writer(bool iBigEndianSizes, size_t iPadMultiple)
 :	fBigEndianSizes(iBigEndianSizes),
@@ -122,8 +120,7 @@ void Writer::End(const ZStreamWPos& iStream, const char* iChunkType)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamR_Chunk
+// MARK: - StreamR_Chunk
 
 StreamR_Chunk::StreamR_Chunk(uint32& oChunkType, const ZStreamR& iStream)
 :	fStream(iStream)
@@ -231,8 +228,7 @@ void StreamR_Chunk::pInit(uint32& oChunkType, bool iSkipOnDestroy,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamRPos_Chunk
+// MARK: - StreamRPos_Chunk
 
 StreamRPos_Chunk::StreamRPos_Chunk(uint32& oChunkType, const ZStreamRPos& iStream)
 :	fStream(iStream)
@@ -339,8 +335,7 @@ void StreamRPos_Chunk::pInit(uint32& oChunkType, bool iSkipOnDestroy,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamWPos_Chunk
+// MARK: - StreamWPos_Chunk
 
 StreamWPos_Chunk::StreamWPos_Chunk(uint32 iChunkType, const ZStreamWPos& iStream)
 :	fStream(iStream),

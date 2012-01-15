@@ -28,8 +28,7 @@ namespace ZooLib {
 #define kDebug_Stream_Buffered 2
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Buffered
+// MARK: - ZStreamR_Buffered
 
 /**
 \class ZStreamR_Buffered
@@ -162,8 +161,7 @@ void ZStreamR_Buffered::Abandon()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Buffered
+// MARK: - ZStreamW_Buffered
 
 /**
 \class ZStreamW_Buffered
@@ -257,8 +255,7 @@ void ZStreamW_Buffered::pFlush()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_DynamicBuffered
+// MARK: - ZStreamR_DynamicBuffered
 
 /**
 \class ZStreamR_DynamicBuffered
@@ -426,8 +423,7 @@ void ZStreamR_DynamicBuffered::Commit()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerR_DynamicBuffered
+// MARK: - ZStreamerR_DynamicBuffered
 
 /// A read filter streamer encapsulating a ZStreamR_DynamicBuffered.
 
@@ -448,8 +444,7 @@ ZStreamR_DynamicBuffered& ZStreamerR_DynamicBuffered::GetStream()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_DynamicBuffered
+// MARK: - ZStreamW_DynamicBuffered
 
 /**
 \class ZStreamW_DynamicBuffered
@@ -510,8 +505,7 @@ void ZStreamW_DynamicBuffered::Imp_Flush()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerW_DynamicBuffered
+// MARK: - ZStreamerW_DynamicBuffered
 
 ZStreamerW_DynamicBuffered::ZStreamerW_DynamicBuffered
 	(ZRef<ZStreamerW> iStreamerSink, ZRef<ZStreamerRWPos> iStreamerBuffer)

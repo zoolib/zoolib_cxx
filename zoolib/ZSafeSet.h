@@ -42,8 +42,7 @@ class DLink_SafeSetIterConst
 	{};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSafeSetRep
+// MARK: - ZSafeSetRep
 
 template <class T>
 class ZSafeSetRep
@@ -220,8 +219,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSafeSet
+// MARK: - ZSafeSet
 
 template <class T>
 class ZSafeSet
@@ -275,8 +273,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSafeSetIterConst
+// MARK: - ZSafeSetIterConst
 
 template <class T>
 class ZSafeSetIterConst : public DLink_SafeSetIterConst<T>
@@ -356,8 +353,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSafeSetIter
+// MARK: - ZSafeSetIter
 
 template <class T>
 class ZSafeSetIter : public ZSafeSetIterConst<T>
@@ -404,8 +400,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSafeSetRep methods that reference details of iterators
+// MARK: - ZSafeSetRep methods that reference details of iterators
 
 template <class T>
 bool ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter, T& oValue)

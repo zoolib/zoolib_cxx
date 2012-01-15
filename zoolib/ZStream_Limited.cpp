@@ -27,8 +27,7 @@ using std::min;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Limited
+// MARK: - ZStreamR_Limited
 
 ZStreamR_Limited::ZStreamR_Limited(uint64 iLimit, const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource),
@@ -87,8 +86,7 @@ void ZStreamR_Limited::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Limited
+// MARK: - ZStreamW_Limited
 
 /// A write filter stream that caps the number of bytes that can be written
 
@@ -113,8 +111,7 @@ void ZStreamW_Limited::Imp_Flush()
 	{ fStreamSink.Flush(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_Limited
+// MARK: - ZStreamRPos_Limited
 
 ZStreamRPos_Limited::ZStreamRPos_Limited
 	(uint64 iOffset, uint64 iLimit, const ZStreamRPos& iStreamSource)
@@ -145,8 +142,7 @@ uint64 ZStreamRPos_Limited::Imp_GetSize()
 	{ return min(fStreamSource.GetSize() - fOffset, fLimit); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRPos_Limited
+// MARK: - ZStreamerRPos_Limited
 
 ZStreamerRPos_Limited::ZStreamerRPos_Limited
 	(uint64 iOffset, uint64 iLimit, ZRef<ZStreamerRPos> iStreamer)

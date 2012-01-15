@@ -31,8 +31,7 @@ namespace ZRA {
 namespace Util {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Util
+// MARK: - Util
 
 class Problem : public ZCounted
 	{
@@ -48,8 +47,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Util
+// MARK: - Util
 
 bool sValidate(std::vector<Problem>& oProblems, ZRef<Expr_Rel> iRel);
 

@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_Mac
+// MARK: - Host_Mac
 
 #if defined(XP_MAC) || defined(XP_MACOSX)
 
@@ -91,8 +90,7 @@ protected:
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_WindowRef
+// MARK: - Host_WindowRef
 
 #if defined(XP_MAC) || defined(XP_MACOSX)
 
@@ -127,8 +125,7 @@ private:
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_HIViewRef
+// MARK: - Host_HIViewRef
 
 #if defined(XP_MACOSX)
 

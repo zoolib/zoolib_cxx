@@ -24,15 +24,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool
+// MARK: - ZExpr_Bool
 
 ZExpr_Bool::ZExpr_Bool()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_True
+// MARK: - ZExpr_Bool_True
 
 ZExpr_Bool_True::ZExpr_Bool_True()
 	{}
@@ -75,15 +73,13 @@ int sCompare_T(const ZExpr_Bool_True& iL, const ZExpr_Bool_True& iR)
 ZMACRO_CompareRegistration_T(ZExpr_Bool_True)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_True
+// MARK: - ZVisitor_Expr_Bool_True
 
 void ZVisitor_Expr_Bool_True::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_False
+// MARK: - ZExpr_Bool_False
 
 ZExpr_Bool_False::ZExpr_Bool_False()
 	{}
@@ -126,15 +122,13 @@ int sCompare_T(const ZExpr_Bool_False& iL, const ZExpr_Bool_False& iR)
 ZMACRO_CompareRegistration_T(ZExpr_Bool_False)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_False
+// MARK: - ZVisitor_Expr_Bool_False
 
 void ZVisitor_Expr_Bool_False::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_Not
+// MARK: - ZExpr_Bool_Not
 
 ZExpr_Bool_Not::ZExpr_Bool_Not(const ZRef<ZExpr_Bool>& iOp0)
 :	inherited(iOp0)
@@ -172,15 +166,13 @@ int sCompare_T(const ZExpr_Bool_Not& iL, const ZExpr_Bool_Not& iR)
 ZMACRO_CompareRegistration_T(ZExpr_Bool_Not)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_Not
+// MARK: - ZVisitor_Expr_Bool_Not
 
 void ZVisitor_Expr_Bool_Not::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_And
+// MARK: - ZExpr_Bool_And
 
 ZExpr_Bool_And::ZExpr_Bool_And(const ZRef<ZExpr_Bool>& iOp0, const ZRef<ZExpr_Bool>& iOp1)
 :	inherited(iOp0, iOp1)
@@ -222,15 +214,13 @@ int sCompare_T(const ZExpr_Bool_And& iL, const ZExpr_Bool_And& iR)
 ZMACRO_CompareRegistration_T(ZExpr_Bool_And)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_And
+// MARK: - ZVisitor_Expr_Bool_And
 
 void ZVisitor_Expr_Bool_And::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_Or
+// MARK: - ZExpr_Bool_Or
 
 ZExpr_Bool_Or::ZExpr_Bool_Or(const ZRef<ZExpr_Bool>& iOp0, const ZRef<ZExpr_Bool>& iOp1)
 :	inherited(iOp0, iOp1)
@@ -272,15 +262,13 @@ int sCompare_T(const ZExpr_Bool_Or& iL, const ZExpr_Bool_Or& iR)
 ZMACRO_CompareRegistration_T(ZExpr_Bool_Or)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_Or
+// MARK: - ZVisitor_Expr_Bool_Or
 
 void ZVisitor_Expr_Bool_Or::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Operators
+// MARK: - Operators
 
 ZRef<ZExpr_Bool> sTrue()
 	{ return ZExpr_Bool_True::sTrue(); }

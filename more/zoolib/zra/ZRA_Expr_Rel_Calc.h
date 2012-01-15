@@ -34,8 +34,7 @@ namespace ZRA {
 class Visitor_Expr_Rel_Calc;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Calc
+// MARK: - Expr_Rel_Calc
 
 class Expr_Rel_Calc
 :	public virtual Expr_Rel
@@ -73,8 +72,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Calc::PseudoMap
+// MARK: - Expr_Rel_Calc::PseudoMap
 
 class Expr_Rel_Calc::PseudoMap
 	{
@@ -129,8 +127,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Calc
+// MARK: - Visitor_Expr_Rel_Calc
 
 class Visitor_Expr_Rel_Calc
 :	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
@@ -140,8 +137,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Relational operators
+// MARK: - Relational operators
 
 ZRef<Expr_Rel> sCalc(const ZRef<Expr_Rel>& iOp0,
 	const RelName& iRelName,

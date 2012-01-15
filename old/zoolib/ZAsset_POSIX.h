@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_POSIX_MemoryMapped
+// MARK: - ZAssetTree_POSIX_MemoryMapped
 
 class ZAssetTree_POSIX_MemoryMapped : public ZAssetTree_Std_Memory
 	{

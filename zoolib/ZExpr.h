@@ -29,8 +29,7 @@ namespace ZooLib {
 class ZVisitor_Expr;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr
+// MARK: - ZExpr
 
 class ZExpr : public ZVisitee
 	{
@@ -43,8 +42,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr
+// MARK: - ZVisitor_Expr
 
 class ZVisitor_Expr
 :	public virtual ZVisitor

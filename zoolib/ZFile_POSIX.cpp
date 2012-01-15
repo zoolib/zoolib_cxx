@@ -68,8 +68,7 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 
@@ -91,8 +90,7 @@ class Make_FileLoc
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Shared implementation details
+// MARK: - Shared implementation details
 
 static ZFile::Error spTranslateError(int iNativeError)
 	{
@@ -561,8 +559,7 @@ static void spGetCWD(vector<string>& oComps)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * RealRep
+// MARK: - RealRep
 
 namespace { // anonymous
 
@@ -663,8 +660,7 @@ string RealRep_POSIX::GetName(size_t iIndex)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileLoc_POSIX
+// MARK: - ZFileLoc_POSIX
 
 ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_CWD()
 	{
@@ -1258,8 +1254,7 @@ string ZFileLoc_POSIX::pGetPath()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileR_POSIX
+// MARK: - ZFileR_POSIX
 
 ZFileR_POSIX::ZFileR_POSIX(int iFD, bool iCloseWhenFinalized)
 :	fFD(iFD),
@@ -1279,8 +1274,7 @@ ZFile::Error ZFileR_POSIX::GetSize(uint64& oSize)
 	{ return spGetSize(fFD, oSize); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileW_POSIX
+// MARK: - ZFileW_POSIX
 
 ZFileW_POSIX::ZFileW_POSIX(int iFD, bool iCloseWhenFinalized)
 :	fFD(iFD),
@@ -1310,8 +1304,7 @@ ZFile::Error ZFileW_POSIX::FlushVolume()
 	{ return spFlushVolume(fFD); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileRW_POSIX
+// MARK: - ZFileRW_POSIX
 
 ZFileRW_POSIX::ZFileRW_POSIX(int iFD, bool iCloseWhenFinalized)
 :	fFD(iFD),
@@ -1345,8 +1338,7 @@ ZFile::Error ZFileRW_POSIX::FlushVolume()
 	{ return spFlushVolume(fFD); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileR_POSIXMutex
+// MARK: - ZFileR_POSIXMutex
 
 ZFileR_POSIXMutex::ZFileR_POSIXMutex(int iFD, bool iCloseWhenFinalized)
 :	fPosition(uint64(-1)),
@@ -1381,8 +1373,7 @@ ZFile::Error ZFileR_POSIXMutex::GetSize(uint64& oSize)
 	{ return spGetSize(fFD, oSize); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileW_POSIXMutex
+// MARK: - ZFileW_POSIXMutex
 
 ZFileW_POSIXMutex::ZFileW_POSIXMutex(int iFD, bool iCloseWhenFinalized)
 :	fPosition(uint64(-1)),
@@ -1426,8 +1417,7 @@ ZFile::Error ZFileW_POSIXMutex::FlushVolume()
 	{ return spFlushVolume(fFD); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileRW_POSIXMutex
+// MARK: - ZFileRW_POSIXMutex
 
 ZFileRW_POSIXMutex::ZFileRW_POSIXMutex(int iFD, bool iCloseWhenFinalized)
 :	fPosition(uint64(-1)),
@@ -1488,8 +1478,7 @@ ZFile::Error ZFileRW_POSIXMutex::FlushVolume()
 	{ return spFlushVolume(fFD); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_File_POSIX
+// MARK: - ZStreamRPos_File_POSIX
 
 ZStreamRPos_File_POSIX::ZStreamRPos_File_POSIX(int iFD, bool iCloseWhenFinalized)
 :	fFD(iFD),
@@ -1525,8 +1514,7 @@ uint64 ZStreamRPos_File_POSIX::Imp_GetSize()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRPos_File_POSIX
+// MARK: - ZStreamerRPos_File_POSIX
 
 ZStreamerRPos_File_POSIX::ZStreamerRPos_File_POSIX(int iFD, bool iCloseWhenFinalized)
 :	fStream(iFD, iCloseWhenFinalized)
@@ -1539,8 +1527,7 @@ const ZStreamRPos& ZStreamerRPos_File_POSIX::GetStreamRPos()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_File_POSIX
+// MARK: - ZStreamWPos_File_POSIX
 
 ZStreamWPos_File_POSIX::ZStreamWPos_File_POSIX(int iFD, bool iCloseWhenFinalized)
 :	fFD(iFD),
@@ -1585,8 +1572,7 @@ void ZStreamWPos_File_POSIX::Imp_SetSize(uint64 iSize)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerWPos_File_POSIX
+// MARK: - ZStreamerWPos_File_POSIX
 
 ZStreamerWPos_File_POSIX::ZStreamerWPos_File_POSIX(int iFD, bool iCloseWhenFinalized)
 :	fStream(iFD, iCloseWhenFinalized)
@@ -1599,8 +1585,7 @@ const ZStreamWPos& ZStreamerWPos_File_POSIX::GetStreamWPos()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWPos_File_POSIX
+// MARK: - ZStreamRWPos_File_POSIX
 
 ZStreamRWPos_File_POSIX::ZStreamRWPos_File_POSIX(int iFD, bool iCloseWhenFinalized)
 :	fFD(iFD),
@@ -1648,8 +1633,7 @@ void ZStreamRWPos_File_POSIX::Imp_SetSize(uint64 iSize)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRWPos_File_POSIX
+// MARK: - ZStreamerRWPos_File_POSIX
 
 ZStreamerRWPos_File_POSIX::ZStreamerRWPos_File_POSIX(int iFD, bool iCloseWhenFinalized)
 :	fStream(iFD, iCloseWhenFinalized)

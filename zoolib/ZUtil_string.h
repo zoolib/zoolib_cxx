@@ -34,8 +34,7 @@ namespace ZUtil_string {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_string
+// MARK: - ZUtil_string
 
 ZQ<int64> sQInt64(const string& iString);
 int64 sDInt64(int64 iDefault, const string& iString);

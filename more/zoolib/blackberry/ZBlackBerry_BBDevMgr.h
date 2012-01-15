@@ -44,8 +44,7 @@ namespace ZBlackBerry {
 class Device_BBDevMgr;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Manager_BBDevMgr
+// MARK: - ZBlackBerry::Manager_BBDevMgr
 
 class Manager_BBDevMgr
 :	private ZBlackBerryCOM::IDeviceManagerEvents,

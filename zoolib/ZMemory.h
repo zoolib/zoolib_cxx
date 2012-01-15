@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * memcmp, memcpy, memmove, memset, bzero wrappers.
+// MARK: - memcmp, memcpy, memmove, memset, bzero wrappers.
 
 inline int ZMemCompare(const void* iLHS, const void* iRHS, std::size_t iCount)
 	{ return std::memcmp(iLHS, iRHS, iCount); }

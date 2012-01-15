@@ -32,8 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Declarations of names in namespace ZDCPixmapNS
+// MARK: - Declarations of names in namespace ZDCPixmapNS
 
 /// ZDCPixmapNS encompasses a suite of types and methods for working with fairly generic pixmaps.
 
@@ -69,8 +68,7 @@ class PixelDesc;
 } // namespace ZDCPixmapNS
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::EFormatEfficient
+// MARK: - ZDCPixmapNS::EFormatEfficient
 
 namespace ZDCPixmapNS {
 
@@ -94,8 +92,7 @@ enum EFormatEfficient
 } // namespace ZDCPixmapNS
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::EFormatStandard
+// MARK: - ZDCPixmapNS::EFormatStandard
 
 namespace ZDCPixmapNS {
 
@@ -140,8 +137,7 @@ enum EFormatStandard
 } // namespace ZDCPixmapNS
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sMapEfficientToStandard
+// MARK: - sMapEfficientToStandard
 
 namespace ZDCPixmapNS {
 
@@ -150,8 +146,7 @@ EFormatStandard sMapEfficientToStandard(EFormatEfficient iFormat);
 } // namespace ZDCPixmapNS
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixvalDesc
+// MARK: - ZDCPixmapNS::PixvalDesc
 
 /** PixvalDesc describes how a single pixval is laid out. */
 
@@ -173,8 +168,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::RasterDesc
+// MARK: - ZDCPixmapNS::RasterDesc
 
 /** RasterDesc describes the layout of pixel values in a raster. It does not address which
 components of a pixel are encoded in which bits of a pixel value, it simply maintains enough
@@ -209,8 +203,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixvalAccessor
+// MARK: - ZDCPixmapNS::PixvalAccessor
 
 /** PixvalAccessor provides for efficient access to
 pixvals by precomputing and reusing key information. */
@@ -250,8 +243,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixvalIterR
+// MARK: - ZDCPixmapNS::PixvalIterR
 
 class ZDCPixmapNS::PixvalIterR
 	{
@@ -273,8 +265,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * PixvalIterRW
+// MARK: - PixvalIterRW
 
 class ZDCPixmapNS::PixvalIterRW
 	{
@@ -299,8 +290,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixvalIterW
+// MARK: - ZDCPixmapNS::PixvalIterW
 
 class ZDCPixmapNS::PixvalIterW
 	{
@@ -322,8 +312,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::MapPixvalToRGB_Indexed
+// MARK: - ZDCPixmapNS::MapPixvalToRGB_Indexed
 
 class ZDCPixmapNS::MapPixvalToRGB_Indexed
 	{
@@ -362,8 +351,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::MapPixvalToRGB_Gray
+// MARK: - ZDCPixmapNS::MapPixvalToRGB_Gray
 
 class ZDCPixmapNS::MapPixvalToRGB_Gray
 	{
@@ -408,8 +396,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::MapPixvalToRGB_Color
+// MARK: - ZDCPixmapNS::MapPixvalToRGB_Color
 
 class ZDCPixmapNS::MapPixvalToRGB_Color
 	{
@@ -464,8 +451,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::MapRGBToPixval_Indexed
+// MARK: - ZDCPixmapNS::MapRGBToPixval_Indexed
 
 class ZDCPixmapNS::MapRGBToPixval_Indexed
 	{
@@ -495,8 +481,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::MapRGBToPixval_Gray
+// MARK: - ZDCPixmapNS::MapRGBToPixval_Gray
 
 class ZDCPixmapNS::MapRGBToPixval_Gray
 	{
@@ -529,8 +514,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::MapRGBToPixval_Color
+// MARK: - ZDCPixmapNS::MapRGBToPixval_Color
 
 class ZDCPixmapNS::MapRGBToPixval_Color
 	{
@@ -568,8 +552,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixelDescRep
+// MARK: - ZDCPixmapNS::PixelDescRep
 
 class ZDCPixmapNS::PixelDescRep : public ZCountedWithoutFinalize
 	{
@@ -604,8 +587,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixelDescRep_Indexed
+// MARK: - ZDCPixmapNS::PixelDescRep_Indexed
 
 class ZDCPixmapNS::PixelDescRep_Indexed
 :	public ZDCPixmapNS::PixelDescRep,
@@ -649,8 +631,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixelDescRep_Gray
+// MARK: - ZDCPixmapNS::PixelDescRep_Gray
 
 class ZDCPixmapNS::PixelDescRep_Gray
 :	public ZDCPixmapNS::PixelDescRep,
@@ -679,8 +660,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixelDescRep_Color
+// MARK: - ZDCPixmapNS::PixelDescRep_Color
 
 class ZDCPixmapNS::PixelDescRep_Color
 :	public ZDCPixmapNS::PixelDescRep,
@@ -708,8 +688,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixelDesc
+// MARK: - ZDCPixmapNS::PixelDesc
 
 class ZDCPixmapNS::PixelDesc
 	{
@@ -745,8 +724,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixelIterR_T
+// MARK: - ZDCPixmapNS::PixelIterR_T
 
 namespace ZDCPixmapNS {
 
@@ -783,8 +761,7 @@ private:
 } // namespace ZDCPixmapNS
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixelIterRW_T
+// MARK: - ZDCPixmapNS::PixelIterRW_T
 
 namespace ZDCPixmapNS {
 
@@ -823,8 +800,7 @@ private:
 } // namespace ZDCPixmapNS
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS::PixelIterW_T
+// MARK: - ZDCPixmapNS::PixelIterW_T
 
 namespace ZDCPixmapNS {
 
@@ -857,8 +833,7 @@ private:
 } // namespace ZDCPixmapNS
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapNS utilities, filling, munging and blitting
+// MARK: - ZDCPixmapNS utilities, filling, munging and blitting
 
 namespace ZDCPixmapNS {
 

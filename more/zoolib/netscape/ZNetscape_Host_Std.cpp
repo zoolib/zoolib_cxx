@@ -47,8 +47,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * HostMeister_Std
+// MARK: - HostMeister_Std
 
 HostMeister_Std::HostMeister_Std()
 	{}
@@ -518,8 +517,7 @@ void HostMeister_Std::UnscheduleTimer(NPP npp, uint32 timerID)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_Std::HTTPFetcher
+// MARK: - Host_Std::HTTPFetcher
 
 class Host_Std::HTTPFetcher
 :	public ZCallable_Void
@@ -607,8 +605,7 @@ void Host_Std::HTTPFetcher::Cancel()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_Std::Sender
+// MARK: - Host_Std::Sender
 
 class Host_Std::Sender
 	{
@@ -757,8 +754,7 @@ bool Host_Std::Sender::pDeliverData()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_Std
+// MARK: - Host_Std
 
 Host_Std::Host_Std(ZRef<GuestFactory> iGuestFactory)
 :	Host(iGuestFactory)

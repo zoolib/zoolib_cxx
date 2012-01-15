@@ -36,8 +36,7 @@ namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel
+// MARK: - Expr_Rel
 
 class Expr_Rel
 :	public virtual ZExpr
@@ -47,8 +46,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SemanticError
+// MARK: - SemanticError
 
 class SemanticError : public std::runtime_error
 	{

@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZProgressWatcher
+// MARK: - ZProgressWatcher
 
 class ZProgressWatcher
 	{
@@ -43,8 +42,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZProgressPusher
+// MARK: - ZProgressPusher
 
 class ZProgressPusher
 	{

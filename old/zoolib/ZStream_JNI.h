@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_JNI
+// MARK: - ZStreamR_JNI
 
 /// A read stream that sources data from a java.io.InputStream.
 

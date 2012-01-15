@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCompare_T declaration
+// MARK: - sCompare_T declaration
 
 template <class T> int sCompare_T(const T& iL, const T& iR);
 
@@ -42,8 +41,7 @@ inline int sCompare_T(const std::pair<S,T>& iLeft, const std::pair<S,T>& iRight)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Less_Compare_T
+// MARK: - Less_Compare_T
 
 template <class T>
 struct Less_Compare_T : public std::binary_function<T,T,bool>
@@ -53,8 +51,7 @@ struct Less_Compare_T : public std::binary_function<T,T,bool>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCompareIterators_T
+// MARK: - sCompareIterators_T
 
 template <class InputIterator>
 inline int sCompareIterators_T

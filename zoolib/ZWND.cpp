@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWindowClassRegistrationW
+// MARK: - ZWindowClassRegistrationW
 
 class ZWindowClassRegistrationW
 	{
@@ -73,8 +72,7 @@ const WCHAR* ZWindowClassRegistrationW::GetWNDCLASSName() const
 	{ return fWNDCLASSName; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWNDW
+// MARK: - ZWNDW
 
 static ZWindowClassRegistrationW
 	spWindowClassRegistrationW_Default(DefWindowProcW, L"WindowClassRegistrationW_Default");
@@ -217,8 +215,7 @@ ZWNDW* ZWNDW::sFromHWNDNilOkayW(HWND iHWND)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWNDSubClassW
+// MARK: - ZWNDSubClassW
 
 ZWNDSubClassW::ZWNDSubClassW()
 :	fHWND(nullptr),

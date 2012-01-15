@@ -32,8 +32,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamR_XMLRPC
+// MARK: - ZYadStreamR_XMLRPC
 
 class ZYadStreamR_XMLRPC
 :	public ZYadStreamR
@@ -54,8 +53,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_XMLRPC
+// MARK: - ZYadStrimR_XMLRPC
 
 class ZYadStrimR_XMLRPC
 :	public ZYadStrimR
@@ -74,8 +72,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_XMLRPC
+// MARK: - ZYadSeqR_XMLRPC
 
 class ZYadSeqR_XMLRPC : public ZYadSeqR_Std
 	{
@@ -90,8 +87,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_XMLRPC
+// MARK: - ZYadMapR_XMLRPC
 
 class ZYadMapR_XMLRPC : public ZYadMapR_Std
 	{
@@ -106,8 +102,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static parsing functions
+// MARK: - Static parsing functions
 
 static void spThrowParseException(const string& iMessage)
 	{
@@ -278,8 +273,7 @@ static ZRef<ZYadR> spMakeYadR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException_XMLRPC
+// MARK: - ZYadParseException_XMLRPC
 
 ZYadParseException_XMLRPC::ZYadParseException_XMLRPC(const string& iWhat)
 :	ZYadParseException_Std(iWhat)
@@ -290,8 +284,7 @@ ZYadParseException_XMLRPC::ZYadParseException_XMLRPC(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamR_XMLRPC
+// MARK: - ZYadStreamR_XMLRPC
 
 ZYadStreamR_XMLRPC::ZYadStreamR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU),
@@ -309,8 +302,7 @@ const ZStreamR& ZYadStreamR_XMLRPC::GetStreamR()
 	{ return fStreamR_Base64Decode; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_XMLRPC
+// MARK: - ZYadStrimR_XMLRPC
 
 ZYadStrimR_XMLRPC::ZYadStrimR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
@@ -328,8 +320,7 @@ const ZStrimR& ZYadStrimR_XMLRPC::GetStrimR()
 	{ return fStrimmerU->GetStrimR(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_XMLRPC
+// MARK: - ZYadSeqR_XMLRPC
 
 ZYadSeqR_XMLRPC::ZYadSeqR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
@@ -366,8 +357,7 @@ void ZYadSeqR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_XMLRPC_Params
+// MARK: - ZYadSeqR_XMLRPC_Params
 
 class ZYadSeqR_XMLRPC_Params : public ZYadSeqR_Std
 	{
@@ -429,8 +419,7 @@ void ZYadSeqR_XMLRPC_Params::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_XMLRPC_Fault
+// MARK: - ZYadSeqR_XMLRPC_Fault
 
 class ZYadSeqR_XMLRPC_Fault : public ZYadSeqR_Std
 	{
@@ -478,8 +467,7 @@ void ZYadSeqR_XMLRPC_Fault::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_XMLRPC
+// MARK: - ZYadMapR_XMLRPC
 
 ZYadMapR_XMLRPC::ZYadMapR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
@@ -527,8 +515,7 @@ void ZYadMapR_XMLRPC::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static writing functions
+// MARK: - Static writing functions
 
 static void spToStrim(const ZML::StrimW& s, ZRef<ZYadR> iYadR);
 
@@ -656,8 +643,7 @@ static void spToStrim(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_XMLRPC
+// MARK: - ZYad_XMLRPC
 
 namespace ZYad_XMLRPC {
 

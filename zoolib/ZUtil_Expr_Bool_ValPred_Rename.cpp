@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace Util_Expr_Bool {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * DoRename (anonymous)
+// MARK: - DoRename (anonymous)
 
 namespace { // anonymous
 
@@ -57,8 +56,7 @@ void DoRename::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Util_Expr_Bool
+// MARK: - Util_Expr_Bool
 
 ZRef<ZExpr_Bool> sRenamed(const std::map<std::string,std::string>& iRename,
 	const ZRef<ZExpr_Bool>& iExpr)

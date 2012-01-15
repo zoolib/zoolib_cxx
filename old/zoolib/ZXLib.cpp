@@ -32,8 +32,7 @@ namespace ZooLib {
 ZMutex ZXLib::sMutex;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZXLib::ErrorTrap
+// MARK: - ZXLib::ErrorTrap
 
 ZXLib::ErrorTrap* ZXLib::ErrorTrap::sCurrent;
 
@@ -252,8 +251,7 @@ ZXLib::ErrorTrap::Init::~Init()
 ZXLib::ErrorTrap::Init ZXLib::ErrorTrap::sInit;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZXLib
+// MARK: - ZXLib
 
 Display* ZXLib::OpenDisplay(const char* a0)
 	{

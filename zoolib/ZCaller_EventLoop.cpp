@@ -25,8 +25,7 @@ namespace ZooLib {
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCaller_EventLoop
+// MARK: - ZCaller_EventLoop
 
 ZCaller_EventLoop::ZCaller_EventLoop()
 :	fTriggered(false)

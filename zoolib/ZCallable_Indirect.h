@@ -28,14 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect
+// MARK: - ZCallable_Indirect
 
 template <class Signature> class ZCallable_Indirect;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 0 params)
+// MARK: - ZCallable_Indirect (specialization for 0 params)
 
 template <class R>
 class ZCallable_Indirect<R(void)>
@@ -67,8 +65,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 1 param)
+// MARK: - ZCallable_Indirect (specialization for 1 param)
 
 template <class R,
 	class P0>
@@ -101,8 +98,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 2 params)
+// MARK: - ZCallable_Indirect (specialization for 2 params)
 
 template <class R,
 	class P0, class P1>
@@ -135,8 +131,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 3 params)
+// MARK: - ZCallable_Indirect (specialization for 3 params)
 
 template <class R,
 	class P0, class P1, class P2>
@@ -169,8 +164,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 4 params)
+// MARK: - ZCallable_Indirect (specialization for 4 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3>
@@ -203,8 +197,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 5 params)
+// MARK: - ZCallable_Indirect (specialization for 5 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -238,8 +231,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 6 params)
+// MARK: - ZCallable_Indirect (specialization for 6 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -273,8 +265,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 7 params)
+// MARK: - ZCallable_Indirect (specialization for 7 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -308,8 +299,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 8 params)
+// MARK: - ZCallable_Indirect (specialization for 8 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -343,8 +333,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 9 params)
+// MARK: - ZCallable_Indirect (specialization for 9 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -381,8 +370,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 10 params)
+// MARK: - ZCallable_Indirect (specialization for 10 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -419,8 +407,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 11 params)
+// MARK: - ZCallable_Indirect (specialization for 11 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -457,8 +444,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 12 params)
+// MARK: - ZCallable_Indirect (specialization for 12 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -495,8 +481,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 13 params)
+// MARK: - ZCallable_Indirect (specialization for 13 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -534,8 +519,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 14 params)
+// MARK: - ZCallable_Indirect (specialization for 14 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -573,8 +557,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 15 params)
+// MARK: - ZCallable_Indirect (specialization for 15 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -614,8 +597,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Indirect (specialization for 16 params)
+// MARK: - ZCallable_Indirect (specialization for 16 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -656,8 +638,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable_Indirect
+// MARK: - sCallable_Indirect
 
 template <class Sig>
 ZRef<ZCallable_Indirect<Sig> > sCallable_Indirect(const ZRef<ZCallable<Sig> >& iCallable)

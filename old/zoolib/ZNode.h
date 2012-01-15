@@ -38,8 +38,7 @@ class ZNodeRep;
 class ZNodeIterRep;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNode
+// MARK: - ZNode
 
 class ZNode
 	{
@@ -137,8 +136,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIter
+// MARK: - ZNodeIter
 
 class ZNodeIter
 	{
@@ -161,8 +159,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeTreeIter
+// MARK: - ZNodeTreeIter
 
 /// An iterator that provides access to every node descending from a ZNode.
 
@@ -188,8 +185,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeRep
+// MARK: - ZNodeRep
 
 class ZNodeRep : public ZCounted
 	{
@@ -236,8 +232,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIterRep
+// MARK: - ZNodeIterRep
 
 class ZNodeIterRep : public ZCounted
 	{
@@ -256,8 +251,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIterRep_Std
+// MARK: - ZNodeIterRep_Std
 
 class ZNodeIterRep_Std : public ZNodeIterRep
 	{
@@ -281,8 +275,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIterRep_Std::RealRep
+// MARK: - ZNodeIterRep_Std::RealRep
 
 class ZNodeIterRep_Std::RealRep : public ZCounted
 	{

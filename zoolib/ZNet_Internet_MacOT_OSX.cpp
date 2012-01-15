@@ -38,8 +38,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMacMP
+// MARK: - ZMacMP
 
 namespace ZMacMP {
 
@@ -161,8 +160,7 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 #endif // ZCONFIG(Thread_API, Mac)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Initialize OpenTransport
+// MARK: - Initialize OpenTransport
 
 static OTClientContextPtr spOTClientContextPtr;
 
@@ -193,8 +191,7 @@ InitHelper sInitHelper;
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 
@@ -242,8 +239,7 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+// MARK: - Helper functions
 
 static ZNet::Error spTranslateError(OTResult theOTResult)
 	{
@@ -283,8 +279,7 @@ static OTResult spSetFourByteOption(EndpointRef ep, OTXTILevel level, OTXTIName 
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetNameLookup_Internet_MacOT_OSX
+// MARK: - ZNetNameLookup_Internet_MacOT_OSX
 
 ZNetNameLookup_Internet_MacOT_OSX::ZNetNameLookup_Internet_MacOT_OSX
 	(const string& iName, ip_port iPort, size_t iMaxAddresses)
@@ -391,8 +386,7 @@ void ZNetNameLookup_Internet_MacOT_OSX::sMP_Lookup(void* iParam)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_TCP_MacOT_OSX
+// MARK: - ZNetListener_TCP_MacOT_OSX
 
 struct ListenerConstruct_t
 	{
@@ -605,8 +599,7 @@ ip_port ZNetListener_TCP_MacOT_OSX::GetPort()
 	{ return fLocalPort; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_TCP_MacOT_OSX
+// MARK: - ZNetEndpoint_TCP_MacOT_OSX
 
 ZNetEndpoint_TCP_MacOT_OSX::ZNetEndpoint_TCP_MacOT_OSX
 	(EndpointRef iEndpointRef, InetAddress& iRemoteInetAddress)

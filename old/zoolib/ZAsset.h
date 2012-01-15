@@ -38,8 +38,7 @@ class ZAssetRep;
 class ZAssetTree;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAsset
+// MARK: - ZAsset
 
 /// Represents an asset in an asset tree.
 
@@ -82,8 +81,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetIter
+// MARK: - ZAssetIter
 
 /// An iterator that provides access to the children of an asset.
 
@@ -107,8 +105,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree
+// MARK: - ZAssetTree
 
 /// Represents an entire asset tree.
 
@@ -125,8 +122,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep
+// MARK: - ZAssetRep
 
 class ZAssetRep : public ZCounted, NonCopyable
 	{
@@ -155,8 +151,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetIterRep
+// MARK: - ZAssetIterRep
 
 class ZAssetIterRep : public ZCounted
 	{
@@ -175,8 +170,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Overlay
+// MARK: - ZAssetRep_Overlay
 
 class ZAssetRep_Overlay : public ZAssetRep
 	{
@@ -210,8 +204,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetIterRep_Union
+// MARK: - ZAssetIterRep_Union
 
 class ZAssetIterRep_Union : public ZAssetIterRep
 	{
@@ -240,8 +233,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAsset Inlines
+// MARK: - ZAsset Inlines
 
 inline ZAsset::ZAsset()
 	{}

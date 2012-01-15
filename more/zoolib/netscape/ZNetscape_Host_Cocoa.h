@@ -39,8 +39,7 @@ class Host_Cocoa;
 } // namespace ZooLib
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NSView_NetscapeHost
+// MARK: - NSView_NetscapeHost
 
 @interface NSView_NetscapeHost : NSView
 	{
@@ -51,8 +50,7 @@ class Host_Cocoa;
 @end
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_Cocoa
+// MARK: - Host_Cocoa
 
 namespace ZooLib {
 namespace ZNetscape {

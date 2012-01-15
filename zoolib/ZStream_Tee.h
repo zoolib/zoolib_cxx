@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Tee
+// MARK: - ZStreamR_Tee
 
 /// A read filter stream that echoes any data read from it to a write stream.
 
@@ -48,8 +47,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerR_Tee
+// MARK: - ZStreamerR_Tee
 
 /// A read filter streamer encapsulating a ZStreamR_Tee.
 
@@ -69,8 +67,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Tee
+// MARK: - ZStreamW_Tee
 
 /// A write filter stream that replicates writes made against it.
 
@@ -90,8 +87,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerW_Tee
+// MARK: - ZStreamerW_Tee
 
 /// A write filter streamer encapsulating a ZStreamW_Tee.
 

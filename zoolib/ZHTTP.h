@@ -223,8 +223,7 @@ void sWrite_MinimalResponse(const ZStreamW& w, int iResult);
 void sWrite_MinimalResponse_ErrorInBody(const ZStreamW& w, int iError);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamR_Chunked
+// MARK: - StreamR_Chunked
 
 class StreamR_Chunked : public ZStreamR
 	{
@@ -244,8 +243,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamW_Chunked
+// MARK: - StreamW_Chunked
 
 class StreamW_Chunked : public ZStreamW
 	{

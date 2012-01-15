@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZYad_JSONNormalize {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_JSONNormalize
+// MARK: - ZYad_JSONNormalize
 
 ZRef<ZYadR> sYadR(ZRef<ZYadR> iYadR, bool iPreserveSeqs, bool iPreserveMaps);
 

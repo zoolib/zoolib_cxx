@@ -26,8 +26,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZProgressPusher
+// MARK: - ZProgressPusher
 
 ZProgressPusher::ZProgressPusher(
 	ZProgressWatcher* iProgressWatcher, const string& iDescription, int32 iMax)

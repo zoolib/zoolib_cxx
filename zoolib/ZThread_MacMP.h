@@ -46,8 +46,7 @@ class ZMtx_MacMP;
 class ZSem_MacMP;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZThread_MacMP
+// MARK: - ZThread_MacMP
 
 namespace ZThread_MacMP {
 
@@ -65,8 +64,7 @@ void sSleep(double iDuration);
 } // namespace ZThread_MacMP
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTSS_MacMP
+// MARK: - ZTSS_MacMP
 
 namespace ZTSS_MacMP {
 
@@ -82,8 +80,7 @@ Value sGet(Key iKey);
 } // namespace ZTSS_MacMP
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMtx_MacMP
+// MARK: - ZMtx_MacMP
 
 class ZMtx_MacMP : NonCopyable
 	{
@@ -100,26 +97,22 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCndBase_MacMP
+// MARK: - ZCndBase_MacMP
 
 typedef ZCndBase_T<ZMtx_MacMP, ZSem_MacMP> ZCndBase_MacMP;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMtxR_MacMP
+// MARK: - ZMtxR_MacMP
 
 typedef ZMtxR_T<ZMtx_MacMP, ZCndBase_MacMP, ZThread_MacMP::ID, ZThread_MacMP::sID> ZMtxR_MacMP;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCnd_MacMP
+// MARK: - ZCnd_MacMP
 
 typedef ZCndR_T<ZMtxR_MacMP, ZCndBase_MacMP> ZCnd_MacMP;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSem_MacMP
+// MARK: - ZSem_MacMP
 
 class ZSem_MacMP : NonCopyable
 	{

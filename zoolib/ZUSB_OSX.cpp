@@ -42,8 +42,7 @@ using std::runtime_error;
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Other stuff
+// MARK: - Other stuff
 
 static string spErrorAsString(IOReturn iError)
 	{
@@ -89,8 +88,7 @@ static IOUSBDeviceInterface182** spCreate_USBDeviceInterface(io_service_t iUSBDe
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUSBWatcher
+// MARK: - ZUSBWatcher
 
 ZUSBWatcher::ZUSBWatcher
 	(IONotificationPortRef iIONotificationPortRef, SInt32 iUSBVendor, SInt32 iUSBProduct)
@@ -147,8 +145,7 @@ void ZUSBWatcher::spDeviceAdded(void* iRefcon, io_iterator_t iIterator)
 	{ static_cast<ZUSBWatcher*>(iRefcon)->pDeviceAdded(iIterator); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUSBDevice
+// MARK: - ZUSBDevice
 
 ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_t iUSBDevice)
 :	fIOUSBDeviceInterface(nullptr)
@@ -378,8 +375,7 @@ void ZUSBDevice::pFetchDeviceDescriptor()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamerR_TO
+// MARK: - StreamerR_TO
 
 namespace { // anonymous
 
@@ -515,8 +511,7 @@ bool StreamerR_TO::pRefill(double iTimeout)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamerR_Async
+// MARK: - StreamerR_Async
 
 namespace { // anonymous
 
@@ -669,8 +664,7 @@ void StreamerR_Async::spCompletion(void* iRefcon, IOReturn iResult, void* iArg)
 	{ static_cast<StreamerR_Async*>(iRefcon)->pCompletion(iResult, iArg); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamerW
+// MARK: - StreamerW
 
 namespace { // anonymous
 
@@ -738,8 +732,7 @@ void StreamerW::Imp_Write
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUSBInterfaceInterface
+// MARK: - ZUSBInterfaceInterface
 
 ZUSBInterfaceInterface::ZUSBInterfaceInterface(ZRef<ZUSBDevice> iUSBDevice,
 	CFRunLoopRef iRunLoopRef,

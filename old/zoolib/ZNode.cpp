@@ -27,8 +27,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNode
+// MARK: - ZNode
 
 ZNode::ZNode()
 	{}
@@ -451,8 +450,7 @@ ZRef<ZNodeRep> ZNode::pPhysicalNodeRep() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIter
+// MARK: - ZNodeIter
 
 ZNodeIter::ZNodeIter()
 	{}
@@ -507,8 +505,7 @@ string ZNodeIter::CurrentName() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeTreeIter
+// MARK: - ZNodeTreeIter
 
 ZNodeTreeIter::ZNodeTreeIter()
 	{}
@@ -565,8 +562,7 @@ std::string ZNodeTreeIter::CurrentName() const
 	{ return fCurrent.Name(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeRep
+// MARK: - ZNodeRep
 
 ZNodeRep::ZNodeRep()
 	{}
@@ -651,8 +647,7 @@ ZRef<ZStreamerRWPos> ZNodeRep::CreateRWPos(bool iOpenExisting, bool iPreventWrit
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIterRep
+// MARK: - ZNodeIterRep
 
 ZNodeIterRep::ZNodeIterRep()
 	{}
@@ -661,8 +656,7 @@ ZNodeIterRep::~ZNodeIterRep()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIterRep_Std
+// MARK: - ZNodeIterRep_Std
 
 ZNodeIterRep_Std::ZNodeIterRep_Std(ZRef<RealRep> iRealRep, size_t iIndex)
 :	fRealRep(iRealRep),

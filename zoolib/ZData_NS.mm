@@ -28,8 +28,7 @@ namespace ZooLib {
 using ZUtil_NS::sDataMutable;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZData_NS
+// MARK: - ZData_NS
 
 ZAny ZData_NS::AsAny() const
 	{ return ZUtil_NS::sAsAny(this->pData()); }

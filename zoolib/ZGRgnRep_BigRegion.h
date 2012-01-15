@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgnRep_BigRegion
+// MARK: - ZGRgnRep_BigRegion
 
 class ZGRgnRep_BigRegion : public ZGRgnRep
 	{

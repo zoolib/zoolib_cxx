@@ -25,8 +25,7 @@ namespace ZooLib {
 namespace ZUnicode {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode, normalization -- very incomplete for now
+// MARK: - ZUnicode, normalization -- very incomplete for now
 
 bool sNormalized(string16& oResult, const Param_Normalize& iParam)
 	{ return ZFunctionChain_T<string16, Param_Normalize>::sInvoke(oResult, iParam); }

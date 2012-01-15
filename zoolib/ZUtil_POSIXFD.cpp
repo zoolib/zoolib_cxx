@@ -50,8 +50,7 @@ static void spSetup(fd_set& oSet, int iFD)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_POSIXFD
+// MARK: - ZUtil_POSIXFD
 
 #ifdef __APPLE__
 

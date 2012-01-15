@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException_XMLRPC
+// MARK: - ZYadParseException_XMLRPC
 
 class ZYadParseException_XMLRPC : public ZYadParseException_Std
 	{
@@ -39,8 +38,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_XMLRPC
+// MARK: - ZYad_XMLRPC
 
 namespace ZYad_XMLRPC {
 

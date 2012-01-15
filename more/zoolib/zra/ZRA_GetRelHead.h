@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sGetRelHead
+// MARK: - sGetRelHead
 
 RelHead sGetRelHead(const ZRef<Expr_Rel>& iRel);
 

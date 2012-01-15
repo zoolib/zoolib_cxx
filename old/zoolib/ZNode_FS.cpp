@@ -26,8 +26,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static helpers
+// MARK: - Static helpers
 
 static ZNode::Error spTranslateError(ZFile::Error iErr)
 	{
@@ -55,8 +54,7 @@ static void spTranslateError(ZFile::Error iErr, ZNode::Error* oError)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeRep_FS
+// MARK: - ZNodeRep_FS
 
 ZNodeRep_FS::ZNodeRep_FS(const ZFileSpec& iFileSpec)
 :	fFileSpec(iFileSpec)
@@ -389,8 +387,7 @@ ZFileSpec ZNodeRep_FS::GetFileSpec()
 	{ return fFileSpec; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIterRep_FS
+// MARK: - ZNodeIterRep_FS
 
 ZNodeIterRep_FS::ZNodeIterRep_FS(const ZFileIter& iFileIter)
 :	fFileIter(iFileIter)

@@ -42,8 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Forward and external declarations
+// MARK: - Forward and external declarations
 
 class ZStreamR;
 class ZStreamW;
@@ -93,8 +92,7 @@ template <> inline int sCompare_T(const ZType& iL, const ZType& iR)
 const char* ZTypeAsString(ZType iType);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_ZooLib
+// MARK: - ZVal_ZooLib
 
 #if ZCONFIG_Val_ZooLib_Packed
 #	pragma pack(4)
@@ -281,8 +279,7 @@ private:
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_ZooLib inlines
+// MARK: - ZVal_ZooLib inlines
 
 inline bool operator!=(const ZVal_ZooLib& l, const ZVal_ZooLib& r)
 	{ return !(l == r); }
@@ -303,8 +300,7 @@ inline void swap(ZVal_ZooLib& a, ZVal_ZooLib& b)
 	{ a.swap(b); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_ZooLib::Ex_IllegalType
+// MARK: - ZVal_ZooLib::Ex_IllegalType
 
 class ZVal_ZooLib::Ex_IllegalType : public std::runtime_error
 	{
@@ -314,8 +310,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_ZooLib
+// MARK: - ZSeq_ZooLib
 
 class ZSeq_ZooLib
 	{
@@ -384,8 +379,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_ZooLib inlines
+// MARK: - ZSeq_ZooLib inlines
 
 inline bool operator!=(const ZSeq_ZooLib& l, const ZSeq_ZooLib& r)
 	{ return !(l == r); }
@@ -414,8 +408,7 @@ inline void ZSeq_ZooLib::GetVector_T(OutputIterator iIter, const T& iDummy) cons
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NameVal
+// MARK: - NameVal
 
 /// The type used to store name/property pairs.
 
@@ -440,8 +433,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_ZooLib
+// MARK: - ZMap_ZooLib
 
 /// Associative array mapping names to ZVal_ZooLibs.
 
@@ -566,8 +558,7 @@ S ZMap_Z::Get(const Index_t& iIndex) const
 	{ return this->Get(iIndex).Get<S>(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_ZooLib inlines
+// MARK: - ZMap_ZooLib inlines
 
 inline bool operator!=(const ZMap_ZooLib& l, const ZMap_ZooLib& r)
 	{ return !(l == r); }

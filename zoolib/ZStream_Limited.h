@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Limited
+// MARK: - ZStreamR_Limited
 
 /// A read filter stream that caps the number of bytes that can be read
 
@@ -60,8 +59,7 @@ protected:
 // typedef ZStreamerR_FT<ZStreamR_Limited> ZStreamerR_Limited;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Limited
+// MARK: - ZStreamW_Limited
 
 /// A write filter stream that caps the number of bytes that can be written
 
@@ -83,8 +81,7 @@ protected:
 // typedef ZStreamerW_FT<ZStreamW_Limited> ZStreamerW_Limited;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_Limited
+// MARK: - ZStreamRPos_Limited
 
 /** A positionable read filter stream that offsets
 the position and caps the number of bytes that can be read. */
@@ -111,8 +108,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRPos_Limited
+// MARK: - ZStreamerRPos_Limited
 
 /// A positionable read filter streamer encapsulating a ZStreamRPos_Limited.
 

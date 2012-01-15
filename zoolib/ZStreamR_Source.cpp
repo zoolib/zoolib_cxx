@@ -27,8 +27,7 @@ using std::pair;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Source
+// MARK: - ZStreamR_Source
 
 /**
 \class ZStreamR_Source
@@ -132,8 +131,7 @@ void ZStreamR_Source::pCopyTo(const ZStreamW& iStreamW, uint64 iCount,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerR_Source
+// MARK: - ZStreamerR_Source
 
 ZStreamerR_Source::ZStreamerR_Source()
 	{}

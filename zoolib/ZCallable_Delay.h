@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_DelayFor
+// MARK: - ZCallable_DelayFor
 
 template <class R>
 class ZCallable_DelayFor
@@ -65,8 +64,7 @@ sCallable_DelayFor(double iInterval, const ZRef<ZCallable<R(void)> >& iCallable)
 	{ return new ZCallable_DelayFor<R>(iInterval, iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_DelayUntil
+// MARK: - ZCallable_DelayUntil
 
 template <class R>
 class ZCallable_DelayUntil

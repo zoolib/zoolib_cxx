@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparand_Const_Any
+// MARK: - ZValComparand_Const_Any
 
 ZValComparand_Const_Any::ZValComparand_Const_Any(const ZVal_Any& iVal)
 :	fVal(iVal)
@@ -43,8 +42,7 @@ int sCompare_T(const ZValComparand_Const_Any& iL, const ZValComparand_Const_Any&
 ZMACRO_CompareRegistration_T(ZValComparand_Const_Any)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparator_Callable_Any
+// MARK: - ZValComparator_Callable_Any
 
 ZValComparator_Callable_Any::ZValComparator_Callable_Any(ZRef<Callable> iCallable)
 :	fCallable(iCallable)
@@ -60,8 +58,7 @@ int sCompare_T(const ZValComparator_Callable_Any& iL, const ZValComparator_Calla
 ZMACRO_CompareRegistration_T(ZValComparator_Callable_Any)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparator_StringContains
+// MARK: - ZValComparator_StringContains
 
 ZValComparator_StringContains::ZValComparator_StringContains(int iStrength)
 :	fStrength(iStrength)
@@ -77,8 +74,7 @@ int sCompare_T(const ZValComparator_StringContains& iL, const ZValComparator_Str
 ZMACRO_CompareRegistration_T(ZValComparator_StringContains)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Comparand pseudo constructors
+// MARK: - Comparand pseudo constructors
 
 ZValComparandPseudo CConst(const ZVal_Any& iVal)
 	{ return new ZValComparand_Const_Any(iVal); }

@@ -47,8 +47,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNet_TCP_Socket
+// MARK: - ZNet_TCP_Socket
 
 namespace ZNet_TCP_Socket {
 
@@ -58,8 +57,7 @@ int sListen(ip6_addr iLocalAddress, ip_port iLocalPort);
 } // namespace ZNet_TCP_Socket
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetNameLookup_Internet_Socket
+// MARK: - ZNetNameLookup_Internet_Socket
 
 class ZNetNameLookup_Internet_Socket : public ZNetNameLookup
 	{
@@ -85,8 +83,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_TCP_Socket
+// MARK: - ZNetListener_TCP_Socket
 
 class ZNetListener_TCP_Socket
 :	public ZNetListener_TCP,
@@ -113,8 +110,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_TCP_Socket
+// MARK: - ZNetEndpoint_TCP_Socket
 
 class ZNetEndpoint_TCP_Socket
 :	public ZNetEndpoint_TCP,

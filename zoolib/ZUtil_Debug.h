@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace ZUtil_Debug {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Debug
+// MARK: - ZUtil_Debug
 
 #if ZCONFIG_API_Enabled(StackCrawl)
 	void sDumpStackCrawl(const ZStackCrawl& iCrawl, const ZStrimW& s);

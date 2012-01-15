@@ -46,8 +46,7 @@ typedef ZMap_AppleEvent ZMap_AE;
 std::string sAEKeywordAsString(AEKeyword iKeyword);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_AppleEvent
+// MARK: - ZVal_AppleEvent
 
 class ZVal_AppleEvent
 :	public AEDesc
@@ -141,8 +140,7 @@ inline void swap(ZVal_AppleEvent& a, ZVal_AppleEvent& b)
 	{ a.swap(b); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_AppleEvent
+// MARK: - ZSeq_AppleEvent
 
 class ZSeq_AppleEvent
 :	public AEDescList
@@ -185,8 +183,7 @@ inline void swap(ZSeq_AppleEvent& a, ZSeq_AppleEvent& b)
 	{ a.swap(b); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_AppleEvent
+// MARK: - ZMap_AppleEvent
 
 class ZMap_AppleEvent
 :	public AERecord

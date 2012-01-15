@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCompare_T
+// MARK: - sCompare_T
 
 template <>
 int sCompare_T(const ZRA::Expr_Rel_Concrete& iL, const ZRA::Expr_Rel_Concrete& iR)
@@ -36,8 +35,7 @@ ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Concrete)
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Concrete
+// MARK: - Expr_Rel_Concrete
 
 Expr_Rel_Concrete::Expr_Rel_Concrete(const RelHead& iRelHead)
 :	fRelHead(iRelHead)
@@ -72,15 +70,13 @@ const RelHead& Expr_Rel_Concrete::GetConcreteRelHead() const
 	{ return fRelHead; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Concrete
+// MARK: - Visitor_Expr_Rel_Concrete
 
 void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sConcrete
+// MARK: - sConcrete
 
 ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead)
 	{ return new Expr_Rel_Concrete(iRelHead); }

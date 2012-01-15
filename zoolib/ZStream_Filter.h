@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Filter
+// MARK: - ZStreamR_Filter
 
 class ZStreamR_Filter : public ZStreamR
 	{
@@ -54,8 +53,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRCon_Filter
+// MARK: - ZStreamRCon_Filter
 
 class ZStreamRCon_Filter : public ZStreamRCon
 	{
@@ -79,8 +77,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamU_Filter
+// MARK: - ZStreamU_Filter
 
 class ZStreamU_Filter : public ZStreamU
 	{
@@ -103,8 +100,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_Filter
+// MARK: - ZStreamRPos_Filter
 
 class ZStreamRPos_Filter : public ZStreamRPos
 	{
@@ -129,8 +125,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Filter
+// MARK: - ZStreamW_Filter
 
 class ZStreamW_Filter : public ZStreamW
 	{
@@ -148,8 +143,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWCon_Filter
+// MARK: - ZStreamWCon_Filter
 
 class ZStreamWCon_Filter : public ZStreamWCon
 	{
@@ -171,8 +165,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_Filter
+// MARK: - ZStreamWPos_Filter
 
 class ZStreamWPos_Filter : public ZStreamWPos
 	{
@@ -197,8 +190,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWPos_Filter
+// MARK: - ZStreamRWPos_Filter
 
 class ZStreamRWPos_Filter : public ZStreamRWPos
 	{

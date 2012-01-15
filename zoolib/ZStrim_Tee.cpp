@@ -29,8 +29,7 @@ using std::min;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_Tee
+// MARK: - ZStrimR_Tee
 
 ZStrimR_Tee::ZStrimR_Tee(const ZStrimR& iSource, const ZStrimW& iSink)
 :	fSource(iSource),
@@ -72,8 +71,7 @@ void ZStrimR_Tee::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerR_Tee
+// MARK: - ZStrimmerR_Tee
 
 ZStrimmerR_Tee::ZStrimmerR_Tee(ZRef<ZStrimmerR> iStrimmerSource, ZRef<ZStrimmerW> iStrimmerSink)
 :	fStrimmerSource(iStrimmerSource),
@@ -88,8 +86,7 @@ const ZStrimR& ZStrimmerR_Tee::GetStrimR()
 	{ return fStrim; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_Tee
+// MARK: - ZStrimW_Tee
 
 ZStrimW_Tee::ZStrimW_Tee(const ZStrimW& iSink1, const ZStrimW& iSink2)
 :	fSink1(iSink1),
@@ -129,8 +126,7 @@ void ZStrimW_Tee::Imp_Flush()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerW_Tee
+// MARK: - ZStrimmerW_Tee
 
 ZStrimmerW_Tee::ZStrimmerW_Tee(ZRef<ZStrimmerW> iStrimmerSink1, ZRef<ZStrimmerW> iStrimmerSink2)
 :	fStrimmerSink1(iStrimmerSink1),

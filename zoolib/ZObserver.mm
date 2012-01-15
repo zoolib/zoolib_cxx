@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZObserver
+// MARK: - ZObserver
 
 ZObserver::ZObserver(void* iObject, const std::string& iName, ZRef<Callable> iCallable)
 :	fObject(iObject)

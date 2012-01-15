@@ -53,8 +53,7 @@ namespace ZooLib {
 namespace ZBlackBerry {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Manager_OSXUSB
+// MARK: - ZBlackBerry::Manager_OSXUSB
 
 class Manager_OSXUSB
 :	public Manager

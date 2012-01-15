@@ -26,8 +26,7 @@ namespace ZSOCKS {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSOCKS::sConnect
+// MARK: - ZSOCKS::sConnect
 
 bool sConnect(const ZStreamR& r, const ZStreamW& w, const std::string& iHost, uint16 iPort)
 	{

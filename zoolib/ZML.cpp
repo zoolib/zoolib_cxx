@@ -42,8 +42,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static helper functions
+// MARK: - Static helper functions
 
 static string spReadReference(const ZStrimU& iStrim, ZRef<Callable_Entity> iCallable)
 	{
@@ -291,8 +290,7 @@ static bool spReadMLAttributeValue
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML::StrimU
+// MARK: - ZML::StrimU
 
 StrimU::StrimU(const ZStrimU& iStrim)
 :	fStrim(iStrim),
@@ -633,8 +631,7 @@ void StrimU::pAdvance()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML::StrimmerU
+// MARK: - ZML::StrimmerU
 
 StrimmerU::StrimmerU(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
@@ -657,8 +654,7 @@ StrimU& StrimmerU::GetStrim()
 	{ return fStrim; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML parsing support
+// MARK: - ZML parsing support
 
 void sSkipText(StrimU& r)
 	{
@@ -730,8 +726,7 @@ bool sTryRead_End(StrimU& r, const string& iTagName)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML::StrimW
+// MARK: - ZML::StrimW
 
 /** \class ZML::StrimW
 ZML::StrimW extends the ZStrimW protocol with methods to open and close
@@ -1411,8 +1406,7 @@ void StrimW::pEnd()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML::StrimW::Indenter
+// MARK: - ZML::StrimW::Indenter
 
 StrimW::Indenter::Indenter(StrimW& iStrimW, bool iIndent)
 :	fStrimW(iStrimW),
@@ -1423,8 +1417,7 @@ StrimW::Indenter::~Indenter()
 	{ fStrimW.Indent(fPriorIndent); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML::StrimmerW
+// MARK: - ZML::StrimmerW
 
 StrimmerW::StrimmerW(ZRef<ZStrimmerW> iStrimmerW)
 :	fStrimmerW(iStrimmerW),

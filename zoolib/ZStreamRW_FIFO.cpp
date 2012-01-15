@@ -26,8 +26,7 @@ using std::deque;
 using std::min;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRW_FIFO
+// MARK: - ZStreamRW_FIFO
 
 ZStreamRW_FIFO::ZStreamRW_FIFO()
 :	fClosed(false),

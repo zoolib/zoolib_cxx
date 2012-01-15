@@ -42,8 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgnRep_RgnHandle
+// MARK: - ZGRgnRep_RgnHandle
 
 class ZGRgnRep_RgnHandle : public ZGRgnRep
 	{

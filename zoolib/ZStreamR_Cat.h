@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Cat
+// MARK: - ZStreamR_Cat
 
 /// A read filter stream that reads from \a iStreamR1 until it's exhausted, then from \a iStreamR2.
 
@@ -50,8 +49,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerR_Cat
+// MARK: - ZStreamerR_Cat
 
 /// A read filter streamer encapsulating a ZStreamR_Cat.
 

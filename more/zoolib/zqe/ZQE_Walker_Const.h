@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Walker_Const
+// MARK: - Walker_Const
 
 class Walker_Const : public Walker
 	{

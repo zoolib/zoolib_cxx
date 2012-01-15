@@ -41,8 +41,7 @@ using ZIntervalTreeClock::Event;
 using ZRA::RelHead;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * AddedQuery
+// MARK: - AddedQuery
 
 class AddedQuery
 	{
@@ -63,8 +62,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * QueryResult
+// MARK: - QueryResult
 
 class QueryResult
 	{
@@ -87,8 +85,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source
+// MARK: - Source
 
 class Source : public ZCounted
 	{
@@ -120,8 +117,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SourceFactory
+// MARK: - SourceFactory
 
 class SourceFactory : public ZCounted
 	{

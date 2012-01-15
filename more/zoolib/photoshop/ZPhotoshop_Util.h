@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZPhotoshop {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Photoshop
+// MARK: - ZUtil_Photoshop
 
 void sGetHostVersion(int& oMajor, int& oMinor, int& oFix);
 

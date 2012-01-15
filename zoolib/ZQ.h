@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZQ
+// MARK: - ZQ
 
 // The 'Q' stands for 'Questionable', 'Queryable', 'Quibble' or perhaps 'Quib'
 
@@ -307,8 +306,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZQ (specialized for void)
+// MARK: - ZQ (specialized for void)
 
 template <bool Sense>
 class ZQ<void,Sense>
@@ -401,8 +399,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * swap
+// MARK: - swap
 
 template <class T>
 inline void swap(ZQ<T>& a, ZQ<T>& b)

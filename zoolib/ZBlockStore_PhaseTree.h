@@ -36,8 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree
+// MARK: - ZBlockStore_PhaseTree
 
 class ZBlockStore_PhaseTree : public ZBlockStore
 	{

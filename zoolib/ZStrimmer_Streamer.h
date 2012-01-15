@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerR_Streamer_T
+// MARK: - ZStrimmerR_Streamer_T
 
 template <class StrimR_t>
 class ZStrimmerR_Streamer_T : public ZStrimmerR
@@ -69,8 +68,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerU_Streamer_T
+// MARK: - ZStrimmerU_Streamer_T
 
 template <class StrimU_t>
 class ZStrimmerU_Streamer_T : public ZStrimmerU
@@ -110,8 +108,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerW_Streamer_T
+// MARK: - ZStrimmerW_Streamer_T
 
 template <class StrimW_t>
 class ZStrimmerW_Streamer_T : public ZStrimmerW

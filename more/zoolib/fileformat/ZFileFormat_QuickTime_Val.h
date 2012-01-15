@@ -30,8 +30,7 @@ namespace FileFormat {
 namespace QuickTime {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sAsVal
+// MARK: - sAsVal
 
 typedef ZTagVal<ZData_Any,struct BMP> Data_BMP;
 typedef ZTagVal<ZData_Any,struct JPEG> Data_JPEG;

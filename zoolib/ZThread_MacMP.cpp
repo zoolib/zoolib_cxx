@@ -32,8 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZThread_MacMP
+// MARK: - ZThread_MacMP
 
 namespace ZThread_MacMP {
 
@@ -64,8 +63,7 @@ void sSleep(double iDuration)
 } // namespace ZThread_MacMP
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTSS_MacMP
+// MARK: - ZTSS_MacMP
 
 ZTSS_MacMP::Key ZTSS_MacMP::sCreate()
 	{
@@ -84,8 +82,7 @@ ZTSS_MacMP::Value ZTSS_MacMP::sGet(Key iKey)
 	{ return ::MPGetTaskStorageValue(iKey); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMtx_MacMP
+// MARK: - ZMtx_MacMP
 
 /*
 MPCriticalRegionID is recursive, but we want to ensure that ZMtx_MacMP
@@ -114,8 +111,7 @@ void ZMtx_MacMP::Release()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSem_MacMP
+// MARK: - ZSem_MacMP
 
 ZSem_MacMP::ZSem_MacMP()
 	{ ::MPCreateSemaphore(0xFFFFFFFFU, 0, &fMPSemaphoreID); }

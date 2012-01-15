@@ -37,8 +37,7 @@ namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZRA::Transform_PushDownRestricts
+// MARK: - ZRA::Transform_PushDownRestricts
 
 class Transform_PushDownRestricts
 :	public virtual ZVisitor_Expr_Op_Do_Transform_T<Expr_Rel>

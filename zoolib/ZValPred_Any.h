@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparand_Const_Any
+// MARK: - ZValComparand_Const_Any
 
 class ZValComparand_Const_Any : public ZValComparand
 	{
@@ -48,8 +47,7 @@ template <>
 int sCompare_T(const ZValComparand_Const_Any& iL, const ZValComparand_Const_Any& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparator_Callable_Any
+// MARK: - ZValComparator_Callable_Any
 
 class ZValComparator_Callable_Any : public ZValComparator
 	{
@@ -69,8 +67,7 @@ template <>
 int sCompare_T(const ZValComparator_Callable_Any& iL, const ZValComparator_Callable_Any& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparator_StringContains
+// MARK: - ZValComparator_StringContains
 
 class ZValComparator_StringContains : public ZValComparator
 	{
@@ -88,8 +85,7 @@ template <>
 int sCompare_T(const ZValComparator_StringContains& iL, const ZValComparator_StringContains& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Comparand pseudo constructors
+// MARK: - Comparand pseudo constructors
 
 ZValComparandPseudo CConst(const ZVal_Any& iVal);
 

@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZWinWND {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWinWND::ClassRegistration
+// MARK: - ZWinWND::ClassRegistration
 
 class ClassRegistration
 	{
@@ -48,8 +47,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWinWND, Callable <--> Regular window
+// MARK: - ZWinWND, Callable <--> Regular window
 
 typedef ZCallable<LRESULT(WNDPROC,HWND,UINT,WPARAM,LPARAM)> Callable;
 
@@ -73,8 +71,7 @@ bool sAttach(HWND iHWND, ZRef<Callable> iCallable);
 bool sDoOneMessage();
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWinWND, Callable <--> Dialog
+// MARK: - ZWinWND, Callable <--> Dialog
 
 typedef ZCallable<INT_PTR(HWND,UINT,WPARAM,LPARAM)> Callable_Dialog;
 

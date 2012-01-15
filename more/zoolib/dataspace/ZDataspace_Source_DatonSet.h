@@ -41,8 +41,7 @@ ZVal_Any sAsVal(const ZDatonSet::Daton& iDaton);
 ZDatonSet::Daton sAsDaton(const ZVal_Any& iVal);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Annotation_Daton
+// MARK: - Annotation_Daton
 
 class Annotation_Daton : public ZCounted
 	{
@@ -58,8 +57,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_DatonSet
+// MARK: - Source_DatonSet
 
 class Source_DatonSet : public Source
 	{

@@ -47,14 +47,12 @@ clear the cache.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * kDebug
+// MARK: - kDebug
 
 #define kDebug_Pixmap 1
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmap
+// MARK: - ZDCPixmap
 
 ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource1, const ZDCPixmap& iSource2, const ZDCPixmap& iMask)
 	{
@@ -473,8 +471,7 @@ void ZDCPixmap::pTouch()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRaster
+// MARK: - ZDCPixmapRaster
 
 ZDCPixmapRaster::ZDCPixmapRaster(const RasterDesc& iRasterDesc)
 :	fRasterDesc(iRasterDesc),
@@ -508,8 +505,7 @@ void ZDCPixmapRaster::Fill(uint32 iPixval)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRaster_Simple
+// MARK: - ZDCPixmapRaster_Simple
 
 ZDCPixmapRaster_Simple::ZDCPixmapRaster_Simple(const RasterDesc& iRasterDesc)
 :	ZDCPixmapRaster(iRasterDesc)
@@ -539,8 +535,7 @@ ZDCPixmapRaster_Simple::~ZDCPixmapRaster_Simple()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRaster_StaticData
+// MARK: - ZDCPixmapRaster_StaticData
 
 ZDCPixmapRaster_StaticData::ZDCPixmapRaster_StaticData(const void* iBaseAddress,
 	const RasterDesc& iRasterDesc)
@@ -569,8 +564,7 @@ ZDCPixmapRaster_StaticData::~ZDCPixmapRaster_StaticData()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapCache
+// MARK: - ZDCPixmapCache
 
 ZDCPixmapCache::ZDCPixmapCache()
 	{}
@@ -585,8 +579,7 @@ ZDCPixmapCache::~ZDCPixmapCache()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRep
+// MARK: - ZDCPixmapRep
 
 ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate
 	(const ZRef<ZDCPixmapRaster>& iRaster,

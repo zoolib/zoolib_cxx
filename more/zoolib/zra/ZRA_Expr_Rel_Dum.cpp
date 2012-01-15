@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCompare_T
+// MARK: - sCompare_T
 
 template <>
 int sCompare_T(const ZRA::Expr_Rel_Dum& iL, const ZRA::Expr_Rel_Dum& iR)
@@ -36,8 +35,7 @@ ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Dum)
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Dum
+// MARK: - Expr_Rel_Dum
 
 Expr_Rel_Dum::Expr_Rel_Dum()
 	{}
@@ -71,15 +69,13 @@ void Expr_Rel_Dum::Accept_Expr_Rel_Dum(Visitor_Expr_Rel_Dum& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Dum(this); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Dum
+// MARK: - Visitor_Expr_Rel_Dum
 
 void Visitor_Expr_Rel_Dum::Visit_Expr_Rel_Dum(const ZRef<Expr_Rel_Dum>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Relational operators
+// MARK: - Relational operators
 
 ZRef<Expr_Rel> sDum()
 	{ return new Expr_Rel_Dum; }

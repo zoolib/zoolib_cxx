@@ -43,8 +43,7 @@ namespace ZHTTP {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP
+// MARK: - ZHTTP
 
 static bool spReadResponse(const ZStreamR& r, int32* oResponseCode, Map* oHeader)
 	{
@@ -329,8 +328,7 @@ ZRef<ZStreamerR> sPostRaw(ZRef<Callable_Connect> iCallable_Connect,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP, read a POST into a Map
+// MARK: - ZHTTP, read a POST into a Map
 
 static ZRef<ZStrimmerR> spCreateStrimmerR(const Map& iHeader, const ZStreamR& iStreamR)
 	{

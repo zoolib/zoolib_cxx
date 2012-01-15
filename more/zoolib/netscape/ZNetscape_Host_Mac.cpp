@@ -81,8 +81,7 @@ static const HIPoint& spHI(const ZGPointf& iP)
 #endif // defined(XP_MACOSX)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_Mac
+// MARK: - Host_Mac
 
 #if defined(XP_MAC) || defined(XP_MACOSX)
 
@@ -308,8 +307,7 @@ void Host_Mac::EventLoopTimer_Idle(EventLoopTimerRef iTimer)
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_WindowRef
+// MARK: - Host_WindowRef
 
 #if defined(XP_MAC) || defined(XP_MACOSX)
 
@@ -571,8 +569,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_HIViewRef
+// MARK: - Host_HIViewRef
 
 #if defined(XP_MACOSX)
 

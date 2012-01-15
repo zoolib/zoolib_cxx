@@ -25,8 +25,7 @@ namespace ZooLib {
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCRgn
+// MARK: - ZDCRgn
 
 ZDCRgn ZDCRgn::sLine(ZCoord iStartH, ZCoord iStartV,
 	ZCoord iEndH, ZCoord iEndV, ZCoord iLineWidth)
@@ -74,8 +73,7 @@ ZDCRgn ZDCRgn::sPoly(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCRgn
+// MARK: - ZDCRgn
 
 ZDCRgn::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fGRgn); }

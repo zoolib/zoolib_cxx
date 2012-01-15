@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace ZGameEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sTween_ScaleX
+// MARK: - sTween_ScaleX
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleX(const ZRef<ZTween<Val> >& iTween)
@@ -42,8 +41,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleX(const ZRef<ZTween<Val> >& iTween)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sTween_ScaleY
+// MARK: - sTween_ScaleY
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleY(const ZRef<ZTween<Val> >& iTween)
@@ -54,8 +52,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleY(const ZRef<ZTween<Val> >& iTween)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sTween_ScaleZ
+// MARK: - sTween_ScaleZ
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleZ(const ZRef<ZTween<Val> >& iTween)
@@ -66,8 +63,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleZ(const ZRef<ZTween<Val> >& iTween)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sTween_TranslateX
+// MARK: - sTween_TranslateX
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateX(const ZRef<ZTween<Val> >& iTween)
@@ -78,8 +74,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateX(const ZRef<ZTween<Val> >& iTw
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sTween_TranslateY
+// MARK: - sTween_TranslateY
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateY(const ZRef<ZTween<Val> >& iTween)
@@ -90,8 +85,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateY(const ZRef<ZTween<Val> >& iTw
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sTween_TranslateZ
+// MARK: - sTween_TranslateZ
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateZ(const ZRef<ZTween<Val> >& iTween)
@@ -102,8 +96,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateZ(const ZRef<ZTween<Val> >& iTw
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sTween_RotateX
+// MARK: - sTween_RotateX
 
 template <class Val>
 ZMatrix<Val,4,4> sTweenFun_Rotate2PiX(Val iVal)
@@ -118,8 +111,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateX(const ZRef<ZTween<Val> >& iTween
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sTween_RotateY
+// MARK: - sTween_RotateY
 
 template <class Val>
 ZMatrix<Val,4,4> sTweenFun_Rotate2PiY(Val iVal)
@@ -134,8 +126,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateY(const ZRef<ZTween<Val> >& iTween
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sTween_RotateZ
+// MARK: - sTween_RotateZ
 
 template <class Val>
 ZMatrix<Val,4,4> sTweenFun_Rotate2PiZ(Val iVal)

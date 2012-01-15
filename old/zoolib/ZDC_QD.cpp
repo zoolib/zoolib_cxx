@@ -98,14 +98,12 @@ static inline bool spIsPortOffscreen(CGrafPtr iGrafPtr)
 static ZRef<ZDCPixmapRep_QD> spGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>& inInkRep);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * kDebug
+// MARK: - kDebug
 
 #define kDebug_QD 2
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD::SetupPort
+// MARK: - ZDCCanvas_QD::SetupPort
 
 class ZDCCanvas_QD::SetupPort
 	{
@@ -136,8 +134,7 @@ ZDCCanvas_QD::SetupPort::~SetupPort()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD::SetupInk
+// MARK: - ZDCCanvas_QD::SetupInk
 
 class ZDCCanvas_QD::SetupInk
 	{
@@ -155,8 +152,7 @@ ZDCCanvas_QD::SetupInk::~SetupInk()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD::SetupText
+// MARK: - ZDCCanvas_QD::SetupText
 
 class ZDCCanvas_QD::SetupText
 	{
@@ -174,8 +170,7 @@ ZDCCanvas_QD::SetupText::~SetupText()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD_Native
+// MARK: - ZDCCanvas_QD_Native
 
 class ZDCCanvas_QD_Native : public ZDCCanvas_QD_NonWindow
 	{
@@ -196,8 +191,7 @@ ZDCCanvas_QD_Native::~ZDCCanvas_QD_Native()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD
+// MARK: - ZDCCanvas_QD
 
 ZMutex ZDCCanvas_QD::sMutex_List;
 ZDCCanvas_QD* ZDCCanvas_QD::sCanvas_Head;
@@ -1577,8 +1571,7 @@ void ZDCCanvas_QD::Internal_TileRegion(ZDCState& ioState, const ZDCRgn& inRgn, Z
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD_NonWindow
+// MARK: - ZDCCanvas_QD_NonWindow
 
 ZDCCanvas_QD_NonWindow::ZDCCanvas_QD_NonWindow()
 	{
@@ -1698,8 +1691,7 @@ ZDCRgn ZDCCanvas_QD_NonWindow::Internal_CalcClipRgn(const ZDCState& inState)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD_OffScreen
+// MARK: - ZDCCanvas_QD_OffScreen
 
 ZDCCanvas_QD_OffScreen::ZDCCanvas_QD_OffScreen(const ZRect& inGlobalRect)
 	{
@@ -1822,8 +1814,7 @@ ZDCPixmap ZDCCanvas_QD_OffScreen::GetPixmap(ZDCState& ioState, const ZRect& inBo
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD_Print
+// MARK: - ZDCCanvas_QD_Print
 
 ZDCCanvas_QD_Print::ZDCCanvas_QD_Print(GrafPtr inGrafPtr)
 	{
@@ -1839,8 +1830,7 @@ bool ZDCCanvas_QD_Print::IsPrinting()
 	{ return true; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD_PICT
+// MARK: - ZDCCanvas_QD_PICT
 
 class ZDCCanvas_QD_PICT : public ZDCCanvas_QD_NonWindow
 	{
@@ -2012,8 +2002,7 @@ QDPutPicUPP ZDCCanvas_QD_PICT::spPutPicProcUPP = NewQDPutPicUPP(spPutPicProc);
 ZDCCanvas_QD_PICT* ZDCCanvas_QD_PICT::spHead = nullptr;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC_PICT
+// MARK: - ZDC_PICT
 
 ZDC_PICT::ZDC_PICT(const ZRect& inBounds, const ZStreamW& inStream)
 :	ZDC(new ZDCCanvas_QD_PICT(inBounds, inStream), ZPoint::sZero)
@@ -2025,8 +2014,7 @@ ZDC_PICT::~ZDC_PICT()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC_NativeQD
+// MARK: - ZDC_NativeQD
 
 ZDC_NativeQD::ZDC_NativeQD(CGrafPtr inGrafPtr)
 	{
@@ -2105,8 +2093,7 @@ ZDC_NativeQD::~ZDC_NativeQD()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC::SetupForQD
+// MARK: - ZDC::SetupForQD
 
 ZDCSetupForQD::ZDCSetupForQD(const ZDC& inDC, bool inUsingPatterns)
 :	fCanvas(ZRefDynamicCast<ZDCCanvas_QD>(inDC.GetCanvas()))
@@ -2135,8 +2122,7 @@ CGrafPtr ZDCSetupForQD::GetCGrafPtr()
 	{ return fCanvas->fGrafPtr; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRep_QD
+// MARK: - ZDCPixmapRep_QD
 
 static bool spCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect& inBounds,
 							const ZDCPixmapNS::PixelDesc& inPixelDesc)
@@ -2440,8 +2426,7 @@ ZRef<ZDCPixmapRep_QD> ZDCPixmapRep_QD::sAsPixmapRep_QD(ZRef<ZDCPixmapRep> inRep)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Rep conversion/coercion utilities
+// MARK: - Rep conversion/coercion utilities
 
 static ZRef<ZDCPixmapRep_QD> spGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>& inInkRep)
 	{
@@ -2488,8 +2473,7 @@ static ZRef<ZDCPixmapRep_QD> spGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>&
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 
@@ -2544,8 +2528,7 @@ class Make_EfficientToStandard
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvasFactory_QD
+// MARK: - ZDCCanvasFactory_QD
 
 class ZDCCanvasFactory_QD : public ZDCCanvasFactory
 	{

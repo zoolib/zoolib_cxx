@@ -36,8 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZWorker.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NSView_NetscapeHost
+// MARK: - NSView_NetscapeHost
 
 @implementation NSView_NetscapeHost
 
@@ -168,8 +167,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 @end
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_Cocoa
+// MARK: - Host_Cocoa
 
 namespace ZooLib {
 namespace ZNetscape {

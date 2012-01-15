@@ -46,8 +46,7 @@ ZMACRO_MSVCStaticLib_Reference(Net_Internet_WinSock)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNet_Internet_WinSock
+// MARK: - ZNet_Internet_WinSock
 
 class ZNet_Internet_WinSock
 	{
@@ -56,8 +55,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetNameLookup_Internet_WinSock
+// MARK: - ZNetNameLookup_Internet_WinSock
 
 class ZNetNameLookup_Internet_WinSock : public ZNetNameLookup
 	{
@@ -83,8 +81,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_TCP_WinSock
+// MARK: - ZNetListener_TCP_WinSock
 
 class ZNetListener_TCP_WinSock : public ZNetListener_TCP, private ZNet_Internet_WinSock
 	{
@@ -108,8 +105,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_TCP_WinSock
+// MARK: - ZNetEndpoint_TCP_WinSock
 
 class ZNetEndpoint_TCP_WinSock
 :	public ZNetEndpoint_TCP,

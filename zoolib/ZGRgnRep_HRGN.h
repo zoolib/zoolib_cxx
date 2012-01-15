@@ -45,8 +45,7 @@ ZMACRO_MSVCStaticLib_Reference(GRgnRep_HRGN)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgnRep_HRGN
+// MARK: - ZGRgnRep_HRGN
 
 class ZGRgnRep_HRGN : public ZGRgnRep
 	{

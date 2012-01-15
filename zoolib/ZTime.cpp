@@ -57,8 +57,7 @@ namespace ZooLib {
 ZMACRO_CompareRegistration_T(ZTime)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTime constants
+// MARK: - ZTime constants
 
 const double ZTime::kSecond = 1;
 const double ZTime::kMinute = 60 * kSecond;
@@ -76,8 +75,7 @@ const double ZTime::kEpochDelta_1970_To_2001 = -978307200.0;
 const double ZTime::kEpochDelta_2001_To_1970 = 978307200.0;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTime
+// MARK: - ZTime
 
 ZTime::ZTime()
 :	fVal(NAN)

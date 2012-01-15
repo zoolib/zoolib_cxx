@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sTransform_Search
+// MARK: - sTransform_Search
 
 ZRef<ZRA::Expr_Rel> sTransform_Search(const ZRef<ZRA::Expr_Rel>& iExpr);
 

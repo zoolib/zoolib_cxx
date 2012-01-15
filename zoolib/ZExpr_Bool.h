@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool
+// MARK: - ZExpr_Bool
 
 class ZExpr_Bool
 :	public virtual ZExpr
@@ -38,8 +37,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_True
+// MARK: - ZExpr_Bool_True
 
 class ZVisitor_Expr_Bool_True;
 
@@ -71,8 +69,7 @@ template<>
 int sCompare_T(const ZExpr_Bool_True& iL, const ZExpr_Bool_True& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_True
+// MARK: - ZVisitor_Expr_Bool_True
 
 class ZVisitor_Expr_Bool_True
 :	public virtual ZVisitor_Expr_Op0_T<ZExpr_Bool>
@@ -82,8 +79,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_False
+// MARK: - ZExpr_Bool_False
 
 class ZVisitor_Expr_Bool_False;
 
@@ -116,8 +112,7 @@ template<>
 int sCompare_T(const ZExpr_Bool_False& iL, const ZExpr_Bool_False& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_False
+// MARK: - ZVisitor_Expr_Bool_False
 
 class ZVisitor_Expr_Bool_False
 :	public virtual ZVisitor_Expr_Op0_T<ZExpr_Bool>
@@ -127,8 +122,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_Not
+// MARK: - ZExpr_Bool_Not
 
 class ZVisitor_Expr_Bool_Not;
 
@@ -157,8 +151,7 @@ template<>
 int sCompare_T(const ZExpr_Bool_Not& iL, const ZExpr_Bool_Not& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_Not
+// MARK: - ZVisitor_Expr_Bool_Not
 
 class ZVisitor_Expr_Bool_Not
 :	public virtual ZVisitor_Expr_Op1_T<ZExpr_Bool>
@@ -168,8 +161,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_And
+// MARK: - ZExpr_Bool_And
 
 class ZVisitor_Expr_Bool_And;
 
@@ -198,8 +190,7 @@ template<>
 int sCompare_T(const ZExpr_Bool_And& iL, const ZExpr_Bool_And& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_And
+// MARK: - ZVisitor_Expr_Bool_And
 
 class ZVisitor_Expr_Bool_And
 :	public virtual ZVisitor_Expr_Op2_T<ZExpr_Bool>
@@ -209,8 +200,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_Or
+// MARK: - ZExpr_Bool_Or
 
 class ZVisitor_Expr_Bool_Or;
 
@@ -239,8 +229,7 @@ template<>
 int sCompare_T(const ZExpr_Bool_Or& iL, const ZExpr_Bool_Or& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_Or
+// MARK: - ZVisitor_Expr_Bool_Or
 
 class ZVisitor_Expr_Bool_Or
 :	public virtual ZVisitor_Expr_Op2_T<ZExpr_Bool>
@@ -250,8 +239,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Operators
+// MARK: - Operators
 
 ZRef<ZExpr_Bool> sTrue();
 ZRef<ZExpr_Bool> sFalse();

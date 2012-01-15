@@ -31,8 +31,7 @@ namespace ZooLib {
 typedef ZCounted COUNTEDBASE;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallableUtil
+// MARK: - ZCallableUtil
 
 namespace ZCallableUtil {
 
@@ -66,14 +65,12 @@ template <class T> struct VT<T&>
 } // namespace ZCallableUtil
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable
+// MARK: - ZCallable
 
 template <class Signature> class ZCallable;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 0 params)
+// MARK: - ZCallable (specialization for 0 params)
 
 template <class R>
 class ZCallable<R(void)>
@@ -100,8 +97,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 0 params, void return)
+// MARK: - ZCallable (specialization for 0 params, void return)
 
 template <>
 class ZCallable<void(void)>
@@ -119,8 +115,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 1 param)
+// MARK: - ZCallable (specialization for 1 param)
 
 template <class R,
 	class P0>
@@ -149,8 +144,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 1 param, void return)
+// MARK: - ZCallable (specialization for 1 param, void return)
 
 template <
 	class P0>
@@ -169,8 +163,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 2 params)
+// MARK: - ZCallable (specialization for 2 params)
 
 template <class R,
 	class P0, class P1>
@@ -202,8 +195,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 2 params, void return)
+// MARK: - ZCallable (specialization for 2 params, void return)
 
 template <
 	class P0, class P1>
@@ -224,8 +216,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 3 params)
+// MARK: - ZCallable (specialization for 3 params)
 
 template <class R,
 	class P0, class P1, class P2>
@@ -259,8 +250,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 3 params, void return)
+// MARK: - ZCallable (specialization for 3 params, void return)
 
 template <
 	class P0, class P1, class P2>
@@ -282,8 +272,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 4 params)
+// MARK: - ZCallable (specialization for 4 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3>
@@ -319,8 +308,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 4 params, void return)
+// MARK: - ZCallable (specialization for 4 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3>
@@ -343,8 +331,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 5 params)
+// MARK: - ZCallable (specialization for 5 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -383,8 +370,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 5 params, void return)
+// MARK: - ZCallable (specialization for 5 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -409,8 +395,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 6 params)
+// MARK: - ZCallable (specialization for 6 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -451,8 +436,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 6 params, void return)
+// MARK: - ZCallable (specialization for 6 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -478,8 +462,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 7 params)
+// MARK: - ZCallable (specialization for 7 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -522,8 +505,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 7 params, void return)
+// MARK: - ZCallable (specialization for 7 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -550,8 +532,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 8 params)
+// MARK: - ZCallable (specialization for 8 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -596,8 +577,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 8 params, void return)
+// MARK: - ZCallable (specialization for 8 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -625,8 +605,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 9 params)
+// MARK: - ZCallable (specialization for 9 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -674,8 +653,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 9 params, void return)
+// MARK: - ZCallable (specialization for 9 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -705,8 +683,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 10 params)
+// MARK: - ZCallable (specialization for 10 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -756,8 +733,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 10 params, void return)
+// MARK: - ZCallable (specialization for 10 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -788,8 +764,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 11 params)
+// MARK: - ZCallable (specialization for 11 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -841,8 +816,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 11 params, void return)
+// MARK: - ZCallable (specialization for 11 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -874,8 +848,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 12 params)
+// MARK: - ZCallable (specialization for 12 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -929,8 +902,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 12 params, void return)
+// MARK: - ZCallable (specialization for 12 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -963,8 +935,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 13 params)
+// MARK: - ZCallable (specialization for 13 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1021,8 +992,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 13 params, void return)
+// MARK: - ZCallable (specialization for 13 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -1057,8 +1027,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 14 params)
+// MARK: - ZCallable (specialization for 14 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1117,8 +1086,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 14 params, void return)
+// MARK: - ZCallable (specialization for 14 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -1154,8 +1122,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 15 params)
+// MARK: - ZCallable (specialization for 15 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1216,8 +1183,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 15 params, void return)
+// MARK: - ZCallable (specialization for 15 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -1254,8 +1220,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 16 params)
+// MARK: - ZCallable (specialization for 16 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1318,8 +1283,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable (specialization for 16 params, void return)
+// MARK: - ZCallable (specialization for 16 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -1357,8 +1321,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 0 params)
+// MARK: - sCall variants (specialization for 0 params)
 
 template <class R>
 ZQ<R> sQCall
@@ -1395,8 +1358,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 1 param)
+// MARK: - sCall variants (specialization for 1 param)
 
 template <class R,
 	class P0>
@@ -1439,8 +1401,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 2 params)
+// MARK: - sCall variants (specialization for 2 params)
 
 template <class R,
 	class P0, class P1>
@@ -1486,8 +1447,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 3 params)
+// MARK: - sCall variants (specialization for 3 params)
 
 template <class R,
 	class P0, class P1, class P2>
@@ -1536,8 +1496,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 4 params)
+// MARK: - sCall variants (specialization for 4 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3>
@@ -1589,8 +1548,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 5 params)
+// MARK: - sCall variants (specialization for 5 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1648,8 +1606,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 6 params)
+// MARK: - sCall variants (specialization for 6 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1710,8 +1667,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 7 params)
+// MARK: - sCall variants (specialization for 7 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1775,8 +1731,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 8 params)
+// MARK: - sCall variants (specialization for 8 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1843,8 +1798,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 9 params)
+// MARK: - sCall variants (specialization for 9 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1917,8 +1871,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 10 params)
+// MARK: - sCall variants (specialization for 10 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -1994,8 +1947,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 11 params)
+// MARK: - sCall variants (specialization for 11 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -2074,8 +2026,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 12 params)
+// MARK: - sCall variants (specialization for 12 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -2157,8 +2108,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 13 params)
+// MARK: - sCall variants (specialization for 13 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -2246,8 +2196,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 14 params)
+// MARK: - sCall variants (specialization for 14 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -2338,8 +2287,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 15 params)
+// MARK: - sCall variants (specialization for 15 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -2435,8 +2383,7 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCall variants (specialization for 16 params)
+// MARK: - sCall variants (specialization for 16 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -2535,32 +2482,28 @@ R sCall
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable
+// MARK: - sCallable
 
 template <class Signature>
 ZRef<ZCallable<Signature> > sCallable(const ZRef<ZCallable<Signature> >& iCallable)
 	{ return iCallable; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallReturnVoid
+// MARK: - sCallReturnVoid
 
 template <class T>
 void sCallReturnVoid(ZRef<ZCallable<T(void)> > iCallable)
 	{ sCall(iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallVoid
+// MARK: - sCallVoid
 
 inline
 void sCallVoid(ZRef<ZCallable<void(void)> > iCallable)
 	{ sCall(iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Useful typedefs
+// MARK: - Useful typedefs
 
 typedef ZCallable<void(void)> ZCallable_Void;
 typedef ZRef<ZCallable_Void> ZRef_ZCallable_Void;
@@ -2568,8 +2511,7 @@ typedef ZRef<ZCallable_Void> ZRef_ZCallable_Void;
 typedef ZCallable<bool(void)> ZCallable_Bool;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Null
+// MARK: - ZCallable_Null
 
 class ZCallable_Null
 :	public ZCallable_Void

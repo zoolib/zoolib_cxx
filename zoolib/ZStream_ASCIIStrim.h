@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_ASCIIStrim
+// MARK: - ZStreamR_ASCIIStrim
 
 class ZStrimR;
 
@@ -45,8 +44,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_ASCIIStrim
+// MARK: - ZStreamW_ASCIIStrim
 
 class ZStrimW;
 

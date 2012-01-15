@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_Escaped
+// MARK: - ZStrimR_Escaped
 
 ZStrimR_Escaped::ZStrimR_Escaped(const ZStrimU& iStrimSource, UTF32 iDelimiter)
 :	fStrimSource(iStrimSource),
@@ -143,8 +142,7 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_Escaped::Options
+// MARK: - ZStrimW_Escaped::Options
 
 ZStrimW_Escaped::Options::Options()
 :	fQuoteQuotes(true),
@@ -152,8 +150,7 @@ ZStrimW_Escaped::Options::Options()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_Escaped
+// MARK: - ZStrimW_Escaped
 
 ZStrimW_Escaped::ZStrimW_Escaped(const Options& iOptions, const ZStrimW& iStrimSink)
 :	fStrimSink(iStrimSink),

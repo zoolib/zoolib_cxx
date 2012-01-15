@@ -48,8 +48,7 @@ access to them allows code to be applied to any of them.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadOptions
+// MARK: - ZYadOptions
 
 ZYadOptions::ZYadOptions(bool iDoIndentation)
 :	fRawChunkSize(16),
@@ -68,8 +67,7 @@ ZYadOptions::ZYadOptions(bool iDoIndentation)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException
+// MARK: - ZYadParseException
 
 ZYadParseException::ZYadParseException(const string& iWhat)
 :	runtime_error(iWhat)
@@ -80,8 +78,7 @@ ZYadParseException::ZYadParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadR
+// MARK: - ZYadR
 
 /**
 \class ZYadR
@@ -116,8 +113,7 @@ void ZYadR::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ iVisitor.Visit_YadR(this); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadAtomR
+// MARK: - ZYadAtomR
 
 /**
 \class ZYadAtomR
@@ -133,8 +129,7 @@ bool ZYadAtomR::IsSimple(const ZYadOptions& iOptions)
 	{ return true; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamR
+// MARK: - ZYadStreamR
 
 /**
 \class ZYadStreamR
@@ -150,8 +145,7 @@ bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR
+// MARK: - ZYadStrimR
 
 /**
 \class ZYadStrimR
@@ -167,8 +161,7 @@ bool ZYadStrimR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR
+// MARK: - ZYadSeqR
 
 /**
 \class ZYadSeqR
@@ -193,8 +186,7 @@ void ZYadSeqR::SkipAll()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRClone
+// MARK: - ZYadSeqRClone
 
 void ZYadSeqRClone::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ iVisitor.Visit_YadSeqR(this); }
@@ -231,8 +223,7 @@ bool ZYadSeqRClone::IsSimple(const ZYadOptions& iOptions)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos
+// MARK: - ZYadSeqRPos
 
 /**
 \class ZYadSeqRPos
@@ -283,8 +274,7 @@ ZRef<ZYadR> ZYadSeqRPos::ReadAt(uint64 iPosition)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR
+// MARK: - ZYadMapR
 
 /**
 \class ZYadMapR
@@ -312,15 +302,13 @@ void ZYadMapR::SkipAll()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRClone
+// MARK: - ZYadMapRClone
 
 void ZYadMapRClone::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ iVisitor.Visit_YadMapRClone(this); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos
+// MARK: - ZYadMapRPos
 
 /**
 \class ZYadMapRPos
@@ -345,8 +333,7 @@ ZRef<ZYadR> ZYadMapRPos::ReadAt(const std::string& iName)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Yad
+// MARK: - ZVisitor_Yad
 
 /**
 \class ZVisitor_Yad
@@ -386,8 +373,7 @@ void ZVisitor_Yad::Visit_YadMapRPos(const ZRef<ZYadMapRPos>& iYadMapRPos)
 	{ this->Visit_YadMapRClone(iYadMapRPos); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadAtomR_Any
+// MARK: - ZYadAtomR_Any
 
 ZYadAtomR_Any::ZYadAtomR_Any(const ZAny& iAny)
 :	fAny(iAny)
@@ -403,8 +389,7 @@ const ZAny& ZYadAtomR_Any::GetAny()
 	{ return fAny; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimU_String
+// MARK: - ZYadStrimU_String
 
 ZYadStrimU_String::ZYadStrimU_String(const string& iString)
 :	ZStrimmerU_T<ZStrimU_String>(iString)
@@ -414,8 +399,7 @@ bool ZYadStrimU_String::IsSimple(const ZYadOptions& iOptions)
 	{ return true; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(const string& iVal)
 	{ return new ZYadStrimU_String(iVal); }

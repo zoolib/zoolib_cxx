@@ -33,8 +33,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadAtomR_NS
+// MARK: - ZYadAtomR_NS
 
 ZYadAtomR_NS::ZYadAtomR_NS(NSObject* iVal)
 :	ZYadR_NS(iVal)
@@ -44,8 +43,7 @@ ZAny ZYadAtomR_NS::AsAny()
 	{ return ZUtil_NS::sAsAny(this->GetVal()); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamRPos_NS
+// MARK: - ZYadStreamRPos_NS
 
 ZYadStreamRPos_NS::ZYadStreamRPos_NS(NSData* iData)
 :	ZYadR_NS(iData)
@@ -59,8 +57,7 @@ bool ZYadStreamRPos_NS::IsSimple(const ZYadOptions& iOptions)
 	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_NS
+// MARK: - ZYadStrimR_NS
 
 ZYadStrimR_NS::ZYadStrimR_NS(NSString* iString)
 :	ZYadR_NS(iString)
@@ -68,8 +65,7 @@ ZYadStrimR_NS::ZYadStrimR_NS(NSString* iString)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos_NS
+// MARK: - ZYadSeqRPos_NS
 
 ZYadSeqRPos_NS::ZYadSeqRPos_NS(NSArray* iArray)
 :	ZYadR_NS(iArray)
@@ -82,8 +78,7 @@ ZYadSeqRPos_NS::ZYadSeqRPos_NS(NSArray* iArray, uint64 iPosition)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos_NS
+// MARK: - ZYadMapRPos_NS
 
 ZYadMapRPos_NS::ZYadMapRPos_NS(NSDictionary* iDictionary,
 	uint64 iPosition,
@@ -128,8 +123,7 @@ void ZYadMapRPos_NS::SetPosition(const std::string& iName)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(NSObject* iVal)
 	{
@@ -179,8 +173,7 @@ ZRef<ZYadMapRPos> sYadR(NSDictionary* iDictionary)
 	{ return new ZYadMapRPos_NS(iDictionary); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sFromYadR
+// MARK: - sFromYadR
 
 namespace { // anonymous
 

@@ -31,8 +31,7 @@ using std::map;
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZRef support
+// MARK: - ZRef support
 
 template <>
 void sRetain_T(JSPropertyNameArrayRef& iRef)
@@ -119,8 +118,7 @@ void sRelease_T(JSObjectRef iRef)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore
+// MARK: - ZJavaScriptCore
 
 namespace ZJavaScriptCore {
 
@@ -147,8 +145,7 @@ static string16 spAsString16(JSStringRef iRef)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::ContextRefSetter
+// MARK: - ZJavaScriptCore::ContextRefSetter
 
 static ZTSS::Key spContextRefKey = ZTSS::sCreate();
 
@@ -172,8 +169,7 @@ ContextRefSetter::~ContextRefSetter()
 	{ ZTSS::sSet(spContextRefKey, fJSContextRef_Prior); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::ContextRef::Rep
+// MARK: - ZJavaScriptCore::ContextRef::Rep
 
 class ContextRef::Rep : public ZCounted
 	{
@@ -198,8 +194,7 @@ JSGlobalContextRef ContextRef::Rep::GetJSGlobalContextRef()
 	{ return fRep.Get(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::ContextRef
+// MARK: - ZJavaScriptCore::ContextRef
 
 ContextRef::ContextRef()
 	{}
@@ -242,8 +237,7 @@ ObjectRef ContextRef::GetGlobalObjectRef() const
 	{ return ObjectRef(::JSContextGetGlobalObject(*this)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::String
+// MARK: - ZJavaScriptCore::String
 
 String::String()
 	{}
@@ -291,8 +285,7 @@ String::operator string16() const
 	{ return spAsString16(fRep); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::Value
+// MARK: - ZJavaScriptCore::Value
 
 ZQ<Value> Value::sQFromAny(const ZAny& iAny)
 	{
@@ -559,8 +552,7 @@ ZMACRO_ZValAccessors_Def_GetP(,Value, String, String)
 ZMACRO_ZValAccessors_Def_GetP(,Value, ObjectRef, ObjectRef)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::ObjectRef
+// MARK: - ZJavaScriptCore::ObjectRef
 
 ZAny ObjectRef::AsAny() const
 	{
@@ -706,8 +698,7 @@ Value ObjectRef::CallAsFunction(const ObjectRef& iThis,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::ObjectImp
+// MARK: - ZJavaScriptCore::ObjectImp
 
 ObjectImp::ObjectImp()
 :	fJSObjectRef(nullptr)

@@ -107,8 +107,7 @@ ZAssertCompile(sizeof(float) == sizeof(int32));
 ZAssertCompile(sizeof(double) == sizeof(int64));
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Utility methods
+// MARK: - Utility methods
 
 static void spCopyReadToWrite(void* iBuffer, size_t iBufferSize,
 	const ZStreamR& iStreamR, const ZStreamW& iStreamW, uint64 iCount,
@@ -246,8 +245,7 @@ ZStream::ExEndOfStream::ExEndOfStream(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR
+// MARK: - ZStreamR
 
 /**
 \class ZStreamR
@@ -694,16 +692,14 @@ void ZStreamR::sThrowEndOfStream()
 	{ throw ExEndOfStream(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR::ExEndOfStream
+// MARK: - ZStreamR::ExEndOfStream
 
 ZStreamR::ExEndOfStream::ExEndOfStream()
 :	ZStream::ExEndOfStream("ZStreamR::ExEndOfStream")
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRCon
+// MARK: - ZStreamRCon
 
 /**
 \class ZStreamRCon
@@ -717,8 +713,7 @@ void ZStreamRCon::Abort() const
 	{ const_cast<ZStreamRCon*>(this)->Imp_Abort(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamU
+// MARK: - ZStreamU
 
 /**
 \class ZStreamU
@@ -726,8 +721,7 @@ void ZStreamRCon::Abort() const
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos
+// MARK: - ZStreamRPos
 
 /**
 \class ZStreamRPos
@@ -775,8 +769,7 @@ void ZStreamRPos::Imp_Unread()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW
+// MARK: - ZStreamW
 
 /**
 \class ZStreamW
@@ -1173,16 +1166,14 @@ void ZStreamW::sThrowEndOfStream()
 	{ throw ExEndOfStream(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW::ExEndOfStream
+// MARK: - ZStreamW::ExEndOfStream
 
 ZStreamW::ExEndOfStream::ExEndOfStream()
 :	ZStream::ExEndOfStream("ZStreamW::ExEndOfStream")
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWCon
+// MARK: - ZStreamWCon
 
 /**
 \class ZStreamWCon
@@ -1196,8 +1187,7 @@ void ZStreamWCon::Abort() const
 	{ const_cast<ZStreamWCon*>(this)->Imp_Abort(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos
+// MARK: - ZStreamWPos
 
 /**
 \class ZStreamWPos
@@ -1217,16 +1207,14 @@ void ZStreamWPos::sThrowBadSize()
 	{ throw ExBadSize(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos::ExBadSize
+// MARK: - ZStreamWPos::ExBadSize
 
 ZStreamWPos::ExBadSize::ExBadSize()
 :	range_error("ZStreamWPos::ExBadSize")
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWPos
+// MARK: - ZStreamRWPos
 
 /**
 \class ZStreamRWPos
@@ -1239,8 +1227,7 @@ position, and the current position (and size) is updated.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamU_Unreader
+// MARK: - ZStreamU_Unreader
 
 ZStreamU_Unreader::ZStreamU_Unreader(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource),
@@ -1329,8 +1316,7 @@ void ZStreamU_Unreader::Imp_Unread()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Null
+// MARK: - ZStreamR_Null
 
 /**
 \class ZStreamR_Null
@@ -1374,8 +1360,7 @@ void ZStreamR_Null::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_Null
+// MARK: - ZStreamRPos_Null
 
 /**
 \class ZStreamRPos_Null
@@ -1431,8 +1416,7 @@ uint64 ZStreamRPos_Null::Imp_GetSize()
 	{ return 0; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Null
+// MARK: - ZStreamW_Null
 
 /**
 \class ZStreamW_Null
@@ -1478,8 +1462,7 @@ void ZStreamW_Null::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_Null
+// MARK: - ZStreamWPos_Null
 
 ZStreamWPos_Null::ZStreamWPos_Null()
 :	fPosition(0),

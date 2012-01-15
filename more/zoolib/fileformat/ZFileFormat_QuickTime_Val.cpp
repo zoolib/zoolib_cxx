@@ -31,8 +31,7 @@ namespace QuickTime {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 namespace { // anonymous
 
@@ -42,8 +41,7 @@ ZData_Any spRead(const ZStreamR& iStreamR)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sAsVal
+// MARK: - sAsVal
 
 // See http://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/Metadata/Metadata.html
 

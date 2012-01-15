@@ -36,8 +36,7 @@ using std::vector;
 static const char spMagicText[] = "ZStream_Compressed 1.0 CRLF\r\nCR\rLF\n";
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Compressed
+// MARK: - ZStreamW_Compressed
 
 ZStreamW_Compressed::ZStreamW_Compressed(size_t iChunkSize, const ZStreamWPos& iSink)
 :	fSink(iSink),
@@ -91,8 +90,7 @@ void ZStreamW_Compressed::Imp_Write(const void* iSource, size_t iCount, size_t* 
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_Compressed
+// MARK: - ZStreamRPos_Compressed
 
 ZStreamRPos_Compressed::ZStreamRPos_Compressed(const ZStreamRPos& iSource)
 :	fSource(iSource),

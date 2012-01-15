@@ -33,8 +33,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPStream_Z
+// MARK: - NPStream_Z
 
 class NPStream_Z : public NPStream
 	{
@@ -45,8 +44,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPClass_Z
+// MARK: - NPClass_Z
 
 class NPClass_Z : public NPClass
 	{
@@ -73,8 +71,7 @@ public:
 NPClass_Z* sGetClass(NPObject* obj);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPNetscapeFuncs_Z
+// MARK: - NPNetscapeFuncs_Z
 
 class NPNetscapeFuncs_Z : public NPNetscapeFuncs
 	{
@@ -105,8 +102,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sAsString
+// MARK: - sAsString
 
 std::string sAsString(const NPString& iNPString);
 std::string sAsString(NPNVariable iVar);

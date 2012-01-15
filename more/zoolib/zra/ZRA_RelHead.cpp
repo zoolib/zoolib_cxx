@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCompare
+// MARK: - sCompare
 
 template <>
 int sCompare_T(const ZRA::RelHead& iL, const ZRA::RelHead& iR)
@@ -47,8 +46,7 @@ namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Rename
+// MARK: - Rename
 
 Rename sInverted(const Rename& iRename)
 	{
@@ -59,8 +57,7 @@ Rename sInverted(const Rename& iRename)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Prefix
+// MARK: - Prefix
 
 bool sHasPrefix(const RelName& iPrefix, const RelName& iRelName)
 	{ return iRelName.substr(0, iPrefix.size()) == iPrefix; }

@@ -41,8 +41,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 NSArray* sMakeNSIndexPathArray(size_t iSectionIndex, size_t iBaseRowIndex, size_t iCount)
 	{
@@ -70,8 +69,7 @@ static bool spIsVersion4OrLater()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Section
+// MARK: - Section
 
 Section::Section(ZRef<SectionBody> iBody)
 :	fBody(iBody)
@@ -133,8 +131,7 @@ UITableViewRowAnimation Section::SectionAnimation_Reload()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody::RowMeta
+// MARK: - SectionBody::RowMeta
 
 SectionBody::RowMeta::RowMeta()
 :	fBase(0)
@@ -148,8 +145,7 @@ void SectionBody::RowMeta::UpdateCount(size_t iCount)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody::RowUpdate
+// MARK: - SectionBody::RowUpdate
 
 SectionBody::RowUpdate::RowUpdate(RowMeta& ioRowMeta, std::map<size_t, UITableViewRowAnimation>& ioMap)
 :	fRowMeta(ioRowMeta)
@@ -174,8 +170,7 @@ void SectionBody::RowUpdate::AddRange(size_t iStart, size_t iCount, UITableViewR
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody
+// MARK: - SectionBody
 
 void SectionBody::ViewWillAppear(UITableView* iTV)
 	{}
@@ -193,8 +188,7 @@ bool SectionBody::FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow)
 	{ return iSB == this; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody_Concrete
+// MARK: - SectionBody_Concrete
 
 SectionBody_Concrete::SectionBody_Concrete()
 :	fRowAnimation_Insert(UITableViewRowAnimationRight)
@@ -308,8 +302,7 @@ UITableViewRowAnimation SectionBody_Concrete::RowAnimation_Reload()
 	{ return fRowAnimation_Reload; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody_SingleRow
+// MARK: - SectionBody_SingleRow
 
 SectionBody_SingleRow::SectionBody_SingleRow(ZRef<UITableViewCell> iCell)
 :	fCell_Pending(iCell)
@@ -398,8 +391,7 @@ ZRef<UITableViewCell> SectionBody_SingleRow::UITableViewCellForRow
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody_Multi
+// MARK: - SectionBody_Multi
 
 size_t SectionBody_Multi::NumberOfRows()
 	{
@@ -676,8 +668,7 @@ ZRef<SectionBody> SectionBody_Multi::pGetBodyAndRowIndex(size_t& oIndex, size_t 
 } // namespace ZooLib
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * UITVHandler_WithSections
+// MARK: - UITVHandler_WithSections
 
 using namespace ZooLib;
 using namespace ZooLib::UIKit;
@@ -1329,8 +1320,7 @@ static void spInsertSections(UITableView* iTableView,
 @end // implementation UITVHandler_WithSections
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * UITVHandler_WithSections_VariableRowHeight
+// MARK: - UITVHandler_WithSections_VariableRowHeight
 
 @implementation UITVHandler_WithSections_VariableRowHeight
 
@@ -1347,8 +1337,7 @@ static void spInsertSections(UITableView* iTableView,
 @end // implementation UITVHandler_WithSections_VariableRowHeight
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * UIGestureRecognizer_TableViewWithSections
+// MARK: - UIGestureRecognizer_TableViewWithSections
 
 @interface UIGestureRecognizer_TableViewWithSections : UIGestureRecognizer
 	{
@@ -1416,8 +1405,7 @@ static void spInsertSections(UITableView* iTableView,
 @end // UIGestureRecognizer_TableViewWithSections
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * UITableView_WithSections
+// MARK: - UITableView_WithSections
 
 @implementation UITableView_WithSections
 

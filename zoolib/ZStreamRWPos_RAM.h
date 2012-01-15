@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWPos_RAM
+// MARK: - ZStreamRWPos_RAM
 
 /// A RWPos stream that maintains its data in memory.
 

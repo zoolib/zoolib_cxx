@@ -30,8 +30,7 @@ namespace ZNetscape {
 class Guest_Std;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * GuestMeister_Std
+// MARK: - GuestMeister_Std
 
 class GuestMeister_Std : public GuestMeister
 	{
@@ -80,8 +79,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Guest_Std
+// MARK: - Guest_Std
 
 class Guest_Std : public Guest
 	{

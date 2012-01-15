@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerR
+// MARK: - ZStrimmerR
 
 /** A refcounted entity that provides access to a ZStrimR.
 \ingroup Strimmer
@@ -44,8 +43,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerU
+// MARK: - ZStrimmerU
 
 /** A refcounted entity that provides access to a ZStrimU.
 \ingroup Strimmer
@@ -62,8 +60,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerW
+// MARK: - ZStrimmerW
 
 /** A refcounted entity that provides access to a ZStrimW.
 \ingroup Strimmer
@@ -76,8 +73,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerR_T
+// MARK: - ZStrimmerR_T
 
 template <class Strim_t>
 class ZStrimmerR_T : public virtual ZStrimmerR
@@ -104,8 +100,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerR_FT
+// MARK: - ZStrimmerR_FT
 
 template <class Strim_t>
 class ZStrimmerR_FT : public virtual ZStrimmerR
@@ -145,8 +140,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerU_T
+// MARK: - ZStrimmerU_T
 
 template <class Strim_t>
 class ZStrimmerU_T : public virtual ZStrimmerU
@@ -173,8 +167,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerU_FT
+// MARK: - ZStrimmerU_FT
 
 template <class Strim_t>
 class ZStrimmerU_FT : public virtual ZStrimmerU
@@ -222,8 +215,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerW_T
+// MARK: - ZStrimmerW_T
 
 template <class Strim_t>
 class ZStrimmerW_T : public virtual ZStrimmerW
@@ -250,8 +242,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerW_FT
+// MARK: - ZStrimmerW_FT
 
 template <class Strim_t>
 class ZStrimmerW_FT : public virtual ZStrimmerW
@@ -291,8 +282,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerR_Strim
+// MARK: - ZStrimmerR_Strim
 
 class ZStrimmerR_Strim
 :	public ZStrimmerR
@@ -310,8 +300,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerU_Strim
+// MARK: - ZStrimmerU_Strim
 
 class ZStrimmerU_Strim
 :	public ZStrimmerU
@@ -329,8 +318,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimmerW_Strim
+// MARK: - ZStrimmerW_Strim
 
 class ZStrimmerW_Strim
 :	public ZStrimmerW

@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCaller_WinMessageLoop
+// MARK: - ZCaller_WinMessageLoop
 
 ZCaller_WinMessageLoop::ZCaller_WinMessageLoop()
 :	fHWND(nullptr)

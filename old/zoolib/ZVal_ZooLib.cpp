@@ -87,15 +87,13 @@ const char* ZTypeAsString(ZType iType)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+// MARK: - Helper functions
 
 static inline bool spIsSpecialString(size_t iSize)
 	{ return iSize <= ZVal_ZooLib::kBytesSize; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ValString
+// MARK: - ValString
 
 namespace { // anonymous
 
@@ -216,8 +214,7 @@ void ValString::ToString(string& oString) const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_ZooLib::Ex_IllegalType
+// MARK: - ZVal_ZooLib::Ex_IllegalType
 
 ZVal_ZooLib::Ex_IllegalType::Ex_IllegalType(int iType)
 :	runtime_error("Ex_IllegalType"),
@@ -225,8 +222,7 @@ ZVal_ZooLib::Ex_IllegalType::Ex_IllegalType(int iType)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_ZooLib
+// MARK: - ZVal_ZooLib
 
 /** \class ZVal_ZooLib
 \nosubgrouping
@@ -1266,8 +1262,7 @@ void ZVal_ZooLib::ToStream(const ZStreamW& iStreamW) const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_ZooLib typename accessors
+// MARK: - ZVal_ZooLib typename accessors
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, ID, uint64)
@@ -1286,8 +1281,7 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Raw, ZData_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Tuple, ZMap_ZooLib)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_ZooLib internal implementation
+// MARK: - ZVal_ZooLib internal implementation
 
 int ZVal_ZooLib::pUncheckedCompare(const ZVal_ZooLib& iOther) const
 	{
@@ -1742,8 +1736,7 @@ void ZVal_ZooLib::pFromStream(ZType iType, const ZStreamR& iStreamR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_ZooLib::Rep
+// MARK: - ZSeq_ZooLib::Rep
 
 class ZSeq_ZooLib::Rep : public ZCountedWithoutFinalize
 	{
@@ -1766,8 +1759,7 @@ ZSeq_ZooLib::Rep::~Rep()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_ZooLib
+// MARK: - ZSeq_ZooLib
 
 ZSeq_Any ZSeq_ZooLib::AsSeq_Any(const ZAny& iDefault) const
 	{
@@ -1978,8 +1970,7 @@ void ZSeq_ZooLib::pTouch()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NameVal inlines
+// MARK: - NameVal inlines
 
 NameVal::NameVal(const ZStreamR& iStreamR)
 :	fName(iStreamR)
@@ -2022,8 +2013,7 @@ void NameVal::ToStream(const ZStreamW& iStreamW) const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_ZooLib::Rep
+// MARK: - ZMap_ZooLib::Rep
 
 class ZMap_ZooLib::Rep : public ZCountedWithoutFinalize
 	{
@@ -2046,8 +2036,7 @@ ZMap_ZooLib::Rep::~Rep()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_ZooLib
+// MARK: - ZMap_ZooLib
 
 ZMap_Any ZMap_ZooLib::AsMap_Any(const ZAny& iDefault) const
 	{
@@ -2485,8 +2474,7 @@ void ZMap_ZooLib::ToStream(const ZStreamW& iStreamW) const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_ZooLib internal implementation
+// MARK: - ZMap_ZooLib internal implementation
 
 void ZMap_ZooLib::pSet(Index_t iIndex, const ZVal_ZooLib& iVal)
 	{

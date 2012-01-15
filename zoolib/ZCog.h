@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCog
+// MARK: - ZCog
 
 template <class Param_p>
 class ZCog
@@ -135,8 +134,7 @@ const ZCog<Param>& ZCog<Param>::sTrue()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Nullary, sCog_Unknown
+// MARK: - Nullary, sCog_Unknown
 
 template <class Param>
 ZCog<Param> spCogFun_Unknown(const ZCog<Param>& iSelf, Param iParam)
@@ -150,8 +148,7 @@ const ZCog<Param>& sCog_Unknown()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Cog classification
+// MARK: - Cog classification
 
 template <class Param>
 bool sIsTrue(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
@@ -170,8 +167,7 @@ bool sIsPending(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& i
 	{ return iCallable && not sIsTrue(iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallCog variants
+// MARK: - sCallCog variants
 
 template <class Cog>
 Cog sCallCog(const Cog& iCog, const typename Cog::Param iParam)
@@ -217,8 +213,7 @@ bool sCallCog_Unchanged(Cog& ioCog, const typename Cog::Param iParam)
 	{ return sIsFinished(ioCog) || sCallPendingCog_Unchanged(ioCog, iParam); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Unary, sCog_Not
+// MARK: - Unary, sCog_Not
 
 template <class Param>
 ZCog<Param> spCog_Not
@@ -269,8 +264,7 @@ ZCog<Param> operator~
 	{ return sCog_Not<Param>(iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Unary, sCog_Tautology (TrueIfFinished)
+// MARK: - Unary, sCog_Tautology (TrueIfFinished)
 
 template <class Param>
 ZCog<Param> spCog_Tautology
@@ -314,8 +308,7 @@ ZCog<Param> operator+(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)
 	{ return sCog_Tautology<Param>(iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Unary, sCog_Contradiction (FalseIfFinished)
+// MARK: - Unary, sCog_Contradiction (FalseIfFinished)
 
 template <class Param>
 ZCog<Param> spCog_Contradiction
@@ -359,8 +352,7 @@ ZCog<Param> operator-(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)
 	{ return sCog_Contradiction<Param>(iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Unary, sCog_Repeat
+// MARK: - Unary, sCog_Repeat
 
 template <class Param>
 ZCog<Param> spCog_Repeat
@@ -418,8 +410,7 @@ ZCog<Param> operator*(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)
 	{ return sCog_Repeat<Param>(iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Binary sequential, sCog_Then
+// MARK: - Binary sequential, sCog_Then
 
 // Call cog0 till it finishes, if true then call cog1
 
@@ -490,8 +481,7 @@ ZCog<Param>& operator>>=
 	{ return ioCog0 = sCog_Then<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Binary sequential, sCog_Each
+// MARK: - Binary sequential, sCog_Each
 
 // Call cog0 till it finishes, then call cog1
 
@@ -514,8 +504,7 @@ ZCog<Param>& operator^=
 	{ return ioCog0 = ioCog0 ^ iCallable1; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Binary parallel, sCog_And
+// MARK: - Binary parallel, sCog_And
 
 template <class Param>
 ZCog<Param> spCogFun_And(const ZCog<Param>& iSelf, Param iParam,
@@ -618,8 +607,7 @@ ZCog<Param>& operator&=
 	{ return ioCog0 = sCog_And<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Binary parallel, sCog_Or
+// MARK: - Binary parallel, sCog_Or
 
 template <class Param>
 ZCog<Param> spCogFun_Or(const ZCog<Param>& iSelf, Param iParam,
@@ -716,8 +704,7 @@ ZCog<Param>& operator|=
 	{ return ioCog0 = sCog_Or<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Binary parallel, sCog_With
+// MARK: - Binary parallel, sCog_With
 
 // Call cog1 so long as cog0 is pending.
 
@@ -791,8 +778,7 @@ ZCog<Param>& operator/=
 	{ return ioCog0 = sCog_With<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Binary parallel, sCog_WithUnchanged
+// MARK: - Binary parallel, sCog_WithUnchanged
 
 // Call cog1 so long as cog0 is pending and unchanged.
 

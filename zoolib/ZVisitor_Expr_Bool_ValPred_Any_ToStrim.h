@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred_Any_ToStrim
+// MARK: - ZVisitor_Expr_Bool_ValPred_Any_ToStrim
 
 class ZVisitor_Expr_Bool_ValPred_Any_ToStrim
 :	public virtual ZVisitor_Expr_Bool_ToStrim

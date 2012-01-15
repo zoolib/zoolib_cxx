@@ -48,8 +48,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCaller_CFRunLoop
+// MARK: - ZCaller_CFRunLoop
 
 class ZCaller_CFRunLoop
 :	public ZCaller_EventLoop

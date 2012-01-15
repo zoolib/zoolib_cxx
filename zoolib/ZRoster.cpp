@@ -29,8 +29,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZRoster
+// MARK: - ZRoster
 
 ZRoster::ZRoster()
 	{}
@@ -139,8 +138,7 @@ void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallabl
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZRoster::Entry
+// MARK: - ZRoster::Entry
 
 ZRoster::Entry::Entry
 	(const ZRef<ZRoster>& iRoster,

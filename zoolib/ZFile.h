@@ -39,8 +39,7 @@ class ZFileW;
 class ZFileRW;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFile
+// MARK: - ZFile
 
 namespace ZFile {
 
@@ -69,8 +68,7 @@ enum Kind
 } // namespace ZFile
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileSpec
+// MARK: - ZFileSpec
 
 /// Represents a node in the file system.
 
@@ -172,8 +170,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileIter
+// MARK: - ZFileIter
 
 /// An iterator that provides access to the children of a directory.
 
@@ -196,8 +193,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileTreeIter
+// MARK: - ZFileTreeIter
 
 /// An iterator that provides access to every node descending from a ZFileSpec.
 
@@ -221,8 +217,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileLoc
+// MARK: - ZFileLoc
 
 class ZFileLoc : public ZCounted
 	{
@@ -280,8 +275,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileIterRep
+// MARK: - ZFileIterRep
 
 class ZFileIterRep : public ZCounted
 	{
@@ -300,8 +294,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileIterRep_Std
+// MARK: - ZFileIterRep_Std
 
 class ZFileIterRep_Std : public ZFileIterRep
 	{
@@ -325,8 +318,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileIterRep_Std::RealRep
+// MARK: - ZFileIterRep_Std::RealRep
 
 class ZFileIterRep_Std::RealRep : public ZCounted
 	{
@@ -340,8 +332,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileR
+// MARK: - ZFileR
 
 /// Base interface for stateless read access.
 
@@ -359,8 +350,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileW
+// MARK: - ZFileW
 
 /// Base interface for stateless write access.
 
@@ -383,8 +373,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileRW
+// MARK: - ZFileRW
 
 /// Base interface for stateless read/write access.
 
@@ -407,8 +396,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_FileR
+// MARK: - ZStreamRPos_FileR
 
 /// Puts a stream interface on top of a ZFileR.
 
@@ -433,8 +421,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRPos_FileR
+// MARK: - ZStreamerRPos_FileR
 
 class ZStreamerRPos_FileR : public ZStreamerRPos
 	{
@@ -450,8 +437,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_FileW
+// MARK: - ZStreamWPos_FileW
 
 /// Puts a stream interface on top of a ZFileW.
 
@@ -478,8 +464,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerWPos_FileW
+// MARK: - ZStreamerWPos_FileW
 
 class ZStreamerWPos_FileW : public ZStreamerWPos
 	{
@@ -495,8 +480,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWPos_FileRW
+// MARK: - ZStreamRWPos_FileRW
 
 /// Puts a stream interface on top of a ZFileRW.
 
@@ -528,8 +512,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRWPos_FileRW
+// MARK: - ZStreamerRWPos_FileRW
 
 class ZStreamerRWPos_FileRW : public ZStreamerRWPos
 	{
@@ -545,8 +528,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileR_StreamerRPos
+// MARK: - ZFileR_StreamerRPos
 
 /// Puts a ZFileR interface on top of a streamer.
 
@@ -567,8 +549,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileW_StreamerWPos
+// MARK: - ZFileW_StreamerWPos
 
 /// Puts a ZFileW interface on top of a streamer.
 
@@ -594,8 +575,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileRW_StreamerRWPos
+// MARK: - ZFileRW_StreamerRWPos
 
 /// Puts a ZFileRW interface on top of a streamer.
 

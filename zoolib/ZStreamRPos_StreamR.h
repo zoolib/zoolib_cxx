@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_StreamR
+// MARK: - ZStreamRPos_StreamR
 
 /** Puts a ZStreamRPos interface over a ZStreamR. */
 

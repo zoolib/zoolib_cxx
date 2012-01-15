@@ -37,8 +37,7 @@ using std::runtime_error;
 #define kDebug_bzip2 2
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_bzip2Decode
+// MARK: - ZStreamR_bzip2Decode
 
 /**
 \class ZStreamR_bzip2Decode
@@ -132,8 +131,7 @@ void ZStreamR_bzip2Decode::pInit(size_t iBufferSize)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_bzip2Encode
+// MARK: - ZStreamW_bzip2Encode
 
 /**
 \class ZStreamW_bzip2Encode
@@ -281,8 +279,7 @@ void ZStreamW_bzip2Encode::pFlush()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerW_bzip2Encode
+// MARK: - ZStreamerW_bzip2Encode
 
 ZStreamerW_bzip2Encode::ZStreamerW_bzip2Encode(int iBlockSize100K, ZRef<ZStreamerW> iStreamer)
 :	fStreamer(iStreamer),
@@ -302,8 +299,7 @@ const ZStreamW& ZStreamerW_bzip2Encode::GetStreamW()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStream_bzip2
+// MARK: - ZStream_bzip2
 
 static const uint64 BLOCK_HEADER = ZUINT64_C(0x314159265359);
 static const uint64 BLOCK_ENDMARK = ZUINT64_C(0x177245385090);

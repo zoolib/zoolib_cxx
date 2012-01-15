@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_ZooLibStreamOld
+// MARK: - ZYadMapR_ZooLibStreamOld
 
 class ZYadMapR_ZooLibStreamOld : public ZYadMapR_Std
 	{
@@ -44,8 +43,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_ZooLibStream
+// MARK: - ZYad_ZooLibStream
 
 namespace ZYad_ZooLibStream {
 

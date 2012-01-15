@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCompare_T
+// MARK: - sCompare_T
 
 template <>
 int sCompare_T(const ZQE::Expr_Rel_Search& iL, const ZQE::Expr_Rel_Search& iR)
@@ -41,8 +40,7 @@ ZMACRO_CompareRegistration_T(ZQE::Expr_Rel_Search)
 namespace ZQE {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Search
+// MARK: - Expr_Rel_Search
 
 Expr_Rel_Search::Expr_Rel_Search(const ZRA::Rename& iRename, const ZRef<ZExpr_Bool>& iExpr_Bool)
 :	fRename(iRename)
@@ -81,8 +79,7 @@ const ZRef<ZExpr_Bool>& Expr_Rel_Search::GetExpr_Bool() const
 	{ return fExpr_Bool; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Search
+// MARK: - Visitor_Expr_Rel_Search
 
 void Visitor_Expr_Rel_Search::Visit_Expr_Rel_Search
 	(const ZRef<Expr_Rel_Search>& iExpr)

@@ -34,8 +34,7 @@ using namespace ZooLib;
 #if ZCONFIG_API_Enabled(StackCrawl)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Win32 Helpers
+// MARK: - Win32 Helpers
 
 #if ZCONFIG_SPI_Enabled(Win)
 #include <csetjmp>
@@ -237,8 +236,7 @@ static void spGetSymNameAndOffset(const void* iAddress, string& oSymName, size_t
 #endif // ZCONFIG_SPI_Enabled(Win)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Linux helpers
+// MARK: - Linux helpers
 
 #if defined(linux) && ZCONFIG(Processor, x86)
 #include <execinfo.h> // <--Use this instead of our own code.
@@ -537,8 +535,7 @@ void ZStackCrawl::sPopulateStackFrames(vector<ZStackCrawl::pFrame_t>& oFrames)
 #endif // defined(linux) && ZCONFIG(Processor, x86)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStackCrawl
+// MARK: - ZStackCrawl
 ZStackCrawl::ZStackCrawl()
 	{
 	fFrames.reserve(32);

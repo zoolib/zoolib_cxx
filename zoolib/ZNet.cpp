@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEx
+// MARK: - ZNetEx
 
 ZNetEx::ZNetEx(ZNet::Error iError)
 :	runtime_error("ZNetEx"),
@@ -32,8 +31,7 @@ ZNetEx::ZNetEx(ZNet::Error iError)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddress
+// MARK: - ZNetAddress
 
 ZNetAddress::ZNetAddress()
 	{}
@@ -51,15 +49,13 @@ ZRef<ZNetEndpoint> ZNetAddress::Connect() const
 	{ return null; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddressLookup
+// MARK: - ZNetAddressLookup
 
 ZNetAddressLookup::~ZNetAddressLookup()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetName
+// MARK: - ZNetName
 
 ZNetName::ZNetName()
 	{}
@@ -103,15 +99,13 @@ ZRef<ZNetAddress> ZNetName::Lookup() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetNameLookup
+// MARK: - ZNetNameLookup
 
 ZNetNameLookup::~ZNetNameLookup()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener
+// MARK: - ZNetListener
 
 ZNetListener::~ZNetListener()
 	{}
@@ -123,8 +117,7 @@ ZRef<ZStreamerRWCon> ZNetListener::MakeStreamerRWCon()
 	{ return this->Listen(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint
+// MARK: - ZNetEndpoint
 
 ZNetEndpoint::ZNetEndpoint()
 	{}

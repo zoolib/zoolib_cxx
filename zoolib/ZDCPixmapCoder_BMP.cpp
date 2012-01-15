@@ -37,8 +37,7 @@ using namespace ZDCPixmapNS;
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapEncoder_BMP
+// MARK: - ZDCPixmapEncoder_BMP
 
 void ZDCPixmapEncoder_BMP::sWritePixmap(const ZStreamW& iStream,
 	const ZDCPixmap& iPixmap, bool iWithFileHeader)
@@ -170,8 +169,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapDecoder_BMP
+// MARK: - ZDCPixmapDecoder_BMP
 
 ZDCPixmap ZDCPixmapDecoder_BMP::sReadPixmap(const ZStreamR& iStream, bool iWithFileHeader)
 	{

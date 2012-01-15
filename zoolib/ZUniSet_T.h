@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUniSet_T declaration
+// MARK: - ZUniSet_T declaration
 
 template <class T>
 class ZUniSet_T
@@ -106,8 +105,7 @@ template <class T>
 ZUniSet_T<T> operator&(const T& iElem, const ZUniSet_T<T>& iUniSet_T);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUniSet_T definition
+// MARK: - ZUniSet_T definition
 
 template <class T>
 void ZUniSet_T<T>::swap(ZUniSet_T& iOther)

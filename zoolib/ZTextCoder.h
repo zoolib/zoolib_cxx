@@ -33,8 +33,7 @@ class ZStreamR;
 class ZStreamW;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTextCoder
+// MARK: - ZTextCoder
 
 namespace ZTextCoder {
 
@@ -43,8 +42,7 @@ void sGetAliases(const std::string& iName, std::vector<std::string>& oAliases);
 } // namespace ZTextCoder
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTextDecoder
+// MARK: - ZTextDecoder
 
 class ZTextDecoder
 	{
@@ -70,8 +68,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTextEncoder
+// MARK: - ZTextEncoder
 
 class ZTextEncoder
 	{

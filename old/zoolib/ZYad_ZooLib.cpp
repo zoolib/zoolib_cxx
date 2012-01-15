@@ -28,8 +28,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+// MARK: - Helper functions
 
 static bool spIsSimpleString(const ZYadOptions& iOptions, const string& iString)
 	{
@@ -95,8 +94,7 @@ static bool spIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadAtomR_ZooLib
+// MARK: - ZYadAtomR_ZooLib
 
 ZYadAtomR_ZooLib::ZYadAtomR_ZooLib()
 	{}
@@ -116,8 +114,7 @@ ZAny ZYadAtomR_ZooLib::AsAny()
 	{ return fVal.AsAny(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos_ZooLib
+// MARK: - ZYadSeqRPos_ZooLib
 
 ZYadSeqRPos_ZooLib::ZYadSeqRPos_ZooLib(const ZSeq_ZooLib& iSeq)
 :	ZYadR_ZooLib(iSeq)
@@ -133,8 +130,7 @@ bool ZYadSeqRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return spIsSimple(iOptions, fVal); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos_ZooLib
+// MARK: - ZYadMapRPos_ZooLib
 
 ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZMap_ZooLib& iMap)
 :	ZYadR_ZooLib(iMap)
@@ -150,8 +146,7 @@ bool ZYadMapRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return spIsSimple(iOptions, fVal); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(const ZVal_ZooLib& iVal)
 	{
@@ -173,8 +168,7 @@ ZRef<ZYadMapRPos> sYadR(const ZMap_ZooLib& iMap)
 	{ return new ZYadMapRPos_ZooLib(iMap); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sFromYadR
+// MARK: - sFromYadR
 
 namespace { // anonymous
 

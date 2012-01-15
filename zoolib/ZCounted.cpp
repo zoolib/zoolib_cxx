@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCountedBase
+// MARK: - ZCountedBase
 
 ZCountedBase::ZCountedBase()
 :	fRefCount(0)
@@ -135,8 +134,7 @@ int ZCountedBase::pCOMRelease()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCountedBase::WeakRefProxy
+// MARK: - ZCountedBase::WeakRefProxy
 
 ZCountedBase::WeakRefProxy::WeakRefProxy(ZCountedBase* iCountedBase)
 :	fCountedBase(iCountedBase)
@@ -158,8 +156,7 @@ void ZCountedBase::WeakRefProxy::pClear()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWeakRefBase
+// MARK: - ZWeakRefBase
 
 ZWeakRefBase::ZWeakRefBase()
 	{}

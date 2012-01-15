@@ -30,8 +30,8 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static parsing functions
+// MARK: -
+// MARK:	Static parsing functions
 
 static void spThrowParseException(const string& iMessage)
 	{
@@ -156,8 +156,7 @@ static ZRef<ZYadR> spMakeYadR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException_XMLPList
+// MARK: - ZYadParseException_XMLPList
 
 ZYadParseException_XMLPList::ZYadParseException_XMLPList(const string& iWhat)
 :	ZYadParseException_Std(iWhat)
@@ -168,8 +167,7 @@ ZYadParseException_XMLPList::ZYadParseException_XMLPList(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamR_XMLPList
+// MARK: - ZYadStreamR_XMLPList
 
 ZYadStreamR_XMLPList::ZYadStreamR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
 :	fStrimmerU(iStrimmerU),
@@ -197,8 +195,7 @@ const ZStreamR& ZYadStreamR_XMLPList::GetStreamR()
 	{ return fStreamR_Base64Decode; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_XMLPList
+// MARK: - ZYadStrimR_XMLPList
 
 ZYadStrimR_XMLPList::ZYadStrimR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
 :	fStrimmerU(iStrimmerU),
@@ -224,8 +221,7 @@ const ZStrimR& ZYadStrimR_XMLPList::GetStrimR()
 	{ return fStrimmerU->GetStrimR(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadReaderRep_XMLPList
+// MARK: - ZYadReaderRep_XMLPList
 
 ZYadSeqR_XMLPList::ZYadSeqR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
 :	fStrimmerU(iStrimmerU),
@@ -260,8 +256,7 @@ void ZYadSeqR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_XMLPList
+// MARK: - ZYadMapR_XMLPList
 
 ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
 :	fStrimmerU(iStrimmerU),
@@ -303,8 +298,7 @@ void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, string& oName, ZRef<ZYadR>& o
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_XMLPList
+// MARK: - ZYad_XMLPList
 
 ZRef<ZYadR> ZYad_XMLPList::sYadR(ZRef<ZML::StrimmerU> iStrimmerU)
 	{

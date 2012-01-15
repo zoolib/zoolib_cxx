@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTS_Umbrella
+// MARK: - ZTS_Umbrella
 
 class ZTS_Umbrella : public ZTS
 	{

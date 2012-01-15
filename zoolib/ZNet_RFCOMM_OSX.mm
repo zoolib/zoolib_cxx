@@ -37,8 +37,7 @@ using std::runtime_error;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_RFCOMM_OSX
+// MARK: - ZNetListener_RFCOMM_OSX
 
 ZNetListener_RFCOMM_OSX::ZNetListener_RFCOMM_OSX(CFDictionaryRef iServiceDict)
 	{

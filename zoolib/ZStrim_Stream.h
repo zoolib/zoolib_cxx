@@ -31,8 +31,7 @@ class ZTextDecoder;
 class ZTextEncoder;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_StreamUTF32BE
+// MARK: - ZStrimR_StreamUTF32BE
 
 /// A read strim that sources text by reading big endian UTF-32 code units from a ZStreamR.
 
@@ -49,8 +48,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_StreamUTF32LE
+// MARK: - ZStrimR_StreamUTF32LE
 
 /// A read strim that sources text by reading little endian UTF-32 code units from a ZStreamR.
 
@@ -67,8 +65,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_StreamUTF16BE
+// MARK: - ZStrimR_StreamUTF16BE
 
 /// A read strim that sources text by reading big endian UTF-16 code units from a ZStreamR.
 
@@ -85,8 +82,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_StreamUTF16LE
+// MARK: - ZStrimR_StreamUTF16LE
 
 /// A read strim that sources text by reading little endian UTF-16 code units from a ZStreamR.
 
@@ -103,8 +99,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_StreamUTF8
+// MARK: - ZStrimR_StreamUTF8
 
 /// A read strim that sources text by reading UTF-8 code units from a ZStreamR.
 
@@ -124,8 +119,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_StreamUTF32BE
+// MARK: - ZStrimW_StreamUTF32BE
 
 /// A write strim that writes text to a ZStreamW in big endian UTF-32.
 
@@ -143,8 +137,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_StreamUTF32LE
+// MARK: - ZStrimW_StreamUTF32LE
 
 /// A write strim that writes text to a ZStreamW in little endian UTF-32.
 
@@ -162,8 +155,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_StreamUTF16BE
+// MARK: - ZStrimW_StreamUTF16BE
 
 /// A write strim that writes text to a ZStreamW in big endian UTF-16.
 
@@ -181,8 +173,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_StreamUTF16LE
+// MARK: - ZStrimW_StreamUTF16LE
 
 /// A write strim that writes text to a ZStreamW in little endian UTF-16.
 
@@ -200,8 +191,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_StreamUTF8
+// MARK: - ZStrimW_StreamUTF8
 
 /// A write strim that writes text to a ZStreamW in UTF-8.
 
@@ -219,8 +209,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_StreamDecoder
+// MARK: - ZStrimR_StreamDecoder
 
 /** A read strim that provides text by reading it from a ZStreamR in some encoding, using
 a ZTextDecoder instance to convert it to Unicode. */
@@ -245,8 +234,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_StreamEncoder
+// MARK: - ZStrimW_StreamEncoder
 
 /** A write strim that disposes of text written to it by
 writing it to a ZStreamW using a ZTextEncoder. */

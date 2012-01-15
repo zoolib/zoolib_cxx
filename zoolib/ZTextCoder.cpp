@@ -32,8 +32,7 @@ namespace ZooLib {
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTextCoder
+// MARK: - ZTextCoder
 
 namespace { // anonymous
 struct CharsetEntry_t
@@ -457,8 +456,7 @@ void ZTextCoder::sGetAliases(const std::string& iName, std::vector<std::string>&
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTextDecoder
+// MARK: - ZTextDecoder
 
 /**
 \class ZTextDecoder
@@ -604,8 +602,7 @@ void ZTextDecoder::Reset()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTextEncoder
+// MARK: - ZTextEncoder
 
 /**
 \class ZTextEncoder

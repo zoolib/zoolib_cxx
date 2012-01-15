@@ -33,8 +33,7 @@ more discussion and suggested workarounds.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFunctionChain_T
+// MARK: - ZFunctionChain_T
 
 template <class Result, class Param>
 class ZFunctionChain_T

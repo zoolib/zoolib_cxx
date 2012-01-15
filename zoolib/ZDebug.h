@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace ZDebug {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDebug
+// MARK: - ZDebug
 
 struct Params_t
 	{

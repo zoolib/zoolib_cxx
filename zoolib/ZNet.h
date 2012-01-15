@@ -36,8 +36,7 @@ class ZNetName;
 class ZNetNameLookup;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNet
+// MARK: - ZNet
 
 namespace ZNet
 	{
@@ -55,8 +54,7 @@ namespace ZNet
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEx
+// MARK: - ZNetEx
 
 class ZNetEx : public std::runtime_error
 	{
@@ -70,8 +68,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddress
+// MARK: - ZNetAddress
 
 /// Represents the physical address of a particular endpoint on a particular host.
 class ZNetAddress : public ZStreamerRWConFactory
@@ -92,8 +89,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddressLookup
+// MARK: - ZNetAddressLookup
 
 /// Subclasses of this are returned by ZNetAddress instances when
 /// ZNetAddress::CreateLookup is called. It's an iterator that returns zero or
@@ -111,8 +107,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetName
+// MARK: - ZNetName
 
 /// Represents the abstract name of a port or service on a host or hosts.
 class ZNetName : public ZStreamerRWConFactory
@@ -138,8 +133,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetNameLookup
+// MARK: - ZNetNameLookup
 
 /// Subclasses of this are returned by ZNetName instances when
 /// ZNetName::CreateLookup is called. It's an iterator that returns zero or
@@ -158,8 +152,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener
+// MARK: - ZNetListener
 
 /// Subclasses of this return ZNetEndpoint instances as connections arrive.
 class ZNetListener
@@ -180,8 +173,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint
+// MARK: - ZNetEndpoint
 
 /// Subclasses of this provide the interface to network endpoints.
 class ZNetEndpoint

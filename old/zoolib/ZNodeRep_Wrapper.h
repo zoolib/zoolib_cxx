@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeRep_Wrapper
+// MARK: - ZNodeRep_Wrapper
 
 class ZNodeRep_Wrapper : public ZNodeRep
 	{

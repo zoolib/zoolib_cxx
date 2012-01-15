@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZWinCOM {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Variant
+// MARK: - Variant
 
 /**
 \class ZWinCOM::Variant
@@ -453,8 +452,7 @@ ZMACRO_ZValAccessors_Def_Entry(Variant, Dispatch, ZRef<IDispatch>)
 /// \endcond DoxygenIgnore
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * String
+// MARK: - String
 
 String::String()
 :	fBSTR(nullptr)

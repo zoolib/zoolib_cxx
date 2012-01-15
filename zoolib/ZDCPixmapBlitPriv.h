@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace ZDCPixmapBlit {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Using declarations
+// MARK: - Using declarations
 
 // Pull in PixelIter names, to reduce repetitive clutter.
 using ZDCPixmapNS::PixelIterR_T;
@@ -38,8 +37,7 @@ using ZDCPixmapNS::PixelIterW_T;
 using ZDCPixmapNS::PixelIterRW_T;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 // Returns a number between 0 and iRange - 1. The effect is as if enough multiples
 // of iRange are added to or subtracted from iAmount to bring it into that range.
@@ -51,8 +49,7 @@ inline int sPositiveModulus(int iAmount, int iRange)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Porter-Duff composition functors
+// MARK: - Porter-Duff composition functors
 
 /*
 Porter-Duff operators
@@ -169,8 +166,7 @@ struct Compose_Plus
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Tile variants
+// MARK: - Tile variants
 
 template <class S, class D>
 void sTile_SD_T
@@ -605,8 +601,7 @@ void sTile_SMDO_T
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Copy variants
+// MARK: - Copy variants
 
 template <class S, class D>
 void sCopy_SD_T
@@ -870,8 +865,7 @@ void sCopy_SMDO_T
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Tile source, untiled matte
+// MARK: - Tile source, untiled matte
 
 template <class S, class M, class D>
 void sTileSource_SMD_T
@@ -1105,8 +1099,7 @@ void sTileSource_SMDO_T
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Tile matte, untiled source
+// MARK: - Tile matte, untiled source
 
 template <class S, class M, class D>
 void sTileMatte_SMD_T
@@ -1338,8 +1331,7 @@ void sTileMatte_SMDO_T
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Fill/color variants
+// MARK: - Fill/color variants
 
 static void sFillPixval(void* oDest, const RD& iDestRD, const ZRectPOD& iDestB,
 			uint32 iPixval)
@@ -1670,8 +1662,7 @@ void sColorTile_MDO_T
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Blit dispatchers
+// MARK: - Blit dispatchers
 
 // Replicate iSourceB over iDestB, aligning iSourceOrigin with iDestB.TopLeft()
 template <class S, class D>

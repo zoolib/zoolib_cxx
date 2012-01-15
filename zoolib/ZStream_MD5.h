@@ -36,8 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStream_MD5
+// MARK: - ZStream_MD5
 
 namespace ZStream_MD5 {
 
@@ -63,8 +62,7 @@ void sFinal(Context& ioContext, uint8 oDigest[16]);
 } // namespace ZStream_MD5
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_MD5
+// MARK: - ZStreamR_MD5
 
 /// A read filter stream that MD5 hashes data read through it.
 
@@ -88,8 +86,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_MD5
+// MARK: - ZStreamW_MD5
 
 /// A write filter stream that MD5 hashes data written through it.
 

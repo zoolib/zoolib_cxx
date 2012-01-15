@@ -44,8 +44,7 @@ namespace ZooLib {
 namespace ZPhotoshop {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop
+// MARK: - ZPhotoshop
 
 using std::string;
 using std::vector;
@@ -65,16 +64,14 @@ typedef DescriptorTypeID TypeID;
 typedef DescriptorUnitID UnitID;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Public utilities
+// MARK: - Public utilities
 
 bool sAsRuntimeTypeID(const string8& iString, TypeID& oTypeID);
 
 bool sFromRuntimeTypeID(TypeID iTypeID, string8& oString);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ClassID
+// MARK: - ClassID
 
 struct ClassID
 	{
@@ -93,8 +90,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * UnitFloat
+// MARK: - UnitFloat
 
 struct UnitFloat
 	{
@@ -113,8 +109,7 @@ struct UnitFloat
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Enumerated
+// MARK: - Enumerated
 
 struct Enumerated
 	{
@@ -133,8 +128,7 @@ struct Enumerated
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Spec
+// MARK: - Spec
 
 class Spec
 	{
@@ -220,8 +214,7 @@ inline void swap(Spec& a, Spec& b)
 	{ a.swap(b); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Val
+// MARK: - Val
 
 class Val : public ZAny
 	{
@@ -269,8 +262,7 @@ inline void swap(Val& a, Val& b)
 	{ a.swap(b); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Seq
+// MARK: - Seq
 
 class Seq
 	{
@@ -337,8 +329,7 @@ inline void swap(Seq& a, Seq& b)
 	{ a.swap(b); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Map
+// MARK: - Map
 
 class Map
 	{

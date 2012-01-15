@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSaveRestore_T
+// MARK: - ZSaveRestore_T
 
 template <class T>
 class ZSaveRestore_T

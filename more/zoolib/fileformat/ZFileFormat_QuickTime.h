@@ -32,8 +32,7 @@ namespace FileFormat {
 namespace QuickTime {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * FileFormat::QuickTime::Writer
+// MARK: - FileFormat::QuickTime::Writer
 
 class Writer
 	{
@@ -53,8 +52,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_IFF
+// MARK: - ZStreamR_IFF
 
 class StreamR_Chunk : public ZStreamR
 	{
@@ -85,8 +83,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamRPos_Chunk
+// MARK: - StreamRPos_Chunk
 
 class StreamRPos_Chunk : public ZStreamRPos
 	{
@@ -122,8 +119,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamWPos_Chunk
+// MARK: - StreamWPos_Chunk
 
 class StreamWPos_Chunk : public ZStreamWPos
 	{

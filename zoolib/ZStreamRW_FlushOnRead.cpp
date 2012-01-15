@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRW_FlushOnRead
+// MARK: - ZStreamRW_FlushOnRead
 
 /**
 \class ZStreamRW_FlushOnRead
@@ -153,8 +152,7 @@ void ZStreamRW_FlushOnRead::Imp_Flush()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRW_FlushOnRead
+// MARK: - ZStreamerRW_FlushOnRead
 
 ZStreamerRW_FlushOnRead::ZStreamerRW_FlushOnRead
 	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)

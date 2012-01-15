@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPVariant_T
+// MARK: - NPVariant_T
 
 template <class T>
 ZAny NPVariant_T<T>::AsAny() const
@@ -364,8 +363,7 @@ void NPVariant_T<T>::pSetString(const std::string& iString)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPVariant_T<T> typename accessors
+// MARK: - NPVariant_T<T> typename accessors
 
 ZMACRO_ZValAccessors_Def_GetP(template <class T>, NPVariant_T<T>, Bool, bool)
 ZMACRO_ZValAccessors_Def_GetP(template <class T>, NPVariant_T<T>, Int32, int32)

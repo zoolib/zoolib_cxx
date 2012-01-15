@@ -43,8 +43,7 @@ class ZSeq_NS;
 class ZMap_NS;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_NS
+// MARK: - ZVal_NS
 
 class ZVal_NS
 :	public ZRef<NSObject>
@@ -173,8 +172,7 @@ ZQ<S> ZVal_NS::QGet() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_NS
+// MARK: - ZSeq_NS
 
 class ZSeq_NS
 :	public ZRef<NSArray>
@@ -238,8 +236,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_NS
+// MARK: - ZMap_NS
 
 class ZMap_NS
 :	public ZRef<NSDictionary>

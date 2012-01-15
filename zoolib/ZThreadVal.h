@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZThreadVal
+// MARK: - ZThreadVal
 
 template <class Value, class Tag = Value>
 class ZThreadVal
@@ -111,8 +110,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sThreadVal
+// MARK: - sThreadVal
 
 // Not sure about this one yet.
 template <class T>

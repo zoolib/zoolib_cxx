@@ -26,14 +26,12 @@ namespace ZooLib {
 namespace ZPhotoshop {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadR
+// MARK: - YadR
 
 typedef ZYadR_Val_T<Val> YadR;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static bool spAppendIfASCII(char iChar, string& ioString)
 	{
@@ -65,20 +63,17 @@ static ZVal_Any spIntAsVal(int32 iInt)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadSeqRPos
+// MARK: - YadSeqRPos
 
 typedef ZYadSeqRPos_Val_T<Seq> YadSeqRPos;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadMapRPos
+// MARK: - YadMapRPos
 
 typedef ZYadMapRPos_Val_T<Map> YadMapRPos;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop::MakeYadR
+// MARK: - ZPhotoshop::MakeYadR
 
 ZRef<ZYadR> sYadR(const Val& iVal)
 	{

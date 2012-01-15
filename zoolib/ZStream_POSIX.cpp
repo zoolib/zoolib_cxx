@@ -133,8 +133,7 @@ static uint64 spGetSize(FILE* iFILE)
 using std::range_error;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_FILE
+// MARK: - ZStreamR_FILE
 
 ZStreamR_FILE::ZStreamR_FILE(FILE* iFILE)
 :	fFILE(iFILE),
@@ -156,8 +155,7 @@ void ZStreamR_FILE::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{ spRead(fFILE, oDest, iCount, oCountRead); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_FILE
+// MARK: - ZStreamRPos_FILE
 
 ZStreamRPos_FILE::ZStreamRPos_FILE(FILE* iFILE)
 :	fFILE(iFILE),
@@ -191,8 +189,7 @@ uint64 ZStreamRPos_FILE::Imp_GetSize()
 	{ return spGetSize(fFILE); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_FILE
+// MARK: - ZStreamW_FILE
 
 ZStreamW_FILE::ZStreamW_FILE(FILE* iFILE)
 :	fFILE(iFILE),
@@ -220,8 +217,7 @@ void ZStreamW_FILE::Imp_Flush()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * FILE backed by a ZStream
+// MARK: - FILE backed by a ZStream
 
 #if defined(__USE_GNU)
 

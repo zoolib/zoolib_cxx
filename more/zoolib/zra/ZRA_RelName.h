@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * RelName
+// MARK: - RelName
 
 typedef string8 RelName;
 

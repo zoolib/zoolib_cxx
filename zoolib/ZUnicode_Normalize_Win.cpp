@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZUnicode {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode, normalization, Win
+// MARK: - ZUnicode, normalization, Win
 
 namespace { // anonymous
 

@@ -32,8 +32,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Client
+// MARK: - Source_Client
 
 Source_Client::Source_Client(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fStreamerR(iStreamerR)

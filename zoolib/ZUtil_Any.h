@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStdInt.h" // For int64
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAny coercion
+// MARK: - ZAny coercion
 
 namespace ZooLib {
 

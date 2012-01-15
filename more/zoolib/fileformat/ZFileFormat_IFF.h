@@ -32,8 +32,7 @@ namespace FileFormat {
 namespace IFF {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileFormat_IFF::Writer
+// MARK: - ZFileFormat_IFF::Writer
 
 class Writer
 	{
@@ -55,8 +54,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileFormat_IFF::StreamR_Chunk
+// MARK: - ZFileFormat_IFF::StreamR_Chunk
 
 class StreamR_Chunk : public ZStreamR
 	{
@@ -91,8 +89,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileFormat_IFF::StreamRPos_Chunk
+// MARK: - ZFileFormat_IFF::StreamRPos_Chunk
 
 class StreamRPos_Chunk : public ZStreamRPos
 	{
@@ -132,8 +129,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileFormat_IFF::StreamWPos_Chunk
+// MARK: - ZFileFormat_IFF::StreamWPos_Chunk
 
 class StreamWPos_Chunk : public ZStreamWPos
 	{

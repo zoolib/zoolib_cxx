@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRWFactory_Precon
+// MARK: - ZStreamerRWFactory_Precon
 
 ZStreamerRWFactory_Precon::ZStreamerRWFactory_Precon
 	(ZRef<ZStreamerRW> iSRW, ZRef<ZStreamerRWFactory> iFactory)
@@ -51,8 +50,7 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Precon::MakeStreamerRW()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRWConFactory_Precon
+// MARK: - ZStreamerRWConFactory_Precon
 
 ZStreamerRWConFactory_Precon::ZStreamerRWConFactory_Precon
 	(ZRef<ZStreamerRWCon> iSRWCon, ZRef<ZStreamerRWConFactory> iFactory)

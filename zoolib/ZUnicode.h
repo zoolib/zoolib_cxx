@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZUnicode {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode, code unit stuff
+// MARK: - ZUnicode, code unit stuff
 
 /** \name Useful constants and lookup tables
 *///@{
@@ -110,8 +109,7 @@ inline void sAppendContinuation(uint32& ioCP, uint8 iContinuation)
 	{ ioCP = (ioCP << 6) + (iContinuation & 0x3F); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode, counting and iterators
+// MARK: - ZUnicode, counting and iterators
 
 /* These are all template functions, they'll take anything that behaves like a string::iterator
 or a pointer. They call through to static member functions of template structs declared in
@@ -284,8 +282,7 @@ inline bool sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 //@}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode, string conversion
+// MARK: - ZUnicode, string conversion
 
 /** \name Converting strings to UTF32.
 *///@{
@@ -404,8 +401,7 @@ inline string8 sAsUTF8(const string8& iString)
 //@}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode, buffer conversion
+// MARK: - ZUnicode, buffer conversion
 
 /** \name Converting buffers between UTF32, UTF16 and UTF8
 *///@{
@@ -474,8 +470,7 @@ bool sUTF8ToUTF8
 //@}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode, wstring conversion
+// MARK: - ZUnicode, wstring conversion
 
 /** \name Converting from UTF8 in a std::string to UTFXX in a std::wstring.
 *///@{
@@ -496,8 +491,7 @@ inline std::wstring sAsWString(const std::string& iString)
 //@}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode, characterization
+// MARK: - ZUnicode, characterization
 
 /** \name Simple characterization.
 *///@{
@@ -510,8 +504,7 @@ bool sIsEOL(UTF32 iCP);
 //@}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode, simple case conversion
+// MARK: - ZUnicode, simple case conversion
 
 /** \name Case and other conversions.
 *///@{

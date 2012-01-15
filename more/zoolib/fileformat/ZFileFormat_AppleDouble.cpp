@@ -30,8 +30,7 @@ namespace AppleDouble {
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Writer
+// MARK: - Writer
 
 Writer::Writer()
 	{

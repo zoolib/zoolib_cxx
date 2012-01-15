@@ -45,8 +45,7 @@ extern "C" {
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetNameRegistered_DNSSD
+// MARK: - ZNetNameRegistered_DNSSD
 
 class ZNetNameRegistered_DNSSD
 	{

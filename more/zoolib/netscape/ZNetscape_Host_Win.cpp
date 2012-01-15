@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_Win
+// MARK: - Host_Win
 
 Host_Win::Host_Win(ZRef<GuestFactory> iGuestFactory, HWND iHWND)
 :	Host_Std(iGuestFactory),

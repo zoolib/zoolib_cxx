@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace ZHTTP {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZHTTP
+// MARK: - ZHTTP
 
 typedef ZCallable<ZRef<ZStreamerRWCon>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
 	Callable_Connect;

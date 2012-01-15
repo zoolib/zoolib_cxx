@@ -30,8 +30,7 @@ using std::set;
 using namespace ZUtil_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Walker_Rename
+// MARK: - Walker_Rename
 
 Walker_Rename::Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, const string8& iOld)
 :	Walker_Unary(iWalker)

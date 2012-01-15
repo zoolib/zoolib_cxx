@@ -37,8 +37,7 @@ using std::min;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_string
+// MARK: - ZUtil_string
 
 ZQ<int64> sQInt64(const string& iString)
 	{

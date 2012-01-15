@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTextCollatorRep_ASCII
+// MARK: - ZTextCollatorRep_ASCII
 
 class ZTextCollatorRep_ASCII : public ZTextCollatorRep_NativeUTF8
 	{

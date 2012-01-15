@@ -41,8 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_bzip2Decode
+// MARK: - ZStreamR_bzip2Decode
 
 /// A read filter stream that bzip2-decompresses a source stream.
 
@@ -70,8 +69,7 @@ protected:
 typedef ZStreamerR_FT<ZStreamR_bzip2Decode> ZStreamerR_bzip2Decode;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_bzip2Encode
+// MARK: - ZStreamW_bzip2Encode
 
 /// A write filter stream that bzip2-compresses to a destination stream.
 
@@ -97,8 +95,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerW_bzip2Encode
+// MARK: - ZStreamerW_bzip2Encode
 
 /// A write filter streamer that zlib-compresses (deflates) to a destination stream.
 
@@ -119,8 +116,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStream_bzip2
+// MARK: - ZStream_bzip2
 
 namespace ZStream_bzip2 {
 

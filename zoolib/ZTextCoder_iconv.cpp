@@ -37,8 +37,7 @@ namespace ZooLib {
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 
@@ -65,8 +64,7 @@ class Make_Encoder
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+// MARK: - Helper functions
 
 typedef size_t (*iconvproc_const_t)(iconv_t cd, const char**, size_t*, char**, size_t*);
 static inline size_t spIconvIntermediary(iconvproc_const_t iProc,
@@ -103,8 +101,7 @@ size_t static spIconv
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTextDecoder_iconv
+// MARK: - ZTextDecoder_iconv
 
 static iconv_t spIconvOpenDecoder(const string& iSourceName)
 	{
@@ -210,8 +207,7 @@ void ZTextDecoder_iconv::Reset()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTextEncoder_iconv
+// MARK: - ZTextEncoder_iconv
 
 static iconv_t spIconvOpenEncoder(const string& iDestName)
 	{

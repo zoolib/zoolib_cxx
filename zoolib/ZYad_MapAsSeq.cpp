@@ -99,8 +99,7 @@ ZRef<ZYadR> YadSeqR::ReadInc()
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sMapAsSeq
+// MARK: - sMapAsSeq
 
 ZRef<ZYadSeqR> sMapAsSeq(const string& iNamePropName, ZRef<ZYadMapR> iYadMapR)
 	{

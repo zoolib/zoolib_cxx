@@ -32,8 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_MacOS_Resource
+// MARK: - ZAssetTree_MacOS_Resource
 
 class ZAssetTree_MacOS_Resource : public ZAssetTree_Std_Memory
 	{

@@ -31,8 +31,7 @@ namespace ZooLib {
 using namespace ZDCPixmapNS;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static functions
+// MARK: - Static functions
 
 static void spThrowToStream()
 	{
@@ -76,8 +75,7 @@ static void spPNG_Read(png_structp png_ptr, png_bytep iDestAddress, png_size_t i
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapEncoder_PNG
+// MARK: - ZDCPixmapEncoder_PNG
 
 void ZDCPixmapEncoder_PNG::sWritePixmap(const ZStreamW& iStream, const ZDCPixmap& iPixmap)
 	{
@@ -223,8 +221,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapDecoder_PNG
+// MARK: - ZDCPixmapDecoder_PNG
 
 ZDCPixmap ZDCPixmapDecoder_PNG::sReadPixmap(const ZStreamR& iStream)
 	{

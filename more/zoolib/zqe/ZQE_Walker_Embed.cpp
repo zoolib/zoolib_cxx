@@ -32,8 +32,7 @@ using std::vector;
 using namespace ZUtil_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Walker_Embed
+// MARK: - Walker_Embed
 
 Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker_Parent,
 		const string8& iRelName, const ZRef<Walker>& iWalker_Embedee)

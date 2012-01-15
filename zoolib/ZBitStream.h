@@ -37,8 +37,7 @@ for each reader and writer. And there should be efficient single bit methods.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBitReaderBE
+// MARK: - ZBitReaderBE
 
 /// ZBitReaderBE reads a bitstream from a ZStreamR or from memory in increments of 1 to 32 bits .
 
@@ -58,8 +57,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBitReaderLE
+// MARK: - ZBitReaderLE
 
 /// ZBitReaderLE reads a bitstream from a ZStreamR or from memory in increments of 1 to 32 bits .
 
@@ -79,8 +77,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBitWriterBE
+// MARK: - ZBitWriterBE
 
 /// ZBitWriterBE writes a bitstream to a ZStreamW or to memory in increments of 1 to 32 bits.
 
@@ -102,8 +99,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBitWriterLE
+// MARK: - ZBitWriterLE
 
 /// ZBitWriterLE writes a bitstream to a ZStreamW or to memory in increments of 1 to 32 bits.
 

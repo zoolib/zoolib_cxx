@@ -45,8 +45,7 @@ class ZDCPixmap;
 class ZXWindow;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZXServer
+// MARK: - ZXServer
 
 class ZXServer : public ZCounted
 	{
@@ -189,8 +188,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZXWindow
+// MARK: - ZXWindow
 
 class ZXWindow
 	{

@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitee
+// MARK: - ZVisitee
 
 class ZVisitor;
 
@@ -40,8 +39,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor
+// MARK: - ZVisitor
 
 class ZVisitor
 	{

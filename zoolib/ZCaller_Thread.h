@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallOnNewThread
+// MARK: - sCallOnNewThread
 
 template <class T>
 void sCallOnNewThread(const ZRef<ZCallable<T(void)> >& iCallable)
@@ -40,8 +39,7 @@ void sCallOnNewThread(const ZRef_ZCallable_Void& iCallable)
  	{ ZThread::sCreate_T<ZRef_ZCallable_Void>(sCallVoid, iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCaller_Thread
+// MARK: - ZCaller_Thread
 
 class ZCaller_Thread
 :	public ZCaller

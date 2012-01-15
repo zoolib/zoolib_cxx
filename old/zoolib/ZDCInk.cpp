@@ -49,8 +49,7 @@ const ZDCInk ZDCInk::sLtGray(spLocalWhite, spLocalBlack, ZDCPattern::sLtGray);
 #define ALLONES ZUINT64_C(0xFFFFFFFFFFFFFFFF)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCInk
+// MARK: - ZDCInk
 
 #if ZCONFIG(Compiler, CodeWarrior)
 // Enforce higher level of optimization for this code -- otherwise
@@ -158,8 +157,7 @@ void ZDCPattern::sOffset(int32 inOffsetH, int32 inOffsetV, const uint8* inSource
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCInkRep
+// MARK: - ZDCInkRep
 
 ZDCInkRep::ZDCInkRep(const ZDCInkRep& inOther)
 	{
@@ -214,8 +212,7 @@ ZDCInkRep::~ZDCInkRep()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCInk
+// MARK: - ZDCInk
 
 ZDCInk::ZDCInk(const ZDCPixmap& inPixmap)
 :	fRep(inPixmap ? new ZDCInkRep(inPixmap) : nullptr)

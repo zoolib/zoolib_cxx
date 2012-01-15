@@ -31,8 +31,7 @@ namespace ZBlackBerry {
 class Commer_Streamer;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Device_Streamer
+// MARK: - ZBlackBerry::Device_Streamer
 
 class Device_Streamer
 :	public Device

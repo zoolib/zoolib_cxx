@@ -33,8 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNatter
+// MARK: - ZNatter
 
 class ZNatter
 :	public ZCounted
@@ -76,8 +75,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNatter::Exchange
+// MARK: - ZNatter::Exchange
 
 class ZNatter::Exchange
 :	public ZCounted

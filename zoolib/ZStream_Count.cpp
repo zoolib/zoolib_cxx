@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Count
+// MARK: - ZStreamR_Count
 
 /**
 \class ZStreamR_Count
@@ -101,8 +100,7 @@ void ZStreamR_Count::ZeroCount()
 	{ *fCountPtr = 0; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Count
+// MARK: - ZStreamW_Count
 
 /**
 \class ZStreamW_Count

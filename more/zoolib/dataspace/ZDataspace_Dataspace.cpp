@@ -33,8 +33,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Dataspace
+// MARK: - Dataspace
 
 Dataspace::Dataspace(ZRef<Source> iSource)
 :	fSource(iSource)
@@ -177,8 +176,7 @@ void Dataspace::pFinalize(Sieve* iSieve)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Sieve
+// MARK: - Sieve
 
 Sieve::Sieve()
 :	fDataspace(nullptr)
@@ -218,8 +216,7 @@ bool Sieve::IsLoaded()
 	{ return fResult; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Sieve_Callable
+// MARK: - Sieve_Callable
 
 Sieve_Callable::Sieve_Callable(ZRef<Callable> iCallable)
 :	fCallable(iCallable)

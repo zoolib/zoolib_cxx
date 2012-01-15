@@ -29,8 +29,7 @@ namespace ZDataspace {
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SourceServer
+// MARK: - SourceServer
 
 SourceServer::SourceServer
 	(ZRef<Source> iSource, ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)

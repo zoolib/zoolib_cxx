@@ -41,8 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStream_ZLib
+// MARK: - ZStream_ZLib
 
 namespace ZStream_ZLib {
 
@@ -63,8 +62,7 @@ enum EFormatW
 }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_ZLibDecode
+// MARK: - ZStreamR_ZLibDecode
 
 /// A read filter stream that zlib-decompresses (inflates) a source stream.
 
@@ -94,8 +92,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerR_ZLibDecode
+// MARK: - ZStreamerR_ZLibDecode
 
 /// A read filter streamer that zlib-decompresses (inflates) a source stream.
 
@@ -119,8 +116,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_ZLibEncode
+// MARK: - ZStreamW_ZLibEncode
 
 /// A write filter stream that zlib-compresses (deflates) to a destination stream.
 
@@ -150,8 +146,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerW_ZLibEncode
+// MARK: - ZStreamerW_ZLibEncode
 
 /// A write filter streamer that zlib-compresses (deflates) to a destination stream.
 

@@ -33,8 +33,7 @@ namespace Util_Strim_Rel {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZRA::Util_Strim_Rel::Visitor
+// MARK: - ZRA::Util_Strim_Rel::Visitor
 
 void Visitor::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 	{
@@ -155,8 +154,7 @@ void Visitor::pWriteBinary
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZRA_Util_Strim_Rel
+// MARK: - ZRA_Util_Strim_Rel
 
 void sToStrim(const ZRef<ZRA::Expr_Rel>& iRel, const ZStrimW& iStrimW)
 	{

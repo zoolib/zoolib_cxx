@@ -34,8 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAny
+// MARK: - ZAny
 
 namespace ZooLib {
 
@@ -334,8 +333,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAny, internal implementation inlines
+// MARK: - ZAny, internal implementation inlines
 
 inline bool ZAny::spIsPOD(const void* iPtr)
 	{ return ((intptr_t)iPtr) & 1; }
@@ -360,8 +358,7 @@ inline void ZAny::pDtor()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAny, public inlines
+// MARK: - ZAny, public inlines
 
 inline ZAny::ZAny()
 	{
@@ -403,8 +400,7 @@ inline ZAny& ZAny::operator=(const S& iVal)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAny, swap and pseudo-constructors
+// MARK: - ZAny, swap and pseudo-constructors
 
 inline void swap(ZAny& a, ZAny& b)
 	{ a.swap(b); }

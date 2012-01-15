@@ -37,8 +37,7 @@ using namespace ZUtil_STL;
 typedef map<int64,pair<ZRef<ZQE::Result>,ZRef<Event> > > Map_Refcon_Result;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SourceMUX::ClientSource
+// MARK: - SourceMUX::ClientSource
 
 class SourceMUX::ClientSource
 :	public Source
@@ -78,8 +77,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SourceMUX
+// MARK: - SourceMUX
 
 SourceMUX::SourceMUX(ZRef<Source> iSource)
 :	fSource(iSource)

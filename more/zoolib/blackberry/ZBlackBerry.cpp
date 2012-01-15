@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZBlackBerry {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Manager
+// MARK: - ZBlackBerry::Manager
 
 /**
 \class Manager
@@ -52,8 +51,7 @@ void Manager::pChanged()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Device
+// MARK: - ZBlackBerry::Device
 
 /**
 \class Device
@@ -83,8 +81,7 @@ void Device::pFinished()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Channel
+// MARK: - ZBlackBerry::Channel
 
 /**
 \class Channel

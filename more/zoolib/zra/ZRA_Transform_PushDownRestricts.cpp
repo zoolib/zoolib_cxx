@@ -29,8 +29,7 @@ namespace ZRA {
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Transform_PushDownRestricts
+// MARK: - Transform_PushDownRestricts
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 	{ this->pHandleIt(iExpr->GetRelName(), iExpr->SelfOrClone(this->Do(iExpr->GetOp0()))); }

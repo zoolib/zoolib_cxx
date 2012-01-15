@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZThread, ZTSS etc.
+// MARK: - ZThread, ZTSS etc.
 
 #if 0
 
@@ -82,8 +81,7 @@ namespace ZooLib {
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Acquirer, Releaser, Guard
+// MARK: - Acquirer, Releaser, Guard
 
 typedef ZAcquirer_T<ZMtx> ZAcqMtx;
 typedef ZAcquirer_T<ZMtxR> ZAcqMtxR;
@@ -95,8 +93,7 @@ typedef ZGuardR_T<ZMtx> ZGuardRMtx;
 typedef ZGuardR_T<ZMtxR> ZGuardRMtxR;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZThread
+// MARK: - ZThread
 
 namespace ZThread {
 

@@ -34,8 +34,7 @@ using std::vector;
 using std::wstring;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWinService
+// MARK: - ZWinService
 
 static vector<SERVICE_TABLE_ENTRYW> spEntries;
 

@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZRA::Transform_DecomposeRestricts
+// MARK: - ZRA::Transform_DecomposeRestricts
 
 class Transform_DecomposeRestricts
 :	public virtual ZVisitor_Expr_Op_Do_Transform_T<Expr_Rel>

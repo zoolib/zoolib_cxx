@@ -28,8 +28,7 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCompare_T
+// MARK: - sCompare_T
 
 template <>
 int sCompare_T(const ZQE::Result& iL, const ZQE::Result& iR)
@@ -44,8 +43,7 @@ int sCompare_T<ZRef<ZQE::Result> >(const ZRef<ZQE::Result>& iL, const ZRef<ZQE::
 ZMACRO_CompareRegistration_T(ZRef<ZQE::Result>)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZQE::Result
+// MARK: - ZQE::Result
 
 namespace ZQE {
 

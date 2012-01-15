@@ -34,8 +34,7 @@ using std::vector;
 using namespace ZooLib;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_NS
+// MARK: - ZUtil_NS
 
 namespace ZooLib {
 namespace ZUtil_NS {
@@ -116,8 +115,7 @@ NSMutableData* sDataMutable(NSData* iNSData)
 	{ return [NSMutableData dataWithData:iNSData]; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_NS, conversions
+// MARK: - ZUtil_NS, conversions
 
 string8 sAsUTF8(NSString* iNSString)
 	{

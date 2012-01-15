@@ -34,8 +34,7 @@ using std::string;
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * spAECheckIsRecord
+// MARK: - spAECheckIsRecord
 
 #if TARGET_RT_MAC_CFM
 
@@ -83,8 +82,7 @@ namespace ZooLib {
 // TODO look at TN2046 "AEStream and friends"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+// MARK: - Helper functions
 
 static AEKeyword spAsAEKeyword(const string& iName)
 	{
@@ -240,8 +238,7 @@ static ZAny spDAsAny(const ZAny& iDefault, const AEDesc& iDesc)
 #undef AEGETTER
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_AppleEvent
+// MARK: - ZVal_AppleEvent
 
 /**
 \class ZVal_AppleEvent
@@ -459,8 +456,7 @@ ZVal_AppleEvent ZVal_AppleEvent::Get(size_t iIndex) const
 	{ return this->GetSeq().Get(iIndex); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_AppleEvent typename accessors
+// MARK: - ZVal_AppleEvent typename accessors
 
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Int16, int16)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Int32, int32)
@@ -478,8 +474,7 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSRef, FSRef)
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_AppleEvent
+// MARK: - ZSeq_AppleEvent
 
 ZSeq_Any ZSeq_AppleEvent::AsSeq_Any(const ZAny& iDefault) const
 	{ return spAsSeq_Any(iDefault, *this); }
@@ -607,8 +602,7 @@ ZSeq_AppleEvent& ZSeq_AppleEvent::Append(const ZVal_AppleEvent& iVal)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_AppleEvent
+// MARK: - ZMap_AppleEvent
 
 ZMap_Any ZMap_AppleEvent::AsMap_Any(const ZAny& iDefault) const
 	{ return spAsMap_Any(iDefault, *this); }

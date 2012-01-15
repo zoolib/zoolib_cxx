@@ -32,8 +32,7 @@ using std::vector;
 #define kDebug_TS_Umbrella 0
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTS_Umbrella
+// MARK: - ZTS_Umbrella
 
 ZTS_Umbrella::ZTS_Umbrella(const vector<ZRef<ZTS> >& iTSes)
 	{

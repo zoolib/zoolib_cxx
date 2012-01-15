@@ -28,8 +28,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static parsing functions
+// MARK: - Static parsing functions
 
 static bool spReadValues(vector<string8>& oValues,
 	UTF32 iDivider_Value, UTF32 iDivider_Line, const ZStrimR& iStrimR)
@@ -68,8 +67,7 @@ static bool spReadValues(vector<string8>& oValues,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ParseException
+// MARK: - ParseException
 
 ParseException::ParseException(const string& iWhat)
 :	ZYadParseException(iWhat)
@@ -80,8 +78,7 @@ ParseException::ParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadSeqR
+// MARK: - YadSeqR
 
 class YadSeqR : public ZYadSeqR
 	{
@@ -120,8 +117,7 @@ ZRef<ZYadR> YadSeqR::ReadInc()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(UTF32 iDivider_Value, UTF32 iDividerLine, ZRef<ZStrimmerR> iStrimmerR)
 	{

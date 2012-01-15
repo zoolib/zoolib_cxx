@@ -42,8 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate
+// MARK: - ZDelegate
 
 class ZDelegate
 :	ZooLib::NonCopyable
@@ -126,8 +125,7 @@ private:
 #ifdef __OBJC__
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper
+// MARK: - ZDelegate::Wrapper
 
 class ZDelegate::Wrapper
 :	public ZCounted
@@ -172,8 +170,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 0 params)
+// MARK: - ZDelegate::Wrapper_T (specialized for 0 params)
 
 template <class R>
 class ZDelegate::Wrapper_T<R(void)>
@@ -199,8 +196,7 @@ class ZDelegate::Wrapper_T<R(void)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 0 params, void return)
+// MARK: - ZDelegate::Wrapper_T (specialized for 0 params, void return)
 
 template <>
 class ZDelegate::Wrapper_T<void(void)>
@@ -225,8 +221,7 @@ class ZDelegate::Wrapper_T<void(void)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 1 param)
+// MARK: - ZDelegate::Wrapper_T (specialized for 1 param)
 
 template <class R,
 	class P0>
@@ -257,8 +252,7 @@ class ZDelegate::Wrapper_T<R(P0)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 1 param, void return)
+// MARK: - ZDelegate::Wrapper_T (specialized for 1 param, void return)
 
 template <class P0>
 class ZDelegate::Wrapper_T<void(P0)>
@@ -287,8 +281,7 @@ class ZDelegate::Wrapper_T<void(P0)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 2 params)
+// MARK: - ZDelegate::Wrapper_T (specialized for 2 params)
 
 template <class R,
 	class P0, class P1>
@@ -321,8 +314,7 @@ class ZDelegate::Wrapper_T<R(P0,P1)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 2 params, void return)
+// MARK: - ZDelegate::Wrapper_T (specialized for 2 params, void return)
 
 template <class P0, class P1>
 class ZDelegate::Wrapper_T<void(P0,P1)>
@@ -353,8 +345,7 @@ class ZDelegate::Wrapper_T<void(P0,P1)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 3 params)
+// MARK: - ZDelegate::Wrapper_T (specialized for 3 params)
 
 template <class R,
 	class P0, class P1, class P2>
@@ -389,8 +380,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 3 params, void return)
+// MARK: - ZDelegate::Wrapper_T (specialized for 3 params, void return)
 
 template <class P0, class P1, class P2>
 class ZDelegate::Wrapper_T<void(P0,P1,P2)>
@@ -423,8 +413,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 4 params)
+// MARK: - ZDelegate::Wrapper_T (specialized for 4 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3>
@@ -461,8 +450,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 4 params, void return)
+// MARK: - ZDelegate::Wrapper_T (specialized for 4 params, void return)
 
 template <class P0, class P1, class P2, class P3>
 class ZDelegate::Wrapper_T<void(P0,P1,P2,P3)>
@@ -497,8 +485,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 5 params)
+// MARK: - ZDelegate::Wrapper_T (specialized for 5 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4>
@@ -538,8 +525,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 5 params, void return)
+// MARK: - ZDelegate::Wrapper_T (specialized for 5 params, void return)
 
 template <class P0, class P1, class P2, class P3, class P4>
 class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4)>
@@ -577,8 +563,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 6 params)
+// MARK: - ZDelegate::Wrapper_T (specialized for 6 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4, class P5>
@@ -620,8 +605,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 6 params, void return)
+// MARK: - ZDelegate::Wrapper_T (specialized for 6 params, void return)
 
 template <class P0, class P1, class P2, class P3, class P4, class P5>
 class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5)>
@@ -661,8 +645,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 7 params)
+// MARK: - ZDelegate::Wrapper_T (specialized for 7 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4, class P5, class P6>
@@ -706,8 +689,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 7 params, void return)
+// MARK: - ZDelegate::Wrapper_T (specialized for 7 params, void return)
 
 template <class P0, class P1, class P2, class P3, class P4, class P5, class P6>
 class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6)>
@@ -749,8 +731,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 8 params)
+// MARK: - ZDelegate::Wrapper_T (specialized for 8 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
@@ -796,8 +777,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Wrapper_T (specialized for 8 params, void return)
+// MARK: - ZDelegate::Wrapper_T (specialized for 8 params, void return)
 
 template <class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)>
@@ -841,8 +821,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::spMakeWrapper
+// MARK: - ZDelegate::spMakeWrapper
 
 template <class R,
 	class P0>
@@ -893,8 +872,7 @@ ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >& iCa
 	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6,P7)>(iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDelegate::Set
+// MARK: - ZDelegate::Set
 
 template <class Callable>
 void ZDelegate::Set(SEL iSEL, const ZRef<Callable>& iCallable)

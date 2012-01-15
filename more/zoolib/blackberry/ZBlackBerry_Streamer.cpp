@@ -40,8 +40,7 @@ namespace ZooLib {
 namespace ZBlackBerry {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Protocol constants
+// MARK: - Protocol constants
 
 enum EMsg
 	{
@@ -131,8 +130,7 @@ Connected, but with a non-empty send buffer.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamW_Chunked
+// MARK: - StreamW_Chunked
 
 class StreamW_Chunked : public ZStreamW
 	{
@@ -183,8 +181,7 @@ bool StreamW_Chunked::Send(uint16 iChannelID, const ZStreamW& iStreamW)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Commer_Streamer declaration
+// MARK: - ZBlackBerry::Commer_Streamer declaration
 
 class Channel_Streamer;
 
@@ -270,8 +267,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Channel_Streamer
+// MARK: - Channel_Streamer
 
 class Channel_Streamer
 :	public ZBlackBerry::Channel,
@@ -461,8 +457,7 @@ void Channel_Streamer::Imp_Abort()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Commer_Streamer definition
+// MARK: - Commer_Streamer definition
 
 Commer_Streamer::Commer_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	ZCommer(iStreamerR, iStreamerW),
@@ -1562,8 +1557,7 @@ void Commer_Streamer::pFlush(const ZStreamW& iStreamW)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Device_Streamer
+// MARK: - ZBlackBerry::Device_Streamer
 
 Device_Streamer::Device_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fStreamerR(iStreamerR),

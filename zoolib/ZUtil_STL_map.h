@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZUtil_STL {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_STL
+// MARK: - ZUtil_STL
 
 /** Returns true if iMap has an element at iKey. */
 template <typename KBase, typename Value, typename Comparator, typename KDerived>

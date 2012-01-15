@@ -32,8 +32,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPVariantBase
+// MARK: - NPVariantBase
 
 // NPVariantBase is only needed to work around our inability
 // to have partial template member specialization.
@@ -60,8 +59,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPVariant_T
+// MARK: - NPVariant_T
 
 template <class T>
 void sVariantRelease_T(T&);

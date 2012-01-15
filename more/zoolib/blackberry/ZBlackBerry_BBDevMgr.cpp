@@ -41,8 +41,7 @@ using namespace ZBlackBerryCOM;
 using namespace ZWinCOM;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Channel_BBDevMgr
+// MARK: - ZBlackBerry::Channel_BBDevMgr
 
 class Channel_BBDevMgr
 :	private IChannelEvents,
@@ -465,8 +464,7 @@ ZRef<IChannel> Channel_BBDevMgr::pUseChannel()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Device_BBDevMgr
+// MARK: - ZBlackBerry::Device_BBDevMgr
 
 class Device_BBDevMgr : public Device
 	{
@@ -603,8 +601,7 @@ ZRef<IDevice> Device_BBDevMgr::pUseDevice()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Manager_BBDevMgr
+// MARK: - ZBlackBerry::Manager_BBDevMgr
 
 Manager_BBDevMgr::Manager_BBDevMgr()
 :	fNextID(1)

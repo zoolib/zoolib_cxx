@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Base64Encode
+// MARK: - ZStreamR_Base64Encode
 
 /** A read filter stream that converts data from the source stream into base64 data on the fly. */
 
@@ -48,8 +47,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Base64Decode
+// MARK: - ZStreamR_Base64Decode
 
 /** A read filter stream that converts base64 data from
 the source stream into binary data on the fly.*/
@@ -70,8 +68,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Base64Encode
+// MARK: - ZStreamW_Base64Encode
 
 /** A write filter stream that writes to the destination stream the base64
 equivalent of binary data written to it. */
@@ -93,8 +90,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Base64Decode
+// MARK: - ZStreamW_Base64Decode
 
 /*** A write filter stream that writes to the destination stream the binary
 equivalent of base64 data written to it. */

@@ -38,8 +38,7 @@ namespace ZNetscape {
 class NPObjectG;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SetRestoreNPP
+// MARK: - SetRestoreNPP
 
 class SetRestoreNPP
 	{
@@ -56,14 +55,12 @@ private:
 typedef SetRestoreNPP NPPSetter;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPVariantG
+// MARK: - NPVariantG
 
 typedef NPVariant_T<NPObjectG> NPVariantG;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPObjectG
+// MARK: - NPObjectG
 
 void sRetain(NPObjectG& iOb);
 void sRelease(NPObjectG& iOb);
@@ -112,8 +109,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ObjectG
+// MARK: - ObjectG
 
 class ObjectG : public NPObjectG
 	{
@@ -166,8 +162,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * GuestMeister
+// MARK: - GuestMeister
 
 // You must have a concrete instance of a subclass of GuestMeister in your project
 class GuestMeister
@@ -363,8 +358,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Guest
+// MARK: - Guest
 
 class Guest
 	{

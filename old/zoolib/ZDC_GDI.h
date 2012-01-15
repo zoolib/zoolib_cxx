@@ -45,8 +45,7 @@ ZMACRO_MSVCStaticLib_Reference(DC_GDI)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI
+// MARK: - ZDCCanvas_GDI
 
 class ZDCSetupForGDI;
 
@@ -168,8 +167,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI_NonWindow
+// MARK: - ZDCCanvas_GDI_NonWindow
 
 class ZDCCanvas_GDI_NonWindow : public ZDCCanvas_GDI
 	{
@@ -188,8 +186,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI_OffScreen
+// MARK: - ZDCCanvas_GDI_OffScreen
 
 class ZDCCanvas_GDI_OffScreen : public ZDCCanvas_GDI_NonWindow
 	{
@@ -211,8 +208,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI_IC
+// MARK: - ZDCCanvas_GDI_IC
 
 class ZDCCanvas_GDI_IC : public ZDCCanvas_GDI_NonWindow
 	{
@@ -222,8 +218,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC_NativeGDI
+// MARK: - ZDC_NativeGDI
 
 class ZDC_NativeGDI : public ZDC
 	{
@@ -237,8 +232,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI::SetupDC
+// MARK: - ZDCCanvas_GDI::SetupDC
 
 class ZDCCanvas_GDI::SetupDC
 	{
@@ -252,8 +246,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI::SetupDC
+// MARK: - ZDCCanvas_GDI::SetupDC
 
 class ZDCSetupForGDI
 	{
@@ -269,8 +262,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRep_DIB
+// MARK: - ZDCPixmapRep_DIB
 
 class ZDCPixmapRep_DIB : public ZDCPixmapRep
 	{

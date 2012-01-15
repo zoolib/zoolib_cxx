@@ -31,8 +31,7 @@ namespace ZDatonSet {
 using namespace std;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Daton
+// MARK: - Daton
 
 Daton::Daton()
 	{}
@@ -67,8 +66,7 @@ ZData Daton::GetData() const
 	{ return fData; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Nombre
+// MARK: - Nombre
 
 Nombre::Nombre()
 	{}
@@ -100,8 +98,7 @@ bool Nombre::operator<(const Nombre& iRHS) const
 	{ return fForks < iRHS.fForks; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NamedEvent
+// MARK: - NamedEvent
 
 NamedEvent::NamedEvent()
 	{}
@@ -141,8 +138,7 @@ ZRef<Event> NamedEvent::GetEvent() const
 	{ return fEvent; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Delta
+// MARK: - Delta
 
 Delta::Delta(const map<Daton, bool>& iStatements)
 :	fStatements(iStatements)
@@ -155,8 +151,7 @@ const map<Daton, bool>& Delta::GetStatements() const
 	{ return fStatements; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Deltas
+// MARK: - Deltas
 
 Deltas::Deltas(const Map_NamedEvent_Delta_t& iMap)
 :	fMap(iMap)
@@ -169,8 +164,7 @@ const Map_NamedEvent_Delta_t& Deltas::GetMap() const
 	{ return fMap; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * DeltasChain
+// MARK: - DeltasChain
 
 DeltasChain::DeltasChain(const ZRef<DeltasChain>& iParent, const ZRef<Deltas>& iDeltas)
 :	fParent(iParent)
@@ -241,8 +235,7 @@ void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * DatonSet
+// MARK: - DatonSet
 
 DatonSet::DatonSet
 	(const Nombre& iNombre, const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain)

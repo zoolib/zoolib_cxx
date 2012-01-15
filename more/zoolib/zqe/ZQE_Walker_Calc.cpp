@@ -28,8 +28,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Walker_Calc
+// MARK: - Walker_Calc
 
 Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
 	const string8& iRelName,

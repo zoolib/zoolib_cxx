@@ -38,8 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZPoint_T
+// MARK: - ZPoint_T
 
 template <class T>
 class ZPoint_T
@@ -205,8 +204,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZRect_T
+// MARK: - ZRect_T
 
 template <class T>
 class ZRect_T
@@ -679,8 +677,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZPoint and ZRect
+// MARK: - ZPoint and ZRect
 
 typedef ZPoint_T<ZCoord> ZPoint;
 typedef ZRect_T<ZCoord> ZRect;
@@ -689,8 +686,7 @@ typedef ZPoint_T<float> ZPointf;
 typedef ZRect_T<float> ZRectf;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Conversion operators
+// MARK: - Conversion operators
 
 template <class T>
 inline ZPoint_T<T>::operator ZPointPOD() const

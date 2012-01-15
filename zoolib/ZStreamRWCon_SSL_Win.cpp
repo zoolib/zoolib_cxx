@@ -56,8 +56,7 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 
@@ -74,8 +73,7 @@ class Make_SSL
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static PSecurityFunctionTableA spPSFT = ::InitSecurityInterfaceA();
 
@@ -150,8 +148,7 @@ static bool spAcquireCredentials(bool iVerify, bool iCheckName, CredHandle& oCre
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWCon_SSL_Win
+// MARK: - ZStreamRWCon_SSL_Win
 
 static const DWORD spRequirements =
 	ISC_REQ_SEQUENCE_DETECT
@@ -561,8 +558,7 @@ bool ZStreamRWCon_SSL_Win::pHandshake()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWCon_SSL_Win
+// MARK: - ZStreamRWCon_SSL_Win
 
 ZStreamerRWCon_SSL_Win::ZStreamerRWCon_SSL_Win
 	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)

@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparator
+// MARK: - ZValComparator
 
 ZValComparator::ZValComparator()
 	{}
@@ -36,8 +35,7 @@ ZValComparator::~ZValComparator()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparator_Simple
+// MARK: - ZValComparator_Simple
 
 ZValComparator_Simple::ZValComparator_Simple(EComparator iEComparator)
 :	fEComparator(iEComparator)
@@ -53,8 +51,7 @@ int sCompare_T(const ZValComparator_Simple& iL, const ZValComparator_Simple& iR)
 ZMACRO_CompareRegistration_T(ZValComparator_Simple)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparand
+// MARK: - ZValComparand
 
 ZValComparand::ZValComparand()
 	{}
@@ -63,8 +60,7 @@ ZValComparand::~ZValComparand()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparand_Name
+// MARK: - ZValComparand_Name
 
 ZValComparand_Name::ZValComparand_Name(const std::string& iName)
 :	fName(iName)
@@ -80,8 +76,7 @@ int sCompare_T(const ZValComparand_Name& iL, const ZValComparand_Name& iR)
 ZMACRO_CompareRegistration_T(ZValComparand_Name)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValPred
+// MARK: - ZValPred
 
 ZValPred::ZValPred()
 	{}
@@ -122,8 +117,7 @@ const ZRef<ZValComparand>& ZValPred::GetRHS() const
 	{ return fRHS; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValPred, sCompare_T
+// MARK: - ZValPred, sCompare_T
 
 template<>
 int sCompare_T(const ZValPred& iL, const ZValPred& iR)
@@ -141,23 +135,20 @@ bool operator<(const ZValPred& iL, const ZValPred& iR)
 	{ return sCompare_T(iL, iR) < 0; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparandPseudo
+// MARK: - ZValComparandPseudo
 
 ZValComparandPseudo::ZValComparandPseudo(ZValComparand* iRep)
 :	ZRef<ZValComparand>(iRep)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Comparand pseudo constructors
+// MARK: - Comparand pseudo constructors
 
 ZValComparandPseudo CName(const std::string& iName)
 	{ return new ZValComparand_Name(iName); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Comparison operators taking comparands and returning a condition
+// MARK: - Comparison operators taking comparands and returning a condition
 
 ZValPred operator<(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
 	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eLT), iRHS); }

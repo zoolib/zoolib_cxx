@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_ASCIIStrim
+// MARK: - ZStreamR_ASCIIStrim
 
 ZStreamR_ASCIIStrim::ZStreamR_ASCIIStrim(const ZStrimR& iStrimR)
 :	fStrimR(iStrimR)
@@ -93,8 +92,7 @@ void ZStreamR_ASCIIStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_ASCIIStrim
+// MARK: - ZStreamW_ASCIIStrim
 
 ZStreamW_ASCIIStrim::ZStreamW_ASCIIStrim(const ZStrimW& iStrimW)
 :	fStrimW(iStrimW)

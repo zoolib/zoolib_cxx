@@ -31,8 +31,7 @@ namespace ZQE {
 class Visitor_Expr_Rel_Search;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Search
+// MARK: - Expr_Rel_Search
 
 class Expr_Rel_Search
 :	public virtual ZRA::Expr_Rel
@@ -63,8 +62,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Search
+// MARK: - Visitor_Expr_Rel_Search
 
 class Visitor_Expr_Rel_Search
 :	public virtual ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>

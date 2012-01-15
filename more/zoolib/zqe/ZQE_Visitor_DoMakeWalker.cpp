@@ -35,8 +35,7 @@ namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_DoMakeWalker
+// MARK: - Visitor_DoMakeWalker
 
 void Visitor_DoMakeWalker::Visit(const ZRef<ZVisitee>& iRep)
 	{ ZUnimplemented(); }

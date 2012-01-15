@@ -28,8 +28,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Walker_Project
+// MARK: - Walker_Project
 
 Walker_Project::Walker_Project(const ZRef<Walker>& iWalker, const ZRA::RelHead& iRelHead)
 :	Walker_Unary(iWalker)

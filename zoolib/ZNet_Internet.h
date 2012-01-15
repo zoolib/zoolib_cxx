@@ -50,8 +50,7 @@ struct ip6_addr
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddress_Internet
+// MARK: - ZNetAddress_Internet
 
 class ZNetAddress_Internet
 :	public ZNetAddress
@@ -67,8 +66,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddress_IP4
+// MARK: - ZNetAddress_IP4
 
 class ZNetAddress_IP4
 :	public ZNetAddress_Internet
@@ -96,8 +94,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddress_IP6
+// MARK: - ZNetAddress_IP6
 
 class ZNetAddress_IP6
 :	public ZNetAddress_Internet
@@ -119,8 +116,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetName_Internet
+// MARK: - ZNetName_Internet
 
 class ZNetName_Internet
 :	public ZNetName
@@ -145,8 +141,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_TCP
+// MARK: - ZNetListener_TCP
 
 class ZNetListener_TCP
 :	public virtual ZNetListener
@@ -164,8 +159,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_TCP
+// MARK: - ZNetEndpoint_TCP
 
 class ZNetEndpoint_TCP
 :	public virtual ZNetEndpoint

@@ -28,8 +28,7 @@ using std::string;
 class ZYadR_FS;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadR_FS
+// MARK: - ZYadR_FS
 
 class ZYadR_FS : public virtual ZYadR
 	{
@@ -51,8 +50,7 @@ ZRef<ZYadR> ZYadR_FS::Meta()
 	{ return ZYadR::Meta(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos_Dir
+// MARK: - ZYadMapRPos_Dir
 
 class ZYadMapRPos_Dir
 :	public ZYadR_FS,
@@ -111,8 +109,7 @@ void ZYadMapRPos_Dir::SetPosition(const std::string& iName)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamRPos_File
+// MARK: - ZYadStreamRPos_File
 
 class ZYadStreamRPos_File
 :	public ZYadR_FS,
@@ -152,8 +149,7 @@ const ZStreamRPos& ZYadStreamRPos_File::GetStreamRPos()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_FS::sYadR
+// MARK: - ZYad_FS::sYadR
 
 ZRef<ZYadR> ZYad_FS::sYadR(const ZFileSpec& iFS)
 	{

@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_String
+// MARK: - ZStreamRPos_String
 
 /// ZStreamRPos_String provides a ZStreamRPos interface to a referenced standard library string.
 
@@ -55,8 +54,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_String
+// MARK: - ZStreamWPos_String
 
 /// ZStreamWPos_String provides a ZStreamWPos interface to a referenced standard library string.
 
@@ -82,8 +80,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWPos_String
+// MARK: - ZStreamRWPos_String
 
 /// ZStreamRWPos_String provides a ZStreamRWPos interface to a referenced standard library string.
 

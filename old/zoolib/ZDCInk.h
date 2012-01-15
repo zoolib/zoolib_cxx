@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPattern
+// MARK: - ZDCPattern
 
 class ZDCPattern
 	{
@@ -50,8 +49,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCInk
+// MARK: - ZDCInk
 
 class ZDCInkRep;
 class ZDCPixmap;
@@ -97,8 +95,7 @@ private:
 
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCInkRep
+// MARK: - ZDCInkRep
 
 class ZDCInkRep : public ZCounted
 	{
@@ -140,8 +137,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCInk Inlines
+// MARK: - ZDCInk Inlines
 
 inline ZDCInk::ZDCInk()
 	{}

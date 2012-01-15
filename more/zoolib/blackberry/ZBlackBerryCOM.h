@@ -38,8 +38,7 @@ namespace ZooLib {
 namespace ZBlackBerryCOM {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * IChannelEvents
+// MARK: - IChannelEvents
 
 ZMACRO_WinCOM_Class(IChannelEvents, IUnknown,
 	C7168312,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
@@ -51,8 +50,7 @@ ZMACRO_WinCOM_Class(IChannelEvents, IUnknown,
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * IChannel
+// MARK: - IChannel
 
 struct ChannelParams
 	{
@@ -74,8 +72,7 @@ ZMACRO_WinCOM_Class(IChannel, IUnknown,
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * IDeviceProperty
+// MARK: - IDeviceProperty
 
 ZMACRO_WinCOM_Class(IDeviceProperty, IUnknown,
 	C7168310,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
@@ -85,8 +82,7 @@ ZMACRO_WinCOM_Class(IDeviceProperty, IUnknown,
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * IDeviceProperties
+// MARK: - IDeviceProperties
 
 ZMACRO_WinCOM_Class(IDeviceProperties, IUnknown,
 	C716830F,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
@@ -96,8 +92,7 @@ ZMACRO_WinCOM_Class(IDeviceProperties, IUnknown,
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * IDevice
+// MARK: - IDevice
 
 ZMACRO_WinCOM_Class(IDevice, IUnknown,
 	C716830E,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
@@ -113,8 +108,7 @@ ZMACRO_WinCOM_Class(IDevice, IUnknown,
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * IDevices
+// MARK: - IDevices
 
 ZMACRO_WinCOM_Class(IDevices, IUnknown,
 	C716830D,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
@@ -124,8 +118,7 @@ ZMACRO_WinCOM_Class(IDevices, IUnknown,
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * IDeviceManagerEvents
+// MARK: - IDeviceManagerEvents
 
 ZMACRO_WinCOM_Class(IDeviceManagerEvents, IUnknown,
 	C716830C,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
@@ -135,8 +128,7 @@ ZMACRO_WinCOM_Class(IDeviceManagerEvents, IUnknown,
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * IDeviceManagerNotification
+// MARK: - IDeviceManagerNotification
 
 ZMACRO_WinCOM_Class(IDeviceManagerNotification, IDeviceManagerEvents,
 	5F67EACC,D387,4B71,96,37,59,69,01,D0,0C,E0)
@@ -147,8 +139,7 @@ ZMACRO_WinCOM_Class(IDeviceManagerNotification, IDeviceManagerEvents,
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * IDeviceManager
+// MARK: - IDeviceManager
 
 ZMACRO_WinCOM_Class(IDeviceManager, IUnknown,
 	C716830B,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)

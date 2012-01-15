@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * anonymous
+// MARK: - anonymous
 
 namespace { // anonymous
 
@@ -41,8 +40,7 @@ struct Base : public ZCB
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Makers
+// MARK: - Makers
 
 ZRef<ZCB> sCallable_True()
 	{ return sCallable_Const(true); }

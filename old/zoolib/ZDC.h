@@ -34,8 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCState
+// MARK: - ZDCState
 
 /// Holds the state in the context of which drawing should be done by a ZDC.
 struct ZDCState
@@ -62,8 +61,7 @@ struct ZDCState
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC
+// MARK: - ZDC
 
 class ZDCCanvas;
 
@@ -266,8 +264,7 @@ Exposing our canvas and state -- DO NOT MISUSE!!! */
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas
+// MARK: - ZDCCanvas
 
 class ZDCCanvas : public ZCounted
 	{
@@ -383,8 +380,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvasFactory
+// MARK: - ZDCCanvasFactory
 
 class ZDCCanvasFactory
 	{
@@ -405,8 +401,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCScratch
+// MARK: - ZDCScratch
 
 /** ZDCScratch provides access to a scratch ZDC -- primarily used for finding font metrics
 when there is no ZDC available or appropriate to use. ZDCScratch::sSet is called by ZOSApp_XX
@@ -421,8 +416,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC_Off
+// MARK: - ZDC_Off
 
 class ZDC_Off : public ZDC
 	{
@@ -432,8 +426,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC_OffAuto
+// MARK: - ZDC_OffAuto
 
 class ZDC_OffAuto : public ZDC_Off
 	{
@@ -445,8 +438,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC Inines
+// MARK: - ZDC Inines
 
 inline const ZDCInk& ZDC::GetInk() const
 	{ return fState.fInk; }

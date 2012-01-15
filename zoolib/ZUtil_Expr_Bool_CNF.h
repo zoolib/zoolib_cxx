@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace Util_Expr_Bool {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Util_Expr_Bool
+// MARK: - Util_Expr_Bool
 
 typedef std::set<ZTagVal<ZRef<ZExpr_Bool>,struct Tag_Disjunction> > Disjunction;
 typedef std::set<Disjunction> CNF;

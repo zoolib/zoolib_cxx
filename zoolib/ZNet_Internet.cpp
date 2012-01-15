@@ -33,8 +33,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddress_Internet
+// MARK: - ZNetAddress_Internet
 
 ZNetAddress_Internet::ZNetAddress_Internet(ip_port iPort)
 :	fPort(iPort)
@@ -44,8 +43,7 @@ ip_port ZNetAddress_Internet::GetPort() const
 	{ return fPort; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddress_IP4
+// MARK: - ZNetAddress_IP4
 
 ZNetAddress_IP4::ZNetAddress_IP4(ip4_addr iAddr, ip_port iPort)
 :	ZNetAddress_Internet(iPort)
@@ -85,8 +83,7 @@ ip4_addr ZNetAddress_IP4::sAddr(uint8 iAddr0, uint8 iAddr1, uint8 iAddr2, uint8 
 	{ return (iAddr0 << 24) | (iAddr1 << 16) | (iAddr2 << 8) | iAddr3; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddress_IP6
+// MARK: - ZNetAddress_IP6
 
 ZNetAddress_IP6::ZNetAddress_IP6(ip_port iPort, ip6_addr iAddr)
 :	ZNetAddress_Internet(iPort)
@@ -106,8 +103,7 @@ const ip6_addr ZNetAddress_IP6::sAny =
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }}};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetName_Internet
+// MARK: - ZNetName_Internet
 
 ZNetName_Internet::ZNetName_Internet(const string& iName, ip_port iPort)
 :	fName(iName)
@@ -133,8 +129,7 @@ ip_port ZNetName_Internet::GetPort() const
 	{ return fPort; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_TCP
+// MARK: - ZNetListener_TCP
 
 ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(ip_port iPort)
 	{
@@ -157,8 +152,7 @@ ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_TCP
+// MARK: - ZNetEndpoint_TCP
 
 ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected
 	(ip4_addr iRemoteAddr, ip_port iRemotePort)

@@ -33,8 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicodeString.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_NS
+// MARK: - ZUtil_NS
 
 namespace ZooLib {
 namespace ZUtil_NS {
@@ -87,8 +86,7 @@ NSObject* sAsNSObject(const ZAny& iVal);
 } // namespace ZooLib
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * asAnyWithDefault
+// MARK: - asAnyWithDefault
 
 @interface NSObject (ZAny_Additions)
 -(ZooLib::ZAny)asAnyWithDefault:(const ZooLib::ZAny&)iDefault;

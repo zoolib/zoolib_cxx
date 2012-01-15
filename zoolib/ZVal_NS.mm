@@ -35,8 +35,7 @@ using ZUtil_NS::sArrayMutable;
 using ZUtil_NS::sDictionaryMutable;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers (anonymous)
+// MARK: - Helpers (anonymous)
 
 namespace { // anonymous
 
@@ -54,8 +53,7 @@ NSNumber* spAsNumber(NSObject* iObj)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_NS
+// MARK: - ZVal_NS
 
 /**
 \class ZVal_NS
@@ -383,8 +381,7 @@ ZVal_NS ZVal_NS::Get(size_t iIndex) const
 	{ return this->GetSeq().Get(iIndex); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_NS typename accessors
+// MARK: - ZVal_NS typename accessors
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_NS)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, NSString, ZVal_NS::NSStringPtr)
@@ -393,8 +390,7 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Seq, ZSeq_NS)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Map, ZMap_NS)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_NS
+// MARK: - ZSeq_NS
 
 ZSeq_NS::operator bool() const
 	{ return this->Count(); }
@@ -557,8 +553,7 @@ NSMutableArray* ZSeq_NS::pTouch()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_NS
+// MARK: - ZMap_NS
 
 ZMap_NS::operator bool() const
 	{

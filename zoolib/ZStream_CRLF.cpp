@@ -36,8 +36,7 @@ static const char LF = '\n';
 #define kBufSize sStackBufferSize
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_CRLFRemove
+// MARK: - ZStreamR_CRLFRemove
 
 ZStreamR_CRLFRemove::ZStreamR_CRLFRemove(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource),
@@ -98,8 +97,7 @@ void ZStreamR_CRLFRemove::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_CRLFInsert
+// MARK: - ZStreamR_CRLFInsert
 
 ZStreamR_CRLFInsert::ZStreamR_CRLFInsert(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource),
@@ -177,8 +175,7 @@ void ZStreamR_CRLFInsert::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_CRLFRemove
+// MARK: - ZStreamW_CRLFRemove
 
 ZStreamW_CRLFRemove::ZStreamW_CRLFRemove(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink),
@@ -271,8 +268,7 @@ void ZStreamW_CRLFRemove::Imp_Flush()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_CRLFInsert
+// MARK: - ZStreamW_CRLFInsert
 
 ZStreamW_CRLFInsert::ZStreamW_CRLFInsert(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink),

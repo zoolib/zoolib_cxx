@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr
+// MARK: - ZExpr
 
 void ZExpr::Accept(ZVisitor& iVisitor)
 	{
@@ -38,8 +37,7 @@ void ZExpr::Accept_Expr(ZVisitor_Expr& iVisitor)
 	{ iVisitor.Visit_Expr(this); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr
+// MARK: - ZVisitor_Expr
 
 void ZVisitor_Expr::Visit_Expr(const ZRef<ZExpr>& iExpr)
 	{ this->Visit(iExpr); }

@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * kDebug
+// MARK: - kDebug
 
 #define kDebug_X 2
 
@@ -37,8 +36,7 @@ namespace ZooLib {
 static short spModeLookup[] = { GXcopy, GXor, GXxor };
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_X::SetupLock
+// MARK: - ZDCCanvas_X::SetupLock
 
 ZDCCanvas_X::SetupLock::SetupLock(ZDCCanvas_X* inCanvas)
 	{
@@ -53,8 +51,7 @@ ZDCCanvas_X::SetupLock::~SetupLock()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_X::SetupClip
+// MARK: - ZDCCanvas_X::SetupClip
 
 class ZDCCanvas_X::SetupClip
 	{
@@ -100,8 +97,7 @@ ZDCCanvas_X::SetupClip::~SetupClip()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_X::SetupInk
+// MARK: - ZDCCanvas_X::SetupInk
 
 class ZDCCanvas_X::SetupInk
 	{
@@ -211,8 +207,7 @@ ZDCCanvas_X::SetupInk::~SetupInk()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_X
+// MARK: - ZDCCanvas_X
 
 ZDCCanvas_X::ZDCCanvas_X()
 	{
@@ -836,8 +831,7 @@ ZRef<ZDCCanvas> ZDCCanvas_X::CreateOffScreen(ZPoint inDimensions, ZDCPixmapNS::E
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_X_NonWindow
+// MARK: - ZDCCanvas_X_NonWindow
 
 ZDCCanvas_X_NonWindow::ZDCCanvas_X_NonWindow()
 	{
@@ -943,8 +937,7 @@ ZDCRgn ZDCCanvas_X_NonWindow::Internal_CalcClipRgn(const ZDCState& inState)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_X_OffScreen
+// MARK: - ZDCCanvas_X_OffScreen
 
 ZDCCanvas_X_OffScreen::ZDCCanvas_X_OffScreen(ZRef<ZXServer> inXServer, ZPoint inDimensions, ZDCPixmapNS::EFormatEfficient iFormat)
 	{
@@ -973,8 +966,7 @@ bool ZDCCanvas_X_OffScreen::IsOffScreen()
 	{ return true; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 

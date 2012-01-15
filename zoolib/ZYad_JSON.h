@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZYad_JSON {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ReadOptions
+// MARK: - ReadOptions
 
 struct ReadOptions
 	{
@@ -47,8 +46,7 @@ struct ReadOptions
 ReadOptions sReadOptions_Extended();
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * WriteOptions
+// MARK: - WriteOptions
 
 struct WriteOptions : ZYadOptions
 	{
@@ -60,8 +58,7 @@ struct WriteOptions : ZYadOptions
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ParseException
+// MARK: - ParseException
 
 class ParseException : public ZYadParseException_Std
 	{
@@ -71,8 +68,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadStreamR
+// MARK: - YadStreamR
 
 class YadStreamR
 :	public ZYadStreamR
@@ -92,8 +88,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadStrimR
+// MARK: - YadStrimR
 
 class YadStrimR
 :	public ZYadStrimR
@@ -113,8 +108,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadSeqR
+// MARK: - YadSeqR
 
 class YadSeqR : public ZYadSeqR_Std
 	{
@@ -130,8 +124,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadMapR
+// MARK: - YadMapR
 
 class YadMapR : public ZYadMapR_Std
 	{
@@ -147,8 +140,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Writer
+// MARK: - Visitor_Writer
 
 class Visitor_Writer : public ZVisitor_Yad
 	{
@@ -172,8 +164,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR and sToStrim
+// MARK: - sYadR and sToStrim
 
 ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU);
 ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions);

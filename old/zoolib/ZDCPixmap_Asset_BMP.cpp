@@ -36,8 +36,7 @@ namespace ZooLib {
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * PixmapRaster_Asset
+// MARK: - PixmapRaster_Asset
 
 namespace { // anonymous
 
@@ -68,8 +67,7 @@ PixmapRaster_Asset::~PixmapRaster_Asset()
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmap_Asset_BMP::sGetPixmap
+// MARK: - ZDCPixmap_Asset_BMP::sGetPixmap
 
 static void spReadRLE8(const ZStreamR& iStream,
 	ZCoord iWidth, ZCoord iHeight, size_t iRowBytes, bool iFlip, uint8* iBuffer);

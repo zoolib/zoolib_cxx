@@ -46,8 +46,7 @@ NSIndexSet* sMakeIndexSet(size_t iIndex);
 class SectionBody;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Section
+// MARK: - Section
 
 class Section : public ZCounted
 	{
@@ -97,8 +96,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody
+// MARK: - SectionBody
 
 class SectionBody : public ZCounted
 	{
@@ -155,8 +153,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody::RowMeta
+// MARK: - SectionBody::RowMeta
 
 class SectionBody::RowMeta
 	{
@@ -170,8 +167,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody::RowUpdate
+// MARK: - SectionBody::RowUpdate
 
 class SectionBody::RowUpdate
 	{
@@ -188,8 +184,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody_Concrete
+// MARK: - SectionBody_Concrete
 
 class SectionBody_Concrete : public SectionBody
 	{
@@ -238,8 +233,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody_SingleRow
+// MARK: - SectionBody_SingleRow
 
 class SectionBody_SingleRow : public SectionBody_Concrete
 	{
@@ -272,8 +266,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SectionBody_Multi
+// MARK: - SectionBody_Multi
 
 class SectionBody_Multi : public SectionBody
 	{
@@ -327,8 +320,7 @@ private:
 } // namespace ZooLib
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * UITVHandler_WithSections
+// MARK: - UITVHandler_WithSections
 
 @interface UITVHandler_WithSections : NSObject <UITableViewDelegate, UITableViewDataSource>
 	{
@@ -393,8 +385,7 @@ private:
 @end // interface UITVController_WithSections
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * UITVHandler_WithSections_VariableRowHeight
+// MARK: - UITVHandler_WithSections_VariableRowHeight
 
 @interface UITVHandler_WithSections_VariableRowHeight : UITVHandler_WithSections
 	{}
@@ -405,8 +396,7 @@ private:
 @end // interface UITVHandler_WithSections_VariableRowHeight
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * UITableView_WithSections
+// MARK: - UITableView_WithSections
 
 @interface UITableView_WithSections : UITableView
 	{

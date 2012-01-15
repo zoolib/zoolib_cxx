@@ -27,8 +27,7 @@ namespace ZooLib {
 using std::min;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Chunked
+// MARK: - ZStreamR_Chunked
 
 ZStreamR_Chunked::ZStreamR_Chunked(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
@@ -95,8 +94,7 @@ void ZStreamR_Chunked::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Chunked
+// MARK: - ZStreamW_Chunked
 
 ZStreamW_Chunked::ZStreamW_Chunked(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)

@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZPhotoshop {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop::MakeYadR
+// MARK: - ZPhotoshop::MakeYadR
 
 ZRef<ZYadR> sYadR(const Val& iVal);
 

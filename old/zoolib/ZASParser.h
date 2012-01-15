@@ -49,8 +49,7 @@ bool sParse(const ZFileSpec& iFileSpec, const ZStreamR& iStream, ParseHandler& i
 			const ErrorHandler& iErrorHandler, IncludeHandler* iIncludeHandler);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ParseHandler
+// MARK: - ParseHandler
 
 class ParseHandler
 	{
@@ -81,8 +80,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamProvider
+// MARK: - StreamProvider
 
 class StreamProvider
 	{
@@ -104,8 +102,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ErrorHandler
+// MARK: - ErrorHandler
 
 class ErrorHandler
 	{
@@ -126,8 +123,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * IncludeHandler
+// MARK: - IncludeHandler
 
 class IncludeHandler
 	{
@@ -142,8 +138,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ParseHandler_Prettify
+// MARK: - ParseHandler_Prettify
 
 class ParseHandler_Prettify : public ZASParser::ParseHandler
 	{

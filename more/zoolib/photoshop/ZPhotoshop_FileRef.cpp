@@ -42,8 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "PIUSuites.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Fixup, for building with ancient MW
+// MARK: - Fixup, for building with ancient MW
 
 #ifdef __PIMac__
 
@@ -85,8 +84,7 @@ FSNewAliasMinimalUnicode(
 #endif // __PIMac__
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop suites, for local use
+// MARK: - ZPhotoshop suites, for local use
 
 static AutoSuite<PSHandleSuite2>
 	spPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
@@ -97,8 +95,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * UseHandle (anonymous)
+// MARK: - UseHandle (anonymous)
 
 namespace { // anonymous
 
@@ -133,8 +130,7 @@ size_t UseHandle::Size() const
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static Handle spHandleDuplicate(Handle iHandle)
 	{
@@ -263,8 +259,7 @@ static UINT spSystemCodePage()
 #endif // defined(__PIWin__)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZooLib::ZPhotoshop
+// MARK: - ZooLib::ZPhotoshop
 
 namespace ZPhotoshop {
 
@@ -305,8 +300,7 @@ ZQ<ZTrail> sAsTrail(const SPPlatformFileSpecification& iSpec)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * FileRef
+// MARK: - FileRef
 
 FileRef::FileRef()
 :	fHandle(nullptr)

@@ -32,8 +32,7 @@ namespace ZRA {
 class Visitor_Expr_Rel_Const;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Const
+// MARK: - Expr_Rel_Const
 
 class Expr_Rel_Const
 :	public virtual Expr_Rel
@@ -66,8 +65,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Const
+// MARK: - Visitor_Expr_Rel_Const
 
 class Visitor_Expr_Rel_Const
 :	public virtual ZVisitor_Expr_Op0_T<Expr_Rel>
@@ -77,8 +75,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Relational operators
+// MARK: - Relational operators
 
 ZRef<Expr_Rel> sConst(const RelName& iRelName, const ZVal_Any& iVal);
 

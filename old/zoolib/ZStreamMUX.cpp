@@ -39,8 +39,7 @@ namespace ZooLib {
 #define kDebug 1
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamMUX, definitions and helper functions
+// MARK: - ZStreamMUX, definitions and helper functions
 
 const size_t kDefaultMaxFragmentSize = 1024;
 const size_t kDefaultReceiveBufferSize = 16 * 1024;
@@ -135,8 +134,7 @@ static bool spIsRemote(uint32 iID)
 	{ return !spIsLocal(iID); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamMUX::Commer
+// MARK: - ZStreamMUX::Commer
 
 class ZStreamMUX::Commer : public ZCommer
 	{
@@ -187,8 +185,7 @@ void ZStreamMUX::Commer::Finished()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamMUX::Endpoint
+// MARK: - ZStreamMUX::Endpoint
 
 class ZStreamMUX::DLink_Endpoint_Pending
 :	public DListLink<ZStreamMUX::Endpoint, ZStreamMUX::DLink_Endpoint_Pending, kDebug>
@@ -401,8 +398,7 @@ void ZStreamMUX::Endpoint::Imp_Abort()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamMUX::Listener
+// MARK: - ZStreamMUX::Listener
 
 class ZStreamMUX::Listener : public ZStreamerRWConFactory
 	{
@@ -470,8 +466,7 @@ void ZStreamMUX::Listener::Cancel()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamMUX::Options
+// MARK: - ZStreamMUX::Options
 
 ZStreamMUX::Options::Options()
 :	fMaxFragmentSize(kDefaultMaxFragmentSize),
@@ -484,8 +479,7 @@ ZStreamMUX::Options::Options(size_t iMaxFragmentSize, size_t iDefaultReceiveBuff
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamMUX
+// MARK: - ZStreamMUX
 
 ZStreamMUX::ZStreamMUX()
 :	fMaxFragmentSize(kDefaultMaxFragmentSize),

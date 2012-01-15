@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCaller_CarbonEvents
+// MARK: - ZCaller_CarbonEvents
 
 class ZCaller_CarbonEvents
 :	public ZCaller_EventLoop

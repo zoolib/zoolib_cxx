@@ -130,8 +130,7 @@ implemented as a vector<char>.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sEquali
+// MARK: - sEquali
 
 bool sEquali(const std::string& iLeft, const std::string& iRight)
 	{ return ZUtil_string::sEquali(iLeft, iRight); }

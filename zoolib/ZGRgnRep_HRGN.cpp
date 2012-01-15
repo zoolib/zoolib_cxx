@@ -31,8 +31,7 @@ ZMACRO_MSVCStaticLib_cpp(GRgnRep_HRGN)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+// MARK: - Helper functions
 
 namespace { // anonymous
 
@@ -97,8 +96,7 @@ HRGN sMakeHRGN(const ZRef<ZGRgnRep>& iRep)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 
@@ -120,8 +118,7 @@ ZRef<ZGRgnRep> ZGRgnRepCreator_T<HRGN>::sCreate(HRGN iNative, bool iAdopt)
 	{ return new ZGRgnRep_HRGN(iNative, iAdopt); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgnRep_HRGN
+// MARK: - ZGRgnRep_HRGN
 
 ZRef<ZGRgnRep_HRGN> ZGRgnRep_HRGN::sGetRep(const ZRef<ZGRgnRep>& iRep)
 	{

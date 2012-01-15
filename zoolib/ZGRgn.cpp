@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 static ZRef<ZGRgnRep> spMake(const ZRectPOD& iBounds)
 	{
@@ -34,15 +33,13 @@ static ZRef<ZGRgnRep> spMake(const ZRectPOD& iBounds)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgn
+// MARK: - ZGRgn
 
 ZGRgnRep::ZGRgnRep()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgn
+// MARK: - ZGRgn
 
 ZGRgn::ZGRgn()
 	{}

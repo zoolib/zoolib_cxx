@@ -53,8 +53,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Time
+// MARK: - ZUtil_Time
 
 #if DO_IT_OURSELVES
 // Return 1 if iYear (1900-based) is a leap year. 0 Otherwise

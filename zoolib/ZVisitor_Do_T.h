@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Do_T
+// MARK: - ZVisitor_Do_T
 
 template <class Result_t>
 class ZVisitor_Do_T

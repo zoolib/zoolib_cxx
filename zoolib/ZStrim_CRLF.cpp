@@ -35,8 +35,7 @@ static const UTF32 CR = '\r';
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_CRLFRemove
+// MARK: - ZStrimR_CRLFRemove
 
 ZStrimR_CRLFRemove::ZStrimR_CRLFRemove(const ZStrimR& iStrimSource)
 :	fStrimSource(iStrimSource),
@@ -101,8 +100,7 @@ void ZStrimR_CRLFRemove::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCou
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_CRLFRemove
+// MARK: - ZStrimW_CRLFRemove
 
 ZStrimW_CRLFRemove::ZStrimW_CRLFRemove(const ZStrimW& iStrimSink)
 :	fStrimSink(iStrimSink),
@@ -179,8 +177,7 @@ void ZStrimW_CRLFRemove::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, s
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_CRLFInsert
+// MARK: - ZStrimW_CRLFInsert
 
 ZStrimW_CRLFInsert::ZStrimW_CRLFInsert(const ZStrimW& iStrimSink)
 :	fStrimSink(iStrimSink)

@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException_XMLPList
+// MARK: - ZYadParseException_XMLPList
 
 class ZYadParseException_XMLPList : public ZYadParseException_Std
 	{
@@ -47,8 +46,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamR_XMLPList
+// MARK: - ZYadStreamR_XMLPList
 
 class ZYadStreamR_XMLPList
 :	public ZYadStreamR
@@ -71,8 +69,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_XMLPList
+// MARK: - ZYadStrimR_XMLPList
 
 class ZYadStrimR_XMLPList
 :	public ZYadStrimR
@@ -93,8 +90,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_XMLPList
+// MARK: - ZYadSeqR_XMLPList
 
 class ZYadSeqR_XMLPList
 :	public ZYadSeqR_Std
@@ -112,8 +108,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_XMLPList
+// MARK: - ZYadMapR_XMLPList
 
 class ZYadMapR_XMLPList
 :	public ZYadMapR_Std
@@ -131,8 +126,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_XMLPList
+// MARK: - ZYad_XMLPList
 
 namespace ZYad_XMLPList {
 

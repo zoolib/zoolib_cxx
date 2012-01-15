@@ -43,8 +43,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTextDecoder_Mac
+// MARK: - ZTextDecoder_Mac
 
 class ZTextDecoder_Mac : public ZTextDecoder
 	{
@@ -68,8 +67,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTextEncoder_Mac
+// MARK: - ZTextEncoder_Mac
 
 class ZTextEncoder_Mac : public ZTextEncoder
 	{

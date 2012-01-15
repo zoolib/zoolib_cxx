@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_FS
+// MARK: - ZAssetRep_FS
 
 /*! \brief ZAssetRep_FS provides ZAsset-like access to a filesystem.
 

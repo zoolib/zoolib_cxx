@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_Limited
+// MARK: - ZStrimR_Limited
 
 /// A read filter strim that limits the number of code points read through it.
 
@@ -54,8 +53,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_Limited
+// MARK: - ZStrimW_Limited
 
 /// A write filter strim that limits the number of code points it will pass on.
 

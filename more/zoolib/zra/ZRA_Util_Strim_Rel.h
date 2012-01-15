@@ -45,8 +45,7 @@ namespace ZRA {
 namespace Util_Strim_Rel {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZRA::Util_Strim_Rel::Visitor
+// MARK: - ZRA::Util_Strim_Rel::Visitor
 
 class Visitor
 :	public virtual ZVisitor_Expr_Bool_ValPred_Any_ToStrim

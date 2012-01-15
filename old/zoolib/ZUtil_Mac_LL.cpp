@@ -504,8 +504,7 @@ ZDCPixmapNS::PixelDesc ZUtil_Mac_LL::sGetIndexedPixelDesc(int16 iCTableID)
 
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::RefCountedCTabHandle
+// MARK: - ZUtil_Mac_LL::RefCountedCTabHandle
 
 ZUtil_Mac_LL::RefCountedCTabHandle::~RefCountedCTabHandle()
 	{
@@ -514,8 +513,7 @@ ZUtil_Mac_LL::RefCountedCTabHandle::~RefCountedCTabHandle()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::SaveRestorePort
+// MARK: - ZUtil_Mac_LL::SaveRestorePort
 
 ZUtil_Mac_LL::SaveRestorePort::SaveRestorePort()
 	{
@@ -528,8 +526,7 @@ ZUtil_Mac_LL::SaveRestorePort::~SaveRestorePort()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::SaveSetBlackWhite
+// MARK: - ZUtil_Mac_LL::SaveSetBlackWhite
 
 ZUtil_Mac_LL::SaveSetBlackWhite::SaveSetBlackWhite()
 	{
@@ -548,8 +545,7 @@ ZUtil_Mac_LL::SaveSetBlackWhite::~SaveSetBlackWhite()
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::SaveRestoreResFile
+// MARK: - ZUtil_Mac_LL::SaveRestoreResFile
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 

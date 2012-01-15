@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * id and NSObject, sRetain and sRelease
+// MARK: - id and NSObject, sRetain and sRelease
 
 void sRetain(struct objc_object& iOb);
 void sRelease(struct objc_object& iOb);

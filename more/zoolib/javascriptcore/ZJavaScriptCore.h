@@ -39,8 +39,7 @@ class ObjectImp;
 class ObjectRef;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::ContextRefSetter
+// MARK: - ZJavaScriptCore::ContextRefSetter
 
 JSContextRef sCurrentContextRef();
 
@@ -55,8 +54,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::ContextRef
+// MARK: - ZJavaScriptCore::ContextRef
 
 class ContextRef
 	{
@@ -82,8 +80,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::String
+// MARK: - ZJavaScriptCore::String
 
 class String
 	{
@@ -109,8 +106,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::Value
+// MARK: - ZJavaScriptCore::Value
 
 class Value
 :	public ZRef<JSValueRef>
@@ -179,8 +175,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::ObjectRef
+// MARK: - ZJavaScriptCore::ObjectRef
 
 class ObjectRef
 :	public ZRef<JSObjectRef>
@@ -222,8 +217,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZJavaScriptCore::ObjectImp
+// MARK: - ZJavaScriptCore::ObjectImp
 
 class ObjectImp
 :	public ZCounted

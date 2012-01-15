@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZBlackBerry {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Manager_Union
+// MARK: - ZBlackBerry::Manager_Union
 
 class Manager_Union
 :	public Manager,

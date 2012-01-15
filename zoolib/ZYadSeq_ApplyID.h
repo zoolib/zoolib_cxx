@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_ApplyID
+// MARK: - ZYadSeqR_ApplyID
 
 class ZYadSeqR_ApplyID : public ZYadSeqR
 	{
@@ -49,8 +48,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos_ApplyID
+// MARK: - ZYadSeqRPos_ApplyID
 
 class ZYadSeqRPos_ApplyID : public ZYadSeqRPos
 	{

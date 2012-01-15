@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace ZSQLite {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSQLite::YadSeqR_Iter
+// MARK: - ZSQLite::YadSeqR_Iter
 
 class YadSeqR_Iter : public ZYadSeqR_Std
 	{

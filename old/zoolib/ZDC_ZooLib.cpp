@@ -30,8 +30,7 @@ using ZDCPixmapNS::PixvalDesc;
 using ZDCPixmapNS::RasterDesc;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_ZooLib
+// MARK: - ZDCCanvas_ZooLib
 
 ZDCCanvas_ZooLib::ZDCCanvas_ZooLib(ZRef<ZDCPixmapRep> iPixmapRep,
 	ZRef<ZDCGlyphServer> iGlyphServer)
@@ -693,8 +692,7 @@ void ZDCCanvas_ZooLib::pInvertRegion(const ZDCRgn& iRgn)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvasFactory_ZooLib
+// MARK: - ZDCCanvasFactory_ZooLib
 
 class ZDCCanvasFactory_ZooLib : public ZDCCanvasFactory
 	{

@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_ValPred
+// MARK: - ZExpr_Bool_ValPred
 
 ZExpr_Bool_ValPred::ZExpr_Bool_ValPred(const ZValPred& iValPred)
 :	fValPred(iValPred)
@@ -79,15 +78,13 @@ int sCompare_T(const ZExpr_Bool_ValPred& iL, const ZExpr_Bool_ValPred& iR)
 ZMACRO_CompareRegistration_T(ZExpr_Bool_ValPred)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred
+// MARK: - ZVisitor_Expr_Bool_ValPred
 
 void ZVisitor_Expr_Bool_ValPred::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred >& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Operators
+// MARK: - Operators
 
 ZRef<ZExpr_Bool> sExpr_Bool(const ZValPred& iValPred)
 	{ return new ZExpr_Bool_ValPred(iValPred); }

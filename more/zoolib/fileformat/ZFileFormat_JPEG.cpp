@@ -110,8 +110,7 @@ static const char* const spSegmentNames[] =
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileFormat_JPEG
+// MARK: - ZFileFormat_JPEG
 
 const char* sSegmentAsText(uint8 iSegment)
 	{
@@ -175,8 +174,7 @@ bool sIs_APP(uint8 iSegment)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamR_Segment
+// MARK: - StreamR_Segment
 
 /**
 A read filter stream that examines its source stream for 0xFF 0xXX sequences. If
@@ -359,8 +357,7 @@ void StreamR_Segment::pInit(uint8& oSegmentType, bool iSkipOnDestroy)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileFormat_JPEG, testing
+// MARK: - ZFileFormat_JPEG, testing
 
 void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW);
 void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW)

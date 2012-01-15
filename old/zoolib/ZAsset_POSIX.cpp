@@ -34,8 +34,7 @@ using std::runtime_error;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_POSIX_MemoryMapped
+// MARK: - ZAssetTree_POSIX_MemoryMapped
 
 ZAssetTree_POSIX_MemoryMapped::ZAssetTree_POSIX_MemoryMapped(
 	int inFileDescriptor, bool inAdopt, size_t inStart, size_t inLength)

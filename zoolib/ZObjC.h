@@ -36,8 +36,7 @@ ZMACRO_ObjCClass(NSAutoreleasePool);
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAutoreleasePool
+// MARK: - ZAutoreleasePool
 
 class ZAutoreleasePool
 	{

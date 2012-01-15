@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Memory
+// MARK: - ZStreamR_Memory
 
 /// A read stream that gets its data from normal memory.
 
@@ -62,8 +61,7 @@ protected:
 typedef ZStreamerR_T<ZStreamR_Memory> ZStreamerR_Memory;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_Memory
+// MARK: - ZStreamRPos_Memory
 
 /// A positionable read stream that gets its data from normal memory.
 
@@ -107,8 +105,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRPos_Memory
+// MARK: - ZStreamerRPos_Memory
 
 /// A positionable read streamer encapsulating a ZStreamRPos_Memory.
 
@@ -132,8 +129,7 @@ protected:
 // typedef ZStreamerRPos_T<ZStreamRPos_Memory> ZStreamerRPos_Memory;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Memory
+// MARK: - ZStreamW_Memory
 
 /// A write stream that writes to normal memory.
 
@@ -165,8 +161,7 @@ protected:
 typedef ZStreamerW_T<ZStreamW_Memory> ZStreamerW_Memory;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_Memory
+// MARK: - ZStreamWPos_Memory
 
 /// A positionable write stream that writes to normal memory.
 
@@ -207,8 +202,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerWPos_Memory
+// MARK: - ZStreamerWPos_Memory
 
 /// A positionable write streamer encapsulating a ZStreamWPos_Memory.
 

@@ -34,8 +34,7 @@ namespace YadTree {
 typedef ZCountedVal<string> CountedString;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Chain declaration
+// MARK: - Chain declaration
 
 class Chain
 :	public ZCounted
@@ -67,8 +66,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadSeqRPos declaration
+// MARK: - YadSeqRPos declaration
 
 class YadSeqRPos
 :	public ZYadSeqRPos
@@ -97,8 +95,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadMapRPos declaration
+// MARK: - YadMapRPos declaration
 
 class YadMapRPos
 :	public ZYadMapRPos
@@ -131,8 +128,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static ZRef<ZYadR> spWrap(const ZRef<CountedString>& iProtoName,
 	const ZRef<Chain>& iChain, const ZRef<ZYadR>& iYad)
@@ -147,8 +143,7 @@ static ZRef<ZYadR> spWrap(const ZRef<CountedString>& iProtoName,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Chain definition
+// MARK: - Chain definition
 
 Chain::Chain(const Chain& iOther)
 :	fParent(iOther.fParent)
@@ -276,8 +271,7 @@ ZRef<Chain> Chain::WithRootAugment
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadSeqRPos definition
+// MARK: - YadSeqRPos definition
 
 YadSeqRPos::YadSeqRPos(const ZRef<CountedString>& iProtoName,
 	const ZRef<Chain>& iChain, const ZRef<ZYadSeqRPos>& iYadSeqRPos)
@@ -305,8 +299,7 @@ ZRef<ZYadR> YadSeqRPos::ReadAt(uint64 iPosition)
 	{ return spWrap(fProtoName, fChain, fYadSeqRPos->ReadAt(iPosition)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadMapRPos definition
+// MARK: - YadMapRPos definition
 
 YadMapRPos::YadMapRPos(const ZRef<CountedString>& iProtoName,
 	const ZRef<Chain>& iChain, const string& iPosition)
@@ -353,13 +346,13 @@ ZRef<YadMapRPos> YadMapRPos::WithRootAugment
 	(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment)
 	{
 	ZRef<Chain> newChain = fChain->WithRootAugment(iRootAugmentName, iRootAugment);
-	return new YadMapRPos(fProtoName, newChain, string()); }
+	return new YadMapRPos(fProtoName, newChain, string());
+	}
 
 } // namespace YadTree
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadMapRPos definition
+// MARK: - YadMapRPos definition
 
 using namespace YadTree;
 

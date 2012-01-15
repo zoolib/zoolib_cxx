@@ -27,8 +27,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(const ZAny& iVal)
 	{
@@ -57,8 +56,7 @@ ZRef<ZYadMapRPos> sYadR(const ZMap_Any& iMap)
 	{ return new ZYadMapRPos_Any(iMap); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sFromYadR
+// MARK: - sFromYadR
 
 namespace { // anonymous
 
@@ -137,8 +135,7 @@ void Visitor_Do_GetVal::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sFromYadR
+// MARK: - sFromYadR
 
 ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
 	{ return sFromYadR(false, iDefault, iYadR); }

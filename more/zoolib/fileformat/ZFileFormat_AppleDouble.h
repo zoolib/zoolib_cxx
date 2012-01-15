@@ -31,8 +31,7 @@ namespace FileFormat {
 namespace AppleDouble {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * FileFormat::AppleDouble
+// MARK: - FileFormat::AppleDouble
 
 static const uint32 entryID_DataFork = 1;
 static const uint32 entryID_ResourceFork = 2;
@@ -45,8 +44,7 @@ static const uint32 entryID_FinderInfo = 9;
 static const uint32 entryID_User = 0x80000000U;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * FileFormat::AppleDouble::Writer
+// MARK: - FileFormat::AppleDouble::Writer
 
 class Writer
 	{

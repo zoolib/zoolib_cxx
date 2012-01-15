@@ -34,8 +34,7 @@ namespace ZooLib {
 using namespace ZDCPixmapNS;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Stream_Chunk
+// MARK: - Stream_Chunk
 
 namespace { // anonymous
 
@@ -48,8 +47,7 @@ static const int spInterlaceStart[] = { 0, 4, 2, 1 };
 static const int spInterlaceIncrement[] = { 8, 8, 4, 2 };
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapEncoder_GIF
+// MARK: - ZDCPixmapEncoder_GIF
 
 void ZDCPixmapEncoder_GIF::sWritePixmap(const ZStreamW& iStream, const ZDCPixmap& iPixmap)
 	{
@@ -259,8 +257,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapDecoder_GIF
+// MARK: - ZDCPixmapDecoder_GIF
 
 static void spReadColorTable(const ZStreamR& iStream,
 	size_t iCount, vector<ZRGBA_POD>& oColorTable)

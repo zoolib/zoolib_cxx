@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace ZIntervalTreeClock {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Identity
+// MARK: - Identity
 
 class Identity
 :	public ZCountedWithoutFinalize
@@ -62,8 +61,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Event
+// MARK: - Event
 
 class Event
 :	public ZCountedWithoutFinalize
@@ -115,15 +113,13 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Event mutating operations
+// MARK: - Event mutating operations
 
 void sEvent(ZRef<Event>& ioEvent, const ZRef<Identity>& iIdentity);
 void sJoin(ZRef<Event>& ioEvent, const ZRef<Event>& iOther);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Clock
+// MARK: - Clock
 
 class Clock
 :	public ZCountedWithoutFinalize
@@ -163,8 +159,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Clock mutating operations
+// MARK: - Clock mutating operations
 
 void sSend(ZRef<Clock>& ioClock);
 void sReceive(ZRef<Clock>& ioClock, const ZRef<Event>& iEventReceived);

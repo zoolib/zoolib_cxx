@@ -45,8 +45,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SetRestoreNPP
+// MARK: - SetRestoreNPP
 
 static NPP spNPP;
 
@@ -61,8 +60,7 @@ NPP SetRestoreNPP::sCurrent()
 	{ return spNPP; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPVariantG
+// MARK: - NPVariantG
 
 // Explicitly instantiate NPVariant_T<NPObjectG>, aka NPVariantG
 template class NPVariant_T<NPObjectG>;
@@ -89,8 +87,7 @@ void sFree_T<NPVariantG>(void* iPtr)
 	{ return GuestMeister::sGet()->Host_MemFree(iPtr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPObjectG
+// MARK: - NPObjectG
 
 // Explicitly instantiate NPObject_T<NPVariantG>
 template class NPObject_T<NPVariantG>;
@@ -187,8 +184,7 @@ bool NPObjectG::Enumerate(NPIdentifier*& oIdentifiers, uint32& oCount)
 		(SetRestoreNPP::sCurrent(), this, &oIdentifiers, &oCount); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ObjectG
+// MARK: - ObjectG
 
 NPClass_Z ObjectG::spNPClass
 	(spAllocate,
@@ -398,8 +394,7 @@ bool ObjectG::spEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * GuestMeister
+// MARK: - GuestMeister
 
 static GuestMeister* spGuestMeister;
 
@@ -895,8 +890,7 @@ NPError GuestMeister::spSetValue(NPP npp, NPNVariable variable, void *value)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Guest
+// MARK: - Guest
 
 Guest::Guest(NPP npp)
 :	fNPP(npp)

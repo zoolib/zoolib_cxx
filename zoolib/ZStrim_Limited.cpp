@@ -30,8 +30,7 @@ using std::min;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_Limited
+// MARK: - ZStrimR_Limited
 
 ZStrimR_Limited::ZStrimR_Limited(size_t iLimitCP, const ZStrimR& iSource)
 :	fRemainingCP(iLimitCP),
@@ -77,8 +76,7 @@ void ZStrimR_Limited::Imp_Skip(uint64 iCountCP, uint64* oCountCPSkipped)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_Limited
+// MARK: - ZStrimW_Limited
 
 ZStrimW_Limited::ZStrimW_Limited(uint64 iLimitCP, const ZStrimW& iSink)
 :	fRemainingCP(iLimitCP),

@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeRep_FS
+// MARK: - ZNodeRep_FS
 
 class ZNodeRep_FS : public ZNodeRep
 	{
@@ -70,8 +69,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIterRep_FS
+// MARK: - ZNodeIterRep_FS
 
 class ZNodeIterRep_FS : public ZNodeIterRep
 	{

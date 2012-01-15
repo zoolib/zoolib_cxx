@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Compressed
+// MARK: - ZStreamW_Compressed
 
 class ZStreamW_Compressed : public ZStreamW
 	{
@@ -52,8 +51,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_Compressed
+// MARK: - ZStreamRPos_Compressed
 
 class ZStreamRPos_Compressed : public ZStreamRPos
 	{

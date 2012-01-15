@@ -45,8 +45,7 @@ namespace ZooLib {
 namespace ZUtil_ATSUI {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_ATSUI
+// MARK: - ZUtil_ATSUI
 
 ATSUStyle sAsATSUStyle(const ZDCFont& iFont, float iFontSize);
 

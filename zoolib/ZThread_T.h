@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAcquirer_T
+// MARK: - ZAcquirer_T
 
 template <class Mtx>
 class ZAcquirer_T : NonCopyable
@@ -46,8 +45,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZReleaser_T
+// MARK: - ZReleaser_T
 
 template <class Mtx>
 class ZReleaser_T : NonCopyable
@@ -62,8 +60,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGuardR_T
+// MARK: - ZGuardR_T
 
 template <class Mtx>
 class ZGuardR_T : NonCopyable
@@ -96,8 +93,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCndBase_T
+// MARK: - ZCndBase_T
 
 /*
 "Implementing Condition Variables with Semaphores",
@@ -188,8 +184,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCndR_T
+// MARK: - ZCndR_T
 
 template <class MtxR, class Cnd>
 class ZCndR_T : public Cnd
@@ -212,8 +207,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMtx_T
+// MARK: - ZMtx_T
 
 template <class Sem>
 class ZMtx_T : NonCopyable
@@ -230,8 +224,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMtxR_T
+// MARK: - ZMtxR_T
 
 template <class Mtx, class Cnd, class ThreadID, ThreadID (*GetThreadIDProc)(void)>
 class ZMtxR_T : NonCopyable
@@ -314,8 +307,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSem_T
+// MARK: - ZSem_T
 
 template <class Mtx, class Cnd>
 class ZSem_T : NonCopyable

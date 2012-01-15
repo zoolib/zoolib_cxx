@@ -29,8 +29,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static ZMap_Any spAsMap(const AEDesc& iAEDesc)
 	{
@@ -47,8 +46,7 @@ static ZMap_Any spAsMap(const AEDesc& iAEDesc)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(const ZVal_AppleEvent& iVal)
 	{

@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNatter
+// MARK: - ZNatter
 
 ZNatter::ZNatter(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fStreamerR(iStreamerR)
@@ -265,8 +264,7 @@ void ZNatter::pRead(ZGuardRMtxR& iGuard)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNatter::Exchange
+// MARK: - ZNatter::Exchange
 
 ZNatter::Exchange::Exchange()
 	{}

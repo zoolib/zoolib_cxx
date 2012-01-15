@@ -33,8 +33,7 @@ namespace ZooLib {
 namespace ZBlackBerry {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Channel_Client
+// MARK: - Channel_Client
 
 class Channel_Client
 :	public Channel,
@@ -125,8 +124,7 @@ void Channel_Client::Imp_Abort()
 	{ fSRWCon->GetStreamWCon().Abort(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Device_Client
+// MARK: - Device_Client
 
 class Device_Client
 :	public Device,
@@ -312,8 +310,7 @@ void Device_Client::Stop()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Manager_Client::Commer_Changed
+// MARK: - Manager_Client::Commer_Changed
 
 class Manager_Client::Commer_Changed : public ZCommer
 	{
@@ -397,8 +394,7 @@ void Manager_Client::Commer_Changed::Finished()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Manager_Client
+// MARK: - Manager_Client
 
 Manager_Client::Manager_Client()
 	{}

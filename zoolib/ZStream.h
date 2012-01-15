@@ -37,8 +37,7 @@ class ZStreamW;
 class ZStreamWCon;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStream
+// MARK: - ZStream
 
 namespace ZStream {
 
@@ -85,8 +84,7 @@ protected:
 } // namespace ZStream
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR
+// MARK: - ZStreamR
 
 /// Base interface for read streams.
 
@@ -244,8 +242,7 @@ inline bool ZStreamR::WaitReadable(double iTimeout) const
 	{ return const_cast<ZStreamR*>(this)->Imp_WaitReadable(iTimeout); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR::ExEndOfStream
+// MARK: - ZStreamR::ExEndOfStream
 
 class ZStreamR::ExEndOfStream : public ZStream::ExEndOfStream
 	{
@@ -254,8 +251,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRCon
+// MARK: - ZStreamRCon
 
 /// Base interface for connected read streams.
 
@@ -278,8 +274,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamU
+// MARK: - ZStreamU
 
 /// Base interface for read streams that can unread a single byte.
 
@@ -297,8 +292,7 @@ inline void ZStreamU::Unread() const
 	{ const_cast<ZStreamU*>(this)->Imp_Unread(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos
+// MARK: - ZStreamRPos
 
 /// Base interface for positionable read streams.
 
@@ -350,8 +344,7 @@ inline uint64 ZStreamRPos::GetSize() const
 	{ return const_cast<ZStreamRPos*>(this)->Imp_GetSize(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW
+// MARK: - ZStreamW
 
 /// Base interface for write streams.
 
@@ -470,8 +463,7 @@ but particular subclasses may have more efficient implementations available.
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW::ExEndOfStream
+// MARK: - ZStreamW::ExEndOfStream
 
 class ZStreamW::ExEndOfStream : public ZStream::ExEndOfStream
 	{
@@ -480,8 +472,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWCon
+// MARK: - ZStreamWCon
 
 /// Base interface for connected write streams.
 
@@ -503,8 +494,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos
+// MARK: - ZStreamWPos
 
 /// Base interface for positionable write streams.
 
@@ -566,8 +556,7 @@ inline void ZStreamWPos::Truncate() const
 	{ return const_cast<ZStreamWPos*>(this)->Imp_Truncate(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos::ExBadSize
+// MARK: - ZStreamWPos::ExBadSize
 
 class ZStreamWPos::ExBadSize : public std::range_error
 	{
@@ -576,8 +565,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWPos
+// MARK: - ZStreamRWPos
 
 /// Base interface for positionable read/write streams.
 
@@ -625,8 +613,7 @@ inline uint64 ZStreamRWPos::GetSize() const
 	{ return const_cast<ZStreamRWPos*>(this)->Imp_GetSize(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamU_Unreader
+// MARK: - ZStreamU_Unreader
 
 /// Implements ZStreamU::Unread by buffering a single byte from a source ZStreamR.
 
@@ -649,8 +636,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Null
+// MARK: - ZStreamR_Null
 
 /// A read stream with no content.
 
@@ -673,8 +659,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_Null
+// MARK: - ZStreamRPos_Null
 
 /// A positionable read stream of zero size.
 
@@ -706,8 +691,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Null
+// MARK: - ZStreamW_Null
 
 /// A write stream that discards all data written to it.
 
@@ -732,8 +716,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_Null
+// MARK: - ZStreamWPos_Null
 
 /// A positionable write stream that discards all data written to it.
 

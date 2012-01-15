@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZUtil_STL {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_STL
+// MARK: - ZUtil_STL
 
 template <class T>
 T* sFirstOrNil(std::vector<T>& iVec)

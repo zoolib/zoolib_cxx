@@ -54,8 +54,7 @@ int sCompare_T(const ZMap_CF& iL, const ZMap_CF& iR)
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 namespace {
 
@@ -82,8 +81,7 @@ ZRef<CFTypeRef> spNumber_T(CFNumberType iNumberType, const S& iVal)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_CF
+// MARK: - ZVal_CF
 
 /**
 \class ZVal_CF
@@ -470,8 +468,7 @@ ZVal_CF ZVal_CF::Get(size_t iIndex) const
 	{ return this->GetSeq().Get(iIndex); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_CF typename accessors
+// MARK: - ZVal_CF typename accessors
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_CF)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_CF, CFString, ZRef<CFStringRef>)
@@ -480,8 +477,7 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_CF, Seq, ZSeq_CF)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_CF, Map, ZMap_CF)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_CF
+// MARK: - ZSeq_CF
 
 ZSeq_Any ZSeq_CF::AsSeq_Any(const ZAny& iDefault) const
 	{ return ZUtil_CF::sAsSeq_Any(iDefault, this->pArray()); }
@@ -647,8 +643,7 @@ CFMutableArrayRef ZSeq_CF::pTouch()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_CF
+// MARK: - ZMap_CF
 
 ZMap_Any ZMap_CF::AsMap_Any(const ZAny& iDefault) const
 	{ return ZUtil_CF::sAsMap_Any(iDefault, this->pDictionary()); }

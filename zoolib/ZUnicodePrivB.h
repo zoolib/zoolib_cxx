@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZUnicode {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode::Functions_CountCU
+// MARK: - ZUnicode::Functions_CountCU
 
 template <class I>
 size_t Functions_CountCU_T<I>::sCountCU(I iSource)
@@ -41,8 +40,7 @@ size_t Functions_CountCU_T<I>::sCountCU(I iSource)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode::Functions_Count
+// MARK: - ZUnicode::Functions_Count
 
 template <class I>
 size_t Functions_Count_T<I>::sCountCP(I iSource)
@@ -155,8 +153,7 @@ size_t Functions_Count_T<I>::sCUToCP(I iSource, I iEnd)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode::Functions_Read_T<I, UTF32>
+// MARK: - ZUnicode::Functions_Read_T<I, UTF32>
 
 template <class I>
 struct Functions_Read_T<I, UTF32>
@@ -349,8 +346,7 @@ bool Functions_Read_T<I, UTF32>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32&
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode::Functions_Write_T<I, UTF32>
+// MARK: - ZUnicode::Functions_Write_T<I, UTF32>
 
 template <class I>
 struct Functions_Write_T<I, UTF32>
@@ -378,8 +374,7 @@ bool Functions_Write_T<I, UTF32>::sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode::Functions_Read_T<I, UTF16>
+// MARK: - ZUnicode::Functions_Read_T<I, UTF16>
 
 template <class I>
 struct Functions_Read_T<I, UTF16>
@@ -822,8 +817,7 @@ bool Functions_Read_T<I, UTF16>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32&
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode::Functions_Write_T<I, UTF16>
+// MARK: - ZUnicode::Functions_Write_T<I, UTF16>
 
 template <class I>
 struct Functions_Write_T<I, UTF16>
@@ -866,8 +860,7 @@ bool Functions_Write_T<I, UTF16>::sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode::Functions_Read_T<I, UTF8>
+// MARK: - ZUnicode::Functions_Read_T<I, UTF8>
 template <class I>
 struct Functions_Read_T<I, UTF8>
 	{
@@ -1399,8 +1392,7 @@ bool Functions_Read_T<I, UTF8>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32& 
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode::Functions_Write_T<I, UTF8>
+// MARK: - ZUnicode::Functions_Write_T<I, UTF8>
 
 template <class I>
 struct Functions_Write_T<I, UTF8>
@@ -1493,8 +1485,7 @@ bool Functions_Write_T<I, UTF8>::sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode::Functions_Convert
+// MARK: - ZUnicode::Functions_Convert
 
 template <class I>
 string32 Functions_Convert_T<I>::sAsUTF32(I iSource)

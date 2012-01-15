@@ -32,8 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCaller_WinMessageLoop
+// MARK: - ZCaller_WinMessageLoop
 
 class ZCaller_WinMessageLoop
 :	public ZCaller_EventLoop

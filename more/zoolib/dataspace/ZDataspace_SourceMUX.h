@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SourceMUX
+// MARK: - SourceMUX
 
 class SourceMUX : public SourceFactory
 	{

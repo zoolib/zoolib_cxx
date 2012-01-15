@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException_ML
+// MARK: - ZYadParseException_ML
 
 class ZYadParseException_ML : public ZYadParseException_Std
 	{
@@ -39,8 +38,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_ML
+// MARK: - ZYadStrimR_ML
 
 class ZYadStrimR_ML
 :	public virtual ZYadStrimR
@@ -62,8 +60,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_ML
+// MARK: - ZYadMapR_ML
 
 class ZYadMapR_ML
 :	public virtual ZYadMapR_Std

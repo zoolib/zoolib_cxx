@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPClass_Z
+// MARK: - NPClass_Z
 
 #define ASSIGN(a) this->a = a
 
@@ -73,8 +72,7 @@ NPClass_Z* sGetClass(NPObject* obj)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sAsString
+// MARK: - sAsString
 
 string sAsString(const NPString& iNPString)
 	{ return string(sNPStringCharsConst(iNPString), sNPStringLengthConst(iNPString)); }

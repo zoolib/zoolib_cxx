@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_CRLFRemove
+// MARK: - ZStrimR_CRLFRemove
 
 /// A read filter strim that removes CRLF sequences and replaces them with another code point.
 
@@ -48,8 +47,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_CRLFRemove
+// MARK: - ZStrimW_CRLFRemove
 
 /// A write filter strim that removes CRLF sequences and replaces them with another code point.
 
@@ -68,8 +66,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_CRLFInsert
+// MARK: - ZStrimW_CRLFInsert
 
 /// A write filter strim that replaces standalone CR or LF with CRLF.
 

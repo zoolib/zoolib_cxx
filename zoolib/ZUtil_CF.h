@@ -33,8 +33,7 @@ namespace ZooLib {
 namespace ZUtil_CF {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_CF
+// MARK: - ZUtil_CF
 
 ZRef<CFStringRef> sString();
 ZRef<CFStringRef> sString(const string8& iString8);

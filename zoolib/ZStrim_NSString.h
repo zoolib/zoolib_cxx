@@ -34,8 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_NSString
+// MARK: - ZStrimR_NSString
 
 class ZStrimR_NSString : public ZStrimR
 	{
@@ -60,8 +59,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_NSString
+// MARK: - ZStrimW_NSString
 
 class ZStrimW_NSString : public ZStrimW_NativeUTF16
 	{

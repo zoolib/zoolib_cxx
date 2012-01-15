@@ -27,8 +27,7 @@ namespace ZYad_Basic {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 namespace { // anonymous
 
@@ -44,8 +43,7 @@ bool spRead_Until(const ZStrimU& iStrimU, UTF32 iTerminator, string& oString)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ParseException
+// MARK: - ParseException
 
 ParseException::ParseException(const string& iWhat)
 :	ZYadParseException_Std(iWhat)
@@ -56,8 +54,7 @@ ParseException::ParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * MapR
+// MARK: - MapR
 
 class MapR
 :	public ZYadMapR_Std
@@ -111,8 +108,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_Basic::Options
+// MARK: - ZYad_Basic::Options
 
 Options::Options(UTF32 iNameFromValue, UTF32 iEntryFromEntry)
 :	fSeparator_NameFromValue(iNameFromValue)
@@ -120,8 +116,7 @@ Options::Options(UTF32 iNameFromValue, UTF32 iEntryFromEntry)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadMapR> sYadR(const Options& iOptions, ZRef<ZStrimmerU> iStrimmerU)
 	{ return new MapR(iOptions, iStrimmerU); }

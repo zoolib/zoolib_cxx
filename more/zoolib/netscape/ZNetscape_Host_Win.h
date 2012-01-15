@@ -32,8 +32,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host_Win
+// MARK: - Host_Win
 
 class Host_Win
 :	public Host_Std,

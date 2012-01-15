@@ -32,8 +32,7 @@ typedef ZYadSeqRPos_Val_T<ZSeq_Any> ZYadSeqRPos_Any;
 typedef ZYadMapRPos_Val_T<ZMap_Any> ZYadMapRPos_Any;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(const ZAny& iVal);
 
@@ -44,8 +43,7 @@ ZRef<ZYadSeqRPos> sYadR(const ZSeq_Any& iSeq);
 ZRef<ZYadMapRPos> sYadR(const ZMap_Any& iMap);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sFromYadR
+// MARK: - sFromYadR
 
 ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR);
 ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYadR> iYadR);

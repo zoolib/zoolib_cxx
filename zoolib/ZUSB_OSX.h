@@ -48,8 +48,7 @@ class ZUSBDevice;
 class ZUSBInterfaceInterface;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUSBWatcher
+// MARK: - ZUSBWatcher
 
 class ZUSBWatcher : public ZCounted
 	{
@@ -113,8 +112,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUSBInterfaceInterface
+// MARK: - ZUSBInterfaceInterface
 
 class ZUSBInterfaceInterface : public ZCountedWithoutFinalize
 	{

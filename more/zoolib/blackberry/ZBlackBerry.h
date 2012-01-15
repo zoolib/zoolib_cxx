@@ -44,8 +44,7 @@ class Device;
 class Channel;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Manager
+// MARK: - ZBlackBerry::Manager
 
 class Manager : public ZCounted
 	{
@@ -71,8 +70,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Device
+// MARK: - ZBlackBerry::Device
 
 class Device : public ZCounted
 	{
@@ -114,8 +112,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Channel
+// MARK: - ZBlackBerry::Channel
 
 class Channel : public ZStreamerRWCon
 	{

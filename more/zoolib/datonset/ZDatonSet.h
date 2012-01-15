@@ -39,8 +39,7 @@ using ZIntervalTreeClock::Clock;
 using ZIntervalTreeClock::Event;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Daton
+// MARK: - Daton
 
 //! A trivial implementation till I get the signing stuff figured out
 
@@ -65,8 +64,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Nombre
+// MARK: - Nombre
 
 class Nombre
 	{
@@ -86,8 +84,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NamedEvent
+// MARK: - NamedEvent
 
 class NamedEvent
 	{
@@ -109,8 +106,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Delta
+// MARK: - Delta
 
 class Delta : public ZCountedWithoutFinalize
 	{
@@ -125,14 +121,12 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Map_NamedEvent_Delta_t
+// MARK: - Map_NamedEvent_Delta_t
 
 typedef std::map<NamedEvent, ZRef<Delta> > Map_NamedEvent_Delta_t;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Deltas
+// MARK: - Deltas
 
 class Deltas : public ZCountedWithoutFinalize
 	{
@@ -147,8 +141,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * DeltasChain
+// MARK: - DeltasChain
 
 class DeltasChain : public ZCountedWithoutFinalize
 	{
@@ -167,8 +160,7 @@ private:
 void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * DatonSet
+// MARK: - DatonSet
 
 class DatonSet : public ZCountedWithoutFinalize
 	{

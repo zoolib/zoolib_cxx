@@ -82,8 +82,7 @@ namespace ZooLib {
 #define kDebug_BigRegion 3
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBigRegion
+// MARK: - ZBigRegion
 
 ZBigRegion ZBigRegion::sRects(const ZRectPOD* iRects, size_t iCount, bool iAlreadySorted)
 	{

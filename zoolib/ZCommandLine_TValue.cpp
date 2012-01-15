@@ -35,8 +35,7 @@ namespace ZooLib {
 // ZVal_Any, and also parameterize the parser.
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine::TValue
+// MARK: - ZCommandLine::TValue
 
 ZCommandLine::TValue::TValue(const string& iName, const string& iDescription, EFlags iFlags)
 :	Opt(iName, iDescription, iFlags, false)

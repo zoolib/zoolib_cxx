@@ -268,8 +268,7 @@ void ZStream_SHA1::sFinal(ZStream_SHA1::Context& ioContext, uint8 oDigest[20])
 #endif // !ZCONFIG_StreamSHA1_UseOpenSSL
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_SHA1
+// MARK: - ZStreamR_SHA1
 
 /**
 \class ZStreamR_SHA1
@@ -327,8 +326,7 @@ void ZStreamR_SHA1::GetDigest(uint8 oDigest[20])
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_SHA1
+// MARK: - ZStreamW_SHA1
 
 /**
 \class ZStreamW_SHA1

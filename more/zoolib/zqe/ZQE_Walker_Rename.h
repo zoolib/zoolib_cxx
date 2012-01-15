@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Walker_Rename
+// MARK: - Walker_Rename
 
 class Walker_Rename : public Walker_Unary
 	{

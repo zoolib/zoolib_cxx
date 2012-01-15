@@ -34,8 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_Win_MultiResource
+// MARK: - ZStreamRPos_Win_MultiResource
 
 class ZStreamRPos_Win_MultiResource : public ZStreamRPos
 	{
@@ -69,8 +68,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRPos_Win_MultiResource
+// MARK: - ZStreamerRPos_Win_MultiResource
 
 class ZStreamerRPos_Win_MultiResource : public ZStreamerRPos
 	{

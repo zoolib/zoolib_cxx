@@ -27,8 +27,7 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamerMemory
+// MARK: - StreamerMemory
 
 namespace { // anonymous
 
@@ -49,8 +48,7 @@ StreamerMemory::StreamerMemory(ZRef<ZAssetRep> inAssetRep, const void* inAddress
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetIterRep_FS
+// MARK: - ZAssetIterRep_FS
 
 class ZAssetIterRep_FS : public ZAssetIterRep
 	{
@@ -92,8 +90,7 @@ ZRef<ZAssetIterRep> ZAssetIterRep_FS::Clone()
 	{ return new ZAssetIterRep_FS(fIter); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_FS
+// MARK: - ZAssetRep_FS
 
 ZAssetRep_FS::ZAssetRep_FS(const ZFileSpec& iSpec)
 :	fSpec(iSpec),

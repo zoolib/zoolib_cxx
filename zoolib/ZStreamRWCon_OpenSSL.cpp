@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 
@@ -50,8 +49,7 @@ static SSL_CTX* spCTX;
 static int spDummy = ::SSL_library_init();
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWCon_OpenSSL
+// MARK: - ZStreamRWCon_OpenSSL
 
 ZStreamRWCon_OpenSSL::ZStreamRWCon_OpenSSL(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
 :	fStreamR(iStreamR)
@@ -216,8 +214,7 @@ OSStatus ZStreamRWCon_OpenSSL::spWrite
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWCon_OpenSSL
+// MARK: - ZStreamRWCon_OpenSSL
 
 ZStreamerRWCon_OpenSSL::ZStreamerRWCon_OpenSSL
 	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)

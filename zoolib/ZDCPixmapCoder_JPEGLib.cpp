@@ -53,8 +53,7 @@ namespace ZooLib {
 using namespace ZDCPixmapNS;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * JPEGErrorMgr
+// MARK: - JPEGErrorMgr
 
 namespace { // anonymous
 
@@ -127,8 +126,7 @@ void JPEGErrorMgr::spReset(j_common_ptr cinfo)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * JPEGWriter
+// MARK: - JPEGWriter
 
 namespace { // anonymous
 
@@ -203,8 +201,7 @@ void JPEGWriter::spTerminate(j_compress_ptr iCInfo)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * JPEGReader
+// MARK: - JPEGReader
 
 namespace { // anonymous
 
@@ -306,8 +303,7 @@ void JPEGReader::spTerminate(j_decompress_ptr iCInfo)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapEncoder_JPEGLib
+// MARK: - ZDCPixmapEncoder_JPEGLib
 
 void ZDCPixmapEncoder_JPEGLib::sWritePixmap(const ZStreamW& iStream,
 	const ZDCPixmap& iPixmap, int iQuality)
@@ -432,8 +428,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapDecoder_JPEGLib
+// MARK: - ZDCPixmapDecoder_JPEGLib
 
 ZDCPixmap ZDCPixmapDecoder_JPEGLib::sReadPixmap(const ZStreamR& iStream)
 	{

@@ -34,8 +34,7 @@ namespace ZooLib {
 class ZTxnTarget;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTxn
+// MARK: - ZTxn
 
 /// Represents a transaction.
 class ZTxn : NonCopyable
@@ -66,8 +65,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTxnTarget
+// MARK: - ZTxnTarget
 
 class ZTxnTarget
 	{

@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZUnicode {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode, normalization
+// MARK: - ZUnicode, normalization
 
 enum ENormForm
 	{

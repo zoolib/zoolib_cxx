@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * typedefs
+// MARK: - typedefs
 
 typedef ZRGBA_POD ZRGBColorPOD;
 typedef ZRGBA ZRGBColor;

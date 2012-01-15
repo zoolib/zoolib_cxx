@@ -97,8 +97,7 @@ static const size_t kBufSize = sStackBufferSize;
 static const size_t kCopySize = 1024*1024;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Utility methods
+// MARK: - Utility methods
 
 /**
 Copy data from \a iStrimR to \a iStrimW by reading it into a buffer and writing
@@ -189,16 +188,14 @@ static void spCopyReadToWrite(const ZStrimR& iStrimR, const ZStrimW& iStrimW,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrim
+// MARK: - ZStrim
 
 ZStrim::ExEndOfStrim::ExEndOfStrim(const char* iWhat)
 :	range_error(iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR
+// MARK: - ZStrimR
 /**
 \class ZStrimR
 \nosubgrouping
@@ -661,16 +658,14 @@ void ZStrimR::sThrowEndOfStrim()
 	{ throw ExEndOfStrim(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR::ExEndOfStrim
+// MARK: - ZStrimR::ExEndOfStrim
 
 ZStrimR::ExEndOfStrim::ExEndOfStrim()
 :	ZStrim::ExEndOfStrim("ZStrimR::ExEndOfStrim")
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimU
+// MARK: - ZStrimU
 /**
 \class ZStrimU
 \nosubgrouping
@@ -690,8 +685,7 @@ size_t ZStrimU::UnreadableLimit() const
 	{ return const_cast<ZStrimU*>(this)->Imp_UnreadableLimit(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW
+// MARK: - ZStrimW
 
 /**
 \class ZStrimW
@@ -1235,16 +1229,14 @@ void ZStrimW::pWritev(size_t* oCountCU, size_t* oWritten, const UTF8* iString, v
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW::ExEndOfStrim
+// MARK: - ZStrimW::ExEndOfStrim
 
 ZStrimW::ExEndOfStrim::ExEndOfStrim()
 :	ZStrim::ExEndOfStrim("ZStrimW::ExEndOfStrim")
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_NativeUTF32
+// MARK: - ZStrimW_NativeUTF32
 
 void ZStrimW_NativeUTF32::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCountCU)
 	{
@@ -1327,8 +1319,7 @@ void ZStrimW_NativeUTF32::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_NativeUTF16
+// MARK: - ZStrimW_NativeUTF16
 
 void ZStrimW_NativeUTF16::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
 	{
@@ -1412,8 +1403,7 @@ void ZStrimW_NativeUTF16::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_NativeUTF8
+// MARK: - ZStrimW_NativeUTF8
 
 void ZStrimW_NativeUTF8::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
 	{
@@ -1500,8 +1490,7 @@ void ZStrimW_NativeUTF8::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, s
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_Null
+// MARK: - ZStrimR_Null
 
 /// A derivation of ZStrimR that is empty
 
@@ -1554,8 +1543,7 @@ void ZStrimR_Null::Imp_Skip(uint64 iCountCP, uint64* oCountCPSkipped)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_Null
+// MARK: - ZStrimW_Null
 
 void ZStrimW_Null::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
 	{
@@ -1598,8 +1586,7 @@ void ZStrimW_Null::Imp_CopyFrom(const ZStrimR& iStrimR,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimU_String32
+// MARK: - ZStrimU_String32
 
 ZStrimU_String32::ZStrimU_String32(const string32& iString)
 :	fString(iString),
@@ -1699,8 +1686,7 @@ size_t ZStrimU_String32::Imp_UnreadableLimit()
 	{ return size_t(-1); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimU_String16
+// MARK: - ZStrimU_String16
 
 ZStrimU_String16::ZStrimU_String16(const string16& iString)
 :	fString(iString),
@@ -1802,8 +1788,7 @@ size_t ZStrimU_String16::Imp_UnreadableLimit()
 	{ return size_t(-1); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimU_String8
+// MARK: - ZStrimU_String8
 
 ZStrimU_String8::ZStrimU_String8(const string8& iString)
 :	fString(iString),
@@ -1908,8 +1893,7 @@ string8 ZStrimU_String8::GetString8() const
 	{ return fString; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_String8
+// MARK: - ZStrimW_String8
 
 ZStrimW_String8::ZStrimW_String8(string8& iString)
 :	fString(iString)
@@ -1931,8 +1915,7 @@ void ZStrimW_String8::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_Indirect
+// MARK: - ZStrimW_Indirect
 
 ZStrimW_Indirect::ZStrimW_Indirect()
 :	fSink(nullptr)

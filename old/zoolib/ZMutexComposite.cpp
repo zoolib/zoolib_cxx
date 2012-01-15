@@ -27,8 +27,7 @@ namespace ZooLib {
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMutexComposite
+// MARK: - ZMutexComposite
 
 ZMutexComposite::ZMutexComposite()
 :	fIsLocked(false)

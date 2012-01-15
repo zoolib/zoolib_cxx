@@ -101,8 +101,7 @@ using std::min;
 using std::max;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPoly
+// MARK: - ZDCPoly
 
 ZDCPoly::ZDCPoly()
 	{

@@ -29,8 +29,7 @@ namespace ZooLib {
 #define kDebug_Stream_Tee 2
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Tee
+// MARK: - ZStreamR_Tee
 
 /**
 \class ZStreamR_Tee
@@ -85,8 +84,7 @@ void ZStreamR_Tee::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerR_Tee
+// MARK: - ZStreamerR_Tee
 
 ZStreamerR_Tee::ZStreamerR_Tee(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fStreamerR(iStreamerR),
@@ -101,8 +99,7 @@ const ZStreamR& ZStreamerR_Tee::GetStreamR()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Tee
+// MARK: - ZStreamW_Tee
 
 /**
 \class ZStreamW_Tee
@@ -155,8 +152,7 @@ void ZStreamW_Tee::Imp_Flush()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerW_Tee
+// MARK: - ZStreamerW_Tee
 
 ZStreamerW_Tee::ZStreamerW_Tee(ZRef<ZStreamerW> iStreamerSink1, ZRef<ZStreamerW> iStreamerSink2)
 :	fStreamerSink1(iStreamerSink1),

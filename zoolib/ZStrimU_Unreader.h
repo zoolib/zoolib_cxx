@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimU_Unreader
+// MARK: - ZStrimU_Unreader
 
 class ZStrimU_Unreader : public ZStrimU
 	{

@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZUtil_MacOSX {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_MacOSX
+// MARK: - ZUtil_MacOSX
 
 #if ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)
 

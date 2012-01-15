@@ -43,8 +43,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetNameLookup_Internet_MacOT_OSX
+// MARK: - ZNetNameLookup_Internet_MacOT_OSX
 
 class ZNetNameLookup_Internet_MacOT_OSX : public ZNetNameLookup
 	{
@@ -73,8 +72,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_TCP_MacOT_OSX
+// MARK: - ZNetListener_TCP_MacOT_OSX
 
 class ZNetListener_TCP_MacOT_OSX : public ZNetListener_TCP
 	{
@@ -101,8 +99,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_TCP_MacOT_OSX
+// MARK: - ZNetEndpoint_TCP_MacOT_OSX
 
 class ZNetEndpoint_TCP_MacOT_OSX
 :	public ZNetEndpoint_TCP,

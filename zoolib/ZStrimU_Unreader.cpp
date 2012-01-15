@@ -28,8 +28,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimU_Unreader
+// MARK: - ZStrimU_Unreader
 
 ZStrimU_Unreader::ZStrimU_Unreader(const ZStrimR& iStrimSource)
 :	fStrimSource(iStrimSource)

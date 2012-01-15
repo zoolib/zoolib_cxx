@@ -24,8 +24,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPVariantBase
+// MARK: - NPVariantBase
 
 template <>
 ZQ<bool> NPVariantBase::QGet<bool>() const

@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_ToStrim::Options
+// MARK: - ZVisitor_ToStrim::Options
 
 ZVisitor_ToStrim::Options::Options()
 :	fEOLString("\n")
@@ -39,8 +38,7 @@ ZVisitor_ToStrim::Options::Options()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_ToStrim
+// MARK: - ZVisitor_ToStrim
 
 ZVisitor_ToStrim::ZVisitor_ToStrim()
 :	fOptions(nullptr)

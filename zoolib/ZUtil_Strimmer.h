@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace ZUtil_Strimmer {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Strimmer
+// MARK: - ZUtil_Strimmer
 
 ZRef<ZStrimmerU> sStrimmerU(ZRef<ZStreamerR> iStreamerR);
 

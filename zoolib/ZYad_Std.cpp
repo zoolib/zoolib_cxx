@@ -25,8 +25,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException_Std
+// MARK: - ZYadParseException_Std
 
 ZYadParseException_Std::ZYadParseException_Std(const string& iWhat)
 :	ZYadParseException(iWhat)
@@ -37,8 +36,7 @@ ZYadParseException_Std::ZYadParseException_Std(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_Std
+// MARK: - ZYadSeqR_Std
 
 ZYadSeqR_Std::ZYadSeqR_Std()
 :	fStarted(false)
@@ -69,8 +67,7 @@ ZRef<ZYadR> ZYadSeqR_Std::ReadInc()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_Std
+// MARK: - ZYadMapR_Std
 
 ZYadMapR_Std::ZYadMapR_Std()
 :	fStarted(false)

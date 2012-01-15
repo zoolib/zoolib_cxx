@@ -36,8 +36,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Utility routines
+// MARK: - Utility routines
 
 static uint32 spReadCount(const ZStreamR& iStream)
 	{ return iStream.ReadCount(); }
@@ -52,8 +51,7 @@ static const char spMagicText[] = "ZAO v1.0";
 static const size_t spMagicTextSize = sizeof(spMagicText);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Std::CompareAgainstRep
+// MARK: - ZAssetRep_Std::CompareAgainstRep
 
 struct ZAssetRep_Std::CompareAgainstRep
 	{
@@ -66,8 +64,7 @@ struct ZAssetRep_Std::CompareAgainstRep
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Std::CompareAgainstPath
+// MARK: - ZAssetRep_Std::CompareAgainstPath
 
 struct ZAssetRep_Std::CompareAgainstPath
 	{
@@ -83,8 +80,7 @@ struct ZAssetRep_Std::CompareAgainstPath
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Std
+// MARK: - ZAssetRep_Std
 
 ZAssetRep_Std::ZAssetRep_Std(ZAssetRep_Std_Directory* iParent, const char* iName, size_t iNameLength)
 :   fName(iName),
@@ -123,8 +119,7 @@ ZRef<ZAssetRep> ZAssetRep_Std::GetParentAssetRep()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Std_Directory
+// MARK: - ZAssetRep_Std_Directory
 
 ZAssetRep_Std_Directory::ZAssetRep_Std_Directory(
 	ZAssetTree_Std* iAssetTree,
@@ -299,8 +294,7 @@ void ZAssetRep_Std_Directory::DoFinalization()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Std_Union
+// MARK: - ZAssetRep_Std_Union
 
 ZAssetRep_Std_Union::ZAssetRep_Std_Union(
 	ZAssetRep_Std_Directory* iParent,
@@ -402,8 +396,7 @@ void ZAssetRep_Std_Union::pResolvePaths()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetIterRep_Std_Directory
+// MARK: - ZAssetIterRep_Std_Directory
 
 ZAssetIterRep_Std_Directory::ZAssetIterRep_Std_Directory(
 	ZRef<ZAssetRep_Std_Directory> iAssetRep, size_t iIndex)
@@ -449,8 +442,7 @@ ZRef<ZAssetIterRep> ZAssetIterRep_Std_Directory::Clone()
 	{ return new ZAssetIterRep_Std_Directory(fAssetRep, fCurrent); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std
+// MARK: - ZAssetTree_Std
 
 ZAssetTree_Std::ZAssetTree_Std()
 	{}
@@ -524,8 +516,7 @@ void ZAssetTree_Std::RepBeingFinalized(ZAssetRep_Std* iRep)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamerMemory
+// MARK: - StreamerMemory
 
 namespace { // anonymous
 
@@ -546,8 +537,7 @@ StreamerMemory::StreamerMemory(ZRef<ZAssetRep> iAssetRep, const void* iAddress, 
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Std_Data_Stream
+// MARK: - ZAssetRep_Std_Data_Stream
 
 class ZAssetRep_Std_Data_Stream : public ZAssetRep_Std
 	{
@@ -636,8 +626,7 @@ void ZAssetRep_Std_Data_Stream::DoFinalization()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_Stream::StreamerRPos
+// MARK: - ZAssetTree_Std_Stream::StreamerRPos
 
 class ZAssetTree_Std_Stream::StreamerRPos : public ZStreamerRPos,
 								private ZStreamRPos
@@ -703,8 +692,7 @@ uint64 ZAssetTree_Std_Stream::StreamerRPos::Imp_GetSize()
 	{ return fSize; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_Stream
+// MARK: - ZAssetTree_Std_Stream
 
 ZAssetTree_Std_Stream::ZAssetTree_Std_Stream()
 	{
@@ -820,8 +808,7 @@ void ZAssetTree_Std_Stream::ReadData(size_t iOffset, size_t iSize, void* oData)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_Streamer
+// MARK: - ZAssetTree_Std_Streamer
 
 ZAssetTree_Std_Streamer::ZAssetTree_Std_Streamer(ZRef<ZStreamerRPos> iStreamer)
 :	fStreamer(iStreamer)
@@ -844,8 +831,7 @@ ZAssetTree_Std_Streamer::~ZAssetTree_Std_Streamer()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Std_Data_File
+// MARK: - ZAssetRep_Std_Data_File
 
 class ZAssetRep_Std_Data_File : public ZAssetRep_Std
 	{
@@ -934,8 +920,7 @@ void ZAssetRep_Std_Data_File::DoFinalization()
 
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_File::StreamerRPos
+// MARK: - ZAssetTree_Std_File::StreamerRPos
 
 class ZAssetTree_Std_File::StreamerRPos : public ZStreamerRPos,
 								private ZStreamRPos
@@ -1002,8 +987,7 @@ uint64 ZAssetTree_Std_File::StreamerRPos::Imp_GetSize()
 	{ return fSize; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_File
+// MARK: - ZAssetTree_Std_File
 
 ZAssetTree_Std_File::ZAssetTree_Std_File(ZRef<ZFileR> iFile, uint64 iOffset, size_t iSize)
 	{
@@ -1090,8 +1074,7 @@ void ZAssetTree_Std_File::ReadData(uint64 iOffset, size_t iSize, void* oData)
 	{ fFile->ReadAt(iOffset, oData, iSize, nullptr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Std_Data_Memory
+// MARK: - ZAssetRep_Std_Data_Memory
 
 class ZAssetRep_Std_Data_Memory : public ZAssetRep_Std
 	{
@@ -1146,8 +1129,7 @@ void ZAssetRep_Std_Data_Memory::DoFinalization()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_Memory
+// MARK: - ZAssetTree_Std_Memory
 
 ZAssetTree_Std_Memory::ZAssetTree_Std_Memory()
 	{
@@ -1246,8 +1228,7 @@ void ZAssetTree_Std_Memory::ShutDown()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Std_Memory_StaticData
+// MARK: - ZAssetTree_Std_Memory_StaticData
 
 ZAssetTree_Std_Memory_StaticData::ZAssetTree_Std_Memory_StaticData(
 	const void* iAddress, size_t iSize)

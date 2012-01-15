@@ -335,8 +335,7 @@ an invalid ZAsset and an empty string, respectively.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAsset
+// MARK: - ZAsset
 
 /**
 \class ZAsset
@@ -475,8 +474,7 @@ ZRef<ZStreamerRWPos> ZAsset::OpenRWPos() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetIter
+// MARK: - ZAssetIter
 
 /**
 \class ZAssetIter
@@ -551,8 +549,7 @@ string ZAssetIter::CurrentName() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep
+// MARK: - ZAssetRep
 
 ZRef<ZAssetRep> ZAssetRep::ResolvePath(const char* iPath)
 	{
@@ -613,8 +610,7 @@ ZRef<ZAssetIterRep> ZAssetRep::CreateIterRep()
 	{ return ZRef<ZAssetIterRep>(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetIterRep
+// MARK: - ZAssetIterRep
 
 ZAssetIterRep::ZAssetIterRep()
 	{}
@@ -623,8 +619,7 @@ ZAssetIterRep::~ZAssetIterRep()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetRep_Overlay
+// MARK: - ZAssetRep_Overlay
 
 ZAssetRep_Overlay::ZAssetRep_Overlay(const ZRef<ZAssetRep>& iParent, const vector<ZRef<ZAssetRep> >& iOverlays)
 :	fParent(iParent),
@@ -718,8 +713,7 @@ ZRef<ZStreamerRWPos> ZAssetRep_Overlay::OpenRWPos()
 	{ return fOverlays.front()->OpenRWPos(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetIterRep_Union
+// MARK: - ZAssetIterRep_Union
 
 ZAssetIterRep_Union::ZAssetIterRep_Union(
 	ZRef<ZAssetRep> iParent, const vector<ZRef<ZAssetRep> >& iRepsUnvisited)

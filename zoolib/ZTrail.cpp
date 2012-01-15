@@ -35,8 +35,7 @@ namespace ZooLib {
 static string8 spEmptyString;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+// MARK: - Helper functions
 
 template <class C>
 void sParseStringAndAppend_T
@@ -111,8 +110,7 @@ static void spNormalize_KeepLeadingBounces(const vector<string8>& iComps, vector
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTrail
+// MARK: - ZTrail
 
 /** \class ZTrail
 */

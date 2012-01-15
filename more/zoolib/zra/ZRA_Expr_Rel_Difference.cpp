@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCompare_T
+// MARK: - sCompare_T
 
 template <>
 int sCompare_T(const ZRA::Expr_Rel_Difference& iL, const ZRA::Expr_Rel_Difference& iR)
@@ -41,8 +40,7 @@ ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Difference)
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Difference
+// MARK: - Expr_Rel_Difference
 
 Expr_Rel_Difference::Expr_Rel_Difference(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
 :	inherited(iOp0, iOp1)
@@ -71,8 +69,7 @@ void Expr_Rel_Difference::Accept_Expr_Rel_Difference(Visitor_Expr_Rel_Difference
 	{ iVisitor.Visit_Expr_Rel_Difference(this); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Difference
+// MARK: - Visitor_Expr_Rel_Difference
 
 void Visitor_Expr_Rel_Difference::Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }

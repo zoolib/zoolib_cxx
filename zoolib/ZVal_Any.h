@@ -46,8 +46,7 @@ class ZSeq_Any;
 class ZMap_Any;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_Any
+// MARK: - ZVal_Any
 
 class ZVal_Any : public ZAny
 	{
@@ -226,8 +225,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_Any
+// MARK: - ZSeq_Any
 
 class ZSeq_Any
 	{
@@ -322,8 +320,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_Any::Rep
+// MARK: - ZSeq_Any::Rep
 
 class ZSeq_Any::Rep
 :	public ZCountedWithoutFinalize
@@ -344,8 +341,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_Any, inline templated constructor
+// MARK: - ZSeq_Any, inline templated constructor
 
 template <class Iterator>
 ZSeq_Any::ZSeq_Any(Iterator begin, Iterator end)
@@ -353,14 +349,12 @@ ZSeq_Any::ZSeq_Any(Iterator begin, Iterator end)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNameVal
+// MARK: - ZNameVal
 
 typedef std::pair<string8, ZVal_Any> ZNameVal;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_Any
+// MARK: - ZMap_Any
 
 class ZMap_Any
 	{
@@ -543,8 +537,7 @@ ZMap_Any& operator*=(ZMap_Any& ioMap0, const ZMap_Any& iMap1);
 ZMap_Any operator*(const ZMap_Any& iMap0, const ZMap_Any& iMap1);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_Any::Rep
+// MARK: - ZMap_Any::Rep
 
 class ZMap_Any::Rep
 :	public ZCountedWithoutFinalize
@@ -566,8 +559,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_Any, inline templated constructor
+// MARK: - ZMap_Any, inline templated constructor
 
 template <class Iterator>
 ZMap_Any::ZMap_Any(Iterator begin, Iterator end)
@@ -575,8 +567,7 @@ ZMap_Any::ZMap_Any(Iterator begin, Iterator end)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * 
+// MARK: - 
 
 ZMap_Any sAugment(const ZMap_Any& iUnder, const ZMap_Any& iOver);
 

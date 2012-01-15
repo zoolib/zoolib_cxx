@@ -33,8 +33,7 @@ static ZMtx spMutex;
 static LogMeister* spLogMeister;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * String/integer mapping
+// MARK: - String/integer mapping
 
 static const char* const spNames[] =
 	{
@@ -70,8 +69,7 @@ string sNameFromPriority(EPriority iPriority)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZLog::StrimW
+// MARK: - ZLog::StrimW
 
 StrimW::StrimW(EPriority iPriority, const string& iName_String)
 :	fPriority(iPriority),
@@ -182,8 +180,7 @@ void StrimW::pEmit()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZLog::LogMeister
+// MARK: - ZLog::LogMeister
 
 LogMeister::LogMeister()
 	{}
@@ -212,8 +209,7 @@ void sSetLogMeister(LogMeister* iLogMeister)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZLog::FunctionEntryExit
+// MARK: - ZLog::FunctionEntryExit
 
 FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionName)
 :	fPriority(iPriority)
@@ -230,8 +226,7 @@ FunctionEntryExit::~FunctionEntryExit()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZLog::sLogTrace
+// MARK: - ZLog::sLogTrace
 
 static const char* spTruncateFileName(const char* iFilename)
 	{

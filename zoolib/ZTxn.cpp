@@ -28,8 +28,7 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTxn
+// MARK: - ZTxn
 
 ZThreadSafe_t sNextID(1);
 
@@ -218,8 +217,7 @@ void ZTxn::sCommitCallback(void* iRefcon)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTxnTarget
+// MARK: - ZTxnTarget
 
 void ZTxnTarget::RegisterWithTxn(const ZTxn& iTxn)
 	{

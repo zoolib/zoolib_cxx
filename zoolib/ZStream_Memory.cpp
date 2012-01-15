@@ -29,8 +29,7 @@ namespace ZooLib {
 //#define kDebug_Stream_Memory 2
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Memory
+// MARK: - ZStreamR_Memory
 
 /**
 \class ZStreamR_Memory
@@ -98,8 +97,7 @@ void ZStreamR_Memory::pCopyTo(const ZStreamW& iStreamW, uint64 iCount,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_Memory
+// MARK: - ZStreamRPos_Memory
 
 /**
 \class ZStreamRPos_Memory
@@ -203,8 +201,7 @@ void ZStreamRPos_Memory::pCopyTo(const ZStreamW& iStreamW, uint64 iCount,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRPos_Memory
+// MARK: - ZStreamerRPos_Memory
 
 ZStreamerRPos_Memory::ZStreamerRPos_Memory(const void* iAddress, size_t iSize)
 :	fStream(iAddress, iSize)
@@ -220,8 +217,7 @@ const void* ZStreamerRPos_Memory::GetCurrentAddress()
 	{ return fStream.GetCurrentAddress(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Memory
+// MARK: - ZStreamW_Memory
 
 /**
 \class ZStreamW_Memory
@@ -286,8 +282,7 @@ void ZStreamW_Memory::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_Memory
+// MARK: - ZStreamWPos_Memory
 
 /**
 \class ZStreamWPos_Memory
@@ -395,8 +390,7 @@ void ZStreamWPos_Memory::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerWPos_Memory
+// MARK: - ZStreamerWPos_Memory
 
 ZStreamerWPos_Memory::ZStreamerWPos_Memory(void* iAddress, size_t iSize)
 :	fStream(iAddress, iSize)

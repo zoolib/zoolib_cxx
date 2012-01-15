@@ -28,14 +28,12 @@ namespace ZooLib {
 namespace ZCallable_Caller {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable
+// MARK: - Callable
 
 template <class Signature> class Callable;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 0 params)
+// MARK: - Callable (specialization for 0 params)
 
 template <class R>
 class Callable<R(void)>
@@ -62,8 +60,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 1 param)
+// MARK: - Callable (specialization for 1 param)
 
 template <class R,
 	class P0>
@@ -91,8 +88,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 2 params)
+// MARK: - Callable (specialization for 2 params)
 
 template <class R,
 	class P0, class P1>
@@ -120,8 +116,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 3 params)
+// MARK: - Callable (specialization for 3 params)
 
 template <class R,
 	class P0, class P1, class P2>
@@ -149,8 +144,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 4 params)
+// MARK: - Callable (specialization for 4 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3>
@@ -178,8 +172,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 5 params)
+// MARK: - Callable (specialization for 5 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -208,8 +201,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 6 params)
+// MARK: - Callable (specialization for 6 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -238,8 +230,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 7 params)
+// MARK: - Callable (specialization for 7 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -268,8 +259,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 8 params)
+// MARK: - Callable (specialization for 8 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -298,8 +288,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 9 params)
+// MARK: - Callable (specialization for 9 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -331,8 +320,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 10 params)
+// MARK: - Callable (specialization for 10 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -364,8 +352,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 11 params)
+// MARK: - Callable (specialization for 11 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -397,8 +384,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 12 params)
+// MARK: - Callable (specialization for 12 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -430,8 +416,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 13 params)
+// MARK: - Callable (specialization for 13 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -465,8 +450,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 14 params)
+// MARK: - Callable (specialization for 14 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -500,8 +484,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 15 params)
+// MARK: - Callable (specialization for 15 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -535,8 +518,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 16 params)
+// MARK: - Callable (specialization for 16 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -572,8 +554,7 @@ private:
 } // namespace ZCallable_Caller
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable_Caller
+// MARK: - sCallable_Caller
 
 template <class Signature>
 ZRef<ZCallable<Signature> >

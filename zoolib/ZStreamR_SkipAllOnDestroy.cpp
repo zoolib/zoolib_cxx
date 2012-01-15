@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_SkipAllOnDestroy
+// MARK: - ZStreamR_SkipAllOnDestroy
 
 /**
 \class ZStreamR_SkipAllOnDestroy

@@ -27,8 +27,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * GuestMeister
+// MARK: - GuestMeister
 
 static Guest_Std* spGuest(NPP iNPP)
 	{ return static_cast<Guest_Std*>(iNPP->pdata); }
@@ -97,8 +96,7 @@ NPError GuestMeister_Std::SetValue(NPP iNPP, NPNVariable variable, void *value)
 	{ return spGuest(iNPP)->Guest_SetValue(variable, value); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Guest_Std
+// MARK: - Guest_Std
 
 Guest_Std::Guest_Std(NPP iNPP)
 :	Guest(iNPP)

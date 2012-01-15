@@ -74,8 +74,7 @@ static const ZStrimW& operator<<(const ZStrimW& w, const Daton& iDaton)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * spAsVal (anonymous)
+// MARK: - spAsVal (anonymous)
 
 namespace { // anonymous
 
@@ -102,8 +101,7 @@ ZVal_Any spAsVal(const ZData_Any& iData)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Daton/Val conversion.
+// MARK: - Daton/Val conversion.
 
 ZVal_Any sAsVal(const Daton& iDaton)
 	{ return spAsVal(iDaton.GetData()); }
@@ -117,8 +115,7 @@ Daton sAsDaton(const ZVal_Any& iVal)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_DatonSet::Visitor_DoMakeWalker
+// MARK: - Source_DatonSet::Visitor_DoMakeWalker
 
 class Source_DatonSet::Visitor_DoMakeWalker
 :	public virtual ZQE::Visitor_DoMakeWalker
@@ -143,8 +140,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_DatonSet::Walker_Concrete
+// MARK: - Source_DatonSet::Walker_Concrete
 
 class Source_DatonSet::Walker_Concrete : public ZQE::Walker
 	{
@@ -183,8 +179,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_DatonSet::ClientQuery
+// MARK: - Source_DatonSet::ClientQuery
 
 class Source_DatonSet::DLink_ClientQuery_InPQuery
 :	public DListLink<ClientQuery, DLink_ClientQuery_InPQuery, kDebug>
@@ -209,8 +204,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_DatonSet::PQuery
+// MARK: - Source_DatonSet::PQuery
 
 class Source_DatonSet::DLink_PQuery_NeedsWork
 :	public DListLink<PQuery, DLink_PQuery_NeedsWork, kDebug>
@@ -231,8 +225,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_DatonSet::PSearch
+// MARK: - Source_DatonSet::PSearch
 
 class Source_DatonSet::DLink_PSearch_NeedsWork
 :	public DListLink<PSearch, DLink_PSearch_NeedsWork, kDebug>
@@ -250,8 +243,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_DatonSet
+// MARK: - Source_DatonSet
 
 void Source_DatonSet::ForceUpdate()
 	{ Source::pTriggerResultsAvailable(); }

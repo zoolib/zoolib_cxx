@@ -92,8 +92,7 @@ type             -
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static void spThrowParseException(const string& iMessage)
 	{
@@ -270,8 +269,7 @@ static ZRef<ZYadR> spMakeYadR_JSON
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ReadOptions
+// MARK: - ReadOptions
 
 ReadOptions sReadOptions_Extended()
 	{
@@ -287,8 +285,7 @@ ReadOptions sReadOptions_Extended()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * WriteOptions
+// MARK: - WriteOptions
 
 WriteOptions::WriteOptions()
 :	ZYadOptions()
@@ -306,8 +303,7 @@ WriteOptions::WriteOptions(const WriteOptions& iOther)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ParseException
+// MARK: - ParseException
 
 ParseException::ParseException(const string& iWhat)
 :	ZYadParseException_Std(iWhat)
@@ -318,8 +314,7 @@ ParseException::ParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadStreamR
+// MARK: - YadStreamR
 
 YadStreamR::YadStreamR(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
@@ -338,8 +333,7 @@ const ZStreamR& YadStreamR::GetStreamR()
 	{ return fStreamR; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadStrimR
+// MARK: - YadStrimR
 
 YadStrimR::YadStrimR(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU),
@@ -358,8 +352,7 @@ const ZStrimR& YadStrimR::GetStrimR()
 	{ return fStrimR; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadSeqR
+// MARK: - YadSeqR
 
 YadSeqR::YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
 :	fStrimmerU(iStrimmerU)
@@ -406,8 +399,7 @@ void YadSeqR::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadMapR
+// MARK: - YadMapR
 
 YadMapR::YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
 :	fStrimmerU(iStrimmerU)
@@ -465,8 +457,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static writing functions
+// MARK: - Static writing functions
 
 static void spWriteIndent(const ZStrimW& iStrimW,
 	size_t iCount, const WriteOptions& iOptions)
@@ -707,8 +698,7 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamR& iStreamR,
 		}
 	}
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Writer
+// MARK: - Visitor_Writer
 
 Visitor_Writer::Visitor_Writer
 	(size_t iIndent, const WriteOptions& iOptions, const ZStrimW& iStrimW)
@@ -917,8 +907,7 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR and sToStrim
+// MARK: - sYadR and sToStrim
 
 ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU)
 	{ return spMakeYadR_JSON(iStrimmerU, ReadOptions()); }

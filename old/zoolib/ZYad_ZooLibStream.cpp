@@ -32,8 +32,7 @@ using std::vector;
 static ZRef<ZYadR> spMakeYadR_ZooLibStream(ZRef<ZStreamerR> iStreamerR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static helpers
+// MARK: - Static helpers
 
 static void spToStream(const string& iString, const ZStreamW& iStreamW)
 	{
@@ -51,8 +50,7 @@ static string spStringFromStream(const ZStreamR& iStreamR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamR_ZooLibStreamNew
+// MARK: - ZYadStreamR_ZooLibStreamNew
 
 class ZYadStreamR_ZooLibStreamNew
 :	public ZYadStreamR,
@@ -150,8 +148,7 @@ void ZYadStreamR_ZooLibStreamNew::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamR_ZooLibStreamOld
+// MARK: - ZYadStreamR_ZooLibStreamOld
 
 class ZYadStreamR_ZooLibStreamOld
 :	public ZYadStreamR
@@ -182,8 +179,7 @@ const ZStreamR& ZYadStreamR_ZooLibStreamOld::GetStreamR()
 	{ return fStreamR_Limited; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_ZooLibStream
+// MARK: - ZYadStrimR_ZooLibStream
 
 class ZYadStrimR_ZooLibStream
 :	public ZYadStrimR
@@ -216,8 +212,7 @@ const ZStrimR& ZYadStrimR_ZooLibStream::GetStrimR()
 	{ return fStrimR; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_ZooLibStreamNew
+// MARK: - ZYadSeqR_ZooLibStreamNew
 
 class ZYadSeqR_ZooLibStreamNew : public ZYadSeqR_Std
 	{
@@ -239,8 +234,7 @@ void ZYadSeqR_ZooLibStreamNew::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{ oYadR = spMakeYadR_ZooLibStream(fStreamerR); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_ZooLibStreamOld
+// MARK: - ZYadSeqR_ZooLibStreamOld
 
 class ZYadSeqR_ZooLibStreamOld : public ZYadSeqR_Std
 	{
@@ -270,8 +264,7 @@ void ZYadSeqR_ZooLibStreamOld::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_ZooLibStreamNew
+// MARK: - ZYadMapR_ZooLibStreamNew
 
 class ZYadMapR_ZooLibStreamNew : public ZYadMapR_Std
 	{
@@ -297,8 +290,7 @@ void ZYadMapR_ZooLibStreamNew::Imp_ReadInc
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_ZooLibStreamOld
+// MARK: - ZYadMapR_ZooLibStreamOld
 
 ZYadMapR_ZooLibStreamOld::ZYadMapR_ZooLibStreamOld(ZRef<ZStreamerR> iStreamerR)
 :	fStreamerR(iStreamerR),
@@ -317,8 +309,7 @@ void ZYadMapR_ZooLibStreamOld::Imp_ReadInc
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_ZooLibStream
+// MARK: - ZYad_ZooLibStream
 
 void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 	{

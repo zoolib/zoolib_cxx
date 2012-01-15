@@ -33,8 +33,7 @@ namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Asyncify
+// MARK: - Source_Asyncify
 
 class Source_Asyncify : public Source
 	{

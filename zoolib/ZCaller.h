@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCaller
+// MARK: - ZCaller
 
 class ZCaller
 :	public ZCounted
@@ -38,8 +37,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCaller_Trivial
+// MARK: - ZCaller_Trivial
 
 class ZCaller_Trivial
 :	public ZCaller

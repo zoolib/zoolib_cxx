@@ -41,8 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileLoc_POSIX
+// MARK: - ZFileLoc_POSIX
 
 class ZFileLoc_POSIX : public ZFileLoc
 	{
@@ -107,8 +106,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileR_POSIX
+// MARK: - ZFileR_POSIX
 
 class ZFileR_POSIX : public ZFileR
 	{
@@ -127,8 +125,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileW_POSIX
+// MARK: - ZFileW_POSIX
 
 class ZFileW_POSIX : public ZFileW
 	{
@@ -152,8 +149,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileRW_POSIX
+// MARK: - ZFileRW_POSIX
 
 class ZFileRW_POSIX : public ZFileRW
 	{
@@ -179,8 +175,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileR_POSIXMutex
+// MARK: - ZFileR_POSIXMutex
 
 class ZFileR_POSIXMutex : public ZFileR
 	{
@@ -201,8 +196,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileW_POSIXMutex
+// MARK: - ZFileW_POSIXMutex
 
 class ZFileW_POSIXMutex : public ZFileW
 	{
@@ -228,8 +222,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileRW_POSIXMutex
+// MARK: - ZFileRW_POSIXMutex
 
 class ZFileRW_POSIXMutex : public ZFileRW
 	{
@@ -256,8 +249,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_File_POSIX
+// MARK: - ZStreamRPos_File_POSIX
 
 class ZStreamRPos_File_POSIX : public ZStreamRPos
 	{
@@ -283,8 +275,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRPos_File_POSIX
+// MARK: - ZStreamerRPos_File_POSIX
 
 class ZStreamerRPos_File_POSIX : public ZStreamerRPos
 	{
@@ -300,8 +291,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_File_POSIX
+// MARK: - ZStreamWPos_File_POSIX
 
 class ZStreamWPos_File_POSIX : public ZStreamWPos
 	{
@@ -329,8 +319,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerWPos_File_POSIX
+// MARK: - ZStreamerWPos_File_POSIX
 
 class ZStreamerWPos_File_POSIX : public ZStreamerWPos
 	{
@@ -346,8 +335,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWPos_File_POSIX
+// MARK: - ZStreamRWPos_File_POSIX
 
 class ZStreamRWPos_File_POSIX : public ZStreamRWPos
 	{
@@ -380,8 +368,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRWPos_File_POSIX
+// MARK: - ZStreamerRWPos_File_POSIX
 
 class ZStreamerRWPos_File_POSIX : public ZStreamerRWPos
 	{

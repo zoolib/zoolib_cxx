@@ -41,8 +41,7 @@ namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_DoMakeWalker
+// MARK: - Visitor_DoMakeWalker
 
 class Visitor_DoMakeWalker
 :	public virtual ZVisitor_Do_T<ZRef<Walker> >

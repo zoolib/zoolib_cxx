@@ -56,8 +56,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * InsertPrefix (anonymous)
+// MARK: - InsertPrefix (anonymous)
 
 namespace { // anonymous
 
@@ -94,8 +93,7 @@ void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& i
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union::PIP
+// MARK: - Source_Union::PIP
 
 class Source_Union::DLink_PIP_InProxy
 :	public DListLink<PIP, DLink_PIP_InProxy, kDebug>
@@ -119,8 +117,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union::Proxy declaration
+// MARK: - Source_Union::Proxy declaration
 
 class Source_Union::Proxy
 :	public virtual ZRA::Expr_Rel
@@ -155,8 +152,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union::Visitor_Proxy
+// MARK: - Source_Union::Visitor_Proxy
 
 class Source_Union::Visitor_Proxy
 :	public virtual ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>
@@ -167,8 +163,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union::Proxy definition
+// MARK: - Source_Union::Proxy definition
 
 Source_Union::Proxy::Proxy(Source_Union* iSource)
 :	fSource(iSource)
@@ -203,8 +198,7 @@ void Source_Union::Proxy::Accept_Proxy(Visitor_Proxy& iVisitor)
 	{ iVisitor.Visit_Proxy(this); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union::Walker_Proxy
+// MARK: - Source_Union::Walker_Proxy
 
 class Source_Union::Walker_Proxy : public ZQE::Walker
 	{
@@ -245,8 +239,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union::ClientQuery
+// MARK: - Source_Union::ClientQuery
 
 class Source_Union::DLink_ClientQuery_NeedsWork
 :	public DListLink<ClientQuery, DLink_ClientQuery_NeedsWork, kDebug>
@@ -271,8 +264,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union::PQuery
+// MARK: - Source_Union::PQuery
 
 class Source_Union::DLink_PQuery_NeedsWork
 :	public DListLink<PQuery, DLink_PQuery_NeedsWork, kDebug>
@@ -295,8 +287,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union::Visitor_DoMakeWalker
+// MARK: - Source_Union::Visitor_DoMakeWalker
 
 class Source_Union::Visitor_DoMakeWalker
 :	public virtual ZQE::Visitor_DoMakeWalker
@@ -324,8 +315,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union::Analyze
+// MARK: - Source_Union::Analyze
 
 class Source_Union::Analyze
 :	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel>
@@ -665,8 +655,7 @@ ZRef<ZRA::Expr_Rel> Source_Union::Analyze::TopLevelDo(ZRef<ZRA::Expr_Rel> iRel)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union::PSource
+// MARK: - Source_Union::PSource
 
 class Source_Union::DLink_PSource_NeedsWork
 :	public DListLink<PSource, DLink_PSource_NeedsWork, kDebug>
@@ -721,8 +710,7 @@ ZRef<ZRA::Expr_Rel> Source_Union::PSource::UsableRel(ZRef<ZRA::Expr_Rel> iRel)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union
+// MARK: - Source_Union
 
 Source_Union::Source_Union()
 :	fEvent(Event::sZero())

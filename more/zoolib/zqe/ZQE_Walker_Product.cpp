@@ -29,8 +29,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Walker_Product
+// MARK: - Walker_Product
 
 Walker_Product::Walker_Product(const ZRef<Walker>& iWalker_Left, const ZRef<Walker>& iWalker_Right)
 :	fWalker_Left(iWalker_Left)

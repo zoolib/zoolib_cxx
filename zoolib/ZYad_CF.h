@@ -36,14 +36,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadR_CF
+// MARK: - ZYadR_CF
 
 typedef ZYadR_Val_T<ZRef<CFTypeRef> > ZYadR_CF;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadAtomR_CF
+// MARK: - ZYadAtomR_CF
 
 class ZYadAtomR_CF
 :	public ZYadR_CF
@@ -57,8 +55,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamRPos_CF
+// MARK: - ZYadStreamRPos_CF
 
 typedef ZStreamerRPos_T<ZStreamRPos_CFData> ZStreamerRPos_CF;
 
@@ -76,8 +73,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_CF
+// MARK: - ZYadStrimR_CF
 
 typedef ZStrimmerR_T<ZStrimR_CFString> ZStrimmerR_CFString;
 
@@ -91,8 +87,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos_CF
+// MARK: - ZYadSeqRPos_CF
 
 class ZYadSeqRPos_CF
 :	public ZYadR_CF
@@ -104,8 +99,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos_CF
+// MARK: - ZYadMapRPos_CF
 
 class ZYadMapRPos_CF
 :	public ZYadR_CF
@@ -136,8 +130,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(CFTypeRef iVal);
 ZRef<ZYadR> sYadR(const ZRef<CFTypeRef>& iVal);
@@ -159,8 +152,7 @@ ZRef<ZYadMapRPos> sYadR(CFDictionaryRef iDictionary);
 ZRef<ZYadMapRPos> sYadR(const ZRef<CFDictionaryRef>& iDictionary);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sFromYadR
+// MARK: - sFromYadR
 
 ZRef<CFTypeRef> sFromYadR(CFTypeRef iDefault, ZRef<ZYadR> iYadR);
 ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR);

@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSet_T declaration
+// MARK: - ZSet_T declaration
 
 template <class T, class Comparator = std::less<T> >
 class ZSet_T : public std::set<T,Comparator>
@@ -91,8 +90,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSet_T definition
+// MARK: - ZSet_T definition
 
 template <class T, class Comparator>
 ZSet_T<T,Comparator>::ZSet_T(Base_t* ioElems)
@@ -304,8 +302,7 @@ size_t ZSet_T<T,Comparator>::IndexOf(const T& iElem) const
 	{ return std::distance(this->begin(), this->find(iElem)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSet_T operators
+// MARK: - ZSet_T operators
 
 template <class T, class Comparator>
 inline ZSet_T<T,Comparator> operator&(const T& iElem, const ZSet_T<T,Comparator>& iSet)

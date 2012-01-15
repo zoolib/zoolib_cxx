@@ -84,8 +84,7 @@ bool ZMIME::sReadFieldName(const ZStreamR& iStream, std::string* oName, std::str
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMIME::StreamR_Header
+// MARK: - ZMIME::StreamR_Header
 
 ZMIME::StreamR_Header::StreamR_Header(const ZStreamR& iStream)
 :	fStreamR(iStream),
@@ -167,8 +166,7 @@ void ZMIME::StreamR_Header::Reset()
 	{ fState = eInitial; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMIME::StreamR_Line
+// MARK: - ZMIME::StreamR_Line
 
 ZMIME::StreamR_Line::StreamR_Line(const ZStreamR& iStream)
 :	fStreamR(iStream),

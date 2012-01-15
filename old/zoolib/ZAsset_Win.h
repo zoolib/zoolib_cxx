@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Win_MemoryMapped
+// MARK: - ZAssetTree_Win_MemoryMapped
 
 class ZAssetTree_Win_MemoryMapped : public ZAssetTree_Std_Memory
 	{
@@ -51,8 +50,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAssetTree_Win_MultiResource
+// MARK: - ZAssetTree_Win_MultiResource
 
 class ZStreamRPos_Win_MultiResource;
 

@@ -32,8 +32,7 @@ using ZUtil_CF::sData;
 using ZUtil_CF::sDataMutable;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZData_CF
+// MARK: - ZData_CF
 
 ZAny ZData_CF::AsAny() const
 	{ return ZUtil_CF::sAsAny(this->pData()); }

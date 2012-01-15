@@ -24,8 +24,7 @@ namespace ZooLib {
 namespace ZPhotoshop {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZooLib::ZPhotoshop
+// MARK: - ZooLib::ZPhotoshop
 
 } // namespace ZPhotoshop
 } // namespace ZooLib

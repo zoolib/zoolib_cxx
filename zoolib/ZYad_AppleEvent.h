@@ -35,8 +35,7 @@ typedef ZYadSeqRPos_Val_T<ZSeq_AppleEvent> ZYadSeqRPos_AppleEvent;
 typedef ZYadMapRPos_Val_T<ZMap_AppleEvent> ZYadMapRPos_AppleEvent;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(const ZVal_AppleEvent& iVal);
 

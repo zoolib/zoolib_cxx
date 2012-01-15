@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRWFactory_Retry
+// MARK: - ZStreamerRWFactory_Retry
 
 class ZStreamerRWFactory_Retry : public ZStreamerRWFactory
 	{

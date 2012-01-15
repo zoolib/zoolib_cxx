@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_Boundary
+// MARK: - ZStrimR_Boundary
 
 /// A read filter strim that reads from another strim until a boundary sequence is encountered.
 
@@ -63,8 +62,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimerR_Boundary
+// MARK: - ZStrimerR_Boundary
 
 /// A read filter strimmer encapsulating a ZStrimR_Boundary.
 

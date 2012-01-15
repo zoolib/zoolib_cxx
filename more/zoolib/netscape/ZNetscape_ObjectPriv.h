@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPObject_T
+// MARK: - NPObject_T
 
 template <class Variant_t>
 NPObject_T<Variant_t>::NPObject_T()

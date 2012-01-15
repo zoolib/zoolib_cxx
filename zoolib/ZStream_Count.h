@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Count
+// MARK: - ZStreamR_Count
 
 /// A read filter stream that counts the number of bytes read from it.
 
@@ -69,8 +68,7 @@ protected:
 //typedef ZStreamerR_FT<ZStreamR_Count> ZStreamerR_Count;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_Count
+// MARK: - ZStreamW_Count
 
 /// A write filter stream that counts the number of bytes written to it.
 

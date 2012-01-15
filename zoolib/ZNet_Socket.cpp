@@ -37,8 +37,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNet_Socket
+// MARK: - ZNet_Socket
 
 // On MacOS X (and FreeBSD) and Linux a send or receive on a socket where the other end
 // has closed can cause delivery of a sigpipe. These helper functions, and the conditional
@@ -188,8 +187,7 @@ ZNet::Error ZNet_Socket::sTranslateError(int iNativeError)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_Socket
+// MARK: - ZNetListener_Socket
 
 static bool spFastCancellationEnabled;
 
@@ -293,8 +291,7 @@ void ZNetListener_Socket::sEnableFastCancellation()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_Socket
+// MARK: - ZNetEndpoint_Socket
 
 ZNetEndpoint_Socket::ZNetEndpoint_Socket(int iSocketFD)
 	{

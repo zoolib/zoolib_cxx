@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace ZWinWND {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers (anonymous)
+// MARK: - Helpers (anonymous)
 
 namespace { // anonymous
 
@@ -128,8 +127,7 @@ INT_PTR CALLBACK spDialogProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWinWND::ClassRegistration
+// MARK: - ZWinWND::ClassRegistration
 
 ClassRegistration::ClassRegistration(WNDPROC iWNDPROC, const WCHAR* iClassName)
 :	fClassName(iClassName)
@@ -162,8 +160,7 @@ const WCHAR* ClassRegistration::GetClassName() const
 	{ return fClassName; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWinWND, Callable <--> Regular window
+// MARK: - ZWinWND, Callable <--> Regular window
 
 static ClassRegistration spClassRegistration(spWindowProcW, L"ZWinWND ClassRegistration");
 
@@ -246,8 +243,7 @@ bool sDoOneMessage()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWinWND, Callable <--> Dialog
+// MARK: - ZWinWND, Callable <--> Dialog
 
 HWND sCreateDialog(LPCWSTR lpTemplate, LCID iLCID, HWND hWndParent, ZRef<Callable_Dialog> iCallable)
 	{

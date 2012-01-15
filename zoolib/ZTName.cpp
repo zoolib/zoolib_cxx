@@ -34,8 +34,7 @@ namespace ZooLib {
 static const int kDebug = 2;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTName, helper functions and PNRep
+// MARK: - ZTName, helper functions and PNRep
 
 static inline int spCompare(const void* iLeft, size_t iLeftLength,
 	const void* iRight, size_t iRightLength)
@@ -127,8 +126,7 @@ static inline const PNRep* spGetPNRep(const void* iData)
 	{ return reinterpret_cast<const PNRep*>(reinterpret_cast<intptr_t>(iData) & ~1); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTName::String
+// MARK: - ZTName::String
 
 // ZTName::String is only used for non-zero length names that do not
 // appear in the pre-registered names table. We assert that fSize is non-zero
@@ -166,8 +164,7 @@ inline string ZTName::String::AsString() const
 	{ return string(fBuffer, fSize); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTName
+// MARK: - ZTName
 
 int ZTName::sPreRegister(const char* const* iNames, size_t iCount)
 	{
@@ -466,8 +463,7 @@ void ZTName::ToStream(const ZStreamW& iStreamW) const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTName::String
+// MARK: - ZTName::String
 
 void ZTName::String::ToStream(const ZStreamW& iStreamW) const
 	{

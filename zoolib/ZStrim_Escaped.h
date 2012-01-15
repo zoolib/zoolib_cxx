@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimR_Escaped
+// MARK: - ZStrimR_Escaped
 
 class ZStrimR_Escaped : public ZStrimR
 	{
@@ -45,8 +44,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_Escaped
+// MARK: - ZStrimW_Escaped
 
 /// A write filter strim that inserts C-style escape sequences.
 

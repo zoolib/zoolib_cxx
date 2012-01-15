@@ -36,8 +36,7 @@ class ZDCPixmapRep;
 class ZDCPixmapRaster;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmap
+// MARK: - ZDCPixmap
 
 /// Stuff about ZDCPixmap
 
@@ -175,8 +174,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRaster
+// MARK: - ZDCPixmapRaster
 
 class ZDCPixmapRaster : public ZCounted, NonCopyable
 	{
@@ -204,8 +202,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRaster_Simple
+// MARK: - ZDCPixmapRaster_Simple
 
 class ZDCPixmapRaster_Simple : public ZDCPixmapRaster
 	{
@@ -219,8 +216,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRaster_StaticData
+// MARK: - ZDCPixmapRaster_StaticData
 
 class ZDCPixmapRaster_StaticData : public ZDCPixmapRaster
 	{
@@ -236,8 +232,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapCache
+// MARK: - ZDCPixmapCache
 
 class ZDCPixmapCache : public ZCounted
 	{
@@ -251,8 +246,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRep
+// MARK: - ZDCPixmapRep
 
 class ZDCPixmapRep : public ZCounted, NonCopyable
 	{
@@ -326,8 +320,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmap inline definitions
+// MARK: - ZDCPixmap inline definitions
 
 inline ZDCPixmap::ZDCPixmap()
 	{}
@@ -392,8 +385,7 @@ inline const ZRectPOD& ZDCPixmap::GetBounds() const
 	{ return fRep->GetBounds(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRep inline definitions
+// MARK: - ZDCPixmapRep inline definitions
 
 inline const ZRectPOD& ZDCPixmapRep::GetBounds()
 	{ return fBounds; }

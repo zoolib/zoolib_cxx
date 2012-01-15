@@ -46,8 +46,7 @@ typedef ZDCPixmapNS::PixelDescRep_Gray PDRep_Gray;
 typedef ZDCPixmapNS::PixelDescRep_Color PDRep_Color;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Public API
+// MARK: - Public API
 
 void sBlit
 	(const void* iSource, const RD& iSourceRD, const ZRectPOD& iSourceB, const PD& iSourcePD,

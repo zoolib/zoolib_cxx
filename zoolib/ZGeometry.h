@@ -77,8 +77,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGPointPOD_T
+// MARK: - ZGPointPOD_T
 
 template <class T>
 class ZGPointPOD_T
@@ -148,8 +147,7 @@ ZGPointPOD_T<T>& ZGPointPOD_T<T>::operator=(const ZGPointPOD_T<S>& other)
 	{ x = T(other.x); y = T(other.y); return *this; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGPoint_T
+// MARK: - ZGPoint_T
 
 template <class T>
 class ZGPoint_T : public ZGPointPOD_T<T>
@@ -217,8 +215,7 @@ ZGPoint_T<T>::ZGPoint_T(const ZGPoint_T<S>& other)
 	{ this->x = T(other.x); this->y = T(other.y); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGExtentPOD_T
+// MARK: - ZGExtentPOD_T
 
 template <class T>
 class ZGExtentPOD_T
@@ -299,8 +296,7 @@ ZGExtentPOD_T<T>& ZGExtentPOD_T<T>::operator=(const ZGExtentPOD_T<S>& other)
 	{ h = T(other.h); v = T(other.v); return *this; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGExtent_T
+// MARK: - ZGExtent_T
 
 template <class T>
 class ZGExtent_T : public ZGExtentPOD_T<T>
@@ -368,8 +364,7 @@ ZGExtent_T<T>::ZGExtent_T(const ZPointPOD& iPoint)
 	{ this->h = T(iPoint.h); this->v = T(iPoint.v); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRectPOD_T
+// MARK: - ZGRectPOD_T
 
 template <class T>
 class ZGRect_T;
@@ -887,8 +882,7 @@ bool ZGRectPOD_T<Ord>::Contains(U x, U y) const
 	{ return this->ContainsX(x) && this->ContainsY(y); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRect_T
+// MARK: - ZGRect_T
 
 template <class Ord>
 class ZGRect_T : public ZGRectPOD_T<Ord>
@@ -1028,8 +1022,7 @@ ZGRect_T<Ord>::ZGRect_T(const ZGPointPOD_T<U>& iOrigin, Ord iWidth, Ord iHeight)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Operations - Extent/Extent
+// MARK: - Operations - Extent/Extent
 
 template <class T>
 ZGExtentPOD_T<T> operator+(const ZGExtentPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
@@ -1048,8 +1041,7 @@ ZGExtentPOD_T<T>& operator-=(ZGExtentPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
 	{ l.h -= r.h; l.v -= r.v; return l; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Operations - Extent/Point
+// MARK: - Operations - Extent/Point
 
 template <class T>
 ZGPoint_T<T> operator+(const ZGPointPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
@@ -1072,8 +1064,7 @@ ZGPoint_T<T>& operator-=(ZGPoint_T<T>& l, const ZGExtentPOD_T<T>& r)
 	{ l.x -= r.h; l.y -= r.v; return l; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Operations - Rect/Extent
+// MARK: - Operations - Rect/Extent
 
 template <class T>
 ZGRect_T<T> operator+(const ZGRectPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
@@ -1092,8 +1083,7 @@ ZGRectPOD_T<T>& operator-=(ZGRectPOD_T<T>& l, const ZGExtentPOD_T<T>& r)
 	{ l.origin -= r; return l; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Operations - Rect
+// MARK: - Operations - Rect
 
 template <class T, class U>
 ZGRect_T<T> operator&(const ZGRectPOD_T<T>& l, const ZGRectPOD_T<U>& r)
@@ -1174,8 +1164,7 @@ ZGRectPOD_T<T>& operator|=(ZGRectPOD_T<T>& l, const ZGRectPOD_T<U>& r)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * CoreGraphics
+// MARK: - CoreGraphics
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 
@@ -1246,8 +1235,7 @@ ZGRect_T<T>::ZGRect_T(const CGRect& iRect)
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Cocoa
+// MARK: - Cocoa
 
 #if ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) \
 	&& !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
@@ -1325,8 +1313,7 @@ ZGRect_T<T>::ZGRect_T(const NSRect& iRect)
 // ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX) && !ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * QuickDraw
+// MARK: - QuickDraw
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 
@@ -1401,8 +1388,7 @@ ZGRect_T<T>::ZGRect_T(const Rect& iRect)
 #endif // ZCONFIG_SPI_Enabled(QuickDraw)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * GDI
+// MARK: - GDI
 
 #if ZCONFIG_SPI_Enabled(GDI)
 
@@ -1477,8 +1463,7 @@ ZGRect_T<T>::ZGRect_T(const RECT& iRect)
 #endif // ZCONFIG_SPI_Enabled(GDI)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * X11
+// MARK: - X11
 
 #if ZCONFIG_SPI_Enabled(X11)
 
@@ -1586,8 +1571,7 @@ ZGRect_T<T>::ZGRect_T(const XRectangle& iRect)
 #endif // ZCONFIG_SPI_Enabled(X11)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Standard typedefs
+// MARK: - Standard typedefs
 
 typedef ZGPoint_T<float> ZGPointf;
 typedef ZGExtent_T<float> ZGExtentf;

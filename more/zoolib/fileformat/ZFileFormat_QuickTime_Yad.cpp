@@ -33,8 +33,7 @@ namespace QuickTime {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 namespace { // anonymous
 
@@ -82,8 +81,7 @@ static ZQ<bool> spIsContainer(const string& iName)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadStreamR
+// MARK: - YadStreamR
 
 class YadStreamR
 :	public ZYadStreamR
@@ -108,8 +106,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadStreamRPos
+// MARK: - YadStreamRPos
 
 class YadStreamRPos
 :	public ZYadStreamR
@@ -136,8 +133,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * YadMapR
+// MARK: - YadMapR
 
 class YadMapR : public ZYadMapR_Std
 	{
@@ -320,8 +316,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(ZRef<ZStreamerR> iStreamerR)
 	{

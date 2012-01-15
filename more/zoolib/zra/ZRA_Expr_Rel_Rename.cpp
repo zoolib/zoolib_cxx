@@ -28,8 +28,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCompare_T
+// MARK: - sCompare_T
 
 template <>
 int sCompare_T(const ZRA::Expr_Rel_Rename& iL, const ZRA::Expr_Rel_Rename& iR)
@@ -48,8 +47,7 @@ ZMACRO_CompareRegistration_T(ZRA::Expr_Rel_Rename)
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Rename
+// MARK: - Expr_Rel_Rename
 
 Expr_Rel_Rename::Expr_Rel_Rename(const ZRef<Expr_Rel>& iOp0,
 	const RelName& iNew, const RelName& iOld)
@@ -93,15 +91,13 @@ const RelName& Expr_Rel_Rename::GetOld() const
 	{ return fOld; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Rename
+// MARK: - Visitor_Expr_Rel_Rename
 
 void Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Relational operators
+// MARK: - Relational operators
 
 ZRef<Expr_Rel> sRename(const ZRef<Expr_Rel>& iExpr,
 	const RelName& iNewPropName, const RelName& iOldPropName)

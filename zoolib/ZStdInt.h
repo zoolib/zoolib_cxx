@@ -34,8 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Standard integers
+// MARK: - Standard integers
 // Get the names int8, uint8, int16, uint16, int32, uint32,
 // int64 and uint64 into namespace ZStdInt. if you provide
 // a project-specific header, it must achieve the same result.

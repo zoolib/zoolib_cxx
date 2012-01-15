@@ -37,8 +37,7 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPVariantH
+// MARK: - NPVariantH
 
 // Explicitly instantiate NPVariant_T<NPObjectH>, aka NPVariantH
 template class NPVariant_T<NPObjectH>;
@@ -65,8 +64,7 @@ void sFree_T<NPVariantH>(void* iPtr)
 	{ return HostMeister::sGet()->MemFree(iPtr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPObjectH
+// MARK: - NPObjectH
 
 // Explicitly instantiate NPObject_T<NPVariantH>
 template class NPObject_T<NPVariantH>;
@@ -150,8 +148,7 @@ bool NPObjectH::Enumerate(NPIdentifier*& oIdentifiers, uint32& oCount)
 	{ return HostMeister::sGet()->Enumerate(fake, this, &oIdentifiers, &oCount); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ObjectH
+// MARK: - ObjectH
 
 NPClass_Z ObjectH::spNPClass
 	(spAllocate,
@@ -355,8 +352,7 @@ bool ObjectH::spEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * HostMeister
+// MARK: - HostMeister
 
 static HostMeister* spHostMeister;
 
@@ -850,8 +846,7 @@ void HostMeister::spUnscheduleTimer(NPP npp, uint32 timerID)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * GuestFactory
+// MARK: - GuestFactory
 
 GuestFactory::GuestFactory()
 	{}
@@ -863,8 +858,7 @@ void GuestFactory::GetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	{ HostMeister::sGet()->sGetNPNF(oNPNF); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host
+// MARK: - Host
 
 Host::Host(ZRef<GuestFactory> iGuestFactory)
 :	fGuestFactory(iGuestFactory),

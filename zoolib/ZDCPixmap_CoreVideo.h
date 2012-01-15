@@ -42,8 +42,7 @@ namespace ZooLib {
 namespace ZDCPixmap_CoreVideo {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmap_CoreVideo
+// MARK: - ZDCPixmap_CoreVideo
 
 ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR);
 

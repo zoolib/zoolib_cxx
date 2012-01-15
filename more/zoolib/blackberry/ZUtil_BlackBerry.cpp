@@ -34,8 +34,7 @@ namespace ZooLib {
 namespace ZUtil_BlackBerry {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_BlackBerry
+// MARK: - ZUtil_BlackBerry
 
 ZRef<ZBlackBerry::Manager> sMakeManager(ZRef<ZStreamerRWConFactory> iFactory)
 	{

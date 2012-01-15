@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMACRO_ZValAccessors
+// MARK: - ZMACRO_ZValAccessors
 
 #define ZMACRO_ZValAccessors_Decl_Get(T, TYPENAME, TYPE) \
 	ZQ<TYPE> QGet##TYPENAME() const; \

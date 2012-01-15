@@ -32,8 +32,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Util
+// MARK: - Util
 
 Problem::Problem(ZRef<Expr_Rel> iRel, string iDescription)
 :	fRel(iRel)
@@ -47,8 +46,7 @@ string Problem::GetDescription() const
 	{ return fDescription; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Anonymous
+// MARK: - Anonymous
 
 namespace { // anonymous
 
@@ -102,8 +100,7 @@ void Doer::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Util
+// MARK: - Util
 
 bool sValidate(vector<Problem>& oProblems, ZRef<Expr_Rel> iRel)
 	{

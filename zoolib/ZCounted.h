@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCountedBase
+// MARK: - ZCountedBase
 
 class ZCountedBase
 	{
@@ -63,8 +62,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sRetain/sRelase for ZCountedBase derivatives (ie ZCounted)
+// MARK: - sRetain/sRelase for ZCountedBase derivatives (ie ZCounted)
 
 inline void sRetain(ZCountedBase& iObject)
 	{ iObject.Retain(); }
@@ -76,15 +74,13 @@ inline void sCheck(ZCountedBase* iP)
 	{ ZAssertStop(1, iP); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCounted
+// MARK: - ZCounted
 
 class ZCounted : public virtual ZCountedBase
 	{};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCountedBase::WeakRefProxy
+// MARK: - ZCountedBase::WeakRefProxy
 
 class ZCountedBase::WeakRefProxy
 :	public ZCountedWithoutFinalize
@@ -104,8 +100,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWeakRefBase
+// MARK: - ZWeakRefBase
 
 class ZWeakRefBase
 	{
@@ -128,8 +123,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZWeakRef
+// MARK: - ZWeakRef
 
 template <class T>
 class ZWeakRef
@@ -226,8 +220,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * MakeWeakRef
+// MARK: - MakeWeakRef
 
 template <class T>
 ZWeakRef<T> sWeakRef(T* iP)

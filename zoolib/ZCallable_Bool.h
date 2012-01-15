@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Makers
+// MARK: - Makers
 
 ZRef<ZCallable_Bool> sCallable_True();
 ZRef<ZCallable_Bool> sCallable_False();
@@ -38,8 +37,7 @@ ZRef<ZCallable_Bool> sCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCa
 ZRef<ZCallable_Bool> sCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Concise Makers
+// MARK: - Concise Makers
 
 inline ZRef<ZCallable_Bool> sNot(const ZRef<ZCallable_Bool>& iCallable)
 	{ return sCallable_Not(iCallable); }
@@ -54,8 +52,7 @@ inline ZRef<ZCallable_Bool> sXor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCal
 	{ return sCallable_Xor(i0, i1); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Infix notation
+// MARK: - Infix notation
 
 inline
 ZRef<ZCallable_Bool> operator~(const ZRef<ZCallable_Bool>& iCallable)

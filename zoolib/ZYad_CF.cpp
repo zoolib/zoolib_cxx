@@ -36,8 +36,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadAtomR_CF
+// MARK: - ZYadAtomR_CF
 
 ZYadAtomR_CF::ZYadAtomR_CF(CFTypeRef iVal)
 :	ZYadR_CF(iVal)
@@ -47,8 +46,7 @@ ZAny ZYadAtomR_CF::AsAny()
 	{ return ZUtil_CF::sAsAny(this->GetVal()); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamRPos_CF
+// MARK: - ZYadStreamRPos_CF
 
 ZYadStreamRPos_CF::ZYadStreamRPos_CF(CFDataRef iDataRef)
 :	ZYadR_CF(iDataRef)
@@ -62,8 +60,7 @@ bool ZYadStreamRPos_CF::IsSimple(const ZYadOptions& iOptions)
 	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_CF
+// MARK: - ZYadStrimR_CF
 
 ZYadStrimR_CF::ZYadStrimR_CF(CFStringRef iStringRef)
 :	ZYadR_CF(iStringRef)
@@ -71,8 +68,7 @@ ZYadStrimR_CF::ZYadStrimR_CF(CFStringRef iStringRef)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos_CF
+// MARK: - ZYadSeqRPos_CF
 
 ZYadSeqRPos_CF::ZYadSeqRPos_CF(CFArrayRef iArray)
 :	ZYadR_CF(iArray)
@@ -85,8 +81,7 @@ ZYadSeqRPos_CF::ZYadSeqRPos_CF(CFArrayRef iArray, uint64 iPosition)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos_CF
+// MARK: - ZYadMapRPos_CF
 
 namespace { // anonymous
 
@@ -150,8 +145,7 @@ void ZYadMapRPos_CF::SetPosition(const std::string& iName)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(CFTypeRef iVal)
 	{
@@ -212,8 +206,7 @@ ZRef<ZYadMapRPos> sYadR(const ZRef<CFDictionaryRef>& iDictionary)
 	{ return sYadR(iDictionary.Get()); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sFromYadR
+// MARK: - sFromYadR
 
 namespace { // anonymous
 

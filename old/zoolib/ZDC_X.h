@@ -41,8 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_X
+// MARK: - ZDCCanvas_X
 
 class ZDCPixmapRep_XPixmap;
 
@@ -145,8 +144,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_X::SetupLock
+// MARK: - ZDCCanvas_X::SetupLock
 
 class ZDCCanvas_X::SetupLock
 	{
@@ -159,8 +157,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_X_NonWindow
+// MARK: - ZDCCanvas_X_NonWindow
 
 class ZDCCanvas_X_NonWindow : public ZDCCanvas_X
 	{
@@ -181,8 +178,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_X_OffScreen
+// MARK: - ZDCCanvas_X_OffScreen
 
 class ZDCCanvas_X_OffScreen : public ZDCCanvas_X_NonWindow
 	{
@@ -195,8 +191,7 @@ public:
 
 /*
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRep_XPixmap
+// MARK: - ZDCPixmapRep_XPixmap
 
 class ZDCPixmapRep_XPixmap : public ZDCPixmapRep
 	{

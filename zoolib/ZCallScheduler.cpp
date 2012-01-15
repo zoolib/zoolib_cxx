@@ -26,8 +26,7 @@ namespace ZooLib {
 using std::set;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static ZCallScheduler* spScheduler;
 
@@ -38,8 +37,7 @@ struct Deleter { ~Deleter() { delete spScheduler; } } spDeleter;
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallScheduler
+// MARK: - ZCallScheduler
 
 ZCallScheduler* ZCallScheduler::sGet()
 	{

@@ -28,14 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Set
+// MARK: - ZCallable_Set
 
 template <class Signature> class ZCallable_Set;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Set (specialization for 0 params)
+// MARK: - ZCallable_Set (specialization for 0 params)
 
 template <>
 class ZCallable_Set<void(void)>
@@ -68,8 +66,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Set (specialization for 1 param)
+// MARK: - ZCallable_Set (specialization for 1 param)
 
 template <class P0>
 class ZCallable_Set<void(P0)>
@@ -102,8 +99,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Set (specialization for 2 params)
+// MARK: - ZCallable_Set (specialization for 2 params)
 
 template <class P0, class P1>
 class ZCallable_Set<void(P0,P1)>
@@ -136,8 +132,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Set (specialization for 3 params)
+// MARK: - ZCallable_Set (specialization for 3 params)
 
 template <class P0, class P1, class P2>
 class ZCallable_Set<void(P0,P1,P2)>
@@ -170,8 +165,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Set (specialization for 4 params)
+// MARK: - ZCallable_Set (specialization for 4 params)
 
 template <class P0, class P1, class P2, class P3>
 class ZCallable_Set<void(P0,P1,P2,P3)>
@@ -204,8 +198,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Set (specialization for 5 params)
+// MARK: - ZCallable_Set (specialization for 5 params)
 
 template <class P0, class P1, class P2, class P3, class P4>
 class ZCallable_Set<void(P0,P1,P2,P3,P4)>
@@ -238,8 +231,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Set (specialization for 6 params)
+// MARK: - ZCallable_Set (specialization for 6 params)
 
 template <class P0, class P1, class P2, class P3, class P4, class P5>
 class ZCallable_Set<void(P0,P1,P2,P3,P4,P5)>
@@ -272,8 +264,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Set (specialization for 7 params)
+// MARK: - ZCallable_Set (specialization for 7 params)
 
 template <class P0, class P1, class P2, class P3, class P4, class P5, class P6>
 class ZCallable_Set<void(P0,P1,P2,P3,P4,P5,P6)>
@@ -299,8 +290,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Set (specialization for 8 params)
+// MARK: - ZCallable_Set (specialization for 8 params)
 
 template <class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 class ZCallable_Set<void(P0,P1,P2,P3,P4,P5,P6,P7)>

@@ -25,29 +25,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetName_RFCOMM
+// MARK: - ZNetName_RFCOMM
 
 ZNetName_RFCOMM::ZNetName_RFCOMM()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddress_RFCOMM
+// MARK: - ZNetAddress_RFCOMM
 
 ZNetAddress_RFCOMM::ZNetAddress_RFCOMM()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_RFCOMM
+// MARK: - ZNetListener_RFCOMM
 
 ZNetListener_RFCOMM::ZNetListener_RFCOMM()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_RFCOMM
+// MARK: - ZNetEndpoint_RFCOMM
 
 ZNetEndpoint_RFCOMM::ZNetEndpoint_RFCOMM()
 	{}

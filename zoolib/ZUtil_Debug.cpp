@@ -45,8 +45,7 @@ using std::min;
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Debug::sDumpStackCrawl
+// MARK: - ZUtil_Debug::sDumpStackCrawl
 
 #if ZCONFIG_API_Enabled(StackCrawl)
 
@@ -88,8 +87,7 @@ void sDumpStackCrawl(const ZStackCrawl& iCrawl, const ZStrimW& s)
 #endif // ZCONFIG_API_Enabled(StackCrawl)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Sync signal handler
+// MARK: - Sync signal handler
 
 #if ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)
 
@@ -122,8 +120,7 @@ static void spHandleSignal_Sync(int inSignal)
 #endif // ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDebug and ZAssert handler
+// MARK: - ZDebug and ZAssert handler
 
 static void spHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 	{
@@ -179,8 +176,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Debug::LogMeister
+// MARK: - ZUtil_Debug::LogMeister
 
 LogMeister* LogMeister::sLogMeister;
 
@@ -256,8 +252,7 @@ ZLog::EPriority LogMeister::GetLogPriority()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Debug
+// MARK: - ZUtil_Debug
 
 void sInstall()
 	{

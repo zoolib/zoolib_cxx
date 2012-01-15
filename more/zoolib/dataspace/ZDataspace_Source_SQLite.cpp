@@ -41,8 +41,7 @@ using namespace ZSQLite;
 using ZRA::RelName;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_SQLite::ClientQuery
+// MARK: - Source_SQLite::ClientQuery
 
 class Source_SQLite::DLink_ClientQuery_InPQuery
 :	public DListLink<ClientQuery, DLink_ClientQuery_InPQuery, kDebug>
@@ -62,8 +61,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_SQLite::PQuery
+// MARK: - Source_SQLite::PQuery
 
 class Source_SQLite::PQuery
 	{
@@ -79,8 +77,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_SQLite
+// MARK: - Source_SQLite
 
 Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
 :	fDB(iDB)

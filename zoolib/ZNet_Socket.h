@@ -41,8 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNet_Socket
+// MARK: - ZNet_Socket
 
 class ZNet_Socket
 	{
@@ -55,8 +54,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_Socket
+// MARK: - ZNetListener_Socket
 
 class ZNetListener_Socket
 :	public virtual ZNetListener,
@@ -87,8 +85,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_Socket
+// MARK: - ZNetEndpoint_Socket
 
 class ZNetEndpoint_Socket
 :	public virtual ZNetEndpoint,

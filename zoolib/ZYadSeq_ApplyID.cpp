@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 // FIXME. Could return a ZYadMapR with a constant for the ID, and the actual yad for the value.
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_Expr_Bool
+// MARK: - ZYadSeqR_Expr_Bool
 
 ZYadSeqR_ApplyID::ZYadSeqR_ApplyID
 	(ZRef<ZYadSeqR> iYadSeqR, const std::string& iIDName, const std::string& iValName)
@@ -52,8 +51,7 @@ ZRef<ZYadR> ZYadSeqR_ApplyID::ReadInc()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos_ApplyID
+// MARK: - ZYadSeqRPos_ApplyID
 
 ZYadSeqRPos_ApplyID::ZYadSeqRPos_ApplyID
 	(ZRef<ZYadSeqRPos> iYadSeqRPos, const std::string& iIDName, const std::string& iValName)

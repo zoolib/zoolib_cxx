@@ -28,8 +28,7 @@ namespace ZDCPixmap_CoreVideo {
 using namespace ZDCPixmapNS;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmap_CoreVideo::PixmapRaster
+// MARK: - ZDCPixmap_CoreVideo::PixmapRaster
 
 class PixmapRaster : public ZDCPixmapRaster
 	{
@@ -77,8 +76,7 @@ EFormatStandard sAsFormatStandard(OSType iOSType)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmap_CoreVideo
+// MARK: - ZDCPixmap_CoreVideo
 
 ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR)
 	{

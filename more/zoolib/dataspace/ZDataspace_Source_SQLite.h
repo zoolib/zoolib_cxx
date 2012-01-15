@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_SQLite
+// MARK: - Source_SQLite
 
 class Source_SQLite : public Source
 	{

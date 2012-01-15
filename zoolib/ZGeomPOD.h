@@ -28,14 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCoord
+// MARK: - ZCoord
 
 typedef int32 ZCoord;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZPointPOD
+// MARK: - ZPointPOD
 
 struct ZPointPOD
 	{
@@ -65,8 +63,7 @@ template <>
 int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZRectPOD
+// MARK: - ZRectPOD
 
 struct ZRectPOD
 	{

@@ -29,8 +29,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIterRep_Overlay declaration
+// MARK: - ZNodeIterRep_Overlay declaration
 
 class ZNodeIterRep_Overlay : public ZNodeIterRep
 	{
@@ -55,8 +54,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeRep_Overlay
+// MARK: - ZNodeRep_Overlay
 
 ZNodeRep_Overlay::ZNodeRep_Overlay(ZRef<ZNodeRep> iParent,
 	const std::string& iName, const vector<ZRef<ZNodeRep> >& iOverlays)
@@ -276,8 +274,7 @@ ZRef<ZNodeRep> ZNodeRep_Overlay::pGetNodeRep()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIterRep_Overlay definition
+// MARK: - ZNodeIterRep_Overlay definition
 
 ZNodeIterRep_Overlay::ZNodeIterRep_Overlay(ZRef<ZNodeRep> iParent,
 	const vector<ZRef<ZNodeRep> >& iRepsUnvisited)

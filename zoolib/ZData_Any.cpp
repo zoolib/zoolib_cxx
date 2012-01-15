@@ -34,8 +34,7 @@ using std::vector;
 ZMACRO_CompareRegistration_T(ZData_Any)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZData_Any::Rep
+// MARK: - ZData_Any::Rep
 
 class ZData_Any::Rep : public ZCountedWithoutFinalize
 	{
@@ -59,8 +58,7 @@ ZData_Any::Rep::Rep(const vector<char>& iVector)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZData_Any
+// MARK: - ZData_Any
 
 ZAny ZData_Any::AsAny() const
 	{ return ZAny(*this); }

@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCallable_Const
+// MARK: - ZCallable_Const
 
 template <class R>
 class ZCallable_Const
@@ -48,8 +47,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable_Const
+// MARK: - sCallable_Const
 
 template <class R>
 ZRef<ZCallable<R(void)> > sCallable_Const(R iR)

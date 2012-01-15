@@ -29,8 +29,7 @@ namespace ZooLib {
 class ZStrimW;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine
+// MARK: - ZCommandLine
 
 class ZCommandLine
 	{
@@ -83,8 +82,7 @@ inline const ZStrimW& operator<<(const ZStrimW& s, const ZCommandLine& iCmdLine)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine::Opt
+// MARK: - ZCommandLine::Opt
 
 class ZCommandLine::Opt
 	{
@@ -112,8 +110,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine::String
+// MARK: - ZCommandLine::String
 
 class ZCommandLine::String : public ZCommandLine::Opt
 	{
@@ -134,8 +131,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine::Boolean
+// MARK: - ZCommandLine::Boolean
 
 class ZCommandLine::Boolean : public ZCommandLine::Opt
 	{
@@ -149,8 +145,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine::Integer
+// MARK: - ZCommandLine::Integer
 
 class ZCommandLine::Int64 : public ZCommandLine::Opt
 	{

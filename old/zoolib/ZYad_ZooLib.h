@@ -29,14 +29,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadR_ZooLib
+// MARK: - ZYadR_ZooLib
 
 typedef ZYadR_Val_T<ZVal_ZooLib> ZYadR_ZooLib;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadAtomR_ZooLib
+// MARK: - ZYadAtomR_ZooLib
 
 class ZYadAtomR_ZooLib
 :	public ZYadR_ZooLib,
@@ -55,14 +53,12 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamRPos_ZooLib
+// MARK: - ZYadStreamRPos_ZooLib
 
 typedef ZYadStreamRPos_Val_T<ZData_ZooLib> ZYadStreamRPos_ZooLib;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos_ZooLib
+// MARK: - ZYadSeqRPos_ZooLib
 
 class ZYadSeqRPos_ZooLib
 :	public ZYadR_ZooLib
@@ -77,8 +73,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos_ZooLib
+// MARK: - ZYadMapRPos_ZooLib
 
 //typedef ZYadMapRPos_Val_T<ZMap_ZooLib, ZMap_ZooLib::Index_t> ZYadMapRPos_ZooLib;
 
@@ -97,8 +92,7 @@ public:
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(const ZVal_ZooLib& iVal);
 
@@ -107,8 +101,7 @@ ZRef<ZYadSeqRPos> sYadR(const ZSeq_ZooLib& iSeq);
 ZRef<ZYadMapRPos> sYadR(const ZMap_ZooLib& iMap);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sFromYadR
+// MARK: - sFromYadR
 
 ZVal_ZooLib sFromYadR(const ZVal_ZooLib& iDefault, ZRef<ZYadR> iYadR);
 

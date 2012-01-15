@@ -60,8 +60,7 @@ ZMACRO_CompareRegistration_T(ZSeq_Any)
 ZMACRO_CompareRegistration_T(ZMap_Any)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_Any typename accessors
+// MARK: - ZVal_Any typename accessors
 
 /**
 \class ZVal_Any
@@ -117,8 +116,7 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Seq, ZSeq_Any)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Map, ZMap_Any)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_Any::Rep
+// MARK: - ZSeq_Any::Rep
 
 ZSeq_Any::Rep::Rep()
 	{}
@@ -131,8 +129,7 @@ ZSeq_Any::Rep::Rep(const Vector_t& iVector)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_Any
+// MARK: - ZSeq_Any
 
 ZSeq_Any::ZSeq_Any()
 	{}
@@ -279,8 +276,7 @@ void ZSeq_Any::pTouch()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_Any::Rep
+// MARK: - ZMap_Any::Rep
 
 ZMap_Any::Rep::Rep()
 	{}
@@ -297,8 +293,7 @@ ZMap_Any::Rep::Rep(const Map_t& iMap)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_Any
+// MARK: - ZMap_Any
 
 static string8 spEmptyString;
 static ZMap_Any::Map_t spEmptyMap;
@@ -678,8 +673,7 @@ ZMap_Any operator*(const ZMap_Any& iMap0, const ZMap_Any& iMap1)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * 
+// MARK: - 
 
 ZMap_Any sAugment(const ZMap_Any& iUnder, const ZMap_Any& iOver)
 	{

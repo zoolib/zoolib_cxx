@@ -29,8 +29,7 @@ namespace ZooLib {
 // Need to figure out what the accessors for all this stuff are.
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNet_RFCOMM
+// MARK: - ZNet_RFCOMM
 
 class ZNet_RFCOMM
 	{
@@ -42,8 +41,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetName_RFCOMM
+// MARK: - ZNetName_RFCOMM
 
 class ZNetName_RFCOMM
 :	public ZNetName,
@@ -54,8 +52,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetAddress_RFCOMM
+// MARK: - ZNetAddress_RFCOMM
 
 class ZNetAddress_RFCOMM
 :	public ZNetAddress,
@@ -68,8 +65,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_RFCOMM
+// MARK: - ZNetListener_RFCOMM
 
 class ZNetListener_RFCOMM
 :	public ZNetListener,
@@ -85,8 +81,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_RFCOMM
+// MARK: - ZNetEndpoint_RFCOMM
 
 class ZNetEndpoint_RFCOMM
 :	public ZNetEndpoint,

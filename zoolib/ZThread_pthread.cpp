@@ -33,8 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZThread_pthread
+// MARK: - ZThread_pthread
 
 namespace ZThread_pthread {
 
@@ -73,8 +72,7 @@ void sSleep(double iDuration)
 } // namespace ZThread_pthread
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZTSS_pthread
+// MARK: - ZTSS_pthread
 
 namespace ZTSS_pthread {
 
@@ -94,8 +92,7 @@ void sSet(Key iKey, Value iValue)
 } // namespace ZTSS_pthread
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCnd_pthread
+// MARK: - ZCnd_pthread
 
 bool ZCnd_pthread::pWaitFor(pthread_mutex_t& iMtx, double iTimeout)
 	{
@@ -115,8 +112,7 @@ bool ZCnd_pthread::pWaitUntil(pthread_mutex_t& iMtx, ZTime iDeadline)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMtxR_pthread
+// MARK: - ZMtxR_pthread
 
 ZMtxR_pthread::ZMtxR_pthread()
 	{
@@ -128,8 +124,7 @@ ZMtxR_pthread::ZMtxR_pthread()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSemNoTimeout_pthread
+// MARK: - ZSemNoTimeout_pthread
 
 ZSemNoTimeout_pthread::ZSemNoTimeout_pthread()
 	{ ::sem_init(&fSem, 0, 0); }

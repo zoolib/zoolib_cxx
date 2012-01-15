@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace ZBlackBerry {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerry::Manager_Union
+// MARK: - ZBlackBerry::Manager_Union
 
 Manager_Union::Manager_Union(const vector<ZRef<Manager> >& iManagers)
 	{

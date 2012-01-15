@@ -34,8 +34,7 @@ namespace ZooLib {
 class ZVisitor_Yad;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadOptions
+// MARK: - ZYadOptions
 
 struct ZYadOptions
 	{
@@ -60,8 +59,7 @@ struct ZYadOptions
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException
+// MARK: - ZYadParseException
 
 class ZYadParseException : public std::runtime_error
 	{
@@ -71,8 +69,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadR
+// MARK: - ZYadR
 
 class ZYadR
 :	public ZVisitee
@@ -92,8 +89,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadAtomR
+// MARK: - ZYadAtomR
 
 class ZYadAtomR
 :	public virtual ZYadR
@@ -108,8 +104,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamR
+// MARK: - ZYadStreamR
 
 class ZYadStreamR
 :	public virtual ZYadR
@@ -122,8 +117,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR
+// MARK: - ZYadStrimR
 
 class ZYadStrimR
 :	public virtual ZYadR
@@ -135,8 +129,7 @@ class ZYadStrimR
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR
+// MARK: - ZYadSeqR
 
 class ZYadSeqR
 :	public virtual ZYadR
@@ -154,8 +147,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRClone
+// MARK: - ZYadSeqRClone
 
 class ZYadSeqRClone
 :	public virtual ZYadSeqR
@@ -170,8 +162,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqRPos
+// MARK: - ZYadSeqRPos
 
 class ZYadSeqRPos
 :	public virtual ZYadSeqRClone
@@ -196,8 +187,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR
+// MARK: - ZYadMapR
 
 class ZYadMapR
 :	public virtual ZYadR
@@ -214,8 +204,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRClone
+// MARK: - ZYadMapRClone
 
 class ZYadMapRClone
 :	public virtual ZYadMapR
@@ -229,8 +218,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos
+// MARK: - ZYadMapRPos
 
 class ZYadMapRPos
 :	public virtual ZYadMapRClone
@@ -247,8 +235,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Yad
+// MARK: - ZVisitor_Yad
 
 class ZVisitor_Yad
 :	public virtual ZVisitor
@@ -269,8 +256,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadAtomR_Any
+// MARK: - ZYadAtomR_Any
 
 class ZYadAtomR_Any
 :	public ZYadAtomR
@@ -290,8 +276,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimU_String
+// MARK: - ZYadStrimU_String
 
 class ZYadStrimU_String
 :	public ZYadStrimR
@@ -305,8 +290,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sYadR
+// MARK: - sYadR
 
 ZRef<ZYadR> sYadR(const std::string& iVal);
 

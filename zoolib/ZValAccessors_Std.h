@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMACRO_ZValAccessors_Std
+// MARK: - ZMACRO_ZValAccessors_Std
 
 #define ZMACRO_ZValAccessors_Decl_Std(T) \
 	ZMACRO_ZValAccessors_Decl_Entry(T, Int8, int8) \

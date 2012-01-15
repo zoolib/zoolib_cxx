@@ -32,8 +32,7 @@ using std::vector;
 using ZRA::RelHead;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sQuery
+// MARK: - sQuery
 
 ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 	{

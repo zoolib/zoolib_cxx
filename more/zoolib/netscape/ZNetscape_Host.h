@@ -40,14 +40,12 @@ using ::uint32;
 class NPObjectH;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPVariantH
+// MARK: - NPVariantH
 
 typedef NPVariant_T<NPObjectH> NPVariantH;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPObjectH
+// MARK: - NPObjectH
 
 void sRetain(NPObjectH& iOb);
 void sRelease(NPObjectH& iOb);
@@ -96,8 +94,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ObjectH
+// MARK: - ObjectH
 
 class ObjectH : public NPObjectH
 	{
@@ -145,8 +142,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * HostMeister
+// MARK: - HostMeister
 
 class Host;
 
@@ -388,8 +384,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * GuestFactory
+// MARK: - GuestFactory
 
 class GuestFactory : public ZCounted
 	{
@@ -407,8 +402,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Host
+// MARK: - Host
 
 class Host
 	{

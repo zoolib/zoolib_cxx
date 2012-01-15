@@ -36,8 +36,7 @@ difficulties because of its ctor/dtor (in unions, mainly.).
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZPointPOD
+// MARK: - ZPointPOD
 
 template <>
 int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR)
@@ -48,8 +47,7 @@ int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZRectPOD
+// MARK: - ZRectPOD
 
 template <>
 int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR)

@@ -32,8 +32,7 @@ namespace ZooLib {
 class ZDCPoly;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCRgn
+// MARK: - ZDCRgn
 
 class ZDCRgn
 	{
@@ -186,8 +185,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCRgnAccumulator
+// MARK: - ZDCRgnAccumulator
 
 class ZDCRgnUnioner_t
 	{

@@ -32,8 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWCon_SSL_OSX
+// MARK: - ZStreamRWCon_SSL_OSX
 
 class ZStreamRWCon_SSL_OSX
 :	public ZStreamRCon
@@ -74,8 +73,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWCon_SSL_OSX
+// MARK: - ZStreamRWCon_SSL_OSX
 
 class ZStreamerRWCon_SSL_OSX
 :	public ZStreamerRWCon

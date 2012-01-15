@@ -30,8 +30,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_String
+// MARK: - ZStreamRPos_String
 
 ZStreamRPos_String::ZStreamRPos_String(const string& inString)
 :	fString(inString),
@@ -66,8 +65,7 @@ uint64 ZStreamRPos_String::Imp_GetSize()
 	{ return fString.size(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_String
+// MARK: - ZStreamWPos_String
 
 ZStreamWPos_String::ZStreamWPos_String(string& inString)
 :	fString(inString),
@@ -122,8 +120,7 @@ void ZStreamWPos_String::Imp_SetSize(uint64 iSize)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWPos_String
+// MARK: - ZStreamRWPos_String
 
 ZStreamRWPos_String::ZStreamRWPos_String(string& inString)
 :	fString(inString),

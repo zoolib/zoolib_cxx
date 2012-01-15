@@ -28,8 +28,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_JSONNormalize declaration
+// MARK: - ZYadSeqR_JSONNormalize declaration
 
 class ZYadSeqR_JSONNormalize : public ZYadSeqR_Std
 	{
@@ -46,8 +45,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_JSONNormalize declaration
+// MARK: - ZYadMapR_JSONNormalize declaration
 
 class ZYadMapR_JSONNormalize : public ZYadMapR_Std
 	{
@@ -64,8 +62,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 	{
@@ -132,8 +129,7 @@ static ZRef<ZYadR> spMakeYadR_JSONNormalize
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_JSONNormalize
+// MARK: - ZYadSeqR_JSONNormalize
 
 ZYadSeqR_JSONNormalize::ZYadSeqR_JSONNormalize
 	(ZRef<ZYadSeqR> iYadSeqR, bool iPreserveSeqs, bool iPreserveMaps)
@@ -157,8 +153,7 @@ void ZYadSeqR_JSONNormalize::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_JSONNormalize
+// MARK: - ZYadMapR_JSONNormalize
 
 ZYadMapR_JSONNormalize::ZYadMapR_JSONNormalize
 	(ZRef<ZYadMapR> iYadMapR, bool iPreserveSeqs, bool iPreserveMaps)
@@ -182,8 +177,7 @@ void ZYadMapR_JSONNormalize::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_JSONNormalize
+// MARK: - ZYad_JSONNormalize
 
 ZRef<ZYadR> ZYad_JSONNormalize::sYadR
 	(ZRef<ZYadR> iYadR, bool iPreserveSeqs, bool iPreserveMaps)

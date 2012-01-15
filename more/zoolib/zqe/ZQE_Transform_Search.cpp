@@ -53,8 +53,7 @@ using ZRA::Rename;
 using std::set;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * HasConst (anonymous)
+// MARK: - HasConst (anonymous)
 
 namespace { // anonymous
 
@@ -91,8 +90,7 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Transform_Search (anonymous)
+// MARK: - Transform_Search (anonymous)
 
 namespace { // anonymous
 

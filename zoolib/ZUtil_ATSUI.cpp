@@ -32,8 +32,7 @@ ZAssertCompile(sizeof(UTF16) == sizeof(UniChar));
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_ATSUI
+// MARK: - ZUtil_ATSUI
 
 ATSUStyle sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 	{
@@ -133,8 +132,7 @@ ATSUTextLayout sCreateLayout
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Attributes
+// MARK: - Attributes
 
 Attributes::Attributes()
 	{}

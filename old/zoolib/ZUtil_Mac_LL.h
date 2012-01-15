@@ -72,8 +72,7 @@ ZDCPixmapNS::PixelDesc sGetIndexedPixelDesc(int16 iCTableID);
 void sSetWindowManagerPort();
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::RefCountedCTabHandle
+// MARK: - ZUtil_Mac_LL::RefCountedCTabHandle
 
 class RefCountedCTabHandle : public ZCountedWithoutFinalize
 	{
@@ -88,8 +87,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::SaveRestorePort
+// MARK: - ZUtil_Mac_LL::SaveRestorePort
 
 class SaveRestorePort
 	{
@@ -103,8 +101,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::SaveSetBlackWhite
+// MARK: - ZUtil_Mac_LL::SaveSetBlackWhite
 
 class SaveSetBlackWhite
 	{
@@ -120,8 +117,7 @@ protected:
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::SaveRestoreResFile
+// MARK: - ZUtil_Mac_LL::SaveRestoreResFile
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 
@@ -139,8 +135,7 @@ protected:
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::HandleLocker
+// MARK: - ZUtil_Mac_LL::HandleLocker
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 

@@ -33,22 +33,19 @@ namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Rename
+// MARK: - Rename
 
 typedef std::map<RelName,RelName> Rename;
 
 Rename sInverted(const Rename& iRename);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * RelHead
+// MARK: - RelHead
 
 typedef ZSet_T<RelName> RelHead;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * RelHead operators
+// MARK: - RelHead operators
 
 inline RelHead operator&(const RelHead& iRelHead, const char* iElem)
 	{ return iRelHead & RelHead::key_type(iElem); }
@@ -72,8 +69,7 @@ inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
 	{ return iRelHead ^ RelHead::key_type(iElem); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Prefix
+// MARK: - Prefix
 
 bool sHasPrefix(const RelName& iPrefix, const RelName& iRelName);
 RelName sPrefixInserted(const RelName& iPrefix, const RelName& iRelName);

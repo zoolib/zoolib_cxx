@@ -32,8 +32,7 @@ namespace FileFormat {
 namespace JPEG {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileFormat_JPEG
+// MARK: - ZFileFormat_JPEG
 
 enum
 	{
@@ -122,8 +121,7 @@ bool sIs_SOF(uint8 iSegment);
 bool sIs_APP(uint8 iSegment);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * StreamR_Segment
+// MARK: - StreamR_Segment
 
 class StreamR_Segment : public ZStreamR
 	{

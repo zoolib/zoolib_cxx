@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStream_CGData::sCGDataProviderCreate
+// MARK: - ZStream_CGData::sCGDataProviderCreate
 
 static size_t spGetBytes_R(void* iInfo, void* oBuffer, size_t iCount)
 	{
@@ -89,8 +88,7 @@ ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> i
 #endif // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStream_CGData::sCGDataProviderCreateRewind
+// MARK: - ZStream_CGData::sCGDataProviderCreateRewind
 
 static size_t spGetBytes_RPos(void* iInfo, void* oBuffer, size_t iCount)
 	{
@@ -151,8 +149,7 @@ ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreateRewind(ZRef<ZStream
 #endif // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * CGDataConsumerRef, ZStreamerW
+// MARK: - CGDataConsumerRef, ZStreamerW
 
 namespace { // anonymous
 

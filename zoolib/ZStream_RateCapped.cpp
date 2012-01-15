@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZooLib
+// MARK: - ZooLib
 
 RateLimiter::RateLimiter(double iRate, size_t iQuantum)
 :	fRate(iRate),
@@ -51,8 +50,7 @@ size_t RateLimiter::GetCount(size_t iLastCount, size_t iCount)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_RateCapped
+// MARK: - ZStreamR_RateCapped
 
 ZStreamR_RateCapped::ZStreamR_RateCapped
 	(double iRate, size_t iQuantum, const ZStreamR& iStreamReal)
@@ -73,8 +71,7 @@ void ZStreamR_RateCapped::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerR_RateCapped
+// MARK: - ZStreamerR_RateCapped
 
 ZStreamerR_RateCapped::ZStreamerR_RateCapped
 	(double iRate, size_t iQuantum, ZRef<ZStreamerR> iStreamerReal)
@@ -89,8 +86,7 @@ const ZStreamR& ZStreamerR_RateCapped::GetStreamR()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamU_RateCapped
+// MARK: - ZStreamU_RateCapped
 
 ZStreamU_RateCapped::ZStreamU_RateCapped
 	(double iRate, size_t iQuantum, const ZStreamU& iStreamReal)
@@ -111,8 +107,7 @@ void ZStreamU_RateCapped::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerU_RateCapped
+// MARK: - ZStreamerU_RateCapped
 
 ZStreamerU_RateCapped::ZStreamerU_RateCapped
 	(double iRate, size_t iQuantum, ZRef<ZStreamerU> iStreamerReal)
@@ -127,8 +122,7 @@ const ZStreamU& ZStreamerU_RateCapped::GetStreamU()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_RateCapped
+// MARK: - ZStreamRPos_RateCapped
 
 ZStreamRPos_RateCapped::ZStreamRPos_RateCapped
 	(double iRate, size_t iQuantum, const ZStreamRPos& iStreamReal)
@@ -149,8 +143,7 @@ void ZStreamRPos_RateCapped::Imp_Read(void* oDest, size_t iCount, size_t* oCount
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRPos_RateCapped
+// MARK: - ZStreamerRPos_RateCapped
 
 ZStreamerRPos_RateCapped::ZStreamerRPos_RateCapped
 	(double iRate, size_t iQuantum, ZRef<ZStreamerRPos> iStreamerReal)
@@ -165,8 +158,7 @@ const ZStreamRPos& ZStreamerRPos_RateCapped::GetStreamRPos()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_RateCapped
+// MARK: - ZStreamW_RateCapped
 
 ZStreamW_RateCapped::ZStreamW_RateCapped
 	(double iRate, size_t iQuantum, const ZStreamW& iStreamReal)
@@ -187,8 +179,7 @@ void ZStreamW_RateCapped::Imp_Write(const void* iSource, size_t iCount, size_t* 
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerW_RateCapped
+// MARK: - ZStreamerW_RateCapped
 
 ZStreamerW_RateCapped::ZStreamerW_RateCapped
 	(double iRate, size_t iQuantum, ZRef<ZStreamerW> iStreamerReal)
@@ -203,8 +194,7 @@ const ZStreamW& ZStreamerW_RateCapped::GetStreamW()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_RateCapped
+// MARK: - ZStreamWPos_RateCapped
 
 ZStreamWPos_RateCapped::ZStreamWPos_RateCapped
 	(double iRate, size_t iQuantum, const ZStreamWPos& iStreamReal)
@@ -225,8 +215,7 @@ void ZStreamWPos_RateCapped::Imp_Write(const void* iSource, size_t iCount, size_
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerWPos_RateCapped
+// MARK: - ZStreamerWPos_RateCapped
 
 ZStreamerWPos_RateCapped::ZStreamerWPos_RateCapped
 	(double iRate, size_t iQuantum, ZRef<ZStreamerWPos> iStreamerReal)

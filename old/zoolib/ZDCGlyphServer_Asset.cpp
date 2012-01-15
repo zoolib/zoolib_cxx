@@ -26,8 +26,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+// MARK: - Helper functions
 
 static int16 spReadAsset_Int16(const ZAsset& iAsset)
 	{
@@ -93,8 +92,7 @@ static ZPoint spReadAsset_ZPoint(const ZAsset& iAsset)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * PixmapRaster_Asset
+// MARK: - PixmapRaster_Asset
 
 namespace { // anonymous
 
@@ -125,8 +123,7 @@ PixmapRaster_Asset::~PixmapRaster_Asset()
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCGlyphServer_Asset
+// MARK: - ZDCGlyphServer_Asset
 
 ZDCGlyphServer_Asset::ZDCGlyphServer_Asset(const ZAsset& iAsset)
 :	fAsset(iAsset)

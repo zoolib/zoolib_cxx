@@ -35,8 +35,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Asyncify
+// MARK: - Source_Asyncify
 
 Source_Asyncify::Source_Asyncify(ZRef<Source> iSource)
 :	fSource(iSource)

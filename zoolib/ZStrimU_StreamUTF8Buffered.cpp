@@ -27,8 +27,7 @@ using std::min;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimU_StreamUTF8Buffered
+// MARK: - ZStrimU_StreamUTF8Buffered
 
 ZStrimU_StreamUTF8Buffered::ZStrimU_StreamUTF8Buffered(size_t iBufferSize, const ZStreamR& iStreamR)
 :	fStreamR(iStreamR),

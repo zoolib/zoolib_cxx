@@ -28,14 +28,12 @@ namespace ZooLib {
 namespace ZCallable_Function {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable
+// MARK: - Callable
 
 template <class Signature> class Callable;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 0 params)
+// MARK: - Callable (specialization for 0 params)
 
 template <class R>
 class Callable<R(void)>
@@ -57,8 +55,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 0 params, void return)
+// MARK: - Callable (specialization for 0 params, void return)
 
 template <>
 class Callable<void(void)>
@@ -83,8 +80,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 1 param)
+// MARK: - Callable (specialization for 1 param)
 
 template <class R,
 	class P0>
@@ -107,8 +103,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 1 param, void return)
+// MARK: - Callable (specialization for 1 param, void return)
 
 template <
 	class P0>
@@ -134,8 +129,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 2 params)
+// MARK: - Callable (specialization for 2 params)
 
 template <class R,
 	class P0, class P1>
@@ -158,8 +152,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 2 params, void return)
+// MARK: - Callable (specialization for 2 params, void return)
 
 template <
 	class P0, class P1>
@@ -185,8 +178,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 3 params)
+// MARK: - Callable (specialization for 3 params)
 
 template <class R,
 	class P0, class P1, class P2>
@@ -209,8 +201,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 3 params, void return)
+// MARK: - Callable (specialization for 3 params, void return)
 
 template <
 	class P0, class P1, class P2>
@@ -236,8 +227,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 4 params)
+// MARK: - Callable (specialization for 4 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3>
@@ -260,8 +250,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 4 params, void return)
+// MARK: - Callable (specialization for 4 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3>
@@ -287,8 +276,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 5 params)
+// MARK: - Callable (specialization for 5 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -312,8 +300,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 5 params, void return)
+// MARK: - Callable (specialization for 5 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -340,8 +327,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 6 params)
+// MARK: - Callable (specialization for 6 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -365,8 +351,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 6 params, void return)
+// MARK: - Callable (specialization for 6 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -393,8 +378,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 7 params)
+// MARK: - Callable (specialization for 7 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -418,8 +402,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 7 params, void return)
+// MARK: - Callable (specialization for 7 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -446,8 +429,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 8 params)
+// MARK: - Callable (specialization for 8 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -471,8 +453,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 8 params, void return)
+// MARK: - Callable (specialization for 8 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -499,8 +480,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 9 params)
+// MARK: - Callable (specialization for 9 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -527,8 +507,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 9 params, void return)
+// MARK: - Callable (specialization for 9 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -558,8 +537,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 10 params)
+// MARK: - Callable (specialization for 10 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -586,8 +564,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 10 params, void return)
+// MARK: - Callable (specialization for 10 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -617,8 +594,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 11 params)
+// MARK: - Callable (specialization for 11 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -645,8 +621,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 11 params, void return)
+// MARK: - Callable (specialization for 11 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -676,8 +651,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 12 params)
+// MARK: - Callable (specialization for 12 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -704,8 +678,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 12 params, void return)
+// MARK: - Callable (specialization for 12 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -735,8 +708,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 13 params)
+// MARK: - Callable (specialization for 13 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -764,8 +736,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 13 params, void return)
+// MARK: - Callable (specialization for 13 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -796,8 +767,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 14 params)
+// MARK: - Callable (specialization for 14 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -825,8 +795,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 14 params, void return)
+// MARK: - Callable (specialization for 14 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -857,8 +826,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 15 params)
+// MARK: - Callable (specialization for 15 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -886,8 +854,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 15 params, void return)
+// MARK: - Callable (specialization for 15 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -918,8 +885,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 16 params)
+// MARK: - Callable (specialization for 16 params)
 
 template <class R,
 	class P0, class P1, class P2, class P3,
@@ -947,8 +913,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable (specialization for 16 params, void return)
+// MARK: - Callable (specialization for 16 params, void return)
 
 template <
 	class P0, class P1, class P2, class P3,
@@ -979,8 +944,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable
+// MARK: - sCallable
 
 template <class R>
 ZRef<ZCallable<R(void)> >
@@ -1178,8 +1142,7 @@ sCallable(R (*iFunctionPtr)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF))
 } // namespace ZCallable_Function
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable
+// MARK: - sCallable
 
 using ZCallable_Function::sCallable;
 

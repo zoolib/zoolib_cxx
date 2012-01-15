@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_HexStrim
+// MARK: - ZStreamW_HexStrim
 
 static const UTF8 spHexDigits[] = "0123456789ABCDEF";
 static const UTF8 spHexDigitsWithUnderscore[] = "_123456789ABCDEF";

@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable_Apply
+// MARK: - sCallable_Apply
 
 template <class A, class B, class C>
 class ZCallable_Apply
@@ -59,8 +58,7 @@ sCallable_Apply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)>
 	{ return new ZCallable_Apply<A,B,C>(iApply, iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable_Seq
+// MARK: - sCallable_Seq
 
 template <class R0, class R1>
 class ZCallable_Seq
@@ -90,8 +88,7 @@ sCallable_Seq(const ZRef<ZCallable<R0(void)> >& i0, const ZRef<ZCallable<R1(void
 	{ return new ZCallable_Seq<R0,R1>(i0, i1); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable_For
+// MARK: - sCallable_For
 
 template <class R_Init, class R_Inc>
 class ZCallable_For
@@ -127,8 +124,7 @@ ZRef<ZCallable_Void> sCallable_For(const ZRef<ZCallable<R_Init(void)> >& iInit,
 	{ return new ZCallable_For<R_Init,R_Inc>(iInit, iCondition, iInc); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable_If
+// MARK: - sCallable_If
 
 template <class R>
 class ZCallable_If
@@ -167,8 +163,7 @@ ZRef<ZCallable<R(void)> > sCallable_If(const ZRef<ZCallable_Bool>& iCondition,
 	{ return new ZCallable_If<R>(iCondition, i0, i1); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable_Repeat
+// MARK: - sCallable_Repeat
 
 template<class R>
 class ZCallable_Repeat
@@ -202,8 +197,7 @@ ZRef<ZCallable_Void> sCallable_Repeat(size_t iCount, const ZRef<ZCallable<R(void
 	{ return new ZCallable_Repeat<R>(iCount, iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sCallable_While
+// MARK: - sCallable_While
 
 template <class R>
 class ZCallable_While

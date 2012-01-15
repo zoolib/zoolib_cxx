@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Walker_Union
+// MARK: - Walker_Union
 
 class Walker_Union : public Walker
 	{

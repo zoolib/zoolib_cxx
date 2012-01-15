@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_Cat
+// MARK: - ZStreamR_Cat
 
 /**
 \class ZStreamR_Cat
@@ -107,8 +106,7 @@ void ZStreamR_Cat::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerR_Cat
+// MARK: - ZStreamerR_Cat
 
 ZStreamerR_Cat::ZStreamerR_Cat(ZRef<ZStreamerR> iStreamerR1, ZRef<ZStreamerR> iStreamerR2)
 :	fStreamerR1(iStreamerR1),

@@ -46,14 +46,12 @@ namespace ZooLib {
 static short spModeLookup[] = { R2_COPYPEN, R2_MERGEPEN, R2_NOTXORPEN, R2_MASKNOTPEN };
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * kDebug
+// MARK: - kDebug
 
 #define kDebug_GDI 1
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static helper functions
+// MARK: - Static helper functions
 
 static inline COLORREF spAsCOLORREF_Palette(HDC iHDC, const ZRGBColor& iColor)
 	{ return PALETTERGB((iColor.red >> 8), (iColor.green >> 8), (iColor.blue >> 8)); }
@@ -147,8 +145,7 @@ static HFONT spCreateHFONT(const ZDCFont& iFont)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI::SetupDC
+// MARK: - ZDCCanvas_GDI::SetupDC
 
 ZDCCanvas_GDI::SetupDC::SetupDC(ZDCCanvas_GDI* iCanvas, const ZDCState& iState)
 :	fCanvas(iCanvas)
@@ -198,8 +195,7 @@ ZDCCanvas_GDI::SetupDC::~SetupDC()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI::SetupHPEN
+// MARK: - ZDCCanvas_GDI::SetupHPEN
 
 class ZDCCanvas_GDI::SetupHPEN
 	{
@@ -246,8 +242,7 @@ ZDCCanvas_GDI::SetupHPEN::~SetupHPEN()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI::SetupHBRUSH
+// MARK: - ZDCCanvas_GDI::SetupHBRUSH
 
 class ZDCCanvas_GDI::SetupHBRUSH
 	{
@@ -339,8 +334,7 @@ ZDCCanvas_GDI::SetupHBRUSH::~SetupHBRUSH()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI::SetupModeColor
+// MARK: - ZDCCanvas_GDI::SetupModeColor
 
 class ZDCCanvas_GDI::SetupModeColor
 	{
@@ -394,8 +388,7 @@ ZDCCanvas_GDI::SetupModeColor::~SetupModeColor()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI::SetupHFONT
+// MARK: - ZDCCanvas_GDI::SetupHFONT
 
 class ZDCCanvas_GDI::SetupHFONT
 	{
@@ -433,8 +426,7 @@ ZDCCanvas_GDI::SetupHFONT::~SetupHFONT()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI_Native
+// MARK: - ZDCCanvas_GDI_Native
 
 class ZDCCanvas_GDI_Native : public ZDCCanvas_GDI_NonWindow
 	{
@@ -455,8 +447,7 @@ ZDCCanvas_GDI_Native::~ZDCCanvas_GDI_Native()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI
+// MARK: - ZDCCanvas_GDI
 
 ZMutex sMutex_List;
 
@@ -1572,8 +1563,7 @@ void ZDCCanvas_GDI::Internal_TileRegion(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI_NonWindow
+// MARK: - ZDCCanvas_GDI_NonWindow
 
 ZDCCanvas_GDI_NonWindow::ZDCCanvas_GDI_NonWindow()
 	{
@@ -1641,8 +1631,7 @@ ZDCRgn ZDCCanvas_GDI_NonWindow::Internal_CalcClipRgn(const ZDCState& iState)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI_OffScreen
+// MARK: - ZDCCanvas_GDI_OffScreen
 
 static HPALETTE spHPALETTE_Offscreen = ::CreateHalftonePalette(nullptr);
 
@@ -1896,8 +1885,7 @@ bool ZDCCanvas_GDI_OffScreen::IsOffScreen()
 	{ return true; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_GDI_IC
+// MARK: - ZDCCanvas_GDI_IC
 
 ZDCCanvas_GDI_IC::ZDCCanvas_GDI_IC()
 	{
@@ -1917,8 +1905,7 @@ ZDCCanvas_GDI_IC::~ZDCCanvas_GDI_IC()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC_NativeGDI
+// MARK: - ZDC_NativeGDI
 
 ZDC_NativeGDI::ZDC_NativeGDI(HDC iHDC)
 	{
@@ -1951,8 +1938,7 @@ ZDC_NativeGDI::~ZDC_NativeGDI()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCSetupForGDI
+// MARK: - ZDCSetupForGDI
 
 ZDCSetupForGDI::ZDCSetupForGDI(const ZDC& iDC, bool iZeroOrigin)
 :	fCanvas(ZRefDynamicCast<ZDCCanvas_GDI>(iDC.GetCanvas()))
@@ -1972,8 +1958,7 @@ HDC ZDCSetupForGDI::GetHDC()
 	{ return ((ZDCCanvas_GDI*)fCanvas.GetObject())->fHDC; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRep_DIB
+// MARK: - ZDCPixmapRep_DIB
 
 static bool spCheckDesc(const ZDCPixmapNS::RasterDesc& iRasterDesc, const ZRect& iBounds,
 	const ZDCPixmapNS::PixelDesc& iPixelDesc)
@@ -2457,8 +2442,7 @@ ZRef<ZDCPixmapRep_DIB> ZDCPixmapRep_DIB::sAsPixmapRep_DIB(ZRef<ZDCPixmapRep> iRe
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 

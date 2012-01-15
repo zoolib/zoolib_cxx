@@ -33,8 +33,7 @@ namespace ZooLib {
 class ZGRgnRep;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgnRepCreator_T
+// MARK: - ZGRgnRepCreator_T
 
 template <typename Native>
 class ZGRgnRepCreator_T
@@ -44,8 +43,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgnRep
+// MARK: - ZGRgnRep
 
 class ZGRgnRep : public ZCounted
 	{
@@ -91,8 +89,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgn
+// MARK: - ZGRgn
 
 class ZGRgn
 	{
@@ -258,8 +255,7 @@ inline ZGRgn operator^(const ZGRgn& iRgn, const ZGRgn& iOther)
 	{ return iRgn.Xoring(iOther); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgnAccumulator
+// MARK: - ZGRgnAccumulator
 
 class ZGRgnUnioner_t
 	{

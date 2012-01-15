@@ -36,21 +36,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop
+// MARK: - ZPhotoshop
 
 namespace ZPhotoshop {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Public utilities
+// MARK: - Public utilities
 
 ZTrail sWinAsTrail(const string8& iWin);
 ZQ<ZTrail> sAsTrail(const SPPlatformFileSpecification& iSpec);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * FileRef
+// MARK: - FileRef
 
 class FileRef
 	{

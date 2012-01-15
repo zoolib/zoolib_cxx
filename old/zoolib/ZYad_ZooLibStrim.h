@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException_ZooLibStrim
+// MARK: - ZYadParseException_ZooLibStrim
 
 class ZYadParseException_ZooLibStrim : public ZYadParseException_Std
 	{
@@ -42,8 +41,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamR_ZooLibStrim
+// MARK: - ZYadStreamR_ZooLibStrim
 
 class ZYadStreamR_ZooLibStrim
 :	public ZYadStreamR
@@ -64,8 +62,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_ZooLibStrim_Apos
+// MARK: - ZYadStrimR_ZooLibStrim_Apos
 
 class ZYadStrimR_ZooLibStrim_Apos
 :	public ZYadStrimR
@@ -85,8 +82,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_ZooLibStrim_Quote
+// MARK: - ZYadStrimR_ZooLibStrim_Quote
 
 class ZYadStrimR_ZooLibStrim_Quote
 :	public ZYadStrimR,
@@ -111,8 +107,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_ZooLibStrim
+// MARK: - ZYadSeqR_ZooLibStrim
 
 class ZYadSeqR_ZooLibStrim : public ZYadSeqR_Std
 	{
@@ -128,8 +123,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_ZooLibStrim
+// MARK: - ZYadMapR_ZooLibStrim
 
 class ZYadMapR_ZooLibStrim : public ZYadMapR_Std
 	{
@@ -145,8 +139,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_ZooLibStrim
+// MARK: - ZYad_ZooLibStrim
 
 namespace ZYad_ZooLibStrim {
 

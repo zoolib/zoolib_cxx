@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ZAssertCompile(sizeof(ZooLib::ZAtomic_t) == sizeof(int));
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * CodeWarrior/PPC
+// MARK: - CodeWarrior/PPC
 
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
 
@@ -80,8 +79,7 @@ noGood:
 #endif // ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * CodeWarrior/x86
+// MARK: - CodeWarrior/x86
 
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, x86)
 
@@ -190,8 +188,7 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, x86)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Mach (OSX/iPhone)
+// MARK: - Mach (OSX/iPhone)
 
 #if defined(__MACH__) && ! ZCONFIG(Compiler, CodeWarrior)
 
@@ -262,8 +259,7 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // defined(__MACH__)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Windows
+// MARK: - Windows
 
 #if ZCONFIG_SPI_Enabled(Win)
 
@@ -341,16 +337,14 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // ZCONFIG_SPI_Enabled(Win)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * A real CompareAndSwap must be defined by now
+// MARK: - A real CompareAndSwap must be defined by now
 
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
 #	error No CompareAndSwap available
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Default implementations that depend on CAS or ZAtomic_Add.
+// MARK: - Default implementations that depend on CAS or ZAtomic_Add.
 
 namespace ZooLib {
 

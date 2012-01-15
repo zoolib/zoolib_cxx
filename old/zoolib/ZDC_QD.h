@@ -45,8 +45,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD
+// MARK: - ZDCCanvas_QD
 
 class ZDCCanvas_QD_OffScreen;
 class ZDCSetupForQD;
@@ -185,8 +184,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD_NonWindow
+// MARK: - ZDCCanvas_QD_NonWindow
 
 class ZDCCanvas_QD_NonWindow : public ZDCCanvas_QD
 	{
@@ -204,8 +202,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD_OffScreen
+// MARK: - ZDCCanvas_QD_OffScreen
 
 class ZDCCanvas_QD_OffScreen : public ZDCCanvas_QD_NonWindow
 	{
@@ -223,8 +220,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCCanvas_QD_Print
+// MARK: - ZDCCanvas_QD_Print
 
 class ZDCCanvas_QD_Print : public ZDCCanvas_QD_NonWindow
 	{
@@ -236,8 +232,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC_PICT
+// MARK: - ZDC_PICT
 
 class ZStreamW;
 class ZDC_PICT : public ZDC
@@ -248,8 +243,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDC_NativeQD
+// MARK: - ZDC_NativeQD
 
 class ZDC_NativeQD : public ZDC
 	{
@@ -275,8 +269,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCSetupForQD
+// MARK: - ZDCSetupForQD
 
 class ZDCSetupForQD
 	{
@@ -293,8 +286,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapRep_QD
+// MARK: - ZDCPixmapRep_QD
 
 class ZDCPixmapRep_QD : public ZDCPixmapRep
 	{

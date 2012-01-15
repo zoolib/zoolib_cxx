@@ -35,8 +35,7 @@ class ZSeq_Yad;
 class ZMap_Yad;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_Yad
+// MARK: - ZVal_Yad
 
 class ZVal_Yad
 	{
@@ -131,8 +130,7 @@ ZQ<S> ZVal_Yad::QGet() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_Yad
+// MARK: - ZSeq_Yad
 
 class ZSeq_Yad
 	{
@@ -174,8 +172,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_Yad
+// MARK: - ZMap_Yad
 
 class ZMap_Yad
 	{

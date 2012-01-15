@@ -39,8 +39,7 @@ using std::min;
 using std::max;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Identity
+// MARK: - Identity
 
 static const ZRef<Identity> spZero = new Identity;
 static const ZRef<Identity> spOne = new Identity;
@@ -151,8 +150,7 @@ ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther) const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Event
+// MARK: - Event
 
 const ZRef<Event> spEventZero = new Event;
 
@@ -437,8 +435,7 @@ size_t Event::pHeight() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Event mutating operations
+// MARK: - Event mutating operations
 
 void sEvent(ZRef<Event>& ioEvent, const ZRef<Identity>& iIdentity)
 	{ ioEvent = ioEvent->Evented(iIdentity); }
@@ -447,8 +444,7 @@ void sJoin(ZRef<Event>& ioEvent, const ZRef<Event>& iOther)
 	{ ioEvent = ioEvent->Joined(iOther); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Clock
+// MARK: - Clock
 
 ZRef<Clock> Clock::sSeed()
 	{ return new Clock(Identity::sOne(), Event::sZero()); }
@@ -515,8 +511,7 @@ void Clock::Forked(ZRef<Clock>& oLeft, ZRef<Clock>& oRight) const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Clock mutating operations
+// MARK: - Clock mutating operations
 
 void sSend(ZRef<Clock>& ioClock)
 	{ ioClock = ioClock->Sent(); }

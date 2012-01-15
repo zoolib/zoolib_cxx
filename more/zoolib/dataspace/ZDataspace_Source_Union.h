@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Union
+// MARK: - Source_Union
 
 class Source_Union : public Source
 	{

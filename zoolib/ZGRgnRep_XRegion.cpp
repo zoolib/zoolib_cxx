@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+// MARK: - Helper functions
 
 namespace { // anonymous
 
@@ -89,8 +88,7 @@ Region sMakeRegion(const ZRef<ZGRgnRep>& iRep)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 
@@ -114,8 +112,7 @@ ZRef<ZGRgnRep> ZGRgnRepCreator_T<Region>::sCreate(Region iNative, bool iAdopt)
 	{ return new ZGRgnRep_XRegion(iNative, iAdopt); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZGRgnRep_XRegion
+// MARK: - ZGRgnRep_XRegion
 
 ZRef<ZGRgnRep_XRegion> ZGRgnRep_XRegion::sGetRep(const ZRef<ZGRgnRep>& iRep)
 	{

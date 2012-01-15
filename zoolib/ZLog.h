@@ -58,8 +58,7 @@ namespace ZooLib {
 namespace ZLog {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * EPriority
+// MARK: - EPriority
 
 enum
 	{
@@ -83,15 +82,13 @@ enum
 typedef int EPriority;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * String/integer mapping
+// MARK: - String/integer mapping
 
 EPriority sPriorityFromName(const std::string& iString);
 std::string sNameFromPriority(EPriority iPriority);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZLog::StrimW
+// MARK: - ZLog::StrimW
 
 class StrimW : public ZStrimW
 	{
@@ -122,8 +119,7 @@ private:
 typedef StrimW S;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZLog::LogMeister
+// MARK: - ZLog::LogMeister
 
 class LogMeister
 	{
@@ -143,8 +139,7 @@ public:
 void sSetLogMeister(LogMeister* iLogMeister);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZLog::FunctionEntryExit
+// MARK: - ZLog::FunctionEntryExit
 
 class FunctionEntryExit
 	{
@@ -158,8 +153,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZLog::sLogTrace
+// MARK: - ZLog::sLogTrace
 
 void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iFunctionName);
 

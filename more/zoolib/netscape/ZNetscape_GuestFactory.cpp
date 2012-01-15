@@ -53,8 +53,7 @@ using std::vector;
 using ZNetscape::NPNetscapeFuncs_Z;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+// MARK: - Helper functions
 
 static void spThrowMissingEntryPoint()
 	{
@@ -62,8 +61,7 @@ static void spThrowMissingEntryPoint()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions, Win
+// MARK: - Helper functions, Win
 
 #if ZCONFIG_SPI_Enabled(Win)
 
@@ -81,8 +79,7 @@ static ZQ<int> spQGetMajorVersion(const UTF16* iNativePath)
 #endif // ZCONFIG_SPI_Enabled(Win)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions, Mach
+// MARK: - Helper functions, Mach
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation) && __MACH__
 
@@ -126,8 +123,7 @@ P sLookup_T(NSModule iNSModule, const char* iName)
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation) && __MACH__
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions, CoreFoundation
+// MARK: - Helper functions, CoreFoundation
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 
@@ -164,8 +160,7 @@ ZQ<int> spQGetMajorVersion(const ZRef<CFBundleRef>& iBundleRef)
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * GuestFactory_Win
+// MARK: - GuestFactory_Win
 
 #if ZCONFIG_SPI_Enabled(Win)
 
@@ -243,8 +238,7 @@ ZQ<int> GuestFactory_Win::QGetMajorVersion()
 #endif // ZCONFIG_SPI_Enabled(Win)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * GuestFactory_HostMachO
+// MARK: - GuestFactory_HostMachO
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation) && __MACH__
 
@@ -396,8 +390,7 @@ ZQ<int> GuestFactory_HostMachO::QGetMajorVersion()
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation) && __MACH__
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * GuestFactory_HostCFM
+// MARK: - GuestFactory_HostCFM
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation) && ZCONFIG(Processor,PPC) && !__MACH__
 
@@ -498,8 +491,7 @@ const NPPluginFuncs& GuestFactory_HostCFM::GetEntryPoints()
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation) && ZCONFIG(Processor,PPC) && !__MACH__
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetscape
+// MARK: - ZNetscape
 
 ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory
 	(ZQ<int> iEarliest, ZQ<int> iLatest, const std::string& iNativePath)

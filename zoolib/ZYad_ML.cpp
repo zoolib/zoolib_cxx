@@ -35,8 +35,7 @@ for walking HTML.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static helpers
+// MARK: - Static helpers
 
 static void spThrowParseException(const string& iMessage)
 	{
@@ -44,8 +43,7 @@ static void spThrowParseException(const string& iMessage)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException_ML
+// MARK: - ZYadParseException_ML
 
 ZYadParseException_ML::ZYadParseException_ML(const string& iWhat)
 :	ZYadParseException_Std(iWhat)
@@ -56,8 +54,7 @@ ZYadParseException_ML::ZYadParseException_ML(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_ML
+// MARK: - ZYadStrimR_ML
 
 ZYadStrimR_ML::ZYadStrimR_ML(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
@@ -73,8 +70,7 @@ ZML::StrimU& ZYadStrimR_ML::GetStrim()
 	{ return fStrimmerU->GetStrim(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_ML
+// MARK: - ZYadMapR_ML
 
 ZYadMapR_ML::ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)

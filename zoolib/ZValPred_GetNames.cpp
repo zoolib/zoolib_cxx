@@ -27,8 +27,7 @@ using std::set;
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValPred, sGetNames
+// MARK: - ZValPred, sGetNames
 
 namespace { // anonymous
 

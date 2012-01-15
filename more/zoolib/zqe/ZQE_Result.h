@@ -35,8 +35,7 @@ namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Result
+// MARK: - Result
 
 class Result : public ZCounted
 	{

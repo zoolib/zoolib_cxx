@@ -60,8 +60,7 @@ static void spSkipWrite(const ZStreamW& inStream, size_t inCount)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZASCompiler::NameEntry
+// MARK: - ZASCompiler::NameEntry
 
 class ZASCompiler::NameEntry
 	{
@@ -78,8 +77,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZASCompiler::Node
+// MARK: - ZASCompiler::Node
 
 class ZASCompiler::Node
 	{
@@ -260,8 +258,7 @@ void ZASCompiler::Node::WriteTo(const ZStreamW& inStream)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZASCompiler
+// MARK: - ZASCompiler
 
 ZASCompiler::ZASCompiler(const ZStreamW& inStream)
 :	fStreamW(inStream)

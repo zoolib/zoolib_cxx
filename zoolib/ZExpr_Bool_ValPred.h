@@ -30,8 +30,7 @@ namespace ZooLib {
 class ZVisitor_Expr_Bool_ValPred;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Bool_ValPred
+// MARK: - ZExpr_Bool_ValPred
 
 class ZExpr_Bool_ValPred
 :	public virtual ZExpr_Bool
@@ -64,8 +63,7 @@ template<>
 int sCompare_T(const ZExpr_Bool_ValPred& iL, const ZExpr_Bool_ValPred& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred
+// MARK: - ZVisitor_Expr_Bool_ValPred
 
 class ZVisitor_Expr_Bool_ValPred
 :	public virtual ZVisitor_Expr_Op0_T<ZExpr_Bool>
@@ -75,8 +73,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Operators
+// MARK: - Operators
 
 ZRef<ZExpr_Bool> sExpr_Bool(const ZValPred& iValPred);
 

@@ -31,8 +31,7 @@ namespace ZRA {
 class Visitor_Expr_Rel_Embed;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel_Embed
+// MARK: - Expr_Rel_Embed
 
 class Expr_Rel_Embed
 :	public virtual Expr_Rel
@@ -62,8 +61,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Embed
+// MARK: - Visitor_Expr_Rel_Embed
 
 class Visitor_Expr_Rel_Embed
 :	public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
@@ -73,8 +71,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Relational operators
+// MARK: - Relational operators
 
 ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0,
 	const RelName& iRelName, const ZRef<Expr_Rel>& iEmbedee);

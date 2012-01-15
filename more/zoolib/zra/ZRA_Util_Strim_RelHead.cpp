@@ -27,8 +27,7 @@ namespace ZRA {
 namespace Util_Strim_RelHead {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Util_Strim_RelHead
+// MARK: - Util_Strim_RelHead
 
 using std::set;
 

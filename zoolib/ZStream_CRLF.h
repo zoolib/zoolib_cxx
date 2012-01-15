@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_CRLFRemove
+// MARK: - ZStreamR_CRLFRemove
 
 class ZStreamR_CRLFRemove : public ZStreamR
 	{
@@ -49,8 +48,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_CRLFInsert
+// MARK: - ZStreamR_CRLFInsert
 
 class ZStreamR_CRLFInsert : public ZStreamR
 	{
@@ -69,8 +67,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_CRLFRemove
+// MARK: - ZStreamW_CRLFRemove
 
 class ZStreamW_CRLFRemove : public ZStreamW
 	{
@@ -90,8 +87,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_CRLFInsert
+// MARK: - ZStreamW_CRLFInsert
 
 class ZStreamW_CRLFInsert : public ZStreamW
 	{

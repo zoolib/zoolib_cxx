@@ -29,8 +29,7 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_MacOSX
+// MARK: - ZUtil_MacOSX
 
 void ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO
 	(void* ioFuncs, size_t iCount, vector<char>& ioStorage)

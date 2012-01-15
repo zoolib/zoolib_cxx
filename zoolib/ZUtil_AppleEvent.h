@@ -41,8 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAETypeMap_T
+// MARK: - ZAETypeMap_T
 
 template <int T> struct ZAELookup_Desc2CPP {};
 template <class T> struct ZAELookup_CPP2Desc {};
@@ -77,8 +76,7 @@ ZMACRO_AELookup_CPP2Desc(ZHandle_T<AliasHandle>, typeAlias)
 #undef ZMACRO_AELookup
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAEValRef_T, generic
+// MARK: - ZAEValRef_T, generic
 
 template <class T, int D = ZAELookup_CPP2Desc<T>::sDescType>
 class ZAEValRef_T
@@ -99,16 +97,14 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAEValRef_T, specialized to disable pointer use
+// MARK: - ZAEValRef_T, specialized to disable pointer use
 
 template <class T, int D>
 class ZAEValRef_T<T*, D>
 	{};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAEValRef_T, specialized for handles
+// MARK: - ZAEValRef_T, specialized for handles
 
 template <class T, int D>
 class ZAEValRef_T<T**, D>
@@ -133,8 +129,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZAEValRef_T, specialized for ZHandle_T
+// MARK: - ZAEValRef_T, specialized for ZHandle_T
 
 template <class T, int D>
 class ZAEValRef_T<ZHandle_T<T>, D>

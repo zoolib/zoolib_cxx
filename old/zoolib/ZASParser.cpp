@@ -48,8 +48,7 @@ namespace ZooLib {
 namespace { // anonymous
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static helper functions
+// MARK: - Static helper functions
 
 static bool spAtEnd(ZStrimU& iStrimU)
 	{
@@ -61,8 +60,7 @@ static bool spAtEnd(ZStrimU& iStrimU)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * DecoderSetter
+// MARK: - DecoderSetter
 
 class DecoderSetter
 	{
@@ -87,8 +85,7 @@ DecoderSetter::~DecoderSetter()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Parser
+// MARK: - Parser
 
 class NestedParse : public std::exception
 	{
@@ -556,8 +553,7 @@ bool Parser::TryParseStringBody(string& oString)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZASParser::sParse
+// MARK: - ZASParser::sParse
 
 /**
 This is the entry point for parsing when you have a source file's path. It just
@@ -617,8 +613,7 @@ bool ZASParser::sParse(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZASParser::ParseHandler
+// MARK: - ZASParser::ParseHandler
 
 void ZASParser::ParseHandler::StartParse()
 	{}
@@ -661,8 +656,7 @@ void ZASParser::ParseHandler::ExitCharSet(bool iWasInBlock, bool iNowInBlock)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZASParser::StreamProvider
+// MARK: - ZASParser::StreamProvider
 
 ZRef<ZStreamerR> ZASParser::StreamProvider::ProvideStreamSource(
 	const ZFileSpec& iCurrent, const string& iPath,
@@ -675,8 +669,7 @@ ZRef<ZStreamerR> ZASParser::StreamProvider::ProvideStreamBinary(
 	{ return ZRef<ZStreamerR>(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZASParser::ErrorHandler
+// MARK: - ZASParser::ErrorHandler
 
 void ZASParser::ErrorHandler::ReportError(
 	const vector<pair<ZFileSpec, int> >& iSources, const string& iMessage) const
@@ -689,8 +682,7 @@ void ZASParser::ErrorHandler::ReportProgress(int iLinesProcessed) const
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZASParser::ParseHandler_Prettify
+// MARK: - ZASParser::ParseHandler_Prettify
 
 static void spWriteIndent(const ZStrimW& iStrimW, int iIndent)
 	{

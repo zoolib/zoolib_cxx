@@ -42,8 +42,7 @@ that's more than I want to do right now.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileSpec
+// MARK: - ZFileSpec
 /**
 \class ZFileSpec
 \ingroup File
@@ -751,8 +750,7 @@ ZFileSpec ZFileSpec::sPOSIXPath(const string& iPath)
 #endif // ZCONFIG_File_EnableDeprecated
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileIter
+// MARK: - ZFileIter
 
 /** \class ZFileIter
 \ingroup File
@@ -839,8 +837,7 @@ string ZFileIter::CurrentName() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileTreeIter
+// MARK: - ZFileTreeIter
 
 ZFileTreeIter::ZFileTreeIter()
 	{}
@@ -897,8 +894,7 @@ std::string ZFileTreeIter::CurrentName() const
 	{ return fCurrent.Name(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileLoc
+// MARK: - ZFileLoc
 
 /** \class ZFileLoc
 \ingroup File
@@ -1015,8 +1011,7 @@ ZRef<ZFileRW> ZFileLoc::CreateFileRW(bool iOpenExisting, bool iPreventWriters, Z
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileIterRep
+// MARK: - ZFileIterRep
 
 /** \class ZFileIterRep
 */
@@ -1028,8 +1023,7 @@ ZFileIterRep::~ZFileIterRep()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileIterRep_Std
+// MARK: - ZFileIterRep_Std
 
 /** \class ZFileIterRep_Std
 */
@@ -1058,8 +1052,7 @@ ZRef<ZFileIterRep> ZFileIterRep_Std::Clone()
 	{ return new ZFileIterRep_Std(fRealRep, fIndex); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_FileR
+// MARK: - ZStreamRPos_FileR
 
 ZStreamRPos_FileR::ZStreamRPos_FileR(ZRef<ZFileR> iFile)
 :	fFile(iFile),
@@ -1101,8 +1094,7 @@ uint64 ZStreamRPos_FileR::Imp_GetSize()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRPos_FileR
+// MARK: - ZStreamerRPos_FileR
 
 ZStreamerRPos_FileR::ZStreamerRPos_FileR(ZRef<ZFileR> iFile)
 :	fStream(iFile)
@@ -1115,8 +1107,7 @@ const ZStreamRPos& ZStreamerRPos_FileR::GetStreamRPos()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamWPos_FileW
+// MARK: - ZStreamWPos_FileW
 
 ZStreamWPos_FileW::ZStreamWPos_FileW(ZRef<ZFileW> iFile)
 :	fFile(iFile),
@@ -1167,8 +1158,7 @@ void ZStreamWPos_FileW::Imp_SetSize(uint64 iSize)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerWPos_FileW
+// MARK: - ZStreamerWPos_FileW
 
 ZStreamerWPos_FileW::ZStreamerWPos_FileW(ZRef<ZFileW> iFile)
 :	fStream(iFile)
@@ -1181,8 +1171,7 @@ const ZStreamWPos& ZStreamerWPos_FileW::GetStreamWPos()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWPos_FileRW
+// MARK: - ZStreamRWPos_FileRW
 
 ZStreamRWPos_FileRW::ZStreamRWPos_FileRW(ZRef<ZFileRW> iFile)
 :	fFile(iFile),
@@ -1248,8 +1237,7 @@ void ZStreamRWPos_FileRW::Imp_SetSize(uint64 iSize)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRWPos_FileRW
+// MARK: - ZStreamerRWPos_FileRW
 
 ZStreamerRWPos_FileRW::ZStreamerRWPos_FileRW(ZRef<ZFileRW> iFile)
 :	fStream(iFile)
@@ -1262,8 +1250,7 @@ const ZStreamRWPos& ZStreamerRWPos_FileRW::GetStreamRWPos()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileR_StreamerRPos
+// MARK: - ZFileR_StreamerRPos
 
 ZFileR_StreamerRPos::ZFileR_StreamerRPos(ZRef<ZStreamerRPos> iStreamer)
 :	fStreamer(iStreamer),
@@ -1289,8 +1276,7 @@ ZFile::Error ZFileR_StreamerRPos::GetSize(uint64& oSize)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileW_StreamerWPos
+// MARK: - ZFileW_StreamerWPos
 
 ZFileW_StreamerWPos::ZFileW_StreamerWPos(ZRef<ZStreamerWPos> iStreamer)
 :	fStreamer(iStreamer),
@@ -1340,8 +1326,7 @@ ZFile::Error ZFileW_StreamerWPos::FlushVolume()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZFileRW_StreamerRWPos
+// MARK: - ZFileRW_StreamerRWPos
 
 ZFileRW_StreamerRWPos::ZFileRW_StreamerRWPos(ZRef<ZStreamerRWPos> iStreamer)
 :	fStreamer(iStreamer),

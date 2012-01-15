@@ -37,8 +37,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Factory functions
+// MARK: - Factory functions
 
 namespace { // anonymous
 
@@ -95,8 +94,7 @@ class Make_Endpoint6
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static ZRef<ZNetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_port iPort)
 	{
@@ -126,8 +124,7 @@ static ZRef<ZNetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_p
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNet_TCP_Socket
+// MARK: - ZNet_TCP_Socket
 
 int ZNet_TCP_Socket::sListen(ip4_addr iLocalAddress, ip_port iLocalPort)
 	{
@@ -186,8 +183,7 @@ int ZNet_TCP_Socket::sListen(ip6_addr iLocalAddress, ip_port iLocalPort)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetNameLookup_Internet_Socket
+// MARK: - ZNetNameLookup_Internet_Socket
 
 ZNetNameLookup_Internet_Socket::ZNetNameLookup_Internet_Socket
 	(const string& iName, ip_port iPort, size_t iMaxAddresses)
@@ -271,8 +267,7 @@ ZRef<ZNetName> ZNetNameLookup_Internet_Socket::CurrentName()
 	{ return new ZNetName_Internet(fName, fPort); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetListener_TCP_Socket
+// MARK: - ZNetListener_TCP_Socket
 
 static int spEnsureInet(int iSocketFD)
 	{
@@ -352,8 +347,7 @@ ZRef<ZNetEndpoint> ZNetListener_TCP_Socket::Imp_MakeEndpoint(int iSocketFD)
 	{ return new ZNetEndpoint_TCP_Socket(iSocketFD); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_TCP_Socket
+// MARK: - ZNetEndpoint_TCP_Socket
 
 static void spSetSocketOptions(int iSocketFD)
 	{

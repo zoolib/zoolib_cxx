@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRWFactory_Buffered
+// MARK: - ZStreamerRWFactory_Buffered
 
 class ZStreamerRWFactory_Buffered : public ZStreamerRWFactory
 	{

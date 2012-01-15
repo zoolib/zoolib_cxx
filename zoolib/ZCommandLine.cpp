@@ -346,8 +346,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine
+// MARK: - ZCommandLine
 
 ZCommandLine* ZCommandLine::sCommandLineCurrent = nullptr;
 
@@ -518,8 +517,7 @@ void ZCommandLine::pAppendOpt(Opt* iOpt)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine::Opt
+// MARK: - ZCommandLine::Opt
 
 ZCommandLine::Opt::Opt
 	(const string& iName, const string& iDescription, EFlags iFlags, bool iHasDefault)
@@ -544,8 +542,7 @@ void ZCommandLine::Opt::WriteDefault(const ZStrimW& s)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine::String
+// MARK: - ZCommandLine::String
 
 ZCommandLine::String::String(const string& iName, const string& iDescription, EFlags iFlags)
 :	Opt(iName, iDescription, iFlags, false)
@@ -579,8 +576,7 @@ const string& ZCommandLine::String::operator()() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine::Boolean
+// MARK: - ZCommandLine::Boolean
 
 ZCommandLine::Boolean::Boolean(const string& iName, const string& iDescription)
 :	Opt(iName, iDescription, eOptional, false)
@@ -604,8 +600,7 @@ bool ZCommandLine::Boolean::operator()() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine::Int64
+// MARK: - ZCommandLine::Int64
 
 ZCommandLine::Int64::Int64(const string& iName, const string& iDescription, EFlags iFlags)
 :	Opt(iName, iDescription, iFlags, false),

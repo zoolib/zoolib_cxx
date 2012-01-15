@@ -41,8 +41,7 @@ class StreamR_Header;
 class StreamR_Line;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMIME::StreamR_Header
+// MARK: - ZMIME::StreamR_Header
 
 /// Takes a source stream and reads until it sees an LFLF sequence, at which
 /// point it appears to be empty.
@@ -78,8 +77,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMIME::StreamR_Line
+// MARK: - ZMIME::StreamR_Line
 
 /// Returns bytes from the real stream until an end of line is detected.
 

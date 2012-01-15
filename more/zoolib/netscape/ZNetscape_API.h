@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStdInt.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Standard integer types.
+// MARK: - Standard integer types.
 
 // Much as it pains me, the standard npapi.h files do introduce global definitions
 // for int16, uint16, int32 and uint32, so we have to do the same.
@@ -55,8 +54,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPAPI platform designation
+// MARK: - NPAPI platform designation
 
 #if ZCONFIG_SPI_Enabled(Win)
 
@@ -77,8 +75,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NP_NO_QUICKDRAW and NP_NO_CARBON
+// MARK: - NP_NO_QUICKDRAW and NP_NO_CARBON
 
 #if defined(XP_MACOSX) && __LP64__
 #	define NP_NO_QUICKDRAW 1
@@ -86,8 +83,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Mac headers
+// MARK: - Mac headers
 
 #if defined(XP_MACOSX)
 #	include <ApplicationServices/ApplicationServices.h>
@@ -99,24 +95,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Windows headers
+// MARK: - Windows headers
 
 #if defined(XP_WIN)
 #	include "zoolib/ZCompat_Win.h"
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * UNIX headers
+// MARK: - UNIX headers
 
 #if defined(XP_UNIX)
 #	include "zoolib/ZCompat_XLib.h"
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NP_VERSION
+// MARK: - NP_VERSION
 
 #define NP_VERSION_MAJOR 0
 #define NP_VERSION_MINOR 24
@@ -132,8 +125,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Basic data typedefs
+// MARK: - Basic data typedefs
 
 typedef ZStdInt::uint8 NPBool;
 typedef ZStdInt::int16 NPError;
@@ -141,8 +133,7 @@ typedef ZStdInt::int16 NPReason;
 typedef char* NPMIMEType;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPP
+// MARK: - NPP
 
 typedef struct _NPP
 	{
@@ -153,8 +144,7 @@ typedef struct _NPP
 typedef NPP_t* NPP;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPStream
+// MARK: - NPStream
 
 typedef struct _NPStream
 	{
@@ -168,8 +158,7 @@ typedef struct _NPStream
 	} NPStream;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPByteRange
+// MARK: - NPByteRange
 
 typedef struct _NPByteRange
 	{
@@ -179,8 +168,7 @@ typedef struct _NPByteRange
 	} NPByteRange;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPSavedData
+// MARK: - NPSavedData
 
 typedef struct _NPSavedData
 	{
@@ -189,8 +177,7 @@ typedef struct _NPSavedData
 	} NPSavedData;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPRect
+// MARK: - NPRect
 
 typedef struct _NPRect
 	{
@@ -201,8 +188,7 @@ typedef struct _NPRect
 	} NPRect;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Unix-specific
+// MARK: - Unix-specific
 
 #if defined(XP_UNIX)
 enum
@@ -233,8 +219,7 @@ typedef struct
 #endif // XP_UNIX
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPPVariable and NPNVariable
+// MARK: - NPPVariable and NPNVariable
 
 #define NP_ABI_MASK 0
 
@@ -310,8 +295,7 @@ typedef enum {
 } NPNURLVariable;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPWindowType and NPWindow
+// MARK: - NPWindowType and NPWindow
 
 typedef enum
 	{
@@ -320,8 +304,7 @@ typedef enum
 	} NPWindowType;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPDrawingModel
+// MARK: - NPDrawingModel
 
 #if defined(XP_MACOSX)
 	typedef enum
@@ -335,8 +318,7 @@ typedef enum
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPEventModel, NPCocoaEventType, NPCocoaEvent
+// MARK: - NPEventModel, NPCocoaEventType, NPCocoaEvent
 
 #if defined(XP_MACOSX)
 
@@ -417,8 +399,7 @@ typedef enum
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPWindow
+// MARK: - NPWindow
 
 typedef struct _NPWindow
 	{
@@ -435,8 +416,7 @@ typedef struct _NPWindow
 	} NPWindow;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPFullPrint, NPEmbedPrint, NPPrint
+// MARK: - NPFullPrint, NPEmbedPrint, NPPrint
 
 typedef struct _NPFullPrint
 	{
@@ -462,8 +442,7 @@ typedef struct _NPPrint
 	} NPPrint;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPMenu
+// MARK: - NPMenu
 
 #if defined(XP_MACOSX)
 	typedef NPNSMenu NPMenu;
@@ -472,8 +451,7 @@ typedef struct _NPPrint
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPCoordinateSpace
+// MARK: - NPCoordinateSpace
 
 typedef enum {
   NPCoordinateSpacePlugin = 1,
@@ -484,8 +462,7 @@ typedef enum {
 } NPCoordinateSpace;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPEvent
+// MARK: - NPEvent
 
 #if defined(XP_MAC) || defined(XP_MACOSX)
 
@@ -513,8 +490,7 @@ typedef enum {
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPRegion
+// MARK: - NPRegion
 
 #if defined(XP_MAC)
 
@@ -545,8 +521,7 @@ typedef enum {
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Mac-specific NP_Port and events
+// MARK: - Mac-specific NP_Port and events
 
 #if defined(XP_MACOSX)
 
@@ -599,15 +574,13 @@ typedef enum {
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Values passed to NPP_New
+// MARK: - Values passed to NPP_New
 
 #define NP_EMBED 1
 #define NP_FULL 2
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Values passed to NPP_NewStream
+// MARK: - Values passed to NPP_NewStream
 
 #define NP_NORMAL 1
 #define NP_SEEK 2
@@ -617,8 +590,7 @@ typedef enum {
 #define NP_MAXREADY	(((unsigned)(~0)<<1)>>1)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPError values
+// MARK: - NPError values
 
 #define NPERR_BASE 0
 #define NPERR_NO_ERROR (NPERR_BASE + 0)
@@ -637,8 +609,7 @@ typedef enum {
 #define NPERR_STREAM_NOT_SEEKABLE (NPERR_BASE + 13)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPReason values
+// MARK: - NPReason values
 
 #define NPRES_BASE 0
 #define NPRES_DONE (NPRES_BASE + 0)
@@ -646,8 +617,7 @@ typedef enum {
 #define NPRES_USER_BREAK (NPRES_BASE + 2)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPVers values
+// MARK: - NPVers values
 
 #define NPVERS_HAS_STREAMOUTPUT 8
 #define NPVERS_HAS_NOTIFICATION 9
@@ -665,8 +635,7 @@ typedef enum {
 #define NPVERS_MACOSX_HAS_EVENT_MODELS 20
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPObject, NPClass, NPVariant etc.
+// MARK: - NPObject, NPClass, NPVariant etc.
 
 typedef struct NPObject NPObject;
 typedef struct NPClass NPClass;
@@ -743,8 +712,7 @@ struct NPObject
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPFunctions
+// MARK: - NPFunctions
 
 typedef void* JRIGlobalRef;
 typedef struct __JRIEnv JRIEnv;
@@ -846,8 +814,7 @@ ZMacCFM_DefineProc3(NPError, NPP_SetValue, NPP, NPNVariable, void*);
 ZMacCFM_DefineProc0(void*, NPP_GetJavaClassProcPtr);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPNetscapeFuncs
+// MARK: - NPNetscapeFuncs
 
 typedef struct _NPNetscapeFuncs
 	{
@@ -910,8 +877,7 @@ typedef struct _NPNetscapeFuncs
 	} NPNetscapeFuncs;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * NPPluginFuncs
+// MARK: - NPPluginFuncs
 
 typedef struct _NPPluginFuncs
 	{
@@ -934,8 +900,7 @@ typedef struct _NPPluginFuncs
 	} NPPluginFuncs;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Mac-specific, reset structure alignment
+// MARK: - Mac-specific, reset structure alignment
 
 #if ! __LP64__
 #	if defined(XP_MAC) || defined(XP_MACOSX)

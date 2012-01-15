@@ -34,8 +34,7 @@ namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Source_Client
+// MARK: - Source_Client
 
 class Source_Client : public Source
 	{

@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVal_Yad
+// MARK: - ZVal_Yad
 
 ZAny ZVal_Yad::AsAny() const
 	{ return this->pAsAny(); }
@@ -126,8 +125,7 @@ ZMACRO_ZValAccessors_Def_GetP(,ZVal_Yad, Seq, ZSeq_Yad)
 ZMACRO_ZValAccessors_Def_GetP(,ZVal_Yad, Map, ZMap_Yad)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSeq_Yad
+// MARK: - ZSeq_Yad
 
 ZSeq_Yad::ZSeq_Yad()
 	{}
@@ -195,8 +193,7 @@ ZRef<ZYadSeqRPos> ZSeq_Yad::GetYad() const
 	{ return fYad; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZMap_Yad
+// MARK: - ZMap_Yad
 
 ZMap_Yad::ZMap_Yad()
 	{}

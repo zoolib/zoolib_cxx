@@ -30,8 +30,7 @@ namespace ZCallable_Bind {
 using namespace ZCallableUtil;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ST (Signature Traits)
+// MARK: - ST (Signature Traits)
 
 struct Empty_t {};
 
@@ -42,8 +41,7 @@ template <class R_p, class Signature>
 struct STReturn;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 0 params)
+// MARK: - Signature Traits (specialized for 0 params)
 
 template <class R_p>
 struct ST_T<R_p(void)>
@@ -92,8 +90,7 @@ struct STReturn<R,Ignore(void)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 1 param)
+// MARK: - Signature Traits (specialized for 1 param)
 
 template <class R_p,
 	class P0>
@@ -148,8 +145,7 @@ struct STReturn<R,Ignore(P0)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 2 params)
+// MARK: - Signature Traits (specialized for 2 params)
 
 template <class R_p,
 	class P0, class P1>
@@ -206,8 +202,7 @@ struct STReturn<R,Ignore(P0,P1)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 3 params)
+// MARK: - Signature Traits (specialized for 3 params)
 
 template <class R_p,
 	class P0, class P1, class P2>
@@ -266,8 +261,7 @@ struct STReturn<R,Ignore(P0,P1,P2)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 4 params)
+// MARK: - Signature Traits (specialized for 4 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3>
@@ -328,8 +322,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 5 params)
+// MARK: - Signature Traits (specialized for 5 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -394,8 +387,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 6 params)
+// MARK: - Signature Traits (specialized for 6 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -462,8 +454,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 7 params)
+// MARK: - Signature Traits (specialized for 7 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -532,8 +523,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5,P6)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 8 params)
+// MARK: - Signature Traits (specialized for 8 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -604,8 +594,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5,P6,P7)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 9 params)
+// MARK: - Signature Traits (specialized for 9 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -680,8 +669,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 10 params)
+// MARK: - Signature Traits (specialized for 10 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -758,8 +746,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 11 params)
+// MARK: - Signature Traits (specialized for 11 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -838,8 +825,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 12 params)
+// MARK: - Signature Traits (specialized for 12 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -920,8 +906,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 13 params)
+// MARK: - Signature Traits (specialized for 13 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -1006,8 +991,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 14 params)
+// MARK: - Signature Traits (specialized for 14 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -1094,8 +1078,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 15 params)
+// MARK: - Signature Traits (specialized for 15 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -1184,8 +1167,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Signature Traits (specialized for 16 params)
+// MARK: - Signature Traits (specialized for 16 params)
 
 template <class R_p,
 	class P0, class P1, class P2, class P3,
@@ -1276,8 +1258,7 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L01
+// MARK: - Callable_L01
 
 template <class Signature_p>
 class Callable_L01
@@ -1374,8 +1355,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L02
+// MARK: - Callable_L02
 
 template <class Signature_p>
 class Callable_L02
@@ -1469,8 +1449,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L03
+// MARK: - Callable_L03
 
 template <class Signature_p>
 class Callable_L03
@@ -1561,8 +1540,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L04
+// MARK: - Callable_L04
 
 template <class Signature_p>
 class Callable_L04
@@ -1650,8 +1628,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L05
+// MARK: - Callable_L05
 
 template <class Signature_p>
 class Callable_L05
@@ -1736,8 +1713,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L06
+// MARK: - Callable_L06
 
 template <class Signature_p>
 class Callable_L06
@@ -1819,8 +1795,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L07
+// MARK: - Callable_L07
 
 template <class Signature_p>
 class Callable_L07
@@ -1899,8 +1874,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L08
+// MARK: - Callable_L08
 
 template <class Signature_p>
 class Callable_L08
@@ -1976,8 +1950,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L09
+// MARK: - Callable_L09
 
 template <class Signature_p>
 class Callable_L09
@@ -2052,8 +2025,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L10
+// MARK: - Callable_L10
 
 template <class Signature_p>
 class Callable_L10
@@ -2126,8 +2098,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L11
+// MARK: - Callable_L11
 
 template <class Signature_p>
 class Callable_L11
@@ -2198,8 +2169,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L12
+// MARK: - Callable_L12
 
 template <class Signature_p>
 class Callable_L12
@@ -2268,8 +2238,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L13
+// MARK: - Callable_L13
 
 template <class Signature_p>
 class Callable_L13
@@ -2336,8 +2305,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L14
+// MARK: - Callable_L14
 
 template <class Signature_p>
 class Callable_L14
@@ -2402,8 +2370,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L15
+// MARK: - Callable_L15
 
 template <class Signature_p>
 class Callable_L15
@@ -2466,8 +2433,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_L16
+// MARK: - Callable_L16
 
 template <class Signature_p>
 class Callable_L16
@@ -2528,8 +2494,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sBindL
+// MARK: - sBindL
 
 template <class Callable>
 ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL01> >
@@ -2862,8 +2827,7 @@ sBindL
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R01
+// MARK: - Callable_R01
 
 template <class Signature_p>
 class Callable_R01
@@ -2960,8 +2924,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R02
+// MARK: - Callable_R02
 
 template <class Signature_p>
 class Callable_R02
@@ -3055,8 +3018,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R03
+// MARK: - Callable_R03
 
 template <class Signature_p>
 class Callable_R03
@@ -3147,8 +3109,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R04
+// MARK: - Callable_R04
 
 template <class Signature_p>
 class Callable_R04
@@ -3236,8 +3197,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R05
+// MARK: - Callable_R05
 
 template <class Signature_p>
 class Callable_R05
@@ -3322,8 +3282,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R06
+// MARK: - Callable_R06
 
 template <class Signature_p>
 class Callable_R06
@@ -3405,8 +3364,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R07
+// MARK: - Callable_R07
 
 template <class Signature_p>
 class Callable_R07
@@ -3485,8 +3443,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R08
+// MARK: - Callable_R08
 
 template <class Signature_p>
 class Callable_R08
@@ -3562,8 +3519,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R09
+// MARK: - Callable_R09
 
 template <class Signature_p>
 class Callable_R09
@@ -3638,8 +3594,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R10
+// MARK: - Callable_R10
 
 template <class Signature_p>
 class Callable_R10
@@ -3712,8 +3667,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R11
+// MARK: - Callable_R11
 
 template <class Signature_p>
 class Callable_R11
@@ -3784,8 +3738,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R12
+// MARK: - Callable_R12
 
 template <class Signature_p>
 class Callable_R12
@@ -3854,8 +3807,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R13
+// MARK: - Callable_R13
 
 template <class Signature_p>
 class Callable_R13
@@ -3922,8 +3874,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R14
+// MARK: - Callable_R14
 
 template <class Signature_p>
 class Callable_R14
@@ -3988,8 +3939,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R15
+// MARK: - Callable_R15
 
 template <class Signature_p>
 class Callable_R15
@@ -4052,8 +4002,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_R16
+// MARK: - Callable_R16
 
 template <class Signature_p>
 class Callable_R16
@@ -4114,8 +4063,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sBindR
+// MARK: - sBindR
 
 template <class Callable>
 ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR01> >
@@ -4446,8 +4394,7 @@ sBindR
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_IgnoreParams
+// MARK: - Callable_IgnoreParams
 
 template <class Signature_p>
 class Callable_IgnoreParams
@@ -4545,8 +4492,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sBind_IgnoreParams
+// MARK: - sBind_IgnoreParams
 
 template <class Callable>
 ZRef<Callable> sBind_IgnoreParams(const ZRef<Callable>& iCallable)
@@ -4557,8 +4503,7 @@ ZRef<Callable> sBind_IgnoreParams(const ZRef<Callable>& iCallable)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_Return
+// MARK: - Callable_Return
 
 template <class R_p, class Signature_p>
 class Callable_Return
@@ -4710,8 +4655,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Callable_Return (specialized for void)
+// MARK: - Callable_Return (specialized for void)
 
 template <class Signature_p>
 class Callable_Return<void, Signature_p>
@@ -4877,8 +4821,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * sBind_Return
+// MARK: - sBind_Return
 
 template <class R, class Callable>
 ZRef<ZCallable<typename STReturn<R, typename Callable::Signature>::Signature> >

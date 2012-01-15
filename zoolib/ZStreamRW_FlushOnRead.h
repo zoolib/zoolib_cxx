@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRW_FlushOnRead
+// MARK: - ZStreamRW_FlushOnRead
 
 /// A RW stream that ensures the write stream is flushed when the read stream is read.
 
@@ -71,8 +70,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerRW_FlushOnRead
+// MARK: - ZStreamerRW_FlushOnRead
 
 /// A RW streamer encapsulating a ZStreamRW_FlushOnRead.
 

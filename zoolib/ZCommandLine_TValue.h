@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine_TValue
+// MARK: - ZCommandLine_TValue
 
 class ZCommandLine::TValue : public ZCommandLine::Opt
 	{

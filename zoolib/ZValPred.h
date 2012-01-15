@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparator
+// MARK: - ZValComparator
 
 class ZValComparator : public ZCounted
 	{
@@ -42,8 +41,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparator_Simple
+// MARK: - ZValComparator_Simple
 
 class ZValComparator_Simple : public ZValComparator
 	{
@@ -63,8 +61,7 @@ template<>
 int sCompare_T(const ZValComparator_Simple& iL, const ZValComparator_Simple& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparand
+// MARK: - ZValComparand
 
 class ZValComparand : public ZCounted
 	{
@@ -76,8 +73,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparand_Name
+// MARK: - ZValComparand_Name
 
 class ZValComparand_Name : public ZValComparand
 	{
@@ -95,8 +91,7 @@ template<>
 int sCompare_T(const ZValComparand_Name& iL, const ZValComparand_Name& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValPred
+// MARK: - ZValPred
 
 class ZValPred
 	{
@@ -128,8 +123,7 @@ int sCompare_T(const ZValPred& iL, const ZValPred& iR);
 bool operator<(const ZValPred& iL, const ZValPred& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZValComparandPseudo
+// MARK: - ZValComparandPseudo
 
 // This subclass of ZRef<ZValComparand> is returned by the C-prefixed pseudo constructor
 // functions so we can more easily use overloaded operators to construct a ZValPred.
@@ -142,14 +136,12 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Comparand pseudo constructors
+// MARK: - Comparand pseudo constructors
 
 ZValComparandPseudo CName(const std::string& iName);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Comparison operators taking comparands and returning a condition
+// MARK: - Comparison operators taking comparands and returning a condition
 
 ZValPred operator<(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS);
 ZValPred operator<=(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS);

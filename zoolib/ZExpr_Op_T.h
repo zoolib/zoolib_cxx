@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Op0
+// MARK: - ZExpr_Op0
 
 template <class T>
 class ZVisitor_Expr_Op0_T;
@@ -77,8 +76,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Op0
+// MARK: - ZVisitor_Expr_Op0
 
 template <class T>
 class ZVisitor_Expr_Op0_T
@@ -91,8 +89,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Op1_T
+// MARK: - ZExpr_Op1_T
 
 template <class T>
 class ZVisitor_Expr_Op1_T;
@@ -150,8 +147,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Op1_T
+// MARK: - ZVisitor_Expr_Op1_T
 
 template <class T>
 class ZVisitor_Expr_Op1_T
@@ -164,8 +160,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_Op2_T
+// MARK: - ZExpr_Op2_T
 
 template <class T>
 class ZVisitor_Expr_Op2_T;
@@ -228,8 +223,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Op2_T
+// MARK: - ZVisitor_Expr_Op2_T
 
 template <class T>
 class ZVisitor_Expr_Op2_T
@@ -242,8 +236,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZExpr_OpN_T
+// MARK: - ZExpr_OpN_T
 
 template <class T>
 class ZVisitor_Expr_OpN_T;
@@ -301,8 +294,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_OpN_T
+// MARK: - ZVisitor_Expr_OpN_T
 
 template <class T>
 class ZVisitor_Expr_OpN_T

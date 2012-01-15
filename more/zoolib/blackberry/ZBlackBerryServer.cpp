@@ -35,8 +35,7 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerryServer::Handler_ManagerChanged
+// MARK: - ZBlackBerryServer::Handler_ManagerChanged
 
 class ZBlackBerryServer::Handler_ManagerChanged
 :	public ZCommer
@@ -152,8 +151,7 @@ void ZBlackBerryServer::Handler_ManagerChanged::TripIt()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerryServer::Handler_DeviceFinished
+// MARK: - ZBlackBerryServer::Handler_DeviceFinished
 
 class ZBlackBerryServer::Handler_DeviceFinished
 :	public ZCommer
@@ -237,8 +235,7 @@ void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlackBerryServer
+// MARK: - ZBlackBerryServer
 
 static string spReadString(const ZStreamR& r)
 	{

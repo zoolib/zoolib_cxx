@@ -33,8 +33,7 @@ namespace ZooLib {
 namespace ZML {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML
+// MARK: - ZML
 
 using std::pair;
 using std::string;
@@ -56,8 +55,7 @@ typedef vector<Attr_t> Attrs_t;
 typedef ZCallable<string(string)> Callable_Entity;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML::StrimU
+// MARK: - ZML::StrimU
 
 /// Tokenizes ML in a source strim.
 
@@ -109,8 +107,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML::StrimmerU
+// MARK: - ZML::StrimmerU
 
 class StrimmerU : public ZStrimmerU
 	{
@@ -132,8 +129,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML parsing support
+// MARK: - ZML parsing support
 
 void sSkipText(StrimU& r);
 
@@ -147,8 +143,7 @@ bool sTryRead_Empty(StrimU& r, const string& iTagName);
 bool sTryRead_End(StrimU& r, const string& iTagName);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML::StrimW
+// MARK: - ZML::StrimW
 
 /// A write filter strim to help generate well-formed ML-type data (XML, HTML etc).
 
@@ -278,8 +273,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML::StrimW::Indenter
+// MARK: - ZML::StrimW::Indenter
 
 class StrimW::Indenter
 	{
@@ -293,8 +287,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZML::StrimmerW
+// MARK: - ZML::StrimmerW
 
 /// A write filter strimmer encapsulating a StrimW.
 

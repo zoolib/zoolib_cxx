@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZBlackBerry {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Manager_Client
+// MARK: - Manager_Client
 
 class Manager_Client
 :	public Manager

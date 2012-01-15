@@ -25,8 +25,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIterRep_Wrapper declaration
+// MARK: - ZNodeIterRep_Wrapper declaration
 
 class ZNodeIterRep_Wrapper : public ZNodeIterRep
 	{
@@ -50,8 +49,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeRep_Wrapper
+// MARK: - ZNodeRep_Wrapper
 
 ZNodeRep_Wrapper::ZNodeRep_Wrapper(ZRef<ZNodeRep> iParent, const std::string& iName,
 	size_t iDepth, ZRef<ZNodeRep> iNodeRep)
@@ -179,8 +177,7 @@ ZRef<ZNodeRep> ZNodeRep_Wrapper::GetRealNodeRep()
 	{ return fNodeRep; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZNodeIterRep_Wrapper definition
+// MARK: - ZNodeIterRep_Wrapper definition
 
 ZNodeIterRep_Wrapper::ZNodeIterRep_Wrapper(ZRef<ZNodeRep> iParent,
 	const std::string& iName, size_t iDepth, ZRef<ZNodeIterRep> iIterRep)

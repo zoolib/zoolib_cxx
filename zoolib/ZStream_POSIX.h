@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_FILE
+// MARK: - ZStreamR_FILE
 
 /// A read stream that wraps a POSIX FILE*.
 
@@ -54,8 +53,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_FILE
+// MARK: - ZStreamRPos_FILE
 
 /// A positionable read stream that wraps a POSIX FILE*.
 
@@ -85,8 +83,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamW_FILE
+// MARK: - ZStreamW_FILE
 
 /// A write stream that wraps a POSIX FILE*.
 
@@ -111,8 +108,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * FILE backed by a ZStream or ZStreamer
+// MARK: - FILE backed by a ZStream or ZStreamer
 
 FILE* sStreamOpen(const ZStreamR& iStreamR);
 FILE* sStreamOpen(const ZStreamRPos& iStreamRPos);

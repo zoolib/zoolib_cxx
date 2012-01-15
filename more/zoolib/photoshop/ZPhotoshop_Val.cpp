@@ -44,8 +44,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Seq and Map Copy, Getter, Setter macros
+// MARK: - Seq and Map Copy, Getter, Setter macros
 
 #define COPYFROMTO(SUITE, iSource, iKey, iType, DEST) \
 	switch (iType) \
@@ -291,8 +290,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		{ SUITE->PutData(PARAM, theVal->GetSize(), const_cast<void*>(theVal->GetData())); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop suites, for local use
+// MARK: - ZPhotoshop suites, for local use
 
 // If we use the symbolic constants for suite version numbers and use a more recent
 // SDK then we will have an unnecessary runtime error with older host apps.
@@ -319,8 +317,7 @@ static AutoSuite<ASZStringSuite>
 	spASZString(kASZStringSuite, kASZStringSuiteVersion1);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Using statements
+// MARK: - Using statements
 
 namespace ZooLib {
 
@@ -328,8 +325,7 @@ using std::map;
 using std::pair;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Support for ZRef<ASZString>
+// MARK: - Support for ZRef<ASZString>
 
 template <>
 void sRetain_T(struct ASZByteRun*& ioString)
@@ -346,15 +342,13 @@ void sRelease_T(struct ASZByteRun* iString)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop
+// MARK: - ZPhotoshop
 
 /** Various stuff */
 namespace ZPhotoshop {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
+// MARK: - Helpers
 
 static PIActionDescriptor spDuplicate(PIActionDescriptor iSource);
 
@@ -453,8 +447,7 @@ static string8 spAsString(KeyID iKeyID)
 	{ return spFromRuntimeTypeID(iKeyID); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Public utilities
+// MARK: - Public utilities
 
 bool sAsRuntimeTypeID(const string8& iString, TypeID& oTypeID)
 	{
@@ -505,16 +498,14 @@ bool sFromRuntimeTypeID(TypeID iTypeID, string8& oString)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ClassID
+// MARK: - ClassID
 
 ClassID::ClassID(const string8& iName)
 :	fDCI(spAsRuntimeTypeID(iName))
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Enumerated
+// MARK: - Enumerated
 
 Enumerated::Enumerated(EnumTypeID iEnumType, const string8& iValue)
 :	fEnumType(iEnumType)
@@ -532,8 +523,7 @@ Enumerated::Enumerated(const string8& iEnumType, const string8& iValue)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Spec::Entry
+// MARK: - Spec::Entry
 
 Spec::Entry::Entry()
 :	fDCI(0)
@@ -697,8 +687,7 @@ void Spec::Entry::pCopyFrom(const Entry& iOther)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Spec
+// MARK: - Spec
 
 /**
 \class Spec
@@ -996,8 +985,7 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Val
+// MARK: - Val
 
 /**
 \class Val
@@ -1088,8 +1076,7 @@ Val::Val(const Spec& iVal)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Val typename accessors
+// MARK: - Val typename accessors
 
 ZMACRO_ZValAccessors_Def_Entry(Val, Int32, int32)
 ZMACRO_ZValAccessors_Def_Entry(Val, Double, double)
@@ -1105,8 +1092,7 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Map, Map)
 ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Seq
+// MARK: - Seq
 
 /**
 \class Seq
@@ -1237,8 +1223,7 @@ PIActionList Seq::Orphan()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Map
+// MARK: - Map
 
 /**
 \class Map

@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace ZSOCKS {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZSOCKS
+// MARK: - ZSOCKS
 
 bool sConnect(const ZStreamR& r, const ZStreamW& w, const std::string& iHost, uint16 iPort);
 

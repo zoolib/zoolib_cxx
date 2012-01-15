@@ -65,8 +65,7 @@ and then the root node written.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree. Layout of nodes.
+// MARK: - ZBlockStore_PhaseTree. Layout of nodes.
 
 /*
 Note that all fields in nodes are 32 bits in size, and are kept in big-endian order.
@@ -110,8 +109,7 @@ struct NativeLessBig
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree::Slot
+// MARK: - ZBlockStore_PhaseTree::Slot
 
 class ZBlockStore_PhaseTree::Slot
 	{
@@ -171,8 +169,7 @@ void ZBlockStore_PhaseTree::Slot::operator delete(void* iPtr, size_t iObjectSize
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree::StreamRPos
+// MARK: - ZBlockStore_PhaseTree::StreamRPos
 
 class ZBlockStore_PhaseTree::StreamRPos : public ZStreamRPos
 	{
@@ -233,8 +230,7 @@ uint64 ZBlockStore_PhaseTree::StreamRPos::Imp_GetSize()
 	{ return fBlockStore->GetBlockSize(fBlockID, fBlockSlot); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree::StreamerRPos
+// MARK: - ZBlockStore_PhaseTree::StreamerRPos
 
 class ZBlockStore_PhaseTree::StreamerRPos : public ZStreamerRPos
 	{
@@ -261,8 +257,7 @@ ZStreamRPos& ZBlockStore_PhaseTree::StreamerRPos::GetStreamRPos()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree::StreamRWPos
+// MARK: - ZBlockStore_PhaseTree::StreamRWPos
 
 class ZBlockStore_PhaseTree::StreamRWPos : public ZStreamRWPos
 	{
@@ -357,8 +352,7 @@ void ZBlockStore_PhaseTree::StreamRWPos::Imp_SetSize(uint64 iSize)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree::StreamerRWPos
+// MARK: - ZBlockStore_PhaseTree::StreamerRWPos
 
 class ZBlockStore_PhaseTree::StreamerRWPos : public ZStreamerRWPos
 	{
@@ -385,8 +379,7 @@ ZStreamRWPos& ZBlockStore_PhaseTree::StreamerRWPos::GetStreamRWPos()
 	{ return fStream; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree. Potentially inlined low level field access.
+// MARK: - ZBlockStore_PhaseTree. Potentially inlined low level field access.
 
 PT_INLINE uint32 ZBlockStore_PhaseTree::ReadField(Slot* iSlot, size_t iOffset)
 	{
@@ -486,8 +479,7 @@ inline void ZBlockStore_PhaseTree::ValidateSlot
 #endif // ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree. Potentially inlined higher level field access.
+// MARK: - ZBlockStore_PhaseTree. Potentially inlined higher level field access.
 
 // These methods are the ones that are used most
 // heavily and thus that benefit most from being inlined.
@@ -548,8 +540,7 @@ PT_INLINE uint32 ZBlockStore_PhaseTree::Index_GetSubTreeSize(Slot* iSlot, size_t
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree
+// MARK: - ZBlockStore_PhaseTree
 
 // We embed CRLF, CR and LF into the magic text, if the file passes through
 // a line-ending transforming gateway of some kind one or other (or all) of
@@ -1484,8 +1475,7 @@ size_t ZBlockStore_PhaseTree::ValidateOne
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree. Methods called by streams or our block store API.
+// MARK: - ZBlockStore_PhaseTree. Methods called by streams or our block store API.
 
 void ZBlockStore_PhaseTree::StreamDisposing(Slot* iBlockSlot)
 	{
@@ -2161,8 +2151,7 @@ void ZBlockStore_PhaseTree::SetBlockSizeImp(Slot* iSlot, size_t iSize)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree. Slot management.
+// MARK: - ZBlockStore_PhaseTree. Slot management.
 
 uint32 ZBlockStore_PhaseTree::AllocateSlotNumber(bool iForImmediateUse)
 	{
@@ -2889,8 +2878,7 @@ void ZBlockStore_PhaseTree::ReadFinish(Slot* iBlockSlot)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree. Index node manipulation.
+// MARK: - ZBlockStore_PhaseTree. Index node manipulation.
 
 ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChild
 	(Slot* iSlot, bool iIsLeaf, BlockID iBlockID, size_t& oOffset)
@@ -3229,8 +3217,7 @@ void ZBlockStore_PhaseTree::Index_Rotate(Slot* iSlot, bool iSlotsAreLeaves,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree. Index node accessors.
+// MARK: - ZBlockStore_PhaseTree. Index node accessors.
 
 void ZBlockStore_PhaseTree::Index_Initialize(Slot* iSlot)
 	{
@@ -3505,8 +3492,7 @@ void ZBlockStore_PhaseTree::Index_LeafDeleteToEnd(Slot* iSlot, size_t iOffset)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree. Block node manipulation.
+// MARK: - ZBlockStore_PhaseTree. Block node manipulation.
 
 ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlot
 	(Slot* iSlot, size_t iPosition)
@@ -3881,8 +3867,7 @@ void ZBlockStore_PhaseTree::Block_PruneTreeRecurse(Slot* iSlot, size_t iFieldOff
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZBlockStore_PhaseTree. Extent node manipulation.
+// MARK: - ZBlockStore_PhaseTree. Extent node manipulation.
 
 void ZBlockStore_PhaseTree::Extent_RecursiveDelete(Slot* iSlot, int iHeight)
 	{

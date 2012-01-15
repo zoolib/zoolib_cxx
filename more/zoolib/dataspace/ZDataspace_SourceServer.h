@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * SourceServer
+// MARK: - SourceServer
 
 class SourceServer : public ZCounted
 	{

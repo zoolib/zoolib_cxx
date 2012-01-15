@@ -31,8 +31,7 @@ using std::set;
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Static helper functions
+// MARK: - Static helper functions
 
 static void spWrite_PropName(const string& iName, const ZStrimW& s)
 	{
@@ -120,8 +119,7 @@ static void spToStrim(const ZRef<ZValComparator>& iComparator, const ZStrimW& s)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Strim_ValPred_Any
+// MARK: - ZUtil_Strim_ValPred_Any
 
 void sToStrim(const ZValPred& iValPred, const ZStrimW& s)
 	{

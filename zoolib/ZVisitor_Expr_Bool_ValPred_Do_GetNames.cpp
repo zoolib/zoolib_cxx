@@ -25,8 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor_Expr_Bool_ValPred_Do_GetNames
+// MARK: - ZVisitor_Expr_Bool_ValPred_Do_GetNames
 
 void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Bool_ValPred
 	(const ZRef<ZExpr_Bool_ValPred>& iExpr)
