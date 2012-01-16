@@ -38,20 +38,21 @@ class ZNetNameLookup;
 // =================================================================================================
 // MARK: - ZNet
 
-namespace ZNet
-	{
-	enum Error
-		{
-		errorNone,
-		errorGeneric,
-		errorBadState,
+namespace ZNet {
 
-		errorCouldntConnect,
-		errorLocalPortInUse,
-		errorCantGetAmountUnread,
-		errorBufferTooSmall
-		};
-	}
+enum Error
+	{
+	errorNone,
+	errorGeneric,
+	errorBadState,
+
+	errorCouldntConnect,
+	errorLocalPortInUse,
+	errorCantGetAmountUnread,
+	errorBufferTooSmall
+	};
+
+} // namespace ZNet
 
 // =================================================================================================
 // MARK: - ZNetEx

@@ -167,7 +167,7 @@ bool sIsPending(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& i
 	{ return iCallable && not sIsTrue(iCallable); }
 
 // =================================================================================================
-// MARK: - sCallCog variants
+// MARK:- sCallCog variants
 
 template <class Cog>
 Cog sCallCog(const Cog& iCog, const typename Cog::Param iParam)

@@ -442,8 +442,7 @@ const struct
 	} sTempRef = {};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: -
 
 template <class T>
 void swap(ZRef<T>& a, ZRef<T>& b)
