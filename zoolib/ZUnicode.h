@@ -113,7 +113,7 @@ inline void sAppendContinuation(uint32& ioCP, uint8 iContinuation)
 
 /* These are all template functions, they'll take anything that behaves like a string::iterator
 or a pointer. They call through to static member functions of template structs declared in
-ZUnicodePriv.h.The actual code for the three different code unit types is in ZUnicodePrivB.h,
+ZUnicodePriv.h. The actual code for the three different code unit types is in ZUnicodePrivB.h,
 and we do explicit template instantiations of the structs in ZUnicode.cpp. So if you have a new
 kind of iterator you'll need to do something similar in your code. */
 
