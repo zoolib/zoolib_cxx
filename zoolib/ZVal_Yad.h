@@ -80,6 +80,7 @@ public:
 		}
 
 // Shortcut access to values in an enclosed Map.
+	ZQ<ZVal_Yad> QGet(const string8& iName) const;
 	ZVal_Yad Get(const string8& iName) const;
 
 	template <class S>
@@ -91,6 +92,7 @@ public:
 		{ return this->Get(iName).Get<S>(); }
 
 // Shortcut access to values in an enclosed Seq.
+	ZQ<ZVal_Yad> QGet(const size_t& iIndex) const;
 	ZVal_Yad Get(const size_t& iIndex) const;
 
 	template <class S>

@@ -81,11 +81,25 @@ ZVal_Yad& ZVal_Yad::operator=(const ZMap_Yad& iMap)
 bool ZVal_Yad::IsNull() const
 	{ return fYad; }
 
+ZQ<ZVal_Yad> ZVal_Yad::QGet(const string8& iName) const
+	{
+	if (ZRef<ZYadMapRPos> theYad = fYad.DynamicCast<ZYadMapRPos>())
+		return ZMap_Yad(theYad).QGet(iName);
+	return null;
+	}
+
 ZVal_Yad ZVal_Yad::Get(const string8& iName) const
 	{
 	if (ZRef<ZYadMapRPos> theYad = fYad.DynamicCast<ZYadMapRPos>())
 		return ZMap_Yad(theYad).Get(iName);
 	return ZVal_Yad();
+	}
+
+ZQ<ZVal_Yad> ZVal_Yad::QGet(const size_t& iIndex) const
+	{
+	if (ZRef<ZYadSeqRPos> theYad = fYad.DynamicCast<ZYadSeqRPos>())
+		return ZSeq_Yad(theYad).QGet(iIndex);
+	return null;
 	}
 
 ZVal_Yad ZVal_Yad::Get(const size_t& iIndex) const
