@@ -49,16 +49,18 @@ public:
 // From ZVisitor_Expr_Op1_T
 	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<T> >& iExpr)
 		{
-		ZRef<T> newOp0 = this->Do(iExpr->GetOp0());
-		this->pSetResult(iExpr->SelfOrClone(newOp0));
+		if (ZQ<ZRef<T> > theQ0 = this->QDo(iExpr->GetOp0()))
+			this->pSetResult(iExpr->SelfOrClone(*theQ0));
 		}
 
 // From ZVisitor_Expr_Op2_T
 	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<T> >& iExpr)
 		{
-		ZRef<T> newOp0 = this->Do(iExpr->GetOp0());
-		ZRef<T> newOp1 = this->Do(iExpr->GetOp1());
-		this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
+		if (ZQ<ZRef<T> > theQ0 = this->QDo(iExpr->GetOp0()))
+			{
+			if (ZQ<ZRef<T> > theQ1 = this->QDo(iExpr->GetOp1()))
+				this->pSetResult(iExpr->SelfOrClone(*theQ0, *theQ1));
+			}
 		}
 	};
 
