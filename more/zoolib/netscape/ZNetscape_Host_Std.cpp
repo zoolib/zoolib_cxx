@@ -650,7 +650,7 @@ Host_Std::Sender::Sender(Host* iHost, const NPP_t& iNPP_t,
 	fNPStream.lastmodified = 0;
 	fNPStream.notifyData = iNotifyData;
 	fNPStream.headers = nullptr;
-//	fNPStream.headers = static_cast<const char*>(fHeaders.GetData());
+//	fNPStream.headers = static_cast<const char*>(fHeaders.GetPtr());
 	}
 
 Host_Std::Sender::~Sender()

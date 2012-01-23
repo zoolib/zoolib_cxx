@@ -53,8 +53,8 @@ public:
 	size_t GetSize() const;
 	void SetSize(size_t iSize);
 
-	const void* GetData() const;
-	void* GetDataMutable();
+	const void* GetPtr() const;
+	void* GetPtrMutable();
 
 	void CopyFrom(size_t iOffset, const void* iSource, size_t iCount);
 	void CopyFrom(const void* iSource, size_t iCount);

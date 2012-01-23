@@ -170,7 +170,7 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 	else if (const ZData_Any* theValue = iVal.PGet<ZData_Any>())
 		{
 		if (size_t theSize = theValue->GetSize())
-			return sData(theValue->GetData(), theSize);
+			return sData(theValue->GetPtr(), theSize);
 		else
 			return sData();
 		}

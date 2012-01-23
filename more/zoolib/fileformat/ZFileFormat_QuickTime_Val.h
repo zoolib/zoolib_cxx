@@ -41,7 +41,6 @@ ZQ<ZVal_Any> sAsVal(const void* iSource, size_t iSize);
 ZQ<ZVal_Any> sAsVal(const ZData_Any& iData);
 ZQ<ZVal_Any> sAsVal(const ZStreamR& iStreamR);
 
-
 } // namespace QuickTime
 } // namespace FileFormat
 } // namespace ZooLib

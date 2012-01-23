@@ -127,14 +127,14 @@ void ZData_CF::SetSize(size_t iSize)
 		::CFDataSetLength(this->pTouch(), iSize);
 	}
 
-const void* ZData_CF::GetData() const
+const void* ZData_CF::GetPtr() const
 	{
 	if (CFDataRef theData = this->pData())
 		return ::CFDataGetBytePtr(theData);
 	return nullptr;
 	}
 
-void* ZData_CF::GetDataMutable()
+void* ZData_CF::GetPtrMutable()
 	{ return ::CFDataGetMutableBytePtr(this->pTouch()); }
 
 void ZData_CF::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)

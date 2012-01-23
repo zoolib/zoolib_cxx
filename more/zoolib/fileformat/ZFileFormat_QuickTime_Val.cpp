@@ -120,7 +120,7 @@ ZQ<ZVal_Any> sAsVal(const void* iSource, size_t iSize)
 	{ return sAsVal(ZStreamRPos_Memory(iSource, iSize)); }
 
 ZQ<ZVal_Any> sAsVal(const ZData_Any& iData)
-	{ return sAsVal(iData.GetData(), iData.GetSize()); }
+	{ return sAsVal(iData.GetPtr(), iData.GetSize()); }
 
 } // namespace QuickTime
 } // namespace FileFormat

@@ -151,9 +151,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				{ \
 				Data theVal(theLength); \
 				if (0 == theLength \
-					|| noErr == SUITE->GetData(iSource, iKey, theVal.GetDataMutable())) \
+					|| noErr == SUITE->GetData(iSource, iKey, theVal.GetPtrMutable())) \
 					{ \
-					SUITE->PutData(DEST, theVal.GetSize(), theVal.GetDataMutable()); \
+					SUITE->PutData(DEST, theVal.GetSize(), theVal.GetPtrMutable()); \
 					} \
 				} \
 			break; \
@@ -250,7 +250,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		if (noErr == SUITE->GetDataLength(P0, P1, &theLength)) \
 			{ \
 			Data result(theLength); \
-			if (0 == theLength || noErr == SUITE->GetData(P0, P1, result.GetDataMutable())) \
+			if (0 == theLength || noErr == SUITE->GetData(P0, P1, result.GetPtrMutable())) \
 				return result; \
 			} \
 		break; \
@@ -287,7 +287,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	else if (const FileRef* theVal = iVal.PGet<FileRef>()) \
 		{ SUITE->PutAlias(PARAM, theVal->Get()); } \
 	else if (const Data* theVal = iVal.PGet<Data>()) \
-		{ SUITE->PutData(PARAM, theVal->GetSize(), const_cast<void*>(theVal->GetData())); }
+		{ SUITE->PutData(PARAM, theVal->GetSize(), const_cast<void*>(theVal->GetPtr())); }
 
 // =================================================================================================
 // MARK: - ZPhotoshop suites, for local use

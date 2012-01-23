@@ -160,7 +160,7 @@ ZQ<ZData_Any> ZNatter::pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
 		w.WriteUInt8(2);
 		w.WriteInt64(iExchange->fID ^ 1);
 		w.WriteCount(iData.GetSize());
-		w.Write(iData.GetData(), iData.GetSize());
+		w.Write(iData.GetPtr(), iData.GetSize());
 		w.Flush();
 		}
 	catch (...)

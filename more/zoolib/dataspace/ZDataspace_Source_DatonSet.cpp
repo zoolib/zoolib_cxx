@@ -69,7 +69,7 @@ identify those entities that satisfy a RelHead.
 static const ZStrimW& operator<<(const ZStrimW& w, const Daton& iDaton)
 	{
 	const ZData_Any& theData = iDaton.GetData();
-	w.Write(static_cast<const UTF8*>(theData.GetData()), theData.GetSize());
+	w.Write(static_cast<const UTF8*>(theData.GetPtr()), theData.GetSize());
 	return w;
 	}
 

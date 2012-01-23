@@ -1246,7 +1246,7 @@ void ZVal_ZooLib::ToStream(const ZStreamW& iStreamW) const
 			const ZData_ZooLib* theMemoryBlock = sFetch_T<ZData_ZooLib>(fType.fBytes);
 			iStreamW.WriteCount(theMemoryBlock->GetSize());
 			if (theMemoryBlock->GetSize())
-				iStreamW.Write(theMemoryBlock->GetData(), theMemoryBlock->GetSize());
+				iStreamW.Write(theMemoryBlock->GetPtr(), theMemoryBlock->GetSize());
 			break;
 			}
 		case eZType_Vector:
@@ -1712,7 +1712,7 @@ void ZVal_ZooLib::pFromStream(ZType iType, const ZStreamR& iStreamR)
 				{
 				try
 					{
-					iStreamR.Read(theRaw->GetDataMutable(), size);
+					iStreamR.Read(theRaw->GetPtrMutable(), size);
 					}
 				catch (...)
 					{

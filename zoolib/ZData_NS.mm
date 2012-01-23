@@ -123,14 +123,14 @@ void ZData_NS::SetSize(size_t iSize)
 		[this->pTouch() setLength:iSize];
 	}
 
-const void* ZData_NS::GetData() const
+const void* ZData_NS::GetPtr() const
 	{
 	if (NSData* theData = this->pData())
 		return [theData bytes];
 	return nullptr;
 	}
 
-void* ZData_NS::GetDataMutable()
+void* ZData_NS::GetPtrMutable()
 	{ return [this->pTouch() mutableBytes]; }
 
 void ZData_NS::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)

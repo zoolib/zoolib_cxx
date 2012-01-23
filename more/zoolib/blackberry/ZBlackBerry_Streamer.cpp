@@ -755,7 +755,7 @@ uint32 Commer_Streamer::GetPIN()
 	{
 	Data theMB_PIN = this->GetAttribute(8, 4);
 	if (theMB_PIN.GetSize() >= 15)
-		return ZByteSwap_ReadLittle32(static_cast<const char*>(theMB_PIN.GetData()) + 11);
+		return ZByteSwap_ReadLittle32(static_cast<const char*>(theMB_PIN.GetPtr()) + 11);
 	return 0;
 	}
 
@@ -1062,7 +1062,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 
 				// We've already read one byte (containing the command);
 				Data theMB(iPayloadSize - 1);
-				iStreamR.Read(theMB.GetDataMutable(), theMB.GetSize());
+				iStreamR.Read(theMB.GetPtrMutable(), theMB.GetSize());
 
 				ZGuardRMtxR locker(fMutex);
 				ZAssert(fGetAttribute);

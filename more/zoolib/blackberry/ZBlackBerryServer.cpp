@@ -379,7 +379,7 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				ZBlackBerry::Data theMB = theQ.Get();
 				w.WriteBool(true);
 				w.WriteCount(theMB.GetSize());
-				w.Write(theMB.GetData(), theMB.GetSize());
+				w.Write(theMB.GetPtr(), theMB.GetSize());
 				return;
 				}
 			}
