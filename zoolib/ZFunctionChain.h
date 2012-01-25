@@ -89,6 +89,9 @@ protected:
 		theHead = this;
 		}
 
+	virtual ~ZFunctionChain_T()
+		{}
+
 	virtual bool Invoke(Result& oResult, Param iParam)
 		{ return false; }
 

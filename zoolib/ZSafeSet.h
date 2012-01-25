@@ -126,7 +126,7 @@ private:
 		return fList.size();
 		}
 
-	bool pEmpty() const
+	bool pIsEmpty() const
 		{
 		ZAcqMtx acq(fMtx);
 		return fList.empty();
@@ -247,8 +247,8 @@ public:
 	size_t Size() const
 		{ return fRep->pSize(); }
 
-	bool Empty() const
-		{ return fRep->pEmpty(); }
+	bool IsEmpty() const
+		{ return fRep->pIsEmpty(); }
 
 	bool Insert(const T& iT)
 		{ return fRep->pInsert(iT); }

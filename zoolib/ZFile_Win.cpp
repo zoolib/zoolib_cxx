@@ -543,13 +543,16 @@ ZRef<ZFileLoc> ZFileLoc_Win::sGet_App()
 	while (bufSize < 16384)
 		{
 		vector<char> buffer(bufSize);
-		DWORD result = ::GetModuleFileNameA(::GetModuleHandleA(nullptr), &buffer[0], bufSize);
-		if (result < 0)
+		if (DWORD result = ::GetModuleFileNameA(::GetModuleHandleA(nullptr), &buffer[0], bufSize))
+			{
+			if (result < bufSize)
+				return sFromFullWinPath(&buffer[0]);
+			bufSize *= 2;
+			}
+		else
+			{
 			break;
-		if (result < bufSize)
-			return sFromFullWinPath(&buffer[0]);
-
-		bufSize *= 2;
+			}
 		}
 
 	return null;
@@ -1133,13 +1136,16 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::sGet_App()
 	while (bufSize < 16384)
 		{
 		vector<UTF16> buffer(bufSize);
-		DWORD result = ::GetModuleFileNameW(::GetModuleHandleW(nullptr), &buffer[0], bufSize);
-		if (result < 0)
+		if (DWORD result = ::GetModuleFileNameW(::GetModuleHandleW(nullptr), &buffer[0], bufSize))
+			{
+			if (result < bufSize)
+				return sFromFullWinPath(&buffer[0]);
+			bufSize *= 2;
+			}
+		else
+			{
 			break;
-		if (result < bufSize)
-			return sFromFullWinPath(&buffer[0]);
-
-		bufSize *= 2;
+			}
 		}
 
 	return null;

@@ -160,7 +160,7 @@ bool ZWorker::IsAwake()
 bool ZWorker::Attach(ZRef<ZCaller> iCaller)
 	{
 	ZGuardRMtx guard(fMtx);
-	if (!fCaller)
+	if (not fCaller)
 		{
 		fCaller = iCaller;
 

@@ -211,7 +211,7 @@ ZRef<ZPromise<T> > sPromise()
 	{ return new ZPromise<T>; }
 
 // =================================================================================================
-// MARK: - sGetClear
+// MARK: - sGetDeliveryClearPromise
 
 template <class T>
 ZRef<ZDelivery<T> > sGetDeliveryClearPromise(ZRef<ZPromise<T> >& ioPromise)

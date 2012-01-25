@@ -161,10 +161,7 @@ void ZStrimW_CRLFRemove::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, s
 				size_t countWritten;
 				fStrimSink.Write(localSource, innerSource - localSource, &countWritten);
 				if (countWritten == 0)
-					{
-					iCountCU = 0;
 					break;
-					}
 				iCountCU -= countWritten;
 				localSource += countWritten;
 				fLastWasCR = false;

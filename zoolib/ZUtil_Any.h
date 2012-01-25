@@ -46,10 +46,17 @@ double sDCoerceRat(double iDefault, const ZAny& iAny);
 double sCoerceRat(const ZAny& iAny);
 
 // Old names
-ZQ<double> sQCoerceReal(const ZAny& iAny);
-bool sQCoerceReal(const ZAny& iAny, double& oVal);
-double sDCoerceReal(double iDefault, const ZAny& iAny);
-double sCoerceReal(const ZAny& iAny);
+inline ZQ<double> sQCoerceReal(const ZAny& iAny)
+	{ return sQCoerceRat(iAny); }
+
+inline bool sQCoerceReal(const ZAny& iAny, double& oVal)
+	{ return sQCoerceRat(iAny, oVal); }
+
+inline double sDCoerceReal(double iDefault, const ZAny& iAny)
+	{ return sDCoerceRat(iDefault, iAny); }
+
+inline double sCoerceReal(const ZAny& iAny)
+	{ return sCoerceRat(iAny); }
 
 } // namespace ZooLib
 

@@ -104,12 +104,12 @@ const void* ZAny::ConstVoidStar() const
 
 void ZAny::swap(ZAny& ioOther)
 	{
-	// Simplify this for now
 	if (fPtr_InPlace || ioOther.fPtr_InPlace)
 		{
-		ZAny temp = *this;
+		// Trivial implementation for now
+		const ZAny temp = *this;
 		*this = ioOther;
-		ioOther = *this;
+		ioOther = temp;
 		}
 	else
 		{

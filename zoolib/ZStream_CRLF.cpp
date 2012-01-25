@@ -248,10 +248,7 @@ void ZStreamW_CRLFRemove::Imp_Write(const void* iSource, size_t iCount, size_t* 
 				size_t countWritten;
 				fStreamSink.Write(localSource, innerSource - localSource, &countWritten);
 				if (countWritten == 0)
-					{
-					countRemaining = 0;
 					break;
-					}
 				if (oCountWritten)
 					*oCountWritten += countWritten;
 				countRemaining -= countWritten;

@@ -72,8 +72,8 @@ public:
 	:	fT(T())
 		{
 		fT.info = iRef.Get();
-		fT.retain = (CFAllocatorRetainCallBack)&ZRef<O>::sCFRetain;
-		fT.release = (CFAllocatorReleaseCallBack)&ZRef<O>::sCFRelease;
+		fT.retain = (CFAllocatorRetainCallBack)&ZRef<O>::sCFAllocatorRetain;
+		fT.release = (CFAllocatorReleaseCallBack)&ZRef<O>::sCFAllocatorRelease;
 		fT.retain(fT.info);
 		}
 

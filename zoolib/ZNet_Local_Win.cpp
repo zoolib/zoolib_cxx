@@ -207,19 +207,18 @@ ZRef<ZNetAddress> ZNetListener_Local_Win::GetAddress()
 
 ZRef<ZNetEndpoint> ZNetListener_Local_Win::Listen()
 	{
-	bool success = ::ConnectNamedPipe(fHANDLE, &fOVERLAPPED);
-
-//	DWORD err = ::GetLastError();
-//	if (!success && (err == ERROR_IO_PENDING || err == ERROR_PIPE_LISTENING))
-//		::WaitForSingleObjectEx(fEvent, INFINITE, TRUE);
-
-	DWORD dummy;
-	success = ::GetOverlappedResult(fHANDLE, &fOVERLAPPED, &dummy, TRUE);
-
-	ZRef<HANDLE> theHANDLE;
-	theHANDLE.swap(fHANDLE);
-	fHANDLE = spCreateNamedPipe(fPath, false);
-	return new ZNetEndpoint_Local_Win(theHANDLE);
+	if (::ConnectNamedPipe(fHANDLE, &fOVERLAPPED))
+		{
+		DWORD dummy;
+		if (::GetOverlappedResult(fHANDLE, &fOVERLAPPED, &dummy, TRUE))
+			{
+			ZRef<HANDLE> theHANDLE;
+			theHANDLE.swap(fHANDLE);
+			fHANDLE = spCreateNamedPipe(fPath, false);
+			return new ZNetEndpoint_Local_Win(theHANDLE);
+			}
+		}
+	return null;
 	}
 
 void ZNetListener_Local_Win::CancelListen()

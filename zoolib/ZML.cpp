@@ -896,8 +896,7 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 		ZQ<UTF32> theEntityCPQ;
 		const UTF8* current = localSource;
 		const UTF8* priorToEntity;
-		while (not theEntityCPQ)
-			{
+		do	{
 			priorToEntity = current;
 			UTF32 theCP;
 			if (not ZUnicode::sReadInc(current, localSourceEnd, theCP))
@@ -928,7 +927,7 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 						theEntityCPQ = theCP;
 					}
 				}
-			}
+			} while (not theEntityCPQ);
 
 		if (theEntityCPQ)
 			{

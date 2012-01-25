@@ -44,6 +44,7 @@ public:
 class ZVisitor
 	{
 public:
+	virtual ~ZVisitor();
 	virtual void Visit(const ZRef<ZVisitee>& iRep);
 	};
 

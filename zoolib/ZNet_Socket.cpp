@@ -316,30 +316,33 @@ int ZNetEndpoint_Socket::GetSocketFD()
 void ZNetEndpoint_Socket::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	char* localDest = static_cast<char*>(oDest);
-	while (iCount)
+	if (iCount)
 		{
-		const int result = sReceive(fSocketFD, localDest, iCount);
+		for (;;)
+			{
+			const int result = sReceive(fSocketFD, localDest, iCount);
 
-		if (result < 0)
-			{
-			const int err = errno;
-			if (err == EAGAIN)
-				sWaitReadable(fSocketFD, 1000);
-			else if (err != EINTR)
+			if (result < 0)
+				{
+				const int err = errno;
+				if (err == EAGAIN)
+					sWaitReadable(fSocketFD, 1000);
+				else if (err != EINTR)
+					break;
+				}
+			else if (result == 0)
+				{
+				// result is zero, indicating that the other end has sent FIN.
 				break;
-			}
-		else if (result == 0)
-			{
-			// result is zero, indicating that the other end has sent FIN.
-			break;
-			}
-		else
-			{
-			localDest += result;
-			iCount -= result;
-			break;
+				}
+			else
+				{
+				localDest += result;
+				break;
+				}
 			}
 		}
+		
 	if (oCountRead)
 		*oCountRead = localDest - static_cast<char*>(oDest);
 	}

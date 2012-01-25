@@ -2644,8 +2644,6 @@ sBindL
 	{
 	if (not iCallable)
 		return null;
-	if (not iCallable)
-		return null;
 	return new Callable_L09<typename Callable::Signature>
 		(i0, i1, i2, i3, i4, i5, i6, i7, i8,
 		iCallable);

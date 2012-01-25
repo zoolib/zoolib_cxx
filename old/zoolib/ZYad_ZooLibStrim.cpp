@@ -165,7 +165,6 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 				else if (typeValueLC == "id") oVal = eZType_ID;
 				else if (typeValueLC == "vector") oVal = eZType_Vector;
 				else if (typeValueLC == "type") oVal = eZType_Type;
-				else if (typeValueLC == "time") oVal = eZType_Time;
 //##				else if (typeValueLC == "name") oVal = eZType_Name;
 				else
 					spThrowParseException("Unknown type name '" + typeValue + "'");

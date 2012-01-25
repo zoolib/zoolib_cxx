@@ -31,6 +31,9 @@ void ZVisitee::Accept(ZVisitor& iVisitor)
 // =================================================================================================
 // MARK: - ZVisitor
 
+ZVisitor::~ZVisitor()
+	{}
+
 void ZVisitor::Visit(const ZRef<ZVisitee>& iRep)
 	{}
 

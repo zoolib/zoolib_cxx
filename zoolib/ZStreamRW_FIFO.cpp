@@ -57,23 +57,25 @@ void ZStreamRW_FIFO::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	ZAcqMtx acq(fMutex);
 	++fUserCount;
 	uint8* localDest = static_cast<uint8*>(oDest);
-	while (iCount)
+	if (iCount)
 		{
-		const size_t countToCopy = min(iCount, fBuffer.size());
-		if (countToCopy == 0)
+		for (;;)
 			{
-			if (fClosed)
+			const size_t countToCopy = min(iCount, fBuffer.size());
+			if (countToCopy == 0)
+				{
+				if (fClosed)
+					break;
+				fCondition_Read.Wait(fMutex);
+				}
+			else
+				{
+				copy(fBuffer.begin(), fBuffer.begin() + countToCopy, localDest);
+				fBuffer.erase(fBuffer.begin(), fBuffer.begin() + countToCopy);
+				localDest += countToCopy;
+				fCondition_Write.Broadcast();
 				break;
-			fCondition_Read.Wait(fMutex);
-			}
-		else
-			{
-			copy(fBuffer.begin(), fBuffer.begin() + countToCopy, localDest);
-			fBuffer.erase(fBuffer.begin(), fBuffer.begin() + countToCopy);
-			localDest += countToCopy;
-			iCount -= countToCopy;
-			fCondition_Write.Broadcast();
-			break;
+				}
 			}
 		}
 	if (oCountRead)

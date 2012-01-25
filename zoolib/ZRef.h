@@ -206,18 +206,15 @@ public:
 		return true;
 		}
 
-	static T* sCFRetain(T* iP)
+	static T* sCFAllocatorRetain(T* iP)
 		{
 		if (iP)
 			sRetain(*iP);
 		return iP;
 		}
 
-	static void sCFRelease(T* iP)
-		{
-		if (iP)
-			sRelease(*iP);
-		}
+	static void sCFAllocatorRelease(T* iP)
+		{ spRelease(iP); }
 
 private:
 	T* fP;
@@ -402,18 +399,16 @@ public:
 		return true;
 		}
 
-	static T* sCFRetain(T* iP)
+	static T* sCFAllocatorRetain(T* iP)
 		{
 		if (iP)
 			sRetain_T(iP);
 		return iP;
 		}
 
-	static T* sCFRelease(T* iP)
-		{
-		if (iP)
-			sRelease_T(iP);
-		}
+	static void sCFAllocatorRelease(T* iP)
+		{ spRelease(iP); }
+
 private:
 	T* fP;
 	};

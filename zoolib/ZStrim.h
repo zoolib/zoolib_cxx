@@ -63,7 +63,7 @@ The canonical methods are protected, thus you cannot create, destroy or assign t
 ZStrimR reference, you must work with some derived class.
 */	//@{
 	ZStrimR() {}
-	~ZStrimR() {}
+	virtual ~ZStrimR() {}
 	ZStrimR(const ZStrimR&) {}
 	ZStrimR& operator=(const ZStrimR&) { return *this; }
 	//@}
@@ -196,7 +196,7 @@ The canonical methods are protected, thus you cannot create, destroy or assign t
 ZStrimW reference, you must work with some derived class.
 */	//@{
 	ZStrimW() {}
-	~ZStrimW() {}
+	virtual ~ZStrimW() {}
 	ZStrimW(const ZStrimW&) {}
 	ZStrimW& operator=(const ZStrimW&) { return *this; }
 	//@}

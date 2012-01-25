@@ -35,7 +35,7 @@ class ZCompare
 	{
 protected:
 	ZCompare(const char* iTypeName);
-	~ZCompare();
+	virtual ~ZCompare();
 
 	virtual int Compare(const void* iL, const void* iR) = 0;
 

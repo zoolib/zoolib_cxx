@@ -96,7 +96,7 @@ The canonical methods are protected, thus you cannot create, destroy or assign t
 ZStreamR reference, you must work with some derived class.
 */	//@{
 	ZStreamR() {}
-	~ZStreamR() {}
+	virtual ~ZStreamR() {}
 	ZStreamR(const ZStreamR&) {}
 	ZStreamR& operator=(const ZStreamR&) { return *this; }
 	//@}
@@ -356,7 +356,7 @@ The canonical methods are protected, thus you cannot create, destroy or assign t
 ZStreamW reference, you must work with some derived class.
 */	//@{
 	ZStreamW() {}
-	~ZStreamW() {}
+	virtual ~ZStreamW() {}
 	ZStreamW(const ZStreamW&) {}
 	ZStreamW& operator=(const ZStreamW&) { return *this; }
 	//@}
