@@ -55,11 +55,8 @@ public:
 		}
 
 // Our protocol
-	void Insert(ZRef<Callable> iCallable)
-		{ fCallables.Insert(iCallable); }
-
-	void Erase(ZRef<Callable> iCallable)
-		{ fCallables.Erase(iCallable); }
+	ZSafeSet<ZRef<Callable> >& GetCallables()
+		{ return fCallables; }
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -88,11 +85,8 @@ public:
 		}
 
 // Our protocol
-	void Insert(ZRef<Callable> iCallable)
-		{ fCallables.Insert(iCallable); }
-
-	void Erase(ZRef<Callable> iCallable)
-		{ fCallables.Erase(iCallable); }
+	ZSafeSet<ZRef<Callable> >& GetCallables()
+		{ return fCallables; }
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -121,11 +115,8 @@ public:
 		}
 
 // Our protocol
-	void Insert(ZRef<Callable> iCallable)
-		{ fCallables.Insert(iCallable); }
-
-	void Erase(ZRef<Callable> iCallable)
-		{ fCallables.Erase(iCallable); }
+	ZSafeSet<ZRef<Callable> >& GetCallables()
+		{ return fCallables; }
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -154,11 +145,8 @@ public:
 		}
 
 // Our protocol
-	void Insert(ZRef<Callable> iCallable)
-		{ fCallables.Insert(iCallable); }
-
-	void Erase(ZRef<Callable> iCallable)
-		{ fCallables.Erase(iCallable); }
+	ZSafeSet<ZRef<Callable> >& GetCallables()
+		{ return fCallables; }
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -187,11 +175,8 @@ public:
 		}
 
 // Our protocol
-	void Insert(ZRef<Callable> iCallable)
-		{ fCallables.Insert(iCallable); }
-
-	void Erase(ZRef<Callable> iCallable)
-		{ fCallables.Erase(iCallable); }
+	ZSafeSet<ZRef<Callable> >& GetCallables()
+		{ return fCallables; }
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -220,11 +205,8 @@ public:
 		}
 
 // Our protocol
-	void Insert(ZRef<Callable> iCallable)
-		{ fCallables.Insert(iCallable); }
-
-	void Erase(ZRef<Callable> iCallable)
-		{ fCallables.Erase(iCallable); }
+	ZSafeSet<ZRef<Callable> >& GetCallables()
+		{ return fCallables; }
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -253,11 +235,8 @@ public:
 		}
 
 // Our protocol
-	void Insert(ZRef<Callable> iCallable)
-		{ fCallables.Insert(iCallable); }
-
-	void Erase(ZRef<Callable> iCallable)
-		{ fCallables.Erase(iCallable); }
+	ZSafeSet<ZRef<Callable> >& GetCallables()
+		{ return fCallables; }
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -284,6 +263,10 @@ public:
 				return notnull;
 			}
 		}
+
+// Our protocol
+	ZSafeSet<ZRef<Callable> >& GetCallables()
+		{ return fCallables; }
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
@@ -312,11 +295,8 @@ public:
 		}
 
 // Our protocol
-	void Insert(ZRef<Callable> iCallable)
-		{ fCallables.Insert(iCallable); }
-
-	void Erase(ZRef<Callable> iCallable)
-		{ fCallables.Erase(iCallable); }
+	ZSafeSet<ZRef<Callable> >& GetCallables()
+		{ return fCallables; }
 
 private:
 	ZSafeSet<ZRef<Callable> > fCallables;
