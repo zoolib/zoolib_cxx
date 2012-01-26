@@ -79,7 +79,7 @@ protected:
 
 public:
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // Our protocol
 	virtual void Finish();

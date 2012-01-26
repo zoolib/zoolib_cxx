@@ -25,9 +25,9 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZExpr
 
-void ZExpr::Accept(ZVisitor& iVisitor)
+void ZExpr::Accept(const ZVisitor& iVisitor)
 	{
-	if (ZVisitor_Expr* theVisitor = dynamic_cast<ZVisitor_Expr*>(&iVisitor))
+	if (ZVisitor_Expr* theVisitor = DynNonConst<ZVisitor_Expr*>(&iVisitor))
 		this->Accept_Expr(*theVisitor);
 	else
 		ZVisitee::Accept(iVisitor);

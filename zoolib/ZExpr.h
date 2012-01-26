@@ -35,7 +35,7 @@ class ZExpr : public ZVisitee
 	{
 public:
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // Our protocol
 	virtual void Accept_Expr(ZVisitor_Expr& iVisitor);

@@ -25,8 +25,8 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZVisitee
 
-void ZVisitee::Accept(ZVisitor& iVisitor)
-	{ iVisitor.Visit(this); }
+void ZVisitee::Accept(const ZVisitor& iVisitor)
+	{ const_cast<ZVisitor&>(iVisitor).Visit(this); }
 
 // =================================================================================================
 // MARK: - ZVisitor

@@ -35,7 +35,7 @@ class ZVisitee : public virtual ZCounted
 	{
 public:
 // Our protocol
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor) = 0;
 	};
 
 // =================================================================================================
