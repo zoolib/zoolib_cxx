@@ -324,7 +324,7 @@ void Source_DatonSet::ModifyRegistrations
 
 		PQuery* thePQuery = theClientQuery->fPQuery;
 		thePQuery->fClientQuery_InPQuery.Erase(theClientQuery);
-		if (thePQuery->fClientQuery_InPQuery.Empty())
+		if (thePQuery->fClientQuery_InPQuery.IsEmpty())
 			{
 			// Detach from any depended-upon PSearch
 			for (set<PSearch*>::iterator iterPSearch = thePQuery->fPSearch_Used.begin();
@@ -345,7 +345,7 @@ void Source_DatonSet::ModifyRegistrations
 		fMap_Refcon_ClientQuery.erase(iterClientQuery);
 		}
 
-	if (!fClientQuery_NeedsWork.Empty() || !fPQuery_NeedsWork.Empty())
+	if (!fClientQuery_NeedsWork.IsEmpty() || !fPQuery_NeedsWork.IsEmpty())
 		{
 		guard.Release();
 		Source::pTriggerResultsAvailable();

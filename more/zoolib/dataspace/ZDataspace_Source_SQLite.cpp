@@ -161,7 +161,7 @@ void Source_SQLite::ModifyRegistrations
 
 		PQuery* thePQuery = theClientQuery->fPQuery;
 		thePQuery->fClientQueries.Erase(theClientQuery);
-		if (thePQuery->fClientQueries.Empty())
+		if (thePQuery->fClientQueries.IsEmpty())
 			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 
 		fMap_RefconToClientQuery.erase(iterClientQuery);

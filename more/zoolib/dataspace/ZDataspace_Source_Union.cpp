@@ -767,7 +767,7 @@ void Source_Union::ModifyRegistrations
 
 		thePQuery->fClientQueries.Erase(theClientQuery);
 
-		if (thePQuery->fClientQueries.Empty())
+		if (thePQuery->fClientQueries.IsEmpty())
 			{
 			for (set<ZRef<Proxy> >::iterator
 				iterProxies = thePQuery->fProxiesDependedUpon.begin(),
@@ -888,7 +888,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 
 	// -----------------
 
-	if (!fPQuery_NeedsWork.Empty())
+	if (!fPQuery_NeedsWork.IsEmpty())
 		{
 		ZLOGPF(s, eDebug+1);
 
@@ -1074,7 +1074,7 @@ void Source_Union::pFinalizeProxy(Proxy* iProxy)
 	if (not iProxy->FinishFinalize())
 		return;
 
-	ZAssertStop(kDebug, iProxy->fPIP_InProxy.Empty());
+	ZAssertStop(kDebug, iProxy->fPIP_InProxy.IsEmpty());
 
 	ZUtil_STL::sEraseMustContain(kDebug, fProxyMap, iProxy->fRel);
 
