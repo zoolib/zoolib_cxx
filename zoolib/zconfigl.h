@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __zconfigl__
-#define __zconfigl__ 1
+#ifndef __zconfigl_h__
+#define __zconfigl_h__ 1
 
 // Ensure our definitions have been set up
 #include "zoolib/zconfigd.h"
@@ -92,17 +92,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_Endian
 #	if 0
-#	elif (ZCONFIG_Processor == ZCONFIG_Processor_PPC)
+#	elif ZCONFIG(Processor, PPC)
 #		define ZCONFIG_Endian ZCONFIG_Endian_Big
-#	elif (ZCONFIG_Processor == ZCONFIG_Processor_PPC_64)
+#	elif ZCONFIG(Processor, PPC_64)
 #		define ZCONFIG_Endian ZCONFIG_Endian_Big
-#	elif (ZCONFIG_Processor == ZCONFIG_Processor_68K)
+#	elif ZCONFIG(Processor, 68K)
 #		define ZCONFIG_Endian ZCONFIG_Endian_Big
-#	elif (ZCONFIG_Processor == ZCONFIG_Processor_x86)
+#	elif ZCONFIG(Processor, x86)
 #		define ZCONFIG_Endian ZCONFIG_Endian_Little
-#	elif (ZCONFIG_Processor == ZCONFIG_Processor_x86_64)
+#	elif ZCONFIG(Processor, x86_64)
 #		define ZCONFIG_Endian ZCONFIG_Endian_Little
-#	elif (ZCONFIG_Processor == ZCONFIG_Processor_ARM)
+#	elif ZCONFIG(Processor, ARM)
 #		define ZCONFIG_Endian ZCONFIG_Endian_Little
 #	endif
 #endif
@@ -116,9 +116,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_Is64Bit
 #	if 0
-#	elif (ZCONFIG_Processor == ZCONFIG_Processor_PPC_64)
+#	elif ZCONFIG(Processor, PPC_64)
 #		define ZCONFIG_Is64Bit 1
-#	elif (ZCONFIG_Processor == ZCONFIG_Processor_x86_64)
+#	elif ZCONFIG(Processor, x86_64)
 #		define ZCONFIG_Is64Bit 1
 #	endif
 #endif
@@ -148,6 +148,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // With XCode we could base debug off !__OPTIMIZE__
 #ifndef ZCONFIG_Debug
 #	if 0
+#	elif defined(__MACH__)
+#		if not defined(__OPTIMIZE__)
+#			define ZCONFIG_Debug ZCONFIG_DebugLevel
+#		else
+#			define ZCONFIG_Debug 0
+#		endif
 #	elif defined(__MWERKS__)
 #		if __option(sym)
 #			define ZCONFIG_Debug ZCONFIG_DebugLevel
@@ -155,7 +161,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #			define ZCONFIG_Debug 0
 #		endif
 #	elif defined(_MSC_VER)
-#		if defined(_DEBUG)
+#		if defined(DEBUG) || defined(_DEBUG)
 #			define ZCONFIG_Debug ZCONFIG_DebugLevel
 #		else
 #			define ZCONFIG_Debug 0
@@ -254,6 +260,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	// inherits 'XXX' via dominance
 #	pragma warning(disable:4250)
+
 #else
 
 	typedef wchar_t __wchar_t;
@@ -265,27 +272,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Objective C we're switching to use the soon-to-be standardized nullptr.
 
 #ifdef __cplusplus
-	#ifdef __MWERKS__
+
+	#if 0
+	#elif defined(_MSC_VER) && _MSC_VER >= 1600
+
+		// nullptr is naturally available
+
+	#elif defined(__MWERKS__)
+
 		class nullptr_t
 			{
+			void operator&() const;
 		public:
 			template <class T> operator T*() const { return 0; }
-		private:
-			void operator&() const;
 			};
 		#define nullptr nullptr_t()
-	#elif _MSC_VER >= 1600
-		// nullptr is naturally available
+
 	#else
+
 		const class nullptr_t
 			{
+			void operator&() const;
 		public:
 			template <class T> operator T*() const { return 0; }
 			template <class C, class T> operator T C::*() const { return 0; }
-		private:
-			void operator&() const;
 			} nullptr = {};
+
 	#endif
+
 #elif not defined(nullptr)
 	#define nullptr 0
 #endif
@@ -296,14 +310,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifdef __cplusplus
 	const class notnull_t {} notnull = {};
-	const class null_t
+	const struct null_t
 		{
-	public:
 		const notnull_t operator!() const { return notnull; }
 		} null = {};
 #endif
 
 // =================================================================================================
+
 #if __MACH__
 	#define ZMACINCLUDE2(a,b) <a/b>
 	#if __MWERKS__
@@ -316,8 +330,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZMACINCLUDE3(a,b,c) <c>
 #endif
 
+// =================================================================================================
+
 #define ZMACRO_Concat_(x, y) x ## y
 #define ZMACRO_Concat(x, y) ZMACRO_Concat_(x,y)
+
+// =================================================================================================
 
 #ifdef __cplusplus
 	#define ZMACRO_ExternC_Begin extern "C" {
@@ -327,7 +345,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZMACRO_ExternC_End
 #endif
 
+// =================================================================================================
+
 #define ZMACRO_Stringify(a) #a
+
+// =================================================================================================
 
 #if defined(_MSC_VER)
 	#include "zoolib/ZMACRO_typeof.h"
@@ -339,5 +361,38 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZMACRO_auto_(name,expr) ZMACRO_typeof(expr) name = (expr)
 #endif
 
+// =================================================================================================
 
-#endif // __zconfigl__
+#ifndef ZMACRO_Attribute_Format_Printf
+	#if ZCONFIG(Compiler,GCC)
+		#define ZMACRO_Attribute_Format_Printf(m,n) __attribute__((format(printf,m,n)))
+	#else
+		#define ZMACRO_Attribute_Format_Printf(m,n)
+	#endif
+#endif
+
+#ifndef ZMACRO_Attribute_Aligned
+	#if ZCONFIG(Compiler,GCC)
+		#define ZMACRO_Attribute_Aligned __attribute__((aligned))
+	#else
+		#define ZMACRO_Attribute_Aligned
+	#endif
+#endif
+
+#ifndef ZMACRO_Attribute_NoReturn
+	#if ZCONFIG(Compiler,GCC)
+		#define ZMACRO_Attribute_NoReturn __attribute__((noreturn))
+	#else
+		#define ZMACRO_Attribute_NoReturn
+	#endif
+#endif
+
+#ifndef ZMACRO_Attribute_Unused
+	#if ZCONFIG(Compiler,GCC)
+		#define ZMACRO_Attribute_Unused __attribute__((unused))
+	#else
+		#define ZMACRO_Attribute_Unused
+	#endif
+#endif
+
+#endif // __zconfigl_h__

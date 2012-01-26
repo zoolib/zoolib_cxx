@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __zconfigd__
-#define __zconfigd__ 1
+#ifndef __zconfigd_h__
+#define __zconfigd_h__ 1
 
 // Which compiler -- ZCONFIG_Compiler
 #define ZCONFIG_Compiler_CodeWarrior 1
@@ -47,4 +47,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // on CW, DEBUG defined on gcc). You should therefore define ZCONFIG_DebugLevel in your zconfig.h
 // file if it needs to be different from the default value of 1.
 
-#endif // __zconfigd__
+#endif // __zconfigd_h__

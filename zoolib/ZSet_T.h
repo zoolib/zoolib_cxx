@@ -82,7 +82,7 @@ public:
 	ZSet_T& Insert(const T& iElem);
 	ZSet_T& Erase(const T& iElem);
 
-	bool Empty() const;
+	bool IsEmpty() const;
 
 	const Base_t& GetElems() const;
 
@@ -290,7 +290,7 @@ ZSet_T<T,Comparator>& ZSet_T<T,Comparator>::Erase(const T& iElem)
 	}
 
 template <class T, class Comparator>
-bool ZSet_T<T,Comparator>::Empty() const
+bool ZSet_T<T,Comparator>::IsEmpty() const
 	{ return this->empty(); }
 
 template <class T, class Comparator>

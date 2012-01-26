@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZCONFIG_SPI.h"
-#include "zoolib/ZTypes.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -209,9 +208,9 @@ static bool spIsDebuggerPresent()
 				mov	eax, 0x18
 				mov	eax, es:[eax]
 				sub	eax, 0x10
-#ifdef xor
-#undef xor
-#endif
+				#ifdef xor
+					#undef xor
+				#endif
 				xor eax, [threadID]
 				mov	[obfuscator], eax
 				}
@@ -278,3 +277,16 @@ public:
 } // namespace ZDebug
 } // namespace ZooLib
 
+
+// =================================================================================================
+// MARK: - ZUnimplemented
+
+namespace ZooLib {
+
+// I'd like to formalize ZUnimplemented a little more sometime.
+// Perhaps it should throw an exception in production code.
+
+void ZUnimplemented()
+	{ ZDebugStopf(0, ("Unimplemented routine")); }
+
+} // namespace ZooLib

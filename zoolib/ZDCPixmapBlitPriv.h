@@ -1540,7 +1540,6 @@ void sColorTile_MD_T
 		iDestB.left,
 		iDestPD);
 
-	ZRGBA_POD theColor = iColor;
 	for (;;)
 		{
 		int destCountH = destWidth + 1;
@@ -1617,7 +1616,6 @@ void sColorTile_MDO_T
 		iDestB.left,
 		iDestPD);
 
-	ZRGBA_POD theColor = iColor;
 	for (;;)
 		{
 		int destCountH = destWidth + 1;
@@ -1674,6 +1672,7 @@ void sBlit_T
 	{
 	switch (iOp)
 		{
+		default:
 		case eOp_Copy:
 			{
 			sTile_SD_T(iSource, iSourceRD, iSourceB, iSourcePD,
@@ -1711,6 +1710,7 @@ void sBlit_T
 	{
 	switch (iOp)
 		{
+		default:
 		case eOp_Copy:
 			{
 			sCopy_SD_T(iSource, iSourceRD, iSourcePD,
@@ -1749,6 +1749,7 @@ void sBlit_T
 	{
 	switch (iOp)
 		{
+		default:
 		case eOp_Copy:
 			{
 			sTile_SMD_T(iSource, iSourceRD, iSourceB, iSourcePD,
@@ -1796,6 +1797,7 @@ void sBlit_T
 	{
 	switch (iOp)
 		{
+		default:
 		case eOp_Copy:
 			{
 			sTileSource_SMD_T(iSource, iSourceRD, iSourceB, iSourcePD,
@@ -1843,6 +1845,7 @@ void sBlit_T
 	{
 	switch (iOp)
 		{
+		default:
 		case eOp_Copy:
 			{
 			sTileMatte_SMD_T(iSource, iSourceRD, iSourcePD,
@@ -1890,6 +1893,7 @@ void sBlit_T
 	{
 	switch (iOp)
 		{
+		default:
 		case eOp_Copy:
 			{
 			sCopy_SMD_T(iSource, iSourceRD, iSourcePD,
@@ -1934,6 +1938,7 @@ void sColor_T
 	{
 	switch (iOp)
 		{
+		default:
 		case eOp_Copy:
 			{
 			sFillPixval(oDest, iDestRD, iDestB, iDestPD.AsPixval(iColor));
@@ -1967,6 +1972,7 @@ void sColor_T
 	{
 	switch (iOp)
 		{
+		default:
 		case eOp_Copy:
 			{
 			sColor_MD_T(iMatte, iMatteRD, iMattePD,
@@ -2007,6 +2013,7 @@ void sColorTile_T
 	{
 	switch (iOp)
 		{
+		default:
 		case eOp_Copy:
 			{
 			sColorTile_MD_T(iMatte, iMatteRD, iMatteB, iMattePD,

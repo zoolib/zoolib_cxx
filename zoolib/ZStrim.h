@@ -27,14 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdarg.h> // For va_list
 #include <stdexcept> // For range_error
 
-#ifndef ZMACRO_Attribute_Format_Printf
-	#if ZCONFIG(Compiler,GCC)
-		#define ZMACRO_Attribute_Format_Printf(m,n) __attribute__((format(printf,m,n)))
-	#else
-		#define ZMACRO_Attribute_Format_Printf(m,n)
-	#endif
-#endif
-
 namespace ZooLib {
 
 class ZStrimW;

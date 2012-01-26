@@ -25,20 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstdarg>
 #include <string>
 
-#ifndef ZMACRO_Attribute_Format_printf
-	#if ZCONFIG(Compiler,GCC)
-		#define ZMACRO_Attribute_Format_printf(m,n) __attribute__((format(printf,m,n)))
-	#else
-		#define ZMACRO_Attribute_Format_printf(m,n)
-	#endif
-#endif
-
-// ==================================================
+// =================================================================================================
 
 namespace ZooLib {
 
-std::string ZStringf(const char* iString, ...)
-	ZMACRO_Attribute_Format_printf(1,2);
+std::string ZStringf(const char* iString, ...) ZMACRO_Attribute_Format_Printf(1,2);
 
 std::string ZStringf(const char* iString, std::va_list iArgs);
 

@@ -296,12 +296,7 @@ public:
 		}
 
 private:
-	#if ZCONFIG(Compiler,GCC)
-		char fBytes[sizeof(T)] __attribute__((aligned));
-	#else
-		char fBytes[sizeof(T)];
-	#endif
-
+	char fBytes[sizeof(T)] ZMACRO_Attribute_Aligned;
 	bool fHasValue;
 	};
 

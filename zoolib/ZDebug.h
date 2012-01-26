@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstdarg> // For std::va_list
 #include <cstddef> // For std::size_t
 
-namespace ZooLib {
-namespace ZDebug {
-
 // =================================================================================================
 // MARK: - ZDebug
+
+namespace ZooLib {
+namespace ZDebug {
 
 struct Params_t
 	{
@@ -96,14 +96,21 @@ template <> struct AssertCompile<true> { typedef bool IsValid; };
 
 #define ZAssertCompile(a) typedef ZooLib::ZDebug::AssertCompile<(a)>::IsValid ZAssertCompileValid
 
-// I'd like to formalize ZUnimplemented a little more sometime. Perhaps it should
-// throw an exception in production code.
-#define ZUnimplemented() ZDebugStopf(0, ("Unimplemented routine"))
-
 // There are still quite a lot of places where plain old ZAssert is used.
-#define ZAssert(a) ZAssertStop(0, a)
+#ifndef ZAssert
+	#define ZAssert(a) ZAssertStop(0, a)
+#endif
 
 } // namespace ZDebug
+} // namespace ZooLib
+
+// =================================================================================================
+// MARK: - ZUnimplemented
+
+namespace ZooLib {
+
+void ZUnimplemented() ZMACRO_Attribute_NoReturn;
+
 } // namespace ZooLib
 
 #endif // __ZDebug_h__

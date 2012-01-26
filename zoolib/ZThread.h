@@ -140,11 +140,7 @@ private:
 		{
 		// Useful when debugging under GDB, which (on MacOS) doesn't always
 		// tell us what pthread_id corresponds to a thread.
-		#if ZCONFIG(Compiler,GCC)
-			const ZThread::ID theThreadID __attribute__((unused)) = ZThread::sID();
-		#else
-			const ZThread::ID theThreadID = ZThread::sID();
-		#endif
+		const ZThread::ID theThreadID ZMACRO_Attribute_Unused = ZThread::sID();
 
 		sStarted();
 

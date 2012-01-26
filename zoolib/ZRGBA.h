@@ -211,9 +211,9 @@ public:
 
 	bool operator<(const ZRGBA_POD& other) const
 		{
-		return red < other.red ||
-			red == other.red && green < other.green ||
-			red == other.red && green == other.green && blue < other.blue;
+		return (red < other.red)
+			|| (red == other.red && green < other.green)
+			|| (red == other.red && green == other.green && blue < other.blue);
 		}
 	};
 

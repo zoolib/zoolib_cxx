@@ -125,14 +125,9 @@ public:
 		{ return fHRESULT; }
 
 private:
-	#if ZCONFIG(Compiler,GCC)
-		mutable char fBytes[sizeof(T)] __attribute__((aligned));
-	#else
-		mutable char fBytes[sizeof(T)];
-	#endif
-
-	mutable bool fHasValue;
+	mutable char fBytes[sizeof(T)] ZMACRO_Attribute_Aligned;
 	const HRESULT fHRESULT;
+	mutable bool fHasValue;
 	};
 
 // =================================================================================================

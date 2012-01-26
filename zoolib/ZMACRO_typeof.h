@@ -21,9 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZMACRO_typeof_h__
 #define __ZMACRO_typeof_h__ 1
 
-#if defined(_MSC_VER)
-
-#if 0
+#if not defined(_MSC_VER)
 
 #elif _MSC_VER >= 1600
 
@@ -57,6 +55,9 @@ Written by Igor Chesnokov
 // 1) type_id(type)
 // 2) var_type_id(expersssion)
 // 3) type_of(expression)
+
+namespace ZooLib {
+namespace MACRO_auto {
 
 // IMPLEMENTATION
 template<int ID>
@@ -104,9 +105,9 @@ public:
 // type_id
 #define type_id(type) \
     (CProvideCounterValue< \
-        /*register TYPE--ID*/ typename CTypeReg<type, CCountOf<type >::count>::Dummy, \
-        /*increment compile-time Counter*/ CCounter<CCountOf<type >::count>, \
-        /*pass value of Counter*/CCountOf<type >::count \
+		typename CTypeReg<type, CCountOf<type >::count>::Dummy, \
+		CCounter<CCountOf<type >::count>, \
+		CCountOf<type >::count \
      >::value)
 
 // Lets type_id() be > than 0
@@ -139,6 +140,5 @@ typename sized<type_id(const volatile T)> VarTypeID(const volatile T&);
 #define ZMACRO_auto_(name,expr) ZMACRO_typeof(expr) name = (expr)
 
 #endif // _MSV_VER
-#endif // defined(_MSC_VER)
 
 #endif // __ZMACRO_typeof_h__

@@ -58,7 +58,7 @@ public:
 
 	size_t Size() const { return fSize; }
 
-	bool Empty() const
+	bool IsEmpty() const
 		{
 		ZAssertStop(L::kDebug, (!fSize && !fHeadL) || (fSize && fHeadL));
 		return !fHeadL;
