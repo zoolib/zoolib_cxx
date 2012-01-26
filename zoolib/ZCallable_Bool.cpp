@@ -24,94 +24,81 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - anonymous
+// MARK: - Ctors
 
-namespace { // anonymous
-
-typedef ZCallable_Bool ZCB;
-
-struct Base : public ZCB
-	{
-	Base(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1) : f0(i0) , f1(i1) {}
-	const ZRef<ZCB> f0;
-	const ZRef<ZCB> f1;	
-	};
-
-} // anonymous namespace
-
-// =================================================================================================
-// MARK: - Makers
-
-ZRef<ZCB> sCallable_True()
+ZRef<ZCallable_Bool> sCallable_True()
 	{ return sCallable_Const(true); }
 
-ZRef<ZCB> sCallable_False()
+ZRef<ZCallable_Bool> sCallable_False()
 	{ return sCallable_Const(false); }
 
-ZRef<ZCB> sCallable_Not(const ZRef<ZCB>& iCallable)
+ZRef<ZCallable_Bool> sCallable_Not(const ZRef<ZCallable_Bool>& iCallable)
 	{
-	struct Callable : public ZCB
+	struct Callable : public ZCallable_Bool
 		{
-		Callable(const ZRef<ZCB>& iCallable) : fCallable(iCallable) {}
+		Callable(const ZRef<ZCallable_Bool>& iCallable) : fCallable(iCallable) {}
 		virtual ZQ<bool> QCall()
 			{
-			if (ZQ<bool> theQ = sQCall(fCallable))
-				return not theQ.Get();
+			if (const ZQ<bool> theQ = sQCall(fCallable))
+				return not *theQ;
 			return null;
 			}
-		const ZRef<ZCB> fCallable;
+		const ZRef<ZCallable_Bool> fCallable;
 		};
 	return new Callable(iCallable);
 	}
 
-ZRef<ZCB> sCallable_And(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1)
+ZRef<ZCallable_Bool> sCallable_And(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{
-	struct Callable : public Base
+	struct Callable : public ZCallable_Bool
 		{
-		Callable(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1) : Base(i0, i1) {}
+		Callable(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1) : f0(i0), f1(i1) {}
 		virtual ZQ<bool> QCall()
 			{
-			if (ZQ<bool> theQ0 = sQCall(f0))
+			if (const ZQ<bool> theQ0 = sQCall(f0))
 				{
-				if (theQ0.Get())
+				if (*theQ0)
 					return sQCall(f1);
 				return false;
 				}
 			return null;
 			}
+		const ZRef<ZCallable_Bool> f0, f1;
 		};
 	return new Callable(i0, i1);
 	}
 
-ZRef<ZCB> sCallable_Or(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1)
+ZRef<ZCallable_Bool> sCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{
-	struct Callable : public Base
+	struct Callable : public ZCallable_Bool
 		{
-		Callable(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1) : Base(i0, i1) {}
+		Callable(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1) : f0(i0), f1(i1) {}
 		virtual ZQ<bool> QCall()
 			{
-			if (ZQ<bool> theQ0 = sQCall(f0) && theQ0.Get())
+			if (const ZQ<bool> theQ0 = sQCall(f0) && *theQ0)
 				return true;
 			return sQCall(f1);
 			}
+		const ZRef<ZCallable_Bool> f0, f1;
 		};
 	return new Callable(i0, i1);
 	}
 
-ZRef<ZCB> sCallable_Xor(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1)
+ZRef<ZCallable_Bool> sCallable_Xor(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1)
 	{
-	struct Callable : public Base
+	struct Callable : public ZCallable_Bool
 		{
-		Callable(const ZRef<ZCB>& i0, const ZRef<ZCB>& i1) : Base(i0, i1) {}
+		Callable(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1) : f0(i0), f1(i1) {}
 		virtual ZQ<bool> QCall()
 			{
-			if (ZQ<bool> theQ0 = sQCall(f0))
+			if (const ZQ<bool> theQ0 = sQCall(f0))
 				{
-				if (ZQ<bool> theQ1 = sQCall(f1))
-					return theQ0.Get() ^ theQ1.Get();
+				if (const ZQ<bool> theQ1 = sQCall(f1))
+					return *theQ0 ^ *theQ1;
 				}
 			return null;
 			}
+		const ZRef<ZCallable_Bool> f0, f1;
 		};
 	return new Callable(i0, i1);
 	}

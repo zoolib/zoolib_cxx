@@ -42,8 +42,8 @@ public:
 // From ZCallable
 	virtual ZQ<A> QCall(C iC)
 		{
-		if (ZQ<B> theB = sQCall(fCallable, iC))
-			return sQCall(fApply, theB.Get());
+		if (const ZQ<B> theB = sQCall(fCallable, iC))
+			return sQCall(fApply, *theB);
 		return null;
 		}
 
@@ -141,9 +141,9 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall()
 		{
-		if (ZQ<bool> theQ = sQCall(fCondition))
+		if (const ZQ<bool> theQ = sQCall(fCondition))
 			{
-			if (theQ.Get())
+			if (*theQ)
 				return sQCall(f0);
 			else
 				return sQCall(f1);
