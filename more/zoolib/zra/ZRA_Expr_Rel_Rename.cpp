@@ -59,9 +59,9 @@ Expr_Rel_Rename::Expr_Rel_Rename(const ZRef<Expr_Rel>& iOp0,
 Expr_Rel_Rename::~Expr_Rel_Rename()
 	{}
 
-void Expr_Rel_Rename::Accept(ZVisitor& iVisitor)
+void Expr_Rel_Rename::Accept(const ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Rename* theVisitor = dynamic_cast<Visitor_Expr_Rel_Rename*>(&iVisitor))
+	if (Visitor_Expr_Rel_Rename* theVisitor = DynNonConst<Visitor_Expr_Rel_Rename*>(&iVisitor))
 		this->Accept_Expr_Rel_Rename(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
@@ -69,7 +69,7 @@ void Expr_Rel_Rename::Accept(ZVisitor& iVisitor)
 
 void Expr_Rel_Rename::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Rename* theVisitor = dynamic_cast<Visitor_Expr_Rel_Rename*>(&iVisitor))
+	if (Visitor_Expr_Rel_Rename* theVisitor = DynNonConst<Visitor_Expr_Rel_Rename*>(&iVisitor))
 		this->Accept_Expr_Rel_Rename(*theVisitor);
 	else
 		inherited::Accept_Expr_Op1(iVisitor);

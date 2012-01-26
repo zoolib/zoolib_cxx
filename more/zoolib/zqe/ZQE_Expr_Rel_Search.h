@@ -42,7 +42,7 @@ public:
 	Expr_Rel_Search(const ZRA::Rename& iRename, const ZRef<ZExpr_Bool>& iExpr_Bool);
 
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // From ZExpr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);

@@ -54,7 +54,8 @@ PixmapRaster::~PixmapRaster()
 	fBaseAddress = nullptr;
 	}
 
-EFormatStandard sAsFormatStandard(OSType iOSType)
+static
+EFormatStandard spAsFormatStandard(OSType iOSType)
 	{
 	switch (iOSType)
 		{
@@ -81,7 +82,7 @@ EFormatStandard sAsFormatStandard(OSType iOSType)
 ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR)
 	{
 	const OSType thePFT = ::CVPixelBufferGetPixelFormatType(iPBR);
-	const EFormatStandard theFormat = sAsFormatStandard(thePFT);
+	const EFormatStandard theFormat = spAsFormatStandard(thePFT);
 
 	const size_t theRowBytes = ::CVPixelBufferGetBytesPerRow(iPBR);
 	const size_t theHeight = ::CVPixelBufferGetHeight(iPBR);

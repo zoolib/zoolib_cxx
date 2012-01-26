@@ -375,7 +375,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 			s.Writef("%lld", asInt64);
 		s.End("integer");
 		}
-	else if (sQCoerceReal(iVal, asDouble))
+	else if (sQCoerceRat(iVal, asDouble))
 		{
 		s.Begin("real");
 			ZUtil_Strim::sWriteExact(s, asDouble);

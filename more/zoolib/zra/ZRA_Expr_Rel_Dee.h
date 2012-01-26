@@ -46,7 +46,7 @@ public:
 	virtual ~Expr_Rel_Dee();
 
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // From ZExpr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);

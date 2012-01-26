@@ -131,7 +131,7 @@ public:
 	virtual void Finalize();
 
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // From ZExpr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
@@ -172,9 +172,9 @@ Source_Union::Proxy::Proxy(Source_Union* iSource)
 void Source_Union::Proxy::Finalize()
 	{ fSource->pFinalizeProxy(this); }
 
-void Source_Union::Proxy::Accept(ZVisitor& iVisitor)
+void Source_Union::Proxy::Accept(const ZVisitor& iVisitor)
 	{
-	if (Visitor_Proxy* theVisitor = dynamic_cast<Visitor_Proxy*>(&iVisitor))
+	if (Visitor_Proxy* theVisitor = DynNonConst<Visitor_Proxy*>(&iVisitor))
 		this->Accept_Proxy(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
@@ -182,7 +182,7 @@ void Source_Union::Proxy::Accept(ZVisitor& iVisitor)
 
 void Source_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Proxy* theVisitor = dynamic_cast<Visitor_Proxy*>(&iVisitor))
+	if (Visitor_Proxy* theVisitor = DynNonConst<Visitor_Proxy*>(&iVisitor))
 		this->Accept_Proxy(*theVisitor);
 	else
 		inherited::Accept_Expr_Op0(iVisitor);

@@ -53,7 +53,7 @@ public:
 	static ZRef<ZExpr_Bool> sTrue();
 
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // From ZExpr_Op0_T
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Bool>& iVisitor);
@@ -96,7 +96,7 @@ public:
 	static ZRef<ZExpr_Bool> sFalse();
 
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // From ZExpr_Op0_T
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Bool>& iVisitor);
@@ -135,7 +135,7 @@ public:
 	ZExpr_Bool_Not(const ZRef<ZExpr_Bool>& iOp0);
 
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // From ZExpr_Op1_T
 	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<ZExpr_Bool>& iVisitor);
@@ -174,7 +174,7 @@ public:
 	ZExpr_Bool_And(const ZRef<ZExpr_Bool>& iOp0, const ZRef<ZExpr_Bool>& iOp1);
 
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // From ZExpr_Op2_T
 	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Bool>& iVisitor);
@@ -213,7 +213,7 @@ public:
 	ZExpr_Bool_Or(const ZRef<ZExpr_Bool>& iOp0, const ZRef<ZExpr_Bool>& iOp1);
 
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // From ZExpr_Op2_T
 	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Bool>& iVisitor);

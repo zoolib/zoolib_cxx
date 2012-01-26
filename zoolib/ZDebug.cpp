@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include <stdio.h>
+#include <stdlib.h> // For abort
 #include <string.h>
 
 #if ZCONFIG(Compiler, MSVC)
@@ -287,6 +288,9 @@ namespace ZooLib {
 // Perhaps it should throw an exception in production code.
 
 void ZUnimplemented()
-	{ ZDebugStopf(0, ("Unimplemented routine")); }
+	{
+	ZDebugStopf(0, ("Unimplemented routine"));
+	abort();
+	}
 
 } // namespace ZooLib

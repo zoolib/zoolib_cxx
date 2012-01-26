@@ -45,7 +45,7 @@ public:
 	virtual ~Expr_Rel_Rename();
 
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // From ZExpr_Op1_T<Expr_Rel>
 	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);

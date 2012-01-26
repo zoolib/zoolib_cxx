@@ -50,9 +50,9 @@ Expr_Rel_Const::Expr_Rel_Const(const RelName& iRelName, const ZVal_Any& iVal)
 Expr_Rel_Const::~Expr_Rel_Const()
 	{}
 
-void Expr_Rel_Const::Accept(ZVisitor& iVisitor)
+void Expr_Rel_Const::Accept(const ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Const* theVisitor = dynamic_cast<Visitor_Expr_Rel_Const*>(&iVisitor))
+	if (Visitor_Expr_Rel_Const* theVisitor = DynNonConst<Visitor_Expr_Rel_Const*>(&iVisitor))
 		this->Accept_Expr_Rel_Const(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
@@ -60,7 +60,7 @@ void Expr_Rel_Const::Accept(ZVisitor& iVisitor)
 
 void Expr_Rel_Const::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Const* theVisitor = dynamic_cast<Visitor_Expr_Rel_Const*>(&iVisitor))
+	if (Visitor_Expr_Rel_Const* theVisitor = DynNonConst<Visitor_Expr_Rel_Const*>(&iVisitor))
 		this->Accept_Expr_Rel_Const(*theVisitor);
 	else
 		inherited::Accept_Expr_Op0(iVisitor);

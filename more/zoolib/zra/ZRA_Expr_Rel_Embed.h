@@ -43,7 +43,7 @@ public:
 		const RelName& iRelName, const ZRef<Expr_Rel>& iEmbedee);
 
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // From ZExpr_Op2_T
 	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor);

@@ -80,7 +80,7 @@ static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 		{
 		oVal = theQ.Get();
 		}
-	else if (ZQ<double> theQ = sQCoerceReal(iVal))
+	else if (ZQ<double> theQ = sQCoerceRat(iVal))
 		{
 		oVal = theQ.Get();
 		}

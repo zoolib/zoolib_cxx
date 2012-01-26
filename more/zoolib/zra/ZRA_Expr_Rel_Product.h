@@ -42,7 +42,7 @@ public:
 	Expr_Rel_Product(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1);
 
 // From ZVisitee
-	virtual void Accept(ZVisitor& iVisitor);
+	virtual void Accept(const ZVisitor& iVisitor);
 
 // From ZExpr_Op2_T
 	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor);

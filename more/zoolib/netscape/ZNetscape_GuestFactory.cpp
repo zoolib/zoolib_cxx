@@ -66,7 +66,7 @@ static void spThrowMissingEntryPoint()
 #if ZCONFIG_SPI_Enabled(Win)
 
 template <typename P>
-P sLookup_T(HMODULE iHMODULE, const char* iName)
+P spLookup(HMODULE iHMODULE, const char* iName)
 	{ return reinterpret_cast<P>(::GetProcAddress(iHMODULE, iName)); }
 
 static ZQ<int> spQGetMajorVersion(const UTF16* iNativePath)
@@ -109,16 +109,13 @@ static NSModule spLoadNSModule(CFBundleRef iBundleRef)
 	return nullptr;
 	}
 
-static void* spLookup(NSModule iModule, const char* iName)
+template <typename P>
+P spLookup(NSModule iNSModule, const char* iName)
 	{
-	if (NSSymbol theSymbol = ::NSLookupSymbolInModule(iModule, iName))
-		return ::NSAddressOfSymbol(theSymbol);
+	if (NSSymbol theSymbol = ::NSLookupSymbolInModule(iNSModule, iName))
+		return reinterpret_cast<P>(::NSAddressOfSymbol(theSymbol));
 	return nullptr;
 	}
-
-template <typename P>
-P sLookup_T(NSModule iNSModule, const char* iName)
-	{ return reinterpret_cast<P>(spLookup(iNSModule, iName)); }
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation) && __MACH__
 
@@ -128,7 +125,7 @@ P sLookup_T(NSModule iNSModule, const char* iName)
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 
 template <typename P>
-P sLookup_T(CFBundleRef iBundleRef, CFStringRef iName)
+P spLookup(CFBundleRef iBundleRef, CFStringRef iName)
 	{ return reinterpret_cast<P>(::CFBundleGetFunctionPointerForName(iBundleRef, iName)); }
 
 ZQ<int> spQGetMajorVersion(const ZRef<CFStringRef>& iStringRef)
@@ -193,14 +190,14 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 	ZMemZero_T(fNPPluginFuncs);
 	fNPPluginFuncs.size = sizeof(NPPluginFuncs);
 
-	fShutdown = sLookup_T<NPP_ShutdownProcPtr>(fHMODULE, "NP_Shutdown");
+	fShutdown = spLookup<NPP_ShutdownProcPtr>(fHMODULE, "NP_Shutdown");
 
 	NP_InitializeFuncPtr theInit =
-		sLookup_T<NP_InitializeFuncPtr>
+		spLookup<NP_InitializeFuncPtr>
 		(fHMODULE, "NP_Initialize");
 
 	NP_GetEntryPointsFuncPtr theEntryPoints =
-		sLookup_T<NP_GetEntryPointsFuncPtr>
+		spLookup<NP_GetEntryPointsFuncPtr>
 		(fHMODULE, "NP_GetEntryPoints");
 
 	if (!fShutdown || !theInit || !theEntryPoints)
@@ -210,7 +207,7 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 	theEntryPoints(&fNPPluginFuncs);
 
 	if (Flash_DisableLocalSecurityFuncPtr theDLS =
-		sLookup_T<Flash_DisableLocalSecurityFuncPtr>(fHMODULE, "Flash_DisableLocalSecurity"))
+		spLookup<Flash_DisableLocalSecurityFuncPtr>(fHMODULE, "Flash_DisableLocalSecurity"))
 		{
 		theDLS();
 		}
@@ -296,24 +293,22 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 	// don't do this, and unload the bundle, then any subsequent loader will
 	// get nils for any entry point. In Safari this manifests with a
 	// "Internal error unloading bundle" log message.
-	bool isMachOPlugin = ::CFBundleGetFunctionPointerForName(theBundleRef, CFSTR("NP_Initialize"));
-
 	// This also tells us that the NP_Initialize entry point exists, so it's
 	// a macho binary (CFM would only provide 'main'), and we should use NSModule
 	// to load our independent instantiation.
 
-	if (isMachOPlugin)
+	if (::CFBundleGetFunctionPointerForName(theBundleRef, CFSTR("NP_Initialize")))
 		{
 		fNSModule = spLoadNSModule(theBundleRef);
 
-		fShutdown = sLookup_T<NPP_ShutdownProcPtr>(fNSModule, "_NP_Shutdown");
+		fShutdown = spLookup<NPP_ShutdownProcPtr>(fNSModule, "_NP_Shutdown");
 
 		NP_GetEntryPointsFuncPtr theEntryPoints =
-			sLookup_T<NP_GetEntryPointsFuncPtr>
+			spLookup<NP_GetEntryPointsFuncPtr>
 			(fNSModule, "_NP_GetEntryPoints");
 
 		NP_InitializeFuncPtr theInit =
-			sLookup_T<NP_InitializeFuncPtr>
+			spLookup<NP_InitializeFuncPtr>
 			(fNSModule, "_NP_Initialize");
 
 		if (!fShutdown || !theInit || !theEntryPoints)
@@ -350,7 +345,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 		// lookup mechanism will have created a MachO-callable thunk for it.
 
 		MainFuncPtr theMain =
-			sLookup_T<MainFuncPtr>
+			spLookup<MainFuncPtr>
 			(theBundleRef, CFSTR("main"));
 
 		if (!theMain)
@@ -441,7 +436,7 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 	CFBundleRef theBundleRef = ::CFPlugInGetBundle(fPlugInRef);
 
 	// We're PowerPC -- look for main(), and if it's there we can just call it.
-	MainFuncPtr theMain = sLookup_T<MainFuncPtr>(theBundleRef, CFSTR("main"));
+	MainFuncPtr theMain = spLookup<MainFuncPtr>(theBundleRef, CFSTR("main"));
 
 	if (theMain)
 		{
@@ -456,14 +451,14 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 			(fNPNF.size - offsetof(NPNetscapeFuncs_Z, geturl)) / sizeof(void*),
 			fGlue_NPNF);
 
-		fShutdown = sLookup_T<NPP_ShutdownProcPtr>(theBundleRef, CFSTR("NP_Shutdown"));
+		fShutdown = spLookup<NPP_ShutdownProcPtr>(theBundleRef, CFSTR("NP_Shutdown"));
 
 		NP_GetEntryPointsFuncPtr theEntryPoints =
-			sLookup_T<NP_GetEntryPointsFuncPtr>
+			spLookup<NP_GetEntryPointsFuncPtr>
 			(theBundleRef, CFSTR("NP_GetEntryPoints"));
 
 		NP_InitializeFuncPtr theInit =
-			sLookup_T<NP_InitializeFuncPtr>
+			spLookup<NP_InitializeFuncPtr>
 			(theBundleRef, CFSTR("NP_Initialize"));
 
 		if (!fShutdown || !theInit || !theEntryPoints)

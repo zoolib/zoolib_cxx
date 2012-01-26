@@ -299,7 +299,7 @@ ZQ<Value> Value::sQFromAny(const ZAny& iAny)
 		{
 		return Value(double(theQ.Get()));
 		}
-	else if (ZQ<double> theQ = sQCoerceReal(iAny))
+	else if (ZQ<double> theQ = sQCoerceRat(iAny))
 		{
 		return Value(theQ.Get());
 		}
