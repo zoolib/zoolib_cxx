@@ -35,20 +35,18 @@ ZExpr_Bool_ValPred::~ZExpr_Bool_ValPred()
 
 void ZExpr_Bool_ValPred::Accept(const ZVisitor& iVisitor)
 	{
-	if (ZVisitor_Expr_Bool_ValPred* theVisitor =
-		DynNonConst<ZVisitor_Expr_Bool_ValPred*>(&iVisitor))
-		{ this->Accept_Expr_Bool_ValPred(*theVisitor); }
+	if (ZVisitor_Expr_Bool_ValPred* theVisitor = DynNonConst<ZVisitor_Expr_Bool_ValPred>(&iVisitor))
+		this->Accept_Expr_Bool_ValPred(*theVisitor);
 	else
-		{ inherited::Accept(iVisitor); }
+		inherited::Accept(iVisitor);
 	}
 
 void ZExpr_Bool_ValPred::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Bool>& iVisitor)
 	{
-	if (ZVisitor_Expr_Bool_ValPred* theVisitor =
-		DynNonConst<ZVisitor_Expr_Bool_ValPred*>(&iVisitor))
-		{ this->Accept_Expr_Bool_ValPred(*theVisitor); }
+	if (ZVisitor_Expr_Bool_ValPred* theVisitor = DynNonConst<ZVisitor_Expr_Bool_ValPred>(&iVisitor))
+		this->Accept_Expr_Bool_ValPred(*theVisitor);
 	else
-		{ inherited::Accept_Expr_Op0(iVisitor); }
+		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
 ZRef<ZExpr_Bool> ZExpr_Bool_ValPred::Self()

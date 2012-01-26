@@ -48,15 +48,10 @@ Expr_Rel_Intersect::Expr_Rel_Intersect(const ZRef<Expr_Rel>& iOp0, const ZRef<Ex
 
 void Expr_Rel_Intersect::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Intersect* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Intersect*>(&iVisitor))
-		{
+	if (Visitor_Expr_Rel_Intersect* theVisitor = DynNonConst<Visitor_Expr_Rel_Intersect>(&iVisitor))
 		this->Accept_Expr_Rel_Intersect(*theVisitor);
-		}
 	else
-		{
 		inherited::Accept_Expr_Op2(iVisitor);
-		}
 	}
 
 ZRef<Expr_Rel> Expr_Rel_Intersect::Self()

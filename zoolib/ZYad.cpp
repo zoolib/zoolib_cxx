@@ -92,7 +92,7 @@ ZYadR::ZYadR()
 
 void ZYadR::Accept(const ZVisitor& iVisitor)
 	{
-	if (ZVisitor_Yad* theVisitor = DynNonConst<ZVisitor_Yad*>(&iVisitor))
+	if (ZVisitor_Yad* theVisitor = DynNonConst<ZVisitor_Yad>(&iVisitor))
 		this->Accept_Yad(*theVisitor);
 	else
 		ZVisitee::Accept(iVisitor);

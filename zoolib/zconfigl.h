@@ -334,16 +334,32 @@ T* NonConst(const T* iT)
 	{ return const_cast<T*>(iT); }
 
 template <class T>
+T* NonConst(T* iT)
+	{ return iT; }
+
+template <class T>
 T& NonConst(const T& iT)
 	{ return const_cast<T&>(iT); }
 
-template <class P, class T>
-P DynNonConst(const T* iT)
-	{ return dynamic_cast<P>(NonConst(iT)); }
+template <class T>
+T& NonConst(T& iT)
+	{ return iT; }
 
 template <class P, class T>
-P DynNonConst(const T& iT)
-	{ return dynamic_cast<P>(NonConst(iT)); }
+P* DynNonConst(const T* iT)
+	{ return dynamic_cast<P*>(NonConst(iT)); }
+
+template <class P, class T>
+P* DynNonConst(T* iT)
+	{ return dynamic_cast<P*>(iT); }
+
+template <class P, class T>
+P& DynNonConst(const T& iT)
+	{ return dynamic_cast<P&>(NonConst(iT)); }
+
+template <class P, class T>
+P& DynNonConst(T& iT)
+	{ return dynamic_cast<P&>(iT); }
 
 } // namespace ZooLib
 

@@ -52,7 +52,7 @@ Expr_Rel_Restrict::~Expr_Rel_Restrict()
 
 void Expr_Rel_Restrict::Accept(const ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Restrict* theVisitor = DynNonConst<Visitor_Expr_Rel_Restrict*>(&iVisitor))
+	if (Visitor_Expr_Rel_Restrict* theVisitor = DynNonConst<Visitor_Expr_Rel_Restrict>(&iVisitor))
 		this->Accept_Expr_Rel_Restrict(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
@@ -60,7 +60,7 @@ void Expr_Rel_Restrict::Accept(const ZVisitor& iVisitor)
 
 void Expr_Rel_Restrict::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Restrict* theVisitor = DynNonConst<Visitor_Expr_Rel_Restrict*>(&iVisitor))
+	if (Visitor_Expr_Rel_Restrict* theVisitor = DynNonConst<Visitor_Expr_Rel_Restrict>(&iVisitor))
 		this->Accept_Expr_Rel_Restrict(*theVisitor);
 	else
 		inherited::Accept_Expr_Op1(iVisitor);

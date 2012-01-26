@@ -52,7 +52,7 @@ Expr_Rel_Project::~Expr_Rel_Project()
 
 void Expr_Rel_Project::Accept(const ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Project* theVisitor = DynNonConst<Visitor_Expr_Rel_Project*>(&iVisitor))
+	if (Visitor_Expr_Rel_Project* theVisitor = DynNonConst<Visitor_Expr_Rel_Project>(&iVisitor))
 		this->Accept_Expr_Rel_Project(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
@@ -60,7 +60,7 @@ void Expr_Rel_Project::Accept(const ZVisitor& iVisitor)
 
 void Expr_Rel_Project::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Project* theVisitor = DynNonConst<Visitor_Expr_Rel_Project*>(&iVisitor))
+	if (Visitor_Expr_Rel_Project* theVisitor = DynNonConst<Visitor_Expr_Rel_Project>(&iVisitor))
 		this->Accept_Expr_Rel_Project(*theVisitor);
 	else
 		inherited::Accept_Expr_Op1(iVisitor);

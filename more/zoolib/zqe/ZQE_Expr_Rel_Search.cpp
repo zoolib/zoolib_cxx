@@ -49,20 +49,18 @@ Expr_Rel_Search::Expr_Rel_Search(const ZRA::Rename& iRename, const ZRef<ZExpr_Bo
 
 void Expr_Rel_Search::Accept(const ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Search* theVisitor =
-		DynNonConst<Visitor_Expr_Rel_Search*>(&iVisitor))
-		{ this->Accept_Expr_Rel_Search(*theVisitor); }
+	if (Visitor_Expr_Rel_Search* theVisitor = DynNonConst<Visitor_Expr_Rel_Search>(&iVisitor))
+		this->Accept_Expr_Rel_Search(*theVisitor);
 	else
-		{ inherited::Accept(iVisitor); }
+		inherited::Accept(iVisitor);
 	}
 
 void Expr_Rel_Search::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Search* theVisitor =
-		DynNonConst<Visitor_Expr_Rel_Search*>(&iVisitor))
-		{ this->Accept_Expr_Rel_Search(*theVisitor); }
+	if (Visitor_Expr_Rel_Search* theVisitor = DynNonConst<Visitor_Expr_Rel_Search>(&iVisitor))
+		this->Accept_Expr_Rel_Search(*theVisitor);
 	else
-		{ inherited::Accept_Expr_Op0(iVisitor); }
+		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
 ZRef<ZRA::Expr_Rel> Expr_Rel_Search::Self()
