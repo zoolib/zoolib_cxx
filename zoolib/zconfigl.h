@@ -309,11 +309,44 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // empty value of some sort, but where we don't want to have to manually create the value each time.
 
 #ifdef __cplusplus
-	const class notnull_t {} notnull = {};
-	const struct null_t
-		{
-		const notnull_t operator!() const { return notnull; }
-		} null = {};
+
+namespace ZooLib {
+
+const class notnull_t {} notnull = {};
+
+const struct null_t
+	{
+	const notnull_t operator!() const { return notnull; }
+	} null = {};
+
+} // namespace ZooLib
+
+#endif
+
+// =================================================================================================
+
+#ifdef __cplusplus
+
+namespace ZooLib {
+
+template <class T>
+T* NonConst(const T* iT)
+	{ return const_cast<T*>(iT); }
+
+template <class T>
+T& NonConst(const T& iT)
+	{ return const_cast<T&>(iT); }
+
+template <class P, class T>
+P DynNonConst(const T* iT)
+	{ return dynamic_cast<P>(NonConst(iT)); }
+
+template <class P, class T>
+P DynNonConst(const T& iT)
+	{ return dynamic_cast<P>(NonConst(iT)); }
+
+} // namespace ZooLib
+
 #endif
 
 // =================================================================================================
