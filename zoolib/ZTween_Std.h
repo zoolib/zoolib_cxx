@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTween_Std_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_algorithm.h" // for sMinMax
 #include "zoolib/ZTween.h"
 
 namespace ZooLib {
@@ -37,9 +36,9 @@ class ZTween_Fun
 public:
 	virtual ZQ<Val> QValAt(double iTime)
 		{
-		if (iTime < 0 || iTime >= 1.0)
-			return null;
-		return Fun(iTime);
+		if (iTime >= 0 && iTime <= 1.0)
+			return Fun(iTime);
+		return null;
 		}
 
 	virtual double Duration()
@@ -97,6 +96,14 @@ public:
 private:
 	const ZRef<ZTween<Param> > fTween;
 	};
+
+template <class Val, class Param>
+ZRef<ZTween<Val> > sTween_Filter_Coerce(const ZRef<ZTween<Param> >& iTween)
+	{
+	if (iTween)
+		return new ZTween_Filter_Coerce<Val,Param>(iTween);
+	return null;
+	}
 
 // =================================================================================================
 // MARK: - sTween_OneMinus
@@ -443,14 +450,14 @@ template <class Val>
 Val spTweenFun_BounceIn(double iTime)
 	{
 	if (iTime < 1 / 2.75)
+		{
 		return 7.5625 * iTime * iTime;
-
+		}
 	else if (iTime < 2 / 2.75)
 		{
 		iTime -= 1.5/2.75;
 		return 7.5625 * iTime * iTime + .75;
 		}
-
 	else if (iTime < 2.5 / 2.75)
 		{
 		iTime -= 2.25/2.75;
