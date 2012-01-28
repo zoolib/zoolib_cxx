@@ -148,11 +148,13 @@ public:
 	using ZAny::DGet;
 	using ZAny::Get;
 	using ZAny::Set;
+	using ZAny::Mutable;
 
 // Shortcut access to values in an enclosed Map.
 	ZVal_Any* PGetMutable(const string8& iName);
 	const ZVal_Any* PGet(const string8& iName) const;
 	ZVal_Any Get(const string8& iName) const;
+	ZVal_Any& Mutable(const string8& iName);
 
 	template <class S>
 	S* PGetMutable(const string8& iName)
@@ -177,6 +179,10 @@ public:
 	template <class S>
 	S Get(const string8& iName) const
 		{ return this->Get(iName).Get<S>(); }
+
+	template <class S>
+	S& Mutable(const string8& iName) const
+		{ return this->Mutable(iName).Mutable<S>(); }
 
 // Shortcut access to values in an enclosed Seq.
 	ZVal_Any* PGetMutable(size_t iIndex);
@@ -497,6 +503,8 @@ public:
 	ZMap_Any& Erase(const Index_t& iIndex);
 
 // Our protocol
+	ZVal_Any& Mutable(const string8& iName);
+	
 	Index_t Begin() const;
 	Index_t End() const;
 

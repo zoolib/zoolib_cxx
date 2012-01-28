@@ -94,6 +94,13 @@ const ZVal_Any* ZVal_Any::PGet(const string8& iName) const
 ZVal_Any ZVal_Any::Get(const string8& iName) const
 	{ return this->GetMap().Get(iName); }
 
+ZVal_Any& ZVal_Any::Mutable(const string8& iName)
+	{
+	if (ZMap_Any* asMap = this->PGetMutable<ZMap_Any>())
+		return asMap->Mutable(iName);	
+	return this->Mutable<ZMap_Any>().Mutable(iName);
+	}
+
 ZVal_Any* ZVal_Any::PGetMutable(size_t iIndex)
 	{
 	if (ZSeq_Any* asSeq = this->PGetMutable<ZSeq_Any>())
@@ -537,6 +544,12 @@ ZMap_Any& ZMap_Any::Erase(const Index_t& iIndex)
 	if (theIndex != this->End())
 		fRep->fMap.erase(theIndex);
 	return *this;
+	}
+
+ZVal_Any& ZMap_Any::Mutable(const string8& iName)
+	{
+	this->pTouch();
+	return fRep->fMap[iName];
 	}
 
 ZMap_Any::Index_t ZMap_Any::Begin() const
