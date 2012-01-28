@@ -121,7 +121,7 @@ const ZCog<Param>& ZCog<Param>::sFalse()
 template <class Param>
 ZCog<Param> spCogFun_True(const ZCog<Param>& iSelf, Param iParam)
 	{
-	// Shouldn't ever call this.
+	// Must not ever call this.
 	ZUnimplemented();
 	return null;
 	}
