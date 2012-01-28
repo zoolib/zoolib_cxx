@@ -118,6 +118,16 @@ public:
 	bool Is() const
 		{ return this->PGet<S>(); }
 
+	template <class S>
+	S& Mutable()
+		{
+		if (S* theP = this->PGetMutable<S>())
+			return *theP;
+		pDtor();
+		pCtor_T<S>(S());
+		return *this->PGetMutable<S>();
+		}
+
 // Special purpose constructors, called by sAny and sAnyCounted
 	template <class S, class P0>
 	ZAny(const S* dummy, const P0& iP0)
