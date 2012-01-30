@@ -92,14 +92,10 @@ const ZVal_Any* ZVal_Any::PGet(const string8& iName) const
 	}
 
 ZVal_Any ZVal_Any::Get(const string8& iName) const
-	{ return this->GetMap().Get(iName); }
+	{ return this->Get<ZMap_Any>().Get(iName); }
 
 ZVal_Any& ZVal_Any::Mutable(const string8& iName)
-	{
-	if (ZMap_Any* asMap = this->PGetMutable<ZMap_Any>())
-		return asMap->Mutable(iName);	
-	return this->Mutable<ZMap_Any>().Mutable(iName);
-	}
+	{ return this->Mutable<ZMap_Any>().Mutable(iName); }
 
 ZVal_Any* ZVal_Any::PGetMutable(size_t iIndex)
 	{

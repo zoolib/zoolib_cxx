@@ -504,6 +504,19 @@ public:
 
 // Our protocol
 	ZVal_Any& Mutable(const string8& iName);
+
+	template <class S>
+	S& Mutable(const string8& iName)
+		{ return this->Mutable(iName).Mutable<S>(); }
+
+	template <class S>
+	S& DMutable(const S& iDefault, const string8& iName)
+		{
+		if (S* theVal = this->PGetMutable<S>(iName))
+			return *theVal;
+		this->Set(iName, iDefault);
+		return *this->PGetMutable<S>(iName);
+		}
 	
 	Index_t Begin() const;
 	Index_t End() const;
