@@ -289,7 +289,7 @@ namespace ZooLib {
 
 void ZUnimplemented()
 	{
-	ZDebugStopf(0, ("Unimplemented routine"));
+	ZDebugStop(0);
 	abort();
 	}
 

@@ -109,7 +109,9 @@ template <> struct AssertCompile<true> { typedef bool IsValid; };
 
 namespace ZooLib {
 
-void ZUnimplemented() ZMACRO_Attribute_NoReturn;
+ZMACRO_NoReturn_Pre
+void ZUnimplemented()
+ZMACRO_NoReturn_Post;
 
 } // namespace ZooLib
 
