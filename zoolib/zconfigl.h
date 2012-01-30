@@ -428,11 +428,19 @@ P& DynNonConst(T& iT)
 	#endif
 #endif
 
-#ifndef ZMACRO_Attribute_NoReturn
-	#if ZCONFIG(Compiler,GCC)
-		#define ZMACRO_Attribute_NoReturn __attribute__((noreturn))
+#ifndef ZMACRO_NoReturn_Pre
+	#if ZCONFIG(Compiler,MSVC)
+		#define ZMACRO_NoReturn_Pre __declspec(noreturn)
 	#else
-		#define ZMACRO_Attribute_NoReturn
+		#define ZMACRO_NoReturn_Pre
+	#endif
+#endif
+
+#ifndef ZMACRO_NoReturn_Post
+	#if ZCONFIG(Compiler,GCC)
+		#define ZMACRO_NoReturn_Post __attribute__((noreturn))
+	#else
+		#define ZMACRO_NoReturn_Post
 	#endif
 #endif
 
