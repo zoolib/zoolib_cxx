@@ -79,7 +79,7 @@ ZVal_Yad& ZVal_Yad::operator=(const ZMap_Yad& iMap)
 	}
 
 bool ZVal_Yad::IsNull() const
-	{ return fYad; }
+	{ return not fYad; }
 
 ZQ<ZVal_Yad> ZVal_Yad::QGet(const string8& iName) const
 	{
