@@ -31,29 +31,29 @@ namespace ZooLib {
 template <class C>
 inline const ZStrimW& operator<<(const ZStrimW& s, const ZRect_T<C>& val)
 	{
-	return s.Writef("Rect(%g, %g, %g, %g)",
-		double(val.left), double(val.top),
-		double(val.right), double(val.bottom));
+	return s
+		<< "Rect(" << val.left
+		<< ", " << val.top
+		<< ", " << val.right
+		<< ", " << val.bottom
+		<< ")";
 	}
 
 template <class C>
 inline const ZStrimW& operator<<(const ZStrimW& s, const ZPoint_T<C>& val)
-	{ return s.Writef("[%g, %g]", double(val.h), double(val.v)); }
+	{ return s << "[" << val.x << ", " << val.y << "]"; }
 
 template <class C>
 inline const ZStrimW& operator<<(const ZStrimW& s, const ZGPointPOD_T<C>& val)
-	{ return s.Writef("[%g, %g]", double(val.x), double(val.y)); }
+	{ return s << "[" << val.x << ", " << val.y << "]"; }
 
 template <class C>
 inline const ZStrimW& operator<<(const ZStrimW& s, const ZGExtentPOD_T<C>& val)
-	{ return s.Writef("[%g, %g]", double(val.h), double(val.v)); }
+	{ return s << "[" << val.h << ", " << val.v << "]"; }
 
 template <class C>
 inline const ZStrimW& operator<<(const ZStrimW& s, const ZGRectPOD_T<C>& val)
-	{
-	s << "[" << val.origin << ", " << val.extent << "]";
-	return s;
-	}
+	{ return s << "[" << val.origin << ", " << val.extent << "]"; }
 
 } // namespace ZooLib
 
