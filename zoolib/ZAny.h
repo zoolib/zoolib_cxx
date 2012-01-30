@@ -124,8 +124,16 @@ public:
 		if (S* theP = this->PGetMutable<S>())
 			return *theP;
 		pDtor();
-		pCtor_T<S>(S());
-		return *this->PGetMutable<S>();
+		return pCtorRet_T<S>();
+		}
+
+	template <class S>
+	S& DMutable(const S& iDefault)
+		{
+		if (S* theP = this->PGetMutable<S>())
+			return *theP;
+		pDtor();
+		return pCtorRet_T<S>(iDefault);
 		}
 
 // Special purpose constructors, called by sAny and sAnyCounted
@@ -170,6 +178,8 @@ private:
 	class Holder_InPlace_T : public Holder_InPlace
 		{
 	public:
+		Holder_InPlace_T() {}
+
 		template <class P0>
 		Holder_InPlace_T(const P0& iP0) : fValue(iP0) {}
 
@@ -216,6 +226,8 @@ private:
 	class Holder_Counted_T : public Holder_Counted
 		{
 	public:
+		Holder_Counted_T() {}
+
 		template <class P0>
 		Holder_Counted_T(const P0& iP0) : fValue(iP0) {}
 
@@ -291,7 +303,7 @@ private:
 			else if (std::tr1::is_pod<S>::value)
 				{
 				fPtr_InPlace = (void*)(((intptr_t)&typeid(S)) | 1);
-				*((S*)fBytes_Payload) = iP0;
+				sCtor_T<S>(fBytes_Payload, iP0);
 				}
 			#endif
 			else
@@ -311,6 +323,64 @@ private:
 		{
 		fPtr_InPlace = 0;
 		sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, new Holder_Counted_T<S>(iP0));
+		}
+
+// -----------------
+
+	template <class S, class P0>
+	S& pCtorRet_T(const P0& iP0)
+		{
+		if (ZAnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
+			{
+			if (false)
+				{}
+			#if ZCONFIG(Compiler,GCC)
+			else if (std::tr1::is_pod<S>::value)
+				{
+				fPtr_InPlace = (void*)(((intptr_t)&typeid(S)) | 1);
+				return *sCtor_T<S>(fBytes_Payload, iP0);
+				}
+			#endif
+			else
+				{
+				return sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0)->fValue;
+				}
+			}
+		else
+			{
+			fPtr_InPlace = 0;
+			Holder_Counted_T<S>* theHolder = new Holder_Counted_T<S>(iP0);
+			sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, theHolder);
+			return theHolder->fValue;
+			}
+		}
+
+	template <class S>
+	S& pCtorRet_T()
+		{
+		if (ZAnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
+			{
+			if (false)
+				{}
+			#if ZCONFIG(Compiler,GCC)
+			else if (std::tr1::is_pod<S>::value)
+				{
+				fPtr_InPlace = (void*)(((intptr_t)&typeid(S)) | 1);
+				return *sCtor_T<S>(fBytes_Payload);
+				}
+			#endif
+			else
+				{
+				return sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace)->fValue;
+				}
+			}
+		else
+			{
+			fPtr_InPlace = 0;
+			Holder_Counted_T<S>* theHolder = new Holder_Counted_T<S>;
+			sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, theHolder);
+			return theHolder->fValue;
+			}
 		}
 
 // -----------------
