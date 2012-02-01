@@ -52,7 +52,7 @@ public:
 	virtual ZRef<ZNodeRep> CreateDir(Error* oError);
 
 	virtual ZRef<ZNodeRep> MoveTo(ZRef<ZNodeRep> iDest, Error* oError);
-//#	#virtual ZRef<ZNodeRep> MoveFrom(ZRef<ZNodeRep> iSource, Error* oError);
+//##	virtual ZRef<ZNodeRep> MoveFrom(ZRef<ZNodeRep> iSource, Error* oError);
 	virtual bool Delete(Error* oError);
 
 	virtual ZRef<ZStreamerR> OpenR(bool iPreventWriters, Error* oError);

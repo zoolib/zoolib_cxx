@@ -364,7 +364,7 @@ static PIActionList spDuplicate(PIActionList iSource)
 			TypeID theType;
 			if (noErr != spPSActionList->GetType(iSource, x, &theType))
 				break;
-//#			#COPYFROMTO(spPSActionList, iSource, x, theType, theDest)
+//##			COPYFROMTO(spPSActionList, iSource, x, theType, theDest)
 			}
 		}
 	return theDest;

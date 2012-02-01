@@ -587,8 +587,8 @@ IconRef ZUtil_Mac_HL::sIconRefFromPixmaps(const ZDCPixmap& inColorPixmap, const 
 	if (inColorPixmap)
 		sAddPixmapToIconFamily(inColorPixmap, eData8, theIconFamilyHandle);
 
-//#	#if (inColorPixmap)
-//#		#sAddPixmapToIconFamily(inColorPixmap, eData32, theIconFamilyHandle);
+//##	if (inColorPixmap)
+//##		sAddPixmapToIconFamily(inColorPixmap, eData32, theIconFamilyHandle);
 
 	if (inMonoPixmap)
 		sAddPixmapToIconFamily(inMonoPixmap, eData1, theIconFamilyHandle);
@@ -635,7 +635,7 @@ static pascal Boolean sAppleEventIdleProc(EventRecord* inEventRecord, long* outS
 /*	if (ZApp::sGet())
 		{
 		ZDCRgn theDCRgn;
-//#		#ZApp::sGet()->AppleEventIdleProc(theEventRecord, sleepTime, theDCRgn);
+//##		ZApp::sGet()->AppleEventIdleProc(theEventRecord, sleepTime, theDCRgn);
 		::MacCopyRgn(theDCRgn, *outMouseRgn);
 		}*/
 	return false;
@@ -671,8 +671,8 @@ void ZUtil_Mac_HL::sPostDialog()
 static ModalFilterUPP sModalFilterUPP = NewModalFilterUPP(ZUtil_Mac_HL::sModalFilter);
 pascal Boolean ZUtil_Mac_HL::sModalFilter(DialogPtr theDialog, EventRecord* inOutEventRecord, short* inOutItemHit)
 	{
-//#	#if (ZApp::sGet())
-//#		#return ZApp::sGet()->ModalFilter(theDialog, theEventRecord, itemHit);
+//##	if (ZApp::sGet())
+//##		return ZApp::sGet()->ModalFilter(theDialog, theEventRecord, itemHit);
 	return false;
 	}
 

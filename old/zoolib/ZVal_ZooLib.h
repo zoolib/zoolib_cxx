@@ -82,7 +82,7 @@ enum ZType
 	eZType_Vector = 18,
 	eZType_Type = 19,
 	eZType_Time = 20,
-//#	#eZType_Name = 21
+//##	eZType_Name = 21
 	eZType_Max
 	};
 

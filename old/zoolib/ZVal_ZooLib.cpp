@@ -76,7 +76,7 @@ static const char* const spZTypeAsString[eZType_Max] =
 	"Vector",
 	"Type",
 	"Time",
-//#	#"Name"
+//##	"Name"
 	};
 
 const char* ZTypeAsString(ZType iType)
@@ -1486,7 +1486,7 @@ void ZVal_ZooLib::pRelease()
 		case eZType_Rect: delete fData.fAs_Rect; break;
 
 		case eZType_String: sDtor_T<ValString>(fType.fBytes); break;
-//#		#case eZType_Name: sDtor_T<ZTName>(fType.fBytes); break;
+//##		case eZType_Name: sDtor_T<ZTName>(fType.fBytes); break;
 		case eZType_Tuple: sDtor_T<ZMap_ZooLib>(fType.fBytes); break;
 		case eZType_RefCounted:
 			{
