@@ -384,10 +384,10 @@ ZVal_NS ZVal_NS::Get(size_t iIndex) const
 // MARK: - ZVal_NS typename accessors
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_NS)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, NSString, ZVal_NS::NSStringPtr)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Data, ZData_NS)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Seq, ZSeq_NS)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Map, ZMap_NS)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_NS, NSString, ZVal_NS::NSStringPtr)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_NS, Data, ZData_NS)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_NS, Seq, ZSeq_NS)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_NS, Map, ZMap_NS)
 
 // =================================================================================================
 // MARK: - ZSeq_NS

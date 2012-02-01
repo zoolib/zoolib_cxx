@@ -215,9 +215,9 @@ public:
 
 // Typename accessors
 /// \cond DoxygenIgnore
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Data, ZData_Any)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Seq, ZSeq_Any)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Map, ZMap_Any)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_Any, Data, ZData_Any)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_Any, Seq, ZSeq_Any)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_Any, Map, ZMap_Any)
 /// \endcond DoxygenIgnore
 
 	// If these are free functions then our template constructor will

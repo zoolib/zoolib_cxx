@@ -105,8 +105,8 @@ public:
 
 // Typename accessors
 /// \cond DoxygenIgnore
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Yad, Seq, ZSeq_Yad)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Yad, Map, ZMap_Yad)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_Yad, Seq, ZSeq_Yad)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_Yad, Map, ZMap_Yad)
 /// \endcond DoxygenIgnore
 
 // Our protocol

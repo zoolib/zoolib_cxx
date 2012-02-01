@@ -25,36 +25,47 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 // MARK: - ZMACRO_ZValAccessors
 
+// Declaration, Get
+
 #define ZMACRO_ZValAccessors_Decl_Get(T, TYPENAME, TYPE) \
 	ZQ<TYPE> QGet##TYPENAME() const; \
-	bool QGet##TYPENAME(TYPE& oVal) const; \
 	TYPE DGet##TYPENAME(const TYPE& iDefault) const; \
 	TYPE Get##TYPENAME() const; \
 
-#define ZMACRO_ZValAccessors_Decl_Entry(T, TYPENAME, TYPE) \
+// Declaration, GetSet
+
+#define ZMACRO_ZValAccessors_Decl_GetSet(T, TYPENAME, TYPE) \
 	ZMACRO_ZValAccessors_Decl_Get(T, TYPENAME, TYPE) \
 	void Set##TYPENAME(const TYPE& iVal); \
 
-#define ZMACRO_ZValAccessors_Def_GetP(P, T, TYPENAME, TYPE) \
-	P ZQ<TYPE> T::QGet##TYPENAME() const \
+
+// Definition, Get, with leading extra qualification
+
+#define ZMACRO_ZValAccessors_Def_GetX(X, T, TYPENAME, TYPE) \
+	X ZQ<TYPE> T::QGet##TYPENAME() const \
 		{ return this->QGet<TYPE>(); } \
-	P bool T::QGet##TYPENAME(TYPE& oVal) const \
-		{ \
-		if (ZQ<TYPE> theQ = this->QGet<TYPE>()) \
-			{ oVal = theQ.Get(); return true; } \
-		return false; \
-		} \
-	P TYPE T::DGet##TYPENAME(const TYPE& iDefault) const \
+	X TYPE T::DGet##TYPENAME(const TYPE& iDefault) const \
 		{ return this->DGet<TYPE>(iDefault); } \
-	P TYPE T::Get##TYPENAME() const \
+	X TYPE T::Get##TYPENAME() const \
 		{ return this->Get<TYPE>(); } \
 
-#define ZMACRO_ZValAccessors_Def_EntryP(P, T, TYPENAME, TYPE) \
-	ZMACRO_ZValAccessors_Def_GetP(P, T, TYPENAME, TYPE) \
-	P void T::Set##TYPENAME(const TYPE& iVal) \
+
+// Definition, GetSet, with leading extra qualification
+
+#define ZMACRO_ZValAccessors_Def_GetSetX(X, T, TYPENAME, TYPE) \
+	ZMACRO_ZValAccessors_Def_GetX(X, T, TYPENAME, TYPE) \
+	X void T::Set##TYPENAME(const TYPE& iVal) \
 		{ return this->Set<TYPE>(iVal); } \
 
-#define ZMACRO_ZValAccessors_Def_Entry(T, TYPENAME, TYPE) \
-	ZMACRO_ZValAccessors_Def_EntryP(,T,TYPENAME, TYPE)
+
+// Definition, Get
+
+#define ZMACRO_ZValAccessors_Def_Get(T, TYPENAME, TYPE) \
+	ZMACRO_ZValAccessors_Def_GetX(,T,TYPENAME, TYPE)
+
+// Definition, GetSet
+
+#define ZMACRO_ZValAccessors_Def_GetSet(T, TYPENAME, TYPE) \
+	ZMACRO_ZValAccessors_Def_GetSetX(,T,TYPENAME, TYPE)
 
 #endif // __ZValAccessors_h__

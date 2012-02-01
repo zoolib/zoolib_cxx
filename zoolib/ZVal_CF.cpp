@@ -471,10 +471,10 @@ ZVal_CF ZVal_CF::Get(size_t iIndex) const
 // MARK: - ZVal_CF typename accessors
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_CF)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_CF, CFString, ZRef<CFStringRef>)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_CF, Data, ZData_CF)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_CF, Seq, ZSeq_CF)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_CF, Map, ZMap_CF)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_CF, CFString, ZRef<CFStringRef>)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_CF, Data, ZData_CF)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_CF, Seq, ZSeq_CF)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_CF, Map, ZMap_CF)
 
 // =================================================================================================
 // MARK: - ZSeq_CF

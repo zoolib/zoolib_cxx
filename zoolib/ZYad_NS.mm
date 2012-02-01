@@ -129,21 +129,17 @@ ZRef<ZYadR> sYadR(NSObject* iVal)
 	{
 	const ZVal_NS theVal = iVal;
 
-	ZMap_NS asMap;
-	if (theVal.QGetMap(asMap))
-		return new ZYadMapRPos_NS(asMap);
+	if (ZQ<ZMap_NS> theQ = theVal.QGetMap())
+		return new ZYadMapRPos_NS(*theQ);
 
-	ZSeq_NS asSeq;
-	if (theVal.QGetSeq(asSeq))
-		return new ZYadSeqRPos_NS(asSeq);
+	if (ZQ<ZSeq_NS> theQ = theVal.QGetSeq())
+		return new ZYadSeqRPos_NS(*theQ);
 
-	ZData_NS asData;
-	if (theVal.QGetData(asData))
-		return new ZYadStreamRPos_NS(asData);
+	if (ZQ<ZData_NS> theQ = theVal.QGetData())
+		return new ZYadStreamRPos_NS(*theQ);
 
-	NSString* asNSString;
-	if (theVal.QGetNSString(asNSString))
-		return new ZYadStrimR_NS(asNSString);
+	if (ZQ<NSString*> theQ = theVal.QGetNSString())
+		return new ZYadStrimR_NS(*theQ);
 
 	return new ZYadAtomR_NS(iVal);
 	}

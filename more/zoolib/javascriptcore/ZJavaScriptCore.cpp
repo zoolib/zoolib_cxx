@@ -546,10 +546,10 @@ ZQ<ObjectRef> Value::QGet<ObjectRef>() const
 	return null;
 	}
 
-ZMACRO_ZValAccessors_Def_GetP(,Value, Bool, bool)
-ZMACRO_ZValAccessors_Def_GetP(,Value, Double, double)
-ZMACRO_ZValAccessors_Def_GetP(,Value, String, String)
-ZMACRO_ZValAccessors_Def_GetP(,Value, ObjectRef, ObjectRef)
+ZMACRO_ZValAccessors_Def_Get(Value, Bool, bool)
+ZMACRO_ZValAccessors_Def_Get(Value, Double, double)
+ZMACRO_ZValAccessors_Def_Get(Value, String, String)
+ZMACRO_ZValAccessors_Def_Get(Value, ObjectRef, ObjectRef)
 
 // =================================================================================================
 // MARK: - ZJavaScriptCore::ObjectRef

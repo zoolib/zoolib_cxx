@@ -149,10 +149,10 @@ public:
 	typedef NSString* NSStringPtr;
 
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_NS)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, NSString, NSStringPtr)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Data, ZData_NS)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Seq, ZSeq_NS)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Map, ZMap_NS)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_NS, NSString, NSStringPtr)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_NS, Data, ZData_NS)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_NS, Seq, ZSeq_NS)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_NS, Map, ZMap_NS)
 /// \endcond DoxygenIgnore
 	};
 

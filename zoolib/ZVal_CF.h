@@ -136,10 +136,10 @@ public:
 // Typename accessors
 /// \cond DoxygenIgnore
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_CF)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CF, CFString, ZRef<CFStringRef>)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CF, Data, ZData_CF)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CF, Seq, ZSeq_CF)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CF, Map, ZMap_CF)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_CF, CFString, ZRef<CFStringRef>)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_CF, Data, ZData_CF)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_CF, Seq, ZSeq_CF)
+	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_CF, Map, ZMap_CF)
 /// \endcond DoxygenIgnore
 	};
 

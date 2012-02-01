@@ -306,22 +306,22 @@ public:
 
 // Typename accessors
 /// \cond DoxygenIgnore
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int8, int8)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt, uint8)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int16, int16)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt16, uint16)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int32, int32)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt32, uint32)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int64, int64)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt64, uint64)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Bool, bool)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Float, float)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Double, double)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, String, string8)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, String8, string8)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, String16, string16)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Unknown, ZRef<IUnknown>)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Dispatch, ZRef<IDispatch>)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, Int8, int8)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, UInt, uint8)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, Int16, int16)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, UInt16, uint16)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, UInt32, uint32)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, Int64, int64)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, UInt64, uint64)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, Float, float)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, Double, double)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, String, string8)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, String8, string8)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, String16, string16)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, Unknown, ZRef<IUnknown>)
+	ZMACRO_ZValAccessors_Decl_GetSet(Variant, Dispatch, ZRef<IDispatch>)
 /// \endcond DoxygenIgnore
 	};
 

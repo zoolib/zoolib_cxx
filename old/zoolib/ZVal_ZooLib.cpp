@@ -1265,20 +1265,20 @@ void ZVal_ZooLib::ToStream(const ZStreamW& iStreamW) const
 // MARK: - ZVal_ZooLib typename accessors
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_ZooLib)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, ID, uint64)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Type, ZType)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Time, ZTime)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Rect, ZRectPOD)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Point, ZPointPOD)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, RefCounted, ZRef<ZCounted>)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Pointer, VoidStar_t)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Data, ZData_ZooLib)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Seq, ZSeq_ZooLib)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Map, ZMap_ZooLib)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, ID, uint64)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, Type, ZType)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, Time, ZTime)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, Rect, ZRectPOD)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, Point, ZPointPOD)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, RefCounted, ZRef<ZCounted>)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, Pointer, VoidStar_t)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, Data, ZData_ZooLib)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, Seq, ZSeq_ZooLib)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, Map, ZMap_ZooLib)
 
 // Backwards compatibility
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Raw, ZData_ZooLib)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Tuple, ZMap_ZooLib)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, Raw, ZData_ZooLib)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_ZooLib, Tuple, ZMap_ZooLib)
 
 // =================================================================================================
 // MARK: - ZVal_ZooLib internal implementation

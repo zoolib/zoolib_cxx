@@ -458,19 +458,19 @@ ZVal_AppleEvent ZVal_AppleEvent::Get(size_t iIndex) const
 // =================================================================================================
 // MARK: - ZVal_AppleEvent typename accessors
 
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Int16, int16)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Int32, int32)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Int64, int64)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Bool, bool)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Float, float)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Double, double)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, String, std::string)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Seq, ZSeq_AppleEvent)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Map, ZMap_AppleEvent)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSRef, FSRef)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_AppleEvent, Int16, int16)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_AppleEvent, Int32, int32)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_AppleEvent, Int64, int64)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_AppleEvent, Bool, bool)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_AppleEvent, Float, float)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_AppleEvent, Double, double)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_AppleEvent, String, std::string)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_AppleEvent, Seq, ZSeq_AppleEvent)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_AppleEvent, Map, ZMap_AppleEvent)
+ZMACRO_ZValAccessors_Def_GetSet(ZVal_AppleEvent, FSRef, FSRef)
 
 #if ZCONFIG_SPI_Enabled(Carbon)
-	ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
+	ZMACRO_ZValAccessors_Def_GetSet(ZVal_AppleEvent, FSSpec, FSSpec)
 #endif
 
 // =================================================================================================

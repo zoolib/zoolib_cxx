@@ -365,11 +365,11 @@ void NPVariant_T<T>::pSetString(const std::string& iString)
 // =================================================================================================
 // MARK: - NPVariant_T<T> typename accessors
 
-ZMACRO_ZValAccessors_Def_GetP(template <class T>, NPVariant_T<T>, Bool, bool)
-ZMACRO_ZValAccessors_Def_GetP(template <class T>, NPVariant_T<T>, Int32, int32)
-ZMACRO_ZValAccessors_Def_GetP(template <class T>, NPVariant_T<T>, Double, double)
-ZMACRO_ZValAccessors_Def_GetP(template <class T>, NPVariant_T<T>, String, std::string)
-ZMACRO_ZValAccessors_Def_GetP(template <class T>, NPVariant_T<T>, Object, ZRef<T>)
+ZMACRO_ZValAccessors_Def_GetX(template <class T>, NPVariant_T<T>, Bool, bool)
+ZMACRO_ZValAccessors_Def_GetX(template <class T>, NPVariant_T<T>, Int32, int32)
+ZMACRO_ZValAccessors_Def_GetX(template <class T>, NPVariant_T<T>, Double, double)
+ZMACRO_ZValAccessors_Def_GetX(template <class T>, NPVariant_T<T>, String, std::string)
+ZMACRO_ZValAccessors_Def_GetX(template <class T>, NPVariant_T<T>, Object, ZRef<T>)
 
 } // namespace ZNetscape
 } // namespace ZooLib

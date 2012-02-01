@@ -132,8 +132,8 @@ ZAny ZVal_Yad::pAsAny() const
 	return ZAny();
 	}
 
-ZMACRO_ZValAccessors_Def_GetP(,ZVal_Yad, Seq, ZSeq_Yad)
-ZMACRO_ZValAccessors_Def_GetP(,ZVal_Yad, Map, ZMap_Yad)
+ZMACRO_ZValAccessors_Def_Get(ZVal_Yad, Seq, ZSeq_Yad)
+ZMACRO_ZValAccessors_Def_Get(ZVal_Yad, Map, ZMap_Yad)
 
 // =================================================================================================
 // MARK: - ZSeq_Yad

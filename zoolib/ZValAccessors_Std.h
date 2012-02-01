@@ -31,23 +31,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // MARK: - ZMACRO_ZValAccessors_Std
 
 #define ZMACRO_ZValAccessors_Decl_Std(T) \
-	ZMACRO_ZValAccessors_Decl_Entry(T, Int8, int8) \
-	ZMACRO_ZValAccessors_Decl_Entry(T, Int16, int16) \
-	ZMACRO_ZValAccessors_Decl_Entry(T, Int32, int32) \
-	ZMACRO_ZValAccessors_Decl_Entry(T, Int64, int64) \
-	ZMACRO_ZValAccessors_Decl_Entry(T, Bool, bool) \
-	ZMACRO_ZValAccessors_Decl_Entry(T, Float, float) \
-	ZMACRO_ZValAccessors_Decl_Entry(T, Double, double) \
-	ZMACRO_ZValAccessors_Decl_Entry(T, String, std::string) \
+	ZMACRO_ZValAccessors_Decl_GetSet(T, Int8, int8) \
+	ZMACRO_ZValAccessors_Decl_GetSet(T, Int16, int16) \
+	ZMACRO_ZValAccessors_Decl_GetSet(T, Int32, int32) \
+	ZMACRO_ZValAccessors_Decl_GetSet(T, Int64, int64) \
+	ZMACRO_ZValAccessors_Decl_GetSet(T, Bool, bool) \
+	ZMACRO_ZValAccessors_Decl_GetSet(T, Float, float) \
+	ZMACRO_ZValAccessors_Decl_GetSet(T, Double, double) \
+	ZMACRO_ZValAccessors_Decl_GetSet(T, String, std::string) \
 
 #define ZMACRO_ZValAccessors_Def_Std(T) \
-	ZMACRO_ZValAccessors_Def_Entry(T, Int8, int8) \
-	ZMACRO_ZValAccessors_Def_Entry(T, Int16, int16) \
-	ZMACRO_ZValAccessors_Def_Entry(T, Int32, int32) \
-	ZMACRO_ZValAccessors_Def_Entry(T, Int64, int64) \
-	ZMACRO_ZValAccessors_Def_Entry(T, Bool, bool) \
-	ZMACRO_ZValAccessors_Def_Entry(T, Float, float) \
-	ZMACRO_ZValAccessors_Def_Entry(T, Double, double) \
-	ZMACRO_ZValAccessors_Def_Entry(T, String, std::string) \
+	ZMACRO_ZValAccessors_Def_GetSet(T, Int8, int8) \
+	ZMACRO_ZValAccessors_Def_GetSet(T, Int16, int16) \
+	ZMACRO_ZValAccessors_Def_GetSet(T, Int32, int32) \
+	ZMACRO_ZValAccessors_Def_GetSet(T, Int64, int64) \
+	ZMACRO_ZValAccessors_Def_GetSet(T, Bool, bool) \
+	ZMACRO_ZValAccessors_Def_GetSet(T, Float, float) \
+	ZMACRO_ZValAccessors_Def_GetSet(T, Double, double) \
+	ZMACRO_ZValAccessors_Def_GetSet(T, String, std::string) \
 
 #endif // __ZValAccessors_Std_h__

@@ -263,14 +263,14 @@ Val Val::Get(const string8& iName) const
 	return Val();
 	}
 
-ZMACRO_ZValAccessors_Def_GetP(,Val, String16, string16)
-ZMACRO_ZValAccessors_Def_GetP(,Val, StringList, vector<string16>)
-ZMACRO_ZValAccessors_Def_GetP(,Val, String_Env, String_Env)
-ZMACRO_ZValAccessors_Def_GetP(,Val, String_Link, String_Link)
-ZMACRO_ZValAccessors_Def_GetP(,Val, Int32, int32)
-ZMACRO_ZValAccessors_Def_GetP(,Val, Int64, int64)
-ZMACRO_ZValAccessors_Def_GetP(,Val, Data, Data)
-ZMACRO_ZValAccessors_Def_GetP(,Val, KeyRef, KeyRef)
+ZMACRO_ZValAccessors_Def_Get(Val, String16, string16)
+ZMACRO_ZValAccessors_Def_Get(Val, StringList, vector<string16>)
+ZMACRO_ZValAccessors_Def_Get(Val, String_Env, String_Env)
+ZMACRO_ZValAccessors_Def_Get(Val, String_Link, String_Link)
+ZMACRO_ZValAccessors_Def_Get(Val, Int32, int32)
+ZMACRO_ZValAccessors_Def_Get(Val, Int64, int64)
+ZMACRO_ZValAccessors_Def_Get(Val, Data, Data)
+ZMACRO_ZValAccessors_Def_Get(Val, KeyRef, KeyRef)
 
 // =================================================================================================
 // MARK: - ZWinRegistry::KeyRef

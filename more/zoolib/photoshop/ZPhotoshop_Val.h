@@ -243,18 +243,18 @@ public:
 
 // Typename accessors
 /// \cond DoxygenIgnore
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Int32, int32)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Double, double)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Bool, bool)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, String, string8)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Data, Data)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, ClassID, ClassID)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, UnitFloat, UnitFloat)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Enumerated, Enumerated)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, FileRef, FileRef)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Seq, Seq)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Map, Map)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Spec, Spec)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, Double, double)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, String, string8)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, Data, Data)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, ClassID, ClassID)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, UnitFloat, UnitFloat)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, Enumerated, Enumerated)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, FileRef, FileRef)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, Seq, Seq)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, Map, Map)
+	ZMACRO_ZValAccessors_Decl_GetSet(Val, Spec, Spec)
 /// \endcond DoxygenIgnore
 	};
 
