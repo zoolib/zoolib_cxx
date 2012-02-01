@@ -25,19 +25,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZCONFIG_CFM_Use_UPP (TARGET_RT_MAC_CFM && !TARGET_API_MAC_CARBON)
 
 #if ZCONFIG_CFM_Use_UPP
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,MixedMode.h)
+	#include ZMACINCLUDE3(CoreServices,CarbonCore,MixedMode.h)
 #endif
 
 // =================================================================================================
 
 #if ZCONFIG_CFM_Use_UPP
 
-#	define ZMacCFM_CreateUPP(proc, func) \
+	#define ZMacCFM_CreateUPP(proc, func) \
 	(proc##_UPP)NewRoutineDescriptor((ProcPtr)func, proc##_ProcInfo, GetCurrentArchitecture())
 
 #else
 
-#	define ZMacCFM_CreateUPP(proc, func) func
+	#define ZMacCFM_CreateUPP(proc, func) func
 
 #endif
 
@@ -48,9 +48,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	typedef ret(*proc##ProcPtr)()
 
 #if ZCONFIG_CFM_Use_UPP
-#	define ZMacCFM_Call0(ret, proc, upp) \
+	#define ZMacCFM_Call0(ret, proc, upp) \
 			(ret) CallUniversalProc(upp, proc##_ProcInfo)
-#	define ZMacCFM_Priv_DefineUPP0(ret, proc) \
+	#define ZMacCFM_Priv_DefineUPP0(ret, proc) \
 		typedef UniversalProcPtr proc##_UPP; \
 		enum \
 			{ \
@@ -59,7 +59,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			| RESULT_SIZE(SIZE_CODE(sizeof(ret))) \
 			}
 
-#	define ZMacCFM_Priv_DefineUPP0_Void(proc) \
+	#define ZMacCFM_Priv_DefineUPP0_Void(proc) \
 		typedef UniversalProcPtr proc##_UPP; \
 		enum \
 			{ \
@@ -67,12 +67,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			| STACK_ROUTINE_PARAMETER(1, SIZE_CODE(0)) \
 			}
 #else
-#	define ZMacCFM_Call0(ret, proc, upp) \
+	#define ZMacCFM_Call0(ret, proc, upp) \
 			upp()
-#	define ZMacCFM_Priv_DefineUPP0(ret, proc) \
+	#define ZMacCFM_Priv_DefineUPP0(ret, proc) \
 			typedef proc##ProcPtr proc##_UPP
 
-#	define ZMacCFM_Priv_DefineUPP0_Void(proc) \
+	#define ZMacCFM_Priv_DefineUPP0_Void(proc) \
 			typedef proc##ProcPtr proc##_UPP
 #endif
 

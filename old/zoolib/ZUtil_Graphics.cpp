@@ -28,8 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDC_QD.h"
 
 #if ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon)
-#	include ZMACINCLUDE3(Carbon,HIToolbox,Drag.h) // For GetDragHiliteColor
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,LowMem.h) // For LMGetHiliteRGB
+	#include ZMACINCLUDE3(Carbon,HIToolbox,Drag.h) // For GetDragHiliteColor
+	#include ZMACINCLUDE3(CoreServices,CarbonCore,LowMem.h) // For LMGetHiliteRGB
 #endif
 
 using std::vector;

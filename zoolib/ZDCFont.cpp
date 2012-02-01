@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE3(ApplicationServices,QD,Fonts.h)
+	#include ZMACINCLUDE3(ApplicationServices,QD,Fonts.h)
 #endif
 
 namespace ZooLib {

@@ -28,17 +28,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // CFRunLoop is not available in CW's headers
 #ifndef ZCONFIG_API_Avail__Caller_CFRunLoop
-#	if ZCONFIG_SPI_Enabled(CoreFoundation) && !ZCONFIG(Compiler,CodeWarrior)
-#		define ZCONFIG_API_Avail__Caller_CFRunLoop 1
-#	endif
+	#if ZCONFIG_SPI_Enabled(CoreFoundation) && !ZCONFIG(Compiler,CodeWarrior)
+		#define ZCONFIG_API_Avail__Caller_CFRunLoop 1
+	#endif
 #endif
 
 #ifndef ZCONFIG_API_Avail__Caller_CFRunLoop
-#	define ZCONFIG_API_Avail__Caller_CFRunLoop 0
+	#define ZCONFIG_API_Avail__Caller_CFRunLoop 0
 #endif
 
 #ifndef ZCONFIG_API_Desired__Caller_CFRunLoop
-#	define ZCONFIG_API_Desired__Caller_CFRunLoop 1
+	#define ZCONFIG_API_Desired__Caller_CFRunLoop 1
 #endif
 
 #if ZCONFIG_API_Enabled(Caller_CFRunLoop)

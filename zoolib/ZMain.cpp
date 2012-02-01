@@ -67,7 +67,7 @@ extern "C" int main(int argc, char **argv)
 #include "zoolib/ZCompat_Win.h"
 
 #if !(ZCONFIG(Compiler, CodeWarrior) || ZCONFIG(Compiler, MSVC) || defined(__MINGW32__))
-#	error (Probably) unsupported compiler
+	#error (Probably) unsupported compiler
 #endif
 
 // MSL and the Visual C++ runtime put argc and argv into the globals __argc and __argv.
@@ -98,9 +98,9 @@ extern "C" int APIENTRY WinMain
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(POSIX)
-#	include <cstdlib>
-#	include <unistd.h>
-#	include <fcntl.h>
+	#include <cstdlib>
+	#include <unistd.h>
+	#include <fcntl.h>
 #endif
 
 namespace ZooLib {

@@ -197,7 +197,7 @@ by using <code>\#pragma ushort_wchar_t on</code>
 #include <ctype.h>
 
 #if ZCONFIG_SPI_Enabled(ICU)
-#	include "unicode/uchar.h"
+	#include "unicode/uchar.h"
 #endif
 
 // =================================================================================================

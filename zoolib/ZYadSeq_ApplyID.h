@@ -62,7 +62,7 @@ public:
 	virtual ZRef<ZYadR> ReadInc();
 
 // From ZYadSeqRPos
-//##	virtual ZRef<ZYadSeqRPos> Clone();
+//#	#virtual ZRef<ZYadSeqRPos> Clone();
 
 	virtual uint64 GetPosition();
 	virtual void SetPosition(uint64 iPosition);

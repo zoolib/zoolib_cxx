@@ -27,8 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGeometry.h" // Pulls in platform types and ZGeomPOD
 
 #if ZCONFIG_SPI_Enabled(BeOS)
-#	include <interface/Point.h>
-#	include <interface/Rect.h>
+	#include <interface/Point.h>
+	#include <interface/Rect.h>
 #endif
 
 // Include these after the platform files -- cmath causes problems

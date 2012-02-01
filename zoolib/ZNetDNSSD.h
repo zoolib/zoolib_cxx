@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__NetDNSSD
-#	define ZCONFIG_API_Avail__NetDNSSD ZCONFIG_SPI_Enabled(DNSSD)
+	#define ZCONFIG_API_Avail__NetDNSSD ZCONFIG_SPI_Enabled(DNSSD)
 #endif
 
 #ifndef ZCONFIG_API_Desired__NetDNSSD
-#	define ZCONFIG_API_Desired__NetDNSSD 1
+	#define ZCONFIG_API_Desired__NetDNSSD 1
 #endif
 
 

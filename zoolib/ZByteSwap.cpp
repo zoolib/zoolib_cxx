@@ -23,14 +23,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Switch off optimization for CodeWarrior -- it runs out of registers.
 #if ZCONFIG(Compiler, CodeWarrior)
-#	pragma push
-#	pragma optimization_level 1
-#	pragma opt_common_subs off
-#	pragma opt_lifetimes off
-#	pragma peephole off
-#	if ZCONFIG(Processor, x86)
-#		pragma register_coloring off
-#	endif
+	#pragma push
+	#pragma optimization_level 1
+	#pragma opt_common_subs off
+	#pragma opt_lifetimes off
+	#pragma peephole off
+	#if ZCONFIG(Processor, x86)
+		#pragma register_coloring off
+	#endif
 #endif
 
 namespace ZooLib {

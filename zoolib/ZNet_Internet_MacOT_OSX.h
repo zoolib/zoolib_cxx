@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__Net_Internet_MacOT_OSX
-#	define ZCONFIG_API_Avail__Net_Internet_MacOT_OSX ZCONFIG_SPI_Enabled(Carbon)
+	#define ZCONFIG_API_Avail__Net_Internet_MacOT_OSX ZCONFIG_SPI_Enabled(Carbon)
 #endif
 
 #ifndef ZCONFIG_API_Desired__Net_Internet_MacOT_OSX
-#	define ZCONFIG_API_Desired__Net_Internet_MacOT_OSX 1
+	#define ZCONFIG_API_Desired__Net_Internet_MacOT_OSX 1
 #endif
 
 #include "zoolib/ZNet_Internet.h"
@@ -37,7 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)
 
 #if ZCONFIG_SPI_Enabled(Carbon)
-#	include ZMACINCLUDE3(CoreServices,OSServices,OpenTransportProviders.h)
+	#include ZMACINCLUDE3(CoreServices,OSServices,OpenTransportProviders.h)
 #endif
 
 namespace ZooLib {

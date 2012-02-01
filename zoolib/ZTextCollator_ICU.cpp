@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "unicode/usearch.h"
 
 #ifndef kDebug_ICU
-#	define kDebug_ICU 1
+	#define kDebug_ICU 1
 #endif
 
 using std::string;

@@ -40,7 +40,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#endif
 
 	#ifndef ZCONFIG_NPStringUpperCaseFieldNames
-	#	define ZCONFIG_NPStringUpperCaseFieldNames 1
+		#define ZCONFIG_NPStringUpperCaseFieldNames 1
 	#endif
 
 	#define NPEventType_GetFocusEvent getFocusEvent
@@ -54,26 +54,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if defined(_NPFUNCTIONS_H_)
-#	define ZCONFIG_NPAPI_WebKit_10_4 1
+	#define ZCONFIG_NPAPI_WebKit_10_4 1
 #elif defined(NPFUNCTIONS_H)
-#	if defined(EXPORTED_CALLBACK)
-#		define ZCONFIG_NPAPI_WebKit_Recent 1
-#	else
-#		define ZCONFIG_NPAPI_WebKit_10_5 1
-#	endif
+	#if defined(EXPORTED_CALLBACK)
+		#define ZCONFIG_NPAPI_WebKit_Recent 1
+	#else
+		#define ZCONFIG_NPAPI_WebKit_10_5 1
+	#endif
 #elif defined(_NPUPP_H_)
-#	if defined(_NPUPP_USE_UPP_)
-#		define ZCONFIG_NPAPI_Mozilla_Old 1
-#	else
-#		define ZCONFIG_NPAPI_Mozilla_New 1
-#	endif
+	#if defined(_NPUPP_USE_UPP_)
+		#define ZCONFIG_NPAPI_Mozilla_Old 1
+	#else
+		#define ZCONFIG_NPAPI_Mozilla_New 1
+	#endif
 #endif
 
 // =================================================================================================
 // Fixup the NPString field name change
 
 #ifndef ZCONFIG_NPStringUpperCaseFieldNames
-#	define ZCONFIG_NPStringUpperCaseFieldNames 0
+	#define ZCONFIG_NPStringUpperCaseFieldNames 0
 #endif
 
 #if ZCONFIG_NPStringUpperCaseFieldNames

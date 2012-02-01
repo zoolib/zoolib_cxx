@@ -32,11 +32,11 @@ using std::vector;
 // =================================================================================================
 
 #if defined(XP_WIN)
-#	define EXPORT_DECL(ret) extern "C" __declspec(dllexport) ret __stdcall
-#	define EXPORT_DEF(ret) ret __stdcall
+	#define EXPORT_DECL(ret) extern "C" __declspec(dllexport) ret __stdcall
+	#define EXPORT_DEF(ret) ret __stdcall
 #else
-#	define EXPORT_DECL(ret) extern "C" __attribute__((visibility("default"))) ret
-#	define EXPORT_DEF(ret) ret
+	#define EXPORT_DECL(ret) extern "C" __attribute__((visibility("default"))) ret
+	#define EXPORT_DEF(ret) ret
 #endif
 
 #if !ZCONFIG(Processor, PPC) || !__MACH__

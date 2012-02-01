@@ -275,7 +275,7 @@ bool Device_Client::Read(const ZStreamR& r)
 	ZAssert(!req);
 
 	fOpen = false;
-//##	ZStreamerWriter::Wake();
+//#	#ZStreamerWriter::Wake();
 	return false;
 	}
 
@@ -306,7 +306,7 @@ void Device_Client::Finished()
 void Device_Client::Stop()
 	{
 	fOpen = false;
-//##	ZStreamerWriter::Wake();
+//#	#ZStreamerWriter::Wake();
 	}
 
 // =================================================================================================
@@ -347,7 +347,7 @@ void Manager_Client::Commer_Changed::ReadFinished()
 	fSendClose = true;
 	this->WakeWrite();
 
-//##	ZCommer::ReadFinished();
+//#	#ZCommer::ReadFinished();
 	}
 
 bool Manager_Client::Commer_Changed::Read(const ZStreamR& r)

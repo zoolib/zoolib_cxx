@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #if !defined(__MWERKS__) && defined(_MSC_VER) && (_MSC_VER < 1200)
-#	include <algorithm.h>
+	#include <algorithm.h>
 #else
-#	include <algorithm>
+	#include <algorithm>
 #endif
 
 namespace ZooLib {

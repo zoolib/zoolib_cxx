@@ -24,11 +24,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_StreamSHA1_UseOpenSSL
-#	define ZCONFIG_StreamSHA1_UseOpenSSL ZCONFIG_SPI_Enabled(openssl)
+	#define ZCONFIG_StreamSHA1_UseOpenSSL ZCONFIG_SPI_Enabled(openssl)
 #endif
 
 #if ZCONFIG_StreamSHA1_UseOpenSSL
-#	include <openssl/sha.h>
+	#include <openssl/sha.h>
 #endif
 
 #include "zoolib/ZStream_Filter.h"

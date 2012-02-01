@@ -28,17 +28,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNet_Socket.h"
 
 #ifndef ZCONFIG_API_Avail__Net_Local_Socket
-#	if ZCONFIG_API_Enabled(Net_Socket)
-#		define ZCONFIG_API_Avail__Net_Local_Socket 1
-#	endif
+	#if ZCONFIG_API_Enabled(Net_Socket)
+		#define ZCONFIG_API_Avail__Net_Local_Socket 1
+	#endif
 #endif
 
 #ifndef ZCONFIG_API_Avail__Net_Local_Socket
-#	define ZCONFIG_API_Avail__Net_Local_Socket 0
+	#define ZCONFIG_API_Avail__Net_Local_Socket 0
 #endif
 
 #ifndef ZCONFIG_API_Desired__Net_Local_Socket
-#	define ZCONFIG_API_Desired__Net_Local_Socket 1
+	#define ZCONFIG_API_Desired__Net_Local_Socket 1
 #endif
 
 #if ZCONFIG_API_Enabled(Net_Local_Socket)

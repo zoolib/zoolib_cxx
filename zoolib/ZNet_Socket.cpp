@@ -49,7 +49,7 @@ namespace ZooLib {
 // prior to 10.2, so we define it ourselves if necessary.
 
 #ifndef SO_NOSIGPIPE
-#	define SO_NOSIGPIPE 0x1022
+	#define SO_NOSIGPIPE 0x1022
 #endif
 
 static void spSetSocketOptions(int iSocket)
@@ -90,7 +90,7 @@ static void spSetSocketOptions(int iSocket)
 	}
 
 #ifndef MSG_NOSIGNAL
-#	define MSG_NOSIGNAL 0x2000
+	#define MSG_NOSIGNAL 0x2000
 #endif
 
 static bool spCanUse_MSG_NOSIGNAL = false;

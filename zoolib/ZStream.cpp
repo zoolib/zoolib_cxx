@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 #if ZCONFIG(Compiler, MSVC)
-#	define vsnprintf _vsnprintf
+	#define vsnprintf _vsnprintf
 #endif
 
 using std::max;

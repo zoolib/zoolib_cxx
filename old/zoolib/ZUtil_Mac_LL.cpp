@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <new> // for bad_alloc
 
 #if ZCONFIG_SPI_Enabled(Carbon)
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
+	#include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
 #endif
 
 using std::bad_alloc;

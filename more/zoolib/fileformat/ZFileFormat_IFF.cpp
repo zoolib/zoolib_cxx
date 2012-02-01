@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string.h> // For strlen
 
 #ifndef kDebug_IFF
-#	define kDebug_IFF 1
+	#define kDebug_IFF 1
 #endif
 
 namespace ZooLib {

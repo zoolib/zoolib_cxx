@@ -26,30 +26,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(POSIX)
-#	include <sys/time.h> // For timeval
+	#include <sys/time.h> // For timeval
 #endif
 
 #if ZCONFIG_SPI_Enabled(MacClassic)
-#	include <DriverServices.h> // For UpTime, Nanoseconds etc
+	#include <DriverServices.h> // For UpTime, Nanoseconds etc
 #endif
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,DriverServices.h) // For UpTime, Nanoseconds etc
+	#include ZMACINCLUDE3(CoreServices,CarbonCore,DriverServices.h) // For UpTime, Nanoseconds etc
 #endif
 
 #if ZCONFIG_SPI_Enabled(Win)
-#	include "zoolib/ZCompat_Win.h"
-#	include "zoolib/ZUtil_Win.h"
+	#include "zoolib/ZCompat_Win.h"
+	#include "zoolib/ZUtil_Win.h"
 #endif
 
 #if ZCONFIG_SPI_Enabled(Linux)
-#	include <sys/sysinfo.h> // For sysinfo
-#	include <cstdio> // For FILE and fopen
+	#include <sys/sysinfo.h> // For sysinfo
+	#include <cstdio> // For FILE and fopen
 #endif
 
 #if ZCONFIG_SPI_Enabled(BSD)
-#	include <sys/types.h> // For sysctl etc.
-#	include <sys/sysctl.h>
+	#include <sys/types.h> // For sysctl etc.
+	#include <sys/sysctl.h>
 #endif
 
 namespace ZooLib {

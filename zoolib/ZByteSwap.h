@@ -536,11 +536,11 @@ inline void ZByteSwap_32(volatile void* ioValueAddress)
 
 #if !defined(ZByteSwap_EndianBig)
 
-#	if ZCONFIG(Endian, Big)
-#		define ZByteSwap_EndianBig 1
-#	else
-#		define ZByteSwap_EndianBig 0
-#	endif
+	#if ZCONFIG(Endian, Big)
+		#define ZByteSwap_EndianBig 1
+	#else
+		#define ZByteSwap_EndianBig 0
+	#endif
 
 	inline uint16 ZByteSwap_16(uint16 iValue)
 		{ return (iValue >> 8) | (iValue << 8); }

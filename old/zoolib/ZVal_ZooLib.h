@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 #ifndef ZCONFIG_Val_ZooLib_Packed
-#	define ZCONFIG_Val_ZooLib_Packed 1
+	#define ZCONFIG_Val_ZooLib_Packed 1
 #endif
 
 namespace ZooLib {
@@ -82,7 +82,7 @@ enum ZType
 	eZType_Vector = 18,
 	eZType_Type = 19,
 	eZType_Time = 20,
-//##	eZType_Name = 21
+//#	#eZType_Name = 21
 	eZType_Max
 	};
 
@@ -95,7 +95,7 @@ const char* ZTypeAsString(ZType iType);
 // MARK: - ZVal_ZooLib
 
 #if ZCONFIG_Val_ZooLib_Packed
-#	pragma pack(4)
+	#pragma pack(4)
 #endif
 
 class ZVal_ZooLib
@@ -275,7 +275,7 @@ private:
 	};
 
 #if ZCONFIG_Val_ZooLib_Packed
-#	pragma pack()
+	#pragma pack()
 #endif
 
 // =================================================================================================

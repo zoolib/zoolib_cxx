@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE3(CoreServices,CarbonCore,Multiprocessing.h)
 
 #ifndef kDebug_OT
-#	define kDebug_OT 1
+	#define kDebug_OT 1
 #endif
 
 using std::string;

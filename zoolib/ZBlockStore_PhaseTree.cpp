@@ -38,17 +38,17 @@ using std::vector;
 namespace ZooLib {
 
 #ifndef kDebug_PhaseTreeFile
-#	define kDebug_PhaseTreeFile 3
+	#define kDebug_PhaseTreeFile 3
 #endif
 
 #if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
-#	define PT_INLINE
-#	define ASSERT_LOCKED(a) ZAssertStop(0, a.IsLocked())
-#	define ASSERT_UNLOCKED(a) ZAssertStop(0, !a.IsLocked())
+	#define PT_INLINE
+	#define ASSERT_LOCKED(a) ZAssertStop(0, a.IsLocked())
+	#define ASSERT_UNLOCKED(a) ZAssertStop(0, !a.IsLocked())
 #else
-#	define PT_INLINE inline
-#	define ASSERT_LOCKED(a)
-#	define ASSERT_UNLOCKED(a)
+	#define PT_INLINE inline
+	#define ASSERT_LOCKED(a)
+	#define ASSERT_UNLOCKED(a)
 #endif
 
 /**

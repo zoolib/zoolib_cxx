@@ -28,9 +28,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 
 #if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
-#	define ZCONFIG_Has_typeUTF8Text 1
+	#define ZCONFIG_Has_typeUTF8Text 1
 #else
-#	define ZCONFIG_Has_typeUTF8Text 0
+	#define ZCONFIG_Has_typeUTF8Text 0
 #endif
 
 // =================================================================================================

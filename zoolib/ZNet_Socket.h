@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__Net_Socket
-#	define ZCONFIG_API_Avail__Net_Socket ZCONFIG_SPI_Enabled(POSIX)
+	#define ZCONFIG_API_Avail__Net_Socket ZCONFIG_SPI_Enabled(POSIX)
 #endif
 
 #ifndef ZCONFIG_API_Desired__Net_Socket
-#	define ZCONFIG_API_Desired__Net_Socket 1
+	#define ZCONFIG_API_Desired__Net_Socket 1
 #endif
 
 #include "zoolib/ZNet.h"

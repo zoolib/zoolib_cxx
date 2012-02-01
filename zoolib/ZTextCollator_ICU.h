@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__TextCollator_ICU
-#	define ZCONFIG_API_Avail__TextCollator_ICU ZCONFIG_SPI_Enabled(ICU)
+	#define ZCONFIG_API_Avail__TextCollator_ICU ZCONFIG_SPI_Enabled(ICU)
 #endif
 
 #ifndef ZCONFIG_API_Desired__TextCollator_ICU
-#	define ZCONFIG_API_Desired__TextCollator_ICU 1
+	#define ZCONFIG_API_Desired__TextCollator_ICU 1
 #endif
 
 #include "zoolib/ZTextCollator.h"

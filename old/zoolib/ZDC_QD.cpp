@@ -38,14 +38,14 @@ static short spModeLookup[] = { srcCopy, srcOr, srcXor, srcBic};
 
 // If we're using the old headers then MacLineTo won't be defined
 #if !defined(TARGET_OS_MAC) || (TARGET_OS_MAC && !defined(MacLineTo))
-#	define MacLineTo LineTo
-#	define MacFrameRect FrameRect
-#	define MacInvertRect InvertRect
-#	define MacFrameRgn FrameRgn
-#	define MacInvertRgn InvertRgn
-#	define MacPaintRgn PaintRgn
-#	define MacDrawText DrawText
-#	define MacOffsetRgn OffsetRgn
+	#define MacLineTo LineTo
+	#define MacFrameRect FrameRect
+	#define MacInvertRect InvertRect
+	#define MacFrameRgn FrameRgn
+	#define MacInvertRgn InvertRgn
+	#define MacPaintRgn PaintRgn
+	#define MacDrawText DrawText
+	#define MacOffsetRgn OffsetRgn
 #endif
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,LowMem.h) // For LMSetHiliteMode

@@ -111,9 +111,9 @@ void ZStream_SHA1::sFinal(Context& ioContext, uint8 oDigest[20])
 /* I got the idea of expanding during the round function from SSLeay */
 
 #if ZCONFIG(Endian, Big)
-#	define blk0(i) (localData[i] = iData[i])
+	#define blk0(i) (localData[i] = iData[i])
 #else
-#	define blk0(i) (localData[i] = ZByteSwap_ReadBig32(iData + i))
+	#define blk0(i) (localData[i] = ZByteSwap_ReadBig32(iData + i))
 #endif
 
 #define blk(i) (localData[i&15] = \

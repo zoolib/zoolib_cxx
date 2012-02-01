@@ -27,15 +27,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNet_Local.h"
 
 #ifndef ZCONFIG_API_Avail__Net_Local_Win
-#	define ZCONFIG_API_Avail__Net_Local_Win ZCONFIG_SPI_Enabled(Win)
+	#define ZCONFIG_API_Avail__Net_Local_Win ZCONFIG_SPI_Enabled(Win)
 #endif
 
 #ifndef ZCONFIG_API_Avail__Net_Local_Win
-#	define ZCONFIG_API_Avail__Net_Local_Win 0
+	#define ZCONFIG_API_Avail__Net_Local_Win 0
 #endif
 
 #ifndef ZCONFIG_API_Desired__Net_Local_Win
-#	define ZCONFIG_API_Desired__Net_Local_Win 1
+	#define ZCONFIG_API_Desired__Net_Local_Win 1
 #endif
 
 

@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__Net_Internet_WinSock
-#	define ZCONFIG_API_Avail__Net_Internet_WinSock ZCONFIG_SPI_Enabled(Win)
+	#define ZCONFIG_API_Avail__Net_Internet_WinSock ZCONFIG_SPI_Enabled(Win)
 #endif
 
 #ifndef ZCONFIG_API_Desired__Net_Internet_WinSock
-#	define ZCONFIG_API_Desired__Net_Internet_WinSock 1
+	#define ZCONFIG_API_Desired__Net_Internet_WinSock 1
 #endif
 
 #include "zoolib/ZNet_Internet.h"

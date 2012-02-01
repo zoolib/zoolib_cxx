@@ -26,11 +26,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_API_Avail__Util_ATSUI
 // ?? Is this the right condition ??
-#	define ZCONFIG_API_Avail__Util_ATSUI ZCONFIG_SPI_Enabled(Carbon)
+	#define ZCONFIG_API_Avail__Util_ATSUI ZCONFIG_SPI_Enabled(Carbon)
 #endif
 
 #ifndef ZCONFIG_API_Desired__Util_ATSUI
-#	define ZCONFIG_API_Desired__Util_ATSUI 1
+	#define ZCONFIG_API_Desired__Util_ATSUI 1
 #endif
 
 #if ZCONFIG_API_Enabled(Util_ATSUI)

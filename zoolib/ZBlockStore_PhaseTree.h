@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 
 #ifndef ZCONFIG_PhaseTree_Debug
-#	define ZCONFIG_PhaseTree_Debug 3
+	#define ZCONFIG_PhaseTree_Debug 3
 #endif
 
 namespace ZooLib {

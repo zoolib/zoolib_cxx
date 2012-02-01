@@ -51,17 +51,17 @@ extern void sInvoke(int iLevel, bool iStop,
 std::size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams);
 
 #if ZCONFIG(Compiler,GCC)
-#	define ZMACRO_Unwrap(b...) b
+	#define ZMACRO_Unwrap(b...) b
 #else
-#	define ZMACRO_Unwrap(...) __VA_ARGS__
+	#define ZMACRO_Unwrap(...) __VA_ARGS__
 #endif
 
 #if ZCONFIG(Compiler, GCC)
-#	define ZMACRO_FunctionName __PRETTY_FUNCTION__
+	#define ZMACRO_FunctionName __PRETTY_FUNCTION__
 #elif ZCONFIG(Compiler, MSVC)
-#	define ZMACRO_FunctionName __FUNCDNAME__
+	#define ZMACRO_FunctionName __FUNCDNAME__
 #else
-#	define ZMACRO_FunctionName __FUNCTION__
+	#define ZMACRO_FunctionName __FUNCTION__
 #endif
 
 #define ZMACRO_Debug(level, stop, message) \

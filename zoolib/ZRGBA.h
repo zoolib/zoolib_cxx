@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTypes.h"
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE3(ApplicationServices,QD,QuickDraw.h)
+	#include ZMACINCLUDE3(ApplicationServices,QD,QuickDraw.h)
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)
@@ -34,11 +34,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if ZCONFIG_SPI_Enabled(X11)
-#	include "zoolib/ZCompat_Xlib.h"
+	#include "zoolib/ZCompat_Xlib.h"
 #endif
 
 #if ZCONFIG_SPI_Enabled(BeOS)
-#	include <GraphicsDefs.h>
+	#include <GraphicsDefs.h>
 #endif
 
 namespace ZooLib {

@@ -26,20 +26,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__StackCrawl
-#	if ZCONFIG_SPI_Enabled(Linux) && ZCONFIG(Processor, x86)
-#		define ZCONFIG_API_Avail__StackCrawl 1
-#	endif
-#	if ZCONFIG_SPI_Enabled(Win)
-#		define ZCONFIG_API_Avail__StackCrawl ZCONFIG_SPI_Enabled(imagehlp)
-#	endif
+	#if ZCONFIG_SPI_Enabled(Linux) && ZCONFIG(Processor, x86)
+		#define ZCONFIG_API_Avail__StackCrawl 1
+	#endif
+	#if ZCONFIG_SPI_Enabled(Win)
+		#define ZCONFIG_API_Avail__StackCrawl ZCONFIG_SPI_Enabled(imagehlp)
+	#endif
 #endif
 
 #ifndef ZCONFIG_API_Avail__StackCrawl
-#	define ZCONFIG_API_Avail__StackCrawl 0
+	#define ZCONFIG_API_Avail__StackCrawl 0
 #endif
 
 #ifndef ZCONFIG_API_Desired__StackCrawl
-#	define ZCONFIG_API_Desired__StackCrawl 1
+	#define ZCONFIG_API_Desired__StackCrawl 1
 #endif
 
 #if ZCONFIG_API_Enabled(StackCrawl)

@@ -23,11 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,Gestalt.h)
-#	if !ZCONFIG_SPI_Enabled(MacOSX)
+	#include ZMACINCLUDE3(CoreServices,CarbonCore,Gestalt.h)
+	#if !ZCONFIG_SPI_Enabled(MacOSX)
 		static bool sIsMacOSX_Checked;
 		static bool sIsMacOSX_Value;
-#	endif
+	#endif
 #endif
 
 namespace ZooLib {

@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__File_POSIX
-#	define ZCONFIG_API_Avail__File_POSIX ZCONFIG_SPI_Enabled(POSIX)
+	#define ZCONFIG_API_Avail__File_POSIX ZCONFIG_SPI_Enabled(POSIX)
 #endif
 
 #ifndef ZCONFIG_API_Desired__File_POSIX
-#	define ZCONFIG_API_Desired__File_POSIX 1
+	#define ZCONFIG_API_Desired__File_POSIX 1
 #endif
 
 #include "zoolib/ZFile.h"

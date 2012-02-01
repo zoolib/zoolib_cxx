@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // See comment in Solaris' /usr/include/sys/ioctl.h
 #if __sun__
-#	define BSD_COMP
+	#define BSD_COMP
 #endif
 
 #include <sys/ioctl.h>
@@ -35,8 +35,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // AG 2005-01-04. It looks like poll.h is not always present on MacOS X.
 // We don't use poll on MacOS, so we can just skip the include for now.
 #ifndef __APPLE__
-#	define POLL_NO_WARN // Switch off Apple warning re poll().
-#	include <poll.h>
+	#define POLL_NO_WARN // Switch off Apple warning re poll().
+	#include <poll.h>
 #endif
 
 namespace ZooLib {

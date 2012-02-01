@@ -367,8 +367,8 @@ void Manager_OSXUSB::pDeviceAttached(ZRef<ZUSBDevice> iUSBDevice)
 		// Watcher fired, but could not create a USBDevice.
 		if (ZLOG(s, eNotice, "ZBlackBerry::Manager_OSXUSB"))
 			s << "Added, invoked with null device, PocketMac drivers installed?";
-//##		if (fPocketMacDriverInstalled)
-//##			fObserver->AddFailed();
+//#		#if (fPocketMacDriverInstalled)
+//#			#fObserver->AddFailed();
 		return;
 		}
 

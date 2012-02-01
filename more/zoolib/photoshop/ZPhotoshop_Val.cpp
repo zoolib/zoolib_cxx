@@ -28,11 +28,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "PIUSuites.h"
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
-#	if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
-#		include ZMACINCLUDE3(ApplicationServices,AE,AEObjects.h)
-#	else
-#		include ZMACINCLUDE3(CoreServices,AE,AEObjects.h)
-#	endif
+	#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
+		#include ZMACINCLUDE3(ApplicationServices,AE,AEObjects.h)
+	#else
+		#include ZMACINCLUDE3(CoreServices,AE,AEObjects.h)
+	#endif
 #endif
 
 #if ZCONFIG_SPI_Enabled(Win)
@@ -364,7 +364,7 @@ static PIActionList spDuplicate(PIActionList iSource)
 			TypeID theType;
 			if (noErr != spPSActionList->GetType(iSource, x, &theType))
 				break;
-//##			COPYFROMTO(spPSActionList, iSource, x, theType, theDest)
+//#			#COPYFROMTO(spPSActionList, iSource, x, theType, theDest)
 			}
 		}
 	return theDest;

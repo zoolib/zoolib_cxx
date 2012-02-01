@@ -54,20 +54,20 @@ const ZDCInk ZDCInk::sLtGray(spLocalWhite, spLocalBlack, ZDCPattern::sLtGray);
 #if ZCONFIG(Compiler, CodeWarrior)
 // Enforce higher level of optimization for this code -- otherwise
 // the funky switch stuff is all for naught.
-#	pragma push
-#	pragma optimization_level 4
-#	pragma opt_common_subs on
-#	pragma opt_lifetimes on
-#	pragma peephole on
-#	if ZCONFIG(Processor, x86)
-#		pragma register_coloring on
-#	endif
+	#pragma push
+	#pragma optimization_level 4
+	#pragma opt_common_subs on
+	#pragma opt_lifetimes on
+	#pragma peephole on
+	#if ZCONFIG(Processor, x86)
+		#pragma register_coloring on
+	#endif
 #endif
 
 #if ZCONFIG(Compiler, CodeWarrior) && (ZCONFIG(Processor, 68K) || ZCONFIG(Processor, x86))
-#	define RotateLeft(a,b,c) __rol(a,b)
+	#define RotateLeft(a,b,c) __rol(a,b)
 #else
-#	define RotateLeft(value, distance, eightMinusDistance) \
+	#define RotateLeft(value, distance, eightMinusDistance) \
 	(((value) << (distance)) | ((value) >> (eightMinusDistance)))
 #endif
 
@@ -153,7 +153,7 @@ void ZDCPattern::sOffset(int32 inOffsetH, int32 inOffsetV, const uint8* inSource
 	}
 
 #if ZCONFIG(Compiler, CodeWarrior)
-#	pragma pop
+	#pragma pop
 #endif
 
 // =================================================================================================

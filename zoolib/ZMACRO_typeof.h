@@ -43,7 +43,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 From <http://stackoverflow.com/questions/4292085/type-inference-in-visual-c-2008>,
 originally from <http://rsdn.ru/forum/src/1094305.aspx>
 Written by Igor Chesnokov
-
+*/
 // type_of() evil implementation for VC7
 //
 // (c) Chez

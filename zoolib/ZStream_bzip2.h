@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__Stream_bzip2
-#	define ZCONFIG_API_Avail__Stream_bzip2 ZCONFIG_SPI_Enabled(bzip2)
+	#define ZCONFIG_API_Avail__Stream_bzip2 ZCONFIG_SPI_Enabled(bzip2)
 #endif
 
 #ifndef ZCONFIG_API_Desired__Stream_bzip2
-#	define ZCONFIG_API_Desired__Stream_bzip2 1
+	#define ZCONFIG_API_Desired__Stream_bzip2 1
 #endif
 
 #include "zoolib/ZStreamer.h"

@@ -75,7 +75,7 @@ SOFTWARE.
 #include "zoolib/ZMemory.h" // For ZMemCopy
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,MacMemory.h) // For HLock etc.
+	#include ZMACINCLUDE3(CoreServices,CarbonCore,MacMemory.h) // For HLock etc.
 #endif
 
 using ZooLib::ZCoord;

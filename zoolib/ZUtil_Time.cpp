@@ -29,15 +29,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <time.h>
 
 #if ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon64)
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,OSUtils.h)
+	#include ZMACINCLUDE3(CoreServices,CarbonCore,OSUtils.h)
 #endif
 
 #if ZCONFIG_SPI_Enabled(Win)
-#	include "zoolib/ZCompat_Win.h"
+	#include "zoolib/ZCompat_Win.h"
 #endif
 
 #if ZCONFIG_SPI_Enabled(POSIX)
-#	include <sys/time.h>
+	#include <sys/time.h>
 #endif
 
 using std::string;
@@ -45,9 +45,9 @@ using std::string;
 #if (__MWERKS__ && (!defined(_MSL_USING_MW_C_HEADERS) || _MSL_USING_MW_C_HEADERS)) \
 	|| (ZCONFIG_SPI_Enabled(Win) && ZCONFIG(Compiler, GCC)) \
 	|| (ZCONFIG_SPI_Enabled(Win) && ZCONFIG(Compiler, MSVC))
-#	define DO_IT_OURSELVES 1
+	#define DO_IT_OURSELVES 1
 #else
-#	define DO_IT_OURSELVES 0
+	#define DO_IT_OURSELVES 0
 #endif
 
 namespace ZooLib {

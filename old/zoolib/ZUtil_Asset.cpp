@@ -33,18 +33,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h" // For pascal string conversions
 
 #if ZCONFIG_SPI_Enabled(POSIX)
-#	include <sys/types.h> // For lseek
-#	include <fcntl.h> // For open
-#	include <unistd.h> // For lseek
+	#include <sys/types.h> // For lseek
+	#include <fcntl.h> // For open
+	#include <unistd.h> // For lseek
 #endif
 
 #if ZCONFIG_SPI_Enabled(Win)
-#	include "zoolib/ZUnicode.h"
-#	include "zoolib/ZUtil_Win.h"
+	#include "zoolib/ZUnicode.h"
+	#include "zoolib/ZUtil_Win.h"
 #endif
 
 #if ZCONFIG_SPI_Enabled(Carbon)
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
+	#include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
 #endif
 
 namespace ZooLib {

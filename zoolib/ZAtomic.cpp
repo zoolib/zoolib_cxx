@@ -31,9 +31,9 @@ ZAssertCompile(sizeof(ZooLib::ZAtomic_t) == sizeof(int));
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
 
 #if 0
-#	define ZAtomic_PPC405_ERR77(rA,rB) dcbt rA , rB;
+	#define ZAtomic_PPC405_ERR77(rA,rB) dcbt rA , rB;
 #else
-#	define ZAtomic_PPC405_ERR77(rA,rB)
+	#define ZAtomic_PPC405_ERR77(rA,rB)
 #endif
 
 // We attach a register declarator to each parameter so that CW does not generate
@@ -340,7 +340,7 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 // MARK: - A real CompareAndSwap must be defined by now
 
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
-#	error No CompareAndSwap available
+	#error No CompareAndSwap available
 #endif
 
 // =================================================================================================

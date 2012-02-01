@@ -27,15 +27,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Neither the MSL headers nor the Windows headers have fseeko or ftello.
 
 #if defined(_MSL_USING_MSL_C) || ZCONFIG_SPI_Enabled(Win)
-#	define ZCONFIG_Has_fseeko 0
+	#define ZCONFIG_Has_fseeko 0
 #else
-#	define ZCONFIG_Has_fseeko 1
+	#define ZCONFIG_Has_fseeko 1
 #endif
 
 #if ZCONFIG_Has_fseeko
 // To pick up the definition of BSD, if any. Can't do this
 // when using CW and their headers (file doesn't exist).
-#	include <sys/param.h>
+	#include <sys/param.h>
 #endif
 
 namespace ZooLib {

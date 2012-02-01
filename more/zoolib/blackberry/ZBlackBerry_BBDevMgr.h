@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__BlackBerry_BBDevMgr
-#	define ZCONFIG_API_Avail__BlackBerry_BBDevMgr ZCONFIG_SPI_Enabled(Win)
+	#define ZCONFIG_API_Avail__BlackBerry_BBDevMgr ZCONFIG_SPI_Enabled(Win)
 #endif
 
 #ifndef ZCONFIG_API_Desired__BlackBerry_BBDevMgr
-#	define ZCONFIG_API_Desired__BlackBerry_BBDevMgr 1
+	#define ZCONFIG_API_Desired__BlackBerry_BBDevMgr 1
 #endif
 
 #include "zoolib/blackberry/ZBlackBerry.h"

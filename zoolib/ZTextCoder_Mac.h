@@ -25,13 +25,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__TextCoder_Mac
-#	define ZCONFIG_API_Avail__TextCoder_Mac \
+	#define ZCONFIG_API_Avail__TextCoder_Mac \
 	(ZCONFIG_SPI_Enabled(Carbon64) \
 	|| ZCONFIG_SPI_Enabled(MacClassic))
 #endif
 
 #ifndef ZCONFIG_API_Desired__TextCoder_Mac
-#	define ZCONFIG_API_Desired__TextCoder_Mac 1
+	#define ZCONFIG_API_Desired__TextCoder_Mac 1
 #endif
 
 #include "zoolib/ZTextCoder.h"

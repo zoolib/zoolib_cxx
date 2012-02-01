@@ -26,22 +26,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // RFCOMM_OSX is only available when building for 10.2 and later
 #ifndef ZCONFIG_API_Avail__Net_RFCOMM_OSX
-#	if ZCONFIG_SPI_Enabled(MacOSX)
-#		include <AvailabilityMacros.h>
-#		if defined(MAC_OS_X_VERSION_MIN_REQUIRED)
-#			if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
-#				define ZCONFIG_API_Avail__Net_RFCOMM_OSX 1
-#			endif
-#		endif
-#	endif
+	#if ZCONFIG_SPI_Enabled(MacOSX)
+		#include <AvailabilityMacros.h>
+		#if defined(MAC_OS_X_VERSION_MIN_REQUIRED)
+			#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
+				#define ZCONFIG_API_Avail__Net_RFCOMM_OSX 1
+			#endif
+		#endif
+	#endif
 #endif
 
 #ifndef ZCONFIG_API_Avail__Net_RFCOMM_OSX
-#	define ZCONFIG_API_Avail__Net_RFCOMM_OSX 0
+	#define ZCONFIG_API_Avail__Net_RFCOMM_OSX 0
 #endif
 
 #ifndef ZCONFIG_API_Desired__Net_RFCOMM_OSX
-#	define ZCONFIG_API_Desired__Net_RFCOMM_OSX 1
+	#define ZCONFIG_API_Desired__Net_RFCOMM_OSX 1
 #endif
 
 #include "zoolib/ZNet_RFCOMM.h"

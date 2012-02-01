@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__TextCoder_Win
-#	define ZCONFIG_API_Avail__TextCoder_Win ZCONFIG_SPI_Enabled(Win)
+	#define ZCONFIG_API_Avail__TextCoder_Win ZCONFIG_SPI_Enabled(Win)
 #endif
 
 #ifndef ZCONFIG_API_Desired__TextCoder_Win
-#	define ZCONFIG_API_Desired__TextCoder_Win 1
+	#define ZCONFIG_API_Desired__TextCoder_Win 1
 #endif
 
 #include "zoolib/ZTextCoder.h"

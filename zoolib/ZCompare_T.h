@@ -100,4 +100,4 @@ inline int sCompareIterators_T
 
 } // namespace ZooLib
 
-#endif // __ZCompare_Vector_h__
+#endif // __ZCompare_T_h__

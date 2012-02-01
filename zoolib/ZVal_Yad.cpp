@@ -30,7 +30,7 @@ ZAny ZVal_Yad::AsAny() const
 	{ return this->pAsAny(); }
 
 //##ZVal_Yad::operator operator_bool() const
-//##	{ return operator_bool_gen::translate(fYad); }
+//#	#{ return operator_bool_gen::translate(fYad); }
 
 ZVal_Yad::ZVal_Yad()
 	{}

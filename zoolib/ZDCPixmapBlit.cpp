@@ -23,14 +23,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG(Compiler, CodeWarrior)
 // Enforce higher level of optimization for this code.
-#	pragma push
-#	pragma optimization_level 4
-#	pragma opt_common_subs on
-#	pragma opt_lifetimes on
-#	pragma peephole on
-#	if ZCONFIG(Processor, x86)
-#		pragma register_coloring on
-#	endif
+	#pragma push
+	#pragma optimization_level 4
+	#pragma opt_common_subs on
+	#pragma opt_lifetimes on
+	#pragma peephole on
+	#if ZCONFIG(Processor, x86)
+		#pragma register_coloring on
+	#endif
 #endif
 
 #include "zoolib/ZDCPixmapBlitPriv.h"

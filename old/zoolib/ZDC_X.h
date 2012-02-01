@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__DC_X
-#	define ZCONFIG_API_Avail__DC_X ZCONFIG_SPI_Enabled(X11)
+	#define ZCONFIG_API_Avail__DC_X ZCONFIG_SPI_Enabled(X11)
 #endif
 
 #ifndef ZCONFIG_API_Desired__DC_X
-#	define ZCONFIG_API_Desired__DC_X 1
+	#define ZCONFIG_API_Desired__DC_X 1
 #endif
 
 #include "zoolib/ZDC.h"

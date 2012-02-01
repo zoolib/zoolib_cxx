@@ -30,10 +30,10 @@ namespace ZooLib {
 using namespace ZDCPixmapNS;
 
 #ifndef BI_RGB
-#	define BI_RGB 0L
-#	define BI_RLE8 1L
-#	define BI_RLE4 2L
-#	define BI_BITFIELDS 3L
+	#define BI_RGB 0L
+	#define BI_RLE8 1L
+	#define BI_RLE4 2L
+	#define BI_BITFIELDS 3L
 #endif
 
 // =================================================================================================

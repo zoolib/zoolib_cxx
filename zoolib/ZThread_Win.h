@@ -26,11 +26,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__Thread_Win
-#	define ZCONFIG_API_Avail__Thread_Win ZCONFIG_SPI_Enabled(Win)
+	#define ZCONFIG_API_Avail__Thread_Win ZCONFIG_SPI_Enabled(Win)
 #endif
 
 #ifndef ZCONFIG_API_Desired__Thread_Win
-#	define ZCONFIG_API_Desired__Thread_Win 1
+	#define ZCONFIG_API_Desired__Thread_Win 1
 #endif
 
 #if ZCONFIG_API_Enabled(Thread_Win)

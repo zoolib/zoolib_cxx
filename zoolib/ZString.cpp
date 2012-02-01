@@ -21,11 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 
 #if ZCONFIG(Compiler, MSVC)
-#	define vsnprintf _vsnprintf
+	#define vsnprintf _vsnprintf
 #endif
 
 #ifndef va_copy
-#	define va_copy(dest, src) dest = src
+	#define va_copy(dest, src) dest = src
 #endif
 
 namespace ZooLib {

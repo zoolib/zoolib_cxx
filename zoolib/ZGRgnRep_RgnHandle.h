@@ -26,11 +26,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_API.h"
 
 #ifndef ZCONFIG_API_Avail__GRgnRep_RgnHandle
-#	define ZCONFIG_API_Avail__GRgnRep_RgnHandle ZCONFIG_SPI_Enabled(QuickDraw)
+	#define ZCONFIG_API_Avail__GRgnRep_RgnHandle ZCONFIG_SPI_Enabled(QuickDraw)
 #endif
 
 #ifndef ZCONFIG_API_Desired__GRgnRep_RgnHandle
-#	define ZCONFIG_API_Desired__GRgnRep_RgnHandle 1
+	#define ZCONFIG_API_Desired__GRgnRep_RgnHandle 1
 #endif
 
 #include "zoolib/ZGRgn.h"

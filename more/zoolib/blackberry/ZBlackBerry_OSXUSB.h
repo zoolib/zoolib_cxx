@@ -27,17 +27,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUSB_OSX.h"
 
 #ifndef ZCONFIG_API_Avail__BlackBerry_OSXUSB
-#	if ZCONFIG_API_Enabled(USB_OSX)
-#		define ZCONFIG_API_Avail__BlackBerry_OSXUSB 1
-#	endif
+	#if ZCONFIG_API_Enabled(USB_OSX)
+		#define ZCONFIG_API_Avail__BlackBerry_OSXUSB 1
+	#endif
 #endif
 
 #ifndef ZCONFIG_API_Avail__BlackBerry_OSXUSB
-#	define ZCONFIG_API_Avail__BlackBerry_OSXUSB 0
+	#define ZCONFIG_API_Avail__BlackBerry_OSXUSB 0
 #endif
 
 #ifndef ZCONFIG_API_Desired__BlackBerry_OSXUSB
-#	define ZCONFIG_API_Desired__BlackBerry_OSXUSB 1
+	#define ZCONFIG_API_Desired__BlackBerry_OSXUSB 1
 #endif
 
 #include "zoolib/blackberry/ZBlackBerry.h"

@@ -26,9 +26,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(X11)
 // Unfortunately, QuickDraw also defines Cursor. For the moment this lets us compile
 // code that sees both QuickDraw and X11 headers. And don't get me started on BOOL ...
-#	define Cursor ZooLib_X11_Cursor
-#	include <X11/Xlib.h>
-#	undef Cursor
+	#define Cursor ZooLib_X11_Cursor
+	#include <X11/Xlib.h>
+	#undef Cursor
 #endif
 
 #endif // __ZCompat_XLib_h__

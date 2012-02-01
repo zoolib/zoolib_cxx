@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // strdup doesn't show up on older versions of CW
 #if defined(__MWERKS__) && __MWERKS__ <= 0x2406
-#	include <extras.h>
+	#include <extras.h>
 #endif
 
 #endif // __ZCompat_string_h__

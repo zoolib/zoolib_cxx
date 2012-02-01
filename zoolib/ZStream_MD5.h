@@ -24,13 +24,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_StreamMD5_UseOpenSSL
-#	define ZCONFIG_StreamMD5_UseOpenSSL ZCONFIG_SPI_Enabled(openssl)
+	#define ZCONFIG_StreamMD5_UseOpenSSL ZCONFIG_SPI_Enabled(openssl)
 #endif
 
 #include "zoolib/ZStream_Filter.h"
 
 #if ZCONFIG_StreamMD5_UseOpenSSL
-#	include <openssl/md5.h>
+	#include <openssl/md5.h>
 #endif
 
 namespace ZooLib {

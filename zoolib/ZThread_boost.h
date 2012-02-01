@@ -26,22 +26,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__Thread_boost
-#	if ZCONFIG_SPI_Enabled(boost)
-#		include <boost/version.hpp>
-#		if !defined(__MWERKS__)
-#			if defined(BOOST_VERSION) && BOOST_VERSION >= 103500
-#				define ZCONFIG_API_Avail__Thread_boost 1
-#			endif
-#		endif
-#	endif
+	#if ZCONFIG_SPI_Enabled(boost)
+		#include <boost/version.hpp>
+		#if !defined(__MWERKS__)
+			#if defined(BOOST_VERSION) && BOOST_VERSION >= 103500
+				#define ZCONFIG_API_Avail__Thread_boost 1
+			#endif
+		#endif
+	#endif
 #endif
 
 #ifndef ZCONFIG_API_Avail__Thread_boost
-#	define ZCONFIG_API_Avail__Thread_boost 0
+	#define ZCONFIG_API_Avail__Thread_boost 0
 #endif
 
 #ifndef ZCONFIG_API_Desired__Thread_boost
-#	define ZCONFIG_API_Desired__Thread_boost 1
+	#define ZCONFIG_API_Desired__Thread_boost 1
 #endif
 
 #if ZCONFIG_API_Enabled(Thread_boost)

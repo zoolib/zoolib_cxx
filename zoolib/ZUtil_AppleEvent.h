@@ -29,9 +29,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTypes.h"
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
-#	include ZMACINCLUDE3(ApplicationServices,AE,AEDataModel.h)
+	#include ZMACINCLUDE3(ApplicationServices,AE,AEDataModel.h)
 #else
-#	include ZMACINCLUDE3(CoreServices,AE,AEDataModel.h)
+	#include ZMACINCLUDE3(CoreServices,AE,AEDataModel.h)
 #endif
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,Aliases.h)

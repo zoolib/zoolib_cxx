@@ -19,17 +19,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompat_Win.h"
+#include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZStdInt.h"
 
 #include <stdio.h>
 #include <stdlib.h> // For abort
 #include <string.h>
 
 #if ZCONFIG(Compiler, MSVC)
-#	define vsnprintf _vsnprintf
-#	define snprintf _snprintf
+	#define vsnprintf _vsnprintf
+	#define snprintf _snprintf
 #endif
 
 // =================================================================================================
@@ -171,7 +172,7 @@ void OutputDebugString(const char *restrict fmt, ...) {
 #if ZCONFIG_SPI_Enabled(Win)
 
 #if ZCONFIG(Compiler, CodeWarrior)
-#	define __asm asm
+	#define __asm asm
 #endif
 
 // spIsDebuggerPresent was taken from Whisper 1.3, which was adpated

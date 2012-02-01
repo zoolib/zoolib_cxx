@@ -78,7 +78,7 @@ ZRef<ZYadR> ZYadSeqRPos_ApplyID::ReadInc()
 	}
 
 //##ZRef<ZYadSeqRPos> ZYadSeqRPos_ApplyID::Clone()
-//##	{ return new ZYadSeqRPos_ApplyID(fYadSeqRPos->Clone(), fIDName, fValName); }
+//#	#{ return new ZYadSeqRPos_ApplyID(fYadSeqRPos->Clone(), fIDName, fValName); }
 
 uint64 ZYadSeqRPos_ApplyID::GetPosition()
 	{ return fYadSeqRPos->GetPosition(); }

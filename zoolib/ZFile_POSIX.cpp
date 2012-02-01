@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // use _FILE_OFFSET_BITS to do renaming of entry points and data types because I'd
 // rather be explicit about which functions we're calling.
 #ifndef _LARGEFILE64_SOURCE
-#	define _LARGEFILE64_SOURCE
+	#define _LARGEFILE64_SOURCE
 #endif
 
 #include "zoolib/ZFile_POSIX.h"
@@ -32,9 +32,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(BeOS)
-#	define ZCONFIG_File_AtAPISupported 0
+	#define ZCONFIG_File_AtAPISupported 0
 #else
-#	define ZCONFIG_File_AtAPISupported 1
+	#define ZCONFIG_File_AtAPISupported 1
 #endif
 
 #include "zoolib/ZDebug.h"
@@ -54,9 +54,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Linux)
 #elif ZCONFIG_SPI_Enabled(MacOSX)
-#	include <mach-o/dyld.h>
+	#include <mach-o/dyld.h>
 #else
-#	include "zoolib/ZMain.h" // For ZMainNS::sArgV
+	#include "zoolib/ZMain.h" // For ZMainNS::sArgV
 #endif
 
 #if (!__MWERKS__)

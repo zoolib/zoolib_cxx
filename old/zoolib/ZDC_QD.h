@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__DC_QD
-#	define ZCONFIG_API_Avail__DC_QD ZCONFIG_SPI_Enabled(QuickDraw)
+	#define ZCONFIG_API_Avail__DC_QD ZCONFIG_SPI_Enabled(QuickDraw)
 #endif
 
 #ifndef ZCONFIG_API_Desired__DC_QD
-#	define ZCONFIG_API_Desired__DC_QD 1
+	#define ZCONFIG_API_Desired__DC_QD 1
 #endif
 
 

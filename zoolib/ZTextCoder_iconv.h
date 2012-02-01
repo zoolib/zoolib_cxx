@@ -30,15 +30,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // because <iconv.h> may #define 'iconv' as 'libiconv', and any use of
 // ZCONFIG_SPI_Enabled(iconv) subsequent to the include of iconv.h
 // becomes ZCONFIG_SPI_Enabled(libiconv) which of course evaluates to false.
-#	if ZCONFIG_SPI_Enabled(iconv)
-#		define ZCONFIG_API_Avail__TextCoder_iconv 1
-#	else
-#		define ZCONFIG_API_Avail__TextCoder_iconv 0
-#	endif
+	#if ZCONFIG_SPI_Enabled(iconv)
+		#define ZCONFIG_API_Avail__TextCoder_iconv 1
+	#else
+		#define ZCONFIG_API_Avail__TextCoder_iconv 0
+	#endif
 #endif
 
 #ifndef ZCONFIG_API_Desired__TextCoder_iconv
-#	define ZCONFIG_API_Desired__TextCoder_iconv 1
+	#define ZCONFIG_API_Desired__TextCoder_iconv 1
 #endif
 
 #include "zoolib/ZTextCoder.h"

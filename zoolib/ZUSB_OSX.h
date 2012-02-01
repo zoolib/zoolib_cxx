@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__USB_OSX
-#	define ZCONFIG_API_Avail__USB_OSX ZCONFIG_SPI_Enabled(MacOSX)
+	#define ZCONFIG_API_Avail__USB_OSX ZCONFIG_SPI_Enabled(MacOSX)
 #endif
 
 #ifndef ZCONFIG_API_Desired__USB_OSX
-#	define ZCONFIG_API_Desired__USB_OSX 1
+	#define ZCONFIG_API_Desired__USB_OSX 1
 #endif
 
 #if ZCONFIG_API_Enabled(USB_OSX)

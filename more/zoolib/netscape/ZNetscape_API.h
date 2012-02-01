@@ -58,19 +58,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#	define XP_WIN 1
+	#define XP_WIN 1
 
 #elif ZCONFIG_SPI_Enabled(Carbon64)
 
-#	if __MACH__
-#		define XP_MACOSX 1
-#	else
-#		define XP_MAC 1
-#	endif
+	#if __MACH__
+		#define XP_MACOSX 1
+	#else
+		#define XP_MAC 1
+	#endif
 
 #elif ZCONFIG_SPI_Enabled(X11)
 
-#	define XP_UNIX 1
+	#define XP_UNIX 1
 
 #endif
 
@@ -78,34 +78,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // MARK: - NP_NO_QUICKDRAW and NP_NO_CARBON
 
 #if defined(XP_MACOSX) && __LP64__
-#	define NP_NO_QUICKDRAW 1
-#	define NP_NO_CARBON 1
+	#define NP_NO_QUICKDRAW 1
+	#define NP_NO_CARBON 1
 #endif
 
 // =================================================================================================
 // MARK: - Mac headers
 
 #if defined(XP_MACOSX)
-#	include <ApplicationServices/ApplicationServices.h>
-#	include <OpenGL/OpenGL.h>
+	#include <ApplicationServices/ApplicationServices.h>
+	#include <OpenGL/OpenGL.h>
 #endif
 
 #if defined(XP_MACOSX) || defined(XP_MAC)
-#	include ZMACINCLUDE2(Carbon,Carbon.h)
+	#include ZMACINCLUDE2(Carbon,Carbon.h)
 #endif
 
 // =================================================================================================
 // MARK: - Windows headers
 
 #if defined(XP_WIN)
-#	include "zoolib/ZCompat_Win.h"
+	#include "zoolib/ZCompat_Win.h"
 #endif
 
 // =================================================================================================
 // MARK: - UNIX headers
 
 #if defined(XP_UNIX)
-#	include "zoolib/ZCompat_XLib.h"
+	#include "zoolib/ZCompat_XLib.h"
 #endif
 
 // =================================================================================================
@@ -119,9 +119,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark "* Mac-specific, set structure alignment to be 68K"
 
 #if ! __LP64__
-#	if defined(XP_MAC) || defined(XP_MACOSX)
-#		pragma options align=mac68k
-#	endif
+	#if defined(XP_MAC) || defined(XP_MACOSX)
+		#pragma options align=mac68k
+	#endif
 #endif
 
 // =================================================================================================
@@ -903,15 +903,15 @@ typedef struct _NPPluginFuncs
 // MARK: - Mac-specific, reset structure alignment
 
 #if ! __LP64__
-#	if defined(XP_MAC) || defined(XP_MACOSX)
-#		pragma options align=reset
-#	endif
+	#if defined(XP_MAC) || defined(XP_MACOSX)
+		#pragma options align=reset
+	#endif
 #endif
 
 #if defined(XP_WIN)
-#	define ZNetscape_API_EXPORTED_CALLBACK(_type, _name) _type (__stdcall * _name)
+	#define ZNetscape_API_EXPORTED_CALLBACK(_type, _name) _type (__stdcall * _name)
 #else
-#	define ZNetscape_API_EXPORTED_CALLBACK(_type, _name) _type (* _name)
+	#define ZNetscape_API_EXPORTED_CALLBACK(_type, _name) _type (* _name)
 #endif
 
 
