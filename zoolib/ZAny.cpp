@@ -28,29 +28,29 @@ namespace ZooLib {
 inline static const std::type_info* spPODTypeInfo(const void* iPtr)
 	{ return (const std::type_info*)(((intptr_t)iPtr) ^ 1); }
 
-inline ZAny::Holder_InPlace& ZAny::fHolder_InPlace()
-	{ return *sFetch_T<Holder_InPlace>(fBytes_InPlace); }
+inline ZAny::Holder_InPlace& ZAny::pAsInPlace()
+	{ return *sFetch_T<Holder_InPlace>(&fDistinguisher); }
 
-inline const ZAny::Holder_InPlace& ZAny::fHolder_InPlace() const
-	{ return *sFetch_T<Holder_InPlace>(fBytes_InPlace); }
+inline const ZAny::Holder_InPlace& ZAny::pAsInPlace() const
+	{ return *sFetch_T<Holder_InPlace>(&fDistinguisher); }
 
-inline ZRef<ZAny::Holder_Counted>& ZAny::fHolder_Ref()
-	{ return *sFetch_T<ZRef<Holder_Counted> >(fBytes_Payload); }
+inline ZRef<ZAny::Holder_Counted>& ZAny::pAsCounted()
+	{ return *sFetch_T<ZRef<Holder_Counted> >(&fPayload); }
 
-inline const ZRef<ZAny::Holder_Counted>& ZAny::fHolder_Ref() const
-	{ return *sFetch_T<ZRef<Holder_Counted> >(fBytes_Payload); }
+inline const ZRef<ZAny::Holder_Counted>& ZAny::pAsCounted() const
+	{ return *sFetch_T<ZRef<Holder_Counted> >(&fPayload); }
 
 const std::type_info& ZAny::Type() const
 	{
-	if (spIsPOD(fPtr_InPlace))
+	if (spIsPOD(fDistinguisher))
 		{
-		return *spPODTypeInfo(fPtr_InPlace);
+		return *spPODTypeInfo(fDistinguisher);
 		}
-	else if (fPtr_InPlace)
+	else if (fDistinguisher)
 		{
-		return fHolder_InPlace().Type();
+		return pAsInPlace().Type();
 		}
-	else if (const ZRef<Holder_Counted>& theHolderRef = fHolder_Ref())
+	else if (const ZRef<Holder_Counted>& theHolderRef = pAsCounted())
 		{
 		return theHolderRef->Type();
 		}
@@ -62,15 +62,15 @@ const std::type_info& ZAny::Type() const
 
 void* ZAny::VoidStar()
 	{
-	if (spIsPOD(fPtr_InPlace))
+	if (spIsPOD(fDistinguisher))
 		{
-		return fBytes_Payload;
+		return &fPayload;
 		}
-	else if (fPtr_InPlace)
+	else if (fDistinguisher)
 		{
-		return fHolder_InPlace().VoidStar();
+		return pAsInPlace().VoidStar();
 		}
-	else if (ZRef<Holder_Counted>& theHolderRef = fHolder_Ref())
+	else if (ZRef<Holder_Counted>& theHolderRef = pAsCounted())
 		{
 		if (theHolderRef->IsShared())
 			theHolderRef = theHolderRef->Clone();
@@ -84,15 +84,15 @@ void* ZAny::VoidStar()
 
 const void* ZAny::ConstVoidStar() const
 	{
-	if (spIsPOD(fPtr_InPlace))
+	if (spIsPOD(fDistinguisher))
 		{
-		return fBytes_Payload;
+		return &fPayload;
 		}
-	else if (fPtr_InPlace)
+	else if (fDistinguisher)
 		{
-		return fHolder_InPlace().ConstVoidStar();
+		return pAsInPlace().ConstVoidStar();
 		}
-	else if (const ZRef<Holder_Counted>& theHolderRef = fHolder_Ref())
+	else if (const ZRef<Holder_Counted>& theHolderRef = pAsCounted())
 		{
 		return theHolderRef->VoidStar();
 		}
@@ -104,7 +104,7 @@ const void* ZAny::ConstVoidStar() const
 
 void ZAny::swap(ZAny& ioOther)
 	{
-	if (fPtr_InPlace || ioOther.fPtr_InPlace)
+	if (fDistinguisher || ioOther.fDistinguisher)
 		{
 		// Trivial implementation for now
 		const ZAny temp = *this;
@@ -113,43 +113,43 @@ void ZAny::swap(ZAny& ioOther)
 		}
 	else
 		{
-		fHolder_Ref().swap(ioOther.fHolder_Ref());
+		pAsCounted().swap(ioOther.pAsCounted());
 		}
 	}
 
 bool ZAny::IsNull() const
-	{ return not fPtr_InPlace && not fHolder_Ref(); }
+	{ return not fDistinguisher && not fPayload.fAsPtr; }
 
 void ZAny::Clear()
 	{
-	if (spIsPOD(fPtr_InPlace))
+	if (spIsPOD(fDistinguisher))
 		{
-		fPtr_InPlace = 0;
+		fDistinguisher = 0;
 		}
-	else if (fPtr_InPlace)
+	else if (fDistinguisher)
 		{
-		sDtor_T<Holder_InPlace>(fBytes_InPlace);
-		fPtr_InPlace = 0;
+		sDtor_T<Holder_InPlace>(&fDistinguisher);
+		fDistinguisher = 0;
 		}
 	else
 		{
-		sDtor_T<ZRef<Holder_Counted> >(fBytes_Payload);
+		sDtor_T<ZRef<Holder_Counted> >(&fPayload);
 		}
-	fPtr_Counted = 0;
+	fPayload.fAsPtr = 0;
 	}
 
 void* ZAny::pGetMutable(const std::type_info& iTypeInfo)
 	{
-	if (spIsPOD(fPtr_InPlace))
+	if (spIsPOD(fDistinguisher))
 		{
-		if (iTypeInfo == *spPODTypeInfo(fPtr_InPlace))
-			return fBytes_Payload;
+		if (iTypeInfo == *spPODTypeInfo(fDistinguisher))
+			return &fPayload;
 		}
-	else if (fPtr_InPlace)
+	else if (fDistinguisher)
 		{
-		return fHolder_InPlace().VoidStarIf(iTypeInfo);
+		return pAsInPlace().VoidStarIf(iTypeInfo);
 		}
-	else if (ZRef<Holder_Counted>& theHolderRef = fHolder_Ref())
+	else if (ZRef<Holder_Counted>& theHolderRef = pAsCounted())
 		{
 		if (theHolderRef->Type() == iTypeInfo)
 			{
@@ -164,16 +164,16 @@ void* ZAny::pGetMutable(const std::type_info& iTypeInfo)
 
 const void* ZAny::pGet(const std::type_info& iTypeInfo) const
 	{
-	if (spIsPOD(fPtr_InPlace))
+	if (spIsPOD(fDistinguisher))
 		{
-		if (iTypeInfo == *spPODTypeInfo(fPtr_InPlace))
-			return fBytes_Payload;
+		if (iTypeInfo == *spPODTypeInfo(fDistinguisher))
+			return &fPayload;
 		}
-	else if (fPtr_InPlace)
+	else if (fDistinguisher)
 		{
-		return fHolder_InPlace().ConstVoidStarIf(iTypeInfo);
+		return pAsInPlace().ConstVoidStarIf(iTypeInfo);
 		}
-	else if (const ZRef<Holder_Counted>& theHolderRef = fHolder_Ref())
+	else if (const ZRef<Holder_Counted>& theHolderRef = pAsCounted())
 		{
 		return theHolderRef->VoidStarIf(iTypeInfo);
 		}
@@ -183,23 +183,23 @@ const void* ZAny::pGet(const std::type_info& iTypeInfo) const
 
 void ZAny::pCtor_Complex(const ZAny& iOther)
 	{
-	if (iOther.fPtr_InPlace)
+	if (iOther.fDistinguisher)
 		{
-		iOther.fHolder_InPlace().CtorInto(fBytes_InPlace);
+		iOther.pAsInPlace().CtorInto(&fDistinguisher);
 		}
 	else
 		{
-		fPtr_InPlace = 0;
-		sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, iOther.fHolder_Ref());
+		fDistinguisher = 0;
+		sCtor_T<ZRef<Holder_Counted> >(&fPayload, iOther.pAsCounted());
 		}
 	}
 
 void ZAny::pDtor_Complex()
 	{
-	if (fPtr_InPlace)
-		sDtor_T<Holder_InPlace>(fBytes_InPlace);
+	if (fDistinguisher)
+		sDtor_T<Holder_InPlace>(&fDistinguisher);
 	else
-		sDtor_T<ZRef<Holder_Counted> >(fBytes_Payload);
+		sDtor_T<ZRef<Holder_Counted> >(&fPayload);
 	}
 
 } // namespace ZooLib

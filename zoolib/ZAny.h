@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZQ.h" 
 #include "zoolib/ZRef.h"
-#include "zoolib/ZTypes.h"
 
 #include <typeinfo> // for std::type_info
 
@@ -249,12 +248,11 @@ private:
 
 // -----------------
 
-	// Pseudo field accesors, hence the 'f' prefix
-	Holder_InPlace& fHolder_InPlace();
-	const Holder_InPlace& fHolder_InPlace() const;
+	Holder_InPlace& pAsInPlace();
+	const Holder_InPlace& pAsInPlace() const;
 
-	ZRef<Holder_Counted>& fHolder_Ref();
-	const ZRef<Holder_Counted>& fHolder_Ref() const;
+	ZRef<Holder_Counted>& pAsCounted();
+	const ZRef<Holder_Counted>& pAsCounted() const;
 
 // -----------------
 
@@ -276,20 +274,20 @@ private:
 		{
 		if (ZAnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0, iP1);
+			sCtor_T<Holder_InPlace_T<S> >(&fDistinguisher, iP0, iP1);
 			}
 		else
 			{
-			fPtr_InPlace = 0;
-			sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, new Holder_Counted_T<S>(iP0, iP1));
+			fDistinguisher = 0;
+			sCtor_T<ZRef<Holder_Counted> >(&fPayload, new Holder_Counted_T<S>(iP0, iP1));
 			}
 		}
 
 	template <class S, class P0, class P1>
 	void pCtor_Counted_T(const P0& iP0, const P1& iP1)
 		{
-		fPtr_InPlace = 0;
-		sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, new Holder_Counted_T<S>(iP0, iP1));
+		fDistinguisher = 0;
+		sCtor_T<ZRef<Holder_Counted> >(&fPayload, new Holder_Counted_T<S>(iP0, iP1));
 		}
 
 	template <class S, class P0>
@@ -302,27 +300,27 @@ private:
 			#if ZCONFIG(Compiler,GCC)
 			else if (std::tr1::is_pod<S>::value)
 				{
-				fPtr_InPlace = (void*)(((intptr_t)&typeid(S)) | 1);
-				sCtor_T<S>(fBytes_Payload, iP0);
+				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
+				sCtor_T<S>(&fPayload, iP0);
 				}
 			#endif
 			else
 				{
-				sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0);
+				sCtor_T<Holder_InPlace_T<S> >(&fDistinguisher, iP0);
 				}
 			}
 		else
 			{
-			fPtr_InPlace = 0;
-			sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, new Holder_Counted_T<S>(iP0));
+			fDistinguisher = 0;
+			sCtor_T<ZRef<Holder_Counted> >(&fPayload, new Holder_Counted_T<S>(iP0));
 			}
 		}
 
 	template <class S, class P0>
 	void pCtor_Counted_T(const P0& iP0)
 		{
-		fPtr_InPlace = 0;
-		sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, new Holder_Counted_T<S>(iP0));
+		fDistinguisher = 0;
+		sCtor_T<ZRef<Holder_Counted> >(&fPayload, new Holder_Counted_T<S>(iP0));
 		}
 
 // -----------------
@@ -337,20 +335,20 @@ private:
 			#if ZCONFIG(Compiler,GCC)
 			else if (std::tr1::is_pod<S>::value)
 				{
-				fPtr_InPlace = (void*)(((intptr_t)&typeid(S)) | 1);
-				return *sCtor_T<S>(fBytes_Payload, iP0);
+				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
+				return *sCtor_T<S>(&fPayload, iP0);
 				}
 			#endif
 			else
 				{
-				return sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace, iP0)->fValue;
+				return sCtor_T<Holder_InPlace_T<S> >(&fDistinguisher, iP0)->fValue;
 				}
 			}
 		else
 			{
-			fPtr_InPlace = 0;
+			fDistinguisher = 0;
 			Holder_Counted_T<S>* theHolder = new Holder_Counted_T<S>(iP0);
-			sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, theHolder);
+			sCtor_T<ZRef<Holder_Counted> >(&fPayload, theHolder);
 			return theHolder->fValue;
 			}
 		}
@@ -365,51 +363,49 @@ private:
 			#if ZCONFIG(Compiler,GCC)
 			else if (std::tr1::is_pod<S>::value)
 				{
-				fPtr_InPlace = (void*)(((intptr_t)&typeid(S)) | 1);
-				return *sCtor_T<S>(fBytes_Payload);
+				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
+				return *sCtor_T<S>(&fPayload);
 				}
 			#endif
 			else
 				{
-				return sCtor_T<Holder_InPlace_T<S> >(fBytes_InPlace)->fValue;
+				return sCtor_T<Holder_InPlace_T<S> >(&fDistinguisher)->fValue;
 				}
 			}
 		else
 			{
-			fPtr_InPlace = 0;
+			fDistinguisher = 0;
 			Holder_Counted_T<S>* theHolder = new Holder_Counted_T<S>;
-			sCtor_T<ZRef<Holder_Counted> >(fBytes_Payload, theHolder);
+			sCtor_T<ZRef<Holder_Counted> >(&fPayload, theHolder);
 			return theHolder->fValue;
 			}
 		}
 
 // -----------------
+	// There are three situations, distinguished by the value in fDistinguisher.
+	// 1. It's null. fPayload.fAsPtr points to an instance of a Holder_Counted subclass. If
+	//    fPayload.fAsPtr is also null then this is itself a null object.
+	// 2. LSB is set. With an unset LSB it points to a typeid, and fPayload holds a POD value.
+	// 3. LSB is unset. It's the vptr of a Holder_InPlace, the fields of the object itself
+	//    spilling over into fPayload.
+	
+	void* fDistinguisher;
 
 	union
 		{
-		char fBytes_InPlace[1];
-		void* fPtr_InPlace;
-		};
+		// This union provides space for a refcounted pointer to a Holder_Counted, space
+		// for the most common in-place values, and makes some values legible in a debugger.
+		void* fAsPtr;
 
-	union
-		{
-		char fBytes_Payload[1];
-		void* fPtr_Counted;
-		union
-			{
-			// This union serves three purposes. It reserves space for in-place
-			// values, ensures ZAny has appropriate alignment, and finally
-			// makes some types legible when debugging.
-			bool fAsBool;
-			char fAsChar;
-			short fAsShort;
-			int fAsInt;
-			long fAsLong;
-			int64 fAsLongLong;
-			float fAsFloat;
-			double fAsDouble;
-			} fPayload;
-		};
+		bool fAsBool;
+		char fAsChar;
+		short fAsShort;
+		int fAsInt;
+		long fAsLong;
+		int64 fAsLongLong;
+		float fAsFloat;
+		double fAsDouble;
+		} fPayload;
 	};
 
 // =================================================================================================
@@ -420,9 +416,9 @@ inline bool ZAny::spIsPOD(const void* iPtr)
 
 inline void ZAny::pCtor(const ZAny& iOther)
 	{
-	if (spIsPOD(iOther.fPtr_InPlace))
+	if (spIsPOD(iOther.fDistinguisher))
 		{
-		fPtr_InPlace = iOther.fPtr_InPlace;
+		fDistinguisher = iOther.fDistinguisher;
 		fPayload = iOther.fPayload;
 		}
 	else
@@ -433,7 +429,7 @@ inline void ZAny::pCtor(const ZAny& iOther)
 
 inline void ZAny::pDtor()
 	{
-	if (not spIsPOD(fPtr_InPlace))
+	if (not spIsPOD(fDistinguisher))
 		pDtor_Complex();
 	}
 
@@ -442,8 +438,8 @@ inline void ZAny::pDtor()
 
 inline ZAny::ZAny()
 	{
-	fPtr_InPlace = 0;
-	fPtr_Counted = 0;
+	fDistinguisher = 0;
+	fPayload.fAsPtr = 0;
 	}
 
 inline ZAny::ZAny(const ZAny& iOther)
