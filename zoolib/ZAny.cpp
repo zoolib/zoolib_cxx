@@ -28,31 +28,29 @@ namespace ZooLib {
 inline static const std::type_info* spPODTypeInfo(const void* iPtr)
 	{ return (const std::type_info*)(((intptr_t)iPtr) ^ 1); }
 
-inline ZAny::Holder_InPlace& ZAny::pAsInPlace()
-	{ return *sFetch_T<Holder_InPlace>(&fDistinguisher); }
+inline ZAny::InPlace& ZAny::pAsInPlace()
+	{ return *sFetch_T<InPlace>(&fDistinguisher); }
 
-inline const ZAny::Holder_InPlace& ZAny::pAsInPlace() const
-	{ return *sFetch_T<Holder_InPlace>(&fDistinguisher); }
+inline const ZAny::InPlace& ZAny::pAsInPlace() const
+	{ return *sFetch_T<InPlace>(&fDistinguisher); }
 
-inline ZRef<ZAny::Holder_Counted>& ZAny::pAsCounted()
-	{ return *sFetch_T<ZRef<Holder_Counted> >(&fPayload); }
+inline ZRef<ZAny::Reffed>& ZAny::pAsReffed()
+	{ return *sFetch_T<ZRef<Reffed> >(&fPayload); }
 
-inline const ZRef<ZAny::Holder_Counted>& ZAny::pAsCounted() const
-	{ return *sFetch_T<ZRef<Holder_Counted> >(&fPayload); }
+inline const ZRef<ZAny::Reffed>& ZAny::pAsReffed() const
+	{ return *sFetch_T<ZRef<Reffed> >(&fPayload); }
 
 const std::type_info& ZAny::Type() const
 	{
-	if (spIsPOD(fDistinguisher))
+	if (fDistinguisher)
 		{
-		return *spPODTypeInfo(fDistinguisher);
-		}
-	else if (fDistinguisher)
-		{
+		if (spIsPOD(fDistinguisher))
+			return *spPODTypeInfo(fDistinguisher);
 		return pAsInPlace().Type();
 		}
-	else if (const ZRef<Holder_Counted>& theHolderRef = pAsCounted())
+	else if (const ZRef<Reffed>& theReffed = pAsReffed())
 		{
-		return theHolderRef->Type();
+		return theReffed->Type();
 		}
 	else
 		{
@@ -62,19 +60,17 @@ const std::type_info& ZAny::Type() const
 
 void* ZAny::VoidStar()
 	{
-	if (spIsPOD(fDistinguisher))
+	if (fDistinguisher)
 		{
-		return &fPayload;
-		}
-	else if (fDistinguisher)
-		{
+		if (spIsPOD(fDistinguisher))
+			return &fPayload;
 		return pAsInPlace().VoidStar();
 		}
-	else if (ZRef<Holder_Counted>& theHolderRef = pAsCounted())
+	else if (ZRef<Reffed>& theReffed = pAsReffed())
 		{
-		if (theHolderRef->IsShared())
-			theHolderRef = theHolderRef->Clone();
-		return theHolderRef->VoidStar();
+		if (theReffed->IsShared())
+			theReffed = theReffed->Clone();
+		return theReffed->VoidStar();
 		}
 	else
 		{
@@ -84,17 +80,15 @@ void* ZAny::VoidStar()
 
 const void* ZAny::ConstVoidStar() const
 	{
-	if (spIsPOD(fDistinguisher))
+	if (fDistinguisher)
 		{
-		return &fPayload;
-		}
-	else if (fDistinguisher)
-		{
+		if (spIsPOD(fDistinguisher))
+			return &fPayload;
 		return pAsInPlace().ConstVoidStar();
 		}
-	else if (const ZRef<Holder_Counted>& theHolderRef = pAsCounted())
+	else if (const ZRef<Reffed>& theReffed = pAsReffed())
 		{
-		return theHolderRef->VoidStar();
+		return theReffed->VoidStar();
 		}
 	else
 		{
@@ -113,7 +107,7 @@ void ZAny::swap(ZAny& ioOther)
 		}
 	else
 		{
-		pAsCounted().swap(ioOther.pAsCounted());
+		pAsReffed().swap(ioOther.pAsReffed());
 		}
 	}
 
@@ -122,40 +116,40 @@ bool ZAny::IsNull() const
 
 void ZAny::Clear()
 	{
-	if (spIsPOD(fDistinguisher))
+	if (fDistinguisher)
 		{
-		fDistinguisher = 0;
-		}
-	else if (fDistinguisher)
-		{
-		sDtor_T<Holder_InPlace>(&fDistinguisher);
+		if (not spIsPOD(fDistinguisher))
+			sDtor_T<InPlace>(&fDistinguisher);
 		fDistinguisher = 0;
 		}
 	else
 		{
-		sDtor_T<ZRef<Holder_Counted> >(&fPayload);
+		sDtor_T<ZRef<Reffed> >(&fPayload);
 		}
 	fPayload.fAsPtr = 0;
 	}
 
 void* ZAny::pGetMutable(const std::type_info& iTypeInfo)
 	{
-	if (spIsPOD(fDistinguisher))
+	if (fDistinguisher)
 		{
-		if (iTypeInfo == *spPODTypeInfo(fDistinguisher))
-			return &fPayload;
-		}
-	else if (fDistinguisher)
-		{
-		return pAsInPlace().VoidStarIf(iTypeInfo);
-		}
-	else if (ZRef<Holder_Counted>& theHolderRef = pAsCounted())
-		{
-		if (theHolderRef->Type() == iTypeInfo)
+		if (spIsPOD(fDistinguisher))
 			{
-			if (theHolderRef->IsShared())
-				theHolderRef = theHolderRef->Clone();
-			return theHolderRef->VoidStar();
+			if (iTypeInfo == *spPODTypeInfo(fDistinguisher))
+				return &fPayload;
+			}
+		else
+			{
+			return pAsInPlace().VoidStarIf(iTypeInfo);
+			}
+		}
+	else if (ZRef<Reffed>& theReffed = pAsReffed())
+		{
+		if (theReffed->Type() == iTypeInfo)
+			{
+			if (theReffed->IsShared())
+				theReffed = theReffed->Clone();
+			return theReffed->VoidStar();
 			}
 		}
 
@@ -164,24 +158,27 @@ void* ZAny::pGetMutable(const std::type_info& iTypeInfo)
 
 const void* ZAny::pGet(const std::type_info& iTypeInfo) const
 	{
-	if (spIsPOD(fDistinguisher))
+	if (fDistinguisher)
 		{
-		if (iTypeInfo == *spPODTypeInfo(fDistinguisher))
-			return &fPayload;
+		if (spIsPOD(fDistinguisher))
+			{
+			if (iTypeInfo == *spPODTypeInfo(fDistinguisher))
+				return &fPayload;
+			}
+		else
+			{
+			return pAsInPlace().ConstVoidStarIf(iTypeInfo);
+			}
 		}
-	else if (fDistinguisher)
+	else if (const ZRef<Reffed>& theReffed = pAsReffed())
 		{
-		return pAsInPlace().ConstVoidStarIf(iTypeInfo);
-		}
-	else if (const ZRef<Holder_Counted>& theHolderRef = pAsCounted())
-		{
-		return theHolderRef->VoidStarIf(iTypeInfo);
+		return theReffed->VoidStarIf(iTypeInfo);
 		}
 
 	return 0;
 	}
 
-void ZAny::pCtor_Complex(const ZAny& iOther)
+void ZAny::pCtor_NonPOD(const ZAny& iOther)
 	{
 	if (iOther.fDistinguisher)
 		{
@@ -190,16 +187,16 @@ void ZAny::pCtor_Complex(const ZAny& iOther)
 	else
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZRef<Holder_Counted> >(&fPayload, iOther.pAsCounted());
+		sCtor_T<ZRef<Reffed> >(&fPayload, iOther.pAsReffed());
 		}
 	}
 
-void ZAny::pDtor_Complex()
+void ZAny::pDtor_NonPOD()
 	{
 	if (fDistinguisher)
-		sDtor_T<Holder_InPlace>(&fDistinguisher);
+		sDtor_T<InPlace>(&fDistinguisher);
 	else
-		sDtor_T<ZRef<Holder_Counted> >(&fPayload);
+		sDtor_T<ZRef<Reffed> >(&fPayload);
 	}
 
 } // namespace ZooLib

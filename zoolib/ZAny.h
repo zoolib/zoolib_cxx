@@ -155,10 +155,10 @@ public:
 private:
 // -----------------
 
-	class Holder_InPlace
+	class InPlace
 		{
 	public:
-		virtual ~Holder_InPlace() {}
+		virtual ~InPlace() {}
 
 		virtual void CtorInto(void* iOther) const = 0;
 
@@ -174,18 +174,18 @@ private:
 // -----------------
 
 	template<typename S>
-	class Holder_InPlace_T : public Holder_InPlace
+	class InPlace_T : public InPlace
 		{
 	public:
-		Holder_InPlace_T() {}
+		InPlace_T() {}
 
 		template <class P0>
-		Holder_InPlace_T(const P0& iP0) : fValue(iP0) {}
+		InPlace_T(const P0& iP0) : fValue(iP0) {}
 
 		template <class P0, class P1>
-		Holder_InPlace_T(const P0& iP0, const P1& iP1) : fValue(iP0, iP1) {}
+		InPlace_T(const P0& iP0, const P1& iP1) : fValue(iP0, iP1) {}
 
-		virtual void CtorInto(void* iOther) const { sCtor_T<Holder_InPlace_T>(iOther, fValue); }
+		virtual void CtorInto(void* iOther) const { sCtor_T<InPlace_T>(iOther, fValue); }
 
 		virtual const std::type_info& Type() const { return typeid(S); }
 
@@ -210,11 +210,11 @@ private:
 
 // -----------------
 
-	class Holder_Counted : public ZCountedWithoutFinalize
+	class Reffed : public ZCountedWithoutFinalize
 		{
 	public:
 		virtual const std::type_info& Type() const = 0;
-		virtual Holder_Counted* Clone() const = 0;
+		virtual Reffed* Clone() const = 0;
 		virtual void* VoidStar() = 0;
 		virtual void* VoidStarIf(const std::type_info& iTI) = 0;
 		};
@@ -222,19 +222,19 @@ private:
 // -----------------
 
 	template<typename S>
-	class Holder_Counted_T : public Holder_Counted
+	class Reffed_T : public Reffed
 		{
 	public:
-		Holder_Counted_T() {}
+		Reffed_T() {}
 
 		template <class P0>
-		Holder_Counted_T(const P0& iP0) : fValue(iP0) {}
+		Reffed_T(const P0& iP0) : fValue(iP0) {}
 
 		template <class P0, class P1>
-		Holder_Counted_T(const P0& iP0, const P1& iP1) : fValue(iP0, iP1) {}
+		Reffed_T(const P0& iP0, const P1& iP1) : fValue(iP0, iP1) {}
 
 		virtual const std::type_info& Type() const { return typeid(S); }
-		virtual Holder_Counted* Clone() const { return new Holder_Counted_T(fValue); }
+		virtual Reffed* Clone() const { return new Reffed_T(fValue); }
 		virtual void* VoidStar() { return &fValue; }
 		virtual void* VoidStarIf(const std::type_info& iTI)
 			{
@@ -248,11 +248,11 @@ private:
 
 // -----------------
 
-	Holder_InPlace& pAsInPlace();
-	const Holder_InPlace& pAsInPlace() const;
+	InPlace& pAsInPlace();
+	const InPlace& pAsInPlace() const;
 
-	ZRef<Holder_Counted>& pAsCounted();
-	const ZRef<Holder_Counted>& pAsCounted() const;
+	ZRef<Reffed>& pAsReffed();
+	const ZRef<Reffed>& pAsReffed() const;
 
 // -----------------
 
@@ -260,10 +260,10 @@ private:
 	const void* pGet(const std::type_info& iTypeInfo) const;
 
 	void pCtor(const ZAny& iOther);
-	void pCtor_Complex(const ZAny& iOther);
+	void pCtor_NonPOD(const ZAny& iOther);
 
 	void pDtor();
-	void pDtor_Complex();
+	void pDtor_NonPOD();
 
 	static bool spIsPOD(const void* iPtr);
 
@@ -274,12 +274,12 @@ private:
 		{
 		if (ZAnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			sCtor_T<Holder_InPlace_T<S> >(&fDistinguisher, iP0, iP1);
+			sCtor_T<InPlace_T<S> >(&fDistinguisher, iP0, iP1);
 			}
 		else
 			{
 			fDistinguisher = 0;
-			sCtor_T<ZRef<Holder_Counted> >(&fPayload, new Holder_Counted_T<S>(iP0, iP1));
+			sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
 			}
 		}
 
@@ -287,7 +287,7 @@ private:
 	void pCtor_Counted_T(const P0& iP0, const P1& iP1)
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZRef<Holder_Counted> >(&fPayload, new Holder_Counted_T<S>(iP0, iP1));
+		sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
 		}
 
 	template <class S, class P0>
@@ -306,13 +306,13 @@ private:
 			#endif
 			else
 				{
-				sCtor_T<Holder_InPlace_T<S> >(&fDistinguisher, iP0);
+				sCtor_T<InPlace_T<S> >(&fDistinguisher, iP0);
 				}
 			}
 		else
 			{
 			fDistinguisher = 0;
-			sCtor_T<ZRef<Holder_Counted> >(&fPayload, new Holder_Counted_T<S>(iP0));
+			sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0));
 			}
 		}
 
@@ -320,7 +320,7 @@ private:
 	void pCtor_Counted_T(const P0& iP0)
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZRef<Holder_Counted> >(&fPayload, new Holder_Counted_T<S>(iP0));
+		sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0));
 		}
 
 // -----------------
@@ -341,15 +341,15 @@ private:
 			#endif
 			else
 				{
-				return sCtor_T<Holder_InPlace_T<S> >(&fDistinguisher, iP0)->fValue;
+				return sCtor_T<InPlace_T<S> >(&fDistinguisher, iP0)->fValue;
 				}
 			}
 		else
 			{
 			fDistinguisher = 0;
-			Holder_Counted_T<S>* theHolder = new Holder_Counted_T<S>(iP0);
-			sCtor_T<ZRef<Holder_Counted> >(&fPayload, theHolder);
-			return theHolder->fValue;
+			Reffed_T<S>* theReffed = new Reffed_T<S>(iP0);
+			sCtor_T<ZRef<Reffed> >(&fPayload, theReffed);
+			return theReffed->fValue;
 			}
 		}
 
@@ -369,32 +369,33 @@ private:
 			#endif
 			else
 				{
-				return sCtor_T<Holder_InPlace_T<S> >(&fDistinguisher)->fValue;
+				return sCtor_T<InPlace_T<S> >(&fDistinguisher)->fValue;
 				}
 			}
 		else
 			{
 			fDistinguisher = 0;
-			Holder_Counted_T<S>* theHolder = new Holder_Counted_T<S>;
-			sCtor_T<ZRef<Holder_Counted> >(&fPayload, theHolder);
-			return theHolder->fValue;
+			Reffed_T<S>* theReffed = new Reffed_T<S>;
+			sCtor_T<ZRef<Reffed> >(&fPayload, theReffed);
+			return theReffed->fValue;
 			}
 		}
 
 // -----------------
 	// There are three situations, distinguished by the value in fDistinguisher.
-	// 1. It's null. fPayload.fAsPtr points to an instance of a Holder_Counted subclass. If
-	//    fPayload.fAsPtr is also null then this is itself a null object.
+	// 1. It's null. fPayload.fAsPtr points to an instance of a Reffed subclass. If
+	//    fPayload.fAsPtr is also null then the ZAny is itself a null object.
 	// 2. LSB is set. With an unset LSB it points to a typeid, and fPayload holds a POD value.
-	// 3. LSB is unset. It's the vptr of a Holder_InPlace, the fields of the object itself
+	// 3. LSB is unset. It's the vptr of an InPlace, the fields of the object itself
 	//    spilling over into fPayload.
 	
 	void* fDistinguisher;
 
 	union
 		{
-		// This union provides space for a refcounted pointer to a Holder_Counted, space
+		// This union provides space for a refcounted pointer to a Reffed, space
 		// for the most common in-place values, and makes some values legible in a debugger.
+		// It has it's own name so that sizeof has something on which to operate.
 		void* fAsPtr;
 
 		bool fAsBool;
@@ -423,14 +424,14 @@ inline void ZAny::pCtor(const ZAny& iOther)
 		}
 	else
 		{
-		pCtor_Complex(iOther);
+		pCtor_NonPOD(iOther);
 		}
 	}
 
 inline void ZAny::pDtor()
 	{
 	if (not spIsPOD(fDistinguisher))
-		pDtor_Complex();
+		pDtor_NonPOD();
 	}
 
 // =================================================================================================
@@ -450,7 +451,7 @@ inline ZAny::~ZAny()
 
 inline ZAny& ZAny::operator=(const ZAny& iOther)
 	{
-	if (this != & iOther)
+	if (this != &iOther)
 		{
 		pDtor();
 		pCtor(iOther);
