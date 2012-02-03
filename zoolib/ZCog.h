@@ -160,11 +160,11 @@ bool sIsFalse(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCa
 
 template <class Param>
 bool sIsFinished(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
-	{ return not iCallable || sIsTrue(iCallable); }
+	{ return sIsFalse(iCallable) || sIsTrue(iCallable); }
 
 template <class Param>
 bool sIsPending(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
-	{ return iCallable && not sIsTrue(iCallable); }
+	{ return not sIsFinished(iCallable); }
 
 // =================================================================================================
 // MARK:- sCallCog variants
@@ -373,8 +373,8 @@ ZCog<Param> spCogFun_Repeat(const ZCog<Param>& iSelf, Param iParam,
 	if (not sIsTrue(newCog))
 		return spCog_Repeat(iCog_Init, newCog);
 
-	// To get unbroken repetition on hitting a term we need to call the new cog,
-	// don't make the call if we'd just be calling an iSelf-equivalent.
+	// To get unbroken repetition on hitting a term we need to call the new cog, but don't
+	// make the call if we'd be calling an iSelf-equivalent (infinite recursion would ensue).
 	if (iCog_Init == iCog)
 		return iSelf;
 	else
@@ -704,9 +704,85 @@ ZCog<Param>& operator|=
 	{ return ioCog0 = sCog_Or<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
+// MARK: - Binary parallel, sCog_While
+
+// Call cog0 and cog1 while cog1 is pending, result from cog1.
+
+template <class Param>
+ZCog<Param> spCogFun_While(const ZCog<Param>& iSelf, Param iParam,
+	ZCog<Param> lCog0, const ZCog<Param>& iCog1);
+
+template <class Param>
+ZCog<Param> spCog_While
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{
+	ZAssert(sIsPending(iCallable0) && sIsPending(iCallable1));
+
+	static ZMACRO_auto(spCallable, sCallable(spCogFun_While<Param>));
+	return sBindR(spCallable, iCallable0, iCallable1);
+	}
+
+template <class Param>
+ZCog<Param> sCog_While
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{
+	if (sIsPending(iCallable0) && sIsPending(iCallable1))
+		return spCog_While(iCallable0, iCallable1);
+	return iCallable1;
+	}
+
+template <class Param>
+ZCog<Param> spCogFun_While(const ZCog<Param>& iSelf, Param iParam,
+	ZCog<Param> lCog0, const ZCog<Param>& iCog1)
+	{
+	ZAssert(sIsPending(lCog0) && sIsPending(iCog1));
+
+	if (sCallPendingCog_Unchanged(lCog0, iParam))
+		{
+		ZCog<Param> newCog1 = iCog1;
+		if (sCallPendingCog_Unchanged(newCog1, iParam))
+			return iSelf;
+
+		if (sIsFinished(newCog1))
+			return newCog1;
+
+		return spCog_While(lCog0, newCog1);
+		}
+	else if (sIsFinished(lCog0))
+		{
+		return iCog1->Call(iCog1, iParam);
+		}
+	else
+		{
+		ZCog<Param> newCog1 = iCog1->Call(iCog1, iParam);
+
+		if (sIsFinished(newCog1))
+			return newCog1;
+
+		return spCog_While(lCog0, newCog1);		
+		}
+	}
+
+#if 0
+template <class Param>
+ZCog<Param> operator/
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return sCog_While<Param>(iCallable0, iCallable1); }
+
+template <class Param>
+ZCog<Param>& operator/=
+	(ZCog<Param>& ioCog0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return ioCog0 = sCog_While<Param>(ioCog0, iCallable1); }
+#endif
+
+// =================================================================================================
 // MARK: - Binary parallel, sCog_With
 
-// Call cog1 so long as cog0 is pending.
+// Call cog0 and cog1 so long as cog0 is pending, result from cog0
 
 template <class Param>
 ZCog<Param> spCogFun_With(const ZCog<Param>& iSelf, Param iParam,
@@ -780,7 +856,7 @@ ZCog<Param>& operator/=
 // =================================================================================================
 // MARK: - Binary parallel, sCog_WithUnchanged
 
-// Call cog1 so long as cog0 is pending and unchanged.
+// Call cog0 and cog1 so long as cog0 is pending and unchanged, result from cog0
 
 template <class Param>
 ZCog<Param> spCogFun_WithUnchanged(const ZCog<Param>& iSelf, Param iParam,
