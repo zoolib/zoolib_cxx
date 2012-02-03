@@ -53,8 +53,8 @@ void ZServer::Start(ZRef<ZCaller> iCaller,
 	ZAssert(iCaller);
 	ZAssert(iFactory);
 
-	// Declared before the acq, so it goes out of scope
-	// after it, and any callable is invoked with our mutex released.
+	// Declared before the acq, so it goes out of scope after it, and any
+	// callable on the roster is invoked with our mutex released.
 	ZRef<ZRoster> priorRoster;
 
 	ZAcqMtx acq(fMtx);
