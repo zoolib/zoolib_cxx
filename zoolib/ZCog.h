@@ -107,31 +107,24 @@ public:
 
 //--
 
-	static const ZCog& sFalse();
-	static const ZCog& sTrue();
+	static const ZCog& sFalse()
+		{
+		static const ZCog<Param> spCog;
+		return spCog;
+		}
+
+	static ZCog spCogFun_True(const ZCog& iSelf, Param iParam)
+		{
+		// Must not ever call this.
+		ZUnimplemented();
+		}
+
+	static const ZCog& sTrue()
+		{
+		static const ZCog spCog = sCallable(spCogFun_True);
+		return spCog;
+		}
 	};
-
-template <class Param>
-const ZCog<Param>& ZCog<Param>::sFalse()
-	{
-	static const ZCog<Param> spCog;
-	return spCog;
-	}
-
-template <class Param>
-ZCog<Param> spCogFun_True(const ZCog<Param>& iSelf, Param iParam)
-	{
-	// Must not ever call this.
-	ZUnimplemented();
-	return null;
-	}
-
-template <class Param>
-const ZCog<Param>& ZCog<Param>::sTrue()
-	{
-	static const ZCog<Param> spCog = sCallable(spCogFun_True<Param>);
-	return spCog;
-	}
 
 // =================================================================================================
 // MARK: - Nullary, sCog_Unknown
@@ -363,6 +356,9 @@ template <class Param>
 ZCog<Param> spCogFun_Repeat(const ZCog<Param>& iSelf, Param iParam,
 	const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog)
 	{
+	// We don't do the usual trick of having iCog be a value param called 'lCog', because we may
+	// need to compare it's original value against iCog_Init later.
+	
 	ZCog<Param> newCog = iCog;
 	if (sCallPendingCog_Unchanged(newCog, iParam))
 		return iSelf;
@@ -410,75 +406,78 @@ ZCog<Param> operator*(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)
 	{ return sCog_Repeat<Param>(iCallable); }
 
 // =================================================================================================
-// MARK: - Binary sequential, sCog_Then
+// MARK: - Ternary sequential, sCog_If
 
 // Call cog0 till it finishes, if true then call cog1
 
 template <class Param>
-ZCog<Param> spCog_Then
-	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+ZCog<Param> spCog_If
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCondition,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1);
 
 template <class Param>
-ZCog<Param> spCogFun_Then(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog, const ZCog<Param>& iCog1)
+ZCog<Param> spCogFun_If(const ZCog<Param>& iSelf, Param iParam,
+	ZCog<Param> lCondition,
+	const ZCog<Param>& iCog0,
+	const ZCog<Param>& iCog1)
 	{
-	if (sCallPendingCog_Unchanged(lCog, iParam))
+	if (sCallPendingCog_Unchanged(lCondition, iParam))
 		return iSelf;
 
-	if (sIsFalse(lCog))
-		return false;
+	if (sIsTrue(lCondition))
+		{
+		if (sIsFinished(iCog0))
+			return iCog0;
+		return iCog0->Call(iCog0, iParam);
+		}
 
-	if (sIsTrue(lCog))
+	if (sIsFalse(lCondition))
 		{
 		if (sIsFinished(iCog1))
 			return iCog1;
 		return iCog1->Call(iCog1, iParam);
 		}
 
-	return spCog_Then(lCog, iCog1);
+	return spCog_If(lCondition, iCog0, iCog1);
 	}
 
 template <class Param>
-ZCog<Param> sCog_Then
-	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+ZCog<Param> sCog_If
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCondition,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
-	if (sIsFalse(iCallable0))
-		return false;
+	if (sIsTrue(iCondition))
+		return iCallable0;
 
-	if (sIsTrue(iCallable0))
+	if (sIsFalse(iCondition))
 		return iCallable1;
 
-	return spCog_Then(iCallable0, iCallable1);
+	return spCog_If(iCondition, iCallable0, iCallable1);
 	}
 
 template <class Param>
-ZCog<Param> spCog_Then
-	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+ZCog<Param> spCog_If
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCondition,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
-	if (sIsFalse(iCallable0))
-		return false;
-
-	if (sIsTrue(iCallable0))
-		return iCallable1;
-
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_Then<Param>));
-	return sBindR(spCallable, iCallable0, iCallable1);
+	static ZMACRO_auto(spCallable, sCallable(spCogFun_If<Param>));
+	return sBindR(spCallable, iCondition, iCallable0, iCallable1);
 	}
 
 template <class Param>
 ZCog<Param> operator>>
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
-	{ return sCog_Then<Param>(iCallable0, iCallable1); }
+	{ return sCog_If<Param>(iCallable0, iCallable1, null); }
 
 template <class Param>
 ZCog<Param>& operator>>=
 	(ZCog<Param>& ioCog0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
-	{ return ioCog0 = sCog_Then<Param>(ioCog0, iCallable1); }
+	{ return ioCog0 = sCog_If<Param>(ioCog0, iCallable1, null); }
 
 // =================================================================================================
 // MARK: - Binary sequential, sCog_Each
@@ -489,7 +488,8 @@ template <class Param>
 ZCog<Param> sCog_Each
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
-	{ return +iCallable0 >> iCallable1; }
+	{ return sCog_If(iCallable0, iCallable1, iCallable1); }
+//	{ return +iCallable0 >> iCallable1; }
 
 template <class Param>
 ZCog<Param> operator^
