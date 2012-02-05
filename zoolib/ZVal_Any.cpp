@@ -112,7 +112,7 @@ const ZVal_Any* ZVal_Any::PGet(size_t iIndex) const
 	}
 
 ZVal_Any ZVal_Any::Get(size_t iIndex) const
-	{ return this->GetSeq().Get(iIndex); }
+	{ return this->Get<ZSeq_Any>().Get(iIndex); }
 
 ZMACRO_ZValAccessors_Def_GetSet(ZVal_Any, Data, ZData_Any)
 ZMACRO_ZValAccessors_Def_GetSet(ZVal_Any, Seq, ZSeq_Any)
