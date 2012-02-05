@@ -27,9 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-//typedef ZCountedWithoutFinalize COUNTEDBASE;
-typedef ZCounted COUNTEDBASE;
-
 // =================================================================================================
 // MARK: - ZCallableUtil
 
@@ -74,7 +71,7 @@ template <class Signature> class ZCallable;
 
 template <class R>
 class ZCallable<R(void)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(void);
@@ -101,7 +98,7 @@ public:
 
 template <>
 class ZCallable<void(void)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(void);
@@ -120,7 +117,7 @@ public:
 template <class R,
 	class P0>
 class ZCallable<R(P0)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0);
@@ -149,7 +146,7 @@ public:
 template <
 	class P0>
 class ZCallable<void(P0)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0);
@@ -168,7 +165,7 @@ public:
 template <class R,
 	class P0, class P1>
 class ZCallable<R(P0,P1)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1);
@@ -200,7 +197,7 @@ public:
 template <
 	class P0, class P1>
 class ZCallable<void(P0,P1)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1);
@@ -221,7 +218,7 @@ public:
 template <class R,
 	class P0, class P1, class P2>
 class ZCallable<R(P0,P1,P2)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2);
@@ -255,7 +252,7 @@ public:
 template <
 	class P0, class P1, class P2>
 class ZCallable<void(P0,P1,P2)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2);
@@ -277,7 +274,7 @@ public:
 template <class R,
 	class P0, class P1, class P2, class P3>
 class ZCallable<R(P0,P1,P2,P3)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3);
@@ -313,7 +310,7 @@ public:
 template <
 	class P0, class P1, class P2, class P3>
 class ZCallable<void(P0,P1,P2,P3)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3);
@@ -337,7 +334,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4>
 class ZCallable<R(P0,P1,P2,P3,P4)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4);
@@ -376,7 +373,7 @@ template <
 	class P0, class P1, class P2, class P3,
 	class P4>
 class ZCallable<void(P0,P1,P2,P3,P4)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4);
@@ -401,7 +398,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
 class ZCallable<R(P0,P1,P2,P3,P4,P5)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5);
@@ -442,7 +439,7 @@ template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5>
 class ZCallable<void(P0,P1,P2,P3,P4,P5)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4,P5);
@@ -468,7 +465,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6);
@@ -511,7 +508,7 @@ template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6>
 class ZCallable<void(P0,P1,P2,P3,P4,P5,P6)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6);
@@ -538,7 +535,7 @@ template <class R,
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7);
@@ -583,7 +580,7 @@ template <
 	class P0, class P1, class P2, class P3,
 	class P4, class P5, class P6, class P7>
 class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7);
@@ -612,7 +609,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8);
@@ -660,7 +657,7 @@ template <
 	class P4, class P5, class P6, class P7,
 	class P8>
 class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8);
@@ -690,7 +687,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
@@ -740,7 +737,7 @@ template <
 	class P4, class P5, class P6, class P7,
 	class P8, class P9>
 class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9);
@@ -771,7 +768,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
@@ -823,7 +820,7 @@ template <
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA>
 class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA);
@@ -855,7 +852,7 @@ template <class R,
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
@@ -909,7 +906,7 @@ template <
 	class P4, class P5, class P6, class P7,
 	class P8, class P9, class PA, class PB>
 class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB);
@@ -943,7 +940,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
@@ -1000,7 +997,7 @@ template <
 	class P8, class P9, class PA, class PB,
 	class PC>
 class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC);
@@ -1035,7 +1032,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
@@ -1094,7 +1091,7 @@ template <
 	class P8, class P9, class PA, class PB,
 	class PC, class PD>
 class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD);
@@ -1130,7 +1127,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
@@ -1191,7 +1188,7 @@ template <
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE>
 class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE);
@@ -1228,7 +1225,7 @@ template <class R,
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
 class ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef R(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
@@ -1291,7 +1288,7 @@ template <
 	class P8, class P9, class PA, class PB,
 	class PC, class PD, class PE, class PF>
 class ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
-:	public COUNTEDBASE
+:	public ZCounted
 	{
 public:
 	typedef void(Signature)(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF);
