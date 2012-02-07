@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_JSON_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCountedVal.h"
 #include "zoolib/ZStreamR_HexStrim.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Escaped.h"
@@ -113,14 +114,14 @@ private:
 class YadSeqR : public ZYadSeqR_Std
 	{
 public:
-	YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions);
+	YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO);
 
 // From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZStrimmerU> fStrimmerU;
-	const ReadOptions fReadOptions;
+	const ZRef<ZCountedVal<ReadOptions> > fRO;
 	};
 
 // =================================================================================================
@@ -129,14 +130,14 @@ private:
 class YadMapR : public ZYadMapR_Std
 	{
 public:
-	YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions);
+	YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZStrimmerU> fStrimmerU;
-	const ReadOptions fReadOptions;
+	const ZRef<ZCountedVal<ReadOptions> > fRO;
 	};
 
 // =================================================================================================

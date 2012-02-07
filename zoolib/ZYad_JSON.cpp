@@ -234,7 +234,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 	}
 
 static ZRef<ZYadR> spMakeYadR_JSON
-	(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
+	(ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO)
 	{
 	using namespace ZUtil_Strim;
 
@@ -244,17 +244,17 @@ static ZRef<ZYadR> spMakeYadR_JSON
 
 	if (sTryRead_CP(theStrimU, '['))
 		{
-		return new YadSeqR(iStrimmerU, iReadOptions);
+		return new YadSeqR(iStrimmerU, iRO);
 		}
 	else if (sTryRead_CP(theStrimU, '{'))
 		{
-		return new YadMapR(iStrimmerU, iReadOptions);
+		return new YadMapR(iStrimmerU, iRO);
 		}
 	else if (sTryRead_CP(theStrimU, '"'))
 		{
 		return new YadStrimR(iStrimmerU);
 		}
-	else if (iReadOptions.fAllowBinary.DGet(false) && sTryRead_CP(theStrimU, '('))
+	else if (iRO->Get().fAllowBinary.DGet(false) && sTryRead_CP(theStrimU, '('))
 		{
 		return new YadStreamR(iStrimmerU);
 		}
@@ -354,9 +354,9 @@ const ZStrimR& YadStrimR::GetStrimR()
 // =================================================================================================
 // MARK: - YadSeqR
 
-YadSeqR::YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
+YadSeqR::YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO)
 :	fStrimmerU(iStrimmerU)
-,	fReadOptions(iReadOptions)
+,	fRO(iRO)
 	{}
 
 void YadSeqR::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
@@ -378,32 +378,32 @@ void YadSeqR::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 		// Must read a separator
 		if (not sTryRead_CP(theStrimU, ','))
 			{
-			if (not fReadOptions.fAllowSemiColons.DGet(false) || not sTryRead_CP(theStrimU, ';'))
+			if (not fRO->Get().fAllowSemiColons.DGet(false) || not sTryRead_CP(theStrimU, ';'))
 				{
-				if (not fReadOptions.fLooseSeparators.DGet(false))
+				if (not fRO->Get().fLooseSeparators.DGet(false))
 					spThrowParseException("Require ',' to separate array elements");
 				}
 			}
 
 		sSkip_WSAndCPlusPlusComments(theStrimU);
 
-		if (fReadOptions.fAllowTerminators.DGet(false) && sTryRead_CP(theStrimU, ']'))
+		if (fRO->Get().fAllowTerminators.DGet(false) && sTryRead_CP(theStrimU, ']'))
 			{
 			// The separator was actually a terminator, and we're done.
 			return;
 			}
 		}
 
-	if (not (oYadR = spMakeYadR_JSON(fStrimmerU, fReadOptions)))
+	if (not (oYadR = spMakeYadR_JSON(fStrimmerU, fRO)))
 		spThrowParseException("Expected a value");
 	}
 
 // =================================================================================================
 // MARK: - YadMapR
 
-YadMapR::YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
+YadMapR::YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO)
 :	fStrimmerU(iStrimmerU)
-,	fReadOptions(iReadOptions)
+,	fRO(iRO)
 	{}
 
 void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
@@ -425,34 +425,34 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 		// Must read a separator
 		if (not sTryRead_CP(theStrimU, ','))
 			{
-			if (not fReadOptions.fAllowSemiColons.DGet(false) || not sTryRead_CP(theStrimU, ';'))
+			if (not fRO->Get().fAllowSemiColons.DGet(false) || not sTryRead_CP(theStrimU, ';'))
 				{
-				if (not fReadOptions.fLooseSeparators.DGet(false))
+				if (not fRO->Get().fLooseSeparators.DGet(false))
 					spThrowParseException("Require ',' to separate object elements");
 				}
 			}
 
 		sSkip_WSAndCPlusPlusComments(theStrimU);
 
-		if (fReadOptions.fAllowTerminators.DGet(false) && sTryRead_CP(theStrimU, '}'))
+		if (fRO->Get().fAllowTerminators.DGet(false) && sTryRead_CP(theStrimU, '}'))
 			{
 			// The separator was actually a terminator, and we're done.
 			return;
 			}
 		}
 
-	if (not spTryRead_PropertyName(theStrimU, oName, fReadOptions.fAllowUnquotedPropertyNames.DGet(false)))
+	if (not spTryRead_PropertyName(theStrimU, oName, fRO->Get().fAllowUnquotedPropertyNames.DGet(false)))
 		spThrowParseException("Expected a member name");
 
 	sSkip_WSAndCPlusPlusComments(theStrimU);
 
 	if (not sTryRead_CP(theStrimU, ':'))
 		{
-		if (not fReadOptions.fAllowEquals.DGet(false) || not sTryRead_CP(theStrimU, '='))
+		if (not fRO->Get().fAllowEquals.DGet(false) || not sTryRead_CP(theStrimU, '='))
 			spThrowParseException("Expected ':' after a member name");
 		}
 
-	if (not (oYadR = spMakeYadR_JSON(fStrimmerU, fReadOptions)))
+	if (not (oYadR = spMakeYadR_JSON(fStrimmerU, fRO)))
 		spThrowParseException("Expected value after ':'");
 	}
 
@@ -697,6 +697,7 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamR& iStreamR,
 		s.Write(")");
 		}
 	}
+
 // =================================================================================================
 // MARK: - Visitor_Writer
 
@@ -910,10 +911,10 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 // MARK: - sYadR and sToStrim
 
 ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU)
-	{ return spMakeYadR_JSON(iStrimmerU, ReadOptions()); }
+	{ return spMakeYadR_JSON(iStrimmerU, sCountedVal(ReadOptions())); }
 
 ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
-	{ return spMakeYadR_JSON(iStrimmerU, iReadOptions); }
+	{ return spMakeYadR_JSON(iStrimmerU, sCountedVal(iReadOptions)); }
 
 void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)
 	{ sToStrim(0, WriteOptions(), iYadR, s); }
