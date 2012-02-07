@@ -30,32 +30,28 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZMACRO_ZValAccessors_Decl_Get(T, TYPENAME, TYPE) \
 	ZQ<TYPE> QGet##TYPENAME() const; \
 	TYPE DGet##TYPENAME(const TYPE& iDefault) const; \
-	TYPE Get##TYPENAME() const; \
+	TYPE Get##TYPENAME() const;
 
 // Declaration, GetSet
 
 #define ZMACRO_ZValAccessors_Decl_GetSet(T, TYPENAME, TYPE) \
 	ZMACRO_ZValAccessors_Decl_Get(T, TYPENAME, TYPE) \
-	void Set##TYPENAME(const TYPE& iVal); \
+	void Set##TYPENAME(const TYPE& iVal);
 
 
 // Definition, Get, with leading extra qualification
 
 #define ZMACRO_ZValAccessors_Def_GetX(X, T, TYPENAME, TYPE) \
-	X ZQ<TYPE> T::QGet##TYPENAME() const \
-		{ return this->QGet<TYPE>(); } \
-	X TYPE T::DGet##TYPENAME(const TYPE& iDefault) const \
-		{ return this->DGet<TYPE>(iDefault); } \
-	X TYPE T::Get##TYPENAME() const \
-		{ return this->Get<TYPE>(); } \
+	X ZQ<TYPE> T::QGet##TYPENAME() const { return this->QGet<TYPE>(); } \
+	X TYPE T::DGet##TYPENAME(const TYPE& iDefault) const { return this->DGet<TYPE>(iDefault); } \
+	X TYPE T::Get##TYPENAME() const { return this->Get<TYPE>(); }
 
 
 // Definition, GetSet, with leading extra qualification
 
 #define ZMACRO_ZValAccessors_Def_GetSetX(X, T, TYPENAME, TYPE) \
 	ZMACRO_ZValAccessors_Def_GetX(X, T, TYPENAME, TYPE) \
-	X void T::Set##TYPENAME(const TYPE& iVal) \
-		{ return this->Set<TYPE>(iVal); } \
+	X void T::Set##TYPENAME(const TYPE& iVal) { return this->Set<TYPE>(iVal); }
 
 
 // Definition, Get

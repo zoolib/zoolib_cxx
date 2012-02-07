@@ -11,7 +11,7 @@ Every ZooLib header file starts with
 \code
 #include "zconfig.h"
 \endcode
-There is a default copy of this file in \c zoolib/default_config. If you wish to provide project-specific settings, create your own \c zconfig.h file and make sure it's found before the default one. The simplest way to do that is to put it in with your own source files, and to make sure that \c zoolib/default_config is not in your project's include paths.
+There is a default copy of this file in \c zoolib/default_config. If you wish to provide project-specific settings, create your own \c zconfig.h file and ensure it's found before the default one. The simplest way to do that is to put it in with your own source files, and ensure that \c zoolib/default_config is not in your project's include paths.
 
 To use ZooLib in your own project:
 - Put the ZooLib directory somewhere stable.

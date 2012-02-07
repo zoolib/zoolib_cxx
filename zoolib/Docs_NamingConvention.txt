@@ -45,12 +45,12 @@ Names that are phrases are CamelCased, each word in the phrase has its first let
 If there is a prefix, the prefix is lower cased and the 'meat' starts with an upper case letter, the
 remainder being CamelCased.
 
-For non-class types I'll usually use a \c _t suffix, and for template types/classes/functions a
+For non-class types I'll often use a \c _t suffix, and for template types/classes/functions a
 \c _T suffix.
 
 Classes and method names have an upper case initial letter.
 
-Local variables have a lower case initial letter. I often use a  \c the prefix, but the
+Local variables have a lower case initial letter. I often use a \c the prefix, but the
 goal is just to make it read well.
 
 Pretty much everything else has a scope prefix.
@@ -59,12 +59,11 @@ Pretty much everything else has a scope prefix.
 
 This may be the most controversial stylistic decision, but I've found it helpful.
 
-Much of ZooLib
-consists of abstract interfaces and a suite of concrete implementations. In such situations the
-base is named with a noun or noun phrase (CamelCased of course). Concrete implementations are
-named with the base name, an underscore, and a distinguishing noun or noun phrase. This
-approach keeps hierarchies together when their members are sorted lexicographically. It
-also provides a strong hint of a type's likely compatibility -- if you see an \c XxxYyy_Zzz
+Much of ZooLib consists of abstract interfaces and a suite of concrete implementations. In such
+situations the base is named with a noun or noun phrase (CamelCased of course). Concrete
+implementations are named with the base name, an underscore, and a distinguishing noun or noun
+phrase. This approach keeps hierarchies together when their members are sorted lexicographically.
+It also provides a strong hint of a type's likely compatibility -- if you see an \c XxxYyy_Zzz
 it can generally be passed to a function expecting an \c XxxYyy.
 
 For types that are related but not type-compatible I use reverse English order noun phrases, so

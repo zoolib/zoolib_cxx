@@ -35,7 +35,9 @@ typedef ZYad_Basic::ParseException ParseException;
 // =================================================================================================
 // MARK: - ZYad_Simple
 
-ZRef<ZYadMapR> sYadR(ZRef<ZStrimmerU> iStrimmerU);
+inline
+ZRef<ZYadMapR> sYadR(ZRef<ZStrimmerU> iStrimmerU)
+	{ return sYadR(ZYad_Basic::Options('=', ','), iStrimmerU); }
 
 } // namespace ZYad_Simple
 } // namespace ZooLib
