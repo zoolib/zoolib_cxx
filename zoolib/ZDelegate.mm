@@ -103,14 +103,14 @@ BOOL ZDelegate::pRespondsToSelector(SEL aSelector)
 
 void ZDelegate::pForwardInvocation(NSInvocation* anInvocation)
 	{
-	if (ZQ<ZRef<Wrapper> > theQ = ZUtil_STL::sGetIfContains(fWrappers, [anInvocation selector]))
-		theQ.Get()->ForwardInvocation(anInvocation);
+	if (ZQ<ZRef<Wrapper> > theQ = ZUtil_STL::sQGet(fWrappers, [anInvocation selector]))
+		(*theQ)->ForwardInvocation(anInvocation);
 	}
 
 NSMethodSignature* ZDelegate::pMethodSignatureForSelector(SEL aSelector)
 	{
-	if (ZQ<ZRef<Wrapper> > theQ = ZUtil_STL::sGetIfContains(fWrappers, aSelector))
-		return theQ.Get()->fNSMethodSignature;
+	if (ZQ<ZRef<Wrapper> > theQ = ZUtil_STL::sQGet(fWrappers, aSelector))
+		return (*theQ)->fNSMethodSignature;
 	return nil;
 	}
 

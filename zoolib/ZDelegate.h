@@ -27,17 +27,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZObjC.h"
 #include "zoolib/ZRef_NS.h"
 
 #include <map>
 
-#ifdef __OBJC__
-	#import <Foundation/NSInvocation.h>
-	@class NSMethodSignature;
-	@class ZooLib_ZDelegate_Proxy;
-#else
-	typedef struct objc_ZooLib_ZDelegate_Proxy ZooLib_ZDelegate_Proxy;
-#endif
+ZMACRO_ObjCClass(NSInvocation);
+ZMACRO_ObjCClass(NSMethodSignature);
+ZMACRO_ObjCClass(ZooLib_ZDelegate_Proxy);
 
 namespace ZooLib {
 
