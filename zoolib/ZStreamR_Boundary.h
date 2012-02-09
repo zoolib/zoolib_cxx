@@ -61,6 +61,9 @@ protected:
 	bool fHitBoundary;
 	};
 
+bool sFindBoundary(const std::string& iBoundary, const ZStreamR& iStreamSource);
+bool sFindBoundary(const void* iBoundary, size_t iBoundarySize, const ZStreamR& iStreamSource);
+
 // =================================================================================================
 // MARK: - ZStreamerR_Boundary
 

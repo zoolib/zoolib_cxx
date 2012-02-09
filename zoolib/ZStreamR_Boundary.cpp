@@ -204,6 +204,23 @@ void ZStreamR_Boundary::pInit()
 	}
 
 // =================================================================================================
+// MARK: - sFindBoundary
+
+bool sFindBoundary(const std::string& iBoundary, const ZStreamR& iStreamSource)
+	{
+	ZStreamR_Boundary r(iBoundary, iStreamSource);
+	r.SkipAll();
+	return r.HitBoundary();
+	}
+
+bool sFindBoundary(const void* iBoundary, size_t iBoundarySize, const ZStreamR& iStreamSource)
+	{
+	ZStreamR_Boundary r(iBoundary, iBoundarySize, iStreamSource);
+	r.SkipAll();
+	return r.HitBoundary();
+	}
+
+// =================================================================================================
 // MARK: - ZStreamerR_Boundary
 
 ZStreamerR_Boundary::ZStreamerR_Boundary(const string& iBoundary, ZRef<ZStreamerR> iStreamerSource)
