@@ -41,7 +41,6 @@ class ZVal_Yad
 	{
 public:
 	ZAny AsAny() const;
-	//##ZMACRO_operator_bool(ZVal_Yad, operator_bool) const;
 
 	ZVal_Yad();
 	ZVal_Yad(const ZVal_Yad& iOther);
@@ -113,7 +112,7 @@ public:
 	ZRef<ZYadR> GetYad() const;
 
 private:
-	ZAny pAsAny() const;
+	ZQ<ZAny> pQAsAny() const;
 	ZRef<ZYadR> fYad;
 	};
 
@@ -126,8 +125,8 @@ ZQ<ZMap_Yad> ZVal_Yad::QGet() const;
 template <class S>
 ZQ<S> ZVal_Yad::QGet() const
 	{
-	if (ZQ<ZAny> theQ = this->pAsAny())
-		return theQ->QGet<S>();
+	if (ZQ<ZAny> theQ = this->pQAsAny())
+   		return theQ->QGet<S>();
 	return null;
 	}
 
@@ -156,15 +155,33 @@ public:
 
 	template <class S>
 	ZQ<S> QGet(size_t iIndex) const
-		{ return this->Get(iIndex).QGet<S>(); }
+		{
+		if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
+			return theQ->QGet<S>();
+		return null;
+		}
 
 	template <class S>
 	S DGet(const S& iDefault, size_t iIndex) const
-		{ return this->Get(iIndex).DGet<S>(iDefault); }
+		{
+		if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
+			{
+			if (ZQ<S> theQ2 = theQ->QGet<S>())
+				return *theQ2;
+			}
+		return iDefault;
+		}
 
 	template <class S>
 	S Get(size_t iIndex) const
-		{ return this->Get(iIndex).Get<S>(); }
+		{
+		if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
+			{
+			if (ZQ<S> theQ2 = theQ->QGet<S>())
+				return *theQ2;
+			}
+		return S();
+		}
 
 // Our protocol
 	ZRef<ZYadSeqRPos> GetYad() const;
@@ -196,15 +213,33 @@ public:
 
 	template <class S>
 	ZQ<S> QGet(const string8& iName) const
-		{ return this->Get(iName).QGet<S>(); }
+		{
+		if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
+			return theQ->QGet<S>();
+		return null;
+		}
 
 	template <class S>
 	S DGet(const S& iDefault, const string8& iName) const
-		{ return this->Get(iName).DGet<S>(iDefault); }
+		{
+		if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
+			{
+			if (ZQ<S> theQ2 = theQ->QGet<S>())
+				return *theQ2;
+			}
+		return iDefault;
+		}
 
 	template <class S>
 	S Get(const string8& iName) const
-		{ return this->Get(iName).Get<S>(); }
+		{
+		if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
+			{
+			if (ZQ<S> theQ2 = theQ->QGet<S>())
+				return *theQ2;
+			}
+		return S();
+		}
 
 // Our protocol
 	ZRef<ZYadMapRPos> GetYad() const;

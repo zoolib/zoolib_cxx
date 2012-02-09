@@ -27,7 +27,11 @@ namespace ZooLib {
 // MARK: - ZVal_Yad
 
 ZAny ZVal_Yad::AsAny() const
-	{ return this->pAsAny(); }
+	{
+	if (ZQ<ZAny> theQ = this->pQAsAny())
+		return *theQ;
+	return ZAny();
+	}
 
 ZVal_Yad::ZVal_Yad()
 	{}
@@ -125,11 +129,18 @@ ZQ<ZMap_Yad> ZVal_Yad::QGet() const
 ZRef<ZYadR> ZVal_Yad::GetYad() const
 	{ return fYad; }
 
-ZAny ZVal_Yad::pAsAny() const
+ZQ<ZAny> ZVal_Yad::pQAsAny() const
 	{
-	if (fYad)
-		return sFromYadR(false, ZVal_Any(), fYad);
-	return ZAny();
+	if (not fYad)
+		return null;
+
+	if (ZRef<ZYadSeqRPos> theYad = fYad.DynamicCast<ZYadSeqRPos>())
+		return ZSeq_Yad(theYad);
+
+	if (ZRef<ZYadMapRPos> theYad = fYad.DynamicCast<ZYadMapRPos>())
+		return ZMap_Yad(theYad);
+
+	return sFromYadR(ZVal_Any(), fYad).AsAny();
 	}
 
 ZMACRO_ZValAccessors_Def_Get(ZVal_Yad, Seq, ZSeq_Yad)
