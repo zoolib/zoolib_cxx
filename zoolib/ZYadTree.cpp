@@ -28,41 +28,56 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
+#if 0
+#include "ZYad_Any.h"
+namespace GameEngine {
+void sDump(const ZooLib::ZAny& iAny);
+} // namespace GameEngine
+#endif
+
+
 namespace ZooLib {
 namespace YadTree {
 
 typedef ZCountedVal<string> CountedString;
 
-// =================================================================================================
-// MARK: - Chain declaration
+class Link;
 
-class Chain
+// =================================================================================================
+// MARK: - Helpers
+
+static ZRef<ZYadR> spWrap(const ZRef<CountedString>& iProtoName,
+	const ZRef<Link>& iLink, const ZRef<ZYadR>& iYad);
+
+// =================================================================================================
+// MARK: - Link declaration
+
+class Link
 :	public ZCounted
 	{
 private:
-	Chain(const Chain& iOther);
+	Link(const Link& iOther);
 
 public:
-	Chain(const ZRef<Chain>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos);
-	Chain(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment,
+	Link(const ZRef<Link>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos);
+	Link(const std::string& iRootAugmentName, const ZRef<Link>& iRootAugment,
 		const ZRef<ZYadMapRPos>& iYadMapRPos);
 
-	ZRef<Chain> Clone();
+	ZRef<Link> Clone();
 
-	ZRef<ZYadR> ReadInc(string& oName);
 	ZRef<ZYadR> ReadAt(const ZRef<CountedString>& iProtoName, const string& iName);
 
-	ZRef<Chain> WithRootAugment
-		(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment);
+	ZRef<Link> WithRootAugment
+		(const std::string& iRootAugmentName, const ZRef<Link>& iRootAugment);
 
 private:
 	ZRef<ZYadR> pReadAt(const string& iName);
 
-	const ZRef<Chain> fParent;
+	const ZRef<Link> fParent;
 	ZRef<ZYadMapRPos> fYadMapRPos;
 	
-	std::map<string8, ZRef<Chain> > fCacheByName;
-	std::map<string8, ZRef<Chain> > fCacheByTrail;
+	std::map<string8, ZRef<Link> > fCacheByName;
+	std::map<string8, ZRef<Link> > fCacheByTrail;
 	};
 
 // =================================================================================================
@@ -73,24 +88,36 @@ class YadSeqRPos
 	{
 public:
 	YadSeqRPos(const ZRef<CountedString>& iProtoName,
-		const ZRef<Chain>& iChain, const ZRef<ZYadSeqRPos>& iYadSeqRPos);
+		const ZRef<Link>& iLink, const ZRef<ZYadSeqRPos>& iYadSeqRPos)
+	:	fProtoName(iProtoName)
+	,	fLink(iLink)
+	,	fYadSeqRPos(iYadSeqRPos)
+		{}
 
 // From ZYadSeqR via ZYadSeqRPos
-	virtual ZRef<ZYadR> ReadInc();
+	virtual ZRef<ZYadR> ReadInc()
+		{ return spWrap(fProtoName, fLink, fYadSeqRPos->ReadInc()); }
 
 // From ZYadSeqRClone via ZYadSeqRPos
-	virtual ZRef<ZYadSeqRClone> Clone();
+	virtual ZRef<ZYadSeqRClone> Clone()
+		{ return new YadSeqRPos(fProtoName, fLink, fYadSeqRPos->Clone().DynamicCast<ZYadSeqRPos>()); }
 
 // From ZYadSeqRPos
-	virtual uint64 GetPosition();
-	virtual void SetPosition(uint64 iPosition);
-	virtual uint64 GetSize();
+	virtual uint64 GetPosition()
+		{ return fYadSeqRPos->GetPosition(); }
 
-	virtual ZRef<ZYadR> ReadAt(uint64 iPosition);
+	virtual void SetPosition(uint64 iPosition)
+		{ fYadSeqRPos->SetPosition(iPosition); }
+
+	virtual uint64 GetSize()
+		{ return fYadSeqRPos->GetSize(); }
+
+	virtual ZRef<ZYadR> ReadAt(uint64 iPosition)
+		{ return spWrap(fProtoName, fLink, fYadSeqRPos->ReadAt(iPosition)); }
 
 private:
 	const ZRef<CountedString> fProtoName;
-	const ZRef<Chain> fChain;
+	const ZRef<Link> fLink;
 	const ZRef<ZYadSeqRPos> fYadSeqRPos;
 	};
 
@@ -102,7 +129,7 @@ class YadMapRPos
 	{
 public:
 	YadMapRPos(const ZRef<CountedString>& iProtoName,
-		const ZRef<Chain>& iChain, const string& iPosition);
+		const ZRef<Link>& iLink, const string& iPosition);
 
 	YadMapRPos(const ZRef<CountedString>& iProtoName, const ZRef<ZYadMapRPos>& iYad);
 
@@ -117,42 +144,27 @@ public:
 	virtual ZRef<ZYadR> ReadAt(const string& iName);
 
 // Our protocol
-	ZRef<Chain> GetChain();
+	ZRef<Link> GetLink();
 	ZRef<YadMapRPos> WithRootAugment
-		(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment);
+		(const std::string& iRootAugmentName, const ZRef<Link>& iRootAugment);
 
 private:
 	const ZRef<CountedString> fProtoName;
-	ZRef<Chain> fChain;
+	ZRef<Link> fLink;
 	string fPosition;
 	};
 
 // =================================================================================================
-// MARK: - Helpers
+// MARK: - Link definition
 
-static ZRef<ZYadR> spWrap(const ZRef<CountedString>& iProtoName,
-	const ZRef<Chain>& iChain, const ZRef<ZYadR>& iYad)
-	{
-	if (ZRef<ZYadSeqRPos> theYadSeqRPos = iYad.DynamicCast<ZYadSeqRPos>())
-		return new YadSeqRPos(iProtoName, iChain, theYadSeqRPos);
-
-	if (ZRef<ZYadMapRPos> theYadMapRPos = iYad.DynamicCast<ZYadMapRPos>())
-		return new YadMapRPos(iProtoName, new Chain(iChain, theYadMapRPos), string());
-
-	return iYad;
-	}
-
-// =================================================================================================
-// MARK: - Chain definition
-
-Chain::Chain(const Chain& iOther)
+Link::Link(const Link& iOther)
 :	fParent(iOther.fParent)
 ,	fYadMapRPos(iOther.fYadMapRPos->Clone().DynamicCast<ZYadMapRPos>())
 ,	fCacheByName(iOther.fCacheByName)
 ,	fCacheByTrail(iOther.fCacheByTrail)
 	{}
 
-Chain::Chain(const ZRef<Chain>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos)
+Link::Link(const ZRef<Link>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos)
 :	fParent(iParent)
 ,	fYadMapRPos(iYadMapRPos)
 	{
@@ -160,40 +172,37 @@ Chain::Chain(const ZRef<Chain>& iParent, const ZRef<ZYadMapRPos>& iYadMapRPos)
 	ZAssert(not iYadMapRPos.DynamicCast<YadMapRPos>());
 	}
 
-Chain::Chain(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment,
+Link::Link(const std::string& iRootAugmentName, const ZRef<Link>& iRootAugment,
 	const ZRef<ZYadMapRPos>& iYadMapRPos)
 :	fYadMapRPos(iYadMapRPos->Clone().DynamicCast<ZYadMapRPos>())
 	{
 	ZUtil_STL::sInsertMustNotContain(fCacheByName, iRootAugmentName, iRootAugment);	
 	}
 
-ZRef<Chain> Chain::Clone()
-	{ return new Chain(*this); }
+ZRef<Link> Link::Clone()
+	{ return new Link(*this); }
 
-ZRef<ZYadR> Chain::ReadInc(string& oName)
-	{ return fYadMapRPos->ReadInc(oName); }
-
-ZRef<ZYadR> Chain::pReadAt(const string& iName)
+ZRef<ZYadR> Link::pReadAt(const string& iName)
 	{ return fYadMapRPos->ReadAt(iName); }
 
-ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProtoName, const string& iName)
+ZRef<ZYadR> Link::ReadAt(const ZRef<CountedString>& iProtoName, const string& iName)
 	{
 	using namespace ZUtil_STL;
 
 	if (ZRef<ZYadR> theYad = this->pReadAt(iName))
 		return spWrap(iProtoName, this, theYad);
 	
-	ZRef<Chain> theChain;
-	if (ZQ<ZRef<Chain> > theByNameQ = sQGet(fCacheByName, iName))
+	ZRef<Link> theLink;
+	if (ZQ<ZRef<Link> > theByNameQ = sQGet(fCacheByName, iName))
 		{
-		theChain = *theByNameQ;
+		theLink = *theByNameQ;
 		}
 	else if (ZRef<ZYadStrimR> theProtoYad = this->pReadAt(iProtoName->Get()).DynamicCast<ZYadStrimR>())
 		{
 		const string theTrailString = theProtoYad->GetStrimR().ReadAll8();
-		if (ZQ<ZRef<Chain> > theByTrailQ = sQGet(fCacheByTrail, theTrailString))
+		if (ZQ<ZRef<Link> > theByTrailQ = sQGet(fCacheByTrail, theTrailString))
 			{
-			theChain = *theByTrailQ;
+			theLink = *theByTrailQ;
 			}
 		else
 			{
@@ -201,12 +210,12 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProtoName, const string& i
 				{
 				size_t index = 0;
 				const ZTrail theTrail = ZTrail(theTrailString).Normalized();
-				ZRef<Chain> cur = this;
+				ZRef<Link> cur = this;
 
 				if (theTrailString[0] == '/')
 					{
 					// Walk up to the root.
-					for (ZRef<Chain> next = null; next = cur->fParent; cur = next)
+					for (ZRef<Link> next = null; next = cur->fParent; cur = next)
 						{}
 					}
 				else
@@ -225,9 +234,9 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProtoName, const string& i
 					for (;;)
 						{
 						const string theComp = theTrail.At(index);
-						if (ZQ<ZRef<Chain> > aChain = sQGet(cur->fCacheByName, theComp))
+						if (ZQ<ZRef<Link> > aLink = sQGet(cur->fCacheByName, theComp))
 							{
-							cur = *aChain;
+							cur = *aLink;
 							}
 						else if (ZRef<ZYadMapRPos,0> theYadMapRPos =
 							cur->pReadAt(theComp).DynamicCast<ZYadMapRPos>())
@@ -236,23 +245,25 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProtoName, const string& i
 							}
 						else
 							{
-							cur = new Chain(cur, theYadMapRPos);
+//##							if (ZRef<ZYadMapRPos_Any> theM = theYadMapRPos.DynamicCast<ZYadMapRPos_Any>())
+//##								GameEngine::sDump(ZAny(theM->GetMap()));
+							cur = new Link(cur, theYadMapRPos);
 							}
 						if (++index == theTrail.Count())
 							{
-							theChain = cur;
+							theLink = cur;
 							break;
 							}
 						}
 					}
 				}
-			sInsertMustNotContain(fCacheByTrail, theTrailString, theChain);
+			sInsertMustNotContain(fCacheByTrail, theTrailString, theLink);
 			}
-		sInsertMustNotContain(fCacheByName, iName, theChain);
+		sInsertMustNotContain(fCacheByName, iName, theLink);
 		}
 
-	if (theChain)
-		return theChain->ReadAt(iProtoName, iName);
+	if (theLink)
+		return theLink->ReadAt(iProtoName, iName);
 
 	// Yay, lexical scoping, disabled for now.
 	if (false && fParent)
@@ -261,92 +272,70 @@ ZRef<ZYadR> Chain::ReadAt(const ZRef<CountedString>& iProtoName, const string& i
 	return null;
 	}
 
-ZRef<Chain> Chain::WithRootAugment
-	(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment)
+ZRef<Link> Link::WithRootAugment
+	(const std::string& iRootAugmentName, const ZRef<Link>& iRootAugment)
 	{
 	ZRef<ZYadMapRPos> newYad = fYadMapRPos->Clone().DynamicCast<ZYadMapRPos>();
 	if (fParent)
-		return new Chain(fParent->WithRootAugment(iRootAugmentName, iRootAugment), newYad);
-	return new Chain(iRootAugmentName, iRootAugment, newYad);
+		return new Link(fParent->WithRootAugment(iRootAugmentName, iRootAugment), newYad);
+	return new Link(iRootAugmentName, iRootAugment, newYad);
 	}
-
-// =================================================================================================
-// MARK: - YadSeqRPos definition
-
-YadSeqRPos::YadSeqRPos(const ZRef<CountedString>& iProtoName,
-	const ZRef<Chain>& iChain, const ZRef<ZYadSeqRPos>& iYadSeqRPos)
-:	fProtoName(iProtoName)
-,	fChain(iChain)
-,	fYadSeqRPos(iYadSeqRPos)
-	{}
-
-ZRef<ZYadR> YadSeqRPos::ReadInc()
-	{ return spWrap(fProtoName, fChain, fYadSeqRPos->ReadInc()); }
-
-ZRef<ZYadSeqRClone> YadSeqRPos::Clone()
-	{ return new YadSeqRPos(fProtoName, fChain, fYadSeqRPos->Clone().DynamicCast<ZYadSeqRPos>()); }
-
-uint64 YadSeqRPos::GetPosition()
-	{ return fYadSeqRPos->GetPosition(); }
-
-void YadSeqRPos::SetPosition(uint64 iPosition)
-	{ fYadSeqRPos->SetPosition(iPosition); }
-
-uint64 YadSeqRPos::GetSize()
-	{ return fYadSeqRPos->GetSize(); }
-
-ZRef<ZYadR> YadSeqRPos::ReadAt(uint64 iPosition)
-	{ return spWrap(fProtoName, fChain, fYadSeqRPos->ReadAt(iPosition)); }
 
 // =================================================================================================
 // MARK: - YadMapRPos definition
 
 YadMapRPos::YadMapRPos(const ZRef<CountedString>& iProtoName,
-	const ZRef<Chain>& iChain, const string& iPosition)
+	const ZRef<Link>& iLink, const string& iPosition)
 :	fProtoName(iProtoName)
-,	fChain(iChain)
+,	fLink(iLink)
 ,	fPosition(iPosition)
 	{}
 
 YadMapRPos::YadMapRPos(const ZRef<CountedString>& iProtoName, const ZRef<ZYadMapRPos>& iYad)
 :	fProtoName(iProtoName)
-,	fChain(new Chain(null, iYad))
+,	fLink(new Link(null, iYad))
 	{}
 
 ZRef<ZYadR> YadMapRPos::ReadInc(string& oName)
-	{
-	if (fChain->IsShared())
-		fChain = fChain->Clone();
-
-	if (fPosition.empty())
-		return fChain->ReadInc(oName);
-	
-	oName = fPosition;
-	return fChain->ReadAt(fProtoName, sGetSet(fPosition, string()));
-	}
+	{ ZUnimplemented(); }
 
 ZRef<ZYadR> YadMapRPos::ReadAt(const string& iName)
 	{
-	if (fChain->IsShared())
-		fChain = fChain->Clone();
+	if (fLink->IsShared())
+		fLink = fLink->Clone();
 	fPosition.clear();
-	return fChain->ReadAt(fProtoName, iName);
+	return fLink->ReadAt(fProtoName, iName);
 	}
 
 ZRef<ZYadMapRClone> YadMapRPos::Clone()
-	{ return new YadMapRPos(fProtoName, fChain->Clone(), fPosition); }
+	{ return new YadMapRPos(fProtoName, fLink->Clone(), fPosition); }
 
 void YadMapRPos::SetPosition(const string& iName)
 	{ fPosition = iName; }
 
-ZRef<Chain> YadMapRPos::GetChain()
-	{ return fChain; }
+ZRef<Link> YadMapRPos::GetLink()
+	{ return fLink; }
 
 ZRef<YadMapRPos> YadMapRPos::WithRootAugment
-	(const std::string& iRootAugmentName, const ZRef<Chain>& iRootAugment)
+	(const std::string& iRootAugmentName, const ZRef<Link>& iRootAugment)
 	{
-	ZRef<Chain> newChain = fChain->WithRootAugment(iRootAugmentName, iRootAugment);
-	return new YadMapRPos(fProtoName, newChain, string());
+	ZRef<Link> newLink = fLink->WithRootAugment(iRootAugmentName, iRootAugment);
+	return new YadMapRPos(fProtoName, newLink, string());
+	}
+
+// =================================================================================================
+// MARK: - Helpers
+
+static ZRef<ZYadR> spWrap(const ZRef<CountedString>& iProtoName,
+	const ZRef<Link>& iLink, const ZRef<ZYadR>& iYad)
+	{
+	if (ZRef<ZYadSeqRPos> theYadSeqRPos = iYad.DynamicCast<ZYadSeqRPos>())
+		return new YadSeqRPos(iProtoName, iLink, theYadSeqRPos);
+
+	if (ZRef<ZYadMapRPos> theYadMapRPos = iYad.DynamicCast<ZYadMapRPos>())
+		return new YadMapRPos(iProtoName, new Link(iLink, theYadMapRPos), string());
+
+	return iYad;
 	}
 
 } // namespace YadTree
@@ -368,9 +357,8 @@ ZRef<ZYadMapRPos> sParameterizedYadTree(const ZRef<ZYadMapRPos>& iBase,
 	if (ZRef<YadMapRPos> theBase = iBase.DynamicCast<YadMapRPos>())
 		{
 		if (ZRef<YadMapRPos> theRootAugment = iRootAugment.DynamicCast<YadMapRPos>())
-			return theBase->WithRootAugment(iRootAugmentName, theRootAugment->GetChain());
+			return theBase->WithRootAugment(iRootAugmentName, theRootAugment->GetLink());
 		}
 	return iBase;
 	}
-
 } // namespace ZooLib
