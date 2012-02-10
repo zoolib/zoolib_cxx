@@ -24,13 +24,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #ifdef __OBJC__
+	#include <objc/objc.h>
 	#define ZMACRO_ObjCClass(p) @class p
 #else
-	#define ZMACRO_ObjCClass(p) typedef struct objc_##p p
 	typedef struct objc_class *Class;
 	typedef struct objc_object { Class isa; } *id;
 	typedef struct objc_selector *SEL;
 	typedef id (*IMP)(id, SEL, ...);
+	#define ZMACRO_ObjCClass(p) typedef struct objc_##p p
 #endif
 
 #if ZCONFIG_SPI_Enabled(Cocoa) && __cplusplus
