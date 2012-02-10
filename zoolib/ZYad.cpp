@@ -314,6 +314,9 @@ void ZYadSat::Accept_Yad(ZVisitor_Yad& iVisitor)
 void ZYadMat::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ iVisitor.Visit_YadMat(this); }
 
+ZQ<ZAny> ZYadMat::QAsAny()
+	{ return null; }
+
 // =================================================================================================
 // MARK: - ZYadSatRPos
 

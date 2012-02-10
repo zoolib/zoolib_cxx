@@ -245,6 +245,9 @@ public:
 			return sYadR(fMap.Get(theIndex));
 		return null;
 		}
+
+	virtual ZQ<ZAny> QAsAny()
+		{ return fMap; }
 		
 // Our protocol
 	const Map_t& GetMap()

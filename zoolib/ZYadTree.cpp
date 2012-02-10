@@ -295,6 +295,13 @@ public:
 	virtual ZRef<ZYadR> ReadAt(const string& iName)
 		{ return fLink->ReadAt(iName); }
 
+	virtual ZQ<ZAny> QAsAny()
+		{
+		if (ZRef<ZYadMat> theYadMat = fLink->GetYadMat())
+			return theYadMat->QAsAny();
+		return null;
+		}
+
 // Our protocol
 	ZRef<Link> GetLink()
 		{ return fLink; }
@@ -315,10 +322,7 @@ Link::Link(const ZRef<Link>& iParent, const ZRef<ZYadMat>& iYadMat)
 :	fProtoName(iParent->fProtoName)
 ,	fParent(iParent)
 ,	fYadMat(iYadMat)
-	{
-	// It's an error and a problem if iYadMat is a YadTree::YadMat.
-	ZAssert(not iYadMat.DynamicCast<YadMat>());
-	}
+	{}
 
 ZRef<ZYadMat> Link::GetYadMat()
 	{ return fYadMat; }
@@ -369,6 +373,7 @@ ZRef<ZYadR> Link::ReadAt(const string& iName)
 					{}
 				}
 						
+			// Walk down the tree.
 			for (;;)
 				{
 				if (ZRef<ZYadR> theYadR = cur->ReadAt(theTrail.At(index)))

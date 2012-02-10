@@ -255,6 +255,8 @@ public:
 
 // Our protocol
 	virtual ZRef<ZYadR> ReadAt(const std::string& iName) = 0;
+
+	virtual ZQ<ZAny> QAsAny();
 	};
 
 // =================================================================================================

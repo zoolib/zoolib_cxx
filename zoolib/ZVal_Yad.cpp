@@ -135,7 +135,7 @@ ZQ<ZAny> ZVal_Yad::pQAsAny() const
 		return null;
 
 	if (ZRef<ZYadSat> theYad = fYad.DynamicCast<ZYadSat>())
-		return sFromYadR(ZVal_Any(), theYad).AsAny();
+		return ZSeq_Yad(theYad);
 
 	if (ZRef<ZYadMat> theYad = fYad.DynamicCast<ZYadMat>())
 		return ZMap_Yad(theYad);
