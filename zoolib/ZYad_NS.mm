@@ -65,22 +65,22 @@ ZYadStrimR_NS::ZYadStrimR_NS(NSString* iString)
 	{}
 
 // =================================================================================================
-// MARK: - ZYadSeqRPos_NS
+// MARK: - ZYadSatRPos_NS
 
-ZYadSeqRPos_NS::ZYadSeqRPos_NS(NSArray* iArray)
+ZYadSatRPos_NS::ZYadSatRPos_NS(NSArray* iArray)
 :	ZYadR_NS(iArray)
 ,	YadSeqBase_t(iArray)
 	{}
 
-ZYadSeqRPos_NS::ZYadSeqRPos_NS(NSArray* iArray, uint64 iPosition)
+ZYadSatRPos_NS::ZYadSatRPos_NS(NSArray* iArray, uint64 iPosition)
 :	ZYadR_NS(iArray)
 ,	YadSeqBase_t(iArray, iPosition)
 	{}
 
 // =================================================================================================
-// MARK: - ZYadMapRPos_NS
+// MARK: - ZYadMatRPos_NS
 
-ZYadMapRPos_NS::ZYadMapRPos_NS(NSDictionary* iDictionary,
+ZYadMatRPos_NS::ZYadMatRPos_NS(NSDictionary* iDictionary,
 	uint64 iPosition,
 	const ZSeq_NS& iNames,
 	const ZSeq_NS& iValues)
@@ -91,16 +91,18 @@ ZYadMapRPos_NS::ZYadMapRPos_NS(NSDictionary* iDictionary,
 ,	fValues(iValues)
 	{}
 
-ZYadMapRPos_NS::ZYadMapRPos_NS(NSDictionary* iDictionary)
+ZYadMatRPos_NS::ZYadMatRPos_NS(NSDictionary* iDictionary)
 :	ZYadR_NS(iDictionary)
 ,	fDictionary(iDictionary)
-,	fPosition(0)
+,	fPosition(-1)
 ,	fNames([iDictionary allKeys])
 ,	fValues([iDictionary allValues])
 	{}
 
-ZRef<ZYadR> ZYadMapRPos_NS::ReadInc(string& oName)
+ZRef<ZYadR> ZYadMatRPos_NS::ReadInc(string& oName)
 	{
+	this->pSetupPosition();
+
 	if (fPosition < fNames.Count())
 		{
 		oName = fNames.Get(fPosition).GetString();
@@ -109,17 +111,33 @@ ZRef<ZYadR> ZYadMapRPos_NS::ReadInc(string& oName)
 	return null;
 	}
 
-ZRef<ZYadMapRClone> ZYadMapRPos_NS::Clone()
-	{ return new ZYadMapRPos_NS(fDictionary, fPosition, fNames, fValues); }
+ZRef<ZYadMapRClone> ZYadMatRPos_NS::Clone()
+	{ return new ZYadMatRPos_NS(fDictionary, fPosition, fNames, fValues); }
 
-void ZYadMapRPos_NS::SetPosition(const std::string& iName)
+void ZYadMatRPos_NS::SetPosition(const std::string& iName)
 	{
+	this->pSetupPosition();
+
 	const size_t count = fNames.Count();
 	for (fPosition = 0; fPosition < count; ++fPosition)
 		{
 		if (iName == fNames.Get(fPosition).GetString())
 			break;
 		}
+	}
+
+ZRef<ZYadR> ZYadMatRPos_NS::ReadAt(const std::string& iName)
+	{ return sYadR((NSObject*)[fDictionary.Get() valueForKey:ZUtil_NS::sString(iName)]); }
+
+void ZYadMatRPos_NS::pSetupPosition()
+	{
+	if (fPosition != -1)
+		return;
+
+	fPosition = 0;
+
+	fNames = [fDictionary.Get() allKeys];
+	fValues = [fDictionary.Get() allValues];
 	}
 
 // =================================================================================================
@@ -130,10 +148,10 @@ ZRef<ZYadR> sYadR(NSObject* iVal)
 	const ZVal_NS theVal = iVal;
 
 	if (ZQ<ZMap_NS> theQ = theVal.QGetMap())
-		return new ZYadMapRPos_NS(*theQ);
+		return new ZYadMatRPos_NS(*theQ);
 
 	if (ZQ<ZSeq_NS> theQ = theVal.QGetSeq())
-		return new ZYadSeqRPos_NS(*theQ);
+		return new ZYadSatRPos_NS(*theQ);
 
 	if (ZQ<ZData_NS> theQ = theVal.QGetData())
 		return new ZYadStreamRPos_NS(*theQ);
@@ -156,24 +174,24 @@ ZRef<ZYadStreamR> sYadR(NSMutableData* iData)
 ZRef<ZYadStreamR> sYadR(NSData* iData)
 	{ return new ZYadStreamRPos_NS(iData); }
 
-ZRef<ZYadSeqRPos> sYadR(NSMutableArray* iArray)
-	{ return new ZYadSeqRPos_NS(iArray); }
+ZRef<ZYadSatRPos> sYadR(NSMutableArray* iArray)
+	{ return new ZYadSatRPos_NS(iArray); }
 
-ZRef<ZYadSeqRPos> sYadR(NSArray* iArray)
-	{ return new ZYadSeqRPos_NS(iArray); }
+ZRef<ZYadSatRPos> sYadR(NSArray* iArray)
+	{ return new ZYadSatRPos_NS(iArray); }
 
-ZRef<ZYadMapRPos> sYadR(NSMutableDictionary* iDictionary)
-	{ return new ZYadMapRPos_NS(iDictionary); }
+ZRef<ZYadMatRPos> sYadR(NSMutableDictionary* iDictionary)
+	{ return new ZYadMatRPos_NS(iDictionary); }
 
-ZRef<ZYadMapRPos> sYadR(NSDictionary* iDictionary)
-	{ return new ZYadMapRPos_NS(iDictionary); }
+ZRef<ZYadMatRPos> sYadR(NSDictionary* iDictionary)
+	{ return new ZYadMatRPos_NS(iDictionary); }
 
 // =================================================================================================
 // MARK: - sFromYadR
 
 namespace { // anonymous
 
-class Visitor_GetVal : public ZVisitor_Yad
+class Visitor_GetVal : public ZVisitor_Yad_PreferAt
 	{
 public:
 	Visitor_GetVal(ZRef<NSObject> iDefault);

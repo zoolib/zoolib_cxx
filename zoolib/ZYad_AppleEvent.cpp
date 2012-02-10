@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(AppleEvent)
 
 #include "zoolib/ZYad_Any.h"
-//#include "zoolib/ZYad_Std.h"
 
 namespace ZooLib {
 
@@ -51,25 +50,25 @@ static ZMap_Any spAsMap(const AEDesc& iAEDesc)
 ZRef<ZYadR> sYadR(const ZVal_AppleEvent& iVal)
 	{
 	if (ZQ<ZMap_AppleEvent> theQ = iVal.QGet<ZMap_AppleEvent>())
-		return new ZYadMapRPos_AppleEvent(theQ.Get());
+		return sYadR(*theQ);
 
 	if (ZQ<ZSeq_AppleEvent> theQ = iVal.QGet<ZSeq_AppleEvent>())
-		return new ZYadSeqRPos_AppleEvent(theQ.Get());
+		return sYadR(*theQ);
 
 	if (ZQ<string8> theQ = iVal.QGet<string8>())
-		return sYadR(theQ.Get());
+		return sYadR(*theQ);
 
 //	if (iVal.QGetData(asData))
 //		return new ZYadStreamRPos_AppleEvent(asData);
 
-	return new ZYadMapRPos_Any(spAsMap(iVal));
+	return sYadR(spAsMap(iVal));
 	}
 
-ZRef<ZYadSeqRPos> sYadR(const ZSeq_AppleEvent& iSeq)
-	{ return new ZYadSeqRPos_AppleEvent(iSeq); }
+ZRef<ZYadSatRPos> sYadR(const ZSeq_AppleEvent& iSeq)
+	{ return new ZYadSatRPos_AppleEvent(iSeq); }
 
-ZRef<ZYadMapRPos> sYadR(const ZMap_AppleEvent& iMap)
-	{ return new ZYadMapRPos_AppleEvent(iMap); }
+ZRef<ZYadMatRPos> sYadR(const ZMap_AppleEvent& iMap)
+	{ return new ZYadMatRPos_AppleEvent(iMap); }
 
 } // namespace ZooLib
 

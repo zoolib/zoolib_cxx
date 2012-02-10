@@ -28,8 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 typedef ZYadStreamRPos_Val_T<ZData_Any> ZYadStreamRPos_Any;
-typedef ZYadSeqRPos_Val_T<ZSeq_Any> ZYadSeqRPos_Any;
-typedef ZYadMapRPos_Val_T<ZMap_Any> ZYadMapRPos_Any;
+typedef ZYadSatRPos_Val_T<ZSeq_Any> ZYadSatRPos_Any;
+typedef ZYadMatRPos_Val_T<ZMap_Any> ZYadMatRPos_Any;
 
 // =================================================================================================
 // MARK: - sYadR
@@ -38,9 +38,9 @@ ZRef<ZYadR> sYadR(const ZAny& iVal);
 
 ZRef<ZYadStreamR> sYadR(const ZData_Any& iData);
 
-ZRef<ZYadSeqRPos> sYadR(const ZSeq_Any& iSeq);
+ZRef<ZYadSatRPos> sYadR(const ZSeq_Any& iSeq);
 
-ZRef<ZYadMapRPos> sYadR(const ZMap_Any& iMap);
+ZRef<ZYadMatRPos> sYadR(const ZMap_Any& iMap);
 
 // =================================================================================================
 // MARK: - sFromYadR

@@ -26,11 +26,6 @@ namespace ZooLib {
 namespace ZPhotoshop {
 
 // =================================================================================================
-// MARK: - YadR
-
-typedef ZYadR_Val_T<Val> YadR;
-
-// =================================================================================================
 // MARK: - Helpers
 
 static bool spAppendIfASCII(char iChar, string& ioString)
@@ -63,25 +58,25 @@ static ZVal_Any spIntAsVal(int32 iInt)
 	}
 
 // =================================================================================================
-// MARK: - YadSeqRPos
+// MARK: - YadSatRPos
 
-typedef ZYadSeqRPos_Val_T<Seq> YadSeqRPos;
-
-// =================================================================================================
-// MARK: - YadMapRPos
-
-typedef ZYadMapRPos_Val_T<Map> YadMapRPos;
+typedef ZYadSatRPos_Val_T<Seq> YadSatRPos;
 
 // =================================================================================================
-// MARK: - ZPhotoshop::MakeYadR
+// MARK: - YadMatRPos
+
+typedef ZYadMatRPos_Val_T<Map> YadMatRPos;
+
+// =================================================================================================
+// MARK: - ZPhotoshop::sYadR
 
 ZRef<ZYadR> sYadR(const Val& iVal)
 	{
 	if (const Map* asMap = iVal.PGet<Map>())
-		return new YadMapRPos(*asMap);
+		sYadR(*asMap);
 
 	if (const Seq* asSeq = iVal.PGet<Seq>())
-		return new YadSeqRPos(*asSeq);
+		sYadR(*asSeq);
 
 	if (const UnitFloat* asUnitFloat = iVal.PGet<UnitFloat>())
 		{
@@ -125,11 +120,11 @@ ZRef<ZYadR> sYadR(const Val& iVal)
 	return new ZYadAtomR_Any(iVal.AsAny());
 	}
 
-ZRef<ZYadSeqRPos> sYadR(const Seq& iSeq)
-	{ return new YadSeqRPos(iSeq); }
+ZRef<ZYadSatRPos> sYadR(const Seq& iSeq)
+	{ return new YadSatRPos(iSeq); }
 
-ZRef<ZYadMapRPos> sYadR(const Map& iMap)
-	{ return new YadMapRPos(iMap); }
+ZRef<ZYadMatRPos> sYadR(const Map& iMap)
+	{ return new YadMatRPos(iMap); }
 
 } // namespace ZPhotoshop
 } // namespace ZooLib

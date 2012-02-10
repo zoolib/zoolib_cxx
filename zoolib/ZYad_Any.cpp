@@ -49,11 +49,11 @@ ZRef<ZYadR> sYadR(const ZAny& iVal)
 ZRef<ZYadStreamR> sYadR(const ZData_Any& iData)
 	{ return new ZYadStreamRPos_Any(iData); }
 
-ZRef<ZYadSeqRPos> sYadR(const ZSeq_Any& iSeq)
-	{ return new ZYadSeqRPos_Any(iSeq); }
+ZRef<ZYadSatRPos> sYadR(const ZSeq_Any& iSeq)
+	{ return new ZYadSatRPos_Any(iSeq); }
 
-ZRef<ZYadMapRPos> sYadR(const ZMap_Any& iMap)
-	{ return new ZYadMapRPos_Any(iMap); }
+ZRef<ZYadMatRPos> sYadR(const ZMap_Any& iMap)
+	{ return new ZYadMatRPos_Any(iMap); }
 
 // =================================================================================================
 // MARK: - sFromYadR
@@ -62,75 +62,65 @@ namespace { // anonymous
 
 class Visitor_Do_GetVal
 :	public virtual ZVisitor_Do_T<ZVal_Any>
-,	public virtual ZVisitor_Yad
+,	public virtual ZVisitor_Yad_PreferRPos
 	{
 public:
-	Visitor_Do_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault);
-
 // From ZVisitor_Yad
-	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR);
-	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR);
-	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR);
-	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR);
-	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR);
+	Visitor_Do_GetVal(bool iRepeatedPropsAsSeq)
+	:	fRepeatedPropsAsSeq(iRepeatedPropsAsSeq)
+		{}
+
+	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
+		{ this->pSetResult(iYadAtomR->AsAny()); }
+
+	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
+		{ this->pSetResult(sReadAll_T<ZData_Any>(iYadStreamR->GetStreamR())); }
+
+	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
+		{ this->pSetResult(iYadStrimR->GetStrimR().ReadAll8()); }
+
+	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
+		{
+		ZSeq_Any theSeq;
+
+		while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
+			theSeq.Append(this->Do(theChild));
+
+		this->pSetResult(theSeq);
+		}
+
+	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
+		{
+		ZMap_Any theMap;
+
+		string theName;
+		while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
+			{
+			ZVal_Any theVal = this->Do(theChild);
+			if (fRepeatedPropsAsSeq)
+				{
+				if (ZVal_Any* prior = theMap.PGetMutable(theName))
+					{
+					if (ZSeq_Any* priorSeq = prior->PGetMutable<ZSeq_Any>())
+						{
+						priorSeq->Append(theVal);
+						continue;
+						}
+					ZSeq_Any theSeq;
+					theSeq.Append(*prior);
+					theSeq.Append(theVal);
+					theVal = theSeq;
+					}
+				}
+			theMap.Set(theName, theVal);
+			}
+
+		this->pSetResult(theMap);
+		}
 
 private:
 	bool fRepeatedPropsAsSeq;
-	const ZVal_Any& fDefault;
 	};
-
-Visitor_Do_GetVal::Visitor_Do_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault)
-:	fRepeatedPropsAsSeq(iRepeatedPropsAsSeq)
-,	fDefault(iDefault)
-	{}
-
-void Visitor_Do_GetVal::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
-	{ this->pSetResult(iYadAtomR->AsAny()); }
-
-void Visitor_Do_GetVal::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
-	{ this->pSetResult(sReadAll_T<ZData_Any>(iYadStreamR->GetStreamR())); }
-
-void Visitor_Do_GetVal::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
-	{ this->pSetResult(iYadStrimR->GetStrimR().ReadAll8()); }
-
-void Visitor_Do_GetVal::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
-	{
-	ZSeq_Any theSeq;
-
-	while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
-		theSeq.Append(this->Do(theChild));
-
-	this->pSetResult(theSeq);
-	}
-
-void Visitor_Do_GetVal::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
-	{
-	ZMap_Any theMap;
-
-	string theName;
-	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
-		{
-		ZVal_Any theVal = this->Do(theChild);
-		if (fRepeatedPropsAsSeq)
-			{
-			if (ZVal_Any* prior = theMap.PGetMutable(theName))
-				{
-				if (ZSeq_Any* priorSeq = prior->PGetMutable<ZSeq_Any>())
-					{
-					priorSeq->Append(theVal);
-					continue;
-					}
-				ZSeq_Any theSeq;
-				theSeq.Append(*prior);
-				theSeq.Append(theVal);
-				theVal = theSeq;
-				}
-			}
-		theMap.Set(theName, theVal);
-		}
-
-	this->pSetResult(theMap);
-	}
 
 } // anonymous namespace
 
@@ -151,13 +141,13 @@ ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYad
 	if (ZRef<ZYadStreamRPos_Any> asYadStream = iYadR.DynamicCast<ZYadStreamRPos_Any>())
 		return asYadStream->GetStream().GetData();
 
-	if (ZRef<ZYadMapRPos_Any> asMap = iYadR.DynamicCast<ZYadMapRPos_Any>())
+	if (ZRef<ZYadMatRPos_Any> asMap = iYadR.DynamicCast<ZYadMatRPos_Any>())
 		return asMap->GetMap();
 
-	if (ZRef<ZYadSeqRPos_Any> asSeq = iYadR.DynamicCast<ZYadSeqRPos_Any>())
+	if (ZRef<ZYadSatRPos_Any> asSeq = iYadR.DynamicCast<ZYadSatRPos_Any>())
 		return asSeq->GetSeq();
 
-	return Visitor_Do_GetVal(iRepeatedPropsAsSeq, iDefault).Do(iYadR);
+	return Visitor_Do_GetVal(iRepeatedPropsAsSeq).DDo(iDefault, iYadR);
 	}
 
 } // namespace ZooLib

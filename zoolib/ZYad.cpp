@@ -262,12 +262,6 @@ bool ZYadSeqRPos::Skip()
 void ZYadSeqRPos::SkipAll()
 	{ this->SetPosition(this->GetSize()); }
 
-ZRef<ZYadR> ZYadSeqRPos::ReadAt(uint64 iPosition)
-	{
-	this->SetPosition(iPosition);
-	return this->ReadInc();
-	}
-
 // =================================================================================================
 // MARK: - ZYadMapR
 
@@ -305,27 +299,32 @@ void ZYadMapRClone::Accept_Yad(ZVisitor_Yad& iVisitor)
 // =================================================================================================
 // MARK: - ZYadMapRPos
 
-/**
-\class ZYadMapRPos
-\ingroup Yad
-\sa Yad
-
-*/
-
 void ZYadMapRPos::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ iVisitor.Visit_YadMapRPos(this); }
 
-ZRef<ZYadR> ZYadMapRPos::ReadAt(const std::string& iName)
-	{
-	this->SetPosition(iName);
-	string8 theName;
-	if (ZRef<ZYadR> result = this->ReadInc(theName))
-		{
-		if (theName == iName)
-			return result;
-		}
-	return null;
-	}
+// =================================================================================================
+// MARK: - ZYadSat
+
+void ZYadSat::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadSat(this); }
+
+// =================================================================================================
+// MARK: - ZYadMat
+
+void ZYadMat::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadMat(this); }
+
+// =================================================================================================
+// MARK: - ZYadSatRPos
+
+void ZYadSatRPos::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadSatRPos(this); }
+
+// =================================================================================================
+// MARK: - ZYadMatRPos
+
+void ZYadMatRPos::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadMatRPos(this); }
 
 // =================================================================================================
 // MARK: - ZVisitor_Yad
@@ -366,6 +365,42 @@ void ZVisitor_Yad::Visit_YadMapRClone(const ZRef<ZYadMapRClone>& iYadMapRClone)
 
 void ZVisitor_Yad::Visit_YadMapRPos(const ZRef<ZYadMapRPos>& iYadMapRPos)
 	{ this->Visit_YadMapRClone(iYadMapRPos); }
+
+void ZVisitor_Yad::Visit_YadSat(const ZRef<ZYadSat>& iYadSat)
+	{ this->Visit_YadR(iYadSat); }
+
+void ZVisitor_Yad::Visit_YadSatRPos(const ZRef<ZYadSatRPos>& iYadSatRPos)
+	{
+	this->Visit_YadSat(iYadSatRPos);
+	this->Visit_YadSeqRPos(iYadSatRPos);
+	}
+
+void ZVisitor_Yad::Visit_YadMat(const ZRef<ZYadMat>& iYadMat)
+	{ this->Visit_YadR(iYadMat); }
+
+void ZVisitor_Yad::Visit_YadMatRPos(const ZRef<ZYadMatRPos>& iYadMatRPos)
+	{
+	this->Visit_YadMat(iYadMatRPos);
+	this->Visit_YadMapRPos(iYadMatRPos);
+	}
+
+// =================================================================================================
+// MARK: - ZVisitor_Yad_PreferRPos
+
+void ZVisitor_Yad_PreferRPos::Visit_YadSatRPos(const ZRef<ZYadSatRPos>& iYadSatRPos)
+	{ this->Visit_YadSeqRPos(iYadSatRPos); }
+
+void ZVisitor_Yad_PreferRPos::Visit_YadMatRPos(const ZRef<ZYadMatRPos>& iYadMatRPos)
+	{ this->Visit_YadMapRPos(iYadMatRPos); }
+
+// =================================================================================================
+// MARK: - ZVisitor_Yad_PreferAt
+
+void ZVisitor_Yad_PreferAt::Visit_YadSatRPos(const ZRef<ZYadSatRPos>& iYadSatRPos)
+	{ this->Visit_YadSat(iYadSatRPos); }
+
+void ZVisitor_Yad_PreferAt::Visit_YadMatRPos(const ZRef<ZYadMatRPos>& iYadMatRPos)
+	{ this->Visit_YadMat(iYadMatRPos); }
 
 // =================================================================================================
 // MARK: - ZYadAtomR_Any

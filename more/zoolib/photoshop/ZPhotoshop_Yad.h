@@ -35,9 +35,9 @@ namespace ZPhotoshop {
 
 ZRef<ZYadR> sYadR(const Val& iVal);
 
-ZRef<ZYadSeqRPos> sYadR(const Seq& iSeq);
+ZRef<ZYadSatRPos> sYadR(const Seq& iSeq);
 
-ZRef<ZYadMapRPos> sYadR(const Map& iMap);
+ZRef<ZYadMatRPos> sYadR(const Map& iMap);
 
 } // namespace ZPhotoshop
 } // namespace ZooLib

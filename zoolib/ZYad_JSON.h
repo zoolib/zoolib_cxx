@@ -143,7 +143,7 @@ private:
 // =================================================================================================
 // MARK: - Visitor_Writer
 
-class Visitor_Writer : public ZVisitor_Yad
+class Visitor_Writer : public ZVisitor_Yad_PreferRPos
 	{
 public:
 	Visitor_Writer
