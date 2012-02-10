@@ -77,24 +77,24 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadSatRPos_Val_T
+// MARK: - ZYadSeqAtRPos_Val_T
 
 template <class Seq_t>
-class ZYadSatRPos_Val_T
-:	public ZYadSatRPos
+class ZYadSeqAtRPos_Val_T
+:	public ZYadSeqAtRPos
 	{
 public:
-	ZYadSatRPos_Val_T(const Seq_t& iSeq)
+	ZYadSeqAtRPos_Val_T(const Seq_t& iSeq)
 	:	fSeq(iSeq)
 	,	fPosition(0)
 		{}
 
-	ZYadSatRPos_Val_T(const Seq_t& iSeq, uint64 iPosition)
+	ZYadSeqAtRPos_Val_T(const Seq_t& iSeq, uint64 iPosition)
 	:	fSeq(iSeq)
 	,	fPosition(iPosition)
 		{}
 
-// From ZYadSeqR via ZYadSatRPos
+// From ZYadSeqR via ZYadSeqAtRPos
 	virtual ZRef<ZYadR> ReadInc()
 		{
 		if (fPosition < fSeq.Count())
@@ -102,9 +102,9 @@ public:
 		return null;
 		}
 
-// From ZYadSeqRClone via ZYadSatRPos
+// From ZYadSeqRClone via ZYadSeqAtRPos
 	virtual ZRef<ZYadSeqRClone> Clone()
-		{ return new ZYadSatRPos_Val_T(fSeq, fPosition); }
+		{ return new ZYadSeqAtRPos_Val_T(fSeq, fPosition); }
 
 // From ZYadSeqRPos
 	virtual uint64 GetPosition()
@@ -116,7 +116,7 @@ public:
 	virtual uint64 GetSize()
 		{ return fSeq.Count(); }
 
-// From ZYadSat
+// From ZYadSeqAt
 	virtual uint64 Count()
 		{ return fSeq.Count(); }
 
@@ -137,30 +137,30 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZYadSatRPos_Val_Self_T
+// MARK: - ZYadSeqAtRPos_Val_Self_T
 
 // Urgh, quite an ugly name.
 
 template <class Self_t, class Seq_t>
-class ZYadSatRPos_Val_Self_T
-:	public ZYadSatRPos
+class ZYadSeqAtRPos_Val_Self_T
+:	public ZYadSeqAtRPos
 	{
 public:
-	typedef ZYadSatRPos_Val_Self_T YadSeqBase_t;
+	typedef ZYadSeqAtRPos_Val_Self_T YadSeqBase_t;
 
 protected:
-	ZYadSatRPos_Val_Self_T(const Seq_t& iSeq)
+	ZYadSeqAtRPos_Val_Self_T(const Seq_t& iSeq)
 	:	fSeq(iSeq)
 	,	fPosition(0)
 		{}
 
-	ZYadSatRPos_Val_Self_T(const Seq_t& iSeq, uint64 iPosition)
+	ZYadSeqAtRPos_Val_Self_T(const Seq_t& iSeq, uint64 iPosition)
 	:	fSeq(iSeq)
 	,	fPosition(iPosition)
 		{}
 
 public:
-// From ZYadSeqR via ZYadSatRPos
+// From ZYadSeqR via ZYadSeqAtRPos
 	virtual ZRef<ZYadR> ReadInc()
 		{
 		if (fPosition < fSeq.Count())
@@ -168,7 +168,7 @@ public:
 		return null;
 		}
 
-// From ZYadSeqRClone via ZYadSatRPos
+// From ZYadSeqRClone via ZYadSeqAtRPos
 	virtual ZRef<ZYadSeqRClone> Clone()
 		{ return new Self_t(fSeq, fPosition); }
 
@@ -182,7 +182,7 @@ public:
 	virtual uint64 GetSize()
 		{ return fSeq.Count(); }
 
-// From ZYadSat
+// From ZYadSeqAt
 	virtual uint64 Count()
 		{ return fSeq.Count(); }
 
@@ -199,26 +199,26 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZYadMatRPos_Val_T
+// MARK: - ZYadMapAtRPos_Val_T
 
 template <class Map_t, class Index_P = typename Map_t::Index_t>
-class ZYadMatRPos_Val_T
-:	public ZYadMatRPos
+class ZYadMapAtRPos_Val_T
+:	public ZYadMapAtRPos
 	{
 public:
 	typedef Index_P Index_t;
 
-	ZYadMatRPos_Val_T(const Map_t& iMap)
+	ZYadMapAtRPos_Val_T(const Map_t& iMap)
 	:	fMap(iMap)
 	,	fIndex(fMap.Begin())
 		{}
 
-	ZYadMatRPos_Val_T(const Map_t& iMap, const Index_t& iIndex)
+	ZYadMapAtRPos_Val_T(const Map_t& iMap, const Index_t& iIndex)
 	:	fMap(iMap)
 	,	fIndex(fMap.IndexOf(iMap, iIndex))
 		{}
 
-// From ZYadMapR via ZYadMatRPos
+// From ZYadMapR via ZYadMapAtRPos
 	ZRef<ZYadR> ReadInc(std::string& oName)
 		{
 		if (fIndex != fMap.End())
@@ -229,15 +229,15 @@ public:
 		return null;
 		}
 
-// From ZYadMapRClone via ZYadMatRPos
+// From ZYadMapRClone via ZYadMapAtRPos
 	virtual ZRef<ZYadMapRClone> Clone()
-		{ return new ZYadMatRPos_Val_T(fMap, fIndex); }
+		{ return new ZYadMapAtRPos_Val_T(fMap, fIndex); }
 
-// From ZYadMatRPos
+// From ZYadMapAtRPos
 	void SetPosition(const std::string& iName)
 		{ fIndex = fMap.IndexOf(iName); }
 
-// From ZYadMat
+// From ZYadMapAt
 	virtual ZRef<ZYadR> ReadAt(const std::string& iName)
 		{
 		Index_t theIndex = fMap.IndexOf(iName);
@@ -259,29 +259,29 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZYadMatRPos_Val_Self_T
+// MARK: - ZYadMapAtRPos_Val_Self_T
 
 template <class Self_t, class Map_t, class Index_P = typename Map_t::Index_t>
-class ZYadMatRPos_Val_Self_T
-:	public ZYadMatRPos
+class ZYadMapAtRPos_Val_Self_T
+:	public ZYadMapAtRPos
 	{
 public:
 	typedef Index_P Index_t;
 
 protected:
-	typedef ZYadMatRPos_Val_Self_T YadMapBase_t;
-	ZYadMatRPos_Val_Self_T(const Map_t& iMap)
+	typedef ZYadMapAtRPos_Val_Self_T YadMapBase_t;
+	ZYadMapAtRPos_Val_Self_T(const Map_t& iMap)
 	:	fMap(iMap)
 	,	fIndex(fMap.Begin())
 		{}
 
-	ZYadMatRPos_Val_Self_T(const Map_t& iMap, const Index_t& iIndex)
+	ZYadMapAtRPos_Val_Self_T(const Map_t& iMap, const Index_t& iIndex)
 	:	fMap(iMap)
 	,	fIndex(iIndex)
 		{}
 
 public:
-// From ZYadMapR via ZYadMatRPos
+// From ZYadMapR via ZYadMapAtRPos
 	ZRef<ZYadR> ReadInc(std::string& oName)
 		{
 		if (fIndex != fMap.End())
@@ -292,15 +292,15 @@ public:
 		return null;
 		}
 
-// From ZYadMapRClone via ZYadMatRPos
+// From ZYadMapRClone via ZYadMapAtRPos
 	virtual ZRef<ZYadMapRClone> Clone()
 		{ return new Self_t(fMap, fIndex); }
 
-// From ZYadMatRPos
+// From ZYadMapAtRPos
 	void SetPosition(const std::string& iName)
 		{ fIndex = fMap.IndexOf(iName); }
 
-// From ZYadMat
+// From ZYadMapAt
 	virtual ZRef<ZYadR> ReadAt(const std::string& iName)
 		{
 		Index_t theIndex = fMap.IndexOf(iName);

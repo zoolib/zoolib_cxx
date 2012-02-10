@@ -49,11 +49,11 @@ ZRef<ZYadR> sYadR(const ZAny& iVal)
 ZRef<ZYadStreamR> sYadR(const ZData_Any& iData)
 	{ return new ZYadStreamRPos_Any(iData); }
 
-ZRef<ZYadSatRPos> sYadR(const ZSeq_Any& iSeq)
-	{ return new ZYadSatRPos_Any(iSeq); }
+ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_Any& iSeq)
+	{ return new ZYadSeqAtRPos_Any(iSeq); }
 
-ZRef<ZYadMatRPos> sYadR(const ZMap_Any& iMap)
-	{ return new ZYadMatRPos_Any(iMap); }
+ZRef<ZYadMapAtRPos> sYadR(const ZMap_Any& iMap)
+	{ return new ZYadMapAtRPos_Any(iMap); }
 
 // =================================================================================================
 // MARK: - sFromYadR
@@ -141,10 +141,10 @@ ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYad
 	if (ZRef<ZYadStreamRPos_Any> asYadStream = iYadR.DynamicCast<ZYadStreamRPos_Any>())
 		return asYadStream->GetStream().GetData();
 
-	if (ZRef<ZYadMatRPos_Any> asMap = iYadR.DynamicCast<ZYadMatRPos_Any>())
+	if (ZRef<ZYadMapAtRPos_Any> asMap = iYadR.DynamicCast<ZYadMapAtRPos_Any>())
 		return asMap->GetMap();
 
-	if (ZRef<ZYadSatRPos_Any> asSeq = iYadR.DynamicCast<ZYadSatRPos_Any>())
+	if (ZRef<ZYadSeqAtRPos_Any> asSeq = iYadR.DynamicCast<ZYadSeqAtRPos_Any>())
 		return asSeq->GetSeq();
 
 	return Visitor_Do_GetVal(iRepeatedPropsAsSeq).DDo(iDefault, iYadR);

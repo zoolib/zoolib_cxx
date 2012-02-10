@@ -87,42 +87,42 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadSatRPos_CF
+// MARK: - ZYadSeqAtRPos_CF
 
-class ZYadSatRPos_CF
+class ZYadSeqAtRPos_CF
 :	public ZYadR_CF
-,	public ZYadSatRPos_Val_Self_T<ZYadSatRPos_CF, ZSeq_CF>
+,	public ZYadSeqAtRPos_Val_Self_T<ZYadSeqAtRPos_CF, ZSeq_CF>
 	{
 public:
-	ZYadSatRPos_CF(CFArrayRef iArray);
-	ZYadSatRPos_CF(CFArrayRef iArray, uint64 iPosition);
+	ZYadSeqAtRPos_CF(CFArrayRef iArray);
+	ZYadSeqAtRPos_CF(CFArrayRef iArray, uint64 iPosition);
 	};
 
 // =================================================================================================
-// MARK: - ZYadMatRPos_CF
+// MARK: - ZYadMapAtRPos_CF
 
-class ZYadMatRPos_CF
+class ZYadMapAtRPos_CF
 :	public ZYadR_CF
-,	public ZYadMatRPos
+,	public ZYadMapAtRPos
 	{
-	ZYadMatRPos_CF(CFDictionaryRef iDictionary,
+	ZYadMapAtRPos_CF(CFDictionaryRef iDictionary,
 		uint64 iPosition,
 		const std::vector<CFStringRef>& iNames,
 		const std::vector<CFTypeRef>& iValues);
 
 public:
-	ZYadMatRPos_CF(CFDictionaryRef iDictionary);
+	ZYadMapAtRPos_CF(CFDictionaryRef iDictionary);
 
-// From ZYadMapR via ZYadMatRPos
+// From ZYadMapR via ZYadMapAtRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
-// From ZYadMapRClone via ZYadMatRPos
+// From ZYadMapRClone via ZYadMapAtRPos
 	virtual ZRef<ZYadMapRClone> Clone();
 
-// From ZYadMapRPos via ZYadMatRPos
+// From ZYadMapRPos via ZYadMapAtRPos
 	virtual void SetPosition(const std::string& iName);
 
-// From ZYadMatR
+// From ZYadMapAtR
 	virtual ZRef<ZYadR> ReadAt(const std::string& iName);	
 
 private:
@@ -148,13 +148,13 @@ ZRef<ZYadStreamR> sYadR(CFMutableDataRef iData);
 ZRef<ZYadStreamR> sYadR(CFDataRef iData);
 ZRef<ZYadStreamR> sYadR(const ZRef<CFDataRef>& iData);
 
-ZRef<ZYadSatRPos> sYadR(CFMutableArrayRef iArray);
-ZRef<ZYadSatRPos> sYadR(CFArrayRef iArray);
-ZRef<ZYadSatRPos> sYadR(const ZRef<CFArrayRef>& iArray);
+ZRef<ZYadSeqAtRPos> sYadR(CFMutableArrayRef iArray);
+ZRef<ZYadSeqAtRPos> sYadR(CFArrayRef iArray);
+ZRef<ZYadSeqAtRPos> sYadR(const ZRef<CFArrayRef>& iArray);
 
-ZRef<ZYadMatRPos> sYadR(CFMutableDictionaryRef iDictionary);
-ZRef<ZYadMatRPos> sYadR(CFDictionaryRef iDictionary);
-ZRef<ZYadMatRPos> sYadR(const ZRef<CFDictionaryRef>& iDictionary);
+ZRef<ZYadMapAtRPos> sYadR(CFMutableDictionaryRef iDictionary);
+ZRef<ZYadMapAtRPos> sYadR(CFDictionaryRef iDictionary);
+ZRef<ZYadMapAtRPos> sYadR(const ZRef<CFDictionaryRef>& iDictionary);
 
 // =================================================================================================
 // MARK: - sFromYadR

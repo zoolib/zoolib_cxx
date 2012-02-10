@@ -87,42 +87,42 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadSatRPos_NS
+// MARK: - ZYadSeqAtRPos_NS
 
-class ZYadSatRPos_NS
+class ZYadSeqAtRPos_NS
 :	public ZYadR_NS
-,	public ZYadSatRPos_Val_Self_T<ZYadSatRPos_NS, ZSeq_NS>
+,	public ZYadSeqAtRPos_Val_Self_T<ZYadSeqAtRPos_NS, ZSeq_NS>
 	{
 public:
-	ZYadSatRPos_NS(NSArray* iArray);
-	ZYadSatRPos_NS(NSArray* iArray, uint64 iPosition);
+	ZYadSeqAtRPos_NS(NSArray* iArray);
+	ZYadSeqAtRPos_NS(NSArray* iArray, uint64 iPosition);
 	};
 
 // =================================================================================================
-// MARK: - ZYadMatRPos_NS
+// MARK: - ZYadMapAtRPos_NS
 
-class ZYadMatRPos_NS
+class ZYadMapAtRPos_NS
 :	public ZYadR_NS
-,	public ZYadMatRPos
+,	public ZYadMapAtRPos
 	{
-	ZYadMatRPos_NS(NSDictionary* iDictionary,
+	ZYadMapAtRPos_NS(NSDictionary* iDictionary,
 		uint64 iPosition,
 		const ZSeq_NS& iNames,
 		const ZSeq_NS& iValues);
 
 public:
-	ZYadMatRPos_NS(NSDictionary* iDictionary);
+	ZYadMapAtRPos_NS(NSDictionary* iDictionary);
 
-// From ZYadMapR via ZYadMatRPos
+// From ZYadMapR via ZYadMapAtRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
-// From ZYadMapRClone via ZYadMatRPos
+// From ZYadMapRClone via ZYadMapAtRPos
 	virtual ZRef<ZYadMapRClone> Clone();
 
-// From ZYadMapRPos via ZYadMatRPos
+// From ZYadMapRPos via ZYadMapAtRPos
 	virtual void SetPosition(const std::string& iName);
 
-// From ZYadMatR
+// From ZYadMapAtR
 	virtual ZRef<ZYadR> ReadAt(const std::string& iName);	
 
 private:
@@ -145,11 +145,11 @@ ZRef<ZYadStrimR> sYadR(NSString* iString);
 ZRef<ZYadStreamR> sYadR(NSMutableData* iData);
 ZRef<ZYadStreamR> sYadR(NSData* iData);
 
-ZRef<ZYadSatRPos> sYadR(NSMutableArray* iArray);
-ZRef<ZYadSatRPos> sYadR(NSArray* iArray);
+ZRef<ZYadSeqAtRPos> sYadR(NSMutableArray* iArray);
+ZRef<ZYadSeqAtRPos> sYadR(NSArray* iArray);
 
-ZRef<ZYadMatRPos> sYadR(NSMutableDictionary* iDictionary);
-ZRef<ZYadMatRPos> sYadR(NSDictionary* iDictionary);
+ZRef<ZYadMapAtRPos> sYadR(NSMutableDictionary* iDictionary);
+ZRef<ZYadMapAtRPos> sYadR(NSDictionary* iDictionary);
 
 // =================================================================================================
 // MARK: - sFromYadR

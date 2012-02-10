@@ -65,22 +65,22 @@ ZYadStrimR_NS::ZYadStrimR_NS(NSString* iString)
 	{}
 
 // =================================================================================================
-// MARK: - ZYadSatRPos_NS
+// MARK: - ZYadSeqAtRPos_NS
 
-ZYadSatRPos_NS::ZYadSatRPos_NS(NSArray* iArray)
+ZYadSeqAtRPos_NS::ZYadSeqAtRPos_NS(NSArray* iArray)
 :	ZYadR_NS(iArray)
 ,	YadSeqBase_t(iArray)
 	{}
 
-ZYadSatRPos_NS::ZYadSatRPos_NS(NSArray* iArray, uint64 iPosition)
+ZYadSeqAtRPos_NS::ZYadSeqAtRPos_NS(NSArray* iArray, uint64 iPosition)
 :	ZYadR_NS(iArray)
 ,	YadSeqBase_t(iArray, iPosition)
 	{}
 
 // =================================================================================================
-// MARK: - ZYadMatRPos_NS
+// MARK: - ZYadMapAtRPos_NS
 
-ZYadMatRPos_NS::ZYadMatRPos_NS(NSDictionary* iDictionary,
+ZYadMapAtRPos_NS::ZYadMapAtRPos_NS(NSDictionary* iDictionary,
 	uint64 iPosition,
 	const ZSeq_NS& iNames,
 	const ZSeq_NS& iValues)
@@ -91,7 +91,7 @@ ZYadMatRPos_NS::ZYadMatRPos_NS(NSDictionary* iDictionary,
 ,	fValues(iValues)
 	{}
 
-ZYadMatRPos_NS::ZYadMatRPos_NS(NSDictionary* iDictionary)
+ZYadMapAtRPos_NS::ZYadMapAtRPos_NS(NSDictionary* iDictionary)
 :	ZYadR_NS(iDictionary)
 ,	fDictionary(iDictionary)
 ,	fPosition(-1)
@@ -99,7 +99,7 @@ ZYadMatRPos_NS::ZYadMatRPos_NS(NSDictionary* iDictionary)
 ,	fValues([iDictionary allValues])
 	{}
 
-ZRef<ZYadR> ZYadMatRPos_NS::ReadInc(string& oName)
+ZRef<ZYadR> ZYadMapAtRPos_NS::ReadInc(string& oName)
 	{
 	this->pSetupPosition();
 
@@ -111,10 +111,10 @@ ZRef<ZYadR> ZYadMatRPos_NS::ReadInc(string& oName)
 	return null;
 	}
 
-ZRef<ZYadMapRClone> ZYadMatRPos_NS::Clone()
-	{ return new ZYadMatRPos_NS(fDictionary, fPosition, fNames, fValues); }
+ZRef<ZYadMapRClone> ZYadMapAtRPos_NS::Clone()
+	{ return new ZYadMapAtRPos_NS(fDictionary, fPosition, fNames, fValues); }
 
-void ZYadMatRPos_NS::SetPosition(const std::string& iName)
+void ZYadMapAtRPos_NS::SetPosition(const std::string& iName)
 	{
 	this->pSetupPosition();
 
@@ -126,10 +126,10 @@ void ZYadMatRPos_NS::SetPosition(const std::string& iName)
 		}
 	}
 
-ZRef<ZYadR> ZYadMatRPos_NS::ReadAt(const std::string& iName)
+ZRef<ZYadR> ZYadMapAtRPos_NS::ReadAt(const std::string& iName)
 	{ return sYadR((NSObject*)[fDictionary.Get() valueForKey:ZUtil_NS::sString(iName)]); }
 
-void ZYadMatRPos_NS::pSetupPosition()
+void ZYadMapAtRPos_NS::pSetupPosition()
 	{
 	if (fPosition != -1)
 		return;
@@ -148,10 +148,10 @@ ZRef<ZYadR> sYadR(NSObject* iVal)
 	const ZVal_NS theVal = iVal;
 
 	if (ZQ<ZMap_NS> theQ = theVal.QGetMap())
-		return new ZYadMatRPos_NS(*theQ);
+		return new ZYadMapAtRPos_NS(*theQ);
 
 	if (ZQ<ZSeq_NS> theQ = theVal.QGetSeq())
-		return new ZYadSatRPos_NS(*theQ);
+		return new ZYadSeqAtRPos_NS(*theQ);
 
 	if (ZQ<ZData_NS> theQ = theVal.QGetData())
 		return new ZYadStreamRPos_NS(*theQ);
@@ -174,17 +174,17 @@ ZRef<ZYadStreamR> sYadR(NSMutableData* iData)
 ZRef<ZYadStreamR> sYadR(NSData* iData)
 	{ return new ZYadStreamRPos_NS(iData); }
 
-ZRef<ZYadSatRPos> sYadR(NSMutableArray* iArray)
-	{ return new ZYadSatRPos_NS(iArray); }
+ZRef<ZYadSeqAtRPos> sYadR(NSMutableArray* iArray)
+	{ return new ZYadSeqAtRPos_NS(iArray); }
 
-ZRef<ZYadSatRPos> sYadR(NSArray* iArray)
-	{ return new ZYadSatRPos_NS(iArray); }
+ZRef<ZYadSeqAtRPos> sYadR(NSArray* iArray)
+	{ return new ZYadSeqAtRPos_NS(iArray); }
 
-ZRef<ZYadMatRPos> sYadR(NSMutableDictionary* iDictionary)
-	{ return new ZYadMatRPos_NS(iDictionary); }
+ZRef<ZYadMapAtRPos> sYadR(NSMutableDictionary* iDictionary)
+	{ return new ZYadMapAtRPos_NS(iDictionary); }
 
-ZRef<ZYadMatRPos> sYadR(NSDictionary* iDictionary)
-	{ return new ZYadMatRPos_NS(iDictionary); }
+ZRef<ZYadMapAtRPos> sYadR(NSDictionary* iDictionary)
+	{ return new ZYadMapAtRPos_NS(iDictionary); }
 
 // =================================================================================================
 // MARK: - sFromYadR

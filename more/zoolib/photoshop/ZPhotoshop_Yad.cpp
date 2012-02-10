@@ -58,14 +58,14 @@ static ZVal_Any spIntAsVal(int32 iInt)
 	}
 
 // =================================================================================================
-// MARK: - YadSatRPos
+// MARK: - YadSeqAtRPos
 
-typedef ZYadSatRPos_Val_T<Seq> YadSatRPos;
+typedef ZYadSeqAtRPos_Val_T<Seq> YadSeqAtRPos;
 
 // =================================================================================================
-// MARK: - YadMatRPos
+// MARK: - YadMapAtRPos
 
-typedef ZYadMatRPos_Val_T<Map> YadMatRPos;
+typedef ZYadMapAtRPos_Val_T<Map> YadMapAtRPos;
 
 // =================================================================================================
 // MARK: - ZPhotoshop::sYadR
@@ -120,11 +120,11 @@ ZRef<ZYadR> sYadR(const Val& iVal)
 	return new ZYadAtomR_Any(iVal.AsAny());
 	}
 
-ZRef<ZYadSatRPos> sYadR(const Seq& iSeq)
-	{ return new YadSatRPos(iSeq); }
+ZRef<ZYadSeqAtRPos> sYadR(const Seq& iSeq)
+	{ return new YadSeqAtRPos(iSeq); }
 
-ZRef<ZYadMatRPos> sYadR(const Map& iMap)
-	{ return new YadMatRPos(iMap); }
+ZRef<ZYadMapAtRPos> sYadR(const Map& iMap)
+	{ return new YadMapAtRPos(iMap); }
 
 } // namespace ZPhotoshop
 } // namespace ZooLib

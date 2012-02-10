@@ -229,9 +229,9 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadSat
+// MARK: - ZYadSeqAt
 
-class ZYadSat
+class ZYadSeqAt
 :	public virtual ZYadR
 	{
 public:
@@ -244,9 +244,9 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadMat
+// MARK: - ZYadMapAt
 
-class ZYadMat
+class ZYadMapAt
 :	public virtual ZYadR
 	{
 public:
@@ -260,10 +260,10 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadSatRPos
+// MARK: - ZYadSeqAtRPos
 
-class ZYadSatRPos
-:	public virtual ZYadSat
+class ZYadSeqAtRPos
+:	public virtual ZYadSeqAt
 ,	public virtual ZYadSeqRPos
 	{
 // From ZYadR
@@ -271,10 +271,10 @@ class ZYadSatRPos
 	};
 
 // =================================================================================================
-// MARK: - ZYadMatRPos
+// MARK: - ZYadMapAtRPos
 
-class ZYadMatRPos
-:	public virtual ZYadMat
+class ZYadMapAtRPos
+:	public virtual ZYadMapAt
 ,	public virtual ZYadMapRPos
 	{
 // From ZYadR
@@ -301,11 +301,11 @@ public:
 	virtual void Visit_YadMapRClone(const ZRef<ZYadMapRClone>& iYadMapRClone);
 	virtual void Visit_YadMapRPos(const ZRef<ZYadMapRPos>& iYadMapRPos);
 
-	virtual void Visit_YadSat(const ZRef<ZYadSat>& iYadSat);
-	virtual void Visit_YadSatRPos(const ZRef<ZYadSatRPos>& iYadSatRPos);
+	virtual void Visit_YadSeqAt(const ZRef<ZYadSeqAt>& iYadSeqAt);
+	virtual void Visit_YadSeqAtRPos(const ZRef<ZYadSeqAtRPos>& iYadSeqAtRPos);
 
-	virtual void Visit_YadMat(const ZRef<ZYadMat>& iYadMat);
-	virtual void Visit_YadMatRPos(const ZRef<ZYadMatRPos>& iYadMatRPos);
+	virtual void Visit_YadMapAt(const ZRef<ZYadMapAt>& iYadMapAt);
+	virtual void Visit_YadMapAtRPos(const ZRef<ZYadMapAtRPos>& iYadMapAtRPos);
 	};
 
 // =================================================================================================
@@ -315,8 +315,8 @@ class ZVisitor_Yad_PreferRPos
 :	public virtual ZVisitor_Yad
 	{
 public:
-	virtual void Visit_YadSatRPos(const ZRef<ZYadSatRPos>& iYadSatRPos);
-	virtual void Visit_YadMatRPos(const ZRef<ZYadMatRPos>& iYadMatRPos);
+	virtual void Visit_YadSeqAtRPos(const ZRef<ZYadSeqAtRPos>& iYadSeqAtRPos);
+	virtual void Visit_YadMapAtRPos(const ZRef<ZYadMapAtRPos>& iYadMapAtRPos);
 	};
 
 // =================================================================================================
@@ -326,8 +326,8 @@ class ZVisitor_Yad_PreferAt
 :	public virtual ZVisitor_Yad
 	{
 public:
-	virtual void Visit_YadSatRPos(const ZRef<ZYadSatRPos>& iYadSatRPos);
-	virtual void Visit_YadMatRPos(const ZRef<ZYadMatRPos>& iYadMatRPos);
+	virtual void Visit_YadSeqAtRPos(const ZRef<ZYadSeqAtRPos>& iYadSeqAtRPos);
+	virtual void Visit_YadMapAtRPos(const ZRef<ZYadMapAtRPos>& iYadMapAtRPos);
 	};
 
 // =================================================================================================

@@ -31,17 +31,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 typedef ZYadR_Val_T<ZVal_AppleEvent> ZYadR_AppleEvent;
-typedef ZYadSatRPos_Val_T<ZSeq_AppleEvent> ZYadSatRPos_AppleEvent;
-typedef ZYadMatRPos_Val_T<ZMap_AppleEvent> ZYadMatRPos_AppleEvent;
+typedef ZYadSeqAtRPos_Val_T<ZSeq_AppleEvent> ZYadSeqAtRPos_AppleEvent;
+typedef ZYadMapAtRPos_Val_T<ZMap_AppleEvent> ZYadMapAtRPos_AppleEvent;
 
 // =================================================================================================
 // MARK: - sYadR
 
 ZRef<ZYadR> sYadR(const ZVal_AppleEvent& iVal);
 
-ZRef<ZYadSatRPos> sYadR(const ZSeq_AppleEvent& iSeq);
+ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_AppleEvent& iSeq);
 
-ZRef<ZYadMatRPos> sYadR(const ZMap_AppleEvent& iMap);
+ZRef<ZYadMapAtRPos> sYadR(const ZMap_AppleEvent& iMap);
 
 } // namespace ZooLib
 

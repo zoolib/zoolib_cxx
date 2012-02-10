@@ -68,20 +68,20 @@ ZYadStrimR_CF::ZYadStrimR_CF(CFStringRef iStringRef)
 	{}
 
 // =================================================================================================
-// MARK: - ZYadSatRPos_CF
+// MARK: - ZYadSeqAtRPos_CF
 
-ZYadSatRPos_CF::ZYadSatRPos_CF(CFArrayRef iArray)
+ZYadSeqAtRPos_CF::ZYadSeqAtRPos_CF(CFArrayRef iArray)
 :	ZYadR_CF(iArray)
 ,	YadSeqBase_t(iArray)
 	{}
 
-ZYadSatRPos_CF::ZYadSatRPos_CF(CFArrayRef iArray, uint64 iPosition)
+ZYadSeqAtRPos_CF::ZYadSeqAtRPos_CF(CFArrayRef iArray, uint64 iPosition)
 :	ZYadR_CF(iArray)
 ,	YadSeqBase_t(iArray, iPosition)
 	{}
 
 // =================================================================================================
-// MARK: - ZYadMatRPos_CF
+// MARK: - ZYadMapAtRPos_CF
 
 namespace { // anonymous
 
@@ -100,7 +100,7 @@ void spGatherContents(const void* iKey, const void* iValue, void* iRefcon)
 
 } // anonymous namespace
 
-ZYadMatRPos_CF::ZYadMatRPos_CF(CFDictionaryRef iDictionary,
+ZYadMapAtRPos_CF::ZYadMapAtRPos_CF(CFDictionaryRef iDictionary,
 	uint64 iPosition,
 	const std::vector<CFStringRef>& iNames,
 	const std::vector<CFTypeRef>& iValues)
@@ -111,13 +111,13 @@ ZYadMatRPos_CF::ZYadMatRPos_CF(CFDictionaryRef iDictionary,
 ,	fValues(iValues)
 	{}
 
-ZYadMatRPos_CF::ZYadMatRPos_CF(CFDictionaryRef iDictionary)
+ZYadMapAtRPos_CF::ZYadMapAtRPos_CF(CFDictionaryRef iDictionary)
 :	ZYadR_CF(iDictionary)
 ,	fDictionary(iDictionary)
 ,	fPosition(-1)
 	{}
 
-ZRef<ZYadR> ZYadMatRPos_CF::ReadInc(string& oName)
+ZRef<ZYadR> ZYadMapAtRPos_CF::ReadInc(string& oName)
 	{
 	this->pSetupPosition();
 	if (fPosition < fNames.size())
@@ -128,10 +128,10 @@ ZRef<ZYadR> ZYadMatRPos_CF::ReadInc(string& oName)
 	return null;
 	}
 
-ZRef<ZYadMapRClone> ZYadMatRPos_CF::Clone()
-	{ return new ZYadMatRPos_CF(fDictionary, fPosition, fNames, fValues); }
+ZRef<ZYadMapRClone> ZYadMapAtRPos_CF::Clone()
+	{ return new ZYadMapAtRPos_CF(fDictionary, fPosition, fNames, fValues); }
 
-void ZYadMatRPos_CF::SetPosition(const std::string& iName)
+void ZYadMapAtRPos_CF::SetPosition(const std::string& iName)
 	{
 	this->pSetupPosition();
 	for (fPosition = 0; fPosition < fNames.size(); ++fPosition)
@@ -141,7 +141,7 @@ void ZYadMatRPos_CF::SetPosition(const std::string& iName)
 		}
 	}
 
-ZRef<ZYadR> ZYadMatRPos_CF::ReadAt(const std::string& iName)
+ZRef<ZYadR> ZYadMapAtRPos_CF::ReadAt(const std::string& iName)
 	{
 	CFTypeRef theVal;
 	if (::CFDictionaryGetValueIfPresent(fDictionary, ZUtil_CF::sString(iName), &theVal))
@@ -149,7 +149,7 @@ ZRef<ZYadR> ZYadMatRPos_CF::ReadAt(const std::string& iName)
 	return null;
 	}
 
-void ZYadMatRPos_CF::pSetupPosition()
+void ZYadMapAtRPos_CF::pSetupPosition()
 	{
 	if (fPosition != -1)
 		return;
@@ -170,10 +170,10 @@ ZRef<ZYadR> sYadR(CFTypeRef iVal)
 	const ZVal_CF theVal = iVal;
 
 	if (ZQ<ZMap_CF> theQ = theVal.QGet<ZMap_CF>())
-		return new ZYadMatRPos_CF(theQ.Get());
+		return new ZYadMapAtRPos_CF(theQ.Get());
 
 	if (ZQ<ZSeq_CF> theQ = theVal.QGet<ZSeq_CF>())
-		return new ZYadSatRPos_CF(theQ.Get());
+		return new ZYadSeqAtRPos_CF(theQ.Get());
 
 	if (ZQ<ZData_CF> theQ = theVal.QGet<ZData_CF>())
 		return new ZYadStreamRPos_CF(theQ.Get());
@@ -205,22 +205,22 @@ ZRef<ZYadStreamR> sYadR(CFDataRef iData)
 ZRef<ZYadStreamR> sYadR(const ZRef<CFDataRef>& iData)
 	{ return sYadR(iData.Get()); }
 
-ZRef<ZYadSatRPos> sYadR(CFMutableArrayRef iArray)
-	{ return new ZYadSatRPos_CF(iArray); }
+ZRef<ZYadSeqAtRPos> sYadR(CFMutableArrayRef iArray)
+	{ return new ZYadSeqAtRPos_CF(iArray); }
 
-ZRef<ZYadSatRPos> sYadR(CFArrayRef iArray)
-	{ return new ZYadSatRPos_CF(iArray); }
+ZRef<ZYadSeqAtRPos> sYadR(CFArrayRef iArray)
+	{ return new ZYadSeqAtRPos_CF(iArray); }
 
-ZRef<ZYadSatRPos> sYadR(const ZRef<CFArrayRef>& iArray)
+ZRef<ZYadSeqAtRPos> sYadR(const ZRef<CFArrayRef>& iArray)
 	{ return sYadR(iArray.Get()); }
 
-ZRef<ZYadMatRPos> sYadR(CFMutableDictionaryRef iDictionary)
-	{ return new ZYadMatRPos_CF(iDictionary); }
+ZRef<ZYadMapAtRPos> sYadR(CFMutableDictionaryRef iDictionary)
+	{ return new ZYadMapAtRPos_CF(iDictionary); }
 
-ZRef<ZYadMatRPos> sYadR(CFDictionaryRef iDictionary)
-	{ return new ZYadMatRPos_CF(iDictionary); }
+ZRef<ZYadMapAtRPos> sYadR(CFDictionaryRef iDictionary)
+	{ return new ZYadMapAtRPos_CF(iDictionary); }
 
-ZRef<ZYadMatRPos> sYadR(const ZRef<CFDictionaryRef>& iDictionary)
+ZRef<ZYadMapAtRPos> sYadR(const ZRef<CFDictionaryRef>& iDictionary)
 	{ return sYadR(iDictionary.Get()); }
 
 // =================================================================================================

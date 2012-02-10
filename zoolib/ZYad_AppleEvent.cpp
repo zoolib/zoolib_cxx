@@ -64,11 +64,11 @@ ZRef<ZYadR> sYadR(const ZVal_AppleEvent& iVal)
 	return sYadR(spAsMap(iVal));
 	}
 
-ZRef<ZYadSatRPos> sYadR(const ZSeq_AppleEvent& iSeq)
-	{ return new ZYadSatRPos_AppleEvent(iSeq); }
+ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_AppleEvent& iSeq)
+	{ return new ZYadSeqAtRPos_AppleEvent(iSeq); }
 
-ZRef<ZYadMatRPos> sYadR(const ZMap_AppleEvent& iMap)
-	{ return new ZYadMatRPos_AppleEvent(iMap); }
+ZRef<ZYadMapAtRPos> sYadR(const ZMap_AppleEvent& iMap)
+	{ return new ZYadMapAtRPos_AppleEvent(iMap); }
 
 } // namespace ZooLib
 
