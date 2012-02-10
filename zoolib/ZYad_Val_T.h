@@ -127,6 +127,9 @@ public:
 		return null;
 		}
 
+	virtual ZQ<ZAny> QAsAny()
+		{ return fSeq; }
+
 // Our protocol
 	const Seq_t& GetSeq()
 		{ return fSeq; }
@@ -192,6 +195,13 @@ public:
 			return sYadR(fSeq.Get(iPosition));
 		return null;
 		}
+
+	virtual ZQ<ZAny> QAsAny()
+		{ return fSeq; }
+
+// Our protocol
+	const Seq_t& GetSeq()
+		{ return fSeq; }
 
 protected:
 	const Seq_t fSeq;
@@ -308,6 +318,9 @@ public:
 			return fMap.Get(theIndex);
 		return null;
 		}
+
+	virtual ZQ<ZAny> QAsAny()
+		{ return fMap; }
 
 // Our protocol
 	const Map_t& GetMap()

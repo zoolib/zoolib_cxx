@@ -241,6 +241,8 @@ public:
 // Our protocol
 	virtual uint64 Count() = 0;
 	virtual ZRef<ZYadR> ReadAt(uint64 iPosition) = 0;
+
+	virtual ZQ<ZAny> QAsAny();
 	};
 
 // =================================================================================================

@@ -308,6 +308,9 @@ void ZYadMapRPos::Accept_Yad(ZVisitor_Yad& iVisitor)
 void ZYadSeqAt::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ iVisitor.Visit_YadSeqAt(this); }
 
+ZQ<ZAny> ZYadSeqAt::QAsAny()
+	{ return null; }
+
 // =================================================================================================
 // MARK: - ZYadMapAt
 

@@ -205,6 +205,9 @@ public:
 		return theYad;
 		}
 
+	virtual ZQ<ZAny> QAsAny()
+		{ return fYad->QAsAny(); }
+
 // Our protocol
 	ZRef<ZYadSeqAt> GetYad()
 		{ return fYad; }
@@ -270,6 +273,9 @@ public:
 			}
 		return theYad;
 		}
+
+	virtual ZQ<ZAny> QAsAny()
+		{ return fYad->QAsAny(); }
 
 private:
 	const ZRef<Link> fLink;
