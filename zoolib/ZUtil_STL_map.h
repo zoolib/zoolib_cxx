@@ -84,28 +84,28 @@ template <typename KBase, typename Value, typename Comparator, typename KDerived
 ZQ<Value> sEraseAndReturnIfContains(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
 	{ return sQErase(ioMap, iKey); }
 
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
 void sInsertMustNotContain(const int iDebugLevel,
-	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
+	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{
 	const bool didInsert =
 		ioMap.insert(typename std::map<KBase,Value,Comparator>::value_type(iKey, iValue)).second;
 	ZAssertStop(iDebugLevel, didInsert);
 	}
 
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
 void sInsertMustNotContain
-	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
+	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{ sInsertMustNotContain(1, ioMap, iKey, iValue);}
 
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
 bool sInsertIfNotContains
-	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
+	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{
 	return ioMap.insert(typename std::map<KBase,Value,Comparator>::value_type(iKey, iValue)).second;
 	}
 
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
 void sSetMustContain(const int iDebugLevel,
 	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
 	{
@@ -114,13 +114,14 @@ void sSetMustContain(const int iDebugLevel,
 	i->second = iValue;
 	}
 
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
 void sSetMustContain
-	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
+	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{ sSetMustContain(1, ioMap, iKey, iValue); }
 
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-bool sSetIfContains(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
+bool sSetIfContains
+	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{
 	typename std::map<KBase,Value,Comparator>::iterator i = ioMap.find(iKey);
 	if (ioMap.end() == i)
