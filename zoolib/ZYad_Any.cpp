@@ -46,8 +46,8 @@ ZRef<ZYadR> sYadR(const ZAny& iVal)
 	return new ZYadAtomR_Any(iVal);
 	}
 
-ZRef<ZYadStreamR> sYadR(const ZData_Any& iData)
-	{ return new ZYadStreamRPos_Any(iData); }
+ZRef<ZYadStreamerR> sYadR(const ZData_Any& iData)
+	{ return new ZYadStreamerRPos_Any(iData); }
 
 ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_Any& iSeq)
 	{ return new ZYadSeqAtRPos_Any(iSeq); }
@@ -73,11 +73,11 @@ public:
 	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 		{ this->pSetResult(iYadAtomR->AsAny()); }
 
-	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
-		{ this->pSetResult(sReadAll_T<ZData_Any>(iYadStreamR->GetStreamR())); }
+	virtual void Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR)
+		{ this->pSetResult(sReadAll_T<ZData_Any>(iYadStreamerR->GetStreamR())); }
 
-	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
-		{ this->pSetResult(iYadStrimR->GetStrimR().ReadAll8()); }
+	virtual void Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR)
+		{ this->pSetResult(iYadStrimmerR->GetStrimR().ReadAll8()); }
 
 	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 		{
@@ -135,11 +135,11 @@ ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYad
 	if (ZRef<ZYadAtomR_Any> asAtom = iYadR.DynamicCast<ZYadAtomR_Any>())
 		return asAtom->GetAny();
 
-	if (ZRef<ZYadStrimU_String> asString = iYadR.DynamicCast<ZYadStrimU_String>())
+	if (ZRef<ZYadStrimmerU_String> asString = iYadR.DynamicCast<ZYadStrimmerU_String>())
 		return asString->GetStrim().GetString8();
 
-	if (ZRef<ZYadStreamRPos_Any> asYadStream = iYadR.DynamicCast<ZYadStreamRPos_Any>())
-		return asYadStream->GetStream().GetData();
+	if (ZRef<ZYadStreamerRPos_Any> asYadStreamer = iYadR.DynamicCast<ZYadStreamerRPos_Any>())
+		return asYadStreamer->GetStream().GetData();
 
 	if (ZRef<ZYadMapAtRPos_Any> asMap = iYadR.DynamicCast<ZYadMapAtRPos_Any>())
 		return asMap->GetMap();

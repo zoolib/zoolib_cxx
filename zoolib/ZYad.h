@@ -104,9 +104,9 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStreamR
+// MARK: - ZYadStreamerR
 
-class ZYadStreamR
+class ZYadStreamerR
 :	public virtual ZYadR
 ,	public virtual ZStreamerR
 	{
@@ -117,9 +117,9 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStrimR
+// MARK: - ZYadStrimmerR
 
-class ZYadStrimR
+class ZYadStrimmerR
 :	public virtual ZYadR
 ,	public virtual ZStrimmerR
 	{
@@ -290,8 +290,8 @@ class ZVisitor_Yad
 public:
 	virtual void Visit_YadR(const ZRef<ZYadR>& iYadR);
 	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR);
-	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR);
-	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR);
+	virtual void Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR);
+	virtual void Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR);
 
 	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR);
 	virtual void Visit_YadSeqRClone(const ZRef<ZYadSeqRClone>& iYadSeqRClone);
@@ -351,14 +351,14 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStrimU_String
+// MARK: - ZYadStrimmerU_String
 
-class ZYadStrimU_String
-:	public ZYadStrimR
+class ZYadStrimmerU_String
+:	public ZYadStrimmerR
 ,	public ZStrimmerU_T<ZStrimU_String>
 	{
 public:
-	ZYadStrimU_String(const std::string& iString);
+	ZYadStrimmerU_String(const std::string& iString);
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);

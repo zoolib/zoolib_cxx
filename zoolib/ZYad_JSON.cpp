@@ -252,11 +252,11 @@ static ZRef<ZYadR> spMakeYadR_JSON
 		}
 	else if (sTryRead_CP(theStrimU, '"'))
 		{
-		return new YadStrimR(iStrimmerU);
+		return new YadStrimmerR(iStrimmerU);
 		}
 	else if (iRO->Get().fAllowBinary.DGet(false) && sTryRead_CP(theStrimU, '('))
 		{
-		return new YadStreamR(iStrimmerU);
+		return new YadStreamerR(iStrimmerU);
 		}
 	else
 		{
@@ -314,14 +314,14 @@ ParseException::ParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-// MARK: - YadStreamR
+// MARK: - YadStreamerR
 
-YadStreamR::YadStreamR(ZRef<ZStrimmerU> iStrimmerU)
+YadStreamerR::YadStreamerR(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 ,	fStreamR(iStrimmerU->GetStrimU())
 	{}
 
-void YadStreamR::Finish()
+void YadStreamerR::Finish()
 	{
 	using namespace ZUtil_Strim;
 	fStreamR.SkipAll();
@@ -329,18 +329,18 @@ void YadStreamR::Finish()
 		spThrowParseException("Expected ')' to close a binary data");	
 	}
 
-const ZStreamR& YadStreamR::GetStreamR()
+const ZStreamR& YadStreamerR::GetStreamR()
 	{ return fStreamR; }
 
 // =================================================================================================
-// MARK: - YadStrimR
+// MARK: - YadStrimmerR
 
-YadStrimR::YadStrimR(ZRef<ZStrimmerU> iStrimmerU)
+YadStrimmerR::YadStrimmerR(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU),
 	fStrimR(iStrimmerU->GetStrimU(), '"')
 	{}
 
-void YadStrimR::Finish()
+void YadStrimmerR::Finish()
 	{
 	using namespace ZUtil_Strim;
 	fStrimR.SkipAll();
@@ -348,7 +348,7 @@ void YadStrimR::Finish()
 		throw ParseException("Missing string delimiter");
 	}
 
-const ZStrimR& YadStrimR::GetStrimR()
+const ZStrimR& YadStrimmerR::GetStrimR()
 	{ return fStrimR; }
 
 // =================================================================================================
@@ -719,11 +719,11 @@ void Visitor_Writer::Visit_YadR(const ZRef<ZYadR>& iYadR)
 void Visitor_Writer::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 	{ spToStrim_SimpleValue(fStrimW, iYadAtomR->AsAny()); }
 
-void Visitor_Writer::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
-	{ spToStrim_Stream(fStrimW, iYadStreamR->GetStreamR(), fIndent, fOptions, fMayNeedInitialLF); }
+void Visitor_Writer::Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR)
+	{ spToStrim_Stream(fStrimW, iYadStreamerR->GetStreamR(), fIndent, fOptions, fMayNeedInitialLF); }
 
-void Visitor_Writer::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
-	{ spWriteString(fStrimW, iYadStrimR->GetStrimR()); }
+void Visitor_Writer::Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR)
+	{ spWriteString(fStrimW, iYadStrimmerR->GetStrimR()); }
 
 void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 	{

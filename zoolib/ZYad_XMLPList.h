@@ -46,19 +46,19 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStreamR_XMLPList
+// MARK: - ZYadStreamerR_XMLPList
 
-class ZYadStreamR_XMLPList
-:	public ZYadStreamR
+class ZYadStreamerR_XMLPList
+:	public ZYadStreamerR
 ,	ZYadR_XMLPlist
 	{
 public:
-	ZYadStreamR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
+	ZYadStreamerR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZStreamerR via ZYadStreamR
+// From ZStreamerR via ZYadStreamerR
 	const ZStreamR& GetStreamR();
 
 private:
@@ -69,19 +69,19 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStrimR_XMLPList
+// MARK: - ZYadStrimmerR_XMLPList
 
-class ZYadStrimR_XMLPList
-:	public ZYadStrimR
+class ZYadStrimmerR_XMLPList
+:	public ZYadStrimmerR
 ,	ZYadR_XMLPlist
 	{
 public:
-	ZYadStrimR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
+	ZYadStrimmerR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZStrimmerR via ZYadStrimR
+// From ZStrimmerR via ZYadStrimmerR
 	const ZStrimR& GetStrimR();
 
 private:

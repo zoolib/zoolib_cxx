@@ -59,15 +59,15 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStreamRPos_Val_T
+// MARK: - ZYadStreamerRPos_Val_T
 
 template <class Data_t>
-class ZYadStreamRPos_Val_T
-:	public ZYadStreamR
+class ZYadStreamerRPos_Val_T
+:	public ZYadStreamerR
 ,	public ZStreamerRPos_T<ZStreamRPos_Data_T<Data_t> >
 	{
 public:
-	ZYadStreamRPos_Val_T(const Data_t& iData)
+	ZYadStreamerRPos_Val_T(const Data_t& iData)
 	:	ZStreamerRPos_T<ZStreamRPos_Data_T<Data_t> >(iData)
 		{}
 

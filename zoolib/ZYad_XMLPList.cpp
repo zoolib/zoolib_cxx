@@ -117,11 +117,11 @@ static ZRef<ZYadR> spMakeYadR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU)
 			}
 		else if (theR.Name() == "data")
 			{
-			return new ZYadStreamR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
+			return new ZYadStreamerR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
 			}
 		else if (theR.Name() == "string")
 			{
-			return new ZYadStrimR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
+			return new ZYadStrimmerR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
 			}
 		}
 	else if (theR.Current() == ZML::eToken_TagBegin)
@@ -139,12 +139,12 @@ static ZRef<ZYadR> spMakeYadR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU)
 		else if (theR.Name() == "data")
 			{
 			theR.Advance();
-			return new ZYadStreamR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
+			return new ZYadStreamerR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
 			}
 		else if (theR.Name() == "string")
 			{
 			theR.Advance();
-			return new ZYadStrimR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
+			return new ZYadStrimmerR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
 			}
 		}
 
@@ -167,16 +167,16 @@ ZYadParseException_XMLPList::ZYadParseException_XMLPList(const char* iWhat)
 	{}
 
 // =================================================================================================
-// MARK: - ZYadStreamR_XMLPList
+// MARK: - ZYadStreamerR_XMLPList
 
-ZYadStreamR_XMLPList::ZYadStreamR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
+ZYadStreamerR_XMLPList::ZYadStreamerR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
 :	fStrimmerU(iStrimmerU),
 	fRead(iRead),
 	fStreamR_ASCIIStrim(fStrimmerU->GetStrimR()),
 	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
 	{}
 
-void ZYadStreamR_XMLPList::Finish()
+void ZYadStreamerR_XMLPList::Finish()
 	{
 	if (fRead == eRead_EmptyTag)
 		{
@@ -191,18 +191,18 @@ void ZYadStreamR_XMLPList::Finish()
 		spEnd(fStrimmerU->GetStrim(), "data");
 	}
 
-const ZStreamR& ZYadStreamR_XMLPList::GetStreamR()
+const ZStreamR& ZYadStreamerR_XMLPList::GetStreamR()
 	{ return fStreamR_Base64Decode; }
 
 // =================================================================================================
-// MARK: - ZYadStrimR_XMLPList
+// MARK: - ZYadStrimmerR_XMLPList
 
-ZYadStrimR_XMLPList::ZYadStrimR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
+ZYadStrimmerR_XMLPList::ZYadStrimmerR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
 :	fStrimmerU(iStrimmerU),
 	fRead(iRead)
 	{}
 
-void ZYadStrimR_XMLPList::Finish()
+void ZYadStrimmerR_XMLPList::Finish()
 	{
 	if (fRead == eRead_EmptyTag)
 		{
@@ -217,7 +217,7 @@ void ZYadStrimR_XMLPList::Finish()
 		spEnd(fStrimmerU->GetStrim(), "string");
 	}
 
-const ZStrimR& ZYadStrimR_XMLPList::GetStrimR()
+const ZStrimR& ZYadStrimmerR_XMLPList::GetStrimR()
 	{ return fStrimmerU->GetStrimR(); }
 
 // =================================================================================================
@@ -409,13 +409,13 @@ void ZYad_XMLPList::sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s)
 		{
 		spToStrim_List(s, theYadSeqR);
 		}
-	else if (ZRef<ZYadStreamR> theYadStreamR = iYadR.DynamicCast<ZYadStreamR>())
+	else if (ZRef<ZYadStreamerR> theYadStreamerR = iYadR.DynamicCast<ZYadStreamerR>())
 		{
-		spToStrim_Stream(s, theYadStreamR->GetStreamR());
+		spToStrim_Stream(s, theYadStreamerR->GetStreamR());
 		}
-	else if (ZRef<ZYadStrimR> theYadStrimR = iYadR.DynamicCast<ZYadStrimR>())
+	else if (ZRef<ZYadStrimmerR> theYadStrimmerR = iYadR.DynamicCast<ZYadStrimmerR>())
 		{
-		spToStrim_Strim(s, theYadStrimR->GetStrimR());
+		spToStrim_Strim(s, theYadStrimmerR->GetStrimR());
 		}
 	else if (ZRef<ZYadAtomR> theYadAtomR = iYadR.DynamicCast<ZYadAtomR>())
 		{

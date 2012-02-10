@@ -54,19 +54,19 @@ ZYadParseException_ML::ZYadParseException_ML(const char* iWhat)
 	{}
 
 // =================================================================================================
-// MARK: - ZYadStrimR_ML
+// MARK: - ZYadStrimmerR_ML
 
-ZYadStrimR_ML::ZYadStrimR_ML(ZRef<ZML::StrimmerU> iStrimmerU)
+ZYadStrimmerR_ML::ZYadStrimmerR_ML(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 	{}
 
-void ZYadStrimR_ML::Finish()
+void ZYadStrimmerR_ML::Finish()
 	{ sSkipText(fStrimmerU->GetStrim()); }
 
-const ZStrimR& ZYadStrimR_ML::GetStrimR()
+const ZStrimR& ZYadStrimmerR_ML::GetStrimR()
 	{ return fStrimmerU->GetStrimR(); }
 
-ZML::StrimU& ZYadStrimR_ML::GetStrim()
+ZML::StrimU& ZYadStrimmerR_ML::GetStrim()
 	{ return fStrimmerU->GetStrim(); }
 
 // =================================================================================================
@@ -130,7 +130,7 @@ void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oY
 			}
 		case ZML::eToken_Text:
 			{
-			oYadR = new ZYadStrimR_ML(fStrimmerU);
+			oYadR = new ZYadStrimmerR_ML(fStrimmerU);
 			break;
 			}
 		default:

@@ -38,18 +38,18 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStrimR_ML
+// MARK: - ZYadStrimmerR_ML
 
-class ZYadStrimR_ML
-:	public virtual ZYadStrimR
+class ZYadStrimmerR_ML
+:	public virtual ZYadStrimmerR
 	{
 public:
-	ZYadStrimR_ML(ZRef<ZML::StrimmerU> iStrimmerU);
+	ZYadStrimmerR_ML(ZRef<ZML::StrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZStrimmerU via ZYadStrimR
+// From ZStrimmerU via ZYadStrimmerR
 	virtual const ZStrimR& GetStrimR();
 
 // Our protocol

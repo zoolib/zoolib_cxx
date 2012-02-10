@@ -69,18 +69,18 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - YadStreamR
+// MARK: - YadStreamerR
 
-class YadStreamR
-:	public ZYadStreamR
+class YadStreamerR
+:	public ZYadStreamerR
 	{
 public:
-	YadStreamR(ZRef<ZStrimmerU> iStrimmerU);
+	YadStreamerR(ZRef<ZStrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZStreamerR via ZYadStreamR
+// From ZStreamerR via ZYadStreamerR
 	const ZStreamR& GetStreamR();
 
 private:
@@ -89,18 +89,18 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - YadStrimR
+// MARK: - YadStrimmerR
 
-class YadStrimR
-:	public ZYadStrimR
+class YadStrimmerR
+:	public ZYadStrimmerR
 	{
 public:
-	YadStrimR(ZRef<ZStrimmerU> iStrimmerU);
+	YadStrimmerR(ZRef<ZStrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZStrimmerR via ZYadStrimR
+// From ZStrimmerR via ZYadStrimmerR
 	const ZStrimR& GetStrimR();
 
 private:
@@ -152,8 +152,8 @@ public:
 // From ZVisitor_Yad
 	virtual void Visit_YadR(const ZRef<ZYadR>& iYadR);
 	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR);
-	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR);
-	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR);
+	virtual void Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR);
+	virtual void Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR);
 	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR);
 	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR);
 

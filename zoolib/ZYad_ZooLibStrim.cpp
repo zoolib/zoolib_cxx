@@ -313,15 +313,15 @@ static ZRef<ZYadR> spMakeYadR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU)
 		}
 	else if (sTryRead_CP(theStrimU, '('))
 		{
-		return new ZYadStreamR_ZooLibStrim(iStrimmerU, true);
+		return new ZYadStreamerR_ZooLibStrim(iStrimmerU, true);
 		}
 	else if (sTryRead_CP(theStrimU, '"'))
 		{
-		return new ZYadStrimR_ZooLibStrim_Quote(iStrimmerU);
+		return new ZYadStrimmerR_ZooLibStrim_Quote(iStrimmerU);
 		}
 	else if (sTryRead_CP(theStrimU, '\''))
 		{
-		return new ZYadStrimR_ZooLibStrim_Apos(iStrimmerU);
+		return new ZYadStrimmerR_ZooLibStrim_Apos(iStrimmerU);
 		}
 	else
 		{
@@ -345,15 +345,15 @@ ZYadParseException_ZooLibStrim::ZYadParseException_ZooLibStrim(const char* iWhat
 	{}
 
 // =================================================================================================
-// MARK: - ZYadStreamR_ZooLibStrim
+// MARK: - ZYadStreamerR_ZooLibStrim
 
-ZYadStreamR_ZooLibStrim::ZYadStreamR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter)
+ZYadStreamerR_ZooLibStrim::ZYadStreamerR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter)
 :	fStrimmerU(iStrimmerU),
 	fReadDelimiter(iReadDelimiter),
 	fStreamR(fStrimmerU->GetStrimU())
 	{}
 
-void ZYadStreamR_ZooLibStrim::Finish()
+void ZYadStreamerR_ZooLibStrim::Finish()
 	{
 	using namespace ZUtil_Strim;
 
@@ -368,18 +368,18 @@ void ZYadStreamR_ZooLibStrim::Finish()
 		}
 	}
 
-const ZStreamR& ZYadStreamR_ZooLibStrim::GetStreamR()
+const ZStreamR& ZYadStreamerR_ZooLibStrim::GetStreamR()
 	{ return fStreamR; }
 
 // =================================================================================================
-// MARK: - ZYadStrimR_ZooLibStrim_Apos
+// MARK: - ZYadStrimmerR_ZooLibStrim_Apos
 
-ZYadStrimR_ZooLibStrim_Apos::ZYadStrimR_ZooLibStrim_Apos(ZRef<ZStrimmerU> iStrimmerU)
+ZYadStrimmerR_ZooLibStrim_Apos::ZYadStrimmerR_ZooLibStrim_Apos(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU),
 	fStrimR(fStrimmerU->GetStrimU(), '\'')
 	{}
 
-void ZYadStrimR_ZooLibStrim_Apos::Finish()
+void ZYadStrimmerR_ZooLibStrim_Apos::Finish()
 	{
 	using namespace ZUtil_Strim;
 	fStrimR.SkipAll();
@@ -387,25 +387,25 @@ void ZYadStrimR_ZooLibStrim_Apos::Finish()
 		throw ParseException("Missing string delimiter");
 	}
 
-const ZStrimR& ZYadStrimR_ZooLibStrim_Apos::GetStrimR()
+const ZStrimR& ZYadStrimmerR_ZooLibStrim_Apos::GetStrimR()
 	{ return fStrimR; }
 
 // =================================================================================================
-// MARK: - ZYadStrimR_ZooLibStrim_Quote
+// MARK: - ZYadStrimmerR_ZooLibStrim_Quote
 
-ZYadStrimR_ZooLibStrim_Quote::ZYadStrimR_ZooLibStrim_Quote(ZRef<ZStrimmerU> iStrimmerU)
+ZYadStrimmerR_ZooLibStrim_Quote::ZYadStrimmerR_ZooLibStrim_Quote(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU),
 	fStrimR_Boundary("\"\"\"", fStrimmerU->GetStrimR()),
 	fQuotesSeen(1)
 	{}
 
-void ZYadStrimR_ZooLibStrim_Quote::Finish()
+void ZYadStrimmerR_ZooLibStrim_Quote::Finish()
 	{ this->SkipAll(); }
 
-const ZStrimR& ZYadStrimR_ZooLibStrim_Quote::GetStrimR()
+const ZStrimR& ZYadStrimmerR_ZooLibStrim_Quote::GetStrimR()
 	{ return *this; }
 
-void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
+void ZYadStrimmerR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	using namespace ZUtil_Strim;
 
@@ -1078,13 +1078,13 @@ static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		{
 		spToStrim_Seq(s, theYadSeqR, iLevel, iOptions, iMayNeedInitialLF);
 		}
-	else if (ZRef<ZYadStreamR> theYadStreamR = iYadR.DynamicCast<ZYadStreamR>())
+	else if (ZRef<ZYadStreamerR> theYadStreamerR = iYadR.DynamicCast<ZYadStreamerR>())
 		{
-		spToStrim_Stream(s, theYadStreamR->GetStreamR(), iLevel, iOptions, iMayNeedInitialLF);
+		spToStrim_Stream(s, theYadStreamerR->GetStreamR(), iLevel, iOptions, iMayNeedInitialLF);
 		}
-	else if (ZRef<ZYadStrimR> theYadStrimR = iYadR.DynamicCast<ZYadStrimR>())
+	else if (ZRef<ZYadStrimmerR> theYadStrimmerR = iYadR.DynamicCast<ZYadStrimmerR>())
 		{
-		spToStrim_Strim(s, theYadStrimR->GetStrimR(), iLevel, iOptions, iMayNeedInitialLF);
+		spToStrim_Strim(s, theYadStrimmerR->GetStrimR(), iLevel, iOptions, iMayNeedInitialLF);
 		}
 	else if (ZRef<ZYadAtomR> theYadAtomR = iYadR.DynamicCast<ZYadAtomR>())
 		{

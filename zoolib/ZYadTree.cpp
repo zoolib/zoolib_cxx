@@ -346,7 +346,7 @@ ZRef<ZYadR> Link::ReadAt(const string& iName)
 			}
 		}
 
-	if (ZRef<ZYadStrimR> theProtoYad = fYadMapAt->ReadAt(fProtoName->Get()).DynamicCast<ZYadStrimR>())
+	if (ZRef<ZYadStrimmerR> theProtoYad = fYadMapAt->ReadAt(fProtoName->Get()).DynamicCast<ZYadStrimmerR>())
 		{
 		const string theTrailString = theProtoYad->GetStrimR().ReadAll8();
 

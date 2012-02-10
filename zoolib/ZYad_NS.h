@@ -55,35 +55,35 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStreamRPos_NS
+// MARK: - ZYadStreamerRPos_NS
 
 typedef ZStreamerRPos_T<ZStreamRPos_NSData> ZStreamerRPos_NS;
 
-class ZYadStreamRPos_NS
+class ZYadStreamerRPos_NS
 :	public ZYadR_NS
-,	public ZYadStreamR
+,	public ZYadStreamerR
 ,	public ZStreamerRPos_NS
 	{
 public:
-	ZYadStreamRPos_NS(NSData* iData);
-	virtual ~ZYadStreamRPos_NS();
+	ZYadStreamerRPos_NS(NSData* iData);
+	virtual ~ZYadStreamerRPos_NS();
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================
-// MARK: - ZYadStrimR_NS
+// MARK: - ZYadStrimmerR_NS
 
 typedef ZStrimmerR_T<ZStrimR_NSString> ZStrimmerR_NSString;
 
-class ZYadStrimR_NS
+class ZYadStrimmerR_NS
 :	public ZYadR_NS
-,	public ZYadStrimR
+,	public ZYadStrimmerR
 ,	public ZStrimmerR_NSString
 	{
 public:
-	ZYadStrimR_NS(NSString* iString);
+	ZYadStrimmerR_NS(NSString* iString);
 	};
 
 // =================================================================================================
@@ -139,11 +139,11 @@ private:
 
 ZRef<ZYadR> sYadR(NSObject* iVal);
 
-ZRef<ZYadStrimR> sYadR(NSMutableString* iString);
-ZRef<ZYadStrimR> sYadR(NSString* iString);
+ZRef<ZYadStrimmerR> sYadR(NSMutableString* iString);
+ZRef<ZYadStrimmerR> sYadR(NSString* iString);
 
-ZRef<ZYadStreamR> sYadR(NSMutableData* iData);
-ZRef<ZYadStreamR> sYadR(NSData* iData);
+ZRef<ZYadStreamerR> sYadR(NSMutableData* iData);
+ZRef<ZYadStreamerR> sYadR(NSData* iData);
 
 ZRef<ZYadSeqAtRPos> sYadR(NSMutableArray* iArray);
 ZRef<ZYadSeqAtRPos> sYadR(NSArray* iArray);

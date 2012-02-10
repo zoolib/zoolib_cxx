@@ -59,7 +59,7 @@ ZRef<ZYadR> sYadR(const ZVal_AppleEvent& iVal)
 		return sYadR(*theQ);
 
 //	if (iVal.QGetData(asData))
-//		return new ZYadStreamRPos_AppleEvent(asData);
+//		return new ZYadStreamerRPos_AppleEvent(asData);
 
 	return sYadR(spAsMap(iVal));
 	}

@@ -32,18 +32,18 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-// MARK: - ZYadStreamR_XMLRPC
+// MARK: - ZYadStreamerR_XMLRPC
 
-class ZYadStreamR_XMLRPC
-:	public ZYadStreamR
+class ZYadStreamerR_XMLRPC
+:	public ZYadStreamerR
 	{
 public:
-	ZYadStreamR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU);
+	ZYadStreamerR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZStreamerR via ZYadStreamR
+// From ZStreamerR via ZYadStreamerR
 	const ZStreamR& GetStreamR();
 
 private:
@@ -53,18 +53,18 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStrimR_XMLRPC
+// MARK: - ZYadStrimmerR_XMLRPC
 
-class ZYadStrimR_XMLRPC
-:	public ZYadStrimR
+class ZYadStrimmerR_XMLRPC
+:	public ZYadStrimmerR
 	{
 public:
-	ZYadStrimR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU);
+	ZYadStrimmerR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZStrimmerU via ZYadStrimR
+// From ZStrimmerU via ZYadStrimmerR
 	const ZStrimR& GetStrimR();
 
 private:
@@ -256,12 +256,12 @@ static ZRef<ZYadR> spMakeYadR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 		else if (theR.Name() == "base64")
 			{
 			theR.Advance();
-			return new ZYadStreamR_XMLRPC(iStrimmerU);
+			return new ZYadStreamerR_XMLRPC(iStrimmerU);
 			}
 		else if (theR.Name() == "string")
 			{
 			theR.Advance();
-			return new ZYadStrimR_XMLRPC(iStrimmerU);
+			return new ZYadStrimmerR_XMLRPC(iStrimmerU);
 			}
 		}
 
@@ -284,31 +284,31 @@ ZYadParseException_XMLRPC::ZYadParseException_XMLRPC(const char* iWhat)
 	{}
 
 // =================================================================================================
-// MARK: - ZYadStreamR_XMLRPC
+// MARK: - ZYadStreamerR_XMLRPC
 
-ZYadStreamR_XMLRPC::ZYadStreamR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
+ZYadStreamerR_XMLRPC::ZYadStreamerR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU),
 	fStreamR_ASCIIStrim(fStrimmerU->GetStrimR()),
 	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
 	{}
 
-void ZYadStreamR_XMLRPC::Finish()
+void ZYadStreamerR_XMLRPC::Finish()
 	{
 	fStreamR_Base64Decode.SkipAll();
 	spEnd(fStrimmerU->GetStrim(), "base64");
 	}
 
-const ZStreamR& ZYadStreamR_XMLRPC::GetStreamR()
+const ZStreamR& ZYadStreamerR_XMLRPC::GetStreamR()
 	{ return fStreamR_Base64Decode; }
 
 // =================================================================================================
-// MARK: - ZYadStrimR_XMLRPC
+// MARK: - ZYadStrimmerR_XMLRPC
 
-ZYadStrimR_XMLRPC::ZYadStrimR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
+ZYadStrimmerR_XMLRPC::ZYadStrimmerR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 	{}
 
-void ZYadStrimR_XMLRPC::Finish()
+void ZYadStrimmerR_XMLRPC::Finish()
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
@@ -316,7 +316,7 @@ void ZYadStrimR_XMLRPC::Finish()
 	spEnd(theR, "string");
 	}
 
-const ZStrimR& ZYadStrimR_XMLRPC::GetStrimR()
+const ZStrimR& ZYadStrimmerR_XMLRPC::GetStrimR()
 	{ return fStrimmerU->GetStrimR(); }
 
 // =================================================================================================
@@ -624,13 +624,13 @@ static void spToStrim(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 		{
 		spToStrim_Seq(s, theYadSeqR);
 		}
-	else if (ZRef<ZYadStreamR> theYadStreamR = iYadR.DynamicCast<ZYadStreamR>())
+	else if (ZRef<ZYadStreamerR> theYadStreamerR = iYadR.DynamicCast<ZYadStreamerR>())
 		{
-		spToStrim_Stream(s, theYadStreamR->GetStreamR());
+		spToStrim_Stream(s, theYadStreamerR->GetStreamR());
 		}
-	else if (ZRef<ZYadStrimR> theYadStrimR = iYadR.DynamicCast<ZYadStrimR>())
+	else if (ZRef<ZYadStrimmerR> theYadStrimmerR = iYadR.DynamicCast<ZYadStrimmerR>())
 		{
-		spToStrim_Strim(s, theYadStrimR->GetStrimR());
+		spToStrim_Strim(s, theYadStrimmerR->GetStrimR());
 		}
 	else if (ZRef<ZYadAtomR> theYadAtomR = iYadR.DynamicCast<ZYadAtomR>())
 		{

@@ -55,35 +55,35 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStreamRPos_CF
+// MARK: - ZYadStreamerRPos_CF
 
 typedef ZStreamerRPos_T<ZStreamRPos_CFData> ZStreamerRPos_CF;
 
-class ZYadStreamRPos_CF
+class ZYadStreamerRPos_CF
 :	public ZYadR_CF
-,	public ZYadStreamR
+,	public ZYadStreamerR
 ,	public ZStreamerRPos_CF
 	{
 public:
-	ZYadStreamRPos_CF(CFDataRef iData);
-	virtual ~ZYadStreamRPos_CF();
+	ZYadStreamerRPos_CF(CFDataRef iData);
+	virtual ~ZYadStreamerRPos_CF();
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================
-// MARK: - ZYadStrimR_CF
+// MARK: - ZYadStrimmerR_CF
 
 typedef ZStrimmerR_T<ZStrimR_CFString> ZStrimmerR_CFString;
 
-class ZYadStrimR_CF
+class ZYadStrimmerR_CF
 :	public ZYadR_CF
-,	public ZYadStrimR
+,	public ZYadStrimmerR
 ,	public ZStrimmerR_CFString
 	{
 public:
-	ZYadStrimR_CF(CFStringRef iStringRef);
+	ZYadStrimmerR_CF(CFStringRef iStringRef);
 	};
 
 // =================================================================================================
@@ -140,13 +140,13 @@ private:
 ZRef<ZYadR> sYadR(CFTypeRef iVal);
 ZRef<ZYadR> sYadR(const ZRef<CFTypeRef>& iVal);
 
-ZRef<ZYadStrimR> sYadR(CFMutableStringRef iString);
-ZRef<ZYadStrimR> sYadR(CFStringRef iString);
-ZRef<ZYadStrimR> sYadR(const ZRef<CFStringRef>& iString);
+ZRef<ZYadStrimmerR> sYadR(CFMutableStringRef iString);
+ZRef<ZYadStrimmerR> sYadR(CFStringRef iString);
+ZRef<ZYadStrimmerR> sYadR(const ZRef<CFStringRef>& iString);
 
-ZRef<ZYadStreamR> sYadR(CFMutableDataRef iData);
-ZRef<ZYadStreamR> sYadR(CFDataRef iData);
-ZRef<ZYadStreamR> sYadR(const ZRef<CFDataRef>& iData);
+ZRef<ZYadStreamerR> sYadR(CFMutableDataRef iData);
+ZRef<ZYadStreamerR> sYadR(CFDataRef iData);
+ZRef<ZYadStreamerR> sYadR(const ZRef<CFDataRef>& iData);
 
 ZRef<ZYadSeqAtRPos> sYadR(CFMutableArrayRef iArray);
 ZRef<ZYadSeqAtRPos> sYadR(CFArrayRef iArray);

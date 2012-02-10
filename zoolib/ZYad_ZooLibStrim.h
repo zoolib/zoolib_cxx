@@ -41,18 +41,18 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStreamR_ZooLibStrim
+// MARK: - ZYadStreamerR_ZooLibStrim
 
-class ZYadStreamR_ZooLibStrim
-:	public ZYadStreamR
+class ZYadStreamerR_ZooLibStrim
+:	public ZYadStreamerR
 	{
 public:
-	ZYadStreamR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter);
+	ZYadStreamerR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZStreamerR via ZYadStreamR
+// From ZStreamerR via ZYadStreamerR
 	const ZStreamR& GetStreamR();
 
 private:
@@ -62,18 +62,18 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStrimR_ZooLibStrim_Apos
+// MARK: - ZYadStrimmerR_ZooLibStrim_Apos
 
-class ZYadStrimR_ZooLibStrim_Apos
-:	public ZYadStrimR
+class ZYadStrimmerR_ZooLibStrim_Apos
+:	public ZYadStrimmerR
 	{
 public:
-	ZYadStrimR_ZooLibStrim_Apos(ZRef<ZStrimmerU> iStrimmerU);
+	ZYadStrimmerR_ZooLibStrim_Apos(ZRef<ZStrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZStrimmerR via ZYadStrimR
+// From ZStrimmerR via ZYadStrimmerR
 	const ZStrimR& GetStrimR();
 
 private:
@@ -82,19 +82,19 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStrimR_ZooLibStrim_Quote
+// MARK: - ZYadStrimmerR_ZooLibStrim_Quote
 
-class ZYadStrimR_ZooLibStrim_Quote
-:	public ZYadStrimR,
+class ZYadStrimmerR_ZooLibStrim_Quote
+:	public ZYadStrimmerR,
 	private ZStrimR
 	{
 public:
-	ZYadStrimR_ZooLibStrim_Quote(ZRef<ZStrimmerU> iStrimmerU);
+	ZYadStrimmerR_ZooLibStrim_Quote(ZRef<ZStrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZStrimmerR via ZYadStrimR
+// From ZStrimmerR via ZYadStrimmerR
 	const ZStrimR& GetStrimR();
 
 // From ZStrimR

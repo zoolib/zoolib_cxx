@@ -43,23 +43,23 @@ ZAny ZYadAtomR_NS::AsAny()
 	{ return ZUtil_NS::sAsAny(this->GetVal()); }
 
 // =================================================================================================
-// MARK: - ZYadStreamRPos_NS
+// MARK: - ZYadStreamerRPos_NS
 
-ZYadStreamRPos_NS::ZYadStreamRPos_NS(NSData* iData)
+ZYadStreamerRPos_NS::ZYadStreamerRPos_NS(NSData* iData)
 :	ZYadR_NS(iData)
 ,	ZStreamerRPos_NS(iData)
 	{}
 
-ZYadStreamRPos_NS::~ZYadStreamRPos_NS()
+ZYadStreamerRPos_NS::~ZYadStreamerRPos_NS()
 	{}
 
-bool ZYadStreamRPos_NS::IsSimple(const ZYadOptions& iOptions)
+bool ZYadStreamerRPos_NS::IsSimple(const ZYadOptions& iOptions)
 	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
 
 // =================================================================================================
-// MARK: - ZYadStrimR_NS
+// MARK: - ZYadStrimmerR_NS
 
-ZYadStrimR_NS::ZYadStrimR_NS(NSString* iString)
+ZYadStrimmerR_NS::ZYadStrimmerR_NS(NSString* iString)
 :	ZYadR_NS(iString)
 ,	ZStrimmerR_NSString(iString)
 	{}
@@ -154,25 +154,25 @@ ZRef<ZYadR> sYadR(NSObject* iVal)
 		return new ZYadSeqAtRPos_NS(*theQ);
 
 	if (ZQ<ZData_NS> theQ = theVal.QGetData())
-		return new ZYadStreamRPos_NS(*theQ);
+		return new ZYadStreamerRPos_NS(*theQ);
 
 	if (ZQ<NSString*> theQ = theVal.QGetNSString())
-		return new ZYadStrimR_NS(*theQ);
+		return new ZYadStrimmerR_NS(*theQ);
 
 	return new ZYadAtomR_NS(iVal);
 	}
 
-ZRef<ZYadStrimR> sYadR(NSMutableString* iString)
-	{ return new ZYadStrimR_NS(iString); }
+ZRef<ZYadStrimmerR> sYadR(NSMutableString* iString)
+	{ return new ZYadStrimmerR_NS(iString); }
 
-ZRef<ZYadStrimR> sYadR(NSString* iString)
-	{ return new ZYadStrimR_NS(iString); }
+ZRef<ZYadStrimmerR> sYadR(NSString* iString)
+	{ return new ZYadStrimmerR_NS(iString); }
 
-ZRef<ZYadStreamR> sYadR(NSMutableData* iData)
-	{ return new ZYadStreamRPos_NS(iData); }
+ZRef<ZYadStreamerR> sYadR(NSMutableData* iData)
+	{ return new ZYadStreamerRPos_NS(iData); }
 
-ZRef<ZYadStreamR> sYadR(NSData* iData)
-	{ return new ZYadStreamRPos_NS(iData); }
+ZRef<ZYadStreamerR> sYadR(NSData* iData)
+	{ return new ZYadStreamerRPos_NS(iData); }
 
 ZRef<ZYadSeqAtRPos> sYadR(NSMutableArray* iArray)
 	{ return new ZYadSeqAtRPos_NS(iArray); }
@@ -198,8 +198,8 @@ public:
 
 // From ZVisitor_Yad
 	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR);
-	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR);
-	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR);
+	virtual void Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR);
+	virtual void Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR);
 	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR);
 	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR);
 
@@ -220,13 +220,13 @@ Visitor_GetVal::Visitor_GetVal(ZRef<NSObject> iDefault)
 void Visitor_GetVal::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 	{ fOutput = ZUtil_NS::sDAsNSObject(fDefault, iYadAtomR->AsAny()); }
 
-void Visitor_GetVal::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
-	{ fOutput = sReadAll_T<ZData_NS>(iYadStreamR->GetStreamR()); }
+void Visitor_GetVal::Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR)
+	{ fOutput = sReadAll_T<ZData_NS>(iYadStreamerR->GetStreamR()); }
 
-void Visitor_GetVal::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
+void Visitor_GetVal::Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR)
 	{
 	NSMutableString* result = ZUtil_NS::sStringMutable();
-	ZStrimW_NSString(result).CopyAllFrom(iYadStrimR->GetStrimR());
+	ZStrimW_NSString(result).CopyAllFrom(iYadStrimmerR->GetStrimR());
 	fOutput = result;
 	}
 

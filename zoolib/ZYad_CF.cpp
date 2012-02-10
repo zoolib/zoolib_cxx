@@ -46,23 +46,23 @@ ZAny ZYadAtomR_CF::AsAny()
 	{ return ZUtil_CF::sAsAny(this->GetVal()); }
 
 // =================================================================================================
-// MARK: - ZYadStreamRPos_CF
+// MARK: - ZYadStreamerRPos_CF
 
-ZYadStreamRPos_CF::ZYadStreamRPos_CF(CFDataRef iDataRef)
+ZYadStreamerRPos_CF::ZYadStreamerRPos_CF(CFDataRef iDataRef)
 :	ZYadR_CF(iDataRef)
 ,	ZStreamerRPos_CF(iDataRef)
 	{}
 
-ZYadStreamRPos_CF::~ZYadStreamRPos_CF()
+ZYadStreamerRPos_CF::~ZYadStreamerRPos_CF()
 	{}
 
-bool ZYadStreamRPos_CF::IsSimple(const ZYadOptions& iOptions)
+bool ZYadStreamerRPos_CF::IsSimple(const ZYadOptions& iOptions)
 	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
 
 // =================================================================================================
-// MARK: - ZYadStrimR_CF
+// MARK: - ZYadStrimmerR_CF
 
-ZYadStrimR_CF::ZYadStrimR_CF(CFStringRef iStringRef)
+ZYadStrimmerR_CF::ZYadStrimmerR_CF(CFStringRef iStringRef)
 :	ZYadR_CF(iStringRef)
 ,	ZStrimmerR_CFString(iStringRef)
 	{}
@@ -176,7 +176,7 @@ ZRef<ZYadR> sYadR(CFTypeRef iVal)
 		return new ZYadSeqAtRPos_CF(theQ.Get());
 
 	if (ZQ<ZData_CF> theQ = theVal.QGet<ZData_CF>())
-		return new ZYadStreamRPos_CF(theQ.Get());
+		return new ZYadStreamerRPos_CF(theQ.Get());
 
 	if (ZQ<ZRef<CFStringRef> > theQ = theVal.QGet<ZRef<CFStringRef> >())
 		return sYadR(theQ.Get());
@@ -187,22 +187,22 @@ ZRef<ZYadR> sYadR(CFTypeRef iVal)
 ZRef<ZYadR> sYadR(const ZRef<CFTypeRef>& iVal)
 	{ return sYadR(iVal.Get()); }
 
-ZRef<ZYadStrimR> sYadR(CFMutableStringRef iString)
-	{ return new ZYadStrimR_CF(iString); }
+ZRef<ZYadStrimmerR> sYadR(CFMutableStringRef iString)
+	{ return new ZYadStrimmerR_CF(iString); }
 
-ZRef<ZYadStrimR> sYadR(CFStringRef iString)
-	{ return new ZYadStrimR_CF(iString); }
+ZRef<ZYadStrimmerR> sYadR(CFStringRef iString)
+	{ return new ZYadStrimmerR_CF(iString); }
 
-ZRef<ZYadStrimR> sYadR(const ZRef<CFStringRef>& iString)
+ZRef<ZYadStrimmerR> sYadR(const ZRef<CFStringRef>& iString)
 	{ return sYadR(iString.Get()); }
 
-ZRef<ZYadStreamR> sYadR(CFMutableDataRef iData)
-	{ return new ZYadStreamRPos_CF(iData); }
+ZRef<ZYadStreamerR> sYadR(CFMutableDataRef iData)
+	{ return new ZYadStreamerRPos_CF(iData); }
 
-ZRef<ZYadStreamR> sYadR(CFDataRef iData)
-	{ return new ZYadStreamRPos_CF(iData); }
+ZRef<ZYadStreamerR> sYadR(CFDataRef iData)
+	{ return new ZYadStreamerRPos_CF(iData); }
 
-ZRef<ZYadStreamR> sYadR(const ZRef<CFDataRef>& iData)
+ZRef<ZYadStreamerR> sYadR(const ZRef<CFDataRef>& iData)
 	{ return sYadR(iData.Get()); }
 
 ZRef<ZYadSeqAtRPos> sYadR(CFMutableArrayRef iArray)
@@ -235,8 +235,8 @@ public:
 
 // From ZVisitor_Yad
 	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR);
-	virtual void Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR);
-	virtual void Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR);
+	virtual void Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR);
+	virtual void Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR);
 	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR);
 	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR);
 
@@ -257,13 +257,13 @@ Visitor_GetVal::Visitor_GetVal(ZRef<CFTypeRef> iDefault)
 void Visitor_GetVal::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 	{ fOutput = ZUtil_CF::sDAsCFType(fDefault, iYadAtomR->AsAny()); }
 
-void Visitor_GetVal::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
-	{ fOutput = sReadAll_T<ZData_CF>(iYadStreamR->GetStreamR()); }
+void Visitor_GetVal::Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR)
+	{ fOutput = sReadAll_T<ZData_CF>(iYadStreamerR->GetStreamR()); }
 
-void Visitor_GetVal::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
+void Visitor_GetVal::Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR)
 	{
 	ZRef<CFMutableStringRef> result = ZUtil_CF::sStringMutable();
-	ZStrimW_CFString(result).CopyAllFrom(iYadStrimR->GetStrimR());
+	ZStrimW_CFString(result).CopyAllFrom(iYadStrimmerR->GetStrimR());
 	fOutput = result;
 	}
 

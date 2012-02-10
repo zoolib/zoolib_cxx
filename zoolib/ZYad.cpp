@@ -124,35 +124,35 @@ bool ZYadAtomR::IsSimple(const ZYadOptions& iOptions)
 	{ return true; }
 
 // =================================================================================================
-// MARK: - ZYadStreamR
+// MARK: - ZYadStreamerR
 
 /**
-\class ZYadStreamR
+\class ZYadStreamerR
 \ingroup Yad
 \sa Yad
 
 */
 
-void ZYadStreamR::Accept_Yad(ZVisitor_Yad& iVisitor)
-	{ iVisitor.Visit_YadStreamR(this); }
+void ZYadStreamerR::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadStreamerR(this); }
 
-bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
+bool ZYadStreamerR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
 
 // =================================================================================================
-// MARK: - ZYadStrimR
+// MARK: - ZYadStrimmerR
 
 /**
-\class ZYadStrimR
+\class ZYadStrimmerR
 \ingroup Yad
 \sa Yad
 
 */
 
-void ZYadStrimR::Accept_Yad(ZVisitor_Yad& iVisitor)
-	{ iVisitor.Visit_YadStrimR(this); }
+void ZYadStrimmerR::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadStrimmerR(this); }
 
-bool ZYadStrimR::IsSimple(const ZYadOptions& iOptions)
+bool ZYadStrimmerR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
 
 // =================================================================================================
@@ -345,11 +345,11 @@ void ZVisitor_Yad::Visit_YadR(const ZRef<ZYadR>& iYadR)
 void ZVisitor_Yad::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 	{ this->Visit_YadR(iYadAtomR); }
 
-void ZVisitor_Yad::Visit_YadStreamR(const ZRef<ZYadStreamR>& iYadStreamR)
-	{ this->Visit_YadR(iYadStreamR); }
+void ZVisitor_Yad::Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR)
+	{ this->Visit_YadR(iYadStreamerR); }
 
-void ZVisitor_Yad::Visit_YadStrimR(const ZRef<ZYadStrimR>& iYadStrimR)
-	{ this->Visit_YadR(iYadStrimR); }
+void ZVisitor_Yad::Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR)
+	{ this->Visit_YadR(iYadStrimmerR); }
 
 void ZVisitor_Yad::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 	{ this->Visit_YadR(iYadSeqR); }
@@ -422,19 +422,19 @@ const ZAny& ZYadAtomR_Any::GetAny()
 	{ return fAny; }
 
 // =================================================================================================
-// MARK: - ZYadStrimU_String
+// MARK: - ZYadStrimmerU_String
 
-ZYadStrimU_String::ZYadStrimU_String(const string& iString)
+ZYadStrimmerU_String::ZYadStrimmerU_String(const string& iString)
 :	ZStrimmerU_T<ZStrimU_String>(iString)
 	{}
 
-bool ZYadStrimU_String::IsSimple(const ZYadOptions& iOptions)
+bool ZYadStrimmerU_String::IsSimple(const ZYadOptions& iOptions)
 	{ return true; }
 
 // =================================================================================================
 // MARK: - sYadR
 
 ZRef<ZYadR> sYadR(const string& iVal)
-	{ return new ZYadStrimU_String(iVal); }
+	{ return new ZYadStrimmerU_String(iVal); }
 
 } // namespace ZooLib

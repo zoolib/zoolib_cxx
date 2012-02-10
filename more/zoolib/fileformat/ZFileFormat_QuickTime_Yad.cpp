@@ -81,13 +81,13 @@ static ZQ<bool> spIsContainer(const string& iName)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - YadStreamR
+// MARK: - YadStreamerR
 
-class YadStreamR
-:	public ZYadStreamR
+class YadStreamerR
+:	public ZYadStreamerR
 	{
 public:
-	YadStreamR(ZRef<ZStreamerR> iStreamerR, uint64 iSize)
+	YadStreamerR(ZRef<ZStreamerR> iStreamerR, uint64 iSize)
 	:	fStreamerR(iStreamerR)
 	,	fStreamR_Limited(iSize, fStreamerR->GetStreamR())
 		{}
@@ -96,7 +96,7 @@ public:
 	virtual void Finish()
 		{ fStreamR_Limited.SkipAll(); }
 
-// From ZStreamerR via ZYadStreamR
+// From ZStreamerR via ZYadStreamerR
 	const ZStreamR& GetStreamR()
 		{ return fStreamR_Limited; }
 
@@ -106,14 +106,14 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - YadStreamRPos
+// MARK: - YadStreamerRPos
 
-class YadStreamRPos
-:	public ZYadStreamR
+class YadStreamerRPos
+:	public ZYadStreamerR
 ,	public virtual ZStreamerRPos
 	{
 public:
-	YadStreamRPos(ZRef<ZStreamerRPos> iStreamerRPos, uint64 iSize)
+	YadStreamerRPos(ZRef<ZStreamerRPos> iStreamerRPos, uint64 iSize)
 	:	fStreamerRPos(iStreamerRPos)
 	,	fStreamRPos_Limited(fStreamerRPos->GetStreamRPos().GetPosition(),
 		iSize, fStreamerRPos->GetStreamRPos())
@@ -259,7 +259,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 			if (isContainerQ.Get())
 				oYadR = new YadMapR(fStreamerR, theSize);
 			else
-				oYadR = new YadStreamRPos(theSRPos, theSize);
+				oYadR = new YadStreamerRPos(theSRPos, theSize);
 			}
 		else
 			{
@@ -276,7 +276,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 			else
 				{
 				theSRPos->GetStreamRPos().SetPosition(priorPos);
-				oYadR = new YadStreamRPos(theSRPos, theSize);
+				oYadR = new YadStreamerRPos(theSRPos, theSize);
 				}
 			}
 		}
@@ -287,7 +287,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 			if (isContainerQ.Get())
 				oYadR = new YadMapR(fStreamerR, theSize);
 			else
-				oYadR = new YadStreamR(fStreamerR, theSize);
+				oYadR = new YadStreamerR(fStreamerR, theSize);
 			}
 		else
 			{
@@ -309,7 +309,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 				ZRef<ZStreamerR> prior =
 					new ZStreamerR_T<ZStreamRPos_Data_T<ZData_Any> >(buffer);
 				ZRef<ZStreamerR> theCat = new ZStreamerR_Cat(prior, fStreamerR);
-				oYadR = new YadStreamR(theCat, theSize);
+				oYadR = new YadStreamerR(theCat, theSize);
 				}
 			}
 		}
