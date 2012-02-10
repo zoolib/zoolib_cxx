@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
+#import <Foundation/NSInvocation.h>
 #import <Foundation/NSMethodSignature.h>
 
 using std::string;
