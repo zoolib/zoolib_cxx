@@ -36,7 +36,7 @@ class ZTween_Fun
 public:
 	virtual ZQ<Val> QValAt(double iTime)
 		{
-		if (iTime >= 0 && iTime <= 1.0)
+		if (iTime >= 0 && iTime < 1.0)
 			return Fun(iTime);
 		return null;
 		}
