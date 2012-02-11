@@ -214,8 +214,10 @@ ZCog<Param> spCog_Not
 
 template <class Param>
 ZCog<Param> spCogFun_Not(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog)
+	const ZCog<Param>& iCog)
 	{
+	ZCog<Param> lCog = iCog;
+
 	if (sCallPendingCog_Unchanged(lCog, iParam))
 		return iSelf;
 
@@ -265,8 +267,10 @@ ZCog<Param> spCog_Tautology
 
 template <class Param>
 ZCog<Param> spCogFun_Tautology(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog)
+	const ZCog<Param>& iCog)
 	{
+	ZCog<Param> lCog = iCog;
+
 	if (sCallPendingCog_Unchanged(lCog, iParam))
 		return iSelf;
 
@@ -309,8 +313,10 @@ ZCog<Param> spCog_Contradiction
 
 template <class Param>
 ZCog<Param> spCogFun_Contradiction(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog)
+	const ZCog<Param>& iCog)
 	{
+	ZCog<Param> lCog = iCog;
+
 	if (sCallPendingCog_Unchanged(lCog, iParam))
 		return iSelf;
 
@@ -508,7 +514,7 @@ ZCog<Param>& operator^=
 
 template <class Param>
 ZCog<Param> spCogFun_And(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_And
@@ -540,8 +546,10 @@ ZCog<Param> sCog_And
 
 template <class Param>
 ZCog<Param> spCogFun_And(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{
+	ZCog<Param> lCog0 = iCog0;
+
 	ZAssert(sIsPending(lCog0) && not sIsTrue(iCog1));
 
 	if (sCallPendingCog_Unchanged(lCog0, iParam))
@@ -611,7 +619,7 @@ ZCog<Param>& operator&=
 
 template <class Param>
 ZCog<Param> spCogFun_Or(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_Or
@@ -643,8 +651,10 @@ ZCog<Param> sCog_Or
 
 template <class Param>
 ZCog<Param> spCogFun_Or(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{
+	ZCog<Param> lCog0 = iCog0;
+
 	ZAssert(sIsPending(lCog0) && iCog1);
 
 	if (sCallPendingCog_Unchanged(lCog0, iParam))
@@ -710,7 +720,7 @@ ZCog<Param>& operator|=
 
 template <class Param>
 ZCog<Param> spCogFun_While(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_While
@@ -735,8 +745,10 @@ ZCog<Param> sCog_While
 
 template <class Param>
 ZCog<Param> spCogFun_While(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{
+	ZCog<Param> lCog0 = iCog0;
+
 	ZAssert(sIsPending(lCog0) && sIsPending(iCog1));
 
 	if (sCallPendingCog_Unchanged(lCog0, iParam))
@@ -786,7 +798,7 @@ ZCog<Param>& operator/=
 
 template <class Param>
 ZCog<Param> spCogFun_With(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_With
@@ -811,8 +823,10 @@ ZCog<Param> sCog_With
 
 template <class Param>
 ZCog<Param> spCogFun_With(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{
+	ZCog<Param> lCog0 = iCog0;
+
 	ZAssert(sIsPending(lCog0) && sIsPending(iCog1));
 
 	if (sCallPendingCog_Unchanged(lCog0, iParam))
@@ -860,7 +874,7 @@ ZCog<Param>& operator/=
 
 template <class Param>
 ZCog<Param> spCogFun_WithUnchanged(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1);
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1);
 
 template <class Param>
 ZCog<Param> spCog_WithUnchanged
@@ -885,8 +899,10 @@ ZCog<Param> sCog_WithUnchanged
 
 template <class Param>
 ZCog<Param> spCogFun_WithUnchanged(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCog0, const ZCog<Param>& iCog1)
+	const ZCog<Param>& iCog0, const ZCog<Param>& iCog1)
 	{
+	ZCog<Param> lCog0 = iCog0;
+
 	ZAssert(sIsPending(lCog0) && sIsPending(iCog1));
 
 	if (sCallPendingCog_Unchanged(lCog0, iParam))
