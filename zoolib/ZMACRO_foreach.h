@@ -27,8 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define ZMACRO_foreachi(iter, cont) \
 	for (ZMACRO_typeof(cont.begin()) iter = cont.begin(), \
-	ZMACRO_Concat(cont##_##end,__LINE__) = cont.end(); \
-	iter != ZMACRO_Concat(cont##_##end,__LINE__); ++iter)
+		ZMACRO_Concat(cont##_##end,__LINE__) = cont.end(); \
+		iter != ZMACRO_Concat(cont##_##end,__LINE__); ++iter)
 
 #ifndef foreachi
 	#define foreachi ZMACRO_foreachi
@@ -38,21 +38,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // MARK: - ZMACRO_foreachv
 
 namespace ZooLib {
+
 template <typename Container>
 class ZWrapper_foreachv_T
 	{
 public:
     inline ZWrapper_foreachv_T(const Container& iContainer)
-	:	fContainer(iContainer)
-	,	fIter(fContainer.begin())
-	,	fEnd(fContainer.end())
-	,	fBroke(0)
+	:	fIter(iContainer.begin())
+	,	fEnd(iContainer.end())
+	,	fMismatch(0)
 		{}
 
-    const Container& fContainer;
     typename Container::const_iterator fIter;
 	const typename Container::const_iterator fEnd;
-    int fBroke;
+    int fMismatch;
 	};
 
 } // namespace ZooLib
@@ -61,23 +60,23 @@ public:
 	// Curt version
 	#define ZMACRO_foreachv(vardecl, cont) \
 		for (ZWrapper_foreachv_T<ZMACRO_typeof(cont)> wrap(cont); \
-			not wrap.fBroke && wrap.fIter != wrap.fEnd; \
-			++wrap.fIter, ++wrap.fBroke) \
-			for (vardecl = *wrap.fIter; not wrap.fBroke; --wrap.fBroke)
+			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
+			++wrap.fIter, ++wrap.fMismatch) \
+			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
 
 #else
 	#define ZMACRO_foreachv(VarDeclaration, Container) \
 		for (ZooLib::ZWrapper_foreachv_T<ZMACRO_typeof(Container)> \
-		ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__))(Container); \
-			not ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fBroke \
+			ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__))(Container); \
+			not ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fMismatch \
 			&& ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fIter \
 			!= ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fEnd; \
 			++ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fIter, \
-			++ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fBroke) \
+			++ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fMismatch) \
 			for (VarDeclaration = \
 			*ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fIter; \
-			not ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fBroke; \
-			--ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fBroke)
+			not ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fMismatch; \
+			--ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fMismatch)
 
 #endif
 
