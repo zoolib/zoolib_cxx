@@ -27,8 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define ZMACRO_foreachi(iter, cont) \
 	for (ZMACRO_typeof(cont.begin()) iter = cont.begin(), \
-		ZMACRO_Concat(cont##_##end,__LINE__) = cont.end(); \
-		iter != ZMACRO_Concat(cont##_##end,__LINE__); ++iter)
+		ZMACRO_Concat(foreach_end,__LINE__) = cont.end(); \
+		iter != ZMACRO_Concat(foreach_end,__LINE__); ++iter)
 
 #ifndef foreachi
 	#define foreachi ZMACRO_foreachi
@@ -67,16 +67,16 @@ public:
 #else
 	#define ZMACRO_foreachv(VarDeclaration, Container) \
 		for (ZooLib::ZWrapper_foreachv_T<ZMACRO_typeof(Container)> \
-			ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__))(Container); \
-			not ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fMismatch \
-			&& ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fIter \
-			!= ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fEnd; \
-			++ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fIter, \
-			++ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fMismatch) \
+			ZMACRO_Concat(Wrapper_foreachv,__LINE__)(Container); \
+			not ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch \
+			&& ZMACRO_Concat(Wrapper_foreachv,__LINE__).fIter \
+			!= ZMACRO_Concat(Wrapper_foreachv,__LINE__).fEnd; \
+			++ZMACRO_Concat(Wrapper_foreachv,__LINE__).fIter, \
+			++ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch) \
 			for (VarDeclaration = \
-			*ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fIter; \
-			not ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fMismatch; \
-			--ZMACRO_Concat(Container,ZMACRO_Concat(_Wrapper,__LINE__)).fMismatch)
+			*ZMACRO_Concat(Wrapper_foreachv,__LINE__).fIter; \
+			not ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch; \
+			--ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch)
 
 #endif
 
