@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable_ObjC.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMacro_foreach.h"
 #include "zoolib/ZRef_NS.h"
 #include "zoolib/ZUtil_NS.h"
 #include "zoolib/ZUtil_STL_map.h"
@@ -396,22 +397,22 @@ ZRef<UITableViewCell> SectionBody_SingleRow::UITableViewCellForRow
 size_t SectionBody_Multi::NumberOfRows()
 	{
 	size_t count = 0;
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
-		count += (*i)->NumberOfRows();
+	foreachi (ii, fBodies)
+		count += (*ii)->NumberOfRows();
 	return count;
 	}
 
 void SectionBody_Multi::PreUpdate()
 	{
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies_Pending.begin(); i != fBodies_Pending.end(); ++i)
-		(*i)->PreUpdate();
+	foreachi (ii, fBodies_Pending)
+		(*ii)->PreUpdate();
 	}
 
 bool SectionBody_Multi::WillBeEmpty()
 	{
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies_Pending.begin(); i != fBodies_Pending.end(); ++i)
+	foreachi (ii, fBodies_Pending)
 		{
-		if (!(*i)->WillBeEmpty())
+		if (!(*ii)->WillBeEmpty())
 			return false;
 		}
 	return true;
@@ -419,8 +420,8 @@ bool SectionBody_Multi::WillBeEmpty()
 
 void SectionBody_Multi::Update_NOP()
 	{
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies_Pending.begin(); i != fBodies_Pending.end(); ++i)
-		(*i)->Update_NOP();
+	foreachi (ii, fBodies_Pending)
+		(*ii)->Update_NOP();
 	}
 
 void SectionBody_Multi::Update_Normal
@@ -469,52 +470,52 @@ void SectionBody_Multi::Update_Normal
 
 void SectionBody_Multi::Update_Insert(RowMeta& ioRowMeta_New, RowUpdate& ioRowUpdate_New)
 	{
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies_Pending.begin(); i != fBodies_Pending.end(); ++i)
-		(*i)->Update_Insert(ioRowMeta_New, ioRowUpdate_New);
+	foreachi (ii, fBodies_Pending)
+		(*ii)->Update_Insert(ioRowMeta_New, ioRowUpdate_New);
 	}
 
 void SectionBody_Multi::Update_Delete(RowMeta& ioRowMeta_Old, RowUpdate& ioRowUpdate_Old)
 	{
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies_Pending.begin(); i != fBodies_Pending.end(); ++i)
-		(*i)->Update_Delete(ioRowMeta_Old, ioRowUpdate_Old);
+	foreachi (ii, fBodies_Pending)
+		(*ii)->Update_Delete(ioRowMeta_Old, ioRowUpdate_Old);
 	}
 
 void SectionBody_Multi::FinishUpdate()
 	{
 	fBodies = fBodies_Pending;
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
-		(*i)->FinishUpdate();
+	foreachi (ii, fBodies)
+		(*ii)->FinishUpdate();
 	}
 
 void SectionBody_Multi::ViewWillAppear(UITableView* iTV)
 	{
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
-		(*i)->ViewWillAppear(iTV);
+	foreachi (ii, fBodies)
+		(*ii)->ViewWillAppear(iTV);
 	}
 
 void SectionBody_Multi::ViewDidAppear(UITableView* iTV)
 	{
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
-		(*i)->ViewDidAppear(iTV);
+	foreachi (ii, fBodies)
+		(*ii)->ViewDidAppear(iTV);
 	}
 
 void SectionBody_Multi::ViewWillDisappear(UITableView* iTV)
 	{
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
-		(*i)->ViewWillDisappear(iTV);
+	foreachi (ii, fBodies)
+		(*ii)->ViewWillDisappear(iTV);
 	}
 
 void SectionBody_Multi::ViewDidDisappear(UITableView* iTV)
 	{
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
-		(*i)->ViewDidDisappear(iTV);
+	foreachi (ii, fBodies)
+		(*ii)->ViewDidDisappear(iTV);
 	}
 
 bool SectionBody_Multi::FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow)
 	{
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
+	foreachi (ii, fBodies)
 		{
-		if ((*i)->FindSectionBody(iSB, ioRow))
+		if ((*ii)->FindSectionBody(iSB, ioRow))
 			return true;
 		}
 	return false;
@@ -638,7 +639,7 @@ ZRef<SectionBody> SectionBody_Multi::pGetBodyAndRowIndex(size_t& oIndex, size_t 
 ZRef<SectionBody> SectionBody_Multi::pGetBodyAndRowIndex(size_t& oIndex, size_t iIndex, bool* oIsSucceeded)
 	{
 	oIndex = iIndex;
-	for (vector<ZRef<SectionBody> >::iterator i = fBodies.begin(); i != fBodies.end(); ++i)
+	foreachi (i, fBodies)
 		{
 		ZRef<SectionBody> theBody = *i;
 		const size_t theCount = theBody->NumberOfRows();
@@ -1224,8 +1225,7 @@ static void spInsertSections(UITableView* iTableView,
 			for (size_t x = 0; x < fReloads.size(); ++x)
 				{
 				map<size_t, UITableViewRowAnimation>& theMap = fReloads[x];
-				for (map<size_t, UITableViewRowAnimation>::iterator i = theMap.begin();
-					i != theMap.end(); ++i)
+				foreachi (i, theMap)
 					{
 					UITableViewRowAnimation theAnimation = UITableViewRowAnimationNone;
 					if (fShown)
@@ -1240,8 +1240,7 @@ static void spInsertSections(UITableView* iTableView,
 		for (size_t x = 0; x < fDeletes.size(); ++x)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = fDeletes[x];
-			for (map<size_t, UITableViewRowAnimation>::iterator i = theMap.begin();
-				i != theMap.end(); ++i)
+			foreachi (i, theMap)
 				{
 				[tableView
 					deleteRowsAtIndexPaths:sMakeNSIndexPathArray(x, i->first, 1)
@@ -1252,8 +1251,7 @@ static void spInsertSections(UITableView* iTableView,
 		for (size_t x = 0; x < fInserts.size(); ++x)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = fInserts[x];
-			for (map<size_t, UITableViewRowAnimation>::iterator i = theMap.begin();
-				i != theMap.end(); ++i)
+			foreachi (i, theMap)
 				{
 				[tableView
 					insertRowsAtIndexPaths:sMakeNSIndexPathArray(x, i->first, 1)
