@@ -44,7 +44,7 @@ ZRef<ZYadR> sYadR(const Val& iVal)
 	}
 
 ZRef<ZYadMapRPos> sYadR(const KeyRef& iKeyRef)
-	{ return new ZYadMapRPos_Val_T<KeyRef>(iKeyRef); }
+	{ return new ZYadMapAtRPos_Val_T<KeyRef>(iKeyRef); }
 
 } // namespace ZWinRegistry
 } // namespace ZooLib
