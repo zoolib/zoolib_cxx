@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_Val_T_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZYad.h"
 #include "zoolib/ZStream_Data_T.h"
+#include "zoolib/ZYad.h"
 
 namespace ZooLib {
 
