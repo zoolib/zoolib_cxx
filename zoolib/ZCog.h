@@ -418,28 +418,29 @@ ZCog<Param> spCog_If
 
 template <class Param>
 ZCog<Param> spCogFun_If(const ZCog<Param>& iSelf, Param iParam,
-	ZCog<Param> lCondition,
+	const ZCog<Param>& iCondition,
 	const ZCog<Param>& iCog0,
 	const ZCog<Param>& iCog1)
 	{
-	if (sCallPendingCog_Unchanged(lCondition, iParam))
+	ZCog<Param> newCondition = iCondition;
+	if (sCallPendingCog_Unchanged(newCondition, iParam))
 		return iSelf;
 
-	if (sIsTrue(lCondition))
+	if (sIsTrue(newCondition))
 		{
 		if (sIsFinished(iCog0))
 			return iCog0;
 		return iCog0->Call(iCog0, iParam);
 		}
 
-	if (sIsFalse(lCondition))
+	if (sIsFalse(newCondition))
 		{
 		if (sIsFinished(iCog1))
 			return iCog1;
 		return iCog1->Call(iCog1, iParam);
 		}
 
-	return spCog_If(lCondition, iCog0, iCog1);
+	return spCog_If(newCondition, iCog0, iCog1);
 	}
 
 template <class Param>
@@ -489,7 +490,6 @@ ZCog<Param> sCog_Each
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return sCog_If(iCallable0, iCallable1, iCallable1); }
-//	{ return +iCallable0 >> iCallable1; }
 
 template <class Param>
 ZCog<Param> operator^
