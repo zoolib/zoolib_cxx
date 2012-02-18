@@ -26,8 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // MARK: - ZMACRO_foreachi
 
 #define ZMACRO_foreachi(iter, cont) \
-	for (ZMACRO_typeof(cont.begin()) iter = cont.begin(), \
-		ZMACRO_Concat(foreach_end,__LINE__) = cont.end(); \
+	for (ZMACRO_typeof((cont).begin()) iter = (cont).begin(), \
+		ZMACRO_Concat(foreach_end,__LINE__) = (cont).end(); \
 		iter != ZMACRO_Concat(foreach_end,__LINE__); ++iter)
 
 #ifndef foreachi
