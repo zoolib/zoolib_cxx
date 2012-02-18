@@ -229,9 +229,9 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadSeqAt
+// MARK: - ZYadSeqAtR
 
-class ZYadSeqAt
+class ZYadSeqAtR
 :	public virtual ZYadR
 	{
 public:
@@ -246,9 +246,9 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadMapAt
+// MARK: - ZYadMapAtR
 
-class ZYadMapAt
+class ZYadMapAtR
 :	public virtual ZYadR
 	{
 public:
@@ -265,7 +265,7 @@ public:
 // MARK: - ZYadSeqAtRPos
 
 class ZYadSeqAtRPos
-:	public virtual ZYadSeqAt
+:	public virtual ZYadSeqAtR
 ,	public virtual ZYadSeqRPos
 	{
 // From ZYadR
@@ -276,7 +276,7 @@ class ZYadSeqAtRPos
 // MARK: - ZYadMapAtRPos
 
 class ZYadMapAtRPos
-:	public virtual ZYadMapAt
+:	public virtual ZYadMapAtR
 ,	public virtual ZYadMapRPos
 	{
 // From ZYadR
@@ -303,10 +303,10 @@ public:
 	virtual void Visit_YadMapRClone(const ZRef<ZYadMapRClone>& iYadMapRClone);
 	virtual void Visit_YadMapRPos(const ZRef<ZYadMapRPos>& iYadMapRPos);
 
-	virtual void Visit_YadSeqAt(const ZRef<ZYadSeqAt>& iYadSeqAt);
+	virtual void Visit_YadSeqAtR(const ZRef<ZYadSeqAtR>& iYadSeqAtR);
 	virtual void Visit_YadSeqAtRPos(const ZRef<ZYadSeqAtRPos>& iYadSeqAtRPos);
 
-	virtual void Visit_YadMapAt(const ZRef<ZYadMapAt>& iYadMapAt);
+	virtual void Visit_YadMapAtR(const ZRef<ZYadMapAtR>& iYadMapAtR);
 	virtual void Visit_YadMapAtRPos(const ZRef<ZYadMapAtRPos>& iYadMapAtRPos);
 	};
 

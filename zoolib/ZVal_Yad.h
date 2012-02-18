@@ -141,8 +141,8 @@ public:
 	~ZSeq_Yad();
 	ZSeq_Yad& operator=(const ZSeq_Yad& iOther);
 
-	ZSeq_Yad(const ZRef<ZYadSeqAt>& iYad);
-	ZSeq_Yad& operator=(const ZRef<ZYadSeqAt>& iYad);
+	ZSeq_Yad(const ZRef<ZYadSeqAtR>& iYad);
+	ZSeq_Yad& operator=(const ZRef<ZYadSeqAtR>& iYad);
 
 // ZSeq protocol
 	size_t Count() const;
@@ -184,10 +184,10 @@ public:
 		}
 
 // Our protocol
-	ZRef<ZYadSeqAt> GetYad() const;
+	ZRef<ZYadSeqAtR> GetYad() const;
 
 private:
-	mutable ZRef<ZYadSeqAt> fYad;
+	mutable ZRef<ZYadSeqAtR> fYad;
 	};
 
 // =================================================================================================
@@ -201,8 +201,8 @@ public:
 	~ZMap_Yad();
 	ZMap_Yad& operator=(const ZMap_Yad& iOther);
 
-	ZMap_Yad(const ZRef<ZYadMapAt>& iYad);
-	ZMap_Yad& operator=(const ZRef<ZYadMapAt>& iYad);
+	ZMap_Yad(const ZRef<ZYadMapAtR>& iYad);
+	ZMap_Yad& operator=(const ZRef<ZYadMapAtR>& iYad);
 
 // ZMap protocol
 	void Clear();
@@ -242,10 +242,10 @@ public:
 		}
 
 // Our protocol
-	ZRef<ZYadMapAt> GetYad() const;
+	ZRef<ZYadMapAtR> GetYad() const;
 
 private:
-	mutable ZRef<ZYadMapAt> fYad;
+	mutable ZRef<ZYadMapAtR> fYad;
 	};
 
 } // namespace ZooLib

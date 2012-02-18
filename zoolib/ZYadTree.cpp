@@ -37,13 +37,13 @@ using namespace ZUtil_STL;
 typedef ZCountedVal<string> CountedString;
 
 class Link;
-class YadMapAt;
+class YadMapAtR;
 
 // =================================================================================================
 // MARK: - Helpers
 
 ZRef<ZYadR> spWrap(const ZRef<Link>& iLink, const ZRef<ZYadR>& iYad);
-ZRef<ZYadR> spWrapNoMat(const ZRef<Link>& iLink, const ZRef<ZYadR>& iYad);
+ZRef<ZYadR> spWrap_NoAt(const ZRef<Link>& iLink, const ZRef<ZYadR>& iYad);
 
 // =================================================================================================
 // MARK: - Link declaration
@@ -53,12 +53,12 @@ class Link
 	{
 public:
 // ctor that establishes a tree
-	Link(const ZRef<CountedString>& iProtoName, const ZRef<ZYadMapAt>& iYadMapAt);
+	Link(const ZRef<CountedString>& iProtoName, const ZRef<ZYadMapAtR>& iYadMapAtR);
 
 // ctor used as we walk down a tree.
-	Link(const ZRef<Link>& iParent, const ZRef<ZYadMapAt>& iYadMapAt);
+	Link(const ZRef<Link>& iParent, const ZRef<ZYadMapAtR>& iYadMapAtR);
 
-	ZRef<ZYadMapAt> GetYadMapAt();
+	ZRef<ZYadMapAtR> GetYadMapAtR();
 
 	ZRef<ZYadR> ReadAt(const string& iName);
 
@@ -67,7 +67,7 @@ public:
 private:
 	const ZRef<CountedString> fProtoName;
 	const ZRef<Link> fParent;
-	const ZRef<ZYadMapAt> fYadMapAt;
+	const ZRef<ZYadMapAtR> fYadMapAtR;
 	map<string,ZRef<Link> > fChildren;
 	};
 
@@ -171,13 +171,13 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - YadSeqAt
+// MARK: - YadSeqAtR
 
-class YadSeqAt
-:	public ZYadSeqAt
+class YadSeqAtR
+:	public ZYadSeqAtR
 	{
 public:
-	YadSeqAt(const ZRef<Link>& iLink, const ZRef<ZYadSeqAt>& iYad)
+	YadSeqAtR(const ZRef<Link>& iLink, const ZRef<ZYadSeqAtR>& iYad)
 	:	fLink(iLink)
 	,	fYad(iYad)
 	,	fChildren(fYad->Count(), null)
@@ -186,7 +186,7 @@ public:
 	virtual bool IsSimple(const ZYadOptions& iOptions)
 		{ return false; }
 
-// From ZYadSeqAt
+// From ZYadSeqAtR
 	virtual uint64 Count()
 		{ return fYad->Count(); }
 
@@ -209,12 +209,12 @@ public:
 		{ return fYad->QAsAny(); }
 
 // Our protocol
-	ZRef<ZYadSeqAt> GetYad()
+	ZRef<ZYadSeqAtR> GetYad()
 		{ return fYad; }
 
 private:
 	const ZRef<Link> fLink;
-	const ZRef<ZYadSeqAt> fYad;
+	const ZRef<ZYadSeqAtR> fYad;
 	vector<ZRef<ZYadR> > fChildren;
 	};
 
@@ -255,7 +255,7 @@ public:
 	virtual uint64 GetSize()
 		{ return fYad->GetSize(); }
 
-// From ZYadSeqAt
+// From ZYadSeqAtR
 	virtual uint64 Count()
 		{ return fYad->Count(); }
 
@@ -284,17 +284,17 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - YadMapAt
+// MARK: - YadMapAtR
 
-class YadMapAt
-:	public ZYadMapAt
+class YadMapAtR
+:	public ZYadMapAtR
 	{
 public:
-	YadMapAt(const ZRef<Link>& iLink)
+	YadMapAtR(const ZRef<Link>& iLink)
 	:	fLink(iLink)
 		{}
 
-// From ZYadMapAt
+// From ZYadMapAtR
 	virtual bool IsSimple(const ZYadOptions& iOptions)
 		{ return false; }
 
@@ -303,8 +303,8 @@ public:
 
 	virtual ZQ<ZAny> QAsAny()
 		{
-		if (ZRef<ZYadMapAt> theYadMapAt = fLink->GetYadMapAt())
-			return theYadMapAt->QAsAny();
+		if (ZRef<ZYadMapAtR> theYadMapAtR = fLink->GetYadMapAtR())
+			return theYadMapAtR->QAsAny();
 		return null;
 		}
 
@@ -319,40 +319,40 @@ private:
 // =================================================================================================
 // MARK: - Link definition
 
-Link::Link(const ZRef<CountedString>& iProtoName, const ZRef<ZYadMapAt>& iYadMapAt)
+Link::Link(const ZRef<CountedString>& iProtoName, const ZRef<ZYadMapAtR>& iYadMapAtR)
 :	fProtoName(iProtoName)
-,	fYadMapAt(iYadMapAt)
+,	fYadMapAtR(iYadMapAtR)
 	{}
 
-Link::Link(const ZRef<Link>& iParent, const ZRef<ZYadMapAt>& iYadMapAt)
+Link::Link(const ZRef<Link>& iParent, const ZRef<ZYadMapAtR>& iYadMapAtR)
 :	fProtoName(iParent->fProtoName)
 ,	fParent(iParent)
-,	fYadMapAt(iYadMapAt)
+,	fYadMapAtR(iYadMapAtR)
 	{}
 
-ZRef<ZYadMapAt> Link::GetYadMapAt()
-	{ return fYadMapAt; }
+ZRef<ZYadMapAtR> Link::GetYadMapAtR()
+	{ return fYadMapAtR; }
 
 ZRef<ZYadR> Link::ReadAt(const string& iName)
 	{
 	if (ZQ<ZRef<Link> > theQ = sQGet(fChildren, iName))
-		return new YadMapAt(*theQ);
+		return new YadMapAtR(*theQ);
 
-	if (ZRef<ZYadR> theYad = fYadMapAt->ReadAt(iName))
+	if (ZRef<ZYadR> theYad = fYadMapAtR->ReadAt(iName))
 		{
-		if (ZRef<ZYadMapAt> asYadMapAt = theYad.DynamicCast<ZYadMapAt>())
+		if (ZRef<ZYadMapAtR> asYadMapAtR = theYad.DynamicCast<ZYadMapAtR>())
 			{
-			ZRef<Link> theLink = new Link(this, asYadMapAt);
+			ZRef<Link> theLink = new Link(this, asYadMapAtR);
 			sInsertMustNotContain(fChildren, iName, theLink);
-			return new YadMapAt(theLink);
+			return new YadMapAtR(theLink);
 			}
 		else
 			{
-			return spWrapNoMat(this, theYad);
+			return spWrap_NoAt(this, theYad);
 			}
 		}
 
-	if (ZRef<ZYadStrimmerR> theProtoYad = fYadMapAt->ReadAt(fProtoName->Get()).DynamicCast<ZYadStrimmerR>())
+	if (ZRef<ZYadStrimmerR> theProtoYad = fYadMapAtR->ReadAt(fProtoName->Get()).DynamicCast<ZYadStrimmerR>())
 		{
 		const string theTrailString = theProtoYad->GetStrimR().ReadAll8();
 
@@ -387,9 +387,9 @@ ZRef<ZYadR> Link::ReadAt(const string& iName)
 					if (++index == theTrail.Count())
 						return theYadR;
 
-					if (ZRef<YadMapAt> theYadMapAt = theYadR.DynamicCast<YadMapAt>())
+					if (ZRef<YadMapAtR> theYadMapAtR = theYadR.DynamicCast<YadMapAtR>())
 						{
-						cur = theYadMapAt->GetLink();
+						cur = theYadMapAtR->GetLink();
 						continue;
 						}
 					}
@@ -405,11 +405,11 @@ ZRef<Link> Link::WithRootAugment(const string& iRootAugmentName, const ZRef<Link
 	if (fParent)
 		{
 		ZRef<Link> newParent = fParent->WithRootAugment(iRootAugmentName, iRootAugment);
-		ZRef<Link> newSelf = new Link(newParent, fYadMapAt);
+		ZRef<Link> newSelf = new Link(newParent, fYadMapAtR);
 		return newSelf;
 		}
 
-	ZRef<Link> newSelf = new Link(fProtoName, fYadMapAt);
+	ZRef<Link> newSelf = new Link(fProtoName, fYadMapAtR);
 	sInsertMustNotContain(newSelf->fChildren, iRootAugmentName, iRootAugment);
 	return newSelf;
 	}
@@ -438,14 +438,14 @@ public:
 	virtual void Visit_YadSeqRPos(const ZRef<ZYadSeqRPos>& iYadSeqRPos)
 		{ pSetResult(new YadSeqRPos(fLink, iYadSeqRPos)); }
 
-	virtual void Visit_YadSeqAt(const ZRef<ZYadSeqAt>& iYadSeqAt)
-		{ pSetResult(new YadSeqAt(fLink, iYadSeqAt)); }
+	virtual void Visit_YadSeqAtR(const ZRef<ZYadSeqAtR>& iYadSeqAtR)
+		{ pSetResult(new YadSeqAtR(fLink, iYadSeqAtR)); }
 
 	virtual void Visit_YadSeqAtRPos(const ZRef<ZYadSeqAtRPos>& iYadSeqAtRPos)
 		{ pSetResult(new YadSeqAtRPos(fLink, iYadSeqAtRPos)); }
 
-	virtual void Visit_YadMapAt(const ZRef<ZYadMapAt>& iYadMapAt)
-		{ pSetResult(new YadMapAt(new Link(fLink, iYadMapAt))); }
+	virtual void Visit_YadMapAtR(const ZRef<ZYadMapAtR>& iYadMapAtR)
+		{ pSetResult(new YadMapAtR(new Link(fLink, iYadMapAtR))); }
 
 	const ZRef<Link>& fLink;
 	};
@@ -453,20 +453,20 @@ public:
 ZRef<ZYadR> spWrap(const ZRef<Link>& iLink, const ZRef<ZYadR>& iYad)
 	{ return Visitor_Wrap(iLink).Do(iYad); }
 
-class Visitor_Wrap_NoMat
+class Visitor_Wrap_NoAt
 :	public Visitor_Wrap
 	{
 public:
-	Visitor_Wrap_NoMat(const ZRef<Link>& iLink)
+	Visitor_Wrap_NoAt(const ZRef<Link>& iLink)
 	:	Visitor_Wrap(iLink)
 		{}
 
-	virtual void Visit_YadMapAt(const ZRef<ZYadMapAt>& iYadMapAt)
+	virtual void Visit_YadMapAtR(const ZRef<ZYadMapAtR>& iYadMapAtR)
 		{ ZUnimplemented(); }
 	};
 
-ZRef<ZYadR> spWrapNoMat(const ZRef<Link>& iLink, const ZRef<ZYadR>& iYad)
-	{ return Visitor_Wrap_NoMat(iLink).Do(iYad); }
+ZRef<ZYadR> spWrap_NoAt(const ZRef<Link>& iLink, const ZRef<ZYadR>& iYad)
+	{ return Visitor_Wrap_NoAt(iLink).Do(iYad); }
 
 } // anonymous namespace
 } // namespace YadTree
@@ -476,22 +476,22 @@ ZRef<ZYadR> spWrapNoMat(const ZRef<Link>& iLink, const ZRef<ZYadR>& iYad)
 
 using namespace YadTree;
 
-ZRef<ZYadMapAt> sYadTree(const ZRef<ZYadMapAt>& iYadMapAt, const string& iProtoName)
-	{ return new YadMapAt(new Link(new CountedString(iProtoName), iYadMapAt)); }
+ZRef<ZYadMapAtR> sYadTree(const ZRef<ZYadMapAtR>& iYadMapAtR, const string& iProtoName)
+	{ return new YadMapAtR(new Link(new CountedString(iProtoName), iYadMapAtR)); }
 
-ZRef<ZYadMapAt> sYadTree(const ZRef<ZYadMapAt>& iYadMapAt)
-	{ return sYadTree(iYadMapAt, "_"); }
+ZRef<ZYadMapAtR> sYadTree(const ZRef<ZYadMapAtR>& iYadMapAtR)
+	{ return sYadTree(iYadMapAtR, "_"); }
 
-ZRef<ZYadMapAt> sParameterizedYadTree(const ZRef<ZYadMapAt>& iBase,
-	const string& iRootAugmentName, const ZRef<ZYadMapAt>& iRootAugment)
+ZRef<ZYadMapAtR> sParameterizedYadTree(const ZRef<ZYadMapAtR>& iBase,
+	const string& iRootAugmentName, const ZRef<ZYadMapAtR>& iRootAugment)
 	{
-	if (ZRef<YadMapAt> theBase = iBase.DynamicCast<YadMapAt>())
+	if (ZRef<YadMapAtR> theBase = iBase.DynamicCast<YadMapAtR>())
 		{
-		if (ZRef<YadMapAt> theRootAugment = iRootAugment.DynamicCast<YadMapAt>())
+		if (ZRef<YadMapAtR> theRootAugment = iRootAugment.DynamicCast<YadMapAtR>())
 			{
 			ZRef<Link> newLink =
 				theBase->GetLink()->WithRootAugment(iRootAugmentName, theRootAugment->GetLink());
-			return new YadMapAt(newLink);
+			return new YadMapAtR(newLink);
 			}
 		}
 	return iBase;

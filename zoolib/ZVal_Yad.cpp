@@ -84,28 +84,28 @@ bool ZVal_Yad::IsNull() const
 
 ZQ<ZVal_Yad> ZVal_Yad::QGet(const string8& iName) const
 	{
-	if (ZRef<ZYadMapAt> theYad = fYad.DynamicCast<ZYadMapAt>())
+	if (ZRef<ZYadMapAtR> theYad = fYad.DynamicCast<ZYadMapAtR>())
 		return ZMap_Yad(theYad).QGet(iName);
 	return null;
 	}
 
 ZVal_Yad ZVal_Yad::Get(const string8& iName) const
 	{
-	if (ZRef<ZYadMapAt> theYad = fYad.DynamicCast<ZYadMapAt>())
+	if (ZRef<ZYadMapAtR> theYad = fYad.DynamicCast<ZYadMapAtR>())
 		return ZMap_Yad(theYad).Get(iName);
 	return ZVal_Yad();
 	}
 
 ZQ<ZVal_Yad> ZVal_Yad::QGet(const size_t& iIndex) const
 	{
-	if (ZRef<ZYadSeqAt> theYad = fYad.DynamicCast<ZYadSeqAt>())
+	if (ZRef<ZYadSeqAtR> theYad = fYad.DynamicCast<ZYadSeqAtR>())
 		return ZSeq_Yad(theYad).QGet(iIndex);
 	return null;
 	}
 
 ZVal_Yad ZVal_Yad::Get(const size_t& iIndex) const
 	{
-	if (ZRef<ZYadSeqAt> theYad = fYad.DynamicCast<ZYadSeqAt>())
+	if (ZRef<ZYadSeqAtR> theYad = fYad.DynamicCast<ZYadSeqAtR>())
 		return ZSeq_Yad(theYad).Get(iIndex);
 	return ZVal_Yad();
 	}
@@ -113,7 +113,7 @@ ZVal_Yad ZVal_Yad::Get(const size_t& iIndex) const
 template <>
 ZQ<ZSeq_Yad> ZVal_Yad::QGet() const
 	{
-	if (ZRef<ZYadSeqAt> theYad = fYad.DynamicCast<ZYadSeqAt>())
+	if (ZRef<ZYadSeqAtR> theYad = fYad.DynamicCast<ZYadSeqAtR>())
 		return ZSeq_Yad(theYad);
 	return null;
 	}
@@ -121,7 +121,7 @@ ZQ<ZSeq_Yad> ZVal_Yad::QGet() const
 template <>
 ZQ<ZMap_Yad> ZVal_Yad::QGet() const
 	{
-	if (ZRef<ZYadMapAt> theYad = fYad.DynamicCast<ZYadMapAt>())
+	if (ZRef<ZYadMapAtR> theYad = fYad.DynamicCast<ZYadMapAtR>())
 		return ZMap_Yad(theYad);
 	return null;
 	}
@@ -134,10 +134,10 @@ ZQ<ZAny> ZVal_Yad::pQAsAny() const
 	if (not fYad)
 		return null;
 
-	if (ZRef<ZYadSeqAt> theYad = fYad.DynamicCast<ZYadSeqAt>())
+	if (ZRef<ZYadSeqAtR> theYad = fYad.DynamicCast<ZYadSeqAtR>())
 		return ZSeq_Yad(theYad);
 
-	if (ZRef<ZYadMapAt> theYad = fYad.DynamicCast<ZYadMapAt>())
+	if (ZRef<ZYadMapAtR> theYad = fYad.DynamicCast<ZYadMapAtR>())
 		return ZMap_Yad(theYad);
 
 	return sFromYadR(ZVal_Any(), fYad).AsAny();
@@ -165,11 +165,11 @@ ZSeq_Yad& ZSeq_Yad::operator=(const ZSeq_Yad& iOther)
 	return *this;
 	}
 
-ZSeq_Yad::ZSeq_Yad(const ZRef<ZYadSeqAt>& iYad)
+ZSeq_Yad::ZSeq_Yad(const ZRef<ZYadSeqAtR>& iYad)
 :	fYad(iYad)
 	{}
 
-ZSeq_Yad& ZSeq_Yad::operator=(const ZRef<ZYadSeqAt>& iYad)
+ZSeq_Yad& ZSeq_Yad::operator=(const ZRef<ZYadSeqAtR>& iYad)
 	{
 	fYad = iYad;
 	return *this;
@@ -209,7 +209,7 @@ ZVal_Yad ZSeq_Yad::Get(size_t iIndex) const
 	return ZVal_Yad();
 	}
 
-ZRef<ZYadSeqAt> ZSeq_Yad::GetYad() const
+ZRef<ZYadSeqAtR> ZSeq_Yad::GetYad() const
 	{ return fYad; }
 
 // =================================================================================================
@@ -231,11 +231,11 @@ ZMap_Yad& ZMap_Yad::operator=(const ZMap_Yad& iOther)
 	return *this;
 	}
 
-ZMap_Yad::ZMap_Yad(const ZRef<ZYadMapAt>& iYad)
+ZMap_Yad::ZMap_Yad(const ZRef<ZYadMapAtR>& iYad)
 :	fYad(iYad)
 	{}
 
-ZMap_Yad& ZMap_Yad::operator=(const ZRef<ZYadMapAt>& iYad)
+ZMap_Yad& ZMap_Yad::operator=(const ZRef<ZYadMapAtR>& iYad)
 	{
 	fYad = iYad;
 	return *this;
@@ -268,7 +268,7 @@ ZVal_Yad ZMap_Yad::Get(const string8& iName) const
 	return ZVal_Yad();
 	}
 
-ZRef<ZYadMapAt> ZMap_Yad::GetYad() const
+ZRef<ZYadMapAtR> ZMap_Yad::GetYad() const
 	{ return fYad; }
 
 } // namespace ZooLib

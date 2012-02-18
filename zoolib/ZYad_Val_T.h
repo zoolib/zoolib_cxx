@@ -247,7 +247,7 @@ public:
 	void SetPosition(const std::string& iName)
 		{ fIndex = fMap.IndexOf(iName); }
 
-// From ZYadMapAt
+// From ZYadMapAtR
 	virtual ZRef<ZYadR> ReadAt(const std::string& iName)
 		{
 		Index_t theIndex = fMap.IndexOf(iName);
@@ -310,7 +310,7 @@ public:
 	void SetPosition(const std::string& iName)
 		{ fIndex = fMap.IndexOf(iName); }
 
-// From ZYadMapAt
+// From ZYadMapAtR
 	virtual ZRef<ZYadR> ReadAt(const std::string& iName)
 		{
 		Index_t theIndex = fMap.IndexOf(iName);

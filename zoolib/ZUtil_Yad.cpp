@@ -32,9 +32,9 @@ static ZRef<ZYadR> spGetChild(ZRef<ZYadR> iYadR, const string& iName)
 	{
 	if (ZRef<ZYadMapR> theYadMapR = iYadR.DynamicCast<ZYadMapR>())
 		{
-		if (ZRef<ZYadMapAt> theYadMapAt = iYadR.DynamicCast<ZYadMapAt>())
+		if (ZRef<ZYadMapAtR> theYadMapAtR = iYadR.DynamicCast<ZYadMapAtR>())
 			{
-			return theYadMapAt->ReadAt(iName);
+			return theYadMapAtR->ReadAt(iName);
 			}
 		else if (ZRef<ZYadMapRPos> theYadMapRPos = iYadR.DynamicCast<ZYadMapRPos>())
 			{
@@ -58,9 +58,9 @@ static ZRef<ZYadR> spGetChild(ZRef<ZYadR> iYadR, const string& iName)
 			int64 theIntIndex = theQ.Get();
 			if (theIntIndex >= 0)
 				{
-				if (ZRef<ZYadSeqAt> theYadSeqAt = iYadR.DynamicCast<ZYadSeqAt>())
+				if (ZRef<ZYadSeqAtR> theYadSeqAtR = iYadR.DynamicCast<ZYadSeqAtR>())
 					{
-					return theYadSeqAt->ReadAt(theIntIndex);
+					return theYadSeqAtR->ReadAt(theIntIndex);
 					}
 				else if (ZRef<ZYadSeqRPos> theYadSeqRPos = iYadR.DynamicCast<ZYadSeqRPos>())
 					{
