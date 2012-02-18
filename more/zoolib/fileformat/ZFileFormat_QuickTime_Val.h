@@ -37,9 +37,9 @@ typedef ZTagVal<ZData_Any,struct JPEG> Data_JPEG;
 typedef ZTagVal<ZData_Any,struct PNG> Data_PNG;
 typedef ZTagVal<ZData_Any,struct Meta> Data_Meta;
 
-ZQ<ZVal_Any> sAsVal(const void* iSource, size_t iSize);
-ZQ<ZVal_Any> sAsVal(const ZData_Any& iData);
-ZQ<ZVal_Any> sAsVal(const ZStreamR& iStreamR);
+ZQ<ZVal_Any> sQAsVal(const void* iSource, size_t iSize);
+ZQ<ZVal_Any> sQAsVal(const ZData_Any& iData);
+ZQ<ZVal_Any> sQAsVal(const ZStreamR& iStreamR);
 
 } // namespace QuickTime
 } // namespace FileFormat

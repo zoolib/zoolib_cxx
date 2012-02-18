@@ -45,7 +45,7 @@ ZData_Any spRead(const ZStreamR& iStreamR)
 
 // See http://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/Metadata/Metadata.html
 
-ZQ<ZVal_Any> sAsVal(const ZStreamRPos& iStreamRPos)
+ZQ<ZVal_Any> sQAsVal(const ZStreamRPos& iStreamRPos)
 	{
 	try
 		{
@@ -116,11 +116,11 @@ ZQ<ZVal_Any> sAsVal(const ZStreamRPos& iStreamRPos)
 	return null;
 	}
 
-ZQ<ZVal_Any> sAsVal(const void* iSource, size_t iSize)
-	{ return sAsVal(ZStreamRPos_Memory(iSource, iSize)); }
+ZQ<ZVal_Any> sQAsVal(const void* iSource, size_t iSize)
+	{ return sQAsVal(ZStreamRPos_Memory(iSource, iSize)); }
 
-ZQ<ZVal_Any> sAsVal(const ZData_Any& iData)
-	{ return sAsVal(iData.GetPtr(), iData.GetSize()); }
+ZQ<ZVal_Any> sQAsVal(const ZData_Any& iData)
+	{ return sQAsVal(iData.GetPtr(), iData.GetSize()); }
 
 } // namespace QuickTime
 } // namespace FileFormat
