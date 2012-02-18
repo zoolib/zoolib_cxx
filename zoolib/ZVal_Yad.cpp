@@ -182,8 +182,8 @@ size_t ZSeq_Yad::Count() const
 	return 0;
 	}
 
-void ZSeq_Yad::Clear()
-	{ fYad.Clear(); }
+//##void ZSeq_Yad::Clear()
+//##	{ fYad.Clear(); }
 
 ZQ<ZVal_Yad> ZSeq_Yad::QGet(size_t iIndex) const
 	{
@@ -241,8 +241,8 @@ ZMap_Yad& ZMap_Yad::operator=(const ZRef<ZYadMapAtR>& iYad)
 	return *this;
 	}
 
-void ZMap_Yad::Clear()
-	{ fYad.Clear(); }
+//##void ZMap_Yad::Clear()
+//##	{ fYad.Clear(); }
 
 ZQ<ZVal_Yad> ZMap_Yad::QGet(const string8& iName) const
 	{

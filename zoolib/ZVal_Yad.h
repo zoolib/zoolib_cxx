@@ -147,7 +147,7 @@ public:
 // ZSeq protocol
 	size_t Count() const;
 
-	void Clear();
+//##	void Clear();
 
 	ZQ<ZVal_Yad> QGet(size_t iIndex) const;
 	ZVal_Yad DGet(const ZVal_Yad& iDefault, size_t iIndex) const;
@@ -205,7 +205,7 @@ public:
 	ZMap_Yad& operator=(const ZRef<ZYadMapAtR>& iYad);
 
 // ZMap protocol
-	void Clear();
+//##	void Clear();
 
 	ZQ<ZVal_Yad> QGet(const string8& iName) const;
 	ZVal_Yad DGet(const ZVal_Yad& iDefault, const string8& iName) const;
