@@ -51,7 +51,7 @@ public:
 		{}
 
 // Our protocol
-	Val_t GetVal()
+	const Val_t& GetVal()
 		{ return fVal; }
 
 protected:
