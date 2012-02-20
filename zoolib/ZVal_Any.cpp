@@ -587,15 +587,7 @@ ZMap_Any& ZMap_Any::Set(const ZNameVal& iNV)
 	{ return this->Set(iNV.first, iNV.second); }
 
 ZVal_Any& ZMap_Any::operator[](const string8& iName)
-	{
-	if (ZVal_Any* theVal = this->PGetMutable(iName))
-		{ return *theVal; }
-	else
-		{
-		this->Set(iName, ZVal_Any());
-		return *this->PGetMutable(iName);
-		}
-	}
+	{ return this->Mutable(iName); }
 
 const ZVal_Any& ZMap_Any::operator[](const string8& iName) const
 	{
