@@ -61,7 +61,7 @@ const ZStrimW& operator<<(const ZStrimW& s, void* iVal);
 
 template <class P>
 const ZStrimW& operator<<(const ZStrimW& s, const P* iVal)
-	{ return s << "(" << typeid(P).name() << "*)" << static_cast<void*>(iVal); }
+	{ return s << "(const " << typeid(P).name() << "*)" << static_cast<const void*>(iVal); }
 
 template <class P>
 const ZStrimW& operator<<(const ZStrimW& s, P* iVal)
