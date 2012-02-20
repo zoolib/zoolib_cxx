@@ -25,10 +25,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 // MARK: - ZMACRO_foreachi
 
-#define ZMACRO_foreachi(iter, cont) \
-	for (ZMACRO_typeof((cont).begin()) iter = (cont).begin(), \
-		ZMACRO_Concat(foreach_end,__LINE__) = (cont).end(); \
-		iter != ZMACRO_Concat(foreach_end,__LINE__); ++iter)
+#ifndef ZMACRO_foreachi
+	#define ZMACRO_foreachi(iter, cont) \
+		for (ZMACRO_typeof((cont).begin()) iter = (cont).begin(), \
+			ZMACRO_Concat(foreach_end,__LINE__) = (cont).end(); \
+			iter != ZMACRO_Concat(foreach_end,__LINE__); ++iter)
+#endif
 
 #ifndef foreachi
 	#define foreachi ZMACRO_foreachi
@@ -56,10 +58,11 @@ public:
 
 } // namespace ZooLib
 
-#if 0
-	// Curt version
+#ifdef ZMACRO_foreachv
+#elif 0
+	// Terse version without line number suffix on local wrapper.
 	#define ZMACRO_foreachv(vardecl, cont) \
-		for (ZWrapper_foreachv_T<ZMACRO_typeof(cont)> wrap(cont); \
+		for (ZooLib::ZWrapper_foreachv_T<ZMACRO_typeof(cont)> wrap(cont); \
 			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
 			++wrap.fIter, ++wrap.fMismatch) \
 			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
