@@ -127,16 +127,16 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Nullary, sCog_Unknown
+// MARK: - Nullary, sCog_Pending
 
 template <class Param>
-ZCog<Param> spCogFun_Unknown(const ZCog<Param>& iSelf, Param iParam)
+ZCog<Param> spCogFun_Pending(const ZCog<Param>& iSelf, Param iParam)
 	{ return iSelf; }
 
 template <class Param>
-const ZCog<Param>& sCog_Unknown()
+const ZCog<Param>& sCog_Pending()
 	{
-	static const ZCog<Param> spCog = sCallable(spCogFun_Unknown<Param>);
+	static const ZCog<Param> spCog = sCallable(spCogFun_Pending<Param>);
 	return spCog;
 	}
 
@@ -396,7 +396,7 @@ ZCog<Param> sCog_Repeat
 		return false;
 
 	if (sIsTrue(iCallable))
-		return sCog_Unknown<Param>();
+		return sCog_Pending<Param>();
 
 	return spCog_Repeat(iCallable, iCallable);
 	}
