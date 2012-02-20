@@ -677,24 +677,22 @@ ZMatrix<E,Dim+1,Dim+1> sTranslate(const ZMatrix<E,1,Dim>& iVec)
 // =================================================================================================
 // MARK: - sMinor
 
-// ii is row, jj is col
-
 template <class E, size_t Dim>
 ZMatrix<E,Dim-1,Dim-1> sMinor(const ZMatrix<E,Dim,Dim>& iMat, size_t iRow, size_t iCol)
 	{
 	ZMatrix<E,Dim-1,Dim-1> result(null);
 	size_t r = 0;
-	for (size_t ii = 0; ii < Dim; ++ii)
+	for (size_t rr = 0; rr < Dim; ++rr)
 		{
-		if (ii == iRow)
+		if (rr == iRow)
 			continue;
 
 		size_t c = 0;
-		for (size_t jj = 0; jj < Dim; ++jj)
+		for (size_t cc = 0; cc < Dim; ++cc)
 			{
-			if (jj == iCol)
+			if (cc == iCol)
 				continue;
-			result.fE[c][r] = iMat.fE[jj][ii];
+			result.fE[c][r] = iMat.fE[cc][rr];
 			++c;
 			}
 		++r;
@@ -712,13 +710,13 @@ E sDeterminant(const ZMatrix<E,Dim,Dim>& iMat)
 
 	E result = 0.0;
 
-	for (size_t ii = 0; ii < Dim; ++ii)
+	for (size_t c = 0; c < Dim; ++c)
 		{
-		ZMatrix<E,Dim-1,Dim-1> minor = sMinor(iMat, 0, ii);
-		if (ii & 1)
-			result -= iMat.fE[ii][0] * sDeterminant(minor);
+		ZMatrix<E,Dim-1,Dim-1> minor = sMinor(iMat, 0, c);
+		if (c & 1)
+			result -= iMat.fE[c][0] * sDeterminant(minor);
 		else
-			result += iMat.fE[ii][0] * sDeterminant(minor);
+			result += iMat.fE[c][0] * sDeterminant(minor);
 		}
 
 	return result;
@@ -759,15 +757,15 @@ ZMatrix<E,Dim,Dim> sInverse(const ZMatrix<E,Dim,Dim>& iMat)
 
 	ZMatrix<E,Dim,Dim> result(null);
 
-	for (size_t jj = 0; jj < Dim; ++jj)
+	for (size_t c = 0; c < Dim; ++c)
 		{
-		for (size_t ii = 0; ii < Dim; ++ii)
+		for (size_t r = 0; r < Dim; ++r)
 			{
-			const E temp = det * sDeterminant(sMinor(iMat, jj, ii));
-			if ((ii + jj) & 1)
-				result[jj][ii] = -temp;
+			const E temp = det * sDeterminant(sMinor(iMat, c, r));
+			if ((r + c) & 1)
+				result[c][r] = -temp;
 			else
-				result[jj][ii] = temp;
+				result[c][r] = temp;
 			}
 		}
 
