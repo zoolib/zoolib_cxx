@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVal_Yad_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVal_Any.h"
+#include "zoolib/ZVal_Any.h" // For ZSeq_Any and ZMap_Any
 #include "zoolib/ZValAccessors.h"
 #include "zoolib/ZYad.h"
 
@@ -30,105 +30,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-class ZVal_Yad;
 class ZSeq_Yad;
 class ZMap_Yad;
 
-// =================================================================================================
-// MARK: - ZVal_Yad
-
-class ZVal_Yad
-	{
-public:
-	ZAny AsAny() const;
-
-	ZVal_Yad();
-	ZVal_Yad(const ZVal_Yad& iOther);
-	~ZVal_Yad();
-	ZVal_Yad& operator=(const ZVal_Yad& iOther);
-
-	ZVal_Yad(const ZRef<ZYadR>& iYad);
-	ZVal_Yad& operator=(const ZRef<ZYadR>& iYad);
-
-	ZVal_Yad(const ZSeq_Yad& iSeq);
-	ZVal_Yad& operator=(const ZSeq_Yad& iSeq);
-
-	ZVal_Yad(const ZMap_Yad& iMap);
-	ZVal_Yad& operator=(const ZMap_Yad& iMap);
-
-// ZVal protocol
-	bool IsNull() const;
-
-	template <class S>
-	ZQ<S> QGet() const;
-
-	template <class S>
-	S DGet(const S& iDefault) const
-		{
-		if (ZQ<S> theQ = this->QGet<S>())
-			return theQ.Get();
-		return iDefault;
-		}
-
-	template <class S>
-	S Get() const
-		{
-		if (ZQ<S> theQ = this->QGet<S>())
-			return theQ.Get();
-		return S();
-		}
-
-// Shortcut access to values in an enclosed Map.
-	ZQ<ZVal_Yad> QGet(const string8& iName) const;
-	ZVal_Yad Get(const string8& iName) const;
-
-	template <class S>
-	ZQ<S> QGet(const string8& iName) const
-		{ return this->Get(iName).QGet<S>(); }
-
-	template <class S>
-	S Get(const string8& iName) const
-		{ return this->Get(iName).Get<S>(); }
-
-// Shortcut access to values in an enclosed Seq.
-	ZQ<ZVal_Yad> QGet(const size_t& iIndex) const;
-	ZVal_Yad Get(const size_t& iIndex) const;
-
-	template <class S>
-	ZQ<S> QGet(const size_t& iIndex) const
-		{ return this->Get(iIndex).QGet<S>(); }
-
-	template <class S>
-	S Get(const size_t& iIndex) const
-		{ return this->Get(iIndex).Get<S>(); }
-
-// Typename accessors
-/// \cond DoxygenIgnore
-	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_Yad, Seq, ZSeq_Yad)
-	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_Yad, Map, ZMap_Yad)
-/// \endcond DoxygenIgnore
-
-// Our protocol
-	ZRef<ZYadR> GetYad() const;
-
-private:
-	ZQ<ZAny> pQAsAny() const;
-	ZRef<ZYadR> fYad;
-	};
-
-template <>
-ZQ<ZSeq_Yad> ZVal_Yad::QGet() const;
-
-template <>
-ZQ<ZMap_Yad> ZVal_Yad::QGet() const;
-
-template <class S>
-ZQ<S> ZVal_Yad::QGet() const
-	{
-	if (ZQ<ZAny> theQ = this->pQAsAny())
-   		return theQ->QGet<S>();
-	return null;
-	}
+typedef ZVal_T<ZMap_Yad,ZSeq_Yad> ZVal_Yad;
 
 // =================================================================================================
 // MARK: - ZSeq_Yad
@@ -147,7 +52,7 @@ public:
 // ZSeq protocol
 	size_t Count() const;
 
-//##	void Clear();
+	void Clear();
 
 	ZQ<ZVal_Yad> QGet(size_t iIndex) const;
 	ZVal_Yad DGet(const ZVal_Yad& iDefault, size_t iIndex) const;
@@ -183,11 +88,22 @@ public:
 		return S();
 		}
 
+	ZSeq_Yad& Set(size_t iIndex, const ZVal_Yad& iVal);
+
+	ZSeq_Yad& Erase(size_t iIndex);
+
+	ZSeq_Yad& Insert(size_t iIndex, const ZVal_Yad& iVal);
+
+	ZSeq_Yad& Append(const ZVal_Yad& iVal);
+
 // Our protocol
 	ZRef<ZYadSeqAtR> GetYad() const;
 
 private:
+	void pGenSeq();
+
 	mutable ZRef<ZYadSeqAtR> fYad;
+	mutable ZSeq_Any fSeq;
 	};
 
 // =================================================================================================
@@ -205,7 +121,7 @@ public:
 	ZMap_Yad& operator=(const ZRef<ZYadMapAtR>& iYad);
 
 // ZMap protocol
-//##	void Clear();
+	void Clear();
 
 	ZQ<ZVal_Yad> QGet(const string8& iName) const;
 	ZVal_Yad DGet(const ZVal_Yad& iDefault, const string8& iName) const;
@@ -241,11 +157,24 @@ public:
 		return S();
 		}
 
+	ZMap_Yad& Set(const string8& iName, const ZVal_Yad& iVal);
+
+	template <class S>
+	ZMap_Yad& Set(const string8& iName, const S& iVal)
+		{ return this->Set(iName, ZVal_Yad(iVal)); }
+
+	ZMap_Yad& Erase(const string8& iName);
+
 // Our protocol
+	ZVal_Yad& Mutable(const string8& iName);
+	ZVal_Yad& operator[](const string8& iName);
+	const ZVal_Yad& operator[](const string8& iName) const;
+
 	ZRef<ZYadMapAtR> GetYad() const;
 
 private:
 	mutable ZRef<ZYadMapAtR> fYad;
+	mutable ZMap_Any fMap;
 	};
 
 } // namespace ZooLib
