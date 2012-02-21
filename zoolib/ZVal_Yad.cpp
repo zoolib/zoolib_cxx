@@ -258,7 +258,7 @@ ZVal_Yad& ZMap_Yad::Mutable(const string8& iName)
 	if (fYad)
 		{
 		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
-			theMutable = spAsVal_Yad(theYad);
+			theMutable = spAsVal_Yad(theYad).AsAny();
 		}
 	return static_cast<ZVal_Yad&>(theMutable);
 	}
@@ -276,7 +276,7 @@ const ZVal_Yad& ZMap_Yad::operator[](const string8& iName) const
 		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
 			{
 			ZAny& theMutable = fMap.Mutable(iName);
-			theMutable = spAsVal_Yad(theYad);
+			theMutable = spAsVal_Yad(theYad).AsAny();
 			return static_cast<ZVal_Yad&>(theMutable);
 			}
 		}
