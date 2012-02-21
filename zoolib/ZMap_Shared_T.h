@@ -128,10 +128,11 @@ class ZMap_SharedMutable_T
 	{
 	typedef ZMap_Shared_T<Map_p,Val_p> inherited;
 	using inherited::fRep;
-//	using inherited::Map;
-//	using inherited::Val;
 
 public:
+	using inherited::Map;
+	using inherited::Val;
+
 	ZMap_SharedMutable_T()
 		{}
 
