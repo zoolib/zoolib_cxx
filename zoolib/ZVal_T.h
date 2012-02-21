@@ -50,7 +50,7 @@ public:
 		{}
 
 	ZVal_T(const ZVal_T& iOther)
-	:	ZAny((const ZAny&)(iOther))
+	:	ZAny(iOther.AsAny())
 		{}
 
 	~ZVal_T()
