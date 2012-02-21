@@ -73,6 +73,10 @@ public:
 // MARK: - sCountedVal
 
 template <class T>
+ZRef<ZCountedVal<T> > sCountedVal()
+	{ return new ZCountedVal<T>(); }
+
+template <class T>
 ZRef<ZCountedVal<T> > sCountedVal(const T& iOther)
 	{ return new ZCountedVal<T>(iOther); }
 
