@@ -235,7 +235,7 @@ ZCog<Param> spCog_Not
 	{
 	ZAssert(sIsPending(iCallable));
 
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_Not<Param>));
+	static const ZMACRO_auto(spCallable, sCallable(spCogFun_Not<Param>));
 	return sBindR(spCallable, iCallable);	
 	}
 
@@ -284,7 +284,7 @@ ZCog<Param> spCog_Tautology
 	{
 	ZAssert(sIsPending(iCallable));
 
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_Tautology<Param>));
+	static const ZMACRO_auto(spCallable, sCallable(spCogFun_Tautology<Param>));
 	return sBindR(spCallable, iCallable);	
 	}
 
@@ -329,7 +329,7 @@ ZCog<Param> spCog_Contradiction
 	{
 	ZAssert(sIsPending(iCallable));
 
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_Contradiction<Param>));
+	static const ZMACRO_auto(spCallable, sCallable(spCogFun_Contradiction<Param>));
 	return sBindR(spCallable, iCallable);	
 	}
 
@@ -369,8 +369,8 @@ ZCog<Param> spCogFun_Repeat(const ZCog<Param>& iSelf, Param iParam,
 	if (not sIsTrue(newCog))
 		return spCog_Repeat(iCog_Init, newCog);
 
-	// To get unbroken repetition on hitting a term we need to call the new cog, but don't
-	// make the call if we'd be calling an iSelf-equivalent (infinite recursion would ensue).
+	// To get unbroken repetition on hitting a term we need to call the new cog, but must
+	// not make the call if it's an iSelf-equivalent (infinite recursion would ensue).
 	if (iCog_Init == iCog)
 		return iSelf;
 	else
@@ -384,7 +384,7 @@ ZCog<Param> spCog_Repeat
 	{
 	ZAssert(iCallable_Init && iCallable);
 
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_Repeat<Param>));
+	static const ZMACRO_auto(spCallable, sCallable(spCogFun_Repeat<Param>));
 	return sBindR(spCallable, iCallable_Init, iCallable);
 	}
 
@@ -464,7 +464,7 @@ ZCog<Param> spCog_If
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_If<Param>));
+	static const ZMACRO_auto(spCallable, sCallable(spCogFun_If<Param>));
 	return sBindR(spCallable, iCondition, iCallable0, iCallable1);
 	}
 
@@ -517,7 +517,7 @@ ZCog<Param> spCog_And
 	{
 	ZAssert(sIsPending(iCallable0) && not sIsTrue(iCallable1));
 
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_And<Param>));
+	static const ZMACRO_auto(spCallable, sCallable(spCogFun_And<Param>));
 	return sBindR(spCallable, iCallable0, iCallable1);
 	}
 
@@ -621,7 +621,7 @@ ZCog<Param> spCog_Or
 	{
 	ZAssert(sIsPending(iCallable0) && sIsPending(iCallable1));
 
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_Or<Param>));
+	static const ZMACRO_auto(spCallable, sCallable(spCogFun_Or<Param>));
 	return sBindR(spCallable, iCallable0, iCallable1);
 	}
 
@@ -721,7 +721,7 @@ ZCog<Param> spCog_While
 	{
 	ZAssert(sIsPending(iCallable0) && sIsPending(iCallable1));
 
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_While<Param>));
+	static const ZMACRO_auto(spCallable, sCallable(spCogFun_While<Param>));
 	return sBindR(spCallable, iCallable0, iCallable1);
 	}
 
@@ -784,7 +784,7 @@ ZCog<Param> spCog_With
 	{
 	ZAssert(sIsPending(iCallable0) && sIsPending(iCallable1));
 
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_With<Param>));
+	static const ZMACRO_auto(spCallable, sCallable(spCogFun_With<Param>));
 	return sBindR(spCallable, iCallable0, iCallable1);
 	}
 
@@ -859,7 +859,7 @@ ZCog<Param> spCog_WithUnchanged
 	{
 	ZAssert(sIsPending(iCallable0) && sIsPending(iCallable1));
 
-	static ZMACRO_auto(spCallable, sCallable(spCogFun_WithUnchanged<Param>));
+	static const ZMACRO_auto(spCallable, sCallable(spCogFun_WithUnchanged<Param>));
 	return sBindR(spCallable, iCallable0, iCallable1);
 	}
 
