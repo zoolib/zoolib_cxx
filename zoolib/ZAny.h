@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZQ.h" 
 #include "zoolib/ZRef.h"
 
-#include <typeinfo> // for std::type_info
+#include <typeinfo> // For std::type_info
 
 #if ZCONFIG(Compiler,GCC)
 	#include <tr1/type_traits> // For std::tr1::is_pod
@@ -46,6 +46,12 @@ struct ZAnyTraits
 class ZAny
 	{
 public:
+	const ZAny& AsAny() const
+		{ return *this; }
+
+	ZAny& AsAny()
+		{ return *this; }
+
 	ZAny();
 	ZAny(const ZAny& iOther);
 	~ZAny();
