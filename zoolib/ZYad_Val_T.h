@@ -30,7 +30,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZYadR_Val_T
 
-template <class Val_t>
+template <class Val_p>
 class ZYadR_Val_T
 :	public virtual ZYadR
 	{
@@ -51,11 +51,11 @@ public:
 		{}
 
 // Our protocol
-	const Val_t& GetVal()
+	const Val_p& GetVal()
 		{ return fVal; }
 
 protected:
-	const Val_t fVal;
+	const Val_p fVal;
 	};
 
 // =================================================================================================

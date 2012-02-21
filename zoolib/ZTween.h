@@ -49,7 +49,7 @@ A ZTween has a duration and returns a value given a time within that duration.
 If given a time outside that range, returns null.
 */
 
-template <class Val_t>
+template <class Val_p>
 class ZTween
 :	public ZCountedWithoutFinalize
 	{
@@ -57,7 +57,7 @@ protected:
 	ZTween() {}
 
 public:
-	typedef Val_t Val;
+	typedef Val_p Val;
 
 	virtual ~ZTween() {}
 

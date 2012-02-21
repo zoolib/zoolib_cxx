@@ -267,7 +267,7 @@ inline void swap(Val& a, Val& b)
 class Seq
 	{
 public:
-	typedef Val Val_t;
+	typedef ZPhotoshop::Val Val;
 
 	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
@@ -296,7 +296,7 @@ public:
 	template <class S>
 	ZQ<S> QGet(size_t iIndex) const
 		{
-		if (ZQ<Val_t> theQ = this->QGet(iIndex))
+		if (ZQ<Val> theQ = this->QGet(iIndex))
 			return theQ.Get().QGet<S>();
 		return null;
 		}
@@ -335,7 +335,7 @@ class Map
 	{
 public:
 	typedef ZTagVal<size_t,Map> Index_t;
-	typedef Val Val_t;
+	typedef ZPhotoshop::Val Val;
 
 	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 

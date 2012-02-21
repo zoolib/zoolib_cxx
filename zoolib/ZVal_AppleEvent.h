@@ -146,7 +146,7 @@ class ZSeq_AppleEvent
 :	public AEDescList
 	{
 public:
-	typedef ZVal_AppleEvent Val_t;
+	typedef ZVal_AppleEvent Val;
 
 	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
@@ -190,7 +190,7 @@ class ZMap_AppleEvent
 	{
 public:
 	typedef ZTagVal<size_t,ZMap_AppleEvent> Index_t;
-	typedef ZVal_AppleEvent Val_t;
+	typedef ZVal_AppleEvent Val;
 
 	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 

@@ -46,7 +46,7 @@ class ZSeq_Any
 
 public:
 	typedef std::vector<ZVal_Any> Vector_t;
-	typedef ZVal_Any Val_t;
+	typedef ZVal_Any Val;
 
 	ZSeq_Any();
 	ZSeq_Any(const ZSeq_Any& iOther);
@@ -176,7 +176,7 @@ class ZMap_Any
 public:
 	typedef std::map<string8, ZVal_Any, FastComparator_String> Map_t;
 	typedef Map_t::iterator Index_t;
-	typedef ZVal_Any Val_t;
+	typedef ZVal_Any Val;
 
 	ZMap_Any();
 	ZMap_Any(const ZMap_Any& iOther);

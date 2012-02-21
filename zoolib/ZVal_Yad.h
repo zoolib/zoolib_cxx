@@ -41,6 +41,8 @@ typedef ZVal_T<ZMap_Yad,ZSeq_Yad> ZVal_Yad;
 class ZSeq_Yad
 	{
 public:
+	typedef ZVal_Yad Val;
+
 	ZSeq_Yad();
 	ZSeq_Yad(const ZSeq_Yad& iOther);
 	~ZSeq_Yad();
@@ -112,6 +114,8 @@ private:
 class ZMap_Yad
 	{
 public:
+	typedef ZVal_Yad Val;
+
 	ZMap_Yad();
 	ZMap_Yad(const ZMap_Yad& iOther);
 	~ZMap_Yad();

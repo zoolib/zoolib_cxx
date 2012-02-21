@@ -152,7 +152,7 @@ class ZSeq_CF
 	typedef ZRef<CFArrayRef> inherited;
 
 public:
-	typedef ZVal_CF Val_t;
+	typedef ZVal_CF Val;
 
 	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
@@ -220,7 +220,7 @@ class ZMap_CF
 	typedef ZRef<CFDictionaryRef> inherited;
 
 public:
-	typedef ZVal_CF Val_t;
+	typedef ZVal_CF Val;
 
 	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 

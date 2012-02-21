@@ -105,7 +105,7 @@ public:
 	static KeyRef sHKU();
 
 	typedef size_t Index_t;
-	typedef Val Val_t;
+	typedef ZWinRegistry::Val Val;
 
 	void swap(KeyRef& rhs);
 
