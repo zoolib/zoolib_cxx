@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare_Vector.h"
 #include "zoolib/ZVal_Any.h"
 
-#include <cstring> // for strcmp
+#include <cstring> // For strcmp
 
 using std::map;
 using std::pair;
@@ -58,65 +58,6 @@ int sCompare_T(const ZNameVal& iL, const ZNameVal& iR)
 ZMACRO_CompareRegistration_T(ZVal_Any)
 ZMACRO_CompareRegistration_T(ZSeq_Any)
 ZMACRO_CompareRegistration_T(ZMap_Any)
-
-// =================================================================================================
-// MARK: - ZVal_Any typename accessors
-
-/**
-\class ZVal_Any
-\ingroup ZVal
-
-\brief
-*/
-
-int ZVal_Any::Compare(const ZVal_Any& iOther) const
-	{
-	const char* typeName = this->Type().name();
-	if (int compare = strcmp(typeName, iOther.Type().name()))
-		return compare;
-	return ZCompare::sCompare(typeName, this->ConstVoidStar(), iOther.ConstVoidStar());
-	}
-
-ZVal_Any* ZVal_Any::PGetMutable(const string8& iName)
-	{
-	if (ZMap_Any* asMap = this->PGetMutable<ZMap_Any>())
-		return asMap->PGetMutable(iName);
-	return nullptr;
-	}
-
-const ZVal_Any* ZVal_Any::PGet(const string8& iName) const
-	{
-	if (const ZMap_Any* asMap = this->PGet<ZMap_Any>())
-		return asMap->PGet(iName);
-	return nullptr;
-	}
-
-ZVal_Any ZVal_Any::Get(const string8& iName) const
-	{ return this->Get<ZMap_Any>().Get(iName); }
-
-ZVal_Any& ZVal_Any::Mutable(const string8& iName)
-	{ return this->Mutable<ZMap_Any>().Mutable(iName); }
-
-ZVal_Any* ZVal_Any::PGetMutable(size_t iIndex)
-	{
-	if (ZSeq_Any* asSeq = this->PGetMutable<ZSeq_Any>())
-		return asSeq->PGetMutable(iIndex);
-	return nullptr;
-	}
-
-const ZVal_Any* ZVal_Any::PGet(size_t iIndex) const
-	{
-	if (const ZSeq_Any* asSeq = this->PGet<ZSeq_Any>())
-		return asSeq->PGet(iIndex);
-	return nullptr;
-	}
-
-ZVal_Any ZVal_Any::Get(size_t iIndex) const
-	{ return this->Get<ZSeq_Any>().Get(iIndex); }
-
-ZMACRO_ZValAccessors_Def_GetSet(ZVal_Any, Data, ZData_Any)
-ZMACRO_ZValAccessors_Def_GetSet(ZVal_Any, Seq, ZSeq_Any)
-ZMACRO_ZValAccessors_Def_GetSet(ZVal_Any, Map, ZMap_Any)
 
 // =================================================================================================
 // MARK: - ZSeq_Any::Rep

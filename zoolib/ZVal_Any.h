@@ -21,214 +21,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZVal_Any_h__
 #define __ZVal_Any_h__ 1
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZAny.h"
 #include "zoolib/ZData_Any.h"
-#include "zoolib/ZCompare_String.h"
-#include "zoolib/ZUnicodeString.h"
+#include "zoolib/ZCompare_String.h" // For FastComparator_String
 #include "zoolib/ZVal.h"
-#include "zoolib/ZValAccessors.h"
+#include "zoolib/ZVal_T.h"
 
 #include <map>
 #include <vector>
 
 namespace ZooLib {
 
-template <>
-struct ZAnyTraits<string8>
-	{
-	enum { eAllowInPlace = 0 };
-	};
-
-class ZVal_Any;
 class ZSeq_Any;
 class ZMap_Any;
 
-// =================================================================================================
-// MARK: - ZVal_Any
-
-class ZVal_Any : public ZAny
-	{
-// private, to catch the common mistake of passing a ZQ.
-	template <class S> ZVal_Any(const ZQ<S>&);
-	template <class S> ZVal_Any& operator=(const ZQ<S>&);
-
-public:
-	const ZAny& AsAny() const
-		{ return *this; }
-
-	ZVal_Any()
-		{}
-
-	ZVal_Any(const ZVal_Any& iOther)
-	:	ZAny((const ZAny&)(iOther))
-		{}
-
-	~ZVal_Any()
-		{}
-
-	ZVal_Any& operator=(const ZVal_Any& iOther)
-		{
-		ZAny::operator=((const ZAny&)(iOther));
-		return *this;
-		}
-
-// Overload, so we don't pack a ZAny inside a ZAny
-	ZVal_Any(const ZAny& iOther)
-	:	ZAny(iOther)
-		{}
-
-	ZVal_Any& operator=(const ZAny& rhs)
-		{
-		ZAny::operator=(rhs);
-		return *this;
-		}
-
-// Overload, so a null becomes a ZVal_Any()
-	ZVal_Any(const null_t&)
-	:	ZAny()
-		{}
-
-	ZVal_Any& operator=(const null_t&)
-		{
-		ZAny::Clear();
-		return *this;
-		}
-
-// Overload, so we can init/assign from a string constant
-	ZVal_Any(const UTF8* iVal)
-	:	ZAny(sAny<string8>(iVal))
-		{}
-
-	ZVal_Any& operator=(const UTF8* iVal)
-		{
-		ZAny::operator=(sAny<string8>(iVal));
-		return *this;
-		}
-
-	ZVal_Any(const UTF16* iVal)
-	:	ZAny(sAny<string16>(iVal))
-		{}
-
-	ZVal_Any& operator=(const UTF16* iVal)
-		{
-		ZAny::operator=(sAny<string16>(iVal));
-		return *this;
-		}
-
-	ZVal_Any(const UTF32* iVal)
-	:	ZAny(string32(iVal))
-		{}
-
-	ZVal_Any& operator=(const UTF32* iVal)
-		{
-		ZAny::operator=(sAny<string32>(iVal));
-		return *this;
-		}
-
-// Overload, as ZAny's templated constructor is explicit.
-	template <class S>
-	ZVal_Any(const S& iVal)
-	:	ZAny(iVal)
-		{}
-
-	template <class S>
-	ZVal_Any& operator=(const S& iVal)
-		{
-		ZAny::operator=(iVal);
-		return *this;
-		}
-
-	int Compare(const ZVal_Any& iOther) const;
-
-	using ZAny::PGetMutable;
-	using ZAny::PGet;
-	using ZAny::QGet;
-	using ZAny::DGet;
-	using ZAny::Get;
-	using ZAny::Set;
-	using ZAny::Mutable;
-
-// Shortcut access to values in an enclosed Map.
-	ZVal_Any* PGetMutable(const string8& iName);
-	const ZVal_Any* PGet(const string8& iName) const;
-	ZVal_Any Get(const string8& iName) const;
-	ZVal_Any& Mutable(const string8& iName);
-
-	template <class S>
-	S* PGetMutable(const string8& iName)
-		{
-		if (ZVal_Any* theVal = this->PGetMutable(iName))
-			return theVal->PGetMutable<S>();
-		return nullptr;
-		}
-
-	template <class S>
-	const S* PGet(const string8& iName) const
-		{
-		if (const ZVal_Any* theVal = this->PGet(iName))
-			return theVal->PGet<S>();
-		return nullptr;
-		}
-
-	template <class S>
-	ZQ<S> QGet(const string8& iName) const
-		{ return this->Get(iName).QGet<S>(); }
-
-	template <class S>
-	S Get(const string8& iName) const
-		{ return this->Get(iName).Get<S>(); }
-
-	template <class S>
-	S& Mutable(const string8& iName) const
-		{ return this->Mutable(iName).Mutable<S>(); }
-
-// Shortcut access to values in an enclosed Seq.
-	ZVal_Any* PGetMutable(size_t iIndex);
-	const ZVal_Any* PGet(size_t iIndex) const;
-	ZVal_Any Get(size_t iIndex) const;
-
-	template <class S>
-	S* PGetMutable(size_t iIndex)
-		{
-		if (ZVal_Any* theVal = this->PGetMutable(iIndex))
-			return theVal->PGetMutable<S>();
-		return nullptr;
-		}
-
-	template <class S>
-	const S* PGet(size_t iIndex) const
-		{
-		if (const ZVal_Any* theVal = this->PGet(iIndex))
-			return theVal->PGet<S>();
-		return nullptr;
-		}
-
-	template <class S>
-	ZQ<S> QGet(size_t iIndex) const
-		{ return this->Get(iIndex).QGet<S>(); }
-
-	template <class S>
-	S Get(size_t iIndex) const
-		{ return this->Get(iIndex).Get<S>(); }
-
-// Typename accessors
-/// \cond DoxygenIgnore
-	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_Any, Data, ZData_Any)
-	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_Any, Seq, ZSeq_Any)
-	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_Any, Map, ZMap_Any)
-/// \endcond DoxygenIgnore
-
-	// If these are free functions then our template constructor will
-	// be tried for any free use of operator== and operator<, leading
-	// to perplexing errors all over the place.
-	bool operator==(const ZVal_Any& r) const
-		{ return this->Compare(r) == 0; }
-
-	bool operator<(const ZVal_Any& r) const
-		{ return this->Compare(r) < 0; }
-	};
+typedef ZVal_T<ZMap_Any,ZSeq_Any> ZVal_Any;
 
 // =================================================================================================
 // MARK: - ZSeq_Any
