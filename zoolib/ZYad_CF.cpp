@@ -151,7 +151,7 @@ ZRef<ZYadR> ZYadMapAtRPos_CF::ReadAt(const std::string& iName)
 
 void ZYadMapAtRPos_CF::pSetupPosition()
 	{
-	if (fPosition != -1)
+	if (fPosition != uint64(-1))
 		return;
 
 	fPosition = 0;
