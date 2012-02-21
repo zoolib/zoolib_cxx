@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZQ.h"
-#include "zoolib/ZStdInt.h" // for uint64
+#include "zoolib/ZStdInt.h" // For uint64
 
 #include <string>
 #include <vector>

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include <errno.h>
-#include <stdexcept> // for range_error
+#include <stdexcept> // For range_error
 
 // Neither the MSL headers nor the Windows headers have fseeko or ftello.
 

@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
-#include "zoolib/ZCompat_algorithm.h" // for std::binary_function
-#include "zoolib/ZCompat_cmath.h" // for fmod
-#include "zoolib/ZDebug.h" // for fmod
+#include "zoolib/ZCompat_algorithm.h" // For std::binary_function
+#include "zoolib/ZCompat_cmath.h" // For fmod
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZQ.h"
 #include "zoolib/ZRef.h"
 

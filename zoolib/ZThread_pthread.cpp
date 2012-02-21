@@ -22,13 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Thread_pthread)
 
-#include "zoolib/ZCompat_cmath.h" // for fmod
+#include "zoolib/ZCompat_cmath.h" // For fmod
 
 #include <errno.h> // For errno
 #include <sys/time.h> // For gettimeofday
 #include <unistd.h> // For usleep
 
-#include <new> // for std::bad_alloc
+#include <new> // For std::bad_alloc
 
 namespace ZooLib {
 
