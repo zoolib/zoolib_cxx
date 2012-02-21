@@ -37,7 +37,7 @@ struct ZAnyTraits<string8>
 // =================================================================================================
 // MARK: - ZVal_T
 
-template<class Map_p, class Seq_p>
+template <class Map_p, class Seq_p>
 class ZVal_T
 :	public ZAny
 	{
