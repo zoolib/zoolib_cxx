@@ -29,6 +29,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ZYad_JSON.h"
 
+#if ZCONFIG(Compiler,GCC)
+	#include <cxxabi.h>
+#endif
+
 namespace ZooLib {
 namespace ZYad_JSON {
 
@@ -713,7 +717,26 @@ void Visitor_Writer::Visit_YadR(const ZRef<ZYadR>& iYadR)
 	{
 	fStrimW << "null";
 	if (fOptions.fBreakStrings)
-		fStrimW << " /*!! Unhandled yad: " << typeid(*iYadR.Get()).name() <<" !!*/";
+		{
+		fStrimW << " /*!! Unhandled yad: ";
+
+		#if ZCONFIG(Compiler,GCC)
+			const std::type_info& theTI = typeid(*iYadR.Get());
+//			int status;
+			if (char* unmangled = abi::__cxa_demangle(theTI.name(), 0, 0, 0))
+//			if (const char* unmangled = abi::__cxa_demangle(theTI.name(), 0, 0, &status)
+				{
+				fStrimW << unmangled;
+				free(unmangled);
+				}
+			else
+		#endif
+				{
+				fStrimW << theTI.name();
+				}
+
+		fStrimW << " !!*/";
+		}
 	}
 
 void Visitor_Writer::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
