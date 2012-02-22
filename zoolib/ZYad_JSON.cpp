@@ -98,6 +98,20 @@ type             -
 // =================================================================================================
 // MARK: - Helpers
 
+static string spPrettyName(const std::type_info& iTI)
+	{
+	#if ZCONFIG(Compiler,GCC)
+	if (char* unmangled = abi::__cxa_demangle(iTI.name(), 0, 0, 0))
+		{
+		string result = unmangled;
+		free(unmangled);
+		return result;
+		}
+	#endif
+
+	return iTI.name();
+	}
+
 static void spThrowParseException(const string& iMessage)
 	{
 	throw ParseException(iMessage);
@@ -575,7 +589,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		}
 	else
 		{
-		s << "null /*!! Unhandled: " << iAny.Type().name() << " !!*/";
+		s << " /*!! Unhandled: " << spPrettyName(iAny.Type()) << " !!*/";
 		}
 	}
 
@@ -718,24 +732,9 @@ void Visitor_Writer::Visit_YadR(const ZRef<ZYadR>& iYadR)
 	fStrimW << "null";
 	if (fOptions.fBreakStrings)
 		{
-		fStrimW << " /*!! Unhandled yad: ";
-
-		#if ZCONFIG(Compiler,GCC)
-			const std::type_info& theTI = typeid(*iYadR.Get());
-//			int status;
-			if (char* unmangled = abi::__cxa_demangle(theTI.name(), 0, 0, 0))
-//			if (const char* unmangled = abi::__cxa_demangle(theTI.name(), 0, 0, &status)
-				{
-				fStrimW << unmangled;
-				free(unmangled);
-				}
-			else
-		#endif
-				{
-				fStrimW << theTI.name();
-				}
-
-		fStrimW << " !!*/";
+		fStrimW << " /*!! Unhandled yad: "
+			<< spPrettyName(typeid(*iYadR.Get()))
+			<< " !!*/";
 		}
 	}
 
