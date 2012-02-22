@@ -18,10 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZVal_Yad.h"
 #include "zoolib/ZYad_Any.h"
 
 namespace ZooLib {
+
+using std::set;
+using std::string;
 
 namespace { // anonymous
 
@@ -34,10 +38,10 @@ ZVal_Yad spAsVal_Yad(const ZRef<ZYadR>& iYadR)
 	if (not iYadR)
 		return spVal_Null;
 
-	if (ZRef<ZYadSeqAtR> theYad = iYadR.DynamicCast<ZYadSeqAtR>())
+	if (ZRef<ZYadSeqAtRPos> theYad = iYadR.DynamicCast<ZYadSeqAtRPos>())
 		return ZSeq_Yad(theYad);
 
-	if (ZRef<ZYadMapAtR> theYad = iYadR.DynamicCast<ZYadMapAtR>())
+	if (ZRef<ZYadMapAtRPos> theYad = iYadR.DynamicCast<ZYadMapAtRPos>())
 		return ZMap_Yad(theYad);
 
 	return sFromYadR(ZVal_Any(), iYadR).AsAny();
@@ -66,11 +70,11 @@ ZSeq_Yad& ZSeq_Yad::operator=(const ZSeq_Yad& iOther)
 	return *this;
 	}
 
-ZSeq_Yad::ZSeq_Yad(const ZRef<ZYadSeqAtR>& iYad)
+ZSeq_Yad::ZSeq_Yad(const ZRef<ZYadSeqAtRPos>& iYad)
 :	fYad(iYad)
 	{}
 
-ZSeq_Yad& ZSeq_Yad::operator=(const ZRef<ZYadSeqAtR>& iYad)
+ZSeq_Yad& ZSeq_Yad::operator=(const ZRef<ZYadSeqAtRPos>& iYad)
 	{
 	fYad = iYad;
 	fSeq.Clear();
@@ -147,8 +151,11 @@ ZSeq_Yad& ZSeq_Yad::Append(const ZVal_Yad& iVal)
 	return *this;
 	}
 
-ZRef<ZYadSeqAtR> ZSeq_Yad::GetYad() const
+ZRef<ZYadSeqAtRPos> ZSeq_Yad::GetYad() const
 	{ return fYad; }
+
+ZSeq_Any ZSeq_Yad::GetSeq() const
+	{ return fSeq; }
 
 void ZSeq_Yad::pGenSeq()
 	{
@@ -182,11 +189,11 @@ ZMap_Yad& ZMap_Yad::operator=(const ZMap_Yad& iOther)
 	return *this;
 	}
 
-ZMap_Yad::ZMap_Yad(const ZRef<ZYadMapAtR>& iYad)
+ZMap_Yad::ZMap_Yad(const ZRef<ZYadMapAtRPos>& iYad)
 :	fYad(iYad)
 	{}
 
-ZMap_Yad& ZMap_Yad::operator=(const ZRef<ZYadMapAtR>& iYad)
+ZMap_Yad& ZMap_Yad::operator=(const ZRef<ZYadMapAtRPos>& iYad)
 	{
 	fYad = iYad;
 	fMap.Clear();
@@ -284,7 +291,128 @@ const ZVal_Yad& ZMap_Yad::operator[](const string8& iName) const
 	return spVal_Null;
 	}
 
-ZRef<ZYadMapAtR> ZMap_Yad::GetYad() const
+ZRef<ZYadMapAtRPos> ZMap_Yad::GetYad() const
 	{ return fYad; }
+
+ZMap_Any ZMap_Yad::GetMap() const
+	{ return fMap; }
+
+// =================================================================================================
+// MARK: - YadMapAtRPos
+
+namespace { // anonymous
+
+class YadMapAtRPos
+:	public ZYadMapAtRPos
+	{
+	YadMapAtRPos(const YadMapAtRPos& iOther)
+	:	fYad(iOther.fYad->Clone().DynamicCast<ZYadMapAtRPos>())
+	,	fMap(iOther.fMap)
+	,	fCurrent(fMap.IndexOf(iOther.fMap, iOther.fCurrent))
+		{}
+
+public:
+	YadMapAtRPos(ZRef<ZYadMapAtRPos> iYad, const ZMap_Any& iMap)
+	:	fYad(iYad)
+	,	fMap(iMap)
+	,	fCurrent(fMap.Begin())
+		{}
+
+// From ZYadR
+	virtual bool IsSimple(const ZYadOptions& iOptions)
+		{ return false; }
+
+// From ZYadMapR
+	virtual ZRef<ZYadR> ReadInc(std::string& oName)
+		{
+		if (ZRef<ZYadR> theYad = fYad->ReadInc(oName))
+			{
+			ZUtil_STL::sInsertMustNotContain(fNamesSeen, oName);
+			if (const ZVal_Any* theP = fMap.PGet(oName))
+				return sYadR(*theP);
+			return theYad;
+			}
+
+		while (fCurrent != fMap.End())
+			{
+			oName = fMap.NameOf(fCurrent);
+			if (ZUtil_STL::sInsertIfNotContains(fNamesSeen, oName))
+				return sYadR(fMap.Get(fCurrent++));
+			++fCurrent;
+			}
+
+		return null;
+		}
+
+// From ZYadMapRClone
+	virtual ZRef<ZYadMapRClone> Clone()
+		{ return new YadMapAtRPos(*this); }
+
+// From ZYadMapAtR
+	virtual ZRef<ZYadR> ReadAt(const string& iName)
+		{
+		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
+			{
+			if (const ZVal_Any* theP = fMap.PGet(iName))
+				return sYadR(*theP);
+			return theYad;
+			}
+		
+		if (const ZVal_Any* theP = fMap.PGet(iName))
+			return sYadR(*theP);
+		
+		return null;
+		}
+
+	virtual ZQ<ZAny> QAsAny()
+		{ return null; }
+
+// From ZYadMapRPos
+	virtual void SetPosition(const std::string& iName)
+		{
+		// Urg.
+		ZUnimplemented();
+//		fYadMapAtRPos->SetPosition(iName);
+		}
+
+private:
+	ZRef<ZYadMapAtRPos> fYad;
+	ZMap_Any fMap;
+	ZMap_Any::Index_t fCurrent;
+	set<string> fNamesSeen;
+	};
+
+} // anonymous namespace
+
+// =================================================================================================
+// MARK: - sYadR
+
+ZRef<ZYadR> sYadR(const ZVal_Yad& iVal)
+	{
+	if (const string8* theVal = iVal.PGet<string8>())
+		return sYadR(*theVal);
+
+	if (const ZSeq_Yad* theVal = iVal.PGet<ZSeq_Yad>())
+		return sYadR(*theVal);
+
+	if (const ZMap_Yad* theVal = iVal.PGet<ZMap_Yad>())
+		return sYadR(*theVal);
+
+	return new ZYadAtomR_Any(iVal.AsAny());
+	}
+
+ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_Yad& iSeq)
+	{
+	if (ZRef<ZYadSeqAtRPos> theYad = iSeq.GetYad())
+		return theYad->Clone().DynamicCast<ZYadSeqAtRPos>();
+	return sYadR(iSeq.GetSeq());
+	}
+
+ZRef<ZYadMapAtRPos> sYadR(const ZMap_Yad& iMap)
+	{
+	if (ZRef<ZYadMapAtRPos> theYad = iMap.GetYad())
+		return new YadMapAtRPos(theYad->Clone().DynamicCast<ZYadMapAtRPos>(), iMap.GetMap());
+	return sYadR(iMap.GetMap());
+	}
 
 } // namespace ZooLib

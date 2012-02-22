@@ -26,12 +26,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-ZRef<ZYadMapAtR> sYadTree(const ZRef<ZYadMapAtR>& iYadMapAtR, const std::string& iProtoName);
+ZRef<ZYadMapAtRPos> sYadTree
+	(const ZRef<ZYadMapAtRPos>& iYadMapAtRPos, const std::string& iProtoName);
 
-ZRef<ZYadMapAtR> sYadTree(const ZRef<ZYadMapAtR>& iYadMapAtR);
+ZRef<ZYadMapAtRPos> sYadTree(const ZRef<ZYadMapAtRPos>& iYadMapAtRPos);
 
-ZRef<ZYadMapAtR> sParameterizedYadTree(const ZRef<ZYadMapAtR>& iBase,
-	const std::string& iRootAugmentName, const ZRef<ZYadMapAtR>& iRootAugment);
+ZRef<ZYadMapAtRPos> sParameterizedYadTree(const ZRef<ZYadMapAtRPos>& iBase,
+	const std::string& iRootAugmentName, const ZRef<ZYadMapAtRPos>& iRootAugment);
 
 } // namespace ZooLib
 
