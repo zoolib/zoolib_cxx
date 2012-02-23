@@ -151,6 +151,20 @@ ZSeq_Yad& ZSeq_Yad::Append(const ZVal_Yad& iVal)
 	return *this;
 	}
 
+#if 0
+ZVal_Yad& ZSeq_Yad::Mutable(size_t iIndex)
+	{
+	
+	}
+
+ZVal_Yad& ZSeq_Yad::operator[](size_t iIndex)
+	{
+	}
+#endif
+
+ZVal_Yad ZSeq_Yad::operator[](size_t iIndex) const
+	{ return this->Get(iIndex); }
+
 ZRef<ZYadSeqAtRPos> ZSeq_Yad::GetYad() const
 	{ return fYad; }
 

@@ -99,6 +99,10 @@ public:
 	ZSeq_Yad& Append(const ZVal_Yad& iVal);
 
 // Our protocol
+//	ZVal_Yad& Mutable(size_t iIndex);
+//	ZVal_Yad& operator[](size_t iIndex);
+	ZVal_Yad operator[](size_t iIndex) const;
+
 	ZRef<ZYadSeqAtRPos> GetYad() const;
 	ZSeq_Any GetSeq() const;
 
