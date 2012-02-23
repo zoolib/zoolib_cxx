@@ -644,6 +644,43 @@ ZRef<ZTween<Val> > sTween_Rate(double iRate, const ZRef<ZTween<Val> >& iTween)
 	}
 
 // =================================================================================================
+// MARK: - sTween_Phase
+
+template <class Val>
+class ZTween_Phase
+:	public ZTween<Val>
+	{
+public:
+	ZTween_Phase(const ZRef<ZTween<Val> >& iTween, double iPhase)
+	:	fTween(iTween)
+	,	fPhase(iPhase)
+		{}
+
+// From ZTween
+	virtual ZQ<Val> QValAt(double iTime)
+		{
+		const double theDuration = spGetDuration(fTween, fQTweenDuration);
+		return fTween->QValAt(fmod(iTime + fPhase * theDuration, theDuration));
+		}
+
+	virtual double Duration()
+		{ return spGetDuration(fTween, fQTweenDuration); }
+
+private:
+	const ZRef<ZTween<Val> > fTween;
+	ZQ<double> fQTweenDuration;
+	const double fPhase;
+	};
+
+template <class Val>
+ZRef<ZTween<Val> > sTween_Phase(double iPhase, const ZRef<ZTween<Val> >& iTween)
+	{
+	if (iTween)
+		return new ZTween_Phase<Val>(iTween, iPhase);
+	return null;
+	}
+
+// =================================================================================================
 // MARK: - sTween_Normalize
 
 template <class Val>
