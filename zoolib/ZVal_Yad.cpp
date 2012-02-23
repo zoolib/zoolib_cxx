@@ -163,7 +163,7 @@ void ZSeq_Yad::pGenSeq()
 		return;
 
 	for (size_t x = 0, count = fYad->Count(); x < count ; ++x)
-		fSeq.Append(spAsVal_Yad(fYad->ReadAt(x)));
+		fSeq.Append(spAsVal_Yad(fYad->ReadAt(x)).AsAny());
 
 	fYad.Clear();
 	}
