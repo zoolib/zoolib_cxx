@@ -632,7 +632,7 @@ void Source_DatonSet::pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& iV
 
 void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 	{
-	const ZMap_Any theMap = iVal.GetMap();
+	const ZMap_Any theMap = iVal.Get<ZMap_Any>();
 	RelHead theRH;
 	for (ZMap_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
 		theRH |= theMap.NameOf(i);

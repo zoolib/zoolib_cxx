@@ -90,7 +90,7 @@ ZVal_Any spGetVal(const ZRef<ZValComparand>& iComparand, const ZVal_Any& iVal)
 	if (ZRef<ZValComparand_Name> asName =
 		iComparand.DynamicCast<ZValComparand_Name>())
 		{
-		return iVal.GetMap().Get(asName->GetName());
+		return iVal.Get<ZMap_Any>().Get(asName->GetName());
 		}
 	else if (ZRef<ZValComparand_Const_Any> asConst =
 		iComparand.DynamicCast<ZValComparand_Const_Any>())
