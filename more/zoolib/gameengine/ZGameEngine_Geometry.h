@@ -165,6 +165,10 @@ template <class Val>
 ZMatrix<Val,4,4> sScaleZ(Val z)
 	{ return sScale<Val>(1, 1, z); }
 
+template <class Val>
+ZMatrix<Val,4,4> sScale(const ZMatrix<Val,1,3>& iCVec3)
+	{ return sScale(iCVec3[0], iCVec3[1], iCVec3[2]); }
+
 // =================================================================================================
 // MARK: - sTranslate
 
@@ -189,6 +193,10 @@ ZMatrix<Val,4,4> sTranslateY(Val y)
 template <class Val>
 ZMatrix<Val,4,4> sTranslateZ(Val z)
 	{ return sTranslate<Val>(0, 0, z); }
+
+template <class Val>
+ZMatrix<Val,4,4> sTranslate(const ZMatrix<Val,1,3>& iCVec3)
+	{ return sTranslate(iCVec3[0], iCVec3[1], iCVec3[2]); }
 
 // =================================================================================================
 // MARK: - sRotateX
