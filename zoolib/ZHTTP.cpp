@@ -205,7 +205,7 @@ void Response::Send(const ZStreamW& s) const
 bool sOrganizeRanges(size_t iSourceSize, const Val& iRangeParam,
 	vector<pair<size_t, size_t> >& oRanges)
 	{
-	const Map asMap = iRangeParam.GetMap();
+	const Map asMap = iRangeParam.Get<Map>();
 	if (ZQ<int64> reqBegin = asMap.QGet<int64>("begin"))
 		{
 		if (reqBegin.Get() <= iSourceSize)
@@ -431,7 +431,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 
 			if (ioFields)
 				{
-				Map cookieMap = ioFields->Get("cookie").GetMap();
+				Map cookieMap = ioFields->Get("cookie").Get<Map>();
 				cookieMap.Set(cookieName, cookieValue);
 				ioFields->Set("cookie", cookieMap);
 				}
@@ -725,7 +725,7 @@ string sGetString0(const Val& iVal)
 	if (ZQ<string> result = iVal.QGet<string>())
 		return result.Get();
 
-	const Seq& theSeq = iVal.GetSeq();
+	const Seq& theSeq = iVal.Get<Seq>();
 	if (theSeq.Count())
 		return theSeq.Get<string>(0);
 
@@ -1704,7 +1704,7 @@ void sWrite_Header(const ZStreamW& w, const Map& iHeader)
 		const string name = iHeader.NameOf(ii);
 		const Val& theVal = *iHeader.PGet(ii);
 
-		if (ZQ<Seq> asSeqQ = theVal.QGetSeq())
+		if (ZQ<Seq> asSeqQ = theVal.QGet<Seq>())
 			{
 			const Seq asSeq = asSeqQ.Get();
 			for (size_t x = 0, count = asSeq.Count(); x < count; ++x)
