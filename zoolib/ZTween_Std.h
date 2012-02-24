@@ -34,15 +34,12 @@ class ZTween_Fun
 :	public ZTween<Val>
 	{
 public:
-	virtual ZQ<Val> QValAt(double iTime)
+	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (iTime >= 0 && iTime < 1.0)
-			return Fun(iTime);
+		if (iPlace >= 0 && iPlace < 1.0)
+			return Fun(iPlace);
 		return null;
 		}
-
-	virtual double Duration()
-		{ return 1; }
 	};
 
 // =================================================================================================
@@ -57,15 +54,15 @@ public:
 	:	fTween(iTween)
 		{}
 
-	virtual ZQ<Val> QValAt(double iTime)
+	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (ZQ<Param> theQ = fTween->QValAt(iTime))
+		if (ZQ<Param> theQ = fTween->QValAt(iPlace))
 			return Fun(*theQ);
 		return null;
 		}
 
-	virtual double Duration()
-		{ return fTween->Duration(); }
+	virtual double Extent()
+		{ return fTween->Extent(); }
 
 private:
 	const ZRef<ZTween<Param> > fTween;
@@ -83,15 +80,15 @@ public:
 	:	fTween(iTween)
 		{}
 
-	virtual ZQ<Val> QValAt(double iTime)
+	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (ZQ<Param> theQ = fTween->QValAt(iTime))
+		if (ZQ<Param> theQ = fTween->QValAt(iPlace))
 			return Val(*theQ);
 		return null;
 		}
 
-	virtual double Duration()
-		{ return fTween->Duration(); }
+	virtual double Extent()
+		{ return fTween->Extent(); }
 
 private:
 	const ZRef<ZTween<Param> > fTween;
@@ -124,31 +121,31 @@ ZRef<ZTween<Val> > sTween_OneMinus(const ZRef<ZTween<Val> >& iTween)
 // MARK: - sTween_Linear
 
 template <class Val>
-Val spTweenFun_Linear(double iTime)
-	{ return iTime; }
+Val spTweenFun_Linear(double iPlace)
+	{ return iPlace; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Linear()
 	{ return new ZTween_Fun<Val,spTweenFun_Linear>; }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Linear(double iDuration)
-	{ return sTween_Rate(iDuration, sTween_Linear<Val>()); }
+ZRef<ZTween<Val> > sTween_Linear(double iExtent)
+	{ return sTween_Rate(iExtent, sTween_Linear<Val>()); }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal)
 	{ return sTween_Range(iZeroVal, iOneVal, sTween_Linear<Val>()); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal, double iDuration)
-	{ return sTween_Range(iZeroVal, iOneVal, sTween_Rate(iDuration, sTween_Linear<Val>())); }
+ZRef<ZTween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal, double iExtent)
+	{ return sTween_Range(iZeroVal, iOneVal, sTween_Rate(iExtent, sTween_Linear<Val>())); }
 
 // =================================================================================================
 // MARK: - sTween_Triangle
 
 template <class Val>
-Val spTweenFun_Triangle(double iTime)
-	{ return 1 - fabs(iTime * 2 - 1); }
+Val spTweenFun_Triangle(double iPlace)
+	{ return 1 - fabs(iPlace * 2 - 1); }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Triangle()
@@ -158,8 +155,8 @@ ZRef<ZTween<Val> > sTween_Triangle()
 // MARK: - sTween_Square
 
 template <class Val>
-Val spTweenFun_Square(double iTime)
-	{ return iTime < 0.5 ? 0.0 : 1.0; }
+Val spTweenFun_Square(double iPlace)
+	{ return iPlace < 0.5 ? 0.0 : 1.0; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Square()
@@ -169,8 +166,8 @@ ZRef<ZTween<Val> > sTween_Square()
 // MARK: - sTween_Sin
 
 template <class Val>
-Val spTweenFun_Sin(double iTime)
-	{ return sin(2 * M_PI * iTime); }
+Val spTweenFun_Sin(double iPlace)
+	{ return sin(2 * M_PI * iPlace); }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Sin()
@@ -180,8 +177,8 @@ ZRef<ZTween<Val> > sTween_Sin()
 // MARK: - sTween_Cos
 
 template <class Val>
-Val spTweenFun_Cos(double iTime)
-	{ return cos(2 * M_PI * iTime); }
+Val spTweenFun_Cos(double iPlace)
+	{ return cos(2 * M_PI * iPlace); }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Cos()
@@ -191,8 +188,8 @@ ZRef<ZTween<Val> > sTween_Cos()
 // MARK: - sTween_QuadIn
 
 template <class Val>
-Val spTweenFun_QuadIn(double iTime)
-	{ return iTime * iTime; }
+Val spTweenFun_QuadIn(double iPlace)
+	{ return iPlace * iPlace; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_QuadIn()
@@ -202,8 +199,8 @@ ZRef<ZTween<Val> > sTween_QuadIn()
 // MARK: - sTween_QuadOut
 
 template <class Val>
-Val spTweenFun_QuadOut(double iTime)
-	{ return -iTime * (iTime - 2); }
+Val spTweenFun_QuadOut(double iPlace)
+	{ return -iPlace * (iPlace - 2); }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_QuadOut()
@@ -213,8 +210,8 @@ ZRef<ZTween<Val> > sTween_QuadOut()
 // MARK: - sTween_CubicIn
 
 template <class Val>
-Val spTweenFun_CubicIn(double iTime)
-	{ return iTime * iTime * iTime; }
+Val spTweenFun_CubicIn(double iPlace)
+	{ return iPlace * iPlace * iPlace; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_CubicIn()
@@ -224,10 +221,10 @@ ZRef<ZTween<Val> > sTween_CubicIn()
 // MARK: - sTween_CubicOut
 
 template <class Val>
-Val spTweenFun_CubicOut(double iTime)
+Val spTweenFun_CubicOut(double iPlace)
 	{
-	iTime -= 1;
-	return iTime * iTime * iTime;
+	iPlace -= 1;
+	return iPlace * iPlace * iPlace;
 	}
 
 template <class Val>
@@ -238,8 +235,8 @@ ZRef<ZTween<Val> > sTween_CubicOut()
 // MARK: - sTween_QuartIn
 
 template <class Val>
-Val spTweenFun_QuartIn(double iTime)
-	{ return iTime * iTime * iTime * iTime; }
+Val spTweenFun_QuartIn(double iPlace)
+	{ return iPlace * iPlace * iPlace * iPlace; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_QuartIn()
@@ -249,10 +246,10 @@ ZRef<ZTween<Val> > sTween_QuartIn()
 // MARK: - sTween_QuartOut
 
 template <class Val>
-Val spTweenFun_QuartOut(double iTime)
+Val spTweenFun_QuartOut(double iPlace)
 	{
-	iTime -= 1;
-	return -1 * (iTime * iTime * iTime * iTime - 1);
+	iPlace -= 1;
+	return -1 * (iPlace * iPlace * iPlace * iPlace - 1);
 	}
 
 template <class Val>
@@ -263,8 +260,8 @@ ZRef<ZTween<Val> > sTween_QuartOut()
 // MARK: - sTween_QuintIn
 
 template <class Val>
-Val spTweenFun_QuintIn(double iTime)
-	{ return iTime * iTime * iTime * iTime * iTime; }
+Val spTweenFun_QuintIn(double iPlace)
+	{ return iPlace * iPlace * iPlace * iPlace * iPlace; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_QuintIn()
@@ -274,10 +271,10 @@ ZRef<ZTween<Val> > sTween_QuintIn()
 // MARK: - sTween_QuintOut
 
 template <class Val>
-Val spTweenFun_QuintOut(double iTime)
+Val spTweenFun_QuintOut(double iPlace)
 	{
-	iTime -= 1;
-	return iTime * iTime * iTime * iTime * iTime + 1;
+	iPlace -= 1;
+	return iPlace * iPlace * iPlace * iPlace * iPlace + 1;
 	}
 
 template <class Val>
@@ -288,8 +285,8 @@ ZRef<ZTween<Val> > sTween_QuintOut()
 // MARK: - sTween_SinIn
 
 template <class Val>
-Val spTweenFun_SinIn(double iTime)
-	{ return -1 * cos(iTime * M_PI / 2) + 1; }
+Val spTweenFun_SinIn(double iPlace)
+	{ return -1 * cos(iPlace * M_PI / 2) + 1; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_SinIn()
@@ -299,8 +296,8 @@ ZRef<ZTween<Val> > sTween_SinIn()
 // MARK: - sTween_SinOut
 
 template <class Val>
-Val spTweenFun_SinOut(double iTime)
-	{ return sin(iTime * M_PI / 2); }
+Val spTweenFun_SinOut(double iPlace)
+	{ return sin(iPlace * M_PI / 2); }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_SinOut()
@@ -310,8 +307,8 @@ ZRef<ZTween<Val> > sTween_SinOut()
 // MARK: - sTween_ExpoIn
 
 template <class Val>
-Val spTweenFun_ExpoIn(double iTime)
-	{ return iTime <= 0 ? 0 : pow(2, 10 * (iTime - 1)); }
+Val spTweenFun_ExpoIn(double iPlace)
+	{ return iPlace <= 0 ? 0 : pow(2, 10 * (iPlace - 1)); }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_ExpoIn()
@@ -321,8 +318,8 @@ ZRef<ZTween<Val> > sTween_ExpoIn()
 // MARK: - sTween_ExpoOut
 
 template <class Val>
-Val spTweenFun_ExpoOut(double iTime)
-	{ return iTime >= 1 ? 1 : (-pow(2, -10 * iTime) + 1); }
+Val spTweenFun_ExpoOut(double iPlace)
+	{ return iPlace >= 1 ? 1 : (-pow(2, -10 * iPlace) + 1); }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_ExpoOut()
@@ -332,8 +329,8 @@ ZRef<ZTween<Val> > sTween_ExpoOut()
 // MARK: - sTween_CircIn
 
 template <class Val>
-Val spTweenFun_CircIn(double iTime)
-	{ return -1 * (sqrt(1 - iTime * iTime) - 1); }
+Val spTweenFun_CircIn(double iPlace)
+	{ return -1 * (sqrt(1 - iPlace * iPlace) - 1); }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_CircIn()
@@ -343,10 +340,10 @@ ZRef<ZTween<Val> > sTween_CircIn()
 // MARK: - sTween_CircOut
 
 template <class Val>
-Val spTweenFun_CircOut(double iTime)
+Val spTweenFun_CircOut(double iPlace)
 	{
-	iTime -= 1;
-	return sqrt(1 - iTime * iTime);
+	iPlace -= 1;
+	return sqrt(1 - iPlace * iPlace);
 	}
 
 template <class Val>
@@ -357,10 +354,10 @@ ZRef<ZTween<Val> > sTween_CircOut()
 // MARK: - sTween_ElasticIn
 
 template <class Val>
-Val spTweenFun_ElasticIn(double iTime)
+Val spTweenFun_ElasticIn(double iPlace)
 	{
-	iTime -= 1;
-	return -1 * (pow(2, 10*iTime) * sin((iTime-0.3)*2*M_PI/0.3));
+	iPlace -= 1;
+	return -1 * (pow(2, 10*iPlace) * sin((iPlace-0.3)*2*M_PI/0.3));
 	}
 
 template <class Val>
@@ -371,8 +368,8 @@ ZRef<ZTween<Val> > sTween_ElasticIn()
 // MARK: - sTween_ElasticOut
 
 template <class Val>
-Val spTweenFun_ElasticOut(double iTime)
-	{ return pow(2, -10*iTime) * sin((iTime-0.3)*2*M_PI/0.3) + 1; }
+Val spTweenFun_ElasticOut(double iPlace)
+	{ return pow(2, -10*iPlace) * sin((iPlace-0.3)*2*M_PI/0.3) + 1; }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_ElasticOut()
@@ -388,15 +385,12 @@ class ZTween_Fun_BackIn
 public:
 	ZTween_Fun_BackIn(Val iFactor) : fFactor(iFactor) {}
 
-	virtual ZQ<Val> QValAt(double iTime)
+	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (iTime < 0 || iTime >= 1.0)
+		if (iPlace < 0 || iPlace >= 1.0)
 			return null;
-		return iTime * iTime * ((fFactor + 1 ) * iTime - fFactor);
+		return iPlace * iPlace * ((fFactor + 1 ) * iPlace - fFactor);
 		}
-
-	virtual double Duration()
-		{ return 1; }
 
 private:
 	const Val fFactor;
@@ -420,16 +414,13 @@ class ZTween_Fun_BackOut
 public:
 	ZTween_Fun_BackOut(Val iFactor) : fFactor(iFactor) {}
 
-	virtual ZQ<Val> QValAt(double iTime)
+	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (iTime < 0 || iTime >= 1.0)
+		if (iPlace < 0 || iPlace >= 1.0)
 			return null;
-		iTime -= 1;
-		return iTime * iTime * ((fFactor + 1) * iTime + fFactor) + 1;
+		iPlace -= 1;
+		return iPlace * iPlace * ((fFactor + 1) * iPlace + fFactor) + 1;
 		}
-
-	virtual double Duration()
-		{ return 1; }
 
 private:
 	const Val fFactor;
@@ -447,26 +438,26 @@ ZRef<ZTween<Val> > sTween_BackOut(Val iFactor)
 // MARK: - sTween_BounceIn
 
 template <class Val>
-Val spTweenFun_BounceIn(double iTime)
+Val spTweenFun_BounceIn(double iPlace)
 	{
-	if (iTime < 1 / 2.75)
+	if (iPlace < 1 / 2.75)
 		{
-		return 7.5625 * iTime * iTime;
+		return 7.5625 * iPlace * iPlace;
 		}
-	else if (iTime < 2 / 2.75)
+	else if (iPlace < 2 / 2.75)
 		{
-		iTime -= 1.5/2.75;
-		return 7.5625 * iTime * iTime + .75;
+		iPlace -= 1.5/2.75;
+		return 7.5625 * iPlace * iPlace + .75;
 		}
-	else if (iTime < 2.5 / 2.75)
+	else if (iPlace < 2.5 / 2.75)
 		{
-		iTime -= 2.25/2.75;
-		return 7.5625 * iTime * iTime + .9375;
+		iPlace -= 2.25/2.75;
+		return 7.5625 * iPlace * iPlace + .9375;
 		}
 	else
 		{
-		iTime -= 2.625/2.75;
-		return 7.5625 * iTime * iTime + .984375;
+		iPlace -= 2.625/2.75;
+		return 7.5625 * iPlace * iPlace + .984375;
 		}
 	}
 
@@ -478,8 +469,8 @@ ZRef<ZTween<Val> > sTween_BounceIn()
 // MARK: - sTween_BounceOut
 
 template <class Val>
-Val spTweenFun_BounceOut(double iTime)
-	{ return spTweenFun_BounceIn<Val>(1 - iTime); }
+Val spTweenFun_BounceOut(double iPlace)
+	{ return spTweenFun_BounceIn<Val>(1 - iPlace); }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_BounceOut()
