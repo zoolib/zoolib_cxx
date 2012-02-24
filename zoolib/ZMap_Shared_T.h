@@ -23,6 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCountedVal.h"
+#include "zoolib/ZQ.h"
+
+#include <string>
 
 namespace ZooLib {
 
@@ -59,21 +62,21 @@ public:
 
 
 // ZMap protocol
-	ZQ<Val> QGet(const string8& iName) const
+	ZQ<Val> QGet(const std::string& iName) const
 		{
 		if (fRep)
 			return fRep->Get().QGet(iName);
 		return null;
 		}
 
-	Val DGet(const Val& iDefault, const string8& iName) const
+	Val DGet(const Val& iDefault, const std::string& iName) const
 		{
 		if (ZQ<Val> theVal = this->QGet(iName))
 			return *theVal;
 		return iDefault;
 		}
 
-	Val Get(const string8& iName) const
+	Val Get(const std::string& iName) const
 		{
 		if (ZQ<Val> theVal = this->QGet(iName))
 			return *theVal;
@@ -81,7 +84,7 @@ public:
 		}
 
 	template <class S>
-	ZQ<S> QGet(const string8& iName) const
+	ZQ<S> QGet(const std::string& iName) const
 		{
 		if (ZQ<Val> theQ = this->QGet(iName))
 			return theQ->QGet<S>();
@@ -89,7 +92,7 @@ public:
 		}
 
 	template <class S>
-	S DGet(const S& iDefault, const string8& iName) const
+	S DGet(const S& iDefault, const std::string& iName) const
 		{
 		if (ZQ<Val> theQ = this->QGet(iName))
 			{
@@ -100,7 +103,7 @@ public:
 		}
 
 	template <class S>
-	S Get(const string8& iName) const
+	S Get(const std::string& iName) const
 		{
 		if (ZQ<Val> theQ = this->QGet(iName))
 			{
@@ -111,7 +114,7 @@ public:
 		}
 
 // Our protocol
-	const Val operator[](const string8& iName) const
+	const Val operator[](const std::string& iName) const
 		{ return this->Get(iName); }
 
 protected:
@@ -163,7 +166,7 @@ public:
 			fRep->GetMutable().Clear();
 		}
 
-	ZMap_Shared_Mutable_T& Set(const string8& iName, const Val& iVal)
+	ZMap_Shared_Mutable_T& Set(const std::string& iName, const Val& iVal)
 		{
 		if (not fRep)
 			fRep = sCountedVal<Map>();
@@ -172,10 +175,10 @@ public:
 		}
 
 	template <class S>
-	ZMap_Shared_Mutable_T& Set(const string8& iName, const S& iVal)
+	ZMap_Shared_Mutable_T& Set(const std::string& iName, const S& iVal)
 		{ return this->Set(iName, Val(iVal)); }
 
-	ZMap_Shared_Mutable_T& Erase(const string8& iName)
+	ZMap_Shared_Mutable_T& Erase(const std::string& iName)
 		{
 		if (fRep)
 			fRep->GetMutable().Erase(iName);
@@ -183,14 +186,14 @@ public:
 		}
 
 // Our protocol
-	Val& Mutable(const string8& iName)
+	Val& Mutable(const std::string& iName)
 		{
 		if (not fRep)
 			fRep = sCountedVal<Map>();
 		return fRep->GetMutable().Mutable(iName);
 		}
 
-	Val& operator[](const string8& iName)
+	Val& operator[](const std::string& iName)
 		{ return this->Mutable(iName); }
 	};
 
