@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare.h"
-#include "zoolib/ZCompare_Real.h"
+#include "zoolib/ZCompare_Rational.h"
 #include "zoolib/ZCompat_cmath.h"
 
 namespace ZooLib {

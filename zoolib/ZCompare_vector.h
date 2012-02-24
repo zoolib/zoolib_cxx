@@ -18,20 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompare_Real_h__
-#define __ZCompare_Real_h__ 1
+#ifndef __ZCompare_vector_h__
+#define __ZCompare_vector_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompare_T.h"
 
+#include <vector>
+
 namespace ZooLib {
 
-template <>
-int sCompare_T(const float& iL, const float& iR);
-
-template <>
-int sCompare_T(const double& iL, const double& iR);
+template <class T>
+inline int sCompare_T(const std::vector<T>& iLeft, const std::vector<T>& iRight)
+	{ return sCompareIterators_T(iLeft.begin(), iLeft.end(), iRight.begin(), iRight.end()); }
 
 } // namespace ZooLib
 
-#endif // __ZCompare_Real_h__
+#endif // __ZCompare_vector_h__
