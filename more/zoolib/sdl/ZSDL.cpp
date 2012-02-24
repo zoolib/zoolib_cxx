@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/sdl/ZSDL.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZUtil_STL_vector.h"
@@ -262,13 +263,14 @@ void Mixer::Erase(ZRef<Callable> iCallable)
 
 void Mixer::pCallback(Uint8* oDest, size_t iCount)
 	{
-	ZAcqMtxR acq(fMtxR);
-	vector<uint8> buffer(iCount);
+	ZGuardRMtxR guard(fMtxR);
 	vector<ZRef<Callable> > vec(fCallables.begin(), fCallables.end());
-	for (vector<ZRef<Callable> >::iterator iter = vec.begin(); iter != vec.end(); ++iter)
+	guard.Release();
+
+	foreachv (ZRef<Callable> callable, vec)
 		{
-		if (!(*iter)->Call(oDest, iCount))
-			this->Erase(*iter);
+		if (not callable->Call(oDest, iCount))
+			this->Erase(callable);
 		}
 	}
 
