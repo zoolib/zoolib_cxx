@@ -53,7 +53,7 @@ public:
 		}
 
 // Our ctor protocol
-	ZMap_Shared_T(const Map& iMap)
+	explicit ZMap_Shared_T(const Map& iMap)
 	:	fRep(new Rep(iMap))
 		{}
 
@@ -115,7 +115,7 @@ public:
 		{ return this->Get(iName); }
 
 protected:
-	typedef ZCountedVal<Map_p> Rep;
+	typedef ZCountedVal<Map> Rep;
 	ZRef<Rep> fRep;
 	};
 
@@ -130,8 +130,8 @@ class ZMap_SharedMutable_T
 	using inherited::fRep;
 
 public:
-	using inherited::Map;
-	using inherited::Val;
+	typedef Map_p Map;
+	typedef Val_p Val;
 
 	ZMap_SharedMutable_T()
 		{}
@@ -150,7 +150,7 @@ public:
 		}
 
 // Our ctor protocol
-	ZMap_SharedMutable_T(const Map_p& iMap)
+	explicit ZMap_SharedMutable_T(const Map& iMap)
 	:	inherited(iMap)
 		{}
 
@@ -167,7 +167,7 @@ public:
 	ZMap_SharedMutable_T& Set(const string8& iName, const Val_p& iVal)
 		{
 		if (not fRep)
-			fRep = sCountedVal<Map_p>();
+			fRep = sCountedVal<Map>();
 		fRep->GetMutable().Set(iName, iVal);
 		return *this;
 		}
@@ -187,7 +187,7 @@ public:
 	Val_p& Mutable(const string8& iName)
 		{
 		if (not fRep)
-			fRep = sCountedVal<Map_p>();
+			fRep = sCountedVal<Map>();
 		return fRep->GetMutable().Mutable(iName);
 		}
 
