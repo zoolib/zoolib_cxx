@@ -650,31 +650,6 @@ ZMatrix<E,C,R>& operator-=(ZMatrix<E,C,R>& ioLeft, T iRight)
 	}
 
 // =================================================================================================
-// MARK: - sScale (taking column vector)
-
-template <class E, size_t Dim>
-ZMatrix<E,Dim+1,Dim+1> sScale(const ZMatrix<E,1,Dim>& iVec)
-	{
-	ZMatrix<E,Dim+1,Dim+1> result;
-	for (size_t ii = 0; ii < Dim; ++ii)
-		result.fE[ii][ii] = iVec.fE[0][ii];
-	result.fE[Dim][Dim] = 1;
-	return result;
-	}
-
-// =================================================================================================
-// MARK: - sTranslate (taking column vector)
-
-template <class E, size_t Dim>
-ZMatrix<E,Dim+1,Dim+1> sTranslate(const ZMatrix<E,1,Dim>& iVec)
-	{
-	ZMatrix<E,Dim+1,Dim+1> result = sIdentity<E,Dim+1>();
-	for (size_t ii = 0; ii < Dim; ++ii)
-		result.fE[Dim][ii] = iVec.fE[0][ii];
-	return result;
-	}
-
-// =================================================================================================
 // MARK: - sMinor
 
 template <class E, size_t Dim>
