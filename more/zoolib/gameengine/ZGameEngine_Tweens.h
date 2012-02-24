@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZTween_Std.h" // For ZTween_Filter_Fun
-#include "zoolib/gameengine/ZGameEngine_Geometry.h"
+#include "zoolib/gameengine/ZGameEngine_Geometry3.h"
 
 namespace ZooLib {
 namespace ZGameEngine {
@@ -36,7 +36,7 @@ template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleX(const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sScaleX>(iTween);
+		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sScale3X>(iTween);
 	return null;
 	}
 
@@ -47,7 +47,7 @@ template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleY(const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sScaleY>(iTween);
+		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sScale3Y>(iTween);
 	return null;
 	}
 
@@ -58,7 +58,7 @@ template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_ScaleZ(const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sScaleZ>(iTween);
+		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sScale3Z>(iTween);
 	return null;
 	}
 
@@ -69,7 +69,7 @@ template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateX(const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTranslateX>(iTween);
+		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTranslate3X>(iTween);
 	return null;
 	}
 
@@ -80,7 +80,7 @@ template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateY(const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTranslateY>(iTween);
+		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTranslate3Y>(iTween);
 	return null;
 	}
 
@@ -91,7 +91,7 @@ template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateZ(const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTranslateZ>(iTween);
+		return new ZTween_Filter_Fun<ZMatrix<Val,4,4>,Val,sTranslate3Z>(iTween);
 	return null;
 	}
 
@@ -100,7 +100,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_TranslateZ(const ZRef<ZTween<Val> >& iTw
 
 template <class Val>
 ZMatrix<Val,4,4> sTweenFun_Rotate2PiX(Val iVal)
-	{ return sRotateX<Val>(2 * M_PI * iVal); }
+	{ return sRotate3X<Val>(2 * M_PI * iVal); }
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateX(const ZRef<ZTween<Val> >& iTween)
@@ -115,7 +115,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateX(const ZRef<ZTween<Val> >& iTween
 
 template <class Val>
 ZMatrix<Val,4,4> sTweenFun_Rotate2PiY(Val iVal)
-	{ return sRotateY<Val>(2 * M_PI * iVal); }
+	{ return sRotate3Y<Val>(2 * M_PI * iVal); }
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateY(const ZRef<ZTween<Val> >& iTween)
@@ -130,7 +130,7 @@ ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateY(const ZRef<ZTween<Val> >& iTween
 
 template <class Val>
 ZMatrix<Val,4,4> sTweenFun_Rotate2PiZ(Val iVal)
-	{ return sRotateZ<Val>(2 * M_PI * iVal); }
+	{ return sRotate3Z<Val>(2 * M_PI * iVal); }
 
 template <class Val>
 ZRef<ZTween<ZMatrix<Val,4,4> > > sTween_RotateZ(const ZRef<ZTween<Val> >& iTween)
