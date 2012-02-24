@@ -54,36 +54,36 @@ public:
 
 // Our ctor protocol
 	explicit ZMap_Shared_T(const Map& iMap)
-	:	fRep(new Rep(iMap))
+	:	fRep(sCountedVal(iMap))
 		{}
 
 
 // ZMap protocol
-	ZQ<Val_p> QGet(const string8& iName) const
+	ZQ<Val> QGet(const string8& iName) const
 		{
 		if (fRep)
 			return fRep->Get().QGet(iName);
 		return null;
 		}
 
-	Val_p DGet(const Val_p& iDefault, const string8& iName) const
+	Val DGet(const Val& iDefault, const string8& iName) const
 		{
-		if (ZQ<Val_p> theVal = this->QGet(iName))
+		if (ZQ<Val> theVal = this->QGet(iName))
 			return *theVal;
 		return iDefault;
 		}
 
-	Val_p Get(const string8& iName) const
+	Val Get(const string8& iName) const
 		{
-		if (ZQ<Val_p> theVal = this->QGet(iName))
+		if (ZQ<Val> theVal = this->QGet(iName))
 			return *theVal;
-		return Val_p();
+		return Val();
 		}
 
 	template <class S>
 	ZQ<S> QGet(const string8& iName) const
 		{
-		if (ZQ<Val_p> theQ = this->QGet(iName))
+		if (ZQ<Val> theQ = this->QGet(iName))
 			return theQ->QGet<S>();
 		return null;
 		}
@@ -91,7 +91,7 @@ public:
 	template <class S>
 	S DGet(const S& iDefault, const string8& iName) const
 		{
-		if (ZQ<Val_p> theQ = this->QGet(iName))
+		if (ZQ<Val> theQ = this->QGet(iName))
 			{
 			if (ZQ<S> theQ2 = theQ->QGet<S>())
 				return *theQ2;
@@ -102,7 +102,7 @@ public:
 	template <class S>
 	S Get(const string8& iName) const
 		{
-		if (ZQ<Val_p> theQ = this->QGet(iName))
+		if (ZQ<Val> theQ = this->QGet(iName))
 			{
 			if (ZQ<S> theQ2 = theQ->QGet<S>())
 				return *theQ2;
@@ -111,12 +111,11 @@ public:
 		}
 
 // Our protocol
-	const Val_p operator[](const string8& iName) const
+	const Val operator[](const string8& iName) const
 		{ return this->Get(iName); }
 
 protected:
-	typedef ZCountedVal<Map> Rep;
-	ZRef<Rep> fRep;
+	ZRef<ZCountedVal<Map> > fRep;
 	};
 
 // =================================================================================================
@@ -164,7 +163,7 @@ public:
 			fRep->GetMutable().Clear();
 		}
 
-	ZMap_SharedMutable_T& Set(const string8& iName, const Val_p& iVal)
+	ZMap_SharedMutable_T& Set(const string8& iName, const Val& iVal)
 		{
 		if (not fRep)
 			fRep = sCountedVal<Map>();
@@ -174,7 +173,7 @@ public:
 
 	template <class S>
 	ZMap_SharedMutable_T& Set(const string8& iName, const S& iVal)
-		{ return this->Set(iName, Val_p(iVal)); }
+		{ return this->Set(iName, Val(iVal)); }
 
 	ZMap_SharedMutable_T& Erase(const string8& iName)
 		{
@@ -184,14 +183,14 @@ public:
 		}
 
 // Our protocol
-	Val_p& Mutable(const string8& iName)
+	Val& Mutable(const string8& iName)
 		{
 		if (not fRep)
 			fRep = sCountedVal<Map>();
 		return fRep->GetMutable().Mutable(iName);
 		}
 
-	Val_p& operator[](const string8& iName)
+	Val& operator[](const string8& iName)
 		{ return this->Mutable(iName); }
 	};
 
