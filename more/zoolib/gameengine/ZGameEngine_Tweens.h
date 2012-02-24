@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZTween_Std.h" // For ZTween_Filter_Fun
-#include "zoolib/gameengine/ZGameEngine_Geometry3.h"
+#include "zoolib/gameengine/ZGameEngine_Geometry3D.h"
 
 namespace ZooLib {
 namespace ZGameEngine {

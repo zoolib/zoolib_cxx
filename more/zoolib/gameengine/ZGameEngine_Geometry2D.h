@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGameEngine_Geometry2_h__
-#define __ZGameEngine_Geometry2_h__ 1
+#ifndef __ZGameEngine_Geometry2D_h__
+#define __ZGameEngine_Geometry2D_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/gameengine/ZGameEngine_Geometry.h"
@@ -49,7 +49,7 @@ ZMatrix<Val,3,3> sScale2Y(Val y)
 
 template <class Val>
 ZMatrix<Val,3,3> sScale2(const ZMatrix<Val,1,2>& iCVec2)
-	{ return sScale2(iCVec2[0], iCVec2[1]); }
+	{ return sScale(iCVec2); }
 
 // =================================================================================================
 // MARK: - sTranslate2
@@ -57,9 +57,9 @@ ZMatrix<Val,3,3> sScale2(const ZMatrix<Val,1,2>& iCVec2)
 template <class Val>
 ZMatrix<Val,3,3> sTranslate2(Val x, Val y)
 	{
-	ZMatrix<Val,2,2> result = sIdentity<Val,3>();
-	result[3][0] = x;
-	result[3][1] = y;
+	ZMatrix<Val,3,3> result = sIdentity<Val,3>();
+	result[2][0] = x;
+	result[2][1] = y;
 	return result;
 	}
 
@@ -73,7 +73,7 @@ ZMatrix<Val,3,3> sTranslate2Y(Val y)
 
 template <class Val>
 ZMatrix<Val,3,3> sTranslate2(const ZMatrix<Val,1,2>& iCVec2)
-	{ return sTranslate2<Val>(iCVec2[0], iCVec2[1]); }
+	{ return sTranslate<Val>(iCVec2); }
 
 // =================================================================================================
 // MARK: - sRotate2Z
@@ -117,4 +117,4 @@ ZMatrix<Val,3,3> sShear2(Val xy, Val yx)
 } // namespace ZGameEngine
 } // namespace ZooLib
 
-#endif // __ZGameEngine_Geometry_h__
+#endif // __ZGameEngine_Geometry2D_h__

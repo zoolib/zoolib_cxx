@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGameEngine_Geometry3_h__
-#define __ZGameEngine_Geometry3_h__ 1
+#ifndef __ZGameEngine_Geometry3D_h__
+#define __ZGameEngine_Geometry3D_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/gameengine/ZGameEngine_Geometry2.h"
+#include "zoolib/gameengine/ZGameEngine_Geometry2D.h"
 
 namespace ZooLib {
 namespace ZGameEngine {
@@ -55,7 +55,7 @@ ZMatrix<Val,4,4> sScale3Z(Val z)
 
 template <class Val>
 ZMatrix<Val,4,4> sScale3(const ZMatrix<Val,1,3>& iCVec3)
-	{ return sScale3(iCVec3[0], iCVec3[1], iCVec3[2]); }
+	{ return sScale(iCVec3); }
 
 // =================================================================================================
 // MARK: - sTranslate3
@@ -84,7 +84,7 @@ ZMatrix<Val,4,4> sTranslate3Z(Val z)
 
 template <class Val>
 ZMatrix<Val,4,4> sTranslate3(const ZMatrix<Val,1,3>& iCVec3)
-	{ return sTranslate3<Val>(iCVec3[0], iCVec3[1], iCVec3[2]); }
+	{ return sTranslate<Val>(iCVec3); }
 
 // =================================================================================================
 // MARK: - sRotate3X
@@ -199,4 +199,4 @@ ZMatrix<Val,1,2> sZY(const ZMatrix<Val,1,3>& iMat)
 } // namespace ZGameEngine
 } // namespace ZooLib
 
-#endif // __ZGameEngine_Geometry_h__
+#endif // __ZGameEngine_Geometry3D_h__
