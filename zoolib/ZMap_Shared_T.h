@@ -119,10 +119,10 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZMap_SharedMutable_T
+// MARK: - ZMap_Shared_Mutable_T
 
 template <class Map_p, class Val_p = typename Map_p::Val>
-class ZMap_SharedMutable_T
+class ZMap_Shared_Mutable_T
 :	public ZMap_Shared_T<Map_p,Val_p>
 	{
 	typedef ZMap_Shared_T<Map_p,Val_p> inherited;
@@ -132,24 +132,24 @@ public:
 	typedef Map_p Map;
 	typedef Val_p Val;
 
-	ZMap_SharedMutable_T()
+	ZMap_Shared_Mutable_T()
 		{}
 
-	ZMap_SharedMutable_T(const ZMap_SharedMutable_T& iOther)
+	ZMap_Shared_Mutable_T(const ZMap_Shared_Mutable_T& iOther)
 	:	inherited(iOther)
 		{}
 
-	~ZMap_SharedMutable_T()
+	~ZMap_Shared_Mutable_T()
 		{}
 
-	ZMap_SharedMutable_T& operator=(const ZMap_SharedMutable_T& iOther)
+	ZMap_Shared_Mutable_T& operator=(const ZMap_Shared_Mutable_T& iOther)
 		{
 		inherited::operator=(iOther);
 		return *this;
 		}
 
 // Our ctor protocol
-	explicit ZMap_SharedMutable_T(const Map& iMap)
+	explicit ZMap_Shared_Mutable_T(const Map& iMap)
 	:	inherited(iMap)
 		{}
 
@@ -163,7 +163,7 @@ public:
 			fRep->GetMutable().Clear();
 		}
 
-	ZMap_SharedMutable_T& Set(const string8& iName, const Val& iVal)
+	ZMap_Shared_Mutable_T& Set(const string8& iName, const Val& iVal)
 		{
 		if (not fRep)
 			fRep = sCountedVal<Map>();
@@ -172,10 +172,10 @@ public:
 		}
 
 	template <class S>
-	ZMap_SharedMutable_T& Set(const string8& iName, const S& iVal)
+	ZMap_Shared_Mutable_T& Set(const string8& iName, const S& iVal)
 		{ return this->Set(iName, Val(iVal)); }
 
-	ZMap_SharedMutable_T& Erase(const string8& iName)
+	ZMap_Shared_Mutable_T& Erase(const string8& iName)
 		{
 		if (fRep)
 			fRep->GetMutable().Erase(iName);
