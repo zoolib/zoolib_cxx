@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 // MARK: - ZMACRO_foreachi
 
-#ifndef ZMACRO_foreachi
+#ifdef ZMACRO_foreachi
+#elif 1
 	#define ZMACRO_foreachi(iter, cont) \
 		for (ZMACRO_typeof((cont).begin()) iter = (cont).begin(), \
 			ZMACRO_Concat(foreach_end,__LINE__) = (cont).end(); \
@@ -67,7 +68,7 @@ public:
 			++wrap.fIter, ++wrap.fMismatch) \
 			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
 
-#else
+#elif 1
 	#define ZMACRO_foreachv(VarDeclaration, Container) \
 		for (ZooLib::ZWrapper_foreachv_T<ZMACRO_typeof(Container)> \
 			ZMACRO_Concat(Wrapper_foreachv,__LINE__)(Container); \
