@@ -55,7 +55,7 @@ static ZRef<ZYadR> spGetChild(ZRef<ZYadR> iYadR, const string& iName)
 		{
 		if (ZQ<int64> theQ = ZUtil_string::sQInt64(iName))
 			{
-			int64 theIntIndex = theQ.Get();
+			int64 theIntIndex = *theQ;
 			if (theIntIndex >= 0)
 				{
 				if (ZRef<ZYadSeqAtR> theYadSeqAtR = iYadR.DynamicCast<ZYadSeqAtR>())

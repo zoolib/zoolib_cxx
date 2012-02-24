@@ -370,6 +370,9 @@ public:
 	ZMACRO_operator_bool_T(ZQ, operator_bool) const
 		{ return operator_bool_gen::translate(fHasValue == Sense); }
 
+	void operator*() const
+		{}
+
 	void Clear()
 		{ fHasValue = false; }
 

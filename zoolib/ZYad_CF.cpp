@@ -170,16 +170,16 @@ ZRef<ZYadR> sYadR(CFTypeRef iVal)
 	const ZVal_CF theVal = iVal;
 
 	if (ZQ<ZMap_CF> theQ = theVal.QGet<ZMap_CF>())
-		return new ZYadMapAtRPos_CF(theQ.Get());
+		return new ZYadMapAtRPos_CF(*theQ);
 
 	if (ZQ<ZSeq_CF> theQ = theVal.QGet<ZSeq_CF>())
-		return new ZYadSeqAtRPos_CF(theQ.Get());
+		return new ZYadSeqAtRPos_CF(*theQ);
 
 	if (ZQ<ZData_CF> theQ = theVal.QGet<ZData_CF>())
-		return new ZYadStreamerRPos_CF(theQ.Get());
+		return new ZYadStreamerRPos_CF(*theQ);
 
 	if (ZQ<ZRef<CFStringRef> > theQ = theVal.QGet<ZRef<CFStringRef> >())
-		return sYadR(theQ.Get());
+		return sYadR(*theQ);
 
 	return new ZYadAtomR_CF(iVal);
 	}

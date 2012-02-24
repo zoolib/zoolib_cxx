@@ -576,7 +576,7 @@ ZQ<ZVal_CF> ZSeq_CF::QGet(size_t iIndex) const
 ZVal_CF ZSeq_CF::DGet(const ZVal_CF& iDefault, size_t iIndex) const
 	{
 	if (ZQ<ZVal_CF> theQ = this->QGet(iIndex))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
@@ -746,14 +746,14 @@ ZQ<ZVal_CF> ZMap_CF::QGet(CFStringRef iName) const
 ZVal_CF ZMap_CF::DGet(const ZVal_CF& iDefault, const string8& iName) const
 	{
 	if (ZQ<ZVal_CF> theQ = this->QGet(iName))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
 ZVal_CF ZMap_CF::DGet(const ZVal_CF& iDefault, CFStringRef iName) const
 	{
 	if (ZQ<ZVal_CF> theQ = this->QGet(iName))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 

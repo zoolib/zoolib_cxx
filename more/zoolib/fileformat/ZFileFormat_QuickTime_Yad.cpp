@@ -256,7 +256,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 		{
 		if (ZQ<bool> isContainerQ = spIsContainer(oName))
 			{
-			if (isContainerQ.Get())
+			if (*isContainerQ)
 				oYadR = new YadMapR(fStreamerR, theSize);
 			else
 				oYadR = new YadStreamerRPos(theSRPos, theSize);
@@ -284,7 +284,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 		{
 		if (ZQ<bool> isContainerQ = spIsContainer(oName))
 			{
-			if (isContainerQ.Get())
+			if (*isContainerQ)
 				oYadR = new YadMapR(fStreamerR, theSize);
 			else
 				oYadR = new YadStreamerR(fStreamerR, theSize);

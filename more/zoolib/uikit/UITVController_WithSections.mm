@@ -66,7 +66,7 @@ static bool spIsVersion4OrLater()
 	static ZQ<bool> resultQ;
 	if (!resultQ)
 		resultQ = [[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0;
-	return resultQ.Get();
+	return *resultQ;
 	}
 
 // =================================================================================================
@@ -113,21 +113,21 @@ ZQ<UITableViewRowAnimation> Section::QSectionAnimation_Reload()
 UITableViewRowAnimation Section::SectionAnimation_Insert()
 	{
 	if (ZQ<UITableViewRowAnimation> theQ = this->QSectionAnimation_Insert())
-		return theQ.Get();
+		return *theQ;
 	return UITableViewRowAnimationNone;
 	}
 
 UITableViewRowAnimation Section::SectionAnimation_Delete()
 	{
 	if (ZQ<UITableViewRowAnimation> theQ = this->QSectionAnimation_Delete())
-		return theQ.Get();
+		return *theQ;
 	return UITableViewRowAnimationNone;
 	}
 
 UITableViewRowAnimation Section::SectionAnimation_Reload()
 	{
 	if (ZQ<UITableViewRowAnimation> theQ = this->QSectionAnimation_Reload())
-		return theQ.Get();
+		return *theQ;
 	return UITableViewRowAnimationNone;
 	}
 
@@ -705,7 +705,7 @@ using namespace ZooLib::UIKit;
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<size_t> theQ = theSection->GetBody()->NumberOfRows())
-			return theQ.Get();
+			return *theQ;
 		}
 	return 0;
 	}
@@ -725,7 +725,7 @@ using namespace ZooLib::UIKit;
 		{
 		if (ZQ<bool> theQ = theSection->GetBody()->CanSelect([tableView isEditing], indexPath.row))
 			{
-			if (!theQ.Get())
+			if (!*theQ)
 				return nil;
 			}
 		}
@@ -778,7 +778,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<CGFloat> theQ = theSection->QHeaderHeight())
-			return theQ.Get();
+			return *theQ;
 		}
 	return tableView.sectionHeaderHeight;
 	}
@@ -788,7 +788,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<CGFloat> theQ = theSection->QFooterHeight())
-			return theQ.Get();
+			return *theQ;
 		}
 	return tableView.sectionFooterHeight;
 	}
@@ -798,7 +798,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<string8> theQ = theSection->QHeaderTitle())
-			return ZUtil_NS::sString(theQ.Get());
+			return ZUtil_NS::sString(*theQ);
 		}
 	return nullptr;
 	}
@@ -808,7 +808,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<string8> theQ = theSection->QFooterTitle())
-			return ZUtil_NS::sString(theQ.Get());
+			return ZUtil_NS::sString(*theQ);
 		}
 	return nullptr;
 	}
@@ -852,7 +852,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
 		if (ZQ<bool> theQ = theSection->GetBody()->QShouldIndentWhileEditing(indexPath.row))
-			return theQ.Get();
+			return *theQ;
 		}
 	return true;
 	}
@@ -873,7 +873,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
 		if (ZQ<UITableViewCellEditingStyle> theQ = theSection->GetBody()->QEditingStyle(indexPath.row))
-			return theQ.Get();
+			return *theQ;
 		}
 	return UITableViewCellEditingStyleNone;
 	}
@@ -884,7 +884,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
 		if (ZQ<NSInteger> theQ = theSection->GetBody()->QIndentationLevel(indexPath.row))
-			return theQ.Get();
+			return *theQ;
 		}
 	return 0;
 	}
@@ -1327,7 +1327,7 @@ static void spInsertSections(UITableView* iTableView,
 	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
 		{
 		if (ZQ<CGFloat> theQ = theSection->GetBody()->QRowHeight(indexPath.row))
-			return theQ.Get();
+			return *theQ;
 		}
 	return tableView.rowHeight;
 	}

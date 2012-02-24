@@ -459,21 +459,21 @@ ZQ<Val> KeyRef::QGet(const Index_t& iIndex) const
 Val KeyRef::DGet(const Val& iDefault, const string16& iName) const
 	{
 	if (ZQ<Val> theQ = this->QGet(iName))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
 Val KeyRef::DGet(const Val& iDefault, const string8& iName) const
 	{
 	if (ZQ<Val> theQ = this->QGet(ZUnicode::sAsUTF16(iName)))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
 Val KeyRef::DGet(const Val& iDefault, const Index_t& iIndex) const
 	{
 	if (ZQ<Val> theQ = this->QGet(iIndex))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 

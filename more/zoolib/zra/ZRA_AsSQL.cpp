@@ -203,7 +203,7 @@ void Analyzer::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	const RelName& newName = iExpr->GetNew();
 	if (ZQ<RelName> theQ = ZUtil_STL::sEraseAndReturnIfContains(theAnalysis.fRename, oldName))
 		{
-		const RelName orgName = theQ.Get();
+		const RelName orgName = *theQ;
 		const RelName orgNameInverse =
 			ZUtil_STL::sEraseAndReturnIfContains(theAnalysis.fRename_Inverse, orgName).Get();
 		ZAssert(orgNameInverse == oldName);
@@ -344,7 +344,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		}
 	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
-		s.Writef("%lld", theQ.Get());
+		s.Writef("%lld", *theQ);
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
@@ -497,7 +497,7 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 				s << ",";
 			isFirst = false;
 			if (ZQ<string8> theQ = ZUtil_STL::sGetIfContains(theAnalysis.fRename, *i))
-				s << theQ.Get();
+				s << *theQ;
 			else
 				spToStrim_SimpleValue(s, theAnalysis.fConstValues.Get(*i));
 			}

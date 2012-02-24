@@ -63,12 +63,10 @@ static HANDLE spDuplicateHandle(HANDLE iHANDLE)
 			false, // bInheritHandle
 			DUPLICATE_SAME_ACCESS // dwOptions
 			))
-			{
-			return result;
-			}
-		return iHANDLE;
+			{ return result; }
 		}
-	return nullptr;
+
+	return iHANDLE;
 	}
 
 // =================================================================================================

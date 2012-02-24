@@ -52,7 +52,7 @@ void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Ren
 	string8 newName = iExpr->GetNew();
 
 	if (ZQ<string8> theQ = sQErase(fRename, newName))
-		newName = theQ.Get();
+		newName = *theQ;
 
 	const string8 oldName = iExpr->GetOld();
 
@@ -62,7 +62,7 @@ void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Ren
 
 	if (ZQ<string8> theQ = sQGet(fRename, oldName))
 		{
-		if (theQ.Get() == newName)
+		if (*theQ == newName)
 			{
 			if (newName != oldName)
 				newOp0 = sRename(newOp0, newName, oldName);

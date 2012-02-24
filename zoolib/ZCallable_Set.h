@@ -48,7 +48,7 @@ public:
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
 			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(theQ.Get());
+				sCall(*theQ);
 			else
 				return notnull;
 			}
@@ -78,7 +78,7 @@ public:
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
 			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(theQ.Get(), i0);
+				sCall(*theQ, i0);
 			else
 				return notnull;
 			}
@@ -108,7 +108,7 @@ public:
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
 			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(theQ.Get(), i0, i1);
+				sCall(*theQ, i0, i1);
 			else
 				return notnull;
 			}
@@ -138,7 +138,7 @@ public:
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
 			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(theQ.Get(), i0, i1, i2);
+				sCall(*theQ, i0, i1, i2);
 			else
 				return notnull;
 			}
@@ -168,7 +168,7 @@ public:
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
 			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(theQ.Get(), i0, i1, i2, i3);
+				sCall(*theQ, i0, i1, i2, i3);
 			else
 				return notnull;
 			}
@@ -198,7 +198,7 @@ public:
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
 			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(theQ.Get(), i0, i1, i2, i3, i4);
+				sCall(*theQ, i0, i1, i2, i3, i4);
 			else
 				return notnull;
 			}
@@ -228,7 +228,7 @@ public:
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
 			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5);
+				sCall(*theQ, i0, i1, i2, i3, i4, i5);
 			else
 				return notnull;
 			}
@@ -258,7 +258,7 @@ public:
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
 			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5, i6);
+				sCall(*theQ, i0, i1, i2, i3, i4, i5, i6);
 			else
 				return notnull;
 			}
@@ -288,7 +288,7 @@ public:
 		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
 			{
 			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(theQ.Get(), i0, i1, i2, i3, i4, i5, i6, i7);
+				sCall(*theQ, i0, i1, i2, i3, i4, i5, i6, i7);
 			else
 				return notnull;
 			}

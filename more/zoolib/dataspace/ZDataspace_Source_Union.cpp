@@ -1031,7 +1031,7 @@ ZRef<ZRA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
 	ZRef<Proxy> theProxyRef;
 	if (ZQ<Proxy*> theQ = ZUtil_STL::sGetIfContains(fProxyMap, iRel))
 		{
-		theProxyRef = theQ.Get();
+		theProxyRef = *theQ;
 		ZAssert(iRelHead == theProxyRef->fResultRelHead);
 		}
 	else

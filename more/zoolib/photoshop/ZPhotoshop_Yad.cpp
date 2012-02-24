@@ -100,7 +100,7 @@ ZRef<ZYadR> sYadR(const Val& iVal)
 		{
 		ZTrail theTrail;
 		if (ZQ<ZTrail> theQ = asFileRef->AsTrail())
-			theTrail = theQ.Get();
+			theTrail = *theQ;
 		const ZMap_Any theMap = ZMap_Any()
 			.Set("!Type", string("FileRef"))
 			.Set("PathTrail", theTrail.AsString());

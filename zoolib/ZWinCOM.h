@@ -290,7 +290,7 @@ public:
 	S DGet(const S& iDefault) const
 		{
 		if (ZQ<S> theQ = this->QGet<S>())
-			return theQ.Get();
+			return *theQ;
 		return iDefault;
 		}
 

@@ -112,14 +112,14 @@ ZQ<ZVal_Yad> ZSeq_Yad::QGet(size_t iIndex) const
 ZVal_Yad ZSeq_Yad::DGet(const ZVal_Yad& iDefault, size_t iIndex) const
 	{
 	if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
 ZVal_Yad ZSeq_Yad::Get(size_t iIndex) const
 	{
 	if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
-		return theQ.Get();
+		return *theQ;
 	return ZVal_Yad();
 	}
 
@@ -246,14 +246,14 @@ ZQ<ZVal_Yad> ZMap_Yad::QGet(const string8& iName) const
 ZVal_Yad ZMap_Yad::DGet(const ZVal_Yad& iDefault, const string8& iName) const
 	{
 	if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
 ZVal_Yad ZMap_Yad::Get(const string8& iName) const
 	{
 	if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
-		return theQ.Get();
+		return *theQ;
 	return ZVal_Yad();
 	}
 

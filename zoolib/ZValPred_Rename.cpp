@@ -33,7 +33,7 @@ ZRef<ZValComparand> sRenamed(const map<string,string>& iRename,
 	if (ZRef<ZValComparand_Name> as = iVal.DynamicCast<ZValComparand_Name>())
 		{
 		if (ZQ<string> theQ = ZUtil_STL::sGetIfContains(iRename, as->GetName()))
-			return new ZValComparand_Name(theQ.Get());
+			return new ZValComparand_Name(*theQ);
 		}
 	return iVal;
 	}

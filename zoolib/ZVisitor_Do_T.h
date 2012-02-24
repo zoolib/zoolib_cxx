@@ -59,7 +59,7 @@ public:
 			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ);
 			iRep->Accept(*this);
 			if (fResultQ)
-				return fResultQ.Get();
+				return *fResultQ;
 			}
 		return iDefault;
 		}
@@ -71,7 +71,7 @@ public:
 			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ);
 			iRep->Accept(*this);
 			if (fResultQ)
-				return fResultQ.Get();
+				return *fResultQ;
 			}
 		return Result_t();
 		}

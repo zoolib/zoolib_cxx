@@ -486,7 +486,7 @@ ZQ<ZVal_NS> ZSeq_NS::QGet(size_t iIndex) const
 ZVal_NS ZSeq_NS::DGet(const ZVal_NS& iDefault, size_t iIndex) const
 	{
 	if (ZQ<ZVal_NS> theQ = this->QGet(iIndex))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
@@ -653,14 +653,14 @@ ZQ<ZVal_NS> ZMap_NS::QGet(NSString* iName) const
 ZVal_NS ZMap_NS::DGet(const ZVal_NS& iDefault, const string8& iName) const
 	{
 	if (ZQ<ZVal_NS> theQ = this->QGet(iName))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
 ZVal_NS ZMap_NS::DGet(const ZVal_NS& iDefault, NSString* iName) const
 	{
 	if (ZQ<ZVal_NS> theQ = this->QGet(iName))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 

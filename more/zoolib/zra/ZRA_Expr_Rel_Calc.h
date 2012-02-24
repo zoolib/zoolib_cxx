@@ -85,7 +85,7 @@ public:
 	const ZVal_Any* PGet(const string8& iName) const
 		{
 		if (ZQ<size_t> theOffsetQ = ZUtil_STL::sQGet(fBindings, iName))
-			return fVals + theOffsetQ.Get();
+			return fVals + *theOffsetQ;
 		return nullptr;
 		}
 

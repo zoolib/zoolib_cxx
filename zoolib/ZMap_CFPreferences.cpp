@@ -70,7 +70,7 @@ ZVal_CF ZMap_CFPreferences::DGet(const ZVal_CF& iDefault, const string8& iName) 
 ZVal_CF ZMap_CFPreferences::DGet(const ZVal_CF& iDefault, CFStringRef iName) const
 	{
 	if (ZQ<ZVal_CF> theQ = this->QGet(iName))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
@@ -80,7 +80,7 @@ ZVal_CF ZMap_CFPreferences::Get(const string8& iName) const
 ZVal_CF ZMap_CFPreferences::Get(CFStringRef iName) const
 	{
 	if (ZQ<ZVal_CF> theQ = this->QGet(iName))
-		return theQ.Get();
+		return *theQ;
 	return ZVal_CF();
 	}
 

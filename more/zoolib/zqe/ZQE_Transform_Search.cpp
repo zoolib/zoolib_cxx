@@ -295,7 +295,7 @@ public:
 			fProjection.Insert(oldName);
 
 		if (ZQ<string8> theQ = ZUtil_STL::sQErase(fRename, newName))
-			newName = theQ.Get();
+			newName = *theQ;
 
 		ZUtil_STL::sInsertMustNotContain(1, fRename, oldName, newName);
 

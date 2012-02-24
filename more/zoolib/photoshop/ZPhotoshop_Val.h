@@ -297,7 +297,7 @@ public:
 	ZQ<S> QGet(size_t iIndex) const
 		{
 		if (ZQ<Val> theQ = this->QGet(iIndex))
-			return theQ.Get().QGet<S>();
+			return theQ->QGet<S>();
 		return null;
 		}
 
@@ -305,7 +305,7 @@ public:
 	S DGet(const S& iDefault, size_t iIndex) const
 		{
 		if (ZQ<S> theQ = this->QGet<S>(iIndex))
-			return theQ.Get();
+			return *theQ;
 		return iDefault;
 		}
 

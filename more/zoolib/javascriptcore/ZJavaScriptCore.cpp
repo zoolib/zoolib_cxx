@@ -297,11 +297,11 @@ ZQ<Value> Value::sQFromAny(const ZAny& iAny)
 		}
 	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
-		return Value(double(theQ.Get()));
+		return Value(double(*theQ));
 		}
 	else if (ZQ<double> theQ = sQCoerceRat(iAny))
 		{
-		return Value(theQ.Get());
+		return Value(*theQ);
 		}
 	else if (const string* theValue = iAny.PGet<string>())
 		{
@@ -322,7 +322,7 @@ ZQ<Value> Value::sQFromAny(const ZAny& iAny)
 			i != end; ++i)
 			{
 			if (ZQ<Value> theQ = sQFromAny(theValue->Get(i)))
-				theMap.Set(theValue->NameOf(i), theQ.Get());
+				theMap.Set(theValue->NameOf(i), *theQ);
 			}
 		return theMap;
 		}
@@ -332,14 +332,14 @@ ZQ<Value> Value::sQFromAny(const ZAny& iAny)
 Value Value::sDFromAny(const Value& iDefault, const ZAny& iAny)
 	{
 	if (ZQ<Value> theQ = sQFromAny(iAny))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
 Value Value::sFromAny(const ZAny& iAny)
 	{
 	if (ZQ<Value> theQ = sQFromAny(iAny))
-		return theQ.Get();
+		return *theQ;
 	return Value();
 	}
 
@@ -561,7 +561,7 @@ ZAny ObjectRef::AsAny() const
 		if (ZQ<double> theQ = this->Get("length").QGetDouble())
 			{
 			ZSeq_Any result;
-			for (size_t x = 0; x < theQ.Get(); ++x)
+			for (size_t x = 0; x < *theQ; ++x)
 				result.Append(this->Get(x).AsAny());
 			return ZAny(result);
 			}
@@ -622,7 +622,7 @@ ZQ<Value> ObjectRef::QGet(const string8& iName) const
 Value ObjectRef::DGet(const Value& iDefault, const string8& iName) const
 	{
 	if (ZQ<Value> theQ = this->QGet(iName))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
@@ -659,7 +659,7 @@ ZQ<Value> ObjectRef::QGet(size_t iIndex) const
 Value ObjectRef::DGet(const Value& iDefault, size_t iIndex) const
 	{
 	if (ZQ<Value> theQ = this->QGet(iIndex))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 

@@ -1191,7 +1191,7 @@ ZQ<Val> Seq::QGet(size_t iIndex) const
 Val Seq::DGet(const Val& iDefault, size_t iIndex) const
 	{
 	if (ZQ<Val> theQ = this->QGet(iIndex))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
@@ -1331,21 +1331,21 @@ ZQ<Val> Map::QGet(Index_t iIndex) const
 Val Map::DGet(const Val& iDefault, KeyID iKey) const
 	{
 	if (ZQ<Val> theQ = this->QGet(iKey))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
 Val Map::DGet(const Val& iDefault, const string8& iName) const
 	{
 	if (ZQ<Val> theQ = this->QGet(iName))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 
 Val Map::DGet(const Val& iDefault, Index_t iIndex) const
 	{
 	if (ZQ<Val> theQ = this->QGet(iIndex))
-		return theQ.Get();
+		return *theQ;
 	return iDefault;
 	}
 

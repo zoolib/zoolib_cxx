@@ -139,12 +139,12 @@ StrimW::operator operator_bool() const
 		if (fName_StringQ)
 			{
 			return operator_bool_gen::translate
-				(spLogMeister->Enabled(fPriority, fName_StringQ.Get()));
+				(spLogMeister->Enabled(fPriority, *fName_StringQ));
 			}
 		else
 			{
 			return operator_bool_gen::translate
-				(spLogMeister->Enabled(fPriority, fName_CharStarQ.Get()));
+				(spLogMeister->Enabled(fPriority, *fName_CharStarQ));
 			}
 		}
 	else
@@ -170,8 +170,8 @@ void StrimW::pEmit()
 		try
 			{
 			if (!fName_StringQ)
-				fName_StringQ = fName_CharStarQ.Get();
-			spLogMeister->LogIt(fPriority, fName_StringQ.Get(), fMessageQ.Get());
+				fName_StringQ = *fName_CharStarQ;
+			spLogMeister->LogIt(fPriority, *fName_StringQ, *fMessageQ);
 			}
 		catch (...)
 			{}

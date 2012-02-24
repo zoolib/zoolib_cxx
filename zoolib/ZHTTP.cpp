@@ -1354,7 +1354,7 @@ bool sParseURL(const string& iURL,
 		if (ZQ<int64> theQ = ZUtil_string::sQInt64(hostAndPort.substr(colonOffset + 1)))
 			{
 			if (oPort)
-				*oPort = theQ.Get();
+				*oPort = *theQ;
 			if (oHost)
 				*oHost = hostAndPort.substr(0, colonOffset);
 			}
@@ -1706,16 +1706,16 @@ void sWrite_Header(const ZStreamW& w, const Map& iHeader)
 
 		if (ZQ<Seq> asSeqQ = theVal.QGet<Seq>())
 			{
-			const Seq asSeq = asSeqQ.Get();
+			const Seq asSeq = *asSeqQ;
 			for (size_t x = 0, count = asSeq.Count(); x < count; ++x)
 				{
 				if (ZQ<string> bodyQ = asSeq.QGet<string>(x))
-					sWrite_HeaderLine(w, name, bodyQ.Get());
+					sWrite_HeaderLine(w, name, *bodyQ);
 				}
 			}
 		else if (ZQ<string> asStringQ = theVal.QGet<string>())
 			{
-			sWrite_HeaderLine(w, name, asStringQ.Get());
+			sWrite_HeaderLine(w, name, *asStringQ);
 			}
 		}
 	}
