@@ -144,6 +144,54 @@ public:
 	using ZAny::Set;
 	using ZAny::Mutable;
 
+// Shortcut access to values in an enclosed Seq.
+	ZVal_T* PGetMutable(size_t iIndex)
+		{
+		if (Seq_p* asSeq = this->PGetMutable<Seq_p>())
+			return asSeq->PGetMutable(iIndex);
+		return nullptr;
+		}
+
+	const ZVal_T* PGet(size_t iIndex) const
+		{
+		if (const Seq_p* asSeq = this->PGet<Seq_p>())
+			return asSeq->PGet(iIndex);
+		return nullptr;
+		}
+
+	ZQ<ZVal_T> QGet(size_t iIndex) const
+		{ return this->Get<Seq_p>().QGet(iIndex); }
+
+	ZVal_T Get(size_t iIndex) const
+		{ return this->Get<Seq_p>().Get(iIndex); }
+
+	template <class S>
+	S* PGetMutable(size_t iIndex)
+		{
+		if (ZVal_T* theVal = this->PGetMutable(iIndex))
+			return theVal->PGetMutable<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	const S* PGet(size_t iIndex) const
+		{
+		if (const ZVal_T* theVal = this->PGet(iIndex))
+			return theVal->PGet<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	ZQ<S> QGet(size_t iIndex) const
+		{ return this->Get(iIndex).QGet<S>(); }
+
+	template <class S>
+	S Get(size_t iIndex) const
+		{ return this->Get(iIndex).Get<S>(); }
+
+	ZVal_T operator[](size_t iIndex) const
+		{ return this->Get(iIndex); }
+
 // Shortcut access to values in an enclosed Map.
 	ZVal_T* PGetMutable(const string8& iName)
 		{
@@ -196,50 +244,8 @@ public:
 	S& Mutable(const string8& iName) const
 		{ return this->Mutable(iName).Mutable<S>(); }
 
-// Shortcut access to values in an enclosed Seq.
-	ZVal_T* PGetMutable(size_t iIndex)
-		{
-		if (Seq_p* asSeq = this->PGetMutable<Seq_p>())
-			return asSeq->PGetMutable(iIndex);
-		return nullptr;
-		}
-
-	const ZVal_T* PGet(size_t iIndex) const
-		{
-		if (const Seq_p* asSeq = this->PGet<Seq_p>())
-			return asSeq->PGet(iIndex);
-		return nullptr;
-		}
-
-	ZQ<ZVal_T> QGet(size_t iIndex) const
-		{ return this->Get<Seq_p>().QGet(iIndex); }
-
-	ZVal_T Get(size_t iIndex) const
-		{ return this->Get<Seq_p>().Get(iIndex); }
-
-	template <class S>
-	S* PGetMutable(size_t iIndex)
-		{
-		if (ZVal_T* theVal = this->PGetMutable(iIndex))
-			return theVal->PGetMutable<S>();
-		return nullptr;
-		}
-
-	template <class S>
-	const S* PGet(size_t iIndex) const
-		{
-		if (const ZVal_T* theVal = this->PGet(iIndex))
-			return theVal->PGet<S>();
-		return nullptr;
-		}
-
-	template <class S>
-	ZQ<S> QGet(size_t iIndex) const
-		{ return this->Get(iIndex).QGet<S>(); }
-
-	template <class S>
-	S Get(size_t iIndex) const
-		{ return this->Get(iIndex).Get<S>(); }
+	ZVal_T operator[](const string8& iName) const
+		{ return this->Get(iName); }
 
 // Typename accessors
 /// \cond DoxygenIgnore
