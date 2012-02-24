@@ -749,30 +749,30 @@ ZRef<ZTween<Val> > sTween_Const(const Val& iVal, double iExtent)
 	{ return new ZTween_Const<Val>(iVal, iExtent); }
 
 // =================================================================================================
-// MARK: - sTween_Scale
+// MARK: - sTween_ValScale
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Scale(Val iScale, const ZRef<ZTween<Val> >& iTween)
-	{ return sTween_With(iTween, sTween_Const<Val>(iScale)); }
+ZRef<ZTween<Val> > sTween_ValScale(Val iValScale, const ZRef<ZTween<Val> >& iTween)
+	{ return sTween_With(iTween, sTween_Const<Val>(iValScale)); }
 
 // =================================================================================================
-// MARK: - sTween_Offset
+// MARK: - sTween_ValOffset
 
 template <class Val>
-class ZTween_Offset
+class ZTween_ValOffset
 :	public ZTween<Val>
 	{
 public:
-	ZTween_Offset(const ZRef<ZTween<Val> >& iTween, Val iOffset)
+	ZTween_ValOffset(const ZRef<ZTween<Val> >& iTween, Val iValOffset)
 	:	fTween(iTween)
-	,	fOffset(iOffset)
+	,	fValOffset(iValOffset)
 		{}
 
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
 		if (ZQ<Val> theQ = fTween->QValAt(iPlace))
-			return *theQ + fOffset;
+			return *theQ + fValOffset;
 		return null;
 		}
 
@@ -782,14 +782,14 @@ public:
 private:
 	const ZRef<ZTween<Val> > fTween;
 	ZQ<double> fTweenExtentQ;
-	const Val fOffset;
+	const Val fValOffset;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Offset(Val iOffset, const ZRef<ZTween<Val> >& iTween)
+ZRef<ZTween<Val> > sTween_ValOffset(Val iValOffset, const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Offset<Val>(iTween, iOffset);
+		return new ZTween_ValOffset<Val>(iTween, iValOffset);
 	return null;
 	}
 
@@ -797,8 +797,8 @@ ZRef<ZTween<Val> > sTween_Offset(Val iOffset, const ZRef<ZTween<Val> >& iTween)
 // MARK: - sTween_Range
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Range(Val iZeroVal, Val iOneVal, const ZRef<ZTween<Val> >& iTween)
-	{ return sTween_Offset(iZeroVal, sTween_Scale<Val>(iOneVal - iZeroVal, iTween)); }
+ZRef<ZTween<Val> > sTween_ValRange(Val iZeroVal, Val iOneVal, const ZRef<ZTween<Val> >& iTween)
+	{ return sTween_ValOffset(iZeroVal, sTween_ValScale<Val>(iOneVal - iZeroVal, iTween)); }
 
 } // namespace ZooLib
 

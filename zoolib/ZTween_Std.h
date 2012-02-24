@@ -134,11 +134,11 @@ ZRef<ZTween<Val> > sTween_Linear(double iExtent)
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal)
-	{ return sTween_Range(iZeroVal, iOneVal, sTween_Linear<Val>()); }
+	{ return sTween_ValRange(iZeroVal, iOneVal, sTween_Linear<Val>()); }
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal, double iExtent)
-	{ return sTween_Range(iZeroVal, iOneVal, sTween_Rate(iExtent, sTween_Linear<Val>())); }
+	{ return sTween_ValRange(iZeroVal, iOneVal, sTween_Rate(iExtent, sTween_Linear<Val>())); }
 
 // =================================================================================================
 // MARK: - sTween_Triangle
