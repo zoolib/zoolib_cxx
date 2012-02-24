@@ -83,6 +83,17 @@ public:
 	};
 
 // =================================================================================================
+// MARK: - spDuration
+
+template <class Val>
+double spDuration(const ZRef<ZTween<Val> >& iTween, ZQ<double>& ioCache)
+	{
+	if (not ioCache)
+		ioCache = iTween->Duration();
+	return *ioCache;
+	}
+
+// =================================================================================================
 // MARK: - sTween_Null
 
 template <class Val>
@@ -107,17 +118,6 @@ ZRef<ZTween<Val> > sTween_Null()
 	}
 
 // =================================================================================================
-// MARK: - spGetDuration
-
-template <class Val>
-double spGetDuration(const ZRef<ZTween<Val> >& iTween, ZQ<double>& ioCache)
-	{
-	if (not ioCache)
-		ioCache = iTween->Duration();
-	return *ioCache;
-	}
-
-// =================================================================================================
 // MARK: - sTween_Or
 
 template <class Val0, class Val1, class Combiner = TweenCombiner<Val0,Val1> >
@@ -135,14 +135,14 @@ public:
 		{ return fCombiner(f0->QValAt(iTime), f1->QValAt(iTime)); }
 
 	virtual double Duration()
-		{ return std::max(spGetDuration(f0, fQD0), spGetDuration(f1, fQD1)); }
+		{ return std::max(spDuration(f0, fD0Q), spDuration(f1, fD1Q)); }
 
 private:
 	Combiner fCombiner;
 
 	const ZRef<ZTween<Val0> > f0;
 	const ZRef<ZTween<Val1> > f1;
-	ZQ<double> fQD0, fQD1;
+	ZQ<double> fD0Q, fD1Q;
 	};
 
 template <class Val0, class Val1>
@@ -214,14 +214,14 @@ public:
 		{ return fCombiner(f0->QValAt(iTime), f1->QValAt(iTime)); }
 
 	virtual double Duration()
-		{ return std::min(spGetDuration(f0, fQD0), spGetDuration(f1, fQD1)); }
+		{ return std::min(spDuration(f0, fD0Q), spDuration(f1, fD1Q)); }
 
 private:
 	Combiner fCombiner;
 
 	const ZRef<ZTween<Val0> > f0;
 	const ZRef<ZTween<Val1> > f1;
-	ZQ<double> fQD0, fQD1;
+	ZQ<double> fD0Q, fD1Q;
 	};
 
 template <class Val0, class Val1>
@@ -269,18 +269,18 @@ public:
 // From ZTween
 	virtual ZQ<Val> QValAt(double iTime)
 		{
-		if (iTime < spGetDuration(f0, fQD0))
+		if (iTime < spDuration(f0, fD0Q))
 			return f0->QValAt(iTime);
 		else
-			return f1->QValAt(iTime - spGetDuration(f0, fQD0));
+			return f1->QValAt(iTime - spDuration(f0, fD0Q));
 		}
 
 	virtual double Duration()
-		{ return spGetDuration(f0, fQD0) + spGetDuration(f1, fQD1); }
+		{ return spDuration(f0, fD0Q) + spDuration(f1, fD1Q); }
 
 private:
 	const ZRef<ZTween<Val> > f0, f1;
-	ZQ<double> fQD0, fQD1;
+	ZQ<double> fD0Q, fD1Q;
 	};
 
 template <class Val>
@@ -327,12 +327,12 @@ public:
 // From ZTween
 	virtual ZQ<Val0> QValAt(double iTime)
 		{
-		const double proportion = iTime / spGetDuration(f0, fQD0);
-		return fCombiner(f0->QValAt(iTime), f1->QValAt(proportion * spGetDuration(f1, fQD1)));
+		const double proportion = iTime / spDuration(f0, fD0Q);
+		return fCombiner(f0->QValAt(iTime), f1->QValAt(proportion * spDuration(f1, fD1Q)));
 		}
 
 	virtual double Duration()
-		{ return spGetDuration(f0, fQD0); }
+		{ return spDuration(f0, fD0Q); }
 
 private:
 	Combiner fCombiner;
@@ -340,7 +340,7 @@ private:
 	const ZRef<ZTween<Val0> > f0;
 	const ZRef<ZTween<Val1> > f1;
 
-	ZQ<double> fQD0, fQD1;
+	ZQ<double> fD0Q, fD1Q;
 	};
 
 template <class Val0, class Val1>
@@ -392,17 +392,17 @@ public:
 // From ZTween
 	virtual ZQ<Val> QValAt(double lTime)
 		{
-		const double childDuration = spGetDuration(fTween, fQTweenDuration);
+		const double childDuration = spDuration(fTween, fTweenDurationQ);
 		lTime = sMinMax(0.0, lTime, childDuration * fCount);
 		return fTween->QValAt(fmod(lTime, childDuration));
 		}
 
 	virtual double Duration()
-		{ return fCount * spGetDuration(fTween, fQTweenDuration); }
+		{ return fCount * spDuration(fTween, fTweenDurationQ); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fQTweenDuration;
+	ZQ<double> fTweenDurationQ;
 	const size_t fCount;
 	};
 
@@ -432,7 +432,7 @@ public:
 		{
 		if (iTime < 0 || iTime >= fDuration)
 			return null;
-		return fTween->QValAt(fmod(iTime, spGetDuration(fTween, fQTweenDuration)));
+		return fTween->QValAt(fmod(iTime, spDuration(fTween, fTweenDurationQ)));
 		}
 
 	virtual double Duration()
@@ -440,7 +440,7 @@ public:
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fQTweenDuration;
+	ZQ<double> fTweenDurationQ;
 	const double fDuration;
 	};
 
@@ -511,11 +511,11 @@ public:
 		}
 
 	virtual double Duration()
-		{ return std::min(fAtMost, spGetDuration(fTween, fQTweenDuration)); }
+		{ return std::min(fAtMost, spDuration(fTween, fTweenDurationQ)); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fQTweenDuration;
+	ZQ<double> fTweenDurationQ;
 	const double fAtMost;
 	};
 
@@ -545,15 +545,15 @@ public:
 		{
 		if (iTime >= fAtLeast)
 			return null;
-		return fTween->QValAt(std::min(iTime, spGetDuration(fTween, fQTweenDuration) - 1e-3));
+		return fTween->QValAt(std::min(iTime, spDuration(fTween, fTweenDurationQ) - 1e-3));
 		}
 
 	virtual double Duration()
-		{ return std::max(fAtLeast, spGetDuration(fTween, fQTweenDuration)); }
+		{ return std::max(fAtLeast, spDuration(fTween, fTweenDurationQ)); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fQTweenDuration;
+	ZQ<double> fTweenDurationQ;
 	const double fAtLeast;
 	};
 
@@ -583,11 +583,11 @@ public:
 		{ return fTween->QValAt(iTime - fDelay); }
 
 	virtual double Duration()
-		{ return std::max(0.0, spGetDuration(fTween, fQTweenDuration) + fDelay); }
+		{ return std::max(0.0, spDuration(fTween, fTweenDurationQ) + fDelay); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fQTweenDuration;
+	ZQ<double> fTweenDurationQ;
 	const double fDelay;
 	};
 
@@ -618,20 +618,20 @@ public:
 		if (fRate > 0)
 			return fTween->QValAt(iTime / fRate);
 		else
-			return fTween->QValAt(spGetDuration(fTween, fQTweenDuration) + iTime/fRate);
+			return fTween->QValAt(spDuration(fTween, fTweenDurationQ) + iTime/fRate);
 		}
 
 	virtual double Duration()
 		{
 		if (fRate > 0)
-			return fRate * spGetDuration(fTween, fQTweenDuration);
+			return fRate * spDuration(fTween, fTweenDurationQ);
 		else 
-			return -fRate * spGetDuration(fTween, fQTweenDuration);
+			return -fRate * spDuration(fTween, fTweenDurationQ);
 		}
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fQTweenDuration;
+	ZQ<double> fTweenDurationQ;
 	const double fRate;
 	};
 
@@ -659,16 +659,16 @@ public:
 // From ZTween
 	virtual ZQ<Val> QValAt(double iTime)
 		{
-		const double theDuration = spGetDuration(fTween, fQTweenDuration);
+		const double theDuration = spDuration(fTween, fTweenDurationQ);
 		return fTween->QValAt(fmod(iTime + fPhase * theDuration, theDuration));
 		}
 
 	virtual double Duration()
-		{ return spGetDuration(fTween, fQTweenDuration); }
+		{ return spDuration(fTween, fTweenDurationQ); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fQTweenDuration;
+	ZQ<double> fTweenDurationQ;
 	const double fPhase;
 	};
 
@@ -694,14 +694,14 @@ public:
 
 // From ZTween
 	virtual ZQ<Val> QValAt(double iTime)
-		{ return fTween->QValAt(iTime / spGetDuration(fTween, fQTweenDuration)); }
+		{ return fTween->QValAt(iTime / spDuration(fTween, fTweenDurationQ)); }
 
 	virtual double Duration()
 		{ return 1; }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fQTweenDuration;
+	ZQ<double> fTweenDurationQ;
 	};
 
 template <class Val>
@@ -778,11 +778,11 @@ public:
 		}
 
 	virtual double Duration()
-		{ return spGetDuration(fTween, fQTweenDuration); }
+		{ return spDuration(fTween, fTweenDurationQ); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fQTweenDuration;
+	ZQ<double> fTweenDurationQ;
 	const Val fOffset;
 	};
 
