@@ -45,8 +45,8 @@ struct TweenCombiner : public std::binary_function<ZQ<Val0>, ZQ<Val1>, ZQ<Val0> 
 // MARK: - ZTween
 
 /**
-A ZTween has an extent and returns a value given a place within that extent.
-If given a time outside that range, returns null.
+A ZTween has a weight and returns a value given a place within that weight.
+If given a place outside that weight it returns null.
 */
 
 template <class Val_p>
@@ -59,39 +59,40 @@ protected:
 public:
 	typedef Val_p Val;
 
-	virtual ~ZTween() {}
+	virtual ~ZTween()
+		{}
 
 // Our protocol
 	Val ValAtWrapped(double lPlace)
 		{
-		const double extent = this->Extent();
-		if (extent <= 0)
+		const double weight = this->Weight();
+		if (weight <= 0)
 			{
 			lPlace = 0;
 			}
 		else
 			{
-			lPlace = fmod(lPlace, extent);
+			lPlace = fmod(lPlace, weight);
 			if (lPlace < 0)
-				lPlace += extent;
+				lPlace += weight;
 			}
 		return this->QValAt(lPlace).Get();
 		}
 
 	virtual ZQ<Val> QValAt(double iPlace) = 0;
 
-	virtual double Extent()
+	virtual double Weight()
 		{ return 1; }
 	};
 
 // =================================================================================================
-// MARK: - spExtent
+// MARK: - spWeight
 
 template <class Val>
-double spExtent(const ZRef<ZTween<Val> >& iTween, ZQ<double>& ioCache)
+double spWeight(const ZRef<ZTween<Val> >& iTween, ZQ<double>& ioCache)
 	{
 	if (not ioCache)
-		ioCache = iTween->Extent();
+		ioCache = iTween->Weight();
 	return *ioCache;
 	}
 
@@ -108,7 +109,7 @@ public:
 	virtual ZQ<Val> QValAt(double iPlace)
 		{ return null; }
 	
-	virtual double Extent()
+	virtual double Weight()
 		{ return 0; }
 	};
 
@@ -136,8 +137,8 @@ public:
 	virtual ZQ<Val0> QValAt(double iPlace)
 		{ return fCombiner(f0->QValAt(iPlace), f1->QValAt(iPlace)); }
 
-	virtual double Extent()
-		{ return std::max(spExtent(f0, fD0Q), spExtent(f1, fD1Q)); }
+	virtual double Weight()
+		{ return std::max(spWeight(f0, fD0Q), spWeight(f1, fD1Q)); }
 
 private:
 	Combiner fCombiner;
@@ -215,8 +216,8 @@ public:
 	virtual ZQ<Val0> QValAt(double iPlace)
 		{ return fCombiner(f0->QValAt(iPlace), f1->QValAt(iPlace)); }
 
-	virtual double Extent()
-		{ return std::min(spExtent(f0, fD0Q), spExtent(f1, fD1Q)); }
+	virtual double Weight()
+		{ return std::min(spWeight(f0, fD0Q), spWeight(f1, fD1Q)); }
 
 private:
 	Combiner fCombiner;
@@ -271,14 +272,14 @@ public:
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (iPlace < spExtent(f0, fD0Q))
+		if (iPlace < spWeight(f0, fD0Q))
 			return f0->QValAt(iPlace);
 		else
-			return f1->QValAt(iPlace - spExtent(f0, fD0Q));
+			return f1->QValAt(iPlace - spWeight(f0, fD0Q));
 		}
 
-	virtual double Extent()
-		{ return spExtent(f0, fD0Q) + spExtent(f1, fD1Q); }
+	virtual double Weight()
+		{ return spWeight(f0, fD0Q) + spWeight(f1, fD1Q); }
 
 private:
 	const ZRef<ZTween<Val> > f0, f1;
@@ -329,12 +330,12 @@ public:
 // From ZTween
 	virtual ZQ<Val0> QValAt(double iPlace)
 		{
-		const double proportion = iPlace / spExtent(f0, fD0Q);
-		return fCombiner(f0->QValAt(iPlace), f1->QValAt(proportion * spExtent(f1, fD1Q)));
+		const double proportion = iPlace / spWeight(f0, fD0Q);
+		return fCombiner(f0->QValAt(iPlace), f1->QValAt(proportion * spWeight(f1, fD1Q)));
 		}
 
-	virtual double Extent()
-		{ return spExtent(f0, fD0Q); }
+	virtual double Weight()
+		{ return spWeight(f0, fD0Q); }
 
 private:
 	Combiner fCombiner;
@@ -394,17 +395,17 @@ public:
 // From ZTween
 	virtual ZQ<Val> QValAt(double lPlace)
 		{
-		const double childExtent = spExtent(fTween, fTweenExtentQ);
-		lPlace = sMinMax(0.0, lPlace, childExtent * fCount);
-		return fTween->QValAt(fmod(lPlace, childExtent));
+		const double childWeight = spWeight(fTween, fTweenWeightQ);
+		lPlace = sMinMax(0.0, lPlace, childWeight * fCount);
+		return fTween->QValAt(fmod(lPlace, childWeight));
 		}
 
-	virtual double Extent()
-		{ return fCount * spExtent(fTween, fTweenExtentQ); }
+	virtual double Weight()
+		{ return fCount * spWeight(fTween, fTweenWeightQ); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fTweenExtentQ;
+	ZQ<double> fTweenWeightQ;
 	const size_t fCount;
 	};
 
@@ -424,33 +425,33 @@ class ZTween_RepeatFor
 :	public ZTween<Val>
 	{
 public:
-	ZTween_RepeatFor(const ZRef<ZTween<Val> >& iTween, double iExtent)
+	ZTween_RepeatFor(const ZRef<ZTween<Val> >& iTween, double iWeight)
 	:	fTween(iTween)
-	,	fExtent(iExtent)
+	,	fWeight(iWeight)
 		{}
 
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (iPlace < 0 || iPlace >= fExtent)
+		if (iPlace < 0 || iPlace >= fWeight)
 			return null;
-		return fTween->QValAt(fmod(iPlace, spExtent(fTween, fTweenExtentQ)));
+		return fTween->QValAt(fmod(iPlace, spWeight(fTween, fTweenWeightQ)));
 		}
 
-	virtual double Extent()
-		{ return fExtent; }
+	virtual double Weight()
+		{ return fWeight; }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fTweenExtentQ;
-	const double fExtent;
+	ZQ<double> fTweenWeightQ;
+	const double fWeight;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_RepeatFor(double iExtent, const ZRef<ZTween<Val> >& iTween)
+ZRef<ZTween<Val> > sTween_RepeatFor(double iWeight, const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_RepeatFor<Val>(iTween, iExtent);
+		return new ZTween_RepeatFor<Val>(iTween, iWeight);
 	return null;
 	}
 
@@ -462,32 +463,32 @@ class ZTween_ForExactly
 :	public ZTween<Val>
 	{
 public:
-	ZTween_ForExactly(const ZRef<ZTween<Val> >& iTween, double iExtent)
+	ZTween_ForExactly(const ZRef<ZTween<Val> >& iTween, double iWeight)
 	:	fTween(iTween)
-	,	fExtent(iExtent)
+	,	fWeight(iWeight)
 		{}
 
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (iPlace >= fExtent)
+		if (iPlace >= fWeight)
 			return null;
 		return fTween->QValAt(iPlace);
 		}
 
-	virtual double Extent()
-		{ return fExtent; }
+	virtual double Weight()
+		{ return fWeight; }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	const double fExtent;
+	const double fWeight;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_ForExactly(double iExtent, const ZRef<ZTween<Val> >& iTween)
+ZRef<ZTween<Val> > sTween_ForExactly(double iWeight, const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_ForExactly<Val>(iTween, iExtent);
+		return new ZTween_ForExactly<Val>(iTween, iWeight);
 	return null;
 	}
 
@@ -512,12 +513,12 @@ public:
 		return fTween->QValAt(iPlace);
 		}
 
-	virtual double Extent()
-		{ return std::min(fAtMost, spExtent(fTween, fTweenExtentQ)); }
+	virtual double Weight()
+		{ return std::min(fAtMost, spWeight(fTween, fTweenWeightQ)); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fTweenExtentQ;
+	ZQ<double> fTweenWeightQ;
 	const double fAtMost;
 	};
 
@@ -547,15 +548,15 @@ public:
 		{
 		if (iPlace >= fAtLeast)
 			return null;
-		return fTween->QValAt(std::min(iPlace, spExtent(fTween, fTweenExtentQ) - 1e-3));
+		return fTween->QValAt(std::min(iPlace, spWeight(fTween, fTweenWeightQ) - 1e-3));
 		}
 
-	virtual double Extent()
-		{ return std::max(fAtLeast, spExtent(fTween, fTweenExtentQ)); }
+	virtual double Weight()
+		{ return std::max(fAtLeast, spWeight(fTween, fTweenWeightQ)); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fTweenExtentQ;
+	ZQ<double> fTweenWeightQ;
 	const double fAtLeast;
 	};
 
@@ -568,92 +569,92 @@ ZRef<ZTween<Val> > sTween_ForAtLeast(double iAtLeast, const ZRef<ZTween<Val> >& 
 	}
 
 // =================================================================================================
-// MARK: - sTween_Delay
+// MARK: - sTween_WeightShift
 
 template <class Val>
-class ZTween_Delay
+class ZTween_WeightShift
 :	public ZTween<Val>
 	{
 public:
-	ZTween_Delay(const ZRef<ZTween<Val> >& iTween, double iDelay)
+	ZTween_WeightShift(const ZRef<ZTween<Val> >& iTween, double iWeightShift)
 	:	fTween(iTween)
-	,	fDelay(iDelay)
+	,	fWeightShift(iWeightShift)
 		{}
 
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
-		{ return fTween->QValAt(iPlace - fDelay); }
+		{ return fTween->QValAt(iPlace - fWeightShift); }
 
-	virtual double Extent()
-		{ return std::max(0.0, spExtent(fTween, fTweenExtentQ) + fDelay); }
+	virtual double Weight()
+		{ return std::max(0.0, spWeight(fTween, fTweenWeightQ) + fWeightShift); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fTweenExtentQ;
-	const double fDelay;
+	ZQ<double> fTweenWeightQ;
+	const double fWeightShift;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Delay(double iDelay, const ZRef<ZTween<Val> >& iTween)
+ZRef<ZTween<Val> > sTween_WeightShift(double iWeightShift, const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Delay<Val>(iTween, iDelay);
+		return new ZTween_WeightShift<Val>(iTween, iWeightShift);
 	return null;
 	}
 
 // =================================================================================================
-// MARK: - sTween_Rate
+// MARK: - sTween_WeightScale
 
 template <class Val>
-class ZTween_Rate
+class ZTween_WeightScale
 :	public ZTween<Val>
 	{
 public:
-	ZTween_Rate(const ZRef<ZTween<Val> >& iTween, double iRate)
+	ZTween_WeightScale(const ZRef<ZTween<Val> >& iTween, double iWeightScale)
 	:	fTween(iTween)
-	,	fRate(iRate)
-		{ ZAssert(fRate); }
+	,	fWeightScale(iWeightScale)
+		{ ZAssert(fWeightScale); }
 
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (fRate > 0)
-			return fTween->QValAt(iPlace / fRate);
+		if (fWeightScale > 0)
+			return fTween->QValAt(iPlace / fWeightScale);
 		else
-			return fTween->QValAt(spExtent(fTween, fTweenExtentQ) + iPlace/fRate);
+			return fTween->QValAt(spWeight(fTween, fTweenWeightQ) + iPlace/fWeightScale);
 		}
 
-	virtual double Extent()
+	virtual double Weight()
 		{
-		if (fRate > 0)
-			return fRate * spExtent(fTween, fTweenExtentQ);
+		if (fWeightScale > 0)
+			return fWeightScale * spWeight(fTween, fTweenWeightQ);
 		else 
-			return -fRate * spExtent(fTween, fTweenExtentQ);
+			return -fWeightScale * spWeight(fTween, fTweenWeightQ);
 		}
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fTweenExtentQ;
-	const double fRate;
+	ZQ<double> fTweenWeightQ;
+	const double fWeightScale;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Rate(double iRate, const ZRef<ZTween<Val> >& iTween)
+ZRef<ZTween<Val> > sTween_WeightScale(double iWeightScale, const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Rate<Val>(iTween, iRate);
+		return new ZTween_WeightScale<Val>(iTween, iWeightScale);
 	return null;
 	}
 
 // =================================================================================================
-// MARK: - sTween_Phase
+// MARK: - sTween_WeightPhase
 
 template <class Val>
-class ZTween_Phase
+class ZTween_WeightPhase
 :	public ZTween<Val>
 	{
 public:
-	ZTween_Phase(const ZRef<ZTween<Val> >& iTween, double iPhase)
+	ZTween_WeightPhase(const ZRef<ZTween<Val> >& iTween, double iPhase)
 	:	fTween(iTween)
 	,	fPhase(iPhase)
 		{}
@@ -661,53 +662,53 @@ public:
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		const double theExtent = spExtent(fTween, fTweenExtentQ);
-		return fTween->QValAt(fmod(iPlace + fPhase * theExtent, theExtent));
+		const double theWeight = spWeight(fTween, fTweenWeightQ);
+		return fTween->QValAt(fmod(iPlace + fPhase * theWeight, theWeight));
 		}
 
-	virtual double Extent()
-		{ return spExtent(fTween, fTweenExtentQ); }
+	virtual double Weight()
+		{ return spWeight(fTween, fTweenWeightQ); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fTweenExtentQ;
+	ZQ<double> fTweenWeightQ;
 	const double fPhase;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Phase(double iPhase, const ZRef<ZTween<Val> >& iTween)
+ZRef<ZTween<Val> > sTween_WeightPhase(double iPhase, const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Phase<Val>(iTween, iPhase);
+		return new ZTween_WeightPhase<Val>(iTween, iPhase);
 	return null;
 	}
 
 // =================================================================================================
-// MARK: - sTween_Normalize
+// MARK: - sTween_WeightNormalize
 
 template <class Val>
-class ZTween_Normalize
+class ZTween_WeightNormalize
 :	public ZTween<Val>
 	{
 public:
-	ZTween_Normalize(const ZRef<ZTween<Val> >& iTween)
+	ZTween_WeightNormalize(const ZRef<ZTween<Val> >& iTween)
 	:	fTween(iTween)
 		{}
 
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
-		{ return fTween->QValAt(iPlace / spExtent(fTween, fTweenExtentQ)); }
+		{ return fTween->QValAt(iPlace / spWeight(fTween, fTweenWeightQ)); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fTweenExtentQ;
+	ZQ<double> fTweenWeightQ;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Normalize(const ZRef<ZTween<Val> >& iTween)
+ZRef<ZTween<Val> > sTween_WeightNormalize(const ZRef<ZTween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Normalize<Val>(iTween);
+		return new ZTween_WeightNormalize<Val>(iTween);
 	return null;
 	}
 
@@ -719,25 +720,25 @@ class ZTween_Const
 :	public ZTween<Val>
 	{
 public:
-	ZTween_Const(const Val& iVal, double iExtent)
+	ZTween_Const(const Val& iVal, double iWeight)
 	:	fVal(iVal)
-	,	fExtent(iExtent)
+	,	fWeight(iWeight)
 		{}
 
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (iPlace < 0 || iPlace >= fExtent)
+		if (iPlace < 0 || iPlace >= fWeight)
 			return null;
 		return fVal;
 		}
 
-	virtual double Extent()
-		{ return fExtent; }
+	virtual double Weight()
+		{ return fWeight; }
 
 private:
 	const Val fVal;
-	const double fExtent;
+	const double fWeight;
 	};
 
 template <class Val>
@@ -745,8 +746,8 @@ ZRef<ZTween<Val> > sTween_Const(const Val& iVal)
 	{ return new ZTween_Const<Val>(iVal, 1.0); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Const(const Val& iVal, double iExtent)
-	{ return new ZTween_Const<Val>(iVal, iExtent); }
+ZRef<ZTween<Val> > sTween_Const(const Val& iVal, double iWeight)
+	{ return new ZTween_Const<Val>(iVal, iWeight); }
 
 // =================================================================================================
 // MARK: - sTween_ValScale
@@ -776,12 +777,11 @@ public:
 		return null;
 		}
 
-	virtual double Extent()
-		{ return spExtent(fTween, fTweenExtentQ); }
+	virtual double Weight()
+		{ return fTween->Weight(); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fTweenExtentQ;
 	const Val fValOffset;
 	};
 
