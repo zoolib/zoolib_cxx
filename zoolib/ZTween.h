@@ -37,8 +37,8 @@ ZQ<Val0> sCombineTweenVals(const ZQ<Val0>& iVal0Q, const ZQ<Val1>& iVal1Q);
 template <class Val0, class Val1>
 struct TweenCombiner : public std::binary_function<ZQ<Val0>, ZQ<Val1>, ZQ<Val0> >
 	{
-	ZQ<Val0> operator()(const ZQ<Val0>& i0, const ZQ<Val1>& i1) const
-		{ return sCombineTweenVals<Val0,Val1>(i0, i1); }
+	ZQ<Val0> operator()(const ZQ<Val0>& iVal0Q, const ZQ<Val1>& iVal1Q) const
+		{ return sCombineTweenVals<Val0,Val1>(iVal0Q, iVal1Q); }
 	};
 
 // =================================================================================================
