@@ -117,7 +117,7 @@ public:
 	E& operator[](size_t r)
 		{ return fE[0][r]; }
 
-	const E operator[](size_t r) const
+	const E& operator[](size_t r) const
 		{ return fE[0][r]; }
 
 	E& GetMutable(size_t r)
@@ -164,7 +164,7 @@ public:
 	E& operator[](size_t c)
 		{ return fE[c][0]; }
 
-	const E operator[](size_t c) const
+	const E& operator[](size_t c) const
 		{ return fE[c][0]; }
 
 	E& GetMutable(size_t c)
@@ -175,6 +175,27 @@ public:
 
 	E fE[C][1];
 	};
+
+// =================================================================================================
+// MARK: - operator== and operator!=
+
+template <class E, size_t C, size_t R>
+bool operator==(const ZMatrix<E,C,R>& iL, const ZMatrix<E,C,R>& iR)
+	{
+	for (size_t c = 0; c < C; ++c)
+		{
+		for (size_t r = 0; r < R; ++r)
+			{
+			if (iL[c][r] != iR[c][r])
+				return false;
+			}
+		}
+	return true;
+	}
+
+template <class E, size_t C, size_t R>
+bool operator!=(const ZMatrix<E,C,R>& iL, const ZMatrix<E,C,R>& iR)
+	{ return not (iL == iR); }
 
 // =================================================================================================
 // MARK: - sHomogenous (column vector)
@@ -434,7 +455,7 @@ ZMatrix<E,C,R> sNonZero(const ZMatrix<E,C,R>& iMat)
 // MARK: - Multiplication (aka composition)
 
 template <class E, size_t RL, size_t Common, size_t CR>
-ZMatrix<E,CR, RL> operator*(const ZMatrix<E,Common,RL>& iLeft, const ZMatrix<E,CR,Common>& iRight)
+ZMatrix<E,CR,RL> operator*(const ZMatrix<E,Common,RL>& iLeft, const ZMatrix<E,CR,Common>& iRight)
 	{
 	ZMatrix<E,CR,RL> result;
 	for (size_t rl = 0; rl < RL; ++rl)
@@ -448,8 +469,8 @@ ZMatrix<E,CR, RL> operator*(const ZMatrix<E,Common,RL>& iLeft, const ZMatrix<E,C
 	return result;
 	}
 
-template <class E, size_t CR, size_t Common, size_t RL>
-ZMatrix<E,CR,RL>& operator*=(ZMatrix<E,Common,RL>& ioLeft, const ZMatrix<E,CR,Common>& iRight)
+template <class E, size_t Dim>
+ZMatrix<E,Dim,Dim>& operator*=(ZMatrix<E,Dim,Dim>& ioLeft, const ZMatrix<E,Dim,Dim>& iRight)
 	{ return ioLeft = ioLeft * iRight; }
 
 // =================================================================================================
@@ -458,10 +479,6 @@ ZMatrix<E,CR,RL>& operator*=(ZMatrix<E,Common,RL>& ioLeft, const ZMatrix<E,CR,Co
 template <class E, size_t Common, size_t RL>
 ZMatrix<E,1,Common> operator*(const ZMatrix<E,Common+1,RL>& iLeft, const ZMatrix<E,1,Common>& iRight)
 	{ return sCartesian(iLeft * sHomogenous(iRight)); }
-
-template <class E, size_t Common, size_t RL>
-ZMatrix<E,1,Common>& operator*=(ZMatrix<E,Common+1,RL>& ioLeft, const ZMatrix<E,1,Common>& iRight)
-	{ return ioLeft = ioLeft * iRight; }
 
 // =================================================================================================
 // MARK: - Element-by-element multiplication
