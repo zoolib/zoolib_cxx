@@ -359,6 +359,38 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 
+#ifdef __cplusplus
+
+	namespace ZooLib {
+
+	const struct
+		{
+		template <class T>
+		class Holder
+			{
+		public:
+			Holder(const T& iT) : fT(iT) {}
+
+			operator const T*() const { return &fT; }
+
+		private:
+			const T fT;
+			};
+
+		template <class T>
+		Holder<T> operator()(const T& iT) const { return Holder<T>(iT); }
+
+		template <class T>
+		Holder<T> operator&(const T& iT) const { return Holder<T>(iT); }
+
+		} sConstPtr = {};
+
+	} // namespace ZooLib
+
+#endif
+
+// =================================================================================================
+
 #if __MACH__
 	#define ZMACINCLUDE2(a,b) <a/b>
 	#if __MWERKS__
