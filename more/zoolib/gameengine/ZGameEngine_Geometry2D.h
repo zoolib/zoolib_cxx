@@ -29,61 +29,61 @@ namespace ZGameEngine {
 // =================================================================================================
 // MARK: - sScale2
 
-template <class Val>
-ZMatrix<Val,3,3> sScale2(Val x, Val y)
+template <class E>
+ZMatrix<E,3,3> sScale2(E x, E y)
 	{
-	ZMatrix<Val,3,3> result;
+	ZMatrix<E,3,3> result;
 	result[0][0] = x;
 	result[1][1] = y;
 	result[2][2] = 1;
 	return result;
 	}
 
-template <class Val>
-ZMatrix<Val,3,3> sScale2X(Val x)
-	{ return sScale2<Val>(x, 1); }
+template <class E>
+ZMatrix<E,3,3> sScale2X(E x)
+	{ return sScale2<E>(x, 1); }
 
-template <class Val>
-ZMatrix<Val,3,3> sScale2Y(Val y)
-	{ return sScale2<Val>(1, y); }
+template <class E>
+ZMatrix<E,3,3> sScale2Y(E y)
+	{ return sScale2<E>(1, y); }
 
-template <class Val>
-ZMatrix<Val,3,3> sScale2(const ZMatrix<Val,1,2>& iCVec2)
+template <class E>
+ZMatrix<E,3,3> sScale2(const ZMatrix<E,1,2>& iCVec2)
 	{ return sScale(iCVec2); }
 
 // =================================================================================================
 // MARK: - sTranslate2
 
-template <class Val>
-ZMatrix<Val,3,3> sTranslate2(Val x, Val y)
+template <class E>
+ZMatrix<E,3,3> sTranslate2(E x, E y)
 	{
-	ZMatrix<Val,3,3> result = sIdentity<Val,3>();
+	ZMatrix<E,3,3> result = sIdentity<E,3>();
 	result[2][0] = x;
 	result[2][1] = y;
 	return result;
 	}
 
-template <class Val>
-ZMatrix<Val,3,3> sTranslate2X(Val x)
-	{ return sTranslate2<Val>(x, 0); }
+template <class E>
+ZMatrix<E,3,3> sTranslate2X(E x)
+	{ return sTranslate2<E>(x, 0); }
 
-template <class Val>
-ZMatrix<Val,3,3> sTranslate2Y(Val y)
-	{ return sTranslate2<Val>(0, y); }
+template <class E>
+ZMatrix<E,3,3> sTranslate2Y(E y)
+	{ return sTranslate2<E>(0, y); }
 
-template <class Val>
-ZMatrix<Val,3,3> sTranslate2(const ZMatrix<Val,1,2>& iCVec2)
-	{ return sTranslate<Val>(iCVec2); }
+template <class E>
+ZMatrix<E,3,3> sTranslate2(const ZMatrix<E,1,2>& iCVec2)
+	{ return sTranslate<E>(iCVec2); }
 
 // =================================================================================================
 // MARK: - sRotate2Z
 
-template <class Val>
-ZMatrix<Val,3,3> sRotate2Z(Val radians)
+template <class E>
+ZMatrix<E,3,3> sRotate2Z(E radians)
 	{
-	const Val s = sin(radians);
-	const Val c = cos(radians);
-	ZMatrix<Val,3,3> result;
+	const E s = sin(radians);
+	const E c = cos(radians);
+	ZMatrix<E,3,3> result;
 	result.fE[0][0] = c;
 	result.fE[0][1] = s;
 	result.fE[1][0] = -s;
@@ -95,10 +95,10 @@ ZMatrix<Val,3,3> sRotate2Z(Val radians)
 // =================================================================================================
 // MARK: - sShear2
 
-template <class Val>
-ZMatrix<Val,3,3> sShear2(Val xy, Val yx)
+template <class E>
+ZMatrix<E,3,3> sShear2(E xy, E yx)
 	{
-	ZMatrix<Val,3,3> result(null);
+	ZMatrix<E,3,3> result(null);
 	result.fE[0][0] = 1;
 	result.fE[0][1] = xy;
 	result.fE[0][2] = 0;
