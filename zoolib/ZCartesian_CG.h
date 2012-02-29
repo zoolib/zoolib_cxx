@@ -231,10 +231,10 @@ struct Traits<CGRect>
 	typedef Ord_t& H_t;
 	static H_t sH(Rect_t& ioRect) { return ioRect.size.height; }
 
-	typedef const Point_t& WHC_t;
+	typedef const CGSize& WHC_t;
 	static WHC_t sWH(const Rect_t& iRect) { return iRect.size; }
 
-	typedef Point_t& WH_t;
+	typedef CGSize& WH_t;
 	static WH_t sWH(Rect_t& ioRect) { return ioRect.size; }
 
 	typedef const Point_t& LTC_t;

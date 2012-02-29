@@ -47,6 +47,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME 0
 #endif
 
+#if ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
+	#include "zoolib/ZCartesian_CG.h"
+#endif
+
 #if not ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 
 namespace ZooLib {
@@ -117,7 +121,10 @@ struct Traits<NSPoint>
 	static WH_t sWH(Point_t& ioPoint) { return ioPoint; }
 
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
-		{ return NSPointMake(iX, iY); }
+		{
+		const NSPoint result = { iX, iY };
+		return result;
+		}
 	};
 
 inline bool operator==(const NSPoint& iL, const NSPoint& iR)
@@ -191,7 +198,10 @@ struct Traits<NSSize>
 	static WH_t sWH(Point_t& ioPoint) { return ioPoint; }
 
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
-		{ return NSSizeMake(iX, iY); }
+		{
+		const NSSize result = { iX, iY };
+		return result;
+		}
 	};
 
 
@@ -210,18 +220,6 @@ struct Traits<NSRect>
 	typedef float Ord_t;
 	typedef NSPoint Point_t;
 	typedef NSRect Rect_t;
-
-//	typedef const Ord_t& XC_t;
-//	static XC_t sX(const Rect_t& iRect) { return iRect.origin.x; }
-
-//	typedef Ord_t& X_t;
-//	static X_t sX(Rect_t& iRect) { return iRect.origin.x; }
-
-//	typedef const Ord_t& YC_t;
-//	static YC_t sY(const Rect_t& iRect) { return iRect.origin.y; }
-
-//	typedef Ord_t& Y_t;
-//	static Y_t sY(Rect_t& iRect) { return iRect.origin.y; }
 
 	typedef const Ord_t& LC_t;
 	static LC_t sL(const Rect_t& iRect) { return iRect.origin.x; }
@@ -259,10 +257,10 @@ struct Traits<NSRect>
 	typedef Ord_t& H_t;
 	static H_t sH(Rect_t& ioRect) { return ioRect.size.height; }
 
-	typedef const Point_t& WHC_t;
+	typedef const NSSize& WHC_t;
 	static WHC_t sWH(const Rect_t& iRect) { return iRect.size; }
 
-	typedef Point_t& WH_t;
+	typedef NSSize& WH_t;
 	static WH_t sWH(Rect_t& ioRect) { return ioRect.size; }
 
 	typedef const Point_t& LTC_t;
@@ -290,7 +288,10 @@ struct Traits<NSRect>
 	static RT_t sRT(Rect_t& ioRect) { return sPoint<Point_t>(R(ioRect), T(ioRect)); }
 
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
-		{ return NSRectMake(iL, iT, iR - iL, iB - iT); }
+		{
+		const NSRect result = { {iL, iT}, {iR - iL, iB - iT} };
+		return result;
+		}
 	};
 
 
@@ -303,6 +304,6 @@ inline bool operator!=(const NSRect& iL, const NSRect& iR)
 } // namespace ZCartesian
 } // namespace ZooLib
 
-#endif // not ZMACRO_NS_AND_CG_CartesianETRY_ARE_SAME
+#endif // not ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 #endif // ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
 #endif // __ZCartesian_NS_h__
