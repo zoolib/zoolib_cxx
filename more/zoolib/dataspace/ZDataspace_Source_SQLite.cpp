@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 
@@ -174,8 +175,7 @@ void Source_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	oChanged.clear();
 
 	ZRef<Event> theEvent = fClock->GetEvent();
-	for (Map_Rel_PQuery::iterator iterPQuery = fMap_Rel_PQuery.begin();
-		iterPQuery != fMap_Rel_PQuery.end(); ++iterPQuery)
+	foreachi (iterPQuery, fMap_Rel_PQuery)
 		{
 		PQuery* thePQuery = &iterPQuery->second;
 		vector<ZVal_Any> thePackedRows;
