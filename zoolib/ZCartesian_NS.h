@@ -204,7 +204,6 @@ struct Traits<NSSize>
 		}
 	};
 
-
 inline bool operator==(const NSSize& iL, const NSSize& iR)
 	{ return iL.width == iR.width && iL.height == iR.height; }
 
@@ -293,7 +292,6 @@ struct Traits<NSRect>
 		return result;
 		}
 	};
-
 
 inline bool operator==(const NSRect& iL, const NSRect& iR)
 	{ return iL.origin == iR.origin && iL.size == iR.size; }

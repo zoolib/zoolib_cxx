@@ -178,7 +178,6 @@ struct Traits<CGSize>
 		{ return CGSizeMake(iX, iY); }
 	};
 
-
 inline bool operator==(const CGSize& iL, const CGSize& iR)
 	{ return iL.width == iR.width && iL.height == iR.height; }
 
@@ -264,7 +263,6 @@ struct Traits<CGRect>
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{ return CGRectMake(iL, iT, iR - iL, iB - iT); }
 	};
-
 
 inline bool operator==(const CGRect& iL, const CGRect& iR)
 	{ return iL.origin == iR.origin && iL.size == iR.size; }
