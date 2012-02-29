@@ -52,110 +52,253 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZCartesian {
 
+// =================================================================================================
+// MARK: - NSPoint
+
 template <>
-struct PointTraits<NSPoint>
+struct Traits<NSPoint>
 	{
 	typedef float Ord_t;
 	typedef NSPoint Point_t;
 	typedef NSRect Rect_t;
+
+	typedef const Ord_t& XC_t;
+	static XC_t sX(const Point_t& iPoint) { return iPoint.x; }
+
+	typedef Ord_t& X_t;
+	static X_t sX(Point_t& ioPoint) { return ioPoint.x; }
+
+	typedef const Ord_t& YC_t;
+	static YC_t sY(const Point_t& iPoint) { return iPoint.y; }
+
+	typedef Ord_t& Y_t;
+	static Y_t sY(Point_t& ioPoint) { return ioPoint.y; }
+
+	typedef const Ord_t LC_t;
+	static LC_t sL(const Point_t& iPoint) { return 0; }
+
+	typedef const Ord_t L_t;
+	static L_t sL(Point_t& ioPoint) { return 0; }
+
+	typedef const Ord_t TC_t;
+	static TC_t sT(const Point_t& iPoint) { return 0; }
+
+	typedef const Ord_t T_t;
+	static T_t sT(Point_t& ioPoint) { return 0; }
+
+	typedef const Ord_t& RC_t;
+	static RC_t sR(const Point_t& iPoint) { return iPoint.x; }
+
+	typedef Ord_t& R_t;
+	static R_t sR(Point_t& ioPoint) { return ioPoint.x; }
+
+	typedef const Ord_t& BC_t;
+	static BC_t sB(const Point_t& iPoint) { return iPoint.y; }
+
+	typedef Ord_t& B_t;
+	static B_t sB(Point_t& ioPoint) { return ioPoint.y; }
+
+	typedef const Ord_t& WC_t;
+	static WC_t sW(const Point_t& iPoint) { return iPoint.x; }
+
+	typedef Ord_t& W_t;
+	static W_t sW(Point_t& ioPoint) { return ioPoint.x; }
+
+	typedef const Ord_t& HC_t;
+	static HC_t sH(const Point_t& iPoint) { return iPoint.y; }
+
+	typedef Ord_t& H_t;
+	static H_t sH(Point_t& ioPoint) { return ioPoint.y; }
+
+	typedef const Point_t& WHC_t;
+	static WHC_t sWH(const Point_t& iPoint) { return iPoint; }
+
+	typedef Point_t& WH_t;
+	static WH_t sWH(Point_t& ioPoint) { return ioPoint; }
 
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{ return NSPointMake(iX, iY); }
 	};
 
-// =================================================================================================
-// MARK: - Point accessors
+inline bool operator==(const NSPoint& iL, const NSPoint& iR)
+	{ return iL.x == iR.x && iL.y == iR.y; }
 
-const float& X(const NSPoint& iNSPoint) { return iNSPoint.x; }
-float& X(NSPoint& ioNSPoint) { return ioNSPoint.x; }
-
-const float& Y(const NSPoint& iNSPoint) { return iNSPoint.y; }
-float& Y(NSPoint& ioNSPoint) { return ioNSPoint.y; }
-
-inline const float L(const NSPoint& iNSPoint) { return 0; }
-inline const float T(const NSPoint& iNSPoint) { return 0; }
-
-inline const float& R(const NSPoint& iNSPoint) { return iNSPoint.x; }
-inline float& R(NSPoint& ioNSPoint) { return ioNSPoint.x; }
-
-inline const float& B(const NSPoint& iNSPoint) { return iNSPoint.y; }
-inline float B(NSPoint& ioNSPoint) { return ioNSPoint.y; }
-
-inline const float& W(const NSPoint& iNSPoint) { return iNSPoint.x; }
-inline float& W(NSPoint& ioNSPoint) { return ioNSPoint.x; }
-
-inline const float& H(const NSPoint& iNSPoint) { return iNSPoint.y; }
-inline float& H(NSPoint& ioNSPoint) { return ioNSPoint.y; }
-
-inline const NSPoint& Ex(const NSPoint& iNSPoint) { return iNSPoint; }
-inline NSPoint& Ex(NSPoint& ioNSPoint) { return ioNSPoint; }
+inline bool operator!=(const NSPoint& iL, const NSPoint& iR)
+	{ return not (iL == iR); }
 
 // =================================================================================================
-// MARK: - Extent accessors
-
-const float& X(const NSExtent& iNSExtent) { return iNSExtent.width; }
-float& X(NSExtent& ioNSExtent) { return ioNSExtent.width; }
-
-const float& Y(const NSExtent& iNSExtent) { return iNSExtent.height; }
-float& Y(NSExtent& ioNSExtent) { return ioNSExtent.height; }
-
-inline const float L(const NSExtent& iNSExtent) { return 0; }
-inline const float T(const NSExtent& iNSExtent) { return 0; }
-
-inline const float& R(const NSExtent& iNSExtent) { return iNSExtent.width; }
-inline float& R(NSExtent& ioNSExtent) { return ioNSExtent.width; }
-
-inline const float& B(const NSExtent& iNSExtent) { return iNSExtent.height; }
-inline float B(NSExtent& ioNSExtent) { return ioNSExtent.height; }
-
-inline const float& W(const NSExtent& iNSExtent) { return iNSExtent.width; }
-inline float& W(NSExtent& ioNSExtent) { return ioNSExtent.width; }
-
-inline const float& H(const NSExtent& iNSExtent) { return iNSExtent.height; }
-inline float& H(NSExtent& ioNSExtent) { return ioNSExtent.height; }
-
-inline const NSExtent& Ex(const NSExtent& iNSExtent) { return iNSExtent; }
-inline NSExtent& Ex(NSExtent& ioNSExtent) { return ioNSExtent; }
-
-// =================================================================================================
-// MARK: - Rect accessors
+// MARK: - NSSize
 
 template <>
-struct RectTraits<NSRect>
+struct Traits<NSSize>
+	{
+	typedef float Ord_t;
+	typedef NSSize Point_t;
+	typedef NSRect Rect_t;
+
+	typedef const Ord_t& XC_t;
+	static XC_t sX(const Point_t& iPoint) { return iPoint.width; }
+
+	typedef Ord_t& X_t;
+	static X_t sX(Point_t& ioPoint) { return ioPoint.width; }
+
+	typedef const Ord_t& YC_t;
+	static YC_t sY(const Point_t& iPoint) { return iPoint.height; }
+
+	typedef Ord_t& Y_t;
+	static Y_t sY(Point_t& ioPoint) { return ioPoint.height; }
+
+	typedef const Ord_t LC_t;
+	static LC_t sL(const Point_t& iPoint) { return 0; }
+
+	typedef const Ord_t L_t;
+	static L_t sL(Point_t& ioPoint) { return 0; }
+
+	typedef const Ord_t TC_t;
+	static TC_t sT(const Point_t& iPoint) { return 0; }
+
+	typedef const Ord_t T_t;
+	static T_t sT(Point_t& ioPoint) { return 0; }
+
+	typedef const Ord_t& RC_t;
+	static RC_t sR(const Point_t& iPoint) { return iPoint.width; }
+
+	typedef Ord_t& R_t;
+	static R_t sR(Point_t& ioPoint) { return ioPoint.width; }
+
+	typedef const Ord_t& BC_t;
+	static BC_t sB(const Point_t& iPoint) { return iPoint.height; }
+
+	typedef Ord_t& B_t;
+	static B_t sB(Point_t& ioPoint) { return ioPoint.height; }
+
+	typedef const Ord_t& WC_t;
+	static WC_t sW(const Point_t& iPoint) { return iPoint.width; }
+
+	typedef Ord_t& W_t;
+	static W_t sW(Point_t& ioPoint) { return ioPoint.width; }
+
+	typedef const Ord_t& HC_t;
+	static HC_t sH(const Point_t& iPoint) { return iPoint.height; }
+
+	typedef Ord_t& H_t;
+	static H_t sH(Point_t& ioPoint) { return ioPoint.height; }
+
+	typedef const Point_t& WHC_t;
+	static WHC_t sWH(const Point_t& iPoint) { return iPoint; }
+
+	typedef Point_t& WH_t;
+	static WH_t sWH(Point_t& ioPoint) { return ioPoint; }
+
+	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
+		{ return NSSizeMake(iX, iY); }
+	};
+
+
+inline bool operator==(const NSSize& iL, const NSSize& iR)
+	{ return iL.width == iR.width && iL.height == iR.height; }
+
+inline bool operator!=(const NSSize& iL, const NSSize& iR)
+	{ return not (iL == iR); }
+
+// =================================================================================================
+// MARK: - NSRect
+
+template <>
+struct Traits<NSRect>
 	{
 	typedef float Ord_t;
 	typedef NSPoint Point_t;
 	typedef NSRect Rect_t;
 
+//	typedef const Ord_t& XC_t;
+//	static XC_t sX(const Rect_t& iRect) { return iRect.origin.x; }
+
+//	typedef Ord_t& X_t;
+//	static X_t sX(Rect_t& iRect) { return iRect.origin.x; }
+
+//	typedef const Ord_t& YC_t;
+//	static YC_t sY(const Rect_t& iRect) { return iRect.origin.y; }
+
+//	typedef Ord_t& Y_t;
+//	static Y_t sY(Rect_t& iRect) { return iRect.origin.y; }
+
+	typedef const Ord_t& LC_t;
+	static LC_t sL(const Rect_t& iRect) { return iRect.origin.x; }
+
+	typedef Ord_t& L_t;
+	static L_t sL(Rect_t& ioRect) { return ioRect.origin.x; }
+
+	typedef const Ord_t& TC_t;
+	static TC_t sT(const Rect_t& iRect) { return iRect.origin.y; }
+
+	typedef Ord_t& T_t;
+	static T_t sT(Rect_t& ioRect) { return ioRect.origin.y; }
+
+	typedef const Ord_t RC_t;
+	static RC_t sR(const Rect_t& iRect) { return iRect.origin.x + iRect.size.width; }
+
+	typedef const Ord_t R_t;
+	static R_t sR(Rect_t& ioRect) { return ioRect.origin.x + ioRect.size.width; }
+
+	typedef const Ord_t BC_t;
+	static BC_t sB(const Rect_t& iRect) { return iRect.origin.y + iRect.size.height; }
+
+	typedef const Ord_t B_t;
+	static B_t sB(Rect_t& ioRect) { return ioRect.origin.y + ioRect.size.height; }
+
+	typedef const Ord_t& WC_t;
+	static WC_t sW(const Rect_t& iRect) { return iRect.size.width; }
+
+	typedef Ord_t& W_t;
+	static W_t sW(Rect_t& ioRect) { return ioRect.size.width; }
+
+	typedef const Ord_t& HC_t;
+	static HC_t sH(const Rect_t& iRect) { return iRect.size.height; }
+
+	typedef Ord_t& H_t;
+	static H_t sH(Rect_t& ioRect) { return ioRect.size.height; }
+
+	typedef const Point_t& WHC_t;
+	static WHC_t sWH(const Rect_t& iRect) { return iRect.size; }
+
+	typedef Point_t& WH_t;
+	static WH_t sWH(Rect_t& ioRect) { return ioRect.size; }
+
+	typedef const Point_t& LTC_t;
+	static LTC_t sLT(const Rect_t& iRect) { return iRect.origin; }
+
+	typedef Point_t& LT_t;
+	static LT_t sLT(Rect_t& ioRect) { return ioRect.origin; }
+
+	typedef const Point_t RBC_t;
+	static RBC_t sRB(const Rect_t& iRect) { return sPoint<Point_t>(R(iRect), B(iRect)); }
+
+	typedef const Point_t RB_t;
+	static RB_t sRB(Rect_t& ioRect) { return sPoint<Point_t>(R(ioRect), B(ioRect)); }
+
+	typedef const Point_t LBC_t;
+	static LBC_t sLB(const Rect_t& iRect) { return sPoint<Point_t>(L(iRect), B(iRect)); }
+
+	typedef const Point_t LB_t;
+	static LB_t sLB(Rect_t& ioRect) { return sPoint<Point_t>(L(ioRect), B(ioRect)); }
+
+	typedef const Point_t RTC_t;
+	static RTC_t sRT(const Rect_t& iRect) { return sPoint<Point_t>(R(iRect), T(iRect)); }
+
+	typedef const Point_t RT_t;
+	static RT_t sRT(Rect_t& ioRect) { return sPoint<Point_t>(R(ioRect), T(ioRect)); }
+
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{ return NSRectMake(iL, iT, iR - iL, iB - iT); }
 	};
 
-inline const float& L(const NSRect& iNSRect) { return iNSRect.origin.x; }
-inline float& L(NSRect& ioNSRect) { return ioNSRect.origin.x; }
 
-inline const float& T(const NSRect& iNSRect) { return iNSRect.origin.y; }
-inline float& T(NSRect& ioNSRect) { return ioNSRect.origin.y; }
+inline bool operator==(const NSRect& iL, const NSRect& iR)
+	{ return iL.origin == iR.origin && iL.size == iR.size; }
 
-inline const float R(const NSRect& iNSRect) { return iNSRect.origin.x + iNSRect.extent.width; }
-
-inline const float B(const NSRect& iNSRect) { return iNSRect.origin.y + iNSRect.extent.height; }
-
-inline const float& W(const NSRect& iNSRect) { return iNSRect.extent.width; }
-inline float& W(NSRect& ioNSRect) { return ioNSRect.extent.width; }
-
-inline const float& H(const NSRect& iNSRect) { return iNSRect.extent.height; }
-inline float& H(NSRect& ioNSRect) { return ioNSRect.extent.height; }
-
-inline const NSExtent& Ex(const NSRect& iNSRect) { return iNSRect.extent; }
-inline NSExtent& Ex(NSRect& ioNSRect) { return ioNSRect.extent; }
-
-inline const NSPoint& LT(const NSRect& iNSRect) { return iNSRect.origin; }
-inline NSPoint& LT(NSRect& ioNSRect) { return ioNSRect.origin; }
-
-inline const NSPoint RB(const NSRect& iNSRect) { return sPoint<NSPoint>(R(iRect), B(iRect)); }
-inline const NSPoint LB(const NSRect& iNSRect) { return sPoint<NSPoint>(L(iRect), B(iRect)); }
-inline const NSPoint RT(const NSRect& iNSRect) { return sPoint<NSPoint>(R(iRect), T(iRect)); }
+inline bool operator!=(const NSRect& iL, const NSRect& iR)
+	{ return not (iL == iR); }
 
 } // namespace ZCartesian
 } // namespace ZooLib

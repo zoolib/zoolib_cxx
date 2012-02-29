@@ -29,15 +29,69 @@ namespace ZooLib {
 namespace ZCartesian {
 
 // =================================================================================================
-// MARK: - PointTraits
+// MARK: - ZMatrix<Ord,1,2> (point)
 
 template <>
 template <class Ord>
-struct PointTraits<ZMatrix<Ord,1,2> >
+struct Traits<ZMatrix<Ord,1,2> >
 	{
 	typedef Ord Ord_t;
 	typedef ZMatrix<Ord,1,2> Point_t;
 	typedef ZMatrixArray<Ord,1,2,2> Rect_t;
+
+	typedef const Ord_t& XC_t;
+	static XC_t sX(const Point_t& iPoint) { return iPoint[0]; }
+
+	typedef Ord_t& X_t;
+	static X_t sX(Point_t& ioPoint) { return ioPoint[0]; }
+
+	typedef const Ord_t& YC_t;
+	static YC_t sY(const Point_t& iPoint) { return iPoint[1]; }
+
+	typedef Ord_t& Y_t;
+	static Y_t sY(Point_t& ioPoint) { return ioPoint[1]; }
+
+	typedef const Ord_t LC_t;
+	static LC_t sL(const Point_t& iPoint) { return 0; }
+
+	typedef const Ord_t L_t;
+	static L_t sL(Point_t& ioPoint) { return 0; }
+
+	typedef const Ord_t TC_t;
+	static TC_t sT(const Point_t& iPoint) { return 0; }
+
+	typedef const Ord_t T_t;
+	static T_t sT(Point_t& ioPoint) { return 0; }
+
+	typedef const Ord_t& RC_t;
+	static RC_t sR(const Point_t& iPoint) { return iPoint[0]; }
+
+	typedef Ord_t& R_t;
+	static R_t sR(Point_t& ioPoint) { return ioPoint[0]; }
+
+	typedef const Ord_t& BC_t;
+	static BC_t sB(const Point_t& iPoint) { return iPoint[1]; }
+
+	typedef Ord_t& B_t;
+	static B_t sB(Point_t& ioPoint) { return ioPoint[1]; }
+
+	typedef const Ord_t& WC_t;
+	static WC_t sW(const Point_t& iPoint) { return iPoint[0]; }
+
+	typedef Ord_t& W_t;
+	static W_t sW(Point_t& ioPoint) { return ioPoint[0]; }
+
+	typedef const Ord_t& HC_t;
+	static HC_t sH(const Point_t& iPoint) { return iPoint[1]; }
+
+	typedef Ord_t& H_t;
+	static H_t sH(Point_t& ioPoint) { return ioPoint[1]; }
+
+	typedef const Point_t& WHC_t;
+	static WHC_t sWH(const Point_t& iPoint) { return iPoint; }
+
+	typedef Point_t& WH_t;
+	static WH_t sWH(Point_t& ioPoint) { return ioPoint; }
 
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{
@@ -49,44 +103,148 @@ struct PointTraits<ZMatrix<Ord,1,2> >
 	};
 
 // =================================================================================================
-// MARK: - Point accessors
-
-template <class Ord> const Ord& X(const ZMatrix<Ord,1,2>& iPoint) { return iPoint[0]; }
-template <class Ord> Ord& X(ZMatrix<Ord,1,2>& ioPoint) { return ioPoint[0]; }
-
-template <class Ord> const Ord& Y(const ZMatrix<Ord,1,2>& iPoint) { return iPoint[1]; }
-template <class Ord> Ord& Y(ZMatrix<Ord,1,2>& ioPoint) { return ioPoint[1]; }
-
-template <class Ord> const Ord L(const ZMatrix<Ord,1,2>& iPoint) { return 0; }
-
-template <class Ord> const Ord T(const ZMatrix<Ord,1,2>& iPoint) { return 0; }
-
-template <class Ord> const Ord& R(const ZMatrix<Ord,1,2>& iPoint) { return X(iPoint); }
-template <class Ord> Ord& R(ZMatrix<Ord,1,2>& ioPoint) { return X(ioPoint); }
-
-template <class Ord> const Ord& B(const ZMatrix<Ord,1,2>& iPoint) { return Y(iPoint); }
-template <class Ord> Ord B(ZMatrix<Ord,1,2>& ioPoint) { return Y(ioPoint); }
-
-template <class Ord> const Ord& W(const ZMatrix<Ord,1,2>& iPoint) { return X(iPoint); }
-template <class Ord> Ord& W(ZMatrix<Ord,1,2>& ioPoint) { return X(ioPoint); }
-
-template <class Ord> const Ord& H(const ZMatrix<Ord,1,2>& iPoint) { return Y(iPoint); }
-template <class Ord> Ord& H(ZMatrix<Ord,1,2>& ioPoint) { return Y(ioPoint); }
-
-template <class Ord> const ZMatrix<Ord,1,2>& WH(const ZMatrix<Ord,1,2>& iPoint) { return iPoint; }
-template <class Ord> const ZMatrix<Ord,1,2>& WH(ZMatrix<Ord,1,2>& ioPoint) { return ioPoint; }
-
-// =================================================================================================
-// MARK: - RectTraits
+// MARK: - ZMatrix<Ord,1,2> (CVec3 used as a 2D point)
 
 template <>
 template <class Ord>
-struct RectTraits<ZMatrixArray<Ord,1,2,2> >
+struct Traits<ZMatrix<Ord,1,3> >
+	{
+	typedef Ord Ord_t;
+	typedef ZMatrix<Ord,1,3> Point_t;
+	typedef ZMatrixArray<Ord,1,2,2> Rect_t;
+
+	typedef const Ord_t& XC_t;
+	static XC_t sX(const Point_t& iPoint) { return iPoint[0]; }
+
+	typedef Ord_t& X_t;
+	static X_t sX(Point_t& ioPoint) { return ioPoint[0]; }
+
+	typedef const Ord_t& YC_t;
+	static YC_t sY(const Point_t& iPoint) { return iPoint[1]; }
+
+	typedef Ord_t& Y_t;
+	static Y_t sY(Point_t& ioPoint) { return ioPoint[1]; }
+
+	typedef const Ord_t LC_t;
+	static LC_t sL(const Point_t& iPoint) { return 0; }
+
+	typedef const Ord_t L_t;
+	static L_t sL(Point_t& ioPoint) { return 0; }
+
+	typedef const Ord_t TC_t;
+	static TC_t sT(const Point_t& iPoint) { return 0; }
+
+	typedef const Ord_t T_t;
+	static T_t sT(Point_t& ioPoint) { return 0; }
+
+	typedef const Ord_t& RC_t;
+	static RC_t sR(const Point_t& iPoint) { return iPoint[0]; }
+
+	typedef Ord_t& R_t;
+	static R_t sR(Point_t& ioPoint) { return ioPoint[0]; }
+
+	typedef const Ord_t& BC_t;
+	static BC_t sB(const Point_t& iPoint) { return iPoint[1]; }
+
+	typedef Ord_t& B_t;
+	static B_t sB(Point_t& ioPoint) { return ioPoint[1]; }
+
+	typedef const Ord_t& WC_t;
+	static WC_t sW(const Point_t& iPoint) { return iPoint[0]; }
+
+	typedef Ord_t& W_t;
+	static W_t sW(Point_t& ioPoint) { return ioPoint[0]; }
+
+	typedef const Ord_t& HC_t;
+	static HC_t sH(const Point_t& iPoint) { return iPoint[1]; }
+
+	typedef Ord_t& H_t;
+	static H_t sH(Point_t& ioPoint) { return ioPoint[1]; }
+
+	typedef const Point_t& WHC_t;
+	static WHC_t sWH(const Point_t& iPoint) { return iPoint; }
+
+	typedef Point_t& WH_t;
+	static WH_t sWH(Point_t& ioPoint) { return ioPoint; }
+	};
+
+// =================================================================================================
+// MARK: - ZMatrixArray<Ord,1,2,2> (rectangle)
+
+template <>
+template <class Ord>
+struct Traits<ZMatrixArray<Ord,1,2,2> >
 	{
 	typedef Ord Ord_t;
 	typedef ZMatrix<Ord,1,2> Point_t;
 	typedef ZMatrixArray<Ord,1,2,2> Rect_t;
 	
+	typedef const Ord_t& LC_t;
+	static LC_t sL(const Rect_t& iRect) { return iRect[0][0]; }
+
+	typedef Ord_t& L_t;
+	static L_t sL(Rect_t& ioRect) { return ioRect[0][0]; }
+
+	typedef const Ord_t& TC_t;
+	static TC_t sT(const Rect_t& iRect) { return iRect[0][1]; }
+
+	typedef Ord_t& T_t;
+	static T_t sT(Rect_t& ioRect) { return ioRect[0][1]; }
+
+	typedef const Ord_t& RC_t;
+	static RC_t sR(const Rect_t& iRect) { return iRect[1][0]; }
+
+	typedef Ord_t& R_t;
+	static R_t sR(Rect_t& ioRect) { return ioRect[1][0]; }
+
+	typedef const Ord_t& BC_t;
+	static BC_t sB(const Rect_t& iRect) { return iRect[1][1]; }
+
+	typedef Ord_t& B_t;
+	static B_t sB(Rect_t& ioRect) { return ioRect[1][1]; }
+
+	typedef const Ord_t WC_t;
+	static WC_t sW(const Rect_t& iRect) { return iRect[1][0] - iRect[0][0]; }
+
+	typedef const Ord_t W_t;
+	static W_t sW(Rect_t& ioRect) { return ioRect[1][0] - ioRect[0][0]; }
+
+	typedef const Ord_t HC_t;
+	static HC_t sH(const Rect_t& iRect) { return iRect[1][1] - iRect[0][1]; }
+
+	typedef const Ord_t H_t;
+	static H_t sH(Rect_t& ioRect) { return ioRect[1][1] - ioRect[0][1]; }
+
+	typedef const Point_t WHC_t;
+	static WHC_t sWH(const Rect_t& iRect) { return sPoint<Point_t>(W(iRect), H(iRect)); }
+
+	typedef const Point_t WH_t;
+	static WH_t sWH(Rect_t& ioRect) { return sPoint<Point_t>(W(ioRect), H(ioRect)); }
+
+	typedef const Point_t& LTC_t;
+	static LTC_t sLT(const Rect_t& iRect) { return iRect[0]; }
+
+	typedef Point_t& LT_t;
+	static LT_t sLT(Rect_t& ioRect) { return ioRect[0]; }
+
+	typedef const Point_t& RBC_t;
+	static RBC_t sRB(const Rect_t& iRect) { return iRect[1]; }
+
+	typedef Point_t& RB_t;
+	static RB_t sRB(Rect_t& ioRect) { return ioRect[1]; }
+
+	typedef const Point_t LBC_t;
+	static LBC_t sLB(const Rect_t& iRect) { return sPoint<Point_t>(L(iRect), B(iRect)); }
+
+	typedef const Point_t LB_t;
+	static LB_t sLB(Rect_t& ioRect) { return sPoint<Point_t>(L(ioRect), B(ioRect)); }
+
+	typedef const Point_t RTC_t;
+	static RTC_t sRT(const Rect_t& iRect) { return sPoint<Point_t>(R(iRect), T(iRect)); }
+
+	typedef const Point_t RT_t;
+	static RT_t sRT(Rect_t& ioRect) { return sPoint<Point_t>(R(ioRect), T(ioRect)); }
+
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{
 		ZMatrixArray<Ord,1,2,2> result;
@@ -114,49 +272,6 @@ struct RectTraits<ZMatrixArray<Ord,1,2,2> >
 		return result;
 		}
 	};
-
-// =================================================================================================
-// MARK: - Rect accessors
-
-template <class Ord> const Ord& L(const ZMatrixArray<Ord,1,2,2>& iRect) { return X(LT(iRect)); }
-template <class Ord> Ord& L(ZMatrixArray<Ord,1,2,2>& ioRect) { return X(LT(ioRect)); }
-
-template <class Ord> const Ord& T(const ZMatrixArray<Ord,1,2,2>& iRect) { return Y(LT(iRect)); }
-template <class Ord> Ord& T(ZMatrixArray<Ord,1,2,2>& ioRect) { return Y(LT(ioRect)); }
-
-template <class Ord> const Ord& R(const ZMatrixArray<Ord,1,2,2>& iRect) { return X(RB(iRect)); }
-template <class Ord> Ord& R(ZMatrixArray<Ord,1,2,2>& ioRect) { return X(RB(ioRect)); }
-
-template <class Ord> const Ord& B(const ZMatrixArray<Ord,1,2,2>& iRect) { return Y(RB(iRect)); }
-template <class Ord> Ord& B(ZMatrixArray<Ord,1,2,2>& ioRect) { return Y(RB(ioRect)); }
-
-template <class Ord>
-const Ord W(const ZMatrixArray<Ord,1,2,2>& iRect) { return R(iRect) - L(iRect); }
-
-template <class Ord>
-const Ord H(const ZMatrixArray<Ord,1,2,2>& iRect) { return B(iRect) - T(iRect); }
-
-template <class Ord>
-const ZMatrix<Ord,1,2> WH(const ZMatrixArray<Ord,1,2,2>& iRect)
-	{ return sPoint<ZMatrix<Ord,1,2> >(W(iRect), H(iRect)); }
-
-template <class Ord>
-const ZMatrix<Ord,1,2>& LT(const ZMatrixArray<Ord,1,2,2>& iRect) { return iRect[0]; }
-
-template <class Ord> ZMatrix<Ord,1,2>& LT(ZMatrixArray<Ord,1,2,2>& iRect) { return iRect[0]; }
-
-template <class Ord>
-const ZMatrix<Ord,1,2>& RB(const ZMatrixArray<Ord,1,2,2>& iRect) { return iRect[1]; }
-
-template <class Ord> ZMatrix<Ord,1,2>& RB(ZMatrixArray<Ord,1,2,2>& iRect) { return iRect[1]; }
-
-template <class Ord>
-const ZMatrix<Ord,1,2> LB(const ZMatrixArray<Ord,1,2,2>& iRect)
-	{ return sPoint<ZMatrix<Ord,1,2> >(L(iRect), B(iRect)); }
-
-template <class Ord>
-const ZMatrix<Ord,1,2> RT(const ZMatrixArray<Ord,1,2,2>& iRect)
-	{ return sPoint<ZMatrix<Ord,1,2> >(R(iRect), T(iRect)); }
 
 } // namespace ZCartesian
 } // namespace ZooLib

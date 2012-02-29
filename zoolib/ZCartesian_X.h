@@ -28,17 +28,73 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(X11)
 
 #include "zoolib/ZCompat_Xlib.h"
-//#include <X11/Xutil.h>
 
 namespace ZooLib {
 namespace ZCartesian {
 
+// =================================================================================================
+// MARK: - XPoint
+
 template <>
-struct PointTraits<XPoint>
+struct Traits<XPoint>
 	{
 	typedef short Ord_t;
 	typedef XPoint Point_t;
 	typedef XRectangle Rect_t;
+
+	typedef const Ord_t& XC_t;
+	static XC_t sX(const Point_t& iPoint) { return iPoint.x; }
+
+	typedef Ord_t& X_t;
+	static X_t sX(Point_t& ioPoint) { return ioPoint.x; }
+
+	typedef const Ord_t& YC_t;
+	static YC_t sY(const Point_t& iPoint) { return iPoint.y; }
+
+	typedef Ord_t& Y_t;
+	static Y_t sY(Point_t& ioPoint) { return ioPoint.y; }
+
+	typedef const Ord_t LC_t;
+	static LC_t sL(const Point_t& iPoint) { return 0; }
+
+	typedef const Ord_t L_t;
+	static LC_t sL(Point_t& ioPoint) { return 0; }
+
+	typedef const Ord_t TC_t;
+	static TC_t sT(const Point_t& iPoint) { return 0; }
+
+	typedef const Ord_t T_t;
+	static T_t sT(Point_t& ioPoint) { return 0; }
+
+	typedef const Ord_t& RC_t;
+	static RC_t sR(const Point_t& iPoint) { return iPoint.x; }
+
+	typedef Ord_t& R_t;
+	static R_t sR(Point_t& ioPoint) { return ioPoint.x; }
+
+	typedef const Ord_t& BC_t;
+	static BC_t sB(const Point_t& iPoint) { return iPoint.y; }
+
+	typedef Ord_t& B_t;
+	static B_t sB(Point_t& ioPoint) { return ioPoint.y; }
+
+	typedef const Ord_t& WC_t;
+	static WC_t sW(const Point_t& iPoint) { return iPoint.x; }
+
+	typedef Ord_t& W_t;
+	static W_t sW(Point_t& ioPoint) { return ioPoint.x; }
+
+	typedef const Ord_t& HC_t;
+	static HC_t sH(const Point_t& iPoint) { return iPoint.y; }
+
+	typedef Ord_t& H_t;
+	static H_t sH(Point_t& ioPoint) { return ioPoint.y; }
+
+	typedef const Point_t& WHC_t;
+	static WHC_t sWH(const Point_t& iPoint) { return iPoint; }
+
+	typedef Point_t& WH_t;
+	static WH_t sWH(Point_t& ioPoint) { return ioPoint; }
 
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{
@@ -49,69 +105,100 @@ struct PointTraits<XPoint>
 		}
 	};
 
-// =================================================================================================
-// MARK: - Point accessors
+inline bool operator==(const XPoint& iL, const XPoint& iR)
+	{ return iL.x == iR.x && iL.y == iR.y; }
 
-const float& X(const XPoint& iXPoint) { return iXPoint.x; }
-float& X(XPoint& ioXPoint) { return ioXPoint.x; }
-
-const float& Y(const XPoint& iXPoint) { return iXPoint.y; }
-float& Y(XPoint& ioXPoint) { return ioXPoint.y; }
-
-inline const float L(const XPoint& iXPoint) { return 0; }
-inline const float T(const XPoint& iXPoint) { return 0; }
-
-inline const float& R(const XPoint& iXPoint) { return iXPoint.x; }
-inline float& R(XPoint& ioXPoint) { return ioXPoint.x; }
-
-inline const float& B(const XPoint& iXPoint) { return iXPoint.y; }
-inline float B(XPoint& ioXPoint) { return ioXPoint.y; }
-
-inline const float& W(const XPoint& iXPoint) { return iXPoint.x; }
-inline float& W(XPoint& ioXPoint) { return ioXPoint.x; }
-
-inline const float& H(const XPoint& iXPoint) { return iXPoint.y; }
-inline float& H(XPoint& ioXPoint) { return ioXPoint.y; }
-
-inline const XPoint& WH(const XPoint& iXPoint) { return iXPoint; }
-inline XPoint& WH(XPoint& ioXPoint) { return ioXPoint; }
+inline bool operator!=(const XPoint& iL, const XPoint& iR)
+	{ return not (iL == iR); }
 
 // =================================================================================================
-// MARK: - Rect accessors
+// MARK: - XRectangle
 
 template <>
-struct RectTraits<XRectangle>
+struct Traits<XRectangle>
 	{
 	typedef short Ord_t;
 	typedef XPoint Point_t;
 	typedef XRectangle Rect_t;
 
+	typedef const Ord_t& LC_t;
+	static LC_t sL(const Rect_t& iRect) { return iRect.x; }
+
+	typedef Ord_t& L_t;
+	static L_t sL(Rect_t& ioRect) { return ioRect.x; }
+
+	typedef const Ord_t& TC_t;
+	static TC_t sT(const Rect_t& iRect) { return iRect.y; }
+
+	typedef Ord_t& T_t;
+	static T_t sT(Rect_t& ioRect) { return ioRect.y; }
+
+	typedef const Ord_t RC_t;
+	static RC_t sR(const Rect_t& iRect) { return iRect.x + iRect.width; }
+
+	typedef const Ord_t R_t;
+	static R_t sR(Rect_t& ioRect) { return ioRect.x + ioRect.width; }
+
+	typedef const Ord_t BC_t;
+	static BC_t sB(const Rect_t& iRect) { return iRect.y + iRect.height; }
+
+	typedef const Ord_t B_t;
+	static B_t sB(Rect_t& ioRect) { return ioRect.y + ioRect.height; }
+
+	typedef const Ord_t& WC_t;
+	static WC_t sW(const Rect_t& iRect) { return iRect.width; }
+
+	typedef Ord_t& W_t;
+	static W_t sW(Rect_t& ioRect) { return ioRect.width; }
+
+	typedef const Ord_t& HC_t;
+	static HC_t sH(const Rect_t& iRect) { return iRect.height; }
+
+	typedef Ord_t& H_t;
+	static H_t sH(Rect_t& ioRect) { return ioRect.height; }
+
+	typedef const Point_t WHC_t;
+	static WHC_t sWH(const Rect_t& iRect) { return sPoint<Point_t>(W(iRect), H(iRect)); }
+
+	typedef const Point_t WH_t;
+	static WH_t sWH(Rect_t& ioRect) { return sPoint<Point_t>(W(ioRect), H(ioRect)); }
+
+	typedef const Point_t TLC_t;
+	static TLC_t sTL(const Rect_t& iRect) { return sPoint<Point_t>(T(iRect), L(iRect)); }
+
+	typedef const Point_t TL_t;
+	static TL_t sTL(Rect_t& ioRect) { return sPoint<Point_t>(T(ioRect), L(ioRect)); }
+
+	typedef const Point_t RBC_t;
+	static RBC_t sRB(const Rect_t& iRect) { return sPoint<Point_t>(R(iRect), B(iRect)); }
+
+	typedef const Point_t RB_t;
+	static RB_t sRB(Rect_t& ioRect) { return sPoint<Point_t>(R(ioRect), B(ioRect)); }
+
+	typedef const Point_t LBC_t;
+	static LBC_t sLB(const Rect_t& iRect) { return sPoint<Point_t>(L(iRect), B(iRect)); }
+
+	typedef const Point_t LB_t;
+	static LB_t sLB(Rect_t& ioRect) { return sPoint<Point_t>(L(ioRect), B(ioRect)); }
+
+	typedef const Point_t RTC_t;
+	static RTC_t sRT(const Rect_t& iRect) { return sPoint<Point_t>(R(iRect), T(iRect)); }
+
+	typedef const Point_t RT_t;
+	static RT_t sRT(Rect_t& ioRect) { return sPoint<Point_t>(R(ioRect), T(ioRect)); }
+
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{ return XRectangleMake(iL, iT, iR - iL, iB - iT); }
 	};
 
-inline const float& L(const XRectangle& iXRect) { return iXRect.x; }
-inline float& L(XRectangle& ioXRect) { return ioXRect.x; }
+inline bool operator==(const XRectangle& iL, const XRectangle& iR)
+	{
+	return iL.x == iR.x && iL.y == iR.y
+		&& iL.width == iR.width && iL.height == iR.height;
+	}
 
-inline const float& T(const XRectangle& iXRect) { return iXRect.y; }
-inline float& T(XRectangle& ioXRect) { return ioXRect.y; }
-
-inline const float R(const XRectangle& iXRect) { return iXRect.x + iXRect.width; }
-
-inline const float B(const XRectangle& iXRect) { return iXRect.y + iXRect.height; }
-
-inline const float& W(const XRectangle& iXRect) { return iXRect.width; }
-inline float& W(XRectangle& ioXRect) { return ioXRect.width; }
-
-inline const float& H(const XRectangle& iXRect) { return iXRect.height; }
-inline float& H(XRectangle& ioXRect) { return ioXRect.height; }
-
-inline const XPoint WH(const XRectangle& iXRect) { sPoint<XPoint>(iXRect.width, iXRect.height); }
-
-inline const XPoint LT(const XRectangle& iXRect) { return sPoint<XPoint>(L(iXRect), T(iXRect)); }
-inline const XPoint RB(const XRectangle& iXRect) { return sPoint<XPoint>(R(iXRect), B(iXRect)); }
-inline const XPoint LB(const XRectangle& iXRect) { return sPoint<XPoint>(L(iXRect), B(iXRect)); }
-inline const XPoint RT(const XRectangle& iXRect) { return sPoint<XPoint>(R(iXRect), T(iXRect)); }
+inline bool operator!=(const XRectangle& iL, const XRectangle& iR)
+	{ return not (iL == iR); }
 
 } // namespace ZCartesian
 } // namespace ZooLib
