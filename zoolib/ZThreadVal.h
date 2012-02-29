@@ -99,7 +99,7 @@ private:
 	static ZThreadVal* spGet()
 		{ return ((ZThreadVal*)(ZTSS::sGet(spKey()))); }
 
-	static ZTSS::Key& spKey()
+	static const ZTSS::Key& spKey()
 		{
 		// This method is a sneaky way to have static storage for a template class.
 		static ZTSS::Key spKey = ZTSS::sCreate();
