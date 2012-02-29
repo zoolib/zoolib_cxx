@@ -103,7 +103,7 @@ struct Traits<ZMatrix<Ord,1,2> >
 	};
 
 // =================================================================================================
-// MARK: - ZMatrix<Ord,1,2> (CVec3 used as a 2D point)
+// MARK: - ZMatrix<Ord,1,3> (CVec3 used as a 2D point)
 
 template <>
 template <class Ord>
