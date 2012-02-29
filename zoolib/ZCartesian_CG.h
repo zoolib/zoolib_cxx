@@ -110,6 +110,54 @@ inline bool operator==(const CGPoint& iL, const CGPoint& iR)
 inline bool operator!=(const CGPoint& iL, const CGPoint& iR)
 	{ return not (iL == iR); }
 
+template <class Other>
+CGPoint operator+(const CGPoint& iL, const Other& iR)
+	{ return CGPointMake(X(iL) + X(iR), Y(iL) + Y(iR)); }
+
+template <class Other>
+CGPoint& operator+=(CGPoint& ioL, const Other& iR)
+	{
+	X(ioL) += X(iR);
+	Y(ioL) += Y(iR);
+	return ioL;
+	}
+
+template <class Other>
+CGPoint operator-(const CGPoint& iL, const Other& iR)
+	{ return CGPointMake(X(iL) - X(iR), Y(iL) - Y(iR)); }
+
+template <class Other>
+CGPoint& operator-=(CGPoint& ioL, const Other& iR)
+	{
+	X(ioL) -= X(iR);
+	Y(ioL) -= Y(iR);
+	return ioL;
+	}
+
+template <class Other>
+CGPoint operator*(const CGPoint& iL, const Other& iR)
+	{ return CGPointMake(X(iL) * X(iR), Y(iL) * Y(iR)); }
+
+template <class Other>
+CGPoint& operator*=(CGPoint& ioL, const Other& iR)
+	{
+	X(ioL) *= X(iR);
+	Y(ioL) *= X(iR);
+	return ioL;
+	}
+
+template <class Other>
+CGPoint operator/(const CGPoint& iL, const Other& iR)
+	{ return CGPointMake(X(iL) / X(iR), Y(iL) / Y(iR)); }
+
+template <class Other>
+CGPoint& operator/=(CGPoint& ioL, const Other& iR)
+	{
+	X(ioL) /= X(iR);
+	Y(ioL) /= Y(iR);
+	return ioL;
+	}
+
 // =================================================================================================
 // MARK: - CGSize
 
@@ -183,6 +231,54 @@ inline bool operator==(const CGSize& iL, const CGSize& iR)
 
 inline bool operator!=(const CGSize& iL, const CGSize& iR)
 	{ return not (iL == iR); }
+
+template <class Other>
+CGSize operator+(const CGSize& iL, const Other& iR)
+	{ return CGSizeMake(X(iL) + X(iR), Y(iL) + Y(iR)); }
+
+template <class Other>
+CGSize& operator+=(CGSize& ioL, const Other& iR)
+	{
+	X(ioL) += X(iR);
+	Y(ioL) += Y(iR);
+	return ioL;
+	}
+
+template <class Other>
+CGSize operator-(const CGSize& iL, const Other& iR)
+	{ return CGSizeMake(X(iL) - X(iR), Y(iL) - Y(iR)); }
+
+template <class Other>
+CGSize& operator-=(CGSize& ioL, const Other& iR)
+	{
+	X(ioL) -= X(iR);
+	Y(ioL) -= Y(iR);
+	return ioL;
+	}
+
+template <class Other>
+CGSize operator*(const CGSize& iL, const Other& iR)
+	{ return CGSizeMake(X(iL) * X(iR), Y(iL) * Y(iR)); }
+
+template <class Other>
+CGSize& operator*=(CGSize& ioL, const Other& iR)
+	{
+	X(ioL) *= X(iR);
+	Y(ioL) *= X(iR);
+	return ioL;
+	}
+
+template <class Other>
+CGSize operator/(const CGSize& iL, const Other& iR)
+	{ return CGSizeMake(X(iL) / X(iR), Y(iL) / Y(iR)); }
+
+template <class Other>
+CGSize& operator/=(CGSize& ioL, const Other& iR)
+	{
+	X(ioL) /= X(iR);
+	Y(ioL) /= Y(iR);
+	return ioL;
+	}
 
 // =================================================================================================
 // MARK: - CGRect
@@ -269,6 +365,38 @@ inline bool operator==(const CGRect& iL, const CGRect& iR)
 
 inline bool operator!=(const CGRect& iL, const CGRect& iR)
 	{ return not (iL == iR); }
+
+template <class Other>
+CGRect operator+(const CGRect& iL, const Other& iR)
+	{ return sOffseted(X(iR), Y(iR), iL); }
+
+template <class Other>
+CGRect& operator+=(CGRect& ioL, const Other& iR)
+	{ return ioL = ioL + iR; }
+
+template <class Other>
+CGRect operator-(const CGRect& iL, const Other& iR)
+	{ return sOffseted(-X(iR), -Y(iR), iL); }
+
+template <class Other>
+CGRect& operator-=(CGRect& ioL, const Other& iR)
+	{ return ioL = ioL - iR; }
+
+template <class Other>
+CGRect operator*(const CGRect& iL, const Other& iR)
+	{ return CGRectMake(L(iL) * X(iR), T(iL) * Y(iR), R(iL) * X(iR), B(iL) * Y(iR)); }
+
+template <class Other>
+CGRect& operator*=(CGRect& ioL, const Other& iR)
+	{ return ioL = ioL * iR; }
+
+template <class Other>
+CGRect operator/(const CGRect& iL, const Other& iR)
+	{ return CGRectMake(L(iL) / X(iR), T(iL) / Y(iR), R(iL) / X(iR), B(iL) / Y(iR)); }
+
+template <class Other>
+CGRect& operator/=(CGRect& ioL, const Other& iR)
+	{ return ioL = ioL / iR; }
 
 } // namespace ZCartesian
 } // namespace ZooLib
