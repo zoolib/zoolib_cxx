@@ -209,7 +209,7 @@ ZSeq_Any& ZSeq_Any::Append(const ZVal_Any& iVal)
 
 void ZSeq_Any::pTouch()
 	{
-	if (!fRep)
+	if (not fRep)
 		{
 		fRep = new Rep;
 		}
@@ -286,7 +286,7 @@ int ZMap_Any::Compare(const ZMap_Any& iOther) const
 		return 0;
 		}
 
-	if (!fRep)
+	if (not fRep)
 		{
 		// We have no rep, (iOther must have a rep or fRep would be == iOther.fRep).
 		if (iOther.fRep->fMap.empty())
@@ -557,7 +557,7 @@ const ZVal_Any& ZMap_Any::operator[](const Index_t& iIndex) const
 
 void ZMap_Any::pTouch()
 	{
-	if (!fRep)
+	if (not fRep)
 		{
 		fRep = new Rep;
 		}
@@ -569,7 +569,7 @@ void ZMap_Any::pTouch()
 
 ZMap_Any::Map_t::iterator ZMap_Any::pTouch(const Index_t& iIndex)
 	{
-	if (!fRep)
+	if (not fRep)
 		{
 		return spEmptyMap.end();
 		}
