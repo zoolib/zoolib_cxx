@@ -62,6 +62,9 @@ namespace ZCartesian {
 template <>
 struct Traits<NSPoint>
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef float Ord_t;
 	typedef NSPoint Point_t;
 	typedef NSRect Rect_t;
@@ -97,6 +100,9 @@ inline bool operator!=(const NSPoint& iL, const NSPoint& iR)
 template <>
 struct Traits<NSSize>
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef float Ord_t;
 	typedef NSSize Point_t;
 	typedef NSRect Rect_t;
@@ -132,6 +138,9 @@ inline bool operator!=(const NSSize& iL, const NSSize& iR)
 template <>
 struct Traits<NSRect>
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef float Ord_t;
 	typedef NSPoint Point_t;
 	typedef NSRect Rect_t;

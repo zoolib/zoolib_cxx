@@ -33,8 +33,11 @@ namespace ZCartesian {
 // MARK: - SDL_Point
 
 template <>
-struct Traits<SDL_Point>
+struct PointTraits<SDL_Point>
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef int Ord_t;
 	typedef SDL_Point Point_t;
 	typedef SDL_Rect Rect_t;
@@ -58,18 +61,15 @@ struct Traits<SDL_Point>
 		}
 	};
 
-inline bool operator==(const SDL_Point& iL, const SDL_Point& iR)
-	{ return iL.x == iR.x && iL.y == iR.y; }
-
-inline bool operator!=(const SDL_Point& iL, const SDL_Point& iR)
-	{ return not (iL == iR); }
-
 // =================================================================================================
 // MARK: - SDL_Rect
 
 template <>
-struct Traits<SDL_Rect>
+struct RectTraits<SDL_Rect>
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef int Ord_t;
 	typedef SDL_Point Point_t;
 	typedef SDL_Rect Rect_t;
@@ -116,11 +116,11 @@ struct Traits<SDL_Rect>
 	typedef const Point_t WH_t;
 	static WH_t sWH(Rect_t& ioRect) { return sPoint<Point_t>(W(ioRect), H(ioRect)); }
 
-	typedef const Point_t TLC_t;
-	static TLC_t sTL(const Rect_t& iRect) { return sPoint<Point_t>(T(iRect), L(iRect)); }
+	typedef const Point_t LTC_t;
+	static LTC_t sLT(const Rect_t& iRect) { return sPoint<Point_t>(L(iRect), T(iRect)); }
 
-	typedef const Point_t TL_t;
-	static TL_t sTL(Rect_t& ioRect) { return sPoint<Point_t>(T(ioRect), L(ioRect)); }
+	typedef const Point_t LT_t;
+	static LT_t sLT(Rect_t& ioRect) { return sPoint<Point_t>(L(ioRect), T(ioRect)); }
 
 	typedef const Point_t RBC_t;
 	static RBC_t sRB(const Rect_t& iRect) { return sPoint<Point_t>(R(iRect), B(iRect)); }
@@ -146,15 +146,6 @@ struct Traits<SDL_Rect>
 		return result;
 		}
 	};
-
-inline bool operator==(const SDL_Rect& iL, const SDL_Rect& iR)
-	{
-	return iL.x == iR.x && iL.y == iR.y
-		&& iL.w == iR.w && iL.h == iR.h;
-	}
-
-inline bool operator!=(const SDL_Rect& iL, const SDL_Rect& iR)
-	{ return not (iL == iR); }
 
 } // namespace ZCartesian
 } // namespace ZooLib

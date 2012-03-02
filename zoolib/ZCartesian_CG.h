@@ -40,8 +40,11 @@ namespace ZCartesian {
 // MARK: - CGPoint
 
 template <>
-struct Traits<CGPoint>
+struct PointTraits<CGPoint>
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef CGFloat Ord_t;
 	typedef CGPoint Point_t;
 	typedef CGRect Rect_t;
@@ -62,66 +65,15 @@ struct Traits<CGPoint>
 		{ return CGPointMake(iX, iY); }
 	};
 
-inline bool operator==(const CGPoint& iL, const CGPoint& iR)
-	{ return iL.x == iR.x && iL.y == iR.y; }
-
-inline bool operator!=(const CGPoint& iL, const CGPoint& iR)
-	{ return not (iL == iR); }
-
-template <class Other>
-CGPoint operator+(const CGPoint& iL, const Other& iR)
-	{ return CGPointMake(X(iL) + X(iR), Y(iL) + Y(iR)); }
-
-template <class Other>
-CGPoint& operator+=(CGPoint& ioL, const Other& iR)
-	{
-	X(ioL) += X(iR);
-	Y(ioL) += Y(iR);
-	return ioL;
-	}
-
-template <class Other>
-CGPoint operator-(const CGPoint& iL, const Other& iR)
-	{ return CGPointMake(X(iL) - X(iR), Y(iL) - Y(iR)); }
-
-template <class Other>
-CGPoint& operator-=(CGPoint& ioL, const Other& iR)
-	{
-	X(ioL) -= X(iR);
-	Y(ioL) -= Y(iR);
-	return ioL;
-	}
-
-template <class Other>
-CGPoint operator*(const CGPoint& iL, const Other& iR)
-	{ return CGPointMake(X(iL) * X(iR), Y(iL) * Y(iR)); }
-
-template <class Other>
-CGPoint& operator*=(CGPoint& ioL, const Other& iR)
-	{
-	X(ioL) *= X(iR);
-	Y(ioL) *= X(iR);
-	return ioL;
-	}
-
-template <class Other>
-CGPoint operator/(const CGPoint& iL, const Other& iR)
-	{ return CGPointMake(X(iL) / X(iR), Y(iL) / Y(iR)); }
-
-template <class Other>
-CGPoint& operator/=(CGPoint& ioL, const Other& iR)
-	{
-	X(ioL) /= X(iR);
-	Y(ioL) /= Y(iR);
-	return ioL;
-	}
-
 // =================================================================================================
 // MARK: - CGSize
 
 template <>
-struct Traits<CGSize>
+struct PointTraits<CGSize>
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef CGFloat Ord_t;
 	typedef CGSize Point_t;
 	typedef CGRect Rect_t;
@@ -142,66 +94,15 @@ struct Traits<CGSize>
 		{ return CGSizeMake(iX, iY); }
 	};
 
-inline bool operator==(const CGSize& iL, const CGSize& iR)
-	{ return iL.width == iR.width && iL.height == iR.height; }
-
-inline bool operator!=(const CGSize& iL, const CGSize& iR)
-	{ return not (iL == iR); }
-
-template <class Other>
-CGSize operator+(const CGSize& iL, const Other& iR)
-	{ return CGSizeMake(X(iL) + X(iR), Y(iL) + Y(iR)); }
-
-template <class Other>
-CGSize& operator+=(CGSize& ioL, const Other& iR)
-	{
-	X(ioL) += X(iR);
-	Y(ioL) += Y(iR);
-	return ioL;
-	}
-
-template <class Other>
-CGSize operator-(const CGSize& iL, const Other& iR)
-	{ return CGSizeMake(X(iL) - X(iR), Y(iL) - Y(iR)); }
-
-template <class Other>
-CGSize& operator-=(CGSize& ioL, const Other& iR)
-	{
-	X(ioL) -= X(iR);
-	Y(ioL) -= Y(iR);
-	return ioL;
-	}
-
-template <class Other>
-CGSize operator*(const CGSize& iL, const Other& iR)
-	{ return CGSizeMake(X(iL) * X(iR), Y(iL) * Y(iR)); }
-
-template <class Other>
-CGSize& operator*=(CGSize& ioL, const Other& iR)
-	{
-	X(ioL) *= X(iR);
-	Y(ioL) *= X(iR);
-	return ioL;
-	}
-
-template <class Other>
-CGSize operator/(const CGSize& iL, const Other& iR)
-	{ return CGSizeMake(X(iL) / X(iR), Y(iL) / Y(iR)); }
-
-template <class Other>
-CGSize& operator/=(CGSize& ioL, const Other& iR)
-	{
-	X(ioL) /= X(iR);
-	Y(ioL) /= Y(iR);
-	return ioL;
-	}
-
 // =================================================================================================
 // MARK: - CGRect
 
 template <>
-struct Traits<CGRect>
+struct RectTraits<CGRect>
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef CGFloat Ord_t;
 	typedef CGPoint Point_t;
 	typedef CGRect Rect_t;
@@ -275,44 +176,6 @@ struct Traits<CGRect>
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{ return CGRectMake(iL, iT, iR - iL, iB - iT); }
 	};
-
-inline bool operator==(const CGRect& iL, const CGRect& iR)
-	{ return iL.origin == iR.origin && iL.size == iR.size; }
-
-inline bool operator!=(const CGRect& iL, const CGRect& iR)
-	{ return not (iL == iR); }
-
-template <class Other>
-CGRect operator+(const CGRect& iL, const Other& iR)
-	{ return sOffseted(X(iR), Y(iR), iL); }
-
-template <class Other>
-CGRect& operator+=(CGRect& ioL, const Other& iR)
-	{ return ioL = ioL + iR; }
-
-template <class Other>
-CGRect operator-(const CGRect& iL, const Other& iR)
-	{ return sOffseted(-X(iR), -Y(iR), iL); }
-
-template <class Other>
-CGRect& operator-=(CGRect& ioL, const Other& iR)
-	{ return ioL = ioL - iR; }
-
-template <class Other>
-CGRect operator*(const CGRect& iL, const Other& iR)
-	{ return CGRectMake(L(iL) * X(iR), T(iL) * Y(iR), R(iL) * X(iR), B(iL) * Y(iR)); }
-
-template <class Other>
-CGRect& operator*=(CGRect& ioL, const Other& iR)
-	{ return ioL = ioL * iR; }
-
-template <class Other>
-CGRect operator/(const CGRect& iL, const Other& iR)
-	{ return CGRectMake(L(iL) / X(iR), T(iL) / Y(iR), R(iL) / X(iR), B(iL) / Y(iR)); }
-
-template <class Other>
-CGRect& operator/=(CGRect& ioL, const Other& iR)
-	{ return ioL = ioL / iR; }
 
 } // namespace ZCartesian
 } // namespace ZooLib

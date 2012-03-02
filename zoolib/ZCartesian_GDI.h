@@ -38,6 +38,9 @@ namespace ZCartesian {
 template <>
 struct Traits<POINT>
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef LONG Ord_t;
 	typedef POINT Point_t;
 	typedef RECT Rect_t;
@@ -61,18 +64,15 @@ struct Traits<POINT>
 		}
 	};
 
-inline bool operator==(const POINT& iL, const POINT& iR)
-	{ return iL.x == iR.x && iL.y == iR.y; }
-
-inline bool operator!=(const POINT& iL, const POINT& iR)
-	{ return not (iL == iR); }
-
 // =================================================================================================
 // MARK: - RECT
 
 template <>
 struct Traits<RECT>
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef LONG Ord_t;
 	typedef POINT Point_t;
 	typedef RECT Rect_t;
@@ -149,15 +149,6 @@ struct Traits<RECT>
 		return result;
 		}
 	};
-
-inline bool operator==(const RECT& iL, const RECT& iR)
-	{
-	return iL.left == iR.left && iL.top == iR.top
-		&& iL.right == iR.right && iL.bottom == iR.bottom;
-	}
-
-inline bool operator!=(const RECT& iL, const RECT& iR)
-	{ return not (iL == iR); }
 
 } // namespace ZCartesian
 } // namespace ZooLib

@@ -33,13 +33,18 @@ Abbreviations
 -------------
 X = X coordinate (horizontal)
 Y = Y coordinate (vertical)
+Z = Z coordinate (not used here)
 
 L = Left
 T = Top
 R = Right
 B = Bottom
-W = Width
-H = Height
+N = Near (not used here)
+F = Far (not used here)
+
+W = Width (distance on X axis)
+H = Height (distance on Y axis)
+D = Depth  (distance on Z axis, not used here)
 
 LT = Left Top
 RB = Right Bottom
@@ -54,17 +59,28 @@ CY = aka CTB, Center Y
 
 Operations
 ----------
-Contains, operator&, operator|
+Contains
 Aligned, Centered, Flipped, Insetted, Offsetted, With
 */
 
 // =================================================================================================
-// MARK: - Definitions of these must be provided for each cartesian API.
+// MARK: - PointTraits and accessors
 
-template <class Type_p> struct Traits;
+template <class Type_p> struct PointTraits;
+
+template <class Type_p>
+typename PointTraits<Type_p>::XC_t X(const Type_p& iT) { return PointTraits<Type_p>::sX(iT); }
+template <class Type_p>
+typename PointTraits<Type_p>::X_t X(Type_p& iT) { return PointTraits<Type_p>::sX(iT); }
+
+
+template <class Type_p>
+typename PointTraits<Type_p>::YC_t Y(const Type_p& iT) { return PointTraits<Type_p>::sY(iT); }
+template <class Type_p>
+typename PointTraits<Type_p>::Y_t Y(Type_p& iT) { return PointTraits<Type_p>::sY(iT); }
 
 #define ZMACRO_Cartesian(T) \
-	template <> struct Traits<T> \
+	template <> struct PointTraits<T> \
 		{ \
 		typedef T Ord_t; \
 		typedef const Ord_t& XC_t; \
@@ -90,137 +106,357 @@ ZMACRO_Cartesian(long double)
 #undef ZMACRO_Cartesian
 
 // =================================================================================================
-// MARK: - Basic Accessors
-
-template <class Type_p>
-typename Traits<Type_p>::XC_t X(const Type_p& iT) { return Traits<Type_p>::sX(iT); }
-template <class Type_p>
-typename Traits<Type_p>::X_t X(Type_p& iT) { return Traits<Type_p>::sX(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::YC_t Y(const Type_p& iT) { return Traits<Type_p>::sY(iT); }
-template <class Type_p>
-typename Traits<Type_p>::Y_t Y(Type_p& iT) { return Traits<Type_p>::sY(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::LC_t L(const Type_p& iT) { return Traits<Type_p>::sL(iT); }
-template <class Type_p>
-typename Traits<Type_p>::L_t L(Type_p& iT) { return Traits<Type_p>::sL(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::TC_t T(const Type_p& iT) { return Traits<Type_p>::sT(iT); }
-template <class Type_p>
-typename Traits<Type_p>::T_t T(Type_p& iT) { return Traits<Type_p>::sT(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::RC_t R(const Type_p& iT) { return Traits<Type_p>::sR(iT); }
-template <class Type_p>
-typename Traits<Type_p>::R_t R(Type_p& iT) { return Traits<Type_p>::sR(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::BC_t B(const Type_p& iT) { return Traits<Type_p>::sB(iT); }
-template <class Type_p>
-typename Traits<Type_p>::B_t B(Type_p& iT) { return Traits<Type_p>::sB(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::WC_t W(const Type_p& iT) { return Traits<Type_p>::sW(iT); }
-template <class Type_p>
-typename Traits<Type_p>::W_t W(Type_p& iT) { return Traits<Type_p>::sW(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::HC_t H(const Type_p& iT) { return Traits<Type_p>::sH(iT); }
-template <class Type_p>
-typename Traits<Type_p>::H_t H(Type_p& iT) { return Traits<Type_p>::sH(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::WHC_t WH(const Type_p& iT) { return Traits<Type_p>::sWH(iT); }
-template <class Type_p>
-typename Traits<Type_p>::WH_t WH(Type_p& iT) { return Traits<Type_p>::sWH(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::LTC_t LT(const Type_p& iT) { return Traits<Type_p>::sLT(iT); }
-template <class Type_p>
-typename Traits<Type_p>::LT_t LT(Type_p& iT) { return Traits<Type_p>::sLT(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::RBC_t RB(const Type_p& iT) { return Traits<Type_p>::sRB(iT); }
-template <class Type_p>
-typename Traits<Type_p>::RB_t RB(Type_p& iT) { return Traits<Type_p>::sRB(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::LBC_t LB(const Type_p& iT) { return Traits<Type_p>::sLB(iT); }
-template <class Type_p>
-typename Traits<Type_p>::LB_t LB(Type_p& iT) { return Traits<Type_p>::sLB(iT); }
-
-
-template <class Type_p>
-typename Traits<Type_p>::RTC_t RT(const Type_p& iT) { return Traits<Type_p>::sRT(iT); }
-template <class Type_p>
-typename Traits<Type_p>::RT_t RT(Type_p& iT) { return Traits<Type_p>::sRT(iT); }
-
-// =================================================================================================
-// MARK: - Fundamental Pseudo-ctors.
+// MARK: - Fundamental Point Pseudo-ctor
 
 template <class Point_p>
-Point_p sPoint() { return Traits<Point_p>::sMake(0, 0); }
-
-template <class Rect_p>
-Rect_p sRect
-	(const typename Traits<Rect_p>::Ord_t& iL,
-	const typename Traits<Rect_p>::Ord_t& iT,
-	const typename Traits<Rect_p>::Ord_t& iR,
-	const typename Traits<Rect_p>::Ord_t& iB)
-	{ return Traits<Rect_p>::sMake(iL, iT, iR, iB); }
-
-// =================================================================================================
-// MARK: - Derived accessors
-
-template <class Rect_p>
-typename Traits<Rect_p>::Ord_t CX(const Rect_p& iRect)
-	{ return (L(iRect) + R(iRect)) / 2; }
-
-template <class Rect_p>
-typename Traits<Rect_p>::Ord_t CY(const Rect_p& iRect)
-	{ return (T(iRect) + B(iRect)) / 2; }
-
-template <class Rect_p>
-typename Traits<Rect_p>::Point_t C(const Rect_p& iRect)
-	{ return sPoint<typename Traits<Rect_p>::Point_t>(CX(iRect), CY(iRect)); }
+typename PointTraits<Point_p>::Point_t
+sPoint
+	(const typename PointTraits<Point_p>::Ord_t& iX,
+	const typename PointTraits<Point_p>::Ord_t& iY)
+	{ return PointTraits<Point_p>::sMake(iX, iY); }
 
 // =================================================================================================
 // MARK: - Other Pseudo-ctors.
 
 template <class Point_p>
-Point_p sPoint
-	(const typename Traits<Point_p>::Ord_t& iX,
-	const typename Traits<Point_p>::Ord_t& iY)
-	{ return Traits<Point_p>::sMake(iX, iY); }
+typename PointTraits<Point_p>::Point_t
+sPoint()
+	{ return PointTraits<Point_p>::sMake(0, 0); }
 
 template <class Point_p, class Other>
-Point_p sPoint(const Other& iOther) { return sPoint(X(iOther), Y(iOther)); }
+typename PointTraits<Point_p>::Point_t
+sPoint
+	(const Other& iOther,
+	const typename PointTraits<Other>::Dummy_t& dummy = null)
+	{ return sPoint<Point_p>(X(iOther), Y(iOther)); }
+
+// =================================================================================================
+// MARK: - Point Comparison Operators
+
+template <class Point_p>
+typename PointTraits<Point_p>::Bool_t
+operator==(const Point_p& iL, const Point_p& iR)
+	{ return X(iL) == X(iR) && Y(iL) == Y(iR); }
+
+template <class Point_p>
+typename PointTraits<Point_p>::Bool_t
+operator!=(const Point_p& iL, const Point_p& iR)
+	{ return not (iL == iR); }
+
+template <class Point_p>
+typename PointTraits<Point_p>::Bool_t
+operator<(const Point_p& iL, const Point_p& iR)
+	{ return X(iL) < X(iR) || X(iL) == X(iR) && Y(iL) < Y(iR); }
+
+template <class Point_p>
+typename PointTraits<Point_p>::Bool_t
+operator>(const Point_p& iL, const Point_p& iR)
+	{ return iR < iL; }
+
+template <class Point_p>
+typename PointTraits<Point_p>::Bool_t
+operator<=(const Point_p& iL, const Point_p& iR)
+	{ return not (iR < iL); }
+
+template <class Point_p>
+typename PointTraits<Point_p>::Bool_t
+operator>=(const Point_p& iL, const Point_p& iR)
+	{ return not (iL < iR); }
+
+// =================================================================================================
+// MARK: - Point Manipulation Operators
+
+template <class Point_p, class Other>
+typename PointTraits<Point_p>::Point_t
+operator+(const Point_p& iL, const Other& iR)
+	{ return sPoint<Point_p>(X(iL) + X(iR), Y(iL) + Y(iR)); }
+
+template <class Point_p, class Other>
+typename PointTraits<Point_p>::Point_t&
+operator+=(Point_p& ioL, const Other& iR)
+	{
+	X(ioL) += X(iR);
+	Y(ioL) += Y(iR);
+	return ioL;
+	}
+
+template <class Point_p, class Other>
+typename PointTraits<Point_p>::Point_t
+operator-(const Point_p& iL, const Other& iR)
+	{ return sPoint<Point_p>(X(iL) - X(iR), Y(iL) - Y(iR)); }
+
+template <class Point_p, class Other>
+typename PointTraits<Point_p>::Point_t&
+operator-=(Point_p& ioL, const Other& iR)
+	{
+	X(ioL) -= X(iR);
+	Y(ioL) -= Y(iR);
+	return ioL;
+	}
+
+template <class Point_p, class Other>
+typename PointTraits<Point_p>::Point_t
+operator*(const Point_p& iL, const Other& iR)
+	{ return sPoint<Point_p>(X(iL) * X(iR), Y(iL) * Y(iR)); }
+
+template <class Point_p, class Other>
+typename PointTraits<Point_p>::Point_t&
+operator*=(Point_p& ioL, const Other& iR)
+	{
+	X(ioL) *= X(iR);
+	Y(ioL) *= Y(iR);
+	return ioL;
+	}
+
+template <class Point_p, class Other>
+typename PointTraits<Point_p>::Point_t
+operator/(const Point_p& iL, const Other& iR)
+	{ return sPoint<Point_p>(X(iL) / X(iR), Y(iL) / Y(iR)); }
+
+template <class Point_p, class Other>
+typename PointTraits<Point_p>::Point_t&
+operator/=(Point_p& ioL, const Other& iR)
+	{
+	X(ioL) /= X(iR);
+	Y(ioL) /= Y(iR);
+	return ioL;
+	}
+
+// =================================================================================================
+// MARK: - RectTraits and accessors
+
+template <class Type_p> struct RectTraits;
+
+template <class Type_p>
+typename RectTraits<Type_p>::LC_t L(const Type_p& iT) { return RectTraits<Type_p>::sL(iT); }
+template <class Type_p>
+typename RectTraits<Type_p>::L_t L(Type_p& iT) { return RectTraits<Type_p>::sL(iT); }
+
+
+template <class Type_p>
+typename RectTraits<Type_p>::TC_t T(const Type_p& iT) { return RectTraits<Type_p>::sT(iT); }
+template <class Type_p>
+typename RectTraits<Type_p>::T_t T(Type_p& iT) { return RectTraits<Type_p>::sT(iT); }
+
+
+template <class Type_p>
+typename RectTraits<Type_p>::RC_t R(const Type_p& iT) { return RectTraits<Type_p>::sR(iT); }
+template <class Type_p>
+typename RectTraits<Type_p>::R_t R(Type_p& iT) { return RectTraits<Type_p>::sR(iT); }
+
+
+template <class Type_p>
+typename RectTraits<Type_p>::BC_t B(const Type_p& iT) { return RectTraits<Type_p>::sB(iT); }
+template <class Type_p>
+typename RectTraits<Type_p>::B_t B(Type_p& iT) { return RectTraits<Type_p>::sB(iT); }
+
+
+template <class Type_p>
+typename RectTraits<Type_p>::WC_t W(const Type_p& iT) { return RectTraits<Type_p>::sW(iT); }
+template <class Type_p>
+typename RectTraits<Type_p>::W_t W(Type_p& iT) { return RectTraits<Type_p>::sW(iT); }
+
+
+template <class Type_p>
+typename RectTraits<Type_p>::HC_t H(const Type_p& iT) { return RectTraits<Type_p>::sH(iT); }
+template <class Type_p>
+typename RectTraits<Type_p>::H_t H(Type_p& iT) { return RectTraits<Type_p>::sH(iT); }
+
+
+template <class Type_p>
+typename RectTraits<Type_p>::WHC_t WH(const Type_p& iT) { return RectTraits<Type_p>::sWH(iT); }
+template <class Type_p>
+typename RectTraits<Type_p>::WH_t WH(Type_p& iT) { return RectTraits<Type_p>::sWH(iT); }
+
+
+template <class Type_p>
+typename RectTraits<Type_p>::LTC_t LT(const Type_p& iT) { return RectTraits<Type_p>::sLT(iT); }
+template <class Type_p>
+typename RectTraits<Type_p>::LT_t LT(Type_p& iT) { return RectTraits<Type_p>::sLT(iT); }
+
+
+template <class Type_p>
+typename RectTraits<Type_p>::RBC_t RB(const Type_p& iT) { return RectTraits<Type_p>::sRB(iT); }
+template <class Type_p>
+typename RectTraits<Type_p>::RB_t RB(Type_p& iT) { return RectTraits<Type_p>::sRB(iT); }
+
+
+template <class Type_p>
+typename RectTraits<Type_p>::LBC_t LB(const Type_p& iT) { return RectTraits<Type_p>::sLB(iT); }
+template <class Type_p>
+typename RectTraits<Type_p>::LB_t LB(Type_p& iT) { return RectTraits<Type_p>::sLB(iT); }
+
+
+template <class Type_p>
+typename RectTraits<Type_p>::RTC_t RT(const Type_p& iT) { return RectTraits<Type_p>::sRT(iT); }
+template <class Type_p>
+typename RectTraits<Type_p>::RT_t RT(Type_p& iT) { return RectTraits<Type_p>::sRT(iT); }
+
+// =================================================================================================
+// MARK: - Fundamental Rect Pseudo-ctor.
 
 template <class Rect_p>
-Rect_p sRect()
+typename RectTraits<Rect_p>::Rect_t
+sRect
+	(const typename RectTraits<Rect_p>::Ord_t& iL,
+	const typename RectTraits<Rect_p>::Ord_t& iT,
+	const typename RectTraits<Rect_p>::Ord_t& iR,
+	const typename RectTraits<Rect_p>::Ord_t& iB)
+	{ return RectTraits<Rect_p>::sMake(iL, iT, iR, iB); }
+
+// =================================================================================================
+// MARK: - Derived accessors
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Ord_t
+CX(const Rect_p& iRect)
+	{ return (L(iRect) + R(iRect)) / 2; }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Ord_t
+CY(const Rect_p& iRect)
+	{ return (T(iRect) + B(iRect)) / 2; }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Point_t
+C(const Rect_p& iRect)
+	{ return sPoint<typename RectTraits<Rect_p>::Point_t>(CX(iRect), CY(iRect)); }
+
+// =================================================================================================
+// MARK: - Other Pseudo-ctors.
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Rect_t
+sRect()
 	{ return sRect<Rect_p>(0, 0, 0, 0); }
 
-template <class Rect_p, class Other>
-Rect_p sRect(const Other& iOtherW, const Other& iOtherH)
-	{ return sRect<Rect_p>(0, 0, iOtherW, iOtherH); }
+template <class Point_p>
+typename PointTraits<Point_p>::Rect_t
+sRect(const Point_p& iPoint)
+	{ return sRect<typename PointTraits<Point_p>::Rect_t>(0, 0, X(iPoint), Y(iPoint)); }
 
 template <class Rect_p, class Other>
-Rect_p sRect(const Other& iOther)
+typename RectTraits<Rect_p>::Rect_t
+sRect
+	(const Other& iOther,
+	const typename RectTraits<Other>::Dummy_t& dummy = null)
 	{ return sRect<Rect_p>(L(iOther), T(iOther), R(iOther), B(iOther)); }
+
+template <class Point_p>
+typename PointTraits<Point_p>::Rect_t
+sRect
+	(const Point_p& iLT,
+	const Point_p& iRB)
+	{ return sRect<typename PointTraits<Point_p>::Rect_t>(X(iLT), Y(iLT), X(iRB), Y(iRB)); }
+
+
+template <class Rect_p, class OtherW, class OtherH>
+typename RectTraits<Rect_p>::Rect_t
+sRect
+	(const OtherW& iW,
+	const OtherH& iH)
+	{ return sRect<Rect_p>(0, 0, iW, iH); }
+
+// =================================================================================================
+// MARK: - Rect Comparison Operators
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Bool_t
+operator==(const Rect_p& iL, const Rect_p& iR)
+	{ return LT(iL) == LT(iR) && RB(iL) == RB(iR); }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Bool_t
+operator!=(const Rect_p& iL, const Rect_p& iR)
+	{ return not (iL == iR); }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Bool_t
+operator<(const Rect_p& iL, const Rect_p& iR)
+	{ return LT(iL) < LT(iR) || LT(iL) == LT(iR) && RB(iL) < RB(iR); }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Bool_t
+operator>(const Rect_p& iL, const Rect_p& iR)
+	{ return iR < iL; }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Bool_t
+operator<=(const Rect_p& iL, const Rect_p& iR)
+	{ return not (iR < iL); }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Bool_t
+operator>=(const Rect_p& iL, const Rect_p& iR)
+	{ return not (iL < iR); }
+
+// =================================================================================================
+// MARK: - Rect Manipulation Operators
+
+template <class Rect_p, class Other>
+typename RectTraits<Rect_p>::Rect_t
+operator+(const Rect_p& iL, const Other& iR)
+	{
+	return sRect<Rect_p>
+		(L(iL) + X(iR),
+		T(iL) + Y(iR),
+		R(iL) + X(iR),
+		B(iL) + Y(iR));
+	}
+
+template <class Rect_p, class Other>
+typename RectTraits<Rect_p>::Rect_t&
+operator+=(Rect_p& ioL, const Other& iR)
+	{ return ioL = ioL + iR; }
+
+template <class Rect_p, class Other>
+typename RectTraits<Rect_p>::Rect_t
+operator-(const Rect_p& iL, const Other& iR)
+	{
+	return sRect<Rect_p>
+		(L(iL) - X(iR),
+		T(iL) - Y(iR),
+		R(iL) - X(iR),
+		B(iL) - Y(iR));
+	}
+
+template <class Rect_p, class Other>
+typename RectTraits<Rect_p>::Rect_t&
+operator-=(Rect_p& ioL, const Other& iR)
+	{ return ioL = ioL - iR; }
+
+template <class Rect_p, class Other>
+typename RectTraits<Rect_p>::Rect_t
+operator*(const Rect_p& iL, const Other& iR)
+	{
+	return sRect<Rect_p>
+		(L(iL) * X(iR),
+		T(iL) * Y(iR),
+		R(iL) * X(iR),
+		B(iL) * Y(iR));
+	}
+
+template <class Rect_p, class Other>
+typename RectTraits<Rect_p>::Rect_t&
+operator*=(Rect_p& ioL, const Other& iR)
+	{ return ioL = ioL * iR; }
+
+
+template <class Rect_p, class Other>
+typename RectTraits<Rect_p>::Rect_t
+operator/(const Rect_p& iL, const Other& iR)
+	{
+	return sRect<Rect_p>
+		(L(iL) / X(iR),
+		T(iL) / Y(iR),
+		R(iL) / X(iR),
+		B(iL) / Y(iR));
+	}
+
+template <class Rect_p, class Other>
+typename RectTraits<Rect_p>::Rect_t&
+operator/=(Rect_p& ioL, const Other& iR)
+	{ return ioL = ioL / iR; }
 
 // =================================================================================================
 // MARK: - sContains
@@ -245,48 +481,6 @@ bool sContains(const Rect_p& iRect, const Other& iOther)
 	{
 	return X(iOther) >= L(iRect) && X(iOther) < R(iRect)
 		&& Y(iOther) >= T(iRect) && Y(iOther) < B(iRect);
-	}
-
-// =================================================================================================
-// MARK: - operator&
-
-template <class Rect_p, class Other>
-Rect_p operator&(const Rect_p& iL, const Rect_p& iR)
-	{
-	return sRect<Rect_p>
-		(std::max(L(iL),L(iR)), std::max(T(iL),T(iR)),
-		std::min(R(iL),R(iR)), std::min(B(iL),B(iR)));
-	}
-
-template <class Rect_p, class Other>
-Rect_p& operator&=(Rect_p& ioL, const Rect_p& iR)
-	{
-	L(ioL) = std::max(L(ioL), L(iR));
-	T(ioL) = std::max(T(ioL), T(iR));
-	R(ioL) = std::min(R(ioL), R(iR));
-	B(ioL) = std::min(B(ioL), B(iR));
-	return ioL;
-	}
-
-// =================================================================================================
-// MARK: - operator&
-
-template <class Rect_p, class Other>
-Rect_p operator|(const Rect_p& iL, const Rect_p& iR)
-	{
-	return sRect<Rect_p>
-		(std::min(L(iL),L(iR)), std::min(T(iL),T(iR)),
-		std::max(R(iL),R(iR)), std::max(B(iL),B(iR)));
-	}
-
-template <class Rect_p, class Other>
-Rect_p& operator|=(Rect_p& ioL, const Rect_p& iR)
-	{
-	L(ioL) = std::min(L(ioL), L(iR));
-	T(ioL) = std::min(T(ioL), T(iR));
-	R(ioL) = std::max(R(ioL), R(iR));
-	B(ioL) = std::max(B(ioL), B(iR));
-	return ioL;
 	}
 
 // =================================================================================================
@@ -401,6 +595,15 @@ Rect_p sInsetted(const Other& iOther, const Rect_p& iRect)
 // =================================================================================================
 // MARK: - sOffsetted
 
+template <class Rect_p, class OtherX, class OtherY>
+typename RectTraits<Rect_p>::Rect_t
+sOffsetted(const OtherX& iOtherX, const OtherY& iOtherY, const Rect_p& iRect)
+	{
+	return sRect<Rect_p>
+		(L(iRect) + X(iOtherX), T(iRect) + Y(iOtherY),
+		R(iRect) + X(iOtherX), B(iRect) + Y(iOtherY));
+	}
+
 template <class Rect_p, class OtherX>
 Rect_p sOffsettedX(const OtherX& iOther, const Rect_p& iRect)
 	{ return sRect<Rect_p>(L(iRect) + X(iOther), T(iRect), R(iRect) + X(iOther), B(iRect)); }
@@ -408,13 +611,6 @@ Rect_p sOffsettedX(const OtherX& iOther, const Rect_p& iRect)
 template <class Rect_p, class OtherY>
 Rect_p sOffsettedY(const OtherY& iOther, const Rect_p& iRect)
 	{ return sRect<Rect_p>(L(iRect), T(iRect) + Y(iOther), R(iRect), B(iRect) + Y(iOther)); }
-
-template <class Rect_p, class OtherX, class OtherY>
-Rect_p sOffsetted(const OtherX& iOtherX, const OtherY& iOtherY, const Rect_p& iRect)
-	{
-	return sRect<Rect_p>
-		(L(iRect) + X(iOtherX), T(iRect) + Y(iOtherY),
-		R(iRect) + X(iOtherX), B(iRect) + Y(iOtherY)); }
 
 template <class Rect_p, class Other>
 Rect_p sOffsetted(const Other& iOther, const Rect_p& iRect)

@@ -33,8 +33,11 @@ namespace ZCartesian {
 
 template <>
 template <class Ord>
-struct Traits<ZMatrix<Ord,1,2> >
+struct PointTraits<ZMatrix<Ord,1,2> >
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef Ord Ord_t;
 	typedef ZMatrix<Ord,1,2> Point_t;
 	typedef ZMatrixArray<Ord,1,2,2> Rect_t;
@@ -65,8 +68,11 @@ struct Traits<ZMatrix<Ord,1,2> >
 
 template <>
 template <class Ord>
-struct Traits<ZMatrix<Ord,1,3> >
+struct PointTraits<ZMatrix<Ord,1,3> >
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef Ord Ord_t;
 	typedef ZMatrix<Ord,1,3> Point_t;
 	typedef ZMatrixArray<Ord,1,2,2> Rect_t;
@@ -89,8 +95,11 @@ struct Traits<ZMatrix<Ord,1,3> >
 
 template <>
 template <class Ord>
-struct Traits<ZMatrixArray<Ord,1,2,2> >
+struct RectTraits<ZMatrixArray<Ord,1,2,2> >
 	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
 	typedef Ord Ord_t;
 	typedef ZMatrix<Ord,1,2> Point_t;
 	typedef ZMatrixArray<Ord,1,2,2> Rect_t;
