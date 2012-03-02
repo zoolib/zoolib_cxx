@@ -190,6 +190,17 @@ ZCog<const Param&> sCallCog
 	}
 
 template <class Cog>
+void sCallCogAndUpdate(Cog& ioCog, const typename Cog::Param iParam)
+	{
+	if (sIsPending(ioCog))
+		ioCog = ioCog->Call(ioCog, iParam);
+	}
+
+template <class Cog>
+bool sCallPendingCog_StillPending(Cog& ioCog, const typename Cog::Param iParam)
+	{ return sIsPending(ioCog = ioCog->Call(ioCog, iParam)); }
+
+template <class Cog>
 bool sCallPendingCog_Changed(Cog& ioCog, const typename Cog::Param iParam)
 	{ return sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
 
