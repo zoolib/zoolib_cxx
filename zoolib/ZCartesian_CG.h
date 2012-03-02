@@ -175,6 +175,7 @@ struct RectTraits<CGRect>
 
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{ return CGRectMake(iL, iT, iR - iL, iB - iT); }
+
 	};
 
 } // namespace ZCartesian
