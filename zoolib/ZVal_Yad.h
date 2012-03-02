@@ -176,6 +176,11 @@ public:
 
 // Our protocol
 	ZVal_Yad& Mutable(const string8& iName);
+
+	template <class S>
+	S& Mutable(const string8& iName)
+		{ return this->Mutable(iName).Mutable<S>(); }
+
 	ZVal_Yad& operator[](const string8& iName);
 	const ZVal_Yad& operator[](const string8& iName) const;
 

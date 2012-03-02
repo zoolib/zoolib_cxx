@@ -193,6 +193,14 @@ public:
 		return fRep->GetMutable().Mutable(iName);
 		}
 
+	template <class S>
+	S& Mutable(const std::string& iName)
+		{
+		if (not fRep)
+			fRep = sCountedVal<Map>();
+		return fRep->GetMutable().Mutable<S>(iName);
+		}
+
 	Val& operator[](const std::string& iName)
 		{ return this->Mutable(iName); }
 	};
