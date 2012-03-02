@@ -484,6 +484,52 @@ bool sContains(const Rect_p& iRect, const Other& iOther)
 	}
 
 // =================================================================================================
+// MARK: - sOffsetted
+
+template <class Rect_p, class OtherX, class OtherY>
+typename RectTraits<Rect_p>::Rect_t
+sOffsetted(const OtherX& iOtherX, const OtherY& iOtherY, const Rect_p& iRect)
+	{
+	return sRect<Rect_p>
+		(L(iRect) + X(iOtherX), T(iRect) + Y(iOtherY),
+		R(iRect) + X(iOtherX), B(iRect) + Y(iOtherY));
+	}
+
+template <class Rect_p, class OtherX>
+Rect_p sOffsettedX(const OtherX& iOther, const Rect_p& iRect)
+	{ return sRect<Rect_p>(L(iRect) + X(iOther), T(iRect), R(iRect) + X(iOther), B(iRect)); }
+
+template <class Rect_p, class OtherY>
+Rect_p sOffsettedY(const OtherY& iOther, const Rect_p& iRect)
+	{ return sRect<Rect_p>(L(iRect), T(iRect) + Y(iOther), R(iRect), B(iRect) + Y(iOther)); }
+
+template <class Rect_p, class Other>
+Rect_p sOffsetted(const Other& iOther, const Rect_p& iRect)
+	{
+	return sRect<Rect_p>
+		(L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect) + X(iOther), B(iRect) + Y(iOther));
+	}
+
+// =================================================================================================
+// MARK: - sOffsetted
+
+template <class Rect_p, class OtherX>
+Rect_p sOffsettedL(const OtherX& iOther, const Rect_p& iRect)
+	{ return sRect<Rect_p>(L(iRect) + X(iOther), T(iRect), R(iRect), B(iRect)); }
+
+template <class Rect_p, class OtherY>
+Rect_p sOffsettedT(const OtherY& iOther, const Rect_p& iRect)
+	{ return sRect<Rect_p>(L(iRect), T(iRect) + Y(iOther), R(iRect), B(iRect)); }
+
+template <class Rect_p, class OtherX>
+Rect_p sOffsettedR(const OtherX& iOther, const Rect_p& iRect)
+	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect) + X(iOther), B(iRect)); }
+
+template <class Rect_p, class OtherY>
+Rect_p sOffsettedB(const OtherY& iOther, const Rect_p& iRect)
+	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect), B(iRect) + Y(iOther)); }
+
+// =================================================================================================
 // MARK: - sAligned
 
 template <class Rect_p, class OtherX>
@@ -507,38 +553,38 @@ Rect_p sAlignedB(const OtherY& iOther, const Rect_p& iRect)
 
 template <class Rect_p, class Other_p>
 Rect_p sAlignedLT(const Other_p& iOther, const Rect_p& iRect)
-	{ return sAlignedL(iOther, sAlignedT(iOther, iRect)); }
+	{ return sOffsetted(X(iOther) - L(iRect), Y(iOther) - T(iRect), iRect); }
 
 template <class Rect_p, class Other_p>
 Rect_p sAlignedRB(const Other_p& iOther, const Rect_p& iRect)
-	{ return sAlignedR(iOther, sAlignedB(iOther, iRect)); }
+	{ return sOffsetted(X(iOther) - R(iRect), Y(iOther) - B(iRect), iRect); }
 
 template <class Rect_p, class Other_p>
 Rect_p sAlignedLB(const Other_p& iOther, const Rect_p& iRect)
-	{ return sAlignedL(iOther, sAlignedB(iOther, iRect)); }
+	{ return sOffsetted(X(iOther) - L(iRect), Y(iOther) - B(iRect), iRect); }
 
 template <class Rect_p, class Other_p>
 Rect_p sAlignedRT(const Other_p& iOther, const Rect_p& iRect)
-	{ return sAlignedR(iOther, sAlignedT(iOther, iRect)); }
+	{ return sOffsetted(X(iOther) - R(iRect), Y(iOther) - T(iRect), iRect); }
 
 // =================================================================================================
 // MARK: - sAligned
 
 template <class Rect_p, class OtherX, class OtherY>
 Rect_p sAlignedLT(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
-	{ return sAlignedL(iX, sAlignedT(iY, iRect)); }
+	{ return sOffsetted(X(iX) - L(iRect), Y(iY) - T(iRect), iRect); }
 
 template <class Rect_p, class OtherX, class OtherY>
 Rect_p sAlignedRB(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
-	{ return sAlignedR(iX, sAlignedB(iY, iRect)); }
+	{ return sOffsetted(X(iX) - R(iRect), Y(iY) - B(iRect), iRect); }
 
 template <class Rect_p, class OtherX, class OtherY>
 Rect_p sAlignedLB(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
-	{ return sAlignedL(iX, sAlignedB(iY, iRect)); }
+	{ return sOffsetted(X(iX) - L(iRect), Y(iY) - B(iRect), iRect); }
 
 template <class Rect_p, class OtherX, class OtherY>
 Rect_p sAlignedRT(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
-	{ return sAlignedR(iX, sAlignedY(iY, iRect)); }
+	{ return sOffsetted(X(iX) - R(iRect), Y(iY) - T(iRect), iRect); }
 
 // =================================================================================================
 // MARK: - sCentered
@@ -591,52 +637,6 @@ Rect_p sInsetted(const Other& iOther, const Rect_p& iRect)
 	return sRect<Rect_p>
 		(L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect) - X(iOther), B(iRect) - Y(iOther));
 	}
-
-// =================================================================================================
-// MARK: - sOffsetted
-
-template <class Rect_p, class OtherX, class OtherY>
-typename RectTraits<Rect_p>::Rect_t
-sOffsetted(const OtherX& iOtherX, const OtherY& iOtherY, const Rect_p& iRect)
-	{
-	return sRect<Rect_p>
-		(L(iRect) + X(iOtherX), T(iRect) + Y(iOtherY),
-		R(iRect) + X(iOtherX), B(iRect) + Y(iOtherY));
-	}
-
-template <class Rect_p, class OtherX>
-Rect_p sOffsettedX(const OtherX& iOther, const Rect_p& iRect)
-	{ return sRect<Rect_p>(L(iRect) + X(iOther), T(iRect), R(iRect) + X(iOther), B(iRect)); }
-
-template <class Rect_p, class OtherY>
-Rect_p sOffsettedY(const OtherY& iOther, const Rect_p& iRect)
-	{ return sRect<Rect_p>(L(iRect), T(iRect) + Y(iOther), R(iRect), B(iRect) + Y(iOther)); }
-
-template <class Rect_p, class Other>
-Rect_p sOffsetted(const Other& iOther, const Rect_p& iRect)
-	{
-	return sRect<Rect_p>
-		(L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect) + X(iOther), B(iRect) + Y(iOther));
-	}
-
-// =================================================================================================
-// MARK: - sOffsetted
-
-template <class Rect_p, class OtherX>
-Rect_p sOffsettedL(const OtherX& iOther, const Rect_p& iRect)
-	{ return sRect<Rect_p>(L(iRect) + X(iOther), T(iRect), R(iRect), B(iRect)); }
-
-template <class Rect_p, class OtherY>
-Rect_p sOffsettedT(const OtherY& iOther, const Rect_p& iRect)
-	{ return sRect<Rect_p>(L(iRect), T(iRect) + Y(iOther), R(iRect), B(iRect)); }
-
-template <class Rect_p, class OtherX>
-Rect_p sOffsettedR(const OtherX& iOther, const Rect_p& iRect)
-	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect) + X(iOther), B(iRect)); }
-
-template <class Rect_p, class OtherY>
-Rect_p sOffsettedB(const OtherY& iOther, const Rect_p& iRect)
-	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect), B(iRect) + Y(iOther)); }
 
 // =================================================================================================
 // MARK: - sWith
