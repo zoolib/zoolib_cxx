@@ -28,6 +28,36 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZCartesian {
 
+/*
+Abbreviations
+-------------
+X = X coordinate (horizontal)
+Y = Y coordinate (vertical)
+
+L = Left
+T = Top
+R = Right
+B = Bottom
+W = Width
+H = Height
+
+LT = Left Top
+RB = Right Bottom
+LB = Left Bottom
+RT = Right Top
+
+WH = Width Height (extent or size)
+
+C = Center
+CX = aka CLR, Center X
+CY = aka CTB, Center Y
+
+Operations
+----------
+Contains, operator&, operator|
+Aligned, Centered, Flipped, Insetted, Offsetted, With
+*/
+
 // =================================================================================================
 // MARK: - Definitions of these must be provided for each cartesian API.
 
@@ -60,139 +90,90 @@ ZMACRO_Cartesian(long double)
 #undef ZMACRO_Cartesian
 
 // =================================================================================================
-// MARK: - Accessors
+// MARK: - Basic Accessors
 
 template <class Type_p>
-typename Traits<Type_p>::XC_t X(const Type_p& iT)
-	{ return Traits<Type_p>::sX(iT); }
-
+typename Traits<Type_p>::XC_t X(const Type_p& iT) { return Traits<Type_p>::sX(iT); }
 template <class Type_p>
-typename Traits<Type_p>::X_t X(Type_p& iT)
-	{ return Traits<Type_p>::sX(iT); }
+typename Traits<Type_p>::X_t X(Type_p& iT) { return Traits<Type_p>::sX(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::YC_t Y(const Type_p& iT)
-	{ return Traits<Type_p>::sY(iT); }
-
+typename Traits<Type_p>::YC_t Y(const Type_p& iT) { return Traits<Type_p>::sY(iT); }
 template <class Type_p>
-typename Traits<Type_p>::Y_t Y(Type_p& iT)
-	{ return Traits<Type_p>::sY(iT); }
+typename Traits<Type_p>::Y_t Y(Type_p& iT) { return Traits<Type_p>::sY(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::LC_t L(const Type_p& iT)
-	{ return Traits<Type_p>::sL(iT); }
-
+typename Traits<Type_p>::LC_t L(const Type_p& iT) { return Traits<Type_p>::sL(iT); }
 template <class Type_p>
-typename Traits<Type_p>::L_t L(Type_p& iT)
-	{ return Traits<Type_p>::sL(iT); }
+typename Traits<Type_p>::L_t L(Type_p& iT) { return Traits<Type_p>::sL(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::TC_t T(const Type_p& iT)
-	{ return Traits<Type_p>::sT(iT); }
-
+typename Traits<Type_p>::TC_t T(const Type_p& iT) { return Traits<Type_p>::sT(iT); }
 template <class Type_p>
-typename Traits<Type_p>::T_t T(Type_p& iT)
-	{ return Traits<Type_p>::sT(iT); }
+typename Traits<Type_p>::T_t T(Type_p& iT) { return Traits<Type_p>::sT(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::RC_t R(const Type_p& iT)
-	{ return Traits<Type_p>::sR(iT); }
-
+typename Traits<Type_p>::RC_t R(const Type_p& iT) { return Traits<Type_p>::sR(iT); }
 template <class Type_p>
-typename Traits<Type_p>::R_t R(Type_p& iT)
-	{ return Traits<Type_p>::sR(iT); }
+typename Traits<Type_p>::R_t R(Type_p& iT) { return Traits<Type_p>::sR(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::BC_t B(const Type_p& iT)
-	{ return Traits<Type_p>::sB(iT); }
-
+typename Traits<Type_p>::BC_t B(const Type_p& iT) { return Traits<Type_p>::sB(iT); }
 template <class Type_p>
-typename Traits<Type_p>::B_t B(Type_p& iT)
-	{ return Traits<Type_p>::sB(iT); }
+typename Traits<Type_p>::B_t B(Type_p& iT) { return Traits<Type_p>::sB(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::WC_t W(const Type_p& iT)
-	{ return Traits<Type_p>::sW(iT); }
-
+typename Traits<Type_p>::WC_t W(const Type_p& iT) { return Traits<Type_p>::sW(iT); }
 template <class Type_p>
-typename Traits<Type_p>::W_t W(Type_p& iT)
-	{ return Traits<Type_p>::sW(iT); }
+typename Traits<Type_p>::W_t W(Type_p& iT) { return Traits<Type_p>::sW(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::HC_t H(const Type_p& iT)
-	{ return Traits<Type_p>::sH(iT); }
-
+typename Traits<Type_p>::HC_t H(const Type_p& iT) { return Traits<Type_p>::sH(iT); }
 template <class Type_p>
-typename Traits<Type_p>::H_t H(Type_p& iT)
-	{ return Traits<Type_p>::sH(iT); }
+typename Traits<Type_p>::H_t H(Type_p& iT) { return Traits<Type_p>::sH(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::WHC_t WH(const Type_p& iT)
-	{ return Traits<Type_p>::sWH(iT); }
-
+typename Traits<Type_p>::WHC_t WH(const Type_p& iT) { return Traits<Type_p>::sWH(iT); }
 template <class Type_p>
-typename Traits<Type_p>::WH_t WH(Type_p& iT)
-	{ return Traits<Type_p>::sWH(iT); }
+typename Traits<Type_p>::WH_t WH(Type_p& iT) { return Traits<Type_p>::sWH(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::LTC_t LT(const Type_p& iT)
-	{ return Traits<Type_p>::sLT(iT); }
-
+typename Traits<Type_p>::LTC_t LT(const Type_p& iT) { return Traits<Type_p>::sLT(iT); }
 template <class Type_p>
-typename Traits<Type_p>::LT_t LT(Type_p& iT)
-	{ return Traits<Type_p>::sLT(iT); }
+typename Traits<Type_p>::LT_t LT(Type_p& iT) { return Traits<Type_p>::sLT(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::RBC_t RB(const Type_p& iT)
-	{ return Traits<Type_p>::sRB(iT); }
-
+typename Traits<Type_p>::RBC_t RB(const Type_p& iT) { return Traits<Type_p>::sRB(iT); }
 template <class Type_p>
-typename Traits<Type_p>::RB_t RB(Type_p& iT)
-	{ return Traits<Type_p>::sRB(iT); }
+typename Traits<Type_p>::RB_t RB(Type_p& iT) { return Traits<Type_p>::sRB(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::LBC_t LB(const Type_p& iT)
-	{ return Traits<Type_p>::sLB(iT); }
-
+typename Traits<Type_p>::LBC_t LB(const Type_p& iT) { return Traits<Type_p>::sLB(iT); }
 template <class Type_p>
-typename Traits<Type_p>::LB_t LB(Type_p& iT)
-	{ return Traits<Type_p>::sLB(iT); }
+typename Traits<Type_p>::LB_t LB(Type_p& iT) { return Traits<Type_p>::sLB(iT); }
 
 
 template <class Type_p>
-typename Traits<Type_p>::RTC_t RT(const Type_p& iT)
-	{ return Traits<Type_p>::sRT(iT); }
-
+typename Traits<Type_p>::RTC_t RT(const Type_p& iT) { return Traits<Type_p>::sRT(iT); }
 template <class Type_p>
-typename Traits<Type_p>::RT_t RT(Type_p& iT)
-	{ return Traits<Type_p>::sRT(iT); }
-
+typename Traits<Type_p>::RT_t RT(Type_p& iT) { return Traits<Type_p>::sRT(iT); }
 
 // =================================================================================================
-// MARK: - Simpler pseudo-ctors.
+// MARK: - Fundamental Pseudo-ctors.
 
 template <class Point_p>
 Point_p sPoint() { return Traits<Point_p>::sMake(0, 0); }
-
-template <class Point_p>
-Point_p sPoint
-	(const typename Traits<Point_p>::Ord_t& iX,
-	const typename Traits<Point_p>::Ord_t& iY)
-	{ return Traits<Point_p>::sMake(iX, iY); }
-
-template <class Point_p, class Other>
-Point_p sPoint(const Other& iOther) { return sPoint(X(iOther), Y(iOther)); }
 
 template <class Rect_p>
 Rect_p sRect
@@ -203,7 +184,31 @@ Rect_p sRect
 	{ return Traits<Rect_p>::sMake(iL, iT, iR, iB); }
 
 // =================================================================================================
-// MARK: - Generic pseudo-ctor variants
+// MARK: - Derived accessors
+
+template <class Rect_p>
+typename Traits<Rect_p>::Ord_t CX(const Rect_p& iRect)
+	{ return (L(iRect) + R(iRect)) / 2; }
+
+template <class Rect_p>
+typename Traits<Rect_p>::Ord_t CY(const Rect_p& iRect)
+	{ return (T(iRect) + B(iRect)) / 2; }
+
+template <class Rect_p>
+typename Traits<Rect_p>::Point_t C(const Rect_p& iRect)
+	{ return sPoint<typename Traits<Rect_p>::Point_t>(CX(iRect), CY(iRect)); }
+
+// =================================================================================================
+// MARK: - Other Pseudo-ctors.
+
+template <class Point_p>
+Point_p sPoint
+	(const typename Traits<Point_p>::Ord_t& iX,
+	const typename Traits<Point_p>::Ord_t& iY)
+	{ return Traits<Point_p>::sMake(iX, iY); }
+
+template <class Point_p, class Other>
+Point_p sPoint(const Other& iOther) { return sPoint(X(iOther), Y(iOther)); }
 
 template <class Rect_p>
 Rect_p sRect()
@@ -243,7 +248,7 @@ bool sContains(const Rect_p& iRect, const Other& iOther)
 	}
 
 // =================================================================================================
-// MARK: - operator&, operator|
+// MARK: - operator&
 
 template <class Rect_p, class Other>
 Rect_p operator&(const Rect_p& iL, const Rect_p& iR)
@@ -263,6 +268,9 @@ Rect_p& operator&=(Rect_p& ioL, const Rect_p& iR)
 	return ioL;
 	}
 
+// =================================================================================================
+// MARK: - operator&
+
 template <class Rect_p, class Other>
 Rect_p operator|(const Rect_p& iL, const Rect_p& iR)
 	{
@@ -280,6 +288,89 @@ Rect_p& operator|=(Rect_p& ioL, const Rect_p& iR)
 	B(ioL) = std::max(B(ioL), B(iR));
 	return ioL;
 	}
+
+// =================================================================================================
+// MARK: - sAligned
+
+template <class Rect_p, class OtherX>
+Rect_p sAlignedL(const OtherX& iOther, const Rect_p& iRect)
+	{ return sOffsetted(X(iOther) - L(iRect), 0, iRect); }
+
+template <class Rect_p, class OtherY>
+Rect_p sAlignedT(const OtherY& iOther, const Rect_p& iRect)
+	{ return sOffsetted(0, Y(iOther) - T(iRect), iRect); }
+
+template <class Rect_p, class OtherX>
+Rect_p sAlignedR(const OtherX& iOther, const Rect_p& iRect)
+	{ return sOffsetted(X(iOther) - R(iRect), 0, iRect); }
+
+template <class Rect_p, class OtherY>
+Rect_p sAlignedB(const OtherY& iOther, const Rect_p& iRect)
+	{ return sOffsetted(0, Y(iOther) - B(iRect), iRect); }
+
+// =================================================================================================
+// MARK: - sAligned
+
+template <class Rect_p, class Other_p>
+Rect_p sAlignedLT(const Other_p& iOther, const Rect_p& iRect)
+	{ return sAlignedL(iOther, sAlignedT(iOther, iRect)); }
+
+template <class Rect_p, class Other_p>
+Rect_p sAlignedRB(const Other_p& iOther, const Rect_p& iRect)
+	{ return sAlignedR(iOther, sAlignedB(iOther, iRect)); }
+
+template <class Rect_p, class Other_p>
+Rect_p sAlignedLB(const Other_p& iOther, const Rect_p& iRect)
+	{ return sAlignedL(iOther, sAlignedB(iOther, iRect)); }
+
+template <class Rect_p, class Other_p>
+Rect_p sAlignedRT(const Other_p& iOther, const Rect_p& iRect)
+	{ return sAlignedR(iOther, sAlignedT(iOther, iRect)); }
+
+// =================================================================================================
+// MARK: - sAligned
+
+template <class Rect_p, class OtherX, class OtherY>
+Rect_p sAlignedLT(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
+	{ return sAlignedL(iX, sAlignedT(iY, iRect)); }
+
+template <class Rect_p, class OtherX, class OtherY>
+Rect_p sAlignedRB(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
+	{ return sAlignedR(iX, sAlignedB(iY, iRect)); }
+
+template <class Rect_p, class OtherX, class OtherY>
+Rect_p sAlignedLB(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
+	{ return sAlignedL(iX, sAlignedB(iY, iRect)); }
+
+template <class Rect_p, class OtherX, class OtherY>
+Rect_p sAlignedRT(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
+	{ return sAlignedR(iX, sAlignedY(iY, iRect)); }
+
+// =================================================================================================
+// MARK: - sCentered
+
+template <class Rect_p, class OtherX>
+Rect_p sCenteredX(const OtherX& iOtherX, const Rect_p& iRect)
+	{ return sOffsetted(X(iOtherX) - CX(iRect), 0, iRect); }
+
+template <class Rect_p, class OtherY>
+Rect_p sCenteredY(const OtherY& iOtherY, const Rect_p& iRect)
+	{ return sOffsetted(0, Y(iOtherY) - CY(iRect), iRect); }
+
+template <class Rect_p, class OtherX, class OtherY>
+Rect_p sCentered(const OtherX& iOtherX, const OtherY& iOtherY, const Rect_p& iRect)
+	{ return sOffsetted(X(iOtherX) - CX(iRect), Y(iOtherY) - CY(iRect), iRect); }
+
+template <class Rect_p, class Other>
+Rect_p sCentered(const Other& iOther, const Rect_p& iRect)
+	{ return sOffsetted(X(iOther) - CX(iRect), Y(iOther) - CY(iRect), iRect); }
+
+// =================================================================================================
+// MARK: - sFlippedY
+
+template <class Rect_p, class Other_p>
+Rect_p sFlippedY(const Other_p& iY, const Rect_p& iRect)
+	{ return sRect<Rect_p>(L(iRect), Y(iY) - T(iRect), R(iRect), Y(iY) - B(iRect)); }
 
 // =================================================================================================
 // MARK: - sInsetted
@@ -350,97 +441,6 @@ Rect_p sOffsettedR(const OtherX& iOther, const Rect_p& iRect)
 template <class Rect_p, class OtherY>
 Rect_p sOffsettedB(const OtherY& iOther, const Rect_p& iRect)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect), B(iRect) + Y(iOther)); }
-
-// =================================================================================================
-// MARK: - sCenter
-
-template <class Rect_p>
-typename Traits<Rect_p>::Ord_t sCenterX(const Rect_p& iRect)
-	{ return (L(iRect) + R(iRect)) / 2; }
-
-template <class Rect_p>
-typename Traits<Rect_p>::Ord_t sCenterY(const Rect_p& iRect)
-	{ return (T(iRect) + B(iRect)) / 2; }
-
-template <class Rect_p>
-typename Traits<Rect_p>::Point_t sCenter(const Rect_p& iRect)
-	{ return sPoint<typename Traits<Rect_p>::Point_t>(sCenterX(iRect), sCenterY(iRect)); }
-
-// =================================================================================================
-// MARK: - sCentered
-
-template <class Rect_p, class OtherX>
-Rect_p sCenteredX(const OtherX& iOtherX, const Rect_p& iRect)
-	{ return sOffsetted(X(iOtherX) - sCenterX(iRect), 0, iRect); }
-
-template <class Rect_p, class OtherY>
-Rect_p sCenteredY(const OtherY& iOtherY, const Rect_p& iRect)
-	{ return sOffsetted(0, Y(iOtherY) - sCenterY(iRect), iRect); }
-
-template <class Rect_p, class OtherX, class OtherY>
-Rect_p sCentered(const OtherX& iOtherX, const OtherY& iOtherY, const Rect_p& iRect)
-	{ return sOffsetted(X(iOtherX) - sCenterX(iRect), Y(iOtherY) - sCenterY(iRect), iRect); }
-
-template <class Rect_p, class Other>
-Rect_p sCentered(const Other& iOther, const Rect_p& iRect)
-	{ return sOffsetted(X(iOther) - sCenterX(iRect), Y(iOther) - sCenterY(iRect), iRect); }
-
-// =================================================================================================
-// MARK: - sAligned
-
-template <class Rect_p, class OtherX>
-Rect_p sAlignedL(const OtherX& iOther, const Rect_p& iRect)
-	{ return sOffsetted(X(iOther) - L(iRect), 0, iRect); }
-
-template <class Rect_p, class OtherY>
-Rect_p sAlignedT(const OtherY& iOther, const Rect_p& iRect)
-	{ return sOffsetted(0, Y(iOther) - T(iRect), iRect); }
-
-template <class Rect_p, class OtherX>
-Rect_p sAlignedR(const OtherX& iOther, const Rect_p& iRect)
-	{ return sOffsetted(X(iOther) - R(iRect), 0, iRect); }
-
-template <class Rect_p, class OtherY>
-Rect_p sAlignedB(const OtherY& iOther, const Rect_p& iRect)
-	{ return sOffsetted(0, Y(iOther) - B(iRect), iRect); }
-
-// =================================================================================================
-// MARK: - sAligned
-
-template <class Rect_p, class Other_p>
-Rect_p sAlignedLT(const Other_p& iOther, const Rect_p& iRect)
-	{ return sAlignedL(iOther, sAlignedT(iOther, iRect)); }
-
-template <class Rect_p, class Other_p>
-Rect_p sAlignedRB(const Other_p& iOther, const Rect_p& iRect)
-	{ return sAlignedR(iOther, sAlignedB(iOther, iRect)); }
-
-template <class Rect_p, class Other_p>
-Rect_p sAlignedLB(const Other_p& iOther, const Rect_p& iRect)
-	{ return sAlignedL(iOther, sAlignedB(iOther, iRect)); }
-
-template <class Rect_p, class Other_p>
-Rect_p sAlignedRT(const Other_p& iOther, const Rect_p& iRect)
-	{ return sAlignedR(iOther, sAlignedT(iOther, iRect)); }
-
-// =================================================================================================
-// MARK: - sAligned
-
-template <class Rect_p, class OtherX, class OtherY>
-Rect_p sAlignedLT(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
-	{ return sAlignedL(iX, sAlignedT(iY, iRect)); }
-
-template <class Rect_p, class OtherX, class OtherY>
-Rect_p sAlignedRB(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
-	{ return sAlignedR(iX, sAlignedB(iY, iRect)); }
-
-template <class Rect_p, class OtherX, class OtherY>
-Rect_p sAlignedLB(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
-	{ return sAlignedL(iX, sAlignedB(iY, iRect)); }
-
-template <class Rect_p, class OtherX, class OtherY>
-Rect_p sAlignedRT(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
-	{ return sAlignedR(iX, sAlignedY(iY, iRect)); }
 
 // =================================================================================================
 // MARK: - sWith
@@ -563,13 +563,6 @@ Rect_p sWithWHLB(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
 template <class Rect_p, class OtherX, class OtherY>
 Rect_p sWithWHRT(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
 	{ return sRect<Rect_p>(L(iRect), B(iRect) - Y(iY), L(iRect) + X(iX), B(iRect)); }
-
-// =================================================================================================
-// MARK: - sFlippedY
-
-template <class Rect_p, class Other_p>
-Rect_p sFlippedY(const Other_p& iY, const Rect_p& iRect)
-	{ return sRect<Rect_p>(L(iRect), Y(iY) - T(iRect), R(iRect), Y(iY) - B(iRect)); }
 
 } // namespace ZCartesian
 } // namespace ZooLib

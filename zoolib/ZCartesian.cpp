@@ -26,6 +26,5 @@ namespace ZCartesian {
 // =================================================================================================
 // MARK: -
 
-
 } // namespace ZCartesian
 } // namespace ZooLib

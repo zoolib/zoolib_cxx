@@ -51,48 +51,6 @@ struct Traits<ZMatrix<Ord,1,2> >
 	typedef Ord_t& Y_t;
 	static Y_t sY(Point_t& ioPoint) { return ioPoint[1]; }
 
-	typedef const Ord_t LC_t;
-	static LC_t sL(const Point_t& iPoint) { return 0; }
-
-	typedef const Ord_t L_t;
-	static L_t sL(Point_t& ioPoint) { return 0; }
-
-	typedef const Ord_t TC_t;
-	static TC_t sT(const Point_t& iPoint) { return 0; }
-
-	typedef const Ord_t T_t;
-	static T_t sT(Point_t& ioPoint) { return 0; }
-
-	typedef const Ord_t& RC_t;
-	static RC_t sR(const Point_t& iPoint) { return iPoint[0]; }
-
-	typedef Ord_t& R_t;
-	static R_t sR(Point_t& ioPoint) { return ioPoint[0]; }
-
-	typedef const Ord_t& BC_t;
-	static BC_t sB(const Point_t& iPoint) { return iPoint[1]; }
-
-	typedef Ord_t& B_t;
-	static B_t sB(Point_t& ioPoint) { return ioPoint[1]; }
-
-	typedef const Ord_t& WC_t;
-	static WC_t sW(const Point_t& iPoint) { return iPoint[0]; }
-
-	typedef Ord_t& W_t;
-	static W_t sW(Point_t& ioPoint) { return ioPoint[0]; }
-
-	typedef const Ord_t& HC_t;
-	static HC_t sH(const Point_t& iPoint) { return iPoint[1]; }
-
-	typedef Ord_t& H_t;
-	static H_t sH(Point_t& ioPoint) { return ioPoint[1]; }
-
-	typedef const Point_t& WHC_t;
-	static WHC_t sWH(const Point_t& iPoint) { return iPoint; }
-
-	typedef Point_t& WH_t;
-	static WH_t sWH(Point_t& ioPoint) { return ioPoint; }
-
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{
 		ZMatrix<Ord,1,2> result;
@@ -124,48 +82,6 @@ struct Traits<ZMatrix<Ord,1,3> >
 
 	typedef Ord_t& Y_t;
 	static Y_t sY(Point_t& ioPoint) { return ioPoint[1]; }
-
-	typedef const Ord_t LC_t;
-	static LC_t sL(const Point_t& iPoint) { return 0; }
-
-	typedef const Ord_t L_t;
-	static L_t sL(Point_t& ioPoint) { return 0; }
-
-	typedef const Ord_t TC_t;
-	static TC_t sT(const Point_t& iPoint) { return 0; }
-
-	typedef const Ord_t T_t;
-	static T_t sT(Point_t& ioPoint) { return 0; }
-
-	typedef const Ord_t& RC_t;
-	static RC_t sR(const Point_t& iPoint) { return iPoint[0]; }
-
-	typedef Ord_t& R_t;
-	static R_t sR(Point_t& ioPoint) { return ioPoint[0]; }
-
-	typedef const Ord_t& BC_t;
-	static BC_t sB(const Point_t& iPoint) { return iPoint[1]; }
-
-	typedef Ord_t& B_t;
-	static B_t sB(Point_t& ioPoint) { return ioPoint[1]; }
-
-	typedef const Ord_t& WC_t;
-	static WC_t sW(const Point_t& iPoint) { return iPoint[0]; }
-
-	typedef Ord_t& W_t;
-	static W_t sW(Point_t& ioPoint) { return ioPoint[0]; }
-
-	typedef const Ord_t& HC_t;
-	static HC_t sH(const Point_t& iPoint) { return iPoint[1]; }
-
-	typedef Ord_t& H_t;
-	static H_t sH(Point_t& ioPoint) { return ioPoint[1]; }
-
-	typedef const Point_t& WHC_t;
-	static WHC_t sWH(const Point_t& iPoint) { return iPoint; }
-
-	typedef Point_t& WH_t;
-	static WH_t sWH(Point_t& ioPoint) { return ioPoint; }
 	};
 
 // =================================================================================================
