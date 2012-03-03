@@ -170,7 +170,7 @@ ZMatrix<Val,4,4> sShear3(Val xy, Val xz, Val yx, Val yz, Val zx, Val zy)
 	}
 
 // =================================================================================================
-// MARK: - Extraction of coordinate subsets.
+// MARK: - Extraction of coordinate subsets
 
 template <class Val>
 ZMatrix<Val,1,2> sXY(const ZMatrix<Val,1,3>& iMat)
