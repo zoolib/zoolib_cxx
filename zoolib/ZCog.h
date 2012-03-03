@@ -160,6 +160,17 @@ bool sIsPending(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& i
 	{ return not sIsFinished(iCallable); }
 
 // =================================================================================================
+// MARK:-
+
+template <class Param>
+ZCog<Param>& sPreserveIfPending(ZCog<Param>& ioCog)
+	{
+	if (sIsFinished(ioCog))
+		ioCog = null;
+	return ioCog;
+	}
+
+// =================================================================================================
 // MARK:- sCallCog variants
 
 template <class Cog>
@@ -190,31 +201,31 @@ ZCog<const Param&> sCallCog
 	}
 
 template <class Cog>
-void sCallCogAndUpdate(Cog& ioCog, const typename Cog::Param iParam)
+void sCallAndUpdateCog(Cog& ioCog, const typename Cog::Param iParam)
 	{
 	if (sIsPending(ioCog))
 		ioCog = ioCog->Call(ioCog, iParam);
 	}
 
 template <class Cog>
-bool sCallPendingCog_StillPending(Cog& ioCog, const typename Cog::Param iParam)
+bool sCallAndUpdatePendingCog_StillPending(Cog& ioCog, const typename Cog::Param iParam)
 	{ return sIsPending(ioCog = ioCog->Call(ioCog, iParam)); }
 
 template <class Cog>
-bool sCallPendingCog_Changed(Cog& ioCog, const typename Cog::Param iParam)
+bool sCallAndUpdatePendingCog_Changed(Cog& ioCog, const typename Cog::Param iParam)
 	{ return sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
 
 template <class Cog>
-bool sCallPendingCog_Unchanged(Cog& ioCog, const typename Cog::Param iParam)
+bool sCallAndUpdatePendingCog_Unchanged(Cog& ioCog, const typename Cog::Param iParam)
 	{ return not sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
 
 template <class Cog>
-bool sCallCog_Changed(Cog& ioCog, const typename Cog::Param iParam)
-	{ return sIsPending(ioCog) && sCallPendingCog_Changed(ioCog, iParam); }
+bool sCallAndUpdateCog_Changed(Cog& ioCog, const typename Cog::Param iParam)
+	{ return sIsPending(ioCog) && sCallAndUpdatePendingCog_Changed(ioCog, iParam); }
 
 template <class Cog>
-bool sCallCog_Unchanged(Cog& ioCog, const typename Cog::Param iParam)
-	{ return sIsFinished(ioCog) || sCallPendingCog_Unchanged(ioCog, iParam); }
+bool sCallAndUpdateCog_Unchanged(Cog& ioCog, const typename Cog::Param iParam)
+	{ return sIsFinished(ioCog) || sCallAndUpdatePendingCog_Unchanged(ioCog, iParam); }
 
 // =================================================================================================
 // MARK: - Unary, sCog_Not
@@ -228,7 +239,7 @@ ZCog<Param> spCogFun_Not(const ZCog<Param>& iSelf, Param iParam,
 	const ZCog<Param>& iCog)
 	{
 	ZCog<Param> newCog = iCog;
-	if (sCallPendingCog_Unchanged(newCog, iParam))
+	if (sCallAndUpdatePendingCog_Unchanged(newCog, iParam))
 		return iSelf;
 
 	if (sIsFalse(newCog))
@@ -280,7 +291,7 @@ ZCog<Param> spCogFun_Tautology(const ZCog<Param>& iSelf, Param iParam,
 	const ZCog<Param>& iCog)
 	{
 	ZCog<Param> newCog = iCog;
-	if (sCallPendingCog_Unchanged(newCog, iParam))
+	if (sCallAndUpdatePendingCog_Unchanged(newCog, iParam))
 		return iSelf;
 
 	if (sIsFinished(newCog))
@@ -325,7 +336,7 @@ ZCog<Param> spCogFun_Contradiction(const ZCog<Param>& iSelf, Param iParam,
 	const ZCog<Param>& iCog)
 	{
 	ZCog<Param> newCog = iCog;
-	if (sCallPendingCog_Unchanged(newCog, iParam))
+	if (sCallAndUpdatePendingCog_Unchanged(newCog, iParam))
 		return iSelf;
 
 	if (sIsFinished(newCog))
@@ -371,7 +382,7 @@ ZCog<Param> spCogFun_Repeat(const ZCog<Param>& iSelf, Param iParam,
 	const ZCog<Param>& iCog_Init, const ZCog<Param>& iCog)
 	{
 	ZCog<Param> newCog = iCog;
-	if (sCallPendingCog_Unchanged(newCog, iParam))
+	if (sCallAndUpdatePendingCog_Unchanged(newCog, iParam))
 		return iSelf;
 
 	if (sIsFalse(newCog))
@@ -434,7 +445,7 @@ ZCog<Param> spCogFun_If(const ZCog<Param>& iSelf, Param iParam,
 	const ZCog<Param>& iCog1)
 	{
 	ZCog<Param> newCondition = iCondition;
-	if (sCallPendingCog_Unchanged(newCondition, iParam))
+	if (sCallAndUpdatePendingCog_Unchanged(newCondition, iParam))
 		return iSelf;
 
 	if (sIsTrue(newCondition))
@@ -556,13 +567,13 @@ ZCog<Param> spCogFun_And(const ZCog<Param>& iSelf, Param iParam,
 	ZAssert(sIsPending(iCog0) && not sIsTrue(iCog1));
 
 	ZCog<Param> newCog0 = iCog0;
-	if (sCallPendingCog_Unchanged(newCog0, iParam))
+	if (sCallAndUpdatePendingCog_Unchanged(newCog0, iParam))
 		{
 		if (sIsFalse(iCog1))
 			return false;
 
 		ZCog<Param> newCog1 = iCog1;
-		if (sCallPendingCog_Unchanged(newCog1, iParam))
+		if (sCallAndUpdatePendingCog_Unchanged(newCog1, iParam))
 			return iSelf;
 
 		if (sIsFalse(newCog1))
@@ -660,13 +671,13 @@ ZCog<Param> spCogFun_Or(const ZCog<Param>& iSelf, Param iParam,
 	ZAssert(sIsPending(iCog0) && iCog1);
 
 	ZCog<Param> newCog0 = iCog0;
-	if (sCallPendingCog_Unchanged(newCog0, iParam))
+	if (sCallAndUpdatePendingCog_Unchanged(newCog0, iParam))
 		{
 		if (sIsTrue(iCog1))
 			return true;
 
 		ZCog<Param> newCog1 = iCog1;
-		if (sCallPendingCog_Unchanged(newCog1, iParam))
+		if (sCallAndUpdatePendingCog_Unchanged(newCog1, iParam))
 			return iSelf;
 
 		if (sIsFalse(newCog1))
@@ -753,10 +764,10 @@ ZCog<Param> spCogFun_While(const ZCog<Param>& iSelf, Param iParam,
 	ZAssert(sIsPending(iCog0) && sIsPending(iCog1));
 
 	ZCog<Param> newCog0 = iCog0;
-	if (sCallPendingCog_Unchanged(newCog0, iParam))
+	if (sCallAndUpdatePendingCog_Unchanged(newCog0, iParam))
 		{
 		ZCog<Param> newCog1 = iCog1;
-		if (sCallPendingCog_Unchanged(newCog1, iParam))
+		if (sCallAndUpdatePendingCog_Unchanged(newCog1, iParam))
 			return iSelf;
 
 		if (sIsFinished(newCog1))
@@ -816,10 +827,10 @@ ZCog<Param> spCogFun_With(const ZCog<Param>& iSelf, Param iParam,
 	ZAssert(sIsPending(iCog0) && sIsPending(iCog1));
 
 	ZCog<Param> newCog0 = iCog0;
-	if (sCallPendingCog_Unchanged(newCog0, iParam))
+	if (sCallAndUpdatePendingCog_Unchanged(newCog0, iParam))
 		{
 		ZCog<Param> newCog1 = iCog1;
-		if (sCallPendingCog_Unchanged(newCog1, iParam))
+		if (sCallAndUpdatePendingCog_Unchanged(newCog1, iParam))
 			return iSelf;
 
 		if (sIsFinished(newCog1))
@@ -891,10 +902,10 @@ ZCog<Param> spCogFun_WithUnchanged(const ZCog<Param>& iSelf, Param iParam,
 	ZAssert(sIsPending(iCog0) && sIsPending(iCog1));
 
 	ZCog<Param> newCog0 = iCog0;
-	if (sCallPendingCog_Unchanged(newCog0, iParam))
+	if (sCallAndUpdatePendingCog_Unchanged(newCog0, iParam))
 		{
 		ZCog<Param> newCog1 = iCog1;
-		if (sCallPendingCog_Unchanged(newCog1, iParam))
+		if (sCallAndUpdatePendingCog_Unchanged(newCog1, iParam))
 			return iSelf;
 
 		if (sIsFinished(newCog1))
