@@ -88,12 +88,6 @@ struct Traits<NSPoint>
 		}
 	};
 
-inline bool operator==(const NSPoint& iL, const NSPoint& iR)
-	{ return iL.x == iR.x && iL.y == iR.y; }
-
-inline bool operator!=(const NSPoint& iL, const NSPoint& iR)
-	{ return not (iL == iR); }
-
 // =================================================================================================
 // MARK: - NSSize
 
@@ -125,12 +119,6 @@ struct Traits<NSSize>
 		return result;
 		}
 	};
-
-inline bool operator==(const NSSize& iL, const NSSize& iR)
-	{ return iL.width == iR.width && iL.height == iR.height; }
-
-inline bool operator!=(const NSSize& iL, const NSSize& iR)
-	{ return not (iL == iR); }
 
 // =================================================================================================
 // MARK: - NSRect
@@ -217,12 +205,6 @@ struct Traits<NSRect>
 		return result;
 		}
 	};
-
-inline bool operator==(const NSRect& iL, const NSRect& iR)
-	{ return iL.origin == iR.origin && iL.size == iR.size; }
-
-inline bool operator!=(const NSRect& iL, const NSRect& iR)
-	{ return not (iL == iR); }
 
 } // namespace ZCartesian
 } // namespace ZooLib
