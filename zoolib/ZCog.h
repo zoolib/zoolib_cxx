@@ -109,7 +109,7 @@ public:
 
 	static const ZCog& sFalse()
 		{
-		static const ZCog<Param> spCog;
+		static const ZCog spCog;
 		return spCog;
 		}
 
