@@ -32,7 +32,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZRGBA.h"
 #include "zoolib/ZStream_String.h"
-#include "zoolib/ZUtil_Strim_Geom.h"
 #include "zoolib/ZWorker.h"
 
 // =================================================================================================
@@ -279,9 +278,9 @@ void Host_Cocoa::PostCreateAndLoad()
 
 void Host_Cocoa::pDoSetWindow()
 	{
-	ZGRectf theFrame = [fView frame];
-	float width = theFrame.Width();
-	float height = theFrame.Height();
+	NSRect theFrame = [fView frame];
+	float width = theFrame.size.width;
+	float height = theFrame.size.height;
 
 	fNPWindow.width = width;
 	fNPWindow.height = height;

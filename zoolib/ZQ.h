@@ -241,7 +241,7 @@ public:
 		return nullptr;
 		}
 
-	T DGet(const T& iDefault) const
+	const T DGet(const T& iDefault) const
 		{
 		if (fHasValue)
 			return *sFetch_T<T>(fBytes);
@@ -376,7 +376,7 @@ public:
 	void Clear()
 		{ fHasValue = false; }
 
-	void Get() const
+	const void Get() const
 		{}
 
 	void Set()

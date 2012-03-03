@@ -494,7 +494,7 @@ String Value::ToString() const
 	}
 
 template <>
-ZQ<bool> Value::QGet<bool>() const
+const ZQ<bool> Value::QGet<bool>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
@@ -505,7 +505,7 @@ ZQ<bool> Value::QGet<bool>() const
 	}
 
 template <>
-ZQ<double> Value::QGet<double>() const
+const ZQ<double> Value::QGet<double>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
@@ -521,7 +521,7 @@ ZQ<double> Value::QGet<double>() const
 	}
 
 template <>
-ZQ<String> Value::QGet<String>() const
+const ZQ<String> Value::QGet<String>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
@@ -536,7 +536,7 @@ ZQ<String> Value::QGet<String>() const
 	}
 
 template <>
-ZQ<ObjectRef> Value::QGet<ObjectRef>() const
+const ZQ<ObjectRef> Value::QGet<ObjectRef>() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
@@ -609,7 +609,7 @@ ObjectRef& ObjectRef::operator=(const ZRef<JSObjectRef>& iOther)
 	return *this;
 	}
 
-ZQ<Value> ObjectRef::QGet(const string8& iName) const
+const ZQ<Value> ObjectRef::QGet(const string8& iName) const
 	{
 	JSValueRef theEx = nullptr;
 	JSValueRef theResult = ::JSObjectGetProperty(sCurrentContextRef(),
@@ -619,14 +619,14 @@ ZQ<Value> ObjectRef::QGet(const string8& iName) const
 	return null;
 	}
 
-Value ObjectRef::DGet(const Value& iDefault, const string8& iName) const
+const Value ObjectRef::DGet(const Value& iDefault, const string8& iName) const
 	{
 	if (ZQ<Value> theQ = this->QGet(iName))
 		return *theQ;
 	return iDefault;
 	}
 
-Value ObjectRef::Get(const string8& iName) const
+const Value ObjectRef::Get(const string8& iName) const
 	{ return this->DGet(Value(), iName); }
 
 bool ObjectRef::Set(const string8& iName, const Value& iValue)
@@ -646,7 +646,7 @@ bool ObjectRef::Erase(const string8& iName)
 bool ObjectRef::IsSeq() const
 	{ return this->QGet("length"); }
 
-ZQ<Value> ObjectRef::QGet(size_t iIndex) const
+const ZQ<Value> ObjectRef::QGet(size_t iIndex) const
 	{
 	JSValueRef theEx = nullptr;
 	JSValueRef theResult = ::JSObjectGetPropertyAtIndex(sCurrentContextRef(),
@@ -656,14 +656,14 @@ ZQ<Value> ObjectRef::QGet(size_t iIndex) const
 	return null;
 	}
 
-Value ObjectRef::DGet(const Value& iDefault, size_t iIndex) const
+const Value ObjectRef::DGet(const Value& iDefault, size_t iIndex) const
 	{
 	if (ZQ<Value> theQ = this->QGet(iIndex))
 		return *theQ;
 	return iDefault;
 	}
 
-Value ObjectRef::Get(size_t iIndex) const
+const Value ObjectRef::Get(size_t iIndex) const
 	{ return this->DGet(Value(), iIndex); }
 
 bool ObjectRef::Set(size_t iIndex, const Value& iValue)

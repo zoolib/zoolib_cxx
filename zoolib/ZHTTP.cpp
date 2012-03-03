@@ -50,7 +50,7 @@ static const char LF = '\n';
 // MARK: - Utility stuff
 
 static void spAppend(Map& ioFields, const string& iName, const Val& iValue)
-	{ ioFields.Set(iName, ioFields.Get<Seq>(iName).Append(iValue)); }
+	{ ioFields.Set(iName, Seq(ioFields.Get<Seq>(iName)).Append(iValue)); }
 
 static uint32 spHexCharToUInt(char iChar)
 	{

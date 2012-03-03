@@ -80,14 +80,14 @@ public:
 	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
 
 // ZMap protocol (ish)
-	ZQ<Variant_t> QGet(const std::string& iName);
-	ZQ<Variant_t> QGet(size_t iIndex);
+	const ZQ<Variant_t> QGet(const std::string& iName);
+	const ZQ<Variant_t> QGet(size_t iIndex);
 
-	Variant_t DGet(const Variant_t& iDefault, const std::string& iName);
-	Variant_t DGet(const Variant_t& iDefault, size_t iIndex);
+	const Variant_t DGet(const Variant_t& iDefault, const std::string& iName);
+	const Variant_t DGet(const Variant_t& iDefault, size_t iIndex);
 
-	Variant_t Get(const std::string& iName);
-	Variant_t Get(size_t iIndex);
+	const Variant_t Get(const std::string& iName);
+	const Variant_t Get(size_t iIndex);
 
 	bool Set(const std::string& iName, const Variant_t& iValue);
 	bool Set(size_t iIndex, const Variant_t& iValue);

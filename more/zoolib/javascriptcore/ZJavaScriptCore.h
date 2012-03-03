@@ -150,10 +150,10 @@ public:
 
 // ZVal Get protocol
 	template <class S>
-	ZQ<S> QGet() const;
+	const ZQ<S> QGet() const;
 
 	template <class S>
-	S DGet(const S& iDefault) const
+	const S DGet(const S& iDefault) const
 		{
 		if (ZQ<S> theQ = this->QGet<S>())
 			return *theQ;
@@ -161,7 +161,7 @@ public:
 		}
 
 	template <class S>
-	S Get() const
+	const S Get() const
 		{
 		if (ZQ<S> theQ = this->QGet<S>())
 			return *theQ;
@@ -193,18 +193,18 @@ public:
 	ObjectRef& operator=(const ZRef<JSObjectRef>& iOther);
 
 // ZMap protocol (ish)
-	ZQ<Value> QGet(const string8& iName) const;
-	Value DGet(const Value& iDefault, const string8& iName) const;
-	Value Get(const string8& iName) const;
+	const ZQ<Value> QGet(const string8& iName) const;
+	const Value DGet(const Value& iDefault, const string8& iName) const;
+	const Value Get(const string8& iName) const;
 	bool Set(const string8& iName, const Value& iValue);
 	bool Erase(const string8& iName);
 
 // ZSeq protocol (ish)
 	bool IsSeq() const;
 	size_t Count() const;
-	ZQ<Value> QGet(size_t iIndex) const;
-	Value DGet(const Value& iDefault, size_t iIndex) const;
-	Value Get(size_t iIndex) const;
+	const ZQ<Value> QGet(size_t iIndex) const;
+	const Value DGet(const Value& iDefault, size_t iIndex) const;
+	const Value Get(size_t iIndex) const;
 	bool Set(size_t iIndex, const Value& iValue);
 	bool Erase(size_t iIndex);
 	void Insert(size_t iIndex, const Value& iVal);

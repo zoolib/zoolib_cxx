@@ -68,8 +68,8 @@ public:
 
 	ZVal_Any* PGetMutable(size_t iIndex);
 	const ZVal_Any* PGet(size_t iIndex) const;
-	ZQ<ZVal_Any> QGet(size_t iIndex) const;
-	ZVal_Any DGet(const ZVal_Any& iDefault, size_t iIndex) const;
+	const ZQ<ZVal_Any> QGet(size_t iIndex) const;
+	const ZVal_Any DGet(const ZVal_Any& iDefault, size_t iIndex) const;
 	const ZVal_Any& Get(size_t iIndex) const;
 
 	template <class S>
@@ -89,7 +89,7 @@ public:
 		}
 
 	template <class S>
-	ZQ<S> QGet(size_t iIndex) const
+	const ZQ<S> QGet(size_t iIndex) const
 		{
 		if (const ZVal_Any* theVal = this->PGet(iIndex))
 			return theVal->QGet<S>();
@@ -97,7 +97,7 @@ public:
 		}
 
 	template <class S>
-	S DGet(const S& iDefault, size_t iIndex) const
+	const S DGet(const S& iDefault, size_t iIndex) const
 		{
 		if (const S* theVal = this->PGet<S>(iIndex))
 			return *theVal;
@@ -105,7 +105,7 @@ public:
 		}
 
 	template <class S>
-	S Get(size_t iIndex) const
+	const S Get(size_t iIndex) const
 		{
 		if (const S* theVal = this->PGet<S>(iIndex))
 			return *theVal;
@@ -206,11 +206,11 @@ public:
 	const ZVal_Any* PGet(const string8& iName) const;
 	const ZVal_Any* PGet(const Index_t& iIndex) const;
 
-	ZQ<ZVal_Any> QGet(const string8& iName) const;
-	ZQ<ZVal_Any> QGet(const Index_t& iIndex) const;
+	const ZQ<ZVal_Any> QGet(const string8& iName) const;
+	const ZQ<ZVal_Any> QGet(const Index_t& iIndex) const;
 
-	ZVal_Any DGet(const ZVal_Any& iDefault, const string8& iName) const;
-	ZVal_Any DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const;
+	const ZVal_Any DGet(const ZVal_Any& iDefault, const string8& iName) const;
+	const ZVal_Any DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const;
 
 	const ZVal_Any& Get(const string8& iName) const;
 	const ZVal_Any& Get(const Index_t& iIndex) const;
@@ -248,7 +248,7 @@ public:
 		}
 
 	template <class S>
-	ZQ<S> QGet(const string8& iName) const
+	const ZQ<S> QGet(const string8& iName) const
 		{
 		if (const ZVal_Any* theVal = this->PGet(iName))
 			return theVal->QGet<S>();
@@ -256,7 +256,7 @@ public:
 		}
 
 	template <class S>
-	ZQ<S> QGet(const Index_t& iIndex) const
+	const ZQ<S> QGet(const Index_t& iIndex) const
 		{
 		if (const ZVal_Any* theVal = this->PGet(iIndex))
 			return theVal->QGet<S>();
@@ -264,7 +264,7 @@ public:
 		}
 
 	template <class S>
-	S DGet(const S& iDefault, const string8& iName) const
+	const S DGet(const S& iDefault, const string8& iName) const
 		{
 		if (const S* theVal = this->PGet<S>(iName))
 			return *theVal;
@@ -272,7 +272,7 @@ public:
 		}
 
 	template <class S>
-	S DGet(const S& iDefault, const Index_t& iIndex) const
+	const S DGet(const S& iDefault, const Index_t& iIndex) const
 		{
 		if (const S* theVal = this->PGet<S>(iIndex))
 			return *theVal;
@@ -280,7 +280,7 @@ public:
 		}
 
 	template <class S>
-	S Get(const string8& iName) const
+	const S Get(const string8& iName) const
 		{
 		if (const S* theVal = this->PGet<S>(iName))
 			return *theVal;
@@ -288,7 +288,7 @@ public:
 		}
 
 	template <class S>
-	S Get(const Index_t& iIndex) const
+	const S Get(const Index_t& iIndex) const
 		{
 		if (const S* theVal = this->PGet<S>(iIndex))
 			return *theVal;

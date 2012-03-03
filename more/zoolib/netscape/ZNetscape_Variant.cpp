@@ -27,7 +27,7 @@ namespace ZNetscape {
 // MARK: - NPVariantBase
 
 template <>
-ZQ<bool> NPVariantBase::QGet<bool>() const
+const ZQ<bool> NPVariantBase::QGet<bool>() const
 	{
 	if (type == NPVariantType_Bool)
 		return bool(value.boolValue);
@@ -35,7 +35,7 @@ ZQ<bool> NPVariantBase::QGet<bool>() const
 	}
 
 template <>
-ZQ<int32> NPVariantBase::QGet<int32>() const
+const ZQ<int32> NPVariantBase::QGet<int32>() const
 	{
 	if (type == NPVariantType_Int32)
 		return int32(value.boolValue);
@@ -43,7 +43,7 @@ ZQ<int32> NPVariantBase::QGet<int32>() const
 	}
 
 template <>
-ZQ<double> NPVariantBase::QGet<double>() const
+const ZQ<double> NPVariantBase::QGet<double>() const
 	{
 	if (type == NPVariantType_Double)
 		return double(value.boolValue);
@@ -51,7 +51,7 @@ ZQ<double> NPVariantBase::QGet<double>() const
 	}
 
 template <>
-ZQ<std::string> NPVariantBase::QGet<std::string>() const
+const ZQ<std::string> NPVariantBase::QGet<std::string>() const
 	{
 	if (type == NPVariantType_String)
 		{

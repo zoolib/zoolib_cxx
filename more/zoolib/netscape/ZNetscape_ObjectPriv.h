@@ -128,7 +128,7 @@ bool NPObject_T<Variant_t>::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
 	}
 
 template <class Variant_t>
-ZQ<Variant_t> NPObject_T<Variant_t>::QGet(const std::string& iName)
+const ZQ<Variant_t> NPObject_T<Variant_t>::QGet(const std::string& iName)
 	{
 	Variant_t theVar;
 	if (static_cast<Self_t*>(this)->GetProperty(iName, theVar))
@@ -137,7 +137,7 @@ ZQ<Variant_t> NPObject_T<Variant_t>::QGet(const std::string& iName)
 	}
 
 template <class Variant_t>
-ZQ<Variant_t> NPObject_T<Variant_t>::QGet(size_t iIndex)
+const ZQ<Variant_t> NPObject_T<Variant_t>::QGet(size_t iIndex)
 	{
 	Variant_t theVar;
 	if (static_cast<Self_t*>(this)->GetProperty(iIndex, theVar))
@@ -146,7 +146,7 @@ ZQ<Variant_t> NPObject_T<Variant_t>::QGet(size_t iIndex)
 	}
 
 template <class Variant_t>
-Variant_t NPObject_T<Variant_t>::DGet(const Variant_t& iDefault, const std::string& iName)
+const Variant_t NPObject_T<Variant_t>::DGet(const Variant_t& iDefault, const std::string& iName)
 	{
 	Variant_t result;
 	if (static_cast<Self_t*>(this)->GetProperty(iName, result))
@@ -155,7 +155,7 @@ Variant_t NPObject_T<Variant_t>::DGet(const Variant_t& iDefault, const std::stri
 	}
 
 template <class Variant_t>
-Variant_t NPObject_T<Variant_t>::DGet(const Variant_t& iDefault, size_t iIndex)
+const Variant_t NPObject_T<Variant_t>::DGet(const Variant_t& iDefault, size_t iIndex)
 	{
 	Variant_t result;
 	if (static_cast<Self_t*>(this)->GetProperty(iIndex, result))
@@ -164,11 +164,11 @@ Variant_t NPObject_T<Variant_t>::DGet(const Variant_t& iDefault, size_t iIndex)
 	}
 
 template <class Variant_t>
-Variant_t NPObject_T<Variant_t>::Get(const std::string& iName)
+const Variant_t NPObject_T<Variant_t>::Get(const std::string& iName)
 	{ return static_cast<Self_t*>(this)->DGet(Variant_t(), iName); }
 
 template <class Variant_t>
-Variant_t NPObject_T<Variant_t>::Get(size_t iIndex)
+const Variant_t NPObject_T<Variant_t>::Get(size_t iIndex)
 	{ return static_cast<Self_t*>(this)->DGet(Variant_t(), iIndex); }
 
 template <class Variant_t>

@@ -73,7 +73,7 @@ public:
 			}
 		}
 
-	T Get() const
+	const T Get() const
 		{
 		T result;
 		for (typename S::const_iterator i = fStack.begin(); i != fStack.end(); ++i)

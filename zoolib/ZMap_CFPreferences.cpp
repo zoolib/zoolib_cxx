@@ -54,30 +54,30 @@ ZMap_CFPreferences::ZMap_CFPreferences(CFStringRef iApplicationID)
 :	fApplicationID(iApplicationID)
 	{}
 
-ZQ<ZVal_CF> ZMap_CFPreferences::QGet(const string8& iName) const
+const ZQ<ZVal_CF> ZMap_CFPreferences::QGet(const string8& iName) const
 	{ return this->QGet(ZUtil_CF::sString(iName)); }
 
-ZQ<ZVal_CF> ZMap_CFPreferences::QGet(CFStringRef iName) const
+const ZQ<ZVal_CF> ZMap_CFPreferences::QGet(CFStringRef iName) const
 	{
 	if (ZRef<CFPropertyListRef> theVal = sAdopt& ::CFPreferencesCopyAppValue(iName, fApplicationID))
 		return theVal;
 	return null;
 	}
 
-ZVal_CF ZMap_CFPreferences::DGet(const ZVal_CF& iDefault, const string8& iName) const
+const ZVal_CF ZMap_CFPreferences::DGet(const ZVal_CF& iDefault, const string8& iName) const
 	{ return this->DGet(iDefault, ZUtil_CF::sString(iName)); }
 
-ZVal_CF ZMap_CFPreferences::DGet(const ZVal_CF& iDefault, CFStringRef iName) const
+const ZVal_CF ZMap_CFPreferences::DGet(const ZVal_CF& iDefault, CFStringRef iName) const
 	{
 	if (ZQ<ZVal_CF> theQ = this->QGet(iName))
 		return *theQ;
 	return iDefault;
 	}
 
-ZVal_CF ZMap_CFPreferences::Get(const string8& iName) const
+const ZVal_CF ZMap_CFPreferences::Get(const string8& iName) const
 	{ return this->Get(ZUtil_CF::sString(iName)); }
 
-ZVal_CF ZMap_CFPreferences::Get(CFStringRef iName) const
+const ZVal_CF ZMap_CFPreferences::Get(CFStringRef iName) const
 	{
 	if (ZQ<ZVal_CF> theQ = this->QGet(iName))
 		return *theQ;

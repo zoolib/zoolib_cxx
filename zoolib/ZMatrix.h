@@ -170,7 +170,7 @@ public:
 	E& GetMutable(size_t c)
 		{ return fE[c][0]; }
 
-	E Get(size_t c) const
+	const E Get(size_t c) const
 		{ return fE[c][0]; }
 
 	E fE[C][1];

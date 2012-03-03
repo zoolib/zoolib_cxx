@@ -88,7 +88,7 @@ public:
 		{ return static_cast<const S*>(pGet(typeid(S))); }
 
 	template <class S>
-	ZQ<S> QGet() const
+	const ZQ<S> QGet() const
 		{
 		if (const S* theVal = this->PGet<S>())
 			return *theVal;
@@ -96,7 +96,7 @@ public:
 		}
 
 	template <class S>
-	S DGet(const S& iDefault) const
+	const S DGet(const S& iDefault) const
 		{
 		if (const S* theVal = this->PGet<S>())
 			return *theVal;
@@ -104,7 +104,7 @@ public:
 		}
 
 	template <class S>
-	S Get() const
+	const S Get() const
 		{
 		if (const S* theVal = this->PGet<S>())
 			return *theVal;

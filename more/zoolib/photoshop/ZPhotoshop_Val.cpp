@@ -780,7 +780,7 @@ Spec& Spec::operator+=(const Spec& iOther)
 	return *this;
 	}
 
-ZQ<Map> Spec::QGet() const
+const ZQ<Map> Spec::QGet() const
 	{
 	if (PIActionReference theRef = this->MakeRef())
 		{
@@ -1170,7 +1170,7 @@ void Seq::Clear()
 	spPSActionList->Make(&fAL);
 	}
 
-ZQ<Val> Seq::QGet(size_t iIndex) const
+const ZQ<Val> Seq::QGet(size_t iIndex) const
 	{
 	if (iIndex < this->Count())
 		{
@@ -1188,14 +1188,14 @@ ZQ<Val> Seq::QGet(size_t iIndex) const
 	return null;
 	}
 
-Val Seq::DGet(const Val& iDefault, size_t iIndex) const
+const Val Seq::DGet(const Val& iDefault, size_t iIndex) const
 	{
 	if (ZQ<Val> theQ = this->QGet(iIndex))
 		return *theQ;
 	return iDefault;
 	}
 
-Val Seq::Get(size_t iIndex) const
+const Val Seq::Get(size_t iIndex) const
 	{ return this->DGet(Val(), iIndex); }
 
 Seq& Seq::Append(const Val& iVal)
@@ -1304,7 +1304,7 @@ bool Map::IsEmpty() const
 void Map::Clear()
 	{ spPSActionDescriptor->Clear(fAD); }
 
-ZQ<Val> Map::QGet(KeyID iKey) const
+const ZQ<Val> Map::QGet(KeyID iKey) const
 	{
 	if (fAD)
 		{
@@ -1322,40 +1322,40 @@ ZQ<Val> Map::QGet(KeyID iKey) const
 	return null;
 	}
 
-ZQ<Val> Map::QGet(const string8& iName) const
+const ZQ<Val> Map::QGet(const string8& iName) const
 	{ return this->QGet(spAsKeyID(iName)); }
 
-ZQ<Val> Map::QGet(Index_t iIndex) const
+const ZQ<Val> Map::QGet(Index_t iIndex) const
 	{ return this->QGet(this->KeyOf(iIndex)); }
 
-Val Map::DGet(const Val& iDefault, KeyID iKey) const
+const Val Map::DGet(const Val& iDefault, KeyID iKey) const
 	{
 	if (ZQ<Val> theQ = this->QGet(iKey))
 		return *theQ;
 	return iDefault;
 	}
 
-Val Map::DGet(const Val& iDefault, const string8& iName) const
+const Val Map::DGet(const Val& iDefault, const string8& iName) const
 	{
 	if (ZQ<Val> theQ = this->QGet(iName))
 		return *theQ;
 	return iDefault;
 	}
 
-Val Map::DGet(const Val& iDefault, Index_t iIndex) const
+const Val Map::DGet(const Val& iDefault, Index_t iIndex) const
 	{
 	if (ZQ<Val> theQ = this->QGet(iIndex))
 		return *theQ;
 	return iDefault;
 	}
 
-Val Map::Get(KeyID iKey) const
+const Val Map::Get(KeyID iKey) const
 	{ return this->DGet(Val(), iKey); }
 
-Val Map::Get(const string8& iName) const
+const Val Map::Get(const string8& iName) const
 	{ return this->DGet(Val(), iName); }
 
-Val Map::Get(Index_t iIndex) const
+const Val Map::Get(Index_t iIndex) const
 	{ return this->DGet(Val(), iIndex); }
 
 Map& Map::Set(KeyID iKey, const Val& iVal)

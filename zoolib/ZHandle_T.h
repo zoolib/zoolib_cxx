@@ -97,10 +97,10 @@ public:
 		return *this;
 		}
 
-	T Get() const
+	const T Get() const
 		{ return fHandle; }
 
-	T Orphan()
+	const T Orphan()
 		{
 		Handle result = fHandle;
 		fHandle = 0;

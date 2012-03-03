@@ -133,8 +133,8 @@ public:
 	void Clear();
 
 	ZQ<ZVal_Yad> QGet(const string8& iName) const;
-	ZVal_Yad DGet(const ZVal_Yad& iDefault, const string8& iName) const;
-	ZVal_Yad Get(const string8& iName) const;
+	const ZVal_Yad DGet(const ZVal_Yad& iDefault, const string8& iName) const;
+	const ZVal_Yad Get(const string8& iName) const;
 
 	template <class S>
 	ZQ<S> QGet(const string8& iName) const
@@ -145,7 +145,7 @@ public:
 		}
 
 	template <class S>
-	S DGet(const S& iDefault, const string8& iName) const
+	const S DGet(const S& iDefault, const string8& iName) const
 		{
 		if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
 			{
@@ -156,7 +156,7 @@ public:
 		}
 
 	template <class S>
-	S Get(const string8& iName) const
+	const S Get(const string8& iName) const
 		{
 		if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
 			{

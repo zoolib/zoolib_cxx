@@ -69,7 +69,7 @@ public:
 		return fVal;
 		}
 
-	T Get() const
+	const T Get() const
 		{
 		ZAcqMtx acq(fMtx);
 		return fVal;

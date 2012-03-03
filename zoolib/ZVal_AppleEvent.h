@@ -94,10 +94,10 @@ public:
 	void Clear();
 
 	template <class S>
-	ZQ<S> QGet() const;
+	const ZQ<S> QGet() const;
 
 	template <class S>
-	S DGet(const S& iDefault) const
+	const S DGet(const S& iDefault) const
 		{
 		if (ZQ<S> result = this->QGet<S>())
 			return result.Get();
@@ -105,7 +105,7 @@ public:
 		}
 
 	template <class S>
-	S Get() const
+	const S Get() const
 		{ return this->DGet(S()); }
 
 	template <class S>
@@ -114,8 +114,8 @@ public:
 // Our protocol
 	AEDesc& OParam();
 
-	ZVal_AppleEvent Get(const std::string& iName) const;
-	ZVal_AppleEvent Get(size_t iIndex) const;
+	const ZVal_AppleEvent Get(const std::string& iName) const;
+	const ZVal_AppleEvent Get(size_t iIndex) const;
 
 // Typename accessors
 /// \cond DoxygenIgnore
@@ -165,9 +165,9 @@ public:
 
 	void Clear();
 
-	ZQ<ZVal_AppleEvent> QGet(size_t iIndex) const;
-	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, size_t iIndex) const;
-	ZVal_AppleEvent Get(size_t iIndex) const;
+	const ZQ<ZVal_AppleEvent> QGet(size_t iIndex) const;
+	const ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, size_t iIndex) const;
+	const ZVal_AppleEvent Get(size_t iIndex) const;
 
 	ZSeq_AppleEvent& Set(size_t iIndex, const AEDesc& iVal);
 
@@ -211,17 +211,17 @@ public:
 // ZMap protocol
 	void Clear();
 
-	ZQ<ZVal_AppleEvent> QGet(AEKeyword iName) const;
-	ZQ<ZVal_AppleEvent> QGet(const std::string& iName) const;
-	ZQ<ZVal_AppleEvent> QGet(Index_t iPropIter) const;
+	const ZQ<ZVal_AppleEvent> QGet(AEKeyword iName) const;
+	const ZQ<ZVal_AppleEvent> QGet(const std::string& iName) const;
+	const ZQ<ZVal_AppleEvent> QGet(Index_t iPropIter) const;
 
-	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, AEKeyword iName) const;
-	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, const std::string& iName) const;
-	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, Index_t iIndex) const;
+	const ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, AEKeyword iName) const;
+	const ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, const std::string& iName) const;
+	const ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, Index_t iIndex) const;
 
-	ZVal_AppleEvent Get(AEKeyword iName) const;
-	ZVal_AppleEvent Get(const std::string& iName) const;
-	ZVal_AppleEvent Get(Index_t iIndex) const;
+	const ZVal_AppleEvent Get(AEKeyword iName) const;
+	const ZVal_AppleEvent Get(const std::string& iName) const;
+	const ZVal_AppleEvent Get(Index_t iIndex) const;
 
 	ZMap_AppleEvent& Set(AEKeyword iName, const AEDesc& iVal);
 	ZMap_AppleEvent& Set(const std::string& iName, const AEDesc& iVal);
@@ -234,9 +234,9 @@ public:
 // Our protocol
 	AERecord& OParam();
 
-	ZQ<ZVal_AppleEvent> QGetAttr(AEKeyword iName) const;
-	ZVal_AppleEvent DGetAttr(const ZVal_AppleEvent& iDefault, AEKeyword iName) const;
-	ZVal_AppleEvent GetAttr(AEKeyword iName) const;
+	const ZQ<ZVal_AppleEvent> QGetAttr(AEKeyword iName) const;
+	const ZVal_AppleEvent DGetAttr(const ZVal_AppleEvent& iDefault, AEKeyword iName) const;
+	const ZVal_AppleEvent GetAttr(AEKeyword iName) const;
 	void SetAttr(AEKeyword iName, const AEDesc& iVal);
 
 	AEKeyword GetType() const;

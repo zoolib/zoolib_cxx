@@ -243,14 +243,14 @@ ZQ<ZVal_Yad> ZMap_Yad::QGet(const string8& iName) const
 	return null;
 	}
 
-ZVal_Yad ZMap_Yad::DGet(const ZVal_Yad& iDefault, const string8& iName) const
+const ZVal_Yad ZMap_Yad::DGet(const ZVal_Yad& iDefault, const string8& iName) const
 	{
 	if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
 		return *theQ;
 	return iDefault;
 	}
 
-ZVal_Yad ZMap_Yad::Get(const string8& iName) const
+const ZVal_Yad ZMap_Yad::Get(const string8& iName) const
 	{
 	if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
 		return *theQ;

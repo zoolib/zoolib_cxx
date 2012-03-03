@@ -43,10 +43,10 @@ class NPVariantBase
 public:
 // ZVal Get protocol
 	template <class S>
-	ZQ<S> QGet() const;
+	const ZQ<S> QGet() const;
 
 	template <class S>
-	S DGet(const S& iDefault) const
+	const S DGet(const S& iDefault) const
 		{
 		if (ZQ<S> theQ = this->QGet<S>())
 			return *theQ;
@@ -54,7 +54,7 @@ public:
 		}
 
 	template <class S>
-	S Get() const
+	const S Get() const
 		{ return this->DGet(S()); }
 	};
 

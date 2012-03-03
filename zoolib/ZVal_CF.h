@@ -108,10 +108,10 @@ public:
 	using inherited::Get;
 
 	template <class S>
-	ZQ<S> QGet() const;
+	const ZQ<S> QGet() const;
 
 	template <class S>
-	S DGet(const S& iDefault) const
+	const S DGet(const S& iDefault) const
 		{
 		if (ZQ<S> theQ = this->QGet<S>())
 			return *theQ;
@@ -119,7 +119,7 @@ public:
 		}
 
 	template <class S>
-	S Get() const
+	const S Get() const
 		{
 		if (ZQ<S> theQ = this->QGet<S>())
 			return *theQ;
@@ -129,9 +129,9 @@ public:
 	template <class S>
 	void Set(const S& iVal);
 
-	ZVal_CF Get(const string8& iName) const;
-	ZVal_CF Get(CFStringRef iName) const;
-	ZVal_CF Get(size_t iIndex) const;
+	const ZVal_CF Get(const string8& iName) const;
+	const ZVal_CF Get(CFStringRef iName) const;
+	const ZVal_CF Get(size_t iIndex) const;
 
 // Typename accessors
 /// \cond DoxygenIgnore
@@ -181,20 +181,20 @@ public:
 	using inherited::Clear;
 	using inherited::Get;
 
-	ZQ<ZVal_CF> QGet(size_t iIndex) const;
-	ZVal_CF DGet(const ZVal_CF& iDefault, size_t iIndex) const;
-	ZVal_CF Get(size_t iIndex) const;
+	const ZQ<ZVal_CF> QGet(size_t iIndex) const;
+	const ZVal_CF DGet(const ZVal_CF& iDefault, size_t iIndex) const;
+	const ZVal_CF Get(size_t iIndex) const;
 
 	template <class S>
-	ZQ<S> QGet(size_t iIndex) const
+	const ZQ<S> QGet(size_t iIndex) const
 		{ return this->Get(iIndex).QGet<S>(); }
 
 	template <class S>
-	S DGet(const S& iDefault, size_t iIndex) const
+	const S DGet(const S& iDefault, size_t iIndex) const
 		{ return this->Get(iIndex).DGet<S>(iDefault); }
 
 	template <class S>
-	S Get(size_t iIndex) const
+	const S Get(size_t iIndex) const
 		{ return this->Get(iIndex).Get<S>(); }
 
 	ZSeq_CF& Set(size_t iIndex, const ZVal_CF& iVal);
@@ -247,37 +247,37 @@ public:
 	using inherited::Clear;
 	using inherited::Get;
 
-	ZQ<ZVal_CF> QGet(const string8& iName) const;
-	ZQ<ZVal_CF> QGet(CFStringRef iName) const;
+	const ZQ<ZVal_CF> QGet(const string8& iName) const;
+	const ZQ<ZVal_CF> QGet(CFStringRef iName) const;
 
-	ZVal_CF DGet(const ZVal_CF& iDefault, const string8& iName) const;
-	ZVal_CF DGet(const ZVal_CF& iDefault, CFStringRef iName) const;
+	const ZVal_CF DGet(const ZVal_CF& iDefault, const string8& iName) const;
+	const ZVal_CF DGet(const ZVal_CF& iDefault, CFStringRef iName) const;
 
-	ZVal_CF Get(const string8& iName) const;
-	ZVal_CF Get(CFStringRef iName) const;
+	const ZVal_CF Get(const string8& iName) const;
+	const ZVal_CF Get(CFStringRef iName) const;
 
 	template <class S>
-	ZQ<S> QGet(const string8& iName) const
+	const ZQ<S> QGet(const string8& iName) const
 		{ return this->Get(iName).QGet<S>(); }
 
 	template <class S>
-	ZQ<S> QGet(CFStringRef iName) const
+	const ZQ<S> QGet(CFStringRef iName) const
 		{ return this->Get(iName).QGet<S>(); }
 
 	template <class S>
-	S DGet(const S& iDefault, const string8& iName) const
+	const S DGet(const S& iDefault, const string8& iName) const
 		{ return this->Get(iName).DGet<S>(iDefault); }
 
 	template <class S>
-	S DGet(const S& iDefault, CFStringRef iName) const
+	const S DGet(const S& iDefault, CFStringRef iName) const
 		{ return this->Get(iName).DGet<S>(iDefault); }
 
 	template <class S>
-	S Get(const string8& iName) const
+	const S Get(const string8& iName) const
 		{ return this->Get(iName).Get<S>(); }
 
 	template <class S>
-	S Get(CFStringRef iName) const
+	const S Get(CFStringRef iName) const
 		{ return this->Get(iName).Get<S>(); }
 
 	ZMap_CF& Set(const string8& iName, const ZVal_CF& iVal);

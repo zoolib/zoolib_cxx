@@ -45,37 +45,37 @@ public:
 	ZMap_CFPreferences(CFStringRef iApplicationID);
 
 // ZMap protocol
-	ZQ<ZVal_CF> QGet(const string8& iName) const;
-	ZQ<ZVal_CF> QGet(CFStringRef iName) const;
+	const ZQ<ZVal_CF> QGet(const string8& iName) const;
+	const ZQ<ZVal_CF> QGet(CFStringRef iName) const;
 
-	ZVal_CF DGet(const ZVal_CF& iDefault, const string8& iName) const;
-	ZVal_CF DGet(const ZVal_CF& iDefault, CFStringRef iName) const;
+	const ZVal_CF DGet(const ZVal_CF& iDefault, const string8& iName) const;
+	const ZVal_CF DGet(const ZVal_CF& iDefault, CFStringRef iName) const;
 
-	ZVal_CF Get(const string8& iName) const;
-	ZVal_CF Get(CFStringRef iName) const;
+	const ZVal_CF Get(const string8& iName) const;
+	const ZVal_CF Get(CFStringRef iName) const;
 
 	template <class S>
-	ZQ<S> QGet(const string8& iName) const
+	const ZQ<S> QGet(const string8& iName) const
 		{ return this->Get(iName).QGet<S>(); }
 
 	template <class S>
-	ZQ<S> QGet(CFStringRef iName) const
+	const ZQ<S> QGet(CFStringRef iName) const
 		{ return this->Get(iName).QGet<S>(); }
 
 	template <class S>
-	S DGet(const S& iDefault, const string8& iName) const
+	const S DGet(const S& iDefault, const string8& iName) const
 		{ return this->Get(iName).DGet<S>(iDefault); }
 
 	template <class S>
-	S DGet(const S& iDefault, CFStringRef iName) const
+	const S DGet(const S& iDefault, CFStringRef iName) const
 		{ return this->Get(iName).DGet<S>(iDefault); }
 
 	template <class S>
-	S Get(const string8& iName) const
+	const S Get(const string8& iName) const
 		{ return this->Get(iName).Get<S>(); }
 
 	template <class S>
-	S Get(CFStringRef iName) const
+	const S Get(CFStringRef iName) const
 		{ return this->Get(iName).Get<S>(); }
 
 	ZMap_CFPreferences& Set(const string8& iName, const ZVal_CF& iVal);

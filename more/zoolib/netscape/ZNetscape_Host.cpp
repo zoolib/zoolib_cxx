@@ -44,7 +44,7 @@ template class NPVariant_T<NPObjectH>;
 
 // Provide implementation of NPVariantBase::QGet<ZRef<NPObjectH> >
 template <>
-ZQ<ZRef<NPObjectH> > NPVariantBase::QGet<ZRef<NPObjectH> >() const
+const ZQ<ZRef<NPObjectH> > NPVariantBase::QGet<ZRef<NPObjectH> >() const
 	{
 	if (type == NPVariantType_Object)
 		return ZRef<NPObjectH>(static_cast<NPObjectH*>(value.objectValue));

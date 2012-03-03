@@ -165,7 +165,7 @@ public:
 	Spec operator+(const Spec& iOther);
 	Spec& operator+=(const Spec& iOther);
 
-	ZQ<Map> QGet() const;
+	const ZQ<Map> QGet() const;
 
 	PIActionReference MakeRef() const;
 
@@ -289,12 +289,12 @@ public:
 
 	void Clear();
 
-	ZQ<Val> QGet(size_t iIndex) const;
-	Val DGet(const Val& iDefault, size_t iIndex) const;
-	Val Get(size_t iIndex) const;
+	const ZQ<Val> QGet(size_t iIndex) const;
+	const Val DGet(const Val& iDefault, size_t iIndex) const;
+	const Val Get(size_t iIndex) const;
 
 	template <class S>
-	ZQ<S> QGet(size_t iIndex) const
+	const ZQ<S> QGet(size_t iIndex) const
 		{
 		if (ZQ<Val> theQ = this->QGet(iIndex))
 			return theQ->QGet<S>();
@@ -302,7 +302,7 @@ public:
 		}
 
 	template <class S>
-	S DGet(const S& iDefault, size_t iIndex) const
+	const S DGet(const S& iDefault, size_t iIndex) const
 		{
 		if (ZQ<S> theQ = this->QGet<S>(iIndex))
 			return *theQ;
@@ -310,7 +310,7 @@ public:
 		}
 
 	template <class S>
-	S Get(size_t iIndex) const
+	const S Get(size_t iIndex) const
 		{ return this->DGet<S>(S(), iIndex); }
 
 	Seq& Append(const Val& iVal);
@@ -360,52 +360,52 @@ public:
 
 	void Clear();
 
-	ZQ<Val> QGet(KeyID iKey) const;
-	ZQ<Val> QGet(const string8& iName) const;
-	ZQ<Val> QGet(Index_t iIndex) const;
+	const ZQ<Val> QGet(KeyID iKey) const;
+	const ZQ<Val> QGet(const string8& iName) const;
+	const ZQ<Val> QGet(Index_t iIndex) const;
 
-	Val DGet(const Val& iDefault, KeyID iKey) const;
-	Val DGet(const Val& iDefault, const string8& iName) const;
-	Val DGet(const Val& iDefault, Index_t iIndex) const;
+	const Val DGet(const Val& iDefault, KeyID iKey) const;
+	const Val DGet(const Val& iDefault, const string8& iName) const;
+	const Val DGet(const Val& iDefault, Index_t iIndex) const;
 
-	Val Get(KeyID iKey) const;
-	Val Get(const string8& iName) const;
-	Val Get(Index_t iIndex) const;
+	const Val Get(KeyID iKey) const;
+	const Val Get(const string8& iName) const;
+	const Val Get(Index_t iIndex) const;
 
 	template <class S>
-	ZQ<S> QGet(KeyID iKey) const
+	const ZQ<S> QGet(KeyID iKey) const
 		{ return this->Get(iKey).QGet<S>(); }
 
 	template <class S>
-	ZQ<S> QGet(const string8& iName) const
+	const ZQ<S> QGet(const string8& iName) const
 		{ return this->Get(iName).QGet<S>(); }
 
 	template <class S>
-	ZQ<S> QGet(const Index_t& iIndex) const
+	const ZQ<S> QGet(const Index_t& iIndex) const
 		{ return this->Get(iIndex).QGet<S>(); }
 
 	template <class S>
-	S DGet(const S& iDefault, KeyID iKey) const
+	const S DGet(const S& iDefault, KeyID iKey) const
 		{ return this->Get(iKey).DGet<S>(iDefault); }
 
 	template <class S>
-	S DGet(const S& iDefault, const string8& iName) const
+	const S DGet(const S& iDefault, const string8& iName) const
 		{ return this->Get(iName).DGet<S>(iDefault); }
 
 	template <class S>
-	S DGet(const S& iDefault, const Index_t& iIndex) const
+	const S DGet(const S& iDefault, const Index_t& iIndex) const
 		{ return this->Get(iIndex).DGet<S>(iDefault); }
 
 	template <class S>
-	S Get(KeyID iKey) const
+	const S Get(KeyID iKey) const
 		{ return this->Get(iKey).Get<S>(); }
 
 	template <class S>
-	S Get(const string8& iName) const
+	const S Get(const string8& iName) const
 		{ return this->Get(iName).Get<S>(); }
 
 	template <class S>
-	S Get(const Index_t& iIndex) const
+	const S Get(const Index_t& iIndex) const
 		{ return this->Get(iIndex).Get<S>(); }
 
 	Map& Set(KeyID iKey, const Val& iVal);
