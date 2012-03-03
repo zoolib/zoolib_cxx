@@ -800,6 +800,68 @@ template <class Val>
 ZRef<ZTween<Val> > sTween_ValRange(Val iZeroVal, Val iOneVal, const ZRef<ZTween<Val> >& iTween)
 	{ return sTween_ValOffset(iZeroVal, sTween_ValScale<Val>(iOneVal - iZeroVal, iTween)); }
 
+// =================================================================================================
+// MARK: - sTween_First
+
+template <class Val>
+class ZTween_First
+:	public ZTween<Val>
+	{
+public:
+	ZTween_First(const ZRef<ZTween<Val> >& iTween)
+	:	fTween(iTween)
+		{}
+
+// From ZTween
+	virtual ZQ<Val> QValAt(double iPlace)
+		{ return fTween->QValAt(0); }
+
+private:
+	const ZRef<ZTween<Val> > fTween;
+	};
+
+template <class Val>
+ZRef<ZTween<Val> > sTween_First(const ZRef<ZTween<Val> >& iTween)
+	{
+	if (iTween)
+		return new ZTween_First<Val>(iTween);
+	return null;
+	}
+
+// =================================================================================================
+// MARK: - sTween_Last
+
+template <class Val>
+class ZTween_Last
+:	public ZTween<Val>
+	{
+public:
+	ZTween_Last(const ZRef<ZTween<Val> >& iTween)
+	:	fTween(iTween)
+		{}
+
+// From ZTween
+	virtual ZQ<Val> QValAt(double iPlace)
+		{
+		if (iPlace < 0 || iPlace >= 1)
+			return null;
+
+		return fTween->QValAt(spWeight(fTween, fTweenWeightQ) * 0.999);
+		}
+
+private:
+	const ZRef<ZTween<Val> > fTween;
+	ZQ<double> fTweenWeightQ;
+	};
+
+template <class Val>
+ZRef<ZTween<Val> > sTween_Last(const ZRef<ZTween<Val> >& iTween)
+	{
+	if (iTween)
+		return new ZTween_Last<Val>(iTween);
+	return null;
+	}
+
 } // namespace ZooLib
 
 #endif // __ZTween_h__
