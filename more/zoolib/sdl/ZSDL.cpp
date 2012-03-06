@@ -89,8 +89,7 @@ ZRef<Texture> Renderer::Make_Texture(ZRef<Surface> iSurface)
 Texture::Texture(ZRef<Renderer> iRenderer, SDL_Texture* iTexture)
 :	fRenderer(iRenderer)
 ,	fTexture(iTexture)
-	{
-	}
+	{}
 
 Texture::~Texture()
 	{
@@ -116,8 +115,7 @@ Texture_Mutable::Texture_Mutable(ZRef<Renderer> iRenderer, SDL_Texture* iTexture
 
 Surface::Surface(SDL_Surface* iSurface)
 :	fSurface(iSurface)
-	{
-	}
+	{}
 
 Surface::~Surface()
 	{
