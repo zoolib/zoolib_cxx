@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTrail_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZUnicodeString.h"
 
 #include <vector>
