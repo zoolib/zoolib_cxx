@@ -793,7 +793,7 @@ ZCog<Param> spCogFun_While(const ZCog<Param>& iSelf, Param iParam,
 // =================================================================================================
 // MARK: - Binary parallel, sCog_With
 
-// Call cog0 and cog1 so long as cog0 is pending, result from cog0
+// Call cog0 and cog1 while cog0 is pending, result from cog0.
 
 template <class Param>
 ZCog<Param> spCogFun_With(const ZCog<Param>& iSelf, Param iParam,
