@@ -291,7 +291,22 @@ sRect
 	const typename RectTraits<Rect_p>::Ord_t& iT,
 	const typename RectTraits<Rect_p>::Ord_t& iR,
 	const typename RectTraits<Rect_p>::Ord_t& iB)
-	{ return RectTraits<Rect_p>::sMake(iL, iT, iR, iB); }
+	{
+	if (iL <= iR)
+		{
+		if (iT <= iB)
+			return RectTraits<Rect_p>::sMake(iL, iT, iR, iB);
+		else
+			return RectTraits<Rect_p>::sMake(iL, iB, iR, iT);
+		}
+	else
+		{
+		if (iT <= iB)
+			return RectTraits<Rect_p>::sMake(iR, iT, iL, iB);
+		else
+			return RectTraits<Rect_p>::sMake(iR, iB, iL, iT);
+		}
+	}
 
 // =================================================================================================
 // MARK: - Derived accessors
@@ -775,6 +790,257 @@ Rect_p sWithWHLB(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
 template <class Rect_p, class OtherX, class OtherY>
 Rect_p sWithWHRT(const OtherX& iX, const OtherY& iY, const Rect_p& iRect)
 	{ return sRect<Rect_p>(L(iRect), B(iRect) - Y(iY), L(iRect) + X(iX), B(iRect)); }
+
+// =================================================================================================
+// MARK: - PointTraitsStd_Base
+
+template <class Ord_p, class Point_p, class Rect_p>
+struct PointTraitsStd_Base
+	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
+	typedef Ord_p Ord_t;
+	typedef Point_p Point_t;
+	typedef Rect_p Rect_t;
+
+	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
+		{ return Point_t(iX, iY); }
+	};
+
+// =================================================================================================
+// MARK: - PointTraitsStd_XY
+
+template <class Ord_p, class Point_p, class Rect_p>
+struct PointTraitsStd_XY
+:	public PointTraitsStd_Base<Ord_p,Point_p,Rect_p>
+	{
+	typedef const Ord_p& XC_t;
+	static XC_t sX(const Point_p& iPoint) { return iPoint.x; }
+
+	typedef Ord_p& X_t;
+	static X_t sX(Point_p& ioPoint) { return ioPoint.x; }
+
+	typedef const Ord_p& YC_t;
+	static YC_t sY(const Point_p& iPoint) { return iPoint.y; }
+
+	typedef Ord_p& Y_t;
+	static Y_t sY(Point_p& ioPoint) { return ioPoint.y; }
+	};
+
+// =================================================================================================
+// MARK: - PointTraitsStd_WidthHeight
+
+template <class Ord_p, class Point_p, class Rect_p>
+struct PointTraitsStd_WidthHeight
+:	public PointTraitsStd_Base<Ord_p,Point_p,Rect_p>
+	{
+	typedef const Ord_p& XC_t;
+	static XC_t sX(const Point_p& iPoint) { return iPoint.width; }
+
+	typedef Ord_p& X_t;
+	static X_t sX(Point_p& ioPoint) { return ioPoint.width; }
+
+	typedef const Ord_p& YC_t;
+	static YC_t sY(const Point_p& iPoint) { return iPoint.height; }
+
+	typedef Ord_p& Y_t;
+	static Y_t sY(Point_p& ioPoint) { return ioPoint.height; }
+	};
+
+// =================================================================================================
+// MARK: - RectTraitsStd_Base
+
+template <class Ord_p, class Point_p, class Rect_p>
+struct RectTraitsStd_Base
+	{
+	typedef null_t Dummy_t;
+	typedef bool Bool_t;
+
+	typedef Ord_p Ord_t;
+	typedef Point_p Point_t;
+	typedef Rect_p Rect_t;
+
+	typedef const Ord_p WC_t;
+	typedef WC_t W_t;
+	static WC_t sW(const Rect_p& iRect) { return R(iRect) - L(iRect); }
+
+	typedef const Ord_p HC_t;
+	typedef HC_t H_t;
+	static HC_t sH(const Rect_p& iRect) { return B(iRect) - T(iRect); }
+
+	typedef const Point_p WHC_t;
+	typedef WHC_t WH_t;
+	static WHC_t sWH(const Rect_p& iRect) { return sPoint<Point_p>(W(iRect), H(iRect)); }
+
+	typedef const Point_p LTC_t;
+	typedef LTC_t LT_t;
+	static LTC_t sLT(const Rect_p& iRect) { return sPoint<Point_p>(L(iRect), T(iRect)); }
+
+	typedef const Point_p RBC_t;
+	typedef RBC_t RB_t;
+	static RBC_t sRB(const Rect_p& iRect) { return sPoint<Point_p>(R(iRect), B(iRect)); }
+
+	typedef const Point_p LBC_t;
+	typedef LBC_t LB_t;
+	static LBC_t sLB(const Rect_p& iRect) { return sPoint<Point_p>(L(iRect), B(iRect)); }
+
+	typedef const Point_p RTC_t;
+	typedef RTC_t RT_t;
+	static RTC_t sRT(const Rect_p& iRect) { return sPoint<Point_p>(R(iRect), T(iRect)); }
+	};
+
+// =================================================================================================
+// MARK: - RectTraitsStd_OriginSize
+
+template <class Ord_p, class Origin_p, class Size_p, class Rect_p>
+struct RectTraitsStd_OriginSize
+:	public RectTraitsStd_Base<Ord_p,Origin_p,Rect_p>
+	{
+	typedef const Ord_p& LC_t;
+	static LC_t sL(const Rect_p& iRect) { return X(iRect.origin); }
+
+	typedef Ord_p& L_t;
+	static L_t sL(Rect_p& ioRect) { return X(ioRect.origin); }
+
+	typedef const Ord_p& TC_t;
+	static TC_t sT(const Rect_p& iRect) { return Y(iRect.origin); }
+
+	typedef Ord_p& T_t;
+	static T_t sT(Rect_p& ioRect) { return Y(ioRect.origin); }
+
+	typedef const Ord_p RC_t;
+	typedef RC_t R_t;
+	static RC_t sR(const Rect_p& iRect) { return X(iRect.origin) + X(iRect.size); }
+
+	typedef const Ord_p BC_t;
+	typedef BC_t B_t;
+	static BC_t sB(const Rect_p& iRect) { return Y(iRect.origin) + Y(iRect.size); }
+
+	typedef const Ord_p& WC_t;
+	static WC_t sW(const Rect_p& iRect) { return X(iRect.size); }
+
+	typedef Ord_p& W_t;
+	static W_t sW(Rect_p& ioRect) { return X(ioRect.size); }
+
+	typedef const Ord_p& HC_t;
+	static HC_t sH(const Rect_p& iRect) { return Y(iRect.size); }
+
+	typedef Ord_p& H_t;
+	static H_t sH(Rect_p& ioRect) { return Y(ioRect.size); }
+
+	typedef const Size_p& WHC_t;
+	static WHC_t sWH(const Rect_p& iRect) { return iRect.size; }
+
+	typedef Size_p& WH_t;
+	static WH_t sWH(Rect_p& ioRect) { return ioRect.size; }
+
+	typedef const Origin_p& LTC_t;
+	static LTC_t sLT(const Rect_p& iRect) { return iRect.origin; }
+
+	typedef Origin_p& LT_t;
+	static LT_t sLT(Rect_p& ioRect) { return ioRect.origin; }
+	};
+
+// =================================================================================================
+// MARK: - RectTraitsStd_XYWH_Base
+
+template <class Ord_p, class Point_p, class Rect_p>
+struct RectTraitsStd_XYWH_Base
+:	public RectTraitsStd_Base<Ord_p,Point_p,Rect_p>
+	{
+	typedef const Ord_p& LC_t;
+	static LC_t sL(const Rect_p& iRect) { return iRect.x; }
+
+	typedef Ord_p& L_t;
+	static L_t sL(Rect_p& ioRect) { return ioRect.x; }
+
+	typedef const Ord_p& TC_t;
+	static TC_t sT(const Rect_p& iRect) { return iRect.y; }
+
+	typedef Ord_p& T_t;
+	static T_t sT(Rect_p& ioRect) { return ioRect.y; }
+
+	typedef const Ord_p RC_t;
+	typedef RC_t R_t;
+	static RC_t sR(const Rect_p& iRect) { return iRect.x + W(iRect); }
+
+	typedef const Ord_p BC_t;
+	typedef BC_t B_t;
+	static BC_t sB(const Rect_p& iRect) { return iRect.y + H(iRect); }
+	};
+
+// =================================================================================================
+// MARK: - RectTraitsStd_XYWH
+
+template <class Ord_p, class Point_p, class Rect_p>
+struct RectTraitsStd_XYWH
+:	public RectTraitsStd_XYWH_Base<Ord_p,Point_p,Rect_p>
+	{
+	typedef const Ord_p& WC_t;
+	static WC_t sW(const Rect_p& iRect) { return iRect.w; }
+
+	typedef Ord_p& W_t;
+	static W_t sW(Rect_p& ioRect) { return ioRect.w; }
+
+	typedef const Ord_p& HC_t;
+	static HC_t sH(const Rect_p& iRect) { return iRect.h; }
+
+	typedef Ord_p& H_t;
+	static H_t sH(Rect_p& ioRect) { return ioRect.h; }
+	};
+
+// =================================================================================================
+// MARK: - RectTraitsStd_XYWidthHeight
+
+template <class Ord_p, class Point_p, class Rect_p>
+struct RectTraitsStd_XYWidthHeight
+:	public RectTraitsStd_XYWH_Base<Ord_p,Point_p,Rect_p>
+	{
+	typedef const Ord_p& WC_t;
+	static WC_t sW(const Rect_p& iRect) { return iRect.width; }
+
+	typedef Ord_p& W_t;
+	static W_t sW(Rect_p& ioRect) { return ioRect.width; }
+
+	typedef const Ord_p& HC_t;
+	static HC_t sH(const Rect_p& iRect) { return iRect.height; }
+
+	typedef Ord_p& H_t;
+	static H_t sH(Rect_p& ioRect) { return ioRect.height; }
+	};
+
+// =================================================================================================
+// MARK: - RectTraitsStd_LeftTopRightBottom
+
+template <class Ord_p, class Point_p, class Rect_p>
+struct RectTraitsStd_LeftTopRightBottom
+:	public RectTraitsStd_Base<Ord_p,Point_p,Rect_p>
+	{
+	typedef const Ord_p& LC_t;
+	static LC_t sL(const Rect_p& iRect) { return iRect.left; }
+
+	typedef Ord_p& L_t;
+	static L_t sL(Rect_p& ioRect) { return ioRect.left; }
+
+	typedef const Ord_p& TC_t;
+	static TC_t sT(const Rect_p& iRect) { return iRect.top; }
+
+	typedef Ord_p& T_t;
+	static T_t sT(Rect_p& ioRect) { return ioRect.top; }
+
+	typedef const Ord_p& RC_t;
+	static RC_t sR(const Rect_p& iRect) { return iRect.right; }
+
+	typedef Ord_p& R_t;
+	static R_t sR(Rect_p& ioRect) { return ioRect.right; }
+
+	typedef const Ord_p& BC_t;
+	static BC_t sB(const Rect_p& iRect) { return iRect.bottom; }
+
+	typedef Ord_p& B_t;
+	static B_t sB(Rect_p& ioRect) { return ioRect.bottom; }
+	};
 
 } // namespace ZCartesian
 } // namespace ZooLib
