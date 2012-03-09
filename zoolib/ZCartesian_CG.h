@@ -37,7 +37,7 @@ namespace ZooLib {
 namespace ZCartesian {
 
 // =================================================================================================
-// MARK: - CGPoint
+// MARK: - PointTraits<CGPoint>
 
 template <>
 struct PointTraits<CGPoint>
@@ -48,7 +48,7 @@ struct PointTraits<CGPoint>
 	};
 
 // =================================================================================================
-// MARK: - CGSize
+// MARK: - PointTraits<CGSize>
 
 template <>
 struct PointTraits<CGSize>
@@ -59,7 +59,7 @@ struct PointTraits<CGSize>
 	};
 
 // =================================================================================================
-// MARK: - CGRect
+// MARK: - RectTraits<CGRect>
 
 template <>
 struct RectTraits<CGRect>

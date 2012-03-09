@@ -30,7 +30,7 @@ namespace ZooLib {
 namespace ZCartesian {
 
 // =================================================================================================
-// MARK: - SDL_Point
+// MARK: - PointTraits<SDL_Point>
 
 template <>
 struct PointTraits<SDL_Point>
@@ -44,7 +44,7 @@ struct PointTraits<SDL_Point>
 	};
 
 // =================================================================================================
-// MARK: - SDL_Rect
+// MARK: - RectTraits<SDL_Rect>
 
 template <>
 struct RectTraits<SDL_Rect>

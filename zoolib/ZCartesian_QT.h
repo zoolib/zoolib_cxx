@@ -30,7 +30,7 @@ namespace ZooLib {
 namespace ZCartesian {
 
 // =================================================================================================
-// MARK: - QPoint
+// MARK: - PointTraits<QPoint>
 
 template <>
 struct PointTraits<QPoint>
@@ -38,7 +38,7 @@ struct PointTraits<QPoint>
 	{};
 
 // =================================================================================================
-// MARK: - QSize
+// MARK: - PointTraits<QSize>
 
 template <>
 struct PointTraits<QSize>
@@ -46,7 +46,7 @@ struct PointTraits<QSize>
 	{};
 
 // =================================================================================================
-// MARK: - QRect
+// MARK: - RectTraits<QRect>
 
 template <>
 struct RectTraits<QRect>
@@ -92,7 +92,7 @@ struct RectTraits<QRect>
 	};
 
 // =================================================================================================
-// MARK: - QPointF
+// MARK: - PointTraits<QPointF>
 
 template <>
 struct PointTraits<QPointF>
@@ -100,7 +100,7 @@ struct PointTraits<QPointF>
 	{};
 
 // =================================================================================================
-// MARK: - QRectF
+// MARK: - RectTraits<QRectF>
 
 template <>
 struct RectTraits<QRectF>

@@ -33,7 +33,7 @@ namespace ZooLib {
 namespace ZCartesian {
 
 // =================================================================================================
-// MARK: - XPoint
+// MARK: - PointTraits<XPoint>
 
 template <>
 struct PointTraits<XPoint>
@@ -49,7 +49,7 @@ struct PointTraits<XPoint>
 	};
 
 // =================================================================================================
-// MARK: - SDL_Rect
+// MARK: - RectTraits<XRectangle>
 
 template <>
 struct RectTraits<XRectangle>

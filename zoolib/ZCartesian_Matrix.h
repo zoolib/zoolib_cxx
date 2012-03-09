@@ -29,7 +29,7 @@ namespace ZooLib {
 namespace ZCartesian {
 
 // =================================================================================================
-// MARK: - ZMatrix<Ord,1,2> (point)
+// MARK: - PointTraits<ZMatrix<Ord_p,1,2> > (point)
 
 template <>
 template <class Ord_p>
@@ -60,7 +60,7 @@ struct PointTraits<ZMatrix<Ord_p,1,2> >
 	};
 
 // =================================================================================================
-// MARK: - ZMatrix<Ord,1,3> (CVec3 used as a 2D point)
+// MARK: - PointTraits<ZMatrix<Ord_p,1,3> > (CVec3 used as a 2D point)
 
 template <>
 template <class Ord_p>
@@ -83,7 +83,7 @@ struct PointTraits<ZMatrix<Ord_p,1,3> >
 	};
 
 // =================================================================================================
-// MARK: - ZMatrixArray<Ord,1,2,2> (rectangle)
+// MARK: - RectTraits<ZMatrixArray<Ord,1,2,2> > (rectangle)
 
 template <>
 template <class Ord_p>
