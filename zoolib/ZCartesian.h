@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCartesian_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompat_algorithm.h" // For std::min, std::max
 #include "zoolib/ZStdInt.h" // For int64
-#include "zoolib/ZCompat_algorithm.h" // For std::min/max
 
 namespace ZooLib {
 namespace ZCartesian {
@@ -128,98 +128,6 @@ sPoint
 	(const Other& iOther,
 	const typename PointTraits<Other>::Dummy_t& dummy = null)
 	{ return sPoint<Point_p>(X(iOther), Y(iOther)); }
-
-// =================================================================================================
-// MARK: - Point Comparison Operators
-
-template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
-operator==(const Point_p& iL, const Point_p& iR)
-	{ return X(iL) == X(iR) && Y(iL) == Y(iR); }
-
-template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
-operator!=(const Point_p& iL, const Point_p& iR)
-	{ return not (iL == iR); }
-
-template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
-operator<(const Point_p& iL, const Point_p& iR)
-	{ return X(iL) < X(iR) || X(iL) == X(iR) && Y(iL) < Y(iR); }
-
-template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
-operator>(const Point_p& iL, const Point_p& iR)
-	{ return iR < iL; }
-
-template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
-operator<=(const Point_p& iL, const Point_p& iR)
-	{ return not (iR < iL); }
-
-template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
-operator>=(const Point_p& iL, const Point_p& iR)
-	{ return not (iL < iR); }
-
-// =================================================================================================
-// MARK: - Point Manipulation Operators
-
-template <class Point_p, class Other>
-typename PointTraits<Point_p>::Point_t
-operator+(const Point_p& iL, const Other& iR)
-	{ return sPoint<Point_p>(X(iL) + X(iR), Y(iL) + Y(iR)); }
-
-template <class Point_p, class Other>
-typename PointTraits<Point_p>::Point_t&
-operator+=(Point_p& ioL, const Other& iR)
-	{
-	X(ioL) += X(iR);
-	Y(ioL) += Y(iR);
-	return ioL;
-	}
-
-template <class Point_p, class Other>
-typename PointTraits<Point_p>::Point_t
-operator-(const Point_p& iL, const Other& iR)
-	{ return sPoint<Point_p>(X(iL) - X(iR), Y(iL) - Y(iR)); }
-
-template <class Point_p, class Other>
-typename PointTraits<Point_p>::Point_t&
-operator-=(Point_p& ioL, const Other& iR)
-	{
-	X(ioL) -= X(iR);
-	Y(ioL) -= Y(iR);
-	return ioL;
-	}
-
-template <class Point_p, class Other>
-typename PointTraits<Point_p>::Point_t
-operator*(const Point_p& iL, const Other& iR)
-	{ return sPoint<Point_p>(X(iL) * X(iR), Y(iL) * Y(iR)); }
-
-template <class Point_p, class Other>
-typename PointTraits<Point_p>::Point_t&
-operator*=(Point_p& ioL, const Other& iR)
-	{
-	X(ioL) *= X(iR);
-	Y(ioL) *= Y(iR);
-	return ioL;
-	}
-
-template <class Point_p, class Other>
-typename PointTraits<Point_p>::Point_t
-operator/(const Point_p& iL, const Other& iR)
-	{ return sPoint<Point_p>(X(iL) / X(iR), Y(iL) / Y(iR)); }
-
-template <class Point_p, class Other>
-typename PointTraits<Point_p>::Point_t&
-operator/=(Point_p& ioL, const Other& iR)
-	{
-	X(ioL) /= X(iR);
-	Y(ioL) /= Y(iR);
-	return ioL;
-	}
 
 // =================================================================================================
 // MARK: - RectTraits and accessors
@@ -332,12 +240,12 @@ C(const Rect_p& iRect)
 template <class Rect_p>
 typename RectTraits<Rect_p>::Rect_t
 sRect()
-	{ return sRect<Rect_p>(0, 0, 0, 0); }
+	{ return RectTraits<Rect_p>::sMake(0, 0, 0, 0); }
 
 template <class Point_p>
 typename PointTraits<Point_p>::Rect_t
 sRect(const Point_p& iPoint)
-	{ return sRect<typename PointTraits<Point_p>::Rect_t>(0, 0, X(iPoint), Y(iPoint)); }
+	{ return RectTraits<typename PointTraits<Point_p>::Rect_t>::sMake(0, 0, X(iPoint), Y(iPoint)); }
 
 template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t
@@ -358,107 +266,14 @@ typename RectTraits<Rect_p>::Rect_t
 sRect
 	(const OtherW& iW,
 	const OtherH& iH)
-	{ return sRect<Rect_p>(0, 0, iW, iH); }
+	{ return RectTraits<Rect_p>::sMake(0, 0, iW, iH); }
 
 // =================================================================================================
-// MARK: - Rect Comparison Operators
+// MARK: - sEmpty
 
 template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
-operator==(const Rect_p& iL, const Rect_p& iR)
-	{ return LT(iL) == LT(iR) && RB(iL) == RB(iR); }
-
-template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
-operator!=(const Rect_p& iL, const Rect_p& iR)
-	{ return not (iL == iR); }
-
-template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
-operator<(const Rect_p& iL, const Rect_p& iR)
-	{ return LT(iL) < LT(iR) || LT(iL) == LT(iR) && RB(iL) < RB(iR); }
-
-template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
-operator>(const Rect_p& iL, const Rect_p& iR)
-	{ return iR < iL; }
-
-template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
-operator<=(const Rect_p& iL, const Rect_p& iR)
-	{ return not (iR < iL); }
-
-template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
-operator>=(const Rect_p& iL, const Rect_p& iR)
-	{ return not (iL < iR); }
-
-// =================================================================================================
-// MARK: - Rect Manipulation Operators
-
-template <class Rect_p, class Other>
-typename RectTraits<Rect_p>::Rect_t
-operator+(const Rect_p& iL, const Other& iR)
-	{
-	return sRect<Rect_p>
-		(L(iL) + X(iR),
-		T(iL) + Y(iR),
-		R(iL) + X(iR),
-		B(iL) + Y(iR));
-	}
-
-template <class Rect_p, class Other>
-typename RectTraits<Rect_p>::Rect_t&
-operator+=(Rect_p& ioL, const Other& iR)
-	{ return ioL = ioL + iR; }
-
-template <class Rect_p, class Other>
-typename RectTraits<Rect_p>::Rect_t
-operator-(const Rect_p& iL, const Other& iR)
-	{
-	return sRect<Rect_p>
-		(L(iL) - X(iR),
-		T(iL) - Y(iR),
-		R(iL) - X(iR),
-		B(iL) - Y(iR));
-	}
-
-template <class Rect_p, class Other>
-typename RectTraits<Rect_p>::Rect_t&
-operator-=(Rect_p& ioL, const Other& iR)
-	{ return ioL = ioL - iR; }
-
-template <class Rect_p, class Other>
-typename RectTraits<Rect_p>::Rect_t
-operator*(const Rect_p& iL, const Other& iR)
-	{
-	return sRect<Rect_p>
-		(L(iL) * X(iR),
-		T(iL) * Y(iR),
-		R(iL) * X(iR),
-		B(iL) * Y(iR));
-	}
-
-template <class Rect_p, class Other>
-typename RectTraits<Rect_p>::Rect_t&
-operator*=(Rect_p& ioL, const Other& iR)
-	{ return ioL = ioL * iR; }
-
-template <class Rect_p, class Other>
-typename RectTraits<Rect_p>::Rect_t
-operator/(const Rect_p& iL, const Other& iR)
-	{
-	return sRect<Rect_p>
-		(L(iL) / X(iR),
-		T(iL) / Y(iR),
-		R(iL) / X(iR),
-		B(iL) / Y(iR));
-	}
-
-template <class Rect_p, class Other>
-typename RectTraits<Rect_p>::Rect_t&
-operator/=(Rect_p& ioL, const Other& iR)
-	{ return ioL = ioL / iR; }
+bool sIsEmpty(const Rect_p& iRect)
+	{ return L(iRect) >= R(iRect) || T(iRect) >= B(iRect); }
 
 // =================================================================================================
 // MARK: - sContains
@@ -829,6 +644,26 @@ struct PointTraitsStd_XY
 	};
 
 // =================================================================================================
+// MARK: - PointTraitsStd_HV
+
+template <class Ord_p, class Point_p, class Rect_p>
+struct PointTraitsStd_HV
+:	public PointTraitsStd_Base<Ord_p,Point_p,Rect_p>
+	{
+	typedef const Ord_p& XC_t;
+	static XC_t sX(const Point_p& iPoint) { return iPoint.h; }
+
+	typedef Ord_p& X_t;
+	static X_t sX(Point_p& ioPoint) { return ioPoint.h; }
+
+	typedef const Ord_p& YC_t;
+	static YC_t sY(const Point_p& iPoint) { return iPoint.v; }
+
+	typedef Ord_p& Y_t;
+	static Y_t sY(Point_p& ioPoint) { return ioPoint.v; }
+	};
+
+// =================================================================================================
 // MARK: - PointTraitsStd_WidthHeight
 
 template <class Ord_p, class Point_p, class Rect_p>
@@ -1043,6 +878,226 @@ struct RectTraitsStd_LeftTopRightBottom
 	};
 
 } // namespace ZCartesian
+
+// =================================================================================================
+// MARK: - Point Comparison Operators
+
+template <class Point_p>
+typename ZCartesian::PointTraits<Point_p>::Bool_t
+operator==(const Point_p& iL, const Point_p& iR)
+	{
+	using namespace ZCartesian;
+	return X(iL) == X(iR) && Y(iL) == Y(iR);
+	}
+
+template <class Point_p>
+typename ZCartesian::PointTraits<Point_p>::Bool_t
+operator!=(const Point_p& iL, const Point_p& iR)
+	{ return not (iL == iR); }
+
+template <class Point_p>
+typename ZCartesian::PointTraits<Point_p>::Bool_t
+operator<(const Point_p& iL, const Point_p& iR)
+	{ return X(iL) < X(iR) || X(iL) == X(iR) && Y(iL) < Y(iR); }
+
+template <class Point_p>
+typename ZCartesian::PointTraits<Point_p>::Bool_t
+operator>(const Point_p& iL, const Point_p& iR)
+	{ return iR < iL; }
+
+template <class Point_p>
+typename ZCartesian::PointTraits<Point_p>::Bool_t
+operator<=(const Point_p& iL, const Point_p& iR)
+	{ return not (iR < iL); }
+
+template <class Point_p>
+typename ZCartesian::PointTraits<Point_p>::Bool_t
+operator>=(const Point_p& iL, const Point_p& iR)
+	{ return not (iL < iR); }
+
+// =================================================================================================
+// MARK: - Point Manipulation Operators
+
+template <class Point_p, class Other>
+typename ZCartesian::PointTraits<Point_p>::Point_t
+operator+(const Point_p& iL, const Other& iR)
+	{ return ZCartesian::sPoint<Point_p>(X(iL) + X(iR), Y(iL) + Y(iR)); }
+
+template <class Point_p, class Other>
+typename ZCartesian::PointTraits<Point_p>::Point_t&
+operator+=(Point_p& ioL, const Other& iR)
+	{
+	X(ioL) += X(iR);
+	Y(ioL) += Y(iR);
+	return ioL;
+	}
+
+template <class Point_p, class Other>
+typename ZCartesian::PointTraits<Point_p>::Point_t
+operator-(const Point_p& iL, const Other& iR)
+	{ return ZCartesian::sPoint<Point_p>(X(iL) - X(iR), Y(iL) - Y(iR)); }
+
+template <class Point_p, class Other>
+typename ZCartesian::PointTraits<Point_p>::Point_t&
+operator-=(Point_p& ioL, const Other& iR)
+	{
+	X(ioL) -= X(iR);
+	Y(ioL) -= Y(iR);
+	return ioL;
+	}
+
+template <class Point_p, class Other>
+typename ZCartesian::PointTraits<Point_p>::Point_t
+operator*(const Point_p& iL, const Other& iR)
+	{ return ZCartesian::sPoint<Point_p>(X(iL) * X(iR), Y(iL) * Y(iR)); }
+
+template <class Point_p, class Other>
+typename ZCartesian::PointTraits<Point_p>::Point_t&
+operator*=(Point_p& ioL, const Other& iR)
+	{
+	X(ioL) *= X(iR);
+	Y(ioL) *= Y(iR);
+	return ioL;
+	}
+
+template <class Point_p, class Other>
+typename ZCartesian::PointTraits<Point_p>::Point_t
+operator/(const Point_p& iL, const Other& iR)
+	{ return ZCartesian::sPoint<Point_p>(X(iL) / X(iR), Y(iL) / Y(iR)); }
+
+template <class Point_p, class Other>
+typename ZCartesian::PointTraits<Point_p>::Point_t&
+operator/=(Point_p& ioL, const Other& iR)
+	{
+	X(ioL) /= X(iR);
+	Y(ioL) /= Y(iR);
+	return ioL;
+	}
+
+// =================================================================================================
+// MARK: - Rect Comparison Operators
+
+template <class Rect_p>
+typename ZCartesian::RectTraits<Rect_p>::Bool_t
+operator==(const Rect_p& iL, const Rect_p& iR)
+	{
+	using namespace ZCartesian;
+	return LT(iL) == LT(iR) && RB(iL) == RB(iR);
+	}
+
+template <class Rect_p>
+typename ZCartesian::RectTraits<Rect_p>::Bool_t
+operator!=(const Rect_p& iL, const Rect_p& iR)
+	{ return not (iL == iR); }
+
+template <class Rect_p>
+typename ZCartesian::RectTraits<Rect_p>::Bool_t
+operator<(const Rect_p& iL, const Rect_p& iR)
+	{ return LT(iL) < LT(iR) || LT(iL) == LT(iR) && RB(iL) < RB(iR); }
+
+template <class Rect_p>
+typename ZCartesian::RectTraits<Rect_p>::Bool_t
+operator>(const Rect_p& iL, const Rect_p& iR)
+	{ return iR < iL; }
+
+template <class Rect_p>
+typename ZCartesian::RectTraits<Rect_p>::Bool_t
+operator<=(const Rect_p& iL, const Rect_p& iR)
+	{ return not (iR < iL); }
+
+template <class Rect_p>
+typename ZCartesian::RectTraits<Rect_p>::Bool_t
+operator>=(const Rect_p& iL, const Rect_p& iR)
+	{ return not (iL < iR); }
+
+// =================================================================================================
+// MARK: - Rect Manipulation Operators
+
+template <class Rect_p, class Other>
+typename ZCartesian::RectTraits<Rect_p>::Rect_t
+operator+(const Rect_p& iL, const Other& iR)
+	{
+	using namespace ZCartesian;
+	return sRect<Rect_p>
+		(L(iL) + X(iR),
+		T(iL) + Y(iR),
+		R(iL) + X(iR),
+		B(iL) + Y(iR));
+	}
+
+template <class Rect_p, class Other>
+typename ZCartesian::RectTraits<Rect_p>::Rect_t&
+operator+=(Rect_p& ioL, const Other& iR)
+	{ return ioL = ioL + iR; }
+
+template <class Rect_p, class Other>
+typename ZCartesian::RectTraits<Rect_p>::Rect_t
+operator-(const Rect_p& iL, const Other& iR)
+	{
+	using namespace ZCartesian;
+	return sRect<Rect_p>
+		(L(iL) - X(iR),
+		T(iL) - Y(iR),
+		R(iL) - X(iR),
+		B(iL) - Y(iR));
+	}
+
+template <class Rect_p, class Other>
+typename ZCartesian::RectTraits<Rect_p>::Rect_t&
+operator-=(Rect_p& ioL, const Other& iR)
+	{ return ioL = ioL - iR; }
+
+template <class Rect_p, class Other>
+typename ZCartesian::RectTraits<Rect_p>::Rect_t
+operator*(const Rect_p& iL, const Other& iR)
+	{
+	using namespace ZCartesian;
+	return sRect<Rect_p>
+		(L(iL) * X(iR),
+		T(iL) * Y(iR),
+		R(iL) * X(iR),
+		B(iL) * Y(iR));
+	}
+
+template <class Rect_p, class Other>
+typename ZCartesian::RectTraits<Rect_p>::Rect_t&
+operator*=(Rect_p& ioL, const Other& iR)
+	{ return ioL = ioL * iR; }
+
+template <class Rect_p, class Other>
+typename ZCartesian::RectTraits<Rect_p>::Rect_t
+operator/(const Rect_p& iL, const Other& iR)
+	{
+	using namespace ZCartesian;
+	return sRect<Rect_p>
+		(L(iL) / X(iR),
+		T(iL) / Y(iR),
+		R(iL) / X(iR),
+		B(iL) / Y(iR));
+	}
+
+template <class Rect_p, class Other>
+typename ZCartesian::RectTraits<Rect_p>::Rect_t&
+operator/=(Rect_p& ioL, const Other& iR)
+	{ return ioL = ioL / iR; }
+
+template <class Rect_p>
+typename ZCartesian::RectTraits<Rect_p>::Rect_t
+operator&(const Rect_p& iL, const Rect_p& iR)
+	{
+	using namespace ZCartesian;
+	return sRect<Rect_p>
+		(std::max(L(iL), L(iR)),
+		std::max(T(iL), T(iR)),
+		std::min(R(iL), R(iR)),
+		std::min(B(iL), B(iR)));
+	}
+
+template <class Rect_p>
+typename ZCartesian::RectTraits<Rect_p>::Rect_t&
+operator&=(Rect_p& ioL, const Rect_p& iR)
+	{ return ioL = ioL & iR; }
+
 } // namespace ZooLib
 
 #endif // __ZCartesian_h__
