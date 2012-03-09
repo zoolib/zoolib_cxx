@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZGeomPOD_h__
 #include "zconfig.h"
 
+#include "zoolib/ZCartesian.h"
 #include "zoolib/ZCompare_T.h"
-#include "zoolib/ZStdInt.h"
+#include "zoolib/ZStdInt.h" // For int32
 
 namespace ZooLib {
 
@@ -37,54 +38,27 @@ typedef int32 ZCoord;
 
 struct ZPointPOD
 	{
-	int32 h;
-	int32 v;
+	ZCoord h;
+	ZCoord v;
 	};
 
-inline ZPointPOD sPointPOD(int32 iH, int32 iV)
+inline ZPointPOD sPointPOD(ZCoord iH, ZCoord iV)
 	{
 	const ZPointPOD result = {iH, iV};
 	return result;
 	}
-
-inline ZPointPOD operator+(const ZPointPOD& l, ZPointPOD p)
-	{ return sPointPOD(l.h + p.h, l.v + p.v); }
-
-inline ZPointPOD& operator+=(ZPointPOD& l, ZPointPOD p)
-	{ l.h += p.h; l.v += p.v; return l; }
-
-inline ZPointPOD operator-(const ZPointPOD& l, ZPointPOD p)
-	{ return sPointPOD(l.h - p.h, l.v - p.v); }
-
-inline ZPointPOD& operator-=(ZPointPOD& l, ZPointPOD p)
-	{ l.h -= p.h; l.v -= p.v; return l; }
-
-template <>
-int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR);
 
 // =================================================================================================
 // MARK: - ZRectPOD
 
 struct ZRectPOD
 	{
-	int32 left;
-	int32 top;
-	int32 right;
-	int32 bottom;
+	ZCoord left;
+	ZCoord top;
+	ZCoord right;
+	ZCoord bottom;
 
-	bool operator==(const ZRectPOD& other) const
-		{
-		return top == other.top && left == other.left
-			&& bottom == other.bottom && right == other.right;
-		}
-
-	bool operator!=(const ZRectPOD& other) const
-		{
-		return top != other.top || left != other.left
-			|| bottom != other.bottom || right != other.right;
-		}
-
-	bool Contains(int32 h, int32 v) const
+	bool Contains(ZCoord h, ZCoord v) const
 		{ return h >= left && h < right && v >= top && v < bottom; }
 
 	bool Contains(ZPointPOD p) const
@@ -93,69 +67,69 @@ struct ZRectPOD
 	bool IsEmpty() const
 		{ return left >= right || top >= bottom; }
 
-	int32 Width() const { return right - left; }
-	int32 Height() const { return bottom - top; }
+	ZCoord Width() const { return right - left; }
+	ZCoord Height() const { return bottom - top; }
 	ZPointPOD Size() const { return sPointPOD(right - left, bottom - top); }
 
 	ZPointPOD TopLeft() const { return sPointPOD(left, top); }
 	ZPointPOD TopRight() const { return sPointPOD(right, top); }
 	ZPointPOD BottomLeft() const { return sPointPOD(left, bottom); }
 	ZPointPOD BottomRight() const { return sPointPOD(right, bottom); }
-
-	static inline int32 sMin(int32 a, int32 b)
-		{ return a < b ? a : b; }
 	};
 
-inline ZRectPOD sRectPOD(int32 iLeft, int32 iTop, int32 iRight, int32 iBottom)
+inline ZRectPOD sRectPOD(ZCoord iLeft, ZCoord iTop, ZCoord iRight, ZCoord iBottom)
 	{
 	const ZRectPOD result = {iLeft, iTop, iRight, iBottom};
 	return result;
 	}
 
+// =================================================================================================
+// MARK: - Pseudo-ctors
+
 inline ZRectPOD sRectPOD(ZPointPOD iSize)
 	{ return sRectPOD(0, 0, iSize.h, iSize.v); }
 
-inline ZRectPOD sRectPOD(int32 iWidth, int32 iHeight)
+inline ZRectPOD sRectPOD(ZCoord iWidth, ZCoord iHeight)
 	{ return sRectPOD(0, 0, iWidth, iHeight); }
 
-inline ZRectPOD operator+(const ZRectPOD& l, ZPointPOD p)
-	{ return sRectPOD(l.left + p.h, l.top + p.v, l.right + p.h, l.bottom + p.v); }
+// =================================================================================================
+// MARK: - sCompare_T
 
-inline ZRectPOD& operator+=(ZRectPOD& l, ZPointPOD p)
-	{ l.left += p.h; l.top += p.v; l.right += p.h; l.bottom += p.v; return l; }
-
-inline ZRectPOD operator-(const ZRectPOD& l, ZPointPOD p)
-	{ return sRectPOD(l.left - p.h, l.top - p.v, l.right - p.h, l.bottom - p.v); }
-
-inline ZRectPOD& operator-=(ZRectPOD& l, ZPointPOD p)
-	{ l.left -= p.h; l.top -= p.v; l.right -= p.h; l.bottom -= p.v; return l; }
-
-
-inline ZRectPOD operator&(const ZRectPOD& l, const ZRectPOD& other)
-	{
-	ZRectPOD result;
-	result.left = ZRectPOD::sMin(l.left, other.left);
-	result.top = ZRectPOD::sMin(l.top, other.top);
-	result.right = ZRectPOD::sMin(l.right, other.right);
-	result.bottom = ZRectPOD::sMin(l.bottom, other.bottom);
-	result.left = ZRectPOD::sMin(l.left, l.right);
-	result.top = ZRectPOD::sMin(l.top, l.bottom);
-	return result;
-	}
-
-inline ZRectPOD& operator&=(ZRectPOD& l, const ZRectPOD& other)
-	{
-	l.left = ZRectPOD::sMin(l.left, other.left);
-	l.top = ZRectPOD::sMin(l.top, other.top);
-	l.right = ZRectPOD::sMin(l.right, other.right);
-	l.bottom = ZRectPOD::sMin(l.bottom, other.bottom);
-	l.left = ZRectPOD::sMin(l.left, l.right);
-	l.top = ZRectPOD::sMin(l.top, l.bottom);
-	return l;
-	}
+template <>
+int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR);
 
 template <>
 int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR);
+
+// =================================================================================================
+// MARK: - PointTraits<ZPointPOD>
+
+namespace ZCartesian {
+
+template <>
+struct PointTraits<ZPointPOD>
+:	public PointTraitsStd_HV<ZCoord,ZPointPOD,ZRectPOD>
+	{
+	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
+		{ return sPointPOD(iX, iY); }
+	};
+
+} // namespace ZCartesian
+
+// =================================================================================================
+// MARK: - RectTraits<ZRectPOD>
+
+namespace ZCartesian {
+
+template <>
+struct RectTraits<ZRectPOD>
+:	public RectTraitsStd_LeftTopRightBottom<ZCoord,ZPointPOD,ZRectPOD>
+	{
+	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
+		{ return sRectPOD(iL, iT, iR, iB); }
+	};
+
+} // namespace ZCartesian
 
 } // namespace ZooLib
 
