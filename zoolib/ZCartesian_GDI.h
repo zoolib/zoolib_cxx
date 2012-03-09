@@ -50,8 +50,8 @@ struct PointTraits<POINT>
 // MARK: - RECT
 
 template <>
-struct RectTraits<CGRect>
-:	public RectTraitsStd_LTRB<LONG,POINT,RECT>
+struct RectTraits<RECT>
+:	public RectTraitsStd_LeftTopRightBottom<LONG,POINT,RECT>
 	{
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{
