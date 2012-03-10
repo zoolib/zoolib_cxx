@@ -32,20 +32,15 @@ namespace ZRA {
 void Transform_DecomposeRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
 	using Util_Expr_Bool::CNF;
-	using Util_Expr_Bool::Disjunction;
+	using Util_Expr_Bool::Clause;
 
 	ZRef<Expr_Rel> theRel = this->Do(iExpr->GetOp0());
 	const CNF theCNF = Util_Expr_Bool::sAsCNF(iExpr->GetExpr_Bool());
 	for (CNF::const_iterator i = theCNF.begin(); i != theCNF.end(); ++i)
 		{
 		ZRef<ZExpr_Bool> newBool;
-		for (Disjunction::const_iterator j = i->begin(); j != i->end(); ++j)
-			{
-			if (!newBool)
-				newBool = j->Get();
-			else
-				newBool |= j->Get();
-			}
+		for (Clause::const_iterator j = i->begin(); j != i->end(); ++j)
+			newBool |= j->Get();
 		theRel &= newBool;
 		}
 

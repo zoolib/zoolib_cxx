@@ -40,9 +40,9 @@ CNF spCrossMultiply(const CNF& iCNF0, const CNF& iCNF1)
 		for (CNF::const_iterator iter1 = iCNF1.begin();
 			iter1 != iCNF1.end(); ++iter1)
 			{
-			Disjunction theDis = *iter0;
-			theDis.insert(iter1->begin(), iter1->end());
-			result.insert(theDis);
+			Clause theClause = *iter0;
+			theClause.insert(iter1->begin(), iter1->end());
+			result.insert(theClause);
 			}
 		}
 	return result;
@@ -50,18 +50,18 @@ CNF spCrossMultiply(const CNF& iCNF0, const CNF& iCNF1)
 
 CNF spTrue()
 	{
-	Disjunction theDis;
-	theDis.insert(sTrue());
+	Clause theClause;
+	theClause.insert(sTrue());
 	CNF result;
-	result.insert(theDis);
+	result.insert(theClause);
 	return result;
 	}
 
 CNF spFalse()
 	{
-	Disjunction theDis;
+	Clause theClause;
 	CNF result;
-	result.insert(theDis);
+	result.insert(theClause);
 	return result;
 	}
 
@@ -94,14 +94,14 @@ public:
 
 	virtual void Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<ZExpr_Bool> >& iExpr)
 		{
-		Disjunction theDis;
+		Clause theClause;
 		if (fNegating)
-			theDis.insert(sNot(iExpr->Self()));
+			theClause.insert(sNot(iExpr->Self()));
 		else
-			theDis.insert(iExpr->Self());
+			theClause.insert(iExpr->Self());
 
 		CNF result;
-		result.insert(theDis);
+		result.insert(theClause);
 		this->pSetResult(result);
 		}
 
@@ -181,14 +181,14 @@ protected:
 // =================================================================================================
 // MARK: - Util_Expr_Bool
 
-static ZRef<ZExpr_Bool> spFromDisjunction
-	(const Disjunction& iDisjunction,
+static ZRef<ZExpr_Bool> spFromClause
+	(const Clause& iClause,
 	const ZRef<ZExpr_Bool>& iTrue,
 	const ZRef<ZExpr_Bool>& iFalse)
 	{
 	ZRef<ZExpr_Bool> result = iFalse;
-	for (Disjunction::const_iterator iter = iDisjunction.begin();
-		iter != iDisjunction.end(); ++iter)
+	for (Clause::const_iterator iter = iClause.begin();
+		iter != iClause.end(); ++iter)
 		{
 		ZRef<ZExpr_Bool> theExpr = iter->Get();
 		if (theExpr == iTrue)
@@ -214,7 +214,7 @@ ZRef<ZExpr_Bool> sFromCNF(const CNF& iCNF)
 	for (CNF::const_iterator iter = iCNF.begin();
 		iter != iCNF.end(); ++iter)
 		{
-		ZRef<ZExpr_Bool> theExpr = spFromDisjunction(*iter, theTrue, theFalse);
+		ZRef<ZExpr_Bool> theExpr = spFromClause(*iter, theTrue, theFalse);
 		if (!theExpr || theExpr == theFalse)
 			return theFalse;
 		else if (result == theTrue)

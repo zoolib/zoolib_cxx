@@ -33,8 +33,11 @@ namespace Util_Expr_Bool {
 // =================================================================================================
 // MARK: - Util_Expr_Bool
 
-typedef std::set<ZTagVal<ZRef<ZExpr_Bool>,struct Tag_Disjunction> > Disjunction;
-typedef std::set<Disjunction> CNF;
+// CNF == Conjunctive Normal Form
+// Clause is a disjunction of literals
+
+typedef std::set<ZTagVal<ZRef<ZExpr_Bool>,struct Tag_Clause> > Clause;
+typedef std::set<Clause> CNF;
 
 ZRef<ZExpr_Bool> sFromCNF(const CNF& iCNF);
 CNF sAsCNF(const ZRef<ZExpr_Bool>& iExpr);
