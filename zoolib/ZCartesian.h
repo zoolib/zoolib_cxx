@@ -496,8 +496,28 @@ CY(const Rect_p& iRect)
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Point_t
-C(const Rect_p& iRect)
+CC(const Rect_p& iRect)
 	{ return sPoint<typename RectTraits<Rect_p>::Point_t>(CX(iRect), CY(iRect)); }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Point_t
+CT(const Rect_p& iRect)
+	{ return sPoint<typename RectTraits<Rect_p>::Point_t>(CX(iRect), T(iRect)); }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Point_t
+CB(const Rect_p& iRect)
+	{ return sPoint<typename RectTraits<Rect_p>::Point_t>(CX(iRect), B(iRect)); }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Point_t
+LC(const Rect_p& iRect)
+	{ return sPoint<typename RectTraits<Rect_p>::Point_t>(L(iRect), CY(iRect)); }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Point_t
+RC(const Rect_p& iRect)
+	{ return sPoint<typename RectTraits<Rect_p>::Point_t>(R(iRect), CY(iRect)); }
 
 // =================================================================================================
 // MARK: - sContains
