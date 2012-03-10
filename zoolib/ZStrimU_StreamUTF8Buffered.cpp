@@ -29,20 +29,17 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZStrimU_StreamUTF8Buffered
 
-ZStrimU_StreamUTF8Buffered::ZStrimU_StreamUTF8Buffered(size_t iBufferSize, const ZStreamR& iStreamR)
+ZStrimU_StreamUTF8Buffered::ZStrimU_StreamUTF8Buffered(size_t iBufferCount, const ZStreamR& iStreamR)
 :	fStreamR(iStreamR),
-	fBufferSize(iBufferSize),
-	fBuffer(new UTF32[fBufferSize]),
-	fBuffer_UTF8(new UTF8[fBufferSize]),
+	fBufferCount(iBufferCount),
+	fBuffer(fBufferCount, 0),
+	fBuffer_UTF8(fBufferCount, 0),
 	fFeedIn(0),
 	fFeedOut(0)
 	{}
 
 ZStrimU_StreamUTF8Buffered::~ZStrimU_StreamUTF8Buffered()
-	{
-	delete[] fBuffer;
-	delete[] fBuffer_UTF8;
-	}
+	{}
 
 // Do a more optimal version of this?
 static void spUTF8ToUTF32
@@ -90,14 +87,14 @@ void ZStrimU_StreamUTF8Buffered::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size
 
 				// Start writing to &fBuffer[1]
 				utf32Buffer = &fBuffer[1];
-				countToRead = fBufferSize - 1;
+				countToRead = fBufferCount - 1;
 				fFeedIn = 1;
 				fFeedOut = 1;
 				}
 			else
 				{
 				utf32Buffer = &fBuffer[0];
-				countToRead = fBufferSize;
+				countToRead = fBufferCount;
 				fFeedIn = 0;
 				fFeedOut = 0;
 				}
@@ -124,6 +121,6 @@ void ZStrimU_StreamUTF8Buffered::Imp_Unread(UTF32 iCP)
 	}
 
 size_t ZStrimU_StreamUTF8Buffered::Imp_UnreadableLimit()
-	{ return fBufferSize; }
+	{ return fBufferCount; }
 
 } // namespace ZooLib
