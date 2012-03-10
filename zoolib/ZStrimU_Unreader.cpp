@@ -20,11 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStrimU_Unreader.h"
 
-using std::min;
-using std::nothrow;
-using std::range_error;
-using std::string;
-
 namespace ZooLib {
 
 // =================================================================================================
