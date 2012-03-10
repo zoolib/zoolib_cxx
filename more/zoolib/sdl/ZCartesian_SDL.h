@@ -34,11 +34,11 @@ namespace ZCartesian {
 
 template <>
 struct PointTraits<SDL_Point>
-:	public PointTraitsStd_XY<int,SDL_Point,SDL_Rect>
+:	public PointTraits_Std_XY<int,SDL_Point,SDL_Rect>
 	{
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{
-		const SDL_Point result = { iX, iY };
+		const Point_t result = { iX, iY };
 		return result;
 		}
 	};
@@ -48,11 +48,11 @@ struct PointTraits<SDL_Point>
 
 template <>
 struct RectTraits<SDL_Rect>
-:	public RectTraitsStd_XYWH<int,SDL_Point,SDL_Rect>
+:	public RectTraits_Std_XYWH<int,SDL_Point,SDL_Rect>
 	{
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{
-		const SDL_Rect result = { iL, iT, iR - iL, iB - iT };
+		const Rect_t result = { iL, iT, iR - iL, iB - iT };
 		return result;
 		}	
 	};

@@ -851,10 +851,10 @@ Rect_p sWithWHRT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
 	{ return sRect<Rect_p>(L(iRect), B(iRect) - Y(iY), L(iRect) + X(iX), B(iRect)); }
 
 // =================================================================================================
-// MARK: - PointTraitsStd_Base
+// MARK: - PointTraits_Std_Base
 
 template <class Ord_p, class Point_p, class Rect_p>
-struct PointTraitsStd_Base
+struct PointTraits_Std_Base
 	{
 	typedef null_t Dummy_t;
 	typedef bool Bool_t;
@@ -868,11 +868,11 @@ struct PointTraitsStd_Base
 	};
 
 // =================================================================================================
-// MARK: - PointTraitsStd_XY
+// MARK: - PointTraits_Std_XY
 
 template <class Ord_p, class Point_p, class Rect_p>
-struct PointTraitsStd_XY
-:	public PointTraitsStd_Base<Ord_p,Point_p,Rect_p>
+struct PointTraits_Std_XY
+:	public PointTraits_Std_Base<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& XC_t;
 	static XC_t sX(const Point_p& iPoint) { return iPoint.x; }
@@ -888,11 +888,11 @@ struct PointTraitsStd_XY
 	};
 
 // =================================================================================================
-// MARK: - PointTraitsStd_HV
+// MARK: - PointTraits_Std_HV
 
 template <class Ord_p, class Point_p, class Rect_p>
-struct PointTraitsStd_HV
-:	public PointTraitsStd_Base<Ord_p,Point_p,Rect_p>
+struct PointTraits_Std_HV
+:	public PointTraits_Std_Base<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& XC_t;
 	static XC_t sX(const Point_p& iPoint) { return iPoint.h; }
@@ -908,11 +908,11 @@ struct PointTraitsStd_HV
 	};
 
 // =================================================================================================
-// MARK: - PointTraitsStd_WidthHeight
+// MARK: - PointTraits_Std_WidthHeight
 
 template <class Ord_p, class Point_p, class Rect_p>
-struct PointTraitsStd_WidthHeight
-:	public PointTraitsStd_Base<Ord_p,Point_p,Rect_p>
+struct PointTraits_Std_WidthHeight
+:	public PointTraits_Std_Base<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& XC_t;
 	static XC_t sX(const Point_p& iPoint) { return iPoint.width; }
@@ -928,10 +928,10 @@ struct PointTraitsStd_WidthHeight
 	};
 
 // =================================================================================================
-// MARK: - RectTraitsStd_Base
+// MARK: - RectTraits_Std_Base
 
 template <class Ord_p, class Point_p, class Rect_p>
-struct RectTraitsStd_Base
+struct RectTraits_Std_Base
 	{
 	typedef null_t Dummy_t;
 	typedef bool Bool_t;
@@ -970,11 +970,11 @@ struct RectTraitsStd_Base
 	};
 
 // =================================================================================================
-// MARK: - RectTraitsStd_OriginSize
+// MARK: - RectTraits_Std_OriginSize
 
 template <class Ord_p, class Origin_p, class Size_p, class Rect_p>
-struct RectTraitsStd_OriginSize
-:	public RectTraitsStd_Base<Ord_p,Origin_p,Rect_p>
+struct RectTraits_Std_OriginSize
+:	public RectTraits_Std_Base<Ord_p,Origin_p,Rect_p>
 	{
 	typedef const Ord_p& LC_t;
 	static LC_t sL(const Rect_p& iRect) { return X(iRect.origin); }
@@ -1022,11 +1022,11 @@ struct RectTraitsStd_OriginSize
 	};
 
 // =================================================================================================
-// MARK: - RectTraitsStd_XYWH_Base
+// MARK: - RectTraits_Std_XYWH_Base
 
 template <class Ord_p, class Point_p, class Rect_p>
-struct RectTraitsStd_XYWH_Base
-:	public RectTraitsStd_Base<Ord_p,Point_p,Rect_p>
+struct RectTraits_Std_XYWH_Base
+:	public RectTraits_Std_Base<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& LC_t;
 	static LC_t sL(const Rect_p& iRect) { return iRect.x; }
@@ -1050,11 +1050,11 @@ struct RectTraitsStd_XYWH_Base
 	};
 
 // =================================================================================================
-// MARK: - RectTraitsStd_XYWH
+// MARK: - RectTraits_Std_XYWH
 
 template <class Ord_p, class Point_p, class Rect_p>
-struct RectTraitsStd_XYWH
-:	public RectTraitsStd_XYWH_Base<Ord_p,Point_p,Rect_p>
+struct RectTraits_Std_XYWH
+:	public RectTraits_Std_XYWH_Base<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& WC_t;
 	static WC_t sW(const Rect_p& iRect) { return iRect.w; }
@@ -1070,11 +1070,11 @@ struct RectTraitsStd_XYWH
 	};
 
 // =================================================================================================
-// MARK: - RectTraitsStd_XYWidthHeight
+// MARK: - RectTraits_Std_XYWidthHeight
 
 template <class Ord_p, class Point_p, class Rect_p>
-struct RectTraitsStd_XYWidthHeight
-:	public RectTraitsStd_XYWH_Base<Ord_p,Point_p,Rect_p>
+struct RectTraits_Std_XYWidthHeight
+:	public RectTraits_Std_XYWH_Base<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& WC_t;
 	static WC_t sW(const Rect_p& iRect) { return iRect.width; }
@@ -1090,11 +1090,11 @@ struct RectTraitsStd_XYWidthHeight
 	};
 
 // =================================================================================================
-// MARK: - RectTraitsStd_LeftTopRightBottom
+// MARK: - RectTraits_Std_LeftTopRightBottom
 
 template <class Ord_p, class Point_p, class Rect_p>
-struct RectTraitsStd_LeftTopRightBottom
-:	public RectTraitsStd_Base<Ord_p,Point_p,Rect_p>
+struct RectTraits_Std_LeftTopRightBottom
+:	public RectTraits_Std_Base<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& LC_t;
 	static LC_t sL(const Rect_p& iRect) { return iRect.left; }

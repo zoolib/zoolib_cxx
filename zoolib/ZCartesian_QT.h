@@ -34,7 +34,7 @@ namespace ZCartesian {
 
 template <>
 struct PointTraits<QPoint>
-:	public PointTraitsStd_XY<int,QPoint,QRect>
+:	public PointTraits_Std_XY<int,QPoint,QRect>
 	{};
 
 // =================================================================================================
@@ -42,7 +42,7 @@ struct PointTraits<QPoint>
 
 template <>
 struct PointTraits<QSize>
-:	public PointTraitsStd_XY<int,QSize,QRect>
+:	public PointTraits_Std_XY<int,QSize,QRect>
 	{};
 
 // =================================================================================================
@@ -50,7 +50,7 @@ struct PointTraits<QSize>
 
 template <>
 struct RectTraits<QRect>
-:	public RectTraitsStd_Base<int,QPoint,QRect>
+:	public RectTraits_Std_Base<int,QPoint,QRect>
 	{
 	typedef const Ord_t LC_t;
 	static LC_t sL(const Rect_t& iRect) { return iRect.left(); }
@@ -96,7 +96,7 @@ struct RectTraits<QRect>
 
 template <>
 struct PointTraits<QPointF>
-:	public PointTraitsStd_XY<qreal,QPointF,QRectF>
+:	public PointTraits_Std_XY<qreal,QPointF,QRectF>
 	{};
 
 // =================================================================================================
@@ -104,7 +104,7 @@ struct PointTraits<QPointF>
 
 template <>
 struct RectTraits<QRectF>
-:	public RectTraitsStd_Base<qreal,QPointF,QRectF>
+:	public RectTraits_Std_Base<qreal,QPointF,QRectF>
 	{
 	typedef const Ord_t LC_t;
 	typedef LC_t L_t;

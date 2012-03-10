@@ -37,7 +37,7 @@ namespace ZCartesian {
 
 template <>
 struct PointTraits<XPoint>
-:	public PointTraitsStd_XY<short,XPoint,XRectangle>
+:	public PointTraits_Std_XY<short,XPoint,XRectangle>
 	{
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{
@@ -53,7 +53,7 @@ struct PointTraits<XPoint>
 
 template <>
 struct RectTraits<XRectangle>
-:	public RectTraitsStd_XYWH<short,XPoint,XRectangle>
+:	public RectTraits_Std_XYWH<short,XPoint,XRectangle>
 	{
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{ return XRectangleMake(iL, iT, iR - iL, iB - iT); }

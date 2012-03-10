@@ -41,7 +41,7 @@ namespace ZCartesian {
 
 template <>
 struct PointTraits<CGPoint>
-:	public PointTraitsStd_XY<CGFloat,CGPoint,CGRect>
+:	public PointTraits_Std_XY<CGFloat,CGPoint,CGRect>
 	{
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{ return CGPointMake(iX, iY); }
@@ -52,7 +52,7 @@ struct PointTraits<CGPoint>
 
 template <>
 struct PointTraits<CGSize>
-:	public PointTraitsStd_WidthHeight<CGFloat,CGSize,CGRect>
+:	public PointTraits_Std_WidthHeight<CGFloat,CGSize,CGRect>
 	{
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{ return CGSizeMake(iX, iY); }
@@ -63,7 +63,7 @@ struct PointTraits<CGSize>
 
 template <>
 struct RectTraits<CGRect>
-:	public RectTraitsStd_OriginSize<CGFloat,CGPoint,CGSize,CGRect>
+:	public RectTraits_Std_OriginSize<CGFloat,CGPoint,CGSize,CGRect>
 	{
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{ return CGRectMake(iL, iT, iR - iL, iB - iT); }

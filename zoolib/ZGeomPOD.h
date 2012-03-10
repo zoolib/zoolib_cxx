@@ -108,7 +108,7 @@ namespace ZCartesian {
 
 template <>
 struct PointTraits<ZPointPOD>
-:	public PointTraitsStd_HV<ZCoord,ZPointPOD,ZRectPOD>
+:	public PointTraits_Std_HV<ZCoord,ZPointPOD,ZRectPOD>
 	{
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{ return sPointPOD(iX, iY); }
@@ -123,7 +123,7 @@ namespace ZCartesian {
 
 template <>
 struct RectTraits<ZRectPOD>
-:	public RectTraitsStd_LeftTopRightBottom<ZCoord,ZPointPOD,ZRectPOD>
+:	public RectTraits_Std_LeftTopRightBottom<ZCoord,ZPointPOD,ZRectPOD>
 	{
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{ return sRectPOD(iL, iT, iR, iB); }

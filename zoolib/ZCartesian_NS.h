@@ -61,11 +61,11 @@ namespace ZCartesian {
 
 template <>
 struct PointTraits<NSPoint>
-:	public PointTraitsStd_XY<float,NSPoint,NSRect>
+:	public PointTraits_Std_XY<float,NSPoint,NSRect>
 	{
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{
-		const NSPoint result = { iX, iY };
+		const Point_t result = { iX, iY };
 		return result;
 		}
 	};
@@ -75,11 +75,11 @@ struct PointTraits<NSPoint>
 
 template <>
 struct PointTraits<NSSize>
-:	public PointTraitsStd_WidthHeight<float,NSSize,NSRect>
+:	public PointTraits_Std_WidthHeight<float,NSSize,NSRect>
 	{
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{
-		const NSSize result = { iX, iY };
+		const Point_t result = { iX, iY };
 		return result;
 		}
 	};
@@ -89,11 +89,11 @@ struct PointTraits<NSSize>
 
 template <>
 struct RectTraits<NSRect>
-:	public RectTraitsStd_OriginSize<float,NSPoint,NSSize,NSRect>
+:	public RectTraits_Std_OriginSize<float,NSPoint,NSSize,NSRect>
 	{
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{
-		const NSRect result = { {iL, iT}, {iR - iL, iB - iT} };
+		const Rect_t result = { {iL, iT}, {iR - iL, iB - iT} };
 		return result;
 		}
 	};
