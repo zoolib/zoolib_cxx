@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZCoord
+// MARK: - ZCoord (deprecated)
 
 typedef int32 ZCoord;
 
@@ -38,11 +38,11 @@ typedef int32 ZCoord;
 
 struct ZPointPOD
 	{
-	ZCoord h;
-	ZCoord v;
+	int32 h;
+	int32 v;
 	};
 
-inline ZPointPOD sPointPOD(ZCoord iH, ZCoord iV)
+inline ZPointPOD sPointPOD(int32 iH, int32 iV)
 	{
 	const ZPointPOD result = {iH, iV};
 	return result;
@@ -53,12 +53,12 @@ inline ZPointPOD sPointPOD(ZCoord iH, ZCoord iV)
 
 struct ZRectPOD
 	{
-	ZCoord left;
-	ZCoord top;
-	ZCoord right;
-	ZCoord bottom;
+	int32 left;
+	int32 top;
+	int32 right;
+	int32 bottom;
 
-	bool Contains(ZCoord h, ZCoord v) const
+	bool Contains(int32 h, int32 v) const
 		{ return h >= left && h < right && v >= top && v < bottom; }
 
 	bool Contains(ZPointPOD p) const
@@ -67,8 +67,8 @@ struct ZRectPOD
 	bool IsEmpty() const
 		{ return left >= right || top >= bottom; }
 
-	ZCoord Width() const { return right - left; }
-	ZCoord Height() const { return bottom - top; }
+	int32 Width() const { return right - left; }
+	int32 Height() const { return bottom - top; }
 	ZPointPOD Size() const { return sPointPOD(right - left, bottom - top); }
 
 	ZPointPOD TopLeft() const { return sPointPOD(left, top); }
@@ -77,7 +77,7 @@ struct ZRectPOD
 	ZPointPOD BottomRight() const { return sPointPOD(right, bottom); }
 	};
 
-inline ZRectPOD sRectPOD(ZCoord iLeft, ZCoord iTop, ZCoord iRight, ZCoord iBottom)
+inline ZRectPOD sRectPOD(int32 iLeft, int32 iTop, int32 iRight, int32 iBottom)
 	{
 	const ZRectPOD result = {iLeft, iTop, iRight, iBottom};
 	return result;
@@ -89,7 +89,7 @@ inline ZRectPOD sRectPOD(ZCoord iLeft, ZCoord iTop, ZCoord iRight, ZCoord iBotto
 inline ZRectPOD sRectPOD(ZPointPOD iSize)
 	{ return sRectPOD(0, 0, iSize.h, iSize.v); }
 
-inline ZRectPOD sRectPOD(ZCoord iWidth, ZCoord iHeight)
+inline ZRectPOD sRectPOD(int32 iWidth, int32 iHeight)
 	{ return sRectPOD(0, 0, iWidth, iHeight); }
 
 // =================================================================================================
@@ -108,7 +108,7 @@ namespace ZCartesian {
 
 template <>
 struct PointTraits<ZPointPOD>
-:	public PointTraits_Std_HV<ZCoord,ZPointPOD,ZRectPOD>
+:	public PointTraits_Std_HV<int32,ZPointPOD,ZRectPOD>
 	{
 	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
 		{ return sPointPOD(iX, iY); }
@@ -123,7 +123,7 @@ namespace ZCartesian {
 
 template <>
 struct RectTraits<ZRectPOD>
-:	public RectTraits_Std_LeftTopRightBottom<ZCoord,ZPointPOD,ZRectPOD>
+:	public RectTraits_Std_LeftTopRightBottom<int32,ZPointPOD,ZRectPOD>
 	{
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{ return sRectPOD(iL, iT, iR, iB); }
