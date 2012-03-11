@@ -124,10 +124,13 @@ sPoint
 // Null == (0,0)
 template <class Point_p>
 typename PointTraits<Point_p>::Point_t
-sPoint()
+// Usage: sPoint<PointType>()
+sPoint
+	()
 	{ return PointTraits<Point_p>::sMake(0, 0); }
 
 // From a single parameter that's point-like (will work for scalars too).
+// Usage: sPoint<PointType>(OtherPointType)
 template <class Point_p, class OtherPoint_p>
 typename PointTraits<Point_p>::Point_t
 sPoint
@@ -226,20 +229,24 @@ sRect
 // MARK: - Other Rect Pseudo-ctors.
 
 // Null == ((0,0),(0,0)).
+// Usage: sRect<RectType>()
 template <class Rect_p>
 typename RectTraits<Rect_p>::Rect_t
-sRect()
+sRect
+	()
 	{ return RectTraits<Rect_p>::sMake(0, 0, 0, 0); }
 
-// From width/height.
-template <class Rect_p, class OtherW, class OtherH>
-typename RectTraits<Rect_p>::Rect_t
+// From a single parameter whose PointTraits determines the returned rect type.
+// Usage: sRect(PointType)
+template <class Point_p>
+typename PointTraits<Point_p>::Rect_t
 sRect
-	(const OtherW& iW,
-	const OtherH& iH)
-	{ return RectTraits<Rect_p>::sMake(0, 0, iW, iH); }
+	(const Point_p& iPoint)
+	{ return sRect<typename PointTraits<Point_p>::Rect_t>(0, 0, X(iPoint), Y(iPoint)); }
 
-// From a single parameter that's point-like (will work for scalars too).
+// From a single parameter that is Point-like (scalars too by virtue of the
+// PointTraits above), but with the rect type as a template parameter.
+// Usage: sRect<RectType>(PointType)
 template <class Rect_p, class Point_p>
 typename RectTraits<Rect_p>::Rect_t
 sRect
@@ -247,13 +254,17 @@ sRect
 	const typename PointTraits<Point_p>::Dummy_t& dummy = null)
 	{ return sRect<Rect_p>(0, 0, X(iPoint), Y(iPoint)); }
 
-// From a single parameter that is point-like with traits indicating a compatible rect type.
-template <class Point_p>
-typename PointTraits<Point_p>::Rect_t
-sRect(const Point_p& iPoint)
-	{ return sRect<typename PointTraits<Point_p>::Rect_t>(0, 0, X(iPoint), Y(iPoint)); }
+// From a single parameter that is Rect-like, with the returned rect type as a template parameter.
+// Usage: sRect<RectType>(OtherRectType)
+template <class Rect_p, class OtherRect_p>
+typename RectTraits<Rect_p>::Rect_t
+sRect
+	(const OtherRect_p& iOther,
+	const typename RectTraits<OtherRect_p>::Dummy_t& dummy = null)
+	{ return sRect<Rect_p>(L(iOther), T(iOther), R(iOther), B(iOther)); }
 
-// From a pair of points whose traits indicate a compatible rect type.
+// From a pair of parameters, expected to be point-like LT and RB.
+// Usage: sRect(PointType, PointType)
 template <class Point_p>
 typename PointTraits<Point_p>::Rect_t
 sRect
@@ -261,13 +272,15 @@ sRect
 	const Point_p& iRB)
 	{ return sRect<typename PointTraits<Point_p>::Rect_t>(X(iLT), Y(iLT), X(iRB), Y(iRB)); }
 
-// From a single parameter that's rect-like.
-template <class Rect_p, class OtherRect_p>
+// From a pair of parameters, something convertible to the width and height for
+// the rect type specified as a template parameter.
+// Usage: sRect<RectType>(WidthType, HeightType)
+template <class Rect_p, class Width_p, class Height_p>
 typename RectTraits<Rect_p>::Rect_t
 sRect
-	(const OtherRect_p& iOther,
-	const typename RectTraits<OtherRect_p>::Dummy_t& dummy = null)
-	{ return sRect<Rect_p>(L(iOther), T(iOther), R(iOther), B(iOther)); }
+	(const Width_p& iW,
+	const Height_p& iH)
+	{ return RectTraits<Rect_p>::sMake(0, 0, iW, iH); }
 
 // =================================================================================================
 // MARK: - Point Comparison Operators
