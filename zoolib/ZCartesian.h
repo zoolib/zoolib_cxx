@@ -84,6 +84,7 @@ typename PointTraits<Type_p>::Y_t Y(Type_p& iT) { return PointTraits<Type_p>::sY
 #define ZMACRO_Cartesian(T) \
 	template <> struct PointTraits<T> \
 		{ \
+		typedef null_t Dummy_t; \
 		typedef T Ord_t; \
 		typedef const Ord_t& XC_t; \
 		inline static XC_t sX(const T& iT) { return iT; } \
@@ -120,16 +121,18 @@ sPoint
 // =================================================================================================
 // MARK: - Other Point Pseudo-ctors.
 
+// Null == (0,0)
 template <class Point_p>
 typename PointTraits<Point_p>::Point_t
 sPoint()
 	{ return PointTraits<Point_p>::sMake(0, 0); }
 
-template <class Point_p, class Other>
+// From a single parameter that's point-like (will work for scalars too).
+template <class Point_p, class OtherPoint_p>
 typename PointTraits<Point_p>::Point_t
 sPoint
-	(const Other& iOther,
-	const typename PointTraits<Other>::Dummy_t& dummy = null)
+	(const OtherPoint_p& iOther,
+	const typename PointTraits<OtherPoint_p>::Dummy_t& dummy = null)
 	{ return sPoint<Point_p>(X(iOther), Y(iOther)); }
 
 // =================================================================================================
@@ -222,23 +225,35 @@ sRect
 // =================================================================================================
 // MARK: - Other Rect Pseudo-ctors.
 
+// Null == ((0,0),(0,0)).
 template <class Rect_p>
 typename RectTraits<Rect_p>::Rect_t
 sRect()
 	{ return RectTraits<Rect_p>::sMake(0, 0, 0, 0); }
 
+// From width/height.
+template <class Rect_p, class OtherW, class OtherH>
+typename RectTraits<Rect_p>::Rect_t
+sRect
+	(const OtherW& iW,
+	const OtherH& iH)
+	{ return RectTraits<Rect_p>::sMake(0, 0, iW, iH); }
+
+// From a single parameter that's point-like (will work for scalars too).
+template <class Rect_p, class Point_p>
+typename RectTraits<Rect_p>::Rect_t
+sRect
+	(const Point_p& iPoint,
+	const typename PointTraits<Point_p>::Dummy_t& dummy = null)
+	{ return sRect<Rect_p>(0, 0, X(iPoint), Y(iPoint)); }
+
+// From a single parameter that is point-like with traits indicating a compatible rect type.
 template <class Point_p>
 typename PointTraits<Point_p>::Rect_t
 sRect(const Point_p& iPoint)
-	{ return RectTraits<typename PointTraits<Point_p>::Rect_t>::sMake(0, 0, X(iPoint), Y(iPoint)); }
+	{ return sRect<typename PointTraits<Point_p>::Rect_t>(0, 0, X(iPoint), Y(iPoint)); }
 
-template <class Rect_p, class Other>
-typename RectTraits<Rect_p>::Rect_t
-sRect
-	(const Other& iOther,
-	const typename RectTraits<Other>::Dummy_t& dummy = null)
-	{ return sRect<Rect_p>(L(iOther), T(iOther), R(iOther), B(iOther)); }
-
+// From a pair of points whose traits indicate a compatible rect type.
 template <class Point_p>
 typename PointTraits<Point_p>::Rect_t
 sRect
@@ -246,12 +261,13 @@ sRect
 	const Point_p& iRB)
 	{ return sRect<typename PointTraits<Point_p>::Rect_t>(X(iLT), Y(iLT), X(iRB), Y(iRB)); }
 
-template <class Rect_p, class OtherW, class OtherH>
+// From a single parameter that's rect-like.
+template <class Rect_p, class OtherRect_p>
 typename RectTraits<Rect_p>::Rect_t
 sRect
-	(const OtherW& iW,
-	const OtherH& iH)
-	{ return RectTraits<Rect_p>::sMake(0, 0, iW, iH); }
+	(const OtherRect_p& iOther,
+	const typename RectTraits<OtherRect_p>::Dummy_t& dummy = null)
+	{ return sRect<Rect_p>(L(iOther), T(iOther), R(iOther), B(iOther)); }
 
 // =================================================================================================
 // MARK: - Point Comparison Operators
