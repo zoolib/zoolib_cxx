@@ -88,7 +88,7 @@ struct PointTraits<ZMatrix<Ord_p,1,3> >
 template <>
 template <class Ord_p>
 struct RectTraits<ZMatrixArray<Ord_p,1,2,2> >
-:	public RectTraits_Std_Base<Ord_p,ZMatrix<Ord_p,1,3>,ZMatrixArray<Ord_p,1,2,2> >
+:	public RectTraits_Std_Base<Ord_p,ZMatrix<Ord_p,1,2>,ZMatrixArray<Ord_p,1,2,2> >
 	{
 	typedef ZMatrix<Ord_p,1,2> Point_t;
 	typedef ZMatrixArray<Ord_p,1,2,2> Rect_t;
