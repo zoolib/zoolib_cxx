@@ -38,19 +38,6 @@ namespace ZooLib {
 template <class T, bool Sense = true>
 class ZRef
 	{
-private:
-	static void spRetain(T* iP)
-		{
-		if (iP)
-			sRetain(*iP);
-		}
-
-	static void spRelease(T* iP)
-		{
-		if (iP)
-			sRelease(*iP);
-		}
-
 public:
 	#if defined(__OBJC__)
 		operator bool() const { return Sense == !!fP; }
@@ -197,7 +184,7 @@ public:
 		{
 		if (not ZAtomic_CompareAndSwapPtr(&fP, iPrior, iNew))
 			return false;
-		spRetain(iNew);
+		spRetain(fP);
 		spRelease(iPrior);
 		return true;
 		}
@@ -207,7 +194,7 @@ public:
 		if (fP != iPrior)
 			return false;
 		fP = iNew;
-		spRetain(iNew);
+		spRetain(fP);
 		spRelease(iPrior);
 		return true;
 		}
@@ -222,6 +209,9 @@ public:
 		{ spRelease(iP); }
 
 private:
+	static void spRetain(T* iP) { if (iP) sRetain(*iP); }
+	static void spRelease(T* iP) { if (iP) sRelease(*iP); }
+
 	T* fP;
 	};
 
@@ -242,19 +232,6 @@ template <class T> void sRelease_T(T* iPtr);
 template <class T, bool Sense>
 class ZRef<T*,Sense>
 	{
-private:
-	static void spRetain(T*& iP)
-		{
-		if (iP)
-			sRetain_T(iP);
-		}
-
-	static void spRelease(T* iP)
-		{
-		if (iP)
-			sRelease_T(iP);
-		}
-
 public:
 	operator bool() const { return Sense == !!fP; }
 	operator T*() const { return fP; }
@@ -387,7 +364,7 @@ public:
 		{
 		if (not ZAtomic_CompareAndSwapPtr(&fP, iPrior, iNew))
 			return false;
-		spRetain(iNew);
+		spRetain(fP);
 		spRelease(iPrior);
 		return true;
 		}
@@ -397,7 +374,7 @@ public:
 		if (fP != iPrior)
 			return false;
 		fP = iNew;
-		spRetain(iNew);
+		spRetain(fP);
 		spRelease(iPrior);
 		return true;
 		}
@@ -412,6 +389,8 @@ public:
 		{ spRelease(iP); }
 
 private:
+	static void spRetain(T*& ioP) { if (ioP) sRetain_T(ioP); }
+	static void spRelease(T* iP) { if (iP) sRelease_T(iP); }
 	T* fP;
 	};
 
