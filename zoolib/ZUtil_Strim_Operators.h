@@ -56,6 +56,7 @@ const ZStrimW& operator<<(const ZStrimW& s, int64 iVal);
 const ZStrimW& operator<<(const ZStrimW& s, uint64 iVal);
 const ZStrimW& operator<<(const ZStrimW& s, float iVal);
 const ZStrimW& operator<<(const ZStrimW& s, double iVal);
+const ZStrimW& operator<<(const ZStrimW& s, long double iVal);
 const ZStrimW& operator<<(const ZStrimW& s, const void* iVal);
 const ZStrimW& operator<<(const ZStrimW& s, void* iVal);
 

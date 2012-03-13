@@ -98,6 +98,12 @@ const ZStrimW& operator<<(const ZStrimW& s, float iVal)
 const ZStrimW& operator<<(const ZStrimW& s, double iVal)
 	{ return s.Writef("%.17g", iVal); }
 
+const ZStrimW& operator<<(const ZStrimW& s, long double iVal)
+	{
+	// This is a guess for now.
+	return s.Writef("%.34Lg", iVal);
+	}
+
 const ZStrimW& operator<<(const ZStrimW& s, const void* iVal)
 	{ return s.Writef("%p", iVal); }
 

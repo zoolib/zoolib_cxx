@@ -186,6 +186,10 @@ ZVal_CF::ZVal_CF(double iVal)
 :	inherited(spNumber_T(kCFNumberFloat64Type, iVal))
 	{}
 
+ZVal_CF::ZVal_CF(long double iVal)
+:	inherited(spNumber_T(kCFNumberFloat64Type, iVal))
+	{}
+
 ZVal_CF::ZVal_CF(const char* iVal)
 :	inherited(sString(iVal))
 	{}

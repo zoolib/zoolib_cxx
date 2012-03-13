@@ -32,6 +32,9 @@ int sCompare_T(const float& iL, const float& iR);
 template <>
 int sCompare_T(const double& iL, const double& iR);
 
+template <>
+int sCompare_T(const long double& iL, const long double& iR);
+
 } // namespace ZooLib
 
 #endif // __ZCompare_Rational_h__

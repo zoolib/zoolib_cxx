@@ -252,6 +252,10 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 		{
 		return [NSNumber numberWithDouble:*theValue];
 		}
+	else if (const long double* theValue = iVal.PGet<long double>())
+		{
+		return [NSNumber numberWithDouble:double(*theValue)];
+		}
 
 	return iDefault;
 	}

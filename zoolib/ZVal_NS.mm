@@ -155,6 +155,10 @@ ZVal_NS::ZVal_NS(double iVal)
 :	inherited([NSNumber numberWithDouble:iVal])
 	{}
 
+ZVal_NS::ZVal_NS(long double iVal)
+:	inherited([NSNumber numberWithDouble:double(iVal)])
+	{}
+
 ZVal_NS::ZVal_NS(const char* iVal)
 :	inherited(sString(iVal))
 	{}

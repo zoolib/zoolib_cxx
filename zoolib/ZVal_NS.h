@@ -89,6 +89,7 @@ public:
 	ZVal_NS(bool iVal);
 	ZVal_NS(float iVal);
 	ZVal_NS(double iVal);
+	ZVal_NS(long double iVal);
 	ZVal_NS(const char* iVal);
 	ZVal_NS(const string8& iVal);
 	ZVal_NS(const string16& iVal);

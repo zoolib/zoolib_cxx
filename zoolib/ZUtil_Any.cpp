@@ -147,6 +147,8 @@ ZQ<double> sQCoerceRat(const ZAny& iAny)
 		return *theP;
 	else if (const double* theP = iAny.PGet<double>())
 		return *theP;
+	else if (const long double* theP = iAny.PGet<long double>())
+		return *theP;
 
 	return null;
 	}

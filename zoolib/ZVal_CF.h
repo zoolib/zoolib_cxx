@@ -73,6 +73,7 @@ public:
 	ZVal_CF(bool iVal);
 	ZVal_CF(float iVal);
 	ZVal_CF(double iVal);
+	ZVal_CF(long double iVal);
 	ZVal_CF(const char* iVal);
 	ZVal_CF(const string8& iVal);
 	ZVal_CF(const string16& iVal);
