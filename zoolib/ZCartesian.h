@@ -285,7 +285,7 @@ sRect
 // =================================================================================================
 // MARK: - Point Comparison Operators
 
-#if not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+namespace Operators {
 
 template <class Point_p>
 typename PointTraits<Point_p>::Bool_t
@@ -317,12 +317,12 @@ typename PointTraits<Point_p>::Bool_t
 operator>=(const Point_p& iLHS, const Point_p& iRHS)
 	{ return not (iLHS < iRHS); }
 
-#endif // not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+} // namespace Operators
 
 // =================================================================================================
 // MARK: - Point Manipulation Operators
 
-#if not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+namespace Operators {
 
 template <class Point_p, class Other>
 typename PointTraits<Point_p>::Point_t
@@ -380,12 +380,12 @@ operator/=(Point_p& ioL, const Other& iRHS)
 	return ioL;
 	}
 
-#endif // not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+} // namespace Operators
 
 // =================================================================================================
 // MARK: - Rect Comparison Operators
 
-#if not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+namespace Operators {
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Bool_t
@@ -417,12 +417,12 @@ typename RectTraits<Rect_p>::Bool_t
 operator>=(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return not (iLHS < iRHS); }
 
-#endif // not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+} // namespace Operators
 
 // =================================================================================================
 // MARK: - Rect Manipulation Operators
 
-#if not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+namespace Operators {
 
 template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t
@@ -504,7 +504,7 @@ typename RectTraits<Rect_p>::Rect_t&
 operator&=(Rect_p& ioL, const Rect_p& iRHS)
 	{ return ioL = ioL & iRHS; }
 
-#endif // not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+} // namespace Operators
 
 // =================================================================================================
 // MARK: - sManhattanLength and sLength
@@ -1165,6 +1165,10 @@ struct RectTraits_Std_LeftTopRightBottom
 	typedef Ord_p& B_t;
 	static B_t sB(Rect_p& ioRect) { return ioRect.bottom; }
 	};
+
+#if not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+	using namespace Operators;
+#endif
 
 } // namespace ZCartesian
 
