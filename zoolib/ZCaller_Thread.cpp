@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,27 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCaller_Thread_h__
-#define __ZCaller_Thread_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZCaller.h"
+#include "zoolib/ZCallOnNewThread.h"
+#include "zoolib/ZCaller_Thread.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 // MARK: - ZCaller_Thread
 
-class ZCaller_Thread
-:	public ZCaller
+bool ZCaller_Thread::Queue(const ZRef<ZCallable_Void>& iCallable)
 	{
-public:
-	static ZRef<ZCaller_Thread> sCaller();
+	if (iCallable)
+		{
+		sCallOnNewThread(iCallable);
+		return true;
+		}
+	return false;
+	}
 
-// From ZCaller
-	virtual bool Queue(const ZRef<ZCallable_Void>& iCallable);
-	};
+ZRef<ZCaller_Thread> ZCaller_Thread::sCaller()
+	{
+	static ZRef<ZCaller_Thread> spCaller = new ZCaller_Thread;
+	return spCaller;
+	}
 
 } // namespace ZooLib
-
-#endif // __ZCaller_Thread_h__
