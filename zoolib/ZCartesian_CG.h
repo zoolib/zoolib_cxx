@@ -33,6 +33,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGGeometry.h)
 #endif
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
+	typedef float CGFloat;
+#endif
+
 namespace ZooLib {
 namespace ZCartesian {
 
