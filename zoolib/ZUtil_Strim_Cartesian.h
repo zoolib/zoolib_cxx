@@ -32,12 +32,12 @@ struct enable_if_exists
 	{ typedef R type; };
 
 template <class Point_p>
-typename enable_if_exists<typename ZCartesian::PointTraits<Point_p>::Dummy_t,const ZStrimW&>::type
+typename enable_if_exists<typename ZCartesian::PointTraits<Point_p>::Point_t,const ZStrimW&>::type
 operator<<(const ZStrimW& w, const Point_p& iPoint)
 	{ return w << "(" << X(iPoint) << "," << Y(iPoint) << ")"; }
 
 template <class Rect_p>
-typename enable_if_exists<typename ZCartesian::RectTraits<Rect_p>::Dummy_t,const ZStrimW&>::type
+typename enable_if_exists<typename ZCartesian::RectTraits<Rect_p>::Rect_t,const ZStrimW&>::type
 operator<<(const ZStrimW& w, const Rect_p& iRect)
 	{ return w << "(" << L(iRect) << "," << T(iRect) << "," << R(iRect) << "," << B(iRect) << ")"; }
 
