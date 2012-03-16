@@ -43,7 +43,7 @@ class Store : public ZCounted
 public:
 	typedef ZCallable<void(ZRef<Store>,CFArrayRef)> Callable;
 
-	Store();
+	Store(ZRef<Callable> iCallable);
 	virtual ~Store();
 
 // From ZCounted
@@ -51,12 +51,11 @@ public:
 
 // Our protocol
 	SCDynamicStoreRef GetStoreRef();
-	void Set_Callback(ZRef<Callable> iCallable);
 
 private:
 	static void spCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info);
 
-	ZSafe<ZRef<Callable> > fCallable;
+	const ZRef<Callable> fCallable;
 	ZRef<SCDynamicStoreRef> fStoreRef;
 	};
 

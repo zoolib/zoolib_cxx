@@ -35,7 +35,8 @@ using namespace ZUtil_CF;
 // =================================================================================================
 // MARK: - ZUtil_SystemConfiguration::Store
 
-Store::Store()
+Store::Store(ZRef<Callable> iCallable)
+:	fCallable(iCallable)
 	{}
 
 Store::~Store()
@@ -54,13 +55,10 @@ void Store::Initialize()
 SCDynamicStoreRef Store::GetStoreRef()
 	{ return fStoreRef; }
 
-void Store::Set_Callback(ZRef<Callable> iCallable)
-	{ return fCallable.Set(iCallable); }
-
 void Store::spCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info)
 	{
 	if (ZRef<Store> theStore = ZWeakRef<Store>(static_cast<WeakRefProxy*>(info)))
-		sCall(theStore->fCallable.Get(), theStore, changedKeys);
+		sCall(theStore->fCallable, theStore, changedKeys);
 	}
 
 // =================================================================================================
