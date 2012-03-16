@@ -106,7 +106,7 @@ ZQ<void> ZWorker::QCall()
 			{
 			if (fNextWake < kDistantFuture)
 				{
-				if (ZTime::sSystem() >= fNextWake)
+				if (fNextWake <= ZTime::sSystem())
 					continue;
 				ZCallScheduler::sGet()->NextCallAt(fNextWake, fCaller, this);
 				}
@@ -115,15 +115,10 @@ ZQ<void> ZWorker::QCall()
 
 		fCaller.Clear();
 
-		if (ZRef<Callable_Detached> theCallable = fCallable_Detached)
-			{
-			guard.Release();
+		guard.Release();
 
-			try { theCallable->Call(this); }
-			catch (...) {}
-
-			guard.Acquire();
-			}
+		try { sCall(fCallable_Detached, this); }
+		catch (...) {}
 
 		return null;
 		}
@@ -164,29 +159,21 @@ bool ZWorker::Attach(ZRef<ZCaller> iCaller)
 		{
 		fCaller = iCaller;
 
-		if (ZRef<Callable_Attached,false> theCallable = fCallable_Attached)
-			{ return true; }
-		else
+		guard.Release();
+		try
 			{
-			guard.Release();
-			try
-				{
-				theCallable->Call(this);
-				return true;
-				}
-			catch (...) {}
-			guard.Acquire();
+			sCall(fCallable_Attached, this);
+			return true;
 			}
+		catch (...) {}
+		guard.Acquire();
 
 		fCaller.Clear();
 
-		if (ZRef<Callable_Detached> theCallable = fCallable_Detached)
-			{
-			guard.Release();
-			try { theCallable->Call(this); }
-			catch (...) {}
-			guard.Acquire();
-			}
+		guard.Release();
+		try { sCall(fCallable_Detached, this); }
+		catch (...) {}
+		guard.Acquire();
 		}
 	return false;
 	}
