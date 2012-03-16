@@ -324,6 +324,11 @@ operator>=(const Point_p& iLHS, const Point_p& iRHS)
 
 namespace Operators {
 
+template <class Point_p>
+typename PointTraits<Point_p>::Point_t
+operator-(const Point_p& iPoint)
+	{ return sPoint<Point_p>(-X(iPoint), -Y(iPoint)); }
+
 template <class Point_p, class Other>
 typename PointTraits<Point_p>::Point_t
 operator+(const Point_p& iLHS, const Other& iRHS)
