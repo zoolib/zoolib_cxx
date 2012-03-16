@@ -102,7 +102,7 @@ ZQ<void> ZWorker::QCall()
 		guard.Acquire();
 		fWorking = 0;
 
-		if (result && result.Get())
+		if (result && *result)
 			{
 			if (fNextWake < kDistantFuture)
 				{

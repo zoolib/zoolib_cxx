@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCaller.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThread.h" // For ZThread::ID
 #include "zoolib/ZTime.h"
 
 namespace ZooLib {
