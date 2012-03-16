@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallable_PMF.h"
-#include "zoolib/ZCaller_Thread.h"
+#include "zoolib/ZCallOnNewThread.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
