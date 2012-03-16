@@ -387,7 +387,7 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	oNPNF.posturl = spPostURL;
 	oNPNF.requestread = spRequestRead;
 	oNPNF.newstream = spNewStream;
-	oNPNF.write = spWrite;
+	oNPNF.write = (NPN_WriteProcPtr)spWrite;
 	oNPNF.destroystream = spDestroyStream;
 	oNPNF.status = spStatus;
 	oNPNF.uagent = spUserAgent;

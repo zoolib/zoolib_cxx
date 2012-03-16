@@ -148,7 +148,8 @@ ZQ<int> spQGetMajorVersion(const ZRef<CFBundleRef>& iBundleRef)
 	{
 	if (iBundleRef)
 		{
-		if (ZRef<CFStringRef> theStringRef = (CFStringRef)::CFBundleGetValueForInfoDictionaryKey(iBundleRef, CFSTR("CFBundleShortVersionString")))
+		if (ZRef<CFStringRef> theStringRef =(CFStringRef)::CFBundleGetValueForInfoDictionaryKey
+			(iBundleRef, CFSTR("CFBundleShortVersionString")))
 			{ return spQGetMajorVersion(theStringRef); }
 		}
 	return null;

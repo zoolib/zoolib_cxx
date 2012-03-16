@@ -447,7 +447,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 
 					Rect winFrameRect;
 					::GetWindowBounds(fWindowRef, kWindowGlobalPortRgn, &winFrameRect);
-					winFrameRect = sOffsetted(LT(winFrameRect) * -1, winFrameRect);
+					winFrameRect = sOffsetted(-LT(winFrameRect), winFrameRect);
 
 					if (ZLOGPF(s, eDebug + 1))
 						{
@@ -530,7 +530,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 							s << "kEventWindowBoundsChanged"
 							<< ", newFrame: " << newFrame;
 
-						newFrame = sOffsetted(LT(newFrame) * -1, newFrame);
+						newFrame = sRect(WH(newFrame));
 
 						::InvalWindowRect(fWindowRef, &newFrame);
 
@@ -718,13 +718,14 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					theER.message = 0;
 					theER.when = ::EventTimeToTicks(::GetCurrentEventTime());
 					theER.where = sPoint<Point>(startPoint);
-					theER.modifiers = sGetParam_T<UInt32>(iEventRef,
-						kEventParamKeyModifiers, typeUInt32);
+					theER.modifiers =
+						sGetParam_T<UInt32>(iEventRef,kEventParamKeyModifiers, typeUInt32);
 
 					if (ZLOGPF(s, eDebug + 1))
 						{
 						spWriteEvent(s, theER);
 						}
+
 					this->Guest_HandleEvent(&theER);
 
 					for (;;)
@@ -808,16 +809,18 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 						kEventParamCurrentBounds, typeQDRectangle);
 
 					if (ZLOGPF(s, eDebug + 1))
+						{
 						s << "kEventControlBoundsChanged"
 						<< ", newFrame1: " << newFrame;
+						}
 
 					if (!fUseCoreGraphics)
-						newFrame = sOffsetted(LT(newFrame) * -1, newFrame);
+						newFrame = sRect(WH(newFrame));
 
-					::HIViewSetNeedsDisplayInRect(fHIViewRef, sConstPtr& sRect<CGRect>(newFrame), true);
+					::HIViewSetNeedsDisplayInRect
+						(fHIViewRef, sConstPtr& sRect<CGRect>(newFrame), true);
 
 					newFrame = this->pApplyInsets(newFrame);
-
 
 					if (ZLOGPF(s, eDebug + 1))
 						s << "kEventControlBoundsChanged, newFrame2: " << newFrame;
