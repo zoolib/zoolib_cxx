@@ -285,210 +285,226 @@ sRect
 // =================================================================================================
 // MARK: - Point Comparison Operators
 
-template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
-operator==(const Point_p& iL, const Point_p& iR)
-	{ return X(iL) == X(iR) && Y(iL) == Y(iR); }
+#if not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
 
 template <class Point_p>
 typename PointTraits<Point_p>::Bool_t
-operator!=(const Point_p& iL, const Point_p& iR)
-	{ return not (iL == iR); }
+operator==(const Point_p& iLHS, const Point_p& iRHS)
+	{ return X(iLHS) == X(iRHS) && Y(iLHS) == Y(iRHS); }
 
 template <class Point_p>
 typename PointTraits<Point_p>::Bool_t
-operator<(const Point_p& iL, const Point_p& iR)
-	{ return X(iL) < X(iR) || X(iL) == X(iR) && Y(iL) < Y(iR); }
+operator!=(const Point_p& iLHS, const Point_p& iRHS)
+	{ return not (iLHS == iRHS); }
 
 template <class Point_p>
 typename PointTraits<Point_p>::Bool_t
-operator>(const Point_p& iL, const Point_p& iR)
-	{ return iR < iL; }
+operator<(const Point_p& iLHS, const Point_p& iRHS)
+	{ return X(iLHS) < X(iRHS) || X(iLHS) == X(iRHS) && Y(iLHS) < Y(iRHS); }
 
 template <class Point_p>
 typename PointTraits<Point_p>::Bool_t
-operator<=(const Point_p& iL, const Point_p& iR)
-	{ return not (iR < iL); }
+operator>(const Point_p& iLHS, const Point_p& iRHS)
+	{ return iRHS < iLHS; }
 
 template <class Point_p>
 typename PointTraits<Point_p>::Bool_t
-operator>=(const Point_p& iL, const Point_p& iR)
-	{ return not (iL < iR); }
+operator<=(const Point_p& iLHS, const Point_p& iRHS)
+	{ return not (iRHS < iLHS); }
+
+template <class Point_p>
+typename PointTraits<Point_p>::Bool_t
+operator>=(const Point_p& iLHS, const Point_p& iRHS)
+	{ return not (iLHS < iRHS); }
+
+#endif // not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
 
 // =================================================================================================
 // MARK: - Point Manipulation Operators
 
+#if not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+
 template <class Point_p, class Other>
 typename PointTraits<Point_p>::Point_t
-operator+(const Point_p& iL, const Other& iR)
-	{ return sPoint<Point_p>(X(iL) + X(iR), Y(iL) + Y(iR)); }
+operator+(const Point_p& iLHS, const Other& iRHS)
+	{ return sPoint<Point_p>(X(iLHS) + X(iRHS), Y(iLHS) + Y(iRHS)); }
 
 template <class Point_p, class Other>
 typename PointTraits<Point_p>::Point_t&
-operator+=(Point_p& ioL, const Other& iR)
+operator+=(Point_p& ioL, const Other& iRHS)
 	{
-	X(ioL) += X(iR);
-	Y(ioL) += Y(iR);
+	X(ioL) += X(iRHS);
+	Y(ioL) += Y(iRHS);
 	return ioL;
 	}
 
 template <class Point_p, class Other>
 typename PointTraits<Point_p>::Point_t
-operator-(const Point_p& iL, const Other& iR)
-	{ return sPoint<Point_p>(X(iL) - X(iR), Y(iL) - Y(iR)); }
+operator-(const Point_p& iLHS, const Other& iRHS)
+	{ return sPoint<Point_p>(X(iLHS) - X(iRHS), Y(iLHS) - Y(iRHS)); }
 
 template <class Point_p, class Other>
 typename PointTraits<Point_p>::Point_t&
-operator-=(Point_p& ioL, const Other& iR)
+operator-=(Point_p& ioL, const Other& iRHS)
 	{
-	X(ioL) -= X(iR);
-	Y(ioL) -= Y(iR);
+	X(ioL) -= X(iRHS);
+	Y(ioL) -= Y(iRHS);
 	return ioL;
 	}
 
 template <class Point_p, class Other>
 typename PointTraits<Point_p>::Point_t
-operator*(const Point_p& iL, const Other& iR)
-	{ return sPoint<Point_p>(X(iL) * X(iR), Y(iL) * Y(iR)); }
+operator*(const Point_p& iLHS, const Other& iRHS)
+	{ return sPoint<Point_p>(X(iLHS) * X(iRHS), Y(iLHS) * Y(iRHS)); }
 
 template <class Point_p, class Other>
 typename PointTraits<Point_p>::Point_t&
-operator*=(Point_p& ioL, const Other& iR)
+operator*=(Point_p& ioL, const Other& iRHS)
 	{
-	X(ioL) *= X(iR);
-	Y(ioL) *= Y(iR);
+	X(ioL) *= X(iRHS);
+	Y(ioL) *= Y(iRHS);
 	return ioL;
 	}
 
 template <class Point_p, class Other>
 typename PointTraits<Point_p>::Point_t
-operator/(const Point_p& iL, const Other& iR)
-	{ return sPoint<Point_p>(X(iL) / X(iR), Y(iL) / Y(iR)); }
+operator/(const Point_p& iLHS, const Other& iRHS)
+	{ return sPoint<Point_p>(X(iLHS) / X(iRHS), Y(iLHS) / Y(iRHS)); }
 
 template <class Point_p, class Other>
 typename PointTraits<Point_p>::Point_t&
-operator/=(Point_p& ioL, const Other& iR)
+operator/=(Point_p& ioL, const Other& iRHS)
 	{
-	X(ioL) /= X(iR);
-	Y(ioL) /= Y(iR);
+	X(ioL) /= X(iRHS);
+	Y(ioL) /= Y(iRHS);
 	return ioL;
 	}
+
+#endif // not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
 
 // =================================================================================================
 // MARK: - Rect Comparison Operators
 
-template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
-operator==(const Rect_p& iL, const Rect_p& iR)
-	{ return LT(iL) == LT(iR) && RB(iL) == RB(iR); }
+#if not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Bool_t
-operator!=(const Rect_p& iL, const Rect_p& iR)
-	{ return not (iL == iR); }
+operator==(const Rect_p& iLHS, const Rect_p& iRHS)
+	{ return LT(iLHS) == LT(iRHS) && RB(iLHS) == RB(iRHS); }
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Bool_t
-operator<(const Rect_p& iL, const Rect_p& iR)
-	{ return LT(iL) < LT(iR) || LT(iL) == LT(iR) && RB(iL) < RB(iR); }
+operator!=(const Rect_p& iLHS, const Rect_p& iRHS)
+	{ return not (iLHS == iRHS); }
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Bool_t
-operator>(const Rect_p& iL, const Rect_p& iR)
-	{ return iR < iL; }
+operator<(const Rect_p& iLHS, const Rect_p& iRHS)
+	{ return LT(iLHS) < LT(iRHS) || LT(iLHS) == LT(iRHS) && RB(iLHS) < RB(iRHS); }
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Bool_t
-operator<=(const Rect_p& iL, const Rect_p& iR)
-	{ return not (iR < iL); }
+operator>(const Rect_p& iLHS, const Rect_p& iRHS)
+	{ return iRHS < iLHS; }
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Bool_t
-operator>=(const Rect_p& iL, const Rect_p& iR)
-	{ return not (iL < iR); }
+operator<=(const Rect_p& iLHS, const Rect_p& iRHS)
+	{ return not (iRHS < iLHS); }
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Bool_t
+operator>=(const Rect_p& iLHS, const Rect_p& iRHS)
+	{ return not (iLHS < iRHS); }
+
+#endif // not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
 
 // =================================================================================================
 // MARK: - Rect Manipulation Operators
 
+#if not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+
 template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t
-operator+(const Rect_p& iL, const Other& iR)
+operator+(const Rect_p& iLHS, const Other& iRHS)
 	{
 	return sRect<Rect_p>
-		(L(iL) + X(iR),
-		T(iL) + Y(iR),
-		R(iL) + X(iR),
-		B(iL) + Y(iR));
+		(L(iLHS) + X(iRHS),
+		T(iLHS) + Y(iRHS),
+		R(iLHS) + X(iRHS),
+		B(iLHS) + Y(iRHS));
 	}
 
 template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t&
-operator+=(Rect_p& ioL, const Other& iR)
-	{ return ioL = ioL + iR; }
+operator+=(Rect_p& ioL, const Other& iRHS)
+	{ return ioL = ioL + iRHS; }
 
 template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t
-operator-(const Rect_p& iL, const Other& iR)
+operator-(const Rect_p& iLHS, const Other& iRHS)
 	{
 	return sRect<Rect_p>
-		(L(iL) - X(iR),
-		T(iL) - Y(iR),
-		R(iL) - X(iR),
-		B(iL) - Y(iR));
+		(L(iLHS) - X(iRHS),
+		T(iLHS) - Y(iRHS),
+		R(iLHS) - X(iRHS),
+		B(iLHS) - Y(iRHS));
 	}
 
 template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t&
-operator-=(Rect_p& ioL, const Other& iR)
-	{ return ioL = ioL - iR; }
+operator-=(Rect_p& ioL, const Other& iRHS)
+	{ return ioL = ioL - iRHS; }
 
 template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t
-operator*(const Rect_p& iL, const Other& iR)
+operator*(const Rect_p& iLHS, const Other& iRHS)
 	{
 	return sRect<Rect_p>
-		(L(iL) * X(iR),
-		T(iL) * Y(iR),
-		R(iL) * X(iR),
-		B(iL) * Y(iR));
+		(L(iLHS) * X(iRHS),
+		T(iLHS) * Y(iRHS),
+		R(iLHS) * X(iRHS),
+		B(iLHS) * Y(iRHS));
 	}
 
 template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t&
-operator*=(Rect_p& ioL, const Other& iR)
-	{ return ioL = ioL * iR; }
+operator*=(Rect_p& ioL, const Other& iRHS)
+	{ return ioL = ioL * iRHS; }
 
 template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t
-operator/(const Rect_p& iL, const Other& iR)
+operator/(const Rect_p& iLHS, const Other& iRHS)
 	{
 	return sRect<Rect_p>
-		(L(iL) / X(iR),
-		T(iL) / Y(iR),
-		R(iL) / X(iR),
-		B(iL) / Y(iR));
+		(L(iLHS) / X(iRHS),
+		T(iLHS) / Y(iRHS),
+		R(iLHS) / X(iRHS),
+		B(iLHS) / Y(iRHS));
 	}
 
 template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t&
-operator/=(Rect_p& ioL, const Other& iR)
-	{ return ioL = ioL / iR; }
+operator/=(Rect_p& ioL, const Other& iRHS)
+	{ return ioL = ioL / iRHS; }
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Rect_t
-operator&(const Rect_p& iL, const Rect_p& iR)
+operator&(const Rect_p& iLHS, const Rect_p& iRHS)
 	{
 	return sRect<Rect_p>
-		(std::max(L(iL), L(iR)),
-		std::max(T(iL), T(iR)),
-		std::min(R(iL), R(iR)),
-		std::min(B(iL), B(iR)));
+		(std::max(L(iLHS), L(iRHS)),
+		std::max(T(iLHS), T(iRHS)),
+		std::min(R(iLHS), R(iRHS)),
+		std::min(B(iLHS), B(iRHS)));
 	}
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Rect_t&
-operator&=(Rect_p& ioL, const Rect_p& iR)
-	{ return ioL = ioL & iR; }
+operator&=(Rect_p& ioL, const Rect_p& iRHS)
+	{ return ioL = ioL & iRHS; }
+
+#endif // not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
 
 // =================================================================================================
 // MARK: - sManhattanLength and sLength
@@ -815,8 +831,8 @@ Rect_p sWithRT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
 	{ return sRect<Rect_p>(L(iRect), Y(iY), X(iX), B(iRect)); }
 
 template <class Rect_p, class OtherL_p, class OtherR_p>
-Rect_p sWithLR(const OtherL_p& iL, const OtherR_p& iR, const Rect_p& iRect)
-	{ return sRect<Rect_p>(X(iL), T(iRect), X(iR), B(iRect)); }
+Rect_p sWithLR(const OtherL_p& iLHS, const OtherR_p& iR, const Rect_p& iRect)
+	{ return sRect<Rect_p>(X(iLHS), T(iRect), X(iR), B(iRect)); }
 
 template <class Rect_p, class OtherT_p, class OtherB_p>
 Rect_p sWithTB(const OtherT_p& iT, const OtherB_p& iB, const Rect_p& iRect)
