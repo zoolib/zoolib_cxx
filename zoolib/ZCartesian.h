@@ -63,6 +63,15 @@ Contains
 Aligned, Centered, Flipped, Insetted, Offsetted, With
 */
 
+// This may get promoted out of ZCartesian at some point. Depends on
+// whether I can count on the availability of std::tr1.
+template <typename T, typename R = void>
+struct IfExists_T
+	{
+	enum { value = (sizeof(T) == sizeof(T)) };
+	typedef R type;
+	};
+
 // =================================================================================================
 // MARK: - PointTraits and accessors
 
@@ -84,7 +93,6 @@ typename PointTraits<Type_p>::Y_t Y(Type_p& iT) { return PointTraits<Type_p>::sY
 #define ZMACRO_Cartesian(T) \
 	template <> struct PointTraits<T> \
 		{ \
-		typedef null_t Dummy_t; \
 		typedef T Ord_t; \
 		typedef const Ord_t& XC_t; \
 		inline static XC_t sX(const T& iT) { return iT; } \
@@ -132,10 +140,10 @@ sPoint
 // From a single parameter that's point-like (will work for scalars too).
 // Usage: sPoint<PointType>(OtherPointType)
 template <class Point_p, class OtherPoint_p>
-typename PointTraits<Point_p>::Point_t
+typename IfExists_T
+	<typename PointTraits<OtherPoint_p>::Point_t,typename PointTraits<Point_p>::Point_t>::type
 sPoint
-	(const OtherPoint_p& iOther,
-	const typename PointTraits<OtherPoint_p>::Dummy_t& dummy = null)
+	(const OtherPoint_p& iOther)
 	{ return sPoint<Point_p>(X(iOther), Y(iOther)); }
 
 // =================================================================================================
@@ -248,19 +256,19 @@ sRect
 // PointTraits above), but with the rect type as a template parameter.
 // Usage: sRect<RectType>(PointType)
 template <class Rect_p, class Point_p>
-typename RectTraits<Rect_p>::Rect_t
+typename IfExists_T
+	<typename PointTraits<Point_p>::Point_t,typename RectTraits<Rect_p>::Rect_t>::type
 sRect
-	(const Point_p& iPoint,
-	const typename PointTraits<Point_p>::Dummy_t& dummy = null)
+	(const Point_p& iPoint)
 	{ return sRect<Rect_p>(0, 0, X(iPoint), Y(iPoint)); }
 
 // From a single parameter that is Rect-like, with the returned rect type as a template parameter.
 // Usage: sRect<RectType>(OtherRectType)
 template <class Rect_p, class OtherRect_p>
-typename RectTraits<Rect_p>::Rect_t
+typename IfExists_T
+	<typename RectTraits<OtherRect_p>::Rect_t,typename RectTraits<Rect_p>::Rect_t>::type
 sRect
-	(const OtherRect_p& iOther,
-	const typename RectTraits<OtherRect_p>::Dummy_t& dummy = null)
+	(const OtherRect_p& iOther)
 	{ return sRect<Rect_p>(L(iOther), T(iOther), R(iOther), B(iOther)); }
 
 // From a pair of parameters, expected to be point-like LT and RB.
@@ -288,32 +296,32 @@ sRect
 namespace Operators {
 
 template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
+typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
 operator==(const Point_p& iLHS, const Point_p& iRHS)
 	{ return X(iLHS) == X(iRHS) && Y(iLHS) == Y(iRHS); }
 
 template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
+typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
 operator!=(const Point_p& iLHS, const Point_p& iRHS)
 	{ return not (iLHS == iRHS); }
 
 template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
+typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
 operator<(const Point_p& iLHS, const Point_p& iRHS)
 	{ return X(iLHS) < X(iRHS) || X(iLHS) == X(iRHS) && Y(iLHS) < Y(iRHS); }
 
 template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
+typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
 operator>(const Point_p& iLHS, const Point_p& iRHS)
 	{ return iRHS < iLHS; }
 
 template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
+typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
 operator<=(const Point_p& iLHS, const Point_p& iRHS)
 	{ return not (iRHS < iLHS); }
 
 template <class Point_p>
-typename PointTraits<Point_p>::Bool_t
+typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
 operator>=(const Point_p& iLHS, const Point_p& iRHS)
 	{ return not (iLHS < iRHS); }
 
@@ -393,32 +401,32 @@ operator/=(Point_p& ioL, const Other& iRHS)
 namespace Operators {
 
 template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
+typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
 operator==(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return LT(iLHS) == LT(iRHS) && RB(iLHS) == RB(iRHS); }
 
 template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
+typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
 operator!=(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return not (iLHS == iRHS); }
 
 template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
+typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
 operator<(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return LT(iLHS) < LT(iRHS) || LT(iLHS) == LT(iRHS) && RB(iLHS) < RB(iRHS); }
 
 template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
+typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
 operator>(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return iRHS < iLHS; }
 
 template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
+typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
 operator<=(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return not (iRHS < iLHS); }
 
 template <class Rect_p>
-typename RectTraits<Rect_p>::Bool_t
+typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
 operator>=(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return not (iLHS < iRHS); }
 
@@ -906,9 +914,6 @@ Rect_p sWithWHRT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
 template <class Ord_p, class Point_p, class Rect_p>
 struct PointTraits_Std_Base
 	{
-	typedef null_t Dummy_t;
-	typedef bool Bool_t;
-
 	typedef Ord_p Ord_t;
 	typedef Point_p Point_t;
 	typedef Rect_p Rect_t;
@@ -983,9 +988,6 @@ struct PointTraits_Std_WidthHeight
 template <class Ord_p, class Point_p, class Rect_p>
 struct RectTraits_Std_Base
 	{
-	typedef null_t Dummy_t;
-	typedef bool Bool_t;
-
 	typedef Ord_p Ord_t;
 	typedef Point_p Point_t;
 	typedef Rect_p Rect_t;
