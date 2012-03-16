@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZNetscape_Host_Std.h"
 
-#include "zoolib/ZCaller_Thread.h"
+#include "zoolib/ZCallOnNewThread.h"
 #include "zoolib/ZCompat_string.h" // For strdup
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZHTTP_Requests.h"
