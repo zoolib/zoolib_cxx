@@ -281,7 +281,7 @@ private:
 	static NPError spNewStream(NPP npp,
 		NPMIMEType type, const char* window, NPStream** stream);
 
-	static ::int32 spWrite(NPP npp, NPStream* stream, ::int32 len, void* buffer);
+	static int32 spWrite(NPP npp, NPStream* stream, int32 len, void* buffer);
 
 	static NPError spDestroyStream(NPP npp, NPStream* stream, NPReason reason);
 

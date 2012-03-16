@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ! ZCONFIG_Is64Bit
  
-#include "zoolib/ZGeometry.h"
 #include "zoolib/netscape/ZNetscape_Host_Std.h"
 
 namespace ZooLib {
@@ -54,10 +53,11 @@ public:
 
 	virtual void DoEvent(const EventRecord& iEvent);
 
-	void DoSetWindow(const ZGRectf& iWinFrame);
+	void DoSetWindow(const Rect& iWinFrame);
 	void DoSetWindow(int iX, int iY, int iWidth, int iHeight);
 
-	void pApplyInsets(ZGRectf& ioRect);
+	template<class Rect_p>
+	Rect_p pApplyInsets(const Rect_p& iRect);
 
 protected:
 	bool pDeliverEvent(EventRef iEventRef);

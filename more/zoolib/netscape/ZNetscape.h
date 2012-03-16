@@ -33,6 +33,15 @@ namespace ZooLib {
 namespace ZNetscape {
 
 // =================================================================================================
+// MARK: - NPPoint_Z
+
+struct NPPoint_Z
+	{
+	uint16 x;
+	uint16 y;
+	};
+
+// =================================================================================================
 // MARK: - NPStream_Z
 
 class NPStream_Z : public NPStream

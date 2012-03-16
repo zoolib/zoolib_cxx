@@ -26,13 +26,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if defined(XP_MAC) || defined(XP_MACOSX)
 
+#include "zoolib/ZCartesian.h"
+#include "zoolib/ZCartesian_CG.h"
+#include "zoolib/ZCartesian_QD.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZRGBA.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZUtil_CarbonEvents.h"
-#include "zoolib/ZUtil_Strim_Geom.h"
+#include "zoolib/ZUtil_Strim_Cartesian.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
+
+#include "zoolib/netscape/ZCartesian_Netscape.h"
 
 #if UNIVERSAL_INTERFACES_VERSION <= 0x0341
 enum
@@ -42,6 +47,7 @@ enum
 	kEventMouseExited = 9
 	};
 #endif
+
 
 namespace ZooLib {
 
@@ -53,30 +59,19 @@ using ZUtil_CarbonEvents::sSetParam_T;
 
 namespace ZNetscape {
 
+
 // =================================================================================================
 
-static void spWriteEvent(const ZStrimW&s, const EventRecord& iER)
+static void spWriteEvent(const ZStrimW& w, const EventRecord& iER)
 	{
-	s	<< "what: " << ZUtil_CarbonEvents::sEventTypeAsString(iER.what)
+	w	<< "what: " << ZUtil_CarbonEvents::sEventTypeAsString(iER.what)
 		<< ", message: " << iER.message
 		<< ", when: " << iER.when
-		<< ", where: (" << iER.where.h << ", " << iER.where.v << ")"
+		<< ", where: " << iER.where
 		<< ", modifiers: " << iER.modifiers;
 	}
 
 #if defined(XP_MACOSX)
-
-static HIRect& spHI(ZGRectf& iR)
-	{ return *((HIRect*)&iR); }
-
-static const HIRect& spHI(const ZGRectf& iR)
-	{ return *((const HIRect*)&iR); }
-
-static HIPoint& spHI(ZGPointf& iP)
-	{ return *((HIPoint*)&iP); }
-
-static const HIPoint& spHI(const ZGPointf& iP)
-	{ return *((const HIPoint*)&iP); }
 
 #endif // defined(XP_MACOSX)
 
@@ -85,12 +80,17 @@ static const HIPoint& spHI(const ZGPointf& iP)
 
 #if defined(XP_MAC) || defined(XP_MACOSX)
 
+template<class Rect_p>
+Rect_p Host_Mac::pApplyInsets(const Rect_p& iRect)
+	{ return sOffsettedRB(fRight, fBottom, sInsetted(fLeft, fTop, iRect)); }
+
 Host_Mac::Host_Mac(ZRef<GuestFactory> iGuestFactory, bool iAllowCG)
 :	Host_Std(iGuestFactory),
 	fAllowCG(iAllowCG),
 	fEventLoopTimerRef_Idle(nullptr),
 	fLeft(0), fTop(0), fRight(0), fBottom(0)
 	{
+
 	#if defined(XP_MACOSX)
 		fUseCoreGraphics = false;
 		fNP_CGContext.context = nullptr;
@@ -189,14 +189,6 @@ void Host_Mac::DoIdle()
 	this->DoEvent(nullEvent, 0);
 	}
 
-void Host_Mac::pApplyInsets(ZGRectf& ioRect)
-	{
-	ioRect.origin.x += fLeft;
-	ioRect.origin.y += fTop;
-	ioRect.extent.h -= fLeft + fRight;
-	ioRect.extent.v -= fTop + fBottom;
-	}
-
 void Host_Mac::DoEvent(EventKind iWhat, uint32 iMessage)
 	{
 	EventRecord theER;
@@ -222,10 +214,9 @@ void Host_Mac::DoEvent(const EventRecord& iEvent)
 	this->Guest_HandleEvent(&theER);
 	}
 
-void Host_Mac::DoSetWindow(const ZGRectf& iWinFrame)
+void Host_Mac::DoSetWindow(const Rect& iWinFrame)
 	{
-	this->DoSetWindow
-		(iWinFrame.origin.x, iWinFrame.origin.y, iWinFrame.extent.h, iWinFrame.extent.v);
+	this->DoSetWindow(L(iWinFrame), T(iWinFrame), W(iWinFrame), H(iWinFrame));
 	}
 
 void Host_Mac::DoSetWindow(int iX, int iY, int iWidth, int iHeight)
@@ -243,10 +234,7 @@ void Host_Mac::DoSetWindow(int iX, int iY, int iWidth, int iHeight)
 	fNPWindow.width = iWidth;
 	fNPWindow.height = iHeight;
 
-	fNPWindow.clipRect.left = 0;
-	fNPWindow.clipRect.top = 0;
-	fNPWindow.clipRect.right = iWidth;
-	fNPWindow.clipRect.bottom = iHeight;
+	fNPWindow.clipRect = sRect<NPRect>(iWidth, iHeight);
 
 	#define CHECKIT(a) if (fNPWindow_Prior.a != fNPWindow.a) callIt = true;
 	bool callIt = false;
@@ -459,18 +447,16 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 
 					Rect winFrameRect;
 					::GetWindowBounds(fWindowRef, kWindowGlobalPortRgn, &winFrameRect);
-					ZGRectf winFrame(winFrameRect.right - winFrameRect.left,
-						winFrameRect.bottom - winFrameRect.top);
+					winFrameRect = sOffsetted(LT(winFrameRect) * -1, winFrameRect);
 
 					if (ZLOGPF(s, eDebug + 1))
 						{
-						s << "kEventWindowDrawContent: " << winFrame;
+						s << "kEventWindowDrawContent: " << winFrameRect;
 						}
 
-					winFrameRect = winFrame;
 					::EraseRect(&winFrameRect);
 
-					this->pApplyInsets(winFrame);
+					winFrameRect = this->pApplyInsets(winFrameRect);
 
 					if (false) {}
 					#if defined(XP_MACOSX)
@@ -483,9 +469,9 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 						CGContextRef cg;
 						::QDBeginCGContext(qdPort, &cg);
 						::CGContextSaveGState(cg);
-						::CGContextTranslateCTM(cg, 0, winFrameRect.bottom - winFrameRect.top);
+						::CGContextTranslateCTM(cg, 0, H(winFrameRect));
 						::CGContextScaleCTM(cg, 1.0, -1.0);
-						::CGContextTranslateCTM(cg, winFrame.origin.x, winFrame.origin.y);
+						::CGContextTranslateCTM(cg, L(winFrameRect), T(winFrameRect));
 
 						fNP_CGContext.context = cg;
 
@@ -494,10 +480,9 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 						Rect structureRect;
 						::GetWindowBounds(fWindowRef, kWindowStructureRgn, &structureRect);
 
-						winFrame.origin.x += contentRect.left - structureRect.left;
-						winFrame.origin.y += contentRect.top - structureRect.top;
+						winFrameRect = sOffsetted(LT(contentRect) - LT(structureRect), winFrameRect);
 
-						this->DoSetWindow(winFrame);
+						this->DoSetWindow(winFrameRect);
 						this->DoEvent(updateEvt, (UInt32)fWindowRef);
 
 						::CGContextRestoreGState(cg);
@@ -509,7 +494,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 					#endif // defined(XP_MACOSX)
 					else
 						{
-						this->DoSetWindow(winFrame);
+						this->DoSetWindow(winFrameRect);
 						this->DoEvent(updateEvt, (UInt32)fWindowRef);
 						}
 
@@ -538,21 +523,20 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 				case kEventWindowBoundsChanged:
 					{
 					#if defined(XP_MACOSX)
-						ZGRectf newFrame = sGetParam_T<Rect>(iEventRef,
+						Rect newFrame = sGetParam_T<Rect>(iEventRef,
 							kEventParamCurrentBounds, typeQDRectangle);
 
 						if (ZLOGPF(s, eDebug + 1))
 							s << "kEventWindowBoundsChanged"
 							<< ", newFrame: " << newFrame;
 
-						newFrame.origin = 0;
+						newFrame = sOffsetted(LT(newFrame) * -1, newFrame);
 
-						Rect qdRect = newFrame;
-						::InvalWindowRect(fWindowRef, &qdRect);
+						::InvalWindowRect(fWindowRef, &newFrame);
 
 						if (!fUseCoreGraphics)
 							{
-							this->pApplyInsets(newFrame);
+							newFrame = this->pApplyInsets(newFrame);
 							this->DoSetWindow(newFrame);
 							}
 					#endif
@@ -632,15 +616,7 @@ Host_HIViewRef::~Host_HIViewRef()
 	}
 
 void Host_HIViewRef::Host_InvalidateRect(NPP npp, NPRect* rect)
-	{
-	ZGRectf theRect;
-	theRect.origin.x = rect->left + fLeft;
-	theRect.origin.y = rect->top + fTop;
-	theRect.extent.h = rect->right - rect->left;
-	theRect.extent.v = rect->bottom - rect->top;
-
-	::HIViewSetNeedsDisplayInRect(fHIViewRef, &spHI(theRect), true);
-	}
+	{ ::HIViewSetNeedsDisplayInRect(fHIViewRef, sConstPtr& sRect<CGRect>(*rect), true); }
 
 void Host_HIViewRef::PostCreateAndLoad()
 	{
@@ -666,10 +642,10 @@ void Host_HIViewRef::PostCreateAndLoad()
 		ZUnimplemented();
 		}
 
-	ZGRectf theFrame;
-	::HIViewGetBounds(fHIViewRef, &spHI(theFrame));
-	this->pApplyInsets(theFrame);
-	::HIViewSetNeedsDisplayInRect(fHIViewRef, &spHI(theFrame), true);
+	CGRect theFrame;
+	::HIViewGetBounds(fHIViewRef, &theFrame);
+	theFrame = this->pApplyInsets(theFrame);
+	::HIViewSetNeedsDisplayInRect(fHIViewRef, &theFrame, true);
 	}
 
 EventHandlerUPP Host_HIViewRef::sEventHandlerUPP_View = NewEventHandlerUPP(sEventHandler_View);
@@ -731,17 +707,17 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					{
 					WindowRef theWindowRef = ::HIViewGetWindow(fHIViewRef);
 
-					ZGPointf startPoint = sGetParam_T<Point>(iEventRef,
-						kEventParamMouseLocation, typeQDPoint);
+					CGPoint startPoint = sPoint<CGPoint>
+						(sGetParam_T<Point>(iEventRef, kEventParamMouseLocation, typeQDPoint));
 
-					::HIPointConvert(&spHI(startPoint),
+					::HIPointConvert(&startPoint,
 						kHICoordSpaceView, fHIViewRef, kHICoordSpace72DPIGlobal, theWindowRef);
 
 					EventRecord theER;
 					theER.what = mouseDown;
 					theER.message = 0;
 					theER.when = ::EventTimeToTicks(::GetCurrentEventTime());
-					theER.where = startPoint;
+					theER.where = sPoint<Point>(startPoint);
 					theER.modifiers = sGetParam_T<UInt32>(iEventRef,
 						kEventParamKeyModifiers, typeUInt32);
 
@@ -788,18 +764,16 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 
 					WindowRef theWindowRef = ::HIViewGetWindow(fHIViewRef);
 
-					ZGRectf theFrame;
-					::HIViewGetBounds(fHIViewRef, &spHI(theFrame));
-					this->pApplyInsets(theFrame);
-
-					ZGRectf winFrame = theFrame;
+					CGRect theFrame;
+					::HIViewGetBounds(fHIViewRef, &theFrame);
+					theFrame = this->pApplyInsets(theFrame);
 
 					if (ZLOGPF(s, eDebug + 1))
-						s << "draw, winFrame: " << winFrame;
+						s << "draw, theFrame: " << theFrame;
 
 					if (fUseCoreGraphics)
 						{
-						::HIRectConvert(&spHI(winFrame),
+						::HIRectConvert(&theFrame,
 							kHICoordSpaceView, fHIViewRef, kHICoordSpaceWindow, theWindowRef);
 
 						if (CGContextRef theCG = sGetParam_T<CGContextRef>(iEventRef,
@@ -808,9 +782,9 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 							fNP_CGContext.context = theCG;
 
 							::CGContextSaveGState(theCG);
-							::CGContextTranslateCTM(theCG, theFrame.origin.x, theFrame.origin.y);
+							::CGContextTranslateCTM(theCG, L(theFrame), T(theFrame));
 
-							this->DoSetWindow(winFrame);
+							this->DoSetWindow(sRect<Rect>(theFrame));
 
 							this->DoEvent(updateEvt, (UInt32)theWindowRef);
 
@@ -821,7 +795,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 						}
 					else
 						{
-						this->DoSetWindow(winFrame);
+						this->DoSetWindow(sRect<Rect>(theFrame));
 						this->DoEvent(updateEvt, (UInt32)theWindowRef);
 						}
 					return noErr;
@@ -830,7 +804,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					{
 					// WindowRef theWindowRef = ::HIViewGetWindow(fHIViewRef);
 
-					ZGRectf newFrame = sGetParam_T<Rect>(iEventRef,
+					Rect newFrame = sGetParam_T<Rect>(iEventRef,
 						kEventParamCurrentBounds, typeQDRectangle);
 
 					if (ZLOGPF(s, eDebug + 1))
@@ -838,11 +812,11 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 						<< ", newFrame1: " << newFrame;
 
 					if (!fUseCoreGraphics)
-						newFrame.origin = 0;
+						newFrame = sOffsetted(LT(newFrame) * -1, newFrame);
 
-					::HIViewSetNeedsDisplayInRect(fHIViewRef, &spHI(ZGRectf(newFrame.extent)), true);
+					::HIViewSetNeedsDisplayInRect(fHIViewRef, sConstPtr& sRect<CGRect>(newFrame), true);
 
-					this->pApplyInsets(newFrame);
+					newFrame = this->pApplyInsets(newFrame);
 
 
 					if (ZLOGPF(s, eDebug + 1))

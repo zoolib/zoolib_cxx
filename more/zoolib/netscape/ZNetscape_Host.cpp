@@ -523,7 +523,7 @@ NPError HostMeister::spNewStream(NPP npp,
 	ZMACRO_Netscape_After_NPError
 	}
 
-::int32 HostMeister::spWrite(NPP npp, NPStream* stream, ::int32 len, void* buffer)
+int32 HostMeister::spWrite(NPP npp, NPStream* stream, int32 len, void* buffer)
 	{
 	ZMACRO_Netscape_Before
 		return sGet()->Write(npp, stream, len, buffer);
