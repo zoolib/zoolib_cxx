@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCartesian.h"
-#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZStdInt.h" // For int32
 
 namespace ZooLib {
@@ -57,24 +56,6 @@ struct ZRectPOD
 	int32 top;
 	int32 right;
 	int32 bottom;
-
-	bool Contains(int32 h, int32 v) const
-		{ return h >= left && h < right && v >= top && v < bottom; }
-
-	bool Contains(ZPointPOD p) const
-		{ return p.h >= left && p.h < right && p.v >= top && p.v < bottom; }
-
-	bool IsEmpty() const
-		{ return left >= right || top >= bottom; }
-
-	int32 Width() const { return right - left; }
-	int32 Height() const { return bottom - top; }
-	ZPointPOD Size() const { return sPointPOD(right - left, bottom - top); }
-
-	ZPointPOD TopLeft() const { return sPointPOD(left, top); }
-	ZPointPOD TopRight() const { return sPointPOD(right, top); }
-	ZPointPOD BottomLeft() const { return sPointPOD(left, bottom); }
-	ZPointPOD BottomRight() const { return sPointPOD(right, bottom); }
 	};
 
 inline ZRectPOD sRectPOD(int32 iLeft, int32 iTop, int32 iRight, int32 iBottom)
@@ -91,15 +72,6 @@ inline ZRectPOD sRectPOD(ZPointPOD iSize)
 
 inline ZRectPOD sRectPOD(int32 iWidth, int32 iHeight)
 	{ return sRectPOD(0, 0, iWidth, iHeight); }
-
-// =================================================================================================
-// MARK: - sCompare_T
-
-template <>
-int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR);
-
-template <>
-int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR);
 
 // =================================================================================================
 // MARK: - PointTraits<ZPointPOD>

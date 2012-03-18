@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,47 +18,43 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZGeomPOD.h"
-#include "zoolib/ZCompare_Integer.h"
+#ifndef __ZCompare_Cartesian_h__
+#define __ZCompare_Cartesian_h__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZCartesian.h"
+#include "zoolib/ZCompare_T.h"
 
 namespace ZooLib {
 
-/** \typedef ZPointPOD
-\ingroup Types
-ZPointPOD is used in circumstances where a ZPoint would present
-difficulties because of its ctor/dtor (in unions, mainly.).
-*/
-
-/** \typedef ZRectPOD
-\ingroup Types
-ZRectPOD is used in circumstances where a ZRect would present
-difficulties because of its ctor/dtor (in unions, mainly.).
-*/
-
 // =================================================================================================
-// MARK: - ZPointPOD
+// MARK: - sCompare_T, point
 
-template <>
-int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR)
+template <class Point_p>
+typename IfExists_T<typename PointTraits<Point_p>::Point_t,int>::type
+sCompare_T(const Point_p& iLHS, const Point_p& iRHS)
 	{
-	if (int compare = sCompare_T(iL.h, iR.h))
+	if (int compare = sCompare_T(X(iLHS), X(iRHS)))
 		return compare;
-	return sCompare_T(iL.v, iR.v);
+	return sCompare_T(Y(iLHS), Y(iRHS));
 	}
 
 // =================================================================================================
-// MARK: - ZRectPOD
+// MARK: - sCompare_T, rect
 
-template <>
-int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR)
+template <class Rect_p>
+typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,int>::type
+sCompare_T(const Rect_p& iLHS, const Rect_p& iRHS)
 	{
-	if (int compare = sCompare_T(iL.left, iR.left))
+	if (int compare = sCompare_T(L(iLHS), L(iRHS)))
 		return compare;
-	if (int compare = sCompare_T(iL.top, iR.top))
+	if (int compare = sCompare_T(T(iLHS), T(iRHS)))
 		return compare;
-	if (int compare = sCompare_T(iL.right, iR.right))
+	if (int compare = sCompare_T(R(iLHS), R(iRHS)))
 		return compare;
-	return sCompare_T(iL.bottom, iR.bottom);
+	return sCompare_T(B(iLHS), B(iRHS));
 	}
 
 } // namespace ZooLib
+
+#endif // __ZCompare_Cartesian_h__
