@@ -62,7 +62,7 @@ protected:
 
 	const ZStreamR& fStreamSource;
 	bz_stream fState;
-	char* fBuffer;
+	std::vector<char> fBuffer
 	size_t fBufferSize;
 	};
 
@@ -90,7 +90,7 @@ protected:
 
 	const ZStreamW& fStreamSink;
 	bz_stream fState;
-	char* fBuffer;
+	std::vector<char> fBuffer
 	size_t fBufferSize;
 	};
 

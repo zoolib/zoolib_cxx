@@ -68,7 +68,6 @@ ZStreamR_bzip2Decode::ZStreamR_bzip2Decode(size_t iBufferSize, const ZStreamR& i
 ZStreamR_bzip2Decode::~ZStreamR_bzip2Decode()
 	{
 	::BZ2_bzDecompressEnd(&fState);
-	delete[] fBuffer;
 	}
 
 void ZStreamR_bzip2Decode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
@@ -90,7 +89,7 @@ void ZStreamR_bzip2Decode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRe
 			if (countReadable == 0)
 				countReadable = 1;
 
-			size_t countToRead = min(countReadable, fBufferSize);
+			size_t countToRead = min(countReadable, fBuffer.size());
 
 			size_t countRead;
 			fStreamSource.Read(fBuffer, countToRead, &countRead);
@@ -113,14 +112,13 @@ size_t ZStreamR_bzip2Decode::Imp_CountReadable()
 
 void ZStreamR_bzip2Decode::pInit(size_t iBufferSize)
 	{
-	fBufferSize = max(size_t(1024), iBufferSize);
-	fBuffer = new char[fBufferSize];
+	fBuffer.resize(max(size_t(1024), iBufferSize));
 
 	fState.bzalloc = nullptr;
 	fState.bzfree = nullptr;
 	fState.opaque = nullptr;
 
-	fState.next_in = fBuffer;
+	fState.next_in = &fBuffer[0];
 	fState.avail_in = 0;
 
 	fState.next_out = nullptr;
@@ -165,7 +163,7 @@ ZStreamW_bzip2Encode::ZStreamW_bzip2Encode
 
 ZStreamW_bzip2Encode::~ZStreamW_bzip2Encode()
 	{
-	if (fBufferSize)
+	if (fBuffer.size())
 		{
 		try
 			{
@@ -176,13 +174,11 @@ ZStreamW_bzip2Encode::~ZStreamW_bzip2Encode()
 		}
 
 	::BZ2_bzCompressEnd(&fState);
-
-	delete[] fBuffer;
 	}
 
 void ZStreamW_bzip2Encode::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	if (!fBufferSize)
+	if (fBuffer.empty())
 		{
 		if (oCountWritten)
 			*oCountWritten = 0;
@@ -196,18 +192,18 @@ void ZStreamW_bzip2Encode::Imp_Write(const void* iSource, size_t iCount, size_t*
 	for (;;)
 		{
 		int result = ::BZ2_bzCompress(&fState, BZ_RUN);
-		if (size_t countToWrite = fBufferSize - fState.avail_out)
+		if (size_t countToWrite = fBuffer.size() - fState.avail_out)
 			{
 			size_t countWritten;
-			fStreamSink.Write(fBuffer, countToWrite, &countWritten);
+			fStreamSink.Write(&fBuffer[0], countToWrite, &countWritten);
 			if (countWritten < countToWrite)
 				{
 				// fStreamSink has closed. Mark ourselves similarly, by zeroing fBufferSize.
 				fBufferSize = 0;
 				break;
 				}
-			fState.next_out = fBuffer;
-			fState.avail_out = fBufferSize;
+			fState.next_out = &fBuffer[0];
+			fState.avail_out = fBuffer.size();
 			}
 		else if (fState.avail_in == 0)
 			{
@@ -227,7 +223,7 @@ in the hopes that it can be compressed in conjunction with subsequent data.
 */
 void ZStreamW_bzip2Encode::Imp_Flush()
 	{
-	if (!fBufferSize)
+	if (fBuffer.empty())
 		return;
 	this->pFlush();
 	fStreamSink.Flush();
@@ -235,8 +231,7 @@ void ZStreamW_bzip2Encode::Imp_Flush()
 
 void ZStreamW_bzip2Encode::pInit(int iBlockSize100K, size_t iBufferSize)
 	{
-	fBufferSize = max(size_t(1024), iBufferSize);
-	fBuffer = new char[fBufferSize];
+	fBuffer.resize(max(size_t(1024), iBufferSize));
 
 	fState.bzalloc = nullptr;
 	fState.bzfree = nullptr;
@@ -245,8 +240,8 @@ void ZStreamW_bzip2Encode::pInit(int iBlockSize100K, size_t iBufferSize)
 	fState.next_in = nullptr;
 	fState.avail_in = 0;
 
-	fState.next_out = fBuffer;
-	fState.avail_out = fBufferSize;
+	fState.next_out = &fBuffer[0];
+	fState.avail_out = fBuffer.size();
 
 	if (BZ_OK != ::BZ2_bzCompressInit(&fState, iBlockSize100K, 0, 0))
 		throw runtime_error("ZStreamW_bzip2Encode problem");
@@ -259,17 +254,17 @@ void ZStreamW_bzip2Encode::pFlush()
 	for (;;)
 		{
 		int result = ::BZ2_bzCompress(&fState, BZ_FLUSH);
-		if (size_t countToWrite = fBufferSize - fState.avail_out)
+		if (size_t countToWrite = fBuffer.size() - fState.avail_out)
 			{
 			size_t countWritten;
-			fStreamSink.Write(fBuffer, countToWrite, &countWritten);
+			fStreamSink.Write(&fBuffer[0], countToWrite, &countWritten);
 			if (countWritten < countToWrite)
 				{
-				fBufferSize = 0;
+				fBuffer.resize(0);
 				ZStreamW::sThrowEndOfStream();
 				}
-			fState.next_out = fBuffer;
-			fState.avail_out = fBufferSize;
+			fState.next_out = &fBuffer[0];
+			fState.avail_out = fBuffer.size();
 			}
 		else
 			{

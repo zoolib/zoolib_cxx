@@ -98,10 +98,8 @@ void ZStreamR_Chunked::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 
 ZStreamW_Chunked::ZStreamW_Chunked(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)
-	{
-	fBuffer = new uint8[256];
-	fBufferUsed = 0;
-	}
+,	fBufferUsed(0)
+	{}
 
 ZStreamW_Chunked::~ZStreamW_Chunked()
 	{
@@ -112,8 +110,6 @@ ZStreamW_Chunked::~ZStreamW_Chunked()
 		}
 	catch (...)
 		{}
-
-	delete[] fBuffer;
 	}
 
 void ZStreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)

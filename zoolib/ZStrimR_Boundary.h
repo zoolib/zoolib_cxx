@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimmer.h"
 
 #include <string>
+#include <vector>
 
 namespace ZooLib {
 
@@ -55,7 +56,7 @@ protected:
 	const ZStrimR& fStrimSource;
 	string32 fBoundary;
 	size_t fSkip[256];
-	UTF32* fBuffer;
+	std::vector<UTF32> fBuffer;
 	size_t fStart;
 	size_t fEnd;
 	bool fHitBoundary;

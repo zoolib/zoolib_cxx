@@ -28,8 +28,6 @@ namespace ZooLib {
 
 #define kDebug_LZW 2
 
-static const int kTableSize = 5003;
-
 // =================================================================================================
 // MARK: - ZStreamR_LZWEncode
 
@@ -145,33 +143,12 @@ ZStreamR_LZWDecode::ZStreamR_LZWDecode(int iCodeSize_Alphabet, const ZStreamR& i
 	fCode_Last = -1;
 	fCode_ABCABCA = -1;
 
-	fStack = nullptr;
-	fPrefix = nullptr;
-	fSuffix = nullptr;
-	try
-		{
-		fStack = new uint8[4096];
-		fPrefix = new uint16[4096];
-		fSuffix = new uint8[4096];
-		}
-	catch (...)
-		{
-		delete[] fStack;
-		delete[] fPrefix;
-		delete[] fSuffix;
-		throw;
-		}
-
 	fStackEnd = fStack + 4096;
 	fStackTop = fStackEnd;
 	}
 
 ZStreamR_LZWDecode::~ZStreamR_LZWDecode()
-	{
-	delete[] fStack;
-	delete[] fPrefix;
-	delete[] fSuffix;
-	}
+	{}
 
 void ZStreamR_LZWDecode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
@@ -273,24 +250,6 @@ ZStreamW_LZWEncode::ZStreamW_LZWEncode(int iCodeSize_Alphabet, const ZStreamW& i
 	fCode_FIN = (1 << fCodeSize_Alphabet) + 1;
 	fCode_FirstAvailable = (1 << fCodeSize_Alphabet) + 2;
 
-	fCodes_Suffix = nullptr;
-	fCodes_Prefix = nullptr;
-	fChild = nullptr;
-
-	try
-		{
-		fCodes_Suffix = new uint8[kTableSize];
-		fCodes_Prefix = new uint16[kTableSize];
-		fChild = new uint16[kTableSize];
-		}
-	catch (...)
-		{
-		delete[] fCodes_Suffix;
-		delete[] fCodes_Prefix;
-		delete[] fChild;
-		throw;
-		}
-
 	ZMemZero(fChild, sizeof(uint16) * kTableSize);
 
 	fFresh = true;
@@ -310,10 +269,6 @@ ZStreamW_LZWEncode::~ZStreamW_LZWEncode()
 		}
 	catch (...)
 		{}
-
-	delete[] fCodes_Suffix;
-	delete[] fCodes_Prefix;
-	delete[] fChild;
 	}
 
 void ZStreamW_LZWEncode::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
@@ -481,33 +436,12 @@ ZStreamW_LZWDecode::ZStreamW_LZWDecode(int iCodeSize_Alphabet, const ZStreamW& i
 	fCode_Last = -1;
 	fCode_ABCABCA = -1;
 
-	fStack = nullptr;
-	fPrefix = nullptr;
-	fSuffix = nullptr;
-	try
-		{
-		fStack = new uint8[4096];
-		fPrefix = new uint16[4096];
-		fSuffix = new uint8[4096];
-		}
-	catch (...)
-		{
-		delete[] fStack;
-		delete[] fPrefix;
-		delete[] fSuffix;
-		throw;
-		}
-
 	fStackEnd = fStack + 4096;
 	fStackTop = fStackEnd;
 	}
 
 ZStreamW_LZWDecode::~ZStreamW_LZWDecode()
-	{
-	delete[] fStack;
-	delete[] fPrefix;
-	delete[] fSuffix;
-	}
+	{}
 
 void ZStreamW_LZWDecode::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{

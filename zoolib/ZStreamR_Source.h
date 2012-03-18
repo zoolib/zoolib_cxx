@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
+#include <vector>
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -61,8 +63,7 @@ protected:
 	void pCopyTo(const ZStreamW& iStreamW, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);
 
-	uint8* fData;
-	size_t fDataSize;
+	std::vector<uint8> fData;
 	size_t fOffset;
 	};
 

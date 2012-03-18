@@ -118,12 +118,12 @@ protected:
 	int fCode_Last;
 	int fCode_ABCABCA;
 
-	uint8* fStack;
+	uint8 fStack[4096];
 	uint8* fStackEnd;
 	uint8* fStackTop;
 
-	uint16* fPrefix;
-	uint8* fSuffix;
+	uint16 fPrefix[4096];
+	uint8 fSuffix[4096];
 
 	ZBitReaderBE fBitReader;
 	};
@@ -153,9 +153,11 @@ protected:
 	int fCode_FIN;
 	int fCode_FirstAvailable;
 
-	uint8* fCodes_Suffix;
-	uint16* fCodes_Prefix;
-	uint16* fChild;
+	static const int kTableSize = 5003;
+
+	uint8 fCodes_Suffix[kTableSize];
+	uint16 fCodes_Prefix[kTableSize];
+	uint16 fChild[kTableSize];
 
 	uint16 fPendingPrefix;
 
@@ -220,12 +222,12 @@ protected:
 	int fCode_Last;
 	int fCode_ABCABCA;
 
-	uint8* fStack;
+	uint8 fStack[4096];
 	uint8* fStackEnd;
 	uint8* fStackTop;
 
-	uint16* fPrefix;
-	uint8* fSuffix;
+	uint16 fPrefix[4096];
+	uint8 fSuffix[4096];
 
 	ZBitReaderBE fBitReader;
 	};

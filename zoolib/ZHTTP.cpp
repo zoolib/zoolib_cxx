@@ -1824,19 +1824,15 @@ bool StreamR_Chunked::Imp_WaitReadable(double iTimeout)
 
 StreamW_Chunked::StreamW_Chunked(size_t iBufferSize, const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink),
-	fBufferSize(max(size_t(64), iBufferSize))
-	{
-	fBuffer = new uint8[fBufferSize];
-	fBufferUsed = 0;
-	}
+	fBuffer(max(size_t(64), iBufferSize), 0),
+	fBufferUsed(0)
+	{}
 
 StreamW_Chunked::StreamW_Chunked(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink),
-	fBufferSize(1024)
-	{
-	fBuffer = new uint8[fBufferSize];
-	fBufferUsed = 0;
-	}
+	fBuffer(1024, 0),
+	fBufferUsed(0)
+	{}
 
 StreamW_Chunked::~StreamW_Chunked()
 	{
@@ -1853,8 +1849,6 @@ StreamW_Chunked::~StreamW_Chunked()
 		}
 	catch (...)
 		{}
-
-	delete[] fBuffer;
 	}
 
 void StreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
@@ -1862,13 +1856,13 @@ void StreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCou
 	const uint8* localSource = reinterpret_cast<const uint8*>(iSource);
 	while (iCount)
 		{
-		if (fBufferUsed + iCount >= fBufferSize)
+		if (fBufferUsed + iCount >= fBuffer.size())
 			{
 			// The data would overflow the buffer, so we can write the
 			// buffer content (if any) plus this new stuff.
 			fStreamSink.Writef("%X\r\n", fBufferUsed + iCount);
 			// Hmmm. Do we allow an end of stream exception to propogate?
-			fStreamSink.Write(fBuffer, fBufferUsed);
+			fStreamSink.Write(&fBuffer[0], fBufferUsed);
 			fBufferUsed = 0;
 			fStreamSink.Write(localSource, iCount);
 			fStreamSink.WriteString("\r\n");
@@ -1877,8 +1871,8 @@ void StreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCou
 			}
 		else
 			{
-			size_t countToCopy = min(iCount, size_t(fBufferSize - fBufferUsed));
-			ZMemCopy(fBuffer + fBufferUsed, localSource, countToCopy);
+			size_t countToCopy = min(iCount, size_t(fBuffer.size() - fBufferUsed));
+			ZMemCopy(&fBuffer[0] + fBufferUsed, localSource, countToCopy);
 			fBufferUsed += countToCopy;
 			iCount -= countToCopy;
 			localSource += countToCopy;
@@ -1900,7 +1894,7 @@ void StreamW_Chunked::pFlush()
 		{
 		fBufferUsed = 0;
 		fStreamSink.Writef("%X\r\n", bufferUsed);
-		fStreamSink.Write(fBuffer, bufferUsed);
+		fStreamSink.Write(&fBuffer[0], bufferUsed);
 		fStreamSink.WriteString("\r\n");
 		}
 	}

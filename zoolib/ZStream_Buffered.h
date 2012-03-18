@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
+#include <vector>
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -49,8 +51,7 @@ public:
 
 protected:
 	const ZStreamR& fStreamSource;
-	uint8* fBuffer;
-	size_t fBufferSize;
+	std::vector<uint8> fBuffer;
 	size_t fBufferOffset;
 	};
 
@@ -78,8 +79,7 @@ protected:
 	void pFlush();
 
 	const ZStreamW& fStreamSink;
-	uint8* fBuffer;
-	size_t fBufferSize;
+	std::vector<uint8> fBuffer;
 	size_t fBufferOffset;
 	};
 

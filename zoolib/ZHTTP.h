@@ -260,8 +260,7 @@ private:
 	void pFlush();
 
 	const ZStreamW& fStreamSink;
-	uint8* fBuffer;
-	size_t fBufferSize;
+	std::vector<uint8> fBuffer;
 	size_t fBufferUsed;
 	};
 

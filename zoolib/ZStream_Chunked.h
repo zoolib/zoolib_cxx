@@ -64,7 +64,7 @@ private:
 	void pFlush();
 
 	const ZStreamW& fStreamSink;
-	uint8* fBuffer;
+	uint8 fBuffer[256];
 	size_t fBufferUsed;
 	};
 

@@ -405,8 +405,7 @@ private:
 	ZRef<ZUSBInterfaceInterface> fUSBII;
 	IOUSBInterfaceInterface190** fII;
 	int fPipeRefR;
-	const size_t fSize;
-	uint8* fBuffer;
+	std::vector<uint8> fBuffer;
 	size_t fOffset;
 	size_t fEnd;
 	};
@@ -420,16 +419,13 @@ StreamerR_TO::StreamerR_TO(ZRef<ZUSBInterfaceInterface> iUSBII,
 :	fUSBII(iUSBII),
 	fII(iIOUSBInterfaceInterface),
 	fPipeRefR(iPipeRefR),
-	fSize(iBufferSize),
-	fBuffer(new uint8[iBufferSize]),
+	fBuffer(iBufferSize, 0),
 	fOffset(0),
 	fEnd(0)
 	{}
 
 StreamerR_TO::~StreamerR_TO()
-	{
-	delete[] fBuffer;
-	}
+	{}
 
 const ZStreamR& StreamerR_TO::GetStreamR()
 	{ return *this; }
@@ -443,7 +439,7 @@ void StreamerR_TO::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		if (fEnd > fOffset)
 			{
 			const size_t countToCopy = min(fEnd - fOffset, iCount);
-			ZMemCopy(localDest, fBuffer + fOffset, countToCopy);
+			ZMemCopy(localDest, &fBuffer[fOffset], countToCopy);
 			localDest += countToCopy;
 			fOffset += countToCopy;
 			break;
@@ -477,9 +473,9 @@ bool StreamerR_TO::pRefill(double iTimeout)
 
 	fOffset = 0;
 	fEnd = 0;
-	UInt32 localCount = fSize;
+	UInt32 localCount = fBuffer.size();
 	IOReturn result = fII[0]->ReadPipeTO
-		(fII, fPipeRefR, fBuffer, &localCount, iTimeout * 1e3, 1000000);
+		(fII, fPipeRefR, &fBuffer[0], &localCount, iTimeout * 1e3, 1000000);
 
 	if (kIOUSBTransactionTimeout == result)
 		{
@@ -495,7 +491,7 @@ bool StreamerR_TO::pRefill(double iTimeout)
 		if (ZLOGPF(s, eDebug + 2))
 			{
 			s << "pipe: "<< fPipeRefR << ", ";
-			ZUtil_Strim_Data::sDumpData(s, fBuffer, localCount);
+			ZUtil_Strim_Data::sDumpData(s, &fBuffer[0], localCount);
 			}
 		fEnd = localCount;
 		return true;
@@ -546,8 +542,7 @@ private:
 
 	ZMtx fMtx;
 	ZCnd fCnd;
-	uint8* fBuffer;
-	const size_t fSize;
+	std::vector<uint8> fBuffer;
 	size_t fOffset;
 	size_t fEnd;
 	bool fPending;
@@ -563,8 +558,7 @@ StreamerR_Async::StreamerR_Async(ZRef<ZUSBInterfaceInterface> iUSBII,
 :	fUSBII(iUSBII),
 	fII(iIOUSBInterfaceInterface),
 	fPipeRefR(iPipeRefR),
-	fBuffer(new uint8[iBufferSize]),
-	fSize(iBufferSize),
+	fBuffer(iBufferSize,0),
 	fOffset(0),
 	fEnd(0),
 	fPending(false),
@@ -581,7 +575,6 @@ StreamerR_Async::~StreamerR_Async()
 		while (fPending)
 			fCnd.Wait(fMtx);
 		}
-	delete[] fBuffer;
 	}
 
 const ZStreamR& StreamerR_Async::GetStreamR()
@@ -597,7 +590,7 @@ void StreamerR_Async::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		if (fOffset < fEnd)
 			{
 			const size_t countToCopy = min(fEnd - fOffset, iCount);
-			ZMemCopy(localDest, fBuffer + fOffset, countToCopy);
+			ZMemCopy(localDest, &fBuffer[fOffset], countToCopy);
 			localDest += countToCopy;
 			fOffset += countToCopy;
 			break;
@@ -644,7 +637,7 @@ void StreamerR_Async::pTriggerRead()
 	fEnd = 0;
 
 	IOReturn result = fII[0]->ReadPipeAsync
-		(fII, fPipeRefR, fBuffer, fSize, spCompletion, this);
+		(fII, fPipeRefR, &fBuffer[0], fBuffer.size(), spCompletion, this);
 
 	if (kIOReturnSuccess == result)
 		fPending = true;

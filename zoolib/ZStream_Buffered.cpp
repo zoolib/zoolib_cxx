@@ -43,24 +43,16 @@ high call overhead or latency.
 */
 
 ZStreamR_Buffered::ZStreamR_Buffered(size_t iBufferSize, const ZStreamR& iStreamSource)
-:	fStreamSource(iStreamSource)
-	{
-	// Ensure we have a reasonable size of buffer
-	if (iBufferSize < 128)
-		iBufferSize = 128;
-	else if (iBufferSize > 8192)
-		iBufferSize = 8192;
-	fBufferSize = iBufferSize;
-	fBuffer = new uint8[fBufferSize];
-	fBufferOffset = fBufferSize;
-	}
+:	fStreamSource(iStreamSource),
+	fBuffer(sMinMax(128, iBufferSize, 8192), 0),
+	fBufferOffset(fBuffer.size())
+	{}
 
 ZStreamR_Buffered::~ZStreamR_Buffered()
 	{
 // This check causes more trouble than its worth.
-//	if (fBufferSize - fBufferOffset)
+//	if (fBuffer.size() - fBufferOffset)
 //		ZDebugLogf(1, ("~ZStreamR_Buffered::~~ZStreamR_Buffered, disposed with unread data"));
-	delete[] fBuffer;
 	}
 
 void ZStreamR_Buffered::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
@@ -68,12 +60,12 @@ void ZStreamR_Buffered::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount)
 		{
-		size_t countInBuffer = fBufferSize - fBufferOffset;
+		size_t countInBuffer = fBuffer.size() - fBufferOffset;
 		if (countInBuffer)
 			{
 			// We have some data in our buffer, use it up first.
 			size_t countToMove = min(countInBuffer, iCount);
-			ZMemCopy(localDest, fBuffer + fBufferOffset, countToMove);
+			ZMemCopy(localDest, &fBuffer[fBufferOffset], countToMove);
 			fBufferOffset += countToMove;
 			localDest += countToMove;
 			iCount -= countToMove;
@@ -82,7 +74,7 @@ void ZStreamR_Buffered::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			{
 			// Our buffer is empty.
 			size_t countReadable = fStreamSource.CountReadable();
-			if (iCount >= fBufferSize || iCount >= countReadable)
+			if (iCount >= fBuffer.size() || iCount >= countReadable)
 				{
 				// Either we're asking for more data than would fit in our buffer, or we're asking
 				// for more data than the stream will be able to provide without blocking. In
@@ -99,9 +91,9 @@ void ZStreamR_Buffered::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 				// We're asking for less data than the stream guarantees it could provide without
 				// blocking, in which case we fill up as much of our buffer as we can, so some
 				// later request will be able to be satisfied straight from our buffer.
-				size_t countToRead = min(fBufferSize, countReadable);
+				size_t countToRead = min(fBuffer.size(), countReadable);
 				size_t countRead;
-				fStreamSource.Read(fBuffer + (fBufferSize - countToRead), countToRead, &countRead);
+				fStreamSource.Read(&fBuffer[0] + (fBuffer.size() - countToRead), countToRead, &countRead);
 				if (countRead == 0)
 					break;
 				// If countRead is less than what we asked for, shift the buffer contents so that
@@ -110,10 +102,10 @@ void ZStreamR_Buffered::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 				// feeding out from (fBufferOffset), but just how much more data is actually valid.
 				if (countRead < countToRead)
 					{
-					ZMemMove(fBuffer + (fBufferSize - countRead),
-						fBuffer + (fBufferSize - countToRead), countRead);
+					ZMemMove(&fBuffer[0] + (fBuffer.size() - countRead),
+						&fBuffer[0] + (fBuffer.size() - countToRead), countRead);
 					}
-				fBufferOffset = fBufferSize - countRead;
+				fBufferOffset = fBuffer.size() - countRead;
 				}
 			}
 		}
@@ -122,11 +114,11 @@ void ZStreamR_Buffered::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	}
 
 size_t ZStreamR_Buffered::Imp_CountReadable()
-	{ return fBufferSize - fBufferOffset + fStreamSource.CountReadable(); }
+	{ return fBuffer.size() - fBufferOffset + fStreamSource.CountReadable(); }
 
 bool ZStreamR_Buffered::Imp_WaitReadable(double iTimeout)
 	{
-	if (fBufferSize - fBufferOffset)
+	if (fBuffer.size() - fBufferOffset)
 		return true;
 	return fStreamSource.WaitReadable(iTimeout);
 	}
@@ -137,7 +129,7 @@ void ZStreamR_Buffered::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 		*oCountSkipped = 0;
 
 	// Skip as much as we might have buffered
-	if (uint64 countToSkip = min(uint64(fBufferSize - fBufferOffset), iCount))
+	if (uint64 countToSkip = min(uint64(fBuffer.size() - fBufferOffset), iCount))
 		{
 		iCount -= countToSkip;
 		fBufferOffset += countToSkip;
@@ -156,9 +148,7 @@ void ZStreamR_Buffered::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	}
 
 void ZStreamR_Buffered::Abandon()
-	{
-	fBufferOffset = fBufferSize;
-	}
+	{ fBufferOffset = fBuffer.size(); }
 
 // =================================================================================================
 // MARK: - ZStreamW_Buffered
@@ -173,17 +163,10 @@ passed straight through to the sink stream, bypassing the buffer altogether.
 */
 
 ZStreamW_Buffered::ZStreamW_Buffered(size_t iBufferSize, const ZStreamW& iStreamSink)
-:	fStreamSink(iStreamSink)
-	{
-	// Ensure we have a reasonable size of buffer
-	if (iBufferSize < 128)
-		iBufferSize = 128;
-	else if (iBufferSize > 8192)
-		iBufferSize = 8192;
-	fBufferSize = iBufferSize;
-	fBuffer = new uint8[fBufferSize];
-	fBufferOffset = 0;
-	}
+:	fStreamSink(iStreamSink),
+	fBuffer(sMinMax(128, iBufferSize, 8192), 0),
+	fBufferOffset(fBuffer.size())
+	{}
 
 ZStreamW_Buffered::~ZStreamW_Buffered()
 	{
@@ -195,8 +178,6 @@ ZStreamW_Buffered::~ZStreamW_Buffered()
 		{
 		ZDebugLogf(1, ("ZStreamW_Buffered::~ZStreamW_Buffered, unable to flush entire buffer"));
 		}
-
-	delete[] fBuffer;
 	}
 
 void ZStreamW_Buffered::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
@@ -204,7 +185,7 @@ void ZStreamW_Buffered::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 	const uint8* localSource = reinterpret_cast<const uint8*>(iSource);
 	while (iCount)
 		{
-		if (fBufferOffset == 0 && fBufferSize <= iCount)
+		if (fBufferOffset == 0 && fBuffer.size() <= iCount)
 			{
 			// We have an empty buffer *and* we have more data to send than would fit in the buffer.
 			size_t countWritten;
@@ -218,12 +199,12 @@ void ZStreamW_Buffered::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 			{
 			// Either we already have data in the buffer, or we have an empty buffer
 			// and less than a buffer's worth to send.
-			size_t countToCopy = min(iCount, fBufferSize - fBufferOffset);
-			ZMemCopy(fBuffer + fBufferOffset, localSource, countToCopy);
+			size_t countToCopy = min(iCount, fBuffer.size() - fBufferOffset);
+			ZMemCopy(&fBuffer[fBufferOffset], localSource, countToCopy);
 			fBufferOffset += countToCopy;
 			localSource += countToCopy;
 			iCount -= countToCopy;
-			if (fBufferOffset == fBufferSize)
+			if (fBufferOffset == fBuffer.size())
 				{
 				// The buffer's completely full.
 				this->pFlush();
@@ -250,7 +231,7 @@ void ZStreamW_Buffered::pFlush()
 	if (const size_t bufferUsed = fBufferOffset)
 		{
 		fBufferOffset = 0;
-		fStreamSink.Write(fBuffer, bufferUsed);
+		fStreamSink.Write(&fBuffer[0], bufferUsed);
 		}
 	}
 

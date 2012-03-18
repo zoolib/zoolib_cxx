@@ -37,50 +37,38 @@ by calling the appropriate constructor.
 */
 
 ZStreamR_Source::ZStreamR_Source()
-	{
-	fData = new uint8[1024];
-	fDataSize = 1024;
-	ZMemZero(fData, 1024);
-	fOffset = 0;
-	}
+:	fData(1024, 0),
+	fOffset(0)
+	{}
 
 ZStreamR_Source::ZStreamR_Source(uint8 iData)
-	{
-	fData = new uint8[1024];
-	fDataSize = 1024;
-	ZMemSet(fData, iData, 1024);
-	fOffset = 0;
-	}
+:	fData(1024, iData),
+	fOffset(0)
+	{}
 
 ZStreamR_Source::ZStreamR_Source(const void* iData, size_t iDataSize)
-	{
-	fData = new uint8[iDataSize];
-	fDataSize = iDataSize;
-	ZMemCopy(fData, iData, fDataSize);
-	fOffset = 0;
-	}
+:	fData(static_cast<const char*>(iData), static_cast<const char*>(iData) + iDataSize),
+	fOffset(0)
+	{}
 
 ZStreamR_Source::ZStreamR_Source(const pair<const void*, size_t>& iParam)
-	{
-	fData = new uint8[iParam.second];
-	fDataSize = iParam.second;
-	ZMemCopy(fData, iParam.first, fDataSize);
-	fOffset = 0;
-	}
+:	fData
+		(static_cast<const char*>(iParam.first),
+		static_cast<const char*>(iParam.first) + iParam.second),
+	fOffset(0)
+	{}
 
 ZStreamR_Source::~ZStreamR_Source()
-	{
-	delete[] fData;
-	}
+	{}
 
 void ZStreamR_Source::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount)
 		{
-		size_t countToMove = min(iCount, fDataSize - fOffset);
-		ZMemCopy(localDest, fData + fOffset, countToMove);
-		fOffset = (fOffset + countToMove) % fDataSize;
+		size_t countToMove = min(iCount, fData.size() - fOffset);
+		ZMemCopy(localDest, &fData[fOffset], countToMove);
+		fOffset = (fOffset + countToMove) % fData.size();
 		localDest += countToMove;
 		iCount -= countToMove;
 		}
@@ -102,7 +90,7 @@ void ZStreamR_Source::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 
 void ZStreamR_Source::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	fOffset = (fOffset + iCount) % fDataSize;
+	fOffset = (fOffset + iCount) % fData.size();
 	if (oCountSkipped)
 		*oCountSkipped = iCount;
 	}
@@ -116,12 +104,12 @@ void ZStreamR_Source::pCopyTo(const ZStreamW& iStreamW, uint64 iCount,
 		*oCountWritten = 0;
 	while (iCount)
 		{
-		uint64 countToWrite = min(iCount, uint64(fDataSize - fOffset));
+		uint64 countToWrite = min(iCount, uint64(fData.size() - fOffset));
 		size_t countWritten;
-		iStreamW.Write(fData + fOffset, countToWrite, &countWritten);
+		iStreamW.Write(&fData[fOffset], countToWrite, &countWritten);
 		if (countWritten == 0)
 			break;
-		fOffset = (fOffset + countWritten) % fDataSize;
+		fOffset = (fOffset + countWritten) % fData.size();
 		iCount -= countWritten;
 		if (oCountRead)
 			*oCountRead += countWritten;
