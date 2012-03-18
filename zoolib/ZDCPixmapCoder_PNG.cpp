@@ -120,7 +120,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 		if (PixelDescRep_Indexed* thePixelDescRep_Indexed =
 			thePixelDescRep.DynamicCast<PixelDescRep_Indexed>())
 			{
-			::png_set_IHDR(write_ptr, info_ptr, iBounds.Width(), iBounds.Height(), 8,
+			::png_set_IHDR(write_ptr, info_ptr, W(iBounds), H(iBounds), 8,
 				PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
 				PNG_COMPRESSION_TYPE_BASE,PNG_FILTER_TYPE_BASE);
 
@@ -156,7 +156,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 				destPixelDesc = PixelDesc(eFormatStandard_RGB_24);
 				destPixvalDesc = PixvalDesc(eFormatStandard_RGB_24);
 				}
-			::png_set_IHDR(write_ptr, info_ptr, iBounds.Width(), iBounds.Height(), 8,
+			::png_set_IHDR(write_ptr, info_ptr, W(iBounds), H(iBounds), 8,
 				colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 			}
 		else if (thePixelDescRep.DynamicCast<PixelDescRep_Gray>())
@@ -174,7 +174,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 				destPixelDesc = PixelDesc(eFormatStandard_Gray_8);
 				destPixvalDesc = PixvalDesc(eFormatStandard_Gray_8);
 				}
-			::png_set_IHDR(write_ptr, info_ptr, iBounds.Width(), iBounds.Height(), 8,
+			::png_set_IHDR(write_ptr, info_ptr, W(iBounds), H(iBounds), 8,
 				colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 			}
 		else
@@ -182,7 +182,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 			ZUnimplemented();
 			}
 
-		theRowBufferVector.resize(iBounds.Width() * (destPixvalDesc.fDepth / 8));
+		theRowBufferVector.resize(W(iBounds) * (destPixvalDesc.fDepth / 8));
 
 		if (setjmp(write_ptr->jmpbuf))
 			spThrowToStream();
@@ -198,7 +198,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 				sBlitRow
 					(sourceRowAddress, sourcePixvalDesc, iPixelDesc, iBounds.left,
 					theRowBuffer, destPixvalDesc, destPixelDesc, 0,
-					iBounds.Width());
+					W(iBounds));
 
 				if (setjmp(write_ptr->jmpbuf))
 					spThrowToStream();

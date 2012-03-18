@@ -333,8 +333,8 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 	theEM.BeforeCall();
 	::jpeg_create_compress(&theJCS);
 
-	theJCS.image_width = iBounds.Width();
-	theJCS.image_height = iBounds.Height();
+	theJCS.image_width = W(iBounds);
+	theJCS.image_height = H(iBounds);
 
 	JPEGWriter theJW(iStream);
 	theJCS.dest = &theJW;
@@ -351,7 +351,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 			{
 			theJCS.input_components = 1;
 			theJCS.in_color_space = JCS_GRAYSCALE;
-			rowBufferVector.resize(iBounds.Width());
+			rowBufferVector.resize(W(iBounds));
 
 			destPixelDesc = PixelDesc(eFormatStandard_Gray_8);
 			destPixvalDesc = PixvalDesc(eFormatStandard_Gray_8);
@@ -360,7 +360,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 			{
 			theJCS.input_components = 3;
 			theJCS.in_color_space = JCS_RGB;
-			rowBufferVector.resize(3 * iBounds.Width());
+			rowBufferVector.resize(3 * W(iBounds));
 
 			destPixelDesc = PixelDesc(eFormatStandard_RGB_24);
 			destPixvalDesc = PixvalDesc(eFormatStandard_RGB_24);
@@ -409,7 +409,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 				sBlitRow
 					(sourceRowAddress, iRasterDesc.fPixvalDesc, iPixelDesc, iBounds.left,
 					rowPtr[0], destPixvalDesc, destPixelDesc, 0,
-					iBounds.Width());
+					W(iBounds));
 
 				theEM.BeforeCall();
 				::jpeg_write_scanlines(&theJCS, rowPtr, 1);

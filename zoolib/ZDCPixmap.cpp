@@ -148,8 +148,8 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource, const ZRectPOD& iSourceBounds)
 
 	ZRectPOD originalBounds = sourceRep->GetBounds();
 
-	ZRectPOD realBounds = (iSourceBounds + originalBounds.TopLeft()) & originalBounds;
-	if (realBounds.IsEmpty())
+	ZRectPOD realBounds = (iSourceBounds + LT(originalBounds)) & originalBounds;
+	if (sIsEmpty(realBounds))
 		return;
 
 	fRep = ZDCPixmapRep::sCreate
@@ -293,14 +293,14 @@ void ZDCPixmap::CopyFrom(ZPointPOD iDestLocation, const ZDCPixmap& iSource, cons
 	ZRectPOD availDestBounds = fRep->GetBounds();
 
 	// Offset into actual coordinates
-	realSourceBounds += availSourceBounds.TopLeft();
-	realDestLocation += availDestBounds.TopLeft();
+	realSourceBounds += LT(availSourceBounds);
+	realDestLocation += LT(availDestBounds);
 
 	realSourceBounds.right = min(realSourceBounds.right, availSourceBounds.right);
 	realSourceBounds.bottom = min(realSourceBounds.bottom, availSourceBounds.bottom);
 
 	// Bail if we've ended up with an empty rectangle
-	if (realSourceBounds.IsEmpty())
+	if (sIsEmpty(realSourceBounds))
 		return;
 
 	// Make sure we're not sharing our rep with anyone
@@ -349,10 +349,10 @@ void ZDCPixmap::CopyFrom(ZPointPOD iDestLocation,
 	ZRectPOD availDestBounds = fRep->GetBounds();
 
 	// Offset into actual coordinates
-	realDestLocation += availDestBounds.TopLeft();
+	realDestLocation += LT(availDestBounds);
 
 	// Bail if we've ended up with an empty rectangle
-	if (realSourceBounds.IsEmpty())
+	if (sIsEmpty(realSourceBounds))
 		return;
 
 	// Make sure we're not sharing our rep with anyone
@@ -402,13 +402,13 @@ void ZDCPixmap::CopyTo(ZPointPOD iDestLocation,
 	ZRectPOD availSourceBounds = fRep->GetBounds();
 
 	// Offset into actual coordinates
-	realSourceBounds += availSourceBounds.TopLeft();
+	realSourceBounds += LT(availSourceBounds);
 
 	realSourceBounds.right = min(realSourceBounds.right, availSourceBounds.right);
 	realSourceBounds.bottom = min(realSourceBounds.bottom, availSourceBounds.bottom);
 
 	// Bail if we've ended up with an empty rectangle
-	if (realSourceBounds.IsEmpty())
+	if (sIsEmpty(realSourceBounds))
 		return;
 
 	fRep->CopyTo(realDestLocation,
@@ -626,7 +626,7 @@ ZDCPixmapRep::~ZDCPixmapRep()
 
 ZRGBA_POD ZDCPixmapRep::GetPixel(ZCoord iLocationH, ZCoord iLocationV) const
 	{
-	if (!fBounds.Contains(iLocationH, iLocationV))
+	if (not sContains(fBounds, iLocationH, iLocationV))
 		return ZRGBA::sBlack;
 
 	ZRGBA result;
@@ -636,26 +636,21 @@ ZRGBA_POD ZDCPixmapRep::GetPixel(ZCoord iLocationH, ZCoord iLocationV) const
 
 void ZDCPixmapRep::SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBA_POD& iColor)
 	{
-	if (!fBounds.Contains(iLocationH, iLocationV))
-		return;
-
-	fRaster->SetPixval(iLocationH, iLocationV, fPixelDesc.AsPixval(iColor));
+	if (sContains(fBounds, iLocationH, iLocationV))
+		fRaster->SetPixval(iLocationH, iLocationV, fPixelDesc.AsPixval(iColor));
 	}
 
 uint32 ZDCPixmapRep::GetPixval(ZCoord iLocationH, ZCoord iLocationV)
 	{
-	if (!fBounds.Contains(iLocationH, iLocationV))
-		return 0;
-
-	return fRaster->GetPixval(iLocationH, iLocationV);
+	if (sContains(fBounds, iLocationH, iLocationV))
+		return fRaster->GetPixval(iLocationH, iLocationV);
+	return 0;
 	}
 
 void ZDCPixmapRep::SetPixval(ZCoord iLocationH, ZCoord iLocationV, uint32 iPixval)
 	{
-	if (!fBounds.Contains(iLocationH, iLocationV))
-		return;
-
-	fRaster->SetPixval(iLocationH, iLocationV, iPixval);
+	if (sContains(fBounds, iLocationH, iLocationV))
+		fRaster->SetPixval(iLocationH, iLocationV, iPixval);
 	}
 
 void ZDCPixmapRep::CopyFrom(ZPointPOD iDestLocation,
@@ -665,7 +660,7 @@ void ZDCPixmapRep::CopyFrom(ZPointPOD iDestLocation,
 		{
 		ZAssertStop(kDebug_Pixmap, iSourceBounds == (iSourceBounds & iSourceRep->GetBounds()));
 
-		ZRectPOD destBounds = iSourceBounds + (iDestLocation - iSourceBounds.TopLeft());
+		ZRectPOD destBounds = iSourceBounds + (iDestLocation - LT(iSourceBounds));
 		ZAssertStop(kDebug_Pixmap, destBounds == (destBounds & fBounds));
 		}
 
@@ -688,7 +683,7 @@ void ZDCPixmapRep::CopyFrom(ZPointPOD iDestLocation,
 	{
 	if (kDebug_Pixmap <= ZCONFIG_Debug)
 		{
-		ZRectPOD destBounds = iSourceBounds + (iDestLocation - iSourceBounds.TopLeft());
+		ZRectPOD destBounds = iSourceBounds + (iDestLocation - LT(iSourceBounds));
 		ZAssertStop(kDebug_Pixmap, destBounds == (destBounds & fBounds));
 		}
 
@@ -725,11 +720,11 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::Touch()
 		const RasterDesc& ourRasterDesc = fRaster->GetRasterDesc();
 		RasterDesc newRasterDesc = ourRasterDesc;
 		newRasterDesc.fRowBytes =
-			sCalcRowBytes(fBounds.Width(), newRasterDesc.fPixvalDesc.fDepth, 4);
-		newRasterDesc.fRowCount = fBounds.Height();
+			sCalcRowBytes(W(fBounds), newRasterDesc.fPixvalDesc.fDepth, 4);
+		newRasterDesc.fRowCount = H(fBounds);
 
 		ZRef<ZDCPixmapRep> newRep =
-			sCreate(newRasterDesc, sRectPOD(fBounds.Size()), fPixelDesc);
+			sCreate(newRasterDesc, sRectPOD(WH(fBounds)), fPixelDesc);
 
 		newRep->CopyFrom(sPointPOD(0,0),
 			fRaster->GetBaseAddress(), ourRasterDesc, fPixelDesc, fBounds);

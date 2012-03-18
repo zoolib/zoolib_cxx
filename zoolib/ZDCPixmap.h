@@ -391,7 +391,7 @@ inline const ZRectPOD& ZDCPixmapRep::GetBounds()
 	{ return fBounds; }
 
 inline ZPointPOD ZDCPixmapRep::GetSize()
-	{ return fBounds.Size(); }
+	{ return WH(fBounds); }
 
 inline const ZDCPixmapNS::PixelDesc& ZDCPixmapRep::GetPixelDesc()
 	{ return fPixelDesc; }

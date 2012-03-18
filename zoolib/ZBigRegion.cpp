@@ -283,14 +283,14 @@ bool ZBigRegion::Contains(const ZPointPOD& iPoint) const
 	if (fNumRects == 0)
 		return false;
 
-	if (!fExtent.Contains(iPoint))
+	if (!sContains(fExtent, iPoint))
 		return false;
 
 	// Simple check -- later we can do a binary chop, or even just bail when the top
 	// of the current rectangle is >= thePoint.v
 	for (size_t x = 0; x < fNumRects; ++x)
 		{
-		if (fRects[x].Contains(iPoint))
+		if (sContains(fRects[x], iPoint))
 			return true;
 		}
 
@@ -302,14 +302,14 @@ bool ZBigRegion::Contains(int32 iH, int32 iV) const
 	if (fNumRects == 0)
 		return false;
 
-	if (!fExtent.Contains(iH, iV))
+	if (not sContains(fExtent, iH, iV))
 		return false;
 
 	// Simple check -- later we can do a binary chop, or even just bail when the top
 	// of the current rectangle is >= thePoint.v
 	for (size_t x = 0; x < fNumRects; ++x)
 		{
-		if (fRects[x].Contains(iH, iV))
+		if (sContains(fRects[x], iH, iV))
 			return true;
 		}
 

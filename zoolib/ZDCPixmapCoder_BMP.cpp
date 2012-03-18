@@ -78,7 +78,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 		iStream.WriteUInt32LE(54); // bfOffBits
 		}
 
-	ZPointPOD theSize = iBounds.Size();
+	ZPointPOD theSize = WH(iBounds);
 
 	iStream.WriteUInt32LE(0x28); // biSize
 	iStream.WriteUInt32LE(theSize.h); // biWidth
@@ -163,7 +163,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 		sBlitRow
 			(sourceRowAddress, iRasterDesc.fPixvalDesc, iPixelDesc, iBounds.left,
 			theRowBuffer, destPixvalDesc, destPixelDesc, 0,
-			iBounds.Width());
+			W(iBounds));
 		iStream.Write(theRowBuffer, rowBytes);
 		}
 	}

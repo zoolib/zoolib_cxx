@@ -66,10 +66,10 @@ void sBlit
 	EOp iOp)
 	{
 	ZRectPOD realDest = iDestB;
-	realDest.right = min(realDest.right, ZCoord(realDest.left + iSourceB.Width()));
-	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + iSourceB.Height()));
+	realDest.right = min(realDest.right, ZCoord(realDest.left + W(iSourceB)));
+	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + H(iSourceB)));
 
-	ZPointPOD sourceStart = iSourceB.TopLeft();
+	ZPointPOD sourceStart = LT(iSourceB);
 	sBlit_T(iSource, iSourceRD, iSourcePD,
 		sourceStart,
 		oDest, iDestRD, realDest, iDestPD,
@@ -101,10 +101,10 @@ void sBlit
 	bool iSourcePremultiplied, EOp iOp)
 	{
 	ZRectPOD realDest = iDestB;
-	realDest.right = min(realDest.right, ZCoord(realDest.left + iMatteB.Width()));
-	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + iMatteB.Height()));
+	realDest.right = min(realDest.right, ZCoord(realDest.left + W(iMatteB)));
+	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + H(iMatteB)));
 
-	ZPointPOD matteStart = iMatteB.TopLeft();
+	ZPointPOD matteStart = LT(iMatteB);
 
 	sBlit_T(iSource, iSourceRD, iSourceB, iSourcePD,
 		iSourceOrigin,
@@ -122,10 +122,10 @@ void sBlit
 	bool iSourcePremultiplied, EOp iOp)
 	{
 	ZRectPOD realDest = iDestB;
-	realDest.right = min(realDest.right, ZCoord(realDest.left + iSourceB.Width()));
-	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + iSourceB.Height()));
+	realDest.right = min(realDest.right, ZCoord(realDest.left + W(iSourceB)));
+	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + H(iSourceB)));
 
-	ZPointPOD sourceStart = iSourceB.TopLeft();
+	ZPointPOD sourceStart = LT(iSourceB);
 
 	ZRef<PDRep> sourcePDRep = iSourcePD.GetRep();
 	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
@@ -163,14 +163,14 @@ void sBlit
 	bool iSourcePremultiplied, EOp iOp)
 	{
 	ZRectPOD realDest = iDestB;
-	int realWidth = min(iMatteB.Width(), iSourceB.Width());
+	int realWidth = min(W(iMatteB), W(iSourceB));
 	realDest.right = min(realDest.right, ZCoord(realDest.left + realWidth));
 
-	int realHeight = min(iMatteB.Height(), iSourceB.Height());
+	int realHeight = min(H(iMatteB), H(iSourceB));
 	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + realHeight));
 
-	ZPointPOD sourceStart = iSourceB.TopLeft();
-	ZPointPOD matteStart = iMatteB.TopLeft();
+	ZPointPOD sourceStart = LT(iSourceB);
+	ZPointPOD matteStart = LT(iMatteB);
 
 	ZRef<PDRep> sourcePDRep = iSourcePD.GetRep();
 	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
@@ -229,10 +229,10 @@ void sColor
 	EOp iOp)
 	{
 	ZRectPOD realDest = iDestB;
-	realDest.right = min(realDest.right, ZCoord(realDest.left + iMatteB.Width()));
-	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + iMatteB.Height()));
+	realDest.right = min(realDest.right, ZCoord(realDest.left + W(iMatteB)));
+	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + H(iMatteB)));
 
-	ZPointPOD matteStart = iMatteB.TopLeft();
+	ZPointPOD matteStart = LT(iMatteB);
 
 	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
@@ -378,10 +378,10 @@ void sApplyMatte
 	ZAssertStop(1, iMattePD.HasAlpha());
 	ZAssertStop(1, iDestPD.HasAlpha());
 	ZRectPOD realDest = iDestB;
-	realDest.right = min(realDest.right, ZCoord(realDest.left + iMatteB.Width()));
-	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + iMatteB.Height()));
+	realDest.right = min(realDest.right, ZCoord(realDest.left + W(iMatteB)));
+	realDest.bottom = min(realDest.bottom, ZCoord(realDest.top + H(iMatteB)));
 
-	ZPointPOD matteStart = iMatteB.TopLeft();
+	ZPointPOD matteStart = LT(iMatteB);
 
 	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();

@@ -130,8 +130,8 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 		iStream.WriteString("GIF89a");
 	else
 		iStream.WriteString("GIF87a");
-	iStream.WriteUInt16LE(iBounds.Width());
-	iStream.WriteUInt16LE(iBounds.Height());
+	iStream.WriteUInt16LE(W(iBounds));
+	iStream.WriteUInt16LE(H(iBounds));
 
 	uint8 globalStrmFlags = 0;
 	globalStrmFlags |= 0x80; // hasGlobalColorTable
@@ -170,8 +170,8 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	iStream.WriteUInt8(','); // Start of image
 	iStream.WriteUInt16LE(0); // Origin h
 	iStream.WriteUInt16LE(0); // Origin v
-	iStream.WriteUInt16LE(iBounds.Width());
-	iStream.WriteUInt16LE(iBounds.Height());
+	iStream.WriteUInt16LE(W(iBounds));
+	iStream.WriteUInt16LE(H(iBounds));
 
 	uint8 localStrmFlags = 0;
 //	localStrmFlags |= 0x80; // hasLocalColorTable
@@ -203,7 +203,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 
 	PixvalDesc destPixvalDesc(8, true);
 
-	vector<uint8> theRowBufferVector(iBounds.Width());
+	vector<uint8> theRowBufferVector(W(iBounds));
 	void* theRowBuffer = &theRowBufferVector[0];
 
 	try
@@ -221,9 +221,9 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 					sBlitRowPixvals
 						(sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
 						theRowBuffer, destPixvalDesc, 0,
-						iBounds.Width());
+						W(iBounds));
 
-					theStream->Write(theRowBuffer, iBounds.Width());
+					theStream->Write(theRowBuffer, W(iBounds));
 					}
 				}
 			}
@@ -237,8 +237,8 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 				sBlitRowPixvals
 					(sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
 					theRowBuffer, destPixvalDesc, 0,
-					iBounds.Width());
-				theStream->Write(theRowBuffer, iBounds.Width());
+					W(iBounds));
+				theStream->Write(theRowBuffer, W(iBounds));
 				}
 			}
 		}
@@ -293,7 +293,7 @@ static void spReadImageData(const ZStreamR& iStream,
 
 	RasterDesc destRasterDesc = ioRaster->GetRasterDesc();
 
-	vector<uint8> theRowBufferVector(iBounds.Width());
+	vector<uint8> theRowBufferVector(W(iBounds));
 	void* theRowBuffer = &theRowBufferVector[0];
 
 	if (iInterlaced)
@@ -303,12 +303,12 @@ static void spReadImageData(const ZStreamR& iStream,
 			for (ZCoord currentY = iBounds.top + spInterlaceStart[pass];
 				currentY < iBounds.bottom; currentY += spInterlaceIncrement[pass])
 				{
-				theSILZW.Read(theRowBuffer, iBounds.Width());
+				theSILZW.Read(theRowBuffer, W(iBounds));
 				void* destRowAddress = destRasterDesc.CalcRowAddressDest(destBaseAddress, currentY);
 
 				sBlitRowPixvals(theRowBuffer, sourcePixvalDesc, 0,
 					destRowAddress, destRasterDesc.fPixvalDesc, iBounds.left,
-					iBounds.Width());
+					W(iBounds));
 				}
 			}
 		}
@@ -316,12 +316,12 @@ static void spReadImageData(const ZStreamR& iStream,
 		{
 		for (ZCoord currentY = iBounds.top; currentY < iBounds.bottom; ++currentY)
 			{
-			theSILZW.Read(theRowBuffer, iBounds.Width());
+			theSILZW.Read(theRowBuffer, W(iBounds));
 			void* destRowAddress = destRasterDesc.CalcRowAddressDest(destBaseAddress, currentY);
 
 			sBlitRowPixvals(theRowBuffer, sourcePixvalDesc, 0,
 				destRowAddress, destRasterDesc.fPixvalDesc, iBounds.left,
-				iBounds.Width());
+				W(iBounds));
 			}
 		}
 	}

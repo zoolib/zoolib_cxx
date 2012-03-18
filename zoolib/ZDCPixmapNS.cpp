@@ -2352,13 +2352,13 @@ void ZDCPixmapNS::sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, uint3
 void ZDCPixmapNS::sFill
 	(void* iBaseAddress, const RasterDesc& iRasterDesc, const ZRectPOD& iBounds, uint32 iPixval)
 	{
-	int32 hSize = iBounds.Width();
+	int32 hSize = W(iBounds);
 
 	vector<uint32> sourcePixvals(hSize, iPixval);
 
 	PixvalAccessor destAccessor(iRasterDesc.fPixvalDesc);
 
-	int32 vSize = iBounds.Height();
+	int32 vSize = H(iBounds);
 
 	for (int32 vCurrent = 0; vCurrent < vSize; ++vCurrent)
 		{
@@ -2399,8 +2399,8 @@ static void sMunge_T
 	const S& iMapPixvalToRGB, const D& iMapRGBToPixval,
 	const ZRectPOD& iBounds, MungeProc iMungeProc, void* iRefcon)
 	{
-	int32 hSize = iBounds.Width();
-	int32 vSize = iBounds.Height();
+	int32 hSize = W(iBounds);
+	int32 vSize = H(iBounds);
 
 	for (int32 vCurrent = 0; vCurrent < vSize; ++vCurrent)
 		{
@@ -2520,8 +2520,8 @@ static void sBlitWithMaps_T
 	{
 	PixvalDesc sourcePixvalDesc = iSourceRasterDesc.fPixvalDesc;
 
-	int32 vCount = iSourceBounds.Height();
-	int32 hCount = iSourceBounds.Width();
+	int32 vCount = H(iSourceBounds);
+	int32 hCount = W(iSourceBounds);
 
 	if (iInvertColors)
 		{
@@ -2565,8 +2565,8 @@ void ZDCPixmapNS::sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourc
 	void* iDestBase, const RasterDesc& iDestRasterDesc,
 	const ZRectPOD& iSourceBounds, ZPointPOD iDestLocation)
 	{
-	int32 vCount = iSourceBounds.Height();
-	int32 hCount = iSourceBounds.Width();
+	int32 vCount = H(iSourceBounds);
+	int32 hCount = W(iSourceBounds);
 
 	if (iSourceRasterDesc.fPixvalDesc == iDestRasterDesc.fPixvalDesc
 		&& (iSourceRasterDesc.fPixvalDesc.fDepth >= 8

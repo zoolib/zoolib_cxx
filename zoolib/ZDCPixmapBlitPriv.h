@@ -174,18 +174,18 @@ void sTile_SD_T
 	ZPointPOD iSourceOrigin,
 	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD)
 	{
-	int destWidth = iDestB.Width();
+	int destWidth = W(iDestB);
 	int destBottom = iDestB.bottom;
 
 	int sourceLeft = iSourceB.left;
-	int sourceWidth = iSourceB.Width();
+	int sourceWidth = W(iSourceB);
 	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
 	int sourceCountHStart = iSourceB.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
 	int sourceTop = iSourceB.top;
 	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = iSourceB.Height();
+	int sourceHeight = H(iSourceB);
 	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
@@ -243,18 +243,18 @@ void sTile_SDO_T
 	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const O& iOp)
 	{
-	int destWidth = iDestB.Width();
+	int destWidth = W(iDestB);
 	int destBottom = iDestB.bottom;
 
 	int sourceLeft = iSourceB.left;
-	int sourceWidth = iSourceB.Width();
+	int sourceWidth = W(iSourceB);
 	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
 	int sourceCountHStart = iSourceB.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
 	int sourceTop = iSourceB.top;
 	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = iSourceB.Height();
+	int sourceHeight = H(iSourceB);
 	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
@@ -321,31 +321,31 @@ void sTile_SMD_T
 	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	bool iSourcePremultiplied)
 	{
-	int destWidth = iDestB.Width();
+	int destWidth = W(iDestB);
 	int destBottom = iDestB.bottom;
 
 	int sourceLeft = iSourceB.left;
-	int sourceWidth = iSourceB.Width();
+	int sourceWidth = W(iSourceB);
 	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
 	int sourceCountHStart = iSourceB.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
 	int sourceTop = iSourceB.top;
 	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = iSourceB.Height();
+	int sourceHeight = H(iSourceB);
 	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
 
 	int matteLeft = iMatteB.left;
-	int matteWidth = iMatteB.Width();
+	int matteWidth = W(iMatteB);
 	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
 	int matteCountHStart = iMatteB.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
 	int matteTop = iMatteB.top;
 	int matteBottom = iMatteB.bottom;
-	int matteHeight = iMatteB.Height();
+	int matteHeight = H(iMatteB);
 	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int matteV = matteVStart;
@@ -459,31 +459,31 @@ void sTile_SMDO_T
 	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	bool iSourcePremultiplied, const O& iOp)
 	{
-	int destWidth = iDestB.Width();
+	int destWidth = W(iDestB);
 	int destBottom = iDestB.bottom;
 
 	int sourceLeft = iSourceB.left;
-	int sourceWidth = iSourceB.Width();
+	int sourceWidth = W(iSourceB);
 	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
 	int sourceCountHStart = iSourceB.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
 	int sourceTop = iSourceB.top;
 	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = iSourceB.Height();
+	int sourceHeight = H(iSourceB);
 	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
 
 	int matteLeft = iMatteB.left;
-	int matteWidth = iMatteB.Width();
+	int matteWidth = W(iMatteB);
 	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
 	int matteCountHStart = iMatteB.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
 	int matteTop = iMatteB.top;
 	int matteBottom = iMatteB.bottom;
-	int matteHeight = iMatteB.Height();
+	int matteHeight = H(iMatteB);
 	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int matteV = matteVStart;
@@ -621,8 +621,8 @@ void sCopy_SD_T
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -666,8 +666,8 @@ void sCopy_SDO_T
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -725,8 +725,8 @@ void sCopy_SMD_T
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -802,8 +802,8 @@ void sCopy_SMDO_T
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -876,18 +876,18 @@ void sTileSource_SMD_T
 	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	bool iSourcePremultiplied)
 	{
-	int destWidth = iDestB.Width();
+	int destWidth = W(iDestB);
 	int destBottom = iDestB.bottom;
 
 	int sourceLeft = iSourceB.left;
-	int sourceWidth = iSourceB.Width();
+	int sourceWidth = W(iSourceB);
 	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
 	int sourceCountHStart = iSourceB.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
 	int sourceTop = iSourceB.top;
 	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = iSourceB.Height();
+	int sourceHeight = H(iSourceB);
 	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
@@ -986,18 +986,18 @@ void sTileSource_SMDO_T
 	bool iSourcePremultiplied,
 	const O& iOp)
 	{
-	int destWidth = iDestB.Width();
+	int destWidth = W(iDestB);
 	int destBottom = iDestB.bottom;
 
 	int sourceLeft = iSourceB.left;
-	int sourceWidth = iSourceB.Width();
+	int sourceWidth = W(iSourceB);
 	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
 	int sourceCountHStart = iSourceB.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
 	int sourceTop = iSourceB.top;
 	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = iSourceB.Height();
+	int sourceHeight = H(iSourceB);
 	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
@@ -1110,18 +1110,18 @@ void sTileMatte_SMD_T
 	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	bool iSourcePremultiplied)
 	{
-	int destWidth = iDestB.Width();
+	int destWidth = W(iDestB);
 	int destBottom = iDestB.bottom;
 
 	int matteLeft = iMatteB.left;
-	int matteWidth = iMatteB.Width();
+	int matteWidth = W(iMatteB);
 	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
 	int matteCountHStart = iMatteB.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
 	int matteTop = iMatteB.top;
 	int matteBottom = iMatteB.bottom;
-	int matteHeight = iMatteB.Height();
+	int matteHeight = H(iMatteB);
 	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int sourceV = iSourceStart.v;
@@ -1219,18 +1219,18 @@ void sTileMatte_SMDO_T
 	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	bool iSourcePremultiplied, const O& iOp)
 	{
-	int destWidth = iDestB.Width();
+	int destWidth = W(iDestB);
 	int destBottom = iDestB.bottom;
 
 	int matteLeft = iMatteB.left;
-	int matteWidth = iMatteB.Width();
+	int matteWidth = W(iMatteB);
 	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
 	int matteCountHStart = iMatteB.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
 	int matteTop = iMatteB.top;
 	int matteBottom = iMatteB.bottom;
-	int matteHeight = iMatteB.Height();
+	int matteHeight = H(iMatteB);
 	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int sourceV = iSourceStart.v;
@@ -1341,8 +1341,8 @@ static void sFillPixval(void* oDest, const RD& iDestRD, const ZRectPOD& iDestB,
 		iDestRD.fPixvalDesc,
 		iDestB.left);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -1372,8 +1372,8 @@ void sColor_DO_T
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -1415,8 +1415,8 @@ void sColor_MD_T
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -1468,8 +1468,8 @@ void sColor_MDO_T
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -1511,18 +1511,18 @@ void sColorTile_MD_T
 	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const ZRGBA_POD& iColor)
 	{
-	int destWidth = iDestB.Width();
+	int destWidth = W(iDestB);
 	int destBottom = iDestB.bottom;
 
 	int matteLeft = iMatteB.left;
-	int matteWidth = iMatteB.Width();
+	int matteWidth = W(iMatteB);
 	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
 	int matteCountHStart = iMatteB.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
 	int matteTop = iMatteB.top;
 	int matteBottom = iMatteB.bottom;
-	int matteHeight = iMatteB.Height();
+	int matteHeight = H(iMatteB);
 	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int matteV = matteVStart;
@@ -1587,18 +1587,18 @@ void sColorTile_MDO_T
 	void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const D& iDestPD,
 	const ZRGBA_POD& iColor, const O& iOp)
 	{
-	int destWidth = iDestB.Width();
+	int destWidth = W(iDestB);
 	int destBottom = iDestB.bottom;
 
 	int matteLeft = iMatteB.left;
-	int matteWidth = iMatteB.Width();
+	int matteWidth = W(iMatteB);
 	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
 	int matteCountHStart = iMatteB.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
 	int matteTop = iMatteB.top;
 	int matteBottom = iMatteB.bottom;
-	int matteHeight = iMatteB.Height();
+	int matteHeight = H(iMatteB);
 	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int matteV = matteVStart;
@@ -2053,8 +2053,8 @@ void sInvert_T(void* oDest, const RD& iDestRD, const ZRectPOD& iDestB, const D& 
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -2089,8 +2089,8 @@ void sOpaque_T
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -2126,8 +2126,8 @@ void sDarken_T
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -2162,8 +2162,8 @@ void sFade_T
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
@@ -2204,8 +2204,8 @@ void sApplyMatte_T
 		iDestB.left,
 		iDestPD);
 
-	int destWidth = iDestB.Width();
-	int destHeight = iDestB.Height();
+	int destWidth = W(iDestB);
+	int destHeight = H(iDestB);
 	int row = 0;
 	for (;;)
 		{
