@@ -30,9 +30,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-template <class T>
-const T& sMinMax(const T& iMin, const T& iVal, const T& iMax)
-	{ return std::min(std::max(iMin, iVal), iMax); }	
+template <class Min_p, class T, class Max_p>
+const T& sMinMax(const Min_p& iMin, const T& iVal, const Max_p& iMax)
+	{ return std::min(std::max(T(iMin), iVal), T(iMax)); }	
 
 } // namespace ZooLib
 
