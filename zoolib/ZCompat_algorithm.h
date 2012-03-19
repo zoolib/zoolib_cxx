@@ -30,9 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-template <class Min_p, class T, class Max_p>
-const T sMinMax(const Min_p& iMin, const T& iVal, const Max_p& iMax)
-	{ return std::min(std::max(T(iMin), iVal), T(iMax)); }	
+// =================================================================================================
+// MARK: - sMin, sMax and sMinMax
 
 template <class T, class Other_p>
 const T sMin(const T& iVal, const Other_p& iOther)
@@ -42,12 +41,12 @@ template <class T, class Other_p>
 const T sMax(const T& iVal, const Other_p& iOther)
 	{ return std::max(iVal, T(iOther)); }
 
-template <class T>
-inline T sGetSet(T& ioLoc, T iVal)
-	{
-	std::swap(iVal, ioLoc);
-	return iVal;
-	}
+template <class Min_p, class T, class Max_p>
+const T sMinMax(const Min_p& iMin, const T& iVal, const Max_p& iMax)
+	{ return std::min(std::max(T(iMin), iVal), T(iMax)); }	
+
+// =================================================================================================
+// MARK: - sGetSet
 
 template <class S, class T>
 inline S sGetSet(S& ioLoc, T iVal)
