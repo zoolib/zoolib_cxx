@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVisitor_Do_T_h__
 #include "zconfig.h"
 
+#include "zoolib/ZCompat_algorithm.h" // For ZSetRestore_T
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZQ.h"
-#include "zoolib/ZSetRestore_T.h"
 #include "zoolib/ZVisitor.h"
 
 namespace ZooLib {

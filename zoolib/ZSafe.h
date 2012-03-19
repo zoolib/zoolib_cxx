@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZSafe_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZGetSet.h"
+#include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZThread.h"
 
 namespace ZooLib {
