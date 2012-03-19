@@ -461,7 +461,7 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 				}
 
 			spReadImageData(iStream, strmIsInterlaced, curBounds, fRaster);
-			oPixmap = new ZDCPixmapRep(fRaster, sRectPOD(fSize), thePixelDesc);
+			oPixmap = new ZDCPixmapRep(fRaster, sRect(fSize), thePixelDesc);
 			return;
 			}
 		}

@@ -96,7 +96,7 @@ ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR)
 
 	const PixelDesc thePixelDesc(theFormat);
 
-	return ZDCPixmapRep::sCreate(thePMR, sRectPOD(theWidth, theHeight), thePixelDesc);
+	return ZDCPixmapRep::sCreate(thePMR, sRect<ZRectPOD>(theWidth, theHeight), thePixelDesc);
 	}
 
 } // namespace ZDCPixmap_CoreVideo

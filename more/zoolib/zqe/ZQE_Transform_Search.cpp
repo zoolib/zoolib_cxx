@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZExpr_Bool_ValPred.h"
-#include "zoolib/ZSetRestore_T.h"
 #include "zoolib/ZUniSet_T.h"
 #include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
 #include "zoolib/ZUtil_STL_map.h"
