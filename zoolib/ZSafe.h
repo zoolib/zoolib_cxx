@@ -81,7 +81,7 @@ public:
 		fVal = iOther;
 		}
 
-	T GetSet(const T& iOther)
+	const T GetSet(const T& iOther)
 		{
 		ZAcqMtx acq(fMtx);
 		return sGetSet(fVal, iOther);
