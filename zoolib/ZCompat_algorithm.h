@@ -42,6 +42,70 @@ template <class T, class Other_p>
 const T sMax(const T& iVal, const Other_p& iOther)
 	{ return std::max(iVal, T(iOther)); }
 
+template <class T>
+inline T sGetSet(T& ioLoc, T iVal)
+	{
+	std::swap(iVal, ioLoc);
+	return iVal;
+	}
+
+template <class S, class T>
+inline S sGetSet(S& ioLoc, T iVal)
+	{
+	std::swap(iVal, ioLoc);
+	return iVal;
+	}
+
+// =================================================================================================
+// MARK: - ZSaveRestore_T
+
+template <class T>
+class ZSaveRestore_T
+	{
+public:
+	ZSaveRestore_T(T& ioRef)
+	:	fRef(ioRef)
+	,	fValPrior(ioRef)
+		{}
+
+	~ZSaveRestore_T()
+		{ std::swap(fRef, fValPrior); }
+
+	const T& GetPrior() const
+		{ return fValPrior; }
+
+private:
+	T& fRef;
+	T fValPrior;
+	};
+
+// =================================================================================================
+// MARK: - ZSetRestore_T
+
+template <class T>
+class ZSetRestore_T
+	{
+public:
+	ZSetRestore_T(T& ioRef)
+	:	fRef(ioRef)
+		{ std::swap(fRef, fValPrior); }
+
+	ZSetRestore_T(T& ioRef, const T& iVal)
+	:	fRef(ioRef)
+	,	fValPrior(iVal)
+		{ std::swap(fRef, fValPrior); }
+
+	~ZSetRestore_T()
+		{ std::swap(fRef, fValPrior); }
+
+	const T& GetPrior() const
+		{ return fValPrior; }
+
+private:
+	T& fRef;
+	T fValPrior;
+	};
+
 } // namespace ZooLib
 
 #endif // __ZCompat_algorithm_h__
