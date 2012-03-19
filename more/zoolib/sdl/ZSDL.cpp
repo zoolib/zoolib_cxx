@@ -196,7 +196,7 @@ ZDCPixmap sPixmap(ZRef<Surface> iSurface)
 
 	ZRef<PixmapRaster> thePMR = new PixmapRaster(theRasterDesc, iSurface);
 
-	return ZDCPixmapRep::sCreate(thePMR, sRectPOD(theWidth, theHeight), thePixelDesc);
+	return ZDCPixmapRep::sCreate(thePMR, sRect<ZRectPOD>(theWidth, theHeight), thePixelDesc);
 	}
 
 

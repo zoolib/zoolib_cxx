@@ -65,16 +65,7 @@ inline ZRectPOD sRectPOD(int32 iLeft, int32 iTop, int32 iRight, int32 iBottom)
 	}
 
 // =================================================================================================
-// MARK: - Pseudo-ctors
-
-inline ZRectPOD sRectPOD(ZPointPOD iSize)
-	{ return sRectPOD(0, 0, iSize.h, iSize.v); }
-
-inline ZRectPOD sRectPOD(int32 iWidth, int32 iHeight)
-	{ return sRectPOD(0, 0, iWidth, iHeight); }
-
-// =================================================================================================
-// MARK: - PointTraits<ZPointPOD>
+// MARK: - ZCartesian::PointTraits<ZPointPOD>
 
 namespace ZCartesian {
 
@@ -89,7 +80,7 @@ struct PointTraits<ZPointPOD>
 } // namespace ZCartesian
 
 // =================================================================================================
-// MARK: - RectTraits<ZRectPOD>
+// MARK: - ZCartesian::RectTraits<ZRectPOD>
 
 namespace ZCartesian {
 
