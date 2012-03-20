@@ -228,7 +228,7 @@ const NPPluginFuncs& GuestFactory_Win::GetEntryPoints()
 ZQ<int> GuestFactory_Win::QGetMajorVersion()
 	{
 	vector<UTF16> buffer(1024);
-	if (0 <::GetModuleFileNameW(::GetModuleHandleW(nullptr), &buffer[0], buffer.size()))
+	if (0 < ::GetModuleFileNameW(::GetModuleHandleW(nullptr), &buffer[0], buffer.size()))
 		return spQGetMajorVersion(&buffer[0]);
 	return null;
 	}

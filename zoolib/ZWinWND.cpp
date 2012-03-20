@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZThreadVal.h"
 #include "zoolib/ZUtil_Win.h"
 
 namespace ZooLib {
@@ -81,19 +82,11 @@ LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 			return ::CallWindowProcW(baseProc, iHWND, iMessage, iWPARAM, iLPARAM);
 			}
 		}
-	else if (iMessage == WM_GETMINMAXINFO)
-		{
-		// We're being created, but the *very* first message sent to a window
-		// is (go figure) WM_GETMINMAXINFO. We don't have access to our CREATESTRUCTW,
-		// so we'll handle it specially.
-		return ::DefWindowProcW(iHWND, iMessage, iWPARAM, iLPARAM);
-		}
 	else
 		{
-		ZAssert(iMessage == WM_NCCREATE);
-		// This is the second message sent to a window, and is where we're able to
-		// attach to our Callable. All subsequent calls will go through the callable.
-		CreateStruct* theCS = (CreateStruct*)((CREATESTRUCTW*)iLPARAM)->lpCreateParams;
+		// The very first message sent is WM_GETMINMAXINFO, *then* WM_NCCREATE.
+		ZAssert(iMessage == WM_GETMINMAXINFO);
+		const CreateStruct* theCS = ZThreadVal<const CreateStruct*>::sGet();
 		spAttach(iHWND, theCS->fWNDPROC, theCS->fCallable);
 		return theCS->fCallable->Call(theCS->fWNDPROC, iHWND, WM_NCCREATE, iWPARAM, iLPARAM);
 		}
@@ -160,6 +153,28 @@ const WCHAR* ClassRegistration::GetClassName() const
 	{ return fClassName; }
 
 // =================================================================================================
+// MARK: - sCreateDefWindowProc
+
+HWND ZWinWND::sCreateDefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam)
+	{
+	static ClassRegistration spClassRegistration(DefWindowProcW, L"DefWindowProcW");
+
+	return ::CreateWindowExW
+		(0, // Extended attributes
+		spClassRegistration.GetClassName(),
+		nullptr, // window caption
+		iStyle, // window style
+		0, // initial x position
+		0, // initial y position
+		10, // initial x size
+		10, // initial y size
+		iParent, // Parent window
+		nullptr,
+		ZUtil_Win::sGetModuleHandle(),
+		iCreateParam); // creation parameters
+	}
+
+// =================================================================================================
 // MARK: - ZWinWND, Callable <--> Regular window
 
 static ClassRegistration spClassRegistration(spWindowProcW, L"ZWinWND ClassRegistration");
@@ -177,7 +192,9 @@ HWND sCreate
 	WNDPROC iWNDPROC,
 	ZRef<Callable> iCallable)
 	{
-	CreateStruct theCS = { iWNDPROC, iCallable };
+	const CreateStruct theCS = { iWNDPROC, iCallable };
+
+	ZThreadVal<const CreateStruct*> theCreateStructTV(&theCS);
 
 	return ::CreateWindowExW
 		(dwExStyle,
@@ -191,7 +208,7 @@ HWND sCreate
 		hWndParent,
 		hMenu,
 		ZUtil_Win::sGetModuleHandle(),
-		&theCS); // creation parameters
+		nullptr); // creation parameters
 	}
 
 HWND sCreate(HWND iParent, ZRef<Callable> iCallable)

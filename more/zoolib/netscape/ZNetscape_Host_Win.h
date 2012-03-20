@@ -26,8 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if defined(XP_WIN)
 
-#include "zoolib/ZWND.h"
-
 namespace ZooLib {
 namespace ZNetscape {
 
@@ -35,8 +33,7 @@ namespace ZNetscape {
 // MARK: - Host_Win
 
 class Host_Win
-:	public Host_Std,
-	public ZWNDSubClassW
+:	public Host_Std
 	{
 public:
 	Host_Win(ZRef<GuestFactory> iGuestFactory, HWND iHWND);
@@ -53,13 +50,13 @@ public:
 // Our protocol
 	virtual void PaintBackground(HDC iHDC, const PAINTSTRUCT& iPS);
 
-// From ZWNDSubClass
-	virtual LRESULT WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
 protected:
+	LRESULT pWindowProc(WNDPROC iBaseProc, HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
+
 	void pPaint(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM);
 	void pStuffNPWindow(int iWidth, int iHeight);
 
+	HWND fHWND;
 	bool fIsWindowed;
 	bool fIsTransparent;
 	NPWindow fNPWindow;

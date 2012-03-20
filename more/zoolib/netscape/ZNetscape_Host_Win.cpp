@@ -22,8 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if defined(XP_WIN)
 
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
+#include "zoolib/ZWinWND.h"
 
 #include <cstdio>
 
@@ -35,18 +37,21 @@ namespace ZNetscape {
 
 Host_Win::Host_Win(ZRef<GuestFactory> iGuestFactory, HWND iHWND)
 :	Host_Std(iGuestFactory),
+	fHWND(iHWND),
 	fIsWindowed(true),
 	fIsTransparent(false),
 	fTimerID(0),
 	fInnerWND(nullptr)
 	{
 	ZMemZero_T(fNPWindow);
-	this->Attach(iHWND);
+	ZWinWND::sAttach(fHWND, sCallable(this, &Host_Win::pWindowProc));
 	fTimerID = ::SetTimer(iHWND, 1, 50, nullptr);
 	}
 
 Host_Win::~Host_Win()
-	{ this->Detach(); }
+	{
+	::DestroyWindow(fHWND);
+	}
 
 NPError Host_Win::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{
@@ -57,7 +62,7 @@ NPError Host_Win::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 			if (fIsWindowed)
 				*static_cast<HWND*>(ret_value) = fInnerWND;
 			else
-				*static_cast<HWND*>(ret_value) = this->GetHWND();
+				*static_cast<HWND*>(ret_value) = fHWND;
 			return NPERR_NO_ERROR;
 			}
 		case NPNVSupportsWindowless:
@@ -98,21 +103,20 @@ void Host_Win::Host_InvalidateRect(NPP npp, NPRect* rect)
 	if (!fIsWindowed)
 		{
 		RECT theRECT = { rect->left, rect->top, rect->right, rect->bottom };
-		::InvalidateRect(this->GetHWND(), &theRECT, false);
+		::InvalidateRect(fHWND, &theRECT, false);
 		}
 	}
 
 void Host_Win::PostCreateAndLoad()
 	{
 	RECT theCR;
-	::GetClientRect(this->GetHWND(), &theCR);
+	::GetClientRect(fHWND, &theCR);
 	const int theWidth = theCR.right - theCR.left;
 	const int theHeight = theCR.bottom - theCR.top;
 
 	if (fIsWindowed)
 		{
-		fInnerWND = ZWNDW::sCreateDefault(this->GetHWND(),
-			WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN, nullptr);
+		fInnerWND = ZWinWND::sCreate(fHWND, null);
 		::SetWindowPos(fInnerWND, nullptr,
 			0, 0,
 			theWidth, theHeight,
@@ -133,7 +137,7 @@ void Host_Win::PostCreateAndLoad()
 void Host_Win::PaintBackground(HDC iHDC, const PAINTSTRUCT& iPS)
 	{}
 
-LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+LRESULT Host_Win::pWindowProc(WNDPROC iBaseProc, HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	bool callPlugin = false;
 	bool callDefault = false;
@@ -231,7 +235,7 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 		}
 
 	if (callDefault)
-		return ZWNDSubClassW::WindowProc(iHWND, iMessage, iWPARAM, iLPARAM);
+		return ::CallWindowProcW(iBaseProc, iHWND, iMessage, iWPARAM, iLPARAM);
 
 	return 0;
 	}

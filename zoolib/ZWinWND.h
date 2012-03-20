@@ -47,6 +47,11 @@ private:
 	};
 
 // =================================================================================================
+// MARK: - sCreateDefWindowProc
+
+HWND sCreateDefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam);
+
+// =================================================================================================
 // MARK: - ZWinWND, Callable <--> Regular window
 
 typedef ZCallable<LRESULT(WNDPROC,HWND,UINT,WPARAM,LPARAM)> Callable;
