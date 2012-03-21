@@ -191,23 +191,6 @@ private:
 // =================================================================================================
 // MARK: - ZWinCOM::sCreate
 
-template <class Class, class Interface>
-ZRef<Interface> sCreate()
-	{
-	ZRef<Interface> result;
-
-	if (SUCCEEDED(::CoCreateInstance
-		(ZMACRO_UUID(Class),
-		nullptr,
-		CLSCTX_INPROC_SERVER,
-		ZMACRO_UUID(Interface),
-		sVoidPtr(result)))
-		&& result)
-		{ return result; }
-
-	return null;
-	}
-
 template <class Interface>
 ZRef<Interface> sCreate(CLSID iCLSID)
 	{
@@ -224,6 +207,10 @@ ZRef<Interface> sCreate(CLSID iCLSID)
 
 	return null;
 	}
+
+template <class Class, class Interface>
+ZRef<Interface> sCreate()
+	{ return sCreate<Interface>(ZMACRO_UUID(Class)); }
 
 // =================================================================================================
 // MARK: - ZWinCOM::sSuccess& pseudo prefix operator
