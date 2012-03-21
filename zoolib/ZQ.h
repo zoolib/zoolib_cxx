@@ -140,6 +140,7 @@ public:
 		else if (const OtherT* theOther = iOther.PGet())
 			{
 			sCtor_T<T,OtherT>(fBytes, *theOther);
+			fHasValue = true;
 			}
 		return *this;
 		}
