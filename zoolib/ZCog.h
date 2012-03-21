@@ -641,7 +641,7 @@ ZCog<Param> spCog_Or
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
-	ZAssert(sIsPending(iCallable0) && sIsPending(iCallable1));
+	ZAssert(sIsPending(iCallable0) && not sIsFalse(iCallable1));
 
 	static const ZMACRO_auto(spCallable, sCallable(spCogFun_Or<Param>));
 	return sBindR(spCallable, iCallable0, iCallable1);
