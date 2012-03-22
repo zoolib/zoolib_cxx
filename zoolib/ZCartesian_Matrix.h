@@ -31,7 +31,6 @@ namespace ZCartesian {
 // =================================================================================================
 // MARK: - PointTraits<ZMatrix<Ord_p,1,2> > (point)
 
-template <>
 template <class Ord_p>
 struct PointTraits<ZMatrix<Ord_p,1,2> >
 :	public PointTraits_Std_Base<Ord_p,ZMatrix<Ord_p,1,2>,ZMatrixArray<Ord_p,1,2,2> >
@@ -62,7 +61,6 @@ struct PointTraits<ZMatrix<Ord_p,1,2> >
 // =================================================================================================
 // MARK: - PointTraits<ZMatrix<Ord_p,1,3> > (CVec3 used as a 2D point)
 
-template <>
 template <class Ord_p>
 struct PointTraits<ZMatrix<Ord_p,1,3> >
 :	public PointTraits_Std_Base<Ord_p,ZMatrix<Ord_p,1,3>,ZMatrixArray<Ord_p,1,2,2> >
@@ -85,7 +83,6 @@ struct PointTraits<ZMatrix<Ord_p,1,3> >
 // =================================================================================================
 // MARK: - RectTraits<ZMatrixArray<Ord,1,2,2> > (rectangle)
 
-template <>
 template <class Ord_p>
 struct RectTraits<ZMatrixArray<Ord_p,1,2,2> >
 :	public RectTraits_Std_Base<Ord_p,ZMatrix<Ord_p,1,2>,ZMatrixArray<Ord_p,1,2,2> >
