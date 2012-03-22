@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMatrix_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZDebug.h"
 
 namespace ZooLib {
