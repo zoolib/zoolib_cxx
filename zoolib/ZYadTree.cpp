@@ -401,7 +401,7 @@ ZRef<ZYadR> Link::ReadAt(const string& iName)
 			if (theTrailString[0] == '/')
 				{
 				// Walk up to the root.
-				for (ZRef<Link> next = null; next = cur->fParent; cur = next)
+				for (ZRef<Link> next = null; (next = cur->fParent); cur = next)
 					{}
 				}
 			else

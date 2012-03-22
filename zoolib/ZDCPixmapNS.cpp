@@ -1094,7 +1094,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 							destVal8 |= (*iPixvals++ & 0x03) << sourceShift;
 							sourceShift -= 2;
 							}
-						*localDest8 = *localDest8 & (0xFF ^ cumuMask8) | destVal8;
+						*localDest8 = (*localDest8 & (0xFF ^ cumuMask8)) | destVal8;
 						++localDest8;						
 						}
 
@@ -1122,7 +1122,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 							destVal8 |= (*iPixvals++ & 0x03) << sourceShift;
 							sourceShift -= 2;
 							}
-						*localDest8 = *localDest8 & (0xFF ^ cumuMask8) | destVal8;
+						*localDest8 = ((*localDest8 & (0xFF ^ cumuMask8))) | destVal8;
 						}
 					break;
 					}
@@ -1175,7 +1175,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 							cumuMask8 |= destMask8;
 							destMask8 = destMask8 << 1;
 							}
-						*localDest8 = *localDest8 & (0xFF ^ cumuMask8) | destVal8;
+						*localDest8 = (*localDest8 & (0xFF ^ cumuMask8)) | destVal8;
 						++localDest8;
 						}
 
@@ -1207,7 +1207,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 							cumuMask8 |= destMask8;
 							destMask8 = destMask8 << 1;
 							}
-						*localDest8 = *localDest8 & (0xFF ^ cumuMask8) | destVal8;
+						*localDest8 = (*localDest8 & (0xFF ^ cumuMask8)) | destVal8;
 						}
 					break;
 					}

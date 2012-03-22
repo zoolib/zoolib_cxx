@@ -308,7 +308,7 @@ operator!=(const Point_p& iLHS, const Point_p& iRHS)
 template <class Point_p>
 typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
 operator<(const Point_p& iLHS, const Point_p& iRHS)
-	{ return X(iLHS) < X(iRHS) || X(iLHS) == X(iRHS) && Y(iLHS) < Y(iRHS); }
+	{ return X(iLHS) < X(iRHS) || (X(iLHS) == X(iRHS) && Y(iLHS) < Y(iRHS)); }
 
 template <class Point_p>
 typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
@@ -413,7 +413,7 @@ operator!=(const Rect_p& iLHS, const Rect_p& iRHS)
 template <class Rect_p>
 typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
 operator<(const Rect_p& iLHS, const Rect_p& iRHS)
-	{ return LT(iLHS) < LT(iRHS) || LT(iLHS) == LT(iRHS) && RB(iLHS) < RB(iRHS); }
+	{ return LT(iLHS) < LT(iRHS) || (LT(iLHS) == LT(iRHS) && RB(iLHS) < RB(iRHS)); }
 
 template <class Rect_p>
 typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
