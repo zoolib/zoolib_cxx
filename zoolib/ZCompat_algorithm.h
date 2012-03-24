@@ -56,53 +56,49 @@ inline S sGetSet(S& ioLoc, T iVal)
 	}
 
 // =================================================================================================
-// MARK: - ZSaveRestore_T
+// MARK: - ZRestore_T, ZSaveRestore_T and ZSetRestore_T
 
 template <class T>
-class ZSaveRestore_T
+class ZRestore_T
 	{
-public:
-	ZSaveRestore_T(T& ioRef)
+protected:
+	ZRestore_T(T& ioRef)
 	:	fRef(ioRef)
 	,	fValPrior(ioRef)
 		{}
 
-	~ZSaveRestore_T()
-		{ std::swap(fRef, fValPrior); }
-
-	const T& GetPrior() const
-		{ return fValPrior; }
-
-private:
-	T& fRef;
-	T fValPrior;
-	};
-
-// =================================================================================================
-// MARK: - ZSetRestore_T
-
-template <class T>
-class ZSetRestore_T
-	{
-public:
-	ZSetRestore_T(T& ioRef)
-	:	fRef(ioRef)
-		{ std::swap(fRef, fValPrior); }
-
-	ZSetRestore_T(T& ioRef, const T& iVal)
+	ZRestore_T(T& ioRef, const T& iVal)
 	:	fRef(ioRef)
 	,	fValPrior(iVal)
 		{ std::swap(fRef, fValPrior); }
 
-	~ZSetRestore_T()
+public:
+	~ZRestore_T()
 		{ std::swap(fRef, fValPrior); }
 
 	const T& GetPrior() const
 		{ return fValPrior; }
 
-private:
+	const T& GetCurrent() const
+		{ return fRef; }
+
+	T& GetCurrent()
+		{ return fRef; }
+
+protected:
 	T& fRef;
 	T fValPrior;
+	};
+
+template <class T>
+struct ZSaveRestore_T : public ZRestore_T<T>
+	{ ZSaveRestore_T(T& ioRef) : ZRestore_T<T>(ioRef) {} };
+
+template <class T>
+struct ZSetRestore_T : public ZRestore_T<T>
+	{
+	ZSetRestore_T(T& ioRef) : ZRestore_T<T>(ioRef, T()) {}
+	ZSetRestore_T(T& ioRef, const T& iVal) : ZRestore_T<T>(ioRef, iVal) {}
 	};
 
 } // namespace ZooLib
