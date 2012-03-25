@@ -75,7 +75,7 @@ ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioLHS, const ZRef<Expr_Rel>& iRHS);
 
 } // namespace ZRA
 
-template<>
+template <>
 int sCompare_T(const ZRA::Expr_Rel_Product& iL, const ZRA::Expr_Rel_Product& iR);
 
 } // namespace ZooLib

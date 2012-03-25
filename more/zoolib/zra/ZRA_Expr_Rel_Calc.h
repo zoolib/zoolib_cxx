@@ -145,7 +145,7 @@ ZRef<Expr_Rel> sCalc(const ZRef<Expr_Rel>& iOp0,
 
 } // namespace ZRA
 
-template<>
+template <>
 int sCompare_T(const ZRA::Expr_Rel_Calc& iL, const ZRA::Expr_Rel_Calc& iR);
 
 } // namespace ZooLib

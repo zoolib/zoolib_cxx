@@ -119,7 +119,7 @@ const ZRef<ZValComparand>& ZValPred::GetRHS() const
 // =================================================================================================
 // MARK: - ZValPred, sCompare_T
 
-template<>
+template <>
 int sCompare_T(const ZValPred& iL, const ZValPred& iR)
 	{
 	if (int compare = sCompare_T(iL.GetLHS(), iR.GetLHS()))

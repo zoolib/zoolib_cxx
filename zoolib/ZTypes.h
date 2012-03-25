@@ -67,7 +67,7 @@ extern char sGarbageBuffer[4096];
 // For a discussion of the implementation of countof See section 14.3 of
 // "Imperfect C++" by Matthew Wilson, published by Addison Wesley.
 
-template<class T, int N>
+template <class T, int N>
 uint8 (&byte_array_of_same_dimension_as(T(&)[N]))[N];
 
 #define countof(x) sizeof(ZooLib::byte_array_of_same_dimension_as((x)))

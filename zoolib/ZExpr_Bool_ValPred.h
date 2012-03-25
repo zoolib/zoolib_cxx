@@ -59,7 +59,7 @@ private:
 	const ZValPred fValPred;
 	};
 
-template<>
+template <>
 int sCompare_T(const ZExpr_Bool_ValPred& iL, const ZExpr_Bool_ValPred& iR);
 
 // =================================================================================================

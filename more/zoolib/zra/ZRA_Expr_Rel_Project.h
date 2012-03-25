@@ -82,7 +82,7 @@ ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr, const RelHead& iRelHead);
 
 } // namespace ZRA
 
-template<>
+template <>
 int sCompare_T(const ZRA::Expr_Rel_Project& iL, const ZRA::Expr_Rel_Project& iR);
 
 } // namespace ZooLib

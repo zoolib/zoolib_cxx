@@ -165,7 +165,7 @@ ZRef<ZCallable<R(void)> > sCallable_If(const ZRef<ZCallable_Bool>& iCondition,
 // =================================================================================================
 // MARK: - sCallable_Repeat
 
-template<class R>
+template <class R>
 class ZCallable_Repeat
 :	public ZCallable_Void
 	{

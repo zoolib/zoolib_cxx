@@ -57,7 +57,7 @@ private:
 	const EComparator fEComparator;
 	};
 
-template<>
+template <>
 int sCompare_T(const ZValComparator_Simple& iL, const ZValComparator_Simple& iR);
 
 // =================================================================================================
@@ -87,7 +87,7 @@ private:
 	const std::string fName;
 	};
 
-template<>
+template <>
 int sCompare_T(const ZValComparand_Name& iL, const ZValComparand_Name& iR);
 
 // =================================================================================================
@@ -117,7 +117,7 @@ private:
 	ZRef<ZValComparand> fRHS;
 	};
 
-template<>
+template <>
 int sCompare_T(const ZValPred& iL, const ZValPred& iR);
 
 bool operator<(const ZValPred& iL, const ZValPred& iR);

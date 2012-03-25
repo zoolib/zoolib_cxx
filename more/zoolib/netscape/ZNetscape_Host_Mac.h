@@ -56,7 +56,7 @@ public:
 	void DoSetWindow(const Rect& iWinFrame);
 	void DoSetWindow(int iX, int iY, int iWidth, int iHeight);
 
-	template<class Rect_p>
+	template <class Rect_p>
 	Rect_p pApplyInsets(const Rect_p& iRect);
 
 protected:

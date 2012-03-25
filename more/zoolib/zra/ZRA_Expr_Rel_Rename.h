@@ -82,7 +82,7 @@ ZRef<Expr_Rel> sRename(const ZRef<Expr_Rel>& iExpr,
 
 } // namespace ZRA
 
-template<>
+template <>
 int sCompare_T(const ZRA::Expr_Rel_Rename& iL, const ZRA::Expr_Rel_Rename& iR);
 
 } // namespace ZooLib

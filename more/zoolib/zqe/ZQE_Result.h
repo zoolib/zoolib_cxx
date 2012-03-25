@@ -64,7 +64,7 @@ private:
 
 } // namespace ZQE
 
-template<>
+template <>
 int sCompare_T(const ZQE::Result& iL, const ZQE::Result& iR);
 
 template <>

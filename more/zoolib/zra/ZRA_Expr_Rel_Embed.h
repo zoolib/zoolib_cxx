@@ -78,7 +78,7 @@ ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0,
 
 } // namespace ZRA
 
-template<>
+template <>
 int sCompare_T(const ZRA::Expr_Rel_Embed& iL, const ZRA::Expr_Rel_Embed& iR);
 
 } // namespace ZooLib

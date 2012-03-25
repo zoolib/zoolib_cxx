@@ -75,7 +75,7 @@ ZRef<Expr_Rel> sDum();
 
 } // namespace ZRA
 
-template<>
+template <>
 int sCompare_T(const ZRA::Expr_Rel_Dum& iL, const ZRA::Expr_Rel_Dum& iR);
 
 } // namespace ZooLib

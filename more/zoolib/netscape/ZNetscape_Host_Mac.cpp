@@ -80,7 +80,7 @@ static void spWriteEvent(const ZStrimW& w, const EventRecord& iER)
 
 #if defined(XP_MAC) || defined(XP_MACOSX)
 
-template<class Rect_p>
+template <class Rect_p>
 Rect_p Host_Mac::pApplyInsets(const Rect_p& iRect)
 	{ return sOffsettedRB(fRight, fBottom, sInsetted(fLeft, fTop, iRect)); }
 

@@ -63,7 +63,7 @@ public:
 
 } // namespace ZRA
 
-template<>
+template <>
 int sCompare_T(const ZRA::Expr_Rel_Difference& iL, const ZRA::Expr_Rel_Difference& iR);
 
 } // namespace ZooLib

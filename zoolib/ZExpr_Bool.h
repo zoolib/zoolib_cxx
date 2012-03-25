@@ -65,7 +65,7 @@ public:
 	virtual void Accept_Expr_Bool_True(ZVisitor_Expr_Bool_True& iVisitor);
 	};
 
-template<>
+template <>
 int sCompare_T(const ZExpr_Bool_True& iL, const ZExpr_Bool_True& iR);
 
 // =================================================================================================
@@ -108,7 +108,7 @@ public:
 	virtual void Accept_Expr_Bool_False(ZVisitor_Expr_Bool_False& iVisitor);
 	};
 
-template<>
+template <>
 int sCompare_T(const ZExpr_Bool_False& iL, const ZExpr_Bool_False& iR);
 
 // =================================================================================================
@@ -147,7 +147,7 @@ public:
 	virtual void Accept_Expr_Bool_Not(ZVisitor_Expr_Bool_Not& iVisitor);
 	};
 
-template<>
+template <>
 int sCompare_T(const ZExpr_Bool_Not& iL, const ZExpr_Bool_Not& iR);
 
 // =================================================================================================
@@ -186,7 +186,7 @@ public:
 	virtual void Accept_Expr_Bool_And(ZVisitor_Expr_Bool_And& iVisitor);
 	};
 
-template<>
+template <>
 int sCompare_T(const ZExpr_Bool_And& iL, const ZExpr_Bool_And& iR);
 
 // =================================================================================================
@@ -225,7 +225,7 @@ public:
 	virtual void Accept_Expr_Bool_Or(ZVisitor_Expr_Bool_Or& iVisitor);
 	};
 
-template<>
+template <>
 int sCompare_T(const ZExpr_Bool_Or& iL, const ZExpr_Bool_Or& iR);
 
 // =================================================================================================

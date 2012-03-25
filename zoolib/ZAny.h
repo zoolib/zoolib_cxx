@@ -179,7 +179,7 @@ private:
 
 // -----------------
 
-	template<typename S>
+	template <typename S>
 	class InPlace_T : public InPlace
 		{
 	public:
@@ -227,7 +227,7 @@ private:
 
 // -----------------
 
-	template<typename S>
+	template <typename S>
 	class Reffed_T : public Reffed
 		{
 	public:

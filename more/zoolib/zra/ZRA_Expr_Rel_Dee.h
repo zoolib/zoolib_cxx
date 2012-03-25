@@ -75,7 +75,7 @@ ZRef<Expr_Rel> sDee();
 
 } // namespace ZRA
 
-template<>
+template <>
 int sCompare_T(const ZRA::Expr_Rel_Dee& iL, const ZRA::Expr_Rel_Dee& iR);
 
 } // namespace ZooLib
