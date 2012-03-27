@@ -61,7 +61,7 @@ inline S sGetSet(S& ioLoc, T iVal)
 template <class T>
 class ZRestore_T
 	{
-protected:
+public:
 	ZRestore_T(T& ioRef)
 	:	fRef(ioRef)
 	,	fValPrior(ioRef)
@@ -72,17 +72,16 @@ protected:
 	,	fValPrior(iVal)
 		{ std::swap(fRef, fValPrior); }
 
-public:
 	~ZRestore_T()
 		{ std::swap(fRef, fValPrior); }
 
-	const T& GetPrior() const
+	const T& Prior() const
 		{ return fValPrior; }
 
-	const T& GetCurrent() const
+	const T& Current() const
 		{ return fRef; }
 
-	T& GetCurrent()
+	T& Current()
 		{ return fRef; }
 
 protected:
