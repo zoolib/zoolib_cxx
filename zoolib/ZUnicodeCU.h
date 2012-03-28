@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStdInt.h" // For uint16, uint32
+#include "zoolib/ZUnicodeCU8.h"
 
 namespace ZooLib {
 
@@ -49,10 +50,9 @@ template <> struct Types_T<2>
 
 } // namespace ZUnicode
 
-// Definitions of UTF32, UTF16 and UTF8
+// Definitions of UTF32 and UTF16
 typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf32_t UTF32;
 typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf16_t UTF16;
-typedef char UTF8;
 
 } // namespace ZooLib
 

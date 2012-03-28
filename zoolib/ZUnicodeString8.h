@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,21 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUnicodeString_h__
-#define __ZUnicodeString_h__ 1
+#ifndef __ZUnicodeString8_h__
+#define __ZUnicodeString8_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUnicodeCU.h"
-#include "zoolib/ZUnicodeString8.h"
+#include "zoolib/ZUnicodeCU8.h"
+
+#include <string>
 
 namespace ZooLib {
 
-/// A basic_string specialization that holds a sequence of UTF32 code units.
-typedef std::basic_string<UTF32> string32;
-
-/// A basic_string specialization that holds a sequence of UTF16 code units.
-typedef std::basic_string<UTF16> string16;
+/// A basic_string specialization that holds a sequence of UTF8 code units.
+/// It is actually the same type as std::string.
+typedef std::basic_string<UTF8> string8;
 
 } // namespace ZooLib
 
-#endif // __ZUnicodeString_h__
+#endif // __ZUnicodeString8_h__
