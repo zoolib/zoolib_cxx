@@ -114,50 +114,6 @@ static void spCopyReadToWrite(const ZStrimR& iStrimR, const ZStrimW& iStrimW,
 	if (iCountCP == 0)
 		return;
 
-	if (iCountCP > sStackBufferSize)
-		{
-		// Try to allocate and use an 8K heap-based buffer.
-		if (UTF32* heapBuffer = new(nothrow) UTF32[2048])
-			{
-			try
-				{
-				uint64 cpRemaining = iCountCP;
-				while (cpRemaining > 0)
-					{
-					size_t cpRead;
-					iStrimR.Read(heapBuffer, min(cpRemaining, ZUINT64_C(2048)), &cpRead);
-					if (cpRead == 0)
-						break;
-					if (oCountCPRead)
-						*oCountCPRead += cpRead;
-					cpRemaining -= cpRead;
-					UTF32* tempSource = heapBuffer;
-					while (cpRead > 0)
-						{
-						size_t cpWritten;
-						iStrimW.Write(tempSource, cpRead, &cpWritten);
-						if (cpWritten == 0)
-							{
-							cpRemaining = 0;
-							break;
-							}
-						tempSource += cpWritten;
-						cpRead -= cpWritten;
-						if (oCountCPWritten)
-							*oCountCPWritten += cpWritten;
-						}
-					}
-				}
-			catch (...)
-				{
-				delete[] heapBuffer;
-				throw;
-				}
-			delete[] heapBuffer;
-			return;
-			}
-		}
-
 	UTF32 localBuffer[sStackBufferSize];
 	size_t cpRemaining = iCountCP;
 	while (cpRemaining > 0)

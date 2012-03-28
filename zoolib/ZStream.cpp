@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZDeleter.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -123,7 +124,7 @@ static void spCopyReadToWrite(void* iBuffer, size_t iBufferSize,
 		if (oCountRead)
 			*oCountRead += countRead;
 		countRemaining -= countRead;
-		const uint8* tempSource = static_cast<const uint8*>(iBuffer);
+		const char* tempSource = static_cast<const char*>(iBuffer);
 		while (countRead > 0)
 			{
 			size_t countWritten;
@@ -161,20 +162,14 @@ void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStream
 	if (iCount > 8192)
 		{
 		// Try to allocate and use an 8K heap-based buffer.
-		if (uint8* heapBuffer = new(nothrow) uint8[8192])
+		if (char* heapBuffer = new(nothrow) char[8192])
 			{
-			try
-				{
-				spCopyReadToWrite(heapBuffer, 8192,
-					iStreamR, iStreamW, iCount,
-					oCountRead, oCountWritten);
-				}
-			catch (...)
-				{
-				delete[] heapBuffer;
-				throw;
-				}
-			delete[] heapBuffer;
+			ZDeleter<char[]> del(heapBuffer);
+
+			spCopyReadToWrite(heapBuffer, 8192,
+				iStreamR, iStreamW, iCount,
+				oCountRead, oCountWritten);
+
 			return;
 			}
 		}
@@ -185,7 +180,7 @@ void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStream
 	// Use a stack-based buffer if we're moving less than 8K and thus will iterate
 	// fewer than 8 times. Previously we'd unconditionally used one of size 4096, but that's
 	// fairly large and can contribute to blowing the stack on MacOS.
-	uint8 localBuffer[sStackBufferSize];
+	char localBuffer[sStackBufferSize];
 	spCopyReadToWrite(localBuffer, sizeof(localBuffer),
 		iStreamR, iStreamW, iCount,
 		oCountRead, oCountWritten);
@@ -196,18 +191,16 @@ static void spCopy(const ZStreamR& iStreamR,
 	const ZStreamW& iStreamW,
 	size_t& oCountRead, size_t& oCountWritten)
 	{
-	try
+	if (iChunkSize > sStackBufferSize)
 		{
-		if (iChunkSize > sStackBufferSize)
+		if (char* heapBuffer = new(nothrow) char[iChunkSize])
 			{
-			std::vector<uint8> buffer(iChunkSize, 0);
-			iStreamR.Read(&buffer[0], buffer.size(), &oCountRead);
-			iStreamW.Write(&buffer[0], oCountRead, &oCountWritten);
+			ZDeleter<char[]> del(heapBuffer);
+			iStreamR.Read(heapBuffer, iChunkSize, &oCountRead);
+			iStreamW.Write(heapBuffer, oCountRead, &oCountWritten);
 			return;
 			}
 		}
-	catch (...)
-		{}
 
 	char buffer[sStackBufferSize];
 	iStreamR.Read(buffer, sStackBufferSize, &oCountRead);

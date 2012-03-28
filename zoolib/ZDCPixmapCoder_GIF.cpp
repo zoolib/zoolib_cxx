@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDCPixmapCoder_GIF.h"
+#include "zoolib/ZDeleter.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStream_Chunked.h"
 #include "zoolib/ZStream_LZW.h"
@@ -189,6 +190,9 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	ZStreamW_LZWEncode* theSLZW = nullptr;
 	ZStreamW_LZWEncodeNoPatent* theSLZWNP = nullptr;
 
+	ZDeleter<ZStreamW_LZWEncode> deleter1(theSLZW);
+	ZDeleter<ZStreamW_LZWEncodeNoPatent> deleter2(theSLZWNP);
+
 	ZStreamW* theStream;
 	if (fNoPatent)
 		{
@@ -206,30 +210,12 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	vector<uint8> theRowBufferVector(W(iBounds));
 	void* theRowBuffer = &theRowBufferVector[0];
 
-	try
+	if (fInterlace)
 		{
-		if (fInterlace)
+		for (int pass = 0; pass < 4; ++pass)
 			{
-			for (int pass = 0; pass < 4; ++pass)
-				{
-				for (ZCoord currentY = iBounds.top + spInterlaceStart[pass];
-					currentY < iBounds.bottom; currentY += spInterlaceIncrement[pass])
-					{
-					const void* sourceRowAddress =
-						iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
-
-					sBlitRowPixvals
-						(sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
-						theRowBuffer, destPixvalDesc, 0,
-						W(iBounds));
-
-					theStream->Write(theRowBuffer, W(iBounds));
-					}
-				}
-			}
-		else
-			{
-			for (ZCoord currentY = iBounds.top; currentY < iBounds.bottom; ++currentY)
+			for (ZCoord currentY = iBounds.top + spInterlaceStart[pass];
+				currentY < iBounds.bottom; currentY += spInterlaceIncrement[pass])
 				{
 				const void* sourceRowAddress =
 					iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
@@ -238,20 +224,26 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 					(sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
 					theRowBuffer, destPixvalDesc, 0,
 					W(iBounds));
+
 				theStream->Write(theRowBuffer, W(iBounds));
 				}
 			}
 		}
-	catch (...)
+	else
 		{
-		delete theSLZW;
-		delete theSLZWNP;
-		throw;
-		}
+		for (ZCoord currentY = iBounds.top; currentY < iBounds.bottom; ++currentY)
+			{
+			const void* sourceRowAddress =
+				iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
 
-	delete theSLZW;
-	delete theSLZWNP;
-	}
+			sBlitRowPixvals
+				(sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
+				theRowBuffer, destPixvalDesc, 0,
+				W(iBounds));
+			theStream->Write(theRowBuffer, W(iBounds));
+			}
+		}
+	} // End of scope for theSC
 
 	iStream.WriteUInt8(';'); // Trailer.
 	}

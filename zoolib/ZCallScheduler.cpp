@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallScheduler.h"
+#include "zoolib/ZDeleter.h"
 #include "zoolib/ZUtil_STL_set.h"
 
 namespace ZooLib {
@@ -30,11 +31,7 @@ using std::set;
 
 static ZCallScheduler* spScheduler;
 
-namespace { // anonymous
-
-struct Deleter { ~Deleter() { delete spScheduler; } } spDeleter;
-
-} // anonymous namespace
+static ZDeleter<ZCallScheduler> spDeleter(spScheduler);
 
 // =================================================================================================
 // MARK: - ZCallScheduler
