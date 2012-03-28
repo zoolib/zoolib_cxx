@@ -60,7 +60,6 @@ public:
 	:	fRep(sCountedVal(iMap))
 		{}
 
-
 // ZMap protocol
 	ZQ<Val> QGet(const std::string& iName) const
 		{
