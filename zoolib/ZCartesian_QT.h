@@ -34,7 +34,7 @@ namespace ZCartesian {
 
 template <>
 struct PointTraits<QPoint>
-:	public PointTraits_Std_Base<int,QPoint,QRect>
+:	public PointTraits_Std<int,QPoint,QRect>
 	{
 	typedef const Ord_t XC_t;
 	static XC_t sX(const Point_t& iPoint) { return iPoint.x(); }
@@ -54,7 +54,7 @@ struct PointTraits<QPoint>
 
 template <>
 struct PointTraits<QSize>
-:	public PointTraits_Std_Base<int,QSize,QRect>
+:	public PointTraits_Std<int,QSize,QRect>
 	{
 	typedef const Ord_t XC_t;
 	static XC_t sX(const Point_t& iPoint) { return iPoint.width(); }
@@ -74,7 +74,7 @@ struct PointTraits<QSize>
 
 template <>
 struct RectTraits<QRect>
-:	public RectTraits_Std_Base<int,QPoint,QRect>
+:	public RectTraits_Std<int,QPoint,QRect>
 	{
 	typedef const Ord_t LC_t;
 	static LC_t sL(const Rect_t& iRect) { return iRect.left(); }
@@ -120,7 +120,7 @@ struct RectTraits<QRect>
 
 template <>
 struct PointTraits<QPointF>
-:	public PointTraits_Std_Base<qreal,QPointF,QRectF>
+:	public PointTraits_Std<qreal,QPointF,QRectF>
 	{
 	typedef const Ord_t XC_t;
 	static XC_t sX(const Point_t& iPoint) { return iPoint.x(); }
@@ -140,7 +140,7 @@ struct PointTraits<QPointF>
 
 template <>
 struct RectTraits<QRectF>
-:	public RectTraits_Std_Base<qreal,QPointF,QRectF>
+:	public RectTraits_Std<qreal,QPointF,QRectF>
 	{
 	typedef const Ord_t LC_t;
 	typedef LC_t L_t;

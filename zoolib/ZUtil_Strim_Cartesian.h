@@ -28,12 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <class Point_p>
-typename IfExists_T<typename ZCartesian::PointTraits<Point_p>::Point_t,const ZStrimW&>::type
+typename EnableIfC<ZCartesian::PointTraits<Point_p>::value,const ZStrimW&>::type
 operator<<(const ZStrimW& w, const Point_p& iPoint)
 	{ return w << "(" << X(iPoint) << "," << Y(iPoint) << ")"; }
 
 template <class Rect_p>
-typename IfExists_T<typename ZCartesian::RectTraits<Rect_p>::Rect_t,const ZStrimW&>::type
+typename EnableIfC<ZCartesian::RectTraits<Rect_p>::value,const ZStrimW&>::type
 operator<<(const ZStrimW& w, const Rect_p& iRect)
 	{ return w << "(" << L(iRect) << "," << T(iRect) << "," << R(iRect) << "," << B(iRect) << ")"; }
 

@@ -65,12 +65,14 @@ Aligned, Centered, Flipped, Insetted, Offsetted, With
 
 // This may get promoted out of ZCartesian at some point. Depends on
 // whether I can count on the availability of std::tr1.
-template <typename T, typename R = void>
-struct IfExists_T
-	{
-	enum { value = (sizeof(T) == sizeof(T)) };
-	typedef R type;
-	};
+
+template <bool B, class T = void>
+struct EnableIfC
+	{};
+
+template <class T>
+struct EnableIfC<true, T>
+	{ typedef T type; };
 
 // =================================================================================================
 // MARK: - PointTraits and accessors
@@ -93,6 +95,7 @@ typename PointTraits<Type_p>::Y_t Y(Type_p& iT) { return PointTraits<Type_p>::sY
 #define ZMACRO_Cartesian(T) \
 	template <> struct PointTraits<T> \
 		{ \
+		enum {value = 1}; \
 		typedef T Ord_t; \
 		typedef const Ord_t& XC_t; \
 		inline static XC_t sX(const T& iT) { return iT; } \
@@ -140,8 +143,8 @@ sPoint
 // From a single parameter that's point-like (will work for scalars too).
 // Usage: sPoint<PointType>(OtherPointType)
 template <class Point_p, class OtherPoint_p>
-typename IfExists_T
-	<typename PointTraits<OtherPoint_p>::Point_t,typename PointTraits<Point_p>::Point_t>::type
+typename EnableIfC
+	<PointTraits<OtherPoint_p>::value,typename PointTraits<Point_p>::Point_t>::type
 sPoint
 	(const OtherPoint_p& iOther)
 	{ return sPoint<Point_p>(X(iOther), Y(iOther)); }
@@ -256,8 +259,8 @@ sRect
 // PointTraits above), but with the rect type as a template parameter.
 // Usage: sRect<RectType>(PointType)
 template <class Rect_p, class Point_p>
-typename IfExists_T
-	<typename PointTraits<Point_p>::Point_t,typename RectTraits<Rect_p>::Rect_t>::type
+typename EnableIfC
+	<PointTraits<Point_p>::value,typename RectTraits<Rect_p>::Rect_t>::type
 sRect
 	(const Point_p& iPoint)
 	{ return sRect<Rect_p>(0, 0, X(iPoint), Y(iPoint)); }
@@ -265,8 +268,8 @@ sRect
 // From a single parameter that is Rect-like, with the returned rect type as a template parameter.
 // Usage: sRect<RectType>(OtherRectType)
 template <class Rect_p, class OtherRect_p>
-typename IfExists_T
-	<typename RectTraits<OtherRect_p>::Rect_t,typename RectTraits<Rect_p>::Rect_t>::type
+typename EnableIfC
+	<RectTraits<OtherRect_p>::value,typename RectTraits<Rect_p>::Rect_t>::type
 sRect
 	(const OtherRect_p& iOther)
 	{ return sRect<Rect_p>(L(iOther), T(iOther), R(iOther), B(iOther)); }
@@ -296,32 +299,32 @@ sRect
 namespace Operators {
 
 template <class Point_p>
-typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
+typename EnableIfC<PointTraits<Point_p>::value,bool>::type
 operator==(const Point_p& iLHS, const Point_p& iRHS)
 	{ return X(iLHS) == X(iRHS) && Y(iLHS) == Y(iRHS); }
 
 template <class Point_p>
-typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
+typename EnableIfC<PointTraits<Point_p>::value,bool>::type
 operator!=(const Point_p& iLHS, const Point_p& iRHS)
 	{ return not (iLHS == iRHS); }
 
 template <class Point_p>
-typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
+typename EnableIfC<PointTraits<Point_p>::value,bool>::type
 operator<(const Point_p& iLHS, const Point_p& iRHS)
 	{ return X(iLHS) < X(iRHS) || (X(iLHS) == X(iRHS) && Y(iLHS) < Y(iRHS)); }
 
 template <class Point_p>
-typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
+typename EnableIfC<PointTraits<Point_p>::value,bool>::type
 operator>(const Point_p& iLHS, const Point_p& iRHS)
 	{ return iRHS < iLHS; }
 
 template <class Point_p>
-typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
+typename EnableIfC<PointTraits<Point_p>::value,bool>::type
 operator<=(const Point_p& iLHS, const Point_p& iRHS)
 	{ return not (iRHS < iLHS); }
 
 template <class Point_p>
-typename IfExists_T<typename PointTraits<Point_p>::Point_t,bool>::type
+typename EnableIfC<PointTraits<Point_p>::value,bool>::type
 operator>=(const Point_p& iLHS, const Point_p& iRHS)
 	{ return not (iLHS < iRHS); }
 
@@ -401,32 +404,32 @@ operator/=(Point_p& ioL, const Other& iRHS)
 namespace Operators {
 
 template <class Rect_p>
-typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
+typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
 operator==(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return LT(iLHS) == LT(iRHS) && RB(iLHS) == RB(iRHS); }
 
 template <class Rect_p>
-typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
+typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
 operator!=(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return not (iLHS == iRHS); }
 
 template <class Rect_p>
-typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
+typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
 operator<(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return LT(iLHS) < LT(iRHS) || (LT(iLHS) == LT(iRHS) && RB(iLHS) < RB(iRHS)); }
 
 template <class Rect_p>
-typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
+typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
 operator>(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return iRHS < iLHS; }
 
 template <class Rect_p>
-typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
+typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
 operator<=(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return not (iRHS < iLHS); }
 
 template <class Rect_p>
-typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,bool>::type
+typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
 operator>=(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return not (iLHS < iRHS); }
 
@@ -909,10 +912,20 @@ Rect_p sWithWHRT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
 	{ return sRect<Rect_p>(L(iRect), B(iRect) - Y(iY), L(iRect) + X(iX), B(iRect)); }
 
 // =================================================================================================
-// MARK: - PointTraits_Std_Base
+// MARK: - PointTraitsBase
+
+template <class Type_p>
+struct PointTraitsBase
+	{
+	enum {value=1};
+	};
+
+// =================================================================================================
+// MARK: - PointTraits_Std
 
 template <class Ord_p, class Point_p, class Rect_p>
-struct PointTraits_Std_Base
+struct PointTraits_Std
+:	public PointTraitsBase<Point_p>
 	{
 	typedef Ord_p Ord_t;
 	typedef Point_p Point_t;
@@ -927,7 +940,7 @@ struct PointTraits_Std_Base
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct PointTraits_Std_XY
-:	public PointTraits_Std_Base<Ord_p,Point_p,Rect_p>
+:	public PointTraits_Std<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& XC_t;
 	static XC_t sX(const Point_p& iPoint) { return iPoint.x; }
@@ -947,7 +960,7 @@ struct PointTraits_Std_XY
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct PointTraits_Std_HV
-:	public PointTraits_Std_Base<Ord_p,Point_p,Rect_p>
+:	public PointTraits_Std<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& XC_t;
 	static XC_t sX(const Point_p& iPoint) { return iPoint.h; }
@@ -967,7 +980,7 @@ struct PointTraits_Std_HV
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct PointTraits_Std_WidthHeight
-:	public PointTraits_Std_Base<Ord_p,Point_p,Rect_p>
+:	public PointTraits_Std<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& XC_t;
 	static XC_t sX(const Point_p& iPoint) { return iPoint.width; }
@@ -983,10 +996,20 @@ struct PointTraits_Std_WidthHeight
 	};
 
 // =================================================================================================
-// MARK: - RectTraits_Std_Base
+// MARK: - RectTraitsBase
+
+template <class Type_p>
+struct RectTraitsBase
+	{
+	enum {value=1};
+	};
+
+// =================================================================================================
+// MARK: - RectTraits_Std
 
 template <class Ord_p, class Point_p, class Rect_p>
-struct RectTraits_Std_Base
+struct RectTraits_Std
+:	public RectTraitsBase<Rect_p>
 	{
 	typedef Ord_p Ord_t;
 	typedef Point_p Point_t;
@@ -1026,7 +1049,7 @@ struct RectTraits_Std_Base
 
 template <class Ord_p, class Origin_p, class Size_p, class Rect_p>
 struct RectTraits_Std_OriginSize
-:	public RectTraits_Std_Base<Ord_p,Origin_p,Rect_p>
+:	public RectTraits_Std<Ord_p,Origin_p,Rect_p>
 	{
 	typedef const Ord_p& LC_t;
 	static LC_t sL(const Rect_p& iRect) { return X(iRect.origin); }
@@ -1078,7 +1101,7 @@ struct RectTraits_Std_OriginSize
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct RectTraits_Std_XYWH_Base
-:	public RectTraits_Std_Base<Ord_p,Point_p,Rect_p>
+:	public RectTraits_Std<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& LC_t;
 	static LC_t sL(const Rect_p& iRect) { return iRect.x; }
@@ -1146,7 +1169,7 @@ struct RectTraits_Std_XYWidthHeight
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct RectTraits_Std_LeftTopRightBottom
-:	public RectTraits_Std_Base<Ord_p,Point_p,Rect_p>
+:	public RectTraits_Std<Ord_p,Point_p,Rect_p>
 	{
 	typedef const Ord_p& LC_t;
 	static LC_t sL(const Rect_p& iRect) { return iRect.left; }
