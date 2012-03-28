@@ -48,8 +48,8 @@ const T sMinMax(const Min_p& iMin, const T& iVal, const Max_p& iMax)
 // =================================================================================================
 // MARK: - sGetSet
 
-template <class S, class T>
-inline S sGetSet(S& ioLoc, T iVal)
+template <class S>
+inline S sGetSet(S& ioLoc, S iVal)
 	{
 	std::swap(iVal, ioLoc);
 	return iVal;
