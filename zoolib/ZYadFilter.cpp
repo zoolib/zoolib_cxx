@@ -32,18 +32,15 @@ class YadMapR_Filtered
 	{
 public:
 	YadMapR_Filtered
-		(const ZRef<Callable_YadFilter>& iCallable_YadFilter, const ZRef<ZYadMapR>& iYadMapR)
-	:	fCallable_YadFilter(iCallable_YadFilter)
+		(const ZRef<Callable_YadFilter>& iCallable, const ZRef<ZYadMapR>& iYadMapR)
+	:	fCallable(iCallable)
 	,	fYadMapR(iYadMapR)
 		{}
 	
 	virtual ZRef<ZYadR> ReadInc(string8& oName)
-		{
-		return sYadFilter
-			(fCallable_YadFilter, sCall(fCallable_YadFilter, fYadMapR->ReadInc(oName)));
-		}
+		{ return sYadFilter(fCallable, sCall(fCallable, fYadMapR->ReadInc(oName))); }
 
-	const ZRef<Callable_YadFilter> fCallable_YadFilter;
+	const ZRef<Callable_YadFilter> fCallable;
 	const ZRef<ZYadMapR> fYadMapR;
 	};
 
@@ -52,17 +49,15 @@ class YadSeqR_Filtered
 	{
 public:
 	YadSeqR_Filtered
-		(const ZRef<Callable_YadFilter>& iCallable_YadFilter, const ZRef<ZYadSeqR>& iYadSeqR)
-	:	fCallable_YadFilter(iCallable_YadFilter)
+		(const ZRef<Callable_YadFilter>& iCallable, const ZRef<ZYadSeqR>& iYadSeqR)
+	:	fCallable(iCallable)
 	,	fYadSeqR(iYadSeqR)
 		{}
 	
 	virtual ZRef<ZYadR> ReadInc()
-		{
-		return sYadFilter(fCallable_YadFilter, sCall(fCallable_YadFilter, fYadSeqR->ReadInc())));
-		}
+		{ return sYadFilter(fCallable, sCall(fCallable, fYadSeqR->ReadInc())); }
 
-	const ZRef<Callable_YadFilter> fCallable_YadFilter;
+	const ZRef<Callable_YadFilter> fCallable;
 	const ZRef<ZYadSeqR> fYadSeqR;
 	};
 
