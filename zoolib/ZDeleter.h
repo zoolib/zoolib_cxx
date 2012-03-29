@@ -42,7 +42,7 @@ template <class T>
 class ZDeleter<T[]>
 	{
 public:
-	ZDeleter(T* iT) : fT(iT) {}
+	ZDeleter(T*& iT) : fT(iT) {}
 	~ZDeleter() { delete[] fT; }
 
 private:
