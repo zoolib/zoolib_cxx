@@ -165,7 +165,7 @@ passed straight through to the sink stream, bypassing the buffer altogether.
 ZStreamW_Buffered::ZStreamW_Buffered(size_t iBufferSize, const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink),
 	fBuffer(sMinMax(128, iBufferSize, 8192), 0),
-	fBufferOffset(fBuffer.size())
+	fBufferOffset(0)
 	{}
 
 ZStreamW_Buffered::~ZStreamW_Buffered()
