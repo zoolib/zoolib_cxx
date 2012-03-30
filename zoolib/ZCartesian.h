@@ -143,8 +143,7 @@ sPoint
 // From a single parameter that's point-like (will work for scalars too).
 // Usage: sPoint<PointType>(OtherPointType)
 template <class Point_p, class OtherPoint_p>
-typename EnableIfC
-	<PointTraits<OtherPoint_p>::value,typename PointTraits<Point_p>::Point_t>::type
+typename EnableIfC<PointTraits<OtherPoint_p>::value,typename PointTraits<Point_p>::Point_t>::type
 sPoint
 	(const OtherPoint_p& iOther)
 	{ return sPoint<Point_p>(X(iOther), Y(iOther)); }
@@ -259,8 +258,7 @@ sRect
 // PointTraits above), but with the rect type as a template parameter.
 // Usage: sRect<RectType>(PointType)
 template <class Rect_p, class Point_p>
-typename EnableIfC
-	<PointTraits<Point_p>::value,typename RectTraits<Rect_p>::Rect_t>::type
+typename EnableIfC<PointTraits<Point_p>::value,typename RectTraits<Rect_p>::Rect_t>::type
 sRect
 	(const Point_p& iPoint)
 	{ return sRect<Rect_p>(0, 0, X(iPoint), Y(iPoint)); }
@@ -268,8 +266,7 @@ sRect
 // From a single parameter that is Rect-like, with the returned rect type as a template parameter.
 // Usage: sRect<RectType>(OtherRectType)
 template <class Rect_p, class OtherRect_p>
-typename EnableIfC
-	<RectTraits<OtherRect_p>::value,typename RectTraits<Rect_p>::Rect_t>::type
+typename EnableIfC<RectTraits<OtherRect_p>::value,typename RectTraits<Rect_p>::Rect_t>::type
 sRect
 	(const OtherRect_p& iOther)
 	{ return sRect<Rect_p>(L(iOther), T(iOther), R(iOther), B(iOther)); }
