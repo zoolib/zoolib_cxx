@@ -105,21 +105,23 @@ private:
 class ZWeakRefBase
 	{
 protected:
+	typedef ZCountedBase::WeakRefProxy WeakRefProxy;
+
 	ZWeakRefBase();
 	~ZWeakRefBase();
 	ZWeakRefBase(const ZWeakRefBase& iOther);
 	ZWeakRefBase& operator=(const ZWeakRefBase& iOther);
 
-	ZWeakRefBase(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy);
+	ZWeakRefBase(const ZRef<WeakRefProxy>& iWeakRefProxy);
 
-	void pAssign(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy);
+	void pAssign(const ZRef<WeakRefProxy>& iWeakRefProxy);
 	void pClear();
 
 	ZRef<ZCountedBase> pGet() const;
-	ZRef<ZCountedBase::WeakRefProxy> pGetWeakRefProxy() const;
+	ZRef<WeakRefProxy> pGetWeakRefProxy() const;
 
 private:
-	ZRef<ZCountedBase::WeakRefProxy> fWeakRefProxy;
+	ZRef<WeakRefProxy> fWeakRefProxy;
 	};
 
 // =================================================================================================
@@ -165,21 +167,21 @@ public:
 		return *this;
 		}
 
-	ZWeakRef(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy)
+	ZWeakRef(const ZRef<WeakRefProxy>& iWeakRefProxy)
 	:	ZWeakRefBase(iWeakRefProxy)
 		{}
 
-	ZWeakRef& operator=(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy)
+	ZWeakRef& operator=(const ZRef<WeakRefProxy>& iWeakRefProxy)
 		{
 		ZWeakRefBase::pAssign(iWeakRefProxy);
 		return *this;
 		}
 
-	ZWeakRef(ZCountedBase::WeakRefProxy* iWeakRefProxy)
+	ZWeakRef(WeakRefProxy* iWeakRefProxy)
 	:	ZWeakRefBase(iWeakRefProxy)
 		{}
 
-	ZWeakRef& operator=(ZCountedBase::WeakRefProxy* iWeakRefProxy)
+	ZWeakRef& operator=(WeakRefProxy* iWeakRefProxy)
 		{
 		ZWeakRefBase::pAssign(iWeakRefProxy);
 		return *this;
@@ -201,7 +203,7 @@ public:
 	void Clear()
 		{ ZWeakRefBase::pClear(); }
 
-	ZRef<ZCountedBase::WeakRefProxy> GetWeakRefProxy() const
+	ZRef<WeakRefProxy> GetWeakRefProxy() const
 		{ return ZWeakRefBase::pGetWeakRefProxy(); }
 
 	ZRef<T> Get() const
