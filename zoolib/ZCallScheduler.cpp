@@ -151,7 +151,7 @@ void ZCallScheduler::pRun()
 				ZRef<ZCaller> theCaller = begin->second.first;
 				ZRef<ZCallable_Void> theCallable = begin->second.second;
 
-				ZUtil_STL::sEraseMustContain(fJobTimes, make_pair(begin->second, begin->first));
+				sEraseMustContain(fJobTimes, make_pair(begin->second, begin->first));
 				fTimeJobs.erase(begin);
 
 				guard.Release();
