@@ -113,7 +113,7 @@ public:
 	};
 
 template <class T0, class T1, class T2, class T3>
-ZMulti_T3<T0,T1,T2> sMulti(const T0& i0, const T1& i1, const T2& i2, const T3& i3)
+ZMulti_T4<T0,T1,T2,T3> sMulti(const T0& i0, const T1& i1, const T2& i2, const T3& i3)
 	{ return ZMulti_T4<T0,T1,T2,T3>(i0, i1, i2, i3); }
 
 } // namespace ZooLib
