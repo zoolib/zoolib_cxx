@@ -166,13 +166,6 @@ enum { ZLongIs64Bit = ZIntTrait_T<sizeof(long)>::eIs64Bit };
 
 enum { ZIntIs64Bit = ZIntTrait_T<sizeof(int)>::eIs64Bit };
 
-// Even today wchar_t can still be an oddball, certainly on MSVC where __wchar_t is the
-// canonical type and wchar_t can be a typedef of an int. So we define __wchar_t elsewhere
-// so we've got a type we can depend on interpreting correctly.
-#if not defined(_MSC_VER)
-	typedef wchar_t __wchar_t;
-#endif
-
 } // namespace ZooLib
 
 #endif // __ZStdInt_h__

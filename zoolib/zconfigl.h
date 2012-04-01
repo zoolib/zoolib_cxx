@@ -387,4 +387,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#endif
 #endif
 
+#if not defined(_MSC_VER)
+	// Even today wchar_t can still be an oddball, certainly on MSVC where __wchar_t is the
+	// canonical type and wchar_t can be a typedef of an int. So we define __wchar_t elsewhere
+	// so we've got a type we can depend on interpreting correctly.
+	typedef wchar_t __wchar_t;
+
+	// Similarly for 64 bit ints.
+	typedef long long __int64;
+	typedef unsigned long long __uint64;
+#else
+	typedef unsigned __int64 __uint64;
+#endif
+
 #endif // __zconfigl_h__
