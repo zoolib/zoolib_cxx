@@ -43,48 +43,48 @@ ZQ<int64> sQInt64(const string& iString)
 	{
 	if (iString.size())
 		{
-		int64 result;
+		__int64 result;
 		if (sscanf(iString.c_str(), "%lld", &result) > 0)
 			return result;
 		}
 	return null;
 	}
 
-int64 sDInt64(int64 iDefault, const string& iString)
+__int64 sDInt64(__int64 iDefault, const string& iString)
 	{
-	if (ZQ<int64> qInt64 = sQInt64(iString))
+	if (ZQ<__int64> qInt64 = sQInt64(iString))
 		return qInt64.Get();
 	return iDefault;
 	}
 
-int64 sInt64(const string& iString)
+__int64 sInt64(const string& iString)
 	{
-	if (ZQ<int64> qInt64 = sQInt64(iString))
+	if (ZQ<__int64> qInt64 = sQInt64(iString))
 		return qInt64.Get();
 	return 0;
 	}
 
-ZQ<uint64> sQUInt64(const string& iString)
+ZQ<__uint64> sQUInt64(const string& iString)
 	{
 	if (iString.size())
 		{
-		uint64 result;
+		__uint64 result;
 		if (sscanf(iString.c_str(), "%llu", &result) > 0)
 			return result;
 		}
 	return null;
 	}
 
-uint64 sDUInt64(uint64 iDefault, const string& iString)
+__uint64 sDUInt64(__uint64 iDefault, const string& iString)
 	{
-	if (ZQ<uint64> qUInt64 = sQUInt64(iString))
+	if (ZQ<__uint64> qUInt64 = sQUInt64(iString))
 		return qUInt64.Get();
 	return iDefault;
 	}
 
-uint64 sUInt64(const string& iString)
+__uint64 sUInt64(const string& iString)
 	{
-	if (ZQ<uint64> qUInt64 = sQUInt64(iString))
+	if (ZQ<__uint64> qUInt64 = sQUInt64(iString))
 		return qUInt64.Get();
 	return 0;
 	}

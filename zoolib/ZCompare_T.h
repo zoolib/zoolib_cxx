@@ -32,6 +32,22 @@ namespace ZooLib {
 
 template <class T> int sCompare_T(const T& iL, const T& iR);
 
+// =================================================================================================
+// MARK: - sCompare_T specialized for void pointers
+
+typedef void* VoidStar_t;
+
+template <> inline int sCompare_T(const VoidStar_t& iL, const VoidStar_t& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
+typedef const void* ConstVoidStar_t;
+
+template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar_t& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
+// =================================================================================================
+// MARK: - sCompare_T specialized for std::pair
+
 template <class S, class T>
 inline int sCompare_T(const std::pair<S,T>& iLeft, const std::pair<S,T>& iRight)
 	{
@@ -41,7 +57,7 @@ inline int sCompare_T(const std::pair<S,T>& iLeft, const std::pair<S,T>& iRight)
 	}
 
 // =================================================================================================
-// MARK: - Less_Compare_T
+// MARK: - Less_Compare_T, less<>-style functor implemented in terms of sCompare_T
 
 template <class T>
 struct Less_Compare_T : public std::binary_function<T,T,bool>
@@ -97,19 +113,6 @@ inline int sCompareIterators_T
 			}
 		}
 	}
-
-// =================================================================================================
-// MARK: - sCompare_T specialized for void pointers
-
-typedef void* VoidStar_t;
-
-template <> inline int sCompare_T(const VoidStar_t& iL, const VoidStar_t& iR)
-	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
-
-typedef const void* ConstVoidStar_t;
-
-template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar_t& iR)
-	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 } // namespace ZooLib
 

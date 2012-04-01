@@ -21,10 +21,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZUtil_Win_h__
 #define __ZUtil_Win_h__
 #include "zconfig.h"
+
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZQ.h"
-#include "zoolib/ZStdInt.h" // For uint64
 
 #if ZCONFIG_SPI_Enabled(Win)
 
@@ -39,7 +39,7 @@ void sDisallowWAPI();
 
 HINSTANCE sGetModuleHandle();
 
-ZQ<uint64> sQGetVersion_File(const WCHAR* iPath);
+ZQ<__uint64> sQGetVersion_File(const WCHAR* iPath);
 
 } // namespace ZUtil_Win
 } // namespace ZooLib

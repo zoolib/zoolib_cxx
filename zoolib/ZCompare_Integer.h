@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompare_T.h"
-#include "zoolib/ZStdInt.h" // For __wchar_t
 
 namespace ZooLib {
 
@@ -77,27 +76,13 @@ inline int sCompare_T(const unsigned long& iL, const unsigned long& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 
-#if ZCONFIG(Compiler, MSVC)
+template <>
+inline int sCompare_T(const __int64& iL, const __int64& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
-	template <>
-	inline int sCompare_T(const __int64& iL, const __int64& iR)
-		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
-
-	template <>
-	inline int sCompare_T(const unsigned __int64& iL, const unsigned __int64& iR)
-		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
-
-#else
-
-	template <>
-	inline int sCompare_T(const long long& iL, const long long& iR)
-		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
-
-	template <>
-	inline int sCompare_T(const unsigned long long& iL, const unsigned long long& iR)
-		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
-
-#endif
+template <>
+inline int sCompare_T(const __uint64& iL, const __uint64& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 } // namespace ZooLib
 

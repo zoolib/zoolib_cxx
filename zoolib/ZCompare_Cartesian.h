@@ -31,7 +31,7 @@ namespace ZooLib {
 // MARK: - sCompare_T, point
 
 template <class Point_p>
-typename IfExists_T<typename PointTraits<Point_p>::Point_t,int>::type
+typename EnableIfC<PointTraits<Point_p>::value,int>::type
 sCompare_T(const Point_p& iLHS, const Point_p& iRHS)
 	{
 	if (int compare = sCompare_T(X(iLHS), X(iRHS)))
@@ -43,7 +43,7 @@ sCompare_T(const Point_p& iLHS, const Point_p& iRHS)
 // MARK: - sCompare_T, rect
 
 template <class Rect_p>
-typename IfExists_T<typename RectTraits<Rect_p>::Rect_t,int>::type
+typename EnableIfC<RectTraits<Rect_p>::value,int>::type
 sCompare_T(const Rect_p& iLHS, const Rect_p& iRHS)
 	{
 	if (int compare = sCompare_T(L(iLHS), L(iRHS)))

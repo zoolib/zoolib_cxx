@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZAny.h"
-#include "zoolib/ZStdInt.h" // For int64
 
 // =================================================================================================
 // MARK: - ZAny coercion
@@ -35,10 +34,10 @@ bool sQCoerceBool(const ZAny& iAny, bool& oVal);
 bool sDCoerceBool(bool iDefault, const ZAny& iAny);
 bool sCoerceBool(const ZAny& iAny);
 
-ZQ<int64> sQCoerceInt(const ZAny& iAny);
-bool sQCoerceInt(const ZAny& iAny, int64& oVal);
-int64 sDCoerceInt(int64 iDefault, const ZAny& iAny);
-int64 sCoerceInt(const ZAny& iAny);
+ZQ<__int64> sQCoerceInt(const ZAny& iAny);
+bool sQCoerceInt(const ZAny& iAny, __int64& oVal);
+__int64 sDCoerceInt(__int64 iDefault, const ZAny& iAny);
+__int64 sCoerceInt(const ZAny& iAny);
 
 ZQ<double> sQCoerceRat(const ZAny& iAny);
 bool sQCoerceRat(const ZAny& iAny, double& oVal);

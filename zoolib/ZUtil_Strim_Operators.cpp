@@ -86,10 +86,10 @@ const ZStrimW& operator<<(const ZStrimW& s, long iVal)
 const ZStrimW& operator<<(const ZStrimW& s, unsigned long iVal)
 	{ return s.Writef("%lu", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, int64 iVal)
+const ZStrimW& operator<<(const ZStrimW& s, __int64 iVal)
 	{ return s.Writef("%lld", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, uint64 iVal)
+const ZStrimW& operator<<(const ZStrimW& s, __uint64 iVal)
 	{ return s.Writef("%llu", iVal); }
 
 const ZStrimW& operator<<(const ZStrimW& s, float iVal)

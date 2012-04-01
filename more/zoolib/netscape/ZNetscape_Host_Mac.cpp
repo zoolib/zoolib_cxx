@@ -616,7 +616,7 @@ Host_HIViewRef::~Host_HIViewRef()
 	}
 
 void Host_HIViewRef::Host_InvalidateRect(NPP npp, NPRect* rect)
-	{ ::HIViewSetNeedsDisplayInRect(fHIViewRef, sConstPtr& sRect<CGRect>(*rect), true); }
+	{ ::HIViewSetNeedsDisplayInRect(fHIViewRef, ConstPtr& sRect<CGRect>(*rect), true); }
 
 void Host_HIViewRef::PostCreateAndLoad()
 	{
@@ -818,7 +818,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 						newFrame = sRect(WH(newFrame));
 
 					::HIViewSetNeedsDisplayInRect
-						(fHIViewRef, sConstPtr& sRect<CGRect>(newFrame), true);
+						(fHIViewRef, ConstPtr& sRect<CGRect>(newFrame), true);
 
 					newFrame = this->pApplyInsets(newFrame);
 
