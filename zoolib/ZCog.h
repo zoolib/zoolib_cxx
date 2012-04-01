@@ -213,11 +213,11 @@ bool sCallAndUpdatePendingCog_StillPending(Cog& ioCog, const typename Cog::Param
 
 template <class Cog>
 bool sCallAndUpdatePendingCog_Changed(Cog& ioCog, const typename Cog::Param iParam)
-	{ return sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
+	{ return sCompareSet(ioCog, ioCog->Call(ioCog, iParam)); }
 
 template <class Cog>
 bool sCallAndUpdatePendingCog_Unchanged(Cog& ioCog, const typename Cog::Param iParam)
-	{ return not sCompareAndSet(ioCog, ioCog->Call(ioCog, iParam)); }
+	{ return not sCompareSet(ioCog, ioCog->Call(ioCog, iParam)); }
 
 template <class Cog>
 bool sCallAndUpdateCog_Changed(Cog& ioCog, const typename Cog::Param iParam)

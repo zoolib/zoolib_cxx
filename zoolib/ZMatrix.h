@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZTypes.h" // For null
 
 namespace ZooLib {
 
