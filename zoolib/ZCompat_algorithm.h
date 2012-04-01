@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if !defined(__MWERKS__) && defined(_MSC_VER) && (_MSC_VER < 1200)
 	#include <algorithm.h>
 #else
-	#include <algorithm>
+	#include <algorithm> // For std::min, std::max and std::swap
 #endif
 
 namespace ZooLib {
@@ -53,6 +53,19 @@ inline S sGetSet(S& ioLoc, S iVal)
 	{
 	std::swap(iVal, ioLoc);
 	return iVal;
+	}
+
+// =================================================================================================
+// MARK: - sCompareSet
+
+template <class T, class S>
+bool sCompareSet(T& out, const S& in)
+	{
+	if (out == in)
+		return false;
+
+	out = in;
+	return true;
 	}
 
 // =================================================================================================

@@ -98,6 +98,19 @@ inline int sCompareIterators_T
 		}
 	}
 
+// =================================================================================================
+// MARK: - sCompare_T specialized for void pointers
+
+typedef void* VoidStar_t;
+
+template <> inline int sCompare_T(const VoidStar_t& iL, const VoidStar_t& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
+typedef const void* ConstVoidStar_t;
+
+template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar_t& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
 } // namespace ZooLib
 
 #endif // __ZCompare_T_h__

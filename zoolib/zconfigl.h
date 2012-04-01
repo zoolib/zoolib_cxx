@@ -261,10 +261,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// inherits 'XXX' via dominance
 	#pragma warning(disable:4250)
 
-#else
-
-	typedef wchar_t __wchar_t;
-
 #endif
 
 // =================================================================================================
@@ -290,7 +286,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	#else
 
-		const class nullptr_t
+		const class
 			{
 			void operator&() const;
 		public:
@@ -302,91 +298,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #elif not defined(nullptr)
 	#define nullptr 0
-#endif
-
-// =================================================================================================
-// null is a marker value, used in places where we're wanting to be explicit about returning an
-// empty value of some sort, but where we don't want to have to manually create the value each time.
-
-#ifdef __cplusplus
-
-	namespace ZooLib {
-
-	const class notnull_t {} notnull = {};
-
-	const struct null_t
-		{
-		const notnull_t operator!() const { return notnull; }
-		} null = {};
-
-	} // namespace ZooLib
-
-#endif
-
-// =================================================================================================
-
-#ifdef __cplusplus
-
-	namespace ZooLib {
-
-	template <class T>
-	T* NonConst(const T* iT) { return const_cast<T*>(iT); }
-
-	template <class T>
-	T* NonConst(T* iT) { return iT; }
-
-	template <class T>
-	T& NonConst(const T& iT) { return const_cast<T&>(iT); }
-
-	template <class T>
-	T& NonConst(T& iT) { return iT; }
-
-	template <class P, class T>
-	P* DynNonConst(const T* iT) { return dynamic_cast<P*>(NonConst(iT)); }
-
-	template <class P, class T>
-	P* DynNonConst(T* iT) { return dynamic_cast<P*>(iT); }
-
-	template <class P, class T>
-	P& DynNonConst(const T& iT) { return dynamic_cast<P&>(NonConst(iT)); }
-
-	template <class P, class T>
-	P& DynNonConst(T& iT) { return dynamic_cast<P&>(iT); }
-
-	} // namespace ZooLib
-
-#endif
-
-// =================================================================================================
-
-#ifdef __cplusplus
-
-	namespace ZooLib {
-
-	const struct
-		{
-		template <class T>
-		class Holder
-			{
-		public:
-			Holder(const T& iT) : fT(iT) {}
-
-			operator const T*() const { return &fT; }
-
-		private:
-			const T fT;
-			};
-
-		template <class T>
-		Holder<T> operator()(const T& iT) const { return Holder<T>(iT); }
-
-		template <class T>
-		Holder<T> operator&(const T& iT) const { return Holder<T>(iT); }
-
-		} sConstPtr = {};
-
-	} // namespace ZooLib
-
 #endif
 
 // =================================================================================================

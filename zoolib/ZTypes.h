@@ -24,24 +24,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZStdInt.h"
 #include "zoolib/ZUnicodeCU.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-
-// Use the ZFourCC inline if possible.
-inline uint32 ZFourCC(uint8 a, uint8 b, uint8 c, uint8 d)
-	{ return uint32((a << 24) | (b << 16) | (c << 8) | d); }
-
-// And the macro if a compile-time constant is needed (case statements).
-#define ZFOURCC(a,b,c,d) \
-	((uint32)((((uint8)a) << 24) | (((uint8)b) << 16) | (((uint8)c) << 8) | (((uint8)d))))
-
-// =================================================================================================
-
 // There are several places where we need a buffer for some other code
 // to dump data into, the content of which we don't care about. Rather
 // than having multiple static buffers, or requiring wasteful use of
@@ -52,7 +40,6 @@ inline uint32 ZFourCC(uint8 a, uint8 b, uint8 c, uint8 d)
 extern char sGarbageBuffer[4096];
 
 // =================================================================================================
-
 // In many places we need a stack-based buffer. Ideally they'd be quite large
 // but on MacOS 9 we don't want to blow the 24K - 32K that's normally available.
 // This constant is 4096 on most platforms, 256 on MacOS 9.
@@ -64,15 +51,108 @@ extern char sGarbageBuffer[4096];
 #endif
 
 // =================================================================================================
+
+// Use the ZFourCC inline if possible.
+inline uint32 ZFourCC(uint8 a, uint8 b, uint8 c, uint8 d)
+	{ return uint32((a << 24) | (b << 16) | (c << 8) | d); }
+
+// And the macro if a compile-time constant is needed (case statements).
+#ifndef ZFOURCC
+	#define ZFOURCC(a,b,c,d) \
+		((uint32)((((uint8)a) << 24) | (((uint8)b) << 16) | (((uint8)c) << 8) | (((uint8)d))))
+#endif
+
+// =================================================================================================
 // For a discussion of the implementation of countof See section 14.3 of
 // "Imperfect C++" by Matthew Wilson, published by Addison Wesley.
 
 template <class T, int N>
 uint8 (&byte_array_of_same_dimension_as(T(&)[N]))[N];
 
-#define countof(x) sizeof(ZooLib::byte_array_of_same_dimension_as((x)))
+#ifndef countof
+	#define countof(x) sizeof(ZooLib::byte_array_of_same_dimension_as((x)))
+#endif
 
 // =================================================================================================
+// null is a marker value, used in places where we're wanting to be explicit about returning an
+// empty value of some sort, but where we don't want to have to manually create the value each time.
+
+const class notnull_t {} notnull = {};
+
+const struct null_t
+	{
+	const notnull_t operator!() const { return notnull; }
+	} null = {};
+
+
+// =================================================================================================
+// IKnowWhatIAmDoing is also a marker value, used in a few places generally to distinguish
+// private ctors that would otherwise be identical.
+
+const struct IKnowWhatIAmDoing_t {} IKnowWhatIAmDoing = {};
+
+// =================================================================================================
+// Assuming 'const type* ptr;' NonConst(ptr) is a terser form of const_cast<type*>(ptr).
+
+template <class T>
+T* NonConst(const T* iT) { return const_cast<T*>(iT); }
+
+template <class T>
+T* NonConst(T* iT) { return iT; }
+
+// =================================================================================================
+// Assuming 'const type& ref;' NonConst(ref) is a terser form of const_cast<type&>(ref).
+
+template <class T>
+T& NonConst(const T& iT) { return const_cast<T&>(iT); }
+
+template <class T>
+T& NonConst(T& iT) { return iT; }
+
+// =================================================================================================
+// The DynNonConst template functions combine const and dynamic casts into a single invocation.
+
+template <class P, class T>
+P* DynNonConst(const T* iT) { return dynamic_cast<P*>(NonConst(iT)); }
+
+template <class P, class T>
+P* DynNonConst(T* iT) { return dynamic_cast<P*>(iT); }
+
+template <class P, class T>
+P& DynNonConst(const T& iT) { return dynamic_cast<P&>(NonConst(iT)); }
+
+template <class P, class T>
+P& DynNonConst(T& iT) { return dynamic_cast<P&>(iT); }
+
+// =================================================================================================
+// 'ConstPtr(rvalue)' or 'ConstPtr& rvalue' can be used where a const pointer parameter is
+// required, removing the need for a local variable in some cases.
+
+const struct
+	{
+	template <class T>
+	class Holder
+		{
+	public:
+		Holder(const T& iT) : fT(iT) {}
+
+		operator const T*() const { return &fT; }
+
+	private:
+		const T fT;
+		};
+
+	template <class T>
+	Holder<T> operator()(const T& iT) const { return Holder<T>(iT); }
+
+	template <class T>
+	Holder<T> operator&(const T& iT) const { return Holder<T>(iT); }
+
+	} ConstPtr = {};
+
+// =================================================================================================
+// Adopt_T<type> or Adopt_T<type*> indicates to a ZRef (mainly) that it should
+// take ownership of the pointed-to refcounted entity.
 
 template <class T>
 class Adopt_T
@@ -94,8 +174,9 @@ private:
 	T* fP;
 	};
 
-// Adopt functor.
-// operator& lets you use sAdopt& as a pseudo prefix operator.
+// =================================================================================================
+// 'Adopt(pointer)' or 'Adopt& pointer' returns an Adopt_T<pointee>.
+
 const struct
 	{
 	template <class T>
@@ -103,35 +184,7 @@ const struct
 
 	template <class T>
 	Adopt_T<T> operator&(T iT) const { return Adopt_T<T>(iT); }
-	} Adopt = {}, sAdopt = {};
-
-// =================================================================================================
-
-template <class T, class S>
-bool sCompareAndSet(T& out, const S& in)
-	{
-	if (out == in)
-		return false;
-
-	out = in;
-	return true;
-	}
-
-// =================================================================================================
-
-typedef void* VoidStar_t;
-
-template <> inline int sCompare_T(const VoidStar_t& iL, const VoidStar_t& iR)
-	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
-
-typedef const void* ConstVoidStar_t;
-
-template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar_t& iR)
-	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
-
-// =================================================================================================
-
-const class IKnowWhatIAmDoing_t {} IKnowWhatIAmDoing = {};
+	} Adopt = {};
 
 } // namespace ZooLib
 
