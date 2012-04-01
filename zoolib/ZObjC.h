@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZObjC_h__
 #define __ZObjC_h__ 1
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
 #ifdef __OBJC__
 	#include <objc/objc.h>
@@ -33,28 +32,5 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	typedef id (*IMP)(id, SEL, ...);
 	#define ZMACRO_ObjCClass(p) typedef struct objc_##p p
 #endif
-
-#if ZCONFIG_SPI_Enabled(Cocoa) && __cplusplus
-
-ZMACRO_ObjCClass(NSAutoreleasePool);
-
-namespace ZooLib {
-
-// =================================================================================================
-// MARK: - ZAutoreleasePool
-
-class ZAutoreleasePool
-	{
-public:
-	ZAutoreleasePool();
-	~ZAutoreleasePool();
-
-private:
-	NSAutoreleasePool* fPool;
-	};
-
-} // namespace ZooLib
-
-#endif // ZCONFIG_SPI_Enabled(Cocoa) && __cplusplus
 
 #endif // __ZObjC_h__

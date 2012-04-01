@@ -31,10 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
-#if __OBJC__
-	@class NSString;
-#endif
-
 namespace ZooLib {
 
 // =================================================================================================
@@ -47,9 +43,7 @@ public:
 
 	ZObserver(void* iObject, const std::string& iName, ZRef<Callable> iCallable);
 	ZObserver(void* iObject, CFStringRef iName, ZRef<Callable> iCallable);
-	#if __OBJC__
-		ZObserver(void* iObject, NSString* iName, ZRef<Callable> iCallable);
-	#endif
+
 	virtual ~ZObserver();
 
 // From ZCounted
@@ -61,9 +55,6 @@ public:
 
 	std::string GetName();
 	CFStringRef GetName_CFStringRef();
-	#if __OBJC__
-		NSString* GetName_NSString();
-	#endif
 
 private:
 	static void spCallback(CFNotificationCenterRef center,

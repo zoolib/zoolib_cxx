@@ -41,12 +41,6 @@ ZObserver::ZObserver(void* iObject, CFStringRef iName, ZRef<Callable> iCallable)
 ,	fCallable(iCallable)
 	{}
 
-ZObserver::ZObserver(void* iObject, NSString* iName, ZRef<Callable> iCallable)
-:	fObject(iObject)
-,	fName_CFStringRef((CFStringRef)iName)
-,	fCallable(iCallable)
-	{}
-
 ZObserver::~ZObserver()
 	{}
 
@@ -86,9 +80,6 @@ CFStringRef ZObserver::GetName_CFStringRef()
 		fName_CFStringRef = ZUtil_CF::sString(fName_String.Get());
 	return fName_CFStringRef;
 	}
-
-NSString* ZObserver::GetName_NSString()
-	{ return (NSString*)this->GetName_CFStringRef(); }
 
 void ZObserver::spCallback(CFNotificationCenterRef center,
 	void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
