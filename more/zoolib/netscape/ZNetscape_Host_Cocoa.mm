@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZRGBA.h"
+#include "zoolib/ZSingleton.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZWorker.h"
 
@@ -181,7 +182,8 @@ Host_Cocoa::Host_Cocoa(ZRef<GuestFactory> iGuestFactory, NSView_NetscapeHost* iV
 	if (fView)
 		fView->fHost = this;
 
-	ZCallScheduler::sGet()->NextCallIn(50e-3, ZCaller_CFRunLoop::sMain(), fCallable_Timer);
+	ZSingleton<ZCallScheduler>::sGet().NextCallIn
+		(50e-3, ZCaller_CFRunLoop::sMain(), fCallable_Timer);
 
 //	fNPWindow.type = NPWindowTypeWindow;
 	fNPWindow.type = NPWindowTypeDrawable;//NPWindowTypeWindow;
@@ -411,7 +413,8 @@ void Host_Cocoa::Timer()
 	if (fCallable_Timer)
 		{
 		Host_Std::DeliverData();
-		ZCallScheduler::sGet()->NextCallIn(50e-3, ZCaller_CFRunLoop::sMain(), fCallable_Timer);
+		ZSingleton<ZCallScheduler>::sGet().NextCallIn
+			(50e-3, ZCaller_CFRunLoop::sMain(), fCallable_Timer);
 		}
 	}
 

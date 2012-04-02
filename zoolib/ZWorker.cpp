@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallScheduler.h"
+#include "zoolib/ZSingleton.h"
 #include "zoolib/ZWorker.h"
 
 namespace ZooLib {
@@ -108,7 +109,7 @@ ZQ<void> ZWorker::QCall()
 				{
 				if (fNextWake <= ZTime::sSystem())
 					continue;
-				ZCallScheduler::sGet()->NextCallAt(fNextWake, fCaller, this);
+				ZSingleton<ZCallScheduler>::sGet().NextCallAt(fNextWake, fCaller, this);
 				}
 			return notnull;
 			}
@@ -147,7 +148,7 @@ bool ZWorker::IsAwake()
 		if (fWorking)
 			return fNextWake <= ZTime::sSystem();
 		else
-			return ZCallScheduler::sGet()->IsAwake(fCaller, this);
+			return ZSingleton<ZCallScheduler>::sGet().IsAwake(fCaller, this);
 		}
 	return false;
 	}
@@ -196,7 +197,7 @@ void ZWorker::pWakeAt(ZTime iSystemTime)
 			}
 		else
 			{
-			ZCallScheduler::sGet()->NextCallAt(iSystemTime, fCaller, this);
+			ZSingleton<ZCallScheduler>::sGet().NextCallAt(iSystemTime, fCaller, this);
 			}
 		}
 	}

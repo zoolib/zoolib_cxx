@@ -37,7 +37,7 @@ class ZCallScheduler
 :	ZooLib::NonCopyable
 	{
 public:
-	static ZCallScheduler* sGet();
+	ZCallScheduler();
 
 	void Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
@@ -50,8 +50,6 @@ public:
 	bool IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
 private:
-	ZCallScheduler();
-
 	typedef std::pair<ZRef<ZCaller>,ZRef<ZCallable_Void> > Job;
 
 	void pNextCallAt(ZTime iSystemTime, const Job& iJob);

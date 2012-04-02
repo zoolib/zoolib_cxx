@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallScheduler.h"
-#include "zoolib/ZDeleter.h"
+#include "zoolib/ZSingleton.h"
 #include "zoolib/ZUtil_STL_set.h"
 
 namespace ZooLib {
@@ -27,25 +27,11 @@ namespace ZooLib {
 using std::set;
 
 // =================================================================================================
-// MARK: - Helpers
-
-static ZCallScheduler* spScheduler;
-
-static ZDeleter<ZCallScheduler> spDeleter(spScheduler);
-
-// =================================================================================================
 // MARK: - ZCallScheduler
 
-ZCallScheduler* ZCallScheduler::sGet()
-	{
-	if (not spScheduler)
-		{
-		ZCallScheduler* theScheduler = new ZCallScheduler;
-		if (not ZAtomic_CompareAndSwapPtr(&spScheduler, nullptr, theScheduler))
-			delete theScheduler;
-		}
-	return spScheduler;
-	}
+ZCallScheduler::ZCallScheduler()
+:	fThreadRunning(false)
+	{}
 
 void ZCallScheduler::Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
 	{
@@ -83,10 +69,6 @@ bool ZCallScheduler::IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_
 
 	return false;
 	}
-
-ZCallScheduler::ZCallScheduler()
-:	fThreadRunning(false)
-	{}
 
 void ZCallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 	{
