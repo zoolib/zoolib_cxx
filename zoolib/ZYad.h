@@ -371,6 +371,25 @@ public:
 
 ZRef<ZYadR> sYadR(const std::string& iVal);
 
+// =================================================================================================
+// MARK: - ZYadMapR_WithFirst
+
+class ZYadMapR_WithFirst
+:	public ZYadMapR
+	{
+public:
+	ZYadMapR_WithFirst(const ZRef<ZYadR>& iFirst, const std::string& iFirstName,
+		const ZRef<ZYadMapR>& iRemainder);
+
+// From ZYadMapR
+	virtual ZRef<ZYadR> ReadInc(std::string& oName);
+
+private:
+	ZRef<ZYadR> fFirst;
+	const std::string fFirstName;
+	const ZRef<ZYadMapR> fRemainder;
+	};
+
 } // namespace ZooLib
 
 #endif // __ZYad_h__

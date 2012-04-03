@@ -440,4 +440,24 @@ bool ZYadStrimmerU_String::IsSimple(const ZYadOptions& iOptions)
 ZRef<ZYadR> sYadR(const string& iVal)
 	{ return new ZYadStrimmerU_String(iVal); }
 
+// =================================================================================================
+// MARK: - ZYadMapR_WithFirst
+
+ZYadMapR_WithFirst::ZYadMapR_WithFirst(const ZRef<ZYadR>& iFirst, const std::string& iFirstName,
+	const ZRef<ZYadMapR>& iRemainder)
+:	fFirst(iFirst)
+,	fFirstName(iFirstName)
+,	fRemainder(iRemainder)
+	{}
+
+ZRef<ZYadR> ZYadMapR_WithFirst::ReadInc(string8& oName)
+	{
+	if (fFirst)
+		{
+		oName = fFirstName;
+		return sGetSet(fFirst, ZRef<ZYadR>());
+		}
+	return fRemainder->ReadInc(oName);
+	}
+
 } // namespace ZooLib
