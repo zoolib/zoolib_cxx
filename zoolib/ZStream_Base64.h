@@ -22,96 +22,82 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStream_Base64_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZQ.h"
 #include "zoolib/ZStream.h"
 
 namespace ZooLib {
+namespace Base64 {
 
-// =================================================================================================
-// MARK: - ZStreamR_Base64Encode
-
-/** A read filter stream that converts data from the source stream into base64 data on the fly. */
-
-class ZStreamR_Base64Encode : public ZStreamR
+struct Decode
 	{
-public:
-	ZStreamR_Base64Encode(const ZStreamR& iStreamSource);
-	~ZStreamR_Base64Encode();
-
-// From ZStreamR
-	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
-
-protected:
-	const ZStreamR& fStreamSource;
-	uint8 fSinkBuf[4];
-	size_t fSinkCount;
+	uint8 fTable[256];
 	};
 
+struct Encode
+	{
+	uint8 fTable[64];
+	uint8 fPadding;
+	};
+
+Decode sDecode_Normal();
+Encode sEncode_Normal();
+
+Decode sDecode(uint8 i62, uint8 i63);
+Encode sEncode(uint8 i62, uint8 i63, uint8 iPadding);
+
 // =================================================================================================
-// MARK: - ZStreamR_Base64Decode
+// MARK: - StreamR_Decode
 
 /** A read filter stream that converts base64 data from
 the source stream into binary data on the fly.*/
 
-class ZStreamR_Base64Decode : public ZStreamR
+class StreamR_Decode : public ZStreamR
 	{
 public:
-	ZStreamR_Base64Decode(const ZStreamR& iStreamSource);
-	~ZStreamR_Base64Decode();
+	StreamR_Decode(const ZStreamR& iStreamSource);
+	StreamR_Decode(const Decode& iDecode, const ZStreamR& iStreamSource);
+	~StreamR_Decode();
 
 // From ZStreamR
 	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 protected:
+	const Decode fDecode;
 	const ZStreamR& fStreamSource;
 	uint8 fSinkBuf[3];
 	size_t fSinkCount;
 	};
 
 // =================================================================================================
-// MARK: - ZStreamW_Base64Encode
+// MARK: - StreamW_Encode
 
 /** A write filter stream that writes to the destination stream the base64
 equivalent of binary data written to it. */
 
-class ZStreamW_Base64Encode : public ZStreamW
+class StreamW_Encode : public ZStreamW
 	{
 public:
-	ZStreamW_Base64Encode(const ZStreamW& iStreamSink);
-	~ZStreamW_Base64Encode();
+	StreamW_Encode(const ZStreamW& iStreamSink);
+	StreamW_Encode(const Encode& iEncode, const ZStreamW& iStreamSink);
+	~StreamW_Encode();
 
 // From ZStreamW
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
 	virtual void Imp_Flush();
 
 protected:
+	const Encode fEncode;
 	const ZStreamW& fStreamSink;
 	uint8 fSourceBuf[3];
 	size_t fSourceCount;
 	};
 
 // =================================================================================================
-// MARK: - ZStreamW_Base64Decode
 
-/*** A write filter stream that writes to the destination stream the binary
-equivalent of base64 data written to it. */
+} // namespace Base64
 
-class ZStreamW_Base64Decode : public ZStreamW
-	{
-public:
-	ZStreamW_Base64Decode(const ZStreamW& iStreamSink);
-	~ZStreamW_Base64Decode();
-
-// From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_Flush();
-
-protected:
-	const ZStreamW& fStreamSink;
-	uint32 fSource;
-	size_t fSourceCount;
-	};
-
-// =================================================================================================
+typedef Base64::StreamR_Decode ZStreamR_Base64Decode;
+typedef Base64::StreamW_Encode ZStreamW_Base64Encode;
 
 } // namespace ZooLib
 
