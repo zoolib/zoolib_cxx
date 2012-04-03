@@ -46,7 +46,7 @@ void ZStreamR_ASCIIStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 			if (countCURead == 0)
 				break;
 
-			// Trasncribe only ASCII code units/points.
+			// Transcribe only ASCII code units/points.
 			for (UTF8* readFrom = &buffer[0], *destEnd = &buffer[countCURead];
 				readFrom < destEnd; ++readFrom)
 				{
