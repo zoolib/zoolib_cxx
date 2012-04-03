@@ -274,7 +274,17 @@ static ZRef<ZYadR> spMakeYadR_JSON
 		}
 	else if (iRO->Get().fAllowBinary.DGet(false) && sTryRead_CP(theStrimU, '('))
 		{
-		return new YadStreamerR(iStrimmerU);
+		sSkip_WSAndCPlusPlusComments(theStrimU);
+		if (sTryRead_CP(theStrimU, '='))
+			{
+			// It's Base64
+			return new YadStreamerR_Base64(Base64::sDecode_Normal(), iStrimmerU);
+			}
+		else
+			{
+			// It's Hex
+			return new YadStreamerR_Hex(iStrimmerU);
+			}
 		}
 	else
 		{
@@ -307,17 +317,16 @@ ReadOptions sReadOptions_Extended()
 
 WriteOptions::WriteOptions()
 :	ZYadOptions()
-,	fUseExtendedNotation(false)
 	{}
 
 WriteOptions::WriteOptions(const ZYadOptions& iOther)
 :	ZYadOptions(iOther)
-,	fUseExtendedNotation(false)
 	{}
 
 WriteOptions::WriteOptions(const WriteOptions& iOther)
 :	ZYadOptions(iOther)
 ,	fUseExtendedNotation(iOther.fUseExtendedNotation)
+,	fBinaryAsBase64(iOther.fBinaryAsBase64)
 	{}
 
 // =================================================================================================
@@ -332,14 +341,14 @@ ParseException::ParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-// MARK: - YadStreamerR
+// MARK: - YadStreamerR_Hex
 
-YadStreamerR::YadStreamerR(ZRef<ZStrimmerU> iStrimmerU)
+YadStreamerR_Hex::YadStreamerR_Hex(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 ,	fStreamR(iStrimmerU->GetStrimU())
 	{}
 
-void YadStreamerR::Finish()
+void YadStreamerR_Hex::Finish()
 	{
 	using namespace ZUtil_Strim;
 	fStreamR.SkipAll();
@@ -347,7 +356,28 @@ void YadStreamerR::Finish()
 		spThrowParseException("Expected ')' to close a binary data");	
 	}
 
-const ZStreamR& YadStreamerR::GetStreamR()
+const ZStreamR& YadStreamerR_Hex::GetStreamR()
+	{ return fStreamR; }
+
+// =================================================================================================
+// MARK: - YadStreamerR_Base64
+
+YadStreamerR_Base64::YadStreamerR_Base64(const Base64::Decode& iDecode, ZRef<ZStrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU)
+,	fStreamR_ASCIIStrim(iStrimmerU->GetStrimU())
+,	fStreamR_Boundary(")", fStreamR_ASCIIStrim)
+,	fStreamR(fStreamR_Boundary)
+	{}
+
+void YadStreamerR_Base64::Finish()
+	{
+	using namespace ZUtil_Strim;
+	fStreamR.SkipAll();
+	if (not fStreamR_Boundary.HitBoundary())
+		spThrowParseException("Expected ')' to close a binary data");	
+	}
+
+const ZStreamR& YadStreamerR_Base64::GetStreamR()
 	{ return fStreamR; }
 
 // =================================================================================================
@@ -701,7 +731,17 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 static void spToStrim_Stream(const ZStrimW& s, const ZStreamR& iStreamR,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF)
 	{
-	if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
+	if (iOptions.fBinaryAsBase64.DGet(false))
+		{
+		s.Write("(");
+		s.Write("=");
+		
+		Base64::StreamW_Encode(Base64::sEncode_Normal(), ZStreamW_ASCIIStrim(s))
+			.CopyAllFrom(iStreamR);
+
+		s.Write(")");
+		}
+	else if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
 		{
 		spToStrim_Stream(s, *theStreamRPos, iLevel, iOptions, iMayNeedInitialLF);
 		}

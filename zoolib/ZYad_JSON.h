@@ -23,6 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCountedVal.h"
+#include "zoolib/ZStream_ASCIIStrim.h"
+#include "zoolib/ZStream_Base64.h"
+#include "zoolib/ZStreamR_Boundary.h"
 #include "zoolib/ZStreamR_HexStrim.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Escaped.h"
@@ -56,6 +59,7 @@ struct WriteOptions : ZYadOptions
 	WriteOptions(const WriteOptions& iOther);
 
 	ZQ<bool> fUseExtendedNotation;
+	ZQ<bool> fBinaryAsBase64;
 	};
 
 // =================================================================================================
@@ -69,13 +73,13 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - YadStreamerR
+// MARK: - YadStreamerR_Hex
 
-class YadStreamerR
+class YadStreamerR_Hex
 :	public ZYadStreamerR
 	{
 public:
-	YadStreamerR(ZRef<ZStrimmerU> iStrimmerU);
+	YadStreamerR_Hex(ZRef<ZStrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
@@ -86,6 +90,28 @@ public:
 private:
 	ZRef<ZStrimmerU> fStrimmerU;
 	ZStreamR_HexStrim fStreamR;
+	};
+
+// =================================================================================================
+// MARK: - YadStreamerR_Base64
+
+class YadStreamerR_Base64
+:	public ZYadStreamerR
+	{
+public:
+	YadStreamerR_Base64(const Base64::Decode& iDecode, ZRef<ZStrimmerU> iStrimmerU);
+
+// From ZYadR
+	virtual void Finish();
+
+// From ZStreamerR via ZYadStreamerR
+	const ZStreamR& GetStreamR();
+
+private:
+	ZRef<ZStrimmerU> fStrimmerU;
+	ZStreamR_ASCIIStrim fStreamR_ASCIIStrim;
+	ZStreamR_Boundary fStreamR_Boundary;
+	Base64::StreamR_Decode fStreamR;
 	};
 
 // =================================================================================================
