@@ -26,15 +26,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Just assume GCC for now.
 #define ZMACRO_decltype(expr) __typeof__(expr)
-#define ZMACRO_auto(name,expr) ZMACRO_decltype(expr) name(expr)
-#define ZMACRO_auto_(name,expr) ZMACRO_decltype(expr) name = (expr)
 
 #elif _MSC_VER >= 1600
 
 // Visual C++ 2010
 #define ZMACRO_decltype(expr) decltype(expr)
-#define ZMACRO_auto(name,expr) auto name(expr)
-#define ZMACRO_auto_(name,expr) auto name=(expr)
 
 
 #elif _MSC_VER >= 1400
@@ -139,9 +135,6 @@ typename sized<type_id(const volatile T)> VarTypeID(const volatile T&);
 
 #define ZMACRO_decltype(expr)\
     ZooLib::MACRO_decltype::CTypeRegRoot<var_type_id(expression)>::id2type::Type
-
-#define ZMACRO_auto(name,expr) ZMACRO_decltype(expr) name(expr)
-#define ZMACRO_auto_(name,expr) ZMACRO_decltype(expr) name = (expr)
 
 #endif // _MSV_VER
 

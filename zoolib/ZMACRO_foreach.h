@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMACRO_foreach_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZMACRO_auto.h"
 #include "zoolib/ZMACRO_decltype.h"
 
 // =================================================================================================
