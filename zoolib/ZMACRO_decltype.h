@@ -18,16 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMACRO_typeof_h__
-#define __ZMACRO_typeof_h__ 1
+#ifndef __ZMACRO_decltype_h__
+#define __ZMACRO_decltype_h__ 1
+#include "zconfig.h"
 
 #if not defined(_MSC_VER)
+
+// Just assume GCC for now.
+#define ZMACRO_decltype(expr) __typeof__(expr)
+#define ZMACRO_auto(name,expr) ZMACRO_typeof(expr) name(expr)
+#define ZMACRO_auto_(name,expr) ZMACRO_typeof(expr) name = (expr)
 
 #elif _MSC_VER >= 1600
 
 // Visual C++ 2010
-#define ZMACRO_typeof(expr) __typeof(expr)
-#define ZMACRO_typedef(typename,expr) typedef ZMACRO_typeof(expr) typename
+#define ZMACRO_decltype(expr) decltype(expr)
 #define ZMACRO_auto(name,expr) auto name(expr)
 #define ZMACRO_auto_(name,expr) auto name=(expr)
 
@@ -57,7 +62,7 @@ Written by Igor Chesnokov
 // 3) type_of(expression)
 
 namespace ZooLib {
-namespace MACRO_auto {
+namespace MACRO_decltype {
 
 // IMPLEMENTATION
 template<int ID>
@@ -129,16 +134,15 @@ typename sized<type_id(volatile  T)> VarTypeID(volatile T&);
 template<typename T>
 typename sized<type_id(const volatile T)> VarTypeID(const volatile T&);
 
-} // namespace MACRO_auto
+} // namespace MACRO_decltype
 } // namespace ZooLib
 
-#define ZMACRO_typeof(expr)\
-    ZooLib::MACRO_auto::CTypeRegRoot<var_type_id(expression)>::id2type::Type
+#define ZMACRO_decltype(expr)\
+    ZooLib::MACRO_decltype::CTypeRegRoot<var_type_id(expression)>::id2type::Type
 
-#define ZMACRO_typedef(typename,expr) typedef ZMACRO_typeof(expr) typename
-#define ZMACRO_auto(name,expr) ZMACRO_typeof(expr) name(expr)
-#define ZMACRO_auto_(name,expr) ZMACRO_typeof(expr) name = (expr)
+#define ZMACRO_auto(name,expr) ZMACRO_decltype(expr) name(expr)
+#define ZMACRO_auto_(name,expr) ZMACRO_decltype(expr) name = (expr)
 
 #endif // _MSV_VER
 
-#endif // __ZMACRO_typeof_h__
+#endif // __ZMACRO_decltype_h__

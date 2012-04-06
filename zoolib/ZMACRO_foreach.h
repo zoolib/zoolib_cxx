@@ -22,13 +22,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMACRO_foreach_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZMACRO_decltype.h"
+
 // =================================================================================================
 // MARK: - ZMACRO_foreachi
 
 #ifdef ZMACRO_foreachi
+#elif 0
+	#define ZMACRO_foreachi(iter, cont) \
+		for (ZMACRO_auto_(iter,(cont).begin()), \
+			foreach_end = (cont).end(); \
+			iter != foreach_end; ++iter)
 #elif 1
 	#define ZMACRO_foreachi(iter, cont) \
-		for (ZMACRO_typeof((cont).begin()) iter = (cont).begin(), \
+		for (ZMACRO_auto_(iter,(cont).begin()), \
 			ZMACRO_Concat(foreach_end,__LINE__) = (cont).end(); \
 			iter != ZMACRO_Concat(foreach_end,__LINE__); ++iter)
 #endif
@@ -63,14 +70,14 @@ public:
 #elif 0
 	// Terse version without line number suffix on local wrapper.
 	#define ZMACRO_foreachv(vardecl, cont) \
-		for (ZooLib::ZWrapper_foreachv_T<ZMACRO_typeof(cont)> wrap(cont); \
+		for (ZooLib::ZWrapper_foreachv_T<ZMACRO_decltype(cont)> wrap(cont); \
 			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
 			++wrap.fIter, ++wrap.fMismatch) \
 			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
 
 #elif 1
 	#define ZMACRO_foreachv(VarDeclaration, Container) \
-		for (ZooLib::ZWrapper_foreachv_T<ZMACRO_typeof(Container)> \
+		for (ZooLib::ZWrapper_foreachv_T<ZMACRO_decltype(Container)> \
 			ZMACRO_Concat(Wrapper_foreachv,__LINE__)(Container); \
 			not ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch \
 			&& ZMACRO_Concat(Wrapper_foreachv,__LINE__).fIter \

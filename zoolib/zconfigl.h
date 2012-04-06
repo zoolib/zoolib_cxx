@@ -335,18 +335,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 
-#if defined(_MSC_VER)
-	#include "zoolib/ZMACRO_typeof.h"
-#else
-	// Asssume GCC for now.
-	#define ZMACRO_typeof(expr) __typeof__(expr)
-	#define ZMACRO_typedef(typename,expr) typedef ZMACRO_typeof(expr) typename
-	#define ZMACRO_auto(name,expr) ZMACRO_typeof(expr) name(expr)
-	#define ZMACRO_auto_(name,expr) ZMACRO_typeof(expr) name = (expr)
-#endif
-
-// =================================================================================================
-
 #ifndef ZMACRO_Attribute_Format_Printf
 	#if ZCONFIG(Compiler,GCC)
 		#define ZMACRO_Attribute_Format_Printf(m,n) __attribute__((format(printf,m,n)))
