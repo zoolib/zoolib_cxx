@@ -26,8 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Just assume GCC for now.
 #define ZMACRO_decltype(expr) __typeof__(expr)
-#define ZMACRO_auto(name,expr) ZMACRO_typeof(expr) name(expr)
-#define ZMACRO_auto_(name,expr) ZMACRO_typeof(expr) name = (expr)
+#define ZMACRO_auto(name,expr) ZMACRO_decltype(expr) name(expr)
+#define ZMACRO_auto_(name,expr) ZMACRO_decltype(expr) name = (expr)
 
 #elif _MSC_VER >= 1600
 
