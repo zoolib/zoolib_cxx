@@ -96,7 +96,7 @@ void ZStrimR_Boundary::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 					break;
 
 				// Shuffle existing code units to the beginning of the buffer.
-				ZMemMove(&fBuffer[0], &fBuffer[fEnd], (boundarySize - fEnd) * sizeof(UTF32));
+				ZMemMove(&fBuffer[0], &fBuffer[0] + fEnd, (boundarySize - fEnd) * sizeof(UTF32));
 
 				// And top up the tail.
 				size_t countRead;

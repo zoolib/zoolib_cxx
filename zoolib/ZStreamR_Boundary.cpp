@@ -81,7 +81,7 @@ void ZStreamR_Boundary::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 					break;
 
 				// Shuffle existing stuff to beginning of buffer.
-				ZMemMove(&fBuffer[0], &fBuffer[fDataEnd], boundarySize - fDataEnd);
+				ZMemMove(&fBuffer[0], &fBuffer[0] + fDataEnd, boundarySize - fDataEnd);
 
 				// Top up the tail.
 				size_t countRead;
