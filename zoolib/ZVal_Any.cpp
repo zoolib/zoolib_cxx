@@ -207,6 +207,17 @@ ZSeq_Any& ZSeq_Any::Append(const ZVal_Any& iVal)
 	return *this;
 	}
 
+ZVal_Any& ZSeq_Any::operator[](size_t iIndex)
+	{
+	this->pTouch();
+	if (iIndex >= fRep->fVector.size())
+		fRep->fVector.resize(iIndex + 1);
+	return fRep->fVector[iIndex];
+	}
+
+const ZVal_Any& ZSeq_Any::operator[](size_t iIndex) const
+	{ return this->Get(iIndex); }
+
 void ZSeq_Any::pTouch()
 	{
 	if (not fRep)

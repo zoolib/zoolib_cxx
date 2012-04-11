@@ -126,6 +126,9 @@ public:
 	bool operator<(const ZSeq_Any& r) const
 		{ return this->Compare(r) < 0; }
 
+	ZVal_Any& operator[](size_t iIndex);
+	const ZVal_Any& operator[](size_t iIndex) const;
+
 private:
 	void pTouch();
 
