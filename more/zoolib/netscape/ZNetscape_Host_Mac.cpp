@@ -447,7 +447,11 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 
 					Rect winFrameRect;
 					::GetWindowBounds(fWindowRef, kWindowGlobalPortRgn, &winFrameRect);
+
+					{
+					using namespace ZCartesian::Operators;
 					winFrameRect = sOffsetted(-LT(winFrameRect), winFrameRect);
+					}
 
 					if (ZLOGPF(s, eDebug + 1))
 						{
@@ -480,7 +484,10 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 						Rect structureRect;
 						::GetWindowBounds(fWindowRef, kWindowStructureRgn, &structureRect);
 
+						{
+						using namespace ZCartesian::Operators;
 						winFrameRect = sOffsetted(LT(contentRect) - LT(structureRect), winFrameRect);
+						}
 
 						this->DoSetWindow(winFrameRect);
 						this->DoEvent(updateEvt, (UInt32)fWindowRef);
