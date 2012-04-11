@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
+#include "zoolib/ZCallable_Bind.h"
+#include "zoolib/ZCallable_Function.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZThreadVal.h"
@@ -35,61 +37,80 @@ namespace ZWinWND {
 
 namespace { // anonymous
 
-ZRef<Callable> spGetCallable(HWND iHWND)
+class Callable_Fallback
+:	public Callable
 	{
-	DWORD windowProcessID;
-	::GetWindowThreadProcessId(iHWND, &windowProcessID);
+public:
+	Callable_Fallback(const ZRef<Callable>& i0, const ZRef<Callable>& i1)
+	:	f0(i0)
+	,	f1(i1)
+		{}
 
-	if (windowProcessID == ::GetCurrentProcessId())
-		return (Callable*)::GetPropW(iHWND, L"WinWND Callable");
+	virtual ZQ<ZQ<LRESULT> > QCall(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+		{
+		if (ZQ<LRESULT> theQ = f0->Call(iHWND, iMessage, iWPARAM, iLPARAM))
+			return theQ;
+		return f1->Call(iHWND, iMessage, iWPARAM, iLPARAM);
+		}
 
-	return null;
+	const ZRef<Callable> f0;
+	const ZRef<Callable> f1;
+	};
+
+ZRef<Callable> spCallable_WithFallback(const ZRef<Callable>& i0, const ZRef<Callable>& i1)
+	{
+	if (i0)
+		{
+		if (i1)
+			return new Callable_Fallback(i0, i1);
+		return i0;
+		}
+	return i1;
 	}
 
-WNDPROC spGetBasePROC(HWND iHWND)
-	{ return (WNDPROC)::GetPropW(iHWND, L"ZWinWND BasePROC"); }
-
-void spAttach(HWND iHWND, WNDPROC basePROC, ZRef<Callable> iCallable)
+class Callable_WithWNDPROC
+:	public Callable
 	{
-	::SetPropW(iHWND, L"ZWinWND BasePROC", basePROC);
+public:
+	Callable_WithWNDPROC(const ZRef<Callable>& iCallable, WNDPROC iProc)
+	:	fCallable(iCallable)
+	,	fProc(iProc)
+		{}
 
-	iCallable->Retain();
-	::SetPropW(iHWND, L"WinWND Callable", iCallable.Get());
-	}
+	virtual ZQ<ZQ<LRESULT> > QCall(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+		{
+		if (ZQ<LRESULT> theQ = fCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM))
+			return theQ;
+		return ::CallWindowProcW(fProc, iHWND, iMessage, iWPARAM, iLPARAM);
+		}
 
-struct CreateStruct
-	{
-	WNDPROC fWNDPROC;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
+	const WNDPROC fProc;
 	};
 
 LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
-	if (WNDPROC baseProc = spGetBasePROC(iHWND))
+	ZRef<Callable> theCallable = (Callable*)::GetPropW(iHWND, L"ZWinWND Callable");
+
+	if (not theCallable)
 		{
-		if (ZRef<Callable> theCallable = spGetCallable(iHWND))
-			{
-			if (iMessage == WM_NCDESTROY)
-				{
-				// Undo the Retain we did when we attached.
-				theCallable->Release();
-				}
-			return theCallable->Call(baseProc, iHWND, iMessage, iWPARAM, iLPARAM);
-			}
-		else
-			{
-			// Until we allow a callable to be detached we'll never get here.
-			return ::CallWindowProcW(baseProc, iHWND, iMessage, iWPARAM, iLPARAM);
-			}
-		}
-	else
-		{
-		// The very first message sent is WM_GETMINMAXINFO, *then* WM_NCCREATE.
+		// The very first message sent to a window is WM_GETMINMAXINFO.
 		ZAssert(iMessage == WM_GETMINMAXINFO);
-		const CreateStruct* theCS = ZThreadVal<const CreateStruct*>::sGet();
-		spAttach(iHWND, theCS->fWNDPROC, theCS->fCallable);
-		return theCS->fCallable->Call(theCS->fWNDPROC, iHWND, WM_NCCREATE, iWPARAM, iLPARAM);
+		theCallable =  ZThreadVal<ZRef<Callable> >::sGet();
+		theCallable->Retain();
+		::SetPropW(iHWND, L"ZWinWND Callable", theCallable.Get());
 		}
+
+	if (iMessage == WM_NCDESTROY)
+		{
+		// Undo the Retain we did when we attached.
+		theCallable->Release();
+		}
+
+	if (ZQ<LRESULT> theQ = theCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM))
+		return *theQ;
+
+	return 0;
 	}
 
 INT_PTR CALLBACK spDialogProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
@@ -116,7 +137,7 @@ INT_PTR CALLBACK spDialogProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 		return false;
 		}
 	}
-	
+
 } // anonymous namespace
 
 // =================================================================================================
@@ -192,9 +213,7 @@ HWND sCreate
 	WNDPROC iWNDPROC,
 	ZRef<Callable> iCallable)
 	{
-	const CreateStruct theCS = { iWNDPROC, iCallable };
-
-	ZThreadVal<const CreateStruct*> theCreateStructTV(&theCS);
+	ZThreadVal<ZRef<Callable> > theCallableTV = new Callable_WithWNDPROC(iCallable, iWNDPROC);
 
 	return ::CreateWindowExW
 		(dwExStyle,
@@ -236,12 +255,23 @@ bool sAttach(HWND iHWND, ZRef<Callable> iCallable)
 
 		if (windowProcessID == ::GetCurrentProcessId())
 			{
-			WNDPROC basePROC = (WNDPROC)(LPARAM)
+			WNDPROC priorWNDPROC = (WNDPROC)(LPARAM)
 				::SetWindowLongPtrW(iHWND, GWLP_WNDPROC, (LPARAM)spWindowProcW);
 
-			spAttach(iHWND, basePROC, iCallable);
+			ZRef<Callable> theCallable;
+			if (priorWNDPROC != spWindowProcW)
+				{
+				theCallable = new Callable_WithWNDPROC(iCallable, priorWNDPROC);
+				}
+			else
+				{
+				theCallable = (Callable*)::GetPropW(iHWND, L"ZWinWND Callable");
+				theCallable->Release();
+				theCallable = spCallable_WithFallback(iCallable, theCallable);
+				}
 
-			return true;
+			theCallable->Retain();
+			::SetPropW(iHWND, L"ZWinWND Callable", theCallable.Get());
 			}
 		}
 	return false;
@@ -256,7 +286,7 @@ bool sDoOneMessage()
 	::TranslateMessage(&theMSG);
 	::DispatchMessageW(&theMSG);
 
-	return true;	
+	return true;
 	}
 
 // =================================================================================================
@@ -300,7 +330,7 @@ bool sDoOneMessageForDialog(HWND iHWND)
 		::DispatchMessageW(&theMSG);
 		}
 
-	return true;	
+	return true;
 	}
 
 } // namespace ZWinWND

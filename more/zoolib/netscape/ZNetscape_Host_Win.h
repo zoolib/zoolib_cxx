@@ -51,7 +51,7 @@ public:
 	virtual void PaintBackground(HDC iHDC, const PAINTSTRUCT& iPS);
 
 protected:
-	LRESULT pWindowProc(WNDPROC iBaseProc, HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
+	ZQ<LRESULT> pWindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
 
 	void pPaint(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM);
 	void pStuffNPWindow(int iWidth, int iHeight);

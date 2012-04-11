@@ -82,8 +82,8 @@ bool ZCaller_WinMessageLoop::pTrigger()
 	return false;
 	}
 
-LRESULT ZCaller_WinMessageLoop::pWindowProc
-	(WNDPROC iWNDPROC, HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+ZQ<LRESULT> ZCaller_WinMessageLoop::pWindowProc
+	(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	if (iMessage == spGetMSG())
 		{
@@ -94,7 +94,7 @@ LRESULT ZCaller_WinMessageLoop::pWindowProc
 		{
 		fHWND = nullptr;
 		}
-	return CallWindowProcW(iWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
+	return null;
 	}
 
 } // namespace ZooLib

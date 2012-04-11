@@ -54,7 +54,7 @@ HWND sCreateDefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam);
 // =================================================================================================
 // MARK: - ZWinWND, Callable <--> Regular window
 
-typedef ZCallable<LRESULT(WNDPROC,HWND,UINT,WPARAM,LPARAM)> Callable;
+typedef ZCallable<ZQ<LRESULT>(HWND,UINT,WPARAM,LPARAM)> Callable;
 
 HWND sCreate
 	(DWORD dwExStyle,

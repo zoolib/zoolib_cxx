@@ -53,8 +53,7 @@ protected:
 	virtual bool pTrigger();
 
 private:
-	LRESULT pWindowProc
-		(WNDPROC iWNDPROC, HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
+	ZQ<LRESULT> pWindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
 
 	HWND fHWND;
 	};

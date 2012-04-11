@@ -137,7 +137,7 @@ void Host_Win::PostCreateAndLoad()
 void Host_Win::PaintBackground(HDC iHDC, const PAINTSTRUCT& iPS)
 	{}
 
-LRESULT Host_Win::pWindowProc(WNDPROC iBaseProc, HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+ZQ<LRESULT> Host_Win::pWindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	bool callPlugin = false;
 	bool callDefault = false;
@@ -235,7 +235,7 @@ LRESULT Host_Win::pWindowProc(WNDPROC iBaseProc, HWND iHWND, UINT iMessage, WPAR
 		}
 
 	if (callDefault)
-		return ::CallWindowProcW(iBaseProc, iHWND, iMessage, iWPARAM, iLPARAM);
+		return null;
 
 	return 0;
 	}
