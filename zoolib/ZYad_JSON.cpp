@@ -327,6 +327,7 @@ WriteOptions::WriteOptions(const WriteOptions& iOther)
 :	ZYadOptions(iOther)
 ,	fUseExtendedNotation(iOther.fUseExtendedNotation)
 ,	fBinaryAsBase64(iOther.fBinaryAsBase64)
+,	fPreferSingleQuotes(iOther.fPreferSingleQuotes)
 	{}
 
 // =================================================================================================
@@ -507,34 +508,46 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 // =================================================================================================
 // MARK: - Static writing functions
 
-static void spWriteIndent(const ZStrimW& iStrimW,
-	size_t iCount, const WriteOptions& iOptions)
+static void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ZStrimW& iStrimW)
 	{
 	while (iCount--)
 		iStrimW.Write(iOptions.fIndentString);
 	}
 
-static void spWriteLFIndent(const ZStrimW& iStrimW,
-	size_t iCount, const WriteOptions& iOptions)
+static void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ZStrimW& iStrimW)
 	{
 	iStrimW.Write(iOptions.fEOLString);
-	spWriteIndent(iStrimW, iCount, iOptions);
+	spWriteIndent(iCount, iOptions, iStrimW);
 	}
 
-static void spWriteString(const ZStrimW& s, const string& iString)
+static void spWriteString(const string& iString, bool iPreferSingleQuotes, const ZStrimW& s)
 	{
-	s.Write("\"");
-
 	ZStrimW_Escaped::Options theOptions;
-	theOptions.fQuoteQuotes = true;
 	theOptions.fEscapeHighUnicode = false;
 
-	ZStrimW_Escaped(theOptions, s).Write(iString);
+	if (iPreferSingleQuotes)
+		{
+		s.Write("'");
 
-	s.Write("\"");
+		theOptions.fQuoteQuotes = false;
+
+		ZStrimW_Escaped(theOptions, s).Write(iString);
+
+		s.Write("'");
+		}
+	else
+		{
+		s.Write("\"");
+
+		theOptions.fQuoteQuotes = true;
+
+		ZStrimW_Escaped(theOptions, s).Write(iString);
+
+		s.Write("\"");
+		}
 	}
 
-static void spWriteString(const ZStrimW& s, const ZStrimR& iStrimR)
+static void spWriteString(const ZStrimR& iStrimR, const ZStrimW& s)
 	{
 	s.Write("\"");
 
@@ -568,25 +581,15 @@ static bool spContainsProblemChars(const string& iString)
 	return false;
 	}
 
-static void spWritePropName(const ZStrimW& s, const string& iString)
+static void spWritePropName(const string& iString, bool iUseSingleQuotes, const ZStrimW& s)
 	{
-	ZStrimW_Escaped::Options theOptions;
-	theOptions.fQuoteQuotes = true;
-	theOptions.fEscapeHighUnicode = false;
-
 	if (spContainsProblemChars(iString))
-		{
-		s << "\"";
-		ZStrimW_Escaped(theOptions, s) << iString;
-		s << "\"";
-		}
+		spWriteString(iString, iUseSingleQuotes, s);
 	else
-		{
-		ZStrimW_Escaped(theOptions, s) << iString;
-		}
+		s << iString;
 	}
 
-static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
+static void spToStrim_SimpleValue(const ZAny& iAny, const ZStrimW& s)
 	{
 	if (false)
 		{}
@@ -623,8 +626,9 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		}
 	}
 
-static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
-	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF)
+static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
+	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	const ZStrimW& s)
 	{
 	uint64 theSize = iStreamRPos.GetSize();
 	if (theSize == 0)
@@ -637,7 +641,7 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 		if (iOptions.DoIndentation() && theSize > iOptions.fRawChunkSize)
 			{
 			if (iMayNeedInitialLF)
-				spWriteLFIndent(s, iLevel, iOptions);
+				spWriteLFIndent(iLevel, iOptions, s);
 
 			uint64 countRemaining = theSize;
 			if (iOptions.fRawSizeCap)
@@ -648,7 +652,7 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 			if (countRemaining < theSize)
 				s.Writef(" (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
 
-			spWriteLFIndent(s, iLevel, iOptions);
+			spWriteLFIndent(iLevel, iOptions, s);
 			if (iOptions.fRawAsASCII)
 				{
 				for (;;)
@@ -685,7 +689,7 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 						else
 							s.WriteCP(theChar);
 						}
-					spWriteLFIndent(s, iLevel, iOptions);
+					spWriteLFIndent(iLevel, iOptions, s);
 					}
 				}
 			else
@@ -697,7 +701,7 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 				ZStreamW_HexStrim(iOptions.fRawByteSeparator,
 					eol, iOptions.fRawChunkSize, s).CopyAllFrom(iStreamRPos);
 
-				spWriteLFIndent(s, iLevel, iOptions);
+				spWriteLFIndent(iLevel, iOptions, s);
 				}
 
 			s.Write(")");
@@ -728,28 +732,42 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 		}
 	}
 
-static void spToStrim_Stream(const ZStrimW& s, const ZStreamR& iStreamR,
-	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF)
+static void spToStrim_Stream(const ZStreamR& iStreamR,
+	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	const ZStrimW& s)
 	{
+	string chunkSeparator;
+	size_t chunkSize = 0;
+	if (iOptions.DoIndentation())
+		{
+		chunkSeparator = iOptions.fEOLString;
+		for (size_t x = 0; x < iLevel; ++x)
+			chunkSeparator += iOptions.fIndentString;
+
+		chunkSize = iOptions.fRawChunkSize;
+		}
+
 	if (iOptions.fBinaryAsBase64.DGet(false))
 		{
 		s.Write("(");
 		s.Write("=");
 		
-		Base64::StreamW_Encode(Base64::sEncode_Normal(), ZStreamW_ASCIIStrim(s))
+		Base64::StreamW_Encode
+			(Base64::sEncode_Normal(),
+			ZStreamW_ASCIIStrim(ZStrimW_InsertSeparator(chunkSize * 3, chunkSeparator, s)))
 			.CopyAllFrom(iStreamR);
 
 		s.Write(")");
 		}
 	else if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
 		{
-		spToStrim_Stream(s, *theStreamRPos, iLevel, iOptions, iMayNeedInitialLF);
+		spToStrim_Stream(*theStreamRPos, iLevel, iOptions, iMayNeedInitialLF, s);
 		}
 	else
 		{
 		s.Write("(");
 
-		ZStreamW_HexStrim(iOptions.fRawByteSeparator, string(), 0, s)
+		ZStreamW_HexStrim(iOptions.fRawByteSeparator, chunkSeparator, chunkSize, s)
 			.CopyAllFrom(iStreamR);
 
 		s.Write(")");
@@ -779,13 +797,13 @@ void Visitor_Writer::Visit_YadR(const ZRef<ZYadR>& iYadR)
 	}
 
 void Visitor_Writer::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
-	{ spToStrim_SimpleValue(fStrimW, iYadAtomR->AsAny()); }
+	{ spToStrim_SimpleValue(iYadAtomR->AsAny(), fStrimW); }
 
 void Visitor_Writer::Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR)
-	{ spToStrim_Stream(fStrimW, iYadStreamerR->GetStreamR(), fIndent, fOptions, fMayNeedInitialLF); }
+	{ spToStrim_Stream(iYadStreamerR->GetStreamR(), fIndent, fOptions, fMayNeedInitialLF, fStrimW); }
 
 void Visitor_Writer::Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR)
-	{ spWriteString(fStrimW, iYadStrimmerR->GetStrimR()); }
+	{ spWriteString(iYadStrimmerR->GetStrimR(), fStrimW); }
 
 void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 	{
@@ -807,7 +825,7 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 			{
 			// We were invoked by a tuple which has already issued the property
 			// name and equals sign, so we need to start a fresh line.
-			spWriteLFIndent(fStrimW, fIndent, fOptions);
+			spWriteLFIndent(fIndent, fOptions, fStrimW);
 			}
 
 		ZSetRestore_T<bool> theSR_MayNeedInitialLF(fMayNeedInitialLF, false);
@@ -821,7 +839,7 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 				}
 			else if (false && fOptions.fUseExtendedNotation.DGet(false))
 				{
-				spWriteLFIndent(fStrimW, fIndent, fOptions);
+				spWriteLFIndent(fIndent, fOptions, fStrimW);
 				cur->Accept(*this);
 				fStrimW.Write(";");
 				}
@@ -829,11 +847,11 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 				{
 				if (not isFirst)
 					fStrimW.Write(",");
-				spWriteLFIndent(fStrimW, fIndent, fOptions);
+				spWriteLFIndent(fIndent, fOptions, fStrimW);
 				cur->Accept(*this);
 				}
 			}
-		spWriteLFIndent(fStrimW, fIndent, fOptions);
+		spWriteLFIndent(fIndent, fOptions, fStrimW);
 		fStrimW.Write("]");
 		}
 	else
@@ -877,13 +895,15 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 		needsIndentation = not iYadMapR->IsSimple(fOptions);
 		}
 
+	const bool useSingleQuotes = fOptions.fPreferSingleQuotes.DGet(false);
+
 	if (needsIndentation)
 		{
 		if (fMayNeedInitialLF)
 			{
 			// We're going to be indenting, but need to start
 			// a fresh line to have our { and contents line up.
-			spWriteLFIndent(fStrimW, fIndent, fOptions);
+			spWriteLFIndent(fIndent, fOptions, fStrimW);
 			}
 
 		fStrimW.Write("{");
@@ -896,8 +916,8 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				}
 			else if (fOptions.fUseExtendedNotation.DGet(false))
 				{
-				spWriteLFIndent(fStrimW, fIndent, fOptions);
-				spWritePropName(fStrimW, curName);
+				spWriteLFIndent(fIndent, fOptions, fStrimW);
+				spWritePropName(curName, useSingleQuotes, fStrimW);
 				fStrimW << " = ";
 
 				ZSetRestore_T<size_t> theSR_Indent(fIndent, fIndent + 1);
@@ -909,8 +929,8 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				{
 				if (not isFirst)
 					fStrimW.Write(",");
-				spWriteLFIndent(fStrimW, fIndent, fOptions);
-				spWriteString(fStrimW, curName);
+				spWriteLFIndent(fIndent, fOptions, fStrimW);
+				spWriteString(curName, useSingleQuotes, fStrimW);
 				fStrimW << ": ";
 
 				ZSetRestore_T<size_t> theSR_Indent(fIndent, fIndent + 1);
@@ -918,7 +938,7 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				cur->Accept(*this);
 				}
 			}
-		spWriteLFIndent(fStrimW, fIndent, fOptions);
+		spWriteLFIndent(fIndent, fOptions, fStrimW);
 		fStrimW.Write("}");
 		}
 	else
@@ -936,7 +956,7 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				if (not isFirst && fOptions.fBreakStrings)
 					fStrimW.Write(" ");
 
-				spWritePropName(fStrimW, curName);
+				spWritePropName(curName, useSingleQuotes, fStrimW);
 				if (fOptions.fBreakStrings)
 					fStrimW.Write(" = ");
 				else
@@ -953,7 +973,7 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 					fStrimW.Write(",");
 				if (fOptions.fBreakStrings)
 					fStrimW.Write(" ");
-				spWriteString(fStrimW, curName);
+				spWriteString(curName, useSingleQuotes, fStrimW);
 				fStrimW.Write(":");
 				if (fOptions.fBreakStrings)
 					fStrimW.Write(" ");

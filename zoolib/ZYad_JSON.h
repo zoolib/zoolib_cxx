@@ -60,6 +60,7 @@ struct WriteOptions : ZYadOptions
 
 	ZQ<bool> fUseExtendedNotation;
 	ZQ<bool> fBinaryAsBase64;
+	ZQ<bool> fPreferSingleQuotes;
 	};
 
 // =================================================================================================
