@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,55 +18,51 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamW_HexStrim_h__
-#define __ZStreamW_HexStrim_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZStream.h"
+#include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZStrimW_InsertSeparator.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamW_HexStrim_Real
+// MARK: - ZStrimW_CRLFRemove
 
-class ZStreamW_HexStrim_Real : public ZStreamW
+ZStrimW_InsertSeparator::ZStrimW_InsertSeparator
+	(size_t iSpacing, const string8& iSeparator, const ZStrimW& iStrimSink)
+:	fSpacing(iSpacing)
+,	fSeparator(iSeparator)
+,	fStrimSink(iStrimSink)
+,	fCount(0)
+	{}
+
+void ZStrimW_InsertSeparator::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
 	{
-public:
-	ZStreamW_HexStrim_Real(bool iUseUnderscore, const ZStrimW& iStrimSink);
+	const UTF32* localSource = iSource;
+	size_t countRemaining = iCountCU;
+	while (countRemaining)
+		{
+		size_t countToWrite = countRemaining;
+		if (fSpacing)
+			{
+			if (fCount == fSpacing)
+				{
+				fStrimSink.Write(fSeparator);
+				fCount = 0;
+				}
+			countToWrite = std::min(countToWrite, fSpacing - fCount);
+			}
 
-// From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_Flush();
+		size_t countWritten;
+		fStrimSink.Write(localSource, countToWrite, &countWritten);
+		if (countWritten == 0)
+			break;
+		
+		countRemaining -= countWritten;
+		localSource += countWritten;
+		fCount += countWritten;
+		}
 
-protected:
-	const ZStrimW& fStrimSink;
-	const char* fHexDigits;
-	};
-
-// =================================================================================================
-// MARK: - ZStreamW_HexStrim
-
-class ZStreamW_HexStrim : public ZStreamW
-	{
-public:
-	ZStreamW_HexStrim(const std::string& iByteSeparator,
-		const std::string& iChunkSeparator, size_t iChunkSize, const ZStrimW& iStrimSink);
-
-	ZStreamW_HexStrim(const std::string& iByteSeparator,
-		const std::string& iChunkSeparator, size_t iChunkSize,
-		bool iUseUnderscore, const ZStrimW& iStrimSink);
-
-// From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_Flush();
-
-protected:
-	ZStrimW_InsertSeparator fStrim_Chunks;
-	ZStrimW_InsertSeparator fStrim_Bytes;
-	ZStreamW_HexStrim_Real fStream;
-	};
+	if (oCountCU)
+		*oCountCU = localSource - iSource;
+	}
 
 } // namespace ZooLib
-
-#endif // __ZStreamW_HexStrim_h__

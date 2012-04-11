@@ -19,52 +19,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStreamW_HexStrim.h"
-#include "zoolib/ZStrim.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-// MARK: - ZStreamW_HexStrim
 
 static const UTF8 spHexDigits[] = "0123456789ABCDEF";
 static const UTF8 spHexDigitsWithUnderscore[] = "_123456789ABCDEF";
 
-/**
-\param iByteSeparator A UTF-8 string to be inserted between each byte that is output.
-\param iChunkSeparator A UTF-8 string to be inserted between each chunk that is output.
-\param iChunkSize The number of bytes to treat as a chunk.
-\param iStrimSink The strim to which characters should be written.
-*/
-ZStreamW_HexStrim::ZStreamW_HexStrim(const std::string& iByteSeparator,
-	const std::string& iChunkSeparator, size_t iChunkSize, const ZStrimW& iStrimSink)
-:	fStrimSink(iStrimSink),
-	fByteSeparator(iByteSeparator),
-	fChunkSeparator(iChunkSeparator),
-	fChunkSize(iChunkSize),
-	fCurrentChunkLength(0),
-	fWrittenAny(false),
-	fHexDigits(spHexDigits)
-	{}
+// =================================================================================================
+// MARK: - ZStreamW_HexStrim_Real
 
-/**
-\param iByteSeparator A UTF-8 string to be inserted between each byte that is output.
-\param iChunkSeparator A UTF-8 string to be inserted between each chunk that is output.
-\param iChunkSize The number of bytes to treat as a chunk.
-\param iUseUnderscore If true then an underscore should be output in place of zero, if
-false then a zero is output. This is useful when what's being output is the hex representation
-of a 4 bit per pixel grayscale pixmap, in which case underscores are output for black pixels,
-and visually drop out somewhat.
-\param iStrimSink The strim to which characters should be written.
-*/
-ZStreamW_HexStrim::ZStreamW_HexStrim(const std::string& iByteSeparator,
-	const std::string& iChunkSeparator, size_t iChunkSize,
-	bool iUseUnderscore, const ZStrimW& iStrimSink)
-:	fStrimSink(iStrimSink),
-	fByteSeparator(iByteSeparator),
-	fChunkSeparator(iChunkSeparator),
-	fChunkSize(iChunkSize),
-	fCurrentChunkLength(0),
-	fWrittenAny(false)
+ZStreamW_HexStrim_Real::ZStreamW_HexStrim_Real(bool iUseUnderscore, const ZStrimW& iStrimSink)
+:	fStrimSink(iStrimSink)
 	{
 	if (iUseUnderscore)
 		fHexDigits = spHexDigitsWithUnderscore;
@@ -72,41 +37,49 @@ ZStreamW_HexStrim::ZStreamW_HexStrim(const std::string& iByteSeparator,
 		fHexDigits = spHexDigits;
 	}
 
-void ZStreamW_HexStrim::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+void ZStreamW_HexStrim_Real::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	if (oCountWritten)
-		*oCountWritten = 0;
 	const uint8* localSource = reinterpret_cast<const uint8*>(iSource);
 
 	while (iCount)
 		{
-		if (fWrittenAny)
-			{
-			if (fCurrentChunkLength)
-				fStrimSink.Write(fByteSeparator);
-			else if (fChunkSize)
-				fStrimSink.Write(fChunkSeparator);
-			}
-		fWrittenAny = true;
-
-		UTF8 sHex[2];
-		sHex[0] = fHexDigits[((*localSource) >> 4) & 0x0F];
-		sHex[1] = fHexDigits[(*localSource) & 0x0F];
-		fStrimSink.Write(sHex, 2);
-
-		fCurrentChunkLength += 1;
-		if (fCurrentChunkLength == fChunkSize)
-			fCurrentChunkLength = 0;
-		iCount -= 1;
-		localSource += 1;
-		if (oCountWritten)
-			*oCountWritten += 1;
+		UTF8 theHex[2];
+		theHex[0] = fHexDigits[((*localSource) >> 4) & 0x0F];
+		theHex[1] = fHexDigits[(*localSource) & 0x0F];
+		fStrimSink.Write(theHex, 2);
+		--iCount;
+		++localSource;
 		}
+
+	if (oCountWritten)
+		*oCountWritten = localSource - reinterpret_cast<const uint8*>(iSource);
 	}
+
+void ZStreamW_HexStrim_Real::Imp_Flush()
+	{ fStrimSink.Flush(); }
+
+// =================================================================================================
+// MARK: - ZStreamW_HexStrim
+
+ZStreamW_HexStrim::ZStreamW_HexStrim(const std::string& iByteSeparator,
+	const std::string& iChunkSeparator, size_t iChunkSize, const ZStrimW& iStrimSink)
+:	fStrim_Chunks((2 + iByteSeparator.size()) * iChunkSize, iChunkSeparator, iStrimSink)
+,	fStrim_Bytes(2, iByteSeparator, fStrim_Chunks)
+,	fStream(false, fStrim_Bytes)
+	{}
+
+#if 0 
+ZStreamW_HexStrim::ZStreamW_HexStrim(const std::string& iByteSeparator,
+	const std::string& iChunkSeparator, size_t iChunkSize,
+	bool iUseUnderscore, const ZStrimW& iStrimSink);
+#endif
+
+void ZStreamW_HexStrim::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+	{ fStream.Write(iSource, iCount, oCountWritten); }
 
 void ZStreamW_HexStrim::Imp_Flush()
-	{
-	fStrimSink.Flush();
-	}
+	{ fStream.Flush(); }
+
+
 
 } // namespace ZooLib

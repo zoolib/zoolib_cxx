@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,55 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamW_HexStrim_h__
-#define __ZStreamW_HexStrim_h__ 1
+#ifndef __ZStrimW_InsertSeparator_h__
+#define __ZStrimW_InsertSeparator_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStream.h"
-#include "zoolib/ZStrimW_InsertSeparator.h"
+#include "zoolib/ZStrim.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamW_HexStrim_Real
+// MARK: - ZStrimW_InsertSeparator
 
-class ZStreamW_HexStrim_Real : public ZStreamW
+class ZStrimW_InsertSeparator
+:	public ZStrimW_NativeUTF32
 	{
 public:
-	ZStreamW_HexStrim_Real(bool iUseUnderscore, const ZStrimW& iStrimSink);
+	ZStrimW_InsertSeparator(size_t iSpacing, const string8& iSeparator, const ZStrimW& iStrimSink);
 
-// From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_Flush();
+	virtual void Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU);
 
-protected:
+private:
 	const ZStrimW& fStrimSink;
-	const char* fHexDigits;
-	};
-
-// =================================================================================================
-// MARK: - ZStreamW_HexStrim
-
-class ZStreamW_HexStrim : public ZStreamW
-	{
-public:
-	ZStreamW_HexStrim(const std::string& iByteSeparator,
-		const std::string& iChunkSeparator, size_t iChunkSize, const ZStrimW& iStrimSink);
-
-	ZStreamW_HexStrim(const std::string& iByteSeparator,
-		const std::string& iChunkSeparator, size_t iChunkSize,
-		bool iUseUnderscore, const ZStrimW& iStrimSink);
-
-// From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_Flush();
-
-protected:
-	ZStrimW_InsertSeparator fStrim_Chunks;
-	ZStrimW_InsertSeparator fStrim_Bytes;
-	ZStreamW_HexStrim_Real fStream;
+	const size_t fSpacing;
+	const string8 fSeparator;
+	
+	size_t fCount;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZStreamW_HexStrim_h__
+#endif // __ZStrimW_InsertSeparator_h__
