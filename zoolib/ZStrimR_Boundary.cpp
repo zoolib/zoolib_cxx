@@ -66,11 +66,13 @@ ZStrimR_Boundary::ZStrimR_Boundary
 	}
 
 ZStrimR_Boundary::~ZStrimR_Boundary()
-	{}
+	{
+	delete[] fBuffer;
+	}
 
 void ZStrimR_Boundary::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
-	if (fBuffer.empty())
+	if (!fBuffer)
 		{
 		fStrimSource.Read(oDest, iCount, oCount);
 		}
@@ -85,7 +87,7 @@ void ZStrimR_Boundary::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 			if (fEnd > fStart)
 				{
 				size_t countToMove = std::min(fEnd - fStart, countRemaining);
-				ZMemCopy(localDest, &fBuffer[fStart], countToMove * sizeof(UTF32));
+				ZMemCopy(localDest, fBuffer + fStart, countToMove * sizeof(UTF32));
 				fStart += countToMove;
 				localDest += countToMove;
 				countRemaining -= countToMove;
@@ -96,19 +98,19 @@ void ZStrimR_Boundary::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 					break;
 
 				// Shuffle existing code units to the beginning of the buffer.
-				ZMemMove(&fBuffer[0], &fBuffer[0] + fEnd, (boundarySize - fEnd) * sizeof(UTF32));
+				ZMemMove(fBuffer, fBuffer + fEnd, (boundarySize - fEnd) * sizeof(UTF32));
 
 				// And top up the tail.
 				size_t countRead;
-				fStrimSource.Read(&fBuffer[boundarySize - fEnd], fEnd, &countRead);
+				fStrimSource.Read(fBuffer + boundarySize - fEnd, fEnd, &countRead);
 
 				if (fEnd > countRead)
 					{
 					// The source strim has insufficient code units to fill our buffer,
 					// so shuffle stuff back up so that the code units that *are* in the
 					// buffer align with its end.
-					ZMemMove(&fBuffer[fEnd - countRead],
-						&fBuffer[0], (boundarySize - (fEnd - countRead)) * sizeof(UTF32));
+					ZMemMove(fBuffer + fEnd - countRead,
+						fBuffer, (boundarySize - (fEnd - countRead)) * sizeof(UTF32));
 
 					// The first code unit that can be returned to the caller is
 					// at offset fStart, and the last is at the end of the buffer.
@@ -169,28 +171,38 @@ void ZStrimR_Boundary::Reset()
 
 void ZStrimR_Boundary::pInit()
 	{
-	if (const size_t boundarySize = fBoundary.size())
+	fBuffer = nullptr;
+	try
 		{
-		fBuffer.resize(boundarySize);
-		fStart = boundarySize;
-		fEnd = boundarySize;
+		if (const size_t boundarySize = fBoundary.size())
+			{
+			fBuffer = new UTF32[boundarySize];
+			fStart = boundarySize;
+			fEnd = boundarySize;
 
-		// Initialize the skip vector entries to the boundary size.
-		for (size_t x = 0; x < 256; ++x)
-			fSkip[x] = boundarySize;
+			// Initialize the skip vector entries to the boundary size.
+			for (size_t x = 0; x < 256; ++x)
+				fSkip[x] = boundarySize;
 
-		// For each CP in the search boundary, initialize the appropriate skip
-		// to the distance from the last occurence of any CP with the same low
-		// 8 bits to the end of the boundary.
-		for (size_t x = 0; x < boundarySize - 1; ++x)
-			fSkip[uint8(fBoundary[x])] = boundarySize - x - 1;
+			// For each CP in the search boundary, initialize the appropriate skip
+			// to the distance from the last occurence of any CP with the same low
+			// 8 bits to the end of the boundary.
+			for (size_t x = 0; x < boundarySize - 1; ++x)
+				fSkip[uint8(fBoundary[x])] = boundarySize - x - 1;
+			}
+		else
+			{
+			fBuffer = nullptr;
+			fStart = 0;
+			fEnd = 0;
+			}
+		fHitBoundary = false;
 		}
-	else
+	catch (...)
 		{
-		fStart = 0;
-		fEnd = 0;
+		delete[] fBuffer;
+		throw;
 		}
-	fHitBoundary = false;
 	}
 
 // =================================================================================================

@@ -53,11 +53,13 @@ ZStreamR_Boundary::ZStreamR_Boundary(const void* iBoundary, size_t iBoundarySize
 	}
 
 ZStreamR_Boundary::~ZStreamR_Boundary()
-	{}
+	{
+	delete[] fBuffer;
+	}
 
 void ZStreamR_Boundary::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	if (fBuffer.empty())
+	if (!fBuffer)
 		{
 		fStreamSource.Read(oDest, iCount, oCountRead);
 		}
@@ -70,7 +72,7 @@ void ZStreamR_Boundary::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			if (fDataEnd > fDataStart)
 				{
 				size_t countToMove = min(fDataEnd - fDataStart, iCount);
-				ZMemCopy(localDest, &fBuffer[fDataStart], countToMove);
+				ZMemCopy(localDest, fBuffer + fDataStart, countToMove);
 				fDataStart += countToMove;
 				localDest += countToMove;
 				iCount -= countToMove;
@@ -81,18 +83,18 @@ void ZStreamR_Boundary::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 					break;
 
 				// Shuffle existing stuff to beginning of buffer.
-				ZMemMove(&fBuffer[0], &fBuffer[0] + fDataEnd, boundarySize - fDataEnd);
+				ZMemMove(fBuffer, fBuffer + fDataEnd, boundarySize - fDataEnd);
 
 				// Top up the tail.
 				size_t countRead;
-				fStreamSource.Read(&fBuffer[boundarySize - fDataEnd], fDataEnd, &countRead);
+				fStreamSource.Read(fBuffer + boundarySize - fDataEnd, fDataEnd, &countRead);
 
 				if (countRead < fDataEnd)
 					{
 					// The source stream has gone empty without our having already seen the
 					// boundary. Shuffle the data we do have so the last byte aligns with
 					// the end of the buffer.
-					ZMemMove(&fBuffer[fDataEnd - countRead], &fBuffer[0],
+					ZMemMove(fBuffer + fDataEnd - countRead, fBuffer,
 						boundarySize - (fDataEnd - countRead));
 
 					// The first returnable byte is at fDataStart, and the last is at
@@ -168,27 +170,37 @@ void ZStreamR_Boundary::Reset()
 
 void ZStreamR_Boundary::pInit()
 	{
-	if (const size_t boundarySize = fBoundary.size())
+	fBuffer = nullptr;
+	try
 		{
-		fBuffer.resize(boundarySize);
-		fDataStart = boundarySize;
-		fDataEnd = boundarySize;
+		if (const size_t boundarySize = fBoundary.size())
+			{
+			fBuffer = new uint8[boundarySize];
+			fDataStart = boundarySize;
+			fDataEnd = boundarySize;
 
-		// Initialize the skip vector entries to the boundary size
-		for (size_t x = 0; x < 256; ++x)
-			fDistance[x] = boundarySize;
+			// Initialize the skip vector entries to the boundary size
+			for (size_t x = 0; x < 256; ++x)
+				fDistance[x] = boundarySize;
 
-		// For each byte in the search boundary, initialize the appropriate skip to
-		// the distance from the last occurence of that byte to the end of the boundary.
-		for (size_t x = 0; x < boundarySize - 1; ++x)
-			fDistance[uint8(fBoundary[x])] = boundarySize - x - 1;
+			// For each byte in the search boundary, initialize the appropriate skip to
+			// the distance from the last occurence of that byte to the end of the boundary.
+			for (size_t x = 0; x < boundarySize - 1; ++x)
+				fDistance[uint8(fBoundary[x])] = boundarySize - x - 1;
+			}
+		else
+			{
+			fBuffer = nullptr;
+			fDataStart = 0;
+			fDataEnd = 0;
+			}
+		fHitBoundary = false;
 		}
-	else
+	catch (...)
 		{
-		fDataStart = 0;
-		fDataEnd = 0;
+		delete[] fBuffer;
+		throw;
 		}
-	fHitBoundary = false;
 	}
 
 // =================================================================================================

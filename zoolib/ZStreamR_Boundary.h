@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamer.h"
 
 #include <string>
-#include <vector>
 
 namespace ZooLib {
 
@@ -56,7 +55,7 @@ protected:
 	const ZStreamR& fStreamSource;
 	std::string fBoundary;
 	size_t fDistance[256];
-	std::vector<uint8> fBuffer;
+	uint8* fBuffer;
 	size_t fDataStart;
 	size_t fDataEnd;
 	bool fHitBoundary;
