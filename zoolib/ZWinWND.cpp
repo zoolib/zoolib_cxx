@@ -57,17 +57,6 @@ public:
 	const ZRef<Callable> f1;
 	};
 
-ZRef<Callable> spCallable_WithFallback(const ZRef<Callable>& i0, const ZRef<Callable>& i1)
-	{
-	if (i0)
-		{
-		if (i1)
-			return new Callable_Fallback(i0, i1);
-		return i0;
-		}
-	return i1;
-	}
-
 class Callable_WithWNDPROC
 :	public Callable
 	{
@@ -198,8 +187,6 @@ HWND ZWinWND::sCreateDefWindowProc(HWND iParent, DWORD iStyle, void* iCreatePara
 // =================================================================================================
 // MARK: - ZWinWND, Callable <--> Regular window
 
-static ClassRegistration spClassRegistration(spWindowProcW, L"ZWinWND ClassRegistration");
-
 HWND sCreate
 	(DWORD dwExStyle,
 	LPCWSTR lpWindowName,
@@ -213,6 +200,8 @@ HWND sCreate
 	WNDPROC iWNDPROC,
 	ZRef<Callable> iCallable)
 	{
+	static ClassRegistration spClassRegistration(spWindowProcW, L"ZWinWND ClassRegistration");
+
 	ZThreadVal<ZRef<Callable> > theCallableTV = new Callable_WithWNDPROC(iCallable, iWNDPROC);
 
 	return ::CreateWindowExW
@@ -267,7 +256,7 @@ bool sAttach(HWND iHWND, ZRef<Callable> iCallable)
 				{
 				theCallable = (Callable*)::GetPropW(iHWND, L"ZWinWND Callable");
 				theCallable->Release();
-				theCallable = spCallable_WithFallback(iCallable, theCallable);
+				theCallable = new Callable_Fallback(iCallable, theCallable);
 				}
 
 			theCallable->Retain();
