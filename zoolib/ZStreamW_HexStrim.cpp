@@ -61,25 +61,33 @@ void ZStreamW_HexStrim_Real::Imp_Flush()
 // =================================================================================================
 // MARK: - ZStreamW_HexStrim
 
-ZStreamW_HexStrim::ZStreamW_HexStrim(const std::string& iByteSeparator,
-	const std::string& iChunkSeparator, size_t iChunkSize, const ZStrimW& iStrimSink)
-:	fStrim_Chunks((2 + iByteSeparator.size()) * iChunkSize, iChunkSeparator, iStrimSink)
-,	fStrim_Bytes(2, iByteSeparator, fStrim_Chunks)
-,	fStream(false, fStrim_Bytes)
-	{}
+static
+ZStrimW_InsertSeparator::Spacings
+spSpacings(const std::string& iByteSeparator, const std::string& iChunkSeparator, size_t iChunkSize)
+	{
+	ZStrimW_InsertSeparator::Spacings result;
 
-#if 0 
-ZStreamW_HexStrim::ZStreamW_HexStrim(const std::string& iByteSeparator,
+	if (iByteSeparator.size())
+		result[2] = iByteSeparator;
+
+	if (iChunkSize && iChunkSeparator.size())
+		result[iChunkSize * 2] = iChunkSeparator;
+	
+	return result;
+	}
+
+ZStreamW_HexStrim::ZStreamW_HexStrim
+	(const std::string& iByteSeparator,
 	const std::string& iChunkSeparator, size_t iChunkSize,
-	bool iUseUnderscore, const ZStrimW& iStrimSink);
-#endif
+	const ZStrimW& iStrimSink)
+:	fStrim(spSpacings(iByteSeparator, iChunkSeparator, iChunkSize), iStrimSink)
+,	fStream(false, fStrim)
+	{}
 
 void ZStreamW_HexStrim::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{ fStream.Write(iSource, iCount, oCountWritten); }
 
 void ZStreamW_HexStrim::Imp_Flush()
 	{ fStream.Flush(); }
-
-
 
 } // namespace ZooLib

@@ -23,32 +23,72 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+using std::map;
+using std::min;
+using std::pair;
+
 // =================================================================================================
 // MARK: - ZStrimW_CRLFRemove
 
 ZStrimW_InsertSeparator::ZStrimW_InsertSeparator
 	(size_t iSpacing, const string8& iSeparator, const ZStrimW& iStrimSink)
-:	fSpacing(iSpacing)
-,	fSeparator(iSeparator)
-,	fStrimSink(iStrimSink)
+:	fStrimSink(iStrimSink)
+,	fCount(0)
+	{
+	if (iSpacing)
+		fSpacings[iSpacing] = iSeparator;
+	}
+
+ZStrimW_InsertSeparator::ZStrimW_InsertSeparator
+	(const Spacings& iSpacings, const ZStrimW& iStrimSink)
+:	fStrimSink(iStrimSink)
+,	fSpacings(iSpacings)
 ,	fCount(0)
 	{}
 
-void ZStrimW_InsertSeparator::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
+void ZStrimW_InsertSeparator::Imp_WriteUTF32
+	(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	const UTF32* localSource = iSource;
 	size_t countRemaining = iCountCU;
 	while (countRemaining)
 		{
 		size_t countToWrite = countRemaining;
-		if (fSpacing)
+		
+		if (not fSpacings.empty())
 			{
-			if (fCount == fSpacing)
+			// Find the largest spacing that divides fCount exactly (if any).
+			if (fCount)
 				{
-				fStrimSink.Write(fSeparator);
-				fCount = 0;
+				// This is not the very first write.
+				for (Spacings::const_reverse_iterator
+					riter = fSpacings.rbegin(), end = fSpacings.rend();
+					riter != end; ++riter)
+					{
+					if (riter->first)
+						{
+						if (0 == (fCount % riter->first))
+							{
+							fStrimSink.Write(riter->second);
+							break;
+							}
+						}
+					}
 				}
-			countToWrite = std::min(countToWrite, fSpacing - fCount);
+			
+			const uint64 newEnd = fCount + countToWrite;
+
+			for (Spacings::const_iterator iter = fSpacings.begin(), end = fSpacings.end();
+				iter != end; ++iter)
+				{
+				if (iter->first)
+					{
+					const size_t tickSize = iter->first;
+					const uint64 nextTick = ((fCount + tickSize) / tickSize) * tickSize;
+					if (nextTick <= newEnd)
+						countToWrite = min(countToWrite, size_t(nextTick - fCount));
+					}
+				}
 			}
 
 		size_t countWritten;

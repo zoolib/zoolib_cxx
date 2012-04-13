@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStrim.h"
 
+#include <map>
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -33,16 +35,27 @@ class ZStrimW_InsertSeparator
 :	public ZStrimW_NativeUTF32
 	{
 public:
+	typedef std::map<size_t,string8> Spacings;
+
 	ZStrimW_InsertSeparator(size_t iSpacing, const string8& iSeparator, const ZStrimW& iStrimSink);
 
+	ZStrimW_InsertSeparator(const Spacings& iSpacings, const ZStrimW& iStrimSink);
+	
+	template <class Iterator>
+	ZStrimW_InsertSeparator
+		(const Iterator& iSpacings_Begin, const Iterator& iSpacings_End, const ZStrimW& iStrimSink)
+	:	fStrimSink(iStrimSink)
+	,	fSpacings(iSpacings_Begin, iSpacings_End)
+	,	fCount(0)
+		{}
+
+// From ZStrimW_NativeUTF32
 	virtual void Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU);
 
 private:
 	const ZStrimW& fStrimSink;
-	const size_t fSpacing;
-	const string8 fSeparator;
-	
-	size_t fCount;
+	Spacings fSpacings;	
+	uint64 fCount;
 	};
 
 } // namespace ZooLib

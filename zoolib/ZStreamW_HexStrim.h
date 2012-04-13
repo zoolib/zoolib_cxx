@@ -62,8 +62,7 @@ public:
 	virtual void Imp_Flush();
 
 protected:
-	ZStrimW_InsertSeparator fStrim_Chunks;
-	ZStrimW_InsertSeparator fStrim_Bytes;
+	ZStrimW_InsertSeparator fStrim;
 	ZStreamW_HexStrim_Real fStream;
 	};
 
