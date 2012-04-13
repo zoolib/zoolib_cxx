@@ -328,6 +328,7 @@ WriteOptions::WriteOptions(const WriteOptions& iOther)
 ,	fUseExtendedNotation(iOther.fUseExtendedNotation)
 ,	fBinaryAsBase64(iOther.fBinaryAsBase64)
 ,	fPreferSingleQuotes(iOther.fPreferSingleQuotes)
+,	fNumberSequences(iOther.fNumberSequences)
 	{}
 
 // =================================================================================================
@@ -754,7 +755,8 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 		
 		Base64::StreamW_Encode
 			(Base64::sEncode_Normal(),
-			ZStreamW_ASCIIStrim(ZStrimW_InsertSeparator(chunkSize * 3, chunkSeparator, s)))
+			ZStreamW_ASCIIStrim
+				(ZStrimW_InsertSeparator(chunkSize * 3, chunkSeparator, s)))
 			.CopyAllFrom(iStreamR);
 
 		s.Write(")");
@@ -830,6 +832,7 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 
 		ZSetRestore_T<bool> theSR_MayNeedInitialLF(fMayNeedInitialLF, false);
 
+		uint64 count = 0;
 		fStrimW.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
@@ -848,8 +851,11 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 				if (not isFirst)
 					fStrimW.Write(",");
 				spWriteLFIndent(fIndent, fOptions, fStrimW);
+				if (fOptions.fNumberSequences.DGet(false))
+					fStrimW << "/*" << count << "*/";
 				cur->Accept(*this);
 				}
+			++count;
 			}
 		spWriteLFIndent(fIndent, fOptions, fStrimW);
 		fStrimW.Write("]");
@@ -944,6 +950,7 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	else
 		{
 		fStrimW.Write("{");
+		bool wroteAny = false;
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			string curName;
@@ -982,8 +989,9 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				ZSetRestore_T<bool> theSR_MayNeedInitialLF(fMayNeedInitialLF, true);
 				cur->Accept(*this);
 				}
+			wroteAny = true;
 			}
-		if (fOptions.fBreakStrings)
+		if (wroteAny && fOptions.fBreakStrings)
 			fStrimW.Write(" ");
 		fStrimW.Write("}");
 		}
