@@ -84,7 +84,6 @@ const struct null_t
 	const notnull_t operator!() const { return notnull; }
 	} null = {};
 
-
 // =================================================================================================
 // IKnowWhatIAmDoing is also a marker value, used in a few places generally to distinguish
 // private ctors that would otherwise be identical.
@@ -92,41 +91,41 @@ const struct null_t
 const struct IKnowWhatIAmDoing_t {} IKnowWhatIAmDoing = {};
 
 // =================================================================================================
-// Assuming 'const type* ptr;' NonConst(ptr) is a terser form of const_cast<type*>(ptr).
+// Assuming 'const type* ptr;' sNonConst(ptr) is a terser form of const_cast<type*>(ptr).
 
 template <class T>
-T* NonConst(const T* iT) { return const_cast<T*>(iT); }
+T* sNonConst(const T* iT) { return const_cast<T*>(iT); }
 
 template <class T>
-T* NonConst(T* iT) { return iT; }
+T* sNonConst(T* iT) { return iT; }
 
 // =================================================================================================
-// Assuming 'const type& ref;' NonConst(ref) is a terser form of const_cast<type&>(ref).
+// Assuming 'const type& ref;' sNonConst(ref) is a terser form of const_cast<type&>(ref).
 
 template <class T>
-T& NonConst(const T& iT) { return const_cast<T&>(iT); }
+T& sNonConst(const T& iT) { return const_cast<T&>(iT); }
 
 template <class T>
-T& NonConst(T& iT) { return iT; }
+T& sNonConst(T& iT) { return iT; }
 
 // =================================================================================================
-// The DynNonConst template functions combine const and dynamic casts into a single invocation.
+// The sDynNonConst template functions combine const and dynamic casts into a single invocation.
 
 template <class P, class T>
-P* DynNonConst(const T* iT) { return dynamic_cast<P*>(NonConst(iT)); }
+P* sDynNonConst(const T* iT) { return dynamic_cast<P*>(sNonConst(iT)); }
 
 template <class P, class T>
-P* DynNonConst(T* iT) { return dynamic_cast<P*>(iT); }
+P* sDynNonConst(T* iT) { return dynamic_cast<P*>(iT); }
 
 template <class P, class T>
-P& DynNonConst(const T& iT) { return dynamic_cast<P&>(NonConst(iT)); }
+P& sDynNonConst(const T& iT) { return dynamic_cast<P&>(sNonConst(iT)); }
 
 template <class P, class T>
-P& DynNonConst(T& iT) { return dynamic_cast<P&>(iT); }
+P& sDynNonConst(T& iT) { return dynamic_cast<P&>(iT); }
 
 // =================================================================================================
-// 'ConstPtr(rvalue)' or 'ConstPtr& rvalue' can be used where a const pointer parameter is
-// required, removing the need for a local variable in some cases.
+// 'sConstPtr(rvalue)' or 'sConstPtr& rvalue' can be used where a const pointer
+// parameter is required, removing the need for a local variable in some cases.
 
 const struct
 	{
@@ -148,7 +147,7 @@ const struct
 	template <class T>
 	Holder<T> operator&(const T& iT) const { return Holder<T>(iT); }
 
-	} ConstPtr = {};
+	} sConstPtr = {};
 
 // =================================================================================================
 // Adopt_T<type> or Adopt_T<type*> indicates to a ZRef (mainly) that it should
@@ -175,7 +174,7 @@ private:
 	};
 
 // =================================================================================================
-// 'Adopt(pointer)' or 'Adopt& pointer' returns an Adopt_T<pointee>.
+// 'sAdopt(pointer)' or 'sAdopt& pointer' returns an Adopt_T<pointee>.
 
 const struct
 	{
@@ -184,7 +183,7 @@ const struct
 
 	template <class T>
 	Adopt_T<T> operator&(T iT) const { return Adopt_T<T>(iT); }
-	} Adopt = {};
+	} sAdopt = {};
 
 } // namespace ZooLib
 

@@ -1412,12 +1412,12 @@ static void spInsertSections(UITableView* iTableView,
 	[super initWithFrame:frame style:style];
 	fCallable_NeedsUpdate = sCallable<void()>(self, @selector(needsUpdate));
 	if (variableRowHeight)
-		fHandler = Adopt& [[UITVHandler_WithSections_VariableRowHeight alloc] init];
+		fHandler = sAdopt& [[UITVHandler_WithSections_VariableRowHeight alloc] init];
 	else
-		fHandler = Adopt& [[UITVHandler_WithSections alloc] init];
+		fHandler = sAdopt& [[UITVHandler_WithSections alloc] init];
 	[self setDelegate:fHandler];
 	[self setDataSource:fHandler];
-	ZRef<UIGestureRecognizer_TableViewWithSections> theGR = Adopt&
+	ZRef<UIGestureRecognizer_TableViewWithSections> theGR = sAdopt&
 		[[UIGestureRecognizer_TableViewWithSections alloc] init];
 	theGR->fTV = self;
 	[self addGestureRecognizer:theGR];

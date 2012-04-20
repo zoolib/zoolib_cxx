@@ -60,7 +60,7 @@ void ZCaller_CFRunLoop::Initialize()
 	{
 	ZCaller::Initialize();
 
-	fObserver = Adopt& ::CFRunLoopObserverCreate
+	fObserver = sAdopt& ::CFRunLoopObserverCreate
 		(nullptr, // allocator
 kCFRunLoopAllActivities,//		kCFRunLoopBeforeTimers, // activities
 		true, // repeats

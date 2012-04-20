@@ -48,7 +48,7 @@ Expr_Rel_Product::Expr_Rel_Product(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_R
 
 void Expr_Rel_Product::Accept(const ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Product* theVisitor = DynNonConst<Visitor_Expr_Rel_Product>(&iVisitor))
+	if (Visitor_Expr_Rel_Product* theVisitor = sDynNonConst<Visitor_Expr_Rel_Product>(&iVisitor))
 		this->Accept_Expr_Rel_Product(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
@@ -56,7 +56,7 @@ void Expr_Rel_Product::Accept(const ZVisitor& iVisitor)
 
 void Expr_Rel_Product::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Product* theVisitor = DynNonConst<Visitor_Expr_Rel_Product>(&iVisitor))
+	if (Visitor_Expr_Rel_Product* theVisitor = sDynNonConst<Visitor_Expr_Rel_Product>(&iVisitor))
 		this->Accept_Expr_Rel_Product(*theVisitor);
 	else
 		inherited::Accept_Expr_Op2(iVisitor);

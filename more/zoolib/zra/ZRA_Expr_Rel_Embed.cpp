@@ -54,7 +54,7 @@ Expr_Rel_Embed::Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0,
 
 void Expr_Rel_Embed::Accept(const ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Embed* theVisitor = DynNonConst<Visitor_Expr_Rel_Embed>(&iVisitor))
+	if (Visitor_Expr_Rel_Embed* theVisitor = sDynNonConst<Visitor_Expr_Rel_Embed>(&iVisitor))
 		this->Accept_Expr_Rel_Embed(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
@@ -62,7 +62,7 @@ void Expr_Rel_Embed::Accept(const ZVisitor& iVisitor)
 
 void Expr_Rel_Embed::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Embed* theVisitor = DynNonConst<Visitor_Expr_Rel_Embed>(&iVisitor))
+	if (Visitor_Expr_Rel_Embed* theVisitor = sDynNonConst<Visitor_Expr_Rel_Embed>(&iVisitor))
 		this->Accept_Expr_Rel_Embed(*theVisitor);
 	else
 		inherited::Accept_Expr_Op2(iVisitor);

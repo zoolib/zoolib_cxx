@@ -49,7 +49,7 @@ public:
 // From ZVisitee
 	virtual void Accept(const ZVisitor& iVisitor)
 		{
-		if (ZVisitor_Expr_Op0_T<T>* theVisitor = DynNonConst<ZVisitor_Expr_Op0_T<T> >(&iVisitor))
+		if (ZVisitor_Expr_Op0_T<T>* theVisitor = sDynNonConst<ZVisitor_Expr_Op0_T<T> >(&iVisitor))
 			this->Accept_Expr_Op0(*theVisitor);
 		else
 			ZExpr::Accept(iVisitor);
@@ -58,7 +58,7 @@ public:
 // From ZExpr
 	virtual void Accept_Expr(ZVisitor_Expr& iVisitor)
 		{
-		if (ZVisitor_Expr_Op0_T<T>* theVisitor = DynNonConst<ZVisitor_Expr_Op0_T<T> >(&iVisitor))
+		if (ZVisitor_Expr_Op0_T<T>* theVisitor = sDynNonConst<ZVisitor_Expr_Op0_T<T> >(&iVisitor))
 			{
 			this->Accept_Expr_Op0(*theVisitor);
 			}
@@ -114,7 +114,7 @@ public:
 // From ZVisitee
 	virtual void Accept(const ZVisitor& iVisitor)
 		{
-		if (ZVisitor_Expr_Op1_T<T>* theVisitor = DynNonConst<ZVisitor_Expr_Op1_T<T> >(&iVisitor))
+		if (ZVisitor_Expr_Op1_T<T>* theVisitor = sDynNonConst<ZVisitor_Expr_Op1_T<T> >(&iVisitor))
 			this->Accept_Expr_Op1(*theVisitor);
 		else
 			ZExpr::Accept(iVisitor);
@@ -123,7 +123,7 @@ public:
 // From ZExpr
 	virtual void Accept_Expr(ZVisitor_Expr& iVisitor)
 		{
-		if (ZVisitor_Expr_Op1_T<T>* theVisitor = DynNonConst<ZVisitor_Expr_Op1_T<T> >(&iVisitor))
+		if (ZVisitor_Expr_Op1_T<T>* theVisitor = sDynNonConst<ZVisitor_Expr_Op1_T<T> >(&iVisitor))
 			this->Accept_Expr_Op1(*theVisitor);
 		else
 			ZExpr::Accept_Expr(iVisitor);
@@ -186,7 +186,7 @@ public:
 // From ZVisitee
 	virtual void Accept(const ZVisitor& iVisitor)
 		{
-		if (ZVisitor_Expr_Op2_T<T>* theVisitor = DynNonConst<ZVisitor_Expr_Op2_T<T> >(&iVisitor))
+		if (ZVisitor_Expr_Op2_T<T>* theVisitor = sDynNonConst<ZVisitor_Expr_Op2_T<T> >(&iVisitor))
 			this->Accept_Expr_Op2(*theVisitor);
 		else
 			ZExpr::Accept(iVisitor);
@@ -195,7 +195,7 @@ public:
 // From ZExpr
 	virtual void Accept_Expr(ZVisitor_Expr& iVisitor)
 		{
-		if (ZVisitor_Expr_Op2_T<T>* theVisitor = DynNonConst<ZVisitor_Expr_Op2_T<T> >(&iVisitor))
+		if (ZVisitor_Expr_Op2_T<T>* theVisitor = sDynNonConst<ZVisitor_Expr_Op2_T<T> >(&iVisitor))
 			this->Accept_Expr_Op2(*theVisitor);
 		else
 			ZExpr::Accept_Expr(iVisitor);
@@ -261,7 +261,7 @@ public:
 // From ZVisitee
 	virtual void Accept(const ZVisitor& iVisitor)
 		{
-		if (ZVisitor_Expr_OpN_T<T>* theVisitor = DynNonConst<ZVisitor_Expr_OpN_T<T> >(&iVisitor))
+		if (ZVisitor_Expr_OpN_T<T>* theVisitor = sDynNonConst<ZVisitor_Expr_OpN_T<T> >(&iVisitor))
 			this->Accept_Expr_OpN(*theVisitor);
 		else
 			ZExpr::Accept(iVisitor);
@@ -270,7 +270,7 @@ public:
 // From ZExpr
 	virtual void Accept_Expr(ZVisitor_Expr& iVisitor)
 		{
-		if (ZVisitor_Expr_OpN_T<T>* theVisitor = DynNonConst<ZVisitor_Expr_OpN_T<T> >(&iVisitor))
+		if (ZVisitor_Expr_OpN_T<T>* theVisitor = sDynNonConst<ZVisitor_Expr_OpN_T<T> >(&iVisitor))
 			this->Accept_Expr_OpN(*theVisitor);
 		else
 			ZExpr::Accept_Expr(iVisitor);

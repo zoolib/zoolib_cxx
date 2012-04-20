@@ -46,6 +46,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
+// MARK: - ZMACRO_foreachri
+
+#ifndef ZMACRO_foreachri
+	#define ZMACRO_foreachri(iter, cont) \
+		for (ZMACRO_auto_(iter,(cont).rbegin()), \
+			foreach_end = (cont).rend(); \
+			iter != foreach_end; ++iter)
+#endif
+
+#ifndef foreachri
+	#define foreachri ZMACRO_foreachri
+#endif
+
+// =================================================================================================
 // MARK: - ZMACRO_foreachv
 
 namespace ZooLib {
@@ -94,6 +108,57 @@ public:
 
 #ifndef foreachv
 	#define foreachv ZMACRO_foreachv
+#endif
+
+// =================================================================================================
+// MARK: - ZMACRO_foreachrv
+
+namespace ZooLib {
+
+template <typename Container>
+class ZWrapper_foreachrv_T
+	{
+public:
+    inline ZWrapper_foreachrv_T(const Container& iContainer)
+	:	fIter(iContainer.rbegin())
+	,	fEnd(iContainer.rend())
+	,	fMismatch(0)
+		{}
+
+    typename Container::const_reverse_iterator fIter;
+	const typename Container::const_reverse_iterator fEnd;
+    int fMismatch;
+	};
+
+} // namespace ZooLib
+
+#ifdef ZMACRO_foreachrv
+#elif 0
+	// Terse version without line number suffix on local wrapper.
+	#define ZMACRO_foreachrv(vardecl, cont) \
+		for (ZooLib::ZWrapper_foreachrv_T<ZMACRO_decltype(cont)> wrap(cont); \
+			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
+			++wrap.fIter, ++wrap.fMismatch) \
+			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
+
+#elif 1
+	#define ZMACRO_foreachrv(VarDeclaration, Container) \
+		for (ZooLib::ZWrapper_foreachrv_T<ZMACRO_decltype(Container)> \
+			ZMACRO_Concat(Wrapper_foreachrv,__LINE__)(Container); \
+			not ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fMismatch \
+			&& ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fIter \
+			!= ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fEnd; \
+			++ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fIter, \
+			++ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fMismatch) \
+			for (VarDeclaration = \
+			*ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fIter; \
+			not ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fMismatch; \
+			--ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fMismatch)
+
+#endif
+
+#ifndef foreachrv
+	#define foreachrv ZMACRO_foreachrv
 #endif
 
 #endif // __ZMACRO_foreach_h__

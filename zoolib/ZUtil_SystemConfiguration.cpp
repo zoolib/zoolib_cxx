@@ -46,7 +46,7 @@ void Store::Initialize()
 	{
 	ZCounted::Initialize();
 
-	fStoreRef = Adopt& ::SCDynamicStoreCreate(nullptr,
+	fStoreRef = sAdopt& ::SCDynamicStoreCreate(nullptr,
 		CFSTR("ZUtil_SystemConfiguration"),
 		&Store::spCallback,
 		ZUtil_CF::Context<SCDynamicStoreContext>(this->GetWeakRefProxy()).IParam());

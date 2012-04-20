@@ -45,7 +45,7 @@ Expr_Rel_Dum::~Expr_Rel_Dum()
 
 void Expr_Rel_Dum::Accept(const ZVisitor& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Dum* theVisitor = DynNonConst<Visitor_Expr_Rel_Dum>(&iVisitor))
+	if (Visitor_Expr_Rel_Dum* theVisitor = sDynNonConst<Visitor_Expr_Rel_Dum>(&iVisitor))
 		this->Accept_Expr_Rel_Dum(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
@@ -53,7 +53,7 @@ void Expr_Rel_Dum::Accept(const ZVisitor& iVisitor)
 
 void Expr_Rel_Dum::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Dum* theVisitor = DynNonConst<Visitor_Expr_Rel_Dum>(&iVisitor))
+	if (Visitor_Expr_Rel_Dum* theVisitor = sDynNonConst<Visitor_Expr_Rel_Dum>(&iVisitor))
 		this->Accept_Expr_Rel_Dum(*theVisitor);
 	else
 		inherited::Accept_Expr_Op0(iVisitor);

@@ -174,7 +174,7 @@ void Source_Union::Proxy::Finalize()
 
 void Source_Union::Proxy::Accept(const ZVisitor& iVisitor)
 	{
-	if (Visitor_Proxy* theVisitor = DynNonConst<Visitor_Proxy>(&iVisitor))
+	if (Visitor_Proxy* theVisitor = sDynNonConst<Visitor_Proxy>(&iVisitor))
 		this->Accept_Proxy(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
@@ -182,7 +182,7 @@ void Source_Union::Proxy::Accept(const ZVisitor& iVisitor)
 
 void Source_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Proxy* theVisitor = DynNonConst<Visitor_Proxy>(&iVisitor))
+	if (Visitor_Proxy* theVisitor = sDynNonConst<Visitor_Proxy>(&iVisitor))
 		this->Accept_Proxy(*theVisitor);
 	else
 		inherited::Accept_Expr_Op0(iVisitor);
