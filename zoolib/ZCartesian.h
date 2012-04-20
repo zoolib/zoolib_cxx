@@ -133,9 +133,9 @@ sPoint
 // MARK: - Other Point Pseudo-ctors.
 
 // Null == (0,0)
+// Usage: sPoint<PointType>()
 template <class Point_p>
 typename PointTraits<Point_p>::Point_t
-// Usage: sPoint<PointType>()
 sPoint
 	()
 	{ return PointTraits<Point_p>::sMake(0, 0); }
