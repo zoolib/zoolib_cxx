@@ -621,7 +621,12 @@ public:
 		if (fWeightScale > 0)
 			return fTween->QValAt(iPlace / fWeightScale);
 		else
-			return fTween->QValAt(spWeight(fTween, fTweenWeightQ) + iPlace/fWeightScale);
+			{
+			const double theWeight = spWeight(fTween, fTweenWeightQ);
+			// Tweak the place by 1/1000, so that zero maps to just *before*
+			// the end of the source tween.
+			return fTween->QValAt(theWeight + iPlace/fWeightScale - theWeight * 1e-3);
+			}
 		}
 
 	virtual double Weight()
