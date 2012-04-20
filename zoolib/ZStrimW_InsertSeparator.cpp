@@ -23,10 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-using std::map;
-using std::min;
-using std::pair;
-
 // =================================================================================================
 // MARK: - ZStrimW_CRLFRemove
 
@@ -84,9 +80,9 @@ void ZStrimW_InsertSeparator::Imp_WriteUTF32
 				if (iter->first)
 					{
 					const size_t tickSize = iter->first;
-					const uint64 nextTick = ((fCount + tickSize) / tickSize) * tickSize;
+					const uint64 nextTick = (fCount / tickSize) * tickSize + tickSize;
 					if (nextTick <= newEnd)
-						countToWrite = min(countToWrite, size_t(nextTick - fCount));
+						countToWrite = std::min(countToWrite, size_t(nextTick - fCount));
 					}
 				}
 			}

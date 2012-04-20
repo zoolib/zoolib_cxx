@@ -41,14 +41,6 @@ public:
 
 	ZStrimW_InsertSeparator(const Spacings& iSpacings, const ZStrimW& iStrimSink);
 	
-	template <class Iterator>
-	ZStrimW_InsertSeparator
-		(const Iterator& iSpacings_Begin, const Iterator& iSpacings_End, const ZStrimW& iStrimSink)
-	:	fStrimSink(iStrimSink)
-	,	fSpacings(iSpacings_Begin, iSpacings_End)
-	,	fCount(0)
-		{}
-
 // From ZStrimW_NativeUTF32
 	virtual void Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU);
 
