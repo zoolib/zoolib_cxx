@@ -232,8 +232,9 @@ template <class E, size_t R>
 ZMatrix<E,1,R-1> sCartesian(const ZMatrix<E,1,R>& iMat)
 	{
 	ZMatrix<E,1,R-1> result;
+	const E last = iMat.fE[0][R-1];
 	for (size_t r = 0; r < R - 1; ++r)
-		result.fE[0][r] = iMat.fE[0][r];
+		result.fE[0][r] = iMat.fE[0][r]/last;
 	return result;
 	}
 
@@ -244,8 +245,9 @@ template <class E, size_t C>
 ZMatrix<E,C-1,1> sCartesian(const ZMatrix<E,C,1>& iMat)
 	{
 	ZMatrix<E,C-1,1> result;
+	const E last = iMat.fE[C-1][0];
 	for (size_t c = 0; c < C - 1; ++c)
-		result.fE[c][0] = iMat.fE[c][0];
+		result.fE[c][0] = iMat.fE[c][0]/last;
 	return result;
 	}
 

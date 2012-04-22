@@ -95,7 +95,7 @@ ZUSBWatcher::ZUSBWatcher
 :	fIONotificationPortRef(iIONotificationPortRef)
 ,	fNotification(0)
 	{
-	ZMap_CF theMap = Adopt& ::IOServiceMatching(kIOUSBDeviceClassName);
+	ZMap_CF theMap = sAdopt& ::IOServiceMatching(kIOUSBDeviceClassName);
 	theMap.Set(kUSBVendorID, int32(iUSBVendor));
 	theMap.Set(kUSBProductID, int32(iUSBProduct));
 

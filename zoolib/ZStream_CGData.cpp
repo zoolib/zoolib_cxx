@@ -63,7 +63,7 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential =
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer)
 	{
 	iStreamer->Retain();
-	return Adopt& ::CGDataProviderCreateSequential(iStreamer.Get(), &spCallbacksSequential);
+	return sAdopt& ::CGDataProviderCreateSequential(iStreamer.Get(), &spCallbacksSequential);
 	}
 
 #else // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
@@ -82,7 +82,7 @@ static CGDataProviderCallbacks spCallbacks_R =
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer)
 	{
 	iStreamer->Retain();
-	return Adopt& ::CGDataProviderCreate(iStreamer, &spCallbacks_R);
+	return sAdopt& ::CGDataProviderCreate(iStreamer, &spCallbacks_R);
 	}
 
 #endif // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
@@ -127,7 +127,7 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential_RPos =
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer)
 	{
 	iStreamer->Retain();
-	return Adopt& ::CGDataProviderCreateSequential(iStreamer.Get(), &spCallbacksSequential_RPos);
+	return sAdopt& ::CGDataProviderCreateSequential(iStreamer.Get(), &spCallbacksSequential_RPos);
 	}
 
 #else // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
@@ -143,7 +143,7 @@ static CGDataProviderCallbacks spCallbacks_RPos =
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer)
 	{
 	iStreamer->Retain();
-	return Adopt& ::CGDataProviderCreate(iStreamer, &spCallbacks_RPos);
+	return sAdopt& ::CGDataProviderCreate(iStreamer, &spCallbacks_RPos);
 	}
 
 #endif // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
@@ -174,7 +174,7 @@ CGDataConsumerCallbacks spCallbacks_W =
 ZRef<CGDataConsumerRef> ZStream_CGData::sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer)
 	{
 	iStreamer->Retain();
-	return Adopt& ::CGDataConsumerCreate(iStreamer.Get(), &spCallbacks_W);
+	return sAdopt& ::CGDataConsumerCreate(iStreamer.Get(), &spCallbacks_W);
 	}
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)

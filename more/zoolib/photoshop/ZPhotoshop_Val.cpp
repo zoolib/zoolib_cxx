@@ -211,14 +211,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		{ \
 		PIActionReference theVal; \
 		if (noErr == SUITE->GetReference(P0, P1, &theVal)) \
-			return Spec(Adopt(theVal)); \
+			return Spec(sAdopt(theVal)); \
 		break; \
 		} \
 	case typeValueList: \
 		{ \
 		PIActionList theVal; \
 		if (noErr == SUITE->GetList(P0, P1, &theVal)) \
-			return Seq(Adopt(theVal)); \
+			return Seq(sAdopt(theVal)); \
 		break; \
 		} \
 	case typeObject: \
@@ -226,7 +226,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		DescriptorClassID theDCID; \
 		PIActionDescriptor theVal; \
 		if (noErr == SUITE->GetObject(P0, P1, &theDCID, &theVal)) \
-			return Map(theDCID, Adopt(theVal)); \
+			return Map(theDCID, sAdopt(theVal)); \
 		break; \
 		} \
 	/* global object? */ \
