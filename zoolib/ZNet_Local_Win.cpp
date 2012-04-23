@@ -106,7 +106,7 @@ static ZRef<HANDLE> spConnect(const string& iName)
 			nullptr); // no template file
 
 		if (theHANDLE && theHANDLE != INVALID_HANDLE_VALUE)
-			return Adopt& theHANDLE;
+			return sAdopt& theHANDLE;
 
 		if (::GetLastError() != ERROR_PIPE_BUSY)
 			{
@@ -139,7 +139,7 @@ static ZRef<HANDLE> spCreateNamedPipe(const string16& iPipeName, bool iFirst)
 	if (!theHANDLE || INVALID_HANDLE_VALUE == theHANDLE)
 		throw runtime_error("ZNetListener_Local_Win, spCreateNamedPipe failed");
 
-	return Adopt& theHANDLE;
+	return sAdopt& theHANDLE;
 	}
 
 static ZRef<HANDLE> spCreateEvent()
@@ -147,7 +147,7 @@ static ZRef<HANDLE> spCreateEvent()
 	HANDLE theHANDLE = ::CreateEvent(nullptr, true, false, nullptr);
 	if (!theHANDLE || INVALID_HANDLE_VALUE == theHANDLE)
 		throw runtime_error("spCreateEvent failed");
-	return Adopt& theHANDLE;
+	return sAdopt& theHANDLE;
 	}
 
 // =================================================================================================
