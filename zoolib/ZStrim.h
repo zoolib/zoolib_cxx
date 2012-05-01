@@ -645,6 +645,40 @@ private:
 typedef ZStrimU_String8 ZStrimU_String;
 
 // =================================================================================================
+// MARK: - ZStrimW_String32
+
+/// Provides a ZStrimW interface to a standard library string, writing UTF-32 code units.
+
+class ZStrimW_String32 : public ZStrimW_NativeUTF32
+	{
+public:
+	ZStrimW_String32(string32& ioString);
+	~ZStrimW_String32();
+
+	virtual void Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU);
+
+private:
+	string32& fString;
+	};
+
+// =================================================================================================
+// MARK: - ZStrimW_String16
+
+/// Provides a ZStrimW interface to a standard library string, writing UTF-16 code units.
+
+class ZStrimW_String16 : public ZStrimW_NativeUTF16
+	{
+public:
+	ZStrimW_String16(string16& ioString);
+	~ZStrimW_String16();
+
+	virtual void Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCountCU);
+
+private:
+	string16& fString;
+	};
+
+// =================================================================================================
 // MARK: - ZStrimW_String8
 
 /// Provides a ZStrimW interface to a standard library string, writing UTF-8 code units.
@@ -652,7 +686,7 @@ typedef ZStrimU_String8 ZStrimU_String;
 class ZStrimW_String8 : public ZStrimW_NativeUTF8
 	{
 public:
-	ZStrimW_String8(string8& iString);
+	ZStrimW_String8(string8& ioString);
 	~ZStrimW_String8();
 
 	virtual void Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU);

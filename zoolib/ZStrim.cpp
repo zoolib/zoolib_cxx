@@ -1849,10 +1849,54 @@ string8 ZStrimU_String8::GetString8() const
 	{ return fString; }
 
 // =================================================================================================
+// MARK: - ZStrimW_String32
+
+ZStrimW_String32::ZStrimW_String32(string32& ioString)
+:	fString(ioString)
+	{}
+
+ZStrimW_String32::~ZStrimW_String32()
+	{}
+
+void ZStrimW_String32::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
+	{
+	try
+		{
+		fString.append(iSource, iCountCU);
+		if (oCountCU)
+			*oCountCU = iCountCU;
+		}
+	catch (...)
+		{}
+	}
+
+// =================================================================================================
+// MARK: - ZStrimW_String16
+
+ZStrimW_String16::ZStrimW_String16(string16& ioString)
+:	fString(ioString)
+	{}
+
+ZStrimW_String16::~ZStrimW_String16()
+	{}
+
+void ZStrimW_String16::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCountCU)
+	{
+	try
+		{
+		fString.append(iSource, iCountCU);
+		if (oCountCU)
+			*oCountCU = iCountCU;
+		}
+	catch (...)
+		{}
+	}
+
+// =================================================================================================
 // MARK: - ZStrimW_String8
 
-ZStrimW_String8::ZStrimW_String8(string8& iString)
-:	fString(iString)
+ZStrimW_String8::ZStrimW_String8(string8& ioString)
+:	fString(ioString)
 	{}
 
 ZStrimW_String8::~ZStrimW_String8()
