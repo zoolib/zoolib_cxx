@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZSDL {
 
-using std::set;
+//using std::set;
 using std::vector;
 
 ZMtxR sMtxR;
@@ -187,7 +187,6 @@ ZDCPixmap sPixmap(ZRef<Surface> iSurface)
 		theDepth = theFormat->BytesPerPixel;
 	PixvalDesc thePixvalDesc(theDepth, false);
 
-
 	const size_t theRowBytes = theSurface->pitch;
 	const size_t theHeight = theSurface->h;
 	const size_t theWidth = theSurface->w;
@@ -198,9 +197,6 @@ ZDCPixmap sPixmap(ZRef<Surface> iSurface)
 
 	return ZDCPixmapRep::sCreate(thePMR, sRect<ZRectPOD>(theWidth, theHeight), thePixelDesc);
 	}
-
-
-ZDCPixmap sPixmap(ZRef<Surface> iSurface);
 
 // =================================================================================================
 // MARK: - Mixer
