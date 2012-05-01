@@ -27,20 +27,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_NSObject.h"
 #include "zoolib/ZRef.h"
 
-//namespace ZooLib {
-
 // =================================================================================================
 // MARK: - id and NSObject, sRetain and sRelease
 
 void sRetain(struct objc_object& iOb);
-void sRelease(struct objc_object& iOb);
-
-void sCheck(struct objc_object*);
-
 void sRetain(NSObject& iNSObject);
+
+void sRelease(struct objc_object& iOb);
 void sRelease(NSObject& iNSObject);
 
-//} // namespace ZooLib
+void sCheck(struct objc_object*);
+void sCheck(NSObject*);
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 

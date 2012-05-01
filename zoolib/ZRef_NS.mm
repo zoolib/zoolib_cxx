@@ -31,16 +31,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 void sRetain(struct objc_object& iOb)
 	{ [((id)&iOb) retain]; }
 
+void sRetain(NSObject& iNSObject)
+	{ [&iNSObject retain]; }
+
 void sRelease(struct objc_object& iOb)
 	{ [((id)&iOb) release]; }
+
+void sRelease(NSObject& iNSObject)
+	{ [&iNSObject release]; }
 
 void sCheck(struct objc_object* iP)
 	{ ZAssertStop(1, iP); }
 
-void sRetain(NSObject& iNSObject)
-	{ [&iNSObject retain]; }
-
-void sRelease(NSObject& iNSObject)
-	{ [&iNSObject release]; }
+void sCheck(NSObject* iP)
+	{ ZAssertStop(1, iP); }
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
