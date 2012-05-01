@@ -400,7 +400,7 @@ ZMap_Any::ZMap_Any(Iterator begin, Iterator end)
 // =================================================================================================
 // MARK: - 
 
-ZMap_Any sAugment(const ZMap_Any& iUnder, const ZMap_Any& iOver);
+ZMap_Any sAugmented(const ZMap_Any& iUnder, const ZMap_Any& iOver);
 
 } // namespace ZooLib
 

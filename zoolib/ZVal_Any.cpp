@@ -628,7 +628,7 @@ ZMap_Any operator*(const ZMap_Any& iMap0, const ZMap_Any& iMap1)
 // =================================================================================================
 // MARK: - 
 
-ZMap_Any sAugment(const ZMap_Any& iUnder, const ZMap_Any& iOver)
+ZMap_Any sAugmented(const ZMap_Any& iUnder, const ZMap_Any& iOver)
 	{
 	ZMap_Any result = iUnder;
 	for (ZMap_Any::Index_t ii = iOver.Begin(); ii != iOver.End(); ++ii)
