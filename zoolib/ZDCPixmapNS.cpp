@@ -194,9 +194,9 @@ StandardToInfoColor_t sStandardToInfoColor[] =
 static void spMaskToShiftsAndMultiplier(uint32 iMask,
 	int32& oShiftLeft, int32& oShiftRight, uint32& oMultiplier, uint32& oAdd)
 	{
+	oShiftLeft = 0;
 	if (iMask == 0)
 		{
-		oShiftLeft = 0;
 		// If the mask is empty we use a right shift of 16. When a uint32 with bits set in
 		// only its low 16 bits is shifted by 16, the result will always be zero. It is
 		// important that the right shift be large enough to do this (ie at least 16), but
@@ -209,23 +209,30 @@ static void spMaskToShiftsAndMultiplier(uint32 iMask,
 		}
 	else
 		{
-		oShiftLeft = 0;
-		while (!(iMask & 0x01))
+		while (0 == (iMask & 1))
 			{
 			++oShiftLeft;
 			iMask >>= 1;
 			}
-		int32 theDepth = 0;
-		while (iMask & 0x01)
+		uint32 theDepth = 0;
+		while (iMask & 1)
 			{
 			++theDepth;
 			iMask >>= 1;
 			}
 		ZAssertStop(kDebug_PixmapNS, iMask == 0);
 		ZAssertStop(kDebug_PixmapNS, theDepth <= 16);
-		oShiftRight = 16 - theDepth;
-		oMultiplier = 0xFFFFFFFFU / ((1U << theDepth) - 1);
-		oAdd = 0;
+		if (theDepth)
+			{
+			// theDepth must be non-zero, but Clang's analysis disagrees.
+			oMultiplier = 0xFFFFFFFFU / ((1U << theDepth) - 1);
+			oShiftRight = 16 - theDepth;
+			oAdd = 0;
+			}
+		else
+			{
+			ZUnimplemented();
+			}
 		}
 	}
 

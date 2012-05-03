@@ -183,9 +183,8 @@ bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64)
 			return true;
 			}
 
-		bool readDecimal = sTryRead_DecimalInteger(iStrimU, oInt64);
+		/*bool readDecimal = */sTryRead_DecimalInteger(iStrimU, oInt64);
 		// We know that the first CP to be read is a digit, so sTryRead_DecimalInteger can't fail.
-		ZAssertStop(2, readDecimal);
 		if (isNegative)
 			oInt64 = -oInt64;
 		return true;

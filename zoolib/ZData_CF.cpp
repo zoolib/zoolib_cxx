@@ -141,7 +141,7 @@ void ZData_CF::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 	{
 	if (iCount)
 		{
-		const CFRange theRange = { iOffset, iCount };
+		const CFRange theRange = { CFIndex(iOffset), CFIndex(iCount) };
 		::CFDataReplaceBytes(this->pTouch(), theRange, static_cast<const UInt8*>(iSource), iCount);
 		}
 	}
@@ -155,7 +155,7 @@ void ZData_CF::CopyTo(size_t iOffset, void* oDest, size_t iCount) const
 		{
 		CFDataRef theData = this->pData();
 		ZAssert(theData);
-		const CFRange theRange = { iOffset, iCount };
+		const CFRange theRange = { CFIndex(iOffset), CFIndex(iCount) };
 		::CFDataGetBytes(theData, theRange, static_cast<UInt8*>(oDest));
 		}
 	}

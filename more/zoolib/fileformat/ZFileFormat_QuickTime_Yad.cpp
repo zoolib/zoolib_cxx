@@ -234,8 +234,10 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 		else
 			{
 			if (theSize < 8)
-				isValidSize= false;
+				isValidSize = false;
 			}
+
+		ZAssertLog(0, isValidSize);
 
 		if (theName32 == ZFOURCC('u','u','i','d'))
 			{
