@@ -22,7 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMACRO_decltype_h__ 1
 #include "zconfig.h"
 
-#if not defined(_MSC_VER)
+#if 0
+#elif defined(__cplusplus) && __cplusplus>=201103L
+
+#define ZMACRO_decltype(expr) decltype(expr)
+
+#elif not defined(_MSC_VER)
 
 // Just assume GCC for now.
 #define ZMACRO_decltype(expr) __typeof__(expr)

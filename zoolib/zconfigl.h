@@ -270,6 +270,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifdef __cplusplus
 
 	#if 0
+	#elif defined(__cplusplus) && __cplusplus>=201103L
+
+		// nullptr is naturally available
+
 	#elif defined(_MSC_VER) && _MSC_VER >= 1600
 
 		// nullptr is naturally available
