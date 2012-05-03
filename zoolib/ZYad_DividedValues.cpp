@@ -33,7 +33,7 @@ using std::vector;
 static bool spReadValues(vector<string8>& oValues,
 	UTF32 iDivider_Value, UTF32 iDivider_Line, const ZStrimR& iStrimR)
 	{
-	bool gotAny;
+	bool gotAny = false;
 	oValues.clear();
 	string8 curValue;
 	for (;;)
