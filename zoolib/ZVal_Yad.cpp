@@ -240,6 +240,8 @@ ZQ<ZVal_Yad> ZMap_Yad::QGet(const string8& iName) const
 			return theVal_Yad;
 			}
 		}
+
+	fMap.Set(iName, Tombstone_t());
 	return null;
 	}
 
@@ -273,7 +275,10 @@ ZMap_Yad& ZMap_Yad::Erase(const string8& iName)
 ZVal_Yad& ZMap_Yad::Mutable(const string8& iName)
 	{
 	if (ZAny* theP = fMap.PGetMutable(iName))
-		return *static_cast<ZVal_Yad*>(theP);
+		{
+		if (not theP->PGet<Tombstone_t>())
+			return *static_cast<ZVal_Yad*>(theP);
+		}
 	
 	ZAny& theMutable = fMap.Mutable(iName);
 	if (fYad)
@@ -281,6 +286,7 @@ ZVal_Yad& ZMap_Yad::Mutable(const string8& iName)
 		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
 			theMutable = spAsVal_Yad(theYad).AsAny();
 		}
+
 	return static_cast<ZVal_Yad&>(theMutable);
 	}
 
@@ -289,9 +295,14 @@ ZVal_Yad& ZMap_Yad::operator[](const string8& iName)
 
 const ZVal_Yad& ZMap_Yad::operator[](const string8& iName) const
 	{
-	if (ZAny* theP = fMap.PGetMutable(iName))
-		return *static_cast<ZVal_Yad*>(theP);
-	
+	if (const ZAny* theP = fMap.PGet(iName))
+		{
+		if (theP->PGet<Tombstone_t>())
+			return spVal_Null;
+		else
+			return *static_cast<const ZVal_Yad*>(theP);
+		}
+
 	if (fYad)
 		{
 		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
@@ -302,6 +313,7 @@ const ZVal_Yad& ZMap_Yad::operator[](const string8& iName) const
 			}
 		}
 
+	fMap.Set(iName, Tombstone_t());
 	return spVal_Null;
 	}
 
