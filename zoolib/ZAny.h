@@ -29,7 +29,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <typeinfo> // For std::type_info
 
 #if ZCONFIG(Compiler,GCC)
-	#include <tr1/type_traits> // For std::tr1::is_pod
+	#if defined(__cplusplus) && __cplusplus>=201103L && defined(_LIBCPP_VERSION)
+		#include <type_traits> // For std::is_pod
+		namespace ZooLib { using std::is_pod; }
+	#else
+		#include <tr1/type_traits> // For std::tr1::is_pod
+		namespace ZooLib { using std::tr1::is_pod; }
+	#endif
 #endif
 
 // =================================================================================================
@@ -304,7 +310,7 @@ private:
 			if (false)
 				{}
 			#if ZCONFIG(Compiler,GCC)
-			else if (std::tr1::is_pod<S>::value)
+			else if (is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
 				sCtor_T<S>(&fPayload, iP0);
@@ -339,7 +345,7 @@ private:
 			if (false)
 				{}
 			#if ZCONFIG(Compiler,GCC)
-			else if (std::tr1::is_pod<S>::value)
+			else if (is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
 				return *sCtor_T<S>(&fPayload, iP0);
@@ -367,7 +373,7 @@ private:
 			if (false)
 				{}
 			#if ZCONFIG(Compiler,GCC)
-			else if (std::tr1::is_pod<S>::value)
+			else if (is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
 				return *sCtor_T<S>(&fPayload);
@@ -481,6 +487,29 @@ inline ZAny& ZAny::operator=(const S& iVal)
 	pCtor_T<S>(iVal);
 	return *this;
 	}
+
+// =================================================================================================
+// MARK: - Accessor functions
+
+template <class T>
+const ZQ<T> sQGet(const ZAny& iAny)
+	{ return iAny.QGet<T>(); }
+
+template <class T>
+const T sDGet(const T& iDefault, const ZAny& iAny)
+	{ return iAny.DGet<T>(iDefault); }
+
+template <class T>
+const T sGet(const ZAny& iAny)
+	{ return iAny.Get<T>(); }
+
+//template <class T>
+//T& sGet(ZAny& iAny)
+//	{ return iAny.Mutable<T>(); }
+
+template <class T>
+T& sMutable(ZAny& iAny)
+	{ return iAny.Mutable<T>(); }
 
 // =================================================================================================
 // MARK: - ZAny, swap and pseudo-constructors
