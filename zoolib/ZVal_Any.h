@@ -129,6 +129,17 @@ public:
 	ZVal_Any& operator[](size_t iIndex);
 	const ZVal_Any& operator[](size_t iIndex) const;
 
+// Our protocol
+	ZVal_Any& Mutable(size_t iIndex);
+
+	template <class S>
+	S& Mutable(size_t iIndex)
+		{ return this->Mutable(iIndex).Mutable<S>(); }
+
+	template <class S>
+	S& DMutable(const S& iDefault, size_t iIndex)
+		{ return this->Mutable(iIndex).DMutable(iDefault); }
+	
 private:
 	void pTouch();
 
