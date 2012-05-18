@@ -196,6 +196,9 @@ public:
 	ZMACRO_operator_bool_T(ZQ, operator_bool) const
 		{ return operator_bool_gen::translate(fHasValue == Sense); }
 
+	bool HasValue() const
+		{ return fHasValue; }
+
 	T& operator*()
 		{
 		ZAssert(fHasValue);
@@ -298,7 +301,12 @@ public:
 		}
 
 private:
-	char fBytes[sizeof(T)] ZMACRO_Attribute_Aligned;
+	#if __cplusplus>=201103L
+		alignas(T) char fBytes[sizeof(T)];
+	#else
+		char fBytes[sizeof(T)] ZMACRO_Attribute_Aligned;
+	#endif
+
 	bool fHasValue;
 	};
 
@@ -397,6 +405,33 @@ private:
 
 	friend class ZQ<void, !Sense>;
 	};
+
+// =================================================================================================
+// MARK: - Accessor functions
+
+template <class T, bool Sense>
+T sDGet(const T& iDefault, const ZQ<T,Sense>& iQ)
+	{
+	if (iQ.HasValue())
+		return iQ.Get();
+	return iDefault;
+	}
+
+template <class T, bool Sense>
+T sGet(const ZQ<T,Sense>& iQ)
+	{
+	if (iQ.HasValue())
+		return iQ.Get();
+	return T();
+	}
+
+template <class T, bool Sense>
+T& sGetMutable(ZQ<T,Sense>& iQ)
+	{
+	if (iQ.HasValue())
+		iQ = T();
+	return iQ.GetMutable();
+	}
 
 // =================================================================================================
 // MARK: - swap
