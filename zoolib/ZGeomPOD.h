@@ -47,6 +47,9 @@ inline ZPointPOD sPointPOD(int32 iH, int32 iV)
 	return result;
 	}
 
+inline ZPointPOD sPointPOD(int32 iHV)
+	{ return sPointPOD(iHV, iHV); }
+
 // =================================================================================================
 // MARK: - ZRectPOD
 
@@ -63,6 +66,9 @@ inline ZRectPOD sRectPOD(int32 iLeft, int32 iTop, int32 iRight, int32 iBottom)
 	const ZRectPOD result = {iLeft, iTop, iRight, iBottom};
 	return result;
 	}
+
+inline ZRectPOD sRectPOD(int32 iWidth, int32 iHeight)
+	{ return sRectPOD(0, 0, iWidth, iHeight); }
 
 // =================================================================================================
 // MARK: - ZCartesian::PointTraits<ZPointPOD>
