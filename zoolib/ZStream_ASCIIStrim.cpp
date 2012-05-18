@@ -104,7 +104,7 @@ void ZStreamW_ASCIIStrim::Imp_Write(const void* iSource, size_t iCount, size_t* 
 	while (iCount--)
 		{
 		UTF32 current = *localSource++;
-		if (current >= 0 && current <= 127)
+		if (int32(current) >= 0 && current <= 127)
 			fStrimW.WriteCP(current);
 		}
 	if (oCountWritten)
