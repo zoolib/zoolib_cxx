@@ -475,18 +475,22 @@ bool sUTF8ToUTF8
 /** \name Converting from UTF8 in a std::string to UTFXX in a std::wstring.
 *///@{
 
-inline void sAsWString(const string8& iString8, string16& oString16)
-	{ oString16 = sAsUTF16(iString8); }
+#if defined(__cplusplus) && __cplusplus>=201103L
+	// Not available for now.
+#else
+	inline void sAsWString(const string8& iString8, string16& oString16)
+		{ oString16 = sAsUTF16(iString8); }
 
-inline void sAsWString(const string8& iString8, string32& oString32)
-	{ oString32 = sAsUTF32(iString8); }
+	inline void sAsWString(const string8& iString8, string32& oString32)
+		{ oString32 = sAsUTF32(iString8); }
 
-inline std::wstring sAsWString(const std::string& iString)
-	{
-	std::wstring result;
-	sAsWString(iString, result);
-	return result;
-	}
+	inline std::wstring sAsWString(const std::string& iString)
+		{
+		std::wstring result;
+		sAsWString(iString, result);
+		return result;
+		}
+#endif
 
 //@}
 
