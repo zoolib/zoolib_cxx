@@ -115,16 +115,12 @@ public:
 		}
 
 	static ZCog spCogFun_True(const ZCog& iSelf, Param iParam)
-		{
-		// Must not ever call this.
-		ZUnimplemented();
-		}
+		{ ZUnimplemented(); }
+
+	static const ZCog spCog_True;
 
 	static const ZCog& sTrue()
-		{
-		static const ZCog spCog = sCallable(spCogFun_True);
-		return spCog;
-		}
+		{ return spCog_True; }
 	};
 
 // =================================================================================================
@@ -145,18 +141,22 @@ const ZCog<Param>& sCog_Pending()
 // MARK: - Cog classification
 
 template <class Param>
+inline
 bool sIsTrue(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
 	{ return ZCog<Param>::sTrue() == iCallable; }
 
 template <class Param>
+inline
 bool sIsFalse(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
 	{ return not iCallable; }
 
 template <class Param>
+inline
 bool sIsFinished(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
 	{ return sIsFalse(iCallable) || sIsTrue(iCallable); }
 
 template <class Param>
+inline
 bool sIsPending(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
 	{ return not sIsFinished(iCallable); }
 
@@ -449,18 +449,18 @@ ZCog<Param> spCogFun_If(const ZCog<Param>& iSelf, Param iParam,
 	if (sCallUpdate_PendingCog_Unchanged(newCondition, iParam))
 		return iSelf;
 
-	if (sIsTrue(newCondition))
-		{
-		if (sIsFinished(iCog0))
-			return iCog0;
-		return iCog0->Call(iCog0, iParam);
-		}
-
 	if (sIsFalse(newCondition))
 		{
 		if (sIsFinished(iCog1))
 			return iCog1;
 		return iCog1->Call(iCog1, iParam);
+		}
+
+	if (sIsTrue(newCondition))
+		{
+		if (sIsFinished(iCog0))
+			return iCog0;
+		return iCog0->Call(iCog0, iParam);
 		}
 
 	return spCog_If(newCondition, iCog0, iCog1);
@@ -472,11 +472,11 @@ ZCog<Param> sCog_If
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
-	if (sIsTrue(iCondition))
-		return iCallable0;
-
 	if (sIsFalse(iCondition))
 		return iCallable1;
+
+	if (sIsTrue(iCondition))
+		return iCallable0;
 
 	return spCog_If(iCondition, iCallable0, iCallable1);
 	}
@@ -929,6 +929,15 @@ ZCog<Param>& operator%=
 	(ZCog<Param>& ioCog0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_WithUnchanged<Param>(ioCog0, iCallable1); }
+
+// =================================================================================================
+// MARK: - sCog_Fallback
+
+template <class Param>
+ZCog<Param> sCog_Fallback
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iPreferred,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iFallback)
+	{ return iPreferred ? iPreferred : iFallback; }
 
 } // namespace ZooLib
 
