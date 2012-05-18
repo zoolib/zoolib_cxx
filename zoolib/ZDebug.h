@@ -98,7 +98,7 @@ template <> struct AssertCompile<true> { typedef bool IsValid; };
 
 // There are still quite a lot of places where plain old ZAssert is used.
 #ifndef ZAssert
-	#define ZAssert(a) ZAssertStop(0, a)
+	#define ZAssert(a) ZAssertStop(1, a)
 #endif
 
 } // namespace ZDebug
