@@ -159,25 +159,25 @@ public:
 	using inherited::operator[];
 
 // ZMap mutable protocol
-	void Clear()
+	void Clear() const
 		{
 		if (fRep)
 			fRep->GetMutable().Clear();
 		}
 
-	ZMap_Shared_Mutable_T& Set(const std::string& iName, const Val& iVal)
+	const ZMap_Shared_Mutable_T& Set(const std::string& iName, const Val& iVal) const
 		{
 		if (not fRep)
-			fRep = sCountedVal<Map>();
+			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map>();
 		fRep->GetMutable().Set(iName, iVal);
 		return *this;
 		}
 
 	template <class S>
-	ZMap_Shared_Mutable_T& Set(const std::string& iName, const S& iVal)
+	const ZMap_Shared_Mutable_T& Set(const std::string& iName, const S& iVal) const
 		{ return this->Set(iName, Val(iVal)); }
 
-	ZMap_Shared_Mutable_T& Erase(const std::string& iName)
+	const ZMap_Shared_Mutable_T& Erase(const std::string& iName) const
 		{
 		if (fRep)
 			fRep->GetMutable().Erase(iName);
@@ -185,22 +185,22 @@ public:
 		}
 
 // Our protocol
-	Val& Mutable(const std::string& iName)
+	Val& Mutable(const std::string& iName) const
 		{
 		if (not fRep)
-			fRep = sCountedVal<Map>();
+			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map>();
 		return fRep->GetMutable().Mutable(iName);
 		}
 
 	template <class S>
-	S& Mutable(const std::string& iName)
+	S& Mutable(const std::string& iName) const
 		{
 		if (not fRep)
-			fRep = sCountedVal<Map>();
+			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map>();
 		return fRep->GetMutable().Mutable<S>(iName);
 		}
 
-	Val& operator[](const std::string& iName)
+	Val& operator[](const std::string& iName) const
 		{ return this->Mutable(iName); }
 	};
 
