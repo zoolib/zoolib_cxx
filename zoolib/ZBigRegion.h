@@ -119,7 +119,7 @@ public:
 	ZRectPOD Bounds() const;
 	bool IsSimpleRect() const;
 
-	void Decompose(std::vector<ZRectPOD >& oRects) const;
+	void Decompose(std::vector<ZRectPOD>& oRects) const;
 	typedef bool (*DecomposeProc)(const ZRectPOD& iRect, void* iRefcon);
 	int32 Decompose(DecomposeProc iProc, void* iRefcon) const;
 
