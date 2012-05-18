@@ -41,37 +41,29 @@ class ZMatrix
 	{
 public:
 	typedef E_p E;
-	static const size_t R = R_p;
+
 	static const size_t C = C_p;
+	static const size_t R = R_p;
 
 	ZMatrix(const null_t&)
 		{}
 
 	ZMatrix()
 		{
-		for (size_t c = 0; c < C; ++c)
-			{
-			for (size_t r = 0; r < R; ++r)
-				fE[c][r] = E(0);
-			}
+		for (size_t i = 0; i < C * R; ++i)
+			fE[0][i] = E(0);
 		}
 
 	ZMatrix(const ZMatrix& iOther)
 		{
-		for (size_t c = 0; c < C; ++c)
-			{
-			for (size_t r = 0; r < R; ++r)
-				fE[c][r] = iOther.fE[c][r];
-			}
+		for (size_t i = 0; i < C * R; ++i)
+			fE[0][i] = iOther[0][i];
 		}
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
-		for (size_t c = 0; c < C; ++c)
-			{
-			for (size_t r = 0; r < R; ++r)
-				fE[c][r] = iOther.fE[c][r];
-			}
+		for (size_t i = 0; i < C * R; ++i)
+			fE[0][i] = iOther[0][i];
 		return *this;
 		}
 
@@ -339,6 +331,24 @@ template <class Mat>
 Mat sIdentity()
 	{ return sIdentity<typename Mat::E, Mat::R>(); }
 
+template <class E, size_t Dim>
+bool sIsIdentity(const ZMatrix<E,Dim,Dim>& iMat)
+	{
+	const E& theID = iMat[0][0];
+	for (size_t c = 0; c < Dim; ++c)
+		{
+		for (size_t r = 0; r < Dim; ++r)
+			{
+			const E& theE = iMat.fE[c][r];
+			if (c == r && theE != theID)
+				return false;
+			else if (theE != 0.0)
+				return false;
+			}
+		}
+	return true;
+	}
+
 // =================================================================================================
 // MARK: - sTransposed
 
@@ -461,11 +471,12 @@ ZMatrix<E,C,R> sNonZero(const ZMatrix<E,C,R>& iMat)
 template <class E, size_t RL, size_t Common, size_t CR>
 ZMatrix<E,CR,RL> operator*(const ZMatrix<E,Common,RL>& iLeft, const ZMatrix<E,CR,Common>& iRight)
 	{
-	ZMatrix<E,CR,RL> result;
+	ZMatrix<E,CR,RL> result(null);
 	for (size_t rl = 0; rl < RL; ++rl)
 		{
 		for (size_t cr = 0; cr < CR; ++cr)
 			{
+			result.fE[cr][rl] = E(0);
 			for (size_t o = 0; o < Common; ++o)
 				result.fE[cr][rl] += iLeft.fE[o][rl] * iRight.fE[cr][o];
 			}
