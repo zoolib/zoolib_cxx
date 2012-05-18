@@ -218,22 +218,7 @@ sRect
 	const typename RectTraits<Rect_p>::Ord_t& iT,
 	const typename RectTraits<Rect_p>::Ord_t& iR,
 	const typename RectTraits<Rect_p>::Ord_t& iB)
-	{
-	if (iL <= iR)
-		{
-		if (iT <= iB)
-			return RectTraits<Rect_p>::sMake(iL, iT, iR, iB);
-		else
-			return RectTraits<Rect_p>::sMake(iL, iB, iR, iT);
-		}
-	else
-		{
-		if (iT <= iB)
-			return RectTraits<Rect_p>::sMake(iR, iT, iL, iB);
-		else
-			return RectTraits<Rect_p>::sMake(iR, iB, iL, iT);
-		}
-	}
+	{ return RectTraits<Rect_p>::sMake(iL, iT, iR, iB); }
 
 // =================================================================================================
 // MARK: - Other Rect Pseudo-ctors.
