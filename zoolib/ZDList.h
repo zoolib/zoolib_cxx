@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZStdInt.h"
+#include "zoolib/ZStdInt.h" // For size_t
 
 namespace ZooLib {
 
@@ -165,7 +165,7 @@ public:
 // =================================================================================================
 // MARK: - DListLink
 
-template <typename P, typename L, int kDebug_T = 1>
+template <typename P, typename L = P, int kDebug_T = 1>
 class DListLink
 	{
 private:
@@ -193,7 +193,7 @@ public:
 // =================================================================================================
 // MARK: - DListIterator
 
-template <typename P, typename L>
+template <typename P, typename L = P>
 class DListIterator
 	{
 public:
@@ -245,7 +245,7 @@ private:
 // =================================================================================================
 // MARK: - DListEraser
 
-template <typename P, typename L>
+template <typename P, typename L = P>
 class DListEraser
 	{
 public:
