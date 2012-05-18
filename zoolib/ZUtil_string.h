@@ -55,8 +55,8 @@ bool sContainsi(const string& iPattern, const string& iTarget);
 
 // --
 
-ZQ<string> sWithoutPrefix(const string& iPattern, const string& iTarget);
-ZQ<string> sWithoutSuffix(const string& iPattern, const string& iTarget);
+ZQ<string> sQWithoutPrefix(const string& iPattern, const string& iTarget);
+ZQ<string> sQWithoutSuffix(const string& iPattern, const string& iTarget);
 
 bool sStartsWith(const string& iPattern, const string& iTarget);
 bool sEndsWith(const string& iPattern, const string& iTarget);

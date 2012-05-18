@@ -169,7 +169,7 @@ bool sContainsi(const string& iPattern, const string& iTarget)
 	return string::npos != ZUnicode::sToLower(iTarget).find(ZUnicode::sToLower(iPattern));
 	}
 
-ZQ<string> sWithoutPrefix(const string& iPattern, const string& iTarget)
+ZQ<string> sQWithoutPrefix(const string& iPattern, const string& iTarget)
 	{
 	if (size_t patternLength = iPattern.length())
 		{
@@ -186,7 +186,7 @@ ZQ<string> sWithoutPrefix(const string& iPattern, const string& iTarget)
 	return iTarget;
 	}
 
-ZQ<string> sWithoutSuffix(const string& iPattern, const string& iTarget)
+ZQ<string> sQWithoutSuffix(const string& iPattern, const string& iTarget)
 	{
 	if (size_t patternLength = iPattern.length())
 		{
@@ -204,10 +204,10 @@ ZQ<string> sWithoutSuffix(const string& iPattern, const string& iTarget)
 	}
 
 bool sStartsWith(const string& iPattern, const string& iTarget)
-	{ return sWithoutPrefix(iPattern, iTarget); }
+	{ return sQWithoutPrefix(iPattern, iTarget); }
 
 bool sEndsWith(const string& iPattern, const string& iTarget)
-	{ return sWithoutSuffix(iPattern, iTarget); }
+	{ return sQWithoutSuffix(iPattern, iTarget); }
 
 // =================================================================================================
 
