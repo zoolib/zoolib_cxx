@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallOnNewThread__
-#define __ZCallOnNewThread__ 1
+#ifndef __ZCallOnNewThread_h__
+#define __ZCallOnNewThread_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -40,4 +40,4 @@ void sCallOnNewThread(const ZRef_ZCallable_Void& iCallable)
 
 } // namespace ZooLib
 
-#endif // __ZCallOnNewThread__
+#endif // __ZCallOnNewThread_h__
