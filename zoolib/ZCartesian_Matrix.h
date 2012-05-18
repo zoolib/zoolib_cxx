@@ -35,7 +35,9 @@ template <class Ord_p>
 struct PointTraits<ZMatrix<Ord_p,1,2> >
 :	public PointTraits_Std<Ord_p,ZMatrix<Ord_p,1,2>,ZMatrixArray<Ord_p,1,2,2> >
 	{
+	typedef Ord_p Ord_t;
 	typedef ZMatrix<Ord_p,1,2> Point_t;
+	typedef ZMatrixArray<Ord_p,1,2,2> Rect_t;
 
 	typedef const Ord_p& XC_t;
 	static XC_t sX(const Point_t& iPoint) { return iPoint[0]; }
@@ -65,7 +67,9 @@ template <class Ord_p>
 struct PointTraits<ZMatrix<Ord_p,1,3> >
 :	public PointTraits_Std<Ord_p,ZMatrix<Ord_p,1,3>,ZMatrixArray<Ord_p,1,2,2> >
 	{
+	typedef Ord_p Ord_t;
 	typedef ZMatrix<Ord_p,1,3> Point_t;
+	typedef ZMatrixArray<Ord_p,1,2,2> Rect_t;
 
 	typedef const Ord_p& XC_t;
 	static XC_t sX(const Point_t& iPoint) { return iPoint[0]; }
@@ -78,6 +82,14 @@ struct PointTraits<ZMatrix<Ord_p,1,3> >
 
 	typedef Ord_p& Y_t;
 	static Y_t sY(Point_t& ioPoint) { return ioPoint[1]; }
+	static Point_t sMake(const Ord_p& iX, const Ord_p& iY)
+		{
+		Point_t result(null);
+		result[0] = iX;
+		result[1] = iY;
+		result[2] = 0;
+		return result;
+		}
 	};
 
 // =================================================================================================
@@ -87,6 +99,7 @@ template <class Ord_p>
 struct RectTraits<ZMatrixArray<Ord_p,1,2,2> >
 :	public RectTraits_Std<Ord_p,ZMatrix<Ord_p,1,2>,ZMatrixArray<Ord_p,1,2,2> >
 	{
+	typedef Ord_p Ord_t;
 	typedef ZMatrix<Ord_p,1,2> Point_t;
 	typedef ZMatrixArray<Ord_p,1,2,2> Rect_t;
 
