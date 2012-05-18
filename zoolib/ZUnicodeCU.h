@@ -27,32 +27,41 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+#if defined(__cplusplus) && __cplusplus>=201103L
+
+	typedef char32_t UTF32;
+	typedef char16_t UTF16;
+
 // =================================================================================================
 
-namespace ZUnicode {
+#else
 
-// This lets us typedef UTF16 or UTF32 from wchar_t, with
-// the other being a regular unsigned integer.
+	namespace ZUnicode {
 
-template <int s> struct Types_T {};
+	// This lets us typedef UTF16 or UTF32 from wchar_t, with
+	// the other being a regular unsigned integer.
 
-template <> struct Types_T<4>
-	{
-	typedef wchar_t utf32_t;
-	typedef ZStdInt::uint16 utf16_t;
-	};
+	template <int s> struct Types_T {};
 
-template <> struct Types_T<2>
-	{
-	typedef ZStdInt::uint32 utf32_t;
-	typedef wchar_t utf16_t;
-	};
+	template <> struct Types_T<4>
+		{
+		typedef wchar_t utf32_t;
+		typedef ZStdInt::uint16 utf16_t;
+		};
 
-} // namespace ZUnicode
+	template <> struct Types_T<2>
+		{
+		typedef ZStdInt::uint32 utf32_t;
+		typedef wchar_t utf16_t;
+		};
 
-// Definitions of UTF32 and UTF16
-typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf32_t UTF32;
-typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf16_t UTF16;
+	} // namespace ZUnicode
+
+	// Definitions of UTF32 and UTF16
+	typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf32_t UTF32;
+	typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf16_t UTF16;
+
+#endif
 
 } // namespace ZooLib
 
