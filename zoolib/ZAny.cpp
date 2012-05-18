@@ -25,19 +25,24 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZAny
 
-inline static const std::type_info* spPODTypeInfo(const void* iPtr)
+static inline 
+const std::type_info* spPODTypeInfo(const void* iPtr)
 	{ return (const std::type_info*)(((intptr_t)iPtr) ^ 1); }
 
-inline ZAny::InPlace& ZAny::pAsInPlace()
+inline
+ZAny::InPlace& ZAny::pAsInPlace()
 	{ return *sFetch_T<InPlace>(&fDistinguisher); }
 
-inline const ZAny::InPlace& ZAny::pAsInPlace() const
+inline
+const ZAny::InPlace& ZAny::pAsInPlace() const
 	{ return *sFetch_T<InPlace>(&fDistinguisher); }
 
-inline ZRef<ZAny::Reffed>& ZAny::pAsReffed()
+inline
+ZRef<ZAny::Reffed>& ZAny::pAsReffed()
 	{ return *sFetch_T<ZRef<Reffed> >(&fPayload); }
 
-inline const ZRef<ZAny::Reffed>& ZAny::pAsReffed() const
+inline
+const ZRef<ZAny::Reffed>& ZAny::pAsReffed() const
 	{ return *sFetch_T<ZRef<Reffed> >(&fPayload); }
 
 const std::type_info& ZAny::Type() const
