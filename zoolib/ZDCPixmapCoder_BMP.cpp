@@ -323,7 +323,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			sourceRasterDesc.fRowCount = 1;
 			vector<uint8> rowBufferVector(sourceRasterDesc.fRowBytes);
 			uint8* rowBuffer = &rowBufferVector[0];
-			ZRectPOD sourceRect = sRect<ZRectPOD>(biWidth, 1);
+			ZRectPOD sourceRect = sRectPOD(biWidth, 1);
 			for (long y = 0; y < biHeight; ++y)
 				{
 				iStream.Read(rowBuffer, sourceRasterDesc.fRowBytes);
