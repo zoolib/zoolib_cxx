@@ -143,7 +143,7 @@ ZDCPixmap::ZDCPixmap(const RasterDesc& iRasterDesc, ZPointPOD iSize, const Pixel
 ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource, const ZRectPOD& iSourceBounds)
 	{
 	ZRef<ZDCPixmapRep> sourceRep = iSource.GetRep();
-	if (!sourceRep)
+	if (not sourceRep)
 		return;
 
 	ZRectPOD originalBounds = sourceRep->GetBounds();
@@ -211,7 +211,7 @@ ZCoord ZDCPixmap::Height() const
 
 ZRGBA_POD ZDCPixmap::GetPixel(ZCoord iLocationH, ZCoord iLocationV) const
 	{
-	if (!fRep)
+	if (not fRep)
 		return ZRGBA::sBlack;
 	iLocationH += fRep->GetBounds().left;
 	iLocationV += fRep->GetBounds().top;
@@ -220,7 +220,7 @@ ZRGBA_POD ZDCPixmap::GetPixel(ZCoord iLocationH, ZCoord iLocationV) const
 
 void ZDCPixmap::SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBA_POD& iColor)
 	{
-	if (!fRep)
+	if (not fRep)
 		return;
 
 	this->pTouch();
@@ -231,7 +231,7 @@ void ZDCPixmap::SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBA_POD& 
 
 uint32 ZDCPixmap::GetPixval(ZCoord iLocationH, ZCoord iLocationV) const
 	{
-	if (!fRep)
+	if (not fRep)
 		return 0;
 	iLocationH += fRep->GetBounds().left;
 	iLocationV += fRep->GetBounds().top;
@@ -240,7 +240,7 @@ uint32 ZDCPixmap::GetPixval(ZCoord iLocationH, ZCoord iLocationV) const
 
 void ZDCPixmap::SetPixval(ZCoord iLocationH, ZCoord iLocationV, uint32 iPixval)
 	{
-	if (!fRep)
+	if (not fRep)
 		return;
 	this->pTouch();
 	iLocationH += fRep->GetBounds().left;
@@ -250,106 +250,48 @@ void ZDCPixmap::SetPixval(ZCoord iLocationH, ZCoord iLocationV, uint32 iPixval)
 
 void ZDCPixmap::CopyFrom(ZPointPOD iDestLocation, const ZDCPixmap& iSource, const ZRectPOD& iSourceBounds)
 	{
-	if (!fRep)
-		return;
-
-	ZPointPOD destSize = fRep->GetSize();
-	if (iDestLocation.h >= destSize.h || iDestLocation.v >= destSize.v)
-		return;
-
-	ZRef<ZDCPixmapRep> sourceRep = iSource.fRep;
-	if (!sourceRep)
-		return;
-
-	// Copy parameters into modifiable locals
-	ZRectPOD realSourceBounds = iSourceBounds;
-	ZPointPOD realDestLocation = iDestLocation;
-
-	// Clip location and top left of bounds against zero
-	if (realDestLocation.h < 0)
+	if (ZRef<ZDCPixmapRep> sourceRep = iSource.fRep)
 		{
-		realSourceBounds.left -= realDestLocation.h;
-		realDestLocation.h = 0;
+		this->CopyFrom(iDestLocation,
+			sourceRep->GetRaster()->GetBaseAddress(),
+			sourceRep->GetRaster()->GetRasterDesc(),
+			sourceRep->GetPixelDesc(),
+			iSourceBounds + LT(sourceRep->GetBounds()));
 		}
-	if (realDestLocation.v < 0)
-		{
-		realSourceBounds.top -= realDestLocation.v;
-		realDestLocation.v = 0;
-		}
-
-	if (realSourceBounds.left < 0)
-		{
-		realDestLocation.h -= realSourceBounds.left;
-		realSourceBounds.left = 0;
-		}
-	if (realSourceBounds.top < 0)
-		{
-		realDestLocation.v -= realSourceBounds.top;
-		realSourceBounds.top = 0;
-		}
-
-	// Get the limiting bounds for our source and dest
-	ZRectPOD availSourceBounds = sourceRep->GetBounds();
-	ZRectPOD availDestBounds = fRep->GetBounds();
-
-	// Offset into actual coordinates
-	realSourceBounds += LT(availSourceBounds);
-	realDestLocation += LT(availDestBounds);
-
-	realSourceBounds.right = min(realSourceBounds.right, availSourceBounds.right);
-	realSourceBounds.bottom = min(realSourceBounds.bottom, availSourceBounds.bottom);
-
-	// Bail if we've ended up with an empty rectangle
-	if (sIsEmpty(realSourceBounds))
-		return;
-
-	// Make sure we're not sharing our rep with anyone
-	this->pTouch();
-
-	fRep->CopyFrom(realDestLocation, sourceRep, realSourceBounds);
 	}
 
 void ZDCPixmap::CopyFrom(ZPointPOD iDestLocation,
-			const void* iSourceBaseAddress,
-			const RasterDesc& iSourceRasterDesc,
-			const PixelDesc& iSourcePixelDesc,
-			const ZRectPOD& iSourceBounds)
+	const void* iSourceBaseAddress,
+	const RasterDesc& iSourceRasterDesc,
+	const PixelDesc& iSourcePixelDesc,
+	const ZRectPOD& iSourceBounds)
 	{
-	if (!fRep)
+	if (not fRep)
 		return;
 
-	// Copy parameters into modifiable locals
+	const ZRectPOD repBounds = fRep->GetBounds();
+
+	ZPointPOD realDestLocation = iDestLocation + LT(repBounds);
+
 	ZRectPOD realSourceBounds = iSourceBounds;
-	ZPointPOD realDestLocation = iDestLocation;
 
-	// Clip location and top left of bounds against zero
-	if (realDestLocation.h < 0)
-		{
-		realSourceBounds.left -= realDestLocation.h;
-		realDestLocation.h = 0;
-		}
-	if (realDestLocation.v < 0)
-		{
-		realSourceBounds.top -= realDestLocation.v;
-		realDestLocation.v = 0;
-		}
+	realSourceBounds =
+		sWithWR(sMin(W(realSourceBounds), W(repBounds) - X(realDestLocation)), realSourceBounds);
 
-	if (realSourceBounds.left < 0)
+	realSourceBounds =
+		sWithHB(sMin(H(realSourceBounds), H(repBounds) - Y(realDestLocation)), realSourceBounds);
+
+	if (L(realSourceBounds) < 0)
 		{
-		realDestLocation.h -= realSourceBounds.left;
-		realSourceBounds.left = 0;
-		}
-	if (realSourceBounds.top < 0)
-		{
-		realDestLocation.v -= realSourceBounds.top;
-		realSourceBounds.top = 0;
+		X(realDestLocation) = X(realDestLocation) + L(realSourceBounds);
+		L(realSourceBounds) = 0;
 		}
 
-	// Get the limiting bounds for our dest
-	ZRectPOD availDestBounds = fRep->GetBounds();
-
-	// Offset into actual coordinates
-	realDestLocation += LT(availDestBounds);
+	if (T(realSourceBounds) < 0)
+		{
+		Y(realDestLocation) = Y(realDestLocation) + T(realSourceBounds);
+		T(realSourceBounds) = 0;
+		}
 
 	// Bail if we've ended up with an empty rectangle
 	if (sIsEmpty(realSourceBounds))
@@ -368,7 +310,7 @@ void ZDCPixmap::CopyTo(ZPointPOD iDestLocation,
 	const PixelDesc& iDestPixelDesc,
 	const ZRectPOD& iSourceBounds) const
 	{
-	if (!fRep)
+	if (not fRep)
 		return;
 
 	// Copy parameters into modifiable locals
@@ -417,7 +359,7 @@ void ZDCPixmap::CopyTo(ZPointPOD iDestLocation,
 
 void ZDCPixmap::Munge(bool iMungeColorTable, MungeProc iMungeProc, void* iRefcon)
 	{
-	if (!fRep)
+	if (not fRep)
 		return;
 
 	if (iMungeColorTable)
