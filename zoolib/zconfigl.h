@@ -37,6 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_CodeWarrior
 	#elif defined(__GNUC__)
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_GCC
+		#define ZCONFIG_GCC_Version __GNUC__##__GNUC_MINOR__
 	#elif defined(_MSC_VER)
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_MSVC
 	#endif
@@ -180,6 +181,37 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
+// ZCONFIG_CPP
+
+#if  __cplusplus>=201103L
+	#define ZCONFIG_CPP 2011
+#elif  __cplusplus>=199711L
+	#define ZCONFIG_CPP 2003
+#else
+	#define ZCONFIG_CPP 1998
+#endif
+
+// =================================================================================================
+// ZCONFIG_LIBCPP
+
+#if ZCONFIG_CPP >= 2011
+	#if defined(_LIBCPP_VERSION)
+		#define ZCONFIG_LIBCPP_2011 1
+	#else
+		#define ZCONFIG_LIBCPP_TR1 1
+	#endif
+#elif ZCONFIG_CPP >= 2003
+	#define ZCONFIG_LIBCPP_TR1 1
+	#if defined(ZCONFIG_GCC_Version) && ZCONFIG_GCC_Version >= 42
+		#define ZCONFIG_LIBCPP_GCCExtensions 1
+	#endif
+#else
+	#if defined(ZCONFIG_GCC_Version) && ZCONFIG_GCC_Version >= 42
+		#define ZCONFIG_LIBCPP_GCCExtensions 1
+	#endif
+#endif
+
+// =================================================================================================
 // Some extra bits to patch up some CodeWarrior issues.
 
 #if defined(__MWERKS__)
@@ -267,41 +299,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Previously we've used 'nil' for the null pointer. With our increasing use of
 // Objective C we're switching to use the soon-to-be standardized nullptr.
 
-#ifdef __cplusplus
+#if ZCONFIG_CPP >= 2011
 
-	#if 0
-	#elif defined(__cplusplus) && __cplusplus>=201103L
+	// nullptr is naturally available
 
-		// nullptr is naturally available
+#elif defined(__MWERKS__)
 
-	#elif defined(_MSC_VER) && _MSC_VER >= 1600
+	class nullptr_t
+		{
+		void operator&() const;
+	public:
+		template <class T> operator T*() const { return 0; }
+		};
+	#define nullptr nullptr_t()
 
-		// nullptr is naturally available
+#else
 
-	#elif defined(__MWERKS__)
+	const class
+		{
+		void operator&() const;
+	public:
+		template <class T> operator T*() const { return 0; }
+		template <class C, class T> operator T C::*() const { return 0; }
+		} nullptr = {};
 
-		class nullptr_t
-			{
-			void operator&() const;
-		public:
-			template <class T> operator T*() const { return 0; }
-			};
-		#define nullptr nullptr_t()
-
-	#else
-
-		const class
-			{
-			void operator&() const;
-		public:
-			template <class T> operator T*() const { return 0; }
-			template <class C, class T> operator T C::*() const { return 0; }
-			} nullptr = {};
-
-	#endif
-
-#elif not defined(nullptr)
-	#define nullptr 0
 #endif
 
 // =================================================================================================
