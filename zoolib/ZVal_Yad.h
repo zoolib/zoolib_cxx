@@ -132,9 +132,29 @@ public:
 // ZMap protocol
 	void Clear();
 
+	ZVal_Yad* PGetMutable(const string8& iName);
+
+	const ZVal_Yad* PGet(const string8& iName) const;
+
 	ZQ<ZVal_Yad> QGet(const string8& iName) const;
 	const ZVal_Yad DGet(const ZVal_Yad& iDefault, const string8& iName) const;
 	const ZVal_Yad Get(const string8& iName) const;
+
+	template <class S>
+	S* PGetMutable(const string8& iName)
+		{
+		if (ZVal_Yad* theVal = this->PGetMutable(iName))
+			return theVal->PGetMutable<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	const S* PGet(const string8& iName) const
+		{
+		if (const ZVal_Yad* theVal = this->PGet(iName))
+			return theVal->PGet<S>();
+		return nullptr;
+		}
 
 	template <class S>
 	ZQ<S> QGet(const string8& iName) const

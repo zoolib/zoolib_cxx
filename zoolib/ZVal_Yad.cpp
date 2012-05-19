@@ -220,42 +220,76 @@ void ZMap_Yad::Clear()
 	fMap.Clear();
 	}
 
-ZQ<ZVal_Yad> ZMap_Yad::QGet(const string8& iName) const
+ZVal_Yad* ZMap_Yad::PGetMutable(const string8& iName)
 	{
 	ZMap_Any::Index_t theIndex = fMap.IndexOf(iName);
 	if (theIndex != fMap.End())
 		{
-		const ZAny& theVal = fMap.Get(theIndex);
-		if (theVal.PGet<Tombstone_t>())
-			return null;
-		return ZVal_Yad(theVal);
+		if (ZAny* theAny = fMap.PGetMutable(theIndex))
+			{
+			if (theAny->PGet<Tombstone_t>())
+				return nullptr;
+			return static_cast<ZVal_Yad*>(theAny);
+			}
 		}
 
 	if (fYad)
 		{
 		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
 			{
-			const ZVal_Yad theVal_Yad = spAsVal_Yad(theYad);
-			fMap.Set(iName, ZVal_Any(theVal_Yad.AsAny()));
-			return theVal_Yad;
+			fMap.Set(iName, ZVal_Any(spAsVal_Yad(theYad).AsAny()));
+			return static_cast<ZVal_Yad*>(static_cast<ZAny*>(fMap.PGetMutable(iName)));
 			}
 		}
 
 	fMap.Set(iName, Tombstone_t());
+	return nullptr;
+	}
+
+const ZVal_Yad* ZMap_Yad::PGet(const string8& iName) const
+	{
+	ZMap_Any::Index_t theIndex = fMap.IndexOf(iName);
+	if (theIndex != fMap.End())
+		{
+		if (const ZAny* theAny = fMap.PGet(theIndex))
+			{
+			if (theAny->PGet<Tombstone_t>())
+				return nullptr;
+			return static_cast<const ZVal_Yad*>(theAny);
+			}
+		}
+
+	if (fYad)
+		{
+		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
+			{
+			fMap.Set(iName, ZVal_Any(spAsVal_Yad(theYad).AsAny()));
+			return static_cast<const ZVal_Yad*>(static_cast<const ZAny*>(fMap.PGet(iName)));
+			}
+		}
+
+	fMap.Set(iName, Tombstone_t());
+	return nullptr;
+	}
+
+ZQ<ZVal_Yad> ZMap_Yad::QGet(const string8& iName) const
+	{
+	if (const ZVal_Yad* theVal = this->PGet(iName))
+		return *theVal;
 	return null;
 	}
 
 const ZVal_Yad ZMap_Yad::DGet(const ZVal_Yad& iDefault, const string8& iName) const
 	{
-	if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
-		return *theQ;
+	if (const ZVal_Yad* theVal = this->PGet(iName))
+		return *theVal;
 	return iDefault;
 	}
 
 const ZVal_Yad ZMap_Yad::Get(const string8& iName) const
 	{
-	if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
-		return *theQ;
+	if (const ZVal_Yad* theVal = this->PGet(iName))
+		return *theVal;
 	return ZVal_Yad();
 	}
 
@@ -295,25 +329,8 @@ ZVal_Yad& ZMap_Yad::operator[](const string8& iName)
 
 const ZVal_Yad& ZMap_Yad::operator[](const string8& iName) const
 	{
-	if (const ZAny* theP = fMap.PGet(iName))
-		{
-		if (theP->PGet<Tombstone_t>())
-			return spVal_Null;
-		else
-			return *static_cast<const ZVal_Yad*>(theP);
-		}
-
-	if (fYad)
-		{
-		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
-			{
-			ZAny& theMutable = fMap.Mutable(iName);
-			theMutable = spAsVal_Yad(theYad).AsAny();
-			return static_cast<ZVal_Yad&>(theMutable);
-			}
-		}
-
-	fMap.Set(iName, Tombstone_t());
+	if (const ZVal_Yad* theVal = this->PGet(iName))
+		return *theVal;
 	return spVal_Null;
 	}
 
