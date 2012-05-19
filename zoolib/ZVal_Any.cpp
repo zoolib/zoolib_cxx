@@ -23,11 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare_Vector.h"
 #include "zoolib/ZVal_Any.h"
 
-#include <cstring> // For strcmp
-
 using std::map;
 using std::pair;
-using std::strcmp;
 using std::string;
 using std::vector;
 
@@ -63,7 +60,9 @@ ZMACRO_CompareRegistration_T(ZMap_Any)
 // MARK: - ZSeq_Any::Rep
 
 ZSeq_Any::Rep::Rep()
-	{}
+	{
+	fVector.reserve(8);
+	}
 
 ZSeq_Any::Rep::~Rep()
 	{}
