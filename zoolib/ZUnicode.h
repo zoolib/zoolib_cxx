@@ -475,7 +475,7 @@ bool sUTF8ToUTF8
 /** \name Converting from UTF8 in a std::string to UTFXX in a std::wstring.
 *///@{
 
-#if defined(__cplusplus) && __cplusplus>=201103L
+#if ZCONFIG_CPP >= 2011
 	// Not available for now.
 #else
 	inline void sAsWString(const string8& iString8, string16& oString16)

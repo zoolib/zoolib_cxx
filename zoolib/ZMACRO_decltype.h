@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #if 0
-#elif defined(__cplusplus) && __cplusplus>=201103L
+#elif ZCONFIG_CPP >= 2011
 
 #define ZMACRO_decltype(expr) decltype(expr)
 
@@ -31,12 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Just assume GCC for now.
 #define ZMACRO_decltype(expr) __typeof__(expr)
-
-#elif _MSC_VER >= 1600
-
-// Visual C++ 2010
-#define ZMACRO_decltype(expr) decltype(expr)
-
 
 #elif _MSC_VER >= 1400
 // The VC6-VC7 bug has been fixed, so we don't have a native

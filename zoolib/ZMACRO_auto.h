@@ -24,13 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_decltype.h"
 
-#if 0
-#elif defined(__cplusplus) && __cplusplus>=201103L
-
-	#define ZMACRO_auto(name,expr) auto name(expr)
-	#define ZMACRO_auto_(name,expr) auto name=(expr)
-
-#elif defined(_MSC_VER) && _MSC_VER >= 1600
+#if ZCONFIG_CPP >= 2011
 
 	#define ZMACRO_auto(name,expr) auto name(expr)
 	#define ZMACRO_auto_(name,expr) auto name=(expr)

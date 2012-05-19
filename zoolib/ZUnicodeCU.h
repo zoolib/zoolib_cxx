@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-#if defined(__cplusplus) && __cplusplus>=201103L
+#if ZCONFIG_CPP >= 2011
 
 	typedef char32_t UTF32;
 	typedef char16_t UTF16;

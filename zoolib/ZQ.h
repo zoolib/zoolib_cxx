@@ -301,7 +301,7 @@ public:
 		}
 
 private:
-	#if __cplusplus>=201103L
+	#if ZCONFIG_CPP >= 2011
 		alignas(T) char fBytes[sizeof(T)];
 	#else
 		char fBytes[sizeof(T)] ZMACRO_Attribute_Aligned;
