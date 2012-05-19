@@ -22,21 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZAny_h__
 #include "zconfig.h"
 
+#include "zoolib/ZCompat_type_traits.h" // for is_pod
 #include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZQ.h" 
 #include "zoolib/ZRef.h"
 
 #include <typeinfo> // For std::type_info
-
-#if ZCONFIG(Compiler,GCC)
-	#if defined(__cplusplus) && __cplusplus>=201103L && defined(_LIBCPP_VERSION)
-		#include <type_traits> // For std::is_pod
-		namespace ZooLib { using std::is_pod; }
-	#else
-		#include <tr1/type_traits> // For std::tr1::is_pod
-		namespace ZooLib { using std::tr1::is_pod; }
-	#endif
-#endif
 
 // =================================================================================================
 // MARK: - ZAny
@@ -309,7 +300,7 @@ private:
 			{
 			if (false)
 				{}
-			#if ZCONFIG(Compiler,GCC)
+			#if ZCONFIG_SPI_Enabled(type_traits)
 			else if (is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
@@ -344,7 +335,7 @@ private:
 			{
 			if (false)
 				{}
-			#if ZCONFIG(Compiler,GCC)
+			#if ZCONFIG_SPI_Enabled(type_traits)
 			else if (is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
@@ -372,7 +363,7 @@ private:
 			{
 			if (false)
 				{}
-			#if ZCONFIG(Compiler,GCC)
+			#if ZCONFIG_SPI_Enabled(type_traits)
 			else if (is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
