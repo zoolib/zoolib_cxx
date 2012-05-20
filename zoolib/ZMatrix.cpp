@@ -25,15 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #include <Accelerate/Accelerate.h>
-//vSgemul
 
 namespace ZooLib {
-
-void test()
-	{
-	void* theFunc = vSgemul;
-
-	}
 
 // =================================================================================================
 // MARK: -
