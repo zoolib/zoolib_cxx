@@ -119,7 +119,8 @@ private:
 class ZMap_Yad
 	{
 public:
-	typedef ZVal_Yad Val;
+	typedef ZVal_Yad Val_t;
+	typedef ZMap_Any::Name_t Name_t;
 
 	ZMap_Yad();
 	ZMap_Yad(const ZMap_Yad& iOther);
@@ -132,16 +133,16 @@ public:
 // ZMap protocol
 	void Clear();
 
-	ZVal_Yad* PGetMutable(const string8& iName);
+	ZVal_Yad* PGetMutable(const Name_t& iName);
 
-	const ZVal_Yad* PGet(const string8& iName) const;
+	const ZVal_Yad* PGet(const Name_t& iName) const;
 
-	ZQ<ZVal_Yad> QGet(const string8& iName) const;
-	const ZVal_Yad DGet(const ZVal_Yad& iDefault, const string8& iName) const;
-	const ZVal_Yad Get(const string8& iName) const;
+	ZQ<ZVal_Yad> QGet(const Name_t& iName) const;
+	const ZVal_Yad DGet(const ZVal_Yad& iDefault, const Name_t& iName) const;
+	const ZVal_Yad Get(const Name_t& iName) const;
 
 	template <class S>
-	S* PGetMutable(const string8& iName)
+	S* PGetMutable(const Name_t& iName)
 		{
 		if (ZVal_Yad* theVal = this->PGetMutable(iName))
 			return theVal->PGetMutable<S>();
@@ -149,7 +150,7 @@ public:
 		}
 
 	template <class S>
-	const S* PGet(const string8& iName) const
+	const S* PGet(const Name_t& iName) const
 		{
 		if (const ZVal_Yad* theVal = this->PGet(iName))
 			return theVal->PGet<S>();
@@ -157,7 +158,7 @@ public:
 		}
 
 	template <class S>
-	ZQ<S> QGet(const string8& iName) const
+	ZQ<S> QGet(const Name_t& iName) const
 		{
 		if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
 			return theQ->QGet<S>();
@@ -165,7 +166,7 @@ public:
 		}
 
 	template <class S>
-	const S DGet(const S& iDefault, const string8& iName) const
+	const S DGet(const S& iDefault, const Name_t& iName) const
 		{
 		if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
 			{
@@ -176,7 +177,7 @@ public:
 		}
 
 	template <class S>
-	const S Get(const string8& iName) const
+	const S Get(const Name_t& iName) const
 		{
 		if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
 			{
@@ -186,23 +187,23 @@ public:
 		return S();
 		}
 
-	ZMap_Yad& Set(const string8& iName, const ZVal_Yad& iVal);
+	ZMap_Yad& Set(const Name_t& iName, const ZVal_Yad& iVal);
 
 	template <class S>
-	ZMap_Yad& Set(const string8& iName, const S& iVal)
+	ZMap_Yad& Set(const Name_t& iName, const S& iVal)
 		{ return this->Set(iName, ZVal_Yad(iVal)); }
 
-	ZMap_Yad& Erase(const string8& iName);
+	ZMap_Yad& Erase(const Name_t& iName);
 
 // Our protocol
-	ZVal_Yad& Mutable(const string8& iName);
+	ZVal_Yad& Mutable(const Name_t& iName);
 
 	template <class S>
-	S& Mutable(const string8& iName)
+	S& Mutable(const Name_t& iName)
 		{ return this->Mutable(iName).Mutable<S>(); }
 
-	ZVal_Yad& operator[](const string8& iName);
-	const ZVal_Yad& operator[](const string8& iName) const;
+	ZVal_Yad& operator[](const Name_t& iName);
+	const ZVal_Yad& operator[](const Name_t& iName) const;
 
 	ZRef<ZYadMapAtRPos> GetYad() const;
 	ZMap_Any GetMap() const;

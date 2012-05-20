@@ -220,7 +220,7 @@ void ZMap_Yad::Clear()
 	fMap.Clear();
 	}
 
-ZVal_Yad* ZMap_Yad::PGetMutable(const string8& iName)
+ZVal_Yad* ZMap_Yad::PGetMutable(const Name_t& iName)
 	{
 	ZMap_Any::Index_t theIndex = fMap.IndexOf(iName);
 	if (theIndex != fMap.End())
@@ -246,7 +246,7 @@ ZVal_Yad* ZMap_Yad::PGetMutable(const string8& iName)
 	return nullptr;
 	}
 
-const ZVal_Yad* ZMap_Yad::PGet(const string8& iName) const
+const ZVal_Yad* ZMap_Yad::PGet(const Name_t& iName) const
 	{
 	ZMap_Any::Index_t theIndex = fMap.IndexOf(iName);
 	if (theIndex != fMap.End())
@@ -272,41 +272,41 @@ const ZVal_Yad* ZMap_Yad::PGet(const string8& iName) const
 	return nullptr;
 	}
 
-ZQ<ZVal_Yad> ZMap_Yad::QGet(const string8& iName) const
+ZQ<ZVal_Yad> ZMap_Yad::QGet(const Name_t& iName) const
 	{
 	if (const ZVal_Yad* theVal = this->PGet(iName))
 		return *theVal;
 	return null;
 	}
 
-const ZVal_Yad ZMap_Yad::DGet(const ZVal_Yad& iDefault, const string8& iName) const
+const ZVal_Yad ZMap_Yad::DGet(const ZVal_Yad& iDefault, const Name_t& iName) const
 	{
 	if (const ZVal_Yad* theVal = this->PGet(iName))
 		return *theVal;
 	return iDefault;
 	}
 
-const ZVal_Yad ZMap_Yad::Get(const string8& iName) const
+const ZVal_Yad ZMap_Yad::Get(const Name_t& iName) const
 	{
 	if (const ZVal_Yad* theVal = this->PGet(iName))
 		return *theVal;
 	return ZVal_Yad();
 	}
 
-ZMap_Yad& ZMap_Yad::Set(const string8& iName, const ZVal_Yad& iVal)
+ZMap_Yad& ZMap_Yad::Set(const Name_t& iName, const ZVal_Yad& iVal)
 	{
 	fMap.Set(iName, iVal.AsAny());
 	return *this;
 	}
 
-ZMap_Yad& ZMap_Yad::Erase(const string8& iName)
+ZMap_Yad& ZMap_Yad::Erase(const Name_t& iName)
 	{
 	fMap.Set(iName, Tombstone_t());
 	return *this;
 	}
 
 // Our protocol
-ZVal_Yad& ZMap_Yad::Mutable(const string8& iName)
+ZVal_Yad& ZMap_Yad::Mutable(const Name_t& iName)
 	{
 	if (ZAny* theP = fMap.PGetMutable(iName))
 		{
@@ -324,10 +324,10 @@ ZVal_Yad& ZMap_Yad::Mutable(const string8& iName)
 	return static_cast<ZVal_Yad&>(theMutable);
 	}
 
-ZVal_Yad& ZMap_Yad::operator[](const string8& iName)
+ZVal_Yad& ZMap_Yad::operator[](const Name_t& iName)
 	{ return this->Mutable(iName); }
 
-const ZVal_Yad& ZMap_Yad::operator[](const string8& iName) const
+const ZVal_Yad& ZMap_Yad::operator[](const Name_t& iName) const
 	{
 	if (const ZVal_Yad* theVal = this->PGet(iName))
 		return *theVal;
