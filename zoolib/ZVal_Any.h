@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_unordered_map.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZCompare_String.h" // For FastComparator_String
+#include "zoolib/ZName.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZVal_T.h"
 
@@ -179,7 +180,7 @@ ZSeq_Any::ZSeq_Any(Iterator begin, Iterator end)
 // =================================================================================================
 // MARK: - ZNameVal
 
-typedef std::pair<string8, ZVal_Any> ZNameVal;
+typedef std::pair<ZName, ZVal_Any> ZNameVal;
 
 // =================================================================================================
 // MARK: - ZMap_Any
@@ -189,14 +190,12 @@ class ZMap_Any
 	class Rep;
 
 public:
-	#if 0 && ZCONFIG_SPI_Enabled(unordered_map)
-		typedef unordered_map<string8, ZVal_Any> Map_t;
-	#else
-		typedef std::map<string8, ZVal_Any, FastComparator_String> Map_t;
-	#endif
+	typedef ZName Name_t;
+
+	typedef std::map<Name_t, ZVal_Any> Map_t;
 
 	typedef Map_t::iterator Index_t;
-	typedef ZVal_Any Val;
+	typedef ZVal_Any Val_t;
 
 	ZMap_Any();
 	ZMap_Any(const ZMap_Any& iOther);
@@ -208,7 +207,7 @@ public:
 
 	ZMap_Any(const ZNameVal& iNV);
 	ZMap_Any(const char* iName, const char* iVal);
-	ZMap_Any(const string8& iName, const ZVal_Any& iVal);
+	ZMap_Any(const Name_t& iName, const ZVal_Any& iVal);
 
 	template <class Iterator>
 	ZMap_Any(Iterator begin, Iterator end);
@@ -220,23 +219,23 @@ public:
 
 	void Clear();
 
-	ZVal_Any* PGetMutable(const string8& iName);
+	ZVal_Any* PGetMutable(const Name_t& iName);
 	ZVal_Any* PGetMutable(const Index_t& iIndex);
 
-	const ZVal_Any* PGet(const string8& iName) const;
+	const ZVal_Any* PGet(const Name_t& iName) const;
 	const ZVal_Any* PGet(const Index_t& iIndex) const;
 
-	const ZQ<ZVal_Any> QGet(const string8& iName) const;
+	const ZQ<ZVal_Any> QGet(const Name_t& iName) const;
 	const ZQ<ZVal_Any> QGet(const Index_t& iIndex) const;
 
-	const ZVal_Any DGet(const ZVal_Any& iDefault, const string8& iName) const;
+	const ZVal_Any DGet(const ZVal_Any& iDefault, const Name_t& iName) const;
 	const ZVal_Any DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const;
 
-	const ZVal_Any& Get(const string8& iName) const;
+	const ZVal_Any& Get(const Name_t& iName) const;
 	const ZVal_Any& Get(const Index_t& iIndex) const;
 
 	template <class S>
-	S* PGetMutable(const string8& iName)
+	S* PGetMutable(const Name_t& iName)
 		{
 		if (ZVal_Any* theVal = this->PGetMutable(iName))
 			return theVal->PGetMutable<S>();
@@ -252,7 +251,7 @@ public:
 		}
 
 	template <class S>
-	const S* PGet(const string8& iName) const
+	const S* PGet(const Name_t& iName) const
 		{
 		if (const ZVal_Any* theVal = this->PGet(iName))
 			return theVal->PGet<S>();
@@ -268,7 +267,7 @@ public:
 		}
 
 	template <class S>
-	const ZQ<S> QGet(const string8& iName) const
+	const ZQ<S> QGet(const Name_t& iName) const
 		{
 		if (const ZVal_Any* theVal = this->PGet(iName))
 			return theVal->QGet<S>();
@@ -284,7 +283,7 @@ public:
 		}
 
 	template <class S>
-	const S DGet(const S& iDefault, const string8& iName) const
+	const S DGet(const S& iDefault, const Name_t& iName) const
 		{
 		if (const S* theVal = this->PGet<S>(iName))
 			return *theVal;
@@ -300,7 +299,7 @@ public:
 		}
 
 	template <class S>
-	const S Get(const string8& iName) const
+	const S Get(const Name_t& iName) const
 		{
 		if (const S* theVal = this->PGet<S>(iName))
 			return *theVal;
@@ -315,29 +314,29 @@ public:
 		return S();
 		}
 
-	ZMap_Any& Set(const string8& iName, const ZVal_Any& iVal);
+	ZMap_Any& Set(const Name_t& iName, const ZVal_Any& iVal);
 	ZMap_Any& Set(const Index_t& iIndex, const ZVal_Any& iVal);
 
 	template <class S>
-	ZMap_Any& Set(const string8& iName, const S& iVal)
+	ZMap_Any& Set(const Name_t& iName, const S& iVal)
 		{ return this->Set(iName, ZVal_Any(iVal)); }
 
 	template <class S>
 	ZMap_Any& Set(const Index_t& iIndex, const S& iVal)
 		{ return this->Set(iIndex, ZVal_Any(iVal)); }
 
-	ZMap_Any& Erase(const string8& iName);
+	ZMap_Any& Erase(const Name_t& iName);
 	ZMap_Any& Erase(const Index_t& iIndex);
 
 // Our protocol
-	ZVal_Any& Mutable(const string8& iName);
+	ZVal_Any& Mutable(const Name_t& iName);
 
 	template <class S>
-	S& Mutable(const string8& iName)
+	S& Mutable(const Name_t& iName)
 		{ return this->Mutable(iName).Mutable<S>(); }
 
 	template <class S>
-	S& DMutable(const S& iDefault, const string8& iName)
+	S& DMutable(const S& iDefault, const Name_t& iName)
 		{
 		if (S* theVal = this->PGetMutable<S>(iName))
 			return *theVal;
@@ -348,8 +347,8 @@ public:
 	Index_t Begin() const;
 	Index_t End() const;
 
-	const string8& NameOf(const Index_t& iIndex) const;
-	Index_t IndexOf(const string8& iName) const;
+	const Name_t& NameOf(const Index_t& iIndex) const;
+	Index_t IndexOf(const Name_t& iName) const;
 
 	Index_t IndexOf(const ZMap_Any& iOther, const Index_t& iOtherIndex) const;
 
@@ -361,8 +360,8 @@ public:
 	bool operator<(const ZMap_Any& r) const
 		{ return this->Compare(r) < 0; }
 
-	ZVal_Any& operator[](const string8& iName);
-	const ZVal_Any& operator[](const string8& iName) const;
+	ZVal_Any& operator[](const Name_t& iName);
+	const ZVal_Any& operator[](const Name_t& iName) const;
 
 	ZVal_Any& operator[](const Index_t& iIndex);
 	const ZVal_Any& operator[](const Index_t& iIndex) const;

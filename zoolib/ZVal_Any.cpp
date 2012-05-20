@@ -257,7 +257,8 @@ ZMap_Any::Rep::Rep(const Map_t& iMap)
 // =================================================================================================
 // MARK: - ZMap_Any
 
-static string8 spEmptyString;
+static ZMap_Any::Name_t spEmptyString;
+
 static ZMap_Any::Map_t spEmptyMap;
 
 ZMap_Any::ZMap_Any()
@@ -293,7 +294,7 @@ ZMap_Any::ZMap_Any(const ZNameVal& iNV)
 ZMap_Any::ZMap_Any(const char* iName, const char* iVal)
 	{ this->Set(iName, iVal); }
 
-ZMap_Any::ZMap_Any(const string8& iName, const ZVal_Any& iVal)
+ZMap_Any::ZMap_Any(const Name_t& iName, const ZVal_Any& iVal)
 	{ this->Set(iName, iVal); }
 
 int ZMap_Any::Compare(const ZMap_Any& iOther) const
@@ -346,7 +347,8 @@ int ZMap_Any::Compare(const ZMap_Any& iOther) const
 			if (iterOther != endOther)
 				{
 				// Other is not exhausted either, so we compare their current values.
-				if (int compare = sCompare_T<string>(iterThis->first, iterOther->first))
+				if (int compare = sCompare_T(iterThis->first, iterOther->first))
+//				if (int compare = sCompare_T<string>(iterThis->first, iterOther->first))
 					{
 					// The names are different.
 					return compare;
@@ -388,7 +390,7 @@ bool ZMap_Any::IsEmpty() const
 void ZMap_Any::Clear()
 	{ fRep.Clear(); }
 
-ZVal_Any* ZMap_Any::PGetMutable(const string8& iName)
+ZVal_Any* ZMap_Any::PGetMutable(const Name_t& iName)
 	{
 	if (fRep)
 		{
@@ -408,7 +410,7 @@ ZVal_Any* ZMap_Any::PGetMutable(const Index_t& iIndex)
 	return nullptr;
 	}
 
-const ZVal_Any* ZMap_Any::PGet(const string8& iName) const
+const ZVal_Any* ZMap_Any::PGet(const Name_t& iName) const
 	{
 	if (fRep)
 		{
@@ -426,7 +428,7 @@ const ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex) const
 	return nullptr;
 	}
 
-const ZQ<ZVal_Any> ZMap_Any::QGet(const string8& iName) const
+const ZQ<ZVal_Any> ZMap_Any::QGet(const Name_t& iName) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iName))
 		return *theVal;
@@ -440,7 +442,7 @@ const ZQ<ZVal_Any> ZMap_Any::QGet(const Index_t& iIndex) const
 	return null;
 	}
 
-const ZVal_Any ZMap_Any::DGet(const ZVal_Any& iDefault, const string8& iName) const
+const ZVal_Any ZMap_Any::DGet(const ZVal_Any& iDefault, const Name_t& iName) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iName))
 		return *theVal;
@@ -454,7 +456,7 @@ const ZVal_Any ZMap_Any::DGet(const ZVal_Any& iDefault, const Index_t& iIndex) c
 	return iDefault;
 	}
 
-const ZVal_Any& ZMap_Any::Get(const string8& iName) const
+const ZVal_Any& ZMap_Any::Get(const Name_t& iName) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iName))
 		return *theVal;
@@ -468,7 +470,7 @@ const ZVal_Any& ZMap_Any::Get(const Index_t& iIndex) const
 	return spVal_Null;
 	}
 
-ZMap_Any& ZMap_Any::Set(const string8& iName, const ZVal_Any& iVal)
+ZMap_Any& ZMap_Any::Set(const Name_t& iName, const ZVal_Any& iVal)
 	{
 	this->pTouch();
 	fRep->fMap[iName] = iVal;
@@ -483,7 +485,7 @@ ZMap_Any& ZMap_Any::Set(const Index_t& iIndex, const ZVal_Any& iVal)
 	return *this;
 	}
 
-ZMap_Any& ZMap_Any::Erase(const string8& iName)
+ZMap_Any& ZMap_Any::Erase(const Name_t& iName)
 	{
 	if (fRep)
 		{
@@ -501,7 +503,7 @@ ZMap_Any& ZMap_Any::Erase(const Index_t& iIndex)
 	return *this;
 	}
 
-ZVal_Any& ZMap_Any::Mutable(const string8& iName)
+ZVal_Any& ZMap_Any::Mutable(const Name_t& iName)
 	{
 	this->pTouch();
 	return fRep->fMap[iName];
@@ -521,14 +523,14 @@ ZMap_Any::Index_t ZMap_Any::End() const
 	return spEmptyMap.end();
 	}
 
-const string8& ZMap_Any::NameOf(const Index_t& iIndex) const
+const ZMap_Any::Name_t& ZMap_Any::NameOf(const Index_t& iIndex) const
 	{
 	if (fRep && iIndex != fRep->fMap.end())
 		return iIndex->first;
 	return spEmptyString;
 	}
 
-ZMap_Any::Index_t ZMap_Any::IndexOf(const string8& iName) const
+ZMap_Any::Index_t ZMap_Any::IndexOf(const Name_t& iName) const
 	{
 	if (fRep)
 		return fRep->fMap.find(iName);
@@ -545,10 +547,10 @@ ZMap_Any::Index_t ZMap_Any::IndexOf(const ZMap_Any& iOther, const Index_t& iOthe
 ZMap_Any& ZMap_Any::Set(const ZNameVal& iNV)
 	{ return this->Set(iNV.first, iNV.second); }
 
-ZVal_Any& ZMap_Any::operator[](const string8& iName)
+ZVal_Any& ZMap_Any::operator[](const Name_t& iName)
 	{ return this->Mutable(iName); }
 
-const ZVal_Any& ZMap_Any::operator[](const string8& iName) const
+const ZVal_Any& ZMap_Any::operator[](const Name_t& iName) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iName))
 		return *theVal;
@@ -593,7 +595,7 @@ ZMap_Any::Map_t::iterator ZMap_Any::pTouch(const Index_t& iIndex)
 		}
 	else if (fRep->IsShared())
 		{
-		const string theName = iIndex->first;
+		const Name_t theName = iIndex->first;
 		fRep = new Rep(fRep->fMap);
 		return fRep->fMap.find(theName);
 		}
@@ -640,7 +642,7 @@ ZMap_Any sAugmented(const ZMap_Any& iUnder, const ZMap_Any& iOver)
 	ZMap_Any result = iUnder;
 	for (ZMap_Any::Index_t ii = iOver.Begin(); ii != iOver.End(); ++ii)
 		{
-		const string8& theName = iOver.NameOf(ii);
+		const ZMap_Any::Name_t& theName = iOver.NameOf(ii);
 		const ZVal_Any& theOverVal = iOver.Get(ii);
 		if (ZVal_Any* theResultVal = result.PGetMutable(theName))
 			{
