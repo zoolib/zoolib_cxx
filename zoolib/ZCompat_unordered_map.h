@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Avail__unordered_map 1
 	#if ZCONFIG_LIBCPP_11
 		#include <unordered_map>
-		namespace ZooLib { using unordered_map; }
+		namespace ZooLib { using std::unordered_map; }
 	#elif ZCONFIG_LIBCPP_TR1
 		#include <tr1/unordered_map>
 		namespace ZooLib { using std::tr1::unordered_map; }
