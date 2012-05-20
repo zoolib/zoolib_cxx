@@ -195,6 +195,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ZCONFIG_LIBCPP
 
 #if ZCONFIG_CPP >= 2011
+	// ciso646 does nothing, but on a libc++ system it'll get _LIBCPP_VERSION defined.
+	#include <ciso646>
 	#if defined(_LIBCPP_VERSION)
 		#define ZCONFIG_LIBCPP_2011 1
 	#else
