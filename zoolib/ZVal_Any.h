@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVal_Any_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompat_unordered_map.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZCompare_String.h" // For FastComparator_String
 #include "zoolib/ZVal.h"
@@ -188,7 +189,12 @@ class ZMap_Any
 	class Rep;
 
 public:
-	typedef std::map<string8, ZVal_Any, FastComparator_String> Map_t;
+	#if 0 && ZCONFIG_SPI_Enabled(unordered_map)
+		typedef unordered_map<string8, ZVal_Any> Map_t;
+	#else
+		typedef std::map<string8, ZVal_Any, FastComparator_String> Map_t;
+	#endif
+
 	typedef Map_t::iterator Index_t;
 	typedef ZVal_Any Val;
 
