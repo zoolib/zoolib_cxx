@@ -1,3 +1,4 @@
+
 /* -------------------------------------------------------------------------------------------------
 Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
@@ -779,6 +780,207 @@ ZMatrix<E,Dim,Dim> sInverse(const ZMatrix<E,Dim,Dim>& iMat)
 	return result;
 	}
 
+// =================================================================================================
+// MARK: - Provision for out-of-line optimized version.
+
+ZMatrix<float,4,4> sInverse(const ZMatrix<float,4,4>& iMat);
+
+// =================================================================================================
+// MARK: - Optimized sComposeMat4
+
+template <class E>
+void sComposeMat4(const E iLeft[4][4], const E iRight[4][4], E oDest[4][4])
+	{
+	oDest[0][0]
+		= iRight[0][0] * iLeft[0][0]
+		+ iRight[0][1] * iLeft[1][0]
+		+ iRight[0][2] * iLeft[2][0]
+		+ iRight[0][3] * iLeft[3][0]; 
+
+	oDest[0][1]
+		= iRight[0][0] * iLeft[0][1]
+		+ iRight[0][1] * iLeft[1][1]
+		+ iRight[0][2] * iLeft[2][1]
+		+ iRight[0][3] * iLeft[3][1]; 
+
+	oDest[0][2]
+		= iRight[0][0] * iLeft[0][2]
+		+ iRight[0][1] * iLeft[1][2]
+		+ iRight[0][2] * iLeft[2][2]
+		+ iRight[0][3] * iLeft[3][2]; 
+
+	oDest[0][3]
+		= iRight[0][0] * iLeft[0][3]
+		+ iRight[0][1] * iLeft[1][3]
+		+ iRight[0][2] * iLeft[2][3]
+		+ iRight[0][3] * iLeft[3][3]; 
+
+	oDest[1][0]
+		= iRight[1][0] * iLeft[0][0]
+		+ iRight[1][1] * iLeft[1][0]
+		+ iRight[1][2] * iLeft[2][0]
+		+ iRight[1][3] * iLeft[3][0]; 
+
+	oDest[1][1]
+		= iRight[1][0] * iLeft[0][1]
+		+ iRight[1][1] * iLeft[1][1]
+		+ iRight[1][2] * iLeft[2][1]
+		+ iRight[1][3] * iLeft[3][1]; 
+
+	oDest[1][2]
+		= iRight[1][0] * iLeft[0][2]
+		+ iRight[1][1] * iLeft[1][2]
+		+ iRight[1][2] * iLeft[2][2]
+		+ iRight[1][3] * iLeft[3][2]; 
+
+	oDest[1][3]
+		= iRight[1][0] * iLeft[0][3]
+		+ iRight[1][1] * iLeft[1][3]
+		+ iRight[1][2] * iLeft[2][3]
+		+ iRight[1][3] * iLeft[3][3]; 
+
+	oDest[2][0]
+		= iRight[2][0] * iLeft[0][0]
+		+ iRight[2][1] * iLeft[1][0]
+		+ iRight[2][2] * iLeft[2][0]
+		+ iRight[2][3] * iLeft[3][0]; 
+
+	oDest[2][1]
+		= iRight[2][0] * iLeft[0][1]
+		+ iRight[2][1] * iLeft[1][1]
+		+ iRight[2][2] * iLeft[2][1]
+		+ iRight[2][3] * iLeft[3][1]; 
+
+	oDest[2][2]
+		= iRight[2][0] * iLeft[0][2]
+		+ iRight[2][1] * iLeft[1][2]
+		+ iRight[2][2] * iLeft[2][2]
+		+ iRight[2][3] * iLeft[3][2]; 
+
+	oDest[2][3]
+		= iRight[2][0] * iLeft[0][3]
+		+ iRight[2][1] * iLeft[1][3]
+		+ iRight[2][2] * iLeft[2][3]
+		+ iRight[2][3] * iLeft[3][3]; 
+
+	oDest[3][0]
+		= iRight[3][0] * iLeft[0][0]
+		+ iRight[3][1] * iLeft[1][0]
+		+ iRight[3][2] * iLeft[2][0]
+		+ iRight[3][3] * iLeft[3][0]; 
+
+	oDest[3][1]
+		= iRight[3][0] * iLeft[0][1]
+		+ iRight[3][1] * iLeft[1][1]
+		+ iRight[3][2] * iLeft[2][1]
+		+ iRight[3][3] * iLeft[3][1]; 
+
+	oDest[3][2]
+		= iRight[3][0] * iLeft[0][2]
+		+ iRight[3][1] * iLeft[1][2]
+		+ iRight[3][2] * iLeft[2][2]
+		+ iRight[3][3] * iLeft[3][2]; 
+
+	oDest[3][3]
+		= iRight[3][0] * iLeft[0][3]
+		+ iRight[3][1] * iLeft[1][3]
+		+ iRight[3][2] * iLeft[2][3]
+		+ iRight[3][3] * iLeft[3][3]; 
+	}
+
+void sComposeMat4(const float iLeft[4][4], const float iRight[4][4], float oDest[4][4]);
+
+template <class E>
+ZMatrix<E,4,4> operator*(const ZMatrix<E,4,4>& iLeft, const ZMatrix<E,4,4>& iRight)
+	{
+	ZMatrix<E,4,4> dest(null);
+	sComposeMat4(iLeft.fE, iRight.fE, dest.fE);
+	return dest;
+	}
+
+// =================================================================================================
+// MARK: - Optimized sComposeMat4Vec4
+
+template <class E>
+void sComposeMat4Vec4(const E iLeft[4][4], const E* iRight, E* oDest)
+	{
+	oDest[0]
+		= iRight[0] * iLeft[0][0]
+		+ iRight[1] * iLeft[1][0]
+		+ iRight[2] * iLeft[2][0]
+		+ iRight[3] * iLeft[3][0]; 
+
+	oDest[1]
+		= iRight[0] * iLeft[0][1]
+		+ iRight[1] * iLeft[1][1]
+		+ iRight[2] * iLeft[2][1]
+		+ iRight[3] * iLeft[3][1]; 
+
+	oDest[2]
+		= iRight[0] * iLeft[0][2]
+		+ iRight[1] * iLeft[1][2]
+		+ iRight[2] * iLeft[2][2]
+		+ iRight[3] * iLeft[3][2]; 
+
+	oDest[3]
+		= iRight[0] * iLeft[0][3]
+		+ iRight[1] * iLeft[1][3]
+		+ iRight[2] * iLeft[2][3]
+		+ iRight[3] * iLeft[3][3];
+	}
+
+void sComposeMat4Vec4(const float iLeft[4][4], const float* iRight, float* oDest);
+
+template <class E>
+ZMatrix<E,1,4> operator*(const ZMatrix<E,4,4>& iLeft, const ZMatrix<E,1,4>& iRight)
+	{
+	ZMatrix<E,1,4> dest(null);
+	sComposeMat4Vec4(iLeft.fE, iRight.fE[0], dest.fE[0]);
+	return dest;
+	}
+
+// =================================================================================================
+// MARK: - Optimized sComposeMat4Vec3_ToVec4
+
+template <class E>
+void sComposeMat4Vec3_ToVec4(const E iLeft[4][4], const E* iRight, E* oDest)
+	{
+	oDest[0]
+		= iRight[0] * iLeft[0][0]
+		+ iRight[1] * iLeft[1][0]
+		+ iRight[2] * iLeft[2][0]
+		+ iLeft[3][0]; 
+
+	oDest[1]
+		= iRight[0] * iLeft[0][1]
+		+ iRight[1] * iLeft[1][1]
+		+ iRight[2] * iLeft[2][1]
+		+ iLeft[3][1]; 
+
+	oDest[2]
+		= iRight[0] * iLeft[0][2]
+		+ iRight[1] * iLeft[1][2]
+		+ iRight[2] * iLeft[2][2]
+		+ iLeft[3][2]; 
+
+	oDest[3]
+		= iRight[0] * iLeft[0][3]
+		+ iRight[1] * iLeft[1][3]
+		+ iRight[2] * iLeft[2][3]
+		+ iLeft[3][3];
+	}
+
+void sComposeMat4Vec3_ToVec4(const float iLeft[4][4], const float* iRight, float* oDest);
+
+template <class E>
+ZMatrix<E,1,3> operator*(const ZMatrix<E,4,4>& iLeft, const ZMatrix<E,1,3>& iRight)
+	{
+	ZMatrix<E,1,4> dest(null);
+	sComposeMat4Vec3_ToVec4(iLeft.fE, iRight.fE[0], dest.fE[0]);
+	return sCartesian(dest);
+	}
+
 } // namespace ZooLib
+
 
 #endif // __ZMatrix_h__
