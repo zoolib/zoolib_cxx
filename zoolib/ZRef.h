@@ -208,6 +208,12 @@ public:
 	static void sCFAllocatorRelease(T* iP)
 		{ spRelease(iP); }
 
+	void Retain()
+		{ spRetain(fP); }
+
+	void Release()
+		{ spRelease(fP); }
+
 private:
 	static void spRetain(T* iP) { if (iP) sRetain(*iP); }
 	static void spRelease(T* iP) { if (iP) sRelease(*iP); }
@@ -387,6 +393,12 @@ public:
 
 	static void sCFAllocatorRelease(T* iP)
 		{ spRelease(iP); }
+
+	void Retain()
+		{ spRetain(fP); }
+
+	void Release()
+		{ spRelease(fP); }
 
 private:
 	static void spRetain(T*& ioP) { if (ioP) sRetain_T(ioP); }
