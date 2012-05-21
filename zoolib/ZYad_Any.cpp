@@ -21,10 +21,44 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_Std.h"
+#include "zoolib/ZYad_Val_T.h"
 
 namespace ZooLib {
 
 using std::string;
+
+class ZYadStreamerRPos_Any
+:	public ZYadStreamerRPos_Val_T<ZData_Any>
+,	public ZYadR_Any
+	{
+public:
+	ZYadStreamerRPos_Any(const ZData_Any& iData)
+	:	ZYadStreamerRPos_Val_T<ZData_Any>(iData)
+	,	ZYadR_Any(ZAny(iData))
+		{}
+	};
+
+class ZYadSeqAtRPos_Any
+:	public ZYadSeqAtRPos_Val_T<ZSeq_Any>
+,	public ZYadR_Any
+	{
+public:
+	ZYadSeqAtRPos_Any(const ZSeq_Any& iSeq)
+	:	ZYadSeqAtRPos_Val_T<ZSeq_Any>(iSeq)
+	,	ZYadR_Any(ZAny(iSeq))
+		{}
+	};
+
+class ZYadMapAtRPos_Any
+:	public ZYadMapAtRPos_Val_T<ZMap_Any>
+,	public ZYadR_Any
+	{
+public:
+	ZYadMapAtRPos_Any(const ZMap_Any& iMap)
+	:	ZYadMapAtRPos_Val_T<ZMap_Any>(iMap)
+	,	ZYadR_Any(ZAny(iMap))
+		{}
+	};
 
 // =================================================================================================
 // MARK: - sYadR
@@ -69,6 +103,13 @@ public:
 	Visitor_Do_GetVal(bool iRepeatedPropsAsSeq)
 	:	fRepeatedPropsAsSeq(iRepeatedPropsAsSeq)
 		{}
+
+	virtual ZQ<ZVal_Any> QDo(const ZRef<ZVisitee>& iRep)
+		{
+		if (ZRef<ZYadR_Any> asAny = iRep.DynamicCast<ZYadR_Any>())
+			return asAny->GetAny();
+		return ZVisitor_Do_T<ZVal_Any>::QDo(iRep);
+		}
 
 	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
 		{ this->pSetResult(iYadAtomR->AsAny()); }
@@ -131,23 +172,6 @@ ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
 	{ return sFromYadR(false, iDefault, iYadR); }
 
 ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
-	{
-	if (ZRef<ZYadAtomR_Any> asAtom = iYadR.DynamicCast<ZYadAtomR_Any>())
-		return asAtom->GetAny();
-
-	if (ZRef<ZYadStrimmerU_String> asString = iYadR.DynamicCast<ZYadStrimmerU_String>())
-		return asString->GetStrim().GetString8();
-
-	if (ZRef<ZYadStreamerRPos_Any> asYadStreamer = iYadR.DynamicCast<ZYadStreamerRPos_Any>())
-		return asYadStreamer->GetStream().GetData();
-
-	if (ZRef<ZYadMapAtRPos_Any> asMap = iYadR.DynamicCast<ZYadMapAtRPos_Any>())
-		return asMap->GetMap();
-
-	if (ZRef<ZYadSeqAtRPos_Any> asSeq = iYadR.DynamicCast<ZYadSeqAtRPos_Any>())
-		return asSeq->GetSeq();
-
-	return Visitor_Do_GetVal(iRepeatedPropsAsSeq).DDo(iDefault, iYadR);
-	}
+	{ return Visitor_Do_GetVal(iRepeatedPropsAsSeq).DDo(iDefault, iYadR); }
 
 } // namespace ZooLib

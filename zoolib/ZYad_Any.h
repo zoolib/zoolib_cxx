@@ -23,13 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZVal_Any.h"
-#include "zoolib/ZYad_Val_T.h"
+#include "zoolib/ZYad.h"
 
 namespace ZooLib {
-
-typedef ZYadStreamerRPos_Val_T<ZData_Any> ZYadStreamerRPos_Any;
-typedef ZYadSeqAtRPos_Val_T<ZSeq_Any> ZYadSeqAtRPos_Any;
-typedef ZYadMapAtRPos_Val_T<ZMap_Any> ZYadMapAtRPos_Any;
 
 // =================================================================================================
 // MARK: - sYadR

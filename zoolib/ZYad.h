@@ -333,17 +333,14 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadAtomR_Any
+// MARK: - ZYadR_Any
 
-class ZYadAtomR_Any
-:	public ZYadAtomR
+class ZYadR_Any
+:	public virtual ZYadR
 	{
 public:
-	ZYadAtomR_Any(const ZAny& iAny);
-	virtual ~ZYadAtomR_Any();
-
-// From ZYadAtomR
-	virtual ZAny AsAny();
+	ZYadR_Any(const ZAny& iAny);
+	virtual ~ZYadR_Any();
 
 // Our protocol
 	const ZAny& GetAny();
@@ -353,10 +350,26 @@ private:
 	};
 
 // =================================================================================================
+// MARK: - ZYadAtomR_Any
+
+class ZYadAtomR_Any
+:	public virtual ZYadAtomR
+,	public virtual ZYadR_Any
+	{
+public:
+	ZYadAtomR_Any(const ZAny& iAny);
+	virtual ~ZYadAtomR_Any();
+
+// From ZYadAtomR
+	virtual ZAny AsAny();
+	};
+
+// =================================================================================================
 // MARK: - ZYadStrimmerU_String
 
 class ZYadStrimmerU_String
-:	public ZYadStrimmerR
+:	public virtual ZYadStrimmerR
+,	public virtual ZYadR_Any
 ,	public ZStrimmerU_T<ZStrimU_String>
 	{
 public:

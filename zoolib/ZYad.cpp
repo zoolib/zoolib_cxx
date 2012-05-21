@@ -409,26 +409,37 @@ void ZVisitor_Yad_PreferAt::Visit_YadMapAtRPos(const ZRef<ZYadMapAtRPos>& iYadMa
 	{ this->Visit_YadMapAtR(iYadMapAtRPos); }
 
 // =================================================================================================
+// MARK: - ZYadR_Any
+
+ZYadR_Any::ZYadR_Any(const ZAny& iAny)
+:	fAny(iAny)
+	{}
+
+ZYadR_Any::~ZYadR_Any()
+	{}
+
+const ZAny& ZYadR_Any::GetAny()
+	{ return fAny; }
+
+// =================================================================================================
 // MARK: - ZYadAtomR_Any
 
 ZYadAtomR_Any::ZYadAtomR_Any(const ZAny& iAny)
-:	fAny(iAny)
+:	ZYadR_Any(iAny)
 	{}
 
 ZYadAtomR_Any::~ZYadAtomR_Any()
 	{}
 
 ZAny ZYadAtomR_Any::AsAny()
-	{ return fAny; }
-
-const ZAny& ZYadAtomR_Any::GetAny()
-	{ return fAny; }
+	{ return this->GetAny(); }
 
 // =================================================================================================
 // MARK: - ZYadStrimmerU_String
 
 ZYadStrimmerU_String::ZYadStrimmerU_String(const string& iString)
-:	ZStrimmerU_T<ZStrimU_String>(iString)
+:	ZYadR_Any(ZAny(iString))
+,	ZStrimmerU_T<ZStrimU_String>(iString)
 	{}
 
 bool ZYadStrimmerU_String::IsSimple(const ZYadOptions& iOptions)
