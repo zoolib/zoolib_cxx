@@ -41,7 +41,7 @@ public:
 		{}
 
 // Our protocol
-	ZQ<Result_t> QDo(const ZRef<ZVisitee>& iRep)
+	virtual ZQ<Result_t> QDo(const ZRef<ZVisitee>& iRep)
 		{
 		if (iRep)
 			{
@@ -54,25 +54,15 @@ public:
 
 	Result_t DDo(const Result_t& iDefault, const ZRef<ZVisitee>& iRep)
 		{
-		if (iRep)
-			{
-			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ);
-			iRep->Accept(*this);
-			if (fResultQ)
-				return *fResultQ;
-			}
+		if (ZQ<Result_t> theQ = this->QDo(iRep))
+			return *theQ;
 		return iDefault;
 		}
 
 	Result_t Do(const ZRef<ZVisitee>& iRep)
 		{
-		if (iRep)
-			{
-			ZSetRestore_T<ZQ<Result_t> > sr(fResultQ);
-			iRep->Accept(*this);
-			if (fResultQ)
-				return *fResultQ;
-			}
+		if (ZQ<Result_t> theQ = this->QDo(iRep))
+			return *theQ;
 		return Result_t();
 		}
 
