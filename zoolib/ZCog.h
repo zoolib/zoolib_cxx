@@ -179,7 +179,11 @@ Cog sCallCog(const Cog& iCog, const typename Cog::Param iParam)
 	{
 	if (sIsFinished(iCog))
 		return iCog;
-	return iCog->Call(iCog, iParam);
+
+	if (ZQ<Cog> theQ = iCog->QCall(iCog, iParam))
+		return *theQ;
+
+	return Cog();
 	}
 
 template <class Param>
@@ -188,7 +192,11 @@ ZCog<Param> sCallCog
 	{
 	if (sIsFinished(iCallable))
 		return iCallable;
-	return iCallable->Call(iCallable, iParam);
+
+	if (ZQ<ZCog<Param> > theQ = iCallable->QCall(iCallable, iParam))
+		return *theQ;
+
+	return ZCog<Param>();
 	}
 
 template <class Param>
@@ -198,27 +206,54 @@ ZCog<const Param&> sCallCog
 	{
 	if (sIsFinished(iCallable))
 		return iCallable;
-	return iCallable->Call(iCallable, iParam);
+
+	if (ZQ<ZCog<const Param&> > theQ = iCallable->QCall(iCallable, iParam))
+		return *theQ;
+
+	return ZCog<const Param&>();
 	}
 
 template <class Cog>
 void sCallUpdate_Cog(Cog& ioCog, const typename Cog::Param iParam)
 	{
 	if (sIsPending(ioCog))
-		ioCog = ioCog->Call(ioCog, iParam);
+		{
+		if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
+			ioCog = *theQ;
+		else
+			ioCog.Clear();
+		}
 	}
 
 template <class Cog>
 bool sCallUpdate_PendingCog_StillPending(Cog& ioCog, const typename Cog::Param iParam)
-	{ return sIsPending(ioCog = ioCog->Call(ioCog, iParam)); }
+	{
+	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
+		{
+		ioCog = *theQ;
+		return sIsPending(ioCog);
+		}
+	ioCog.Clear();
+	return false;
+	}
 
 template <class Cog>
 bool sCallUpdate_PendingCog_Changed(Cog& ioCog, const typename Cog::Param iParam)
-	{ return sCompareSet(ioCog, ioCog->Call(ioCog, iParam)); }
+	{
+	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
+		return sCompareSet(ioCog, *theQ);
+	ioCog.Clear();
+	return true;
+	}
 
 template <class Cog>
 bool sCallUpdate_PendingCog_Unchanged(Cog& ioCog, const typename Cog::Param iParam)
-	{ return not sCompareSet(ioCog, ioCog->Call(ioCog, iParam)); }
+	{
+	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
+		return not sCompareSet(ioCog, *theQ);
+	ioCog.Clear();
+	return false;
+	}
 
 template <class Cog>
 bool sCallUpdate_Cog_Changed(Cog& ioCog, const typename Cog::Param iParam)
