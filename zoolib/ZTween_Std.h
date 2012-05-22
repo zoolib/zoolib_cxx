@@ -131,7 +131,6 @@ template <class Val>
 ZRef<ZTween<Val> > sTween_Linear()
 	{ return new ZTween_Fun<Val,spTweenFun_Linear>; }
 
-
 template <class Val>
 ZRef<ZTween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal)
 	{ return sTween_ValRange(iZeroVal, iOneVal, sTween_Linear<Val>()); }
