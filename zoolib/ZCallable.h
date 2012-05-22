@@ -78,6 +78,7 @@ public:
 
 	virtual ZQ<R> QCall() = 0;
 
+	inline
 	R DCall(const R& iDefault)
 		{
 		if (ZQ<R> theQ = this->QCall())
@@ -85,6 +86,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call()
 		{
 		if (ZQ<R> theQ = this->QCall())
@@ -105,6 +107,7 @@ public:
 
 	virtual ZQ<void> QCall() = 0;
 
+	inline
 	void Call()
 		{
 		this->QCall();
@@ -124,6 +127,7 @@ public:
 
 	virtual ZQ<R> QCall(P0) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0)
 		{
@@ -132,6 +136,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call(typename ZCallableUtil::VT<P0>::P i0)
 		{
 		if (ZQ<R> theQ = this->QCall(i0))
@@ -153,6 +158,7 @@ public:
 
 	virtual ZQ<void> QCall(P0) = 0;
 
+	inline
 	void Call(typename ZCallableUtil::VT<P0>::P i0)
 		{
 		this->QCall(i0);
@@ -172,6 +178,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1)
@@ -181,6 +188,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1)
@@ -204,6 +212,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1)
@@ -225,6 +234,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -235,6 +245,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -259,6 +270,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -281,6 +293,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -292,6 +305,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -317,6 +331,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -341,6 +356,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -353,6 +369,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -380,6 +397,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4) = 0;
 	
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -405,6 +423,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -418,6 +437,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -446,6 +466,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -472,6 +493,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -486,6 +508,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -515,6 +538,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -542,6 +566,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -557,6 +582,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -587,6 +613,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -616,6 +643,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -632,6 +660,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -664,6 +693,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -694,6 +724,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -711,6 +742,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -744,6 +776,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -775,6 +808,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -793,6 +827,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -827,6 +862,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -859,6 +895,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -878,6 +915,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -913,6 +951,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -947,6 +986,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -967,6 +1007,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -1004,6 +1045,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -1039,6 +1081,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -1060,6 +1103,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -1098,6 +1142,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -1134,6 +1179,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -1156,6 +1202,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -1195,6 +1242,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -1232,6 +1280,7 @@ public:
 
 	virtual ZQ<R> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF) = 0;
 
+	inline
 	R DCall(const R& iDefault,
 		typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -1256,6 +1305,7 @@ public:
 		return iDefault;
 		}
 	
+	inline
 	R Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
@@ -1297,6 +1347,7 @@ public:
 
 	virtual ZQ<void> QCall(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF) = 0;
 
+	inline
 	void Call
 		(typename ZCallableUtil::VT<P0>::P i0,
 		typename ZCallableUtil::VT<P1>::P i1,
