@@ -619,13 +619,17 @@ public:
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
 		if (fWeightScale > 0)
+			{
 			return fTween->QValAt(iPlace / fWeightScale);
+			}
 		else
 			{
 			const double theWeight = spWeight(fTween, fTweenWeightQ);
-			// Tweak the place by 1/1000, so that zero maps to just *before*
-			// the end of the source tween.
-			return fTween->QValAt(theWeight + iPlace/fWeightScale - theWeight * 1e-3);
+			// Our domain is reversed, and thus is 0 < iPlace <= theWeight,
+			// rather than the usual 0 <= iPlace < theWeight.
+			if (0 < iPlace && iPlace <= theWeight)
+				return fTween->QValAt(theWeight + iPlace/fWeightScale);
+			return null;
 			}
 		}
 
