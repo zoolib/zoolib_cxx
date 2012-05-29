@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCPixmap_CoreVideo_h__
-#define __ZDCPixmap_CoreVideo_h__ 1
+#ifndef __ZDCPixmap_CVPixelBuffer_h__
+#define __ZDCPixmap_CVPixelBuffer_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -39,16 +39,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 namespace ZooLib {
-namespace ZDCPixmap_CoreVideo {
+namespace ZDCPixmap_CVPixelBuffer {
 
 // =================================================================================================
-// MARK: - ZDCPixmap_CoreVideo
+// MARK: - ZDCPixmap_CVPixelBuffer
 
 ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR);
 
-} // namespace ZDCPixmap_CoreVideo
+} // namespace ZDCPixmap_CVPixelBuffer
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)
 
-#endif // __ZDCPixmap_CoreVideo_h__
+#endif // __ZDCPixmap_CVPixelBuffer_h__

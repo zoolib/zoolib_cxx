@@ -18,17 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZDCPixmap_CoreVideo.h"
+#include "zoolib/ZDCPixmap_CVPixelBuffer.h"
 
 #if ZCONFIG_SPI_Enabled(MacOSX)
 
 namespace ZooLib {
-namespace ZDCPixmap_CoreVideo {
+namespace ZDCPixmap_CVPixelBuffer {
 
 using namespace ZDCPixmapNS;
 
 // =================================================================================================
-// MARK: - ZDCPixmap_CoreVideo::PixmapRaster
+// MARK: - ZDCPixmap_CVPixelBuffer::PixmapRaster
 
 class PixmapRaster : public ZDCPixmapRaster
 	{
@@ -77,7 +77,7 @@ EFormatStandard spAsFormatStandard(OSType iOSType)
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmap_CoreVideo
+// MARK: - ZDCPixmap_CVPixelBuffer
 
 ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR)
 	{
@@ -99,7 +99,7 @@ ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR)
 	return ZDCPixmapRep::sCreate(thePMR, sRect<ZRectPOD>(theWidth, theHeight), thePixelDesc);
 	}
 
-} // namespace ZDCPixmap_CoreVideo
+} // namespace ZDCPixmap_CVPixelBuffer
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)
