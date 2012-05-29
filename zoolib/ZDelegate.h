@@ -32,6 +32,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <map>
 
+#ifdef __OBJC__
+	#import <Foundation/NSInvocation.h>
+#endif
+
 ZMACRO_ObjCClass(NSInvocation);
 ZMACRO_ObjCClass(NSMethodSignature);
 ZMACRO_ObjCClass(ZooLib_ZDelegate_Proxy);
