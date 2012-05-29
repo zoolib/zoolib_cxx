@@ -56,7 +56,7 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential =
 	0,
 	spGetBytes_R,
 	spSkipForward_R,
-	spUnimplemented,
+	0,//spUnimplemented,
 	spReleaseProvider_R
 	};
 
@@ -79,7 +79,7 @@ static CGDataProviderCallbacks spCallbacks_R =
 	{
 	spGetBytes_R,
 	spSkipBytes_R,
-	spUnimplemented,
+	0,//spUnimplemented,
 	spReleaseProvider_R
 	};
 
@@ -141,7 +141,8 @@ ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreateRewind(ZRef<ZStream
 
 #else // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
-static void spSkipBytes_RPos(void* iInfo, size_t iCount)//	{ static_cast<ZStreamerRPos*>(iInfo)->GetStreamR().Skip(iCount); }
+static void spSkipBytes_RPos(void* iInfo, size_t iCount)
+	{ static_cast<ZStreamerRPos*>(iInfo)->GetStreamR().Skip(iCount); }
 
 static CGDataProviderCallbacks spCallbacks_RPos =
 	{
