@@ -30,6 +30,13 @@ namespace ZooLib {
 template <class Value, class Tag>
 class ZTagVal
 	{
+private:
+	template <class OtherTag>
+	ZTagVal(const ZTagVal<Value,OtherTag>& iOther);
+
+	template <class OtherTag>
+	ZTagVal& operator=(const ZTagVal<Value,OtherTag>& iOther);
+
 public:
 	ZTagVal()
 	:	fValue(Value())
@@ -48,20 +55,17 @@ public:
 		return *this;
 		}
 
-	ZTagVal(const Value& iValue)
-	:	fValue(iValue)
-		{}
-
-	ZTagVal& operator=(const Value& iValue)
-		{
-		fValue = iValue;
-		return *this;
-		}
-
 	template <class P0>
 	ZTagVal(const P0& i0)
 	:	fValue(i0)
 		{}
+
+	template <class P0>
+	ZTagVal& operator=(const P0& i0)
+		{
+		fValue = i0;
+		return *this;
+		}
 
 	template <class P0, class P1>
 	ZTagVal(const P0& i0, const P1& i1)
