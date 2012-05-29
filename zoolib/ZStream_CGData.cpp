@@ -62,8 +62,12 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential =
 
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer)
 	{
-	iStreamer->Retain();
-	return sAdopt& ::CGDataProviderCreateSequential(iStreamer.Get(), &spCallbacksSequential);
+	if (iStreamer)
+		{
+		iStreamer->Retain();
+		return sAdopt& ::CGDataProviderCreateSequential(iStreamer.Get(), &spCallbacksSequential);
+		}
+	return null;
 	}
 
 #else // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
@@ -81,8 +85,12 @@ static CGDataProviderCallbacks spCallbacks_R =
 
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer)
 	{
-	iStreamer->Retain();
-	return sAdopt& ::CGDataProviderCreate(iStreamer, &spCallbacks_R);
+	if (iStreamer)
+		{
+		iStreamer->Retain();
+		return sAdopt& ::CGDataProviderCreate(iStreamer, &spCallbacks_R);
+		}
+	return null;
 	}
 
 #endif // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
@@ -96,9 +104,6 @@ static size_t spGetBytes_RPos(void* iInfo, void* oBuffer, size_t iCount)
 	static_cast<ZStreamerRPos*>(iInfo)->GetStreamR().Read(oBuffer, iCount, &countRead);
 	return countRead;
 	}
-
-//static void spSkipBytes_RPos(void* iInfo, size_t iCount)
-//	{ static_cast<ZStreamerRPos*>(iInfo)->GetStreamR().Skip(iCount); }
 
 static void spRewind_RPos(void* iInfo)
 	{ static_cast<ZStreamerRPos*>(iInfo)->GetStreamRPos().SetPosition(0); }
@@ -126,11 +131,17 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential_RPos =
 
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer)
 	{
-	iStreamer->Retain();
-	return sAdopt& ::CGDataProviderCreateSequential(iStreamer.Get(), &spCallbacksSequential_RPos);
+	if (iStreamer)
+		{
+		iStreamer->Retain();
+		return sAdopt& ::CGDataProviderCreateSequential(iStreamer.Get(), &spCallbacksSequential_RPos);
+		}
+	return null;
 	}
 
 #else // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+
+static void spSkipBytes_RPos(void* iInfo, size_t iCount)//	{ static_cast<ZStreamerRPos*>(iInfo)->GetStreamR().Skip(iCount); }
 
 static CGDataProviderCallbacks spCallbacks_RPos =
 	{
@@ -142,8 +153,12 @@ static CGDataProviderCallbacks spCallbacks_RPos =
 
 ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer)
 	{
-	iStreamer->Retain();
-	return sAdopt& ::CGDataProviderCreate(iStreamer, &spCallbacks_RPos);
+	if (iStreamer)
+		{
+		iStreamer->Retain();
+		return sAdopt& ::CGDataProviderCreate(iStreamer, &spCallbacks_RPos);
+		}
+	return null;
 	}
 
 #endif // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
@@ -173,8 +188,12 @@ CGDataConsumerCallbacks spCallbacks_W =
 
 ZRef<CGDataConsumerRef> ZStream_CGData::sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer)
 	{
-	iStreamer->Retain();
-	return sAdopt& ::CGDataConsumerCreate(iStreamer.Get(), &spCallbacks_W);
+	if (iStreamer)
+		{
+		iStreamer->Retain();
+		return sAdopt& ::CGDataConsumerCreate(iStreamer.Get(), &spCallbacks_W);
+		}
+	return null;
 	}
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)

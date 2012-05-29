@@ -25,10 +25,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 
-#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataProvider.h)
-#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataConsumer.h)
+#if ZMACRO_IOS
+	#include ZMACINCLUDE2(CoreGraphics,CGDataProvider.h)
+	#include ZMACINCLUDE2(CoreGraphics,CGDataConsumer.h)
+#else
+	#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataProvider.h)
+	#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataConsumer.h)
+#endif
 
-#include "zoolib/ZRef.h"
 #include "zoolib/ZStreamer.h"
 
 namespace ZooLib {
@@ -36,7 +40,6 @@ namespace ZStream_CGData {
 
 // =================================================================================================
 // MARK: - ZStream_CGData
-
 
 ZRef<CGDataProviderRef> sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer);
 
