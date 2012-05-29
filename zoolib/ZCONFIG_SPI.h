@@ -42,6 +42,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #endif
 
+#ifndef ZMACRO_IOS
+	#define ZMACRO_IOS 0
+#endif
+
 // Although it seems that this formulation should work in this header, as it
 // does in application code:
 //#define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Enabled(POSIX))
