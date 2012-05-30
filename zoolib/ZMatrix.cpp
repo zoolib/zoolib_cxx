@@ -33,7 +33,7 @@ namespace ZooLib {
 
 #if ZCONFIG(Processor,ARM)
 
-#define DEFINED_sInverseMat4 1
+#define IMPLEMENTED_sInverseMat4 1
 
 ZMatrix<float,4,4> sInverse(const ZMatrix<float,4,4>& iMat)
 	{
@@ -42,16 +42,16 @@ ZMatrix<float,4,4> sInverse(const ZMatrix<float,4,4>& iMat)
 	return dest;
 	}
 
-#define DEFINED_sComposeMat4 1
+#define IMPLEMENTED_sComposeMat4 1
 
 void sComposeMat4(const float iLeft[4][4], const float iRight[4][4], float oDest[4][4])
 	{ ::Matrix4Mul(iLeft[0], iRight[0], oDest[0]); }
 
-#define DEFINED_sComposeMat4Vec4 1
+#define IMPLEMENTED_sComposeMat4Vec4 1
 void sComposeMat4Vec4(const float iLeft[4][4], const float* iRight, float* oDest)
 	{ ::Matrix4Vector4Mul(iLeft[0], iRight, oDest); }
 
-#define DEFINED_sComposeMat4Vec3_ToVec4 1
+#define IMPLEMENTED_sComposeMat4Vec3_ToVec4 1
 void sComposeMat4Vec3_ToVec4(const float iLeft[4][4], const float* iRight, float* oDest)
 	{ ::Matrix4Vector3Mul(iLeft[0], iRight, oDest); }
 
@@ -60,26 +60,26 @@ void sComposeMat4Vec3_ToVec4(const float iLeft[4][4], const float* iRight, float
 // =================================================================================================
 // MARK: -
 
-#if not DEFINED_sInverseMat4
-	#define DEFINED_sInverseMat4 1
+#if not IMPLEMENTED_sInverseMat4
+	#define IMPLEMENTED_sInverseMat4 1
 	ZMatrix<float,4,4> sInverse(const ZMatrix<float,4,4>& iMat)
 		{ return sInverse<float,4>(iMat); }
 #endif
 
-#if not DEFINED_sComposeMat4
-	#define DEFINED_sComposeMat4 1
+#if not IMPLEMENTED_sComposeMat4
+	#define IMPLEMENTED_sComposeMat4 1
 	void sComposeMat4(const float iLeft[4][4], const float iRight[4][4], float oDest[4][4])
 		{ sComposeMat4<float>(iLeft, iRight, oDest); }
 #endif
 
-#if not DEFINED_sComposeMat4Vec4
-	#define DEFINED_sComposeMat4Vec4 1
+#if not IMPLEMENTED_sComposeMat4Vec4
+	#define IMPLEMENTED_sComposeMat4Vec4 1
 	void sComposeMat4Vec4(const float iLeft[4][4], const float* iRight, float* oDest)
 		{ sComposeMat4Vec4<float>(iLeft, iRight, oDest); }
 #endif
 
-#if not DEFINED_sComposeMat4Vec3_ToVec4
-	#define DEFINED_sComposeMat4Vec3_ToVec4 1
+#if not IMPLEMENTED_sComposeMat4Vec3_ToVec4
+	#define IMPLEMENTED_sComposeMat4Vec3_ToVec4 1
 	void sComposeMat4Vec3_ToVec4(const float iLeft[4][4], const float* iRight, float* oDest)
 		{ sComposeMat4Vec3_ToVec4<float>(iLeft, iRight, oDest); }
 #endif
