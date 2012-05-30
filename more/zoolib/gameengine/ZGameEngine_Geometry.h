@@ -33,7 +33,7 @@ namespace ZGameEngine {
 template <class Val>
 ZMatrix<Val,1,1> sCVec1(Val i0)
 	{
-	ZMatrix<Val,1,1> result;
+	ZMatrix<Val,1,1> result(null);
 	result.fE[0][0] = i0;
 	return result;
 	}
@@ -41,7 +41,7 @@ ZMatrix<Val,1,1> sCVec1(Val i0)
 template <class Val>
 ZMatrix<Val,1,2> sCVec2(Val i0, Val i1)
 	{
-	ZMatrix<Val,1,2> result;
+	ZMatrix<Val,1,2> result(null);
 	result.fE[0][0] = i0;
 	result.fE[0][1] = i1;
 	return result;
@@ -50,7 +50,7 @@ ZMatrix<Val,1,2> sCVec2(Val i0, Val i1)
 template <class Val>
 ZMatrix<Val,1,3> sCVec3(Val i0, Val i1, Val i2)
 	{
-	ZMatrix<Val,1,3> result;
+	ZMatrix<Val,1,3> result(null);
 	result.fE[0][0] = i0;
 	result.fE[0][1] = i1;
 	result.fE[0][2] = i2;
@@ -60,7 +60,7 @@ ZMatrix<Val,1,3> sCVec3(Val i0, Val i1, Val i2)
 template <class Val>
 ZMatrix<Val,1,4> sCVec4(Val i0, Val i1, Val i2, Val i3)
 	{
-	ZMatrix<Val,1,4> result;
+	ZMatrix<Val,1,4> result(null);
 	result.fE[0][0] = i0;
 	result.fE[0][1] = i1;
 	result.fE[0][2] = i2;
@@ -73,7 +73,7 @@ ZMatrix<Val,1,4> sCVec4(Val i0, Val i1, Val i2, Val i3)
 
 template <class Val>
 ZMatrix<Val,1,2> sCVec2(Val iVal)
-	{ return sCVec2(iVal, iVal); }
+	{ return ZMatrix<Val,1,2>(iVal); }
 
 template <class Val>
 ZMatrix<Val,1,2> sCVec2()
@@ -84,7 +84,7 @@ ZMatrix<Val,1,2> sCVec2()
 
 template <class Val>
 ZMatrix<Val,1,3> sCVec3(Val iVal)
-	{ return sCVec3(iVal, iVal, iVal); }
+	{ return ZMatrix<Val,1,3>(iVal); }
 
 template <class Val>
 ZMatrix<Val,1,3> sCVec3()
@@ -96,7 +96,7 @@ ZMatrix<Val,1,3> sCVec3()
 template <class Val>
 ZMatrix<Val,1,1> sRVec1(Val i0)
 	{
-	ZMatrix<Val,1,1> result;
+	ZMatrix<Val,1,1> result(null);
 	result.fE[0][0] = i0;
 	return result;
 	}
@@ -104,7 +104,7 @@ ZMatrix<Val,1,1> sRVec1(Val i0)
 template <class Val>
 ZMatrix<Val,2,1> sRVec2(Val i0, Val i1)
 	{
-	ZMatrix<Val,1,2> result;
+	ZMatrix<Val,1,2> result(null);
 	result.fE[0][0] = i0;
 	result.fE[1][0] = i1;
 	return result;
@@ -113,7 +113,7 @@ ZMatrix<Val,2,1> sRVec2(Val i0, Val i1)
 template <class Val>
 ZMatrix<Val,3,1> sRVec3(Val i0, Val i1, Val i2)
 	{
-	ZMatrix<Val,1,3> result;
+	ZMatrix<Val,1,3> result(null);
 	result.fE[0][0] = i0;
 	result.fE[1][0] = i1;
 	result.fE[2][0] = i2;
@@ -123,7 +123,7 @@ ZMatrix<Val,3,1> sRVec3(Val i0, Val i1, Val i2)
 template <class Val>
 ZMatrix<Val,4,1> sRVec4(Val i0, Val i1, Val i2, Val i3)
 	{
-	ZMatrix<Val,1,4> result;
+	ZMatrix<Val,1,4> result(null);
 	result.fE[0][0] = i0;
 	result.fE[1][0] = i1;
 	result.fE[2][0] = i2;
@@ -136,7 +136,7 @@ ZMatrix<Val,4,1> sRVec4(Val i0, Val i1, Val i2, Val i3)
 
 template <class Val>
 ZMatrix<Val,2,1> sRVec2(Val iVal)
-	{ return sRVec2(iVal, iVal); }
+	{ return ZMatrix<Val,2,1>(iVal); }
 
 template <class Val>
 ZMatrix<Val,2,1> sRVec2()
@@ -147,7 +147,7 @@ ZMatrix<Val,2,1> sRVec2()
 
 template <class Val>
 ZMatrix<Val,3,1> sRVec3(Val iVal)
-	{ return sRVec3(iVal, iVal, iVal); }
+	{ return ZMatrix<Val,3,1>(iVal); }
 
 template <class Val>
 ZMatrix<Val,3,1> sRVec3()
@@ -172,7 +172,7 @@ ZMatrix<E,Dim+1,Dim+1> sScale(const ZMatrix<E,1,Dim>& iVec)
 template <class E, size_t Dim>
 ZMatrix<E,Dim+1,Dim+1> sTranslate(const ZMatrix<E,1,Dim>& iVec)
 	{
-	ZMatrix<E,Dim+1,Dim+1> result = sIdentity<E,Dim+1>();
+	ZMatrix<E,Dim+1,Dim+1> result(E(1));
 	for (size_t ii = 0; ii < Dim; ++ii)
 		result.fE[Dim][ii] = iVec.fE[0][ii];
 	return result;

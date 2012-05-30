@@ -58,7 +58,7 @@ ZMatrix<E,3,3> sScale2(const ZMatrix<E,1,2>& iCVec2)
 template <class E>
 ZMatrix<E,3,3> sTranslate2(E x, E y)
 	{
-	ZMatrix<E,3,3> result = sIdentity<E,3>();
+	ZMatrix<E,3,3> result(1);
 	result[2][0] = x;
 	result[2][1] = y;
 	return result;

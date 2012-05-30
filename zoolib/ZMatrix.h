@@ -33,7 +33,7 @@ namespace ZooLib {
 // Matrices are specified as the number of columns, then the number of rows.
 
 // =================================================================================================
-// MARK: - ZMatrix
+// MARK: - ZMatrix, general
 
 template <class E, size_t C, size_t R> class ZMatrix;
 
@@ -45,9 +45,6 @@ public:
 
 	static const size_t C = C_p;
 	static const size_t R = R_p;
-
-	ZMatrix(const null_t&)
-		{}
 
 	ZMatrix()
 		{
@@ -68,6 +65,9 @@ public:
 		return *this;
 		}
 
+	ZMatrix(const null_t&)
+		{}
+
 	E* operator[](size_t c)
 		{ return fE[c]; }
 
@@ -87,9 +87,6 @@ public:
 	typedef E_p E;
 	static const size_t R = R_p;
 
-	ZMatrix(const null_t&)
-		{}
-
 	ZMatrix()
 		{
 		for (size_t r = 0; r < R; ++r)
@@ -107,6 +104,15 @@ public:
 		for (size_t r = 0; r < R; ++r)
 			fE[0][r] = iOther.fE[0][r];
 		return *this;
+		}
+
+	ZMatrix(const null_t&)
+		{}
+
+	ZMatrix(E iE)
+		{
+		for (size_t r = 0; r < R; ++r)
+			fE[0][r] = iE;
 		}
 
 	E& operator[](size_t r)
@@ -134,9 +140,6 @@ public:
 	typedef E_p E;
 	static const size_t C = C_p;
 
-	ZMatrix(const null_t&)
-		{}
-
 	ZMatrix()
 		{
 		for (size_t c = 0; c < C; ++c)
@@ -156,6 +159,15 @@ public:
 		return *this;
 		}
 
+	ZMatrix(const null_t&)
+		{}
+
+	ZMatrix(E iE)
+		{
+		for (size_t c = 0; c < C; ++c)
+			fE[0][c] = iE;
+		}
+
 	E& operator[](size_t c)
 		{ return fE[c][0]; }
 
@@ -169,6 +181,58 @@ public:
 		{ return fE[c][0]; }
 
 	E fE[C][1];
+	};
+
+// =================================================================================================
+// MARK: - ZMatrix, square
+
+template <class E_p, size_t Dim_p>
+class ZMatrix<E_p,Dim_p,Dim_p>
+	{
+public:
+	typedef E_p E;
+
+	static const size_t C = Dim_p;
+	static const size_t R = Dim_p;
+	static const size_t Dim = Dim_p;
+
+	ZMatrix()
+		{
+		for (size_t i = 0; i < C * R; ++i)
+			fE[0][i] = E(0);
+		}
+
+	ZMatrix(const ZMatrix& iOther)
+		{
+		for (size_t i = 0; i < C * R; ++i)
+			fE[0][i] = iOther[0][i];
+		}
+
+	ZMatrix& operator=(const ZMatrix& iOther)
+		{
+		for (size_t i = 0; i < C * R; ++i)
+			fE[0][i] = iOther[0][i];
+		return *this;
+		}
+
+	ZMatrix(const null_t&)
+		{}
+
+	ZMatrix(E iDiagonal)
+		{
+		for (size_t i = 0; i < Dim * Dim; ++i)
+			fE[0][i] = E(0);
+		for (size_t i = 0; i < Dim; ++i)
+			fE[i][i] = iDiagonal;
+		}
+
+	ZMatrix<E,1,Dim>& operator[](size_t c)
+		{ return *reinterpret_cast<ZMatrix<E,1,Dim>*>(fE[c]); }
+
+	const ZMatrix<E,1,Dim>& operator[](size_t c) const
+		{ return *reinterpret_cast<const ZMatrix<E,1,Dim>*>(fE[c]); }
+
+	E fE[C][R];
 	};
 
 // =================================================================================================
@@ -317,20 +381,7 @@ ZMatrix<E,C,1> sCross(const ZMatrix<E,C,1>& i0, const ZMatrix<E,C,1>& i1)
 	}
 
 // =================================================================================================
-// MARK: - sIdentity
-
-template <class E, size_t Dim>
-ZMatrix<E,Dim,Dim> sIdentity()
-	{
-	ZMatrix<E,Dim,Dim> result;
-	for (size_t x = 0; x < Dim; ++x)
-		result.fE[x][x] = E(1);
-	return result;
-	}
-
-template <class Mat>
-Mat sIdentity()
-	{ return sIdentity<typename Mat::E, Mat::R>(); }
+// MARK: - sIsIdentity
 
 template <class E, size_t Dim>
 bool sIsIdentity(const ZMatrix<E,Dim,Dim>& iMat)
@@ -470,7 +521,7 @@ ZMatrix<E,C,R> sNonZero(const ZMatrix<E,C,R>& iMat)
 // MARK: - Multiplication (aka composition)
 
 template <class E, size_t RL, size_t Common, size_t CR>
-ZMatrix<E,CR,RL> operator*(const ZMatrix<E,Common,RL>& iLeft, const ZMatrix<E,CR,Common>& iRight)
+ZMatrix<E,CR,RL> operator*(const ZMatrix<E,Common,RL>& iLHS, const ZMatrix<E,CR,Common>& iRHS)
 	{
 	ZMatrix<E,CR,RL> result(null);
 	for (size_t rl = 0; rl < RL; ++rl)
@@ -479,88 +530,168 @@ ZMatrix<E,CR,RL> operator*(const ZMatrix<E,Common,RL>& iLeft, const ZMatrix<E,CR
 			{
 			result.fE[cr][rl] = E(0);
 			for (size_t o = 0; o < Common; ++o)
-				result.fE[cr][rl] += iLeft.fE[o][rl] * iRight.fE[cr][o];
+				result.fE[cr][rl] += iLHS.fE[o][rl] * iRHS.fE[cr][o];
 			}
 		}
 	return result;
 	}
 
 template <class E, size_t Dim>
-ZMatrix<E,Dim,Dim>& operator*=(ZMatrix<E,Dim,Dim>& ioLeft, const ZMatrix<E,Dim,Dim>& iRight)
-	{ return ioLeft = ioLeft * iRight; }
+ZMatrix<E,Dim,Dim>& operator*=(ZMatrix<E,Dim,Dim>& ioLHS, const ZMatrix<E,Dim,Dim>& iRHS)
+	{ return ioLHS = ioLHS * iRHS; }
 
 // =================================================================================================
-// MARK: - Composition
+// MARK: - Composition of undersized column vector
 
 template <class E, size_t Common, size_t RL>
-ZMatrix<E,1,Common> operator*(const ZMatrix<E,Common+1,RL>& iLeft, const ZMatrix<E,1,Common>& iRight)
-	{ return sCartesian(iLeft * sHomogenous(iRight)); }
+ZMatrix<E,1,Common> operator*(const ZMatrix<E,Common+1,RL>& iLHS, const ZMatrix<E,1,Common>& iRHS)
+	{ return sCartesian(iLHS * sHomogenous(iRHS)); }
 
 // =================================================================================================
-// MARK: - Element-by-element multiplication
+// MARK: - Element-by-element multiplication (general)
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R> sTimes(const ZMatrix<E,C,R>& iLeft, const ZMatrix<E,C,R>& iRight)
+ZMatrix<E,C,R> sTimes(const ZMatrix<E,C,R>& iLHS, const ZMatrix<E,C,R>& iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLeft.fE[c][r] * iRight.fE[c][r];
+			result.fE[c][r] = iLHS.fE[c][r] * iRHS.fE[c][r];
 		}
 	return result;
+	}
+
+// =================================================================================================
+// MARK: - Element-by-element multiplication (column vector)
+
+template <class E, size_t R>
+ZMatrix<E,1,R> operator*(const ZMatrix<E,1,R>& iLHS, const ZMatrix<E,1,R>& iRHS)
+	{
+	ZMatrix<E,1,R> result(null);
+	for (size_t r = 0; r < R; ++r)
+		result.fE[0][r] = iLHS.fE[0][r] * iRHS.fE[0][r];
+	return result;
+	}
+
+template <class E, size_t R>
+ZMatrix<E,1,R>& operator*=(ZMatrix<E,1,R>& ioLHS, const ZMatrix<E,1,R>& iRHS)
+	{
+	for (size_t r = 0; r < R; ++r)
+		ioLHS.fE[0][r] *= iRHS.fE[0][r];
+	return ioLHS;
+	}
+
+// =================================================================================================
+// MARK: - Element-by-element multiplication (row vector)
+
+template <class E, size_t C>
+ZMatrix<E,C,1> operator*(const ZMatrix<E,C,1>& iLHS, const ZMatrix<E,C,1>& iRHS)
+	{
+	ZMatrix<E,C,1> result(null);
+	for (size_t c = 0; c < C; ++c)
+		result.fE[c][0] = iLHS.fE[c][0] * iRHS.fE[c][0];
+	return result;
+	}
+
+template <class E, size_t C>
+ZMatrix<E,C,1>& operator*=(const ZMatrix<E,C,1>& ioLHS, const ZMatrix<E,C,1>& iRHS)
+	{
+	for (size_t c = 0; c < C; ++c)
+		ioLHS.fE[c][0] *= iRHS.fE[c][0];
+	return ioLHS;
+	}
+
+// =================================================================================================
+// MARK: - Element-by-element division (column vector)
+
+template <class E, size_t R>
+ZMatrix<E,1,R> operator/(const ZMatrix<E,1,R>& iLHS, const ZMatrix<E,1,R>& iRHS)
+	{
+	ZMatrix<E,1,R> result(null);
+	for (size_t r = 0; r < R; ++r)
+		result.fE[0][r] = iLHS.fE[0][r] / iRHS.fE[0][r];
+	return result;
+	}
+
+template <class E, size_t R>
+ZMatrix<E,1,R>& operator/=(ZMatrix<E,1,R>& ioLHS, const ZMatrix<E,1,R>& iRHS)
+	{
+	for (size_t r = 0; r < R; ++r)
+		ioLHS.fE[0][r] /= iRHS.fE[0][r];
+	return ioLHS;
+	}
+
+// =================================================================================================
+// MARK: - Element-by-element division (column vector)
+
+template <class E, size_t C>
+ZMatrix<E,C,1> operator/(const ZMatrix<E,C,1>& iLHS, const ZMatrix<E,C,1>& iRHS)
+	{
+	ZMatrix<E,C,1> result(null);
+	for (size_t c = 0; c < C; ++c)
+		result.fE[c][0] = iLHS.fE[c][0] / iRHS.fE[c][0];
+	return result;
+	}
+
+template <class E, size_t C>
+ZMatrix<E,C,1>& operator/=(const ZMatrix<E,C,1>& ioLHS, const ZMatrix<E,C,1>& iRHS)
+	{
+	for (size_t c = 0; c < C; ++c)
+		ioLHS.fE[c][0] /= iRHS.fE[c][0];
+	return ioLHS;
 	}
 
 // =================================================================================================
 // MARK: - Addition
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R> operator+(const ZMatrix<E,C,R>& iLeft, const ZMatrix<E,C,R>& iRight)
+ZMatrix<E,C,R> operator+(const ZMatrix<E,C,R>& iLHS, const ZMatrix<E,C,R>& iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLeft.fE[c][r] + iRight.fE[c][r];
+			result.fE[c][r] = iLHS.fE[c][r] + iRHS.fE[c][r];
 		}
 	return result;
 	}
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R>& operator+=(ZMatrix<E,C,R>& ioLeft, const ZMatrix<E,C,R>& iRight)
+ZMatrix<E,C,R>& operator+=(ZMatrix<E,C,R>& ioLHS, const ZMatrix<E,C,R>& iRHS)
 	{
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			ioLeft.fE[c][r] += iRight.fE[c][r];
+			ioLHS.fE[c][r] += iRHS.fE[c][r];
 		}
-	return ioLeft;
+	return ioLHS;
 	}
 
 // =================================================================================================
 // MARK: - Subtraction
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iLeft, const ZMatrix<E,C,R>& iRight)
+ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iLHS, const ZMatrix<E,C,R>& iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLeft.fE[c][r] - iRight.fE[c][r];
+			result.fE[c][r] = iLHS.fE[c][r] - iRHS.fE[c][r];
 		}
 	return result;
 	}
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R>& operator-=(ZMatrix<E,C,R>& ioLeft, const ZMatrix<E,C,R>& iRight)
+ZMatrix<E,C,R>& operator-=(ZMatrix<E,C,R>& ioLHS, const ZMatrix<E,C,R>& iRHS)
 	{
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			ioLeft.fE[c][r] -= iRight.fE[c][r];
+			ioLHS.fE[c][r] -= iRHS.fE[c][r];
 		}
-	return ioLeft;
+	return ioLHS;
 	}
 
 // =================================================================================================
@@ -582,104 +713,104 @@ ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iMat)
 // MARK: - Scalar multiplication
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R> operator*(const ZMatrix<E,C,R>& iLeft, T iRight)
+ZMatrix<E,C,R> operator*(const ZMatrix<E,C,R>& iLHS, T iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLeft.fE[c][r] * E(iRight);
+			result.fE[c][r] = iLHS.fE[c][r] * E(iRHS);
 		}
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R>& operator*=(ZMatrix<E,C,R>& ioLeft, T iRight)
+ZMatrix<E,C,R>& operator*=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 	{
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			ioLeft.fE[c][r] *= E(iRight);
+			ioLHS.fE[c][r] *= E(iRHS);
 		}
-	return ioLeft;
+	return ioLHS;
 	}
 
 // =================================================================================================
 // MARK: - Scalar division
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R> operator/(const ZMatrix<E,C,R>& iLeft, T iRight)
+ZMatrix<E,C,R> operator/(const ZMatrix<E,C,R>& iLHS, T iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLeft.fE[c][r] / E(iRight);
+			result.fE[c][r] = iLHS.fE[c][r] / E(iRHS);
 		}
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R>& operator/=(ZMatrix<E,C,R>& ioLeft, T iRight)
+ZMatrix<E,C,R>& operator/=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 	{
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			ioLeft.fE[c][r] /= E(iRight);
+			ioLHS.fE[c][r] /= E(iRHS);
 		}
-	return ioLeft;
+	return ioLHS;
 	}
 
 // =================================================================================================
 // MARK: - Scalar addition
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R> operator+(const ZMatrix<E,C,R>& iLeft, T iRight)
+ZMatrix<E,C,R> operator+(const ZMatrix<E,C,R>& iLHS, T iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLeft.fE[c][r] + E(iRight);
+			result.fE[c][r] = iLHS.fE[c][r] + E(iRHS);
 		}
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R>& operator+=(ZMatrix<E,C,R>& ioLeft, T iRight)
+ZMatrix<E,C,R>& operator+=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 	{
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			ioLeft.fE[c][r] += E(iRight);
+			ioLHS.fE[c][r] += E(iRHS);
 		}
-	return ioLeft;
+	return ioLHS;
 	}
 
 // =================================================================================================
 // MARK: - Scalar subtraction
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iLeft, T iRight)
+ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iLHS, T iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLeft.fE[c][r] - E(iRight);
+			result.fE[c][r] = iLHS.fE[c][r] - E(iRHS);
 		}
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R>& operator-=(ZMatrix<E,C,R>& ioLeft, T iRight)
+ZMatrix<E,C,R>& operator-=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 	{
 	for (size_t c = 0; c < C; ++c)
 		{
 		for (size_t r = 0; r < R; ++r)
-			ioLeft.fE[c][r] -= E(iRight);
+			ioLHS.fE[c][r] -= E(iRHS);
 		}
-	return ioLeft;
+	return ioLHS;
 	}
 
 // =================================================================================================
@@ -789,112 +920,112 @@ ZMatrix<float,4,4> sInverse(const ZMatrix<float,4,4>& iMat);
 // MARK: - Optimized sComposeMat4
 
 template <class E>
-void sComposeMat4(const E iLeft[4][4], const E iRight[4][4], E oDest[4][4])
+void sComposeMat4(const E iLHS[4][4], const E iRHS[4][4], E oDest[4][4])
 	{
 	oDest[0][0]
-		= iRight[0][0] * iLeft[0][0]
-		+ iRight[0][1] * iLeft[1][0]
-		+ iRight[0][2] * iLeft[2][0]
-		+ iRight[0][3] * iLeft[3][0]; 
+		= iRHS[0][0] * iLHS[0][0]
+		+ iRHS[0][1] * iLHS[1][0]
+		+ iRHS[0][2] * iLHS[2][0]
+		+ iRHS[0][3] * iLHS[3][0]; 
 
 	oDest[0][1]
-		= iRight[0][0] * iLeft[0][1]
-		+ iRight[0][1] * iLeft[1][1]
-		+ iRight[0][2] * iLeft[2][1]
-		+ iRight[0][3] * iLeft[3][1]; 
+		= iRHS[0][0] * iLHS[0][1]
+		+ iRHS[0][1] * iLHS[1][1]
+		+ iRHS[0][2] * iLHS[2][1]
+		+ iRHS[0][3] * iLHS[3][1]; 
 
 	oDest[0][2]
-		= iRight[0][0] * iLeft[0][2]
-		+ iRight[0][1] * iLeft[1][2]
-		+ iRight[0][2] * iLeft[2][2]
-		+ iRight[0][3] * iLeft[3][2]; 
+		= iRHS[0][0] * iLHS[0][2]
+		+ iRHS[0][1] * iLHS[1][2]
+		+ iRHS[0][2] * iLHS[2][2]
+		+ iRHS[0][3] * iLHS[3][2]; 
 
 	oDest[0][3]
-		= iRight[0][0] * iLeft[0][3]
-		+ iRight[0][1] * iLeft[1][3]
-		+ iRight[0][2] * iLeft[2][3]
-		+ iRight[0][3] * iLeft[3][3]; 
+		= iRHS[0][0] * iLHS[0][3]
+		+ iRHS[0][1] * iLHS[1][3]
+		+ iRHS[0][2] * iLHS[2][3]
+		+ iRHS[0][3] * iLHS[3][3]; 
 
 	oDest[1][0]
-		= iRight[1][0] * iLeft[0][0]
-		+ iRight[1][1] * iLeft[1][0]
-		+ iRight[1][2] * iLeft[2][0]
-		+ iRight[1][3] * iLeft[3][0]; 
+		= iRHS[1][0] * iLHS[0][0]
+		+ iRHS[1][1] * iLHS[1][0]
+		+ iRHS[1][2] * iLHS[2][0]
+		+ iRHS[1][3] * iLHS[3][0]; 
 
 	oDest[1][1]
-		= iRight[1][0] * iLeft[0][1]
-		+ iRight[1][1] * iLeft[1][1]
-		+ iRight[1][2] * iLeft[2][1]
-		+ iRight[1][3] * iLeft[3][1]; 
+		= iRHS[1][0] * iLHS[0][1]
+		+ iRHS[1][1] * iLHS[1][1]
+		+ iRHS[1][2] * iLHS[2][1]
+		+ iRHS[1][3] * iLHS[3][1]; 
 
 	oDest[1][2]
-		= iRight[1][0] * iLeft[0][2]
-		+ iRight[1][1] * iLeft[1][2]
-		+ iRight[1][2] * iLeft[2][2]
-		+ iRight[1][3] * iLeft[3][2]; 
+		= iRHS[1][0] * iLHS[0][2]
+		+ iRHS[1][1] * iLHS[1][2]
+		+ iRHS[1][2] * iLHS[2][2]
+		+ iRHS[1][3] * iLHS[3][2]; 
 
 	oDest[1][3]
-		= iRight[1][0] * iLeft[0][3]
-		+ iRight[1][1] * iLeft[1][3]
-		+ iRight[1][2] * iLeft[2][3]
-		+ iRight[1][3] * iLeft[3][3]; 
+		= iRHS[1][0] * iLHS[0][3]
+		+ iRHS[1][1] * iLHS[1][3]
+		+ iRHS[1][2] * iLHS[2][3]
+		+ iRHS[1][3] * iLHS[3][3]; 
 
 	oDest[2][0]
-		= iRight[2][0] * iLeft[0][0]
-		+ iRight[2][1] * iLeft[1][0]
-		+ iRight[2][2] * iLeft[2][0]
-		+ iRight[2][3] * iLeft[3][0]; 
+		= iRHS[2][0] * iLHS[0][0]
+		+ iRHS[2][1] * iLHS[1][0]
+		+ iRHS[2][2] * iLHS[2][0]
+		+ iRHS[2][3] * iLHS[3][0]; 
 
 	oDest[2][1]
-		= iRight[2][0] * iLeft[0][1]
-		+ iRight[2][1] * iLeft[1][1]
-		+ iRight[2][2] * iLeft[2][1]
-		+ iRight[2][3] * iLeft[3][1]; 
+		= iRHS[2][0] * iLHS[0][1]
+		+ iRHS[2][1] * iLHS[1][1]
+		+ iRHS[2][2] * iLHS[2][1]
+		+ iRHS[2][3] * iLHS[3][1]; 
 
 	oDest[2][2]
-		= iRight[2][0] * iLeft[0][2]
-		+ iRight[2][1] * iLeft[1][2]
-		+ iRight[2][2] * iLeft[2][2]
-		+ iRight[2][3] * iLeft[3][2]; 
+		= iRHS[2][0] * iLHS[0][2]
+		+ iRHS[2][1] * iLHS[1][2]
+		+ iRHS[2][2] * iLHS[2][2]
+		+ iRHS[2][3] * iLHS[3][2]; 
 
 	oDest[2][3]
-		= iRight[2][0] * iLeft[0][3]
-		+ iRight[2][1] * iLeft[1][3]
-		+ iRight[2][2] * iLeft[2][3]
-		+ iRight[2][3] * iLeft[3][3]; 
+		= iRHS[2][0] * iLHS[0][3]
+		+ iRHS[2][1] * iLHS[1][3]
+		+ iRHS[2][2] * iLHS[2][3]
+		+ iRHS[2][3] * iLHS[3][3]; 
 
 	oDest[3][0]
-		= iRight[3][0] * iLeft[0][0]
-		+ iRight[3][1] * iLeft[1][0]
-		+ iRight[3][2] * iLeft[2][0]
-		+ iRight[3][3] * iLeft[3][0]; 
+		= iRHS[3][0] * iLHS[0][0]
+		+ iRHS[3][1] * iLHS[1][0]
+		+ iRHS[3][2] * iLHS[2][0]
+		+ iRHS[3][3] * iLHS[3][0]; 
 
 	oDest[3][1]
-		= iRight[3][0] * iLeft[0][1]
-		+ iRight[3][1] * iLeft[1][1]
-		+ iRight[3][2] * iLeft[2][1]
-		+ iRight[3][3] * iLeft[3][1]; 
+		= iRHS[3][0] * iLHS[0][1]
+		+ iRHS[3][1] * iLHS[1][1]
+		+ iRHS[3][2] * iLHS[2][1]
+		+ iRHS[3][3] * iLHS[3][1]; 
 
 	oDest[3][2]
-		= iRight[3][0] * iLeft[0][2]
-		+ iRight[3][1] * iLeft[1][2]
-		+ iRight[3][2] * iLeft[2][2]
-		+ iRight[3][3] * iLeft[3][2]; 
+		= iRHS[3][0] * iLHS[0][2]
+		+ iRHS[3][1] * iLHS[1][2]
+		+ iRHS[3][2] * iLHS[2][2]
+		+ iRHS[3][3] * iLHS[3][2]; 
 
 	oDest[3][3]
-		= iRight[3][0] * iLeft[0][3]
-		+ iRight[3][1] * iLeft[1][3]
-		+ iRight[3][2] * iLeft[2][3]
-		+ iRight[3][3] * iLeft[3][3]; 
+		= iRHS[3][0] * iLHS[0][3]
+		+ iRHS[3][1] * iLHS[1][3]
+		+ iRHS[3][2] * iLHS[2][3]
+		+ iRHS[3][3] * iLHS[3][3]; 
 	}
 
-void sComposeMat4(const float iLeft[4][4], const float iRight[4][4], float oDest[4][4]);
+void sComposeMat4(const float iLHS[4][4], const float iRHS[4][4], float oDest[4][4]);
 
 template <class E>
-ZMatrix<E,4,4> operator*(const ZMatrix<E,4,4>& iLeft, const ZMatrix<E,4,4>& iRight)
+ZMatrix<E,4,4> operator*(const ZMatrix<E,4,4>& iLHS, const ZMatrix<E,4,4>& iRHS)
 	{
 	ZMatrix<E,4,4> dest(null);
-	sComposeMat4(iLeft.fE, iRight.fE, dest.fE);
+	sComposeMat4(iLHS.fE, iRHS.fE, dest.fE);
 	return dest;
 	}
 
@@ -902,40 +1033,40 @@ ZMatrix<E,4,4> operator*(const ZMatrix<E,4,4>& iLeft, const ZMatrix<E,4,4>& iRig
 // MARK: - Optimized sComposeMat4Vec4
 
 template <class E>
-void sComposeMat4Vec4(const E iLeft[4][4], const E* iRight, E* oDest)
+void sComposeMat4Vec4(const E iLHS[4][4], const E* iRHS, E* oDest)
 	{
 	oDest[0]
-		= iRight[0] * iLeft[0][0]
-		+ iRight[1] * iLeft[1][0]
-		+ iRight[2] * iLeft[2][0]
-		+ iRight[3] * iLeft[3][0]; 
+		= iRHS[0] * iLHS[0][0]
+		+ iRHS[1] * iLHS[1][0]
+		+ iRHS[2] * iLHS[2][0]
+		+ iRHS[3] * iLHS[3][0]; 
 
 	oDest[1]
-		= iRight[0] * iLeft[0][1]
-		+ iRight[1] * iLeft[1][1]
-		+ iRight[2] * iLeft[2][1]
-		+ iRight[3] * iLeft[3][1]; 
+		= iRHS[0] * iLHS[0][1]
+		+ iRHS[1] * iLHS[1][1]
+		+ iRHS[2] * iLHS[2][1]
+		+ iRHS[3] * iLHS[3][1]; 
 
 	oDest[2]
-		= iRight[0] * iLeft[0][2]
-		+ iRight[1] * iLeft[1][2]
-		+ iRight[2] * iLeft[2][2]
-		+ iRight[3] * iLeft[3][2]; 
+		= iRHS[0] * iLHS[0][2]
+		+ iRHS[1] * iLHS[1][2]
+		+ iRHS[2] * iLHS[2][2]
+		+ iRHS[3] * iLHS[3][2]; 
 
 	oDest[3]
-		= iRight[0] * iLeft[0][3]
-		+ iRight[1] * iLeft[1][3]
-		+ iRight[2] * iLeft[2][3]
-		+ iRight[3] * iLeft[3][3];
+		= iRHS[0] * iLHS[0][3]
+		+ iRHS[1] * iLHS[1][3]
+		+ iRHS[2] * iLHS[2][3]
+		+ iRHS[3] * iLHS[3][3];
 	}
 
-void sComposeMat4Vec4(const float iLeft[4][4], const float* iRight, float* oDest);
+void sComposeMat4Vec4(const float iLHS[4][4], const float* iRHS, float* oDest);
 
 template <class E>
-ZMatrix<E,1,4> operator*(const ZMatrix<E,4,4>& iLeft, const ZMatrix<E,1,4>& iRight)
+ZMatrix<E,1,4> operator*(const ZMatrix<E,4,4>& iLHS, const ZMatrix<E,1,4>& iRHS)
 	{
 	ZMatrix<E,1,4> dest(null);
-	sComposeMat4Vec4(iLeft.fE, iRight.fE[0], dest.fE[0]);
+	sComposeMat4Vec4(iLHS.fE, iRHS.fE[0], dest.fE[0]);
 	return dest;
 	}
 
@@ -943,40 +1074,40 @@ ZMatrix<E,1,4> operator*(const ZMatrix<E,4,4>& iLeft, const ZMatrix<E,1,4>& iRig
 // MARK: - Optimized sComposeMat4Vec3_ToVec4
 
 template <class E>
-void sComposeMat4Vec3_ToVec4(const E iLeft[4][4], const E* iRight, E* oDest)
+void sComposeMat4Vec3_ToVec4(const E iLHS[4][4], const E* iRHS, E* oDest)
 	{
 	oDest[0]
-		= iRight[0] * iLeft[0][0]
-		+ iRight[1] * iLeft[1][0]
-		+ iRight[2] * iLeft[2][0]
-		+ iLeft[3][0]; 
+		= iRHS[0] * iLHS[0][0]
+		+ iRHS[1] * iLHS[1][0]
+		+ iRHS[2] * iLHS[2][0]
+		+ iLHS[3][0]; 
 
 	oDest[1]
-		= iRight[0] * iLeft[0][1]
-		+ iRight[1] * iLeft[1][1]
-		+ iRight[2] * iLeft[2][1]
-		+ iLeft[3][1]; 
+		= iRHS[0] * iLHS[0][1]
+		+ iRHS[1] * iLHS[1][1]
+		+ iRHS[2] * iLHS[2][1]
+		+ iLHS[3][1]; 
 
 	oDest[2]
-		= iRight[0] * iLeft[0][2]
-		+ iRight[1] * iLeft[1][2]
-		+ iRight[2] * iLeft[2][2]
-		+ iLeft[3][2]; 
+		= iRHS[0] * iLHS[0][2]
+		+ iRHS[1] * iLHS[1][2]
+		+ iRHS[2] * iLHS[2][2]
+		+ iLHS[3][2]; 
 
 	oDest[3]
-		= iRight[0] * iLeft[0][3]
-		+ iRight[1] * iLeft[1][3]
-		+ iRight[2] * iLeft[2][3]
-		+ iLeft[3][3];
+		= iRHS[0] * iLHS[0][3]
+		+ iRHS[1] * iLHS[1][3]
+		+ iRHS[2] * iLHS[2][3]
+		+ iLHS[3][3];
 	}
 
-void sComposeMat4Vec3_ToVec4(const float iLeft[4][4], const float* iRight, float* oDest);
+void sComposeMat4Vec3_ToVec4(const float iLHS[4][4], const float* iRHS, float* oDest);
 
 template <class E>
-ZMatrix<E,1,3> operator*(const ZMatrix<E,4,4>& iLeft, const ZMatrix<E,1,3>& iRight)
+ZMatrix<E,1,3> operator*(const ZMatrix<E,4,4>& iLHS, const ZMatrix<E,1,3>& iRHS)
 	{
 	ZMatrix<E,1,4> dest(null);
-	sComposeMat4Vec3_ToVec4(iLeft.fE, iRight.fE[0], dest.fE[0]);
+	sComposeMat4Vec3_ToVec4(iLHS.fE, iRHS.fE[0], dest.fE[0]);
 	return sCartesian(dest);
 	}
 

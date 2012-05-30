@@ -63,7 +63,7 @@ ZMatrix<Val,4,4> sScale3(const ZMatrix<Val,1,3>& iCVec3)
 template <class Val>
 ZMatrix<Val,4,4> sTranslate3(Val x, Val y, Val z)
 	{
-	ZMatrix<Val,4,4> result = sIdentity<Val,4>();
+	ZMatrix<Val,4,4> result(1);
 	result[3][0] = x;
 	result[3][1] = y;
 	result[3][2] = z;
