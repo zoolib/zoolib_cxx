@@ -142,7 +142,7 @@ ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther) const
 		ZRef<Identity> newLeft = fLeft->Summed(iOther->fLeft);
 		ZRef<Identity> newRight = fRight->Summed(iOther->fRight);
 
-		if (newLeft->IsZero() && newRight->IsZero() || newLeft->IsOne() && newRight->IsOne())
+		if ((newLeft->IsZero() && newRight->IsZero()) || (newLeft->IsOne() && newRight->IsOne()))
 			return newLeft; // or equivalently newRight.
 
 		return new Identity(newLeft, newRight);
