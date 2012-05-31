@@ -55,7 +55,7 @@ bool Walker_Const::ReadInc
 	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
-	if (fExhausted++)
+	if (sGetSet(fExhausted, true))
 		return false;
 
 	ioResults[fOutputOffset] = fVal;

@@ -123,7 +123,7 @@ void Source::pCollectResultsCalled()
 void Source::pTriggerResultsAvailable()
 	{
 	ZGuardRMtx guard(fMtx);
-	if (!fCalled_ResultsAvailable++)
+	if (not sGetSet(fCalled_ResultsAvailable, true))
 		{
 		if (ZRef<Callable_ResultsAvailable> theCallable = fCallable_ResultsAvailable)
 			{

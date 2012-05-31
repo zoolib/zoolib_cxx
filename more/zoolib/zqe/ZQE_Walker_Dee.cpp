@@ -48,7 +48,7 @@ ZRef<Walker> Walker_Dee::Prime
 bool Walker_Dee::ReadInc
 	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
-	{ return !fExhausted++; }
+	{ return not sGetSet(fExhausted, true); }
 
 } // namespace ZQE
 } // namespace ZooLib
