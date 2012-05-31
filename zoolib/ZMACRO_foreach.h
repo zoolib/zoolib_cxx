@@ -22,6 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMACRO_foreach_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZCompat_type_traits.h"
+
+#if ZCONFIG_SPI_Enabled(type_traits)
+
 #include "zoolib/ZMACRO_auto.h"
 #include "zoolib/ZMACRO_decltype.h"
 
@@ -29,16 +34,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // MARK: - ZMACRO_foreachi
 
 #ifdef ZMACRO_foreachi
-#elif 0
-	#define ZMACRO_foreachi(iter, cont) \
-		for (ZMACRO_auto_(iter,(cont).begin()), \
-			foreach_end = (cont).end(); \
-			iter != foreach_end; ++iter)
-#elif 1
+#elif ZCONFIG_Debug
 	#define ZMACRO_foreachi(iter, cont) \
 		for (ZMACRO_auto_(iter,(cont).begin()), \
 			ZMACRO_Concat(foreach_end,__LINE__) = (cont).end(); \
 			iter != ZMACRO_Concat(foreach_end,__LINE__); ++iter)
+#elif 1
+	#define ZMACRO_foreachi(iter, cont) \
+		for (ZMACRO_auto_(iter,(cont).begin()), \
+			foreach_end = (cont).end(); \
+			iter != foreach_end; ++iter)
 #endif
 
 #ifndef foreachi
@@ -49,6 +54,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // MARK: - ZMACRO_foreachri
 
 #ifndef ZMACRO_foreachri
+#elif ZCONFIG_Debug
+	#define ZMACRO_foreachri(iter, cont) \
+		for (ZMACRO_auto_(iter,(cont).rbegin()), \
+			foreach_end = (cont).rend(); \
+			iter != foreach_end; ++iter)
+#elif 1
 	#define ZMACRO_foreachri(iter, cont) \
 		for (ZMACRO_auto_(iter,(cont).rbegin()), \
 			foreach_end = (cont).rend(); \
@@ -82,17 +93,9 @@ public:
 } // namespace ZooLib
 
 #ifdef ZMACRO_foreachv
-#elif 0
-	// Terse version without line number suffix on local wrapper.
-	#define ZMACRO_foreachv(vardecl, cont) \
-		for (ZooLib::ZWrapper_foreachv_T<ZMACRO_decltype(cont)> wrap(cont); \
-			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
-			++wrap.fIter, ++wrap.fMismatch) \
-			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
-
-#elif 1
+#elif ZCONFIG_Debug
 	#define ZMACRO_foreachv(VarDeclaration, Container) \
-		for (ZooLib::ZWrapper_foreachv_T<ZMACRO_decltype(Container)> \
+		for (ZooLib::ZWrapper_foreachv_T<remove_reference<ZMACRO_decltype(Container)>::type> \
 			ZMACRO_Concat(Wrapper_foreachv,__LINE__)(Container); \
 			not ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch \
 			&& ZMACRO_Concat(Wrapper_foreachv,__LINE__).fIter \
@@ -103,6 +106,13 @@ public:
 			*ZMACRO_Concat(Wrapper_foreachv,__LINE__).fIter; \
 			not ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch; \
 			--ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch)
+
+#elif 1
+	#define ZMACRO_foreachv(vardecl, cont) \
+		for (ZooLib::ZWrapper_foreachv_T<remove_reference<ZMACRO_decltype(cont)>::type> wrap(cont); \
+			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
+			++wrap.fIter, ++wrap.fMismatch) \
+			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
 
 #endif
 
@@ -133,17 +143,9 @@ public:
 } // namespace ZooLib
 
 #ifdef ZMACRO_foreachrv
-#elif 0
-	// Terse version without line number suffix on local wrapper.
-	#define ZMACRO_foreachrv(vardecl, cont) \
-		for (ZooLib::ZWrapper_foreachrv_T<ZMACRO_decltype(cont)> wrap(cont); \
-			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
-			++wrap.fIter, ++wrap.fMismatch) \
-			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
-
-#elif 1
+#elif ZCONFIG_Debug
 	#define ZMACRO_foreachrv(VarDeclaration, Container) \
-		for (ZooLib::ZWrapper_foreachrv_T<ZMACRO_decltype(Container)> \
+		for (ZooLib::ZWrapper_foreachrv_T<remove_reference<ZMACRO_decltype(Container)>::type> \
 			ZMACRO_Concat(Wrapper_foreachrv,__LINE__)(Container); \
 			not ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fMismatch \
 			&& ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fIter \
@@ -155,10 +157,20 @@ public:
 			not ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fMismatch; \
 			--ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fMismatch)
 
+#elif 1
+	#define ZMACRO_foreachrv(vardecl, cont) \
+		for (ZooLib::ZWrapper_foreachrv_T<remove_reference<ZMACRO_decltype(cont)>::type> wrap(cont); \
+			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
+			++wrap.fIter, ++wrap.fMismatch) \
+			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
+
+
 #endif
 
 #ifndef foreachrv
 	#define foreachrv ZMACRO_foreachrv
 #endif
+
+#endif // ZCONFIG_SPI_Enabled(type_traits)
 
 #endif // __ZMACRO_foreach_h__
