@@ -1359,11 +1359,8 @@ static void spInsertSections(UITableView* iTableView,
 - (void)reset
 	{
 	[super reset];
-	if (fCallEnd)
-		{
-		fCallEnd = false;
+	if (sGetSet(fCallEnd, false))
 		[fTV pChangeTouchState:NO];
-		}
 	}
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -1382,22 +1379,16 @@ static void spInsertSections(UITableView* iTableView,
 	{
 	[super touchesEnded:touches withEvent:event];
 	self.state = UIGestureRecognizerStateFailed;
-	if (fCallEnd)
-		{
-		fCallEnd = false;
+	if (sGetSet(fCallEnd, false))
 		[fTV pChangeTouchState:NO];
-		}
 	}
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 	{
 	[super touchesEnded:touches withEvent:event];
 	self.state = UIGestureRecognizerStateFailed;
-	if (fCallEnd)
-		{
-		fCallEnd = false;
+	if (sGetSet(fCallEnd, false))
 		[fTV pChangeTouchState:NO];
-		}
 	}
 
 @end // UIGestureRecognizer_TableViewWithSections
