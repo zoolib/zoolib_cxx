@@ -65,10 +65,10 @@ ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef)
 		{}
 	else
 		{
-		const CGBitmapInfo theBI = ::CGImageGetBitmapInfo(iImageRef);
-		const CGImageAlphaInfo theAI = ::CGImageGetAlphaInfo(iImageRef);
-		const size_t theBPC = ::CGImageGetBitsPerComponent(iImageRef);
-		const size_t theBPP = ::CGImageGetBitsPerPixel(iImageRef);
+//		const CGBitmapInfo theBI = ::CGImageGetBitmapInfo(iImageRef);
+//		const CGImageAlphaInfo theAI = ::CGImageGetAlphaInfo(iImageRef);
+//		const size_t theBPC = ::CGImageGetBitsPerComponent(iImageRef);
+//		const size_t theBPP = ::CGImageGetBitsPerPixel(iImageRef);
 
 //		const OSType thePFT = ::CVPixelBufferGetPixelFormatType(iPBR);
 //		const EFormatStandard theFormat = spAsFormatStandard(thePFT);
