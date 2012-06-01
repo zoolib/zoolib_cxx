@@ -313,6 +313,14 @@ operator>=(const Point_p& iLHS, const Point_p& iRHS)
 } // namespace Operators
 
 // =================================================================================================
+// MARK: - Point Manipulation functions
+
+template <class Point_p>
+typename EnableIfC<PointTraits<Point_p>::value,Point_p>::type
+sTransposed(const Point_p& iPoint)
+	{ return sPoint<Point_p>(Y(iPoint), X(iPoint)); }
+
+// =================================================================================================
 // MARK: - Point Manipulation Operators
 
 namespace Operators {
