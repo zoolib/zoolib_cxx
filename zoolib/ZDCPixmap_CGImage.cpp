@@ -38,14 +38,10 @@ public:
 	:	ZDCPixmapRaster(iRasterDesc)
 	,	fImageRef(iImageRef)
 	,	fDataRef(iDataRef)
-		{
-		fBaseAddress = sNonConst(::CFDataGetBytePtr(fDataRef));
-		}
+		{ fBaseAddress = sNonConst(::CFDataGetBytePtr(fDataRef)); }
 
 	virtual ~PixmapRaster()
-		{
-		fBaseAddress = nullptr;
-		}
+		{ fBaseAddress = nullptr; }
 
 private:
 	ZRef<CGImageRef> fImageRef;
@@ -73,7 +69,7 @@ ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef)
 //		const OSType thePFT = ::CVPixelBufferGetPixelFormatType(iPBR);
 //		const EFormatStandard theFormat = spAsFormatStandard(thePFT);
 
-		// Just fake it out for now.
+		// Just fake it for now.
 		const EFormatStandard theFormat = eFormatStandard_RGBA_32;
 
 		const PixvalDesc thePixvalDesc(theFormat);
