@@ -248,7 +248,7 @@ public:
 		{ fIndex = fMap.IndexOf(iName); }
 
 // From ZYadMapAtR
-	virtual ZRef<ZYadR> ReadAt(const std::string& iName)
+	virtual ZRef<ZYadR> ReadAt(const ZName& iName)
 		{
 		Index_t theIndex = fMap.IndexOf(iName);
 		if (theIndex != fMap.End())
@@ -311,7 +311,7 @@ public:
 		{ fIndex = fMap.IndexOf(iName); }
 
 // From ZYadMapAtR
-	virtual ZRef<ZYadR> ReadAt(const std::string& iName)
+	virtual ZRef<ZYadR> ReadAt(const ZName& iName)
 		{
 		Index_t theIndex = fMap.IndexOf(iName);
 		if (theIndex != fMap.end())

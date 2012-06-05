@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMap_Shared_T_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZAny.h" // For sDefault
 #include "zoolib/ZCountedVal.h"
 #include "zoolib/ZQ.h"
 
@@ -60,55 +61,64 @@ public:
 		{}
 
 // ZMap protocol
-	ZQ<Val_t> QGet(const Name_t& iName) const
+	const Val_t* PGet(const Name_t& iName) const
 		{
 		if (fRep)
-			return fRep->Get().QGet(iName);
+			return fRep->Get().PGet(iName);
+		return nullptr;
+		}
+
+	template <class S>
+	const S* PGet(const Name_t& iName) const
+		{
+		if (fRep)
+			return fRep->Get().PGet<S>(iName);
+		return nullptr;
+		}
+
+	ZQ<Val_t> QGet(const Name_t& iName) const
+		{
+		if (const Val_t* theVal = this->PGet(iName))
+			return *theVal;
 		return null;
 		}
 
 	Val_t DGet(const Val_t& iDefault, const Name_t& iName) const
 		{
-		if (ZQ<Val_t> theVal = this->QGet(iName))
+		if (const Val_t* theVal = this->PGet(iName))
 			return *theVal;
 		return iDefault;
 		}
 
 	Val_t Get(const Name_t& iName) const
 		{
-		if (ZQ<Val_t> theVal = this->QGet(iName))
+		if (const Val_t* theVal = this->PGet(iName))
 			return *theVal;
-		return Val_t();
+		return sDefault<Val_t>();
 		}
 
 	template <class S>
 	ZQ<S> QGet(const Name_t& iName) const
 		{
-		if (ZQ<Val_t> theQ = this->QGet(iName))
-			return theQ->QGet<S>();
+		if (const S* theVal = this->PGet<S>(iName))
+			return *theVal;
 		return null;
 		}
 
 	template <class S>
 	S DGet(const S& iDefault, const Name_t& iName) const
 		{
-		if (ZQ<Val_t> theQ = this->QGet(iName))
-			{
-			if (ZQ<S> theQ2 = theQ->QGet<S>())
-				return *theQ2;
-			}
+		if (const S* theVal = this->PGet<S>(iName))
+			return *theVal;
 		return iDefault;
 		}
 
 	template <class S>
 	S Get(const Name_t& iName) const
 		{
-		if (ZQ<Val_t> theQ = this->QGet(iName))
-			{
-			if (ZQ<S> theQ2 = theQ->QGet<S>())
-				return *theQ2;
-			}
-		return S();
+		if (const S* theVal = this->PGet<S>(iName))
+			return *theVal;
+		return sDefault<S>();
 		}
 
 // Our protocol
@@ -163,6 +173,21 @@ public:
 		{
 		if (fRep)
 			fRep->GetMutable().Clear();
+		}
+
+	Val_t* PGetMutable(const Name_t& iName) const
+		{
+		if (fRep)
+			return fRep->Get().PGetMutable(iName);
+		return nullptr;
+		}
+
+	template <class S>
+	S* PGetMutable(const Name_t& iName) const
+		{
+		if (fRep)
+			return fRep->Get().PGetMutable<S>(iName);
+		return nullptr;
 		}
 
 	const ZMap_Shared_Mutable_T& Set(const Name_t& iName, const Val_t& iVal) const

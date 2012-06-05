@@ -279,18 +279,18 @@ ZQ<ZVal_Yad> ZMap_Yad::QGet(const Name_t& iName) const
 	return null;
 	}
 
-const ZVal_Yad ZMap_Yad::DGet(const ZVal_Yad& iDefault, const Name_t& iName) const
+const ZVal_Yad& ZMap_Yad::DGet(const ZVal_Yad& iDefault, const Name_t& iName) const
 	{
 	if (const ZVal_Yad* theVal = this->PGet(iName))
 		return *theVal;
 	return iDefault;
 	}
 
-const ZVal_Yad ZMap_Yad::Get(const Name_t& iName) const
+const ZVal_Yad& ZMap_Yad::Get(const Name_t& iName) const
 	{
 	if (const ZVal_Yad* theVal = this->PGet(iName))
 		return *theVal;
-	return ZVal_Yad();
+	return sDefault<ZVal_Yad>();
 	}
 
 ZMap_Yad& ZMap_Yad::Set(const Name_t& iName, const ZVal_Yad& iVal)
@@ -305,13 +305,13 @@ ZMap_Yad& ZMap_Yad::Erase(const Name_t& iName)
 	return *this;
 	}
 
-// Our protocol
 ZVal_Yad& ZMap_Yad::Mutable(const Name_t& iName)
 	{
 	if (ZAny* theP = fMap.PGetMutable(iName))
 		{
-		if (not theP->PGet<Tombstone_t>())
-			return *static_cast<ZVal_Yad*>(theP);
+		if (theP->PGet<Tombstone_t>())
+			*theP = ZAny();			
+		return *static_cast<ZVal_Yad*>(theP);
 		}
 	
 	ZAny& theMutable = fMap.Mutable(iName);
@@ -392,7 +392,7 @@ public:
 		{ return new YadMapAtRPos(*this); }
 
 // From ZYadMapAtR
-	virtual ZRef<ZYadR> ReadAt(const string& iName)
+	virtual ZRef<ZYadR> ReadAt(const ZName& iName)
 		{
 		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
 			{
@@ -415,7 +415,6 @@ public:
 		{
 		// Urg.
 		ZUnimplemented();
-//		fYadMapAtRPos->SetPosition(iName);
 		}
 
 private:

@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZAny.h"
+#include "zoolib/ZName.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrimmer.h"
 #include "zoolib/ZVisitor.h"
@@ -256,7 +257,7 @@ public:
 	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
 
 // Our protocol
-	virtual ZRef<ZYadR> ReadAt(const std::string& iName) = 0;
+	virtual ZRef<ZYadR> ReadAt(const ZName& iName) = 0;
 
 	virtual ZQ<ZAny> QAsAny();
 	};

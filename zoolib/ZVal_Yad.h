@@ -87,7 +87,7 @@ public:
 			if (ZQ<S> theQ2 = theQ->QGet<S>())
 				return *theQ2;
 			}
-		return S();
+		return sDefault<S>();
 		}
 
 	ZSeq_Yad& Set(size_t iIndex, const ZVal_Yad& iVal);
@@ -138,8 +138,8 @@ public:
 	const ZVal_Yad* PGet(const Name_t& iName) const;
 
 	ZQ<ZVal_Yad> QGet(const Name_t& iName) const;
-	const ZVal_Yad DGet(const ZVal_Yad& iDefault, const Name_t& iName) const;
-	const ZVal_Yad Get(const Name_t& iName) const;
+	const ZVal_Yad& DGet(const ZVal_Yad& iDefault, const Name_t& iName) const;
+	const ZVal_Yad& Get(const Name_t& iName) const;
 
 	template <class S>
 	S* PGetMutable(const Name_t& iName)
@@ -160,31 +160,25 @@ public:
 	template <class S>
 	ZQ<S> QGet(const Name_t& iName) const
 		{
-		if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
-			return theQ->QGet<S>();
+		if (const S* theP = this->PGet<S>(iName))
+			return *theP;
 		return null;
 		}
 
 	template <class S>
-	const S DGet(const S& iDefault, const Name_t& iName) const
+	const S& DGet(const S& iDefault, const Name_t& iName) const
 		{
-		if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
-			{
-			if (ZQ<S> theQ2 = theQ->QGet<S>())
-				return *theQ2;
-			}
+		if (const S* theP = this->PGet<S>(iName))
+			return *theP;
 		return iDefault;
 		}
 
 	template <class S>
-	const S Get(const Name_t& iName) const
+	const S& Get(const Name_t& iName) const
 		{
-		if (ZQ<ZVal_Yad> theQ = this->QGet(iName))
-			{
-			if (ZQ<S> theQ2 = theQ->QGet<S>())
-				return *theQ2;
-			}
-		return S();
+		if (const S* theP = this->PGet<S>(iName))
+			return *theP;
+		return sDefault<S>();
 		}
 
 	ZMap_Yad& Set(const Name_t& iName, const ZVal_Yad& iVal);

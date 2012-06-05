@@ -34,7 +34,7 @@ namespace { // anonymous
 
 using namespace ZUtil_STL;
 
-typedef ZCountedVal<string> CountedString;
+typedef ZCountedVal<ZName> CountedString;
 
 class Link;
 class YadMapAtRPos;
@@ -60,7 +60,7 @@ public:
 
 	ZRef<ZYadMapAtRPos> GetYadMapAtRPos();
 
-	ZRef<ZYadR> ReadAt(const string& iName);
+	ZRef<ZYadR> ReadAt(const ZName& iName);
 
 	ZRef<Link> WithRootAugment(const string& iRootAugmentName, const ZRef<Link>& iRootAugment);
 
@@ -317,7 +317,7 @@ public:
 		{ return new YadMapAtRPos(*this); }
 
 // From ZYadMapAtR
-	virtual ZRef<ZYadR> ReadAt(const string& iName)
+	virtual ZRef<ZYadR> ReadAt(const ZName& iName)
 		{ return fLink->ReadAt(iName); }
 
 	virtual ZQ<ZAny> QAsAny()
@@ -366,7 +366,7 @@ Link::Link(const ZRef<Link>& iParent, const ZRef<ZYadMapAtRPos>& iYadMapAtRPos)
 ZRef<ZYadMapAtRPos> Link::GetYadMapAtRPos()
 	{ return fYadMapAtRPos; }
 
-ZRef<ZYadR> Link::ReadAt(const string& iName)
+ZRef<ZYadR> Link::ReadAt(const ZName& iName)
 	{
 	if (ZQ<ZRef<Link> > theQ = sQGet(fChildren, iName))
 		return new YadMapAtRPos(*theQ);
@@ -394,7 +394,7 @@ ZRef<ZYadR> Link::ReadAt(const string& iName)
 			{
 			// Our Yad has a non-empty proto trail.
 			size_t index = 0;
-			const ZTrail theTrail = ZTrail(theTrailString).Normalized() + iName;
+			const ZTrail theTrail = ZTrail(theTrailString).Normalized() + string8(iName);
 			
 			ZRef<Link> cur = this;
 
