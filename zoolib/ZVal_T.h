@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZCompare.h"
+#include "zoolib/ZName.h"
 #include "zoolib/ZUnicodeString.h" // For string8 etc.
 
 namespace ZooLib {
@@ -46,6 +47,8 @@ class ZVal_T
 	template <class S> ZVal_T& operator=(const ZQ<S>&);
 
 public:
+	typedef ZName Name_t;
+
 	ZVal_T()
 		{}
 
@@ -193,31 +196,31 @@ public:
 		{ return this->Get(iIndex); }
 
 // Shortcut access to values in an enclosed Map.
-	ZVal_T* PGetMutable(const string8& iName)
+	ZVal_T* PGetMutable(const Name_t& iName)
 		{
 		if (Map_p* asMap = this->PGetMutable<Map_p>())
 			return asMap->PGetMutable(iName);
 		return nullptr;
 		}
 
-	const ZVal_T* PGet(const string8& iName) const
+	const ZVal_T* PGet(const Name_t& iName) const
 		{
 		if (const Map_p* asMap = this->PGet<Map_p>())
 			return asMap->PGet(iName);
 		return nullptr;
 		}
 
-	const ZQ<ZVal_T> QGet(const string8& iName) const
+	const ZQ<ZVal_T> QGet(const Name_t& iName) const
 		{ return this->Get<Map_p>().QGet(iName); }
 
-	const ZVal_T& Get(const string8& iName) const
+	const ZVal_T& Get(const Name_t& iName) const
 		{ return this->Get<Map_p>().Get(iName); }
 
-	ZVal_T& Mutable(const string8& iName)
+	ZVal_T& Mutable(const Name_t& iName)
 		{ return this->Mutable<Map_p>().Mutable(iName); }
 
 	template <class S>
-	S* PGetMutable(const string8& iName)
+	S* PGetMutable(const Name_t& iName)
 		{
 		if (ZVal_T* theVal = this->PGetMutable(iName))
 			return theVal->PGetMutable<S>();
@@ -225,7 +228,7 @@ public:
 		}
 
 	template <class S>
-	const S* PGet(const string8& iName) const
+	const S* PGet(const Name_t& iName) const
 		{
 		if (const ZVal_T* theVal = this->PGet(iName))
 			return theVal->PGet<S>();
@@ -233,21 +236,21 @@ public:
 		}
 
 	template <class S>
-	const ZQ<S> QGet(const string8& iName) const
+	const ZQ<S> QGet(const Name_t& iName) const
 		{ return this->Get(iName).QGet<S>(); }
 
 	template <class S>
-	const S& Get(const string8& iName) const
+	const S& Get(const Name_t& iName) const
 		{ return this->Get(iName).Get<S>(); }
 
 	template <class S>
-	S& Mutable(const string8& iName) const
+	S& Mutable(const Name_t& iName) const
 		{ return this->Mutable(iName).Mutable<S>(); }
 
-	ZVal_T& operator[](const string8& iName)
+	ZVal_T& operator[](const Name_t& iName)
 		{ return this->Mutable(iName); }
 
-	const ZVal_T& operator[](const string8& iName) const
+	const ZVal_T& operator[](const Name_t& iName) const
 		{ return this->Get(iName); }
 
 // Typename accessors
