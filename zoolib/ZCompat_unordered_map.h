@@ -30,13 +30,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Avail__unordered_map 1
 	#if ZCONFIG_LIBCPP_11
 		#include <unordered_map>
-		namespace ZooLib { using std::unordered_map; }
+		namespace ZooLib
+			{
+			using std::unordered_map;
+			using std::unordered_multimap;
+			}
 	#elif ZCONFIG_LIBCPP_TR1
 		#include <tr1/unordered_map>
-		namespace ZooLib { using std::tr1::unordered_map; }
+		namespace ZooLib
+			{
+			using std::tr1::unordered_map;
+			using std::tr1::unordered_multimap;
+			}
 	#elif ZCONFIG_LIBCPP_GCCExtensions
 		#include <hash_map>
-		namespace ZooLib { typedef hash_map unordered_map; }
+		namespace ZooLib
+			{
+			typedef hash_map unordered_map;
+			typedef unordered_hash_map unordered_multimap;
+			}
 	#else
 		#undef ZCONFIG_SPI_Avail__unordered_map
 		#define ZCONFIG_SPI_Avail__unordered_map 0
