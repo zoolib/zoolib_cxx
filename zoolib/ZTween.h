@@ -625,10 +625,8 @@ public:
 		else
 			{
 			const double theWeight = spWeight(fTween, fTweenWeightQ);
-			// Our domain is reversed, and thus is 0 < iPlace <= theWeight,
-			// rather than the usual 0 <= iPlace < theWeight.
-			if (0 < iPlace && iPlace <= theWeight)
-				return fTween->QValAt(theWeight + iPlace/fWeightScale);
+			if (0 <= iPlace && iPlace < theWeight)
+				return fTween->QValAt((theWeight*0.999999) + iPlace/fWeightScale);
 			return null;
 			}
 		}
