@@ -99,7 +99,7 @@ public:
 		}
 
 	template <class S>
-	const S DGet(const S& iDefault, size_t iIndex) const
+	const S& DGet(const S& iDefault, size_t iIndex) const
 		{
 		if (const S* theVal = this->PGet<S>(iIndex))
 			return *theVal;
@@ -107,11 +107,11 @@ public:
 		}
 
 	template <class S>
-	const S Get(size_t iIndex) const
+	const S& Get(size_t iIndex) const
 		{
 		if (const S* theVal = this->PGet<S>(iIndex))
 			return *theVal;
-		return S();
+		return sDefault<S>();
 		}
 
 	ZSeq_Any& Set(size_t iIndex, const ZVal_Any& iVal);
@@ -192,7 +192,11 @@ class ZMap_Any
 public:
 	typedef ZName Name_t;
 
+#if 1
+	typedef unordered_map<Name_t, ZVal_Any> Map_t;
+#else
 	typedef std::map<Name_t, ZVal_Any> Map_t;
+#endif
 
 	typedef Map_t::iterator Index_t;
 	typedef ZVal_Any Val_t;
@@ -228,8 +232,8 @@ public:
 	const ZQ<ZVal_Any> QGet(const Name_t& iName) const;
 	const ZQ<ZVal_Any> QGet(const Index_t& iIndex) const;
 
-	const ZVal_Any DGet(const ZVal_Any& iDefault, const Name_t& iName) const;
-	const ZVal_Any DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const;
+	const ZVal_Any& DGet(const ZVal_Any& iDefault, const Name_t& iName) const;
+	const ZVal_Any& DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const;
 
 	const ZVal_Any& Get(const Name_t& iName) const;
 	const ZVal_Any& Get(const Index_t& iIndex) const;
@@ -283,7 +287,7 @@ public:
 		}
 
 	template <class S>
-	const S DGet(const S& iDefault, const Name_t& iName) const
+	const S& DGet(const S& iDefault, const Name_t& iName) const
 		{
 		if (const S* theVal = this->PGet<S>(iName))
 			return *theVal;
@@ -291,7 +295,7 @@ public:
 		}
 
 	template <class S>
-	const S DGet(const S& iDefault, const Index_t& iIndex) const
+	const S& DGet(const S& iDefault, const Index_t& iIndex) const
 		{
 		if (const S* theVal = this->PGet<S>(iIndex))
 			return *theVal;
@@ -299,19 +303,19 @@ public:
 		}
 
 	template <class S>
-	const S Get(const Name_t& iName) const
+	const S& Get(const Name_t& iName) const
 		{
 		if (const S* theVal = this->PGet<S>(iName))
 			return *theVal;
-		return S();
+		return sDefault<S>();
 		}
 
 	template <class S>
-	const S Get(const Index_t& iIndex) const
+	const S& Get(const Index_t& iIndex) const
 		{
 		if (const S* theVal = this->PGet<S>(iIndex))
 			return *theVal;
-		return S();
+		return sDefault<S>();
 		}
 
 	ZMap_Any& Set(const Name_t& iName, const ZVal_Any& iVal);

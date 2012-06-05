@@ -442,14 +442,14 @@ const ZQ<ZVal_Any> ZMap_Any::QGet(const Index_t& iIndex) const
 	return null;
 	}
 
-const ZVal_Any ZMap_Any::DGet(const ZVal_Any& iDefault, const Name_t& iName) const
+const ZVal_Any& ZMap_Any::DGet(const ZVal_Any& iDefault, const Name_t& iName) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iName))
 		return *theVal;
 	return iDefault;
 	}
 
-const ZVal_Any ZMap_Any::DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const
+const ZVal_Any& ZMap_Any::DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return *theVal;

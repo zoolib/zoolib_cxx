@@ -162,7 +162,7 @@ public:
 	const ZQ<ZVal_T> QGet(size_t iIndex) const
 		{ return this->Get<Seq_p>().QGet(iIndex); }
 
-	const ZVal_T Get(size_t iIndex) const
+	const ZVal_T& Get(size_t iIndex) const
 		{ return this->Get<Seq_p>().Get(iIndex); }
 
 	template <class S>
@@ -186,10 +186,10 @@ public:
 		{ return this->Get(iIndex).QGet<S>(); }
 
 	template <class S>
-	const S Get(size_t iIndex) const
+	const S& Get(size_t iIndex) const
 		{ return this->Get(iIndex).Get<S>(); }
 
-	const ZVal_T operator[](size_t iIndex) const
+	const ZVal_T& operator[](size_t iIndex) const
 		{ return this->Get(iIndex); }
 
 // Shortcut access to values in an enclosed Map.
@@ -210,7 +210,7 @@ public:
 	const ZQ<ZVal_T> QGet(const string8& iName) const
 		{ return this->Get<Map_p>().QGet(iName); }
 
-	const ZVal_T Get(const string8& iName) const
+	const ZVal_T& Get(const string8& iName) const
 		{ return this->Get<Map_p>().Get(iName); }
 
 	ZVal_T& Mutable(const string8& iName)
@@ -237,7 +237,7 @@ public:
 		{ return this->Get(iName).QGet<S>(); }
 
 	template <class S>
-	const S Get(const string8& iName) const
+	const S& Get(const string8& iName) const
 		{ return this->Get(iName).Get<S>(); }
 
 	template <class S>
@@ -247,7 +247,7 @@ public:
 	ZVal_T& operator[](const string8& iName)
 		{ return this->Mutable(iName); }
 
-	const ZVal_T operator[](const string8& iName) const
+	const ZVal_T& operator[](const string8& iName) const
 		{ return this->Get(iName); }
 
 // Typename accessors

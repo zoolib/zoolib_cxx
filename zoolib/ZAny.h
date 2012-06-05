@@ -40,6 +40,13 @@ struct ZAnyTraits
 	enum { eAllowInPlace = 1 };
 	};
 
+template <class S>
+static const S& sDefault()
+	{
+	static S theS;
+	return theS;
+	}
+
 class ZAny
 	{
 public:
@@ -93,7 +100,7 @@ public:
 		}
 
 	template <class S>
-	const S DGet(const S& iDefault) const
+	const S& DGet(const S& iDefault) const
 		{
 		if (const S* theVal = this->PGet<S>())
 			return *theVal;
@@ -101,11 +108,11 @@ public:
 		}
 
 	template <class S>
-	const S Get() const
+	const S& Get() const
 		{
 		if (const S* theVal = this->PGet<S>())
 			return *theVal;
-		return S();
+		return sDefault<S>();
 		}
 
 	template <class S>
