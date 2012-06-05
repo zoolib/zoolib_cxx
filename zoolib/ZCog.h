@@ -485,25 +485,32 @@ public:
 
 	virtual ZQ<ZCog<Param> > QCall(const ZCog<Param>& iSelf, Param iParam)
 		{
-		const ZCog<Param> newCondition = fCondition->Call(fCondition, iParam);
-		if (newCondition == fCondition)
-			return iSelf;
+		if (ZQ<ZCog<Param> > newConditionQ = fCondition->QCall(fCondition, iParam))
+			{
+			const ZCog<Param>& newCondition = *newConditionQ;
+			if (newCondition == fCondition)
+				return iSelf;
 
-		if (sIsFalse(newCondition))
-			{
-			if (sIsFinished(fCog1))
-				return fCog1;
-			return fCog1->QCall(fCog1, iParam);
+			if (sIsFalse(newCondition))
+				{
+				if (sIsFinished(fCog1))
+					return fCog1;
+				return fCog1->QCall(fCog1, iParam);
+				}
+		
+			if (sIsTrue(newCondition))
+				{
+				if (sIsFinished(fCog0))
+					return fCog0;
+				return fCog0->QCall(fCog0, iParam);
+				}
+		
+			return new Cog_If(newCondition, fCog0, fCog1);
 			}
-	
-		if (sIsTrue(newCondition))
-			{
-			if (sIsFinished(fCog0))
-				return fCog0;
-			return fCog0->QCall(fCog0, iParam);
-			}
-	
-		return new Cog_If(newCondition, fCog0, fCog1);
+
+		if (sIsFinished(fCog1))
+			return fCog1;
+		return fCog1->QCall(fCog1, iParam);
 		}
 
 	const ZCog<Param> fCondition;
@@ -579,53 +586,65 @@ public:
 		{
 		ZAssert(sIsPending(fCog0) && not sIsTrue(fCog1));
 	
-		const ZCog<Param> newCog0 = fCog0->Call(fCog0, iParam);
-		if (newCog0 == fCog0)
+		if (ZQ<ZCog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
-			if (sIsFalse(fCog1))
-				return false;
-	
-			const ZCog<Param> newCog1 = fCog1->Call(fCog1, iParam);
-			if (newCog1 == fCog1)
-				return iSelf;
-	
-			if (sIsFalse(newCog1))
-				return false;
+			const ZCog<Param>& newCog0 = *newCog0Q;
+			if (newCog0 == fCog0)
+				{
+				if (sIsFalse(fCog1))
+					return false;
+		
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (newCog1 == fCog1)
+						return iSelf;
 			
-			if (sIsTrue(newCog1))
-				return newCog0;
-	
-			return new Cog_And(newCog0, newCog1);
-			}
-		else if (sIsFalse(newCog0))
-			{
-			return false;
-			}
-		else if (sIsTrue(newCog0))
-			{
-			if (sIsFalse(fCog1))
+					if (sIsFalse(newCog1))
+						return false;
+					
+					if (sIsTrue(newCog1))
+						return newCog0;
+			
+					return new Cog_And(newCog0, newCog1);
+					}
 				return false;
-	
-			if (sIsTrue(fCog1))
-				return true;
-	
-			return fCog1->QCall(fCog1, iParam);
+				}
+			else if (sIsFalse(newCog0))
+				{
+				return false;
+				}
+			else if (sIsTrue(newCog0))
+				{
+				if (sIsFalse(fCog1))
+					return false;
+		
+				if (sIsTrue(fCog1))
+					return true;
+		
+				return fCog1->QCall(fCog1, iParam);
+				}
+			else
+				{
+				if (sIsFalse(fCog1))
+					return false;
+		
+				if (sIsTrue(fCog1))
+					return newCog0;
+		
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (sIsTrue(newCog1))
+						return newCog0;
+					return new Cog_And(newCog0, newCog1);
+					}
+		
+				return false;
+				}
 			}
 		else
 			{
-			if (sIsFalse(fCog1))
-				return false;
-	
-			if (sIsTrue(fCog1))
-				return newCog0;
-	
-			if (ZCog<Param> newCog1 = fCog1->Call(fCog1, iParam))
-				{
-				if (sIsTrue(newCog1))
-					return newCog0;
-				return new Cog_And(newCog0, newCog1);
-				}
-	
 			return false;
 			}
 		}
@@ -681,48 +700,62 @@ public:
 		{
 		ZAssert(sIsPending(fCog0) && fCog1);
 	
-		const ZCog<Param> newCog0 = fCog0->Call(fCog0, iParam);
-		if (newCog0 == fCog0)
+		if (ZQ<ZCog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
-			if (sIsTrue(fCog1))
-				return true;
-	
-			const ZCog<Param> newCog1 = fCog1->Call(fCog1, iParam);
-			if (newCog1 == fCog1)
-				return iSelf;
-	
-			if (sIsFalse(newCog1))
-				return newCog0;
+			const ZCog<Param>& newCog0 = *newCog0Q;
+			if (newCog0 == fCog0)
+				{
+				if (sIsTrue(fCog1))
+					return true;
+		
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (newCog1 == fCog1)
+						return iSelf;
 			
-			if (sIsTrue(newCog1))
+					if (sIsFalse(newCog1))
+						return newCog0;
+					
+					if (sIsTrue(newCog1))
+						return true;
+			
+					return new Cog_Or(newCog0, newCog1);
+					}
+				return newCog0;
+				}
+			else if (sIsFalse(newCog0))
+				{
+				if (sIsTrue(fCog1))
+					return true;
+		
+				return fCog1->QCall(fCog1, iParam);
+				}
+			else if (sIsTrue(newCog0))
+				{
 				return true;
-	
-			return new Cog_Or(newCog0, newCog1);
-			}
-		else if (sIsFalse(newCog0))
-			{
-			if (sIsTrue(fCog1))
-				return true;
-	
-			return fCog1->QCall(fCog1, iParam);
-			}
-		else if (sIsTrue(newCog0))
-			{
-			return true;
+				}
+			else
+				{
+				if (sIsTrue(fCog1))
+					return true;
+		
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (sIsTrue(newCog1))
+						return true;
+					return new Cog_Or(newCog0, newCog1);
+					}		
+				return newCog0;
+				}
 			}
 		else
 			{
 			if (sIsTrue(fCog1))
 				return true;
 	
-			if (ZCog<Param> newCog1 = fCog1->Call(fCog1, iParam))
-				{
-				if (sIsTrue(newCog1))
-					return true;
-				return new Cog_Or(newCog0, newCog1);
-				}
-	
-			return newCog0;
+			return fCog1->QCall(fCog1, iParam);
 			}
 		}
 
@@ -779,30 +812,47 @@ public:
 		{
 		ZAssert(sIsPending(fCog0) && sIsPending(fCog1));
 	
-		const ZCog<Param> newCog0 = fCog0->Call(fCog0, iParam);
-		if (newCog0 == fCog0)
+		if (ZQ<ZCog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
-			const ZCog<Param> newCog1 = fCog1->Call(fCog1, iParam);
-			if (newCog1 == fCog1)
-				return iSelf;
-	
-			if (sIsFinished(newCog1))
-				return newCog1;
-	
-			return new Cog_While(newCog0, newCog1);
-			}
-		else if (sIsFinished(newCog0))
-			{
-			return fCog1->QCall(fCog1, iParam);
+			const ZCog<Param>& newCog0 = *newCog0Q;
+			if (newCog0 == fCog0)
+				{
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (newCog1 == fCog1)
+						return iSelf;
+			
+					if (sIsFinished(newCog1))
+						return newCog1;
+			
+					return new Cog_While(newCog0, newCog1);
+					}
+				else
+					{
+					return false;
+					}
+				}
+			else if (sIsFinished(newCog0))
+				{
+				return fCog1->QCall(fCog1, iParam);
+				}
+			else
+				{
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (sIsFinished(newCog1))
+						return newCog1;
+			
+					return new Cog_While(newCog0, newCog1);
+					}
+				return false;
+				}
 			}
 		else
 			{
-			ZCog<Param> newCog1 = fCog1->Call(fCog1, iParam);
-	
-			if (sIsFinished(newCog1))
-				return newCog1;
-	
-			return new Cog_While(newCog0, newCog1);		
+			return fCog1->QCall(fCog1, iParam);
 			}
 		}
 
@@ -840,30 +890,45 @@ public:
 		{
 		ZAssert(sIsPending(fCog0) && sIsPending(fCog1));
 	
-		const ZCog<Param> newCog0 = fCog0->Call(fCog0, iParam);
-		if (newCog0 == fCog0)
+		if (ZQ<ZCog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
-			const ZCog<Param> newCog1 = fCog1->Call(fCog1, iParam);
-			if (newCog1 == fCog1)
-				return iSelf;
-	
-			if (sIsFinished(newCog1))
+			const ZCog<Param>& newCog0 = *newCog0Q;
+			if (newCog0 == fCog0)
+				{
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (newCog1 == fCog1)
+						return iSelf;
+			
+					if (sIsFinished(newCog1))
+						return newCog0;
+			
+					return new Cog_With(newCog0, newCog1);
+					}
 				return newCog0;
-	
-			return new Cog_With(newCog0, newCog1);
-			}
-		else if (sIsPending(newCog0))
-			{
-			ZCog<Param> newCog1 = fCog1->Call(fCog1, iParam);
-	
-			if (sIsFinished(newCog1))
+				}
+			else if (sIsPending(newCog0))
+				{
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+			
+					if (sIsFinished(newCog1))
+						return newCog0;
+			
+					return new Cog_With(newCog0, newCog1);
+					}
 				return newCog0;
-	
-			return new Cog_With(newCog0, newCog1);		
+				}
+			else
+				{
+				return newCog0;
+				}
 			}
 		else
 			{
-			return newCog0;
+			return false;
 			}
 		}
 
@@ -894,6 +959,97 @@ ZCog<Param>& operator/=
 	{ return ioCog0 = sCog_With<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
+// MARK: - Binary parallel, sCog_Plus
+
+// Call cog0 and cog1
+
+template <class Param>
+class Cog_Plus
+:	public ZCallable<ZCog<Param>(const ZCog<Param>&,Param)>
+	{
+public:
+	Cog_Plus(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	:	fCog0(iCallable0)
+	,	fCog1(iCallable1)
+		{}
+
+	virtual ZQ<ZCog<Param> > QCall(const ZCog<Param>& iSelf, Param iParam)
+		{
+		ZAssert(sIsPending(fCog0) && sIsPending(fCog1));
+	
+		if (ZQ<ZCog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
+			{
+			const ZCog<Param>& newCog0 = *newCog0Q;
+			if (newCog0 == fCog0)
+				{
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (newCog1 == fCog1)
+						return iSelf;
+			
+					if (sIsFinished(newCog1))
+						return newCog0;
+			
+					return new Cog_Plus(newCog0, newCog1);
+					}
+				return newCog0;
+				}
+			else if (sIsPending(newCog0))
+				{
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (sIsFinished(newCog1))
+						return newCog0;
+			
+					return new Cog_Plus(newCog0, newCog1);
+					}
+				return newCog0;
+				}
+			else
+				{
+				return fCog1->QCall(fCog1, iParam);
+				}
+			}
+		else
+			{
+			return fCog1->QCall(fCog1, iParam);
+			}
+		}
+
+	const ZCog<Param> fCog0;
+	const ZCog<Param> fCog1;
+	};
+
+template <class Param>
+ZCog<Param> sCog_Plus
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{
+	if (sIsFinished(iCallable0))
+		return iCallable1;
+
+	if (sIsFinished(iCallable1))
+		return iCallable0;
+
+	return new Cog_Plus<Param>(iCallable0, iCallable1);
+	}
+
+template <class Param>
+ZCog<Param> operator+
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return sCog_Plus<Param>(iCallable0, iCallable1); }
+
+template <class Param>
+ZCog<Param>& operator+=
+	(ZCog<Param>& ioCog0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return ioCog0 = sCog_Plus<Param>(ioCog0, iCallable1); }
+
+// =================================================================================================
 // MARK: - Binary parallel, sCog_WithUnchanged
 
 // Call cog0 and cog1 so long as cog0 is pending and unchanged, result from cog0
@@ -913,20 +1069,29 @@ public:
 		{
 		ZAssert(sIsPending(fCog0) && sIsPending(fCog1));
 	
-		const ZCog<Param> newCog0 = fCog0->Call(fCog0, iParam);
-		if (newCog0 == fCog0)
+		if (ZQ<ZCog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
-			const ZCog<Param> newCog1 = fCog1->Call(fCog1, iParam);
-			if (newCog1 == fCog1)
-				return iSelf;
-	
-			if (sIsFinished(newCog1))
-				return newCog0;
-	
-			return new Cog_WithUnchanged(newCog0, newCog1);		
+			const ZCog<Param>& newCog0 = *newCog0Q;
+			if (newCog0 == fCog0)
+				{
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (newCog1 == fCog1)
+						return iSelf;
+			
+					if (sIsFinished(newCog1))
+						return newCog0;
+			
+					return new Cog_WithUnchanged(newCog0, newCog1);		
+					}
+				}		
+			return newCog0;
 			}
-	
-		return newCog0;
+		else
+			{
+			return false;
+			}
 		}
 
 	const ZCog<Param> fCog0;
