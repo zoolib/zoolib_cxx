@@ -53,6 +53,8 @@ public:
 
 	int Compare(const ZName& iOther) const;
 
+	std::size_t Hash() const;
+
 private:
 	intptr_t fAsIntPtr;
 	bool fIsCounted;
@@ -63,5 +65,13 @@ inline int sCompare_T(const ZName& iL, const ZName& iR)
 	{ return iL.Compare(iR); }
 
 } // namespace ZooLib
+
+namespace std { namespace tr1 { 
+
+template<typename T> struct hash;
+template<>
+struct hash<ZooLib::ZName>
+	{ std::size_t operator()(const ZooLib::ZName& iName) const { return iName.Hash(); } };
+}}	
 
 #endif // __ZName_h__

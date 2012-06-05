@@ -127,4 +127,18 @@ int ZName::Compare(const ZName& iOther) const
 		spAsCharStar(iOther.fAsIntPtr, iOther.fIsCounted));
 	}
 
+std::size_t ZName::Hash() const
+	{
+	size_t result = 0;
+	if (const char* i = spAsCharStar(fAsIntPtr, fIsCounted))
+		{
+		for (size_t x = sizeof(size_t); --x && *i; ++i)
+			{
+			result <<= 8;
+			result |= *i;
+			}
+		}
+	return result;
+	}
+
 } // namespace ZooLib
