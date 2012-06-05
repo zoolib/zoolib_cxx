@@ -285,13 +285,11 @@ public:
 			if (newCog == fCog)
 				return iSelf;
 
-			if (sIsFalse(newCog))
-				return true;
-
 			if (sIsTrue(newCog))
 				return false;
 
-			return new Cog_Not(newCog);
+			if (not sIsFalse(newCog))
+				return new Cog_Not(newCog);
 			}
 		return true;
 		}
@@ -337,10 +335,8 @@ public:
 			if (newCog == fCog)
 				return iSelf;
 
-			if (sIsFinished(newCog))
-				return true;
-
-			return new Cog_Tautology(newCog);
+			if (sIsPending(newCog))
+				return new Cog_Tautology(newCog);
 			}
 		return true;
 		}
@@ -382,10 +378,8 @@ public:
 			if (newCog == fCog)
 				return iSelf;
 
-			if (sIsFinished(newCog))
-				return false;
-
-			return new Cog_Contradiction(newCog);
+			if (sIsPending(newCog))
+				return new Cog_Contradiction(newCog);
 			}
 		return false;
 		}
@@ -551,10 +545,48 @@ ZCog<Param>& operator>>=
 // Call cog0 till it finishes, then call cog1
 
 template <class Param>
+class Cog_Each
+:	public ZCallable<ZCog<Param>(const ZCog<Param>&,Param)>
+	{
+public:
+	Cog_Each
+		(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	:	fCog0(iCallable0)
+	,	fCog1(iCallable1)
+		{}
+
+	virtual ZQ<ZCog<Param> > QCall(const ZCog<Param>& iSelf, Param iParam)
+		{
+		if (ZQ<ZCog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
+			{
+			const ZCog<Param>& newCog0 = *newCog0Q;
+			if (newCog0 == fCog0)
+				return iSelf;
+
+			if (sIsPending(newCog0))
+				return new Cog_Each(newCog0, fCog1);
+			}
+		return fCog1->QCall(fCog1, iParam);
+		}
+
+	const ZCog<Param> fCog0;
+	const ZCog<Param> fCog1;
+	};
+
+template <class Param>
 ZCog<Param> sCog_Each
 	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
-	{ return sCog_If(iCallable0, iCallable1, iCallable1); }
+	{
+	if (sIsFinished(iCallable0))
+		return iCallable1;
+
+	if (sIsFinished(iCallable1))
+		return iCallable0;
+
+	return new Cog_Each<Param>(iCallable0, iCallable1);
+	}
 
 template <class Param>
 ZCog<Param> operator^
