@@ -45,7 +45,7 @@ ZRoster::~ZRoster()
 
 void ZRoster::Finalize()
 	{
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 
 	if (not	this->FinishFinalize())
 		return;
@@ -83,7 +83,7 @@ ZRef<ZRoster::Entry> ZRoster::MakeEntry(const ZRef<ZCallable_Void>& iCallable_Br
 
 void ZRoster::Broadcast()
 	{
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 	vector<ZRef<Entry> > local(fEntries.begin(), fEntries.end());
 	guard.Release();
 

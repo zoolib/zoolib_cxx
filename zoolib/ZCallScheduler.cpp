@@ -106,7 +106,7 @@ void ZCallScheduler::pRun()
 	{
 	using namespace ZUtil_STL;
 
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 	for (;;)
 		{
 		if (fTimeJobs.empty())

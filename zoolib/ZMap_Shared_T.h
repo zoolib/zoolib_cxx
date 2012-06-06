@@ -68,14 +68,6 @@ public:
 		return nullptr;
 		}
 
-	template <class S>
-	const S* PGet(const Name_t& iName) const
-		{
-		if (fRep)
-			return fRep->Get().PGet<S>(iName);
-		return nullptr;
-		}
-
 	ZQ<Val_t> QGet(const Name_t& iName) const
 		{
 		if (const Val_t* theVal = this->PGet(iName))
@@ -83,18 +75,26 @@ public:
 		return null;
 		}
 
-	Val_t DGet(const Val_t& iDefault, const Name_t& iName) const
+	const Val_t& DGet(const Val_t& iDefault, const Name_t& iName) const
 		{
 		if (const Val_t* theVal = this->PGet(iName))
 			return *theVal;
 		return iDefault;
 		}
 
-	Val_t Get(const Name_t& iName) const
+	const Val_t& Get(const Name_t& iName) const
 		{
 		if (const Val_t* theVal = this->PGet(iName))
 			return *theVal;
 		return sDefault<Val_t>();
+		}
+
+	template <class S>
+	const S* PGet(const Name_t& iName) const
+		{
+		if (fRep)
+			return fRep->Get().PGet<S>(iName);
+		return nullptr;
 		}
 
 	template <class S>
@@ -106,7 +106,7 @@ public:
 		}
 
 	template <class S>
-	S DGet(const S& iDefault, const Name_t& iName) const
+	const S& DGet(const S& iDefault, const Name_t& iName) const
 		{
 		if (const S* theVal = this->PGet<S>(iName))
 			return *theVal;
@@ -114,7 +114,7 @@ public:
 		}
 
 	template <class S>
-	S Get(const Name_t& iName) const
+	const S& Get(const Name_t& iName) const
 		{
 		if (const S* theVal = this->PGet<S>(iName))
 			return *theVal;
@@ -122,7 +122,7 @@ public:
 		}
 
 // Our protocol
-	const Val_t operator[](const Name_t& iName) const
+	const Val_t& operator[](const Name_t& iName) const
 		{ return this->Get(iName); }
 
 protected:
@@ -210,6 +210,7 @@ public:
 		}
 
 // Our protocol
+//	Val_t& Mutable(const Name_t& iName)
 	Val_t& Mutable(const Name_t& iName) const
 		{
 		if (not fRep)
@@ -218,6 +219,7 @@ public:
 		}
 
 	template <class S>
+//	S& Mutable(const Name_t& iName)
 	S& Mutable(const Name_t& iName) const
 		{
 		if (not fRep)
@@ -225,6 +227,7 @@ public:
 		return fRep->GetMutable().Mutable<S>(iName);
 		}
 
+//	Val_t& operator[](const Name_t& iName)
 	Val_t& operator[](const Name_t& iName) const
 		{ return this->Mutable(iName); }
 	};

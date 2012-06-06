@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread_boost.h"
 #include "zoolib/ZThread_MacMP.h"
 #include "zoolib/ZThread_pthread.h"
-#include "zoolib/ZThread_T.h" // For ZAcquirer_T, ZReleaser_T, ZGuardR_T
+#include "zoolib/ZThread_T.h" // For ZAcquirer_T, ZReleaser_T, ZGuard_T
 #include "zoolib/ZThread_Win.h"
 
 namespace ZooLib {
@@ -81,6 +81,12 @@ namespace ZooLib {
 #endif
 
 // =================================================================================================
+// MARK: - ZBen (benaphore)
+
+typedef ZBen_T<ZSemNoTimeout> ZBen;
+typedef ZBenR_T<ZBen,ZThread::ID,ZThread::sID> ZBenR;
+
+// =================================================================================================
 // MARK: - Acquirer, Releaser, Guard
 
 typedef ZAcquirer_T<ZMtx> ZAcqMtx;
@@ -89,8 +95,14 @@ typedef ZAcquirer_T<ZMtxR> ZAcqMtxR;
 typedef ZReleaser_T<ZMtx> ZRelMtx;
 typedef ZReleaser_T<ZMtxR> ZRelMtxR;
 
-typedef ZGuardR_T<ZMtx> ZGuardRMtx;
-typedef ZGuardR_T<ZMtxR> ZGuardRMtxR;
+//typedef ZGuard_T<ZMtx> ZGuardRMtx;
+//typedef ZGuard_T<ZMtxR> ZGuardRMtxR;
+
+typedef ZGuard_T<ZMtx> ZGuardMtx;
+typedef ZGuard_T<ZMtxR> ZGuardMtxR;
+
+typedef ZAcquirer_T<ZBen> ZAcqBen;
+typedef ZGuard_T<ZBenR> ZGuardBenR;
 
 // =================================================================================================
 // MARK: - ZThread

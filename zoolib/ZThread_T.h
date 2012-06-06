@@ -60,20 +60,20 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZGuardR_T
+// MARK: - ZGuard_T
 
 template <class Mtx>
-class ZGuardR_T : NonCopyable
+class ZGuard_T : NonCopyable
 	{
 private:
 	Mtx& fMtx;
 	int fCount;
 
 public:
-	ZGuardR_T(Mtx& iMtx) : fMtx(iMtx) , fCount(1) { fMtx.Acquire(); }
-	ZGuardR_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) , fCount(1) { fMtx.Acquire(); }
+	ZGuard_T(Mtx& iMtx) : fMtx(iMtx) , fCount(1) { fMtx.Acquire(); }
+	ZGuard_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) , fCount(1) { fMtx.Acquire(); }
 
-	~ZGuardR_T()
+	~ZGuard_T()
 		{
 		while (fCount--)
 			fMtx.Release();
@@ -424,6 +424,73 @@ public:
 			fCnd.Broadcast();
 			}
 		}
+	};
+
+// =================================================================================================
+// MARK: - ZSem_T
+
+template <class Sem>
+class ZBen_T
+	{
+public:
+	ZBen_T()
+	:	fAtomic(0)
+		{}
+
+	void Acquire()
+		{
+		if (0 < ZAtomic_Add(&fAtomic, 1))
+			fSem.Procure();
+		}
+
+	void Release()
+		{
+		if (1 < ZAtomic_Add(&fAtomic, -1))
+			fSem.Vacate();
+		}
+
+private:
+	ZAtomic_t fAtomic;
+	Sem fSem;
+	};
+
+// =================================================================================================
+// MARK: - ZBenR_T
+
+template <class Ben, class ThreadID, ThreadID (*GetThreadIDProc)(void)>
+class ZBenR_T : NonCopyable
+	{
+public:
+	ZBenR_T() : fOwner(0), fCount(0) {}
+
+	~ZBenR_T() {}
+
+	void Acquire()
+		{
+		const ThreadID current = GetThreadIDProc();
+		if (fOwner != current)
+			{
+			fBen.Acquire();
+			fOwner = current;
+			ZAssert(fCount == 0);
+			}
+		++fCount;
+		}
+
+	void Release()
+		{
+		ZAssert(fOwner == GetThreadIDProc());
+
+		if (0 == --fCount)
+			{
+			fOwner = 0;
+			fBen.Release();
+			}
+		}
+
+	ThreadID fOwner;
+	Ben fBen;
+	int fCount;
 	};
 
 } // namespace ZooLib
