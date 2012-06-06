@@ -47,7 +47,7 @@ public:
 	const ZStreamR& GetStreamR();
 
 private:
-	ZRef<ZML::StrimmerU>& fStrimmerU;
+	ZRef<ZML::StrimmerU> fStrimmerU;
 	ZStreamR_ASCIIStrim fStreamR_ASCIIStrim;
 	ZStreamR_Base64Decode fStreamR_Base64Decode;
 	};
