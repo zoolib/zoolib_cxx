@@ -126,7 +126,7 @@ void ZYadMapAtRPos_NS::SetPosition(const std::string& iName)
 		}
 	}
 
-ZRef<ZYadR> ZYadMapAtRPos_NS::ReadAt(const std::string& iName)
+ZRef<ZYadR> ZYadMapAtRPos_NS::ReadAt(const ZName& iName)
 	{ return sYadR((NSObject*)[fDictionary.Get() valueForKey:ZUtil_NS::sString(iName)]); }
 
 void ZYadMapAtRPos_NS::pSetupPosition()

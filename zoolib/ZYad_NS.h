@@ -123,7 +123,7 @@ public:
 	virtual void SetPosition(const std::string& iName);
 
 // From ZYadMapAtR
-	virtual ZRef<ZYadR> ReadAt(const std::string& iName);	
+	virtual ZRef<ZYadR> ReadAt(const ZName& iName);	
 
 private:
 	void pSetupPosition();

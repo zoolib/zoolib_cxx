@@ -141,7 +141,7 @@ void ZYadMapAtRPos_CF::SetPosition(const std::string& iName)
 		}
 	}
 
-ZRef<ZYadR> ZYadMapAtRPos_CF::ReadAt(const std::string& iName)
+ZRef<ZYadR> ZYadMapAtRPos_CF::ReadAt(const ZName& iName)
 	{
 	CFTypeRef theVal;
 	if (::CFDictionaryGetValueIfPresent(fDictionary, ZUtil_CF::sString(iName), &theVal))
