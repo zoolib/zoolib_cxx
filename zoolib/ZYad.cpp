@@ -280,7 +280,7 @@ bool ZYadMapR::IsSimple(const ZYadOptions& iOptions)
 
 bool ZYadMapR::Skip()
 	{
-	string dummy;
+	ZName dummy;
 	return this->ReadInc(dummy);
 	}
 
@@ -454,14 +454,14 @@ ZRef<ZYadR> sYadR(const string& iVal)
 // =================================================================================================
 // MARK: - ZYadMapR_WithFirst
 
-ZYadMapR_WithFirst::ZYadMapR_WithFirst(const ZRef<ZYadR>& iFirst, const std::string& iFirstName,
+ZYadMapR_WithFirst::ZYadMapR_WithFirst(const ZRef<ZYadR>& iFirst, const ZName& iFirstName,
 	const ZRef<ZYadMapR>& iRemainder)
 :	fFirst(iFirst)
 ,	fFirstName(iFirstName)
 ,	fRemainder(iRemainder)
 	{}
 
-ZRef<ZYadR> ZYadMapR_WithFirst::ReadInc(string8& oName)
+ZRef<ZYadR> ZYadMapR_WithFirst::ReadInc(ZName& oName)
 	{
 	if (fFirst)
 		{

@@ -229,7 +229,7 @@ public:
 		{}
 
 // From ZYadMapR via ZYadMapAtRPos
-	ZRef<ZYadR> ReadInc(std::string& oName)
+	ZRef<ZYadR> ReadInc(ZName& oName)
 		{
 		if (fIndex != fMap.End())
 			{
@@ -244,7 +244,7 @@ public:
 		{ return new ZYadMapAtRPos_Val_T(fMap, fIndex); }
 
 // From ZYadMapAtRPos
-	void SetPosition(const std::string& iName)
+	void SetPosition(const ZName& iName)
 		{ fIndex = fMap.IndexOf(iName); }
 
 // From ZYadMapAtR
@@ -292,7 +292,7 @@ protected:
 
 public:
 // From ZYadMapR via ZYadMapAtRPos
-	ZRef<ZYadR> ReadInc(std::string& oName)
+	ZRef<ZYadR> ReadInc(ZName& oName)
 		{
 		if (fIndex != fMap.End())
 			{
@@ -307,7 +307,7 @@ public:
 		{ return new Self_t(fMap, fIndex); }
 
 // From ZYadMapAtRPos
-	void SetPosition(const std::string& iName)
+	void SetPosition(const ZName& iName)
 		{ fIndex = fMap.IndexOf(iName); }
 
 // From ZYadMapAtR

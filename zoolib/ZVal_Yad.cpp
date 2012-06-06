@@ -366,7 +366,7 @@ public:
 		{ return false; }
 
 // From ZYadMapR
-	virtual ZRef<ZYadR> ReadInc(std::string& oName)
+	virtual ZRef<ZYadR> ReadInc(ZName& oName)
 		{
 		if (ZRef<ZYadR> theYad = fYad->ReadInc(oName))
 			{
@@ -411,7 +411,7 @@ public:
 		{ return null; }
 
 // From ZYadMapRPos
-	virtual void SetPosition(const std::string& iName)
+	virtual void SetPosition(const ZName& iName)
 		{
 		// Urg.
 		ZUnimplemented();

@@ -39,12 +39,12 @@ static ZRef<ZYadR> spGetChild(ZRef<ZYadR> iYadR, const string& iName)
 		else if (ZRef<ZYadMapRPos> theYadMapRPos = iYadR.DynamicCast<ZYadMapRPos>())
 			{
 			theYadMapRPos->SetPosition(iName);
-			string dummy;
+			ZName dummy;
 			return theYadMapRPos->ReadInc(dummy);
 			}
 		else for (;;)
 			{
-			string theName;
+			ZName theName;
 			if (ZRef<ZYadR,false> cur = theYadMapR->ReadInc(theName))
 				break;
 			else if (theName == iName)

@@ -46,19 +46,21 @@ static void spThrowParseException(const string& iMessage)
 	throw ZYadParseException_ZooLibStrim(iMessage);
 	}
 
-static bool spTryRead_PropertyName(const ZStrimU& iStrimU, string& oName)
+static bool spTryRead_PropertyName(const ZStrimU& iStrimU, ZName& oName)
 	{
+	string8 theString;
 	using namespace ZUtil_Strim;
 
-	if (!sTryRead_EscapedString(iStrimU, '"', oName))
+	if (!sTryRead_EscapedString(iStrimU, '"', theString))
 		{
-		if (!sTryRead_EscapedString(iStrimU, '\'', oName))
+		if (!sTryRead_EscapedString(iStrimU, '\'', theString))
 			{
-			if (not ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nullptr, &oName))
+			if (not ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nullptr, &theString))
 				return false;
 			}
 		}
 
+	oName = theString;
 	return true;
 	}
 
@@ -538,7 +540,7 @@ ZYadMapR_ZooLibStrim::ZYadMapR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iRe
 	fReadDelimiter(iReadDelimiter)
 	{}
 
-void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -1023,7 +1025,7 @@ static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 		s.Write("{");
 		for (;;)
 			{
-			string curName;
+			ZName curName;
 			if (ZRef<ZYadR,false> cur = iYadMapR->ReadInc(curName))
 				{
 				break;
@@ -1045,7 +1047,7 @@ static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 		s.Write("{");
 		for (;;)
 			{
-			string curName;
+			ZName curName;
 			if (ZRef<ZYadR,false> cur = iYadMapR->ReadInc(curName))
 				{
 				break;

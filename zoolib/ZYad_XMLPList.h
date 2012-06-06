@@ -118,7 +118,7 @@ public:
 	ZYadMapR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;

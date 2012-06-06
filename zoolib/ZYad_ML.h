@@ -75,14 +75,12 @@ public:
 	virtual ZRef<ZYadR> Meta();
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR);
 
 // Our protocol
 	ZML::Attrs_t GetAttrs();
 
 private:
-	void pAdvance(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
-
 	ZRef<ZML::StrimmerU> fStrimmerU;
 
 	const std::string fTagName;

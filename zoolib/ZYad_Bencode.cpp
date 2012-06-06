@@ -201,7 +201,7 @@ ZYadMapR_Bencode::ZYadMapR_Bencode(ZRef<ZStreamerU> iStreamerU)
 :	fStreamerU(iStreamerU)
 	{}
 
-void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 	{
 	const ZStreamU& theStreamU = fStreamerU->GetStreamU();
 	if (!spTryRead_Byte(theStreamU, 'e'))

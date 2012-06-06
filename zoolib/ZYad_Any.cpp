@@ -25,8 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-using std::string;
-
 class ZYadStreamerRPos_Any
 :	public ZYadStreamerRPos_Val_T<ZData_Any>
 ,	public ZYadR_Any
@@ -134,7 +132,7 @@ public:
 		{
 		ZMap_Any theMap;
 
-		string theName;
+		ZName theName;
 		while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
 			{
 			ZVal_Any theVal = this->Do(theChild);

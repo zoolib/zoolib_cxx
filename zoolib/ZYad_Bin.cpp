@@ -213,7 +213,7 @@ public:
 		{}
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 		{
 		oName = spStringFromStream(fStreamerR->GetStreamR());
 		oYadR = spMakeYadR(fStreamerR);
@@ -336,7 +336,7 @@ public:
 	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 		{
 		fW.WriteUInt8(13);
-		string8 theName;
+		ZName theName;
 		while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
 			{
 			spToStream(theName, fW);

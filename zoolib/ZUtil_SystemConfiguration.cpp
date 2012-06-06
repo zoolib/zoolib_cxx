@@ -83,7 +83,7 @@ public:
 		{}
 
 // From ZYadMapR via ZYadMapRPos
-	virtual ZRef<ZYadR> ReadInc(std::string& oName)
+	virtual ZRef<ZYadR> ReadInc(ZName& oName)
 		{
 		while (fPosition < fKeys.Count())
 			{
@@ -104,7 +104,7 @@ public:
 		{ return new YadMapRPos(fStoreRef, fKeys, fPosition); }
 
 // From ZYadMapRPos
-	virtual void SetPosition(const std::string& iName)
+	virtual void SetPosition(const ZName& iName)
 		{
 		for (/*no init*/; fPosition < fKeys.Count(); ++fPosition)
 			{

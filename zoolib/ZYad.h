@@ -196,7 +196,7 @@ public:
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
-	virtual ZRef<ZYadR> ReadInc(std::string& oName) = 0;
+	virtual ZRef<ZYadR> ReadInc(ZName& oName) = 0;
 	virtual bool Skip();
 	virtual void SkipAll();
 	};
@@ -226,7 +226,7 @@ public:
 	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
 
 // Our protocol
-	virtual void SetPosition(const std::string& iName) = 0;
+	virtual void SetPosition(const ZName& iName) = 0;
 	};
 
 // =================================================================================================
@@ -392,15 +392,15 @@ class ZYadMapR_WithFirst
 :	public ZYadMapR
 	{
 public:
-	ZYadMapR_WithFirst(const ZRef<ZYadR>& iFirst, const std::string& iFirstName,
+	ZYadMapR_WithFirst(const ZRef<ZYadR>& iFirst, const ZName& iFirstName,
 		const ZRef<ZYadMapR>& iRemainder);
 
 // From ZYadMapR
-	virtual ZRef<ZYadR> ReadInc(std::string& oName);
+	virtual ZRef<ZYadR> ReadInc(ZName& oName);
 
 private:
 	ZRef<ZYadR> fFirst;
-	const std::string fFirstName;
+	const ZName fFirstName;
 	const ZRef<ZYadMapR> fRemainder;
 	};
 

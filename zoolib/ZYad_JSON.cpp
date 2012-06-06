@@ -456,7 +456,7 @@ YadMapR::YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions
 ,	fRO(iRO)
 	{}
 
-void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+void YadMapR::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -491,8 +491,10 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 			}
 		}
 
-	if (not spTryRead_PropertyName(theStrimU, oName, fRO->Get().fAllowUnquotedPropertyNames.DGet(false)))
+	string theName;
+	if (not spTryRead_PropertyName(theStrimU, theName, fRO->Get().fAllowUnquotedPropertyNames.DGet(false)))
 		spThrowParseException("Expected a member name");
+	oName = theName;
 
 	sSkip_WSAndCPlusPlusComments(theStrimU);
 
@@ -915,7 +917,7 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 		fStrimW.Write("{");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			string curName;
+			ZName curName;
 			if (ZRef<ZYadR,false> cur = iYadMapR->ReadInc(curName))
 				{
 				break;
@@ -953,7 +955,7 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 		bool wroteAny = false;
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			string curName;
+			ZName curName;
 			if (ZRef<ZYadR,false> cur = iYadMapR->ReadInc(curName))
 				{
 				break;

@@ -61,13 +61,13 @@ public:
 	ZYadMapRPos_Dir(const ZFileSpec& iFS, const ZFileIter& iFileIter);
 
 // From ZYadMapR via ZYadMapRPos
-	virtual ZRef<ZYadR> ReadInc(std::string& oName);
+	virtual ZRef<ZYadR> ReadInc(ZName& oName);
 
 // From ZYadMapRClone via ZYadMapRPos
 	virtual ZRef<ZYadMapRClone> Clone();
 
 // From ZYadMapRPos
-	virtual void SetPosition(const std::string& iName);
+	virtual void SetPosition(const ZName& iName);
 
 private:
 	ZFileIter fFileIter;
@@ -83,7 +83,7 @@ ZYadMapRPos_Dir::ZYadMapRPos_Dir(const ZFileSpec& iFS, const ZFileIter& iFileIte
 	fFileIter(iFileIter)
 	{}
 
-ZRef<ZYadR> ZYadMapRPos_Dir::ReadInc(std::string& oName)
+ZRef<ZYadR> ZYadMapRPos_Dir::ReadInc(ZName& oName)
 	{
 	while (fFileIter)
 		{
@@ -102,9 +102,10 @@ ZRef<ZYadR> ZYadMapRPos_Dir::ReadInc(std::string& oName)
 ZRef<ZYadMapRClone> ZYadMapRPos_Dir::Clone()
 	{ return new ZYadMapRPos_Dir(fFS, fFileIter); }
 
-void ZYadMapRPos_Dir::SetPosition(const std::string& iName)
+void ZYadMapRPos_Dir::SetPosition(const ZName& iName)
 	{
-	while (fFileIter && fFileIter.CurrentName() != iName)
+	string8 asString = string8(iName);
+	while (fFileIter && fFileIter.CurrentName() != asString)
 		fFileIter.Advance();
 	}
 

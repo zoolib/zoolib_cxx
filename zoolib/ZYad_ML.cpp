@@ -100,7 +100,7 @@ ZRef<ZYadR> ZYadMapR_ML::Meta()
 ZML::Attrs_t ZYadMapR_ML::GetAttrs()
 	{ return fAttrs; }
 
-void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
 

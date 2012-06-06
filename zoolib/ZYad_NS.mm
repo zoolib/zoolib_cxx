@@ -99,7 +99,7 @@ ZYadMapAtRPos_NS::ZYadMapAtRPos_NS(NSDictionary* iDictionary)
 ,	fValues([iDictionary allValues])
 	{}
 
-ZRef<ZYadR> ZYadMapAtRPos_NS::ReadInc(string& oName)
+ZRef<ZYadR> ZYadMapAtRPos_NS::ReadInc(ZName& oName)
 	{
 	this->pSetupPosition();
 
@@ -114,7 +114,7 @@ ZRef<ZYadR> ZYadMapAtRPos_NS::ReadInc(string& oName)
 ZRef<ZYadMapRClone> ZYadMapAtRPos_NS::Clone()
 	{ return new ZYadMapAtRPos_NS(fDictionary, fPosition, fNames, fValues); }
 
-void ZYadMapAtRPos_NS::SetPosition(const std::string& iName)
+void ZYadMapAtRPos_NS::SetPosition(const ZName& iName)
 	{
 	this->pSetupPosition();
 
@@ -244,7 +244,7 @@ void Visitor_GetVal::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	{
 	ZMap_NS theMap;
 
-	string theName;
+	ZName theName;
 	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
 		theMap.Set(theName, this->GetVal(theChild));
 

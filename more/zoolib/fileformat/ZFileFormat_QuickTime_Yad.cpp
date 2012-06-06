@@ -143,7 +143,7 @@ public:
 		uint64 iFirstSize, uint64 iFirstHeaderSize, const string& iFirstName);
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZStreamerR> fStreamerR;
@@ -197,7 +197,7 @@ static bool spLooksLikeAContainer(const ZStreamR& iStreamR, size_t iOuterSize,
 	return false;
 	}
 
-void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+void YadMapR::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 	{
 	if (!fRemaining)
 		return;

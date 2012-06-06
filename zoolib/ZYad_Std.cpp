@@ -80,9 +80,9 @@ ZYadMapR_Std::ZYadMapR_Std(bool iFinished)
 void ZYadMapR_Std::Finish()
 	{ this->SkipAll(); }
 
-ZRef<ZYadR> ZYadMapR_Std::ReadInc(std::string& oName)
+ZRef<ZYadR> ZYadMapR_Std::ReadInc(ZName& oName)
 	{
-	oName.clear();
+	oName = ZName();
 	if (!fStarted)
 		{
 		fStarted = true;

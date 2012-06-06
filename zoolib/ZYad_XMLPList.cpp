@@ -263,7 +263,7 @@ ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRea
 	fRead(iRead)
 	{}
 
-void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, string& oName, ZRef<ZYadR>& oYadR)
+void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
@@ -340,11 +340,11 @@ static void spToStrim_List(const ZML::StrimW& s, ZRef<ZYadSeqR> iYadSeqR)
 static void spToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
 	{
 	s.Begin("dict");
-		string theName;
+		ZName theName;
 		while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
 			{
 			s.Begin("key");
-				s << theName;
+				s << string8(theName);
 			s.End("key");
 			ZYad_XMLPList::sToStrim(theChild, s);
 			}

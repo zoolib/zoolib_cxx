@@ -114,13 +114,13 @@ public:
 	ZYadMapAtRPos_NS(NSDictionary* iDictionary);
 
 // From ZYadMapR via ZYadMapAtRPos
-	virtual ZRef<ZYadR> ReadInc(std::string& oName);
+	virtual ZRef<ZYadR> ReadInc(ZName& oName);
 
 // From ZYadMapRClone via ZYadMapAtRPos
 	virtual ZRef<ZYadMapRClone> Clone();
 
 // From ZYadMapRPos via ZYadMapAtRPos
-	virtual void SetPosition(const std::string& iName);
+	virtual void SetPosition(const ZName& iName);
 
 // From ZYadMapAtR
 	virtual ZRef<ZYadR> ReadAt(const ZName& iName);	

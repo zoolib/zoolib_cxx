@@ -66,7 +66,7 @@ public:
 		{}
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 		{
 		using namespace ZUtil_Strim;
 
@@ -92,8 +92,10 @@ public:
 				}
 			}
 
-		if (!spRead_Until(theStrimU, fOptions.fSeparator_NameFromValue, oName))
+		string theName;
+		if (!spRead_Until(theStrimU, fOptions.fSeparator_NameFromValue, theName))
 			spThrowParseException("Expected a member name, followed by " + fOptions.fSeparator_NameFromValue);
+		oName = theName;
 
 		string theValue;
 		if (spRead_Until(theStrimU, fOptions.fSeparator_EntryFromEntry, theValue))

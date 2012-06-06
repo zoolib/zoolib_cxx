@@ -80,10 +80,10 @@ public:
 	virtual void Finish();
 
 // From ZYadMapR
-	virtual ZRef<ZYadR> ReadInc(std::string& oName);
+	virtual ZRef<ZYadR> ReadInc(ZName& oName);
 
 // Our protocol
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR) = 0;
+	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR) = 0;
 
 private:
 	bool fStarted;

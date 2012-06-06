@@ -117,7 +117,7 @@ ZYadMapAtRPos_CF::ZYadMapAtRPos_CF(CFDictionaryRef iDictionary)
 ,	fPosition(-1)
 	{}
 
-ZRef<ZYadR> ZYadMapAtRPos_CF::ReadInc(string& oName)
+ZRef<ZYadR> ZYadMapAtRPos_CF::ReadInc(ZName& oName)
 	{
 	this->pSetupPosition();
 	if (fPosition < fNames.size())
@@ -131,7 +131,7 @@ ZRef<ZYadR> ZYadMapAtRPos_CF::ReadInc(string& oName)
 ZRef<ZYadMapRClone> ZYadMapAtRPos_CF::Clone()
 	{ return new ZYadMapAtRPos_CF(fDictionary, fPosition, fNames, fValues); }
 
-void ZYadMapAtRPos_CF::SetPosition(const std::string& iName)
+void ZYadMapAtRPos_CF::SetPosition(const ZName& iName)
 	{
 	this->pSetupPosition();
 	for (fPosition = 0; fPosition < fNames.size(); ++fPosition)
@@ -281,7 +281,7 @@ void Visitor_GetVal::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 	{
 	ZMap_CF theMap;
 
-	string theName;
+	ZName theName;
 	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
 		theMap.Set(theName, this->GetVal(theChild));
 

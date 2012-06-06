@@ -95,7 +95,7 @@ public:
 	ZYadMapR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU);
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
@@ -473,7 +473,7 @@ ZYadMapR_XMLRPC::ZYadMapR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 	{}
 
-void ZYadMapR_XMLRPC::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+void ZYadMapR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
@@ -550,12 +550,12 @@ static void spToStrim_Seq(const ZML::StrimW& s, ZRef<ZYadSeqR> iYadSeqR)
 static void spToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
 	{
 	s.Begin("struct");
-		string theName;
+		ZName theName;
 		while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
 			{
 			s.Begin("member");
 				s.Begin("name");
-					s << theName;
+					s << string8(theName);
 				s.End("name");
 
 				s.Begin("value");

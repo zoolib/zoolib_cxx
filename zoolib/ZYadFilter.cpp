@@ -40,7 +40,7 @@ public:
 	virtual bool IsSimple(const ZYadOptions& iOptions)
 		{ return fYadMapR->IsSimple(iOptions); }
 
-	virtual ZRef<ZYadR> ReadInc(string8& oName)
+	virtual ZRef<ZYadR> ReadInc(ZName& oName)
 		{ return sYadFilter(fCallable, sCall(fCallable, fYadMapR->ReadInc(oName))); }
 
 	const ZRef<Callable_YadFilter> fCallable;

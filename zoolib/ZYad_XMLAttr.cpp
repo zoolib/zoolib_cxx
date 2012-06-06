@@ -87,7 +87,7 @@ public:
 	YadMapR(ZRef<ZML::StrimmerU> iStrimmerU, const string& iOuterName, const ZML::Attrs_t& iAttrs);
 
 // From ZYadMapR
-	virtual ZRef<ZYadR> ReadInc(std::string& oName);
+	virtual ZRef<ZYadR> ReadInc(ZName& oName);
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
@@ -114,7 +114,7 @@ YadMapR::YadMapR
 ,	fIter(fAttrs.begin())
 	{}
 
-ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
+ZRef<ZYadR> YadMapR::ReadInc(ZName& oName)
 	{
 	if (fIter != fAttrs.end())
 		{

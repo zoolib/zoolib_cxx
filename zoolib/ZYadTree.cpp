@@ -306,7 +306,7 @@ public:
 		{ return false; }
 
 // From ZYadMapR
-	virtual ZRef<ZYadR> ReadInc(std::string& oName)
+	virtual ZRef<ZYadR> ReadInc(ZName& oName)
 		{
 		this->pGenMap();
 		return fYadMapAtRPos->ReadInc(oName);
@@ -328,7 +328,7 @@ public:
 		}
 
 // From ZYadMapRPos
-	virtual void SetPosition(const std::string& iName)
+	virtual void SetPosition(const ZName& iName)
 		{
 		this->pGenMap();
 		fYadMapAtRPos->SetPosition(iName);
