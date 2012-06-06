@@ -192,7 +192,7 @@ class ZMap_Any
 public:
 	typedef ZName Name_t;
 
-#if 1
+#if ZCONFIG_SPI_Enabled(unordered_map)
 	typedef unordered_map<Name_t, ZVal_Any> Map_t;
 #else
 	typedef std::map<Name_t, ZVal_Any> Map_t;
