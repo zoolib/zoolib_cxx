@@ -69,7 +69,7 @@ public:
 		}
 
 	template <class S>
-	S DGet(const S& iDefault, size_t iIndex) const
+	const S DGet(const S& iDefault, size_t iIndex) const
 		{
 		if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
 			{
@@ -80,7 +80,7 @@ public:
 		}
 
 	template <class S>
-	S Get(size_t iIndex) const
+	const S Get(size_t iIndex) const
 		{
 		if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
 			{

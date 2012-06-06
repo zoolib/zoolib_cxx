@@ -31,12 +31,10 @@ namespace { // anonymous
 
 class Tombstone_t {};
 
-ZVal_Yad spVal_Null;
-
 ZVal_Yad spAsVal_Yad(const ZRef<ZYadR>& iYadR)
 	{
 	if (not iYadR)
-		return spVal_Null;
+		return sDefault<ZVal_Yad>();
 
 	if (ZRef<ZYadSeqAtRPos> theYad = iYadR.DynamicCast<ZYadSeqAtRPos>())
 		return ZSeq_Yad(theYad);
@@ -331,7 +329,7 @@ const ZVal_Yad& ZMap_Yad::operator[](const Name_t& iName) const
 	{
 	if (const ZVal_Yad* theVal = this->PGet(iName))
 		return *theVal;
-	return spVal_Null;
+	return sDefault<ZVal_Yad>();
 	}
 
 ZRef<ZYadMapAtRPos> ZMap_Yad::GetYad() const
