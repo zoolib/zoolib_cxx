@@ -104,7 +104,7 @@ bool ZStreamRWCon_MemoryPipe::Imp_WaitReadable(double iTimeout)
 	ZAcqMtx acq(fMutex);
 	for (;;)
 		{
-		if (fSource && fSource < fSourceEnd || fWriteClosed)
+		if ((fSource && fSource < fSourceEnd) || fWriteClosed)
 			return true;
 
 		if (!fCondition_Read.WaitUntil(fMutex, deadline))
