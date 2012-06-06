@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZCompat_unordered_map_h__
 #define __ZCompat_unordered_map_h__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI_Definitions.h"
 
 #ifndef ZCONFIG_SPI_Desired__unordered_map
 	#define ZCONFIG_SPI_Desired__unordered_map 1
