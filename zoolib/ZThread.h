@@ -95,9 +95,6 @@ typedef ZAcquirer_T<ZMtxR> ZAcqMtxR;
 typedef ZReleaser_T<ZMtx> ZRelMtx;
 typedef ZReleaser_T<ZMtxR> ZRelMtxR;
 
-//typedef ZGuard_T<ZMtx> ZGuardRMtx;
-//typedef ZGuard_T<ZMtxR> ZGuardRMtxR;
-
 typedef ZGuard_T<ZMtx> ZGuardMtx;
 typedef ZGuard_T<ZMtxR> ZGuardMtxR;
 

@@ -35,13 +35,13 @@ namespace ZooLib {
 template <class Mtx>
 class ZAcquirer_T : NonCopyable
 	{
-private:
-	Mtx& fMtx;
-
 public:
 	ZAcquirer_T(Mtx& iMtx) : fMtx(iMtx) { fMtx.Acquire(); }
 	ZAcquirer_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) { fMtx.Acquire(); }
 	~ZAcquirer_T() { fMtx.Release(); }
+
+private:
+	Mtx& fMtx;
 	};
 
 // =================================================================================================
@@ -50,13 +50,13 @@ public:
 template <class Mtx>
 class ZReleaser_T : NonCopyable
 	{
-private:
-	Mtx& fMtx;
-
 public:
 	ZReleaser_T(Mtx& iMtx) : fMtx(iMtx) { fMtx.Release(); }
 	ZReleaser_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) { fMtx.Release(); }
 	~ZReleaser_T() { fMtx.Acquire(); }
+
+private:
+	Mtx& fMtx;
 	};
 
 // =================================================================================================
@@ -65,10 +65,6 @@ public:
 template <class Mtx>
 class ZGuard_T : NonCopyable
 	{
-private:
-	Mtx& fMtx;
-	int fCount;
-
 public:
 	ZGuard_T(Mtx& iMtx) : fMtx(iMtx) , fCount(1) { fMtx.Acquire(); }
 	ZGuard_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) , fCount(1) { fMtx.Acquire(); }
@@ -90,6 +86,10 @@ public:
 		fMtx.Acquire();
 		++fCount;
 		}
+
+private:
+	Mtx& fMtx;
+	int fCount;
 	};
 
 // =================================================================================================
@@ -108,10 +108,6 @@ Douglas C. Schmidt and Irfan Pyarali
 template <class Mtx, class Sem>
 class ZCndBase_T : NonCopyable
 	{
-private:
-	Sem fSem;
-	ZAtomic_t fWaitingThreads;
-
 public:
 	ZCndBase_T() : fWaitingThreads(0) {}
 	~ZCndBase_T() {}
@@ -181,6 +177,10 @@ public:
 			break;
 			}
 		}
+
+private:
+	Sem fSem;
+	ZAtomic_t fWaitingThreads;
 	};
 
 // =================================================================================================
@@ -212,15 +212,15 @@ public:
 template <class Sem>
 class ZMtx_T : NonCopyable
 	{
-private:
-	Sem fSem;
-
 public:
 	ZMtx_T(const char* iName = nullptr) { fSem.Signal(); }
 	~ZMtx_T() {}
 
 	void Acquire() { fSem.Procure(); }
 	void Release() { fSem.Vacate(); }
+
+private:
+	Sem fSem;
 	};
 
 // =================================================================================================
@@ -427,7 +427,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZSem_T
+// MARK: - ZBen_T (benaphore)
 
 template <class Sem>
 class ZBen_T
@@ -455,7 +455,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZBenR_T
+// MARK: - ZBenR_T (recursive benaphore)
 
 template <class Ben, class ThreadID, ThreadID (*GetThreadIDProc)(void)>
 class ZBenR_T : NonCopyable

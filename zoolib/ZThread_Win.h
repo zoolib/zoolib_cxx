@@ -134,7 +134,6 @@ class ZSem_Win : NonCopyable
 	{
 public:
 	ZSem_Win();
-
 	~ZSem_Win();
 
 	void Procure();
