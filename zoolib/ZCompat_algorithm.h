@@ -34,14 +34,17 @@ namespace ZooLib {
 // MARK: - sMin, sMax and sMinMax
 
 template <class T, class Other_p>
+inline
 const T sMin(const T& iVal, const Other_p& iOther)
 	{ return std::min(iVal, T(iOther)); }
 
 template <class T, class Other_p>
+inline
 const T sMax(const T& iVal, const Other_p& iOther)
 	{ return std::max(iVal, T(iOther)); }
 
 template <class Min_p, class T, class Max_p>
+inline
 const T sMinMax(const Min_p& iMin, const T& iVal, const Max_p& iMax)
 	{ return std::min(std::max(T(iMin), iVal), T(iMax)); }	
 
@@ -49,7 +52,8 @@ const T sMinMax(const Min_p& iMin, const T& iVal, const Max_p& iMax)
 // MARK: - sGetSet
 
 template <class S>
-inline S sGetSet(S& ioLoc, S iVal)
+inline
+S sGetSet(S& ioLoc, S iVal)
 	{
 	std::swap(iVal, ioLoc);
 	return iVal;
@@ -59,12 +63,13 @@ inline S sGetSet(S& ioLoc, S iVal)
 // MARK: - sCompareSet
 
 template <class T, class S>
-bool sCompareSet(T& out, const S& in)
+inline
+bool sCompareSet(T& ioLoc, const S& iVal)
 	{
-	if (out == in)
+	if (ioLoc == iVal)
 		return false;
 
-	out = in;
+	ioLoc = iVal;
 	return true;
 	}
 
