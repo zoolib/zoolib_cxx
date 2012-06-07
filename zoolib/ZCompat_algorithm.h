@@ -60,11 +60,11 @@ S sGetSet(S& ioLoc, S iVal)
 	}
 
 // =================================================================================================
-// MARK: - sCompareSet
+// MARK: - sCAS
 
 template <class T, class S>
 inline
-bool sCompareSet(T& ioLoc, const S& iVal)
+bool sCAS(T& ioLoc, const S& iVal)
 	{
 	if (ioLoc == iVal)
 		return false;
