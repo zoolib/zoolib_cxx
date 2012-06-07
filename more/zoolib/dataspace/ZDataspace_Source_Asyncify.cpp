@@ -135,7 +135,7 @@ void Source_Asyncify::pTrigger_Update()
 
 void Source_Asyncify::pUpdate()
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 
 	for (;;)
 		{
@@ -192,7 +192,7 @@ void Source_Asyncify::pUpdate()
 
 void Source_Asyncify::pResultsAvailable(ZRef<Source> iSource)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 	fNeeds_SourceCollectResults = true;
 	this->pTrigger_Update();
 	}

@@ -87,7 +87,7 @@ ZWorker::ZWorker()
 
 ZQ<void> ZWorker::QCall()
 	{
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 
 	for (;;)
 		{
@@ -155,7 +155,7 @@ bool ZWorker::IsAwake()
 
 bool ZWorker::Attach(ZRef<ZCaller> iCaller)
 	{
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 	if (not fCaller)
 		{
 		fCaller = iCaller;

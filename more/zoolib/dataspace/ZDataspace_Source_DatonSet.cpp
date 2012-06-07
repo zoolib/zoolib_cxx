@@ -270,7 +270,7 @@ void Source_DatonSet::ModifyRegistrations
 	(const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
@@ -430,7 +430,7 @@ ZRef<ZDatonSet::DatonSet> Source_DatonSet::GetDatonSet()
 
 ZRef<Event> Source_DatonSet::Insert(const Daton& iDaton)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 	this->pModify(iDaton, sAsVal(iDaton), true);
 	ZRef<Event> result = this->pConditionalPushDown();
 	guard.Release();
@@ -442,7 +442,7 @@ ZRef<Event> Source_DatonSet::Insert(const Daton& iDaton)
 
 ZRef<Event> Source_DatonSet::Erase(const Daton& iDaton)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 	this->pModify(iDaton, sAsVal(iDaton), false);
 	ZRef<Event> result = this->pConditionalPushDown();
 	guard.Release();
@@ -454,7 +454,7 @@ ZRef<Event> Source_DatonSet::Erase(const Daton& iDaton)
 
 ZRef<Event> Source_DatonSet::Replace(const ZDatonSet::Daton& iOld, const ZDatonSet::Daton& iNew)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 	this->pModify(iOld, sAsVal(iOld), false);
 	this->pModify(iNew, sAsVal(iNew), true);
 	ZRef<Event> result = this->pConditionalPushDown();
@@ -488,7 +488,7 @@ void Source_DatonSet::ClearTransaction(size_t iIndex)
 
 void Source_DatonSet::CloseTransaction(size_t iIndex)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 
 	ZAssert(iIndex == fStack_Map_Pending.size());
 

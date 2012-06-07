@@ -44,7 +44,7 @@ ZQ<ZData_Any> ZNatter::Receive(ZRef<Exchange>* oExchange)
 	{
 	ZRef<Exchange> theExchange = this->MakeExchange();
 
-	ZGuardRMtxR guard(fMtxR_Structure);
+	ZGuardMtxR guard(fMtxR_Structure);
 	const int64 theID = fNextLocalID;
 	theExchange->fID = theID;
 	fNextLocalID += 2;
@@ -82,7 +82,7 @@ ZQ<ZData_Any> ZNatter::Receive(ZRef<Exchange>* oExchange)
 
 ZRef<ZNatter::Exchange> ZNatter::MakeExchange()
 	{
-	ZGuardRMtxR guard(fMtxR_Structure);
+	ZGuardMtxR guard(fMtxR_Structure);
 	ZRef<Exchange> theExchange = new Exchange;
 
 	theExchange->fNatter = this;
@@ -94,7 +94,7 @@ ZRef<ZNatter::Exchange> ZNatter::MakeExchange()
 
 void ZNatter::pRemove(Exchange* iExchange)
 	{
-	ZGuardRMtxR guard(fMtxR_Structure);
+	ZGuardMtxR guard(fMtxR_Structure);
 
 	if (not iExchange->fID)
 		return;
@@ -124,7 +124,7 @@ void ZNatter::pRemove(Exchange* iExchange)
 
 ZQ<ZData_Any> ZNatter::pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
 	{
-	ZGuardRMtxR guard(fMtxR_Structure);
+	ZGuardMtxR guard(fMtxR_Structure);
 
 	ZAssert(!iExchange->fDataQ);
 
@@ -177,7 +177,7 @@ ZQ<ZData_Any> ZNatter::pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
 	return this->pReadFor(guard, iExchange);
 	}
 
-ZQ<ZData_Any> ZNatter::pReadFor(ZGuardRMtxR& iGuard, ZRef<Exchange> iExchange)
+ZQ<ZData_Any> ZNatter::pReadFor(ZGuardMtxR& iGuard, ZRef<Exchange> iExchange)
 	{
 	while (!fError && iExchange->fWaiting)
 		this->pRead(iGuard);
@@ -205,7 +205,7 @@ static bool spReadPacket(uint8& oType, int64& oID, ZData_Any& oData, const ZStre
 	return false;
 	}
 
-void ZNatter::pRead(ZGuardRMtxR& iGuard)
+void ZNatter::pRead(ZGuardMtxR& iGuard)
 	{
 	if (fReadBusy)
 		{

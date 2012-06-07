@@ -745,7 +745,7 @@ void Source_Union::ModifyRegistrations
 	(const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 
 	// -----------------
 
@@ -1177,7 +1177,7 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 
 void Source_Union::pResultsAvailable(ZRef<Source> iSource)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 	Map_Source_PSource::iterator iterSource = fMap_Source_PSource.find(iSource);
 	fPSource_CollectFrom.InsertIfNotContains(&iterSource->second);
 	guard.Release();

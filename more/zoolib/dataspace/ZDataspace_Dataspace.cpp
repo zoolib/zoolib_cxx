@@ -73,7 +73,7 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 
 void Dataspace::Update()
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 	fCalled_UpdateNeeded = false;
 	guard.Release();
 
@@ -147,7 +147,7 @@ void Dataspace::Changed(const ZRef<Sieve>& iSieve)
 
 void Dataspace::pCallback_Source(ZRef<Source> iSource)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 	if (ZRef<Callable_UpdateNeeded> theCallable = fCallable_UpdateNeeded)
 		{
 		if (!fCalled_UpdateNeeded)
@@ -161,7 +161,7 @@ void Dataspace::pCallback_Source(ZRef<Source> iSource)
 
 void Dataspace::pFinalize(Sieve* iSieve)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 
 	if (not iSieve->FinishFinalize())
 		return;

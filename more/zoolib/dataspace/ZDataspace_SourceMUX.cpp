@@ -117,7 +117,7 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 
 	vector<AddedQuery> theAddedQueries;
 	theAddedQueries.reserve(iAddedCount);
@@ -150,7 +150,7 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 	vector<QueryResult>& oChanged)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 
 	vector<QueryResult> changes;
 	if (fResultsAvailable)
@@ -183,7 +183,7 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 
 void SourceMUX::pResultsAvailable(ZRef<Source> iSource)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 	if (!fResultsAvailable)
 		{
 		fResultsAvailable = true;
@@ -197,7 +197,7 @@ void SourceMUX::pResultsAvailable(ZRef<Source> iSource)
 
 void SourceMUX::pFinalizeClientSource(ClientSource* iCS)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 
 	if (not iCS->FinishFinalize())
 		return;
