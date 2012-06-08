@@ -146,7 +146,7 @@ ZBigRegion::ZBigRegion(const ZBigRegion& iOther)
 	fExtent = iOther.fExtent;
 	fRects = new ZRectPOD[fNumRects];
 	fNumRectsAllocated = fNumRects;
-	ZMemCopy(fRects, iOther.fRects, fNumRects * sizeof(ZRectPOD));
+	sMemCopy(fRects, iOther.fRects, fNumRects * sizeof(ZRectPOD));
 	}
 
 ZBigRegion::ZBigRegion(const ZRectPOD& iBounds)
@@ -191,7 +191,7 @@ ZBigRegion& ZBigRegion::operator=(const ZBigRegion& iOther)
 
 		fNumRects = iOther.fNumRects;
 		fExtent = iOther.fExtent;
-		ZMemCopy(fRects, iOther.fRects, fNumRects * sizeof(ZRectPOD));
+		sMemCopy(fRects, iOther.fRects, fNumRects * sizeof(ZRectPOD));
 		}
 	return *this;
 	}
@@ -410,7 +410,7 @@ ZBigRegion& ZBigRegion::operator^=(const ZBigRegion& iOther)
 void ZBigRegion::spReallocate(ZBigRegion& ioRegion, ZRectPOD*& oRect)
 	{
 	ZRectPOD* newArray = new ZRectPOD[2 * ioRegion.fNumRectsAllocated];
-	ZMemCopy(newArray, ioRegion.fRects, ioRegion.fNumRectsAllocated * sizeof(ZRectPOD));
+	sMemCopy(newArray, ioRegion.fRects, ioRegion.fNumRectsAllocated * sizeof(ZRectPOD));
 	delete[] ioRegion.fRects;
 	ioRegion.fRects = newArray;
 	ioRegion.fNumRectsAllocated = 2 * ioRegion.fNumRectsAllocated;
@@ -439,7 +439,7 @@ void ZBigRegion::spCopy(const ZBigRegion& iSource, ZBigRegion& oDestination)
 	oDestination.fNumRects = iSource.fNumRects;
 	oDestination.fExtent = iSource.fExtent;
 
-	ZMemCopy(oDestination.fRects,
+	sMemCopy(oDestination.fRects,
 		iSource.fRects, oDestination.fNumRects * sizeof(ZRectPOD));
 	}
 
@@ -1059,7 +1059,7 @@ void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
 		if (ioNewRegion.fNumRects == 0)
 			ioNewRegion.fNumRectsAllocated = 1;
 		ZRectPOD* newRects = new ZRectPOD[ioNewRegion.fNumRectsAllocated];
-		ZMemCopy(newRects, ioNewRegion.fRects, ioNewRegion.fNumRects * sizeof(ZRectPOD));
+		sMemCopy(newRects, ioNewRegion.fRects, ioNewRegion.fNumRects * sizeof(ZRectPOD));
 		delete[] ioNewRegion.fRects;
 		ioNewRegion.fRects = newRects;
 		}

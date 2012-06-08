@@ -32,21 +32,21 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - memcmp, memcpy, memmove, memset, bzero wrappers.
 
-inline int ZMemCompare(const void* iLHS, const void* iRHS, std::size_t iCount)
+inline int sMemCompare(const void* iLHS, const void* iRHS, std::size_t iCount)
 	{ return std::memcmp(iLHS, iRHS, iCount); }
 
-int ZMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t iCountR);
+int sMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t iCountR);
 
-inline void ZMemCopy(void* oDest, const void* iSource, std::size_t iCount)
+inline void sMemCopy(void* oDest, const void* iSource, std::size_t iCount)
 	{ std::memcpy(oDest, iSource, iCount); }
 
-inline void ZMemMove(void* oDest, const void* iSource, std::size_t iCount)
+inline void sMemMove(void* oDest, const void* iSource, std::size_t iCount)
 	{ std::memmove(oDest, iSource, iCount); }
 
-inline void ZMemSet(void* oDest, unsigned char iValue, std::size_t iCount)
+inline void sMemSet(void* oDest, unsigned char iValue, std::size_t iCount)
 	{ std::memset(oDest, iValue, iCount); }
 
-inline void ZMemZero(void* oDest, std::size_t iCount)
+inline void sMemZero(void* oDest, std::size_t iCount)
 	{
 	#if ZCONFIG_SPI_Enabled(POSIX)
 		::bzero(oDest, iCount);

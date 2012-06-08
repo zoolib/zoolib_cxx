@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h" // For min
 #include "zoolib/ZCompat_string.h" // For strncasecmp
-#include "zoolib/ZMemory.h" // For ZMemCopy
+#include "zoolib/ZMemory.h" // For sMemCopy
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_string.h"
 
@@ -218,7 +218,7 @@ void sToPString(const string& inString, unsigned char* outPString, size_t inMaxL
 	{
 	size_t sourceLength = min(inString.size(), inMaxLength);
 	if (sourceLength)
-		ZMemCopy(&(outPString[1]), inString.data(), sourceLength);
+		sMemCopy(&(outPString[1]), inString.data(), sourceLength);
 	outPString[0] = sourceLength;
 	}
 
@@ -226,7 +226,7 @@ void sToPString(const char* inString, unsigned char* outPString, size_t inMaxLen
 	{
 	size_t sourceLength = min(strlen(inString), inMaxLength);
 	if (sourceLength)
-		ZMemCopy(&(outPString[1]), inString, sourceLength);
+		sMemCopy(&(outPString[1]), inString, sourceLength);
 	outPString[0] = sourceLength;
 	}
 

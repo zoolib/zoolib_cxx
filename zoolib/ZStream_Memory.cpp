@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStream_Memory.h"
-#include "zoolib/ZMemory.h" // For ZMemCopy
+#include "zoolib/ZMemory.h" // For sMemCopy
 
 using std::min;
 using std::pair;
@@ -50,7 +50,7 @@ ZStreamR_Memory::ZStreamR_Memory(const void* iAddress)
 
 void ZStreamR_Memory::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	ZMemCopy(oDest, fAddress, iCount);
+	sMemCopy(oDest, fAddress, iCount);
 	fAddress += iCount;
 	if (oCountRead)
 		*oCountRead = iCount;
@@ -133,7 +133,7 @@ ZStreamRPos_Memory::ZStreamRPos_Memory(const pair<const void*, size_t>& iParam)
 void ZStreamRPos_Memory::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t countToCopy = ZStream::sClampedSize(iCount, fSize, fPosition);
-	ZMemCopy(oDest, fAddress + fPosition, countToCopy);
+	sMemCopy(oDest, fAddress + fPosition, countToCopy);
 	fPosition += countToCopy;
 	if (oCountRead)
 		*oCountRead = countToCopy;
@@ -236,7 +236,7 @@ ZStreamW_Memory::ZStreamW_Memory(void* iAddress)
 
 void ZStreamW_Memory::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	ZMemCopy(fAddress, iSource, iCount);
+	sMemCopy(fAddress, iSource, iCount);
 	fAddress += iCount;
 	if (oCountWritten)
 		*oCountWritten = iCount;
@@ -323,7 +323,7 @@ ZStreamWPos_Memory::ZStreamWPos_Memory(void* iAddress, size_t iSize, size_t iCap
 void ZStreamWPos_Memory::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	size_t countToCopy = ZStream::sClampedSize(iCount, fCapacity, fPosition);
-	ZMemCopy(fAddress + fPosition, iSource, countToCopy);
+	sMemCopy(fAddress + fPosition, iSource, countToCopy);
 	fPosition += countToCopy;
 	if (fSize < fPosition)
 		fSize = fPosition;

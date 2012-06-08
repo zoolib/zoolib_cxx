@@ -105,7 +105,7 @@ int ZData_Any::Compare(const ZData_Any& iOther) const
 			else if (otherSize < thisSize)
 				return 1;
 			else
-				return ZMemCompare(&fRep->fVector[0], &iOther.fRep->fVector[0], thisSize);
+				return sMemCompare(&fRep->fVector[0], &iOther.fRep->fVector[0], thisSize);
 			}
 		else
 			{

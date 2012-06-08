@@ -467,7 +467,7 @@ ZDCPixmapRaster_Simple::ZDCPixmapRaster_Simple(ZRef<ZDCPixmapRaster> iOther)
 	// may *read* past the end of a buffer in some situations.
 	fBuffer = new uint8[bufferSize + 4];
 	fBaseAddress = fBuffer;
-	ZMemCopy(fBuffer, iOther->GetBaseAddress(), bufferSize);
+	sMemCopy(fBuffer, iOther->GetBaseAddress(), bufferSize);
 	}
 
 ZDCPixmapRaster_Simple::~ZDCPixmapRaster_Simple()

@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - memmove, memcpy, memset, bzero wrappers.
+// MARK: -
 
-int ZMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t iCountR)
+int sMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t iCountR)
 	{
 	if (iCountL < iCountR)
 		{

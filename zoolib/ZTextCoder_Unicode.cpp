@@ -148,7 +148,7 @@ class Make_Encoder
 // MARK: - Utility functions
 
 static void spCopyUTF32(const void* iSource, void* oDest, size_t iCount)
-	{ ZMemCopy(oDest, iSource, iCount * sizeof(UTF32)); }
+	{ sMemCopy(oDest, iSource, iCount * sizeof(UTF32)); }
 
 static void spCopyUTF32Swapped(const void* iSource, void* oDest, size_t iCount)
 	{

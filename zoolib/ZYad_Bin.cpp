@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Bin.h"
 #include "zoolib/ZYad_Std.h"
 
+#include <map>
 #include <vector>
 
 #include "zoolib/ZLog.h"

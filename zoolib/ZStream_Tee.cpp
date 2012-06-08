@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStream_Tee.h"
-#include "zoolib/ZMemory.h" // For ZMemCopy
+#include "zoolib/ZMemory.h" // For sMemCopy
 
 using std::max;
 using std::min;
@@ -60,7 +60,7 @@ void ZStreamR_Tee::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		if (countRead == 0)
 			break;
 
-		ZMemCopy(localDest, buffer, countRead);
+		sMemCopy(localDest, buffer, countRead);
 
 		size_t countWritten;
 		fStreamW.Write(buffer, countRead, &countWritten);

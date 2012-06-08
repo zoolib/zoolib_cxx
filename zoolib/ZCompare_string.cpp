@@ -20,8 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_string.h"
-#include "zoolib/ZMemory.h"
-#include "zoolib/ZStdInt.h"
+#include "zoolib/ZMemory.h" // For ZMemCompare
+#include "zoolib/ZStdInt.h" // For size_t
 
 namespace ZooLib {
 
@@ -38,7 +38,7 @@ bool FastComparator_String::operator()(const std::string& iLeft, const std::stri
 			else if (lengthR < lengthL)
 				return false;
 			else
-				return ZMemCompare(iLeft.data(), iRight.data(), lengthL) < 0;
+				return sMemCompare(iLeft.data(), iRight.data(), lengthL) < 0;
 			}
 		else
 			{
@@ -47,7 +47,7 @@ bool FastComparator_String::operator()(const std::string& iLeft, const std::stri
 		}
 	else
 		{
-		return ! iRight.empty();
+		return not iRight.empty();
 		}
 	}
 
