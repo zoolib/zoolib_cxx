@@ -53,10 +53,13 @@ public:
 
 	int Compare(const ZName& iOther) const;
 
+	bool IsNull() const;
+	void Clear();
+
 	std::size_t Hash() const;
 
 private:
-	intptr_t fAsIntPtr;
+	intptr_t fIntPtr;
 	bool fIsCounted;
 	};
 

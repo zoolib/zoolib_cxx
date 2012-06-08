@@ -38,16 +38,16 @@ const char* spAsCharStar(intptr_t iIntPtr, bool iIsCounted)
 	}
 
 ZName::ZName()
-:	fAsIntPtr(0)
+:	fIntPtr(0)
 ,	fIsCounted(false)
 	{}
 
 ZName::ZName(const ZName& iOther)
-:	fAsIntPtr(iOther.fAsIntPtr)
+:	fIntPtr(iOther.fIntPtr)
 ,	fIsCounted(iOther.fIsCounted)
 	{
 	if (fIsCounted)
-		sFetch_T<ZRefCountedString>(&fAsIntPtr)->Retain();
+		sFetch_T<ZRefCountedString>(&fIntPtr)->Retain();
 	}
 
 ZName& ZName::operator=(const ZName& iOther)
@@ -56,23 +56,23 @@ ZName& ZName::operator=(const ZName& iOther)
 		{
 		if (iOther.fIsCounted)
 			{
-			sAssignFromVoidStar_T<ZRefCountedString>(&fAsIntPtr, &iOther.fAsIntPtr);
+			sAssignFromVoidStar_T<ZRefCountedString>(&fIntPtr, &iOther.fIntPtr);
 			}
 		else
 			{
-			sFetch_T<ZRefCountedString>(&fAsIntPtr)->Release();
-			fAsIntPtr = iOther.fAsIntPtr;
+			sFetch_T<ZRefCountedString>(&fIntPtr)->Release();
+			fIntPtr = iOther.fIntPtr;
 			fIsCounted = false;
 			}
 		}
 	else if (iOther.fIsCounted)
 		{
-		sCtorFromVoidStar_T<ZRefCountedString>(&fAsIntPtr, &iOther.fAsIntPtr);
+		sCtorFromVoidStar_T<ZRefCountedString>(&fIntPtr, &iOther.fIntPtr);
 		fIsCounted = true;
 		}
 	else
 		{	
-		fAsIntPtr = iOther.fAsIntPtr;
+		fIntPtr = iOther.fIntPtr;
 		}
 	return *this;
 	}
@@ -80,28 +80,28 @@ ZName& ZName::operator=(const ZName& iOther)
 ZName::~ZName()
 	{
 	if (fIsCounted)
-		sFetch_T<ZRefCountedString>(&fAsIntPtr)->Release();
+		sFetch_T<ZRefCountedString>(&fIntPtr)->Release();
 	}
 
 ZName::ZName(const char* iStatic)
-:	fAsIntPtr(((intptr_t)iStatic))
+:	fIntPtr(((intptr_t)iStatic))
 ,	fIsCounted(false)
 	{}
 
 ZName::ZName(const string8& iString)
 :	fIsCounted(true)
-	{ sCtor_T<ZRefCountedString>(&fAsIntPtr, sCountedVal(iString)); }
+	{ sCtor_T<ZRefCountedString>(&fIntPtr, sCountedVal(iString)); }
 
 ZName::ZName(const ZRefCountedString& iCountedString)
 	{
 	if (iCountedString)
 		{
-		sCtor_T<ZRefCountedString>(&fAsIntPtr, iCountedString);
+		sCtor_T<ZRefCountedString>(&fIntPtr, iCountedString);
 		fIsCounted = true;
 		}
 	else
 		{
-		fAsIntPtr = 0;
+		fIntPtr = 0;
 		fIsCounted = false;
 		}
 	}
@@ -109,9 +109,10 @@ ZName::ZName(const ZRefCountedString& iCountedString)
 ZName::operator string8() const
 	{
 	if (fIsCounted)
-		return sFetch_T<ZName::ZRefCountedString>(&fAsIntPtr)->Get()->Get();
-	else
-		return (const char*)(fAsIntPtr);
+		return sFetch_T<ZName::ZRefCountedString>(&fIntPtr)->Get()->Get();
+	else if (fIntPtr)
+		return (const char*)(fIntPtr);
+	return string8();
 	}
 
 bool ZName::operator<(const ZName& iOther) const
@@ -122,15 +123,36 @@ bool ZName::operator==(const ZName& iOther) const
 
 int ZName::Compare(const ZName& iOther) const
 	{
-	return std::strcmp
-		(spAsCharStar(fAsIntPtr, fIsCounted),
-		spAsCharStar(iOther.fAsIntPtr, iOther.fIsCounted));
+	const char* lhs = spAsCharStar(fIntPtr, fIsCounted);
+	const char* rhs = spAsCharStar(iOther.fIntPtr, iOther.fIsCounted);
+	if (lhs)
+		{
+		if (rhs)
+			return std::strcmp(lhs, rhs);
+		return 1;
+		}
+	else if (rhs)
+		return -1;
+	return 0;
+	}
+
+bool ZName::IsNull() const
+	{ return not fIsCounted && not fIntPtr; }
+
+void ZName::Clear()
+	{
+	if (fIsCounted)
+		{
+		sFetch_T<ZRefCountedString>(&fIntPtr)->Release();
+		fIsCounted = false;
+		}
+	fIntPtr = 0;
 	}
 
 std::size_t ZName::Hash() const
 	{
 	size_t result = 0;
-	if (const char* i = spAsCharStar(fAsIntPtr, fIsCounted))
+	if (const char* i = spAsCharStar(fIntPtr, fIsCounted))
 		{
 		for (size_t x = sizeof(size_t); --x && *i; ++i)
 			{
