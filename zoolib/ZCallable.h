@@ -52,7 +52,7 @@ template <class T> struct VT<const T&>
 
 template <class T> struct VT<T&>
 	{
-	typedef T& Field;
+	typedef T Field;
 	typedef T& Param;
 
 	typedef Field F;
