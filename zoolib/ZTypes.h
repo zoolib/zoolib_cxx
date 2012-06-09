@@ -185,6 +185,16 @@ const struct
 	Adopt_T<T> operator&(T iT) const { return Adopt_T<T>(iT); }
 	} sAdopt = {};
 
+// =================================================================================================
+// sDefault
+
+template <class S>
+static const S& sDefault()
+	{
+	static S theS;
+	return theS;
+	}
+
 } // namespace ZooLib
 
 #endif // __ZTypes_h__
