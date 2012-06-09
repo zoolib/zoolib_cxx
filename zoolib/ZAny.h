@@ -40,13 +40,6 @@ struct ZAnyTraits
 	enum { eAllowInPlace = 1 };
 	};
 
-template <class S>
-static const S& sDefault()
-	{
-	static S theS;
-	return theS;
-	}
-
 class ZAny
 	{
 public:
@@ -208,6 +201,7 @@ private:
 				return &fValue;
 			return 0;
 			}
+
 		virtual const void* ConstVoidStarIf(const std::type_info& iTI) const
 			{
 			if (iTI == typeid(S))
@@ -226,7 +220,8 @@ private:
 		virtual const std::type_info& Type() const = 0;
 		virtual Reffed* Clone() const = 0;
 		virtual void* VoidStar() = 0;
-		virtual void* VoidStarIf(const std::type_info& iTI) = 0;
+		virtual void* VoidStarIf(ZRef<Reffed>& ioReffed, const std::type_info& iTI) = 0;
+		virtual const void* ConstVoidStarIf(const std::type_info& iTI) = 0;
 		};
 
 // -----------------
@@ -246,7 +241,23 @@ private:
 		virtual const std::type_info& Type() const { return typeid(S); }
 		virtual Reffed* Clone() const { return new Reffed_T(fValue); }
 		virtual void* VoidStar() { return &fValue; }
-		virtual void* VoidStarIf(const std::type_info& iTI)
+
+		virtual void* VoidStarIf(ZRef<Reffed>& ioReffed, const std::type_info& iTI)
+			{
+			if (iTI == typeid(S))
+				{
+				if (this->IsShared())
+					{
+					Reffed_T* theReffed = new Reffed_T(fValue);
+					ioReffed = theReffed;
+					return &theReffed->fValue;
+					}
+				return &fValue;
+				}
+			return 0;
+			}
+
+		virtual const void* ConstVoidStarIf(const std::type_info& iTI)
 			{
 			if (iTI == typeid(S))
 				return &fValue;

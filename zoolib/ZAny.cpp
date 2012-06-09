@@ -150,12 +150,7 @@ void* ZAny::pGetMutable(const std::type_info& iTypeInfo)
 		}
 	else if (ZRef<Reffed>& theReffed = pAsReffed())
 		{
-		if (theReffed->Type() == iTypeInfo)
-			{
-			if (theReffed->IsShared())
-				theReffed = theReffed->Clone();
-			return theReffed->VoidStar();
-			}
+		return theReffed->VoidStarIf(theReffed, iTypeInfo);
 		}
 
 	return 0;
@@ -177,7 +172,7 @@ const void* ZAny::pGet(const std::type_info& iTypeInfo) const
 		}
 	else if (const ZRef<Reffed>& theReffed = pAsReffed())
 		{
-		return theReffed->VoidStarIf(iTypeInfo);
+		return theReffed->ConstVoidStarIf(iTypeInfo);
 		}
 
 	return 0;
