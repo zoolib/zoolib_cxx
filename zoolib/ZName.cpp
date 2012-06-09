@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCtorDtor.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZName.h"
+#include "zoolib/ZTypes.h" // For sDefault
 
 #include <cstring>
 
@@ -112,7 +113,7 @@ ZName::operator string8() const
 		return sFetch_T<ZName::ZRefCountedString>(&fIntPtr)->Get()->Get();
 	else if (fIntPtr)
 		return (const char*)(fIntPtr);
-	return string8();
+	return sDefault<string8>();
 	}
 
 bool ZName::operator<(const ZName& iOther) const
@@ -123,16 +124,17 @@ bool ZName::operator==(const ZName& iOther) const
 
 int ZName::Compare(const ZName& iOther) const
 	{
-	const char* lhs = spAsCharStar(fIntPtr, fIsCounted);
-	const char* rhs = spAsCharStar(iOther.fIntPtr, iOther.fIsCounted);
-	if (lhs)
+	if (const char* lhs = spAsCharStar(fIntPtr, fIsCounted))
 		{
-		if (rhs)
+		if (const char* rhs = spAsCharStar(iOther.fIntPtr, iOther.fIsCounted))
 			return std::strcmp(lhs, rhs);
-		return 1;
+		else
+			return 1;
 		}
-	else if (rhs)
+
+	if (spAsCharStar(iOther.fIntPtr, iOther.fIsCounted))
 		return -1;
+
 	return 0;
 	}
 
