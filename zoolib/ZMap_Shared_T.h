@@ -169,13 +169,15 @@ public:
 	using inherited::operator[];
 
 // ZMap mutable protocol
-	void Clear() const
+	void Clear()
+//	void Clear() const
 		{
 		if (fRep)
 			fRep->GetMutable().Clear();
 		}
 
-	Val_t* PGetMutable(const Name_t& iName) const
+	Val_t* PGetMutable(const Name_t& iName)
+//	Val_t* PGetMutable(const Name_t& iName) const
 		{
 		if (fRep)
 			return fRep->Get().PGetMutable(iName);
@@ -183,14 +185,16 @@ public:
 		}
 
 	template <class S>
-	S* PGetMutable(const Name_t& iName) const
+	S* PGetMutable(const Name_t& iName)
+//	S* PGetMutable(const Name_t& iName) const
 		{
 		if (fRep)
 			return fRep->Get().PGetMutable<S>(iName);
 		return nullptr;
 		}
 
-	const ZMap_Shared_Mutable_T& Set(const Name_t& iName, const Val_t& iVal) const
+	ZMap_Shared_Mutable_T& Set(const Name_t& iName, const Val_t& iVal)
+//	const ZMap_Shared_Mutable_T& Set(const Name_t& iName, const Val_t& iVal) const
 		{
 		if (not fRep)
 			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
@@ -199,10 +203,12 @@ public:
 		}
 
 	template <class S>
-	const ZMap_Shared_Mutable_T& Set(const Name_t& iName, const S& iVal) const
+	ZMap_Shared_Mutable_T& Set(const Name_t& iName, const S& iVal)
+//	const ZMap_Shared_Mutable_T& Set(const Name_t& iName, const S& iVal) const
 		{ return this->Set(iName, Val_t(iVal)); }
 
-	const ZMap_Shared_Mutable_T& Erase(const Name_t& iName) const
+	ZMap_Shared_Mutable_T& Erase(const Name_t& iName)
+//	const ZMap_Shared_Mutable_T& Erase(const Name_t& iName) const
 		{
 		if (fRep)
 			fRep->GetMutable().Erase(iName);
@@ -210,8 +216,8 @@ public:
 		}
 
 // Our protocol
-//	Val_t& Mutable(const Name_t& iName)
-	Val_t& Mutable(const Name_t& iName) const
+	Val_t& Mutable(const Name_t& iName)
+//	Val_t& Mutable(const Name_t& iName) const
 		{
 		if (not fRep)
 			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
@@ -219,16 +225,16 @@ public:
 		}
 
 	template <class S>
-//	S& Mutable(const Name_t& iName)
-	S& Mutable(const Name_t& iName) const
+	S& Mutable(const Name_t& iName)
+//	S& Mutable(const Name_t& iName) const
 		{
 		if (not fRep)
 			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
 		return fRep->GetMutable().Mutable<S>(iName);
 		}
 
-//	Val_t& operator[](const Name_t& iName)
-	Val_t& operator[](const Name_t& iName) const
+	Val_t& operator[](const Name_t& iName)
+//	Val_t& operator[](const Name_t& iName) const
 		{ return this->Mutable(iName); }
 	};
 
