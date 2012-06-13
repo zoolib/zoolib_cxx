@@ -56,8 +56,8 @@ inline void sMemZero(void* oDest, std::size_t iCount)
 	}
 
 template <class T>
-void ZMemZero_T(T& oT)
-	{ ZMemZero(&oT, sizeof(oT)); }
+void sMemZero_T(T& oT)
+	{ sMemZero(&oT, sizeof(oT)); }
 
 } // namespace ZooLib
 
