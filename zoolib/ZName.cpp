@@ -27,6 +27,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+// It would be nice to be able to steal the bottom bit of fIntPtr to use as fIsCounted. The
+// problem is that const char* are often packed tightly and thus often have odd addresses, so
+// every bit can be significant.
+
 // =================================================================================================
 // MARK: -
 
