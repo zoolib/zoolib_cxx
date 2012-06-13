@@ -154,15 +154,11 @@ public:
 	template <class O>
 	ZWeakRef(const ZWeakRef<O>& iOther)
 	:	ZWeakRefBase(iOther)
-		{
-		// Ensure that T is a supertype of O
-		(void)static_cast<T*>(static_cast<O*>(0));
-		}
+		{}
 
 	template <class O>
 	ZWeakRef& operator=(const ZWeakRef<O>& iOther)
 		{
-		(void)static_cast<T*>(static_cast<O*>(0));
 		ZWeakRefBase::operator=(iOther);
 		return *this;
 		}
@@ -219,6 +215,16 @@ public:
 		ZRef<ZCountedBase> theCB = ZWeakRefBase::pGet();
 		return theCB.DynamicCast<O>();
 		}
+
+	bool operator==(const ZWeakRef& iOther) const
+		{ return this->GetWeakRefProxy() == iOther.GetWeakRefProxy(); }
+
+	bool operator!=(const ZWeakRef& iOther) const
+		{ return this->GetWeakRefProxy() != iOther.GetWeakRefProxy(); }
+
+	bool operator<(const ZWeakRef& iOther) const
+		{ return this->GetWeakRefProxy() < iOther.GetWeakRefProxy(); }
+
 	};
 
 // =================================================================================================
