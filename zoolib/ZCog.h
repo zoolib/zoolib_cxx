@@ -172,6 +172,13 @@ ZCog<Param>& sPreserveIfPending(ZCog<Param>& ioCog)
 	}
 
 // =================================================================================================
+// MARK:-
+
+template <class Param>
+ZCog<Param> sCog(ZCallable<ZCog<Param>(const ZCog<Param>&,Param)>* iCallable)
+	{ return ZCog<Param>(iCallable); }
+
+// =================================================================================================
 // MARK:- sCallCog variants
 
 template <class Cog>
