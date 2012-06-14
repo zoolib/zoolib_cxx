@@ -48,20 +48,20 @@ public:
 
 	ZMatrix()
 		{
-		for (size_t i = 0; i < C * R; ++i)
-			fE[0][i] = E(0);
+		for (size_t ii = 0; ii < C * R; ++ii)
+			fE[0][ii] = E(0);
 		}
 
 	ZMatrix(const ZMatrix& iOther)
 		{
-		for (size_t i = 0; i < C * R; ++i)
-			fE[0][i] = iOther.fE[0][i];
+		for (size_t ii = 0; ii < C * R; ++ii)
+			fE[0][ii] = iOther.fE[0][ii];
 		}
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
-		for (size_t i = 0; i < C * R; ++i)
-			fE[0][i] = iOther.fE[0][i];
+		for (size_t ii = 0; ii < C * R; ++ii)
+			fE[0][ii] = iOther.fE[0][ii];
 		return *this;
 		}
 
@@ -89,20 +89,20 @@ public:
 
 	ZMatrix()
 		{
-		for (size_t r = 0; r < R; ++r)
-			fE[0][r] = E(0);
+		for (size_t rr = 0; rr < R; ++rr)
+			fE[0][rr] = E(0);
 		}
 
 	ZMatrix(const ZMatrix& iOther)
 		{
-		for (size_t r = 0; r < R; ++r)
-			fE[0][r] = iOther.fE[0][r];
+		for (size_t rr = 0; rr < R; ++rr)
+			fE[0][rr] = iOther.fE[0][rr];
 		}
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
-		for (size_t r = 0; r < R; ++r)
-			fE[0][r] = iOther.fE[0][r];
+		for (size_t rr = 0; rr < R; ++rr)
+			fE[0][rr] = iOther.fE[0][rr];
 		return *this;
 		}
 
@@ -111,8 +111,8 @@ public:
 
 	ZMatrix(E iE)
 		{
-		for (size_t r = 0; r < R; ++r)
-			fE[0][r] = iE;
+		for (size_t rr = 0; rr < R; ++rr)
+			fE[0][rr] = iE;
 		}
 
 	E& operator[](size_t r)
@@ -142,20 +142,20 @@ public:
 
 	ZMatrix()
 		{
-		for (size_t c = 0; c < C; ++c)
-			fE[c][0] = E(0);
+		for (size_t cc = 0; cc < C; ++cc)
+			fE[cc][0] = E(0);
 		}
 
 	ZMatrix(const ZMatrix& iOther)
 		{
-		for (size_t c = 0; c < C; ++c)
-			fE[c][0] = iOther.fE[c][0];
+		for (size_t cc = 0; cc < C; ++cc)
+			fE[cc][0] = iOther.fE[cc][0];
 		}
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
-		for (size_t c = 0; c < C; ++c)
-			fE[c][0] = iOther.fE[c][0];
+		for (size_t cc = 0; cc < C; ++cc)
+			fE[cc][0] = iOther.fE[cc][0];
 		return *this;
 		}
 
@@ -164,8 +164,8 @@ public:
 
 	ZMatrix(E iE)
 		{
-		for (size_t c = 0; c < C; ++c)
-			fE[0][c] = iE;
+		for (size_t cc = 0; cc < C; ++cc)
+			fE[0][cc] = iE;
 		}
 
 	E& operator[](size_t c)
@@ -198,20 +198,20 @@ public:
 
 	ZMatrix()
 		{
-		for (size_t i = 0; i < C * R; ++i)
-			fE[0][i] = E(0);
+		for (size_t ii = 0; ii < C * R; ++ii)
+			fE[0][ii] = E(0);
 		}
 
 	ZMatrix(const ZMatrix& iOther)
 		{
-		for (size_t i = 0; i < C * R; ++i)
-			fE[0][i] = iOther.fE[0][i];
+		for (size_t ii = 0; ii < C * R; ++ii)
+			fE[0][ii] = iOther.fE[0][ii];
 		}
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
-		for (size_t i = 0; i < C * R; ++i)
-			fE[0][i] = iOther.fE[0][i];
+		for (size_t ii = 0; ii < C * R; ++ii)
+			fE[0][ii] = iOther.fE[0][ii];
 		return *this;
 		}
 
@@ -220,10 +220,10 @@ public:
 
 	ZMatrix(E iDiagonal)
 		{
-		for (size_t i = 0; i < Dim * Dim; ++i)
-			fE[0][i] = E(0);
-		for (size_t i = 0; i < Dim; ++i)
-			fE[i][i] = iDiagonal;
+		for (size_t ii = 0; ii < Dim * Dim; ++ii)
+			fE[0][ii] = E(0);
+		for (size_t ii = 0; ii < Dim; ++ii)
+			fE[ii][ii] = iDiagonal;
 		}
 
 	ZMatrix<E,1,Dim>& operator[](size_t c)
@@ -260,8 +260,8 @@ template <class E, size_t R>
 ZMatrix<E,1,R+1> sHomogenous(const ZMatrix<E,1,R>& iMat)
 	{
 	ZMatrix<E,1,R+1> result;
-	for (size_t r = 0; r < R; ++r)
-		result.fE[0][r] = iMat.fE[0][r];
+	for (size_t rr = 0; rr < R; ++rr)
+		result.fE[0][rr] = iMat.fE[0][rr];
 	result.fE[0][R] = 1;
 	return result;
 	}
@@ -273,8 +273,8 @@ template <class E, size_t C>
 ZMatrix<E,C+1,1> sHomogenous(const ZMatrix<E,C,1>& iMat)
 	{
 	ZMatrix<E,C+1,1> result;
-	for (size_t c = 0; c < C; ++c)
-		result.fE[c][0] = iMat.fE[c][0];
+	for (size_t cc = 0; cc < C; ++cc)
+		result.fE[cc][0] = iMat.fE[cc][0];
 	result.fE[C][0] = 1;
 	return result;
 	}
@@ -300,8 +300,8 @@ ZMatrix<E,C-1,1> sCartesian(const ZMatrix<E,C,1>& iMat)
 	{
 	ZMatrix<E,C-1,1> result;
 	const E last = iMat.fE[C-1][0];
-	for (size_t c = 0; c < C - 1; ++c)
-		result.fE[c][0] = iMat.fE[c][0]/last;
+	for (size_t cc = 0; cc < C - 1; ++cc)
+		result.fE[cc][0] = iMat.fE[cc][0]/last;
 	return result;
 	}
 
@@ -312,8 +312,8 @@ template <class E, size_t R>
 E sDot(const ZMatrix<E,1,R>& i0, const ZMatrix<E,1,R>& i1)
 	{
 	E result = 0;
-	for (size_t r = 0; r < R; ++r)
-		result += i0.fE[0][r] * i1.fE[0][r];
+	for (size_t rr = 0; rr < R; ++rr)
+		result += i0.fE[0][rr] * i1.fE[0][rr];
 	return result;
 	}
 
@@ -324,8 +324,8 @@ template <class E, size_t C>
 E sDot(const ZMatrix<E,C,1>& i0, const ZMatrix<E,C,1>& i1)
 	{
 	E result = 0;
-	for (size_t c = 0; c < C; ++c)
-		result += i0.fE[c][0] * i1.fE[c][0];
+	for (size_t cc = 0; cc < C; ++cc)
+		result += i0.fE[cc][0] * i1.fE[cc][0];
 	return result;
 	}
 
@@ -336,16 +336,16 @@ template <class E, size_t R>
 ZMatrix<E,1,R> sCross(const ZMatrix<E,1,R>& i0, const ZMatrix<E,1,R>& i1)
 	{
 	ZMatrix<E,1,R> result;
-	for (size_t r = 0; r < R; ++r)
+	for (size_t rr = 0; rr < R; ++rr)
 		{
 		for (size_t r0 = 0; r0 < R; ++r0)
 			{
-			if (r0 != r)
+			if (r0 != rr)
 				{
 				for (size_t r1 = 0; r1 < R; ++r1)
 					{
-					if (r1 != r)
-						result.fE[0][r] += i0.fE[0][r0] * i0.fE[0][r1];
+					if (r1 != rr)
+						result.fE[0][rr] += i0.fE[0][r0] * i0.fE[0][r1];
 					}
 				}
 			}
@@ -360,16 +360,16 @@ template <class E, size_t C>
 ZMatrix<E,C,1> sCross(const ZMatrix<E,C,1>& i0, const ZMatrix<E,C,1>& i1)
 	{
 	ZMatrix<E,C,1> result;
-	for (size_t c = 0; c < C; ++c)
+	for (size_t cc = 0; cc < C; ++cc)
 		{
 		for (size_t c0 = 0; c0 < C; ++c0)
 			{
-			if (c0 != c)
+			if (c0 != cc)
 				{
 				for (size_t c1 = 0; c1 < C; ++c1)
 					{
-					if (c1 != c)
-						result.fE[c][0] += i0.fE[c0][0] * i0.fE[c1][0];
+					if (c1 != cc)
+						result.fE[cc][0] += i0.fE[c0][0] * i0.fE[c1][0];
 					}
 				}
 			}
@@ -405,10 +405,10 @@ template <class E, size_t C, size_t R>
 ZMatrix<E,C,R> sTransposed(const ZMatrix<E,R,C>& iMat)
 	{
 	ZMatrix<E,C,R> result;
-	for (size_t c = 0; c < C; ++c)
+	for (size_t cc = 0; cc < C; ++cc)
 		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iMat.fE[r][c];
+		for (size_t rr = 0; rr < R; ++rr)
+			result.fE[cc][rr] = iMat.fE[rr][cc];
 		}
 	return result;
 	}
@@ -450,8 +450,8 @@ ZMatrix<E,C,1> sNormalized(const ZMatrix<E,C,1>& iVec)
 	const E length = sLength(iVec);
 	ZAssert(length > 0);
 	ZMatrix<E,C,1> result(null);
-	for (size_t c = 0; c < C; ++c)
-		result.fE[c][0] = iVec.fE[c][0] / length;
+	for (size_t cc = 0; cc < C; ++cc)
+		result.fE[cc][0] = iVec.fE[cc][0] / length;
 	return result;
 	}
 
@@ -464,8 +464,8 @@ ZMatrix<E,1,R> sNormalized(const ZMatrix<E,1,R>& iVec)
 	const E length = sLength(iVec);
 	ZAssert(length > 0);
 	ZMatrix<E,1,R> result(null);
-	for (size_t r = 0; r < R; ++r)
-		result.fE[0][r] = iVec.fE[0][r] / length;
+	for (size_t rr = 0; rr < R; ++rr)
+		result.fE[0][rr] = iVec.fE[0][rr] / length;
 	return result;
 	}
 
@@ -554,16 +554,16 @@ template <class E, size_t R>
 ZMatrix<E,1,R> operator*(const ZMatrix<E,1,R>& iLHS, const ZMatrix<E,1,R>& iRHS)
 	{
 	ZMatrix<E,1,R> result(null);
-	for (size_t r = 0; r < R; ++r)
-		result.fE[0][r] = iLHS.fE[0][r] * iRHS.fE[0][r];
+	for (size_t rr = 0; rr < R; ++rr)
+		result.fE[0][rr] = iLHS.fE[0][rr] * iRHS.fE[0][rr];
 	return result;
 	}
 
 template <class E, size_t R>
 ZMatrix<E,1,R>& operator*=(ZMatrix<E,1,R>& ioLHS, const ZMatrix<E,1,R>& iRHS)
 	{
-	for (size_t r = 0; r < R; ++r)
-		ioLHS.fE[0][r] *= iRHS.fE[0][r];
+	for (size_t rr = 0; rr < R; ++rr)
+		ioLHS.fE[0][rr] *= iRHS.fE[0][rr];
 	return ioLHS;
 	}
 
@@ -574,16 +574,16 @@ template <class E, size_t C>
 ZMatrix<E,C,1> operator*(const ZMatrix<E,C,1>& iLHS, const ZMatrix<E,C,1>& iRHS)
 	{
 	ZMatrix<E,C,1> result(null);
-	for (size_t c = 0; c < C; ++c)
-		result.fE[c][0] = iLHS.fE[c][0] * iRHS.fE[c][0];
+	for (size_t cc = 0; cc < C; ++cc)
+		result.fE[cc][0] = iLHS.fE[cc][0] * iRHS.fE[cc][0];
 	return result;
 	}
 
 template <class E, size_t C>
 ZMatrix<E,C,1>& operator*=(const ZMatrix<E,C,1>& ioLHS, const ZMatrix<E,C,1>& iRHS)
 	{
-	for (size_t c = 0; c < C; ++c)
-		ioLHS.fE[c][0] *= iRHS.fE[c][0];
+	for (size_t cc = 0; cc < C; ++cc)
+		ioLHS.fE[cc][0] *= iRHS.fE[cc][0];
 	return ioLHS;
 	}
 
@@ -594,16 +594,16 @@ template <class E, size_t R>
 ZMatrix<E,1,R> operator/(const ZMatrix<E,1,R>& iLHS, const ZMatrix<E,1,R>& iRHS)
 	{
 	ZMatrix<E,1,R> result(null);
-	for (size_t r = 0; r < R; ++r)
-		result.fE[0][r] = iLHS.fE[0][r] / iRHS.fE[0][r];
+	for (size_t rr = 0; rr < R; ++rr)
+		result.fE[0][rr] = iLHS.fE[0][rr] / iRHS.fE[0][rr];
 	return result;
 	}
 
 template <class E, size_t R>
 ZMatrix<E,1,R>& operator/=(ZMatrix<E,1,R>& ioLHS, const ZMatrix<E,1,R>& iRHS)
 	{
-	for (size_t r = 0; r < R; ++r)
-		ioLHS.fE[0][r] /= iRHS.fE[0][r];
+	for (size_t rr = 0; rr < R; ++rr)
+		ioLHS.fE[0][rr] /= iRHS.fE[0][rr];
 	return ioLHS;
 	}
 
@@ -614,16 +614,16 @@ template <class E, size_t C>
 ZMatrix<E,C,1> operator/(const ZMatrix<E,C,1>& iLHS, const ZMatrix<E,C,1>& iRHS)
 	{
 	ZMatrix<E,C,1> result(null);
-	for (size_t c = 0; c < C; ++c)
-		result.fE[c][0] = iLHS.fE[c][0] / iRHS.fE[c][0];
+	for (size_t cc = 0; cc < C; ++cc)
+		result.fE[cc][0] = iLHS.fE[cc][0] / iRHS.fE[cc][0];
 	return result;
 	}
 
 template <class E, size_t C>
 ZMatrix<E,C,1>& operator/=(const ZMatrix<E,C,1>& ioLHS, const ZMatrix<E,C,1>& iRHS)
 	{
-	for (size_t c = 0; c < C; ++c)
-		ioLHS.fE[c][0] /= iRHS.fE[c][0];
+	for (size_t cc = 0; cc < C; ++cc)
+		ioLHS.fE[cc][0] /= iRHS.fE[cc][0];
 	return ioLHS;
 	}
 
@@ -777,7 +777,7 @@ ZMatrix<E,Dim-1,Dim-1> sMinor(const ZMatrix<E,Dim,Dim>& iMat, size_t iRow, size_
 			{
 			if (cc == iCol)
 				continue;
-			result.fE[c][r] = iMat.fE[cc][rr];
+			result.fE[cc][rr] = iMat.fE[cc][rr];
 			++c;
 			}
 		++r;
@@ -795,13 +795,13 @@ E sDeterminant(const ZMatrix<E,Dim,Dim>& iMat)
 
 	E result = 0.0;
 
-	for (size_t c = 0; c < Dim; ++c)
+	for (size_t cc = 0; cc < Dim; ++cc)
 		{
-		ZMatrix<E,Dim-1,Dim-1> minor = sMinor(iMat, 0, c);
-		if (c & 1)
-			result -= iMat.fE[c][0] * sDeterminant(minor);
+		ZMatrix<E,Dim-1,Dim-1> minor = sMinor(iMat, 0, cc);
+		if (cc & 1)
+			result -= iMat.fE[cc][0] * sDeterminant(minor);
 		else
-			result += iMat.fE[c][0] * sDeterminant(minor);
+			result += iMat.fE[cc][0] * sDeterminant(minor);
 		}
 
 	return result;
@@ -842,15 +842,15 @@ ZMatrix<E,Dim,Dim> sInverse(const ZMatrix<E,Dim,Dim>& iMat)
 
 	ZMatrix<E,Dim,Dim> result(null);
 
-	for (size_t c = 0; c < Dim; ++c)
+	for (size_t cc = 0; cc < Dim; ++cc)
 		{
-		for (size_t r = 0; r < Dim; ++r)
+		for (size_t rr = 0; rr < Dim; ++rr)
 			{
-			const E temp = det * sDeterminant(sMinor(iMat, c, r));
-			if ((r + c) & 1)
-				result[c][r] = -temp;
+			const E temp = det * sDeterminant(sMinor(iMat, cc, rr));
+			if ((rr + cc) & 1)
+				result[cc][rr] = -temp;
 			else
-				result[c][r] = temp;
+				result[cc][rr] = temp;
 			}
 		}
 
