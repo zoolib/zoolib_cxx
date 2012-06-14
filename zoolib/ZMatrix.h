@@ -55,13 +55,13 @@ public:
 	ZMatrix(const ZMatrix& iOther)
 		{
 		for (size_t i = 0; i < C * R; ++i)
-			fE[0][i] = iOther[0][i];
+			fE[0][i] = iOther.fE[0][i];
 		}
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
 		for (size_t i = 0; i < C * R; ++i)
-			fE[0][i] = iOther[0][i];
+			fE[0][i] = iOther.fE[0][i];
 		return *this;
 		}
 
@@ -205,13 +205,13 @@ public:
 	ZMatrix(const ZMatrix& iOther)
 		{
 		for (size_t i = 0; i < C * R; ++i)
-			fE[0][i] = iOther[0][i];
+			fE[0][i] = iOther.fE[0][i];
 		}
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
 		for (size_t i = 0; i < C * R; ++i)
-			fE[0][i] = iOther[0][i];
+			fE[0][i] = iOther.fE[0][i];
 		return *this;
 		}
 
@@ -241,13 +241,10 @@ public:
 template <class E, size_t C, size_t R>
 bool operator==(const ZMatrix<E,C,R>& iL, const ZMatrix<E,C,R>& iR)
 	{
-	for (size_t c = 0; c < C; ++c)
+	for (size_t ii = 0; ii < C * R; ++ii)
 		{
-		for (size_t r = 0; r < R; ++r)
-			{
-			if (iL[c][r] != iR[c][r])
-				return false;
-			}
+		if (iL.fE[0][ii] != iR.fE[0][ii])
+			return false;
 		}
 	return true;
 	}
@@ -348,7 +345,7 @@ ZMatrix<E,1,R> sCross(const ZMatrix<E,1,R>& i0, const ZMatrix<E,1,R>& i1)
 				for (size_t r1 = 0; r1 < R; ++r1)
 					{
 					if (r1 != r)
-						result[0][r] += i0[0][r0] * i0[0][r1];
+						result.fE[0][r] += i0.fE[0][r0] * i0.fE[0][r1];
 					}
 				}
 			}
@@ -372,7 +369,7 @@ ZMatrix<E,C,1> sCross(const ZMatrix<E,C,1>& i0, const ZMatrix<E,C,1>& i1)
 				for (size_t c1 = 0; c1 < C; ++c1)
 					{
 					if (c1 != c)
-						result[c][0] += i0[c0][0] * i0[c1][0];
+						result.fE[c][0] += i0.fE[c0][0] * i0.fE[c1][0];
 					}
 				}
 			}
@@ -386,7 +383,7 @@ ZMatrix<E,C,1> sCross(const ZMatrix<E,C,1>& i0, const ZMatrix<E,C,1>& i1)
 template <class E, size_t Dim>
 bool sIsIdentity(const ZMatrix<E,Dim,Dim>& iMat)
 	{
-	const E& theID = iMat[0][0];
+	const E& theID = iMat.fE[0][0];
 	for (size_t c = 0; c < Dim; ++c)
 		{
 		for (size_t r = 0; r < Dim; ++r)
@@ -479,11 +476,8 @@ template <class Fun, class E, size_t C, size_t R>
 ZMatrix<E,C,R> sApply(Fun iFun, const ZMatrix<E,C,R>& i0, const ZMatrix<E,C,R>& i1)
 	{
 	ZMatrix<E,C,R> result(null);
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iFun(i0.fE[c][r], i1.fE[c][r]);
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		result.fE[0][ii] = iFun(i0.fE[0][ii], i1.fE[0][ii]);
 	return result;
 	}
 
@@ -494,11 +488,8 @@ template <class Fun, class E, size_t C, size_t R>
 ZMatrix<E,C,R> sApply(Fun iFun, const ZMatrix<E,C,R>& iMat)
 	{
 	ZMatrix<E,C,R> result(null);
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iFun(iMat.fE[c][r]);
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		result.fE[0][ii] = iFun(iMat.fE[0][ii]);
 	return result;
 	}
 
@@ -509,11 +500,8 @@ template <class E, size_t C, size_t R>
 ZMatrix<E,C,R> sNonZero(const ZMatrix<E,C,R>& iMat)
 	{
 	ZMatrix<E,C,R> result(null);
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iMat.fE[c][r] ? E(1) : E(0);
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		result.fE[0][ii] = iMat.fE[0][ii] ? E(1) : E(0);
 	return result;
 	}
 
@@ -554,11 +542,8 @@ template <class E, size_t C, size_t R>
 ZMatrix<E,C,R> sTimes(const ZMatrix<E,C,R>& iLHS, const ZMatrix<E,C,R>& iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLHS.fE[c][r] * iRHS.fE[c][r];
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		result.fE[0][ii] = iLHS.fE[0][ii] * iRHS.fE[0][ii];
 	return result;
 	}
 
@@ -649,22 +634,16 @@ template <class E, size_t C, size_t R>
 ZMatrix<E,C,R> operator+(const ZMatrix<E,C,R>& iLHS, const ZMatrix<E,C,R>& iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLHS.fE[c][r] + iRHS.fE[c][r];
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		result.fE[0][ii] = iLHS.fE[0][ii] + iRHS.fE[0][ii];
 	return result;
 	}
 
 template <class E, size_t C, size_t R>
 ZMatrix<E,C,R>& operator+=(ZMatrix<E,C,R>& ioLHS, const ZMatrix<E,C,R>& iRHS)
 	{
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			ioLHS.fE[c][r] += iRHS.fE[c][r];
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		ioLHS.fE[0][ii] += iRHS.fE[0][ii];
 	return ioLHS;
 	}
 
@@ -675,22 +654,16 @@ template <class E, size_t C, size_t R>
 ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iLHS, const ZMatrix<E,C,R>& iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLHS.fE[c][r] - iRHS.fE[c][r];
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		result.fE[0][ii] = iLHS.fE[0][ii] - iRHS.fE[0][ii];
 	return result;
 	}
 
 template <class E, size_t C, size_t R>
 ZMatrix<E,C,R>& operator-=(ZMatrix<E,C,R>& ioLHS, const ZMatrix<E,C,R>& iRHS)
 	{
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			ioLHS.fE[c][r] -= iRHS.fE[c][r];
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		ioLHS.fE[0][ii] -= iRHS.fE[0][ii];
 	return ioLHS;
 	}
 
@@ -701,11 +674,8 @@ template <class E, size_t C, size_t R>
 ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iMat)
 	{
 	ZMatrix<E,C,R> result(null);
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = -iMat.fE[c][r];
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		result.fE[0][ii] = -iMat.fE[0][ii];
 	return result;
 	}
 
@@ -716,22 +686,16 @@ template <class E, size_t C, size_t R, class T>
 ZMatrix<E,C,R> operator*(const ZMatrix<E,C,R>& iLHS, T iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLHS.fE[c][r] * E(iRHS);
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		result.fE[0][ii] = iLHS.fE[0][ii] * E(iRHS);
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
 ZMatrix<E,C,R>& operator*=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 	{
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			ioLHS.fE[c][r] *= E(iRHS);
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		ioLHS.fE[0][ii] *= E(iRHS);
 	return ioLHS;
 	}
 
@@ -742,22 +706,16 @@ template <class E, size_t C, size_t R, class T>
 ZMatrix<E,C,R> operator/(const ZMatrix<E,C,R>& iLHS, T iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLHS.fE[c][r] / E(iRHS);
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		result.fE[0][ii] = iLHS.fE[0][ii] / E(iRHS);
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
 ZMatrix<E,C,R>& operator/=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 	{
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			ioLHS.fE[c][r] /= E(iRHS);
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		ioLHS.fE[0][ii] /= E(iRHS);
 	return ioLHS;
 	}
 
@@ -768,22 +726,16 @@ template <class E, size_t C, size_t R, class T>
 ZMatrix<E,C,R> operator+(const ZMatrix<E,C,R>& iLHS, T iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLHS.fE[c][r] + E(iRHS);
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		result.fE[0][ii] = iLHS.fE[0][ii] + E(iRHS);
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
 ZMatrix<E,C,R>& operator+=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 	{
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			ioLHS.fE[c][r] += E(iRHS);
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		ioLHS.fE[0][ii] += E(iRHS);
 	return ioLHS;
 	}
 
@@ -794,22 +746,16 @@ template <class E, size_t C, size_t R, class T>
 ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iLHS, T iRHS)
 	{
 	ZMatrix<E,C,R> result(null);
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			result.fE[c][r] = iLHS.fE[c][r] - E(iRHS);
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		result.fE[0][ii] = iLHS.fE[0][ii] - E(iRHS);
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
 ZMatrix<E,C,R>& operator-=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 	{
-	for (size_t c = 0; c < C; ++c)
-		{
-		for (size_t r = 0; r < R; ++r)
-			ioLHS.fE[c][r] -= E(iRHS);
-		}
+	for (size_t ii = 0; ii < C * R; ++ii)
+		ioLHS.fE[0][ii] -= E(iRHS);
 	return ioLHS;
 	}
 
