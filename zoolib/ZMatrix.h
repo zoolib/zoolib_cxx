@@ -766,21 +766,21 @@ template <class E, size_t Dim>
 ZMatrix<E,Dim-1,Dim-1> sMinor(const ZMatrix<E,Dim,Dim>& iMat, size_t iRow, size_t iCol)
 	{
 	ZMatrix<E,Dim-1,Dim-1> result(null);
-	size_t r = 0;
+	size_t ri = 0;
 	for (size_t rr = 0; rr < Dim; ++rr)
 		{
 		if (rr == iRow)
 			continue;
 
-		size_t c = 0;
+		size_t ci = 0;
 		for (size_t cc = 0; cc < Dim; ++cc)
 			{
 			if (cc == iCol)
 				continue;
-			result.fE[cc][rr] = iMat.fE[cc][rr];
-			++c;
+			result.fE[ci][ri] = iMat.fE[cc][rr];
+			++ci;
 			}
-		++r;
+		++ri;
 		}
 	return result;
 	}
