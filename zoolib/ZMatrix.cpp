@@ -18,44 +18,66 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZMatrix.h"
-
-#if ZCONFIG(Processor,ARM)
-	#include "vfpmathlibrary/matrix_impl.h"
-#endif
-
-#include <Accelerate/Accelerate.h>
+#include "zoolib/ZMatrix_armv6.h"
+#include "zoolib/ZMatrix_armv7.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+// MARK: - armv7
 
-#if ZCONFIG(Processor,ARM)
+#if ZCONFIG_API_Enabled(Matrix_armv7)
 
-#define IMPLEMENTED_sInverseMat4 1
+#if !defined(IMPLEMENTED_sComposeMat4)
+	#define IMPLEMENTED_sComposeMat4 1
+	void sComposeMat4(const float iLeft[4][4], const float iRight[4][4], float oDest[4][4])
+		{ ZMatrix_armv7::Matrix4Mul(iRight[0], iLeft[0], oDest[0]); }
+#endif
 
-ZMatrix<float,4,4> sInverse(const ZMatrix<float,4,4>& iMat)
-	{
-	ZMatrix<float,4,4> dest;
-	::Matrix4Invert(iMat.fE[0], dest.fE[0]);
-	return dest;
-	}
+#if !defined(IMPLEMENTED_sComposeMat4Vec4)
+	#define IMPLEMENTED_sComposeMat4Vec4 1
+	void sComposeMat4Vec4(const float iLeft[4][4], const float* iRight, float* oDest)
+		{ ZMatrix_armv7::Matrix4Vector4Mul(iLeft[0], iRight, oDest); }
+#endif
 
-#define IMPLEMENTED_sComposeMat4 1
+#endif // ZCONFIG_API_Enabled(Matrix_armv7)
 
-void sComposeMat4(const float iLeft[4][4], const float iRight[4][4], float oDest[4][4])
-	{ ::Matrix4Mul(iLeft[0], iRight[0], oDest[0]); }
+// =================================================================================================
+// MARK: - armv6
 
+#if ZCONFIG_API_Enabled(Matrix_armv6)
+
+#if !defined(IMPLEMENTED_sInverseMat4)
+	#define IMPLEMENTED_sInverseMat4 1
+	ZMatrix<float,4,4> sInverse(const ZMatrix<float,4,4>& iMat)
+		{
+		ZMatrix<float,4,4> dest;
+		ZMatrix_armv6::Matrix4Invert(iMat.fE[0], dest.fE[0]);
+		return dest;
+		}
+#endif
+
+#if !defined(IMPLEMENTED_sComposeMat4)
+	#define IMPLEMENTED_sComposeMat4 1
+	void sComposeMat4(const float iLeft[4][4], const float iRight[4][4], float oDest[4][4])
+		{ ZMatrix_armv6::Matrix4Mul(iLeft[0], iRight[0], oDest[0]); }
+#endif
+
+#if !defined(IMPLEMENTED_sComposeMat4Vec4)
 #define IMPLEMENTED_sComposeMat4Vec4 1
-void sComposeMat4Vec4(const float iLeft[4][4], const float* iRight, float* oDest)
-	{ ::Matrix4Vector4Mul(iLeft[0], iRight, oDest); }
+	void sComposeMat4Vec4(const float iLeft[4][4], const float* iRight, float* oDest)
+		{ ZMatrix_armv6::Matrix4Vector4Mul(iLeft[0], iRight, oDest); }
+#endif
 
-#define IMPLEMENTED_sComposeMat4Vec3_ToVec4 1
-void sComposeMat4Vec3_ToVec4(const float iLeft[4][4], const float* iRight, float* oDest)
-	{ ::Matrix4Vector3Mul(iLeft[0], iRight, oDest); }
+#if !defined(IMPLEMENTED_sComposeMat4Vec3_ToVec4)
+	#define IMPLEMENTED_sComposeMat4Vec3_ToVec4 1
+	void sComposeMat4Vec3_ToVec4(const float iLeft[4][4], const float* iRight, float* oDest)
+		{ ZMatrix_armv6::Matrix4Vector3Mul(iLeft[0], iRight, oDest); }
+#endif
 
-#endif // ZCONFIG(Processor,ARM)
+#endif // ZCONFIG_API_Enabled(Matrix_armv6)
 
 // =================================================================================================
 // MARK: -
