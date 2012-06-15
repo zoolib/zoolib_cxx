@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCountedVal.h"
+#include "zoolib/ZLog.h"
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZVisitor_Do_T.h"
@@ -69,6 +70,8 @@ private:
 	const ZRef<Link> fParent;
 	const ZRef<ZYadMapAtRPos> fYadMapAtRPos;
 	map<string,ZRef<Link> > fChildren;
+	bool fCheckedProto;
+	ZRef<Link> fProto;
 	};
 
 // =================================================================================================
@@ -353,12 +356,14 @@ private:
 // MARK: - Link definition
 
 Link::Link(const ZRef<CountedString>& iProtoName, const ZRef<ZYadMapAtRPos>& iYadMapAtRPos)
-:	fProtoName(iProtoName)
+:	fCheckedProto(false)
+,	fProtoName(iProtoName)
 ,	fYadMapAtRPos(iYadMapAtRPos)
 	{}
 
 Link::Link(const ZRef<Link>& iParent, const ZRef<ZYadMapAtRPos>& iYadMapAtRPos)
-:	fProtoName(iParent->fProtoName)
+:	fCheckedProto(false)
+,	fProtoName(iParent->fProtoName)
 ,	fParent(iParent)
 ,	fYadMapAtRPos(iYadMapAtRPos)
 	{}
@@ -385,52 +390,61 @@ ZRef<ZYadR> Link::ReadAt(const ZName& iName)
 			}
 		}
 
-	if (ZRef<ZYadStrimmerR> theProtoYad =
-		fYadMapAtRPos->ReadAt(fProtoName->Get()).DynamicCast<ZYadStrimmerR>())
+	if (not sGetSet(fCheckedProto, true))
 		{
-		const string theTrailString = theProtoYad->GetStrimR().ReadAll8();
-
-		if (theTrailString.size())
+		if (ZRef<ZYadStrimmerR> theProtoYad =
+			fYadMapAtRPos->ReadAt(fProtoName->Get()).DynamicCast<ZYadStrimmerR>())
 			{
-			// Our Yad has a non-empty proto trail.
-			size_t index = 0;
-			const ZTrail theTrail = ZTrail(theTrailString).Normalized() + string8(iName);
-			
-			ZRef<Link> cur = this;
+			const string theTrailString = theProtoYad->GetStrimR().ReadAll8();
 
-			if (theTrailString[0] == '/')
+			if (theTrailString.size())
 				{
-				// Walk up to the root.
-				for (ZRef<Link> next = null; (next = cur->fParent); cur = next)
-					{}
-				}
-			else
-				{
-				// Follow any leading bounces.
-				for (/*no init*/;
-					cur && index < theTrail.Count() && theTrail.At(index).empty();
-					++index, cur = cur->fParent)
-					{}
-				}
-						
-			// Walk down the tree.
-			for (;;)
-				{
-				if (ZRef<ZYadR> theYadR = cur->ReadAt(theTrail.At(index)))
+				// Our Yad has a non-empty proto trail.
+				size_t index = 0;
+				const ZTrail theTrail = ZTrail(theTrailString).Normalized();
+				
+				ZRef<Link> cur = this;
+
+				if (theTrailString[0] == '/')
 					{
-					if (++index == theTrail.Count())
-						return theYadR;
-
-					if (ZRef<YadMapAtRPos> theYadMapAtRPos = theYadR.DynamicCast<YadMapAtRPos>())
-						{
-						cur = theYadMapAtRPos->GetLink();
-						continue;
-						}
+					// Walk up to the root.
+					for (ZRef<Link> next = null; (next = cur->fParent); cur = next)
+						{}
 					}
-				break;
+				else
+					{
+					// Follow any leading bounces.
+					for (/*no init*/;
+						cur && index < theTrail.Count() && sIsEmpty(theTrail.At(index));
+						++index, cur = cur->fParent)
+						{}
+					}
+							
+				// Walk down the tree.
+				for (;;)
+					{
+					if (ZRef<ZYadR> theYadR = cur->ReadAt(theTrail.At(index)))
+						{
+						if (ZRef<YadMapAtRPos> theYMARPos = theYadR.DynamicCast<YadMapAtRPos>())
+							{
+							cur = theYMARPos->GetLink();
+							if (++index == theTrail.Count())
+								{
+								fProto = cur;
+								break;
+								}
+							continue;
+							}
+						}
+					break;
+					}
 				}
 			}
 		}
+
+	if (fProto)
+		return fProto->ReadAt(iName);
+
 	return null;
 	}
 
