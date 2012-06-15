@@ -33,10 +33,10 @@ ZAssertCompile(sizeof(void*) == sizeof(ProcVoid_t));
 static ZAtomic_t spThreadCount;
 
 void sStarted()
-	{ ZAtomic_Inc(&spThreadCount); }
+	{ sAtomic_Inc(&spThreadCount); }
 
 void sFinished()
-	{ ZAtomic_Dec(&spThreadCount); }
+	{ sAtomic_Dec(&spThreadCount); }
 
 static bool spDontTearDown;
 
@@ -47,7 +47,7 @@ void sWaitTillAllThreadsExit()
 	{
 	for (;;)
 		{
-		int count = ZAtomic_Get(&spThreadCount);
+		int count = sAtomic_Get(&spThreadCount);
 		// This sleep serves two purposes. First it means we're polling at
 		// intervals for the value of sThreadCount, rather than busy-waiting.
 		// Second, at least .1s will elapse between the thread count hitting
@@ -63,11 +63,11 @@ void sWaitTillAllThreadsExit()
 static ZAtomic_t spInitCount;
 
 InitHelper::InitHelper()
-	{ ZAtomic_Inc(&spInitCount); }
+	{ sAtomic_Inc(&spInitCount); }
 
 InitHelper::~InitHelper()
 	{
-	if (ZAtomic_DecAndTest(&spInitCount) && spDontTearDown)
+	if (sAtomic_DecAndTest(&spInitCount) && spDontTearDown)
 		sWaitTillAllThreadsExit();
 	}
 

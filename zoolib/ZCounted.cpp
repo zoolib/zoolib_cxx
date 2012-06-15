@@ -32,15 +32,24 @@ ZCountedBase::ZCountedBase()
 
 ZCountedBase::~ZCountedBase()
 	{
-	ZAssertStop(1, !fWeakRefProxy);
-	ZAssertStopf(1, 0 == ZAtomic_Get(&fRefCount),
-		("Non-zero refcount at destruction, it is %d", ZAtomic_Get(&fRefCount)));
+	ZAssertStop(1, not fWeakRefProxy);
+	if (ZCONFIG_Debug >= 1)
+		{
+		const int old = sAtomic_Get(&fRefCount);
+		if (0 != old)
+			ZDebugStopf(1, ("Non-zero refcount at destruction, it is %d", old));
+		}
 	}
 
 void ZCountedBase::Initialize()
 	{
-	ZAssertStopf(1, 1 == ZAtomic_Get(&fRefCount),
-		("Refcount is not 1, it is %d", ZAtomic_Get(&fRefCount)));
+	ZAssertStop(1, not fWeakRefProxy);
+	if (ZCONFIG_Debug >= 1)
+		{
+		const int old = sAtomic_Get(&fRefCount);
+		if (1 != old)
+			ZDebugStopf(1, ("Refcount is not 1, it is %d", old));
+		}
 	}
 
 void ZCountedBase::Finalize()
@@ -51,7 +60,7 @@ void ZCountedBase::Finalize()
 
 bool ZCountedBase::FinishFinalize()
 	{
-	if (not ZAtomic_DecAndTest(&fRefCount))
+	if (not sAtomic_DecAndTest(&fRefCount))
 		return false;
 
 	if (fWeakRefProxy)
@@ -65,7 +74,7 @@ bool ZCountedBase::FinishFinalize()
 
 void ZCountedBase::Retain()
 	{
-	if (0 == ZAtomic_Add(&fRefCount, 1))
+	if (0 == sAtomic_Add(&fRefCount, 1))
 		this->Initialize();
 	}
 
@@ -73,23 +82,23 @@ void ZCountedBase::Release()
 	{
 	for (;;)
 		{
-		const int oldRefCount = ZAtomic_Get(&fRefCount);
+		const int oldRefCount = sAtomic_Get(&fRefCount);
 		if (oldRefCount == 1)
 			{
 			this->Finalize();
 			return;
 			}
 
-		if (ZAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
+		if (sAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
 			return;
 		}
 	}
 
 bool ZCountedBase::IsShared() const
-	{ return ZAtomic_Get(&fRefCount) > 1; }
+	{ return sAtomic_Get(&fRefCount) > 1; }
 
 bool ZCountedBase::IsReferenced() const
-	{ return ZAtomic_Get(&fRefCount) > 0; }
+	{ return sAtomic_Get(&fRefCount) > 0; }
 
 ZRef<ZCountedBase::WeakRefProxy> ZCountedBase::GetWeakRefProxy()
 	{
@@ -108,7 +117,7 @@ ZRef<ZCountedBase::WeakRefProxy> ZCountedBase::GetWeakRefProxy()
 
 int ZCountedBase::pCOMAddRef()
 	{
-	const int oldRefCount = ZAtomic_Add(&fRefCount, 1);
+	const int oldRefCount = sAtomic_Add(&fRefCount, 1);
 	if (oldRefCount == 0)
 		this->Initialize();
 	return oldRefCount + 1;
@@ -118,7 +127,7 @@ int ZCountedBase::pCOMRelease()
 	{
 	for (;;)
 		{
-		const int oldRefCount = ZAtomic_Get(&fRefCount);
+		const int oldRefCount = sAtomic_Get(&fRefCount);
 		if (oldRefCount == 1)
 			{
 			this->Finalize();
@@ -126,7 +135,7 @@ int ZCountedBase::pCOMRelease()
 			// Return zero as a sensible value.
 			return 0;
 			}
-		else if (ZAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
+		else if (sAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
 			{
 			return oldRefCount - 1;
 			}

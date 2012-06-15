@@ -60,7 +60,7 @@ ZCompare::ZCompare(const char* iTypeName)
 	if (not spMap)
 		{
 		CompareMap* theMap = new CompareMap;
-		if (not ZAtomic_CompareAndSwapPtr(&spMap, nullptr, theMap))
+		if (not sAtomic_CompareAndSwapPtr(&spMap, nullptr, theMap))
 			delete theMap;
 		}
 	spMap->insert(pair<const char*, ZCompare*>(iTypeName, this));

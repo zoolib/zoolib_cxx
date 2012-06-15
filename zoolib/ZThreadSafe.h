@@ -41,19 +41,19 @@ typedef ZAtomic_t ZThreadSafe_t;
 // If your environment is not preemptive, then define ZCONFIG_Thread_Preemptive as zero.
 #if !defined(ZCONFIG_Thread_Preemptive) || ZCONFIG_Thread_Preemptive
 
-	#define ZThreadSafe_Get(x) ZAtomic_Get(&x)
-	#define ZThreadSafe_Set(x, y) ZAtomic_Set(&x, y)
-	#define ZThreadSafe_Swap(x, y) ZAtomic_Swap(&x, y)
+	#define ZThreadSafe_Get(x) sAtomic_Get(&x)
+	#define ZThreadSafe_Set(x, y) sAtomic_Set(&x, y)
+	#define ZThreadSafe_Swap(x, y) sAtomic_Swap(&x, y)
 
-	#define ZThreadSafe_Inc(x) ZAtomic_Inc(&x)
-	#define ZThreadSafe_Dec(x) ZAtomic_Dec(&x)
-	#define ZThreadSafe_DecAndTest(x) ZAtomic_DecAndTest(&x)
+	#define ZThreadSafe_Inc(x) sAtomic_Inc(&x)
+	#define ZThreadSafe_Dec(x) sAtomic_Dec(&x)
+	#define ZThreadSafe_DecAndTest(x) sAtomic_DecAndTest(&x)
 
-	#define ZThreadSafe_IncReturnNew(x) (ZAtomic_Add(&x, 1) + 1)
-	#define ZThreadSafe_DecReturnNew(x) (ZAtomic_Add(&x, -1) - 1)
+	#define ZThreadSafe_IncReturnNew(x) (sAtomic_Add(&x, 1) + 1)
+	#define ZThreadSafe_DecReturnNew(x) (sAtomic_Add(&x, -1) - 1)
 
-	#define ZThreadSafe_IncReturnOld(x) (ZAtomic_Add(&x, 1))
-	#define ZThreadSafe_DecReturnOld(x) (ZAtomic_Add(&x, -1))
+	#define ZThreadSafe_IncReturnOld(x) (sAtomic_Add(&x, 1))
+	#define ZThreadSafe_DecReturnOld(x) (sAtomic_Add(&x, -1))
 
 #else // ZCONFIG_Thread_Preemptive
 

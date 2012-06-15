@@ -439,13 +439,13 @@ public:
 
 	void Acquire()
 		{
-		if (0 < ZAtomic_Add(&fAtomic, 1))
+		if (0 < sAtomic_Add(&fAtomic, 1))
 			fSem.Procure();
 		}
 
 	void Release()
 		{
-		if (1 < ZAtomic_Add(&fAtomic, -1))
+		if (1 < sAtomic_Add(&fAtomic, -1))
 			fSem.Vacate();
 		}
 
