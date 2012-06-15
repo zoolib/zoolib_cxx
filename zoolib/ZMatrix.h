@@ -1059,5 +1059,4 @@ ZMatrix<E,1,3> operator*(const ZMatrix<E,4,4>& iLHS, const ZMatrix<E,1,3>& iRHS)
 
 } // namespace ZooLib
 
-
 #endif // __ZMatrix_h__
