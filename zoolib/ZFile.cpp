@@ -230,7 +230,7 @@ ZFileSpec ZFileSpec::Trail(const ZTrail& iTrail, ZFile::Error* oError) const
 			iTrail.GetComps().begin(), iTrail.GetComps().end());
 
 		vector<string> realComps;
-		size_t bounces = ZTrail::sNormalize_ReturnLeadingBounces(originalComps, realComps);
+		size_t bounces = sNormalize_ReturnLeadingBounces(originalComps, realComps);
 
 		if (ZRef<ZFileLoc> ancestorLoc = fLoc->GetAncestor(bounces, oError))
 			{

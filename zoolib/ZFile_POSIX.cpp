@@ -543,7 +543,7 @@ static void spSplit(char iSep, bool iIncludeEmpties, const string& iPath, vector
 		spSplit(iSep, iIncludeEmpties, iPath.data(), iPath.data() + length, oComps);
 	}
 
-static void spGetCWD(vector<string>& oComps)
+static void spGetCWD(vector<string8>& oComps)
 	{
 	for (size_t bufSize = 1024; bufSize < 16384; bufSize *= 2)
 		{
@@ -845,18 +845,18 @@ ZQ<ZTrail> ZFileLoc_POSIX::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) con
 	if (ZFileLoc_POSIX* dest = oDest.DynamicCast<ZFileLoc_POSIX>())
 		{
 		if (fIsAtRoot == dest->fIsAtRoot)
-			return ZTrail::sTrailFromTo(fComps, dest->fComps);
+			return sTrailFromTo(fComps, dest->fComps);
 
-		vector<string> theFullTrail;
+		vector<string8> theFullTrail;
 		spGetCWD(theFullTrail);
 		if (fIsAtRoot)
 			{
 			theFullTrail.insert(theFullTrail.end(), dest->fComps.begin(), dest->fComps.end());
-			return ZTrail::sTrailFromTo(fComps, theFullTrail);
+			return sTrailFromTo(fComps, theFullTrail);
 			}
 
 		theFullTrail.insert(theFullTrail.end(), fComps.begin(), fComps.end());
-		return ZTrail::sTrailFromTo(theFullTrail, dest->fComps);
+		return sTrailFromTo(theFullTrail, dest->fComps);
 		}
 
 	if (oErr)
