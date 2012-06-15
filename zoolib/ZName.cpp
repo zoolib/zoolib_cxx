@@ -145,6 +145,15 @@ int ZName::Compare(const ZName& iOther) const
 bool ZName::IsNull() const
 	{ return not fIsCounted && not fIntPtr; }
 
+bool ZName::IsEmpty() const
+	{
+	if (fIsCounted)
+		return sFetch_T<ZRefCountedString>(&fIntPtr)->Get()->Get().empty();
+	else if (fIntPtr)
+		return not ((const char*)(fIntPtr))[0];
+	return true;
+	}
+
 void ZName::Clear()
 	{
 	if (fIsCounted)

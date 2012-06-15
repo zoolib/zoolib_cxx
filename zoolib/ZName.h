@@ -54,6 +54,8 @@ public:
 	int Compare(const ZName& iOther) const;
 
 	bool IsNull() const;
+	bool IsEmpty() const;
+
 	void Clear();
 
 	std::size_t Hash() const;
