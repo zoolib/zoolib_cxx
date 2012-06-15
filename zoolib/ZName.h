@@ -69,6 +69,10 @@ template <>
 inline int sCompare_T(const ZName& iL, const ZName& iR)
 	{ return iL.Compare(iR); }
 
+inline
+bool sIsEmpty(const ZName& iName)
+	{ return iName.IsEmpty(); }
+
 } // namespace ZooLib
 
 namespace std { namespace tr1 { 

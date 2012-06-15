@@ -32,6 +32,10 @@ namespace ZooLib {
 /// It is actually the same type as std::string.
 typedef std::basic_string<UTF8> string8;
 
+inline
+bool sIsEmpty(const string8& iString)
+	{ return iString.empty(); }
+
 } // namespace ZooLib
 
 #endif // __ZUnicodeString8_h__
