@@ -31,9 +31,9 @@ ZAssertCompile(sizeof(ZooLib::ZAtomic_t) == sizeof(int));
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
 
 #if 0
-	#define ZAtomic_PPC405_ERR77(rA,rB) dcbt rA , rB;
+	#define sAtomic_PPC405_ERR77(rA,rB) dcbt rA , rB;
 #else
-	#define ZAtomic_PPC405_ERR77(rA,rB)
+	#define sAtomic_PPC405_ERR77(rA,rB)
 #endif
 
 // We attach a register declarator to each parameter so that CW does not generate
@@ -42,10 +42,10 @@ ZAssertCompile(sizeof(ZooLib::ZAtomic_t) == sizeof(int));
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_CompareAndSwap)
-#define DEFINED_ZAtomic_CompareAndSwap 1
+#if !defined(DEFINED_sAtomic_CompareAndSwap)
+#define DEFINED_sAtomic_CompareAndSwap 1
 
-asm bool ZAtomic_CompareAndSwap(register ZAtomic_t* iAtomic,
+asm bool sAtomic_CompareAndSwap(register ZAtomic_t* iAtomic,
 	register int iOldValue, register int iNewValue)
 	{
 	// r3 = iAtomic
@@ -56,7 +56,7 @@ tryAgain:
 	lwarx r6, 0, r3;
 	cmpw r6, r4
 	bne- noGood
-	ZAtomic_PPC405_ERR77(0, r3)
+	sAtomic_PPC405_ERR77(0, r3)
 	stwcx. r5, 0, r3;
 	bne- tryAgain
 	isync
@@ -86,10 +86,10 @@ noGood:
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_CompareAndSwap)
-#define DEFINED_ZAtomic_CompareAndSwap 1
+#if !defined(DEFINED_sAtomic_CompareAndSwap)
+#define DEFINED_sAtomic_CompareAndSwap 1
 
-bool ZAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
+bool sAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 	{
 	asm
 		{
@@ -103,10 +103,10 @@ bool ZAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Swap)
-#define DEFINED_ZAtomic_Swap 1
+#if !defined(DEFINED_sAtomic_Swap)
+#define DEFINED_sAtomic_Swap 1
 
-int ZAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
+int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 	{
 	asm
 		{
@@ -120,10 +120,10 @@ int ZAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Add)
-#define DEFINED_ZAtomic_Add 1
+#if !defined(DEFINED_sAtomic_Add)
+#define DEFINED_sAtomic_Add 1
 
-int ZAtomic_Add(ZAtomic_t* iAtomic, int iParam)
+int sAtomic_Add(ZAtomic_t* iAtomic, int iParam)
 	{
 	asm
 		{
@@ -137,10 +137,10 @@ int ZAtomic_Add(ZAtomic_t* iAtomic, int iParam)
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_DecAndTest)
-#define DEFINED_ZAtomic_DecAndTest 1
+#if !defined(DEFINED_sAtomic_DecAndTest)
+#define DEFINED_sAtomic_DecAndTest 1
 
-bool ZAtomic_DecAndTest(ZAtomic_t* iAtomic)
+bool sAtomic_DecAndTest(ZAtomic_t* iAtomic)
 	{
 	bool isZero;
 	asm
@@ -154,10 +154,10 @@ bool ZAtomic_DecAndTest(ZAtomic_t* iAtomic)
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Inc)
-#define DEFINED_ZAtomic_Inc 1
+#if !defined(DEFINED_sAtomic_Inc)
+#define DEFINED_sAtomic_Inc 1
 
-void ZAtomic_Inc(ZAtomic_t* iAtomic)
+void sAtomic_Inc(ZAtomic_t* iAtomic)
 	{
 	asm
 		{
@@ -168,10 +168,10 @@ void ZAtomic_Inc(ZAtomic_t* iAtomic)
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Dec)
-#define DEFINED_ZAtomic_Dec 1
+#if !defined(DEFINED_sAtomic_Dec)
+#define DEFINED_sAtomic_Dec 1
 
-void ZAtomic_Dec(ZAtomic_t* iAtomic)
+void sAtomic_Dec(ZAtomic_t* iAtomic)
 	{
 	asm
 		{
@@ -188,77 +188,6 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, x86)
 
 // =================================================================================================
-// MARK: - Mach (OSX/iPhone)
-
-#if defined(__MACH__) && ! ZCONFIG(Compiler, CodeWarrior)
-
-#include <libkern/OSAtomic.h>
-
-namespace ZooLib {
-
-// -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_CompareAndSwapPtr)
-#define DEFINED_ZAtomic_CompareAndSwapPtr 1
-
-bool ZAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
-	{
-	#if ZCONFIG_Is64Bit
-		return ::OSAtomicCompareAndSwap64Barrier
-			((int64_t)iOldValue, (int64_t)iNewValue, (int64_t*)iPtrAddress);
-	#else
-		return ::OSAtomicCompareAndSwap32Barrier
-			((int32_t)iOldValue, (int32_t)iNewValue, (int32_t*)iPtrAddress);
-	#endif
-	}
-
-#endif
-// -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_CompareAndSwap)
-#define DEFINED_ZAtomic_CompareAndSwap 1
-
-bool ZAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
-	{ return ::OSAtomicCompareAndSwap32Barrier(iOldValue, iNewValue, (int32_t*)&iAtomic->fValue); }
-
-#endif
-// -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Add)
-#define DEFINED_ZAtomic_Add 1
-
-int ZAtomic_Add(ZAtomic_t* iAtomic, int iParam)
-	{ return ::OSAtomicAdd32Barrier(iParam, (int32_t*)&iAtomic->fValue) - iParam; }
-
-#endif
-// -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_DecAndTest)
-#define DEFINED_ZAtomic_DecAndTest 1
-
-bool ZAtomic_DecAndTest(ZAtomic_t* iAtomic)
-	{ return 0 == ::OSAtomicAdd32Barrier(-1, (int32_t*)&iAtomic->fValue); }
-
-#endif
-// -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Inc)
-#define DEFINED_ZAtomic_Inc 1
-
-void ZAtomic_Inc(ZAtomic_t* iAtomic)
-	{ ::OSAtomicIncrement32((int32_t*)&iAtomic->fValue); }
-
-#endif
-// -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Dec)
-#define DEFINED_ZAtomic_Dec 1
-
-void ZAtomic_Dec(ZAtomic_t* iAtomic)
-	{ ::OSAtomicDecrement32((int32_t*)&iAtomic->fValue); }
-
-#endif
-// -----------------------------------------------
-
-} // namespace ZooLib
-
-#endif // defined(__MACH__)
-
-// =================================================================================================
 // MARK: - Windows
 
 #if ZCONFIG_SPI_Enabled(Win)
@@ -268,10 +197,10 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_CompareAndSwapPtr)
-#define DEFINED_ZAtomic_CompareAndSwapPtr 1
+#if !defined(DEFINED_sAtomic_CompareAndSwapPtr)
+#define DEFINED_sAtomic_CompareAndSwapPtr 1
 
-bool ZAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
+bool sAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
 	{
 	return iOldValue
 		== ::InterlockedCompareExchangePointer((PVOID*)iPtrAddress, iNewValue, iOldValue);
@@ -280,10 +209,10 @@ bool ZAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewVal
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_CompareAndSwap)
-#define DEFINED_ZAtomic_CompareAndSwap 1
+#if !defined(DEFINED_sAtomic_CompareAndSwap)
+#define DEFINED_sAtomic_CompareAndSwap 1
 
-bool ZAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
+bool sAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 	{
 	return iOldValue
 		== ::InterlockedCompareExchange((LONG*)&iAtomic->fValue, iNewValue, iOldValue);
@@ -291,42 +220,42 @@ bool ZAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Swap)
-#define DEFINED_ZAtomic_Swap 1
+#if !defined(DEFINED_sAtomic_Swap)
+#define DEFINED_sAtomic_Swap 1
 
-int ZAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
+int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 	{ return ::InterlockedExchange((LONG*)&iAtomic->fValue, iParam); }
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Add)
-#define DEFINED_ZAtomic_Add 1
+#if !defined(DEFINED_sAtomic_Add)
+#define DEFINED_sAtomic_Add 1
 
-int ZAtomic_Add(ZAtomic_t* iAtomic, int iParam)
+int sAtomic_Add(ZAtomic_t* iAtomic, int iParam)
 	{ return ::InterlockedExchangeAdd((LONG*)&iAtomic->fValue, iParam); }
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_DecAndTest)
-#define DEFINED_ZAtomic_DecAndTest 1
+#if !defined(DEFINED_sAtomic_DecAndTest)
+#define DEFINED_sAtomic_DecAndTest 1
 
-bool ZAtomic_DecAndTest(ZAtomic_t* iAtomic)
+bool sAtomic_DecAndTest(ZAtomic_t* iAtomic)
 	{ return 0 == ::InterlockedDecrement((LONG*)&iAtomic->fValue); }
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Inc)
-#define DEFINED_ZAtomic_Inc 1
+#if !defined(DEFINED_sAtomic_Inc)
+#define DEFINED_sAtomic_Inc 1
 
-void ZAtomic_Inc(ZAtomic_t* iAtomic)
+void sAtomic_Inc(ZAtomic_t* iAtomic)
 	{ ::InterlockedIncrement((LONG*)&iAtomic->fValue); }
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Dec)
-#define DEFINED_ZAtomic_Dec 1
+#if !defined(DEFINED_sAtomic_Dec)
+#define DEFINED_sAtomic_Dec 1
 
-void ZAtomic_Dec(ZAtomic_t* iAtomic)
+void sAtomic_Dec(ZAtomic_t* iAtomic)
 	{ ::InterlockedDecrement((LONG*)&iAtomic->fValue); }
 
 #endif
@@ -339,76 +268,76 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 // =================================================================================================
 // MARK: - A real CompareAndSwap must be defined by now
 
-#if !defined(DEFINED_ZAtomic_CompareAndSwap)
+#if !defined(DEFINED_sAtomic_CompareAndSwap)
 	#error No CompareAndSwap available
 #endif
 
 // =================================================================================================
-// MARK: - Default implementations that depend on CAS or ZAtomic_Add.
+// MARK: - Default implementations that depend on CAS or sAtomic_Add.
 
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Swap)
-#define DEFINED_ZAtomic_Swap 1
+#if !defined(DEFINED_sAtomic_Swap)
+#define DEFINED_sAtomic_Swap 1
 
-int ZAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
+int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 	{
 	for (;;)
 		{
 		int prior = iAtomic->fValue;
-		if (ZAtomic_CompareAndSwap(iAtomic, prior, iParam))
+		if (sAtomic_CompareAndSwap(iAtomic, prior, iParam))
 			return prior;
 		}
 	}
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Add)
-#define DEFINED_ZAtomic_Add 1
+#if !defined(DEFINED_sAtomic_Add)
+#define DEFINED_sAtomic_Add 1
 
-int ZAtomic_Add(ZAtomic_t* iAtomic, int iParam)
+int sAtomic_Add(ZAtomic_t* iAtomic, int iParam)
 	{
 	for (;;)
 		{
 		int prior = iAtomic->fValue;
-		if (ZAtomic_CompareAndSwap(iAtomic, prior, prior + iParam))
+		if (sAtomic_CompareAndSwap(iAtomic, prior, prior + iParam))
 			return prior;
 		}
 	}
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_DecAndTest)
-#define DEFINED_ZAtomic_DecAndTest 1
+#if !defined(DEFINED_sAtomic_DecAndTest)
+#define DEFINED_sAtomic_DecAndTest 1
 
-bool ZAtomic_DecAndTest(ZAtomic_t* iAtomic)
-	{ return 1 == ZAtomic_Add(iAtomic, -1); }
-
-#endif
-// -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Inc)
-#define DEFINED_ZAtomic_Inc 1
-
-void ZAtomic_Inc(ZAtomic_t* iAtomic)
-	{ ZAtomic_Add(iAtomic, 1); }
+bool sAtomic_DecAndTest(ZAtomic_t* iAtomic)
+	{ return 1 == sAtomic_Add(iAtomic, -1); }
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_Dec)
-#define DEFINED_ZAtomic_Dec 1
+#if !defined(DEFINED_sAtomic_Inc)
+#define DEFINED_sAtomic_Inc 1
 
-void ZAtomic_Dec(ZAtomic_t* iAtomic)
-	{ ZAtomic_Add(iAtomic, -1); }
+void sAtomic_Inc(ZAtomic_t* iAtomic)
+	{ sAtomic_Add(iAtomic, 1); }
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_ZAtomic_CompareAndSwapPtr)
-#define DEFINED_ZAtomic_CompareAndSwapPtr 1
+#if !defined(DEFINED_sAtomic_Dec)
+#define DEFINED_sAtomic_Dec 1
 
-bool ZAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
+void sAtomic_Dec(ZAtomic_t* iAtomic)
+	{ sAtomic_Add(iAtomic, -1); }
+
+#endif
+// -----------------------------------------------
+#if !defined(DEFINED_sAtomic_CompareAndSwapPtr)
+#define DEFINED_sAtomic_CompareAndSwapPtr 1
+
+bool sAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
 	{
-	return ZAtomic_CompareAndSwap((ZAtomic_t*)iPtrAddress, (int)iOldValue, (int)iNewValue);
+	return sAtomic_CompareAndSwap((ZAtomic_t*)iPtrAddress, (int)iOldValue, (int)iNewValue);
 	}
 
 #endif
