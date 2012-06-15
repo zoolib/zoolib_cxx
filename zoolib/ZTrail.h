@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTrail_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZName.h"
 #include "zoolib/ZUnicodeString.h"
 
 #include <vector>
@@ -35,6 +36,8 @@ class ZTrail
 	{
 	ZTrail(bool); // Not implemented
 public:
+	typedef ZName Comp;
+
 	ZTrail();
 	ZTrail(const ZTrail& iTrail);
 	~ZTrail();
@@ -62,7 +65,7 @@ public:
 	void AppendTrail(const I& iBegin, const I& iEnd)
 		{ fComps.insert(fComps.end(), iBegin, iEnd); }
 	void AppendTrail(const ZTrail& iTrail);
-	void AppendComp(const string8& iComp);
+	void AppendComp(const Comp& iComp);
 	void AppendBounce();
 	void AppendBounces(size_t iCount);
 
@@ -70,7 +73,7 @@ public:
 	void PrependTrail(const I& iBegin, const I& iEnd)
 		{ fComps.insert(fComps.begin(), iBegin, iEnd);}
 	void PrependTrail(const ZTrail& iTrail);
-	void PrependComp(const string8& iComp);
+	void PrependComp(const Comp& iComp);
 	void PrependBounce();
 	void PrependBounces(size_t iCount);
 
@@ -78,10 +81,10 @@ public:
 	string8 AsString(const string8& iSeparator, const string8& iBounce) const;
 
 	ZTrail Branch() const;
-	const string8& Leaf() const;
+	const Comp& Leaf() const;
 
 	size_t Count() const;
-	const string8& At(size_t iIndex) const;
+	const Comp& At(size_t iIndex) const;
 	ZTrail SubTrail(size_t iBegin, size_t iEnd) const;
 	ZTrail SubTrail(size_t iBegin) const;
 
@@ -89,30 +92,83 @@ public:
 	ZTrail& Normalize();
 	bool IsNormalized() const;
 
-	const std::vector<string8>& GetComps() const
+	const std::vector<Comp>& GetComps() const
 		{ return fComps; }
-
-	static ZTrail sTrailFromTo(const std::vector<string8>& iSource,
-		const std::vector<string8>& oDest);
 
 	static void sParseStringAndAppend
 		(const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
 		const UTF8* iPath, size_t iPathSize,
-		std::vector<string8>& ioComps);
+		std::vector<Comp>& ioComps);
 
 	static void sParseStringAndAppend
 		(const UTF16* iSeparator, const UTF16* iIgnore, const UTF16* iBounce,
 		const UTF16* iPath, size_t iPathSize,
 		std::vector<string16>& ioComps);
 
-	static size_t sNormalize_ReturnLeadingBounces(const std::vector<string8>& iComps,
-		std::vector<string8>& oComps);
-
 private:
-	std::vector<string8> fComps;
+	std::vector<Comp> fComps;
 	};
 
 ZTrail operator+(const string8& iPOSIXTrail, const ZTrail& iTrail);
+
+template <class Comp>
+void sNormalize_KeepLeadingBounces
+	(const std::vector<Comp>& iComps, std::vector<Comp>& oComps)
+	{
+	for (typename std::vector<Comp>::const_iterator current = iComps.begin();
+		current != iComps.end(); ++current)
+		{
+		// Note that an empty string8 is our notation for a bounce.
+		if (sIsEmpty(*current) && !oComps.empty() && !sIsEmpty(oComps.back()))
+			{
+			// The current component is a bounce, the new list is not empty
+			// and the component at the end of the the new list is not itself a bounce,
+			// so just remove the component at the end of the new list.
+			oComps.pop_back();
+			}
+		else
+			{
+			oComps.push_back(*current);
+			}
+		}
+	}
+
+template <class Comp>
+size_t sNormalize_ReturnLeadingBounces(const std::vector<Comp>& iComps,
+	std::vector<Comp>& oComps)
+	{
+	sNormalize_KeepLeadingBounces(iComps, oComps);
+	size_t bounces = 0;
+	while (oComps.size() && sIsEmpty(oComps.front()))
+		{
+		oComps.erase(oComps.begin());
+		++bounces;
+		}
+	return bounces;	
+	}
+
+/**
+Return a trail that would navigate from iSource to oDest. The vectors iSource and oDest
+are considered to be lists of names of nodes starting at the root or other common node.
+This code is used by ZFileLoc implementations, but is also available to application code.
+*/
+template <class Comp>
+ZTrail sTrailFromTo(const std::vector<Comp>& iSource, const std::vector<Comp>& oDest)
+	{
+	size_t matchUntil = 0;
+	while (matchUntil < iSource.size() && matchUntil < oDest.size()
+		&& iSource[matchUntil] == oDest[matchUntil])
+		{ ++matchUntil; }
+
+	ZTrail theTrail;
+	if (matchUntil < iSource.size())
+		theTrail.AppendBounces(iSource.size() - matchUntil);
+
+	if (matchUntil < oDest.size())
+		theTrail.AppendTrail(oDest.begin() + matchUntil, oDest.end());
+
+	return theTrail;
+	}
 
 } // namespace ZooLib
 
