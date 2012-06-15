@@ -55,7 +55,7 @@ struct RectTraits<RECT>
 	{
 	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
 		{
-		const Rect_t result = {iL, iT, iR, iB };
+		const Rect_t result = { iL, iT, iR, iB };
 		return result;
 		}
 	};
