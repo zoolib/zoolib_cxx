@@ -36,10 +36,10 @@ public:
 	ZMatrixArray() {}
 	ZMatrixArray(const null_t&) {}
 
-	const ZMatrix<E,C,R>& operator[] (size_t i) const
+	const ZMatrix<E,C,R>& operator[](size_t i) const
 		{ return fArray[i]; }
 
-	ZMatrix<E,C,R>& operator[] (size_t i)
+	ZMatrix<E,C,R>& operator[](size_t i)
 		{ return fArray[i]; }
 
 	ZMatrix<E,C,R> fArray[Length_p];
