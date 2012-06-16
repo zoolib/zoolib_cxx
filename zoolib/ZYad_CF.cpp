@@ -294,7 +294,7 @@ ZRef<CFTypeRef> Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)
 	if (iYadR)
 		{
 		iYadR->Accept(*this);
-		std::swap(result, fOutput);
+		swap(result, fOutput);
 		}
 	return result;
 	}

@@ -47,9 +47,14 @@ public:
 			{ return operator_bool_gen::translate(Sense == !!fP); }
 	#endif
 
+	friend class ZRef<T,not Sense>;
+
 	template <class O, bool OtherSense>
 	void swap(ZRef<O,OtherSense>& ioOther)
-		{ std::swap(fP, ioOther.fP); }
+		{
+		using std::swap;
+		swap(fP, ioOther.fP);
+		}
 
 	typedef T Type_t;
 	typedef T* Ptr_t;
@@ -67,8 +72,9 @@ public:
 
 	ZRef& operator=(const ZRef& iOther)
 		{
+		using std::swap;
 		T* otherP = iOther.Copy();
-		std::swap(otherP, fP);
+		swap(otherP, fP);
 		spRelease(otherP);
 		return *this;
 		}
@@ -83,7 +89,8 @@ public:
 
 	ZRef& operator=(T* iP)
 		{
-		std::swap(iP, fP);
+		using std::swap;
+		swap(iP, fP);
 		spRetain(fP);
 		spRelease(iP);
 		return *this;
@@ -97,8 +104,9 @@ public:
 	template <class O, bool OtherSense>
 	ZRef& operator=(const ZRef<O,OtherSense>& iOther)
 		{
+		using std::swap;
 		T* otherP = iOther.Copy();
-		std::swap(otherP, fP);
+		swap(otherP, fP);
 		spRelease(otherP);
 		return *this;
 		}
@@ -111,8 +119,9 @@ public:
 	template <class O>
 	ZRef& operator=(const Adopt_T<O>& iAdopt)
 		{
+		using std::swap;
 		T* otherP = iAdopt.Get();
-		std::swap(otherP, fP);
+		swap(otherP, fP);
 		spRelease(otherP);
 		return *this;
 		}
@@ -154,15 +163,17 @@ public:
 
 	T* Orphan()
 		{
+		using std::swap;
 		T* otherP = 0;
-		std::swap(otherP, fP);
+		swap(otherP, fP);
 		return otherP;
 		}
 
 	void Clear()
 		{
+		using std::swap;
 		T* otherP = 0;
-		std::swap(otherP, fP);
+		swap(otherP, fP);
 		spRelease(otherP);
 		}
 
@@ -242,9 +253,14 @@ public:
 	operator bool() const { return Sense == !!fP; }
 	operator T*() const { return fP; }
 
+	friend class ZRef<T,not Sense>;
+
 	template <class O, bool OtherSense>
 	void swap(ZRef<O,OtherSense>& ioOther)
-		{ std::swap(fP, ioOther.fP); }
+		{
+		using std::swap;
+		swap(fP, ioOther.fP);
+		}
 
 	typedef T* Type_t;
 	typedef T* Ptr_t;
@@ -262,8 +278,9 @@ public:
 
 	ZRef& operator=(const ZRef& iOther)
 		{
+		using std::swap;
 		T* otherP = iOther.Copy();
-		std::swap(otherP, fP);
+		swap(otherP, fP);
 		spRelease(otherP);
 		return *this;
 		}
@@ -278,7 +295,8 @@ public:
 
 	ZRef& operator=(T* iP)
 		{
-		std::swap(iP, fP);
+		using std::swap;
+		swap(iP, fP);
 		spRetain(fP);
 		spRelease(iP);
 		return *this;
@@ -292,8 +310,9 @@ public:
 	template <class O, bool OtherSense>
 	ZRef& operator=(const ZRef<O*,OtherSense>& iOther)
 		{
+		using std::swap;
 		T* otherP = iOther.Copy();
-		std::swap(otherP, fP);
+		swap(otherP, fP);
 		spRelease(otherP);
 		return *this;
 		}
@@ -306,8 +325,9 @@ public:
 	template <class O>
 	ZRef& operator=(const Adopt_T<O*>& iAdopt)
 		{
+		using std::swap;
 		T* otherP = iAdopt.Get();
-		std::swap(otherP, fP);
+		swap(otherP, fP);
 		spRelease(otherP);
 		return *this;
 		}
@@ -344,15 +364,17 @@ public:
 
 	T* Orphan()
 		{
+		using std::swap;
 		T* otherP = 0;
-		std::swap(otherP, fP);
+		swap(otherP, fP);
 		return otherP;
 		}
 
 	void Clear()
 		{
+		using std::swap;
 		T* otherP = 0;
-		std::swap(otherP, fP);
+		swap(otherP, fP);
 		spRelease(otherP);
 		}
 
@@ -432,12 +454,12 @@ const struct
 // =================================================================================================
 // MARK: -
 
-template <class T>
-void swap(ZRef<T>& a, ZRef<T>& b)
+template <class T, bool SenseA>
+void swap(ZooLib::ZRef<T,SenseA>& a, ZooLib::ZRef<T,SenseA>& b)
 	{ a.swap(b); }
 
-template <class T, bool SenseA, bool SenseB>
-void swap(ZRef<T,SenseA>& a, ZRef<T,SenseB>& b)
+template <class T, bool SenseA>
+void swap(ZooLib::ZRef<T,SenseA>& a, ZooLib::ZRef<T,not SenseA>& b)
 	{ a.swap(b); }
 
 } // namespace ZooLib

@@ -257,7 +257,7 @@ ZRef<NSObject> Visitor_GetVal::GetVal(const ZRef<ZYadR>& iYadR)
 	if (iYadR)
 		{
 		iYadR->Accept(*this);
-		std::swap(result, fOutput);
+		swap(result, fOutput);
 		}
 	return result;
 	}

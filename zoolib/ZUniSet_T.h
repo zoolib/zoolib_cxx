@@ -110,8 +110,9 @@ ZUniSet_T<T> operator&(const T& iElem, const ZUniSet_T<T>& iUniSet_T);
 template <class T>
 void ZUniSet_T<T>::swap(ZUniSet_T& iOther)
 	{
-	std::swap(fUniversal, iOther.fUniversal);
-	std::swap(fElems, iOther.fElems);
+	using std::swap;
+	swap(fUniversal, iOther.fUniversal);
+	swap(fElems, iOther.fElems);
 	}
 
 template <class T>

@@ -43,6 +43,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		};
 #endif
 
+using std::swap;
+
 // =================================================================================================
 // MARK: - Seq and Map Copy, Getter, Setter macros
 
@@ -758,7 +760,7 @@ Spec& Spec::operator=(PIActionReference iOther)
 	{
 	vector<Entry> newEntries;
 	spConvert(iOther, newEntries);
-	std::swap(fEntries, newEntries);
+	swap(fEntries, newEntries);
 	return *this;
 	}
 
@@ -766,7 +768,7 @@ Spec& Spec::operator=(Adopt_T<PIActionReference> iOther)
 	{
 	vector<Entry> newEntries;
 	spConvert(iOther.Get(), newEntries);
-	std::swap(fEntries, newEntries);
+	swap(fEntries, newEntries);
 	spPSActionReference->Free(iOther.Get());
 	return *this;
 	}
@@ -1112,7 +1114,7 @@ ZSeq_Any Seq::AsSeq_Any(const ZAny& iDefault) const
 	}
 
 void Seq::swap(Seq& iOther)
-	{ std::swap(fAL, iOther.fAL); }
+	{ swap(fAL, iOther.fAL); }
 
 Seq::Seq()
 	{ spPSActionList->Make(&fAL); }
@@ -1240,7 +1242,7 @@ ZMap_Any Map::AsMap_Any(const ZAny& iDefault) const
 	}
 
 void Map::swap(Map& iOther)
-	{ std::swap(fAD, iOther.fAD); }
+	{ swap(fAD, iOther.fAD); }
 
 Map::Map()
 :	fType(typeObject)

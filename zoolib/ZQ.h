@@ -47,7 +47,8 @@ public:
 			{
 			if (iOther.fHasValue)
 				{
-				std::swap(*sFetch_T<T>(fBytes), *sFetch_T<T>(iOther.fBytes));
+				using std::swap;
+				swap(*sFetch_T<T>(fBytes), *sFetch_T<T>(iOther.fBytes));
 				}
 			else
 				{
