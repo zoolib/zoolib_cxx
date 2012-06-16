@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZMemory.h"
 #include "zoolib/ZTypes.h" // For null
 
 namespace ZooLib {
@@ -48,20 +49,23 @@ public:
 
 	ZMatrix()
 		{
-		for (size_t ii = 0; ii < C * R; ++ii)
-			fE[0][ii] = E(0);
+		sMemZero_T(fE);
+//		for (size_t ii = 0; ii < C * R; ++ii)
+//			fE[0][ii] = E(0);
 		}
 
 	ZMatrix(const ZMatrix& iOther)
 		{
-		for (size_t ii = 0; ii < C * R; ++ii)
-			fE[0][ii] = iOther.fE[0][ii];
+		sMemCopy(fE, iOther.fE, sizeof(fE));
+//		for (size_t ii = 0; ii < C * R; ++ii)
+//			fE[0][ii] = iOther.fE[0][ii];
 		}
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
-		for (size_t ii = 0; ii < C * R; ++ii)
-			fE[0][ii] = iOther.fE[0][ii];
+		sMemCopy(fE, iOther.fE, sizeof(fE));
+//		for (size_t ii = 0; ii < C * R; ++ii)
+//			fE[0][ii] = iOther.fE[0][ii];
 		return *this;
 		}
 
@@ -89,20 +93,23 @@ public:
 
 	ZMatrix()
 		{
-		for (size_t rr = 0; rr < R; ++rr)
-			fE[0][rr] = E(0);
+		sMemZero_T(fE);
+//		for (size_t rr = 0; rr < R; ++rr)
+//			fE[0][rr] = E(0);
 		}
 
 	ZMatrix(const ZMatrix& iOther)
 		{
-		for (size_t rr = 0; rr < R; ++rr)
-			fE[0][rr] = iOther.fE[0][rr];
+		sMemCopy(fE, iOther.fE, sizeof(fE));
+//		for (size_t rr = 0; rr < R; ++rr)
+//			fE[0][rr] = iOther.fE[0][rr];
 		}
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
-		for (size_t rr = 0; rr < R; ++rr)
-			fE[0][rr] = iOther.fE[0][rr];
+		sMemCopy(fE, iOther.fE, sizeof(fE));
+//		for (size_t rr = 0; rr < R; ++rr)
+//			fE[0][rr] = iOther.fE[0][rr];
 		return *this;
 		}
 
@@ -142,20 +149,23 @@ public:
 
 	ZMatrix()
 		{
-		for (size_t cc = 0; cc < C; ++cc)
-			fE[cc][0] = E(0);
+		sMemZero_T(fE);
+//		for (size_t cc = 0; cc < C; ++cc)
+//			fE[cc][0] = E(0);
 		}
 
 	ZMatrix(const ZMatrix& iOther)
 		{
-		for (size_t cc = 0; cc < C; ++cc)
-			fE[cc][0] = iOther.fE[cc][0];
+		sMemCopy(fE, iOther.fE, sizeof(fE));
+//		for (size_t cc = 0; cc < C; ++cc)
+//			fE[cc][0] = iOther.fE[cc][0];
 		}
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
-		for (size_t cc = 0; cc < C; ++cc)
-			fE[cc][0] = iOther.fE[cc][0];
+		sMemCopy(fE, iOther.fE, sizeof(fE));
+//		for (size_t cc = 0; cc < C; ++cc)
+//			fE[cc][0] = iOther.fE[cc][0];
 		return *this;
 		}
 
@@ -198,20 +208,23 @@ public:
 
 	ZMatrix()
 		{
-		for (size_t ii = 0; ii < C * R; ++ii)
-			fE[0][ii] = E(0);
+		sMemZero_T(fE);
+//		for (size_t ii = 0; ii < C * R; ++ii)
+//			fE[0][ii] = E(0);
 		}
 
 	ZMatrix(const ZMatrix& iOther)
 		{
-		for (size_t ii = 0; ii < C * R; ++ii)
-			fE[0][ii] = iOther.fE[0][ii];
+		sMemCopy(fE, iOther.fE, sizeof(fE));
+//		for (size_t ii = 0; ii < C * R; ++ii)
+//			fE[0][ii] = iOther.fE[0][ii];
 		}
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
-		for (size_t ii = 0; ii < C * R; ++ii)
-			fE[0][ii] = iOther.fE[0][ii];
+		sMemCopy(fE, iOther.fE, sizeof(fE));
+//		for (size_t ii = 0; ii < C * R; ++ii)
+//			fE[0][ii] = iOther.fE[0][ii];
 		return *this;
 		}
 
@@ -608,7 +621,7 @@ ZMatrix<E,1,R>& operator/=(ZMatrix<E,1,R>& ioLHS, const ZMatrix<E,1,R>& iRHS)
 	}
 
 // =================================================================================================
-// MARK: - Element-by-element division (column vector)
+// MARK: - Element-by-element division (row vector)
 
 template <class E, size_t C>
 ZMatrix<E,C,1> operator/(const ZMatrix<E,C,1>& iLHS, const ZMatrix<E,C,1>& iRHS)
