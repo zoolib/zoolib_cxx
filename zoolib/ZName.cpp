@@ -42,19 +42,6 @@ const char* spAsCharStar(intptr_t iIntPtr, bool iIsCounted)
 	return (const char*)(iIntPtr);
 	}
 
-ZName::ZName()
-:	fIntPtr(0)
-,	fIsCounted(false)
-	{}
-
-ZName::ZName(const ZName& iOther)
-:	fIntPtr(iOther.fIntPtr)
-,	fIsCounted(iOther.fIsCounted)
-	{
-	if (fIsCounted)
-		sFetch_T<ZRefCountedString>(&fIntPtr)->Retain();
-	}
-
 ZName& ZName::operator=(const ZName& iOther)
 	{
 	if (fIsCounted)
@@ -81,17 +68,6 @@ ZName& ZName::operator=(const ZName& iOther)
 		}
 	return *this;
 	}
-
-ZName::~ZName()
-	{
-	if (fIsCounted)
-		sFetch_T<ZRefCountedString>(&fIntPtr)->Release();
-	}
-
-ZName::ZName(const char* iStatic)
-:	fIntPtr(((intptr_t)iStatic))
-,	fIsCounted(false)
-	{}
 
 ZName::ZName(const string8& iString)
 :	fIsCounted(true)
@@ -120,12 +96,6 @@ ZName::operator string8() const
 	return sDefault<string8>();
 	}
 
-bool ZName::operator<(const ZName& iOther) const
-	{ return this->Compare(iOther) < 0; }
-
-bool ZName::operator==(const ZName& iOther) const
-	{ return this->Compare(iOther) == 0; }
-
 int ZName::Compare(const ZName& iOther) const
 	{
 	if (const char* lhs = spAsCharStar(fIntPtr, fIsCounted))
@@ -141,9 +111,6 @@ int ZName::Compare(const ZName& iOther) const
 
 	return 0;
 	}
-
-bool ZName::IsNull() const
-	{ return not fIsCounted && not fIntPtr; }
 
 bool ZName::IsEmpty() const
 	{

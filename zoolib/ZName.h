@@ -37,23 +37,55 @@ public:
 	typedef ZCountedVal<string8> CountedString;
 	typedef ZRef<CountedString> ZRefCountedString;
 
-	ZName();
-	ZName(const ZName& iOther);
-	ZName& operator=(const ZName& iOther);
-	~ZName();
+	inline
+	ZName()
+	:	fIntPtr(0)
+	,	fIsCounted(false)
+		{}
 
-	ZName(const char* iStatic);
+	inline
+	ZName(const ZName& iOther)
+	:	fIntPtr(iOther.fIntPtr)
+	,	fIsCounted(iOther.fIsCounted)
+		{
+		if (fIsCounted)
+			this->pRetain();
+		}
+
+	ZName& operator=(const ZName& iOther);
+
+	inline
+	~ZName()
+		{
+		if (fIsCounted)
+			this->pRelease();
+		}
+
+	inline
+	ZName(const char* iStatic)
+	:	fIntPtr(((intptr_t)iStatic))
+	,	fIsCounted(false)
+		{}
+
 	ZName(const string8& iString);
 	ZName(const ZRefCountedString& iCountedString);
 	
 	operator string8() const;
 
-	bool operator<(const ZName& iOther) const;
-	bool operator==(const ZName& iOther) const;
+	inline
+	bool operator<(const ZName& iOther) const
+		{ return this->Compare(iOther) < 0; }
+
+	inline
+	bool operator==(const ZName& iOther) const
+		{ return this->Compare(iOther) == 0; }
 
 	int Compare(const ZName& iOther) const;
 
-	bool IsNull() const;
+	inline
+	bool IsNull() const
+		{ return not fIsCounted && not fIntPtr; }
+
 	bool IsEmpty() const;
 
 	void Clear();
@@ -61,12 +93,19 @@ public:
 	std::size_t Hash() const;
 
 private:
+	ZMACRO_Attribute_NoThrow
+	void pRetain();
+
+	ZMACRO_Attribute_NoThrow
+	void pRelease();
+
 	intptr_t fIntPtr;
 	bool fIsCounted;
 	};
 
 template <>
-inline int sCompare_T(const ZName& iL, const ZName& iR)
+inline
+int sCompare_T(const ZName& iL, const ZName& iR)
 	{ return iL.Compare(iR); }
 
 inline
