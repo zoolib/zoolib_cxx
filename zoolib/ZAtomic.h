@@ -70,6 +70,8 @@ inline void ZAtomicPtr_Set(ZAtomicPtr_t* iAtomicPtr, void* iParam)
 
 bool sAtomic_CompareAndSwapPtr(ZAtomicPtr_t* iAtomicPtr, void* iOldValue, void* iNewValue);
 
+void sAtomic_Barrier();
+
 } // namespace ZooLib
 
 // =================================================================================================
@@ -464,6 +466,15 @@ void sAtomic_Inc(ZAtomic_t* iAtomic)
 inline
 void sAtomic_Dec(ZAtomic_t* iAtomic)
 	{ ::OSAtomicDecrement32((int32_t*)&iAtomic->fValue); }
+
+#endif
+// -----------------------------------------------
+#if !defined(DEFINED_sAtomic_Barrier)
+#define DEFINED_sAtomic_Barrier 1
+
+inline
+void sAtomic_Barrier()
+	{ ::OSMemoryBarrier(); }
 
 #endif
 // -----------------------------------------------

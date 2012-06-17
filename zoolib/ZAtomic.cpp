@@ -342,5 +342,13 @@ bool sAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewVal
 
 #endif
 // -----------------------------------------------
+#if !defined(DEFINED_sAtomic_Barrier)
+#define DEFINED_sAtomic_Barrier 1
+
+void sAtomic_Barrier()
+	{}
+
+#endif
+// -----------------------------------------------
 
 } // namespace ZooLib
