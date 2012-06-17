@@ -378,6 +378,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#endif
 #endif
 
+#ifndef ZMACRO_Attribute_NoThrow
+	#if ZCONFIG(Compiler,GCC)
+		#define ZMACRO_Attribute_NoThrow __attribute__((nothrow))
+	#else
+		#define ZMACRO_Attribute_NoThrow
+	#endif
+#endif
+
+#ifndef ZMACRO_Attribute_Unused
+	#if ZCONFIG(Compiler,GCC)
+		#define ZMACRO_Attribute_Unused __attribute__((unused))
+	#else
+		#define ZMACRO_Attribute_Unused
+	#endif
+#endif
+
 #ifndef ZMACRO_NoReturn_Pre
 	#if ZCONFIG(Compiler,MSVC)
 		#define ZMACRO_NoReturn_Pre __declspec(noreturn)
@@ -391,14 +407,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#define ZMACRO_NoReturn_Post __attribute__((noreturn))
 	#else
 		#define ZMACRO_NoReturn_Post
-	#endif
-#endif
-
-#ifndef ZMACRO_Attribute_Unused
-	#if ZCONFIG(Compiler,GCC)
-		#define ZMACRO_Attribute_Unused __attribute__((unused))
-	#else
-		#define ZMACRO_Attribute_Unused
 	#endif
 #endif
 
