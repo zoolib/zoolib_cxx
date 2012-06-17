@@ -50,7 +50,7 @@ public:
 	friend class ZRef<T,not Sense>;
 
 	template <class O, bool OtherSense>
-	void swap(ZRef<O,OtherSense>& ioOther)
+	void swap(ZRef<O,OtherSense>& ioOther) throw()
 		{
 		using std::swap;
 		swap(fP, ioOther.fP);
@@ -59,7 +59,7 @@ public:
 	typedef T Type_t;
 	typedef T* Ptr_t;
 
-	ZRef()
+	ZRef() throw()
 	:	fP(0)
 		{}
 
@@ -67,7 +67,7 @@ public:
 	:	fP(iOther.Copy())
 		{}
 
-	~ZRef()
+	~ZRef() throw()
 		{ spRelease(fP); }
 
 	ZRef& operator=(const ZRef& iOther)
@@ -79,7 +79,7 @@ public:
 		return *this;
 		}
 
-	ZRef(const null_t&)
+	ZRef(const null_t&) throw()
 	:	fP(0)
 		{}
 
@@ -112,7 +112,7 @@ public:
 		}
 
 	template <class O>
-	ZRef(const Adopt_T<O>& iAdopt)
+	ZRef(const Adopt_T<O>& iAdopt) throw()
 	:	fP(iAdopt.Get())
 		{}
 
@@ -127,32 +127,32 @@ public:
 		}
 
 	template <class O>
-	bool operator==(O* iP) const
+	bool operator==(O* iP) const throw()
 		{ return fP == iP; }
 
 	template <class O>
-	bool operator!=(O* iP) const
+	bool operator!=(O* iP) const throw()
 		{ return fP != iP; }
 
 	template <class O, bool OtherSense>
-	bool operator==(const ZRef<O,OtherSense>& iOther) const
+	bool operator==(const ZRef<O,OtherSense>& iOther) const throw()
 		{ return fP == iOther.Get(); }
 
 	template <class O, bool OtherSense>
-	bool operator!=(const ZRef<O,OtherSense>& iOther) const
+	bool operator!=(const ZRef<O,OtherSense>& iOther) const throw()
 		{ return fP != iOther.Get(); }
 
 	template <class O, bool OtherSense>
-	bool operator<(const ZRef<O,OtherSense>& iOther) const
+	bool operator<(const ZRef<O,OtherSense>& iOther) const throw()
 		{ return fP < iOther.Get(); }
 
-	T* operator->() const
+	T* operator->() const throw()
 		{
 		sCheck(fP);
 		return fP;
 		}
 
-	T* Get() const
+	T* Get() const throw()
 		{ return fP; }
 
 	T* Copy() const
@@ -161,7 +161,7 @@ public:
 		return fP;
 		}
 
-	T* Orphan()
+	T* Orphan() throw()
 		{
 		using std::swap;
 		T* otherP = 0;
@@ -184,11 +184,11 @@ public:
 		}
 
 	template <class O>
-	O* DynamicCast() const
+	O* DynamicCast() const throw()
 		{ return dynamic_cast<O*>(fP); }
 
 	template <class O>
-	O* StaticCast() const
+	O* StaticCast() const throw()
 		{ return static_cast<O*>(fP); }
 
 	bool AtomicCAS(T* iPrior, T* iNew)
@@ -452,14 +452,14 @@ const struct
 	} sTempRef = {};
 
 // =================================================================================================
-// MARK: -
+// MARK: - swap
 
-template <class T, bool SenseA>
-void swap(ZooLib::ZRef<T,SenseA>& a, ZooLib::ZRef<T,SenseA>& b)
+template <class T, bool Sense>
+void swap(ZRef<T,Sense>& a, ZRef<T,Sense>& b)
 	{ a.swap(b); }
 
-template <class T, bool SenseA>
-void swap(ZooLib::ZRef<T,SenseA>& a, ZooLib::ZRef<T,not SenseA>& b)
+template <class T, bool Sense>
+void swap(ZRef<T,Sense>& a, ZRef<T,not Sense>& b)
 	{ a.swap(b); }
 
 } // namespace ZooLib
