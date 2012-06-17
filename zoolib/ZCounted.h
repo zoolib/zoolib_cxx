@@ -92,7 +92,7 @@ private:
 	ZRef<ZCountedBase> pGetCountedBase();
 	void pClear();
 
-	ZMtx fMtx;
+	ZBen fBen;
 	ZCountedBase* fCountedBase;
 
 	friend class ZCountedBase;

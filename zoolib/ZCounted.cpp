@@ -154,13 +154,13 @@ ZCountedBase::WeakRefProxy::~WeakRefProxy()
 
 ZRef<ZCountedBase> ZCountedBase::WeakRefProxy::pGetCountedBase()
 	{
-	ZAcqMtx acq(fMtx);
+	ZAcqBen acq(fBen);
 	return fCountedBase;
 	}
 
 void ZCountedBase::WeakRefProxy::pClear()
 	{
-	ZAcqMtx acq(fMtx);
+	ZAcqBen acq(fBen);
 	fCountedBase = nullptr;
 	}
 
