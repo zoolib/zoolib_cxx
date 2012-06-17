@@ -21,19 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZCompat_noncopyable_h__
 #define __ZCompat_noncopyable_h__
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
-
-#if ZCONFIG_SPI_Enabled(boost)
-
-#include "boost/noncopyable.hpp"
-
-namespace ZooLib {
-
-typedef boost::noncopyable NonCopyable;
-
-} // namespace ZooLib
-
-#else
 
 //  Boost noncopyable.hpp header file  --------------------------------------//
 
@@ -57,8 +44,8 @@ namespace noncopyable_  // protection from unintended ADL
 		protected:
 			// The following ensure that subclasses must provide
 			// their own accessible constructor and destructor.
-			noncopyable() {}
-			~noncopyable() {}
+			inline noncopyable() {}
+			inline ~noncopyable() {}
 		private:
 			// The following are inaccessible and not implemented.
 			noncopyable(const noncopyable&);
@@ -69,7 +56,5 @@ namespace noncopyable_  // protection from unintended ADL
 typedef noncopyable_::noncopyable NonCopyable;
 
 } // namespace ZooLib
-
-#endif
 
 #endif // __ZCompat_noncopyable_h__
