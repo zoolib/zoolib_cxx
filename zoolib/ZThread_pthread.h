@@ -38,6 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZThread_T.h"
 
+#include <errno.h> // For EINTR
 #include <pthread.h>
 #include <semaphore.h>
 
@@ -60,7 +61,13 @@ typedef ProcResult_t (*ProcRaw_t)(ProcParam_t iParam);
 typedef pthread_t ID;
 
 void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
-ID sID();
+
+ZMACRO_Attribute_NoThrow
+inline
+ID sID()
+	{ return ::pthread_self(); }
+
+ZMACRO_Attribute_NoThrow
 void sSleep(double iDuration);
 
 } // namespace ZThread_pthread
@@ -76,8 +83,14 @@ typedef const void* Value;
 Key sCreate();
 void sFree(Key iKey);
 
-void sSet(Key iKey, Value iValue);
-inline Value sGet(Key iKey)
+ZMACRO_Attribute_NoThrow
+inline
+void sSet(Key iKey, Value iValue)
+	{ ::pthread_setspecific(iKey, iValue); }
+
+ZMACRO_Attribute_NoThrow
+inline
+Value sGet(Key iKey)
 	{ return ::pthread_getspecific(iKey); }
 
 } // namespace ZTSS_pthread
@@ -85,96 +98,92 @@ inline Value sGet(Key iKey)
 // =================================================================================================
 // MARK: - ZCnd_pthread
 
-class ZCnd_pthread : NonCopyable
+class ZCnd_pthread
+:	public pthread_cond_t
+,	NonCopyable
 	{
 public:
-	ZCnd_pthread();
-	~ZCnd_pthread();
+	ZMACRO_Attribute_NoThrow
+	inline
+	ZCnd_pthread() { ::pthread_cond_init(this, nullptr); }
 
-	void Wait(ZMtx_pthread& iMtx);
-	bool WaitFor(ZMtx_pthread& iMtx, double iTimeout);
-	bool WaitUntil(ZMtx_pthread& iMtx, ZTime iDeadline);
+	ZMACRO_Attribute_NoThrow
+	inline
+	~ZCnd_pthread() { ::pthread_cond_destroy(this); }
 
-	void Wait(ZMtxR_pthread& iMtx);
-	bool WaitFor(ZMtxR_pthread& iMtx, double iTimeout);
-	bool WaitUntil(ZMtxR_pthread& iMtx, ZTime iDeadline);
+	ZMACRO_Attribute_NoThrow
+	inline
+	void Wait(pthread_mutex_t& iMtx) { ::pthread_cond_wait(this, &iMtx); }
 
-	void Signal();
-	void Broadcast();
+	ZMACRO_Attribute_NoThrow
+	inline
+	bool WaitFor(pthread_mutex_t& iMtx, double iTimeout)
+		{ return this->pWaitFor(iMtx, iTimeout); }
+
+	ZMACRO_Attribute_NoThrow
+	inline
+	bool WaitUntil(pthread_mutex_t& iMtx, ZTime iDeadline)
+		{ return this->pWaitUntil(iMtx, iDeadline); }
+
+	ZMACRO_Attribute_NoThrow
+	inline
+	void Signal() { ::pthread_cond_signal(this); }
+
+	ZMACRO_Attribute_NoThrow
+	inline
+	void Broadcast() { ::pthread_cond_broadcast(this); }
 
 protected:
+	ZMACRO_Attribute_NoThrow
 	bool pWaitFor(pthread_mutex_t& iMtx, double iTimeout);
-	bool pWaitUntil(pthread_mutex_t& iMtx, ZTime iDeadline);
 
-	pthread_cond_t fCond;
+	ZMACRO_Attribute_NoThrow
+	bool pWaitUntil(pthread_mutex_t& iMtx, ZTime iDeadline);
+	};
+
+// =================================================================================================
+// MARK: - ZMtx_pthread_base
+
+class ZMtx_pthread_base
+:	public pthread_mutex_t
+,	NonCopyable
+	{
+public:
+	ZMACRO_Attribute_NoThrow
+	inline
+	~ZMtx_pthread_base() { ::pthread_mutex_destroy(this); }
+
+	ZMACRO_Attribute_NoThrow
+	inline
+	void Acquire() { ::pthread_mutex_lock(this); }
+
+	ZMACRO_Attribute_NoThrow
+	inline
+	void Release() { ::pthread_mutex_unlock(this); }
+
+	friend class ZCnd_pthread;
 	};
 
 // =================================================================================================
 // MARK: - ZMtx_pthread
 
-class ZMtx_pthread : NonCopyable
+class ZMtx_pthread : public ZMtx_pthread_base
 	{
 public:
-	ZMtx_pthread() { ::pthread_mutex_init(&fMutex, nullptr); }
-	~ZMtx_pthread() { ::pthread_mutex_destroy(&fMutex); }
-
-	void Acquire() { ::pthread_mutex_lock(&fMutex); }
-	void Release() { ::pthread_mutex_unlock(&fMutex); }
-
-protected:
-	pthread_mutex_t fMutex;
-	friend class ZCnd_pthread;
+	ZMACRO_Attribute_NoThrow
+	inline
+	ZMtx_pthread() { ::pthread_mutex_init(this, nullptr); }
 	};
 
 // =================================================================================================
 // MARK: - ZMtxR_pthread
 
-class ZMtxR_pthread : NonCopyable
+class ZMtxR_pthread : public ZMtx_pthread_base
 	{
 public:
+	ZMACRO_Attribute_NoThrow
 	ZMtxR_pthread();
-	~ZMtxR_pthread() { ::pthread_mutex_destroy(&fMutex); }
-
-	void Acquire() { ::pthread_mutex_lock(&fMutex); }
-	void Release() { ::pthread_mutex_unlock(&fMutex); }
-
-protected:
-	pthread_mutex_t fMutex;
-	friend class ZCnd_pthread;
 	};
-
-// =================================================================================================
-// MARK: - ZCnd_pthread inlines
-
-inline ZCnd_pthread::ZCnd_pthread()
-	{ ::pthread_cond_init(&fCond, nullptr); }
-
-inline ZCnd_pthread::~ZCnd_pthread()
-	{ ::pthread_cond_destroy(&fCond); }
-
-inline void ZCnd_pthread::Wait(ZMtx_pthread& iMtx)
-	{ ::pthread_cond_wait(&fCond, &iMtx.fMutex); }
-
-inline bool ZCnd_pthread::WaitFor(ZMtx_pthread& iMtx, double iTimeout)
-	{ return this->pWaitFor(iMtx.fMutex, iTimeout); }
-
-inline bool ZCnd_pthread::WaitUntil(ZMtx_pthread& iMtx, ZTime iDeadline)
-	{ return this->pWaitUntil(iMtx.fMutex, iDeadline); }
-
-inline void ZCnd_pthread::Wait(ZMtxR_pthread& iMtx)
-	{ ::pthread_cond_wait(&fCond, &iMtx.fMutex); }
-
-inline bool ZCnd_pthread::WaitFor(ZMtxR_pthread& iMtx, double iTimeout)
-	{ return this->pWaitFor(iMtx.fMutex, iTimeout); }
-
-inline bool ZCnd_pthread::WaitUntil(ZMtxR_pthread& iMtx, ZTime iDeadline)
-	{ return this->pWaitUntil(iMtx.fMutex, iDeadline); }
-
-inline void ZCnd_pthread::Signal()
-	{ ::pthread_cond_signal(&fCond); }
-
-inline void ZCnd_pthread::Broadcast()
-	{ ::pthread_cond_broadcast(&fCond); }
 
 // =================================================================================================
 // MARK: - ZSem_pthread
@@ -187,12 +196,28 @@ typedef ZSem_T<ZMtx_pthread, ZCnd_pthread> ZSem_pthread;
 class ZSemNoTimeout_pthread : NonCopyable
 	{
 public:
-	ZSemNoTimeout_pthread();
-	~ZSemNoTimeout_pthread();
+	ZMACRO_Attribute_NoThrow
+	inline
+	ZSemNoTimeout_pthread() { ::sem_init(&fSem, 0, 0); }
 
-	void Procure();
-	bool TryProcure();
-	void Vacate();
+	ZMACRO_Attribute_NoThrow
+	inline 
+	~ZSemNoTimeout_pthread() { ::sem_destroy(&fSem); }
+
+	ZMACRO_Attribute_NoThrow
+	inline 
+	void Procure()
+		{ while (EINTR == ::sem_wait(&fSem)) {} }
+
+	ZMACRO_Attribute_NoThrow
+	inline
+	bool TryProcure()
+		{ return 0 == ::sem_trywait(&fSem); }
+
+	ZMACRO_Attribute_NoThrow
+	inline
+	void Vacate()
+		{ ::sem_post(&fSem); }
 
 protected:
 	sem_t fSem;

@@ -38,6 +38,14 @@ namespace ZooLib {
 template <class T, bool Sense = true>
 class ZRef
 	{
+	inline
+	ZMACRO_Attribute_NoThrow
+	static void spRetain(T* iP) { if (iP) sRetain(*iP); }
+
+	inline
+	ZMACRO_Attribute_NoThrow
+	static void spRelease(T* iP) { if (iP) sRelease(*iP); }
+
 public:
 	#if defined(__OBJC__)
 		operator bool() const { return Sense == !!fP; }
@@ -50,7 +58,9 @@ public:
 	friend class ZRef<T,not Sense>;
 
 	template <class O, bool OtherSense>
-	void swap(ZRef<O,OtherSense>& ioOther) throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	void swap(ZRef<O,OtherSense>& ioOther)
 		{
 		using std::swap;
 		swap(fP, ioOther.fP);
@@ -59,17 +69,25 @@ public:
 	typedef T Type_t;
 	typedef T* Ptr_t;
 
-	ZRef() throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	ZRef()
 	:	fP(0)
 		{}
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	ZRef(const ZRef& iOther)
 	:	fP(iOther.Copy())
 		{}
 
-	~ZRef() throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	~ZRef()
 		{ spRelease(fP); }
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	ZRef& operator=(const ZRef& iOther)
 		{
 		using std::swap;
@@ -79,14 +97,20 @@ public:
 		return *this;
 		}
 
-	ZRef(const null_t&) throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	ZRef(const null_t&)
 	:	fP(0)
 		{}
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	ZRef(T* iP)
 	:	fP(iP)
 		{ spRetain(fP); }
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	ZRef& operator=(T* iP)
 		{
 		using std::swap;
@@ -97,11 +121,15 @@ public:
 		}
 
 	template <class O, bool OtherSense>
+	ZMACRO_Attribute_NoThrow
+	inline
 	ZRef(const ZRef<O,OtherSense>& iOther)
 	:	fP(iOther.Copy())
 		{}
 
 	template <class O, bool OtherSense>
+	ZMACRO_Attribute_NoThrow
+	inline
 	ZRef& operator=(const ZRef<O,OtherSense>& iOther)
 		{
 		using std::swap;
@@ -112,11 +140,15 @@ public:
 		}
 
 	template <class O>
-	ZRef(const Adopt_T<O>& iAdopt) throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	ZRef(const Adopt_T<O>& iAdopt)
 	:	fP(iAdopt.Get())
 		{}
 
 	template <class O>
+	ZMACRO_Attribute_NoThrow
+	inline
 	ZRef& operator=(const Adopt_T<O>& iAdopt)
 		{
 		using std::swap;
@@ -127,41 +159,60 @@ public:
 		}
 
 	template <class O>
-	bool operator==(O* iP) const throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	bool operator==(O* iP) const
 		{ return fP == iP; }
 
 	template <class O>
-	bool operator!=(O* iP) const throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	bool operator!=(O* iP) const
 		{ return fP != iP; }
 
 	template <class O, bool OtherSense>
-	bool operator==(const ZRef<O,OtherSense>& iOther) const throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	bool operator==(const ZRef<O,OtherSense>& iOther) const
 		{ return fP == iOther.Get(); }
 
 	template <class O, bool OtherSense>
-	bool operator!=(const ZRef<O,OtherSense>& iOther) const throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	bool operator!=(const ZRef<O,OtherSense>& iOther) const
 		{ return fP != iOther.Get(); }
 
 	template <class O, bool OtherSense>
-	bool operator<(const ZRef<O,OtherSense>& iOther) const throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	bool operator<(const ZRef<O,OtherSense>& iOther) const
 		{ return fP < iOther.Get(); }
 
-	T* operator->() const throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	T* operator->() const
 		{
 		sCheck(fP);
 		return fP;
 		}
 
-	T* Get() const throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	T* Get() const
 		{ return fP; }
 
+	inline
+	ZMACRO_Attribute_NoThrow
+	inline
 	T* Copy() const
 		{
 		spRetain(fP);
 		return fP;
 		}
 
-	T* Orphan() throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	T* Orphan()
 		{
 		using std::swap;
 		T* otherP = 0;
@@ -169,6 +220,8 @@ public:
 		return otherP;
 		}
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	void Clear()
 		{
 		using std::swap;
@@ -177,6 +230,8 @@ public:
 		spRelease(otherP);
 		}
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	T*& OParam()
 		{
 		this->Clear();
@@ -184,13 +239,19 @@ public:
 		}
 
 	template <class O>
-	O* DynamicCast() const throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	O* DynamicCast() const
 		{ return dynamic_cast<O*>(fP); }
 
 	template <class O>
-	O* StaticCast() const throw()
+	ZMACRO_Attribute_NoThrow
+	inline
+	O* StaticCast() const
 		{ return static_cast<O*>(fP); }
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	bool AtomicCAS(T* iPrior, T* iNew)
 		{
 		if (not sAtomic_CompareAndSwapPtr(&fP, iPrior, iNew))
@@ -200,6 +261,8 @@ public:
 		return true;
 		}
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	bool CAS(T* iPrior, T* iNew)
 		{
 		if (fP != iPrior)
@@ -210,25 +273,29 @@ public:
 		return true;
 		}
 
+	inline
 	static T* sCFAllocatorRetain(T* iP)
 		{
 		spRetain(iP);
 		return iP;
 		}
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	static void sCFAllocatorRelease(T* iP)
 		{ spRelease(iP); }
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	void Retain()
 		{ spRetain(fP); }
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	void Release()
 		{ spRelease(fP); }
 
 private:
-	static void spRetain(T* iP) { if (iP) sRetain(*iP); }
-	static void spRelease(T* iP) { if (iP) sRelease(*iP); }
-
 	T* fP;
 	};
 
@@ -455,10 +522,14 @@ const struct
 // MARK: - swap
 
 template <class T, bool Sense>
+ZMACRO_Attribute_NoThrow
+inline
 void swap(ZRef<T,Sense>& a, ZRef<T,Sense>& b)
 	{ a.swap(b); }
 
 template <class T, bool Sense>
+ZMACRO_Attribute_NoThrow
+inline
 void swap(ZRef<T,Sense>& a, ZRef<T,not Sense>& b)
 	{ a.swap(b); }
 

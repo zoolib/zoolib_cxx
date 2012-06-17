@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_cmath.h" // For fmod
 
-#include <errno.h> // For errno
 #include <sys/time.h> // For gettimeofday
 #include <unistd.h> // For usleep
 
@@ -56,9 +55,6 @@ void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
 		throw std::bad_alloc();
 	}
 
-ID sID()
-	{ return ::pthread_self(); }
-
 void sSleep(double iDuration)
 	{
 	if (iDuration <= 0)
@@ -86,9 +82,6 @@ Key sCreate()
 void sFree(Key iKey)
 	{ ::pthread_key_delete(iKey); }
 
-void sSet(Key iKey, Value iValue)
-	{ ::pthread_setspecific(iKey, iValue); }
-
 } // namespace ZTSS_pthread
 
 // =================================================================================================
@@ -107,7 +100,7 @@ bool ZCnd_pthread::pWaitUntil(pthread_mutex_t& iMtx, ZTime iDeadline)
 	theTimeSpec.tv_sec = time_t(iDeadline.fVal);
 	theTimeSpec.tv_nsec = int(fmod(iDeadline.fVal, 1.0) * 1e9);
 
-	int result = ::pthread_cond_timedwait(&fCond, &iMtx, &theTimeSpec);
+	int result = ::pthread_cond_timedwait(this, &iMtx, &theTimeSpec);
 	return result == 0;
 	}
 
@@ -119,37 +112,9 @@ ZMtxR_pthread::ZMtxR_pthread()
 	pthread_mutexattr_t attr;
 	::pthread_mutexattr_init(&attr);
 	::pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-	::pthread_mutex_init(&fMutex, &attr);
+	::pthread_mutex_init(this, &attr);
 	::pthread_mutexattr_destroy(&attr);
 	}
-
-// =================================================================================================
-// MARK: - ZSemNoTimeout_pthread
-
-ZSemNoTimeout_pthread::ZSemNoTimeout_pthread()
-	{ ::sem_init(&fSem, 0, 0); }
-
-ZSemNoTimeout_pthread::~ZSemNoTimeout_pthread()
-	{ ::sem_destroy(&fSem); }
-
-void ZSemNoTimeout_pthread::Procure()
-	{
-	for (;;)
-		{
-		if (int result = ::sem_wait(&fSem))
-			{
-			if (EINTR == result)
-				continue;
-			}
-		break;
-		}
-	}
-
-bool ZSemNoTimeout_pthread::TryProcure()
-	{ return 0 == ::sem_trywait(&fSem); }
-
-void ZSemNoTimeout_pthread::Vacate()
-	{ ::sem_post(&fSem); }
 
 } // namespace ZooLib
 
