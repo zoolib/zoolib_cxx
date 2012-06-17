@@ -41,29 +41,32 @@ template <class T, bool Sense = true>
 class ZQ
 	{
 public:
-	void swap(ZQ& iOther)
+	friend class ZQ<T,not Sense>;
+
+	template <bool OtherSense>
+	void swap(ZQ<T,OtherSense>& ioOther)
 		{
 		if (fHasValue)
 			{
-			if (iOther.fHasValue)
+			if (ioOther.fHasValue)
 				{
 				using std::swap;
-				swap(*sFetch_T<T>(fBytes), *sFetch_T<T>(iOther.fBytes));
+				swap(*sFetch_T<T>(fBytes), *sFetch_T<T>(ioOther.fBytes));
 				}
 			else
 				{
-				sCtorFromVoidStar_T<T>(iOther.fBytes, fBytes);
-				iOther.fHasValue = true;
+				sCtorFromVoidStar_T<T>(ioOther.fBytes, fBytes);
+				ioOther.fHasValue = true;
 				fHasValue = false;
 				sDtor_T<T>(fBytes);
 				}
 			}
-		else if (iOther.fHasValue)
+		else if (ioOther.fHasValue)
 			{
-			sCtorFromVoidStar_T<T>(fBytes, iOther.fBytes);
+			sCtorFromVoidStar_T<T>(fBytes, ioOther.fBytes);
 			fHasValue = true;
-			iOther.fHasValue = false;
-			sDtor_T<T>(iOther.fBytes);
+			ioOther.fHasValue = false;
+			sDtor_T<T>(ioOther.fBytes);
 			}
 		}
 
@@ -437,8 +440,12 @@ T& sGetMutable(ZQ<T,Sense>& iQ)
 // =================================================================================================
 // MARK: - swap
 
-template <class T>
-inline void swap(ZQ<T>& a, ZQ<T>& b)
+template <class T, bool Sense>
+void swap(ZQ<T,Sense>& a, ZQ<T,Sense>& b)
+	{ a.swap(b); }
+
+template <class T, bool Sense>
+void swap(ZQ<T,Sense>& a, ZQ<T,not Sense>& b)
 	{ a.swap(b); }
 
 } // namespace ZooLib
