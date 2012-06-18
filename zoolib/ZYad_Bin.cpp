@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Std.h"
 
 #include <map>
+#include <set>
 #include <vector>
 
 #include "zoolib/ZLog.h"
@@ -35,6 +36,7 @@ namespace ZooLib {
 namespace ZYad_Bin {
 
 using std::min;
+using std::set;
 using std::string;
 using std::vector;
 
@@ -44,19 +46,42 @@ class Memoizer
 :	public ZCounted
 	{
 public:
-	ZName GetName(const string8& iString)
+	ZName GetName(const char* iP)
 		{
-		auto iter = fMap.find(iString);
-		if (iter != fMap.end())
-			return iter->second;
+		const ZName temp(iP);
+		set<ZName>::iterator iter = fSet.lower_bound(temp);
+		if (iter != fSet.end() && *iter == temp)
+			return *iter;
 
-		const ZName theName = iString;
-		fMap.insert(std::make_pair(iString, theName));
-		return theName;
+		const ZName newName(sCountedVal<string>(iP));
+		fSet.insert(iter, newName);
+		return newName;
 		}
 
-	std::map<string8,ZName> fMap;
+	set<ZName> fSet;
 	};
+
+ZName spNameFromStream(const ZStreamR& r, const ZRef<Memoizer>& iMemoizer)
+	{
+	if (size_t theCount = r.ReadCount())
+		{
+		if (theCount < 256)
+			{
+			char buff[256];
+			buff[theCount] = 0;
+			r.Read(&buff[0], theCount);
+			return iMemoizer->GetName(&buff[0]);
+			}
+		else
+			{
+			vector<char> buff(0, theCount+1);
+			r.Read(&buff[0], theCount);
+			buff[theCount] = 0;
+			return iMemoizer->GetName(&buff[0]);
+			}
+		}
+	return ZName();
+	}
 
 ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Memoizer>& iMemoizer);
 
@@ -71,11 +96,16 @@ void spToStream(const string& iString, const ZStreamW& w)
 		w.Write(iString.data(), theLength);
 	}
 
-string spStringFromStream(const ZStreamR& r)
+ZAny spStringFromStream(const ZStreamR& r)
 	{
 	if (const size_t theLength = r.ReadCount())
-		return r.ReadString(theLength);
-	return string();
+		{
+		ZAny theAny = sAny<string>(theLength, 0);
+		string* theP = theAny.PGetMutable<string>();
+		r.Read(&(*theP)[0], theLength);
+		return theAny;
+		}
+	return sAny<string>();
 	}
 
 // =================================================================================================
@@ -240,7 +270,7 @@ public:
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 		{
-		oName = fMemoizer->GetName(spStringFromStream(fStreamerR->GetStreamR()));
+		oName = spNameFromStream(fStreamerR->GetStreamR(), fMemoizer);
 		oYadR = spMakeYadR(fStreamerR, fMemoizer);
 		}
 
@@ -269,7 +299,7 @@ ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Memoizer>&
 			case 4: return sYadR(ZAny(r.ReadInt64()));
 			case 5: return sYadR(ZAny(r.ReadDouble()));
 			case 7: return new YadStreamerR(iStreamerR);
-			case 8: return ZooLib::sYadR(spStringFromStream(r));
+			case 8: return new ZYadStrimmerU_String(spStringFromStream(r));
 			case 11: return new YadSeqR(iStreamerR, iMemoizer);
 			case 13: return new YadMapR(iStreamerR, iMemoizer);
 			}
