@@ -44,6 +44,17 @@ public:
 	friend class ZQ<T,not Sense>;
 
 	template <bool OtherSense>
+	static
+	void spSwap(ZQ<T,OtherSense>& ioNoValue, ZQ<T,OtherSense>& ioHasValue)
+		{
+		sCtorFromVoidStar_T<T>(ioNoValue.fBytes, ioHasValue.fBytes);
+		ioNoValue.fHasValue = true;
+		ioHasValue.fHasValue = false;
+		sDtor_T<T>(ioHasValue.fBytes);
+		}
+
+	template <bool OtherSense>
+	ZMACRO_Attribute_NoThrow
 	void swap(ZQ<T,OtherSense>& ioOther)
 		{
 		if (fHasValue)
@@ -55,18 +66,12 @@ public:
 				}
 			else
 				{
-				sCtorFromVoidStar_T<T>(ioOther.fBytes, fBytes);
-				ioOther.fHasValue = true;
-				fHasValue = false;
-				sDtor_T<T>(fBytes);
+				spSwap(ioOther, *this);
 				}
 			}
 		else if (ioOther.fHasValue)
 			{
-			sCtorFromVoidStar_T<T>(fBytes, ioOther.fBytes);
-			fHasValue = true;
-			ioOther.fHasValue = false;
-			sDtor_T<T>(ioOther.fBytes);
+			spSwap(*this, ioOther);
 			}
 		}
 
