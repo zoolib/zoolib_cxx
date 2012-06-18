@@ -44,10 +44,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-class ZCnd_pthread;
-class ZMtx_pthread;
-class ZMtxR_pthread;
-
 // =================================================================================================
 // MARK: - ZThread_pthread
 
@@ -160,8 +156,6 @@ public:
 	ZMACRO_Attribute_NoThrow
 	inline
 	void Release() { ::pthread_mutex_unlock(this); }
-
-	friend class ZCnd_pthread;
 	};
 
 // =================================================================================================
