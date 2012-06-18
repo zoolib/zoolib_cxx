@@ -240,19 +240,49 @@ void ZSeq_Any::pTouch()
 // =================================================================================================
 // MARK: - ZMap_Any::Rep
 
+// =================================================================================================
+// MARK: - ZYadAtomR_Any
+
+static ZSafeStack<SafeStackLink_Map_Any_Rep> spSafeStack_Map_Any_Rep;
+
 ZMap_Any::Rep::Rep()
 	{}
 
 ZMap_Any::Rep::~Rep()
 	{}
 
-ZMap_Any::Rep::Rep(const ZNameVal& iNV)
-:	fMap(&iNV, &iNV + 1)
-	{}
-
 ZMap_Any::Rep::Rep(const Map_t& iMap)
 :	fMap(iMap)
 	{}
+
+void ZMap_Any::Rep::Finalize()
+	{
+	bool finalized = this->FinishFinalize();
+	ZAssert(finalized);
+	ZAssert(not this->IsReferenced());
+	fMap.clear();
+
+	spSafeStack_Map_Any_Rep.Push(this);
+	}
+
+ZRef<ZMap_Any::Rep> ZMap_Any::Rep::sMake()
+	{
+	if (Rep* result = spSafeStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
+		return result;
+
+	return new Rep;
+	}
+
+ZRef<ZMap_Any::Rep> ZMap_Any::Rep::sMake(const Map_t& iMap)
+	{
+	if (Rep* result = spSafeStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
+		{
+		result->fMap = iMap;
+		return result;
+		}
+
+	return new Rep(iMap);
+	}
 
 // =================================================================================================
 // MARK: - ZMap_Any
@@ -278,18 +308,19 @@ ZMap_Any& ZMap_Any::operator=(const ZMap_Any& iOther)
 	}
 
 ZMap_Any::ZMap_Any(const Map_t& iOther)
-:	fRep(new Rep(iOther.begin(), iOther.end()))
+:	fRep(Rep::sMake(iOther))
 	{}
 
 ZMap_Any& ZMap_Any::operator=(Map_t& iOther)
 	{
-	fRep = new Rep(iOther.begin(), iOther.end());
+	fRep = Rep::sMake(iOther);
 	return *this;
 	}
 
 ZMap_Any::ZMap_Any(const ZNameVal& iNV)
-:	fRep(new Rep(iNV))
-	{}
+	{
+	this->Set(iNV);
+	}
 
 ZMap_Any::ZMap_Any(const char* iName, const char* iVal)
 	{ this->Set(iName, iVal); }
@@ -579,11 +610,11 @@ void ZMap_Any::pTouch()
 	{
 	if (not fRep)
 		{
-		fRep = new Rep;
+		fRep = Rep::sMake();
 		}
 	else if (fRep->IsShared())
 		{
-		fRep = new Rep(fRep->fMap);
+		fRep = Rep::sMake(fRep->fMap);
 		}
 	}
 
@@ -596,7 +627,7 @@ ZMap_Any::Map_t::iterator ZMap_Any::pTouch(const Index_t& iIndex)
 	else if (fRep->IsShared())
 		{
 		const Name_t theName = iIndex->first;
-		fRep = new Rep(fRep->fMap);
+		fRep = Rep::sMake(fRep->fMap);
 		return fRep->fMap.find(theName);
 		}
 	else
@@ -607,7 +638,8 @@ ZMap_Any::Map_t::iterator ZMap_Any::pTouch(const Index_t& iIndex)
 
 ZMap_Any operator*(const ZNameVal& iNV0, const ZNameVal& iNV1)
 	{
-	ZMap_Any result(iNV0);
+	ZMap_Any result;
+	result.Set(iNV0);
 	result.Set(iNV1);
 	return result;
 	}

@@ -23,9 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_unordered_map.h"
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZCompare_String.h" // For FastComparator_String
 #include "zoolib/ZName.h"
+#include "zoolib/ZSafeStack.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZVal_T.h"
 
@@ -187,9 +189,8 @@ typedef std::pair<ZName, ZVal_Any> ZNameVal;
 
 class ZMap_Any
 	{
-	class Rep;
-
 public:
+	class Rep;
 	typedef ZName Name_t;
 
 #if ZCONFIG_SPI_Enabled(unordered_map)
@@ -212,9 +213,6 @@ public:
 	ZMap_Any(const ZNameVal& iNV);
 	ZMap_Any(const char* iName, const char* iVal);
 	ZMap_Any(const Name_t& iName, const ZVal_Any& iVal);
-
-	template <class Iterator>
-	ZMap_Any(Iterator begin, Iterator end);
 
 	int Compare(const ZMap_Any& iOther) const;
 
@@ -390,32 +388,30 @@ ZMap_Any operator*(const ZMap_Any& iMap0, const ZMap_Any& iMap1);
 // =================================================================================================
 // MARK: - ZMap_Any::Rep
 
+class SafeStackLink_Map_Any_Rep
+:	public ZSafeStackLink<ZMap_Any::Rep,SafeStackLink_Map_Any_Rep>
+	{};
+
 class ZMap_Any::Rep
-:	public ZCountedWithoutFinalize
+:	public ZCounted
+,	public SafeStackLink_Map_Any_Rep
 	{
 private:
 	Rep();
 	virtual ~Rep();
 
-	Rep(const ZNameVal& iNV);
 	Rep(const Map_t& iMap);
 
-	template <class Iterator>
-	Rep(Iterator begin, Iterator end)
-	:	fMap(begin, end)
-		{}
+// From ZCounted
+	virtual void Finalize();
+
+// Our protocol
+	static ZRef<Rep> sMake();
+	static ZRef<Rep> sMake(const Map_t& iMap);
 
 	Map_t fMap;
 	friend class ZMap_Any;
 	};
-
-// =================================================================================================
-// MARK: - ZMap_Any, inline templated constructor
-
-template <class Iterator>
-ZMap_Any::ZMap_Any(Iterator begin, Iterator end)
-:	fRep(new Rep(begin, end))
-	{}
 
 // =================================================================================================
 // MARK: - 
