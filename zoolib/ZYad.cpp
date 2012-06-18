@@ -424,6 +424,9 @@ const ZAny& ZYadR_Any::GetAny()
 // =================================================================================================
 // MARK: - ZYadAtomR_Any
 
+static ZBen spBen_AtomR;
+ZYadAtomR_Any* spHead;
+
 ZYadAtomR_Any::ZYadAtomR_Any(const ZAny& iAny)
 :	ZYadR_Any(iAny)
 	{}
@@ -431,8 +434,37 @@ ZYadAtomR_Any::ZYadAtomR_Any(const ZAny& iAny)
 ZYadAtomR_Any::~ZYadAtomR_Any()
 	{}
 
+void ZYadAtomR_Any::Finalize()
+	{	
+	bool finalized = this->FinishFinalize();
+	ZAssert(finalized);
+	ZAssert(not this->IsReferenced());
+	fAny.Clear();
+	
+	ZAcqBen acq(spBen_AtomR);
+	fNext = spHead;
+	spHead = this;
+	}
+
 ZAny ZYadAtomR_Any::AsAny()
 	{ return this->GetAny(); }
+
+ZRef<ZYadAtomR_Any> ZYadAtomR_Any::sMake(const ZAny& iAny)
+	{
+	spBen_AtomR.Acquire();
+	if (ZYadAtomR_Any* result = spHead)
+		{
+		spHead = spHead->fNext;
+		spBen_AtomR.Release();
+
+		result->fNext = nullptr;
+		result->fAny = iAny;
+		return result;
+		}
+	spBen_AtomR.Release();
+
+	return new ZYadAtomR_Any(iAny);
+	}
 
 // =================================================================================================
 // MARK: - ZYadStrimmerU_String

@@ -346,8 +346,8 @@ public:
 // Our protocol
 	const ZAny& GetAny();
 
-private:
-	const ZAny fAny;
+protected:
+	ZAny fAny;
 	};
 
 // =================================================================================================
@@ -357,12 +357,21 @@ class ZYadAtomR_Any
 :	public virtual ZYadAtomR
 ,	public virtual ZYadR_Any
 	{
-public:
+private:
 	ZYadAtomR_Any(const ZAny& iAny);
+
+public:
+	static ZRef<ZYadAtomR_Any> sMake(const ZAny& iAny);
+
 	virtual ~ZYadAtomR_Any();
+
+// From ZCounted
+	virtual void Finalize();
 
 // From ZYadAtomR
 	virtual ZAny AsAny();
+
+	ZYadAtomR_Any* fNext;
 	};
 
 // =================================================================================================

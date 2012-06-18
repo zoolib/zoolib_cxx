@@ -75,7 +75,7 @@ ZRef<ZYadR> sYadR(const ZAny& iVal)
 	if (const ZMap_Any* theVal = iVal.PGet<ZMap_Any>())
 		return sYadR(*theVal);
 
-	return new ZYadAtomR_Any(iVal);
+	return ZYadAtomR_Any::sMake(iVal);
 	}
 
 ZRef<ZYadStreamerR> sYadR(const ZData_Any& iData)
