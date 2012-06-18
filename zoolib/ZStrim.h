@@ -611,15 +611,13 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimU_String8
+// MARK: - ZStrimU_String8Ref
 
-/// Provides a ZStrimU interface to a standard library string containing UTF-8 code units.
-
-class ZStrimU_String8 : public ZStrimU
+class ZStrimU_String8Ref : public ZStrimU
 	{
 public:
-	ZStrimU_String8(const string8& iString);
-	~ZStrimU_String8();
+	ZStrimU_String8Ref(const string8& iStringRef);
+	~ZStrimU_String8Ref();
 
 // From ZStrimR via ZStrimU
 	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
@@ -635,11 +633,30 @@ public:
 	virtual size_t Imp_UnreadableLimit();
 
 // Our protocol
-	string8 GetString8() const;
+	const string8& GetString8() const;
 
 private:
-	string8 fString;
+	const string8& fString;
 	size_t fPosition;
+	};
+
+// =================================================================================================
+// MARK: - ZStrimU_String8
+
+/// Provides a ZStrimU interface to a standard library string containing UTF-8 code units.
+
+struct ZStrimU_String8Helper
+	{
+	ZStrimU_String8Helper(const string8& iString);
+	const string8 fStringStorage;
+	};
+
+class ZStrimU_String8
+:	public ZStrimU_String8Helper
+,	public ZStrimU_String8Ref
+	{
+public:
+	ZStrimU_String8(const string8& iString);
 	};
 
 typedef ZStrimU_String8 ZStrimU_String;

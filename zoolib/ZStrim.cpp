@@ -1744,17 +1744,17 @@ size_t ZStrimU_String16::Imp_UnreadableLimit()
 	{ return size_t(-1); }
 
 // =================================================================================================
-// MARK: - ZStrimU_String8
+// MARK: - ZStrimU_String8Ref
 
-ZStrimU_String8::ZStrimU_String8(const string8& iString)
+ZStrimU_String8Ref::ZStrimU_String8Ref(const string8& iString)
 :	fString(iString),
 	fPosition(0)
 	{}
 
-ZStrimU_String8::~ZStrimU_String8()
+ZStrimU_String8Ref::~ZStrimU_String8Ref()
 	{}
 
-void ZStrimU_String8::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
+void ZStrimU_String8Ref::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	const size_t theLength = fString.length();
 	if (fPosition >= theLength)
@@ -1774,7 +1774,7 @@ void ZStrimU_String8::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 		}
 	}
 
-void ZStrimU_String8::Imp_ReadUTF16(UTF16* oDest,
+void ZStrimU_String8Ref::Imp_ReadUTF16(UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const size_t theLength = fString.length();
@@ -1798,7 +1798,7 @@ void ZStrimU_String8::Imp_ReadUTF16(UTF16* oDest,
 		}
 	}
 
-void ZStrimU_String8::Imp_ReadUTF8(UTF8* oDest,
+void ZStrimU_String8Ref::Imp_ReadUTF8(UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const size_t theLength = fString.length();
@@ -1822,7 +1822,7 @@ void ZStrimU_String8::Imp_ReadUTF8(UTF8* oDest,
 		}
 	}
 
-void ZStrimU_String8::Imp_Unread(UTF32 iCP)
+void ZStrimU_String8Ref::Imp_Unread(UTF32 iCP)
 	{
 	if (size_t stringSize = fString.size())
 		{
@@ -1842,11 +1842,23 @@ void ZStrimU_String8::Imp_Unread(UTF32 iCP)
 	ZUnimplemented();
 	}
 
-size_t ZStrimU_String8::Imp_UnreadableLimit()
+size_t ZStrimU_String8Ref::Imp_UnreadableLimit()
 	{ return size_t(-1); }
 
-string8 ZStrimU_String8::GetString8() const
+const string8& ZStrimU_String8Ref::GetString8() const
 	{ return fString; }
+
+// =================================================================================================
+// MARK: - ZStrimU_String8
+
+ZStrimU_String8Helper::ZStrimU_String8Helper(const string8& iString)
+:	fStringStorage(iString)
+	{}
+
+ZStrimU_String8::ZStrimU_String8(const string8& iString)
+:	ZStrimU_String8Helper(iString)
+,	ZStrimU_String8Ref(fStringStorage)
+	{}
 
 // =================================================================================================
 // MARK: - ZStrimW_String32
