@@ -526,6 +526,10 @@ T& sMutable(ZAny& iAny)
 inline void swap(ZAny& a, ZAny& b)
 	{ a.swap(b); }
 
+template <class S>
+ZAny sAny()
+	{ return ZAny(static_cast<S*>(0)); }
+
 template <class S, class P0>
 ZAny sAny(const P0& iP0)
 	{ return ZAny(static_cast<S*>(0), iP0); }
