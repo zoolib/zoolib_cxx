@@ -40,22 +40,10 @@ using std::vector;
 
 namespace { // anonymous
 
-class Counter
+class Memoizer
 :	public ZCounted
 	{
 public:
-	virtual void Finalize()
-		{
-#if 0
-		if (ZLOGF(w,eNotice))
-			{
-			foreachi (ii, fMap)
-				w << "\n" << ii->second << "\t'" << ii->first << "'";
-			}
-		ZCounted::Finalize();
-#endif
-		}
-
 	ZName GetName(const string8& iString)
 		{
 		auto iter = fMap.find(iString);
@@ -70,7 +58,7 @@ public:
 	std::map<string8,ZName> fMap;
 	};
 
-ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Counter>& iCounter);
+ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Memoizer>& iMemoizer);
 
 // =================================================================================================
 // MARK: - Helpers
@@ -224,18 +212,18 @@ private:
 class YadSeqR : public ZYadSeqR_Std
 	{
 public:
-	YadSeqR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Counter>& iCounter)
+	YadSeqR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Memoizer>& iMemoizer)
 	:	fStreamerR(iStreamerR)
-	,	fCounter(iCounter)
+	,	fMemoizer(iMemoizer)
 		{}
 
 // From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
-		{ oYadR = spMakeYadR(fStreamerR, fCounter); }
+		{ oYadR = spMakeYadR(fStreamerR, fMemoizer); }
 
 private:
 	ZRef<ZStreamerR> fStreamerR;
-	ZRef<Counter> fCounter;
+	ZRef<Memoizer> fMemoizer;
 	};
 
 // =================================================================================================
@@ -244,27 +232,27 @@ private:
 class YadMapR : public ZYadMapR_Std
 	{
 public:
-	YadMapR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Counter>& iCounter)
+	YadMapR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Memoizer>& iMemoizer)
 	:	fStreamerR(iStreamerR)
-	,	fCounter(iCounter)
+	,	fMemoizer(iMemoizer)
 		{}
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 		{
-		oName = fCounter->GetName(spStringFromStream(fStreamerR->GetStreamR()));
-		oYadR = spMakeYadR(fStreamerR, fCounter);
+		oName = fMemoizer->GetName(spStringFromStream(fStreamerR->GetStreamR()));
+		oYadR = spMakeYadR(fStreamerR, fMemoizer);
 		}
 
 private:
 	ZRef<ZStreamerR> fStreamerR;
-	ZRef<Counter> fCounter;
+	ZRef<Memoizer> fMemoizer;
 	};
 
 // =================================================================================================
 // MARK: - Yad
 
-ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Counter>& iCounter)
+ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Memoizer>& iMemoizer)
 	{
 	const ZStreamR& r = iStreamerR->GetStreamR();
 
@@ -282,8 +270,8 @@ ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Counter>& 
 			case 5: return sYadR(ZAny(r.ReadDouble()));
 			case 7: return new YadStreamerR(iStreamerR);
 			case 8: return ZooLib::sYadR(spStringFromStream(r));
-			case 11: return new YadSeqR(iStreamerR, iCounter);
-			case 13: return new YadMapR(iStreamerR, iCounter);
+			case 11: return new YadSeqR(iStreamerR, iMemoizer);
+			case 13: return new YadMapR(iStreamerR, iMemoizer);
 			}
 		ZUnimplemented();
 		}
@@ -391,7 +379,7 @@ private:
 } // anonymous namespace
 
 ZRef<ZYadR> sYadR(ZRef<ZStreamerR> iStreamerR)
-	{ return spMakeYadR(iStreamerR, new Counter); }
+	{ return spMakeYadR(iStreamerR, new Memoizer); }
 
 void sToStream(ZRef<ZYadR> iYadR, const ZStreamW& w)
 	{ iYadR->Accept(Visitor_ToStream(w)); }
