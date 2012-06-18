@@ -154,12 +154,16 @@ ZCountedBase::WeakRefProxy::~WeakRefProxy()
 
 ZRef<ZCountedBase> ZCountedBase::WeakRefProxy::pGetCountedBase()
 	{
+	// This looks pretty innocuous, but we are incrementing the refcount
+	// of fCountedBase under the protection of fBen.
 	ZAcqBen acq(fBen);
 	return fCountedBase;
 	}
 
 void ZCountedBase::WeakRefProxy::pClear()
 	{
+	// And here we're clearing it, but are locked out until
+	// any call to pGetCountedBase has returned.
 	ZAcqBen acq(fBen);
 	fCountedBase = nullptr;
 	}
