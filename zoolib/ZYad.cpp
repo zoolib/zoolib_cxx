@@ -424,8 +424,7 @@ const ZAny& ZYadR_Any::GetAny()
 // =================================================================================================
 // MARK: - ZYadAtomR_Any
 
-static ZBen spBen_AtomR;
-ZYadAtomR_Any* spHead;
+static ZSafeStack<SafeStackLink_YadAtomR_Any> spSafeStack_YadAtomR_Any;
 
 ZYadAtomR_Any::ZYadAtomR_Any(const ZAny& iAny)
 :	ZYadR_Any(iAny)
@@ -440,10 +439,8 @@ void ZYadAtomR_Any::Finalize()
 	ZAssert(finalized);
 	ZAssert(not this->IsReferenced());
 	fAny.Clear();
-	
-	ZAcqBen acq(spBen_AtomR);
-	fNext = spHead;
-	spHead = this;
+
+	spSafeStack_YadAtomR_Any.Push(this);
 	}
 
 ZAny ZYadAtomR_Any::AsAny()
@@ -451,27 +448,25 @@ ZAny ZYadAtomR_Any::AsAny()
 
 ZRef<ZYadAtomR_Any> ZYadAtomR_Any::sMake(const ZAny& iAny)
 	{
-	spBen_AtomR.Acquire();
-	if (ZYadAtomR_Any* result = spHead)
+	if (ZYadAtomR_Any* result = spSafeStack_YadAtomR_Any.PopIfNotEmpty<ZYadAtomR_Any>())
 		{
-		spHead = spHead->fNext;
-		spBen_AtomR.Release();
-
-		result->fNext = nullptr;
 		result->fAny = iAny;
 		return result;
 		}
-	spBen_AtomR.Release();
-
 	return new ZYadAtomR_Any(iAny);
 	}
 
 // =================================================================================================
 // MARK: - ZYadStrimmerU_String
 
+ZYadStrimmerU_String::ZYadStrimmerU_String(const ZAny& iAny)
+:	ZYadR_Any(iAny)
+,	ZStrimmerU_T<ZStrimU_String8Ref>(fAny.Get<string8>())
+	{}
+
 ZYadStrimmerU_String::ZYadStrimmerU_String(const string& iString)
 :	ZYadR_Any(ZAny(iString))
-,	ZStrimmerU_T<ZStrimU_String>(iString)
+,	ZStrimmerU_T<ZStrimU_String8Ref>(fAny.Get<string8>())
 	{}
 
 bool ZYadStrimmerU_String::IsSimple(const ZYadOptions& iOptions)

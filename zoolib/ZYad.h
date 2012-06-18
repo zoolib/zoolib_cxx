@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZName.h"
+#include "zoolib/ZSafeStack.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrimmer.h"
 #include "zoolib/ZVisitor.h"
@@ -353,9 +354,16 @@ protected:
 // =================================================================================================
 // MARK: - ZYadAtomR_Any
 
+class ZYadAtomR_Any;
+
+class SafeStackLink_YadAtomR_Any
+:	public ZSafeStackLink<ZYadAtomR_Any,SafeStackLink_YadAtomR_Any>
+	{};
+
 class ZYadAtomR_Any
 :	public virtual ZYadAtomR
 ,	public virtual ZYadR_Any
+,	public SafeStackLink_YadAtomR_Any
 	{
 private:
 	ZYadAtomR_Any(const ZAny& iAny);
@@ -370,8 +378,6 @@ public:
 
 // From ZYadAtomR
 	virtual ZAny AsAny();
-
-	ZYadAtomR_Any* fNext;
 	};
 
 // =================================================================================================
@@ -380,9 +386,10 @@ public:
 class ZYadStrimmerU_String
 :	public virtual ZYadStrimmerR
 ,	public virtual ZYadR_Any
-,	public ZStrimmerU_T<ZStrimU_String>
+,	public ZStrimmerU_T<ZStrimU_String8Ref>
 	{
 public:
+	ZYadStrimmerU_String(const ZAny& iAny);
 	ZYadStrimmerU_String(const std::string& iString);
 
 // From ZYadR
