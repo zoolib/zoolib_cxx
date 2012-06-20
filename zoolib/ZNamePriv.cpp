@@ -36,9 +36,8 @@ void ZName::pRetain()
 
 void ZName::pRelease()
 	{
-	sFetch_T<ZRefCountedString>(&fIntPtr)->Release();
-//	try { sFetch_T<ZName::ZRefCountedString>(&fIntPtr)->Release(); }
-//	catch (...) {}
+	try { sFetch_T<ZName::ZRefCountedString>(&fIntPtr)->Release(); }
+	catch (...) {}
 	}
 
 } // namespace ZooLib
