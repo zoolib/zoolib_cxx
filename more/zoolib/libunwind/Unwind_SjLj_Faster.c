@@ -134,7 +134,7 @@ static pthread_key_t spRecursiveCheck
 	// something weird, but we don't actually deref it, so no foul.
 	UFC* prior = (UFC*)pthread_getspecific(iKey);
 
-	// Register a UFC. Not that we're doing a recursive traversal precisely to reduce the
+	// Register a UFC. Note that we're doing a recursive traversal precisely to reduce the
 	// likelhood of aliasing -- a value being stored in a thread-specific-key that just happens
 	// to match a probed-for value.
 	UFC theUFC;
