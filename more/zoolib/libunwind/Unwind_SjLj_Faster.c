@@ -84,7 +84,7 @@ That's perfectly reasonable. Unfortunately GetCurrentContext looks like this:
 
 and SetCurrentContext(theContext):
 	pthread_once(SetupKey)
-	return pthread_Set_specific(sKey, theContext)
+	pthread_Set_specific(sKey, theContext)
 
 So we're calling pthread_once three times per function that participates in the SjLj exception
 mechanism. pthread_once is quick, but if you call it three times per function, the cost adds up.
