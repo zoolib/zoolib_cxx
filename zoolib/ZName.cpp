@@ -105,11 +105,14 @@ int ZName::Compare(const ZName& iOther) const
 		else
 			return 1;
 		}
-
-	if (spAsCharStar(iOther.fIntPtr, iOther.fIsCounted))
+	else if (spAsCharStar(iOther.fIntPtr, iOther.fIsCounted))
+		{
 		return -1;
-
-	return 0;
+		}
+	else
+		{
+		return 0;
+		}
 	}
 
 bool ZName::IsEmpty() const
