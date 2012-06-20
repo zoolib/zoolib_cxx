@@ -181,6 +181,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
+// DEBUG and NDEBUG
+
+#ifndef DEBUG
+	#if !!ZCONFIG_Debug
+		#define DEBUG 1
+	#endif
+#endif
+
+#ifndef NDEBUG
+	#if !ZCONFIG_Debug
+		#define NDEBUG 1
+	#endif
+#endif
+
+// =================================================================================================
 // ZCONFIG_CPP
 
 #if  __cplusplus>=201103L
