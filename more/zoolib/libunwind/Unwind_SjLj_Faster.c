@@ -90,7 +90,7 @@ So we're calling pthread_once three times per function that participates in the 
 mechanism. pthread_once is quick, but if you call it three times per function, the cost adds up.
 And remember, all it's doing is ensuring that there's a pthread_key_t consistent across all threads.
 
-This file identifies what pthread_key_y is being used by Register/Unregister and provides
+This file identifies what pthread_key_t is being used by Register/Unregister and provides
 replacement implementations of Register/Unregister that reference a static value presumed to
 have been already setup.
 
