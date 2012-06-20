@@ -19,63 +19,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 /*
-Summary
--------
-This file should be first in your executable's link order. If that's not possible, see comments
-in _Unwind_SjLj_Register.
+Functions that have cleanup to be done in the event of an exception being thrown are very common.
+On iOS and other systems 'setjmp/longjmp' (SjLj) exception handling is used. To support the
+mechanism the compiler inserts into every exception-savvy function a call to _Unwind_SjLj_Register
+as part of the function prologue and a matching call to _Unwind_SjLj_Unregister in the epilogue.
 
-SjLj-based exceptions on iOS require that _Unwind_SjLj_Register/_Unwind_SjLj_Unregister be
-frequently called. This file provides replacement implementations which will be called
-by an executable's own code (though not by system libraries) and which are simpler and
-thus quicker than the standrd versions, but remain compatible with them.
+_Unwind_SjLj_Register and _Unwind_SjLj_Unregister are part of libunwind, the version of which used
+prior to iOS 5.0 has a nasty performance problem. See lines 80 to 118 of
+	<http://www.opensource.apple.com/source/libunwind/libunwind-30/src/Unwind-sjlj.c>
 
-Dicussion
----------
-To support exceptions one needs at least two pieces of information.
-	1. A way to identify the point at which a particular throw will be caught.
-	2. A list of the work has to be (un)done between a throw and matched catch.
-
-This file is concerned with making management of the latter more efficient on systems using
-libunwind, for my purposes that means iPhone/iPad.
-
-In most environments we have zero-overhead exceptions. In the normal course of affairs code just
-runs, if you don't thow an exception there is no runtime cost. The compiler embeds additional meta
-information which is inspected by the runtime throw and which provides instruction as to what
-cleanup code need be executed.
-
-Zero-overhead exceptions fundamentally rely on a robust call-chain architecture, so that at
-runtime one needs only to use the program counter and the stack pointer to identify the appropriate
-meta information.
-
-There *is* a cost associated with all this. First, there's the meta information itself. This
-can often double the size of code emitted. The other cost is the reliance on a robust call-chain.
-Not every architecture is sufficienlty rigid in its call/return requirements to naturally support
-this mechanism.
-
-So on some systems, iOS being my immediate concern, a mechanism based on setjmp/longjmp is used.
-The actual transfer of control is by longjmp, and each function that cares about this issue calls
-_Unwind_SjLj_Register near entry, and _Unwind_SjLj_Unregister near exit. There *is* meta-information
-emitted as well, so the size issue may remain, but we need the SjLj stuff to create a reliable
-chain independent of CPU vagaries.
-
-Every function that *may* need to participate in cleanup caused by the passage of an exception
-calls _Unwind_SjLj_Register and _Unwind_SjLj_Unregister. The compiler sometimes does this even
-when a function's cleanup is a no-op.
-
-The problem is that the standard implementations of _Unwind_SjLj_Register and 
-_Unwind_SjLj_Unregister in libunwind are not as efficient as they could be.
-
-Register and unregister maintain a linked list of contextual information on a per-thread basis.
-So they have to call pthread_set_specific and pthread_get_specific. They also have to know what
-pthread_key_t to use.
-
-In pseudo code,
-
-Register (passed theNewContext) does this:
+In pseudo code, Register(theNewContext) does this:
 	theNewContext->prev = GetCurrentContext()
 	SetCurrentContext(theNewContext)
 	
-and Unregister (passed theCurrentContext) does this
+and Unregister(theCurrentContext) does this
 	SetCurrentContext(theCurrentContext->prev)
 
 That's perfectly reasonable. Unfortunately GetCurrentContext looks like this:
@@ -86,19 +43,36 @@ and SetCurrentContext(theContext):
 	pthread_once(SetupKey)
 	pthread_Set_specific(sKey, theContext)
 
-So we're calling pthread_once three times per function that participates in the SjLj exception
-mechanism. pthread_once is quick, but if you call it three times per function, the cost adds up.
-And remember, all it's doing is ensuring that there's a pthread_key_t consistent across all threads.
+It's calling pthread_once(SetupKey) to ensure that there is single pthread_key_t allocated
+for its use. And although pthread_once is quick, it's being called three times for *every*
+exception-savvy function.
 
-This file identifies what pthread_key_t is being used by Register/Unregister and provides
-replacement implementations of Register/Unregister that reference a static value presumed to
-have been already setup.
+An alternative would be to set up that key as part of the process static initialization,
+and since iOS 5 a more extreme version of that strategy used -- key 18 is hardcoded for use
+by libunwind. See line 86 in
+	<http://www.opensource.apple.com/source/Libc/Libc-763.13/pthreads/pthread_machdep.h>
 
-Our own Register calls a function pointer that intially references the setup function, and
-is then updated to reference the fast implementation.
+Unwind_SjLj_Faster.c provides implementations of _Unwind_SjLj_Register and
+_Unwind_SjLj_Unregister that do not use pthread_once. Instead, we identify the key the system
+code has allocated and then do only what the pseudo code above does -- get the prior value
+and put in the new context's prev, set the new context as the current.
+
+The system-provided _Unwind_SjLj_Register/_Unwind_SjLj_Unregister in iOS 5 are more efficient than
+these replacements. So if we detect that the allocated key is 18 we assume we're on such a system,
+and call through to the original code.
+
 */
 
 #if defined(__arm__)
+
+#if __APPLE__
+	#include <Availability.h>
+	#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_5_0
+		#define Unwind_SjLj_Faster_DISABLED
+	#endif
+#endif
+
+#ifndef Unwind_SjLj_Faster_DISABLED
 
 #include <assert.h>
 #include <dlfcn.h>
@@ -175,48 +149,85 @@ static void spRegister_Fast(UFC* fc)
 	pthread_setspecific(spKey, fc);	
 	}
 
+static void spUnregister_Fast(UFC* fc)
+	{
+	fc->prev = (UFC*)pthread_getspecific(spKey);
+	pthread_setspecific(spKey, fc->prev);
+	}
+
 static void spRegister_Initial(UFC* fc);
 
 static SjLj_t spRegister = spRegister_Initial;
+static SjLj_t spUnregister;
 
 static void spRegister_Initial(UFC* fc)
 	{
+	SjLj_t systemRegister = (SjLj_t)dlsym(RTLD_NEXT, "_Unwind_SjLj_Register");
+	SjLj_t systemUnregister = (SjLj_t)dlsym(RTLD_NEXT, "_Unwind_SjLj_Unregister");
+
 	spKey = spRecursiveCheck(
-		(SjLj_t)dlsym(RTLD_NEXT, "_Unwind_SjLj_Register"),
-		(SjLj_t)dlsym(RTLD_NEXT, "_Unwind_SjLj_Unregister"),
+		systemRegister, systemUnregister,
 		0, // Starting key to try.
 		512 // Largest key to try. NB. We may create this many stack frames.
 		);
-	
-	// If this assert trips, we couldn't find libunwind's key.
-	assert(spKey);
 
-	spRegister = spRegister_Fast;
+	if (spKey == 0 || spKey == 18)
+		{
+		spRegister = systemRegister;
+		spUnregister = systemUnregister;
+		}
+	else
+		{
+		spRegister = spRegister_Fast;
+		spUnregister = spUnregister_Fast;
+		}
 
-	spRegister_Fast(fc);
+	spRegister(fc);
 	}
 
 // =================================================================================================
 // MARK: -
 
+#if 1 // Use asm
+
+__attribute__((naked))
 void _Unwind_SjLj_Register(UFC* fc)
 	{
-	// If this assert trips, then this file has not been placed early enough in the
-	// link order. We could make it safe by conditionalizing execution on the value
-	// of spRegister, calling (SjLj_t)dlsym(RTLD_NEXT, "_Unwind_SjLj_Register") if it's
-	// null, but that would somewhat subvert the whole point, which is to make the
-	// calling of Register/Unregister as efficient as possible.
-	assert(spRegister);
-
-	spRegister(fc);
-
-	assert(spKey);
+	__asm__
+		(
+		"mov r1, %0 \n\t"
+		"ldr r0, [sp] \n\t"
+		"bx r1 \n\t"
+		:
+		: "=r"(spRegister)
+		: "r1"
+		);
 	}
 
+__attribute__((naked))
 void _Unwind_SjLj_Unregister(UFC* fc)
 	{
-	assert(spRegister && spKey);
-	pthread_setspecific(spKey, fc->prev);
+	__asm__
+		(
+		"mov r1, %0 \n\t"
+		"ldr r0, [sp] \n\t"
+		"bx r1 \n\t"
+		:
+		: "=r"(spUnregister)
+		: "r1"
+		);
 	}
+
+#else // Use asm
+
+void _Unwind_SjLj_Register(UFC* fc)
+	{ spRegister(fc); }
+
+void _Unwind_SjLj_Unregister(UFC* fc)
+	{ spUnregister(fc); }
+
+#endif // Use asm
+
+#endif // Unwind_SjLj_Faster_DISABLED
 
 #endif // defined(__arm__)
