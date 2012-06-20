@@ -157,14 +157,13 @@ static pthread_key_t spRecursiveCheck
 		return iKey;
 		}
 
-	if (iKey < iKey_Max)
+	if (iKey == iKey_Max)
 		{
-		// We haven't tried too many keys, try the next.
-		return spRecursiveCheck(iRegister, iUnregister, iKey + 1, iKey_Max);
+		// We've gone too deep without finding anything.
+		return 0;
 		}
 
-	// We've gone too deep without finding anything.
-	return 0;
+	return spRecursiveCheck(iRegister, iUnregister, iKey + 1, iKey_Max);
 	}
 
 // =================================================================================================
