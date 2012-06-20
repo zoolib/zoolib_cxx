@@ -150,10 +150,7 @@ static void spRegister_Fast(UFC* fc)
 	}
 
 static void spUnregister_Fast(UFC* fc)
-	{
-	fc->prev = (UFC*)pthread_getspecific(spKey);
-	pthread_setspecific(spKey, fc->prev);
-	}
+	{ pthread_setspecific(spKey, fc->prev); }
 
 static void spRegister_Initial(UFC* fc);
 
