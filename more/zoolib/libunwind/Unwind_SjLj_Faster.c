@@ -185,45 +185,11 @@ static void spRegister_Initial(UFC* fc)
 // =================================================================================================
 // MARK: -
 
-#if 1 // Use asm
-
-__attribute__((naked))
-void _Unwind_SjLj_Register(UFC* fc)
-	{
-	__asm__
-		(
-		"mov r1, %0 \n\t"
-		"ldr r0, [sp] \n\t"
-		"bx r1 \n\t"
-		:
-		: "=r"(spRegister)
-		: "r1"
-		);
-	}
-
-__attribute__((naked))
-void _Unwind_SjLj_Unregister(UFC* fc)
-	{
-	__asm__
-		(
-		"mov r1, %0 \n\t"
-		"ldr r0, [sp] \n\t"
-		"bx r1 \n\t"
-		:
-		: "=r"(spUnregister)
-		: "r1"
-		);
-	}
-
-#else // Use asm
-
 void _Unwind_SjLj_Register(UFC* fc)
 	{ spRegister(fc); }
 
 void _Unwind_SjLj_Unregister(UFC* fc)
 	{ spUnregister(fc); }
-
-#endif // Use asm
 
 #endif // Unwind_SjLj_Faster_DISABLED
 
