@@ -120,9 +120,9 @@ static OSStatus spMPTaskEntry(void* iArg)
 
 		::ZThreadTM_Resume(static_cast<ZThreadTM_State*>(param3));
 
-		if (ZAtomic_Add(&spMPTaskCount, 1) >= 5)
+		if (sAtomic_Add(&spMPTaskCount, 1) >= 5)
 			{
-			ZAtomic_Add(&spMPTaskCount, -1);
+			sAtomic_Add(&spMPTaskCount, -1);
 			break;
 			}
 		}
@@ -145,9 +145,9 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 	else
 		{
 		ZThreadTM_State* theThread = ZThreadTM_Current();
-		if (ZAtomic_Add(&spMPTaskCount, -1) <= 0)
+		if (sAtomic_Add(&spMPTaskCount, -1) <= 0)
 			{
-			ZAtomic_Add(&spMPTaskCount, 1);
+			sAtomic_Add(&spMPTaskCount, 1);
 			MPTaskID theTaskID;
 			OSStatus err = ::MPCreateTask(spMPTaskEntry, nullptr, 64 * 1024, 0, 0, 0, 0, &theTaskID);
 			ZAssertStop(1, err == noErr);

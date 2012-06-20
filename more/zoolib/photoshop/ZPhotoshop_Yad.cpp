@@ -117,7 +117,7 @@ ZRef<ZYadR> sYadR(const Val& iVal)
 	if (const string* asString = iVal.PGet<string>())
 		return ZooLib::sYadR(*asString);
 
-	return new ZYadAtomR_Any(iVal.AsAny());
+	return ZYadAtomR_Any::sMake(iVal.AsAny());
 	}
 
 ZRef<ZYadSeqAtRPos> sYadR(const Seq& iSeq)

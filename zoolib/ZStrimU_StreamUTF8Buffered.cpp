@@ -71,7 +71,7 @@ void ZStrimU_StreamUTF8Buffered::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size
 		if (fFeedOut < fFeedIn)
 			{
 			const size_t countWritten = min(iCount, fFeedIn - fFeedOut);
-			ZMemCopy(localDest, &fBuffer[fFeedOut], countWritten * sizeof(UTF32));
+			sMemCopy(localDest, &fBuffer[fFeedOut], countWritten * sizeof(UTF32));
 			fFeedOut += countWritten;
 			localDest += countWritten;
 			iCount -= countWritten;

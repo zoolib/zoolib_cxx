@@ -41,7 +41,7 @@ public:
 		if (not spT)
 			{
 			T* theT = new T;
-			if (not ZAtomic_CompareAndSwapPtr(&spT, nullptr, theT))
+			if (not sAtomic_CompareAndSwapPtr(&spT, nullptr, theT))
 				delete theT;
 			}
 		return *spT;
