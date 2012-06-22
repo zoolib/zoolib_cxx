@@ -36,6 +36,10 @@ inline
 bool sIsEmpty(const string8& iString)
 	{ return iString.empty(); }
 
+inline
+bool sNotEmpty(const string8& iString)
+	{ return not iString.empty(); }
+
 } // namespace ZooLib
 
 #endif // __ZUnicodeString8_h__

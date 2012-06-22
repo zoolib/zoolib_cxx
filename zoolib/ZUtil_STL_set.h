@@ -29,6 +29,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZUtil_STL {
 
+template <typename T, typename Comparator>
+bool
+sIsEmpty(const std::set<T,Comparator>& iSet)
+	{ return iSet.empty(); }
+
+template <typename T, typename Comparator>
+bool
+sNotEmpty(const std::set<T,Comparator>& iSet)
+	{ return not iSet.empty(); }
+
 // =================================================================================================
 // MARK: - ZUtil_STL
 
