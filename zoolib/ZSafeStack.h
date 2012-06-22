@@ -37,8 +37,10 @@ class ZSafeStack
 	{
 public:
 	ZSafeStack()
-	:	fHead(&fDummy)
-		{}
+		{
+		fHead = &fDummy;
+		fHead->fNext = fHead;
+		}
 
 	void Push(L* iL)
 		{
@@ -60,10 +62,9 @@ public:
 			{
 			L* theHead = fHead;
 
-			ZAssertStop(L::kDebug, theHead != &fDummy);
-
 			if (sAtomic_CompareAndSwapPtr(&fHead, theHead, theHead->fNext))
 				{
+				ZAssertStop(L::kDebug, theHead != &fDummy);
 				theHead->fNext = nullptr;
 				return static_cast<P*>(theHead);
 				}
@@ -77,11 +78,10 @@ public:
 			{
 			L* theHead = fHead;
 
-			if (theHead == &fDummy)
-				return nullptr;
-
 			if (sAtomic_CompareAndSwapPtr(&fHead, theHead, theHead->fNext))
 				{
+				if (theHead == &fDummy)
+					return nullptr;
 				theHead->fNext = nullptr;
 				return static_cast<P*>(theHead);
 				}
