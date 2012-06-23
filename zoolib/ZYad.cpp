@@ -424,36 +424,59 @@ const ZAny& ZYadR_Any::GetAny()
 // =================================================================================================
 // MARK: - ZYadAtomR_Any
 
-static ZSafeStack<SafeStackLink_YadAtomR_Any> spSafeStack_YadAtomR_Any;
+namespace {
 
-ZYadAtomR_Any::ZYadAtomR_Any(const ZAny& iAny)
-:	ZYadR_Any(iAny)
-	{}
+class YadAtomR_Any;
 
-ZYadAtomR_Any::~ZYadAtomR_Any()
-	{}
+class SafeStackLink_YadAtomR_Any
+:	public ZSafeStackLink<YadAtomR_Any,SafeStackLink_YadAtomR_Any>
+	{};
 
-void ZYadAtomR_Any::Finalize()
-	{	
-	bool finalized = this->FinishFinalize();
-	ZAssert(finalized);
-	ZAssert(not this->IsReferenced());
-	fAny.Clear();
+ZSafeStack_WithDestroyer<YadAtomR_Any,SafeStackLink_YadAtomR_Any> spSafeStack_YadAtomR_Any;
 
-	spSafeStack_YadAtomR_Any.Push(this);
-	}
-
-ZAny ZYadAtomR_Any::AsAny()
-	{ return this->GetAny(); }
-
-ZRef<ZYadAtomR_Any> ZYadAtomR_Any::sMake(const ZAny& iAny)
+class YadAtomR_Any
+:	public virtual ZYadAtomR
+,	public virtual ZYadR_Any
+,	public SafeStackLink_YadAtomR_Any
 	{
-	if (ZYadAtomR_Any* result = spSafeStack_YadAtomR_Any.PopIfNotEmpty<ZYadAtomR_Any>())
+public:
+	YadAtomR_Any(const ZAny& iAny)
+	:	ZYadR_Any(iAny)
+		{}
+
+	virtual ~YadAtomR_Any()
+		{}
+
+// From ZCounted
+	virtual void Finalize()
 		{
-		result->fAny = iAny;
+		bool finalized = this->FinishFinalize();
+		ZAssert(finalized);
+		ZAssert(not this->IsReferenced());
+		fAny.Clear();
+
+		spSafeStack_YadAtomR_Any.Push(this);
+		}
+
+// From ZYadAtomR
+	virtual ZAny AsAny()
+		{ return this->GetAny(); }
+
+// Our protocol
+	void SetAny(const ZAny& iAny)
+		{ fAny = iAny; }
+	};
+
+} // anonymous namespace
+
+ZRef<ZYadAtomR> sMake_YadAtomR_Any(const ZAny& iAny)
+	{
+	if (YadAtomR_Any* result = spSafeStack_YadAtomR_Any.PopIfNotEmpty<YadAtomR_Any>())
+		{
+		result->SetAny(iAny);
 		return result;
 		}
-	return new ZYadAtomR_Any(iAny);
+	return new YadAtomR_Any(iAny);
 	}
 
 // =================================================================================================

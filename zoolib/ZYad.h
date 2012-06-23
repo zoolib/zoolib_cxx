@@ -354,31 +354,7 @@ protected:
 // =================================================================================================
 // MARK: - ZYadAtomR_Any
 
-class ZYadAtomR_Any;
-
-class SafeStackLink_YadAtomR_Any
-:	public ZSafeStackLink<ZYadAtomR_Any,SafeStackLink_YadAtomR_Any>
-	{};
-
-class ZYadAtomR_Any
-:	public virtual ZYadAtomR
-,	public virtual ZYadR_Any
-,	public SafeStackLink_YadAtomR_Any
-	{
-private:
-	ZYadAtomR_Any(const ZAny& iAny);
-
-public:
-	static ZRef<ZYadAtomR_Any> sMake(const ZAny& iAny);
-
-	virtual ~ZYadAtomR_Any();
-
-// From ZCounted
-	virtual void Finalize();
-
-// From ZYadAtomR
-	virtual ZAny AsAny();
-	};
+ZRef<ZYadAtomR> sMake_YadAtomR_Any(const ZAny& iAny);
 
 // =================================================================================================
 // MARK: - ZYadStrimmerU_String
