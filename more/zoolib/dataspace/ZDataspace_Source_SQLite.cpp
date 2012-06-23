@@ -38,6 +38,7 @@ using std::set;
 using std::vector;
 
 using namespace ZSQLite;
+using namespace ZUtil_STL;
 
 using ZRA::RelName;
 
@@ -88,7 +89,7 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
 		iterTables->HasValue(); iterTables->Advance())
 		{
 		const string8 theTableName = iterTables->Get(0).Get<string8>();
-		ZAssert(!theTableName.empty());
+		ZAssert(sIsNotEmpty(theTableName));
 		RelHead theRelHead;
 		for (ZRef<Iter> iterTable = new Iter(fDB, "pragma table_info(" + theTableName + ");");
 			iterTable->HasValue(); iterTable->Advance())
@@ -97,7 +98,7 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
 			}
 		theRelHead |= "oid";
 
-		if (!theRelHead.empty())
+		if (sIsNotEmpty(theRelHead))
 			ZUtil_STL::sInsertMustNotContain(kDebug, fMap_Tables, theTableName, theRelHead);
 		}
 	}
@@ -110,8 +111,9 @@ bool Source_SQLite::Intersects(const RelHead& iRelHead)
 	for (map<string8, RelHead>::const_iterator iterTables = fMap_Tables.begin();
 		iterTables != fMap_Tables.end(); ++iterTables)
 		{
-		if (!(ZRA::sPrefixInserted(iterTables->first + "_", iterTables->second) & iRelHead).empty())
-			return true;
+		if (sIsNotEmpty
+			(ZRA::sPrefixInserted(iterTables->first + "_", iterTables->second) & iRelHead))
+			{ return true; }
 		}
 	return false;
 	}
