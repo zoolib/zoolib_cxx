@@ -42,6 +42,15 @@ public:
 		fHead->fNext = fHead;
 		}
 
+	~ZSafeStack()
+		{
+		ZAssert(fHead == &fDummy);
+		fDummy.fNext = nullptr;
+		}
+
+	bool IsEmpty() const
+		{ return fHead == &fDummy; }
+
 	void Push(L* iL)
 		{
 		ZAssertStop(L::kDebug, not iL->fNext);
@@ -90,6 +99,21 @@ public:
 
 	L* fHead;
 	L fDummy;
+	};
+
+// =================================================================================================
+// MARK: - ZSafeStack_WithDestroyer
+
+template <typename P, typename L = P>
+class ZSafeStack_WithDestroyer
+:	public ZSafeStack<L>
+	{
+public:
+	~ZSafeStack_WithDestroyer()
+		{
+		while (P* p = ZSafeStack<L>::template PopIfNotEmpty<P>())
+			delete p;
+		}
 	};
 
 // =================================================================================================
