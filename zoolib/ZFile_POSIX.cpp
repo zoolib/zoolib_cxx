@@ -536,13 +536,6 @@ static void spSplit
 		}
 	}
 
-ZMACRO_Attribute_Unused
-static void spSplit(char iSep, bool iIncludeEmpties, const string& iPath, vector<string>& oComps)
-	{
-	if (size_t length = iPath.length())
-		spSplit(iSep, iIncludeEmpties, iPath.data(), iPath.data() + length, oComps);
-	}
-
 static void spGetCWD(vector<string8>& oComps)
 	{
 	for (size_t bufSize = 1024; bufSize < 16384; bufSize *= 2)
