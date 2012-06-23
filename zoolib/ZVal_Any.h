@@ -396,9 +396,11 @@ class ZMap_Any::Rep
 :	public ZCounted
 ,	public SafeStackLink_Map_Any_Rep
 	{
+public:
+	virtual ~Rep();
+
 private:
 	Rep();
-	virtual ~Rep();
 
 	Rep(const Map_t& iMap);
 

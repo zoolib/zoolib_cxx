@@ -240,10 +240,11 @@ void ZSeq_Any::pTouch()
 // =================================================================================================
 // MARK: - ZMap_Any::Rep
 
-// =================================================================================================
-// MARK: - ZYadAtomR_Any
+namespace {
 
-static ZSafeStack<SafeStackLink_Map_Any_Rep> spSafeStack_Map_Any_Rep;
+ZSafeStack_WithDestroyer<ZMap_Any::Rep,SafeStackLink_Map_Any_Rep> spSafeStack_Map_Any_Rep;
+
+} // anonymous namespace
 
 ZMap_Any::Rep::Rep()
 	{}
