@@ -438,7 +438,7 @@ ZRef<ZYadR> sYadR(const ZVal_Yad& iVal)
 	if (const ZMap_Yad* theVal = iVal.PGet<ZMap_Yad>())
 		return sYadR(*theVal);
 
-	return ZYadAtomR_Any::sMake(iVal.AsAny());
+	return sMake_YadAtomR_Any(iVal.AsAny());
 	}
 
 ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_Yad& iSeq)

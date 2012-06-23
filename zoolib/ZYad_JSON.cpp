@@ -290,7 +290,7 @@ static ZRef<ZYadR> spMakeYadR_JSON
 		{
 		ZAny theVal;
 		if (spFromStrim_Value(theStrimU, theVal))
-			return ZYadAtomR_Any::sMake(theVal);
+			return sMake_YadAtomR_Any(theVal);
 		}
 
 	return null;
