@@ -104,8 +104,7 @@ static const Decode spDecodeStd =
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Internal (anonymous)
-
+// MARK: -
 
 Decode sDecode(uint8 i62, uint8 i63)
 	{
