@@ -106,5 +106,4 @@ namespace ZooLib {
 		{ sComposeMat4Vec3_ToVec4<float>(iLeft, iRight, oDest); }
 #endif
 
-
 } // namespace ZooLib

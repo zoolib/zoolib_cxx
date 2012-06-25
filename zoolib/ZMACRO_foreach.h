@@ -163,8 +163,6 @@ public:
 			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
 			++wrap.fIter, ++wrap.fMismatch) \
 			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
-
-
 #endif
 
 #ifndef foreachrv

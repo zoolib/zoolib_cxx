@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-
 #if ZCONFIG_SPI_Enabled(Win)
 
 // Enable DCOM features
@@ -49,13 +48,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <windows.h>
 
-
 // We replace MAKEINTRESOURCE with a definition that exposes the int parameter, and forces
 // code trying to use it to instead use MAKEINTRESOURCEW or MAKEINTRESOURCEA, as
 // appropriate for the actual runtime.
 #undef MAKEINTRESOURCE
 #define MAKEINTRESOURCE(a) (a)
-
 
 // Remove the definitions of all string-related windows api entry points --
 // if you're using unicode strings, then do so *deliberately*.

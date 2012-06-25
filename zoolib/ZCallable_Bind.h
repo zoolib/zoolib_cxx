@@ -2377,7 +2377,6 @@ public:
 	typedef typename ST::R R;
 	typedef typename ST::LF P0;
 
-
 private:
 	ZQ<R> QCall()
 		{ return fCallable->QCall(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, fA, fB, fC, fD, fE); }
