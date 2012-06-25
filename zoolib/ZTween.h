@@ -839,35 +839,8 @@ ZRef<ZTween<Val> > sTween_First(const ZRef<ZTween<Val> >& iTween)
 // MARK: - sTween_Last
 
 template <class Val>
-class ZTween_Last
-:	public ZTween<Val>
-	{
-public:
-	ZTween_Last(const ZRef<ZTween<Val> >& iTween)
-	:	fTween(iTween)
-		{}
-
-// From ZTween
-	virtual ZQ<Val> QValAt(double iPlace)
-		{
-		if (iPlace < 0 || iPlace >= 1)
-			return null;
-
-		return fTween->QValAt(spWeight(fTween, fTweenWeightQ) * 0.999);
-		}
-
-private:
-	const ZRef<ZTween<Val> > fTween;
-	ZQ<double> fTweenWeightQ;
-	};
-
-template <class Val>
 ZRef<ZTween<Val> > sTween_Last(const ZRef<ZTween<Val> >& iTween)
-	{
-	if (iTween)
-		return new ZTween_Last<Val>(iTween);
-	return null;
-	}
+	{ return sTween_First(sTween_WeightScale(-1, iTween)); }
 
 } // namespace ZooLib
 
