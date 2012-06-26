@@ -43,19 +43,19 @@ and SetCurrentContext(theContext):
 	pthread_once(SetupKey)
 	pthread_Set_specific(sKey, theContext)
 
-It's calling pthread_once(SetupKey) to ensure that there is single pthread_key_t allocated
-for its use. And although pthread_once is quick, it's being called three times for *every*
+It's calling pthread_once(SetupKey) to ensure that there is single pthread_key_t allocated for
+libunwind's use. And although pthread_once is quick, it's being called three times for *every*
 exception-savvy function.
 
-An alternative would be to set up that key as part of the process static initialization,
+An alternative would be to allocate that key as part of the process' static initialization,
 and since iOS 5 a more extreme version of that strategy used -- key 18 is hardcoded for use
 by libunwind. See line 86 in
 	<http://www.opensource.apple.com/source/Libc/Libc-763.13/pthreads/pthread_machdep.h>
 
 Unwind_SjLj_Faster.c provides implementations of _Unwind_SjLj_Register and
 _Unwind_SjLj_Unregister that do not use pthread_once. Instead, we identify the key the system
-code has allocated and then do only what the pseudo code above does -- get the prior value
-and put in the new context's prev, set the new context as the current.
+code has allocated and then do only what the pseudo code above does -- get the prior value,
+put it in the new context's prev and set the new context as the current.
 
 The system-provided _Unwind_SjLj_Register/_Unwind_SjLj_Unregister in iOS 5 are more efficient than
 these replacements. So if we detect that the allocated key is 18 we assume we're on such a system,
@@ -95,7 +95,7 @@ typedef void (*SjLj_t)(UFC*);
 // =================================================================================================
 
 // This will take on the value of the thread-local key allocated by libunwind,
-// efficient accces to which is really the whole point of this file.
+// efficient access to which is really the whole point of this file.
 
 static pthread_key_t spKey;
 
