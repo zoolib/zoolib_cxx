@@ -40,9 +40,9 @@ inline int sAtomic_Get(const ZAtomic_t* iAtomic)
 inline void sAtomic_Set(ZAtomic_t* iAtomic, int iParam)
 	{ iAtomic->fValue = iParam; }
 
-bool sAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue);
+bool sAtomic_CASPtr(void* iPtrAddress, void* iOldValue, void* iNewValue);
 
-bool sAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue);
+bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue);
 int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam);
 
 int sAtomic_Add(ZAtomic_t* iAtomic, int iParam);
@@ -68,7 +68,7 @@ inline void* ZAtomicPtr_Get(const ZAtomicPtr_t* iAtomicPtr)
 inline void ZAtomicPtr_Set(ZAtomicPtr_t* iAtomicPtr, void* iParam)
 	{ iAtomicPtr->fValue = iParam; }
 
-bool sAtomic_CompareAndSwapPtr(ZAtomicPtr_t* iAtomicPtr, void* iOldValue, void* iNewValue);
+bool sAtomic_CASPtr(ZAtomicPtr_t* iAtomicPtr, void* iOldValue, void* iNewValue);
 
 void sAtomic_Barrier();
 
@@ -82,10 +82,10 @@ void sAtomic_Barrier();
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CompareAndSwap)
-#define DEFINED_sAtomic_CompareAndSwap 1
+#if !defined(DEFINED_sAtomic_CAS)
+#define DEFINED_sAtomic_CAS 1
 
-inline asm bool sAtomic_CompareAndSwap(ZAtomic_t* iAtomic : __A0,
+inline asm bool sAtomic_CAS(ZAtomic_t* iAtomic : __A0,
 	int iOldValue : __D0, int iNewValue : __D1)
 	{
 	dc.l 0x0ED00040 // cas.l d0, d1, (a0)
@@ -121,10 +121,10 @@ can be enabled later if necessary. */
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CompareAndSwap)
-#define DEFINED_sAtomic_CompareAndSwap 1
+#if !defined(DEFINED_sAtomic_CAS)
+#define DEFINED_sAtomic_CAS 1
 
-inline bool sAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
+inline bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 	{
 	int oldValue;
 	asm volatile
@@ -182,10 +182,10 @@ inline int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CompareAndSwap)
-#define DEFINED_sAtomic_CompareAndSwap 1
+#if !defined(DEFINED_sAtomic_CAS)
+#define DEFINED_sAtomic_CAS 1
 
-inline bool sAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
+inline bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 	{
 	bool result;
 	asm volatile
@@ -294,10 +294,10 @@ inline void sAtomic_Dec(ZAtomic_t* iAtomic)
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CompareAndSwap)
-#define DEFINED_sAtomic_CompareAndSwap 1
+#if !defined(DEFINED_sAtomic_CAS)
+#define DEFINED_sAtomic_CAS 1
 
-inline bool sAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
+inline bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 	{
 	bool result;
 	__asm
@@ -407,11 +407,11 @@ inline void sAtomic_Dec(ZAtomic_t* iAtomic)
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CompareAndSwapPtr)
-#define DEFINED_sAtomic_CompareAndSwapPtr 1
+#if !defined(DEFINED_sAtomic_CASPtr)
+#define DEFINED_sAtomic_CASPtr 1
 
 inline
-bool sAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
+bool sAtomic_CASPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
 	{
 	#if ZCONFIG_Is64Bit
 		return ::OSAtomicCompareAndSwap64
@@ -424,11 +424,11 @@ bool sAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewVal
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CompareAndSwap)
-#define DEFINED_sAtomic_CompareAndSwap 1
+#if !defined(DEFINED_sAtomic_CAS)
+#define DEFINED_sAtomic_CAS 1
 
 inline
-bool sAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
+bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 	{ return ::OSAtomicCompareAndSwap32(iOldValue, iNewValue, (int32_t*)&iAtomic->fValue); }
 
 #endif

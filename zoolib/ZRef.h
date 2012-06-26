@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#include "zoolib/ZCompat_operator_bool.h"
 #endif
 
-#include "zoolib/ZAtomic.h" // For sAtomic_CompareAndSwapPtr
+#include "zoolib/ZAtomic.h" // For sAtomic_CASPtr
 #include "zoolib/ZCompat_algorithm.h" // For std::swap
 #include "zoolib/ZTypes.h" // For Adopt_T
 
@@ -254,7 +254,7 @@ public:
 	inline
 	bool AtomicCAS(T* iPrior, T* iNew)
 		{
-		if (not sAtomic_CompareAndSwapPtr(&fP, iPrior, iNew))
+		if (not sAtomic_CASPtr(&fP, iPrior, iNew))
 			return false;
 		spRetain(fP);
 		spRelease(iPrior);
@@ -457,7 +457,7 @@ public:
 
 	bool AtomicCAS(T* iPrior, T* iNew)
 		{
-		if (not sAtomic_CompareAndSwapPtr(&fP, iPrior, iNew))
+		if (not sAtomic_CASPtr(&fP, iPrior, iNew))
 			return false;
 		spRetain(fP);
 		spRelease(iPrior);

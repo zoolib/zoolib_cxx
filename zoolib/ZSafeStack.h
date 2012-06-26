@@ -59,7 +59,7 @@ public:
 			{
 			L* theHead = fHead;
 			iL->fNext = theHead;
-			if (sAtomic_CompareAndSwapPtr(&fHead, theHead, iL))
+			if (sAtomic_CASPtr(&fHead, theHead, iL))
 				break;
 			}
 		}
@@ -71,7 +71,7 @@ public:
 			{
 			L* theHead = fHead;
 
-			if (sAtomic_CompareAndSwapPtr(&fHead, theHead, theHead->fNext))
+			if (sAtomic_CASPtr(&fHead, theHead, theHead->fNext))
 				{
 				ZAssertStop(L::kDebug, theHead != &fDummy);
 				theHead->fNext = nullptr;
@@ -87,7 +87,7 @@ public:
 			{
 			L* theHead = fHead;
 
-			if (sAtomic_CompareAndSwapPtr(&fHead, theHead, theHead->fNext))
+			if (sAtomic_CASPtr(&fHead, theHead, theHead->fNext))
 				{
 				if (theHead == &fDummy)
 					return nullptr;

@@ -42,10 +42,10 @@ ZAssertCompile(sizeof(ZooLib::ZAtomic_t) == sizeof(int));
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CompareAndSwap)
-#define DEFINED_sAtomic_CompareAndSwap 1
+#if !defined(DEFINED_sAtomic_CAS)
+#define DEFINED_sAtomic_CAS 1
 
-asm bool sAtomic_CompareAndSwap(register ZAtomic_t* iAtomic,
+asm bool sAtomic_CAS(register ZAtomic_t* iAtomic,
 	register int iOldValue, register int iNewValue)
 	{
 	// r3 = iAtomic
@@ -86,10 +86,10 @@ noGood:
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CompareAndSwap)
-#define DEFINED_sAtomic_CompareAndSwap 1
+#if !defined(DEFINED_sAtomic_CAS)
+#define DEFINED_sAtomic_CAS 1
 
-bool sAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
+bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 	{
 	asm
 		{
@@ -197,10 +197,10 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CompareAndSwapPtr)
-#define DEFINED_sAtomic_CompareAndSwapPtr 1
+#if !defined(DEFINED_sAtomic_CASPtr)
+#define DEFINED_sAtomic_CASPtr 1
 
-bool sAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
+bool sAtomic_CASPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
 	{
 	return iOldValue
 		== ::InterlockedCompareExchangePointer((PVOID*)iPtrAddress, iNewValue, iOldValue);
@@ -209,10 +209,10 @@ bool sAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewVal
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CompareAndSwap)
-#define DEFINED_sAtomic_CompareAndSwap 1
+#if !defined(DEFINED_sAtomic_CAS)
+#define DEFINED_sAtomic_CAS 1
 
-bool sAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
+bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 	{
 	return iOldValue
 		== ::InterlockedCompareExchange((LONG*)&iAtomic->fValue, iNewValue, iOldValue);
@@ -266,10 +266,10 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // ZCONFIG_SPI_Enabled(Win)
 
 // =================================================================================================
-// MARK: - A real CompareAndSwap must be defined by now
+// MARK: - A real CompareAndSet must be defined by now
 
-#if !defined(DEFINED_sAtomic_CompareAndSwap)
-	#error No CompareAndSwap available
+#if !defined(DEFINED_sAtomic_CAS)
+	#error No CompareAndSet available
 #endif
 
 // =================================================================================================
@@ -286,7 +286,7 @@ int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 	for (;;)
 		{
 		int prior = iAtomic->fValue;
-		if (sAtomic_CompareAndSwap(iAtomic, prior, iParam))
+		if (sAtomic_CAS(iAtomic, prior, iParam))
 			return prior;
 		}
 	}
@@ -301,7 +301,7 @@ int sAtomic_Add(ZAtomic_t* iAtomic, int iParam)
 	for (;;)
 		{
 		int prior = iAtomic->fValue;
-		if (sAtomic_CompareAndSwap(iAtomic, prior, prior + iParam))
+		if (sAtomic_CAS(iAtomic, prior, prior + iParam))
 			return prior;
 		}
 	}
@@ -332,12 +332,12 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CompareAndSwapPtr)
-#define DEFINED_sAtomic_CompareAndSwapPtr 1
+#if !defined(DEFINED_sAtomic_CASPtr)
+#define DEFINED_sAtomic_CASPtr 1
 
-bool sAtomic_CompareAndSwapPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
+bool sAtomic_CASPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
 	{
-	return sAtomic_CompareAndSwap((ZAtomic_t*)iPtrAddress, (int)iOldValue, (int)iNewValue);
+	return sAtomic_CAS((ZAtomic_t*)iPtrAddress, (int)iOldValue, (int)iNewValue);
 	}
 
 #endif

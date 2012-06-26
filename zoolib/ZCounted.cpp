@@ -89,7 +89,7 @@ void ZCountedBase::Release()
 			return;
 			}
 
-		if (sAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
+		if (sAtomic_CAS(&fRefCount, oldRefCount, oldRefCount - 1))
 			return;
 		}
 	}
@@ -135,7 +135,7 @@ int ZCountedBase::pCOMRelease()
 			// Return zero as a sensible value.
 			return 0;
 			}
-		else if (sAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
+		else if (sAtomic_CAS(&fRefCount, oldRefCount, oldRefCount - 1))
 			{
 			return oldRefCount - 1;
 			}

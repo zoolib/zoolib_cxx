@@ -194,7 +194,7 @@ public:
 			{
 			if (int oldCount = sAtomic_Get(&fWaitingThreads))
 				{
-				if (not sAtomic_CompareAndSwap(&fWaitingThreads, oldCount, oldCount - 1))
+				if (not sAtomic_CAS(&fWaitingThreads, oldCount, oldCount - 1))
 					continue;
 
 				fSem.Vacate();
@@ -211,7 +211,7 @@ public:
 			{
 			if (int oldCount = sAtomic_Get(&fWaitingThreads))
 				{
-				if (not sAtomic_CompareAndSwap(&fWaitingThreads, oldCount, 0))
+				if (not sAtomic_CAS(&fWaitingThreads, oldCount, 0))
 					continue;
 
 				while (oldCount--)
