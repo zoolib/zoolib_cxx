@@ -111,7 +111,7 @@ static ZRef<ZYadR> spReadStringish(const ZStreamU& s)
 		spThrowParseException("Expected ':' terminator for string/binary length");
 
 	if (!theLength)
-		return new ZYadAtomR_Std(ZAny());
+		return sMake_YadAtomR_Any(ZAny());
 
 	const string theString = s.ReadString(theLength);
 	string::const_iterator current = theString.begin();
@@ -154,7 +154,7 @@ static ZRef<ZYadR> spMakeYadR_Bencode(ZRef<ZStreamerU> iStreamerU)
 				spThrowParseException("Expected signed decimal integer");
 			if (!spTryRead_Byte(theStreamU, 'e'))
 				spThrowParseException("Expected 'e' terminator for integer");
-			return new ZYadAtomR_Std(ZAny(theInteger));
+			return sMake_YadAtomR_Any(ZAny(theInteger));
 			}
 		default:
 			{
