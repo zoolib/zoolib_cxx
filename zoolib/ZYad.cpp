@@ -516,7 +516,7 @@ ZRef<ZYadR> ZYadMapR_WithFirst::ReadInc(ZName& oName)
 	if (fFirst)
 		{
 		oName = fFirstName;
-		return sGetSet(fFirst, ZRef<ZYadR>());
+		return sGetSet(fFirst, null);
 		}
 	return fRemainder->ReadInc(oName);
 	}
