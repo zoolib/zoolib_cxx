@@ -92,7 +92,12 @@ ZYadMapR_ML::ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU, const ZML::Attrs_t& iA
 ZRef<ZYadR> ZYadMapR_ML::Meta()
 	{
 	if (!fAttrs.empty())
-		return sYadR(ZMap_Any(fAttrs.begin(), fAttrs.end()));
+		{
+		ZMap_Any theMap;
+		for (ZML::Attrs_t::const_iterator ii = fAttrs.begin(); ii != fAttrs.end(); ++ii)
+			theMap.Set(ii->first, ii->second);
+		return sYadR(theMap);
+		}
 
 	return null;
 	}
