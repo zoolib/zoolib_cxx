@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYad_Bin.h"
+#include "zoolib/ZYad_JSONB.h"
 #include "zoolib/ZYad_Std.h"
 
 #include <map>
@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMACRO_foreach.h"
 
 namespace ZooLib {
-namespace ZYad_Bin {
+namespace ZYad_JSONB {
 
 using std::min;
 using std::set;
@@ -41,6 +41,9 @@ using std::string;
 using std::vector;
 
 namespace { // anonymous
+
+// =================================================================================================
+// MARK: - Memoized ZNames
 
 class Memoizer
 :	public ZCounted
@@ -86,7 +89,7 @@ ZName spNameFromStream(const ZStreamR& r, const ZRef<Memoizer>& iMemoizer)
 ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Memoizer>& iMemoizer);
 
 // =================================================================================================
-// MARK: - Helpers
+// MARK: - String to/from stream
 
 void spToStream(const string& iString, const ZStreamW& w)
 	{
@@ -207,36 +210,6 @@ void YadStreamerR::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	}
 
 // =================================================================================================
-// MARK: - YadStrimmerR
-
-#if 0
-class YadStrimmerR
-:	public ZYadStrimmerR
-	{
-public:
-	YadStrimmerR(ZRef<ZStreamerR> iStreamerR)
-	:	fStreamerR(iStreamerR)
-	,	fStreamR_Limited(iStreamerR->GetStreamR().ReadCount(), iStreamerR->GetStreamR())
-	,	fStrimR(fStreamR_Limited)
-		{}
-
-// From ZYadR
-	virtual void Finish()
-		{ fStreamR_Limited.SkipAll(); }
-
-// From ZStrimmerR via ZYadStrimmerR
-	const ZStrimR& GetStrimR()
-		{ return fStrimR; }
-
-private:
-	ZRef<ZStreamerR> fStreamerR;
-	ZStreamR_Limited fStreamR_Limited;
-	ZStrimR_StreamUTF8 fStrimR;
-	};
-
-#endif
-
-// =================================================================================================
 // MARK: - YadSeqR
 
 class YadSeqR : public ZYadSeqR_Std
@@ -310,8 +283,7 @@ ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR, const ZRef<Memoizer>&
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_ToStream
+// MARK: - Visitor_ToStream
 
 class Visitor_ToStream
 :	public ZVisitor_Yad_PreferRPos
@@ -414,5 +386,5 @@ ZRef<ZYadR> sYadR(ZRef<ZStreamerR> iStreamerR)
 void sToStream(ZRef<ZYadR> iYadR, const ZStreamW& w)
 	{ iYadR->Accept(Visitor_ToStream(w)); }
 
-} // namespace ZYad_Bin
+} // namespace ZYad_JSONB
 } // namespace ZooLib

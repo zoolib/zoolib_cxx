@@ -18,15 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_Bin_h__
-#define __ZYad_Bin_h__ 1
+#ifndef __ZYad_JSONB_h__
+#define __ZYad_JSONB_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZYad.h"
 
 namespace ZooLib {
-namespace ZYad_Bin {
+namespace ZYad_JSONB {
 
 // =================================================================================================
 // MARK: -
@@ -35,7 +35,7 @@ ZRef<ZYadR> sYadR(ZRef<ZStreamerR> iStreamerR);
 
 void sToStream(ZRef<ZYadR> iYadR, const ZStreamW& w);
 
-} // namespace ZYad_Bin
+} // namespace ZYad_JSONB
 } // namespace ZooLib
 
-#endif // __ZYad_Bin_h__
+#endif // __ZYad_JSONB_h__
