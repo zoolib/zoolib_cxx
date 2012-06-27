@@ -85,7 +85,7 @@ ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> i
 	if (iStreamer)
 		{
 		iStreamer->Retain();
-		return sAdopt& ::CGDataProviderCreate(iStreamer, &spCallbacks_R);
+		return sAdopt& ::CGDataProviderCreate(iStreamer.Get(), &spCallbacks_R);
 		}
 	return null;
 	}
@@ -154,7 +154,7 @@ ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreateRewind(ZRef<ZStream
 	if (iStreamer)
 		{
 		iStreamer->Retain();
-		return sAdopt& ::CGDataProviderCreate(iStreamer, &spCallbacks_RPos);
+		return sAdopt& ::CGDataProviderCreate(iStreamer.Get(), &spCallbacks_RPos);
 		}
 	return null;
 	}
