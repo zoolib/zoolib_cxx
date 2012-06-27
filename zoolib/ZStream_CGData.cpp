@@ -36,9 +36,6 @@ static size_t spGetBytes_R(void* iInfo, void* oBuffer, size_t iCount)
 	return countRead;
 	}
 
-static void spUnimplemented(void* iInfo)
-	{ ZUnimplemented(); }
-
 static void spReleaseProvider_R(void* iInfo)
 	{ static_cast<ZStreamerR*>(iInfo)->Release(); }
 
