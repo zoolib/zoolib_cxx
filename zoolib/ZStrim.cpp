@@ -1861,16 +1861,17 @@ ZStrimU_String8::ZStrimU_String8(const string8& iString)
 	{}
 
 // =================================================================================================
-// MARK: - ZStrimW_String32
+// MARK: - ZStrimW_String
 
-ZStrimW_String32::ZStrimW_String32(string32& ioString)
+ZStrimW_String<string32>::ZStrimW_String(string32& ioString)
 :	fString(ioString)
 	{}
 
-ZStrimW_String32::~ZStrimW_String32()
+ZStrimW_String<string32>::~ZStrimW_String()
 	{}
 
-void ZStrimW_String32::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
+void ZStrimW_String<string32>::Imp_WriteUTF32
+	(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	try
 		{
@@ -1882,17 +1883,15 @@ void ZStrimW_String32::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, siz
 		{}
 	}
 
-// =================================================================================================
-// MARK: - ZStrimW_String16
-
-ZStrimW_String16::ZStrimW_String16(string16& ioString)
+ZStrimW_String<string16>::ZStrimW_String(string16& ioString)
 :	fString(ioString)
 	{}
 
-ZStrimW_String16::~ZStrimW_String16()
+ZStrimW_String<string16>::~ZStrimW_String()
 	{}
 
-void ZStrimW_String16::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCountCU)
+void ZStrimW_String<string16>::Imp_WriteUTF16
+	(const UTF16* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	try
 		{
@@ -1904,17 +1903,14 @@ void ZStrimW_String16::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, siz
 		{}
 	}
 
-// =================================================================================================
-// MARK: - ZStrimW_String8
-
-ZStrimW_String8::ZStrimW_String8(string8& ioString)
+ZStrimW_String<string8>::ZStrimW_String(string8& ioString)
 :	fString(ioString)
 	{}
 
-ZStrimW_String8::~ZStrimW_String8()
+ZStrimW_String<string8>::~ZStrimW_String()
 	{}
 
-void ZStrimW_String8::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU)
+void ZStrimW_String<string8>::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	try
 		{
