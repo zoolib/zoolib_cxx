@@ -201,7 +201,6 @@ public:
 	T* Get() const
 		{ return fP; }
 
-	inline
 	ZMACRO_Attribute_NoThrow
 	inline
 	T* Copy() const
