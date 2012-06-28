@@ -49,24 +49,52 @@ public:
 	ZAny& AsAny()
 		{ return *this; }
 
-	ZAny();
-	ZAny(const ZAny& iOther);
-	~ZAny();
-	ZAny& operator=(const ZAny& iOther);
+	ZAny()
+		{
+		fDistinguisher = 0;
+		fPayload.fAsPtr = 0;
+		}
 
-	ZAny(const null_t&);
-	ZAny& operator=(const null_t&);
+	ZAny(const ZAny& iOther)
+		{ pCtor(iOther); }
+
+	~ZAny()
+		{ pDtor(); }
+
+	ZAny& operator=(const ZAny& iOther)
+		{
+		if (this != &iOther)
+			{
+			pDtor();
+			pCtor(iOther);
+			}
+		return *this;
+		}
+
+	ZAny(const null_t&)
+		{}
+
+	ZAny& operator=(const null_t&)
+		{
+		this->Clear();
+		return *this;
+		}
 
 	template <class S>
 	explicit ZAny(const S& iVal)
 		{ pCtor_T<S>(iVal); }
 
 	template <class S>
-	ZAny& operator=(const S& iVal);
+	ZAny& operator=(const S& iVal)
+		{
+		pDtor();
+		pCtor_T<S>(iVal);
+		return *this;
+		}
 
 	const std::type_info& Type() const;
 
-	void* VoidStar();
+	void* MutableVoidStar();
 	const void* ConstVoidStar() const;
 
 // ZVal protocol, generally for use by ZVal derivatives
@@ -78,7 +106,7 @@ public:
 
 	template <class S>
 	const S* PGet() const
-		{ return static_cast<const S*>(pGet(typeid(S))); }
+		{ return static_cast<const S*>(pFetchConst(typeid(S))); }
 
 	template <class S>
 	const ZQ<S> QGet() const
@@ -106,7 +134,7 @@ public:
 
 	template <class S>
 	S* PMut()
-		{ return static_cast<S*>(pGetMutable(typeid(S))); }
+		{ return static_cast<S*>(pFetchMutable(typeid(S))); }
 
 	template <class S>
 	S& DMut(const S& iDefault)
@@ -169,11 +197,13 @@ private:
 
 		virtual const std::type_info& Type() const = 0;
 
-		virtual void* VoidStar() = 0;
 		virtual const void* ConstVoidStar() const = 0;
 
-		virtual void* VoidStarIf(const std::type_info& iTI) = 0;
 		virtual const void* ConstVoidStarIf(const std::type_info& iTI) const = 0;
+
+		virtual void* MutableVoidStar() = 0;
+
+		virtual void* MutableVoidStarIf(const std::type_info& iTI) = 0;
 		};
 
 // -----------------
@@ -194,17 +224,18 @@ private:
 
 		virtual const std::type_info& Type() const { return typeid(S); }
 
-		virtual void* VoidStar() { return &fValue; }
 		virtual const void* ConstVoidStar() const { return &fValue; }
 
-		virtual void* VoidStarIf(const std::type_info& iTI)
+		virtual const void* ConstVoidStarIf(const std::type_info& iTI) const
 			{
 			if (iTI == typeid(S))
 				return &fValue;
 			return 0;
 			}
 
-		virtual const void* ConstVoidStarIf(const std::type_info& iTI) const
+		virtual void* MutableVoidStar() { return &fValue; }
+
+		virtual void* MutableVoidStarIf(const std::type_info& iTI)
 			{
 			if (iTI == typeid(S))
 				return &fValue;
@@ -220,10 +251,14 @@ private:
 		{
 	public:
 		virtual const std::type_info& Type() const = 0;
-		virtual Reffed* Clone() const = 0;
-		virtual void* VoidStar() = 0;
-		virtual void* VoidStarIf(ZRef<Reffed>& ioReffed, const std::type_info& iTI) = 0;
+
+		virtual const void* ConstVoidStar() = 0;
+
 		virtual const void* ConstVoidStarIf(const std::type_info& iTI) = 0;
+
+		virtual void* FreshMutableVoidStar(ZRef<Reffed>& ioReffed) = 0;
+
+		virtual void* FreshMutableVoidStarIf(ZRef<Reffed>& ioReffed, const std::type_info& iTI) = 0;
 		};
 
 // -----------------
@@ -241,10 +276,29 @@ private:
 		Reffed_T(const P0& iP0, const P1& iP1) : fValue(iP0, iP1) {}
 
 		virtual const std::type_info& Type() const { return typeid(S); }
-		virtual Reffed* Clone() const { return new Reffed_T(fValue); }
-		virtual void* VoidStar() { return &fValue; }
 
-		virtual void* VoidStarIf(ZRef<Reffed>& ioReffed, const std::type_info& iTI)
+		virtual const void* ConstVoidStar()
+			{ return &fValue; }
+
+		virtual const void* ConstVoidStarIf(const std::type_info& iTI)
+			{
+			if (iTI == typeid(S))
+				return &fValue;
+			return 0;
+			}
+
+		virtual void* FreshMutableVoidStar(ZRef<Reffed>& ioReffed)
+			{
+			if (this->IsShared())
+				{
+				Reffed_T* theReffed = new Reffed_T(fValue);
+				ioReffed = theReffed;
+				return &theReffed->fValue;
+				}
+			return &fValue;
+			}
+
+		virtual void* FreshMutableVoidStarIf(ZRef<Reffed>& ioReffed, const std::type_info& iTI)
 			{
 			if (iTI == typeid(S))
 				{
@@ -256,13 +310,6 @@ private:
 					}
 				return &fValue;
 				}
-			return 0;
-			}
-
-		virtual const void* ConstVoidStarIf(const std::type_info& iTI)
-			{
-			if (iTI == typeid(S))
-				return &fValue;
 			return 0;
 			}
 
@@ -279,16 +326,37 @@ private:
 
 // -----------------
 
-	void* pGetMutable(const std::type_info& iTypeInfo);
-	const void* pGet(const std::type_info& iTypeInfo) const;
+	const void* pFetchConst(const std::type_info& iTypeInfo) const;
+	void* pFetchMutable(const std::type_info& iTypeInfo);
 
-	void pCtor(const ZAny& iOther);
+	void pCtor(const ZAny& iOther)
+		{
+		if (spNotPOD(iOther.fDistinguisher))
+			{
+			pCtor_NonPOD(iOther);
+			}
+		else
+			{
+			fDistinguisher = iOther.fDistinguisher;
+			fPayload = iOther.fPayload;
+			}
+		}
+
 	void pCtor_NonPOD(const ZAny& iOther);
 
-	void pDtor();
+	void pDtor()
+		{
+		if (spNotPOD(fDistinguisher))
+			pDtor_NonPOD();
+		}
+
 	void pDtor_NonPOD();
 
-	static bool spIsPOD(const void* iPtr);
+	static bool spIsPOD(const void* iPtr)
+		{ return ((intptr_t)iPtr) & 1; }
+
+	static bool spNotPOD(const void* iPtr)
+		{ return not spIsPOD(iPtr); }
 
 // -----------------
 
@@ -405,11 +473,11 @@ private:
 		}
 
 // -----------------
-	// There are three situations, distinguished by the value in fDistinguisher.
-	// 1. It's null. fPayload.fAsPtr points to an instance of a Reffed subclass. If
+	// There are three situations indicated by the value in fDistinguisher.
+	// 1. It's zero. fPayload.fAsPtr points to an instance of a Reffed subclass. If
 	//    fPayload.fAsPtr is also null then the ZAny is itself a null object.
-	// 2. LSB is set. With an unset LSB it points to a typeid, and fPayload holds a POD value.
-	// 3. LSB is unset. It's the vptr of an InPlace, the fields of the object itself
+	// 2. LSB is one. It points one byte past a typeid, and fPayload holds a POD value.
+	// 3. LSB is zero. It's the vptr of an InPlace, the fields of the object itself
 	//    spilling over into fPayload.
 	
 	void* fDistinguisher;
@@ -431,73 +499,6 @@ private:
 		double fAsDouble;
 		} fPayload;
 	};
-
-// =================================================================================================
-// MARK: - ZAny, internal implementation inlines
-
-inline bool ZAny::spIsPOD(const void* iPtr)
-	{ return ((intptr_t)iPtr) & 1; }
-
-inline void ZAny::pCtor(const ZAny& iOther)
-	{
-	if (spIsPOD(iOther.fDistinguisher))
-		{
-		fDistinguisher = iOther.fDistinguisher;
-		fPayload = iOther.fPayload;
-		}
-	else
-		{
-		pCtor_NonPOD(iOther);
-		}
-	}
-
-inline void ZAny::pDtor()
-	{
-	if (not spIsPOD(fDistinguisher))
-		pDtor_NonPOD();
-	}
-
-// =================================================================================================
-// MARK: - ZAny, public inlines
-
-inline ZAny::ZAny()
-	{
-	fDistinguisher = 0;
-	fPayload.fAsPtr = 0;
-	}
-
-inline ZAny::ZAny(const ZAny& iOther)
-	{ pCtor(iOther); }
-
-inline ZAny::~ZAny()
-	{ pDtor(); }
-
-inline ZAny& ZAny::operator=(const ZAny& iOther)
-	{
-	if (this != &iOther)
-		{
-		pDtor();
-		pCtor(iOther);
-		}
-	return *this;
-	}
-
-inline ZAny::ZAny(const null_t&)
-	{}
-
-inline ZAny& ZAny::operator=(const null_t&)
-	{
-	this->Clear();
-	return *this;
-	}
-
-template <class S>
-inline ZAny& ZAny::operator=(const S& iVal)
-	{
-	pDtor();
-	pCtor_T<S>(iVal);
-	return *this;
-	}
 
 // =================================================================================================
 // MARK: - Accessor functions

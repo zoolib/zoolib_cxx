@@ -63,19 +63,17 @@ const std::type_info& ZAny::Type() const
 		}
 	}
 
-void* ZAny::VoidStar()
+void* ZAny::MutableVoidStar()
 	{
 	if (fDistinguisher)
 		{
 		if (spIsPOD(fDistinguisher))
 			return &fPayload;
-		return pAsInPlace().VoidStar();
+		return pAsInPlace().MutableVoidStar();
 		}
 	else if (ZRef<Reffed>& theReffed = pAsReffed())
 		{
-		if (theReffed->IsShared())
-			theReffed = theReffed->Clone();
-		return theReffed->VoidStar();
+		return theReffed->FreshMutableVoidStar(theReffed);
 		}
 	else
 		{
@@ -93,7 +91,7 @@ const void* ZAny::ConstVoidStar() const
 		}
 	else if (const ZRef<Reffed>& theReffed = pAsReffed())
 		{
-		return theReffed->VoidStar();
+		return theReffed->ConstVoidStar();
 		}
 	else
 		{
@@ -123,7 +121,7 @@ void ZAny::Clear()
 	{
 	if (fDistinguisher)
 		{
-		if (not spIsPOD(fDistinguisher))
+		if (spNotPOD(fDistinguisher))
 			sDtor_T<InPlace>(&fDistinguisher);
 		fDistinguisher = 0;
 		}
@@ -134,29 +132,7 @@ void ZAny::Clear()
 	fPayload.fAsPtr = 0;
 	}
 
-void* ZAny::pGetMutable(const std::type_info& iTypeInfo)
-	{
-	if (fDistinguisher)
-		{
-		if (spIsPOD(fDistinguisher))
-			{
-			if (iTypeInfo == *spPODTypeInfo(fDistinguisher))
-				return &fPayload;
-			}
-		else
-			{
-			return pAsInPlace().VoidStarIf(iTypeInfo);
-			}
-		}
-	else if (ZRef<Reffed>& theReffed = pAsReffed())
-		{
-		return theReffed->VoidStarIf(theReffed, iTypeInfo);
-		}
-
-	return 0;
-	}
-
-const void* ZAny::pGet(const std::type_info& iTypeInfo) const
+const void* ZAny::pFetchConst(const std::type_info& iTypeInfo) const
 	{
 	if (fDistinguisher)
 		{
@@ -173,6 +149,28 @@ const void* ZAny::pGet(const std::type_info& iTypeInfo) const
 	else if (const ZRef<Reffed>& theReffed = pAsReffed())
 		{
 		return theReffed->ConstVoidStarIf(iTypeInfo);
+		}
+
+	return 0;
+	}
+
+void* ZAny::pFetchMutable(const std::type_info& iTypeInfo)
+	{
+	if (fDistinguisher)
+		{
+		if (spIsPOD(fDistinguisher))
+			{
+			if (iTypeInfo == *spPODTypeInfo(fDistinguisher))
+				return &fPayload;
+			}
+		else
+			{
+			return pAsInPlace().MutableVoidStarIf(iTypeInfo);
+			}
+		}
+	else if (ZRef<Reffed>& theReffed = pAsReffed())
+		{
+		return theReffed->FreshMutableVoidStarIf(theReffed, iTypeInfo);
 		}
 
 	return 0;
