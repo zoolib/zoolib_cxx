@@ -127,7 +127,7 @@ static string8 spAsString8(JSStringRef iRef)
 	if (iRef)
 		{
 		return ZUnicode::sAsUTF8
-			(static_cast<const UTF16*>(::JSStringGetCharactersPtr(iRef)),
+			(reinterpret_cast<const UTF16*>(::JSStringGetCharactersPtr(iRef)),
 			::JSStringGetLength(iRef));
 		}
 	return string8();
@@ -138,7 +138,7 @@ static string16 spAsString16(JSStringRef iRef)
 	if (iRef)
 		{
 		return string16
-			(::JSStringGetCharactersPtr(iRef),
+			(reinterpret_cast<const UTF16*>(::JSStringGetCharactersPtr(iRef)),
 			::JSStringGetLength(iRef));
 		}
 	return string16();
@@ -272,7 +272,8 @@ String::String(const string8& iString8)
 	{}
 
 String::String(const string16& iString16)
-:	fRep(sAdopt& ::JSStringCreateWithCharacters(iString16.c_str(), iString16.length()))
+:	fRep(sAdopt& ::JSStringCreateWithCharacters
+		(reinterpret_cast<const JSChar*>(iString16.c_str()), iString16.length()))
 	{}
 
 String::operator JSStringRef() const

@@ -52,7 +52,7 @@ void ZStrimR_Tee::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 		if (countRead == 0)
 			break;
 
-		ZMemCopy(localDest, buffer, countRead * sizeof(UTF32));
+		sMemCopy(localDest, buffer, countRead * sizeof(UTF32));
 
 		size_t countWritten;
 		fSink.Write(buffer, countRead, &countWritten);

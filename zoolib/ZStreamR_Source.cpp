@@ -67,7 +67,7 @@ void ZStreamR_Source::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	while (iCount)
 		{
 		size_t countToMove = min(iCount, fData.size() - fOffset);
-		ZMemCopy(localDest, &fData[fOffset], countToMove);
+		sMemCopy(localDest, &fData[fOffset], countToMove);
 		fOffset = (fOffset + countToMove) % fData.size();
 		localDest += countToMove;
 		iCount -= countToMove;

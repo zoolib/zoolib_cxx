@@ -36,7 +36,7 @@ ZServer::~ZServer()
 
 void ZServer::Finalize()
 	{
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 	ZAssert(not fWorker);
 	ZAssert(not fFactory);
 	fRoster.Clear();
@@ -143,7 +143,7 @@ static void spKill(ZRef<ZStreamerRWCon> iSRWCon)
 
 bool ZServer::pWork(ZRef<ZWorker> iWorker)
 	{
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 
 	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
 		{

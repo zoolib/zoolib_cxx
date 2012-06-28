@@ -1872,7 +1872,7 @@ void StreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCou
 		else
 			{
 			size_t countToCopy = min(iCount, size_t(fBuffer.size() - fBufferUsed));
-			ZMemCopy(&fBuffer[0] + fBufferUsed, localSource, countToCopy);
+			sMemCopy(&fBuffer[0] + fBufferUsed, localSource, countToCopy);
 			fBufferUsed += countToCopy;
 			iCount -= countToCopy;
 			localSource += countToCopy;

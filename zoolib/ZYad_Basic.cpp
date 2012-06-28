@@ -37,7 +37,7 @@ void spThrowParseException(const string& iMessage)
 bool spRead_Until(const ZStrimU& iStrimU, UTF32 iTerminator, string& oString)
 	{
 	oString.clear();
-	return ZUtil_Strim::sCopy_Until(iStrimU, iTerminator, ZStrimW_String(oString));
+	return ZUtil_Strim::sCopy_Until(iStrimU, iTerminator, ZStrimW_String<string>(oString));
 	}
 
 } // anonymous namespace

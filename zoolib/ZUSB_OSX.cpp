@@ -439,7 +439,7 @@ void StreamerR_TO::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		if (fEnd > fOffset)
 			{
 			const size_t countToCopy = min(fEnd - fOffset, iCount);
-			ZMemCopy(localDest, &fBuffer[fOffset], countToCopy);
+			sMemCopy(localDest, &fBuffer[fOffset], countToCopy);
 			localDest += countToCopy;
 			fOffset += countToCopy;
 			break;
@@ -590,7 +590,7 @@ void StreamerR_Async::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		if (fOffset < fEnd)
 			{
 			const size_t countToCopy = min(fEnd - fOffset, iCount);
-			ZMemCopy(localDest, &fBuffer[fOffset], countToCopy);
+			sMemCopy(localDest, &fBuffer[fOffset], countToCopy);
 			localDest += countToCopy;
 			fOffset += countToCopy;
 			break;

@@ -437,7 +437,7 @@ PT_INLINE void ZBlockStore_PhaseTree::Move(Slot* iSlot, size_t iSource, size_t i
 	#endif
 
 	uint32* start = reinterpret_cast<uint32*>(iSlot->fData);
-	ZMemMove(start + iDest, start + iSource, sizeof(uint32) * iCount);
+	sMemMove(start + iDest, start + iSource, sizeof(uint32) * iCount);
 	}
 
 PT_INLINE void ZBlockStore_PhaseTree::Fill(Slot* iSlot, size_t iBegin, size_t iCount)
@@ -1593,7 +1593,7 @@ void ZBlockStore_PhaseTree::ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot,
 		size_t countRemaining = min(uint64(iCount), theSize > iPosition ? theSize - iPosition : 0);
 		if (theSize <= fCapacity_BlockRoot_Byte)
 			{
-			ZMemCopy(oDest,
+			sMemCopy(oDest,
 				reinterpret_cast<char*>(FieldAddress(ioBlockSlot, 1)) + iPosition, countRemaining);
 			oCountRead = countRemaining;
 			}
@@ -1606,7 +1606,7 @@ void ZBlockStore_PhaseTree::ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot,
 				Slot* dataSlot = this->Block_FindDataSlot(ioBlockSlot, localPosition);
 				size_t positionInData = localPosition % fCapacity_Data;
 				size_t countToMove = min(countRemaining, fCapacity_Data - positionInData);
-				ZMemCopy(localDest,
+				sMemCopy(localDest,
 					reinterpret_cast<char*>(dataSlot->fData) + positionInData, countToMove);
 
 				countRemaining -= countToMove;
@@ -1644,7 +1644,7 @@ void ZBlockStore_PhaseTree::WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot,
 
 		if (theSize <= fCapacity_BlockRoot_Byte)
 			{
-			ZMemCopy(reinterpret_cast<char*>(FieldAddress(ioBlockSlot, 1)) + iPosition,
+			sMemCopy(reinterpret_cast<char*>(FieldAddress(ioBlockSlot, 1)) + iPosition,
 				iSource, countRemaining);
 			oCountWritten = countRemaining;
 			}
@@ -1658,7 +1658,7 @@ void ZBlockStore_PhaseTree::WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot,
 				size_t countToMove = min(countRemaining, fCapacity_Data - positionInData);
 				Slot* dataSlot = this->Block_FindDataSlotForWrite(ioBlockSlot,
 					localPosition, positionInData != 0 || countToMove != fCapacity_Data);
-				ZMemCopy(reinterpret_cast<char*>(dataSlot->fData) + positionInData,
+				sMemCopy(reinterpret_cast<char*>(dataSlot->fData) + positionInData,
 					localSource, countToMove);
 				countRemaining -= countToMove;
 				localSource += countToMove;
@@ -2091,7 +2091,7 @@ void ZBlockStore_PhaseTree::SetBlockSizeImp(Slot* iSlot, size_t iSize)
 				{
 				// Take a copy of the data in the root
 				vector<char> tempBuffer(currentSize);
-				ZMemCopy(&tempBuffer[0], FieldAddress(iSlot, 1), currentSize);
+				sMemCopy(&tempBuffer[0], FieldAddress(iSlot, 1), currentSize);
 				// Mark our root as being zero bytes in length
 				WriteField(iSlot, 0, 0);
 				// Grow our empty tree.
@@ -2101,7 +2101,7 @@ void ZBlockStore_PhaseTree::SetBlockSizeImp(Slot* iSlot, size_t iSize)
 				// Find the leftmost data slot.
 				Slot* leftMostSlot = this->Block_FindDataSlotForWrite(iSlot, 0, false);
 				// And copy into it the data that was in the root.
-				ZMemCopy(leftMostSlot->fData, &tempBuffer[0], currentSize);
+				sMemCopy(leftMostSlot->fData, &tempBuffer[0], currentSize);
 				this->UnuseSlot(leftMostSlot);
 				}
 			else
@@ -2129,13 +2129,13 @@ void ZBlockStore_PhaseTree::SetBlockSizeImp(Slot* iSlot, size_t iSize)
 				Slot* leftMostSlot = this->Block_FindDataSlot(iSlot, 0);
 				vector<char> tempBuffer(iSize);
 				// Copy its first iSize bytes into a temporary buffer.
-				ZMemCopy(&tempBuffer[0], leftMostSlot->fData, iSize);
+				sMemCopy(&tempBuffer[0], leftMostSlot->fData, iSize);
 				// Release the leftmost slot.
 				this->UnuseSlot(leftMostSlot);
 				// Discard the entire tree.
 				this->Block_KillTree(iSlot);
 				// Copy the data into the root slot.
-				ZMemCopy(FieldAddress(iSlot, 1), &tempBuffer[0], iSize);
+				sMemCopy(FieldAddress(iSlot, 1), &tempBuffer[0], iSize);
 				// And update the block's size.
 				WriteField(iSlot, 0, iSize);
 				}
@@ -2456,7 +2456,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal
 				fMutex_Slots.Acquire();
 				oForkedSlotNumber = this->AllocateSlotNumber(true);
 				theSlot = new(fSlotSize) Slot(oForkedSlotNumber);
-				ZMemCopy(theSlot->fData, existingSlot->fData, fSlotSize);
+				sMemCopy(theSlot->fData, existingSlot->fData, fSlotSize);
 
 				fSlots_Loaded[oForkedSlotNumber] = theSlot;
 				fMutex_Slots.Release();
@@ -2488,7 +2488,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal
 			fMutex_Slots.Acquire();
 			oForkedSlotNumber = this->AllocateSlotNumber(true);
 			theSlot = new(fSlotSize) Slot(oForkedSlotNumber);
-			ZMemCopy(theSlot->fData, existingSlot->fData, fSlotSize);
+			sMemCopy(theSlot->fData, existingSlot->fData, fSlotSize);
 
 			fSlots_Loaded[oForkedSlotNumber] = theSlot;
 			fMutex_Slots.Release();

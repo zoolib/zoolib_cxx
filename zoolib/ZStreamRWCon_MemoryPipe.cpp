@@ -58,7 +58,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Read(void* oDest, size_t iCount, size_t* oCoun
 			{
 			// We've got a source waiting to give us data.
 			size_t countToCopy = min(localEnd - localDest, fSourceEnd - fSource);
-			ZMemCopy(localDest, fSource, countToCopy);
+			sMemCopy(localDest, fSource, countToCopy);
 			localDest += countToCopy;
 			fSource += countToCopy;
 			fCondition_Write.Broadcast();
@@ -188,7 +188,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Write(const void* iSource, size_t iCount, size
 			size_t countToCopy = min(fDestCount, size_t(localEnd - localSource));
 			if (fDest)
 				{
-				ZMemCopy(fDest, localSource, countToCopy);
+				sMemCopy(fDest, localSource, countToCopy);
 				fDest += countToCopy;
 				}
 			localSource += countToCopy;

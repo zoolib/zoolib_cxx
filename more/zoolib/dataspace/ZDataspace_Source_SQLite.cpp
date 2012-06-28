@@ -89,7 +89,7 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
 		iterTables->HasValue(); iterTables->Advance())
 		{
 		const string8 theTableName = iterTables->Get(0).Get<string8>();
-		ZAssert(sIsNotEmpty(theTableName));
+		ZAssert(sNotEmpty(theTableName));
 		RelHead theRelHead;
 		for (ZRef<Iter> iterTable = new Iter(fDB, "pragma table_info(" + theTableName + ");");
 			iterTable->HasValue(); iterTable->Advance())
@@ -98,7 +98,7 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
 			}
 		theRelHead |= "oid";
 
-		if (sIsNotEmpty(theRelHead))
+		if (sNotEmpty(theRelHead))
 			ZUtil_STL::sInsertMustNotContain(kDebug, fMap_Tables, theTableName, theRelHead);
 		}
 	}
@@ -111,7 +111,7 @@ bool Source_SQLite::Intersects(const RelHead& iRelHead)
 	for (map<string8, RelHead>::const_iterator iterTables = fMap_Tables.begin();
 		iterTables != fMap_Tables.end(); ++iterTables)
 		{
-		if (sIsNotEmpty
+		if (sNotEmpty
 			(ZRA::sPrefixInserted(iterTables->first + "_", iterTables->second) & iRelHead))
 			{ return true; }
 		}
@@ -138,7 +138,7 @@ void Source_SQLite::ModifyRegistrations
 
 		if (iterPQueryPair.second)
 			{
-			ZRA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String(thePQuery->fSQL));
+			ZRA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String<string8>(thePQuery->fSQL));
 			thePQuery->fRelHead = sGetRelHead(theRel);
 			}
 

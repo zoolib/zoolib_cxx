@@ -215,7 +215,7 @@ void ZStreamR_LZWDecode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead
 			}
 
 		size_t countToCopy = min(iCount, size_t(fStackEnd - fStackTop));
-		ZMemCopy(localDest, fStackTop, countToCopy);
+		sMemCopy(localDest, fStackTop, countToCopy);
 		fStackTop += countToCopy;
 		localDest += countToCopy;
 		iCount -= countToCopy;
@@ -250,7 +250,7 @@ ZStreamW_LZWEncode::ZStreamW_LZWEncode(int iCodeSize_Alphabet, const ZStreamW& i
 	fCode_FIN = (1 << fCodeSize_Alphabet) + 1;
 	fCode_FirstAvailable = (1 << fCodeSize_Alphabet) + 2;
 
-	ZMemZero(fChild, sizeof(uint16) * kTableSize);
+	sMemZero(fChild, sizeof(uint16) * kTableSize);
 
 	fFresh = true;
 	}
@@ -317,7 +317,7 @@ void ZStreamW_LZWEncode::Imp_Write(const void* iSource, size_t iCount, size_t* o
 							fBitWriter.WriteBits(fStreamSink, fCodeSize_Emitted, fCode_Clear);
 							fCodeSize_Emitted = fCodeSize_Alphabet + 1;
 							fCode_FirstAvailable = (1 << fCodeSize_Alphabet) + 2;
-							ZMemZero(fChild, sizeof(uint16) * kTableSize);
+							sMemZero(fChild, sizeof(uint16) * kTableSize);
 							}
 						}
 

@@ -177,8 +177,8 @@ Host_Cocoa::Host_Cocoa(ZRef<GuestFactory> iGuestFactory, NSView_NetscapeHost* iV
 ,	fView(iView)
 ,	fCallable_Timer(sCallable(this, &Host_Cocoa::Timer))
 	{
-	ZMemZero_T(fNP_CGContext);
-	ZMemZero_T(fNP_CGContext_Prior);
+	sMemZero_T(fNP_CGContext);
+	sMemZero_T(fNP_CGContext_Prior);
 	if (fView)
 		fView->fHost = this;
 
@@ -296,7 +296,7 @@ void Host_Cocoa::pDoSetWindow()
 
 static inline void spInitialize(NPCocoaEvent& oEvent, NPCocoaEventType iType)
 	{
-	ZMemZero_T(oEvent);
+	sMemZero_T(oEvent);
 	oEvent.type = iType;
 	oEvent.version = 0;
 	}

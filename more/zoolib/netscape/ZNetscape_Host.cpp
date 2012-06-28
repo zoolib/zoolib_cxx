@@ -377,7 +377,7 @@ Host* HostMeister::sHostFromStream(NPStream* iNPStream)
 
 void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	{
-	ZMemZero_T(oNPNF);
+	sMemZero_T(oNPNF);
 
 	oNPNF.version = NP_VERSION_MINOR;//NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL;
 
@@ -864,7 +864,7 @@ Host::Host(ZRef<GuestFactory> iGuestFactory)
 :	fGuestFactory(iGuestFactory),
 	fNPPluginFuncs(fGuestFactory->GetEntryPoints())
 	{
-	ZMemZero_T(fNPP_t);
+	sMemZero_T(fNPP_t);
 	fNPP_t.ndata = this;
 	}
 
