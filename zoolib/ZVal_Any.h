@@ -70,19 +70,11 @@ public:
 
 	void Clear();
 
-	ZVal_Any* PGetMutable(size_t iIndex);
+	ZVal_Any* PMut(size_t iIndex);
 	const ZVal_Any* PGet(size_t iIndex) const;
 	const ZQ<ZVal_Any> QGet(size_t iIndex) const;
 	const ZVal_Any DGet(const ZVal_Any& iDefault, size_t iIndex) const;
 	const ZVal_Any& Get(size_t iIndex) const;
-
-	template <class S>
-	S* PGetMutable(size_t iIndex)
-		{
-		if (ZVal_Any* theVal = this->PGetMutable(iIndex))
-			return theVal->PGetMutable<S>();
-		return nullptr;
-		}
 
 	template <class S>
 	const S* PGet(size_t iIndex) const
@@ -116,6 +108,14 @@ public:
 		return sDefault<S>();
 		}
 
+	template <class S>
+	S* PMut(size_t iIndex)
+		{
+		if (ZVal_Any* theVal = this->PMut(iIndex))
+			return theVal->PMut<S>();
+		return nullptr;
+		}
+
 	ZSeq_Any& Set(size_t iIndex, const ZVal_Any& iVal);
 
 	ZSeq_Any& Erase(size_t iIndex);
@@ -134,15 +134,15 @@ public:
 	const ZVal_Any& operator[](size_t iIndex) const;
 
 // Our protocol
-	ZVal_Any& Mutable(size_t iIndex);
+	ZVal_Any& Mut(size_t iIndex);
 
 	template <class S>
-	S& Mutable(size_t iIndex)
-		{ return this->Mutable(iIndex).Mutable<S>(); }
+	S& Mut(size_t iIndex)
+		{ return this->Mut(iIndex).Mut<S>(); }
 
 	template <class S>
-	S& DMutable(const S& iDefault, size_t iIndex)
-		{ return this->Mutable(iIndex).DMutable(iDefault); }
+	S& DMut(const S& iDefault, size_t iIndex)
+		{ return this->Mut(iIndex).DMut(iDefault); }
 	
 private:
 	void pTouch();
@@ -221,9 +221,6 @@ public:
 
 	void Clear();
 
-	ZVal_Any* PGetMutable(const Name_t& iName);
-	ZVal_Any* PGetMutable(const Index_t& iIndex);
-
 	const ZVal_Any* PGet(const Name_t& iName) const;
 	const ZVal_Any* PGet(const Index_t& iIndex) const;
 
@@ -236,21 +233,8 @@ public:
 	const ZVal_Any& Get(const Name_t& iName) const;
 	const ZVal_Any& Get(const Index_t& iIndex) const;
 
-	template <class S>
-	S* PGetMutable(const Name_t& iName)
-		{
-		if (ZVal_Any* theVal = this->PGetMutable(iName))
-			return theVal->PGetMutable<S>();
-		return nullptr;
-		}
-
-	template <class S>
-	S* PGetMutable(const Index_t& iIndex)
-		{
-		if (ZVal_Any* theVal = this->PGetMutable(iIndex))
-			return theVal->PGetMutable<S>();
-		return nullptr;
-		}
+	ZVal_Any* PMut(const Name_t& iName);
+	ZVal_Any* PMut(const Index_t& iIndex);
 
 	template <class S>
 	const S* PGet(const Name_t& iName) const
@@ -316,6 +300,22 @@ public:
 		return sDefault<S>();
 		}
 
+	template <class S>
+	S* PMut(const Name_t& iName)
+		{
+		if (ZVal_Any* theVal = this->PMut(iName))
+			return theVal->PMut<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	S* PMut(const Index_t& iIndex)
+		{
+		if (ZVal_Any* theVal = this->PMut(iIndex))
+			return theVal->PMut<S>();
+		return nullptr;
+		}
+
 	ZMap_Any& Set(const Name_t& iName, const ZVal_Any& iVal);
 	ZMap_Any& Set(const Index_t& iIndex, const ZVal_Any& iVal);
 
@@ -331,19 +331,19 @@ public:
 	ZMap_Any& Erase(const Index_t& iIndex);
 
 // Our protocol
-	ZVal_Any& Mutable(const Name_t& iName);
+	ZVal_Any& Mut(const Name_t& iName);
 
 	template <class S>
-	S& Mutable(const Name_t& iName)
-		{ return this->Mutable(iName).Mutable<S>(); }
+	S& Mut(const Name_t& iName)
+		{ return this->Mut(iName).Mut<S>(); }
 
 	template <class S>
-	S& DMutable(const S& iDefault, const Name_t& iName)
+	S& DMut(const S& iDefault, const Name_t& iName)
 		{
-		if (S* theVal = this->PGetMutable<S>(iName))
+		if (S* theVal = this->PMut<S>(iName))
 			return *theVal;
 		this->Set(iName, iDefault);
-		return *this->PGetMutable<S>(iName);
+		return *this->PMut<S>(iName);
 		}
 	
 	Index_t Begin() const;

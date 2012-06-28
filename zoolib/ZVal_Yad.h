@@ -133,21 +133,12 @@ public:
 // ZMap protocol
 	void Clear();
 
-	ZVal_Yad* PGetMutable(const Name_t& iName);
-
 	const ZVal_Yad* PGet(const Name_t& iName) const;
-
 	ZQ<ZVal_Yad> QGet(const Name_t& iName) const;
 	const ZVal_Yad& DGet(const ZVal_Yad& iDefault, const Name_t& iName) const;
 	const ZVal_Yad& Get(const Name_t& iName) const;
-
-	template <class S>
-	S* PGetMutable(const Name_t& iName)
-		{
-		if (ZVal_Yad* theVal = this->PGetMutable(iName))
-			return theVal->PGetMutable<S>();
-		return nullptr;
-		}
+	ZVal_Yad* PMut(const Name_t& iName);
+	ZVal_Yad& Mut(const Name_t& iName);
 
 	template <class S>
 	const S* PGet(const Name_t& iName) const
@@ -181,6 +172,18 @@ public:
 		return sDefault<S>();
 		}
 
+	template <class S>
+	S* PMut(const Name_t& iName)
+		{
+		if (ZVal_Yad* theVal = this->PMut(iName))
+			return theVal->PMut<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	S& Mut(const Name_t& iName)
+		{ return this->Mut(iName).Mut<S>(); }
+
 	ZMap_Yad& Set(const Name_t& iName, const ZVal_Yad& iVal);
 
 	template <class S>
@@ -190,12 +193,6 @@ public:
 	ZMap_Yad& Erase(const Name_t& iName);
 
 // Our protocol
-	ZVal_Yad& Mutable(const Name_t& iName);
-
-	template <class S>
-	S& Mutable(const Name_t& iName)
-		{ return this->Mutable(iName).Mutable<S>(); }
-
 	ZVal_Yad& operator[](const Name_t& iName);
 	const ZVal_Yad& operator[](const Name_t& iName) const;
 

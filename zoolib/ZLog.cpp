@@ -91,9 +91,7 @@ void StrimW::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCoun
 	{
 	try
 		{
-		if (!fMessageQ)
-			fMessageQ = std::string();
-		ZStrimW_String8(fMessageQ.GetMutable()).Write(iSource, iCountCU, oCountCU);
+		ZStrimW_String8(sMut(fMessageQ)).Write(iSource, iCountCU, oCountCU);
 		}
 	catch (...)
 		{
@@ -106,9 +104,7 @@ void StrimW::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCoun
 	{
 	try
 		{
-		if (!fMessageQ)
-			fMessageQ = std::string();
-		ZStrimW_String8(fMessageQ.GetMutable()).Write(iSource, iCountCU, oCountCU);
+		ZStrimW_String8(sMut(fMessageQ)).Write(iSource, iCountCU, oCountCU);
 		}
 	catch (...)
 		{
@@ -121,9 +117,7 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 	{
 	try
 		{
-		if (!fMessageQ)
-			fMessageQ = std::string();
-		ZStrimW_String8(fMessageQ.GetMutable()).Write(iSource, iCountCU, oCountCU);
+		ZStrimW_String8(sMut(fMessageQ)).Write(iSource, iCountCU, oCountCU);
 		}
 	catch (...)
 		{
@@ -158,7 +152,7 @@ void StrimW::Emit() const
 	if (fMessageQ && !fMessageQ->empty())
 		{
 		const_cast<StrimW*>(this)->pEmit();
-		fMessageQ.GetMutable().resize(0);
+		sMut(fMessageQ).resize(0);
 		}
 	}
 

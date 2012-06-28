@@ -133,16 +133,6 @@ int ZSeq_Any::Compare(const ZSeq_Any& iOther) const
 void ZSeq_Any::Clear()
 	{ fRep.Clear(); }
 
-ZVal_Any* ZSeq_Any::PGetMutable(size_t iIndex)
-	{
-	if (fRep && iIndex < fRep->fVector.size())
-		{
-		this->pTouch();
-		return &fRep->fVector[iIndex];
-		}
-	return nullptr;
-	}
-
 const ZVal_Any* ZSeq_Any::PGet(size_t iIndex) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
@@ -169,6 +159,24 @@ const ZVal_Any& ZSeq_Any::Get(size_t iIndex) const
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return *theVal;
 	return spVal_Null;
+	}
+
+ZVal_Any* ZSeq_Any::PMut(size_t iIndex)
+	{
+	if (fRep && iIndex < fRep->fVector.size())
+		{
+		this->pTouch();
+		return &fRep->fVector[iIndex];
+		}
+	return nullptr;
+	}
+
+ZVal_Any& ZSeq_Any::Mut(size_t iIndex)
+	{
+	this->pTouch();
+	if (iIndex >= fRep->fVector.size())
+		fRep->fVector.resize(iIndex + 1);
+	return fRep->fVector[iIndex];
 	}
 
 ZSeq_Any& ZSeq_Any::Set(size_t iIndex, const ZVal_Any& iVal)
@@ -216,14 +224,6 @@ ZVal_Any& ZSeq_Any::operator[](size_t iIndex)
 
 const ZVal_Any& ZSeq_Any::operator[](size_t iIndex) const
 	{ return this->Get(iIndex); }
-
-ZVal_Any& ZSeq_Any::Mutable(size_t iIndex)
-	{
-	this->pTouch();
-	if (iIndex >= fRep->fVector.size())
-		fRep->fVector.resize(iIndex + 1);
-	return fRep->fVector[iIndex];
-	}
 
 void ZSeq_Any::pTouch()
 	{
@@ -422,26 +422,6 @@ bool ZMap_Any::IsEmpty() const
 void ZMap_Any::Clear()
 	{ fRep.Clear(); }
 
-ZVal_Any* ZMap_Any::PGetMutable(const Name_t& iName)
-	{
-	if (fRep)
-		{
-		this->pTouch();
-		Index_t theIndex = fRep->fMap.find(iName);
-		if (theIndex != fRep->fMap.end())
-			return &theIndex->second;
-		}
-	return nullptr;
-	}
-
-ZVal_Any* ZMap_Any::PGetMutable(const Index_t& iIndex)
-	{
-	Map_t::iterator theIndex = this->pTouch(iIndex);
-	if (theIndex != this->End())
-		return &theIndex->second;
-	return nullptr;
-	}
-
 const ZVal_Any* ZMap_Any::PGet(const Name_t& iName) const
 	{
 	if (fRep)
@@ -502,6 +482,32 @@ const ZVal_Any& ZMap_Any::Get(const Index_t& iIndex) const
 	return spVal_Null;
 	}
 
+ZVal_Any* ZMap_Any::PMut(const Name_t& iName)
+	{
+	if (fRep)
+		{
+		this->pTouch();
+		Index_t theIndex = fRep->fMap.find(iName);
+		if (theIndex != fRep->fMap.end())
+			return &theIndex->second;
+		}
+	return nullptr;
+	}
+
+ZVal_Any* ZMap_Any::PMut(const Index_t& iIndex)
+	{
+	Map_t::iterator theIndex = this->pTouch(iIndex);
+	if (theIndex != this->End())
+		return &theIndex->second;
+	return nullptr;
+	}
+
+ZVal_Any& ZMap_Any::Mut(const Name_t& iName)
+	{
+	this->pTouch();
+	return fRep->fMap[iName];
+	}
+
 ZMap_Any& ZMap_Any::Set(const Name_t& iName, const ZVal_Any& iVal)
 	{
 	this->pTouch();
@@ -533,12 +539,6 @@ ZMap_Any& ZMap_Any::Erase(const Index_t& iIndex)
 	if (theIndex != this->End())
 		fRep->fMap.erase(theIndex);
 	return *this;
-	}
-
-ZVal_Any& ZMap_Any::Mutable(const Name_t& iName)
-	{
-	this->pTouch();
-	return fRep->fMap[iName];
 	}
 
 ZMap_Any::Index_t ZMap_Any::Begin() const
@@ -580,7 +580,7 @@ ZMap_Any& ZMap_Any::Set(const ZNameVal& iNV)
 	{ return this->Set(iNV.first, iNV.second); }
 
 ZVal_Any& ZMap_Any::operator[](const Name_t& iName)
-	{ return this->Mutable(iName); }
+	{ return this->Mut(iName); }
 
 const ZVal_Any& ZMap_Any::operator[](const Name_t& iName) const
 	{
@@ -591,7 +591,7 @@ const ZVal_Any& ZMap_Any::operator[](const Name_t& iName) const
 
 ZVal_Any& ZMap_Any::operator[](const Index_t& iIndex)
 	{
-	if (ZVal_Any* theVal = this->PGetMutable(iIndex))
+	if (ZVal_Any* theVal = this->PMut(iIndex))
 		{ return *theVal; }
 	else
 		{
@@ -677,13 +677,13 @@ ZMap_Any sAugmented(const ZMap_Any& iUnder, const ZMap_Any& iOver)
 		{
 		const ZMap_Any::Name_t& theName = iOver.NameOf(ii);
 		const ZVal_Any& theOverVal = iOver.Get(ii);
-		if (ZVal_Any* theResultVal = result.PGetMutable(theName))
+		if (ZVal_Any* theResultVal = result.PMut(theName))
 			{
 			// Already have a val in result
 			if (const ZMap_Any* theOverMap = theOverVal.PGet<ZMap_Any>())
 				{
 				// Over is a map
-				if (ZMap_Any* theResultMap = theResultVal->PGetMutable<ZMap_Any>())
+				if (ZMap_Any* theResultMap = theResultVal->PMut<ZMap_Any>())
 					{
 					// And result is a map, so we augment, and continue so as to skip
 					// the default replacement operation below.

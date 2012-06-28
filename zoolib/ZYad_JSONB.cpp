@@ -104,7 +104,7 @@ ZAny spStringFromStream(const ZStreamR& r)
 	if (const size_t theLength = r.ReadCount())
 		{
 		ZAny theAny = sAny<string>(theLength, 0);
-		string* theP = theAny.PGetMutable<string>();
+		string* theP = sPMut<string>(theAny);
 		r.Read(&(*theP)[0], theLength);
 		return theAny;
 		}

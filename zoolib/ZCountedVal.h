@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCountedWithoutFinalize.h"
+#include "zoolib/ZQ.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZTagVal.h"
 
@@ -87,6 +88,75 @@ ZRef<ZCountedVal<T> > sCountedVal(const P0& i0)
 template <class T, class P0, class P1>
 ZRef<ZCountedVal<T> > sCountedVal(const P0& i0, const P1& i1)
 	{ return new ZCountedVal<T>(i0, i1); }
+
+// =================================================================================================
+// MARK: - Accessors
+
+template <class Value, class Tag>
+const Value* sPGet(const ZRef<ZCountedVal<Value,Tag> >& iCountedVal)
+	{
+	if (iCountedVal)
+		return &iCountedVal->Get();
+	return nullptr;
+	}
+
+template <class Value, class Tag>
+const ZQ<Value> sQGet(const ZRef<ZCountedVal<Value,Tag> >& iCountedVal)
+	{
+	if (const Value* theValue = sPGet(iCountedVal))
+		return *theValue;
+	return null;
+	}
+
+template <class Value, class Tag>
+const Value& sDGet(const Value& iDefault, const ZRef<ZCountedVal<Value,Tag> >& iCountedVal)
+	{
+	if (const Value* theValue = sPGet(iCountedVal))
+		return *theValue;
+	return iDefault;
+	}
+
+template <class Value, class Tag>
+const Value& sGet(const ZRef<ZCountedVal<Value,Tag> >& iCountedVal)
+	{
+	if (const Value* theValue = sPGet(iCountedVal))
+		return *theValue;
+	return sDefault<Value>();
+	}
+
+template <class Value, class Tag>
+Value* sPMut(const ZRef<ZCountedVal<Value,Tag> >& ioCountedVal)
+	{
+	if (ioCountedVal)
+		return &ioCountedVal->Mut();
+	return nullptr;
+	}
+
+template <class Value, class Tag>
+Value& sDMut(const Value& iDefault, ZRef<ZCountedVal<Value,Tag> >& ioCountedVal)
+	{
+	if (not ioCountedVal)
+		ioCountedVal = new ZCountedVal<Value,Tag>(iDefault);
+	return ioCountedVal->Mut();
+	}
+
+template <class Value, class Tag>
+Value& sMut(ZRef<ZCountedVal<Value,Tag> >& ioCountedVal)
+	{
+	if (not ioCountedVal)
+		ioCountedVal = new ZCountedVal<Value,Tag>();
+	return ioCountedVal->Mut();
+	}
+
+template <class Value, class Tag>
+Value& sFresh(ZRef<ZCountedVal<Value,Tag> >& ioCountedVal)
+	{
+	if (not ioCountedVal)
+		ioCountedVal = new ZCountedVal<Value,Tag>();
+	else if (ioCountedVal->IsShared())
+		ioCountedVal = ioCountedVal->Clone();
+	return ioCountedVal->Mut();
+	}
 
 } // namespace ZooLib
 

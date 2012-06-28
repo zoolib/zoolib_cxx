@@ -48,24 +48,14 @@ public:
 	static const size_t R = R_p;
 
 	ZMatrix()
-		{
-		sMemZero_T(fE);
-//		for (size_t ii = 0; ii < C * R; ++ii)
-//			fE[0][ii] = E(0);
-		}
+		{ sMemZero_T(fE); }
 
 	ZMatrix(const ZMatrix& iOther)
-		{
-		sMemCopy(fE, iOther.fE, sizeof(fE));
-//		for (size_t ii = 0; ii < C * R; ++ii)
-//			fE[0][ii] = iOther.fE[0][ii];
-		}
+		{ sMemCopy(fE, iOther.fE, sizeof(fE)); }
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
 		sMemCopy(fE, iOther.fE, sizeof(fE));
-//		for (size_t ii = 0; ii < C * R; ++ii)
-//			fE[0][ii] = iOther.fE[0][ii];
 		return *this;
 		}
 
@@ -92,24 +82,14 @@ public:
 	static const size_t R = R_p;
 
 	ZMatrix()
-		{
-		sMemZero_T(fE);
-//		for (size_t rr = 0; rr < R; ++rr)
-//			fE[0][rr] = E(0);
-		}
+		{ sMemZero_T(fE); }
 
 	ZMatrix(const ZMatrix& iOther)
-		{
-		sMemCopy(fE, iOther.fE, sizeof(fE));
-//		for (size_t rr = 0; rr < R; ++rr)
-//			fE[0][rr] = iOther.fE[0][rr];
-		}
+		{ sMemCopy(fE, iOther.fE, sizeof(fE)); }
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
 		sMemCopy(fE, iOther.fE, sizeof(fE));
-//		for (size_t rr = 0; rr < R; ++rr)
-//			fE[0][rr] = iOther.fE[0][rr];
 		return *this;
 		}
 
@@ -128,7 +108,7 @@ public:
 	const E& operator[](size_t r) const
 		{ return fE[0][r]; }
 
-	E& GetMutable(size_t r)
+	E& Mut(size_t r)
 		{ return fE[0][r]; }
 
 	const E Get(size_t r) const
@@ -148,24 +128,14 @@ public:
 	static const size_t C = C_p;
 
 	ZMatrix()
-		{
-		sMemZero_T(fE);
-//		for (size_t cc = 0; cc < C; ++cc)
-//			fE[cc][0] = E(0);
-		}
+		{ sMemZero_T(fE); }
 
 	ZMatrix(const ZMatrix& iOther)
-		{
-		sMemCopy(fE, iOther.fE, sizeof(fE));
-//		for (size_t cc = 0; cc < C; ++cc)
-//			fE[cc][0] = iOther.fE[cc][0];
-		}
+		{ sMemCopy(fE, iOther.fE, sizeof(fE)); }
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
 		sMemCopy(fE, iOther.fE, sizeof(fE));
-//		for (size_t cc = 0; cc < C; ++cc)
-//			fE[cc][0] = iOther.fE[cc][0];
 		return *this;
 		}
 
@@ -184,7 +154,7 @@ public:
 	const E& operator[](size_t c) const
 		{ return fE[c][0]; }
 
-	E& GetMutable(size_t c)
+	E& Mut(size_t c)
 		{ return fE[c][0]; }
 
 	const E Get(size_t c) const
@@ -207,24 +177,14 @@ public:
 	static const size_t Dim = Dim_p;
 
 	ZMatrix()
-		{
-		sMemZero_T(fE);
-//		for (size_t ii = 0; ii < C * R; ++ii)
-//			fE[0][ii] = E(0);
-		}
+		{ sMemZero_T(fE); }
 
 	ZMatrix(const ZMatrix& iOther)
-		{
-		sMemCopy(fE, iOther.fE, sizeof(fE));
-//		for (size_t ii = 0; ii < C * R; ++ii)
-//			fE[0][ii] = iOther.fE[0][ii];
-		}
+		{ sMemCopy(fE, iOther.fE, sizeof(fE)); }
 
 	ZMatrix& operator=(const ZMatrix& iOther)
 		{
 		sMemCopy(fE, iOther.fE, sizeof(fE));
-//		for (size_t ii = 0; ii < C * R; ++ii)
-//			fE[0][ii] = iOther.fE[0][ii];
 		return *this;
 		}
 

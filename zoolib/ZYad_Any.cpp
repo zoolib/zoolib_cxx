@@ -138,9 +138,9 @@ public:
 			ZVal_Any theVal = this->Do(theChild);
 			if (fRepeatedPropsAsSeq)
 				{
-				if (ZVal_Any* prior = theMap.PGetMutable(theName))
+				if (ZVal_Any* prior = theMap.PMut(theName))
 					{
-					if (ZSeq_Any* priorSeq = prior->PGetMutable<ZSeq_Any>())
+					if (ZSeq_Any* priorSeq = prior->PMut<ZSeq_Any>())
 						{
 						priorSeq->Append(theVal);
 						continue;

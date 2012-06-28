@@ -77,66 +77,68 @@ public:
 	void Clear();
 
 	template <class S>
-	S* PGetMutable()
-		{ return static_cast<S*>(pGetMutable(typeid(S))); }
-
-	template <class S>
 	const S* PGet() const
 		{ return static_cast<const S*>(pGet(typeid(S))); }
 
 	template <class S>
 	const ZQ<S> QGet() const
 		{
-		if (const S* theVal = this->PGet<S>())
-			return *theVal;
+		if (const S* theP = this->PGet<S>())
+			return *theP;
 		return null;
 		}
 
 	template <class S>
 	const S& DGet(const S& iDefault) const
 		{
-		if (const S* theVal = this->PGet<S>())
-			return *theVal;
+		if (const S* theP = this->PGet<S>())
+			return *theP;
 		return iDefault;
 		}
 
 	template <class S>
 	const S& Get() const
 		{
-		if (const S* theVal = this->PGet<S>())
-			return *theVal;
+		if (const S* theP = this->PGet<S>())
+			return *theP;
 		return sDefault<S>();
 		}
 
 	template <class S>
-	void Set(const S& iVal)
+	S* PMut()
+		{ return static_cast<S*>(pGetMutable(typeid(S))); }
+
+	template <class S>
+	S& DMut(const S& iDefault)
 		{
+		if (const S* theP = this->PGet<S>())
+			return *theP;
 		pDtor();
-		pCtor_T<S>(iVal);
+		return pCtorRet_T<S>(iDefault);
 		}
 
-// Our protocol
 	template <class S>
-	bool Is() const
-		{ return this->PGet<S>(); }
-
-	template <class S>
-	S& Mutable()
+	S& Mut()
 		{
-		if (S* theP = this->PGetMutable<S>())
+		if (S* theP = this->PMut<S>())
 			return *theP;
 		pDtor();
 		return pCtorRet_T<S>();
 		}
 
 	template <class S>
-	S& DMutable(const S& iDefault)
+	S& Set(const S& iVal)
 		{
-		if (S* theP = this->PGetMutable<S>())
-			return *theP;
+		if (S* theP = this->PMut<S>())
+			*theP = iVal;
 		pDtor();
-		return pCtorRet_T<S>(iDefault);
+		return pCtorRet_T<S>(iVal);
 		}
+
+// Our protocol
+	template <class S>
+	bool Is() const
+		{ return this->PGet<S>(); }
 
 // Special purpose constructors, called by sAny and sAnyCounted
 	template <class S, class P0>
@@ -500,25 +502,37 @@ inline ZAny& ZAny::operator=(const S& iVal)
 // =================================================================================================
 // MARK: - Accessor functions
 
-template <class T>
-const ZQ<T> sQGet(const ZAny& iAny)
-	{ return iAny.QGet<T>(); }
+template <class S>
+const S* sPGet(const ZAny& iAny)
+	{ return iAny.PGet<S>(); }
 
-template <class T>
-const T sDGet(const T& iDefault, const ZAny& iAny)
-	{ return iAny.DGet<T>(iDefault); }
+template <class S>
+const ZQ<S> sQGet(const ZAny& iAny)
+	{ return iAny.QGet<S>(); }
 
-template <class T>
-const T sGet(const ZAny& iAny)
-	{ return iAny.Get<T>(); }
+template <class S>
+const S& sDGet(const S& iDefault, const ZAny& iAny)
+	{ return iAny.DGet<S>(iDefault); }
 
-//template <class T>
-//T& sGet(ZAny& iAny)
-//	{ return iAny.Mutable<T>(); }
+template <class S>
+const S& sGet(const ZAny& iAny)
+	{ return iAny.Get<S>(); }
 
-template <class T>
-T& sMutable(ZAny& iAny)
-	{ return iAny.Mutable<T>(); }
+template <class S>
+S* sPMut(ZAny& ioAny)
+	{ return ioAny.PMut<S>(); }
+
+template <class S>
+S& sDMut(const S& iDefault, ZAny& ioAny)
+	{ return ioAny.DMut<S>(iDefault); }
+
+template <class S>
+S& sMut(ZAny& ioAny)
+	{ return ioAny.Mut<S>(); }
+
+template <class S>
+S& sSet(ZAny& ioAny, const S& iVal)
+	{ return ioAny.Set<S>(iVal); }
 
 // =================================================================================================
 // MARK: - ZAny, swap and pseudo-constructors

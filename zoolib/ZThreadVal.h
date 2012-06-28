@@ -67,11 +67,11 @@ public:
 
 	//--
 
-	static Value& sGetMutable()
+	static const Value* sPGet()
 		{
-		ZThreadVal* theTV = spGet();
-		ZAssert(theTV);
-		return theTV->GetMutable();
+		if (ZThreadVal* theTV = spGet())
+			return &theTV->Get();
+		return null;
 		}
 
 	static ZQ<Value> sQGet()
@@ -88,11 +88,25 @@ public:
 		return iDefault;
 		}
 
-	static Value sGet()
+	static const Value& sGet()
 		{
 		if (ZThreadVal* theTV = spGet())
 			return theTV->Get();
-		return Value();
+		return sDefault<Value>();
+		}
+
+	static Value* sPMut()
+		{
+		if (ZThreadVal* theTV = spGet())
+			return &theTV->Mut();
+		return null;
+		}
+
+	static Value& sMut()
+		{
+		ZThreadVal* theTV = spGet();
+		ZAssert(theTV);
+		return theTV->Mut();
 		}
 
 private:
@@ -114,7 +128,7 @@ private:
 
 // Not sure about this one yet.
 template <class T>
-T sThreadVal()
+const T& sThreadVal()
 	{ return ZThreadVal<T>::sGet(); }
 
 } // namespace ZooLib

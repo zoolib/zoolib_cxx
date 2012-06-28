@@ -32,12 +32,12 @@ namespace ZooLib {
 bool sEquali(const std::string& iLeft, const std::string& iRight);
 
 template <class Map_t>
-typename Map_t::Val* sPGetMutablei(Map_t& iMap, const std::string& iNamei)
+typename Map_t::Val* sPMuti(Map_t& iMap, const std::string& iNamei)
 	{
 	for (typename Map_t::Index_t ii = iMap.Begin(); ii != iMap.End(); ++ii)
 		{
 		if (sEquali(iMap.NameOf(ii), iNamei))
-			return iMap.PGetMutable(ii);
+			return iMap.PMut(ii);
 		}
 	return nullptr;
 	}

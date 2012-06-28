@@ -232,6 +232,8 @@ public:
 		return sFetch_T<T>(fBytes);
 		}
 
+// -----------------
+
 	void Clear()
 		{
 		if (fHasValue)
@@ -241,13 +243,6 @@ public:
 			}
 		}
 
-	T* PGetMutable()
-		{
-		if (fHasValue)
-			return sFetch_T<T>(fBytes);
-		return nullptr;
-		}
-
 	const T* PGet() const
 		{
 		if (fHasValue)
@@ -255,35 +250,58 @@ public:
 		return nullptr;
 		}
 
-	const T DGet(const T& iDefault) const
+	const T& DGet(const T& iDefault) const
 		{
 		if (fHasValue)
 			return *sFetch_T<T>(fBytes);
 		return iDefault;
 		}
 
-	T& GetMutable()
-		{
-		ZAssert(fHasValue);
-		return *sFetch_T<T>(fBytes);
-		}
-
 	const T& Get() const
 		{
-		ZAssert(fHasValue);
+		if (fHasValue)
+			return *sFetch_T<T>(fBytes);
+		return sDefault<T>();
+		}
+
+	T* PMut()
+		{
+		if (fHasValue)
+			return sFetch_T<T>(fBytes);
+		return nullptr;
+		}
+
+	T& DMut(const T& iDefault)
+		{
+		if (not fHasValue)
+			{
+			sCtor_T<T>(fBytes, iDefault);
+			fHasValue = true;
+			}
 		return *sFetch_T<T>(fBytes);
 		}
 
-	void Set(const T& iVal)
+	T& Mut()
+		{
+		if (not fHasValue)
+			{
+			sCtor_T<T>(fBytes);
+			fHasValue = true;
+			}
+		return *sFetch_T<T>(fBytes);
+		}
+
+	T& Set(const T& iVal)
 		{
 		if (fHasValue)
 			{
-			sAssign_T<T>(fBytes, iVal);
+			return sAssign_T<T>(fBytes, iVal);
 			}
 		else
 			{
 			sCtor_T<T>(fBytes, iVal);
 			fHasValue = true;
+			return *sFetch_T<T>(fBytes);
 			}
 		}
 
@@ -419,28 +437,36 @@ private:
 // MARK: - Accessor functions
 
 template <class T, bool Sense>
-T sDGet(const T& iDefault, const ZQ<T,Sense>& iQ)
-	{
-	if (iQ.HasValue())
-		return iQ.Get();
-	return iDefault;
-	}
+const T* sPGet(const ZQ<T,Sense>& iQ)
+	{ return iQ.PGet(); }
 
 template <class T, bool Sense>
-T sGet(const ZQ<T,Sense>& iQ)
-	{
-	if (iQ.HasValue())
-		return iQ.Get();
-	return T();
-	}
+const ZQ<T,Sense> sQGet(const ZQ<T,Sense>& iQ)
+	{ return iQ.QGet(); }
 
 template <class T, bool Sense>
-T& sGetMutable(ZQ<T,Sense>& iQ)
-	{
-	if (iQ.HasValue())
-		iQ = T();
-	return iQ.GetMutable();
-	}
+const T& sDGet(const T& iDefault, const ZQ<T,Sense>& iQ)
+	{ return iQ.DGet(iDefault); }
+
+template <class T, bool Sense>
+const T& sGet(const ZQ<T,Sense>& iQ)
+	{ return iQ.Get(); }
+
+template <class T, bool Sense>
+T* sPMut(ZQ<T,Sense>& ioQ)
+	{ return ioQ.PMut(); }
+
+template <class T, bool Sense>
+T& sDMut(const T& iDefault, ZQ<T,Sense>& ioQ)
+	{ return ioQ.DMut(iDefault); }
+
+template <class T, bool Sense>
+T& sMut(ZQ<T,Sense>& ioQ)
+	{ return ioQ.Mut(); }
+
+template <class T, bool Sense>
+T& sSet(ZQ<T,Sense>& ioQ, const T& iVal)
+	{ return ioQ.Set(iVal); }
 
 // =================================================================================================
 // MARK: - swap

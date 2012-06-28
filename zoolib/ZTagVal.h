@@ -72,20 +72,20 @@ public:
 	:	fValue(i0, i1)
 		{}
 
-	operator Value&()
-		{ return fValue; }
-
 	operator const Value&() const
 		{ return fValue; }
 
-	Value& GetMutable()
+	operator Value&()
 		{ return fValue; }
 
 	const Value& Get() const
 		{ return fValue; }
 
-	void Set(const Value& iValue) const
-		{ fValue = iValue; }
+	Value& Mut()
+		{ return fValue; }
+
+	Value& Set(const Value& iValue) const
+		{ return fValue = iValue; }
 
 	bool operator==(const ZTagVal& iOther) const
 		{ return fValue == iOther.fValue; }
@@ -108,6 +108,29 @@ public:
 protected:
 	Value fValue;
 	};
+
+// =================================================================================================
+// MARK: - Accessors
+
+template <class Value, class Tag>
+const Value* sPGet(const ZTagVal<Value,Tag>& iTagVal)
+	{ return &iTagVal.Get(); }
+
+template <class Value, class Tag>
+const Value& sGet(const ZTagVal<Value,Tag>& iTagVal)
+	{ return iTagVal.Get(); }
+
+template <class Value, class Tag>
+Value* sPMut(ZTagVal<Value,Tag>& ioTagVal)
+	{ return &ioTagVal.Mut(); }
+
+template <class Value, class Tag>
+Value& sMut(ZTagVal<Value,Tag>& ioTagVal)
+	{ return ioTagVal.Mut(); }
+
+template <class Value, class Tag>
+Value& sSet(ZTagVal<Value,Tag>& ioTagVal, const Value& iValue)
+	{ return ioTagVal.Set(iValue); }
 
 } // namespace ZooLib
 

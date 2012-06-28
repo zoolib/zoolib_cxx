@@ -64,7 +64,7 @@ public:
 	const Val_t* PGet(const Name_t& iName) const
 		{
 		if (fRep)
-			return fRep->Get().PGet(iName);
+			return sGet(fRep).PGet(iName);
 		return nullptr;
 		}
 
@@ -93,7 +93,7 @@ public:
 	const S* PGet(const Name_t& iName) const
 		{
 		if (fRep)
-			return fRep->Get().PGet<S>(iName);
+			return sGet(fRep).PGet<S>(iName);
 		return nullptr;
 		}
 
@@ -170,72 +170,62 @@ public:
 
 // ZMap mutable protocol
 	void Clear()
-//	void Clear() const
 		{
 		if (fRep)
-			fRep->GetMutable().Clear();
+			sMut(fRep).Clear();
 		}
 
-	Val_t* PGetMutable(const Name_t& iName)
-//	Val_t* PGetMutable(const Name_t& iName) const
+	Val_t* PMut(const Name_t& iName)
 		{
 		if (fRep)
-			return fRep->Get().PGetMutable(iName);
+			return sMut(fRep).PMut(iName);
+		return nullptr;
+		}
+
+	Val_t& Mut(const Name_t& iName)
+		{
+		if (not fRep)
+			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
+		return sMut(fRep).Mut(iName);
+		}
+
+	template <class S>
+	S* PMut(const Name_t& iName)
+		{
+		if (fRep)
+			return sMut(fRep).PMut<S>(iName);
 		return nullptr;
 		}
 
 	template <class S>
-	S* PGetMutable(const Name_t& iName)
-//	S* PGetMutable(const Name_t& iName) const
-		{
-		if (fRep)
-			return fRep->Get().PGetMutable<S>(iName);
-		return nullptr;
-		}
-
-	ZMap_Shared_Mutable_T& Set(const Name_t& iName, const Val_t& iVal)
-//	const ZMap_Shared_Mutable_T& Set(const Name_t& iName, const Val_t& iVal) const
+	S& Mut(const Name_t& iName)
 		{
 		if (not fRep)
 			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
-		fRep->GetMutable().Set(iName, iVal);
+		return sMut(fRep).Mut<S>(iName);
+		}
+
+	ZMap_Shared_Mutable_T& Set(const Name_t& iName, const Val_t& iVal)
+		{
+		if (not fRep)
+			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
+		sMut(fRep).Set(iName, iVal);
 		return *this;
 		}
 
 	template <class S>
 	ZMap_Shared_Mutable_T& Set(const Name_t& iName, const S& iVal)
-//	const ZMap_Shared_Mutable_T& Set(const Name_t& iName, const S& iVal) const
 		{ return this->Set(iName, Val_t(iVal)); }
 
 	ZMap_Shared_Mutable_T& Erase(const Name_t& iName)
-//	const ZMap_Shared_Mutable_T& Erase(const Name_t& iName) const
 		{
 		if (fRep)
-			fRep->GetMutable().Erase(iName);
+			sMut(fRep).Erase(iName);
 		return *this;
 		}
 
-// Our protocol
-	Val_t& Mutable(const Name_t& iName)
-//	Val_t& Mutable(const Name_t& iName) const
-		{
-		if (not fRep)
-			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
-		return fRep->GetMutable().Mutable(iName);
-		}
-
-	template <class S>
-	S& Mutable(const Name_t& iName)
-//	S& Mutable(const Name_t& iName) const
-		{
-		if (not fRep)
-			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
-		return fRep->GetMutable().Mutable<S>(iName);
-		}
-
 	Val_t& operator[](const Name_t& iName)
-//	Val_t& operator[](const Name_t& iName) const
-		{ return this->Mutable(iName); }
+		{ return this->Mut(iName); }
 	};
 
 } // namespace ZooLib
