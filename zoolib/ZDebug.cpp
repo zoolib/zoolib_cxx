@@ -33,6 +33,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define snprintf _snprintf
 #endif
 
+#if defined(__ANDROID__)
+	#include <android/log.h>
+#endif
+
 // =================================================================================================
 // MARK: - ZDebug
 
@@ -166,6 +170,35 @@ void OutputDebugString(const char *restrict fmt, ...) {
     va_end(args);
 }
 #endif
+
+// =================================================================================================
+// MARK: - Android
+
+#if defined(__ANDROID__)
+
+static void spHandleDebug_Android(const Params_t& iParams, va_list iArgs)
+	{
+	if (iParams.fUserMessage)
+		__android_log_vprint(ANDROID_LOG_ERROR, "ZooLib", iParams.fUserMessage, iArgs);
+	if (iParams.fStop)
+		abort();
+	}
+
+class DebugFunction_Android
+:	public ZFunctionChain_T<Function_t, const Params_t&>
+	{
+public:
+	DebugFunction_Android() : Base_t(false) {}
+
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
+		{
+		oResult = spHandleDebug_Android;
+		return true;
+		}
+	} sDebugFunction_Android;
+
+#endif // defined(__ANDROID__)
+
 // =================================================================================================
 // MARK: - Win
 

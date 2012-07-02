@@ -175,7 +175,7 @@ static time_t spTMToTime(const struct tm& iTM)
 		// MSL's mktime does no timezone conversion.
 		result = mktime(const_cast<struct tm*>(&iTM));
 
- 	#elif defined(__sun__)
+ 	#elif defined(__sun__) || defined (__ANDROID__)
 
 		// Sun doesn't provide timegm, assume things are going to work.
 		//#warning "CHECK THIS"

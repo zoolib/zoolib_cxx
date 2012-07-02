@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,49 +18,32 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMemory_h__
-#define __ZMemory_h__ 1
-#include "zconfig.h"
+#include "zoolib/ZStrimW_AndroidLog.h"
 
-#include "zoolib/ZCONFIG_SPI.h"
+#if defined(__ANDROID__)
 
-#include <cstddef> // For std::size_t
-#include <cstring> // For std::memcmp, std::memcpy, std::memmove and std::memset
-
-#include <strings.h> // For bzero on Android
+#include <android/log.h>
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - memcmp, memcpy, memmove, memset, bzero wrappers.
+// MARK: - ZStrimW_AndroidLog
 
-inline int sMemCompare(const void* iLHS, const void* iRHS, std::size_t iCount)
-	{ return std::memcmp(iLHS, iRHS, iCount); }
-
-int sMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t iCountR);
-
-inline void sMemCopy(void* oDest, const void* iSource, std::size_t iCount)
-	{ std::memcpy(oDest, iSource, iCount); }
-
-inline void sMemMove(void* oDest, const void* iSource, std::size_t iCount)
-	{ std::memmove(oDest, iSource, iCount); }
-
-inline void sMemSet(void* oDest, unsigned char iValue, std::size_t iCount)
-	{ std::memset(oDest, iValue, iCount); }
-
-inline void sMemZero(void* oDest, std::size_t iCount)
+void ZStrimW_AndroidLog::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU)
 	{
-	#if ZCONFIG_SPI_Enabled(POSIX)
-		::bzero(oDest, iCount);
-	#else
-		ZMemSet(oDest, 0, iCount);
-	#endif
+	ZAcqMtx acq(fMtx);
+	fBuffer += std::string(iSource, iCountCU);
+	if (oCountCU)
+		*oCountCU = iCountCU;
 	}
 
-template <class T>
-void sMemZero_T(T& oT)
-	{ sMemZero(&oT, sizeof(oT)); }
+void ZStrimW_AndroidLog::Imp_Flush()
+	{
+	ZAcqMtx acq(fMtx);
+	__android_log_print(ANDROID_LOG_INFO, "ZooLib", fBuffer.c_str());
+	fBuffer.clear();
+	}
 
 } // namespace ZooLib
 
-#endif // __ZMemory_h__
+#endif // defined(__ANDROID__)

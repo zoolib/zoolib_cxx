@@ -266,6 +266,28 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // ZCONFIG_SPI_Enabled(Win)
 
 // =================================================================================================
+// MARK: - Android
+
+#if defined(__ANDROID__)
+
+#include <sys/atomics.h>
+
+namespace ZooLib {
+
+// -----------------------------------------------
+#if !defined(DEFINED_sAtomic_CAS)
+#define DEFINED_sAtomic_CAS 1
+
+bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
+	{ return 0 == __atomic_cmpxchg(iOldValue, iNewValue, &iAtomic->fValue); }
+
+#endif
+
+} // namespace ZooLib
+
+#endif // defined(__ANDROID__)
+
+// =================================================================================================
 // MARK: - A real CompareAndSet must be defined by now
 
 #if !defined(DEFINED_sAtomic_CAS)
@@ -336,9 +358,7 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 #define DEFINED_sAtomic_CASPtr 1
 
 bool sAtomic_CASPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
-	{
-	return sAtomic_CAS((ZAtomic_t*)iPtrAddress, (int)iOldValue, (int)iNewValue);
-	}
+	{ return sAtomic_CAS((ZAtomic_t*)iPtrAddress, (int)iOldValue, (int)iNewValue); }
 
 #endif
 // -----------------------------------------------

@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompat_cmath.h" // For NAN and isnan
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTypes.h" // For countof
 
@@ -255,11 +256,14 @@ double ZTime::sSinceBoot()
 			return theUptime;
 		}
 
-	struct sysinfo theSI;
-	if (0 == ::sysinfo(&theSI))
-		return ZTime(theSI.uptime);
-
-	return -1;
+	#if defined(__ANDROID__)
+		ZUnimplemented();
+	#else
+		struct sysinfo theSI;
+		if (0 == ::sysinfo(&theSI))
+			return theSI.uptime;
+		return -1;
+	#endif
 
 #elif ZCONFIG_SPI_Enabled(BSD)
 

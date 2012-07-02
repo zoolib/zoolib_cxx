@@ -149,6 +149,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // With XCode we could base debug off !__OPTIMIZE__
 #ifndef ZCONFIG_Debug
 	#if 0
+	#elif defined(DEBUG)
+		#define ZCONFIG_Debug ZCONFIG_DebugLevel
+	#elif defined(NDEBUG)
+		#define ZCONFIG_Debug 0
 	#elif defined(__MACH__)
 		#if not defined(__OPTIMIZE__)
 			#define ZCONFIG_Debug ZCONFIG_DebugLevel
@@ -222,6 +226,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#if defined(ZCONFIG_GCC_Version) && ZCONFIG_GCC_Version >= 42
 		#define ZCONFIG_LIBCPP_GCCExtensions 1
 	#endif
+#elif defined(__ANDROID__)
+	#define ZCONFIG_LIBCPP_TR1 1
+	#define ZCONFIG_LIBCPP_GCCExtensions 1
 #else
 	#if defined(ZCONFIG_GCC_Version) && ZCONFIG_GCC_Version >= 42
 		#define ZCONFIG_LIBCPP_GCCExtensions 1

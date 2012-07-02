@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(BeOS)
+#if ZCONFIG_SPI_Enabled(BeOS) || defined (__ANDROID__)
 	#define ZCONFIG_File_AtAPISupported 0
 #else
 	#define ZCONFIG_File_AtAPISupported 1
@@ -337,7 +337,7 @@ static ZFile::Error spReadAt
 	size_t countRemaining = iCount;
 	while (countRemaining > 0)
 		{
-		#if defined(linux)
+		#if defined(linux) && not defined (__ANDROID__)
 			ssize_t countRead = ::pread64(iFD, localDest, countRemaining, localOffset);
 		#else
 			ssize_t countRead = ::pread(iFD, localDest, countRemaining, localOffset);
@@ -387,7 +387,7 @@ static ZFile::Error spWriteAt(int iFD,
 	size_t countRemaining = iCount;
 	while (countRemaining > 0)
 		{
-		#if defined(linux)
+		#if defined(linux) && not defined (__ANDROID__)
 			ssize_t countWritten = ::pwrite64(iFD, localSource, countRemaining, localOffset);
 		#else
 			ssize_t countWritten = ::pwrite(iFD, localSource, countRemaining, localOffset);
@@ -418,7 +418,7 @@ static ZFile::Error spWriteAt(int iFD,
 
 static ZFile::Error spGetPosition(int iFD, uint64& oPosition)
 	{
-	#if defined(linux)
+	#if defined(linux) && not defined (__ANDROID__)
 		off64_t result = ::lseek64(iFD, 0, SEEK_CUR);
 	#else
 		off_t result = ::lseek(iFD, 0, SEEK_CUR);
@@ -432,7 +432,7 @@ static ZFile::Error spGetPosition(int iFD, uint64& oPosition)
 
 static ZFile::Error spSetPosition(int iFD, uint64 iPosition)
 	{
-	#if defined(linux)
+	#if defined(linux) && not defined (__ANDROID__)
 		if (::lseek64(iFD, iPosition, SEEK_SET) < 0)
 			return spTranslateError(errno);
 	#else
@@ -445,7 +445,7 @@ static ZFile::Error spSetPosition(int iFD, uint64 iPosition)
 
 static ZFile::Error spGetSize(int iFD, uint64& oSize)
 	{
-	#if defined(linux)
+	#if defined(linux) && not defined (__ANDROID__)
 		struct stat64 theStatStruct;
 		if (::fstat64(iFD, &theStatStruct))
 			return spTranslateError(errno);
@@ -462,7 +462,7 @@ static ZFile::Error spGetSize(int iFD, uint64& oSize)
 static ZFile::Error spSetSize(int iFD, uint64 iSize)
 	{
 	// NB ftruncate is not supported on all systems
-	#if defined(linux)
+	#if defined(linux) && not defined (__ANDROID__)
 		if (::ftruncate64(iFD, iSize) < 0)
 			return spTranslateError(errno);
 	#else
@@ -477,7 +477,7 @@ static ZFile::Error spFlush(int iFD)
 	{
 	// AG 2001-08-02. Stumbled across the docs for fdatasync, which ensures the contents of a
 	// file are flushed to disk, but does not necessarily ensure mod time is brought up to date.
-	#if defined(linux)
+	#if defined(linux) && not defined (__ANDROID__)
 		::fdatasync(iFD);
 	#else
 		::fsync(iFD);
@@ -597,7 +597,7 @@ bool RealRep_POSIX::HasValue(size_t iIndex)
 		// (leonb@research.att.com) titled "Subtle NFS/VFS/GLIBC interaction bug"
 		// <http://www.ussg.iu.edu/hypermail/linux/kernel/0103.1/0140.html>
 
-		#if defined(linux)
+		#if defined(linux) && not defined (__ANDROID__)
 			dirent64* theDirEnt = ::readdir64(fDIR);
 		#else
 			dirent* theDirEnt = ::readdir(fDIR);
@@ -988,7 +988,7 @@ ZFile::Kind ZFileLoc_POSIX::Kind(ZFile::Error* oErr)
 
 uint64 ZFileLoc_POSIX::Size(ZFile::Error* oErr)
 	{
-	#if defined(linux)
+	#if defined(linux) && not defined (__ANDROID__)
 		struct stat64 theStat;
 		int result = ::stat64(this->pGetPath().c_str(), &theStat);
 	#else
