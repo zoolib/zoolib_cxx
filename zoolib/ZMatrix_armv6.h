@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 
+#include "zoolib/ZCompat_arm.h"
 #include "zoolib/ZMatrix.h"
 
 #ifndef ZCONFIG_API_Desired__Matrix_armv6
@@ -32,7 +33,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef ZCONFIG_API_Avail__Matrix_armv6
 	#if ZCONFIG_API_Desired__Matrix_armv6
 		#if __arm__
-			#include <arm/arch.h>
 			#if defined(_ARM_ARCH_6)
 				#define ZCONFIG_API_Avail__Matrix_armv6 1
 			#endif

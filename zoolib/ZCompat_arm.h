@@ -18,47 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMatrix_armv7_h__
-#define __ZMatrix_armv7_h__ 1
+#ifndef __ZCompat_arm_h__
+#define __ZCompat_arm_h__ 1
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_API.h"
 
-#include "zoolib/ZCompat_arm.h"
-#include "zoolib/ZMatrix.h"
-
-#ifndef ZCONFIG_API_Desired__Matrix_armv7
-	#define ZCONFIG_API_Desired__Matrix_armv7 1
-#endif
-
-#ifndef ZCONFIG_API_Avail__Matrix_armv7
-	#if ZCONFIG_API_Desired__Matrix_armv7
-		#if __arm__
-			#if defined(_ARM_ARCH_7)
-				#define ZCONFIG_API_Avail__Matrix_armv7 1
-			#endif
-		#endif
+#if __arm__
+	#if defined (__ANDROID__)
+		#include <machine/cpu-features.h>
+	#else
+		#include <arm/arch.h>
 	#endif
 #endif
 
-#ifndef ZCONFIG_API_Avail__Matrix_armv7
-	#define ZCONFIG_API_Avail__Matrix_armv7 0
-#endif
-
-#if ZCONFIG_API_Enabled(Matrix_armv7)
-
-namespace ZooLib {
-namespace ZMatrix_armv7 {
-
-// =================================================================================================
-// MARK: -
-
-void Matrix4Mul(const float* src_mat_1, const float* src_mat_2, float* dst_mat);
-
-void Matrix4Vector4Mul(const float* src_mat, const float* src_vec, float* dst_vec);
-
-} // namespace ZMatrix_armv7
-} // namespace ZooLib
-
-#endif // ZCONFIG_API_Enabled(Matrix_armv7)
-
-#endif // __ZMatrix_armv7_h__
+#endif // __ZCompat_arm_h__
