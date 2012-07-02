@@ -330,7 +330,7 @@ ZRef<ZStreamerR> sPostRaw(ZRef<Callable_Connect> iCallable_Connect,
 // =================================================================================================
 // MARK: - ZHTTP, read a POST into a Map
 
-static ZRef<ZStrimmerR> spCreateStrimmerR(const Map& iHeader, const ZStreamR& iStreamR)
+static ZRef<ZStrimmerR> spMakeStrimmerR(const Map& iHeader, const ZStreamR& iStreamR)
 	{
 	const string charset =
 		iHeader.Get("content-type").Get("parameters").Get<string>("charset");
@@ -435,9 +435,9 @@ static ZQ<Val> spReadPOST(const ZStreamR& iStreamR, const Map& iHeader)
 		}
 	else if (content_type.Get<string>("type") == "text")
 		{
-		// It's explicitly some kind of text. Use spCreateStrimmerR to create an appropriate
+		// It's explicitly some kind of text. Use spMakeStrimmerR to Make an appropriate
 		// strimmer, which it does by examining values in iHeader.
-		return spCreateStrimmerR(iHeader, iStreamR)->GetStrimR().ReadAll8();
+		return spMakeStrimmerR(iHeader, iStreamR)->GetStrimR().ReadAll8();
 		}
 	else if (content_type.IsEmpty())
 		{
