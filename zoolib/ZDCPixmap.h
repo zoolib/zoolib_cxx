@@ -51,7 +51,7 @@ public:
 	ZDCPixmap& operator=(const ZRef<ZDCPixmapRep>& iRep);
 
 	ZDCPixmap(const null_t&);
-	ZDCPixmap& operator=(const const null_t&);
+	ZDCPixmap& operator=(const null_t&);
 
 	/** This is the most general and flexible constructor, but it does require
 	that client code create the ZDCPixmapRep, and thus that code has to deal with
@@ -352,7 +352,7 @@ ZDCPixmap::ZDCPixmap(const null_t&)
 	{}
 
 inline
-ZDCPixmap& ZDCPixmap::operator=(const const null_t&)
+ZDCPixmap& ZDCPixmap::operator=(const null_t&)
 	{
 	fRep.Clear();
 	return *this;
