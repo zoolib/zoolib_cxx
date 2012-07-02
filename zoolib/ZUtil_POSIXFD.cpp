@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(POSIX)
 
 #include "zoolib/ZCompat_cmath.h" // For fmod
+#include "zoolib/ZCompat_algorithm.h" // For sMin
 
 // See comment in Solaris' /usr/include/sys/ioctl.h
 #if __sun__
@@ -86,7 +87,7 @@ bool sWaitReadable(int iFD, double iTimeout)
 	thePollFD.fd = iFD;
 	thePollFD.events = POLLIN | POLLPRI;
 	thePollFD.revents = 0;
-	return 0 < ::poll(&thePollFD, 1, 1000 * int(min(3600.0, iTimeout));
+	return 0 < ::poll(&thePollFD, 1, 1000 * int(sMin(3600, iTimeout)));
 	}
 
 void sWaitWriteable(int iFD)
