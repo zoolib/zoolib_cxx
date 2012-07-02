@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStream_CGData::sCGDataProviderCreate
+// MARK: - ZStream_CGData::sProvider
 
 static size_t spGetBytes_R(void* iInfo, void* oBuffer, size_t iCount)
 	{
@@ -57,7 +57,7 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential =
 	spReleaseProvider_R
 	};
 
-ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer)
+ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerR> iStreamer)
 	{
 	if (iStreamer)
 		{
@@ -80,7 +80,7 @@ static CGDataProviderCallbacks spCallbacks_R =
 	spReleaseProvider_R
 	};
 
-ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer)
+ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerR> iStreamer)
 	{
 	if (iStreamer)
 		{
@@ -93,7 +93,7 @@ ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreate(ZRef<ZStreamerR> i
 #endif // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 // =================================================================================================
-// MARK: - ZStream_CGData::sCGDataProviderCreateRewind
+// MARK: - ZStream_CGData::sProvider
 
 static size_t spGetBytes_RPos(void* iInfo, void* oBuffer, size_t iCount)
 	{
@@ -126,7 +126,7 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential_RPos =
 	spReleaseProvider_RPos
 	};
 
-ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer)
+ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerRPos> iStreamer)
 	{
 	if (iStreamer)
 		{
@@ -149,7 +149,7 @@ static CGDataProviderCallbacks spCallbacks_RPos =
 	spReleaseProvider_RPos
 	};
 
-ZRef<CGDataProviderRef> ZStream_CGData::sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer)
+ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerRPos> iStreamer)
 	{
 	if (iStreamer)
 		{
@@ -184,7 +184,7 @@ CGDataConsumerCallbacks spCallbacks_W =
 
 } // anonymous namespace
 
-ZRef<CGDataConsumerRef> ZStream_CGData::sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer)
+ZRef<CGDataConsumerRef> ZStream_CGData::sConsumer(ZRef<ZStreamerW> iStreamer)
 	{
 	if (iStreamer)
 		{
@@ -194,6 +194,6 @@ ZRef<CGDataConsumerRef> ZStream_CGData::sCGDataConsumerCreate(ZRef<ZStreamerW> i
 	return null;
 	}
 
-#endif // ZCONFIG_SPI_Enabled(CoreGraphics)
-
 } // namespace ZooLib
+
+#endif // ZCONFIG_SPI_Enabled(CoreGraphics)

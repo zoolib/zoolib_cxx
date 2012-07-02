@@ -41,11 +41,11 @@ namespace ZStream_CGData {
 // =================================================================================================
 // MARK: - ZStream_CGData
 
-ZRef<CGDataProviderRef> sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer);
+ZRef<CGDataProviderRef> sProvider(ZRef<ZStreamerR> iStreamer);
 
-ZRef<CGDataProviderRef> sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer);
+ZRef<CGDataProviderRef> sProvider(ZRef<ZStreamerRPos> iStreamer);
 
-ZRef<CGDataConsumerRef> sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer);
+ZRef<CGDataConsumerRef> sConsumer(ZRef<ZStreamerW> iStreamer);
 
 } // namespace ZStream_CGData
 } // namespace ZooLib
