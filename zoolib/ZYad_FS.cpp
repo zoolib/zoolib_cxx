@@ -18,47 +18,64 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZMemory.h"
 #include "zoolib/ZYad_FS.h"
+#include "zoolib/ZYad_Std.h"
 
 namespace ZooLib {
+namespace ZYad_FS {
 
-using std::min;
-using std::string;
-
-class ZYadR_FS;
+namespace { // anonymous
 
 // =================================================================================================
-// MARK: - ZYadR_FS
+// MARK: - YadStreamerRPos
 
-class ZYadR_FS : public virtual ZYadR
+class YadStreamerRPos
+:	public virtual ZYadStreamerR
+,	public virtual ZStreamerRPos
 	{
 public:
-	ZYadR_FS(const ZFileSpec& iFS);
+	YadStreamerRPos(const ZFileSpec& iFS);
+	virtual ~YadStreamerRPos();
 
 // From ZYadR
-	virtual ZRef<ZYadR> Meta();
+	virtual bool IsSimple(const ZYadOptions& iOptions);
 
-protected:
-	const ZFileSpec fFS;
+// From ZStreamerRPos
+	virtual const ZStreamRPos& GetStreamRPos();
+
+private:
+	ZFileSpec fFileSpec;
+	ZRef<ZStreamerRPos> fStreamerRPos;
 	};
 
-ZYadR_FS::ZYadR_FS(const ZFileSpec& iFS)
-:	fFS(iFS)
+YadStreamerRPos::YadStreamerRPos(const ZFileSpec& iFS)
+:	fFileSpec(iFS)
 	{}
 
-ZRef<ZYadR> ZYadR_FS::Meta()
-	{ return ZYadR::Meta(); }
+YadStreamerRPos::~YadStreamerRPos()
+	{}
+
+bool YadStreamerRPos::IsSimple(const ZYadOptions& iOptions)
+	{ return false; }
+
+const ZStreamRPos& YadStreamerRPos::GetStreamRPos()
+	{
+	if (not fStreamerRPos)
+		fStreamerRPos = fFileSpec.OpenRPos();
+
+	return fStreamerRPos->GetStreamRPos();
+	}
 
 // =================================================================================================
-// MARK: - ZYadMapRPos_Dir
+// MARK: - YadMapAtRPos
 
-class ZYadMapRPos_Dir
-:	public ZYadR_FS,
-	public ZYadMapRPos
+class YadMapAtRPos
+:	public ZYadMapAtRPos
 	{
 public:
-	ZYadMapRPos_Dir(const ZFileSpec& iFS);
-	ZYadMapRPos_Dir(const ZFileSpec& iFS, const ZFileIter& iFileIter);
+	YadMapAtRPos(const ZFileSpec& iFS);
+	YadMapAtRPos(const ZFileSpec& iFS, const ZFileIter& iFileIter);
 
 // From ZYadMapR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(ZName& oName);
@@ -66,29 +83,36 @@ public:
 // From ZYadMapRClone via ZYadMapRPos
 	virtual ZRef<ZYadMapRClone> Clone();
 
-// From ZYadMapRPos
+// From ZYadMapRPos via ZYadMapAtRPos
 	virtual void SetPosition(const ZName& iName);
 
+// From ZYadMapAtR via ZYadMapAtRPos
+	virtual ZRef<ZYadR> ReadAt(const ZName& iName);
+
 private:
+	ZFileSpec fFileSpec;
 	ZFileIter fFileIter;
 	};
 
-ZYadMapRPos_Dir::ZYadMapRPos_Dir(const ZFileSpec& iFS)
-:	ZYadR_FS(iFS),
-	fFileIter(iFS)
+YadMapAtRPos::YadMapAtRPos(const ZFileSpec& iFS)
+:	fFileSpec(iFS)
+,	fFileIter(iFS)
 	{}
 
-ZYadMapRPos_Dir::ZYadMapRPos_Dir(const ZFileSpec& iFS, const ZFileIter& iFileIter)
-:	ZYadR_FS(iFS),
-	fFileIter(iFileIter)
+	ZFileSpec fFileSpec;
+	ZFileIter fFileIter;
+
+YadMapAtRPos::YadMapAtRPos(const ZFileSpec& iFS, const ZFileIter& iFileIter)
+:	fFileSpec(iFS)
+,	fFileIter(iFileIter)
 	{}
 
-ZRef<ZYadR> ZYadMapRPos_Dir::ReadInc(ZName& oName)
+ZRef<ZYadR> YadMapAtRPos::ReadInc(ZName& oName)
 	{
 	while (fFileIter)
 		{
 		const ZFileSpec cur = fFileIter.Current();
-		const string curName = fFileIter.CurrentName();
+		const ZName curName = fFileIter.CurrentName();
 		fFileIter.Advance();
 		if (ZRef<ZYadR> result = ZYad_FS::sYadR(cur))
 			{
@@ -99,64 +123,32 @@ ZRef<ZYadR> ZYadMapRPos_Dir::ReadInc(ZName& oName)
 	return null;
 	}
 
-ZRef<ZYadMapRClone> ZYadMapRPos_Dir::Clone()
-	{ return new ZYadMapRPos_Dir(fFS, fFileIter); }
+ZRef<ZYadMapRClone> YadMapAtRPos::Clone()
+	{ return new YadMapAtRPos(fFileSpec, fFileIter); }
 
-void ZYadMapRPos_Dir::SetPosition(const ZName& iName)
+void YadMapAtRPos::SetPosition(const ZName& iName)
 	{
 	string8 asString = string8(iName);
 	while (fFileIter && fFileIter.CurrentName() != asString)
 		fFileIter.Advance();
 	}
 
-// =================================================================================================
-// MARK: - ZYadStreamerRPos_File
+ZRef<ZYadR> YadMapAtRPos::ReadAt(const ZName& iName)
+	{ return ZYad_FS::sYadR(fFileSpec.Child(iName)); }
 
-class ZYadStreamerRPos_File
-:	public ZYadR_FS,
-	public ZYadStreamerR,
-	public virtual ZStreamerRPos
-	{
-public:
-	ZYadStreamerRPos_File(const ZFileSpec& iFS);
-	virtual ~ZYadStreamerRPos_File();
-
-// From ZYadR
-	virtual bool IsSimple(const ZYadOptions& iOptions);
-
-// From ZStreamerRPos
-	virtual const ZStreamRPos& GetStreamRPos();
-
-private:
-	ZRef<ZStreamerRPos> fStreamerRPos;
-	};
-
-ZYadStreamerRPos_File::ZYadStreamerRPos_File(const ZFileSpec& iFS)
-:	ZYadR_FS(iFS)
-	{}
-
-ZYadStreamerRPos_File::~ZYadStreamerRPos_File()
-	{}
-
-bool ZYadStreamerRPos_File::IsSimple(const ZYadOptions& iOptions)
-	{ return false; }
-
-const ZStreamRPos& ZYadStreamerRPos_File::GetStreamRPos()
-	{
-	if (!fStreamerRPos)
-		fStreamerRPos = fFS.OpenRPos();
-
-	return fStreamerRPos->GetStreamRPos();
-	}
+} // anonymous namespace
 
 // =================================================================================================
 // MARK: - ZYad_FS::sYadR
 
-ZRef<ZYadR> ZYad_FS::sYadR(const ZFileSpec& iFS)
+ZRef<ZYadR> sYadR(const ZFileSpec& iFS)
 	{
-	if (iFS.IsDir()) return new ZYadMapRPos_Dir(iFS);
-	else if (iFS.IsFile()) return new ZYadStreamerRPos_File(iFS);
-	else return null;
+	if (iFS.IsDir())
+		return new YadMapAtRPos(iFS);
+	else if (iFS.IsFile())
+		return new YadStreamerRPos(iFS);
+	return null;
 	}
 
+} // namespace ZYad_FS
 } // namespace ZooLib
