@@ -27,35 +27,68 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCallable_Apply
+// MARK: - sCallable_Apply (void)
 
-template <class A, class B, class C>
-class ZCallable_Apply
-:	public ZCallable<A(C)>
+template <class R0, class P0, class R1>
+class ZCallable_Apply_Void
+:	public ZCallable<R0()>
 	{
 public:
-	ZCallable_Apply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)> >& iCallable)
+	ZCallable_Apply_Void
+		(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1()> >& iCallable)
 	:	fApply(iApply)
 	,	fCallable(iCallable)
 		{}
 
 // From ZCallable
-	virtual ZQ<A> QCall(C iC)
+	virtual ZQ<R0> QCall()
 		{
-		if (const ZQ<B> theB = sQCall(fCallable, iC))
-			return sQCall(fApply, *theB);
+		if (const ZQ<R1> theR1 = sQCall(fCallable))
+			return sQCall(fApply, *theR1);
 		return null;
 		}
 
 private:
-	const ZRef<ZCallable<A(B)> > fApply;
-	const ZRef<ZCallable<B(C)> > fCallable;
+	const ZRef<ZCallable<R0(P0)> > fApply;
+	const ZRef<ZCallable<R1()> > fCallable;
 	};
 
-template <class A, class B, class C>
-ZRef<ZCallable<A(C)> >
-sCallable_Apply(const ZRef<ZCallable<A(B)> >& iApply, const ZRef<ZCallable<B(C)> >& iCallable)
-	{ return new ZCallable_Apply<A,B,C>(iApply, iCallable); }
+template <class R0, class P0, class R1>
+ZRef<ZCallable<R0()> >
+sCallable_Apply(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1()> >& iCallable)
+	{ return new ZCallable_Apply_Void<R0,P0,R1>(iApply, iCallable); }
+
+// =================================================================================================
+// MARK: - sCallable_Apply (one parameter)
+
+template <class R0, class P0, class R1, class P1>
+class ZCallable_Apply
+:	public ZCallable<R0(P1)>
+	{
+public:
+	ZCallable_Apply
+		(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1(P1)> >& iCallable)
+	:	fApply(iApply)
+	,	fCallable(iCallable)
+		{}
+
+// From ZCallable
+	virtual ZQ<R0> QCall(P1 iP1)
+		{
+		if (const ZQ<R1> theR1 = sQCall(fCallable, iP1))
+			return sQCall(fApply, *theR1);
+		return null;
+		}
+
+private:
+	const ZRef<ZCallable<R0(P0)> > fApply;
+	const ZRef<ZCallable<R1(P1)> > fCallable;
+	};
+
+template <class R0, class P0, class R1, class P1>
+ZRef<ZCallable<R0(P1)> >
+sCallable_Apply(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1(P1)> >& iCallable)
+	{ return new ZCallable_Apply<R0,P0,R1,P1>(iApply, iCallable); }
 
 // =================================================================================================
 // MARK: - sCallable_Seq
