@@ -55,8 +55,10 @@ void ZStreamR_JNI::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 					while (countRemaining > 0)
 						{
 						const size_t countToRead = sMin(countRemaining, theBufferSize);
+
 						jint countRead = env->CallIntMethod(fJavaStream, mid_read,
 							theBufferArray, 0, countToRead);
+
 						if (countRead <= 0)
 							break;
 
@@ -89,6 +91,7 @@ size_t ZStreamR_JNI::Imp_CountReadable()
 		if (jmethodID mid_available = env->GetMethodID(class_Stream, "available", "()I"))
 			return env->CallIntMethod(fJavaStream, mid_available);
 		}
+
 	return 0;
 	}
 
