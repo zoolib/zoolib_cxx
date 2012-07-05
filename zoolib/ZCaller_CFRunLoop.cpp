@@ -62,7 +62,7 @@ void ZCaller_CFRunLoop::Initialize()
 
 	fObserver = sAdopt& ::CFRunLoopObserverCreate
 		(nullptr, // allocator
-kCFRunLoopAllActivities,//		kCFRunLoopBeforeTimers, // activities
+		kCFRunLoopAllActivities,// kCFRunLoopBeforeTimers, // activities
 		true, // repeats
 		0, // order
 		spCallback,
