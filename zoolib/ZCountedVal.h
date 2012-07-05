@@ -75,7 +75,7 @@ public:
 
 template <class T>
 ZRef<ZCountedVal<T> > sCountedVal()
-	{ return new ZCountedVal<T>(); }
+	{ return new ZCountedVal<T>; }
 
 template <class T>
 ZRef<ZCountedVal<T> > sCountedVal(const T& iOther)
@@ -144,7 +144,7 @@ template <class Value, class Tag>
 Value& sMut(ZRef<ZCountedVal<Value,Tag> >& ioCountedVal)
 	{
 	if (not ioCountedVal)
-		ioCountedVal = new ZCountedVal<Value,Tag>();
+		ioCountedVal = new ZCountedVal<Value,Tag>;
 	return ioCountedVal->Mut();
 	}
 
@@ -152,7 +152,7 @@ template <class Value, class Tag>
 Value& sFresh(ZRef<ZCountedVal<Value,Tag> >& ioCountedVal)
 	{
 	if (not ioCountedVal)
-		ioCountedVal = new ZCountedVal<Value,Tag>();
+		ioCountedVal = new ZCountedVal<Value,Tag>;
 	else if (ioCountedVal->IsShared())
 		ioCountedVal = ioCountedVal->Clone();
 	return ioCountedVal->Mut();
