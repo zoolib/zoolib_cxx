@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <map>
 
+#include "zip.h"
+
 namespace ZooLib {
 namespace ZYad_Zip {
 

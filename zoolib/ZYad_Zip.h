@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad.h"
 
-#include <zip.h>
+// Avoid pulling zip.h into everything using ZYad_Zip.
+extern "C" { struct zip; }
 
 namespace ZooLib {
 namespace ZYad_Zip {
