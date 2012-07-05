@@ -26,16 +26,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+// sCallable_Apply could be expanded so that with with X+Y params we could pass
+// X+1 params to iApply and Y params to iCallable. We'd likely need a revised type
+// parameter naming scheme to make it intelligible.
+
 // =================================================================================================
-// MARK: - sCallable_Apply (void)
+// MARK: - sCallable_Apply (specialization for 0 params)
 
 template <class R0, class P0, class R1>
-class ZCallable_Apply_Void
-:	public ZCallable<R0()>
+class ZCallable_Apply_0
+:	public ZCallable<R0(void)>
 	{
 public:
-	ZCallable_Apply_Void
-		(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1()> >& iCallable)
+	ZCallable_Apply_0
+		(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1(void)> >& iCallable)
 	:	fApply(iApply)
 	,	fCallable(iCallable)
 		{}
@@ -50,23 +54,23 @@ public:
 
 private:
 	const ZRef<ZCallable<R0(P0)> > fApply;
-	const ZRef<ZCallable<R1()> > fCallable;
+	const ZRef<ZCallable<R1(void)> > fCallable;
 	};
 
 template <class R0, class P0, class R1>
 ZRef<ZCallable<R0()> >
-sCallable_Apply(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1()> >& iCallable)
-	{ return new ZCallable_Apply_Void<R0,P0,R1>(iApply, iCallable); }
+sCallable_Apply(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1(void)> >& iCallable)
+	{ return new ZCallable_Apply_0<R0,P0,R1>(iApply, iCallable); }
 
 // =================================================================================================
-// MARK: - sCallable_Apply (one parameter)
+// MARK: - sCallable_Apply (specialization for 1 param)
 
 template <class R0, class P0, class R1, class P1>
-class ZCallable_Apply
+class ZCallable_Apply_1
 :	public ZCallable<R0(P1)>
 	{
 public:
-	ZCallable_Apply
+	ZCallable_Apply_1
 		(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1(P1)> >& iCallable)
 	:	fApply(iApply)
 	,	fCallable(iCallable)
@@ -88,7 +92,7 @@ private:
 template <class R0, class P0, class R1, class P1>
 ZRef<ZCallable<R0(P1)> >
 sCallable_Apply(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1(P1)> >& iCallable)
-	{ return new ZCallable_Apply<R0,P0,R1,P1>(iApply, iCallable); }
+	{ return new ZCallable_Apply_1<R0,P0,R1,P1>(iApply, iCallable); }
 
 // =================================================================================================
 // MARK: - sCallable_Seq
