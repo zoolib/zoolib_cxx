@@ -39,9 +39,8 @@ bool ZCaller_EventLoop::Queue(const ZRef<ZCallable_Void>& iCallable)
 	if (iCallable)
 		{
 		ZAcqMtx acq(fMtx);
-		if (fTriggered || this->pTrigger())
+		if (sGetSet(fTriggered, true) || this->pTrigger())
 			{
-			fTriggered = true;
 			fCallables.push_back(iCallable);
 			return true;
 			}
