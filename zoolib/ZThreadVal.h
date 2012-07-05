@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZThreadVal_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZQ.h"
 #include "zoolib/ZTagVal.h"
 #include "zoolib/ZThread.h"
 
