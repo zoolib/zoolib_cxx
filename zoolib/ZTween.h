@@ -217,7 +217,7 @@ public:
 		{ return fCombiner(f0->QValAt(iPlace), f1->QValAt(iPlace)); }
 
 	virtual double Weight()
-		{ return std::min(spWeight(f0, fD0Q), spWeight(f1, fD1Q)); }
+		{ return sMin(spWeight(f0, fD0Q), spWeight(f1, fD1Q)); }
 
 private:
 	Combiner fCombiner;
@@ -433,9 +433,9 @@ public:
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (iPlace < 0 || iPlace >= fWeight)
-			return null;
-		return fTween->QValAt(fmod(iPlace, spWeight(fTween, fTweenWeightQ)));
+		if (0 <= iPlace && iPlace < fWeight)
+			return fTween->QValAt(fmod(iPlace, spWeight(fTween, fTweenWeightQ)));
+		return null;
 		}
 
 	virtual double Weight()
@@ -471,9 +471,9 @@ public:
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (iPlace >= fWeight)
-			return null;
-		return fTween->QValAt(iPlace);
+		if (iPlace < fWeight)
+			return fTween->QValAt(sMin(iPlace, spWeight(fTween, fTweenWeightQ) * 0.999999));
+		return null;
 		}
 
 	virtual double Weight()
@@ -481,6 +481,7 @@ public:
 
 private:
 	const ZRef<ZTween<Val> > fTween;
+	ZQ<double> fTweenWeightQ;
 	const double fWeight;
 	};
 
@@ -508,13 +509,13 @@ public:
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (iPlace >= fAtMost)
-			return null;
-		return fTween->QValAt(iPlace);
+		if (iPlace < fAtMost)
+			return fTween->QValAt(iPlace);
+		return null;
 		}
 
 	virtual double Weight()
-		{ return std::min(fAtMost, spWeight(fTween, fTweenWeightQ)); }
+		{ return sMin(fAtMost, spWeight(fTween, fTweenWeightQ)); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
@@ -545,11 +546,7 @@ public:
 
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
-		{
-		if (iPlace >= fAtLeast)
-			return null;
-		return fTween->QValAt(std::min(iPlace, spWeight(fTween, fTweenWeightQ) - 1e-3));
-		}
+		{ return fTween->QValAt(sMin(iPlace, spWeight(fTween, fTweenWeightQ) * 0.999999)); }
 
 	virtual double Weight()
 		{ return std::max(fAtLeast, spWeight(fTween, fTweenWeightQ)); }
@@ -626,7 +623,7 @@ public:
 			{
 			const double theWeight = spWeight(fTween, fTweenWeightQ);
 			if (0 <= iPlace && iPlace < theWeight)
-				return fTween->QValAt((theWeight*0.999999) + iPlace/fWeightScale);
+				return fTween->QValAt(sMin(theWeight*0.999999, theWeight + iPlace/fWeightScale));
 			return null;
 			}
 		}
@@ -735,9 +732,9 @@ public:
 // From ZTween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
-		if (iPlace < 0 || iPlace >= fWeight)
-			return null;
-		return fVal;
+		if (0 <= iPlace && iPlace < fWeight)
+			return fVal;
+		return null;
 		}
 
 	virtual double Weight()
