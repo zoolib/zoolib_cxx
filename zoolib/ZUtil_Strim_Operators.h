@@ -62,11 +62,11 @@ const ZStrimW& operator<<(const ZStrimW& s, void* iVal);
 
 template <class P>
 const ZStrimW& operator<<(const ZStrimW& s, const P* iVal)
-	{ return s << "(const " << typeid(P).name() << "*)" << static_cast<const void*>(iVal); }
+	{ return s << "(const " << typeid(P).name() << "*)" << reinterpret_cast<const void*>(iVal); }
 
 template <class P>
 const ZStrimW& operator<<(const ZStrimW& s, P* iVal)
-	{ return s << "(" << typeid(P).name() << "*)" << static_cast<void*>(iVal); }
+	{ return s << "(" << typeid(P).name() << "*)" << reinterpret_cast<void*>(iVal); }
 
 } // namespace ZUtil_Strim_Operators
 
