@@ -28,7 +28,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZStreamR_JNI
 
-ZStreamR_JNI::ZStreamR_JNI(JNIEnv* iEnv, jobject iJavaStream)
+ZStreamR_JNI::ZStreamR_JNI(jobject iJavaStream)
 :	fJavaStream(iJavaStream)
 	{
 	ZAssert(fJavaStream);
