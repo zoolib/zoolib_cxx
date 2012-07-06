@@ -138,7 +138,7 @@ public:
 		{ return fCombiner(f0->QValAt(iPlace), f1->QValAt(iPlace)); }
 
 	virtual double Weight()
-		{ return std::max(spWeight(f0, fD0Q), spWeight(f1, fD1Q)); }
+		{ return sMax(spWeight(f0, fD0Q), spWeight(f1, fD1Q)); }
 
 private:
 	Combiner fCombiner;
@@ -549,7 +549,7 @@ public:
 		{ return fTween->QValAt(sMin(iPlace, spWeight(fTween, fTweenWeightQ) * 0.999999)); }
 
 	virtual double Weight()
-		{ return std::max(fAtLeast, spWeight(fTween, fTweenWeightQ)); }
+		{ return sMax(fAtLeast, spWeight(fTween, fTweenWeightQ)); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
@@ -583,7 +583,7 @@ public:
 		{ return fTween->QValAt(iPlace - fWeightShift); }
 
 	virtual double Weight()
-		{ return std::max(0.0, spWeight(fTween, fTweenWeightQ) + fWeightShift); }
+		{ return sMax(0.0, spWeight(fTween, fTweenWeightQ) + fWeightShift); }
 
 private:
 	const ZRef<ZTween<Val> > fTween;
