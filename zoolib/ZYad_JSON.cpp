@@ -759,7 +759,7 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 			(Base64::sEncode_Normal(),
 			ZStreamW_ASCIIStrim
 				(ZStrimW_InsertSeparator(chunkSize * 3, chunkSeparator, s)))
-			.CopyAllFrom(iStreamR);
+		.CopyAllFrom(iStreamR);
 
 		s.Write(")");
 		}
