@@ -497,13 +497,20 @@ private:
 // =================================================================================================
 // MARK: - sRef
 
-template <class T>
-ZRef<T,true> sRef(T* iP)
-	{ return ZRef<T,true>(iP); }
+const struct
+	{
+	template <class T>
+	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(iP); }
 
-template <class T, bool Sense>
-ZRef<T,true> sRef(const ZRef<T,Sense>& iP)
-	{ return iP; }
+	template <class T, bool Sense>
+	ZRef<T,true> operator()(const ZRef<T,Sense>& iRef) const { return ZRef<T,true>(iRef); }
+
+	template <class T>
+	ZRef<T,true> operator&(T* iP) const { return ZRef<T,true>(iP); }
+
+	template <class T, bool Sense>
+	ZRef<T,true> operator&(const ZRef<T,Sense>& iRef) const { return ZRef<T,true>(iRef); }
+	} sRef = {};
 
 // =================================================================================================
 // MARK: - sTempRef
