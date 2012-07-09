@@ -82,6 +82,5 @@ void sSemanticError(const string8& iMessage)
 		theCallable->Call(iMessage);
 	}
 
-
 } // namespace ZRA
 } // namespace ZooLib
