@@ -102,8 +102,14 @@ static pthread_key_t spKey;
 // =================================================================================================
 
 static pthread_key_t spRecursiveCheck
-	(SjLj_t iRegister, SjLj_t iUnregister, pthread_key_t iKey, pthread_key_t iKey_Max)
+	(SjLj_t iRegister, SjLj_t iUnregister, pthread_key_t iKey, pthread_key_t iKey_End)
 	{
+	if (iKey == iKey_End)
+		{
+		// We've gone too deep without finding anything.
+		return iKey_End;
+		}
+
 	// Make a note of the putative UFC* stored at iKey It may well be null, or else
 	// something weird, but we don't actually deref it, so no foul.
 	UFC* prior = (UFC*)pthread_getspecific(iKey);
@@ -131,13 +137,7 @@ static pthread_key_t spRecursiveCheck
 		return iKey;
 		}
 
-	if (iKey == iKey_Max)
-		{
-		// We've gone too deep without finding anything.
-		return 0;
-		}
-
-	return spRecursiveCheck(iRegister, iUnregister, iKey + 1, iKey_Max);
+	return spRecursiveCheck(iRegister, iUnregister, iKey + 1, iKey_End);
 	}
 
 // =================================================================================================
@@ -165,10 +165,10 @@ static void spRegister_Initial(UFC* fc)
 	spKey = spRecursiveCheck(
 		systemRegister, systemUnregister,
 		0, // Starting key to try.
-		512 // Largest key to try. NB. We may create this many stack frames.
+		512 // Give up when this key is reached
 		);
 
-	if (spKey == 0 || spKey == 18)
+	if (spKey == 512 || spKey == 18)
 		{
 		spRegister = systemRegister;
 		spUnregister = systemUnregister;
