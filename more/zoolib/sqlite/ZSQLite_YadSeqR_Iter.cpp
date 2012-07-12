@@ -35,7 +35,7 @@ public:
 	YadMapR(ZRef<Iter> iIter);
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<Iter> fIter;
@@ -47,7 +47,7 @@ YadMapR::YadMapR(ZRef<Iter> iIter)
 ,	fIndex(0)
 	{}
 
-void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+void YadMapR::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 	{
 	if (fIndex < fIter->Count())
 		{
