@@ -119,7 +119,7 @@ public:
 	~Slot();
 
 	void* operator new(size_t iObjectSize, size_t iSlotSize);
-	void operator delete(void* iPtr, size_t iObjectSize);
+	void operator delete(void* iPtr);
 
 protected:
 	friend class ZBlockStore_PhaseTree;
@@ -163,7 +163,7 @@ void* ZBlockStore_PhaseTree::Slot::operator new(size_t iObjectSize, size_t iSlot
 	return new char[iObjectSize - 1 + iSlotSize];
 	}
 
-void ZBlockStore_PhaseTree::Slot::operator delete(void* iPtr, size_t iObjectSize)
+void ZBlockStore_PhaseTree::Slot::operator delete(void* iPtr)
 	{
 	delete[] static_cast<char*>(iPtr);
 	}
@@ -446,7 +446,7 @@ PT_INLINE void ZBlockStore_PhaseTree::Fill(Slot* iSlot, size_t iBegin, size_t iC
 
 	#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
 		uint32* start = reinterpret_cast<uint32*>(iSlot->fData);
-		ZMemSet(start + iBegin, 0x55, sizeof(uint32) * iCount);
+		sMemSet(start + iBegin, 0x55, sizeof(uint32) * iCount);
 	#endif
 	}
 
@@ -1353,7 +1353,7 @@ void ZBlockStore_PhaseTree::DumpMeta()
 
 	fprintf(stdout,
 		"Loaded slots: %zu, use requests: %d, use cached %d, "
-		"use failures: %d, loaded hit rate: %d, cached hit rate\n",
+		"use failures: %d, loaded hit rate: %d, cached hit rate: %d\n",
 		fSlots_Loaded.size(), fUseRequests, fUseCached,
 		fUseFailures, 100 - loadedHitRate, 100 - cachedHitRate);
 
@@ -2215,7 +2215,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::AllocateSlotDirty()
 	fSlots_Loaded[theSlotNumber] = theSlot;
 
 	if (ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug)
-		ZMemSet(theSlot->fData, 0xAA, fSlotSize);
+		sMemSet(theSlot->fData, 0xAA, fSlotSize);
 
 	fMutex_Slots.Release();
 	theSlot->fMutex.Acquire();
