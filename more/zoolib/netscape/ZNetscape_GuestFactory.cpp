@@ -285,7 +285,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 	GuestFactory::GetNPNF(fNPNF);
 
 	// And clean out our plugin functions struct
-	ZMemZero_T(fNPPluginFuncs);
+	sMemZero_T(fNPPluginFuncs);
 	fNPPluginFuncs.size = sizeof(NPPluginFuncs);
 
 	ZRef<CFBundleRef> theBundleRef = ::CFPlugInGetBundle(fPlugInRef);

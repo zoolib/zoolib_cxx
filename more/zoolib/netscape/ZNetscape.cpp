@@ -110,6 +110,8 @@ string sAsString(NPNVariable iVar)
 			CASE(NPNVsupportsOpenGLBool);
 			CASE(NPNVsupportsCocoaBool);
 		#endif
+		default:
+			break;
 		}
 	return ZStringf("NPNVariable=%d", iVar);
 	}
@@ -135,6 +137,8 @@ string sAsString(NPPVariable iVar)
 			CASE(NPPVpluginDrawingModel);
 			CASE(NPPVpluginEventModel);
 		#endif
+		default:
+			break;
 		}
 	return ZStringf("NPPVariable=%d", iVar);
 	}

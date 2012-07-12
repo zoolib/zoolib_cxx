@@ -859,7 +859,7 @@ static string spFixURL(const string& iBaseURL, const string& iRelativeURL)
 			{
 			const ZTrail baseDir = ZTrail(basePath).Branch();
 			const ZTrail resultTrail = (baseDir + ZTrail(relPath)).Normalized();
-			if (resultTrail.Count() && resultTrail.At(0).empty())
+			if (resultTrail.Count() && sIsEmpty(resultTrail.At(0)))
 				{
 				// We've got leading bounces.
 				return string();
@@ -933,6 +933,8 @@ NPError Host_Std::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 				}
 			break;
 			}
+		default:
+			break;
 		}
 	return NPERR_GENERIC_ERROR;
 	}

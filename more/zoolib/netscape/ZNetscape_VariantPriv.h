@@ -41,6 +41,11 @@ ZAny NPVariant_T<T>::AsAny(const ZAny& iDefault) const
 	{
 	switch (type)
 		{
+		case NPVariantType_Void:
+		case NPVariantType_Null:
+			{
+			return null;
+			}
 		case NPVariantType_Bool:
 			{
 			return ZAny(bool(value.boolValue));

@@ -235,6 +235,8 @@ NPError Host_Cocoa::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value
 			*static_cast<NPBool*>(ret_value) = false;
 			return NPERR_NO_ERROR;
 			}
+		default:
+			break;
 		}
 
 	return Host_Std::Host_GetValue(npp, variable, ret_value);
@@ -258,6 +260,8 @@ NPError Host_Cocoa::Host_SetValue(NPP npp, NPPVariable variable, void* value)
 			ZAssert(reinterpret_cast<intptr_t>(value) == NPEventModelCocoa);
 			return NPERR_NO_ERROR;
 			}
+		default:
+			break;
 		}
 
 	return Host_Std::Host_SetValue(npp, variable, value);

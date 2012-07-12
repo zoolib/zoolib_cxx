@@ -154,6 +154,8 @@ NPError Guest_Std::Guest_GetValue(NPPVariable iNPPVariable, void* oValue)
 				}
 			break;
 			}
+		default:
+			break;
 		}
 
 	return NPERR_GENERIC_ERROR;
