@@ -533,6 +533,13 @@ bool sIsEmpty(const Rect_p& iRect)
 	{ return L(iRect) >= R(iRect) || T(iRect) >= B(iRect); }
 
 // =================================================================================================
+// MARK: - sNotEmpty
+
+template <class Rect_p>
+bool sNotEmpty(const Rect_p& iRect)
+	{ return not sIsEmpty(iRect); }
+
+// =================================================================================================
 // MARK: - Center
 
 template <class Rect_p>
