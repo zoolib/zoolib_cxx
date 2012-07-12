@@ -135,10 +135,7 @@ void ZWorker::WakeAt(ZTime iSystemTime)
 	{ this->pWakeAt(iSystemTime); }
 
 bool ZWorker::IsWorking()
-	{
-	ZAcqMtx acq(fMtx);
-	return ZThread::sID() == fWorking;
-	}
+	{ return ZThread::sID() == fWorking; }
 
 bool ZWorker::IsAwake()
 	{
