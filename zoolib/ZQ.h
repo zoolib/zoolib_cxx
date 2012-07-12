@@ -33,19 +33,19 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZQ
 
-// The 'Q' stands for 'Questionable', 'Queryable', 'Quibble' or perhaps 'Quib'
+// The 'Q' stands for 'Questionable' or 'Queryable', and can be pronounced 'Quid' as
+// in the latin interrogative pronoun and Spanish's 'crux' as in 'point of the matter'.
 
 // c.f. Haskell's 'Data.Maybe', Scala's 'Option'.
 
 template <class T, bool Sense = true>
 class ZQ
 	{
-public:
 	friend class ZQ<T,not Sense>;
 
-	template <bool OtherSense>
+	template <bool SenseNoValue, bool SenseHasValue>
 	static
-	void spSwap(ZQ<T,OtherSense>& ioNoValue, ZQ<T,OtherSense>& ioHasValue)
+	void spSwap(ZQ<T,SenseNoValue>& ioNoValue, ZQ<T,SenseHasValue>& ioHasValue)
 		{
 		sCtorFromVoidStar_T<T>(ioNoValue.fBytes, ioHasValue.fBytes);
 		ioNoValue.fHasValue = true;
@@ -53,6 +53,7 @@ public:
 		sDtor_T<T>(ioHasValue.fBytes);
 		}
 
+public:
 	template <bool OtherSense>
 	ZMACRO_Attribute_NoThrow
 	void swap(ZQ<T,OtherSense>& ioOther)
