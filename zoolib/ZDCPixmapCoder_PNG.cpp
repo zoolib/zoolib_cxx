@@ -21,6 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmapCoder_PNG.h"
 
 #include <vector>
+
+#define PNG_DEPSTRUCT
+
 #include "png.h"
 
 using std::runtime_error;
