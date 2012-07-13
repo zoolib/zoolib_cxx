@@ -771,7 +771,7 @@ Rect_p sCentered(const Other& iOther, const Rect_p& iRect)
 
 template <class Rect_p, class Other_p>
 Rect_p sFlippedY(const Other_p& iY, const Rect_p& iRect)
-	{ return sRect<Rect_p>(L(iRect), Y(iY) - T(iRect), R(iRect), Y(iY) - B(iRect)); }
+	{ return sRect<Rect_p>(L(iRect), Y(iY) - B(iRect), R(iRect), Y(iY) - T(iRect)); }
 
 // =================================================================================================
 // MARK: - sInsetted
