@@ -84,7 +84,7 @@ public:
 	Value& Mut()
 		{ return fValue; }
 
-	Value& Set(const Value& iValue) const
+	Value& Set(const Value& iValue)
 		{ return fValue = iValue; }
 
 	bool operator==(const ZTagVal& iOther) const
