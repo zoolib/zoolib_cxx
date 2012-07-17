@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZAtomic.h"
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompat_cmath.h" // For NAN and isnan
 #include "zoolib/ZDebug.h"
@@ -28,6 +29,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 	#include <sys/time.h> // For timeval
+#endif
+
+#if defined(__MACH__)
+	#include <mach/mach_time.h>
 #endif
 
 #if ZCONFIG_SPI_Enabled(MacClassic)
@@ -145,6 +150,20 @@ ZTime ZTime::sNow()
 ZTime ZTime::sSystem()
 	{
 #if 0
+#elif defined(__MACH__)
+	static bool sInited;
+	static double sRatio;
+	if (not sInited)
+		{
+		mach_timebase_info_data_t theTBI;
+		::mach_timebase_info(&theTBI);
+		sRatio = double(theTBI.numer) / double(theTBI.denom) / 1e9;
+		sInited = true;
+		sAtomic_Barrier();
+		}
+
+	return double(::mach_absolute_time()) * sRatio;
+
 #elif ZCONFIG_SPI_Enabled(POSIX)
 
 	/* AG 2003-10-26.
