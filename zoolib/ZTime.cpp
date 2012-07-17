@@ -206,29 +206,25 @@ ZTime ZTime::sSystem()
 
 	if (ZUtil_Win::sIsWinNT())
 		{
-		// On NT we try to use the performance counter of CPU 0. Some types of CPU
-		// do not have performance counters that run in sync, so using the
-		// counter from whatever CPU on which this code happens to be executed defeats
-		// the whole point of sSystem.
-		DWORD_PTR oldmask = ::SetThreadAffinityMask(::GetCurrentThread(), 1);
-
-		uint64 frequency;
-		::QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&frequency));
-		if (frequency)
+		// It appears that the QueryPerformanceFrequency issue on MP systems
+		// has generally been addressed at the OS level. See old code for details.
+		static double sFrequency = 0;
+		if (sFrequency == 0.0)
 			{
-			uint64 time;
-			::QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&time));
-
-			::SetThreadAffinityMask(::GetCurrentThread(), oldmask);
-
-			return double(time) / double(frequency);
+			uint64 frequency = 0;
+			::QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&frequency));
+			sFrequency = frequency;
 			}
 
-		::SetThreadAffinityMask(::GetCurrentThread(), oldmask);
+		uint64 time;
+		::QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&time));
+		return double(time) / sFrequency;
 		}
-
-	// Use GetTickCount if we're not on NT or QPC is not available.
-	return double(::GetTickCount()) / 1e3;
+	else
+		{
+		// Use GetTickCount if we're not on NT.
+		return double(::GetTickCount()) / 1e3;
+		}
 
 #elif ZCONFIG_SPI_Enabled(BeOS)
 
