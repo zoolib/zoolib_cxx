@@ -35,6 +35,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Thread_pthread)
 
+#ifndef ZCONFIG_pthread_Debug
+	#if ZCONFIG_Debug
+		#define ZCONFIG_pthread_Debug 1
+	#endif
+#endif
+
+#ifndef ZCONFIG_pthread_Debug
+	#define ZCONFIG_pthread_Debug 0
+#endif
+
+
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZThread_T.h"
 
@@ -145,17 +156,27 @@ class ZMtx_pthread_base
 ,	NonCopyable
 	{
 public:
-	ZMACRO_Attribute_NoThrow
-	inline
-	~ZMtx_pthread_base() { ::pthread_mutex_destroy(this); }
+	#if ZCONFIG_pthread_Debug
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Acquire() { ::pthread_mutex_lock(this); }
+		~ZMtx_pthread_base();
+		void Acquire();
+		void Release();
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Release() { ::pthread_mutex_unlock(this); }
+	#else
+
+		ZMACRO_Attribute_NoThrow
+		inline
+		~ZMtx_pthread_base() { ::pthread_mutex_destroy(this); }
+
+		ZMACRO_Attribute_NoThrow
+		inline
+		void Acquire() { ::pthread_mutex_lock(this); }
+
+		ZMACRO_Attribute_NoThrow
+		inline
+		void Release() { ::pthread_mutex_unlock(this); }
+
+	#endif
 	};
 
 // =================================================================================================
@@ -164,9 +185,17 @@ public:
 class ZMtx_pthread : public ZMtx_pthread_base
 	{
 public:
-	ZMACRO_Attribute_NoThrow
-	inline
-	ZMtx_pthread() { ::pthread_mutex_init(this, nullptr); }
+	#if ZCONFIG_pthread_Debug
+
+		ZMtx_pthread();
+
+	#else
+
+		ZMACRO_Attribute_NoThrow
+		inline
+		ZMtx_pthread() { ::pthread_mutex_init(this, nullptr); }
+
+	#endif
 	};
 
 // =================================================================================================

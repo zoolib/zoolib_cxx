@@ -91,18 +91,61 @@ bool ZCnd_pthread::pWaitFor(pthread_mutex_t& iMtx, double iTimeout)
 	{
 	if (iTimeout <= 0)
 		return false;
-	return this->pWaitUntil(iMtx, ZTime::sSystem() + iTimeout);
+
+	#if defined(__APPLE__) || defined(__ANDROID__)
+		const timespec the_timespec = { time_t(iTimeout), long(1e9 * fmod(iTimeout, 1.0)) };
+		return 0 == ::pthread_cond_timedwait_relative_np(this, &iMtx, &the_timespec);
+	#else
+		return this->pWaitUntil(iMtx, ZTime::sSystem() + iTimeout);
+	#endif
 	}
 
 bool ZCnd_pthread::pWaitUntil(pthread_mutex_t& iMtx, ZTime iDeadline)
 	{
-	timespec theTimeSpec;
-	theTimeSpec.tv_sec = time_t(iDeadline.fVal);
-	theTimeSpec.tv_nsec = int(fmod(iDeadline.fVal, 1.0) * 1e9);
-
-	int result = ::pthread_cond_timedwait(this, &iMtx, &theTimeSpec);
-	return result == 0;
+	const timespec the_timespec = { time_t(iDeadline.fVal), long(1e9 * fmod(iDeadline.fVal, 1.0)) };
+	return 0 == ::pthread_cond_timedwait(this, &iMtx, &the_timespec);
 	}
+
+// =================================================================================================
+// MARK: - ~ZMtx_pthread_base
+
+#if ZCONFIG_pthread_Debug
+
+ZMtx_pthread_base::~ZMtx_pthread_base()
+	{
+	int result = ::pthread_mutex_destroy(this);
+	ZAssert(result == 0);
+	}
+
+void ZMtx_pthread_base::Acquire()
+	{
+	int result = ::pthread_mutex_lock(this);
+	ZAssert(result == 0);
+	}
+
+void ZMtx_pthread_base::Release()
+	{
+	int result = ::pthread_mutex_unlock(this);
+	ZAssert(result == 0);
+	}
+
+#endif // ZCONFIG_pthread_Debug
+
+// =================================================================================================
+// MARK: - ZMtx_pthread
+
+#if ZCONFIG_pthread_Debug
+
+ZMtx_pthread::ZMtx_pthread()
+	{
+	pthread_mutexattr_t attr;
+	::pthread_mutexattr_init(&attr);
+	::pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK);
+	::pthread_mutex_init(this, &attr);
+	::pthread_mutexattr_destroy(&attr);
+	}
+
+#endif // ZCONFIG_pthread_Debug
 
 // =================================================================================================
 // MARK: - ZMtxR_pthread
@@ -112,8 +155,10 @@ ZMtxR_pthread::ZMtxR_pthread()
 	pthread_mutexattr_t attr;
 	::pthread_mutexattr_init(&attr);
 	::pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-	::pthread_mutex_init(this, &attr);
+	int result = ::pthread_mutex_init(this, &attr);
 	::pthread_mutexattr_destroy(&attr);
+
+	ZAssert(result == 0);
 	}
 
 } // namespace ZooLib
