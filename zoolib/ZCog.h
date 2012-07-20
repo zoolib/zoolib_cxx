@@ -982,7 +982,7 @@ ZCog<Param> sCog_With
 	{
 	if (sIsPending(iCallable0) && sIsPending(iCallable1))
 		return new Cog_With<Param>(iCallable0, iCallable1);
-	return iCallable1;
+	return iCallable0;
 	}
 
 template <class Param>
@@ -1144,7 +1144,7 @@ ZCog<Param> sCog_WithUnchanged
 	{
 	if (sIsPending(iCallable0) && sIsPending(iCallable1))
 		return new Cog_WithUnchanged<Param>(iCallable0, iCallable1);
-	return iCallable1;
+	return iCallable0;
 	}
 
 template <class Param>
