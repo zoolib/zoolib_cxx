@@ -1000,7 +1000,7 @@ ZCog<Param>& operator/=
 // =================================================================================================
 // MARK: - Binary parallel, sCog_Plus
 
-// Call cog0 and cog1
+// Call cog0 and cog1, till both return, result is that of the last to return
 
 template <class Param>
 class Cog_Plus
@@ -1087,6 +1087,97 @@ ZCog<Param>& operator+=
 	(ZCog<Param>& ioCog0,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_Plus<Param>(ioCog0, iCallable1); }
+
+// =================================================================================================
+// MARK: - Binary parallel, sCog_Minus
+
+// Call cog0 and cog1, till either returns, result is that of the first to return
+
+template <class Param>
+class Cog_Minus
+:	public ZCallable<ZCog<Param>(const ZCog<Param>&,Param)>
+	{
+public:
+	Cog_Minus(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	:	fCog0(iCallable0)
+	,	fCog1(iCallable1)
+		{}
+
+	virtual ZQ<ZCog<Param> > QCall(const ZCog<Param>& iSelf, Param iParam)
+		{
+		ZAssert(sIsPending(fCog0) && sIsPending(fCog1));
+	
+		if (ZQ<ZCog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
+			{
+			const ZCog<Param>& newCog0 = *newCog0Q;
+			if (newCog0 == fCog0)
+				{
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (newCog1 == fCog1)
+						return iSelf;
+			
+					if (sIsFinished(newCog1))
+						return newCog1;
+			
+					return new Cog_Minus(newCog0, newCog1);
+					}
+				return newCog0;
+				}
+			else if (sIsPending(newCog0))
+				{
+				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+					{
+					const ZCog<Param>& newCog1 = *newCog1Q;
+					if (sIsFinished(newCog1))
+						return newCog1;
+			
+					return new Cog_Minus(newCog0, newCog1);
+					}
+				return newCog0;
+				}
+			else
+				{
+				return newCog0;
+				}
+			}
+		else
+			{
+			return false;
+			}
+		}
+
+	const ZCog<Param> fCog0;
+	const ZCog<Param> fCog1;
+	};
+
+template <class Param>
+ZCog<Param> sCog_Minus
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{
+	if (sIsFinished(iCallable0))
+		return iCallable0;
+
+	if (sIsFinished(iCallable1))
+		return iCallable1;
+
+	return new Cog_Minus<Param>(iCallable0, iCallable1);
+	}
+
+template <class Param>
+ZCog<Param> operator-
+	(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return sCog_Minus<Param>(iCallable0, iCallable1); }
+
+template <class Param>
+ZCog<Param>& operator-=
+	(ZCog<Param>& ioCog0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return ioCog0 = sCog_Minus<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
 // MARK: - Binary parallel, sCog_WithUnchanged
