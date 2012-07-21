@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZSafeStack_h__
 #include "zconfig.h"
 
-#include "zoolib/ZAtomic.h"
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZThread.h"
 
 namespace ZooLib {
 
@@ -37,68 +37,53 @@ class ZSafeStack
 	{
 public:
 	ZSafeStack()
-		{
-		fHead = &fDummy;
-		fHead->fNext = fHead;
-		}
+	:	fHead(nullptr)
+		{}
 
 	~ZSafeStack()
 		{
-		ZAssert(fHead == &fDummy);
-		fDummy.fNext = nullptr;
+		ZAssert(not fHead);
 		}
 
 	bool IsEmpty() const
-		{ return fHead == &fDummy; }
+		{ return not fHead; }
 
 	void Push(L* iL)
 		{
+		ZAssertStop(L::kDebug, iL);
 		ZAssertStop(L::kDebug, not iL->fNext);
 
-		for (;;)
-			{
-			L* theHead = fHead;
-			iL->fNext = theHead;
-			if (sAtomic_CASPtr(&fHead, theHead, iL))
-				break;
-			}
+		ZAcqMtx acq(fMtx);
+		iL->fNext = fHead;
+		fHead = iL;
 		}
 
 	template <class P>
 	P* Pop()
 		{
-		for (;;)
-			{
-			L* theHead = fHead;
-
-			if (sAtomic_CASPtr(&fHead, theHead, theHead->fNext))
-				{
-				ZAssertStop(L::kDebug, theHead != &fDummy);
-				theHead->fNext = nullptr;
-				return static_cast<P*>(theHead);
-				}
-			}
+		ZAcqMtx acq(fMtx);
+		ZAssertStop(L::kDebug, fHead);
+		L* result = fHead;
+		fHead = fHead->fNext;
+		result->fNext = nullptr;
+		return static_cast<P*>(result);
 		}
 
 	template <class P>
 	P* PopIfNotEmpty()
 		{
-		for (;;)
+		ZAcqMtx acq(fMtx);
+		if (L* result = fHead)
 			{
-			L* theHead = fHead;
-
-			if (sAtomic_CASPtr(&fHead, theHead, theHead->fNext))
-				{
-				if (theHead == &fDummy)
-					return nullptr;
-				theHead->fNext = nullptr;
-				return static_cast<P*>(theHead);
-				}
+			fHead = fHead->fNext;
+			result->fNext = nullptr;
+			return static_cast<P*>(result);
 			}
+		return nullptr;
 		}
 
+	ZMtx fMtx;
 	L* fHead;
-	L fDummy;
 	};
 
 // =================================================================================================
