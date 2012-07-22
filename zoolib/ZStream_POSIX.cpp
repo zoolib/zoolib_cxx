@@ -181,7 +181,7 @@ uint64 ZStreamRPos_FILE::Imp_GetPosition()
 
 void ZStreamRPos_FILE::Imp_SetPosition(uint64 iPosition)
 	{
-	if (!spSetPosition(fFILE, iPosition))
+	if (not spSetPosition(fFILE, iPosition))
 		throw range_error("ZStreamRPos_FILE::Imp_SetPosition");
 	}
 

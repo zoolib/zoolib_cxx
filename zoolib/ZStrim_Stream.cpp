@@ -128,7 +128,7 @@ static void spReadUTF32_UTF8(const ZStreamR& iStreamR,
 	bool gotByte = false;
 	while (localDest < localDestEnd)
 		{
-		if (!gotByte)
+		if (not gotByte)
 			{
 			if (not iStreamR.ReadByte(curByte))
 				break;
@@ -163,7 +163,7 @@ static void spReadUTF32_UTF8(const ZStreamR& iStreamR,
 				theCP += curByte & 0x3F;
 				}
 
-			if (!gotByte)
+			if (not gotByte)
 				*localDest++ = theCP;
 			}
 		}
@@ -183,7 +183,7 @@ static void spReadUTF8_UTF8(const ZStreamR& iStreamR, UTF8* oDest,
 	bool gotByte = false;
 	while (localDest < localDestEnd && localCountCP)
 		{
-		if (!gotByte)
+		if (not gotByte)
 			{
 			if (not iStreamR.ReadByte(curByte))
 				break;

@@ -55,14 +55,14 @@ ZRef<Walker> Walker_Union::Prime
 	map<string8,size_t> leftOffsets;
 	fWalker_Left = fWalker_Left->Prime(iOffsets, leftOffsets, ioBaseOffset);
 
-	if (!fWalker_Left)
+	if (not fWalker_Left)
 		return fWalker_Right->Prime(iOffsets, oOffsets, ioBaseOffset);
 
 	map<string8,size_t> rightOffsets;
 	fWalker_Right = fWalker_Right->Prime(iOffsets, rightOffsets, ioBaseOffset);
 
 	oOffsets.insert(leftOffsets.begin(), leftOffsets.end());
-	if (!fWalker_Right)
+	if (not fWalker_Right)
 		return fWalker_Left;
 
 	ZAssert(leftOffsets.size() == rightOffsets.size());
@@ -99,7 +99,7 @@ bool Walker_Union::ReadInc
 		{
 		vector<ZVal_Any> subset;
 		subset.reserve(count);
-		if (!fExhaustedLeft)
+		if (not fExhaustedLeft)
 			{
 			if (fWalker_Left->ReadInc(ioResults, oAnnotations))
 				{
@@ -112,7 +112,7 @@ bool Walker_Union::ReadInc
 			fExhaustedLeft = true;
 			}
 
-		if (!fWalker_Right->ReadInc(ioResults, localAnnotationsPtr))
+		if (not fWalker_Right->ReadInc(ioResults, localAnnotationsPtr))
 			return false;
 
 		for (size_t x = 0; x < count; ++x)

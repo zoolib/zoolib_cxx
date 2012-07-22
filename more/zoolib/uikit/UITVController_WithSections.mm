@@ -64,7 +64,7 @@ static bool spIsVersion4OrLater()
 	{
 	return false;
 	static ZQ<bool> resultQ;
-	if (!resultQ)
+	if (not resultQ)
 		resultQ = [[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0;
 	return *resultQ;
 	}
@@ -412,7 +412,7 @@ bool SectionBody_Multi::WillBeEmpty()
 	{
 	foreachi (ii, fBodies_Pending)
 		{
-		if (!(*ii)->WillBeEmpty())
+		if (not (*ii)->WillBeEmpty())
 			return false;
 		}
 	return true;
@@ -725,7 +725,7 @@ using namespace ZooLib::UIKit;
 		{
 		if (ZQ<bool> theQ = theSection->GetBody()->CanSelect([tableView isEditing], indexPath.row))
 			{
-			if (!*theQ)
+			if (not *theQ)
 				return nil;
 			}
 		}
@@ -757,7 +757,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 	{
-	if (!fDragging)
+	if (not fDragging)
 		{
 		fDragging = true;
 		[self changeTouchState:YES forTableView:(UITableView*)scrollView];
@@ -907,7 +907,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (fTouchCount)
 		return;
 
-	if (!fNeedsUpdate)
+	if (not fNeedsUpdate)
 		return;
 
 	if (fUpdateInFlight)
@@ -1077,7 +1077,7 @@ static void spInsertSections(UITableView* iTableView,
 	{
 	ZAssert(tableView);
 
-	if (!fNeedsUpdate)
+	if (not fNeedsUpdate)
 		return;
 	fNeedsUpdate = false;
 
@@ -1089,14 +1089,14 @@ static void spInsertSections(UITableView* iTableView,
 		{
 		ZRef<Section> theSection = fSections_All[x];
 		theSection->GetBody()->PreUpdate();
-		if (!theSection->HideWhenEmpty() || !theSection->GetBody()->WillBeEmpty())
+		if (not theSection->HideWhenEmpty() || !theSection->GetBody()->WillBeEmpty())
 			fSections_Shown_Pending.push_back(theSection);
 		}
 
 	// We've done PreUpdate on every section, and fSections_Shown_Pending contains
 	// those sections that will be visible.
 
-	if (!fShown)
+	if (not fShown)
 		{
 		// We're not onscreen, so we can Update/Finish all sections, switch
 		// to the new list of sections, reloadData, check for pending updates and return.
@@ -1287,7 +1287,7 @@ static void spInsertSections(UITableView* iTableView,
 	ZAssert(fUpdateInFlight);
 	ZAssert(tableView);
 
-	if (!spIsVersion4OrLater())
+	if (not spIsVersion4OrLater())
 		{
 		for (size_t x = 0; x < fSections_Shown.size(); ++x)
 			{

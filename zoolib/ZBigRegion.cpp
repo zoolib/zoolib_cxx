@@ -283,7 +283,7 @@ bool ZBigRegion::Contains(const ZPointPOD& iPoint) const
 	if (fNumRects == 0)
 		return false;
 
-	if (!sContains(fExtent, iPoint))
+	if (not sContains(fExtent, iPoint))
 		return false;
 
 	// Simple check -- later we can do a binary chop, or even just bail when the top

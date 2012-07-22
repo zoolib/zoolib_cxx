@@ -423,7 +423,7 @@ ZRef<Walker> Walker_Restrict::Prime
 	size_t& ioBaseOffset)
 	{
 	fWalker = fWalker->Prime(iOffsets, fChildOffsets, ioBaseOffset);
-	if (!fWalker)
+	if (not fWalker)
 		return null;
 
 	oOffsets.insert(fChildOffsets.begin(), fChildOffsets.end());
@@ -447,7 +447,7 @@ bool Walker_Restrict::ReadInc
 
 	for (;;)
 		{
-		if (!fWalker->ReadInc(ioResults, localAnnotationsPtr))
+		if (not fWalker->ReadInc(ioResults, localAnnotationsPtr))
 			return false;
 
 		if (fExec->Call(ioResults, theConsts))

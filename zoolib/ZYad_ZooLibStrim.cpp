@@ -28,8 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
-//#include "../old/zoolib/ZVal_ZooLib.h" // For ZType enum
-
 #include <vector>
 
 namespace ZooLib {
@@ -51,9 +49,9 @@ static bool spTryRead_PropertyName(const ZStrimU& iStrimU, ZName& oName)
 	string8 theString;
 	using namespace ZUtil_Strim;
 
-	if (!sTryRead_EscapedString(iStrimU, '"', theString))
+	if (not sTryRead_EscapedString(iStrimU, '"', theString))
 		{
-		if (!sTryRead_EscapedString(iStrimU, '\'', theString))
+		if (not sTryRead_EscapedString(iStrimU, '\'', theString))
 			{
 			if (not ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nullptr, &theString))
 				return false;
@@ -68,7 +66,7 @@ static int64 spMustRead_GenericInteger(const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
 	int64 theInteger;
-	if (!sTryRead_SignedGenericInteger(iStrimU, theInteger))
+	if (not sTryRead_SignedGenericInteger(iStrimU, theInteger))
 		spThrowParseException("Expected an integer");
 	return theInteger;
 	}
@@ -78,7 +76,7 @@ static void spMustRead_WSCommaWS(const ZStrimU& iStrimU)
 	using namespace ZUtil_Strim;
 	sSkip_WSAndCPlusPlusComments(iStrimU);
 
-	if (!sTryRead_CP(iStrimU, ','))
+	if (not sTryRead_CP(iStrimU, ','))
 		spThrowParseException("Expected a ','");
 
 	sSkip_WSAndCPlusPlusComments(iStrimU);
@@ -97,9 +95,9 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 		{
 		// It's a property name.
 		string propertyName;
-		if (!sTryRead_EscapedString(iStrimU, '"', propertyName))
+		if (not sTryRead_EscapedString(iStrimU, '"', propertyName))
 			{
-			if (!sTryRead_EscapedString(iStrimU, '\'', propertyName))
+			if (not sTryRead_EscapedString(iStrimU, '\'', propertyName))
 				{
 				if (not ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nullptr, &propertyName))
 					spThrowParseException("Expected a property name after '#'");
@@ -134,7 +132,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 		else
 			{
 			sSkip_WSAndCPlusPlusComments(iStrimU);
-			if (!sTryRead_CP(iStrimU, '('))
+			if (not sTryRead_CP(iStrimU, '('))
 				spThrowParseException("Expected '(' following a type designator");
 
 			sSkip_WSAndCPlusPlusComments(iStrimU);
@@ -211,14 +209,14 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 			else if (theTypeLC == "float")
 				{
 				double theDouble;
-				if (!sTryRead_SignedDouble(iStrimU, theDouble))
+				if (not sTryRead_SignedDouble(iStrimU, theDouble))
 					spThrowParseException("Expected a floating point number");
 				oVal = float(theDouble);
 				}
 			else if (theTypeLC == "double")
 				{
 				double theDouble;
-				if (!sTryRead_SignedDouble(iStrimU, theDouble))
+				if (not sTryRead_SignedDouble(iStrimU, theDouble))
 					spThrowParseException("Expected a floating point number");
 				oVal = theDouble;
 				}
@@ -290,7 +288,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 
 			sSkip_WSAndCPlusPlusComments(iStrimU);
 
-			if (!sTryRead_CP(iStrimU, ')'))
+			if (not sTryRead_CP(iStrimU, ')'))
 				spThrowParseException("Expected ')' to close a value");
 			}
 		}
@@ -365,7 +363,7 @@ void ZYadStreamerR_ZooLibStrim::Finish()
 		{
 		const ZStrimU& theStrimU = fStrimmerU->GetStrimU();
 		sSkip_WSAndCPlusPlusComments(theStrimU);
-		if (!sTryRead_CP(theStrimU, ')'))
+		if (not sTryRead_CP(theStrimU, ')'))
 			spThrowParseException("Expected ')' to close a raw");
 		}
 	}
@@ -385,7 +383,7 @@ void ZYadStrimmerR_ZooLibStrim_Apos::Finish()
 	{
 	using namespace ZUtil_Strim;
 	fStrimR.SkipAll();
-	if (!sTryRead_CP(fStrimmerU->GetStrimU(), '\''))
+	if (not sTryRead_CP(fStrimmerU->GetStrimU(), '\''))
 		throw ParseException("Missing string delimiter");
 	}
 
@@ -476,7 +474,7 @@ void ZYadStrimmerR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* oDest, size_t iCount,
 				localDest += countRead;
 				if (countRead == 0)
 					{
-					if (!fStrimR_Boundary.HitBoundary())
+					if (not fStrimR_Boundary.HitBoundary())
 						spThrowParseException("Expected \"\"\" to close a string");
 					fStrimR_Boundary.Reset();
 					fQuotesSeen = 0;
@@ -509,7 +507,7 @@ void ZYadSeqR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	bool gotSeparator = true;
 	if (not iIsFirst)
 		{
-		if (!sTryRead_CP(theStrimU, ',') && !sTryRead_CP(theStrimU, ';'))
+		if (not sTryRead_CP(theStrimU, ',') && !sTryRead_CP(theStrimU, ';'))
 			gotSeparator = false;
 		else
 			sSkip_WSAndCPlusPlusComments(theStrimU);
@@ -521,12 +519,12 @@ void ZYadSeqR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 			return;
 		}
 
-	if (!gotSeparator)
+	if (not gotSeparator)
 		spThrowParseException("Expected ';' or ',' between values");
 
-	if (!(oYadR = spMakeYadR_ZooLibStrim(fStrimmerU)))
+	if (not (oYadR = spMakeYadR_ZooLibStrim(fStrimmerU)))
 		{
-		if (!fReadDelimiter)
+		if (not fReadDelimiter)
 			return;
 		spThrowParseException("Expected a value");
 		}
@@ -550,7 +548,7 @@ void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>&
 
 	if (not iIsFirst)
 		{
-		if (!sTryRead_CP(theStrimU, ',') && !sTryRead_CP(theStrimU, ';'))
+		if (not sTryRead_CP(theStrimU, ',') && !sTryRead_CP(theStrimU, ';'))
 			spThrowParseException("Expected ';' or ',' after property");
 		sSkip_WSAndCPlusPlusComments(theStrimU);
 		}
@@ -561,19 +559,19 @@ void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>&
 			return;
 		}
 
-	if (!spTryRead_PropertyName(theStrimU, oName))
+	if (not spTryRead_PropertyName(theStrimU, oName))
 		{
-		if (!fReadDelimiter)
+		if (not fReadDelimiter)
 			return;
 		spThrowParseException("Expected property name");
 		}
 
 	sSkip_WSAndCPlusPlusComments(theStrimU);
 
-	if (!sTryRead_CP(theStrimU, '='))
+	if (not sTryRead_CP(theStrimU, '='))
 		spThrowParseException("Expected '=' after property name");
 
-	if (!(oYadR = spMakeYadR_ZooLibStrim(fStrimmerU)))
+	if (not (oYadR = spMakeYadR_ZooLibStrim(fStrimmerU)))
 		spThrowParseException("Expected value after '='");
 	}
 
@@ -610,7 +608,7 @@ static void spWriteString
 		for (;;)
 			{
 			s.CopyAllFrom(strim_Boundary);
-			if (!strim_Boundary.HitBoundary())
+			if (not strim_Boundary.HitBoundary())
 				{
 				// We've returned without having hit the boundary, so we're done.
 				break;

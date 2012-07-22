@@ -99,7 +99,7 @@ static void spHandleSignal_Sync(int inSignal)
 		case SIGSEGV:
 		case SIGBUS:
 			{
-			if (!spHandlingFatal)
+			if (not spHandlingFatal)
 				{
 				spHandlingFatal = true;
 				ZLog::S s(ZLog::ePriority_Crit, "ZUtil_Debug");
@@ -200,7 +200,7 @@ void LogMeister::LogIt
 		return;
 
 	ZRef<ZStrimmerW> theStrimmerW = fStrimmerW;
-	if (!theStrimmerW)
+	if (not theStrimmerW)
 		return;
 
 	const ZStrimW& theStrimW = theStrimmerW->GetStrimW();

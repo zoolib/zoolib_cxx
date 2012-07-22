@@ -492,7 +492,7 @@ public:
 		{
 		ZAcquirer_T<Mtx> acq(fMtx);
 
-		if (!fWaiters)
+		if (not fWaiters)
 			{
 			fAvailable += iCount;
 			}

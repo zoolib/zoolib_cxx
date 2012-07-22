@@ -463,7 +463,7 @@ ZTime ZFileSpec::TimeModified(Error* oError) const
 /// On MacOS sets the creator and type appropriately. On other platforms, does nothing.
 bool ZFileSpec::SetCreatorAndType(uint32 iCreator, uint32 iType, ZFile::Error* oError) const
 	{
-	if (!fLoc)
+	if (not fLoc)
 		{
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;
@@ -521,7 +521,7 @@ ZFileSpec ZFileSpec::MoveTo(const ZFileSpec& oDest, ZFile::Error* oError) const
 /// Delete the entity in the file system referenced by the file spec.
 bool ZFileSpec::Delete(ZFile::Error* oError) const
 	{
-	if (!fLoc)
+	if (not fLoc)
 		{
 		if (oError)
 			*oError = ZFile::errorInvalidFileSpec;

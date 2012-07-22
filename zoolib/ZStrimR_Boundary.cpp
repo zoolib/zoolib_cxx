@@ -72,7 +72,7 @@ ZStrimR_Boundary::~ZStrimR_Boundary()
 
 void ZStrimR_Boundary::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
-	if (!fBuffer)
+	if (not fBuffer)
 		{
 		fStrimSource.Read(oDest, iCount, oCount);
 		}

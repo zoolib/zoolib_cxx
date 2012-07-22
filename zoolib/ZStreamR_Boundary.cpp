@@ -59,7 +59,7 @@ ZStreamR_Boundary::~ZStreamR_Boundary()
 
 void ZStreamR_Boundary::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	if (!fBuffer)
+	if (not fBuffer)
 		{
 		fStreamSource.Read(oDest, iCount, oCountRead);
 		}

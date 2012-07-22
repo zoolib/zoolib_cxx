@@ -92,7 +92,7 @@ ZRef<ZNetAddress> ZNetName::Lookup() const
 	if (ZRef<ZNetNameLookup> theLookup = this->CreateLookup(1))
 		{
 		theLookup->Start();
-		if (!theLookup->Finished())
+		if (not theLookup->Finished())
 			return theLookup->CurrentAddress();
 		}
 	return null;

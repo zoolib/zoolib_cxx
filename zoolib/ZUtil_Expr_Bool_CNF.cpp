@@ -215,7 +215,7 @@ ZRef<ZExpr_Bool> sFromCNF(const CNF& iCNF)
 		iter != iCNF.end(); ++iter)
 		{
 		ZRef<ZExpr_Bool> theExpr = spFromClause(*iter, theTrue, theFalse);
-		if (!theExpr || theExpr == theFalse)
+		if (not theExpr || theExpr == theFalse)
 			return theFalse;
 		else if (result == theTrue)
 			result = theExpr;

@@ -173,7 +173,7 @@ void StreamR_Decode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			while (sourceCount < 4)
 				{
 				uint8 currChar;
-				if (!fStreamSource.ReadByte(currChar))
+				if (not fStreamSource.ReadByte(currChar))
 					break;
 
 				const uint8 c = fDecode.fTable[currChar];

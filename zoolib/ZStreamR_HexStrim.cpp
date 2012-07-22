@@ -50,18 +50,18 @@ void ZStreamR_HexStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		{
 		sSkip_WSAndCPlusPlusComments(fStrimU);
 		int firstDigit;
-		if (!sTryRead_HexDigit(fStrimU, firstDigit))
+		if (not sTryRead_HexDigit(fStrimU, firstDigit))
 			{
-			if (!fAllowUnderscore || !sTryRead_CP(fStrimU, '_'))
+			if (not fAllowUnderscore || !sTryRead_CP(fStrimU, '_'))
 				break;
 			firstDigit = 0;
 			}
 
 		sSkip_WSAndCPlusPlusComments(fStrimU);
 		int secondDigit;
-		if (!sTryRead_HexDigit(fStrimU, secondDigit))
+		if (not sTryRead_HexDigit(fStrimU, secondDigit))
 			{
-			if (!fAllowUnderscore || !sTryRead_CP(fStrimU, '_'))
+			if (not fAllowUnderscore || !sTryRead_CP(fStrimU, '_'))
 				{
 				throw ParseException("Could not read second nibble of byte");
 				break;

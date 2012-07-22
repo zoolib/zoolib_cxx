@@ -224,7 +224,7 @@ void ZNatter::pRead(ZGuardMtxR& iGuard)
 		iGuard.Acquire();
 		fReadBusy = false;
 
-		if (!result)
+		if (not result)
 			{
 			fError = true;
 			}

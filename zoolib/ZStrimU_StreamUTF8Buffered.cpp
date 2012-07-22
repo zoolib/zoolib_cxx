@@ -101,7 +101,7 @@ void ZStrimU_StreamUTF8Buffered::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size
 
 			size_t utf8Read;
 			fStreamR.Read(&fBuffer_UTF8[0], countToRead, &utf8Read);
-			if (!utf8Read)
+			if (not utf8Read)
 				break;
 
 			size_t destCU;

@@ -87,7 +87,7 @@ bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead)
 
 	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
 		{
-		if (!sHasPrefix(iPrefix, *i))
+		if (not sHasPrefix(iPrefix, *i))
 			return false;
 		}
 

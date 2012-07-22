@@ -119,7 +119,7 @@ void ZMIME::StreamR_Header::Imp_Read(void* oDest, size_t iCount, size_t* oCountR
 				break;
 			}
 
-		if (!fStreamR.ReadChar(fX))
+		if (not fStreamR.ReadChar(fX))
 			break;
 
 		if (fX == CR)
@@ -189,7 +189,7 @@ void ZMIME::StreamR_Line::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 			continue;
 			}
 
-		if (!fStreamR.ReadChar(fX))
+		if (not fStreamR.ReadChar(fX))
 			break;
 
 		if (fState == eNormal)

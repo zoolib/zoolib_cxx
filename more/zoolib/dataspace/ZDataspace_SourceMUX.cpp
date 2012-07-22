@@ -184,10 +184,8 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 void SourceMUX::pResultsAvailable(ZRef<Source> iSource)
 	{
 	ZGuardMtxR guard(fMtxR);
-	if (!fResultsAvailable)
+	if (not sGetSet(fResultsAvailable, true))
 		{
-		fResultsAvailable = true;
-
 		for (set<ClientSource*>::iterator
 			iter = fClientSources.begin(), end = fClientSources.end();
 			iter != end; ++iter)

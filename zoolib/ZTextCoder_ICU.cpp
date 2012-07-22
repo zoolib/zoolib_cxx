@@ -84,7 +84,7 @@ ZTextDecoder_ICU::ZTextDecoder_ICU(const string& iSourceName)
 	{
 	UErrorCode status = U_ZERO_ERROR;
 	fConverter = ::ucnv_open(iSourceName.c_str(), &status);
-	if (!fConverter)
+	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	::ucnv_setToUCallBack(fConverter, spCallbackCount, &fCountSkipped, nullptr, nullptr, &status);
 	}
@@ -93,7 +93,7 @@ ZTextDecoder_ICU::ZTextDecoder_ICU(const char* iSourceName)
 	{
 	UErrorCode status = U_ZERO_ERROR;
 	fConverter = ::ucnv_open(iSourceName, &status);
-	if (!fConverter)
+	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	::ucnv_setToUCallBack(fConverter, spCallbackCount, &fCountSkipped, nullptr, nullptr, &status);
 	}
@@ -165,7 +165,7 @@ ZTextEncoder_ICU::ZTextEncoder_ICU(const string& iDestName)
 	{
 	UErrorCode status = U_ZERO_ERROR;
 	fConverter = ::ucnv_open(iDestName.c_str(), &status);
-	if (!fConverter)
+	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	::ucnv_setFromUCallBack(fConverter, UCNV_FROM_U_CALLBACK_SKIP, nullptr, nullptr, nullptr, &status);
 	}
@@ -174,7 +174,7 @@ ZTextEncoder_ICU::ZTextEncoder_ICU(const char* iDestName)
 	{
 	UErrorCode status = U_ZERO_ERROR;
 	fConverter = ::ucnv_open(iDestName, &status);
-	if (!fConverter)
+	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	::ucnv_setFromUCallBack(fConverter, UCNV_FROM_U_CALLBACK_SKIP, nullptr, nullptr, nullptr, &status);
 	}

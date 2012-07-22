@@ -537,7 +537,7 @@ NSMutableArray* ZSeq_NS::pTouch()
 	ZRef<NSMutableArray> theMutableArray;
 	if (NSArray* theArray = this->pArray())
 		{
-		if (!fMutable || [theArray retainCount] > 1)
+		if (not fMutable || [theArray retainCount] > 1)
 			{
 			theMutableArray = sArrayMutable(theArray);
 			inherited::operator=(theMutableArray);
@@ -715,7 +715,7 @@ NSMutableDictionary* ZMap_NS::pTouch()
 	ZRef<NSMutableDictionary> theMutableDictionary;
 	if (NSDictionary* theDictionary = this->pDictionary())
 		{
-		if (!fMutable || [theDictionary retainCount] > 1)
+		if (not fMutable || [theDictionary retainCount] > 1)
 			{
 			theMutableDictionary = sDictionaryMutable(theDictionary);
 			inherited::operator=(theMutableDictionary);

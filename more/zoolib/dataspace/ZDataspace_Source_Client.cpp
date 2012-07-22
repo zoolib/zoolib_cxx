@@ -76,11 +76,8 @@ void Source_Client::ModifyRegistrations
 			ZUtil_STL::sInsertMustNotContain(1, fRemoves, theRefcon);
 		}
 
-	if (!fNeedsWrite)
-		{
-		fNeedsWrite = true;
+	if (not sGetSet(fNeedsWrite, true))
 		sCallOnNewThread(sCallable(sRef(this), &Source_Client::pWrite));
-		}
 	}
 
 void Source_Client::CollectResults(std::vector<QueryResult>& oChanged)

@@ -54,11 +54,8 @@ void SourceServer::Initialize()
 void SourceServer::pCallback_Source(ZRef<Source> iSource)
 	{
 	ZAcqMtx acq(fMtx);
-	if (!fNeedsWrite)
-		{
-		fNeedsWrite = true;
+	if (not sGetSet(fNeedsWrite, true))
 		sCallOnNewThread(sCallable(sRef(this), &SourceServer::pWrite));
-		}
 	}
 
 bool SourceServer::pRead(ZRef<ZWorker> iWorker)
@@ -82,7 +79,7 @@ bool SourceServer::pRead(ZRef<ZWorker> iWorker)
 		removedQueries.push_back(theRefcon);
 		}
 
-	if (!addedQueries.empty() || !removedQueries.empty())
+	if (not addedQueries.empty() || not removedQueries.empty())
 		{
 		fSource->ModifyRegistrations
 			(ZUtil_STL::sFirstOrNil(addedQueries), addedQueries.size(),

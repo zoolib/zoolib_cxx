@@ -150,9 +150,8 @@ void Dataspace::pCallback_Source(ZRef<Source> iSource)
 	ZGuardMtxR guard(fMtxR);
 	if (ZRef<Callable_UpdateNeeded> theCallable = fCallable_UpdateNeeded)
 		{
-		if (!fCalled_UpdateNeeded)
+		if (not sGetSet(fCalled_UpdateNeeded, true))
 			{
-			fCalled_UpdateNeeded = true;
 			guard.Release();
 			theCallable->Call(this);
 			}

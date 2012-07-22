@@ -61,7 +61,7 @@ ZRef<Walker> Walker_Product::Prime
 
 	fWalker_Right = fWalker_Right->Prime(combined, oOffsets, ioBaseOffset);
 
-	if (!fWalker_Left || !fWalker_Right)
+	if (not fWalker_Left || not fWalker_Right)
 		return null;
 
 	if (fWalker_Left.DynamicCast<Walker_Dee>())
@@ -84,7 +84,7 @@ bool Walker_Product::ReadInc
 			fAnnotations_Left.clear();
 			fNeedLoadLeft = false;
 
-			if (!fWalker_Left->ReadInc(ioResults, &fAnnotations_Left))
+			if (not fWalker_Left->ReadInc(ioResults, &fAnnotations_Left))
 				return false;
 
 			std::copy(ioResults, ioResults + fResults_Left.size(), fResults_Left.begin());

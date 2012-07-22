@@ -210,7 +210,7 @@ string8 ZTrail::AsString(const string8& iSeparator, const string8& iBounce) cons
 	string8 result;
 	for (vector<Comp>::const_iterator ii = fComps.begin(); ii != fComps.end(); ++ii)
 		{
-		if (!result.empty())
+		if (not result.empty())
 			result += iSeparator;
 
 		if (sIsEmpty(*ii))

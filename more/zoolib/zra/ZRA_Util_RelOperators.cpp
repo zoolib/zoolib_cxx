@@ -29,7 +29,7 @@ static ZRef<Expr_Rel> spConst(const ZMap_Any& iMap)
 	for (ZMap_Any::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
 		{
 		ZRef<Expr_Rel> cur = sConst(iMap.NameOf(i), iMap.Get(i));
-		if (!result)
+		if (not result)
 			result = cur;
 		else
 			result = result * cur;

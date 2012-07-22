@@ -169,7 +169,7 @@ bool ZTextDecoder_Mac::Decode
 			// code units and so this iteration may be the one where we have to
 			// bail out early. So we pass the offset array to ConvertFromTextToUnicode in
 			// order to discover where any truncation in the source occurred.
-			if (!spInitedSourceOffsets)
+			if (not spInitedSourceOffsets)
 				{
 				// This is thread safe, even if two threads execute this at the same time
 				// the end result will be the same -- an array of kBufSize elements containing

@@ -116,7 +116,7 @@ void ZNetNameLookup_Local_Socket::Advance()
 
 ZRef<ZNetAddress> ZNetNameLookup_Local_Socket::CurrentAddress()
 	{
-	if (!fFinished)
+	if (not fFinished)
 		return new ZNetAddress_Local(fPath);
 
 	return null;
@@ -191,7 +191,7 @@ ZNetListener_Local_Socket::ZNetListener_Local_Socket(const std::string& iPath)
 
 ZNetListener_Local_Socket::~ZNetListener_Local_Socket()
 	{
-	if (!fPath.empty())
+	if (not fPath.empty())
 		::unlink(fPath.c_str());
 	}
 

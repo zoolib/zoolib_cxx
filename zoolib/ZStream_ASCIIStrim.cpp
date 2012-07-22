@@ -76,7 +76,7 @@ void ZStreamR_ASCIIStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 					// We found a problem, so start transcribing only those bytes that are okay.
 					for (UTF8* writeTo = readFrom; readFrom < destEnd; ++readFrom)
 						{
-						if (!(*readFrom & 0x80))
+						if (not (*readFrom & 0x80))
 							*writeTo++ = *readFrom;
 						}
 					break;

@@ -428,14 +428,14 @@ bool spConvert_T
 			S priorLocalSource = localSource;
 			UTF32 theCP;
 			size_t cuSkipped = 0;
-			if (!sReadInc(localSource, localSourceEnd, theCP, cuSkipped))
+			if (not sReadInc(localSource, localSourceEnd, theCP, cuSkipped))
 				{
 				if (localSource < localSourceEnd)
 					sourceComplete = false;
 				break;
 				}
 
-			if (!sWriteInc(localDest, localDestEnd, theCP))
+			if (not sWriteInc(localDest, localDestEnd, theCP))
 				{
 				localSource = priorLocalSource;
 				break;
@@ -450,14 +450,14 @@ bool spConvert_T
 			{
 			S priorLocalSource = localSource;
 			UTF32 theCP;
-			if (!sReadInc(localSource, localSourceEnd, theCP))
+			if (not sReadInc(localSource, localSourceEnd, theCP))
 				{
 				if (localSource < localSourceEnd)
 					sourceComplete = false;
 				break;
 				}
 
-			if (!sWriteInc(localDest, localDestEnd, theCP))
+			if (not sWriteInc(localDest, localDestEnd, theCP))
 				{
 				localSource = priorLocalSource;
 				break;
@@ -734,7 +734,7 @@ string8 sToUpper(const string8& iString)
 	for (;;)
 		{
 		UTF32 theUTF32;
-		if (!sReadInc(current, end, theUTF32))
+		if (not sReadInc(current, end, theUTF32))
 			break;
 		result += sToUpper(theUTF32);
 		}
@@ -751,7 +751,7 @@ string8 sToLower(const string8& iString)
 	for (;;)
 		{
 		UTF32 theUTF32;
-		if (!sReadInc(current, end, theUTF32))
+		if (not sReadInc(current, end, theUTF32))
 			break;
 		result += sToLower(theUTF32);
 		}
@@ -813,7 +813,7 @@ string16 sAsUTF16(const string8& iString)
 				while (--sequenceLength)
 					{
 					const uint8 curByte = *source++;
-					if (!sIsContinuation(curByte))
+					if (not sIsContinuation(curByte))
 						{
 						// It's not a legal continuation byte.
 						--source;

@@ -242,7 +242,7 @@ void ZNetNameLookup_Internet_Socket::Start()
 
 bool ZNetNameLookup_Internet_Socket::Finished()
 	{
-	if (!fStarted)
+	if (not fStarted)
 		return true;
 
 	return fCurrentIndex >= fAddresses.size();

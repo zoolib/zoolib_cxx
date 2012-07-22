@@ -173,7 +173,7 @@ bool ZStrimR::ReadCP(UTF32& oCP) const
 UTF32 ZStrimR::ReadCP() const
 	{
 	UTF32 theCP;
-	if (!this->ReadCP(theCP))
+	if (not this->ReadCP(theCP))
 		sThrowEndOfStrim();
 	return theCP;
 	}

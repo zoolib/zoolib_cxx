@@ -211,10 +211,10 @@ static map<string, UINT> spMap_NameToCodePage;
 
 static UINT spLookupName(const string& iName)
 	{
-	if (!spBuilt_NameToCodePage)
+	if (not spBuilt_NameToCodePage)
 		{
 		spMutex_NameToCodePage.Acquire();
-		if (!spBuilt_NameToCodePage)
+		if (not spBuilt_NameToCodePage)
 			{
 			for (size_t x = 0; x < countof(spNameToCodePage); ++x)
 				{
@@ -422,7 +422,7 @@ bool ZTextDecoder_Win::Decode
 
 void ZTextDecoder_Win::Init(UINT iSourceCodePage)
 	{
-	if (!::IsValidCodePage(iSourceCodePage))
+	if (not ::IsValidCodePage(iSourceCodePage))
 		throw runtime_error("ZTextDecoder_Win, invalid code page");
 	fSourceCodePage = iSourceCodePage;
 	}
@@ -545,7 +545,7 @@ void ZTextEncoder_Win::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 
 void ZTextEncoder_Win::Init(UINT iDestCodePage)
 	{
-	if (!::IsValidCodePage(iDestCodePage))
+	if (not ::IsValidCodePage(iDestCodePage))
 		throw runtime_error("ZTextDecoder_Win, invalid code page");
 	fDestCodePage = iDestCodePage;
 	}

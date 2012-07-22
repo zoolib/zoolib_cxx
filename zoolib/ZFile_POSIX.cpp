@@ -60,7 +60,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if (!__MWERKS__)
-using std::strchr;
+	using std::strchr;
 #endif
 using std::string;
 using std::vector;
@@ -513,29 +513,6 @@ static void spSplit(char iSep, bool iIncludeEmpties, const char* iPath, vector<s
 		}
 	}
 
-static void spSplit
-	(char iSep, bool iIncludeEmpties, const char* iPath, const char* iEnd,
-	vector<string>& oComps)
-	{
-	for (;;)
-		{
-		if (const char* nextSep = strchr(iPath, iSep))
-			{
-			size_t length = nextSep - iPath;
-			if (iIncludeEmpties || length)
-				oComps.push_back(string(iPath, length));
-			iPath = nextSep + 1;
-			}
-		else
-			{
-			size_t length = iEnd - iPath;
-			if (iIncludeEmpties || length)
-				oComps.push_back(string(iPath, length));
-			break;
-			}
-		}
-	}
-
 static void spGetCWD(vector<string8>& oComps)
 	{
 	for (size_t bufSize = 1024; bufSize < 16384; bufSize *= 2)
@@ -664,6 +641,29 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_Root()
 	}
 
 #if ZCONFIG_SPI_Enabled(Linux)
+
+static void spSplit
+	(char iSep, bool iIncludeEmpties, const char* iPath, const char* iEnd,
+	vector<string>& oComps)
+	{
+	for (;;)
+		{
+		if (const char* nextSep = strchr(iPath, iSep))
+			{
+			size_t length = nextSep - iPath;
+			if (iIncludeEmpties || length)
+				oComps.push_back(string(iPath, length));
+			iPath = nextSep + 1;
+			}
+		else
+			{
+			size_t length = iEnd - iPath;
+			if (iIncludeEmpties || length)
+				oComps.push_back(string(iPath, length));
+			break;
+			}
+		}
+	}
 
 ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 	{
@@ -879,7 +879,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::GetParent(ZFile::Error* oErr)
 		// get the CWD as a list of components.
 		vector<string> realComps;
 		spGetCWD(realComps);
-		if (!realComps.empty())
+		if (not realComps.empty())
 			{
 			// There's at least one component, so return the list minus the last component.
 			realComps.pop_back();
@@ -922,7 +922,7 @@ string ZFileLoc_POSIX::AsString_Native(const string* iComps, size_t iCount)
 		{
 		if (iCount)
 			{
-			if (!fIsAtRoot)
+			if (not fIsAtRoot)
 				result = ".";
 			for (size_t x = 0; x < iCount; ++x)
 				{
@@ -1071,7 +1071,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::CreateDir(ZFile::Error* oErr)
 ZRef<ZFileLoc> ZFileLoc_POSIX::MoveTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr)
 	{
 	ZFileLoc_POSIX* other = oDest.DynamicCast<ZFileLoc_POSIX>();
-	if (!other)
+	if (not other)
 		{
 		if (oErr)
 			*oErr = ZFile::errorGeneric;
@@ -1234,7 +1234,7 @@ string ZFileLoc_POSIX::pGetPath()
 		}
 
 	string result;
-	if (!fIsAtRoot)
+	if (not fIsAtRoot)
 		result = ".";
 	for (size_t x = 0; x < fComps.size(); ++x)
 		{

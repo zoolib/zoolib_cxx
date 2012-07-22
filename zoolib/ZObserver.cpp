@@ -69,14 +69,14 @@ void* ZObserver::GetObject()
 
 std::string ZObserver::GetName()
 	{
-	if (!fName_String)
+	if (not fName_String)
 		fName_String = ZUtil_CF::sAsUTF8(fName_CFStringRef);
 	return fName_String.Get();
 	}
 
 CFStringRef ZObserver::GetName_CFStringRef()
 	{
-	if (!fName_CFStringRef)
+	if (not fName_CFStringRef)
 		fName_CFStringRef = ZUtil_CF::sString(fName_String.Get());
 	return fName_CFStringRef;
 	}

@@ -163,7 +163,7 @@ void StrimW::pEmit()
 		{
 		try
 			{
-			if (!fName_StringQ)
+			if (not fName_StringQ)
 				fName_StringQ = *fName_CharStarQ;
 			spLogMeister->LogIt(fPriority, *fName_StringQ, *fMessageQ);
 			}

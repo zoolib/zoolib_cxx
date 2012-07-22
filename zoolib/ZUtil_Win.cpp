@@ -37,7 +37,7 @@ bool ZUtil_Win::sIsWinNT()
 	// if we're on NT, which is what this method is trying to determine.
 	// We could use the W entry point, and a failure used to indicate
 	// that we know we're not on NT.
-	if (!spIsWinNT_Inited)
+	if (not spIsWinNT_Inited)
 		{
 		OSVERSIONINFOA info;
 		info.dwOSVersionInfoSize = sizeof(info);
@@ -54,7 +54,7 @@ static bool spIsWin95OSR2_Inited;
 static bool spIsWin95OSR2_Result;
 bool ZUtil_Win::sIsWin95OSR2()
 	{
-	if (!spIsWin95OSR2_Inited)
+	if (not spIsWin95OSR2_Inited)
 		{
 		OSVERSIONINFOA info;
 		info.dwOSVersionInfoSize = sizeof(info);

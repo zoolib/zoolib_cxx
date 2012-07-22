@@ -426,7 +426,7 @@ bool ZCommandLine::pParse
 
 	while (localArgc)
 		{
-		if (!this->pParseOne(iStrimErrors, localArgc, localArgv))
+		if (not this->pParseOne(iStrimErrors, localArgc, localArgv))
 			return false;
 		}
 

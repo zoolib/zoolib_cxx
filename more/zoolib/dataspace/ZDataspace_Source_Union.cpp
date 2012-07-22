@@ -867,7 +867,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 				}
 			else
 				{
-				if (!thePIP->fNeedsAdd)
+				if (not thePIP->fNeedsAdd)
 					{
 					theRemoves.push_back(thePIP->fRefcon);
 					thePSource->fMap_Refcon_PIP.erase(thePIP->fRefcon);
@@ -888,7 +888,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 
 	// -----------------
 
-	if (!fPQuery_NeedsWork.IsEmpty())
+	if (not fPQuery_NeedsWork.IsEmpty())
 		{
 		ZLOGPF(s, eDebug+1);
 
@@ -908,7 +908,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 					allOK && iterPIP; iterPIP.Advance())
 					{
 					PIP* thePIP = iterPIP.Current();
-					if (!thePIP->fResult)
+					if (not thePIP->fResult)
 						{
 						allOK = false;
 						}

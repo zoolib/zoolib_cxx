@@ -72,7 +72,7 @@ public:
 		ZAssertStop(L::kDebug, !iL->fPrev);
 		ZAssertStop(L::kDebug, !iL->fNext);
 
-		if (!fHeadL)
+		if (not fHeadL)
 			{
 			ZAssertStop(L::kDebug, fSize == 0);
 			fSize = 1;
@@ -279,7 +279,7 @@ public:
 		{
 		ioDListHead.fHeadL = nullptr;
 		ioDListHead.fSize = 0;
-		if (!fCurrent)
+		if (not fCurrent)
 			{
 			fNext = nullptr;
 			}

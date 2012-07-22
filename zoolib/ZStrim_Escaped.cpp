@@ -45,7 +45,7 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	while (localDestEnd > localDest)
 		{
 		UTF32 theCP;
-		if (!fStrimSource.ReadCP(theCP))
+		if (not fStrimSource.ReadCP(theCP))
 			throw ParseException("Unexpected end of strim whilst parsing a string");
 
 		if (theCP == fDelimiter)
@@ -59,7 +59,7 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 
 		if (theCP == '\\')
 			{
-			if (!fStrimSource.ReadCP(theCP))
+			if (not fStrimSource.ReadCP(theCP))
 				throw ParseException("Unexpected end of strim whilst parsing a string");
 
 			switch (theCP)
@@ -94,7 +94,7 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 				case 'x':
 					{
 					int curDigit;
-					if (!sTryRead_HexDigit(fStrimSource, curDigit))
+					if (not sTryRead_HexDigit(fStrimSource, curDigit))
 						throw ParseException("Illegal non-hex digit following \"\\x\"");
 
 					theCP = curDigit;
@@ -114,7 +114,7 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 					while (requiredChars--)
 						{
 						int curDigit;
-						if (!sTryRead_HexDigit(fStrimSource, curDigit))
+						if (not sTryRead_HexDigit(fStrimSource, curDigit))
 							{
 							throw ParseException(string8("Illegal non-hex digit in \"\\")
 								+ char(theCP) + "\" escape sequence");
@@ -246,7 +246,7 @@ void ZStrimW_Escaped::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size
 			{
 			if (fQuoteQuotes && theCP == '\"')
 				fStrimSink.Write("\\\"");
-			else if (!fQuoteQuotes && theCP == '\'')
+			else if (not fQuoteQuotes && theCP == '\'')
 				fStrimSink.Write("\\\'");
 			else if (theCP == '\\')
 				fStrimSink.Write("\\\\");

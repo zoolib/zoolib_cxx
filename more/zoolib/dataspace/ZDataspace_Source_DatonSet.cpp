@@ -345,7 +345,7 @@ void Source_DatonSet::ModifyRegistrations
 		fMap_Refcon_ClientQuery.erase(iterClientQuery);
 		}
 
-	if (!fClientQuery_NeedsWork.IsEmpty() || !fPQuery_NeedsWork.IsEmpty())
+	if (not fClientQuery_NeedsWork.IsEmpty() || not fPQuery_NeedsWork.IsEmpty())
 		{
 		guard.Release();
 		Source::pTriggerResultsAvailable();
@@ -726,7 +726,7 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const R
 	sInsertMustNotContain(kDebug, iPQuery->fPSearch_Used, thePSearch);
 	sInsertMustNotContain(kDebug, thePSearch->fPQuery_Using, iPQuery);
 
-	if (!thePSearch->fResult)
+	if (not thePSearch->fResult)
 		{
 		ZRef<ZQE::Walker> theWalker =
 			new Walker_Concrete(this, vector<string8>(iRelHead.begin(), iRelHead.end()));

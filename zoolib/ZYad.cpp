@@ -192,7 +192,7 @@ bool ZYadSeqRClone::IsSimple(const ZYadOptions& iOptions)
 		{
 		if (ZRef<ZYadR> theYadR = clone->ReadInc())
 			{
-			if (!clone->Skip())
+			if (not clone->Skip())
 				{
 				// We've exhausted ouselves, so we had just one entry, and
 				// we're simple if that entry is simple.

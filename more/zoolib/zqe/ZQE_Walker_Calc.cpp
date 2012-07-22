@@ -51,7 +51,7 @@ ZRef<Walker> Walker_Calc::Prime
 	fOutputOffset = ioBaseOffset++;
 	oOffsets[fRelName] = fOutputOffset;
 
-	if (!fWalker)
+	if (not fWalker)
 		return null;
 
 	return this;
@@ -61,7 +61,7 @@ bool Walker_Calc::ReadInc
 	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
-	if (!fWalker->ReadInc(ioResults, oAnnotations))
+	if (not fWalker->ReadInc(ioResults, oAnnotations))
 		return false;
 
 	ioResults[fOutputOffset] = fCallable->Call(PseudoMap(fBindings, ioResults));

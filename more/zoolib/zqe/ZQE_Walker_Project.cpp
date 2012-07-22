@@ -59,7 +59,7 @@ ZRef<Walker> Walker_Project::Prime
 		oOffsets[*i] = childOffset;
 		}
 
-	if (!fWalker)
+	if (not fWalker)
 		return null;
 
 	return this;
@@ -78,7 +78,7 @@ bool Walker_Project::ReadInc
 
 	for (;;)
 		{
-		if (!fWalker->ReadInc(ioResults, localAnnotationsPtr))
+		if (not fWalker->ReadInc(ioResults, localAnnotationsPtr))
 			return false;
 
 		vector<ZVal_Any> subset;

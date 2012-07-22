@@ -40,7 +40,7 @@ bool ZMacOSX::sIsMacOSX()
 
 	#elif ZCONFIG_SPI_Enabled(Carbon64)
 
-		if (!sIsMacOSX_Checked)
+		if (not sIsMacOSX_Checked)
 			{
 			UInt32 systemVersion;
 			OSErr err = ::Gestalt(gestaltSystemVersion, (SInt32*)&systemVersion);

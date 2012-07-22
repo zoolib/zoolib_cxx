@@ -906,7 +906,7 @@ void Functions_Read_T<I, UTF8>::sAlign(I& ioCurrent)
 			bool okay = true;
 			while (--sequenceLength)
 				{
-				if (!sIsContinuation(*localSource++))
+				if (not sIsContinuation(*localSource++))
 					{
 					--localSource;
 					okay = false;
@@ -942,7 +942,7 @@ void Functions_Read_T<I, UTF8>::sAlign(I& ioCurrent, I iEnd)
 			bool okay = true;
 			while (--sequenceLength && localSource < iEnd)
 				{
-				if (!sIsContinuation(*ioCurrent++))
+				if (not sIsContinuation(*ioCurrent++))
 					{
 					--ioCurrent;
 					okay = false;
@@ -976,7 +976,7 @@ void Functions_Read_T<I, UTF8>::sInc(I& ioCurrent)
 			bool okay = true;
 			while (--sequenceLength)
 				{
-				if (!sIsContinuation(*ioCurrent++))
+				if (not sIsContinuation(*ioCurrent++))
 					{
 					// It's not a legal continuation byte.
 					--ioCurrent;
@@ -1022,7 +1022,7 @@ bool Functions_Read_T<I, UTF8>::sInc(I& ioCurrent, I iEnd)
 			bool okay = true;
 			while (--sequenceLength)
 				{
-				if (!sIsContinuation(*ioCurrent++))
+				if (not sIsContinuation(*ioCurrent++))
 					{
 					// It's not a legal continuation byte.
 					--ioCurrent;
@@ -1070,13 +1070,13 @@ void Functions_Read_T<I, UTF8>::sDec(I& ioCurrent)
 			else
 				{
 				// We haven't seen enough continuation bytes.
-				if (!seenNonContinuation)
+				if (not seenNonContinuation)
 					{
 					// We've only seen continuation bytes.
 					I current = ioCurrent + 1;
 					while (--sequenceLength)
 						{
-						if (!sIsContinuation(*current++))
+						if (not sIsContinuation(*current++))
 							break;
 						}
 					if (sequenceLength == 0)
@@ -1133,7 +1133,7 @@ bool Functions_Read_T<I, UTF8>::sDec(I iStart, I& ioCurrent, I iEnd)
 			else
 				{
 				// We haven't seen enough continuation bytes.
-				if (!seenNonContinuation)
+				if (not seenNonContinuation)
 					{
 					// We've only seen continuation bytes.
 					if (ioCurrent + sequenceLength <= iEnd)
@@ -1143,7 +1143,7 @@ bool Functions_Read_T<I, UTF8>::sDec(I iStart, I& ioCurrent, I iEnd)
 						I current = ioCurrent + 1;
 						while (--sequenceLength)
 							{
-							if (!sIsContinuation(*current++))
+							if (not sIsContinuation(*current++))
 								break;
 							}
 						if (sequenceLength == 0)
@@ -1195,7 +1195,7 @@ UTF32 Functions_Read_T<I, UTF8>::sReadInc(I& ioCurrent)
 			while (--sequenceLength)
 				{
 				const uint8 curByte = *ioCurrent++;
-				if (!sIsContinuation(curByte))
+				if (not sIsContinuation(curByte))
 					{
 					// It's not a legal continuation byte.
 					--ioCurrent;
@@ -1245,7 +1245,7 @@ bool Functions_Read_T<I, UTF8>::sReadInc(I& ioCurrent, I iEnd, UTF32& oCP)
 			while (--sequenceLength)
 				{
 				const uint8 curByte = *ioCurrent++;
-				if (!sIsContinuation(curByte))
+				if (not sIsContinuation(curByte))
 					{
 					// It's not a legal continuation byte.
 					--ioCurrent;
@@ -1299,7 +1299,7 @@ bool Functions_Read_T<I, UTF8>::sReadInc(I& ioCurrent, I iEnd, UTF32& oCP, size_
 			for (size_t countConsumed = 1; countConsumed < sequenceLength; ++countConsumed)
 				{
 				const uint8 curByte = *ioCurrent++;
-				if (!sIsContinuation(curByte))
+				if (not sIsContinuation(curByte))
 					{
 					// It's not a legal continuation byte.
 					--ioCurrent;

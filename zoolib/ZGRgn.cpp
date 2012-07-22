@@ -190,7 +190,7 @@ ZGRgn ZGRgn::Offsetted(ZCoord iOffsetH, ZCoord iOffsetV) const
 
 void ZGRgn::Include(const ZRectPOD& iRect)
 	{
-	if (!fRep)
+	if (not fRep)
 		fRep = spMake(iRect);
 	else if (fRep->IsShared())
 		fRep = fRep->Including(iRect);
@@ -200,7 +200,7 @@ void ZGRgn::Include(const ZRectPOD& iRect)
 
 ZGRgn ZGRgn::Including(const ZRectPOD& iRect) const
 	{
-	if (!fRep)
+	if (not fRep)
 		return ZGRgn(spMake(iRect));
 	else
 		return ZGRgn(fRep->Including(iRect));
@@ -244,7 +244,7 @@ ZGRgn ZGRgn::Excluding(const ZRectPOD& iRect) const
 
 void ZGRgn::Include(const ZGRgn& iOther)
 	{
-	if (!fRep)
+	if (not fRep)
 		fRep = iOther.fRep;
 	else if (iOther.fRep)
 		{
@@ -257,7 +257,7 @@ void ZGRgn::Include(const ZGRgn& iOther)
 
 ZGRgn ZGRgn::Including(const ZGRgn& iOther) const
 	{
-	if (!fRep)
+	if (not fRep)
 		return iOther;
 	else if (iOther.fRep)
 		return ZGRgn(fRep->Including(iOther.fRep));
@@ -307,7 +307,7 @@ ZGRgn ZGRgn::Excluding(const ZGRgn& iOther) const
 
 void ZGRgn::Xor(const ZGRgn& iOther)
 	{
-	if (!fRep)
+	if (not fRep)
 		{
 		fRep = iOther.fRep;
 		}
@@ -322,7 +322,7 @@ void ZGRgn::Xor(const ZGRgn& iOther)
 
 ZGRgn ZGRgn::Xoring(const ZGRgn& iOther) const
 	{
-	if (!fRep)
+	if (not fRep)
 		return iOther;
 	else if (iOther.fRep)
 		return ZGRgn(fRep->Xoring(iOther.fRep));

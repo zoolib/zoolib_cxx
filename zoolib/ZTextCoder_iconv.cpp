@@ -135,14 +135,14 @@ static iconv_t spOpenDecoder(const string& iSourceName)
 ZTextDecoder_iconv::ZTextDecoder_iconv(const string& iSourceName)
 	{
 	fConverter = spOpenDecoder(iSourceName);
-	if (!fConverter)
+	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
 
 ZTextDecoder_iconv::ZTextDecoder_iconv(const char* iSourceName)
 	{
 	fConverter = spOpenDecoder(iSourceName);
-	if (!fConverter)
+	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
 
@@ -241,14 +241,14 @@ static iconv_t spOpenEncoder(const string& iDestName)
 ZTextEncoder_iconv::ZTextEncoder_iconv(const string& iDestName)
 	{
 	fConverter = spOpenEncoder(iDestName);
-	if (!fConverter)
+	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
 
 ZTextEncoder_iconv::ZTextEncoder_iconv(const char* iDestName)
 	{
 	fConverter = spOpenEncoder(iDestName);
-	if (!fConverter)
+	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
 

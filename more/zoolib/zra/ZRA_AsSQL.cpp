@@ -113,7 +113,7 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 			break;
 			}
 		}
-	if (!found)
+	if (not found)
 		throw std::runtime_error("Couldn't find table");
 
 	const string8 realTableName = found.Get()->first;

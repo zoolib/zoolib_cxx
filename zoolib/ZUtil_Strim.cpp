@@ -215,7 +215,7 @@ bool sTryRead_HexInteger(const ZStrimU& iStrimU, int64& oInt64)
 	for (bool gotAny = false; /*no test*/; gotAny = true)
 		{
 		int curDigit;
-		if (!sTryRead_HexDigit(iStrimU, curDigit))
+		if (not sTryRead_HexDigit(iStrimU, curDigit))
 			return gotAny;
 		oInt64 *= 16;
 		oInt64 += curDigit;
@@ -248,10 +248,10 @@ bool sTryRead_Mantissa(const ZStrimU& iStrimU, int64& oInt64, double& oDouble, b
 	for (bool gotAny = false; /*no test*/; gotAny = true)
 		{
 		int curDigit;
-		if (!sTryRead_Digit(iStrimU, curDigit))
+		if (not sTryRead_Digit(iStrimU, curDigit))
 			return gotAny;
 
-		if (!oIsDouble)
+		if (not oIsDouble)
 			{
 			int64 priorInt64 = oInt64;
 			oInt64 *= 10;
@@ -273,7 +273,7 @@ bool sTryRead_DecimalInteger(const ZStrimU& iStrimU, int64& oInt64)
 	for (bool gotAny = false; /*no test*/; gotAny = true)
 		{
 		int curDigit;
-		if (!sTryRead_Digit(iStrimU, curDigit))
+		if (not sTryRead_Digit(iStrimU, curDigit))
 			return gotAny;
 		oInt64 *= 10;
 		oInt64 += curDigit;
@@ -315,7 +315,7 @@ bool sTryRead_DecimalNumber(const ZStrimU& iStrimU, int64& oInt64, double& oDoub
 		return true;
 		}
 
-	if (!sTryRead_Mantissa(iStrimU, oInt64, oDouble, oIsDouble))
+	if (not sTryRead_Mantissa(iStrimU, oInt64, oDouble, oIsDouble))
 		return false;
 
 	if (sTryRead_CP(iStrimU, '.'))
@@ -327,7 +327,7 @@ bool sTryRead_DecimalNumber(const ZStrimU& iStrimU, int64& oInt64, double& oDoub
 		for (;;)
 			{
 			int curDigit;
-			if (!sTryRead_Digit(iStrimU, curDigit))
+			if (not sTryRead_Digit(iStrimU, curDigit))
 				break;
 			divisor *= 10;
 			fracPart *= 10;
@@ -340,7 +340,7 @@ bool sTryRead_DecimalNumber(const ZStrimU& iStrimU, int64& oInt64, double& oDoub
 		{
 		oIsDouble = true;
 		int64 exponent;
-		if (!sTryRead_SignedDecimalInteger(iStrimU, exponent))
+		if (not sTryRead_SignedDecimalInteger(iStrimU, exponent))
 			spThrowParseException("Expected a valid exponent after 'e'");
 		oDouble = oDouble * pow(10.0, int(exponent));
 		}
@@ -443,7 +443,7 @@ void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& oDest)
 				else if (sTryRead_CP(iStrimU, '*'))
 					{
 					oDest.Write("/*");
-					if (!sCopy_Until(iStrimU, "*/", oDest))
+					if (not sCopy_Until(iStrimU, "*/", oDest))
 						spThrowParseException("Unexpected end of data while parsing a /**/ comment");
 					oDest.Write("*/");
 					continue;
@@ -548,12 +548,12 @@ void sRead_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, string8& oSt
 bool sTryCopy_EscapedString(const ZStrimU& iStrimU,
 	UTF32 iDelimiter, const ZStrimW& oDest)
 	{
-	if (!sTryRead_CP(iStrimU, iDelimiter))
+	if (not sTryRead_CP(iStrimU, iDelimiter))
 		return false;
 
 	sCopy_EscapedString(iStrimU, iDelimiter, oDest);
 
-	if (!sTryRead_CP(iStrimU, iDelimiter))
+	if (not sTryRead_CP(iStrimU, iDelimiter))
 		spThrowParseException("Missing string delimiter");
 
 	return true;

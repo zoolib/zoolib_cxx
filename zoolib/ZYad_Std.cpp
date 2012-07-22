@@ -51,9 +51,8 @@ void ZYadSeqR_Std::Finish()
 
 ZRef<ZYadR> ZYadSeqR_Std::ReadInc()
 	{
-	if (!fStarted)
+	if (not sGetSet(fStarted, true))
 		{
-		fStarted = true;
 		this->Imp_ReadInc(true, fValue);
 		}
 	else if (fValue)
@@ -83,9 +82,8 @@ void ZYadMapR_Std::Finish()
 ZRef<ZYadR> ZYadMapR_Std::ReadInc(ZName& oName)
 	{
 	oName = ZName();
-	if (!fStarted)
+	if (not sGetSet(fStarted, true))
 		{
-		fStarted = true;
 		this->Imp_ReadInc(true, oName, fValue);
 		}
 	else if (fValue)

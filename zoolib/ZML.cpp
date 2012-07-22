@@ -88,7 +88,7 @@ static string spReadReference(const ZStrimU& iStrim, ZRef<Callable_Entity> iCall
 			theEntity += theCP;
 			}
 
-		if (!theEntity.empty())
+		if (not theEntity.empty())
 			{
 			if (iCallable)
 				result = iCallable->Call(theEntity);
@@ -115,7 +115,7 @@ static bool spReadMLIdentifier(const ZStrimU& s, string& oText)
 	oText.resize(0);
 
 	UTF32 curCP;
-	if (!s.ReadCP(curCP))
+	if (not s.ReadCP(curCP))
 		return false;
 
 	if (not ZUnicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
@@ -128,7 +128,7 @@ static bool spReadMLIdentifier(const ZStrimU& s, string& oText)
 
 	for (;;)
 		{
-		if (!s.ReadCP(curCP))
+		if (not s.ReadCP(curCP))
 			{
 			break;
 			}
@@ -153,7 +153,7 @@ static bool spReadUntil(const ZStrimU& s, UTF32 iTerminator, string& oText)
 	for (;;)
 		{
 		UTF32 theCP;
-		if (!s.ReadCP(theCP))
+		if (not s.ReadCP(theCP))
 			return false;
 
 		if (theCP == iTerminator)
@@ -173,7 +173,7 @@ static bool spReadUntil
 	for (;;)
 		{
 		UTF32 theCP;
-		if (!s.ReadCP(theCP))
+		if (not s.ReadCP(theCP))
 			{
 			return false;
 			}
@@ -197,7 +197,7 @@ static bool spReadMLAttributeName(const ZStrimU& s, string& oName)
 	oName.resize(0);
 
 	UTF32 curCP;
-	if (!s.ReadCP(curCP))
+	if (not s.ReadCP(curCP))
 		return false;
 
 	if (curCP == '"')
@@ -219,7 +219,7 @@ static bool spReadMLAttributeName(const ZStrimU& s, string& oName)
 		oName += curCP;
 		for (;;)
 			{
-			if (!s.ReadCP(curCP))
+			if (not s.ReadCP(curCP))
 				break;
 
 			if (not ZUnicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
@@ -243,7 +243,7 @@ static bool spReadMLAttributeValue
 	oValue.resize(0);
 
 	UTF32 curCP;
-	if (!s.ReadCP(curCP))
+	if (not s.ReadCP(curCP))
 		return false;
 
 	if (curCP == '"')
@@ -262,7 +262,7 @@ static bool spReadMLAttributeValue
 
 		for (;;)
 			{
-			if (!s.ReadCP(curCP))
+			if (not s.ReadCP(curCP))
 				{
 				break;
 				}
@@ -338,7 +338,7 @@ void StrimU::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 			else
 				{
 				UTF32 theCP;
-				if (!fStrim.ReadCP(theCP))
+				if (not fStrim.ReadCP(theCP))
 					{
 					fToken = eToken_Exhausted;
 					break;
@@ -496,7 +496,7 @@ void StrimU::pAdvance()
 	for	(;;)
 		{
 		UTF32 theCP;
-		if (!fStrim.ReadCP(theCP))
+		if (not fStrim.ReadCP(theCP))
 			{
 			fToken = eToken_Exhausted;
 			return;
@@ -511,7 +511,7 @@ void StrimU::pAdvance()
 
 		sSkip_WS(fStrim);
 
-		if (!fStrim.ReadCP(theCP))
+		if (not fStrim.ReadCP(theCP))
 			{
 			fToken = eToken_Exhausted;
 			return;
@@ -523,7 +523,7 @@ void StrimU::pAdvance()
 				{
 				sSkip_WS(fStrim);
 
-				if (!spReadMLIdentifier(fStrim, fTagName))
+				if (not spReadMLIdentifier(fStrim, fTagName))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -531,7 +531,7 @@ void StrimU::pAdvance()
 
 				sSkip_WS(fStrim);
 
-				if (!sTryRead_CP(fStrim, '>'))
+				if (not sTryRead_CP(fStrim, '>'))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -578,7 +578,7 @@ void StrimU::pAdvance()
 				{
 				fStrim.Unread(theCP);
 
-				if (!spReadMLIdentifier(fStrim, fTagName))
+				if (not spReadMLIdentifier(fStrim, fTagName))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -590,7 +590,7 @@ void StrimU::pAdvance()
 
 					string attributeName;
 					attributeName.reserve(8);
-					if (!spReadMLAttributeName(fStrim, attributeName))
+					if (not spReadMLAttributeName(fStrim, attributeName))
 						break;
 
 					sSkip_WS(fStrim);
@@ -600,7 +600,7 @@ void StrimU::pAdvance()
 						sSkip_WS(fStrim);
 						string attributeValue;
 						attributeValue.reserve(8);
-						if (!spReadMLAttributeValue
+						if (not spReadMLAttributeValue
 							(fStrim, fRecognizeEntitiesInAttributeValues, fCallable, attributeValue))
 							{
 							fToken = eToken_Exhausted;
@@ -621,7 +621,7 @@ void StrimU::pAdvance()
 				else
 					fToken = eToken_TagBegin;
 
-				if (!sTryRead_CP(fStrim, '>'))
+				if (not sTryRead_CP(fStrim, '>'))
 					fToken = eToken_Exhausted;
 
 				return;
@@ -936,7 +936,7 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 				{
 				size_t countWritten;
 				fStrimSink.Write(localSource, countToWrite, &countWritten);
-				if (!countWritten)
+				if (not countWritten)
 					break;
 
 				localSource += countWritten;
@@ -964,11 +964,11 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 		else
 			{
 			size_t countToWrite = current - localSource;
-			if (!countToWrite)
+			if (not countToWrite)
 				break;
 			size_t countWritten;
 			fStrimSink.Write(localSource, countToWrite, &countWritten);
-			if (!countWritten)
+			if (not countWritten)
 				break;
 			localSource += countWritten;
 			}
@@ -1162,7 +1162,7 @@ const StrimW& StrimW::Attr(const string8& iName, const string8& iValue) const
 				newValue->reserve(iValue.size());
 				}
 			}
-		if (!newValue)
+		if (not newValue)
 			{
 			// We saw no CPs that need entity encoding, so never allocated newValue
 			// nor did we accumulate values into it. So we can do so now and will
@@ -1292,9 +1292,9 @@ void StrimW::pPreTag()
 	{
 	if (fIndentEnabled)
 		{
-		if (!fWrittenSinceLastTag)
+		if (not fWrittenSinceLastTag)
 			{
-			if (!fLastWasEOL)
+			if (not fLastWasEOL)
 				fStrimSink.Write(fString_EOL);
 			spWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
 			}
@@ -1312,9 +1312,9 @@ void StrimW::pWritePending()
 
 	if (fIndentEnabled)
 		{
-		if (!fWrittenSinceLastTag)
+		if (not fWrittenSinceLastTag)
 			{
-			if (!fLastWasEOL)
+			if (not fLastWasEOL)
 				fStrimSink.Write(fString_EOL);
 			spWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
 			}
@@ -1329,7 +1329,7 @@ void StrimW::pWritePending()
 
 	fStrimSink.Write(fTags.back());
 
-	if (!fAttributeNames.empty())
+	if (not fAttributeNames.empty())
 		{
 		for (size_t x = 0; x < fAttributeNames.size(); ++x)
 			{
@@ -1385,9 +1385,9 @@ void StrimW::pEnd()
 
 	if (fIndentEnabled)
 		{
-		if (!fWrittenSinceLastTag && !fLastWasBegin)
+		if (not fWrittenSinceLastTag && !fLastWasBegin)
 			{
-			if (!fLastWasEOL)
+			if (not fLastWasEOL)
 				fStrimSink.Write(fString_EOL);
 			spWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
 			}

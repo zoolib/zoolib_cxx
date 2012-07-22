@@ -98,7 +98,7 @@ void Identity::Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight) const
 		oLeft = spOneZero;
 		oRight = spZeroOne;
 		}
-	else if (!fLeft->IsZero() && fRight->IsZero())
+	else if (not fLeft->IsZero() && fRight->IsZero())
 		{
 		ZRef<Identity> newLeft, newRight;
 		fLeft->Split(newLeft, newRight);
@@ -106,7 +106,7 @@ void Identity::Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight) const
 		oLeft = new Identity(newLeft, spZero);
 		oRight = new Identity(newRight, spZero);
 		}
-	else if (fLeft->IsZero() && !fRight->IsZero())
+	else if (fLeft->IsZero() && not fRight->IsZero())
 		{
 		ZRef<Identity> newLeft, newRight;
 		fRight->Split(newLeft, newRight);

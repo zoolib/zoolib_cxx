@@ -36,7 +36,7 @@ void ZThread_Win::sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
 	{
 	ID theID;
 	HANDLE theThreadHANDLE = (HANDLE) ::_beginthreadex(nullptr, 0, iProc, iParam, 0, &theID);
-	if (!theThreadHANDLE || theThreadHANDLE == (HANDLE)-1)
+	if (not theThreadHANDLE || theThreadHANDLE == (HANDLE)-1)
 		throw std::bad_alloc();
 	::CloseHandle(theThreadHANDLE);
 	}
