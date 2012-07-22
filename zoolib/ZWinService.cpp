@@ -77,7 +77,7 @@ ZWinService::ZWinService
 	{
 	ZLOGFUNCTION(eDebug);
 
-	ZMemZero_T(fServiceStatus);
+	sMemZero_T(fServiceStatus);
 
 	SERVICE_TABLE_ENTRYW theEntry;
 	theEntry.lpServiceName = const_cast<wchar_t*>(fServiceName.c_str());
@@ -183,7 +183,7 @@ void ZWinService::pContinued()
 void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	{
 	ZGuardRMtxR guard(fMtx);
-	ZMemZero_T(fServiceStatus);
+	sMemZero_T(fServiceStatus);
 	fServiceStatus.dwServiceType = SERVICE_WIN32;
 	fServiceStatus.dwCurrentState = SERVICE_START_PENDING;
 	fServiceStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP;
