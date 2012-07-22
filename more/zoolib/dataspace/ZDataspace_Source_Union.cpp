@@ -55,6 +55,8 @@ using std::pair;
 using std::set;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - InsertPrefix (anonymous)
 
@@ -407,7 +409,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>
 	ZRA::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
-	fPSources = ZUtil_STL::sOr(leftPSources, rightPSources);
+	fPSources = sOr(leftPSources, rightPSources);
 	fResultRelHead = leftRelHead | iExpr->GetRelName();
 
 	if (leftPSources.size() <= 1)
@@ -478,8 +480,8 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 	ZRA::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
-	fPSources = ZUtil_STL::sOr(leftPSources, rightPSources);
-	fResultRelHead = ZUtil_STL::sOr(leftRelHead, rightRelHead);
+	fPSources = sOr(leftPSources, rightPSources);
+	fResultRelHead = sOr(leftRelHead, rightRelHead);
 
 	if (leftPSources.size() <= 1)
 		{
@@ -537,7 +539,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Renam
 	{
 	ZRA::Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(iExpr);
 
-	if (ZUtil_STL::sEraseIfContains(fResultRelHead, iExpr->GetOld()))
+	if (sQErase(fResultRelHead, iExpr->GetOld()))
 		fResultRelHead |= iExpr->GetNew();
 	}
 
@@ -551,13 +553,13 @@ void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Res
 	if (fPSources.size() > 1)
 		{
 		// Child is complex, proxies will have been created already.
-		fPSources = ZUtil_STL::sOr(fPSources, priorPSources);
+		fPSources = sOr(fPSources, priorPSources);
 		this->pSetResult(iExpr->SelfOrClone(newOp0));
 		}
 	else
 		{
 		// Child is simple.
-		set<PSource*> combinedPSources = ZUtil_STL::sOr(priorPSources, fPSources);
+		set<PSource*> combinedPSources = sOr(priorPSources, fPSources);
 		if (combinedPSources.size() > 1)
 			{
 			// We're complex with the addition of our prior sources.
@@ -597,7 +599,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>
 	ZRA::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
-	fPSources = ZUtil_STL::sOr(leftPSources, rightPSources);
+	fPSources = sOr(leftPSources, rightPSources);
 	ZAssert(leftRelHead == rightRelHead);
 	fResultRelHead = leftRelHead;
 
@@ -775,7 +777,7 @@ void Source_Union::ModifyRegistrations
 				iterProxies != endProxies; ++iterProxies)
 				{
 				ZRef<Proxy> theProxy = *iterProxies;
-				ZUtil_STL::sEraseMustContain(kDebug, theProxy->fDependentPQueries, thePQuery);
+				sEraseMust(kDebug, theProxy->fDependentPQueries, thePQuery);
 				if (theProxy->fDependentPQueries.empty())
 					{
 					for (DListEraser<PIP, DLink_PIP_InProxy>
@@ -790,7 +792,7 @@ void Source_Union::ModifyRegistrations
 					}
 				}
 			fPQuery_NeedsWork.EraseIfContains(thePQuery);
-			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
+			sEraseMust(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 			}
 
 		fMap_Refcon_ClientQuery.erase(iterClientQuery);
@@ -876,8 +878,8 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 			}
 
 		thePSource->fSource->ModifyRegistrations
-			(ZUtil_STL::sFirstOrNil(theAddedQueries), theAddedQueries.size(),
-			ZUtil_STL::sFirstOrNil(theRemoves), theRemoves.size());
+			(sFirstOrNil(theAddedQueries), theAddedQueries.size(),
+			sFirstOrNil(theRemoves), theRemoves.size());
 		}
 
 	// -----------------
@@ -977,8 +979,7 @@ void Source_Union::InsertSource(ZRef<Source> iSource, const string8& iPrefix)
 	ZAcqMtxR acq(fMtxR);
 	ZAssertStop(kDebug, fMap_Refcon_ClientQuery.empty());
 
-	ZUtil_STL::sInsertMustNotContain(kDebug, fMap_Source_PSource,
-		iSource, PSource(iSource, iPrefix));
+	sInsertMust(kDebug, fMap_Source_PSource, iSource, PSource(iSource, iPrefix));
 
 	iSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
 	}
@@ -999,8 +1000,7 @@ void Source_Union::EraseSource(ZRef<Source> iSource)
 		}
 	thePSource.fMap_Refcon_PIP.clear();
 
-	iSource->ModifyRegistrations(nullptr, 0,
-		ZUtil_STL::sFirstOrNil(toRemove), toRemove.size());
+	iSource->ModifyRegistrations(nullptr, 0, sFirstOrNil(toRemove), toRemove.size());
 
 	iSource->SetCallable_ResultsAvailable(null);
 
@@ -1029,7 +1029,7 @@ ZRef<ZRA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
 		return iRel;
 
 	ZRef<Proxy> theProxyRef;
-	if (ZQ<Proxy*> theQ = ZUtil_STL::sGetIfContains(fProxyMap, iRel))
+	if (ZQ<Proxy*> theQ = sQGet(fProxyMap, iRel))
 		{
 		theProxyRef = *theQ;
 		ZAssert(iRelHead == theProxyRef->fResultRelHead);
@@ -1040,7 +1040,7 @@ ZRef<ZRA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
 		theProxyRef = theProxy;
 		theProxy->fRel = iRel;
 		theProxy->fResultRelHead = iRelHead;
-		ZUtil_STL::sInsertMustNotContain(kDebug, fProxyMap, iRel, theProxy);
+		sInsertMust(kDebug, fProxyMap, iRel, theProxy);
 		for (set<PSource*>::const_iterator
 			iterPSources = iPSources.begin(), endPSources = iPSources.end();
 			iterPSources != endPSources; ++iterPSources)
@@ -1076,7 +1076,7 @@ void Source_Union::pFinalizeProxy(Proxy* iProxy)
 
 	ZAssertStop(kDebug, iProxy->fPIP_InProxy.IsEmpty());
 
-	ZUtil_STL::sEraseMustContain(kDebug, fProxyMap, iProxy->fRel);
+	sEraseMust(kDebug, fProxyMap, iProxy->fRel);
 
 	delete iProxy;
 	}

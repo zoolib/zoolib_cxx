@@ -26,6 +26,8 @@ namespace ZooLib {
 using std::set;
 using std::string;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - ZValPred, sGetNames
 
@@ -44,6 +46,6 @@ set<string> spGetNames(const ZRef<ZValComparand>& iComparand)
 } // anonymous namespace
 
 set<string> sGetNames(const ZValPred& iValPred)
-	{ return ZUtil_STL::sOr(spGetNames(iValPred.GetLHS()), spGetNames(iValPred.GetRHS())); }
+	{ return sOr(spGetNames(iValPred.GetLHS()), spGetNames(iValPred.GetRHS())); }
 
 } // namespace ZooLib

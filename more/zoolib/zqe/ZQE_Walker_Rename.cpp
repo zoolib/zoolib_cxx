@@ -47,12 +47,12 @@ ZRef<Walker> Walker_Rename::Prime
 	size_t& ioBaseOffset)
 	{
 	map<string8,size_t> newBindingOffsets = iOffsets;
-	if (ZQ<size_t> theQ = sEraseAndReturnIfContains(newBindingOffsets, fNew))
+	if (ZQ<size_t> theQ = sQGetErase(newBindingOffsets, fNew))
 		newBindingOffsets[fOld] = *theQ;
 
 	fWalker = fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
 
-	sInsertMustNotContain(1, oOffsets, fNew, sEraseAndReturn(1, oOffsets, fOld));
+	sInsertMust(oOffsets, fNew, sGetEraseMust(oOffsets, fOld));
 
 	return fWalker;
 	}

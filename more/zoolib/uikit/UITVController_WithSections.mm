@@ -166,7 +166,7 @@ void SectionBody::RowUpdate::AddRange(size_t iStart, size_t iCount, UITableViewR
 		{
 		ZAssert(iStart + iCount <= fRowMeta.fLimit);
 		while (iCount--)
-			ZUtil_STL::sInsertMustNotContain(0, fMap, fRowMeta.fBase + iStart++, iRowAnimation);
+			ZUtil_STL::sInsertMust(0, fMap, fRowMeta.fBase + iStart++, iRowAnimation);
 		}
 	}
 

@@ -41,19 +41,41 @@ template <class T>
 const T* sFirstOrNil(const std::vector<T>& iVec)
 	{ return iVec.empty() ? nullptr : &iVec[0]; }
 
-// ==================================================
+// -----
 
-/** Returns true if iVector contains iElement. iVector is
-assumed to be unordered, so we use find to make the determination. */
+template <class T>
+bool sIsEmpty(const std::vector<T>& iVec)
+	{ return iVec.empty(); }
+
+template <class T>
+bool sNotEmpty(const std::vector<T>& iVec)
+	{ return not sIsEmpty(iVec); }
+
+// -----
+
+// =================================================================================================
+// MARK: - ZUtil_STL, unsorted vectors
+
 template <typename Base, typename Derived>
-bool sContains(const std::vector<Base>& iVector, const Derived& iElement)
-	{ return iVector.end() != std::find(iVector.begin(), iVector.end(), iElement); }
+bool sContains(const std::vector<Base>& iVec, const Derived& iElement)
+	{ return iVec.end() != std::find(iVec.begin(), iVec.end(), iElement); }
 
-
-/** Appends iElement to ioVec by calling push_back. If iElement was already contained in ioVec
-then false is returned and no change is made to ioVec. */
 template <typename Base, typename Derived>
-bool sPushBackIfNotContains(std::vector<Base>& ioVec, const Derived& iElement)
+bool sQErase(std::vector<Base>& ioVec, const Derived& iElement)
+	{
+	typename std::vector<Base>::iterator ii = std::find(ioVec.begin(), ioVec.end(), iElement);
+	if (ii == ioVec.end())
+		return false;
+	ioVec.erase(ii);
+	return true;
+	}
+
+template <typename Base, typename Derived>
+void sErase(std::vector<Base>& ioVec, const Derived& iElement)
+	{ sQErase(ioVec, iElement); }
+
+template <typename Base, typename Derived>
+bool sQPushBack(std::vector<Base>& ioVec, const Derived& iElement)
 	{
 	if (ioVec.end() != std::find(ioVec.begin(), ioVec.end(), iElement))
 		return false;
@@ -61,130 +83,98 @@ bool sPushBackIfNotContains(std::vector<Base>& ioVec, const Derived& iElement)
 	return true;
 	}
 
-
-/** Appends iElement to ioVec by calling push_back. We first assert, controlled
-by iDebugLevel, that iElement is not already present in ioVec. */
 template <typename Base, typename Derived>
-void sPushBackMustNotContain(const int iDebugLevel,
+void sPushBack(std::vector<Base>& ioVec, const Derived& iElement)
+	{ ioVec.push_back(iElement); }
+
+// =================================================================================================
+// MARK: - ZUtil_STL, sXXXMust
+
+template <typename Base, typename Derived>
+void sEraseMust(const int iDebugLevel,
 	std::vector<Base>& ioVec, const Derived& iElement)
 	{
-	ZAssertStop(iDebugLevel, ioVec.end() == std::find(ioVec.begin(), ioVec.end(), iElement));
-	ioVec.push_back(iElement);
+	const bool result = sQErase(ioVec, iElement);
+	ZAssertStop(iDebugLevel, result);
 	}
 
 template <typename Base, typename Derived>
-void sPushBackMustNotContain(std::vector<Base>& ioVec, const Derived& iElement)
-	{ sPushBackMustNotContain(1, ioVec, iElement); }
+void sEraseMust(std::vector<Base>& ioVec, const Derived& iElement)
+	{ sEraseMust(1, ioVec, iElement); }
 
-
-/** If the unordered vector ioVec contains iElement then it is
-removed and true returned. Otherwise no change is made to ioVec and
-false is returned. */
 template <typename Base, typename Derived>
-bool sEraseIfContains(std::vector<Base>& ioVec, const Derived& iElement)
+void sPushBackMust(const int iDebugLevel,
+	std::vector<Base>& ioVec, const Derived& iElement)
 	{
-	typename std::vector<Base>::iterator i = std::find(ioVec.begin(), ioVec.end(), iElement);
-	if (i == ioVec.end())
+	const bool result = sQPushBack(ioVec, iElement);
+	ZAssertStop(iDebugLevel, result);
+	}
+
+template <typename Base, typename Derived>
+void sPushBackMust(std::vector<Base>& ioVec, const Derived& iElement)
+	{ sPushBackMust(1, ioVec, iElement); }
+
+// =================================================================================================
+// MARK: - ZUtil_STL, vectors sorted by less<Base>
+
+template <typename Base, typename Derived>
+bool sQContainsSorted(const std::vector<Base>& iVec, const Derived& iElement)
+	{
+	typename std::vector<Base>::const_iterator ii =
+		lower_bound(iVec.begin(), iVec.end(), iElement);
+	return ii != iVec.end() && *ii == iElement;
+	}
+
+template <typename Base, typename Derived>
+bool sQEraseSorted(std::vector<Base>& ioVec, const Derived& iElement)
+	{
+	typename std::vector<Base>::iterator ii = lower_bound(ioVec.begin(), ioVec.end(), iElement);
+
+	if (ii == ioVec.end() || not (*ii == iElement))
 		return false;
-	ioVec.erase(i);
+
+	ioVec.erase(ii);
 	return true;
 	}
 
-
-/** Removes iElement from ioVec, asserting that it is present and
-returning an iterator referencing the position at which iElement was found. */
 template <typename Base, typename Derived>
-typename std::vector<Base>::iterator sEraseMustContain(const int iDebugLevel,
-	std::vector<Base>& ioVec, const Derived& iElement)
+bool sQInsertSorted(std::vector<Base>& ioVec, const Derived& iElement)
 	{
-	typename std::vector<Base>::iterator i = std::find(ioVec.begin(), ioVec.end(), iElement);
-	ZAssertStop(iDebugLevel, i != ioVec.end());
-	return ioVec.erase(i);
-	}
+	typename std::vector<Base>::iterator ii = lower_bound(ioVec.begin(), ioVec.end(), iElement);
 
-template <typename Base, typename Derived>
-typename std::vector<Base>::iterator sEraseMustContain
-	(std::vector<Base>& ioVec, const Derived& iElement)
-	{ return sEraseMustContain(1, ioVec, iElement); }
-
-// ==================================================
-
-/** The contents of iVector are assumed to be sorted by less<Base>. Returns
-true if iVector contains iElement. */
-template <typename Base, typename Derived>
-bool sSortedContains(const std::vector<Base>& iVector, const Derived& iElement)
-	{
-	typename std::vector<Base>::const_iterator i =
-		lower_bound(iVector.begin(), iVector.end(), iElement);
-	return i != iVector.end() && *i == iElement;
-	}
-
-
-/** The contents of ioVec are assumed to be sorted by less<Base>. If iElement
-was already contained in ioVec then false is returned and no change is made
-to ioVec. Otherwise it is inserted using lower_bound and less<Base> and true
-is returned. */
-template <typename Base, typename Derived>
-bool sSortedInsertIfNotContains(std::vector<Base>& ioVec, const Derived& iElement)
-	{
-	typename std::vector<Base>::iterator i = lower_bound(ioVec.begin(), ioVec.end(), iElement);
-
-	if (i != ioVec.end() && *i == iElement)
+	if (ii != ioVec.end() && *ii == iElement)
 		return false;
 
-	ioVec.insert(i, iElement);
+	ioVec.insert(ii, iElement);
 	return true;
 	}
 
+// =================================================================================================
+// MARK: - ZUtil_STL, sXXXMust
 
-/** The contents of ioVec are assumed to be sorted by less<Base>. Returns false
-if ioVec does not contain iElement. If ioVec does contain
-iElement then it is removed and true returned. */
 template <typename Base, typename Derived>
-bool sSortedEraseIfContains(std::vector<Base>& ioVec, const Derived& iElement)
-	{
-	typename std::vector<Base>::iterator i = lower_bound(ioVec.begin(), ioVec.end(), iElement);
-
-	if (i == ioVec.end() || !(*i == iElement))
-		return false;
-
-	ioVec.erase(i);
-	return true;
-	}
-
-
-/** The contents of ioVec are assumed to be sorted by less<Base>. We first
-assert, under the control of iDebugLevel, that ioVec does not contain iElement.
-We then insert iElement using lower_bound and less<Base>. */
-template <typename Base, typename Derived>
-void sSortedInsertMustNotContain(const int iDebugLevel,
+void sEraseSortedMust(const int iDebugLevel,
 	std::vector<Base>& ioVec, const Derived& iElement)
 	{
-	typename std::vector<Base>::iterator i = lower_bound(ioVec.begin(), ioVec.end(), iElement);
-	ZAssertStop(iDebugLevel, i == ioVec.end() || !(*i == iElement));
-	ioVec.insert(i, iElement);
+	const bool result = sQEraseSorted(ioVec, iElement);
+	ZAssertStop(iDebugLevel, result);
 	}
 
 template <typename Base, typename Derived>
-void sSortedInsertMustNotContain(std::vector<Base>& ioVec, const Derived& iElement)
-	{ sSortedInsertMustNotContain(1, ioVec, iElement); } 
+void sEraseSortedMust(std::vector<Base>& ioVec, const Derived& iElement)
+	{ sEraseSortedMust(1, ioVec, iElement); }
 
-
-/** The contents of ioVec are assumed to be sorted by less<Base>. We first
-assert, under the control of iDebugLevel, that ioVec contains iElement.
-We then remove iElement using lower_bound and less<Base>. */
 template <typename Base, typename Derived>
-void sSortedEraseMustContain(const int iDebugLevel,
+void sInsertSortedMust(const int iDebugLevel,
 	std::vector<Base>& ioVec, const Derived& iElement)
 	{
-	typename std::vector<Base>::iterator i = lower_bound(ioVec.begin(), ioVec.end(), iElement);
-	ZAssertStop(iDebugLevel, i != ioVec.end() && *i == iElement);
-	ioVec.erase(i);
+	const bool result = sQInsertSorted(ioVec, iElement);
+	ZAssertStop(iDebugLevel, result);
 	}
 
 template <typename Base, typename Derived>
-void sSortedEraseMustContain(std::vector<Base>& ioVec, const Derived& iElement)
-	{ return sSortedEraseMustContain(1, ioVec, iElement); }
+void sInsertSortedMust(std::vector<Base>& ioVec, const Derived& iElement)
+	{ sInsertSortedMust(1, ioVec, iElement); }
 
 } // namespace ZUtil_STL
 } // namespace ZooLib

@@ -27,6 +27,8 @@ using std::map;
 using std::set;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - Walker_Union
 
@@ -106,7 +108,7 @@ bool Walker_Union::ReadInc
 				for (size_t x = 0; x < count; ++x)
 					subset.push_back(ioResults[fMapping_Left[x]]);
 
-				ZUtil_STL::sInsertMustNotContain(1, fPriors, subset);
+				sInsertMust(fPriors, subset);
 				return true;
 				}
 			fExhaustedLeft = true;
@@ -118,7 +120,7 @@ bool Walker_Union::ReadInc
 		for (size_t x = 0; x < count; ++x)
 			subset.push_back(ioResults[fMapping_Right[x]]);
 
-		if (not ZUtil_STL::sContains(fPriors, subset))
+		if (not sContains(fPriors, subset))
 			{
 			for (size_t x = 0; x < count; ++x)
 				ioResults[fMapping_Left[x]] = subset[x];

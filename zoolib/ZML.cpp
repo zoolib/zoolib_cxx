@@ -41,6 +41,8 @@ using std::pair;
 using std::string;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - Static helper functions
 
@@ -1222,7 +1224,7 @@ void StrimW::Abandon()
 	fTags.clear();
 	fAttributeNames.clear();
 
-	ZUtil_STL::sDeleteAll(fAttributeValues.begin(), fAttributeValues.end());
+	sDeleteAll(fAttributeValues.begin(), fAttributeValues.end());
 	fAttributeValues.clear();
 	}
 
@@ -1240,7 +1242,7 @@ const StrimW& StrimW::EndAllIfPresent(const string8& iTag)
 	{
 	this->pWritePending();
 
-	if (ZUtil_STL::sContains(fTags, iTag))
+	if (sContains(fTags, iTag))
 		{
 		for (bool gotIt = false; !gotIt; /*no inc*/)
 			{

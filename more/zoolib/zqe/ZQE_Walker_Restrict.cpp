@@ -36,6 +36,8 @@ using std::map;
 using std::set;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - Walker_Restrict::Exec
 
@@ -292,11 +294,11 @@ Walker_Restrict::Exec* AsExec::pMakeExec_T
 	if (ZRef<ZValComparand_Name> asNameL =
 		iLHS.DynamicCast<ZValComparand_Name>())
 		{
-		const size_t theOffsetL = ZUtil_STL::sGetMustContain(1, fVars, asNameL->GetName());
+		const size_t theOffsetL = sGetMust(fVars, asNameL->GetName());
 		if (ZRef<ZValComparand_Name> asNameR =
 			iRHS.DynamicCast<ZValComparand_Name>())
 			{
-			const size_t theOffsetR = ZUtil_STL::sGetMustContain(1, fVars, asNameR->GetName());
+			const size_t theOffsetR = sGetMust(fVars, asNameR->GetName());
 			return new Exec_Functor<Functor_p, true, true>(iFunctor, theOffsetL, theOffsetR);
 			}
 		else if (ZRef<ZValComparand_Const_Any> asConstR =
@@ -319,7 +321,7 @@ Walker_Restrict::Exec* AsExec::pMakeExec_T
 		if (ZRef<ZValComparand_Name> asNameR =
 			iRHS.DynamicCast<ZValComparand_Name>())
 			{
-			const size_t theOffsetR = ZUtil_STL::sGetMustContain(1, fVars, asNameR->GetName());
+			const size_t theOffsetR = sGetMust(fVars, asNameR->GetName());
 			return new Exec_Functor<Functor_p, false, true>(iFunctor, theOffsetL, theOffsetR);
 			}
 		else if (ZRef<ZValComparand_Const_Any> asConstR =

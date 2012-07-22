@@ -26,6 +26,8 @@ namespace ZooLib {
 
 using std::set;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - ZCallScheduler
 
@@ -35,8 +37,6 @@ ZCallScheduler::ZCallScheduler()
 
 void ZCallScheduler::Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
 	{
-	using namespace ZUtil_STL;
-
 	ZAcqMtx acq(fMtx);
 
 	const Job theJob(iCaller, iCallable);
@@ -44,7 +44,7 @@ void ZCallScheduler::Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_V
 	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(theJob, 0.0));
 	if (iterJT != fJobTimes.end() && iterJT->first == theJob)
 		{
-		sEraseMustContain(fTimeJobs, make_pair(iterJT->second, theJob));
+		sEraseMust(fTimeJobs, make_pair(iterJT->second, theJob));
 		fJobTimes.erase(iterJT);
 		}
 	}
@@ -72,8 +72,6 @@ bool ZCallScheduler::IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_
 
 void ZCallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 	{
-	using namespace ZUtil_STL;
-
 	ZAcqMtx acq(fMtx);
 
 	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(iJob, 0.0));
@@ -81,18 +79,18 @@ void ZCallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 		{
 		if (iSystemTime < iterJT->second)
 			{
-			sEraseMustContain(fTimeJobs, make_pair(iterJT->second, iJob));
+			sEraseMust(fTimeJobs, make_pair(iterJT->second, iJob));
 			fJobTimes.erase(iterJT);
 
-			sInsertMustNotContain(fTimeJobs, make_pair(iSystemTime, iJob));
-			sInsertMustNotContain(fJobTimes, make_pair(iJob, iSystemTime));
+			sInsertMust(fTimeJobs, make_pair(iSystemTime, iJob));
+			sInsertMust(fJobTimes, make_pair(iJob, iSystemTime));
 			fCnd.Broadcast();
 			}
 		}
 	else
 		{
-		sInsertMustNotContain(fJobTimes, make_pair(iJob, iSystemTime));
-		sInsertMustNotContain(fTimeJobs, make_pair(iSystemTime, iJob));
+		sInsertMust(fJobTimes, make_pair(iJob, iSystemTime));
+		sInsertMust(fTimeJobs, make_pair(iSystemTime, iJob));
 		if (not fThreadRunning)
 			{
 			fThreadRunning = true;
@@ -104,8 +102,6 @@ void ZCallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 
 void ZCallScheduler::pRun()
 	{
-	using namespace ZUtil_STL;
-
 	ZGuardMtx guard(fMtx);
 	for (;;)
 		{
@@ -133,7 +129,7 @@ void ZCallScheduler::pRun()
 				ZRef<ZCaller> theCaller = begin->second.first;
 				ZRef<ZCallable_Void> theCallable = begin->second.second;
 
-				sEraseMustContain(fJobTimes, make_pair(begin->second, begin->first));
+				sEraseMust(fJobTimes, make_pair(begin->second, begin->first));
 				fTimeJobs.erase(begin);
 
 				guard.Release();

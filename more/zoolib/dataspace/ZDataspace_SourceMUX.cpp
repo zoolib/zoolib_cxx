@@ -126,10 +126,10 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 		const int64 theClientRefcon = iAdded->GetRefcon();
 		const int64 thePRefcon = fNextPRefcon++;
 
-		sInsertMustNotContain(kDebug,
+		sInsertMust(kDebug,
 			iCS->fMap_ClientToPRefcon, theClientRefcon, thePRefcon);
 
-		sInsertMustNotContain(kDebug,
+		sInsertMust(kDebug,
 			fPRefconToClient, thePRefcon, make_pair(iCS.Get(), theClientRefcon));
 
 		theAddedQueries.push_back(AddedQuery(thePRefcon, iAdded->GetRel()));
@@ -138,7 +138,7 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 	vector<int64> removedQueries;
 	removedQueries.reserve(iRemovedCount);
 	while (iRemovedCount--)
-		removedQueries.push_back(sEraseAndReturn(kDebug, iCS->fMap_ClientToPRefcon, *iRemoved++));
+		removedQueries.push_back(sGetEraseMust(kDebug, iCS->fMap_ClientToPRefcon, *iRemoved++));
 
 	guard.Release();
 
@@ -166,7 +166,7 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 		iterChanges != endChanges; ++iterChanges)
 		{
 		const pair<ClientSource*,int64>& thePair =
-			sGetMustContain(kDebug, fPRefconToClient, iterChanges->GetRefcon());
+			sGetMust(kDebug, fPRefconToClient, iterChanges->GetRefcon());
 
 		thePair.first->fResults[thePair.second] =
 			make_pair(iterChanges->GetResult(), iterChanges->GetEvent());
@@ -207,7 +207,7 @@ void SourceMUX::pFinalizeClientSource(ClientSource* iCS)
 		iter != end; ++iter)
 		{ removedQueries.push_back(iter->second); }
 
-	sEraseMustContain(1, fClientSources, iCS);
+	sEraseMust(fClientSources, iCS);
 	delete iCS;
 
 	guard.Release();

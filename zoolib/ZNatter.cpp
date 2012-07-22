@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - ZNatter
 
@@ -49,7 +51,7 @@ ZQ<ZData_Any> ZNatter::Receive(ZRef<Exchange>* oExchange)
 	theExchange->fID = theID;
 	fNextLocalID += 2;
 
-	ZUtil_STL::sInsertMustNotContain(1, fPending, theExchange->fID, theExchange);
+	sInsertMust(fPending, theExchange->fID, theExchange);
 	theExchange->fWaiting = true;
 
 	guard.Release();
@@ -99,7 +101,7 @@ void ZNatter::pRemove(Exchange* iExchange)
 	if (not iExchange->fID)
 		return;
 
-	ZUtil_STL::sInsertMustNotContain(1, fRetired, iExchange->fID);
+	sInsertMust(fRetired, iExchange->fID);
 
 	guard.Release();
 
@@ -145,7 +147,7 @@ ZQ<ZData_Any> ZNatter::pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
 			}
 		}
 
-	ZUtil_STL::sInsertMustNotContain(1, fPending, iExchange->fID, iExchange);
+	sInsertMust(fPending, iExchange->fID, iExchange);
 	iExchange->fWaiting = true;
 
 	guard.Release();
@@ -240,16 +242,16 @@ void ZNatter::pRead(ZGuardMtxR& iGuard)
 				}
 			else if (theType == 1)
 				{
-				if (not ZUtil_STL::sEraseIfContains(fRetired, theID))
+				if (not sQErase(fRetired, theID))
 					{
-					ZRef<Exchange> theExchange = ZUtil_STL::sEraseAndReturn(1, fPending, theID);
+					ZRef<Exchange> theExchange = sGetEraseMust(fPending, theID);
 					ZAssert(theExchange->fWaiting);
 					theExchange->fWaiting = false;
 					}
 				}
 			else if (theType == 2)
 				{
-				ZRef<Exchange> theExchange = ZUtil_STL::sEraseAndReturn(1, fPending, theID);
+				ZRef<Exchange> theExchange = sGetEraseMust(fPending, theID);
 				ZAssert(theExchange->fWaiting);
 				theExchange->fWaiting = false;
 				theExchange->fDataQ = theData;

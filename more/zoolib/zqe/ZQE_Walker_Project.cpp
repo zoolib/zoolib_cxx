@@ -27,6 +27,8 @@ using std::map;
 using std::set;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - Walker_Project
 
@@ -86,7 +88,7 @@ bool Walker_Project::ReadInc
 		for (size_t x = 0; x < count; ++x)
 			subset.push_back(ioResults[fChildMapping[x]]);
 
-		if (ZUtil_STL::sInsertIfNotContains(fPriors, subset))
+		if (sQInsert(fPriors, subset))
 			{
 			if (oAnnotations)
 				oAnnotations->insert(localAnnotations.begin(), localAnnotations.end());

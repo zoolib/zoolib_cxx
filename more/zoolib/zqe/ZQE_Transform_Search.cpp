@@ -51,6 +51,8 @@ using ZRA::Rename;
 
 using std::set;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - HasConst (anonymous)
 
@@ -168,7 +170,7 @@ public:
 			{
 			const RelName& theRelName = *iterRH;
 			if (fProjection.Contains(theRelName))
-				ZUtil_STL::sInsertIfNotContains(newRename, theRelName, theRelName);
+				sInsertMust(newRename, theRelName, theRelName); // sSet??
 			}
 
 		if (fRestriction == sTrue())
@@ -293,10 +295,10 @@ public:
 		if (fProjection.QErase(newName))
 			fProjection.Insert(oldName);
 
-		if (ZQ<string8> theQ = ZUtil_STL::sQErase(fRename, newName))
+		if (ZQ<string8> theQ = sQGetErase(fRename, newName))
 			newName = *theQ;
 
-		ZUtil_STL::sInsertMustNotContain(1, fRename, oldName, newName);
+		sInsertMust(fRename, oldName, newName);
 
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}

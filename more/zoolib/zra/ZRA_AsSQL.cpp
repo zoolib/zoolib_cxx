@@ -43,6 +43,7 @@ namespace ZooLib {
 namespace ZRA {
 
 using std::map;
+using namespace ZUtil_STL;
 
 // =================================================================================================
 // MARK: - Analysis (anonymous)
@@ -130,8 +131,8 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 		const string8 fieldName = sPrefixErased(realTableNameUnderscore, attrName);
 		const string8 physicalFieldName = usedTableNameDot + fieldName;
 		theAnalysis.fRelHead_Physical |= physicalFieldName;
-		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename, attrName, physicalFieldName);
-		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename_Inverse, physicalFieldName, attrName);
+		sInsertMust(theAnalysis.fRename, attrName, physicalFieldName);
+		sInsertMust(theAnalysis.fRename_Inverse, physicalFieldName, attrName);
 		}
 
 	this->pSetResult(theAnalysis);
@@ -180,9 +181,8 @@ void Analyzer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 		i != theAnalysis.fRelHead_Physical.end(); ++i)
 		{
 		const string8 theString1 = *i;
-		const string8 theString2 =
-			ZUtil_STL::sGetMustContain(1, theAnalysis.fRename_Inverse, theString1);
-		if (ZUtil_STL::sContains(theRH, theString2))
+		const string8 theString2 = sGetMust(theAnalysis.fRename_Inverse, theString1);
+		if (sContains(theRH, theString2))
 			newRelHead.insert(theString1);
 		}
 	theAnalysis.fRelHead_Physical.swap(newRelHead);
@@ -201,14 +201,13 @@ void Analyzer::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	Analysis theAnalysis = this->Do(iExpr->GetOp0());
 	const RelName& oldName = iExpr->GetOld();
 	const RelName& newName = iExpr->GetNew();
-	if (ZQ<RelName> theQ = ZUtil_STL::sEraseAndReturnIfContains(theAnalysis.fRename, oldName))
+	if (ZQ<RelName> theQ = sQGetErase(theAnalysis.fRename, oldName))
 		{
 		const RelName orgName = *theQ;
-		const RelName orgNameInverse =
-			ZUtil_STL::sEraseAndReturnIfContains(theAnalysis.fRename_Inverse, orgName).Get();
+		const RelName orgNameInverse = sGetEraseMust(theAnalysis.fRename_Inverse, orgName);
 		ZAssert(orgNameInverse == oldName);
-		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename, newName, orgName);
-		ZUtil_STL::sInsertMustNotContain(1, theAnalysis.fRename_Inverse, orgName, newName);
+		sInsertMust(theAnalysis.fRename, newName, orgName);
+		sInsertMust(theAnalysis.fRename_Inverse, orgName, newName);
 		}
 	else
 		{
@@ -481,7 +480,7 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 		for (RelHead::iterator i = theAnalysis.fRelHead_Physical.begin();
 			i != theAnalysis.fRelHead_Physical.end(); ++i)
 			{
-			theRHLogical |= ZUtil_STL::sGetMustContain(1, theAnalysis.fRename_Inverse, *i);
+			theRHLogical |= sGetMust(theAnalysis.fRename_Inverse, *i);
 			}
 
 		for (ZMap_Any::Index_t i = theAnalysis.fConstValues.Begin();
@@ -496,7 +495,7 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 			if (not isFirst)
 				s << ",";
 			isFirst = false;
-			if (ZQ<string8> theQ = ZUtil_STL::sGetIfContains(theAnalysis.fRename, *i))
+			if (ZQ<string8> theQ = sQGet(theAnalysis.fRename, *i))
 				s << *theQ;
 			else
 				spToStrim_SimpleValue(s, theAnalysis.fConstValues.Get(*i));

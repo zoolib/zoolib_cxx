@@ -34,6 +34,8 @@ using std::map;
 using std::set;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - Source_Asyncify
 
@@ -72,7 +74,7 @@ void Source_Asyncify::ModifyRegistrations
 		{
 		if (ZLOGPF(s, eDebug + 1))
 			s << "Add: " << iAdded->GetRefcon();
-		ZUtil_STL::sInsertMustNotContain(1, fPendingAdds, iAdded->GetRefcon(), iAdded->GetRel());
+		sInsertMust(fPendingAdds, iAdded->GetRefcon(), iAdded->GetRel());
 		++iAdded;
 		}
 
@@ -81,10 +83,10 @@ void Source_Asyncify::ModifyRegistrations
 		const int64 theRefcon = *iRemoved++;
 		if (ZLOGPF(s, eDebug + 1))
 			s << "Remove: " << theRefcon;
-		if (not ZUtil_STL::sEraseIfContains(fPendingAdds, theRefcon))
-			ZUtil_STL::sInsertMustNotContain(1, fPendingRemoves, theRefcon);
+		if (not sQErase(fPendingAdds, theRefcon))
+			sInsertMust(fPendingRemoves, theRefcon);
 
-		if (ZUtil_STL::sEraseIfContains(fPendingResults, theRefcon))
+		if (sQErase(fPendingResults, theRefcon))
 			{
 			// Not sure if this is actually an issue.
 			ZLOGTRACE(eDebug);
@@ -155,8 +157,8 @@ void Source_Asyncify::pUpdate()
 			{
 			guard.Release();
 			didAnything = true;
-			fSource->ModifyRegistrations(ZUtil_STL::sFirstOrNil(theAdds), theAdds.size(),
-				ZUtil_STL::sFirstOrNil(theRemoves), theRemoves.size());
+			fSource->ModifyRegistrations(sFirstOrNil(theAdds), theAdds.size(),
+				sFirstOrNil(theRemoves), theRemoves.size());
 			guard.Acquire();
 			}
 

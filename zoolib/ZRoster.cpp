@@ -28,6 +28,8 @@ namespace ZooLib {
 using std::set;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - ZRoster
 
@@ -72,7 +74,7 @@ ZRef<ZRoster::Entry> ZRoster::MakeEntry(const ZRef<ZCallable_Void>& iCallable_Br
 
 	{
 	ZAcqMtx acq(fMtx);
-	ZUtil_STL::sInsertMustNotContain(fEntries, theEntry.Get());
+	sInsertMust(fEntries, theEntry.Get());
 	fCnd.Broadcast();
 	}
 
@@ -128,7 +130,7 @@ void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallabl
 	if (not iEntry->FinishFinalize())
 		return;
 
-	ZUtil_STL::sEraseMustContain(fEntries, iEntry);
+	sEraseMust(fEntries, iEntry);
 	delete iEntry;
 	fCnd.Broadcast();
 	}

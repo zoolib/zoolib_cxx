@@ -28,6 +28,8 @@ namespace ZRA {
 
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - Transform_PushDownRestricts
 
@@ -112,7 +114,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rena
 	for (vector<Restrict*>::iterator iter = fRestricts.begin(); iter != fRestricts.end(); ++iter)
 		(*iter)->fExpr_Bool = Util_Expr_Bool::sRenamed(old2New, (*iter)->fExpr_Bool);
 
-	if (ZUtil_STL::sEraseIfContains(fRelHead, oldName))
+	if (sQErase(fRelHead, oldName))
 		fRelHead |= newName;
 	}
 

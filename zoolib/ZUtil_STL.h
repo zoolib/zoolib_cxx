@@ -28,14 +28,11 @@ namespace ZUtil_STL {
 // ==================================================
 
 /** Invoke delete on all elements between begin and end. */
-template <class InputIterator>
-void sDeleteAll(InputIterator begin, InputIterator end)
+template <class ForwardIterator>
+void sDeleteAll(ForwardIterator begin, ForwardIterator end)
 	{
 	while (begin != end)
-		{
-		delete *begin;
-		++begin;
-		}
+		delete *begin++;
 	}
 
 // ==================================================

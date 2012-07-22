@@ -31,6 +31,8 @@ using std::map;
 using std::set;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - Source_Client
 
@@ -64,16 +66,15 @@ void Source_Client::ModifyRegistrations
 
 	while (iAddedCount--)
 		{
-		ZUtil_STL::sInsertMustNotContain(1,
-			fAdds, iAdded->GetRefcon(), iAdded->GetRel());
+		sInsertMust(fAdds, iAdded->GetRefcon(), iAdded->GetRel());
 		++iAdded;
 		}
 
 	while (iRemovedCount--)
 		{
 		const int64 theRefcon = *iRemoved++;
-		if (not ZUtil_STL::sEraseIfContains(fAdds, theRefcon))
-			ZUtil_STL::sInsertMustNotContain(1, fRemoves, theRefcon);
+		if (not sQErase(fAdds, theRefcon))
+			sInsertMust(fRemoves, theRefcon);
 		}
 
 	if (not sGetSet(fNeedsWrite, true))

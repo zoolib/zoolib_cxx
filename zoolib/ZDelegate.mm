@@ -81,6 +81,8 @@ using std::string;
 
 namespace ZooLib {
 
+using namespace ZooLib::ZUtil_STL;
+
 // =================================================================================================
 // MARK: - ZDelegate
 
@@ -100,17 +102,17 @@ ZDelegate::operator id()
 	{ return fProxy; }
 
 BOOL ZDelegate::pRespondsToSelector(SEL aSelector)
-	{ return ZUtil_STL::sContains(fWrappers, aSelector); }
+	{ return sContains(fWrappers, aSelector); }
 
 void ZDelegate::pForwardInvocation(NSInvocation* anInvocation)
 	{
-	if (ZQ<ZRef<Wrapper> > theQ = ZUtil_STL::sQGet(fWrappers, [anInvocation selector]))
+	if (ZQ<ZRef<Wrapper> > theQ = sQGet(fWrappers, [anInvocation selector]))
 		(*theQ)->ForwardInvocation(anInvocation);
 	}
 
 NSMethodSignature* ZDelegate::pMethodSignatureForSelector(SEL aSelector)
 	{
-	if (ZQ<ZRef<Wrapper> > theQ = ZUtil_STL::sQGet(fWrappers, aSelector))
+	if (ZQ<ZRef<Wrapper> > theQ = sQGet(fWrappers, aSelector))
 		return (*theQ)->fNSMethodSignature;
 	return nil;
 	}

@@ -33,128 +33,232 @@ namespace ZUtil_STL {
 // =================================================================================================
 // MARK: - ZUtil_STL
 
-/** Returns true if iMap has an element at iKey. */
+template <typename KBase, typename Value, typename Comparator>
+bool sIsEmpty(const std::map<KBase,Value,Comparator>& iMap)
+	{ return iMap.empty(); }
+
+template <typename KBase, typename Value, typename Comparator>
+bool sNotEmpty(const std::map<KBase,Value,Comparator>& iMap)
+	{ return not sIsEmpty(iMap); }
+
+// -----
+
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
 bool sContains(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
 	{ return iMap.end() != iMap.find(iKey); }
 
+// -----
+
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-bool sEraseIfContains(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+bool sQErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
 	{ return ioMap.erase(iKey); }
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-void sEraseMustContain(const int iDebugLevel,
-	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+void sErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{ ioMap.erase(iKey); }
+
+// -----
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+const Value* sPGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
 	{
-	size_t count = ioMap.erase(iKey);
-	ZAssertStop(iDebugLevel, count);
+	typename std::map<KBase,Value,Comparator>::const_iterator ii = iMap.find(iKey);
+	if (iMap.end() == ii)
+		return nullptr;
+	return &ii->second;
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-void sEraseMustContain(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
-	{ sEraseMustContain(1, ioMap, iKey); }
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-Value sEraseAndReturn(const int iDebugLevel,
-	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+const Value& sDGet
+	(const Value& iDefault, const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
 	{
-	typename std::map<KBase,Value,Comparator>::iterator iter = ioMap.find(iKey);
-	ZAssertStop(iDebugLevel, ioMap.end() != iter);
-	const Value result = (*iter).second;
-	ioMap.erase(iter);
-	return result;
+	if (const Value* theP = sPGet(iMap, iKey))
+		return *theP;
+	return iDefault;
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-Value sEraseAndReturn(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
-	{ return sEraseAndReturn(1, ioMap, iKey); }
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-ZQ<Value> sQErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+const ZQ<Value> sQGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
 	{
-	typename std::map<KBase,Value,Comparator>::iterator i = ioMap.find(iKey);
-	if (ioMap.end() == i)
-		return null;
-	const Value result = i->second;
-	ioMap.erase(i);
-	return result;
+	if (const Value* theP = sPGet(iMap, iKey))
+		return *theP;
+	return null;
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-ZQ<Value> sEraseAndReturnIfContains(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
-	{ return sQErase(ioMap, iKey); }
+const Value& sGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
+	{
+	if (const Value* theP = sPGet(iMap, iKey))
+		return *theP;
+	return sDefault<Value>();
+	}
+
+// -----
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+Value* sPMut(std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
+	{
+	typename std::map<KBase,Value,Comparator>::iterator ii = iMap.find(iKey);
+	if (iMap.end() == ii)
+		return nullptr;
+	return &ii->second;
+	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+Value& sDMut
+	(const Value& iDefault, std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{
+	typename std::map<KBase,Value,Comparator>::iterator ii =
+		ioMap.insert(typename std::map<KBase,Value,Comparator>::value_type(iKey, iDefault));
+	return ii->first.second;
+	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+Value& sMut
+	(std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
+	{ return iMap[iKey]; }
+
+// -----
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-void sInsertMustNotContain(const int iDebugLevel,
-	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
-	{
-	const bool didInsert =
-		ioMap.insert(typename std::map<KBase,Value,Comparator>::value_type(iKey, iValue)).second;
-	ZAssertStop(iDebugLevel, didInsert);
-	}
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-void sInsertMustNotContain
+void sSet
 	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
-	{ sInsertMustNotContain(1, ioMap, iKey, iValue);}
+	{ ioMap[iKey] = iValue; }
+
+// -----
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-bool sInsertIfNotContains
+bool sQInsert
 	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{
 	return ioMap.insert(typename std::map<KBase,Value,Comparator>::value_type(iKey, iValue)).second;
 	}
 
-template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-void sSetMustContain(const int iDebugLevel,
-	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
-	{
-	typename std::map<KBase,Value,Comparator>::iterator i = ioMap.find(iKey);
-	ZAssertStop(iDebugLevel, ioMap.end() != i);
-	i->second = iValue;
-	}
+// -----
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-void sSetMustContain
-	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
-	{ sSetMustContain(1, ioMap, iKey, iValue); }
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-bool sSetIfContains
+bool sQReplace
 	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{
-	typename std::map<KBase,Value,Comparator>::iterator i = ioMap.find(iKey);
-	if (ioMap.end() == i)
+	typename std::map<KBase,Value,Comparator>::iterator ii = ioMap.find(iKey);
+	if (ioMap.end() == ii)
 		return false;
-	i->second = iValue;
+	ii->second = iValue;
 	return true;
 	}
 
+// -----
+
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-const Value& sGetMustContain(const int iDebugLevel,
+ZQ<Value> sQGetErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{
+	typename std::map<KBase,Value,Comparator>::iterator ii = ioMap.find(iKey);
+	if (ioMap.end() == ii)
+		return null;
+	const Value result = ii->second;
+	ioMap.erase(ii);
+	return result;
+	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+Value sDGetErase
+	(const Value& iDefault, std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{
+	typename std::map<KBase,Value,Comparator>::iterator ii = ioMap.find(iKey);
+	if (ioMap.end() == ii)
+		return iDefault;
+	const Value result = ii->second;
+	ioMap.erase(ii);
+	return result;
+	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+Value sGetErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{
+	typename std::map<KBase,Value,Comparator>::iterator ii = ioMap.find(iKey);
+	if (ioMap.end() == ii)
+		return sDefault<Value>();
+	const Value result = ii->second;
+	ioMap.erase(ii);
+	return result;
+	}
+
+// =================================================================================================
+// MARK: - sXXXMust
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+void sEraseMust(const int iDebugLevel,
+	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{
+	const bool result = sQErase(ioMap, iKey);
+	ZAssertStop(iDebugLevel, result);
+	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+void sEraseMust(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{ sEraseMust(1, ioMap, iKey); }
+
+// -----
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+const Value& sGetMust(const int iDebugLevel,
 	const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
 	{
-	typename std::map<KBase,Value,Comparator>::const_iterator i = iMap.find(iKey);
-	ZAssertStop(iDebugLevel, iMap.end() != i);
-	return i->second;
+	const Value* theP = sPGet(iMap, iKey);
+	ZAssertStop(iDebugLevel, theP);
+	return *theP;
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-const Value& sGetMustContain(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
-	{ return sGetMustContain(1, iMap, iKey); }
+const Value& sGetMust(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
+	{ return sGetMust(1, iMap, iKey); }
 
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-ZQ<Value> sQGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
+// -----
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
+void sInsertMust(const int iDebugLevel,
+	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{
-	typename std::map<KBase,Value,Comparator>::const_iterator i = iMap.find(iKey);
-	if (iMap.end() == i)
-		return null;
-	return i->second;
+	const bool result = sQInsert(ioMap, iKey, iValue);
+	ZAssertStop(iDebugLevel, result);
+	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
+void sInsertMust
+	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
+	{ sInsertMust(1, ioMap, iKey, iValue);}
+
+// -----
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
+void sReplaceMust(const int iDebugLevel,
+	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
+	{
+	const bool result = sQReplace(ioMap, iKey, iValue);
+	ZAssertStop(iDebugLevel, result);
+	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
+void sReplaceMust
+	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
+	{ sReplaceMust(1, ioMap, iKey, iValue); }
+
+// -----
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived>
+Value sGetEraseMust(const int iDebugLevel,
+	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{
+	typename std::map<KBase,Value,Comparator>::iterator ii = ioMap.find(iKey);
+	ZAssertStop(iDebugLevel, ioMap.end() != ii);
+	const Value result = ii->second;
+	ioMap.erase(ii);
+	return result;
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-ZQ<Value> sGetIfContains(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
-	{ return sQGet(iMap, iKey); }
+Value sGetEraseMust(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+	{ return sGetEraseMust(1, ioMap, iKey); }
 
 } // namespace ZUtil_STL
 } // namespace ZooLib

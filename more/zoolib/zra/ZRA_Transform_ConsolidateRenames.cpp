@@ -51,12 +51,12 @@ void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Ren
 	{
 	string8 newName = iExpr->GetNew();
 
-	if (ZQ<string8> theQ = sQErase(fRename, newName))
+	if (ZQ<string8> theQ = sQGetErase(fRename, newName))
 		newName = *theQ;
 
 	const string8 oldName = iExpr->GetOld();
 
-	sInsertMustNotContain(1, fRename, oldName, newName);
+	sInsertMust(fRename, oldName, newName);
 
 	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 

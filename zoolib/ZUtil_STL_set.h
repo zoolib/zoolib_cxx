@@ -29,6 +29,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZUtil_STL {
 
+// =================================================================================================
+// MARK: - ZUtil_STL
+
 template <typename T, typename Comparator>
 bool
 sIsEmpty(const std::set<T,Comparator>& iSet)
@@ -39,8 +42,21 @@ bool
 sNotEmpty(const std::set<T,Comparator>& iSet)
 	{ return not iSet.empty(); }
 
-// =================================================================================================
-// MARK: - ZUtil_STL
+// -----
+
+template <typename Base, typename Comparator, typename Derived>
+bool sContains(const std::set<Base,Comparator>& iSet, const Derived& iElement)
+	{ return iSet.end() != iSet.find(iElement); }
+
+// -----
+
+template <typename Base, typename Comparator, typename Derived>
+bool sQErase(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{ return ioSet.erase(iElement); }
+
+template <typename Base, typename Comparator, typename Derived>
+void sErase(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{ ioSet.erase(iElement); }
 
 template <typename T, typename Comparator>
 typename std::set<T,Comparator>::iterator
@@ -54,56 +70,45 @@ sEraseInc(std::set<T,Comparator>& ioSet, typename std::set<T,Comparator>::iterat
 	return ioSet.lower_bound(theVal);
 	}
 
-
-/** Returns true if iSet contains iElement. */
-template <typename Base, typename Comparator, typename Derived>
-bool sContains(const std::set<Base,Comparator>& iSet, const Derived& iElement)
-	{ return iSet.end() != iSet.find(iElement); }
-
-
-/** Inserts iElement to ioSet. We first assert, controlled
-by iDebugLevel, that iElement is not already present in ioSet. */
-template <typename Base, typename Comparator, typename Derived>
-void sInsertMustNotContain(const int iDebugLevel,
-	std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{
-	bool didInsert = ioSet.insert(iElement).second;
-	ZAssertStop(iDebugLevel, didInsert);
-	}
+// -----
 
 template <typename Base, typename Comparator, typename Derived>
-void sInsertMustNotContain(std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{ sInsertMustNotContain(1, ioSet, iElement); }
-
-
-/** Inserts iElement in ioSet, if it's not already contained. */
-template <typename Base, typename Comparator, typename Derived>
-bool sInsertIfNotContains(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+bool sQInsert(std::set<Base,Comparator>& ioSet, const Derived& iElement)
 	{ return ioSet.insert(iElement).second; }
 
-
-/** If ioSet contains iElement then it is removed and true returned.
-Otherwise no change is made to ioSet and false is returned. */
 template <typename Base, typename Comparator, typename Derived>
-bool sEraseIfContains(std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{ return ioSet.erase(iElement); }
+void sInsert(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{ ioSet.insert(iElement).second; }
 
+// =================================================================================================
+// MARK: - sXXXMust
 
-/** Removes iElement from ioSet, asserting that it is present. */
 template <typename Base, typename Comparator, typename Derived>
-void sEraseMustContain(const int iDebugLevel,
-	std::set<Base,Comparator>& ioSet, const Derived& iElement)
+void sInsertMust(const int iDebugLevel, std::set<Base,Comparator>& ioSet, const Derived& iElement)
 	{
-	size_t count = ioSet.erase(iElement);
-	ZAssertStop(iDebugLevel, count);
+	const bool result = sQInsert(ioSet, iElement);
+	ZAssertStop(iDebugLevel, result);
 	}
 
 template <typename Base, typename Comparator, typename Derived>
-void sEraseMustContain(std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{ sEraseMustContain(1, ioSet,  iElement); }
+void sInsertMust(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{ sInsertMust(1, ioSet, iElement); }
 
-// ==================================================
+// -----
 
+template <typename Base, typename Comparator, typename Derived>
+void sEraseMust(const int iDebugLevel, std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{
+	const bool result = sQErase(ioSet, iElement);
+	ZAssertStop(iDebugLevel, result);
+	}
+
+template <typename Base, typename Comparator, typename Derived>
+void sEraseMust(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+	{ sEraseMust(1, ioSet, iElement); }
+
+// =================================================================================================
+// MARK: - ZUtil_STL
 
 template <typename T, typename Comparator>
 void sOr

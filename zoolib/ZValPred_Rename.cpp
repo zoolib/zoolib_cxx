@@ -27,12 +27,14 @@ using std::map;
 using std::set;
 using std::string;
 
+using namespace ZUtil_STL;
+
 ZRef<ZValComparand> sRenamed(const map<string,string>& iRename,
 	const ZRef<ZValComparand>& iVal)
 	{
 	if (ZRef<ZValComparand_Name> as = iVal.DynamicCast<ZValComparand_Name>())
 		{
-		if (ZQ<string> theQ = ZUtil_STL::sGetIfContains(iRename, as->GetName()))
+		if (ZQ<string> theQ = sQGet(iRename, as->GetName()))
 			return new ZValComparand_Name(*theQ);
 		}
 	return iVal;

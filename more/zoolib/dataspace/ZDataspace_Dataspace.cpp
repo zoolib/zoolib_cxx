@@ -32,6 +32,8 @@ namespace ZDataspace {
 using std::set;
 using std::vector;
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - Dataspace
 
@@ -63,7 +65,7 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 	iSieve->fDataspace = this;
 	iSieve->fRefcon = fNextRefcon++;
 	iSieve->fRel = iRel;
-	ZUtil_STL::sInsertMustNotContain(kDebug, fMap_RefconToSieve, iSieve->fRefcon, iSieve.Get());
+	sInsertMust(kDebug, fMap_RefconToSieve, iSieve->fRefcon, iSieve.Get());
 
 	ZRef<ZRA::Expr_Rel> theRel = ZRA::Transform_DecomposeRestricts().Do(iRel);
 	theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
@@ -165,7 +167,7 @@ void Dataspace::pFinalize(Sieve* iSieve)
 	if (not iSieve->FinishFinalize())
 		return;
 
-	ZUtil_STL::sEraseMustContain(kDebug, fMap_RefconToSieve, iSieve->fRefcon);
+	sEraseMust(kDebug, fMap_RefconToSieve, iSieve->fRefcon);
 
 	int64 const theRefcon = iSieve->fRefcon;
 	delete iSieve;

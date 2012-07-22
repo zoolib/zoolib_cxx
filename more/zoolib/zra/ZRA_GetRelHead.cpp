@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZRA {
 
+using namespace ZUtil_STL;
+
 // =================================================================================================
 // MARK: - Visitor_GetRelHead (anonymous)
 
@@ -73,7 +75,7 @@ class Visitor_GetRelHead
 	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 		{
 		RelHead result = this->Do(iExpr->GetOp0());
-		if (ZUtil_STL::sEraseIfContains(result, iExpr->GetOld()))
+		if (sQErase(result, iExpr->GetOld()))
 			result |= iExpr->GetNew();
 		this->pSetResult(result);
 		}

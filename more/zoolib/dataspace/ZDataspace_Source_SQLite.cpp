@@ -99,7 +99,7 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
 		theRelHead |= "oid";
 
 		if (sNotEmpty(theRelHead))
-			ZUtil_STL::sInsertMustNotContain(kDebug, fMap_Tables, theTableName, theRelHead);
+			sInsertMust(kDebug, fMap_Tables, theTableName, theRelHead);
 		}
 	}
 
@@ -165,7 +165,7 @@ void Source_SQLite::ModifyRegistrations
 		PQuery* thePQuery = theClientQuery->fPQuery;
 		thePQuery->fClientQueries.Erase(theClientQuery);
 		if (thePQuery->fClientQueries.IsEmpty())
-			ZUtil_STL::sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
+			sEraseMust(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 
 		fMap_RefconToClientQuery.erase(iterClientQuery);
 		}

@@ -331,14 +331,14 @@ void Source_DatonSet::ModifyRegistrations
 				iterPSearch != thePQuery->fPSearch_Used.end(); ++iterPSearch)
 				{
 				PSearch* thePSearch = *iterPSearch;
-				sEraseMustContain(kDebug, thePSearch->fPQuery_Using, thePQuery);
+				sEraseMust(kDebug, thePSearch->fPQuery_Using, thePQuery);
 				if (thePSearch->fPQuery_Using.empty())
 					fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
 				}
 			thePQuery->fPSearch_Used.clear();
 
 			fPQuery_NeedsWork.EraseIfContains(thePQuery);
-			sEraseMustContain(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
+			sEraseMust(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 			}
 
 		fClientQuery_NeedsWork.EraseIfContains(theClientQuery);
@@ -421,7 +421,7 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 		{
 		PSearch* thePSearch = eraser.Current();
 		if (thePSearch->fPQuery_Using.empty())
-			sEraseMustContain(kDebug, fMap_PSearch, thePSearch->fRelHead);
+			sEraseMust(kDebug, fMap_PSearch, thePSearch->fRelHead);
 		}
 	}
 
@@ -656,7 +656,7 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 					PSearch* thePSearch_Used = *iterPSearch_Used;
 					if (thePSearch_Used != thePSearch)
 						{
-						sEraseMustContain(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
+						sEraseMust(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
 
 						if (thePSearch_Used->fPQuery_Using.empty())
 							fPSearch_NeedsWork.InsertIfNotContains(thePSearch_Used);
@@ -690,7 +690,7 @@ void Source_DatonSet::pChangedAll()
 				PSearch* thePSearch_Used = *iterPSearch_Used;
 				if (thePSearch_Used != thePSearch)
 					{
-					sEraseMustContain(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
+					sEraseMust(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
 
 					if (thePSearch_Used->fPQuery_Using.empty())
 						fPSearch_NeedsWork.InsertIfNotContains(thePSearch_Used);
@@ -723,8 +723,8 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const R
 		thePSearch->fRelHead = iRelHead;
 		}
 
-	sInsertMustNotContain(kDebug, iPQuery->fPSearch_Used, thePSearch);
-	sInsertMustNotContain(kDebug, thePSearch->fPQuery_Using, iPQuery);
+	sInsertMust(kDebug, iPQuery->fPSearch_Used, thePSearch);
+	sInsertMust(kDebug, thePSearch->fPQuery_Using, iPQuery);
 
 	if (not thePSearch->fResult)
 		{
@@ -829,7 +829,7 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 						}
 					}
 
-				if (gotAll && sInsertIfNotContains(iWalker->fPriors, subset))
+				if (gotAll && sQInsert(iWalker->fPriors, subset))
 					{
 					if (ZLOGF(s, eDebug + 2))
 						ZYad_ZooLibStrim::sToStrim(sYadR(*theMap), s);
@@ -867,7 +867,7 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 						}
 					}
 
-				if (gotAll && sInsertIfNotContains(iWalker->fPriors, subset))
+				if (gotAll && sQInsert(iWalker->fPriors, subset))
 					{
 					if (ZLOGF(s, eDebug + 2))
 						ZYad_ZooLibStrim::sToStrim(sYadR(*theMap), s);
