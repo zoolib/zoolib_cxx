@@ -36,7 +36,7 @@ namespace ZooLib {
 // The 'Q' stands for 'Questionable' or 'Queryable'.
 // It is pronounced 'Quid', as in the latin interrogative pronoun.
 
-// c.f. Haskell's 'Data.Maybe', Scala's 'Option'.
+// c.f. boost::optional, Haskell's 'Data.Maybe', Scala's 'Option'.
 
 template <class T, bool Sense = true>
 class ZQ
@@ -120,7 +120,7 @@ public:
 // -----------------
 
 	template <class OtherT, bool OtherSense>
-	ZQ(const ZQ<OtherT, OtherSense>& iOther)
+	ZQ(const ZQ<OtherT,OtherSense>& iOther)
 		{
 		if (const OtherT* theOther = iOther.PGet())
 			{
@@ -134,7 +134,7 @@ public:
 		}
 
 	template <class OtherT, bool OtherSense>
-	ZQ& operator=(const ZQ<OtherT, OtherSense>& iOther)
+	ZQ& operator=(const ZQ<OtherT,OtherSense>& iOther)
 		{
 		if (fHasValue)
 			{
@@ -199,7 +199,7 @@ public:
 	template <class P0, class P1>
 	ZQ(const P0& i0, const P1& i1)
 	:	fHasValue(true)
-		{ sCtor_T<T, P0, P1>(fBytes, i0, i1); }
+		{ sCtor_T<T,P0,P1>(fBytes, i0, i1); }
 
 // -----------------
 
@@ -433,6 +433,21 @@ private:
 
 	friend class ZQ<void, !Sense>;
 	};
+
+// =================================================================================================
+// MARK: - Pseudo-ctor
+
+template <class T>
+ZQ<T> sQ(const T& iT)
+	{ return ZQ<T>(iT); }
+
+template <class T, class P0>
+ZQ<T> sQ(const P0& i0)
+	{ return ZQ<T>(i0); }
+
+template <class T, class P0, class P1>
+ZQ<T> sQ(const P0& i0, const P1& i1)
+	{ return ZQ<T>(i0, i1); }
 
 // =================================================================================================
 // MARK: - Accessor functions
