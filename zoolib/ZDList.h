@@ -60,48 +60,30 @@ public:
 
 	bool IsEmpty() const
 		{
-		ZAssertStop(L::kDebug, (!fSize && !fHeadL) || (fSize && fHeadL));
-		return !fHeadL;
+		ZAssertStop(L::kDebug, (not fSize && not fHeadL) || (fSize && fHeadL));
+		return not fHeadL;
 		}
 
 	bool Contains(L* iL) const
 		{ return iL->fNext; }
 
-	void Insert(L* iL)
+	bool QErase(L* iL)
 		{
-		ZAssertStop(L::kDebug, !iL->fPrev);
-		ZAssertStop(L::kDebug, !iL->fNext);
-
 		if (not fHeadL)
 			{
-			ZAssertStop(L::kDebug, fSize == 0);
-			fSize = 1;
-			fHeadL = iL;
-			iL->fPrev = iL;
-			iL->fNext = iL;
+			ZAssertStop(L::kDebug, not iL->fPrev);
+			ZAssertStop(L::kDebug, not iL->fNext);
+			return false;
 			}
-		else
+
+		if (not iL->fPrev)
 			{
-			ZAssertStop(L::kDebug, fSize != 0);
-			++fSize;
-			iL->fNext = fHeadL;
-			iL->fPrev = fHeadL->fPrev;
-			fHeadL->fPrev->fNext = iL;
-			fHeadL->fPrev = iL;
+			ZAssertStop(L::kDebug, not iL->fNext);
+			return false;
 			}
-		}
 
-	void InsertIfNotContains(L* iL)
-		{
-		if (not iL->fNext)
-			this->Insert(iL);
-		}
-
-	void Erase(L* iL)
-		{
 		ZAssertStop(L::kDebug, fHeadL);
 		ZAssertStop(L::kDebug, iL->fPrev);
-		ZAssertStop(L::kDebug, iL->fNext);
 
 		if (iL->fPrev == iL)
 			{
@@ -123,44 +105,156 @@ public:
 			}
 		iL->fNext = nullptr;
 		iL->fPrev = nullptr;
+		return true;
 		}
 
-	void EraseIfContains(L* iL)
+	bool QInsertBack(L* iL)
 		{
-		if (iL->fNext)
-			this->Erase(iL);
+		if (iL->fPrev)
+			{
+			ZAssertStop(L::kDebug, iL->fNext);
+			return false;
+			}
+
+		ZAssertStop(L::kDebug, not iL->fNext);
+
+		if (not fHeadL)
+			{
+			ZAssertStop(L::kDebug, fSize == 0);
+			fSize = 1;
+			fHeadL = iL;
+			iL->fPrev = iL;
+			iL->fNext = iL;
+			}
+		else
+			{
+			ZAssertStop(L::kDebug, fSize != 0);
+			++fSize;
+			iL->fNext = fHeadL;
+			iL->fPrev = fHeadL->fPrev;
+			fHeadL->fPrev->fNext = iL;
+			fHeadL->fPrev = iL;
+			}
+		return true;
 		}
 
-	void PushFront(L* iL)
+	bool QInsertFront(L* iL)
 		{
-		this->Insert(iL);
+		if (not this->QInsertBack(iL))
+			return false;
 		fHeadL = iL;
+		return true;
 		}
 
-	void PushBack(L* iL)
-		{ this->Insert(iL); }
-
-	template <typename P>
-	P* PopFront()
+	L* GetEraseFront()
 		{
-		ZAssertStop(L::kDebug, fHeadL);
-		L* theL = fHeadL;
-		this->Erase(theL);
-		return static_cast<P*>(theL);
+		if (fHeadL)
+			{
+			L* theL = fHeadL;
+			this->Erase(theL);
+			return theL;
+			}
+		return nullptr;
 		}
 
-	template <typename P>
-	P* PopBack()
+	L* GetEraseBack()
 		{
-		ZAssertStop(L::kDebug, fHeadL);
-		L* theL = fHeadL->fPrev;
-		this->Erase(theL);
-		return static_cast<P*>(theL);
+		if (fHeadL)
+			{
+			L* theL = fHeadL->fPrev;
+			this->Erase(theL);
+			return theL;
+			}
+		return nullptr;
 		}
 
 	L* fHeadL;
 	size_t fSize;
 	};
+
+// =================================================================================================
+// MARK: -
+
+template <typename L>
+bool sIsEmpty(const DListHead<L>& iDListHead)
+	{ return iDListHead.IsEmpty(); }
+
+template <typename L>
+bool sNotEmpty(const DListHead<L>& iDListHead)
+	{ return not sIsEmpty(iDListHead); }
+
+template <typename L, typename P>
+bool sContains(const DListHead<L>& iDListHead, P* iP)
+	{ return iDListHead.Contains(iP); }
+
+template <typename L, typename P>
+bool sQErase(DListHead<L>& ioDListHead, P* iP)
+	{ return ioDListHead.QErase(iP); }
+
+template <typename L, typename P>
+void sErase(DListHead<L>& ioDListHead, P* iP)
+	{ ioDListHead.QErase(iP); }
+
+template <typename L, typename P>
+void sEraseMust(DListHead<L>& ioDListHead, P* iP)
+	{
+	bool result = ioDListHead.QErase(iP);
+	ZAssertStop(L::kDebug, result);
+	}
+
+template <typename L, typename P>
+bool sQInsertBack(DListHead<L>& ioDListHead, P* iP)
+	{ return ioDListHead.QInsertBack(iP); }
+
+template <typename L, typename P>
+void sInsertBack(DListHead<L>& ioDListHead, P* iP)
+	{ ioDListHead.QInsertBack(iP); }
+
+template <typename L, typename P>
+void sInsertBackMust(DListHead<L>& ioDListHead, P* iP)
+	{
+	bool result = ioDListHead.QInsertBack(iP);
+	ZAssertStop(L::kDebug, result);
+	}
+
+template <typename L, typename P>
+bool sQInsertFront(DListHead<L>& ioDListHead, P* iP)
+	{ return ioDListHead.QInsertFront(iP); }
+
+template <typename L, typename P>
+void sInsertFront(DListHead<L>& ioDListHead, P* iP)
+	{ ioDListHead.QInsertFront(iP); }
+
+template <typename L, typename P>
+void sInsertFrontMust(DListHead<L>& ioDListHead, P* iP)
+	{
+	bool result = ioDListHead.QInsertFront(iP);
+	ZAssertStop(L::kDebug, result);
+	}
+
+template <typename P, typename L>
+P* sGetEraseFront(DListHead<L>& ioDListHead)
+	{ return static_cast<P*>(ioDListHead.GetEraseFront()); }
+
+template <typename P, typename L>
+P* sGetEraseFrontMust(DListHead<L>& ioDListHead)
+	{
+	P* result = static_cast<P*>(ioDListHead.GetEraseFront());
+	ZAssertStop(L::kDebug, result);
+	return result;
+	}
+
+template <typename P, typename L>
+P* sGetEraseBack(DListHead<L>& ioDListHead)
+	{ return static_cast<P*>(ioDListHead.GetEraseBack()); }
+
+template <typename P, typename L>
+P* sGetEraseBackMust(DListHead<L>& ioDListHead)
+	{
+	P* result = static_cast<P*>(ioDListHead.GetEraseBack());
+	ZAssertStop(L::kDebug, result);
+	return result;
+	}
 
 // =================================================================================================
 // MARK: - DListLink
