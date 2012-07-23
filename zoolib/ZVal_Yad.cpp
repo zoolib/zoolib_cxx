@@ -27,6 +27,8 @@ namespace ZooLib {
 using std::set;
 using std::string;
 
+using namespace ZUtil_STL;
+
 namespace { // anonymous
 
 class Tombstone_t {};
@@ -357,7 +359,7 @@ public:
 		{
 		if (ZRef<ZYadR> theYad = fYad->ReadInc(oName))
 			{
-			ZUtil_STL::sInsertMustNotContain(fNamesSeen, oName);
+			sInsertMust(fNamesSeen, oName);
 			if (const ZVal_Any* theP = fMap.PGet(oName))
 				return sYadR(*theP);
 			return theYad;
@@ -366,7 +368,7 @@ public:
 		while (fCurrent != fMap.End())
 			{
 			oName = fMap.NameOf(fCurrent);
-			if (ZUtil_STL::sInsertIfNotContains(fNamesSeen, oName))
+			if (sQInsert(fNamesSeen, oName))
 				return sYadR(fMap.Get(fCurrent++));
 			++fCurrent;
 			}

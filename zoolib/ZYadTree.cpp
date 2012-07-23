@@ -381,7 +381,7 @@ ZRef<ZYadR> Link::ReadAt(const ZName& iName)
 		if (ZRef<ZYadMapAtRPos> asYadMapAtRPos = theYad.DynamicCast<ZYadMapAtRPos>())
 			{
 			ZRef<Link> theLink = new Link(this, asYadMapAtRPos);
-			sInsertMustNotContain(fChildren, iName, theLink);
+			sInsertMust(fChildren, iName, theLink);
 			return new YadMapAtRPos(theLink);
 			}
 		else
@@ -458,7 +458,7 @@ ZRef<Link> Link::WithRootAugment(const string& iRootAugmentName, const ZRef<Link
 		}
 
 	ZRef<Link> newSelf = new Link(fProtoName, fYadMapAtRPos);
-	sInsertMustNotContain(newSelf->fChildren, iRootAugmentName, iRootAugment);
+	sInsertMust(newSelf->fChildren, iRootAugmentName, iRootAugment);
 	return newSelf;
 	}
 
