@@ -33,35 +33,20 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - sMin, sMax and sMinMax
 
-template <class P0, class P1>
+template <class T>
 inline
-const P0 sMin(const P0& i0, const P1& i1)
-	{ return std::min(i0, T(i1)); }
+const T sMin(const T& i0, const T& i1)
+	{ return std::min<T>(i0, (i1)); }
 
-template <class R, class P0, class P1>
+template <class T>
 inline
-const R sMin(const P0& i0, const P1& i1)
-	{ return std::min(R(i0), R(i1)); }
+const T sMax(const T& i0, const T& i1)
+	{ return std::max<T>(i0, (i1)); }
 
-template <class P0, class P1>
+template <class T>
 inline
-const P0 sMax(const P0& i0, const P1& i1)
-	{ return std::max(i0, T(i1)); }
-
-template <class R, class P0, class P1>
-inline
-const R sMax(const P0& i0, const P1& i1)
-	{ return std::max(R(i0), R(i1)); }
-
-template <class Min_p, class T, class Max_p>
-inline
-const T sMinMax(const Min_p& iMin, const T& iVal, const Max_p& iMax)
-	{ return std::min(std::max(T(iMin), iVal), T(iMax)); }	
-
-template <class R, class Min_p, class T, class Max_p>
-inline
-const R sMinMax(const Min_p& iMin, const T& iVal, const Max_p& iMax)
-	{ return std::min(std::max(R(iMin), R(iVal)), R(iMax)); }	
+const T sMinMax(const T& iMin, const T& iVal, const T& iMax)
+	{ return std::min<T>(std::max<T>(iMin, iVal), iMax); }	
 
 // =================================================================================================
 // MARK: - sGetSet
