@@ -28,17 +28,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-/// A basic_string specialization that holds a sequence of UTF8 code units.
-/// It is actually the same type as std::string.
+/** A basic_string specialization that holds a sequence of UTF8 code units.
+It is almost certainly same type as std::string. */
 typedef std::basic_string<UTF8> string8;
 
-inline
-bool sIsEmpty(const string8& iString)
+template <class Char_p>
+bool sIsEmpty(const std::basic_string<Char_p>& iString)
 	{ return iString.empty(); }
 
-inline
-bool sNotEmpty(const string8& iString)
-	{ return not iString.empty(); }
+template <class Char_p>
+bool sNotEmpty(const std::basic_string<Char_p>& iString)
+	{ return not sIsEmpty(iString); }
 
 } // namespace ZooLib
 
