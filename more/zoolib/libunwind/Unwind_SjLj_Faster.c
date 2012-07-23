@@ -48,7 +48,7 @@ libunwind's use. And although pthread_once is quick, it's being called three tim
 exception-savvy function.
 
 An alternative would be to allocate that key as part of the process' static initialization,
-and since iOS 5 a more extreme version of that strategy used -- key 18 is hardcoded for use
+and since iOS 5 a more extreme version of that strategy is used -- key 18 is hardcoded for use
 by libunwind. See line 86 in
 	<http://www.opensource.apple.com/source/Libc/Libc-763.13/pthreads/pthread_machdep.h>
 
