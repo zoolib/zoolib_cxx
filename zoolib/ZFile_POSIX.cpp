@@ -492,6 +492,29 @@ static ZFile::Error spFlushVolume(int iFD)
 	return ZFile::errorNone;
 	}
 
+static void spSplit
+	(char iSep, bool iIncludeEmpties, const char* iPath, const char* iEnd,
+	vector<string>& oComps)
+	{
+	for (;;)
+		{
+		if (const char* nextSep = strchr(iPath, iSep))
+			{
+			size_t length = nextSep - iPath;
+			if (iIncludeEmpties || length)
+				oComps.push_back(string(iPath, length));
+			iPath = nextSep + 1;
+			}
+		else
+			{
+			size_t length = iEnd - iPath;
+			if (iIncludeEmpties || length)
+				oComps.push_back(string(iPath, length));
+			break;
+			}
+		}
+	}
+
 static void spSplit(char iSep, bool iIncludeEmpties, const char* iPath, vector<string>& oComps)
 	{
 	for (;;)
@@ -641,29 +664,6 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_Root()
 	}
 
 #if ZCONFIG_SPI_Enabled(Linux)
-
-static void spSplit
-	(char iSep, bool iIncludeEmpties, const char* iPath, const char* iEnd,
-	vector<string>& oComps)
-	{
-	for (;;)
-		{
-		if (const char* nextSep = strchr(iPath, iSep))
-			{
-			size_t length = nextSep - iPath;
-			if (iIncludeEmpties || length)
-				oComps.push_back(string(iPath, length));
-			iPath = nextSep + 1;
-			}
-		else
-			{
-			size_t length = iEnd - iPath;
-			if (iIncludeEmpties || length)
-				oComps.push_back(string(iPath, length));
-			break;
-			}
-		}
-	}
 
 ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 	{
