@@ -824,6 +824,11 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)>
 // =================================================================================================
 // MARK: - ZDelegate::spMakeWrapper
 
+template <class R>
+ZRef<ZDelegate::Wrapper>
+ZDelegate::spMakeWrapper(const ZRef<ZCallable<R()> >& iCallable)
+	{ return new ZDelegate::Wrapper_T<R()>(iCallable); }
+
 template <class R,
 	class P0>
 ZRef<ZDelegate::Wrapper>
