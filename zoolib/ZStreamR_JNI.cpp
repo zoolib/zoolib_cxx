@@ -49,7 +49,7 @@ void ZStreamR_JNI::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			{
 			if (jmethodID mid_read = env->GetMethodID(class_Stream, "read", "([BII)I"))
 				{
-				const size_t theBufferSize = sMin(4096, iCount);
+				const size_t theBufferSize = sMin<size_t>(4096, iCount);
 				if (jbyteArray theBufferArray = env->NewByteArray(theBufferSize))
 					{
 					while (countRemaining > 0)
