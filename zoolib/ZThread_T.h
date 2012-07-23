@@ -449,12 +449,12 @@ public:
 			}
 
 		Waiter theWaiter(iCount);
-		fWaiters.PushBack(&theWaiter);
+		sInsertBackMust(fWaiters, &theWaiter);
 
 		while (theWaiter.fCount > 0)
 			fCnd.Wait(fMtx);
 
-		fWaiters.Erase(&theWaiter);
+		sEraseMust(fWaiters, &theWaiter);
 		}
 
 	ZMACRO_Attribute_NoThrow
@@ -470,12 +470,12 @@ public:
 			}
 
 		Waiter theWaiter(iCount);
-		fWaiters.PushBack(&theWaiter);
+		sInsertBackMust(fWaiters, &theWaiter);
 
 		while (theWaiter.fCount > 0 && fCnd.WaitUntil(fMtx, iDeadline))
 			{}
 
-		fWaiters.Erase(&theWaiter);
+		sEraseMust(fWaiters, &theWaiter);
 
 		if (int acquired = iCount - theWaiter.fCount)
 			{
