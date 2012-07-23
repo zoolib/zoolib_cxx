@@ -148,7 +148,7 @@ void Source_SQLite::ModifyRegistrations
 			(make_pair(theRefcon, ClientQuery(theRefcon, thePQuery)));
 		ZAssert(iterClientQueryPair.second);
 
-		thePQuery->fClientQueries.Insert(&iterClientQueryPair.first->second);
+		sInsertBackMust(thePQuery->fClientQueries, &iterClientQueryPair.first->second);
 
 		++iAdded;
 		}
@@ -163,7 +163,7 @@ void Source_SQLite::ModifyRegistrations
 		ClientQuery* theClientQuery = &iterClientQuery->second;
 
 		PQuery* thePQuery = theClientQuery->fPQuery;
-		thePQuery->fClientQueries.Erase(theClientQuery);
+		sEraseMust(thePQuery->fClientQueries, theClientQuery);
 		if (thePQuery->fClientQueries.IsEmpty())
 			sEraseMust(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 

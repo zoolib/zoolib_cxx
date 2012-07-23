@@ -763,11 +763,11 @@ void Source_Union::ModifyRegistrations
 			fMap_Refcon_ClientQuery.find(theRefcon);
 
 		ClientQuery* theClientQuery = &iterClientQuery->second;
-		fClientQuery_NeedsWork.EraseIfContains(theClientQuery);
+		sErase(fClientQuery_NeedsWork, theClientQuery);
 
 		PQuery* thePQuery = theClientQuery->fPQuery;
 
-		thePQuery->fClientQueries.Erase(theClientQuery);
+		sErase(thePQuery->fClientQueries, theClientQuery);
 
 		if (thePQuery->fClientQueries.IsEmpty())
 			{
@@ -785,13 +785,13 @@ void Source_Union::ModifyRegistrations
 						{
 						PIP* thePIP = eraserPIP.Current();
 						PSource* thePSource = thePIP->fPSource;
-						thePSource->fPIP_NeedsWork.InsertIfNotContains(thePIP);
-						fPSource_NeedsWork.InsertIfNotContains(thePSource);
+						sInsertBack(thePSource->fPIP_NeedsWork, thePIP);
+						sInsertBack(fPSource_NeedsWork, thePSource);
 						thePIP->fProxy = nullptr;
 						}
 					}
 				}
-			fPQuery_NeedsWork.EraseIfContains(thePQuery);
+			sErase(fPQuery_NeedsWork, thePQuery);
 			sEraseMust(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 			}
 
@@ -821,7 +821,7 @@ void Source_Union::ModifyRegistrations
 				s << "Raw:\n" << theRel;
 
 			thePQuery->fRel_Analyzed = Analyze(this, thePQuery).TopLevelDo(theRel);
-			fPQuery_NeedsWork.Insert(thePQuery);
+			sInsertBackMust(fPQuery_NeedsWork, thePQuery);
 
 			if (ZLOGPF(s, eDebug + 1))
 				s << "Analyzed:\n" << thePQuery->fRel_Analyzed;
@@ -830,10 +830,10 @@ void Source_Union::ModifyRegistrations
 		ClientQuery* theClientQuery = &fMap_Refcon_ClientQuery.insert
 			(make_pair(theRefcon, ClientQuery(theRefcon, thePQuery))).first->second;
 
-		thePQuery->fClientQueries.Insert(theClientQuery);
+		sInsertBackMust(thePQuery->fClientQueries, theClientQuery);
 
 		if (not inPQuery.second)
-			fClientQuery_NeedsWork.Insert(theClientQuery);
+			sInsertBackMust(fClientQuery_NeedsWork, theClientQuery);
 		}
 
 	guard.Release();
@@ -952,7 +952,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 
 				for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 					iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
-					{ fClientQuery_NeedsWork.InsertIfNotContains(iterCS.Current()); }
+					{ sInsertBack(fClientQuery_NeedsWork, iterCS.Current()); }
 				}
 			}
 
@@ -996,7 +996,7 @@ void Source_Union::EraseSource(ZRef<Source> iSource)
 		iterPIP != endPIP; ++iterPIP)
 		{
 		toRemove.push_back(iterPIP->first);
-		iterPIP->second.fProxy->fPIP_InProxy.Erase(&iterPIP->second);
+		sEraseMust(iterPIP->second.fProxy->fPIP_InProxy, &iterPIP->second);
 		}
 	thePSource.fMap_Refcon_PIP.clear();
 
@@ -1056,10 +1056,10 @@ ZRef<ZRA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
 			thePIP->fRefcon = theRefcon;
 			thePIP->fProxy = theProxy;
 			thePIP->fPSource = thePSource;
-			theProxy->fPIP_InProxy.Insert(thePIP);
+			sInsertBackMust(theProxy->fPIP_InProxy, thePIP);
 
-			thePSource->fPIP_NeedsWork.Insert(thePIP);
-			fPSource_NeedsWork.InsertIfNotContains(thePSource);
+			sInsertBackMust(thePSource->fPIP_NeedsWork, thePIP);
+			sInsertBack(fPSource_NeedsWork, thePSource);
 			}
 		}
 
@@ -1170,7 +1170,7 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 				i = thePIP->fProxy->fDependentPQueries.begin(),
 				end = thePIP->fProxy->fDependentPQueries.end();
 				i != end; ++i)
-				{ fPQuery_NeedsWork.InsertIfNotContains(*i); }
+				{ sInsertBack(fPQuery_NeedsWork, *i); }
 			}
 		}
 	}
@@ -1179,7 +1179,7 @@ void Source_Union::pResultsAvailable(ZRef<Source> iSource)
 	{
 	ZGuardMtxR guard(fMtxR);
 	Map_Source_PSource::iterator iterSource = fMap_Source_PSource.find(iSource);
-	fPSource_CollectFrom.InsertIfNotContains(&iterSource->second);
+	sInsertBack(fPSource_CollectFrom, &iterSource->second);
 	guard.Release();
 	Source::pTriggerResultsAvailable();
 	}

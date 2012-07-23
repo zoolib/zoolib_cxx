@@ -297,17 +297,17 @@ void Source_DatonSet::ModifyRegistrations
 		ZAssert(iterClientQueryPair.second);
 
 		ClientQuery* theClientQuery = &iterClientQueryPair.first->second;
-		thePQuery->fClientQuery_InPQuery.Insert(theClientQuery);
+		sInsertBackMust(thePQuery->fClientQuery_InPQuery, theClientQuery);
 
 		if (iterPQueryPair.second)
 			{
 			// It's a new PQuery, so we'll need to work on it.
-			fPQuery_NeedsWork.Insert(thePQuery);
+			sInsertBackMust(fPQuery_NeedsWork, thePQuery);
 			}
 		else
 			{
 			// It's an existing PQuery, so the ClientQuery will need to be worked on.
-			fClientQuery_NeedsWork.Insert(theClientQuery);
+			sInsertBackMust(fClientQuery_NeedsWork, theClientQuery);
 			}
 		}
 
@@ -323,8 +323,8 @@ void Source_DatonSet::ModifyRegistrations
 		ClientQuery* theClientQuery = &iterClientQuery->second;
 
 		PQuery* thePQuery = theClientQuery->fPQuery;
-		thePQuery->fClientQuery_InPQuery.Erase(theClientQuery);
-		if (thePQuery->fClientQuery_InPQuery.IsEmpty())
+		sEraseMust(thePQuery->fClientQuery_InPQuery, theClientQuery);
+		if (sIsEmpty(thePQuery->fClientQuery_InPQuery))
 			{
 			// Detach from any depended-upon PSearch
 			for (set<PSearch*>::iterator iterPSearch = thePQuery->fPSearch_Used.begin();
@@ -333,19 +333,19 @@ void Source_DatonSet::ModifyRegistrations
 				PSearch* thePSearch = *iterPSearch;
 				sEraseMust(kDebug, thePSearch->fPQuery_Using, thePQuery);
 				if (thePSearch->fPQuery_Using.empty())
-					fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
+					sInsertBack(fPSearch_NeedsWork, thePSearch);
 				}
 			thePQuery->fPSearch_Used.clear();
 
-			fPQuery_NeedsWork.EraseIfContains(thePQuery);
+			sErase(fPQuery_NeedsWork, thePQuery);
 			sEraseMust(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 			}
 
-		fClientQuery_NeedsWork.EraseIfContains(theClientQuery);
+		sErase(fClientQuery_NeedsWork, theClientQuery);
 		fMap_Refcon_ClientQuery.erase(iterClientQuery);
 		}
 
-	if (not fClientQuery_NeedsWork.IsEmpty() || not fPQuery_NeedsWork.IsEmpty())
+	if (sNotEmpty(fClientQuery_NeedsWork) || sNotEmpty(fPQuery_NeedsWork))
 		{
 		guard.Release();
 		Source::pTriggerResultsAvailable();
@@ -400,7 +400,7 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 			iter = thePQuery->fClientQuery_InPQuery; iter; iter.Advance())
-			{ fClientQuery_NeedsWork.InsertIfNotContains(iter.Current()); }
+			{ sInsertBack(fClientQuery_NeedsWork, iter.Current()); }
 		}
 
 	ZRef<Event> theEvent = fDatonSet->GetEvent();
@@ -647,7 +647,7 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 				iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)
 				{
 				PQuery* thePQuery = *iterPQuery;
-				fPQuery_NeedsWork.InsertIfNotContains(thePQuery);
+				sInsertBack(fPQuery_NeedsWork, thePQuery);
 				for (set<PSearch*>::iterator iterPSearch_Used =
 					thePQuery->fPSearch_Used.begin();
 					iterPSearch_Used != thePQuery->fPSearch_Used.end();
@@ -659,14 +659,14 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 						sEraseMust(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
 
 						if (thePSearch_Used->fPQuery_Using.empty())
-							fPSearch_NeedsWork.InsertIfNotContains(thePSearch_Used);
+							sInsertBack(fPSearch_NeedsWork, thePSearch_Used);
 						}
 					}
 				thePQuery->fPSearch_Used.clear();
 				}
 			thePSearch->fPQuery_Using.clear();
 			thePSearch->fResult.Clear();
-			fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
+			sInsertBack(fPSearch_NeedsWork, thePSearch);
 			}
 		}
 	}
@@ -681,7 +681,7 @@ void Source_DatonSet::pChangedAll()
 			iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)
 			{
 			PQuery* thePQuery = *iterPQuery;
-			fPQuery_NeedsWork.InsertIfNotContains(thePQuery);
+			sInsertBack(fPQuery_NeedsWork, thePQuery);
 			for (set<PSearch*>::iterator iterPSearch_Used =
 				thePQuery->fPSearch_Used.begin();
 				iterPSearch_Used != thePQuery->fPSearch_Used.end();
@@ -693,14 +693,14 @@ void Source_DatonSet::pChangedAll()
 					sEraseMust(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
 
 					if (thePSearch_Used->fPQuery_Using.empty())
-						fPSearch_NeedsWork.InsertIfNotContains(thePSearch_Used);
+						sInsertBack(fPSearch_NeedsWork, thePSearch_Used);
 					}
 				}
 			thePQuery->fPSearch_Used.clear();
 			}
 		thePSearch->fPQuery_Using.clear();
 		thePSearch->fResult.Clear();
-		fPSearch_NeedsWork.InsertIfNotContains(thePSearch);
+		sInsertBack(fPSearch_NeedsWork, thePSearch);
 		}
 	}
 
