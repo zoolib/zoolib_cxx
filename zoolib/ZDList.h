@@ -151,7 +151,7 @@ public:
 		if (fHeadL)
 			{
 			L* theL = fHeadL;
-			this->Erase(theL);
+			this->QErase(theL);
 			return theL;
 			}
 		return nullptr;
@@ -162,7 +162,7 @@ public:
 		if (fHeadL)
 			{
 			L* theL = fHeadL->fPrev;
-			this->Erase(theL);
+			this->QErase(theL);
 			return theL;
 			}
 		return nullptr;
