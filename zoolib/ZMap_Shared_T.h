@@ -93,7 +93,7 @@ public:
 	const S* PGet(const Name_t& iName) const
 		{
 		if (fRep)
-			return sGet(fRep).PGet<S>(iName);
+			return sGet(fRep).template PGet<S>(iName);
 		return nullptr;
 		}
 
@@ -193,7 +193,7 @@ public:
 	S* PMut(const Name_t& iName)
 		{
 		if (fRep)
-			return sMut(fRep).PMut<S>(iName);
+			return sMut(fRep).template PMut<S>(iName);
 		return nullptr;
 		}
 
@@ -202,7 +202,7 @@ public:
 		{
 		if (not fRep)
 			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
-		return sMut(fRep).Mut<S>(iName);
+		return sMut(fRep).template Mut<S>(iName);
 		}
 
 	ZMap_Shared_Mutable_T& Set(const Name_t& iName, const Val_t& iVal)

@@ -181,11 +181,11 @@ public:
 
 	template <class S>
 	const ZQ<S> QGet(size_t iIndex) const
-		{ return this->Get(iIndex).QGet<S>(); }
+		{ return this->Get(iIndex).template QGet<S>(); }
 
 	template <class S>
 	const S& Get(size_t iIndex) const
-		{ return this->Get(iIndex).Get<S>(); }
+		{ return this->Get(iIndex).template Get<S>(); }
 
 	template <class S>
 	S* PMut(size_t iIndex)
@@ -197,7 +197,7 @@ public:
 
 	template <class S>
 	S& Mut(size_t iIndex)
-		{ return this->Mut(iIndex).Mut<S>(); }
+		{ return this->Mut(iIndex).template Mut<S>(); }
 
 	const ZVal_T& operator[](size_t iIndex) const
 		{ return this->Get(iIndex); }
@@ -236,11 +236,11 @@ public:
 
 	template <class S>
 	const ZQ<S> QGet(const Name_t& iName) const
-		{ return this->Get(iName).QGet<S>(); }
+		{ return this->Get(iName).template QGet<S>(); }
 
 	template <class S>
 	const S& Get(const Name_t& iName) const
-		{ return this->Get(iName).Get<S>(); }
+		{ return this->Get(iName).template Get<S>(); }
 
 	template <class S>
 	S* PMut(const Name_t& iName)
@@ -252,7 +252,7 @@ public:
 
 	template <class S>
 	S& Mut(const Name_t& iName) const
-		{ return this->Mut(iName).Mut<S>(); }
+		{ return this->Mut(iName).template Mut<S>(); }
 
 	ZVal_T& operator[](const Name_t& iName)
 		{ return this->Mut(iName); }
