@@ -177,7 +177,7 @@ private:
 		if (ioIter.fNextEntry != fList.end())
 			{
 			ioIter.fRep = iSelf;
-			(*ioIter.fNextEntry).fIters.PushBack(&ioIter);
+			sInsertBackMust(ioIter.fNextEntry->fIters, &ioIter);
 			}
 		}
 
@@ -190,7 +190,7 @@ private:
 		if (ioIter.fNextEntry != fList.end())
 			{
 			ioIter.fRep = iSelf;
-			(*ioIter.fNextEntry).fIters.PushBack(&ioIter);
+			sInsertBackMust(ioIter.fNextEntry->fIters, &ioIter);
 			}
 		}
 
@@ -198,7 +198,7 @@ private:
 		{
 		ZAcqMtx acq(fMtx);
 
-		(*ioIter.fNextEntry).fIters.Erase(&ioIter);
+		sEraseMust(ioIter.fNextEntry->fIters, &ioIter);
 		ioIter.fRep.Clear();
 		}
 
@@ -424,14 +424,14 @@ ZQ<T> ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter)
 		}
 	else
 		{
-		(*ioIter.fNextEntry).fIters.Erase(&ioIter);
+		sEraseMust(ioIter.fNextEntry->fIters, &ioIter);
 
 		result = (*ioIter.fNextEntry).fT;
 
 		if (++ioIter.fNextEntry == fList.end())
 			ioIter.fRep.Clear();
 		else
-			(*ioIter.fNextEntry).fIters.PushBack(&ioIter);
+			sInsertBackMust(ioIter.fNextEntry->fIters, &ioIter);
 
 		}
 	return result;
@@ -505,7 +505,7 @@ bool ZSafeSetRep<T>::pErase(const T& iT)
 		if (++theIter->fNextEntry == fList.end())
 			theIter->fRep.Clear();
 		else
-			(*theIter->fNextEntry).fIters.PushBack(theIter);
+			sInsertBackMust(theIter->fNextEntry->fIters, theIter);
 		}
 	fList.erase(listIter);
 	fMap.erase(mapIter);
