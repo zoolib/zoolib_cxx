@@ -2525,8 +2525,6 @@ static void sBlitWithMaps_T
 	void* iDestBase, const RasterDesc& iDestRasterDesc, const D& iDestRGBToPixval,
 	const ZRectPOD& iSourceBounds, ZPointPOD iDestLocation, bool iInvertColors)
 	{
-	PixvalDesc sourcePixvalDesc = iSourceRasterDesc.fPixvalDesc;
-
 	int32 vCount = H(iSourceBounds);
 	int32 hCount = W(iSourceBounds);
 
