@@ -44,6 +44,10 @@ class NPObjectH;
 
 typedef NPVariant_T<NPObjectH> NPVariantH;
 
+template <> void sVariantRelease_T(NPVariantH& iNPVariantH);
+template <> void* sMalloc_T(NPVariantH&, size_t iLength);
+template <> void sFree_T<NPVariantH>(void* iPtr);
+
 // =================================================================================================
 // MARK: - NPObjectH
 
@@ -92,6 +96,9 @@ public:
 
 	bool Enumerate(NPIdentifier*& oIdentifiers, uint32& oCount);
 	};
+
+template <>
+const ZQ<ZRef<NPObjectH> > NPVariantBase::QGet<ZRef<NPObjectH> >() const;
 
 // =================================================================================================
 // MARK: - ObjectH

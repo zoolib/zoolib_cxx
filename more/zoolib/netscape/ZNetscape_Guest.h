@@ -59,6 +59,10 @@ typedef SetRestoreNPP NPPSetter;
 
 typedef NPVariant_T<NPObjectG> NPVariantG;
 
+template <> void sVariantRelease_T(NPVariantG& iNPVariantG);
+template <> void* sMalloc_T(NPVariantG&, size_t iLength);
+template <> void sFree_T<NPVariantG>(void* iPtr);
+
 // =================================================================================================
 // MARK: - NPObjectG
 
@@ -107,6 +111,9 @@ public:
 
 	bool Enumerate(NPIdentifier*& oIdentifiers, uint32& oCount);
 	};
+
+template <>
+const ZQ<ZRef<NPObjectG> > NPVariantBase::QGet<ZRef<NPObjectG> >() const;
 
 // =================================================================================================
 // MARK: - ObjectG
