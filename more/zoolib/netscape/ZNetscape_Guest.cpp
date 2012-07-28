@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/netscape/ZNetscape_Guest.h"
 #include "zoolib/netscape/ZNetscape_ObjectPriv.h"
 #include "zoolib/netscape/ZNetscape_VariantPriv.h"
-
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
@@ -402,7 +401,7 @@ GuestMeister::GuestMeister()
 	{
 	ZAssert(!spGuestMeister);
 	spGuestMeister = this;
-	ZMemZero_T(fNPNF);
+	sMemZero_T(fNPNF);
 	}
 
 GuestMeister::~GuestMeister()
