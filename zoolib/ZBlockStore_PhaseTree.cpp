@@ -37,6 +37,8 @@ using std::vector;
 
 namespace ZooLib {
 
+using namespace ZUtil_STL;
+
 #ifndef kDebug_PhaseTreeFile
 	#define kDebug_PhaseTreeFile 3
 #endif
@@ -2295,14 +2297,14 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlot(uint32 iSlotNumber)
 			++fUseFailures;
 
 			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
-				!ZUtil_STL::sContains(fSlots_ReleasedForked, iSlotNumber),
+				not sContains(fSlots_ReleasedForked, iSlotNumber),
 				("Slot: %d", iSlotNumber));
 
 			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
-				!ZUtil_STL::sContains(fSlots_ReleasedClean, iSlotNumber),
+				not sContains(fSlots_ReleasedClean, iSlotNumber),
 				("Slot: %d", iSlotNumber));
 
-			if (ZUtil_STL::sEraseIfContains(fSlots_Forked, iSlotNumber))
+			if (sQErase(fSlots_Forked, iSlotNumber))
 				theSlot = new(fSlotSize) Slot(iSlotNumber, true);
 			else
 				theSlot = new(fSlotSize) Slot(iSlotNumber, false);
@@ -2394,14 +2396,14 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal
 			{
 			++fUseFailures;
 			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
-				!ZUtil_STL::sContains(fSlots_ReleasedForked, iSlotNumber),
+				not sContains(fSlots_ReleasedForked, iSlotNumber),
 				("Slot: %d", iSlotNumber));
 
 			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
-				!ZUtil_STL::sContains(fSlots_ReleasedClean, iSlotNumber),
+				not sContains(fSlots_ReleasedClean, iSlotNumber),
 				("Slot: %d", iSlotNumber));
 
-			if (ZUtil_STL::sEraseIfContains(fSlots_Forked, iSlotNumber))
+			if (sQErase(fSlots_Forked, iSlotNumber))
 				{
 				oForkedSlotNumber = 0;
 				theSlot = new(fSlotSize) Slot(iSlotNumber);
@@ -2557,15 +2559,15 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 			case eStateForked:
 				{
 				ZAssertStop(ZCONFIG_PhaseTree_Debug,
-					!ZUtil_STL::sContains(fSlots_Forked, iSlot->fSlotNumber));
+					not sContains(fSlots_Forked, iSlot->fSlotNumber));
 
 				ZAssertStop(ZCONFIG_PhaseTree_Debug,
-					!ZUtil_STL::sContains(fSlots_ReleasedForked, iSlot->fSlotNumber));
+					not sContains(fSlots_ReleasedForked, iSlot->fSlotNumber));
 
 				ZAssertStop(ZCONFIG_PhaseTree_Debug,
-					!ZUtil_STL::sContains(fSlots_ReleasedClean, iSlot->fSlotNumber));
+					not sContains(fSlots_ReleasedClean, iSlot->fSlotNumber));
 
-				ZUtil_STL::sEraseMustContain(ZCONFIG_PhaseTree_Debug,
+				sEraseMust(ZCONFIG_PhaseTree_Debug,
 					fSlots_Loaded, iSlot->fSlotNumber);
 
 				if (true)
@@ -2580,7 +2582,7 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 					fCached_Tail = iSlot;
 
 					ZAssertStop(ZCONFIG_PhaseTree_Debug,
-						!ZUtil_STL::sContains(fSlots_Cached, iSlot->fSlotNumber));
+						not sContains(fSlots_Cached, iSlot->fSlotNumber));
 
 					fSlots_Cached[iSlot->fSlotNumber] = iSlot;
 
@@ -2632,7 +2634,7 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 				// This slot should have been removed from
 				// fSlots_Loaded when ReleaseAndUnuseSlot was called.
 				ZAssertStopf(ZCONFIG_PhaseTree_Debug,
-					!ZUtil_STL::sContains(fSlots_Loaded, iSlot->fSlotNumber),
+					not sContains(fSlots_Loaded, iSlot->fSlotNumber),
 					("Slot: %d", iSlot->fSlotNumber));
 				delete iSlot;
 				break;
@@ -2676,15 +2678,15 @@ void ZBlockStore_PhaseTree::UnuseUnlockedSlot(Slot* iSlot)
 				ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fSlotNumber);
 
 				ZAssertStop(ZCONFIG_PhaseTree_Debug,
-					!ZUtil_STL::sContains(fSlots_Forked, iSlot->fSlotNumber));
+					not sContains(fSlots_Forked, iSlot->fSlotNumber));
 
 				ZAssertStop(ZCONFIG_PhaseTree_Debug,
-					!ZUtil_STL::sContains(fSlots_ReleasedForked, iSlot->fSlotNumber));
+					not sContains(fSlots_ReleasedForked, iSlot->fSlotNumber));
 
 				ZAssertStop(ZCONFIG_PhaseTree_Debug,
-					!ZUtil_STL::sContains(fSlots_ReleasedClean, iSlot->fSlotNumber));
+					not sContains(fSlots_ReleasedClean, iSlot->fSlotNumber));
 
-				ZUtil_STL::sEraseMustContain(ZCONFIG_PhaseTree_Debug,
+				sEraseMust(ZCONFIG_PhaseTree_Debug,
 					fSlots_Loaded, iSlot->fSlotNumber);
 
 				if (iSlot->fState == eStateForked)
@@ -2700,7 +2702,7 @@ void ZBlockStore_PhaseTree::UnuseUnlockedSlot(Slot* iSlot)
 				// stream then its fSlotNumber will have been set to zero.
 				ZAssertStop(ZCONFIG_PhaseTree_Debug,
 					iSlot->fSlotNumber == 0
-					|| !ZUtil_STL::sContains(fSlots_Loaded, iSlot->fSlotNumber));
+					|| not sContains(fSlots_Loaded, iSlot->fSlotNumber));
 				delete iSlot;
 				break;
 				}
@@ -2733,7 +2735,7 @@ void ZBlockStore_PhaseTree::ReleaseSlotNumber(uint32 iSlotNumber)
 	// cannot be loaded, because the ancestor block slot is locked.
 
 	ZAssertStopf(ZCONFIG_PhaseTree_Debug,
-		!ZUtil_STL::sContains(fSlots_Loaded, iSlotNumber), ("Slot: %d", iSlotNumber));
+		not sContains(fSlots_Loaded, iSlotNumber), ("Slot: %d", iSlotNumber));
 
 	// However, the slot could be cached.
 	map<uint32, Slot*>::iterator iterCached = fSlots_Cached.find(iSlotNumber);
@@ -2759,7 +2761,7 @@ void ZBlockStore_PhaseTree::ReleaseSlotNumber(uint32 iSlotNumber)
 		delete theSlot;
 		}
 
-	if (ZUtil_STL::sEraseIfContains(fSlots_Forked, iSlotNumber))
+	if (sQErase(fSlots_Forked, iSlotNumber))
 		fSlots_ReleasedForked.insert(iSlotNumber);
 	else
 		fSlots_ReleasedClean.insert(iSlotNumber);
@@ -2788,7 +2790,7 @@ void ZBlockStore_PhaseTree::ReleaseAndUnuseSlot(Slot* iSlot)
 		fSlots_ReleasedForked.insert(iSlot->fSlotNumber);
 		}
 
-	ZUtil_STL::sEraseMustContain(ZCONFIG_PhaseTree_Debug, fSlots_Loaded, iSlot->fSlotNumber);
+	sEraseMust(ZCONFIG_PhaseTree_Debug, fSlots_Loaded, iSlot->fSlotNumber);
 
 	if (--iSlot->fUseCount == 0)
 		{
