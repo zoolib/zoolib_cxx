@@ -33,7 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef ZCONFIG_API_Avail__Matrix_armv6
 	#if ZCONFIG_API_Desired__Matrix_armv6
 		#if __arm__
-			#if defined(_ARM_ARCH_6)
+			// clang 4 is having trouble with fldmias instructions, disable for now.
+			#if defined(_ARM_ARCH_6) && (not defined(__clang_major__) || __clang_major__ < 4)
 				#define ZCONFIG_API_Avail__Matrix_armv6 1
 			#endif
 		#endif
