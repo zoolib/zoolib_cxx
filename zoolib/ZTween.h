@@ -396,7 +396,7 @@ public:
 	virtual ZQ<Val> QValAt(double lPlace)
 		{
 		const double childWeight = spWeight(fTween, fTweenWeightQ);
-		lPlace = sMinMax(0.0, lPlace, childWeight * fCount);
+		lPlace = sMin(lPlace, childWeight * fCount);
 		return fTween->QValAt(fmod(lPlace, childWeight));
 		}
 
@@ -622,9 +622,7 @@ public:
 		else
 			{
 			const double theWeight = spWeight(fTween, fTweenWeightQ);
-			if (0 <= iPlace && iPlace < theWeight)
-				return fTween->QValAt(sMin(theWeight*0.999999, theWeight + iPlace/fWeightScale));
-			return null;
+			return fTween->QValAt(sMin(theWeight*0.999999, theWeight + iPlace/fWeightScale));
 			}
 		}
 
