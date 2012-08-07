@@ -223,8 +223,8 @@ ZNetListener_TCP_WinSock::~ZNetListener_TCP_WinSock()
 ZRef<ZNetAddress> ZNetListener_TCP_WinSock::GetAddress()
 	{
 	sockaddr_in localSockAddr;
-	int length = sizeof(localSockAddr);
-	if (::getsockname(fSOCKET, (sockaddr*)&localSockAddr, &length) >= 0)
+	if (0 <= ::getsockname
+		(fSOCKET, (sockaddr*)&localSockAddr, sMutablePtr(int(sizeof(localSockAddr)))))
 		{
 		if (localSockAddr.sin_family == AF_INET)
 			{
@@ -250,8 +250,8 @@ ZRef<ZNetEndpoint> ZNetListener_TCP_WinSock::Listen()
 		// We got one.
 		sockaddr_in remoteSockAddr;
 		ZMemZero_T(remoteSockAddr);
-		int addrSize = sizeof(remoteSockAddr);
-		SOCKET newSOCKET = ::accept(fSOCKET, (sockaddr*)&remoteSockAddr, &addrSize);
+		SOCKET newSOCKET =
+			::accept(fSOCKET, (sockaddr*)&remoteSockAddr, sMutablePtr(int(sizeof(remoteSockAddr))));
 		if (newSOCKET != INVALID_SOCKET)
 			{
 			// Ensure new socket is blocking.
@@ -278,9 +278,9 @@ void ZNetListener_TCP_WinSock::CancelListen()
 ip_port ZNetListener_TCP_WinSock::GetPort()
 	{
 	sockaddr_in localSockAddr;
-	int length = sizeof(localSockAddr);
-	if (::getsockname(fSOCKET, (sockaddr*)&localSockAddr, &length) >= 0)
-		return ntohs(localSockAddr.sin_port);
+	if (0 <= ::getsockname
+		(fSOCKET, (sockaddr*)&localSockAddr, sMutablePtr(int(sizeof(localSockAddr)))))
+		{ return ntohs(localSockAddr.sin_port); }
 	return 0;
 	}
 
@@ -399,8 +399,8 @@ const ZStreamWCon& ZNetEndpoint_TCP_WinSock::GetStreamWCon()
 ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetLocalAddress()
 	{
 	sockaddr_in localSockAddr;
-	int length = sizeof(localSockAddr);
-	if (::getsockname(fSOCKET, (sockaddr*)&localSockAddr, &length) >= 0)
+	if (0 <= ::getsockname
+		(fSOCKET, (sockaddr*)&localSockAddr, sMutablePtr(int(sizeof(localSockAddr)))))
 		{
 		if (localSockAddr.sin_family == AF_INET)
 			{
@@ -415,8 +415,8 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetLocalAddress()
 ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetRemoteAddress()
 	{
 	sockaddr_in remoteSockAddr;
-	int length = sizeof(remoteSockAddr);
-	if (::getpeername(fSOCKET, (sockaddr*)&remoteSockAddr, &length) >= 0)
+	if (0 <= ::getpeername
+		(fSOCKET, (sockaddr*)&remoteSockAddr, sMutablePtr(int(sizeof(remoteSockAddr)))))
 		{
 		return new ZNetAddress_IP4
 			(ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));

@@ -272,8 +272,7 @@ ZRef<ZNetName> ZNetNameLookup_Internet_Socket::CurrentName()
 static int spEnsureInet(int iSocketFD)
 	{
 	uint8 buffer[SOCK_MAXADDRLEN];
-	socklen_t length = sizeof(buffer);
-	if (::getsockname(iSocketFD, (sockaddr*)buffer, &length) >= 0)
+	if (0 <= ::getsockname(iSocketFD, (sockaddr*)buffer, sMutablePtr(socklen_t(sizeof(buffer)))))
 		{
 		const sa_family_t theFamily = ((sockaddr*)buffer)->sa_family;
 
@@ -319,8 +318,7 @@ ZNetListener_TCP_Socket::~ZNetListener_TCP_Socket()
 ip_port ZNetListener_TCP_Socket::GetPort()
 	{
 	uint8 buffer[SOCK_MAXADDRLEN];
-	socklen_t length = sizeof(buffer);
-	if (::getsockname(fSocketFD, (sockaddr*)&buffer[0], &length) >= 0)
+	if (0 <= ::getsockname(fSocketFD, (sockaddr*)&buffer[0], sMutablePtr(socklen_t(sizeof(buffer)))))
 		{
 		const sa_family_t theFamily = ((sockaddr*)buffer)->sa_family;
 
@@ -336,8 +334,7 @@ ip_port ZNetListener_TCP_Socket::GetPort()
 ZRef<ZNetAddress> ZNetListener_TCP_Socket::GetAddress()
 	{
 	uint8 buffer[SOCK_MAXADDRLEN];
-	socklen_t length = sizeof(buffer);
-	if (::getsockname(this->GetSocketFD(), (sockaddr*)buffer, &length) >= 0)
+	if (0 <= ::getsockname(this->GetSocketFD(), (sockaddr*)buffer, sMutablePtr(socklen_t(sizeof(buffer)))))
 		return spAsNetAddress((sockaddr*)buffer, 0);
 
 	return null;
@@ -370,7 +367,7 @@ static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteH
 	if (iLocalHost || iLocalPort)
 		{
 		sockaddr_in localSockAddr = {0};
-		localSockAddr.sin_len = sizeof(sockaddr_in);
+		localSockAddr.sin_len = sizeof(localSockAddr);
 		localSockAddr.sin_family = AF_INET;
 		localSockAddr.sin_port = htons(iLocalPort);
 		localSockAddr.sin_addr.s_addr = htonl(iLocalHost);
@@ -383,7 +380,7 @@ static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteH
 		}
 
 	sockaddr_in remoteSockAddr = {0};
-	remoteSockAddr.sin_len = sizeof(sockaddr_in);
+	remoteSockAddr.sin_len = sizeof(remoteSockAddr);
 	remoteSockAddr.sin_family = AF_INET;
 	remoteSockAddr.sin_port = htons(iRemotePort);
 	remoteSockAddr.sin_addr.s_addr = htonl(iRemoteHost);
@@ -403,7 +400,7 @@ static int spConnect6(ip6_addr iRemoteHost, ip_port iRemotePort)
 		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
 
 	sockaddr_in6 remoteSockAddr = {0};
-	remoteSockAddr.sin6_len = sizeof(sockaddr_in);
+	remoteSockAddr.sin6_len = sizeof(remoteSockAddr);
 	remoteSockAddr.sin6_family = AF_INET6;
 	remoteSockAddr.sin6_port = htons(iRemotePort);
 	remoteSockAddr.sin6_addr = *(const struct in6_addr*)(&iRemoteHost);
@@ -447,8 +444,7 @@ ZNetEndpoint_TCP_Socket::~ZNetEndpoint_TCP_Socket()
 ZRef<ZNetAddress> ZNetEndpoint_TCP_Socket::GetLocalAddress()
 	{
 	uint8 buffer[SOCK_MAXADDRLEN];
-	socklen_t length = sizeof(buffer);
-	if (::getsockname(this->GetSocketFD(), (sockaddr*)buffer, &length) >= 0)
+	if (0 <= ::getsockname(this->GetSocketFD(), (sockaddr*)buffer, sMutablePtr(socklen_t(sizeof(buffer)))))
 		return spAsNetAddress((sockaddr*)buffer, 0);
 
 	return null;
@@ -457,8 +453,7 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_Socket::GetLocalAddress()
 ZRef<ZNetAddress> ZNetEndpoint_TCP_Socket::GetRemoteAddress()
 	{
 	uint8 buffer[SOCK_MAXADDRLEN];
-	socklen_t length = sizeof(buffer);
-	if (::getpeername(this->GetSocketFD(), (sockaddr*)buffer, &length) >= 0)
+	if (0 <= ::getpeername(this->GetSocketFD(), (sockaddr*)buffer, sMutablePtr(socklen_t(sizeof(buffer)))))
 		return spAsNetAddress((sockaddr*)buffer, 0);
 
 	return null;

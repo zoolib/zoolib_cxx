@@ -150,6 +150,31 @@ const struct
 	} sConstPtr = {};
 
 // =================================================================================================
+// 'sMutablePtr(rvalue)' or 'sMutablePtr& rvalue' is useful when working with socket APIs.
+
+const struct
+	{
+	template <class T>
+	class Holder
+		{
+	public:
+		Holder(const T& iT) : fT(iT) {}
+
+		operator T*() const { return &fT; }
+
+	private:
+		mutable T fT;
+		};
+
+	template <class T>
+	Holder<T> operator()(const T& iT) const { return Holder<T>(iT); }
+
+	template <class T>
+	Holder<T> operator&(const T& iT) const { return Holder<T>(iT); }
+
+	} sMutablePtr = {};
+
+// =================================================================================================
 // Adopt_T<type> or Adopt_T<type*> indicates to a ZRef (mainly) that it should
 // take ownership of the pointed-to refcounted entity.
 
