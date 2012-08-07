@@ -68,6 +68,7 @@ namespace ZooLib {
 	typedef ZMtxR_Win ZMtxR;
 
 	typedef ZSem_Win ZSem;
+	typedef ZSem_Win ZSemNoTimeout;
 
 #elif ZCONFIG_API_Enabled(Thread_boost)
 

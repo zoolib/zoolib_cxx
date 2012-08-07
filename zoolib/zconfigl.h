@@ -323,7 +323,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Previously we've used 'nil' for the null pointer. With our increasing use of
 // Objective C we're switching to use the soon-to-be standardized nullptr.
 
-#if ZCONFIG_CPP >= 2011
+#if ZCONFIG_CPP >= 2003 // ??
 
 	// nullptr is naturally available
 
