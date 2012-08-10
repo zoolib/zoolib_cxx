@@ -34,6 +34,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
+#if not defined(SOCK_MAXADDRLEN)
+	#define SOCK_MAXADDRLEN (255)
+#endif
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -140,7 +144,9 @@ int ZNet_TCP_Socket::sListen(ip4_addr iLocalAddress, ip_port iLocalPort)
 		SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
 
 	sockaddr_in localSockAddr = {0};
-	localSockAddr.sin_len = sizeof(localSockAddr);
+	#if ZCONFIG_SPI_Enabled(BSD)
+		localSockAddr.sin_len = sizeof(localSockAddr);
+	#endif
 	localSockAddr.sin_family = AF_INET;
 	localSockAddr.sin_port = htons(iLocalPort);
 	localSockAddr.sin_addr.s_addr = htonl(iLocalAddress);
@@ -168,7 +174,9 @@ int ZNet_TCP_Socket::sListen(ip6_addr iLocalAddress, ip_port iLocalPort)
 		SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
 
 	sockaddr_in6 localSockAddr = {0};
-	localSockAddr.sin6_len = sizeof(localSockAddr);
+	#if ZCONFIG_SPI_Enabled(BSD)
+		localSockAddr.sin6_len = sizeof(localSockAddr);
+	#endif
 	localSockAddr.sin6_family = AF_INET6;
 	localSockAddr.sin6_port = htons(iLocalPort);
 	localSockAddr.sin6_addr = *(const struct in6_addr*)(&iLocalAddress);
@@ -367,7 +375,9 @@ static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteH
 	if (iLocalHost || iLocalPort)
 		{
 		sockaddr_in localSockAddr = {0};
-		localSockAddr.sin_len = sizeof(localSockAddr);
+		#if ZCONFIG_SPI_Enabled(BSD)
+			localSockAddr.sin_len = sizeof(localSockAddr);
+		#endif
 		localSockAddr.sin_family = AF_INET;
 		localSockAddr.sin_port = htons(iLocalPort);
 		localSockAddr.sin_addr.s_addr = htonl(iLocalHost);
@@ -380,7 +390,9 @@ static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteH
 		}
 
 	sockaddr_in remoteSockAddr = {0};
-	remoteSockAddr.sin_len = sizeof(remoteSockAddr);
+	#if ZCONFIG_SPI_Enabled(BSD)
+		remoteSockAddr.sin_len = sizeof(remoteSockAddr);
+	#endif
 	remoteSockAddr.sin_family = AF_INET;
 	remoteSockAddr.sin_port = htons(iRemotePort);
 	remoteSockAddr.sin_addr.s_addr = htonl(iRemoteHost);
@@ -400,7 +412,9 @@ static int spConnect6(ip6_addr iRemoteHost, ip_port iRemotePort)
 		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
 
 	sockaddr_in6 remoteSockAddr = {0};
-	remoteSockAddr.sin6_len = sizeof(remoteSockAddr);
+	#if ZCONFIG_SPI_Enabled(BSD)
+		remoteSockAddr.sin6_len = sizeof(remoteSockAddr);
+	#endif
 	remoteSockAddr.sin6_family = AF_INET6;
 	remoteSockAddr.sin6_port = htons(iRemotePort);
 	remoteSockAddr.sin6_addr = *(const struct in6_addr*)(&iRemoteHost);

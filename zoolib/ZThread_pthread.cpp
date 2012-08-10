@@ -87,23 +87,24 @@ void sFree(Key iKey)
 // =================================================================================================
 // MARK: - ZCnd_pthread
 
-bool ZCnd_pthread::pWaitFor(pthread_mutex_t& iMtx, double iTimeout)
+bool ZCnd_pthread::pWaitFor(ZMtx_pthread_base& iMtx, double iTimeout)
 	{
 	if (iTimeout <= 0)
 		return false;
 
 	#if defined(__APPLE__) || defined(__ANDROID__)
 		const timespec the_timespec = { time_t(iTimeout), long(1e9 * fmod(iTimeout, 1.0)) };
-		return 0 == ::pthread_cond_timedwait_relative_np(this, &iMtx, &the_timespec);
+		return 0 == ::pthread_cond_timedwait_relative_np
+			(&f_pthread_cond_t, &iMtx.f_pthread_mutex_t, &the_timespec);
 	#else
 		return this->pWaitUntil(iMtx, ZTime::sSystem() + iTimeout);
 	#endif
 	}
 
-bool ZCnd_pthread::pWaitUntil(pthread_mutex_t& iMtx, ZTime iDeadline)
+bool ZCnd_pthread::pWaitUntil(ZMtx_pthread_base& iMtx, ZTime iDeadline)
 	{
 	const timespec the_timespec = { time_t(iDeadline.fVal), long(1e9 * fmod(iDeadline.fVal, 1.0)) };
-	return 0 == ::pthread_cond_timedwait(this, &iMtx, &the_timespec);
+	return 0 == ::pthread_cond_timedwait(&f_pthread_cond_t, &iMtx.f_pthread_mutex_t, &the_timespec);
 	}
 
 // =================================================================================================
@@ -113,19 +114,19 @@ bool ZCnd_pthread::pWaitUntil(pthread_mutex_t& iMtx, ZTime iDeadline)
 
 ZMtx_pthread_base::~ZMtx_pthread_base()
 	{
-	int result = ::pthread_mutex_destroy(this);
+	int result = ::pthread_mutex_destroy(&f_pthread_mutex_t);
 	ZAssert(result == 0);
 	}
 
 void ZMtx_pthread_base::Acquire()
 	{
-	int result = ::pthread_mutex_lock(this);
+	int result = ::pthread_mutex_lock(&f_pthread_mutex_t);
 	ZAssert(result == 0);
 	}
 
 void ZMtx_pthread_base::Release()
 	{
-	int result = ::pthread_mutex_unlock(this);
+	int result = ::pthread_mutex_unlock(&f_pthread_mutex_t);
 	ZAssert(result == 0);
 	}
 
@@ -141,7 +142,7 @@ ZMtx_pthread::ZMtx_pthread()
 	pthread_mutexattr_t attr;
 	::pthread_mutexattr_init(&attr);
 	::pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK);
-	::pthread_mutex_init(this, &attr);
+	::pthread_mutex_init(&f_pthread_mutex_t, &attr);
 	::pthread_mutexattr_destroy(&attr);
 	}
 
@@ -155,7 +156,7 @@ ZMtxR_pthread::ZMtxR_pthread()
 	pthread_mutexattr_t attr;
 	::pthread_mutexattr_init(&attr);
 	::pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-	int result = ::pthread_mutex_init(this, &attr);
+	int result = ::pthread_mutex_init(&f_pthread_mutex_t, &attr);
 	::pthread_mutexattr_destroy(&attr);
 
 	ZAssert(result == 0);

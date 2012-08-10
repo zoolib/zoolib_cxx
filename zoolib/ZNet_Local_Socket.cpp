@@ -30,6 +30,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sys/stat.h> // For chmod
 #include <sys/un.h>
 
+#if not defined(SOCK_MAXADDRLEN)
+	#define SOCK_MAXADDRLEN (255)
+#endif
+
 namespace ZooLib {
 
 using std::string;
@@ -158,7 +162,9 @@ ZNetListener_Local_Socket::ZNetListener_Local_Socket(int iSocketFD, const IKnowW
 static int spListen(const string& iPath)
 	{
 	sockaddr_un localSockAddr = {0};
-	localSockAddr.sun_len = sizeof(sockaddr_un);
+	#if ZCONFIG_SPI_Enabled(BSD)
+		localSockAddr.sun_len = sizeof(sockaddr_un);
+	#endif
 
 	if (iPath.empty() || iPath.length() >= sizeof(localSockAddr.sun_path))
 		throw ZNetEx(ZNet::errorGeneric);
@@ -227,7 +233,9 @@ static int spConnect(const string& iPath)
 		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
 
 	sockaddr_un remoteSockAddr = {0};
-	remoteSockAddr.sun_len = sizeof(remoteSockAddr);
+	#if ZCONFIG_SPI_Enabled(BSD)
+		remoteSockAddr.sun_len = sizeof(remoteSockAddr);
+	#endif
 	remoteSockAddr.sun_family = AF_LOCAL;
 	strcpy(remoteSockAddr.sun_path, iPath.c_str());
 

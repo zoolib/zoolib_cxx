@@ -53,6 +53,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <unistd.h>
 
 #if ZCONFIG_SPI_Enabled(Linux)
+	#include <stdio.h>
 #elif ZCONFIG_SPI_Enabled(MacOSX)
 	#include <mach-o/dyld.h>
 #else
