@@ -18,16 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZAtomic.h"
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompat_String.h"
-#include "zoolib/ZDeleter.h"
 #include "zoolib/ZDebug.h"
-
-#include <map>
-
-using std::map;
-using std::pair;
+#include "zoolib/ZSingleton.h"
+#include "zoolib/ZUtil_STL_map.h"
 
 namespace ZooLib {
 
@@ -43,11 +38,7 @@ public:
 		{ return strcmp(iL, iR) < 0; }
 	};
 
-typedef map<const char*, ZCompare*, Functor_CompareCharStars> CompareMap;
-
-CompareMap* spMap;
-
-ZDeleter<CompareMap> spDeleter(spMap);
+typedef std::map<const char*, ZCompare*, Functor_CompareCharStars> CompareMap;
 
 } // anonymous namespace
 
@@ -56,15 +47,7 @@ ZDeleter<CompareMap> spDeleter(spMap);
 
 ZCompare::ZCompare(const char* iTypeName)
 :	fTypeName(iTypeName)
-	{
-	if (not spMap)
-		{
-		CompareMap* theMap = new CompareMap;
-		if (not sAtomic_CASPtr(&spMap, nullptr, theMap))
-			delete theMap;
-		}
-	spMap->insert(pair<const char*, ZCompare*>(iTypeName, this));
-	}
+	{ ZUtil_STL::sInsertMust(ZSingleton<CompareMap>::sGet(), iTypeName, this); }
 
 ZCompare::~ZCompare()
 	{}
@@ -77,11 +60,8 @@ int ZCompare::Compare(const void* iL, const void* iR)
 
 int ZCompare::sCompare(const char* iTypeName, const void* iL, const void* iR)
 	{
-	ZAssert(spMap);
-
-	CompareMap::iterator ii = spMap->find(iTypeName);
-	if (ii != spMap->end())
-		return ii->second->Compare(iL, iR);
+	if (ZQ<ZCompare*> theQ = ZUtil_STL::sQGet(ZSingleton<CompareMap>::sGet(),iTypeName))
+		return (*theQ)->Compare(iL, iR);
 
 	ZDebugStopf(0, ("ZCompare::sCompare called on unsupported type '%s'", iTypeName));
 	return iL < iR ? -1 : iL > iR ? 1 : 0;
