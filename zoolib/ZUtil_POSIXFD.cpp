@@ -87,7 +87,7 @@ bool sWaitReadable(int iFD, double iTimeout)
 	thePollFD.fd = iFD;
 	thePollFD.events = POLLIN | POLLPRI;
 	thePollFD.revents = 0;
-	return 0 < ::poll(&thePollFD, 1, 1000 * int(sMin(3600, iTimeout)));
+	return 0 < ::poll(&thePollFD, 1, 1000 * sMin<int>(3600, iTimeout));
 	}
 
 void sWaitWriteable(int iFD)
