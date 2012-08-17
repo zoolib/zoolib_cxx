@@ -250,7 +250,7 @@ void Manager_OSXUSB::Finalize()
 
 void Manager_OSXUSB::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 	{
-	ZGuardRMtxR locker(fMutex);
+	ZGuardMtxR locker(fMutex);
 	const ZTime atMostThis = ZTime::sSystem();
 	for (vector<Device_t>::iterator i = fDevices.begin(); i != fDevices.end(); ++i)
 		{
@@ -332,7 +332,7 @@ static bool spGetPipeRefs
 
 ZRef<Device> Manager_OSXUSB::Open(uint64 iDeviceID)
 	{
-	ZGuardRMtxR locker(fMutex);
+	ZGuardMtxR locker(fMutex);
 	for (vector<Device_t>::iterator i = fDevices.begin(); i != fDevices.end(); ++i)
 		{
 		if (i->fID == iDeviceID)
@@ -416,7 +416,7 @@ void Manager_OSXUSB::pDeviceAttached(ZRef<ZUSBDevice> iUSBDevice)
 		return;
 		}
 
-	ZGuardRMtxR locker(fMutex);
+	ZGuardMtxR locker(fMutex);
 	Device_t theD;
 	theD.fID = fNextID++;
 	theD.fUSBDevice = iUSBDevice;
@@ -448,7 +448,7 @@ void Manager_OSXUSB::pDeviceDetached(ZRef<ZUSBDevice> iUSBDevice)
 	{
 	ZLOGFUNCTION(eDebug);
 
-	ZGuardRMtxR locker(fMutex);
+	ZGuardMtxR locker(fMutex);
 	bool gotIt = false;
 	for (vector<Device_t>::iterator i = fDevices.begin(); i != fDevices.end(); ++i)
 		{
