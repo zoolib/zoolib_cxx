@@ -150,7 +150,7 @@ ZCountedBase::WeakRefProxy::WeakRefProxy(ZCountedBase* iCountedBase)
 	{}
 
 ZCountedBase::WeakRefProxy::~WeakRefProxy()
-	{ ZAssertStop(1, !fCountedBase); }
+	{ ZAssertStop(1, not fCountedBase); }
 
 ZRef<ZCountedBase> ZCountedBase::WeakRefProxy::pGetCountedBase()
 	{

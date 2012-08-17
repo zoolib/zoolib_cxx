@@ -154,7 +154,7 @@ public:
 	template <class O>
 	ZWeakRef(const ZWeakRef<O>& iOther)
 	:	ZWeakRefBase(iOther)
-		{}
+		{ (void)static_cast<T*>(static_cast<O*>(0)); }
 
 	template <class O>
 	ZWeakRef& operator=(const ZWeakRef<O>& iOther)
@@ -203,17 +203,13 @@ public:
 		{ return ZWeakRefBase::pGetWeakRefProxy(); }
 
 	ZRef<T> Get() const
-		{
-		ZRef<ZCountedBase> theCB = ZWeakRefBase::pGet();
-		return theCB.DynamicCast<T>();
-		}
+		{ return ZWeakRefBase::pGet().template DynamicCast<T>(); }
 
 	template <class O, bool Sense>
 	operator ZRef<O,Sense>() const
 		{
 		(void)static_cast<T*>(static_cast<O*>(0));
-		ZRef<ZCountedBase> theCB = ZWeakRefBase::pGet();
-		return theCB.DynamicCast<O>();
+		return ZWeakRefBase::pGet().template DynamicCast<O>();
 		}
 
 	bool operator==(const ZWeakRef& iOther) const
