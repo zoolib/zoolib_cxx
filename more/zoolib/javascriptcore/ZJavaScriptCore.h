@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZCounted.h"
+#include "zoolib/ZThreadVal.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZValAccessors.h"
 
@@ -39,19 +40,11 @@ class ObjectImp;
 class ObjectRef;
 
 // =================================================================================================
-// MARK: - ZJavaScriptCore::ContextRefSetter
+// MARK: -
 
 JSContextRef sCurrentContextRef();
 
-class ContextRefSetter
-	{
-public:
-	ContextRefSetter(JSContextRef iJSContextRef);
-	~ContextRefSetter();
-
-private:
-	JSContextRef fJSContextRef_Prior;
-	};
+typedef ZThreadVal<JSContextRef,struct Tag_CurrentContextRef> ThreadVal_CurrentContextRef;
 
 // =================================================================================================
 // MARK: - ZJavaScriptCore::ContextRef

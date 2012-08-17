@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/javascriptcore/ZJavaScriptCore.h"
 
-#include "zoolib/ZThread.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZVal_Any.h"
@@ -34,88 +33,52 @@ using std::string;
 // MARK: - ZRef support
 
 template <>
-void sRetain_T(JSPropertyNameArrayRef& iRef)
-	{
-	if (iRef)
-		::JSPropertyNameArrayRetain(iRef);
-	}
+void sRetain_T(JSPropertyNameArrayRef& ioRef)
+	{ ::JSPropertyNameArrayRetain(ioRef); }
 
 template <>
 void sRelease_T(JSPropertyNameArrayRef iRef)
-	{
-	if (iRef)
-		::JSPropertyNameArrayRelease(iRef);
-	}
+	{ ::JSPropertyNameArrayRelease(iRef); }
 
 template <>
-void sRetain_T(JSStringRef& iRef)
-	{
-	if (iRef)
-		::JSStringRetain(iRef);
-	}
+void sRetain_T(JSStringRef& ioRef)
+	{ ::JSStringRetain(ioRef); }
 
 template <>
 void sRelease_T(JSStringRef iRef)
-	{
-	if (iRef)
-		::JSStringRelease(iRef);
-	}
+	{ ::JSStringRelease(iRef); }
 
 template <>
-void sRetain_T(JSClassRef& iRef)
-	{
-	if (iRef)
-		::JSClassRetain(iRef);
-	}
+void sRetain_T(JSClassRef& ioRef)
+	{ ::JSClassRetain(ioRef); }
 
 template <>
 void sRelease_T(JSClassRef iRef)
-	{
-	if (iRef)
-		::JSClassRelease(iRef);
-	}
+	{ ::JSClassRelease(iRef); }
 
 template <>
-void sRetain_T(JSGlobalContextRef& iRef)
-	{
-	if (iRef)
-		::JSGlobalContextRetain(iRef);
-	}
+void sRetain_T(JSGlobalContextRef& ioRef)
+	{ ::JSGlobalContextRetain(ioRef); }
 
 template <>
 void sRelease_T(JSGlobalContextRef iRef)
-	{
-	if (iRef)
-		::JSGlobalContextRelease(iRef);
-	}
+	{ ::JSGlobalContextRelease(iRef); }
 
 template <>
-void sRetain_T(JSValueRef& iRef)
-	{
-	if (iRef)
-		::JSValueProtect(ZJavaScriptCore::sCurrentContextRef(), iRef);
-	}
+void sRetain_T(JSValueRef& ioRef)
+	{ ::JSValueProtect(ZJavaScriptCore::sCurrentContextRef(), ioRef); }
 
 template <>
 void sRelease_T(JSValueRef iRef)
-	{
-	if (iRef)
-		::JSValueUnprotect(ZJavaScriptCore::sCurrentContextRef(), iRef);
-	}
+	{ ::JSValueUnprotect(ZJavaScriptCore::sCurrentContextRef(), iRef); }
 
 template <>
-void sRetain_T(JSObjectRef& iRef)
-	{
-	if (iRef)
-		::JSValueProtect(ZJavaScriptCore::sCurrentContextRef(), iRef);
-	}
+void sRetain_T(JSObjectRef& ioRef)
+	{ ::JSValueProtect(ZJavaScriptCore::sCurrentContextRef(), ioRef); }
 
 template <>
 void sRelease_T(JSObjectRef iRef)
-	{
-	if (iRef)
-		::JSValueUnprotect(ZJavaScriptCore::sCurrentContextRef(), iRef);
-	}
+	{ ::JSValueUnprotect(ZJavaScriptCore::sCurrentContextRef(), iRef); }
 
 // =================================================================================================
 // MARK: - ZJavaScriptCore
@@ -145,28 +108,10 @@ static string16 spAsString16(JSStringRef iRef)
 	}
 
 // =================================================================================================
-// MARK: - ZJavaScriptCore::ContextRefSetter
-
-static ZTSS::Key spContextRefKey = ZTSS::sCreate();
-
-static JSContextRef spCurrentContextRef()
-	{ return static_cast<JSContextRef>(ZTSS::sGet(spContextRefKey)); }
+// MARK: - ZJavaScriptCore::sCurrentContextRef
 
 JSContextRef sCurrentContextRef()
-	{
-	JSContextRef theCR = spCurrentContextRef();
-	ZAssert(theCR);
-	return theCR;
-	}
-
-ContextRefSetter::ContextRefSetter(JSContextRef iJSContextRef)
-	{
-	fJSContextRef_Prior = spCurrentContextRef();
-	ZTSS::sSet(spContextRefKey, iJSContextRef);
-	}
-
-ContextRefSetter::~ContextRefSetter()
-	{ ZTSS::sSet(spContextRefKey, fJSContextRef_Prior); }
+	{ return ThreadVal_CurrentContextRef::sGet(); }
 
 // =================================================================================================
 // MARK: - ZJavaScriptCore::ContextRef::Rep
@@ -771,7 +716,7 @@ Value ObjectImp::CallAsFunction(const ObjectRef& iFunction, const ObjectRef& iTh
 
 void ObjectImp::spInitialize(JSContextRef ctx, JSObjectRef object)
 	{
-	ContextRefSetter cs(ctx);
+	ThreadVal_CurrentContextRef tv(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		fun->Initialize(ctx, object);
 	}
@@ -779,14 +724,14 @@ void ObjectImp::spInitialize(JSContextRef ctx, JSObjectRef object)
 void ObjectImp::spFinalize(JSObjectRef object)
 	{
 	// Hmm -- pretend there's no current context.
-	ContextRefSetter cs(nullptr);
+	ThreadVal_CurrentContextRef tv(nullptr);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		fun->Finalize(object);
 	}
 
 bool ObjectImp::spHasProperty(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName)
 	{
-	ContextRefSetter cs(ctx);
+	ThreadVal_CurrentContextRef tv(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		return fun->HasProperty(ObjectRef(object), String(propertyName));
 
@@ -796,7 +741,7 @@ bool ObjectImp::spHasProperty(JSContextRef ctx, JSObjectRef object, JSStringRef 
 JSValueRef ObjectImp::spGetProperty(JSContextRef ctx,
 	JSObjectRef object, JSStringRef propertyName, JSValueRef* exception)
 	{
-	ContextRefSetter cs(ctx);
+	ThreadVal_CurrentContextRef tv(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		{
 		Value ex;
@@ -814,7 +759,7 @@ JSValueRef ObjectImp::spGetProperty(JSContextRef ctx,
 bool ObjectImp::spSetProperty(JSContextRef ctx,
 	JSObjectRef object, JSStringRef propertyName, JSValueRef value, JSValueRef* exception)
 	{
-	ContextRefSetter cs(ctx);
+	ThreadVal_CurrentContextRef tv(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		{
 		Value ex;
@@ -832,7 +777,7 @@ bool ObjectImp::spSetProperty(JSContextRef ctx,
 void ObjectImp::spGetPropertyNames(JSContextRef ctx,
 	JSObjectRef object, JSPropertyNameAccumulatorRef propertyNames)
 	{
-	ContextRefSetter cs(ctx);
+	ThreadVal_CurrentContextRef tv(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		fun->GetPropertyNames(ObjectRef(object), propertyNames);
 	}
@@ -841,7 +786,7 @@ JSValueRef ObjectImp::spCallAsFunction(JSContextRef ctx,
 	JSObjectRef function, JSObjectRef thisObject,
 	size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception)
 	{
-	ContextRefSetter cs(ctx);
+	ThreadVal_CurrentContextRef tv(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(function))
 		{
 		Value ex;
