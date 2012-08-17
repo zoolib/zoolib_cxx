@@ -331,17 +331,11 @@ using std::pair;
 
 template <>
 void sRetain_T(struct ASZByteRun*& ioString)
-	{
-	if (ioString)
-		spASZString->AddRef(ioString);
-	}
+	{ spASZString->AddRef(ioString); }
 
 template <>
 void sRelease_T(struct ASZByteRun* iString)
-	{
-	if (iString)
-		spASZString->Release(iString);
-	}
+	{ spASZString->Release(iString); }
 
 // =================================================================================================
 // MARK: - ZPhotoshop

@@ -28,8 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define ZMACRO_Retain_Release(a) \
 	namespace ZooLib { \
-	template <> void sRetain_T(a& ioRef) { if (ioRef) ::CFRetain(ioRef); } \
-	template <> void sRelease_T(a iRef) { if (iRef) ::CFRelease(iRef); } \
+	template <> void sRetain_T(a& ioRef) { ::CFRetain(ioRef); } \
+	template <> void sRelease_T(a iRef) { ::CFRelease(iRef); } \
 	} // namespace ZooLib
 
 // =================================================================================================
