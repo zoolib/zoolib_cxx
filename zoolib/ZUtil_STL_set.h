@@ -78,7 +78,7 @@ bool sQInsert(std::set<Base,Comparator>& ioSet, const Derived& iElement)
 
 template <typename Base, typename Comparator, typename Derived>
 void sInsert(std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{ ioSet.insert(iElement).second; }
+	{ ioSet.insert(iElement); }
 
 // =================================================================================================
 // MARK: - sXXXMust
