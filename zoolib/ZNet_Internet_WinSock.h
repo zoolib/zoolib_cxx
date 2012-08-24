@@ -32,6 +32,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_API_Desired__Net_Internet_WinSock 1
 #endif
 
+#if ZCONFIG_API_Enabled(Net_Internet_WinSock)
+
+// -----
+// Maddening crud to be able to reference winsock2 stuff
+#ifndef NOMINMAX
+#	define NOMINMAX
+#endif
+#include <winsock2.h>
+#include "zoolib/ZCompat_Win.h"
+#include <ws2tcpip.h>
+// -----
+
+#endif //  ZCONFIG_API_Enabled(Net_Internet_WinSock)
+
 #include "zoolib/ZNet_Internet.h"
 
 #if ZCONFIG_API_Enabled(Net_Internet_WinSock)
@@ -40,8 +54,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ZMACRO_MSVCStaticLib_Reference(Net_Internet_WinSock)
 
 #include <vector>
-
-#include <winsock.h>
 
 namespace ZooLib {
 
