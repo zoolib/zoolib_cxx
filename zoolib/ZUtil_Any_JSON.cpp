@@ -19,13 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStrimmer_Streamer.h"
-#include "zoolib/ZStrimU_Std.h"
+#include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimU_Unreader.h"
 #include "zoolib/ZUtil_Any_JSON.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_JSON.h"
-
-using std::string;
 
 // =================================================================================================
 // MARK: -
@@ -49,18 +47,10 @@ ZQ<ZVal_Any> sQRead(const ZRef<ZStrimmerU>& iSU)
 	}
 
 ZQ<ZVal_Any> sQRead(const ZRef<ZStrimmerR>& iSR)
-	{
-	if (iSR)
-		return sQRead(ZRef<ZStrimmerU>(new ZStrimmerU_FT<ZStrimU_Unreader>(iSR)));
-	return null;
-	}
+	{ return sQRead(ZRef<ZStrimmerU>(sStrimmerU_FT<ZStrimU_Unreader>(iSR))); }
 
 ZQ<ZVal_Any> sQRead(const ZRef<ZStreamerR>& iSR)
-	{
-	if (iSR)
-		return sQRead(new ZStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(iSR));
-	return null;
-	}
+	{ return sQRead(ZRef<ZStrimmerR>(sStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(iSR))); }
 
 void sWrite(const ZVal_Any& iVal, const ZStrimW& iStrimW)
 	{ ZYad_JSON::sToStrim(sYadR(iVal), iStrimW); }
