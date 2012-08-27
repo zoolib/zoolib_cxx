@@ -72,7 +72,7 @@ ZQ<ip4_addr> ZNetAddress_IP4::sFromString(const std::string& iString)
 
 std::string ZNetAddress_IP4::sAsString(ip4_addr iAddr)
 	{
-	return ZStringf("%d.%d.%d.%d",
+	return sStringf("%d.%d.%d.%d",
 		int((iAddr >> 24) & 0xFF),
 		int((iAddr >> 16) & 0xFF),
 		int((iAddr >> 8) & 0xFF),
@@ -114,7 +114,7 @@ ZNetName_Internet::~ZNetName_Internet()
 	{}
 
 string ZNetName_Internet::AsString() const
-	{ return fName + ZStringf(":%d", fPort); }
+	{ return fName + sStringf(":%d", fPort); }
 
 ZRef<ZNetNameLookup> ZNetName_Internet::CreateLookup(size_t iMaxAddresses) const
 	{
