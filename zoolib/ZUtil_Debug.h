@@ -23,8 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZLog.h"
-#include "zoolib/ZStackCrawl.h"
-#include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrimmer.h"
 
 namespace ZooLib {
@@ -33,45 +31,13 @@ namespace ZUtil_Debug {
 // =================================================================================================
 // MARK: - ZUtil_Debug
 
-#if ZCONFIG_API_Enabled(StackCrawl)
-	void sDumpStackCrawl(const ZStackCrawl& iCrawl, const ZStrimW& s);
-#endif
-
-class LogMeister : public ZLog::LogMeister
-	{
-public:
-	LogMeister();
-
-// From ZLog::LogMeister
-	virtual bool Enabled(ZLog::EPriority iPriority, const std::string& iName);
-	virtual bool Enabled(ZLog::EPriority iPriority, const char* iName);
-	virtual void LogIt
-		(ZLog::EPriority iPriority, const std::string& iName, const std::string& iMessage);
-
-// Our protocol
-	void SetStrimmer(ZRef<ZStrimmerW> iStrimmerW);
-
-	void SetLogPriority(ZLog::EPriority iLogPriority);
-	ZLog::EPriority GetLogPriority();
-
-	static LogMeister* sLogMeister;
-
-private:
-	ZRef<ZStrimmerW> fStrimmerW;
-	ZLog::EPriority fLogPriority;
-	size_t fExtraSpace;
-	};
-
 void sInstall();
 
 void sSetStrimmer(ZRef<ZStrimmerW> iStrimmerW);
 
 void sSetLogPriority(ZLog::EPriority iLogPriority);
+
 ZLog::EPriority sGetLogPriority();
-
-ZRef<ZStreamerW> sOpenStreamerW(const std::string& iPath);
-
-ZRef<ZStrimmerW> sOpenStrimmerW(const std::string& iPath);
 
 } // namespace ZUtil_Debug
 } // namespace ZooLib

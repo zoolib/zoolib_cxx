@@ -23,7 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFile.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZSafe.h"
 #include "zoolib/ZStream_POSIX.h"
+#include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZStringf.h"
@@ -49,82 +51,9 @@ using std::min;
 using std::string;
 
 // =================================================================================================
-// MARK: - ZUtil_Debug::sDumpStackCrawl
+// MARK: - ZDebug and ZAssert handler (anonymous)
 
-#if ZCONFIG_API_Enabled(StackCrawl)
-
-void sDumpStackCrawl(const ZStackCrawl& iCrawl, const ZStrimW& s)
-	{
-	for (size_t x = 0; x < iCrawl.Count(); ++x)
-		{
-		const ZStackCrawl::Frame theFrame = iCrawl.At(x);
-		s.Writef("#%3d, 0x%08X: ", x, reinterpret_cast<int>(theFrame.fPC));
-
-		s << theFrame.fName;
-
-		if (theFrame.fOffset)
-			{
-			if (theFrame.fOffset > 9)
-				s.Writef("+0x%X {%u}", theFrame.fOffset, theFrame.fOffset);
-			else
-				s.Writef("+%u", theFrame.fOffset);
-			}
-
-		if (theFrame.fCountParams)
-			{
-			s << " (";
-			for (size_t y = 0; y < theFrame.fCountParams; ++y)
-				{
-				if (y)
-					s << ", ";
-				if (theFrame.fParams[y] > 9)
-					s.Writef("0x%X {%u}", theFrame.fParams[y], theFrame.fParams[y]);
-				else
-					s.Writef("%u", theFrame.fParams[y]);
-				}
-			s << ")";
-			}
-		s << "\n";
-		}
-	}
-
-#endif // ZCONFIG_API_Enabled(StackCrawl)
-
-// =================================================================================================
-// MARK: - Sync signal handler
-
-#if ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)
-
-static bool spHandlingFatal;
-static void spHandleSignal_Sync(int inSignal)
-	{
-	switch (inSignal)
-		{
-		case SIGSEGV:
-		case SIGBUS:
-			{
-			if (not spHandlingFatal)
-				{
-				spHandlingFatal = true;
-				ZLog::S s(ZLog::ePriority_Crit, "ZUtil_Debug");
-				if (inSignal == SIGSEGV)
-					s << "SIGSEGV";
-				else
-					s << "SIGBUS";
-
-				s << " in frame #4 below:\n";
-				ZStackCrawl theCrawl;
-				sDumpStackCrawl(theCrawl, s);
-				}
-			abort();
-			}
-		}
-	}
-
-#endif // ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)
-
-// =================================================================================================
-// MARK: - ZDebug and ZAssert handler
+namespace { // anonymous
 
 static void spHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 	{
@@ -144,27 +73,15 @@ static void spHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 
 	if (iParams.fStop)
 		{
-		#if ZCONFIG_API_Enabled(StackCrawl)
-			ZStackCrawl theCrawl;
-			sDumpStackCrawl(theCrawl, s);
-		#endif
 		s.Emit();
 
-		if (ZCONFIG_API_Enabled(StackCrawl))
-			{
-			// We have stack crawls, so just abort the process.
-			abort();
-			}
-		else
-			{
-			// We don't have stack crawls, which means we're probably
-			// on MacOS X. If we force a segfault then the Crash Reporter
-			// will dump out stacks for us.
-			// From ADC Home > Reference Library > Guides > Tools >
-			// Xcode > Xcode 2.3 User Guide > Controlling Execution of Your Code >
-			//asm {trap};
-			*reinterpret_cast<double*>(1) = 0;
-			}
+		// We don't have stack crawls, which means we're probably
+		// on MacOS X. If we force a segfault then the Crash Reporter
+		// will dump out stacks for us.
+		// From ADC Home > Reference Library > Guides > Tools >
+		// Xcode > Xcode 2.3 User Guide > Controlling Execution of Your Code >
+		//asm {trap};
+		*reinterpret_cast<double*>(1) = 0;
 		}
 	}
 
@@ -179,84 +96,93 @@ public:
 		}
 	};
 
+} // anonymous namespace
+
 // =================================================================================================
-// MARK: - ZUtil_Debug::LogMeister
+// MARK: - LogMeister (anonymous)
 
-LogMeister* LogMeister::sLogMeister;
+namespace { // anonymous
 
-LogMeister::LogMeister()
-:	fLogPriority(ZLog::ePriority_Notice),
-	fExtraSpace(20)
+class LogMeister : public ZLog::LogMeister
 	{
-	sLogMeister = this;
-	}
+public:
+	LogMeister()
+	:	fLogPriority(ZLog::ePriority_Notice)
+	,	fExtraSpace(20)
+		{}
 
-bool LogMeister::Enabled(ZLog::EPriority iPriority, const string& iName)
-	{ return iPriority <= fLogPriority; }
+// From ZLog::LogMeister
+	virtual bool Enabled(ZLog::EPriority iPriority, const std::string& iName)
+		{ return iPriority <= fLogPriority; }
 
-bool LogMeister::Enabled(ZLog::EPriority iPriority, const char* iName)
-	{ return iPriority <= fLogPriority; }
+	virtual bool Enabled(ZLog::EPriority iPriority, const char* iName)
+		{ return iPriority <= fLogPriority; }
 
-void LogMeister::LogIt
-	(ZLog::EPriority iPriority, const string& iName, const string& iMessage)
-	{
-	if (iPriority > fLogPriority)
-		return;
+	virtual void LogIt
+		(ZLog::EPriority iPriority, const std::string& iName, const std::string& iMessage)
+		{
+		if (iPriority > fLogPriority)
+			return;
 
-	ZRef<ZStrimmerW> theStrimmerW = fStrimmerW;
-	if (not theStrimmerW)
-		return;
+		ZRef<ZStrimmerW> theStrimmerW = fStrimmerW;
+		if (not theStrimmerW)
+			return;
 
-	const ZStrimW& theStrimW = theStrimmerW->GetStrimW();
+		const ZStrimW& theStrimW = theStrimmerW->GetStrimW();
 
-	ZTime now = ZTime::sNow();
+		ZTime now = ZTime::sNow();
 
-	const size_t curLength = ZUnicode::sCUToCP(iName.begin(), iName.end());
-//	if (fExtraSpace < curLength)
-//		fExtraSpace = curLength;
+		const size_t curLength = ZUnicode::sCUToCP(iName.begin(), iName.end());
+	//	if (fExtraSpace < curLength)
+	//		fExtraSpace = curLength;
 
-	// extraSpace will ensure that the message text from multiple calls lines
-	// up, so long as iName is 20 CPs or less in length.
-	string extraSpace(fExtraSpace - min(fExtraSpace, curLength), ' ');
+		// extraSpace will ensure that the message text from multiple calls lines
+		// up, so long as iName is 20 CPs or less in length.
+		string extraSpace(fExtraSpace - min(fExtraSpace, curLength), ' ');
 
-	theStrimW << ZUtil_Time::sAsString_ISO8601_us(now, false);
-	#if __MACH__
-		// GDB on Mac uses the mach thread ID for the systag.
-		theStrimW << sStringf(" %5x/", ((int)mach_thread_self()));
-	#else
-		theStrimW << " 0x";
-	#endif
+		theStrimW << ZUtil_Time::sAsString_ISO8601_us(now, false);
+		#if __MACH__
+			// GDB on Mac uses the mach thread ID for the systag.
+			theStrimW << sStringf(" %5x/", ((int)mach_thread_self()));
+		#else
+			theStrimW << " 0x";
+		#endif
 
-	if (sizeof(ZThread::ID) > 4)
-		theStrimW << sStringf("%016llX", (uint64)ZThread::sID());
-	else
-		theStrimW << sStringf("%08llX", (uint64)ZThread::sID());
+		if (sizeof(ZThread::ID) > 4)
+			theStrimW << sStringf("%016llX", (uint64)ZThread::sID());
+		else
+			theStrimW << sStringf("%08llX", (uint64)ZThread::sID());
 
-	theStrimW
-		<< " P" << sStringf("%X", iPriority)
-		<< " " << extraSpace << iName
-		<< " - " << iMessage << "\n";
+		theStrimW
+			<< " P" << sStringf("%X", iPriority)
+			<< " " << extraSpace << iName
+			<< " - " << iMessage << "\n";
 
-	theStrimW.Flush();
-	}
+		theStrimW.Flush();
+		}
 
-void LogMeister::SetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
-	{
-	fStrimmerW = iStrimmerW;
-	}
+// Our protocol
+	void SetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
+		{ fStrimmerW = iStrimmerW; }
 
-void LogMeister::SetLogPriority(ZLog::EPriority iLogPriority)
-	{
-	fLogPriority = iLogPriority;
-	}
+	void SetLogPriority(ZLog::EPriority iLogPriority)
+		{ fLogPriority = iLogPriority; }
 
-ZLog::EPriority LogMeister::GetLogPriority()
-	{
-	return fLogPriority;
-	}
+	ZLog::EPriority GetLogPriority()
+		{ return fLogPriority; }
+
+private:
+	ZSafe<ZRef<ZStrimmerW> > fStrimmerW;
+	ZLog::EPriority fLogPriority;
+	size_t fExtraSpace;
+	};
+
+} // anonymous namespace
 
 // =================================================================================================
 // MARK: - ZUtil_Debug
+
+static LogMeister* spLogMeister;
 
 void sInstall()
 	{
@@ -265,7 +191,12 @@ void sInstall()
 		static DebugFunction theDF;
 		}
 
-	ZLog::sSetLogMeister(new LogMeister);
+	spLogMeister = new LogMeister;
+
+	ZLog::sSetLogMeister(spLogMeister);
+
+	spLogMeister->SetStrimmer
+		(sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(stdout)));
 
 	#if ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)
 		// Install the sync handler only if we're on POSIX and
@@ -287,46 +218,21 @@ void sInstall()
 
 void sSetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
 	{
-	if (LogMeister::sLogMeister)
-		LogMeister::sLogMeister->SetStrimmer(iStrimmerW);
+	if (spLogMeister)
+		spLogMeister->SetStrimmer(iStrimmerW);
 	}
 
 void sSetLogPriority(ZLog::EPriority iLogPriority)
 	{
-	if (LogMeister::sLogMeister)
-		LogMeister::sLogMeister->SetLogPriority(iLogPriority);
+	if (spLogMeister)
+		spLogMeister->SetLogPriority(iLogPriority);
 	}
 
 ZLog::EPriority sGetLogPriority()
 	{
-	if (LogMeister::sLogMeister)
-		return LogMeister::sLogMeister->GetLogPriority();
+	if (spLogMeister)
+		return spLogMeister->GetLogPriority();
 	return 0xFF;
-	}
-
-ZRef<ZStreamerW> sOpenStreamerW(const std::string& iPath)
-	{
-	if (iPath == "-")
-		{
-		return new ZStreamerW_T<ZStreamW_FILE>(stdout);
-		}
-	else if (ZRef<ZStreamerWPos> amerWPos = ZFileSpec(iPath).CreateWPos(true, false))
-		{
-		const ZStreamWPos& amWPos = amerWPos->GetStreamWPos();
-		amWPos.SetPosition(amWPos.GetSize());
-		return amerWPos;
-		}
-	else
-		{
-		return null;
-		}
-	}
-
-ZRef<ZStrimmerW> sOpenStrimmerW(const std::string& iPath)
-	{
-	if (ZRef<ZStreamerW> amerW = sOpenStreamerW(iPath))
-		return new ZStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(amerW);
-	return null;
 	}
 
 } // namespace ZUtil_Debug
