@@ -43,7 +43,7 @@ ZQ<ZVal_Any> sQRead(const ZRef<ZStrimmerU>& iSU)
 		theRO.fAllowSemiColons = true;
 		theRO.fAllowTerminators = true;
 		theRO.fLooseSeparators = true;
-		return sFromYadR(ZVal_Any(), sYadR(iSU, theRO)).QGet<ZMap_Any>();
+		return ZYad_Any::sQFromYadR(sYadR(iSU, theRO));
 		}
 	return null;
 	}
