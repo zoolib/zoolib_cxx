@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTypes.h"
 
@@ -493,7 +493,7 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 		}
 
 	if (theKind.empty())
-		theKind = ZStringf("%u", iEK);
+		theKind = sStringf("%u", iEK);
 
 	return theClass + "/" + theKind;
 	}

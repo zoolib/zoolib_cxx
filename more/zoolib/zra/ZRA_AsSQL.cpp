@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStrim_Escaped.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
 #include "zoolib/ZUtil_Strim.h"
@@ -120,7 +120,7 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	const string8 realTableName = found.Get()->first;
 	const string8 realTableNameUnderscore = realTableName + "_";
 	const int numericSuffix = fTablesUsed[realTableName]++;
-	const string8 usedTableName = realTableName + ZStringf("%d", numericSuffix);
+	const string8 usedTableName = realTableName + sStringf("%d", numericSuffix);
 	const string8 usedTableNameDot = usedTableName + ".";
 
 	Analysis theAnalysis;
@@ -515,7 +515,7 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 				if (not isFirst)
 					s << ",";
 				isFirst = false;
-				s << i->first << " AS " << i->first << ZStringf("%d", x);
+				s << i->first << " AS " << i->first << sStringf("%d", x);
 				}
 			}
 		}

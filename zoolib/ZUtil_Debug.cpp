@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_POSIX.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimmer_Streamer.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUnicode.h"

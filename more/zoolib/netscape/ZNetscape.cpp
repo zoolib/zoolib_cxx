@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZNetscape.h"
 
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 
 #include <cstring>
 
@@ -113,7 +113,7 @@ string sAsString(NPNVariable iVar)
 		default:
 			break;
 		}
-	return ZStringf("NPNVariable=%d", iVar);
+	return sStringf("NPNVariable=%d", iVar);
 	}
 
 string sAsString(NPPVariable iVar)
@@ -140,7 +140,7 @@ string sAsString(NPPVariable iVar)
 		default:
 			break;
 		}
-	return ZStringf("NPPVariable=%d", iVar);
+	return sStringf("NPPVariable=%d", iVar);
 	}
 
 #undef CASE

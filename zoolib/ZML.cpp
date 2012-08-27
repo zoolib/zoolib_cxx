@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZML.h"
 #include "zoolib/ZStrimR_Boundary.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZMemory.h"
@@ -1183,7 +1183,7 @@ const StrimW& StrimW::Attr(const string8& iName, const UTF8* iValue) const
 
 const StrimW& StrimW::Attr(const string8& iName, int iValue) const
 	{
-	string8 theValue = ZStringf("%d", iValue);
+	string8 theValue = sStringf("%d", iValue);
 	const_cast<StrimW*>(this)->pAttr(iName, new string8(theValue));
 
 	return *this;
@@ -1193,7 +1193,7 @@ const StrimW& StrimW::Attrf(const string8& iName, const UTF8* iValue, ...) const
 	{
 	va_list args;
 	va_start(args, iValue);
-	string8 theValue = ZStringf(iValue, args);
+	string8 theValue = sStringf(iValue, args);
 	va_end(args);
 
 	const_cast<StrimW*>(this)->pAttr(iName, new string8(theValue));

@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZValPred_GetNames.h"
@@ -946,8 +946,8 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 						<< "\nWalkerCount: " << fWalkerCount
 						<< "\nReadCount: " << fReadCount
 						<< "\nStepCount: " << fStepCount
-						<< "\nMakeWalker: " << ZStringf("%gms", 1000*(afterMakeWalker-start))
-						<< "\nDoQuery: " << ZStringf("%gms", 1000*(afterDoQuery-afterMakeWalker));
+						<< "\nMakeWalker: " << sStringf("%gms", 1000*(afterMakeWalker-start))
+						<< "\nDoQuery: " << sStringf("%gms", 1000*(afterDoQuery-afterMakeWalker));
 					}
 
 				for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
@@ -960,7 +960,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 
 		if (s)
 			{
-			s << "\nOverall Elapsed: " << ZStringf("%gms", 1000*(afterCollect-start));
+			s << "\nOverall Elapsed: " << sStringf("%gms", 1000*(afterCollect-start));
 			}
 		}
 

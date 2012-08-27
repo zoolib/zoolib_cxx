@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimU_StreamUTF8Buffered.h"
 #include "zoolib/ZStrimmer_Streamer.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
@@ -394,8 +394,8 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 				<< "\nWalkerCount: " << fWalkerCount
 				<< "\nReadCount: " << fReadCount
 				<< "\nStepCount: " << fStepCount
-				<< "\nMakeWalker: " << ZStringf("%gms", 1000*(afterMakeWalker-start))
-				<< "\nDoQuery: " << ZStringf("%gms", 1000*(afterDoQuery-afterMakeWalker));
+				<< "\nMakeWalker: " << sStringf("%gms", 1000*(afterMakeWalker-start))
+				<< "\nDoQuery: " << sStringf("%gms", 1000*(afterDoQuery-afterMakeWalker));
 			}
 
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>

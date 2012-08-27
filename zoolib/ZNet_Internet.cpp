@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZNet_Internet.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 	#include <winsock.h>

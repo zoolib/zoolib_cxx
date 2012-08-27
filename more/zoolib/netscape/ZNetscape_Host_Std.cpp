@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZNet_Internet.h"
 #include "zoolib/ZStream_Data_T.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZWorker.h"
 
@@ -850,7 +850,7 @@ static string spFixURL(const string& iBaseURL, const string& iRelativeURL)
 		if (!basePort)
 			basePort = 80;
 
-		const string resultURL = baseScheme + "://" + baseHost + ZStringf(":%d", basePort);
+		const string resultURL = baseScheme + "://" + baseHost + sStringf(":%d", basePort);
 		if (relPath.substr(0, 1) == "/")
 			{
 			return resultURL + relPath;

@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h" // For ZMemCopy
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZUtil_Strim_Data.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
@@ -52,7 +52,7 @@ static string spErrorAsString(IOReturn iError)
 		case kIOReturnNoDevice: return "kIOReturnNotResponding";
 		case kIOReturnBadArgument: return "kIOReturnNotResponding";
 		case kIOReturnAborted: return "kIOReturnAborted";
-		default: return ZStringf("%d", iError);
+		default: return sStringf("%d", iError);
 		}
 	}
 

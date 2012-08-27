@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Limited.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_string.h"
 
 #include <ctype.h>
