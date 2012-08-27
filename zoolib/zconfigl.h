@@ -400,6 +400,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#endif
 #endif
 
+#ifndef ZMACRO_Attribute_Deprecated
+	#if ZCONFIG(Compiler,GCC)
+		#define ZMACRO_Attribute_Deprecated __attribute__((deprecated))
+	#else
+		#define ZMACRO_Attribute_Deprecated
+	#endif
+#endif
+
 #ifndef ZMACRO_Attribute_NoThrow
 	#if ZCONFIG(Compiler,GCC)
 		#define ZMACRO_Attribute_NoThrow __attribute__((nothrow))
