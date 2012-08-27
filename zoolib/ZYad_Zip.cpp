@@ -62,10 +62,8 @@ struct ZipHolder
 			ioNode->fEntryNum = iEntryNum;
 			return;
 			}
-			
-		const ZName curName = iTrail.At(iIndex);
-	
-		ZRef<Node>& theNode = ioNode->fChildren[curName];
+
+		ZRef<Node>& theNode = ioNode->fChildren[iTrail.At(iIndex)];
 		if (not theNode)
 			theNode = new Node;
 		spStuff(iEntryNum, theNode, iTrail, iIndex + 1);
@@ -79,7 +77,6 @@ struct ZipHolder
 		if (not f_zip)
 			throw std::runtime_error("Couldn't open zip");
 
-		fNode = new Node;
 		for (size_t xx = 0, count = ::zip_get_num_files(f_zip); xx < count; ++xx)
 			{
 			const string theName = ::zip_get_name(f_zip, xx, 0);
