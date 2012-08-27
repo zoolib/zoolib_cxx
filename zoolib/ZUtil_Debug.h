@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStackCrawl.h"
+#include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrimmer.h"
 
 namespace ZooLib {
@@ -67,6 +68,10 @@ void sSetStrimmer(ZRef<ZStrimmerW> iStrimmerW);
 
 void sSetLogPriority(ZLog::EPriority iLogPriority);
 ZLog::EPriority sGetLogPriority();
+
+ZRef<ZStreamerW> sOpenStreamerW(const std::string& iPath);
+
+ZRef<ZStrimmerW> sOpenStrimmerW(const std::string& iPath);
 
 } // namespace ZUtil_Debug
 } // namespace ZooLib

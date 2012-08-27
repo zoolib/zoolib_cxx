@@ -20,8 +20,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_Debug.h"
 
+#include "zoolib/ZFile.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZStream_POSIX.h"
+#include "zoolib/ZStrim_Stream.h"
+#include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
@@ -298,6 +302,31 @@ ZLog::EPriority sGetLogPriority()
 	if (LogMeister::sLogMeister)
 		return LogMeister::sLogMeister->GetLogPriority();
 	return 0xFF;
+	}
+
+ZRef<ZStreamerW> sOpenStreamerW(const std::string& iPath)
+	{
+	if (iPath == "-")
+		{
+		return new ZStreamerW_T<ZStreamW_FILE>(stdout);
+		}
+	else if (ZRef<ZStreamerWPos> amerWPos = ZFileSpec(iPath).CreateWPos(true, false))
+		{
+		const ZStreamWPos& amWPos = amerWPos->GetStreamWPos();
+		amWPos.SetPosition(amWPos.GetSize());
+		return amerWPos;
+		}
+	else
+		{
+		return null;
+		}
+	}
+
+ZRef<ZStrimmerW> sOpenStrimmerW(const std::string& iPath)
+	{
+	if (ZRef<ZStreamerW> amerW = sOpenStreamerW(iPath))
+		return new ZStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(amerW);
+	return null;
 	}
 
 } // namespace ZUtil_Debug
