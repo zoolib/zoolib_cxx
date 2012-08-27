@@ -75,7 +75,7 @@ public:
 // =================================================================================================
 // MARK: - ZStrimmerR_T
 
-template <class Strim_t>
+template <class Strim_p>
 class ZStrimmerR_T : public virtual ZStrimmerR
 	{
 public:
@@ -93,16 +93,16 @@ public:
 	virtual const ZStrimR& GetStrimR() { return fStrim; }
 
 // Our protocol
-	Strim_t& GetStrim() { return fStrim; }
+	Strim_p& GetStrim() { return fStrim; }
 
 protected:
-	Strim_t fStrim;
+	Strim_p fStrim;
 	};
 
 // =================================================================================================
 // MARK: - ZStrimmerR_FT
 
-template <class Strim_t>
+template <class Strim_p>
 class ZStrimmerR_FT : public virtual ZStrimmerR
 	{
 protected:
@@ -132,17 +132,17 @@ public:
 	virtual const ZStrimR& GetStrimR() { return fStrim; }
 
 // Our protocol
-	Strim_t& GetStrim() { return fStrim; }
+	Strim_p& GetStrim() { return fStrim; }
 
 protected:
 	ZRef<ZStrimmerR> fStrimmerReal;
-	Strim_t fStrim;
+	Strim_p fStrim;
 	};
 
 // =================================================================================================
 // MARK: - ZStrimmerU_T
 
-template <class Strim_t>
+template <class Strim_p>
 class ZStrimmerU_T : public virtual ZStrimmerU
 	{
 public:
@@ -160,16 +160,16 @@ public:
 	virtual const ZStrimU& GetStrimU() { return fStrim; }
 
 // Our protocol
-	Strim_t& GetStrim() { return fStrim; }
+	Strim_p& GetStrim() { return fStrim; }
 
 protected:
-	Strim_t fStrim;
+	Strim_p fStrim;
 	};
 
 // =================================================================================================
 // MARK: - ZStrimmerU_FT
 
-template <class Strim_t>
+template <class Strim_p>
 class ZStrimmerU_FT : public virtual ZStrimmerU
 	{
 protected:
@@ -207,17 +207,17 @@ public:
 	virtual const ZStrimU& GetStrimU() { return fStrim; }
 
 // Our protocol
-	Strim_t& GetStrim() { return fStrim; }
+	Strim_p& GetStrim() { return fStrim; }
 
 protected:
 	ZRef<ZStrimmerR> fStrimmerReal;
-	Strim_t fStrim;
+	Strim_p fStrim;
 	};
 
 // =================================================================================================
 // MARK: - ZStrimmerW_T
 
-template <class Strim_t>
+template <class Strim_p>
 class ZStrimmerW_T : public virtual ZStrimmerW
 	{
 public:
@@ -235,16 +235,16 @@ public:
 	virtual const ZStrimW& GetStrimW() { return fStrim; }
 
 // Our protocol
-	Strim_t& GetStrim() { return fStrim; }
+	Strim_p& GetStrim() { return fStrim; }
 
 protected:
-	Strim_t fStrim;
+	Strim_p fStrim;
 	};
 
 // =================================================================================================
 // MARK: - ZStrimmerW_FT
 
-template <class Strim_t>
+template <class Strim_p>
 class ZStrimmerW_FT : public virtual ZStrimmerW
 	{
 protected:
@@ -274,11 +274,11 @@ public:
 	virtual const ZStrimW& GetStrimW() { return fStrim; }
 
 // Our protocol
-	Strim_t& GetStrim() { return fStrim; }
+	Strim_p& GetStrim() { return fStrim; }
 
 protected:
 	ZRef<ZStrimmerW> fStrimmerReal;
-	Strim_t fStrim;
+	Strim_p fStrim;
 	};
 
 } // namespace ZooLib
