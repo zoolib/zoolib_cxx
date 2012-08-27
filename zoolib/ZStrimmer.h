@@ -139,6 +139,23 @@ protected:
 	Strim_p fStrim;
 	};
 
+template <class Strim_p, class Strimmer_p>
+ZRef<ZStrimmerR_FT<Strim_p> > sStrimmerR_FT(const ZRef<Strimmer_p>& iStrimmer)
+	{
+	if (iStrimmer)
+		return new ZStrimmerR_FT<Strim_p>(iStrimmer);
+	return null;
+	}
+
+template <class Strim_p, class Param_p, class Strimmer_p>
+ZRef<ZStrimmerR_FT<Strim_p> >
+sStrimmerR_FT(const Param_p& iParam, const ZRef<Strimmer_p>& iStrimmer)
+	{
+	if (iStrimmer)
+		return new ZStrimmerR_FT<Strim_p>(iParam, iStrimmer);
+	return null;
+	}
+
 // =================================================================================================
 // MARK: - ZStrimmerU_T
 
@@ -192,12 +209,12 @@ public:
 	template <class P>
 	ZStrimmerU_FT(const P& iParam, ZRef<ZStrimmerU> iStrimmer)
 	:	fStrimmerReal(iStrimmer),
-		fStrim(iParam, iStrimmer->GetStrimR())
+		fStrim(iParam, iStrimmer->GetStrimU())
 		{}
 
 	ZStrimmerU_FT(ZRef<ZStrimmerU> iStrimmer)
 	:	fStrimmerReal(iStrimmer),
-		fStrim(iStrimmer->GetStrimR())
+		fStrim(iStrimmer->GetStrimU())
 		{}
 
 // From ZStrimmerR via ZStrimmerU
@@ -213,6 +230,23 @@ protected:
 	ZRef<ZStrimmerR> fStrimmerReal;
 	Strim_p fStrim;
 	};
+
+template <class Strim_p, class Strimmer_p>
+ZRef<ZStrimmerU_FT<Strim_p> > sStrimmerU_FT(const ZRef<Strimmer_p>& iStrimmer)
+	{
+	if (iStrimmer)
+		return new ZStrimmerU_FT<Strim_p>(iStrimmer);
+	return null;
+	}
+
+template <class Strim_p, class Param_p, class Strimmer_p>
+ZRef<ZStrimmerU_FT<Strim_p> >
+sStrimmerU_FT(const Param_p& iParam, const ZRef<Strimmer_p>& iStrimmer)
+	{
+	if (iStrimmer)
+		return new ZStrimmerU_FT<Strim_p>(iParam, iStrimmer);
+	return null;
+	}
 
 // =================================================================================================
 // MARK: - ZStrimmerW_T

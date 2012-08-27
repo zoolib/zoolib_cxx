@@ -30,7 +30,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZStrimmerR_Streamer_T
 
-template <class StrimR_t>
+template <class StrimR_p>
 class ZStrimmerR_Streamer_T : public ZStrimmerR
 	{
 protected:
@@ -40,18 +40,18 @@ public:
 	virtual ~ZStrimmerR_Streamer_T() {}
 
 	template <class P>
-	ZStrimmerR_Streamer_T(P& iParam, ZRef<ZStreamerR> iStreamerR)
+	ZStrimmerR_Streamer_T(P& iParam, const ZRef<ZStreamerR>& iStreamerR)
 	:	fStreamerR(iStreamerR),
 		fStrimR(iParam, iStreamerR->GetStreamR())
 		{}
 
 	template <class P>
-	ZStrimmerR_Streamer_T(const P& iParam, ZRef<ZStreamerR> iStreamerR)
+	ZStrimmerR_Streamer_T(const P& iParam, const ZRef<ZStreamerR>& iStreamerR)
 	:	fStreamerR(iStreamerR),
 		fStrimR(iParam, iStreamerR->GetStreamR())
 		{}
 
-	ZStrimmerR_Streamer_T(ZRef<ZStreamerR> iStreamerR)
+	ZStrimmerR_Streamer_T(const ZRef<ZStreamerR>& iStreamerR)
 	:	fStreamerR(iStreamerR),
 		fStrimR(iStreamerR->GetStreamR())
 		{}
@@ -60,17 +60,35 @@ public:
 	virtual const ZStrimR& GetStrimR() { return fStrimR; }
 
 // Our protocol
-	StrimR_t& GetStrim() { return fStrimR; }
+	StrimR_p& GetStrim() { return fStrimR; }
 
 protected:
 	ZRef<ZStreamerR> fStreamerR;
-	StrimR_t fStrimR;
+	StrimR_p fStrimR;
 	};
+
+template <class StrimR_p, class Streamer_p>
+ZRef<ZStrimmerR_Streamer_T<StrimR_p> >
+sStrimmerR_Streamer_T(const ZRef<Streamer_p>& iStreamer)
+	{
+	if (iStreamer)
+		return new ZStrimmerR_Streamer_T<StrimR_p>(iStreamer);
+	return null;
+	}
+
+template <class StrimR_p, class Param_p, class Streamer_p>
+ZRef<ZStrimmerR_Streamer_T<StrimR_p> >
+sStrimmerR_Streamer_T(const Param_p& iParam, const ZRef<Streamer_p>& iStreamer)
+	{
+	if (iStreamer)
+		return new ZStrimmerR_Streamer_T<StrimR_p>(iParam, iStreamer);
+	return null;
+	}
 
 // =================================================================================================
 // MARK: - ZStrimmerU_Streamer_T
 
-template <class StrimU_t>
+template <class StrimU_p>
 class ZStrimmerU_Streamer_T : public ZStrimmerU
 	{
 protected:
@@ -80,18 +98,18 @@ public:
 	virtual ~ZStrimmerU_Streamer_T() {}
 
 	template <class P>
-	ZStrimmerU_Streamer_T(P& iParam, ZRef<ZStreamerR> iStreamerR)
+	ZStrimmerU_Streamer_T(P& iParam, const ZRef<ZStreamerR>& iStreamerR)
 	:	fStreamerR(iStreamerR),
 		fStrimU(iParam, iStreamerR->GetStreamR())
 		{}
 
 	template <class P>
-	ZStrimmerU_Streamer_T(const P& iParam, ZRef<ZStreamerR> iStreamerR)
+	ZStrimmerU_Streamer_T(const P& iParam, const ZRef<ZStreamerR>& iStreamerR)
 	:	fStreamerR(iStreamerR),
 		fStrimU(iParam, iStreamerR->GetStreamR())
 		{}
 
-	ZStrimmerU_Streamer_T(ZRef<ZStreamerR> iStreamerR)
+	ZStrimmerU_Streamer_T(const ZRef<ZStreamerR>& iStreamerR)
 	:	fStreamerR(iStreamerR),
 		fStrimU(iStreamerR->GetStreamR())
 		{}
@@ -100,17 +118,35 @@ public:
 	virtual const ZStrimU& GetStrimU() { return fStrimU; }
 
 // Our protocol
-	StrimU_t& GetStrim() { return fStrimU; }
+	StrimU_p& GetStrim() { return fStrimU; }
 
 protected:
 	ZRef<ZStreamerR> fStreamerR;
-	StrimU_t fStrimU;
+	StrimU_p fStrimU;
 	};
+
+template <class StrimU_p, class Streamer_p>
+ZRef<ZStrimmerU_Streamer_T<StrimU_p> >
+sStrimmerU_Streamer_T(const ZRef<Streamer_p>& iStreamer)
+	{
+	if (iStreamer)
+		return new ZStrimmerU_Streamer_T<StrimU_p>(iStreamer);
+	return null;
+	}
+
+template <class StrimU_p, class Param_p, class Streamer_p>
+ZRef<ZStrimmerU_Streamer_T<StrimU_p> >
+sStrimmerU_Streamer_T(const Param_p& iParam, const ZRef<Streamer_p>& iStreamer)
+	{
+	if (iStreamer)
+		return new ZStrimmerU_Streamer_T<StrimU_p>(iParam, iStreamer);
+	return null;
+	}
 
 // =================================================================================================
 // MARK: - ZStrimmerW_Streamer_T
 
-template <class StrimW_t>
+template <class StrimW_p>
 class ZStrimmerW_Streamer_T : public ZStrimmerW
 	{
 protected:
@@ -120,18 +156,18 @@ public:
 	virtual ~ZStrimmerW_Streamer_T() {}
 
 	template <class P>
-	ZStrimmerW_Streamer_T(P& iParam, ZRef<ZStreamerW> iStreamerW)
+	ZStrimmerW_Streamer_T(P& iParam, const ZRef<ZStreamerW>& iStreamerW)
 	:	fStreamerW(iStreamerW),
 		fStrimW(iParam, iStreamerW->GetStreamW())
 		{}
 
 	template <class P>
-	ZStrimmerW_Streamer_T(const P& iParam, ZRef<ZStreamerW> iStreamerW)
+	ZStrimmerW_Streamer_T(const P& iParam, const ZRef<ZStreamerW>& iStreamerW)
 	:	fStreamerW(iStreamerW),
 		fStrimW(iParam, iStreamerW->GetStreamW())
 		{}
 
-	ZStrimmerW_Streamer_T(ZRef<ZStreamerW> iStreamerW)
+	ZStrimmerW_Streamer_T(const ZRef<ZStreamerW>& iStreamerW)
 	:	fStreamerW(iStreamerW),
 		fStrimW(iStreamerW->GetStreamW())
 		{}
@@ -140,12 +176,31 @@ public:
 	virtual const ZStrimW& GetStrimW() { return fStrimW; }
 
 // Our protocol
-	StrimW_t& GetStrim() { return fStrimW; }
+	StrimW_p& GetStrim() { return fStrimW; }
 
 protected:
 	ZRef<ZStreamerW> fStreamerW;
-	StrimW_t fStrimW;
+	StrimW_p fStrimW;
 	};
+
+
+template <class StrimU_p, class Streamer_p>
+ZRef<ZStrimmerW_Streamer_T<StrimU_p> >
+sStrimmerW_Streamer_T(const ZRef<Streamer_p>& iStreamer)
+	{
+	if (iStreamer)
+		return new ZStrimmerW_Streamer_T<StrimU_p>(iStreamer);
+	return null;
+	}
+
+template <class StrimU_p, class Param_p, class Streamer_p>
+ZRef<ZStrimmerW_Streamer_T<StrimU_p> >
+sStrimmerW_Streamer_T(const Param_p& iParam, const ZRef<Streamer_p>& iStreamer)
+	{
+	if (iStreamer)
+		return new ZStrimmerW_Streamer_T<StrimU_p>(iParam, iStreamer);
+	return null;
+	}
 
 } // namespace ZooLib
 
