@@ -25,8 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZCompat_type_traits.h"
 
-#if ZCONFIG_SPI_Enabled(type_traits)
-
 #include "zoolib/ZMACRO_auto.h"
 #include "zoolib/ZMACRO_decltype.h"
 
@@ -72,6 +70,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 // MARK: - ZMACRO_foreachv
+
+#if ZCONFIG_SPI_Enabled(type_traits)
 
 namespace ZooLib {
 
