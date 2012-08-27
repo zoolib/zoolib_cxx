@@ -281,60 +281,6 @@ protected:
 	Strim_t fStrim;
 	};
 
-// =================================================================================================
-// MARK: - ZStrimmerR_Strim
-
-class ZStrimmerR_Strim
-:	public ZStrimmerR
-	{
-public:
-	ZStrimmerR_Strim(const ZStrimR& iStrimR)
-	:	fStrimR(iStrimR)
-		{}
-
-// From ZStrimmerR
-	virtual const ZStrimR& GetStrimR() { return fStrimR; }
-
-protected:
-	const ZStrimR& fStrimR;
-	};
-
-// =================================================================================================
-// MARK: - ZStrimmerU_Strim
-
-class ZStrimmerU_Strim
-:	public ZStrimmerU
-	{
-public:
-	ZStrimmerU_Strim(const ZStrimU& iStrimU)
-	:	fStrimU(iStrimU)
-		{}
-
-// From ZStrimmerU
-	virtual const ZStrimU& GetStrimU() { return fStrimU; }
-
-protected:
-	const ZStrimU& fStrimU;
-	};
-
-// =================================================================================================
-// MARK: - ZStrimmerW_Strim
-
-class ZStrimmerW_Strim
-:	public ZStrimmerW
-	{
-public:
-	ZStrimmerW_Strim(const ZStrimW& iStrimW)
-	:	fStrimW(iStrimW)
-		{}
-
-// From ZStrimmerW
-	virtual const ZStrimW& GetStrimW() { return fStrimW; }
-
-protected:
-	const ZStrimW& fStrimW;
-	};
-
 } // namespace ZooLib
 
 #endif // __ZStrimmer_h__
