@@ -60,12 +60,12 @@ EPriority sPriorityFromName(const string& iString)
 string sNameFromPriority(EPriority iPriority)
 	{
 	if (iPriority < 0)
-		return ZStringf("%d", iPriority);
+		return sStringf("%d", iPriority);
 
 	if (iPriority <= eDebug)
 		return spNames[iPriority];
 
-	return spNames[eDebug] + ZStringf("+%d", iPriority - eDebug);
+	return spNames[eDebug] + sStringf("+%d", iPriority - eDebug);
 	}
 
 // =================================================================================================
@@ -238,7 +238,7 @@ static const char* spTruncateFileName(const char* iFilename)
 void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iFunctionName)
 	{
 	if (const S& s = S(iPriority, "ZLOGTRACE"))
-		s << spTruncateFileName(iFile) << ":" << ZStringf("%d", iLine) << ", in " << iFunctionName;
+		s << spTruncateFileName(iFile) << ":" << sStringf("%d", iLine) << ", in " << iFunctionName;
 	}
 
 } // namespace ZLog

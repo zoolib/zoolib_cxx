@@ -163,12 +163,12 @@ void Response::Set(const string& iName, const string& iValue)
 
 void Response::Set(const string& iName, int iValue)
 	{
-	fHeaders.push_back(pair<string, string>(iName, ZStringf("%d", iValue)));
+	fHeaders.push_back(pair<string, string>(iName, sStringf("%d", iValue)));
 	}
 
 void Response::Set(const string& iName, uint64 iValue)
 	{
-	fHeaders.push_back(pair<string, string>(iName, ZStringf("%lld", iValue)));
+	fHeaders.push_back(pair<string, string>(iName, sStringf("%lld", iValue)));
 	}
 
 void Response::Send(const ZStreamW& s) const
@@ -704,7 +704,7 @@ string sEncodeComponent(const string& iString)
 			result.append(iString, lastGood, nextProb - lastGood);
 		lastGood = nextProb + 1;
 
-		result += ZStringf("%%%02hhX", iString[nextProb]);
+		result += sStringf("%%%02hhX", iString[nextProb]);
 		}
 	return result;
 	}
