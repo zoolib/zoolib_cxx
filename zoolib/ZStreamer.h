@@ -208,7 +208,7 @@ public:
 // =================================================================================================
 // MARK: - ZStreamerR_T
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerR_T : public ZStreamerR
 	{
 public:
@@ -226,16 +226,16 @@ public:
 	virtual const ZStreamR& GetStreamR() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerR_FT
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerR_FT : public ZStreamerR
 	{
 protected:
@@ -265,17 +265,17 @@ public:
 	virtual const ZStreamR& GetStreamR() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
 	ZRef<ZStreamerR> fStreamerReal;
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerRCon_T
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerRCon_T : public ZStreamerRCon
 	{
 public:
@@ -296,16 +296,16 @@ public:
 	virtual const ZStreamRCon& GetStreamRCon() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerRCon_FT
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerRCon_FT : public ZStreamerRCon
 	{
 protected:
@@ -338,17 +338,17 @@ public:
 	virtual const ZStreamRCon& GetStreamRCon() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
 	ZRef<ZStreamerRCon> fStreamerReal;
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerU_T
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerU_T : public ZStreamerU
 	{
 public:
@@ -369,16 +369,16 @@ public:
 	virtual const ZStreamU& GetStreamU() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerU_FT
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerU_FT : public ZStreamerU
 	{
 protected:
@@ -428,17 +428,17 @@ public:
 	virtual const ZStreamU& GetStreamU() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
 	ZRef<ZStreamerR> fStreamerReal;
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerRPos_T
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerRPos_T : public ZStreamerRPos
 	{
 public:
@@ -462,16 +462,16 @@ public:
 	virtual const ZStreamRPos& GetStreamRPos() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerRPos_FT
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerRPos_FT : public ZStreamerU
 	{
 protected:
@@ -507,17 +507,17 @@ public:
 	virtual const ZStreamRPos& GetStreamRPos() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
 	ZRef<ZStreamerRPos> fStreamerReal;
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerW_T
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerW_T : public ZStreamerW
 	{
 public:
@@ -535,16 +535,24 @@ public:
 	virtual const ZStreamW& GetStreamW() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
-	Stream_t fStream;
+	Stream_p fStream;
 	};
+
+template <class Stream_p>
+ZRef<ZStreamerW> sStreamerW_T()
+	{ return new ZStreamerW_T<Stream_p>; }
+
+template <class Stream_p, class Param_p>
+ZRef<ZStreamerW> sStreamerW_T(Param_p& iParam)
+	{ return new ZStreamerW_T<Stream_p>(iParam); }
 
 // =================================================================================================
 // MARK: - ZStreamerW_FT
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerW_FT : public ZStreamerW
 	{
 protected:
@@ -574,17 +582,17 @@ public:
 	virtual const ZStreamW& GetStreamW() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
 	ZRef<ZStreamerW> fStreamerReal;
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerWCon_T
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerWCon_T : public ZStreamerWCon
 	{
 public:
@@ -605,16 +613,16 @@ public:
 	virtual const ZStreamWCon& GetStreamWCon() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerWCon_FT
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerWCon_FT : public ZStreamerWCon
 	{
 protected:
@@ -647,17 +655,17 @@ public:
 	virtual const ZStreamWCon& GetStreamWCon() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
 	ZRef<ZStreamerWCon> fStreamerReal;
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerWPos_T
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerWPos_T : public ZStreamerWPos
 	{
 public:
@@ -678,16 +686,16 @@ public:
 	virtual const ZStreamWPos& GetStreamWPos() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerWPos_FT
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerWPos_FT : public ZStreamerWPos
 	{
 protected:
@@ -720,17 +728,17 @@ public:
 	virtual const ZStreamWPos& GetStreamWPos() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
 	ZRef<ZStreamerWPos> fStreamerReal;
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerRWPos_T
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerRWPos_T : public ZStreamerRWPos
 	{
 public:
@@ -763,16 +771,16 @@ public:
 	virtual const ZStreamRWPos& GetStreamRWPos() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerRWPos_FT
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerRWPos_FT : public ZStreamerRWPos
 	{
 protected:
@@ -817,17 +825,17 @@ public:
 	virtual const ZStreamRWPos& GetStreamRWPos() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
 	ZRef<ZStreamerRWPos> fStreamerReal;
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================
 // MARK: - ZStreamerRW_T
 
-template <class Stream_t>
+template <class Stream_p>
 class ZStreamerRW_T : public ZStreamerRW
 	{
 public:
@@ -848,10 +856,10 @@ public:
 	virtual const ZStreamW& GetStreamW() { return fStream; }
 
 // Our protocol
-	Stream_t& GetStream() { return fStream; }
+	Stream_p& GetStream() { return fStream; }
 
 protected:
-	Stream_t fStream;
+	Stream_p fStream;
 	};
 
 // =================================================================================================

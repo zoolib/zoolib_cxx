@@ -68,8 +68,7 @@ protected:
 	};
 
 template <class StrimR_p, class Streamer_p>
-ZRef<ZStrimmerR_Streamer_T<StrimR_p> >
-sStrimmerR_Streamer_T(const ZRef<Streamer_p>& iStreamer)
+ZRef<ZStrimmerR> sStrimmerR_Streamer_T(const ZRef<Streamer_p>& iStreamer)
 	{
 	if (iStreamer)
 		return new ZStrimmerR_Streamer_T<StrimR_p>(iStreamer);
@@ -77,8 +76,7 @@ sStrimmerR_Streamer_T(const ZRef<Streamer_p>& iStreamer)
 	}
 
 template <class StrimR_p, class Param_p, class Streamer_p>
-ZRef<ZStrimmerR_Streamer_T<StrimR_p> >
-sStrimmerR_Streamer_T(const Param_p& iParam, const ZRef<Streamer_p>& iStreamer)
+ZRef<ZStrimmerR> sStrimmerR_Streamer_T(const Param_p& iParam, const ZRef<Streamer_p>& iStreamer)
 	{
 	if (iStreamer)
 		return new ZStrimmerR_Streamer_T<StrimR_p>(iParam, iStreamer);
@@ -126,8 +124,7 @@ protected:
 	};
 
 template <class StrimU_p, class Streamer_p>
-ZRef<ZStrimmerU_Streamer_T<StrimU_p> >
-sStrimmerU_Streamer_T(const ZRef<Streamer_p>& iStreamer)
+ZRef<ZStrimmerU> sStrimmerU_Streamer_T(const ZRef<Streamer_p>& iStreamer)
 	{
 	if (iStreamer)
 		return new ZStrimmerU_Streamer_T<StrimU_p>(iStreamer);
@@ -135,8 +132,7 @@ sStrimmerU_Streamer_T(const ZRef<Streamer_p>& iStreamer)
 	}
 
 template <class StrimU_p, class Param_p, class Streamer_p>
-ZRef<ZStrimmerU_Streamer_T<StrimU_p> >
-sStrimmerU_Streamer_T(const Param_p& iParam, const ZRef<Streamer_p>& iStreamer)
+ZRef<ZStrimmerU> sStrimmerU_Streamer_T(const Param_p& iParam, const ZRef<Streamer_p>& iStreamer)
 	{
 	if (iStreamer)
 		return new ZStrimmerU_Streamer_T<StrimU_p>(iParam, iStreamer);
@@ -184,21 +180,19 @@ protected:
 	};
 
 
-template <class StrimU_p, class Streamer_p>
-ZRef<ZStrimmerW_Streamer_T<StrimU_p> >
-sStrimmerW_Streamer_T(const ZRef<Streamer_p>& iStreamer)
+template <class StrimW_p, class Streamer_p>
+ZRef<ZStrimmerW> sStrimmerW_Streamer_T(const ZRef<Streamer_p>& iStreamer)
 	{
 	if (iStreamer)
-		return new ZStrimmerW_Streamer_T<StrimU_p>(iStreamer);
+		return new ZStrimmerW_Streamer_T<StrimW_p>(iStreamer);
 	return null;
 	}
 
-template <class StrimU_p, class Param_p, class Streamer_p>
-ZRef<ZStrimmerW_Streamer_T<StrimU_p> >
-sStrimmerW_Streamer_T(const Param_p& iParam, const ZRef<Streamer_p>& iStreamer)
+template <class StrimW_p, class Param_p, class Streamer_p>
+ZRef<ZStrimmerW> sStrimmerW_Streamer_T(const Param_p& iParam, const ZRef<Streamer_p>& iStreamer)
 	{
 	if (iStreamer)
-		return new ZStrimmerW_Streamer_T<StrimU_p>(iParam, iStreamer);
+		return new ZStrimmerW_Streamer_T<StrimW_p>(iParam, iStreamer);
 	return null;
 	}
 

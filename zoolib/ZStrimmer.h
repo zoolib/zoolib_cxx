@@ -140,7 +140,7 @@ protected:
 	};
 
 template <class Strim_p, class Strimmer_p>
-ZRef<ZStrimmerR_FT<Strim_p> > sStrimmerR_FT(const ZRef<Strimmer_p>& iStrimmer)
+ZRef<ZStrimmerR> sStrimmerR_FT(const ZRef<Strimmer_p>& iStrimmer)
 	{
 	if (iStrimmer)
 		return new ZStrimmerR_FT<Strim_p>(iStrimmer);
@@ -148,8 +148,7 @@ ZRef<ZStrimmerR_FT<Strim_p> > sStrimmerR_FT(const ZRef<Strimmer_p>& iStrimmer)
 	}
 
 template <class Strim_p, class Param_p, class Strimmer_p>
-ZRef<ZStrimmerR_FT<Strim_p> >
-sStrimmerR_FT(const Param_p& iParam, const ZRef<Strimmer_p>& iStrimmer)
+ZRef<ZStrimmerR> sStrimmerR_FT(const Param_p& iParam, const ZRef<Strimmer_p>& iStrimmer)
 	{
 	if (iStrimmer)
 		return new ZStrimmerR_FT<Strim_p>(iParam, iStrimmer);
@@ -232,7 +231,7 @@ protected:
 	};
 
 template <class Strim_p, class Strimmer_p>
-ZRef<ZStrimmerU_FT<Strim_p> > sStrimmerU_FT(const ZRef<Strimmer_p>& iStrimmer)
+ZRef<ZStrimmerU> sStrimmerU_FT(const ZRef<Strimmer_p>& iStrimmer)
 	{
 	if (iStrimmer)
 		return new ZStrimmerU_FT<Strim_p>(iStrimmer);
@@ -240,8 +239,7 @@ ZRef<ZStrimmerU_FT<Strim_p> > sStrimmerU_FT(const ZRef<Strimmer_p>& iStrimmer)
 	}
 
 template <class Strim_p, class Param_p, class Strimmer_p>
-ZRef<ZStrimmerU_FT<Strim_p> >
-sStrimmerU_FT(const Param_p& iParam, const ZRef<Strimmer_p>& iStrimmer)
+ZRef<ZStrimmerU> sStrimmerU_FT(const Param_p& iParam, const ZRef<Strimmer_p>& iStrimmer)
 	{
 	if (iStrimmer)
 		return new ZStrimmerU_FT<Strim_p>(iParam, iStrimmer);
