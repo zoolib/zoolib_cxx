@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 
 #if ZCONFIG(Compiler, MSVC)
 	#define vsnprintf _vsnprintf
@@ -36,17 +36,17 @@ using namespace std;
 
 // =================================================================================================
 
-string ZStringf(const char* iString, ...)
+string sStringf(const char* iString, ...)
 	{
 	va_list args;
 	va_start(args, iString);
-	string result = ZStringf(iString, args);
+	string result = sStringf(iString, args);
 	va_end(args);
 
 	return result;
 	}
 
-string ZStringf(const char* iString, std::va_list iArgs)
+string sStringf(const char* iString, std::va_list iArgs)
 	{
 	string result(512, ' ');
 	while (true)
@@ -75,6 +75,17 @@ string ZStringf(const char* iString, std::va_list iArgs)
 			break;
 			}
 		}
+
+	return result;
+	}
+
+// Deprecated
+string ZStringf(const char* iString, ...)
+	{
+	va_list args;
+	va_start(args, iString);
+	string result = sStringf(iString, args);
+	va_end(args);
 
 	return result;
 	}
