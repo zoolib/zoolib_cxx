@@ -39,10 +39,22 @@ ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_Any& iSeq);
 ZRef<ZYadMapAtRPos> sYadR(const ZMap_Any& iMap);
 
 // =================================================================================================
+// MARK: - ZYad_Any
+
+namespace ZYad_Any {
+
+ZQ<ZVal_Any> sQFromYadR(ZRef<ZYadR> iYadR);
+
+ZQ<ZVal_Any> sQFromYadR(bool iRepeatedPropsAsSeq, ZRef<ZYadR> iYadR);
+
+} // namespace ZYad_Any
+
+// =================================================================================================
 // MARK: - sFromYadR
 
-ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR);
-ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYadR> iYadR);
+inline
+ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
+	{ return ZYad_Any::sQFromYadR(iYadR).DGet(iDefault); }
 
 } // namespace ZooLib
 

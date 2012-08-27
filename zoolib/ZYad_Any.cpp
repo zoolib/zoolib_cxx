@@ -164,12 +164,16 @@ private:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - sFromYadR
+// MARK: - ZYad_Any
 
-ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
-	{ return sFromYadR(false, iDefault, iYadR); }
+namespace ZYad_Any {
 
-ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
-	{ return Visitor_Do_GetVal(iRepeatedPropsAsSeq).DDo(iDefault, iYadR); }
+ZQ<ZVal_Any> sQFromYadR(ZRef<ZYadR> iYadR)
+	{ return sQFromYadR(false, iYadR); }
+
+ZQ<ZVal_Any> sQFromYadR(bool iRepeatedPropsAsSeq, ZRef<ZYadR> iYadR)
+	{ return Visitor_Do_GetVal(iRepeatedPropsAsSeq).QDo(iYadR); }
+
+} // namespace ZYad_Any
 
 } // namespace ZooLib
