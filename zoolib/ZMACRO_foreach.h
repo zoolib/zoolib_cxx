@@ -169,6 +169,22 @@ public:
 	#define foreachrv ZMACRO_foreachrv
 #endif
 
+// =================================================================================================
+// MARK: - ZMACRO_foreacha
+
+#ifdef ZMACRO_foreacha
+#elif 1
+	#define ZMACRO_foreacha(varname, cont) \
+		for (ZooLib::ZWrapper_foreachv_T<remove_reference<ZMACRO_decltype(cont)>::type> wrap(cont); \
+			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
+			++wrap.fIter, ++wrap.fMismatch) \
+			for (ZMACRO_auto(varname, *wrap.fIter); not wrap.fMismatch; --wrap.fMismatch)
+#endif
+
+#ifndef foreacha
+	#define foreacha ZMACRO_foreacha
+#endif
+
 #endif // ZCONFIG_SPI_Enabled(type_traits)
 
 #endif // __ZMACRO_foreach_h__
