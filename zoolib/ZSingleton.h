@@ -31,22 +31,18 @@ namespace ZooLib {
 // MARK: - ZSingleton
 
 template <class T, class Tag_p = T>
-class ZSingleton
+T& sSingleton()
 	{
-public:
-	static T& sGet()
+	static T* spT;
+	static ZDeleter<T> deleter(spT);
+	if (not spT)
 		{
-		static T* spT;
-		static ZDeleter<T> deleter(spT);
-		if (not spT)
-			{
-			T* theT = new T;
-			if (not sAtomic_CASPtr(&spT, nullptr, theT))
-				delete theT;
-			}
-		return *spT;
+		T* theT = new T;
+		if (not sAtomic_CASPtr(&spT, nullptr, theT))
+			delete theT;
 		}
-	};
+	return *spT;
+	}
 
 } // namespace ZooLib
 

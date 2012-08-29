@@ -109,7 +109,7 @@ ZQ<void> ZWorker::QCall()
 				{
 				if (fNextWake <= ZTime::sSystem())
 					continue;
-				ZSingleton<ZCallScheduler>::sGet().NextCallAt(fNextWake, fCaller, this);
+				sSingleton<ZCallScheduler>().NextCallAt(fNextWake, fCaller, this);
 				}
 			return notnull;
 			}
@@ -145,7 +145,7 @@ bool ZWorker::IsAwake()
 		if (fWorking)
 			return fNextWake <= ZTime::sSystem();
 		else
-			return ZSingleton<ZCallScheduler>::sGet().IsAwake(fCaller, this);
+			return sSingleton<ZCallScheduler>().IsAwake(fCaller, this);
 		}
 	return false;
 	}
@@ -194,7 +194,7 @@ void ZWorker::pWakeAt(ZTime iSystemTime)
 			}
 		else
 			{
-			ZSingleton<ZCallScheduler>::sGet().NextCallAt(iSystemTime, fCaller, this);
+			sSingleton<ZCallScheduler>().NextCallAt(iSystemTime, fCaller, this);
 			}
 		}
 	}

@@ -47,7 +47,7 @@ typedef std::map<const char*, ZCompare*, Functor_CompareCharStars> CompareMap;
 
 ZCompare::ZCompare(const char* iTypeName)
 :	fTypeName(iTypeName)
-	{ ZUtil_STL::sInsertMust(ZSingleton<CompareMap>::sGet(), iTypeName, this); }
+	{ ZUtil_STL::sInsertMust(sSingleton<CompareMap>(), iTypeName, this); }
 
 ZCompare::~ZCompare()
 	{}
@@ -60,7 +60,7 @@ int ZCompare::Compare(const void* iL, const void* iR)
 
 int ZCompare::sCompare(const char* iTypeName, const void* iL, const void* iR)
 	{
-	if (ZQ<ZCompare*> theQ = ZUtil_STL::sQGet(ZSingleton<CompareMap>::sGet(),iTypeName))
+	if (ZQ<ZCompare*> theQ = ZUtil_STL::sQGet(sSingleton<CompareMap>(), iTypeName))
 		return (*theQ)->Compare(iL, iR);
 
 	ZDebugStopf(0, ("ZCompare::sCompare called on unsupported type '%s'", iTypeName));
