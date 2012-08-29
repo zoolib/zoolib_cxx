@@ -522,27 +522,21 @@ ZStrimR_StreamDecoder::ZStrimR_StreamDecoder(const pair<ZTextDecoder*, const ZSt
 	}
 
 ZStrimR_StreamDecoder::~ZStrimR_StreamDecoder()
-	{
-	delete fDecoder;
-	}
+	{ delete fDecoder; }
 
 void ZStrimR_StreamDecoder::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{ fDecoder->Decode(fStreamR, oDest, iCount, oCount); }
 
 void ZStrimR_StreamDecoder::SetDecoder(ZTextDecoder* iDecoder)
 	{
-	ZAssertStop(2, iDecoder);
-	ZTextDecoder* prior = fDecoder;
-	fDecoder = iDecoder;
-	delete prior;
+	ZAssertStop(2, iDecoder && iDecoder != fDecoder);
+	delete sGetSet(fDecoder, iDecoder);
 	}
 
-ZTextDecoder* ZStrimR_StreamDecoder::SetDecoderReturnOld(ZTextDecoder* iDecoder)
+ZTextDecoder* ZStrimR_StreamDecoder::GetSetDecoder(ZTextDecoder* iDecoder)
 	{
 	ZAssertStop(2, iDecoder);
-	ZTextDecoder* prior = fDecoder;
-	fDecoder = iDecoder;
-	return prior;
+	return sGetSet(fDecoder, iDecoder);
 	}
 
 // =================================================================================================
@@ -564,9 +558,7 @@ ZStrimW_StreamEncoder::ZStrimW_StreamEncoder(const pair<ZTextEncoder*, const ZSt
 	}
 
 ZStrimW_StreamEncoder::~ZStrimW_StreamEncoder()
-	{
-	delete fEncoder;
-	}
+	{ delete fEncoder; }
 
 void ZStrimW_StreamEncoder::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
 	{ fEncoder->Encode(fStreamW, iSource, iCountCU, oCountCU); }
@@ -576,18 +568,14 @@ void ZStrimW_StreamEncoder::Imp_Flush()
 
 void ZStrimW_StreamEncoder::SetEncoder(ZTextEncoder* iEncoder)
 	{
-	ZAssertStop(2, iEncoder);
-	ZTextEncoder* prior = fEncoder;
-	fEncoder = iEncoder;
-	delete prior;
+	ZAssertStop(2, iEncoder && iEncoder != fEncoder);
+	delete sGetSet(fEncoder, iEncoder);
 	}
 
-ZTextEncoder* ZStrimW_StreamEncoder::SetEncoderReturnOld(ZTextEncoder* iEncoder)
+ZTextEncoder* ZStrimW_StreamEncoder::GetSetEncoder(ZTextEncoder* iEncoder)
 	{
 	ZAssertStop(2, iEncoder);
-	ZTextEncoder* prior = fEncoder;
-	fEncoder = iEncoder;
-	return prior;
+	return sGetSet(fEncoder, iEncoder);
 	}
 
 } // namespace ZooLib

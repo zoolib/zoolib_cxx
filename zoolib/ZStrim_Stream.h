@@ -226,7 +226,7 @@ public:
 
 // Our protocol
 	void SetDecoder(ZTextDecoder* iDecoder);
-	ZTextDecoder* SetDecoderReturnOld(ZTextDecoder* iDecoder);
+	ZTextDecoder* GetSetDecoder(ZTextDecoder* iDecoder);
 
 private:
 	const ZStreamR& fStreamR;
@@ -252,7 +252,7 @@ public:
 
 // Our protocol
 	void SetEncoder(ZTextEncoder* iEncoder);
-	ZTextEncoder* SetEncoderReturnOld(ZTextEncoder* iEncoder);
+	ZTextEncoder* GetSetEncoder(ZTextEncoder* iEncoder);
 
 private:
 	const ZStreamW& fStreamW;
