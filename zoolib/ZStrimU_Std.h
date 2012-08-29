@@ -46,15 +46,19 @@ public:
 
 // Our protocol
 	void SetDecoder(ZTextDecoder* iDecoder);
-	ZTextDecoder* SetDecoderReturnOld(ZTextDecoder* iDecoder);
+	ZTextDecoder* GetSetDecoder(ZTextDecoder* iDecoder);
 
-	size_t GetLineCount();
+	int GetPos();
+	int GetLine();
+	int GetColumn();
 
 private:
 	ZStrimR_StreamDecoder fStrimR_StreamDecoder;
 	ZStrimR_CRLFRemove fStrimR_CRLFRemove;
 	std::vector<UTF32> fStack;
-	size_t fLineCount;
+	size_t fPos;
+	size_t fLine;
+	size_t fColumn;
 	};
 
 } // namespace ZooLib

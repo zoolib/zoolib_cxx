@@ -20,16 +20,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStrimU_Std.h"
+#include "zoolib/ZUnicode.h"
 
 namespace ZooLib {
+
+using std::vector;
 
 // =================================================================================================
 // MARK: - ZStrimU_Std
 
 ZStrimU_Std::ZStrimU_Std(ZTextDecoder* iDecoder, const ZStreamR& iStreamR)
-:	fStrimR_StreamDecoder(iDecoder, iStreamR),
-	fStrimR_CRLFRemove(fStrimR_StreamDecoder),
-	fLineCount(0)
+:	fStrimR_StreamDecoder(iDecoder, iStreamR)
+,	fStrimR_CRLFRemove(fStrimR_StreamDecoder)
+,	fPos(0)
+,	fLine(0)
+,	fColumn(0)
 	{}
 
 void ZStrimU_Std::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
@@ -41,8 +46,19 @@ void ZStrimU_Std::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 		UTF32 theCP;
 		if (fStack.empty())
 			{
-			if (!fStrimR_CRLFRemove.ReadCP(theCP))
+			if (not fStrimR_CRLFRemove.ReadCP(theCP))
 				break;
+			++fPos;
+
+			if (ZUnicode::sIsEOL(theCP))
+				{
+				++fLine;
+				fColumn = 0;
+				}
+			else
+				{
+				++fColumn;
+				}
 			}
 		else
 			{
@@ -50,8 +66,6 @@ void ZStrimU_Std::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 			fStack.pop_back();
 			}
 
-		if (theCP == '\n')
-			++fLineCount;
 		*localDest++ = theCP;
 		}
 
@@ -60,11 +74,7 @@ void ZStrimU_Std::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	}
 
 void ZStrimU_Std::Imp_Unread(UTF32 iCP)
-	{
-	if (iCP == '\n')
-		--fLineCount;
-	fStack.push_back(iCP);
-	}
+	{ fStack.push_back(iCP); }
 
 size_t ZStrimU_Std::Imp_UnreadableLimit()
 	{ return size_t(-1); }
@@ -72,10 +82,34 @@ size_t ZStrimU_Std::Imp_UnreadableLimit()
 void ZStrimU_Std::SetDecoder(ZTextDecoder* iDecoder)
 	{ fStrimR_StreamDecoder.SetDecoder(iDecoder); }
 
-ZTextDecoder* ZStrimU_Std::SetDecoderReturnOld(ZTextDecoder* iDecoder)
-	{ return fStrimR_StreamDecoder.SetDecoderReturnOld(iDecoder); }
+ZTextDecoder* ZStrimU_Std::GetSetDecoder(ZTextDecoder* iDecoder)
+	{ return fStrimR_StreamDecoder.GetSetDecoder(iDecoder); }
 
-size_t ZStrimU_Std::GetLineCount()
-	{ return fLineCount; }
+int ZStrimU_Std::GetPos()
+	{ return fPos - fStack.size(); }
+
+int ZStrimU_Std::GetLine()
+	{
+	int line = fLine;
+	for (vector<UTF32>::const_reverse_iterator ii = fStack.rbegin(); ii != fStack.rend(); ++ii)
+		{
+		if (ZUnicode::sIsEOL(*ii))
+			--line;
+		}
+	return line;
+	}
+
+int ZStrimU_Std::GetColumn()
+	{
+	int column = fColumn;
+	for (vector<UTF32>::const_reverse_iterator ii = fStack.rbegin(); ii != fStack.rend(); ++ii)
+		{
+		if (ZUnicode::sIsEOL(*ii))
+			column = -1;
+		else
+			--column;
+		}
+	return column;
+	}
 
 } // namespace ZooLib
