@@ -23,11 +23,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ZRef.h"
 #include "zoolib/ZStrim.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
-
-#include "zoolib/ZRef_CF.h"
 
 #include <CoreFoundation/CFString.h>
 

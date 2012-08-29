@@ -23,13 +23,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ZRef.h"
 #include "zoolib/ZStrim.h"
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
 #include <Foundation/NSString.h>
-
-#include "zoolib/ZRef.h"
 
 namespace ZooLib {
 
