@@ -1076,50 +1076,6 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerR_Stream
-
-/** \brief An R streamer that wraps a ZStreamR.
-
-Note that the ZStreamR's lifetime must extend beyond that of the ZStreamerR.
-*/
-
-class ZStreamerR_Stream : public ZStreamerR
-	{
-public:
-	ZStreamerR_Stream(const ZStreamR& iStreamR)
-	:	fStreamR(iStreamR)
-		{}
-
-// From ZStreamerR
-	virtual const ZStreamR& GetStreamR() { return fStreamR; }
-
-protected:
-	const ZStreamR& fStreamR;
-	};
-
-// =================================================================================================
-// MARK: - ZStreamerW_Stream
-
-/** \brief A W streamer that wraps a ZStreamW.
-
-Note that the ZStreamW's lifetime must extend beyond that of the ZStreamerW.
-*/
-
-class ZStreamerW_Stream : public ZStreamerW
-	{
-public:
-	ZStreamerW_Stream(const ZStreamW& iStreamW)
-	:	fStreamW(iStreamW)
-		{}
-
-// From ZStreamerR
-	virtual const ZStreamW& GetStreamW() { return fStreamW; }
-
-protected:
-	const ZStreamW& fStreamW;
-	};
-
-// =================================================================================================
 // MARK: - ZStreamerRFactory
 
 class ZStreamerRFactory : public ZCounted
