@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallScheduler.h"
-#include "zoolib/ZSingleton.h"
 #include "zoolib/ZUtil_STL_set.h"
 
 namespace ZooLib {
