@@ -28,21 +28,28 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZSingleton
+// MARK: - sSingleton
 
-template <class T, class Tag_p = T>
-T& sSingleton()
+template <class Type_p, class Tag_p = Type_p>
+Type_p& sSingleton()
 	{
-	static T* spT;
-	static ZDeleter<T> deleter(spT);
-	if (not spT)
+	static Type_p* spType_p;
+	static ZDeleter<Type_p> deleter(spType_p);
+	if (not spType_p)
 		{
-		T* theT = new T;
-		if (not sAtomic_CASPtr(&spT, nullptr, theT))
-			delete theT;
+		Type_p* theType_p = new Type_p;
+		if (not sAtomic_CASPtr(&spType_p, nullptr, theType_p))
+			delete theType_p;
 		}
-	return *spT;
+	return *spType_p;
 	}
+
+// =================================================================================================
+// MARK: - sDefault
+
+template <class Type_p>
+const Type_p& sDefault()
+	{ return sSingleton<Type_p,struct Tag_Default>(); }
 
 } // namespace ZooLib
 
