@@ -516,7 +516,7 @@ string ZUtil_CarbonEvents::sEventTypeAsString(UInt16 iEventType)
 		EVENT(osEvt);
 		EVENT(kHighLevelEvent);
 		}
-	return ZStringf("%u", iEventType);
+	return sStringf("%u", iEventType);
 	}
 
 } // namespace ZooLib
