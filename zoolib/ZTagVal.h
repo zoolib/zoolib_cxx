@@ -27,23 +27,23 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZTagVal
 
-template <class Value, class Tag>
+template <class Type_p, class Tag_p>
 class ZTagVal
 	{
 private:
 	template <class OtherTag>
-	ZTagVal(const ZTagVal<Value,OtherTag>& iOther);
+	ZTagVal(const ZTagVal<Type_p,OtherTag>& iOther);
 
 	template <class OtherTag>
-	ZTagVal& operator=(const ZTagVal<Value,OtherTag>& iOther);
+	ZTagVal& operator=(const ZTagVal<Type_p,OtherTag>& iOther);
 
 public:
 	ZTagVal()
-	:	fValue(Value())
+	:	fVal(Type_p())
 		{}
 
 	ZTagVal(const ZTagVal& iOther)
-	:	fValue(iOther.fValue)
+	:	fVal(iOther.fVal)
 		{}
 
 	~ZTagVal()
@@ -51,86 +51,86 @@ public:
 
 	ZTagVal& operator=(const ZTagVal& iOther)
 		{
-		fValue = iOther.fValue;
+		fVal = iOther.fVal;
 		return *this;
 		}
 
 	template <class P0>
 	ZTagVal(const P0& i0)
-	:	fValue(i0)
+	:	fVal(i0)
 		{}
 
 	template <class P0>
 	ZTagVal& operator=(const P0& i0)
 		{
-		fValue = i0;
+		fVal = i0;
 		return *this;
 		}
 
 	template <class P0, class P1>
 	ZTagVal(const P0& i0, const P1& i1)
-	:	fValue(i0, i1)
+	:	fVal(i0, i1)
 		{}
 
-	operator const Value&() const
-		{ return fValue; }
+	operator const Type_p&() const
+		{ return fVal; }
 
-	operator Value&()
-		{ return fValue; }
+	operator Type_p&()
+		{ return fVal; }
 
-	const Value& Get() const
-		{ return fValue; }
+	const Type_p& Get() const
+		{ return fVal; }
 
-	Value& Mut()
-		{ return fValue; }
+	Type_p& Mut()
+		{ return fVal; }
 
-	Value& Set(const Value& iValue)
-		{ return fValue = iValue; }
+	Type_p& Set(const Type_p& iVal)
+		{ return fVal = iVal; }
 
 	bool operator==(const ZTagVal& iOther) const
-		{ return fValue == iOther.fValue; }
+		{ return fVal == iOther.fVal; }
 
 	bool operator!=(const ZTagVal& iOther) const
-		{ return not (fValue == iOther.fValue); }
+		{ return not (fVal == iOther.fVal); }
 
 	bool operator<(const ZTagVal& iOther) const
-		{ return fValue < iOther.fValue; }
+		{ return fVal < iOther.fVal; }
 
 	bool operator>(const ZTagVal& iOther) const
-		{ return iOther.fValue < fValue; }
+		{ return iOther.fVal < fVal; }
 
 	bool operator<=(const ZTagVal& iOther) const
-		{ return not (iOther.fValue < fValue) ; }
+		{ return not (iOther.fVal < fVal) ; }
 
 	bool operator>=(const ZTagVal& iOther) const
-		{ return not (fValue < iOther.fValue) ; }
+		{ return not (fVal < iOther.fVal) ; }
 
 protected:
-	Value fValue;
+	Type_p fVal;
 	};
 
 // =================================================================================================
 // MARK: - Accessors
 
-template <class Value, class Tag>
-const Value* sPGet(const ZTagVal<Value,Tag>& iTagVal)
+template <class Type_p, class Tag_p>
+const Type_p* sPGet(const ZTagVal<Type_p,Tag_p>& iTagVal)
 	{ return &iTagVal.Get(); }
 
-template <class Value, class Tag>
-const Value& sGet(const ZTagVal<Value,Tag>& iTagVal)
+template <class Type_p, class Tag_p>
+const Type_p& sGet(const ZTagVal<Type_p,Tag_p>& iTagVal)
 	{ return iTagVal.Get(); }
 
-template <class Value, class Tag>
-Value* sPMut(ZTagVal<Value,Tag>& ioTagVal)
+template <class Type_p, class Tag_p>
+Type_p* sPMut(ZTagVal<Type_p,Tag_p>& ioTagVal)
 	{ return &ioTagVal.Mut(); }
 
-template <class Value, class Tag>
-Value& sMut(ZTagVal<Value,Tag>& ioTagVal)
+template <class Type_p, class Tag_p>
+Type_p& sMut(ZTagVal<Type_p,Tag_p>& ioTagVal)
 	{ return ioTagVal.Mut(); }
 
-template <class Value, class Tag>
-Value& sSet(ZTagVal<Value,Tag>& ioTagVal, const Value& iValue)
-	{ return ioTagVal.Set(iValue); }
+template <class Type_p, class Tag_p>
+Type_p& sSet(ZTagVal<Type_p,Tag_p>& ioTagVal, const Type_p& iVal)
+	{ return ioTagVal.Set(iVal); }
 
 } // namespace ZooLib
 

@@ -31,11 +31,11 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZThreadVal
 
-template <class Value, class Tag = Value>
+template <class Type_p, class Tag_p = Type_p>
 class ZThreadVal
-:	public ZTagVal<Value,Tag>
+:	public ZTagVal<Type_p,Tag_p>
 	{
-	typedef ZTagVal<Value,Tag> inherited;
+	typedef ZTagVal<Type_p,Tag_p> inherited;
 public:
 	ZThreadVal()
 	:	fPrior(spGet())
@@ -55,55 +55,55 @@ public:
 		return *this;
 		}
 
-	ZThreadVal(const Value& iValue)
-	:	inherited(iValue)
+	ZThreadVal(const Type_p& iVal)
+	:	inherited(iVal)
 	,	fPrior(spGet())
 		{ ZTSS::sSet(spKey(), this); }
 
-	ZThreadVal& operator=(const Value& iValue)
+	ZThreadVal& operator=(const Type_p& iVal)
 		{
-		inherited::operator=(iValue);
+		inherited::operator=(iVal);
 		return *this;
 		}
 
 	//--
 
-	static const Value* sPGet()
+	static const Type_p* sPGet()
 		{
 		if (ZThreadVal* theTV = spGet())
 			return &theTV->Get();
 		return null;
 		}
 
-	static ZQ<Value> sQGet()
+	static ZQ<Type_p> sQGet()
 		{
 		if (ZThreadVal* theTV = spGet())
 			return theTV->Get();
 		return null;
 		}
 
-	static Value sDGet(const Value& iDefault)
+	static Type_p sDGet(const Type_p& iDefault)
 		{
 		if (ZThreadVal* theTV = spGet())
 			return theTV->Get();
 		return iDefault;
 		}
 
-	static const Value& sGet()
+	static const Type_p& sGet()
 		{
 		if (ZThreadVal* theTV = spGet())
 			return theTV->Get();
-		return sDefault<Value>();
+		return sDefault<Type_p>();
 		}
 
-	static Value* sPMut()
+	static Type_p* sPMut()
 		{
 		if (ZThreadVal* theTV = spGet())
 			return &theTV->Mut();
 		return null;
 		}
 
-	static Value& sMut()
+	static Type_p& sMut()
 		{
 		ZThreadVal* theTV = spGet();
 		ZAssert(theTV);
@@ -127,10 +127,17 @@ private:
 // =================================================================================================
 // MARK: - sThreadVal
 
-// Not sure about this one yet.
-template <class T>
-const T& sThreadVal()
-	{ return ZThreadVal<T>::sGet(); }
+template <class Type_p, class Tag_p = Type_p>
+ZQ<Type_p> sQThreadVal()
+	{ return ZThreadVal<Type_p,Tag_p>::sQGet(); }
+
+template <class Type_p, class Tag_p = Type_p>
+Type_p* sPThreadVal()
+	{ return ZThreadVal<Type_p,Tag_p>::sPMut(); }
+
+template <class Type_p, class Tag_p = Type_p>
+Type_p& sThreadVal()
+	{ return ZThreadVal<Type_p,Tag_p>::sMut(); }
 
 } // namespace ZooLib
 
