@@ -45,12 +45,6 @@ public:
 // From ZStrimR
 	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
-//	virtual void Imp_ReadUTF16(UTF16* oDest,
-//		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
-
-//	virtual void Imp_ReadUTF8(UTF8* oDest,
-//		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
-
 	virtual bool Imp_ReadCP(UTF32& oCP);
 
 private:

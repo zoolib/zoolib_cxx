@@ -69,88 +69,6 @@ void ZStrimR_NSString::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 		}
 	}
 
-#if 0
-void ZStrimR_NSString::Imp_ReadUTF16(UTF16* oDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
-	{
-	const CFIndex length = [fString length];
-	if (0 == length)
-		{
-		if (oCountCP)
-			*oCountCP = 0;
-		if (oCountCU)
-			*oCountCU = 0;
-		}
-	else
-		{
-		size_t countConsumed;
-		const size_t countAvailable = length < fPosition ? 0 : length - fPosition;
-		if (const UTF16* start = (const UTF16*)::NSStringGetCharactersPtr(fString))
-			{
-			ZUnicode::sUTF16ToUTF16
-				(start + fPosition, countAvailable,
-				&countConsumed, nullptr,
-				oDest, iCountCU,
-				oCountCU,
-				iCountCP, oCountCP);
-			}
-		else
-			{
-			UTF16 buffer[kBufSize];
-			const size_t cuToCopy = min(iCountCU, min(countAvailable, kBufSize));
-			::NSStringGetCharacters(fString, CFRangeMake(fPosition, cuToCopy), (UniChar*)buffer);
-			ZUnicode::sUTF16ToUTF16
-				(buffer, cuToCopy,
-				&countConsumed, nullptr,
-				oDest, iCountCU,
-				oCountCU,
-				iCountCP, oCountCP);
-			}
-		fPosition += countConsumed;
-		}
-	}
-
-void ZStrimR_NSString::Imp_ReadUTF8(UTF8* oDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
-	{
-	const CFIndex length = ::NSStringGetLength(fString);
-	if (0 == length)
-		{
-		if (oCountCP)
-			*oCountCP = 0;
-		if (oCountCU)
-			*oCountCU = 0;
-		}
-	else
-		{
-		size_t countConsumed;
-		const size_t countAvailable = length < fPosition ? 0 : length - fPosition;
-		if (const UTF16* start = (const UTF16*)::NSStringGetCharactersPtr(fString))
-			{
-			ZUnicode::sUTF16ToUTF8
-				(start + fPosition, length - fPosition,
-				&countConsumed, nullptr,
-				oDest, iCountCU,
-				oCountCU,
-				iCountCP, oCountCP);
-			}
-		else
-			{
-			UTF16 buffer[kBufSize];
-			const size_t cuToCopy = min(iCountCU, min(countAvailable, kBufSize));
-			::NSStringGetCharacters(fString, CFRangeMake(fPosition, cuToCopy), (UniChar*)buffer);
-			ZUnicode::sUTF16ToUTF8
-				(buffer, cuToCopy,
-				&countConsumed, nullptr,
-				oDest, iCountCU,
-				oCountCU,
-				iCountCP, oCountCP);
-			}
-		fPosition += countConsumed;
-		}
-	}
-#endif
-
 bool ZStrimR_NSString::Imp_ReadCP(UTF32& oCP)
 	{
 	using namespace ZUnicode;
@@ -214,10 +132,9 @@ void ZStrimW_NSString::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, siz
 	{
 	if (iCountCU)
 		{
-		NSString* asString =
+		ZRef<NSString> asString = sAdopt&
 			[[NSString alloc] initWithCharacters:(unichar*)iSource length:iCountCU];
-		[fString.Get() appendString:asString];
-		[asString release];
+		[fString appendString:asString];
 		}
 
 	if (oCountCU)
