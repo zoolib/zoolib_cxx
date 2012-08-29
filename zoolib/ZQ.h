@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h" // For std::swap
 #include "zoolib/ZCtorDtor.h" // For placement ctor/copy/dtor/assign
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZSingleton.h" // For sDefault
 #include "zoolib/ZTypes.h" // For null
 
 namespace ZooLib {
