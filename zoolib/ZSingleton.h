@@ -30,7 +30,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - sSingleton
 
-template <class Type_p, class Tag_p = Type_p>
+template <class Type_p, class Tag_p>
 Type_p& sSingleton()
 	{
 	static Type_p* spType_p;
@@ -44,12 +44,18 @@ Type_p& sSingleton()
 	return *spType_p;
 	}
 
+template <class Type_p>
+Type_p& sSingleton()
+	{ return sSingleton<Type_p,Type_p>(); }
+
 // =================================================================================================
 // MARK: - sDefault
 
+struct Tag_Default;
+
 template <class Type_p>
 const Type_p& sDefault()
-	{ return sSingleton<Type_p,struct Tag_Default>(); }
+	{ return sSingleton<Type_p,Tag_Default>(); }
 
 } // namespace ZooLib
 
