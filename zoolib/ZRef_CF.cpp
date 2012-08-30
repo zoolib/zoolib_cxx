@@ -56,6 +56,7 @@ ZMACRO_CF_Mutable(WriteStream)
 	ZMACRO_Retain_Release(CF##a##Ref)
 
 ZMACRO_CF_Const(URL)
+ZMACRO_CF_Const(UUID)
 ZMACRO_CF_Const(Null)
 
 // =================================================================================================
