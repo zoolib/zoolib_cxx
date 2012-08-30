@@ -68,10 +68,10 @@ private:
 	ZSafeSetRep(const ZSafeSetRep& iOther)
 		{
 		ZAcqMtx acq(iOther.fMtx);
-		for (typename EntryList::iterator i = iOther.fList.begin();
-			i != iOther.fList.end(); ++i)
+		for (typename EntryList::const_iterator ii = iOther.fList.begin();
+			ii != iOther.fList.end(); ++ii)
 			{
-			const T& val = *i;
+			const T& val = ii->fT;
 			typename EntryList::iterator listIter = fList.insert(fList.end(), Entry(val));
 			fMap.insert(typename EntryMap::value_type(val, listIter));
 			}
@@ -94,9 +94,9 @@ private:
 			listIter != fList.end(); ++listIter)
 			{
 			for (DListEraser<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
-				i = (*listIter).fIters; i; i.Advance())
+				ii = listIter->fIters; ii; ii.Advance())
 				{
-				ZSafeSetIterConst<T>* theIter = i.Current();
+				ZSafeSetIterConst<T>* theIter = ii.Current();
 				theIter->fRep.Clear();
 				}
 			}
@@ -137,7 +137,7 @@ private:
 		ZAcqMtx acq(fMtx);
 
 		typename EntryMap::iterator mapIter = fMap.lower_bound(iT);
-		if (mapIter != fMap.end() && (*mapIter).first == iT)
+		if (mapIter != fMap.end() && mapIter->first == iT)
 			return false;
 
 		typename EntryList::iterator listIter = fList.insert(fList.end(), Entry(iT));
@@ -158,9 +158,9 @@ private:
 			listIter != fList.end(); ++listIter)
 			{
 			for (DListEraser<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
-				i = (*listIter).fIters; i; i.Advance())
+				ii = listIter->fIters; ii; ii.Advance())
 				{
-				ZSafeSetIterConst<T>* theIter = i.Current();
+				ZSafeSetIterConst<T>* theIter = ii.Current();
 				theIter->fRep.Clear();
 				}
 			}
@@ -230,7 +230,7 @@ public:
 		{}
 
 	ZSafeSet(const ZSafeSet& iOther)
-	:	fRep(new ZSafeSetRep<T>(*iOther.GetRep().GetObject()))
+	:	fRep(new ZSafeSetRep<T>(*iOther.GetRep().Get()))
 		{}
 
 	~ZSafeSet()
@@ -239,7 +239,7 @@ public:
 	ZSafeSet& operator=(const ZSafeSet& iOther)
 		{
 		if (this != &iOther)
-			fRep = new ZSafeSetRep<T>(*iOther.fRep.GetObject());
+			fRep = new ZSafeSetRep<T>(*iOther.fRep.Get());
 
 		return *this;
 		}
@@ -426,7 +426,7 @@ ZQ<T> ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter)
 		{
 		sEraseMust(ioIter.fNextEntry->fIters, &ioIter);
 
-		result = (*ioIter.fNextEntry).fT;
+		result = ioIter.fNextEntry->fT;
 
 		if (++ioIter.fNextEntry == fList.end())
 			ioIter.fRep.Clear();
@@ -460,26 +460,26 @@ ZQ<T> ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter)
 		}
 	else
 		{
-		(*ioIter.fNextEntry).fIters.Erase(&ioIter);
+		ioIter.fNextEntry->fIters.Erase(&ioIter);
 
-		result = (*ioIter.fNextEntry).fT;
+		result = ioIter.fNextEntry->fT;
 
 		for (DListEraser<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
-			i = (*ioIter.fNextEntry).fIters; i; i.Advance())
+			ii = ioIter.fNextEntry->fIters; ii; ii.Advance())
 			{
-			ZSafeSetIterConst<T>* theIter = i.Current();
+			ZSafeSetIterConst<T>* theIter = ii.Current();
 
 			if (++theIter->fNextEntry == fList.end())
 				theIter->fRep.Clear();
 			else
-				(*theIter->fNextEntry).fIters.PushBack(theIter);
+				theIter->fNextEntry->fIters.PushBack(theIter);
 			}
 
 		ioIter.fNextEntry = fList.erase(ioIter.fNextEntry);
 		if (ioIter.fNextEntry == fList.end())
 			ioIter.fRep.Clear();
 		else
-			(*ioIter.fNextEntry).fIters.PushBack(&ioIter);
+			ioIter.fNextEntry->fIters.PushBack(&ioIter);
 
 		fMap.erase(result.Get());
 		}
@@ -493,14 +493,14 @@ bool ZSafeSetRep<T>::pErase(const T& iT)
 	fCnd.Broadcast();
 
 	typename EntryMap::iterator mapIter = fMap.lower_bound(iT);
-	if (mapIter == fMap.end() || (*mapIter).first != iT)
+	if (mapIter == fMap.end() || mapIter->first != iT)
 		return false;
 
-	typename EntryList::iterator& listIter = (*mapIter).second;
+	typename EntryList::iterator& listIter = mapIter->second;
 	for (DListEraser<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
-		i = (*listIter).fIters; i; i.Advance())
+		ii = listIter->fIters; ii; ii.Advance())
 		{
-		ZSafeSetIterConst<T>* theIter = i.Current();
+		ZSafeSetIterConst<T>* theIter = ii.Current();
 
 		if (++theIter->fNextEntry == fList.end())
 			theIter->fRep.Clear();
