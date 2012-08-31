@@ -457,9 +457,9 @@ template <class T, bool Sense>
 const T* sPGet(const ZQ<T,Sense>& iQ)
 	{ return iQ.PGet(); }
 
-template <class T, bool Sense>
-const ZQ<T,Sense> sQGet(const ZQ<T,Sense>& iQ)
-	{ return iQ.QGet(); }
+//template <class T, bool Sense>
+//const ZQ<T,Sense> sQGet(const ZQ<T,Sense>& iQ)
+//	{ return iQ.QGet(); }
 
 template <class T, bool Sense>
 const T& sDGet(const T& iDefault, const ZQ<T,Sense>& iQ)
