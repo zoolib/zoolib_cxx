@@ -34,40 +34,48 @@ ZCallScheduler::ZCallScheduler()
 :	fThreadRunning(false)
 	{}
 
-void ZCallScheduler::Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+void ZCallScheduler::Cancel(const Job& iJob)
 	{
 	ZAcqMtx acq(fMtx);
 
-	const Job theJob(iCaller, iCallable);
-
-	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(theJob, 0.0));
-	if (iterJT != fJobTimes.end() && iterJT->first == theJob)
+	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(iJob, 0.0));
+	if (iterJT != fJobTimes.end() && iterJT->first == iJob)
 		{
-		sEraseMust(fTimeJobs, make_pair(iterJT->second, theJob));
+		sEraseMust(fTimeJobs, make_pair(iterJT->second, iJob));
 		fJobTimes.erase(iterJT);
 		}
 	}
 
-void ZCallScheduler::NextCallAt
-	(ZTime iSystemTime, const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
-	{ this->pNextCallAt(iSystemTime, Job(iCaller, iCallable)); }
+void ZCallScheduler::NextCallAt(ZTime iSystemTime, const Job& iJob)
+	{ this->pNextCallAt(iSystemTime, iJob); }
 
-void ZCallScheduler::NextCallIn
-	(double iInterval, const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
-	{ this->pNextCallAt(ZTime::sSystem() + iInterval, Job(iCaller, iCallable)); }
+void ZCallScheduler::NextCallIn(double iInterval, const Job& iJob)
+	{ this->pNextCallAt(ZTime::sSystem() + iInterval, iJob); }
 
-bool ZCallScheduler::IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+bool ZCallScheduler::IsAwake(const Job& iJob)
 	{
 	ZAcqMtx acq(fMtx);
 
-	const Job theJob(iCaller, iCallable);
-
-	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(theJob, 0.0));
-	if (iterJT != fJobTimes.end() && iterJT->first == theJob)
+	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(iJob, 0.0));
+	if (iterJT != fJobTimes.end() && iterJT->first == iJob)
 		return ZTime::sSystem() >= iterJT->second;
 
 	return false;
 	}
+
+void ZCallScheduler::Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+	{ this->Cancel(Job(iCaller, iCallable)); }
+
+void ZCallScheduler::NextCallAt(ZTime iSystemTime,
+	const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+	{ this->pNextCallAt(iSystemTime, Job(iCaller, iCallable)); }
+
+void ZCallScheduler::NextCallIn(double iInterval,
+	const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+	{ this->pNextCallAt(ZTime::sSystem() + iInterval, Job(iCaller, iCallable)); }
+
+bool ZCallScheduler::IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+	{ return this->IsAwake(Job(iCaller, iCallable)); }
 
 void ZCallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 	{

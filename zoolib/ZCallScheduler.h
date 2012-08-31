@@ -39,6 +39,16 @@ class ZCallScheduler
 public:
 	ZCallScheduler();
 
+	typedef std::pair<ZRef<ZCaller>,ZRef<ZCallable_Void> > Job;
+
+	void Cancel(const Job& iJob);
+
+	void NextCallAt(ZTime iSystemTime, const Job& iJob);
+
+	void NextCallIn(double iInterval, const Job& iJob);
+
+	bool IsAwake(const Job& iJob);
+
 	void Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
 	void NextCallAt(ZTime iSystemTime,
@@ -50,8 +60,6 @@ public:
 	bool IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
 private:
-	typedef std::pair<ZRef<ZCaller>,ZRef<ZCallable_Void> > Job;
-
 	void pNextCallAt(ZTime iSystemTime, const Job& iJob);
 
 	void pRun();
