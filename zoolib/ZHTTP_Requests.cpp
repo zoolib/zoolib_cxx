@@ -50,10 +50,10 @@ static bool spReadResponse(const ZStreamR& r, int32* oResponseCode, Map* oHeader
 	ZMIME::StreamR_Header theSIH_Server(r);
 
 	string serverResultMessage;
-	if (!sReadResponse(ZStreamU_Unreader(theSIH_Server), oResponseCode, nullptr))
+	if (not sReadResponse(ZStreamU_Unreader(theSIH_Server), oResponseCode, nullptr))
 		return false;
 
-	if (!sReadHeader(theSIH_Server, oHeader))
+	if (not sReadHeader(theSIH_Server, oHeader))
 		return false;
 
 	return true;
@@ -142,12 +142,12 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 		if (sParseURL(ioURL, &theScheme, &theHost, &thePort, &thePath))
 			{
 			ZRef<ZStreamerRWCon> theEP = spConnect(iCallable_Connect, theScheme, theHost, thePort);
-			if (!theEP)
+			if (not theEP)
 				break;
 
 			int32 theResponseCode;
 			Map theHeaders;
-			if (!spRequest
+			if (not spRequest
 				(theEP->GetStreamW(), theEP->GetStreamR(),
 				iMethod, theHost, thePath,
 				true,
@@ -423,7 +423,7 @@ static ZQ<Val> spReadPOST(const ZStreamR& iStreamR, const Map& iHeader)
 			if (contentDisposition.Get<string>("value") == "form-data")
 				{
 				const string name = contentDisposition.Get("parameters").Get<string>("name");
-				if (!name.empty())
+				if (not name.empty())
 					{
 					if (ZQ<Val> theQVal = spReadPOST(streamPart, header))
 						theMap.Set(name, theQVal.Get());
