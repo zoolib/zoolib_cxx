@@ -49,12 +49,8 @@ public:
 	void Wait()
 		{
 		ZAcqMtx acq(fMtx);
-		for (;;)
-			{
-			if (fVal || not fPromiseExists)
-				return;
+		while (fPromiseExists && not fVal)
 			fCnd.Wait(fMtx);
-			}
 		}
 
 	bool WaitFor(double iTimeout)
@@ -66,10 +62,7 @@ public:
 
 		fCnd.WaitFor(fMtx, iTimeout);
 
-		if (fVal || not fPromiseExists)
-			return true;
-
-		return false;
+		return fVal || not fPromiseExists;
 		}
 
 	bool WaitUntil(ZTime iDeadline)
@@ -81,10 +74,7 @@ public:
 
 		fCnd.WaitUntil(fMtx, iDeadline);
 
-		if (fVal || not fPromiseExists)
-			return true;
-
-		return false;
+		return fVal || not fPromiseExists;
 		}
 
 	ZQ<T> QGet()
