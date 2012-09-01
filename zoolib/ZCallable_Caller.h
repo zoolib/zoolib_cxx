@@ -50,8 +50,7 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall()
 		{
-		return sCallByCaller(fCaller,
-			fCallable)->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable)->QGet().Get();
 		}
 
 private:
@@ -78,8 +77,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0)->QGet().Get();
 		}
 
 private:
@@ -106,8 +105,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1)->QGet().Get();
 		}
 
 private:
@@ -134,8 +133,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2)->QGet().Get();
 		}
 
 private:
@@ -162,8 +161,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3)->QGet().Get();
 		}
 
 private:
@@ -191,8 +190,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4)->QGet().Get();
 		}
 
 private:
@@ -220,8 +219,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4, i5)->QGet().Get();
 		}
 
 private:
@@ -249,8 +248,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4, i5, i6)->QGet().Get();
 		}
 
 private:
@@ -278,8 +277,8 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4, i5, i6, i7)->QGet().Get();
 		}
 
 private:
@@ -310,8 +309,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4, i5, i6, i7, i8)->QGet().Get();
 		}
 
 private:
@@ -342,8 +341,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9)->QGet().Get();
 		}
 
 private:
@@ -374,8 +373,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA)->QGet().Get();
 		}
 
 private:
@@ -406,8 +405,8 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB)->QGet().Get();
 		}
 
 private:
@@ -439,9 +438,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4, i5, i6, i7,
+			i8, i9, iA, iB, iC)->QGet().Get();
 		}
 
 private:
@@ -473,9 +472,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4, i5, i6, i7,
+			i8, i9, iA, iB, iC, iD)->QGet().Get();
 		}
 
 private:
@@ -507,9 +506,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD, iE))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4, i5, i6, i7,
+			i8, i9, iA, iB, iC, iD, iE)->QGet().Get();
 		}
 
 private:
@@ -541,9 +540,9 @@ public:
 		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
-		return sCallByCaller(fCaller,
-			sBindR(fCallable, i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD, iE, iF))->QGet().DGet(null);
+		return sQCallByCaller(fCaller, fCallable,
+			i0, i1, i2, i3, i4, i5, i6, i7,
+			i8, i9, iA, iB, iC, iD, iE, iF)->QGet().Get();
 		}
 
 private:
