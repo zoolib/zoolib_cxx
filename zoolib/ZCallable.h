@@ -2539,17 +2539,10 @@ ZRef<ZCallable<Signature> > sCallable(const ZRef<ZCallable<Signature> >& iCallab
 	{ return iCallable; }
 
 // =================================================================================================
-// MARK: - sCallReturnVoid
-
-template <class T>
-void sCallReturnVoid(ZRef<ZCallable<T(void)> > iCallable)
-	{ sCall(iCallable); }
-
-// =================================================================================================
 // MARK: - sCallVoid
 
-inline
-void sCallVoid(ZRef<ZCallable<void(void)> > iCallable)
+template <class T>
+void sCallVoid(ZRef<ZCallable<T(void)> > iCallable)
 	{ sCall(iCallable); }
 
 // =================================================================================================
