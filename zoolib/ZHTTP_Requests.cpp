@@ -114,16 +114,21 @@ static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 		{
 		return iCallable_Connect->Call(iHost, iPort, useSSL);
 		}
-	else if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
+	else
 		{
-		if (useSSL)
+		return sConnect(iHost, iPort, useSSL);
+		}
+	}
+
+ZRef<ZStreamerRWCon> sConnect(const string& iHost, uint16 iPort, bool iUseSSL)
+	{
+	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
+		{
+		if (iUseSSL)
 			return sStreamerRWCon_SSL(theEP, theEP);
 		return theEP;
 		}
-	else
-		{
-		return null;
-		}
+	return null;
 	}
 
 ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,

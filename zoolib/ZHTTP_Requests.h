@@ -34,6 +34,8 @@ namespace ZHTTP {
 typedef ZCallable<ZRef<ZStreamerRWCon>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
 	Callable_Connect;
 
+ZRef<ZStreamerRWCon> sConnect(const std::string& iHost, uint16 iPort, bool iUseSSL);
+
 ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iMethod, std::string& ioURL,
 	int32* oResultCode, Map* oFields, Data* oRawHeader);
