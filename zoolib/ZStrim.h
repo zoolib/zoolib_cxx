@@ -713,37 +713,6 @@ typedef ZStrimW_String<string32> ZStrimW_String32;
 typedef ZStrimW_String<string16> ZStrimW_String16;
 typedef ZStrimW_String<string8> ZStrimW_String8;
 
-// =================================================================================================
-// MARK: - ZStrimW_Indirect
-
-class ZStrimW_Indirect : public ZStrimW
-	{
-public:
-	ZStrimW_Indirect();
-	ZStrimW_Indirect(const ZStrimW& iStrimW);
-	~ZStrimW_Indirect();
-
-// From ZStrimW
-	virtual void Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU);
-	virtual void Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCountCU);
-	virtual void Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU);
-
-	virtual void Imp_CopyFromDispatch(const ZStrimR& iStrimR,
-		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
-
-	virtual void Imp_CopyFrom(const ZStrimR& iStrimR,
-		uint64 iCountCP, uint64* oCountCPRead, uint64* oCountCPWritten);
-
-	virtual void Imp_Flush();
-
-// Our protocol
-	void SetSink(const ZStrimW& iStrimW);
-	void SetSink(const ZStrimW* iStrimW);
-
-private:
-	const ZStrimW* fSink;
-	};
-
 } // namespace ZooLib
 
 #endif // __ZStrim_h__
