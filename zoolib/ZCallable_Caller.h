@@ -439,8 +439,7 @@ public:
 		P8 i8, P9 i9, PA iA, PB iB, PC iC)
 		{
 		return sQCallByCaller(fCaller, fCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC)->QGet().Get();
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC)->QGet().Get();
 		}
 
 private:
@@ -473,8 +472,7 @@ public:
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 		{
 		return sQCallByCaller(fCaller, fCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD)->QGet().Get();
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD)->QGet().Get();
 		}
 
 private:
@@ -507,8 +505,7 @@ public:
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 		{
 		return sQCallByCaller(fCaller, fCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD, iE)->QGet().Get();
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE)->QGet().Get();
 		}
 
 private:
@@ -541,8 +538,7 @@ public:
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{
 		return sQCallByCaller(fCaller, fCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD, iE, iF)->QGet().Get();
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF)->QGet().Get();
 		}
 
 private:

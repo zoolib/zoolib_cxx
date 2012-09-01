@@ -342,8 +342,7 @@ void spQCallWithPromise_T
 	P8 i8)
 	{
 	iPromise->Deliver(iCallable->QCall
-		(i0, i1, i2, i3, i4, i5, i6, i7,
-		i8));
+		(i0, i1, i2, i3, i4, i5, i6, i7, i8));
 	}
 
 template <class R,
@@ -363,8 +362,7 @@ ZRef<ZDelivery<ZQ<R> > > sQCallByCaller
 			(sCallable(spQCallWithPromise_T<R,P0,P1,P2,P3,P4,P5,P6,P7,P8>),
 			thePromise,
 			iCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8));
+			i0, i1, i2, i3, i4, i5, i6, i7, i8));
 		}
 	return thePromise->GetDelivery();
 	}
@@ -383,8 +381,7 @@ void spQCallWithPromise_T
 	P8 i8, P9 i9)
 	{
 	iPromise->Deliver(iCallable->QCall
-		(i0, i1, i2, i3, i4, i5, i6, i7,
-		i8, i9));
+		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9));
 	}
 
 template <class R,
@@ -404,8 +401,7 @@ ZRef<ZDelivery<ZQ<R> > > sQCallByCaller
 			(sCallable(spQCallWithPromise_T<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9>),
 			thePromise,
 			iCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9));
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9));
 		}
 	return thePromise->GetDelivery();
 	}
@@ -424,8 +420,7 @@ void spQCallWithPromise_T
 	P8 i8, P9 i9, PA iA)
 	{
 	iPromise->Deliver(iCallable->QCall
-		(i0, i1, i2, i3, i4, i5, i6, i7,
-		i8, i9, iA));
+		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA));
 	}
 
 template <class R,
@@ -445,8 +440,7 @@ ZRef<ZDelivery<ZQ<R> > > sQCallByCaller
 			(sCallable(spQCallWithPromise_T<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA>),
 			thePromise,
 			iCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA));
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA));
 		}
 	return thePromise->GetDelivery();
 	}
@@ -465,8 +459,7 @@ void spQCallWithPromise_T
 	P8 i8, P9 i9, PA iA, PB iB)
 	{
 	iPromise->Deliver(iCallable->QCall
-		(i0, i1, i2, i3, i4, i5, i6, i7,
-		i8, i9, iA, iB));
+		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB));
 	}
 
 template <class R,
@@ -486,8 +479,7 @@ ZRef<ZDelivery<ZQ<R> > > sQCallByCaller
 			(sCallable(spQCallWithPromise_T<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB>),
 			thePromise,
 			iCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB));
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB));
 		}
 	return thePromise->GetDelivery();
 	}
@@ -507,8 +499,7 @@ void spQCallWithPromise_T
 	P8 i8, P9 i9, PA iA, PB iB, PC iC)
 	{
 	iPromise->Deliver(iCallable->QCall
-		(i0, i1, i2, i3, i4, i5, i6, i7,
-		i8, i9, iA, iB, iC));
+		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC));
 	}
 
 template <class R,
@@ -529,8 +520,7 @@ ZRef<ZDelivery<ZQ<R> > > sQCallByCaller
 			(sCallable(spQCallWithPromise_T<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC>),
 			thePromise,
 			iCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC));
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC));
 		}
 	return thePromise->GetDelivery();
 	}
@@ -550,8 +540,7 @@ void spQCallWithPromise_T
 	P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
 	{
 	iPromise->Deliver(iCallable->QCall
-		(i0, i1, i2, i3, i4, i5, i6, i7,
-		i8, i9, iA, iB, iC, iD));
+		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD));
 	}
 
 template <class R,
@@ -572,8 +561,7 @@ ZRef<ZDelivery<ZQ<R> > > sQCallByCaller
 			(sCallable(spQCallWithPromise_T<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD>),
 			thePromise,
 			iCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD));
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD));
 		}
 	return thePromise->GetDelivery();
 	}
@@ -593,8 +581,7 @@ void spQCallWithPromise_T
 	P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
 	{
 	iPromise->Deliver(iCallable->QCall
-		(i0, i1, i2, i3, i4, i5, i6, i7,
-		i8, i9, iA, iB, iC, iD, iE));
+		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE));
 	}
 
 template <class R,
@@ -615,8 +602,7 @@ ZRef<ZDelivery<ZQ<R> > > sQCallByCaller
 			(sCallable(spQCallWithPromise_T<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE>),
 			thePromise,
 			iCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD, iE));
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE));
 		}
 	return thePromise->GetDelivery();
 	}
@@ -636,8 +622,7 @@ void spQCallWithPromise_T
 	P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 	{
 	iPromise->Deliver(iCallable->QCall
-		(i0, i1, i2, i3, i4, i5, i6, i7,
-		i8, i9, iA, iB, iC, iD, iE, iF));
+		(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF));
 	}
 
 template <class R,
@@ -658,8 +643,7 @@ ZRef<ZDelivery<ZQ<R> > > sQCallByCaller
 			(sCallable(spQCallWithPromise_T<R,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF>),
 			thePromise,
 			iCallable,
-			i0, i1, i2, i3, i4, i5, i6, i7,
-			i8, i9, iA, iB, iC, iD, iE, iF));
+			i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF));
 		}
 	return thePromise->GetDelivery();
 	}
