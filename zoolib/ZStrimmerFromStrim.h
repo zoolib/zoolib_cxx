@@ -32,14 +32,46 @@ namespace ZooLib {
 class ZStrimmerFromStrimR
 	{
 public:
-	ZStrimmerFromStrimR(const ZStrimR& r);
+	ZStrimmerFromStrimR(const ZStrimR& iStrim);
 	~ZStrimmerFromStrimR();
 
 	operator ZRef<ZStrimmerR>();
 
 private:
-	class StrimmerR;
-	ZRef<StrimmerR> fStrimmerR;
+	class Strimmer;
+	ZRef<Strimmer> fStrimmer;
+	};
+
+// =================================================================================================
+// MARK: - ZStrimmerFromStrimU
+
+class ZStrimmerFromStrimU
+	{
+public:
+	ZStrimmerFromStrimU(const ZStrimU& iStrim);
+	~ZStrimmerFromStrimU();
+
+	operator ZRef<ZStrimmerU>();
+
+private:
+	class Strimmer;
+	ZRef<Strimmer> fStrimmer;
+	};
+
+// =================================================================================================
+// MARK: - ZStrimmerFromStrimW
+
+class ZStrimmerFromStrimW
+	{
+public:
+	ZStrimmerFromStrimW(const ZStrimW& iStrim);
+	~ZStrimmerFromStrimW();
+
+	operator ZRef<ZStrimmerW>();
+
+private:
+	class Strimmer;
+	ZRef<Strimmer> fStrimmer;
 	};
 
 } // namespace ZooLib

@@ -19,93 +19,68 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStrimmerFromStrim.h"
+#include "zoolib/ZStrim_Indirect.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 // MARK: - ZStrimmerFromStrimR
 
-class ZStrimmerFromStrimR::StrimmerR
-:	public ZStrimmerR
-,	public ZStrimR
+class ZStrimmerFromStrimR::Strimmer : public ZStrimmerR, public ZStrimR_Indirect
 	{
 public:
-	StrimmerR(const ZStrimR& r)
-	:	fStrimR(&r)
-		{}
-	
-	virtual ~StrimmerR()
-		{}
-
-// From ZStrimmerR
-	virtual const ZStrimR& GetStrimR()
-		{ return *this; }
-
-// From ZStrimR
-	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
-		{
-		if (fStrimR)
-			{
-			fStrimR->Read(oDest, iCount, oCount);
-			}
-		else
-			{
-			if (oCount)
-				*oCount = 0;
-			}
-		}
-
-	virtual void Imp_ReadUTF16(UTF16* oDest,
-		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
-		{
-		if (fStrimR)
-			{
-			fStrimR->Read(oDest, iCountCU, oCountCU, iCountCP, oCountCP);
-			}
-		else
-			{
-			if (oCountCU)
-				*oCountCU = 0;
-			if (oCountCP)
-				*oCountCP = 0;
-			}
-		}
-
-	virtual void Imp_ReadUTF8(UTF8* oDest,
-		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
-		{
-		if (fStrimR)
-			{
-			fStrimR->Read(oDest, iCountCU, oCountCU, iCountCP, oCountCP);
-			}
-		else
-			{
-			if (oCountCU)
-				*oCountCU = 0;
-			if (oCountCP)
-				*oCountCP = 0;
-			}
-		}
-
-// Our protocol
-	void pDetach()
-		{
-		ZAssert(fStrimR);
-		fStrimR = nullptr;
-		}
-
-private:
-	const ZStrimR* fStrimR;
+	Strimmer(const ZStrimR& iStrim) : ZStrimR_Indirect(&iStrim) {}
+	virtual const ZStrimR& GetStrimR() { return *this; }
 	};
 
-ZStrimmerFromStrimR::ZStrimmerFromStrimR(const ZStrimR& r)
-:	fStrimmerR(new StrimmerR(r))
+ZStrimmerFromStrimR::ZStrimmerFromStrimR(const ZStrimR& iStrim)
+:	fStrimmer(new Strimmer(iStrim))
 	{}
 
 ZStrimmerFromStrimR::~ZStrimmerFromStrimR()
-	{ fStrimmerR->pDetach(); }
+	{ fStrimmer->Set(nullptr); }
 
 ZStrimmerFromStrimR::operator ZRef<ZStrimmerR>()
-	{ return fStrimmerR; }
+	{ return fStrimmer; }
+
+// =================================================================================================
+// MARK: - ZStrimmerFromStrimU
+
+class ZStrimmerFromStrimU::Strimmer : public ZStrimmerU, public ZStrimU_Indirect
+	{
+public:
+	Strimmer(const ZStrimU& iStrim) : ZStrimU_Indirect(&iStrim) {}
+	virtual const ZStrimU& GetStrimU() { return *this; }
+	};
+
+ZStrimmerFromStrimU::ZStrimmerFromStrimU(const ZStrimU& iStrim)
+:	fStrimmer(new Strimmer(iStrim))
+	{}
+
+ZStrimmerFromStrimU::~ZStrimmerFromStrimU()
+	{ fStrimmer->Set(nullptr); }
+
+ZStrimmerFromStrimU::operator ZRef<ZStrimmerU>()
+	{ return fStrimmer; }
+
+// =================================================================================================
+// MARK: - ZStrimmerFromStrimW
+
+class ZStrimmerFromStrimW::Strimmer : public ZStrimmerW, public ZStrimW_Indirect
+	{
+public:
+	Strimmer(const ZStrimW& iStrim) : ZStrimW_Indirect(&iStrim) {}
+	virtual const ZStrimW& GetStrimW() { return *this; }
+	};
+
+ZStrimmerFromStrimW::ZStrimmerFromStrimW(const ZStrimW& iStrim)
+:	fStrimmer(new Strimmer(iStrim))
+	{}
+
+ZStrimmerFromStrimW::~ZStrimmerFromStrimW()
+	{ fStrimmer->Set(nullptr); }
+
+ZStrimmerFromStrimW::operator ZRef<ZStrimmerW>()
+	{ return fStrimmer; }
 
 } // namespace ZooLib
