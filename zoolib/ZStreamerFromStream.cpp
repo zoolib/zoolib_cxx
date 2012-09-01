@@ -26,7 +26,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZStreamerFromStreamR
 
-class ZStreamerFromStreamR::Streamer : public ZStreamerR , public ZStreamR_Indirect
+class ZStreamerFromStreamR::Streamer : public ZStreamerR, public ZStreamR_Indirect
 	{
 public:
 	Streamer(const ZStreamR& iStream) : ZStreamR_Indirect(&iStream) {}
@@ -46,7 +46,7 @@ ZStreamerFromStreamR::operator ZRef<ZStreamerR>()
 // =================================================================================================
 // MARK: - ZStreamerFromStreamRCon
 
-class ZStreamerFromStreamRCon::Streamer : public ZStreamerRCon , public ZStreamRCon_Indirect
+class ZStreamerFromStreamRCon::Streamer : public ZStreamerRCon, public ZStreamRCon_Indirect
 	{
 public:
 	Streamer(const ZStreamRCon& iStream) : ZStreamRCon_Indirect(&iStream) {}
@@ -66,7 +66,7 @@ ZStreamerFromStreamRCon::operator ZRef<ZStreamerRCon>()
 // =================================================================================================
 // MARK: - ZStreamerFromStreamU
 
-class ZStreamerFromStreamU::Streamer : public ZStreamerU , public ZStreamU_Indirect
+class ZStreamerFromStreamU::Streamer : public ZStreamerU, public ZStreamU_Indirect
 	{
 public:
 	Streamer(const ZStreamU& iStream) : ZStreamU_Indirect(&iStream) {}
@@ -86,7 +86,7 @@ ZStreamerFromStreamU::operator ZRef<ZStreamerU>()
 // =================================================================================================
 // MARK: - ZStreamerFromStreamRPos
 
-class ZStreamerFromStreamRPos::Streamer : public ZStreamerRPos , public ZStreamRPos_Indirect
+class ZStreamerFromStreamRPos::Streamer : public ZStreamerRPos, public ZStreamRPos_Indirect
 	{
 public:
 	Streamer(const ZStreamRPos& iStream) : ZStreamRPos_Indirect(&iStream) {}
@@ -106,7 +106,7 @@ ZStreamerFromStreamRPos::operator ZRef<ZStreamerRPos>()
 // =================================================================================================
 // MARK: - ZStreamerFromStreamW
 
-class ZStreamerFromStreamW::Streamer : public ZStreamerW , public ZStreamW_Indirect
+class ZStreamerFromStreamW::Streamer : public ZStreamerW, public ZStreamW_Indirect
 	{
 public:
 	Streamer(const ZStreamW& iStream) : ZStreamW_Indirect(&iStream) {}
@@ -126,7 +126,7 @@ ZStreamerFromStreamW::operator ZRef<ZStreamerW>()
 // =================================================================================================
 // MARK: - ZStreamerFromStreamWCon
 
-class ZStreamerFromStreamWCon::Streamer : public ZStreamerWCon , public ZStreamWCon_Indirect
+class ZStreamerFromStreamWCon::Streamer : public ZStreamerWCon, public ZStreamWCon_Indirect
 	{
 public:
 	Streamer(const ZStreamWCon& iStream) : ZStreamWCon_Indirect(&iStream) {}
@@ -146,7 +146,7 @@ ZStreamerFromStreamWCon::operator ZRef<ZStreamerWCon>()
 // =================================================================================================
 // MARK: - ZStreamerFromStreamWPos
 
-class ZStreamerFromStreamWPos::Streamer : public ZStreamerWPos , public ZStreamWPos_Indirect
+class ZStreamerFromStreamWPos::Streamer : public ZStreamerWPos, public ZStreamWPos_Indirect
 	{
 public:
 	Streamer(const ZStreamWPos& iStream) : ZStreamWPos_Indirect(&iStream) {}
@@ -196,7 +196,7 @@ ZStreamerFromStreamRWCon::operator ZRef<ZStreamerRWCon>()
 // =================================================================================================
 // MARK: - ZStreamerFromStreamRWPos
 
-class ZStreamerFromStreamRWPos::Streamer : public ZStreamerRWPos , public ZStreamRWPos_Indirect
+class ZStreamerFromStreamRWPos::Streamer : public ZStreamerRWPos, public ZStreamRWPos_Indirect
 	{
 public:
 	Streamer(const ZStreamRWPos& iStream) : ZStreamRWPos_Indirect(&iStream) {}
