@@ -32,14 +32,142 @@ namespace ZooLib {
 class ZStreamerFromStreamR
 	{
 public:
-	ZStreamerFromStreamR(const ZStreamR& r);
+	ZStreamerFromStreamR(const ZStreamR& iStream);
 	~ZStreamerFromStreamR();
 
 	operator ZRef<ZStreamerR>();
 
 private:
-	class StreamerR;
-	ZRef<StreamerR> fStreamerR;
+	class Streamer;
+	ZRef<Streamer> fStreamer;
+	};
+
+// =================================================================================================
+// MARK: - ZStreamerFromStreamRCon
+
+class ZStreamerFromStreamRCon
+	{
+public:
+	ZStreamerFromStreamRCon(const ZStreamRCon& iStream);
+	~ZStreamerFromStreamRCon();
+
+	operator ZRef<ZStreamerRCon>();
+
+private:
+	class Streamer;
+	ZRef<Streamer> fStreamer;
+	};
+
+// =================================================================================================
+// MARK: - ZStreamerFromStreamU
+
+class ZStreamerFromStreamU
+	{
+public:
+	ZStreamerFromStreamU(const ZStreamU& iStream);
+	~ZStreamerFromStreamU();
+
+	operator ZRef<ZStreamerU>();
+
+private:
+	class Streamer;
+	ZRef<Streamer> fStreamer;
+	};
+
+// =================================================================================================
+// MARK: - ZStreamerFromStreamRPos
+
+class ZStreamerFromStreamRPos
+	{
+public:
+	ZStreamerFromStreamRPos(const ZStreamRPos& iStream);
+	~ZStreamerFromStreamRPos();
+
+	operator ZRef<ZStreamerRPos>();
+
+private:
+	class Streamer;
+	ZRef<Streamer> fStreamer;
+	};
+
+// =================================================================================================
+// MARK: - ZStreamerFromStreamW
+
+class ZStreamerFromStreamW
+	{
+public:
+	ZStreamerFromStreamW(const ZStreamW& iStream);
+	~ZStreamerFromStreamW();
+
+	operator ZRef<ZStreamerW>();
+
+private:
+	class Streamer;
+	ZRef<Streamer> fStreamer;
+	};
+
+// =================================================================================================
+// MARK: - ZStreamerFromStreamWCon
+
+class ZStreamerFromStreamWCon
+	{
+public:
+	ZStreamerFromStreamWCon(const ZStreamWCon& iStream);
+	~ZStreamerFromStreamWCon();
+
+	operator ZRef<ZStreamerWCon>();
+
+private:
+	class Streamer;
+	ZRef<Streamer> fStreamer;
+	};
+
+// =================================================================================================
+// MARK: - ZStreamerFromStreamWPos
+
+class ZStreamerFromStreamWPos
+	{
+public:
+	ZStreamerFromStreamWPos(const ZStreamWPos& iStream);
+	~ZStreamerFromStreamWPos();
+
+	operator ZRef<ZStreamerWPos>();
+
+private:
+	class Streamer;
+	ZRef<Streamer> fStreamer;
+	};
+
+// =================================================================================================
+// MARK: - ZStreamerFromStreamRWCon
+
+class ZStreamerFromStreamRWCon
+	{
+public:
+	ZStreamerFromStreamRWCon(const ZStreamRCon& r, const ZStreamWCon& w);
+	~ZStreamerFromStreamRWCon();
+
+	operator ZRef<ZStreamerRWCon>();
+
+private:
+	class Streamer;
+	ZRef<Streamer> fStreamer;
+	};
+
+// =================================================================================================
+// MARK: - ZStreamerFromStreamRWPos
+
+class ZStreamerFromStreamRWPos
+	{
+public:
+	ZStreamerFromStreamRWPos(const ZStreamRWPos& iStream);
+	~ZStreamerFromStreamRWPos();
+
+	operator ZRef<ZStreamerRWPos>();
+
+private:
+	class Streamer;
+	ZRef<Streamer> fStreamer;
 	};
 
 } // namespace ZooLib
