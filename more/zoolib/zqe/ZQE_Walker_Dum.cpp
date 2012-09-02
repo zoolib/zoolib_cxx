@@ -44,7 +44,7 @@ ZRef<Walker> Walker_Dum::Prime
 	size_t& ioBaseOffset)
 	{ return this; }
 
-bool Walker_Dum::ReadInc
+bool Walker_Dum::QReadInc
 	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{ return false; }

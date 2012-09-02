@@ -226,7 +226,7 @@ public:
 		return this;
 		}
 
-	virtual bool ReadInc
+	virtual bool QReadInc
 		(ZVal_Any* ioResults,
 		set<ZRef<ZCounted> >* oAnnotations)
 		{ return fSource->pReadInc(this, ioResults, oAnnotations); }

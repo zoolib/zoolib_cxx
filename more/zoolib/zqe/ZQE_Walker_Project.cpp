@@ -67,7 +67,7 @@ ZRef<Walker> Walker_Project::Prime
 	return this;
 	}
 
-bool Walker_Project::ReadInc
+bool Walker_Project::QReadInc
 	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
@@ -80,7 +80,7 @@ bool Walker_Project::ReadInc
 
 	for (;;)
 		{
-		if (not fWalker->ReadInc(ioResults, localAnnotationsPtr))
+		if (not fWalker->QReadInc(ioResults, localAnnotationsPtr))
 			return false;
 
 		vector<ZVal_Any> subset;

@@ -45,7 +45,7 @@ ZRef<Walker> Walker_Dee::Prime
 	size_t& ioBaseOffset)
 	{ return this; }
 
-bool Walker_Dee::ReadInc
+bool Walker_Dee::QReadInc
 	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{ return not sGetSet(fExhausted, true); }

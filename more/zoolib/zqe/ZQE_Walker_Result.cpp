@@ -52,7 +52,7 @@ ZRef<Walker> Walker_Result::Prime
 	return this;
 	}
 
-bool Walker_Result::ReadInc
+bool Walker_Result::QReadInc
 	(ZVal_Any* oResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{

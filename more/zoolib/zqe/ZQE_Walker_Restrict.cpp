@@ -436,7 +436,7 @@ ZRef<Walker> Walker_Restrict::Prime
 	return this;
 	}
 
-bool Walker_Restrict::ReadInc
+bool Walker_Restrict::QReadInc
 	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
@@ -449,7 +449,7 @@ bool Walker_Restrict::ReadInc
 
 	for (;;)
 		{
-		if (not fWalker->ReadInc(ioResults, localAnnotationsPtr))
+		if (not fWalker->QReadInc(ioResults, localAnnotationsPtr))
 			return false;
 
 		if (fExec->Call(ioResults, theConsts))

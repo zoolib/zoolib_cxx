@@ -86,7 +86,7 @@ ZRef<Walker> Walker_Union::Prime
 	return this;
 	}
 
-bool Walker_Union::ReadInc
+bool Walker_Union::QReadInc
 	(ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
@@ -103,7 +103,7 @@ bool Walker_Union::ReadInc
 		subset.reserve(count);
 		if (not fExhaustedLeft)
 			{
-			if (fWalker_Left->ReadInc(ioResults, oAnnotations))
+			if (fWalker_Left->QReadInc(ioResults, oAnnotations))
 				{
 				for (size_t x = 0; x < count; ++x)
 					subset.push_back(ioResults[fMapping_Left[x]]);
@@ -114,7 +114,7 @@ bool Walker_Union::ReadInc
 			fExhaustedLeft = true;
 			}
 
-		if (not fWalker_Right->ReadInc(ioResults, localAnnotationsPtr))
+		if (not fWalker_Right->QReadInc(ioResults, localAnnotationsPtr))
 			return false;
 
 		for (size_t x = 0; x < count; ++x)

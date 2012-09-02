@@ -42,7 +42,7 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool ReadInc
+	virtual bool QReadInc
 		(ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
