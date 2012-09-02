@@ -127,17 +127,29 @@ private:
 // =================================================================================================
 // MARK: - sThreadVal
 
-template <class Type_p, class Tag_p = Type_p>
+template <class Type_p, class Tag_p>
 ZQ<Type_p> sQThreadVal()
 	{ return ZThreadVal<Type_p,Tag_p>::sQGet(); }
 
-template <class Type_p, class Tag_p = Type_p>
+template <class Type_p>
+ZQ<Type_p> sQThreadVal()
+	{ return ZThreadVal<Type_p,Type_p>::sQGet(); }
+
+template <class Type_p, class Tag_p>
 Type_p* sPThreadVal()
 	{ return ZThreadVal<Type_p,Tag_p>::sPMut(); }
 
-template <class Type_p, class Tag_p = Type_p>
+template <class Type_p>
+Type_p* sPThreadVal()
+	{ return ZThreadVal<Type_p,Type_p>::sPMut(); }
+
+template <class Type_p, class Tag_p>
 Type_p& sThreadVal()
 	{ return ZThreadVal<Type_p,Tag_p>::sMut(); }
+
+template <class Type_p>
+Type_p& sThreadVal()
+	{ return ZThreadVal<Type_p,Type_p>::sMut(); }
 
 } // namespace ZooLib
 
