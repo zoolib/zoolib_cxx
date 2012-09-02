@@ -19,12 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZValPred_Rename.h"
+#include "zoolib/ZValPred_Renamed.h"
 
 namespace ZooLib {
 
 using std::map;
-using std::set;
 using std::string;
 
 using namespace ZUtil_STL;
@@ -32,9 +31,9 @@ using namespace ZUtil_STL;
 ZRef<ZValComparand> sRenamed(const map<string,string>& iRename,
 	const ZRef<ZValComparand>& iVal)
 	{
-	if (ZRef<ZValComparand_Name> as = iVal.DynamicCast<ZValComparand_Name>())
+	if (ZRef<ZValComparand_Name> asName = iVal.DynamicCast<ZValComparand_Name>())
 		{
-		if (ZQ<string> theQ = sQGet(iRename, as->GetName()))
+		if (ZQ<string> theQ = sQGet(iRename, asName->GetName()))
 			return new ZValComparand_Name(*theQ);
 		}
 	return iVal;
