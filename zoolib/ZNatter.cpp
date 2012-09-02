@@ -128,9 +128,9 @@ ZQ<ZData_Any> ZNatter::pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
 	{
 	ZGuardMtxR guard(fMtxR_Structure);
 
-	ZAssert(!iExchange->fDataQ);
+	ZAssert(not iExchange->fDataQ);
 
-	while (!iExchange->fID)
+	while (not iExchange->fID)
 		{
 		if (fError)
 			return null;
@@ -181,15 +181,13 @@ ZQ<ZData_Any> ZNatter::pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
 
 ZQ<ZData_Any> ZNatter::pReadFor(ZGuardMtxR& iGuard, ZRef<Exchange> iExchange)
 	{
-	while (!fError && iExchange->fWaiting)
+	while (not fError && iExchange->fWaiting)
 		this->pRead(iGuard);
 
 	if (fError)
 		return null;
 
-	ZQ<ZData_Any> result;
-	result.swap(iExchange->fDataQ);
-	return result;
+	return sGetSet(iExchange->fDataQ, null);
 	}
 
 static bool spReadPacket(uint8& oType, int64& oID, ZData_Any& oData, const ZStreamR& r)
