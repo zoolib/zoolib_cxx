@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZCaller_Thread.h"
+#include "zoolib/ZCallOnNewThread.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/dataspace/ZDataspace_Source_Client.h"
@@ -47,9 +48,9 @@ Source_Client::~Source_Client()
 
 void Source_Client::Initialize()
 	{
-//	sCallOnNewThread(sCallable(sWeakRef(this), &Source_Client::pRead));
-	ZRef<ZWorker> theWorker = sWorker(sCallable(sWeakRef(this), &Source_Client::pRead));
-	sStartWorkerRunner(theWorker);
+	ZCounted::Initialize();
+	(new ZWorker(sCallable(sCallable(sWeakRef(this), &Source_Client::pRead))))
+		->Attach(ZCaller_Thread::sCaller());
 	}
 
 bool Source_Client::Intersects(const RelHead& iRelHead)
@@ -62,7 +63,7 @@ void Source_Client::ModifyRegistrations
 	(const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 
 	while (iAddedCount--)
 		{
@@ -83,7 +84,7 @@ void Source_Client::ModifyRegistrations
 
 void Source_Client::CollectResults(std::vector<QueryResult>& oChanged)
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 	this->pCollectResultsCalled();
 	oChanged.swap(fResults);
 	fResults.clear();
@@ -101,7 +102,7 @@ bool Source_Client::pRead(ZRef<ZWorker> iWorker)
 		theSRs.push_back(QueryResult(theRefcon, null, null));
 		}
 
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 	fResults.insert(fResults.end(), theSRs.begin(), theSRs.end());
 	guard.Release();
 	Source::pTriggerResultsAvailable();
@@ -112,7 +113,7 @@ bool Source_Client::pRead(ZRef<ZWorker> iWorker)
 
 void Source_Client::pWrite()
 	{
-	ZGuardRMtxR guard(fMtxR);
+	ZGuardMtxR guard(fMtxR);
 	fNeedsWrite = false;
 	std::map<int64, ZRef<ZRA::Expr_Rel> > theAdds;
 	theAdds.swap(fAdds);

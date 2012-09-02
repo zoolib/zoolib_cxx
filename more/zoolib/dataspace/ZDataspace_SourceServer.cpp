@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZCaller_Thread.h"
+#include "zoolib/ZCallOnNewThread.h"
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/dataspace/ZDataspace_SourceServer.h"
 
@@ -46,9 +47,9 @@ SourceServer::~SourceServer()
 
 void SourceServer::Initialize()
 	{
+	ZCounted::Initialize();
 	fSource->SetCallable_ResultsAvailable(sCallable(this, &SourceServer::pCallback_Source));
-	ZRef<ZWorker> theWorker = sWorker(sCallable(sRef(this), &SourceServer::pRead));
-	sStartWorkerRunner(theWorker);
+	(new ZWorker(sCallable(sRef(this), &SourceServer::pRead)))->Attach(ZCaller_Thread::sCaller());
 	}
 
 void SourceServer::pCallback_Source(ZRef<Source> iSource)
@@ -92,7 +93,7 @@ bool SourceServer::pRead(ZRef<ZWorker> iWorker)
 
 void SourceServer::pWrite()
 	{
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 	fNeedsWrite = false;
 	guard.Release();
 
