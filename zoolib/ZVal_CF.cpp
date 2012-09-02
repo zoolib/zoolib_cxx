@@ -59,7 +59,7 @@ int sCompare_T(const ZMap_CF& iL, const ZMap_CF& iR)
 namespace {
 
 template <class S>
-ZQ<S> spGetNumber_T(CFTypeRef iTypeRef, CFNumberType iNumberType)
+ZQ<S> spQGetNumber_T(CFTypeRef iTypeRef, CFNumberType iNumberType)
 	{
 	if (iTypeRef && ::CFGetTypeID(iTypeRef) == ::CFNumberGetTypeID())
 		{
@@ -91,10 +91,10 @@ ZRef<CFTypeRef> spNumber_T(CFNumberType iNumberType, const S& iVal)
 */
 
 ZAny ZVal_CF::AsAny() const
-	{ return this->DAsAny(ZAny()); }
+	{ return ZUtil_CF::sDAsAny(ZAny(), *this); }
 
 ZAny ZVal_CF::DAsAny(const ZAny& iDefault) const
-	{ return ZUtil_CF::sDAsAny(ZAny(), *this); }
+	{ return ZUtil_CF::sDAsAny(iDefault, *this); }
 
 ZVal_CF::operator bool() const
 	{
@@ -239,9 +239,9 @@ ZVal_CF& ZVal_CF::operator=(CFTypeRef iVal)
 template <>
 const ZQ<char> ZVal_CF::QGet<char>() const
 	{
-	if (ZQ<char> theQ = spGetNumber_T<char>(*this, kCFNumberSInt8Type))
+	if (ZQ<char> theQ = spQGetNumber_T<char>(*this, kCFNumberSInt8Type))
 		return theQ;
-	if (ZQ<char> theQ = spGetNumber_T<char>(*this, kCFNumberCharType))
+	if (ZQ<char> theQ = spQGetNumber_T<char>(*this, kCFNumberCharType))
 		return theQ;
 	return null;
 	}
@@ -249,9 +249,9 @@ const ZQ<char> ZVal_CF::QGet<char>() const
 template <>
 const ZQ<unsigned char> ZVal_CF::QGet<unsigned char>() const
 	{
-	if (ZQ<unsigned char> theQ = spGetNumber_T<unsigned char>(*this, kCFNumberSInt8Type))
+	if (ZQ<unsigned char> theQ = spQGetNumber_T<unsigned char>(*this, kCFNumberSInt8Type))
 		return theQ;
-	if (ZQ<unsigned char> theQ = spGetNumber_T<unsigned char>(*this, kCFNumberCharType))
+	if (ZQ<unsigned char> theQ = spQGetNumber_T<unsigned char>(*this, kCFNumberCharType))
 		return theQ;
 	return null;
 	}
@@ -259,9 +259,9 @@ const ZQ<unsigned char> ZVal_CF::QGet<unsigned char>() const
 template <>
 const ZQ<signed char> ZVal_CF::QGet<signed char>() const
 	{
-	if (ZQ<signed char> theQ = spGetNumber_T<signed char>(*this, kCFNumberSInt8Type))
+	if (ZQ<signed char> theQ = spQGetNumber_T<signed char>(*this, kCFNumberSInt8Type))
 		return theQ;
-	if (ZQ<signed char> theQ = spGetNumber_T<signed char>(*this, kCFNumberCharType))
+	if (ZQ<signed char> theQ = spQGetNumber_T<signed char>(*this, kCFNumberCharType))
 		return theQ;
 	return null;
 	}
@@ -269,9 +269,9 @@ const ZQ<signed char> ZVal_CF::QGet<signed char>() const
 template <>
 const ZQ<short> ZVal_CF::QGet<short>() const
 	{
-	if (ZQ<short> theQ = spGetNumber_T<short>(*this, kCFNumberSInt16Type))
+	if (ZQ<short> theQ = spQGetNumber_T<short>(*this, kCFNumberSInt16Type))
 		return theQ;
-	if (ZQ<short> theQ = spGetNumber_T<short>(*this, kCFNumberShortType))
+	if (ZQ<short> theQ = spQGetNumber_T<short>(*this, kCFNumberShortType))
 		return theQ;
 	return null;
 	}
@@ -279,9 +279,9 @@ const ZQ<short> ZVal_CF::QGet<short>() const
 template <>
 const ZQ<unsigned short> ZVal_CF::QGet<unsigned short>() const
 	{
-	if (ZQ<unsigned short> theQ = spGetNumber_T<unsigned short>(*this, kCFNumberSInt16Type))
+	if (ZQ<unsigned short> theQ = spQGetNumber_T<unsigned short>(*this, kCFNumberSInt16Type))
 		return theQ;
-	if (ZQ<unsigned short> theQ = spGetNumber_T<unsigned short>(*this, kCFNumberShortType))
+	if (ZQ<unsigned short> theQ = spQGetNumber_T<unsigned short>(*this, kCFNumberShortType))
 		return theQ;
 	return null;
 	}
@@ -289,9 +289,9 @@ const ZQ<unsigned short> ZVal_CF::QGet<unsigned short>() const
 template <>
 const ZQ<int> ZVal_CF::QGet<int>() const
 	{
-	if (ZQ<int> theQ = spGetNumber_T<int>(*this, kCFNumberSInt32Type))
+	if (ZQ<int> theQ = spQGetNumber_T<int>(*this, kCFNumberSInt32Type))
 		return theQ;
-	if (ZQ<int> theQ = spGetNumber_T<int>(*this, kCFNumberIntType))
+	if (ZQ<int> theQ = spQGetNumber_T<int>(*this, kCFNumberIntType))
 		return theQ;
 	return null;
 	}
@@ -299,9 +299,9 @@ const ZQ<int> ZVal_CF::QGet<int>() const
 template <>
 const ZQ<unsigned int> ZVal_CF::QGet<unsigned int>() const
 	{
-	if (ZQ<unsigned int> theQ = spGetNumber_T<unsigned int>(*this, kCFNumberSInt32Type))
+	if (ZQ<unsigned int> theQ = spQGetNumber_T<unsigned int>(*this, kCFNumberSInt32Type))
 		return theQ;
-	if (ZQ<unsigned int> theQ = spGetNumber_T<unsigned int>(*this, kCFNumberIntType))
+	if (ZQ<unsigned int> theQ = spQGetNumber_T<unsigned int>(*this, kCFNumberIntType))
 		return theQ;
 	return null;
 	}
@@ -309,9 +309,9 @@ const ZQ<unsigned int> ZVal_CF::QGet<unsigned int>() const
 template <>
 const ZQ<long> ZVal_CF::QGet<long>() const
 	{
-	if (ZQ<long> theQ = spGetNumber_T<long>(*this, kCFNumberSInt32Type))
+	if (ZQ<long> theQ = spQGetNumber_T<long>(*this, kCFNumberSInt32Type))
 		return theQ;
-	if (ZQ<long> theQ = spGetNumber_T<long>(*this, kCFNumberLongType))
+	if (ZQ<long> theQ = spQGetNumber_T<long>(*this, kCFNumberLongType))
 		return theQ;
 	return null;
 	}
@@ -319,9 +319,9 @@ const ZQ<long> ZVal_CF::QGet<long>() const
 template <>
 const ZQ<unsigned long> ZVal_CF::QGet<unsigned long>() const
 	{
-	if (ZQ<unsigned long> theQ = spGetNumber_T<unsigned long>(*this, kCFNumberSInt32Type))
+	if (ZQ<unsigned long> theQ = spQGetNumber_T<unsigned long>(*this, kCFNumberSInt32Type))
 		return theQ;
-	if (ZQ<unsigned long> theQ = spGetNumber_T<unsigned long>(*this, kCFNumberLongType))
+	if (ZQ<unsigned long> theQ = spQGetNumber_T<unsigned long>(*this, kCFNumberLongType))
 		return theQ;
 	return null;
 	}
@@ -329,9 +329,9 @@ const ZQ<unsigned long> ZVal_CF::QGet<unsigned long>() const
 template <>
 const ZQ<long long> ZVal_CF::QGet<long long>() const
 	{
-	if (ZQ<long long> theQ = spGetNumber_T<long long>(*this, kCFNumberSInt64Type))
+	if (ZQ<long long> theQ = spQGetNumber_T<long long>(*this, kCFNumberSInt64Type))
 		return theQ;
-	if (ZQ<long long> theQ = spGetNumber_T<long long>(*this, kCFNumberLongLongType))
+	if (ZQ<long long> theQ = spQGetNumber_T<long long>(*this, kCFNumberLongLongType))
 		return theQ;
 	return null;
 	}
@@ -339,9 +339,9 @@ const ZQ<long long> ZVal_CF::QGet<long long>() const
 template <>
 const ZQ<unsigned long long> ZVal_CF::QGet<unsigned long long>() const
 	{
-	if (ZQ<unsigned long long> theQ = spGetNumber_T<unsigned long long>(*this, kCFNumberSInt64Type))
+	if (ZQ<unsigned long long> theQ = spQGetNumber_T<unsigned long long>(*this, kCFNumberSInt64Type))
 		return theQ;
-	if (ZQ<unsigned long long> theQ = spGetNumber_T<unsigned long long>(*this, kCFNumberLongLongType))
+	if (ZQ<unsigned long long> theQ = spQGetNumber_T<unsigned long long>(*this, kCFNumberLongLongType))
 		return theQ;
 	return null;
 	}
@@ -357,9 +357,9 @@ const ZQ<bool> ZVal_CF::QGet<bool>() const
 template <>
 const ZQ<float> ZVal_CF::QGet<float>() const
 	{
-	if (ZQ<float> theQ = spGetNumber_T<float>(*this, kCFNumberFloat32Type))
+	if (ZQ<float> theQ = spQGetNumber_T<float>(*this, kCFNumberFloat32Type))
 		return theQ;
-	if (ZQ<float> theQ = spGetNumber_T<float>(*this, kCFNumberFloatType))
+	if (ZQ<float> theQ = spQGetNumber_T<float>(*this, kCFNumberFloatType))
 		return theQ;
 	return null;
 	}
@@ -367,9 +367,9 @@ const ZQ<float> ZVal_CF::QGet<float>() const
 template <>
 const ZQ<double> ZVal_CF::QGet<double>() const
 	{
-	if (ZQ<double> theQ = spGetNumber_T<double>(*this, kCFNumberFloat64Type))
+	if (ZQ<double> theQ = spQGetNumber_T<double>(*this, kCFNumberFloat64Type))
 		return theQ;
-	if (ZQ<double> theQ = spGetNumber_T<double>(*this, kCFNumberDoubleType))
+	if (ZQ<double> theQ = spQGetNumber_T<double>(*this, kCFNumberDoubleType))
 		return theQ;
 	return null;
 	}
