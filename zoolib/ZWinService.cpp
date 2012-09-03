@@ -182,7 +182,7 @@ void ZWinService::pContinued()
 
 void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	{
-	ZGuardRMtxR guard(fMtx);
+	ZGuardMtxR guard(fMtx);
 	sMemZero_T(fServiceStatus);
 	fServiceStatus.dwServiceType = SERVICE_WIN32;
 	fServiceStatus.dwCurrentState = SERVICE_START_PENDING;

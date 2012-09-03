@@ -98,6 +98,11 @@ public:
 	static void sParseStringAndAppend
 		(const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
 		const UTF8* iPath, size_t iPathSize,
+		std::vector<string8>& ioComps);
+
+	static void sParseStringAndAppend
+		(const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
+		const UTF8* iPath, size_t iPathSize,
 		std::vector<Comp>& ioComps);
 
 	static void sParseStringAndAppend

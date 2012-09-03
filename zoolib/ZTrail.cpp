@@ -98,6 +98,12 @@ void sParseStringAndAppend_T
 void ZTrail::sParseStringAndAppend
 	(const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
 	const UTF8* iTrail, size_t iTrailSize,
+	vector<string8>& ioComps)
+	{ return sParseStringAndAppend_T(iSeparator, iIgnore, iBounce, iTrail, iTrailSize, ioComps); }
+
+void ZTrail::sParseStringAndAppend
+	(const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
+	const UTF8* iTrail, size_t iTrailSize,
 	vector<Comp>& ioComps)
 	{ return sParseStringAndAppend_T(iSeparator, iIgnore, iBounce, iTrail, iTrailSize, ioComps); }
 

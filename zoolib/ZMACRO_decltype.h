@@ -25,12 +25,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if 0
 #elif ZCONFIG_CPP >= 2011
 
-#define ZMACRO_decltype(expr) decltype(expr)
+	#define ZMACRO_decltype(expr) decltype(expr)
 
 #elif not defined(_MSC_VER)
 
-// Just assume GCC for now.
-#define ZMACRO_decltype(expr) __typeof__(expr)
+	// Just assume GCC for now.
+	#define ZMACRO_decltype(expr) __typeof__(expr)
+
+#elif _MSC_VER >= 1600
+
+	#define ZMACRO_decltype(expr) decltype(expr)
 
 #elif _MSC_VER >= 1400
 // The VC6-VC7 bug has been fixed, so we don't have a native

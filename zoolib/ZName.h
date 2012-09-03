@@ -114,12 +114,14 @@ bool sIsEmpty(const ZName& iName)
 
 } // namespace ZooLib
 
+#ifndef _MSC_VER
 namespace std { namespace tr1 { 
 
-template<typename T> struct hash;
+template <typename T> class hash;
 template<>
 struct hash<ZooLib::ZName>
 	{ std::size_t operator()(const ZooLib::ZName& iName) const { return iName.Hash(); } };
 }}	
+#endif
 
 #endif // __ZName_h__

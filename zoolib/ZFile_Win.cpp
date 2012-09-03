@@ -633,7 +633,7 @@ ZQ<ZTrail> ZFileLoc_Win::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
 		if (fBase == dest->fBase)
 			{
 			// We have the same base.
-			return ZTrail::sTrailFromTo(fComps, dest->fComps);
+			return sTrailFromTo(fComps, dest->fComps);
 			}
 		// We have different bases, which I'm not sure how to handle, so we'll bail.
 		}
@@ -1230,7 +1230,7 @@ ZQ<ZTrail> ZFileLoc_WinNT::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) con
 			for (size_t x = 0; x < dest->fComps.size(); ++x)
 				destComps.push_back(ZUnicode::sAsUTF8(dest->fComps[x]));
 
-			return ZTrail::sTrailFromTo(myComps, destComps);
+			return sTrailFromTo(myComps, destComps);
 			}
 		// We have different bases, which I'm not sure how to handle, so we'll bail.
 		}

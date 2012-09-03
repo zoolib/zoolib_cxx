@@ -222,9 +222,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#define ZCONFIG_LIBCPP_TR1 1
 	#endif
 #elif ZCONFIG_CPP >= 2003
-	#define ZCONFIG_LIBCPP_TR1 1
-	#if defined(ZCONFIG_GCC_Version) && ZCONFIG_GCC_Version >= 42
-		#define ZCONFIG_LIBCPP_GCCExtensions 1
+	#if defined(_MSC_VER) && _MSC_VER >= 1600
+		#define ZCONFIG_LIBCPP_2011 1
+	#else
+		#define ZCONFIG_LIBCPP_TR1 1
+		#if defined(ZCONFIG_GCC_Version) && ZCONFIG_GCC_Version >= 42
+			#define ZCONFIG_LIBCPP_GCCExtensions 1
+		#endif
 	#endif
 #elif defined(__ANDROID__)
 	#define ZCONFIG_LIBCPP_TR1 1

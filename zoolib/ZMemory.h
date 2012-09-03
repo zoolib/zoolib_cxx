@@ -27,7 +27,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstddef> // For std::size_t
 #include <cstring> // For std::memcmp, std::memcpy, std::memmove and std::memset
 
-#include <strings.h> // For bzero on Android
+#if defined(__ANDROID__)
+	#include <strings.h> // For bzero on Android
+#endif
 
 namespace ZooLib {
 
@@ -53,7 +55,7 @@ inline void sMemZero(void* oDest, std::size_t iCount)
 	#if ZCONFIG_SPI_Enabled(POSIX)
 		::bzero(oDest, iCount);
 	#else
-		ZMemSet(oDest, 0, iCount);
+		sMemSet(oDest, 0, iCount);
 	#endif
 	}
 

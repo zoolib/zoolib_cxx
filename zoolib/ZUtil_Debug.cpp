@@ -195,8 +195,9 @@ void sInstall()
 
 	ZLog::sSetLogMeister(spLogMeister);
 
+	FILE* theStdOut = stdout; // Workaround for VC++
 	spLogMeister->SetStrimmer
-		(sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(stdout)));
+		(sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(theStdOut)));
 
 	#if ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)
 		// Install the sync handler only if we're on POSIX and

@@ -31,14 +31,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	typedef struct HANDLE_t##__ * HANDLE_t; \
 	namespace ZooLib { \
 	template <> void sRetain_T(HANDLE_t& ioHANDLE) \
-	{ ioHANDLE = static_cast<HANDLE_t>(spDuplicateHandle(ioHANDLE)); \
-	} // namespace ZooLib
+	{ ioHANDLE = static_cast<HANDLE_t>(spDuplicateHandle(ioHANDLE)); } \
+	} /* namespace ZooLib */
 
 #define ZMACRO_ZRef_WinHANDLE_WithReleaser(HANDLE_t, Releaser) \
 	ZMACRO_ZRef_WinHANDLE_Decl(HANDLE_t) \
 	namespace ZooLib { \
 	template <> void sRelease_T(HANDLE_t iHANDLE) { Releaser(iHANDLE); } \
-	} // namespace ZooLib
+	} /* namespace ZooLib */
 
 #define ZMACRO_ZRef_WinHANDLE_WithReleaserDecl(HANDLE_t, Qual, Releaser) \
 	Qual WINAPI Releaser(HANDLE_t); \

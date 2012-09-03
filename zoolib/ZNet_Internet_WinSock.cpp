@@ -249,7 +249,7 @@ ZRef<ZNetEndpoint> ZNetListener_TCP_WinSock::Listen()
 		{
 		// We got one.
 		sockaddr_in remoteSockAddr;
-		ZMemZero_T(remoteSockAddr);
+		sMemZero_T(remoteSockAddr);
 		SOCKET newSOCKET =
 			::accept(fSOCKET, (sockaddr*)&remoteSockAddr, sMutablePtr(int(sizeof(remoteSockAddr))));
 		if (newSOCKET != INVALID_SOCKET)
@@ -298,7 +298,7 @@ void ZNetListener_TCP_WinSock::pInit
 	::setsockopt(fSOCKET, IPPROTO_TCP, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
 
 	sockaddr_in localSockAddr;
-	ZMemZero_T(localSockAddr);
+	sMemZero_T(localSockAddr);
 	localSockAddr.sin_family = AF_INET;
 	localSockAddr.sin_port = htons(iLocalPort);
 	localSockAddr.sin_addr.s_addr = htonl(iLocalAddress);
