@@ -36,11 +36,11 @@ void Transform_DecomposeRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_R
 
 	ZRef<Expr_Rel> theRel = this->Do(iExpr->GetOp0());
 	const CNF theCNF = Util_Expr_Bool::sAsCNF(iExpr->GetExpr_Bool());
-	for (CNF::const_iterator i = theCNF.begin(); i != theCNF.end(); ++i)
+	for (CNF::const_iterator ii = theCNF.begin(); ii != theCNF.end(); ++ii)
 		{
 		ZRef<ZExpr_Bool> newBool;
-		for (Clause::const_iterator j = i->begin(); j != i->end(); ++j)
-			newBool |= j->Get();
+		for (Clause::const_iterator jj = ii->begin(); jj != ii->end(); ++jj)
+			newBool |= jj->Get();
 		theRel &= newBool;
 		}
 

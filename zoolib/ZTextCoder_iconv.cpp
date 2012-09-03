@@ -124,9 +124,9 @@ static iconv_t spOpenDecoder(const string& iSourceName)
 	// Work our way through any aliases ZTextCoder may know about
 	vector<string> aliases;
 	ZTextCoder::sGetAliases(iSourceName, aliases);
-	for (vector<string>::iterator i = aliases.begin(); i != aliases.end(); ++i)
+	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
-		if (iconv_t result = spIconvOpenDecoder(*i))
+		if (iconv_t result = spIconvOpenDecoder(*ii))
 			return result;
 		}
 	return 0;
@@ -230,9 +230,9 @@ static iconv_t spOpenEncoder(const string& iDestName)
 	// Work our way through any aliases ZTextCoder may know about
 	vector<string> aliases;
 	ZTextCoder::sGetAliases(iDestName, aliases);
-	for (vector<string>::iterator i = aliases.begin(); i != aliases.end(); ++i)
+	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
-		if (iconv_t result = spIconvOpenEncoder(*i))
+		if (iconv_t result = spIconvOpenEncoder(*ii))
 			return result;
 		}
 	return 0;

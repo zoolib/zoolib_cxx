@@ -47,8 +47,8 @@ ZRef<Walker> Walker_Result::Prime
 	{
 	fBaseOffset = ioBaseOffset;
 	const ZRA::RelHead& theRH = fResult->GetRelHead();
-	for (ZRA::RelHead::const_iterator i = theRH.begin(); i != theRH.end(); ++i)
-		oOffsets[*i] = ioBaseOffset++;
+	for (ZRA::RelHead::const_iterator ii = theRH.begin(); ii != theRH.end(); ++ii)
+		oOffsets[*ii] = ioBaseOffset++;
 	return this;
 	}
 
@@ -65,7 +65,7 @@ bool Walker_Result::QReadInc
 	const ZRA::RelHead& theRH = fResult->GetRelHead();
 	size_t theOffset = fBaseOffset;
 	const ZVal_Any* theVals = fResult->GetValsAt(fIndex);
-	for (ZRA::RelHead::const_iterator i = theRH.begin(); i != theRH.end(); ++i)
+	for (ZRA::RelHead::const_iterator ii = theRH.begin(); ii != theRH.end(); ++ii)
 		oResults[theOffset++] = *theVals++;
 
 	++fIndex;

@@ -32,7 +32,7 @@ void ZVisitor_Expr_Bool_Do_Eval::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_Fal
 	{ this->pSetResult(false); }
 
 void ZVisitor_Expr_Bool_Do_Eval::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
-	{ this->pSetResult(! this->Do(iRep)); }
+	{ this->pSetResult(not this->Do(iRep)); }
 
 void ZVisitor_Expr_Bool_Do_Eval::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
 	{ this->pSetResult(this->Do(iRep->GetOp0()) && this->Do(iRep->GetOp1())); }

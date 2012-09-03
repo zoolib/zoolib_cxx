@@ -103,9 +103,9 @@ void SourceServer::pWrite()
 	const ZStreamW& w = fStreamerW->GetStreamW();
 
 	w.WriteCount(theChanged.size());
-	for (vector<QueryResult>::iterator i = theChanged.begin(); i != theChanged.end(); ++i)
+	for (vector<QueryResult>::iterator ii = theChanged.begin(); ii != theChanged.end(); ++ii)
 		{
-		w.WriteInt64(i->GetRefcon());
+		w.WriteInt64(ii->GetRefcon());
 		// Write contents
 		}
 	w.Flush();

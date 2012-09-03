@@ -31,15 +31,17 @@ using std::set;
 using std::string;
 
 // =================================================================================================
-// MARK: - Static helper functions
+// MARK: - Helper functions (anonymous)
 
-static void spWrite_PropName(const string& iName, const ZStrimW& s)
+namespace { // anonymous
+
+void spWrite_PropName(const string& iName, const ZStrimW& s)
 	{
 	s.Write("@");
 	ZYad_ZooLibStrim::sWrite_PropName(iName, s);
 	}
 
-static void spToStrim(const ZRef<ZValComparand>& iComparand, const ZStrimW& s)
+void spToStrim(const ZRef<ZValComparand>& iComparand, const ZStrimW& s)
 	{
 	if (not iComparand)
 		{
@@ -59,7 +61,7 @@ static void spToStrim(const ZRef<ZValComparand>& iComparand, const ZStrimW& s)
 		}
 	}
 
-static void spToStrim(const ZRef<ZValComparator>& iComparator, const ZStrimW& s)
+void spToStrim(const ZRef<ZValComparator>& iComparator, const ZStrimW& s)
 	{
 	if (not iComparator)
 		{
@@ -117,6 +119,8 @@ static void spToStrim(const ZRef<ZValComparator>& iComparator, const ZStrimW& s)
 		s << "/*Unknown Comparator*/";
 		}
 	}
+
+} // anonymous namespace
 
 // =================================================================================================
 // MARK: - ZUtil_Strim_ValPred_Any

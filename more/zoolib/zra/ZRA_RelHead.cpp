@@ -51,8 +51,8 @@ namespace ZRA {
 Rename sInverted(const Rename& iRename)
 	{
 	Rename result;
-	for (Rename::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
-		result[i->second] = i->first;
+	for (Rename::const_iterator ii = iRename.begin(); ii != iRename.end(); ++ii)
+		result[ii->second] = ii->first;
 	return result;
 	}
 
@@ -85,9 +85,9 @@ bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead)
 	if (iPrefix.empty())
 		return true;
 
-	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
+	for (RelHead::const_iterator ii = iRelHead.begin(); ii != iRelHead.end(); ++ii)
 		{
-		if (not sHasPrefix(iPrefix, *i))
+		if (not sHasPrefix(iPrefix, *ii))
 			return false;
 		}
 
@@ -100,8 +100,8 @@ RelHead sPrefixInserted(const RelName& iPrefix, const RelHead& iRelHead)
 		return iRelHead;
 
 	RelHead result;
-	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		result.insert(sPrefixInserted(iPrefix, *i));
+	for (RelHead::const_iterator ii = iRelHead.begin(); ii != iRelHead.end(); ++ii)
+		result.insert(sPrefixInserted(iPrefix, *ii));
 
 	return result;
 	}
@@ -112,8 +112,8 @@ RelHead sPrefixErased(const RelName& iPrefix, const RelHead& iRelHead)
 		return iRelHead;
 
 	RelHead result;
-	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		result.insert(sPrefixErased(iPrefix, *i));
+	for (RelHead::const_iterator ii = iRelHead.begin(); ii != iRelHead.end(); ++ii)
+		result.insert(sPrefixErased(iPrefix, *ii));
 
 	return result;
 	}
@@ -124,8 +124,8 @@ RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead)
 		return iRelHead;
 
 	RelHead result;
-	for (RelHead::const_iterator i = iRelHead.begin(); i != iRelHead.end(); ++i)
-		result.insert(sRenamed(iRename, *i));
+	for (RelHead::const_iterator ii = iRelHead.begin(); ii != iRelHead.end(); ++ii)
+		result.insert(sRenamed(iRename, *ii));
 
 	return result;
 	}

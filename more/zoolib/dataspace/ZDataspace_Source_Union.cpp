@@ -86,8 +86,8 @@ void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& i
 
 	const RelHead newRelHead = ZRA::sPrefixErased(fPrefix, theRelHead);
 	ZRef<ZRA::Expr_Rel> theRel = ZRA::sConcrete(newRelHead);
-	for (RelHead::const_iterator i = newRelHead.begin(); i != newRelHead.end(); ++i)
-		theRel = sRename(theRel, ZRA::sPrefixInserted(fPrefix, *i), *i);
+	for (RelHead::const_iterator ii = newRelHead.begin(); ii != newRelHead.end(); ++ii)
+		theRel = sRename(theRel, ZRA::sPrefixInserted(fPrefix, *ii), *ii);
 
 	this->pSetResult(theRel);
 	}
@@ -1100,8 +1100,8 @@ void Source_Union::pPrime(ZRef<Walker_Proxy> iWalker,
 	{
 	iWalker->fBaseOffset = ioBaseOffset;
 	const RelHead& theRelHead = iWalker->fProxy->fResultRelHead;
-	for (RelHead::const_iterator i = theRelHead.begin(); i != theRelHead.end(); ++i)
-		oOffsets[*i] = ioBaseOffset++;
+	for (RelHead::const_iterator ii = theRelHead.begin(); ii != theRelHead.end(); ++ii)
+		oOffsets[*ii] = ioBaseOffset++;
 	}
 
 bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
@@ -1144,7 +1144,7 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 			}
 		size_t theOffset = iWalker->fBaseOffset;
 		const ZVal_Any* theVals = iWalker->fCurrentResult->GetValsAt(iWalker->fCurrentIndex);
-		for (ZRA::RelHead::const_iterator i = theRH.begin(); i != theRH.end(); ++i)
+		for (ZRA::RelHead::const_iterator ii = theRH.begin(); ii != theRH.end(); ++ii)
 			ioResults[theOffset++] = *theVals++;
 		++iWalker->fCurrentIndex;
 		return true;

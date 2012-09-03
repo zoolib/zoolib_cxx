@@ -44,8 +44,8 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 	if (s)
 		{
 		s << "\n";
-		for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
-			s << i->first << ": " << i->second << ", ";
+		for (map<string8,size_t>::iterator ii = offsets.begin(); ii != offsets.end(); ++ii)
+			s << ii->first << ": " << ii->second << ", ";
 		s.Emit();
 		}
 
@@ -63,15 +63,15 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 			theAnnotationsVector.push_back
 				(vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
 
-			for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
-				thePackedRows.push_back(theRow[i->second]);
+			for (map<string8,size_t>::iterator ii = offsets.begin(); ii != offsets.end(); ++ii)
+				thePackedRows.push_back(theRow[ii->second]);
 
 			if (s)
 				{
 				s << "\n";
-				for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
+				for (map<string8,size_t>::iterator ii = offsets.begin(); ii != offsets.end(); ++ii)
 					{
-					ZYad_ZooLibStrim::sToStrim(sYadR(theRow[i->second]), s);
+					ZYad_ZooLibStrim::sToStrim(sYadR(theRow[ii->second]), s);
 					s << ", ";
 					}
 				if (int theAnnoCount = theAnnotations.size())
@@ -87,8 +87,8 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 		}
 
 	RelHead theRelHead;
-	for (map<string8,size_t>::iterator i = offsets.begin(); i != offsets.end(); ++i)
-		theRelHead.insert(i->first);
+	for (map<string8,size_t>::iterator ii = offsets.begin(); ii != offsets.end(); ++ii)
+		theRelHead.insert(ii->first);
 
 	return new ZQE::Result(theRelHead, &thePackedRows, &theAnnotationsVector);
 	}

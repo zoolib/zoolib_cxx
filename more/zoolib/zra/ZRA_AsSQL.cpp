@@ -177,10 +177,10 @@ void Analyzer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	Analysis theAnalysis = this->Do(iExpr->GetOp0());
 	const RelHead& theRH = iExpr->GetProjectRelHead();
 	RelHead newRelHead;
-	for (RelHead::iterator i = theAnalysis.fRelHead_Physical.begin();
-		i != theAnalysis.fRelHead_Physical.end(); ++i)
+	for (RelHead::iterator ii = theAnalysis.fRelHead_Physical.begin();
+		ii != theAnalysis.fRelHead_Physical.end(); ++ii)
 		{
-		const string8 theString1 = *i;
+		const string8 theString1 = *ii;
 		const string8 theString2 = sGetMust(theAnalysis.fRename_Inverse, theString1);
 		if (sContains(theRH, theString2))
 			newRelHead.insert(theString1);
@@ -477,28 +477,28 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 
 		{
 		RelHead theRHLogical;
-		for (RelHead::iterator i = theAnalysis.fRelHead_Physical.begin();
-			i != theAnalysis.fRelHead_Physical.end(); ++i)
+		for (RelHead::iterator ii = theAnalysis.fRelHead_Physical.begin();
+			ii != theAnalysis.fRelHead_Physical.end(); ++ii)
 			{
-			theRHLogical |= sGetMust(theAnalysis.fRename_Inverse, *i);
+			theRHLogical |= sGetMust(theAnalysis.fRename_Inverse, *ii);
 			}
 
-		for (ZMap_Any::Index_t i = theAnalysis.fConstValues.Begin();
-			i != theAnalysis.fConstValues.End(); ++i)
+		for (ZMap_Any::Index_t ii = theAnalysis.fConstValues.Begin();
+			ii != theAnalysis.fConstValues.End(); ++ii)
 			{
-			theRHLogical |= theAnalysis.fConstValues.NameOf(i);
+			theRHLogical |= theAnalysis.fConstValues.NameOf(ii);
 			}
 
 		bool isFirst = true;
-		for (RelHead::iterator i = theRHLogical.begin(); i != theRHLogical.end(); ++i)
+		for (RelHead::iterator ii = theRHLogical.begin(); ii != theRHLogical.end(); ++ii)
 			{
 			if (not isFirst)
 				s << ",";
 			isFirst = false;
-			if (ZQ<string8> theQ = sQGet(theAnalysis.fRename, *i))
+			if (ZQ<string8> theQ = sQGet(theAnalysis.fRename, *ii))
 				s << *theQ;
 			else
-				spToStrim_SimpleValue(s, theAnalysis.fConstValues.Get(*i));
+				spToStrim_SimpleValue(s, theAnalysis.fConstValues.Get(*ii));
 			}
 		}
 
@@ -507,15 +507,15 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 		{
 		bool isFirst = true;
 
-		for (map<string8,int>::iterator i = theAnalyzer.fTablesUsed.begin();
-			i != theAnalyzer.fTablesUsed.end(); ++i)
+		for (map<string8,int>::iterator ii = theAnalyzer.fTablesUsed.begin();
+			ii != theAnalyzer.fTablesUsed.end(); ++ii)
 			{
-			for (int x = 0; x < i->second; ++x)
+			for (int x = 0; x < ii->second; ++x)
 				{
 				if (not isFirst)
 					s << ",";
 				isFirst = false;
-				s << i->first << " AS " << i->first << sStringf("%d", x);
+				s << ii->first << " AS " << ii->first << sStringf("%d", x);
 				}
 			}
 		}

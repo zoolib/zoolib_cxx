@@ -36,4 +36,4 @@ ZValPred sRenamed(const std::map<std::string,std::string>& iRename,
 
 } // namespace ZooLib
 
-#endif // __ZValPred_Renamed_T_h__
+#endif // __ZValPred_Renamed_h__

@@ -76,8 +76,8 @@ public:
 	const T Get() const
 		{
 		T result;
-		for (typename S::const_iterator i = fStack.begin(); i != fStack.end(); ++i)
-			fCombiner(result, *i);
+		for (typename S::const_iterator ii = fStack.begin(); ii != fStack.end(); ++ii)
+			fCombiner(result, *ii);
 		return result;
 		}
 

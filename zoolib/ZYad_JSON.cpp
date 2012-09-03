@@ -572,10 +572,10 @@ static bool spContainsProblemChars(const string& iString)
 		return true;
 		}
 
-	for (string::const_iterator i = iString.begin(), end = iString.end();;)
+	for (string::const_iterator ii = iString.begin(), end = iString.end();;)
 		{
 		UTF32 theCP;
-		if (not ZUnicode::sReadInc(i, end, theCP))
+		if (not ZUnicode::sReadInc(ii, end, theCP))
 			break;
 		if (not ZUnicode::sIsAlphaDigit(theCP) && '_' != theCP)
 			return true;

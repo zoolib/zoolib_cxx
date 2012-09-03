@@ -597,13 +597,13 @@ ZRef<Event> Source_DatonSet::pConditionalPushDown()
 	else
 		{
 		ZRef<DatonSet> theDS = fDatonSet_Temp ? fDatonSet_Temp : fDatonSet;
-		for (Map_Pending::iterator i = fMap_Pending.begin(), end = fMap_Pending.end();
-			i != end; ++i)
+		for (Map_Pending::iterator ii = fMap_Pending.begin(), end = fMap_Pending.end();
+			ii != end; ++ii)
 			{
-			if (i->second.second)
-				theDS->Insert(i->first);
+			if (ii->second.second)
+				theDS->Insert(ii->first);
 			else
-				theDS->Erase(i->first);
+				theDS->Erase(ii->first);
 			}
 		fMap_Pending.clear();
 		return theDS->GetEvent();
@@ -612,12 +612,12 @@ ZRef<Event> Source_DatonSet::pConditionalPushDown()
 
 void Source_DatonSet::pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& iVal, bool iSense)
 	{
-	Map_Pending::iterator i = fMap_Pending.find(iDaton);
-	if (fMap_Pending.end() == i)
+	Map_Pending::iterator ii = fMap_Pending.find(iDaton);
+	if (fMap_Pending.end() == ii)
 		{
 		fMap_Pending.insert(make_pair(iDaton, make_pair(iVal, iSense)));
 		}
-	else if (i->second.second == iSense)
+	else if (ii->second.second == iSense)
 		{
 		if (ZLOGF(s, eDebug))
 			s << "\nDaton: " << iDaton;
@@ -625,7 +625,7 @@ void Source_DatonSet::pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& iV
 		}
 	else
 		{
-		fMap_Pending.erase(i);
+		fMap_Pending.erase(ii);
 		}
 	this->pChanged(iVal);
 	}
@@ -741,8 +741,8 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search
 	{
 	const ZRA::Rename& theRename = iRel->GetRename();
 	ZRA::RelHead theRelHead;
-	for (ZRA::Rename::const_iterator i = theRename.begin(); i != theRename.end(); ++i)
-		theRelHead |= i->first;
+	for (ZRA::Rename::const_iterator ii = theRename.begin(); ii != theRename.end(); ++ii)
+		theRelHead |= ii->first;
 
 	ZRef<ZQE::Walker> theWalker;
 	const ZRef<ZExpr_Bool>& theExpr_Bool = iRel->GetExpr_Bool();

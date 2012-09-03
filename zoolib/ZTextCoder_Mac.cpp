@@ -89,9 +89,9 @@ static TextEncoding spLookupName(const string& iName)
 	// Work our way through any aliases ZTextCoder may know about
 	vector<string> aliases;
 	ZTextCoder::sGetAliases(iName, aliases);
-	for (vector<string>::iterator i = aliases.begin(); i != aliases.end(); ++i)
+	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
-		ZUtil_string::sToPString(ZUnicode::sToLower(*i), theNameStr255, 255);
+		ZUtil_string::sToPString(ZUnicode::sToLower(*ii), theNameStr255, 255);
 		if (noErr == TECGetTextEncodingFromInternetName(&theTE, theNameStr255))
 			return theTE;
 		}

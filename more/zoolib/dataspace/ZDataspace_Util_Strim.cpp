@@ -34,12 +34,12 @@ using std::set;
 const ZStrimW& operator<<(const ZStrimW& w, const set<RelHead>& iSet)
 	{
 	bool isSubsequent = false;
-	for (set<RelHead>::const_iterator i = iSet.begin(); i != iSet.end(); ++i)
+	for (set<RelHead>::const_iterator ii = iSet.begin(); ii != iSet.end(); ++ii)
 		{
 		if (isSubsequent)
 			w << ", ";
 		isSubsequent = true;
-		w << *i;
+		w << *ii;
 		}
 	return w;
 	}

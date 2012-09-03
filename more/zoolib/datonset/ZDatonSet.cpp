@@ -220,13 +220,13 @@ void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed)
 		queue.pop();
 
 		const map<Daton, bool>& theStatements = theIters[theX]->second->GetStatements();
-		for (map<Daton, bool>::const_iterator j = theStatements.begin();
-			j != theStatements.end(); ++j)
+		for (map<Daton, bool>::const_iterator jj = theStatements.begin();
+			jj != theStatements.end(); ++jj)
 			{
-			if (j->second)
-				oComposed.insert(j->first);
+			if (jj->second)
+				oComposed.insert(jj->first);
 			else
-				oComposed.erase(j->first);
+				oComposed.erase(jj->first);
 			}
 
 		if (++theIters[theX] != theEnds[theX])

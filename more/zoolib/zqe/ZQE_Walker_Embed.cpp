@@ -59,10 +59,10 @@ ZRef<Walker> Walker_Embed::Prime
 	map<string8,size_t> embedeeOffsets;
 	fWalker_Embedee = fWalker_Embedee->Prime(oOffsets, embedeeOffsets, ioBaseOffset);
 
-	for (map<string8,size_t>::iterator i = embedeeOffsets.begin(); i != embedeeOffsets.end(); ++i)
+	for (map<string8,size_t>::iterator ii = embedeeOffsets.begin(); ii != embedeeOffsets.end(); ++ii)
 		{
-		fEmbedeeRelHead |= i->first;
-		fEmbedeeOffsets.push_back(i->second);
+		fEmbedeeRelHead |= ii->first;
+		fEmbedeeOffsets.push_back(ii->second);
 		}
 
 	fOutputOffset = ioBaseOffset++;
@@ -88,8 +88,8 @@ bool Walker_Embed::QReadInc
 			if (not fWalker_Embedee->QReadInc(ioResults, nullptr))
 				break;
 
-			for (vector<size_t>::iterator i = fEmbedeeOffsets.begin(); i != fEmbedeeOffsets.end(); ++i)
-				thePackedRows.push_back(ioResults[*i]);
+			for (vector<size_t>::iterator ii = fEmbedeeOffsets.begin(); ii != fEmbedeeOffsets.end(); ++ii)
+				thePackedRows.push_back(ioResults[*ii]);
 			}
 
 		ZRef<ZQE::Result> theResult = new ZQE::Result(fEmbedeeRelHead, &thePackedRows, nullptr);

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
-#include "zoolib/ZValPred_Rename.h"
+#include "zoolib/ZValPred_Renamed.h"
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
 
 using std::map;

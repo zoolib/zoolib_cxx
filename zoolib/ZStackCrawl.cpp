@@ -354,10 +354,10 @@ bool Symbols::ReadStabs(int iFD, const Elf32_Ehdr& iHdr, size_t iBaseAddr)
 				if (read(iFD, &fSyms[0], shdr.sh_size) != shdr.sh_size)
 					return false;
 
-				for (vector<Elf32_Sym>::iterator i = fSyms.begin(); i != fSyms.end(); ++i)
+				for (vector<Elf32_Sym>::iterator ii = fSyms.begin(); ii != fSyms.end(); ++ii)
 					{
-					if ((*i).st_shndx && (*i).st_shndx < fNumOffsets)
-						(*i).st_value += iBaseAddr;
+					if (ii->st_shndx && ii->st_shndx < fNumOffsets)
+						ii->st_value += iBaseAddr;
 					}
 
 				int i = iHdr.e_shoff + shdr.sh_link * iHdr.e_shentsize;
@@ -453,22 +453,22 @@ bool ZStackCrawl::AllSymbols::GetSymNameAndOffset(const void* iAddress,
 	const Elf32_Sym* foundSym = nullptr;
 	const Symbols* foundTable = nullptr;
 	size_t addressAsInt = reinterpret_cast<size_t>(iAddress);
-	for (vector<Symbols*>::const_iterator i = fSymbols.begin(); i != fSymbols.end(); ++i)
+	for (vector<Symbols*>::const_iterator ii = fSymbols.begin(); ii != fSymbols.end(); ++ii)
 		{
-		for (vector<Elf32_Sym>::const_iterator j = (*i)->fSyms.begin(); j != (*i)->fSyms.end(); ++j)
+		for (vector<Elf32_Sym>::const_iterator jj = (*ii)->fSyms.begin(); jj != (*ii)->fSyms.end(); ++j)
 			{
-			if ((*j).st_value > addressAsInt)
+			if (jj->st_value > addressAsInt)
 				continue;
-			if ((*j).st_shndx == SHN_UNDEF)
+			if (jj->st_shndx == SHN_UNDEF)
 				continue;
-			if ((*j).st_shndx >= (*i)->fNumOffsets)
+			if (jj->st_shndx >= (*i)->fNumOffsets)
 				continue;
-			if (ELF32_ST_TYPE((*j).st_info) != STT_FUNC)
+			if (ELF32_ST_TYPE(jj->st_info) != STT_FUNC)
 				continue;
-			if (foundSym && foundSym->st_value >= (*j).st_value)
+			if (foundSym && foundSym->st_value >= jj->st_value)
 				continue;
-			foundSym = &(*j);
-			foundTable = *i;
+			foundSym = &(*jj);
+			foundTable = *ii;
 			}
 		}
 

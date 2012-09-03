@@ -165,9 +165,9 @@ static string spCanonicalName(const string& iName)
 	{
 	string result;
 	bool seenNonZeroDigit = false;
-	for (string::const_iterator i = iName.begin(); i != iName.end(); ++i)
+	for (string::const_iterator ii = iName.begin(); ii != iName.end(); ++ii)
 		{
-		char theChar = tolower(*i);
+		char theChar = tolower(*ii);
 		switch (theChar)
 			{
 			case ' ':
@@ -234,11 +234,11 @@ static UINT spLookupName(const string& iName)
 	// Work our way through any aliases ZTextCoder may know about
 	vector<string> aliases;
 	ZTextCoder::sGetAliases(iName, aliases);
-	for (vector<string>::iterator i = aliases.begin(); i != aliases.end(); ++i)
+	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
-		theIter = spMap_NameToCodePage.find(*i);
+		theIter = spMap_NameToCodePage.find(*ii);
 		if (theIter != spMap_NameToCodePage.end())
-			return (*theIter).second;
+			return theIter->second;
 		}
 	return 0;
 	}

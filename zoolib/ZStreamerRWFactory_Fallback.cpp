@@ -40,10 +40,11 @@ ZStreamerRWFactory_Fallback::~ZStreamerRWFactory_Fallback()
 
 ZRef<ZStreamerRW> ZStreamerRWFactory_Fallback::MakeStreamerRW()
 	{
-	for (vector<ZRef<ZStreamerRWFactory> >::iterator i = fFactories.begin();
-		i != fFactories.end(); ++i)
+	for (vector<ZRef<ZStreamerRWFactory> >::iterator ii = fFactories.begin();
+		ii != fFactories.end(); ++ii)
 		{
-		if (ZRef<ZStreamerRW> theSRW = (*i)->MakeStreamerRW())
+//		if (ZRef<ZStreamerRW> theSRW = (*ii)->MakeStreamerRW())
+		if (ZRef<ZStreamerRW> theSRW = ii->MakeStreamerRW())
 			return theSRW;
 		}
 
