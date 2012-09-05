@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDebug_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZMACRO_FileFunctionLine.h"
+
 #include <cstdarg> // For std::va_list
 #include <cstddef> // For std::size_t
 
@@ -56,23 +58,15 @@ std::size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iPa
 	#define ZMACRO_Unwrap(...) __VA_ARGS__
 #endif
 
-#if ZCONFIG(Compiler, GCC)
-	#define ZMACRO_FunctionName __PRETTY_FUNCTION__
-#elif ZCONFIG(Compiler, MSVC)
-	#define ZMACRO_FunctionName __FUNCDNAME__
-#else
-	#define ZMACRO_FunctionName __FUNCTION__
-#endif
-
 #define ZMACRO_Debug(level, stop, message) \
 	do { if (level <= ZCONFIG_Debug) \
 		ZooLib::ZDebug::sInvoke(level, stop, \
-		__FILE__, ZMACRO_FunctionName, __LINE__, 0, ZMACRO_Unwrap message); } while (0)
+		__FILE__, ZMACRO_FunctionName_Long, __LINE__, 0, ZMACRO_Unwrap message); } while (0)
 
 #define ZMACRO_Assert(level, stop, condition, message) \
 	do { if (level <= ZCONFIG_Debug && !(condition)) \
 		ZooLib::ZDebug::sInvoke(level, stop, \
-		__FILE__, ZMACRO_FunctionName, __LINE__, #condition, ZMACRO_Unwrap message); } while (0)
+		__FILE__, ZMACRO_FunctionName_Long, __LINE__, #condition, ZMACRO_Unwrap message); } while (0)
 
 
 #define ZDebugLog(level) ZMACRO_Debug(level, false, (0))
