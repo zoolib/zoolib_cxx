@@ -43,8 +43,7 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Fallback::MakeStreamerRW()
 	for (vector<ZRef<ZStreamerRWFactory> >::iterator ii = fFactories.begin();
 		ii != fFactories.end(); ++ii)
 		{
-//		if (ZRef<ZStreamerRW> theSRW = (*ii)->MakeStreamerRW())
-		if (ZRef<ZStreamerRW> theSRW = ii->MakeStreamerRW())
+		if (ZRef<ZStreamerRW> theSRW = (*ii)->MakeStreamerRW())
 			return theSRW;
 		}
 
