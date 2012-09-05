@@ -29,6 +29,13 @@ namespace ZooLib {
 
 struct ZFileFunctionLine
 	{
+	ZFileFunctionLine()
+	:	fFileName(0)
+	,	fFunctionName_Short(0)
+	,	fFunctionName_Long(0)
+	,	fLine(0)
+		{}
+
 	ZFileFunctionLine(const char* iFileName,
 		const char* iFunctionName_Short,
 		const char* iFunctionName_Long,
@@ -57,7 +64,11 @@ struct ZFileFunctionLine
 } // namespace ZooLib
 
 #ifndef ZMACRO_FunctionName_Short
-	#define ZMACRO_FunctionName_Short __FUNCTION__
+	#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901
+		#define ZMACRO_FunctionName_Short __func__
+	#else
+		#define ZMACRO_FunctionName_Short __FUNCTION__
+	#endif
 #endif
 
 #ifndef ZMACRO_FunctionName_Long
@@ -66,13 +77,14 @@ struct ZFileFunctionLine
 	#elif ZCONFIG(Compiler, MSVC)
 		#define ZMACRO_FunctionName_Long __FUNCDNAME__
 	#else
-		#define ZMACRO_FunctionName_Long __FUNCTION__
+		#define ZMACRO_FunctionName_Long ZMACRO_FunctionName_Short
 	#endif
 #endif
 
 #ifndef ZMACRO_FileFunctionLine
 	#define ZMACRO_FileFunctionLine \
-		ZFileFunctionLine(__FILE__, ZMACRO_FunctionName_Short, ZMACRO_FunctionName_Long, __LINE__)
+		ZooLib::ZFileFunctionLine \
+			(__FILE__, ZMACRO_FunctionName_Short, ZMACRO_FunctionName_Long, __LINE__)
 #endif
 
 #endif // __ZMACRO_FileFunctionLine_h__

@@ -46,15 +46,13 @@ namespace ZDebug {
 using std::va_list;
 
 extern void sInvoke(int iLevel, bool iStop,
-	const char* iFileName, const char* iFunctionName, int iLine,
+	const ZFileFunctionLine& iFFL,
 	const char* iConditionMessage, const char* iUserMessage, ...)
 	{
 	Params_t theParams;
 	theParams.fLevel = iLevel;
 	theParams.fStop = iStop;
-	theParams.fFileName = iFileName;
-	theParams.fFunctionName = iFunctionName;
-	theParams.fLine = iLine;
+	theParams.fFFL = iFFL;
 	theParams.fConditionMessage = iConditionMessage;
 	theParams.fUserMessage = iUserMessage;
 
@@ -82,17 +80,17 @@ size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams)
 		return snprintf(iBuf, iBufSize,
 			"Assertion failed: (%s), in %s[%s:%d]",
 			iParams.fConditionMessage,
-			iParams.fFunctionName,
-			spTruncateFileName(iParams.fFileName),
-			iParams.fLine);
+			iParams.fFFL.fFunctionName_Long,
+			spTruncateFileName(iParams.fFFL.fFileName),
+			iParams.fFFL.fLine);
 		}
 	else
 		{
 		return snprintf(iBuf, iBufSize,
 			"%s[%s:%d]",
-			iParams.fFunctionName,
-			spTruncateFileName(iParams.fFileName),
-			iParams.fLine);
+			iParams.fFFL.fFunctionName_Long,
+			spTruncateFileName(iParams.fFFL.fFileName),
+			iParams.fFFL.fLine);
 		}
 	}
 
@@ -322,7 +320,7 @@ namespace ZooLib {
 
 void ZUnimplemented()
 	{
-	ZDebugStop(0);
+	ZDebugStopf(0, "ZUnimplemented() called");
 	abort();
 	}
 

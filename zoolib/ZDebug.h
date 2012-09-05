@@ -37,9 +37,7 @@ struct Params_t
 	{
 	int fLevel;
 	bool fStop;
-	const char* fFileName;
-	const char* fFunctionName;
-	int fLine;
+	ZFileFunctionLine fFFL;
 	const char* fConditionMessage;
 	const char* fUserMessage;
 	};
@@ -47,40 +45,63 @@ struct Params_t
 typedef void (*Function_t)(const Params_t& iParams, std::va_list iArgs);
 
 extern void sInvoke(int iLevel, bool iStop,
-	const char* iFileName, const char* iFunctionName, int iLine,
+	const ZFileFunctionLine& iFFL,
 	const char* iConditionMessage, const char* iUserMessage, ...);
 
 std::size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams);
 
-#if ZCONFIG(Compiler,GCC)
-	#define ZMACRO_Unwrap(b...) b
-#else
-	#define ZMACRO_Unwrap(...) __VA_ARGS__
+#ifndef ZMACRO_Debug
+	#define ZMACRO_Debug(level, stop, FFL, ...) \
+		do { if (level <= ZCONFIG_Debug) \
+			ZooLib::ZDebug::sInvoke(level, stop, FFL, 0, __VA_ARGS__); } while (0)
 #endif
 
-#define ZMACRO_Debug(level, stop, message) \
-	do { if (level <= ZCONFIG_Debug) \
-		ZooLib::ZDebug::sInvoke(level, stop, \
-		__FILE__, ZMACRO_FunctionName_Long, __LINE__, 0, ZMACRO_Unwrap message); } while (0)
-
-#define ZMACRO_Assert(level, stop, condition, message) \
-	do { if (level <= ZCONFIG_Debug && !(condition)) \
-		ZooLib::ZDebug::sInvoke(level, stop, \
-		__FILE__, ZMACRO_FunctionName_Long, __LINE__, #condition, ZMACRO_Unwrap message); } while (0)
+#ifndef ZMACRO_Assert
+	#define ZMACRO_Assert(level, stop, condition, FFL, ...) \
+		do { if (level <= ZCONFIG_Debug && !(condition)) \
+			ZooLib::ZDebug::sInvoke(level, stop, FFL, #condition, __VA_ARGS__); } while (0)
+#endif
 
 
-#define ZDebugLog(level) ZMACRO_Debug(level, false, (0))
-#define ZDebugLogf(level, message) ZMACRO_Debug(level, false, message)
+#ifndef ZDebugLog
+	#define ZDebugLog(level) \
+		ZMACRO_Debug(level, false, ZMACRO_FileFunctionLine, 0)
+#endif
 
-#define ZDebugStop(level) ZMACRO_Debug(level, true, (0))
-#define ZDebugStopf(level, message) ZMACRO_Debug(level, true, message)
+#ifndef ZDebugLogf
+	#define ZDebugLogf(level, ...) \
+		ZMACRO_Debug(level, false, ZMACRO_FileFunctionLine, __VA_ARGS__)
+#endif
 
-#define ZAssertLog(level, condition) ZMACRO_Assert(level, false, condition, (0))
-#define ZAssertLogf(level, condition, message) ZMACRO_Assert(level, false, condition, message)
+#ifndef ZDebugStop
+	#define ZDebugStop(level) \
+		ZMACRO_Debug(level, true, ZMACRO_FileFunctionLine, 0)
+#endif
 
-#define ZAssertStop(level, condition) ZMACRO_Assert(level, true, condition, (0))
-#define ZAssertStopf(level, condition, message) ZMACRO_Assert(level, true, condition, message)
+#ifndef ZDebugStopf
+	#define ZDebugStopf(level, ...) \
+		ZMACRO_Debug(level, true, ZMACRO_FileFunctionLine, __VA_ARGS__)
+#endif
 
+#ifndef ZAssertLog
+	#define ZAssertLog(level, condition) \
+		ZMACRO_Assert(level, false, condition, ZMACRO_FileFunctionLine, 0)
+#endif
+
+#ifndef ZAssertLogf
+	#define ZAssertLogf(level, condition, ...) \
+		ZMACRO_Assert(level, false, condition, ZMACRO_FileFunctionLine, __VA_ARGS__)
+#endif
+
+#ifndef ZAssertStop
+	#define ZAssertStop(level, condition) \
+		ZMACRO_Assert(level, true, condition, ZMACRO_FileFunctionLine, 0)
+#endif
+
+#ifndef ZAssertStopf
+	#define ZAssertStopf(level, condition, ...) \
+		ZMACRO_Assert(level, true, condition, ZMACRO_FileFunctionLine, __VA_ARGS__)
+#endif
 
 // ZAssertCompile can be used to enforce a constraint at compile time, (for example that a
 // struct obeys necessary alignment rules). It either drops out completely or generates an
@@ -103,9 +124,7 @@ template <> struct AssertCompile<true> { typedef bool IsValid; };
 
 namespace ZooLib {
 
-ZMACRO_NoReturn_Pre
-void ZUnimplemented()
-ZMACRO_NoReturn_Post;
+ZMACRO_NoReturn_Pre void ZUnimplemented() ZMACRO_NoReturn_Post;
 
 } // namespace ZooLib
 
