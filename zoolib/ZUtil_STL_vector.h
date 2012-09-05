@@ -94,8 +94,10 @@ template <typename Base, typename Derived>
 void sEraseMust(const int iDebugLevel,
 	std::vector<Base>& ioVec, const Derived& iElement)
 	{
-	const bool result = sQErase(ioVec, iElement);
-	ZAssertStop(iDebugLevel, result);
+	if (iDebugLevel > ZCONFIG_Debug)
+		sErase(ioVec, iElement);
+	else if (not sQErase(ioVec, iElement))
+		ZDebugStop(iDebugLevel);
 	}
 
 template <typename Base, typename Derived>
@@ -106,8 +108,10 @@ template <typename Base, typename Derived>
 void sPushBackMust(const int iDebugLevel,
 	std::vector<Base>& ioVec, const Derived& iElement)
 	{
-	const bool result = sQPushBack(ioVec, iElement);
-	ZAssertStop(iDebugLevel, result);
+	if (iDebugLevel > ZCONFIG_Debug)
+		sPushBack(ioVec, iElement);
+	else if (not sPushBackMust(ioVec, iElement))
+		ZDebugStop(iDebugLevel);
 	}
 
 template <typename Base, typename Derived>
@@ -156,8 +160,10 @@ template <typename Base, typename Derived>
 void sEraseSortedMust(const int iDebugLevel,
 	std::vector<Base>& ioVec, const Derived& iElement)
 	{
-	const bool result = sQEraseSorted(ioVec, iElement);
-	ZAssertStop(iDebugLevel, result);
+	if (iDebugLevel > ZCONFIG_Debug)
+		sEraseSorted(ioVec, iElement);
+	else if (not sQEraseSorted(ioVec, iElement))
+		ZDebugStop(iDebugLevel);
 	}
 
 template <typename Base, typename Derived>
@@ -168,8 +174,10 @@ template <typename Base, typename Derived>
 void sInsertSortedMust(const int iDebugLevel,
 	std::vector<Base>& ioVec, const Derived& iElement)
 	{
-	const bool result = sQInsertSorted(ioVec, iElement);
-	ZAssertStop(iDebugLevel, result);
+	if (iDebugLevel > ZCONFIG_Debug)
+		sInsertSorted(ioVec, iElement);
+	else if (not sQInsertSorted(ioVec, iElement))
+		ZDebugStop(iDebugLevel);
 	}
 
 template <typename Base, typename Derived>
