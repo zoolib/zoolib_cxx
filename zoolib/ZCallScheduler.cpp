@@ -34,7 +34,7 @@ ZCallScheduler::ZCallScheduler()
 :	fThreadRunning(false)
 	{}
 
-void ZCallScheduler::Cancel(const Job& iJob)
+bool ZCallScheduler::Cancel(const Job& iJob)
 	{
 	ZAcqMtx acq(fMtx);
 
@@ -43,7 +43,9 @@ void ZCallScheduler::Cancel(const Job& iJob)
 		{
 		sEraseMust(fTimeJobs, make_pair(iterJT->second, iJob));
 		fJobTimes.erase(iterJT);
+		return true;
 		}
+	return false;
 	}
 
 void ZCallScheduler::NextCallAt(ZTime iSystemTime, const Job& iJob)
@@ -63,8 +65,8 @@ bool ZCallScheduler::IsAwake(const Job& iJob)
 	return false;
 	}
 
-void ZCallScheduler::Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
-	{ this->Cancel(Job(iCaller, iCallable)); }
+bool ZCallScheduler::Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+	{ return this->Cancel(Job(iCaller, iCallable)); }
 
 void ZCallScheduler::NextCallAt(ZTime iSystemTime,
 	const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)

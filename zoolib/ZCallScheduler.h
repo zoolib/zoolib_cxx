@@ -41,7 +41,7 @@ public:
 
 	typedef std::pair<ZRef<ZCaller>,ZRef<ZCallable_Void> > Job;
 
-	void Cancel(const Job& iJob);
+	bool Cancel(const Job& iJob);
 
 	void NextCallAt(ZTime iSystemTime, const Job& iJob);
 
@@ -49,7 +49,7 @@ public:
 
 	bool IsAwake(const Job& iJob);
 
-	void Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
+	bool Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
 	void NextCallAt(ZTime iSystemTime,
 		const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
