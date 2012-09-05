@@ -138,6 +138,8 @@ public:
 
 void sSetLogMeister(LogMeister* iLogMeister);
 
+void sLogIt(EPriority iPriority, const std::string& iName, const std::string& iMessage);
+
 // =================================================================================================
 // MARK: - ZLog::FunctionEntryExit
 

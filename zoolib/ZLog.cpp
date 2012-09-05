@@ -158,19 +158,9 @@ void StrimW::Emit() const
 
 void StrimW::pEmit()
 	{
-	spMutex.Acquire();
-	if (spLogMeister)
-		{
-		try
-			{
-			if (not fName_StringQ)
-				fName_StringQ = *fName_CharStarQ;
-			spLogMeister->LogIt(fPriority, *fName_StringQ, *fMessageQ);
-			}
-		catch (...)
-			{}
-		}
-	spMutex.Release();
+	if (not fName_StringQ)
+		fName_StringQ = *fName_CharStarQ;
+	sLogIt(fPriority, *fName_StringQ, *fMessageQ);
 	}
 
 // =================================================================================================
@@ -200,6 +190,21 @@ void sSetLogMeister(LogMeister* iLogMeister)
 	delete spLogMeister;
 	spLogMeister = iLogMeister;
 	spMutex.Release();
+	}
+
+void sLogIt(EPriority iPriority, const std::string& iName, const std::string& iMessage)
+	{
+	spMutex.Acquire();
+	if (spLogMeister)
+		{
+		try
+			{
+			spLogMeister->LogIt(iPriority, iName, iMessage);
+			}
+		catch (...)
+			{}
+		}
+	spMutex.Release();	
 	}
 
 // =================================================================================================
