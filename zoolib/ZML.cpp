@@ -1044,7 +1044,7 @@ const StrimW& StrimW::End(const string8& iTag) const
 
 	ZAssertStop(kDebug_StrimW_ML, !fTags.empty());
 	ZAssertStopf(kDebug_StrimW_ML, fTags.back() == iTag,
-		("Expected \"%s\", got \"%s\"", fTags.back().c_str(), iTag.c_str()));
+		"Expected \"%s\", got \"%s\"", fTags.back().c_str(), iTag.c_str());
 
 	const_cast<StrimW*>(this)->pEnd();
 

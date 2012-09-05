@@ -522,7 +522,7 @@ void ZDCPixmapNS::PixvalAccessor::Initialize(int32 inDepth, bool inBigEndian)
 			}
 		default:
 			{
-			ZDebugStopf(0, ("%d depth out of range", inDepth));
+			ZDebugStopf(0, "%d depth out of range", inDepth);
 			}
 		}
 	}
@@ -1803,7 +1803,7 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors
 	{
 	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
 
-	ZAssertStopf(1, iStripAlpha, ("This constructor is only used when stripping alpha"));
+	ZAssertStopf(1, iStripAlpha, "This constructor is only used when stripping alpha");
 
 	MapPixvalToRGB_Indexed::fPixvals = nullptr;
 	MapRGBToPixval_Indexed::fPixvals = nullptr;

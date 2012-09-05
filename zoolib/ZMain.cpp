@@ -45,7 +45,7 @@ static int spMain(int argc, char **argv)
 		}
 	catch (std::exception& theEx)
 		{
-		ZDebugLogf(0, ("Exception \"%s\" not caught by ZMain", theEx.what()));
+		ZDebugLogf(0, "Exception \"%s\" not caught by ZMain", theEx.what());
 		}
 	catch (...)
 		{

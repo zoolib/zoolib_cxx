@@ -188,7 +188,7 @@ bool ZTextDecoder_iconv::Decode
 				}
 			else
 				{
-				ZDebugStopf(1, ("Unexpected error %d", err));
+				ZDebugStopf(1, "Unexpected error %d", err);
 				}
 			}
 		}
@@ -291,7 +291,7 @@ void ZTextEncoder_iconv::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 				}
 			else
 				{
-				ZDebugStopf(1, ("Unexpected error %d", err));
+				ZDebugStopf(1, "Unexpected error %d", err);
 				}
 			}
 		}

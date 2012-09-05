@@ -1442,22 +1442,22 @@ size_t ZBlockStore_PhaseTree::ValidateOne
 			if (x == count)
 				{
 				ZAssertLogf(0, iMaxKey - priorKey >= expectedSubTreeSize,
-					("slotnumber: %d, priorKey: %X, iMaxKey: %X, expectedSubTreeSize: %d",
-					iSlot->fSlotNumber, priorKey, iMaxKey, expectedSubTreeSize));
+					"slotnumber: %d, priorKey: %X, iMaxKey: %X, expectedSubTreeSize: %d",
+					iSlot->fSlotNumber, priorKey, iMaxKey, expectedSubTreeSize);
 				actualSubTreeSize = this->ValidateOne(theSlot, iHeight - 1, priorKey, iMaxKey);
 				}
 			else
 				{
 				uint32 currentKey = this->Index_GetKey(iSlot, false, x);
 				ZAssertLogf(0, currentKey - priorKey >= expectedSubTreeSize,
-					("slotnumber: %d, priorKey: %X, currentKey: %X, expectedSubTreeSize: %d",
-					iSlot->fSlotNumber, priorKey, currentKey, expectedSubTreeSize));
+					"slotnumber: %d, priorKey: %X, currentKey: %X, expectedSubTreeSize: %d",
+					iSlot->fSlotNumber, priorKey, currentKey, expectedSubTreeSize);
 				actualSubTreeSize = this->ValidateOne(theSlot, iHeight - 1, priorKey, currentKey);
 				priorKey = currentKey;
 				}
 			ZAssertLogf(0, expectedSubTreeSize == actualSubTreeSize,
-				("slotnumber: %d, Expected: %d, actual:%d",
-				iSlot->fSlotNumber, expectedSubTreeSize, actualSubTreeSize));
+				"slotnumber: %d, Expected: %d, actual:%d",
+				iSlot->fSlotNumber, expectedSubTreeSize, actualSubTreeSize);
 			accumulatedActual += actualSubTreeSize;
 			this->UnuseSlot(theSlot);
 			}
@@ -1469,8 +1469,8 @@ size_t ZBlockStore_PhaseTree::ValidateOne
 			{
 			uint32 currentKey = this->Index_GetKey(iSlot, false, x);
 			ZAssertLogf(0, currentKey > iMinKeyMinusOne && currentKey <= iMaxKey,
-				("slotnumber: %d, iMinKeyMinusOne: %X, iMaxKey:%X, currentKey:%X",
-				iSlot->fSlotNumber, iMinKeyMinusOne, iMaxKey, currentKey));
+				"slotnumber: %d, iMinKeyMinusOne: %X, iMaxKey:%X, currentKey:%X",
+				iSlot->fSlotNumber, iMinKeyMinusOne, iMaxKey, currentKey);
 			}
 		return count;
 		}
@@ -1800,8 +1800,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp
 					size_t oldSubTreeSize = this->Index_GetSubTreeSize(currentSlot, offset);
 					ZAssertStopf(ZCONFIG_PhaseTree_Debug,
 						leftSubTreeSize + rightSubTreeSize == oldSubTreeSize,
-						("left: %d, right:%d, old:%d",
-						leftSubTreeSize, rightSubTreeSize, oldSubTreeSize));
+						"left: %d, right:%d, old:%d",
+						leftSubTreeSize, rightSubTreeSize, oldSubTreeSize);
 					}
 
 				// And insert its new sibling (newChild) into currentSlot after offset.
@@ -2298,11 +2298,11 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlot(uint32 iSlotNumber)
 
 			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
 				not sContains(fSlots_ReleasedForked, iSlotNumber),
-				("Slot: %d", iSlotNumber));
+				"Slot: %d", iSlotNumber);
 
 			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
 				not sContains(fSlots_ReleasedClean, iSlotNumber),
-				("Slot: %d", iSlotNumber));
+				"Slot: %d", iSlotNumber);
 
 			if (sQErase(fSlots_Forked, iSlotNumber))
 				theSlot = new(fSlotSize) Slot(iSlotNumber, true);
@@ -2397,11 +2397,11 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal
 			++fUseFailures;
 			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
 				not sContains(fSlots_ReleasedForked, iSlotNumber),
-				("Slot: %d", iSlotNumber));
+				"Slot: %d", iSlotNumber);
 
 			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
 				not sContains(fSlots_ReleasedClean, iSlotNumber),
-				("Slot: %d", iSlotNumber));
+				"Slot: %d", iSlotNumber);
 
 			if (sQErase(fSlots_Forked, iSlotNumber))
 				{
@@ -2607,7 +2607,7 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 								fSlots_Cached.find(theSlot->fSlotNumber);
 							ZAssertStopf(ZCONFIG_PhaseTree_Debug,
 								cacheIter != fSlots_Cached.end(),
-								("Slot: %d, state: %d", theSlot->fSlotNumber, theSlot->fState));
+								"Slot: %d, state: %d", theSlot->fSlotNumber, theSlot->fState);
 
 							fSlots_Cached.erase(cacheIter);
 
@@ -2635,7 +2635,7 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 				// fSlots_Loaded when ReleaseAndUnuseSlot was called.
 				ZAssertStopf(ZCONFIG_PhaseTree_Debug,
 					not sContains(fSlots_Loaded, iSlot->fSlotNumber),
-					("Slot: %d", iSlot->fSlotNumber));
+					"Slot: %d", iSlot->fSlotNumber);
 				delete iSlot;
 				break;
 				}
@@ -2735,7 +2735,7 @@ void ZBlockStore_PhaseTree::ReleaseSlotNumber(uint32 iSlotNumber)
 	// cannot be loaded, because the ancestor block slot is locked.
 
 	ZAssertStopf(ZCONFIG_PhaseTree_Debug,
-		not sContains(fSlots_Loaded, iSlotNumber), ("Slot: %d", iSlotNumber));
+		not sContains(fSlots_Loaded, iSlotNumber), "Slot: %d", iSlotNumber);
 
 	// However, the slot could be cached.
 	map<uint32, Slot*>::iterator iterCached = fSlots_Cached.find(iSlotNumber);

@@ -37,7 +37,7 @@ ZCountedBase::~ZCountedBase()
 		{
 		const int old = sAtomic_Get(&fRefCount);
 		if (0 != old)
-			ZDebugStopf(1, ("Non-zero refcount at destruction, it is %d", old));
+			ZDebugStopf(1, "Non-zero refcount at destruction, it is %d", old);
 		}
 	}
 
@@ -48,7 +48,7 @@ void ZCountedBase::Initialize()
 		{
 		const int old = sAtomic_Get(&fRefCount);
 		if (1 != old)
-			ZDebugStopf(1, ("Refcount is not 1, it is %d", old));
+			ZDebugStopf(1, "Refcount is not 1, it is %d", old);
 		}
 	}
 

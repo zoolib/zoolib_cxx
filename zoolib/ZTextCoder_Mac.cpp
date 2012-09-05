@@ -232,7 +232,7 @@ bool ZTextDecoder_Mac::Decode
 				}
 			else
 				{
-				ZDebugStopf(1, ("ConvertFromTextToUnicode returned err %d", err));
+				ZDebugStopf(1, "ConvertFromTextToUnicode returned err %d", err);
 				}
 			}
 		else

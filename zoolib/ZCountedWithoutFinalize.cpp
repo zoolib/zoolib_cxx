@@ -33,7 +33,7 @@ ZCountedWithoutFinalize::ZCountedWithoutFinalize()
 ZCountedWithoutFinalize::~ZCountedWithoutFinalize()
 	{
 	ZAssertStopf(1, ZThreadSafe_Get(fRefCount) == 0,
-		("Non-zero refcount at destruction, it is %d", ZThreadSafe_Get(fRefCount)));
+		"Non-zero refcount at destruction, it is %d", ZThreadSafe_Get(fRefCount));
 	}
 
 void ZCountedWithoutFinalize::Release()

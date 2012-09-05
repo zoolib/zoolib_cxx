@@ -788,7 +788,7 @@ void ZStreamW::Write(const void* iSource, size_t iCount) const
 		const_cast<ZStreamW*>(this)->Imp_Write(localSource, countRemaining, &countWritten);
 
 		ZAssertStopf(kDebug_Stream, countWritten <= countRemaining,
-			("countWritten = %d, countRemaining = %d", countWritten, countRemaining));
+			"countWritten = %d, countRemaining = %d", countWritten, countRemaining);
 
 		if (countWritten == 0)
 			ZStreamW::sThrowEndOfStream();
@@ -1285,8 +1285,8 @@ void ZStreamU_Unreader::Imp_Unread()
 		{
 		case eStateFresh:
 			{
-			ZDebugStopf(2,
-				("You called ZStreamU_Unreader::Imp_Unread without having read anything."));
+			ZDebugStopf
+				(2, "You called ZStreamU_Unreader::Imp_Unread without having read anything.");
 			break;
 			}
 		case eStateNormal:
@@ -1296,13 +1296,13 @@ void ZStreamU_Unreader::Imp_Unread()
 			}
 		case eStateUnread:
 			{
-			ZDebugStopf(2, ("You called ZStreamU_Unreader::Imp_Unread twice consecutively."));
+			ZDebugStopf(2, "You called ZStreamU_Unreader::Imp_Unread twice consecutively.");
 			break;
 			}
 		case eStateHitEnd:
 			{
-			ZDebugStopf(2,
-				("You called ZStreamU_Unreader::Imp_Unread when end of stream has been seen."));
+			ZDebugStopf
+				(2, "You called ZStreamU_Unreader::Imp_Unread when end of stream has been seen.");
 			break;
 			}
 		}

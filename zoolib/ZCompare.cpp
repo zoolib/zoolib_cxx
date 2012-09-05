@@ -54,7 +54,7 @@ ZCompare::~ZCompare()
 
 int ZCompare::Compare(const void* iL, const void* iR)
 	{
-	ZDebugStopf(0, ("ZCompare::Compare not overridden type '%s'", fTypeName));
+	ZDebugStopf(0, "ZCompare::Compare not overridden type '%s'", fTypeName);
 	return 0;
 	}
 
@@ -63,7 +63,7 @@ int ZCompare::sCompare(const char* iTypeName, const void* iL, const void* iR)
 	if (ZQ<ZCompare*> theQ = ZUtil_STL::sQGet(sSingleton<CompareMap>(), iTypeName))
 		return (*theQ)->Compare(iL, iR);
 
-	ZDebugStopf(0, ("ZCompare::sCompare called on unsupported type '%s'", iTypeName));
+	ZDebugStopf(0, "ZCompare::sCompare called on unsupported type '%s'", iTypeName);
 	return iL < iR ? -1 : iL > iR ? 1 : 0;
 	}
 
