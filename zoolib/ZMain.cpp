@@ -88,7 +88,7 @@ extern "C" int APIENTRY WinMain
 	// the x86 Linker panel contains 4.00 (or greater).
 	DWORD theProcessVersion = ::GetProcessVersion(0);
 	ZAssertStopf(0, theProcessVersion >= 0x00040000,
-		("theProcessVersion == 0x08x", theProcessVersion));
+		"theProcessVersion == 0x08x", theProcessVersion);
 
 	return spMain(__argc, __argv);
 	}

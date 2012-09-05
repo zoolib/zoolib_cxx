@@ -89,7 +89,7 @@ public:
 		// Low order byte is major version number, high order byte is minor version number.
 		int result = ::WSAStartup(0x0002, &fWSADATA);
 		if (result)
-			ZDebugLogf(2, ("WSAStartup got error %d", GetLastError()));
+			ZDebugLogf(2, "WSAStartup got error %d", GetLastError());
 		}
 
 	~InitializeWinSock()
@@ -171,7 +171,7 @@ void ZNetNameLookup_Internet_WinSock::Start()
 	else
 		{
 		int err = ::WSAGetLastError();
-		ZDebugLogf(2, ("%d", err));
+		ZDebugLogf(2, "%d", err);
 		}
 	}
 
