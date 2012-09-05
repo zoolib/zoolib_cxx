@@ -38,24 +38,22 @@ ZRef<ZStreamerRWCon> sConnect(const std::string& iHost, uint16 iPort, bool iUseS
 
 ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iMethod, std::string& ioURL,
-	int32* oResultCode, Map* oFields, Data* oRawHeader);
+	int32* oResponseCode, Map* oFields, Data* oRawHeader);
+
+ZRef<ZStreamerR> sPost_Send(ZRef<Callable_Connect> iCallable_Connect,
+	const std::string& iURL, const Map* iFields, const ZStreamR& iBody);
+
+ZRef<ZStreamerR> sPost_Receive(const ZRef<ZStreamerR>& iStreamerR,
+	int32* oResponseCode, Map* oFields, Data* oRawHeader);
 
 ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iURL, const Map* iFields, const ZStreamR& iBody,
-	int32* oResultCode, Map* oFields, Data* oRawHeader);
-
-ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
-	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, Map* oFields, Data* oRawHeader);
-
-ZRef<ZStreamerR> sPostRaw(ZRef<Callable_Connect> iCallable_Connect,
-	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, Map* oFields, Data* oRawHeader);
+	int32* oResponseCode, Map* oFields, Data* oRawHeader);
 
 bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
 	const std::string& iAddress,
 	const Map* iHeader,
-	int32* oResultCode, Map* oHeader);
+	int32* oResponseCode, Map* oHeader);
 
 } // namespace ZHTTP
 } // namespace ZooLib

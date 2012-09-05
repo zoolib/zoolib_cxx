@@ -43,7 +43,22 @@ namespace ZHTTP {
 using std::string;
 
 // =================================================================================================
-// MARK: - ZHTTP
+// MARK: -
+
+ZRef<ZStreamerRWCon> sConnect(const string& iHost, uint16 iPort, bool iUseSSL)
+	{
+	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
+		{
+		if (iUseSSL)
+			return sStreamerRWCon_SSL(theEP, theEP);
+		return theEP;
+		}
+	return null;
+	}
+
+
+// =================================================================================================
+// MARK: -
 
 static bool spReadResponse(const ZStreamR& r, int32* oResponseCode, Map* oHeader)
 	{
@@ -58,6 +73,37 @@ static bool spReadResponse(const ZStreamR& r, int32* oResponseCode, Map* oHeader
 
 	return true;
 	}
+
+static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
+	const string& iScheme, const string& iHost, ip_port iPort)
+	{
+	if (false)
+		{}
+	else if (ZUtil_string::sEquali("http", iScheme))
+		{
+		if (not iPort)
+			iPort = 80;
+		}
+	else if (ZUtil_string::sEquali("https", iScheme))
+		{
+		if (not iPort)
+			iPort = 443;
+		}
+	else
+		{
+		return null;
+		}
+
+	const bool useSSL = ZUtil_string::sEquali("https", iScheme);
+
+	if (iCallable_Connect)
+		return iCallable_Connect->Call(iHost, iPort, useSSL);
+	else
+		return sConnect(iHost, iPort, useSSL);
+	}
+
+// =================================================================================================
+// MARK: -
 
 static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 	const string& iMethod, const string& iHost, const string& iPath,
@@ -88,52 +134,9 @@ static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 		}
 	}
 
-static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
-	const string& iScheme, const string& iHost, ip_port iPort)
-	{
-	if (false)
-		{}
-	else if (ZUtil_string::sEquali("http", iScheme))
-		{
-		if (not iPort)
-			iPort = 80;
-		}
-	else if (ZUtil_string::sEquali("https", iScheme))
-		{
-		if (not iPort)
-			iPort = 443;
-		}
-	else
-		{
-		return null;
-		}
-
-	const bool useSSL = ZUtil_string::sEquali("https", iScheme);
-
-	if (iCallable_Connect)
-		{
-		return iCallable_Connect->Call(iHost, iPort, useSSL);
-		}
-	else
-		{
-		return sConnect(iHost, iPort, useSSL);
-		}
-	}
-
-ZRef<ZStreamerRWCon> sConnect(const string& iHost, uint16 iPort, bool iUseSSL)
-	{
-	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
-		{
-		if (iUseSSL)
-			return sStreamerRWCon_SSL(theEP, theEP);
-		return theEP;
-		}
-	return null;
-	}
-
 ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iMethod, string& ioURL,
-	int32* oResultCode, Map* oFields, Data* oRawHeader)
+	int32* oResponseCode, Map* oFields, Data* oRawHeader)
 	{
 	for (bool keepGoing = true; keepGoing; /*no inc*/)
 		{
@@ -161,8 +164,8 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 				break;
 				}
 
-			if (oResultCode)
-				*oResultCode = theResponseCode;
+			if (oResponseCode)
+				*oResponseCode = theResponseCode;
 
 			switch (theResponseCode)
 				{
@@ -197,6 +200,9 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 	return null;
 	}
 
+// =================================================================================================
+// MARK: -
+
 static void spPost_Prefix(const ZStreamW& w,
 	const string& iHost, const string& iPath, const Map* iFields, bool iSendConnectionClose)
 	{
@@ -220,29 +226,8 @@ static void spPost_Prefix(const ZStreamW& w,
 		}
 	}
 
-static bool spPost_Suffix(const ZStreamR& r,
-	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
-	{
-	if (oRawHeader)
-		{
-		ZStreamRWPos_Data_T<Data> theSRWP_Data(*oRawHeader);
-		ZStreamR_Tee theStream_Tee(r, theSRWP_Data);
-		return spReadResponse(theStream_Tee, oResponseCode, oHeader);
-		}
-	else
-		{
-		return spReadResponse(r, oResponseCode, oHeader);
-		}
-	}
-
-ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
-	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, Map* oFields, Data* oRawHeader)
-	{ return sPost(iCallable_Connect, iURL, nullptr, iBody, oResultCode, oFields, oRawHeader); }
-
-ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
-	const std::string& iURL, const Map* iFields, const ZStreamR& iBody,
-	int32* oResultCode, Map* oFields, Data* oRawHeader)
+ZRef<ZStreamerR> sPost_Send(ZRef<Callable_Connect> iCallable_Connect,
+	const std::string& iURL, const Map* iFields, const ZStreamR& iBody)
 	{
 	string theScheme;
 	string theHost;
@@ -252,7 +237,6 @@ ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
 		{
 		if (ZRef<ZStreamerRWCon> theEP = spConnect(iCallable_Connect, theScheme, theHost, thePort))
 			{
-			const ZStreamR& r = theEP->GetStreamR();
 			const ZStreamW& w = theEP->GetStreamW();
 
 			spPost_Prefix(w, theHost, thePath, iFields, true);
@@ -272,197 +256,73 @@ ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
 				StreamW_Chunked(16 *1024, w).CopyAllFrom(iBody);
 				}
 			w.Flush();
+			return theEP;
+			}
+		}
+	return null;
+	}
 
-			int32 theResponseCode;
-			Map theHeaders;
-			if (spPost_Suffix(r, &theResponseCode, &theHeaders, oRawHeader))
+static bool spPost_Suffix(const ZStreamR& r,
+	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
+	{
+	if (oRawHeader)
+		{
+		ZStreamRWPos_Data_T<Data> theSRWP_Data(*oRawHeader);
+		ZStreamR_Tee theStream_Tee(r, theSRWP_Data);
+		return spReadResponse(theStream_Tee, oResponseCode, oHeader);
+		}
+	else
+		{
+		return spReadResponse(r, oResponseCode, oHeader);
+		}
+	}
+
+ZRef<ZStreamerR> sPost_Receive(const ZRef<ZStreamerR>& iStreamerR,
+	int32* oResponseCode, Map* oFields, Data* oRawHeader)
+	{
+	if (iStreamerR)
+		{
+		int32 theResponseCode;
+		Map theHeaders;
+		if (spPost_Suffix(iStreamerR->GetStreamR(), &theResponseCode, &theHeaders, oRawHeader))
+			{
+			if (oResponseCode)
+				*oResponseCode = theResponseCode;
+
+			if (200 == theResponseCode)
 				{
-				if (200 == theResponseCode)
-					{
-					if (oFields)
-						*oFields = theHeaders;
+				if (oFields)
+					*oFields = theHeaders;
 
-					if (ZRef<ZStreamerR> theStreamerR = sMakeContentStreamer(theHeaders, theEP))
-						return theStreamerR;
+				if (ZRef<ZStreamerR> theStreamerR = sMakeContentStreamer(theHeaders, iStreamerR))
+					return theStreamerR;
 
-					return theEP;
-					}
+				return iStreamerR;
 				}
 			}
 		}
 	return null;
 	}
 
-ZRef<ZStreamerR> sPostRaw(ZRef<Callable_Connect> iCallable_Connect,
-	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, Map* oFields, Data* oRawHeader)
+ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
+	const std::string& iURL, const Map* iFields, const ZStreamR& iBody,
+	int32* oResponseCode, Map* oFields, Data* oRawHeader)
 	{
-	string theScheme;
-	string theHost;
-	ip_port thePort;
-	string thePath;
-	if (sParseURL(iURL, &theScheme, &theHost, &thePort, &thePath))
-		{
-		if (ZRef<ZStreamerRWCon> theEP = spConnect(iCallable_Connect, theScheme, theHost, thePort))
-			{
-			const ZStreamR& r = theEP->GetStreamR();
-			const ZStreamW& w = theEP->GetStreamW();
-
-			spPost_Prefix(w, theHost, thePath, nullptr, true);
-			w.CopyAllFrom(iBody);
-			w.Flush();
-
-			int32 theResponseCode;
-			Map theHeaders;
-			if (spPost_Suffix(r, &theResponseCode, &theHeaders, oRawHeader))
-				{
-				if (200 == theResponseCode)
-					{
-					if (oFields)
-						*oFields = theHeaders;
-
-					if (ZRef<ZStreamerR> theStreamerR = sMakeContentStreamer(theHeaders, theEP))
-						return theStreamerR;
-
-					return theEP;
-					}
-				}
-			}
-		}
+	if (ZRef<ZStreamerR> theStreamerR = sPost_Send(iCallable_Connect, iURL, iFields, iBody))
+		return sPost_Receive(theStreamerR, oResponseCode, oFields, oRawHeader);
 	return null;
 	}
 
 // =================================================================================================
-// MARK: - ZHTTP, read a POST into a Map
-
-static ZRef<ZStrimmerR> spMakeStrimmerR(const Map& iHeader, const ZStreamR& iStreamR)
-	{
-	const string charset =
-		iHeader.Get("content-type").Get("parameters").Get<string>("charset");
-
-	if (ZTextDecoder* theDecoder = ZTextDecoder::sMake(charset))
-		return new ZStrimmerR_StreamR_T<ZStrimR_StreamDecoder>(theDecoder, iStreamR);
-	else
-		return new ZStrimmerR_StreamR_T<ZStrimR_StreamUTF8>(iStreamR);
-	}
-
-#if 0
-
-static bool spReadName(const ZStreamU& iStreamU, string& oName)
-	{
-	bool gotAny = false;
-	for (;;)
-		{
-		char curChar;
-		if (not iStreamU.ReadChar(curChar))
-			break;
-		if (not isalnum(curChar) && curChar != '_')
-			{
-			iStreamU.Unread();
-			break;
-			}
-		oName += curChar;
-		gotAny = true;
-		}
-	return gotAny;
-	}
-
-#endif
-
-static ZQ<Val> spReadPOST(const ZStreamR& iStreamR, const Map& iHeader)
-	{
-	const Map content_type = iHeader.Get<Map>("content-type");
-	if (content_type.Get<string>("type") == "application"
-		&& content_type.Get<string>("subtype") == "x-www-url-encoded")
-		{
-		// It's application/x-www-url-encoded. So we're going to unpack it into a Map.
-		// Map& theTuple = oVal.SetMutableTuple();
-		// yadda yadda.
-		//#warning "not done yet"
-		return null;
-		}
-	else if (content_type.Get<string>("type") == "multipart"
-		&& content_type.Get<string>("subtype") == "form-data")
-		{
-		const string baseBoundary = content_type.Get("parameters").Get<string>("boundary");
-
-		// Skip optional unheadered data section before the first boundary.
-		ZStreamR_Boundary(baseBoundary, iStreamR).SkipAll();
-
-		const string boundary = "\r\n--" + baseBoundary;
-		Map theMap;
-		for (;;)
-			{
-			bool done = false;
-			// At this point we're sitting right after a boundary. We skip all subsequent
-			// characters, although there's supposed to be only white space, until
-			// we see "--", in which case we've hit the end, or we see CR LF, in which
-			// case there's another part following.
-			char prior = 0;
-			for (;;)
-				{
-				char current = iStreamR.ReadInt8();
-				if (prior == '-' && current == '-')
-					{
-					done = true;
-					break;
-					}
-
-				if (prior == '\r' && current =='\n')
-					break;
-
-				prior = current;
-				}
-			if (done)
-				break;
-
-			// We're now sitting at the beginning of the part's header.
-			ZStreamR_Boundary streamPart(boundary, iStreamR);
-
-			// We parse it into the Map called 'header'.
-			Map header;
-			sReadHeader
-				(ZStreamR_SkipAllOnDestroy(ZMIME::StreamR_Header(streamPart)), &header);
-
-			Map contentDisposition = header.Get<Map>("content-disposition");
-			if (contentDisposition.Get<string>("value") == "form-data")
-				{
-				const string name = contentDisposition.Get("parameters").Get<string>("name");
-				if (not name.empty())
-					{
-					if (ZQ<Val> theQVal = spReadPOST(streamPart, header))
-						theMap.Set(name, theQVal.Get());
-					}
-				}
-			streamPart.SkipAll();
-			}
-		return theMap;
-		}
-	else if (content_type.Get<string>("type") == "text")
-		{
-		// It's explicitly some kind of text. Use spMakeStrimmerR to Make an appropriate
-		// strimmer, which it does by examining values in iHeader.
-		return spMakeStrimmerR(iHeader, iStreamR)->GetStrimR().ReadAll8();
-		}
-	else if (content_type.IsEmpty())
-		{
-		// There was no content type specified, so assume text.
-		string theString;
-		ZStreamWPos_String(theString).CopyAllFrom(iStreamR);
-		return theString;
-		}
-
-	// It's some other kind of content. Put it into a raw.
-	return sReadAll_T<Data>(iStreamR);
-	}
+// MARK: -
 
 bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
 	const string& iAddress,
 	const Map* iHeader,
-	int32* oResultCode, Map* oHeader)
+	int32* oResponseCode, Map* oHeader)
 	{
-	if (oResultCode)
-		*oResultCode = 0;
+	if (oResponseCode)
+		*oResponseCode = 0;
 
 	w.WriteString("CONNECT ");
 	w.WriteString(iAddress);
@@ -475,14 +335,14 @@ bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
 
 	w.Flush();
 
-	int32 serverResultCode;
-	if (ZHTTP::sReadResponse(ZStreamU_Unreader(r), &serverResultCode, nullptr))
+	int32 serverResponseCode;
+	if (ZHTTP::sReadResponse(ZStreamU_Unreader(r), &serverResponseCode, nullptr))
 		{
-		if (oResultCode)
-			*oResultCode = serverResultCode;
+		if (oResponseCode)
+			*oResponseCode = serverResponseCode;
 
 		if (ZHTTP::sReadHeader(r, oHeader))
-			return serverResultCode == 200;
+			return serverResponseCode == 200;
 		}
 
 	return false;
