@@ -46,13 +46,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			namespace std { namespace tr1 {
 
 				template<bool, typename _Tp = void> struct enable_if  {};
-				template<typename _Tp> struct enable_if<true, _Tp> { typedef _Tp type; };
+				template<typename _Tp> struct enable_if<true,_Tp> { typedef _Tp type; };
 
 				template<bool _Cond, typename _Iftrue, typename _Iffalse>
 				struct conditional { typedef _Iftrue type; };
 
 				template<typename _Iftrue, typename _Iffalse>
-				struct conditional<false, _Iftrue, _Iffalse> { typedef _Iffalse type; };
+				struct conditional<false,_Iftrue,_Iffalse> { typedef _Iffalse type; };
 
 			}} // namespace tr1, namespace std
 		#endif
