@@ -2465,6 +2465,12 @@ private:
 // MARK: - sBindL
 
 template <class Callable>
+ZRef<ZCallable<typename Callable::Signature> >
+sBindL
+	(const ZRef<Callable>& iCallable)
+	{ return iCallable; }
+
+template <class Callable>
 ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL01> >
 sBindL
 	(typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
@@ -3998,6 +4004,12 @@ private:
 
 // =================================================================================================
 // MARK: - sBindR
+
+template <class Callable>
+ZRef<ZCallable<typename Callable::Signature> >
+sBindR
+	(const ZRef<Callable>& iCallable)
+	{ return iCallable; }
 
 template <class Callable>
 ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR01> >
