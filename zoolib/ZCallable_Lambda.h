@@ -72,7 +72,7 @@ template<typename T>
 struct GetSigImpl_T<T, true>
 	{
 	using type =
-		typename RemoveClass_T<decltype(&std::remove_reference<T>::type::operator())>::type;
+		typename RemoveClass_T<decltype(&remove_reference<T>::type::operator())>::type;
 	};
 
 template<typename T> using GetSig_T = typename GetSigImpl_T<T,true>::type;
