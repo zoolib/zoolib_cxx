@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Desired__type_traits
 
-	#if ZCONFIG_LIBCPP_11
+	#if ZCONFIG_LIBCPP_2011
 		#include <type_traits>
 
 		#define ZMACRO_type_traits_namespace std
