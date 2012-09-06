@@ -29,6 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sys/socket.h>
 #include <sys/stat.h> // For chmod
 #include <sys/un.h>
+#include <unistd.h>
 
 #if not defined(SOCK_MAXADDRLEN)
 	#define SOCK_MAXADDRLEN (255)
