@@ -114,14 +114,27 @@ bool sIsEmpty(const ZName& iName)
 
 } // namespace ZooLib
 
-#ifndef _MSC_VER
-namespace std { namespace tr1 { 
+#if defined(_LIBCPP_BEGIN_NAMESPACE_STD)
+_LIBCPP_BEGIN_NAMESPACE_STD
+#elif ZCONFIG_LIBCPP_2011
+namespace std {
+#elif ZCONFIG_LIBCPP_TR1
+namespace std { namespace tr1 {
+#endif
 
-template <typename T> class hash;
-template<>
+template <typename T> struct hash;
+
+template <>
 struct hash<ZooLib::ZName>
 	{ std::size_t operator()(const ZooLib::ZName& iName) const { return iName.Hash(); } };
-}}	
+
+template <typename T> class hash;
+#if defined(_LIBCPP_END_NAMESPACE_STD)
+_LIBCPP_END_NAMESPACE_STD
+#elif ZCONFIG_LIBCPP_2011
+}
+#elif ZCONFIG_LIBCPP_TR1
+}}
 #endif
 
 #endif // __ZName_h__
