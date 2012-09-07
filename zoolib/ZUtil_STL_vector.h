@@ -87,6 +87,17 @@ template <typename Base, typename Derived>
 void sPushBack(std::vector<Base>& ioVec, const Derived& iElement)
 	{ ioVec.push_back(iElement); }
 
+template <typename Base>
+ZQ<Base> sQPopBack(std::vector<Base>& ioVec)
+	{
+	if (ioVec.empty())
+		return null;
+
+	const Base result = ioVec.back();
+	ioVec.pop_back();
+	return result;
+	}
+
 // =================================================================================================
 // MARK: - ZUtil_STL, sXXXMust
 
@@ -110,7 +121,7 @@ void sPushBackMust(const int iDebugLevel,
 	{
 	if (iDebugLevel > ZCONFIG_Debug)
 		sPushBack(ioVec, iElement);
-	else if (not sPushBackMust(ioVec, iElement))
+	else if (not sQPushBack(ioVec, iElement))
 		ZDebugStop(iDebugLevel);
 	}
 
