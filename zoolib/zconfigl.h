@@ -321,6 +321,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// inherits 'XXX' via dominance
 	#pragma warning(disable:4250)
 
+	// type name first seen using 'class' now seen using 'struct'
+	#pragma warning(disable:4099)
+
 #endif
 
 // =================================================================================================
