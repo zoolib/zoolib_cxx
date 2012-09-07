@@ -121,11 +121,7 @@ private:
 
 template <typename Lambda_p>
 ZRef<ZCallable<GetSig_T<Lambda_p>>> sCallable(const Lambda_p& iLambda)
-	{
-	if (iLambda)
-		return new Callable<Lambda_p,GetSig_T<Lambda_p>>(iLambda);
-	return null;
-	}
+	{ return new Callable<Lambda_p,GetSig_T<Lambda_p>>(iLambda); }
 
 } // namespace ZCallable_Lambda
 
