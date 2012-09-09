@@ -109,7 +109,10 @@ std::size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iPa
 template <bool> struct AssertCompile {};
 template <> struct AssertCompile<true> { typedef bool IsValid; };
 
-#define ZAssertCompile(a) typedef ZooLib::ZDebug::AssertCompile<(a)>::IsValid ZAssertCompileValid
+#ifndef ZAssertCompile
+	#define ZAssertCompile(a) \
+		typedef ZooLib::ZDebug::AssertCompile<(a)>::IsValid ZAssertCompileValid
+#endif
 
 // There are still quite a lot of places where plain old ZAssert is used.
 #ifndef ZAssert
