@@ -20,12 +20,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCaller_Thread.h"
 #include "zoolib/ZCallOnNewThread.h"
-#include "zoolib/ZSingleton.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 // MARK: - ZCaller_Thread
+
+ZRef<ZCaller_Thread> ZCaller_Thread::sGet()
+	{
+	static ZRef<ZCaller_Thread> spCaller = new ZCaller_Thread;
+	return spCaller;
+	}
 
 bool ZCaller_Thread::Queue(const ZRef<ZCallable_Void>& iCallable)
 	{
@@ -36,8 +41,5 @@ bool ZCaller_Thread::Queue(const ZRef<ZCallable_Void>& iCallable)
 		}
 	return false;
 	}
-
-ZRef<ZCaller_Thread> ZCaller_Thread::sGet()
-	{ return sSingleton<ZRef<ZCaller_Thread> >(); }
 
 } // namespace ZooLib

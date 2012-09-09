@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
 
-#include "zoolib/ZSingleton.h"
 #include "zoolib/ZUtil_CarbonEvents.h"
 
 namespace ZooLib {
@@ -31,7 +30,10 @@ namespace ZooLib {
 // MARK: - ZCaller_CarbonEvents
 
 ZRef<ZCaller_CarbonEvents> ZCaller_CarbonEvents::sGet()
-	{ return sSingleton<ZRef<ZCaller_CarbonEvents> >(); }
+	{
+	static ZRef<ZCaller_CarbonEvents> spCaller = new ZCaller_CarbonEvents;
+	return spCaller;
+	}
 
 bool ZCaller_CarbonEvents::pTrigger()
 	{
