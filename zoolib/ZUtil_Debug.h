@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStrimmer.h"
+#include "zoolib/ZThreadVal.h"
 
 namespace ZooLib {
 namespace ZUtil_Debug {
@@ -38,6 +39,8 @@ void sSetStrimmer(ZRef<ZStrimmerW> iStrimmerW);
 void sSetLogPriority(ZLog::EPriority iLogPriority);
 
 ZLog::EPriority sGetLogPriority();
+
+typedef ZThreadVal<ZLog::EPriority,struct Tag_LogPriorityPerThread> LogPriorityPerThread;
 
 } // namespace ZUtil_Debug
 } // namespace ZooLib

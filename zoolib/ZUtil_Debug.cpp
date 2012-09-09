@@ -113,15 +113,15 @@ public:
 
 // From ZLog::LogMeister
 	virtual bool Enabled(ZLog::EPriority iPriority, const std::string& iName)
-		{ return iPriority <= fLogPriority; }
+		{ return iPriority <= this->pGetLogPriority(); }
 
 	virtual bool Enabled(ZLog::EPriority iPriority, const char* iName)
-		{ return iPriority <= fLogPriority; }
+		{ return iPriority <= this->pGetLogPriority(); }
 
 	virtual void LogIt
 		(ZLog::EPriority iPriority, const std::string& iName, const std::string& iMessage)
 		{
-		if (iPriority > fLogPriority)
+		if (iPriority > this->pGetLogPriority())
 			return;
 
 		ZRef<ZStrimmerW> theStrimmerW = fStrimmerW;
@@ -171,6 +171,13 @@ public:
 	ZLog::EPriority GetLogPriority()
 		{ return fLogPriority; }
 
+	ZLog::EPriority pGetLogPriority()
+		{
+		if (const ZLog::EPriority* thePriorityP = LogPriorityPerThread::sPGet())
+			return *thePriorityP;
+		return fLogPriority;
+		}
+
 private:
 	ZSafe<ZRef<ZStrimmerW> > fStrimmerW;
 	ZLog::EPriority fLogPriority;
@@ -198,23 +205,6 @@ void sInstall()
 	FILE* theStdOut = stdout; // Workaround for VC++
 	spLogMeister->SetStrimmer
 		(sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(theStdOut)));
-
-	#if ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)
-		// Install the sync handler only if we're on POSIX and
-		// we have stack crawl capabilities.
-		struct sigaction theSigAction;
-		sigemptyset(&theSigAction.sa_mask);
-		theSigAction.sa_flags = 0;
-		theSigAction.sa_handler = sHandleSignal_Sync;
-
-		sigaddset(&theSigAction.sa_mask, SIGSEGV);
-		sigaddset(&theSigAction.sa_mask, SIGBUS);
-
-		struct sigaction oldSigAction;
-		int result;
-		result = ::sigaction(SIGSEGV, &theSigAction, &oldSigAction);
-		result = ::sigaction(SIGBUS, &theSigAction, &oldSigAction);
-	#endif
 	}
 
 void sSetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
