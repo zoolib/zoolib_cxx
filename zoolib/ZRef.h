@@ -78,8 +78,8 @@ public:
 	ZMACRO_Attribute_NoThrow
 	inline
 	ZRef(const ZRef& iOther)
-	:	fP(iOther.Copy())
-		{}
+	:	fP(0)
+		{ fP = iOther.Copy(); }
 
 	ZMACRO_Attribute_NoThrow
 	inline
@@ -336,8 +336,8 @@ public:
 		{}
 
 	ZRef(const ZRef& iOther)
-	:	fP(iOther.Copy())
-		{}
+	:	fP(0)
+		{ fP = iOther.Copy(); }
 
 	~ZRef()
 		{ spRelease(fP); }
