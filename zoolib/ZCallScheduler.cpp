@@ -81,6 +81,8 @@ bool ZCallScheduler::IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_
 
 void ZCallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 	{
+	ZAssert(iJob.first);
+
 	ZAcqMtx acq(fMtx);
 
 	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(iJob, 0.0));
