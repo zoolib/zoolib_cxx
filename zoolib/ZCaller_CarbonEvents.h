@@ -36,6 +36,8 @@ class ZCaller_CarbonEvents
 :	public ZCaller_EventLoop
 	{
 protected:
+	static ZRef<ZCaller_CarbonEvents> sGet();
+
 // From ZCaller_EventLoop
 	virtual bool pTrigger();
 
