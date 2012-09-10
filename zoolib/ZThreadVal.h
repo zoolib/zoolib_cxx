@@ -72,7 +72,7 @@ public:
 		{
 		if (ZThreadVal* theTV = spGet())
 			return &theTV->Get();
-		return null;
+		return nullptr;
 		}
 
 	static ZQ<Type_p> sQGet()
@@ -100,7 +100,7 @@ public:
 		{
 		if (ZThreadVal* theTV = spGet())
 			return &theTV->Mut();
-		return null;
+		return nullptr;
 		}
 
 	static Type_p& sMut()
