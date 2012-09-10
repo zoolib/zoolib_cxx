@@ -30,10 +30,7 @@ namespace ZooLib {
 // MARK: - ZCaller_CarbonEvents
 
 ZRef<ZCaller_CarbonEvents> ZCaller_CarbonEvents::sGet()
-	{
-	static ZRef<ZCaller_CarbonEvents> spCaller = new ZCaller_CarbonEvents;
-	return spCaller;
-	}
+	{ return sSingleton<ZRef_Counted<ZCaller_CarbonEvents> >(); }
 
 bool ZCaller_CarbonEvents::pTrigger()
 	{

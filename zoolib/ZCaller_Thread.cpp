@@ -27,10 +27,7 @@ namespace ZooLib {
 // MARK: - ZCaller_Thread
 
 ZRef<ZCaller_Thread> ZCaller_Thread::sGet()
-	{
-	static ZRef<ZCaller_Thread> spCaller = new ZCaller_Thread;
-	return spCaller;
-	}
+	{ return sSingleton<ZRef_Counted<ZCaller_Thread> >(); }
 
 bool ZCaller_Thread::Queue(const ZRef<ZCallable_Void>& iCallable)
 	{

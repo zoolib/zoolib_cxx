@@ -224,7 +224,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - MakeWeakRef
+// MARK: - sWeakRef
 
 template <class T>
 ZWeakRef<T> sWeakRef(T* iP)
@@ -241,6 +241,43 @@ ZWeakRef<T> sWeakRef(ZRef<T,Sense> iP)
 		return ZWeakRef<T>(iP->GetWeakRefProxy());
 	return null;
 	}
+
+// =================================================================================================
+// MARK: - ZRef_Counted
+
+template <class Counted_t>
+class ZRef_Counted
+:	public ZRef<Counted_t>
+	{
+	typedef ZRef<Counted_t> inherited;
+public:
+	ZRef_Counted()
+	:	inherited(new Counted_t)
+		{}
+
+	ZRef_Counted(const ZRef_Counted& iOther)
+	:	inherited(iOther)
+		{}
+
+	~ZRef_Counted()
+		{}
+
+	ZRef_Counted& operator=(const ZRef_Counted& iOther)
+		{
+		inherited::operator=(iOther);
+		return *this;
+		}
+
+	ZRef_Counted(const inherited& iOther)
+	:	inherited(iOther)
+		{}
+
+	ZRef_Counted& operator=(const inherited& iOther)
+		{
+		inherited::operator=(iOther);
+		return *this;
+		}
+	};
 
 } // namespace ZooLib
 
