@@ -23,7 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZQ.h"
+#include "zoolib/ZSafe.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
 
 #if ZCONFIG(Compiler, GCC)
@@ -122,21 +124,16 @@ typedef StrimW S;
 // MARK: - ZLog::LogMeister
 
 class LogMeister
+:	public ZCounted
 	{
-protected:
-	LogMeister();
-	LogMeister(const LogMeister&);
-	LogMeister& operator=(const LogMeister&);
-
 public:
-	virtual ~LogMeister();
 	virtual bool Enabled(EPriority iPriority, const std::string& iName);
 	virtual bool Enabled(EPriority iPriority, const char* iName);
 	virtual void LogIt
 		(EPriority iPriority, const std::string& iName, const std::string& iMessage) = 0;
 	};
 
-void sSetLogMeister(LogMeister* iLogMeister);
+extern ZSafe<ZRef<LogMeister> > sLogMeister;
 
 void sLogIt(EPriority iPriority, const std::string& iName, const std::string& iMessage);
 

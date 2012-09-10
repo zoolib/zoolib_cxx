@@ -29,8 +29,7 @@ using std::string;
 namespace ZooLib {
 namespace ZLog {
 
-static ZMtx spMutex;
-static LogMeister* spLogMeister;
+ZSafe<ZRef<LogMeister> > sLogMeister;
 
 // =================================================================================================
 // MARK: - String/integer mapping
@@ -128,17 +127,17 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 
 StrimW::operator operator_bool() const
 	{
-	if (spLogMeister)
+	if (ZRef<LogMeister> theLM = sLogMeister)
 		{
 		if (fName_StringQ)
 			{
 			return operator_bool_gen::translate
-				(spLogMeister->Enabled(fPriority, *fName_StringQ));
+				(theLM->Enabled(fPriority, *fName_StringQ));
 			}
 		else
 			{
 			return operator_bool_gen::translate
-				(spLogMeister->Enabled(fPriority, *fName_CharStarQ));
+				(theLM->Enabled(fPriority, *fName_CharStarQ));
 			}
 		}
 	else
@@ -166,45 +165,23 @@ void StrimW::pEmit()
 // =================================================================================================
 // MARK: - ZLog::LogMeister
 
-LogMeister::LogMeister()
-	{}
-
-LogMeister::LogMeister(const LogMeister&)
-	{}
-
-LogMeister& LogMeister::operator=(const LogMeister&)
-	{ return *this; }
-
-LogMeister::~LogMeister()
-	{}
-
 bool LogMeister::Enabled(EPriority iPriority, const string& iName)
 	{ return true; }
 
 bool LogMeister::Enabled(EPriority iPriority, const char* iName)
 	{ return true; }
 
-void sSetLogMeister(LogMeister* iLogMeister)
-	{
-	spMutex.Acquire();
-	delete spLogMeister;
-	spLogMeister = iLogMeister;
-	spMutex.Release();
-	}
-
 void sLogIt(EPriority iPriority, const std::string& iName, const std::string& iMessage)
 	{
-	spMutex.Acquire();
-	if (spLogMeister)
+	if (ZRef<LogMeister> theLM = sLogMeister)
 		{
 		try
 			{
-			spLogMeister->LogIt(iPriority, iName, iMessage);
+			theLM->LogIt(iPriority, iName, iMessage);
 			}
 		catch (...)
 			{}
 		}
-	spMutex.Release();	
 	}
 
 // =================================================================================================

@@ -34,14 +34,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Time.h"
 
-#include <stdlib.h> // For abort
-
 #if __MACH__
 	#include <mach/mach_init.h> // For mach_thread_self
-#endif
-
-#if ZCONFIG_SPI_Enabled(POSIX)
-	#include <csignal>
 #endif
 
 namespace ZooLib {
@@ -103,7 +97,8 @@ public:
 
 namespace { // anonymous
 
-class LogMeister : public ZLog::LogMeister
+class LogMeister
+:	public ZLog::LogMeister
 	{
 public:
 	LogMeister()
@@ -129,6 +124,8 @@ public:
 			return;
 
 		const ZStrimW& theStrimW = theStrimmerW->GetStrimW();
+
+		ZAcqMtx acq(fMtx);
 
 		ZTime now = ZTime::sNow();
 
@@ -163,7 +160,10 @@ public:
 
 // Our protocol
 	void SetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
-		{ fStrimmerW = iStrimmerW; }
+		{
+		ZAcqMtx acq(fMtx);
+		fStrimmerW = iStrimmerW;
+		}
 
 	void SetLogPriority(ZLog::EPriority iLogPriority)
 		{ fLogPriority = iLogPriority; }
@@ -179,7 +179,8 @@ public:
 		}
 
 private:
-	ZSafe<ZRef<ZStrimmerW> > fStrimmerW;
+	ZMtx fMtx;
+	ZRef<ZStrimmerW> fStrimmerW;
 	ZLog::EPriority fLogPriority;
 	size_t fExtraSpace;
 	};
@@ -189,8 +190,6 @@ private:
 // =================================================================================================
 // MARK: - ZUtil_Debug
 
-static LogMeister* spLogMeister;
-
 void sInstall()
 	{
 	if (not ZCONFIG_SPI_Enabled(Win))
@@ -198,31 +197,31 @@ void sInstall()
 		static DebugFunction theDF;
 		}
 
-	spLogMeister = new LogMeister;
-
-	ZLog::sSetLogMeister(spLogMeister);
+	ZRef<LogMeister> theLM = new LogMeister;
 
 	FILE* theStdOut = stdout; // Workaround for VC++
-	spLogMeister->SetStrimmer
+	theLM->SetStrimmer
 		(sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(theStdOut)));
+
+	ZLog::sLogMeister = theLM;
 	}
 
 void sSetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
 	{
-	if (spLogMeister)
-		spLogMeister->SetStrimmer(iStrimmerW);
+	if (ZRef<LogMeister> theLM = ZLog::sLogMeister.Get().DynamicCast<LogMeister>())
+		theLM->SetStrimmer(iStrimmerW);
 	}
 
 void sSetLogPriority(ZLog::EPriority iLogPriority)
 	{
-	if (spLogMeister)
-		spLogMeister->SetLogPriority(iLogPriority);
+	if (ZRef<LogMeister> theLM = ZLog::sLogMeister.Get().DynamicCast<LogMeister>())
+		theLM->SetLogPriority(iLogPriority);
 	}
 
 ZLog::EPriority sGetLogPriority()
 	{
-	if (spLogMeister)
-		return spLogMeister->GetLogPriority();
+	if (ZRef<LogMeister> theLM = ZLog::sLogMeister.Get().DynamicCast<LogMeister>())
+		return theLM->GetLogPriority();
 	return 0xFF;
 	}
 
