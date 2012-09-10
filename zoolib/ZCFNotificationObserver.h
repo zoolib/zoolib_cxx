@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZObserver_h__
-#define __ZObserver_h__ 1
+#ifndef __ZCFNotificationObserver_h__
+#define __ZCFNotificationObserver_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -34,17 +34,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZObserver
+// MARK: - ZCFNotificationObserver
 
-class ZObserver: public ZCounted
+class ZCFNotificationObserver: public ZCounted
 	{
 public:
-	typedef ZCallable<void(ZRef<ZObserver>, CFDictionaryRef)> Callable;
+	typedef ZCallable<void(ZRef<ZCFNotificationObserver>, CFDictionaryRef)> Callable;
 
-	ZObserver(void* iObject, const std::string& iName, ZRef<Callable> iCallable);
-	ZObserver(void* iObject, CFStringRef iName, ZRef<Callable> iCallable);
+	ZCFNotificationObserver(void* iObject, const std::string& iName, ZRef<Callable> iCallable);
+	ZCFNotificationObserver(void* iObject, CFStringRef iName, ZRef<Callable> iCallable);
 
-	virtual ~ZObserver();
+	virtual ~ZCFNotificationObserver();
 
 // From ZCounted
 	virtual void Initialize();
@@ -69,4 +69,4 @@ private:
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
-#endif // __ZObserver_h__
+#endif // __ZCFNotificationObserver_h__
