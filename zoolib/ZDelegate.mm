@@ -81,7 +81,7 @@ using std::string;
 
 namespace ZooLib {
 
-using namespace ZooLib::ZUtil_STL;
+using namespace ZUtil_STL;
 
 // =================================================================================================
 // MARK: - ZDelegate
