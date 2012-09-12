@@ -49,7 +49,7 @@ void SourceServer::Initialize()
 	{
 	ZCounted::Initialize();
 	fSource->SetCallable_ResultsAvailable(sCallable(this, &SourceServer::pCallback_Source));
-	(new ZWorker(sCallable(sRef(this), &SourceServer::pRead)))->Attach(ZCaller_Thread::sCaller());
+	(new ZWorker(sCallable(sRef(this), &SourceServer::pRead)))->Attach(ZCaller_Thread::sGet());
 	}
 
 void SourceServer::pCallback_Source(ZRef<Source> iSource)

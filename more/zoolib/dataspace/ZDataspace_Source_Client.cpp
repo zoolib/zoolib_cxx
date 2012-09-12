@@ -50,7 +50,7 @@ void Source_Client::Initialize()
 	{
 	ZCounted::Initialize();
 	(new ZWorker(sCallable(sCallable(sWeakRef(this), &Source_Client::pRead))))
-		->Attach(ZCaller_Thread::sCaller());
+		->Attach(ZCaller_Thread::sGet());
 	}
 
 bool Source_Client::Intersects(const RelHead& iRelHead)
