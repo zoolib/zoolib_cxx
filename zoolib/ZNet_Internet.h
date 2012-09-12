@@ -58,6 +58,7 @@ class ZNetAddress_Internet
 protected:
 	ZNetAddress_Internet(ip_port iPort);
 
+public:
 // Our protocol
 	ip_port GetPort() const;
 
