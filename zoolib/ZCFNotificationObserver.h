@@ -36,7 +36,8 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZCFNotificationObserver
 
-class ZCFNotificationObserver: public ZCounted
+class ZCFNotificationObserver
+:	public ZCounted
 	{
 public:
 	typedef ZCallable<void(ZRef<ZCFNotificationObserver>, CFDictionaryRef)> Callable;

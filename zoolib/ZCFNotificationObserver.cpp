@@ -26,6 +26,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+// CFNotificationCenter does not have as robust a protocol as CFRunLoop, so there is the
+// potential for races in this code. If unregistration occurs on a thread other than that
+// on which notifications are delivered, you may wish to rethink things.
+
 // =================================================================================================
 // MARK: - ZCFNotificationObserver
 
