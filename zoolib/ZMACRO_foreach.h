@@ -22,169 +22,183 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMACRO_foreach_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZCompat_type_traits.h"
-
 #include "zoolib/ZMACRO_auto.h"
 #include "zoolib/ZMACRO_decltype.h"
+
+#if ZCONFIG_SPI_Enabled(type_traits)
+
+// =================================================================================================
+// MARK: - ZMACRO_foreach helpers
+
+namespace ZooLib {
+
+struct ForEachController
+	{
+    inline ForEachController() : fBreak(0) {}
+    int fBreak;
+	};
+
+template <typename Container>
+struct ForEachWrapper_Forward_T
+	{
+    inline ForEachWrapper_Forward_T(const Container& iContainer)
+	:	fIter(iContainer.begin())
+	,	fEnd(iContainer.end())
+		{}
+
+    typename Container::const_iterator fIter;
+	const typename Container::const_iterator fEnd;
+	};
+
+template <typename Container>
+struct ForEachWrapper_Reverse_T
+	{
+    inline ForEachWrapper_Reverse_T(const Container& iContainer)
+	:	fIter(iContainer.rbegin())
+	,	fEnd(iContainer.rend())
+		{}
+
+    typename Container::const_reverse_iterator fIter;
+	const typename Container::const_reverse_iterator fEnd;
+	};
+
+// This macro sets up the ForEachController used in each nested loop. It also takes
+// a const reference to container, placing it in __FEC, thus keeping container in scope.
+#define ZMACRO_foreach_prefix(container) \
+	for (ZooLib::ForEachController __FEC; not __FEC.fBreak; ++__FEC.fBreak) \
+	for (ZooLib::add_reference<ZooLib::add_const<ZMACRO_decltype(container)>::type>::type \
+		__CR = container; not __FEC.fBreak; ++__FEC.fBreak) \
+
+// These macros additionally set up the iterator and cached end value.
+#define ZMACRO_foreach_prefix_Forward(container) \
+	ZMACRO_foreach_prefix(container) \
+	for (ZooLib::ForEachWrapper_Forward_T<ZooLib::remove_reference \
+		<ZMACRO_decltype(container)>::type> __FEW(__CR); \
+		not __FEC.fBreak && __FEW.fIter != __FEW.fEnd; \
+		++__FEW.fIter, ++__FEC.fBreak) \
+
+#define ZMACRO_foreach_prefix_Reverse(container) \
+	ZMACRO_foreach_prefix(container) \
+	for (ZooLib::ForEachWrapper_Reverse_T<ZooLib::remove_reference \
+		<ZMACRO_decltype(container)>::type> __FEW(__CR); \
+		not __FEC.fBreak && __FEW.fIter != __FEW.fEnd; \
+		++__FEW.fIter, ++__FEC.fBreak) \
+
+} // namespace ZooLib
 
 // =================================================================================================
 // MARK: - ZMACRO_foreachi
 
-#ifdef ZMACRO_foreachi
-#elif ZCONFIG_Debug
-	#define ZMACRO_foreachi(iter, cont) \
-		for (ZMACRO_auto_(iter,(cont).begin()), \
-			ZMACRO_Concat(foreach_end,__LINE__) = (cont).end(); \
-			iter != ZMACRO_Concat(foreach_end,__LINE__); ++iter)
-#elif 1
-	#define ZMACRO_foreachi(iter, cont) \
-		for (ZMACRO_auto_(iter,(cont).begin()), \
-			foreach_end = (cont).end(); \
-			iter != foreach_end; ++iter)
-#endif
-
-#ifndef foreachi
-	#define foreachi ZMACRO_foreachi
+#ifndef ZMACRO_foreachi
+	#define ZMACRO_foreachi(iter, container) \
+		ZMACRO_foreach_prefix(container) \
+		for (ZMACRO_auto_(iter,__CR.begin()), __FEE = __CR.end(); iter != __FEE; ++iter)
 #endif
 
 // =================================================================================================
 // MARK: - ZMACRO_foreachri
 
 #ifndef ZMACRO_foreachri
-#elif ZCONFIG_Debug
-	#define ZMACRO_foreachri(iter, cont) \
-		for (ZMACRO_auto_(iter,(cont).rbegin()), \
-			foreach_end = (cont).rend(); \
-			iter != foreach_end; ++iter)
-#elif 1
-	#define ZMACRO_foreachri(iter, cont) \
-		for (ZMACRO_auto_(iter,(cont).rbegin()), \
-			foreach_end = (cont).rend(); \
-			iter != foreach_end; ++iter)
+	#define ZMACRO_foreachri(iter, container) \
+		ZMACRO_foreach_prefix(container) \
+		for (ZMACRO_auto_(iter,__CR.rbegin()), __FEE = __CR.rend(); iter != __FEE; ++iter)
+#endif
+
+// =================================================================================================
+// MARK: - ZMACRO_foreachv
+
+#ifndef ZMACRO_foreachv
+	#define ZMACRO_foreachv(vardecl, container) \
+		ZMACRO_foreach_prefix_Forward(container) \
+		for (vardecl = *__FEW.fIter; not __FEC.fBreak; --__FEC.fBreak)
+#endif
+
+// =================================================================================================
+// MARK: - ZMACRO_foreachrv
+
+#ifndef ZMACRO_foreachrv
+	#define ZMACRO_foreachrv(vardecl, container) \
+		ZMACRO_foreach_prefix_Reverse(container) \
+		for (vardecl = *__FEW.fIter; not __FEC.fBreak; --__FEC.fBreak)
+#endif
+
+// =================================================================================================
+// MARK: - ZMACRO_foreacha
+
+#ifndef ZMACRO_foreacha
+	#define ZMACRO_foreacha(varname, container) \
+		ZMACRO_foreach_prefix_Forward(container) \
+		for (ZMACRO_auto(varname, *__FEW.fIter); not __FEC.fBreak; --__FEC.fBreak)
+#endif
+
+// =================================================================================================
+// MARK: - ZMACRO_foreachra
+
+#ifndef ZMACRO_foreachra
+	#define ZMACRO_foreachra(varname, container) \
+		ZMACRO_foreach_prefix_Reverse(container) \
+		for (ZMACRO_auto(varname, *__FEW.fIter); not __FEC.fBreak; --__FEC.fBreak)
+#endif
+
+#endif // ZCONFIG_SPI_Enabled(type_traits)
+
+// =================================================================================================
+// MARK: - Failure-marking macros
+
+#ifndef ZMACRO_foreach_unsupported
+	#define ZMACRO_foreach_unsupported (%ZMACRO_foreach_unsupported%)
+#endif
+
+#ifndef ZMACRO_foreachi
+	#define ZMACRO_foreachi ZMACRO_foreach_unsupported
+#endif
+
+#ifndef ZMACRO_foreachri
+	#define ZMACRO_foreachi ZMACRO_foreach_unsupported
+#endif
+
+#ifndef ZMACRO_foreachv
+	#define ZMACRO_foreachi ZMACRO_foreach_unsupported
+#endif
+
+#ifndef ZMACRO_foreachrv
+	#define ZMACRO_foreachi ZMACRO_foreach_unsupported
+#endif
+
+#ifndef ZMACRO_foreacha
+	#define ZMACRO_foreachi ZMACRO_foreach_unsupported
+#endif
+
+#ifndef ZMACRO_foreachra
+	#define ZMACRO_foreachi ZMACRO_foreach_unsupported
+#endif
+
+// =================================================================================================
+// MARK: - foreachXX macros
+
+#ifndef foreachi
+	#define foreachi ZMACRO_foreachi
 #endif
 
 #ifndef foreachri
 	#define foreachri ZMACRO_foreachri
 #endif
 
-// =================================================================================================
-// MARK: - ZMACRO_foreachv
-
-#if ZCONFIG_SPI_Enabled(type_traits)
-
-namespace ZooLib {
-
-template <typename Container>
-class ZWrapper_foreachv_T
-	{
-public:
-    inline ZWrapper_foreachv_T(const Container& iContainer)
-	:	fIter(iContainer.begin())
-	,	fEnd(iContainer.end())
-	,	fMismatch(0)
-		{}
-
-    typename Container::const_iterator fIter;
-	const typename Container::const_iterator fEnd;
-    int fMismatch;
-	};
-
-} // namespace ZooLib
-
-#ifdef ZMACRO_foreachv
-#elif ZCONFIG_Debug
-	#define ZMACRO_foreachv(VarDeclaration, Container) \
-		for (ZooLib::ZWrapper_foreachv_T<remove_reference<ZMACRO_decltype(Container)>::type> \
-			ZMACRO_Concat(Wrapper_foreachv,__LINE__)(Container); \
-			not ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch \
-			&& ZMACRO_Concat(Wrapper_foreachv,__LINE__).fIter \
-			!= ZMACRO_Concat(Wrapper_foreachv,__LINE__).fEnd; \
-			++ZMACRO_Concat(Wrapper_foreachv,__LINE__).fIter, \
-			++ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch) \
-			for (VarDeclaration = \
-			*ZMACRO_Concat(Wrapper_foreachv,__LINE__).fIter; \
-			not ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch; \
-			--ZMACRO_Concat(Wrapper_foreachv,__LINE__).fMismatch)
-
-#elif 1
-	#define ZMACRO_foreachv(vardecl, cont) \
-		for (ZooLib::ZWrapper_foreachv_T<remove_reference<ZMACRO_decltype(cont)>::type> wrap(cont); \
-			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
-			++wrap.fIter, ++wrap.fMismatch) \
-			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
-
-#endif
-
 #ifndef foreachv
 	#define foreachv ZMACRO_foreachv
-#endif
-
-// =================================================================================================
-// MARK: - ZMACRO_foreachrv
-
-namespace ZooLib {
-
-template <typename Container>
-class ZWrapper_foreachrv_T
-	{
-public:
-    inline ZWrapper_foreachrv_T(const Container& iContainer)
-	:	fIter(iContainer.rbegin())
-	,	fEnd(iContainer.rend())
-	,	fMismatch(0)
-		{}
-
-    typename Container::const_reverse_iterator fIter;
-	const typename Container::const_reverse_iterator fEnd;
-    int fMismatch;
-	};
-
-} // namespace ZooLib
-
-#ifdef ZMACRO_foreachrv
-#elif ZCONFIG_Debug
-	#define ZMACRO_foreachrv(VarDeclaration, Container) \
-		for (ZooLib::ZWrapper_foreachrv_T<remove_reference<ZMACRO_decltype(Container)>::type> \
-			ZMACRO_Concat(Wrapper_foreachrv,__LINE__)(Container); \
-			not ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fMismatch \
-			&& ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fIter \
-			!= ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fEnd; \
-			++ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fIter, \
-			++ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fMismatch) \
-			for (VarDeclaration = \
-			*ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fIter; \
-			not ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fMismatch; \
-			--ZMACRO_Concat(Wrapper_foreachrv,__LINE__).fMismatch)
-
-#elif 1
-	#define ZMACRO_foreachrv(vardecl, cont) \
-		for (ZooLib::ZWrapper_foreachrv_T<remove_reference<ZMACRO_decltype(cont)>::type> wrap(cont); \
-			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
-			++wrap.fIter, ++wrap.fMismatch) \
-			for (vardecl = *wrap.fIter; not wrap.fMismatch; --wrap.fMismatch)
 #endif
 
 #ifndef foreachrv
 	#define foreachrv ZMACRO_foreachrv
 #endif
 
-// =================================================================================================
-// MARK: - ZMACRO_foreacha
-
-#ifdef ZMACRO_foreacha
-#elif 1
-	#define ZMACRO_foreacha(varname, cont) \
-		for (ZooLib::ZWrapper_foreachv_T<remove_reference<ZMACRO_decltype(cont)>::type> wrap(cont); \
-			not wrap.fMismatch && wrap.fIter != wrap.fEnd; \
-			++wrap.fIter, ++wrap.fMismatch) \
-			for (ZMACRO_auto(varname, *wrap.fIter); not wrap.fMismatch; --wrap.fMismatch)
-#endif
-
 #ifndef foreacha
 	#define foreacha ZMACRO_foreacha
 #endif
 
-#endif // ZCONFIG_SPI_Enabled(type_traits)
+#ifndef foreachra
+	#define foreachra ZMACRO_foreachra
+#endif
 
 #endif // __ZMACRO_foreach_h__

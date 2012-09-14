@@ -110,6 +110,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// Reference transformations:
 	using ZMACRO_type_traits_namespace::remove_reference;
+	using ZMACRO_type_traits_namespace::add_reference;
 //		using ZMACRO_type_traits_namespace::add_lvalue_reference;
 //		using ZMACRO_type_traits_namespace::add_rvalue_reference;
 
