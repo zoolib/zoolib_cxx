@@ -486,7 +486,7 @@ private:
 		{
 		// This union provides space for a refcounted pointer to a Reffed, space
 		// for the most common in-place values, and makes some values legible in a debugger.
-		// It has it's own name so that sizeof has something on which to operate.
+		// It has its own name so that sizeof has something on which to operate.
 		void* fAsPtr;
 
 		bool fAsBool;
