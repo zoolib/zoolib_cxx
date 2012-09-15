@@ -49,7 +49,7 @@ public:
 // From ZCallable
 	virtual ZQ<R> QCall()
 		{
-		if (ZQ<R> theQ = fCallable0->QCall())
+		if (const ZQ<R>& theQ = fCallable0->QCall())
 			return theQ;
 		return fCallable1->QCall();
 		}
@@ -60,510 +60,52 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 1 param)
+// MARK: - ZCallable_Fallback variants
 
-template <class R,
-	class P0>
-class ZCallable_Fallback<R(P0)>
-:	public ZCallable<R(P0)>
-	{
-public:
-	typedef ZCallable<R(P0)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall(P0 i0)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0))
-			return theQ;
-		return fCallable1->QCall(i0);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
+#define ZMACRO_Callable_Callable(X) \
+\
+template <class R, ZMACRO_Callable_Class_P##X> \
+class ZCallable_Fallback<R(ZMACRO_Callable_P##X)> \
+:	public ZCallable<R(ZMACRO_Callable_P##X)> \
+	{ \
+public: \
+	typedef ZCallable<R(ZMACRO_Callable_P##X)> Callable; \
+\
+	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1) \
+	:	fCallable0(iCallable0) \
+	,	fCallable1(iCallable1) \
+		{} \
+\
+	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
+		{ \
+		if (const ZQ<R>& theQ = fCallable0->QCall(ZMACRO_Callable_i##X)) \
+			return theQ; \
+		return fCallable1->QCall(ZMACRO_Callable_i##X); \
+		} \
+\
+private: \
+	const ZRef<Callable> fCallable0; \
+	const ZRef<Callable> fCallable1; \
 	};
 
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 2 params)
-
-template <class R,
-	class P0, class P1>
-class ZCallable_Fallback<R(P0,P1)>
-:	public ZCallable<R(P0,P1)>
-	{
-public:
-	typedef ZCallable<R(P0,P1)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall(P0 i0, P1 i1)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1))
-			return theQ;
-		return fCallable1->QCall(i0, i1);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 3 params)
-
-template <class R,
-	class P0, class P1, class P2>
-class ZCallable_Fallback<R(P0,P1,P2)>
-:	public ZCallable<R(P0,P1,P2)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 4 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3>
-class ZCallable_Fallback<R(P0,P1,P2,P3)>
-:	public ZCallable<R(P0,P1,P2,P3)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2, i3))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2, i3);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 5 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4)>
-:	public ZCallable<R(P0,P1,P2,P3,P4)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2, i3, i4))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2, i3, i4);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 6 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4,P5)>
-:	public ZCallable<R(P0,P1,P2,P3,P4,P5)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2, i3, i4, i5))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2, i3, i4, i5);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 7 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4,P5,P6)>
-:	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2, i3, i4, i5, i6))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2, i3, i4, i5, i6);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 8 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4,P5,P6,P7)>
-:	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2, i3, i4, i5, i6, i7))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2, i3, i4, i5, i6, i7);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 9 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
-:	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
-		P8 i8)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 10 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
-:	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
-		P8 i8, P9 i9)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 11 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
-:	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
-		P8 i8, P9 i9, PA iA)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 12 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA, class PB>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
-:	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
-		P8 i8, P9 i9, PA iA, PB iB)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 13 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA, class PB,
-	class PC>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
-:	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
-		P8 i8, P9 i9, PA iA, PB iB, PC iC)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 14 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA, class PB,
-	class PC, class PD>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
-:	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
-		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD))
-			return theQ;
-		return fCallable1->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 15 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA, class PB,
-	class PC, class PD, class PE>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
-:	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
-		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall
-			(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE))
-			{ return theQ; }
-		return fCallable1->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Fallback (specialization for 16 params)
-
-template <class R,
-	class P0, class P1, class P2, class P3,
-	class P4, class P5, class P6, class P7,
-	class P8, class P9, class PA, class PB,
-	class PC, class PD, class PE, class PF>
-class ZCallable_Fallback<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
-:	public ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
-	{
-public:
-	typedef ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)> Callable;
-
-	ZCallable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
-	:	fCallable0(iCallable0)
-	,	fCallable1(iCallable1)
-		{}
-
-// From ZCallable
-	virtual ZQ<R> QCall
-		(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7,
-		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
-		{
-		if (ZQ<R> theQ = fCallable0->QCall
-			(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF))
-			{ return theQ; }
-		return fCallable1->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
-		}
-
-private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
-	};
+ZMACRO_Callable_Callable(0)
+ZMACRO_Callable_Callable(1)
+ZMACRO_Callable_Callable(2)
+ZMACRO_Callable_Callable(3)
+ZMACRO_Callable_Callable(4)
+ZMACRO_Callable_Callable(5)
+ZMACRO_Callable_Callable(6)
+ZMACRO_Callable_Callable(7)
+ZMACRO_Callable_Callable(8)
+ZMACRO_Callable_Callable(9)
+ZMACRO_Callable_Callable(A)
+ZMACRO_Callable_Callable(B)
+ZMACRO_Callable_Callable(C)
+ZMACRO_Callable_Callable(D)
+ZMACRO_Callable_Callable(E)
+ZMACRO_Callable_Callable(F)
+
+#undef ZMACRO_Callable_Callable
 
 // =================================================================================================
 // MARK: - sCallable_Fallback

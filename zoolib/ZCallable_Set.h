@@ -63,244 +63,53 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZCallable_Set (specialization for 1 param)
+// MARK: - ZCallable_Set variants
 
-template <class P0>
-class ZCallable_Set<void(P0)>
-:	public ZCallable<void(P0)>
-	{
-public:
-	typedef ZCallable<void(P0)> Callable;
-
-// From ZCallable
-	ZQ<void> QCall(P0 i0)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(*theQ, i0);
-			else
-				return notnull;
-			}
-		}
-
-// Our protocol
-	ZSafeSet<ZRef<Callable> >& GetCallables()
-		{ return fCallables; }
-
-private:
-	ZSafeSet<ZRef<Callable> > fCallables;
+#define ZMACRO_Callable_Callable(X) \
+\
+template <ZMACRO_Callable_Class_P##X> \
+class ZCallable_Set<void(ZMACRO_Callable_P##X)> \
+:	public ZCallable<void(ZMACRO_Callable_P##X)> \
+	{ \
+public: \
+	typedef ZCallable<void(ZMACRO_Callable_P##X)> Callable; \
+\
+	ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
+		{ \
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/) \
+			{ \
+			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc()) \
+				sCall(*theQ, ZMACRO_Callable_i##X); \
+			else \
+				return notnull; \
+			} \
+		} \
+\
+	ZSafeSet<ZRef<Callable> >& GetCallables() \
+		{ return fCallables; } \
+\
+private: \
+	ZSafeSet<ZRef<Callable> > fCallables; \
 	};
 
-// =================================================================================================
-// MARK: - ZCallable_Set (specialization for 2 params)
+ZMACRO_Callable_Callable(0)
+ZMACRO_Callable_Callable(1)
+ZMACRO_Callable_Callable(2)
+ZMACRO_Callable_Callable(3)
+ZMACRO_Callable_Callable(4)
+ZMACRO_Callable_Callable(5)
+ZMACRO_Callable_Callable(6)
+ZMACRO_Callable_Callable(7)
+ZMACRO_Callable_Callable(8)
+ZMACRO_Callable_Callable(9)
+ZMACRO_Callable_Callable(A)
+ZMACRO_Callable_Callable(B)
+ZMACRO_Callable_Callable(C)
+ZMACRO_Callable_Callable(D)
+ZMACRO_Callable_Callable(E)
+ZMACRO_Callable_Callable(F)
 
-template <class P0, class P1>
-class ZCallable_Set<void(P0,P1)>
-:	public ZCallable<void(P0,P1)>
-	{
-public:
-	typedef ZCallable<void(P0,P1)> Callable;
-
-// From ZCallable
-	ZQ<void> QCall(P0 i0, P1 i1)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(*theQ, i0, i1);
-			else
-				return notnull;
-			}
-		}
-
-// Our protocol
-	ZSafeSet<ZRef<Callable> >& GetCallables()
-		{ return fCallables; }
-
-private:
-	ZSafeSet<ZRef<Callable> > fCallables;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Set (specialization for 3 params)
-
-template <class P0, class P1, class P2>
-class ZCallable_Set<void(P0,P1,P2)>
-:	public ZCallable<void(P0,P1,P2)>
-	{
-public:
-	typedef ZCallable<void(P0,P1,P2)> Callable;
-
-// From ZCallable
-	ZQ<void> QCall(P0 i0, P1 i1, P2 i2)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(*theQ, i0, i1, i2);
-			else
-				return notnull;
-			}
-		}
-
-// Our protocol
-	ZSafeSet<ZRef<Callable> >& GetCallables()
-		{ return fCallables; }
-
-private:
-	ZSafeSet<ZRef<Callable> > fCallables;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Set (specialization for 4 params)
-
-template <class P0, class P1, class P2, class P3>
-class ZCallable_Set<void(P0,P1,P2,P3)>
-:	public ZCallable<void(P0,P1,P2,P3)>
-	{
-public:
-	typedef ZCallable<void(P0,P1,P2,P3)> Callable;
-
-// From ZCallable
-	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(*theQ, i0, i1, i2, i3);
-			else
-				return notnull;
-			}
-		}
-
-// Our protocol
-	ZSafeSet<ZRef<Callable> >& GetCallables()
-		{ return fCallables; }
-
-private:
-	ZSafeSet<ZRef<Callable> > fCallables;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Set (specialization for 5 params)
-
-template <class P0, class P1, class P2, class P3, class P4>
-class ZCallable_Set<void(P0,P1,P2,P3,P4)>
-:	public ZCallable<void(P0,P1,P2,P3,P4)>
-	{
-public:
-	typedef ZCallable<void(P0,P1,P2,P3,P4)> Callable;
-
-// From ZCallable
-	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(*theQ, i0, i1, i2, i3, i4);
-			else
-				return notnull;
-			}
-		}
-
-// Our protocol
-	ZSafeSet<ZRef<Callable> >& GetCallables()
-		{ return fCallables; }
-
-private:
-	ZSafeSet<ZRef<Callable> > fCallables;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Set (specialization for 6 params)
-
-template <class P0, class P1, class P2, class P3, class P4, class P5>
-class ZCallable_Set<void(P0,P1,P2,P3,P4,P5)>
-:	public ZCallable<void(P0,P1,P2,P3,P4,P5)>
-	{
-public:
-	typedef ZCallable<void(P0,P1,P2,P3,P4,P5)> Callable;
-
-// From ZCallable
-	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(*theQ, i0, i1, i2, i3, i4, i5);
-			else
-				return notnull;
-			}
-		}
-
-// Our protocol
-	ZSafeSet<ZRef<Callable> >& GetCallables()
-		{ return fCallables; }
-
-private:
-	ZSafeSet<ZRef<Callable> > fCallables;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Set (specialization for 7 params)
-
-template <class P0, class P1, class P2, class P3, class P4, class P5, class P6>
-class ZCallable_Set<void(P0,P1,P2,P3,P4,P5,P6)>
-:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6)>
-	{
-public:
-	typedef ZCallable<void(P0,P1,P2,P3,P4,P5,P6)> Callable;
-
-// From ZCallable
-	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(*theQ, i0, i1, i2, i3, i4, i5, i6);
-			else
-				return notnull;
-			}
-		}
-
-// Our protocol
-	ZSafeSet<ZRef<Callable> >& GetCallables()
-		{ return fCallables; }
-
-private:
-	ZSafeSet<ZRef<Callable> > fCallables;
-	};
-
-// =================================================================================================
-// MARK: - ZCallable_Set (specialization for 8 params)
-
-template <class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
-class ZCallable_Set<void(P0,P1,P2,P3,P4,P5,P6,P7)>
-:	public ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7)>
-	{
-public:
-	typedef ZCallable<void(P0,P1,P2,P3,P4,P5,P6,P7)> Callable;
-
-// From ZCallable
-	ZQ<void> QCall(P0 i0, P1 i1, P2 i2, P3 i3, P4 i4, P5 i5, P6 i6, P7 i7)
-		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
-			{
-			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
-				sCall(*theQ, i0, i1, i2, i3, i4, i5, i6, i7);
-			else
-				return notnull;
-			}
-		}
-
-// Our protocol
-	ZSafeSet<ZRef<Callable> >& GetCallables()
-		{ return fCallables; }
-
-private:
-	ZSafeSet<ZRef<Callable> > fCallables;
-	};
+#undef ZMACRO_Callable_Callable
 
 } // namespace ZooLib
 
