@@ -51,11 +51,27 @@ Type_p& sSingleton()
 // =================================================================================================
 // MARK: - sDefault
 
+template <class Type_p>
+struct DefaultTraits
+	{
+	typedef const Type_p& Return_t;
+	};
+
+template <>
+struct DefaultTraits<void>
+	{
+	typedef void Return_t;
+	};
+
 struct Tag_Default;
 
 template <class Type_p>
-const Type_p& sDefault()
+typename DefaultTraits<Type_p>::Return_t sDefault()
 	{ return sSingleton<Type_p,Tag_Default>(); }
+
+template <>
+inline void sDefault<void>()
+	{}
 
 } // namespace ZooLib
 
