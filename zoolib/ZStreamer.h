@@ -272,6 +272,14 @@ protected:
 	Stream_p fStream;
 	};
 
+template <class Stream_p>
+ZRef<ZStreamerR> sStreamerR_T()
+	{ return new ZStreamerR_T<Stream_p>; }
+
+template <class Stream_p, class Param_p>
+ZRef<ZStreamerR> sStreamerR_T(Param_p& iParam)
+	{ return new ZStreamerR_T<Stream_p>(iParam); }
+
 // =================================================================================================
 // MARK: - ZStreamerRCon_T
 
