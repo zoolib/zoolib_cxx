@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h" // find
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZQ.h"
 
 #include <vector>
 
