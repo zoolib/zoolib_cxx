@@ -39,9 +39,11 @@ struct ForEachController
     int fBreak;
 	};
 
-template <typename Container>
+template <typename ContainerRef>
 struct ForEachWrapper_Forward_T
 	{
+	typedef typename remove_const<typename remove_reference<ContainerRef>::type>::type Container;
+
     inline ForEachWrapper_Forward_T(const Container& iContainer)
 	:	fIter(iContainer.begin())
 	,	fEnd(iContainer.end())
@@ -51,9 +53,11 @@ struct ForEachWrapper_Forward_T
 	const typename Container::const_iterator fEnd;
 	};
 
-template <typename Container>
+template <typename ContainerRef>
 struct ForEachWrapper_Reverse_T
 	{
+	typedef typename remove_const<typename remove_reference<ContainerRef>::type>::type Container;
+
     inline ForEachWrapper_Reverse_T(const Container& iContainer)
 	:	fIter(iContainer.rbegin())
 	,	fEnd(iContainer.rend())
@@ -64,7 +68,7 @@ struct ForEachWrapper_Reverse_T
 	};
 
 // This macro sets up the ForEachController used in each nested loop. It also takes
-// a const reference to container, placing it in __FEC, thus keeping container in scope.
+// a const reference to container, placing it in __CR, thus keeping container in scope.
 #define ZMACRO_foreach_prefix(container) \
 	for (ZooLib::ForEachController __FEC; not __FEC.fBreak; ++__FEC.fBreak) \
 	for (ZooLib::add_reference<ZooLib::add_const<ZMACRO_decltype(container)>::type>::type \
@@ -73,15 +77,13 @@ struct ForEachWrapper_Reverse_T
 // These macros additionally set up the iterator and cached end value.
 #define ZMACRO_foreach_prefix_Forward(container) \
 	ZMACRO_foreach_prefix(container) \
-	for (ZooLib::ForEachWrapper_Forward_T<ZooLib::remove_reference \
-		<ZMACRO_decltype(container)>::type> __FEW(__CR); \
+	for (ZooLib::ForEachWrapper_Forward_T<ZMACRO_decltype(__CR)> __FEW(__CR); \
 		not __FEC.fBreak && __FEW.fIter != __FEW.fEnd; \
 		++__FEW.fIter, ++__FEC.fBreak) \
 
 #define ZMACRO_foreach_prefix_Reverse(container) \
 	ZMACRO_foreach_prefix(container) \
-	for (ZooLib::ForEachWrapper_Reverse_T<ZooLib::remove_reference \
-		<ZMACRO_decltype(container)>::type> __FEW(__CR); \
+	for (ZooLib::ForEachWrapper_Reverse_T<ZMACRO_decltype(__CR)> __FEW(__CR); \
 		not __FEC.fBreak && __FEW.fIter != __FEW.fEnd; \
 		++__FEW.fIter, ++__FEC.fBreak) \
 
