@@ -179,7 +179,7 @@ void Source_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	ZRef<Event> theEvent = fClock->GetEvent();
 	foreachi (iterPQuery, fMap_Rel_PQuery)
 		{
-		PQuery* thePQuery = &iterPQuery->second;
+		const PQuery* thePQuery = &iterPQuery->second;
 		vector<ZVal_Any> thePackedRows;
 		for (ZRef<Iter> theIter = new Iter(fDB, thePQuery->fSQL);
 			theIter->HasValue(); theIter->Advance())
