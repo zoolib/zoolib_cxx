@@ -33,12 +33,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-struct ForEachController
-	{
-    inline ForEachController() : fBreak(0) {}
-    int fBreak;
-	};
-
 template <typename ContainerRef>
 struct ForEachWrapper_Forward_T
 	{
@@ -67,25 +61,25 @@ struct ForEachWrapper_Reverse_T
 	const typename Container::const_reverse_iterator fEnd;
 	};
 
-// This macro sets up the ForEachController used in each nested loop. It also takes
-// a const reference to container, placing it in __CR, thus keeping container in scope.
+// This macro sets up __FEBreak used in each nested loop. It also takes a const
+// reference to container, placing it in __CR, thus keeping container in scope.
 #define ZMACRO_foreach_prefix(container) \
-	for (ZooLib::ForEachController __FEC; not __FEC.fBreak; ++__FEC.fBreak) \
+	for (int __FEBreak = 0; not __FEBreak; ++__FEBreak) \
 	for (ZooLib::add_reference<ZooLib::add_const<ZMACRO_decltype(container)>::type>::type \
-		__CR = container; not __FEC.fBreak; ++__FEC.fBreak) \
+		__CR = container; not __FEBreak; ++__FEBreak) \
 
 // These macros additionally set up the iterator and cached end value.
 #define ZMACRO_foreach_prefix_Forward(container) \
 	ZMACRO_foreach_prefix(container) \
 	for (ZooLib::ForEachWrapper_Forward_T<ZMACRO_decltype(__CR)> __FEW(__CR); \
-		not __FEC.fBreak && __FEW.fIter != __FEW.fEnd; \
-		++__FEW.fIter, ++__FEC.fBreak) \
+		not __FEBreak && __FEW.fIter != __FEW.fEnd; \
+		++__FEW.fIter, ++__FEBreak) \
 
 #define ZMACRO_foreach_prefix_Reverse(container) \
 	ZMACRO_foreach_prefix(container) \
 	for (ZooLib::ForEachWrapper_Reverse_T<ZMACRO_decltype(__CR)> __FEW(__CR); \
-		not __FEC.fBreak && __FEW.fIter != __FEW.fEnd; \
-		++__FEW.fIter, ++__FEC.fBreak) \
+		not __FEBreak && __FEW.fIter != __FEW.fEnd; \
+		++__FEW.fIter, ++__FEBreak) \
 
 } // namespace ZooLib
 
@@ -113,7 +107,7 @@ struct ForEachWrapper_Reverse_T
 #ifndef ZMACRO_foreachv
 	#define ZMACRO_foreachv(vardecl, container) \
 		ZMACRO_foreach_prefix_Forward(container) \
-		for (vardecl = *__FEW.fIter; not __FEC.fBreak; --__FEC.fBreak)
+		for (vardecl = *__FEW.fIter; not __FEBreak; --__FEBreak)
 #endif
 
 // =================================================================================================
@@ -122,7 +116,7 @@ struct ForEachWrapper_Reverse_T
 #ifndef ZMACRO_foreachrv
 	#define ZMACRO_foreachrv(vardecl, container) \
 		ZMACRO_foreach_prefix_Reverse(container) \
-		for (vardecl = *__FEW.fIter; not __FEC.fBreak; --__FEC.fBreak)
+		for (vardecl = *__FEW.fIter; not __FEBreak; --__FEBreak)
 #endif
 
 // =================================================================================================
@@ -131,7 +125,7 @@ struct ForEachWrapper_Reverse_T
 #ifndef ZMACRO_foreacha
 	#define ZMACRO_foreacha(varname, container) \
 		ZMACRO_foreach_prefix_Forward(container) \
-		for (ZMACRO_auto(varname, *__FEW.fIter); not __FEC.fBreak; --__FEC.fBreak)
+		for (ZMACRO_auto(varname, *__FEW.fIter); not __FEBreak; --__FEBreak)
 #endif
 
 // =================================================================================================
@@ -140,7 +134,7 @@ struct ForEachWrapper_Reverse_T
 #ifndef ZMACRO_foreachra
 	#define ZMACRO_foreachra(varname, container) \
 		ZMACRO_foreach_prefix_Reverse(container) \
-		for (ZMACRO_auto(varname, *__FEW.fIter); not __FEC.fBreak; --__FEC.fBreak)
+		for (ZMACRO_auto(varname, *__FEW.fIter); not __FEBreak; --__FEBreak)
 #endif
 
 #endif // ZCONFIG_SPI_Enabled(type_traits)
