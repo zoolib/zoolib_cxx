@@ -34,12 +34,13 @@ template <class Type_p, class Tag_p>
 Type_p& sSingleton()
 	{
 	static Type_p* spType_p;
-	static ZDeleter<Type_p> deleter(spType_p);
 	if (not spType_p)
 		{
 		Type_p* theType_p = new Type_p;
 		if (not sAtomic_CASPtr(&spType_p, nullptr, theType_p))
 			delete theType_p;
+		else
+			static ZDeleter<Type_p> deleter(spType_p);
 		}
 	return *spType_p;
 	}
@@ -53,21 +54,27 @@ Type_p& sSingleton()
 
 template <class Type_p>
 struct DefaultTraits
-	{
-	typedef const Type_p& Return_t;
-	};
+	{ typedef const Type_p& Return_t; };
 
 template <>
 struct DefaultTraits<void>
-	{
-	typedef void Return_t;
-	};
+	{ typedef void Return_t; };
 
+struct Default_t;
 struct Tag_Default;
 
-template <class Type_p>
+template <class Type_p = Default_t>
 typename DefaultTraits<Type_p>::Return_t sDefault()
 	{ return sSingleton<Type_p,Tag_Default>(); }
+
+const struct Default_t
+	{
+	template <class T> operator const T&() const { return sDefault<T>(); }
+	} sDefault_t = {};
+
+template <>
+inline const Default_t& sDefault<Default_t>()
+	{ return sDefault_t; }
 
 template <>
 inline void sDefault<void>()
