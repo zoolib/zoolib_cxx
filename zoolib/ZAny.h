@@ -72,7 +72,10 @@ public:
 		}
 
 	ZAny(const null_t&)
-		{}
+		{
+		fDistinguisher = 0;
+		fPayload.fAsPtr = 0;
+		}
 
 	ZAny& operator=(const null_t&)
 		{
