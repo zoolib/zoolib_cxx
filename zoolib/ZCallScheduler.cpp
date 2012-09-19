@@ -156,12 +156,7 @@ void ZCallScheduler::pRun()
 
 void ZCallScheduler::spRun(ZCallScheduler* iCallScheduler)
 	{
-	#if (defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
-			&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_6) \
-		|| (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) \
-			&& __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_2)
-		::pthread_setname_np("ZCallScheduler");
-	#endif
+	ZThread::sSetName("ZCallScheduler");
 
 	iCallScheduler->pRun();
 	}
