@@ -197,10 +197,10 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CASPtr)
-#define DEFINED_sAtomic_CASPtr 1
+#if !defined(DEFINED_sAtomicPtr_CAS)
+#define DEFINED_sAtomicPtr_CAS 1
 
-bool sAtomic_CASPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
+bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue)
 	{
 	return iOldValue
 		== ::InterlockedCompareExchangePointer((PVOID*)iPtrAddress, iNewValue, iOldValue);
@@ -354,10 +354,10 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 
 #endif
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CASPtr)
-#define DEFINED_sAtomic_CASPtr 1
+#if !defined(DEFINED_sAtomicPtr_CAS)
+#define DEFINED_sAtomicPtr_CAS 1
 
-bool sAtomic_CASPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
+bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue)
 	{ return sAtomic_CAS((ZAtomic_t*)iPtrAddress, (int)iOldValue, (int)iNewValue); }
 
 #endif

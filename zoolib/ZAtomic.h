@@ -40,7 +40,7 @@ inline int sAtomic_Get(const ZAtomic_t* iAtomic)
 inline void sAtomic_Set(ZAtomic_t* iAtomic, int iParam)
 	{ iAtomic->fValue = iParam; }
 
-bool sAtomic_CASPtr(void* iPtrAddress, void* iOldValue, void* iNewValue);
+bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue);
 
 bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue);
 int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam);
@@ -67,8 +67,6 @@ inline void* ZAtomicPtr_Get(const ZAtomicPtr_t* iAtomicPtr)
 
 inline void ZAtomicPtr_Set(ZAtomicPtr_t* iAtomicPtr, void* iParam)
 	{ iAtomicPtr->fValue = iParam; }
-
-bool sAtomic_CASPtr(ZAtomicPtr_t* iAtomicPtr, void* iOldValue, void* iNewValue);
 
 void sAtomic_Barrier();
 
@@ -407,11 +405,11 @@ inline void sAtomic_Dec(ZAtomic_t* iAtomic)
 namespace ZooLib {
 
 // -----------------------------------------------
-#if !defined(DEFINED_sAtomic_CASPtr)
-#define DEFINED_sAtomic_CASPtr 1
+#if !defined(DEFINED_sAtomicPtr_CAS)
+#define DEFINED_sAtomicPtr_CAS 1
 
 inline
-bool sAtomic_CASPtr(void* iPtrAddress, void* iOldValue, void* iNewValue)
+bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue)
 	{
 	#if ZCONFIG_Is64Bit
 		return ::OSAtomicCompareAndSwap64

@@ -37,7 +37,7 @@ Type_p& sSingleton()
 	if (not spType_p)
 		{
 		Type_p* theType_p = new Type_p;
-		if (not sAtomic_CASPtr(&spType_p, nullptr, theType_p))
+		if (not sAtomicPtr_CAS(&spType_p, nullptr, theType_p))
 			delete theType_p;
 		else
 			static ZDeleter<Type_p> deleter(spType_p);
