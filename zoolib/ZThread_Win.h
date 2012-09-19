@@ -66,6 +66,8 @@ void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
 ID sID();
 void sSleep(double iDuration);
 
+void sSetName(const char* iName);
+
 struct Dummy_CRITICAL_SECTION
 	{
 	void* DebugInfo;

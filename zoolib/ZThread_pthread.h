@@ -77,6 +77,8 @@ ID sID()
 ZMACRO_Attribute_NoThrow
 void sSleep(double iDuration);
 
+void sSetName(const char* iName);
+
 } // namespace ZThread_pthread
 
 // =================================================================================================
