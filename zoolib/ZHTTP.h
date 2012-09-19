@@ -82,9 +82,6 @@ bool sReadHeaderLineNoParsing(const ZStreamU& iStream, Map* ioFields);
 bool sReadHeader(const ZStreamR& iStream, Map* oFields);
 bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields);
 
-// Temporary home for this.
-void sParseParam(const std::string& iString, Map& oParam);
-
 bool sParseQuery(const std::string& iString, Map& oTuple);
 bool sParseQuery(const ZStreamU& iStream, Map& oTuple);
 
