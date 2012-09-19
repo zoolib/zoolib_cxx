@@ -253,7 +253,7 @@ public:
 	inline
 	bool AtomicCAS(T* iPrior, T* iNew)
 		{
-		if (not sAtomic_CASPtr(&fP, iPrior, iNew))
+		if (not sAtomicPtr_CAS(&fP, iPrior, iNew))
 			return false;
 		spRetain(fP);
 		spRelease(iPrior);
