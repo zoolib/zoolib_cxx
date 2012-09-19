@@ -114,11 +114,14 @@ private:
 	static ZThreadVal* spGet()
 		{ return ((ZThreadVal*)(ZTSS::sGet(spKey()))); }
 
-	static const ZTSS::Key& spKey()
+	static ZTSS::Key spKey()
 		{
-		// This method is a sneaky way to have static storage for a template class.
-		static ZTSS::Key spKey = ZTSS::sCreate();
-		return spKey;
+		ZAssertCompile(sizeof(ZAtomic_t) >= sizeof(ZTSS::Key));
+
+		static ZAtomic_t spKey;
+		if (not sAtomic_Get(&spKey))
+			sAtomic_CAS(&spKey, 0, ZTSS::sCreate());
+		return sAtomic_Get(&spKey);
 		}
 
 	ZThreadVal* fPrior;
