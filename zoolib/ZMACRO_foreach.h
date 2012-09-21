@@ -65,7 +65,9 @@ struct ForEachWrapper_Reverse_T
 // reference to container, placing it in __CR, thus keeping container in scope.
 #define ZMACRO_foreach_prefix(container) \
 	for (int __FEBreak = 0; not __FEBreak; ++__FEBreak) \
-	for (ZooLib::add_reference<ZooLib::add_const<ZMACRO_decltype(container)>::type>::type \
+	for (typename ZooLib::add_reference \
+		<typename ZooLib::add_const \
+		<ZMACRO_decltype(container)>::type>::type \
 		__CR = container; not __FEBreak; ++__FEBreak) \
 
 // These macros additionally set up the iterator and cached end value.
