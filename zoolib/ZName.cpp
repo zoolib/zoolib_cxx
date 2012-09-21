@@ -126,11 +126,8 @@ bool ZName::IsEmpty() const
 
 void ZName::Clear()
 	{
-	if (fIsCounted)
-		{
+	if (sGetSet(fIsCounted, false))
 		sFetch_T<ZRefCountedString>(&fIntPtr)->Release();
-		fIsCounted = false;
-		}
 	fIntPtr = 0;
 	}
 
