@@ -60,21 +60,11 @@ template <>
 struct DefaultTraits<void>
 	{ typedef void Return_t; };
 
-struct Default_t;
 struct Tag_Default;
 
-template <class Type_p = Default_t>
+template <class Type_p>
 typename DefaultTraits<Type_p>::Return_t sDefault()
 	{ return sSingleton<Type_p,Tag_Default>(); }
-
-const struct Default_t
-	{
-	template <class T> operator const T&() const { return sDefault<T>(); }
-	} sDefault_t = {};
-
-template <>
-inline const Default_t& sDefault<Default_t>()
-	{ return sDefault_t; }
 
 template <>
 inline void sDefault<void>()
