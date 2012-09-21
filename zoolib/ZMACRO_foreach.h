@@ -61,10 +61,10 @@ struct ForEachWrapper_Reverse_T
 	const typename Container::const_reverse_iterator fEnd;
 	};
 
-
 // This macro sets up __FEBreak used in each nested loop. It also takes a const
 // reference to container, placing it in __CR, thus keeping container in scope.
-#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ <= 2))
+#if ZCONFIG_CPP < 2011
+	// foreachX will not be usable in a template context before C++11.
 	#define ZMACRO_foreach_prefix(container) \
 		for (int __FEBreak = 0; not __FEBreak; ++__FEBreak) \
 		for (ZooLib::add_reference \
