@@ -38,10 +38,10 @@ bool ZCallScheduler::Cancel(const Job& iJob)
 	{
 	ZAcqMtx acq(fMtx);
 
-	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(iJob, 0.0));
+	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(JobTime(iJob, 0.0));
 	if (iterJT != fJobTimes.end() && iterJT->first == iJob)
 		{
-		sEraseMust(fTimeJobs, make_pair(iterJT->second, iJob));
+		sEraseMust(fTimeJobs, TimeJob(iterJT->second, iJob));
 		fJobTimes.erase(iterJT);
 		return true;
 		}
@@ -58,7 +58,7 @@ bool ZCallScheduler::IsAwake(const Job& iJob)
 	{
 	ZAcqMtx acq(fMtx);
 
-	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(iJob, 0.0));
+	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(JobTime(iJob, 0.0));
 	if (iterJT != fJobTimes.end() && iterJT->first == iJob)
 		return ZTime::sSystem() >= iterJT->second;
 
@@ -85,23 +85,23 @@ void ZCallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 
 	ZAcqMtx acq(fMtx);
 
-	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(make_pair(iJob, 0.0));
+	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(JobTime(iJob, 0.0));
 	if (iterJT != fJobTimes.end() && iterJT->first == iJob)
 		{
 		if (iSystemTime < iterJT->second)
 			{
-			sEraseMust(fTimeJobs, make_pair(iterJT->second, iJob));
+			sEraseMust(fTimeJobs, TimeJob(iterJT->second, iJob));
 			fJobTimes.erase(iterJT);
 
-			sInsertMust(fTimeJobs, make_pair(iSystemTime, iJob));
-			sInsertMust(fJobTimes, make_pair(iJob, iSystemTime));
+			sInsertMust(fTimeJobs, TimeJob(iSystemTime, iJob));
+			sInsertMust(fJobTimes, JobTime(iJob, iSystemTime));
 			fCnd.Broadcast();
 			}
 		}
 	else
 		{
-		sInsertMust(fJobTimes, make_pair(iJob, iSystemTime));
-		sInsertMust(fTimeJobs, make_pair(iSystemTime, iJob));
+		sInsertMust(fJobTimes, JobTime(iJob, iSystemTime));
+		sInsertMust(fTimeJobs, TimeJob(iSystemTime, iJob));
 		if (not fThreadRunning)
 			{
 			fThreadRunning = true;
@@ -140,7 +140,7 @@ void ZCallScheduler::pRun()
 				ZRef<ZCaller> theCaller = begin->second.first;
 				ZRef<ZCallable_Void> theCallable = begin->second.second;
 
-				sEraseMust(fJobTimes, make_pair(begin->second, begin->first));
+				sEraseMust(fJobTimes, JobTime(begin->second, begin->first));
 				fTimeJobs.erase(begin);
 
 				guard.Release();
