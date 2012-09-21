@@ -36,12 +36,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#define ZMACRO_type_traits_namespace std
 		#define ZCONFIG_SPI_Avail__type_traits 1
 
-	#elif ZCONFIG_LIBCPP_TR1
+	#elif ZCONFIG_LIBCPP_TR1 || ZCONFIG_LIBCPP_GCCExtensions
 		#include <tr1/type_traits>
 		#define ZMACRO_type_traits_namespace std::tr1
 		#define ZCONFIG_SPI_Avail__type_traits 1
 
-		#if defined(ZCONFIG_GCC_Version) && ZCONFIG_GCC_Version < 45
+		#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 5))
 			// No enable_if or conditional prior to 4.5
 			namespace std { namespace tr1 {
 

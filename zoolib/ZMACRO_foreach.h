@@ -61,27 +61,37 @@ struct ForEachWrapper_Reverse_T
 	const typename Container::const_reverse_iterator fEnd;
 	};
 
+
 // This macro sets up __FEBreak used in each nested loop. It also takes a const
 // reference to container, placing it in __CR, thus keeping container in scope.
-#define ZMACRO_foreach_prefix(container) \
-	for (int __FEBreak = 0; not __FEBreak; ++__FEBreak) \
-	for (typename ZooLib::add_reference \
-		<typename ZooLib::add_const \
-		<ZMACRO_decltype(container)>::type>::type \
-		__CR = container; not __FEBreak; ++__FEBreak) \
+#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ <= 2))
+	#define ZMACRO_foreach_prefix(container) \
+		for (int __FEBreak = 0; not __FEBreak; ++__FEBreak) \
+		for (ZooLib::add_reference \
+			<ZooLib::add_const \
+			<ZMACRO_decltype(container)>::type>::type \
+			__CR = container; not __FEBreak; ++__FEBreak)
+#else
+	#define ZMACRO_foreach_prefix(container) \
+		for (int __FEBreak = 0; not __FEBreak; ++__FEBreak) \
+		for (typename ZooLib::add_reference \
+			<typename ZooLib::add_const \
+			<ZMACRO_decltype(container)>::type>::type \
+			__CR = container; not __FEBreak; ++__FEBreak)
+#endif
 
 // These macros additionally set up the iterator and cached end value.
 #define ZMACRO_foreach_prefix_Forward(container) \
 	ZMACRO_foreach_prefix(container) \
 	for (ZooLib::ForEachWrapper_Forward_T<ZMACRO_decltype(__CR)> __FEW(__CR); \
 		not __FEBreak && __FEW.fIter != __FEW.fEnd; \
-		++__FEW.fIter, ++__FEBreak) \
+		++__FEW.fIter, ++__FEBreak)
 
 #define ZMACRO_foreach_prefix_Reverse(container) \
 	ZMACRO_foreach_prefix(container) \
 	for (ZooLib::ForEachWrapper_Reverse_T<ZMACRO_decltype(__CR)> __FEW(__CR); \
 		not __FEBreak && __FEW.fIter != __FEW.fEnd; \
-		++__FEW.fIter, ++__FEBreak) \
+		++__FEW.fIter, ++__FEBreak)
 
 } // namespace ZooLib
 

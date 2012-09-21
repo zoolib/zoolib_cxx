@@ -37,7 +37,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_CodeWarrior
 	#elif defined(__GNUC__)
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_GCC
-		#define ZCONFIG_GCC_Version __GNUC__##__GNUC_MINOR__
 	#elif defined(_MSC_VER)
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_MSVC
 	#endif
@@ -226,7 +225,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#define ZCONFIG_LIBCPP_2011 1
 	#else
 		#define ZCONFIG_LIBCPP_TR1 1
-		#if defined(ZCONFIG_GCC_Version) && ZCONFIG_GCC_Version >= 42
+		#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 2))
 			#define ZCONFIG_LIBCPP_GCCExtensions 1
 		#endif
 	#endif
@@ -234,7 +233,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_LIBCPP_TR1 1
 	#define ZCONFIG_LIBCPP_GCCExtensions 1
 #else
-	#if defined(ZCONFIG_GCC_Version) && ZCONFIG_GCC_Version >= 42
+	#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 2))
+		#define ZCONFIG_LIBCPP_TR1 1
 		#define ZCONFIG_LIBCPP_GCCExtensions 1
 	#endif
 #endif

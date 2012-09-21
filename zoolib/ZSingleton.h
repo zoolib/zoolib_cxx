@@ -67,7 +67,7 @@ typename DefaultTraits<Type_p>::Return_t sDefault()
 	{ return sSingleton<Type_p,Tag_Default>(); }
 
 template <>
-inline void sDefault<void>()
+inline DefaultTraits<void>::Return_t sDefault<void>()
 	{}
 
 } // namespace ZooLib
