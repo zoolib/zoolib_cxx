@@ -34,12 +34,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Time.h"
 
+#include "zoolib/ZCompat_cmath.h" // For fmod
+
 #if __MACH__
 	#include <mach/mach_init.h> // For mach_thread_self
 #endif
 
 namespace ZooLib {
 namespace ZUtil_Debug {
+
+bool sCompact;
 
 using std::min;
 using std::string;
@@ -138,18 +142,34 @@ public:
 		// up, so long as iName is 20 CPs or less in length.
 		const string extraSpace(fExtraSpace - min(fExtraSpace, curLength), ' ');
 
-		theStrimW << ZUtil_Time::sAsString_ISO8601_us(now, false);
-		#if __MACH__
-			// GDB on Mac uses the mach thread ID for the systag.
-			theStrimW << sStringf(" %5x/", ((int)mach_thread_self()));
-		#else
-			theStrimW << " 0x";
-		#endif
+		if (sCompact)
+			{
+			theStrimW << ZUtil_Time::sAsStringUTC(now, "%M:") << sStringf("%07.4f", fmod(now.fVal, 60));
 
-		if (sizeof(ZThread::ID) > 4)
-			theStrimW << sStringf("%016llX", (uint64)ZThread::sID());
+			#if __MACH__
+				theStrimW << sStringf(" %5x", ((int)mach_thread_self()));
+			#else
+				if (sizeof(ZThread::ID) > 4)
+					theStrimW << sStringf("%016llX", (uint64)ZThread::sID());
+				else
+					theStrimW << sStringf("%08llX", (uint64)ZThread::sID());
+			#endif
+			}
 		else
-			theStrimW << sStringf("%08llX", (uint64)ZThread::sID());
+			{
+			theStrimW << ZUtil_Time::sAsString_ISO8601_us(now, false);
+
+			#if __MACH__
+				// GDB on Mac uses the mach thread ID for the systag.
+				theStrimW << sStringf(" %5x/", ((int)mach_thread_self()));
+			#else
+				theStrimW << " 0x";
+			#endif
+			if (sizeof(ZThread::ID) > 4)
+				theStrimW << sStringf("%016llX", (uint64)ZThread::sID());
+			else
+				theStrimW << sStringf("%08llX", (uint64)ZThread::sID());
+			}
 
 		theStrimW
 			<< " P" << sStringf("%X", iPriority)
