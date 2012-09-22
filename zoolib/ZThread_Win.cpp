@@ -63,7 +63,7 @@ void ZThread_Win::sSetName(const char* iName)
 			LPCSTR szName; // Pointer to name (in user addr space).
 			DWORD dwThreadID; // Thread ID (-1=caller thread).
 			DWORD dwFlags; // Reserved for future use, must be zero.
-			}
+			};
 		#pragma pack(pop)
 
 		THREADNAME_INFO info;
