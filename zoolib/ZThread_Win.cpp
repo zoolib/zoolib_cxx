@@ -49,8 +49,8 @@ void ZThread_Win::sSleep(double iDuration)
 
 void ZThread_Win::sSetName(const char* iName)
 	{
-	// This use a secret handshake with VC debugger and WinDbg, the system
-	// itself has no notion of thread names.
+	// This uses a secret handshake with VC debugger and WinDbg,
+	// the system itself has no notion of thread names.
 
 	// http://msdn.microsoft.com/en-us/library/xcb2z8hs(VS.90).aspx
 	// http://blogs.msdn.com/b/stevejs/archive/2005/12/19/505815.aspx
