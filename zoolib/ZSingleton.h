@@ -50,15 +50,11 @@ Type_p& sSingleton()
 	{ return sSingleton<Type_p,Type_p>(); }
 
 // =================================================================================================
-// MARK: - sDefault
+// MARK: - sDefault<Type_p>()
 
-template <class Type_p>
-struct DefaultTraits
-	{ typedef const Type_p& Return_t; };
+template <class Type_p> struct DefaultTraits { typedef const Type_p& Return_t; };
 
-template <>
-struct DefaultTraits<void>
-	{ typedef void Return_t; };
+template <> struct DefaultTraits<void> { typedef void Return_t; };
 
 struct Tag_Default;
 
@@ -69,6 +65,13 @@ typename DefaultTraits<Type_p>::Return_t sDefault()
 template <>
 inline DefaultTraits<void>::Return_t sDefault<void>()
 	{}
+
+// =================================================================================================
+// MARK: - sDefault()
+
+struct Default_t { template <class T> operator const T&() { return sSingleton<T,Tag_Default>(); } };
+
+inline Default_t sDefault() { return Default_t(); }
 
 } // namespace ZooLib
 
