@@ -49,7 +49,7 @@ void Store::Initialize()
 	fStoreRef = sAdopt& ::SCDynamicStoreCreate(nullptr,
 		CFSTR("ZUtil_SystemConfiguration"),
 		&Store::spCallback,
-		ZUtil_CF::Context<SCDynamicStoreContext>(this->GetWeakRefProxy()).IParam());
+		ZUtil_CF::Context<SCDynamicStoreContext>(this->GetWeakRefProxy()));
 	}
 
 SCDynamicStoreRef Store::GetStoreRef()

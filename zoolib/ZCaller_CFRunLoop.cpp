@@ -66,7 +66,7 @@ void ZCaller_CFRunLoop::Initialize()
 		true, // repeats
 		0, // order
 		spCallback,
-		ZUtil_CF::Context<CFRunLoopObserverContext>(this->GetWeakRefProxy()).IParam());
+		ZUtil_CF::Context<CFRunLoopObserverContext>(this->GetWeakRefProxy()));
 
 	::CFRunLoopAddObserver(fRunLoop, fObserver, kCFRunLoopCommonModes);
 	}

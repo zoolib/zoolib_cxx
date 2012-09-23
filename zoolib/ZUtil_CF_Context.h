@@ -77,6 +77,12 @@ public:
 		fT.retain(fT.info);
 		}
 
+	operator const T*() const
+		{ return &fT; }
+
+	operator T*()
+		{ return &fT; }
+
 	const T* IParam() const
 		{ return &fT; }
 
