@@ -81,6 +81,18 @@ template <typename Base, typename Comparator, typename Derived>
 void sInsert(std::set<Base,Comparator>& ioSet, const Derived& iElement)
 	{ ioSet.insert(iElement); }
 
+// -----
+
+template <typename Base, typename Comparator>
+ZQ<Base> sQPopFront(std::set<Base,Comparator>& ioSet)
+	{
+	if (ioSet.empty())
+		return null;
+	const Base result = *ioSet.begin();
+	ioSet.erase(ioSet.begin());
+	return result;
+	}
+
 // =================================================================================================
 // MARK: - sXXXMust
 
