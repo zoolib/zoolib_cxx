@@ -272,6 +272,7 @@ public:
 		return true;
 		}
 
+	ZMACRO_Attribute_NoThrow
 	inline
 	static T* sCFAllocatorRetain(T* iP)
 		{
@@ -473,18 +474,26 @@ public:
 		return true;
 		}
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	static T* sCFAllocatorRetain(T* iP)
 		{
 		spRetain(iP);
 		return iP;
 		}
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	static void sCFAllocatorRelease(T* iP)
 		{ spRelease(iP); }
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	void Retain()
 		{ spRetain(fP); }
 
+	ZMACRO_Attribute_NoThrow
+	inline
 	void Release()
 		{ spRelease(fP); }
 
