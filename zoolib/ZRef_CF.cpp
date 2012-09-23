@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include ZMACINCLUDE2(CoreFoundation,CFBase.h) // For CFRetain and CFRelease
+#include ZMACINCLUDE2(CoreFoundation,CFBase.h) // For CFRetain, CFRelease and CFTypeRef
 
 // =================================================================================================
 
@@ -33,37 +33,29 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	} // namespace ZooLib
 
 // =================================================================================================
+#define ZMACRO_Mutable(a) \
+	typedef struct __##a * a##Ref; \
+	ZMACRO_Retain_Release(a##Ref)
+
+// =================================================================================================
+#define ZMACRO_Const(a) \
+	typedef const struct __##a * a##Ref; \
+	ZMACRO_Retain_Release(a##Ref)
+
+// =================================================================================================
+#define ZMACRO_Opaque(a) \
+	typedef struct Opaque##a##Ref * a##Ref; \
+	ZMACRO_Retain_Release(a##Ref)
+
+// =================================================================================================
 // CFTypeRef declared in CFBase.h
 ZMACRO_Retain_Release(CFTypeRef)
 
 // =================================================================================================
-#define ZMACRO_CF_Mutable(a) \
-	typedef struct __CF##a * CF##a##Ref; \
-	ZMACRO_Retain_Release(CF##a##Ref)
-
-ZMACRO_CF_Mutable(Bundle)
-ZMACRO_CF_Mutable(Error)
-ZMACRO_CF_Mutable(ReadStream)
-ZMACRO_CF_Mutable(RunLoop)
-ZMACRO_CF_Mutable(RunLoopObserver)
-ZMACRO_CF_Mutable(RunLoopSource)
-ZMACRO_CF_Mutable(RunLoopTimer)
-ZMACRO_CF_Mutable(WriteStream)
-
-// =================================================================================================
-#define ZMACRO_CF_Const(a) \
-	typedef const struct __CF##a * CF##a##Ref; \
-	ZMACRO_Retain_Release(CF##a##Ref)
-
-ZMACRO_CF_Const(URL)
-ZMACRO_CF_Const(UUID)
-ZMACRO_CF_Const(Null)
-
-// =================================================================================================
 #define ZMACRO_CF(a) \
 	typedef const struct __CF##a * CF##a##Ref; \
-	typedef struct __CF##a * CFMutable##a##Ref; \
 	ZMACRO_Retain_Release(CF##a##Ref) \
+	typedef struct __CF##a * CFMutable##a##Ref; \
 	ZMACRO_Retain_Release(CFMutable##a##Ref)
 
 ZMACRO_CF(Array)
@@ -74,51 +66,53 @@ ZMACRO_CF(Number)
 ZMACRO_CF(String)
 
 // =================================================================================================
-#define ZMACRO_CG(a) \
-	typedef struct CG##a * CG##a##Ref; \
-	ZMACRO_Retain_Release(CG##a##Ref)
 
-ZMACRO_CG(Color)
-ZMACRO_CG(ColorSpace)
-ZMACRO_CG(Context)
-ZMACRO_CG(DataProvider)
-ZMACRO_CG(Gradient)
-ZMACRO_CG(Image)
+ZMACRO_Const(CFNull)
+ZMACRO_Const(CFURL)
+ZMACRO_Const(CFUUID)
 
 // =================================================================================================
-typedef struct OpaqueSecKeychainRef *SecKeychainRef;
-ZMACRO_Retain_Release(SecKeychainRef)
 
-typedef struct OpaqueSecKeychainItemRef *SecKeychainItemRef;
-ZMACRO_Retain_Release(SecKeychainItemRef)
+ZMACRO_Mutable(CFBundle)
+ZMACRO_Mutable(CFError)
+ZMACRO_Mutable(CFReadStream)
+ZMACRO_Mutable(CFRunLoop)
+ZMACRO_Mutable(CFRunLoopObserver)
+ZMACRO_Mutable(CFRunLoopSource)
+ZMACRO_Mutable(CFRunLoopTimer)
+ZMACRO_Mutable(CFWriteStream)
 
-typedef struct OpaqueSecKeychainSearchRef *SecKeychainSearchRef;
-ZMACRO_Retain_Release(SecKeychainSearchRef)
-
-typedef const struct __SCDynamicStore *SCDynamicStoreRef;
-ZMACRO_Retain_Release(SCDynamicStoreRef)
-
-typedef const struct __SCPreferences *SCPreferencesRef;
-ZMACRO_Retain_Release(SCPreferencesRef)
+ZMACRO_Mutable(CFUserNotification)
 
 // =================================================================================================
-typedef const struct __SCNetworkReachability *SCNetworkReachabilityRef;
-ZMACRO_Retain_Release(SCNetworkReachabilityRef)
+
+ZMACRO_Mutable(CGColor)
+ZMACRO_Mutable(CGColorSpace)
+ZMACRO_Mutable(CGContext)
+ZMACRO_Mutable(CGDataProvider)
+ZMACRO_Mutable(CGGradient)
+ZMACRO_Mutable(CGImage)
 
 // =================================================================================================
-typedef const struct __AXUIElement *AXUIElementRef;
-ZMACRO_Retain_Release(AXUIElementRef)
+
+ZMACRO_Mutable(CVBuffer)
 
 // =================================================================================================
-typedef struct __CVBuffer *CVBufferRef;
-ZMACRO_Retain_Release(CVBufferRef)
+
+ZMACRO_Const(SCDynamicStore)
+ZMACRO_Const(SCPreferences)
+ZMACRO_Const(SCNetworkReachability)
 
 // =================================================================================================
-typedef struct OpaquePasteboardRef* PasteboardRef;
-ZMACRO_Retain_Release(PasteboardRef)
+
+ZMACRO_Opaque(SecKeychain)
+ZMACRO_Opaque(SecKeychainItem)
+ZMACRO_Opaque(SecKeychainSearch)
 
 // =================================================================================================
-typedef struct __CFUserNotification * CFUserNotificationRef;
-ZMACRO_Retain_Release(CFUserNotificationRef)
+ZMACRO_Const(AXUIElement)
+
+// =================================================================================================
+ZMACRO_Opaque(Pasteboard)
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
