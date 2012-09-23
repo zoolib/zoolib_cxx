@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZRef_CF.h"
-#include "zoolib/ZSafe.h"
 #include "zoolib/ZYad.h"
 
 #include <SystemConfiguration/SCDynamicStore.h>
