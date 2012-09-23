@@ -102,6 +102,10 @@ typedef const struct __SCPreferences *SCPreferencesRef;
 ZMACRO_Retain_Release(SCPreferencesRef)
 
 // =================================================================================================
+typedef const struct __SCNetworkReachability *SCNetworkReachabilityRef;
+ZMACRO_Retain_Release(SCNetworkReachabilityRef)
+
+// =================================================================================================
 typedef const struct __AXUIElement *AXUIElementRef;
 ZMACRO_Retain_Release(AXUIElementRef)
 
