@@ -28,6 +28,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread_T.h" // For ZAcquirer_T, ZReleaser_T, ZGuard_T
 #include "zoolib/ZThread_Win.h"
 
+#if __MACH__
+	#include <mach/mach_init.h> // For mach_thread_self
+#endif
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -151,6 +155,10 @@ private:
 		// Useful when debugging under GDB, which (on MacOS) doesn't always
 		// tell us what pthread_id corresponds to a thread.
 		const ZThread::ID theThreadID ZMACRO_Attribute_Unused = ZThread::sID();
+
+		#if __MACH__
+			const mach_port_t theMachThreadID ZMACRO_Attribute_Unused = ::mach_thread_self();
+		#endif
 
 		sStarted();
 
