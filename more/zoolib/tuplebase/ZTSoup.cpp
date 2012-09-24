@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tuplebase/ZTSoup.h"
 
 #include "zoolib/ZLog.h"
-#include "zoolib/ZString.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZStringf.h"
+#include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
 
 using std::map;

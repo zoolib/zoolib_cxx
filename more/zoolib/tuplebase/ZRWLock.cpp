@@ -108,8 +108,8 @@ void ZRWLock::AcquireRead()
 			fVector_CurrentReaders.push_back(currentID);
 
 			ZDebugLogf(kDebug_RWLock,
-				("Thread %04X, Got it read recursive, total: %d", ZThread::sID(),
-				fCount_CurrentReaders));
+				"Thread %04X, Got it read recursive, total: %d", ZThread::sID(),
+				fCount_CurrentReaders);
 			}
 		else
 			{
@@ -120,20 +120,19 @@ void ZRWLock::AcquireRead()
 				++fCount_WaitingReaders;
 				if (fCount_WaitingReaders == 1)
 					{
-					// We're the first reader to come along, acquire the access lock.
-					ZDebugLogf(kDebug_RWLock, ("Thread %04X, Waiting read", ZThread::sID()));
+					// We're the first reader to come along, acquire the access lock.					ZDebugLogf(kDebug_RWLock, "Thread %04X, Waiting read", ZThread::sID()));
 					fMutex_Structure.Release();
 
 					fSem_Access.Wait(1);
 
 					fMutex_Structure.Acquire();
 
-					ZDebugLogf(kDebug_RWLock, ("Thread %04X, Got it read", ZThread::sID()));
+					ZDebugLogf(kDebug_RWLock, "Thread %04X, Got it read", ZThread::sID());
 					ZAssertStop(kDebug_RWLock,
 						fThreadID_CurrentWriter == 0 && fCount_CurrentWriter == 0);
 					ZDebugLogf(kDebug_RWLock,
-						("Thread %04X, Signal subs: %d", ZThread::sID(),
-						fCount_WaitingReaders - 1));
+						"Thread %04X, Signal subs: %d", ZThread::sID(),
+						fCount_WaitingReaders - 1);
 
 					// We've acquired the access lock, so let the subsequent readers through.
 					fSem_SubsequentReaders.Signal(fCount_WaitingReaders - 1);
@@ -145,7 +144,7 @@ void ZRWLock::AcquireRead()
 					{
 					// We're a subsequent reader. Wait for the read barrier to be opened
 					ZDebugLogf(kDebug_RWLock,
-						("Thread %04X, Waiting subsequent", ZThread::sID()));
+						"Thread %04X, Waiting subsequent", ZThread::sID());
 
 					fMutex_Structure.Release();
 
@@ -154,8 +153,8 @@ void ZRWLock::AcquireRead()
 					fMutex_Structure.Acquire();
 
 					ZDebugLogf(kDebug_RWLock,
-						("Thread %04X, Got it subsequent, total: %d",
-							ZThread::sID(), fCount_CurrentReaders));
+						"Thread %04X, Got it subsequent, total: %d",
+							ZThread::sID(), fCount_CurrentReaders);
 					ZAssertStop(kDebug_RWLock,
 						fThreadID_CurrentWriter == 0 && fCount_CurrentWriter == 0);
 
@@ -167,7 +166,7 @@ void ZRWLock::AcquireRead()
 				// There were no waiting writers and there are current readers.
 				ZAssertStop(kDebug_RWLock,
 					fThreadID_CurrentWriter == 0 && fCount_CurrentWriter == 0);
-				ZDebugLogf(kDebug_RWLock, ("Thread %04X, Got it other", ZThread::sID()));
+				ZDebugLogf(kDebug_RWLock, "Thread %04X, Got it other", ZThread::sID());
 
 				++fCount_CurrentReaders;
 				fVector_CurrentReaders.push_back(currentID);
@@ -197,7 +196,7 @@ void ZRWLock::ReturnLock()
 			// We must also release the access lock
 			fThreadID_CurrentWriter = 0;
 
-			ZDebugLogf(kDebug_RWLock, ("Thread %04X, Returning write", ZThread::sID()));
+			ZDebugLogf(kDebug_RWLock, "Thread %04X, Returning write", ZThread::sID());
 			fSem_Access.Signal(1);
 			}
 
@@ -216,7 +215,7 @@ void ZRWLock::ReturnLock()
 		if (--fCount_CurrentReaders == 0)
 			{
 			ZAssertStop(kDebug_RWLock, fVector_CurrentReaders.size() == 0);
-			ZDebugLogf(kDebug_RWLock, ("Thread %04X, Returning read", ZThread::sID()));
+			ZDebugLogf(kDebug_RWLock, "Thread %04X, Returning read", ZThread::sID());
 
 			fSem_Access.Signal(1);
 			}
@@ -243,21 +242,21 @@ void ZRWLock::AcquireWrite()
 		++fCount_CurrentWriter;
 		ZAssertStop(kDebug_RWLock, fCount_CurrentReaders == 0);
 		ZDebugLogf(kDebug_RWLock,
-			("Thread %04X, Got it write recursive %d", ZThread::sID(),
-			fCount_CurrentWriter));
+			"Thread %04X, Got it write recursive %d", ZThread::sID(),
+			fCount_CurrentWriter);
 		fMutex_Structure.Release();
 		return;
 		}
 
 	// Indicate that we're waiting to write
 	++fCount_WaitingWriters;
-	ZDebugLogf(kDebug_RWLock, ("Thread %04X, Waiting write", ZThread::sID()));
+	ZDebugLogf(kDebug_RWLock, "Thread %04X, Waiting write", ZThread::sID());
 	fMutex_Structure.Release();
 
 	fSem_Access.Wait(1);
 
 	fMutex_Structure.Acquire();
-	ZDebugLogf(kDebug_RWLock, ("Thread %04X, Got it write", ZThread::sID()));
+	ZDebugLogf(kDebug_RWLock, "Thread %04X, Got it write", ZThread::sID());
 	// We're no longer waiting
 	--fCount_WaitingWriters;
 

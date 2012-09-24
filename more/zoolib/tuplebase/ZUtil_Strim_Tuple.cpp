@@ -20,9 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
 
-#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
-
+#include "zoolib/ZStrimmerFromStrim.h"
 namespace ZooLib {
 
 // =================================================================================================
@@ -42,8 +42,8 @@ ZUtil_Strim_Tuple::Format::Format
 
 bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV)
 	{
-	ZRef<ZStrimmerU> theStrimmerU = new ZStrimmerU_Strim(iStrimU);
-	if (ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sYadR(theStrimmerU))
+	ZStrimmerFromStrimU theSFS(iStrimU);
+	if (ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sYadR(theSFS))
 		{
 		oTV = sFromYadR(ZTValue(), theYadR);
 		return true;

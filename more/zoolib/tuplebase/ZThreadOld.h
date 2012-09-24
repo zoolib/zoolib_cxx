@@ -136,8 +136,8 @@ typedef ZMtx ZMutexNR;
 #pragma mark -
 #pragma mark * Guards (aka lockers)
 
-typedef ZGuardR_T<ZMutexBase> ZLocker;
-typedef ZGuardR_T<ZMutex> ZMutexLocker;
+typedef ZGuard_T<ZMutexBase> ZLocker;
+typedef ZGuard_T<ZMutex> ZMutexLocker;
 typedef ZAcqMtx ZMutexNRLocker;
 
 // =================================================================================================

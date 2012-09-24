@@ -22,11 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTuple__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVal_ZooLib.h"
+#include "zoolib/ZVal_Any.h"
+#include "zoolib/ZStream.h"
 
 namespace ZooLib {
 
-typedef ZVal_ZooLib ZTValue;
+typedef ZVal_Any ZTValue;
+typedef ZName ZTName;
 
 // =================================================================================================
 #pragma mark -
@@ -50,7 +52,7 @@ typedef ZVal_ZooLib ZTValue;
 	ZMACRO_ZMapAccessors_Decl_Entry(T, Name_t, String, std::string) \
 	ZMACRO_ZMapAccessors_Decl_Entry(T, Name_t, Time, ZTime) \
 
-class ZTuple : public ZMap_ZooLib
+class ZTuple : public ZMap_Any
 	{
 public:
 	ZTuple();
@@ -58,8 +60,8 @@ public:
 	~ZTuple();
 	ZTuple operator=(const ZTuple& iTuple);
 
-	ZTuple(const ZMap_ZooLib& iMap);
-	ZTuple operator=(const ZMap_ZooLib& iMap);
+	ZTuple(const ZMap_Any& iMap);
+	ZTuple operator=(const ZMap_Any& iMap);
 
 	explicit ZTuple(const ZStreamR& iStreamR);
 
@@ -70,8 +72,8 @@ public:
 	ZTuple GetTuple(const ZTName& iName) const;
 	void SetTuple(const ZTName& iName, const ZTuple& iTuple);
 
-	ZMap_ZooLib& SetNull(const ZTName& iPropName);
-	std::vector<ZVal_ZooLib>& SetMutableVector(const ZTName& iPropName);
+	ZMap_Any& SetNull(const ZTName& iPropName);
+	std::vector<ZVal_Any>& SetMutableVector(const ZTName& iPropName);
 
 	Index_t begin() const { return this->Begin(); }
 	Index_t end() const { return this->End(); }
@@ -85,9 +87,9 @@ public:
 		{ return this->IndexOf(iPropName); }
 
 // Typename accessors
-	ZMACRO_ZMapAccessors_Decl(ZMap_ZooLib, const char*)
-	ZMACRO_ZMapAccessors_Decl(ZMap_ZooLib, const ZTName&)
-	ZMACRO_ZMapAccessors_Decl(ZMap_ZooLib, const_iterator)
+	ZMACRO_ZMapAccessors_Decl(ZMap_Any, const char*)
+	ZMACRO_ZMapAccessors_Decl(ZMap_Any, const ZTName&)
+	ZMACRO_ZMapAccessors_Decl(ZMap_Any, const_iterator)
 	};
 
 #undef ZMACRO_ZMapAccessors_Decl_Entry

@@ -32,7 +32,7 @@ ZTuple::ZTuple()
 	{}
 
 ZTuple::ZTuple(const ZTuple& iTuple)
-:	ZMap_ZooLib(iTuple)
+:	ZMap_Any(iTuple)
 	{}
 
 ZTuple::~ZTuple()
@@ -40,22 +40,22 @@ ZTuple::~ZTuple()
 
 ZTuple ZTuple::operator=(const ZTuple& iTuple)
 	{
-	ZMap_ZooLib::operator=(iTuple);
+	ZMap_Any::operator=(iTuple);
 	return *this;
 	}
 
-ZTuple::ZTuple(const ZMap_ZooLib& iMap)
-:	ZMap_ZooLib(iMap)
+ZTuple::ZTuple(const ZMap_Any& iMap)
+:	ZMap_Any(iMap)
 	{}
 
-ZTuple ZTuple::operator=(const ZMap_ZooLib& iMap)
+ZTuple ZTuple::operator=(const ZMap_Any& iMap)
 	{
-	ZMap_ZooLib::operator=(iMap);
+	ZMap_Any::operator=(iMap);
 	return *this;
 	}
 
 ZTuple::ZTuple(const ZStreamR& iStreamR)
-:	ZMap_ZooLib(iStreamR)
+:	ZMap_Any(iStreamR)
 	{}
 
 ZTuple ZTuple::Over(const ZTuple& iUnder) const
@@ -75,14 +75,14 @@ ZTuple ZTuple::Over(const ZTuple& iUnder) const
 ZTuple ZTuple::Under(const ZTuple& iOver) const
 	{ return iOver.Over(*this); }
 
-ZMap_ZooLib& ZTuple::SetNull(const ZTName& iPropName)
+ZMap_Any& ZTuple::SetNull(const ZTName& iPropName)
 	{
 	this->pTouch();
-	*this->pFindOrAllocate(iPropName) = ZVal_ZooLib();
+	*this->pFindOrAllocate(iPropName) = ZVal_Any();
 	return *this;
 	}
 
-vector<ZVal_ZooLib>& ZTuple::SetMutableVector(const ZTName& iPropName)
+vector<ZVal_Any>& ZTuple::SetMutableVector(const ZTName& iPropName)
 	{
 	this->pTouch();
 	return this->pFindOrAllocate(iPropName)->MutableSeq().MutableVector();
@@ -96,19 +96,19 @@ void ZTuple::SetTuple(const ZTName& iName, const ZTuple& iTuple)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZMap_ZooLib typename accessors
+#pragma mark * ZMap_Any typename accessors
 
 #define ZMACRO_ZMapAccessors_Def_Entry(Name_t, TYPENAME, TYPE) \
 	bool ZTuple::QGet##TYPENAME(Name_t iName, TYPE& oVal) const \
 		{ \
-		ZVal_ZooLib theVal; \
+		ZVal_Any theVal; \
 		if (this->QGet(iName, theVal)) \
 			return theVal.QGet_T<TYPE>(oVal); \
 		return false; \
 		} \
 	TYPE ZTuple::DGet##TYPENAME(const TYPE& iDefault, Name_t iName) const \
 		{ \
-		ZVal_ZooLib theVal; \
+		ZVal_Any theVal; \
 		if (this->QGet(iName, theVal)) \
 			return theVal.DGet_T<TYPE>(iDefault); \
 		return iDefault; \

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_vector.h"
 
 namespace ZooLib {
 using ZUtil_STL::sFirstOrNil;
