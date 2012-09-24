@@ -91,7 +91,8 @@ int ZStrimU_Std::GetPos()
 int ZStrimU_Std::GetLine()
 	{
 	int line = fLine;
-	for (vector<UTF32>::const_reverse_iterator ii = fStack.rbegin(); ii != fStack.rend(); ++ii)
+	for (vector<UTF32>::const_reverse_iterator ii = fStack.rbegin(), rend = fStack.rend();
+		ii != rend; ++ii)
 		{
 		if (ZUnicode::sIsEOL(*ii))
 			--line;
@@ -102,7 +103,8 @@ int ZStrimU_Std::GetLine()
 int ZStrimU_Std::GetColumn()
 	{
 	int column = fColumn;
-	for (vector<UTF32>::const_reverse_iterator ii = fStack.rbegin(); ii != fStack.rend(); ++ii)
+	for (vector<UTF32>::const_reverse_iterator ii = fStack.rbegin(), rend = fStack.rend();
+		ii != rend; ++ii)
 		{
 		if (ZUnicode::sIsEOL(*ii))
 			column = -1;
