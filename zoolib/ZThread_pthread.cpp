@@ -34,7 +34,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(MacOSX)
 	#if defined(MAC_OS_X_VERSION_MIN_REQUIRED)
-		#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
+		#if defined(MAC_OS_X_VERSION_10_6) && MAC_OS_X_VERSION_10_6 <= MAC_OS_X_VERSION_MIN_REQUIRED
+			void ZooLib::ZThread_pthread::sSetName(const char* iName)
+				{ ::pthread_setname_np(iName); }
+		#else
 			extern int pthread_setname_np(const char*) __attribute__((weak_import));
 
 			void ZooLib::ZThread_pthread::sSetName(const char* iName)
@@ -42,9 +45,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				if (pthread_setname_np)
 					::pthread_setname_np(iName);
 				}
-		#else
-			void ZooLib::ZThread_pthread::sSetName(const char* iName)
-				{ ::pthread_setname_np(iName); }
 		#endif
 	#endif
 #elif ZCONFIG_SPI_Enabled(iPhone)
