@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZCompare_String.h" // For FastComparator_String
 #include "zoolib/ZName.h"
-#include "zoolib/ZSafeStack.h"
+#include "zoolib/ZSafePtrStack.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZVal_T.h"
 
@@ -388,13 +388,13 @@ ZMap_Any operator*(const ZMap_Any& iMap0, const ZMap_Any& iMap1);
 // =================================================================================================
 // MARK: - ZMap_Any::Rep
 
-class SafeStackLink_Map_Any_Rep
-:	public ZSafeStackLink<ZMap_Any::Rep,SafeStackLink_Map_Any_Rep>
+class SafePtrStackLink_Map_Any_Rep
+:	public ZSafePtrStackLink<ZMap_Any::Rep,SafePtrStackLink_Map_Any_Rep>
 	{};
 
 class ZMap_Any::Rep
 :	public ZCounted
-,	public SafeStackLink_Map_Any_Rep
+,	public SafePtrStackLink_Map_Any_Rep
 	{
 public:
 	virtual ~Rep();

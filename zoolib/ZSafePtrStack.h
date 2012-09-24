@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2021 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZSafeStack_h__
-#define __ZSafeStack_h__
+#ifndef __ZSafePtrStack_h__
+#define __ZSafePtrStack_h__
 #include "zconfig.h"
 
 #include "zoolib/ZDebug.h"
@@ -30,17 +30,17 @@ namespace ZooLib {
 // In these templates, P is Pointer and L is Link.
 
 // =================================================================================================
-// MARK: - ZSafeStack
+// MARK: - ZSafePtrStack
 
 template <class L>
-class ZSafeStack
+class ZSafePtrStack
 	{
 public:
-	ZSafeStack()
+	ZSafePtrStack()
 	:	fHead(nullptr)
 		{}
 
-	~ZSafeStack()
+	~ZSafePtrStack()
 		{
 		ZAssert(not fHead);
 		}
@@ -87,40 +87,40 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZSafeStack_WithDestroyer
+// MARK: - ZSafePtrStack_WithDestroyer
 
 template <typename P, typename L = P>
-class ZSafeStack_WithDestroyer
-:	public ZSafeStack<L>
+class ZSafePtrStack_WithDestroyer
+:	public ZSafePtrStack<L>
 	{
 public:
-	~ZSafeStack_WithDestroyer()
+	~ZSafePtrStack_WithDestroyer()
 		{
-		while (P* p = ZSafeStack<L>::template PopIfNotEmpty<P>())
+		while (P* p = ZSafePtrStack<L>::template PopIfNotEmpty<P>())
 			delete p;
 		}
 	};
 
 // =================================================================================================
-// MARK: - ZSafeStackLink
+// MARK: - ZSafePtrStackLink
 
 template <typename P, typename L = P, int kDebug_T = 1>
-class ZSafeStackLink
+class ZSafePtrStackLink
 	{
 private:
-	ZSafeStackLink& operator=(const ZSafeStackLink&);
+	ZSafePtrStackLink& operator=(const ZSafePtrStackLink&);
 
 public:
 	static const int kDebug = kDebug_T;
 
-	ZSafeStackLink()
+	ZSafePtrStackLink()
 	:	fNext(nullptr) {}
 
-	ZSafeStackLink(const ZSafeStackLink& iOther)
+	ZSafePtrStackLink(const ZSafePtrStackLink& iOther)
 	:	fNext(nullptr)
 		{ ZAssertStop(kDebug, not iOther.fNext); }
 
-	~ZSafeStackLink()
+	~ZSafePtrStackLink()
 		{ ZAssertStop(kDebug, not fNext); }
 
 	L* fNext;
@@ -128,4 +128,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZSafeStack_h__
+#endif // __ZSafePtrStack_h__

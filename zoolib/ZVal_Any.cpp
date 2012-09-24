@@ -242,7 +242,7 @@ void ZSeq_Any::pTouch()
 
 namespace {
 
-ZSafeStack_WithDestroyer<ZMap_Any::Rep,SafeStackLink_Map_Any_Rep> spSafeStack_Map_Any_Rep;
+ZSafePtrStack_WithDestroyer<ZMap_Any::Rep,SafePtrStackLink_Map_Any_Rep> spSafePtrStack_Map_Any_Rep;
 
 } // anonymous namespace
 
@@ -263,12 +263,12 @@ void ZMap_Any::Rep::Finalize()
 	ZAssert(not this->IsReferenced());
 	fMap.clear();
 
-	spSafeStack_Map_Any_Rep.Push(this);
+	spSafePtrStack_Map_Any_Rep.Push(this);
 	}
 
 ZRef<ZMap_Any::Rep> ZMap_Any::Rep::sMake()
 	{
-	if (Rep* result = spSafeStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
+	if (Rep* result = spSafePtrStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
 		return result;
 
 	return new Rep;
@@ -276,7 +276,7 @@ ZRef<ZMap_Any::Rep> ZMap_Any::Rep::sMake()
 
 ZRef<ZMap_Any::Rep> ZMap_Any::Rep::sMake(const Map_t& iMap)
 	{
-	if (Rep* result = spSafeStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
+	if (Rep* result = spSafePtrStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
 		{
 		result->fMap = iMap;
 		return result;

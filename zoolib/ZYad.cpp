@@ -429,10 +429,10 @@ namespace {
 class YadAtomR_Any;
 
 class SafeStackLink_YadAtomR_Any
-:	public ZSafeStackLink<YadAtomR_Any,SafeStackLink_YadAtomR_Any>
+:	public ZSafePtrStackLink<YadAtomR_Any,SafeStackLink_YadAtomR_Any>
 	{};
 
-ZSafeStack_WithDestroyer<YadAtomR_Any,SafeStackLink_YadAtomR_Any> spSafeStack_YadAtomR_Any;
+ZSafePtrStack_WithDestroyer<YadAtomR_Any,SafeStackLink_YadAtomR_Any> spSafeStack_YadAtomR_Any;
 
 class YadAtomR_Any
 :	public virtual ZYadAtomR
