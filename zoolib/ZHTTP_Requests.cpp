@@ -204,9 +204,11 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 // MARK: -
 
 static void spPost_Prefix(const ZStreamW& w,
+	const std::string& iMethod,
 	const string& iHost, const string& iPath, const Map* iFields, bool iSendConnectionClose)
 	{
-	w.WriteString("POST ");
+	w.WriteString(iMethod);
+	w.WriteString(" ");
 	w.WriteString(iPath);
 	w.WriteString(" HTTP/1.1\r\n");
 	w.WriteString("Host: ");
@@ -227,6 +229,7 @@ static void spPost_Prefix(const ZStreamW& w,
 	}
 
 ZRef<ZStreamerR> sPost_Send(ZRef<Callable_Connect> iCallable_Connect,
+	const std::string& iMethod,
 	const std::string& iURL, const Map* iFields, const ZStreamR& iBody)
 	{
 	string theScheme;
@@ -239,7 +242,7 @@ ZRef<ZStreamerR> sPost_Send(ZRef<Callable_Connect> iCallable_Connect,
 			{
 			const ZStreamW& w = theEP->GetStreamW();
 
-			spPost_Prefix(w, theHost, thePath, iFields, true);
+			spPost_Prefix(w, iMethod, theHost, thePath, iFields, true);
 
 			if (const ZStreamRPos* bodyRPos = dynamic_cast<const ZStreamRPos*>(&iBody))
 				{
@@ -308,7 +311,7 @@ ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iURL, const Map* iFields, const ZStreamR& iBody,
 	int32* oResponseCode, Map* oFields, Data* oRawHeader)
 	{
-	if (ZRef<ZStreamerR> theStreamerR = sPost_Send(iCallable_Connect, iURL, iFields, iBody))
+	if (ZRef<ZStreamerR> theStreamerR = sPost_Send(iCallable_Connect, "POST", iURL, iFields, iBody))
 		return sPost_Receive(theStreamerR, oResponseCode, oFields, oRawHeader);
 	return null;
 	}

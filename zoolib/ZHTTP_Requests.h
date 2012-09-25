@@ -41,6 +41,7 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 	int32* oResponseCode, Map* oFields, Data* oRawHeader);
 
 ZRef<ZStreamerR> sPost_Send(ZRef<Callable_Connect> iCallable_Connect,
+	const std::string& iMethod,
 	const std::string& iURL, const Map* iFields, const ZStreamR& iBody);
 
 ZRef<ZStreamerR> sPost_Receive(const ZRef<ZStreamerR>& iStreamerR,
