@@ -69,7 +69,7 @@ void spQCallWithPromise_T \
 template <class R, ZMACRO_Callable_Class_P##X> \
 ZRef<ZDelivery<ZQ<R> > > sQCallByCaller \
 	(const ZRef<ZCaller>& iCaller, \
-	const ZRef<ZCallable<R(P0)> >& iCallable, \
+	const ZRef<ZCallable<R(ZMACRO_Callable_P##X)> >& iCallable, \
 	ZMACRO_Callable_Pi##X) \
 	{ \
 	ZRef<ZPromise<ZQ<R> > > thePromise = sPromise<ZQ<R> >(); \
@@ -83,6 +83,25 @@ ZRef<ZDelivery<ZQ<R> > > sQCallByCaller \
 		} \
 	return thePromise->GetDelivery(); \
 	}
+
+ZMACRO_Callable_CallByCaller(0)
+ZMACRO_Callable_CallByCaller(1)
+ZMACRO_Callable_CallByCaller(2)
+ZMACRO_Callable_CallByCaller(3)
+ZMACRO_Callable_CallByCaller(4)
+ZMACRO_Callable_CallByCaller(5)
+ZMACRO_Callable_CallByCaller(6)
+ZMACRO_Callable_CallByCaller(7)
+ZMACRO_Callable_CallByCaller(8)
+ZMACRO_Callable_CallByCaller(9)
+ZMACRO_Callable_CallByCaller(A)
+ZMACRO_Callable_CallByCaller(B)
+ZMACRO_Callable_CallByCaller(C)
+ZMACRO_Callable_CallByCaller(D)
+ZMACRO_Callable_CallByCaller(E)
+ZMACRO_Callable_CallByCaller(F)
+
+#undef ZMACRO_Callable_CallByCaller
 
 } // namespace ZooLib
 
