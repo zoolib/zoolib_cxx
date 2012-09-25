@@ -76,50 +76,6 @@ private:
 
 	template <class Signature> class Wrapper_T;
 
-	template <class R>
-	static ZRef<Wrapper>
-	spMakeWrapper(const ZRef<ZCallable<R(void)> >& iCallable);
-
-	template <class R,
-		class P0>
-	static ZRef<Wrapper>
-	spMakeWrapper(const ZRef<ZCallable<R(P0)> >& iCallable);
-
-	template <class R,
-		class P0, class P1>
-	static ZRef<Wrapper>
-	spMakeWrapper(const ZRef<ZCallable<R(P0,P1)> >& iCallable);
-
-	template <class R,
-		class P0, class P1, class P2>
-	static ZRef<Wrapper>
-	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2)> >& iCallable);
-
-	template <class R,
-		class P0, class P1, class P2, class P3>
-	static ZRef<Wrapper>
-	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3)> >& iCallable);
-
-	template <class R,
-		class P0, class P1, class P2, class P3, class P4>
-	static ZRef<Wrapper>
-	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >& iCallable);
-
-	template <class R,
-		class P0, class P1, class P2, class P3, class P4, class P5>
-	static ZRef<Wrapper>
-	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >& iCallable);
-
-	template <class R,
-		class P0, class P1, class P2, class P3, class P4, class P5, class P6>
-	static ZRef<Wrapper>
-	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >& iCallable);
-
-	template <class R,
-		class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
-	static ZRef<Wrapper>
-	spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >& iCallable);
-
 	#endif // __OBJC__
 	};
 
@@ -822,69 +778,13 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)>
 	};
 
 // =================================================================================================
-// MARK: - ZDelegate::spMakeWrapper
-
-template <class R>
-ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(const ZRef<ZCallable<R()> >& iCallable)
-	{ return new ZDelegate::Wrapper_T<R()>(iCallable); }
-
-template <class R,
-	class P0>
-ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0)> >& iCallable)
-	{ return new ZDelegate::Wrapper_T<R(P0)>(iCallable); }
-
-template <class R,
-	class P0, class P1>
-ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1)> >& iCallable)
-	{ return new ZDelegate::Wrapper_T<R(P0,P1)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2>
-ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2)> >& iCallable)
-	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3>
-ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3)> >& iCallable)
-	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3, class P4>
-ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4)> >& iCallable)
-	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3, class P4, class P5>
-ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5)> >& iCallable)
-	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3, class P4, class P5, class P6>
-ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6)> >& iCallable)
-	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6)>(iCallable); }
-
-template <class R,
-	class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
-ZRef<ZDelegate::Wrapper>
-ZDelegate::spMakeWrapper(const ZRef<ZCallable<R(P0,P1,P2,P3,P4,P5,P6,P7)> >& iCallable)
-	{ return new ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6,P7)>(iCallable); }
-
-// =================================================================================================
 // MARK: - ZDelegate::Set
 
 template <class Callable>
 void ZDelegate::Set(SEL iSEL, const ZRef<Callable>& iCallable)
 	{
 	if (iCallable)
-		fWrappers[iSEL] = spMakeWrapper(iCallable);
+		fWrappers[iSEL] = new Wrapper_T<typename Callable::Signature>(iCallable);
 	else
 		fWrappers.erase(iSEL);
 	}
