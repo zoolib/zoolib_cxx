@@ -955,13 +955,7 @@ ZFile::Kind ZFileLoc_POSIX::Kind(ZFile::Error* oErr)
 	{
 	struct stat theStat;
 
-	// For now let's use stat() rather than lstat() so we can deal with
-	// symlinked files and directories -ct 2002-04-19
-#if 0
 	if (0 > ::lstat(this->pGetPath().c_str(), &theStat))
-#else
-	if (0 > ::stat(this->pGetPath().c_str(), &theStat))
-#endif
 		{
 		if (oErr)
 			*oErr = spTranslateError(errno);
@@ -977,12 +971,8 @@ ZFile::Kind ZFileLoc_POSIX::Kind(ZFile::Error* oErr)
 	if (S_ISDIR(theStat.st_mode))
 		return ZFile::kindDir;
 
-	#if 0
-		// no need to check if entity is a symlink if we're
-		// stat-ing rather than lstat-ing -ct 2002-04-19
-		if (S_ISLNK(theStat.st_mode))
-			return ZFile::kindLink;
-	#endif
+	if (S_ISLNK(theStat.st_mode))
+		return ZFile::kindLink;
 
 	return ZFile::kindNone;
 	}
