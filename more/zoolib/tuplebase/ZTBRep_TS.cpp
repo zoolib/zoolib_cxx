@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZUtil_STL.h"
-#include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 #ifndef ZCONFIG_TBRep_TS_Logging
 #	define ZCONFIG_TBRep_TS_Logging 0

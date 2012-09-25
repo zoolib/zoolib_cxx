@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStream_Count.h"
 #include "zoolib/ZUtil_STL_vector.h"
-#include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 namespace ZooLib {
 
@@ -235,10 +235,8 @@ void ZTSWatcher_Client::pSync1
 			ZTBQuery theTBQuery = theAQC.fTBQuery;
 
 			if (!theTBQuery)
-				{
-				ZAssert(theAQC.fMemoryBlock);
 				theTBQuery = ZTBQuery(ZStreamRPos_MemoryBlock(theAQC.fMemoryBlock));
-				}
+
 			temp.SetTuple("query", theTBQuery.AsTuple());
 
 			addedQueriesV.push_back(temp);
@@ -439,7 +437,7 @@ void ZTSWatcher_Client::pSync2
 		theStreamW.WriteInt64(theAQC.fRefcon);
 		if (theAQC.fMemoryBlock)
 			{
-			theStreamW.Write(theAQC.fMemoryBlock.GetData(), theAQC.fMemoryBlock.GetSize());
+			theStreamW.Write(theAQC.fMemoryBlock.GetPtr(), theAQC.fMemoryBlock.GetSize());
 			}
 		else
 			{
@@ -603,7 +601,7 @@ void ZTSWatcher_Client::pSync3
 			}
 
 		spWriteCount(theStreamW, theMB.GetSize());
-		theStreamW.Write(theMB.GetData(), theMB.GetSize());
+		theStreamW.Write(theMB.GetPtr(), theMB.GetSize());
 		}
 
 
@@ -765,7 +763,7 @@ void ZTSWatcher_Client::pSync4
 			}
 
 		spWriteCount(theStreamW, theMB.GetSize());
-		theStreamW.Write(theMB.GetData(), theMB.GetSize());
+		theStreamW.Write(theMB.GetPtr(), theMB.GetSize());
 		}
 
 

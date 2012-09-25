@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,61 +18,67 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTSWatcherServerAsync__
-#define __ZTSWatcherServerAsync__
-#include "zconfig.h"
-
-#include "zoolib/ZCommer.h"
 #include "zoolib/ZTask.h"
-#include "zoolib/ZThreadOld.h"
-#include "zoolib/tuplebase/ZTSWatcher.h"
 
 namespace ZooLib {
 
+/**
+\defgroup Task
+
+*/
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTSWatcherServer
+#pragma mark * ZTaskMaster
 
-class ZTSWatcherServerAsync
-:	public ZTask
-,	public ZCommer
+/**
+\class ZTaskMaster
+\ingroup Task
+\sa task
+*/
+
+void ZTaskMaster::Task_Finished(ZRef<ZTask> iTask)
+	{}
+
+void ZTaskMaster::pDetachTask(ZRef<ZTask> iTask)
 	{
-public:
-	ZTSWatcherServerAsync
-		(ZRef<ZTaskMaster> iTaskMaster,
-		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
-		ZRef<ZTSWatcher> iTSWatcher);
+	iTask->TaskMaster_Detached(this);
+	iTask->fTaskMaster.Clear();
+	}
 
-	virtual ~ZTSWatcherServerAsync();
+void ZTaskMaster::pTask_Finished(ZRef<ZTask> iTask)
+	{
+	this->Task_Finished(iTask);
+	iTask->fTaskMaster.Clear();
+	}
 
-// From ZTask
-	virtual void Kill();
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZTask
 
-// From ZCommer
-	virtual bool Read(const ZStreamR& iStreamR);
-	virtual bool Write(const ZStreamW& iStreamW);
+/**
+\class ZTask
+\ingroup Task
+\sa task
+*/
 
-	virtual void Finished();
+ZTask::ZTask(ZRef<ZTaskMaster> iTaskMaster)
+:	fTaskMaster(iTaskMaster)
+	{}
 
-private:
-	void pCallback();
-	static void spCallback(void* iRefcon);
+ZRef<ZTaskMaster> ZTask::GetTaskMaster()
+	{ return fTaskMaster; }
 
-	ZMutex fMutex;
-	ZRef<ZTSWatcher> fTSWatcher;
-	bool fSendClose;
-	bool fCallbackNeeded;
-	bool fSyncNeeded;
-	size_t fIDsNeeded;
+void ZTask::TaskMaster_Detached(ZRef<ZTaskMaster> iTaskMaster)
+	{}
 
-	std::vector<uint64> fRemovedIDs;
-	std::vector<uint64> fAddedIDs;
-	std::vector<int64> fRemovedQueries;
-	std::vector<ZTSWatcher::AddedQueryCombo> fAddedQueries;
-	std::vector<uint64> fWrittenTupleIDs;
-	std::vector<ZTuple> fWrittenTuples;
-	};
+void ZTask::Kill()
+	{}
+
+void ZTask::pFinished()
+	{
+	if (ZRef<ZTaskMaster> theTaskMaster = fTaskMaster)
+		theTaskMaster->pTask_Finished(this);
+	}
 
 } // namespace ZooLib
-
-#endif // __ZTSWatcherServerAsync__

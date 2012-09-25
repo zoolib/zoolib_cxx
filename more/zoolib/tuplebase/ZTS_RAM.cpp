@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tuplebase/ZTupleIndex.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::map;
 using std::pair;
@@ -133,7 +133,7 @@ void ZTS_RAM::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples
 				(*i)->Erase(theID, oldTuple);
 			}
 
-		if (newTuple)
+		if (not newTuple.IsEmpty())
 			{
 			// The new tuple is not empty, so it must be stored.
 			if (hadIt)

@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_STL_vector.h"
-#include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::map;
 using std::pair;
@@ -402,7 +402,7 @@ bool ZTSoup::Sync()
 						<< " On update list? "
 						<< (static_cast<DLink_PCrouton_Update*>
 							(thePCrouton)->fNext ? "yes " : "no ")
-						<< ZStringf("%llX: ", thePCrouton->fID)
+						<< sStringf("%llX: ", thePCrouton->fID)
 						<< thePCrouton->fValue;
 					}
 				}
@@ -448,7 +448,7 @@ bool ZTSoup::Sync()
 				s << "Got a PSieve on the sync list that maybe shouldn't be there: "
 					<< " On update list? "
 					<< (static_cast<DLink_PSieve_Update*>(thePSieve)->fNext ? "yes " : "no ")
-					<< ZStringf("ID: %llX, value: ", reinterpret_cast<int64>(thePSieve))
+					<< sStringf("ID: %llX, value: ", reinterpret_cast<int64>(thePSieve))
 					<< thePSieve->fTBQuery.AsTuple();
 				}
 			}
@@ -1231,8 +1231,8 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 				if (ZLOG(s, eDebug, "ZTBowl"))
 					{
 					s << "Changed, removing TCrouton, ID: "
-						<< ZStringf("%llX", theTCrouton->GetID())
-						<< ", Address: " << ZStringf("%p", theTCrouton.Get());
+						<< sStringf("%llX", theTCrouton->GetID())
+						<< ", Address: " << sStringf("%p", theTCrouton.Get());
 					}
 
 				(*i).StaticCast<ZTCrouton_Bowl>()->fTBowl.Clear();
@@ -1256,8 +1256,8 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 
 		if (ZLOG(s, eDebug, "ZTBowl"))
 			{
-			s << "Changed, added TCrouton, ID: " << ZStringf("%llX", *i)
-				<< ", Address: " << ZStringf("%p", newCrouton.Get());
+			s << "Changed, added TCrouton, ID: " << sStringf("%llX", *i)
+				<< ", Address: " << sStringf("%p", newCrouton.Get());
 			}
 
 		this->GetTSoup()->Register(newCrouton, *i);

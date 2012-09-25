@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStream_Count.h"
 #include "zoolib/ZStream_Tee.h"
-#include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 namespace ZooLib {
 
@@ -597,7 +597,7 @@ static bool spSync3
 			theCombo.fRefcon = theRefcon;
 			theCombo.fPrefetch = false;
 
-			iStreamR.Read(theCombo.fMemoryBlock.GetData(), theSize);
+			iStreamR.Read(theCombo.fMemoryBlock.GetMutablePtr(), theSize);
 
 			addedQueries.push_back(theCombo);
 			}
@@ -729,7 +729,7 @@ static bool spSync4
 			theCombo.fRefcon = theRefcon;
 			theCombo.fPrefetch = thePrefetch;
 
-			iStreamR.Read(theCombo.fMemoryBlock.GetData(), theSize);
+			iStreamR.Read(theCombo.fMemoryBlock.GetMutablePtr(), theSize);
 
 			addedQueries.push_back(theCombo);
 			}

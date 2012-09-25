@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_TS__
 #include "zconfig.h"
 
+#include "zoolib/ZTuple.h"
 #include "zoolib/ZTypes.h"
-#include "zoolib/tuplebase/ZTuple.h"
 
 #include <map>
 #include <stdexcept>

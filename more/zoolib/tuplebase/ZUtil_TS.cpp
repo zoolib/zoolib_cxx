@@ -24,10 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Buffered.h"
 #include "zoolib/ZTextCoder_Unicode.h"
 #include "zoolib/ZStrimU_Std.h"
-#include "zoolib/ZString.h"
+#include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
-#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
+#include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
 using std::map;
@@ -229,7 +229,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 	using namespace ZUtil_Strim;
 
 	string openingComment;
-	sCopy_WSAndCPlusPlusComments(iStrimU, ZStrimW_String(openingComment));
+	sCopy_WSAndCPlusPlusComments(iStrimU, ZStrimW_String8(openingComment));
 
 	if (openingComment == "/* Next unused ID: */ ")
 		{
@@ -362,13 +362,13 @@ void sRead(const ZStreamRPos& iStreamRPos, uint64& oNextUnusedID, Sink& iSink)
 		catch (ZUtil_Strim::ParseException& ex)
 			{
 			string newMessage = string("ParseException '") + ex.what()
-					+ "' at line " + ZStringf("%zu", theStrimU.GetLineCount());
+					+ "' at line " + sStringf("%zu", theStrimU.GetLineCount());
 			throw ZUtil_Strim::ParseException(newMessage);
 			}
 		catch (Ex_MalformedText& ex)
 			{
 			string newMessage = string("Ex_MalformedText '") + ex.what()
-					+ "' at line " + ZStringf("%zu", theStrimU.GetLineCount());
+					+ "' at line " + sStringf("%zu", theStrimU.GetLineCount());
 			throw Ex_MalformedText(newMessage);
 			}
 		}

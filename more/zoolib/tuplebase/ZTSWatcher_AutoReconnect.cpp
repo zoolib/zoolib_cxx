@@ -299,12 +299,12 @@ void ZTSWatcher_AutoReconnect::pUpdateRegistrations
 
 	while (iRemovedIDsCount--)
 		{
-		ZUtil_STL::sEraseMustContain(kDebug, fTupleIDs, *iRemovedIDs++);
+		ZUtil_STL::sEraseMust(kDebug, fTupleIDs, *iRemovedIDs++);
 		}
 
 	while (iAddedIDsCount--)
 		{
-		ZUtil_STL::sInsertMustNotContain(kDebug, fTupleIDs, *iAddedIDs++);
+		ZUtil_STL::sInsertMust(kDebug, fTupleIDs, *iAddedIDs++);
 		}
 
 	if (iRemovedQueriesCount)
@@ -313,13 +313,13 @@ void ZTSWatcher_AutoReconnect::pUpdateRegistrations
 		while (iRemovedQueriesCount--)
 			{
 			dummy.fRefcon = *iRemovedQueries++;
-			ZUtil_STL::sEraseMustContain(kDebug, fQueries, dummy);
+			ZUtil_STL::sEraseMust(kDebug, fQueries, dummy);
 			}
 		}
 
 	while (iAddedQueriesCount--)
 		{
-		ZUtil_STL::sInsertMustNotContain(kDebug, fQueries, *iAddedQueries++);
+		ZUtil_STL::sInsertMust(kDebug, fQueries, *iAddedQueries++);
 		}
 	}
 
@@ -367,7 +367,7 @@ bool ZTSWatcher_AutoReconnect::pSync
 
 			for (vector<uint64>::iterator i = oAddedIDs.begin(); i != oAddedIDs.end(); ++i)
 				{
-				ZUtil_STL::sInsertMustNotContain(kDebug, fTupleIDs, *i);
+				ZUtil_STL::sInsertMust(kDebug, fTupleIDs, *i);
 				}
 			}
 

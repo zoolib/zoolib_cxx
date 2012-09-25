@@ -25,9 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZDList.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZString.h"
-#include "zoolib/ZUtil_STL.h"
-#include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
+#include "zoolib/ZStringf.h"
+#include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/ZUtil_STL_vector.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 
 using std::lower_bound;
@@ -300,7 +302,7 @@ ZTS_Watchable::~ZTS_Watchable()
 			i != theEnd; ++i)
 			{
 			PSpec* thePSpec = *i;
-			ZUtil_STL::sEraseMustContain(kDebug, thePSpec->fUsingPQueries, thePQuery);
+			ZUtil_STL::sEraseMust(kDebug, thePSpec->fUsingPQueries, thePQuery);
 			this->pReleasePSpec(thePSpec);
 			}
 		delete thePQuery;
@@ -343,13 +345,13 @@ void ZTS_Watchable::Watcher_Finalize(Watcher* iWatcher)
 	if (not iWatcher->FinishFinalize())
 		return;
 
-	ZUtil_STL::sEraseMustContain(kDebug, fWatchers, iWatcher);
+	ZUtil_STL::sEraseMust(kDebug, fWatchers, iWatcher);
 	for (set<PTuple*>::iterator i = iWatcher->fPTuples.begin(),
 		theEnd = iWatcher->fPTuples.end();
 		i != theEnd; ++i)
 		{
 		PTuple* thePTuple = *i;
-		ZUtil_STL::sEraseMustContain(kDebug, thePTuple->fUsingWatchers, iWatcher);
+		ZUtil_STL::sEraseMust(kDebug, thePTuple->fUsingWatchers, iWatcher);
 		this->pReleasePTuple(thePTuple);
 		}
 
@@ -430,10 +432,10 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 		if (!theTBQueryRef)
 			{
 			// If no query is provided, then there must be an MB.
-			ZAssertStop(kDebug, theMBRef);
+			ZAssertStop(kDebug, theMBRef.GetSize());
 			missingQueries = true;
 			}
-		else if (!theMBRef)
+		else if (!theMBRef.GetSize())
 			{
 			theTBQueryRef.ToStream(ZStreamRWPos_MemoryBlock(theMBRef));
 			}
@@ -488,23 +490,23 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 	for (size_t count = iRemovedIDsCount; count; --count)
 		{
 		PTuple* thePTuple = this->pGetPTupleExtant(*iRemovedIDs++);
-		ZUtil_STL::sEraseMustContain(kDebug, thePTuple->fUsingWatchers, iWatcher);
-		ZUtil_STL::sEraseMustContain(kDebug, iWatcher->fPTuples, thePTuple);
-		ZUtil_STL::sEraseIfContains(iWatcher->fTrippedPTuples, thePTuple);
+		ZUtil_STL::sEraseMust(kDebug, thePTuple->fUsingWatchers, iWatcher);
+		ZUtil_STL::sEraseMust(kDebug, iWatcher->fPTuples, thePTuple);
+		ZUtil_STL::sErase(iWatcher->fTrippedPTuples, thePTuple);
 		this->pReleasePTuple(thePTuple);
 		}
 
 	for (size_t count = iAddedIDsCount; count; --count)
 		{
 		PTuple* thePTuple = this->pGetPTuple(*iAddedIDs++);
-		ZUtil_STL::sInsertMustNotContain(kDebug, thePTuple->fUsingWatchers, iWatcher);
-		ZUtil_STL::sInsertMustNotContain(kDebug, iWatcher->fPTuples, thePTuple);
-		ZUtil_STL::sInsertMustNotContain(kDebug, iWatcher->fTrippedPTuples, thePTuple);
+		ZUtil_STL::sInsertMust(kDebug, thePTuple->fUsingWatchers, iWatcher);
+		ZUtil_STL::sInsertMust(kDebug, iWatcher->fPTuples, thePTuple);
+		ZUtil_STL::sInsertMust(kDebug, iWatcher->fTrippedPTuples, thePTuple);
 		}
 
 	for (size_t count = iRemovedQueriesCount; count; --count)
 		{
-		WatcherQuery* theWatcherQuery = ZUtil_STL::sEraseAndReturn(kDebug,
+		WatcherQuery* theWatcherQuery = ZUtil_STL::sGetErase(kDebug,
 			iWatcher->fRefcon_To_WatcherQuery, *iRemovedQueries++);
 
 		iWatcher->fTrippedWatcherQueries.EraseIfContains(theWatcherQuery);
@@ -538,7 +540,7 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 			new WatcherQuery(iWatcher, theRefcon, thePQuery, thePrefetch);
 		thePQuery->fUsingWatcherQueries.Insert(theWatcherQuery);
 
-		ZUtil_STL::sInsertMustNotContain(kDebug,
+		ZUtil_STL::sInsertMust(kDebug,
 			iWatcher->fRefcon_To_WatcherQuery, theRefcon, theWatcherQuery);
 
 		iWatcher->fTrippedWatcherQueries.Insert(theWatcherQuery);
@@ -614,7 +616,7 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 
 		this->pUpdateQueryResults(thePQuery);
 
-		ZUtil_STL::sInsertMustNotContain(kDebug,
+		ZUtil_STL::sInsertMust(kDebug,
 			oChangedQueries, theWatcherQuery->fRefcon, thePQuery->fResults);
 
 		if (theWatcherQuery->fPrefetch)
@@ -626,9 +628,9 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 				{
 				const uint64 theID = *i;
 				PTuple* thePTuple = this->pGetPTuple(theID);
-				if (ZUtil_STL::sInsertIfNotContains(thePTuple->fUsingWatchers, iWatcher))
+				if (ZUtil_STL::sQInsert(thePTuple->fUsingWatchers, iWatcher))
 					{
-					ZUtil_STL::sInsertMustNotContain(kDebug, iWatcher->fPTuples, thePTuple);
+					ZUtil_STL::sInsertMust(kDebug, iWatcher->fPTuples, thePTuple);
 					ZAssertStop(kDebug, !ZUtil_STL::sContains(oChangedTupleIDs, theID));
 					// oAddedIDs is a vector, but we can unconditionally append to it
 					// because the push_back is only called if thePTuple->fUsingWatchers
@@ -816,7 +818,7 @@ void ZTS_Watchable::pInvalidatePSpecs(const ZTuple& iOld, const ZTuple& iNew,
 			iterPSpec != theEnd; ++iterPSpec)
 			{
 			PSpec* curPSpec = *iterPSpec;
-			ZUtil_STL::sEraseMustContain(kDebug, curPSpec->fUsingPQueries, curPQuery);
+			ZUtil_STL::sEraseMust(kDebug, curPSpec->fUsingPQueries, curPQuery);
 			this->pReleasePSpec(curPSpec);
 			}
 		curPQuery->fPSpecs.clear();
@@ -876,7 +878,7 @@ void ZTS_Watchable::pReleasePTuple(PTuple* iPTuple)
 	if (not iPTuple->fUsingWatchers.empty())
 		return;
 
-	ZUtil_STL::sEraseMustContain(kDebug, fID_To_PTuple, iPTuple->fID);
+	ZUtil_STL::sEraseMust(kDebug, fID_To_PTuple, iPTuple->fID);
 	delete iPTuple;
 	}
 
@@ -927,10 +929,10 @@ void ZTS_Watchable::pReleasePSpec(PSpec* iPSpec)
 		{
 		map<ZTName, set<PSpec*> >::iterator j = fPropName_To_PSpec.find(*i);
 		ZAssertStop(kDebug, j != fPropName_To_PSpec.end());
-		ZUtil_STL::sEraseMustContain(kDebug, (*j).second, iPSpec);
+		ZUtil_STL::sEraseMust(kDebug, (*j).second, iPSpec);
 		}
 
-	ZUtil_STL::sEraseMustContain(kDebug, fTBSpec_To_PSpec, iPSpec->GetTBSpec());
+	ZUtil_STL::sEraseMust(kDebug, fTBSpec_To_PSpec, iPSpec->GetTBSpec());
 	delete iPSpec;
 	}
 
@@ -950,11 +952,11 @@ void ZTS_Watchable::pReleasePQuery(PQuery* iPQuery)
 		i != theEnd; ++i)
 		{
 		PSpec* thePSpec = *i;
-		ZUtil_STL::sEraseMustContain(kDebug, thePSpec->fUsingPQueries, iPQuery);
+		ZUtil_STL::sEraseMust(kDebug, thePSpec->fUsingPQueries, iPQuery);
 		this->pReleasePSpec(thePSpec);
 		}
 
-	ZUtil_STL::sEraseMustContain(kDebug, fMB_To_PQuery, iPQuery->fMB);
+	ZUtil_STL::sEraseMust(kDebug, fMB_To_PQuery, iPQuery->fMB);
 	delete iPQuery;
 	}
 

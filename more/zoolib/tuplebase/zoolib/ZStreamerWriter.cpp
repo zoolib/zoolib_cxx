@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,61 +18,50 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTSWatcherServerAsync__
-#define __ZTSWatcherServerAsync__
-#include "zconfig.h"
-
-#include "zoolib/ZCommer.h"
-#include "zoolib/ZTask.h"
-#include "zoolib/ZThreadOld.h"
-#include "zoolib/tuplebase/ZTSWatcher.h"
+#include "zoolib/ZStreamerWriter.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTSWatcherServer
+#pragma mark * ZStreamerWriter
 
-class ZTSWatcherServerAsync
-:	public ZTask
-,	public ZCommer
+ZStreamerWriter::ZStreamerWriter(ZRef<ZStreamerW> iStreamerW)
+:	fStreamerW(iStreamerW)
+	{}
+
+void ZStreamerWriter::RunnerAttached()
 	{
-public:
-	ZTSWatcherServerAsync
-		(ZRef<ZTaskMaster> iTaskMaster,
-		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
-		ZRef<ZTSWatcher> iTSWatcher);
+	ZWorker::RunnerAttached();
+	this->WriteStarted();
+	}
 
-	virtual ~ZTSWatcherServerAsync();
+void ZStreamerWriter::RunnerDetached()
+	{
+	this->WriteFinished();
+	ZWorker::RunnerDetached();
+	}
 
-// From ZTask
-	virtual void Kill();
+bool ZStreamerWriter::Work()
+	{
+	const bool result = this->Write(fStreamerW);
 
-// From ZCommer
-	virtual bool Read(const ZStreamR& iStreamR);
-	virtual bool Write(const ZStreamW& iStreamW);
+	if (!result || !this->IsAwake())
+		fStreamerW->GetStreamW().Flush();
 
-	virtual void Finished();
+	return result;
+	}
 
-private:
-	void pCallback();
-	static void spCallback(void* iRefcon);
+void ZStreamerWriter::WriteStarted()
+	{}
 
-	ZMutex fMutex;
-	ZRef<ZTSWatcher> fTSWatcher;
-	bool fSendClose;
-	bool fCallbackNeeded;
-	bool fSyncNeeded;
-	size_t fIDsNeeded;
+void ZStreamerWriter::WriteFinished()
+	{}
 
-	std::vector<uint64> fRemovedIDs;
-	std::vector<uint64> fAddedIDs;
-	std::vector<int64> fRemovedQueries;
-	std::vector<ZTSWatcher::AddedQueryCombo> fAddedQueries;
-	std::vector<uint64> fWrittenTupleIDs;
-	std::vector<ZTuple> fWrittenTuples;
-	};
+bool ZStreamerWriter::Write(const ZRef<ZStreamerW>& iStreamerW)
+	{ return this->Write(iStreamerW->GetStreamW()); }
+
+bool ZStreamerWriter::Write(const ZStreamW& iStreamW)
+	{ return false; }
 
 } // namespace ZooLib
-
-#endif // __ZTSWatcherServerAsync__

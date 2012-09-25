@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,61 +18,59 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTSWatcherServerAsync__
-#define __ZTSWatcherServerAsync__
-#include "zconfig.h"
-
-#include "zoolib/ZCommer.h"
-#include "zoolib/ZTask.h"
-#include "zoolib/ZThreadOld.h"
-#include "zoolib/tuplebase/ZTSWatcher.h"
+#include "zoolib/ZStreamerReader.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTSWatcherServer
+#pragma mark * ZStreamerReader
 
-class ZTSWatcherServerAsync
-:	public ZTask
-,	public ZCommer
+ZStreamerReader::ZStreamerReader(ZRef<ZStreamerR> iStreamerR)
+:	fStreamerR(iStreamerR)
+	{}
+
+ZStreamerReader::~ZStreamerReader()
+	{}
+
+void ZStreamerReader::RunnerAttached()
 	{
-public:
-	ZTSWatcherServerAsync
-		(ZRef<ZTaskMaster> iTaskMaster,
-		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
-		ZRef<ZTSWatcher> iTSWatcher);
+	ZWorker::RunnerAttached();
+	this->ReadStarted();
+	}
 
-	virtual ~ZTSWatcherServerAsync();
+void ZStreamerReader::RunnerDetached()
+	{
+	this->ReadFinished();
+	ZWorker::RunnerDetached();
+	}
 
-// From ZTask
-	virtual void Kill();
+bool ZStreamerReader::Work()
+	{
+	if (this->Read(fStreamerR))
+		{
+		// ##
+		// See comment in ZStreamerListener::Work.
+		// This is the point at which we'd want to register with a waker that
+		// will call our Wake() when fStreamerR is readable. For now we'll just
+		// unconditionally call Wake(), so this method will be called again
+		// immediately, and we'll just block in Read().
+		ZWorker::Wake();
+		return true;
+		}
+	return false;
+	}
 
-// From ZCommer
-	virtual bool Read(const ZStreamR& iStreamR);
-	virtual bool Write(const ZStreamW& iStreamW);
+void ZStreamerReader::ReadStarted()
+	{}
 
-	virtual void Finished();
+void ZStreamerReader::ReadFinished()
+	{}
 
-private:
-	void pCallback();
-	static void spCallback(void* iRefcon);
+bool ZStreamerReader::Read(ZRef<ZStreamerR> iStreamerR)
+	{ return this->Read(iStreamerR->GetStreamR()); }
 
-	ZMutex fMutex;
-	ZRef<ZTSWatcher> fTSWatcher;
-	bool fSendClose;
-	bool fCallbackNeeded;
-	bool fSyncNeeded;
-	size_t fIDsNeeded;
-
-	std::vector<uint64> fRemovedIDs;
-	std::vector<uint64> fAddedIDs;
-	std::vector<int64> fRemovedQueries;
-	std::vector<ZTSWatcher::AddedQueryCombo> fAddedQueries;
-	std::vector<uint64> fWrittenTupleIDs;
-	std::vector<ZTuple> fWrittenTuples;
-	};
+bool ZStreamerReader::Read(const ZStreamR& iStreamR)
+	{ return false; }
 
 } // namespace ZooLib
-
-#endif // __ZTSWatcherServerAsync__

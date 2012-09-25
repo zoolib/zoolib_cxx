@@ -33,6 +33,10 @@ using std::vector;
 
 namespace ZooLib {
 
+template <class Derived, class Base>
+ZRef<Derived> ZRefDynamicCast(const ZRef<Base>& iBase)
+	{ return iBase.DynamicCast<Derived>(); }
+
 static ZTuple spTupleFromNode(const ZRef<ZTBQueryNode>& iNode);
 static ZRef<ZTBQueryNode> spNodeFromTuple(const ZTuple& iTuple);
 

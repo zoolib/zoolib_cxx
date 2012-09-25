@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcher_Client__
 #include "zconfig.h"
 
-#include "zoolib/tuplebase/ZThreadOld.h"
-#include "zoolib/tuplebase/ZTSWatcher.h"
+#include "zoolib/ZThreadOld.h"
 #include "zoolib/ZStreamer.h"
+
+#include "zoolib/tuplebase/ZTSWatcher.h"
 
 namespace ZooLib {
 

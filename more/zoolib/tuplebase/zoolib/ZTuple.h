@@ -27,6 +27,33 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+enum ZType
+	{
+	eZType_Null = 0,
+	eZType_String = 1,
+//	eZType_CString = 2,
+	eZType_Int8 = 3,
+	eZType_Int16 = 4,
+	eZType_Int32 = 5,
+	eZType_Int64 = 6,
+	eZType_Float = 7,
+	eZType_Double = 8,
+	eZType_Bool = 9,
+	eZType_Pointer = 10,
+	eZType_Raw = 11,
+	eZType_Tuple = 12,
+	eZType_RefCounted = 13,
+	eZType_Rect = 14,
+	eZType_Point = 15,
+	eZType_Region = 16,
+	eZType_ID = 17,
+	eZType_Vector = 18,
+	eZType_Type = 19,
+	eZType_Time = 20,
+//##	eZType_Name = 21
+	eZType_Max
+	};
+
 typedef ZVal_Any ZTValue;
 typedef ZName ZTName;
 

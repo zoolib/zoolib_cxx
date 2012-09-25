@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTS_RAM__
 #include "zconfig.h"
 
-#include "zoolib/tuplebase/ZRWlock.h"
+#include "zoolib/ZRWlock.h"
 #include "zoolib/tuplebase/ZTS.h"
 
 #include <map>

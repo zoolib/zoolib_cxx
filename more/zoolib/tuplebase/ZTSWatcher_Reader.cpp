@@ -223,14 +223,14 @@ bool ZTSWatcher_Reader::pSync
 
 		ZMemoryBlock theMB = theAQC.fMemoryBlock;
 
-		if (!theMB)
+		if (0 == theMB.GetSize())
 			{
 			ZAssert(theAQC.fTBQuery);
 			theAQC.fTBQuery.ToStream(ZStreamRWPos_MemoryBlock(theMB, 1024));
 			}
 
 		theStreamW.WriteCount(theMB.GetSize());
-		theStreamW.Write(theMB.GetData(), theMB.GetSize());
+		theStreamW.Write(theMB.GetPtr(), theMB.GetSize());
 		}
 
 

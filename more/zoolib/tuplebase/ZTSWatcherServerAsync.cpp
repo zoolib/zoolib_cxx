@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_vector.h"
 
 using std::map;
 using std::pair;
@@ -153,7 +153,7 @@ bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
 					theCombo.fRefcon = theRefcon;
 					theCombo.fPrefetch = thePrefetch;
 
-					iStreamR.Read(theCombo.fMemoryBlock.GetData(), theSize);
+					iStreamR.Read(theCombo.fMemoryBlock.GetMutablePtr(), theSize);
 
 					addedQueries.push_back(theCombo);
 					}

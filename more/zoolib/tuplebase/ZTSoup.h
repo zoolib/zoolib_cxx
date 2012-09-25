@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSoup__ 1
 
 #include "zoolib/ZDList.h"
-#include "zoolib/tuplebase/ZThreadOld.h"
+#include "zoolib/ZThreadOld.h"
 #include "zoolib/tuplebase/ZTSWatcher.h"
 
 namespace ZooLib {

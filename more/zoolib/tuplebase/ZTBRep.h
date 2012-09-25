@@ -24,10 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/tuplebase/ZTBQuery.h"
-#include "zoolib/tuplebase/ZTuple.h"
+#include "zoolib/ZTuple.h"
 #include "zoolib/ZTxn.h"
 
-#include "zoolib/tuplebase/ZThreadOld.h"
+#include "zoolib/ZThreadOld.h"
 
 namespace ZooLib {
 

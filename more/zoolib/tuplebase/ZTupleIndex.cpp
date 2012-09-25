@@ -101,7 +101,7 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 		/*no increment*/)
 		{
 		if (0 != (*critIter)->GetComparator().fStrength
-			|| !(*critIter)->GetPropName().Equals(iPropName))
+			|| not (*critIter)->GetPropName() == iPropName)
 			{
 			++critIter;
 			continue;
@@ -112,7 +112,7 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 			{
 			case ZTBSpec::eRel_Equal:
 				{
-				if (oValueEqual && *oValueEqual != *currentValue)
+				if (oValueEqual && not (*oValueEqual == *currentValue))
 					{
 					// We've got two equals constraints with different values, so nothing
 					// can satisfy them both and we return an indication of contradiction.

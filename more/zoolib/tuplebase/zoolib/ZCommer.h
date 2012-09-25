@@ -18,61 +18,61 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTSWatcherServerAsync__
-#define __ZTSWatcherServerAsync__
+#ifndef __ZCommer__
+#define __ZCommer__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCommer.h"
-#include "zoolib/ZTask.h"
-#include "zoolib/ZThreadOld.h"
-#include "zoolib/tuplebase/ZTSWatcher.h"
+#include "zoolib/ZStreamerReader.h"
+#include "zoolib/ZStreamerWriter.h"
+#include "zoolib/ZThread.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTSWatcherServer
+#pragma mark * ZCommer
 
-class ZTSWatcherServerAsync
-:	public ZTask
-,	public ZCommer
+class ZCommer
+:	public ZStreamerReader,
+	public ZStreamerWriter
 	{
 public:
-	ZTSWatcherServerAsync
-		(ZRef<ZTaskMaster> iTaskMaster,
-		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
-		ZRef<ZTSWatcher> iTSWatcher);
+	ZCommer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+	virtual ~ZCommer();
 
-	virtual ~ZTSWatcherServerAsync();
+// From ZStreamerReader
+	virtual void ReadStarted();
+	virtual void ReadFinished();
 
-// From ZTask
-	virtual void Kill();
+// From ZStreamerWriter
+	virtual void WriteStarted();
+	virtual void WriteFinished();
 
-// From ZCommer
-	virtual bool Read(const ZStreamR& iStreamR);
-	virtual bool Write(const ZStreamW& iStreamW);
-
+// Our protocol
+	virtual void Started();
 	virtual void Finished();
 
+	void WaitTillFinished();
+
+	typedef ZCallable<void(ZRef<ZCommer>)> Callable_t;
+	ZRef<Callable_t> GetSetCallable_Started(ZRef<Callable_t> iCallable);
+	ZRef<Callable_t> GetSetCallable_Finished(ZRef<Callable_t> iCallable);
+
 private:
-	void pCallback();
-	static void spCallback(void* iRefcon);
-
-	ZMutex fMutex;
-	ZRef<ZTSWatcher> fTSWatcher;
-	bool fSendClose;
-	bool fCallbackNeeded;
-	bool fSyncNeeded;
-	size_t fIDsNeeded;
-
-	std::vector<uint64> fRemovedIDs;
-	std::vector<uint64> fAddedIDs;
-	std::vector<int64> fRemovedQueries;
-	std::vector<ZTSWatcher::AddedQueryCombo> fAddedQueries;
-	std::vector<uint64> fWrittenTupleIDs;
-	std::vector<ZTuple> fWrittenTuples;
+	ZMtx fMtx;
+	ZCnd fCnd;
+	bool fReadStarted;
+	bool fWriteStarted;
+	ZRef<Callable_t> fCallable_Started;
+	ZRef<Callable_t> fCallable_Finished;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCommer utility methods
+
+void sStartCommerRunners(ZRef<ZCommer> iCommer);
 
 } // namespace ZooLib
 
-#endif // __ZTSWatcherServerAsync__
+#endif // __ZCommer__

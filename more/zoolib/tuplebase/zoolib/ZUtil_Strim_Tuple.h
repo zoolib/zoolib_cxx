@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2003 Andrew Green and Learning in Motion, Inc.
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,61 +18,44 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTSWatcherServerAsync__
-#define __ZTSWatcherServerAsync__
+#ifndef __ZUtil_Strim_Tuple__
+#define __ZUtil_Strim_Tuple__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCommer.h"
-#include "zoolib/ZTask.h"
-#include "zoolib/ZThreadOld.h"
-#include "zoolib/tuplebase/ZTSWatcher.h"
+#include "zoolib/ZTuple.h"
+#include "zoolib/ZYad.h"
 
 namespace ZooLib {
 
+class ZStrimW;
+
+namespace ZUtil_Strim_Tuple {
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTSWatcherServer
+#pragma mark * ZUtil_Strim_Tuple::Format
 
-class ZTSWatcherServerAsync
-:	public ZTask
-,	public ZCommer
+struct Format
 	{
-public:
-	ZTSWatcherServerAsync
-		(ZRef<ZTaskMaster> iTaskMaster,
-		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
-		ZRef<ZTSWatcher> iTSWatcher);
+	Format(const ZTValue& iTV, int iInitialIndent, const ZYadOptions& iOptions);
 
-	virtual ~ZTSWatcherServerAsync();
-
-// From ZTask
-	virtual void Kill();
-
-// From ZCommer
-	virtual bool Read(const ZStreamR& iStreamR);
-	virtual bool Write(const ZStreamW& iStreamW);
-
-	virtual void Finished();
-
-private:
-	void pCallback();
-	static void spCallback(void* iRefcon);
-
-	ZMutex fMutex;
-	ZRef<ZTSWatcher> fTSWatcher;
-	bool fSendClose;
-	bool fCallbackNeeded;
-	bool fSyncNeeded;
-	size_t fIDsNeeded;
-
-	std::vector<uint64> fRemovedIDs;
-	std::vector<uint64> fAddedIDs;
-	std::vector<int64> fRemovedQueries;
-	std::vector<ZTSWatcher::AddedQueryCombo> fAddedQueries;
-	std::vector<uint64> fWrittenTupleIDs;
-	std::vector<ZTuple> fWrittenTuples;
+	const ZTValue& fTValue;
+	int fInitialIndent;
+	const ZYadOptions& fOptions;
 	};
+
+bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV);
+
+} // namespace ZUtil_Strim_Tuple
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * operator<< overloads
+
+const ZStrimW& operator<<(const ZStrimW& s, const ZTValue& iTV);
+
+const ZStrimW& operator<<(const ZStrimW& s, const ZUtil_Strim_Tuple::Format& iFormat);
 
 } // namespace ZooLib
 
-#endif // __ZTSWatcherServerAsync__
+#endif // __ZUtil_Strim_Tuple__

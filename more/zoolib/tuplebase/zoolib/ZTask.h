@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2003 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,44 +18,57 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_Tuple__
-#define __ZUtil_Strim_Tuple__ 1
+#ifndef __ZTask__
+#define __ZTask__ 1
 #include "zconfig.h"
 
-#include "zoolib/tuplebase/ZTuple.h"
-#include "zoolib/ZYad.h"
+#include "zoolib/ZCounted.h"
 
 namespace ZooLib {
 
-class ZStrimW;
-
-namespace ZUtil_Strim_Tuple {
+class ZTask;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_Tuple::Format
+#pragma mark * ZTaskMaster
 
-struct Format
+class ZTaskMaster
+:	public ZCounted
 	{
-	Format(const ZTValue& iTV, int iInitialIndent, const ZYadOptions& iOptions);
+public:
+	virtual void Task_Finished(ZRef<ZTask> iTask);
 
-	const ZTValue& fTValue;
-	int fInitialIndent;
-	const ZYadOptions& fOptions;
+protected:
+	void pDetachTask(ZRef<ZTask> iTask);
+
+private:
+	void pTask_Finished(ZRef<ZTask> iTask);
+	friend class ZTask;
 	};
 
-bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV);
-
-} // namespace ZUtil_Strim_Tuple
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * operator<< overloads
+#pragma mark * ZTask
 
-const ZStrimW& operator<<(const ZStrimW& s, const ZTValue& iTV);
+class ZTask : public ZCounted
+	{
+public:
+	ZTask(ZRef<ZTaskMaster> iTaskMaster);
 
-const ZStrimW& operator<<(const ZStrimW& s, const ZUtil_Strim_Tuple::Format& iFormat);
+	ZRef<ZTaskMaster> GetTaskMaster();
+
+	virtual void TaskMaster_Detached(ZRef<ZTaskMaster> iTaskMaster);
+
+	virtual void Kill();
+
+protected:
+	void pFinished();
+
+private:
+	ZWeakRef<ZTaskMaster> fTaskMaster;
+	friend class ZTaskMaster;
+	};
 
 } // namespace ZooLib
 
-#endif // __ZUtil_Strim_Tuple__
+#endif // __ZTask__

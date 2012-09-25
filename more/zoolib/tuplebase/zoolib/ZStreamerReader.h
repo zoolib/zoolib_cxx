@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,61 +18,42 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTSWatcherServerAsync__
-#define __ZTSWatcherServerAsync__
+#ifndef __ZStreamerReader__
+#define __ZStreamerReader__
 #include "zconfig.h"
 
-#include "zoolib/ZCommer.h"
-#include "zoolib/ZTask.h"
-#include "zoolib/ZThreadOld.h"
-#include "zoolib/tuplebase/ZTSWatcher.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZWorker.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTSWatcherServer
+#pragma mark * ZStreamerReader
 
-class ZTSWatcherServerAsync
-:	public ZTask
-,	public ZCommer
+class ZStreamerReader : public ZWorker
 	{
 public:
-	ZTSWatcherServerAsync
-		(ZRef<ZTaskMaster> iTaskMaster,
-		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
-		ZRef<ZTSWatcher> iTSWatcher);
+	ZStreamerReader(ZRef<ZStreamerR> iStreamerR);
+	virtual ~ZStreamerReader();
 
-	virtual ~ZTSWatcherServerAsync();
+// From ZWorker
+	virtual void RunnerAttached();
+	virtual void RunnerDetached();
 
-// From ZTask
-	virtual void Kill();
+	virtual bool Work();
 
-// From ZCommer
+// Our protocol
+	virtual void ReadStarted();
+	virtual void ReadFinished();
+
+	virtual bool Read(ZRef<ZStreamerR> iStreamerR);
 	virtual bool Read(const ZStreamR& iStreamR);
-	virtual bool Write(const ZStreamW& iStreamW);
 
-	virtual void Finished();
-
-private:
-	void pCallback();
-	static void spCallback(void* iRefcon);
-
-	ZMutex fMutex;
-	ZRef<ZTSWatcher> fTSWatcher;
-	bool fSendClose;
-	bool fCallbackNeeded;
-	bool fSyncNeeded;
-	size_t fIDsNeeded;
-
-	std::vector<uint64> fRemovedIDs;
-	std::vector<uint64> fAddedIDs;
-	std::vector<int64> fRemovedQueries;
-	std::vector<ZTSWatcher::AddedQueryCombo> fAddedQueries;
-	std::vector<uint64> fWrittenTupleIDs;
-	std::vector<ZTuple> fWrittenTuples;
+protected:
+	ZRef<ZStreamerR> fStreamerR;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZTSWatcherServerAsync__
+#endif // __ZStreamerReader__
