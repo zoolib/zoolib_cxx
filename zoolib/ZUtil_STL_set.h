@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZQ.h"
 
 #include <iterator> // For inserter
 #include <set>
