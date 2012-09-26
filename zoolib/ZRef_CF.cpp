@@ -86,12 +86,16 @@ ZMACRO_Mutable(CFUserNotification)
 
 // =================================================================================================
 
-ZMACRO_Mutable(CGColor)
-ZMACRO_Mutable(CGColorSpace)
-ZMACRO_Mutable(CGContext)
-ZMACRO_Mutable(CGDataProvider)
-ZMACRO_Mutable(CGGradient)
-ZMACRO_Mutable(CGImage)
+#define ZMACRO_CG(a) \
+	typedef struct a * a##Ref; \
+	ZMACRO_Retain_Release(a##Ref)
+
+ZMACRO_CG(CGColor)
+ZMACRO_CG(CGColorSpace)
+ZMACRO_CG(CGContext)
+ZMACRO_CG(CGDataProvider)
+ZMACRO_CG(CGGradient)
+ZMACRO_CG(CGImage)
 
 // =================================================================================================
 
