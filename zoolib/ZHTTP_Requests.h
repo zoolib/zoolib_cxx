@@ -34,22 +34,28 @@ namespace ZHTTP {
 typedef ZCallable<ZRef<ZStreamerRWCon>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
 	Callable_Connect;
 
-ZRef<ZStreamerRWCon> sConnect(const std::string& iHost, uint16 iPort, bool iUseSSL);
+ZRef<ZStreamerRWCon> sStreamerRWCon(const std::string& iHost, uint16 iPort, bool iUseSSL);
+
+// -----
 
 ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iMethod, std::string& ioURL, const Map* iHeader,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
 
-ZRef<ZStreamerR> sPost_Send(ZRef<Callable_Connect> iCallable_Connect,
+// -----
+
+ZRef<ZStreamerR> sPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iMethod,
 	const std::string& iURL, const Map* iHeader, const ZStreamR& iBody);
 
-ZRef<ZStreamerR> sPost_Receive(const ZRef<ZStreamerR>& iStreamerR,
+ZRef<ZStreamerR> sPOST_Receive(const ZRef<ZStreamerR>& iStreamerR,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
 
-ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
+ZRef<ZStreamerR> sPOST(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iURL, const Map* iHeader, const ZStreamR& iBody,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
+
+// -----
 
 bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
 	const std::string& iAddress, const Map* iHeader,

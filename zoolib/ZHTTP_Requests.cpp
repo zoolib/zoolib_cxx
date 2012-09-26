@@ -33,6 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimmer_Stream.h"
 #include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZTextCoder.h"
+#include "zoolib/ZUtil_Stream_Operators.h"
 #include "zoolib/ZUtil_string.h"
 
 #include <ctype.h> // For isalnum
@@ -43,21 +44,9 @@ namespace ZHTTP {
 using std::string;
 
 // =================================================================================================
-// MARK: -
+// MARK: - Helpers (anonymous)
 
-ZRef<ZStreamerRWCon> sConnect(const string& iHost, uint16 iPort, bool iUseSSL)
-	{
-	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
-		{
-		if (iUseSSL)
-			return sStreamerRWCon_SSL(theEP, theEP);
-		return theEP;
-		}
-	return null;
-	}
-
-// =================================================================================================
-// MARK: -
+namespace { // anonymous
 
 static bool spReadResponse(const ZStreamR& r, int32* oResponseCode, Map* oHeader)
 	{
@@ -98,32 +87,42 @@ static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 	if (iCallable_Connect)
 		return iCallable_Connect->Call(iHost, iPort, useSSL);
 	else
-		return sConnect(iHost, iPort, useSSL);
+		return sStreamerRWCon(iHost, iPort, useSSL);
+	}
+
+} // anonymous namespace
+
+// =================================================================================================
+// MARK: - ZHTTP::sStreamerRWCon
+
+ZRef<ZStreamerRWCon> sStreamerRWCon(const string& iHost, uint16 iPort, bool iUseSSL)
+	{
+	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
+		{
+		if (iUseSSL)
+			return sStreamerRWCon_SSL(theEP, theEP);
+		return theEP;
+		}
+	return null;
 	}
 
 // =================================================================================================
-// MARK: -
+// MARK: - ZHTTP::sRequest
 
 static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 	const string& iMethod, const string& iHost, const string& iPath, const Map* iHeader,
 	bool iSendConnectionClose,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
-	w.WriteString(iMethod);
-	w.WriteString(" ");
-	w.WriteString(iPath);
-	w.WriteString(" HTTP/1.1\r\n");
-	w.WriteString("Host: ");
-	w.WriteString(iHost);
-	w.WriteString("\r\n");
+	w << iMethod << " " << iPath << " HTTP/1.1\r\n" << "Host: " << iHost << "\r\n";
 
 	if (iHeader)
 		sWrite_Header(w, *iHeader);
 
 	if (iSendConnectionClose)
-		w.WriteString("Connection: close\r\n");
+		w << "Connection: close\r\n";
 
-	w.WriteString("\r\n");
+	w << "\r\n";
 
 	w.Flush();
 
@@ -206,26 +205,20 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 	}
 
 // =================================================================================================
-// MARK: -
+// MARK: - ZHTTP::sPOST
 
-static void spPost_Prefix(const ZStreamW& w,
+static void spPOST_Prefix(const ZStreamW& w,
 	const std::string& iMethod,
 	const string& iHost, const string& iPath, const Map* iHeader, bool iSendConnectionClose)
 	{
-	w.WriteString(iMethod);
-	w.WriteString(" ");
-	w.WriteString(iPath);
-	w.WriteString(" HTTP/1.1\r\n");
-	w.WriteString("Host: ");
-	w.WriteString(iHost);
-	w.WriteString("\r\n");
+	w << iMethod << " " << iPath << " HTTP/1.1\r\n" << "Host: " << iHost << "\r\n";
 	if (iSendConnectionClose)
-		w.WriteString("Connection: close\r\n");
+		w << "Connection: close\r\n";
 	if (iHeader)
 		sWrite_Header(w, *iHeader);
 	}
 
-ZRef<ZStreamerR> sPost_Send(ZRef<Callable_Connect> iCallable_Connect,
+ZRef<ZStreamerR> sPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iMethod,
 	const std::string& iURL, const Map* iHeader, const ZStreamR& iBody)
 	{
@@ -239,20 +232,20 @@ ZRef<ZStreamerR> sPost_Send(ZRef<Callable_Connect> iCallable_Connect,
 			{
 			const ZStreamW& w = theEP->GetStreamW();
 
-			spPost_Prefix(w, iMethod, theHost, thePath, iHeader, true);
+			spPOST_Prefix(w, iMethod, theHost, thePath, iHeader, true);
 
 			if (const ZStreamRPos* bodyRPos = dynamic_cast<const ZStreamRPos*>(&iBody))
 				{
 				const uint64 theLength = bodyRPos->GetSize() - bodyRPos->GetPosition();
 				w.Writef("Content-Length: %lld\r\n", theLength);
-				w.WriteString("\r\n");
+				w << "\r\n";
 
 				w.CopyFrom(*bodyRPos, theLength);
 				}
 			else
 				{
-				w.WriteString("Transfer-Encoding: chunked\r\n");
-				w.WriteString("\r\n");
+				w << "Transfer-Encoding: chunked\r\n";
+				w << "\r\n";
 				StreamW_Chunked(16 *1024, w).CopyAllFrom(iBody);
 				}
 			w.Flush();
@@ -262,7 +255,7 @@ ZRef<ZStreamerR> sPost_Send(ZRef<Callable_Connect> iCallable_Connect,
 	return null;
 	}
 
-static bool spPost_Suffix(const ZStreamR& r,
+static bool spPOST_Suffix(const ZStreamR& r,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
 	if (oRawHeader)
@@ -277,14 +270,14 @@ static bool spPost_Suffix(const ZStreamR& r,
 		}
 	}
 
-ZRef<ZStreamerR> sPost_Receive(const ZRef<ZStreamerR>& iStreamerR,
+ZRef<ZStreamerR> sPOST_Receive(const ZRef<ZStreamerR>& iStreamerR,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
 	if (iStreamerR)
 		{
 		int32 theResponseCode;
 		Map theHeader;
-		if (spPost_Suffix(iStreamerR->GetStreamR(), &theResponseCode, &theHeader, oRawHeader))
+		if (spPOST_Suffix(iStreamerR->GetStreamR(), &theResponseCode, &theHeader, oRawHeader))
 			{
 			if (oResponseCode)
 				*oResponseCode = theResponseCode;
@@ -304,17 +297,17 @@ ZRef<ZStreamerR> sPost_Receive(const ZRef<ZStreamerR>& iStreamerR,
 	return null;
 	}
 
-ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
+ZRef<ZStreamerR> sPOST(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iURL, const Map* iHeader, const ZStreamR& iBody,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
-	if (ZRef<ZStreamerR> theStreamerR = sPost_Send(iCallable_Connect, "POST", iURL, iHeader, iBody))
-		return sPost_Receive(theStreamerR, oResponseCode, oHeader, oRawHeader);
+	if (ZRef<ZStreamerR> theStreamerR = sPOST_Send(iCallable_Connect, "POST", iURL, iHeader, iBody))
+		return sPOST_Receive(theStreamerR, oResponseCode, oHeader, oRawHeader);
 	return null;
 	}
 
 // =================================================================================================
-// MARK: -
+// MARK: - sCONNECT
 
 bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
 	const string& iAddress, const Map* iHeader,
@@ -323,14 +316,12 @@ bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
 	if (oResponseCode)
 		*oResponseCode = 0;
 
-	w.WriteString("CONNECT ");
-	w.WriteString(iAddress);
-	w.WriteString(" HTTP/1.0\r\n");
+	w << "CONNECT " << iAddress << " HTTP/1.0\r\n";
 
 	if (iHeader)
 		sWrite_Header(w, *iHeader);
 
-	w.WriteString("\r\n");
+	w << "\r\n";
 
 	w.Flush();
 

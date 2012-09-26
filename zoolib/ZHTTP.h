@@ -38,7 +38,7 @@ typedef ZSeq_Any Seq;
 typedef ZMap_Any Map;
 
 // =================================================================================================
-// Response
+// MARK: - Response
 
 class Response
 	{
@@ -66,7 +66,7 @@ private:
 	};
 
 // =================================================================================================
-// Higher level parsing
+// MARK: - Higher level parsing
 
 bool sOrganizeRanges(size_t iSourceSize,
 	const Val& iRangeParam, std::vector<std::pair<size_t, size_t> >& oRanges);
@@ -97,7 +97,7 @@ std::string sGetString0(const Val& iVal);
 ZRef<ZStreamerR> sMakeContentStreamer(const Map& iHeader, ZRef<ZStreamerR> iStreamerR);
 
 // =================================================================================================
-// Request headers
+// MARK: - Request headers
 
 bool sRead_accept(const ZStreamU& iStream, Map* ioFields);
 //bool sRead_accept_charset(const ZStreamU& iStream, Map* ioFields); // Not done
@@ -113,18 +113,18 @@ bool sRead_range(const ZStreamU& iStream, Map& oRange);
 //bool sRead_referer(const ZStreamU& iStream, Map* ioFields); // Not done
 
 // =================================================================================================
-// Response headers
+// MARK: - Response headers
 
 bool sRead_www_authenticate(const ZStreamU& iStream, Map* ioFields); // Not done
 
 // =================================================================================================
-// Request or response headers
+// MARK: - Request or response headers
 
 bool sRead_transfer_encoding(const ZStreamU& iStream, Map* ioFields);
 bool sRead_transfer_encoding(const ZStreamU& iStream, std::string& oEncoding);
 
 // =================================================================================================
-// Entity headers
+// MARK: - Entity headers
 
 bool sRead_content_disposition(const ZStreamU& iStream, Map* ioFields);
 bool sRead_content_disposition(const ZStreamU& iStream, Map& oTuple);
@@ -166,7 +166,7 @@ bool sReadMediaType(const ZStreamU& iStream,
 bool sReadLanguageTag(const ZStreamU& iStream, std::string* oLanguageTag);
 
 // =================================================================================================
-// Lower level parsing
+// MARK: - Lower level parsing
 
 bool sParseURL(const std::string& iURL,
 	std::string* oScheme, std::string* oHost, uint16* oPort, std::string* oPath);
@@ -186,7 +186,7 @@ void sSkipLWS(const ZStreamU& iStream);
 bool sReadDecodedChars(const ZStreamU& iStream, std::string& ioString);
 
 // =================================================================================================
-// Lexical classification
+// MARK: - Lexical classification
 
 bool sIs_CHAR(char iChar);
 bool sIs_UPALPHA(char iChar);
@@ -212,7 +212,7 @@ bool sIs_ctext(char iChar);
 bool sIs_qdtext(char iChar);
 
 // =================================================================================================
-// Writing
+// MARK: - Writing
 
 void sWrite_HeaderLine(const ZStreamW& w, const std::string& iName, const std::string& iBody);
 void sWrite_Header(const ZStreamW& w, const Map& iHeader);

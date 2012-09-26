@@ -184,15 +184,13 @@ void Response::Send(const ZStreamW& s) const
 		s.WriteString(" ");
 		s.WriteString(fMessage);
 		}
+
 	s.WriteString("\r\n");
+
 	for (vector<pair<string, string> >::const_iterator ii = fHeaders.begin();
 		ii != fHeaders.end(); ++ii)
-		{
-		s.WriteString(ii->first);
-		s.WriteString(": ");
-		s.WriteString(ii->second);
-		s.WriteString("\r\n");
-		}
+		{ sWrite_HeaderLine(s, ii->first, ii->second); }
+
 	s.WriteString("\r\n");
 	}
 
