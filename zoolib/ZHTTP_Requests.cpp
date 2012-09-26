@@ -56,7 +56,6 @@ ZRef<ZStreamerRWCon> sConnect(const string& iHost, uint16 iPort, bool iUseSSL)
 	return null;
 	}
 
-
 // =================================================================================================
 // MARK: -
 
@@ -106,7 +105,7 @@ static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 // MARK: -
 
 static bool spRequest(const ZStreamW& w, const ZStreamR& r,
-	const string& iMethod, const string& iHost, const string& iPath,
+	const string& iMethod, const string& iHost, const string& iPath, const Map* iHeader,
 	bool iSendConnectionClose,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
@@ -117,9 +116,15 @@ static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 	w.WriteString("Host: ");
 	w.WriteString(iHost);
 	w.WriteString("\r\n");
+
+	if (iHeader)
+		sWrite_Header(w, *iHeader);
+
 	if (iSendConnectionClose)
 		w.WriteString("Connection: close\r\n");
+
 	w.WriteString("\r\n");
+
 	w.Flush();
 
 	if (oRawHeader)
@@ -135,8 +140,8 @@ static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 	}
 
 ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
-	const string& iMethod, string& ioURL,
-	int32* oResponseCode, Map* oFields, Data* oRawHeader)
+	const string& iMethod, string& ioURL, const Map* iHeader,
+	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
 	for (bool keepGoing = true; keepGoing; /*no inc*/)
 		{
@@ -154,12 +159,12 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 				break;
 
 			int32 theResponseCode;
-			Map theHeaders;
+			Map theHeader;
 			if (not spRequest
 				(theEP->GetStreamW(), theEP->GetStreamR(),
-				iMethod, theHost, thePath,
+				iMethod, theHost, thePath, iHeader,
 				true,
-				&theResponseCode, &theHeaders, oRawHeader))
+				&theResponseCode, &theHeader, oRawHeader))
 				{
 				break;
 				}
@@ -171,13 +176,13 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 				{
 				case 200:
 					{
-					if (oFields)
-						*oFields = theHeaders;
+					if (oHeader)
+						*oHeader = theHeader;
 
 					if ("HEAD" == iMethod)
 						return new ZStreamerR_T<ZStreamR_Null>;
 
-					if (ZRef<ZStreamerR> theStreamerR = sMakeContentStreamer(theHeaders, theEP))
+					if (ZRef<ZStreamerR> theStreamerR = sMakeContentStreamer(theHeader, theEP))
 						return theStreamerR;
 
 					return theEP;
@@ -186,7 +191,7 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 				case 302:
 				case 303:
 					{
-					ioURL = sGetString0(theHeaders.Get("location"));
+					ioURL = sGetString0(theHeader.Get("location"));
 					break;
 					}
 				default:
@@ -205,7 +210,7 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 
 static void spPost_Prefix(const ZStreamW& w,
 	const std::string& iMethod,
-	const string& iHost, const string& iPath, const Map* iFields, bool iSendConnectionClose)
+	const string& iHost, const string& iPath, const Map* iHeader, bool iSendConnectionClose)
 	{
 	w.WriteString(iMethod);
 	w.WriteString(" ");
@@ -216,21 +221,13 @@ static void spPost_Prefix(const ZStreamW& w,
 	w.WriteString("\r\n");
 	if (iSendConnectionClose)
 		w.WriteString("Connection: close\r\n");
-	if (iFields)
-		{
-		for (Map::Index_t ii = iFields->Begin(); ii != iFields->End(); ++ii)
-			{
-			w.WriteString(iFields->NameOf(ii));
-			w.WriteString(": ");
-			w.WriteString(iFields->Get<string>(ii));
-			w.WriteString("\r\n");
-			}
-		}
+	if (iHeader)
+		sWrite_Header(w, *iHeader);
 	}
 
 ZRef<ZStreamerR> sPost_Send(ZRef<Callable_Connect> iCallable_Connect,
 	const std::string& iMethod,
-	const std::string& iURL, const Map* iFields, const ZStreamR& iBody)
+	const std::string& iURL, const Map* iHeader, const ZStreamR& iBody)
 	{
 	string theScheme;
 	string theHost;
@@ -242,7 +239,7 @@ ZRef<ZStreamerR> sPost_Send(ZRef<Callable_Connect> iCallable_Connect,
 			{
 			const ZStreamW& w = theEP->GetStreamW();
 
-			spPost_Prefix(w, iMethod, theHost, thePath, iFields, true);
+			spPost_Prefix(w, iMethod, theHost, thePath, iHeader, true);
 
 			if (const ZStreamRPos* bodyRPos = dynamic_cast<const ZStreamRPos*>(&iBody))
 				{
@@ -281,23 +278,23 @@ static bool spPost_Suffix(const ZStreamR& r,
 	}
 
 ZRef<ZStreamerR> sPost_Receive(const ZRef<ZStreamerR>& iStreamerR,
-	int32* oResponseCode, Map* oFields, Data* oRawHeader)
+	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
 	if (iStreamerR)
 		{
 		int32 theResponseCode;
-		Map theHeaders;
-		if (spPost_Suffix(iStreamerR->GetStreamR(), &theResponseCode, &theHeaders, oRawHeader))
+		Map theHeader;
+		if (spPost_Suffix(iStreamerR->GetStreamR(), &theResponseCode, &theHeader, oRawHeader))
 			{
 			if (oResponseCode)
 				*oResponseCode = theResponseCode;
 
 			if (200 == theResponseCode)
 				{
-				if (oFields)
-					*oFields = theHeaders;
+				if (oHeader)
+					*oHeader = theHeader;
 
-				if (ZRef<ZStreamerR> theStreamerR = sMakeContentStreamer(theHeaders, iStreamerR))
+				if (ZRef<ZStreamerR> theStreamerR = sMakeContentStreamer(theHeader, iStreamerR))
 					return theStreamerR;
 
 				return iStreamerR;
@@ -308,11 +305,11 @@ ZRef<ZStreamerR> sPost_Receive(const ZRef<ZStreamerR>& iStreamerR,
 	}
 
 ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
-	const std::string& iURL, const Map* iFields, const ZStreamR& iBody,
-	int32* oResponseCode, Map* oFields, Data* oRawHeader)
+	const std::string& iURL, const Map* iHeader, const ZStreamR& iBody,
+	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
-	if (ZRef<ZStreamerR> theStreamerR = sPost_Send(iCallable_Connect, "POST", iURL, iFields, iBody))
-		return sPost_Receive(theStreamerR, oResponseCode, oFields, oRawHeader);
+	if (ZRef<ZStreamerR> theStreamerR = sPost_Send(iCallable_Connect, "POST", iURL, iHeader, iBody))
+		return sPost_Receive(theStreamerR, oResponseCode, oHeader, oRawHeader);
 	return null;
 	}
 
@@ -320,8 +317,7 @@ ZRef<ZStreamerR> sPost(ZRef<Callable_Connect> iCallable_Connect,
 // MARK: -
 
 bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
-	const string& iAddress,
-	const Map* iHeader,
+	const string& iAddress, const Map* iHeader,
 	int32* oResponseCode, Map* oHeader)
 	{
 	if (oResponseCode)
