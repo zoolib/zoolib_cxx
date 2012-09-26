@@ -20,95 +20,98 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_Strim_Operators.h"
 
+// =================================================================================================
+// MARK: - ZUtil_Strim_Operators
+
 namespace ZooLib {
 namespace ZUtil_Strim_Operators {
 
-const ZStrimW& operator<<(const ZStrimW& s, const string32& iString)
-	{ return s.Write(iString); }
+const ZStrimW& operator<<(const ZStrimW& w, const string32& iString)
+	{ return w.Write(iString); }
 
-const ZStrimW& operator<<(const ZStrimW& s, const UTF32* iString)
-	{ return s.Write(iString); }
+const ZStrimW& operator<<(const ZStrimW& w, const UTF32* iString)
+	{ return w.Write(iString); }
 
-const ZStrimW& operator<<(const ZStrimW& s, UTF32* iString)
-	{ return s.Write(iString); }
+const ZStrimW& operator<<(const ZStrimW& w, UTF32* iString)
+	{ return w.Write(iString); }
 
-const ZStrimW& operator<<(const ZStrimW& s, const string16& iString)
-	{ return s.Write(iString); }
+const ZStrimW& operator<<(const ZStrimW& w, const string16& iString)
+	{ return w.Write(iString); }
 
-const ZStrimW& operator<<(const ZStrimW& s, const UTF16* iString)
-	{ return s.Write(iString); }
+const ZStrimW& operator<<(const ZStrimW& w, const UTF16* iString)
+	{ return w.Write(iString); }
 
-const ZStrimW& operator<<(const ZStrimW& s, UTF16* iString)
-	{ return s.Write(iString); }
+const ZStrimW& operator<<(const ZStrimW& w, UTF16* iString)
+	{ return w.Write(iString); }
 
-const ZStrimW& operator<<(const ZStrimW& s, const string8& iString)
-	{ return s.Write(iString); }
+const ZStrimW& operator<<(const ZStrimW& w, const string8& iString)
+	{ return w.Write(iString); }
 
-const ZStrimW& operator<<(const ZStrimW& s, const UTF8* iString)
-	{ return s.Write(iString); }
+const ZStrimW& operator<<(const ZStrimW& w, const UTF8* iString)
+	{ return w.Write(iString); }
 
-const ZStrimW& operator<<(const ZStrimW& s, UTF8* iString)
-	{ return s.Write(iString); }
+const ZStrimW& operator<<(const ZStrimW& w, UTF8* iString)
+	{ return w.Write(iString); }
 
-const ZStrimW& operator<<(const ZStrimW& s, const ZStrimR& r)
-	{ return s.CopyAllFrom(r); }
+const ZStrimW& operator<<(const ZStrimW& w, const ZStrimR& r)
+	{ return w.CopyAllFrom(r); }
 
-const ZStrimW& operator<<(const ZStrimW& s, bool iVal)
-	{ return s.Write(iVal ? "true" : "false"); }
+const ZStrimW& operator<<(const ZStrimW& w, bool iVal)
+	{ return w.Write(iVal ? "true" : "false"); }
 
-const ZStrimW& operator<<(const ZStrimW& s, char iVal)
-	{ return s.Writef("%c", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, char iVal)
+	{ return w.Writef("%c", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, unsigned char iVal)
-	{ return s.Writef("%uc", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, unsigned char iVal)
+	{ return w.Writef("%uc", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, signed char iVal)
-	{ return s.Writef("%c", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, signed char iVal)
+	{ return w.Writef("%c", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, __wchar_t iVal)
-	{ return s.Writef("%lc", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, __wchar_t iVal)
+	{ return w.Writef("%lc", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, short iVal)
-	{ return s.Writef("%d", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, short iVal)
+	{ return w.Writef("%d", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, unsigned short iVal)
-	{ return s.Writef("%u", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, unsigned short iVal)
+	{ return w.Writef("%u", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, int iVal)
-	{ return s.Writef("%d", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, int iVal)
+	{ return w.Writef("%d", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, unsigned int iVal)
-	{ return s.Writef("%u", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, unsigned int iVal)
+	{ return w.Writef("%u", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, long iVal)
-	{ return s.Writef("%ld", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, long iVal)
+	{ return w.Writef("%ld", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, unsigned long iVal)
-	{ return s.Writef("%lu", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, unsigned long iVal)
+	{ return w.Writef("%lu", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, __int64 iVal)
-	{ return s.Writef("%lld", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, __int64 iVal)
+	{ return w.Writef("%lld", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, __uint64 iVal)
-	{ return s.Writef("%llu", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, __uint64 iVal)
+	{ return w.Writef("%llu", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, float iVal)
-	{ return s.Writef("%.9g", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, float iVal)
+	{ return w.Writef("%.9g", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, double iVal)
-	{ return s.Writef("%.17g", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, double iVal)
+	{ return w.Writef("%.17g", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, long double iVal)
+const ZStrimW& operator<<(const ZStrimW& w, long double iVal)
 	{
 	// This is a guess for now.
-	return s.Writef("%.34Lg", iVal);
+	return w.Writef("%.34Lg", iVal);
 	}
 
-const ZStrimW& operator<<(const ZStrimW& s, const void* iVal)
-	{ return s.Writef("%p", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, const void* iVal)
+	{ return w.Writef("%p", iVal); }
 
-const ZStrimW& operator<<(const ZStrimW& s, void* iVal)
-	{ return s.Writef("%p", iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, void* iVal)
+	{ return w.Writef("%p", iVal); }
 
 } // namespace ZUtil_Strim_Operators
 } // namespace ZooLib

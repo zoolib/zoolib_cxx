@@ -26,51 +26,56 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <typeinfo>
 
+// =================================================================================================
+// MARK: - ZUtil_Strim_Operators
+
 namespace ZooLib {
 namespace ZUtil_Strim_Operators {
 
-const ZStrimW& operator<<(const ZStrimW& s, const string32& iString);
-const ZStrimW& operator<<(const ZStrimW& s, const UTF32* iString);
-const ZStrimW& operator<<(const ZStrimW& s, UTF32* iString);
-const ZStrimW& operator<<(const ZStrimW& s, const string16& iString);
-const ZStrimW& operator<<(const ZStrimW& s, const UTF16* iString);
-const ZStrimW& operator<<(const ZStrimW& s, UTF16* iString);
-const ZStrimW& operator<<(const ZStrimW& s, const string8& iString);
-const ZStrimW& operator<<(const ZStrimW& s, const UTF8* iString);
-const ZStrimW& operator<<(const ZStrimW& s, UTF8* iString);
+const ZStrimW& operator<<(const ZStrimW& w, const string32& iString);
+const ZStrimW& operator<<(const ZStrimW& w, const UTF32* iString);
+const ZStrimW& operator<<(const ZStrimW& w, UTF32* iString);
+const ZStrimW& operator<<(const ZStrimW& w, const string16& iString);
+const ZStrimW& operator<<(const ZStrimW& w, const UTF16* iString);
+const ZStrimW& operator<<(const ZStrimW& w, UTF16* iString);
+const ZStrimW& operator<<(const ZStrimW& w, const string8& iString);
+const ZStrimW& operator<<(const ZStrimW& w, const UTF8* iString);
+const ZStrimW& operator<<(const ZStrimW& w, UTF8* iString);
 
-const ZStrimW& operator<<(const ZStrimW& s, const ZStrimR& r);
+const ZStrimW& operator<<(const ZStrimW& w, const ZStrimR& r);
 
-const ZStrimW& operator<<(const ZStrimW& s, bool iVal);
-const ZStrimW& operator<<(const ZStrimW& s, char iVal);
-const ZStrimW& operator<<(const ZStrimW& s, unsigned char iVal);
-const ZStrimW& operator<<(const ZStrimW& s, signed char iVal);
-const ZStrimW& operator<<(const ZStrimW& s, __wchar_t iVal);
-const ZStrimW& operator<<(const ZStrimW& s, short iVal);
-const ZStrimW& operator<<(const ZStrimW& s, unsigned short iVal);
-const ZStrimW& operator<<(const ZStrimW& s, int iVal);
-const ZStrimW& operator<<(const ZStrimW& s, unsigned int iVal);
-const ZStrimW& operator<<(const ZStrimW& s, long iVal);
-const ZStrimW& operator<<(const ZStrimW& s, unsigned long iVal);
-const ZStrimW& operator<<(const ZStrimW& s, __int64 iVal);
-const ZStrimW& operator<<(const ZStrimW& s, __uint64 iVal);
-const ZStrimW& operator<<(const ZStrimW& s, float iVal);
-const ZStrimW& operator<<(const ZStrimW& s, double iVal);
-const ZStrimW& operator<<(const ZStrimW& s, long double iVal);
-const ZStrimW& operator<<(const ZStrimW& s, const void* iVal);
-const ZStrimW& operator<<(const ZStrimW& s, void* iVal);
-
-template <class P>
-const ZStrimW& operator<<(const ZStrimW& s, const P* iVal)
-	{ return s << "(const " << typeid(P).name() << "*)" << reinterpret_cast<const void*>(iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, bool iVal);
+const ZStrimW& operator<<(const ZStrimW& w, char iVal);
+const ZStrimW& operator<<(const ZStrimW& w, unsigned char iVal);
+const ZStrimW& operator<<(const ZStrimW& w, signed char iVal);
+const ZStrimW& operator<<(const ZStrimW& w, __wchar_t iVal);
+const ZStrimW& operator<<(const ZStrimW& w, short iVal);
+const ZStrimW& operator<<(const ZStrimW& w, unsigned short iVal);
+const ZStrimW& operator<<(const ZStrimW& w, int iVal);
+const ZStrimW& operator<<(const ZStrimW& w, unsigned int iVal);
+const ZStrimW& operator<<(const ZStrimW& w, long iVal);
+const ZStrimW& operator<<(const ZStrimW& w, unsigned long iVal);
+const ZStrimW& operator<<(const ZStrimW& w, __int64 iVal);
+const ZStrimW& operator<<(const ZStrimW& w, __uint64 iVal);
+const ZStrimW& operator<<(const ZStrimW& w, float iVal);
+const ZStrimW& operator<<(const ZStrimW& w, double iVal);
+const ZStrimW& operator<<(const ZStrimW& w, long double iVal);
+const ZStrimW& operator<<(const ZStrimW& w, const void* iVal);
+const ZStrimW& operator<<(const ZStrimW& w, void* iVal);
 
 template <class P>
-const ZStrimW& operator<<(const ZStrimW& s, P* iVal)
-	{ return s << "(" << typeid(P).name() << "*)" << reinterpret_cast<void*>(iVal); }
+const ZStrimW& operator<<(const ZStrimW& w, const P* iVal)
+	{ return w << "(const " << typeid(P).name() << "*)" << reinterpret_cast<const void*>(iVal); }
+
+template <class P>
+const ZStrimW& operator<<(const ZStrimW& w, P* iVal)
+	{ return w << "(" << typeid(P).name() << "*)" << reinterpret_cast<void*>(iVal); }
 
 } // namespace ZUtil_Strim_Operators
 
-using ZUtil_Strim_Operators::operator<<;
+#if not defined(ZMACRO_Util_Strim_Operators_Suppress) || not ZMACRO_Util_Strim_Operators_Suppress
+	using ZUtil_Strim_Operators::operator<<;
+#endif
 
 } // namespace ZooLib
 
