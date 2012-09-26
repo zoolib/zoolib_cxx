@@ -33,22 +33,22 @@ ZQ<bool> sQCoerceBool(const ZAny& iAny)
 	if (const bool* pBool = iAny.PGet<bool>())
 		return *pBool;
 
-	if (ZQ<__int64> theQ = sQCoerceInt(iAny))
-		return *theQ;
+	if (ZQ<__int64> qq = sQCoerceInt(iAny))
+		return *qq;
 
-	if (ZQ<double> theQ = sQCoerceRat(iAny))
-		return *theQ;
+	if (ZQ<double> qq = sQCoerceRat(iAny))
+		return *qq;
 
 	if (const string* pString = iAny.PGet<string>())
 		{
 		if (pString->empty())
 			return false;
 
-		if (ZQ<double> theQ = ZUtil_string::sQDouble(*pString))
-			return *theQ;
+		if (ZQ<double> qq = ZUtil_string::sQDouble(*pString))
+			return *qq;
 
-		if (ZQ<__int64> theQ = ZUtil_string::sQInt64(*pString))
-			return *theQ;
+		if (ZQ<__int64> qq = ZUtil_string::sQInt64(*pString))
+			return *qq;
 
 		if (ZUtil_string::sEquali(*pString, "t") || ZUtil_string::sEquali(*pString, "true"))
 			return true;
@@ -61,9 +61,9 @@ ZQ<bool> sQCoerceBool(const ZAny& iAny)
 
 bool sQCoerceBool(const ZAny& iAny, bool& oVal)
 	{
-	if (ZQ<bool> theQ = sQCoerceBool(iAny))
+	if (ZQ<bool> qq = sQCoerceBool(iAny))
 		{
-		oVal = *theQ;
+		oVal = *qq;
 		return true;
 		}
 	return false;
@@ -71,15 +71,15 @@ bool sQCoerceBool(const ZAny& iAny, bool& oVal)
 
 bool sDCoerceBool(bool iDefault, const ZAny& iAny)
 	{
-	if (ZQ<bool> theQ = sQCoerceBool(iAny))
-		return *theQ;
+	if (ZQ<bool> qq = sQCoerceBool(iAny))
+		return *qq;
 	return iDefault;
 	}
 
 bool sCoerceBool(const ZAny& iAny)
 	{
-	if (ZQ<bool> theQ = sQCoerceBool(iAny))
-		return *theQ;
+	if (ZQ<bool> qq = sQCoerceBool(iAny))
+		return *qq;
 	return false;
 	}
 
@@ -87,39 +87,39 @@ ZQ<int64> sQCoerceInt(const ZAny& iAny)
 	{
 	if (false)
 		{}
-	else if (const char* theP = iAny.PGet<char>())
-		return *theP;
-	else if (const signed char* theP = iAny.PGet<signed char>())
-		return *theP;
-	else if (const unsigned char* theP = iAny.PGet<unsigned char>())
-		return *theP;
-	else if (const wchar_t* theP = iAny.PGet<wchar_t>())
-		return *theP;
-	else if (const short* theP = iAny.PGet<short>())
-		return *theP;
-	else if (const unsigned short* theP = iAny.PGet<unsigned short>())
-		return *theP;
-	else if (const int* theP = iAny.PGet<int>())
-		return *theP;
-	else if (const unsigned int* theP = iAny.PGet<unsigned int>())
-		return *theP;
-	else if (const long* theP = iAny.PGet<long>())
-		return *theP;
-	else if (const unsigned long* theP = iAny.PGet<unsigned long>())
-		return *theP;
-	else if (const __int64* theP = iAny.PGet<__int64>())
-		return *theP;
-	else if (const __uint64* theP = iAny.PGet<__uint64>())
-		return *theP;
+	else if (const char* pp = iAny.PGet<char>())
+		return *pp;
+	else if (const signed char* pp = iAny.PGet<signed char>())
+		return *pp;
+	else if (const unsigned char* pp = iAny.PGet<unsigned char>())
+		return *pp;
+	else if (const wchar_t* pp = iAny.PGet<wchar_t>())
+		return *pp;
+	else if (const short* pp = iAny.PGet<short>())
+		return *pp;
+	else if (const unsigned short* pp = iAny.PGet<unsigned short>())
+		return *pp;
+	else if (const int* pp = iAny.PGet<int>())
+		return *pp;
+	else if (const unsigned int* pp = iAny.PGet<unsigned int>())
+		return *pp;
+	else if (const long* pp = iAny.PGet<long>())
+		return *pp;
+	else if (const unsigned long* pp = iAny.PGet<unsigned long>())
+		return *pp;
+	else if (const __int64* pp = iAny.PGet<__int64>())
+		return *pp;
+	else if (const __uint64* pp = iAny.PGet<__uint64>())
+		return *pp;
 
 	return null;
 	}
 
 bool sQCoerceInt(const ZAny& iAny, int64& oVal)
 	{
-	if (ZQ<__int64> theQ = sQCoerceInt(iAny))
+	if (ZQ<__int64> qq = sQCoerceInt(iAny))
 		{
-		oVal = *theQ;
+		oVal = *qq;
 		return true;
 		}
 	return false;
@@ -127,15 +127,15 @@ bool sQCoerceInt(const ZAny& iAny, int64& oVal)
 
 __int64 sDCoerceInt(__int64 iDefault, const ZAny& iAny)
 	{
-	if (ZQ<__int64> theQ = sQCoerceInt(iAny))
-		return *theQ;
+	if (ZQ<__int64> qq = sQCoerceInt(iAny))
+		return *qq;
 	return iDefault;
 	}
 
 __int64 sCoerceInt(const ZAny& iAny)
 	{
-	if (ZQ<__int64> theQ = sQCoerceInt(iAny))
-		return *theQ;
+	if (ZQ<__int64> qq = sQCoerceInt(iAny))
+		return *qq;
 	return 0;
 	}
 
@@ -143,21 +143,21 @@ ZQ<double> sQCoerceRat(const ZAny& iAny)
 	{
 	if (false)
 		{}
-	else if (const float* theP = iAny.PGet<float>())
-		return *theP;
-	else if (const double* theP = iAny.PGet<double>())
-		return *theP;
-	else if (const long double* theP = iAny.PGet<long double>())
-		return *theP;
+	else if (const float* pp = iAny.PGet<float>())
+		return *pp;
+	else if (const double* pp = iAny.PGet<double>())
+		return *pp;
+	else if (const long double* pp = iAny.PGet<long double>())
+		return *pp;
 
 	return null;
 	}
 
 bool sQCoerceRat(const ZAny& iAny, double& oVal)
 	{
-	if (ZQ<double> theQ = sQCoerceRat(iAny))
+	if (ZQ<double> qq = sQCoerceRat(iAny))
 		{
-		oVal = *theQ;
+		oVal = *qq;
 		return true;
 		}
 	return false;
@@ -165,15 +165,15 @@ bool sQCoerceRat(const ZAny& iAny, double& oVal)
 
 double sDCoerceRat(double iDefault, const ZAny& iAny)
 	{
-	if (ZQ<double> theQ = sQCoerceRat(iAny))
-		return *theQ;
+	if (ZQ<double> qq = sQCoerceRat(iAny))
+		return *qq;
 	return iDefault;
 	}
 
 double sCoerceRat(const ZAny& iAny)
 	{
-	if (ZQ<double> theQ = sQCoerceRat(iAny))
-		return *theQ;
+	if (ZQ<double> qq = sQCoerceRat(iAny))
+		return *qq;
 	return 0.0;
 	}
 

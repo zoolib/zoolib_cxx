@@ -87,11 +87,11 @@ public:
 		{
 		while (fPosition < fKeys.Count())
 			{
-			if (ZQ<ZRef<CFStringRef> > theQName = fKeys.QGet<ZRef<CFStringRef> >(fPosition++))
+			if (ZQ<ZRef<CFStringRef> > qName = fKeys.QGet<ZRef<CFStringRef> >(fPosition++))
 				{
-				if (ZVal_CF theVal = ::SCDynamicStoreCopyValue(fStoreRef, theQName.Get()))
+				if (ZVal_CF theVal = ::SCDynamicStoreCopyValue(fStoreRef, *qName))
 					{
-					oName = ZUtil_CF::sAsUTF8(theQName.Get());
+					oName = ZUtil_CF::sAsUTF8(*qName);
 					return sYadR(theVal);
 					}
 				}
@@ -108,9 +108,9 @@ public:
 		{
 		for (/*no init*/; fPosition < fKeys.Count(); ++fPosition)
 			{
-			if (ZQ<ZRef<CFStringRef> > theQName = fKeys.QGet<ZRef<CFStringRef> >(fPosition))
+			if (ZQ<ZRef<CFStringRef> > qName = fKeys.QGet<ZRef<CFStringRef> >(fPosition))
 				{
-				if (iName == ZUtil_CF::sAsUTF8(theQName.Get()))
+				if (iName == ZUtil_CF::sAsUTF8(*qName))
 					break;
 				}
 			}
