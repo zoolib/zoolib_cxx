@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZName.h"
 #include "zoolib/ZUnicodeString.h" // For string8 etc.
+#include "zoolib/ZUtil_Relops.h"
 
 namespace ZooLib {
 
@@ -260,13 +261,6 @@ public:
 	const ZVal_T& operator[](const Name_t& iName) const
 		{ return this->Get(iName); }
 
-// Typename accessors
-/// \cond DoxygenIgnore
-//	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_T, Data, ZData_Any)
-//	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_T, Seq, Seq_p)
-//	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_T, Map, Map_p)
-/// \endcond DoxygenIgnore
-
 	// If these are free functions then our template constructor will
 	// be tried for any free use of operator== and operator<, leading
 	// to perplexing errors all over the place.
@@ -277,9 +271,9 @@ public:
 		{ return this->Compare(r) < 0; }
 	};
 
-//ZMACRO_ZValAccessors_Def_GetSet(ZVal_Any, Data, ZData_Any)
-//ZMACRO_ZValAccessors_Def_GetSet(ZVal_Any, Seq, ZSeq_Any)
-//ZMACRO_ZValAccessors_Def_GetSet(ZVal_Any, Map, ZMap_Any)
+template <class Map_p, class Seq_p>
+struct RelopsTraits<ZVal_T<Map_p,Seq_p> >
+	{ enum { eHas_LT = 1, eHas_EQ = 1 }; };
 
 } // namespace ZooLib
 
