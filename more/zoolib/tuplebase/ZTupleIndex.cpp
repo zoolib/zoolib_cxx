@@ -101,7 +101,7 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 		/*no increment*/)
 		{
 		if (0 != (*critIter)->GetComparator().fStrength
-			|| not (*critIter)->GetPropName() == iPropName)
+			|| not((*critIter)->GetPropName() == iPropName))
 			{
 			++critIter;
 			continue;

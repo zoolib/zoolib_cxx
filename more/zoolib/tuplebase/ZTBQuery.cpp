@@ -20,8 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare_Vector.h"
 #include "zoolib/ZStream.h"
-#include "zoolib/tuplebase/ZTBQuery.h"
 #include "zoolib/ZUtil_STL.h"
+
+#include "zoolib/tuplebase/ZTBQuery.h"
 
 #ifndef kDebug_TBQuery
 #	define kDebug_TBQuery 1
@@ -32,10 +33,6 @@ using std::string;
 using std::vector;
 
 namespace ZooLib {
-
-template <class Derived, class Base>
-ZRef<Derived> ZRefDynamicCast(const ZRef<Base>& iBase)
-	{ return iBase.DynamicCast<Derived>(); }
 
 static ZTuple spTupleFromNode(const ZRef<ZTBQueryNode>& iNode);
 static ZRef<ZTBQueryNode> spNodeFromTuple(const ZTuple& iTuple);
@@ -253,7 +250,7 @@ ZTBQuery ZTBQuery::operator&(const ZTBSpec& iSpec) const
 	if (iSpec.IsAny())
 		return *this;
 
-	if (ZRef<ZTBQueryNode_Combo> qnc = ZRefDynamicCast<ZTBQueryNode_Combo>(fNode))
+	if (ZRef<ZTBQueryNode_Combo> qnc = fNode.DynamicCast<ZTBQueryNode_Combo>())
 		{
 		vector<ZTBQueryNode_Combo::Intersection> newVectorSect;
 		const vector<ZTBQueryNode_Combo::Intersection>& src = qnc->GetIntersections();
@@ -285,7 +282,7 @@ ZTBQuery& ZTBQuery::operator&=(const ZTBSpec& iSpec)
 		}
 	else if (not iSpec.IsAny())
 		{
-		if (ZRef<ZTBQueryNode_Combo> qnc = ZRefDynamicCast<ZTBQueryNode_Combo>(fNode))
+		if (ZRef<ZTBQueryNode_Combo> qnc = fNode.DynamicCast<ZTBQueryNode_Combo>())
 			{
 			vector<ZTBQueryNode_Combo::Intersection> newVectorSect;
 			const vector<ZTBQueryNode_Combo::Intersection> src = qnc->GetIntersections();
@@ -333,10 +330,10 @@ ZTBQuery& ZTBQuery::operator&=(const ZTBQuery& iQuery)
 		{
 		fNode.Clear();
 		}
-	else if (ZRef<ZTBQueryNode_Combo> myQNC = ZRefDynamicCast<ZTBQueryNode_Combo>(fNode))
+	else if (ZRef<ZTBQueryNode_Combo> myQNC = fNode.DynamicCast<ZTBQueryNode_Combo>())
 		{
 		vector<ZTBQueryNode_Combo::Intersection> newVectorSect;
-		if (ZRef<ZTBQueryNode_Combo> otherQNC = ZRefDynamicCast<ZTBQueryNode_Combo>(iQuery.fNode))
+		if (ZRef<ZTBQueryNode_Combo> otherQNC = iQuery.fNode.DynamicCast<ZTBQueryNode_Combo>())
 			{
 			const vector<ZTBQueryNode_Combo::Intersection>&
 				myVectorSect = myQNC->GetIntersections();
@@ -381,7 +378,7 @@ ZTBQuery& ZTBQuery::operator&=(const ZTBQuery& iQuery)
 			fNode = new ZTBQueryNode_Combo(theSort, newVectorSect);
 			}
 		}
-	else if (ZRef<ZTBQueryNode_Combo> otherQNC = ZRefDynamicCast<ZTBQueryNode_Combo>(iQuery.fNode))
+	else if (ZRef<ZTBQueryNode_Combo> otherQNC = iQuery.fNode.DynamicCast<ZTBQueryNode_Combo>())
 		{
 		vector<ZTBQueryNode_Combo::Intersection> newVectorSect = otherQNC->GetIntersections();
 		for (vector<ZTBQueryNode_Combo::Intersection>::iterator newIter = newVectorSect.begin();
@@ -428,11 +425,11 @@ ZTBQuery& ZTBQuery::operator|=(const ZTBQuery& iQuery)
 	else
 		{
 		vector<ZTBQueryNode_Combo::Intersection> newVectorSect;
-		if (ZRef<ZTBQueryNode_Combo> myQNC = ZRefDynamicCast<ZTBQueryNode_Combo>(fNode))
+		if (ZRef<ZTBQueryNode_Combo> myQNC = fNode.DynamicCast<ZTBQueryNode_Combo>())
 			{
 			newVectorSect = myQNC->GetIntersections();
 			if (ZRef<ZTBQueryNode_Combo> otherQNC =
-				ZRefDynamicCast<ZTBQueryNode_Combo>(iQuery.fNode))
+				iQuery.fNode.DynamicCast<ZTBQueryNode_Combo>())
 				{
 				const vector<ZTBQueryNode_Combo::Intersection>&
 					rightVectorSect = otherQNC->GetIntersections();
@@ -446,7 +443,7 @@ ZTBQuery& ZTBQuery::operator|=(const ZTBQuery& iQuery)
 				}
 			}
 		else if (ZRef<ZTBQueryNode_Combo>otherQNC =
-			ZRefDynamicCast<ZTBQueryNode_Combo>(iQuery.fNode))
+			iQuery.fNode.DynamicCast<ZTBQueryNode_Combo>())
 			{
 			newVectorSect = otherQNC->GetIntersections();
 			newVectorSect.push_back(ZTBQueryNode_Combo::Intersection(fNode));
@@ -476,7 +473,7 @@ ZTBQuery ZTBQuery::Sorted(const ZTName& iPropName, bool iAscending, int iStrengt
 	vector<SortSpec> theSort(1, SortSpec(iPropName, iAscending, iStrength));
 	vector<ZTBQueryNode_Combo::Intersection> theIntersections;
 
-	if (ZRef<ZTBQueryNode_Combo> qnc = ZRefDynamicCast<ZTBQueryNode_Combo>(fNode))
+	if (ZRef<ZTBQueryNode_Combo> qnc = fNode.DynamicCast<ZTBQueryNode_Combo>())
 		{
 		theSort.insert(theSort.end(), qnc->GetSort().begin(), qnc->GetSort().end());
 
@@ -510,7 +507,7 @@ ZTBQuery ZTBQuery::First(const ZTName& iPropName) const
 	if (!fNode)
 		return *this;
 
-	if (ZRef<ZTBQueryNode_First> qnf = ZRefDynamicCast<ZTBQueryNode_First>(fNode))
+	if (ZRef<ZTBQueryNode_First> qnf = fNode.DynamicCast<ZTBQueryNode_First>())
 		{
 		if (iPropName.Empty())
 			return qnf->GetSourceNode();
@@ -668,7 +665,7 @@ static void spSimplify(vector<ZTBQueryNode_Combo::Intersection>& ioIntersections
 		for (vector<ZRef<ZTBQueryNode> >::iterator j = (*i).fNodes.begin();
 			j != (*i).fNodes.end(); /*no incr*/)
 			{
-			if (ZRef<ZTBQueryNode_All> theAll = ZRefDynamicCast<ZTBQueryNode_All>(*j))
+			if (ZRef<ZTBQueryNode_All> theAll = j->DynamicCast<ZTBQueryNode_All>())
 				{
 				j = (*i).fNodes.erase(j);
 				gotAnAll = true;

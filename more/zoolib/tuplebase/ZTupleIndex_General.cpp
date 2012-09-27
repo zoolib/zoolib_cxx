@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tuplebase/ZTupleIndex_General.h"
 
 #include "zoolib/ZStrim.h"
+#include "zoolib/ZUtil_Strim_Operators.h"
 
 using std::set;
 using std::string;
@@ -197,7 +198,7 @@ void ZTupleIndex_General::WriteDescription(const ZStrimW& s)
 	s << "ZTupleIndex_General. ";
 	s.Writef("%zu entries, indexing on ", fSet.size());
 	for (size_t x = 0; x < fPropNameCount; ++x)
-		s << fPropNames[x].AsString() << ", ";
+		s << string8(fPropNames[x]) << ", ";
 	}
 
 bool ZTupleIndex_General::pSetupIterators(vector<const ZTBSpec::Criterion*>& ioCriteria,

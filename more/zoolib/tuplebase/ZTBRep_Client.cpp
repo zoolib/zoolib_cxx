@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tuplebase/ZTBRep_Client.h"
 
 #include "zoolib/ZLog.h"
-#include "zoolib/ZUtil_STL.h" // For sSortedEraseMustContain etc
+#include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
 #include "zoolib/tuplebase/ZTupleIndex.h"
@@ -268,7 +268,7 @@ ZTBRepTransaction* ZTBRep_Client::CreateTransaction()
 	ZMutexLocker lock(fMutex_Structure);
 
 	Transaction* theTransaction = new Transaction(this, fLive);
-	sSortedInsertMustNotContain(kDebug_TBRep_Client, fTransactions_Create_Unsent, theTransaction);
+	sInsertSortedMust(kDebug_TBRep_Client, fTransactions_Create_Unsent, theTransaction);
 
 	fCondition_Sender.Broadcast();
 
@@ -459,12 +459,12 @@ void ZTBRep_Client::Trans_AbortPreValidate(Transaction* iTransaction)
 		fCondition_Transaction.Wait(fMutex_Structure);
 
 	// iTransaction must be created.
-	if (!sSortedEraseIfContains(fTransactions_Created, iTransaction))
+	if (!sQEraseSorted(fTransactions_Created, iTransaction))
 		{
 		ZDebugStopf(kDebug_TBRep_Client, ("Aborting a transaction that's not created"));
 		}
 
-	sSortedInsertMustNotContain(kDebug_TBRep_Client, fTransactions_Aborted_Unsent, iTransaction);
+	sInsertSortedMust(kDebug_TBRep_Client, fTransactions_Aborted_Unsent, iTransaction);
 	fCondition_Sender.Broadcast();
 
 	this->pDoStuff();
@@ -476,7 +476,7 @@ void ZTBRep_Client::Trans_Validate(Transaction* iTransaction,
 	ZMutexLocker lock(fMutex_Structure);
 
 	sSortedEraseMustContain(kDebug_TBRep_Client, fTransactions_Created, iTransaction);
-	sSortedInsertMustNotContain(kDebug_TBRep_Client, fTransactions_Validate_Unsent, iTransaction);
+	sInsertSortedMust(kDebug_TBRep_Client, fTransactions_Validate_Unsent, iTransaction);
 
 	iTransaction->fCallback_Validate = iCallback_Validate;
 	iTransaction->fRefcon = iRefcon;
@@ -502,7 +502,7 @@ void ZTBRep_Client::Trans_CancelPostValidate(Transaction* iTransaction)
 		ZDebugStopf(kDebug_TBRep_Client, ("Canceling a transaction that's not validated"));
 		}
 
-	sSortedInsertMustNotContain(kDebug_TBRep_Client, fTransactions_Aborted_Unsent, iTransaction);
+	sInsertSortedMust(kDebug_TBRep_Client, fTransactions_Aborted_Unsent, iTransaction);
 	fCondition_Sender.Broadcast();
 	this->pDoStuff();
 	}
@@ -520,7 +520,7 @@ void ZTBRep_Client::Trans_Commit(Transaction* iTransaction,
 	ZMutexLocker lock(fMutex_Structure);
 
 	sSortedEraseMustContain(kDebug_TBRep_Client, fTransactions_Validated, iTransaction);
-	sSortedInsertMustNotContain(kDebug_TBRep_Client, fTransactions_Commit_Unsent, iTransaction);
+	sInsertSortedMust(kDebug_TBRep_Client, fTransactions_Commit_Unsent, iTransaction);
 
 	iTransaction->fCallback_Commit = iCallback_Commit;
 	iTransaction->fRefcon = iRefcon;
@@ -599,7 +599,7 @@ void ZTBRep_Client::pDoStuff()
 				{
 				i = fTransactions_Create_Unsent.erase(i);
 				// Move it directly into fTransactions_Created
-				sSortedInsertMustNotContain
+				sInsertSortedMust
 					(kDebug_TBRep_Client, fTransactions_Created, theTransaction);
 				// Give it a fake server ID, to wake Create/Abort etc.
 				theTransaction->fServerID = kDummyServerID;
@@ -621,7 +621,7 @@ void ZTBRep_Client::pDoStuff()
 				{
 				i = fTransactions_Create_Unacked.erase(i);
 				// Move it into fTransactions_Created
-				sSortedInsertMustNotContain
+				sInsertSortedMust
 					(kDebug_TBRep_Client, fTransactions_Created, theTransaction);
 				// Give it a fake server ID, to wake Create/Abort etc.
 				theTransaction->fServerID = kDummyServerID;
@@ -644,7 +644,7 @@ void ZTBRep_Client::pDoStuff()
 				{
 				i = fTransactions_Validate_Unsent.erase(i);
 				// Move it directly into fTransactions_Failed
-				sSortedInsertMustNotContain
+				sInsertSortedMust
 					(kDebug_TBRep_Client, fTransactions_Failed, theTransaction);
 				toCall.push_back(theTransaction);
 				}
@@ -673,7 +673,7 @@ void ZTBRep_Client::pDoStuff()
 				{
 				i = fTransactions_Validate_Unacked.erase(i);
 				// Move it directly into fTransactions_Failed
-				sSortedInsertMustNotContain
+				sInsertSortedMust
 					(kDebug_TBRep_Client, fTransactions_Failed, theTransaction);
 				toCall.push_back(theTransaction);
 				}
@@ -897,7 +897,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			sSortedEraseMustContain
 				(kDebug_TBRep_Client, fTransactions_Create_Unacked, theTransaction);
 
-			sSortedInsertMustNotContain
+			sInsertSortedMust
 				(kDebug_TBRep_Client, fTransactions_Created, theTransaction);
 
 			ZAssertStop(kDebug_TBRep_Client, theTransaction->fServerID == 0);
@@ -916,7 +916,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 
 			sSortedEraseMustContain
 				(kDebug_TBRep_Client, fTransactions_Validate_Unacked, theTransaction);
-			sSortedInsertMustNotContain
+			sInsertSortedMust
 				(kDebug_TBRep_Client, fTransactions_Validated, theTransaction);
 
 			if (theTransaction->fCallback_Validate)
@@ -934,7 +934,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			sSortedEraseMustContain
 				(kDebug_TBRep_Client, fTransactions_Validate_Unacked, theTransaction);
 
-			sSortedInsertMustNotContain(kDebug_TBRep_Client, fTransactions_Failed, theTransaction);
+			sInsertSortedMust(kDebug_TBRep_Client, fTransactions_Failed, theTransaction);
 
 			if (theTransaction->fCallback_Validate)
 				theTransaction->fCallback_Validate(false, theTransaction->fRefcon);
@@ -1105,7 +1105,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				i = fTransactions_Create_Unsent.erase(i);
 
 				vectorTransactionIDs.push_back(reinterpret_cast<int64>(theTransaction));
-				sSortedInsertMustNotContain(kDebug_TBRep_Client,
+				sInsertSortedMust(kDebug_TBRep_Client,
 					fTransactions_Create_Unacked, theTransaction);
 				}
 			}
@@ -1173,7 +1173,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 					i = fTransactions_Validate_Unsent.erase(i);
 
 					vectorServerIDs.push_back(int64(theTransaction->fServerID));
-					sSortedInsertMustNotContain(kDebug_TBRep_Client,
+					sInsertSortedMust(kDebug_TBRep_Client,
 						fTransactions_Validate_Unacked, theTransaction);
 					}
 				}
@@ -1204,7 +1204,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				i = fTransactions_Commit_Unsent.erase(i);
 
 				vectorServerIDs.push_back(int64(theTransaction->fServerID));
-				sSortedInsertMustNotContain(kDebug_TBRep_Client,
+				sInsertSortedMust(kDebug_TBRep_Client,
 					fTransactions_Commit_Unacked, theTransaction);
 				}
 			}

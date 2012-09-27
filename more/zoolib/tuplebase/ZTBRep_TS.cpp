@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
 #ifndef ZCONFIG_TBRep_TS_Logging
@@ -468,7 +469,7 @@ ZTBRepTransaction* ZTBRep_TS::CreateTransaction()
 	Transaction* newTransaction = new Transaction(this, fIndexFactories);
 
 	ZMutexLocker lock(fMutex_Structure);
-	ZUtil_STL::sInsertMustNotContain(kDebug, fTransactions, newTransaction);
+	ZUtil_STL::sInsertMust(kDebug, fTransactions, newTransaction);
 	return newTransaction;
 	}
 
@@ -694,7 +695,7 @@ void ZTBRep_TS::Trans_AbortPreValidate(Transaction* iTransaction)
 
 	iTransaction->fTransTuples.clear();
 
-	ZUtil_STL::sEraseMustContain(kDebug, fTransactions, iTransaction);
+	ZUtil_STL::sEraseMust(kDebug, fTransactions, iTransaction);
 	delete iTransaction;
 	}
 
@@ -720,7 +721,7 @@ void ZTBRep_TS::Trans_AcceptFailure(Transaction* iTransaction)
 	ASSERTUNLOCKED(fMutex_Structure);
 
 	ZMutexLocker lock(fMutex_Structure);
-	ZUtil_STL::sEraseMustContain(kDebug, fTransactions, iTransaction);
+	ZUtil_STL::sEraseMust(kDebug, fTransactions, iTransaction);
 	delete iTransaction;
 	}
 
@@ -753,7 +754,7 @@ void ZTBRep_TS::Trans_CancelPostValidate(Transaction* iTransaction)
 
 	iTransaction->fTransTuples.clear();
 
-	ZUtil_STL::sEraseMustContain(kDebug, fTransactions, iTransaction);
+	ZUtil_STL::sEraseMust(kDebug, fTransactions, iTransaction);
 	delete iTransaction;
 	}
 
@@ -854,7 +855,7 @@ void ZTBRep_TS::Trans_Commit(Transaction* iTransaction)
 	iTransaction->fTransTuples.clear();
 
 	// And dispose the transaction.
-	ZUtil_STL::sEraseMustContain(kDebug, fTransactions, iTransaction);
+	ZUtil_STL::sEraseMust(kDebug, fTransactions, iTransaction);
 	lockerStructure2.Release();
 
 	delete iTransaction;
@@ -1144,7 +1145,7 @@ ZTBRep_TS::TransTuple& ZTBRep_TS::pAllocateTransTuple(const void* iPosition,
 		iTransaction->fTransTuples.insert(*thePosition, pair<uint64, TransTuple>(iTIU.fID,
 		TransTuple(iTIU, iValue, iClockStart, iWritten)))->second;
 
-	iTIU.fUsingTransTuples.Insert(&theTransTuple);
+	sInsertBackMust(iTIU.fUsingTransTuples, &theTransTuple);
 	return theTransTuple;
 	}
 
@@ -1154,7 +1155,7 @@ void ZTBRep_TS::pDisposeTransTuple(TransTuple& iTransTuple)
 
 	TupleInUse& theTupleInUse = iTransTuple.fTupleInUse;
 
-	theTupleInUse.fUsingTransTuples.Erase(&iTransTuple);
+	sEraseMust(theTupleInUse.fUsingTransTuples, &iTransTuple);
 
 	this->pReleaseTupleInUse(theTupleInUse);
 	}
@@ -1194,7 +1195,7 @@ void ZTBRep_TS::pReleaseTupleInUse(TupleInUse& iTupleInUse)
 	if (iTupleInUse.fUsingTransTuples)
 		return;
 
-	ZUtil_STL::sEraseMustContain(kDebug, fTuplesInUse, iTupleInUse.fID);
+	ZUtil_STL::sEraseMust(kDebug, fTuplesInUse, iTupleInUse.fID);
 	}
 
 } // namespace ZooLib
