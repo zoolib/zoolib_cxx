@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h" // For std::min, std::max
 #include "zoolib/ZStdInt.h" // For int64
+#include "zoolib/ZTypes.h" // For EnableIfC
 
 namespace ZooLib {
 namespace ZCartesian {
@@ -62,17 +63,6 @@ Operations
 Contains
 Aligned, Centered, Flipped, Insetted, Offsetted, With
 */
-
-// This may get promoted out of ZCartesian at some point. Depends on
-// whether I can count on the availability of std::tr1.
-
-template <bool B, class T = void>
-struct EnableIfC
-	{};
-
-template <class T>
-struct EnableIfC<true, T>
-	{ typedef T type; };
 
 // =================================================================================================
 // MARK: - PointTraits and accessors

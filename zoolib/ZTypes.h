@@ -210,6 +210,17 @@ const struct
 	Adopt_T<T> operator&(T iT) const { return Adopt_T<T>(iT); }
 	} sAdopt = {};
 
+// =================================================================================================
+// Availability of tr1 is still a bit patchy, use our own enable templates for now.
+
+template <bool B, class T = void>
+struct EnableIfC
+	{};
+
+template <class T>
+struct EnableIfC<true, T>
+	{ typedef T type; };
+
 } // namespace ZooLib
 
 #endif // __ZTypes_h__
