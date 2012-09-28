@@ -18,13 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/tuplebase/ZTB.h"
 #include "zoolib/tuplebase/ZTBServer.h"
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStream.h"
-#include "zoolib/tuplebase/ZTB.h"
 #include "zoolib/ZTime.h"
-#include "zoolib/ZUtil_STL.h" // For sSortedEraseMustContain etc
+#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::map;
@@ -223,8 +226,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 			theTuple.SetInt64("ClientID", theTransaction->fClientID);
 			theTuple.SetInt64("ServerID", reinterpret_cast<int64>(theTransaction));
 			vectorIDs.push_back(theTuple);
-			sSortedInsertMustNotContain(kDebug_TBServer,
-				fTransactions_Created, theTransaction);
+			sInsertSortedMust(kDebug_TBServer, fTransactions_Created, theTransaction);
 			}
 		fTransactions_Create_Unsent.clear();
 
@@ -244,8 +246,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 			{
 			Transaction* theTransaction = *i;
 			vectorClientIDs.push_back(int64(theTransaction->fClientID));
-			sSortedInsertMustNotContain(kDebug_TBServer,
-				fTransactions_Validated, theTransaction);
+			sInsertSortedMust(kDebug_TBServer, fTransactions_Validated, theTransaction);
 			}
 		fTransactions_Validate_Succeeded.clear();
 
@@ -331,8 +332,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 					// Remove it from our low priority list too
 					// Actually, this shouldn't be necessary. fTuplesSent should
 					// stop this from happening. Probably should make this an assertion.
-					ZUtil_STL::sEraseIfContains
-						(theTransaction->fTuplesToSend_LowPriority, (*j).first);
+					sQErase(theTransaction->fTuplesToSend_LowPriority, (*j).first);
 					}
 				theTransaction->fTuplesToSend_HighPriority.clear();
 				vectorTransactionTuples.push_back(theTransactionTuple);
@@ -495,7 +495,7 @@ void ZTBServer::Handle_Create(const ZTuple& iReq)
 
 		locker.Acquire();
 
-		sSortedInsertMustNotContain(kDebug_TBServer, fTransactions_Create_Unsent, theTransaction);
+		sInsertSortedMust(kDebug_TBServer, fTransactions_Create_Unsent, theTransaction);
 
 		ZStreamerWriter::Wake();
 		}
@@ -513,7 +513,7 @@ void ZTBServer::spCallback_GetTupleForSearch
 			{
 			uint64 theID = *iIDs++;
 			const ZTuple& theTuple = *iTuples++;
-			if (not ZUtil_STL::sContains(theTransaction->fTuplesSent, theID))
+			if (not sContains(theTransaction->fTuplesSent, theID))
 				{
 				theTransaction->fTuplesSent.insert(theID);
 				theTransaction->fTuplesToSend_LowPriority.insert
@@ -537,8 +537,8 @@ void ZTBServer::spCallback_Search(void* iRefcon, vector<uint64>& ioResults)
 	// them below, outside the scope of the mutex and by which time the search could be disposed.
 	theSearch->fResults = ioResults;
 
-	sSortedEraseMustContain(kDebug_TBServer, theTransaction->fServer->fSearches_Waiting, theSearch);
-	sSortedInsertMustNotContain(kDebug_TBServer,
+	sEraseSortedMust(kDebug_TBServer, theTransaction->fServer->fSearches_Waiting, theSearch);
+	sInsertSortedMust(kDebug_TBServer,
 		theTransaction->fServer->fSearches_Unsent, theSearch);
 	theTransaction->fServer->ZStreamerWriter::Wake();
 
@@ -568,7 +568,7 @@ void ZTBServer::Handle_Search(const ZTuple& iReq)
 		theSearch->fTransaction = theTransaction;
 		theSearch->fClientSearchID = t.GetInt64("SearchID");
 		ZTBQuery theQuery(t.GetTuple("QueryAsTuple"));
-		sSortedInsertMustNotContain(kDebug_TBServer, fSearches_Waiting, theSearch);
+		sInsertSortedMust(kDebug_TBServer, fSearches_Waiting, theSearch);
 		theTransaction->fTBRepTransaction->Search(theQuery, spCallback_Search, theSearch);
 		}
 	}
@@ -582,8 +582,8 @@ void ZTBServer::spCallback_Count(void* iRefcon, size_t iResult)
 
 	theCount->fResult = iResult;
 
-	sSortedEraseMustContain(kDebug_TBServer, theTransaction->fServer->fCounts_Waiting, theCount);
-	sSortedInsertMustNotContain(kDebug_TBServer, theTransaction->fServer->fCounts_Unsent, theCount);
+	sEraseSortedMust(kDebug_TBServer, theTransaction->fServer->fCounts_Waiting, theCount);
+	sInsertSortedMust(kDebug_TBServer, theTransaction->fServer->fCounts_Unsent, theCount);
 	theTransaction->fServer->ZStreamerWriter::Wake();
 
 	locker.Release();
@@ -605,7 +605,7 @@ void ZTBServer::Handle_Count(const ZTuple& iReq)
 		theCount->fTransaction = theTransaction;
 		theCount->fClientCountID = t.GetInt64("CountID");
 		ZTBQuery theQuery(t.GetTuple("QueryAsTuple"));
-		sSortedInsertMustNotContain(kDebug_TBServer, fCounts_Waiting, theCount);
+		sInsertSortedMust(kDebug_TBServer, fCounts_Waiting, theCount);
 		theTransaction->fTBRepTransaction->Count(theQuery, spCallback_Count, theCount);
 		}
 	}
@@ -615,17 +615,17 @@ void ZTBServer::spCallback_Validate(bool iSucceeded, void* iRefcon)
 	Transaction* theTransaction = static_cast<Transaction*>(iRefcon);
 	ZMutexLocker locker(theTransaction->fServer->fMutex_Structure);
 
-	sSortedEraseMustContain(kDebug_TBServer,
+	sEraseSortedMust(kDebug_TBServer,
 		theTransaction->fServer->fTransactions_Validate_Waiting, theTransaction);
 
 	if (iSucceeded)
 		{
-		sSortedInsertMustNotContain(kDebug_TBServer,
+		sInsertSortedMust(kDebug_TBServer,
 			theTransaction->fServer->fTransactions_Validate_Succeeded, theTransaction);
 		}
 	else
 		{
-		sSortedInsertMustNotContain(kDebug_TBServer,
+		sInsertSortedMust(kDebug_TBServer,
 			theTransaction->fServer->fTransactions_Validate_Failed, theTransaction);
 		}
 
@@ -642,9 +642,9 @@ void ZTBServer::Handle_Validate(const ZTuple& iReq)
 		{
 		Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).GetInt64());
 
-		sSortedEraseMustContain(kDebug_TBServer, fTransactions_Created, theTransaction);
+		sEraseSortedMust(kDebug_TBServer, fTransactions_Created, theTransaction);
 
-		sSortedInsertMustNotContain(kDebug_TBServer,
+		sInsertSortedMust(kDebug_TBServer,
 			fTransactions_Validate_Waiting, theTransaction);
 
 		locker.Release();
@@ -663,11 +663,11 @@ void ZTBServer::Handle_Abort(const ZTuple& iReq)
 		{
 		Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).GetInt64());
 		// theTransaction must either be created or validated.
-		if (sSortedEraseIfContains(fTransactions_Created, theTransaction))
+		if (sQEraseSorted(fTransactions_Created, theTransaction))
 			{
 			theTransaction->fTBRepTransaction->AbortPreValidate();
 			}
-		else if (sSortedEraseIfContains(fTransactions_Validated, theTransaction))
+		else if (sQEraseSorted(fTransactions_Validated, theTransaction))
 			{
 			theTransaction->fTBRepTransaction->CancelPostValidate();
 			}
@@ -685,10 +685,10 @@ void ZTBServer::spCallback_Commit(void* iRefcon)
 	Transaction* theTransaction = static_cast<Transaction*>(iRefcon);
 	ZMutexLocker locker(theTransaction->fServer->fMutex_Structure);
 
-	sSortedEraseMustContain(kDebug_TBServer,
+	sEraseSortedMust(kDebug_TBServer,
 		theTransaction->fServer->fTransactions_Commit_Waiting, theTransaction);
 
-	sSortedInsertMustNotContain(kDebug_TBServer,
+	sInsertSortedMust(kDebug_TBServer,
 		theTransaction->fServer->fTransactions_Commit_Acked, theTransaction);
 
 	theTransaction->fServer->ZStreamerWriter::Wake();
@@ -703,8 +703,8 @@ void ZTBServer::Handle_Commit(const ZTuple& iReq)
 		i != vectorServerIDs.end(); ++i)
 		{
 		Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).GetInt64());
-		sSortedEraseMustContain(kDebug_TBServer, fTransactions_Validated, theTransaction);
-		sSortedInsertMustNotContain(kDebug_TBServer, fTransactions_Commit_Waiting, theTransaction);
+		sEraseSortedMust(kDebug_TBServer, fTransactions_Validated, theTransaction);
+		sInsertSortedMust(kDebug_TBServer, fTransactions_Commit_Waiting, theTransaction);
 		locker.Release();
 		theTransaction->fTBRepTransaction->Commit(spCallback_Commit, theTransaction);
 		locker.Acquire();

@@ -475,7 +475,7 @@ void ZTBRep_Client::Trans_Validate(Transaction* iTransaction,
 	{
 	ZMutexLocker lock(fMutex_Structure);
 
-	sSortedEraseMustContain(kDebug_TBRep_Client, fTransactions_Created, iTransaction);
+	sEraseSortedMust(kDebug_TBRep_Client, fTransactions_Created, iTransaction);
 	sInsertSortedMust(kDebug_TBRep_Client, fTransactions_Validate_Unsent, iTransaction);
 
 	iTransaction->fCallback_Validate = iCallback_Validate;
@@ -497,7 +497,7 @@ void ZTBRep_Client::Trans_CancelPostValidate(Transaction* iTransaction)
 		fCondition_Transaction.Wait(fMutex_Structure);
 
 	// iTransaction must either be validated
-	if (!sSortedEraseIfContains(fTransactions_Validated, iTransaction))
+	if (!sQEraseSorted(fTransactions_Validated, iTransaction))
 		{
 		ZDebugStopf(kDebug_TBRep_Client, ("Canceling a transaction that's not validated"));
 		}
@@ -510,7 +510,7 @@ void ZTBRep_Client::Trans_CancelPostValidate(Transaction* iTransaction)
 void ZTBRep_Client::Trans_AcceptFailure(Transaction* iTransaction)
 	{
 	ZMutexLocker lock(fMutex_Structure);
-	sSortedEraseMustContain(kDebug_TBRep_Client, fTransactions_Failed, iTransaction);
+	sEraseSortedMust(kDebug_TBRep_Client, fTransactions_Failed, iTransaction);
 	delete iTransaction;
 	}
 
@@ -519,7 +519,7 @@ void ZTBRep_Client::Trans_Commit(Transaction* iTransaction,
 	{
 	ZMutexLocker lock(fMutex_Structure);
 
-	sSortedEraseMustContain(kDebug_TBRep_Client, fTransactions_Validated, iTransaction);
+	sEraseSortedMust(kDebug_TBRep_Client, fTransactions_Validated, iTransaction);
 	sInsertSortedMust(kDebug_TBRep_Client, fTransactions_Commit_Unsent, iTransaction);
 
 	iTransaction->fCallback_Commit = iCallback_Commit;
@@ -894,7 +894,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			Transaction* theTransaction =
 				reinterpret_cast<Transaction*>(theTuple.GetInt64("ClientID"));
 
-			sSortedEraseMustContain
+			sEraseSortedMust
 				(kDebug_TBRep_Client, fTransactions_Create_Unacked, theTransaction);
 
 			sInsertSortedMust
@@ -914,7 +914,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			{
 			Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).GetInt64());
 
-			sSortedEraseMustContain
+			sEraseSortedMust
 				(kDebug_TBRep_Client, fTransactions_Validate_Unacked, theTransaction);
 			sInsertSortedMust
 				(kDebug_TBRep_Client, fTransactions_Validated, theTransaction);
@@ -931,7 +931,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			{
 			Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).GetInt64());
 
-			sSortedEraseMustContain
+			sEraseSortedMust
 				(kDebug_TBRep_Client, fTransactions_Validate_Unacked, theTransaction);
 
 			sInsertSortedMust(kDebug_TBRep_Client, fTransactions_Failed, theTransaction);
@@ -948,7 +948,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			{
 			Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).GetInt64());
 
-			sSortedEraseMustContain
+			sEraseSortedMust
 				(kDebug_TBRep_Client, fTransactions_Commit_Unacked, theTransaction);
 
 			if (theTransaction->fCallback_Commit)

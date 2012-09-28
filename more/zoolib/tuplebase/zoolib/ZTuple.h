@@ -92,6 +92,8 @@ public:
 
 	explicit ZTuple(const ZStreamR& iStreamR);
 
+	void ToStream(const ZStreamW& iStreamW) const;
+
 // Backwards compatibility
 	ZTuple Over(const ZTuple& iUnder) const;
 	ZTuple Under(const ZTuple& iOver) const;

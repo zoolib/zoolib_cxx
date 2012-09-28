@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/tuplebase/ZUtil_Strim_Tuple.h"
-
+#include "zoolib/ZStrimmerFromStrim.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
-#include "zoolib/ZStrimmerFromStrim.h"
+
 namespace ZooLib {
 
 // =================================================================================================

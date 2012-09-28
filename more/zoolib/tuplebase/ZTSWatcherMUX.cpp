@@ -22,10 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/ZUtil_STL_vector.h"
 
 namespace ZooLib {
-using ZUtil_STL::sFirstOrNil;
+
+using namespace ZUtil_STL;
 
 using std::map;
 using std::pair;
@@ -306,15 +309,15 @@ ZTSWatcherMUX::~ZTSWatcherMUX()
 	// Purge the caches, so the list destructors' assertions don't trip.
 	while (fPQueries_Cached)
 		{
-		PQuery* thePQuery = fPQueries_Cached.PopBack<PQuery>();
-		ZUtil_STL::sEraseMustContain(kDebug, fRefcon_To_PQuery, thePQuery->fRefcon);
-		ZUtil_STL::sEraseMustContain(kDebug, fMB_To_PQuery, thePQuery->fMB);
+		PQuery* thePQuery = sGetEraseBackMust<PQuery>(fPQueries_Cached);
+		sEraseMust(fRefcon_To_PQuery, thePQuery->fRefcon);
+		sEraseMust(fMB_To_PQuery, thePQuery->fMB);
 		}
 
 	while (fPTuples_Cached)
 		{
-		PTuple* thePTuple = fPTuples_Cached.PopBack<PTuple>();
-		ZUtil_STL::sEraseMustContain(kDebug, fPTuples, thePTuple->fID);
+		PTuple* thePTuple = sGetEraseBackMust<PTuple>(fPTuples_Cached);
+		sEraseMust(fPTuples, thePTuple->fID);
 		}
 
 	if (!fTSWatcher)
@@ -324,15 +327,15 @@ ZTSWatcherMUX::~ZTSWatcherMUX()
 			i != fMB_To_PQuery.end(); ++i)
 			{
 			PQuery* thePQuery = &i->second;
-			fPQueries_Sync.EraseIfContains(thePQuery);
-			ZUtil_STL::sEraseMustContain(kDebug, fRefcon_To_PQuery, thePQuery->fRefcon);
+			sQErase(fPQueries_Sync, thePQuery);
+			sEraseMust(kDebug, fRefcon_To_PQuery, thePQuery->fRefcon);
 			}
 		fMB_To_PQuery.clear();
 
 		for (map<uint64, PTuple>::iterator i = fPTuples.begin();
 			i != fPTuples.end(); ++i)
 			{
-			fPTuples_Sync.EraseIfContains(&i->second);
+			sQErase(fPTuples_Sync, &i->second);
 			}
 		fPTuples.clear();
 		}
@@ -360,9 +363,9 @@ void ZTSWatcherMUX::Watcher_Finalize(Watcher* iWatcher)
 		{
 		WQuery* theWQuery = &i->second;
 		PQuery* thePQuery = theWQuery->fPQuery;
-		thePQuery->fWQueries.Erase(theWQuery);
-		iWatcher->fWQueries_Tripped.EraseIfContains(theWQuery);
-		fPQueries_Sync.InsertIfNotContains(thePQuery);
+		sEraseMust(thePQuery->fWQueries, theWQuery);
+		sErase(iWatcher->fWQueries_Tripped, theWQuery);
+		sInsertBack(fPQueries_Sync, thePQuery);
 		}
 	iWatcher->fWQueries.clear();
 
@@ -371,13 +374,13 @@ void ZTSWatcherMUX::Watcher_Finalize(Watcher* iWatcher)
 		{
 		WTuple* theWTuple = &i->second;
 		PTuple* thePTuple = theWTuple->fPTuple;
-		thePTuple->fWTuples.Erase(theWTuple);
-		iWatcher->fWTuples_Tripped.EraseIfContains(theWTuple);
-		fPTuples_Sync.InsertIfNotContains(thePTuple);
+		sEraseMust(thePTuple->fWTuples, theWTuple);
+		sQErase(iWatcher->fWTuples_Tripped, theWTuple);
+		sQInsertBack(fPTuples_Sync, thePTuple);
 		}
 	iWatcher->fWTuples.clear();
 
-	ZUtil_STL::sEraseMustContain(kDebug, fWatchers, iWatcher);
+	sEraseMust(kDebug, fWatchers, iWatcher);
 
 	delete iWatcher;
 	}
@@ -425,21 +428,21 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 		ZAssertStop(kDebug, i == iWatcher->fWTuples.end() || i->first != theID);
 
 		PTuple* thePTuple = this->pGetPTuple(theID);
-		fPTuples_Cached.EraseIfContains(thePTuple);
+		sQErase(fPTuples_Cached, thePTuple);
 
 		WTuple* theWTuple = &iWatcher->fWTuples.insert(i,
 			pair<uint64, WTuple>(theID, WTuple(iWatcher, thePTuple)))->second;
 
-		thePTuple->fWTuples.Insert(theWTuple);
+		sInsertBackMust(thePTuple->fWTuples, theWTuple);
 
 		if (thePTuple->fReg == eReg_Done)
 			{
-			iWatcher->fWTuples_Tripped.Insert(theWTuple);
+			sInsertBackMust(iWatcher->fWTuples_Tripped, theWTuple);
 			}
 		else
 			{
 			waitForSync = true;
-			fPTuples_Sync.InsertIfNotContains(thePTuple);
+			sInsertBackMust(fPTuples_Sync, thePTuple);
 			}
 		}
 
@@ -450,12 +453,12 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 		ZAssertStop(kDebug, i != iWatcher->fWTuples.end());
 		WTuple* theWTuple = &i->second;
 		PTuple* thePTuple = theWTuple->fPTuple;
-		thePTuple->fWTuples.Erase(theWTuple);
-		iWatcher->fWTuples_Tripped.EraseIfContains(theWTuple);
+		sEraseMust(thePTuple->fWTuples, theWTuple);
+		sQErase(iWatcher->fWTuples_Tripped, theWTuple);
 		iWatcher->fWTuples.erase(i);
 		if (!thePTuple->fWTuples)
 			{
-			fPTuples_Sync.InsertIfNotContains(thePTuple);
+			sQInsertBack(fPTuples_Sync, thePTuple);
 			ZAssertStop(kDebug, !fPTuples_Cached.Contains(thePTuple));
 			}
 		}
@@ -470,12 +473,12 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 		thePTuple->fHasValueForServer = true;
 		thePTuple->fValue = iWrittenTuples[x];
 		thePTuple->fWrittenBy = iWatcher;
-		fPTuples_Sync.InsertIfNotContains(thePTuple);
+		sQInsertBack(fPTuples_Sync, thePTuple);
 		for (DListIterator<WTuple, DLink_WTuple_PTuple>
 			iter = thePTuple->fWTuples;iter; iter.Advance())
 			{
 			WTuple* theWTuple = iter.Current();
-			theWTuple->fWatcher->fWTuples_Tripped.InsertIfNotContains(theWTuple);
+			sQInsertBack(theWTuple->fWatcher->fWTuples_Tripped, theWTuple);
 			}
 		}
 
@@ -489,17 +492,17 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 		WQuery* theWQuery = &iWatcher->fWQueries.insert(i,
 			pair<int64, WQuery>(theWRefcon, WQuery(iWatcher, thePQuery, theWRefcon)))->second;
 
-		fPQueries_Cached.EraseIfContains(thePQuery);
-		thePQuery->fWQueries.Insert(theWQuery);
+		sQErase(fPQueries_Cached, thePQuery);
+		sInsertBackMust(thePQuery->fWQueries, theWQuery);
 
 		if (thePQuery->fReg == eReg_Done)
 			{
-			iWatcher->fWQueries_Tripped.Insert(theWQuery);
+			sInsertBackMust(iWatcher->fWQueries_Tripped, theWQuery);
 			}
 		else
 			{
 			waitForSync = true;
-			fPQueries_Sync.InsertIfNotContains(thePQuery);
+			sQInsertBack(fPQueries_Sync, thePQuery);
 			}
 		}
 
@@ -510,12 +513,12 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 		ZAssertStop(kDebug, i != iWatcher->fWQueries.end());
 		WQuery* theWQuery = &i->second;
 		PQuery* thePQuery = theWQuery->fPQuery;
-		thePQuery->fWQueries.Erase(theWQuery);
-		iWatcher->fWQueries_Tripped.EraseIfContains(theWQuery);
+		sEraseMust(thePQuery->fWQueries, theWQuery);
+		sQErase(iWatcher->fWQueries_Tripped, theWQuery);
 		iWatcher->fWQueries.erase(i);
 		if (!thePQuery->fWQueries)
 			{
-			fPQueries_Sync.InsertIfNotContains(thePQuery);
+			sQInsertBack(fPQueries_Sync, thePQuery);
 			ZAssertStop(kDebug, !fPQueries_Cached.Contains(thePQuery));
 			}
 		}
@@ -526,7 +529,7 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 		}
 
 	set<uint64> allResults;
-	for (DListIteratorEraseAll<WQuery, DLink_WQuery_Tripped>
+	for (DListEraser<WQuery, DLink_WQuery_Tripped>
 		iter = iWatcher->fWQueries_Tripped;iter; iter.Advance())
 		{
 		WQuery* theWQuery = iter.Current();
@@ -554,10 +557,10 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 					WTuple* theWTuple = &iWatcher->fWTuples.insert(iterWTuples,
 						pair<uint64, WTuple>(theID, WTuple(iWatcher, thePTuple)))->second;
 
-					fPTuples_Cached.EraseIfContains(thePTuple);
-					thePTuple->fWTuples.Insert(theWTuple);
+					sQErase(fPTuples_Cached, thePTuple);
+					sInsertBackMust(thePTuple->fWTuples, theWTuple);
 
-					iWatcher->fWTuples_Tripped.Insert(theWTuple);
+					sInsertBackMust(iWatcher->fWTuples_Tripped, theWTuple);
 					oAddedIDs.push_back(theID);
 					}
 				}
@@ -566,7 +569,7 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 
 	oChangedTupleIDs.reserve(iWatcher->fWTuples_Tripped.Size());
 	oChangedTuples.reserve(iWatcher->fWTuples_Tripped.Size());
-	for (DListIteratorEraseAll<WTuple, DLink_WTuple_Tripped>
+	for (DListEraser<WTuple, DLink_WTuple_Tripped>
 		iter = iWatcher->fWTuples_Tripped;iter; iter.Advance())
 		{
 		PTuple* thePTuple = iter.Current()->fPTuple;
@@ -611,7 +614,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 	writtenIDs.reserve(fPTuples_Sync.Size());
 	writtenTuples.reserve(fPTuples_Sync.Size());
 
-	for (DListIteratorEraseAll<PTuple, DLink_PTuple_Sync>
+	for (DListEraser<PTuple, DLink_PTuple_Sync>
 		iter = fPTuples_Sync;iter; iter.Advance())
 		{
 		PTuple* thePTuple = iter.Current();
@@ -622,7 +625,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 			writtenTuples.push_back(thePTuple->fValue);
 			}
 
-		if (thePTuple->fWTuples.Empty())
+		if (sIsEmpty(thePTuple->fWTuples))
 			{
 			ZAssertStop(kDebug, thePTuple->fReg != eReg_Pending);
 			if (thePTuple->fReg == eReg_Done)
@@ -631,7 +634,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 				// may be on the cached list already, so do a conditional
 				// insert (see commented-out assertion in
 				// pSync's handling of iWrittenTuples).
-				fPTuples_Cached.InsertIfNotContains(thePTuple);
+				sQInsertFront(fPTuples_Cached, thePTuple);
 				}
 			else
 				{
@@ -662,25 +665,25 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 		removedIDs.reserve(fPTuples_Cached.Size() - fCacheSize_Tuples);
 		while (fPTuples_Cached.Size() > fCacheSize_Tuples)
 			{
-			PTuple* thePTuple = fPTuples_Cached.PopBack<PTuple>();
+			PTuple* thePTuple = sGetEraseBackMust<PTuple>(fPTuples_Cached);
 			if (thePTuple->fReg == eReg_Done)
 				{
 				thePTuple->fReg = eReg_Fresh; // Not strictly necessary
 				removedIDs.push_back(thePTuple->fID);
 				}
-			ZUtil_STL::sEraseMustContain(kDebug, fPTuples, thePTuple->fID);
+			sEraseMust(kDebug, fPTuples, thePTuple->fID);
 			}
 		}
 
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
-	for (DListIteratorEraseAll<PQuery, DLink_PQuery_Sync>
+	for (DListEraser<PQuery, DLink_PQuery_Sync>
 		iter = fPQueries_Sync;iter; iter.Advance())
 		{
 		PQuery* thePQuery = iter.Current();
-		if (thePQuery->fWQueries.Empty())
+		if (sIsEmpty(thePQuery->fWQueries))
 			{
 			ZAssertStop(kDebug, thePQuery->fReg != eReg_Pending);
-			fPQueries_Cached.PushFront(thePQuery);
+			sInsertFrontMust(fPQueries_Cached, thePQuery);
 			}
 		else
 			{
@@ -702,14 +705,14 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 		removedQueries.reserve(fPQueries_Cached.Size() - fCacheSize_Queries);
 		while (fPQueries_Cached.Size() > fCacheSize_Queries)
 			{
-			PQuery* thePQuery = fPQueries_Cached.PopBack<PQuery>();
+			PQuery* thePQuery = sGetEraseBackMust<PQuery>(fPQueries_Cached);
 			if (thePQuery->fReg == eReg_Done)
 				{
 				thePQuery->fReg = eReg_Fresh; // Not strictly necessary
 				removedQueries.push_back(thePQuery->fRefcon);
 				}
-			ZUtil_STL::sEraseMustContain(kDebug, fRefcon_To_PQuery, thePQuery->fRefcon);
-			ZUtil_STL::sEraseMustContain(kDebug, fMB_To_PQuery, thePQuery->fMB);
+			sEraseMust(kDebug, fRefcon_To_PQuery, thePQuery->fRefcon);
+			sEraseMust(kDebug, fMB_To_PQuery, thePQuery->fMB);
 			}
 		}
 
@@ -815,8 +818,8 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 		PTuple* thePTuple = *i;
 		ZAssertStop(kDebug, thePTuple->fReg == eReg_Pending);
 		thePTuple->fReg = eReg_Done;
-		if (thePTuple->fWTuples.Empty())
-			fPTuples_Sync.InsertIfNotContains(thePTuple);
+		if (sIsEmpty(thePTuple->fWTuples))
+			sQInsertBack(fPTuples_Sync, thePTuple);
 		}
 
 	for (vector<uint64>::iterator i = serverAddedIDs.begin(); i != serverAddedIDs.end(); ++i)
@@ -861,7 +864,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 					iter = thePTuple->fWTuples;iter; iter.Advance())
 					{
 					WTuple* theWTuple = iter.Current();
-					theWTuple->fWatcher->fWTuples_Tripped.InsertIfNotContains(theWTuple);
+					sQInsertBack(theWTuple->fWatcher->fWTuples_Tripped, theWTuple);
 					watchersToCallback.insert(theWTuple->fWatcher);
 					}
 				thePTuple->fValue = changedTuples[x];
@@ -882,7 +885,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 				iter = thePQuery->fWQueries;iter; iter.Advance())
 				{
 				WQuery* theWQuery = iter.Current();
-				theWQuery->fWatcher->fWQueries_Tripped.InsertIfNotContains(theWQuery);
+				sInsertBack(theWQuery->fWatcher->fWQueries_Tripped, theWQuery);
 				watchersToCallback.insert(theWQuery->fWatcher);
 				}
 			thePQuery->fResults.swap(i->second);
@@ -910,7 +913,7 @@ ZTSWatcherMUX::PQuery* ZTSWatcherMUX::pGetPQuery(const ZTSWatcher::AddedQueryCom
 	{
 	ZAssertStop(kDebug, fMutex_Structure.IsLocked());
 	ZMemoryBlock theMB = iAQC.fMemoryBlock;
-	if (!theMB)
+	if (not theMB.GetSize())
 		iAQC.fTBQuery.ToStream(ZStreamRWPos_MemoryBlock(theMB));
 
 	map<ZMemoryBlock, PQuery>::iterator i = fMB_To_PQuery.lower_bound(theMB);

@@ -763,11 +763,11 @@ void Source_Union::ModifyRegistrations
 			fMap_Refcon_ClientQuery.find(theRefcon);
 
 		ClientQuery* theClientQuery = &iterClientQuery->second;
-		sErase(fClientQuery_NeedsWork, theClientQuery);
+		sQErase(fClientQuery_NeedsWork, theClientQuery);
 
 		PQuery* thePQuery = theClientQuery->fPQuery;
 
-		sErase(thePQuery->fClientQueries, theClientQuery);
+		sQErase(thePQuery->fClientQueries, theClientQuery);
 
 		if (thePQuery->fClientQueries.IsEmpty())
 			{
@@ -785,13 +785,13 @@ void Source_Union::ModifyRegistrations
 						{
 						PIP* thePIP = eraserPIP.Current();
 						PSource* thePSource = thePIP->fPSource;
-						sInsertBack(thePSource->fPIP_NeedsWork, thePIP);
-						sInsertBack(fPSource_NeedsWork, thePSource);
+						sQInsertBack(thePSource->fPIP_NeedsWork, thePIP);
+						sQInsertBack(fPSource_NeedsWork, thePSource);
 						thePIP->fProxy = nullptr;
 						}
 					}
 				}
-			sErase(fPQuery_NeedsWork, thePQuery);
+			sQErase(fPQuery_NeedsWork, thePQuery);
 			sEraseMust(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 			}
 
@@ -952,7 +952,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 
 				for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 					iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
-					{ sInsertBack(fClientQuery_NeedsWork, iterCS.Current()); }
+					{ sQInsertBack(fClientQuery_NeedsWork, iterCS.Current()); }
 				}
 			}
 
@@ -1059,7 +1059,7 @@ ZRef<ZRA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
 			sInsertBackMust(theProxy->fPIP_InProxy, thePIP);
 
 			sInsertBackMust(thePSource->fPIP_NeedsWork, thePIP);
-			sInsertBack(fPSource_NeedsWork, thePSource);
+			sQInsertBack(fPSource_NeedsWork, thePSource);
 			}
 		}
 
@@ -1170,7 +1170,7 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 				i = thePIP->fProxy->fDependentPQueries.begin(),
 				end = thePIP->fProxy->fDependentPQueries.end();
 				i != end; ++i)
-				{ sInsertBack(fPQuery_NeedsWork, *i); }
+				{ sQInsertBack(fPQuery_NeedsWork, *i); }
 			}
 		}
 	}
@@ -1179,7 +1179,7 @@ void Source_Union::pResultsAvailable(ZRef<Source> iSource)
 	{
 	ZGuardMtxR guard(fMtxR);
 	Map_Source_PSource::iterator iterSource = fMap_Source_PSource.find(iSource);
-	sInsertBack(fPSource_CollectFrom, &iterSource->second);
+	sQInsertBack(fPSource_CollectFrom, &iterSource->second);
 	guard.Release();
 	Source::pTriggerResultsAvailable();
 	}

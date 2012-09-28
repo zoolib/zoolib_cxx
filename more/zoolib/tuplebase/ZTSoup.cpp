@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStringf.h"
+#include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
@@ -33,7 +35,7 @@ using std::vector;
 
 namespace ZooLib {
 
-using ZUtil_STL::sFirstOrNil;
+using namespace ZUtil_STL;
 
 #define ASSERTLOCKED(a) ZAssertStop(ZTSoup::kDebug, a.IsLocked())
 #define ASSERTUNLOCKED(a) ZAssertStop(ZTSoup::kDebug, !a.IsLocked())
@@ -257,7 +259,7 @@ void ZTSoup::Register(ZRef<ZTSieve> iTSieve, const ZTBQuery& iTBQuery, bool iPre
 		if (iPrefetch && !thePSieve->fPrefetch)
 			{
 			thePSieve->fPrefetch = true;
-			fPSieves_Update.InsertIfNotContains(thePSieve);
+			sQInsertBack(fPSieves_Update, thePSieve);
 			}
 		}
 	else
@@ -272,7 +274,7 @@ void ZTSoup::Register(ZRef<ZTSieve> iTSieve, const ZTBQuery& iTBQuery, bool iPre
 		thePSieve->fHasResults = false;
 		thePSieve->fHasDiffs = false;
 
-		fPSieves_Update.Insert(thePSieve);
+		sInsertBackMust(fPSieves_Update, thePSieve);
 
 		this->pTriggerUpdate();
 		}
@@ -286,7 +288,7 @@ void ZTSoup::Register(ZRef<ZTSieve> iTSieve, const ZTBQuery& iTBQuery, bool iPre
 
 	ZTSieve* theTSieve = iTSieve.Get();
 	theTSieve->fPSieve = thePSieve;
-	thePSieve->fTSieves_Using.Insert(theTSieve);
+	sInsertBackMust(thePSieve->fTSieves_Using, theTSieve);
 
 	if (thePSieve->fHasResults)
 		{
@@ -311,10 +313,10 @@ void ZTSoup::Register(ZRef<ZTCrouton> iTCrouton, uint64 iID)
 
 	ZTCrouton* theTCrouton = iTCrouton.Get();
 	iTCrouton->fPCrouton = thePCrouton;
-	thePCrouton->fTCroutons_Using.Insert(theTCrouton);
+	sInsertBackMust(thePCrouton->fTCroutons_Using, theTCrouton);
 
-	fPCroutons_Update.InsertIfNotContains(thePCrouton);
-	fPCroutons_Pending.EraseIfContains(thePCrouton);
+	sQInsertBack(fPCroutons_Update, thePCrouton);
+	sQErase(fPCroutons_Pending, thePCrouton);
 	this->pTriggerUpdate();
 
 	if (thePCrouton->fHasValue)
@@ -349,11 +351,11 @@ bool ZTSoup::Sync()
 	// be extracted in sorted order, required by ZTSWatcher::Sync.
 	map<uint64, ZTuple> writtenTupleMap;
 
-	if (!fPCroutons_Sync.Empty())
+	if (sNotEmpty(fPCroutons_Sync))
 		{
 		removedIDs.reserve(fPCroutons_Sync.Size());
 		addedIDs.reserve(fPCroutons_Sync.Size());
-		for (DListIteratorEraseAll<PCrouton, DLink_PCrouton_Sync> iter = fPCroutons_Sync;
+		for (DListEraser<PCrouton, DLink_PCrouton_Sync> iter = fPCroutons_Sync;
 			iter; iter.Advance())
 			{
 			PCrouton* thePCrouton = iter.Current();
@@ -372,7 +374,7 @@ bool ZTSoup::Sync()
 
 				// Put it on fPCroutons_Syncing, which will be transcribed
 				// to fCroutons_Pending after we've called our watcher.
-				fPCroutons_Syncing.InsertIfNotContains(thePCrouton);
+				sQInsertBack(fPCroutons_Syncing, thePCrouton);
 				}
 			else if (thePCrouton->fTCroutons_Using)
 				{
@@ -390,7 +392,7 @@ bool ZTSoup::Sync()
 				thePCrouton->fWatcherKnown = false;
 				removedIDs.push_back(thePCrouton->fID);
 				thePCrouton->fHasValue = false;
-				fPCroutons_Update.InsertIfNotContains(thePCrouton);
+				sQInsertBack(fPCroutons_Update, thePCrouton);
 				}
 			else
 				{
@@ -412,7 +414,7 @@ bool ZTSoup::Sync()
 	vector<int64> removedQueries;
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
 
-	for (DListIteratorEraseAll<PSieve, DLink_PSieve_Sync> iter = fPSieves_Sync;
+	for (DListEraser<PSieve, DLink_PSieve_Sync> iter = fPSieves_Sync;
 		iter; iter.Advance())
 		{
 		PSieve* thePSieve = iter.Current();
@@ -438,7 +440,7 @@ bool ZTSoup::Sync()
 			thePSieve->fWatcherKnown = false;
 			thePSieve->fHasResults = false;
 			removedQueries.push_back(reinterpret_cast<int64>(thePSieve));
-			fPSieves_Update.InsertIfNotContains(thePSieve);
+			sQInsertBack(fPSieves_Update, thePSieve);
 			}
 		else
 			{
@@ -506,7 +508,7 @@ bool ZTSoup::Sync()
 		thePCrouton->fWatcherKnown = true;
 		// Stick it on the pending list, so it will last past
 		// the end of the next update.
-		fPCroutons_Pending.InsertIfNotContains(thePCrouton);
+		sQInsertBack(fPCroutons_Pending, thePCrouton);
 		}
 
 	for (vector<uint64>::iterator iterChangedTuples = changedTupleIDs.begin(),
@@ -525,7 +527,7 @@ bool ZTSoup::Sync()
 			thePCrouton->fValue_FromWatcher =
 				*(changedTuples.begin() + (iterChangedTuples - changedTupleIDs.begin()));
 
-			fPCroutons_Changed.InsertIfNotContains(thePCrouton);
+			sQInsertBack(fPCroutons_Changed, thePCrouton);
 			}
 		}
 
@@ -535,14 +537,14 @@ bool ZTSoup::Sync()
 		{
 		PSieve* thePSieve = reinterpret_cast<PSieve*>((*i).first);
 		thePSieve->fResults_Remote.swap((*i).second);
-		fPSieves_Changed.InsertIfNotContains(thePSieve);
+		sQInsertBack(fPSieves_Changed, thePSieve);
 		}
 
-	for (DListIteratorEraseAll<PCrouton, DLink_PCrouton_Syncing>
+	for (DListEraser<PCrouton, DLink_PCrouton_Syncing>
 		iter = fPCroutons_Syncing;
 		iter; iter.Advance())
 		{
-		fPCroutons_Pending.InsertIfNotContains(iter.Current());
+		sQInsertBack(fPCroutons_Pending, iter.Current());
 		}
 
 	locker_CallSync.Release();
@@ -579,7 +581,7 @@ void ZTSoup::Update()
 		s << "Update start";
 		}
 
-	for (DListIteratorEraseAll<PCrouton, DLink_PCrouton_Update> iter = fPCroutons_Update;
+	for (DListEraser<PCrouton, DLink_PCrouton_Update> iter = fPCroutons_Update;
 		iter; iter.Advance())
 		{
 		PCrouton* thePCrouton = iter.Current();
@@ -591,7 +593,7 @@ void ZTSoup::Update()
 			thePCrouton->fWrittenLocally = false;
 			thePCrouton->fHasValue_ForWatcher = true;
 			thePCrouton->fValue_ForWatcher = thePCrouton->fValue;
-			fPCroutons_Sync.InsertIfNotContains(thePCrouton);
+			sQInsertBack(fPCroutons_Sync, thePCrouton);
 			}
 
 		if (!thePCrouton->fHasValue_ForWatcher)
@@ -603,7 +605,7 @@ void ZTSoup::Update()
 				if (!thePCrouton->fWatcherKnown)
 					{
 					// But not known to the watcher.
-					fPCroutons_Sync.InsertIfNotContains(thePCrouton);
+					sQInsertBack(fPCroutons_Sync, thePCrouton);
 					}
 				}
 			else if (!fPCroutons_Syncing.Contains(thePCrouton)
@@ -613,24 +615,24 @@ void ZTSoup::Update()
 				if (thePCrouton->fWatcherKnown)
 					{
 					// It's not in use, not syncing or pending, and is known to the watcher.
-					fPCroutons_Sync.InsertIfNotContains(thePCrouton);
+					sQInsertBack(fPCroutons_Sync, thePCrouton);
 					}
 				else
 					{
 					// It's not in use, not syncing or pending, is not known
 					// to the watcher so we can toss it.
-					fPCroutons_Sync.EraseIfContains(thePCrouton);
-					fPCroutons_Changed.EraseIfContains(thePCrouton);
+					sQErase(fPCroutons_Sync, thePCrouton);
+					sQErase(fPCroutons_Changed, thePCrouton);
 					if (ZLOG(s, eDebug + 1, "ZTSoup"))
 						s.Writef("Deleting PCrouton, ID: %llX", thePCrouton->fID);
 
-					ZUtil_STL::sEraseMustContain(kDebug, fID_To_PCrouton, thePCrouton->fID);
+					sEraseMust(kDebug, fID_To_PCrouton, thePCrouton->fID);
 					}
 				}
 			}
 		}
 
-	for (DListIteratorEraseAll<PSieve, DLink_PSieve_Update> iter = fPSieves_Update;
+	for (DListEraser<PSieve, DLink_PSieve_Update> iter = fPSieves_Update;
 		iter; iter.Advance())
 		{
 		PSieve* thePSieve = iter.Current();
@@ -641,27 +643,27 @@ void ZTSoup::Update()
 			if (!thePSieve->fWatcherKnown)
 				{
 				// But not known to the watcher.
-				fPSieves_Sync.InsertIfNotContains(thePSieve);
+				sQInsertBack(fPSieves_Sync, thePSieve);
 				}
 			}
 		else if (thePSieve->fWatcherKnown)
 			{
 			// It's not in use and is known to the watcher.
-			fPSieves_Sync.InsertIfNotContains(thePSieve);
+			sQInsertBack(fPSieves_Sync, thePSieve);
 			}
 		else
 			{
 			// It's not in use, is not known to the watcher, so we can toss it.
-			fPSieves_Sync.EraseIfContains(thePSieve);
-			fPSieves_Changed.EraseIfContains(thePSieve);
-			ZUtil_STL::sEraseMustContain(kDebug, fTBQuery_To_PSieve, thePSieve->fTBQuery);
+			sQErase(fPSieves_Sync, thePSieve);
+			sQErase(fPSieves_Changed, thePSieve);
+			sEraseMust(kDebug, fTBQuery_To_PSieve, thePSieve->fTBQuery);
 			}
 		}
 
 	// Pick up remotely changed croutons.
 	set<ZRef<ZTCrouton> > croutonsChanged;
 	set<ZRef<ZTCrouton> > croutonsLoaded;
-	for (DListIteratorEraseAll<PCrouton, DLink_PCrouton_Changed>
+	for (DListEraser<PCrouton, DLink_PCrouton_Changed>
 		iter = fPCroutons_Changed;
 		iter; iter.Advance())
 		{
@@ -690,7 +692,7 @@ void ZTSoup::Update()
 	// Pick up remotely changed sieves
 	set<ZRef<ZTSieve> > sievesChanged;
 	set<ZRef<ZTSieve> > sievesLoaded;
-	for (DListIteratorEraseAll<PSieve, DLink_PSieve_Changed> iter = fPSieves_Changed;
+	for (DListEraser<PSieve, DLink_PSieve_Changed> iter = fPSieves_Changed;
 		iter; iter.Advance())
 		{
 		PSieve* thePSieve = iter.Current();
@@ -732,17 +734,17 @@ void ZTSoup::Update()
 		if (ZLOG(s, eDebug + 1, "ZTSoup"))
 			s.Writef("Moving %zu croutons from pending to update", fPCroutons_Pending.Size());
 
-		for (DListIteratorEraseAll<PCrouton, DLink_PCrouton_Pending>
+		for (DListEraser<PCrouton, DLink_PCrouton_Pending>
 			iter = fPCroutons_Pending;
 			iter; iter.Advance())
 			{
-			fPCroutons_Update.InsertIfNotContains(iter.Current());
+			sQInsertBack(fPCroutons_Update, iter.Current());
 			}
 
 		this->pTriggerUpdate();
 		}
 
-	if (!fPCroutons_Sync.Empty() || !fPSieves_Sync.Empty())
+	if (sNotEmpty(fPCroutons_Sync) || sNotEmpty(fPSieves_Sync))
 		this->pTriggerSync();
 
 	if (ZLOG(s, eDebug + 1, "ZTSoup"))
@@ -774,9 +776,9 @@ void ZTSoup::Purge()
 
 		ZAssertStop(ZTSoup::kDebug, !thePSieve->fTSieves_Using);
 
-		fPSieves_Update.EraseIfContains(thePSieve);
-		fPSieves_Sync.EraseIfContains(thePSieve);
-		fPSieves_Changed.EraseIfContains(thePSieve);
+		sQErase(fPSieves_Update, thePSieve);
+		sQErase(fPSieves_Sync, thePSieve);
+		sQErase(fPSieves_Changed, thePSieve);
 		}
 	fTBQuery_To_PSieve.clear();
 
@@ -787,11 +789,11 @@ void ZTSoup::Purge()
 
 		ZAssertStop(ZTSoup::kDebug, !thePCrouton->fTCroutons_Using);
 
-		fPCroutons_Update.EraseIfContains(thePCrouton);
-		fPCroutons_Sync.EraseIfContains(thePCrouton);
-		fPCroutons_Changed.EraseIfContains(thePCrouton);
-		fPCroutons_Syncing.EraseIfContains(thePCrouton);
-		fPCroutons_Pending.EraseIfContains(thePCrouton);
+		sQErase(fPCroutons_Update, thePCrouton);
+		sQErase(fPCroutons_Sync, thePCrouton);
+		sQErase(fPCroutons_Changed, thePCrouton);
+		sQErase(fPCroutons_Syncing, thePCrouton);
+		sQErase(fPCroutons_Pending, thePCrouton);
 		}
 	fID_To_PCrouton.clear();
 	}
@@ -887,11 +889,11 @@ void ZTSoup::pDisposingTSieve(ZTSieve* iTSieve)
 
 	PSieve* thePSieve = iTSieve->fPSieve;
 
-	thePSieve->fTSieves_Using.Erase(iTSieve);
+	sEraseMust(thePSieve->fTSieves_Using, iTSieve);
 
 	if (!thePSieve->fTSieves_Using)
 		{
-		fPSieves_Update.InsertIfNotContains(thePSieve);
+		sQInsertBack(fPSieves_Update, thePSieve);
 		this->pTriggerUpdate();
 		}
 	}
@@ -908,11 +910,11 @@ void ZTSoup::pDisposingTCrouton(ZTCrouton* iTCrouton)
 		s.Writef("Disposing TCrouton, ID: %llX", thePCrouton->fID);
 		}
 
-	thePCrouton->fTCroutons_Using.Erase(iTCrouton);
+	sEraseMust(thePCrouton->fTCroutons_Using, iTCrouton);
 
 	if (!thePCrouton->fTCroutons_Using)
 		{
-		fPCroutons_Update.InsertIfNotContains(thePCrouton);
+		sQErase(fPCroutons_Update, thePCrouton);
 		this->pTriggerUpdate();
 		}
 	}
@@ -1065,7 +1067,7 @@ void ZTSoup::pSet(ZMutexLocker& iLocker_Structure, PCrouton* iPCrouton, const ZT
 	iPCrouton->fValue = iTuple;
 	iPCrouton->fWrittenLocally = true;
 
-	fPCroutons_Update.InsertIfNotContains(iPCrouton);
+	sQInsertBack(fPCroutons_Update, iPCrouton);
 
 	this->pTriggerUpdate();
 
@@ -1225,7 +1227,7 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 		for (vector<ZRef<ZTCrouton> >::iterator i = fTCroutons.begin();
 			i != fTCroutons.end(); /*no inc*/)
 			{
-			if (ZUtil_STL::sContains(removedIDs, (*i)->GetID()))
+			if (sContains(removedIDs, (*i)->GetID()))
 				{
 				ZRef<ZTCrouton> theTCrouton = *i;
 				if (ZLOG(s, eDebug, "ZTBowl"))

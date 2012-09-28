@@ -597,7 +597,7 @@ static bool spSync3
 			theCombo.fRefcon = theRefcon;
 			theCombo.fPrefetch = false;
 
-			iStreamR.Read(theCombo.fMemoryBlock.GetMutablePtr(), theSize);
+			iStreamR.Read(theCombo.fMemoryBlock.GetPtrMutable(), theSize);
 
 			addedQueries.push_back(theCombo);
 			}
@@ -729,7 +729,7 @@ static bool spSync4
 			theCombo.fRefcon = theRefcon;
 			theCombo.fPrefetch = thePrefetch;
 
-			iStreamR.Read(theCombo.fMemoryBlock.GetMutablePtr(), theSize);
+			iStreamR.Read(theCombo.fMemoryBlock.GetPtrMutable(), theSize);
 
 			addedQueries.push_back(theCombo);
 			}

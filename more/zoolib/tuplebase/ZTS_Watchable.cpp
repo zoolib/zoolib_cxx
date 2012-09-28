@@ -31,7 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-
 using std::lower_bound;
 using std::map;
 using std::pair;
@@ -40,6 +39,8 @@ using std::string;
 using std::vector;
 
 namespace ZooLib {
+
+using namespace ZUtil_STL;
 
 #ifdef ZCONFIG_TS_Watchable_DumpStuff
 #	define kDebug_DumpStuff ZCONFIG_TS_Watchable_DumpStuff
@@ -363,13 +364,13 @@ void ZTS_Watchable::Watcher_Finalize(Watcher* iWatcher)
 
 		// Detach theWatcherQuery from its PQuery.
 		PQuery* thePQuery = theWatcherQuery->fPQuery;
-		thePQuery->fUsingWatcherQueries.Erase(theWatcherQuery);
+		sEraseMust(thePQuery->fUsingWatcherQueries, theWatcherQuery);
 		this->pReleasePQuery(thePQuery);
 
 		// If it had been tripped it will be on this watcher's list
 		// of tripped queries and must be removed or we'll trip an assertion
 		// in theWatcherQuery's destructor.
-		iWatcher->fTrippedWatcherQueries.EraseIfContains(theWatcherQuery);
+		sQErase(iWatcher->fTrippedWatcherQueries, theWatcherQuery);
 
 		delete theWatcherQuery;
 		}
@@ -506,13 +507,13 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 
 	for (size_t count = iRemovedQueriesCount; count; --count)
 		{
-		WatcherQuery* theWatcherQuery = ZUtil_STL::sGetErase(kDebug,
-			iWatcher->fRefcon_To_WatcherQuery, *iRemovedQueries++);
+		WatcherQuery* theWatcherQuery =
+			sGetEraseMust(iWatcher->fRefcon_To_WatcherQuery, *iRemovedQueries++);
 
-		iWatcher->fTrippedWatcherQueries.EraseIfContains(theWatcherQuery);
+		sQErase(iWatcher->fTrippedWatcherQueries, theWatcherQuery);
 
 		PQuery* thePQuery = theWatcherQuery->fPQuery;
-		thePQuery->fUsingWatcherQueries.Erase(theWatcherQuery);
+		sEraseMust(thePQuery->fUsingWatcherQueries, theWatcherQuery);
 		delete theWatcherQuery;
 		this->pReleasePQuery(thePQuery);
 		}
@@ -538,12 +539,11 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 
 		WatcherQuery* theWatcherQuery =
 			new WatcherQuery(iWatcher, theRefcon, thePQuery, thePrefetch);
-		thePQuery->fUsingWatcherQueries.Insert(theWatcherQuery);
+		sInsertBackMust(thePQuery->fUsingWatcherQueries, theWatcherQuery);
 
-		ZUtil_STL::sInsertMust(kDebug,
-			iWatcher->fRefcon_To_WatcherQuery, theRefcon, theWatcherQuery);
+		sInsertMust(iWatcher->fRefcon_To_WatcherQuery, theRefcon, theWatcherQuery);
 
-		iWatcher->fTrippedWatcherQueries.Insert(theWatcherQuery);
+		sInsertBackMust(iWatcher->fTrippedWatcherQueries, theWatcherQuery);
 		}
 
 	locker_Structure.Release();
@@ -608,7 +608,7 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 		locker_Structure.Acquire();
 		}
 
-	for (DListIteratorEraseAll<WatcherQuery, WatcherQueryTripped>
+	for (DListEraser<WatcherQuery, WatcherQueryTripped>
 		iter = iWatcher->fTrippedWatcherQueries;iter; iter.Advance())
 		{
 		WatcherQuery* theWatcherQuery = iter.Current();
@@ -809,7 +809,7 @@ void ZTS_Watchable::pInvalidatePSpecs(const ZTuple& iOld, const ZTuple& iNew,
 			iter = curPQuery->fUsingWatcherQueries;iter; iter.Advance())
 			{
 			WatcherQuery* curWatcherQuery = iter.Current();
-			curWatcherQuery->fWatcher->fTrippedWatcherQueries.InsertIfNotContains(curWatcherQuery);
+			sQInsertBack(curWatcherQuery->fWatcher->fTrippedWatcherQueries, curWatcherQuery);
 			ioTouchedWatchers.insert(curWatcherQuery->fWatcher);
 			}
 

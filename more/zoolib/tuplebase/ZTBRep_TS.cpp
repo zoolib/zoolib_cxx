@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
@@ -44,6 +45,8 @@ using std::string;
 using std::vector;
 
 namespace ZooLib {
+
+using namespace ZUtil_STL;
 
 #define ASSERTLOCKED(a) ZAssertStop(kDebug, a.IsLocked())
 #define ASSERTUNLOCKED(a) ZAssertStop(kDebug, !a.IsLocked())
@@ -1195,7 +1198,7 @@ void ZTBRep_TS::pReleaseTupleInUse(TupleInUse& iTupleInUse)
 	if (iTupleInUse.fUsingTransTuples)
 		return;
 
-	ZUtil_STL::sEraseMust(kDebug, fTuplesInUse, iTupleInUse.fID);
+	sEraseMust(kDebug, fTuplesInUse, iTupleInUse.fID);
 	}
 
 } // namespace ZooLib

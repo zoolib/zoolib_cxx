@@ -435,7 +435,7 @@ void ZTSWatcher_Client::pSync2
 		{
 		const AddedQueryCombo& theAQC = *iAddedQueries++;
 		theStreamW.WriteInt64(theAQC.fRefcon);
-		if (theAQC.fMemoryBlock)
+		if (theAQC.fMemoryBlock.GetSize())
 			{
 			theStreamW.Write(theAQC.fMemoryBlock.GetPtr(), theAQC.fMemoryBlock.GetSize());
 			}
@@ -594,7 +594,7 @@ void ZTSWatcher_Client::pSync3
 		theStreamW.WriteInt64(theAQC.fRefcon);
 		ZMemoryBlock theMB = theAQC.fMemoryBlock;
 
-		if (!theMB)
+		if (not theMB.GetSize())
 			{
 			ZAssert(theAQC.fTBQuery);
 			theAQC.fTBQuery.ToStream(ZStreamRWPos_MemoryBlock(theMB, 1024));
@@ -756,7 +756,7 @@ void ZTSWatcher_Client::pSync4
 
 		ZMemoryBlock theMB = theAQC.fMemoryBlock;
 
-		if (!theMB)
+		if (not theMB.GetSize())
 			{
 			ZAssert(theAQC.fTBQuery);
 			theAQC.fTBQuery.ToStream(ZStreamRWPos_MemoryBlock(theMB, 1024));

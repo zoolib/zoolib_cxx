@@ -18,10 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/tuplebase/ZThreadOld.h"
-
 #include "zoolib/ZAtomic.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZThreadOld.h"
 #include "zoolib/ZTime.h"
 
 namespace ZooLib {

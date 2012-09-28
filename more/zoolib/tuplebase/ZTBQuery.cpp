@@ -509,12 +509,12 @@ ZTBQuery ZTBQuery::First(const ZTName& iPropName) const
 
 	if (ZRef<ZTBQueryNode_First> qnf = fNode.DynamicCast<ZTBQueryNode_First>())
 		{
-		if (iPropName.Empty())
+		if (sIsEmpty(iPropName))
 			return qnf->GetSourceNode();
 		return new ZTBQueryNode_First(iPropName, qnf->GetSourceNode());
 		}
 
-	if (iPropName.Empty())
+	if (sIsEmpty(iPropName))
 		return fNode;
 
 	return new ZTBQueryNode_First(iPropName, fNode);
@@ -736,7 +736,7 @@ ZTuple ZTBQueryNode_Combo::AsTuple()
 		for (vector<ZTBQuery::SortSpec>::iterator i = fSort.begin(); i != fSort.end(); ++i)
 			{
 			ZTuple theTuple;
-			theTuple.SetString("PropName", (*i).fPropName.AsString());
+			theTuple.SetString("PropName", string8((*i).fPropName));
 			theTuple.SetBool("Ascending", (*i).fAscending);
 			theTuple.SetInt32("Strength", (*i).fStrength);
 			sortVector.push_back(theTuple);

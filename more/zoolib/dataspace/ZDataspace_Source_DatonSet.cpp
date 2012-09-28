@@ -333,15 +333,15 @@ void Source_DatonSet::ModifyRegistrations
 				PSearch* thePSearch = *iterPSearch;
 				sEraseMust(kDebug, thePSearch->fPQuery_Using, thePQuery);
 				if (thePSearch->fPQuery_Using.empty())
-					sInsertBack(fPSearch_NeedsWork, thePSearch);
+					sQInsertBack(fPSearch_NeedsWork, thePSearch);
 				}
 			thePQuery->fPSearch_Used.clear();
 
-			sErase(fPQuery_NeedsWork, thePQuery);
+			sQErase(fPQuery_NeedsWork, thePQuery);
 			sEraseMust(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
 			}
 
-		sErase(fClientQuery_NeedsWork, theClientQuery);
+		sQErase(fClientQuery_NeedsWork, theClientQuery);
 		fMap_Refcon_ClientQuery.erase(iterClientQuery);
 		}
 
@@ -400,7 +400,7 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 			iter = thePQuery->fClientQuery_InPQuery; iter; iter.Advance())
-			{ sInsertBack(fClientQuery_NeedsWork, iter.Current()); }
+			{ sQInsertBack(fClientQuery_NeedsWork, iter.Current()); }
 		}
 
 	ZRef<Event> theEvent = fDatonSet->GetEvent();
@@ -647,7 +647,7 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 				iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)
 				{
 				PQuery* thePQuery = *iterPQuery;
-				sInsertBack(fPQuery_NeedsWork, thePQuery);
+				sQInsertBack(fPQuery_NeedsWork, thePQuery);
 				for (set<PSearch*>::iterator iterPSearch_Used =
 					thePQuery->fPSearch_Used.begin();
 					iterPSearch_Used != thePQuery->fPSearch_Used.end();
@@ -659,14 +659,14 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 						sEraseMust(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
 
 						if (thePSearch_Used->fPQuery_Using.empty())
-							sInsertBack(fPSearch_NeedsWork, thePSearch_Used);
+							sQInsertBack(fPSearch_NeedsWork, thePSearch_Used);
 						}
 					}
 				thePQuery->fPSearch_Used.clear();
 				}
 			thePSearch->fPQuery_Using.clear();
 			thePSearch->fResult.Clear();
-			sInsertBack(fPSearch_NeedsWork, thePSearch);
+			sQInsertBack(fPSearch_NeedsWork, thePSearch);
 			}
 		}
 	}
@@ -681,7 +681,7 @@ void Source_DatonSet::pChangedAll()
 			iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)
 			{
 			PQuery* thePQuery = *iterPQuery;
-			sInsertBack(fPQuery_NeedsWork, thePQuery);
+			sQInsertBack(fPQuery_NeedsWork, thePQuery);
 			for (set<PSearch*>::iterator iterPSearch_Used =
 				thePQuery->fPSearch_Used.begin();
 				iterPSearch_Used != thePQuery->fPSearch_Used.end();
@@ -693,14 +693,14 @@ void Source_DatonSet::pChangedAll()
 					sEraseMust(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
 
 					if (thePSearch_Used->fPQuery_Using.empty())
-						sInsertBack(fPSearch_NeedsWork, thePSearch_Used);
+						sQInsertBack(fPSearch_NeedsWork, thePSearch_Used);
 					}
 				}
 			thePQuery->fPSearch_Used.clear();
 			}
 		thePSearch->fPQuery_Using.clear();
 		thePSearch->fResult.Clear();
-		sInsertBack(fPSearch_NeedsWork, thePSearch);
+		sQInsertBack(fPSearch_NeedsWork, thePSearch);
 		}
 	}
 

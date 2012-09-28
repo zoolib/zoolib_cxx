@@ -42,7 +42,7 @@ void ZCommer::ReadStarted()
 	{
 	ZStreamerReader::ReadStarted();
 
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 	ZAssert(!fReadStarted);
 	fReadStarted = true;
 	fCnd.Broadcast();
@@ -55,7 +55,7 @@ void ZCommer::ReadStarted()
 
 void ZCommer::ReadFinished()
 	{
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 	ZAssert(fReadStarted);
 	fReadStarted = false;
 	fCnd.Broadcast();
@@ -76,7 +76,7 @@ void ZCommer::WriteStarted()
 	{
 	ZStreamerWriter::WriteStarted();
 
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 	ZAssert(!fWriteStarted);
 	fWriteStarted = true;
 	fCnd.Broadcast();
@@ -89,7 +89,7 @@ void ZCommer::WriteStarted()
 
 void ZCommer::WriteFinished()
 	{
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 	ZAssert(fWriteStarted);
 	fWriteStarted = false;
 	fCnd.Broadcast();
@@ -108,7 +108,7 @@ void ZCommer::WriteFinished()
 
 void ZCommer::Started()
 	{
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 	if (ZRef<Callable_t> theCallable = fCallable_Started)
 		{
 		guard.Release();
@@ -118,7 +118,7 @@ void ZCommer::Started()
 
 void ZCommer::Finished()
 	{
-	ZGuardRMtx guard(fMtx);
+	ZGuardMtx guard(fMtx);
 	if (ZRef<Callable_t> theCallable = fCallable_Finished)
 		{
 		guard.Release();
