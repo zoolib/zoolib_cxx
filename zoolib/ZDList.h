@@ -191,9 +191,9 @@ template <typename L, typename P>
 bool sQErase(DListHead<L>& ioDListHead, P* iP)
 	{ return ioDListHead.QErase(iP); }
 
-template <typename L, typename P>
-void sErase(DListHead<L>& ioDListHead, P* iP)
-	{ ioDListHead.QErase(iP); }
+//template <typename L, typename P>
+//void sErase(DListHead<L>& ioDListHead, P* iP)
+//	{ ioDListHead.QErase(iP); }
 
 template <typename L, typename P>
 void sEraseMust(DListHead<L>& ioDListHead, P* iP)
@@ -206,9 +206,9 @@ template <typename L, typename P>
 bool sQInsertBack(DListHead<L>& ioDListHead, P* iP)
 	{ return ioDListHead.QInsertBack(iP); }
 
-template <typename L, typename P>
-void sInsertBack(DListHead<L>& ioDListHead, P* iP)
-	{ ioDListHead.QInsertBack(iP); }
+//template <typename L, typename P>
+//void sInsertBack(DListHead<L>& ioDListHead, P* iP)
+//	{ ioDListHead.QInsertBack(iP); }
 
 template <typename L, typename P>
 void sInsertBackMust(DListHead<L>& ioDListHead, P* iP)
@@ -221,9 +221,9 @@ template <typename L, typename P>
 bool sQInsertFront(DListHead<L>& ioDListHead, P* iP)
 	{ return ioDListHead.QInsertFront(iP); }
 
-template <typename L, typename P>
-void sInsertFront(DListHead<L>& ioDListHead, P* iP)
-	{ ioDListHead.QInsertFront(iP); }
+//template <typename L, typename P>
+//void sInsertFront(DListHead<L>& ioDListHead, P* iP)
+//	{ ioDListHead.QInsertFront(iP); }
 
 template <typename L, typename P>
 void sInsertFrontMust(DListHead<L>& ioDListHead, P* iP)
