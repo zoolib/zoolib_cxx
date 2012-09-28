@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZName.h"
 #include "zoolib/ZUnicodeString.h" // For string8 etc.
 #include "zoolib/ZUtil_Relops.h"
+#include "zoolib/ZVal_T.h"
 
 namespace ZooLib {
 
@@ -272,8 +273,10 @@ public:
 	};
 
 template <class Map_p, class Seq_p>
-struct RelopsTraits<ZVal_T<Map_p,Seq_p> >
-	{ enum { eHas_LT = 1, eHas_EQ = 1 }; };
+struct RelopsTraits_HasEQ<ZVal_T<Map_p,Seq_p> > { enum { Value = 1 }; };
+
+template <class Map_p, class Seq_p>
+struct RelopsTraits_HasLT<ZVal_T<Map_p,Seq_p> > { enum { Value = 1 }; };
 
 } // namespace ZooLib
 

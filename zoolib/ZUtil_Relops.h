@@ -29,53 +29,46 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - RelopsTraits
 
-template <class S>
-struct RelopsTraits
-	{
-	enum
-		{
-		eHas_EQ = 0,
-		eHas_NE = 0,
-		eHas_LT = 0,
-		eHas_GT = 0,
-		eHas_LE = 0,
-		eHas_GE = 0
-		};
-	};
+template <class S> struct RelopsTraits_HasEQ { enum { Value = 0 }; };
+template <class S> struct RelopsTraits_HasNE { enum { Value = 0 }; };
+template <class S> struct RelopsTraits_HasLT { enum { Value = 0 }; };
+template <class S> struct RelopsTraits_HasGT { enum { Value = 0 }; };
+template <class S> struct RelopsTraits_HasLE { enum { Value = 0 }; };
+template <class S> struct RelopsTraits_HasGE { enum { Value = 0 }; };
 
 // =================================================================================================
 // MARK: - Free relational operators, with conditionalized availability
 
 template <class T>
-typename EnableIfC<not RelopsTraits<T>::eHas_LT && RelopsTraits<T>::eHas_GT,bool>::type
+typename EnableIfC<not RelopsTraits_HasLT<T>::Value && RelopsTraits_HasGT<T>::Value,bool>::type
 operator<(const T& l, const T& r)
 	{ return l > r; }
 
 template <class T>
-typename EnableIfC<not RelopsTraits<T>::eHas_GT && RelopsTraits<T>::eHas_LT,bool>::type
+typename EnableIfC<not RelopsTraits_HasGT<T>::Value && RelopsTraits_HasLT<T>::Value,bool>::type
 operator>(const T& l, const T& r)
 	{ return r < l; }
 
 template <class T>
-typename EnableIfC<not RelopsTraits<T>::eHas_LE && RelopsTraits<T>::eHas_LT,bool>::type
+typename EnableIfC<not RelopsTraits_HasLE<T>::Value && RelopsTraits_HasLT<T>::Value,bool>::type
 operator<=(const T& l, const T& r)
 	{ return not (r < l); }
 
 template <class T>
-typename EnableIfC<not RelopsTraits<T>::eHas_GE && RelopsTraits<T>::eHas_LT,bool>::type
+typename EnableIfC<not RelopsTraits_HasGE<T>::Value && RelopsTraits_HasLT<T>::Value,bool>::type
 operator>=(const T& l, const T& r)
 	{ return not (l < r); }
 
 template <class T>
-typename EnableIfC<not RelopsTraits<T>::eHas_NE && RelopsTraits<T>::eHas_EQ,bool>::type
+typename EnableIfC<not RelopsTraits_HasNE<T>::Value && RelopsTraits_HasLT<T>::Value,bool>::type
 operator!=(const T& l, const T& r)
 	{ return not (l == r); }
 
 template <class T>
 typename EnableIfC
-	<not RelopsTraits<T>::eHas_NE
-	&& not RelopsTraits<T>::eHas_EQ
-	&& RelopsTraits<T>::eHas_LT,bool>::type
+	<not RelopsTraits_HasNE<T>::Value
+	&& not RelopsTraits_HasEQ<T>::Value
+	&& RelopsTraits_HasLT<T>::Value,bool>::type
 operator!=(const T& l, const T& r)
 	{ return not (l < r || r < l); }
 
