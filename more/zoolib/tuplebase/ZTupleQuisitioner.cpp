@@ -730,7 +730,7 @@ void ZTupleQuisitioner::Query_Combo_First(const ZTName& iFirst,
 	const vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
 	const ZTBSpec* iFilter, vector<uint64>& ioIDs)
 	{
-	ZAssertStop(kDebug_TupleQuisitioner, !iFirst.Empty());
+	ZAssertStop(kDebug_TupleQuisitioner, sNotEmpty(iFirst));
 
 	if (iIntersections.empty())
 		return;

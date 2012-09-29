@@ -1004,7 +1004,7 @@ ZTuple ZTBQueryNode_Property::AsTuple()
 	{
 	ZTuple theTuple;
 	theTuple.SetString("Kind", "Property");
-	theTuple.SetString("PropName", fPropName.AsString());
+	theTuple.SetString("PropName", string8(fPropName));
 	if (fSourceNode)
 		theTuple.SetTuple("SourceNode", fSourceNode->AsTuple());
 	return theTuple;

@@ -77,7 +77,7 @@ static void spExtractConstraint(const ZTName& iPropName,
 		if (1 == (*critIter)->GetComparator().fStrength
 			&& ZTBSpec::eRel_Equal == (*critIter)->GetComparator().fRel
 			&& eZType_String == (*critIter)->GetTValue().TypeOf()
-			&& (*critIter)->GetPropName().Equals(iPropName))
+			&& (*critIter)->GetPropName == iPropName)
 			{
 			// It's a 1-strength equality search on our property name,
 			// so we can handle it. Remove the criteria from ioCriteria
@@ -103,7 +103,7 @@ static bool spCheckForConstraint
 		if (1 == (*critIter).GetComparator().fStrength
 			&& ZTBSpec::eRel_Equal == (*critIter).GetComparator().fRel
 			&& eZType_String == (*critIter).GetTValue().TypeOf()
-			&& (*critIter).GetPropName().Equals(iPropName))
+			&& (*critIter).GetPropName() == iPropName)
 			{
 			// It's a 1-strength equality search on our property name,
 			// so we can handle it. Remove the criteria from ioCriteria
@@ -162,7 +162,7 @@ void ZTupleIndex_String::WriteDescription(const ZStrimW& s)
 	{
 	s << "ZTupleIndex_String. ";
 	s.Writef("%zu entries, ", fSet.size());
-	s << "indexing on " << fPropName.AsString();
+	s << "indexing on " << string8(fPropName);
 	}
 
 bool ZTupleIndex_String::pKeyFromTuple(uint64 iID, const ZTuple* iTuple, Key& oKey)
