@@ -112,6 +112,8 @@ public:
 	ZFileSpec Ancestor(size_t iCount, Error* oError = 0) const;
 	ZFileSpec Descendant(const std::string* iComps, size_t iCount, Error* oError = 0) const;
 
+	ZFileSpec Follow() const;
+
 	std::string AsString() const;
 	std::string AsString_Native() const;
 
@@ -239,6 +241,8 @@ public:
 	virtual ZRef<ZFileLoc> GetDescendant
 		(const std::string* iComps, size_t iCount, ZFile::Error* oError) = 0;
 	virtual bool IsRoot() = 0;
+
+	virtual ZRef<ZFileLoc> Follow();
 
 	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount) = 0;
 	virtual std::string AsString_Native(const std::string* iComps, size_t iCount) = 0;

@@ -911,6 +911,28 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::GetDescendant
 bool ZFileLoc_POSIX::IsRoot()
 	{ return fIsAtRoot && fComps.empty(); }
 
+ZRef<ZFileLoc> ZFileLoc_POSIX::Follow()
+	{
+#if 0
+	struct stat theStat;
+	if (0 > ::lstat(this->pGetPath().c_str(), &theStat))
+		return null;
+
+// Need to interpret the link content somewhat, to deal with rel-paths etc.
+	if (S_ISLNK(theStat.st_mode))
+		{
+		char buf[PATH_MAX];
+		ssize_t len = ::readlink(this->pGetPath().c_str()), &buf[0], countof(buf));
+		if (len < 0)
+			return null;
+		ZTrail theTrail
+		return new ZFileLoc_POSIX(
+		return ZFile::kindLink;
+		}
+#endif
+	return this;
+	}
+
 string ZFileLoc_POSIX::AsString_POSIX(const string* iComps, size_t iCount)
 	{
 	return ZFileLoc_POSIX::AsString_Native(iComps, iCount);

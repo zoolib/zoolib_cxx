@@ -283,6 +283,14 @@ ZFileSpec ZFileSpec::Descendant(const std::string* iComps, size_t iCount, Error*
 	return ZFileSpec();
 	}
 
+ZFileSpec ZFileSpec::Follow() const
+	{
+	// ??
+	if (ZRef<ZFileLoc> realLoc = this->pPhysicalLoc())
+		return ZFileSpec(realLoc->Follow());
+	return sDefault();
+	}
+
 /** \brief Return a POSIX syntax textual representation of the path
 that would be passed to the file system to access this node. */
 string ZFileSpec::AsString() const
@@ -930,6 +938,9 @@ ZRef<ZFileLoc> ZFileLoc::GetAncestor(size_t iCount, ZFile::Error* oError)
 		theLoc = theLoc->GetParent(oError);
 	return theLoc;
 	}
+
+ZRef<ZFileLoc> ZFileLoc::Follow()
+	{ return this; }
 
 bool ZFileLoc::SetCreatorAndType(uint32 iCreator, uint32 iType, ZFile::Error* oError)
 	{

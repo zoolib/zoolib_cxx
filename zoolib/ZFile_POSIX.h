@@ -68,6 +68,8 @@ public:
 
 	virtual bool IsRoot();
 
+	virtual ZRef<ZFileLoc> Follow();
+
 	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount);
 	virtual std::string AsString_Native(const std::string* iComps, size_t iCount);
 
