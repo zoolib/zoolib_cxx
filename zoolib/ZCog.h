@@ -21,10 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZCog_h__
 #define __ZCog_h__ 1
 
-#include "zoolib/ZCallable.h"
 #include "zoolib/ZCallable_Bind.h"
 #include "zoolib/ZCallable_Function.h"
-#include "zoolib/ZMACRO_auto.h"
 
 namespace ZooLib {
 
