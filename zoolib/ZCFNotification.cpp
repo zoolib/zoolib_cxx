@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCFNotificationObserver.h"
+#include "zoolib/ZCFNotification.h"
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 
@@ -31,26 +31,26 @@ namespace ZooLib {
 // on which notifications are delivered, you may wish to rethink things.
 
 // =================================================================================================
-// MARK: - ZCFNotificationObserver
+// MARK: - ZCFNotification
 
-ZCFNotificationObserver::ZCFNotificationObserver
+ZCFNotification::ZCFNotification
 	(void* iObject, const std::string& iName, ZRef<Callable> iCallable)
 :	fObject(iObject)
 ,	fName_String(iName)
 ,	fCallable(iCallable)
 	{}
 
-ZCFNotificationObserver::ZCFNotificationObserver
+ZCFNotification::ZCFNotification
 	(void* iObject, CFStringRef iName, ZRef<Callable> iCallable)
 :	fObject(iObject)
 ,	fName_CFStringRef(iName)
 ,	fCallable(iCallable)
 	{}
 
-ZCFNotificationObserver::~ZCFNotificationObserver()
+ZCFNotification::~ZCFNotification()
 	{}
 
-void ZCFNotificationObserver::Initialize()
+void ZCFNotification::Initialize()
 	{
 	ZCounted::Initialize();
 
@@ -63,34 +63,34 @@ void ZCFNotificationObserver::Initialize()
 		CFNotificationSuspensionBehaviorDeliverImmediately);
 	}
 
-void ZCFNotificationObserver::Finalize()
+void ZCFNotification::Finalize()
 	{
 	::CFNotificationCenterRemoveEveryObserver(::CFNotificationCenterGetLocalCenter(), this);
 
 	ZCounted::Finalize();
 	}
 
-void* ZCFNotificationObserver::GetObject()
+void* ZCFNotification::GetObject()
 	{ return fObject; }
 
-std::string ZCFNotificationObserver::GetName()
+std::string ZCFNotification::GetName()
 	{
 	if (not fName_String)
 		fName_String = ZUtil_CF::sAsUTF8(fName_CFStringRef);
 	return *fName_String;
 	}
 
-CFStringRef ZCFNotificationObserver::GetName_CFStringRef()
+CFStringRef ZCFNotification::GetName_CFStringRef()
 	{
 	if (not fName_CFStringRef)
 		fName_CFStringRef = ZUtil_CF::sString(*fName_String);
 	return fName_CFStringRef;
 	}
 
-void ZCFNotificationObserver::spCallback(CFNotificationCenterRef center,
+void ZCFNotification::spCallback(CFNotificationCenterRef center,
 	void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
 	{
-	ZRef<ZCFNotificationObserver> theObserver = static_cast<ZCFNotificationObserver*>(observer);
+	ZRef<ZCFNotification> theObserver = static_cast<ZCFNotification*>(observer);
 	sCall(theObserver->fCallable, theObserver, userInfo);
 	}
 
