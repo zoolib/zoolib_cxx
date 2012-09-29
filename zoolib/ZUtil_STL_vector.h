@@ -173,7 +173,7 @@ void sEraseSortedMust(const int iDebugLevel,
 	std::vector<Base>& ioVec, const Derived& iElement)
 	{
 	if (iDebugLevel > ZCONFIG_Debug)
-		sEraseSorted(ioVec, iElement);
+		sQEraseSorted(ioVec, iElement);
 	else if (not sQEraseSorted(ioVec, iElement))
 		ZDebugStop(iDebugLevel);
 	}
@@ -187,7 +187,7 @@ void sInsertSortedMust(const int iDebugLevel,
 	std::vector<Base>& ioVec, const Derived& iElement)
 	{
 	if (iDebugLevel > ZCONFIG_Debug)
-		sInsertSorted(ioVec, iElement);
+		sQInsertSorted(ioVec, iElement);
 	else if (not sQInsertSorted(ioVec, iElement))
 		ZDebugStop(iDebugLevel);
 	}
