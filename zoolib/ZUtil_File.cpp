@@ -51,6 +51,13 @@ ZQ<ZFileSpec> sQEnsureBranch(const ZFileSpec& iFS)
 	return null;
 	}
 
+bool sDeleteTree(const ZFileSpec& iFS)
+	{
+	for (ZFileIter iter = iFS; iter; iter.Advance())
+		sDeleteTree(iter.Current());
+	return iFS.Delete();
+	}
+
 } // namespace ZUtil_File
 } // namespace ZooLib
 

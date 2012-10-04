@@ -35,6 +35,8 @@ ZFileSpec sEnsureBranch(const ZFileSpec& iFS);
 
 ZQ<ZFileSpec> sQEnsureBranch(const ZFileSpec& iFS);
 
+bool sDeleteTree(const ZFileSpec& iFS);
+
 } // namespace ZUtil_File
 } // namespace ZooLib
 
