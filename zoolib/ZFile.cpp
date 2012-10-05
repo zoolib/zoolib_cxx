@@ -285,7 +285,6 @@ ZFileSpec ZFileSpec::Descendant(const std::string* iComps, size_t iCount, Error*
 
 ZFileSpec ZFileSpec::Follow() const
 	{
-	// ??
 	if (ZRef<ZFileLoc> realLoc = this->pPhysicalLoc())
 		return ZFileSpec(realLoc->Follow());
 	return sDefault();

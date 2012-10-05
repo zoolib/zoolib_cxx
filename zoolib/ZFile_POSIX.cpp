@@ -678,7 +678,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 			{
 			vector<string> comps;
 			spSplit('/', false, &buffer[0], &buffer[result], comps);
-			return new ZFileLoc_POSIX(true, comps, true);
+			return new ZFileLoc_POSIX(true, &comps, IKnowWhatIAmDoing);
 			}
 		}
 	return null;
@@ -706,7 +706,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 		vector<string> comps;
 		// Pass theSize - 1 to omit the terminating NUL.
 		spSplit('/', false, &buffer[0], &buffer[0] + theSize - 1, comps);
-		return new ZFileLoc_POSIX(true, comps, true);
+		return new ZFileLoc_POSIX(true, &comps, IKnowWhatIAmDoing);
 		}
 	return null;
 	}
@@ -733,7 +733,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 				// It starts with a separator and so is an absolute path.
 				vector<string> comps;
 				spSplit('/', false, name, comps);
-				return new ZFileLoc_POSIX(true, comps);
+				return new ZFileLoc_POSIX(true, &comps, IKnowWhatIAmDoing);
 				}
 			else if (string::npos != name.find("/"))
 				{
@@ -741,7 +741,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 				// as a path relative to the current working directory.
 				vector<string> comps;
 				spSplit('/', false, name, comps);
-				return new ZFileLoc_POSIX(false, comps);
+				return new ZFileLoc_POSIX(false, &comps, IKnowWhatIAmDoing);
 				}
 			else
 				{
@@ -769,7 +769,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 								{
 								vector<string> comps;
 								spSplit('/', false, trial, comps);
-								return new ZFileLoc_POSIX(trial[0] == '/', comps);
+								return new ZFileLoc_POSIX(trial[0] == '/', &comps, IKnowWhatIAmDoing);
 								}
 							}
 						}
@@ -808,11 +808,10 @@ ZFileLoc_POSIX::ZFileLoc_POSIX(bool iIsAtRoot, const string* iComps, size_t iCou
 	fComps(iComps, iComps + iCount)
 	{}
 
-ZFileLoc_POSIX::ZFileLoc_POSIX(bool iIsAtRoot, vector<string>& ioComps, bool iKnowWhatImDoing)
+ZFileLoc_POSIX::ZFileLoc_POSIX(bool iIsAtRoot, vector<string>* ioComps, const IKnowWhatIAmDoing_t&)
 :	fIsAtRoot(iIsAtRoot)
 	{
-	ZAssert(iKnowWhatImDoing);
-	fComps.swap(ioComps);
+	ioComps->swap(fComps);
 	}
 
 ZFileLoc_POSIX::~ZFileLoc_POSIX()
@@ -884,7 +883,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::GetParent(ZFile::Error* oErr)
 			{
 			// There's at least one component, so return the list minus the last component.
 			realComps.pop_back();
-			return new ZFileLoc_POSIX(true, realComps, true);
+			return new ZFileLoc_POSIX(true, &realComps, IKnowWhatIAmDoing);
 			}
 		else
 			{
@@ -905,7 +904,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::GetDescendant
 
 	vector<string> newComps = fComps;
 	newComps.insert(newComps.end(), iComps, iComps + iCount);
-	return new ZFileLoc_POSIX(fIsAtRoot, newComps, true);
+	return new ZFileLoc_POSIX(fIsAtRoot, &newComps, IKnowWhatIAmDoing);
 	}
 
 bool ZFileLoc_POSIX::IsRoot()
@@ -913,23 +912,26 @@ bool ZFileLoc_POSIX::IsRoot()
 
 ZRef<ZFileLoc> ZFileLoc_POSIX::Follow()
 	{
-#if 0
 	struct stat theStat;
 	if (0 > ::lstat(this->pGetPath().c_str(), &theStat))
 		return null;
 
-// Need to interpret the link content somewhat, to deal with rel-paths etc.
+	// Need to interpret the link content somewhat, to deal with rel-paths etc.
 	if (S_ISLNK(theStat.st_mode))
 		{
 		char buf[PATH_MAX];
-		ssize_t len = ::readlink(this->pGetPath().c_str()), &buf[0], countof(buf));
+		ssize_t len = ::readlink(this->pGetPath().c_str(), &buf[0], countof(buf));
 		if (len < 0)
 			return null;
-		ZTrail theTrail
-		return new ZFileLoc_POSIX(
-		return ZFile::kindLink;
+
+		vector<string> comps;
+		spSplit('/', false, &buf[0], &buf[len], comps);
+		if (buf[0] == '/')
+			return new ZFileLoc_POSIX(true, &comps, IKnowWhatIAmDoing);
+
+		comps.insert(comps.begin(), fComps.begin(), fComps.end() - 1);
+		return new ZFileLoc_POSIX(fIsAtRoot, &comps, IKnowWhatIAmDoing);
 		}
-#endif
 	return this;
 	}
 

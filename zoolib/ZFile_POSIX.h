@@ -53,7 +53,7 @@ public:
 	ZFileLoc_POSIX(bool iIsAtRoot);
 	ZFileLoc_POSIX(bool iIsAtRoot, const std::vector<std::string>& iComps);
 	ZFileLoc_POSIX(bool iIsAtRoot, const std::string* iComps, size_t iCount);
-	ZFileLoc_POSIX(bool iIsAtRoot, std::vector<std::string>& ioComps, bool iKnowWhatImDoing);
+	ZFileLoc_POSIX(bool iIsAtRoot, std::vector<std::string>* ioComps, const IKnowWhatIAmDoing_t&);
 	virtual ~ZFileLoc_POSIX();
 
 // From ZFileLoc
