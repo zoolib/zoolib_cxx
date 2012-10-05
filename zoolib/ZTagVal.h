@@ -38,6 +38,9 @@ private:
 	ZTagVal& operator=(const ZTagVal<Type_p,OtherTag>& iOther);
 
 public:
+	typedef Tag_p Tag_t;
+	typedef Type_p Type_t;
+
 	ZTagVal()
 	:	fVal(Type_p())
 		{}
