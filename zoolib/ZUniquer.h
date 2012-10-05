@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMemoizer_h__
-#define __ZMemoizer_h__ 1
+#ifndef __ZUniquer_h__
+#define __ZUniquer_h__ 1
 #include "zconfig.h"
 
 #include <set>
@@ -27,10 +27,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZMemoizer
+// MARK: - ZUniquer
 
 template <class Type_p, class Compare_p = typename std::set<Type_p>::key_compare>
-class ZMemoizer
+class ZUniquer
 	{
 public:
 	const Type_p& Get(const Type_p& iValue)
@@ -51,4 +51,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZMemoizer_h__
+#endif // __ZUniquer_h__

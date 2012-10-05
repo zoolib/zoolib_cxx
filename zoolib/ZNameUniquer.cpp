@@ -18,39 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNameMemoizer_h__
-#define __ZNameMemoizer_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZMemoizer.h"
-#include "zoolib/ZName.h"
-#include "zoolib/ZThreadVal.h"
+#include "zoolib/ZNameUniquer.h"
 
 namespace ZooLib {
 
-// =================================================================================================
-// MARK: - NameMemoizer
-
-typedef ZCountedVal<string8> ZCountedString;
-typedef ZRef<ZCountedString> ZRefCountedString;
-
-struct Compare_RefCountedString
-	{ bool operator()(const ZRefCountedString& l, const ZRefCountedString& r); };
-
-typedef ZMemoizer<ZRefCountedString,Compare_RefCountedString> ZCountedStringMemoizer;
-
-typedef ZThreadVal<ZCountedStringMemoizer, struct Tag_NameMemoizer> ZNameMemoizerTV;
+bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRefCountedString& r)
+	{ return l->Get() < r->Get(); }
 
 // =================================================================================================
 // MARK: - sName
 
-inline ZName sName(const char* iConstCharStar)
-	{ return ZName(iConstCharStar); }
+ZName sName(const string8& iString)
+	{
+	const ZRefCountedString theCountedString = sCountedVal(iString);
+	if (ZThreadVal_NameUniquer::Type_t* theUniquer = ZThreadVal_NameUniquer::sPMut())
+		return ZName(theUniquer->Get(theCountedString));
+	return ZName(theCountedString);
+	}
 
-ZName sName(const string8& iString);
-
-ZName sName(const ZRefCountedString& iCountedString);
+ZName sName(const ZRefCountedString& iCountedString)
+	{
+	if (ZThreadVal_NameUniquer::Type_t* theUniquer = ZThreadVal_NameUniquer::sPMut())
+		return ZName(theUniquer->Get(iCountedString));
+	return ZName(iCountedString);
+	}
 
 } // namespace ZooLib
-
-#endif // __ZNameMemoizer_h__

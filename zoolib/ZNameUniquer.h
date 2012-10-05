@@ -18,29 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZNameMemoizer.h"
+#ifndef __ZNameUniquer_h__
+#define __ZNameUniquer_h__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZName.h"
+#include "zoolib/ZThreadVal.h"
+#include "zoolib/ZUniquer.h"
 
 namespace ZooLib {
 
-bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRefCountedString& r)
-	{ return l->Get() < r->Get(); }
+// =================================================================================================
+// MARK: - NameUniquer
+
+typedef ZCountedVal<string8> ZCountedString;
+typedef ZRef<ZCountedString> ZRefCountedString;
+
+struct Compare_RefCountedString
+	{ bool operator()(const ZRefCountedString& l, const ZRefCountedString& r); };
+
+typedef ZUniquer<ZRefCountedString,Compare_RefCountedString> ZCountedStringUniquer;
+
+typedef ZThreadVal<ZCountedStringUniquer, struct Tag_NameUniquer> ZThreadVal_NameUniquer;
 
 // =================================================================================================
 // MARK: - sName
 
-ZName sName(const string8& iString)
-	{
-	const ZRefCountedString theCountedString = sCountedVal(iString);
-	if (ZNameMemoizerTV::Type_t* theMemoizer = ZNameMemoizerTV::sPMut())
-		return ZName(theMemoizer->Get(theCountedString));
-	return ZName(theCountedString);
-	}
+inline ZName sName(const char* iConstCharStar)
+	{ return ZName(iConstCharStar); }
 
-ZName sName(const ZRefCountedString& iCountedString)
-	{
-	if (ZNameMemoizerTV::Type_t* theMemoizer = ZNameMemoizerTV::sPMut())
-		return ZName(theMemoizer->Get(iCountedString));
-	return ZName(iCountedString);
-	}
+ZName sName(const string8& iString);
+
+ZName sName(const ZRefCountedString& iCountedString);
 
 } // namespace ZooLib
+
+#endif // __ZNameUniquer_h__
