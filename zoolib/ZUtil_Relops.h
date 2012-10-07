@@ -40,27 +40,24 @@ template <class S> struct RelopsTraits_HasGE { enum { Value = 0 }; };
 // MARK: - Free relational operators, with conditionalized availability
 
 template <class T>
-typename EnableIfC<not RelopsTraits_HasLT<T>::Value && RelopsTraits_HasGT<T>::Value,bool>::type
-operator<(const T& l, const T& r)
-	{ return l > r; }
+typename EnableIfC
+	<not RelopsTraits_HasEQ<T>::Value
+	&& RelopsTraits_HasNE<T>::Value,bool>::type
+operator==(const T& l, const T& r)
+	{ return not (l != r); }
 
 template <class T>
-typename EnableIfC<not RelopsTraits_HasGT<T>::Value && RelopsTraits_HasLT<T>::Value,bool>::type
-operator>(const T& l, const T& r)
-	{ return r < l; }
+typename EnableIfC
+	<not RelopsTraits_HasEQ<T>::Value
+	&& not RelopsTraits_HasNE<T>::Value
+	&& RelopsTraits_HasLT<T>::Value,bool>::type
+operator==(const T& l, const T& r)
+	{ return not (l < r || r < l); }
 
 template <class T>
-typename EnableIfC<not RelopsTraits_HasLE<T>::Value && RelopsTraits_HasLT<T>::Value,bool>::type
-operator<=(const T& l, const T& r)
-	{ return not (r < l); }
-
-template <class T>
-typename EnableIfC<not RelopsTraits_HasGE<T>::Value && RelopsTraits_HasLT<T>::Value,bool>::type
-operator>=(const T& l, const T& r)
-	{ return not (l < r); }
-
-template <class T>
-typename EnableIfC<not RelopsTraits_HasNE<T>::Value && RelopsTraits_HasLT<T>::Value,bool>::type
+typename EnableIfC
+	<not RelopsTraits_HasNE<T>::Value
+	&& RelopsTraits_HasEQ<T>::Value,bool>::type
 operator!=(const T& l, const T& r)
 	{ return not (l == r); }
 
@@ -70,7 +67,35 @@ typename EnableIfC
 	&& not RelopsTraits_HasEQ<T>::Value
 	&& RelopsTraits_HasLT<T>::Value,bool>::type
 operator!=(const T& l, const T& r)
-	{ return not (l < r || r < l); }
+	{ return l < r || r < l; }
+
+template <class T>
+typename EnableIfC
+	<not RelopsTraits_HasLT<T>::Value
+	&& RelopsTraits_HasGT<T>::Value,bool>::type
+operator<(const T& l, const T& r)
+	{ return l > r; }
+
+template <class T>
+typename EnableIfC
+	<not RelopsTraits_HasGT<T>::Value
+	&& RelopsTraits_HasLT<T>::Value,bool>::type
+operator>(const T& l, const T& r)
+	{ return r < l; }
+
+template <class T>
+typename EnableIfC
+	<not RelopsTraits_HasLE<T>::Value
+	&& RelopsTraits_HasLT<T>::Value,bool>::type
+operator<=(const T& l, const T& r)
+	{ return not (r < l); }
+
+template <class T>
+typename EnableIfC
+	<not RelopsTraits_HasGE<T>::Value
+	&& RelopsTraits_HasLT<T>::Value,bool>::type
+operator>=(const T& l, const T& r)
+	{ return not (l < r); }
 
 } // namespace ZooLib
 
