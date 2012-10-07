@@ -38,12 +38,12 @@ struct ForEachWrapper_Forward_T
 	{
 	typedef typename remove_const<typename remove_reference<ContainerRef>::type>::type Container;
 
-    inline ForEachWrapper_Forward_T(const Container& iContainer)
+	inline ForEachWrapper_Forward_T(const Container& iContainer)
 	:	fIter(iContainer.begin())
 	,	fEnd(iContainer.end())
 		{}
 
-    typename Container::const_iterator fIter;
+	typename Container::const_iterator fIter;
 	const typename Container::const_iterator fEnd;
 	};
 
@@ -52,12 +52,12 @@ struct ForEachWrapper_Reverse_T
 	{
 	typedef typename remove_const<typename remove_reference<ContainerRef>::type>::type Container;
 
-    inline ForEachWrapper_Reverse_T(const Container& iContainer)
+	inline ForEachWrapper_Reverse_T(const Container& iContainer)
 	:	fIter(iContainer.rbegin())
 	,	fEnd(iContainer.rend())
 		{}
 
-    typename Container::const_reverse_iterator fIter;
+	typename Container::const_reverse_iterator fIter;
 	const typename Container::const_reverse_iterator fEnd;
 	};
 

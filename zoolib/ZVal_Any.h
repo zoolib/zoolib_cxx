@@ -193,7 +193,7 @@ public:
 	class Rep;
 	typedef ZName Name_t;
 
-#if ZCONFIG_SPI_Enabled(unordered_map)
+#if 0 && ZCONFIG_SPI_Enabled(unordered_map)
 	typedef unordered_map<Name_t, ZVal_Any> Map_t;
 #else
 	typedef std::map<Name_t, ZVal_Any> Map_t;

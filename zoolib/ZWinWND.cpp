@@ -85,7 +85,7 @@ LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 		{
 		// The very first message sent to a window is WM_GETMINMAXINFO.
 		ZAssert(iMessage == WM_GETMINMAXINFO);
-		theCallable =  ZThreadVal<ZRef<Callable> >::sGet();
+		theCallable = ZThreadVal<ZRef<Callable> >::sGet();
 		theCallable->Retain();
 		::SetPropW(iHWND, L"ZWinWND Callable", theCallable.Get());
 		}

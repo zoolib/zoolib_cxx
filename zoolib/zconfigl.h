@@ -201,9 +201,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 // ZCONFIG_CPP
 
-#if  __cplusplus>=201103L
+#if __cplusplus>=201103L
 	#define ZCONFIG_CPP 2011
-#elif  __cplusplus>=199711L
+#elif __cplusplus>=199711L
 	#define ZCONFIG_CPP 2003
 #else
 	#define ZCONFIG_CPP 1998

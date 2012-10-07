@@ -45,7 +45,7 @@ F = Far (not used here)
 
 W = Width (distance on X axis)
 H = Height (distance on Y axis)
-D = Depth  (distance on Z axis, not used here)
+D = Depth (distance on Z axis, not used here)
 
 LT = Left Top
 RB = Right Bottom

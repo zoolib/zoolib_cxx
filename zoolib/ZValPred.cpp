@@ -41,7 +41,7 @@ ZValComparator_Simple::ZValComparator_Simple(EComparator iEComparator)
 :	fEComparator(iEComparator)
 	{}
 
-ZValComparator_Simple::EComparator ZValComparator_Simple::GetEComparator()  const
+ZValComparator_Simple::EComparator ZValComparator_Simple::GetEComparator() const
 	{ return fEComparator; }
 
 template <>

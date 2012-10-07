@@ -29,15 +29,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - NameUniquer
+// MARK: - ZCountedStringUniquer
 
 typedef ZCountedVal<string8> ZCountedString;
+
 typedef ZRef<ZCountedString> ZRefCountedString;
 
 struct Compare_RefCountedString
 	{ bool operator()(const ZRefCountedString& l, const ZRefCountedString& r); };
 
 typedef ZUniquer<ZRefCountedString,Compare_RefCountedString> ZCountedStringUniquer;
+
+// =================================================================================================
+// MARK: - ZThreadVal_NameUniquer
 
 typedef ZThreadVal<ZCountedStringUniquer, struct Tag_NameUniquer> ZThreadVal_NameUniquer;
 

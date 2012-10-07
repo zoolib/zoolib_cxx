@@ -45,7 +45,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			// No enable_if or conditional prior to 4.5
 			namespace std { namespace tr1 {
 
-				template<bool, typename _Tp = void> struct enable_if  {};
+				template<bool, typename _Tp = void> struct enable_if {};
 				template<typename _Tp> struct enable_if<true,_Tp> { typedef _Tp type; };
 
 				template<bool _Cond, typename _Iftrue, typename _Iffalse>

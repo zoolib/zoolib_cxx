@@ -204,7 +204,7 @@ struct YadMapAtRPos
 	MapNameNode::const_iterator fIter;
 	const MapNameNode::const_iterator fEnd;
 	};
-    
+
 } // anonymous namespace
 
 // =================================================================================================

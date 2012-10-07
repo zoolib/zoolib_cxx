@@ -80,7 +80,7 @@ namespace ZooLib {
 #endif // ZCONFIG_API_Enabled(Matrix_armv6)
 
 // =================================================================================================
-// MARK: -
+// MARK: - Generic
 
 #if not IMPLEMENTED_sInverseMat4
 	#define IMPLEMENTED_sInverseMat4 1

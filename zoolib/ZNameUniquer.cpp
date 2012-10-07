@@ -22,6 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+// =================================================================================================
+// MARK: - Compare_RefCountedString
+
 bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRefCountedString& r)
 	{ return l->Get() < r->Get(); }
 
@@ -30,7 +33,7 @@ bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRef
 
 ZName sName(const string8& iString)
 	{
-	const ZRefCountedString theCountedString = sCountedVal(iString);
+	const ZRefCountedString theCountedString = sCountedVal<string8>(iString);
 	if (ZThreadVal_NameUniquer::Type_t* theUniquer = ZThreadVal_NameUniquer::sPMut())
 		return ZName(theUniquer->Get(theCountedString));
 	return ZName(theCountedString);
