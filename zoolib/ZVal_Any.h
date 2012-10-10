@@ -124,15 +124,6 @@ public:
 
 	ZSeq_Any& Append(const ZVal_Any& iVal);
 
-	bool operator==(const ZSeq_Any& r) const
-		{ return this->Compare(r) == 0; }
-
-	bool operator<(const ZSeq_Any& r) const
-		{ return this->Compare(r) < 0; }
-
-	ZVal_Any& operator[](size_t iIndex);
-	const ZVal_Any& operator[](size_t iIndex) const;
-
 // Our protocol
 	ZVal_Any& Mut(size_t iIndex);
 
@@ -143,7 +134,25 @@ public:
 	template <class S>
 	S& DMut(const S& iDefault, size_t iIndex)
 		{ return this->Mut(iIndex).DMut(iDefault); }
-	
+
+// Operators and STL-style
+	bool operator==(const ZSeq_Any& r) const
+		{ return this->Compare(r) == 0; }
+
+	bool operator<(const ZSeq_Any& r) const
+		{ return this->Compare(r) < 0; }
+
+	ZVal_Any& operator[](size_t iIndex);
+	const ZVal_Any& operator[](size_t iIndex) const;
+
+	typedef Vector_t::iterator iterator;
+	iterator begin();
+	iterator end();
+
+	typedef Vector_t::const_iterator const_iterator;
+	const_iterator begin() const;
+	const_iterator end() const;
+
 private:
 	void pTouch();
 

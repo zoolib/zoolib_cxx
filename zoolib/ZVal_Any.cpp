@@ -100,13 +100,6 @@ ZSeq_Any& ZSeq_Any::operator=(const Vector_t& iOther)
 	return *this;
 	}
 
-size_t ZSeq_Any::Count() const
-	{
-	if (fRep)
-		return fRep->fVector.size();
-	return 0;
-	}
-
 int ZSeq_Any::Compare(const ZSeq_Any& iOther) const
 	{
 	if (fRep)
@@ -128,6 +121,13 @@ int ZSeq_Any::Compare(const ZSeq_Any& iOther) const
 		{
 		return 0;
 		}
+	}
+
+size_t ZSeq_Any::Count() const
+	{
+	if (fRep)
+		return fRep->fVector.size();
+	return 0;
 	}
 
 void ZSeq_Any::Clear()
@@ -171,14 +171,6 @@ ZVal_Any* ZSeq_Any::PMut(size_t iIndex)
 	return nullptr;
 	}
 
-ZVal_Any& ZSeq_Any::Mut(size_t iIndex)
-	{
-	this->pTouch();
-	if (iIndex >= fRep->fVector.size())
-		fRep->fVector.resize(iIndex + 1);
-	return fRep->fVector[iIndex];
-	}
-
 ZSeq_Any& ZSeq_Any::Set(size_t iIndex, const ZVal_Any& iVal)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
@@ -214,6 +206,14 @@ ZSeq_Any& ZSeq_Any::Append(const ZVal_Any& iVal)
 	return *this;
 	}
 
+ZVal_Any& ZSeq_Any::Mut(size_t iIndex)
+	{
+	this->pTouch();
+	if (iIndex >= fRep->fVector.size())
+		fRep->fVector.resize(iIndex + 1);
+	return fRep->fVector[iIndex];
+	}
+
 ZVal_Any& ZSeq_Any::operator[](size_t iIndex)
 	{
 	this->pTouch();
@@ -224,6 +224,34 @@ ZVal_Any& ZSeq_Any::operator[](size_t iIndex)
 
 const ZVal_Any& ZSeq_Any::operator[](size_t iIndex) const
 	{ return this->Get(iIndex); }
+
+ZSeq_Any::iterator ZSeq_Any::begin()
+	{
+	if (fRep)
+		return fRep->fVector.begin();
+	return const_cast<Vector_t&>(sDefault<Vector_t>()).begin();
+	}
+
+ZSeq_Any::iterator ZSeq_Any::end()
+	{
+	if (fRep)
+		return fRep->fVector.end();
+	return const_cast<Vector_t&>(sDefault<Vector_t>()).end();
+	}
+
+ZSeq_Any::const_iterator ZSeq_Any::begin() const
+	{
+	if (fRep)
+		return fRep->fVector.begin();
+	return sDefault<Vector_t>().begin();
+	}
+
+ZSeq_Any::const_iterator ZSeq_Any::end() const
+	{
+	if (fRep)
+		return fRep->fVector.end();
+	return sDefault<Vector_t>().end();
+	}
 
 void ZSeq_Any::pTouch()
 	{
