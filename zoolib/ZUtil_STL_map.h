@@ -57,6 +57,19 @@ template <typename KBase, typename Value, typename Comparator, typename KDerived
 void sErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
 	{ ioMap.erase(iKey); }
 
+template <typename KBase, typename Value, typename Comparator>
+typename std::map<KBase,Value,Comparator>::iterator
+sEraseInc(std::map<KBase,Value,Comparator>& ioMap,
+	typename std::map<KBase,Value,Comparator>::iterator iter)
+	{
+	if (ioMap.end() == iter)
+		return iter;
+
+	const KBase theKey = iter->first;
+	ioMap.erase(iter);
+	return ioMap.lower_bound(theKey);
+	}
+
 // -----
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
