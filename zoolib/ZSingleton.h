@@ -36,7 +36,7 @@ Type_p& sSingleton()
 	static Type_p* spType_p;
 	if (not spType_p)
 		{
-		Type_p* theType_p = new Type_p;
+		Type_p* theType_p = new Type_p();
 		if (not sAtomicPtr_CAS(&spType_p, nullptr, theType_p))
 			delete theType_p;
 		else
