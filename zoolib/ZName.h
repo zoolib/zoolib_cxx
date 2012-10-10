@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCountedVal.h"
 #include "zoolib/ZUnicodeString.h" // For string8
+#include "zoolib/ZUtil_Relops.h"
 
 namespace ZooLib {
 
@@ -102,6 +103,10 @@ private:
 	intptr_t fIntPtr;
 	bool fIsCounted;
 	};
+
+template <> struct RelopsTraits_HasEQ<ZName> { enum { Value = 1 }; };
+
+template <> struct RelopsTraits_HasLE<ZName> { enum { Value = 1 }; };
 
 template <>
 inline
