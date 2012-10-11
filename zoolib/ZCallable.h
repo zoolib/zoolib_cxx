@@ -25,59 +25,77 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZQ.h"
 
+#define ZMACRO_Callable_typedef_V
+#define ZMACRO_Callable_typedef_0 typedef P0_p P0
+#define ZMACRO_Callable_typedef_1 ZMACRO_Callable_typedef_0;typedef P1_p P1
+#define ZMACRO_Callable_typedef_2 ZMACRO_Callable_typedef_1;typedef P2_p P2
+#define ZMACRO_Callable_typedef_3 ZMACRO_Callable_typedef_2;typedef P3_p P3
+#define ZMACRO_Callable_typedef_4 ZMACRO_Callable_typedef_3;typedef P4_p P4
+#define ZMACRO_Callable_typedef_5 ZMACRO_Callable_typedef_4;typedef P5_p P5
+#define ZMACRO_Callable_typedef_6 ZMACRO_Callable_typedef_5;typedef P6_p P6
+#define ZMACRO_Callable_typedef_7 ZMACRO_Callable_typedef_6;typedef P7_p P7
+#define ZMACRO_Callable_typedef_8 ZMACRO_Callable_typedef_7;typedef P8_p P8
+#define ZMACRO_Callable_typedef_9 ZMACRO_Callable_typedef_8;typedef P9_p P9
+#define ZMACRO_Callable_typedef_A ZMACRO_Callable_typedef_9;typedef PA_p PA
+#define ZMACRO_Callable_typedef_B ZMACRO_Callable_typedef_A;typedef PB_p PB
+#define ZMACRO_Callable_typedef_C ZMACRO_Callable_typedef_B;typedef PC_p PC
+#define ZMACRO_Callable_typedef_D ZMACRO_Callable_typedef_C;typedef PD_p PD
+#define ZMACRO_Callable_typedef_E ZMACRO_Callable_typedef_D;typedef PE_p PE
+#define ZMACRO_Callable_typedef_F ZMACRO_Callable_typedef_E;typedef PF_p PF
+
 #define ZMACRO_Callable_PV
-#define ZMACRO_Callable_P0 P0
-#define ZMACRO_Callable_P1 ZMACRO_Callable_P0,P1
-#define ZMACRO_Callable_P2 ZMACRO_Callable_P1,P2
-#define ZMACRO_Callable_P3 ZMACRO_Callable_P2,P3
-#define ZMACRO_Callable_P4 ZMACRO_Callable_P3,P4
-#define ZMACRO_Callable_P5 ZMACRO_Callable_P4,P5
-#define ZMACRO_Callable_P6 ZMACRO_Callable_P5,P6
-#define ZMACRO_Callable_P7 ZMACRO_Callable_P6,P7
-#define ZMACRO_Callable_P8 ZMACRO_Callable_P7,P8
-#define ZMACRO_Callable_P9 ZMACRO_Callable_P8,P9
-#define ZMACRO_Callable_PA ZMACRO_Callable_P9,PA
-#define ZMACRO_Callable_PB ZMACRO_Callable_PA,PB
-#define ZMACRO_Callable_PC ZMACRO_Callable_PB,PC
-#define ZMACRO_Callable_PD ZMACRO_Callable_PC,PD
-#define ZMACRO_Callable_PE ZMACRO_Callable_PD,PE
-#define ZMACRO_Callable_PF ZMACRO_Callable_PE,PF
+#define ZMACRO_Callable_P0 P0_p
+#define ZMACRO_Callable_P1 ZMACRO_Callable_P0,P1_p
+#define ZMACRO_Callable_P2 ZMACRO_Callable_P1,P2_p
+#define ZMACRO_Callable_P3 ZMACRO_Callable_P2,P3_p
+#define ZMACRO_Callable_P4 ZMACRO_Callable_P3,P4_p
+#define ZMACRO_Callable_P5 ZMACRO_Callable_P4,P5_p
+#define ZMACRO_Callable_P6 ZMACRO_Callable_P5,P6_p
+#define ZMACRO_Callable_P7 ZMACRO_Callable_P6,P7_p
+#define ZMACRO_Callable_P8 ZMACRO_Callable_P7,P8_p
+#define ZMACRO_Callable_P9 ZMACRO_Callable_P8,P9_p
+#define ZMACRO_Callable_PA ZMACRO_Callable_P9,PA_p
+#define ZMACRO_Callable_PB ZMACRO_Callable_PA,PB_p
+#define ZMACRO_Callable_PC ZMACRO_Callable_PB,PC_p
+#define ZMACRO_Callable_PD ZMACRO_Callable_PC,PD_p
+#define ZMACRO_Callable_PE ZMACRO_Callable_PD,PE_p
+#define ZMACRO_Callable_PF ZMACRO_Callable_PE,PF_p
 
 #define ZMACRO_Callable_Class_PV
-#define ZMACRO_Callable_Class_P0 class P0
-#define ZMACRO_Callable_Class_P1 ZMACRO_Callable_Class_P0,class P1
-#define ZMACRO_Callable_Class_P2 ZMACRO_Callable_Class_P1,class P2
-#define ZMACRO_Callable_Class_P3 ZMACRO_Callable_Class_P2,class P3
-#define ZMACRO_Callable_Class_P4 ZMACRO_Callable_Class_P3,class P4
-#define ZMACRO_Callable_Class_P5 ZMACRO_Callable_Class_P4,class P5
-#define ZMACRO_Callable_Class_P6 ZMACRO_Callable_Class_P5,class P6
-#define ZMACRO_Callable_Class_P7 ZMACRO_Callable_Class_P6,class P7
-#define ZMACRO_Callable_Class_P8 ZMACRO_Callable_Class_P7,class P8
-#define ZMACRO_Callable_Class_P9 ZMACRO_Callable_Class_P8,class P9
-#define ZMACRO_Callable_Class_PA ZMACRO_Callable_Class_P9,class PA
-#define ZMACRO_Callable_Class_PB ZMACRO_Callable_Class_PA,class PB
-#define ZMACRO_Callable_Class_PC ZMACRO_Callable_Class_PB,class PC
-#define ZMACRO_Callable_Class_PD ZMACRO_Callable_Class_PC,class PD
-#define ZMACRO_Callable_Class_PE ZMACRO_Callable_Class_PD,class PE
-#define ZMACRO_Callable_Class_PF ZMACRO_Callable_Class_PE,class PF
+#define ZMACRO_Callable_Class_P0 class P0_p
+#define ZMACRO_Callable_Class_P1 ZMACRO_Callable_Class_P0,class P1_p
+#define ZMACRO_Callable_Class_P2 ZMACRO_Callable_Class_P1,class P2_p
+#define ZMACRO_Callable_Class_P3 ZMACRO_Callable_Class_P2,class P3_p
+#define ZMACRO_Callable_Class_P4 ZMACRO_Callable_Class_P3,class P4_p
+#define ZMACRO_Callable_Class_P5 ZMACRO_Callable_Class_P4,class P5_p
+#define ZMACRO_Callable_Class_P6 ZMACRO_Callable_Class_P5,class P6_p
+#define ZMACRO_Callable_Class_P7 ZMACRO_Callable_Class_P6,class P7_p
+#define ZMACRO_Callable_Class_P8 ZMACRO_Callable_Class_P7,class P8_p
+#define ZMACRO_Callable_Class_P9 ZMACRO_Callable_Class_P8,class P9_p
+#define ZMACRO_Callable_Class_PA ZMACRO_Callable_Class_P9,class PA_p
+#define ZMACRO_Callable_Class_PB ZMACRO_Callable_Class_PA,class PB_p
+#define ZMACRO_Callable_Class_PC ZMACRO_Callable_Class_PB,class PC_p
+#define ZMACRO_Callable_Class_PD ZMACRO_Callable_Class_PC,class PD_p
+#define ZMACRO_Callable_Class_PE ZMACRO_Callable_Class_PD,class PE_p
+#define ZMACRO_Callable_Class_PF ZMACRO_Callable_Class_PE,class PF_p
 
 #define ZMACRO_Callable_PiV
-#define ZMACRO_Callable_Pi0 P0 i0
-#define ZMACRO_Callable_Pi1 ZMACRO_Callable_Pi0,P1 i1
-#define ZMACRO_Callable_Pi2 ZMACRO_Callable_Pi1,P2 i2
-#define ZMACRO_Callable_Pi3 ZMACRO_Callable_Pi2,P3 i3
-#define ZMACRO_Callable_Pi4 ZMACRO_Callable_Pi3,P4 i4
-#define ZMACRO_Callable_Pi5 ZMACRO_Callable_Pi4,P5 i5
-#define ZMACRO_Callable_Pi6 ZMACRO_Callable_Pi5,P6 i6
-#define ZMACRO_Callable_Pi7 ZMACRO_Callable_Pi6,P7 i7
-#define ZMACRO_Callable_Pi8 ZMACRO_Callable_Pi7,P8 i8
-#define ZMACRO_Callable_Pi9 ZMACRO_Callable_Pi8,P9 i9
-#define ZMACRO_Callable_PiA ZMACRO_Callable_Pi9,PA iA
-#define ZMACRO_Callable_PiB ZMACRO_Callable_PiA,PB iB
-#define ZMACRO_Callable_PiC ZMACRO_Callable_PiB,PC iC
-#define ZMACRO_Callable_PiD ZMACRO_Callable_PiC,PD iD
-#define ZMACRO_Callable_PiE ZMACRO_Callable_PiD,PE iE
-#define ZMACRO_Callable_PiF ZMACRO_Callable_PiE,PF iF
+#define ZMACRO_Callable_Pi0 P0_p i0
+#define ZMACRO_Callable_Pi1 ZMACRO_Callable_Pi0,P1_p i1
+#define ZMACRO_Callable_Pi2 ZMACRO_Callable_Pi1,P2_p i2
+#define ZMACRO_Callable_Pi3 ZMACRO_Callable_Pi2,P3_p i3
+#define ZMACRO_Callable_Pi4 ZMACRO_Callable_Pi3,P4_p i4
+#define ZMACRO_Callable_Pi5 ZMACRO_Callable_Pi4,P5_p i5
+#define ZMACRO_Callable_Pi6 ZMACRO_Callable_Pi5,P6_p i6
+#define ZMACRO_Callable_Pi7 ZMACRO_Callable_Pi6,P7_p i7
+#define ZMACRO_Callable_Pi8 ZMACRO_Callable_Pi7,P8_p i8
+#define ZMACRO_Callable_Pi9 ZMACRO_Callable_Pi8,P9_p i9
+#define ZMACRO_Callable_PiA ZMACRO_Callable_Pi9,PA_p iA
+#define ZMACRO_Callable_PiB ZMACRO_Callable_PiA,PB_p iB
+#define ZMACRO_Callable_PiC ZMACRO_Callable_PiB,PC_p iC
+#define ZMACRO_Callable_PiD ZMACRO_Callable_PiC,PD_p iD
+#define ZMACRO_Callable_PiE ZMACRO_Callable_PiD,PE_p iE
+#define ZMACRO_Callable_PiF ZMACRO_Callable_PiE,PF_p iF
 
 #define ZMACRO_Callable_iV
 #define ZMACRO_Callable_i0 i0
@@ -98,22 +116,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZMACRO_Callable_iF ZMACRO_Callable_iE,iF
 
 #define ZMACRO_Callable_VTV
-#define ZMACRO_Callable_VT0 typename ZCallableUtil::VT<P0>::P i0
-#define ZMACRO_Callable_VT1 ZMACRO_Callable_VT0,typename ZCallableUtil::VT<P1>::P i1
-#define ZMACRO_Callable_VT2 ZMACRO_Callable_VT1,typename ZCallableUtil::VT<P2>::P i2
-#define ZMACRO_Callable_VT3 ZMACRO_Callable_VT2,typename ZCallableUtil::VT<P3>::P i3
-#define ZMACRO_Callable_VT4 ZMACRO_Callable_VT3,typename ZCallableUtil::VT<P4>::P i4
-#define ZMACRO_Callable_VT5 ZMACRO_Callable_VT4,typename ZCallableUtil::VT<P5>::P i5
-#define ZMACRO_Callable_VT6 ZMACRO_Callable_VT5,typename ZCallableUtil::VT<P6>::P i6
-#define ZMACRO_Callable_VT7 ZMACRO_Callable_VT6,typename ZCallableUtil::VT<P7>::P i7
-#define ZMACRO_Callable_VT8 ZMACRO_Callable_VT7,typename ZCallableUtil::VT<P8>::P i8
-#define ZMACRO_Callable_VT9 ZMACRO_Callable_VT8,typename ZCallableUtil::VT<P9>::P i9
-#define ZMACRO_Callable_VTA ZMACRO_Callable_VT9,typename ZCallableUtil::VT<PA>::P iA
-#define ZMACRO_Callable_VTB ZMACRO_Callable_VTA,typename ZCallableUtil::VT<PB>::P iB
-#define ZMACRO_Callable_VTC ZMACRO_Callable_VTB,typename ZCallableUtil::VT<PC>::P iC
-#define ZMACRO_Callable_VTD ZMACRO_Callable_VTC,typename ZCallableUtil::VT<PD>::P iD
-#define ZMACRO_Callable_VTE ZMACRO_Callable_VTD,typename ZCallableUtil::VT<PE>::P iE
-#define ZMACRO_Callable_VTF ZMACRO_Callable_VTE,typename ZCallableUtil::VT<PF>::P iF
+#define ZMACRO_Callable_VT0 typename ZCallableUtil::VT<P0_p>::P i0
+#define ZMACRO_Callable_VT1 ZMACRO_Callable_VT0,typename ZCallableUtil::VT<P1_p>::P i1
+#define ZMACRO_Callable_VT2 ZMACRO_Callable_VT1,typename ZCallableUtil::VT<P2_p>::P i2
+#define ZMACRO_Callable_VT3 ZMACRO_Callable_VT2,typename ZCallableUtil::VT<P3_p>::P i3
+#define ZMACRO_Callable_VT4 ZMACRO_Callable_VT3,typename ZCallableUtil::VT<P4_p>::P i4
+#define ZMACRO_Callable_VT5 ZMACRO_Callable_VT4,typename ZCallableUtil::VT<P5_p>::P i5
+#define ZMACRO_Callable_VT6 ZMACRO_Callable_VT5,typename ZCallableUtil::VT<P6_p>::P i6
+#define ZMACRO_Callable_VT7 ZMACRO_Callable_VT6,typename ZCallableUtil::VT<P7_p>::P i7
+#define ZMACRO_Callable_VT8 ZMACRO_Callable_VT7,typename ZCallableUtil::VT<P8_p>::P i8
+#define ZMACRO_Callable_VT9 ZMACRO_Callable_VT8,typename ZCallableUtil::VT<P9_p>::P i9
+#define ZMACRO_Callable_VTA ZMACRO_Callable_VT9,typename ZCallableUtil::VT<PA_p>::P iA
+#define ZMACRO_Callable_VTB ZMACRO_Callable_VTA,typename ZCallableUtil::VT<PB_p>::P iB
+#define ZMACRO_Callable_VTC ZMACRO_Callable_VTB,typename ZCallableUtil::VT<PC_p>::P iC
+#define ZMACRO_Callable_VTD ZMACRO_Callable_VTC,typename ZCallableUtil::VT<PD_p>::P iD
+#define ZMACRO_Callable_VTE ZMACRO_Callable_VTD,typename ZCallableUtil::VT<PE_p>::P iE
+#define ZMACRO_Callable_VTF ZMACRO_Callable_VTE,typename ZCallableUtil::VT<PF_p>::P iF
 
 namespace ZooLib {
 
@@ -204,6 +222,7 @@ class ZCallable<R_p(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef R_p R; \
+	ZMACRO_Callable_typedef_##X; \
 	typedef R(Signature)(ZMACRO_Callable_P##X); \
 \
 	virtual ZQ<R> QCall(ZMACRO_Callable_P##X) = 0; \
@@ -221,6 +240,7 @@ class ZCallable<void(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef void R; \
+	ZMACRO_Callable_typedef_##X; \
 	typedef void(Signature)(ZMACRO_Callable_P##X); \
 \
 	virtual ZQ<void> QCall(ZMACRO_Callable_P##X) = 0; \
@@ -336,12 +356,16 @@ ZMACRO_Callable_Call(F)
 // MARK: - sCallable
 
 template <class Signature>
-ZRef<ZCallable<Signature> > sCallable(const ZRef<ZCallable<Signature> >& iCallable)
+const ZRef<ZCallable<Signature> >& sCallable(const ZRef<ZCallable<Signature> >& iCallable)
 	{ return iCallable; }
 
 template <class ZRef_p>
-ZRef<ZCallable<typename ZRef_p::Type_t::Signature> > sCallable(const ZRef_p& iCandidate)
-	{ return iCandidate.template StaticCast<ZCallable<typename ZRef_p::Type_t::Signature> >(); }
+const ZRef<ZCallable<typename ZRef_p::Type_t::Signature> >& sCallable(const ZRef_p& iCandidate)
+	{ return (const ZRef<ZCallable<typename ZRef_p::Type_t::Signature> >&)(iCandidate); }
+
+template <class Callable_p>
+ZRef<ZCallable<typename Callable_p::Signature> > sCallable(Callable_p iCandidate)
+	{ return ZRef<ZCallable<typename Callable_p::Signature> >(iCandidate); }
 
 // =================================================================================================
 // MARK: - sCallVoid
