@@ -159,11 +159,12 @@ template <class Signature> class ZCallable;
 // =================================================================================================
 // MARK: - ZCallable (specialization for 0 params)
 
-template <class R>
-class ZCallable<R(void)>
+template <class R_p>
+class ZCallable<R_p(void)>
 :	public ZCounted
 	{
 public:
+	typedef R_p R;
 	typedef R(Signature)(void);
 
 	virtual ZQ<R> QCall() = 0;
@@ -183,6 +184,7 @@ class ZCallable<void(void)>
 :	public ZCounted
 	{
 public:
+	typedef void R;
 	typedef void(Signature)(void);
 
 	virtual ZQ<void> QCall() = 0;
@@ -196,11 +198,12 @@ public:
 
 #define ZMACRO_Callable_Callable(X) \
 \
-template <class R, ZMACRO_Callable_Class_P##X> \
-class ZCallable<R(ZMACRO_Callable_P##X)> \
+template <class R_p, ZMACRO_Callable_Class_P##X> \
+class ZCallable<R_p(ZMACRO_Callable_P##X)> \
 :	public ZCounted \
 	{ \
 public: \
+	typedef R_p R; \
 	typedef R(Signature)(ZMACRO_Callable_P##X); \
 \
 	virtual ZQ<R> QCall(ZMACRO_Callable_P##X) = 0; \
@@ -217,6 +220,7 @@ class ZCallable<void(ZMACRO_Callable_P##X)> \
 :	public ZCounted \
 	{ \
 public: \
+	typedef void R; \
 	typedef void(Signature)(ZMACRO_Callable_P##X); \
 \
 	virtual ZQ<void> QCall(ZMACRO_Callable_P##X) = 0; \
@@ -334,6 +338,10 @@ ZMACRO_Callable_Call(F)
 template <class Signature>
 ZRef<ZCallable<Signature> > sCallable(const ZRef<ZCallable<Signature> >& iCallable)
 	{ return iCallable; }
+
+template <class ZRef_p>
+ZRef<ZCallable<typename ZRef_p::Type_t::Signature> > sCallable(const ZRef_p& iCandidate)
+	{ return iCandidate.template StaticCast<ZCallable<typename ZRef_p::Type_t::Signature> >(); }
 
 // =================================================================================================
 // MARK: - sCallVoid
