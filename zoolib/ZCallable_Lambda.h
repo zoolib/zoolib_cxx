@@ -120,8 +120,16 @@ private:
 	};
 
 template <typename Lambda_p>
-ZRef<ZCallable<GetSig_T<Lambda_p>>> sCallable(const Lambda_p& iLambda)
-	{ return new Callable<Lambda_p,GetSig_T<Lambda_p>>(iLambda); }
+ZRef<ZCallable
+	<typename RemoveClass_T<decltype(&remove_reference<Lambda_p>::type::operator())>::type>
+	>
+sCallable(const Lambda_p& iLambda)
+	{
+	typedef typename RemoveClass_T<decltype(&remove_reference<Lambda_p>::type::operator())>::type
+		Signature;
+
+	return new Callable<Lambda_p,Signature>(iLambda);
+	}
 
 } // namespace ZCallable_Lambda
 
