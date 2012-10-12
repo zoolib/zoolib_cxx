@@ -97,6 +97,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZMACRO_Callable_PiE ZMACRO_Callable_PiD,PE_p iE
 #define ZMACRO_Callable_PiF ZMACRO_Callable_PiE,PF_p iF
 
+#define ZMACRO_Callable_ConstRef_PiV
+#define ZMACRO_Callable_ConstRef_Pi0 const P0_p& i0
+#define ZMACRO_Callable_ConstRef_Pi1 ZMACRO_Callable_ConstRef_Pi0,const P1_p& i1
+#define ZMACRO_Callable_ConstRef_Pi2 ZMACRO_Callable_ConstRef_Pi1,const P2_p& i2
+#define ZMACRO_Callable_ConstRef_Pi3 ZMACRO_Callable_ConstRef_Pi2,const P3_p& i3
+#define ZMACRO_Callable_ConstRef_Pi4 ZMACRO_Callable_ConstRef_Pi3,const P4_p& i4
+#define ZMACRO_Callable_ConstRef_Pi5 ZMACRO_Callable_ConstRef_Pi4,const P5_p& i5
+#define ZMACRO_Callable_ConstRef_Pi6 ZMACRO_Callable_ConstRef_Pi5,const P6_p& i6
+#define ZMACRO_Callable_ConstRef_Pi7 ZMACRO_Callable_ConstRef_Pi6,const P7_p& i7
+#define ZMACRO_Callable_ConstRef_Pi8 ZMACRO_Callable_ConstRef_Pi7,const P8_p& i8
+#define ZMACRO_Callable_ConstRef_Pi9 ZMACRO_Callable_ConstRef_Pi8,const P9_p& i9
+#define ZMACRO_Callable_ConstRef_PiA ZMACRO_Callable_ConstRef_Pi9,const PA_p& iA
+#define ZMACRO_Callable_ConstRef_PiB ZMACRO_Callable_ConstRef_PiA,const PB_p& iB
+#define ZMACRO_Callable_ConstRef_PiC ZMACRO_Callable_ConstRef_PiB,const PC_p& iC
+#define ZMACRO_Callable_ConstRef_PiD ZMACRO_Callable_ConstRef_PiC,const PD_p& iD
+#define ZMACRO_Callable_ConstRef_PiE ZMACRO_Callable_ConstRef_PiD,const PE_p& iE
+#define ZMACRO_Callable_ConstRef_PiF ZMACRO_Callable_ConstRef_PiE,const PF_p& iF
+
 #define ZMACRO_Callable_iV
 #define ZMACRO_Callable_i0 i0
 #define ZMACRO_Callable_i1 ZMACRO_Callable_i0,i1
@@ -272,32 +290,32 @@ ZMACRO_Callable_Callable(F)
 // =================================================================================================
 // MARK: - sCall variants (specialization for 0 params)
 
-template <class R>
-ZQ<R> sQCall
-	(const ZRef<ZCallable<R(void)> >& iCallable)
+template <class Type_p>
+ZQ<typename Type_p::Type_t::R> sQCall
+	(const Type_p& iCallable)
 	{
 	if (iCallable)
 		return iCallable->QCall();
 	return null;
 	}
 
-template <class R>
-R sDCall
-	(typename ZCallableUtil::VT<R>::P iDefault,
-	const ZRef<ZCallable<R(void)> >& iCallable)
+template <class Type_p>
+typename Type_p::Type_t::R sDCall
+	(typename ZCallableUtil::VT<typename Type_p::Type_t::R>::P iDefault,
+	const Type_p& iCallable)
 	{
 	if (iCallable)
 		return iCallable->DCall(iDefault);
 	return iDefault;
 	}
 
-template <class R>
-R sCall
-	(const ZRef<ZCallable<R(void)> >& iCallable)
+template <class Type_p>
+typename Type_p::Type_t::R sCall
+	(const Type_p& iCallable)
 	{
 	if (iCallable)
 		return iCallable->Call();
-	return sDefault<R>();
+	return sDefault<typename Type_p::Type_t::R>();
 	}
 
 // =================================================================================================
@@ -305,32 +323,35 @@ R sCall
 
 #define ZMACRO_Callable_Call(X) \
 \
-template <class R, ZMACRO_Callable_Class_P##X> \
-ZQ<R> sQCall \
-	(const ZRef<ZCallable<R(ZMACRO_Callable_P##X)> >& iCallable, ZMACRO_Callable_VT##X) \
+template <class Type_p, ZMACRO_Callable_Class_P##X> \
+ZQ<typename Type_p::Type_t::R> sQCall \
+	(const Type_p& iCallable, \
+	ZMACRO_Callable_ConstRef_Pi##X) \
 	{ \
 	if (iCallable) \
 		return iCallable->QCall(ZMACRO_Callable_i##X); \
 	return null; \
 	} \
 \
-template <class R, ZMACRO_Callable_Class_P##X> \
-R sDCall \
-	(typename ZCallableUtil::VT<R>::P iDefault, \
-	const ZRef<ZCallable<R(ZMACRO_Callable_P##X)> >& iCallable, ZMACRO_Callable_VT##X) \
+template <class Type_p, ZMACRO_Callable_Class_P##X> \
+typename Type_p::Type_t::R sDCall \
+	(typename ZCallableUtil::VT<typename Type_p::Type_t::R>::P iDefault, \
+	const Type_p& iCallable, \
+	ZMACRO_Callable_ConstRef_Pi##X) \
 	{ \
 	if (iCallable) \
 		return iCallable->DCall(iDefault, ZMACRO_Callable_i##X); \
 	return iDefault; \
 	} \
 \
-template <class R, ZMACRO_Callable_Class_P##X> \
-R sCall \
-	(const ZRef<ZCallable<R(ZMACRO_Callable_P##X)> >& iCallable, ZMACRO_Callable_VT##X) \
+template <class Type_p, ZMACRO_Callable_Class_P##X> \
+typename Type_p::Type_t::R sCall \
+	(const Type_p& iCallable, \
+	ZMACRO_Callable_ConstRef_Pi##X) \
 	{ \
 	if (iCallable) \
 		return iCallable->Call(ZMACRO_Callable_i##X); \
-	return sDefault<R>(); \
+	return sDefault<typename Type_p::Type_t::R>(); \
 	}
 
 ZMACRO_Callable_Call(0)
