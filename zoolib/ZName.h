@@ -106,7 +106,7 @@ private:
 
 template <> struct RelopsTraits_HasEQ<ZName> { enum { Value = 1 }; };
 
-template <> struct RelopsTraits_HasLE<ZName> { enum { Value = 1 }; };
+template <> struct RelopsTraits_HasLT<ZName> { enum { Value = 1 }; };
 
 template <>
 inline
