@@ -287,7 +287,7 @@ ZFileSpec ZFileSpec::Follow() const
 	{
 	if (ZRef<ZFileLoc> realLoc = this->pPhysicalLoc())
 		return ZFileSpec(realLoc->Follow());
-	return sDefault();
+	return ZFileSpec();
 	}
 
 /** \brief Return a POSIX syntax textual representation of the path
