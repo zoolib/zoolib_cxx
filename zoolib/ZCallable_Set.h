@@ -38,6 +38,7 @@ template <class Signature> class ZCallable_Set;
 template <>
 class ZCallable_Set<void(void)>
 :	public ZCallable<void(void)>
+,	public ZSafeSet<ZRef<ZCallable<void(void)> > >
 	{
 public:
 	typedef ZCallable<void(void)> Callable;
@@ -45,7 +46,7 @@ public:
 // From ZCallable
 	ZQ<void> QCall()
 		{
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/)
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = *this; /*no test*/; /*no inc*/)
 			{
 			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
 				sCall(*theQ);
@@ -56,10 +57,7 @@ public:
 
 // Our protocol
 	ZSafeSet<ZRef<Callable> >& GetCallables()
-		{ return fCallables; }
-
-private:
-	ZSafeSet<ZRef<Callable> > fCallables;
+		{ return *this; }
 	};
 
 // =================================================================================================
@@ -70,13 +68,14 @@ private:
 template <ZMACRO_Callable_Class_P##X> \
 class ZCallable_Set<void(ZMACRO_Callable_P##X)> \
 :	public ZCallable<void(ZMACRO_Callable_P##X)> \
+,	public ZSafeSet<ZRef<ZCallable<void(ZMACRO_Callable_P##X)> > > \
 	{ \
 public: \
 	typedef ZCallable<void(ZMACRO_Callable_P##X)> Callable; \
 \
 	ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		for (ZSafeSetIterConst<ZRef<Callable> > iter = fCallables; /*no test*/; /*no inc*/) \
+		for (ZSafeSetIterConst<ZRef<Callable> > iter = *this; /*no test*/; /*no inc*/) \
 			{ \
 			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc()) \
 				sCall(*theQ, ZMACRO_Callable_i##X); \
@@ -86,10 +85,7 @@ public: \
 		} \
 \
 	ZSafeSet<ZRef<Callable> >& GetCallables() \
-		{ return fCallables; } \
-\
-private: \
-	ZSafeSet<ZRef<Callable> > fCallables; \
+		{ return *this; } \
 	};
 
 ZMACRO_Callable_Callable(0)
