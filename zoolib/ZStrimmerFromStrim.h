@@ -32,6 +32,7 @@ namespace ZooLib {
 class ZStrimmerFromStrimR
 	{
 public:
+	// TODO: In C++11 we will want to disallow rvalue refs here.
 	ZStrimmerFromStrimR(const ZStrimR& iStrim);
 	~ZStrimmerFromStrimR();
 
