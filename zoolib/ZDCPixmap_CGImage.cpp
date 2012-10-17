@@ -61,32 +61,50 @@ ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef)
 		{}
 	else
 		{
-//		const CGBitmapInfo theBI = ::CGImageGetBitmapInfo(iImageRef);
-//		const CGImageAlphaInfo theAI = ::CGImageGetAlphaInfo(iImageRef);
-//		const size_t theBPC = ::CGImageGetBitsPerComponent(iImageRef);
-//		const size_t theBPP = ::CGImageGetBitsPerPixel(iImageRef);
+		const PixvalDesc thePixvalDesc
+			(::CGImageGetBitsPerPixel(iImageRef), ZCONFIG_Endian != ZCONFIG_Endian_Big);
 
-//		const OSType thePFT = ::CVPixelBufferGetPixelFormatType(iPBR);
-//		const EFormatStandard theFormat = spAsFormatStandard(thePFT);
+		const RasterDesc theRasterDesc
+			(thePixvalDesc,
+			::CGImageGetBytesPerRow(iImageRef),
+			::CGImageGetHeight(iImageRef),
+			false);
 
-		// Just fake it for now.
-		const EFormatStandard theFormat = eFormatStandard_RGBA_32;
+		ZRef<PixmapRaster> thePixmapRaster = new PixmapRaster(theRasterDesc, iImageRef, theDataRef);
 
-		const PixvalDesc thePixvalDesc(theFormat);
+		// Figure out mask
+		const size_t theBPC = ::CGImageGetBitsPerComponent(iImageRef);
 
-		const size_t theRowBytes = ::CGImageGetBytesPerRow(iImageRef);
+		const CGImageAlphaInfo theAI = ::CGImageGetAlphaInfo(iImageRef);
 
-		const size_t theHeight = ::CGImageGetHeight(iImageRef);
+		const uint32 theMask = (1 << theBPC) - 1;
+		uint32 theStart = theMask;
+		uint32 theA;
+		if (theAI & 1)
+			{
+			theA = theBPC;
+			theStart = theMask << theBPC;
+			}
+		else if (0 == (theAI & 6) || 6 == (theAI & 6))
+			{
+			theA = 0;
+			}
+		else
+			{
+			theA = theBPC << (theBPC * 3);
+			}
 
-		const RasterDesc theRasterDesc(thePixvalDesc, theRowBytes, theHeight, false);
+		const uint32 theB = theStart;
+		const uint32 theG = theB << theBPC;
+		const uint32 theR = theG << theBPC;
 
-		ZRef<PixmapRaster> thePR = new PixmapRaster(theRasterDesc, iImageRef, theDataRef);
+		const PixelDesc thePixelDesc(theR, theG, theB, theA);
 
-		const PixelDesc thePixelDesc(theFormat);
-
-		const size_t theWidth = ::CGImageGetWidth(iImageRef);
-
-		return ZDCPixmapRep::sCreate(thePR, sRectPOD(theWidth, theHeight), thePixelDesc);
+		return ZDCPixmapRep::sCreate
+			(thePixmapRaster,
+			sRectPOD(::CGImageGetWidth(iImageRef),
+			thePixmapRaster->GetRasterDesc().fRowCount),
+			thePixelDesc);
 		}
 
 	return ZDCPixmap();
