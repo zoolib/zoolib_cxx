@@ -117,6 +117,10 @@ inline
 bool sIsEmpty(const ZName& iName)
 	{ return iName.IsEmpty(); }
 
+inline
+bool sNotEmpty(const ZName& iName)
+	{ return not sIsEmpty(iName); }
+
 } // namespace ZooLib
 
 #if defined(_LIBCPP_BEGIN_NAMESPACE_STD)
