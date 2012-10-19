@@ -490,7 +490,7 @@ void ZTBServer::Handle_Create(const ZTuple& iReq)
 
 		Transaction* theTransaction = new Transaction;
 		theTransaction->fServer = this;
-		theTransaction->fClientID = (*i).GetInt64();
+		theTransaction->fClientID = (*i).Get<int64>();
 		theTransaction->fTBRepTransaction = fTBRep->CreateTransaction();
 
 		locker.Acquire();
@@ -555,19 +555,19 @@ void ZTBServer::Handle_Search(const ZTuple& iReq)
 	{
 	ZMutexLocker locker(fMutex_Structure);
 
-	Transaction* theTransaction = reinterpret_cast<Transaction*>(iReq.GetInt64("ServerID"));
+	Transaction* theTransaction = reinterpret_cast<Transaction*>(iReq.Get<int64>("ServerID"));
 	ZAssert(theTransaction->fServer == this);
 
 	const vector<ZTValue>& vectorSearches = iReq.Get("Searches").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorSearches.begin();
 		i != vectorSearches.end(); ++i)
 		{
-		ZTuple t = (*i).GetTuple();
+		ZTuple t = (*i).Get<ZMap_Any>();
 
 		Search_t* theSearch = new Search_t;
 		theSearch->fTransaction = theTransaction;
-		theSearch->fClientSearchID = t.GetInt64("SearchID");
-		ZTBQuery theQuery(t.GetTuple("QueryAsTuple"));
+		theSearch->fClientSearchID = t.Get<int64>("SearchID");
+		ZTBQuery theQuery(t.Get<ZMap_Any>("QueryAsTuple"));
 		sInsertSortedMust(kDebug_TBServer, fSearches_Waiting, theSearch);
 		theTransaction->fTBRepTransaction->Search(theQuery, spCallback_Search, theSearch);
 		}
@@ -593,18 +593,18 @@ void ZTBServer::Handle_Count(const ZTuple& iReq)
 	{
 	ZMutexLocker locker(fMutex_Structure);
 
-	Transaction* theTransaction = reinterpret_cast<Transaction*>(iReq.GetInt64("ServerID"));
+	Transaction* theTransaction = reinterpret_cast<Transaction*>(iReq.Get<int64>("ServerID"));
 	ZAssert(theTransaction->fServer == this);
 
 	const vector<ZTValue>& vectorCounts = iReq.Get("Counts").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorCounts.begin(); i != vectorCounts.end(); ++i)
 		{
-		ZTuple t = (*i).GetTuple();
+		ZTuple t = (*i).Get<ZMap_Any>();
 
 		Count_t* theCount = new Count_t;
 		theCount->fTransaction = theTransaction;
-		theCount->fClientCountID = t.GetInt64("CountID");
-		ZTBQuery theQuery(t.GetTuple("QueryAsTuple"));
+		theCount->fClientCountID = t.Get<int64>("CountID");
+		ZTBQuery theQuery(t.Get<ZMap_Any>("QueryAsTuple"));
 		sInsertSortedMust(kDebug_TBServer, fCounts_Waiting, theCount);
 		theTransaction->fTBRepTransaction->Count(theQuery, spCallback_Count, theCount);
 		}
@@ -640,7 +640,7 @@ void ZTBServer::Handle_Validate(const ZTuple& iReq)
 	for (vector<ZTValue>::const_iterator i = vectorServerIDs.begin();
 		i != vectorServerIDs.end(); ++i)
 		{
-		Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).GetInt64());
+		Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).Get<int64>());
 
 		sEraseSortedMust(kDebug_TBServer, fTransactions_Created, theTransaction);
 
@@ -661,7 +661,7 @@ void ZTBServer::Handle_Abort(const ZTuple& iReq)
 	for (vector<ZTValue>::const_iterator i = vectorServerIDs.begin();
 		i != vectorServerIDs.end(); ++i)
 		{
-		Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).GetInt64());
+		Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).Get<int64>());
 		// theTransaction must either be created or validated.
 		if (sQEraseSorted(fTransactions_Created, theTransaction))
 			{
@@ -702,7 +702,7 @@ void ZTBServer::Handle_Commit(const ZTuple& iReq)
 	for (vector<ZTValue>::const_iterator i = vectorServerIDs.begin();
 		i != vectorServerIDs.end(); ++i)
 		{
-		Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).GetInt64());
+		Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).Get<int64>());
 		sEraseSortedMust(kDebug_TBServer, fTransactions_Validated, theTransaction);
 		sInsertSortedMust(kDebug_TBServer, fTransactions_Commit_Waiting, theTransaction);
 		locker.Release();
@@ -738,7 +738,7 @@ void ZTBServer::spCallback_GetTuple
 
 void ZTBServer::Handle_Actions(const ZTuple& iReq)
 	{
-	Transaction* theTransaction = reinterpret_cast<Transaction*>(iReq.GetInt64("ServerID"));
+	Transaction* theTransaction = reinterpret_cast<Transaction*>(iReq.Get<int64>("ServerID"));
 
 	vector<uint64> vectorGets;
 	iReq.Get("Gets").GetSeq().GetVector_T(back_inserter(vectorGets), uint64());
@@ -749,8 +749,8 @@ void ZTBServer::Handle_Actions(const ZTuple& iReq)
 	const vector<ZTValue>& vectorWrites = iReq.Get("Writes").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorWrites.begin(); i != vectorWrites.end(); ++i)
 		{
-		const ZTuple& t = (*i).GetTuple();
-		theTransaction->fTBRepTransaction->SetTuple(t.GetID("ID"), t.GetTuple("Value"));
+		const ZTuple& t = (*i).Get<ZMap_Any>();
+		theTransaction->fTBRepTransaction->SetTuple(t.GetID("ID"), t.Get<ZMap_Any>("Value"));
 		}
 	}
 

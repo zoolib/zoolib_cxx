@@ -21,6 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim.h"
 #include "zoolib/tuplebase/ZTupleIndex_String.h"
 #include "zoolib/ZUnicode.h"
+#include "zoolib/ZUnicodeString8.h"
+
+#include "zoolib/ZUtil_Strim_operators.h"
 
 using std::set;
 using std::string;
@@ -76,13 +79,13 @@ static void spExtractConstraint(const ZTName& iPropName,
 		// It's a criteria on the current property.
 		if (1 == (*critIter)->GetComparator().fStrength
 			&& ZTBSpec::eRel_Equal == (*critIter)->GetComparator().fRel
-			&& eZType_String == (*critIter)->GetTValue().TypeOf()
-			&& (*critIter)->GetPropName == iPropName)
+			&& (*critIter)->GetTValue().PGet<string8>()
+			&& (*critIter)->GetPropName() == iPropName)
 			{
 			// It's a 1-strength equality search on our property name,
 			// so we can handle it. Remove the criteria from ioCriteria
 			// and return success.
-			oValue = ZUnicode::sAsUTF16((*critIter)->GetTValue().GetString());
+			oValue = ZUnicode::sAsUTF16((*critIter)->GetTValue().Get<string8>());
 			ioCriteria.erase(critIter);
 			return;
 			}
@@ -102,7 +105,7 @@ static bool spCheckForConstraint
 		// It's a criteria on the current property.
 		if (1 == (*critIter).GetComparator().fStrength
 			&& ZTBSpec::eRel_Equal == (*critIter).GetComparator().fRel
-			&& eZType_String == (*critIter).GetTValue().TypeOf()
+			&& (*critIter).GetTValue().PGet<string8>()
 			&& (*critIter).GetPropName() == iPropName)
 			{
 			// It's a 1-strength equality search on our property name,
@@ -167,14 +170,13 @@ void ZTupleIndex_String::WriteDescription(const ZStrimW& s)
 
 bool ZTupleIndex_String::pKeyFromTuple(uint64 iID, const ZTuple* iTuple, Key& oKey)
 	{
-	ZTuple::const_iterator propIter = iTuple->IteratorOf(fPropName);
-	if (propIter == iTuple->end())
-		return false;
-	if (iTuple->PGet(propIter)->TypeOf() != eZType_String)
-		return false;
-	oKey.fValue = ZUnicode::sAsUTF16(iTuple->GetString(propIter));
-	oKey.fID = iID;
-	return true;
+	if (const string8* theString8 = iTuple->PGet<string8>(fPropName))
+		{
+		oKey.fValue = ZUnicode::sAsUTF16(*theString8);
+		oKey.fID = iID;
+		return true;
+		}
+	return false;
 	}
 
 // =================================================================================================

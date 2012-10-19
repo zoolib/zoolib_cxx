@@ -312,7 +312,7 @@ void ZTSWatcher_Client::pSync1
 			i = changedTuplesV.begin(), theEnd = changedTuplesV.end();
 			i != theEnd; ++i)
 			{
-			const ZTuple& entry = (*i).GetTuple();
+			const ZTuple& entry = (*i).Get<ZMap_Any>();
 
 			uint64 theID;
 			if (entry.QGetID("ID", theID))
@@ -334,7 +334,7 @@ void ZTSWatcher_Client::pSync1
 		i = changedQueriesV.begin(), theEnd = changedQueriesV.end();
 		i != theEnd; ++i)
 		{
-		const ZTuple& entry = (*i).GetTuple();
+		const ZTuple& entry = (*i).Get<ZMap_Any>();
 
 		int64 theRefcon;
 		if (entry.QGetInt64("refcon", theRefcon))

@@ -257,13 +257,12 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 
 			sSkip_WSAndCPlusPlusComments(iStrimU);
 
-			ZTuple theTuple;
+			ZQ<ZMap_Any> theTupleQ;
 			ZTValue theTValue;
-			if (not ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue)
-				|| !theTValue.QGetTuple(theTuple))
-				{
+			if (ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue))
+				theTupleQ = theTValue.QGet<ZMap_Any>();
+			if (not theTupleQ)
 				throw Ex_MalformedText("Expected tuple after 'tuple ID:'");
-				}
 
 			if (theID == 0)
 				throw Ex_IDInvalid();
@@ -274,7 +273,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 //			if (theID <= priorID)
 //				throw Ex_IDOutOfSequence();
 
-			if (not iSink.Set(theID, theTuple))
+			if (not iSink.Set(theID, *theTupleQ))
 				throw Ex_IDDuplicate();
 
 			priorID = theID;
@@ -311,13 +310,13 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 
 			sSkip_WSAndCPlusPlusComments(iStrimU);
 
-			ZTuple theTuple;
+			ZQ<ZMap_Any> theTupleQ;
 			ZTValue theTValue;
-			if (not ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue)
-				|| !theTValue.QGetTuple(theTuple))
-				{
+			if (ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue))
+				theTupleQ = theTValue.QGet<ZMap_Any>();
+			if (not theTupleQ)
 				throw Ex_MalformedText("Expected tuple after 'tuple ID:'");
-				}
+
 
 			if (theID == 0)
 				throw Ex_IDInvalid();
@@ -328,7 +327,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 //			if (theID <= priorID)
 //				throw Ex_IDOutOfSequence();
 
-			if (not iSink.Set(theID, theTuple))
+			if (not iSink.Set(theID, *theTupleQ))
 				throw Ex_IDDuplicate();
 
 			priorID = theID;

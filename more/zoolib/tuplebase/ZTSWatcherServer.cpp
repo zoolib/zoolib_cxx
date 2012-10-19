@@ -158,7 +158,7 @@ static bool spSync1
 			i = addedQueriesV.begin(), theEnd = addedQueriesV.end();
 			i != theEnd; ++i)
 			{
-			const ZTuple& entry = (*i).GetTuple();
+			const ZTuple& entry = (*i).Get<ZMap_Any>();
 			int64 theRefcon;
 			if (entry.QGetInt64("refcon", theRefcon))
 				{
@@ -192,7 +192,7 @@ static bool spSync1
 			i = writtenTuplesV.begin(), theEnd = writtenTuplesV.end();
 			i != theEnd; ++i)
 			{
-			const ZTuple& entry = (*i).GetTuple();
+			const ZTuple& entry = (*i).Get<ZMap_Any>();
 			uint64 theID;
 			if (entry.QGetID("ID", theID))
 				{

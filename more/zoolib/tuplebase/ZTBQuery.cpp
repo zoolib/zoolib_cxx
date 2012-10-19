@@ -50,6 +50,27 @@ static inline void spWriteCount(const ZStreamW& iStreamW, uint32 iCount)
 static inline uint32 spReadCount(const ZStreamR& iStreamR)
 	{ return iStreamR.ReadCount(); }
 
+ZName sName(const ZStreamR& r)
+	{
+	if (size_t theCount = r.ReadCount())
+		return r.ReadString(theCount);
+	return ZName();
+	}
+
+void sToStream(const ZStreamW& w, const ZName& iName)
+	{
+	string8 theString = iName;
+	if (size_t theCount = theString.size())
+		{
+		w.WriteCount(theCount);
+		w.WriteString(theString);
+		}
+	else
+		{
+		w.WriteCount(0);
+		}
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTBQueryNode
@@ -528,7 +549,7 @@ ZRef<ZTBQueryNode> ZTBQuery::GetNode() const
 #pragma mark * ZTBQuery::SortSpec
 
 ZTBQuery::SortSpec::SortSpec(const ZStreamR& iStreamR)
-:	fPropName(iStreamR),
+:	fPropName(sName(iStreamR)),
 	fAscending(iStreamR.ReadBool()),
 	fStrength(iStreamR.ReadUInt8())
 	{}
@@ -561,7 +582,7 @@ bool ZTBQuery::SortSpec::operator<(const SortSpec& iOther) const
 
 void ZTBQuery::SortSpec::ToStream(const ZStreamW& iStreamW) const
 	{
-	fPropName.ToStream(iStreamW);
+	sToStream(iStreamW, fPropName);
 	iStreamW.WriteBool(fAscending);
 	iStreamW.WriteUInt8(fStrength);
 	}
@@ -614,11 +635,11 @@ ZTBQueryNode_Combo::Intersection::Intersection(const ZStreamR& iStreamR)
 
 ZTBQueryNode_Combo::Intersection::Intersection(const ZTuple& iTuple)
 	{
-	fFilter = ZTBSpec(iTuple.GetTuple("Filter"));
+	fFilter = ZTBSpec(iTuple.Get<ZMap_Any>("Filter"));
 	const vector<ZTValue>& nodes = iTuple.Get("Nodes").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = nodes.begin(); i != nodes.end(); ++i)
 		{
-		if (ZRef<ZTBQueryNode> aNode = spNodeFromTuple((*i).GetTuple()))
+		if (ZRef<ZTBQueryNode> aNode = spNodeFromTuple((*i).Get<ZMap_Any>()))
 			fNodes.push_back(aNode);
 		}
 	}
@@ -827,7 +848,7 @@ int ZTBQueryNode_Difference::pCompare_Difference(ZTBQueryNode_Difference* iOther
 #pragma mark * ZTBQueryNode_First
 
 ZTBQueryNode_First::ZTBQueryNode_First(const ZStreamR& iStreamR)
-:	fPropName(iStreamR),
+:	fPropName(sName(iStreamR)),
 	fSourceNode(spNodeFromStream(iStreamR))
 	{}
 
@@ -941,7 +962,7 @@ int ZTBQueryNode_ID_Constant::pCompare_ID_Constant(ZTBQueryNode_ID_Constant* iOt
 #pragma mark * ZTBQueryNode_ID_FromSource
 
 inline ZTBQueryNode_ID_FromSource::ZTBQueryNode_ID_FromSource(const ZStreamR& iStreamR)
-:	fSourcePropName(iStreamR),
+:	fSourcePropName(sName(iStreamR)),
 	fSourceNode(spNodeFromStream(iStreamR))
 	{}
 
@@ -958,7 +979,7 @@ ZTuple ZTBQueryNode_ID_FromSource::AsTuple()
 	{
 	ZTuple theTuple;
 	theTuple.SetString("Kind", "ID_FromSource");
-	theTuple.SetString("SourcePropName", fSourcePropName.AsString());
+	theTuple.SetString("SourcePropName", string8(fSourcePropName));
 	if (fSourceNode)
 		theTuple.SetTuple("SourceNode", fSourceNode->AsTuple());
 	return theTuple;
@@ -967,7 +988,7 @@ ZTuple ZTBQueryNode_ID_FromSource::AsTuple()
 void ZTBQueryNode_ID_FromSource::ToStream(const ZStreamW& iStreamW)
 	{
 	iStreamW.WriteUInt8(6);
-	fSourcePropName.ToStream(iStreamW);
+	sToStream(iStreamW, fSourcePropName);
 	spNodeToStream(iStreamW, fSourceNode);
 	}
 
@@ -1013,7 +1034,7 @@ ZTuple ZTBQueryNode_Property::AsTuple()
 void ZTBQueryNode_Property::ToStream(const ZStreamW& iStreamW)
 	{
 	iStreamW.WriteUInt8(7);
-	fPropName.ToStream(iStreamW);
+	sToStream(iStreamW, fPropName);
 	spNodeToStream(iStreamW, fSourceNode);
 	}
 
@@ -1054,7 +1075,7 @@ static ZRef<ZTBQueryNode> spNodeFromTuple(const ZTuple& iTuple)
 		const vector<ZTValue>& vectorSort = iTuple.Get("Sort").GetSeq().GetVector();
 		for (vector<ZTValue>::const_iterator i = vectorSort.begin(); i != vectorSort.end(); ++i)
 			{
-			const ZTuple& temp = (*i).GetTuple();
+			const ZTuple& temp = (*i).Get<ZMap_Any>();
 			theSort.push_back(ZTBQuery::SortSpec
 				(ZTName(temp.GetString("PropName")), temp.GetBool("Ascending"), temp.GetInt32("Strength")));
 			}
@@ -1062,20 +1083,20 @@ static ZRef<ZTBQueryNode> spNodeFromTuple(const ZTuple& iTuple)
 		const vector<ZTValue>& sourceSect = iTuple.Get("Intersections").GetSeq().GetVector();
 		vector<ZTBQueryNode_Combo::Intersection> theIntersections;
 		for (vector<ZTValue>::const_iterator i = sourceSect.begin(); i != sourceSect.end(); ++i)
-			theIntersections.push_back(ZTBQueryNode_Combo::Intersection((*i).GetTuple()));
+			theIntersections.push_back(ZTBQueryNode_Combo::Intersection((*i).Get<ZMap_Any>()));
 
 		return new ZTBQueryNode_Combo(theSort, theIntersections);
 		}
 	else if (nodeKind == "Difference")
 		{
-		ZRef<ZTBQueryNode> leftNode = spNodeFromTuple(iTuple.GetTuple("LeftNode"));
-		ZRef<ZTBQueryNode> rightNode = spNodeFromTuple(iTuple.GetTuple("RightNode"));
+		ZRef<ZTBQueryNode> leftNode = spNodeFromTuple(iTuple.Get<ZMap_Any>("LeftNode"));
+		ZRef<ZTBQueryNode> rightNode = spNodeFromTuple(iTuple.Get<ZMap_Any>("RightNode"));
 		return new ZTBQueryNode_Difference(leftNode, rightNode);
 		}
 	else if (nodeKind == "First")
 		{
 		string propName = iTuple.GetString("PropName");
-		ZRef<ZTBQueryNode> sourceNode = spNodeFromTuple(iTuple.GetTuple("SourceNode"));
+		ZRef<ZTBQueryNode> sourceNode = spNodeFromTuple(iTuple.Get<ZMap_Any>("SourceNode"));
 		return new ZTBQueryNode_First(ZTName(propName), sourceNode);
 		}
 	else if (nodeKind == "ID_Constant")
@@ -1086,14 +1107,14 @@ static ZRef<ZTBQueryNode> spNodeFromTuple(const ZTuple& iTuple)
 		}
 	else if (nodeKind == "ID_FromSource")
 		{
-		ZRef<ZTBQueryNode> sourceNode = spNodeFromTuple(iTuple.GetTuple("SourceNode"));
+		ZRef<ZTBQueryNode> sourceNode = spNodeFromTuple(iTuple.Get<ZMap_Any>("SourceNode"));
 		string sourcePropName = iTuple.GetString("SourcePropName");
 		return new ZTBQueryNode_ID_FromSource(sourceNode, ZTName(sourcePropName));
 		}
 	else if (nodeKind == "Property")
 		{
 		string propName = iTuple.GetString("PropName");
-		ZRef<ZTBQueryNode> sourceNode = spNodeFromTuple(iTuple.GetTuple("SourceNode"));
+		ZRef<ZTBQueryNode> sourceNode = spNodeFromTuple(iTuple.Get<ZMap_Any>("SourceNode"));
 		return new ZTBQueryNode_Property(ZTName(propName), sourceNode);
 		}
 	throw std::runtime_error(string("ZTBQuery, spNodeFromTuple, unknown nodeKind: " + nodeKind));

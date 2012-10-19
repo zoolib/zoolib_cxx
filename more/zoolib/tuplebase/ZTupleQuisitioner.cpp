@@ -401,19 +401,19 @@ static void spFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilte
 void ZTupleQuisitioner::Query_Unordered
 	(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iFilter, set<uint64>& ioIDs)
 	{
-	if (ZRefDynamicCast<ZTBQueryNode_All>(iNode))
+	if (iNode.DynamicCast<ZTBQueryNode_All>())
 		{
 		// We must have a filter, it's not possible to construct a ZTBQueryNode_All
 		// except as a clause in a combo with a filter.
 		ZAssertStop(kDebug_TupleQuisitioner, iFilter);
 		this->Search(*iFilter, ioIDs);
 		}
-	else if (ZTBQueryNode_First* theNode_First = ZRefDynamicCast<ZTBQueryNode_First>(iNode))
+	else if (ZTBQueryNode_First* theNode_First = iNode.DynamicCast<ZTBQueryNode_First>())
 		{
 		if (ZRef<ZTBQueryNode> firstSource = theNode_First->GetSourceNode())
 			{
 			if (ZTBQueryNode_Combo* theNode_Combo =
-				ZRefDynamicCast<ZTBQueryNode_Combo>(firstSource))
+				firstSource.DynamicCast<ZTBQueryNode_Combo>())
 				{
 				// The source is a combo, so we can apply a first to it.
 				const ZTName& theFirst = theNode_First->GetPropName();
@@ -439,13 +439,13 @@ void ZTupleQuisitioner::Query_Unordered
 				}
 			}
 		}
-	else if (ZTBQueryNode_Combo* theNode_Combo = ZRefDynamicCast<ZTBQueryNode_Combo>(iNode))
+	else if (ZTBQueryNode_Combo* theNode_Combo = iNode.DynamicCast<ZTBQueryNode_Combo>())
 		{
 		// We're returning a set of results, so any sort will have no effect.
 		this->Query_Combo_Unordered(theNode_Combo->GetIntersections(), iFilter, ioIDs);
 		}
 	else if (ZTBQueryNode_ID_Constant* theNode_ID_Constant =
-		ZRefDynamicCast<ZTBQueryNode_ID_Constant>(iNode))
+		iNode.DynamicCast<ZTBQueryNode_ID_Constant>())
 		{
 		if (iFilter)
 			{
@@ -462,7 +462,7 @@ void ZTupleQuisitioner::Query_Unordered
 			}
 		}
 	else if (ZTBQueryNode_ID_FromSource* theNode_ID_FromSource =
-		ZRefDynamicCast<ZTBQueryNode_ID_FromSource>(iNode))
+		iNode.DynamicCast<ZTBQueryNode_ID_FromSource>())
 		{
 		set<uint64> sourceIDSet;
 		this->Query_Unordered(theNode_ID_FromSource->GetSourceNode(), nullptr, sourceIDSet);
@@ -495,7 +495,7 @@ void ZTupleQuisitioner::Query_Unordered
 			}
 		}
 	else if (ZTBQueryNode_Property* theNode_Property =
-		ZRefDynamicCast<ZTBQueryNode_Property>(iNode))
+		iNode.DynamicCast<ZTBQueryNode_Property>())
 		{
 		set<uint64> sourceIDSet;
 		this->Query_Unordered(theNode_Property->GetSourceNode(), nullptr, sourceIDSet);
@@ -519,7 +519,7 @@ void ZTupleQuisitioner::Query_Unordered
 void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode,
 	const ZTBSpec* iFilter, vector<uint64>& ioIDs)
 	{
-	if (ZRefDynamicCast<ZTBQueryNode_All>(iNode))
+	if (iNode.DynamicCast<ZTBQueryNode_All>())
 		{
 		// We must have a filter, it's not possible to construct a ZTBQueryNode_All
 		// except as a clause in a combo with a filter.
@@ -528,12 +528,12 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode,
 		this->Search(*iFilter, results);
 		ioIDs.insert(ioIDs.end(), results.begin(), results.end());
 		}
-	else if (ZTBQueryNode_First* theNode_First = ZRefDynamicCast<ZTBQueryNode_First>(iNode))
+	else if (ZTBQueryNode_First* theNode_First = iNode.DynamicCast<ZTBQueryNode_First>())
 		{
 		if (ZRef<ZTBQueryNode> firstSource = theNode_First->GetSourceNode())
 			{
 			if (ZTBQueryNode_Combo* theNode_Combo =
-				ZRefDynamicCast<ZTBQueryNode_Combo>(firstSource))
+				firstSource.DynamicCast<ZTBQueryNode_Combo>())
 				{
 				const ZTName& theFirst = theNode_First->GetPropName();
 				const vector<ZTBQuery::SortSpec>& theSort = theNode_Combo->GetSort();
@@ -553,7 +553,7 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode,
 				}
 			}
 		}
-	else if (ZTBQueryNode_Combo* theNode_Combo = ZRefDynamicCast<ZTBQueryNode_Combo>(iNode))
+	else if (ZTBQueryNode_Combo* theNode_Combo = iNode.DynamicCast<ZTBQueryNode_Combo>())
 		{
 		const vector<ZTBQuery::SortSpec>& theSort = theNode_Combo->GetSort();
 		if (theSort.empty())
@@ -562,7 +562,7 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode,
 			this->Query_Combo_Sorted(theSort, theNode_Combo->GetIntersections(), iFilter, ioIDs);
 		}
 	else if (ZTBQueryNode_ID_Constant* theNode_ID_Constant =
-		ZRefDynamicCast<ZTBQueryNode_ID_Constant>(iNode))
+		iNode.DynamicCast<ZTBQueryNode_ID_Constant>())
 		{
 		if (iFilter)
 			{
@@ -579,7 +579,7 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode,
 			}
 		}
 	else if (ZTBQueryNode_ID_FromSource* theNode_ID_FromSource =
-		ZRefDynamicCast<ZTBQueryNode_ID_FromSource>(iNode))
+		iNode.DynamicCast<ZTBQueryNode_ID_FromSource>())
 		{
 		vector<uint64> sourceIDs;
 		this->Query(theNode_ID_FromSource->GetSourceNode(), nullptr, sourceIDs);
@@ -609,7 +609,7 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode,
 			}
 		}
 	else if (ZTBQueryNode_Property* theNode_Property =
-		ZRefDynamicCast<ZTBQueryNode_Property>(iNode))
+		iNode.DynamicCast<ZTBQueryNode_Property>())
 		{
 		vector<uint64> sourceIDs;
 		this->Query(theNode_Property->GetSourceNode(), nullptr, sourceIDs);
