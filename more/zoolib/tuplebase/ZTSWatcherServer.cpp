@@ -162,12 +162,11 @@ static bool spSync1
 			int64 theRefcon;
 			if (entry.QGetInt64("refcon", theRefcon))
 				{
-				ZTuple queryAsTuple;
-				if (entry.Get("query").QGetTuple(queryAsTuple))
+				if (ZQ<ZMap_Any> theTupleQ = entry.Get<ZMap_Any>("query"))
 					{
 					ZTSWatcher::AddedQueryCombo theCombo;
 					theCombo.fRefcon = theRefcon;
-					theCombo.fTBQuery = ZTBQuery(queryAsTuple);
+					theCombo.fTBQuery = ZTBQuery(*theTupleQ);
 					theCombo.fTBQuery.ToStream(ZStreamRWPos_MemoryBlock(theCombo.fMemoryBlock));
 					theCombo.fPrefetch = entry.GetBool("prefetch");
 					addedQueries.push_back(theCombo);
@@ -196,15 +195,14 @@ static bool spSync1
 			uint64 theID;
 			if (entry.QGetID("ID", theID))
 				{
-				ZTuple theTuple;
-				if (entry.Get("tuple").QGetTuple(theTuple))
+				if (ZQ<ZMap_Any> theTupleQ = entry.Get<ZMap_Any>("tuple"))
 					{
 					if (lastID >= theID)
 						writeNeededSort = true;
 					lastID = theID;
 
 					writtenTupleIDs.push_back(theID);
-					writtenTuples.push_back(theTuple);
+					writtenTuples.push_back(*theTupleQ);
 					}
 				}
 			}
