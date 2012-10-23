@@ -82,7 +82,7 @@ ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef)
 		uint32 theA;
 		if (theAI & 1)
 			{
-			theA = theBPC;
+			theA = theMask;
 			theStart = theMask << theBPC;
 			}
 		else if (0 == (theAI & 6) || 6 == (theAI & 6))
@@ -91,7 +91,7 @@ ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef)
 			}
 		else
 			{
-			theA = theBPC << (theBPC * 3);
+			theA = theMask << (theBPC * 3);
 			}
 
 		const uint32 theB = theStart;
