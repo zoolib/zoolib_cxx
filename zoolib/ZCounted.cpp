@@ -102,6 +102,9 @@ bool ZCountedBase::IsReferenced() const
 
 ZRef<ZCountedBase::WeakRefProxy> ZCountedBase::GetWeakRefProxy()
 	{
+	// It is not legal to take a weak reference from an un-initialized object.
+	ZAssert(sAtomic_Get(&fRefCount));
+
 	if (not fWeakRefProxy)
 		{
 		ZRef<WeakRefProxy> theWeakRefProxy = new WeakRefProxy(this);
