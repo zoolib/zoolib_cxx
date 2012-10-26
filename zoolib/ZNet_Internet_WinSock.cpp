@@ -129,7 +129,7 @@ ZNetNameLookup_Internet_WinSock::ZNetNameLookup_Internet_WinSock
 	fPort(inPort),
 	fStarted(false),
 	fCurrentIndex(0),
-	fCountAddressesToReturn(inMaxAddresses)
+	fCountAddressesToReturn(inMaxAddresses ? inMaxAddresses : 1000)
 	{
 	if (inName.empty())
 		{

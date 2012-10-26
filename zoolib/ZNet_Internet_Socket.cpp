@@ -198,7 +198,7 @@ ZNetNameLookup_Internet_Socket::ZNetNameLookup_Internet_Socket
 	(const string& iName, ip_port iPort, size_t iMaxAddresses)
 :	fName(iName)
 ,	fPort(iPort)
-,	fCountAddressesToReturn(iMaxAddresses)
+,	fCountAddressesToReturn(iMaxAddresses ? iMaxAddresses : 1000)
 ,	fStarted(true)
 ,	fCurrentIndex(0)
 	{
