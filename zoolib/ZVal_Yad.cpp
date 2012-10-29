@@ -94,38 +94,83 @@ void ZSeq_Yad::Clear()
 	fSeq.Clear();
 	}
 
-ZQ<ZVal_Yad> ZSeq_Yad::QGet(size_t iIndex) const
+const ZVal_Yad* ZSeq_Yad::PGet(size_t iIndex) const
 	{
 	if (fYad)
 		{
-		if (ZRef<ZYadR> theYad = fYad->ReadAt(iIndex))
-			return spAsVal_Yad(theYad);
-		return null;
+		for (size_t count = fYad->Count();
+			iIndex <= fSeq.Count() && fSeq.Count() < count;
+			/*no inc*/)
+			{ fSeq.Append(Tombstone_t()); }
 		}
 
-	if (ZQ<ZVal_Any> theQ = fSeq.QGet(iIndex))
-		return theQ->AsAny();
-		
+	if (ZAny* theP = fSeq.PMut(iIndex))
+		{
+		if (theP->PGet<Tombstone_t>())
+			*theP = spAsVal_Yad(fYad->ReadAt(iIndex)).AsAny();
+		return static_cast<ZVal_Yad*>(theP);
+		}
+
+	return nullptr;
+	}
+
+ZQ<ZVal_Yad> ZSeq_Yad::QGet(size_t iIndex) const
+	{
+	if (const ZVal_Yad* theVal = this->PGet(iIndex))
+		return *theVal;
 	return null;
 	}
 
-ZVal_Yad ZSeq_Yad::DGet(const ZVal_Yad& iDefault, size_t iIndex) const
+const ZVal_Yad& ZSeq_Yad::DGet(const ZVal_Yad& iDefault, size_t iIndex) const
 	{
-	if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
-		return *theQ;
+	if (const ZVal_Yad* theVal = this->PGet(iIndex))
+		return *theVal;
 	return iDefault;
 	}
 
-ZVal_Yad ZSeq_Yad::Get(size_t iIndex) const
+const ZVal_Yad& ZSeq_Yad::Get(size_t iIndex) const
 	{
-	if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
-		return *theQ;
-	return ZVal_Yad();
+	if (const ZVal_Yad* theVal = this->PGet(iIndex))
+		return *theVal;
+	return sDefault<ZVal_Yad>();
+	}
+
+ZVal_Yad* ZSeq_Yad::PMut(size_t iIndex)
+	{
+	if (fYad)
+		{
+		for (size_t count = fYad->Count();
+			iIndex <= fSeq.Count() && fSeq.Count() < count;
+			/*no inc*/)
+			{ fSeq.Append(Tombstone_t()); }
+		}
+
+	if (ZAny* theP = fSeq.PMut(iIndex))
+		{
+		if (theP->PGet<Tombstone_t>())
+			*theP = spAsVal_Yad(fYad->ReadAt(iIndex)).AsAny();
+		return static_cast<ZVal_Yad*>(theP);
+		}
+
+	return nullptr;
+	}
+
+ZVal_Yad& ZSeq_Yad::Mut(size_t iIndex)
+	{
+	ZVal_Yad* theP = this->PMut(iIndex);
+	ZAssert(theP);
+	return *theP;
 	}
 
 ZSeq_Yad& ZSeq_Yad::Set(size_t iIndex, const ZVal_Yad& iVal)
 	{
-	this->pGenSeq();
+	if (fYad)
+		{
+		for (size_t count = fYad->Count();
+			iIndex <= fSeq.Count() && fSeq.Count() < count;
+			/*no inc*/)
+			{ fSeq.Append(Tombstone_t()); }
+		}
 	fSeq.Set(iIndex, iVal.AsAny());
 	return *this;
 	}
@@ -151,8 +196,15 @@ ZSeq_Yad& ZSeq_Yad::Append(const ZVal_Yad& iVal)
 	return *this;
 	}
 
-ZVal_Yad ZSeq_Yad::operator[](size_t iIndex) const
-	{ return this->Get(iIndex); }
+ZVal_Yad& ZSeq_Yad::operator[](size_t iIndex)
+	{ return this->Mut(iIndex); }
+
+const ZVal_Yad& ZSeq_Yad::operator[](size_t iIndex) const
+	{
+	if (const ZVal_Yad* theVal = this->PGet(iIndex))
+		return *theVal;
+	return sDefault<ZVal_Yad>();
+	}
 
 ZRef<ZYadSeqAtRPos> ZSeq_Yad::GetYad() const
 	{ return fYad; }
@@ -166,7 +218,16 @@ void ZSeq_Yad::pGenSeq()
 		return;
 
 	for (size_t x = 0, count = fYad->Count(); x < count ; ++x)
-		fSeq.Append(spAsVal_Yad(fYad->ReadAt(x)).AsAny());
+		{
+		if (fSeq.Count() == x)
+			{
+			fSeq.Append(spAsVal_Yad(fYad->ReadAt(x)).AsAny());
+			}
+		else if (fSeq.PGet<Tombstone_t>(x))
+			{
+			fSeq.Set(x, spAsVal_Yad(fYad->ReadAt(x)).AsAny());
+			}
+		}
 
 	fYad.Clear();
 	}

@@ -41,7 +41,7 @@ typedef ZVal_T<ZMap_Yad,ZSeq_Yad> ZVal_Yad;
 class ZSeq_Yad
 	{
 public:
-	typedef ZVal_Yad Val;
+	typedef ZVal_Yad Val_t;
 
 	ZSeq_Yad();
 	ZSeq_Yad(const ZSeq_Yad& iOther);
@@ -56,39 +56,56 @@ public:
 
 	void Clear();
 
+	const ZVal_Yad* PGet(size_t iIndex) const;
 	ZQ<ZVal_Yad> QGet(size_t iIndex) const;
-	ZVal_Yad DGet(const ZVal_Yad& iDefault, size_t iIndex) const;
-	ZVal_Yad Get(size_t iIndex) const;
+	const ZVal_Yad& DGet(const ZVal_Yad& iDefault, size_t iIndex) const;
+	const ZVal_Yad& Get(size_t iIndex) const;
+	ZVal_Yad* PMut(size_t iIndex);
+	ZVal_Yad& Mut(size_t iIndex);
+
+	template <class S>
+	const S* PGet(size_t iIndex) const
+		{
+		if (const ZVal_Yad* theVal = this->PGet(iIndex))
+			return theVal->PGet<S>();
+		return nullptr;
+		}
 
 	template <class S>
 	ZQ<S> QGet(size_t iIndex) const
 		{
-		if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
-			return theQ->QGet<S>();
+		if (const S* theP = this->PGet<S>(iIndex))
+			return *theP;
 		return null;
 		}
 
 	template <class S>
 	const S DGet(const S& iDefault, size_t iIndex) const
 		{
-		if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
-			{
-			if (ZQ<S> theQ2 = theQ->QGet<S>())
-				return *theQ2;
-			}
+		if (const S* theP = this->PGet<S>(iIndex))
+			return *theP;
 		return iDefault;
 		}
 
 	template <class S>
 	const S Get(size_t iIndex) const
 		{
-		if (ZQ<ZVal_Yad> theQ = this->QGet(iIndex))
-			{
-			if (ZQ<S> theQ2 = theQ->QGet<S>())
-				return *theQ2;
-			}
+		if (const S* theP = this->PGet<S>(iIndex))
+			return *theP;
 		return sDefault<S>();
 		}
+
+	template <class S>
+	S* PMut(size_t iIndex)
+		{
+		if (ZVal_Yad* theVal = this->PMut(iIndex))
+			return theVal->PMut<S>();
+		return nullptr;
+		}
+
+	template <class S>
+	S& Mut(size_t iIndex)
+		{ return this->Mut(iIndex).Mut<S>(); }
 
 	ZSeq_Yad& Set(size_t iIndex, const ZVal_Yad& iVal);
 
@@ -99,9 +116,8 @@ public:
 	ZSeq_Yad& Append(const ZVal_Yad& iVal);
 
 // Our protocol
-//	ZVal_Yad& Mutable(size_t iIndex);
-//	ZVal_Yad& operator[](size_t iIndex);
-	ZVal_Yad operator[](size_t iIndex) const;
+	ZVal_Yad& operator[](size_t iIndex);
+	const ZVal_Yad& operator[](size_t iIndex) const;
 
 	ZRef<ZYadSeqAtRPos> GetYad() const;
 	ZSeq_Any GetSeq() const;
