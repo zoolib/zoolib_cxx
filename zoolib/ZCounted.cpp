@@ -43,7 +43,6 @@ ZCountedBase::~ZCountedBase()
 
 void ZCountedBase::Initialize()
 	{
-	ZAssertStop(1, not fWeakRefProxy);
 	if (ZCONFIG_Debug >= 1)
 		{
 		const int old = sAtomic_Get(&fRefCount);
@@ -75,7 +74,10 @@ bool ZCountedBase::FinishFinalize()
 void ZCountedBase::Retain()
 	{
 	if (0 == sAtomic_Add(&fRefCount, 1))
+		{
+		ZAssertStop(1, not fWeakRefProxy);
 		this->Initialize();
+		}
 	}
 
 void ZCountedBase::Release()
