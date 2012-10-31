@@ -119,6 +119,10 @@ template <> struct AssertCompile<true> { typedef bool IsValid; };
 	#define ZAssert(a) ZAssertStop(1, a)
 #endif
 
+#ifndef ZEnsure
+	#define ZEnsure(a) ZAssertStop(0, a)
+#endif
+
 } // namespace ZDebug
 } // namespace ZooLib
 
