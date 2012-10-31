@@ -655,6 +655,13 @@ const ZStrimU& StrimmerU::GetStrimU()
 StrimU& StrimmerU::GetStrim()
 	{ return fStrim; }
 
+ZRef<StrimmerU> sStrimmerU(ZRef<ZStrimmerU> iStrimmerU)
+	{
+	if (iStrimmerU)
+		return new StrimmerU(iStrimmerU);
+	return null;
+	}
+
 // =================================================================================================
 // MARK: - ZML parsing support
 

@@ -1003,10 +1003,18 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 // MARK: - sYadR and sToStrim
 
 ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU)
-	{ return spMakeYadR_JSON(iStrimmerU, sCountedVal(ReadOptions())); }
+	{
+	if (iStrimmerU)
+		return spMakeYadR_JSON(iStrimmerU, sCountedVal(ReadOptions()));
+	return null;
+	}
 
 ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
-	{ return spMakeYadR_JSON(iStrimmerU, sCountedVal(iReadOptions)); }
+	{
+	if (iStrimmerU)
+		return spMakeYadR_JSON(iStrimmerU, sCountedVal(iReadOptions));
+	return null;
+	}
 
 void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)
 	{ sToStrim(0, WriteOptions(), iYadR, s); }

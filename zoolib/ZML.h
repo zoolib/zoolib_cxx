@@ -128,6 +128,8 @@ public:
 	StrimU fStrim;
 	};
 
+ZRef<StrimmerU> sStrimmerU(ZRef<ZStrimmerU> iStrimmerU);
+
 // =================================================================================================
 // MARK: - ZML parsing support
 

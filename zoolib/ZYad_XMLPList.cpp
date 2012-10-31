@@ -302,6 +302,9 @@ void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oY
 
 ZRef<ZYadR> ZYad_XMLPList::sYadR(ZRef<ZML::StrimmerU> iStrimmerU)
 	{
+	if (not iStrimmerU)
+		return null;
+
 	ZML::StrimU& theR = iStrimmerU->GetStrim();
 
 	for (;;)
