@@ -191,14 +191,14 @@ public:
 	ZSeq_NS(NSMutableArray* iOther);
 	ZSeq_NS(NSArray* iOther);
 
-	ZSeq_NS(const Adopt_T<NSMutableArray>& iOther);
-	ZSeq_NS(const Adopt_T<NSArray>& iOther);
+	ZSeq_NS(const Adopt_T<NSMutableArray*>& iOther);
+	ZSeq_NS(const Adopt_T<NSArray*>& iOther);
 
 	ZSeq_NS& operator=(NSMutableArray* iOther);
 	ZSeq_NS& operator=(NSArray* iOther);
 
-	ZSeq_NS& operator=(const Adopt_T<NSMutableArray>& iOther);
-	ZSeq_NS& operator=(const Adopt_T<NSArray>& iOther);
+	ZSeq_NS& operator=(const Adopt_T<NSMutableArray*>& iOther);
+	ZSeq_NS& operator=(const Adopt_T<NSArray*>& iOther);
 
 // ZSeq protocol
 	size_t Count() const;
@@ -255,14 +255,14 @@ public:
 	ZMap_NS(NSMutableDictionary* iOther);
 	ZMap_NS(NSDictionary* iOther);
 
-	ZMap_NS(const Adopt_T<NSMutableDictionary>& iOther);
-	ZMap_NS(const Adopt_T<NSDictionary>& iOther);
+	ZMap_NS(const Adopt_T<NSMutableDictionary*>& iOther);
+	ZMap_NS(const Adopt_T<NSDictionary*>& iOther);
 
 	ZMap_NS& operator=(NSMutableDictionary* iOther);
 	ZMap_NS& operator=(NSDictionary* iOther);
 
-	ZMap_NS& operator=(const Adopt_T<NSMutableDictionary>& iOther);
-	ZMap_NS& operator=(const Adopt_T<NSDictionary>& iOther);
+	ZMap_NS& operator=(const Adopt_T<NSMutableDictionary*>& iOther);
+	ZMap_NS& operator=(const Adopt_T<NSDictionary*>& iOther);
 
 // ZMap protocol
 	using inherited::Clear;

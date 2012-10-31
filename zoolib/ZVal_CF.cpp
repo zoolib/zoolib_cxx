@@ -520,7 +520,7 @@ ZSeq_CF::ZSeq_CF(CFArrayRef iOther)
 	{}
 
 ZSeq_CF::ZSeq_CF(const Adopt_T<CFMutableArrayRef>& iOther)
-:	inherited(ZRef<CFMutableArrayRef>(iOther))
+:	inherited(iOther)
 ,	fMutable(true)
 	{}
 
@@ -545,7 +545,7 @@ ZSeq_CF& ZSeq_CF::operator=(CFArrayRef iOther)
 
 ZSeq_CF& ZSeq_CF::operator=(const Adopt_T<CFMutableArrayRef>& iOther)
 	{
-	inherited::operator=(ZRef<CFMutableArrayRef>(iOther));
+	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
@@ -695,7 +695,7 @@ ZMap_CF::ZMap_CF(const Adopt_T<CFDictionaryRef>& iOther)
 	{}
 
 ZMap_CF::ZMap_CF(const Adopt_T<CFMutableDictionaryRef>& iOther)
-:	inherited(ZRef<CFMutableDictionaryRef>(iOther))
+:	inherited(iOther)
 ,	fMutable(true)
 	{}
 
@@ -715,7 +715,7 @@ ZMap_CF& ZMap_CF::operator=(CFDictionaryRef iOther)
 
 ZMap_CF& ZMap_CF::operator=(const Adopt_T<CFMutableDictionaryRef>& iOther)
 	{
-	inherited::operator=(ZRef<CFMutableDictionaryRef>(iOther));
+	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}

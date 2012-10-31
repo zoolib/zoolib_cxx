@@ -429,12 +429,12 @@ ZSeq_NS::ZSeq_NS(NSArray* iOther)
 ,	fMutable(false)
 	{}
 
-ZSeq_NS::ZSeq_NS(const Adopt_T<NSMutableArray>& iOther)
-:	inherited(iOther.Get())
+ZSeq_NS::ZSeq_NS(const Adopt_T<NSMutableArray*>& iOther)
+:	inherited(iOther)
 ,	fMutable(true)
 	{}
 
-ZSeq_NS::ZSeq_NS(const Adopt_T<NSArray>& iOther)
+ZSeq_NS::ZSeq_NS(const Adopt_T<NSArray*>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
@@ -453,14 +453,14 @@ ZSeq_NS& ZSeq_NS::operator=(NSArray* iOther)
 	return *this;
 	}
 
-ZSeq_NS& ZSeq_NS::operator=(const Adopt_T<NSMutableArray>& iOther)
+ZSeq_NS& ZSeq_NS::operator=(const Adopt_T<NSMutableArray*>& iOther)
 	{
-	inherited::operator=(iOther.Get());
+	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZSeq_NS& ZSeq_NS::operator=(const Adopt_T<NSArray>& iOther)
+ZSeq_NS& ZSeq_NS::operator=(const Adopt_T<NSArray*>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
@@ -596,13 +596,13 @@ ZMap_NS::ZMap_NS(NSMutableDictionary* iOther)
 ,	fMutable(true)
 	{}
 
-ZMap_NS::ZMap_NS(const Adopt_T<NSDictionary>& iOther)
+ZMap_NS::ZMap_NS(const Adopt_T<NSDictionary*>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZMap_NS::ZMap_NS(const Adopt_T<NSMutableDictionary>& iOther)
-:	inherited(iOther.Get())
+ZMap_NS::ZMap_NS(const Adopt_T<NSMutableDictionary*>& iOther)
+:	inherited(iOther)
 ,	fMutable(true)
 	{}
 
@@ -620,14 +620,14 @@ ZMap_NS& ZMap_NS::operator=(NSDictionary* iOther)
 	return *this;
 	}
 
-ZMap_NS& ZMap_NS::operator=(const Adopt_T<NSMutableDictionary>& iOther)
+ZMap_NS& ZMap_NS::operator=(const Adopt_T<NSMutableDictionary*>& iOther)
 	{
-	inherited::operator=(iOther.Get());
+	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZMap_NS& ZMap_NS::operator=(const Adopt_T<NSDictionary>& iOther)
+ZMap_NS& ZMap_NS::operator=(const Adopt_T<NSDictionary*>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
