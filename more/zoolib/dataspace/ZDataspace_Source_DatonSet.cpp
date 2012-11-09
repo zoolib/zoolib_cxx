@@ -110,7 +110,7 @@ Daton sAsDaton(const ZVal_Any& iVal)
 	{
 	ZData_Any theData;
 	ZYad_ZooLibStrim::sToStrim(sYadR(iVal),
-		ZStrimW_StreamUTF8(MakeStreamRWPos_Data_T(theData)));
+		ZStrimW_StreamUTF8(sStreamRWPos_Data_T(theData)));
 	return theData;
 	}
 

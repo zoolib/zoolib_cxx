@@ -83,10 +83,6 @@ template <class T>
 ZStreamRPos_Data_T<T> sStreamRPos_Data_T(const T& iData)
 	{ return ZStreamRPos_Data_T<T>(iData); }
 
-template <class T>
-ZStreamRPos_Data_T<T> MakeStreamRPos_Data_T(const T& iData)
-	{ return sStreamRPos_Data_T<T>(iData); }
-
 // =================================================================================================
 // MARK: - ZStreamRWPos_Data_T
 
@@ -206,10 +202,6 @@ private:
 template <class T>
 ZStreamRWPos_Data_T<T> sStreamRWPos_Data_T(T& iData)
 	{ return ZStreamRWPos_Data_T<T>(iData); }
-
-template <class T>
-ZStreamRWPos_Data_T<T> MakeStreamRWPos_Data_T(T& iData)
-	{ return sStreamRWPos_Data_T<T>(iData); }
 
 // =================================================================================================
 // MARK: - Data stream reading functions
