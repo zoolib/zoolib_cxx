@@ -124,7 +124,7 @@ void ZNatter::pRemove(Exchange* iExchange)
 		}
 	}
 
-ZQ<ZData_Any> ZNatter::pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
+ZQ<ZData_Any> ZNatter::pQSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
 	{
 	ZGuardMtxR guard(fMtxR_Structure);
 
@@ -263,6 +263,20 @@ void ZNatter::pRead(ZGuardMtxR& iGuard)
 		}
 	}
 
+ZRef<ZNatter> sNatter(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+	{
+	if (iStreamerR && iStreamerW)
+		return new ZNatter(iStreamerR, iStreamerW);
+	return null;
+	}
+
+ZRef<ZNatter> sNatter(ZRef<ZStreamerRW> iStreamerRW)
+	{
+	if (iStreamerRW)
+		return new ZNatter(iStreamerRW, iStreamerRW);
+	return null;
+	}
+
 // =================================================================================================
 // MARK: - ZNatter::Exchange
 
@@ -272,7 +286,21 @@ ZNatter::Exchange::Exchange()
 ZNatter::Exchange::~Exchange()
 	{ fNatter->pRemove(this); }
 
-ZQ<ZData_Any> ZNatter::Exchange::SendReceive(const ZData_Any& iData)
-	{ return fNatter->pSendReceive(this, iData); }
+ZQ<ZData_Any> ZNatter::Exchange::QSendReceive(const ZData_Any& iData)
+	{ return fNatter->pQSendReceive(this, iData); }
+
+ZRef<ZNatter::Exchange> sNatterExhange(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+	{
+	if (iStreamerR && iStreamerW)
+		return (new ZNatter(iStreamerR, iStreamerW))->MakeExchange();
+	return null;
+	}
+
+ZRef<ZNatter::Exchange> sNatterExhange(ZRef<ZStreamerRW> iStreamerRW)
+	{
+	if (iStreamerRW)
+		return (new ZNatter(iStreamerRW, iStreamerRW))->MakeExchange();
+	return null;
+	}
 
 } // namespace ZooLib

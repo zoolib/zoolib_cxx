@@ -52,7 +52,7 @@ public:
 private:
 // Called by Exchange instances
 	void pRemove(Exchange* iExchange);
-	ZQ<ZData_Any> pSendReceive(ZRef<Exchange> iExchange, ZData_Any iData);
+	ZQ<ZData_Any> pQSendReceive(ZRef<Exchange> iExchange, ZData_Any iData);
 
 // Internals
 	ZQ<ZData_Any> pReadFor(ZGuardMtxR& iGuard, ZRef<Exchange> iExchange);
@@ -74,6 +74,9 @@ private:
 	std::map<int64, ZRef<Exchange> > fPending;
 	};
 
+ZRef<ZNatter> sNatter(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+ZRef<ZNatter> sNatter(ZRef<ZStreamerRW> iStreamerRW);
+
 // =================================================================================================
 // MARK: - ZNatter::Exchange
 
@@ -87,7 +90,7 @@ public:
 	virtual ~Exchange();
 
 // Our protocol
-	ZQ<ZData_Any> SendReceive(const ZData_Any& iData);
+	ZQ<ZData_Any> QSendReceive(const ZData_Any& iData);
 
 private:
 	ZRef<ZNatter> fNatter;
@@ -97,6 +100,9 @@ private:
 
 	friend class ZNatter;
 	};
+
+ZRef<ZNatter::Exchange> sNatterExhange(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+ZRef<ZNatter::Exchange> sNatterExhange(ZRef<ZStreamerRW> iStreamerRW);
 
 } // namespace ZooLib
 
