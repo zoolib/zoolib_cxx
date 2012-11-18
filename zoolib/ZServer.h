@@ -45,6 +45,8 @@ public:
 	virtual void Finalize();
 
 // Our protocol
+	bool IsStarted();
+
 	void Start(ZRef<ZCaller> iCaller,
 		ZRef<ZStreamerRWFactory> iFactory,
 		ZRef<Callable_Connection> iCallable_Connection);
@@ -72,6 +74,7 @@ private:
 
 	ZRef<ZWorker> fWorker;
 	};
+
 } // namespace ZooLib
 
 #endif // __ZServer_h__

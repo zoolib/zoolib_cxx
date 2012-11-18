@@ -46,6 +46,12 @@ void ZServer::Finalize()
 	ZCounted::Finalize();
 	}
 
+bool ZServer::IsStarted()
+	{
+	ZGuardMtx guard(fMtx);
+	return fFactory;
+	}
+
 void ZServer::Start(ZRef<ZCaller> iCaller,
 	ZRef<ZStreamerRWFactory> iFactory,
 	ZRef<Callable_Connection> iCallable_Connection)
@@ -109,17 +115,29 @@ void ZServer::StopWait()
 	}
 
 void ZServer::KillConnections()
-	{ fRoster->Broadcast(); }
+	{
+	ZGuardMtx guard(fMtx);
+	if (ZRef<ZRoster> theRoster = fRoster)
+		{
+		guard.Release();
+		theRoster->Broadcast();
+		}
+	}
 
 void ZServer::KillConnectionsWait()
 	{
-	fRoster->Broadcast();
-	for (;;)
+	ZGuardMtx guard(fMtx);
+	if (ZRef<ZRoster> theRoster = fRoster)
 		{
-		if (const size_t theCount = fRoster->Count())
-			fRoster->Wait(theCount);
-		else
-			break;
+		guard.Release();
+		theRoster->Broadcast();
+		for (;;)
+			{
+			if (const size_t theCount = theRoster->Count())
+				theRoster->Wait(theCount);
+			else
+				break;
+			}
 		}
 	}
 
