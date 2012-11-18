@@ -28,6 +28,8 @@ namespace ZooLib {
 
 using namespace ZUtil_STL;
 
+using std::pair;
+
 // =================================================================================================
 // MARK: - ZNatter
 
@@ -42,7 +44,7 @@ ZNatter::ZNatter(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 ZNatter::~ZNatter()
 	{}
 
-ZQ<ZData_Any> ZNatter::Receive(ZRef<Exchange>* oExchange)
+ZQ<pair<ZData_Any,ZRef<ZNatter::Exchange> > > ZNatter::QReceive()
 	{
 	ZRef<Exchange> theExchange = this->MakeExchange();
 
@@ -76,10 +78,10 @@ ZQ<ZData_Any> ZNatter::Receive(ZRef<Exchange>* oExchange)
 
 	guard.Acquire();
 
-	if (oExchange)
-		*oExchange = theExchange;
+	if (ZQ<ZData_Any> theQ = this->pReadFor(guard, theExchange))
+		return pair<ZData_Any,ZRef<Exchange> >(*theQ, theExchange);
 
-	return this->pReadFor(guard, theExchange);
+	return null;
 	}
 
 ZRef<ZNatter::Exchange> ZNatter::MakeExchange()

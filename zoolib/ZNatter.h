@@ -45,7 +45,7 @@ public:
 	ZNatter(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~ZNatter();
 
-	ZQ<ZData_Any> Receive(ZRef<Exchange>* oExchange);
+	ZQ<std::pair<ZData_Any,ZRef<Exchange> > > QReceive();
 
 	ZRef<Exchange> MakeExchange();
 
