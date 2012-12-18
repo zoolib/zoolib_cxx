@@ -42,7 +42,9 @@ void ZCaller_WinMessageLoop::Initialize()
 	ZCaller_EventLoop::Initialize();
 
 	fHWND = ZWinWND::sCreate
-		(nullptr, sCallable(sWeakRef(this), &ZCaller_WinMessageLoop::pWindowProc));
+		(HWND_MESSAGE, sCallable(sWeakRef(this), &ZCaller_WinMessageLoop::pWindowProc));
+
+	::SetWindowTextW(fHWND, L"ZCaller_WinMessageLoop::fHWND");
 	}
 
 void ZCaller_WinMessageLoop::Finalize()

@@ -79,10 +79,10 @@ static PSecurityFunctionTableA spPSFT = ::InitSecurityInterfaceA();
 
 static void spWriteFreeFlush(SecBuffer& sb, const ZStreamW& w)
 	{
-	if (!sb.pvBuffer)
+	if (not sb.pvBuffer)
 		return;
 
-	if (!sb.cbBuffer)
+	if (not sb.cbBuffer)
 		{
 		spPSFT->FreeContextBuffer(sb.pvBuffer);
 		sb.pvBuffer = nullptr;
@@ -170,10 +170,10 @@ ZStreamRWCon_SSL_Win::ZStreamRWCon_SSL_Win(const ZStreamR& iStreamR, const ZStre
 	SecInvalidateHandle(&fCredHandle);
 	SecInvalidateHandle(&fCtxtHandle);
 
-	if (!spAcquireCredentials(iVerify, iCheckName, fCredHandle))
+	if (not spAcquireCredentials(iVerify, iCheckName, fCredHandle))
 		throw runtime_error("ZStreamRWCon_SSL_Win, couldn't acquire credentials");
 
-	if (!this->pConnect())
+	if (not this->pConnect())
 		{
 		spPSFT->FreeCredentialsHandle(&fCredHandle);
 		throw runtime_error("ZStreamRWCon_SSL_Win, couldn't handshake");
@@ -211,7 +211,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRe
 			break;
 			}
 
-		if (!fReceiveOpen)
+		if (not fReceiveOpen)
 			break;
 
 		// We pass four buffers. inSB[0] references the available encrypted
@@ -237,12 +237,29 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRe
 			{
 			// fBufferEnc holds an incomplete chunk, DecryptMessage needs
 			// more data before it can do the decrypt.
-			if (!spReadMore(fBufferEnc, fStreamR))
+			if (not spReadMore(fBufferEnc, fStreamR))
 				{
 				// We couldn't read any more encrypted data. Mark
 				// our receive as being closed.
 				fReceiveOpen = false;
-				break;
+				}
+			continue;
+			}
+
+		if (scRet == SEC_I_CONTEXT_EXPIRED)
+			{
+			// SSL-level disconnect has been sent by the other side.
+			fReceiveOpen = false;
+			continue;
+			}
+
+		if (scRet == SEC_I_RENEGOTIATE)
+			{
+			// We need to re-handshake.
+			if (not this->pHandshake())
+				{
+				fReceiveOpen = false;
+				fSendOpen = false;
 				}
 			continue;
 			}
@@ -251,7 +268,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRe
 			{
 			// We failed for some other reason.
 			fReceiveOpen = false;
-			break;
+			continue;
 			}
 
 		// If DecryptMessage did any work, inSB[0] through inSB[2] will now reference
@@ -282,7 +299,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRe
 			{
 			// Copy some decrypted data to our destination.
 			const size_t countToCopy = std::min(iCount, size_t(decrypted->cbBuffer));
-			ZMemCopy(localDest, decrypted->pvBuffer, countToCopy);
+			sMemCopy(localDest, decrypted->pvBuffer, countToCopy);
 			localDest += countToCopy;
 			iCount -= countToCopy;
 
@@ -297,28 +314,13 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRe
 			{
 			// There is some unused data, move it to the front of fBufferEnc,
 			// and resize fBufferEnc to reference only that data.
-			ZMemMove(&fBufferEnc[0], encrypted->pvBuffer, encrypted->cbBuffer);
+			sMemMove(&fBufferEnc[0], encrypted->pvBuffer, encrypted->cbBuffer);
 			fBufferEnc.resize(encrypted->cbBuffer);
 			}
 		else
 			{
 			// There was no unused data.
 			fBufferEnc.clear();
-			}
-
-		if (scRet == SEC_I_CONTEXT_EXPIRED)
-			{
-			// We've received a close indication.
-			fReceiveOpen = false;
-			}
-		else if (scRet == SEC_I_RENEGOTIATE)
-			{
-			// We need to re-handshake.
-			if (!this->pHandshake())
-				{
-				fReceiveOpen = false;
-				fSendOpen = false;
-				}
 			}
 		}
 
@@ -362,7 +364,7 @@ void ZStreamRWCon_SSL_Win::Imp_Write(const void* iSource, size_t iCount, size_t*
 
 	// Encryption happens in-place, copy the plaintext to the appropriate offset of the buffer.
 	const size_t countToEncrypt = min(iCount, size_t(theSizes.cbMaximumMessage));
-	ZMemCopy(&buffer[theSizes.cbHeader], iSource, countToEncrypt);
+	sMemCopy(&buffer[theSizes.cbHeader], iSource, countToEncrypt);
 
 	SecBuffer outSB[4];
 	outSB[0].cbBuffer = theSizes.cbHeader;
@@ -405,17 +407,17 @@ void ZStreamRWCon_SSL_Win::Imp_Flush()
 
 void ZStreamRWCon_SSL_Win::Imp_SendDisconnect()
 	{
-	if (!fSendOpen)
+	if (not fSendOpen)
 		return;
 
 	fSendOpen = false;
 
-	SecBufferDesc outSBD;
 	SecBuffer outSB[1];
 	outSB[0].cbBuffer = 0;
 	outSB[0].pvBuffer = nullptr;
 	outSB[0].BufferType= SECBUFFER_TOKEN;
 
+	SecBufferDesc outSBD;
 	outSBD.cBuffers = 1;
 	outSBD.pBuffers = outSB;
 	outSBD.ulVersion = SECBUFFER_VERSION;
@@ -504,12 +506,12 @@ bool ZStreamRWCon_SSL_Win::pHandshake()
 		inSBD.ulVersion = SECBUFFER_VERSION;
 
 		// Will hold data to be sent to peer
-		SecBufferDesc outSBD;
 		SecBuffer outSB[1];
 		outSB[0].cbBuffer = 0;
 		outSB[0].pvBuffer = nullptr;
 		outSB[0].BufferType= SECBUFFER_TOKEN;
 
+		SecBufferDesc outSBD;
 		outSBD.cBuffers = 1;
 		outSBD.pBuffers = outSB;
 		outSBD.ulVersion = SECBUFFER_VERSION;
@@ -531,7 +533,7 @@ bool ZStreamRWCon_SSL_Win::pHandshake()
 
 		if (result == SEC_E_INCOMPLETE_MESSAGE)
 			{
-			if (!spReadMore(fBufferEnc, fStreamR))
+			if (not spReadMore(fBufferEnc, fStreamR))
 				return false;
 			}
 		else
@@ -558,7 +560,7 @@ bool ZStreamRWCon_SSL_Win::pHandshake()
 	}
 
 // =================================================================================================
-// MARK: - ZStreamRWCon_SSL_Win
+// MARK: - ZStreamerRWCon_SSL_Win
 
 ZStreamerRWCon_SSL_Win::ZStreamerRWCon_SSL_Win
 	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)

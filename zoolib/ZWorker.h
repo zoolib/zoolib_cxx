@@ -72,10 +72,14 @@ public:
 	bool Attach(ZRef<ZCaller> iCaller);
 	bool IsAttached();
 
+	void WaitTillDetached();
+	bool WaitTillDetachedFor(double iTimeout);
+
 private:
 	void pWakeAt(ZTime iSystemTime);
 
 	ZMtx fMtx;
+	ZCnd fCnd;
 	ZRef<ZCaller> fCaller;
 	ZThread::ID fWorking;
 	ZTime fNextWake;

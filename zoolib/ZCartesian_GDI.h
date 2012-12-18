@@ -47,6 +47,32 @@ struct PointTraits<POINT>
 	};
 
 // =================================================================================================
+// MARK: - PointTraits<SIZE>
+
+template <>
+struct PointTraits<SIZE>
+:	public PointTraits_Std<LONG,SIZE,RECT>
+	{
+	typedef const Ord_t& XC_t;
+	static XC_t sX(const Point_t& iPoint) { return iPoint.cx; }
+
+	typedef Ord_t& X_t;
+	static X_t sX(Point_t& ioPoint) { return ioPoint.cx; }
+
+	typedef const Ord_t& YC_t;
+	static YC_t sY(const Point_t& iPoint) { return iPoint.cy; }
+
+	typedef Ord_t& Y_t;
+	static Y_t sY(Point_t& ioPoint) { return ioPoint.cy; }
+
+	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
+		{
+		const Point_t result = { iX, iY };
+		return result;
+		}
+	};
+
+// =================================================================================================
 // MARK: - RectTraits<RECT>
 
 template <>

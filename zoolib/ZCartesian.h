@@ -88,13 +88,13 @@ typename PointTraits<Type_p>::Y_t Y(Type_p& iT) { return PointTraits<Type_p>::sY
 		enum {value = 1}; \
 		typedef T Ord_t; \
 		typedef const Ord_t& XC_t; \
-		inline static XC_t sX(const T& iT) { return iT; } \
+		inline static XC_t sX(const Ord_t& iT) { return iT; } \
 		typedef Ord_t& X_t; \
-		inline static X_t sX(T& ioT) { return ioT; } \
+		inline static X_t sX(Ord_t& ioT) { return ioT; } \
 		typedef const Ord_t& YC_t; \
-		inline static YC_t sY(const T& iT) { return iT; } \
+		inline static YC_t sY(const Ord_t& iT) { return iT; } \
 		typedef Ord_t& Y_t; \
-		inline static Y_t sY(T& ioT) { return ioT; } \
+		inline static Y_t sY(Ord_t& ioT) { return ioT; } \
 		};
 
 ZMACRO_Cartesian(char)

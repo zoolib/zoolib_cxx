@@ -115,6 +115,7 @@ ZQ<void> ZWorker::QCall()
 			}
 
 		fCaller.Clear();
+		fCnd.Broadcast();
 
 		guard.Release();
 
@@ -167,6 +168,7 @@ bool ZWorker::Attach(ZRef<ZCaller> iCaller)
 		guard.Acquire();
 
 		fCaller.Clear();
+		fCnd.Broadcast();
 
 		guard.Release();
 		try { sCall(fCallable_Detached, this); }
@@ -180,6 +182,22 @@ bool ZWorker::IsAttached()
 	{
 	ZAcqMtx acq(fMtx);
 	return fCaller;
+	}
+
+void ZWorker::WaitTillDetached()
+	{
+	ZAcqMtx acq(fMtx);
+	while (fCaller)
+		fCnd.Wait(fMtx);
+	}
+
+bool ZWorker::WaitTillDetachedFor(double iTimeout)
+	{
+	ZAcqMtx acq(fMtx);
+	if (not fCaller)
+		return true;
+	fCnd.WaitFor(fMtx, iTimeout);
+	return not fCaller;
 	}
 
 void ZWorker::pWakeAt(ZTime iSystemTime)

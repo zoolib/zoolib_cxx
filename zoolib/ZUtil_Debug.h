@@ -32,6 +32,8 @@ namespace ZUtil_Debug {
 // =================================================================================================
 // MARK: - ZUtil_Debug
 
+extern bool sCompact;
+
 void sInstall();
 
 void sSetStrimmer(ZRef<ZStrimmerW> iStrimmerW);

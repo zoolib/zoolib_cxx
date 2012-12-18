@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(Win)
 
 #include "zoolib/ZCallable_Bind.h"
+#include "zoolib/ZCallable_Fallback.h"
 #include "zoolib/ZCallable_Function.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
@@ -36,26 +37,6 @@ namespace ZWinWND {
 // MARK: - Helpers (anonymous)
 
 namespace { // anonymous
-
-class Callable_Fallback
-:	public Callable
-	{
-public:
-	Callable_Fallback(const ZRef<Callable>& i0, const ZRef<Callable>& i1)
-	:	f0(i0)
-	,	f1(i1)
-		{}
-
-	virtual ZQ<ZQ<LRESULT> > QCall(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
-		{
-		if (ZQ<LRESULT> theQ = f0->Call(iHWND, iMessage, iWPARAM, iLPARAM))
-			return theQ;
-		return f1->Call(iHWND, iMessage, iWPARAM, iLPARAM);
-		}
-
-	const ZRef<Callable> f0;
-	const ZRef<Callable> f1;
-	};
 
 class Callable_WithWNDPROC
 :	public Callable
@@ -85,7 +66,7 @@ LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 		{
 		// The very first message sent to a window is WM_GETMINMAXINFO.
 		ZAssert(iMessage == WM_GETMINMAXINFO);
-		theCallable = ZThreadVal<ZRef<Callable> >::sGet();
+		theCallable = sThreadVal<ZRef<Callable> >();
 		theCallable->Retain();
 		::SetPropW(iHWND, L"ZWinWND Callable", theCallable.Get());
 		}
@@ -166,6 +147,9 @@ const WCHAR* ClassRegistration::GetClassName() const
 // MARK: - sCreateDefWindowProc
 
 HWND ZWinWND::sCreateDefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam)
+	{ return sCreateDefWindowProc(iParent, iStyle, 0, iCreateParam); }
+
+HWND sCreateDefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreateParam)
 	{
 	static ClassRegistration spClassRegistration(DefWindowProcW, L"DefWindowProcW");
 
@@ -256,7 +240,7 @@ bool sAttach(HWND iHWND, ZRef<Callable> iCallable)
 				{
 				theCallable = (Callable*)::GetPropW(iHWND, L"ZWinWND Callable");
 				theCallable->Release();
-				theCallable = new Callable_Fallback(iCallable, theCallable);
+				theCallable = sCallable_Fallback(iCallable, theCallable);
 				}
 
 			theCallable->Retain();
