@@ -86,6 +86,8 @@ HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iC
 
 bool sDoOneMessageForDialog(HWND iHWND);
 
+bool sDoOneMessageForDialogs();
+
 } // namespace ZWinWND
 } // namespace ZooLib
 

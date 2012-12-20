@@ -83,15 +83,37 @@ LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 	return 0;
 	}
 
+static ZTSS::Key spKey()
+	{
+	static ZAtomicPtr_t spKey;
+	return ZTSS::sKey(spKey);
+	}
+
 INT_PTR CALLBACK spDialogProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	if (ZRef<Callable_Dialog> theCallable =
 		reinterpret_cast<Callable_Dialog*>((long long)::GetWindowLongPtrW(iHWND, GWLP_USERDATA)))
 		{
-		if (iMessage == WM_NCDESTROY)
+		switch (iMessage)
 			{
-			// Undo the Retain we did in WM_INITDIALOG.
-			theCallable->Release();
+			case WM_NCDESTROY:
+				{
+				// Undo the Retain we did in WM_INITDIALOG.
+				theCallable->Release();
+				break;
+				}
+			case WM_ACTIVATE:
+				{
+				if (iWPARAM)
+					ZTSS::sSet(spKey(), iHWND);
+				else
+					ZTSS::sSet(spKey(), nullptr);
+				break;
+				}
+			default:
+				{
+				break;
+				}
 			}
 		return theCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM);
 		}
@@ -297,7 +319,7 @@ bool sDoOneMessageForDialog(HWND iHWND)
 	if (not ::GetMessageW(&theMSG, nullptr, 0, 0))
 		return false;
 
-	if (not ::IsDialogMessageW(iHWND, &theMSG))
+	if (not iHWND || not ::IsDialogMessageW(iHWND, &theMSG))
 		{
 		::TranslateMessage(&theMSG);
 		::DispatchMessageW(&theMSG);
@@ -305,6 +327,9 @@ bool sDoOneMessageForDialog(HWND iHWND)
 
 	return true;
 	}
+
+bool sDoOneMessageForDialogs()
+	{ return sDoOneMessageForDialog((HWND)ZTSS::sGet(spKey())); }
 
 } // namespace ZWinWND
 } // namespace ZooLib
