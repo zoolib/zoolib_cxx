@@ -42,7 +42,7 @@ namespace ZooLib {
 #elif ZCONFIG_API_Enabled(Thread_pthread)
 
 	namespace ZThread { using namespace ZThread_pthread; }
-	namespace ZTSS = ZTSS_pthread;
+	namespace ZTSS { using namespace ZTSS_pthread; }
 
 	typedef ZCnd_pthread ZCnd;
 	typedef ZMtx_pthread ZMtx;
@@ -54,7 +54,7 @@ namespace ZooLib {
 #elif ZCONFIG_API_Enabled(Thread_MacMP)
 
 	namespace ZThread { using namespace ZThread_MacMP; }
-	namespace ZTSS = ZTSS_MacMP;
+	namespace ZTSS { using namespace ZTSS_MacMP; }
 
 	typedef ZCnd_MacMP ZCnd;
 	typedef ZMtx_MacMP ZMtx;
@@ -65,7 +65,7 @@ namespace ZooLib {
 #elif ZCONFIG_API_Enabled(Thread_Win)
 
 	namespace ZThread { using namespace ZThread_Win; }
-	namespace ZTSS = ZTSS_Win;
+	namespace ZTSS { using namespace ZTSS_Win; }
 
 	typedef ZCnd_Win ZCnd;
 	typedef ZMtx_Win ZMtx;
@@ -84,6 +84,15 @@ namespace ZooLib {
 	typedef ZSem_boost ZSem;
 
 #endif
+
+// =================================================================================================
+// MARK: - ZTSS
+
+namespace ZTSS {
+
+ZTSS::Key sKey(ZAtomicPtr_t& ioStorage);
+
+} // namespace ZTSS
 
 // =================================================================================================
 // MARK: - ZBen (benaphore)

@@ -103,4 +103,23 @@ void sCreateVoid(ProcVoid_t iProcVoid)
 
 } // namespace ZThread
 
+// =================================================================================================
+// MARK: - ZTSS
+
+namespace ZTSS {
+
+ZTSS::Key sKey(ZAtomicPtr_t& ioStorage)
+	{
+	ZAssertCompile(sizeof(ZAtomicPtr_t) >= sizeof(ZTSS::Key));
+
+	if (not ZAtomicPtr_Get(&ioStorage))
+		sAtomicPtr_CAS(&ioStorage, 0, reinterpret_cast<void*>(ZTSS::sCreate()));
+	return reinterpret_cast<ZTSS::Key>(ZAtomicPtr_Get(&ioStorage));
+	}
+
+} // namespace ZTSS
+
+ZTSS::Key sKey(ZAtomicPtr_t& ioKey);
+
+
 } // namespace ZooLib
