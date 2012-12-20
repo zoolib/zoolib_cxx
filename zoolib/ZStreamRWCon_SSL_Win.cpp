@@ -188,6 +188,8 @@ ZStreamRWCon_SSL_Win::~ZStreamRWCon_SSL_Win()
 
 void ZStreamRWCon_SSL_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
+	ZAcqMtx acq(fMtx_R);
+
 	char* localDest = static_cast<char*>(oDest);
 
 	while (iCount)
@@ -344,6 +346,8 @@ bool ZStreamRWCon_SSL_Win::Imp_ReceiveDisconnect(double iTimeout)
 
 void ZStreamRWCon_SSL_Win::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
+	ZAcqMtx acq(fMtx_W);
+
 	if (oCountWritten)
 		*oCountWritten = 0;
 
@@ -407,6 +411,8 @@ void ZStreamRWCon_SSL_Win::Imp_Flush()
 
 void ZStreamRWCon_SSL_Win::Imp_SendDisconnect()
 	{
+	ZAcqMtx acq(fMtx_W);
+
 	if (not fSendOpen)
 		return;
 

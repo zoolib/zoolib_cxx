@@ -72,6 +72,9 @@ private:
 	bool pConnect();
 	bool pHandshake();
 
+	ZMtx fMtx_R;
+	ZMtx fMtx_W;
+
 	const ZStreamR& fStreamR;
 	const ZStreamW& fStreamW;
 	CredHandle fCredHandle;
