@@ -181,7 +181,7 @@ OSStatus ZStreamRWCon_SSL_OSX::spWrite
 	}
 
 // =================================================================================================
-// MARK: - ZStreamRWCon_SSL_OSX
+// MARK: - ZStreamerRWCon_SSL_OSX
 
 ZStreamerRWCon_SSL_OSX::ZStreamerRWCon_SSL_OSX
 	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
