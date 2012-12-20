@@ -116,12 +116,8 @@ private:
 
 	static ZTSS::Key spKey()
 		{
-		ZAssertCompile(sizeof(ZAtomicPtr_t) >= sizeof(ZTSS::Key));
-
 		static ZAtomicPtr_t spKey;
-		if (not ZAtomicPtr_Get(&spKey))
-			sAtomicPtr_CAS(&spKey, 0, reinterpret_cast<void*>(ZTSS::sCreate()));
-		return reinterpret_cast<ZTSS::Key>(ZAtomicPtr_Get(&spKey));
+		return ZTSS::sKey(spKey);
 		}
 
 	ZThreadVal* fPrior;
