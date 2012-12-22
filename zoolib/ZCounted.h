@@ -220,7 +220,6 @@ public:
 
 	bool operator<(const ZWeakRef& iOther) const
 		{ return this->GetWeakRefProxy() < iOther.GetWeakRefProxy(); }
-
 	};
 
 // =================================================================================================

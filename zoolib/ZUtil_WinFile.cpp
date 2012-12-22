@@ -30,7 +30,7 @@ namespace ZUtil_WinFile {
 
 DWORD sFlush(HANDLE iHANDLE)
 	{
-	if (!::FlushFileBuffers(iHANDLE))
+	if (not ::FlushFileBuffers(iHANDLE))
 		return ::GetLastError();
 	return 0;
 	}
@@ -43,7 +43,7 @@ DWORD sRead(HANDLE iHANDLE, void* oDest, size_t iCount, size_t* oCountRead)
 	if (iCount)
 		{
 		DWORD countRead = 0;
-		if (!::ReadFile(iHANDLE, oDest, iCount, &countRead, nullptr))
+		if (not ::ReadFile(iHANDLE, oDest, iCount, &countRead, nullptr))
 			return ::GetLastError();
 
 		if (oCountRead)
@@ -61,7 +61,7 @@ DWORD sWrite(HANDLE iHANDLE, const void* iSource, size_t iCount, size_t* oCountW
 	if (iCount)
 		{
 		DWORD countWritten = 0;
-		if (!::WriteFile(iHANDLE, iSource, iCount, &countWritten, nullptr))
+		if (not ::WriteFile(iHANDLE, iSource, iCount, &countWritten, nullptr))
 			return ::GetLastError();
 
 		if (oCountWritten)
@@ -97,7 +97,7 @@ DWORD sRead(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
 		theOVERLAPPED.hEvent = iEvent;
 
 	DWORD countRead = 0;
-	if (!::ReadFile(iHANDLE, oDest, iCount, &countRead, &theOVERLAPPED))
+	if (not ::ReadFile(iHANDLE, oDest, iCount, &countRead, &theOVERLAPPED))
 		{
 		int err = ::GetLastError();
 
@@ -107,7 +107,7 @@ DWORD sRead(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
 		if (iEvent)
 			::WaitForSingleObject(iEvent, INFINITE);
 
-		if (!::GetOverlappedResult(iHANDLE, &theOVERLAPPED, &countRead, FALSE))
+		if (not ::GetOverlappedResult(iHANDLE, &theOVERLAPPED, &countRead, FALSE))
 			return ::GetLastError();
 		}
 
@@ -135,7 +135,7 @@ DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
 		theOVERLAPPED.hEvent = iEvent;
 
 	DWORD countWritten = 0;
-	if (!::WriteFile(iHANDLE, iSource, iCount, &countWritten, &theOVERLAPPED))
+	if (not ::WriteFile(iHANDLE, iSource, iCount, &countWritten, &theOVERLAPPED))
 		{
 		int err = ::GetLastError();
 
@@ -145,7 +145,7 @@ DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
 		if (iEvent)
 			::WaitForSingleObject(iEvent, INFINITE);
 
-		if (!::GetOverlappedResult(iHANDLE, &theOVERLAPPED, &countWritten, FALSE))
+		if (not ::GetOverlappedResult(iHANDLE, &theOVERLAPPED, &countWritten, FALSE))
 			return ::GetLastError();
 		}
 
