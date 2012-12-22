@@ -105,7 +105,7 @@ static ZRef<HANDLE> spConnect(const string& iName)
 			FILE_FLAG_OVERLAPPED, // attributes
 			nullptr); // no template file
 
-		if (theHANDLE && theHANDLE != INVALID_HANDLE_VALUE)
+		if (theHANDLE && INVALID_HANDLE_VALUE != theHANDLE)
 			return sAdopt& theHANDLE;
 
 		if (::GetLastError() != ERROR_PIPE_BUSY)
@@ -136,7 +136,7 @@ static ZRef<HANDLE> spCreateNamedPipe(const string16& iPipeName, bool iFirst)
 		nullptr // lpSecurityAttributes
 		);
 
-	if (!theHANDLE || INVALID_HANDLE_VALUE == theHANDLE)
+	if (not theHANDLE || INVALID_HANDLE_VALUE == theHANDLE)
 		throw runtime_error("ZNetListener_Local_Win, spCreateNamedPipe failed");
 
 	return sAdopt& theHANDLE;
@@ -145,7 +145,7 @@ static ZRef<HANDLE> spCreateNamedPipe(const string16& iPipeName, bool iFirst)
 static ZRef<HANDLE> spCreateEvent()
 	{
 	HANDLE theHANDLE = ::CreateEvent(nullptr, true, false, nullptr);
-	if (!theHANDLE || INVALID_HANDLE_VALUE == theHANDLE)
+	if (not theHANDLE || INVALID_HANDLE_VALUE == theHANDLE)
 		throw runtime_error("spCreateEvent failed");
 	return sAdopt& theHANDLE;
 	}
@@ -172,13 +172,13 @@ bool ZNetNameLookup_Local_Win::Finished()
 
 void ZNetNameLookup_Local_Win::Advance()
 	{
-	ZAssertStop(2, !fFinished);
+	ZAssertStop(2, not fFinished);
 	fFinished = true;
 	}
 
 ZRef<ZNetAddress> ZNetNameLookup_Local_Win::CurrentAddress()
 	{
-	if (!fFinished)
+	if (not fFinished)
 		return new ZNetAddress_Local(fPath);
 
 	return null;
@@ -207,6 +207,7 @@ ZRef<ZNetAddress> ZNetListener_Local_Win::GetAddress()
 
 ZRef<ZNetEndpoint> ZNetListener_Local_Win::Listen()
 	{
+	::ResetEvent(fEvent);
 	if (::ConnectNamedPipe(fHANDLE, &fOVERLAPPED))
 		{
 		DWORD dummy;
@@ -271,9 +272,7 @@ size_t ZNetEndpoint_Local_Win::Imp_CountReadable()
 	}
 
 bool ZNetEndpoint_Local_Win::Imp_WaitReadable(double iTimeout)
-	{
-	return WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, DWORD(iTimeout * 1e3));
-	}
+	{ return WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, DWORD(iTimeout * 1e3)); }
 
 void ZNetEndpoint_Local_Win::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
