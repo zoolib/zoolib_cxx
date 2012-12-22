@@ -58,6 +58,12 @@ public:
 	const WNDPROC fProc;
 	};
 
+ZTSS::Key spKey()
+	{
+	static ZAtomicPtr_t spKey;
+	return ZTSS::sKey(spKey);
+	}
+
 LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	ZRef<Callable> theCallable = (Callable*)::GetPropW(iHWND, L"ZWinWND Callable");
@@ -71,10 +77,26 @@ LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 		::SetPropW(iHWND, L"ZWinWND Callable", theCallable.Get());
 		}
 
-	if (iMessage == WM_NCDESTROY)
+	switch (iMessage)
 		{
-		// Undo the Retain we did when we attached.
-		theCallable->Release();
+		case WM_NCDESTROY:
+			{
+			// Undo the Retain we did in WM_INITDIALOG.
+			theCallable->Release();
+			break;
+			}
+		case WM_ACTIVATE:
+			{
+			if (iWPARAM)
+				ZTSS::sSet(spKey(), iHWND);
+			else
+				ZTSS::sSet(spKey(), nullptr);
+			break;
+			}
+		default:
+			{
+			break;
+			}
 		}
 
 	if (ZQ<LRESULT> theQ = theCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM))
@@ -83,16 +105,10 @@ LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 	return 0;
 	}
 
-static ZTSS::Key spKey()
-	{
-	static ZAtomicPtr_t spKey;
-	return ZTSS::sKey(spKey);
-	}
-
 INT_PTR CALLBACK spDialogProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	if (ZRef<Callable_Dialog> theCallable =
-		reinterpret_cast<Callable_Dialog*>((long long)::GetWindowLongPtrW(iHWND, GWLP_USERDATA)))
+		(Callable_Dialog*)::GetWindowLongPtrW(iHWND, GWLP_USERDATA))
 		{
 		switch (iMessage)
 			{
@@ -133,7 +149,7 @@ INT_PTR CALLBACK spDialogProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - ZWinWND::ClassRegistration
+// MARK: - ClassRegistration
 
 ClassRegistration::ClassRegistration(WNDPROC iWNDPROC, const WCHAR* iClassName)
 :	fClassName(iClassName)
@@ -168,7 +184,7 @@ const WCHAR* ClassRegistration::GetClassName() const
 // =================================================================================================
 // MARK: - sCreateDefWindowProc
 
-HWND ZWinWND::sCreateDefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam)
+HWND sCreateDefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam)
 	{ return sCreateDefWindowProc(iParent, iStyle, 0, iCreateParam); }
 
 HWND sCreateDefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreateParam)
@@ -176,7 +192,7 @@ HWND sCreateDefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCre
 	static ClassRegistration spClassRegistration(DefWindowProcW, L"DefWindowProcW");
 
 	return ::CreateWindowExW
-		(0, // Extended attributes
+		(iExStyle, // Extended attributes
 		spClassRegistration.GetClassName(),
 		nullptr, // window caption
 		iStyle, // window style
@@ -191,7 +207,7 @@ HWND sCreateDefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCre
 	}
 
 // =================================================================================================
-// MARK: - ZWinWND, Callable <--> Regular window
+// MARK: - Callable <--> Regular window
 
 HWND sCreate
 	(DWORD dwExStyle,
@@ -272,20 +288,8 @@ bool sAttach(HWND iHWND, ZRef<Callable> iCallable)
 	return false;
 	}
 
-bool sDoOneMessage()
-	{
-	MSG theMSG;
-	if (not ::GetMessageW(&theMSG, nullptr, 0, 0))
-		return false;
-
-	::TranslateMessage(&theMSG);
-	::DispatchMessageW(&theMSG);
-
-	return true;
-	}
-
 // =================================================================================================
-// MARK: - ZWinWND, Callable <--> Dialog
+// MARK: - Callable <--> Dialog
 
 HWND sCreateDialog(LPCWSTR lpTemplate, LCID iLCID, HWND hWndParent, ZRef<Callable_Dialog> iCallable)
 	{
@@ -313,6 +317,15 @@ HWND sCreateDialog(LPCWSTR lpTemplate, LCID iLCID, HWND hWndParent, ZRef<Callabl
 HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iCallable)
 	{ return sCreateDialog(lpTemplate, ::GetThreadLocale(), hWndParent, iCallable); }
 
+// =================================================================================================
+// MARK: - Message pump
+
+bool sDoOneMessage()
+	{ return sDoOneMessageForDialog(nullptr); }
+
+bool sDoOneMessageForDialogs()
+	{ return sDoOneMessageForDialog((HWND)ZTSS::sGet(spKey())); }
+
 bool sDoOneMessageForDialog(HWND iHWND)
 	{
 	MSG theMSG;
@@ -327,9 +340,6 @@ bool sDoOneMessageForDialog(HWND iHWND)
 
 	return true;
 	}
-
-bool sDoOneMessageForDialogs()
-	{ return sDoOneMessageForDialog((HWND)ZTSS::sGet(spKey())); }
 
 } // namespace ZWinWND
 } // namespace ZooLib
