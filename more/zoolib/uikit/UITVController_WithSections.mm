@@ -1366,8 +1366,8 @@ static void spInsertSections(UITableView* iTableView,
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 	{
 	[super touchesBegan:touches withEvent:event];
-	fCallEnd = true;
-	[fTV pChangeTouchState:YES];
+	if (not sGetSet(fCallEnd, true))
+		[fTV pChangeTouchState:YES];
 	}
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
