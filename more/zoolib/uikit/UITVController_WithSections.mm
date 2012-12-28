@@ -689,7 +689,7 @@ using namespace ZooLib::UIKit;
 	{
 	[super init];
 	fTouchCount = 0;
-	fDragging = 0;
+	fDragging = false;
 	fNeedsUpdate = false;
 	fUpdateInFlight = false;
 	fCheckForUpdateQueued = false;
@@ -757,20 +757,14 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 	{
-	if (not fDragging)
-		{
-		fDragging = true;
+	if (not sGetSet(fDragging, true))
 		[self changeTouchState:YES forTableView:(UITableView*)scrollView];
-		}
 	}
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 	{
-	if (fDragging)
-		{
-		fDragging = false;
+	if (sGetSet(fDragging, false))
 		[self changeTouchState:NO forTableView:(UITableView*)scrollView];
-		}
 	}
 
 - (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section
@@ -893,10 +887,9 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	{
 	fNeedsUpdate = true;
 
-	if (fUpdateInFlight)
+	if (sGetSet(fUpdateInFlight, true))
 		return;
 
-	fUpdateInFlight = true;
 	[self pDoUpdate1:tableView];
 	}
 
@@ -910,18 +903,16 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (not fNeedsUpdate)
 		return;
 
-	if (fUpdateInFlight)
+	if (sGetSet(fUpdateInFlight, true))
 		return;
-	fUpdateInFlight = true;
 
 	[self pDoUpdate1:tableView];
 	}
 
 -(void)pQueueCheckForUpdate:(UITableView*)tableView
 	{
-	if (fCheckForUpdateQueued)
+	if (sGetSet(fCheckForUpdateQueued, true))
 		return;
-	fCheckForUpdateQueued = true;
 
 	[self
 		performSelectorOnMainThread:@selector(pCheckForUpdate:)
@@ -933,9 +924,8 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	{
 	ZAssert(tableView);
 
-	if (fNeedsUpdate)
+	if (sGetSet(fNeedsUpdate, true))
 		return;
-	fNeedsUpdate = true;
 
 	[self pQueueCheckForUpdate:tableView];
 	}
@@ -988,8 +978,6 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 		}
 	else
 		{
-		if (fTouchCount <= 0)
-			ZLOGTRACE(eInfo);
 		if (0 == --fTouchCount)
 			[self pQueueCheckForUpdate:tableView];
 		}
@@ -1077,9 +1065,7 @@ static void spInsertSections(UITableView* iTableView,
 	{
 	ZAssert(tableView);
 
-	if (not fNeedsUpdate)
-		return;
-	fNeedsUpdate = false;
+	if (not sGetSet(fNeedsUpdate, false))
 
 	ZAssert(fUpdateInFlight);
 
@@ -1352,6 +1338,7 @@ static void spInsertSections(UITableView* iTableView,
 	{
 	[super init];
 	fCallEnd = false;
+	self.cancelsTouchesInView = NO;
 	self.delaysTouchesEnded = NO;
 	return self;
 	}
