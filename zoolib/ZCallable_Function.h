@@ -80,7 +80,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Callable (specialization for 1 param)
+// MARK: - Callable (specializations for 1-16 params)
 
 #define ZMACRO_Callable_Callable(X) \
 \
