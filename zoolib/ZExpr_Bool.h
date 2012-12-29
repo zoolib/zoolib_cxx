@@ -255,10 +255,10 @@ ZRef<ZExpr_Bool> operator|(bool iBool, const ZRef<ZExpr_Bool>& iExpr_Bool);
 ZRef<ZExpr_Bool> operator|(const ZRef<ZExpr_Bool>& iExpr_Bool, bool iBool);
 
 ZRef<ZExpr_Bool> operator&(const ZRef<ZExpr_Bool>& iLHS, const ZRef<ZExpr_Bool>& iRHS);
-ZRef<ZExpr_Bool>& operator&=(ZRef<ZExpr_Bool>& iLHS, const ZRef<ZExpr_Bool>& iRHS);
+ZRef<ZExpr_Bool>& operator&=(ZRef<ZExpr_Bool>& ioLHS, const ZRef<ZExpr_Bool>& iRHS);
 
 ZRef<ZExpr_Bool> operator|(const ZRef<ZExpr_Bool>& iLHS, const ZRef<ZExpr_Bool>& iRHS);
-ZRef<ZExpr_Bool>& operator|=(ZRef<ZExpr_Bool>& iLHS, const ZRef<ZExpr_Bool>& iRHS);
+ZRef<ZExpr_Bool>& operator|=(ZRef<ZExpr_Bool>& ioLHS, const ZRef<ZExpr_Bool>& iRHS);
 
 } // namespace ZooLib
 
