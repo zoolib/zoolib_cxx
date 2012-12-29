@@ -262,7 +262,6 @@ template <typename KBase, typename Value, typename KDerived>
 Value sGetEraseMust(unordered_map<KBase,Value>& ioMap, const KDerived& iKey)
 	{ return sGetEraseMust(1, ioMap, iKey); }
 
-
 } // namespace ZUtil_STL
 } // namespace ZooLib
 

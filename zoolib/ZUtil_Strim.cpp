@@ -568,7 +568,6 @@ bool sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& o
 
 // -----------------
 
-
 bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& oDest)
 	{
 	UTF32 theCP;

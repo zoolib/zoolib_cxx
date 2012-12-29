@@ -38,7 +38,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	ZMACRO_ZValAccessors_Decl_Get(T, TYPENAME, TYPE) \
 	void Set##TYPENAME(const TYPE& iVal);
 
-
 // Definition, Get, with leading extra qualification
 
 #define ZMACRO_ZValAccessors_Def_GetX(X, T, TYPENAME, TYPE) \
@@ -46,13 +45,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	X const TYPE T::DGet##TYPENAME(const TYPE& iDefault) const { return this->DGet<TYPE>(iDefault); } \
 	X const TYPE T::Get##TYPENAME() const { return this->Get<TYPE>(); }
 
-
 // Definition, GetSet, with leading extra qualification
 
 #define ZMACRO_ZValAccessors_Def_GetSetX(X, T, TYPENAME, TYPE) \
 	ZMACRO_ZValAccessors_Def_GetX(X, T, TYPENAME, TYPE) \
 	X void T::Set##TYPENAME(const TYPE& iVal) { return this->Set<TYPE>(iVal); }
-
 
 // Definition, Get
 

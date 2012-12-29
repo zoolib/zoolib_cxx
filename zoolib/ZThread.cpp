@@ -121,5 +121,4 @@ ZTSS::Key sKey(ZAtomicPtr_t& ioStorage)
 
 ZTSS::Key sKey(ZAtomicPtr_t& ioKey);
 
-
 } // namespace ZooLib

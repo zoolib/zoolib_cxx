@@ -62,7 +62,6 @@ std::size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iPa
 			ZooLib::ZDebug::sInvoke(level, stop, FFL, #condition, __VA_ARGS__); } while (0)
 #endif
 
-
 #ifndef ZDebugLog
 	#define ZDebugLog(level) \
 		ZMACRO_Debug(level, false, ZMACRO_FileFunctionLine, 0)

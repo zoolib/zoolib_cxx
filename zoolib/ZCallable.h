@@ -267,7 +267,6 @@ public: \
 		{ this->QCall(ZMACRO_Callable_i##X); } \
 	}; \
 
-
 ZMACRO_Callable_Callable(0)
 ZMACRO_Callable_Callable(1)
 ZMACRO_Callable_Callable(2)

@@ -1293,7 +1293,6 @@ static void spInsertSections(UITableView* iTableView,
 		[self pQueueCheckForUpdate:tableView];
 	}
 
-
 -(ZRef<Section>)pGetSection:(size_t)iSectionIndex
 	{
 	if (iSectionIndex < fSections_Shown.size())

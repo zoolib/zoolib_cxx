@@ -179,7 +179,6 @@ protected:
 	StrimW_p fStrimW;
 	};
 
-
 template <class StrimW_p, class Streamer_p>
 ZRef<ZStrimmerW> sStrimmerW_Streamer_T(const ZRef<Streamer_p>& iStreamer)
 	{
