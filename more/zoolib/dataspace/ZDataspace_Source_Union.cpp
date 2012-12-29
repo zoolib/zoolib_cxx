@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_vector.h"
@@ -86,7 +87,7 @@ void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& i
 
 	const RelHead newRelHead = ZRA::sPrefixErased(fPrefix, theRelHead);
 	ZRef<ZRA::Expr_Rel> theRel = ZRA::sConcrete(newRelHead);
-	for (RelHead::const_iterator ii = newRelHead.begin(); ii != newRelHead.end(); ++ii)
+	foreachi (ii, newRelHead)
 		theRel = sRename(theRel, ZRA::sPrefixInserted(fPrefix, *ii), *ii);
 
 	this->pSetResult(theRel);
@@ -731,10 +732,7 @@ bool Source_Union::Intersects(const RelHead& iRelHead)
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	for (Map_Source_PSource::iterator
-		iterSource = fMap_Source_PSource.begin(),
-		endSource = fMap_Source_PSource.end();
-		iterSource != endSource; ++iterSource)
+	foreachi (iterSource, fMap_Source_PSource)
 		{
 		if (iterSource->first->Intersects(iRelHead))
 			return true;
@@ -771,10 +769,7 @@ void Source_Union::ModifyRegistrations
 
 		if (thePQuery->fClientQueries.IsEmpty())
 			{
-			for (set<ZRef<Proxy> >::iterator
-				iterProxies = thePQuery->fProxiesDependedUpon.begin(),
-				endProxies = thePQuery->fProxiesDependedUpon.end();
-				iterProxies != endProxies; ++iterProxies)
+			foreachi (iterProxies, thePQuery->fProxiesDependedUpon)
 				{
 				ZRef<Proxy> theProxy = *iterProxies;
 				sEraseMust(kDebug, theProxy->fDependentPQueries, thePQuery);
@@ -977,6 +972,8 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 void Source_Union::InsertSource(ZRef<Source> iSource, const string8& iPrefix)
 	{
 	ZAcqMtxR acq(fMtxR);
+
+	// We can't add sources on the fly -- require that no queries exist yet.
 	ZAssertStop(kDebug, fMap_Refcon_ClientQuery.empty());
 
 	sInsertMust(kDebug, fMap_Source_PSource, iSource, PSource(iSource, iPrefix));
@@ -1041,9 +1038,7 @@ ZRef<ZRA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
 		theProxy->fRel = iRel;
 		theProxy->fResultRelHead = iRelHead;
 		sInsertMust(kDebug, fProxyMap, iRel, theProxy);
-		for (set<PSource*>::const_iterator
-			iterPSources = iPSources.begin(), endPSources = iPSources.end();
-			iterPSources != endPSources; ++iterPSources)
+		foreachi (iterPSources, iPSources)
 			{
 			PSource* thePSource = *iterPSources;
 
@@ -1099,8 +1094,7 @@ void Source_Union::pPrime(ZRef<Walker_Proxy> iWalker,
 	size_t& ioBaseOffset)
 	{
 	iWalker->fBaseOffset = ioBaseOffset;
-	const RelHead& theRelHead = iWalker->fProxy->fResultRelHead;
-	for (RelHead::const_iterator ii = theRelHead.begin(); ii != theRelHead.end(); ++ii)
+	foreachi (ii, iWalker->fProxy->fResultRelHead)
 		oOffsets[*ii] = ioBaseOffset++;
 	}
 
@@ -1144,7 +1138,7 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 			}
 		size_t theOffset = iWalker->fBaseOffset;
 		const ZVal_Any* theVals = iWalker->fCurrentResult->GetValsAt(iWalker->fCurrentIndex);
-		for (ZRA::RelHead::const_iterator ii = theRH.begin(); ii != theRH.end(); ++ii)
+		foreachi (ii, theRH)
 			ioResults[theOffset++] = *theVals++;
 		++iWalker->fCurrentIndex;
 		return true;
@@ -1156,8 +1150,7 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 	vector<QueryResult> theQueryResults;
 	iPSource->fSource->CollectResults(theQueryResults);
 
-	for (vector<QueryResult>::iterator iterQueryResults = theQueryResults.begin();
-		iterQueryResults != theQueryResults.end(); ++iterQueryResults)
+	foreachi (iterQueryResults, theQueryResults)
 		{
 		const int64 theRefcon = iterQueryResults->GetRefcon();
 		Map_Refcon_PIP::iterator iter = iPSource->fMap_Refcon_PIP.find(theRefcon);
@@ -1166,11 +1159,8 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 			PIP* thePIP = &iter->second;
 			thePIP->fResult = iterQueryResults->GetResult();
 			thePIP->fEvent = iterQueryResults->GetEvent();
-			for (set<PQuery*>::iterator
-				i = thePIP->fProxy->fDependentPQueries.begin(),
-				end = thePIP->fProxy->fDependentPQueries.end();
-				i != end; ++i)
-				{ sQInsertBack(fPQuery_NeedsWork, *i); }
+			foreachi (ii, thePIP->fProxy->fDependentPQueries)
+				sQInsertBack(fPQuery_NeedsWork, *ii);
 			}
 		}
 	}

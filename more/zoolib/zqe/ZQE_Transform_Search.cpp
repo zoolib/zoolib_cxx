@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZExpr_Bool_ValPred.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUniSet_T.h"
 #include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
 #include "zoolib/ZUtil_STL_map.h"
@@ -156,17 +157,14 @@ public:
 		// effectively a project/rename descriptor.
 
 		Rename newRename;
-		for (Rename::iterator iterRename = fRename.begin();
-			iterRename != fRename.end(); ++iterRename)
+		foreachi (iterRename, fRename)
 			{
 			if (fProjection.Contains(iterRename->first))
 				newRename.insert(*iterRename);
 			}
 
 		// Add missing entries
-		const RelHead& theRH = iExpr->GetConcreteRelHead();
-		for (RelHead::const_iterator iterRH = theRH.begin();
-			iterRH != theRH.end(); ++iterRH)
+		foreachi (iterRH, iExpr->GetConcreteRelHead())
 			{
 			const RelName& theRelName = *iterRH;
 			if (fProjection.Contains(theRelName))
@@ -351,8 +349,7 @@ public:
 			iRel = sProject(iRel, projectElems);
 			}
 
-		for (Rename::iterator iterRename = fRename.begin();
-			iterRename != fRename.end(); ++iterRename)
+		foreachi (iterRename, fRename)
 			{
 			if (iterRename->first != iterRename->second)
 				iRel = sRename(iRel, iterRename->first, iterRename->second);

@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZCallOnNewThread.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZUtil_STL_vector.h"
@@ -102,8 +103,7 @@ void Source_Asyncify::CollectResults(vector<QueryResult>& oChanged)
 	this->pCollectResultsCalled();
 
 	oChanged.reserve(fPendingResults.size());
-	for (map<int64,QueryResult>::iterator iter = fPendingResults.begin();
-		iter != fPendingResults.end(); ++iter)
+	foreachi (iter, fPendingResults)
 		{
 		// May need to filter entries on our fPendingRemoves list.
 		oChanged.push_back(iter->second);
@@ -145,9 +145,8 @@ void Source_Asyncify::pUpdate()
 
 		vector<AddedQuery> theAdds;
 		theAdds.reserve(fPendingAdds.size());
-		for (map<int64,ZRef<ZRA::Expr_Rel> >::iterator iter = fPendingAdds.begin();
-			iter != fPendingAdds.end(); ++iter)
-			{ theAdds.push_back(AddedQuery(iter->first, iter->second)); }
+		foreachi (iter, fPendingAdds)
+			theAdds.push_back(AddedQuery(iter->first, iter->second));
 		fPendingAdds.clear();
 
 		vector<int64> theRemoves(fPendingRemoves.begin(), fPendingRemoves.end());
@@ -175,9 +174,8 @@ void Source_Asyncify::pUpdate()
 				didAnything = true;
 				guard.Acquire();
 
-				for (vector<QueryResult>::iterator iter = changes.begin();
-					iter != changes.end(); ++iter)
-					{ fPendingResults[iter->GetRefcon()] = *iter; }
+				foreachi (iter, changes)
+					fPendingResults[iter->GetRefcon()] = *iter;
 
 				guard.Release();
 				Source::pTriggerResultsAvailable();

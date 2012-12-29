@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZMACRO_foreach.h"
+
 #include "zoolib/zqe/ZQE_Walker_Project.h"
 
 namespace ZooLib {
@@ -54,7 +56,7 @@ ZRef<Walker> Walker_Project::Prime
 	map<string8,size_t> childOffsets;
 	fWalker = fWalker->Prime(iOffsets, childOffsets, ioBaseOffset);
 
-	for (ZRA::RelHead::iterator ii = fRelHead.begin(); ii != fRelHead.end(); ++ii)
+	foreachi (ii, fRelHead)
 		{
 		const size_t childOffset = childOffsets[*ii];
 		fChildMapping.push_back(childOffset);

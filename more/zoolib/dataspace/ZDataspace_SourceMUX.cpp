@@ -19,9 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallable_PMF.h"
-#include "zoolib/dataspace/ZDataspace_SourceMUX.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_vector.h"
+
+#include "zoolib/dataspace/ZDataspace_SourceMUX.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -153,9 +155,8 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 	ZGuardMtxR guard(fMtxR);
 
 	vector<QueryResult> changes;
-	if (fResultsAvailable)
+	if (sGetSet(fResultsAvailable, false))
 		{
-		fResultsAvailable = false;
 		guard.Release();
 		fSource->CollectResults(changes);
 		guard.Acquire();
@@ -174,9 +175,8 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 
 	oChanged.clear();
 	oChanged.reserve(iCS->fResults.size());
-	for (Map_Refcon_Result::iterator iter = iCS->fResults.begin(), end = iCS->fResults.end();
-		iter != end; ++iter)
-		{ oChanged.push_back(QueryResult(iter->first, iter->second.first, iter->second.second)); }
+	foreachi (iter, iCS->fResults)
+		oChanged.push_back(QueryResult(iter->first, iter->second.first, iter->second.second));
 
 	iCS->fResults.clear();
 	}

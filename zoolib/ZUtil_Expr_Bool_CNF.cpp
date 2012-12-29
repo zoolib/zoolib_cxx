@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Expr_Bool_CNF.h"
 #include "zoolib/ZVisitor_Do_T.h"
 
@@ -34,11 +35,9 @@ namespace { // anonymous
 CNF spCrossMultiply(const CNF& iCNF0, const CNF& iCNF1)
 	{
 	CNF result;
-	for (CNF::const_iterator iter0 = iCNF0.begin();
-		iter0 != iCNF0.end(); ++iter0)
+	foreachi (iter0, iCNF0)
 		{
-		for (CNF::const_iterator iter1 = iCNF1.begin();
-			iter1 != iCNF1.end(); ++iter1)
+		foreachi (iter1, iCNF1)
 			{
 			Clause theClause = *iter0;
 			theClause.insert(iter1->begin(), iter1->end());
@@ -187,8 +186,7 @@ static ZRef<ZExpr_Bool> spFromClause
 	const ZRef<ZExpr_Bool>& iFalse)
 	{
 	ZRef<ZExpr_Bool> result = iFalse;
-	for (Clause::const_iterator iter = iClause.begin();
-		iter != iClause.end(); ++iter)
+	foreachi (iter, iClause)
 		{
 		ZRef<ZExpr_Bool> theExpr = iter->Get();
 		if (theExpr == iTrue)
@@ -211,8 +209,7 @@ ZRef<ZExpr_Bool> sFromCNF(const CNF& iCNF)
 	ZRef<ZExpr_Bool> theTrue = sTrue();
 	ZRef<ZExpr_Bool> theFalse = sFalse();
 	ZRef<ZExpr_Bool> result = theTrue;
-	for (CNF::const_iterator iter = iCNF.begin();
-		iter != iCNF.end(); ++iter)
+	foreachi (iter, iCNF)
 		{
 		ZRef<ZExpr_Bool> theExpr = spFromClause(*iter, theTrue, theFalse);
 		if (not theExpr || theExpr == theFalse)

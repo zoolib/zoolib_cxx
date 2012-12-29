@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZMACRO_foreach.h"
+
 #include "zoolib/zqe/ZQE_Walker_Result.h"
 
 namespace ZooLib {
@@ -46,8 +48,7 @@ ZRef<Walker> Walker_Result::Prime
 	size_t& ioBaseOffset)
 	{
 	fBaseOffset = ioBaseOffset;
-	const ZRA::RelHead& theRH = fResult->GetRelHead();
-	for (ZRA::RelHead::const_iterator ii = theRH.begin(); ii != theRH.end(); ++ii)
+	foreachi (ii, fResult->GetRelHead())
 		oOffsets[*ii] = ioBaseOffset++;
 	return this;
 	}
@@ -62,10 +63,9 @@ bool Walker_Result::QReadInc
 	if (oAnnotations)
 		fResult->GetAnnotationsAt(fIndex, *oAnnotations);
 
-	const ZRA::RelHead& theRH = fResult->GetRelHead();
 	size_t theOffset = fBaseOffset;
 	const ZVal_Any* theVals = fResult->GetValsAt(fIndex);
-	for (ZRA::RelHead::const_iterator ii = theRH.begin(); ii != theRH.end(); ++ii)
+	foreachi (ii, fResult->GetRelHead())
 		oResults[theOffset++] = *theVals++;
 
 	++fIndex;

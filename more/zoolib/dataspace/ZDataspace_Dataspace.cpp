@@ -20,7 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_map.h"
+
 #include "zoolib/dataspace/ZDataspace_Dataspace.h"
 
 #include "zoolib/zra/ZRA_Transform_DecomposeRestricts.h"
@@ -89,8 +91,7 @@ void Dataspace::Update()
 
 	guard.Acquire();
 
-	for (vector<QueryResult>::iterator iterQueryResults = theQueryResults.begin();
-		iterQueryResults != theQueryResults.end(); ++iterQueryResults)
+	foreachi(iterQueryResults, theQueryResults)
 		{
 		Map_RefconToSieve::iterator iterSieve =
 			fMap_RefconToSieve.find(iterQueryResults->GetRefcon());
@@ -123,16 +124,14 @@ void Dataspace::Updated
 
 void Dataspace::Loaded(const set<ZRef<Sieve> >& iSieves)
 	{
-	for (set<ZRef<Sieve> >::const_iterator iter = iSieves.begin(), end = iSieves.end();
-		iter != end; ++iter)
-		{ this->Loaded(*iter); }
+	foreacha (aa, iSieves)
+		{ this->Loaded(aa); }
 	}
 
 void Dataspace::Changed(const set<ZRef<Sieve> >& iSieves)
 	{
-	for (set<ZRef<Sieve> >::const_iterator iter = iSieves.begin(), end = iSieves.end();
-		iter != end; ++iter)
-		{ this->Changed(*iter); }
+	foreacha (aa, iSieves)
+		{ this->Changed(aa); }
 	}
 
 void Dataspace::Loaded(const ZRef<Sieve>& iSieve)

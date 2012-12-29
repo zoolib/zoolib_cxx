@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimU_StreamUTF8Buffered.h"
@@ -516,9 +517,7 @@ void Source_DatonSet::pPull()
 	if (s)
 		s << "\ntheMNED.size()=" << theMNED.size();
 
-	for (Map_NamedEvent_Delta_t::const_iterator
-		iterMNED = theMNED.begin(), endMNED = theMNED.end();
-		iterMNED != endMNED; ++iterMNED)
+	foreachi (iterMNED, theMNED)
 		{
 		const NamedEvent& theNamedEvent = iterMNED->first;
 		const map<Daton, bool>& theStatements = iterMNED->second->GetStatements();
@@ -528,9 +527,7 @@ void Source_DatonSet::pPull()
 			s << "\nclk:" << theNamedEvent.GetEvent();
 			}
 
-		for (map<Daton, bool>::const_iterator
-			iterStmts = theStatements.begin(), endStmts = theStatements.end();
-			iterStmts != endStmts; ++iterStmts)
+		foreachi (iterStmts, theStatements)
 			{
 			const Daton& theDaton = iterStmts->first;
 
@@ -597,8 +594,7 @@ ZRef<Event> Source_DatonSet::pConditionalPushDown()
 	else
 		{
 		ZRef<DatonSet> theDS = fDatonSet_Temp ? fDatonSet_Temp : fDatonSet;
-		for (Map_Pending::iterator ii = fMap_Pending.begin(), end = fMap_Pending.end();
-			ii != end; ++ii)
+		foreachi (ii, fMap_Pending)
 			{
 			if (ii->second.second)
 				theDS->Insert(ii->first);

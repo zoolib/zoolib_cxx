@@ -18,8 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
+
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
 namespace ZooLib {
@@ -44,11 +46,10 @@ void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
 	s.Write("[");
 
 	bool isFirst = true;
-	for (RelHead::Base_t::const_iterator ii = names.begin(); ii != names.end(); ++ii)
+	foreachi (ii, names)
 		{
-		if (not isFirst)
+		if (not sGetSet(isFirst, false))
 			s.Write(", ");
-		isFirst = false;
 		sWrite_PropName(*ii, s);
 		}
 	s.Write("]");
@@ -67,11 +68,10 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRA::Rename& iRename)
 	{
 	w << "[";
 	bool isFirst = true;
-	for (ZRA::Rename::const_iterator ii = iRename.begin(); ii != iRename.end(); ++ii)
+	foreachi (ii, iRename)
 		{
-		if (not isFirst)
+		if (not sGetSet(isFirst, false))
 			w << ", ";
-		isFirst = false;
 		w << ii->second << "<--" << ii->first;
 		}
 	w << "]";

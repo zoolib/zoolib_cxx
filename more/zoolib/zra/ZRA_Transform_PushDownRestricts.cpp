@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
 
@@ -69,7 +70,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 	ZRef<Expr_Rel> result = iExpr->SelfOrClone(newOp0, newOp1);
 
 	// Examine restricts, see which were touched
-	for (vector<Restrict*>::iterator iter = fRestricts.begin(); iter != fRestricts.end(); ++iter)
+	foreachi (iter, fRestricts)
 		{
 		Restrict& theRestrict = **iter;
 
@@ -103,7 +104,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rena
 	Rename new2Old;
 	new2Old[newName] = oldName;
 
-	for (vector<Restrict*>::iterator iter = fRestricts.begin(); iter != fRestricts.end(); ++iter)
+	foreachi (iter, fRestricts)
 		(*iter)->fExpr_Bool = Util_Expr_Bool::sRenamed(new2Old, (*iter)->fExpr_Bool);
 
 	Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(iExpr);
@@ -111,7 +112,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rena
 	Rename old2New;
 	old2New[oldName] = newName;
 
-	for (vector<Restrict*>::iterator iter = fRestricts.begin(); iter != fRestricts.end(); ++iter)
+	foreachi (iter, fRestricts)
 		(*iter)->fExpr_Bool = Util_Expr_Bool::sRenamed(old2New, (*iter)->fExpr_Bool);
 
 	if (sQErase(fRelHead, oldName))
@@ -157,7 +158,7 @@ void Transform_PushDownRestricts::pHandleIt(const RelHead& iRH, const ZRef<Expr_
 	{
 	fRelHead |= iRH;
 	ZRef<Expr_Rel> result = iExpr;
-	for (vector<Restrict*>::iterator iter = fRestricts.begin(); iter != fRestricts.end(); ++iter)
+	foreachi (iter, fRestricts)
 		{
 		Restrict& theRestrict = **iter;
 		const RelHead exprNames = sGetNames(theRestrict.fExpr_Bool);

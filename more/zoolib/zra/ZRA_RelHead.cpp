@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_String.h"
+#include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/zra/ZRA_RelHead.h"
 
@@ -51,7 +52,7 @@ namespace ZRA {
 Rename sInverted(const Rename& iRename)
 	{
 	Rename result;
-	for (Rename::const_iterator ii = iRename.begin(); ii != iRename.end(); ++ii)
+	foreachi (ii, iRename)
 		result[ii->second] = ii->first;
 	return result;
 	}
@@ -85,7 +86,7 @@ bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead)
 	if (iPrefix.empty())
 		return true;
 
-	for (RelHead::const_iterator ii = iRelHead.begin(); ii != iRelHead.end(); ++ii)
+	foreachi (ii, iRelHead)
 		{
 		if (not sHasPrefix(iPrefix, *ii))
 			return false;
@@ -100,7 +101,7 @@ RelHead sPrefixInserted(const RelName& iPrefix, const RelHead& iRelHead)
 		return iRelHead;
 
 	RelHead result;
-	for (RelHead::const_iterator ii = iRelHead.begin(); ii != iRelHead.end(); ++ii)
+	foreachi (ii, iRelHead)
 		result.insert(sPrefixInserted(iPrefix, *ii));
 
 	return result;
@@ -112,7 +113,7 @@ RelHead sPrefixErased(const RelName& iPrefix, const RelHead& iRelHead)
 		return iRelHead;
 
 	RelHead result;
-	for (RelHead::const_iterator ii = iRelHead.begin(); ii != iRelHead.end(); ++ii)
+	foreachi (ii, iRelHead)
 		result.insert(sPrefixErased(iPrefix, *ii));
 
 	return result;
@@ -124,7 +125,7 @@ RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead)
 		return iRelHead;
 
 	RelHead result;
-	for (RelHead::const_iterator ii = iRelHead.begin(); ii != iRelHead.end(); ++ii)
+	foreachi (ii, iRelHead)
 		result.insert(sRenamed(iRename, *ii));
 
 	return result;

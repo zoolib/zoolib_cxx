@@ -18,7 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_map.h"
+
 #include "zoolib/zqe/ZQE_Result.h"
 #include "zoolib/zqe/ZQE_Walker_Embed.h"
 
@@ -59,7 +61,7 @@ ZRef<Walker> Walker_Embed::Prime
 	map<string8,size_t> embedeeOffsets;
 	fWalker_Embedee = fWalker_Embedee->Prime(oOffsets, embedeeOffsets, ioBaseOffset);
 
-	for (map<string8,size_t>::iterator ii = embedeeOffsets.begin(); ii != embedeeOffsets.end(); ++ii)
+	foreachi (ii, embedeeOffsets)
 		{
 		fEmbedeeRelHead |= ii->first;
 		fEmbedeeOffsets.push_back(ii->second);
@@ -88,7 +90,7 @@ bool Walker_Embed::QReadInc
 			if (not fWalker_Embedee->QReadInc(ioResults, nullptr))
 				break;
 
-			for (vector<size_t>::iterator ii = fEmbedeeOffsets.begin(); ii != fEmbedeeOffsets.end(); ++ii)
+			foreachi (ii, fEmbedeeOffsets)
 				thePackedRows.push_back(ioResults[*ii]);
 			}
 

@@ -21,7 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZCaller_Thread.h"
 #include "zoolib/ZCallOnNewThread.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_vector.h"
+
 #include "zoolib/dataspace/ZDataspace_SourceServer.h"
 
 namespace ZooLib {
@@ -103,7 +105,7 @@ void SourceServer::pWrite()
 	const ZStreamW& w = fStreamerW->GetStreamW();
 
 	w.WriteCount(theChanged.size());
-	for (vector<QueryResult>::iterator ii = theChanged.begin(); ii != theChanged.end(); ++ii)
+	foreachi (ii, theChanged)
 		{
 		w.WriteInt64(ii->GetRefcon());
 		// Write contents

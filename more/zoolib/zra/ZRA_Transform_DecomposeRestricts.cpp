@@ -18,7 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Expr_Bool_CNF.h"
+
 #include "zoolib/zra/ZRA_Transform_DecomposeRestricts.h"
 
 using std::set;
@@ -31,15 +33,12 @@ namespace ZRA {
 
 void Transform_DecomposeRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
-	using Util_Expr_Bool::CNF;
-	using Util_Expr_Bool::Clause;
-
 	ZRef<Expr_Rel> theRel = this->Do(iExpr->GetOp0());
-	const CNF theCNF = Util_Expr_Bool::sAsCNF(iExpr->GetExpr_Bool());
-	for (CNF::const_iterator ii = theCNF.begin(); ii != theCNF.end(); ++ii)
+
+	foreachi (ii, Util_Expr_Bool::sAsCNF(iExpr->GetExpr_Bool()))
 		{
 		ZRef<ZExpr_Bool> newBool;
-		for (Clause::const_iterator jj = ii->begin(); jj != ii->end(); ++jj)
+		foreachi (jj, *ii)
 			newBool |= jj->Get();
 		theRel &= newBool;
 		}

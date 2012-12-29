@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_Any.h"
@@ -106,7 +107,7 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	const RelHead& theRH = iExpr->GetConcreteRelHead();
 
 	ZQ<map<string8,RelHead>::const_iterator> found;
-	for (map<string8,RelHead>::const_iterator iter = fTables.begin(); iter != fTables.end(); ++iter)
+	foreachi (iter, fTables)
 		{
 		if ((sPrefixInserted(iter->first + "_", iter->second) & theRH).size() == theRH.size())
 			{
@@ -125,7 +126,7 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 
 	Analysis theAnalysis;
 	theAnalysis.fCondition = sTrue();
-	for (RelHead::const_iterator iter = theRH.begin(); iter != theRH.end(); ++iter)
+	foreachi (iter, theRH)
 		{
 		const string8 attrName = *iter;
 		const string8 fieldName = sPrefixErased(realTableNameUnderscore, attrName);
@@ -177,10 +178,9 @@ void Analyzer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	Analysis theAnalysis = this->Do(iExpr->GetOp0());
 	const RelHead& theRH = iExpr->GetProjectRelHead();
 	RelHead newRelHead;
-	for (RelHead::iterator ii = theAnalysis.fRelHead_Physical.begin();
-		ii != theAnalysis.fRelHead_Physical.end(); ++ii)
+	foreachi (ii, theAnalysis.fRelHead_Physical)
 		{
-		const string8 theString1 = *ii;
+		const string8& theString1 = *ii;
 		const string8 theString2 = sGetMust(theAnalysis.fRename_Inverse, theString1);
 		if (sContains(theRH, theString2))
 			newRelHead.insert(theString1);
@@ -477,11 +477,8 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 
 		{
 		RelHead theRHLogical;
-		for (RelHead::iterator ii = theAnalysis.fRelHead_Physical.begin();
-			ii != theAnalysis.fRelHead_Physical.end(); ++ii)
-			{
+		foreachi (ii, theAnalysis.fRelHead_Physical)
 			theRHLogical |= sGetMust(theAnalysis.fRename_Inverse, *ii);
-			}
 
 		for (ZMap_Any::Index_t ii = theAnalysis.fConstValues.Begin();
 			ii != theAnalysis.fConstValues.End(); ++ii)
@@ -490,11 +487,11 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 			}
 
 		bool isFirst = true;
-		for (RelHead::iterator ii = theRHLogical.begin(); ii != theRHLogical.end(); ++ii)
+		foreachi (ii, theRHLogical)
 			{
-			if (not isFirst)
+			if (not sGetSet(isFirst, false))
 				s << ",";
-			isFirst = false;
+
 			if (ZQ<string8> theQ = sQGet(theAnalysis.fRename, *ii))
 				s << *theQ;
 			else
@@ -507,14 +504,12 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 		{
 		bool isFirst = true;
 
-		for (map<string8,int>::iterator ii = theAnalyzer.fTablesUsed.begin();
-			ii != theAnalyzer.fTablesUsed.end(); ++ii)
+		foreachi (ii, theAnalyzer.fTablesUsed)
 			{
 			for (int x = 0; x < ii->second; ++x)
 				{
-				if (not isFirst)
+				if (not sGetSet(isFirst, false))
 					s << ",";
-				isFirst = false;
 				s << ii->first << " AS " << ii->first << sStringf("%d", x);
 				}
 			}

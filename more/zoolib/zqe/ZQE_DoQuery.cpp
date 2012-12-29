@@ -19,8 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
+
 #include "zoolib/zqe/ZQE_DoQuery.h"
 
 namespace ZooLib {
@@ -44,7 +46,7 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 	if (s)
 		{
 		s << "\n";
-		for (map<string8,size_t>::iterator ii = offsets.begin(); ii != offsets.end(); ++ii)
+		foreachi (ii, offsets)
 			s << ii->first << ": " << ii->second << ", ";
 		s.Emit();
 		}
@@ -63,13 +65,13 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 			theAnnotationsVector.push_back
 				(vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
 
-			for (map<string8,size_t>::iterator ii = offsets.begin(); ii != offsets.end(); ++ii)
+			foreachi (ii, offsets)
 				thePackedRows.push_back(theRow[ii->second]);
 
 			if (s)
 				{
 				s << "\n";
-				for (map<string8,size_t>::iterator ii = offsets.begin(); ii != offsets.end(); ++ii)
+				foreachi (ii, offsets)
 					{
 					//## ZYad_ZooLibStrim::sToStrim(sYadR(theRow[ii->second]), s);
 					s << ", ";
@@ -87,7 +89,7 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 		}
 
 	RelHead theRelHead;
-	for (map<string8,size_t>::iterator ii = offsets.begin(); ii != offsets.end(); ++ii)
+	foreachi (ii, offsets)
 		theRelHead.insert(ii->first);
 
 	return new ZQE::Result(theRelHead, &thePackedRows, &theAnnotationsVector);

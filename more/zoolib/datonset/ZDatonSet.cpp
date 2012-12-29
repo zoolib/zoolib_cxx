@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
 
 #include "zoolib/datonset/ZDatonSet.h"
@@ -214,14 +215,12 @@ void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed)
 	for (size_t x = 0; x < theIters.size(); ++x)
 		queue.push(TSIndex_t(theIters[x]->first, x));
 
-	while (!queue.empty())
+	while (not queue.empty())
 		{
 		const size_t theX = queue.top().second;
 		queue.pop();
 
-		const map<Daton, bool>& theStatements = theIters[theX]->second->GetStatements();
-		for (map<Daton, bool>::const_iterator jj = theStatements.begin();
-			jj != theStatements.end(); ++jj)
+		foreachi (jj, theIters[theX]->second->GetStatements())
 			{
 			if (jj->second)
 				oComposed.insert(jj->first);

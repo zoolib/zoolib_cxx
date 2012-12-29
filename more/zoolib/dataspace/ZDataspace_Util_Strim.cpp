@@ -18,8 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
+
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
+
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
 namespace ZooLib {
@@ -34,11 +37,10 @@ using std::set;
 const ZStrimW& operator<<(const ZStrimW& w, const set<RelHead>& iSet)
 	{
 	bool isSubsequent = false;
-	for (set<RelHead>::const_iterator ii = iSet.begin(); ii != iSet.end(); ++ii)
+	foreachi (ii, iSet)
 		{
-		if (isSubsequent)
+		if (sGetSet(isSubsequent, true))
 			w << ", ";
-		isSubsequent = true;
 		w << *ii;
 		}
 	return w;
