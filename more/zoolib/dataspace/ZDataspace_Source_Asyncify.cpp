@@ -128,10 +128,9 @@ void Source_Asyncify::Shutdown()
 void Source_Asyncify::pTrigger_Update()
 	{
 	ZAcqMtxR acq(fMtxR);
-	if (fTriggered_Update)
+	if (sGetSet(fTriggered_Update, true))
 		return;
 
-	fTriggered_Update = true;
 	sCallOnNewThread(sCallable(sRef(this), &Source_Asyncify::pUpdate));
 	}
 
