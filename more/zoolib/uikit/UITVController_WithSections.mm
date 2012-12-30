@@ -398,22 +398,22 @@ ZRef<UITableViewCell> SectionBody_SingleRow::UITableViewCellForRow
 size_t SectionBody_Multi::NumberOfRows()
 	{
 	size_t count = 0;
-	foreachi (ii, fBodies)
-		count += (*ii)->NumberOfRows();
+	foreacha (aa, fBodies)
+		count += aa->NumberOfRows();
 	return count;
 	}
 
 void SectionBody_Multi::PreUpdate()
 	{
-	foreachi (ii, fBodies_Pending)
-		(*ii)->PreUpdate();
+	foreacha (aa, fBodies_Pending)
+		aa->PreUpdate();
 	}
 
 bool SectionBody_Multi::WillBeEmpty()
 	{
-	foreachi (ii, fBodies_Pending)
+	foreacha (aa, fBodies_Pending)
 		{
-		if (not (*ii)->WillBeEmpty())
+		if (not aa->WillBeEmpty())
 			return false;
 		}
 	return true;
@@ -421,8 +421,8 @@ bool SectionBody_Multi::WillBeEmpty()
 
 void SectionBody_Multi::Update_NOP()
 	{
-	foreachi (ii, fBodies_Pending)
-		(*ii)->Update_NOP();
+	foreacha (aa, fBodies_Pending)
+		aa->Update_NOP();
 	}
 
 void SectionBody_Multi::Update_Normal
@@ -471,52 +471,52 @@ void SectionBody_Multi::Update_Normal
 
 void SectionBody_Multi::Update_Insert(RowMeta& ioRowMeta_New, RowUpdate& ioRowUpdate_New)
 	{
-	foreachi (ii, fBodies_Pending)
-		(*ii)->Update_Insert(ioRowMeta_New, ioRowUpdate_New);
+	foreacha (aa, fBodies_Pending)
+		aa->Update_Insert(ioRowMeta_New, ioRowUpdate_New);
 	}
 
 void SectionBody_Multi::Update_Delete(RowMeta& ioRowMeta_Old, RowUpdate& ioRowUpdate_Old)
 	{
-	foreachi (ii, fBodies_Pending)
-		(*ii)->Update_Delete(ioRowMeta_Old, ioRowUpdate_Old);
+	foreacha (aa, fBodies_Pending)
+		aa->Update_Delete(ioRowMeta_Old, ioRowUpdate_Old);
 	}
 
 void SectionBody_Multi::FinishUpdate()
 	{
 	fBodies = fBodies_Pending;
-	foreachi (ii, fBodies)
-		(*ii)->FinishUpdate();
+	foreacha (aa, fBodies)
+		aa->FinishUpdate();
 	}
 
 void SectionBody_Multi::ViewWillAppear(UITableView* iTV)
 	{
-	foreachi (ii, fBodies)
-		(*ii)->ViewWillAppear(iTV);
+	foreacha (aa, fBodies)
+		aa->ViewWillAppear(iTV);
 	}
 
 void SectionBody_Multi::ViewDidAppear(UITableView* iTV)
 	{
-	foreachi (ii, fBodies)
-		(*ii)->ViewDidAppear(iTV);
+	foreacha (aa, fBodies)
+		aa->ViewDidAppear(iTV);
 	}
 
 void SectionBody_Multi::ViewWillDisappear(UITableView* iTV)
 	{
-	foreachi (ii, fBodies)
-		(*ii)->ViewWillDisappear(iTV);
+	foreacha (aa, fBodies)
+		aa->ViewWillDisappear(iTV);
 	}
 
 void SectionBody_Multi::ViewDidDisappear(UITableView* iTV)
 	{
-	foreachi (ii, fBodies)
-		(*ii)->ViewDidDisappear(iTV);
+	foreacha (aa, fBodies)
+		aa->ViewDidDisappear(iTV);
 	}
 
 bool SectionBody_Multi::FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow)
 	{
-	foreachi (ii, fBodies)
+	foreacha (aa, fBodies)
 		{
-		if ((*ii)->FindSectionBody(iSB, ioRow))
+		if (aa->FindSectionBody(iSB, ioRow))
 			return true;
 		}
 	return false;
@@ -1388,6 +1388,7 @@ static void spInsertSections(UITableView* iTableView,
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style variableRowHeight:(BOOL)variableRowHeight
 	{
 	[super initWithFrame:frame style:style];
+
 	fCallable_NeedsUpdate = sCallable<void()>(self, @selector(needsUpdate));
 	if (variableRowHeight)
 		fHandler = sAdopt& [[UITVHandler_WithSections_VariableRowHeight alloc] init];
