@@ -577,7 +577,6 @@ void Source_DatonSet::pPull()
 					}
 				}
 
-
 			if (s)
 				s << " " << theDaton;
 			}
