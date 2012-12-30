@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 
-#import "UIKit/UIGestureRecognizerSubclass.h"
+#import <UIKit/UIDevice.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
 
 extern void sUpdatePopovers();
 
