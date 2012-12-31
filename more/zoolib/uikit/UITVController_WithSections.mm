@@ -640,23 +640,23 @@ ZRef<SectionBody> SectionBody_Multi::pGetBodyAndRowIndex(size_t& oIndex, size_t 
 ZRef<SectionBody> SectionBody_Multi::pGetBodyAndRowIndex(size_t& oIndex, size_t iIndex, bool* oIsSucceeded)
 	{
 	oIndex = iIndex;
-	foreachi (i, fBodies)
+	foreachi (ii, fBodies)
 		{
-		ZRef<SectionBody> theBody = *i;
+		ZRef<SectionBody> theBody = *ii;
 		const size_t theCount = theBody->NumberOfRows();
 		if (oIndex < theCount)
 			{
 			if (oIsSucceeded)
 				{
-				++i;
-				while (i != fBodies.end())
+				++ii;
+				while (ii != fBodies.end())
 					{
-					if ((*i)->NumberOfRows())
+					if ((*ii)->NumberOfRows())
 						{
 						*oIsSucceeded = true;
 						break;
 						}
-					++i;
+					++ii;
 					}
 				}
 			return theBody;
@@ -1212,13 +1212,13 @@ static void spInsertSections(UITableView* iTableView,
 			for (size_t x = 0; x < fReloads.size(); ++x)
 				{
 				map<size_t, UITableViewRowAnimation>& theMap = fReloads[x];
-				foreachi (i, theMap)
+				foreachi (ii, theMap)
 					{
 					UITableViewRowAnimation theAnimation = UITableViewRowAnimationNone;
 					if (fShown)
-						theAnimation = i->second;
+						theAnimation = ii->second;
 					[tableView
-						reloadRowsAtIndexPaths:sMakeNSIndexPathArray(x, i->first, 1)
+						reloadRowsAtIndexPaths:sMakeNSIndexPathArray(x, ii->first, 1)
 						withRowAnimation:theAnimation];
 					}
 				}
@@ -1227,22 +1227,22 @@ static void spInsertSections(UITableView* iTableView,
 		for (size_t x = 0; x < fDeletes.size(); ++x)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = fDeletes[x];
-			foreachi (i, theMap)
+			foreachi (ii, theMap)
 				{
 				[tableView
-					deleteRowsAtIndexPaths:sMakeNSIndexPathArray(x, i->first, 1)
-					withRowAnimation:isShown ? i->second : UITableViewRowAnimationNone];
+					deleteRowsAtIndexPaths:sMakeNSIndexPathArray(x, ii->first, 1)
+					withRowAnimation:isShown ? ii->second : UITableViewRowAnimationNone];
 				}
 			}
 
 		for (size_t x = 0; x < fInserts.size(); ++x)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = fInserts[x];
-			foreachi (i, theMap)
+			foreachi (ii, theMap)
 				{
 				[tableView
-					insertRowsAtIndexPaths:sMakeNSIndexPathArray(x, i->first, 1)
-					withRowAnimation:isShown ? i->second : UITableViewRowAnimationNone];
+					insertRowsAtIndexPaths:sMakeNSIndexPathArray(x, ii->first, 1)
+					withRowAnimation:isShown ? ii->second : UITableViewRowAnimationNone];
 				}
 			}
 

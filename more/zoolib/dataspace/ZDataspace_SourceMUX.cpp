@@ -162,9 +162,7 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 		guard.Acquire();
 		}
 
-	for (vector<QueryResult>::iterator
-		iterChanges = changes.begin(), endChanges = changes.end();
-		iterChanges != endChanges; ++iterChanges)
+	foreachi (iterChanges, changes)
 		{
 		const pair<ClientSource*,int64>& thePair =
 			sGetMust(kDebug, fPRefconToClient, iterChanges->GetRefcon());
@@ -186,10 +184,8 @@ void SourceMUX::pResultsAvailable(ZRef<Source> iSource)
 	ZGuardMtxR guard(fMtxR);
 	if (not sGetSet(fResultsAvailable, true))
 		{
-		for (set<ClientSource*>::iterator
-			iter = fClientSources.begin(), end = fClientSources.end();
-			iter != end; ++iter)
-			{ (*iter)->ResultsAvailable(); }
+		foreachi (iter, fClientSources)
+			(*iter)->ResultsAvailable();
 		}
 	}
 
@@ -202,10 +198,8 @@ void SourceMUX::pFinalizeClientSource(ClientSource* iCS)
 
 	vector<int64> removedQueries;
 	removedQueries.reserve(iCS->fMap_ClientToPRefcon.size());
-	for (map<int64,int64>::iterator
-		iter = iCS->fMap_ClientToPRefcon.begin(), end = iCS->fMap_ClientToPRefcon.begin();
-		iter != end; ++iter)
-		{ removedQueries.push_back(iter->second); }
+	foreachi (iter, iCS->fMap_ClientToPRefcon)
+		removedQueries.push_back(iter->second);
 
 	sEraseMust(fClientSources, iCS);
 	delete iCS;

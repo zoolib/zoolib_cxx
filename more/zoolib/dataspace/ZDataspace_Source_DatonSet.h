@@ -70,6 +70,7 @@ public:
 	Source_DatonSet(ZRef<ZDatonSet::DatonSet> iDatonSet);
 	virtual ~Source_DatonSet();
 
+// From Source
 	virtual bool Intersects(const RelHead& iRelHead);
 
 	virtual void ModifyRegistrations

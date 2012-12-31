@@ -44,7 +44,7 @@ public:
 	virtual void Initialize();
 	virtual void Finalize();
 
-// Our protocol
+// From SourceFactory
 	virtual ZRef<Source> Make();
 
 private:

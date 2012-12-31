@@ -91,7 +91,7 @@ void Dataspace::Update()
 
 	guard.Acquire();
 
-	foreachi(iterQueryResults, theQueryResults)
+	foreachi (iterQueryResults, theQueryResults)
 		{
 		Map_RefconToSieve::iterator iterSieve =
 			fMap_RefconToSieve.find(iterQueryResults->GetRefcon());

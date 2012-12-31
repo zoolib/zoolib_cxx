@@ -40,11 +40,10 @@ class Dataspace
 public:
 	enum { kDebug = 1 };
 
-	typedef ZCallable<void(Dataspace*)> Callable_UpdateNeeded;
-
 	Dataspace(ZRef<Source> iSource);
 	~Dataspace();
 
+	typedef ZCallable<void(Dataspace*)> Callable_UpdateNeeded;
 	void SetCallable_UpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable);
 
 	void Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel);
@@ -61,9 +60,6 @@ public:
 
 	virtual void Loaded(const ZRef<Sieve>& iSieve);
 	virtual void Changed(const ZRef<Sieve>& iSieve);
-
-	const ZMtxR& GetMtxR()
-		{ return fMtxR; }
 
 private:
 	void pCallback_Source(ZRef<Source> iSource);
