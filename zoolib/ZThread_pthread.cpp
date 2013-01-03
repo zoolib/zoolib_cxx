@@ -52,7 +52,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		{ ::pthread_setname_np(iName); }
 #else
 	void ZooLib::ZThread_pthread::sSetName(const char* iName)
-		{ ::pthread_setname_np(::ptherad_self(), iName); }
+		{ ::pthread_setname_np(::pthread_self(), iName); }
 #endif
 
 namespace ZooLib {
