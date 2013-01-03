@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZCompare.h"
+#include "zoolib/ZCompat_string.h" // For strcmp
 #include "zoolib/ZName.h"
 #include "zoolib/ZUnicodeString.h" // For string8 etc.
 #include "zoolib/ZUtil_Relops.h"
