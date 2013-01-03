@@ -41,7 +41,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#define ZMACRO_type_traits_namespace std::tr1
 		#define ZCONFIG_SPI_Avail__type_traits 1
 
-		#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 5))
+		#if defined(linux) \
+			|| defined(__GNUC__) && (__GNUC__ < 4 \
+			|| (__GNUC__ == 4 && __GNUC_MINOR__ < 5))
 			// No enable_if or conditional prior to 4.5
 			namespace std { namespace tr1 {
 
