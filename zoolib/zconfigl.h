@@ -346,7 +346,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #else
 
-	const class
+	const class nullptr_t
 		{
 		void operator&() const;
 	public:
