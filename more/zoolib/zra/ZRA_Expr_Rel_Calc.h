@@ -46,7 +46,7 @@ public:
 	typedef ZCallable<ZVal_Any(const PseudoMap&)> Callable;
 
 	Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
-		const RelName& iRelName,
+		const ColName& iColName,
 		const ZRef<Callable>& iCallable);
 
 	virtual ~Expr_Rel_Calc();
@@ -63,11 +63,11 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor);
 
-	const RelName& GetRelName() const;
+	const ColName& GetColName() const;
 	const ZRef<Callable>& GetCallable() const;
 
 private:
-	const RelName fRelName;
+	const ColName fColName;
 	const ZRef<Callable> fCallable;
 	};
 
@@ -140,7 +140,7 @@ public:
 // MARK: - Relational operators
 
 ZRef<Expr_Rel> sCalc(const ZRef<Expr_Rel>& iOp0,
-	const RelName& iRelName,
+	const ColName& iColName,
 	const ZRef<Expr_Rel_Calc::Callable>& iCallable);
 
 } // namespace ZRA

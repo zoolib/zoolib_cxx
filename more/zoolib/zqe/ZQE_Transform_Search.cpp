@@ -46,7 +46,7 @@ namespace ZooLib {
 namespace ZQE {
 
 using ZRA::Expr_Rel;
-using ZRA::RelName;
+using ZRA::ColName;
 using ZRA::RelHead;
 using ZRA::Rename;
 
@@ -120,7 +120,7 @@ class Transform_Search
 public:
 	Transform_Search()
 	:	fRestriction(sTrue())
-	,	fProjection(ZUniSet_T<RelName>::sUniversal())
+	,	fProjection(ZUniSet_T<ColName>::sUniversal())
 		{}
 
 	virtual void Visit(const ZRef<ZVisitee>& iRep)
@@ -128,7 +128,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
 		{
-		const RelName& theName = ZRA::sRenamed(fRename, iExpr->GetRelName());
+		const ColName& theName = ZRA::sRenamed(fRename, iExpr->GetColName());
 
 		// The restriction may reference the name we introduce, so don't pass it down the tree.
 		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
@@ -136,8 +136,8 @@ public:
 
 		// Similarly with projection -- we don't know what names we'll be
 		// referencing from our descendants.
-		const ZUniSet_T<RelName> priorProjection = fProjection;
-		fProjection = ZUniSet_T<RelName>::sUniversal();
+		const ZUniSet_T<ColName> priorProjection = fProjection;
+		fProjection = ZUniSet_T<ColName>::sUniversal();
 
 		ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 		ZRef<ZRA::Expr_Rel> newCalc = new ZRA::Expr_Rel_Calc(newOp0, theName, iExpr->GetCallable());
@@ -166,9 +166,9 @@ public:
 		// Add missing entries
 		foreachi (iterRH, iExpr->GetConcreteRelHead())
 			{
-			const RelName& theRelName = *iterRH;
-			if (fProjection.Contains(theRelName))
-				sInsertMust(newRename, theRelName, theRelName); // sSet??
+			const ColName& theColName = *iterRH;
+			if (fProjection.Contains(theColName))
+				sInsertMust(newRename, theColName, theColName); // sSet??
 			}
 
 		if (fRestriction == sTrue())
@@ -191,7 +191,7 @@ public:
 	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
 		{
 		fLikelySize = 1;
-		this->pApplyRestrictProject(iExpr->GetRelName(), iExpr);
+		this->pApplyRestrictProject(iExpr->GetColName(), iExpr);
 		}
 
 	virtual void Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr)
@@ -212,17 +212,17 @@ public:
 
 		{
 		ZSetRestore_T<ZRef<ZExpr_Bool> > sr0(fRestriction, sTrue());
-		ZSetRestore_T<ZUniSet_T<RelName> > sr1(fProjection, ZUniSet_T<RelName>::sUniversal());
+		ZSetRestore_T<ZUniSet_T<ColName> > sr1(fProjection, ZUniSet_T<ColName>::sUniversal());
 		ZSetRestore_T<Rename> sr2(fRename);
 		newOp1 = this->Do(iExpr->GetOp1());
 		}
 
-		const RelName& theName = ZRA::sRenamed(fRename, iExpr->GetRelName());
+		const ColName& theName = ZRA::sRenamed(fRename, iExpr->GetColName());
 
 		ZRef<ZRA::Expr_Rel> newEmbed;
 		{
 		ZSetRestore_T<ZRef<ZExpr_Bool> > sr0(fRestriction, sTrue());
-		ZSetRestore_T<ZUniSet_T<RelName> > sr1(fProjection, ZUniSet_T<RelName>::sUniversal());
+		ZSetRestore_T<ZUniSet_T<ColName> > sr1(fProjection, ZUniSet_T<ColName>::sUniversal());
 		ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 		newEmbed = new ZRA::Expr_Rel_Embed(newOp0, theName, newOp1);
 		}
@@ -235,14 +235,14 @@ public:
 		{
 		// Remember curent state
 		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
-		const ZUniSet_T<RelName> priorProjection = fProjection;
+		const ZUniSet_T<ColName> priorProjection = fProjection;
 		const Rename priorRename = fRename;
 
 		// We leave rename in place to be used by children,
 		// but reset the restriction and projection -- children will see only any
 		// restriction/projection that exists on their own branch.
 		fRestriction = sTrue();
-		fProjection = ZUniSet_T<RelName>::sUniversal();
+		fProjection = ZUniSet_T<ColName>::sUniversal();
 
 		// Process the left branch.
 		ZRef<ZRA::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
@@ -252,7 +252,7 @@ public:
 		// Projection, rename and restriction may have been touched, so reset things
 		// to the same state for the right branch as for the left.
 		fRestriction = sTrue();
-		fProjection = ZUniSet_T<RelName>::sUniversal();
+		fProjection = ZUniSet_T<ColName>::sUniversal();
 		fRename = priorRename;
 
 		// Process the right branch.
@@ -276,14 +276,14 @@ public:
 
 	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr)
 		{
-		ZSetRestore_T<ZUniSet_T<RelName> > sr(fProjection, iExpr->GetProjectRelHead());
+		ZSetRestore_T<ZUniSet_T<ColName> > sr(fProjection, iExpr->GetProjectRelHead());
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 
 	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr)
 		{
-		const RelName& oldName = iExpr->GetOld();
-		RelName newName = iExpr->GetNew();
+		const ColName& oldName = iExpr->GetOld();
+		ColName newName = iExpr->GetNew();
 
 		Rename new2Old;
 		new2Old[newName] = oldName;
@@ -359,7 +359,7 @@ public:
 		}
 
 	ZRef<ZExpr_Bool> fRestriction;
-	ZUniSet_T<RelName> fProjection;
+	ZUniSet_T<ColName> fProjection;
 	Rename fRename;
 	ZQ<double> fLikelySize;
 	};

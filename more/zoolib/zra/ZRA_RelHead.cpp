@@ -60,28 +60,28 @@ Rename sInverted(const Rename& iRename)
 // =================================================================================================
 // MARK: - Prefix
 
-bool sHasPrefix(const RelName& iPrefix, const RelName& iRelName)
-	{ return iRelName.substr(0, iPrefix.size()) == iPrefix; }
+bool sHasPrefix(const ColName& iPrefix, const ColName& iColName)
+	{ return iColName.substr(0, iPrefix.size()) == iPrefix; }
 
-RelName sPrefixInserted(const RelName& iPrefix, const RelName& iRelName)
-	{ return iPrefix + iRelName; }
+ColName sPrefixInserted(const ColName& iPrefix, const ColName& iColName)
+	{ return iPrefix + iColName; }
 
-RelName sPrefixErased(const RelName& iPrefix, const RelName& iRelName)
+ColName sPrefixErased(const ColName& iPrefix, const ColName& iColName)
 	{
-	if (iRelName.substr(0, iPrefix.size()) == iPrefix)
-		return iRelName.substr(iPrefix.size(), RelName::npos);
-	return iRelName;
+	if (iColName.substr(0, iPrefix.size()) == iPrefix)
+		return iColName.substr(iPrefix.size(), ColName::npos);
+	return iColName;
 	}
 
-RelName sRenamed(const Rename& iRename, const RelName& iRelName)
+ColName sRenamed(const Rename& iRename, const ColName& iColName)
 	{
-	Rename::const_iterator iter = iRename.find(iRelName);
+	Rename::const_iterator iter = iRename.find(iColName);
 	if (iRename.end() == iter)
-		return iRelName;
+		return iColName;
 	return iter->second;
 	}
 
-bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead)
+bool sHasPrefix(const ColName& iPrefix, const RelHead& iRelHead)
 	{
 	if (iPrefix.empty())
 		return true;
@@ -95,7 +95,7 @@ bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead)
 	return true;
 	}
 
-RelHead sPrefixInserted(const RelName& iPrefix, const RelHead& iRelHead)
+RelHead sPrefixInserted(const ColName& iPrefix, const RelHead& iRelHead)
 	{
 	if (iPrefix.empty())
 		return iRelHead;
@@ -107,7 +107,7 @@ RelHead sPrefixInserted(const RelName& iPrefix, const RelHead& iRelHead)
 	return result;
 	}
 
-RelHead sPrefixErased(const RelName& iPrefix, const RelHead& iRelHead)
+RelHead sPrefixErased(const ColName& iPrefix, const RelHead& iRelHead)
 	{
 	if (iPrefix.empty())
 		return iRelHead;

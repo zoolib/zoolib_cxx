@@ -365,7 +365,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& 
 	{
 	ZRA::Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(iExpr);
 
-	fResultRelHead |= iExpr->GetRelName();
+	fResultRelHead |= iExpr->GetColName();
 	}
 
 void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
@@ -386,7 +386,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Con
 void Source_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
 	{
 	ZRA::Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(iExpr);
-	fResultRelHead |= iExpr->GetRelName();
+	fResultRelHead |= iExpr->GetColName();
 	}
 
 void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
@@ -411,7 +411,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>
 	rightRelHead.swap(fResultRelHead);
 
 	fPSources = sOr(leftPSources, rightPSources);
-	fResultRelHead = leftRelHead | iExpr->GetRelName();
+	fResultRelHead = leftRelHead | iExpr->GetColName();
 
 	if (leftPSources.size() <= 1)
 		{

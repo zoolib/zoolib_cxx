@@ -37,9 +37,9 @@ using namespace ZUtil_STL;
 // MARK: - Walker_Embed
 
 Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker_Parent,
-		const string8& iRelName, const ZRef<Walker>& iWalker_Embedee)
+		const string8& iColName, const ZRef<Walker>& iWalker_Embedee)
 :	fWalker_Parent(iWalker_Parent)
-,	fRelName(iRelName)
+,	fColName(iColName)
 ,	fWalker_Embedee(iWalker_Embedee)
 	{}
 
@@ -68,7 +68,7 @@ ZRef<Walker> Walker_Embed::Prime
 		}
 
 	fOutputOffset = ioBaseOffset++;
-	oOffsets[fRelName] = fOutputOffset;
+	oOffsets[fColName] = fOutputOffset;
 
 	return this;
 	}

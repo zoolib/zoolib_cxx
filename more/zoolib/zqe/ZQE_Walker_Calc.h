@@ -39,7 +39,7 @@ public:
 	typedef ZRA::Expr_Rel_Calc::PseudoMap PseudoMap;
 
 	Walker_Calc(const ZRef<Walker>& iWalker,
-		const string8& iRelName,
+		const string8& iColName,
 		const ZRef<Callable>& iCallable);
 
 	virtual ~Walker_Calc();
@@ -55,7 +55,7 @@ public:
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
-	const string8 fRelName;
+	const string8 fColName;
 	const ZRef<Callable> fCallable;
 	size_t fOutputOffset;
 	std::map<string8,size_t> fBindings;

@@ -33,7 +33,7 @@ namespace ZQE {
 class Walker_Const : public Walker
 	{
 public:
-	Walker_Const(const string8& iRelName, const ZVal_Any& iVal);
+	Walker_Const(const string8& iColName, const ZVal_Any& iVal);
 	virtual ~Walker_Const();
 
 // From ZQE::Walker
@@ -50,7 +50,7 @@ public:
 
 private:
 	bool fExhausted;
-	const string8 fRelName;
+	const string8 fColName;
 	size_t fOutputOffset;
 	const ZVal_Any fVal;
 	};

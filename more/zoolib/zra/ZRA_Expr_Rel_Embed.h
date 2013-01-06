@@ -40,7 +40,7 @@ class Expr_Rel_Embed
 	typedef ZExpr_Op2_T<Expr_Rel> inherited;
 public:
 	Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0,
-		const RelName& iRelName, const ZRef<Expr_Rel>& iEmbedee);
+		const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee);
 
 // From ZVisitee
 	virtual void Accept(const ZVisitor& iVisitor);
@@ -54,10 +54,10 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor);
 
-	const RelName& GetRelName() const;
+	const ColName& GetColName() const;
 
 private:
-	const RelName fRelName;
+	const ColName fColName;
 	};
 
 // =================================================================================================
@@ -74,7 +74,7 @@ public:
 // MARK: - Relational operators
 
 ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0,
-	const RelName& iRelName, const ZRef<Expr_Rel>& iEmbedee);
+	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee);
 
 } // namespace ZRA
 

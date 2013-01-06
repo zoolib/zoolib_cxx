@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZSet_T.h"
 
-#include "zoolib/zra/ZRA_RelName.h"
+#include "zoolib/zra/ZRA_ColName.h"
 
 #include <map>
 #include <set>
@@ -35,14 +35,14 @@ namespace ZRA {
 // =================================================================================================
 // MARK: - Rename
 
-typedef std::map<RelName,RelName> Rename;
+typedef std::map<ColName,ColName> Rename;
 
 Rename sInverted(const Rename& iRename);
 
 // =================================================================================================
 // MARK: - RelHead
 
-typedef ZSet_T<RelName> RelHead;
+typedef ZSet_T<ColName> RelHead;
 
 // =================================================================================================
 // MARK: - RelHead operators
@@ -71,14 +71,14 @@ inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
 // =================================================================================================
 // MARK: - Prefix
 
-bool sHasPrefix(const RelName& iPrefix, const RelName& iRelName);
-RelName sPrefixInserted(const RelName& iPrefix, const RelName& iRelName);
-RelName sPrefixErased(const RelName& iPrefix, const RelName& iRelName);
-RelName sRenamed(const Rename& iRename, const RelName& iRelName);
+bool sHasPrefix(const ColName& iPrefix, const ColName& iColName);
+ColName sPrefixInserted(const ColName& iPrefix, const ColName& iColName);
+ColName sPrefixErased(const ColName& iPrefix, const ColName& iColName);
+ColName sRenamed(const Rename& iRename, const ColName& iColName);
 
-bool sHasPrefix(const RelName& iPrefix, const RelHead& iRelHead);
-RelHead sPrefixInserted(const RelName& iPrefix, const RelHead& iRelHead);
-RelHead sPrefixErased(const RelName& iPrefix, const RelHead& iRelHead);
+bool sHasPrefix(const ColName& iPrefix, const RelHead& iRelHead);
+RelHead sPrefixInserted(const ColName& iPrefix, const RelHead& iRelHead);
+RelHead sPrefixErased(const ColName& iPrefix, const RelHead& iRelHead);
 RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead);
 
 } // namespace ZRA

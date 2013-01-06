@@ -29,7 +29,7 @@ namespace ZooLib {
 template <>
 int sCompare_T(const ZRA::Expr_Rel_Const& iL, const ZRA::Expr_Rel_Const& iR)
 	{
-	if (int compare = sCompare_T(iL.GetRelName(), iR.GetRelName()))
+	if (int compare = sCompare_T(iL.GetColName(), iR.GetColName()))
 		return compare;
 
 	return sCompare_T(iL.GetVal(), iR.GetVal());
@@ -42,8 +42,8 @@ namespace ZRA {
 // =================================================================================================
 // MARK: - Expr_Rel_Const
 
-Expr_Rel_Const::Expr_Rel_Const(const RelName& iRelName, const ZVal_Any& iVal)
-:	fRelName(iRelName)
+Expr_Rel_Const::Expr_Rel_Const(const ColName& iColName, const ZVal_Any& iVal)
+:	fColName(iColName)
 ,	fVal(iVal)
 	{}
 
@@ -75,8 +75,8 @@ ZRef<Expr_Rel> Expr_Rel_Const::Clone()
 void Expr_Rel_Const::Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Const(this); }
 
-const RelName& Expr_Rel_Const::GetRelName() const
-	{ return fRelName; }
+const ColName& Expr_Rel_Const::GetColName() const
+	{ return fColName; }
 
 const ZVal_Any& Expr_Rel_Const::GetVal() const
 	{ return fVal; }
@@ -90,8 +90,8 @@ void Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iE
 // =================================================================================================
 // MARK: - Relational operators
 
-ZRef<Expr_Rel> sConst(const RelName& iRelName, const ZVal_Any& iVal)
-	{ return new Expr_Rel_Const(iRelName, iVal); }
+ZRef<Expr_Rel> sConst(const ColName& iColName, const ZVal_Any& iVal)
+	{ return new Expr_Rel_Const(iColName, iVal); }
 
 } // namespace ZRA
 } // namespace ZooLib

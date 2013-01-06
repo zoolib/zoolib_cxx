@@ -31,10 +31,10 @@ using std::vector;
 // MARK: - Walker_Calc
 
 Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
-	const string8& iRelName,
+	const string8& iColName,
 	const ZRef<Callable>& iCallable)
 :	Walker_Unary(iWalker)
-,	fRelName(iRelName)
+,	fColName(iColName)
 ,	fCallable(iCallable)
 	{}
 
@@ -49,7 +49,7 @@ ZRef<Walker> Walker_Calc::Prime
 	fWalker = fWalker->Prime(iOffsets, fBindings, ioBaseOffset);
 	oOffsets.insert(fBindings.begin(), fBindings.end());
 	fOutputOffset = ioBaseOffset++;
-	oOffsets[fRelName] = fOutputOffset;
+	oOffsets[fColName] = fOutputOffset;
 
 	if (not fWalker)
 		return null;

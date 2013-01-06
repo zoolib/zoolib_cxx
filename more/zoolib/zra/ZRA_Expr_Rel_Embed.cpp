@@ -30,7 +30,7 @@ namespace ZooLib {
 template <>
 int sCompare_T(const ZRA::Expr_Rel_Embed& iL, const ZRA::Expr_Rel_Embed& iR)
 	{
-	if (int compare = sCompare_T(iL.GetRelName(), iR.GetRelName()))
+	if (int compare = sCompare_T(iL.GetColName(), iR.GetColName()))
 		return compare;
 
 	if (int compare = sCompare_T(iL.GetOp0(), iR.GetOp0()))
@@ -47,9 +47,9 @@ namespace ZRA {
 // MARK: - Expr_Rel_Embed
 
 Expr_Rel_Embed::Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0,
-	const RelName& iRelName, const ZRef<Expr_Rel>& iEmbedee)
+	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee)
 :	inherited(iOp0, iEmbedee)
-,	fRelName(iRelName)
+,	fColName(iColName)
 	{}
 
 void Expr_Rel_Embed::Accept(const ZVisitor& iVisitor)
@@ -72,13 +72,13 @@ ZRef<Expr_Rel> Expr_Rel_Embed::Self()
 	{ return this; }
 
 ZRef<Expr_Rel> Expr_Rel_Embed::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
-	{ return new Expr_Rel_Embed(iOp0, fRelName, iOp1); }
+	{ return new Expr_Rel_Embed(iOp0, fColName, iOp1); }
 
 void Expr_Rel_Embed::Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Embed(this); }
 
-const RelName& Expr_Rel_Embed::GetRelName() const
-	{ return fRelName; }
+const ColName& Expr_Rel_Embed::GetColName() const
+	{ return fColName; }
 
 // =================================================================================================
 // MARK: - Visitor_Expr_Rel_Embed
@@ -90,8 +90,8 @@ void Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iE
 // MARK: - Relational operators
 
 ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0,
-	const RelName& iRelName, const ZRef<Expr_Rel>& iEmbedee)
-	{ return new Expr_Rel_Embed(iOp0, iRelName, iEmbedee); }
+	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee)
+	{ return new Expr_Rel_Embed(iOp0, iColName, iEmbedee); }
 
 } // namespace ZRA
 } // namespace ZooLib

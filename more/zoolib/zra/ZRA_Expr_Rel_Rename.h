@@ -41,7 +41,7 @@ class Expr_Rel_Rename
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Rename(const ZRef<Expr_Rel>& iOp0, const RelName& iNew, const RelName& iOld);
+	Expr_Rel_Rename(const ZRef<Expr_Rel>& iOp0, const ColName& iNew, const ColName& iOld);
 	virtual ~Expr_Rel_Rename();
 
 // From ZVisitee
@@ -56,12 +56,12 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor);
 
-	const RelName& GetNew() const;
-	const RelName& GetOld() const;
+	const ColName& GetNew() const;
+	const ColName& GetOld() const;
 
 private:
-	const RelName fNew;
-	const RelName fOld;
+	const ColName fNew;
+	const ColName fOld;
 	};
 
 // =================================================================================================
@@ -78,7 +78,7 @@ public:
 // MARK: - Relational operators
 
 ZRef<Expr_Rel> sRename(const ZRef<Expr_Rel>& iExpr,
-	const RelName& iNewPropName, const RelName& iOldPropName);
+	const ColName& iNewPropName, const ColName& iOldPropName);
 
 } // namespace ZRA
 

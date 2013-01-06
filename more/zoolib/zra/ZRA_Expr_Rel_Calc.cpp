@@ -29,7 +29,7 @@ namespace ZooLib {
 template <>
 int sCompare_T(const ZRA::Expr_Rel_Calc& iL, const ZRA::Expr_Rel_Calc& iR)
 	{
-	if (int compare = sCompare_T(iL.GetRelName(), iR.GetRelName()))
+	if (int compare = sCompare_T(iL.GetColName(), iR.GetColName()))
 		return compare;
 
 	if (int compare = sCompare_T(iL.GetOp0(), iR.GetOp0()))
@@ -54,10 +54,10 @@ using std::map;
 // MARK: - Expr_Rel_Calc
 
 Expr_Rel_Calc::Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
-	const RelName& iRelName,
+	const ColName& iColName,
 	const ZRef<Callable>& iCallable)
 :	inherited(iOp0)
-,	fRelName(iRelName)
+,	fColName(iColName)
 ,	fCallable(iCallable)
 	{}
 
@@ -84,13 +84,13 @@ ZRef<Expr_Rel> Expr_Rel_Calc::Self()
 	{ return this; }
 
 ZRef<Expr_Rel> Expr_Rel_Calc::Clone(const ZRef<Expr_Rel>& iOp0)
-	{ return new Expr_Rel_Calc(iOp0, fRelName, fCallable); }
+	{ return new Expr_Rel_Calc(iOp0, fColName, fCallable); }
 
 void Expr_Rel_Calc::Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Calc(this); }
 
-const RelName& Expr_Rel_Calc::GetRelName() const
-	{ return fRelName; }
+const ColName& Expr_Rel_Calc::GetColName() const
+	{ return fColName; }
 
 const ZRef<Expr_Rel_Calc::Callable>& Expr_Rel_Calc::GetCallable() const
 	{ return fCallable; }
@@ -105,10 +105,10 @@ void Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr
 // MARK: - Relational operators
 
 ZRef<Expr_Rel> sCalc(const ZRef<Expr_Rel>& iOp0,
-	const RelName& iRelName,
+	const ColName& iColName,
 	const ZRef<Expr_Rel_Calc::Callable>& iCallable)
 	{
-	return new Expr_Rel_Calc(iOp0, iRelName, iCallable);
+	return new Expr_Rel_Calc(iOp0, iColName, iCallable);
 	}
 
 } // namespace ZRA

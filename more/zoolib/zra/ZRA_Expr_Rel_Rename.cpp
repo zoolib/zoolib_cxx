@@ -50,7 +50,7 @@ namespace ZRA {
 // MARK: - Expr_Rel_Rename
 
 Expr_Rel_Rename::Expr_Rel_Rename(const ZRef<Expr_Rel>& iOp0,
-	const RelName& iNew, const RelName& iOld)
+	const ColName& iNew, const ColName& iOld)
 :	inherited(iOp0)
 ,	fNew(iNew)
 ,	fOld(iOld)
@@ -84,10 +84,10 @@ ZRef<Expr_Rel> Expr_Rel_Rename::Clone(const ZRef<Expr_Rel>& iOp0)
 void Expr_Rel_Rename::Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Rename(this); }
 
-const RelName& Expr_Rel_Rename::GetNew() const
+const ColName& Expr_Rel_Rename::GetNew() const
 	{ return fNew; }
 
-const RelName& Expr_Rel_Rename::GetOld() const
+const ColName& Expr_Rel_Rename::GetOld() const
 	{ return fOld; }
 
 // =================================================================================================
@@ -100,7 +100,7 @@ void Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>&
 // MARK: - Relational operators
 
 ZRef<Expr_Rel> sRename(const ZRef<Expr_Rel>& iExpr,
-	const RelName& iNewPropName, const RelName& iOldPropName)
+	const ColName& iNewPropName, const ColName& iOldPropName)
 	{
 	if (iExpr)
 		return new Expr_Rel_Rename(iExpr, iNewPropName, iOldPropName);

@@ -40,7 +40,7 @@ class Expr_Rel_Const
 	{
 	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Const(const RelName& iRelName, const ZVal_Any& iVal);
+	Expr_Rel_Const(const ColName& iColName, const ZVal_Any& iVal);
 
 	virtual ~Expr_Rel_Const();
 
@@ -56,11 +56,11 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor);
 
-	const RelName& GetRelName() const;
+	const ColName& GetColName() const;
 	const ZVal_Any& GetVal() const;
 
 private:
-	const RelName fRelName;
+	const ColName fColName;
 	const ZVal_Any fVal;
 	};
 
@@ -77,7 +77,7 @@ public:
 // =================================================================================================
 // MARK: - Relational operators
 
-ZRef<Expr_Rel> sConst(const RelName& iRelName, const ZVal_Any& iVal);
+ZRef<Expr_Rel> sConst(const ColName& iColName, const ZVal_Any& iVal);
 
 } // namespace ZRA
 

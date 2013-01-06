@@ -55,19 +55,19 @@ class Visitor_GetRelHead
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
 
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
-		{ this->pSetResult(this->Do(iExpr->GetOp0()) | iExpr->GetRelName()); }
+		{ this->pSetResult(this->Do(iExpr->GetOp0()) | iExpr->GetColName()); }
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 		{ this->pSetResult(iExpr->GetConcreteRelHead()); }
 
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
-		{ this->pSetResult(iExpr->GetRelName()); }
+		{ this->pSetResult(iExpr->GetColName()); }
 
 	virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
 	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
-		{ this->pSetResult(this->Do(iExpr->GetOp0()) | iExpr->GetRelName()); }
+		{ this->pSetResult(this->Do(iExpr->GetOp0()) | iExpr->GetColName()); }
 
 	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) & iExpr->GetProjectRelHead()); }

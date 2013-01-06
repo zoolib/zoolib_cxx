@@ -43,11 +43,11 @@ void Visitor_DoMakeWalker::Visit(const ZRef<ZVisitee>& iRep)
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new Walker_Calc(op0, iExpr->GetRelName(), iExpr->GetCallable()));
+		this->pSetResult(new Walker_Calc(op0, iExpr->GetColName(), iExpr->GetCallable()));
 	}
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
-	{ this->pSetResult(new Walker_Const(iExpr->GetRelName(), iExpr->GetVal())); }
+	{ this->pSetResult(new Walker_Const(iExpr->GetColName(), iExpr->GetVal())); }
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr)
 	{ this->pSetResult(new Walker_Dee); }
@@ -60,7 +60,7 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>&
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
 		if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
-			this->pSetResult(new Walker_Embed(op0, iExpr->GetRelName(), op1));
+			this->pSetResult(new Walker_Embed(op0, iExpr->GetColName(), op1));
 		}
 	}
 

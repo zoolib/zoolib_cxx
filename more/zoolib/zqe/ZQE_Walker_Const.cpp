@@ -29,9 +29,9 @@ using std::set;
 // =================================================================================================
 // MARK: - Walker_Const
 
-Walker_Const::Walker_Const(const string8& iRelName, const ZVal_Any& iVal)
+Walker_Const::Walker_Const(const string8& iColName, const ZVal_Any& iVal)
 :	fExhausted(false)
-,	fRelName(iRelName)
+,	fColName(iColName)
 ,	fVal(iVal)
 	{}
 
@@ -47,7 +47,7 @@ ZRef<Walker> Walker_Const::Prime
 	size_t& ioBaseOffset)
 	{
 	fOutputOffset = ioBaseOffset++;
-	oOffsets[fRelName] = fOutputOffset;
+	oOffsets[fColName] = fOutputOffset;
 	return this;
 	}
 

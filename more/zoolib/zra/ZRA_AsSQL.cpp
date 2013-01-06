@@ -143,7 +143,7 @@ void Analyzer::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	{
 	Analysis theAnalysis;
 	theAnalysis.fCondition = sTrue();
-	theAnalysis.fConstValues.Set(iExpr->GetRelName(), iExpr->GetVal());
+	theAnalysis.fConstValues.Set(iExpr->GetColName(), iExpr->GetVal());
 	this->pSetResult(theAnalysis);
 	}
 
@@ -199,12 +199,12 @@ void Analyzer::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 void Analyzer::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	{
 	Analysis theAnalysis = this->Do(iExpr->GetOp0());
-	const RelName& oldName = iExpr->GetOld();
-	const RelName& newName = iExpr->GetNew();
-	if (ZQ<RelName> theQ = sQGetErase(theAnalysis.fRename, oldName))
+	const ColName& oldName = iExpr->GetOld();
+	const ColName& newName = iExpr->GetNew();
+	if (ZQ<ColName> theQ = sQGetErase(theAnalysis.fRename, oldName))
 		{
-		const RelName orgName = *theQ;
-		const RelName orgNameInverse = sGetEraseMust(theAnalysis.fRename_Inverse, orgName);
+		const ColName orgName = *theQ;
+		const ColName orgNameInverse = sGetEraseMust(theAnalysis.fRename_Inverse, orgName);
 		ZAssert(orgNameInverse == oldName);
 		sInsertMust(theAnalysis.fRename, newName, orgName);
 		sInsertMust(theAnalysis.fRename_Inverse, orgName, newName);

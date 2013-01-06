@@ -39,7 +39,7 @@ void Visitor::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Calc(";
-	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
+	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
 	w << " = /*Some function of*/";
 	w << ",";
 	this->pWriteLFIndent();
@@ -54,7 +54,7 @@ void Visitor::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Const(";
-	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
+	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
 	w << ",";
 	ZYad_ZooLibStrim::sToStrim(sYadR(iExpr->GetVal()), w);
 	w << ")";
@@ -77,7 +77,7 @@ void Visitor::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	this->pToStrim(iExpr->GetOp0());
 	w << ",";
 	this->pWriteLFIndent();
-	Util_Strim_RelHead::sWrite_PropName(iExpr->GetRelName(), w);
+	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
 	w << " = ";
 	++fIndent;
 //	this->pWriteLFIndent();

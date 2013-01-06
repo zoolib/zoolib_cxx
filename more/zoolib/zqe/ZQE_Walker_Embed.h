@@ -35,7 +35,7 @@ class Walker_Embed : public Walker
 	{
 public:
 	Walker_Embed(const ZRef<Walker>& iWalker_Parent,
-		const string8& iRelName, const ZRef<Walker>& iWalker_Embedee);
+		const string8& iColName, const ZRef<Walker>& iWalker_Embedee);
 
 	virtual ~Walker_Embed();
 
@@ -53,7 +53,7 @@ public:
 
 private:
 	ZRef<Walker> fWalker_Parent;
-	const string8 fRelName;
+	const string8 fColName;
 	ZRef<Walker> fWalker_Embedee;
 
 	size_t fOutputOffset;

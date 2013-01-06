@@ -40,7 +40,7 @@ using std::vector;
 using namespace ZSQLite;
 using namespace ZUtil_STL;
 
-using ZRA::RelName;
+using ZRA::ColName;
 
 // =================================================================================================
 // MARK: - Source_SQLite::ClientQuery
