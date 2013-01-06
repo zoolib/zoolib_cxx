@@ -159,14 +159,16 @@ void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStream
 	if (iCount == 0)
 		return;
 
-	if (iCount > 8192)
+	const size_t kBufSize = 8192;
+
+	if (iCount >= kBufSize)
 		{
 		// Try to allocate and use an 8K heap-based buffer.
-		if (char* heapBuffer = new(nothrow) char[8192])
+		if (char* heapBuffer = new(nothrow) char[kBufSize])
 			{
 			ZDeleter<char[]> del(heapBuffer);
 
-			spCopyReadToWrite(heapBuffer, 8192,
+			spCopyReadToWrite(heapBuffer, kBufSize,
 				iStreamR, iStreamW, iCount,
 				oCountRead, oCountWritten);
 
