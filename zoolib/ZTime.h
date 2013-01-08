@@ -97,19 +97,20 @@ public:
 
 	double fVal;
 
-	static const double kSecond;
-	static const double kMinute;
-	static const double kHour;
-	static const double kDay;
-	static const double kWeek;
-	static const double kYear;
+	static const __int64 kSecond = 1;
+	static const __int64 kMinute = 60 * kSecond;
+	static const __int64 kHour = 60 * kMinute;
+	static const __int64 kDay = 24 * kHour;
+	static const __int64 kWeek = 7 * kDay;
+	static const __int64 kYear = 365 * kDay;
 
-	static const double kEpochDelta_1900_To_1904;
-	static const double kEpochDelta_1904_To_1970;
-	static const double kEpochDelta_1900_To_1970;
-	static const double kEpochDelta_1601_To_1970;
-	static const double kEpochDelta_1970_To_2001;
-	static const double kEpochDelta_2001_To_1970;
+	static const __int64 kEpochDelta_1900_To_1904 = 4 * kYear; // 126,144,000
+	static const __int64 kEpochDelta_1904_To_1970 = 66 * kYear + 17 * kDay; // 2,082,844,800
+	static const __int64 kEpochDelta_1900_To_1970 = 70 * kYear + 17 * kDay; // 2,208,988,800
+	static const __int64 kEpochDelta_1601_To_1970 = 369 * kYear + 89 * kDay; // 11,644,473,600
+
+	static const __int64 kEpochDelta_1970_To_2001 = -978307200.0;
+	static const __int64 kEpochDelta_2001_To_1970 = 978307200.0;
 	};
 
 inline ZTime operator+(double iInterval, const ZTime& iTime)
