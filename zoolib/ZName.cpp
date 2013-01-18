@@ -31,6 +31,8 @@ namespace ZooLib {
 // problem is that const char* are often packed tightly and thus often have odd addresses, so
 // every bit can be significant.
 
+// x86_64 has 64 bit pointers, but only uses the bottom 48 bits -- top 16 are free.
+
 // =================================================================================================
 // MARK: -
 
