@@ -133,7 +133,7 @@ ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys)
 ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef, const std::string& iPattern)
 	{
 	return new YadMapRPos(iStoreRef,
-		sTempCF& ::SCDynamicStoreCopyKeyList(iStoreRef, ZUtil_CF::sString(iPattern)));
+		sTempPtrRef& ::SCDynamicStoreCopyKeyList(iStoreRef, ZUtil_CF::sString(iPattern)));
 	}
 
 ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef)

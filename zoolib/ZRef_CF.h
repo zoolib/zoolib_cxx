@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(CFType)
-
 #include "zoolib/ZRef.h"
+
+#if ZCONFIG_SPI_Enabled(CFType)
 
 typedef const void * CFTypeRef;
 
@@ -42,19 +42,6 @@ typedef struct __CFDictionary * CFMutableDictionaryRef;
 
 typedef const struct __CFString * CFStringRef;
 typedef struct __CFString * CFMutableStringRef;
-
-namespace ZooLib {
-
-const struct
-	{
-	template <class T>
-	ZRef<T*,true> operator&(T* iP) const { return ZRef<T*,true>(Adopt_T<T*>(iP)); }
-
-	template <class T>
-	ZRef<T*,true> operator()(T* iP) const { return ZRef<T*,true>(Adopt_T<T*>(iP)); }
-	} sTempCF = {};
-
-} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
