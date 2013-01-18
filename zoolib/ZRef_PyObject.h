@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #ifndef __ZRef_PyObject_h__
-#define __ZRef_PyObject_h__1
+#define __ZRef_PyObject_h__ 1
 #include "zconfig.h"
 
 #include "Python.h"
