@@ -33,28 +33,32 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	} // namespace ZooLib
 
 // =================================================================================================
+
 #define ZMACRO_Mutable(a) \
 	typedef struct __##a * a##Ref; \
 	ZMACRO_Retain_Release(a##Ref)
 
 // =================================================================================================
+
 #define ZMACRO_Const(a) \
 	typedef const struct __##a * a##Ref; \
 	ZMACRO_Retain_Release(a##Ref)
 
 // =================================================================================================
+
 #define ZMACRO_Opaque(a) \
 	typedef struct Opaque##a##Ref * a##Ref; \
 	ZMACRO_Retain_Release(a##Ref)
 
 // =================================================================================================
+
 // CFTypeRef declared in CFBase.h
 ZMACRO_Retain_Release(CFTypeRef)
 
 // =================================================================================================
+
 #define ZMACRO_CF(a) \
-	typedef const struct __CF##a * CF##a##Ref; \
-	ZMACRO_Retain_Release(CF##a##Ref) \
+	ZMACRO_Const(CF##a) \
 	typedef struct __CF##a * CFMutable##a##Ref; \
 	ZMACRO_Retain_Release(CFMutable##a##Ref)
 
@@ -114,9 +118,11 @@ ZMACRO_Opaque(SecKeychainItem)
 ZMACRO_Opaque(SecKeychainSearch)
 
 // =================================================================================================
+
 ZMACRO_Const(AXUIElement)
 
 // =================================================================================================
+
 ZMACRO_Opaque(Pasteboard)
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
