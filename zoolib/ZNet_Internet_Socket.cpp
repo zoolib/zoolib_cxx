@@ -140,9 +140,8 @@ int ZNet_TCP_Socket::sListen(ip4_addr iLocalAddress, ip_port iLocalPort)
 		throw ZNetEx(ZNet_Socket::sTranslateError(err));
 		}
 
-	int reuseAddrFlag = 1;
-	::setsockopt(theSocketFD,
-		SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
+	::setsockopt(theSocketFD, SOL_SOCKET, SO_REUSEADDR,
+		(const char*)(const int*)sConstPtr(int(1)), sizeof(int));
 
 	sockaddr_in localSockAddr = {0};
 	#if ZCONFIG_SPI_Enabled(BSD)
@@ -170,9 +169,8 @@ int ZNet_TCP_Socket::sListen(ip6_addr iLocalAddress, ip_port iLocalPort)
 		throw ZNetEx(ZNet_Socket::sTranslateError(err));
 		}
 
-	int reuseAddrFlag = 1;
-	::setsockopt(theSocketFD,
-		SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
+	::setsockopt(theSocketFD, SOL_SOCKET, SO_REUSEADDR,
+		(const char*)(const int*)sConstPtr(int(1)), sizeof(int));
 
 	sockaddr_in6 localSockAddr = {0};
 	#if ZCONFIG_SPI_Enabled(BSD)
@@ -363,8 +361,8 @@ static void spSetSocketOptions(int iSocketFD)
 	// expect higher level code to do buffering if it doesn't want to flood the connection with
 	// lots of small packets. This is a reasonable expectation because it's what has to be done
 	// anyway under Linux to prevent Nagle algorithm from kicking in.
-	int noDelayFlag = 1;
-	::setsockopt(iSocketFD, IPPROTO_TCP, TCP_NODELAY, (char*)&noDelayFlag, sizeof(noDelayFlag));
+	::setsockopt(iSocketFD, IPPROTO_TCP, TCP_NODELAY,
+		(const char*)(const int*)sConstPtr(int(1)), sizeof(int));
 	}
 
 static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort)
