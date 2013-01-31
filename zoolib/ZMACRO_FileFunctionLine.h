@@ -75,7 +75,7 @@ struct ZFileFunctionLine
 	#if ZCONFIG(Compiler, GCC)
 		#define ZMACRO_FunctionName_Long __PRETTY_FUNCTION__
 	#elif ZCONFIG(Compiler, MSVC)
-		#define ZMACRO_FunctionName_Long __FUNCDNAME__
+		#define ZMACRO_FunctionName_Long __FUNCSIG__
 	#else
 		#define ZMACRO_FunctionName_Long ZMACRO_FunctionName_Short
 	#endif
