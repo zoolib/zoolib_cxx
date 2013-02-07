@@ -212,39 +212,7 @@ static HANDLE spOpenNT
 	(const string16& iPath,
 	bool iRead, bool iWrite, bool iPreventWriters,
 	ZFile::Error* oErr)
-	{
-	DWORD realAccess = 0;
-	DWORD realSharing = FILE_SHARE_READ;
-
-	if (iRead)
-		realAccess |= GENERIC_READ;
-
-	if (not iPreventWriters)
-		realSharing |= FILE_SHARE_WRITE;
-
-	if (iWrite)
-		realAccess |= GENERIC_WRITE;
-
-	DWORD realFlags = FILE_ATTRIBUTE_NORMAL;
-
-	HANDLE theFileHANDLE = ::CreateFileW
-		(iPath.c_str(), // the path
-		realAccess, realSharing,
-		nullptr, // No security attributes
-		OPEN_EXISTING, // Open the file only if it exists
-		realFlags,
-		nullptr);// No template file
-
-	if (oErr)
-		{
-		if (theFileHANDLE == INVALID_HANDLE_VALUE)
-			*oErr = spTranslateError(::GetLastError());
-		else
-			*oErr = ZFile::errorNone;
-		}
-
-	return theFileHANDLE;
-	}
+	{ return ZFile_Win::sOpen(iPath.c_str(), iRead, iWrite, iPreventWriters, oErr); }
 
 static ZFile::Error spCloseFileHANDLE(HANDLE iFileHANDLE)
 	{
@@ -415,6 +383,59 @@ static ZTime spAsZTime(const FILETIME& iFT)
 	result -= ZTime::kEpochDelta_1601_To_1970;
 	return result;
 	}
+
+// =================================================================================================
+// MARK: - ZFile_Win
+
+namespace ZFile_Win {
+
+HANDLE sOpen
+	(const UTF16* iPath,
+	bool iRead, bool iWrite, bool iPreventWriters,
+	ZFile::Error* oErr)
+	{
+	DWORD realAccess = 0;
+	DWORD realSharing = FILE_SHARE_READ;
+
+	if (iRead)
+		realAccess |= GENERIC_READ;
+
+	if (not iPreventWriters)
+		realSharing |= FILE_SHARE_WRITE;
+
+	if (iWrite)
+		realAccess |= GENERIC_WRITE;
+
+	DWORD realFlags = FILE_ATTRIBUTE_NORMAL;
+
+	HANDLE theFileHANDLE = ::CreateFileW
+		(iPath, // the path
+		realAccess, realSharing,
+		nullptr, // No security attributes
+		OPEN_EXISTING, // Open the file only if it exists
+		realFlags,
+		nullptr);// No template file
+
+	if (oErr)
+		{
+		if (theFileHANDLE == INVALID_HANDLE_VALUE)
+			*oErr = spTranslateError(::GetLastError());
+		else
+			*oErr = ZFile::errorNone;
+		}
+
+	return theFileHANDLE;
+	}
+
+ZRef<ZStreamerRPos> sStreamerRPos(const UTF16* iPath, bool iPreventWriters)
+	{
+	HANDLE theHANDLE = sOpen(iPath, true, false, iPreventWriters, nullptr);
+	if (theHANDLE != INVALID_HANDLE_VALUE)
+		return new ZStreamerRPos_File_Win(theHANDLE, true);
+	return null;
+	}
+
+} // namespace ZFile_Win
 
 // =================================================================================================
 // MARK: - RealRep_Win

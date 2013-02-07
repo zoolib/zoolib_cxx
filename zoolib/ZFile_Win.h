@@ -43,6 +43,20 @@ ZMACRO_MSVCStaticLib_Reference(File_Win)
 namespace ZooLib {
 
 // =================================================================================================
+// MARK: - ZFile_Win
+
+namespace ZFile_Win {
+
+HANDLE sOpen
+	(const UTF16* iPath,
+	bool iRead, bool iWrite, bool iPreventWriters,
+	ZFile::Error* oErr);
+
+ZRef<ZStreamerRPos> sStreamerRPos(const UTF16* iPath, bool iPreventWriters);
+
+} // namespace ZFile_Win
+
+// =================================================================================================
 // MARK: - ZFileLoc_Win
 
 class ZFileLoc_Win : public ZFileLoc
