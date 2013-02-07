@@ -45,18 +45,18 @@ static void spPNG_Write(png_structp png_ptr, png_bytep iSource, png_size_t iSize
 	{
 	try
 		{
-		static_cast<ZStreamW*>(png_ptr->io_ptr)->Write(iSource, iSize);
+		static_cast<ZStreamW*>(png_get_io_ptr(png_ptr))->Write(iSource, iSize);
 		return;
 		}
 	catch (...)
 		{}
 
-	longjmp(png_ptr->jmpbuf, 1);
+	longjmp(png_jmpbuf(png_ptr), 1);
 	}
 
 static void spPNG_Write_Flush(png_structp png_ptr)
 	{
-	static_cast<ZStreamW*>(png_ptr->io_ptr)->Flush();
+	static_cast<ZStreamW*>(png_get_io_ptr(png_ptr))->Flush();
 	}
 
 static void spThrowFromStream()
@@ -68,13 +68,13 @@ static void spPNG_Read(png_structp png_ptr, png_bytep iDestAddress, png_size_t i
 	{
 	try
 		{
-		static_cast<ZStreamR*>(png_ptr->io_ptr)->Read(iDestAddress, iSize);
+		static_cast<ZStreamR*>(png_get_io_ptr(png_ptr))->Read(iDestAddress, iSize);
 		return;
 		}
 	catch (...)
 		{}
 
-	longjmp(png_ptr->jmpbuf, 1);
+	longjmp(png_jmpbuf(png_ptr), 1);
 	}
 
 // =================================================================================================
@@ -187,7 +187,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 
 		theRowBufferVector.resize(W(iBounds) * (destPixvalDesc.fDepth / 8));
 
-		if (setjmp(write_ptr->jmpbuf))
+		if (setjmp(png_jmpbuf(write_ptr)))
 			spThrowToStream();
 		::png_write_info(write_ptr, info_ptr);
 
@@ -203,12 +203,12 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 					theRowBuffer, destPixvalDesc, destPixelDesc, 0,
 					W(iBounds));
 
-				if (setjmp(write_ptr->jmpbuf))
+				if (setjmp(png_jmpbuf(write_ptr)))
 					spThrowToStream();
 				::png_write_row(write_ptr, theRowBuffer);
 				}
 			}
-		if (setjmp(write_ptr->jmpbuf))
+		if (setjmp(png_jmpbuf(write_ptr)))
 			spThrowToStream();
 		::png_write_end(write_ptr, info_ptr);
 		}
@@ -249,7 +249,7 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		info_ptr = ::png_create_info_struct(read_ptr);
 		::png_set_read_fn(read_ptr, &const_cast<ZStreamR&>(iStream), spPNG_Read);
 
-		if (setjmp(read_ptr->jmpbuf))
+		if (setjmp(png_jmpbuf(read_ptr)))
 			spThrowFromStream();
 
 		::png_read_info(read_ptr, info_ptr);
@@ -268,12 +268,16 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			case PNG_COLOR_TYPE_PALETTE:
 				{
 				// Turn png's palette into something we can understand
-				vector<ZRGBA_POD> theColorTable(info_ptr->num_palette);
-				for (size_t x = 0; x < info_ptr->num_palette; ++x)
+				int num_palette;
+				png_color* png_palette;
+				::png_get_PLTE(read_ptr, info_ptr, &png_palette, &num_palette);
+
+				vector<ZRGBA_POD> theColorTable(num_palette);
+				for (size_t x = 0; x < num_palette; ++x)
 					{
-					theColorTable[x].red = info_ptr->palette[x].red * 0x101;
-					theColorTable[x].green = info_ptr->palette[x].green * 0x101;
-					theColorTable[x].blue = info_ptr->palette[x].blue * 0x101;
+					theColorTable[x].red = png_palette[x].red * 0x101;
+					theColorTable[x].green = png_palette[x].green * 0x101;
+					theColorTable[x].blue = png_palette[x].blue * 0x101;
 					theColorTable[x].alpha = 0xFFFF;
 					}
 				thePixelDesc = PixelDesc(&theColorTable[0], theColorTable.size());
@@ -345,11 +349,11 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		for (size_t y = 0; y < thePNGHeight; ++y)
 			theRowPointers[y] = theRasterDesc.CalcRowAddressDest(baseAddress, y);
 
-		if (setjmp(read_ptr->jmpbuf))
+		if (setjmp(png_jmpbuf(read_ptr)))
 			spThrowFromStream();
 		::png_read_image(read_ptr, reinterpret_cast<png_byte**>(&theRowPointers[0]));
 
-		if (setjmp(read_ptr->jmpbuf))
+		if (setjmp(png_jmpbuf(read_ptr)))
 			spThrowFromStream();
 		::png_read_end(read_ptr, info_ptr);
 		}
