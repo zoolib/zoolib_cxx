@@ -59,9 +59,9 @@ static bool spCheckDesc(const ZDCPixmapNS::RasterDesc& iRasterDesc, const ZRectP
 			case 24:
 				{
 				if ((iRasterDesc.fPixvalDesc.fBigEndian == true
-					&& maskRed == 0x0000FF && maskGreen == 0x00FF00 && maskBlue == 0xFF0000)
+						&& maskRed == 0x0000FF && maskGreen == 0x00FF00 && maskBlue == 0xFF0000)
 					|| (iRasterDesc.fPixvalDesc.fBigEndian == false
-					&& maskRed == 0xFF0000 && maskGreen == 0x00FF00 && maskBlue == 0x0000FF))
+						&& maskRed == 0xFF0000 && maskGreen == 0x00FF00 && maskBlue == 0x0000FF))
 					{
 					isOkay = true;
 					}
@@ -70,9 +70,9 @@ static bool spCheckDesc(const ZDCPixmapNS::RasterDesc& iRasterDesc, const ZRectP
 			case 32:
 				{
 				if ((iRasterDesc.fPixvalDesc.fBigEndian == true
-					&& maskRed == 0x0000FF00 && maskGreen == 0x00FF0000 && maskBlue == 0xFF000000)
+						&& maskRed == 0x0000FF00 && maskGreen == 0x00FF0000 && maskBlue == 0xFF000000)
 					|| (iRasterDesc.fPixvalDesc.fBigEndian == false
-					&& maskRed == 0x00FF0000 && maskGreen == 0x0000FF00 && maskBlue == 0x000000FF))
+						&& maskRed == 0x00FF0000 && maskGreen == 0x0000FF00 && maskBlue == 0x000000FF))
 					{
 					isOkay = true;
 					}
@@ -484,29 +484,29 @@ ZRef<ZDCPixmapRep_DIB> sPixmapRep_DIB(ZRef<ZDCPixmapRep> iRep)
 	{
 	using namespace ZDCPixmapNS;
 
-	// Let's see if it's a DIB rep already
-	ZRef<ZDCPixmapRep_DIB> theRep_DIB = iRep.DynamicCast<ZDCPixmapRep_DIB>();
-	if (not theRep_DIB)
-		{
-		ZRef<ZDCPixmapRaster> theRaster = iRep->GetRaster();
-		ZRectPOD theBounds = iRep->GetBounds();
-		PixelDesc thePixelDesc = iRep->GetPixelDesc();
-		theRep_DIB = spCreateRepForDesc(theRaster, theBounds, thePixelDesc);
-		if (not theRep_DIB)
-			{
-			EFormatStandard fallbackFormat = eFormatStandard_BGRx_32;
-			if (thePixelDesc.GetRep().DynamicCast<PixelDescRep_Gray>())
-				fallbackFormat = eFormatStandard_Gray_8;
+	if (not iRep)
+		return null;
 
-			RasterDesc newRasterDesc(WH(theBounds), fallbackFormat);
-			PixelDesc newPixelDesc(fallbackFormat);
-			theRep_DIB = new ZDCPixmapRep_DIB(
-				new ZDCPixmapRaster_Simple(newRasterDesc), sRect(WH(theBounds)), newPixelDesc);
+	if (ZRef<ZDCPixmapRep_DIB> theRep = iRep.DynamicCast<ZDCPixmapRep_DIB>())
+		return theRep;
 
-			theRep_DIB->CopyFrom(sPointPOD(0, 0), iRep, theBounds);
-			}
-		}
-	return theRep_DIB;
+	const ZRef<ZDCPixmapRaster> theRaster = iRep->GetRaster();
+	const ZRectPOD theBounds = iRep->GetBounds();
+	const PixelDesc thePixelDesc = iRep->GetPixelDesc();
+	if (ZRef<ZDCPixmapRep_DIB> theRep = spCreateRepForDesc(theRaster, theBounds, thePixelDesc))
+		return theRep;
+
+	EFormatStandard fallbackFormat = eFormatStandard_BGRx_32;
+	if (thePixelDesc.GetRep().DynamicCast<PixelDescRep_Gray>())
+		fallbackFormat = eFormatStandard_Gray_8;
+
+	RasterDesc newRasterDesc(WH(theBounds), fallbackFormat);
+	PixelDesc newPixelDesc(fallbackFormat);
+	ZRef<ZDCPixmapRep_DIB> theRep = new ZDCPixmapRep_DIB
+		(new ZDCPixmapRaster_Simple(newRasterDesc), sRect(WH(theBounds)), newPixelDesc);
+
+	theRep->CopyFrom(sPointPOD(0, 0), iRep, theBounds);
+	return theRep;
 	}
 
 } // namespace ZooLib
