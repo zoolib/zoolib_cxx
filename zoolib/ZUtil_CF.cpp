@@ -433,6 +433,13 @@ ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal)
 ZRef<CFTypeRef> sAsCFType(const ZAny& iVal)
 	{ return sDAsCFType(nullptr, iVal); }
 
+CFTypeRef sIfIs(CFTypeID iTypeID, CFTypeRef iTypeRef)
+	{
+	if (iTypeRef && iTypeID == ::CFGetTypeID(iTypeRef))
+		return iTypeRef;
+	return nullptr;
+	}
+
 } // namespace ZUtil_CF
 } // namespace ZooLib
 

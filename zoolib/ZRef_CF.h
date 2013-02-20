@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+typedef unsigned long CFTypeID;
+
 typedef const void * CFTypeRef;
 
 typedef const struct __CFNull * CFNullRef;

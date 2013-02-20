@@ -81,6 +81,21 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iVal);
 ZSeq_Any sAsSeq_Any(const ZAny& iDefault, CFArrayRef iCFArray);
 ZMap_Any sAsMap_Any(const ZAny& iDefault, CFDictionaryRef iCFDictionary);
 
+CFTypeRef sIfIs(CFTypeID iTypeID, CFTypeRef iTypeRef);
+
+template <typename Ref_p>
+Ref_p sStaticCast(CFTypeRef iTypeRef)
+	{ return (Ref_p)(iTypeRef); }
+
+template <typename Ref_p>
+Ref_p sStaticCastIf(CFTypeID iTypeID, CFTypeRef iTypeRef)
+	{ return (Ref_p)(sIfIs(iTypeID, iTypeRef)); }
+
+// This generally can't work as CFTypeIDs are often/usually allocated at runtime.
+//template <typename Ref_p, CFTypeID TypeID_p>
+//Ref_p sDynamicCast(CFTypeRef iTypeRef)
+//	{ return (Ref_p)(sIfIs(TypeID_p, iTypeRef)); }
+
 } // namespace ZUtil_CF
 } // namespace ZooLib
 

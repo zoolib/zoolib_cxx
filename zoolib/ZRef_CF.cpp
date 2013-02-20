@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	namespace ZooLib { \
 	template <> void sRetain_T(a& ioRef) { ::CFRetain(ioRef); } \
 	template <> void sRelease_T(a iRef) { ::CFRelease(iRef); } \
-	} // namespace ZooLib
+	} /* namespace ZooLib */
 
 // =================================================================================================
 
@@ -116,6 +116,11 @@ ZMACRO_Const(SCNetworkReachability)
 ZMACRO_Opaque(SecKeychain)
 ZMACRO_Opaque(SecKeychainItem)
 ZMACRO_Opaque(SecKeychainSearch)
+
+// =================================================================================================
+
+ZMACRO_Opaque(LSSharedFileList)
+ZMACRO_Opaque(LSSharedFileListItem)
 
 // =================================================================================================
 
