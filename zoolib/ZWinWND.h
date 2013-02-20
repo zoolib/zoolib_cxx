@@ -36,21 +36,30 @@ namespace ZWinWND {
 class ClassRegistration
 	{
 public:
+	ClassRegistration(WNDPROC iWNDPROC, const WCHAR* iClassName, size_t iWndExtra);
 	ClassRegistration(WNDPROC iWNDPROC, const WCHAR* iClassName);
 	~ClassRegistration();
 
 	const WCHAR* GetClassName() const;
 
 private:
+	void pInit(WNDPROC iWNDPROC, const WCHAR* iClassName, size_t iWndExtra);
+
 	const WCHAR* fClassName;
 	ATOM fATOM;
 	};
 
 // =================================================================================================
-// MARK: - sCreateDefWindowProc
+// MARK: - sCreate_DefWindowProc
 
-HWND sCreateDefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam);
-HWND sCreateDefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreateParam);
+HWND sCreate_DefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam);
+HWND sCreate_DefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreateParam);
+
+// =================================================================================================
+// MARK: - sCreate_DefDlgProc
+
+HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, void* iCreateParam);
+HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreateParam);
 
 // =================================================================================================
 // MARK: - ZWinWND, Callable <--> Regular window

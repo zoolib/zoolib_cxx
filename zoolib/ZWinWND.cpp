@@ -151,14 +151,21 @@ INT_PTR CALLBACK spDialogProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 // =================================================================================================
 // MARK: - ClassRegistration
 
+ClassRegistration::ClassRegistration(WNDPROC iWNDPROC, const WCHAR* iClassName, size_t iWndExtra)
+	{ this->pInit(iWNDPROC, iClassName, iWndExtra); }
+
 ClassRegistration::ClassRegistration(WNDPROC iWNDPROC, const WCHAR* iClassName)
-:	fClassName(iClassName)
+	{ this->pInit(iWNDPROC, iClassName, 0); }
+
+void ClassRegistration::pInit(WNDPROC iWNDPROC, const WCHAR* iClassName, size_t iWndExtra)
 	{
+	fClassName = iClassName;
+
 	WNDCLASSW windowClass;
 	windowClass.style = 0;
 	windowClass.lpfnWndProc = iWNDPROC;
 	windowClass.cbClsExtra = 0;
-	windowClass.cbWndExtra = 0;
+	windowClass.cbWndExtra = iWndExtra;
 	windowClass.hInstance = ZUtil_Win::sGetModuleHandle();
 	windowClass.hIcon = nullptr;
 	windowClass.hCursor = ::LoadCursorW(nullptr, MAKEINTRESOURCEW(IDC_ARROW));
@@ -182,14 +189,39 @@ const WCHAR* ClassRegistration::GetClassName() const
 	{ return fClassName; }
 
 // =================================================================================================
-// MARK: - sCreateDefWindowProc
+// MARK: - sCreate_DefWindowProc
 
-HWND sCreateDefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam)
-	{ return sCreateDefWindowProc(iParent, iStyle, 0, iCreateParam); }
+HWND sCreate_DefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam)
+	{ return sCreate_DefWindowProc(iParent, iStyle, 0, iCreateParam); }
 
-HWND sCreateDefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreateParam)
+HWND sCreate_DefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreateParam)
 	{
 	static ClassRegistration spClassRegistration(DefWindowProcW, L"DefWindowProcW");
+
+	return ::CreateWindowExW
+		(iExStyle, // Extended attributes
+		spClassRegistration.GetClassName(),
+		nullptr, // window caption
+		iStyle, // window style
+		0, // initial x position
+		0, // initial y position
+		10, // initial x size
+		10, // initial y size
+		iParent, // Parent window
+		nullptr,
+		ZUtil_Win::sGetModuleHandle(),
+		iCreateParam); // creation parameters
+	}
+
+// =================================================================================================
+// MARK: - sCreate_DefDlgProc
+
+HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, void* iCreateParam)
+	{ return sCreate_DefDlgProc(iParent, iStyle, 0, iCreateParam); }
+
+HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreateParam)
+	{
+	static ClassRegistration spClassRegistration(DefDlgProcW, L"DefDlgProcW", DLGWINDOWEXTRA);
 
 	return ::CreateWindowExW
 		(iExStyle, // Extended attributes
