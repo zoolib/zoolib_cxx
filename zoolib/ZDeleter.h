@@ -31,22 +31,25 @@ template <class T>
 class ZDeleter
 	{
 public:
-	ZDeleter(T*& iT) : fT(iT) {}
-	~ZDeleter() { delete fT; }
+	ZDeleter(T*& iPtr) : fPtr(iPtr) {}
+	~ZDeleter() { delete fPtr; }
 
 private:
-	T*& fT;
+	T*& fPtr;
 	};
+
+// =================================================================================================
+// MARK: - ZDeleter specialized for arrays.
 
 template <class T>
 class ZDeleter<T[]>
 	{
 public:
-	ZDeleter(T*& iT) : fT(iT) {}
-	~ZDeleter() { delete[] fT; }
+	ZDeleter(T*& iPtr) : fPtr(iPtr) {}
+	~ZDeleter() { delete[] fPtr; }
 
 private:
-	T*& fT;
+	T*& fPtr;
 	};
 
 } // namespace ZooLib
