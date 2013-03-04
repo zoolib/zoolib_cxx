@@ -33,6 +33,9 @@ namespace ZooLib {
 
 // x86_64 has 64 bit pointers, but only uses the bottom 48 bits -- top 16 are free.
 
+// We could stick a length in here instead of the isCounted boolean -- zero length == counted,
+// otherwise it's a length that is cheap to access.
+
 // =================================================================================================
 // MARK: -
 
@@ -138,7 +141,7 @@ std::size_t ZName::Hash() const
 	size_t result = 0;
 	if (const char* i = spAsCharStar(fIntPtr, fIsCounted))
 		{
-		for (size_t x = sizeof(size_t); --x && *i; ++i)
+		for (size_t xx = sizeof(size_t); --xx && *i; ++i)
 			{
 			result <<= 8;
 			result |= *i;
