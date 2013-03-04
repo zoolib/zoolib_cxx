@@ -34,121 +34,6 @@ namespace ZooLib {
 namespace ZWinWND {
 
 // =================================================================================================
-// MARK: - Helpers (anonymous)
-
-namespace { // anonymous
-
-class Callable_WithWNDPROC
-:	public Callable
-	{
-public:
-	Callable_WithWNDPROC(const ZRef<Callable>& iCallable, WNDPROC iProc)
-	:	fCallable(iCallable)
-	,	fProc(iProc)
-		{}
-
-	virtual ZQ<ZQ<LRESULT> > QCall(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
-		{
-		if (ZQ<LRESULT> theQ = fCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM))
-			return theQ;
-		return ::CallWindowProcW(fProc, iHWND, iMessage, iWPARAM, iLPARAM);
-		}
-
-	const ZRef<Callable> fCallable;
-	const WNDPROC fProc;
-	};
-
-ZTSS::Key spKey()
-	{
-	static ZAtomicPtr_t spKey;
-	return ZTSS::sKey(spKey);
-	}
-
-LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
-	{
-	ZRef<Callable> theCallable = (Callable*)::GetPropW(iHWND, L"ZWinWND Callable");
-
-	if (not theCallable)
-		{
-		// The very first message sent to a window is WM_GETMINMAXINFO.
-		ZAssert(iMessage == WM_GETMINMAXINFO);
-		theCallable = sThreadVal<ZRef<Callable> >();
-		theCallable->Retain();
-		::SetPropW(iHWND, L"ZWinWND Callable", theCallable.Get());
-		}
-
-	switch (iMessage)
-		{
-		case WM_NCDESTROY:
-			{
-			// Undo the Retain we did in WM_INITDIALOG.
-			theCallable->Release();
-			break;
-			}
-		case WM_ACTIVATE:
-			{
-			if (iWPARAM)
-				ZTSS::sSet(spKey(), iHWND);
-			else
-				ZTSS::sSet(spKey(), nullptr);
-			break;
-			}
-		default:
-			{
-			break;
-			}
-		}
-
-	if (ZQ<LRESULT> theQ = theCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM))
-		return *theQ;
-
-	return 0;
-	}
-
-INT_PTR CALLBACK spDialogProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
-	{
-	if (ZRef<Callable_Dialog> theCallable =
-		(Callable_Dialog*)::GetWindowLongPtrW(iHWND, GWLP_USERDATA))
-		{
-		switch (iMessage)
-			{
-			case WM_NCDESTROY:
-				{
-				// Undo the Retain we did in WM_INITDIALOG.
-				theCallable->Release();
-				break;
-				}
-			case WM_ACTIVATE:
-				{
-				if (iWPARAM)
-					ZTSS::sSet(spKey(), iHWND);
-				else
-					ZTSS::sSet(spKey(), nullptr);
-				break;
-				}
-			default:
-				{
-				break;
-				}
-			}
-		return theCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM);
-		}
-	else if (iMessage == WM_INITDIALOG)
-		{
-		::SetWindowLongPtrW(iHWND, GWLP_USERDATA, iLPARAM);
-		theCallable = (Callable_Dialog*)iLPARAM;
-		theCallable->Retain();
-		return theCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM);
-		}
-	else
-		{
-		return false;
-		}
-	}
-
-} // anonymous namespace
-
-// =================================================================================================
 // MARK: - ClassRegistration
 
 ClassRegistration::ClassRegistration(WNDPROC iWNDPROC, const WCHAR* iClassName, size_t iWndExtra)
@@ -203,10 +88,10 @@ HWND sCreate_DefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCr
 		spClassRegistration.GetClassName(),
 		nullptr, // window caption
 		iStyle, // window style
-		0, // initial x position
+		10, // initial x position
 		0, // initial y position
-		10, // initial x size
-		10, // initial y size
+		100, // initial x size
+		100, // initial y size
 		iParent, // Parent window
 		nullptr,
 		ZUtil_Win::sGetModuleHandle(),
@@ -229,9 +114,9 @@ HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreat
 		nullptr, // window caption
 		iStyle, // window style
 		0, // initial x position
-		0, // initial y position
-		10, // initial x size
-		10, // initial y size
+		10, // initial y position
+		100, // initial x size
+		100, // initial y size
 		iParent, // Parent window
 		nullptr,
 		ZUtil_Win::sGetModuleHandle(),
@@ -239,7 +124,76 @@ HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreat
 	}
 
 // =================================================================================================
+// MARK: - Callable_WithWNDPROC (anonymous)
+
+namespace { // anonymous
+
+class Callable_WithWNDPROC
+:	public Callable
+	{
+public:
+	Callable_WithWNDPROC(const ZRef<Callable>& iCallable, WNDPROC iProc)
+	:	fCallable(iCallable)
+	,	fProc(iProc)
+		{}
+
+	virtual ZQ<ZQ<LRESULT> > QCall(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+		{
+		if (ZQ<LRESULT> theQ = fCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM))
+			return theQ;
+
+		return ::CallWindowProcW(fProc, iHWND, iMessage, iWPARAM, iLPARAM);
+		}
+
+	const ZRef<Callable> fCallable;
+	const WNDPROC fProc;
+	};
+
+} // anonymous namespace
+
+// =================================================================================================
 // MARK: - Callable <--> Regular window
+
+LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+	{
+	ZRef<Callable> theCallable = (Callable*)::GetPropW(iHWND, L"ZWinWND Callable");
+
+	if (not theCallable)
+		{
+		// The very first message sent to a window is WM_GETMINMAXINFO.
+		ZAssert(iMessage == WM_GETMINMAXINFO);
+		theCallable = sThreadVal<ZRef<Callable> >();
+		theCallable->Retain();
+		::SetPropW(iHWND, L"ZWinWND Callable", theCallable.Get());
+		}
+
+	switch (iMessage)
+		{
+		case WM_NCDESTROY:
+			{
+			// Undo the Retain we did above.
+			theCallable->Release();
+			break;
+			}
+		case WM_ACTIVATE:
+			{
+			if (iWPARAM)
+				sSetActiveHWND(iHWND);
+			else
+				sSetActiveHWND(nullptr);
+			break;
+			}
+		default:
+			{
+			break;
+			}
+		}
+
+	if (ZQ<LRESULT> theQ = theCallable->Call(iHWND, iMessage, iWPARAM, iLPARAM))
+		return *theQ;
+
+	return 0;
+	}
 
 HWND sCreate
 	(DWORD dwExStyle,
@@ -281,8 +235,8 @@ HWND sCreate(HWND iParent, ZRef<Callable> iCallable)
 		0, // window style
 		0, // initial x position
 		0, // initial y position
-		10, // initial x size
-		10, // initial y size
+		150, // initial x size
+		150, // initial y size
 		iParent, // Parent window
 		nullptr, // menu
 		DefWindowProcW,
@@ -320,43 +274,29 @@ bool sAttach(HWND iHWND, ZRef<Callable> iCallable)
 	return false;
 	}
 
-// =================================================================================================
-// MARK: - Callable <--> Dialog
-
-HWND sCreateDialog(LPCWSTR lpTemplate, LCID iLCID, HWND hWndParent, ZRef<Callable_Dialog> iCallable)
-	{
-	HMODULE theHMODULE = ZUtil_Win::sGetModuleHandle();
-
-	if (HRSRC theHRSRC = ::FindResourceExW(theHMODULE, (LPCWSTR)RT_DIALOG, lpTemplate, iLCID))
-		{
-		HGLOBAL theHGLOBAL = ::LoadResource(theHMODULE, theHRSRC);
-		return ::CreateDialogIndirectParamW
-			(theHMODULE,
-			(LPCDLGTEMPLATE)::LockResource(theHGLOBAL),
-			hWndParent,
-			spDialogProcW,
-			(LPARAM)iCallable.Get());
-		}
-
-	return ::CreateDialogParamW
-		(theHMODULE,
-		lpTemplate,
-		hWndParent,
-		spDialogProcW,
-		(LPARAM)iCallable.Get());
-	}
-
-HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iCallable)
-	{ return sCreateDialog(lpTemplate, ::GetThreadLocale(), hWndParent, iCallable); }
+ZRef<Callable> sGetCallable(HWND iHWND)
+	{ return (Callable*)::GetPropW(iHWND, L"ZWinWND Callable"); }
 
 // =================================================================================================
 // MARK: - Message pump
+
+static ZTSS::Key spKey_ActiveHWND()
+	{
+	static ZAtomicPtr_t spAtomicPtr_t;
+	return ZTSS::sKey(spAtomicPtr_t);
+	}
+
+void sSetActiveHWND(HWND iHWND)
+	{ ZTSS::sSet(spKey_ActiveHWND(), iHWND); }
+
+HWND sGetActiveHWND()
+	{ return (HWND)ZTSS::sGet(spKey_ActiveHWND()); }
 
 bool sDoOneMessage()
 	{ return sDoOneMessageForDialog(nullptr); }
 
 bool sDoOneMessageForDialogs()
-	{ return sDoOneMessageForDialog((HWND)ZTSS::sGet(spKey())); }
+	{ return sDoOneMessageForDialog(sGetActiveHWND()); }
 
 bool sDoOneMessageForDialog(HWND iHWND)
 	{
