@@ -486,6 +486,29 @@ T& sSet(ZQ<T,Sense>& ioQ, const T& iVal)
 	{ return ioQ.Set(iVal); }
 
 // =================================================================================================
+// MARK: -
+
+template <class T, bool Sense>
+T sGetClear(ZQ<T,Sense>& ioQ)
+	{
+	const T result = ioQ.Get();
+	ioQ.Clear();
+	return result;
+	}
+
+template <class T, bool Sense>
+ZQ<T> sQGetClear(ZQ<T,Sense>& ioQ)
+	{
+	if (ioQ)
+		{
+		const T result = ioQ.Get();
+		ioQ.Clear();
+		return result;
+		}
+	return null;
+	}
+
+// =================================================================================================
 // MARK: - swap
 
 template <class T, bool Sense>
