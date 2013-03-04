@@ -698,7 +698,7 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 			else
 				{
 				string eol = iOptions.fEOLString;
-				for (size_t x = 0; x < iLevel; ++x)
+				for (size_t xx = 0; xx < iLevel; ++xx)
 					eol += iOptions.fIndentString;
 
 				ZStreamW_HexStrim(iOptions.fRawByteSeparator,
@@ -744,7 +744,7 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 	if (iOptions.DoIndentation())
 		{
 		chunkSeparator = iOptions.fEOLString;
-		for (size_t x = 0; x < iLevel; ++x)
+		for (size_t xx = 0; xx < iLevel; ++xx)
 			chunkSeparator += iOptions.fIndentString;
 
 		chunkSize = iOptions.fRawChunkSize;
