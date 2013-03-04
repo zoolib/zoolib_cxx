@@ -506,11 +506,11 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 
 		foreachi (ii, theAnalyzer.fTablesUsed)
 			{
-			for (int x = 0; x < ii->second; ++x)
+			for (int xx = 0; xx < ii->second; ++xx)
 				{
 				if (not sGetSet(isFirst, false))
 					s << ",";
-				s << ii->first << " AS " << ii->first << sStringf("%d", x);
+				s << ii->first << " AS " << ii->first << sStringf("%d", xx);
 				}
 			}
 		}

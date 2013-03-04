@@ -1340,18 +1340,18 @@ void StrimW::pWritePending()
 
 	if (not fAttributeNames.empty())
 		{
-		for (size_t x = 0; x < fAttributeNames.size(); ++x)
+		for (size_t xx = 0; xx < fAttributeNames.size(); ++xx)
 			{
 			fStrimSink.Write(" ");
 
-			fStrimSink.Write(fAttributeNames[x]);
+			fStrimSink.Write(fAttributeNames[xx]);
 
-			if (fAttributeValues[x])
+			if (fAttributeValues[xx])
 				{
 				fStrimSink.Write("=\"");
-				fStrimSink.Write(*fAttributeValues[x]);
+				fStrimSink.Write(*fAttributeValues[xx]);
 				fStrimSink.Write("\"");
-				delete fAttributeValues[x];
+				delete fAttributeValues[xx];
 				}
 			}
 		fAttributeNames.clear();

@@ -660,10 +660,10 @@ string sEncodeComponent(const string& iString)
 string sEncodeTrail(const ZTrail& iTrail)
 	{
 	string result;
-	for (size_t x = 0; x < iTrail.Count(); ++x)
+	for (size_t xx = 0; xx < iTrail.Count(); ++xx)
 		{
 		result += '/';
-		result += sEncodeComponent(iTrail.At(x));
+		result += sEncodeComponent(iTrail.At(xx));
 		}
 	return result;
 	}
@@ -1655,9 +1655,9 @@ void sWrite_Header(const ZStreamW& w, const Map& iHeader)
 		if (ZQ<Seq> asSeqQ = theVal.QGet<Seq>())
 			{
 			const Seq asSeq = *asSeqQ;
-			for (size_t x = 0, count = asSeq.Count(); x < count; ++x)
+			for (size_t xx = 0, count = asSeq.Count(); xx < count; ++xx)
 				{
-				if (ZQ<string> bodyQ = asSeq.QGet<string>(x))
+				if (ZQ<string> bodyQ = asSeq.QGet<string>(xx))
 					sWrite_HeaderLine(w, name, *bodyQ);
 				}
 			}

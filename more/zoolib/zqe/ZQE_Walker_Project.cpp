@@ -87,8 +87,8 @@ bool Walker_Project::QReadInc
 
 		vector<ZVal_Any> subset;
 		subset.reserve(count);
-		for (size_t x = 0; x < count; ++x)
-			subset.push_back(ioResults[fChildMapping[x]]);
+		for (size_t xx = 0; xx < count; ++xx)
+			subset.push_back(ioResults[fChildMapping[xx]]);
 
 		if (sQInsert(fPriors, subset))
 			{

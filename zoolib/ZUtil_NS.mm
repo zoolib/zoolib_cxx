@@ -177,8 +177,8 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 	else if (const ZSeq_Any* theValue = iVal.PGet<ZSeq_Any>())
 		{
 		NSMutableArray* theArray = sArrayMutable();
-		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
-			[theArray addObject:sDAsNSObject(iDefault, theValue->Get(x))];
+		for (size_t xx = 0, count = theValue->Count(); xx < count; ++xx)
+			[theArray addObject:sDAsNSObject(iDefault, theValue->Get(xx))];
 		return theArray;
 		}
 	else if (const ZMap_Any* theValue = iVal.PGet<ZMap_Any>())

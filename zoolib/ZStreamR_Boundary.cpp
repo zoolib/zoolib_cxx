@@ -180,13 +180,13 @@ void ZStreamR_Boundary::pInit()
 			fDataEnd = boundarySize;
 
 			// Initialize the skip vector entries to the boundary size
-			for (size_t x = 0; x < 256; ++x)
-				fDistance[x] = boundarySize;
+			for (size_t xx = 0; xx < 256; ++xx)
+				fDistance[xx] = boundarySize;
 
 			// For each byte in the search boundary, initialize the appropriate skip to
 			// the distance from the last occurence of that byte to the end of the boundary.
-			for (size_t x = 0; x < boundarySize - 1; ++x)
-				fDistance[uint8(fBoundary[x])] = boundarySize - x - 1;
+			for (size_t xx = 0; xx < boundarySize - 1; ++xx)
+				fDistance[uint8(fBoundary[xx])] = boundarySize - xx - 1;
 			}
 		else
 			{

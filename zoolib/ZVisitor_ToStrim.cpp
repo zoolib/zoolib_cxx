@@ -98,7 +98,7 @@ const ZStrimW& ZVisitor_ToStrim::pStrimW()
 void ZVisitor_ToStrim::pWriteLFIndent()
 	{
 	pStrimW().Write(pOptions().fEOLString);
-	for (size_t x = 0; x < fIndent; ++x)
+	for (size_t xx = 0; xx < fIndent; ++xx)
 		pStrimW().Write(pOptions().fIndentString);
 	}
 

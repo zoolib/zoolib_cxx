@@ -181,14 +181,14 @@ void ZStrimR_Boundary::pInit()
 			fEnd = boundarySize;
 
 			// Initialize the skip vector entries to the boundary size.
-			for (size_t x = 0; x < 256; ++x)
-				fSkip[x] = boundarySize;
+			for (size_t xx = 0; xx < 256; ++xx)
+				fSkip[xx] = boundarySize;
 
 			// For each CP in the search boundary, initialize the appropriate skip
 			// to the distance from the last occurence of any CP with the same low
 			// 8 bits to the end of the boundary.
-			for (size_t x = 0; x < boundarySize - 1; ++x)
-				fSkip[uint8(fBoundary[x])] = boundarySize - x - 1;
+			for (size_t xx = 0; xx < boundarySize - 1; ++xx)
+				fSkip[uint8(fBoundary[xx])] = boundarySize - xx - 1;
 			}
 		else
 			{

@@ -524,9 +524,9 @@ string8 KeyRef::NameOf(const Index_t& iIndex) const
 KeyRef::Index_t KeyRef::IndexOf(const string8& iName) const
 	{
 	const Index_t end = this->End();
-	for (Index_t x = this->Begin(); x != end; ++x)
+	for (Index_t xx = this->Begin(); xx != end; ++xx)
 		{
-		if (iName == this->NameOf(x))
+		if (iName == this->NameOf(xx))
 			return x;
 		}
 	return end;

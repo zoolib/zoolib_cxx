@@ -70,17 +70,17 @@ ZRef<Walker> Walker_Union::Prime
 	ZAssert(leftOffsets.size() == rightOffsets.size());
 	fMapping_Left.resize(leftOffsets.size());
 	fMapping_Right.resize(leftOffsets.size());
-	size_t x = 0;
+	size_t xx = 0;
 	for (map<string8,size_t>::iterator iterLeft = leftOffsets.begin(), iterRight = rightOffsets.begin();
 		iterLeft != leftOffsets.end(); ++iterLeft, ++iterRight)
 		{
 		const string8& leftName = iterLeft->first;
 		ZAssert(leftName == iterRight->first);
 		const size_t leftOffset = iterLeft->second;
-		fMapping_Left[x] = leftOffset;
+		fMapping_Left[xx] = leftOffset;
 
 		const size_t rightOffset = iterRight->second;
-		fMapping_Right[x] = rightOffset;
+		fMapping_Right[xx] = rightOffset;
 		}
 
 	return this;
@@ -105,8 +105,8 @@ bool Walker_Union::QReadInc
 			{
 			if (fWalker_Left->QReadInc(ioResults, oAnnotations))
 				{
-				for (size_t x = 0; x < count; ++x)
-					subset.push_back(ioResults[fMapping_Left[x]]);
+				for (size_t xx = 0; xx < count; ++xx)
+					subset.push_back(ioResults[fMapping_Left[xx]]);
 
 				sInsertMust(fPriors, subset);
 				return true;
@@ -117,13 +117,13 @@ bool Walker_Union::QReadInc
 		if (not fWalker_Right->QReadInc(ioResults, localAnnotationsPtr))
 			return false;
 
-		for (size_t x = 0; x < count; ++x)
-			subset.push_back(ioResults[fMapping_Right[x]]);
+		for (size_t xx = 0; xx < count; ++xx)
+			subset.push_back(ioResults[fMapping_Right[xx]]);
 
 		if (not sContains(fPriors, subset))
 			{
-			for (size_t x = 0; x < count; ++x)
-				ioResults[fMapping_Left[x]] = subset[x];
+			for (size_t xx = 0; xx < count; ++xx)
+				ioResults[fMapping_Left[xx]] = subset[xx];
 			if (oAnnotations)
 				oAnnotations->insert(localAnnotations.begin(), localAnnotations.end());
 			return true;

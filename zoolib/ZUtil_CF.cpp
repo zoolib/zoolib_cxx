@@ -182,8 +182,8 @@ ZSeq_Any sAsSeq_Any(const ZAny& iDefault, CFArrayRef iCFArray)
 	{
 	ZSeq_Any theSeq;
 
-	for (size_t x = 0, theCount = ::CFArrayGetCount(iCFArray); x < theCount; ++x)
-		theSeq.Append(sDAsAny(iDefault, ::CFArrayGetValueAtIndex(iCFArray, x)));
+	for (size_t xx = 0, theCount = ::CFArrayGetCount(iCFArray); xx < theCount; ++xx)
+		theSeq.Append(sDAsAny(iDefault, ::CFArrayGetValueAtIndex(iCFArray, xx)));
 
 	return theSeq;
 	}
@@ -336,8 +336,8 @@ ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal)
 	else if (const ZSeq_Any* theValue = iVal.PGet<ZSeq_Any>())
 		{
 		ZRef<CFMutableArrayRef> theArray;
-		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
-			::CFArrayAppendValue(theArray, sDAsCFType(iDefault, theValue->Get(x)));
+		for (size_t xx = 0, count = theValue->Count(); xx < count; ++xx)
+			::CFArrayAppendValue(theArray, sDAsCFType(iDefault, theValue->Get(xx)));
 		return theArray;
 		}
 	else if (const ZMap_Any* theValue = iVal.PGet<ZMap_Any>())
