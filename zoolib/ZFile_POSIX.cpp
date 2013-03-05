@@ -949,10 +949,10 @@ string ZFileLoc_POSIX::AsString_Native(const string* iComps, size_t iCount)
 			{
 			if (not fIsAtRoot)
 				result = ".";
-			for (size_t x = 0; x < iCount; ++x)
+			for (size_t xx = 0; xx < iCount; ++xx)
 				{
 				result += "/";
-				result += iComps[x];
+				result += iComps[xx];
 				}
 			}
 		else
@@ -966,10 +966,10 @@ string ZFileLoc_POSIX::AsString_Native(const string* iComps, size_t iCount)
 	else
 		{
 		result = this->pGetPath();
-		for (size_t x = 0; x < iCount; ++x)
+		for (size_t xx = 0; xx < iCount; ++xx)
 			{
 			result += "/";
-			result += iComps[x];
+			result += iComps[xx];
 			}
 		}
 	return result;
@@ -1251,10 +1251,10 @@ string ZFileLoc_POSIX::pGetPath()
 	string result;
 	if (not fIsAtRoot)
 		result = ".";
-	for (size_t x = 0; x < fComps.size(); ++x)
+	for (size_t xx = 0; xx < fComps.size(); ++xx)
 		{
 		result += "/";
-		result += fComps[x];
+		result += fComps[xx];
 		}
 	return result;
 	}

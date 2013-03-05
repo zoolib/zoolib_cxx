@@ -723,10 +723,10 @@ string ZFileLoc_Win::AsString_POSIX(const string* iComps, size_t iCount)
 		if (iCount)
 			{
 			result += iComps[0];
-			for (size_t x = 1; x < iCount; ++x)
+			for (size_t xx = 1; xx < iCount; ++xx)
 				{
 				result += '/';
-				result += iComps[x];
+				result += iComps[xx];
 				}
 			}
 		}
@@ -737,16 +737,16 @@ string ZFileLoc_Win::AsString_POSIX(const string* iComps, size_t iCount)
 		else
 			result += fBase;
 
-		for (size_t x = 0; x < fComps.size(); ++x)
+		for (size_t xx = 0; xx < fComps.size(); ++xx)
 			{
 			result += "/";
-			result += fComps[x];
+			result += fComps[xx];
 			}
 
-		for (size_t x = 0; x < iCount; ++x)
+		for (size_t xx = 0; xx < iCount; ++xx)
 			{
 			result += '/';
-			result += iComps[x];
+			result += iComps[xx];
 			}
 		}
 
@@ -770,10 +770,10 @@ string ZFileLoc_Win::AsString_Native(const string* iComps, size_t iCount)
 				}
 			else
 				{
-				for (size_t x = 1; x < iCount; ++x)
+				for (size_t xx = 1; xx < iCount; ++xx)
 					{
 					result += '\\';
-					result += iComps[x];
+					result += iComps[xx];
 					}
 				}
 			}
@@ -781,10 +781,10 @@ string ZFileLoc_Win::AsString_Native(const string* iComps, size_t iCount)
 	else
 		{
 		result = this->pGetPath();
-		for (size_t x = 0; x < iCount; ++x)
+		for (size_t xx = 0; xx < iCount; ++xx)
 			{
 			result += '\\';
-			result += iComps[x];
+			result += iComps[xx];
 			}
 		}
 	return result;
@@ -1020,10 +1020,10 @@ string ZFileLoc_Win::pGetPath()
 		}
 	else
 		{
-		for (size_t x = 0; x < fComps.size(); ++x)
+		for (size_t xx = 0; xx < fComps.size(); ++xx)
 			{
 			result += "\\";
-			result += fComps[x];
+			result += fComps[xx];
 			}
 		}
 
@@ -1244,12 +1244,12 @@ ZQ<ZTrail> ZFileLoc_WinNT::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) con
 			{
 			// We have the same base.
 			vector<string> myComps;
-			for (size_t x = 0; x < fComps.size(); ++x)
-				myComps.push_back(ZUnicode::sAsUTF8(fComps[x]));
+			for (size_t xx = 0; xx < fComps.size(); ++xx)
+				myComps.push_back(ZUnicode::sAsUTF8(fComps[xx]));
 
 			vector<string> destComps;
-			for (size_t x = 0; x < dest->fComps.size(); ++x)
-				destComps.push_back(ZUnicode::sAsUTF8(dest->fComps[x]));
+			for (size_t xx = 0; xx < dest->fComps.size(); ++xx)
+				destComps.push_back(ZUnicode::sAsUTF8(dest->fComps[xx]));
 
 			return sTrailFromTo(myComps, destComps);
 			}
@@ -1294,8 +1294,8 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::GetDescendant
 	if (fComps.size())
 		{
 		vector<string16> newComps = fComps;
-		for (size_t x = 0; x < iCount; ++x)
-			newComps.push_back(ZUnicode::sAsUTF16(iComps[x]));
+		for (size_t xx = 0; xx < iCount; ++xx)
+			newComps.push_back(ZUnicode::sAsUTF16(iComps[xx]));
 
 		return new ZFileLoc_WinNT(fBase, newComps);
 		}
@@ -1306,8 +1306,8 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::GetDescendant
 		if (iComps[0].size() == 1 && isalpha(iComps[0][0]))
 			{
 			vector<string16> newComps;
-			for (size_t x = 1; x < iCount; ++x)
-				newComps.push_back(ZUnicode::sAsUTF16(iComps[x]));
+			for (size_t xx = 1; xx < iCount; ++xx)
+				newComps.push_back(ZUnicode::sAsUTF16(iComps[xx]));
 			return new ZFileLoc_WinNT(ZUnicode::sAsUTF16(iComps[0]) + L":", newComps);
 			}
 
@@ -1315,8 +1315,8 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::GetDescendant
 		}
 
 	vector<string16> newComps;
-	for (size_t x = 0; x < iCount; ++x)
-		newComps.push_back(ZUnicode::sAsUTF16(iComps[x]));
+	for (size_t xx = 0; xx < iCount; ++xx)
+		newComps.push_back(ZUnicode::sAsUTF16(iComps[xx]));
 
 	return new ZFileLoc_WinNT(fBase, newComps);
 	}
@@ -1332,10 +1332,10 @@ string ZFileLoc_WinNT::AsString_POSIX(const string* iComps, size_t iCount)
 		if (iCount)
 			{
 			result += iComps[0];
-			for (size_t x = 1; x < iCount; ++x)
+			for (size_t xx = 1; xx < iCount; ++xx)
 				{
 				result += '/';
-				result += iComps[x];
+				result += iComps[xx];
 				}
 			}
 		}
@@ -1346,16 +1346,16 @@ string ZFileLoc_WinNT::AsString_POSIX(const string* iComps, size_t iCount)
 		else
 			result += ZUnicode::sAsUTF8(fBase);
 
-		for (size_t x = 0; x < fComps.size(); ++x)
+		for (size_t xx = 0; xx < fComps.size(); ++xx)
 			{
 			result += "/";
-			result += ZUnicode::sAsUTF8(fComps[x]);
+			result += ZUnicode::sAsUTF8(fComps[xx]);
 			}
 
-		for (size_t x = 0; x < iCount; ++x)
+		for (size_t xx = 0; xx < iCount; ++xx)
 			{
 			result += '/';
-			result += iComps[x];
+			result += iComps[xx];
 			}
 		}
 
@@ -1379,10 +1379,10 @@ string ZFileLoc_WinNT::AsString_Native(const string* iComps, size_t iCount)
 				}
 			else
 				{
-				for (size_t x = 1; x < iCount; ++x)
+				for (size_t xx = 1; xx < iCount; ++xx)
 					{
 					result += '\\';
-					result += iComps[x];
+					result += iComps[xx];
 					}
 				}
 			}
@@ -1390,10 +1390,10 @@ string ZFileLoc_WinNT::AsString_Native(const string* iComps, size_t iCount)
 	else
 		{
 		result = ZUnicode::sAsUTF8(this->pGetPath());
-		for (size_t x = 0; x < iCount; ++x)
+		for (size_t xx = 0; xx < iCount; ++xx)
 			{
 			result += '\\';
-			result += iComps[x];
+			result += iComps[xx];
 			}
 		}
 	return result;
@@ -1631,10 +1631,10 @@ string16 ZFileLoc_WinNT::pGetPath()
 		}
 	else
 		{
-		for (size_t x = 0; x < fComps.size(); ++x)
+		for (size_t xx = 0; xx < fComps.size(); ++xx)
 			{
 			result += L"\\";
-			result += fComps[x];
+			result += fComps[xx];
 			}
 		}
 

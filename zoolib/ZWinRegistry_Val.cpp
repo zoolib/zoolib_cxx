@@ -527,7 +527,7 @@ KeyRef::Index_t KeyRef::IndexOf(const string8& iName) const
 	for (Index_t xx = this->Begin(); xx != end; ++xx)
 		{
 		if (iName == this->NameOf(xx))
-			return x;
+			return xx;
 		}
 	return end;
 	}
