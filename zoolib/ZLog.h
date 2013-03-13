@@ -133,7 +133,8 @@ public:
 		(EPriority iPriority, const std::string& iName, const std::string& iMessage) = 0;
 	};
 
-extern ZSafe<ZRef<LogMeister> > sLogMeister;
+extern ZRef<LogMeister> sLogMeister;
+//extern ZSafe<ZRef<LogMeister> > sLogMeister;
 
 void sLogIt(EPriority iPriority, const std::string& iName, const std::string& iMessage);
 

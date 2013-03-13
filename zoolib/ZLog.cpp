@@ -29,7 +29,8 @@ using std::string;
 namespace ZooLib {
 namespace ZLog {
 
-ZSafe<ZRef<LogMeister> > sLogMeister;
+ZRef<LogMeister> sLogMeister;
+//ZSafe<ZRef<LogMeister> > sLogMeister;
 
 // =================================================================================================
 // MARK: - String/integer mapping

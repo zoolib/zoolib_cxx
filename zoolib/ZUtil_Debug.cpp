@@ -229,20 +229,29 @@ void sInstall()
 
 void sSetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
 	{
-	if (ZRef<LogMeister> theLM = ZLog::sLogMeister.Get().DynamicCast<LogMeister>())
-		theLM->SetStrimmer(iStrimmerW);
+	if (ZRef<ZLog::LogMeister> theLM1 = ZLog::sLogMeister)
+		{
+		if (ZRef<LogMeister> theLM = theLM1.DynamicCast<LogMeister>())
+			theLM->SetStrimmer(iStrimmerW);
+		}
 	}
 
 void sSetLogPriority(ZLog::EPriority iLogPriority)
 	{
-	if (ZRef<LogMeister> theLM = ZLog::sLogMeister.Get().DynamicCast<LogMeister>())
-		theLM->SetLogPriority(iLogPriority);
+	if (ZRef<ZLog::LogMeister> theLM1 = ZLog::sLogMeister)
+		{
+		if (ZRef<LogMeister> theLM = theLM1.DynamicCast<LogMeister>())
+			theLM->SetLogPriority(iLogPriority);
+		}
 	}
 
 ZLog::EPriority sGetLogPriority()
 	{
-	if (ZRef<LogMeister> theLM = ZLog::sLogMeister.Get().DynamicCast<LogMeister>())
-		return theLM->GetLogPriority();
+	if (ZRef<ZLog::LogMeister> theLM1 = ZLog::sLogMeister)
+		{
+		if (ZRef<LogMeister> theLM = theLM1.DynamicCast<LogMeister>())
+			return theLM->GetLogPriority();
+		}
 	return 0xFF;
 	}
 
