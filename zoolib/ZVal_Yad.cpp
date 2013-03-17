@@ -98,8 +98,8 @@ const ZVal_Yad* ZSeq_Yad::PGet(size_t iIndex) const
 	{
 	if (fYad)
 		{
-		for (size_t count = fYad->Count();
-			iIndex <= fSeq.Count() && fSeq.Count() < count;
+		for (const size_t yadCount = fYad->Count();
+			iIndex < yadCount && iIndex >= fSeq.Count();
 			/*no inc*/)
 			{ fSeq.Append(Tombstone_t()); }
 		}
@@ -139,8 +139,8 @@ ZVal_Yad* ZSeq_Yad::PMut(size_t iIndex)
 	{
 	if (fYad)
 		{
-		for (size_t count = fYad->Count();
-			iIndex <= fSeq.Count() && fSeq.Count() < count;
+		for (const size_t yadCount = fYad->Count();
+			iIndex < yadCount && iIndex >= fSeq.Count();
 			/*no inc*/)
 			{ fSeq.Append(Tombstone_t()); }
 		}
@@ -166,8 +166,8 @@ ZSeq_Yad& ZSeq_Yad::Set(size_t iIndex, const ZVal_Yad& iVal)
 	{
 	if (fYad)
 		{
-		for (size_t count = fYad->Count();
-			iIndex <= fSeq.Count() && fSeq.Count() < count;
+		for (const size_t yadCount = fYad->Count();
+			iIndex < yadCount && iIndex >= fSeq.Count();
 			/*no inc*/)
 			{ fSeq.Append(Tombstone_t()); }
 		}
