@@ -26,18 +26,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable_Function.h"
 
 namespace ZooLib {
+namespace ZGenerator {
 
 // =================================================================================================
-// MARK: - Shelf
+// MARK: - ShelfBase
 
-template <class T>
-class Shelf
+class ShelfBase
 	{
 public:
-	Shelf()
+	ShelfBase()
 	:	fPutLive(true)
 	,	fTakeLive(true)
-	,	fPtr(nullptr)
 		{}
 
 	void FinishedPuts()
@@ -53,6 +52,25 @@ public:
 		fTakeLive = false;
 		fCnd.Broadcast();
 		}
+
+protected:
+	ZMtx fMtx;
+	ZCnd fCnd;
+	bool fPutLive;
+	bool fTakeLive;
+	};
+
+// =================================================================================================
+// MARK: - Shelf
+
+template <class T>
+class Shelf
+:	public ShelfBase
+	{
+public:
+	Shelf()
+	:	fPtr(nullptr)
+		{}
 
 	bool QPut(const T& iT)
 		{
@@ -93,10 +111,7 @@ public:
 			}
 		}
 
-	ZMtx fMtx;
-	ZCnd fCnd;
-	bool fPutLive;
-	bool fTakeLive;
+private:
 	const T* fPtr;
 	};
 
@@ -105,27 +120,12 @@ public:
 
 template <>
 class Shelf<void>
+:	public ShelfBase
 	{
 public:
 	Shelf()
-	:	fPutLive(true)
-	,	fTakeLive(true)
-	,	fGotVal(false)
+	:	fGotVal(false)
 		{}
-
-	void FinishedPuts()
-		{
-		ZAcqMtx acq(fMtx);
-		fPutLive = false;
-		fCnd.Broadcast();
-		}
-
-	void FinishedTakes()
-		{
-		ZAcqMtx acq(fMtx);
-		fTakeLive = false;
-		fCnd.Broadcast();
-		}
 
 	bool QPut()
 		{
@@ -165,10 +165,7 @@ public:
 			}
 		}
 
-	ZMtx fMtx;
-	ZCnd fCnd;
-	bool fPutLive;
-	bool fTakeLive;
+private:
 	bool fGotVal;
 	};
 
@@ -184,43 +181,41 @@ public:
 	Shelf<T1> fShelf1;
 	};
 
-
 // =================================================================================================
-// MARK: - SigThing
+// MARK: - AsSig
 
 template <class Sig_p>
-struct SigThingBase
+struct AsSigBase
 	{
 	typedef Sig_p Sig;
 	typedef ZCallable<Sig> Callable;
-	typedef ZRef<Callable> ZRef_Callable;
 	};
 
 template <class T0, class T1>
-struct SigThing : public SigThingBase<T0(T1)>
+struct AsSig : public AsSigBase<T0(T1)>
 	{};
 
 template <class T>
-struct SigThing<T,void> : public SigThingBase<T()>
+struct AsSig<T,void> : public AsSigBase<T()>
 	{};
 
 template <class T>
-struct SigThing<void,T> : public SigThingBase<void(T)>
+struct AsSig<void,T> : public AsSigBase<void(T)>
 	{};
 
 template <>
-struct SigThing<void,void> : public SigThingBase<void()>
+struct AsSig<void,void> : public AsSigBase<void()>
 	{};
 
 // =================================================================================================
-// MARK: - Callable01
+// MARK: - Callable_Gen
 
 template <class T0, class T1>
-class Callable01
+class Callable_Gen
 :	public ZCallable<T0(T1)>
 	{
 public:
-	Callable01(const ZRef<ShelfPair<T0,T1> >& iShelfPair)
+	Callable_Gen(const ZRef<ShelfPair<T0,T1> >& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
@@ -248,14 +243,14 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Callable01 (partial specialization for <T,void>)
+// MARK: - Callable_Gen (partial specialization for <T,void>)
 
 template <class T>
-class Callable01<T,void>
+class Callable_Gen<T,void>
 :	public ZCallable<T()>
 	{
 public:
-	Callable01(const ZRef<ShelfPair<T,void> >& iShelfPair)
+	Callable_Gen(const ZRef<ShelfPair<T,void> >& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
@@ -283,14 +278,14 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Callable10
+// MARK: - Callable_Yield
 
 template <class T0, class T1>
-class Callable10
+class Callable_Yield
 :	public ZCallable<T1(T0)>
 	{
 public:
-	Callable10(const ZRef<ShelfPair<T0,T1> >& iShelfPair)
+	Callable_Yield(const ZRef<ShelfPair<T0,T1> >& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
@@ -320,14 +315,14 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Callable10 (specialization for <void,T>)
+// MARK: - Callable_Yield (specialization for <void,T>)
 
 template <class T>
-class Callable10<void,T>
+class Callable_Yield<void,T>
 :	public ZCallable<T()>
 	{
 public:
-	Callable10(const ZRef<ShelfPair<void,T> >& iShelfPair)
+	Callable_Yield(const ZRef<ShelfPair<void,T> >& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
@@ -361,36 +356,34 @@ public:
 
 template <class T0, class T1>
 void sCallablePair
-	(typename SigThing<T0,T1>::ZRef_Callable& oCallable_01,
-	typename SigThing<T1,T0>::ZRef_Callable& oCallable_10)
+	(ZRef<typename AsSig<T0,T1>::Callable>& oCallable_Gen,
+	ZRef<typename AsSig<T1,T0>::Callable>& oCallable_Yield)
 	{
 	ZRef<ShelfPair<T0,T1> > theShelfPair = new ShelfPair<T0,T1>;
-	oCallable_01 = new Callable01<T0,T1>(theShelfPair);
-	oCallable_10 = new Callable10<T0,T1>(theShelfPair);
+	oCallable_Gen = new Callable_Gen<T0,T1>(theShelfPair);
+	oCallable_Yield = new Callable_Yield<T0,T1>(theShelfPair);
 	}
 
 // =================================================================================================
 // MARK: - sGenerator
 
 template <class T0, class T1>
-typename SigThing<T0,T1>::ZRef_Callable
-sGenerator(const ZRef<ZCallable<
-	void(const typename SigThing<T1,T0>::ZRef_Callable&)
-	> >& iCallable)
+ZRef<typename AsSig<T0,T1>::Callable>
+sGenerator(const ZRef<ZCallable<void(const ZRef<typename AsSig<T1,T0>::Callable>&)> >& iCallable)
 	{
-	typename SigThing<T0,T1>::ZRef_Callable theCallable_01;
-	typename SigThing<T1,T0>::ZRef_Callable theCallable_10;
+	ZRef<typename AsSig<T0,T1>::Callable> theCallable_Gen;
+	ZRef<typename AsSig<T1,T0>::Callable> theCallable_Yield;
+	sCallablePair<T0,T1>(theCallable_Gen, theCallable_Yield);
 
-	sCallablePair<T0,T1>(theCallable_01, theCallable_10);
-	sCallOnNewThread(sBindR(iCallable, theCallable_10));
-	return theCallable_01;
+	if (iCallable)
+		sCallOnNewThread(sBindR(iCallable, theCallable_Yield));
+
+	return theCallable_Gen;
 	}
 
 template <class T>
-typename SigThing<T,void>::ZRef_Callable
-sGenerator(const ZRef<ZCallable<
-	void(const typename SigThing<void,T>::ZRef_Callable&)
-	> >& iCallable)
+ZRef<typename AsSig<T,void>::Callable>
+sGenerator(const ZRef<ZCallable<void(const ZRef<typename AsSig<void,T>::Callable>&)> >& iCallable)
 	{ return sGenerator<T,void>(iCallable); }
 
 // =================================================================================================
@@ -401,7 +394,7 @@ typedef ZThreadVal<ZRef<ZCounted>, struct Tag_Callable_Yield> ZThreadVal_Callabl
 template <class R, class P>
 ZQ<R> sQYield(P iP)
 	{
-	typedef typename SigThing<R,P>::Callable Callable;
+	typedef typename AsSig<R,P>::Callable Callable;
 	if (ZRef<Callable> theCallable = ZThreadVal_Callable_Yield::sGet().DynamicCast<Callable>())
 		return theCallable->QCall(iP);
 	return null;
@@ -413,28 +406,40 @@ void sYield(P iP)
 
 template <class T0, class T1>
 void
-sCallWith(const ZRef<ZCallable_Void>& iCallable_Void,
-	const typename SigThing<T1,T0>::ZRef_Callable& iCallable_Yield)
+sInstallYieldCall(const ZRef<ZCallable_Void>& iCallable_Void,
+	const ZRef<typename AsSig<T1,T0>::Callable>& iCallable_Yield)
 	{
 	ZThreadVal_Callable_Yield theTV(iCallable_Yield);
-	sCall(iCallable_Void);
+	iCallable_Void->Call();
 	}
 
 template <class T0, class T1>
-typename SigThing<T0,T1>::ZRef_Callable
+ZRef<typename AsSig<T0,T1>::Callable>
 sGenerator(const ZRef<ZCallable_Void>& iCallable_Void)
 	{
-	typename SigThing<T0,T1>::ZRef_Callable theCallable_01;
-	typename SigThing<T1,T0>::ZRef_Callable theCallable_10;
-	sCallablePair<T0,T1>(theCallable_01, theCallable_10);
-	sCallOnNewThread(sBindR(sCallable(sCallWith<T0,T1>), iCallable_Void, theCallable_10));
-	return theCallable_01;
+	ZRef<typename AsSig<T0,T1>::Callable> theCallable_Gen;
+	ZRef<typename AsSig<T1,T0>::Callable> theCallable_Yield;
+	sCallablePair<T0,T1>(theCallable_Gen, theCallable_Yield);
+
+	if (iCallable_Void)
+		{
+		sCallOnNewThread
+			(sBindR(sCallable(sInstallYieldCall<T0,T1>), iCallable_Void, theCallable_Yield));
+		}
+
+	return theCallable_Gen;
 	}
 
 template <class T>
-typename SigThing<T,void>::ZRef_Callable
+ZRef<typename AsSig<T,void>::Callable>
 sGenerator(const ZRef<ZCallable_Void>& iCallable_Void)
 	{ return sGenerator<T,void>(iCallable_Void); }
+
+} // namespace ZGenerator
+
+using ZGenerator::sYield;
+using ZGenerator::sQYield;
+using ZGenerator::sGenerator;
 
 } // namespace ZooLib
 
