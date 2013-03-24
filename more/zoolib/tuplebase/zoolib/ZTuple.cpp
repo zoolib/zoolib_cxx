@@ -20,6 +20,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTuple.h"
 
+#include "zoolib/ZStrim_Stream.h"
+#include "zoolib/ZStrimU_Unreader.h"
+#include "zoolib/ZStrimmerFromStrim.h"
+#include "zoolib/ZYad_Any.h"
+#include "zoolib/ZYad_ZooLibStrim.h"
+
 namespace ZooLib {
 
 using std::vector;
@@ -55,25 +61,16 @@ ZTuple ZTuple::operator=(const ZMap_Any& iMap)
 	}
 
 ZTuple::ZTuple(const ZStreamR& iStreamR)
-:	ZMap_Any(iStreamR)
-	{}
-
-ZTuple ZTuple::Over(const ZTuple& iUnder) const
 	{
-	ZTuple result = iUnder;
-	if (fRep)
-		{
-		for (ZTuple::const_iterator i = this->begin(), theEnd = this->end();
-			i != theEnd; ++i)
-			{
-			result.Set((*i).fName, (*i).fVal);
-			}
-		}
-	return result;
+	ZStrimR_StreamUTF8 theStrimR(iStreamR);
+	ZStrimU_Unreader theStrimU(theStrimR);
+
+	*this = sFromYadR(ZVal_Any(),
+		ZYad_ZooLibStrim::sYadR(ZStrimmerFromStrimU(theStrimU))).Get<ZMap_Any>();
 	}
 
-ZTuple ZTuple::Under(const ZTuple& iOver) const
-	{ return iOver.Over(*this); }
+void ZTuple::ToStream(const ZStreamW& iStreamW) const
+	{ ZYad_ZooLibStrim::sToStrim(sYadR(*this), ZStrimW_StreamUTF8(iStreamW)); }
 
 ZTuple ZTuple::GetTuple(const ZTName& iPropName) const
 	{ return this->Get<ZMap_Any>(iPropName); }

@@ -218,7 +218,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		ZTuple response;
 		response.SetString("What", "Create_Ack");
 
-		vector<ZTValue>& vectorIDs = response.SetMutableVector("IDs");
+		ZSeq_Any& vectorIDs = response.Mut<ZSeq_Any>("IDs");
 		for (vector<Transaction*>::iterator i = fTransactions_Create_Unsent.begin();
 			i != fTransactions_Create_Unsent.end(); ++i)
 			{
@@ -226,7 +226,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 			ZTuple theTuple;
 			theTuple.SetInt64("ClientID", theTransaction->fClientID);
 			theTuple.SetInt64("ServerID", reinterpret_cast<int64>(theTransaction));
-			vectorIDs.push_back(theTuple);
+			vectorIDs.Append(theTuple);
 			sInsertSortedMust(kDebug_TBServer, fTransactions_Created, theTransaction);
 			}
 		fTransactions_Create_Unsent.clear();
@@ -241,12 +241,12 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		ZTuple response;
 		response.SetString("What", "Validate_Succeeded");
 
-		vector<ZTValue>& vectorClientIDs = response.SetMutableVector("ClientIDs");
+		ZSeq_Any& vectorClientIDs = response.Mut<ZSeq_Any>("ClientIDs");
 		for (vector<Transaction*>::iterator i = fTransactions_Validate_Succeeded.begin();
 			i != fTransactions_Validate_Succeeded.end(); ++i)
 			{
 			Transaction* theTransaction = *i;
-			vectorClientIDs.push_back(int64(theTransaction->fClientID));
+			vectorClientIDs.Append(int64(theTransaction->fClientID));
 			sInsertSortedMust(kDebug_TBServer, fTransactions_Validated, theTransaction);
 			}
 		fTransactions_Validate_Succeeded.clear();
@@ -261,12 +261,12 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		ZTuple response;
 		response.SetString("What", "Validate_Failed");
 
-		vector<ZTValue>& vectorClientIDs = response.SetMutableVector("ClientIDs");
+		ZSeq_Any& vectorClientIDs = response.Mut<ZSeq_Any>("ClientIDs");
 		for (vector<Transaction*>::iterator i = fTransactions_Validate_Failed.begin();
 			i != fTransactions_Validate_Failed.end(); ++i)
 			{
 			Transaction* theTransaction = *i;
-			vectorClientIDs.push_back(int64(theTransaction->fClientID));
+			vectorClientIDs.Append(int64(theTransaction->fClientID));
 			fTransactions_HaveTuplesToSend.erase(theTransaction);
 			theTransaction->fTBRepTransaction->AcceptFailure();
 			// AcceptFailure deletes ZTBRepTransaction
@@ -283,12 +283,12 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		ZTuple response;
 		response.SetString("What", "Commit_Ack");
 
-		vector<ZTValue>& vectorClientIDs = response.SetMutableVector("ClientIDs");
+		ZSeq_Any& vectorClientIDs = response.Mut<ZSeq_Any>("ClientIDs");
 		for (vector<Transaction*>::iterator i = fTransactions_Commit_Acked.begin();
 			i != fTransactions_Commit_Acked.end(); ++i)
 			{
 			Transaction* theTransaction = *i;
-			vectorClientIDs.push_back(int64(theTransaction->fClientID));
+			vectorClientIDs.Append(int64(theTransaction->fClientID));
 			fTransactions_HaveTuplesToSend.erase(theTransaction);
 			delete theTransaction;
 			}
@@ -307,8 +307,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 
 		bool allEmptied = true;
 		bool sentAny = false;
-		vector<ZTValue>& vectorTransactionTuples =
-			response.SetMutableVector("Transactions");
+		ZSeq_Any& vectorTransactionTuples = response.Mut<ZSeq_Any>("Transactions");
 
 		for (set<Transaction*>::iterator i = fTransactions_HaveTuplesToSend.begin();
 			i != fTransactions_HaveTuplesToSend.end(); ++i)
@@ -318,8 +317,8 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 				{
 				ZTuple theTransactionTuple;
 				theTransactionTuple.SetInt64("ClientID", theTransaction->fClientID);
-				vector<ZTValue>& vectorTuples =
-					theTransactionTuple.SetMutableVector("IDValues");
+				ZSeq_Any& vectorTuples =
+					theTransactionTuple.Mut<ZSeq_Any>("IDValues");
 
 				for (map<uint64, ZTuple>::iterator
 					j = theTransaction->fTuplesToSend_HighPriority.begin();
@@ -328,7 +327,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 					ZTuple aTuple;
 					aTuple.SetID("ID", (*j).first);
 					aTuple.SetTuple("Value", (*j).second);
-					vectorTuples.push_back(aTuple);
+					vectorTuples.Append(aTuple);
 
 					// Remove it from our low priority list too
 					// Actually, this shouldn't be necessary. fTuplesSent should
@@ -336,7 +335,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 					sQErase(theTransaction->fTuplesToSend_LowPriority, (*j).first);
 					}
 				theTransaction->fTuplesToSend_HighPriority.clear();
-				vectorTransactionTuples.push_back(theTransactionTuple);
+				vectorTransactionTuples.Append(theTransactionTuple);
 				sentAny = true;
 				}
 			if (!theTransaction->fTuplesToSend_LowPriority.empty())
@@ -358,17 +357,17 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		ZTuple response;
 		response.SetString("What", "Search_Ack");
 
-		vector<ZTValue>& vectorSearches = response.SetMutableVector("Searches");
+		ZSeq_Any& vectorSearches = response.Mut<ZSeq_Any>("Searches");
 		for (vector<Search_t*>::iterator i = fSearches_Unsent.begin();
 			i != fSearches_Unsent.end(); ++i)
 			{
 			Search_t* theSearch = *i;
 			ZTuple theTuple;
 			theTuple.SetInt64("SearchID", theSearch->fClientSearchID);
-			std::copy(theSearch->fResults.begin(), theSearch->fResults.end(),
-				back_inserter(theTuple.SetMutableVector("Results")));
+			foreacha (aa, theSearch->fResults)
+				theTuple.Mut<ZSeq_Any>("Results").Append(aa);
 
-			vectorSearches.push_back(theTuple);
+			vectorSearches.Append(theTuple);
 			delete theSearch;
 			}
 		fSearches_Unsent.clear();
@@ -383,7 +382,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		ZTuple response;
 		response.SetString("What", "Count_Ack");
 
-		vector<ZTValue>& vectorCounts = response.SetMutableVector("Counts");
+		ZSeq_Any& vectorCounts = response.Mut<ZSeq_Any>("Counts");
 		for (vector<Count_t*>::iterator i = fCounts_Unsent.begin();
 			i != fCounts_Unsent.end(); ++i)
 			{
@@ -391,7 +390,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 			ZTuple theTuple;
 			theTuple.SetInt64("CountID", theCount->fClientCountID);
 			theTuple.SetInt64("Result", theCount->fResult);
-			vectorCounts.push_back(theTuple);
+			vectorCounts.Append(theTuple);
 			delete theCount;
 			}
 		fCounts_Unsent.clear();
@@ -410,8 +409,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		response.SetString("extra", "low priority");
 
 		bool allEmptied = true;
-		vector<ZTValue>& vectorTransactionTuples =
-			response.SetMutableVector("Transactions");
+		ZSeq_Any& vectorTransactionTuples = response.Mut<ZSeq_Any>("Transactions");
 
 		for (set<Transaction*>::iterator i = fTransactions_HaveTuplesToSend.begin();
 			i != fTransactions_HaveTuplesToSend.end(); ++i)
@@ -421,8 +419,8 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 				{
 				ZTuple theTransactionTuple;
 				theTransactionTuple.SetInt64("ClientID", theTransaction->fClientID);
-				vector<ZTValue>& vectorTuples =
-					theTransactionTuple.SetMutableVector("IDValues");
+				ZSeq_Any& vectorTuples =
+					theTransactionTuple.Mut<ZSeq_Any>("IDValues");
 
 				for (map<uint64, ZTuple>::iterator
 					i = theTransaction->fTuplesToSend_LowPriority.begin();
@@ -431,10 +429,10 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 					ZTuple aTuple;
 					aTuple.SetID("ID", (*i).first);
 					aTuple.SetTuple("Value", (*i).second);
-					vectorTuples.push_back(aTuple);
+					vectorTuples.Append(aTuple);
 					}
 				theTransaction->fTuplesToSend_LowPriority.clear();
-				vectorTransactionTuples.push_back(theTransactionTuple);
+				vectorTransactionTuples.Append(theTransactionTuple);
 				}
 			if (!theTransaction->fTuplesToSend_HighPriority.empty())
 				allEmptied = false;

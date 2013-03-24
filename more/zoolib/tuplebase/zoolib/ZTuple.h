@@ -90,19 +90,13 @@ public:
 	ZTuple(const ZMap_Any& iMap);
 	ZTuple operator=(const ZMap_Any& iMap);
 
-//##	explicit ZTuple(const ZStreamR& iStreamR);
+	explicit ZTuple(const ZStreamR& iStreamR);
 
-//##	void ToStream(const ZStreamW& iStreamW) const;
+	void ToStream(const ZStreamW& iStreamW) const;
 
 // Backwards compatibility
-	ZTuple Over(const ZTuple& iUnder) const;
-	ZTuple Under(const ZTuple& iOver) const;
-
 	ZTuple GetTuple(const ZTName& iName) const;
 	void SetTuple(const ZTName& iName, const ZTuple& iTuple);
-
-//##	ZMap_Any& SetNull(const ZTName& iPropName);
-//##	std::vector<ZVal_Any>& SetMutableVector(const ZTName& iPropName);
 
 	Index_t begin() const { return this->Begin(); }
 	Index_t end() const { return this->End(); }
