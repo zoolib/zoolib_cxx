@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZStream_Count.h"
 #include "zoolib/ZStream_Tee.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
 
 namespace ZooLib {
 

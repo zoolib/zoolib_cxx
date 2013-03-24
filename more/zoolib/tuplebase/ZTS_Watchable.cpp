@@ -29,7 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZUtil_STL_vector.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::lower_bound;
 using std::map;
@@ -989,7 +988,7 @@ void ZTS_Watchable::pUpdateQueryResults(PQuery* iPQuery)
 			if (ZLOG(s, eDebug, "ZTS_Watchable"))
 				{
 				s.Writef("Slow query, %.3fms\n", elapsed * 1000);
-				s << ZUtil_Strim_Tuple::Format(iPQuery->fTBQuery.AsTuple(), 0, ZYadOptions(true));
+//##				s << ZUtil_Strim_Tuple::Format(iPQuery->fTBQuery.AsTuple(), 0, ZYadOptions(true));
 				}
 			}
 		if (false && sDumpQuery)
@@ -998,7 +997,7 @@ void ZTS_Watchable::pUpdateQueryResults(PQuery* iPQuery)
 			sDumpQuery = false;
 			if (ZLOG(s, eDebug, "ZTS_Watchable"))
 				{
-				s << iPQuery->fTBQuery.AsTuple();
+//##				s << iPQuery->fTBQuery.AsTuple();
 				}
 			}
 		}

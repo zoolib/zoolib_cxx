@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tuplebase/ZTupleIndex.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::map;
 using std::pair;
@@ -194,8 +193,8 @@ void ZTS_RAM::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint
 			{
 			if (ZLOG(s, eWarning, "ZTS_RAM::Search"))
 				{
-				s << "In the spec:\n" << iSpec.AsTuple()
-					<< "\nat least one clause does not have a usable index";
+//##				s << "In the spec:\n" << iSpec.AsTuple()
+//##					<< "\nat least one clause does not have a usable index";
 				}
 			}
 
