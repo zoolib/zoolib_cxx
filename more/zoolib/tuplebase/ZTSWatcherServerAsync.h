@@ -22,8 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcherServerAsync__
 #include "zconfig.h"
 
-#include "zoolib/ZCommer.h"
-#include "zoolib/ZTask.h"
 #include "zoolib/ZThreadOld.h"
 #include "zoolib/tuplebase/ZTSWatcher.h"
 

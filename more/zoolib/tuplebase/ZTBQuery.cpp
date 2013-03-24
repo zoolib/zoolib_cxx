@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare_Vector.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZUtil_STL.h"
 
@@ -636,8 +637,7 @@ ZTBQueryNode_Combo::Intersection::Intersection(const ZStreamR& iStreamR)
 ZTBQueryNode_Combo::Intersection::Intersection(const ZTuple& iTuple)
 	{
 	fFilter = ZTBSpec(iTuple.Get<ZMap_Any>("Filter"));
-	const vector<ZTValue>& nodes = iTuple.Get("Nodes").GetSeq().GetVector();
-	for (vector<ZTValue>::const_iterator i = nodes.begin(); i != nodes.end(); ++i)
+	foreachi (i, iTuple.Get<ZSeq_Any>("Nodes"))
 		{
 		if (ZRef<ZTBQueryNode> aNode = spNodeFromTuple((*i).Get<ZMap_Any>()))
 			fNodes.push_back(aNode);
@@ -648,9 +648,9 @@ ZTuple ZTBQueryNode_Combo::Intersection::AsTuple() const
 	{
 	ZTuple result;
 	result.SetTuple("Filter", fFilter.AsTuple());
-	vector<ZTValue>& destVec = result.SetMutableVector("Nodes");
+	ZSeq_Any& theSeq = result.Mut<ZSeq_Any>("Nodes");
 	for (vector<ZRef<ZTBQueryNode> >::const_iterator i = fNodes.begin(); i != fNodes.end(); ++i)
-		destVec.push_back(spTupleFromNode(*i));
+		theSeq.Append(spTupleFromNode(*i));
 	return result;
 	}
 
@@ -753,20 +753,20 @@ ZTuple ZTBQueryNode_Combo::AsTuple()
 
 	if (!fSort.empty())
 		{
-		vector<ZTValue>& sortVector = result.SetMutableVector("Sort");
+		ZSeq_Any& theSeq = result.Mut<ZSeq_Any>("Sort");
 		for (vector<ZTBQuery::SortSpec>::iterator i = fSort.begin(); i != fSort.end(); ++i)
 			{
 			ZTuple theTuple;
 			theTuple.SetString("PropName", string8((*i).fPropName));
 			theTuple.SetBool("Ascending", (*i).fAscending);
 			theTuple.SetInt32("Strength", (*i).fStrength);
-			sortVector.push_back(theTuple);
+			theSeq.Append(theTuple);
 			}
 		}
 
-	vector<ZTValue>& sectVector = result.SetMutableVector("Intersections");
+	ZSeq_Any& theSeq = result.Mut<ZSeq_Any>("Intersections");
 	for (vector<Intersection>::iterator i = fIntersections.begin(); i != fIntersections.end(); ++i)
-		sectVector.push_back((*i).AsTuple());
+		theSeq.Append((*i).AsTuple());
 
 	return result;
 	}
@@ -865,7 +865,7 @@ ZTuple ZTBQueryNode_First::AsTuple()
 	{
 	ZTuple theTuple;
 	theTuple.SetString("Kind", "First");
-	theTuple.SetString("PropName", fPropName.AsString());
+	theTuple.SetString("PropName", fPropName);
 	if (fSourceNode)
 		theTuple.SetTuple("SourceNode", fSourceNode->AsTuple());
 	return theTuple;
@@ -874,7 +874,7 @@ ZTuple ZTBQueryNode_First::AsTuple()
 void ZTBQueryNode_First::ToStream(const ZStreamW& iStreamW)
 	{
 	iStreamW.WriteUInt8(4);
-	fPropName.ToStream(iStreamW);
+	sToStream(iStreamW, fPropName);
 	spNodeToStream(iStreamW, fSourceNode);
 	}
 
@@ -935,7 +935,8 @@ ZTuple ZTBQueryNode_ID_Constant::AsTuple()
 	ZTuple theTuple;
 	theTuple.SetString("Kind", "ID_Constant");
 
-	std::copy(fIDs.begin(), fIDs.end(), back_inserter(theTuple.SetMutableVector("IDs")));
+	foreacha (aa, fIDs)
+		theTuple.Mut<ZSeq_Any>("IDs").Append(aa);
 
 	return theTuple;
 	}
@@ -1008,7 +1009,7 @@ int ZTBQueryNode_ID_FromSource::pCompare_ID_FromSource(ZTBQueryNode_ID_FromSourc
 #pragma mark * ZTBQueryNode_Property
 
 inline ZTBQueryNode_Property::ZTBQueryNode_Property(const ZStreamR& iStreamR)
-:	fPropName(iStreamR),
+:	fPropName(sName(iStreamR)),
 	fSourceNode(spNodeFromStream(iStreamR))
 	{}
 
@@ -1072,17 +1073,15 @@ static ZRef<ZTBQueryNode> spNodeFromTuple(const ZTuple& iTuple)
 	else if (nodeKind == "Combo")
 		{
 		vector<ZTBQuery::SortSpec> theSort;
-		const vector<ZTValue>& vectorSort = iTuple.Get("Sort").GetSeq().GetVector();
-		for (vector<ZTValue>::const_iterator i = vectorSort.begin(); i != vectorSort.end(); ++i)
+		foreachi (i, iTuple.Get<ZSeq_Any>("Sort"))
 			{
 			const ZTuple& temp = (*i).Get<ZMap_Any>();
 			theSort.push_back(ZTBQuery::SortSpec
 				(ZTName(temp.GetString("PropName")), temp.GetBool("Ascending"), temp.GetInt32("Strength")));
 			}
 
-		const vector<ZTValue>& sourceSect = iTuple.Get("Intersections").GetSeq().GetVector();
 		vector<ZTBQueryNode_Combo::Intersection> theIntersections;
-		for (vector<ZTValue>::const_iterator i = sourceSect.begin(); i != sourceSect.end(); ++i)
+		foreachi (i, iTuple.Get<ZSeq_Any>("Intersections"))
 			theIntersections.push_back(ZTBQueryNode_Combo::Intersection((*i).Get<ZMap_Any>()));
 
 		return new ZTBQueryNode_Combo(theSort, theIntersections);
@@ -1102,7 +1101,8 @@ static ZRef<ZTBQueryNode> spNodeFromTuple(const ZTuple& iTuple)
 	else if (nodeKind == "ID_Constant")
 		{
 		vector<uint64> theIDs;
-		iTuple.Get("IDs").GetSeq().GetVector_T(back_inserter(theIDs), uint64());
+		foreachi (i, iTuple.Get<ZSeq_Any>("IDs"))
+			theIDs.push_back(i->Get<uint64>());
 		return new ZTBQueryNode_ID_Constant(theIDs, true);
 		}
 	else if (nodeKind == "ID_FromSource")

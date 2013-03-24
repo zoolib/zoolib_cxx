@@ -22,8 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTBServer__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCommer.h"
-#include "zoolib/ZTask.h"
 #include "zoolib/ZThreadOld.h"
 #include "zoolib/ZTuple.h"
 

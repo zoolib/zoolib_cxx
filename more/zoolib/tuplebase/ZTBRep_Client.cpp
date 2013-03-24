@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tuplebase/ZTBRep_Client.h"
 
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
@@ -887,8 +888,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Create_Ack")
 		{
-		const vector<ZTValue>& vectorIDs = theResp.Get("IDs").GetSeq().GetVector();
-		for (vector<ZTValue>::const_iterator i = vectorIDs.begin(); i != vectorIDs.end(); ++i)
+		foreachi (i, theResp.Get<ZSeq_Any>("IDs"))
 			{
 			ZTuple theTuple = (*i).Get<ZMap_Any>();
 			Transaction* theTransaction =
@@ -908,9 +908,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Validate_Succeeded")
 		{
-		const vector<ZTValue>& vectorClientIDs = theResp.Get("ClientIDs").GetSeq().GetVector();
-		for (vector<ZTValue>::const_iterator i = vectorClientIDs.begin();
-			i != vectorClientIDs.end(); ++i)
+		foreachi (i, theResp.Get<ZSeq_Any>("ClientIDs"))
 			{
 			Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).Get<int64>());
 
@@ -925,9 +923,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Validate_Failed")
 		{
-		const vector<ZTValue>& vectorClientIDs = theResp.Get("ClientIDs").GetSeq().GetVector();
-		for (vector<ZTValue>::const_iterator i = vectorClientIDs.begin();
-			i != vectorClientIDs.end(); ++i)
+		foreachi (i, theResp.Get<ZSeq_Any>("ClientIDs"))
 			{
 			Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).Get<int64>());
 
@@ -942,9 +938,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Commit_Ack")
 		{
-		const vector<ZTValue>& vectorClientIDs = theResp.Get("ClientIDs").GetSeq().GetVector();
-		for (vector<ZTValue>::const_iterator i = vectorClientIDs.begin();
-			i != vectorClientIDs.end(); ++i)
+		foreachi (i, theResp.Get<ZSeq_Any>("ClientIDs"))
 			{
 			Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).Get<int64>());
 
@@ -958,21 +952,13 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "GetTuples_Ack")
 		{
-		const vector<ZTValue>& vectorTransactions =
-			theResp.Get("Transactions").GetSeq().GetVector();
-
-		for (vector<ZTValue>::const_iterator i = vectorTransactions.begin();
-			i != vectorTransactions.end(); ++i)
+		foreachi (i, theResp.Get<ZSeq_Any>("Transactions"))
 			{
 			ZTuple theTransactionTuple = (*i).Get<ZMap_Any>();
 			Transaction* theTransaction =
 				reinterpret_cast<Transaction*>(theTransactionTuple.Get<int64>("ClientID"));
 
-			const vector<ZTValue>& vectorIDTuples =
-				theTransactionTuple.Get("IDValues").GetSeq().GetVector();
-
-			for (vector<ZTValue>::const_iterator i = vectorIDTuples.begin();
-				i != vectorIDTuples.end(); ++i)
+			foreachi (i, theResp.Get<ZSeq_Any>("IDValues"))
 				{
 				ZTuple theTuple = (*i).Get<ZMap_Any>();
 				uint64 theID = theTuple.GetID("ID");
@@ -997,9 +983,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Search_Ack")
 		{
-		const vector<ZTValue>& vectorSearches = theResp.Get("Searches").GetSeq().GetVector();
-		for (vector<ZTValue>::const_iterator i = vectorSearches.begin();
-			i != vectorSearches.end(); ++i)
+		foreachi (i, theResp.Get<ZSeq_Any>("Searches"))
 			{
 			ZTuple theSearchTuple = (*i).Get<ZMap_Any>();
 			TransSearch_t* theSearch =
@@ -1008,8 +992,8 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			theTransaction->fSearches_Waiting.erase(theSearch);
 
 			vector<uint64> vectorResultIDs;
-			theSearchTuple.Get("Results").MutableSeq()
-				.GetVector_T(back_inserter(vectorResultIDs), uint64());
+			foreachi (i, theResp.Get<ZSeq_Any>("Results"))
+				vectorResultIDs.push_back(i->Get<uint64>());
 
 			theSearch->fCallback(theSearch->fRefcon, vectorResultIDs);
 			delete theSearch;
@@ -1017,9 +1001,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Count_Ack")
 		{
-		const vector<ZTValue>& vectorCounts = theResp.Get("Counts").GetSeq().GetVector();
-		for (vector<ZTValue>::const_iterator i = vectorCounts.begin();
-			i != vectorCounts.end(); ++i)
+		foreachi (i, theResp.Get<ZSeq_Any>("Counts"))
 			{
 			ZTuple theCountTuple = (*i).Get<ZMap_Any>();
 			TransCount_t* theCount =
@@ -1091,7 +1073,6 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		reqTuple.SetString("What", "Create");
 
 		ZSeq_Any theSeq;
-		vector<ZTValue>& vectorTransactionIDs = theSeq.MutableVector();
 		for (vector<Transaction*>::iterator i = fTransactions_Create_Unsent.begin();
 			i != fTransactions_Create_Unsent.end(); /*no inc*/)
 			{
@@ -1104,13 +1085,13 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				{
 				i = fTransactions_Create_Unsent.erase(i);
 
-				vectorTransactionIDs.push_back(reinterpret_cast<int64>(theTransaction));
+				theSeq.Append(reinterpret_cast<int64>(theTransaction));
 				sInsertSortedMust(kDebug_TBRep_Client,
 					fTransactions_Create_Unacked, theTransaction);
 				}
 			}
 
-		if (!vectorTransactionIDs.empty())
+		if (theSeq.Count())
 			{
 			reqTuple.Set("ClientIDs", theSeq);
 			spSend(locker, iStream, reqTuple);
@@ -1124,7 +1105,6 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		reqTuple.SetString("What", "Abort");
 
 		ZSeq_Any theSeq;
-		vector<ZTValue>& vectorServerIDs = theSeq.MutableVector();
 		for (vector<Transaction*>::iterator i = fTransactions_Aborted_Unsent.begin();
 			i != fTransactions_Aborted_Unsent.end(); /*no inc*/)
 			{
@@ -1137,12 +1117,12 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				{
 				i = fTransactions_Aborted_Unsent.erase(i);
 
-				vectorServerIDs.push_back(int64(theTransaction->fServerID));
+				theSeq.Append(int64(theTransaction->fServerID));
 				delete theTransaction;
 				}
 			}
 
-		if (!vectorServerIDs.empty())
+		if (theSeq.Count())
 			{
 			reqTuple.Set("ServerIDs", theSeq);
 			spSend(locker, iStream, reqTuple);
@@ -1159,7 +1139,6 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 			reqTuple.SetString("What", "Validate");
 
 			ZSeq_Any theSeq;
-			vector<ZTValue>& vectorServerIDs = theSeq.MutableVector();
 			for (vector<Transaction*>::iterator i = fTransactions_Validate_Unsent.begin();
 				i != fTransactions_Validate_Unsent.end(); /*no inc*/)
 				{
@@ -1172,7 +1151,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 					{
 					i = fTransactions_Validate_Unsent.erase(i);
 
-					vectorServerIDs.push_back(int64(theTransaction->fServerID));
+					theSeq.Append(int64(theTransaction->fServerID));
 					sInsertSortedMust(kDebug_TBRep_Client,
 						fTransactions_Validate_Unacked, theTransaction);
 					}
@@ -1190,7 +1169,6 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		reqTuple.SetString("What", "Commit");
 
 		ZSeq_Any theSeq;
-		vector<ZTValue>& vectorServerIDs = theSeq.MutableVector();
 		for (vector<Transaction*>::iterator i = fTransactions_Commit_Unsent.begin();
 			i != fTransactions_Commit_Unsent.end(); /*no inc*/)
 			{
@@ -1203,13 +1181,13 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				{
 				i = fTransactions_Commit_Unsent.erase(i);
 
-				vectorServerIDs.push_back(int64(theTransaction->fServerID));
+				theSeq.Append(int64(theTransaction->fServerID));
 				sInsertSortedMust(kDebug_TBRep_Client,
 					fTransactions_Commit_Unacked, theTransaction);
 				}
 			}
 
-		if (!vectorServerIDs.empty())
+		if (theSeq.Count())
 			{
 			reqTuple.Set("ServerIDs", theSeq);
 			spSend(locker, iStream, reqTuple);
@@ -1237,8 +1215,6 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 			if (!theTransaction->fTransTuples_NeedWork.empty())
 				{
 				ZSeq_Any valWrites, valGets;
-				vector<ZTValue>& vectorWrites = valWrites.MutableVector();
-				vector<ZTValue>& vectorGets = valGets.MutableVector();
 
 				for (set<TransTuple*>::iterator i = theTransaction->fTransTuples_NeedWork.begin();
 					i != theTransaction->fTransTuples_NeedWork.end(); ++i)
@@ -1253,7 +1229,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 							ZTuple theWriteTuple;
 							theWriteTuple.SetID("ID", theTT->fID);
 							theWriteTuple.SetTuple("Value", theTT->fValue);
-							vectorWrites.push_back(theWriteTuple);
+							valWrites.Append(theWriteTuple);
 							}
 						}
 					else
@@ -1262,16 +1238,16 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 							{
 							theTT->fRequestSent = true;
 							// Ask the server to send the tuple.
-							vectorGets.push_back(ZTValue(theTT->fID, true));
+							valGets.Append(theTT->fID);
 							}
 						}
 					}
 
 				actionsTuple.SetString("What", "Actions");
 				actionsTuple.SetInt64("ServerID", theTransaction->fServerID);
-				if (valGets)
+				if (valGets.Count())
 					actionsTuple.Set("Gets", valGets);
-				if (valWrites)
+				if (valWrites.Count())
 					actionsTuple.Set("Writes", valWrites);
 
 				theTransaction->fTransTuples_NeedWork.clear();
@@ -1284,7 +1260,6 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				searchesTuple.SetInt64("ServerID", theTransaction->fServerID);
 
 				ZSeq_Any theSeq;
-				vector<ZTValue>& vectorSearches = theSeq.MutableVector();
 				for (vector<TransSearch_t*>::iterator i = theTransaction->fSearches_Unsent.begin();
 					i != theTransaction->fSearches_Unsent.end(); ++i)
 					{
@@ -1292,7 +1267,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 					ZTuple theTuple;
 					theTuple.SetInt64("SearchID", reinterpret_cast<int64>(theSearch));
 					theTuple.SetTuple("QueryAsTuple", theSearch->fQueryAsTuple);
-					vectorSearches.push_back(theTuple);
+					theSeq.Append(theTuple);
 					theTransaction->fSearches_Waiting.insert(theSearch);
 					}
 				searchesTuple.Set("Searches", theSeq);
@@ -1306,7 +1281,6 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				countsTuple.SetInt64("ServerID", theTransaction->fServerID);
 
 				ZSeq_Any theSeq;
-				vector<ZTValue>& vectorCounts = theSeq.MutableVector();
 				for (vector<TransCount_t*>::iterator i = theTransaction->fCounts_Unsent.begin();
 					i != theTransaction->fCounts_Unsent.end(); ++i)
 					{
@@ -1314,26 +1288,26 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 					ZTuple theTuple;
 					theTuple.SetInt64("CountID", reinterpret_cast<int64>(theCount));
 					theTuple.SetTuple("QueryAsTuple", theCount->fQueryAsTuple);
-					vectorCounts.push_back(theTuple);
+					theSeq.Append(theTuple);
 					theTransaction->fCounts_Waiting.insert(theCount);
 					}
 				countsTuple.Set("Counts", theSeq);
 				theTransaction->fCounts_Unsent.clear();
 				}
 
-			if (actionsTuple)
+			if (not actionsTuple.IsEmpty())
 				{
 				spSend(locker, iStream, actionsTuple);
 				didAnything = true;
 				}
 
-			if (searchesTuple)
+			if (not searchesTuple.IsEmpty())
 				{
 				spSend(locker, iStream, searchesTuple);
 				didAnything = true;
 				}
 
-			if (countsTuple)
+			if (not countsTuple.IsEmpty())
 				{
 				spSend(locker, iStream, countsTuple);
 				didAnything = true;

@@ -45,32 +45,23 @@ namespace ZooLib {
 static int spTupleValueComp(ZTextCollator* ioTextCollators, int iStrength,
 	const ZTValue& iLeft, const ZTValue& iRight)
 	{
-	ZType leftType = iLeft.TypeOf();
-	ZType rightType = iRight.TypeOf();
-	if (leftType != rightType)
-		return int(leftType) - int(rightType);
-
-	if (leftType == eZType_String && iStrength != 0)
+	if (const string8* lp = iLeft.PGet<string8>())
 		{
-		// We're doing string compares where the strength is non zero and
-		// so we need to use a collator to do the comparison.
-		if (iStrength <= 4)
+		if (const string8* rp = iRight.PGet<string8>())
 			{
-			if (not ioTextCollators[iStrength - 1])
-				ioTextCollators[iStrength - 1] = ZTextCollator(iStrength);
-			return ioTextCollators[iStrength - 1].Compare(iLeft.GetString(), iRight.GetString());
-			}
-		else
-			{
-			return ZTextCollator(iStrength).Compare(iLeft.GetString(), iRight.GetString());
+			if (iStrength <= 4)
+				{
+				if (not ioTextCollators[iStrength - 1])
+					ioTextCollators[iStrength - 1] = ZTextCollator(iStrength);
+				return ioTextCollators[iStrength - 1].Compare(*lp, *rp);
+				}
+			else
+				{
+				return ZTextCollator(iStrength).Compare(*lp, *rp);
+				}
 			}
 		}
-	else
-		{
-		// The type matches, so do the appropriate comparison.
-//		return iLeft.pUncheckedCompare(iRight);
-		return iLeft.Compare(iRight);
-		}
+	return iLeft.Compare(iRight);
 	}
 
 /*! Remove from ioIDs any entry whose corresponding tuple does not match iFilter. */
@@ -418,7 +409,7 @@ void ZTupleQuisitioner::Query_Unordered
 				// The source is a combo, so we can apply a first to it.
 				const ZTName& theFirst = theNode_First->GetPropName();
 				const vector<ZTBQuery::SortSpec>& theSort = theNode_Combo->GetSort();
-				if (theSort.empty() || theFirst.Empty())
+				if (theSort.empty() || sIsEmpty(theFirst))
 					{
 					// If there's no first then the results of any sort will not be preserved
 					// after they're dumped into ioIDs, so we just ignore the sort.
@@ -472,7 +463,7 @@ void ZTupleQuisitioner::Query_Unordered
 			for (set<uint64>::iterator i = sourceIDSet.begin(); i != sourceIDSet.end(); ++i)
 				{
 				if (uint64 theID =
-					this->FetchTuple(*i).Get(theNode_ID_FromSource->GetSourcePropName()).GetID())
+					this->FetchTuple(*i).Get(theNode_ID_FromSource->GetSourcePropName()).Get<uint64>())
 					{
 					if (ioIDs.end() == ioIDs.find(theID))
 						{
@@ -487,7 +478,7 @@ void ZTupleQuisitioner::Query_Unordered
 			for (set<uint64>::iterator i = sourceIDSet.begin(); i != sourceIDSet.end(); ++i)
 				{
 				if (uint64 theID =
-					this->FetchTuple(*i).Get(theNode_ID_FromSource->GetSourcePropName()).GetID())
+					this->FetchTuple(*i).Get(theNode_ID_FromSource->GetSourcePropName()).Get<uint64>())
 					{
 					ioIDs.insert(theID);
 					}
@@ -590,9 +581,8 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode,
 		vector<uint64> destIDs;
 		for (vector<ZTuple>::iterator i = sourceTuples.begin(); i != sourceTuples.end(); ++i)
 			{
-			uint64 theID;
-			if ((*i).Get(sourcePropName).QGetID(theID))
-				destIDs.push_back(theID);
+			if (ZQ<uint64> theID = i->QGet<uint64>(sourcePropName))
+				destIDs.push_back(*theID);
 			}
 
 		if (iFilter)

@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcher_Reader__
 #include "zconfig.h"
 
-#include "zoolib/ZStreamerReader.h"
 #include "zoolib/ZThreadOld.h"
 #include "zoolib/tuplebase/ZTSWatcher.h"
 

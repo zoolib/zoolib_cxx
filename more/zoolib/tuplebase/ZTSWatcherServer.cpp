@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZStream_Count.h"
 #include "zoolib/ZStream_Tee.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
@@ -137,78 +138,65 @@ static bool spSync1
 
 
 	vector<uint64> removedIDs;
-	iReq.Get("removedIDs").GetSeq().GetVector_T(back_inserter(removedIDs), uint64());
+	foreachi (i, iReq.Get<ZSeq_Any>("removedIDs"))
+		removedIDs.push_back(i->Get<uint64>());
 
 
 	vector<uint64> addedIDs;
-	iReq.Get("addedIDs").GetSeq().GetVector_T(back_inserter(addedIDs), uint64());
+	foreachi (i, iReq.Get<ZSeq_Any>("addedIDs"))
+		addedIDs.push_back(i->Get<uint64>());
 
 
 	vector<int64> removedQueries;
-	iReq.Get("removedQueries").GetSeq().GetVector_T(back_inserter(removedQueries), uint64());
+	foreachi (i, iReq.Get<ZSeq_Any>("removedQueries"))
+		removedQueries.push_back(i->Get<uint64>());
 
 
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
-	{
-	const vector<ZTValue>& addedQueriesV = iReq.Get("addedQueries").GetSeq().GetVector();
-	if (size_t theCount = addedQueriesV.size())
+
+	foreachi (i, iReq.Get<ZSeq_Any>("addedQueries"))
 		{
-		addedQueries.reserve(theCount);
-		for (vector<ZTValue>::const_iterator
-			i = addedQueriesV.begin(), theEnd = addedQueriesV.end();
-			i != theEnd; ++i)
+		const ZTuple& entry = (*i).Get<ZMap_Any>();
+		int64 theRefcon;
+		if (entry.QGetInt64("refcon", theRefcon))
 			{
-			const ZTuple& entry = (*i).Get<ZMap_Any>();
-			int64 theRefcon;
-			if (entry.QGetInt64("refcon", theRefcon))
+			if (ZQ<ZMap_Any> theTupleQ = entry.Get<ZMap_Any>("query"))
 				{
-				if (ZQ<ZMap_Any> theTupleQ = entry.Get<ZMap_Any>("query"))
-					{
-					ZTSWatcher::AddedQueryCombo theCombo;
-					theCombo.fRefcon = theRefcon;
-					theCombo.fTBQuery = ZTBQuery(*theTupleQ);
-					theCombo.fTBQuery.ToStream(ZStreamRWPos_MemoryBlock(theCombo.fMemoryBlock));
-					theCombo.fPrefetch = entry.GetBool("prefetch");
-					addedQueries.push_back(theCombo);
-					}
+				ZTSWatcher::AddedQueryCombo theCombo;
+				theCombo.fRefcon = theRefcon;
+				theCombo.fTBQuery = ZTBQuery(*theTupleQ);
+				theCombo.fTBQuery.ToStream(ZStreamRWPos_MemoryBlock(theCombo.fMemoryBlock));
+				theCombo.fPrefetch = entry.GetBool("prefetch");
+				addedQueries.push_back(theCombo);
 				}
 			}
 		}
-	}
 
 
 	vector<uint64> writtenTupleIDs;
 	vector<ZTuple> writtenTuples;
 	bool writeNeededSort = false;
 	{
-	const vector<ZTValue>& writtenTuplesV = iReq.Get("writtenTuples").GetSeq().GetVector();
-	if (size_t theCount = writtenTuplesV.size())
+	uint64 lastID = 0;
+	foreachi (i, iReq.Get<ZSeq_Any>("writtenTuples"))
 		{
-		writtenTupleIDs.reserve(theCount);
-		writtenTuples.reserve(theCount);
-		uint64 lastID = 0;
-		for (vector<ZTValue>::const_iterator
-			i = writtenTuplesV.begin(), theEnd = writtenTuplesV.end();
-			i != theEnd; ++i)
+		const ZTuple& entry = (*i).Get<ZMap_Any>();
+		uint64 theID;
+		if (entry.QGetID("ID", theID))
 			{
-			const ZTuple& entry = (*i).Get<ZMap_Any>();
-			uint64 theID;
-			if (entry.QGetID("ID", theID))
+			if (ZQ<ZMap_Any> theTupleQ = entry.Get<ZMap_Any>("tuple"))
 				{
-				if (ZQ<ZMap_Any> theTupleQ = entry.Get<ZMap_Any>("tuple"))
-					{
-					if (lastID >= theID)
-						writeNeededSort = true;
-					lastID = theID;
+				if (lastID >= theID)
+					writeNeededSort = true;
+				lastID = theID;
 
-					writtenTupleIDs.push_back(theID);
-					writtenTuples.push_back(*theTupleQ);
-					}
+				writtenTupleIDs.push_back(theID);
+				writtenTuples.push_back(*theTupleQ);
 				}
 			}
-		if (writeNeededSort)
-			spSort(writtenTupleIDs, writtenTuples);
 		}
+	if (writeNeededSort)
+		spSort(writtenTupleIDs, writtenTuples);
 	}
 
 
@@ -238,15 +226,14 @@ static bool spSync1
 
 	if (!watcherAddedIDs.empty())
 		{
-		std::copy(watcherAddedIDs.begin(), watcherAddedIDs.end(),
-			back_inserter(response.SetMutableVector("addedTuples")));
+		foreacha (aa, watcherAddedIDs)
+			response.Mut<ZSeq_Any>("addedTuples").Append(aa);
 		}
 
 	if (size_t theCount = changedTupleIDs.size())
 		{
 		ZAssertStop(kDebug_TSWatcherServer, changedTupleIDs.size() == changedTuples.size());
-		vector<ZTValue>& changedTuplesV = response.SetMutableVector("changedTuples");
-		changedTuplesV.reserve(theCount);
+		ZSeq_Any& changedTuplesV = response.Mut<ZSeq_Any>("changedTuples");
 		ZTuple temp;
 		vector<ZTuple>::const_iterator iterCT = changedTuples.begin();
 		for (vector<uint64>::const_iterator
@@ -255,7 +242,7 @@ static bool spSync1
 			{
 			temp.SetID("ID", *i);
 			temp.SetTuple("tuple", *iterCT);
-			changedTuplesV.push_back(temp);
+			changedTuplesV.Append(temp);
 			}
 		}
 
@@ -263,19 +250,18 @@ static bool spSync1
 
 	if (size_t theCount = changedQueries.size())
 		{
-		vector<ZTValue>& changedQueriesV = response.SetMutableVector("changedQueries");
-		changedQueriesV.reserve(theCount);
+		ZSeq_Any& changedQueriesV = response.Mut<ZSeq_Any>("changedQueries");
 		ZTuple temp;
 		for (map<int64, vector<uint64> >::iterator
 			i = changedQueries.begin(), theEnd = changedQueries.end();
 			i != theEnd; ++i)
 			{
-			temp.SetInt64("refcon", (*i).first);
+			temp.SetInt64("refcon", i->first);
 
-			std::copy((*i).second.begin(), (*i).second.end(),
-				back_inserter(temp.SetMutableVector("IDs")));
+			foreacha (aa, i->second)
+				temp.Mut<ZSeq_Any>("IDs").Append(aa);
 
-			changedQueriesV.push_back(temp);
+			changedQueriesV.Append(temp);
 			}
 		}
 
@@ -310,6 +296,7 @@ static bool spSync1
 			else
 				s << " ";
 
+#if 0 //##
 			const char sortChar = writeNeededSort ? '!' : 'w';
 
 			s.Writef("1 %7.3fr %7.3fe %7.3fd %7.3fpt %7.3fpq %7.3fs - "
@@ -332,6 +319,7 @@ static bool spSync1
 				changedQueries.size(),
 				size_t(bytesWritten)
 				);
+#endif
 			}
 		}
 	return true;
@@ -533,6 +521,7 @@ static bool spSync2
 			else
 				s << " ";
 
+#if 0 //##
 			s.Writef("2 %7.3fr %7.3fd %7.3fs - "
 				"%3dt- %3dt+ %3dq- %3dtw %3dq+ %3d~t %3d~q - "
 				"%6d< %6d>",
@@ -549,6 +538,7 @@ static bool spSync2
 				size_t(bytesRead),
 				size_t(bytesWritten)
 				);
+#endif
 			}
 		}
 
@@ -666,6 +656,7 @@ static bool spSync3
 
 			const char sortChar = writeNeededSort ? '!' : 'w';
 
+#if 0 //##
 			s.Writef("3 %7.3fr %7.3fd %7.3fs - "
 				"%3dt- %3dt+ %3dq- %3dt%c %3dq+ %3d~t %3d~q - "
 				"%6d< %6d>",
@@ -683,6 +674,7 @@ static bool spSync3
 				size_t(bytesRead),
 				size_t(bytesWritten)
 				);
+#endif
 			}
 		}
 
@@ -810,6 +802,7 @@ static bool spSync4
 
 			const char sortChar = writeNeededSort ? '!' : 'w';
 
+#if 0 //##
 			s.Writef("4 %7.3fr %7.3fd %7.3fs - "
 				"%3dt- %3dt+ %3dq- %3dt%c %3dq+ %3dt+ %3d~t %3d~q - "
 				"%6d< %6d>",
@@ -828,6 +821,7 @@ static bool spSync4
 				size_t(bytesRead),
 				size_t(bytesWritten)
 				);
+#endif
 			}
 		}
 

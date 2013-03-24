@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZStream_Count.h"
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
@@ -201,26 +202,26 @@ void ZTSWatcher_Client::pSync1
 
 	if (iRemovedIDsCount)
 		{
-		std::copy(iRemovedIDs, iRemovedIDs + iRemovedIDsCount,
-			back_inserter(request.SetMutableVector("removedIDs")));
+		for (size_t xx = 0; xx < iRemovedIDsCount; ++xx)
+			request.Mut<ZSeq_Any>("removedIDs").Append(iRemovedIDs[xx]);
 		}
 
 	if (iAddedIDsCount)
 		{
-		std::copy(iAddedIDs, iAddedIDs + iAddedIDsCount,
-			back_inserter(request.SetMutableVector("addedIDs")));
+		for (size_t xx = 0; xx < iAddedIDsCount; ++xx)
+			request.Mut<ZSeq_Any>("addedIDs").Append(iAddedIDs[xx]);
 		}
 
 	if (iRemovedQueriesCount)
 		{
-		std::copy(iRemovedQueries, iRemovedQueries + iRemovedQueriesCount,
-			back_inserter(request.SetMutableVector("removedQueries")));
+		for (size_t xx = 0; xx < iRemovedQueriesCount; ++xx)
+			request.Mut<ZSeq_Any>("removedQueries").Append(iRemovedQueries[xx]);
 		}
 
 
 	if (iAddedQueriesCount)
 		{
-		vector<ZTValue>& addedQueriesV = request.SetMutableVector("addedQueries");
+		ZSeq_Any& addedQueriesV = request.Mut<ZSeq_Any>("addedQueries");
 		for (size_t count = iAddedQueriesCount; count; --count)
 			{
 			const AddedQueryCombo& theAQC = *iAddedQueries++;
@@ -239,20 +240,20 @@ void ZTSWatcher_Client::pSync1
 
 			temp.SetTuple("query", theTBQuery.AsTuple());
 
-			addedQueriesV.push_back(temp);
+			addedQueriesV.Append(temp);
 			}
 		}
 
 
 	if (iWrittenTuplesCount)
 		{
-		vector<ZTValue>& writtenTuplesV = request.SetMutableVector("writtenTuples");
+		ZSeq_Any& writtenTuplesV = request.Mut<ZSeq_Any>("writtenTuples");
 		for (size_t count = iWrittenTuplesCount; count; --count)
 			{
 			ZTuple temp;
 			temp.SetID("ID", *iWrittenTupleIDs++);
 			temp.SetTuple("tuple", *iWrittenTuples++);
-			writtenTuplesV.push_back(temp);
+			writtenTuplesV.Append(temp);
 			}
 		}
 
@@ -298,40 +299,30 @@ void ZTSWatcher_Client::pSync1
 		}
 
 	oAddedIDs.clear();
-	response.Get("addedTuples").GetSeq().GetVector_T(back_inserter(oAddedIDs), uint64());
+	foreachi (i, response.Get<ZSeq_Any>("addedTuples"))
+		oAddedIDs.push_back(i->Get<uint64>());
 
 
 	oChangedTupleIDs.clear();
 	oChangedTuples.clear();
-	const vector<ZTValue>& changedTuplesV = response.Get("changedTuples").GetSeq().GetVector();
-	if (size_t theCount = changedTuplesV.size())
+	foreachi (i, response.Get<ZSeq_Any>("changedTuples"))
 		{
-		oChangedTupleIDs.reserve(theCount);
-		oChangedTuples.reserve(theCount);
-		for (vector<ZTValue>::const_iterator
-			i = changedTuplesV.begin(), theEnd = changedTuplesV.end();
-			i != theEnd; ++i)
-			{
-			const ZTuple& entry = (*i).Get<ZMap_Any>();
+		const ZTuple& entry = (*i).Get<ZMap_Any>();
 
-			uint64 theID;
-			if (entry.QGetID("ID", theID))
+		uint64 theID;
+		if (entry.QGetID("ID", theID))
+			{
+			if (ZQ<ZTuple> theTupleQ = entry.Get<ZMap_Any>("tuple"))
 				{
-				if (ZQ<ZTuple> theTupleQ = entry.Get<ZMap_Any>("tuple"))
-					{
-					oChangedTupleIDs.push_back(theID);
-					oChangedTuples.push_back(*theTupleQ);
-					}
+				oChangedTupleIDs.push_back(theID);
+				oChangedTuples.push_back(*theTupleQ);
 				}
 			}
 		}
 
 
 	oChangedQueries.clear();
-	const vector<ZTValue>& changedQueriesV = response.Get("changedQueries").GetSeq().GetVector();
-	for (vector<ZTValue>::const_iterator
-		i = changedQueriesV.begin(), theEnd = changedQueriesV.end();
-		i != theEnd; ++i)
+	foreachi (i, response.Get<ZSeq_Any>("changedQueries"))
 		{
 		const ZTuple& entry = (*i).Get<ZMap_Any>();
 
@@ -341,8 +332,8 @@ void ZTSWatcher_Client::pSync1
 			pair<map<int64, vector<uint64> >::iterator, bool> pos =
 				oChangedQueries.insert(pair<int64, vector<uint64> >(theRefcon, vector<uint64>()));
 			vector<uint64>& theIDs = (*pos.first).second;
-			theIDs.reserve(entry.Get("IDs").GetSeq().Count());
-			entry.Get("IDs").GetSeq().GetVector_T(back_inserter(theIDs), uint64());
+			foreachi (i, entry.Get<ZSeq_Any>("IDs"))
+				theIDs.push_back(i->Get<uint64>());
 			}
 		}
 
@@ -366,6 +357,7 @@ void ZTSWatcher_Client::pSync1
 				s << "!";
 			else
 				s << " ";
+#if 0 //##
 			s.Writef("1 %7.3fp %7.3fs %7.3fd %7.3fr %7.3fe - "
 				"%3dt- %3dt+ %3dq- %3dtw %3dq+ %3dt+ %3d~t %3d~q - "
 				"%6d> %6d<",
@@ -385,6 +377,7 @@ void ZTSWatcher_Client::pSync1
 				size_t(bytesWritten),
 				size_t(bytesRead)
 				);
+#endif
 			}
 		}
 	}
@@ -524,6 +517,7 @@ void ZTSWatcher_Client::pSync2
 				s << "!";
 			else
 				s << " ";
+#if 0 //##
 			s.Writef("2 %7.3fs %7.3fd %7.3fr - "
 				"%3dt- %3dt+ %3dq- %3dtw %3dq+ %3d~t %3d~q - "
 				"%6d> %6d<",
@@ -540,6 +534,7 @@ void ZTSWatcher_Client::pSync2
 				size_t(bytesWritten),
 				size_t(bytesRead)
 				);
+#endif
 			}
 		}
 	}
@@ -556,13 +551,13 @@ void ZTSWatcher_Client::pSync3
 	{
 	ZAssert(fSupports3);
 
-	const ZTime beforeSend = ZTime::sSystem();
+//##	const ZTime beforeSend = ZTime::sSystem();
 
 	ZTuple request;
 	request.SetString("What", "DoIt3");
 	request.ToStream(iStreamW);
 
-	uint64 bytesWritten;
+//##	uint64 bytesWritten;
 	#if kDebug_ShowStats
 		ZStreamW_Count theStreamW(bytesWritten, iStreamW);
 	#else
@@ -614,10 +609,10 @@ void ZTSWatcher_Client::pSync3
 
 	iStreamW.Flush();
 
-	const ZTime afterSend = ZTime::sSystem();
+//##	const ZTime afterSend = ZTime::sSystem();
 
 
-	uint64 bytesRead;
+//##	uint64 bytesRead;
 	#if kDebug_ShowStats
 		ZStreamU_Unreader theStreamU(iStreamR);
 		theStreamU.ReadInt8();
@@ -625,7 +620,7 @@ void ZTSWatcher_Client::pSync3
 		const ZTime startReceiving = ZTime::sSystem();
 		ZStreamR_Count theStreamR(bytesRead, theStreamU);
 	#else
-		const ZTime startReceiving = ZTime::sSystem();
+//##		const ZTime startReceiving = ZTime::sSystem();
 		const ZStreamR& theStreamR = iStreamR;
 	#endif
 
@@ -664,7 +659,7 @@ void ZTSWatcher_Client::pSync3
 		}
 
 
-	const ZTime allDone = ZTime::sSystem();
+//##	const ZTime allDone = ZTime::sSystem();
 
 	if (kDebug_ShowStats)
 		{
@@ -683,7 +678,7 @@ void ZTSWatcher_Client::pSync3
 				s << "!";
 			else
 				s << " ";
-			s.Writef("3 %7.3fs %7.3fd %7.3fr - "
+#if 0//##			s.Writef("3 %7.3fs %7.3fd %7.3fr - "
 				"%3dt- %3dt+ %3dq- %3dtw %3dq+ %3d~t %3d~q - "
 				"%6d> %6d<",
 				1000*(afterSend-beforeSend),
@@ -699,6 +694,7 @@ void ZTSWatcher_Client::pSync3
 				size_t(bytesWritten),
 				size_t(bytesRead)
 				);
+#endif
 			}
 		}
 	}
@@ -853,6 +849,8 @@ void ZTSWatcher_Client::pSync4
 				s << "!";
 			else
 				s << " ";
+
+#if 0 //##
 			s.Writef("4 %7.3fs %7.3fd %7.3fr - "
 				"%3dt- %3dt+ %3dq- %3dtw %3dq+ %3dt+ %3d~t %3d~q - "
 				"%6d> %6d<",
@@ -870,6 +868,7 @@ void ZTSWatcher_Client::pSync4
 				size_t(bytesWritten),
 				size_t(bytesRead)
 				);
+#endif
 			}
 		}
 	}

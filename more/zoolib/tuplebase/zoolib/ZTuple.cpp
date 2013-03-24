@@ -75,21 +75,8 @@ ZTuple ZTuple::Over(const ZTuple& iUnder) const
 ZTuple ZTuple::Under(const ZTuple& iOver) const
 	{ return iOver.Over(*this); }
 
-ZMap_Any& ZTuple::SetNull(const ZTName& iPropName)
-	{
-	this->pTouch();
-	*this->pFindOrAllocate(iPropName) = ZVal_Any();
-	return *this;
-	}
-
-vector<ZVal_Any>& ZTuple::SetMutableVector(const ZTName& iPropName)
-	{
-	this->pTouch();
-	return this->pFindOrAllocate(iPropName)->MutableSeq().MutableVector();
-	}
-
 ZTuple ZTuple::GetTuple(const ZTName& iPropName) const
-	{ return this->Get(iPropName).GetMap(); }
+	{ return this->Get<ZMap_Any>(iPropName); }
 
 void ZTuple::SetTuple(const ZTName& iName, const ZTuple& iTuple)
 	{ this->Set(iName, iTuple); }
@@ -101,20 +88,17 @@ void ZTuple::SetTuple(const ZTName& iName, const ZTuple& iTuple)
 #define ZMACRO_ZMapAccessors_Def_Entry(Name_t, TYPENAME, TYPE) \
 	bool ZTuple::QGet##TYPENAME(Name_t iName, TYPE& oVal) const \
 		{ \
-		ZVal_Any theVal; \
-		if (this->QGet(iName, theVal)) \
-			return theVal.QGet_T<TYPE>(oVal); \
+		if (ZQ<TYPE> theQ = this->QGet<TYPE>(iName)) \
+			{ \
+			oVal = *theQ; \
+			return true; \
+			} \
 		return false; \
 		} \
 	TYPE ZTuple::DGet##TYPENAME(const TYPE& iDefault, Name_t iName) const \
-		{ \
-		ZVal_Any theVal; \
-		if (this->QGet(iName, theVal)) \
-			return theVal.DGet_T<TYPE>(iDefault); \
-		return iDefault; \
-		} \
+		{ return this->DGet<TYPE>(iDefault, iName); } \
 	TYPE ZTuple::Get##TYPENAME(Name_t iName) const \
-		{ return this->Get(iName).Get_T<TYPE>(); } \
+		{ return this->Get<TYPE>(iName); } \
 	ZTuple& ZTuple::Set##TYPENAME(Name_t iName, const TYPE& iVal) \
 		{ \
 		this->Set(iName, iVal); \
