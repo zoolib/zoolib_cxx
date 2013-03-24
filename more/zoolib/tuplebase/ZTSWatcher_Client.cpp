@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZStream_Count.h"
 #include "zoolib/ZUtil_STL_vector.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
 
 namespace ZooLib {
 
@@ -260,8 +259,8 @@ void ZTSWatcher_Client::pSync1
 	request.SetString("What", "DoIt");
 	if (kDebug_ShowCommsTuples)
 		{
-		if (ZLOG(s, eInfo, "ZTSWatcher_Client"))
-			s << "<< " << request;
+//##		if (ZLOG(s, eInfo, "ZTSWatcher_Client"))
+//##			s << "<< " << request;
 		}
 
 	const ZTime beforeSend = ZTime::sSystem();
@@ -294,8 +293,8 @@ void ZTSWatcher_Client::pSync1
 
 	if (kDebug_ShowCommsTuples)
 		{
-		if (ZLOG(s, eInfo, "ZTSWatcher_Client"))
-			s << ">> " << response;
+//##		if (ZLOG(s, eInfo, "ZTSWatcher_Client"))
+//##			s << ">> " << response;
 		}
 
 	oAddedIDs.clear();

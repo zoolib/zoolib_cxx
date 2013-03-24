@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZUtil_STL_vector.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::map;
 using std::pair;
@@ -398,6 +397,7 @@ bool ZTSoup::Sync()
 				{
 				// It's not in use, and not known to the watcher, so it should have
 				// been pulled from the sync list by update and deleted.
+#if 0 //##
 				if (ZLOG(s, eNotice, "ZTSoup"))
 					{
 					s << "Got a PCrouton on the sync list that maybe shouldn't be there: "
@@ -407,6 +407,7 @@ bool ZTSoup::Sync()
 						<< sStringf("%llX: ", thePCrouton->fID)
 						<< thePCrouton->fValue;
 					}
+#endif
 				}
 			}
 		}
@@ -445,6 +446,7 @@ bool ZTSoup::Sync()
 		else
 			{
 			// Shouldn't still be on the sync list if it's not in use and not known to the watcher
+#if 0 //##
 			if (ZLOG(s, eNotice, "ZTSoup"))
 				{
 				s << "Got a PSieve on the sync list that maybe shouldn't be there: "
@@ -453,6 +455,7 @@ bool ZTSoup::Sync()
 					<< sStringf("ID: %llX, value: ", reinterpret_cast<int64>(thePSieve))
 					<< thePSieve->fTBQuery.AsTuple();
 				}
+#endif
 			}
 		}
 

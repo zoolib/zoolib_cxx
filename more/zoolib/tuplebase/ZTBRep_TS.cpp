@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
 
 #ifndef ZCONFIG_TBRep_TS_Logging
 #	define ZCONFIG_TBRep_TS_Logging 0

@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_vector.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
 
 #include "zoolib/tuplebase/ZTupleIndex.h"
 
@@ -854,8 +853,8 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 
 	if (kDebug_ShowCommsTuples)
 		{
-		if (ZLOG(s, eDebug, "ZTBRep_Client"))
-			s << "<< " << theResp;
+//##		if (ZLOG(s, eDebug, "ZTBRep_Client"))
+//##			s << "<< " << theResp;
 		}
 
 	if (theWhat == "Ping")
@@ -1026,8 +1025,8 @@ static void spSend(ZMutexLocker& iLocker, const ZStreamW& iStream, const ZTuple&
 
 	if (kDebug_ShowCommsTuples)
 		{
-		if (ZLOG(s, eDebug, "ZTBRep_Client"))
-			s << ">> " << iTuple;
+//##		if (ZLOG(s, eDebug, "ZTBRep_Client"))
+//##			s << ">> " << iTuple;
 		}
 
 	iTuple.ToStream(iStream);
