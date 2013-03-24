@@ -45,15 +45,13 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{
+	// I think this needs to work in a fashion akin to product, because we may have a restrict
+	// in op1 that refers to a name from op0.
+
 	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
-	ZRef<Expr_Rel> newOp1;
-	{
-	ZSetRestore_T<vector<Restrict*> > sr0(fRestricts);
-	ZSetRestore_T<RelHead> sr1(fRelHead);
-	newOp1 = this->Do(iExpr->GetOp1());
-	}
-//##??
+	ZRef<Expr_Rel> newOp1 = iExpr->GetOp1();
+
 	this->pHandleIt(iExpr->GetColName(), iExpr->SelfOrClone(newOp0, newOp1));
 	}
 
