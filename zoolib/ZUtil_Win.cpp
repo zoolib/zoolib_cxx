@@ -75,6 +75,48 @@ bool ZUtil_Win::sIsWin95OSR2()
 	return spIsWin95OSR2_Result;
 	}
 
+static bool spIsVistaOrLater_Inited;
+static bool spIsVistaOrLater_Result;
+bool ZUtil_Win::sIsVistaOrLater()
+	{
+	if (not spIsVistaOrLater_Inited)
+		{
+		OSVERSIONINFOEX osvi = { 0 };
+		osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+		osvi.dwMajorVersion = 6;
+		DWORDLONG conditional = 0;
+		VER_SET_CONDITION(conditional, VER_MAJORVERSION, VER_GREATER_EQUAL);
+		spIsVistaOrLater_Result = true && ::VerifyVersionInfo(&osvi, VER_MAJORVERSION, conditional);
+		spIsVistaOrLater_Inited = true;
+		}
+	return spIsVistaOrLater_Result;
+	}
+
+bool ZUtil_Win::sIsUserAdmin()
+	{
+	// Determine if the user is part of the adminstators group. This will return
+	// true in case of XP and 2K if the user belongs to admin group. In case of
+	// Vista, it only returns true if the admin is running elevated.
+	SID_IDENTIFIER_AUTHORITY nt_authority = SECURITY_NT_AUTHORITY;
+	PSID administrators_group = nullptr;
+	BOOL result = ::AllocateAndInitializeSid
+		(&nt_authority,
+		2,
+		SECURITY_BUILTIN_DOMAIN_RID,
+		DOMAIN_ALIAS_RID_ADMINS,
+		0, 0, 0, 0, 0, 0,
+		&administrators_group);
+
+	if (result)
+		{
+		if (not ::CheckTokenMembership(NULL, administrators_group, &result))
+			result = false;
+		::FreeSid(administrators_group);
+		}
+
+	return true && result;
+	}
+
 static bool spFlag_DisallowWAPI;
 bool ZUtil_Win::sUseWAPI()
 	{

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2013 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,35 +18,43 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Win_h__
-#define __ZUtil_Win_h__
+#ifndef __ZUtil_WinFirewall_h__
+#define __ZUtil_WinFirewall_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCONFIG_SPI.h"
-#include "zoolib/ZCompat_Win.h"
-#include "zoolib/ZQ.h"
+// Pull in appropriate windows header fixups
+#include "zoolib/ZNet_Internet_WinSock.h"
 
-#if ZCONFIG_SPI_Enabled(Win)
+#ifndef ZCONFIG_API_Avail__Util_WinFirewall
+	#define ZCONFIG_API_Avail__Util_WinFirewall ZCONFIG_SPI_Enabled(Win)
+#endif
+
+#ifndef ZCONFIG_API_Desired__Util_WinFirewall
+	#define ZCONFIG_API_Desired__Util_WinFirewall 1
+#endif
+
+#if ZCONFIG_API_Enabled(Util_WinFirewall)
+
+#include <netfw.h>
+
+#include "zoolib/ZWinCOM.h"
 
 namespace ZooLib {
-namespace ZUtil_Win {
+namespace ZUtil_WinFirewall {
 
-bool sIsWinNT();
-bool sIsWin95OSR2();
-bool sIsVistaOrLater();
+// =================================================================================================
+// MARK: - ZUtil_WinFirewall
 
-bool sIsUserAdmin();
+ZRef<INetFwMgr> sMgr();
 
-bool sUseWAPI();
+ZRef<INetFwAuthorizedApplications>
+sAuthorizedApplications_CurrentProfile_LocalPolicy(ZRef<INetFwMgr> iMgr);
 
-void sDisallowWAPI();
+ZQ<string16> sQUNCIsh(const UTF16* iPath);
 
-HINSTANCE sGetModuleHandle();
-
-ZQ<__uint64> sQGetVersion_File(const WCHAR* iPath);
-
-} // namespace ZUtil_Win
+} // namespace ZUtil_WinFirewall
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(Win)
-#endif // __ZUtil_Win_h__
+#endif // ZCONFIG_API_Enabled(Util_WinFirewall)
+
+#endif // __ZUtil_WinFirewall_h__
