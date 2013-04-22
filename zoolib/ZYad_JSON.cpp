@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG(Compiler,GCC)
 	#include <cxxabi.h>
+	#include <stdlib.h> // For free
 #endif
 
 namespace ZooLib {
