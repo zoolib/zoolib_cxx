@@ -76,6 +76,33 @@ static void** sVoidPtr(ZRef<T>& ioRef)
 	{ return (void**)(&ioRef.OParam()); }
 
 // =================================================================================================
+// MARK: -
+
+template <class Target_p, class Source_p>
+ZRef<Target_p> sQueryInterface(Source_p* iSource)
+	{
+	if (iSource)
+		{
+		ZRef<Target_p> theTarget;
+		if (sSuccess& iSource->QueryInterface(ZMACRO_UUID(Target_p), sVoidPtr(theTarget)))
+			return theTarget;
+		}
+	return null;
+	}
+
+template <class Target_p, class Source_p>
+ZRef<Target_p> sQueryInterface(const ZRef<Source_p> iSource)
+	{
+	if (iSource)
+		{
+		ZRef<Target_p> theTarget;
+		if (sSuccess& iSource->QueryInterface(ZMACRO_UUID(Target_p), sVoidPtr(theTarget)))
+			return theTarget;
+		}
+	return null;
+	}
+
+// =================================================================================================
 // MARK: - ZWinCOM::OParam
 
 template <class T, bool Sense = true>
@@ -108,12 +135,18 @@ public:
 	operator bool() const
 		{ return fHasValue == Sense; }
 
-	operator T*() const
+	T& Use() const
 		{
 		sCtor_T<T>(fBytes);
 		fHasValue = true;
-		return sFetch_T<T>(fBytes);
+		return *sFetch_T<T>(fBytes);
 		}
+
+	operator T*() const
+		{ return &this->Use(); }
+
+	const T& operator*() const
+		{ return this->Get(); }
 
 	const T& Get() const
 		{
