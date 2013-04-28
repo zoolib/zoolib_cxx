@@ -38,7 +38,7 @@ ZMap_CFPreferences::ZMap_CFPreferences(const ZMap_CFPreferences& iOther)
 	{}
 
 ZMap_CFPreferences::~ZMap_CFPreferences()
-	{}
+	{ ::CFPreferencesAppSynchronize(fApplicationID); }
 
 ZMap_CFPreferences& ZMap_CFPreferences::operator=(const ZMap_CFPreferences& iOther)
 	{
