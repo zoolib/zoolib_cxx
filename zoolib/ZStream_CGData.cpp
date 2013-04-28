@@ -39,7 +39,7 @@ static size_t spGetBytes_R(void* iInfo, void* oBuffer, size_t iCount)
 static void spReleaseProvider_R(void* iInfo)
 	{ static_cast<ZStreamerR*>(iInfo)->Release(); }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#if ZMACRO_IOS || MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 static off_t spSkipForward_R(void* iInfo, off_t iCount)
 	{
@@ -67,7 +67,7 @@ ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerR> iStreamer)
 	return null;
 	}
 
-#else // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#else // ZMACRO_IOS || MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 static void spSkipBytes_R(void* iInfo, size_t iCount)
 	{ static_cast<ZStreamerR*>(iInfo)->GetStreamR().Skip(iCount); }
@@ -90,7 +90,7 @@ ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerR> iStreamer)
 	return null;
 	}
 
-#endif // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#endif // ZMACRO_IOS || MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 // =================================================================================================
 // MARK: - ZStream_CGData::sProvider
@@ -108,7 +108,7 @@ static void spRewind_RPos(void* iInfo)
 static void spReleaseProvider_RPos(void* iInfo)
 	{ static_cast<ZStreamerRPos*>(iInfo)->Release(); }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#if ZMACRO_IOS || MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 static off_t spSkipForward_RPos(void* iInfo, off_t iCount)
 	{
@@ -136,7 +136,7 @@ ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerRPos> iStreamer)
 	return null;
 	}
 
-#else // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#else // ZMACRO_IOS || MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 static void spSkipBytes_RPos(void* iInfo, size_t iCount)
 	{ static_cast<ZStreamerRPos*>(iInfo)->GetStreamR().Skip(iCount); }
@@ -159,7 +159,7 @@ ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerRPos> iStreamer)
 	return null;
 	}
 
-#endif // MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#endif // ZMACRO_IOS || MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 // =================================================================================================
 // MARK: - CGDataConsumerRef, ZStreamerW
