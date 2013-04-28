@@ -143,10 +143,15 @@ ZRef<ZYadR> YadMapAtRPos::ReadAt(const ZName& iName)
 
 ZRef<ZYadR> sYadR(const ZFileSpec& iFS)
 	{
-	if (iFS.IsDir())
-		return new YadMapAtRPos(iFS);
-	else if (iFS.IsFile())
-		return new YadStreamerRPos(iFS);
+	switch (iFS.Kind())
+		{
+		case ZFile::kindDir:
+			return new YadMapAtRPos(iFS);
+		case ZFile::kindFile:
+			return new YadStreamerRPos(iFS);
+		default:
+			break;
+		}
 	return null;
 	}
 
