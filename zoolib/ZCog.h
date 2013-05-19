@@ -563,6 +563,8 @@ public:
 
 	virtual ZQ<ZCog<Param> > QCall(const ZCog<Param>& iSelf, Param iParam)
 		{
+		ZAssert(sIsPending(fCog0) && sIsPending(fCog1));
+
 		if (ZQ<ZCog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
 			const ZCog<Param>& newCog0 = *newCog0Q;
@@ -656,9 +658,6 @@ public:
 				if (sIsFalse(fCog1))
 					return false;
 		
-				if (sIsTrue(fCog1))
-					return true;
-		
 				return fCog1->QCall(fCog1, iParam);
 				}
 			else
@@ -666,14 +665,16 @@ public:
 				if (sIsFalse(fCog1))
 					return false;
 		
-				if (sIsTrue(fCog1))
-					return newCog0;
-		
 				if (ZQ<ZCog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
 					{
 					const ZCog<Param>& newCog1 = *newCog1Q;
+
+					if (sIsFalse(newCog1))
+						return false;
+
 					if (sIsTrue(newCog1))
 						return newCog0;
+
 					return new Cog_And(newCog0, newCog1);
 					}
 		
@@ -735,7 +736,7 @@ public:
 
 	virtual ZQ<ZCog<Param> > QCall(const ZCog<Param>& iSelf, Param iParam)
 		{
-		ZAssert(sIsPending(fCog0) && fCog1);
+		ZAssert(sIsPending(fCog0) && not sIsFalse(fCog1));
 	
 		if (ZQ<ZCog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
