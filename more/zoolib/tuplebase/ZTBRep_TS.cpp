@@ -323,8 +323,8 @@ void ZTBRep_TS::Transaction::TupleQuisitioner::Search(const ZTBSpec& iSpec, set<
 void ZTBRep_TS::Transaction::TupleQuisitioner::Search(const ZTBSpec& iSpec, vector<uint64>& oIDs)
 	{ fTransaction->fTBRep->Trans_Search(fTransaction, iSpec, oIDs); }
 
-void ZTBRep_TS::Transaction::TupleQuisitioner::FetchTuples
-	(size_t iCount, const uint64* iIDs, ZTuple* oTuples)
+void ZTBRep_TS::Transaction::TupleQuisitioner::FetchTuples(
+	size_t iCount, const uint64* iIDs, ZTuple* oTuples)
 	{ fTransaction->fTBRep->Trans_FetchTuples(fTransaction, iCount, iIDs, oTuples); }
 
 ZTuple ZTBRep_TS::Transaction::TupleQuisitioner::FetchTuple(uint64 iID)
@@ -334,8 +334,8 @@ ZTuple ZTBRep_TS::Transaction::TupleQuisitioner::FetchTuple(uint64 iID)
 #pragma mark -
 #pragma mark * ZTBRep_TS::Transaction definition
 
-ZTBRep_TS::Transaction::Transaction
-	(ZRef<ZTBRep_TS> iTBRep, const vector<ZRef<ZTupleIndexFactory> >& iFactories)
+ZTBRep_TS::Transaction::Transaction(
+	ZRef<ZTBRep_TS> iTBRep, const vector<ZRef<ZTupleIndexFactory> >& iFactories)
 :	fTBRep(iTBRep),
 	fWaiting_Prev(nullptr),
 	fWaiting_Next(nullptr),
@@ -366,8 +366,8 @@ ZTBRep_TS::Transaction::~Transaction()
 ZRef<ZTBRep> ZTBRep_TS::Transaction::GetTBRep()
 	{ return fTBRep; }
 
-void ZTBRep_TS::Transaction::Search
-	(const ZTBQuery& iQuery, Callback_Search_t iCallback, void* iRefcon)
+void ZTBRep_TS::Transaction::Search(
+	const ZTBQuery& iQuery, Callback_Search_t iCallback, void* iRefcon)
 	{
 	#if ZCONFIG_TBRep_TS_Logging
 		if (ZLOG(s, eInfo, "ZTBRep_TS::Transaction::Search"))
@@ -381,8 +381,8 @@ void ZTBRep_TS::Transaction::Search
 	iCallback(iRefcon, vectorResults);
 	}
 
-void ZTBRep_TS::Transaction::Count
-	(const ZTBQuery& iQuery, Callback_Count_t iCallback, void* iRefcon)
+void ZTBRep_TS::Transaction::Count(
+	const ZTBQuery& iQuery, Callback_Count_t iCallback, void* iRefcon)
 	{
 	set<uint64> setResults;
 	if (ZRef<ZTBQueryNode> theNode = iQuery.GetNode())
@@ -760,8 +760,8 @@ void ZTBRep_TS::Trans_CancelPostValidate(Transaction* iTransaction)
 	delete iTransaction;
 	}
 
-static void spLatestStartEarliestEnd
-	(const MapTransTuple_t& iTransTuples, uint64& oLatestStart, uint64& ioEarliestEnd)
+static void spLatestStartEarliestEnd(
+	const MapTransTuple_t& iTransTuples, uint64& oLatestStart, uint64& ioEarliestEnd)
 	{
 	oLatestStart = 0;
 	for (MapTransTuple_t::const_iterator iterTT = iTransTuples.begin();
@@ -1174,8 +1174,8 @@ ZTBRep_TS::TupleInUse& ZTBRep_TS::pGetTupleInUse(uint64 iID)
 	else
 		{
 		// This tuple is not in use by any other transaction.
-		TupleInUse& theTIU = fTuplesInUse.insert
-			(position, MapTupleInUse_t::value_type(iID, TupleInUse()))->second;
+		TupleInUse& theTIU = fTuplesInUse.insert(
+			position, MapTupleInUse_t::value_type(iID, TupleInUse()))->second;
 
 		theTIU.fID = iID;
 		theTIU.fTransaction_Writer = nullptr;

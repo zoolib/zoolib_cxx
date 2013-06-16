@@ -34,8 +34,8 @@ using std::vector;
 // =================================================================================================
 // MARK: - SourceServer
 
-SourceServer::SourceServer
-	(ZRef<Source> iSource, ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+SourceServer::SourceServer(
+	ZRef<Source> iSource, ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fSource(iSource)
 ,	fStreamerR(iStreamerR)
 ,	fStreamerW(iStreamerW)
@@ -84,8 +84,8 @@ bool SourceServer::pRead(ZRef<ZWorker> iWorker)
 
 	if (not addedQueries.empty() || not removedQueries.empty())
 		{
-		fSource->ModifyRegistrations
-			(ZUtil_STL::sFirstOrNil(addedQueries), addedQueries.size(),
+		fSource->ModifyRegistrations(
+			ZUtil_STL::sFirstOrNil(addedQueries), addedQueries.size(),
 			ZUtil_STL::sFirstOrNil(removedQueries), removedQueries.size());
 		}
 

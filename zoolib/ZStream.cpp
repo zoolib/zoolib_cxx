@@ -209,8 +209,8 @@ static void spCopy(const ZStreamR& iStreamR,
 	iStreamW.Write(buffer, oCountRead, &oCountWritten);
 	}
 
-bool ZStream::sCopyAllCon
-	(const ZStreamRCon& iStreamRCon,
+bool ZStream::sCopyAllCon(
+	const ZStreamRCon& iStreamRCon,
 	size_t iChunkSize,
 	const ZStreamWCon& iStreamWCon,
 	double iDisconnectTimeout)
@@ -1287,8 +1287,8 @@ void ZStreamU_Unreader::Imp_Unread()
 		{
 		case eStateFresh:
 			{
-			ZDebugStopf
-				(2, "You called ZStreamU_Unreader::Imp_Unread without having read anything.");
+			ZDebugStopf(
+				2, "You called ZStreamU_Unreader::Imp_Unread without having read anything.");
 			break;
 			}
 		case eStateNormal:
@@ -1303,8 +1303,8 @@ void ZStreamU_Unreader::Imp_Unread()
 			}
 		case eStateHitEnd:
 			{
-			ZDebugStopf
-				(2, "You called ZStreamU_Unreader::Imp_Unread when end of stream has been seen.");
+			ZDebugStopf(
+				2, "You called ZStreamU_Unreader::Imp_Unread when end of stream has been seen.");
 			break;
 			}
 		}

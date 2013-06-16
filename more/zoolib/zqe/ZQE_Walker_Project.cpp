@@ -48,8 +48,8 @@ void Walker_Project::Rewind()
 	fPriors.clear();
 	}
 
-ZRef<Walker> Walker_Project::Prime
-	(const map<string8,size_t>& iOffsets,
+ZRef<Walker> Walker_Project::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
@@ -69,8 +69,8 @@ ZRef<Walker> Walker_Project::Prime
 	return this;
 	}
 
-bool Walker_Project::QReadInc
-	(ZVal_Any* ioResults,
+bool Walker_Project::QReadInc(
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	set<ZRef<ZCounted> > localAnnotations;

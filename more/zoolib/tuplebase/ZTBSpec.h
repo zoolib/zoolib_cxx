@@ -211,8 +211,8 @@ taking the various supported types we don't suffer combinatorial explosion.
 	static ZTBSpec sGreaterEqual(const ZTName& iPropName, const ZTValue& iValue);
 
 	/// Tuples whose string property \a iPropName contains \a iString.
-	static ZTBSpec sStringContains
-		(const ZTName& iPropName, const std::string& iString, int iStrength);
+	static ZTBSpec sStringContains(
+		const ZTName& iPropName, const std::string& iString, int iStrength);
 
 	/// Tuples whose vector property \a iPropName contains a value matching \a iValue.
 	static ZTBSpec sVectorContains(const ZTName& iPropName, const ZTValue& iValue);
@@ -441,15 +441,15 @@ inline ZTBSpec ZTBSpec::sGreater(const ZTName& iPropName, const ZTValue& iValue)
 inline ZTBSpec ZTBSpec::sGreaterEqual(const ZTName& iPropName, const ZTValue& iValue)
 	{ return ZTBSpec(iPropName, eRel_GreaterEqual, iValue); }
 
-inline ZTBSpec ZTBSpec::sStringContains
-	(const ZTName& iPropName, const std::string& iString, int iStrength)
+inline ZTBSpec ZTBSpec::sStringContains(
+	const ZTName& iPropName, const std::string& iString, int iStrength)
 	{ return ZTBSpec(iPropName, eRel_StringContains, iStrength, iString); }
 
 inline ZTBSpec ZTBSpec::sVectorContains(const ZTName& iPropName, const ZTValue& iValue)
 	{ return ZTBSpec(iPropName, eRel_VectorContains, iValue); }
 
-inline ZTBSpec ZTBSpec::sRegex
-	(const ZTName& iPropName, const std::string& iRegex, int iStrength)
+inline ZTBSpec ZTBSpec::sRegex(
+	const ZTName& iPropName, const std::string& iRegex, int iStrength)
 	{ return ZTBSpec(iPropName, eRel_Regex, iStrength, iRegex); }
 
 // =================================================================================================

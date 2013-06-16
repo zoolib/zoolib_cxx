@@ -229,8 +229,8 @@ ZRef<Interface> sCreate(CLSID iCLSID)
 	{
 	ZRef<Interface> result;
 
-	if (SUCCEEDED(::CoCreateInstance
-		(iCLSID,
+	if (SUCCEEDED(::CoCreateInstance(
+		iCLSID,
 		nullptr,
 		CLSCTX_INPROC_SERVER,
 		ZMACRO_UUID(Interface),

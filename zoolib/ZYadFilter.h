@@ -32,8 +32,8 @@ namespace ZooLib {
 
 typedef ZCallable<ZRef<ZYadR>(const ZRef<ZYadR>&)> Callable_YadFilter;
 
-ZRef<ZYadR> sYadFilter
-	(const ZRef<Callable_YadFilter>& iCallable_YadFilter, const ZRef<ZYadR>& iYadR);
+ZRef<ZYadR> sYadFilter(
+	const ZRef<Callable_YadFilter>& iCallable_YadFilter, const ZRef<ZYadR>& iYadR);
 
 } // namespace ZooLib
 

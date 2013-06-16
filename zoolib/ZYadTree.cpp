@@ -524,8 +524,8 @@ ZRef<ZYadR> spWrap_NoAt(const ZRef<Link>& iLink, const ZRef<ZYadR>& iYad)
 
 using namespace YadTree;
 
-ZRef<ZYadMapAtRPos> sYadTree
-	(const ZRef<ZYadMapAtRPos>& iYadMapAtRPos, const string& iProtoName)
+ZRef<ZYadMapAtRPos> sYadTree(
+	const ZRef<ZYadMapAtRPos>& iYadMapAtRPos, const string& iProtoName)
 	{ return new YadMapAtRPos(new Link(new CountedString(iProtoName), iYadMapAtRPos)); }
 
 ZRef<ZYadMapAtRPos> sYadTree(const ZRef<ZYadMapAtRPos>& iYadMapAtRPos)

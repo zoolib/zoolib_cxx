@@ -154,8 +154,8 @@ void ZStreamRW_FlushOnRead::Imp_Flush()
 // =================================================================================================
 // MARK: - ZStreamerRW_FlushOnRead
 
-ZStreamerRW_FlushOnRead::ZStreamerRW_FlushOnRead
-	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+ZStreamerRW_FlushOnRead::ZStreamerRW_FlushOnRead(
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	fStreamerR(iStreamerR),
 	fStreamerW(iStreamerW),
 	fStream(iStreamerR->GetStreamR(), iStreamerW->GetStreamW())

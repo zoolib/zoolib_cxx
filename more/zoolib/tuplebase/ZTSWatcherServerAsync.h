@@ -36,8 +36,8 @@ class ZTSWatcherServerAsync
 ,	public ZCommer
 	{
 public:
-	ZTSWatcherServerAsync
-		(ZRef<ZTaskMaster> iTaskMaster,
+	ZTSWatcherServerAsync(
+		ZRef<ZTaskMaster> iTaskMaster,
 		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 		ZRef<ZTSWatcher> iTSWatcher);
 

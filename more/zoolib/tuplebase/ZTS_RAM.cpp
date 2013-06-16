@@ -168,8 +168,8 @@ void ZTS_RAM::GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples)
 		map<uint64, ZTuple>::const_iterator iter = fTuples.find(*iIDs++);
 		if (iter != fTuples.end())
 			*oTuples++ = (*iter).second;
-		else
-			(*oTuples++).Clear();
+		else(
+			*oTuples++).Clear();
 		}
 	}
 

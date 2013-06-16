@@ -75,14 +75,14 @@ public:
 // MARK: - Relational operators
 
 // The order of parameters here differs from that in sRestrict precisely to keep them distinct.
-ZRef<Expr_Rel_Restrict> sRestrict
-	(const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
+ZRef<Expr_Rel_Restrict> sRestrict(
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
 
-ZRef<Expr_Rel> operator&
-	(const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
+ZRef<Expr_Rel> operator&(
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
 
-ZRef<Expr_Rel> operator&
-	(const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel);
+ZRef<Expr_Rel> operator&(
+	const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel);
 
 ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
 

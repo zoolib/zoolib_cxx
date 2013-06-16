@@ -206,7 +206,7 @@ public:
 	virtual ZQ<R> QCall() = 0;
 
 	inline R DCall(const R& iDefault)
-		{ return this->QCall() .DGet(iDefault); }
+		{ return this->QCall().DGet(iDefault); }
 	
 	inline R Call()
 		{ return this->QCall().Get(); }
@@ -290,8 +290,8 @@ ZMACRO_Callable_Callable(F)
 // MARK: - sCall variants (specialization for 0 params)
 
 template <class Type_p>
-ZQ<typename Type_p::Type_t::R> sQCall
-	(const Type_p& iCallable)
+ZQ<typename Type_p::Type_t::R> sQCall(
+	const Type_p& iCallable)
 	{
 	if (iCallable)
 		return iCallable->QCall();
@@ -299,8 +299,8 @@ ZQ<typename Type_p::Type_t::R> sQCall
 	}
 
 template <class Type_p>
-typename Type_p::Type_t::R sDCall
-	(typename ZCallableUtil::VT<typename Type_p::Type_t::R>::P iDefault,
+typename Type_p::Type_t::R sDCall(
+	typename ZCallableUtil::VT<typename Type_p::Type_t::R>::P iDefault,
 	const Type_p& iCallable)
 	{
 	if (iCallable)
@@ -309,8 +309,8 @@ typename Type_p::Type_t::R sDCall
 	}
 
 template <class Type_p>
-typename Type_p::Type_t::R sCall
-	(const Type_p& iCallable)
+typename Type_p::Type_t::R sCall(
+	const Type_p& iCallable)
 	{
 	if (iCallable)
 		return iCallable->Call();
@@ -323,8 +323,8 @@ typename Type_p::Type_t::R sCall
 #define ZMACRO_Callable_Call(X) \
 \
 template <class Type_p, ZMACRO_Callable_Class_P##X> \
-ZQ<typename Type_p::Type_t::R> sQCall \
-	(const Type_p& iCallable, \
+ZQ<typename Type_p::Type_t::R> sQCall( \
+	const Type_p& iCallable, \
 	ZMACRO_Callable_ConstRef_Pi##X) \
 	{ \
 	if (iCallable) \
@@ -333,8 +333,8 @@ ZQ<typename Type_p::Type_t::R> sQCall \
 	} \
 \
 template <class Type_p, ZMACRO_Callable_Class_P##X> \
-typename Type_p::Type_t::R sDCall \
-	(typename ZCallableUtil::VT<typename Type_p::Type_t::R>::P iDefault, \
+typename Type_p::Type_t::R sDCall( \
+	typename ZCallableUtil::VT<typename Type_p::Type_t::R>::P iDefault, \
 	const Type_p& iCallable, \
 	ZMACRO_Callable_ConstRef_Pi##X) \
 	{ \
@@ -344,8 +344,8 @@ typename Type_p::Type_t::R sDCall \
 	} \
 \
 template <class Type_p, ZMACRO_Callable_Class_P##X> \
-typename Type_p::Type_t::R sCall \
-	(const Type_p& iCallable, \
+typename Type_p::Type_t::R sCall( \
+	const Type_p& iCallable, \
 	ZMACRO_Callable_ConstRef_Pi##X) \
 	{ \
 	if (iCallable) \

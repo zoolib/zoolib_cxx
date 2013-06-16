@@ -35,8 +35,8 @@ class ZStreamerRWFactory_Fallback : public ZStreamerRWFactory
 	{
 public:
 	ZStreamerRWFactory_Fallback();
-	ZStreamerRWFactory_Fallback
-		(const ZRef<ZStreamerRWFactory>* iFactories, size_t iCount);
+	ZStreamerRWFactory_Fallback(
+		const ZRef<ZStreamerRWFactory>* iFactories, size_t iCount);
 	virtual ~ZStreamerRWFactory_Fallback();
 
 // From ZStreamerRWFactory

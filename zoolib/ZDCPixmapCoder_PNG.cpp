@@ -198,8 +198,8 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 			for (size_t y = iBounds.top; y < iBounds.bottom; ++y)
 				{
 				const void* sourceRowAddress = iRasterDesc.CalcRowAddress(iBaseAddress, y);
-				sBlitRow
-					(sourceRowAddress, sourcePixvalDesc, iPixelDesc, iBounds.left,
+				sBlitRow(
+					sourceRowAddress, sourcePixvalDesc, iPixelDesc, iBounds.left,
 					theRowBuffer, destPixvalDesc, destPixelDesc, 0,
 					W(iBounds));
 

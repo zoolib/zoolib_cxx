@@ -62,8 +62,8 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 			if (not iWalker->QReadInc(&theRow[0], &theAnnotations))
 				break;
 
-			theAnnotationsVector.push_back
-				(vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
+			theAnnotationsVector.push_back(
+				vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
 
 			foreachi (ii, offsets)
 				thePackedRows.push_back(theRow[ii->second]);

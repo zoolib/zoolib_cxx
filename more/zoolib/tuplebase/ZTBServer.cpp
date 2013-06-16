@@ -112,8 +112,8 @@ public:
 	size_t fResult;
 	};
 
-ZTBServer::ZTBServer
-	(ZRef<ZTaskMaster> iTaskMaster,
+ZTBServer::ZTBServer(
+	ZRef<ZTaskMaster> iTaskMaster,
 	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 	ZRef<ZTBRep> iTBRep, const std::string& iLogFacility)
 :	ZTask(iTaskMaster),
@@ -497,8 +497,8 @@ void ZTBServer::Handle_Create(const ZTuple& iReq)
 		}
 	}
 
-void ZTBServer::spCallback_GetTupleForSearch
-	(void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
+void ZTBServer::spCallback_GetTupleForSearch(
+	void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 	{
 	if (iCount)
 		{
@@ -512,8 +512,8 @@ void ZTBServer::spCallback_GetTupleForSearch
 			if (not sContains(theTransaction->fTuplesSent, theID))
 				{
 				theTransaction->fTuplesSent.insert(theID);
-				theTransaction->fTuplesToSend_LowPriority.insert
-					(pair<uint64, ZTuple>(theID, theTuple));
+				theTransaction->fTuplesToSend_LowPriority.insert(
+					pair<uint64, ZTuple>(theID, theTuple));
 				}
 			}
 
@@ -698,8 +698,8 @@ void ZTBServer::Handle_Commit(const ZTuple& iReq)
 		}
 	}
 
-void ZTBServer::spCallback_GetTuple
-	(void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
+void ZTBServer::spCallback_GetTuple(
+	void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 	{
 	if (iCount)
 		{
@@ -713,8 +713,8 @@ void ZTBServer::spCallback_GetTuple
 				{
 				theTransaction->fTuplesSent.insert(theID);
 				const ZTuple& theTuple = *iTuples++;
-				theTransaction->fTuplesToSend_HighPriority.insert
-					(pair<uint64, ZTuple>(theID, theTuple));
+				theTransaction->fTuplesToSend_HighPriority.insert(
+					pair<uint64, ZTuple>(theID, theTuple));
 				}
 			}
 
@@ -731,8 +731,8 @@ void ZTBServer::Handle_Actions(const ZTuple& iReq)
 	foreachi (i, iReq.Get<ZSeq_Any>("Gets"))
 		vectorGets.push_back(i->Get<uint64>());
 
-	theTransaction->fTBRepTransaction->GetTuples
-		(vectorGets.size(), &vectorGets[0], spCallback_GetTuple, theTransaction);
+	theTransaction->fTBRepTransaction->GetTuples(
+		vectorGets.size(), &vectorGets[0], spCallback_GetTuple, theTransaction);
 
 	foreachi (i, iReq.Get<ZSeq_Any>("Writes"))
 		{

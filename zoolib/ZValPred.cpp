@@ -98,8 +98,8 @@ ZValPred& ZValPred::operator=(const ZValPred& iOther)
 	return *this;
 	}
 
-ZValPred::ZValPred
-	(const ZRef<ZValComparand>& iLHS,
+ZValPred::ZValPred(
+	const ZRef<ZValComparand>& iLHS,
 	const ZRef<ZValComparator>& iComparator,
 	const ZRef<ZValComparand>& iRHS)
 :	fLHS(iLHS)

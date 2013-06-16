@@ -159,8 +159,8 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 
 			int32 theResponseCode;
 			Map theHeader;
-			if (not spRequest
-				(theEP->GetStreamW(), theEP->GetStreamR(),
+			if (not spRequest(
+				theEP->GetStreamW(), theEP->GetStreamR(),
 				iMethod, theHost, thePath, iHeader,
 				true,
 				&theResponseCode, &theHeader, oRawHeader))

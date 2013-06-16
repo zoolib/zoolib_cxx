@@ -41,17 +41,17 @@ public:
 	typedef ZCallable<bool(ZRef_ZWorker)> Callable_Work;
 	typedef ZCallable<void(ZRef_ZWorker)> Callable_Detached;
 
-	ZWorker
-		(const ZRef<Callable_Attached>& iCallable_Attached,
+	ZWorker(
+		const ZRef<Callable_Attached>& iCallable_Attached,
 		const ZRef<Callable_Work>& iCallable_Work,
 		const ZRef<Callable_Detached>& iCallable_Detached);
 
-	ZWorker
-		(const ZRef<Callable_Attached>& iCallable_Attached,
+	ZWorker(
+		const ZRef<Callable_Attached>& iCallable_Attached,
 		const ZRef<Callable_Work>& iCallable_Work);
 
-	ZWorker
-		(const ZRef<Callable_Work>& iCallable_Work,
+	ZWorker(
+		const ZRef<Callable_Work>& iCallable_Work,
 		const ZRef<Callable_Detached>& iCallable_Detached);
 
 	ZWorker(const ZRef<Callable_Work>& iCallable_Work);

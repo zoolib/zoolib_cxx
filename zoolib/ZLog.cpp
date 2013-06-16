@@ -132,13 +132,13 @@ StrimW::operator operator_bool() const
 		{
 		if (fName_StringQ)
 			{
-			return operator_bool_gen::translate
-				(theLM->Enabled(fPriority, *fName_StringQ));
+			return operator_bool_gen::translate(
+				theLM->Enabled(fPriority, *fName_StringQ));
 			}
 		else
 			{
-			return operator_bool_gen::translate
-				(theLM->Enabled(fPriority, *fName_CharStarQ));
+			return operator_bool_gen::translate(
+				theLM->Enabled(fPriority, *fName_CharStarQ));
 			}
 		}
 	else

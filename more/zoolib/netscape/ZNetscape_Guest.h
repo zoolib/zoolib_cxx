@@ -91,8 +91,8 @@ public:
 	bool HasMethod(const std::string& iName);
 
 	using Base_t::Invoke;
-	bool Invoke
-		(const std::string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
+	bool Invoke(
+		const std::string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
 
 	using Base_t::InvokeDefault;
 	bool InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
@@ -132,8 +132,8 @@ protected:
 	virtual void Imp_Invalidate();
 	virtual bool Imp_HasMethod(const std::string& iName);
 
-	virtual bool Imp_Invoke
-		(const std::string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
+	virtual bool Imp_Invoke(
+		const std::string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
 
 	virtual bool Imp_InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
 	virtual bool Imp_HasProperty(const std::string& iName);
@@ -236,8 +236,8 @@ public:
 
 	NPIdentifier Host_GetStringIdentifier(const NPUTF8* name);
 
-	void Host_GetStringIdentifiers
-		(const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers);
+	void Host_GetStringIdentifiers(
+		const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers);
 
 	NPIdentifier Host_GetIntIdentifier(int32 intid);
 
@@ -281,17 +281,17 @@ public:
 
 	void Host_PopPopupsEnabledState(NPP npp);
 
-	bool Host_Enumerate
-		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32 *count);
+	bool Host_Enumerate(
+		NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32 *count);
 
 	void Host_PluginThreadAsyncCall(NPP npp, void (*func)(void *), void *userData);
 
-	bool Host_Construct
-		(NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result);
+	bool Host_Construct(
+		NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result);
 
 // Calls from host to the guest meister.
-	virtual NPError New
-		(NPMIMEType pluginType, NPP npp, uint16 mode,
+	virtual NPError New(
+		NPMIMEType pluginType, NPP npp, uint16 mode,
 		int16 argc, char* argn[], char* argv[], NPSavedData* saved) = 0;
 
 // Calls from host to a guest instance.
@@ -324,8 +324,8 @@ public:
 	virtual NPError SetValue(NPP npp, NPNVariable variable, void *value) = 0;
 
 private:
-	static NPError spNew
-		(NPMIMEType pluginType, NPP npp, uint16 mode,
+	static NPError spNew(
+		NPMIMEType pluginType, NPP npp, uint16 mode,
 		int16 argc, char* argn[], char* argv[], NPSavedData* saved);
 
 	static NPError spDestroy(NPP npp, NPSavedData** save);
@@ -379,8 +379,8 @@ public:
 
 	NPError Host_GetURL(const char* url, const char* target);
 
-	NPError Host_PostURL
-		(const char* url, const char* target, uint32 len, const char* buf, NPBool file);
+	NPError Host_PostURL(
+		const char* url, const char* target, uint32 len, const char* buf, NPBool file);
 
 	NPError Host_RequestRead(NPStream* stream, NPByteRange* rangeList);
 
@@ -423,8 +423,8 @@ public:
 
 	NPIdentifier Host_GetStringIdentifier(const NPUTF8* name);
 
-	void Host_GetStringIdentifiers
-		(const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers);
+	void Host_GetStringIdentifiers(
+		const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers);
 
 	NPIdentifier Host_GetIntIdentifier(int32 intid);
 
@@ -443,8 +443,8 @@ public:
 	bool Host_Invoke(NPObject* obj,
 		NPIdentifier methodName, const NPVariant* args, unsigned argCount, NPVariant* result);
 
-	bool Host_InvokeDefault
-		(NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result);
+	bool Host_InvokeDefault(
+		NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result);
 
 	bool Host_Evaluate(NPObject* obj, NPString* script, NPVariant* result);
 
@@ -467,13 +467,13 @@ public:
 
 	void Host_PopPopupsEnabledState();
 
-	bool Host_Enumerate
-		(NPObject *npobj, NPIdentifier **identifier, uint32 *count);
+	bool Host_Enumerate(
+		NPObject *npobj, NPIdentifier **identifier, uint32 *count);
 
 	void Host_PluginThreadAsyncCall(void (*func)(void *), void *userData);
 
-	bool Host_Construct
-		(NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result);
+	bool Host_Construct(
+		NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result);
 
 	ZRef<NPObjectG> Host_GetWindowObject();
 	ZRef<NPObjectG> Host_GetPluginObject();

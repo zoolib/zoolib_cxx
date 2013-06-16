@@ -397,8 +397,8 @@ static string16 spAsString16(const ZRef<ASZString>& iString)
 	if (size_t theLength = spASZString->LengthAsUnicodeCString(iString))
 		{
 		string16 result(0, theLength);
-		if (noErr == spASZString->AsUnicodeCString
-			(iString, (ASUnicode*)&result[0], theLength, false))
+		if (noErr == spASZString->AsUnicodeCString(
+			iString, (ASUnicode*)&result[0], theLength, false))
 			{
 			return result;
 			}
@@ -891,8 +891,8 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 			case formEnumerated:
 				{
 				Enumerated theVal;
-				if (noErr != spPSActionReference->GetEnumerated
-					(iRef, &theVal.fEnumType, &theVal.fValue))
+				if (noErr != spPSActionReference->GetEnumerated(
+					iRef, &theVal.fEnumType, &theVal.fValue))
 					{
 					allOK = false;
 					}
@@ -944,8 +944,8 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 							}
 						else
 							{
-							oEntries.push_back
-								(Entry::sName(theClassID, theName.substr(0, theLength)));
+							oEntries.push_back(
+								Entry::sName(theClassID, theName.substr(0, theLength)));
 							}
 						}
 				#endif

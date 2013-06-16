@@ -29,8 +29,8 @@ namespace Base64 {
 
 namespace { // anonymous
 
-static void spEncode
-	(const Encode& iEncode, const uint8* iSource, size_t iSourceCount, uint8* oDest)
+static void spEncode(
+	const Encode& iEncode, const uint8* iSource, size_t iSourceCount, uint8* oDest)
 	{
 	switch (iSourceCount)
 		{

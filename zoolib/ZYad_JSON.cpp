@@ -118,8 +118,8 @@ static void spThrowParseException(const string& iMessage)
 	throw ParseException(iMessage);
 	}
 
-static bool spRead_Identifier
-	(const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
+static bool spRead_Identifier(
+	const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
 	{
 	if (oStringExact)
 		oStringExact->reserve(32);
@@ -252,8 +252,8 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 	return true;
 	}
 
-static ZRef<ZYadR> spMakeYadR_JSON
-	(ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO)
+static ZRef<ZYadR> spMakeYadR_JSON(
+	ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO)
 	{
 	using namespace ZUtil_Strim;
 
@@ -756,10 +756,10 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 		s.Write("(");
 		s.Write("=");
 		
-		Base64::StreamW_Encode
-			(Base64::sEncode_Normal(),
-			ZStreamW_ASCIIStrim
-				(ZStrimW_InsertSeparator(chunkSize * 3, chunkSeparator, s)))
+		Base64::StreamW_Encode(
+			Base64::sEncode_Normal(),
+			ZStreamW_ASCIIStrim(
+				ZStrimW_InsertSeparator(chunkSize * 3, chunkSeparator, s)))
 		.CopyAllFrom(iStreamR);
 
 		s.Write(")");
@@ -782,8 +782,8 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 // =================================================================================================
 // MARK: - Visitor_Writer
 
-Visitor_Writer::Visitor_Writer
-	(size_t iIndent, const WriteOptions& iOptions, const ZStrimW& iStrimW)
+Visitor_Writer::Visitor_Writer(
+	size_t iIndent, const WriteOptions& iOptions, const ZStrimW& iStrimW)
 :	fIndent(iIndent),
 	fOptions(iOptions),
 	fStrimW(iStrimW),

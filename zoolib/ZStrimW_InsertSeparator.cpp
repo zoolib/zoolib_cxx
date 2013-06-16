@@ -26,8 +26,8 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZStrimW_CRLFRemove
 
-ZStrimW_InsertSeparator::ZStrimW_InsertSeparator
-	(size_t iSpacing, const string8& iSeparator, const ZStrimW& iStrimSink)
+ZStrimW_InsertSeparator::ZStrimW_InsertSeparator(
+	size_t iSpacing, const string8& iSeparator, const ZStrimW& iStrimSink)
 :	fStrimSink(iStrimSink)
 ,	fCount(0)
 	{
@@ -35,15 +35,15 @@ ZStrimW_InsertSeparator::ZStrimW_InsertSeparator
 		fSpacings[iSpacing] = iSeparator;
 	}
 
-ZStrimW_InsertSeparator::ZStrimW_InsertSeparator
-	(const Spacings& iSpacings, const ZStrimW& iStrimSink)
+ZStrimW_InsertSeparator::ZStrimW_InsertSeparator(
+	const Spacings& iSpacings, const ZStrimW& iStrimSink)
 :	fStrimSink(iStrimSink)
 ,	fSpacings(iSpacings)
 ,	fCount(0)
 	{}
 
-void ZStrimW_InsertSeparator::Imp_WriteUTF32
-	(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
+void ZStrimW_InsertSeparator::Imp_WriteUTF32(
+	const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	const UTF32* localSource = iSource;
 	size_t countRemaining = iCountCU;

@@ -43,8 +43,8 @@ bool ZWinService::sIsService()
 	if (HWINSTA theHWINSTA = ::GetProcessWindowStation())
 		{
 		USEROBJECTFLAGS theUSEROBJECTFLAGS = {0};
-		if (::GetUserObjectInformation
-			(theHWINSTA, UOI_FLAGS, &theUSEROBJECTFLAGS, sizeof(theUSEROBJECTFLAGS), nullptr))
+		if (::GetUserObjectInformation(
+			theHWINSTA, UOI_FLAGS, &theUSEROBJECTFLAGS, sizeof(theUSEROBJECTFLAGS), nullptr))
 			{
 			if (not theUSEROBJECTFLAGS.dwFlags & WSF_VISIBLE)
 				return true;
@@ -70,8 +70,8 @@ void ZWinService::sRunDispatcher()
 	::StartServiceCtrlDispatcherW(&spEntries[0]);
 	}
 
-ZWinService::ZWinService
-	(const wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW iServiceMain, bool iAllowPause)
+ZWinService::ZWinService(
+	const wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW iServiceMain, bool iAllowPause)
 :	fServiceName(iServiceName),
 	fAllowPause(iAllowPause)
 	{
@@ -190,8 +190,8 @@ void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	if (fAllowPause)
 		fServiceStatus.dwControlsAccepted |= SERVICE_ACCEPT_PAUSE_CONTINUE;
 
-	fServiceStatusHandle = ::RegisterServiceCtrlHandlerExW
-		(const_cast<wchar_t*>(fServiceName.c_str()), spServiceCtrlHandlerEx, this);
+	fServiceStatusHandle = ::RegisterServiceCtrlHandlerExW(
+		const_cast<wchar_t*>(fServiceName.c_str()), spServiceCtrlHandlerEx, this);
 
 	if (!fServiceStatusHandle)
 		{
@@ -214,8 +214,8 @@ void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);
 	}
 
-DWORD WINAPI ZWinService::spServiceCtrlHandlerEx
-	(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext)
+DWORD WINAPI ZWinService::spServiceCtrlHandlerEx(
+	DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext)
 	{
 	return static_cast<ZWinService*>(lpContext)->
 		ServiceCtrlHandlerEx(dwControl, dwEventType, lpEventData);

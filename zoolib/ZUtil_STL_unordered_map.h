@@ -71,8 +71,8 @@ const Value* sPGet(const unordered_map<KBase,Value>& iMap, const KDerived& iKey)
 	}
 
 template <typename KBase, typename Value, typename KDerived>
-const Value& sDGet
-	(const Value& iDefault, const unordered_map<KBase,Value>& iMap, const KDerived& iKey)
+const Value& sDGet(
+	const Value& iDefault, const unordered_map<KBase,Value>& iMap, const KDerived& iKey)
 	{
 	if (const Value* theP = sPGet(iMap, iKey))
 		return *theP;
@@ -107,8 +107,8 @@ Value* sPMut(unordered_map<KBase,Value>& iMap, const KDerived& iKey)
 	}
 
 template <typename KBase, typename Value, typename KDerived>
-Value& sDMut
-	(const Value& iDefault, unordered_map<KBase,Value>& ioMap, const KDerived& iKey)
+Value& sDMut(
+	const Value& iDefault, unordered_map<KBase,Value>& ioMap, const KDerived& iKey)
 	{
 	typename unordered_map<KBase,Value>::iterator ii =
 		ioMap.insert(typename unordered_map<KBase,Value>::value_type(iKey, iDefault));
@@ -116,22 +116,22 @@ Value& sDMut
 	}
 
 template <typename KBase, typename Value, typename KDerived>
-Value& sMut
-	(unordered_map<KBase,Value>& iMap, const KDerived& iKey)
+Value& sMut(
+	unordered_map<KBase,Value>& iMap, const KDerived& iKey)
 	{ return iMap[iKey]; }
 
 // -----
 
 template <typename KBase, typename Value, typename KDerived, typename VDerived>
-void sSet
-	(unordered_map<KBase,Value>& ioMap, const KDerived& iKey, const VDerived& iValue)
+void sSet(
+	unordered_map<KBase,Value>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{ ioMap[iKey] = iValue; }
 
 // -----
 
 template <typename KBase, typename Value, typename KDerived, typename VDerived>
-bool sQInsert
-	(unordered_map<KBase,Value>& ioMap, const KDerived& iKey, const VDerived& iValue)
+bool sQInsert(
+	unordered_map<KBase,Value>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{
 	return ioMap.insert(typename unordered_map<KBase,Value>::value_type(iKey, iValue)).second;
 	}
@@ -139,8 +139,8 @@ bool sQInsert
 // -----
 
 template <typename KBase, typename Value, typename KDerived, typename VDerived>
-bool sQReplace
-	(unordered_map<KBase,Value>& ioMap, const KDerived& iKey, const VDerived& iValue)
+bool sQReplace(
+	unordered_map<KBase,Value>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{
 	typename unordered_map<KBase,Value>::iterator ii = ioMap.find(iKey);
 	if (ioMap.end() == ii)
@@ -163,8 +163,8 @@ ZQ<Value> sQGetErase(unordered_map<KBase,Value>& ioMap, const KDerived& iKey)
 	}
 
 template <typename KBase, typename Value, typename KDerived>
-Value sDGetErase
-	(const Value& iDefault, unordered_map<KBase,Value>& ioMap, const KDerived& iKey)
+Value sDGetErase(
+	const Value& iDefault, unordered_map<KBase,Value>& ioMap, const KDerived& iKey)
 	{
 	typename unordered_map<KBase,Value>::iterator ii = ioMap.find(iKey);
 	if (ioMap.end() == ii)
@@ -226,8 +226,8 @@ void sInsertMust(const int iDebugLevel,
 	}
 
 template <typename KBase, typename Value, typename KDerived, typename VDerived>
-void sInsertMust
-	(unordered_map<KBase,Value>& ioMap, const KDerived& iKey, const VDerived& iValue)
+void sInsertMust(
+	unordered_map<KBase,Value>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{ sInsertMust(1, ioMap, iKey, iValue);}
 
 // -----
@@ -241,8 +241,8 @@ void sReplaceMust(const int iDebugLevel,
 	}
 
 template <typename KBase, typename Value, typename KDerived, typename VDerived>
-void sReplaceMust
-	(unordered_map<KBase,Value>& ioMap, const KDerived& iKey, const VDerived& iValue)
+void sReplaceMust(
+	unordered_map<KBase,Value>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{ sReplaceMust(1, ioMap, iKey, iValue); }
 
 // -----

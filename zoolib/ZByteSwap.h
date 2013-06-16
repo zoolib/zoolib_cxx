@@ -500,8 +500,8 @@ inline void ZByteSwap_32(volatile void* ioValueAddress)
 		inline int32 ZByteSwap_32(int32 iValue)
 			{
 			uint32 theValue = iValue;
-			return
-				(theValue >> 24)
+			return(
+				theValue >> 24)
 				| ((theValue >> 8) & 0xFF00)
 				| ((theValue << 8) & 0xFF0000)
 				| (theValue << 24);

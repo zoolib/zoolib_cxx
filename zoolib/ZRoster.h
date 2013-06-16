@@ -83,8 +83,8 @@ class ZRoster::Entry
 ,	NonCopyable
 	{
 private:
-	Entry
-		(const ZRef<ZRoster>& iRoster,
+	Entry(
+		const ZRef<ZRoster>& iRoster,
 		const ZRef<ZCallable_Void>& iCallable_Broadcast,
 		const ZRef<ZCallable_Void>& iCallable_Gone);
 

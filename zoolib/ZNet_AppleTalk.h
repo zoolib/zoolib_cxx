@@ -60,8 +60,8 @@ class ZNetName_AppleTalk : public ZNetName
 	ZNetName_AppleTalk();
 public:
 	ZNetName_AppleTalk(const std::string& iName, const std::string& iType);
-	ZNetName_AppleTalk
-		(const std::string& iName, const std::string& iType, const std::string& iZone);
+	ZNetName_AppleTalk(
+		const std::string& iName, const std::string& iType, const std::string& iZone);
 	virtual ~ZNetName_AppleTalk();
 
 // From ZNetName

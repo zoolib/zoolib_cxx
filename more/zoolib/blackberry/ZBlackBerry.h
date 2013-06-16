@@ -91,8 +91,8 @@ public:
 		error_Generic
 		};
 
-	virtual ZRef<Channel> Open
-		(const std::string& iName, const PasswordHash* iPasswordHash, Error* oError);
+	virtual ZRef<Channel> Open(
+		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError);
 
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError) = 0;

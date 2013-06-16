@@ -31,8 +31,8 @@ class YadMapR_Filtered
 :	public ZYadMapR
 	{
 public:
-	YadMapR_Filtered
-		(const ZRef<Callable_YadFilter>& iCallable, const ZRef<ZYadMapR>& iYadMapR)
+	YadMapR_Filtered(
+		const ZRef<Callable_YadFilter>& iCallable, const ZRef<ZYadMapR>& iYadMapR)
 	:	fCallable(iCallable)
 	,	fYadMapR(iYadMapR)
 		{}
@@ -51,8 +51,8 @@ class YadSeqR_Filtered
 :	public ZYadSeqR
 	{
 public:
-	YadSeqR_Filtered
-		(const ZRef<Callable_YadFilter>& iCallable, const ZRef<ZYadSeqR>& iYadSeqR)
+	YadSeqR_Filtered(
+		const ZRef<Callable_YadFilter>& iCallable, const ZRef<ZYadSeqR>& iYadSeqR)
 	:	fCallable(iCallable)
 	,	fYadSeqR(iYadSeqR)
 		{}
@@ -72,8 +72,8 @@ public:
 // =================================================================================================
 // MARK: -
 
-ZRef<ZYadR> sYadFilter
-	(const ZRef<Callable_YadFilter>& iCallable_YadFilter, const ZRef<ZYadR>& iYadR)
+ZRef<ZYadR> sYadFilter(
+	const ZRef<Callable_YadFilter>& iCallable_YadFilter, const ZRef<ZYadR>& iYadR)
 	{
 	if (iCallable_YadFilter)
 		{

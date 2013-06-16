@@ -44,13 +44,13 @@ namespace ZStream {
 /** Helper function used internally by ZStreamR and ZStreamW,
 but made available in case it's needed by application code. */
 
-void sCopyReadToWrite
-	(const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+void sCopyReadToWrite(
+	const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 	uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten);
 
-bool sCopyAllCon
-	(const ZStreamRCon& iStreamRCon,
+bool sCopyAllCon(
+	const ZStreamRCon& iStreamRCon,
 	size_t iChunkSize,
 	const ZStreamWCon& iStreamWCon,
 	double iDisconnectTimeout);

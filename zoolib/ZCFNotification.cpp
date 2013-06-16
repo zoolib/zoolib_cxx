@@ -33,15 +33,15 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZCFNotification
 
-ZCFNotification::ZCFNotification
-	(void* iObject, const std::string& iName, ZRef<Callable> iCallable)
+ZCFNotification::ZCFNotification(
+	void* iObject, const std::string& iName, ZRef<Callable> iCallable)
 :	fObject(iObject)
 ,	fName_String(iName)
 ,	fCallable(iCallable)
 	{}
 
-ZCFNotification::ZCFNotification
-	(void* iObject, CFStringRef iName, ZRef<Callable> iCallable)
+ZCFNotification::ZCFNotification(
+	void* iObject, CFStringRef iName, ZRef<Callable> iCallable)
 :	fObject(iObject)
 ,	fName_CFStringRef(iName)
 ,	fCallable(iCallable)
@@ -54,8 +54,8 @@ void ZCFNotification::Initialize()
 	{
 	ZCounted::Initialize();
 
-	::CFNotificationCenterAddObserver
-		(::CFNotificationCenterGetLocalCenter(),
+	::CFNotificationCenterAddObserver(
+		::CFNotificationCenterGetLocalCenter(),
 		this,
 		spCallback,
 		this->GetName_CFStringRef(),

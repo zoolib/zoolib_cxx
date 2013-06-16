@@ -218,8 +218,8 @@ public:
 	virtual void Rewind()
 		{ fSource->pRewind(this); }
 
-	virtual ZRef<Walker> Prime
-		(const map<string8,size_t>& iOffsets,
+	virtual ZRef<Walker> Prime(
+		const map<string8,size_t>& iOffsets,
 		map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset)
 		{
@@ -227,8 +227,8 @@ public:
 		return this;
 		}
 
-	virtual bool QReadInc
-		(ZVal_Any* ioResults,
+	virtual bool QReadInc(
+		ZVal_Any* ioResults,
 		set<ZRef<ZCounted> >* oAnnotations)
 		{ return fSource->pReadInc(this, ioResults, oAnnotations); }
 
@@ -741,8 +741,8 @@ bool Source_Union::Intersects(const RelHead& iRelHead)
 	return false;
 	}
 
-void Source_Union::ModifyRegistrations
-	(const AddedQuery* iAdded, size_t iAddedCount,
+void Source_Union::ModifyRegistrations(
+	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	ZGuardMtxR guard(fMtxR);
@@ -822,8 +822,8 @@ void Source_Union::ModifyRegistrations
 				s << "Analyzed:\n" << thePQuery->fRel_Analyzed;
 			}
 
-		ClientQuery* theClientQuery = &fMap_Refcon_ClientQuery.insert
-			(make_pair(theRefcon, ClientQuery(theRefcon, thePQuery))).first->second;
+		ClientQuery* theClientQuery = &fMap_Refcon_ClientQuery.insert(
+			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery))).first->second;
 
 		sInsertBackMust(thePQuery->fClientQueries, theClientQuery);
 
@@ -858,8 +858,8 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 				if (thePIP->fNeedsAdd)
 					{
 					thePIP->fNeedsAdd = false;
-					theAddedQueries.push_back
-						(AddedQuery(thePIP->fRefcon, thePSource->UsableRel(thePIP->fProxy->fRel)));
+					theAddedQueries.push_back(
+						AddedQuery(thePIP->fRefcon, thePSource->UsableRel(thePIP->fProxy->fRel)));
 					}
 				}
 			else
@@ -872,8 +872,8 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 				}
 			}
 
-		thePSource->fSource->ModifyRegistrations
-			(sFirstOrNil(theAddedQueries), theAddedQueries.size(),
+		thePSource->fSource->ModifyRegistrations(
+			sFirstOrNil(theAddedQueries), theAddedQueries.size(),
 			sFirstOrNil(theRemoves), theRemoves.size());
 		}
 
@@ -964,8 +964,8 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 		{
 		ClientQuery* theClientQuery = eraserClientQuery.Current();
 		PQuery* thePQuery = theClientQuery->fPQuery;
-		oChanged.push_back
-			(QueryResult(theClientQuery->fRefcon, thePQuery->fResult, thePQuery->fEvent));
+		oChanged.push_back(
+			QueryResult(theClientQuery->fRefcon, thePQuery->fResult, thePQuery->fEvent));
 		}
 	}
 
@@ -1044,8 +1044,8 @@ ZRef<ZRA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
 
 			const int64 theRefcon = thePSource->fNextRefcon++;
 
-			PIP* thePIP = &thePSource->fMap_Refcon_PIP.insert
-				(make_pair(theRefcon, PIP())).first->second;
+			PIP* thePIP = &thePSource->fMap_Refcon_PIP.insert(
+				make_pair(theRefcon, PIP())).first->second;
 
 			thePIP->fNeedsAdd = true;
 			thePIP->fRefcon = theRefcon;

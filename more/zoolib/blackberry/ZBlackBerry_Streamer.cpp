@@ -157,8 +157,8 @@ StreamW_Chunked::StreamW_Chunked()
 StreamW_Chunked::~StreamW_Chunked()
 	{}
 
-void StreamW_Chunked::Imp_Write
-	(const void* iSource, size_t iCount, size_t* oCountWritten)
+void StreamW_Chunked::Imp_Write(
+	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 	fBuffer.insert(fBuffer.end(), localSource, localSource + iCount);
@@ -219,8 +219,8 @@ private:
 
 	bool Channel_WaitReadable(Channel_Streamer* iChannel, double iTimeout);
 
-	void Channel_Write
-		(Channel_Streamer* iChannel, const void* iSource, size_t iCount, size_t* oCountWritten);
+	void Channel_Write(
+		Channel_Streamer* iChannel, const void* iSource, size_t iCount, size_t* oCountWritten);
 
 	void Channel_SendDisconnect(Channel_Streamer* iChannel);
 
@@ -827,8 +827,8 @@ bool Commer_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 	return this->pDetachIfUnused(iChannel);
 	}
 
-void Commer_Streamer::Channel_Read
-	(Channel_Streamer* iChannel, void* oDest, size_t iCount, size_t* oCountRead)
+void Commer_Streamer::Channel_Read(
+	Channel_Streamer* iChannel, void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	uint8* localDest = static_cast<uint8*>(oDest);
 	deque<uint8>& theBuffer = iChannel->fReceive_Buffer;
@@ -885,8 +885,8 @@ bool Commer_Streamer::Channel_WaitReadable(Channel_Streamer* iChannel, double iT
 		}
 	}
 
-void Commer_Streamer::Channel_Write
-	(Channel_Streamer* iChannel, const void* iSource, size_t iCount, size_t* oCountWritten)
+void Commer_Streamer::Channel_Write(
+	Channel_Streamer* iChannel, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	ZGuardRMtxR locker(fMutex);
 	const uint8* localSource = static_cast<const uint8*>(iSource);

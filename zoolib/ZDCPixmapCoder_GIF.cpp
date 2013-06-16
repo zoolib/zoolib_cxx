@@ -79,8 +79,8 @@ ZDCPixmapEncoder_GIF::ZDCPixmapEncoder_GIF(bool iInterlace, bool iNoPatent)
 \param iInterlace should be true to generate an interlaced GIF.
 \param iNoPatent should be true to generate a GIF without infringing the Unisys patent.
 */
-ZDCPixmapEncoder_GIF::ZDCPixmapEncoder_GIF
-	(bool iInterlace, bool iNoPatent, uint32 iTransparentPixval)
+ZDCPixmapEncoder_GIF::ZDCPixmapEncoder_GIF(
+	bool iInterlace, bool iNoPatent, uint32 iTransparentPixval)
 	{
 	fInterlace = iInterlace;
 	fNoPatent = iNoPatent;
@@ -220,8 +220,8 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 				const void* sourceRowAddress =
 					iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
 
-				sBlitRowPixvals
-					(sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
+				sBlitRowPixvals(
+					sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
 					theRowBuffer, destPixvalDesc, 0,
 					W(iBounds));
 
@@ -236,8 +236,8 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 			const void* sourceRowAddress =
 				iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
 
-			sBlitRowPixvals
-				(sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
+			sBlitRowPixvals(
+				sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
 				theRowBuffer, destPixvalDesc, 0,
 				W(iBounds));
 			theStream->Write(theRowBuffer, W(iBounds));
@@ -396,8 +396,8 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		int rowBytes =
 			sCalcRowBytes(sPhysicalDepths[strmGlobalColorTableSize], fSize.h, 4);
 
-		RasterDesc theRasterDesc
-			(PixvalDesc(strmGlobalColorTableSize + 1, true),
+		RasterDesc theRasterDesc(
+			PixvalDesc(strmGlobalColorTableSize + 1, true),
 			rowBytes, fSize.v, false);
 
 		fRaster = new ZDCPixmapRaster_Simple(theRasterDesc);

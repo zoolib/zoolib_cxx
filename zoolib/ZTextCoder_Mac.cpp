@@ -125,8 +125,8 @@ ZTextDecoder_Mac::~ZTextDecoder_Mac()
 static ByteOffset spSourceOffsets[kBufSize];
 static bool spInitedSourceOffsets = false;
 
-bool ZTextDecoder_Mac::Decode
-	(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+bool ZTextDecoder_Mac::Decode(
+	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	// When we're working with a destination buffer that can't hold all the source material
@@ -179,8 +179,8 @@ bool ZTextDecoder_Mac::Decode
 				spInitedSourceOffsets = true;
 				}
 			size_t countToConvert = min(iSourceBytes, kBufSize);
-			err = ::ConvertFromTextToUnicode
-				(fInfo,
+			err = ::ConvertFromTextToUnicode(
+				fInfo,
 				countToConvert, localSource,
 				flags,
 				countToConvert, spSourceOffsets, &countOffsets, offsets,
@@ -188,8 +188,8 @@ bool ZTextDecoder_Mac::Decode
 			}
 		else
 			{
-			err = ::ConvertFromTextToUnicode
-				(fInfo,
+			err = ::ConvertFromTextToUnicode(
+				fInfo,
 				iSourceBytes, localSource,
 				flags,
 				0, nullptr, nullptr, nullptr, // Offset array stuff.
@@ -242,8 +242,8 @@ bool ZTextDecoder_Mac::Decode
 
 			size_t utf16Consumed;
 			size_t utf32Generated;
-			ZUnicode::sUTF16ToUTF32
-				(reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
+			ZUnicode::sUTF16ToUTF32(
+				reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
 				&utf16Consumed, nullptr,
 				localDest, iDestCU,
 				&utf32Generated);
@@ -277,8 +277,8 @@ void ZTextDecoder_Mac::Init(TextEncoding iSourceEncoding)
 
 	// Note: We can't use kUnicode32BitFormat, the Unicode converter does not support it.
 	UnicodeMapping theMapping;
-	theMapping.unicodeEncoding = ::CreateTextEncoding
-		(kTextEncodingUnicodeV3_2, kTextEncodingDefaultVariant, kUnicode16BitFormat);
+	theMapping.unicodeEncoding = ::CreateTextEncoding(
+		kTextEncodingUnicodeV3_2, kTextEncodingDefaultVariant, kUnicode16BitFormat);
 
 	theMapping.otherEncoding = iSourceEncoding;
 	theMapping.mappingVersion = kUnicodeUseLatestMapping;
@@ -332,8 +332,8 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		{
 		size_t utf32Consumed;
 		size_t utf16Generated;
-		ZUnicode::sUTF32ToUTF16
-			(localSource, iSourceCU,
+		ZUnicode::sUTF32ToUTF16(
+			localSource, iSourceCU,
 			&utf32Consumed, nullptr,
 			reinterpret_cast<UTF16*>(utf16Buffer), kBufSize,
 			&utf16Generated,
@@ -341,8 +341,8 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 
 		ByteCount utf16Consumed;
 		ByteCount destGenerated;
-		OSStatus err = ::ConvertFromUnicodeToText
-			(fInfo,
+		OSStatus err = ::ConvertFromUnicodeToText(
+			fInfo,
 			utf16Generated * 2, utf16Buffer,
 			flags,
 			0, nullptr, nullptr, nullptr, // Offset array stuff.
@@ -356,8 +356,8 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 			// We were not able to consume all the intermediary UTF-16 that was generated.
 			// Turn the number of complete code points consumed back into the number of
 			// corresponding UTF-32 code units.
-			size_t codePoints = ZUnicode::sCUToCP
-				(reinterpret_cast<const UTF16*>(utf16Buffer), utf16Consumed);
+			size_t codePoints = ZUnicode::sCUToCP(
+				reinterpret_cast<const UTF16*>(utf16Buffer), utf16Consumed);
 
 			utf32Consumed = ZUnicode::sCPToCU(localSource, codePoints);
 			}
@@ -391,8 +391,8 @@ void ZTextEncoder_Mac::Init(TextEncoding iDestEncoding)
 	fIsReset = true;
 
 	UnicodeMapping theMapping;
-	theMapping.unicodeEncoding = ::CreateTextEncoding
-		(kTextEncodingUnicodeV3_2, kTextEncodingDefaultVariant, kUnicode16BitFormat);
+	theMapping.unicodeEncoding = ::CreateTextEncoding(
+		kTextEncodingUnicodeV3_2, kTextEncodingDefaultVariant, kUnicode16BitFormat);
 
 	theMapping.otherEncoding = iDestEncoding;
 	theMapping.mappingVersion = kUnicodeUseLatestMapping;

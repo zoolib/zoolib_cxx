@@ -89,15 +89,15 @@ private:
 		const char* iDomain,
 		ConstPString* iTXT, size_t iTXTCount);
 
-	void pDNSServiceRegisterReply
-		(DNSServiceFlags flags,
+	void pDNSServiceRegisterReply(
+		DNSServiceFlags flags,
 		DNSServiceErrorType errorCode,
 		const char* name,
 		const char* regtype,
 		const char* domain);
 
-	static void spDNSServiceRegisterReply
-		(DNSServiceRef sdRef,
+	static void spDNSServiceRegisterReply(
+		DNSServiceRef sdRef,
 		DNSServiceFlags flags,
 		DNSServiceErrorType errorCode,
 		const char* name,

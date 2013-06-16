@@ -139,8 +139,8 @@ void Visitor::Visit_Expr_Rel_Search(const ZRef<ZQE::Expr_Rel_Search>& iExpr)
 	w << ")";
 	}
 
-void Visitor::pWriteBinary
-	(const string& iFunctionName, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
+void Visitor::pWriteBinary(
+	const string& iFunctionName, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << iFunctionName << "(";

@@ -341,8 +341,8 @@ bool ZTupleIndex_General::pKeyFromTuple(uint64 iID, const ZTuple* iTuple, Key& o
 #pragma mark -
 #pragma mark * ZTupleIndexFactory_General
 
-ZTupleIndexFactory_General::ZTupleIndexFactory_General
-	(const vector<string>& iPropNames)
+ZTupleIndexFactory_General::ZTupleIndexFactory_General(
+	const vector<string>& iPropNames)
 :	fPropNameCount(iPropNames.size())
 	{
 	ZAssertStop(ZCONFIG_TupleIndex_Debug, fPropNameCount < ZTupleIndex_General::kMaxProperties);

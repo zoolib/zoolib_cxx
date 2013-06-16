@@ -36,16 +36,16 @@ namespace ZooLib {
 class ZTSWatcher_Client : public ZTSWatcher
 	{
 public:
-	ZTSWatcher_Client
-		(bool iSupports2, bool iSupports3, bool iSupports4, ZRef<ZStreamerRW> iStreamerRW);
+	ZTSWatcher_Client(
+		bool iSupports2, bool iSupports3, bool iSupports4, ZRef<ZStreamerRW> iStreamerRW);
 
 	virtual ~ZTSWatcher_Client();
 
 // From ZTSWatcher
 	virtual bool AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCountIssued);
 
-	virtual bool Sync
-		(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+	virtual bool Sync(
+		const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 		const uint64* iAddedIDs, size_t iAddedIDsCount,
 		const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 		const AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
@@ -57,8 +57,8 @@ public:
 	virtual void SetCallback(Callback_t iCallback, void* iRefcon);
 
 private:
-	void pSync1
-		(const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	void pSync1(
+		const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 		const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 		const uint64* iAddedIDs, size_t iAddedIDsCount,
 		const int64* iRemovedQueries, size_t iRemovedQueriesCount,
@@ -68,8 +68,8 @@ private:
 		const uint64* iWrittenTupleIDs, const ZTuple* iWrittenTuples, size_t iWrittenTuplesCount,
 		std::map<int64, std::vector<uint64> >& oChangedQueries);
 
-	void pSync2
-		(const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	void pSync2(
+		const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 		const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 		const uint64* iAddedIDs, size_t iAddedIDsCount,
 		const int64* iRemovedQueries, size_t iRemovedQueriesCount,
@@ -78,8 +78,8 @@ private:
 		const uint64* iWrittenTupleIDs, const ZTuple* iWrittenTuples, size_t iWrittenTuplesCount,
 		std::map<int64, std::vector<uint64> >& oChangedQueries);
 
-	void pSync3
-		(const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	void pSync3(
+		const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 		const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 		const uint64* iAddedIDs, size_t iAddedIDsCount,
 		const int64* iRemovedQueries, size_t iRemovedQueriesCount,
@@ -88,8 +88,8 @@ private:
 		const uint64* iWrittenTupleIDs, const ZTuple* iWrittenTuples, size_t iWrittenTuplesCount,
 		std::map<int64, std::vector<uint64> >& oChangedQueries);
 
-	void pSync4
-		(const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	void pSync4(
+		const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 		const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 		const uint64* iAddedIDs, size_t iAddedIDsCount,
 		const int64* iRemovedQueries, size_t iRemovedQueriesCount,

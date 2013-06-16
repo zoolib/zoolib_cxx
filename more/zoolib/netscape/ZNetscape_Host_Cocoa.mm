@@ -182,8 +182,8 @@ Host_Cocoa::Host_Cocoa(ZRef<GuestFactory> iGuestFactory, NSView_NetscapeHost* iV
 	if (fView)
 		fView->fHost = this;
 
-	sSingleton<ZCallScheduler>().NextCallIn
-		(50e-3, ZCaller_CFRunLoop::sMain(), fCallable_Timer);
+	sSingleton<ZCallScheduler>().NextCallIn(
+		50e-3, ZCaller_CFRunLoop::sMain(), fCallable_Timer);
 
 //	fNPWindow.type = NPWindowTypeWindow;
 	fNPWindow.type = NPWindowTypeDrawable;//NPWindowTypeWindow;
@@ -417,8 +417,8 @@ void Host_Cocoa::Timer()
 	if (fCallable_Timer)
 		{
 		Host_Std::DeliverData();
-		sSingleton<ZCallScheduler>().NextCallIn
-			(50e-3, ZCaller_CFRunLoop::sMain(), fCallable_Timer);
+		sSingleton<ZCallScheduler>().NextCallIn(
+			50e-3, ZCaller_CFRunLoop::sMain(), fCallable_Timer);
 		}
 	}
 

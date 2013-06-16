@@ -180,8 +180,8 @@ protected:
 // =================================================================================================
 // MARK: - Util_Expr_Bool
 
-static ZRef<ZExpr_Bool> spFromClause
-	(const Clause& iClause,
+static ZRef<ZExpr_Bool> spFromClause(
+	const Clause& iClause,
 	const ZRef<ZExpr_Bool>& iTrue,
 	const ZRef<ZExpr_Bool>& iFalse)
 	{

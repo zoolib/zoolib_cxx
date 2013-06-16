@@ -104,8 +104,8 @@ namespace ZMatrix_armv6 {
 
 void Matrix4Mul(const float* src_mat_1, const float* src_mat_2, float* dst_mat)
 	{
-	asm volatile
-		(
+	asm volatile(
+		
 		VFP_SWITCH_TO_ARM
 		VFP_VECTOR_LENGTH(3)
 
@@ -230,8 +230,8 @@ void Matrix4Mul(const float* src_mat_1, const float* src_mat_2, float* dst_mat)
 
 void Matrix4Vector4Mul(const float* src_mat, const float* src_vec, float* dst_vec)
 	{
-	asm volatile
-		(
+	asm volatile(
+		
 		VFP_SWITCH_TO_ARM
 		
 		// Load the whole matrix.
@@ -260,8 +260,8 @@ void Matrix4Vector4Mul(const float* src_mat, const float* src_vec, float* dst_ve
   
 void Matrix4Vector3Mul(const float* src_mat, const float* src_vec, float* dst_vec)
 	{ 
-	asm volatile
-		(
+	asm volatile(
+		
 		VFP_SWITCH_TO_ARM
 		// Load the whole matrix.
 		"fldmias  %0, {s8-s23}     \n\t"	
@@ -298,8 +298,8 @@ void Matrix4Invert(const float* src_mat, float* dst_mat)
 	{
 	const float one = 1.0;
   
-	asm volatile
-		(
+	asm volatile(
+		
 		VFP_SWITCH_TO_ARM
 		// Load the whole matrix transposed.
 		// Transposing is necessary to be able to execute inversion

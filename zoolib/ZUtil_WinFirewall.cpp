@@ -83,8 +83,8 @@ ZQ<string16> sQUNCIsh(const UTF16* iPath)
 	for (DWORD theSize = 1024; theSize <= 1024*1024; /*no inc*/)
 		{
 		std::vector<char> buffer(theSize);
-		const DWORD result = ::WNetGetUniversalNameW
-			(iPath,
+		const DWORD result = ::WNetGetUniversalNameW(
+			iPath,
 			UNIVERSAL_NAME_INFO_LEVEL,
 			&buffer[0], &theSize);
 

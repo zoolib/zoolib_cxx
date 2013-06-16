@@ -236,8 +236,8 @@ void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed)
 // =================================================================================================
 // MARK: - DatonSet
 
-DatonSet::DatonSet
-	(const Nombre& iNombre, const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain)
+DatonSet::DatonSet(
+	const Nombre& iNombre, const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain)
 :	fNombre(iNombre)
 ,	fNextFork(1)
 ,	fClock(iClock)

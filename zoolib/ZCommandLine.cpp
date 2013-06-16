@@ -369,8 +369,8 @@ bool ZCommandLine::Parse(const ZStrimW& iStrimErrors, int argc, char** argv)
 bool ZCommandLine::Parse(bool iUpdateArgs, int& ioArgc, char**& ioArgv)
 	{ return this->pParse(true, nullptr, ioArgc, ioArgv); }
 
-bool ZCommandLine::Parse
-	(bool iUpdateArgs, const ZStrimW& iStrimErrors, int& ioArgc, char**& ioArgv)
+bool ZCommandLine::Parse(
+	bool iUpdateArgs, const ZStrimW& iStrimErrors, int& ioArgc, char**& ioArgv)
 	{ return this->pParse(true, &iStrimErrors, ioArgc, ioArgv); }
 
 void ZCommandLine::WriteUsage(const ZStrimW& s) const
@@ -417,8 +417,8 @@ void ZCommandLine::WriteUsageExtended(const ZStrimW& s, const string& iIndent) c
 		}
 	}
 
-bool ZCommandLine::pParse
-	(bool iUpdateArgs, const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv)
+bool ZCommandLine::pParse(
+	bool iUpdateArgs, const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv)
 	{
 	// Assume we've been passed the line including the app name in position zero.
 	int localArgc = ioArgc - 1;
@@ -519,8 +519,8 @@ void ZCommandLine::pAppendOpt(Opt* iOpt)
 // =================================================================================================
 // MARK: - ZCommandLine::Opt
 
-ZCommandLine::Opt::Opt
-	(const string& iName, const string& iDescription, EFlags iFlags, bool iHasDefault)
+ZCommandLine::Opt::Opt(
+	const string& iName, const string& iDescription, EFlags iFlags, bool iHasDefault)
 :	fNext(nullptr),
 	fName(iName),
 	fDescription(iDescription),
@@ -548,8 +548,8 @@ ZCommandLine::String::String(const string& iName, const string& iDescription, EF
 :	Opt(iName, iDescription, iFlags, false)
 	{}
 
-ZCommandLine::String::String
-	(const string& iName, const string& iDescription, const string& iDefault)
+ZCommandLine::String::String(
+	const string& iName, const string& iDescription, const string& iDefault)
 :	Opt(iName, iDescription, eOptional, true),
 	fDefault(iDefault)
 	{}

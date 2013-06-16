@@ -38,8 +38,8 @@ static string8 spEmptyString;
 // MARK: - Helper functions
 
 template <class C, class Comp>
-void sParseStringAndAppend_T
-	(const C* iSeparator,
+void sParseStringAndAppend_T(
+	const C* iSeparator,
 	const C* iIgnore,
 	const C* iBounce,
 	const C* iTrail, size_t iTrailSize,
@@ -95,20 +95,20 @@ void sParseStringAndAppend_T
 /** \class ZTrail
 */
 
-void ZTrail::sParseStringAndAppend
-	(const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
+void ZTrail::sParseStringAndAppend(
+	const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
 	const UTF8* iTrail, size_t iTrailSize,
 	vector<string8>& ioComps)
 	{ return sParseStringAndAppend_T(iSeparator, iIgnore, iBounce, iTrail, iTrailSize, ioComps); }
 
-void ZTrail::sParseStringAndAppend
-	(const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
+void ZTrail::sParseStringAndAppend(
+	const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
 	const UTF8* iTrail, size_t iTrailSize,
 	vector<Comp>& ioComps)
 	{ return sParseStringAndAppend_T(iSeparator, iIgnore, iBounce, iTrail, iTrailSize, ioComps); }
 
-void ZTrail::sParseStringAndAppend
-	(const UTF16* iSeparator, const UTF16* iIgnore, const UTF16* iBounce,
+void ZTrail::sParseStringAndAppend(
+	const UTF16* iSeparator, const UTF16* iIgnore, const UTF16* iBounce,
 	const UTF16* iTrail, size_t iTrailSize,
 	vector<string16>& ioComps)
 	{ return sParseStringAndAppend_T(iSeparator, iIgnore, iBounce, iTrail, iTrailSize, ioComps); }

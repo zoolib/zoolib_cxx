@@ -38,8 +38,8 @@ class ZCallable_Apply_0
 :	public ZCallable<R0(void)>
 	{
 public:
-	ZCallable_Apply_0
-		(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1(void)> >& iCallable)
+	ZCallable_Apply_0(
+		const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1(void)> >& iCallable)
 	:	fApply(iApply)
 	,	fCallable(iCallable)
 		{}
@@ -70,8 +70,8 @@ class ZCallable_Apply_1
 :	public ZCallable<R0(P1)>
 	{
 public:
-	ZCallable_Apply_1
-		(const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1(P1)> >& iCallable)
+	ZCallable_Apply_1(
+		const ZRef<ZCallable<R0(P0)> >& iApply, const ZRef<ZCallable<R1(P1)> >& iCallable)
 	:	fApply(iApply)
 	,	fCallable(iCallable)
 		{}
@@ -241,8 +241,8 @@ class ZCallable_While
 :	public ZCallable_Void
 	{
 public:
-	ZCallable_While
-		(const ZRef<ZCallable_Bool>& iCondition, const ZRef<ZCallable<R(void)> >& iCallable)
+	ZCallable_While(
+		const ZRef<ZCallable_Bool>& iCondition, const ZRef<ZCallable<R(void)> >& iCallable)
 	:	fCondition(iCondition)
 	,	fCallable(iCallable)
 		{}
@@ -261,8 +261,8 @@ private:
 	};
 
 template <class R>
-ZRef<ZCallable_Void> sCallable_While
-	(const ZRef<ZCallable_Bool>& iCondition, const ZRef<ZCallable<R(void)> >& iCallable)
+ZRef<ZCallable_Void> sCallable_While(
+	const ZRef<ZCallable_Bool>& iCondition, const ZRef<ZCallable<R(void)> >& iCallable)
 	{ return new ZCallable_While<R>(iCondition, iCallable); }
 
 inline

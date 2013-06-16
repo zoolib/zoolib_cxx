@@ -38,8 +38,8 @@ GuestMeister_Std::GuestMeister_Std()
 GuestMeister_Std::~GuestMeister_Std()
 	{}
 
-NPError GuestMeister_Std::New
-	(NPMIMEType pluginType, NPP iNPP, uint16 mode,
+NPError GuestMeister_Std::New(
+	NPMIMEType pluginType, NPP iNPP, uint16 mode,
 	int16 argc, char* argn[], char* argv[], NPSavedData* saved)
 	{
 	try
@@ -114,8 +114,8 @@ NPError Guest_Std::Guest_Destroy(NPSavedData** save)
 NPError Guest_Std::Guest_SetWindow(NPWindow* window)
 	{ return NPERR_GENERIC_ERROR; }
 
-NPError Guest_Std::Guest_NewStream
-	(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
+NPError Guest_Std::Guest_NewStream(
+	NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
 	{ return NPERR_GENERIC_ERROR; }
 
 NPError Guest_Std::Guest_DestroyStream(NPStream* stream, NPReason reason)

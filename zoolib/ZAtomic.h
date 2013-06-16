@@ -125,8 +125,8 @@ namespace ZooLib {
 inline bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 	{
 	int oldValue;
-	asm volatile
-		(
+	asm volatile(
+		
 		"1: lwarx %1, 0, %2\n"
 		"cmpw %1, %3\n"
 		"beq 2f\n"
@@ -149,8 +149,8 @@ inline bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 inline int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 	{
 	int oldValue;
-	asm volatile
-		(
+	asm volatile(
+		
 		"1: lwarx %1, 0, %2\n"
 		sAtomic_PPC405_ERR77(0, %2)
 		"stwcx. %3, 0, %2\n"
@@ -186,8 +186,8 @@ namespace ZooLib {
 inline bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 	{
 	bool result;
-	asm volatile
-		(
+	asm volatile(
+		
 		ZooLib_SMPLockPrefix "cmpxchg %2, %0\n"
 		"sete %1"
 		: "=m" (iAtomic->fValue), "=qm" (result)
@@ -204,8 +204,8 @@ inline bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 
 inline int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 	{
-	asm volatile
-		(
+	asm volatile(
+		
 		ZooLib_SMPLockPrefix "xchg %1, %0"
 		: "=m" (iAtomic->fValue), "=q" (iParam)
 		: "m" (iAtomic->fValue), "1" (iParam)
@@ -220,8 +220,8 @@ inline int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 
 inline int sAtomic_Add(ZAtomic_t* iAtomic, int iParam)
 	{
-	asm volatile
-		(
+	asm volatile(
+		
 		ZooLib_SMPLockPrefix "xadd %1, %0"
 		: "=m" (iAtomic->fValue), "=q" (iParam)
 		: "m" (iAtomic->fValue), "1" (iParam)
@@ -237,8 +237,8 @@ inline int sAtomic_Add(ZAtomic_t* iAtomic, int iParam)
 inline bool sAtomic_DecAndTest(ZAtomic_t* iAtomic)
 	{
 	bool isZero;
-	asm volatile
-		(
+	asm volatile(
+		
 		ZooLib_SMPLockPrefix "decl %0\n"
 		"sete %1"
 		: "=m" (iAtomic->fValue), "=qm" (isZero)
@@ -254,8 +254,8 @@ inline bool sAtomic_DecAndTest(ZAtomic_t* iAtomic)
 
 inline void sAtomic_Inc(ZAtomic_t* iAtomic)
 	{
-	asm volatile
-		(
+	asm volatile(
+		
 		ZooLib_SMPLockPrefix "incl %0"
 		: "=m" (iAtomic->fValue)
 		: "m" (iAtomic->fValue)
@@ -269,8 +269,8 @@ inline void sAtomic_Inc(ZAtomic_t* iAtomic)
 
 inline void sAtomic_Dec(ZAtomic_t* iAtomic)
 	{
-	asm volatile
-		(
+	asm volatile(
+		
 		ZooLib_SMPLockPrefix "decl %0"
 		: "=m" (iAtomic->fValue)
 		: "m" (iAtomic->fValue)
@@ -412,11 +412,11 @@ inline
 bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue)
 	{
 	#if ZCONFIG_Is64Bit
-		return ::OSAtomicCompareAndSwap64
-			((int64_t)iOldValue, (int64_t)iNewValue, (int64_t*)iPtrAddress);
+		return ::OSAtomicCompareAndSwap64(
+			(int64_t)iOldValue, (int64_t)iNewValue, (int64_t*)iPtrAddress);
 	#else
-		return ::OSAtomicCompareAndSwap32
-			((int32_t)iOldValue, (int32_t)iNewValue, (int32_t*)iPtrAddress);
+		return ::OSAtomicCompareAndSwap32(
+			(int32_t)iOldValue, (int32_t)iNewValue, (int32_t*)iPtrAddress);
 	#endif
 	}
 

@@ -123,8 +123,8 @@ ZNet::Error ZNet_Internet_WinSock::sTranslateError(int inNativeError)
 // =================================================================================================
 // MARK: - ZNetNameLookup_Internet_WinSock
 
-ZNetNameLookup_Internet_WinSock::ZNetNameLookup_Internet_WinSock
-	(const string& inName, ip_port inPort, size_t inMaxAddresses)
+ZNetNameLookup_Internet_WinSock::ZNetNameLookup_Internet_WinSock(
+	const string& inName, ip_port inPort, size_t inMaxAddresses)
 :	fName(inName),
 	fPort(inPort),
 	fStarted(false),
@@ -209,8 +209,8 @@ ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock(ip_port iLocalPort)
 	this->pInit(INADDR_ANY, iLocalPort);
 	}
 
-ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock
-	(ip4_addr iLocalAddress, ip_port iLocalPort)
+ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock(
+	ip4_addr iLocalAddress, ip_port iLocalPort)
 	{
 	this->pInit(iLocalAddress, iLocalPort);
 	}
@@ -223,13 +223,13 @@ ZNetListener_TCP_WinSock::~ZNetListener_TCP_WinSock()
 ZRef<ZNetAddress> ZNetListener_TCP_WinSock::GetAddress()
 	{
 	sockaddr_in localSockAddr;
-	if (0 <= ::getsockname
-		(fSOCKET, (sockaddr*)&localSockAddr, sMutablePtr(int(sizeof(localSockAddr)))))
+	if (0 <= ::getsockname(
+		fSOCKET, (sockaddr*)&localSockAddr, sMutablePtr(int(sizeof(localSockAddr)))))
 		{
 		if (localSockAddr.sin_family == AF_INET)
 			{
-			return new ZNetAddress_IP4
-				(ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
+			return new ZNetAddress_IP4(
+				ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
 			}
 		}
 
@@ -278,14 +278,14 @@ void ZNetListener_TCP_WinSock::CancelListen()
 ip_port ZNetListener_TCP_WinSock::GetPort()
 	{
 	sockaddr_in localSockAddr;
-	if (0 <= ::getsockname
-		(fSOCKET, (sockaddr*)&localSockAddr, sMutablePtr(int(sizeof(localSockAddr)))))
+	if (0 <= ::getsockname(
+		fSOCKET, (sockaddr*)&localSockAddr, sMutablePtr(int(sizeof(localSockAddr)))))
 		{ return ntohs(localSockAddr.sin_port); }
 	return 0;
 	}
 
-void ZNetListener_TCP_WinSock::pInit
-	(ip4_addr iLocalAddress, ip_port iLocalPort)
+void ZNetListener_TCP_WinSock::pInit(
+	ip4_addr iLocalAddress, ip_port iLocalPort)
 	{
 	fSOCKET = ::socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (fSOCKET == INVALID_SOCKET)
@@ -382,8 +382,8 @@ ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock(ip4_addr iRemoteHost, ip_port
 :	fSOCKET(spConnect(0, 0, iRemoteHost, iRemotePort))
 	{}
 
-ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock
-	(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort)
+ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock(
+	ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort)
 :	fSOCKET(spConnect(iLocalHost, iLocalPort, iRemoteHost, iRemotePort))
 	{}
 
@@ -399,13 +399,13 @@ const ZStreamWCon& ZNetEndpoint_TCP_WinSock::GetStreamWCon()
 ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetLocalAddress()
 	{
 	sockaddr_in localSockAddr;
-	if (0 <= ::getsockname
-		(fSOCKET, (sockaddr*)&localSockAddr, sMutablePtr(int(sizeof(localSockAddr)))))
+	if (0 <= ::getsockname(
+		fSOCKET, (sockaddr*)&localSockAddr, sMutablePtr(int(sizeof(localSockAddr)))))
 		{
 		if (localSockAddr.sin_family == AF_INET)
 			{
-			return new ZNetAddress_IP4
-				(ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
+			return new ZNetAddress_IP4(
+				ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
 			}
 		}
 
@@ -415,11 +415,11 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetLocalAddress()
 ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetRemoteAddress()
 	{
 	sockaddr_in remoteSockAddr;
-	if (0 <= ::getpeername
-		(fSOCKET, (sockaddr*)&remoteSockAddr, sMutablePtr(int(sizeof(remoteSockAddr)))))
+	if (0 <= ::getpeername(
+		fSOCKET, (sockaddr*)&remoteSockAddr, sMutablePtr(int(sizeof(remoteSockAddr)))))
 		{
-		return new ZNetAddress_IP4
-			(ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));
+		return new ZNetAddress_IP4(
+			ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));
 		}
 
 	return null;

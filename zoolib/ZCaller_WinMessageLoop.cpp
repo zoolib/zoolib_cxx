@@ -41,8 +41,8 @@ void ZCaller_WinMessageLoop::Initialize()
 	{
 	ZCaller_EventLoop::Initialize();
 
-	fHWND = ZWinWND::sCreate
-		(HWND_MESSAGE, sCallable(sWeakRef(this), &ZCaller_WinMessageLoop::pWindowProc));
+	fHWND = ZWinWND::sCreate(
+		HWND_MESSAGE, sCallable(sWeakRef(this), &ZCaller_WinMessageLoop::pWindowProc));
 
 	::SetWindowTextW(fHWND, L"ZCaller_WinMessageLoop::fHWND");
 	}
@@ -84,8 +84,8 @@ bool ZCaller_WinMessageLoop::pTrigger()
 	return false;
 	}
 
-ZQ<LRESULT> ZCaller_WinMessageLoop::pWindowProc
-	(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
+ZQ<LRESULT> ZCaller_WinMessageLoop::pWindowProc(
+	HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	if (iMessage == spGetMSG())
 		{

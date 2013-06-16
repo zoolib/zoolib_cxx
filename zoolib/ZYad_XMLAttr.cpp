@@ -106,8 +106,8 @@ YadMapR::YadMapR(ZRef<ZML::StrimmerU> iStrimmerU)
 ,	fIter(fAttrs.begin())
 	{}
 
-YadMapR::YadMapR
-	(ZRef<ZML::StrimmerU> iStrimmerU, const string& iOuterName, const ZML::Attrs_t& iAttrs)
+YadMapR::YadMapR(
+	ZRef<ZML::StrimmerU> iStrimmerU, const string& iOuterName, const ZML::Attrs_t& iAttrs)
 :	fStrimmerU(iStrimmerU)
 ,	fOuterName(iOuterName)
 ,	fAttrs(iAttrs)

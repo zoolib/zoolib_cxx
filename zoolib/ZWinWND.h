@@ -66,8 +66,8 @@ HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreat
 
 typedef ZCallable<ZQ<LRESULT>(HWND,UINT,WPARAM,LPARAM)> Callable;
 
-HWND sCreate
-	(DWORD dwExStyle,
+HWND sCreate(
+	DWORD dwExStyle,
 	LPCWSTR lpWindowName,
 	DWORD dwStyle,
 	int X,

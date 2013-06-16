@@ -129,8 +129,8 @@ class LogMeister
 public:
 	virtual bool Enabled(EPriority iPriority, const std::string& iName);
 	virtual bool Enabled(EPriority iPriority, const char* iName);
-	virtual void LogIt
-		(EPriority iPriority, const std::string& iName, const std::string& iMessage) = 0;
+	virtual void LogIt(
+		EPriority iPriority, const std::string& iName, const std::string& iMessage) = 0;
 	};
 
 extern ZRef<LogMeister> sLogMeister;

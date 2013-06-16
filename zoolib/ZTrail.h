@@ -95,18 +95,18 @@ public:
 	const std::vector<Comp>& GetComps() const
 		{ return fComps; }
 
-	static void sParseStringAndAppend
-		(const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
+	static void sParseStringAndAppend(
+		const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
 		const UTF8* iPath, size_t iPathSize,
 		std::vector<string8>& ioComps);
 
-	static void sParseStringAndAppend
-		(const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
+	static void sParseStringAndAppend(
+		const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
 		const UTF8* iPath, size_t iPathSize,
 		std::vector<Comp>& ioComps);
 
-	static void sParseStringAndAppend
-		(const UTF16* iSeparator, const UTF16* iIgnore, const UTF16* iBounce,
+	static void sParseStringAndAppend(
+		const UTF16* iSeparator, const UTF16* iIgnore, const UTF16* iBounce,
 		const UTF16* iPath, size_t iPathSize,
 		std::vector<string16>& ioComps);
 
@@ -117,8 +117,8 @@ private:
 ZTrail operator+(const string8& iPOSIXTrail, const ZTrail& iTrail);
 
 template <class Comp>
-void sNormalize_KeepLeadingBounces
-	(const std::vector<Comp>& iComps, std::vector<Comp>& oComps)
+void sNormalize_KeepLeadingBounces(
+	const std::vector<Comp>& iComps, std::vector<Comp>& oComps)
 	{
 	for (typename std::vector<Comp>::const_iterator current = iComps.begin();
 		current != iComps.end(); ++current)

@@ -96,8 +96,8 @@ static ZRef<HANDLE> spConnect(const string& iName)
 
 	for (;;)
 		{
-		HANDLE theHANDLE = ::CreateFileW
-			(thePipeName.c_str(), // pipe name
+		HANDLE theHANDLE = ::CreateFileW(
+			thePipeName.c_str(), // pipe name
 			GENERIC_READ | GENERIC_WRITE, // read and write access
 			0, // no sharing
 			nullptr, // default security attributes
@@ -125,8 +125,8 @@ static ZRef<HANDLE> spCreateNamedPipe(const string16& iPipeName, bool iFirst)
 	if (iFirst)
 		theOpenMode |= FILE_FLAG_FIRST_PIPE_INSTANCE;
 
-	HANDLE theHANDLE = ::CreateNamedPipeW
-		(iPipeName.c_str(), // lpName
+	HANDLE theHANDLE = ::CreateNamedPipeW(
+		iPipeName.c_str(), // lpName
 		theOpenMode, // dwOpenMode
 		PIPE_TYPE_BYTE | PIPE_WAIT, // dwPipeMode
 		PIPE_UNLIMITED_INSTANCES, // nMaxInstances

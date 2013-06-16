@@ -32,8 +32,8 @@ namespace ZNetscape {
 // =================================================================================================
 // MARK: - ZNetscape
 
-ZRef<GuestFactory> sMakeGuestFactory
-	(ZQ<int> iEarliest, ZQ<int> iLatest, const std::string& iNativePath);
+ZRef<GuestFactory> sMakeGuestFactory(
+	ZQ<int> iEarliest, ZQ<int> iLatest, const std::string& iNativePath);
 
 ZRef<GuestFactory> sMakeGuestFactory(const std::string& iNativePath);
 

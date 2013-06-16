@@ -74,8 +74,8 @@ static bool spSendControlMessage(IOUSBDeviceInterface182** iUDI,
 	void* bytes, unsigned int numbytes,
 	unsigned int timeout)
 	{
-	return spSendControlMessage
-		(iUDI,
+	return spSendControlMessage(
+		iUDI,
 		bRequestType, bRequest,
 		wValue, wIndex,
 		bytes, numbytes,
@@ -260,8 +260,8 @@ void Manager_OSXUSB::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 		}
 	}
 
-static bool spGetPipeRefs
-	(ZRef<ZUSBInterfaceInterface> iInterfaceInterface, int& oPipeRefR, int& oPipeRefW)
+static bool spGetPipeRefs(
+	ZRef<ZUSBInterfaceInterface> iInterfaceInterface, int& oPipeRefR, int& oPipeRefW)
 	{
 	try
 		{

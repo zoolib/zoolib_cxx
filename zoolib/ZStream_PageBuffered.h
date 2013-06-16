@@ -36,8 +36,8 @@ least recently used order.
 class ZStreamRPos_PageBuffered : public ZStreamRPos
 	{
 public:
-	ZStreamRPos_PageBuffered
-		(size_t iBufferCount, size_t iBufferSize, const ZStreamRPos& iStreamReal);
+	ZStreamRPos_PageBuffered(
+		size_t iBufferCount, size_t iBufferSize, const ZStreamRPos& iStreamReal);
 
 	~ZStreamRPos_PageBuffered();
 
@@ -73,8 +73,8 @@ protected:
 class ZStreamerRPos_PageBuffered : public ZStreamerRPos
 	{
 public:
-	ZStreamerRPos_PageBuffered
-		(size_t iBufferCount, size_t iBufferSize, ZRef<ZStreamerRPos> iStreamerSource);
+	ZStreamerRPos_PageBuffered(
+		size_t iBufferCount, size_t iBufferSize, ZRef<ZStreamerRPos> iStreamerSource);
 
 	virtual ~ZStreamerRPos_PageBuffered();
 
@@ -96,8 +96,8 @@ least recently used order, being written back to the real stream when necessary.
 class ZStreamRWPos_PageBuffered : public ZStreamRWPos
 	{
 public:
-	ZStreamRWPos_PageBuffered
-		(size_t iBufferCount, size_t iBufferSize, const ZStreamRWPos& iStreamReal);
+	ZStreamRWPos_PageBuffered(
+		size_t iBufferCount, size_t iBufferSize, const ZStreamRWPos& iStreamReal);
 
 	~ZStreamRWPos_PageBuffered();
 
@@ -138,8 +138,8 @@ protected:
 class ZStreamerRWPos_PageBuffered : public ZStreamerRWPos
 	{
 public:
-	ZStreamerRWPos_PageBuffered
-		(size_t iBufferCount, size_t iBufferSize, ZRef<ZStreamerRWPos> iStreamerReal);
+	ZStreamerRWPos_PageBuffered(
+		size_t iBufferCount, size_t iBufferSize, ZRef<ZStreamerRWPos> iStreamerReal);
 
 	virtual ~ZStreamerRWPos_PageBuffered();
 

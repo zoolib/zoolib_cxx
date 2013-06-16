@@ -76,8 +76,8 @@ spSpacings(const std::string& iByteSeparator, const std::string& iChunkSeparator
 	return result;
 	}
 
-ZStreamW_HexStrim::ZStreamW_HexStrim
-	(const std::string& iByteSeparator,
+ZStreamW_HexStrim::ZStreamW_HexStrim(
+	const std::string& iByteSeparator,
 	const std::string& iChunkSeparator, size_t iChunkSize,
 	const ZStrimW& iStrimSink)
 :	fStrim(spSpacings(iByteSeparator, iChunkSeparator, iChunkSize), iStrimSink)

@@ -119,8 +119,8 @@ class ZNetEndpoint_TCP_Socket
 public:
 	ZNetEndpoint_TCP_Socket(int iSocketFD);
 
-	ZNetEndpoint_TCP_Socket
-		(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort);
+	ZNetEndpoint_TCP_Socket(
+		ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort);
 
 	ZNetEndpoint_TCP_Socket(ip4_addr iRemoteHost, ip_port iRemotePort);
 	ZNetEndpoint_TCP_Socket(ip6_addr iRemoteHost, ip_port iRemotePort);

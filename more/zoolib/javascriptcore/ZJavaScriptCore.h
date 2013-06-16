@@ -231,14 +231,14 @@ public:
 
 	virtual bool HasProperty(const ObjectRef& iThis, const String& iPropName);
 
-	virtual Value GetProperty
-		(const ObjectRef& iThis, const String& iPropName, Value& oEx);
+	virtual Value GetProperty(
+		const ObjectRef& iThis, const String& iPropName, Value& oEx);
 
-	virtual bool SetProperty
-		(const ObjectRef& iThis, const String& iPropName, const Value& iVal, Value& oEx);
+	virtual bool SetProperty(
+		const ObjectRef& iThis, const String& iPropName, const Value& iVal, Value& oEx);
 
-	virtual void GetPropertyNames
-		(const ObjectRef& iThis, JSPropertyNameAccumulatorRef propertyNames);
+	virtual void GetPropertyNames(
+		const ObjectRef& iThis, JSPropertyNameAccumulatorRef propertyNames);
 
 	virtual Value CallAsFunction(const ObjectRef& iFunction, const ObjectRef& iThis,
 		const Value* iArgs, size_t iArgCount,

@@ -355,8 +355,8 @@ public:
 // MARK: - sCallablePair
 
 template <class T0, class T1>
-void sCallablePair
-	(ZRef<typename AsSig<T0,T1>::Callable>& oCallable_Gen,
+void sCallablePair(
+	ZRef<typename AsSig<T0,T1>::Callable>& oCallable_Gen,
 	ZRef<typename AsSig<T1,T0>::Callable>& oCallable_Yield)
 	{
 	ZRef<ShelfPair<T0,T1> > theShelfPair = new ShelfPair<T0,T1>;
@@ -423,8 +423,8 @@ sGenerator(const ZRef<ZCallable_Void>& iCallable_Void)
 
 	if (iCallable_Void)
 		{
-		sCallOnNewThread
-			(sBindR(sCallable(sInstallYieldCall<T0,T1>), iCallable_Void, theCallable_Yield));
+		sCallOnNewThread(
+			sBindR(sCallable(sInstallYieldCall<T0,T1>), iCallable_Void, theCallable_Yield));
 		}
 
 	return theCallable_Gen;

@@ -139,8 +139,8 @@ struct YadStreamerR
 struct YadMapAtRPos
 :	public ZYadMapAtRPos
 	{
-	YadMapAtRPos
-		(const ZRef<ZipHolder>& iZipHolder, const string8& iPrefix, const ZRef<Node>& iNode)
+	YadMapAtRPos(
+		const ZRef<ZipHolder>& iZipHolder, const string8& iPrefix, const ZRef<Node>& iNode)
 	:	fZipHolder(iZipHolder)
 	,	fPrefix(iPrefix)
 	,	fNode(iNode)
@@ -148,8 +148,8 @@ struct YadMapAtRPos
 	,	fEnd(fNode->fChildren.end())
 		{}
 
-	YadMapAtRPos
-		(const ZRef<ZipHolder>& iZipHolder, const string8& iPrefix, const ZRef<Node>& iNode,
+	YadMapAtRPos(
+		const ZRef<ZipHolder>& iZipHolder, const string8& iPrefix, const ZRef<Node>& iNode,
 		const MapNameNode::const_iterator& iIter)
 	:	fZipHolder(iZipHolder)
 	,	fPrefix(iPrefix)

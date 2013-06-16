@@ -51,15 +51,15 @@ string16 sNormalized(const string16& iString, ENormForm iNormForm)
 	if (size_t sourceSize = iString.size())
 		{
 		UErrorCode status = U_ZERO_ERROR;
-		size_t neededSize = ::unorm_normalize
-			(iString.data(), sourceSize, theMode, 0,
+		size_t neededSize = ::unorm_normalize(
+			iString.data(), sourceSize, theMode, 0,
 			nullptr, 0, &status);
 
 		if (!status)
 			{
 			string16 result(neededSize, UTF16());
-			::unorm_normalize
-				(iString.data(), sourceSize, theMode, 0,
+			::unorm_normalize(
+				iString.data(), sourceSize, theMode, 0,
 				const_cast<UTF16*>(result.data()), result.size(), &status);
 			if (!status)
 				return result;

@@ -59,8 +59,8 @@ class NPClass_Z : public NPClass
 	{
 	NPClass_Z();
 public:
-	NPClass_Z
-		(NPAllocateFunctionPtr allocate,
+	NPClass_Z(
+		NPAllocateFunctionPtr allocate,
 		NPDeallocateFunctionPtr deallocate,
 		NPInvalidateFunctionPtr invalidate,
 		NPHasMethodFunctionPtr hasMethod,

@@ -502,8 +502,8 @@ ZRef<ZDCPixmapRep_DIB> sPixmapRep_DIB(ZRef<ZDCPixmapRep> iRep)
 
 	RasterDesc newRasterDesc(WH(theBounds), fallbackFormat);
 	PixelDesc newPixelDesc(fallbackFormat);
-	ZRef<ZDCPixmapRep_DIB> theRep = new ZDCPixmapRep_DIB
-		(new ZDCPixmapRaster_Simple(newRasterDesc), sRect(WH(theBounds)), newPixelDesc);
+	ZRef<ZDCPixmapRep_DIB> theRep = new ZDCPixmapRep_DIB(
+		new ZDCPixmapRaster_Simple(newRasterDesc), sRect(WH(theBounds)), newPixelDesc);
 
 	theRep->CopyFrom(sPointPOD(0, 0), iRep, theBounds);
 	return theRep;

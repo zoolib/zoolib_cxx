@@ -313,8 +313,8 @@ ZTBQuery& ZTBQuery::operator&=(const ZTBSpec& iSpec)
 				{
 				if (ZTBSpec newSpec = (*i).fFilter & iSpec)
 					{
-					newVectorSect.push_back
-						(ZTBQueryNode_Combo::Intersection(newSpec, (*i).fNodes));
+					newVectorSect.push_back(
+						ZTBQueryNode_Combo::Intersection(newSpec, (*i).fNodes));
 					}
 				}
 			vector<SortSpec> theSort = qnc->GetSort();
@@ -376,8 +376,8 @@ ZTBQuery& ZTBQuery::operator&=(const ZTBQuery& iQuery)
 						newNodes.insert(newNodes.end(),
 							(*otherIter).fNodes.begin(), (*otherIter).fNodes.end());
 
-						newVectorSect.push_back
-							(ZTBQueryNode_Combo::Intersection(newFilter, newNodes));
+						newVectorSect.push_back(
+							ZTBQueryNode_Combo::Intersection(newFilter, newNodes));
 						}
 					}
 				}
@@ -713,8 +713,8 @@ static void spSimplify(vector<ZTBQueryNode_Combo::Intersection>& ioIntersections
 		}
 	if (gotSimpleOnes)
 		{
-		ioIntersections.push_back
-			(ZTBQueryNode_Combo::Intersection(simpleFilter, new ZTBQueryNode_All));
+		ioIntersections.push_back(
+			ZTBQueryNode_Combo::Intersection(simpleFilter, new ZTBQueryNode_All));
 		}
 	}
 
@@ -735,8 +735,8 @@ ZTBQueryNode_Combo::ZTBQueryNode_Combo(const ZStreamR& iStreamR)
 		}
 	}
 
-ZTBQueryNode_Combo::ZTBQueryNode_Combo
-	(vector<ZTBQuery::SortSpec>& ioSort, vector<Intersection>& ioIntersections)
+ZTBQueryNode_Combo::ZTBQueryNode_Combo(
+	vector<ZTBQuery::SortSpec>& ioSort, vector<Intersection>& ioIntersections)
 	{
 	fSort.swap(ioSort),
 	fIntersections.swap(ioIntersections);
@@ -805,8 +805,8 @@ inline ZTBQueryNode_Difference::ZTBQueryNode_Difference(const ZStreamR& iStreamR
 	fRightNode = spNodeFromStream(iStreamR);
 	}
 
-ZTBQueryNode_Difference::ZTBQueryNode_Difference
-	(const ZRef<ZTBQueryNode>& iLeftNode, const ZRef<ZTBQueryNode>& iRightNode)
+ZTBQueryNode_Difference::ZTBQueryNode_Difference(
+	const ZRef<ZTBQueryNode>& iLeftNode, const ZRef<ZTBQueryNode>& iRightNode)
 :	fLeftNode(iLeftNode),
 	fRightNode(iRightNode)
 	{}
@@ -852,8 +852,8 @@ ZTBQueryNode_First::ZTBQueryNode_First(const ZStreamR& iStreamR)
 	fSourceNode(spNodeFromStream(iStreamR))
 	{}
 
-ZTBQueryNode_First::ZTBQueryNode_First
-	(const ZTName& iPropName, const ZRef<ZTBQueryNode>& iSourceNode)
+ZTBQueryNode_First::ZTBQueryNode_First(
+	const ZTName& iPropName, const ZRef<ZTBQueryNode>& iSourceNode)
 :	fPropName(iPropName),
 	fSourceNode(iSourceNode)
 	{}
@@ -967,8 +967,8 @@ inline ZTBQueryNode_ID_FromSource::ZTBQueryNode_ID_FromSource(const ZStreamR& iS
 	fSourceNode(spNodeFromStream(iStreamR))
 	{}
 
-ZTBQueryNode_ID_FromSource::ZTBQueryNode_ID_FromSource
-	(const ZRef<ZTBQueryNode>& iSourceNode, const ZTName& iSourcePropName)
+ZTBQueryNode_ID_FromSource::ZTBQueryNode_ID_FromSource(
+	const ZRef<ZTBQueryNode>& iSourceNode, const ZTName& iSourcePropName)
 :	fSourcePropName(iSourcePropName),
 	fSourceNode(iSourceNode)
 	{}
@@ -1013,8 +1013,8 @@ inline ZTBQueryNode_Property::ZTBQueryNode_Property(const ZStreamR& iStreamR)
 	fSourceNode(spNodeFromStream(iStreamR))
 	{}
 
-ZTBQueryNode_Property::ZTBQueryNode_Property
-	(const ZTName& iPropName, const ZRef<ZTBQueryNode>& iSourceNode)
+ZTBQueryNode_Property::ZTBQueryNode_Property(
+	const ZTName& iPropName, const ZRef<ZTBQueryNode>& iSourceNode)
 :	fPropName(iPropName),
 	fSourceNode(iSourceNode)
 	{}
@@ -1076,8 +1076,8 @@ static ZRef<ZTBQueryNode> spNodeFromTuple(const ZTuple& iTuple)
 		foreachi (i, iTuple.Get<ZSeq_Any>("Sort"))
 			{
 			const ZTuple& temp = (*i).Get<ZMap_Any>();
-			theSort.push_back(ZTBQuery::SortSpec
-				(ZTName(temp.GetString("PropName")), temp.GetBool("Ascending"), temp.GetInt32("Strength")));
+			theSort.push_back(ZTBQuery::SortSpec(
+				ZTName(temp.GetString("PropName")), temp.GetBool("Ascending"), temp.GetInt32("Strength")));
 			}
 
 		vector<ZTBQueryNode_Combo::Intersection> theIntersections;
@@ -1209,8 +1209,8 @@ int ZTBQueryNode_GT_ID_Constant::pCompare_ID_Constant(ZTBQueryNode_ID_Constant* 
 #pragma mark -
 #pragma mark * ZTBQueryNode_GT_ID_FromSource
 
-int ZTBQueryNode_GT_ID_FromSource::pCompare_ID_FromSource
-	(ZTBQueryNode_ID_FromSource* iID_FromSource)
+int ZTBQueryNode_GT_ID_FromSource::pCompare_ID_FromSource(
+	ZTBQueryNode_ID_FromSource* iID_FromSource)
 	{ return 1; }
 
 // =================================================================================================

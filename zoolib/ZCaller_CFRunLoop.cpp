@@ -60,8 +60,8 @@ void ZCaller_CFRunLoop::Initialize()
 	{
 	ZCaller::Initialize();
 
-	fObserver = sAdopt& ::CFRunLoopObserverCreate
-		(nullptr, // allocator
+	fObserver = sAdopt& ::CFRunLoopObserverCreate(
+		nullptr, // allocator
 		kCFRunLoopAllActivities,// kCFRunLoopBeforeTimers, // activities
 		true, // repeats
 		0, // order
@@ -89,8 +89,8 @@ bool ZCaller_CFRunLoop::pTrigger()
 	return true;
 	}
 
-void ZCaller_CFRunLoop::spCallback
-	(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info)
+void ZCaller_CFRunLoop::spCallback(
+	CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info)
 	{
 	if (ZRef<ZCaller_CFRunLoop> theCaller =
 		ZWeakRef<ZCaller_CFRunLoop>(static_cast<WeakRefProxy*>(info)))

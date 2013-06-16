@@ -82,8 +82,8 @@ The bits in the stream are considered to be ordered from low to high within cons
 bytes. So the first byte in memory is returned in the low byte of \a oResult (this
 is the same as little endian byte order.)
 */
-void ZBitReaderBE::ReadBits
-	(const void* iSource, size_t iCountBits, uint32& oResult, size_t* oCountBytesConsumed)
+void ZBitReaderBE::ReadBits(
+	const void* iSource, size_t iCountBits, uint32& oResult, size_t* oCountBytesConsumed)
 	{
 	ZAssertStop(kDebug_BitStream, iCountBits <= 32);
 	if (oCountBytesConsumed)
@@ -159,8 +159,8 @@ The bits in the stream are considered to be ordered from low to high within cons
 bytes. So the first byte in memory is returned in the low byte of \a oResult (this
 is the same as little endian byte order.)
 */
-void ZBitReaderLE::ReadBits
-	(const void* iSource, size_t iCountBits, uint32& oResult, size_t* oCountBytesConsumed)
+void ZBitReaderLE::ReadBits(
+	const void* iSource, size_t iCountBits, uint32& oResult, size_t* oCountBytesConsumed)
 	{
 	ZUnimplemented();
 	ZAssertStop(kDebug_BitStream, iCountBits <= 32);
@@ -236,8 +236,8 @@ and can of course be zero. The bits in memory are considered to be ordered from 
 high within consecutive bytes. Passing 16 or 32 bits at a time in \a iBits will
 thus put the data into memory in little endian order.
 */
-void ZBitWriterBE::WriteBits
-	(void* oDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten)
+void ZBitWriterBE::WriteBits(
+	void* oDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten)
 	{
 	ZAssertStop(kDebug_BitStream, iCountBits <= 32);
 	ZAssertStop(kDebug_BitStream, iBits < (1U << iCountBits));
@@ -338,8 +338,8 @@ are available. The number of bytes actually written is returned in \a oCountByte
 and can of course be zero. The bits in memory are considered to be ordered from high to
 low within consecutive bytes, but are passed in from low to high.
 */
-void ZBitWriterLE::WriteBits
-	(void* oDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten)
+void ZBitWriterLE::WriteBits(
+	void* oDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten)
 	{
 	ZAssertStop(kDebug_BitStream, iCountBits <= 32);
 	ZAssertStop(kDebug_BitStream, iBits < (1U << iCountBits));

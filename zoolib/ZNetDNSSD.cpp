@@ -53,8 +53,8 @@ void ZNetNameRegistered_DNSSD::pInit(ip_port iPort,
 			}
 		}
 
-	DNSServiceErrorType result = ::DNSServiceRegister
-		(&fDNSServiceRef, // output service ref
+	DNSServiceErrorType result = ::DNSServiceRegister(
+		&fDNSServiceRef, // output service ref
 		0, // flags
 		0, // default interface index
 		iName, // name, nullptr for default
@@ -162,8 +162,8 @@ ip_port ZNetNameRegistered_DNSSD::GetPort() const
 	return fPort;
 	}
 
-void ZNetNameRegistered_DNSSD::pDNSServiceRegisterReply
-	(DNSServiceFlags flags,
+void ZNetNameRegistered_DNSSD::pDNSServiceRegisterReply(
+	DNSServiceFlags flags,
 	DNSServiceErrorType errorCode,
 	const char* name,
 	const char* regtype,
@@ -180,8 +180,8 @@ void ZNetNameRegistered_DNSSD::pDNSServiceRegisterReply
 		}
 	}
 
-void ZNetNameRegistered_DNSSD::spDNSServiceRegisterReply
-	(DNSServiceRef sdRef,
+void ZNetNameRegistered_DNSSD::spDNSServiceRegisterReply(
+	DNSServiceRef sdRef,
 	DNSServiceFlags flags,
 	DNSServiceErrorType errorCode,
 	const char* name,

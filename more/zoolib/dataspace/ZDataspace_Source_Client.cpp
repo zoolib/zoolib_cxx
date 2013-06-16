@@ -59,8 +59,8 @@ bool Source_Client::Intersects(const RelHead& iRelHead)
 	return true;
 	}
 
-void Source_Client::ModifyRegistrations
-	(const AddedQuery* iAdded, size_t iAddedCount,
+void Source_Client::ModifyRegistrations(
+	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	ZGuardMtxR guard(fMtxR);

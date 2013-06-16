@@ -114,8 +114,8 @@ void Dataspace::Update()
 	this->Updated(sievesLoaded, sievesChanged);
 	}
 
-void Dataspace::Updated
-	(const set<ZRef<Sieve> >& iSievesLoaded,
+void Dataspace::Updated(
+	const set<ZRef<Sieve> >& iSievesLoaded,
 	const set<ZRef<Sieve> >& iSievesChanged)
 	{
 	this->Loaded(iSievesLoaded);

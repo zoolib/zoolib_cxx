@@ -62,8 +62,8 @@ void ZVisitor_ToStrim::Visit(const ZRef<ZVisitee>& iRep)
 		}
 	}
 
-void ZVisitor_ToStrim::ToStrim
-	(const Options& iOptions, const ZStrimW& iStrimW, const ZRef<ZVisitee>& iRep)
+void ZVisitor_ToStrim::ToStrim(
+	const Options& iOptions, const ZStrimW& iStrimW, const ZRef<ZVisitee>& iRep)
 	{
 	ZSetRestore_T<const Options*> sr1(fOptions, &iOptions);
 	ZSetRestore_T<const ZStrimW*> sr2(fStrimW, &iStrimW);

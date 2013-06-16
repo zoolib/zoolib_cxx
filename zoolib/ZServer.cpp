@@ -75,8 +75,8 @@ void ZServer::Start(ZRef<ZCaller> iCaller,
 	fFactory = iFactory;
 	fCallable_Connection = iCallable_Connection;
 
-	fWorker = new ZWorker
-		(sCallable(sWeakRef(this), &ZServer::pWork),
+	fWorker = new ZWorker(
+		sCallable(sWeakRef(this), &ZServer::pWork),
 		sCallable(sWeakRef(this), &ZServer::pWorkDetached));
 
 	fWorker->Attach(iCaller);

@@ -101,8 +101,8 @@ static pthread_key_t spKey;
 
 // =================================================================================================
 
-static pthread_key_t spRecursiveCheck
-	(SjLj_t iRegister, SjLj_t iUnregister, pthread_key_t iKey, pthread_key_t iKey_End)
+static pthread_key_t spRecursiveCheck(
+	SjLj_t iRegister, SjLj_t iUnregister, pthread_key_t iKey, pthread_key_t iKey_End)
 	{
 	if (iKey == iKey_End)
 		{

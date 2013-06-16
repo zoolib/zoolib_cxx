@@ -72,8 +72,8 @@ void Visitor_Expr_Rel_Intersect::Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_In
 // =================================================================================================
 // MARK: - Relational operators
 
-ZRef<Expr_Rel_Intersect> sIntersect
-	(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZRef<Expr_Rel_Intersect> sIntersect(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
 	{
 	if (iLHS && iRHS)
 		return new Expr_Rel_Intersect(iLHS, iRHS);
@@ -81,8 +81,8 @@ ZRef<Expr_Rel_Intersect> sIntersect
 	return null;
 	}
 
-ZRef<Expr_Rel> operator&
-	(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZRef<Expr_Rel> operator&(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
 	{ return sIntersect(iLHS, iRHS); }
 
 } // namespace ZRA

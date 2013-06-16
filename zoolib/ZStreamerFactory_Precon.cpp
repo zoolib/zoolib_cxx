@@ -26,8 +26,8 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZStreamerRWFactory_Precon
 
-ZStreamerRWFactory_Precon::ZStreamerRWFactory_Precon
-	(ZRef<ZStreamerRW> iSRW, ZRef<ZStreamerRWFactory> iFactory)
+ZStreamerRWFactory_Precon::ZStreamerRWFactory_Precon(
+	ZRef<ZStreamerRW> iSRW, ZRef<ZStreamerRWFactory> iFactory)
 :	fSRW(iSRW),
 	fFactory(iFactory)
 	{}
@@ -52,8 +52,8 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Precon::MakeStreamerRW()
 // =================================================================================================
 // MARK: - ZStreamerRWConFactory_Precon
 
-ZStreamerRWConFactory_Precon::ZStreamerRWConFactory_Precon
-	(ZRef<ZStreamerRWCon> iSRWCon, ZRef<ZStreamerRWConFactory> iFactory)
+ZStreamerRWConFactory_Precon::ZStreamerRWConFactory_Precon(
+	ZRef<ZStreamerRWCon> iSRWCon, ZRef<ZStreamerRWConFactory> iFactory)
 :	fSRWCon(iSRWCon),
 	fFactory(iFactory)
 	{}

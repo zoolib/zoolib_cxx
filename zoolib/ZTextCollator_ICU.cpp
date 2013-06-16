@@ -74,8 +74,8 @@ ZTextCollatorRep_ICU::ZTextCollatorRep_ICU(const char* iLocaleName, int iStrengt
 		{
 		if (iLocaleName)
 			{
-			throw std::runtime_error
-				(string("Couldn't open ICU collator for locale: ") + iLocaleName);
+			throw std::runtime_error(
+				string("Couldn't open ICU collator for locale: ") + iLocaleName);
 			}
 		else
 			{

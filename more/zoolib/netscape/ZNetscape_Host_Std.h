@@ -96,8 +96,8 @@ public:
 
 	virtual NPIdentifier GetStringIdentifier(const NPUTF8* name);
 
-	virtual void GetStringIdentifiers
-		(const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers);
+	virtual void GetStringIdentifiers(
+		const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers);
 
 	virtual NPIdentifier GetIntIdentifier(int32 intid);
 
@@ -143,17 +143,17 @@ public:
 
 	virtual void PopPopupsEnabledState(NPP npp);
 
-	virtual bool Enumerate
-		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32 *count);
+	virtual bool Enumerate(
+		NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32 *count);
 
-	virtual void PluginThreadAsyncCall
-		(NPP npp, void (*func)(void *), void *userData);
+	virtual void PluginThreadAsyncCall(
+		NPP npp, void (*func)(void *), void *userData);
 
-	virtual bool Construct
-		(NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result);
+	virtual bool Construct(
+		NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result);
 
-	virtual uint32 ScheduleTimer
-		(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
+	virtual uint32 ScheduleTimer(
+		NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
 
 	virtual void UnscheduleTimer(NPP npp, uint32 timerID);
 
@@ -213,26 +213,26 @@ public:
 	virtual bool Host_Evaluate(NPP npp,
 		NPObject* obj, NPString* script, NPVariant* result);
 
-	virtual uint32 Host_ScheduleTimer
-		(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
+	virtual uint32 Host_ScheduleTimer(
+		NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
 
 	virtual void Host_UnscheduleTimer(NPP npp, uint32 timerID);
 
 // Our protocol
 	typedef std::pair<std::string, std::string> Param_t;
-	void CreateAndLoad
-		(const std::string& iURL, const std::string& iMIME,
+	void CreateAndLoad(
+		const std::string& iURL, const std::string& iMIME,
 		const Param_t* iParams, size_t iCount);
 	virtual void PostCreateAndLoad();
 	void Destroy();
 
-	void SendDataAsync
-		(void* iNotifyData,
+	void SendDataAsync(
+		void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZData_Any& iHeaders,
 		ZRef<ZStreamerR> iStreamerR);
 
-	void SendDataSync
-		(void* iNotifyData,
+	void SendDataSync(
+		void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME,
 		const ZStreamR& iStreamR);
 

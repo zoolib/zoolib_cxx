@@ -41,8 +41,8 @@ ZRef<ZValComparand> sRenamed(const map<string,string>& iRename,
 
 ZValPred sRenamed(const map<string,string>& iRename, const ZValPred& iValPred)
 	{
-	return ZValPred
-		(sRenamed(iRename, iValPred.GetLHS()),
+	return ZValPred(
+		sRenamed(iRename, iValPred.GetLHS()),
 		iValPred.GetComparator(),
 		sRenamed(iRename, iValPred.GetRHS()));
 	}

@@ -165,8 +165,8 @@ static bool spReadUntil(const ZStrimU& s, UTF32 iTerminator, string& oText)
 		}
 	}
 
-static bool spReadUntil
-	(const ZStrimU& s, bool iRecognizeEntities,
+static bool spReadUntil(
+	const ZStrimU& s, bool iRecognizeEntities,
 	ZRef<Callable_Entity> iCallable,
 	UTF32 iTerminator, string& oText)
 	{
@@ -237,8 +237,8 @@ static bool spReadMLAttributeName(const ZStrimU& s, string& oName)
 	return true;
 	}
 
-static bool spReadMLAttributeValue
-	(const ZStrimU& s, bool iRecognizeEntities,
+static bool spReadMLAttributeValue(
+	const ZStrimU& s, bool iRecognizeEntities,
 	ZRef<Callable_Entity> iCallable,
 	string& oValue)
 	{
@@ -602,8 +602,8 @@ void StrimU::pAdvance()
 						sSkip_WS(fStrim);
 						string attributeValue;
 						attributeValue.reserve(8);
-						if (not spReadMLAttributeValue
-							(fStrim, fRecognizeEntitiesInAttributeValues, fCallable, attributeValue))
+						if (not spReadMLAttributeValue(
+							fStrim, fRecognizeEntitiesInAttributeValues, fCallable, attributeValue))
 							{
 							fToken = eToken_Exhausted;
 							return;
@@ -1437,8 +1437,8 @@ StrimmerW::StrimmerW(bool iIndent, ZRef<ZStrimmerW> iStrimmerW)
 	fStrimW(iIndent, iStrimmerW->GetStrimW())
 	{}
 
-StrimmerW::StrimmerW
-	(const string8& iEOL, const string8& iIndent, ZRef<ZStrimmerW> iStrimmerW)
+StrimmerW::StrimmerW(
+	const string8& iEOL, const string8& iIndent, ZRef<ZStrimmerW> iStrimmerW)
 :	fStrimmerW(iStrimmerW),
 	fStrimW(iEOL, iIndent, iStrimmerW->GetStrimW())
 	{}

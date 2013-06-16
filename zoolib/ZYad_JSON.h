@@ -174,8 +174,8 @@ private:
 class Visitor_Writer : public ZVisitor_Yad_PreferRPos
 	{
 public:
-	Visitor_Writer
-		(size_t iIndent, const WriteOptions& iOptions, const ZStrimW& iStrimW);
+	Visitor_Writer(
+		size_t iIndent, const WriteOptions& iOptions, const ZStrimW& iStrimW);
 
 // From ZVisitor_Yad
 	virtual void Visit_YadR(const ZRef<ZYadR>& iYadR);

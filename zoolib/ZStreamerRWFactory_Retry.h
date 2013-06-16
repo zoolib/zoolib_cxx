@@ -33,8 +33,8 @@ namespace ZooLib {
 class ZStreamerRWFactory_Retry : public ZStreamerRWFactory
 	{
 public:
-	ZStreamerRWFactory_Retry
-		(ZRef<ZStreamerRWFactory> iStreamerRWFactory, size_t iCount, double iInterval);
+	ZStreamerRWFactory_Retry(
+		ZRef<ZStreamerRWFactory> iStreamerRWFactory, size_t iCount, double iInterval);
 	virtual ~ZStreamerRWFactory_Retry();
 
 // From ZStreamerRWFactory

@@ -55,8 +55,8 @@ const ZQ<std::string> NPVariantBase::QGet<std::string>() const
 	{
 	if (type == NPVariantType_String)
 		{
-		return std::string
-			(sNPStringCharsConst(value.stringValue),
+		return std::string(
+			sNPStringCharsConst(value.stringValue),
 			sNPStringLengthConst(value.stringValue));
 		}
 	return null;

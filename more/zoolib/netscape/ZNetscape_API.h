@@ -677,10 +677,10 @@ typedef NPObject *(*NPAllocateFunctionPtr)(NPP npp, NPClass *aClass);
 typedef void (*NPDeallocateFunctionPtr)(NPObject *obj);
 typedef void (*NPInvalidateFunctionPtr)(NPObject *obj);
 typedef bool (*NPHasMethodFunctionPtr)(NPObject *obj, NPIdentifier name);
-typedef bool (*NPInvokeFunctionPtr)
-	(NPObject *obj, NPIdentifier name, const NPVariant *args, unsigned argCount, NPVariant *result);
-typedef bool (*NPInvokeDefaultFunctionPtr)
-	(NPObject *npobj, const NPVariant *args, unsigned argCount, NPVariant *result);
+typedef bool (*NPInvokeFunctionPtr)(
+	NPObject *obj, NPIdentifier name, const NPVariant *args, unsigned argCount, NPVariant *result);
+typedef bool (*NPInvokeDefaultFunctionPtr)(
+	NPObject *npobj, const NPVariant *args, unsigned argCount, NPVariant *result);
 typedef bool (*NPHasPropertyFunctionPtr)(NPObject *obj, NPIdentifier name);
 typedef bool (*NPGetPropertyFunctionPtr)(NPObject *obj, NPIdentifier name, NPVariant *result);
 typedef bool (*NPSetPropertyFunctionPtr)(NPObject *obj, NPIdentifier name, const NPVariant *value);
@@ -720,8 +720,8 @@ typedef void* jref;
 
 ZMacCFM_DefineProc3(NPError, NPN_GetURL, NPP, const char*, const char*);
 
-ZMacCFM_DefineProc6
-	(NPError, NPN_PostURL, NPP, const char*, const char*, uint32, const char*, NPBool);
+ZMacCFM_DefineProc6(
+	NPError, NPN_PostURL, NPP, const char*, const char*, uint32, const char*, NPBool);
 
 ZMacCFM_DefineProc2(NPError, NPN_RequestRead, NPStream*, NPByteRange*);
 ZMacCFM_DefineProc4(NPError, NPN_NewStream, NPP, NPMIMEType, const char*, NPStream**);
@@ -737,8 +737,8 @@ ZMacCFM_DefineProc0(JRIEnv*, NPN_GetJavaEnv);
 ZMacCFM_DefineProc1(jref, NPN_GetJavaPeer, NPP);
 ZMacCFM_DefineProc4(NPError, NPN_GetURLNotify, NPP, const char*, const char*, void*);
 
-ZMacCFM_DefineProc7
-	(NPError, NPN_PostURLNotify, NPP, const char*, const char*, uint32, const char*, NPBool, void*);
+ZMacCFM_DefineProc7(
+	NPError, NPN_PostURLNotify, NPP, const char*, const char*, uint32, const char*, NPBool, void*);
 
 ZMacCFM_DefineProc3(NPError, NPN_GetValue, NPP, NPNVariable, void*);
 ZMacCFM_DefineProc3(NPError, NPN_SetValue, NPP, NPPVariable, void*);
@@ -755,11 +755,11 @@ ZMacCFM_DefineProc2(NPObject*, NPN_CreateObject, NPP, NPClass*);
 ZMacCFM_DefineProc1(NPObject*, NPN_RetainObject, NPObject*);
 ZMacCFM_DefineProc1_Void(NPN_ReleaseObject, NPObject*);
 
-ZMacCFM_DefineProc6
-	(bool, NPN_Invoke, NPP, NPObject*, NPIdentifier, const NPVariant*, unsigned, NPVariant*);
+ZMacCFM_DefineProc6(
+	bool, NPN_Invoke, NPP, NPObject*, NPIdentifier, const NPVariant*, unsigned, NPVariant*);
 
-ZMacCFM_DefineProc5
-	(bool, NPN_InvokeDefault, NPP, NPObject*, const NPVariant*, unsigned, NPVariant*);
+ZMacCFM_DefineProc5(
+	bool, NPN_InvokeDefault, NPP, NPObject*, const NPVariant*, unsigned, NPVariant*);
 
 ZMacCFM_DefineProc4(bool, NPN_Evaluate, NPP, NPObject*, NPString*, NPVariant*);
 ZMacCFM_DefineProc4(bool, NPN_GetProperty, NPP, NPObject*, NPIdentifier, NPVariant*);
@@ -775,29 +775,29 @@ ZMacCFM_DefineProc4(bool, NPN_Enumerate, NPP, NPObject*, NPIdentifier**, uint32_
 ZMacCFM_DefineProc3_Void(NPN_PluginThreadAsyncCall, NPP, void (*)(void*), void*);
 ZMacCFM_DefineProc5(bool, NPN_Construct, NPP, NPObject*, const NPVariant*, uint32_t, NPVariant*);
 
-typedef NPError (*NPN_GetValueForURLProcPtr)
-	(NPP npp, NPNURLVariable variable, const char* url, char** value, uint32_t* len);
+typedef NPError (*NPN_GetValueForURLProcPtr)(
+	NPP npp, NPNURLVariable variable, const char* url, char** value, uint32_t* len);
 
-typedef NPError (*NPN_SetValueForURLProcPtr)
-	(NPP npp, NPNURLVariable variable, const char* url, const char* value, uint32_t len);
+typedef NPError (*NPN_SetValueForURLProcPtr)(
+	NPP npp, NPNURLVariable variable, const char* url, const char* value, uint32_t len);
 
-typedef NPError (*NPN_GetAuthenticationInfoProcPtr)
-	(NPP npp, const char* protocol, const char* host, int32_t port, const char* scheme,
+typedef NPError (*NPN_GetAuthenticationInfoProcPtr)(
+	NPP npp, const char* protocol, const char* host, int32_t port, const char* scheme,
 	const char *realm, char** username, uint32_t* ulen, char** password, uint32_t* plen);
 
 
-ZMacCFM_DefineProc4
-	(uint32, NPN_ScheduleTimer, NPP, uint32, NPBool, void (*)(NPP npp, uint32 timerID));
+ZMacCFM_DefineProc4(
+	uint32, NPN_ScheduleTimer, NPP, uint32, NPBool, void (*)(NPP npp, uint32 timerID));
 
 ZMacCFM_DefineProc2_Void(NPN_UnscheduleTimer, NPP, uint32);
 ZMacCFM_DefineProc2(NPError, NPN_PopUpContextMenu, NPP, NPMenu*);
 
-typedef NPBool (*NPN_ConvertPointProcPtr)
-	(NPP npp, double sourceX, double sourceY, NPCoordinateSpace sourceSpace,
+typedef NPBool (*NPN_ConvertPointProcPtr)(
+	NPP npp, double sourceX, double sourceY, NPCoordinateSpace sourceSpace,
 	double *destX, double *destY, NPCoordinateSpace destSpace);
 
-ZMacCFM_DefineProc7
-	(NPError, NPP_New, NPMIMEType, NPP, uint16, int16, char**, char**, NPSavedData*);
+ZMacCFM_DefineProc7(
+	NPError, NPP_New, NPMIMEType, NPP, uint16, int16, char**, char**, NPSavedData*);
 
 ZMacCFM_DefineProc2(NPError, NPP_Destroy, NPP, NPSavedData**);
 ZMacCFM_DefineProc2(NPError, NPP_SetWindow, NPP, NPWindow*);
@@ -925,8 +925,8 @@ typedef ZNetscape_API_EXPORTED_CALLBACK(void, NPP_ShutdownProcPtr)(void);
 
 
 #if defined(XP_UNIX)
-	typedef ZNetscape_API_EXPORTED_CALLBACK(NPError, NP_InitializeFuncPtr)
-		(NPNetscapeFuncs*, NPPluginFuncs*);
+	typedef ZNetscape_API_EXPORTED_CALLBACK(NPError, NP_InitializeFuncPtr)(
+		NPNetscapeFuncs*, NPPluginFuncs*);
 	typedef ZNetscape_API_EXPORTED_CALLBACK(char*, NP_GetMIMEDescriptionFuncPtr)(void);
 #else
 	typedef ZNetscape_API_EXPORTED_CALLBACK(NPError, NP_InitializeFuncPtr)(NPNetscapeFuncs*);

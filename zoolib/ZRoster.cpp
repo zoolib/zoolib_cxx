@@ -142,8 +142,8 @@ void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallabl
 // =================================================================================================
 // MARK: - ZRoster::Entry
 
-ZRoster::Entry::Entry
-	(const ZRef<ZRoster>& iRoster,
+ZRoster::Entry::Entry(
+	const ZRef<ZRoster>& iRoster,
 	const ZRef<ZCallable_Void>& iCallable_Broadcast,
 	const ZRef<ZCallable_Void>& iCallable_Gone)
 :	fRoster(iRoster)

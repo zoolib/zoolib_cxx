@@ -57,8 +57,8 @@ public:
 	virtual bool Intersects(const RelHead& iRelHead)
 		{ return fMUX->pIntersects(this, iRelHead); }
 
-	virtual void ModifyRegistrations
-		(const AddedQuery* iAdded, size_t iAddedCount,
+	virtual void ModifyRegistrations(
+		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount)
 		{ fMUX->pModifyRegistrations(this, iAdded, iAddedCount, iRemoved, iRemovedCount); }
 
@@ -93,8 +93,8 @@ SourceMUX::~SourceMUX()
 void SourceMUX::Initialize()
 	{
 	SourceFactory::Initialize();
-	fSource->SetCallable_ResultsAvailable
-		(sCallable(sWeakRef(this), &SourceMUX::pResultsAvailable));
+	fSource->SetCallable_ResultsAvailable(
+		sCallable(sWeakRef(this), &SourceMUX::pResultsAvailable));
 	}
 
 void SourceMUX::Finalize()
@@ -144,8 +144,8 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 
 	guard.Release();
 
-	fSource->ModifyRegistrations
-		(sFirstOrNil(theAddedQueries), theAddedQueries.size(),
+	fSource->ModifyRegistrations(
+		sFirstOrNil(theAddedQueries), theAddedQueries.size(),
 		sFirstOrNil(removedQueries), removedQueries.size());
 	}
 
@@ -206,8 +206,8 @@ void SourceMUX::pFinalizeClientSource(ClientSource* iCS)
 
 	guard.Release();
 
-	fSource->ModifyRegistrations
-		(nullptr, 0,
+	fSource->ModifyRegistrations(
+		nullptr, 0,
 		sFirstOrNil(removedQueries), removedQueries.size());
 	}
 

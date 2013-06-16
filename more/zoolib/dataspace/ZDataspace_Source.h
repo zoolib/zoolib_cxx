@@ -97,8 +97,8 @@ public:
 
 	virtual bool Intersects(const RelHead& iRelHead) = 0;
 
-	virtual void ModifyRegistrations
-		(const AddedQuery* iAdded, size_t iAddedCount,
+	virtual void ModifyRegistrations(
+		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount) = 0;
 
 	virtual void CollectResults(std::vector<QueryResult>& oChanged) = 0;

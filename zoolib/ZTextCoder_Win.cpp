@@ -287,8 +287,8 @@ static void spMBToWC(UINT iSourceCodePage, const CHAR* iSource, size_t iSourceCU
 
 	for (;;)
 		{
-		if (int result = ::MultiByteToWideChar
-			(iSourceCodePage, 0, iSource, iSourceCU, oDest, iDestCU))
+		if (int result = ::MultiByteToWideChar(
+			iSourceCodePage, 0, iSource, iSourceCU, oDest, iDestCU))
 			{
 			oSourceCU = iSourceCU;
 			oDestCU = result;
@@ -312,8 +312,8 @@ static void spMBToWC(UINT iSourceCodePage, const CHAR* iSource, size_t iSourceCU
 		}
 	}
 
-static void spMBToWC_CanFail
-	(UINT iSourceCodePage, const CHAR* iSource, size_t iSourceCU, size_t& oSourceCU,
+static void spMBToWC_CanFail(
+	UINT iSourceCodePage, const CHAR* iSource, size_t iSourceCU, size_t& oSourceCU,
 	WCHAR* oDest, size_t iDestCU, size_t& oDestCU)
 	{
 	ZAssertStop(1, iSourceCU && iDestCU);
@@ -321,8 +321,8 @@ static void spMBToWC_CanFail
 	DWORD theFlags = MB_ERR_INVALID_CHARS;
 	for (;;)
 		{
-		if (int result = ::MultiByteToWideChar
-			(iSourceCodePage, theFlags, iSource, iSourceCU, oDest, iDestCU))
+		if (int result = ::MultiByteToWideChar(
+			iSourceCodePage, theFlags, iSource, iSourceCU, oDest, iDestCU))
 			{
 			oSourceCU = iSourceCU;
 			oDestCU = result;
@@ -356,8 +356,8 @@ static void spMBToWC_CanFail
 		}
 	}
 
-bool ZTextDecoder_Win::Decode
-	(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+bool ZTextDecoder_Win::Decode(
+	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	WCHAR utf16Buffer[kBufSize];
@@ -393,8 +393,8 @@ bool ZTextDecoder_Win::Decode
 
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		ZUnicode::sUTF16ToUTF32
-			(reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
+		ZUnicode::sUTF16ToUTF32(
+			reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
 			&utf16Consumed, nullptr,
 			localDest, iDestCU,
 			&utf32Generated);
@@ -457,8 +457,8 @@ static void spWCToMB(UINT iDestCodePage, const WCHAR* iSource, size_t iSourceCU,
 		// We've got more UTF-16 than destination bytes, so discover how much space we would need.
 		for (;;)
 			{
-			int result = ::WideCharToMultiByte
-				(iDestCodePage, 0, iSource, iSourceCU, oDest, 0, nullptr, nullptr);
+			int result = ::WideCharToMultiByte(
+				iDestCodePage, 0, iSource, iSourceCU, oDest, 0, nullptr, nullptr);
 
 			if (result <= iDestCU)
 				break;
@@ -470,8 +470,8 @@ static void spWCToMB(UINT iDestCodePage, const WCHAR* iSource, size_t iSourceCU,
 
 	for (;;)
 		{
-		if (int result = ::WideCharToMultiByte
-			(iDestCodePage, 0, iSource, iSourceCU, oDest, iDestCU, nullptr, nullptr))
+		if (int result = ::WideCharToMultiByte(
+			iDestCodePage, 0, iSource, iSourceCU, oDest, iDestCU, nullptr, nullptr))
 			{
 			oSourceCU = iSourceCU;
 			oDestCU = result;
@@ -509,8 +509,8 @@ void ZTextEncoder_Win::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		{
 		size_t utf32Consumed;
 		size_t utf16Generated;
-		ZUnicode::sUTF32ToUTF16
-			(localSource, iSourceCU,
+		ZUnicode::sUTF32ToUTF16(
+			localSource, iSourceCU,
 			&utf32Consumed, nullptr,
 			reinterpret_cast<UTF16*>(utf16Buffer), kBufSize,
 			&utf16Generated,
@@ -526,8 +526,8 @@ void ZTextEncoder_Win::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 			// We were not able to consume all the intermediary UTF-16 that was generated.
 			// Turn the number of complete code points consumed back into the number of
 			// corresponding UTF-32 code units.
-			size_t codePoints = ZUnicode::sCUToCP
-				(reinterpret_cast<const UTF16*>(utf16Buffer), utf16Consumed);
+			size_t codePoints = ZUnicode::sCUToCP(
+				reinterpret_cast<const UTF16*>(utf16Buffer), utf16Consumed);
 
 			utf32Consumed = ZUnicode::sCPToCU(localSource, codePoints);
 			}

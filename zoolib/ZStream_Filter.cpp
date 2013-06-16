@@ -47,8 +47,8 @@ void ZStreamR_Filter::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 void ZStreamR_Filter::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
-	const_cast<ZStreamR&>(fStreamReal).Imp_CopyToDispatch
-		(iStreamW, iCount, oCountRead, oCountWritten);
+	const_cast<ZStreamR&>(fStreamReal).Imp_CopyToDispatch(
+		iStreamW, iCount, oCountRead, oCountWritten);
 	}
 
 void ZStreamR_Filter::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,

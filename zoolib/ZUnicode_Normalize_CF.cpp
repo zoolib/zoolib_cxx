@@ -54,8 +54,8 @@ namespace { // anonymous
 	extern "C" typedef
 		void (*CFStringNormalize_Ptr)(CFMutableStringRef, CFStringNormalizationForm);
 
-	void spCFStringNormalize
-		(CFMutableStringRef iString, CFStringNormalizationForm iNF)
+	void spCFStringNormalize(
+		CFMutableStringRef iString, CFStringNormalizationForm iNF)
 		{
 		CFBundleRef bundleRef = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.CoreFoundation"));
 		if (CFStringNormalize_Ptr theProc = (CFStringNormalize_Ptr)

@@ -125,8 +125,8 @@ void sEraseMust(std::set<Base,Comparator>& ioSet, const Derived& iElement)
 // MARK: - ZUtil_STL
 
 template <typename T, typename Comparator>
-void sOr
-	(const std::set<T,Comparator>& iLHS,
+void sOr(
+	const std::set<T,Comparator>& iLHS,
 	const std::set<T,Comparator>& iRHS,
 	std::set<T,Comparator>& ioResult)
 	{
@@ -136,8 +136,8 @@ void sOr
 	}
 
 template <typename T, typename Comparator>
-std::set<T,Comparator> sOr
-	(const std::set<T,Comparator>& iLHS,
+std::set<T,Comparator> sOr(
+	const std::set<T,Comparator>& iLHS,
 	const std::set<T,Comparator>& iRHS)
 	{
 	std::set<T,Comparator> result;
@@ -146,8 +146,8 @@ std::set<T,Comparator> sOr
 	}
 
 template <typename T, typename Comparator>
-void sAnd
-	(const std::set<T,Comparator>& iLHS,
+void sAnd(
+	const std::set<T,Comparator>& iLHS,
 	const std::set<T,Comparator>& iRHS,
 	std::set<T,Comparator>& ioResult)
 	{
@@ -157,8 +157,8 @@ void sAnd
 	}
 
 template <typename T, typename Comparator>
-std::set<T,Comparator> sAnd
-	(const std::set<T,Comparator>& iLHS,
+std::set<T,Comparator> sAnd(
+	const std::set<T,Comparator>& iLHS,
 	const std::set<T,Comparator>& iRHS)
 	{
 	std::set<T,Comparator> result;
@@ -167,8 +167,8 @@ std::set<T,Comparator> sAnd
 	}
 
 template <typename T, typename Comparator>
-void sMinus
-	(const std::set<T,Comparator>& iLHS,
+void sMinus(
+	const std::set<T,Comparator>& iLHS,
 	const std::set<T,Comparator>& iRHS,
 	std::set<T,Comparator>& ioResult)
 	{
@@ -178,8 +178,8 @@ void sMinus
 	}
 
 template <typename T, typename Comparator>
-std::set<T,Comparator> sMinus
-	(const std::set<T,Comparator>& iLHS,
+std::set<T,Comparator> sMinus(
+	const std::set<T,Comparator>& iLHS,
 	const std::set<T,Comparator>& iRHS)
 	{
 	std::set<T,Comparator> result;
@@ -188,8 +188,8 @@ std::set<T,Comparator> sMinus
 	}
 
 template <typename T, typename Comparator>
-void sXor
-	(const std::set<T,Comparator>& iLHS,
+void sXor(
+	const std::set<T,Comparator>& iLHS,
 	const std::set<T,Comparator>& iRHS,
 	std::set<T,Comparator>& ioResult)
 	{
@@ -199,8 +199,8 @@ void sXor
 	}
 
 template <typename T, typename Comparator>
-std::set<T,Comparator> sXor
-	(const std::set<T,Comparator>& iLHS,
+std::set<T,Comparator> sXor(
+	const std::set<T,Comparator>& iLHS,
 	const std::set<T,Comparator>& iRHS)
 	{
 	std::set<T,Comparator> result;
@@ -209,8 +209,8 @@ std::set<T,Comparator> sXor
 	}
 
 template <typename T, typename Comparator>
-bool sIncludes
-	(const std::set<T,Comparator>& iLHS,
+bool sIncludes(
+	const std::set<T,Comparator>& iLHS,
 	const std::set<T,Comparator>& iRHS)
 	{
 	return includes(iLHS.begin(), iLHS.end(),

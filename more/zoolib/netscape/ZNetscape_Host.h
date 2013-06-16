@@ -76,8 +76,8 @@ public:
 	bool HasMethod(const string& iName);
 
 	using Base_t::Invoke;
-	bool Invoke
-		(const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+	bool Invoke(
+		const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 
 	using Base_t::InvokeDefault;
 	bool InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
@@ -112,8 +112,8 @@ protected:
 	virtual void Imp_Invalidate();
 	virtual bool Imp_HasMethod(const string& iName);
 
-	virtual bool Imp_Invoke
-		(const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+	virtual bool Imp_Invoke(
+		const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 
 	virtual bool Imp_InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 	virtual bool Imp_HasProperty(const string& iName);
@@ -216,8 +216,8 @@ public:
 
 	virtual NPIdentifier GetStringIdentifier(const NPUTF8* name) = 0;
 
-	virtual void GetStringIdentifiers
-		(const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers) = 0;
+	virtual void GetStringIdentifiers(
+		const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers) = 0;
 
 	virtual NPIdentifier GetIntIdentifier(int32 intid) = 0;
 
@@ -263,17 +263,17 @@ public:
 
 	virtual void PopPopupsEnabledState(NPP npp) = 0;
 
-	virtual bool Enumerate
-		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32 *count) = 0;
+	virtual bool Enumerate(
+		NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32 *count) = 0;
 
-	virtual void PluginThreadAsyncCall
-		(NPP npp, void (*func)(void *), void *userData) = 0;
+	virtual void PluginThreadAsyncCall(
+		NPP npp, void (*func)(void *), void *userData) = 0;
 
-	virtual bool Construct
-		(NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result) = 0;
+	virtual bool Construct(
+		NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result) = 0;
 
-	virtual uint32 ScheduleTimer
-		(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID)) = 0;
+	virtual uint32 ScheduleTimer(
+		NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID)) = 0;
 
 	virtual void UnscheduleTimer(NPP npp, uint32 timerID) = 0;
 
@@ -327,8 +327,8 @@ private:
 
 	static NPIdentifier spGetStringIdentifier(const NPUTF8* name);
 
-	static void spGetStringIdentifiers
-		(const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers);
+	static void spGetStringIdentifiers(
+		const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers);
 
 	static NPIdentifier spGetIntIdentifier(int32_t intid);
 
@@ -375,17 +375,17 @@ private:
 
 	static void spPopPopupsEnabledState(NPP npp);
 
-	static bool spEnumerate
-		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
+	static bool spEnumerate(
+		NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
 
-	static void spPluginThreadAsyncCall
-		(NPP npp, void (*func)(void *), void *userData);
+	static void spPluginThreadAsyncCall(
+		NPP npp, void (*func)(void *), void *userData);
 
-	static bool spConstruct
-		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
+	static bool spConstruct(
+		NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
 
-	static uint32 spScheduleTimer
-		(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
+	static uint32 spScheduleTimer(
+		NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
 
 	static void spUnscheduleTimer(NPP npp, uint32 timerID);
 	};
@@ -430,8 +430,8 @@ public:
 
 	NPError Guest_SetWindow(NPWindow* window);
 
-	NPError Guest_NewStream
-		(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
+	NPError Guest_NewStream(
+		NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
 
 	NPError Guest_DestroyStream(NPStream* stream, NPReason reason);
 

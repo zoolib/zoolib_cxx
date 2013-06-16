@@ -110,8 +110,8 @@ static ZRef<ZNetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_p
 		const sockaddr_in* in = (const sockaddr_in*)iSockAddr;
 		if (not iPort)
 			iPort = ntohs(in->sin_port);
-		return new ZNetAddress_IP4
-			(ntohl(in->sin_addr.s_addr),
+		return new ZNetAddress_IP4(
+			ntohl(in->sin_addr.s_addr),
 			iPort);
 		}
 
@@ -120,8 +120,8 @@ static ZRef<ZNetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_p
 		const sockaddr_in6* in = (const sockaddr_in6*)iSockAddr;
 		if (not iPort)
 			iPort = ntohs(in->sin6_port);
-		return new ZNetAddress_IP6
-			(iPort,
+		return new ZNetAddress_IP6(
+			iPort,
 			*((const struct ip6_addr*)(&in->sin6_addr)));
 		}
 
@@ -192,8 +192,8 @@ int ZNet_TCP_Socket::sListen(ip6_addr iLocalAddress, ip_port iLocalPort)
 // =================================================================================================
 // MARK: - ZNetNameLookup_Internet_Socket
 
-ZNetNameLookup_Internet_Socket::ZNetNameLookup_Internet_Socket
-	(const string& iName, ip_port iPort, size_t iMaxAddresses)
+ZNetNameLookup_Internet_Socket::ZNetNameLookup_Internet_Socket(
+	const string& iName, ip_port iPort, size_t iMaxAddresses)
 :	fName(iName)
 ,	fPort(iPort)
 ,	fCountAddressesToReturn(iMaxAddresses ? iMaxAddresses : 1000)
@@ -432,8 +432,8 @@ ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket(int iSocketFD)
 	spSetSocketOptions(this->GetSocketFD());
 	}
 
-ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket
-	(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort)
+ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket(
+	ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort)
 :	ZNetEndpoint_Socket(spConnect4(iLocalHost, iLocalPort, iRemoteHost, iRemotePort))
 	{
 	spSetSocketOptions(this->GetSocketFD());

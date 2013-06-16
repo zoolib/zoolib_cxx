@@ -166,8 +166,8 @@ void Analyzer::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 		}
 	analysis0.fRelHead_Physical |= analysis1.fRelHead_Physical;
 	analysis0.fRename.insert(analysis1.fRename.begin(), analysis1.fRename.end());
-	analysis0.fRename_Inverse.insert
-		(analysis1.fRename_Inverse.begin(), analysis1.fRename_Inverse.end());
+	analysis0.fRename_Inverse.insert(
+		analysis1.fRename_Inverse.begin(), analysis1.fRename_Inverse.end());
 	analysis0.fCondition &= analysis1.fCondition;
 
 	this->pSetResult(analysis0);

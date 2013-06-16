@@ -166,8 +166,8 @@ public:
 		return this;
 		}
 
-	virtual bool QReadInc
-		(ZVal_Any* ioResults,
+	virtual bool QReadInc(
+		ZVal_Any* ioResults,
 		set<ZRef<ZCounted> >* oAnnotations)
 		{ return fSource->pReadInc_Concrete(this, ioResults, oAnnotations); }
 
@@ -267,8 +267,8 @@ Source_DatonSet::~Source_DatonSet()
 bool Source_DatonSet::Intersects(const RelHead& iRelHead)
 	{ return true; }
 
-void Source_DatonSet::ModifyRegistrations
-	(const AddedQuery* iAdded, size_t iAddedCount,
+void Source_DatonSet::ModifyRegistrations(
+	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	ZGuardMtxR guard(fMtxR);
@@ -293,8 +293,8 @@ void Source_DatonSet::ModifyRegistrations
 		const int64 theRefcon = iAdded->GetRefcon();
 
 		const pair<map<int64,ClientQuery>::iterator,bool> iterClientQueryPair =
-			fMap_Refcon_ClientQuery.insert
-			(make_pair(theRefcon, ClientQuery(theRefcon, thePQuery)));
+			fMap_Refcon_ClientQuery.insert(
+			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery)));
 		ZAssert(iterClientQueryPair.second);
 
 		ClientQuery* theClientQuery = &iterClientQueryPair.first->second;
@@ -731,8 +731,8 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const R
 	return new ZQE::Walker_Result(thePSearch->fResult);
 	}
 
-ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search
-	(PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel)
+ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
+	PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel)
 	{
 	const ZRA::Rename& theRename = iRel->GetRename();
 	ZRA::RelHead theRelHead;

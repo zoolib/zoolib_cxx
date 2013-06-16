@@ -81,8 +81,8 @@ static inline size_t spIconvIntermediary(iconvproc_t iProc,
 	return iProc(cd, inbufNonConst, inbytesleft, outbuf, outbytesleft);
 	}
 
-size_t static spIconv
-	(iconv_t cd, const char** inbuf, size_t *inbytesleft, char** outbuf, size_t *outbytesleft)
+size_t static spIconv(
+	iconv_t cd, const char** inbuf, size_t *inbytesleft, char** outbuf, size_t *outbytesleft)
 	{
 	// Different versions of iconv.h may declare inbuf as being const or non-const.
 	// Previously we detected a more modern (const-using) version of the iconv library by
@@ -151,8 +151,8 @@ ZTextDecoder_iconv::~ZTextDecoder_iconv()
 	::iconv_close(fConverter);
 	}
 
-bool ZTextDecoder_iconv::Decode
-	(const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+bool ZTextDecoder_iconv::Decode(
+	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const char* localSource = static_cast<const char*>(iSource);
@@ -166,8 +166,8 @@ bool ZTextDecoder_iconv::Decode
 	bool sourceComplete = true;
 	while (localSourceBytes && localDestBytes)
 		{
-		if (size_t(-1) == spIconv
-			(fConverter, &localSource, &localSourceBytes, &localDest, &localDestBytes))
+		if (size_t(-1) == spIconv(
+			fConverter, &localSource, &localSourceBytes, &localDest, &localDestBytes))
 			{
 			int err = errno;
 			if (err == EINVAL)
@@ -268,8 +268,8 @@ void ZTextEncoder_iconv::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 
 	while (localSourceBytes && localDestBytes)
 		{
-		if (size_t(-1) == spIconv
-			(fConverter, &localSource, &localSourceBytes, &localDest, &localDestBytes))
+		if (size_t(-1) == spIconv(
+			fConverter, &localSource, &localSourceBytes, &localDest, &localDestBytes))
 			{
 			int err = errno;
 			if (err == EINVAL)

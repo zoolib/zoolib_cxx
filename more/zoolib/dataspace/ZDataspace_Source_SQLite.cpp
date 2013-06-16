@@ -110,15 +110,15 @@ bool Source_SQLite::Intersects(const RelHead& iRelHead)
 	{
 	foreachi (iterTables, fMap_Tables)
 		{
-		if (sNotEmpty
-			(ZRA::sPrefixInserted(iterTables->first + "_", iterTables->second) & iRelHead))
+		if (sNotEmpty(
+			ZRA::sPrefixInserted(iterTables->first + "_", iterTables->second) & iRelHead))
 			{ return true; }
 		}
 	return false;
 	}
 
-void Source_SQLite::ModifyRegistrations
-	(const AddedQuery* iAdded, size_t iAddedCount,
+void Source_SQLite::ModifyRegistrations(
+	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
 	if (iAddedCount)// || iRemovedCount)
@@ -143,8 +143,8 @@ void Source_SQLite::ModifyRegistrations
 
 		const int64 theRefcon = iAdded->GetRefcon();
 		pair<std::map<int64, ClientQuery>::iterator,bool> iterClientQueryPair =
-			fMap_RefconToClientQuery.insert
-			(make_pair(theRefcon, ClientQuery(theRefcon, thePQuery)));
+			fMap_RefconToClientQuery.insert(
+			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery)));
 		ZAssert(iterClientQueryPair.second);
 
 		sInsertBackMust(thePQuery->fClientQueries, &iterClientQueryPair.first->second);

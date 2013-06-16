@@ -59,8 +59,8 @@ static inline uint32 spReadCount(const ZStreamR& iStreamR)
 #pragma mark -
 #pragma mark * ZTSWatcher_Client
 
-ZTSWatcher_Client::ZTSWatcher_Client
-	(bool iSupports2, bool iSupports3, bool iSupports4, ZRef<ZStreamerRW> iStreamerRW)
+ZTSWatcher_Client::ZTSWatcher_Client(
+	bool iSupports2, bool iSupports3, bool iSupports4, ZRef<ZStreamerRW> iStreamerRW)
 :	fSupports2(iSupports2),
 	fSupports3(iSupports3),
 	fSupports4(iSupports4),
@@ -83,8 +83,8 @@ ZTSWatcher_Client::~ZTSWatcher_Client()
 		}
 	}
 
-bool ZTSWatcher_Client::Sync
-	(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+bool ZTSWatcher_Client::Sync(
+	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 	const AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
@@ -104,8 +104,8 @@ bool ZTSWatcher_Client::Sync
 		{
 		if (fSupports4)
 			{
-			this->pSync4
-				(theStreamR, theStreamW,
+			this->pSync4(
+				theStreamR, theStreamW,
 				iRemovedIDs, iRemovedIDsCount,
 				iAddedIDs, iAddedIDsCount,
 				iRemovedQueries, iRemovedQueriesCount,
@@ -118,8 +118,8 @@ bool ZTSWatcher_Client::Sync
 		else if (fSupports3)
 			{
 			oAddedIDs.clear();
-			this->pSync3
-				(theStreamR, theStreamW,
+			this->pSync3(
+				theStreamR, theStreamW,
 				iRemovedIDs, iRemovedIDsCount,
 				iAddedIDs, iAddedIDsCount,
 				iRemovedQueries, iRemovedQueriesCount,
@@ -131,8 +131,8 @@ bool ZTSWatcher_Client::Sync
 		else if (fSupports2)
 			{
 			oAddedIDs.clear();
-			this->pSync2
-				(theStreamR, theStreamW,
+			this->pSync2(
+				theStreamR, theStreamW,
 				iRemovedIDs, iRemovedIDsCount,
 				iAddedIDs, iAddedIDsCount,
 				iRemovedQueries, iRemovedQueriesCount,
@@ -143,8 +143,8 @@ bool ZTSWatcher_Client::Sync
 			}
 		else
 			{
-			this->pSync1
-				(theStreamR, theStreamW,
+			this->pSync1(
+				theStreamR, theStreamW,
 				iRemovedIDs, iRemovedIDsCount,
 				iAddedIDs, iAddedIDsCount,
 				iRemovedQueries, iRemovedQueriesCount,
@@ -184,8 +184,8 @@ bool ZTSWatcher_Client::AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCou
 	}
 
 
-void ZTSWatcher_Client::pSync1
-	(const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+void ZTSWatcher_Client::pSync1(
+	const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
@@ -381,8 +381,8 @@ void ZTSWatcher_Client::pSync1
 		}
 	}
 
-void ZTSWatcher_Client::pSync2
-	(const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+void ZTSWatcher_Client::pSync2(
+	const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
@@ -538,8 +538,8 @@ void ZTSWatcher_Client::pSync2
 		}
 	}
 
-void ZTSWatcher_Client::pSync3
-	(const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+void ZTSWatcher_Client::pSync3(
+	const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
@@ -698,8 +698,8 @@ void ZTSWatcher_Client::pSync3
 		}
 	}
 
-void ZTSWatcher_Client::pSync4
-	(const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+void ZTSWatcher_Client::pSync4(
+	const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
@@ -882,8 +882,8 @@ void ZTSWatcher_Client::SetCallback(Callback_t iCallback, void* iRefcon)
 #pragma mark -
 #pragma mark * ZTSWatcherFactory_Client
 
-ZTSWatcherFactory_Client::ZTSWatcherFactory_Client
-	(ZRef<ZStreamerRWFactory> iStreamerRWFactory)
+ZTSWatcherFactory_Client::ZTSWatcherFactory_Client(
+	ZRef<ZStreamerRWFactory> iStreamerRWFactory)
 :	fStreamerRWFactory(iStreamerRWFactory)
 	{}
 

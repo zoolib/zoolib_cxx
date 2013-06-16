@@ -41,8 +41,8 @@ Walker_Const::~Walker_Const()
 void Walker_Const::Rewind()
 	{ fExhausted = false; }
 
-ZRef<Walker> Walker_Const::Prime
-	(const map<string8,size_t>& iOffsets,
+ZRef<Walker> Walker_Const::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
@@ -51,8 +51,8 @@ ZRef<Walker> Walker_Const::Prime
 	return this;
 	}
 
-bool Walker_Const::QReadInc
-	(ZVal_Any* ioResults,
+bool Walker_Const::QReadInc(
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	if (sGetSet(fExhausted, true))

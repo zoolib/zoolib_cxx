@@ -65,8 +65,8 @@ static string spReadZeroTerminatedString(const ZStreamR& iStream)
 	return theString;
 	}
 
-ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource
-	(HMODULE iHMODULE, const string& iType, const string& iName)
+ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource(
+	HMODULE iHMODULE, const string& iType, const string& iName)
 	{
 	ZAssertStop(2, iHMODULE);
 	fHMODULE = iHMODULE;
@@ -98,8 +98,8 @@ ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource
 						}
 					else
 						{
-						throw runtime_error
-							("ZStreamRPos_Win_MultiResource, couldn't load resource");
+						throw runtime_error(
+							"ZStreamRPos_Win_MultiResource, couldn't load resource");
 						}
 					}
 				}
@@ -180,8 +180,8 @@ uint64 ZStreamRPos_Win_MultiResource::Imp_GetSize()
 // =================================================================================================
 // MARK: - ZStreamerRPos_Win_MultiResource
 
-ZStreamerRPos_Win_MultiResource::ZStreamerRPos_Win_MultiResource
-	(HMODULE iHMODULE, const string& iType, const string& iName)
+ZStreamerRPos_Win_MultiResource::ZStreamerRPos_Win_MultiResource(
+	HMODULE iHMODULE, const string& iType, const string& iName)
 :	fStream(iHMODULE, iType, iName)
 	{}
 

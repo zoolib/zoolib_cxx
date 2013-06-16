@@ -48,8 +48,8 @@ private:
 	class Count_t;
 
 public:
-	ZTBServer
-		(ZRef<ZTaskMaster> iTaskMaster,
+	ZTBServer(
+		ZRef<ZTaskMaster> iTaskMaster,
 		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 		ZRef<ZTBRep> iTBRep, const std::string& iLogFacility);
 
@@ -70,8 +70,8 @@ private:
 
 	void Handle_Create(const ZTuple& iReq);
 
-	static void spCallback_GetTupleForSearch
-		(void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
+	static void spCallback_GetTupleForSearch(
+		void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
 
 	static void spCallback_Search(void* iRefcon, std::vector<uint64>& ioResults);
 	void Handle_Search(const ZTuple& iReq);
@@ -87,8 +87,8 @@ private:
 	static void spCallback_Commit(void* iRefcon);
 	void Handle_Commit(const ZTuple& iReq);
 
-	static void spCallback_GetTuple
-		(void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
+	static void spCallback_GetTuple(
+		void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
 
 	void Handle_Actions(const ZTuple& iReq);
 

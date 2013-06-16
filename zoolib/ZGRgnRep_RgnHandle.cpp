@@ -161,8 +161,8 @@ OSStatus sDecompose_RgnHandle(UInt16 iMessage, RgnHandle iRgnHandle,
 		{
 		DecomposeRgnHandle_t* theStruct = reinterpret_cast<DecomposeRgnHandle_t*>(iRefcon);
 		++theStruct->fCallsMade;
-		if (theStruct->fDecomposeProc
-			(sRectPOD(iRect->left, iRect->top, iRect->right, iRect->bottom),
+		if (theStruct->fDecomposeProc(
+			sRectPOD(iRect->left, iRect->top, iRect->right, iRect->bottom),
 			theStruct->fRefcon))
 			{
 			return userCanceledErr;

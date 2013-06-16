@@ -294,8 +294,8 @@ for (Format theFormat = firstFormat; theFormat != endFormat; ++theFormat)
 /endcode
 */
 
-ZStreamR_DynamicBuffered::ZStreamR_DynamicBuffered
-	(const ZStreamR& iStreamSource, const ZStreamRWPos& iStreamBuffer)
+ZStreamR_DynamicBuffered::ZStreamR_DynamicBuffered(
+	const ZStreamR& iStreamSource, const ZStreamRWPos& iStreamBuffer)
 :	fStreamSource(iStreamSource),
 	fStreamBuffer(const_cast<ZStreamRWPos&>(iStreamBuffer)),
 	fMode(eModeReadBufferThenAppend)
@@ -408,8 +408,8 @@ void ZStreamR_DynamicBuffered::Commit()
 
 /// A read filter streamer encapsulating a ZStreamR_DynamicBuffered.
 
-ZStreamerR_DynamicBuffered::ZStreamerR_DynamicBuffered
-	(ZRef<ZStreamerR> iStreamerSource, ZRef<ZStreamerRWPos> iStreamerBuffer)
+ZStreamerR_DynamicBuffered::ZStreamerR_DynamicBuffered(
+	ZRef<ZStreamerR> iStreamerSource, ZRef<ZStreamerRWPos> iStreamerBuffer)
 :	fStreamerSource(iStreamerSource),
 	fStreamerBuffer(iStreamerBuffer),
 	fStream(iStreamerSource->GetStreamR(), iStreamerBuffer->GetStreamRWPos())
@@ -437,8 +437,8 @@ ZStreamRWPos is then resized back to be empty and all subsequent writes are agai
 the next flush, or until disposal.
 */
 
-ZStreamW_DynamicBuffered::ZStreamW_DynamicBuffered
-	(const ZStreamW& iStreamSink, const ZStreamRWPos& iStreamBuffer)
+ZStreamW_DynamicBuffered::ZStreamW_DynamicBuffered(
+	const ZStreamW& iStreamSink, const ZStreamRWPos& iStreamBuffer)
 :	fStreamSink(iStreamSink),
 	fStreamBuffer(const_cast<ZStreamRWPos&>(iStreamBuffer))
 	{}
@@ -488,8 +488,8 @@ void ZStreamW_DynamicBuffered::Imp_Flush()
 // =================================================================================================
 // MARK: - ZStreamerW_DynamicBuffered
 
-ZStreamerW_DynamicBuffered::ZStreamerW_DynamicBuffered
-	(ZRef<ZStreamerW> iStreamerSink, ZRef<ZStreamerRWPos> iStreamerBuffer)
+ZStreamerW_DynamicBuffered::ZStreamerW_DynamicBuffered(
+	ZRef<ZStreamerW> iStreamerSink, ZRef<ZStreamerRWPos> iStreamerBuffer)
 :	fStreamerSink(iStreamerSink),
 	fStreamerBuffer(iStreamerBuffer),
 	fStream(iStreamerSink->GetStreamW(), iStreamerBuffer->GetStreamRWPos())

@@ -120,8 +120,8 @@ bool ZCnd_pthread::pWaitFor(ZMtx_pthread_base& iMtx, double iTimeout)
 
 	#if defined(__APPLE__) || defined(__ANDROID__)
 		const timespec the_timespec = { time_t(iTimeout), long(1e9 * fmod(iTimeout, 1.0)) };
-		return 0 == ::pthread_cond_timedwait_relative_np
-			(&f_pthread_cond_t, &iMtx.f_pthread_mutex_t, &the_timespec);
+		return 0 == ::pthread_cond_timedwait_relative_np(
+			&f_pthread_cond_t, &iMtx.f_pthread_mutex_t, &the_timespec);
 	#else
 		return this->pWaitUntil(iMtx, ZTime::sSystem() + iTimeout);
 	#endif

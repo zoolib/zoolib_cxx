@@ -90,8 +90,8 @@ static IOUSBDeviceInterface182** spCreate_USBDeviceInterface(io_service_t iUSBDe
 // =================================================================================================
 // MARK: - ZUSBWatcher
 
-ZUSBWatcher::ZUSBWatcher
-	(IONotificationPortRef iIONotificationPortRef, SInt32 iUSBVendor, SInt32 iUSBProduct)
+ZUSBWatcher::ZUSBWatcher(
+	IONotificationPortRef iIONotificationPortRef, SInt32 iUSBVendor, SInt32 iUSBProduct)
 :	fIONotificationPortRef(iIONotificationPortRef)
 ,	fNotification(0)
 	{
@@ -99,8 +99,8 @@ ZUSBWatcher::ZUSBWatcher
 	theMap.Set(kUSBVendorID, int32(iUSBVendor));
 	theMap.Set(kUSBProductID, int32(iUSBProduct));
 
-	spThrowIfErr(::IOServiceAddMatchingNotification
-		(fIONotificationPortRef, kIOFirstMatchNotification, theMap.Orphan(),
+	spThrowIfErr(::IOServiceAddMatchingNotification(
+		fIONotificationPortRef, kIOFirstMatchNotification, theMap.Orphan(),
 		spDeviceAdded, this, &fNotification));
 	}
 
@@ -166,8 +166,8 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 
 		fIOUSBDeviceInterface[0]->GetLocationID(fIOUSBDeviceInterface, &fLocationID);
 
-		kern_return_t result = ::IOServiceAddInterestNotification
-			(iIONotificationPortRef, iUSBDevice, kIOGeneralInterest,
+		kern_return_t result = ::IOServiceAddInterestNotification(
+			iIONotificationPortRef, iUSBDevice, kIOGeneralInterest,
 			spDeviceNotification, this, &fNotification);
 
 		if (result != KERN_SUCCESS || fNotification == 0)
@@ -250,8 +250,8 @@ void ZUSBDevice::SetCallable(ZRef<CB_DeviceDetached> iCallable)
 IOUSBDeviceInterface182** ZUSBDevice::GetIOUSBDeviceInterface()
 	{ return fIOUSBDeviceInterface; }
 
-ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface
-	(CFRunLoopRef iRunLoopRef, uint8 iProtocol)
+ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(
+	CFRunLoopRef iRunLoopRef, uint8 iProtocol)
 	{
 	IOUSBFindInterfaceRequest request;
 	request.bInterfaceClass = kIOUSBFindInterfaceDontCare;
@@ -260,8 +260,8 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface
 	request.bAlternateSetting = kIOUSBFindInterfaceDontCare;
 
 	io_iterator_t iterator;
-	if (kIOReturnSuccess != fIOUSBDeviceInterface[0]->CreateInterfaceIterator
-		(fIOUSBDeviceInterface, &request, &iterator))
+	if (kIOReturnSuccess != fIOUSBDeviceInterface[0]->CreateInterfaceIterator(
+		fIOUSBDeviceInterface, &request, &iterator))
 		{ iterator = 0; }
 
 	while (iterator)
@@ -276,8 +276,8 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface
 
 		SInt32 score;
 		IOCFPlugInInterface** plugInInterface;
-		if (kIOReturnSuccess != ::IOCreatePlugInInterfaceForService
-			(usbInterface, kIOUSBInterfaceUserClientTypeID, kIOCFPlugInInterfaceID,
+		if (kIOReturnSuccess != ::IOCreatePlugInInterfaceForService(
+			usbInterface, kIOUSBInterfaceUserClientTypeID, kIOCFPlugInInterfaceID,
 			&plugInInterface, &score))
 			{ plugInInterface = nullptr; }
 
@@ -303,8 +303,8 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface
 					{
 					if (protocol == iProtocol)
 						{
-						if (kIOReturnSuccess == theIOUSBInterfaceInterface[0]->USBInterfaceOpen
-							(theIOUSBInterfaceInterface))
+						if (kIOReturnSuccess == theIOUSBInterfaceInterface[0]->USBInterfaceOpen(
+							theIOUSBInterfaceInterface))
 							{
 							::IOObjectRelease(iterator);
 							return new ZUSBInterfaceInterface(this,
@@ -319,8 +319,8 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface
 	return null;
 	}
 
-void ZUSBDevice::pDeviceNotification
-	(io_service_t iService, natural_t iMessageType, void* iMessageArgument)
+void ZUSBDevice::pDeviceNotification(
+	io_service_t iService, natural_t iMessageType, void* iMessageArgument)
 	{
 	if (iMessageType == kIOMessageServiceIsTerminated)
 		{
@@ -332,8 +332,8 @@ void ZUSBDevice::pDeviceNotification
 		}
 	}
 
-void ZUSBDevice::spDeviceNotification
-	(void* iRefcon, io_service_t iService, natural_t iMessageType, void* iMessageArgument)
+void ZUSBDevice::spDeviceNotification(
+	void* iRefcon, io_service_t iService, natural_t iMessageType, void* iMessageArgument)
 	{
 	static_cast<ZUSBDevice*>(iRefcon)->
 		pDeviceNotification(iService, iMessageType, iMessageArgument);
@@ -474,8 +474,8 @@ bool StreamerR_TO::pRefill(double iTimeout)
 	fOffset = 0;
 	fEnd = 0;
 	UInt32 localCount = fBuffer.size();
-	IOReturn result = fII[0]->ReadPipeTO
-		(fII, fPipeRefR, &fBuffer[0], &localCount, iTimeout * 1e3, 1000000);
+	IOReturn result = fII[0]->ReadPipeTO(
+		fII, fPipeRefR, &fBuffer[0], &localCount, iTimeout * 1e3, 1000000);
 
 	if (kIOUSBTransactionTimeout == result)
 		{
@@ -636,8 +636,8 @@ void StreamerR_Async::pTriggerRead()
 	fOffset = 0;
 	fEnd = 0;
 
-	IOReturn result = fII[0]->ReadPipeAsync
-		(fII, fPipeRefR, &fBuffer[0], fBuffer.size(), spCompletion, this);
+	IOReturn result = fII[0]->ReadPipeAsync(
+		fII, fPipeRefR, &fBuffer[0], fBuffer.size(), spCompletion, this);
 
 	if (kIOReturnSuccess == result)
 		fPending = true;
@@ -700,8 +700,8 @@ StreamerW::~StreamerW()
 const ZStreamW& StreamerW::GetStreamW()
 	{ return *this; }
 
-void StreamerW::Imp_Write
-	(const void* iSource, size_t iCount, size_t* oCountWritten)
+void StreamerW::Imp_Write(
+	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 //	if (size_t countToWrite = min(size_t(1024), iCount))
 	if (size_t countToWrite = iCount)

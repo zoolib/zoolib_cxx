@@ -179,12 +179,12 @@ ZTBRep_Client::Transaction::~Transaction()
 ZRef<ZTBRep> ZTBRep_Client::Transaction::GetTBRep()
 	{ return fTBRep; }
 
-void ZTBRep_Client::Transaction::Search
-	(const ZTBQuery& iQuery, Callback_Search_t iCallback, void* iRefcon)
+void ZTBRep_Client::Transaction::Search(
+	const ZTBQuery& iQuery, Callback_Search_t iCallback, void* iRefcon)
 	{ fTBRep->Trans_Search(this, iQuery, iCallback, iRefcon); }
 
-void ZTBRep_Client::Transaction::Count
-	(const ZTBQuery& iQuery, Callback_Count_t iCallback, void* iRefcon)
+void ZTBRep_Client::Transaction::Count(
+	const ZTBQuery& iQuery, Callback_Count_t iCallback, void* iRefcon)
 	{ fTBRep->Trans_Count(this, iQuery, iCallback, iRefcon); }
 
 void ZTBRep_Client::Transaction::GetTuples(size_t iCount, const uint64* iIDs,
@@ -225,8 +225,8 @@ ZTBRep_Client::ZTBRep_Client()
 ZTBRep_Client::~ZTBRep_Client()
 	{}
 
-void ZTBRep_Client::AllocateIDs
-	(size_t iCount, Callback_AllocateIDs_t iCallback, void* iRefcon)
+void ZTBRep_Client::AllocateIDs(
+	size_t iCount, Callback_AllocateIDs_t iCallback, void* iRefcon)
 	{
 	ZMutexLocker lock(fMutex_Structure);
 	while (iCount)
@@ -599,8 +599,8 @@ void ZTBRep_Client::pDoStuff()
 				{
 				i = fTransactions_Create_Unsent.erase(i);
 				// Move it directly into fTransactions_Created
-				sInsertSortedMust
-					(kDebug_TBRep_Client, fTransactions_Created, theTransaction);
+				sInsertSortedMust(
+					kDebug_TBRep_Client, fTransactions_Created, theTransaction);
 				// Give it a fake server ID, to wake Create/Abort etc.
 				theTransaction->fServerID = kDummyServerID;
 				}
@@ -621,8 +621,8 @@ void ZTBRep_Client::pDoStuff()
 				{
 				i = fTransactions_Create_Unacked.erase(i);
 				// Move it into fTransactions_Created
-				sInsertSortedMust
-					(kDebug_TBRep_Client, fTransactions_Created, theTransaction);
+				sInsertSortedMust(
+					kDebug_TBRep_Client, fTransactions_Created, theTransaction);
 				// Give it a fake server ID, to wake Create/Abort etc.
 				theTransaction->fServerID = kDummyServerID;
 				}
@@ -644,8 +644,8 @@ void ZTBRep_Client::pDoStuff()
 				{
 				i = fTransactions_Validate_Unsent.erase(i);
 				// Move it directly into fTransactions_Failed
-				sInsertSortedMust
-					(kDebug_TBRep_Client, fTransactions_Failed, theTransaction);
+				sInsertSortedMust(
+					kDebug_TBRep_Client, fTransactions_Failed, theTransaction);
 				toCall.push_back(theTransaction);
 				}
 			}
@@ -673,8 +673,8 @@ void ZTBRep_Client::pDoStuff()
 				{
 				i = fTransactions_Validate_Unacked.erase(i);
 				// Move it directly into fTransactions_Failed
-				sInsertSortedMust
-					(kDebug_TBRep_Client, fTransactions_Failed, theTransaction);
+				sInsertSortedMust(
+					kDebug_TBRep_Client, fTransactions_Failed, theTransaction);
 				toCall.push_back(theTransaction);
 				}
 			}
@@ -874,8 +874,8 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		while (count && !fAllocateIDPending.empty())
 			{
 			size_t countToIssue = min(count, fAllocateIDPending.front().fCount);
-			fAllocateIDPending.front().fCallback
-				(fAllocateIDPending.front().fRefcon, baseID, countToIssue);
+			fAllocateIDPending.front().fCallback(
+				fAllocateIDPending.front().fRefcon, baseID, countToIssue);
 			baseID += countToIssue;
 			count -= countToIssue;
 			fAllocateIDPending.front().fCount -= countToIssue;
@@ -893,11 +893,11 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			Transaction* theTransaction =
 				reinterpret_cast<Transaction*>(theTuple.Get<int64>("ClientID"));
 
-			sEraseSortedMust
-				(kDebug_TBRep_Client, fTransactions_Create_Unacked, theTransaction);
+			sEraseSortedMust(
+				kDebug_TBRep_Client, fTransactions_Create_Unacked, theTransaction);
 
-			sInsertSortedMust
-				(kDebug_TBRep_Client, fTransactions_Created, theTransaction);
+			sInsertSortedMust(
+				kDebug_TBRep_Client, fTransactions_Created, theTransaction);
 
 			ZAssertStop(kDebug_TBRep_Client, theTransaction->fServerID == 0);
 
@@ -911,10 +911,10 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			{
 			Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).Get<int64>());
 
-			sEraseSortedMust
-				(kDebug_TBRep_Client, fTransactions_Validate_Unacked, theTransaction);
-			sInsertSortedMust
-				(kDebug_TBRep_Client, fTransactions_Validated, theTransaction);
+			sEraseSortedMust(
+				kDebug_TBRep_Client, fTransactions_Validate_Unacked, theTransaction);
+			sInsertSortedMust(
+				kDebug_TBRep_Client, fTransactions_Validated, theTransaction);
 
 			if (theTransaction->fCallback_Validate)
 				theTransaction->fCallback_Validate(true, theTransaction->fRefcon);
@@ -926,8 +926,8 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			{
 			Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).Get<int64>());
 
-			sEraseSortedMust
-				(kDebug_TBRep_Client, fTransactions_Validate_Unacked, theTransaction);
+			sEraseSortedMust(
+				kDebug_TBRep_Client, fTransactions_Validate_Unacked, theTransaction);
 
 			sInsertSortedMust(kDebug_TBRep_Client, fTransactions_Failed, theTransaction);
 
@@ -941,8 +941,8 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			{
 			Transaction* theTransaction = reinterpret_cast<Transaction*>((*i).Get<int64>());
 
-			sEraseSortedMust
-				(kDebug_TBRep_Client, fTransactions_Commit_Unacked, theTransaction);
+			sEraseSortedMust(
+				kDebug_TBRep_Client, fTransactions_Commit_Unacked, theTransaction);
 
 			if (theTransaction->fCallback_Commit)
 				theTransaction->fCallback_Commit(theTransaction->fRefcon);

@@ -54,11 +54,11 @@ static HANDLE spDuplicateHandle(HANDLE iHANDLE)
 	if (iHANDLE)
 		{
 		HANDLE result;
-		if (::DuplicateHandle
-			(::GetCurrentProcess(), // hSourceProcessHandle
+		if (::DuplicateHandle(
+			::GetCurrentProcess(), // hSourceProcessHandle
 			iHANDLE, // hSourceHandle
-			::GetCurrentProcess(), // hTargetProcessHandle
-			(LPHANDLE)&result, // lpTargetHandle
+			::GetCurrentProcess(), // hTargetProcessHandle(
+			LPHANDLE)&result, // lpTargetHandle
 			0, // dwDesiredAccess
 			false, // bInheritHandle
 			DUPLICATE_SAME_ACCESS // dwOptions

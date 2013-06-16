@@ -25,8 +25,8 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZStreamerRPos_StreamR
 
-ZStreamerRPos_StreamR::ZStreamerRPos_StreamR
-	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerRWPos> iStreamerRWPos)
+ZStreamerRPos_StreamR::ZStreamerRPos_StreamR(
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerRWPos> iStreamerRWPos)
 :	fStreamerR(iStreamerR),
 	fStreamerRWPos(iStreamerRWPos),
 	fStreamRPos_StreamR(iStreamerR->GetStreamR(), iStreamerRWPos->GetStreamRWPos())

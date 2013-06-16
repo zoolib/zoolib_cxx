@@ -41,8 +41,8 @@ ZCommandLine::TValue::TValue(const string& iName, const string& iDescription, EF
 :	Opt(iName, iDescription, iFlags, false)
 	{}
 
-ZCommandLine::TValue::TValue
-	(const string& iName, const string& iDescription, const ZTValue& iDefault)
+ZCommandLine::TValue::TValue(
+	const string& iName, const string& iDescription, const ZTValue& iDefault)
 :	Opt(iName, iDescription, eOptional, true),
 	fDefault(iDefault)
 	{}
@@ -60,10 +60,10 @@ bool ZCommandLine::TValue::Parse(const char* iLexeme, const ZStrimW* iStrimError
 	{
 	try
 		{
-		if (not ZUtil_Strim_Tuple::sFromStrim
-			(ZStrimU_Unreader
-			(ZStrimR_StreamUTF8
-			(ZStreamRPos_Memory(iLexeme, strlen(iLexeme)))),
+		if (not ZUtil_Strim_Tuple::sFromStrim(
+			ZStrimU_Unreader(
+			ZStrimR_StreamUTF8(
+			ZStreamRPos_Memory(iLexeme, strlen(iLexeme)))),
 			fValue))
 			{
 			if (iStrimErrors)

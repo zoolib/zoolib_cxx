@@ -52,8 +52,8 @@ ZStreamR_Source::ZStreamR_Source(const void* iData, size_t iDataSize)
 	{}
 
 ZStreamR_Source::ZStreamR_Source(const pair<const void*, size_t>& iParam)
-:	fData
-		(static_cast<const char*>(iParam.first),
+:	fData(
+		static_cast<const char*>(iParam.first),
 		static_cast<const char*>(iParam.first) + iParam.second),
 	fOffset(0)
 	{}

@@ -65,15 +65,15 @@ public:
 
 	Variant_t InvokeDefault();
 
-	Variant_t InvokeDefault
-		(const Variant_t& i0);
+	Variant_t InvokeDefault(
+		const Variant_t& i0);
 
-	Variant_t InvokeDefault
-		(const Variant_t& i0,
+	Variant_t InvokeDefault(
+		const Variant_t& i0,
 		const Variant_t& i1);
 
-	Variant_t InvokeDefault
-		(const Variant_t& i0,
+	Variant_t InvokeDefault(
+		const Variant_t& i0,
 		const Variant_t& i1,
 		const Variant_t& i2);
 

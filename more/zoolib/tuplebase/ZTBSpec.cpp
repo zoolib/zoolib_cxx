@@ -80,8 +80,8 @@ static ZTBSpec::ERel spRelFromString(const std::string& iString)
 	return ZTBSpec::eRel_Invalid;
 	}
 
-static void spCriterionUnionFromTuple
-	(const ZTuple& iTuple, ZTBSpec::CriterionUnion& ioCriterionUnion)
+static void spCriterionUnionFromTuple(
+	const ZTuple& iTuple, ZTBSpec::CriterionUnion& ioCriterionUnion)
 	{
 	const vector<ZTValue>& outerVector = iTuple.Get("Criteria").GetSeq().GetVector();
 
@@ -539,8 +539,8 @@ ZTBSpec::Criterion::Rep::Rep(const ZTuple& iTuple)
 	fTValue(iTuple.Get("Value"))
 	{}
 
-ZTBSpec::Criterion::Rep::Rep
-	(const ZTName& iPropName, const Comparator& iComparator, const ZTValue& iTV)
+ZTBSpec::Criterion::Rep::Rep(
+	const ZTName& iPropName, const Comparator& iComparator, const ZTValue& iTV)
 :	fPropName(iPropName),
 	fComparator(iComparator),
 	fTValue(iTV)
@@ -563,8 +563,8 @@ ZTBSpec::Criterion::Rep::Rep(const ZTName& iPropName, ERel iRel, const ZTValue& 
 	fTValue(iTV)
 	{}
 
-ZTBSpec::Criterion::Rep::Rep
-	(const ZTName& iPropName, ERel iRel, int iStrength, const ZTValue& iTV)
+ZTBSpec::Criterion::Rep::Rep(
+	const ZTName& iPropName, ERel iRel, int iStrength, const ZTValue& iTV)
 :	fPropName(iPropName),
 	fComparator(iRel, iStrength),
 	fTValue(iTV)
@@ -607,8 +607,8 @@ ZTBSpec::Criterion::Criterion(const ZTuple& iTuple)
 :	fRep(new Rep(iTuple))
 	{}
 
-ZTBSpec::Criterion::Criterion
-	(const ZTName& iPropName, const Comparator& iComparator, const ZTValue& iTV)
+ZTBSpec::Criterion::Criterion(
+	const ZTName& iPropName, const Comparator& iComparator, const ZTValue& iTV)
 :	fRep(new Rep(iPropName, iComparator, iTV))
 	{}
 
@@ -624,8 +624,8 @@ ZTBSpec::Criterion::Criterion(const ZTName& iPropName, ERel iRel, const ZTValue&
 :	fRep(new Rep(iPropName, iRel, iTV))
 	{}
 
-ZTBSpec::Criterion::Criterion
-	(const ZTName& iPropName, ERel iRel, int iStrength, const ZTValue& iTV)
+ZTBSpec::Criterion::Criterion(
+	const ZTName& iPropName, ERel iRel, int iStrength, const ZTValue& iTV)
 :	fRep(new Rep(iPropName, iRel, iStrength, iTV))
 	{}
 
@@ -748,8 +748,8 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 								ZTextCollator(this->GetComparator().fStrength);
 							}
 
-						return fRep->fTextCollator.Equals
-							(leftValue.GetString(), this->GetTValue().GetString());
+						return fRep->fTextCollator.Equals(
+							leftValue.GetString(), this->GetTValue().GetString());
 						}
 					else
 						{
@@ -778,8 +778,8 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 								ZTextCollator(this->GetComparator().fStrength);
 							}
 
-						compare = fRep->fTextCollator.Compare
-							(leftValue.GetString(), this->GetTValue().GetString());
+						compare = fRep->fTextCollator.Compare(
+							leftValue.GetString(), this->GetTValue().GetString());
 						}
 					else
 						{

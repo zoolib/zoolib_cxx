@@ -44,8 +44,8 @@ public:
 	static const bool kAllowPause = true;
 	static const bool kDontAllowPause = false;
 
-	ZWinService
-		(const std::wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW iServiceMain, bool iAllowPause);
+	ZWinService(
+		const std::wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW iServiceMain, bool iAllowPause);
 
 	virtual void Run(DWORD argc, LPWSTR* argv) = 0;
 
@@ -65,8 +65,8 @@ protected:
 	void pServiceMain(DWORD argc, LPWSTR* argv);
 
 private:
-	static DWORD WINAPI spServiceCtrlHandlerEx
-		(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext);
+	static DWORD WINAPI spServiceCtrlHandlerEx(
+		DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext);
 
 	std::wstring fServiceName;
 	SERVICE_STATUS fServiceStatus;

@@ -35,8 +35,8 @@ namespace ZNetscape {
 
 #define ASSIGN(a) this->a = a
 
-NPClass_Z::NPClass_Z
-	(NPAllocateFunctionPtr allocate,
+NPClass_Z::NPClass_Z(
+	NPAllocateFunctionPtr allocate,
 	NPDeallocateFunctionPtr deallocate,
 	NPInvalidateFunctionPtr invalidate,
 	NPHasMethodFunctionPtr hasMethod,

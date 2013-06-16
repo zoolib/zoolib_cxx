@@ -41,8 +41,8 @@ Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
 Walker_Calc::~Walker_Calc()
 	{}
 
-ZRef<Walker> Walker_Calc::Prime
-	(const map<string8,size_t>& iOffsets,
+ZRef<Walker> Walker_Calc::Prime(
+	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
@@ -57,8 +57,8 @@ ZRef<Walker> Walker_Calc::Prime
 	return this;
 	}
 
-bool Walker_Calc::QReadInc
-	(ZVal_Any* ioResults,
+bool Walker_Calc::QReadInc(
+	ZVal_Any* ioResults,
 	set<ZRef<ZCounted> >* oAnnotations)
 	{
 	if (not fWalker->QReadInc(ioResults, oAnnotations))

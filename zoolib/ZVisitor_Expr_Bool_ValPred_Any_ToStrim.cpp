@@ -26,8 +26,8 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZVisitor_Expr_Bool_ValPred_ToStrim
 
-void ZVisitor_Expr_Bool_ValPred_Any_ToStrim::Visit_Expr_Bool_ValPred
-	(const ZRef<ZExpr_Bool_ValPred>& iRep)
+void ZVisitor_Expr_Bool_ValPred_Any_ToStrim::Visit_Expr_Bool_ValPred(
+	const ZRef<ZExpr_Bool_ValPred>& iRep)
 	{ ZUtil_Strim_ValPred_Any::sToStrim(iRep->GetValPred(), pStrimW()); }
 
 } // namespace ZooLib

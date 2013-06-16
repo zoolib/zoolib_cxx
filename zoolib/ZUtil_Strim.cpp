@@ -530,8 +530,8 @@ string8 sRead_Until(const ZStrimR& iStrimR, const string8& iTerminator)
 
 // -----------------
 
-void sCopy_EscapedString
-	(const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& oDest)
+void sCopy_EscapedString(
+	const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& oDest)
 	{
 	ZStrimR_Escaped(iStrimU, iTerminator).CopyAllTo(oDest);
 	}

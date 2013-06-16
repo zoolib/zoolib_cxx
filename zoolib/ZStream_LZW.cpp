@@ -43,8 +43,8 @@ A read filter stream that returns a LZW-compatible codestream but without actual
 compressing, thus avoiding infringement of the Unisys patent.
 */
 
-ZStreamR_LZWEncodeNoPatent::ZStreamR_LZWEncodeNoPatent
-	(int iCodeSize_Alphabet, const ZStreamR& iStreamSource)
+ZStreamR_LZWEncodeNoPatent::ZStreamR_LZWEncodeNoPatent(
+	int iCodeSize_Alphabet, const ZStreamR& iStreamSource)
 :	ZStreamR_Filter(iStreamSource),
 	fStreamSource(iStreamSource)
 	{
@@ -355,8 +355,8 @@ A write filter stream that writes an LZW-compatible codestream but without actua
 compressing, thus avoiding infringement of the Unisys patent.
 */
 
-ZStreamW_LZWEncodeNoPatent::ZStreamW_LZWEncodeNoPatent
-	(int iCodeSize_Alphabet, const ZStreamW& iStreamSink)
+ZStreamW_LZWEncodeNoPatent::ZStreamW_LZWEncodeNoPatent(
+	int iCodeSize_Alphabet, const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)
 	{
 	ZAssertStop(kDebug_LZW, iCodeSize_Alphabet > 0 && iCodeSize_Alphabet <= 8);
@@ -386,8 +386,8 @@ ZStreamW_LZWEncodeNoPatent::~ZStreamW_LZWEncodeNoPatent()
 		{}
 	}
 
-void ZStreamW_LZWEncodeNoPatent::Imp_Write
-	(const void* iSource, size_t iCount, size_t* oCountWritten)
+void ZStreamW_LZWEncodeNoPatent::Imp_Write(
+	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	const uint8* localSource = reinterpret_cast<const uint8*>(iSource);
 	while (iCount)

@@ -42,8 +42,8 @@ namespace ZooLib {
 
 static const ZTime kDistantFuture = 1000 * ZTime::kYear;
 
-ZWorker::ZWorker
-	(const ZRef<Callable_Attached>& iCallable_Attached,
+ZWorker::ZWorker(
+	const ZRef<Callable_Attached>& iCallable_Attached,
 	const ZRef<Callable_Work>& iCallable_Work,
 	const ZRef<Callable_Detached>& iCallable_Detached)
 :	fWorking(0)
@@ -54,8 +54,8 @@ ZWorker::ZWorker
 	ZAssert(fCallable_Work);
 	}
 
-ZWorker::ZWorker
-	(const ZRef<Callable_Attached>& iCallable_Attached,
+ZWorker::ZWorker(
+	const ZRef<Callable_Attached>& iCallable_Attached,
 	const ZRef<Callable_Work>& iCallable_Work)
 :	fWorking(0)
 ,	fCallable_Attached(iCallable_Attached)
@@ -64,8 +64,8 @@ ZWorker::ZWorker
 	ZAssert(fCallable_Work);
 	}
 
-ZWorker::ZWorker
-	(const ZRef<Callable_Work>& iCallable_Work,
+ZWorker::ZWorker(
+	const ZRef<Callable_Work>& iCallable_Work,
 	const ZRef<Callable_Detached>& iCallable_Detached)
 :	fWorking(0)
 ,	fCallable_Work(iCallable_Work)

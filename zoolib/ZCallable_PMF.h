@@ -198,8 +198,8 @@ ZMACRO_Callable_Callable(F)
 
 template <class Class_p, class Object_p, class R>
 ZRef<ZCallable<R(void)> >
-sCallable
-	(const Object_p& iObject,
+sCallable(
+	const Object_p& iObject,
 	R (Class_p::*iMethod)())
 	{ return new Callable<Class_p,Object_p,R(void)>(iObject, iMethod); }
 
@@ -207,8 +207,8 @@ sCallable
 \
 template <class Class_p, class Object_p, class R, ZMACRO_Callable_Class_P##X> \
 ZRef<ZCallable<R(ZMACRO_Callable_P##X)> > \
-sCallable \
-	(const Object_p& iObject, \
+sCallable( \
+	const Object_p& iObject, \
 	R (Class_p::*iMethod)(ZMACRO_Callable_P##X)) \
 	{ return new Callable<Class_p,Object_p,R(ZMACRO_Callable_P##X)>(iObject, iMethod); }
 

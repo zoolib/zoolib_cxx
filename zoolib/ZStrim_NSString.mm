@@ -60,8 +60,8 @@ void ZStrimR_NSString::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 		const size_t cuToCopy = min(iCount, min(countAvailable, kBufSize));
 		const NSRange theRange = { fPosition, cuToCopy };
 		[fString.Get() getCharacters:(unichar*)buffer range:theRange];
-		ZUnicode::sUTF16ToUTF32
-			(buffer, cuToCopy,
+		ZUnicode::sUTF16ToUTF32(
+			buffer, cuToCopy,
 			&countConsumed, nullptr,
 			oDest, iCount,
 			oCount);

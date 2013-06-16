@@ -68,8 +68,8 @@ class ZYadMapR_ML
 public:
 	ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU);
 	ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU, const ZML::Attrs_t& iAttrs);
-	ZYadMapR_ML
-		(ZRef<ZML::StrimmerU> iStrimmerU, const std::string& iTagName, const ZML::Attrs_t& iAttrs);
+	ZYadMapR_ML(
+		ZRef<ZML::StrimmerU> iStrimmerU, const std::string& iTagName, const ZML::Attrs_t& iAttrs);
 
 // From ZYadR
 	virtual ZRef<ZYadR> Meta();

@@ -114,8 +114,8 @@ ZMACRO_Cartesian(long double)
 
 template <class Point_p>
 typename PointTraits<Point_p>::Point_t
-sPoint
-	(const typename PointTraits<Point_p>::Ord_t& iX,
+sPoint(
+	const typename PointTraits<Point_p>::Ord_t& iX,
 	const typename PointTraits<Point_p>::Ord_t& iY)
 	{ return PointTraits<Point_p>::sMake(iX, iY); }
 
@@ -126,16 +126,16 @@ sPoint
 // Usage: sPoint<PointType>()
 template <class Point_p>
 typename PointTraits<Point_p>::Point_t
-sPoint
-	()
+sPoint(
+	)
 	{ return PointTraits<Point_p>::sMake(0, 0); }
 
 // From a single parameter that's point-like (will work for scalars too).
 // Usage: sPoint<PointType>(OtherPointType)
 template <class Point_p, class OtherPoint_p>
 typename EnableIfC<PointTraits<OtherPoint_p>::value,typename PointTraits<Point_p>::Point_t>::type
-sPoint
-	(const OtherPoint_p& iOther)
+sPoint(
+	const OtherPoint_p& iOther)
 	{ return sPoint<Point_p>(X(iOther), Y(iOther)); }
 
 // =================================================================================================
@@ -203,8 +203,8 @@ typename RectTraits<Type_p>::RT_t RT(Type_p& iT) { return RectTraits<Type_p>::sR
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Rect_t
-sRect
-	(const typename RectTraits<Rect_p>::Ord_t& iL,
+sRect(
+	const typename RectTraits<Rect_p>::Ord_t& iL,
 	const typename RectTraits<Rect_p>::Ord_t& iT,
 	const typename RectTraits<Rect_p>::Ord_t& iR,
 	const typename RectTraits<Rect_p>::Ord_t& iB)
@@ -217,16 +217,16 @@ sRect
 // Usage: sRect<RectType>()
 template <class Rect_p>
 typename RectTraits<Rect_p>::Rect_t
-sRect
-	()
+sRect(
+	)
 	{ return RectTraits<Rect_p>::sMake(0, 0, 0, 0); }
 
 // From a single parameter whose PointTraits determines the returned rect type.
 // Usage: sRect(PointType)
 template <class Point_p>
 typename PointTraits<Point_p>::Rect_t
-sRect
-	(const Point_p& iPoint)
+sRect(
+	const Point_p& iPoint)
 	{ return sRect<typename PointTraits<Point_p>::Rect_t>(0, 0, X(iPoint), Y(iPoint)); }
 
 // From a single parameter that is Point-like (scalars too by virtue of the
@@ -234,24 +234,24 @@ sRect
 // Usage: sRect<RectType>(PointType)
 template <class Rect_p, class Point_p>
 typename EnableIfC<PointTraits<Point_p>::value,typename RectTraits<Rect_p>::Rect_t>::type
-sRect
-	(const Point_p& iPoint)
+sRect(
+	const Point_p& iPoint)
 	{ return sRect<Rect_p>(0, 0, X(iPoint), Y(iPoint)); }
 
 // From a single parameter that is Rect-like, with the returned rect type as a template parameter.
 // Usage: sRect<RectType>(OtherRectType)
 template <class Rect_p, class OtherRect_p>
 typename EnableIfC<RectTraits<OtherRect_p>::value,typename RectTraits<Rect_p>::Rect_t>::type
-sRect
-	(const OtherRect_p& iOther)
+sRect(
+	const OtherRect_p& iOther)
 	{ return sRect<Rect_p>(L(iOther), T(iOther), R(iOther), B(iOther)); }
 
 // From a pair of parameters, expected to be point-like LT and RB.
 // Usage: sRect(PointType, PointType)
 template <class Point_p>
 typename PointTraits<Point_p>::Rect_t
-sRect
-	(const Point_p& iLT,
+sRect(
+	const Point_p& iLT,
 	const Point_p& iRB)
 	{ return sRect<typename PointTraits<Point_p>::Rect_t>(X(iLT), Y(iLT), X(iRB), Y(iRB)); }
 
@@ -260,8 +260,8 @@ sRect
 // Usage: sRect<RectType>(WidthType, HeightType)
 template <class Rect_p, class Width_p, class Height_p>
 typename RectTraits<Rect_p>::Rect_t
-sRect
-	(const Width_p& iW,
+sRect(
+	const Width_p& iW,
 	const Height_p& iH)
 	{ return RectTraits<Rect_p>::sMake(0, 0, iW, iH); }
 
@@ -424,8 +424,8 @@ template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t
 operator+(const Rect_p& iLHS, const Other& iRHS)
 	{
-	return sRect<Rect_p>
-		(L(iLHS) + X(iRHS),
+	return sRect<Rect_p>(
+		L(iLHS) + X(iRHS),
 		T(iLHS) + Y(iRHS),
 		R(iLHS) + X(iRHS),
 		B(iLHS) + Y(iRHS));
@@ -440,8 +440,8 @@ template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t
 operator-(const Rect_p& iLHS, const Other& iRHS)
 	{
-	return sRect<Rect_p>
-		(L(iLHS) - X(iRHS),
+	return sRect<Rect_p>(
+		L(iLHS) - X(iRHS),
 		T(iLHS) - Y(iRHS),
 		R(iLHS) - X(iRHS),
 		B(iLHS) - Y(iRHS));
@@ -456,8 +456,8 @@ template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t
 operator*(const Rect_p& iLHS, const Other& iRHS)
 	{
-	return sRect<Rect_p>
-		(L(iLHS) * X(iRHS),
+	return sRect<Rect_p>(
+		L(iLHS) * X(iRHS),
 		T(iLHS) * Y(iRHS),
 		R(iLHS) * X(iRHS),
 		B(iLHS) * Y(iRHS));
@@ -472,8 +472,8 @@ template <class Rect_p, class Other>
 typename RectTraits<Rect_p>::Rect_t
 operator/(const Rect_p& iLHS, const Other& iRHS)
 	{
-	return sRect<Rect_p>
-		(L(iLHS) / X(iRHS),
+	return sRect<Rect_p>(
+		L(iLHS) / X(iRHS),
 		T(iLHS) / Y(iRHS),
 		R(iLHS) / X(iRHS),
 		B(iLHS) / Y(iRHS));
@@ -488,8 +488,8 @@ template <class Rect_p>
 typename RectTraits<Rect_p>::Rect_t
 operator&(const Rect_p& iLHS, const Rect_p& iRHS)
 	{
-	return sRect<Rect_p>
-		(std::max(L(iLHS), L(iRHS)),
+	return sRect<Rect_p>(
+		std::max(L(iLHS), L(iRHS)),
 		std::max(T(iLHS), T(iRHS)),
 		std::min(R(iLHS), R(iRHS)),
 		std::min(B(iLHS), B(iRHS)));
@@ -607,8 +607,8 @@ template <class Rect_p, class OtherX_p, class OtherY_p>
 typename RectTraits<Rect_p>::Rect_t
 sOffsetted(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
 	{
-	return sRect<Rect_p>
-		(L(iRect) + X(iX), T(iRect) + Y(iY),
+	return sRect<Rect_p>(
+		L(iRect) + X(iX), T(iRect) + Y(iY),
 		R(iRect) + X(iX), B(iRect) + Y(iY));
 	}
 
@@ -617,16 +617,16 @@ typename RectTraits<Rect_p>::Rect_t
 sOffsetted(const OtherL_p& iL, const OtherT_p& iT, const OtherR_p& iR, const OtherB_p& iB,
 	const Rect_p& iRect)
 	{
-	return sRect<Rect_p>
-		(L(iRect) + iL, T(iRect) + iT,
+	return sRect<Rect_p>(
+		L(iRect) + iL, T(iRect) + iT,
 		R(iRect) + iR, B(iRect) + iB);
 	}
 
 template <class Rect_p, class Other>
 Rect_p sOffsetted(const Other& iOther, const Rect_p& iRect)
 	{
-	return sRect<Rect_p>
-		(L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect) + X(iOther), B(iRect) + Y(iOther));
+	return sRect<Rect_p>(
+		L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect) + X(iOther), B(iRect) + Y(iOther));
 	}
 
 // =================================================================================================
@@ -777,16 +777,16 @@ Rect_p sInsettedY(const OtherY_p& iY, const Rect_p& iRect)
 template <class Rect_p, class OtherX_p, class OtherY_p>
 Rect_p sInsetted(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
 	{
-	return sRect<Rect_p>
-		(L(iRect) + X(iX), T(iRect) + Y(iY),
+	return sRect<Rect_p>(
+		L(iRect) + X(iX), T(iRect) + Y(iY),
 		R(iRect) - X(iX), B(iRect) - Y(iY));
 	}
 
 template <class Rect_p, class Other>
 Rect_p sInsetted(const Other& iOther, const Rect_p& iRect)
 	{
-	return sRect<Rect_p>
-		(L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect) - X(iOther), B(iRect) - Y(iOther));
+	return sRect<Rect_p>(
+		L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect) - X(iOther), B(iRect) - Y(iOther));
 	}
 
 // =================================================================================================

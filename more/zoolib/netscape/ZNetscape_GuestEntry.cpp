@@ -57,8 +57,8 @@ EXPORT_DEF(NPError) NP_Shutdown()
 
 EXPORT_DECL(int) main(NPNetscapeFuncs_Z*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
 
-EXPORT_DEF(int) main
-	(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
+EXPORT_DEF(int) main(
+	NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
 	{
 	// This function is called by CFM browsers, and also by Mozilla-based code.
 	// On Intel the function pointers are just regular function pointers, on PPC they
@@ -81,8 +81,8 @@ EXPORT_DEF(int) main
 		ZMemCopy(&localNPNF, iNPNF, min(size_t(iNPNF->size), sizeof(localNPNF)));
 
 		// Rewrite them as CFM-callable thunks.
-		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM
-			(&localNPNF.geturl,
+		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
+			&localNPNF.geturl,
 			(localNPNF.size - offsetof(NPNetscapeFuncs, geturl)) / sizeof(void*),
 			spGlue_NPNF);
 
@@ -93,8 +93,8 @@ EXPORT_DEF(int) main
 		NP_GetEntryPoints(oPluginFuncs);
 
 		// And munge them into MachO-callable thunks.
-		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO
-			(&oPluginFuncs->newp,
+		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
+			&oPluginFuncs->newp,
 			(oPluginFuncs->size - offsetof(NPPluginFuncs, newp)) / sizeof(void*),
 			spGlue_PluginFuncs);
 

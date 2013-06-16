@@ -71,8 +71,8 @@ static void spReadUTF32_UTF16(const ZStreamR& iStreamR,
 
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		ZUnicode::sUTF16ToUTF32
-			(utf16Buffer, utf16Read,
+		ZUnicode::sUTF16ToUTF32(
+			utf16Buffer, utf16Read,
 			&utf16Consumed, nullptr,
 			oDest, localCount,
 			&utf32Generated);
@@ -105,8 +105,8 @@ static void spReadUTF32_UTF16Swap(const ZStreamR& iStreamR,
 
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		ZUnicode::sUTF16ToUTF32
-			(utf16Buffer, utf16Read,
+		ZUnicode::sUTF16ToUTF32(
+			utf16Buffer, utf16Read,
 			&utf16Consumed, nullptr,
 			oDest, localCount,
 			&utf32Generated);

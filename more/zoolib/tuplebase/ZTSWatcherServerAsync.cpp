@@ -36,8 +36,8 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZTSWatcherServerAsync
 
-ZTSWatcherServerAsync::ZTSWatcherServerAsync
-	(ZRef<ZTaskMaster> iTaskMaster,
+ZTSWatcherServerAsync::ZTSWatcherServerAsync(
+	ZRef<ZTaskMaster> iTaskMaster,
 	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 	ZRef<ZTSWatcher> iTSWatcher)
 :	ZTask(iTaskMaster),
@@ -275,8 +275,8 @@ bool ZTSWatcherServerAsync::Write(const ZStreamW& iStreamW)
 		map<int64, vector<uint64> > changedQueries;
 
 		using ZUtil_STL::sFirstOrNil;
-		bool success = fTSWatcher->Sync
-			(sFirstOrNil(removedIDs), removedIDs.size(),
+		bool success = fTSWatcher->Sync(
+			sFirstOrNil(removedIDs), removedIDs.size(),
 			sFirstOrNil(addedIDs), addedIDs.size(),
 			sFirstOrNil(removedQueries), removedQueries.size(),
 			sFirstOrNil(addedQueries), addedQueries.size(),

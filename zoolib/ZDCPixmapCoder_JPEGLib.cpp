@@ -406,8 +406,8 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 				{
 				const void* sourceRowAddress = iRasterDesc.CalcRowAddress(iBaseAddress, y);
 
-				sBlitRow
-					(sourceRowAddress, iRasterDesc.fPixvalDesc, iPixelDesc, iBounds.left,
+				sBlitRow(
+					sourceRowAddress, iRasterDesc.fPixvalDesc, iPixelDesc, iBounds.left,
 					rowPtr[0], destPixvalDesc, destPixelDesc, 0,
 					W(iBounds));
 
@@ -502,8 +502,8 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 			void* destRowAddress =
 				destRasterDesc.CalcRowAddressDest(destBaseAddress, theJDS.output_scanline - 1);
 
-			sBlitRow
-				(rowPtr[0], sourcePixvalDesc, sourcePixelDesc, 0,
+			sBlitRow(
+				rowPtr[0], sourcePixvalDesc, sourcePixelDesc, 0,
 				destRowAddress, destRasterDesc.fPixvalDesc, destPixelDesc, 0,
 				theJDS.image_width);
 			}

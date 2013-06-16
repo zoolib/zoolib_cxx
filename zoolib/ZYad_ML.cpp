@@ -76,8 +76,8 @@ ZYadMapR_ML::ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 	{}
 
-ZYadMapR_ML::ZYadMapR_ML
-	(ZRef<ZML::StrimmerU> iStrimmerU, const string& iTagName, const ZML::Attrs_t& iAttrs)
+ZYadMapR_ML::ZYadMapR_ML(
+	ZRef<ZML::StrimmerU> iStrimmerU, const string& iTagName, const ZML::Attrs_t& iAttrs)
 :	fStrimmerU(iStrimmerU),
 	fTagName(iTagName),
 	fAttrs(iAttrs)

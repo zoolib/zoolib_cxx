@@ -92,8 +92,8 @@ void Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Rest
 // =================================================================================================
 // MARK: - Relational operators
 
-ZRef<Expr_Rel_Restrict> sRestrict
-	(const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
+ZRef<Expr_Rel_Restrict> sRestrict(
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
 	{
 	if (iExpr_Rel && iExpr_Bool)
 		return new Expr_Rel_Restrict(iExpr_Rel, iExpr_Bool);
@@ -101,12 +101,12 @@ ZRef<Expr_Rel_Restrict> sRestrict
 	return null;
 	}
 
-ZRef<Expr_Rel> operator&
-	(const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
+ZRef<Expr_Rel> operator&(
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
 	{ return sRestrict(iExpr_Rel, iExpr_Bool); }
 
-ZRef<Expr_Rel> operator&
-	(const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel)
+ZRef<Expr_Rel> operator&(
+	const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel)
 	{ return sRestrict(iExpr_Rel, iExpr_Bool); }
 
 ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)

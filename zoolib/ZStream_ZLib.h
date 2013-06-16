@@ -71,8 +71,8 @@ class ZStreamR_ZLibDecode : public ZStreamR
 public:
 	ZStreamR_ZLibDecode(const ZStreamR& iStreamSource);
 
-	ZStreamR_ZLibDecode
-		(ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
+	ZStreamR_ZLibDecode(
+		ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
 		const ZStreamR& iStreamSource);
 
 	~ZStreamR_ZLibDecode();
@@ -101,8 +101,8 @@ class ZStreamerR_ZLibDecode : public ZStreamerR
 public:
 	ZStreamerR_ZLibDecode(ZRef<ZStreamerR> iStreamer);
 
-	ZStreamerR_ZLibDecode
-		(ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
+	ZStreamerR_ZLibDecode(
+		ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
 		ZRef<ZStreamerR> iStreamer);
 
 	virtual ~ZStreamerR_ZLibDecode();
@@ -125,8 +125,8 @@ class ZStreamW_ZLibEncode : public ZStreamW
 public:
 	ZStreamW_ZLibEncode(const ZStreamW& iStreamSink);
 
-	ZStreamW_ZLibEncode
-		(ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
+	ZStreamW_ZLibEncode(
+		ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
 		const ZStreamW& iStreamSink);
 
 	~ZStreamW_ZLibEncode();
@@ -155,8 +155,8 @@ class ZStreamerW_ZLibEncode : public ZStreamerW
 public:
 	ZStreamerW_ZLibEncode(ZRef<ZStreamerW> iStreamer);
 
-	ZStreamerW_ZLibEncode
-		(ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
+	ZStreamerW_ZLibEncode(
+		ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
 		ZRef<ZStreamerW> iStreamer);
 
 	virtual ~ZStreamerW_ZLibEncode();

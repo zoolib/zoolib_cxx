@@ -168,8 +168,8 @@ public:
 // From ZTSWatcher
 	virtual bool AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCountIssued);
 
-	virtual bool Sync
-		(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+	virtual bool Sync(
+		const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 		const uint64* iAddedIDs, size_t iAddedIDsCount,
 		const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 		const ZTSWatcher::AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
@@ -207,8 +207,8 @@ bool ZTS_Watchable::Watcher::AllocateIDs(size_t iCount, uint64& oBaseID, size_t&
 	return true;
 	}
 
-bool ZTS_Watchable::Watcher::Sync
-	(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+bool ZTS_Watchable::Watcher::Sync(
+	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 	const ZTSWatcher::AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
@@ -377,8 +377,8 @@ void ZTS_Watchable::Watcher_Finalize(Watcher* iWatcher)
 	delete iWatcher;
 	}
 
-void ZTS_Watchable::Watcher_AllocateIDs
-	(Watcher* iWatcher, size_t iCount, uint64& oBaseID, size_t& oCountIssued)
+void ZTS_Watchable::Watcher_AllocateIDs(
+	Watcher* iWatcher, size_t iCount, uint64& oBaseID, size_t& oCountIssued)
 	{ fTS->AllocateIDs(iCount, oBaseID, oCountIssued); }
 
 template <typename C>
@@ -412,8 +412,8 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 		const uint64* iWrittenTupleIDs, const ZTuple* iWrittenTuples, size_t iWrittenTuplesCount,
 		map<int64, vector<uint64> >& oChangedQueries)
 	{
-	vector<ZTSWatcher::AddedQueryCombo> local_AddedQueries
-		(iAddedQueries, iAddedQueries + iAddedQueriesCount);
+	vector<ZTSWatcher::AddedQueryCombo> local_AddedQueries(
+		iAddedQueries, iAddedQueries + iAddedQueriesCount);
 
 	// Go through and ensure that the local data structures have ZTBQueries and
 	// real ZMemoryBlocks. We do it here to simplify code that calls us.
@@ -773,8 +773,8 @@ void ZTS_Watchable::pInvalidatePSpecs(const ZTuple& iOld, const ZTuple& iNew,
 				PSpec* curPSpec = *iterPSpec;
 				if (curPSpec->GetTBSpec().Matches(iOld) != curPSpec->GetTBSpec().Matches(iNew))
 					{
-					toInvalidate.insert
-						(curPSpec->fUsingPQueries.begin(), curPSpec->fUsingPQueries.end());
+					toInvalidate.insert(
+						curPSpec->fUsingPQueries.begin(), curPSpec->fUsingPQueries.end());
 
 					#if kDebug_CountInvalidations
 					++affectedSpecs;

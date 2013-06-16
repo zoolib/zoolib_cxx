@@ -98,8 +98,8 @@ ZMACRO_WinCOM_Class(IDevice, IUnknown,
 	C716830E,A0F4,46DF,B8,2A,54,8C,FB,08,75,5E)
 
 	virtual STDMETHODIMP Properties(IDeviceProperties** oDeviceProperties) = 0;
-	virtual STDMETHODIMP OpenChannel
-		(LPCWSTR iChannelName,
+	virtual STDMETHODIMP OpenChannel(
+		LPCWSTR iChannelName,
 		IChannelEvents* iChannelEvents,
 		IChannel** oChannel) = 0;
 
@@ -148,8 +148,8 @@ ZMACRO_WinCOM_Class(IDeviceManager, IUnknown,
 
 	virtual STDMETHODIMP Devices(IDevices** oDevices) = 0;
 
-	virtual STDMETHODIMP Advise
-		(IDeviceManagerEvents* iDeviceManagerEvents, uint32* oCookie) = 0;
+	virtual STDMETHODIMP Advise(
+		IDeviceManagerEvents* iDeviceManagerEvents, uint32* oCookie) = 0;
 
 	virtual STDMETHODIMP Unadvise(uint32 iCookie) = 0;
 	};

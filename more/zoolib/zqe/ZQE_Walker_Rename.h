@@ -37,13 +37,13 @@ public:
 	virtual ~Walker_Rename();
 
 // From ZQE::Walker
-	virtual ZRef<Walker> Prime
-		(const std::map<string8,size_t>& iOffsets,
+	virtual ZRef<Walker> Prime(
+		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool QReadInc
-		(ZVal_Any* ioResults,
+	virtual bool QReadInc(
+		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:

@@ -103,8 +103,8 @@ bool ZTSWatcher_Latent::AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCou
 	return false;
 	}
 
-bool ZTSWatcher_Latent::Sync
-	(const uint64* iRemovedIDs, size_t iRemovedIDsCount,
+bool ZTSWatcher_Latent::Sync(
+	const uint64* iRemovedIDs, size_t iRemovedIDsCount,
 	const uint64* iAddedIDs, size_t iAddedIDsCount,
 	const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 	const AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
@@ -320,8 +320,8 @@ bool ZTSWatcher_Latent::Sync
 	vector<ZTuple> changedTuples;
 	map<int64, vector<uint64> > changedQueries;
 
-	if (!fTSWatcher->Sync
-			(&removedIDs[0], removedIDs.size(),
+	if (!fTSWatcher->Sync(
+			&removedIDs[0], removedIDs.size(),
 			&addedIDs[0], addedIDs.size(),
 			&removedQueries[0], removedQueries.size(),
 			&addedQueries[0], addedQueries.size(),
@@ -559,9 +559,8 @@ void ZTSWatcher_Latent::pRegisterAQC(AddedQueryCombo& ioAQC)
 					const ZRef<ZTBQueryNode>& theNode = theIntersection.fNodes.back();
 					if (ZRefDynamicCast<ZTBQueryNode_All>(theNode))
 						{
-						fPQueries.insert
-							(pair<int64, PQuery>
-							(ioAQC.fRefcon, PQuery(ioAQC.fRefcon, theIntersection.fFilter)));
+						fPQueries.insert(pair<int64, PQuery>(
+								ioAQC.fRefcon, PQuery(ioAQC.fRefcon, theIntersection.fFilter)));
 						}
 					}
 				}

@@ -147,8 +147,8 @@ ZRef<ZNetListener_Local_Socket> ZNetListener_Local_Socket::sCreateWithFD(int iFD
 static int spEnsureLocal(int iSocketFD)
 	{
 	sockaddr_un localSockAddr;
-	if (0 <= ::getsockname
-		(iSocketFD, (sockaddr*)&localSockAddr, sMutablePtr(socklen_t(sizeof(localSockAddr)))))
+	if (0 <= ::getsockname(
+		iSocketFD, (sockaddr*)&localSockAddr, sMutablePtr(socklen_t(sizeof(localSockAddr)))))
 		{
 		if (localSockAddr.sun_family == AF_LOCAL)
 			return iSocketFD;
@@ -205,8 +205,8 @@ ZNetListener_Local_Socket::~ZNetListener_Local_Socket()
 ZRef<ZNetAddress> ZNetListener_Local_Socket::GetAddress()
 	{
 	uint8 buffer[SOCK_MAXADDRLEN];
-	if (0 <= ::getsockname
-		(this->GetSocketFD(), (sockaddr*)buffer, sMutablePtr(socklen_t(sizeof(buffer)))))
+	if (0 <= ::getsockname(
+		this->GetSocketFD(), (sockaddr*)buffer, sMutablePtr(socklen_t(sizeof(buffer)))))
 		{ return spAsNetAddress((sockaddr*)buffer); }
 
 	return null;

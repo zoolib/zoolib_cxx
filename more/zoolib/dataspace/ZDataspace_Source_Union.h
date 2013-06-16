@@ -47,8 +47,8 @@ public:
 // From Source
 	virtual bool Intersects(const RelHead& iRelHead);
 
-	virtual void ModifyRegistrations
-		(const AddedQuery* iAdded, size_t iAddedCount,
+	virtual void ModifyRegistrations(
+		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount);
 
 	virtual void CollectResults(std::vector<QueryResult>& oChanged);

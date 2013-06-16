@@ -117,8 +117,8 @@ public:
 	virtual bool Enabled(ZLog::EPriority iPriority, const char* iName)
 		{ return iPriority <= this->pGetLogPriority(); }
 
-	virtual void LogIt
-		(ZLog::EPriority iPriority, const std::string& iName, const std::string& iMessage)
+	virtual void LogIt(
+		ZLog::EPriority iPriority, const std::string& iName, const std::string& iMessage)
 		{
 		if (iPriority > this->pGetLogPriority())
 			return;
@@ -221,8 +221,8 @@ void sInstall()
 	ZRef<LogMeister> theLM = new LogMeister;
 
 	FILE* theStdOut = stdout; // Workaround for VC++
-	theLM->SetStrimmer
-		(sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(theStdOut)));
+	theLM->SetStrimmer(
+		sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(theStdOut)));
 
 	ZLog::sLogMeister = theLM;
 	}

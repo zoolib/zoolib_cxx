@@ -82,8 +82,8 @@ const Value* sPGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived&
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-const Value& sDGet
-	(const Value& iDefault, const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
+const Value& sDGet(
+	const Value& iDefault, const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
 	{
 	if (const Value* theP = sPGet(iMap, iKey))
 		return *theP;
@@ -118,8 +118,8 @@ Value* sPMut(std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-Value& sDMut
-	(const Value& iDefault, std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+Value& sDMut(
+	const Value& iDefault, std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
 	{
 	typename std::map<KBase,Value,Comparator>::iterator ii =
 		ioMap.insert(typename std::map<KBase,Value,Comparator>::value_type(iKey, iDefault));
@@ -127,22 +127,22 @@ Value& sDMut
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-Value& sMut
-	(std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
+Value& sMut(
+	std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
 	{ return iMap[iKey]; }
 
 // -----
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-void sSet
-	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
+void sSet(
+	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{ ioMap[iKey] = iValue; }
 
 // -----
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-bool sQInsert
-	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
+bool sQInsert(
+	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{
 	return ioMap.insert(typename std::map<KBase,Value,Comparator>::value_type(iKey, iValue)).second;
 	}
@@ -150,8 +150,8 @@ bool sQInsert
 // -----
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-bool sQReplace
-	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
+bool sQReplace(
+	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{
 	typename std::map<KBase,Value,Comparator>::iterator ii = ioMap.find(iKey);
 	if (ioMap.end() == ii)
@@ -174,8 +174,8 @@ ZQ<Value> sQGetErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iK
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
-Value sDGetErase
-	(const Value& iDefault, std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
+Value sDGetErase(
+	const Value& iDefault, std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
 	{
 	typename std::map<KBase,Value,Comparator>::iterator ii = ioMap.find(iKey);
 	if (ioMap.end() == ii)
@@ -249,8 +249,8 @@ void sInsertMust(const int iDebugLevel,
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-void sInsertMust
-	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
+void sInsertMust(
+	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{ sInsertMust(1, ioMap, iKey, iValue);}
 
 // -----
@@ -264,8 +264,8 @@ void sReplaceMust(const int iDebugLevel,
 	}
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-void sReplaceMust
-	(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
+void sReplaceMust(
+	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
 	{ sReplaceMust(1, ioMap, iKey, iValue); }
 
 // -----

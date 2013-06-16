@@ -42,8 +42,8 @@ ZStrimR_Boundary::ZStrimR_Boundary(const string8& iBoundary, const ZStrimR& iStr
 	this->pInit();
 	}
 
-ZStrimR_Boundary::ZStrimR_Boundary
-	(const UTF8* iBoundary, size_t iBoundarySize, const ZStrimR& iStrimSource)
+ZStrimR_Boundary::ZStrimR_Boundary(
+	const UTF8* iBoundary, size_t iBoundarySize, const ZStrimR& iStrimSource)
 :	fStrimSource(iStrimSource),
 	fBoundary(ZUnicode::sAsUTF32(iBoundary, iBoundarySize))
 	{
@@ -57,8 +57,8 @@ ZStrimR_Boundary::ZStrimR_Boundary(const string32& iBoundary, const ZStrimR& iSt
 	this->pInit();
 	}
 
-ZStrimR_Boundary::ZStrimR_Boundary
-	(const UTF32* iBoundary, size_t iBoundarySize, const ZStrimR& iStrimSource)
+ZStrimR_Boundary::ZStrimR_Boundary(
+	const UTF32* iBoundary, size_t iBoundarySize, const ZStrimR& iStrimSource)
 :	fStrimSource(iStrimSource),
 	fBoundary(iBoundary, iBoundarySize)
 	{
@@ -213,20 +213,20 @@ ZStrimmerR_Boundary::ZStrimmerR_Boundary(const string8& iBoundary, ZRef<ZStrimme
 	fStrim(iBoundary, iStrimmerSource->GetStrimR())
 	{}
 
-ZStrimmerR_Boundary::ZStrimmerR_Boundary
-	(const UTF8* iBoundary, size_t iBoundarySize, ZRef<ZStrimmerR> iStrimmerSource)
+ZStrimmerR_Boundary::ZStrimmerR_Boundary(
+	const UTF8* iBoundary, size_t iBoundarySize, ZRef<ZStrimmerR> iStrimmerSource)
 :	fStrimmerSource(iStrimmerSource),
 	fStrim(iBoundary, iBoundarySize, iStrimmerSource->GetStrimR())
 	{}
 
-ZStrimmerR_Boundary::ZStrimmerR_Boundary
-	(const string32& iBoundary, ZRef<ZStrimmerR> iStrimmerSource)
+ZStrimmerR_Boundary::ZStrimmerR_Boundary(
+	const string32& iBoundary, ZRef<ZStrimmerR> iStrimmerSource)
 :	fStrimmerSource(iStrimmerSource),
 	fStrim(iBoundary, iStrimmerSource->GetStrimR())
 	{}
 
-ZStrimmerR_Boundary::ZStrimmerR_Boundary
-	(const UTF32* iBoundary, size_t iBoundarySize, ZRef<ZStrimmerR> iStrimmerSource)
+ZStrimmerR_Boundary::ZStrimmerR_Boundary(
+	const UTF32* iBoundary, size_t iBoundarySize, ZRef<ZStrimmerR> iStrimmerSource)
 :	fStrimmerSource(iStrimmerSource),
 	fStrim(iBoundary, iBoundarySize, iStrimmerSource->GetStrimR())
 	{}

@@ -680,8 +680,8 @@ string sGetString0(const Val& iVal)
 	return string();
 	}
 
-static ZRef<ZStreamerR> spMakeStreamer_Transfer
-	(const Map& iHeader, ZRef<ZStreamerR> iStreamerR)
+static ZRef<ZStreamerR> spMakeStreamer_Transfer(
+	const Map& iHeader, ZRef<ZStreamerR> iStreamerR)
 	{
 	// According to the spec, if content is chunked, content-length must be ignored.
 	// I've seen some pages being returned with transfer-encoding "chunked, chunked", which
@@ -1747,8 +1747,8 @@ void StreamR_Chunked::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		else
 			{
 			size_t countRead;
-			fStreamSource.Read
-				(localDest, min(iCount, ZStream::sClampedSize(fChunkSize)), &countRead);
+			fStreamSource.Read(
+				localDest, min(iCount, ZStream::sClampedSize(fChunkSize)), &countRead);
 
 			if (countRead == 0)
 				fHitEnd = true;

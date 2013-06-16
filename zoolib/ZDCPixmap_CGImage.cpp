@@ -61,11 +61,11 @@ ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef)
 		{}
 	else
 		{
-		const PixvalDesc thePixvalDesc
-			(::CGImageGetBitsPerPixel(iImageRef), ZCONFIG_Endian != ZCONFIG_Endian_Big);
+		const PixvalDesc thePixvalDesc(
+			::CGImageGetBitsPerPixel(iImageRef), ZCONFIG_Endian != ZCONFIG_Endian_Big);
 
-		const RasterDesc theRasterDesc
-			(thePixvalDesc,
+		const RasterDesc theRasterDesc(
+			thePixvalDesc,
 			::CGImageGetBytesPerRow(iImageRef),
 			::CGImageGetHeight(iImageRef),
 			false);
@@ -100,8 +100,8 @@ ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef)
 
 		const PixelDesc thePixelDesc(theR, theG, theB, theA);
 
-		return ZDCPixmapRep::sCreate
-			(thePixmapRaster,
+		return ZDCPixmapRep::sCreate(
+			thePixmapRaster,
 			sRectPOD(::CGImageGetWidth(iImageRef),
 			thePixmapRaster->GetRasterDesc().fRowCount),
 			thePixelDesc);

@@ -111,8 +111,8 @@ ZMACRO_Callable_Callable(F)
 // MARK: - sCallable_Fallback
 
 template <class Sig>
-ZRef<ZCallable<Sig> > sCallable_Fallback
-	(const ZRef<ZCallable<Sig> >& iCallable0, const ZRef<ZCallable<Sig> >& iCallable1)
+ZRef<ZCallable<Sig> > sCallable_Fallback(
+	const ZRef<ZCallable<Sig> >& iCallable0, const ZRef<ZCallable<Sig> >& iCallable1)
 	{
 	if (iCallable0)
 		{

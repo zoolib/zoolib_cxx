@@ -232,8 +232,8 @@ ZRef<ZNetEndpoint> ZNetListener_Socket::Listen()
 	sWaitReadable(fSocketFD, sleepTime);
 
 	char remoteSockAddr[SOCK_MAXADDRLEN];
-	int result = ::accept
-		(fSocketFD, (sockaddr*)&remoteSockAddr, sMutablePtr(socklen_t(sizeof(remoteSockAddr))));
+	int result = ::accept(
+		fSocketFD, (sockaddr*)&remoteSockAddr, sMutablePtr(socklen_t(sizeof(remoteSockAddr))));
 
 	fMutexNR.Acquire();
 

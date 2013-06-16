@@ -96,8 +96,8 @@ static NSModule spLoadNSModule(CFBundleRef iBundleRef)
 			NSObjectFileImage image;
 			if (NSObjectFileImageSuccess == ::NSCreateObjectFileImageFromFile(buff, &image))
 				{
-				NSModule result = ::NSLinkModule
-					(image, buff,
+				NSModule result = ::NSLinkModule(
+					image, buff,
 					NSLINKMODULE_OPTION_BINDNOW
 					| NSLINKMODULE_OPTION_PRIVATE
 					| NSLINKMODULE_OPTION_RETURN_ON_ERROR);
@@ -148,8 +148,8 @@ ZQ<int> spQGetMajorVersion(const ZRef<CFBundleRef>& iBundleRef)
 	{
 	if (iBundleRef)
 		{
-		if (ZRef<CFStringRef> theStringRef =(CFStringRef)::CFBundleGetValueForInfoDictionaryKey
-			(iBundleRef, CFSTR("CFBundleShortVersionString")))
+		if (ZRef<CFStringRef> theStringRef =(CFStringRef)::CFBundleGetValueForInfoDictionaryKey(
+			iBundleRef, CFSTR("CFBundleShortVersionString")))
 			{ return spQGetMajorVersion(theStringRef); }
 		}
 	return null;
@@ -194,12 +194,10 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 	fShutdown = spLookup<NPP_ShutdownProcPtr>(fHMODULE, "NP_Shutdown");
 
 	NP_InitializeFuncPtr theInit =
-		spLookup<NP_InitializeFuncPtr>
-		(fHMODULE, "NP_Initialize");
+		spLookup<NP_InitializeFuncPtr>(fHMODULE, "NP_Initialize");
 
 	NP_GetEntryPointsFuncPtr theEntryPoints =
-		spLookup<NP_GetEntryPointsFuncPtr>
-		(fHMODULE, "NP_GetEntryPoints");
+		spLookup<NP_GetEntryPointsFuncPtr>(fHMODULE, "NP_GetEntryPoints");
 
 	if (!fShutdown || !theInit || !theEntryPoints)
 		spThrowMissingEntryPoint();
@@ -305,12 +303,10 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 		fShutdown = spLookup<NPP_ShutdownProcPtr>(fNSModule, "_NP_Shutdown");
 
 		NP_GetEntryPointsFuncPtr theEntryPoints =
-			spLookup<NP_GetEntryPointsFuncPtr>
-			(fNSModule, "_NP_GetEntryPoints");
+			spLookup<NP_GetEntryPointsFuncPtr>(fNSModule, "_NP_GetEntryPoints");
 
 		NP_InitializeFuncPtr theInit =
-			spLookup<NP_InitializeFuncPtr>
-			(fNSModule, "_NP_Initialize");
+			spLookup<NP_InitializeFuncPtr>(fNSModule, "_NP_Initialize");
 
 		if (!fShutdown || !theInit || !theEntryPoints)
 			spThrowMissingEntryPoint();
@@ -336,8 +332,8 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 
 		#if ZCONFIG(Processor,PPC)
 			// Rework fNPNF as CFM-callable thunks
-			ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM
-				(&fNPNF.geturl,
+			ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
+				&fNPNF.geturl,
 				(fNPNF.size - offsetof(NPNetscapeFuncs, geturl)) / sizeof(void*),
 				fGlue_NPNF);
 		#endif
@@ -346,8 +342,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 		// lookup mechanism will have created a MachO-callable thunk for it.
 
 		MainFuncPtr theMain =
-			spLookup<MainFuncPtr>
-			(theBundleRef, CFSTR("main"));
+			spLookup<MainFuncPtr>(theBundleRef, CFSTR("main"));
 
 		if (!theMain)
 			spThrowMissingEntryPoint();
@@ -356,8 +351,8 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 
 		#if ZCONFIG(Processor,PPC)
 			// Rework fNPPluginFuncs and fShutdown as MachO-Callable thunks.
-			ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO
-				(&fNPPluginFuncs.newp,
+			ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
+				&fNPPluginFuncs.newp,
 				(fNPPluginFuncs.size - offsetof(NPPluginFuncs, newp)) / sizeof(void*),
 				fGlue_PluginFuncs);
 
@@ -447,20 +442,18 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 		{
 		// We're running as CFM, but the plugin will be using MachO.
 		// Rework fNPNF as MachO-callable thunks.
-		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO
-			(&fNPNF.geturl,
+		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
+			&fNPNF.geturl,
 			(fNPNF.size - offsetof(NPNetscapeFuncs_Z, geturl)) / sizeof(void*),
 			fGlue_NPNF);
 
 		fShutdown = spLookup<NPP_ShutdownProcPtr>(theBundleRef, CFSTR("NP_Shutdown"));
 
 		NP_GetEntryPointsFuncPtr theEntryPoints =
-			spLookup<NP_GetEntryPointsFuncPtr>
-			(theBundleRef, CFSTR("NP_GetEntryPoints"));
+			spLookup<NP_GetEntryPointsFuncPtr>(theBundleRef, CFSTR("NP_GetEntryPoints"));
 
 		NP_InitializeFuncPtr theInit =
-			spLookup<NP_InitializeFuncPtr>
-			(theBundleRef, CFSTR("NP_Initialize"));
+			spLookup<NP_InitializeFuncPtr>(theBundleRef, CFSTR("NP_Initialize"));
 
 		if (!fShutdown || !theInit || !theEntryPoints)
 			spThrowMissingEntryPoint();
@@ -468,8 +461,8 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 		theEntryPoints(&fNPPluginFuncs);
 
 		// Rework fNPPluginFuncs and fShutDown as CFM-Callable thunks.
-		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM
-			(&fNPPluginFuncs.newp,
+		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
+			&fNPPluginFuncs.newp,
 			(fNPPluginFuncs.size - offsetof(NPPluginFuncs, newp)) / sizeof(void*),
 			fGlue_PluginFuncs);
 		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(&fShutdown, 1, fGlue_Shutdown);
@@ -489,8 +482,8 @@ const NPPluginFuncs& GuestFactory_HostCFM::GetEntryPoints()
 // =================================================================================================
 // MARK: - ZNetscape
 
-ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory
-	(ZQ<int> iEarliest, ZQ<int> iLatest, const std::string& iNativePath)
+ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(
+	ZQ<int> iEarliest, ZQ<int> iLatest, const std::string& iNativePath)
 	{
 	try
 		{
@@ -516,8 +509,8 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory
 		#endif
 
 		#if ZCONFIG_SPI_Enabled(CoreFoundation)
-			if (ZRef<CFURLRef> theURL = sAdopt& ::CFURLCreateWithFileSystemPath
-				(nullptr, ZUtil_CF::sString(iNativePath), kCFURLPOSIXPathStyle, true))
+			if (ZRef<CFURLRef> theURL = sAdopt& ::CFURLCreateWithFileSystemPath(
+				nullptr, ZUtil_CF::sString(iNativePath), kCFURLPOSIXPathStyle, true))
 				{
 				if (ZMap_CF theMap = sAdopt& ::CFBundleCopyInfoDictionaryInDirectory(theURL))
 					{

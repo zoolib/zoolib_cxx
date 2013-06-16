@@ -83,8 +83,8 @@ HWND sCreate_DefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCr
 	{
 	static ClassRegistration spClassRegistration(DefWindowProcW, L"DefWindowProcW");
 
-	return ::CreateWindowExW
-		(iExStyle, // Extended attributes
+	return ::CreateWindowExW(
+		iExStyle, // Extended attributes
 		spClassRegistration.GetClassName(),
 		nullptr, // window caption
 		iStyle, // window style
@@ -108,8 +108,8 @@ HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreat
 	{
 	static ClassRegistration spClassRegistration(DefDlgProcW, L"DefDlgProcW", DLGWINDOWEXTRA);
 
-	return ::CreateWindowExW
-		(iExStyle, // Extended attributes
+	return ::CreateWindowExW(
+		iExStyle, // Extended attributes
 		spClassRegistration.GetClassName(),
 		nullptr, // window caption
 		iStyle, // window style
@@ -195,8 +195,8 @@ LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM
 	return 0;
 	}
 
-HWND sCreate
-	(DWORD dwExStyle,
+HWND sCreate(
+	DWORD dwExStyle,
 	LPCWSTR lpWindowName,
 	DWORD dwStyle,
 	int X,
@@ -212,8 +212,8 @@ HWND sCreate
 
 	ZThreadVal<ZRef<Callable> > theCallableTV = new Callable_WithWNDPROC(iCallable, iWNDPROC);
 
-	return ::CreateWindowExW
-		(dwExStyle,
+	return ::CreateWindowExW(
+		dwExStyle,
 		spClassRegistration.GetClassName(),
 		lpWindowName,
 		dwStyle,
@@ -229,8 +229,8 @@ HWND sCreate
 
 HWND sCreate(HWND iParent, ZRef<Callable> iCallable)
 	{
-	return sCreate
-		(0, // Extended attributes
+	return sCreate(
+		0, // Extended attributes
 		nullptr, // window caption
 		0, // window style
 		0, // initial x position

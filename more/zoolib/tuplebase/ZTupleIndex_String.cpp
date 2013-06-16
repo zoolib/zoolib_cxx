@@ -39,8 +39,8 @@ ZTupleIndex_String::Compare::Compare()
 :	fTextCollator(1)
 	{}
 
-bool ZTupleIndex_String::Compare::operator()
-	(const value_type& iLeft, const value_type& iRight) const
+bool ZTupleIndex_String::Compare::operator()(
+	const value_type& iLeft, const value_type& iRight) const
 	{
 	if (int compare = fTextCollator.Compare(iLeft.fValue, iRight.fValue))
 		return compare < 0;
@@ -95,8 +95,8 @@ static void spExtractConstraint(const ZTName& iPropName,
 	ZUnimplemented();
 	}
 
-static bool spCheckForConstraint
-	(const ZTName& iPropName, const ZTBSpec::CriterionSect& iCriterionSect)
+static bool spCheckForConstraint(
+	const ZTName& iPropName, const ZTBSpec::CriterionSect& iCriterionSect)
 	{
 	for (ZTBSpec::CriterionSect::const_iterator critIter = iCriterionSect.begin(),
 		theEnd = iCriterionSect.end();

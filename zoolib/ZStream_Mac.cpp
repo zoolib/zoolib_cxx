@@ -34,8 +34,8 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZStreamRPos_Mac_PartialResource
 
-ZStreamRPos_Mac_PartialResource::ZStreamRPos_Mac_PartialResource
-	(Handle inResourceHandle, bool inAdopt)
+ZStreamRPos_Mac_PartialResource::ZStreamRPos_Mac_PartialResource(
+	Handle inResourceHandle, bool inAdopt)
 	{
 	fResourceHandle = inResourceHandle;
 
@@ -85,8 +85,8 @@ uint64 ZStreamRPos_Mac_PartialResource::Imp_GetSize()
 // =================================================================================================
 // MARK: - ZStreamerRPos_Mac_PartialResource
 
-ZStreamerRPos_Mac_PartialResource::ZStreamerRPos_Mac_PartialResource
-	(Handle inResourceHandle, bool inAdopt)
+ZStreamerRPos_Mac_PartialResource::ZStreamerRPos_Mac_PartialResource(
+	Handle inResourceHandle, bool inAdopt)
 :	fStream(inResourceHandle, inAdopt)
 	{}
 

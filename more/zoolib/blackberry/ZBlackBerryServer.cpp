@@ -62,8 +62,8 @@ private:
 	EState fState;
 	};
 
-ZBlackBerryServer::Handler_ManagerChanged::Handler_ManagerChanged
-	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+ZBlackBerryServer::Handler_ManagerChanged::Handler_ManagerChanged(
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 	ZBlackBerryServer* iServer)
 :	ZCommer(iStreamerR, iStreamerW),
 	fServer(iServer),
@@ -175,8 +175,8 @@ private:
 	bool fOpen;
 	};
 
-ZBlackBerryServer::Handler_DeviceFinished::Handler_DeviceFinished
-	(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+ZBlackBerryServer::Handler_DeviceFinished::Handler_DeviceFinished(
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 	ZBlackBerryServer* iServer)
 :	ZCommer(iStreamerR, iStreamerW),
 	fServer(iServer),
@@ -296,11 +296,11 @@ static void spCopyChunked(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon>
 		}
 	}
 
-static void spCopyAllCon
-	(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize)
+static void spCopyAllCon(
+	ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize)
 	{
-	while (ZStream::sCopyAllCon
-		(iStreamerRCon->GetStreamRCon(), iChunkSize, iStreamerWCon->GetStreamWCon(), 10))
+	while (ZStream::sCopyAllCon(
+		iStreamerRCon->GetStreamRCon(), iChunkSize, iStreamerWCon->GetStreamWCon(), 10))
 		{}
 	}
 
@@ -429,12 +429,12 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				w.Flush();
 
 				// Use a standard copier for the device-->client direction
-				sCallOnNewThread
-					(sBindR(sCallable(&spCopyAllCon), deviceCon, iSRWCon, readSize));
+				sCallOnNewThread(
+					sBindR(sCallable(&spCopyAllCon), deviceCon, iSRWCon, readSize));
 
 				// And our specialized copier for the client-->device direction.
-				sCallOnNewThread
-					(sBindR(sCallable(&spCopyChunked), iSRWCon, deviceCon));
+				sCallOnNewThread(
+					sBindR(sCallable(&spCopyChunked), iSRWCon, deviceCon));
 				return;
 				}
 			}

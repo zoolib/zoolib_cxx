@@ -39,8 +39,8 @@ namespace ZooLib {
 class ZStreamRPos_Win_MultiResource : public ZStreamRPos
 	{
 public:
-	ZStreamRPos_Win_MultiResource
-		(HMODULE iHMODULE, const std::string& iType, const std::string& iName);
+	ZStreamRPos_Win_MultiResource(
+		HMODULE iHMODULE, const std::string& iType, const std::string& iName);
 	~ZStreamRPos_Win_MultiResource();
 
 // From ZStreamR via ZStreamRPos
@@ -73,8 +73,8 @@ private:
 class ZStreamerRPos_Win_MultiResource : public ZStreamerRPos
 	{
 public:
-	ZStreamerRPos_Win_MultiResource
-		(HMODULE iHMODULE, const std::string& iType, const std::string& iName);
+	ZStreamerRPos_Win_MultiResource(
+		HMODULE iHMODULE, const std::string& iType, const std::string& iName);
 	virtual ~ZStreamerRPos_Win_MultiResource();
 
 // From ZStreamerRPos

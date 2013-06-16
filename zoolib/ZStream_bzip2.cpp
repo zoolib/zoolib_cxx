@@ -154,8 +154,8 @@ use less than 1024. If your destination stream has poor latency then use a (much
 value, or interpose a ZStreamW_Buffered or ZStreamW_DynamicBuffered.
 \param iStreamSink The stream to which compressed data should be written.
 */
-ZStreamW_bzip2Encode::ZStreamW_bzip2Encode
-	(int iBlockSize100K, size_t iBufferSize, const ZStreamW& iStreamSink)
+ZStreamW_bzip2Encode::ZStreamW_bzip2Encode(
+	int iBlockSize100K, size_t iBufferSize, const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)
 	{
 	this->pInit(iBlockSize100K, iBufferSize);
@@ -281,8 +281,8 @@ ZStreamerW_bzip2Encode::ZStreamerW_bzip2Encode(int iBlockSize100K, ZRef<ZStreame
 	fStream(iBlockSize100K, iStreamer->GetStreamW())
 	{}
 
-ZStreamerW_bzip2Encode::ZStreamerW_bzip2Encode
-	(int iBlockSize100K, size_t iBufferSize, ZRef<ZStreamerW> iStreamer)
+ZStreamerW_bzip2Encode::ZStreamerW_bzip2Encode(
+	int iBlockSize100K, size_t iBufferSize, ZRef<ZStreamerW> iStreamer)
 :	fStreamer(iStreamer),
 	fStream(iBlockSize100K, iBufferSize, iStreamer->GetStreamW())
 	{}
