@@ -37,6 +37,9 @@ Type_p& sSingleton()
 	if (not spType_p)
 		{
 		Type_p* theType_p = new Type_p();
+		// The parens after Type_p are *essential*. If Type_p is POD then *theType_p will still
+		// be properly default initialized -- without the parens that does not happen.
+		// And yes, I've seen it happen in real life.
 		if (not sAtomicPtr_CAS(&spType_p, nullptr, theType_p))
 			delete theType_p;
 		else
