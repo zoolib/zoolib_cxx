@@ -34,7 +34,7 @@ ZCaller_EventLoop::ZCaller_EventLoop()
 ZCaller_EventLoop::~ZCaller_EventLoop()
 	{}
 
-bool ZCaller_EventLoop::Queue(const ZRef<ZCallable_Void>& iCallable)
+bool ZCaller_EventLoop::Enqueue(const ZRef<ZCallable_Void>& iCallable)
 	{
 	if (iCallable)
 		{

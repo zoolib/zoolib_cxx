@@ -145,7 +145,7 @@ void ZCallScheduler::pRun()
 
 				guard.Release();
 
-				try { theCaller->Queue(theCallable); }
+				try { theCaller->Enqueue(theCallable); }
 				catch (...) {}
 
 				guard.Acquire();

@@ -46,7 +46,7 @@ ZRef<ZDelivery<ZQ<R> > > sQCallByCaller(
 	ZRef<ZPromise<ZQ<R> > > thePromise = sPromise<ZQ<R> >();
 	if (iCaller && iCallable)
 		{
-		iCaller->Queue(sBindR(
+		iCaller->Enqueue(sBindR(
 			sCallable(spQCallWithPromise_T<R>),
 			thePromise,
 			iCallable));
@@ -75,7 +75,7 @@ ZRef<ZDelivery<ZQ<R> > > sQCallByCaller( \
 	ZRef<ZPromise<ZQ<R> > > thePromise = sPromise<ZQ<R> >(); \
 	if (iCaller && iCallable) \
 		{ \
-		iCaller->Queue(sBindR( \
+		iCaller->Enqueue(sBindR( \
 			sCallable(spQCallWithPromise_T<R,ZMACRO_Callable_P##X>), \
 			thePromise, \
 			iCallable, \
