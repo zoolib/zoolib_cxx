@@ -149,7 +149,8 @@ void SectionBody::RowMeta::UpdateCount(size_t iCount)
 // =================================================================================================
 // MARK: - SectionBody::RowUpdate
 
-SectionBody::RowUpdate::RowUpdate(RowMeta& ioRowMeta, std::map<size_t, UITableViewRowAnimation>& ioMap)
+SectionBody::RowUpdate::RowUpdate(
+	RowMeta& ioRowMeta, std::map<size_t, UITableViewRowAnimation>& ioMap)
 :	fRowMeta(ioRowMeta)
 ,	fMap(ioMap)
 	{}
@@ -160,7 +161,8 @@ void SectionBody::RowUpdate::Add(size_t iIndex, UITableViewRowAnimation iRowAnim
 void SectionBody::RowUpdate::AddAll(UITableViewRowAnimation iRowAnimation)
 	{ this->AddRange(0, fRowMeta.fLimit, iRowAnimation); }
 
-void SectionBody::RowUpdate::AddRange(size_t iStart, size_t iCount, UITableViewRowAnimation iRowAnimation)
+void SectionBody::RowUpdate::AddRange(
+	size_t iStart, size_t iCount, UITableViewRowAnimation iRowAnimation)
 	{
 	ZAssert(iStart <= fRowMeta.fLimit);
 	if (iCount)
@@ -253,7 +255,10 @@ bool SectionBody_Concrete::ButtonTapped(UITVHandler_WithSections* iTVC,
 	if ([iTableView isEditing])
 		{
 		if (fCallable_ButtonTapped_Editing)
-			return fCallable_ButtonTapped_Editing->Call(iTVC, iTableView, iIndexPath, this, iRowIndex);
+			{
+			return fCallable_ButtonTapped_Editing->Call(
+				iTVC, iTableView, iIndexPath, this, iRowIndex);
+			}
 		}
 	else
 		{
@@ -269,7 +274,10 @@ bool SectionBody_Concrete::RowSelected(UITVHandler_WithSections* iTVC,
 	if ([iTableView isEditing])
 		{
 		if (fCallable_RowSelected_Editing)
-			return fCallable_RowSelected_Editing->Call(iTVC, iTableView, iIndexPath, this, iRowIndex);
+			{
+			return fCallable_RowSelected_Editing->Call(
+				iTVC, iTableView, iIndexPath, this, iRowIndex);
+			}
 		}
 	else
 		{
@@ -435,8 +443,8 @@ void SectionBody_Multi::Update_Normal(
 	for (size_t iterOld = 0; iterOld < endOld; ++iterOld)
 		{
 		const ZRef<SectionBody> bodyOld = fBodies[iterOld];
-		const size_t inNew =
-			find(fBodies_Pending.begin() + iterNew, fBodies_Pending.end(), bodyOld) - fBodies_Pending.begin();
+		const size_t inNew = find(fBodies_Pending.begin() + iterNew, fBodies_Pending.end(), bodyOld)
+				- fBodies_Pending.begin();
 		if (inNew == endNew)
 			{
 			// It's no longer in fBodies so delete its rows.
@@ -910,7 +918,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	[self pDoUpdate1:tableView];
 	}
 
--(void)pQueueCheckForUpdate:(UITableView*)tableView
+-(void)pEnqueueCheckForUpdate:(UITableView*)tableView
 	{
 	if (sGetSet(fCheckForUpdateQueued, true))
 		return;
@@ -928,7 +936,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (sGetSet(fNeedsUpdate, true))
 		return;
 
-	[self pQueueCheckForUpdate:tableView];
+	[self pEnqueueCheckForUpdate:tableView];
 	}
 
 - (NSIndexPath*)indexPathForSectionBody:(ZooLib::ZRef<ZooLib::UIKit::SectionBody>)iSB
@@ -980,7 +988,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	else
 		{
 		if (0 == --fTouchCount)
-			[self pQueueCheckForUpdate:tableView];
+			[self pEnqueueCheckForUpdate:tableView];
 		}
 	}
 
@@ -1097,7 +1105,7 @@ static void spInsertSections(UITableView* iTableView,
 		[tableView reloadData];
 		fUpdateInFlight = false;
 		if (fNeedsUpdate)
-			[self pQueueCheckForUpdate:tableView];
+			[self pEnqueueCheckForUpdate:tableView];
 		return;
 		}
 
@@ -1291,7 +1299,7 @@ static void spInsertSections(UITableView* iTableView,
 	fUpdateInFlight = false;
 	sUpdatePopovers();
 	if (fNeedsUpdate)
-		[self pQueueCheckForUpdate:tableView];
+		[self pEnqueueCheckForUpdate:tableView];
 	}
 
 -(ZRef<Section>)pGetSection:(size_t)iSectionIndex
