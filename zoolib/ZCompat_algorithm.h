@@ -71,16 +71,30 @@ T sGetSet(T& ioLoc, const S& iVal)
 	}
 
 // =================================================================================================
-// MARK: - sCAS
+// MARK: - sSID (Set If Different)
 
 template <class T, class S>
 inline
-bool sCAS(T& ioLoc, const S& iVal)
+bool sSID(T& ioLoc, const S& iVal)
 	{
 	if (ioLoc == iVal)
 		return false;
 
 	ioLoc = iVal;
+	return true;
+	}
+
+// =================================================================================================
+// MARK: - sCAS (Compare And Set)
+
+template <class T, class S, class R>
+inline
+bool sCAS(T& ioLoc, const S& iOldVal, const R& iNewVal)
+	{
+	if (not (ioLoc == iOldVal))
+		return false;
+
+	ioLoc = iNewVal;
 	return true;
 	}
 
