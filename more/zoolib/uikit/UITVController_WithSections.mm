@@ -1179,8 +1179,6 @@ static void spInsertSections(UITableView* iTableView,
 	[tableView endUpdates];
 
 	[CATransaction commit];
-
-	sUpdatePopovers();
 	}
 
 - (void)pDoUpdate2:(UITableView*)tableView
@@ -1275,19 +1273,19 @@ static void spInsertSections(UITableView* iTableView,
 				}
 			}
 
+		[self pApplyPositionToVisibleCells:tableView];
+
 		for (size_t x = 0; x < fSections_All.size(); ++x)
 			fSections_All[x]->GetBody()->FinishUpdate();
 
 		[tableView endUpdates];
 
 		[CATransaction commit];
-
-		sUpdatePopovers();
-
-		[self pApplyPositionToVisibleCells:tableView];
 		}
 	else
 		{
+		[self pApplyPositionToVisibleCells:tableView];
+
 		for (size_t x = 0; x < fSections_All.size(); ++x)
 			fSections_All[x]->GetBody()->FinishUpdate();
 
@@ -1315,6 +1313,7 @@ static void spInsertSections(UITableView* iTableView,
 	ZAssert(fUpdateInFlight);
 	ZAssert(tableView);
 	fUpdateInFlight = false;
+
 	sUpdatePopovers();
 	if (fNeedsUpdate)
 		[self pEnqueueCheckForUpdate:tableView];
