@@ -232,7 +232,7 @@ template <class Cog>
 bool sCallUpdate_PendingCog_Changed(Cog& ioCog, typename Cog::Param iParam)
 	{
 	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
-		return sCAS(ioCog, *theQ);
+		return sSID(ioCog, *theQ);
 	ioCog.Clear();
 	return true;
 	}
@@ -241,7 +241,7 @@ template <class Cog>
 bool sCallUpdate_PendingCog_Unchanged(Cog& ioCog, typename Cog::Param iParam)
 	{
 	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
-		return not sCAS(ioCog, *theQ);
+		return not sSID(ioCog, *theQ);
 	ioCog.Clear();
 	return false;
 	}
@@ -253,7 +253,7 @@ bool sCallUpdate_Cog_Changed(Cog& ioCog, typename Cog::Param iParam)
 		return false;
 
 	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
-		return sCAS(ioCog, *theQ);
+		return sSID(ioCog, *theQ);
 	ioCog.Clear();
 	return true;
 	}
@@ -265,7 +265,7 @@ bool sCallUpdate_Cog_Unchanged(Cog& ioCog, typename Cog::Param iParam)
 		return true;
 
 	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
-		return not sCAS(ioCog, *theQ);
+		return not sSID(ioCog, *theQ);
 	ioCog.Clear();
 	return false;
 	}
