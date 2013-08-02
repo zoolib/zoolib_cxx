@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <UIKit/UIDevice.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
+#import <QuartzCore/CATransaction.h>
+
 extern void sUpdatePopovers();
 
 namespace ZooLib {
@@ -1075,6 +1077,7 @@ static void spInsertSections(UITableView* iTableView,
 	ZAssert(tableView);
 
 	if (not sGetSet(fNeedsUpdate, false))
+		return;
 
 	ZAssert(fUpdateInFlight);
 
@@ -1117,6 +1120,16 @@ static void spInsertSections(UITableView* iTableView,
 		}
 
 	// We need to insert and remove sections.
+	[CATransaction begin];
+
+	[CATransaction setCompletionBlock:
+		^{
+		if (ZLOGF(w, eDebug))
+			w << "animation has finished";
+		[self pDoUpdate2:tableView];
+		}
+	];
+
 	[tableView beginUpdates];
 
 	const vector<ZRef<Section> > sectionsOld = fSections_Shown;
@@ -1165,11 +1178,9 @@ static void spInsertSections(UITableView* iTableView,
 
 	[tableView endUpdates];
 
-	sUpdatePopovers();
+	[CATransaction commit];
 
-	[self performSelector:@selector(pDoUpdate2:)
-		 withObject:tableView
-		 afterDelay:0.35];
+	sUpdatePopovers();
 	}
 
 - (void)pDoUpdate2:(UITableView*)tableView
@@ -1211,8 +1222,18 @@ static void spInsertSections(UITableView* iTableView,
 		}
 	fSections_ToIgnore.clear();
 
-	if (anyDeletes || anyInserts || (anyReloads && spIsVersion4OrLater()))
+	if (spIsVersion4OrLater() && (anyDeletes || anyInserts || anyReloads))
 		{
+		[CATransaction begin];
+
+		[CATransaction setCompletionBlock:
+			^{
+			if (ZLOGF(w, eDebug))
+				w << "animation has finished";
+			[self pDoUpdate3:tableView];
+			}
+		];
+
 		[tableView beginUpdates];
 
 		if (spIsVersion4OrLater())
@@ -1259,14 +1280,11 @@ static void spInsertSections(UITableView* iTableView,
 
 		[tableView endUpdates];
 
+		[CATransaction commit];
+
 		sUpdatePopovers();
 
 		[self pApplyPositionToVisibleCells:tableView];
-
-		[self
-			performSelector:@selector(pDoUpdate3:)
-			withObject:tableView
-			afterDelay:0.35];
 		}
 	else
 		{
