@@ -65,7 +65,6 @@ NSIndexSet* sMakeIndexSet(size_t iIndex)
 
 static bool spIsVersion4OrLater()
 	{
-	return false;
 	static ZQ<bool> resultQ;
 	if (not resultQ)
 		resultQ = [[[UIDevice currentDevice] systemVersion] floatValue] >= 4.0;
@@ -319,7 +318,7 @@ UITableViewRowAnimation SectionBody_Concrete::RowAnimation_Reload()
 SectionBody_SingleRow::SectionBody_SingleRow(ZRef<UITableViewCell> iCell)
 :	fCell_Pending(iCell)
 	{
-	ZAssert(!fCell_Pending || ![fCell_Pending reuseIdentifier]);
+	ZAssert(!fCell_Pending || not [fCell_Pending reuseIdentifier]);
 	}
 
 size_t SectionBody_SingleRow::NumberOfRows()
@@ -331,12 +330,12 @@ size_t SectionBody_SingleRow::NumberOfRows()
 
 void SectionBody_SingleRow::PreUpdate()
 	{
-	ZAssert(!fCell_Pending || ![fCell_Pending reuseIdentifier]);
+	ZAssert(!fCell_Pending || not [fCell_Pending reuseIdentifier]);
 	fCell_New = fCell_Pending;
 	}
 
 bool SectionBody_SingleRow::WillBeEmpty()
-	{ return !fCell_New; }
+	{ return not fCell_New; }
 
 void SectionBody_SingleRow::Update_NOP()
 	{}
@@ -1033,19 +1032,17 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	const NSArray* paths = [tableView indexPathsForVisibleRows];
 
 	size_t countInSection;
-	int lastSection = -1;
+	int priorSection = -1;
 	for (size_t x = 0, count = [paths count]; x < count; ++x)
 		{
 		NSIndexPath* thePath = [paths objectAtIndex:x];
 		UITableViewCell* cell = [tableView cellForRowAtIndexPath:thePath];
 		if ([cell respondsToSelector:@selector(setPosition:)])
 			{
-			const int section = thePath.section; 
-			if (lastSection != section)
-				{
-				lastSection = section;
+			const int section = thePath.section;
+
+			if (sSID(priorSection, section))
 				countInSection = [self tableView:tableView numberOfRowsInSection:section];
-				}
 
 			const int row = thePath.row;
 			spApplyPosition(cell, row > 0, row < countInSection - 1);
@@ -1087,7 +1084,7 @@ static void spInsertSections(UITableView* iTableView,
 		{
 		ZRef<Section> theSection = fSections_All[x];
 		theSection->GetBody()->PreUpdate();
-		if (not theSection->HideWhenEmpty() || !theSection->GetBody()->WillBeEmpty())
+		if (not theSection->HideWhenEmpty() || not theSection->GetBody()->WillBeEmpty())
 			fSections_Shown_Pending.push_back(theSection);
 		}
 
@@ -1122,13 +1119,7 @@ static void spInsertSections(UITableView* iTableView,
 	// We need to insert and remove sections.
 	[CATransaction begin];
 
-	[CATransaction setCompletionBlock:
-		^{
-		if (ZLOGF(w, eDebug))
-			w << "animation has finished";
-		[self pDoUpdate2:tableView];
-		}
-	];
+	[CATransaction setCompletionBlock:^{ [self pDoUpdate2:tableView]; }];
 
 	[tableView beginUpdates];
 
@@ -1188,72 +1179,54 @@ static void spInsertSections(UITableView* iTableView,
 
 	const bool isShown = fShown;
 
-	fInserts.clear();
-	fInserts.resize(fSections_Shown.size());
+	std::vector<std::map<size_t, UITableViewRowAnimation> > theInserts(fSections_Shown.size());
+	std::vector<std::map<size_t, UITableViewRowAnimation> > theDeletes(fSections_Shown.size());
+	std::vector<std::map<size_t, UITableViewRowAnimation> > theReloads(fSections_Shown.size());
 
-	fDeletes.clear();
-	fDeletes.resize(fSections_Shown.size());
-
-	fReloads.clear();
-	fReloads.resize(fSections_Shown.size());
-
-	bool anyDeletes = false, anyInserts = false, anyReloads = false;
+	bool anyChanges = false;
 	for (size_t x = 0; x < fSections_Shown.size(); ++x)
 		{
 		if (not ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[x]))
 			{
 			SectionBody::RowMeta theRowMeta_Old;
 			SectionBody::RowMeta theRowMeta_New;
-			SectionBody::RowUpdate theRowUpdate_Insert(theRowMeta_New, fInserts[x]);
-			SectionBody::RowUpdate theRowUpdate_Delete(theRowMeta_Old, fDeletes[x]);
-			SectionBody::RowUpdate theRowUpdate_Reload(theRowMeta_Old, fReloads[x]);
+			SectionBody::RowUpdate theRowUpdate_Insert(theRowMeta_New, theInserts[x]);
+			SectionBody::RowUpdate theRowUpdate_Delete(theRowMeta_Old, theDeletes[x]);
+			SectionBody::RowUpdate theRowUpdate_Reload(theRowMeta_Old, theReloads[x]);
 			fSections_Shown[x]->GetBody()->Update_Normal(theRowMeta_Old, theRowMeta_New,
 				theRowUpdate_Insert, theRowUpdate_Delete, theRowUpdate_Reload);
 
-			if (fDeletes[x].size())
-				anyDeletes = true;
-			if (fInserts[x].size())
-				anyInserts = true;
-			if (fReloads[x].size())
-				anyReloads = true;
+			if (theDeletes[x].size() || theInserts[x].size() || theReloads[x].size())
+				anyChanges = true;
 			}
 		}
 	fSections_ToIgnore.clear();
 
-	if (spIsVersion4OrLater() && (anyDeletes || anyInserts || anyReloads))
+	if (spIsVersion4OrLater() && anyChanges)
 		{
 		[CATransaction begin];
 
-		[CATransaction setCompletionBlock:
-			^{
-			if (ZLOGF(w, eDebug))
-				w << "animation has finished";
-			[self pDoUpdate3:tableView];
-			}
-		];
+		[CATransaction setCompletionBlock:^{ [self pDoUpdate3:tableView anyChanges:anyChanges]; }];
 
 		[tableView beginUpdates];
 
-		if (spIsVersion4OrLater())
+		for (size_t x = 0; x < theReloads.size(); ++x)
 			{
-			for (size_t x = 0; x < fReloads.size(); ++x)
+			map<size_t, UITableViewRowAnimation>& theMap = theReloads[x];
+			foreachi (ii, theMap)
 				{
-				map<size_t, UITableViewRowAnimation>& theMap = fReloads[x];
-				foreachi (ii, theMap)
-					{
-					UITableViewRowAnimation theAnimation = UITableViewRowAnimationNone;
-					if (fShown)
-						theAnimation = ii->second;
-					[tableView
-						reloadRowsAtIndexPaths:sMakeNSIndexPathArray(x, ii->first, 1)
-						withRowAnimation:theAnimation];
-					}
+				UITableViewRowAnimation theAnimation = UITableViewRowAnimationNone;
+				if (fShown)
+					theAnimation = ii->second;
+				[tableView
+					reloadRowsAtIndexPaths:sMakeNSIndexPathArray(x, ii->first, 1)
+					withRowAnimation:theAnimation];
 				}
 			}
 
-		for (size_t x = 0; x < fDeletes.size(); ++x)
+		for (size_t x = 0; x < theDeletes.size(); ++x)
 			{
-			map<size_t, UITableViewRowAnimation>& theMap = fDeletes[x];
+			map<size_t, UITableViewRowAnimation>& theMap = theDeletes[x];
 			foreachi (ii, theMap)
 				{
 				[tableView
@@ -1262,9 +1235,9 @@ static void spInsertSections(UITableView* iTableView,
 				}
 			}
 
-		for (size_t x = 0; x < fInserts.size(); ++x)
+		for (size_t x = 0; x < theInserts.size(); ++x)
 			{
-			map<size_t, UITableViewRowAnimation>& theMap = fInserts[x];
+			map<size_t, UITableViewRowAnimation>& theMap = theInserts[x];
 			foreachi (ii, theMap)
 				{
 				[tableView
@@ -1273,47 +1246,37 @@ static void spInsertSections(UITableView* iTableView,
 				}
 			}
 
-		[self pApplyPositionToVisibleCells:tableView];
-
 		for (size_t x = 0; x < fSections_All.size(); ++x)
 			fSections_All[x]->GetBody()->FinishUpdate();
 
 		[tableView endUpdates];
 
+		[self pApplyPositionToVisibleCells:tableView];
+
 		[CATransaction commit];
 		}
 	else
 		{
-		[self pApplyPositionToVisibleCells:tableView];
-
 		for (size_t x = 0; x < fSections_All.size(); ++x)
 			fSections_All[x]->GetBody()->FinishUpdate();
 
-		[self pDoUpdate3:tableView];
+		[self pDoUpdate3:tableView anyChanges:anyChanges];
 		}
 	}
 
-- (void)pDoUpdate3:(UITableView*)tableView
+- (void)pDoUpdate3:(UITableView*)tableView anyChanges:(bool)anyChanges
 	{
 	ZAssert(fUpdateInFlight);
 	ZAssert(tableView);
 
-	if (not spIsVersion4OrLater())
-		{
-		for (size_t x = 0; x < fSections_Shown.size(); ++x)
-			{
-			if (fReloads[x].size())
-				{
-				[tableView reloadData];
-				break;
-				}
-			}
-		}
+	if (not spIsVersion4OrLater() && anyChanges)
+		[tableView reloadData];
 
 	ZAssert(fUpdateInFlight);
 	ZAssert(tableView);
 	fUpdateInFlight = false;
 
+	[self pApplyPositionToVisibleCells:tableView];
 	sUpdatePopovers();
 	if (fNeedsUpdate)
 		[self pEnqueueCheckForUpdate:tableView];
