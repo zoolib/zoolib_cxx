@@ -149,7 +149,7 @@ class ZDelegate::Wrapper_T<R(void)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -174,7 +174,7 @@ class ZDelegate::Wrapper_T<void(void)>
 		fCallable->Call();
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -205,7 +205,7 @@ class ZDelegate::Wrapper_T<R(P0)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -234,7 +234,7 @@ class ZDelegate::Wrapper_T<void(P0)>
 		fCallable->Call(p0);
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -267,7 +267,7 @@ class ZDelegate::Wrapper_T<R(P0,P1)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -298,7 +298,7 @@ class ZDelegate::Wrapper_T<void(P0,P1)>
 		fCallable->Call(p0, p1);
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -333,7 +333,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -366,7 +366,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2)>
 		fCallable->Call(p0, p1, p2);
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -403,7 +403,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -438,7 +438,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3)>
 		fCallable->Call(p0, p1, p2, p3);
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -478,7 +478,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -516,7 +516,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4)>
 		fCallable->Call(p0, p1, p2, p3, p4);
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -558,7 +558,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -598,7 +598,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5)>
 		fCallable->Call(p0, p1, p2, p3, p4, p5);
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -642,7 +642,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -684,7 +684,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6)>
 		fCallable->Call(p0, p1, p2, p3, p4, p5, p6);
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -730,7 +730,7 @@ class ZDelegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
@@ -774,7 +774,7 @@ class ZDelegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)>
 		fCallable->Call(p0, p1, p2, p3, p4, p5, p6, p7);
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable> fCallable;
 	};
 
 // =================================================================================================
