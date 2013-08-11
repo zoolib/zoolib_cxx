@@ -36,6 +36,16 @@ using namespace std;
 
 // =================================================================================================
 
+std::string sStringf(const std::string& iString, ...)
+	{
+	va_list args;
+	va_start(args, iString);
+	string result = sStringf(iString.c_str(), args);
+	va_end(args);
+
+	return result;
+	}
+
 string sStringf(const char* iString, ...)
 	{
 	va_list args;

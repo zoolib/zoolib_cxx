@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+std::string sStringf(const std::string& iString, ...);
+
 std::string sStringf(const char* iString, ...) ZMACRO_Attribute_Format_Printf(1,2);
 
 std::string sStringf(const char* iString, std::va_list iArgs);
