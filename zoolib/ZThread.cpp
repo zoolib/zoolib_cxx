@@ -114,7 +114,7 @@ ZTSS::Key sKey(ZAtomicPtr_t& ioStorage)
 
 	if (not ZAtomicPtr_Get(&ioStorage))
 		sAtomicPtr_CAS(&ioStorage, 0, reinterpret_cast<void*>(ZTSS::sCreate()));
-	return reinterpret_cast<ZTSS::Key>(ZAtomicPtr_Get(&ioStorage));
+	return static_cast<ZTSS::Key>(reinterpret_cast<intptr_t>(ZAtomicPtr_Get(&ioStorage)));
 	}
 
 } // namespace ZTSS
