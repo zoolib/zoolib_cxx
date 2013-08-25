@@ -288,6 +288,35 @@ bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 #endif // defined(__ANDROID__)
 
 // =================================================================================================
+// MARK: - GCC
+
+namespace ZooLib {
+
+#if ZCONFIG(Compiler, GCC)
+
+// -----------------------------------------------
+#if !defined(DEFINED_sAtomic_CAS)
+#define DEFINED_sAtomic_CAS 1
+
+bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
+	{ return 0 == __sync_val_compare_and_swap(&iAtomic->fValue, iOldValue, iNewValue); }
+
+#endif
+
+// -----------------------------------------------
+#if !defined(DEFINED_sAtomicPtr_CAS)
+#define DEFINED_sAtomicPtr_CAS 1
+
+bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue)
+	{ return 0 == __sync_val_compare_and_swap(iPtrAddress, iOldValue, iNewValue); }
+
+#endif
+
+#endif // ZCONFIG(Compiler, GCC)
+
+} // namespace ZooLib
+
+// =================================================================================================
 // MARK: - A real CompareAndSet must be defined by now
 
 #if !defined(DEFINED_sAtomic_CAS)
