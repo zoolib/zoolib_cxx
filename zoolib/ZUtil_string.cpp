@@ -39,7 +39,7 @@ using std::vector;
 // =================================================================================================
 // MARK: - ZUtil_string
 
-ZQ<int64> sQInt64(const string& iString)
+ZQ<__int64> sQInt64(const string& iString)
 	{
 	if (iString.size())
 		{

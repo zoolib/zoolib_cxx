@@ -83,7 +83,7 @@ bool sCoerceBool(const ZAny& iAny)
 	return false;
 	}
 
-ZQ<int64> sQCoerceInt(const ZAny& iAny)
+ZQ<__int64> sQCoerceInt(const ZAny& iAny)
 	{
 	if (false)
 		{}
@@ -115,7 +115,7 @@ ZQ<int64> sQCoerceInt(const ZAny& iAny)
 	return null;
 	}
 
-bool sQCoerceInt(const ZAny& iAny, int64& oVal)
+bool sQCoerceInt(const ZAny& iAny, __int64& oVal)
 	{
 	if (ZQ<__int64> qq = sQCoerceInt(iAny))
 		{
