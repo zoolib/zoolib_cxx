@@ -140,8 +140,7 @@ void ZByteSwap_WriteLittle64(volatile void* oValueAddress, int64 iValue);
 
 // =================================================================================================
 #if ZCONFIG(Processor, 68K)
-#pragma mark -
-#pragma mark * Processor is 68K
+// MARK: - Processor is 68K
 
 #define ZByteSwap_EndianBig 1
 

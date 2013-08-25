@@ -54,7 +54,6 @@ void ZCaller_WinMessageLoop::Finalize()
 		::DestroyWindow(fHWND);
 		ZAssert(not fHWND);
 		}
-
 	ZCaller_EventLoop::Finalize();
 	}
 

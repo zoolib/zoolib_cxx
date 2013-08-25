@@ -67,20 +67,24 @@ ZRef<Walker> Walker_Union::Prime(
 	if (not fWalker_Right)
 		return fWalker_Left;
 
-	ZAssert(leftOffsets.size() == rightOffsets.size());
-	fMapping_Left.resize(leftOffsets.size());
-	fMapping_Right.resize(leftOffsets.size());
-	size_t xx = 0;
-	for (map<string8,size_t>::iterator iterLeft = leftOffsets.begin(), iterRight = rightOffsets.begin();
-		iterLeft != leftOffsets.end(); ++iterLeft, ++iterRight)
-		{
-		const string8& leftName = iterLeft->first;
-		ZAssert(leftName == iterRight->first);
-		const size_t leftOffset = iterLeft->second;
-		fMapping_Left[xx] = leftOffset;
+	size_t count = leftOffsets.size();
+	ZAssert(count == rightOffsets.size());
 
-		const size_t rightOffset = iterRight->second;
-		fMapping_Right[xx] = rightOffset;
+	map<string8,size_t>::const_iterator iterLeft = leftOffsets.begin();
+	map<string8,size_t>::const_iterator iterRight = rightOffsets.begin();
+
+	fMapping_Left.resize(count);
+	vector<size_t>::iterator iterMappingLeft = fMapping_Left.begin();
+
+	fMapping_Right.resize(count);
+	vector<size_t>::iterator iterMappingRight = fMapping_Right.begin();
+
+	while (count--)
+		{
+		ZAssert(iterLeft->first == iterRight->first);
+
+		*iterMappingLeft++ = (iterLeft++)->second;
+		*iterMappingRight++ = (iterRight++)->second;
 		}
 
 	return this;

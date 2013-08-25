@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_unordered_map.h"
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZData_Any.h"
-#include "zoolib/ZCompare_String.h" // For FastComparator_String
+#include "zoolib/ZCompare_string.h" // For FastComparator_String
 #include "zoolib/ZName.h"
 #include "zoolib/ZSafePtrStack.h"
 #include "zoolib/ZVal.h"

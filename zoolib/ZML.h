@@ -150,8 +150,8 @@ bool sTryRead_End(StrimU& r, const string& iTagName);
 /// A write filter strim to help generate well-formed ML-type data (XML, HTML etc).
 
 class StrimW
-:	public ZStrimW_T<ZStrimW_NativeUTF8, StrimW>,
-	NonCopyable
+:	public ZStrimW_T<ZStrimW_NativeUTF8, StrimW>
+,	NonCopyable
 	{
 public:
 	class Indenter;

@@ -34,12 +34,14 @@ namespace ZooLib {
 // MARK: - ZCallScheduler
 
 class ZCallScheduler
-:	ZooLib::NonCopyable
+:	NonCopyable
 	{
 public:
 	ZCallScheduler();
 
 	typedef std::pair<ZRef<ZCaller>,ZRef<ZCallable_Void> > Job;
+
+// -----
 
 	bool Cancel(const Job& iJob);
 
@@ -48,6 +50,8 @@ public:
 	void NextCallIn(double iInterval, const Job& iJob);
 
 	bool IsAwake(const Job& iJob);
+
+// -----
 
 	bool Cancel(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
@@ -58,6 +62,8 @@ public:
 		const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
 	bool IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
+
+// -----
 
 private:
 	void pNextCallAt(ZTime iSystemTime, const Job& iJob);

@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare_Ref.h"
-#include "zoolib/ZCompare_Vector.h"
+#include "zoolib/ZCompare_vector.h"
 #include "zoolib/zqe/ZQE_Result.h"
 
 using std::set;

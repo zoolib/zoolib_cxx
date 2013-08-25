@@ -46,7 +46,7 @@ namespace ZooLib {
 // MARK: - ZDelegate
 
 class ZDelegate
-:	ZooLib::NonCopyable
+:	NonCopyable
 	{
 public:
 	ZDelegate();

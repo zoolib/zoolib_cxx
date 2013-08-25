@@ -129,7 +129,7 @@ void ZCallScheduler::pRun()
 			}
 		else
 			{
-			set<TimeJob>::iterator begin = fTimeJobs.begin();
+			const set<TimeJob>::iterator& begin = fTimeJobs.begin();
 			const double delta = begin->first - ZTime::sSystem();
 			if (delta > 0)
 				{

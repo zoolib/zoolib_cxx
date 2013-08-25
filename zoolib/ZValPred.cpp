@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare_Integer.h"
 #include "zoolib/ZCompare_Ref.h"
-#include "zoolib/ZCompare_String.h"
+#include "zoolib/ZCompare_string.h"
 #include "zoolib/ZValPred.h"
 
 namespace ZooLib {

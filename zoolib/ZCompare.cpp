@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare.h"
-#include "zoolib/ZCompat_String.h"
+#include "zoolib/ZCompat_string.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZSingleton.h"
 #include "zoolib/ZUtil_STL_map.h"
