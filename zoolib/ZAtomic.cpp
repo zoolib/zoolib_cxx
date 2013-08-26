@@ -299,7 +299,7 @@ namespace ZooLib {
 #define DEFINED_sAtomic_CAS 1
 
 bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
-	{ return 0 == __sync_val_compare_and_swap(&iAtomic->fValue, iOldValue, iNewValue); }
+	{ return iOldValue == __sync_val_compare_and_swap(&iAtomic->fValue, iOldValue, iNewValue); }
 
 #endif
 
@@ -308,7 +308,7 @@ bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 #define DEFINED_sAtomicPtr_CAS 1
 
 bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue)
-	{ return 0 == __sync_val_compare_and_swap(iPtrAddress, iOldValue, iNewValue); }
+	{ return iOldValue == __sync_val_compare_and_swap((void**)iPtrAddress, iOldValue, iNewValue); }
 
 #endif
 
