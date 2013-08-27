@@ -42,7 +42,7 @@ public:
 
 // Our protocol
 	void SetSeed(int32 iSeed);
-	void GetSeed() const;
+	int32 GetSeed() const;
 
 protected:
 	int32 fState;

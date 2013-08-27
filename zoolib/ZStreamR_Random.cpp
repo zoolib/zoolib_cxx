@@ -71,7 +71,7 @@ by subsequent reads from the stream.
 void ZStreamR_Random::SetSeed(int32 iSeed)
 	{ fState = iSeed ? iSeed : 1; }
 
-void ZStreamR_Random::GetSeed() const
+int32 ZStreamR_Random::GetSeed() const
 	{ return fState; }
 
 } // namespace ZooLib
