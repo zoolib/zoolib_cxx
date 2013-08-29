@@ -73,7 +73,7 @@ void ZStreamR_Source::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		iCount -= countToMove;
 		}
 	if (oCountRead)
-		*oCountRead += localDest - reinterpret_cast<uint8*>(oDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 void ZStreamR_Source::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
