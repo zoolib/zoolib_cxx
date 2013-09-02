@@ -137,8 +137,6 @@ ZMACRO_Callable_Callable(F)
 
 #undef ZMACRO_Callable_Callable
 
-#endif // defined(__clang_major__) && __clang_major__ >= 2
-
 // =================================================================================================
 // MARK: - sCallable
 
