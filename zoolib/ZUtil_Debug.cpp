@@ -76,9 +76,6 @@ static void spHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 		// We don't have stack crawls, which means we're probably
 		// on MacOS X. If we force a segfault then the Crash Reporter
 		// will dump out stacks for us.
-		// From ADC Home > Reference Library > Guides > Tools >
-		// Xcode > Xcode 2.3 User Guide > Controlling Execution of Your Code >
-		//asm {trap};
 		*reinterpret_cast<double*>(1) = 0;
 		}
 	}
