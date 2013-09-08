@@ -483,7 +483,7 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const
 		for (ZMap_Any::Index_t ii = theAnalysis.fConstValues.Begin();
 			ii != theAnalysis.fConstValues.End(); ++ii)
 			{
-			theRHLogical |= theAnalysis.fConstValues.NameOf(ii);
+			theRHLogical |= ColName(theAnalysis.fConstValues.NameOf(ii));
 			}
 
 		bool isFirst = true;

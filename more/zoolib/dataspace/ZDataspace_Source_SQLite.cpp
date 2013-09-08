@@ -96,7 +96,7 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
 			{
 			theRelHead |= iterTable->Get(1).Get<string8>();
 			}
-		theRelHead |= "oid";
+		theRelHead |= ColName("oid");
 
 		if (sNotEmpty(theRelHead))
 			sInsertMust(kDebug, fMap_Tables, theTableName, theRelHead);

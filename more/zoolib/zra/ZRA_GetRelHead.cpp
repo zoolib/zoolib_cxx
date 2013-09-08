@@ -61,7 +61,7 @@ class Visitor_GetRelHead
 		{ this->pSetResult(iExpr->GetConcreteRelHead()); }
 
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
-		{ this->pSetResult(iExpr->GetColName()); }
+		{ this->pSetResult(sRelHead(iExpr->GetColName())); }
 
 	virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }

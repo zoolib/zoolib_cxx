@@ -222,35 +222,20 @@ ZUniSet_T<T>& ZUniSet_T<T>::operator&=(const ZUniSet_T& iOther)
 template <class T>
 ZUniSet_T<T> ZUniSet_T<T>::operator&(const ZUniSet_T& iOther) const
 	{
-	std::set<T> result;
-	bool resultUniversal;
 	if (fUniversal)
 		{
 		if (iOther.fUniversal)
-			{
-			resultUniversal = true;
-			ZUtil_STL::sOr(fElems, iOther.fElems, result);
-			}
+			return ZUniSet_T(true, fElems | iOther.fElems);
 		else
-			{
-			resultUniversal = false;
-			ZUtil_STL::sMinus(iOther.fElems, fElems, result);
-			}
+			return ZUniSet_T(false, iOther.fElems - fElems);
 		}
 	else
 		{
 		if (iOther.fUniversal)
-			{
-			resultUniversal = false;
-			ZUtil_STL::sMinus(fElems, iOther.fElems, result);
-			}
+			return ZUniSet_T(false, fElems - iOther.fElems);
 		else
-			{
-			resultUniversal = false;
-			ZUtil_STL::sAnd(iOther.fElems, fElems, result);
-			}
+			return ZUniSet_T(false, iOther.fElems & fElems);
 		}
-	return ZUniSet_T(resultUniversal, &result);
 	}
 
 template <class T>
@@ -263,35 +248,20 @@ ZUniSet_T<T>& ZUniSet_T<T>::operator|=(const ZUniSet_T& iOther)
 template <class T>
 ZUniSet_T<T> ZUniSet_T<T>::operator|(const ZUniSet_T& iOther) const
 	{
-	std::set<T> result;
-	bool resultUniversal;
 	if (fUniversal)
 		{
 		if (iOther.fUniversal)
-			{
-			resultUniversal = true;
-			ZUtil_STL::sAnd(fElems, iOther.fElems, result);
-			}
+			return ZUniSet_T(true, fElems & iOther.fElems);
 		else
-			{
-			resultUniversal = true;
-			ZUtil_STL::sMinus(fElems, iOther.fElems, result);
-			}
+			return ZUniSet_T(true, fElems - iOther.fElems);
 		}
 	else
 		{
 		if (iOther.fUniversal)
-			{
-			resultUniversal = true;
-			ZUtil_STL::sMinus(iOther.fElems, fElems, result);
-			}
+			return ZUniSet_T(true, iOther.fElems - fElems);
 		else
-			{
-			resultUniversal = false;
-			ZUtil_STL::sOr(fElems, iOther.fElems, result);
-			}
+			return ZUniSet_T(false, fElems | iOther.fElems);
 		}
-	return ZUniSet_T(resultUniversal, &result);
 	}
 
 template <class T>
@@ -304,35 +274,20 @@ ZUniSet_T<T>& ZUniSet_T<T>::operator-=(const ZUniSet_T<T>& iOther)
 template <class T>
 ZUniSet_T<T> ZUniSet_T<T>::operator-(const ZUniSet_T& iOther) const
 	{
-	std::set<T> result;
-	bool resultUniversal;
 	if (fUniversal)
 		{
 		if (iOther.fUniversal)
-			{
-			resultUniversal = false;
-			ZUtil_STL::sMinus(iOther.fElems, fElems, result);
-			}
+			return ZUniSet_T(false, iOther.fElems - fElems);
 		else
-			{
-			resultUniversal = true;
-			ZUtil_STL::sOr(fElems, iOther.fElems, result);
-			}
+			return ZUniSet_T(true, fElems | iOther.fElems);
 		}
 	else
 		{
 		if (iOther.fUniversal)
-			{
-			resultUniversal = false;
-			ZUtil_STL::sAnd(fElems, iOther.fElems, result);
-			}
+			return ZUniSet_T(false, fElems & iOther.fElems);
 		else
-			{
-			resultUniversal = false;
-			ZUtil_STL::sMinus(fElems, iOther.fElems, result);
-			}
+			return ZUniSet_T(false, fElems - iOther.fElems);
 		}
-	return ZUniSet_T(resultUniversal, &result);
 	}
 
 template <class T>
@@ -344,12 +299,7 @@ ZUniSet_T<T>& ZUniSet_T<T>::operator^=(const ZUniSet_T& iOther)
 
 template <class T>
 ZUniSet_T<T> ZUniSet_T<T>::operator^(const ZUniSet_T& iOther) const
-	{
-	std::set<T> result;
-	bool resultUniversal = fUniversal ^ iOther.fUniversal;
-	ZUtil_STL::sXor(fElems, iOther.fElems, result);
-	return ZUniSet_T(resultUniversal, &result);
-	}
+	{ return ZUniSet_T(fUniversal ^ iOther.fUniversal, fElems ^ iOther.fElems); }
 
 template <class T>
 bool ZUniSet_T<T>::Contains(const ZUniSet_T& iOther) const
@@ -357,15 +307,9 @@ bool ZUniSet_T<T>::Contains(const ZUniSet_T& iOther) const
 	if (fUniversal)
 		{
 		if (iOther.fUniversal)
-			{
 			return ZUtil_STL::sIncludes(iOther.fElems, fElems);
-			}
 		else
-			{
-			std::set<T> sect;
-			ZUtil_STL::sAnd(fElems, iOther.fElems, sect);
-			return sect.empty();
-			}
+			return (fElems & iOther.fElems).empty();
 		}
 	else
 		{

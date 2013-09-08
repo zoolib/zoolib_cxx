@@ -122,100 +122,187 @@ void sEraseMust(std::set<Base,Comparator>& ioSet, const Derived& iElement)
 	{ sEraseMust(1, ioSet, iElement); }
 
 // =================================================================================================
-// MARK: - ZUtil_STL
+// MARK: - Intersection
 
-template <typename T, typename Comparator>
-void sOr(
-	const std::set<T,Comparator>& iLHS,
-	const std::set<T,Comparator>& iRHS,
-	std::set<T,Comparator>& ioResult)
+template <class T, class C>
+std::set<T,C> operator&(const std::set<T,C>& iLHS, const std::set<T,C>& iRHS)
 	{
-	set_union(iLHS.begin(), iLHS.end(),
-		iRHS.begin(), iRHS.end(),
-		inserter(ioResult, ioResult.end()));
-	}
-
-template <typename T, typename Comparator>
-std::set<T,Comparator> sOr(
-	const std::set<T,Comparator>& iLHS,
-	const std::set<T,Comparator>& iRHS)
-	{
-	std::set<T,Comparator> result;
-	sOr(iLHS, iRHS, result);
-	return result;
-	}
-
-template <typename T, typename Comparator>
-void sAnd(
-	const std::set<T,Comparator>& iLHS,
-	const std::set<T,Comparator>& iRHS,
-	std::set<T,Comparator>& ioResult)
-	{
+	std::set<T,C> result;
 	set_intersection(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
-		inserter(ioResult, ioResult.end()));
-	}
-
-template <typename T, typename Comparator>
-std::set<T,Comparator> sAnd(
-	const std::set<T,Comparator>& iLHS,
-	const std::set<T,Comparator>& iRHS)
-	{
-	std::set<T,Comparator> result;
-	sAnd(iLHS, iRHS, result);
+		inserter(result, result.end()));
 	return result;
 	}
 
-template <typename T, typename Comparator>
-void sMinus(
-	const std::set<T,Comparator>& iLHS,
-	const std::set<T,Comparator>& iRHS,
-	std::set<T,Comparator>& ioResult)
+template <class T, class C>
+std::set<T,C>& operator&=(std::set<T,C>& ioLHS, const std::set<T,C>& iRHS)
 	{
-	set_difference(iLHS.begin(), iLHS.end(),
+	std::set<T,C> tmp;
+	set_intersection(ioLHS.begin(), ioLHS.end(),
 		iRHS.begin(), iRHS.end(),
-		inserter(ioResult, ioResult.end()));
+		inserter(tmp, tmp.end()));
+	ioLHS.swap(tmp);
+	return ioLHS;
 	}
 
-template <typename T, typename Comparator>
-std::set<T,Comparator> sMinus(
-	const std::set<T,Comparator>& iLHS,
-	const std::set<T,Comparator>& iRHS)
+template <class T, class C>
+std::set<T,C> operator&(const std::set<T,C>& iLHS, const T& iElem)
 	{
-	std::set<T,Comparator> result;
-	sMinus(iLHS, iRHS, result);
+	if (iLHS.find(iElem) != iLHS.end())
+		return std::set<T,C>(&iElem, &iElem + 1);
+	return std::set<T,C>();
+	}
+
+template <class T, class C>
+std::set<T,C> operator&(const T& iElem, const std::set<T,C>& iRHS)
+	{ return iRHS & iElem; }
+
+template <class T, class C>
+std::set<T,C>& operator&=(std::set<T,C>& ioLHS, const T& iElem)
+	{
+	if (ioLHS.find(iElem) != ioLHS.end())
+		{
+		ioLHS.clear();
+		ioLHS.insert(iElem);
+		}
+	else
+		{
+		ioLHS.clear();
+		}
+	return ioLHS;
+	}
+
+// =================================================================================================
+// MARK: - Union
+
+template <class T, class C>
+std::set<T,C> operator|(const std::set<T,C>& iLHS, const std::set<T,C>& iRHS)
+	{
+	std::set<T,C> result;
+	set_union(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end(),
+		inserter(result, result.end()));
 	return result;
 	}
 
-template <typename T, typename Comparator>
-void sXor(
-	const std::set<T,Comparator>& iLHS,
-	const std::set<T,Comparator>& iRHS,
-	std::set<T,Comparator>& ioResult)
+template <class T, class C>
+std::set<T,C>& operator|=(std::set<T,C>& ioLHS, const std::set<T,C>& iRHS)
 	{
+	ioLHS.insert(iRHS.begin(), iRHS.end());
+	return ioLHS;
+	}
+
+template <class T, class C>
+std::set<T,C> operator|(const std::set<T,C>& iLHS, const T& iElem)
+	{
+	std::set<T,C> tmp = iLHS;
+	tmp.insert(iElem);
+	return tmp;
+	}
+
+template <class T, class C>
+std::set<T,C> operator|(const T& iElem, const std::set<T,C>& iRHS)
+	{ return iRHS | iElem; }
+
+template <class T, class C>
+std::set<T,C>& operator|=(std::set<T,C>& ioLHS, const T& iElem)
+	{
+	ioLHS.insert(iElem);
+	return ioLHS;
+	}
+
+// =================================================================================================
+// MARK: - Xor
+
+template <class T, class C>
+std::set<T,C> operator^(const std::set<T,C>& iLHS, const std::set<T,C>& iRHS)
+	{
+	std::set<T,C> result;
 	set_symmetric_difference(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
-		inserter(ioResult, ioResult.end()));
-	}
-
-template <typename T, typename Comparator>
-std::set<T,Comparator> sXor(
-	const std::set<T,Comparator>& iLHS,
-	const std::set<T,Comparator>& iRHS)
-	{
-	std::set<T,Comparator> result;
-	sXor(iLHS, iRHS, result);
+		inserter(result, result.end()));
 	return result;
 	}
+
+template <class T, class C>
+std::set<T,C>& operator^=(std::set<T,C>& ioLHS, const std::set<T,C>& iRHS)
+	{
+	std::set<T,C> tmp;
+	set_symmetric_difference(ioLHS.begin(), ioLHS.end(),
+		iRHS.begin(), iRHS.end(),
+		inserter(tmp, tmp.end()));
+	ioLHS.swap(tmp);
+	return ioLHS;
+	}
+
+template <class T, class C>
+std::set<T,C> operator^(const std::set<T,C>& iLHS, const T& iElem)
+	{
+	std::set<T,C> result;
+	set_symmetric_difference(iLHS.begin(), iLHS.end(),
+		&iElem, &iElem + 1,
+		inserter(result, result.end()));
+	return result;
+	}
+
+template <class T, class C>
+std::set<T,C> operator^(const T& iElem, const std::set<T,C>& iRHS)
+	{ return iRHS ^ iElem; }
+
+template <class T, class C>
+std::set<T,C>& operator^=(std::set<T,C>& ioLHS, const T& iElem)
+	{
+	typename std::set<T>::iterator iter = ioLHS.find(iElem);
+	if (iter == ioLHS.end() || iElem != *iter)
+		ioLHS.insert(iter, iElem);
+	else
+		ioLHS.erase(iter);
+	return ioLHS;
+	}
+
+// =================================================================================================
+// MARK: - Minus
+
+template <class T, class C>
+std::set<T,C> operator-(const std::set<T,C>& iLHS, const std::set<T,C>& iRHS)
+	{
+	std::set<T,C> result;
+	set_difference(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end(),
+		inserter(result, result.end()));
+	return result;
+	}
+
+template <class T, class C>
+std::set<T,C>& operator-=(std::set<T,C>& ioLHS, const std::set<T,C>& iRHS)
+	{
+	ioLHS.erase(iRHS.begin(), iRHS.end());
+	return ioLHS;
+	}
+
+template <class T, class C>
+std::set<T,C> operator-(const std::set<T,C>& iLHS, const T& iElem)
+	{
+	std::set<T,C> result = iLHS;
+	result.erase(iElem);
+	return result;
+	}
+
+template <class T, class C>
+std::set<T,C>& operator-=(std::set<T,C>& ioLHS, const T& iElem)
+	{
+	ioLHS.erase(iElem);
+	return ioLHS;
+	}
+
+// =================================================================================================
+// MARK: -
 
 template <typename T, typename Comparator>
 bool sIncludes(
 	const std::set<T,Comparator>& iLHS,
 	const std::set<T,Comparator>& iRHS)
-	{
-	return includes(iLHS.begin(), iLHS.end(),
-		iRHS.begin(), iRHS.end());
-	}
+	{ return includes(iLHS.begin(), iLHS.end(), iRHS.begin(), iRHS.end()); }
 
 } // namespace ZUtil_STL
 } // namespace ZooLib

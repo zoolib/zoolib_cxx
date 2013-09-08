@@ -41,12 +41,10 @@ void sWrite_PropName(const string8& iName, const ZStrimW& s)
 
 void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
 	{
-	const RelHead::Base_t& names = iRelHead.GetElems();
-
 	s.Write("[");
 
 	bool isFirst = true;
-	foreachi (ii, names)
+	foreachi (ii, iRelHead)
 		{
 		if (not sGetSet(isFirst, false))
 			s.Write(", ");

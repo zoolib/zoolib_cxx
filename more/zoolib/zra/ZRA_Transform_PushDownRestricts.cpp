@@ -35,13 +35,13 @@ using namespace ZUtil_STL;
 // MARK: - Transform_PushDownRestricts
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
-	{ this->pHandleIt(iExpr->GetColName(), iExpr->SelfOrClone(this->Do(iExpr->GetOp0()))); }
+	{ this->pHandleIt(sRelHead(iExpr->GetColName()), iExpr->SelfOrClone(this->Do(iExpr->GetOp0()))); }
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{ this->pHandleIt(iExpr->GetConcreteRelHead(), iExpr); }
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
-	{ this->pHandleIt(iExpr->GetColName(), iExpr); }
+	{ this->pHandleIt(sRelHead(iExpr->GetColName()), iExpr); }
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{
@@ -52,7 +52,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed
 
 	ZRef<Expr_Rel> newOp1 = iExpr->GetOp1();
 
-	this->pHandleIt(iExpr->GetColName(), iExpr->SelfOrClone(newOp0, newOp1));
+	this->pHandleIt(sRelHead(iExpr->GetColName()), iExpr->SelfOrClone(newOp0, newOp1));
 	}
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)

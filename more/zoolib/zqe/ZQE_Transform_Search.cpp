@@ -48,6 +48,7 @@ namespace ZQE {
 using ZRA::Expr_Rel;
 using ZRA::ColName;
 using ZRA::RelHead;
+using ZRA::sRelHead;
 using ZRA::Rename;
 
 using std::set;
@@ -168,7 +169,8 @@ public:
 			{
 			const ColName& theColName = *iterRH;
 			if (fProjection.Contains(theColName))
-				sInsertMust(newRename, theColName, theColName); // sSet??
+                sInsertMust(newRename, theColName, theColName); // sSet??
+//				sSet(newRename, theColName, theColName);
 			}
 
 		if (fRestriction == sTrue())
@@ -191,7 +193,7 @@ public:
 	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
 		{
 		fLikelySize = 1;
-		this->pApplyRestrictProject(iExpr->GetColName(), iExpr);
+		this->pApplyRestrictProject(sRelHead(iExpr->GetColName()), iExpr);
 		}
 
 	virtual void Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr)

@@ -37,7 +37,10 @@ void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Op1(
 
 void ZVisitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Op2(
 	const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr)
-	{ this->pSetResult(ZUtil_STL::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp1()))); }
+	{
+	using namespace ZUtil_STL;
+	this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1()));
+	}
 
 std::set<std::string> sGetNames(const ZRef<ZExpr_Bool>& iExpr)
 	{ return ZVisitor_Expr_Bool_ValPred_Do_GetNames().Do(iExpr); }

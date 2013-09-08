@@ -54,6 +54,7 @@ using ZDatonSet::Deltas;
 using ZDatonSet::Map_NamedEvent_Delta_t;
 using ZDatonSet::NamedEvent;
 
+using namespace ZRA;
 using namespace ZUtil_STL;
 
 using std::make_pair;
@@ -629,13 +630,13 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 	const ZMap_Any theMap = iVal.Get<ZMap_Any>();
 	RelHead theRH;
 	for (ZMap_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
-		theRH |= theMap.NameOf(i);
+		theRH |= ColName(theMap.NameOf(i));
 
 	for (Map_PSearch::iterator iterPSearch = fMap_PSearch.begin();
 		iterPSearch != fMap_PSearch.end(); ++iterPSearch)
 		{
 		PSearch* thePSearch = &iterPSearch->second;
-		if (theRH.Contains(thePSearch->fRelHead))
+		if (sIncludes(theRH, thePSearch->fRelHead))
 			{
 			for (set<PQuery*>::iterator iterPQuery = thePSearch->fPQuery_Using.begin();
 				iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)

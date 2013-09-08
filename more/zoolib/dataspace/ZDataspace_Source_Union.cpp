@@ -410,7 +410,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>
 	ZRA::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
-	fPSources = sOr(leftPSources, rightPSources);
+	fPSources = leftPSources | rightPSources;
 	fResultRelHead = leftRelHead | iExpr->GetColName();
 
 	if (leftPSources.size() <= 1)
@@ -481,8 +481,8 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 	ZRA::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
-	fPSources = sOr(leftPSources, rightPSources);
-	fResultRelHead = sOr(leftRelHead, rightRelHead);
+	fPSources = leftPSources | rightPSources;
+	fResultRelHead = leftRelHead | rightRelHead;
 
 	if (leftPSources.size() <= 1)
 		{
@@ -554,13 +554,13 @@ void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Res
 	if (fPSources.size() > 1)
 		{
 		// Child is complex, proxies will have been created already.
-		fPSources = sOr(fPSources, priorPSources);
+		fPSources = fPSources | priorPSources;
 		this->pSetResult(iExpr->SelfOrClone(newOp0));
 		}
 	else
 		{
 		// Child is simple.
-		set<PSource*> combinedPSources = sOr(priorPSources, fPSources);
+		set<PSource*> combinedPSources = priorPSources | fPSources;
 		if (combinedPSources.size() > 1)
 			{
 			// We're complex with the addition of our prior sources.
@@ -600,7 +600,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>
 	ZRA::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
-	fPSources = sOr(leftPSources, rightPSources);
+	fPSources = leftPSources | rightPSources;
 	ZAssert(leftRelHead == rightRelHead);
 	fResultRelHead = leftRelHead;
 

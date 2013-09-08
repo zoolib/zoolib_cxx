@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_RelHead_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZSet_T.h"
+#include "zoolib/ZUtil_STL_set.h"
 
 #include "zoolib/zra/ZRA_ColName.h"
 
@@ -42,31 +42,69 @@ Rename sInverted(const Rename& iRename);
 // =================================================================================================
 // MARK: - RelHead
 
-typedef ZSet_T<ColName> RelHead;
+typedef std::set<ColName> RelHead;
+
+inline RelHead sRelHead(const ColName* iElem, size_t iCount)
+	{ return RelHead(iElem, iElem + iCount); }
+
+inline RelHead sRelHead(const ColName& iElem)
+	{ return sRelHead(&iElem, 1); }
+
+inline RelHead sRelHead(const char* iElem)
+	{ return sRelHead(ColName(iElem)); }
+
+inline size_t sIndexOf(const RelHead& iRelHead, const ColName& iElem)
+	{ return std::distance(iRelHead.begin(), iRelHead.find(iElem)); }
 
 // =================================================================================================
 // MARK: - RelHead operators
 
+// Incorporate set operators from ZUtil_STL
+
+using ZUtil_STL::operator&;
+using ZUtil_STL::operator&=;
+
+using ZUtil_STL::operator|;
+using ZUtil_STL::operator|=;
+
+using ZUtil_STL::operator^;
+using ZUtil_STL::operator^=;
+
+using ZUtil_STL::operator-;
+using ZUtil_STL::operator-=;
+
 inline RelHead operator&(const RelHead& iRelHead, const char* iElem)
 	{ return iRelHead & RelHead::key_type(iElem); }
+
+inline RelHead& operator&=(RelHead& ioRelHead, const char* iElem)
+	{ return ioRelHead &= RelHead::key_type(iElem); }
 
 inline RelHead operator&(const char* iElem, const RelHead& iRelHead)
 	{ return iRelHead & RelHead::key_type(iElem); }
 
-inline RelHead operator|(const char* iElem, const RelHead& iRelHead)
-	{ return iRelHead | RelHead::key_type(iElem); }
-
 inline RelHead operator|(const RelHead& iRelHead, const char* iElem)
 	{ return iRelHead | RelHead::key_type(iElem); }
 
-inline RelHead operator-(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead - RelHead::key_type(iElem); }
+inline RelHead& operator|=(RelHead& ioRelHead, const char* iElem)
+	{ return ioRelHead |= RelHead::key_type(iElem); }
+
+inline RelHead operator|(const char* iElem, const RelHead& iRelHead)
+	{ return iRelHead | RelHead::key_type(iElem); }
+
+inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
+	{ return iRelHead ^ RelHead::key_type(iElem); }
+
+inline RelHead& operator^=(RelHead& ioRelHead, const char* iElem)
+	{ return ioRelHead ^= RelHead::key_type(iElem); }
 
 inline RelHead operator^(const char* iElem, const RelHead& iRelHead)
 	{ return iRelHead ^ RelHead::key_type(iElem); }
 
-inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead ^ RelHead::key_type(iElem); }
+inline RelHead operator-(const RelHead& iRelHead, const char* iElem)
+	{ return iRelHead - RelHead::key_type(iElem); }
+
+inline RelHead& operator-=(RelHead& ioRelHead, const char* iElem)
+	{ return ioRelHead -= RelHead::key_type(iElem); }
 
 // =================================================================================================
 // MARK: - Prefix

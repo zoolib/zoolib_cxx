@@ -46,6 +46,6 @@ set<string> spGetNames(const ZRef<ZValComparand>& iComparand)
 } // anonymous namespace
 
 set<string> sGetNames(const ZValPred& iValPred)
-	{ return sOr(spGetNames(iValPred.GetLHS()), spGetNames(iValPred.GetRHS())); }
+	{ return spGetNames(iValPred.GetLHS()) | spGetNames(iValPred.GetRHS()); }
 
 } // namespace ZooLib
