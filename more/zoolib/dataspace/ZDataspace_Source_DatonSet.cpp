@@ -361,7 +361,6 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 
 	oChanged.clear();
 
-	// Pick changes datonSet
 	this->pPull();
 
 	ZLOGPF(s, eDebug + 1);
