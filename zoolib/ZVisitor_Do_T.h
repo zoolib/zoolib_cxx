@@ -53,18 +53,10 @@ public:
 		}
 
 	Result_t DDo(const Result_t& iDefault, const ZRef<ZVisitee>& iRep)
-		{
-		if (ZQ<Result_t> theQ = this->QDo(iRep))
-			return *theQ;
-		return iDefault;
-		}
+		{ return sDGet(iDefault, this->QDo(iRep)); }
 
 	Result_t Do(const ZRef<ZVisitee>& iRep)
-		{
-		if (ZQ<Result_t> theQ = this->QDo(iRep))
-			return *theQ;
-		return Result_t();
-		}
+		{ return sGet(this->QDo(iRep)); }
 
 protected:
 	const ZQ<Result_t>& QGetResult()
@@ -72,7 +64,7 @@ protected:
 
 	void pSetResult(const Result_t& iResult)
 		{
-		ZAssert(!fResultQ);
+		ZAssert(not fResultQ);
 		fResultQ = iResult;
 		}
 
