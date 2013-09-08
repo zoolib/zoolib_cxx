@@ -1129,7 +1129,7 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 		const ZRA::RelHead& theRH = iWalker->fCurrentResult->GetRelHead();
 		if (theRH != iWalker->fProxy->fResultRelHead)
 			{
-			if (ZLOGPF(s, eDebug+1))
+			if (ZLOGPF(s, eDebug))
 				{
 				s	<< "\n" << theRH
 					<< "\n" << iWalker->fProxy->fResultRelHead;
