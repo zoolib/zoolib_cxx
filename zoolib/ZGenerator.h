@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZGenerator_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallOnNewThread.h"
+#include "zoolib/ZCallable_Bind.h"
 #include "zoolib/ZCallable_Function.h"
+#include "zoolib/ZCallOnNewThread.h"
 
 namespace ZooLib {
 namespace ZGenerator {
@@ -355,7 +356,8 @@ public:
 // MARK: - sCallablePair
 
 template <class T0, class T1>
-void sCallablePair(
+void
+sCallablePair(
 	ZRef<typename AsSig<T0,T1>::Callable>& oCallable_Gen,
 	ZRef<typename AsSig<T1,T0>::Callable>& oCallable_Yield)
 	{
@@ -382,9 +384,14 @@ sGenerator(const ZRef<ZCallable<void(const ZRef<typename AsSig<T1,T0>::Callable>
 	}
 
 template <class T>
-ZRef<typename AsSig<T,void>::Callable>
-sGenerator(const ZRef<ZCallable<void(const ZRef<typename AsSig<void,T>::Callable>&)> >& iCallable)
+ZRef<ZCallable<T()> >
+sGenerator(const ZRef<ZCallable<void(const ZRef<ZCallable<void(T)> >&)> >& iCallable)
 	{ return sGenerator<T,void>(iCallable); }
+
+template <class T>
+ZRef<ZCallable<void(T)> >
+sGenerator(const ZRef<ZCallable<void(const ZRef<ZCallable<T(void)> >&)> >& iCallable)
+	{ return sGenerator<void,T>(iCallable); }
 
 // =================================================================================================
 // MARK: - sGenerator
@@ -392,7 +399,8 @@ sGenerator(const ZRef<ZCallable<void(const ZRef<typename AsSig<void,T>::Callable
 typedef ZThreadVal<ZRef<ZCounted>, struct Tag_Callable_Yield> ZThreadVal_Callable_Yield;
 
 template <class R, class P>
-ZQ<R> sQYield(P iP)
+ZQ<R>
+sQYield(P iP)
 	{
 	typedef typename AsSig<R,P>::Callable Callable;
 	if (ZRef<Callable> theCallable = ZThreadVal_Callable_Yield::sGet().DynamicCast<Callable>())
@@ -401,7 +409,8 @@ ZQ<R> sQYield(P iP)
 	}
 
 template <class P>
-void sYield(P iP)
+void
+sYield(P iP)
 	{ return sQYield<void,P>(iP).Get(); }
 
 template <class T0, class T1>
