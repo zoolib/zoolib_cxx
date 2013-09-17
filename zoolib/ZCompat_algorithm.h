@@ -36,12 +36,12 @@ namespace ZooLib {
 template <class T>
 inline
 const T sMin(const T& i0, const T& i1)
-	{ return std::min<T>(i0, (i1)); }
+	{ return std::min<T>(i0, i1); }
 
 template <class T>
 inline
 const T sMax(const T& i0, const T& i1)
-	{ return std::max<T>(i0, (i1)); }
+	{ return std::max<T>(i0, i1); }
 
 template <class T>
 inline
@@ -71,11 +71,11 @@ T sGetSet(T& ioLoc, const S& iVal)
 	}
 
 // =================================================================================================
-// MARK: - sSID (Set If Different)
+// MARK: - sQSet
 
 template <class T, class S>
 inline
-bool sSID(T& ioLoc, const S& iVal)
+bool sQSet(T& ioLoc, const S& iVal)
 	{
 	if (ioLoc == iVal)
 		return false;

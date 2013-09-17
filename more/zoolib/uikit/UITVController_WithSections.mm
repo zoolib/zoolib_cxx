@@ -1041,7 +1041,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 			{
 			const int section = thePath.section;
 
-			if (sSID(priorSection, section))
+			if (sQSet(priorSection, section))
 				countInSection = [self tableView:tableView numberOfRowsInSection:section];
 
 			const int row = thePath.row;
