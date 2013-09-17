@@ -410,7 +410,7 @@ public:
 		{ return operator_bool_gen::translate(fHasValue == Sense); }
 
 	void operator*() const
-		{}
+		{ ZAssert(fHasValue); }
 
 	void Clear()
 		{ fHasValue = false; }
