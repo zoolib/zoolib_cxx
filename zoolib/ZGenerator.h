@@ -183,32 +183,6 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - AsSig
-
-template <class Sig_p>
-struct AsSigBase
-	{
-	typedef Sig_p Sig;
-	typedef ZCallable<Sig> Callable;
-	};
-
-template <class T0, class T1>
-struct AsSig : public AsSigBase<T0(T1)>
-	{};
-
-template <class T>
-struct AsSig<T,void> : public AsSigBase<T()>
-	{};
-
-template <class T>
-struct AsSig<void,T> : public AsSigBase<void(T)>
-	{};
-
-template <>
-struct AsSig<void,void> : public AsSigBase<void()>
-	{};
-
-// =================================================================================================
 // MARK: - Callable_Gen
 
 template <class T0, class T1>
@@ -312,6 +286,7 @@ public:
 		return null;
 		}
 
+private:
 	ZRef<ShelfPair<T0,T1> > fShelfPair;
 	};
 
@@ -349,8 +324,37 @@ public:
 		return null;
 		}
 
+private:
 	ZRef<ShelfPair<void,T> > fShelfPair;
 	};
+
+// =================================================================================================
+// MARK: - AsSig
+
+// AsSig is needed so a void T0 or T1 does not end up in the param list of a signature.
+
+template <class Sig_p>
+struct AsSigBase
+	{
+	typedef Sig_p Sig;
+	typedef ZCallable<Sig> Callable;
+	};
+
+template <class T0, class T1>
+struct AsSig : public AsSigBase<T0(T1)>
+	{};
+
+template <class T>
+struct AsSig<T,void> : public AsSigBase<T()>
+	{};
+
+template <class T>
+struct AsSig<void,T> : public AsSigBase<void(T)>
+	{};
+
+template <>
+struct AsSig<void,void> : public AsSigBase<void()>
+	{};
 
 // =================================================================================================
 // MARK: - sCallablePair
@@ -411,7 +415,7 @@ sQYield(P iP)
 template <class P>
 void
 sYield(P iP)
-	{ return sQYield<void,P>(iP).Get(); }
+	{ return *sQYield<void,P>(iP); }
 
 template <class T0, class T1>
 void
