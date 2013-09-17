@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+// Prioritize armv7, over armv6, over generic.
+
 // =================================================================================================
 // MARK: - armv7
 
