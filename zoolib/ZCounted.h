@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZRef.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThread.h" // For ZBen
 
 namespace ZooLib {
 
@@ -243,6 +243,9 @@ ZWeakRef<T> sWeakRef(ZRef<T,Sense> iP)
 
 // =================================================================================================
 // MARK: - ZRef_Counted
+
+// Useful in situations where we want the default ctor of a ZRef<X> to default create an X.
+// e.g. ZCaller_Thread and its use of sSingleton/ZRef_Counted
 
 template <class Counted_t>
 class ZRef_Counted
