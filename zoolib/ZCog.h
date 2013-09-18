@@ -217,6 +217,30 @@ void sCallUpdate_Cog(Cog& ioCog, typename Cog::Param iParam)
 	}
 
 template <class Cog>
+bool sCallUpdate_Cog_Changed(Cog& ioCog, typename Cog::Param iParam)
+	{
+	if (sIsFinished(ioCog))
+		return false;
+
+	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
+		return sQSet(ioCog, *theQ);
+	ioCog.Clear();
+	return true;
+	}
+
+template <class Cog>
+bool sCallUpdate_Cog_Unchanged(Cog& ioCog, typename Cog::Param iParam)
+	{
+	if (sIsFinished(ioCog))
+		return true;
+
+	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
+		return not sQSet(ioCog, *theQ);
+	ioCog.Clear();
+	return false;
+	}
+
+template <class Cog>
 bool sCallUpdate_PendingCog_StillPending(Cog& ioCog, typename Cog::Param iParam)
 	{
 	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
@@ -240,30 +264,6 @@ bool sCallUpdate_PendingCog_Changed(Cog& ioCog, typename Cog::Param iParam)
 template <class Cog>
 bool sCallUpdate_PendingCog_Unchanged(Cog& ioCog, typename Cog::Param iParam)
 	{
-	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
-		return not sQSet(ioCog, *theQ);
-	ioCog.Clear();
-	return false;
-	}
-
-template <class Cog>
-bool sCallUpdate_Cog_Changed(Cog& ioCog, typename Cog::Param iParam)
-	{
-	if (sIsFinished(ioCog))
-		return false;
-
-	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
-		return sQSet(ioCog, *theQ);
-	ioCog.Clear();
-	return true;
-	}
-
-template <class Cog>
-bool sCallUpdate_Cog_Unchanged(Cog& ioCog, typename Cog::Param iParam)
-	{
-	if (sIsFinished(ioCog))
-		return true;
-
 	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
 		return not sQSet(ioCog, *theQ);
 	ioCog.Clear();
@@ -463,86 +463,6 @@ ZCog<Param> sCog_Repeat(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Para
 template <class Param>
 ZCog<Param> operator*(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
 	{ return sCog_Repeat<Param>(iCallable); }
-
-// =================================================================================================
-// MARK: - Ternary sequential, sCog_If
-
-// Call cog0 till it finishes, if true then call cog1
-
-template <class Param>
-class Cog_If
-:	public ZCallable<ZCog<Param>(const ZCog<Param>&,Param)>
-	{
-public:
-	Cog_If(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCondition,
-		const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-		const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
-	:	fCondition(iCondition)
-	,	fCog0(iCallable0)
-	,	fCog1(iCallable1)
-		{}
-
-	virtual ZQ<ZCog<Param> > QCall(const ZCog<Param>& iSelf, Param iParam)
-		{
-		if (ZQ<ZCog<Param> > newConditionQ = fCondition->QCall(fCondition, iParam))
-			{
-			const ZCog<Param>& newCondition = *newConditionQ;
-			if (newCondition == fCondition)
-				return iSelf;
-
-			if (sIsFalse(newCondition))
-				{
-				if (sIsFinished(fCog1))
-					return fCog1;
-				return fCog1->QCall(fCog1, iParam);
-				}
-		
-			if (sIsTrue(newCondition))
-				{
-				if (sIsFinished(fCog0))
-					return fCog0;
-				return fCog0->QCall(fCog0, iParam);
-				}
-		
-			return new Cog_If(newCondition, fCog0, fCog1);
-			}
-
-		if (sIsFinished(fCog1))
-			return fCog1;
-		return fCog1->QCall(fCog1, iParam);
-		}
-
-	const ZCog<Param> fCondition;
-	const ZCog<Param> fCog0;
-	const ZCog<Param> fCog1;
-	};
-
-template <class Param>
-ZCog<Param> sCog_If(
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCondition,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
-	{
-	if (sIsFalse(iCondition))
-		return iCallable1;
-
-	if (sIsTrue(iCondition))
-		return iCallable0;
-
-	return new Cog_If<Param>(iCondition, iCallable0, iCallable1);
-	}
-
-template <class Param>
-ZCog<Param> operator>>(
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
-	{ return sCog_If<Param>(iCallable0, iCallable1, null); }
-
-template <class Param>
-ZCog<Param>& operator>>=(
-	ZCog<Param>& ioCog0,
-	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
-	{ return ioCog0 = sCog_If<Param>(ioCog0, iCallable1, null); }
 
 // =================================================================================================
 // MARK: - Binary sequential, sCog_Each
@@ -1257,6 +1177,86 @@ ZCog<Param> sCog_Fallback(
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iPreferred,
 	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iFallback)
 	{ return iPreferred ? iPreferred : iFallback; }
+
+// =================================================================================================
+// MARK: - Ternary sequential, sCog_If
+
+// Call cog0 till it finishes, if true then call cog1
+
+template <class Param>
+class Cog_If
+:	public ZCallable<ZCog<Param>(const ZCog<Param>&,Param)>
+	{
+public:
+	Cog_If(const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCondition,
+		const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	:	fCondition(iCondition)
+	,	fCog0(iCallable0)
+	,	fCog1(iCallable1)
+		{}
+
+	virtual ZQ<ZCog<Param> > QCall(const ZCog<Param>& iSelf, Param iParam)
+		{
+		if (ZQ<ZCog<Param> > newConditionQ = fCondition->QCall(fCondition, iParam))
+			{
+			const ZCog<Param>& newCondition = *newConditionQ;
+			if (newCondition == fCondition)
+				return iSelf;
+
+			if (sIsFalse(newCondition))
+				{
+				if (sIsFinished(fCog1))
+					return fCog1;
+				return fCog1->QCall(fCog1, iParam);
+				}
+		
+			if (sIsTrue(newCondition))
+				{
+				if (sIsFinished(fCog0))
+					return fCog0;
+				return fCog0->QCall(fCog0, iParam);
+				}
+		
+			return new Cog_If(newCondition, fCog0, fCog1);
+			}
+
+		if (sIsFinished(fCog1))
+			return fCog1;
+		return fCog1->QCall(fCog1, iParam);
+		}
+
+	const ZCog<Param> fCondition;
+	const ZCog<Param> fCog0;
+	const ZCog<Param> fCog1;
+	};
+
+template <class Param>
+ZCog<Param> sCog_If(
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCondition,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{
+	if (sIsFalse(iCondition))
+		return iCallable1;
+
+	if (sIsTrue(iCondition))
+		return iCallable0;
+
+	return new Cog_If<Param>(iCondition, iCallable0, iCallable1);
+	}
+
+template <class Param>
+ZCog<Param> operator>>(
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return sCog_If<Param>(iCallable0, iCallable1, null); }
+
+template <class Param>
+ZCog<Param>& operator>>=(
+	ZCog<Param>& ioCog0,
+	const ZRef<ZCallable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	{ return ioCog0 = sCog_If<Param>(ioCog0, iCallable1, null); }
 
 } // namespace ZooLib
 
