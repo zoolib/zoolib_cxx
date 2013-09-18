@@ -291,7 +291,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Callable_Yield (specialization for <void,T>)
+// MARK: - Callable_Yield (partial specialization for <void,T>)
 
 template <class T>
 class Callable_Yield<void,T>
@@ -394,7 +394,7 @@ sGenerator(const ZRef<ZCallable<void(const ZRef<ZCallable<void(T)> >&)> >& iCall
 
 template <class T>
 ZRef<ZCallable<void(T)> >
-sGenerator(const ZRef<ZCallable<void(const ZRef<ZCallable<T(void)> >&)> >& iCallable)
+sGenerator(const ZRef<ZCallable<void(const ZRef<ZCallable<T()> >&)> >& iCallable)
 	{ return sGenerator<void,T>(iCallable); }
 
 // =================================================================================================
