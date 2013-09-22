@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimW_CRLFRemove
+// MARK: - ZStrimW_InsertSeparator
 
 ZStrimW_InsertSeparator::ZStrimW_InsertSeparator(
 	size_t iSpacing, const string8& iSeparator, const ZStrimW& iStrimSink)
