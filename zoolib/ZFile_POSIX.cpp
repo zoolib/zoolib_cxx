@@ -99,7 +99,8 @@ static ZFile::Error spTranslateError(int iNativeError)
 	switch (iNativeError)
 		{
 		case 0:
-			theErr = ZFile::errorNone;
+			// We shouldn't call this if there's no error
+			ZUnimplemented();
 			break;
 		case EEXIST:
 			theErr = ZFile::errorAlreadyExists;
@@ -426,7 +427,10 @@ static ZFile::Error spGetPosition(int iFD, uint64& oPosition)
 	#endif
 
 	if (result < 0)
+		{
+		oPosition = 0;
 		return spTranslateError(errno);
+		}
 	oPosition = result;
 	return ZFile::errorNone;
 	}
@@ -449,11 +453,17 @@ static ZFile::Error spGetSize(int iFD, uint64& oSize)
 	#if defined(linux) && not defined (__ANDROID__)
 		struct stat64 theStatStruct;
 		if (::fstat64(iFD, &theStatStruct))
+			{
+			oSize = 0;
 			return spTranslateError(errno);
+			}
 	#else
 		struct stat theStatStruct;
 		if (::fstat(iFD, &theStatStruct))
+			{
+			oSize = 0;
 			return spTranslateError(errno);
+			}
 	#endif
 
 	oSize = theStatStruct.st_size;

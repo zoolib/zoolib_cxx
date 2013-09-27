@@ -234,18 +234,18 @@ template <class Signature>
 ZRef<ZCallable<Signature> >
 sCallable(id iObj, SEL iSEL)
 	{
-	if (not iObj || not iSEL)
-		return null;
-	return new ZCallable_ObjC::Callable<id,Signature>(iObj, iSEL);
+	if (iObj && iSEL)
+		return new ZCallable_ObjC::Callable<id,Signature>(iObj, iSEL);
+	return null;
 	}
 
 template <class Signature,class T>
 ZRef<ZCallable<Signature> >
 sCallable(const ZRef<T>& iObj, SEL iSEL)
 	{
-	if (not iObj || not iSEL)
-		return null;
-	return new ZCallable_ObjC::Callable<ZRef<NSObject>,Signature>(iObj, iSEL);
+	if (iObj && iSEL)
+		return new ZCallable_ObjC::Callable<ZRef<NSObject>,Signature>(iObj, iSEL);
+	return null;
 	}
 
 } // namespace ZooLib

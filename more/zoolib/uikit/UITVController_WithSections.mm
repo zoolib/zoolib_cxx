@@ -697,7 +697,7 @@ using namespace ZooLib::UIKit;
 
 - (id)init
 	{
-	[super init];
+	self = [super init];
 	fTouchCount = 0;
 	fDragging = false;
 	fNeedsUpdate = false;
@@ -1031,7 +1031,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	[tableView visibleCells];
 	const NSArray* paths = [tableView indexPathsForVisibleRows];
 
-	size_t countInSection;
+	size_t countInSection = 0;
 	int priorSection = -1;
 	for (size_t x = 0, count = [paths count]; x < count; ++x)
 		{
@@ -1045,7 +1045,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 				countInSection = [self tableView:tableView numberOfRowsInSection:section];
 
 			const int row = thePath.row;
-			spApplyPosition(cell, row > 0, row < countInSection - 1);
+			spApplyPosition(cell, row > 0, row + 1 < countInSection);
 			}
 		}
 	}
@@ -1324,7 +1324,7 @@ static void spInsertSections(UITableView* iTableView,
 
 - (id)init
 	{
-	[super init];
+	self = [super init];
 	fCallEnd = false;
 	self.cancelsTouchesInView = NO;
 	self.delaysTouchesEnded = NO;
@@ -1375,9 +1375,10 @@ static void spInsertSections(UITableView* iTableView,
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style variableRowHeight:(BOOL)variableRowHeight
 	{
-	[super initWithFrame:frame style:style];
+	self = [super initWithFrame:frame style:style];
 
 	fCallable_NeedsUpdate = sCallable<void()>(self, @selector(needsUpdate));
+
 	if (variableRowHeight)
 		fHandler = sAdopt& [[UITVHandler_WithSections_VariableRowHeight alloc] init];
 	else

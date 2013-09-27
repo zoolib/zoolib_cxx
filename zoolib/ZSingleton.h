@@ -45,6 +45,7 @@ Type_p& sSingleton()
 		else
 			static ZDeleter<Type_p> deleter(spType_p);
 		}
+	ZAssert(spType_p);
 	return *spType_p;
 	}
 

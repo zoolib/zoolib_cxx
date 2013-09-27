@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAtomic.h" // For sAtomic_CASPtr
 #include "zoolib/ZCompat_algorithm.h" // For std::swap
+#include "zoolib/ZDebug.h" // For ZAssert
 #include "zoolib/ZTypes.h" // For Adopt_T
 
 #ifndef ZMACRO_Attribute_NoThrow_Ref
@@ -191,6 +192,7 @@ public:
 	T* operator->() const
 		{
 		sCheck(fP);
+		ZAssert(fP);
 		return fP;
 		}
 
