@@ -60,10 +60,10 @@ const ZStrimW& operator<<(const ZStrimW& w, bool iVal)
 	{ return w.Write(iVal ? "true" : "false"); }
 
 const ZStrimW& operator<<(const ZStrimW& w, char iVal)
-	{ return w.Writef("%c", iVal); }
+	{ return w.Writef("%d", int(iVal)); }
 
 const ZStrimW& operator<<(const ZStrimW& w, unsigned char iVal)
-	{ return w.Writef("%uc", iVal); }
+	{ return w.Writef("%u", (unsigned int)iVal); }
 
 const ZStrimW& operator<<(const ZStrimW& w, signed char iVal)
 	{ return w.Writef("%c", iVal); }
