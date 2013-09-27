@@ -28,8 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <openssl/bio.h>
 #include <openssl/ssl.h>
 
-#error unfinished
-
 namespace ZooLib {
 
 // =================================================================================================
@@ -40,7 +38,7 @@ class ZStreamRWCon_OpenSSL
 ,	public ZStreamWCon
 	{
 public:
-	ZStreamRWCon_OpenSSL(const ZStreamR& iStreamR, const ZStreamW& iStreamW);
+	ZStreamRWCon_OpenSSL(const ZStreamR& iStreamR, const ZStreamW& iStreamW, bool iIsServer);
 	~ZStreamRWCon_OpenSSL();
 
 // From ZStreamR via ZStreamRCon
@@ -61,6 +59,8 @@ public:
 	virtual void Imp_Abort();
 
 private:
+	bool pHandleError(int iResult);
+
 	int pRead(void* oDest, int iCount);
 	static int spRead(BIO* iBIO, char* oDest, int iCount);
 
@@ -74,6 +74,7 @@ private:
 	const ZStreamR& fStreamR;
 	const ZStreamW& fStreamW;
 	bool fLastWasWrite;
+
 	};
 
 // =================================================================================================
@@ -83,7 +84,7 @@ class ZStreamerRWCon_OpenSSL
 :	public ZStreamerRWCon
 	{
 public:
-	ZStreamerRWCon_OpenSSL(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+	ZStreamerRWCon_OpenSSL(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW, bool iIsServer);
 	virtual ~ZStreamerRWCon_OpenSSL();
 
 // From ZStreamerRCon via ZStreamerRWCon_SSL

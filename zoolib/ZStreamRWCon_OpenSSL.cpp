@@ -23,8 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
 
-#error unfinished
-
 namespace ZooLib {
 
 // =================================================================================================
@@ -37,33 +35,100 @@ class Make_SSL
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZStreamerRWCon_OpenSSL(iParam.fStreamerR, iParam.fStreamerW);
+		oResult = new ZStreamerRWCon_OpenSSL(iParam.fStreamerR, iParam.fStreamerW, iParam.fIsServer);
 		return true;
 		}
 	} sMaker0;
 
 } // anonymous namespace
 
-static SSL_CTX* spCTX;
-
 static int spDummy = ::SSL_library_init();
 
 // =================================================================================================
 // MARK: - ZStreamRWCon_OpenSSL
 
-ZStreamRWCon_OpenSSL::ZStreamRWCon_OpenSSL(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
+ZStreamRWCon_OpenSSL::ZStreamRWCon_OpenSSL(
+	const ZStreamR& iStreamR, const ZStreamW& iStreamW, bool iIsServer)
 :	fStreamR(iStreamR)
 ,	fStreamW(iStreamW)
 ,	fSSL(nullptr)
 ,	fLastWasWrite(false)
 	{
-	fSSL_CTX = ::SSL_CTX_new(::SSLv23_client_method());
-	fSSL = ::SSL_new(fSSL_CTX);
-	fBIOR = ::BIO_new(::BIO_s_mem());
-	fBIOW = ::BIO_new(::BIO_s_mem());
-	::SSL_set_bio(fSSL, fBIOR, fBIOW);
-	::SSL_set_connect_state(fSSL);
+	if (iIsServer)
+		fSSL_CTX = ::SSL_CTX_new(::DTLSv1_server_method());
+	else
+		fSSL_CTX = ::SSL_CTX_new(::TLSv1_method());
 
+	fSSL = ::SSL_new(fSSL_CTX);
+
+	::SSL_set_verify(fSSL, SSL_VERIFY_NONE, nullptr);
+
+	fBIOR = ::BIO_new(::BIO_s_mem());
+	::BIO_set_nbio(fBIOR, 1);
+
+	fBIOW = ::BIO_new(::BIO_s_mem());
+	::BIO_set_nbio(fBIOW, 1);
+
+	::SSL_set_bio(fSSL, fBIOR, fBIOW);
+
+	if (iIsServer)
+		::SSL_set_accept_state(fSSL);
+	else
+		::SSL_set_connect_state(fSSL);
+
+	for (;;)
+		{
+		int result = ::SSL_do_handshake(fSSL);
+		if (result == 0)
+			break;
+		if (this->pHandleError(result))
+			break;
+		}
+	}
+
+bool ZStreamRWCon_OpenSSL::pHandleError(int iResult)
+	{
+	int error = ::SSL_get_error(fSSL, iResult);
+
+	switch (error)
+		{
+		case SSL_ERROR_WANT_READ:
+		case SSL_ERROR_WANT_WRITE:
+			{
+			break;
+			}
+		case SSL_ERROR_ZERO_RETURN:
+		case SSL_ERROR_NONE:
+			{
+			return true;
+			}
+		default:
+			{
+			return false;
+			}
+		}
+
+	char buf[1024];
+	int countRead = ::BIO_read(fBIOW, buf, sizeof(buf));
+	if (countRead > 0)
+		{
+		fStreamW.Write(buf, countRead);
+		return false;
+		}
+
+	if (SSL_want_read(fSSL))
+		{
+		fStreamW.Flush();
+		size_t countRead;
+		fStreamR.Read(buf, sizeof(buf), &countRead);
+		if (countRead)
+			{
+			::BIO_write(fBIOR, buf, countRead);
+			return false;
+			}
+		return true;
+		}
+	return true;
 	}
 
 ZStreamRWCon_OpenSSL::~ZStreamRWCon_OpenSSL()
@@ -74,25 +139,22 @@ ZStreamRWCon_OpenSSL::~ZStreamRWCon_OpenSSL()
 
 void ZStreamRWCon_OpenSSL::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	int result = ::SSL_read(fSSL, oDest, iCount);
-	if (result < 0)
+	for (;;)
 		{
-		int error = ::SSL_get_error(fSSL, result);
-
-		switch(error)
+		int result = ::SSL_read(fSSL, oDest, iCount);
+		if (result >= 0)
 			{
-			case SSL_ERROR_ZERO_RETURN:
-			case SSL_ERROR_NONE: 
-			case SSL_ERROR_WANT_READ:
-				{
-				break;
-				}
+			if (oCountRead)
+				*oCountRead = result;
+			break;
 			}
-		result = 0;
+		if (this->pHandleError(result))
+			{
+			if (oCountRead)
+				*oCountRead = 0;
+			break;
+			}
 		}
-
-	if (oCountRead)
-		*oCountRead = result;
 	}
 
 size_t ZStreamRWCon_OpenSSL::Imp_CountReadable()
@@ -113,29 +175,21 @@ bool ZStreamRWCon_OpenSSL::Imp_ReceiveDisconnect(double iTimeout)
 
 void ZStreamRWCon_OpenSSL::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	int result = ::SSL_write(fSSL, iSource, iCount);
-	if (result < 0)
+	for (;;)
 		{
-		int error = ::SSL_get_error(fSSL, result);
-		switch(error)
+		int result = ::SSL_write(fSSL, iSource, iCount);
+		if (result >= 0)
 			{
-			case SSL_ERROR_ZERO_RETURN:
-				break;
-
-			case SSL_ERROR_NONE: 
-				break;
-
-			case SSL_ERROR_WANT_READ:
-				break;
+			if (oCountWritten)
+				*oCountWritten = result;
+			break;
 			}
-
-		if (oCountWritten)
-			*oCountWritten = 0;
-		}
-	else
-		{
-		if (oCountWritten)
-			*oCountWritten = result;
+		if (this->pHandleError(result))
+			{
+			if (oCountWritten)
+				*oCountWritten = 0;
+			break;
+			}
 		}
 	}
 
@@ -152,75 +206,14 @@ void ZStreamRWCon_OpenSSL::Imp_Abort()
 	::SSL_shutdown(fSSL);
 	}
 
-void ZStreamRWCon_OpenSSL::pRead(void* oDest, size_t* ioCount)
-	{
-	try
-		{
-		size_t countToRead = *ioCount;
-		if (fLastWasWrite)
-			{
-			fLastWasWrite = false;
-			fStreamW.Flush();
-			}
-		size_t countRead;
-		fStreamR.ReadAll(oDest, countToRead, &countRead);
-		*ioCount = countRead;
-//		if (countRead == 0)
-//			return ioErr;
-//		return noErr;
-		}
-	catch (...)
-		{
-//		return errSSLClosedAbort;
-		}
-	}
-
-#if 0
-OSStatus ZStreamRWCon_OpenSSL::spRead(SSLConnectionRef iRefcon, void* oDest, size_t* ioCount)
-	{
-	ZStreamRWCon_OpenSSL* theS =
-		const_cast<ZStreamRWCon_OpenSSL*>(static_cast<const ZStreamRWCon_OpenSSL*>(iRefcon));
-
-	return theS->pRead(oDest, ioCount);
-	}
-#endif
-
-OSStatus ZStreamRWCon_OpenSSL::pWrite(const void* iSource, size_t* ioCount)
-	{
-	try
-		{
-		size_t countToWrite = *ioCount;
-		size_t countWritten;
-		fStreamW.Write(iSource, countToWrite, &countWritten);
-		fLastWasWrite = true;
-		*ioCount = countWritten;
-		if (countWritten == 0)
-			return errSSLClosedAbort;
-		return noErr;
-		}
-	catch (...)
-		{
-		return errSSLClosedAbort;
-		}
-	}
-
-OSStatus ZStreamRWCon_OpenSSL::spWrite(
-	SSLConnectionRef iRefcon, const void* iSource, size_t* ioCount)
-	{
-	ZStreamRWCon_OpenSSL* theS =
-		const_cast<ZStreamRWCon_OpenSSL*>(static_cast<const ZStreamRWCon_OpenSSL*>(iRefcon));
-
-	return theS->pWrite(iSource, ioCount);
-	}
-
 // =================================================================================================
 // MARK: - ZStreamRWCon_OpenSSL
 
 ZStreamerRWCon_OpenSSL::ZStreamerRWCon_OpenSSL(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW, bool iIsServer)
 :	fStreamerR(iStreamerR)
 ,	fStreamerW(iStreamerW)
-,	fStream(fStreamerR->GetStreamR(), fStreamerW->GetStreamW())
+,	fStream(fStreamerR->GetStreamR(), fStreamerW->GetStreamW(), iIsServer)
 	{}
 
 ZStreamerRWCon_OpenSSL::~ZStreamerRWCon_OpenSSL()
