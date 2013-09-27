@@ -42,7 +42,7 @@ ZStreamRWCon_MemoryPipe::ZStreamRWCon_MemoryPipe()
 
 ZStreamRWCon_MemoryPipe::~ZStreamRWCon_MemoryPipe()
 	{
-	fMutex.Acquire();
+	ZAcqMtx acq(fMutex);
 	ZAssertStop(2, fSource == nullptr && fDest == nullptr);
 	}
 
