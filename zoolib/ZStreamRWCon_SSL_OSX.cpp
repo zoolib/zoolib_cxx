@@ -39,7 +39,7 @@ class Make_SSL
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZStreamerRWCon_SSL_OSX(iParam.fStreamerR, iParam.fStreamerW);
+		oResult = new ZStreamerRWCon_SSL_OSX(iParam.fStreamerR, iParam.fStreamerW, iParam.fIsServer);
 		return true;
 		}
 	} sMaker0;
@@ -49,21 +49,32 @@ class Make_SSL
 // =================================================================================================
 // MARK: - ZStreamRWCon_SSL_OSX
 
-ZStreamRWCon_SSL_OSX::ZStreamRWCon_SSL_OSX(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
+ZStreamRWCon_SSL_OSX::ZStreamRWCon_SSL_OSX(
+	const ZStreamR& iStreamR, const ZStreamW& iStreamW, bool iIsServer)
 :	fStreamR(iStreamR)
 ,	fStreamW(iStreamW)
 ,	fSSLCR(nullptr)
 ,	fLastWasWrite(false)
 	{
-	::SSLNewContext(false, &fSSLCR);
+	::SSLNewContext(iIsServer, &fSSLCR);
 	try
 		{
 		::SSLSetConnection(fSSLCR, this);
 		::SSLSetIOFuncs(fSSLCR, spRead, spWrite);
 
-		::SSLSetProtocolVersion(fSSLCR, kSSLProtocolAll);
+		if (iIsServer)
+			{
+			// *Must* have a server certificate.
+			::SSLSetClientSideAuthenticate(fSSLCR, kNeverAuthenticate);
+			::SSLSetProtocolVersionEnabled(fSSLCR, kSSLProtocolAll, true);
+//##			::SSLSetCertificate(fSSLCR)
+			}
+		else
+			{
+			::SSLSetProtocolVersion(fSSLCR, kSSLProtocolAll);
+			}
 		::SSLSetAllowsExpiredCerts(fSSLCR, true);
-	//	::SSLSetEnableCertVerify(fSSLCR, false);
+		::SSLSetEnableCertVerify(fSSLCR, false);
 		::SSLSetAllowsExpiredRoots(fSSLCR, true);
 		::SSLSetAllowsAnyRoot(fSSLCR, true);
 
@@ -184,10 +195,10 @@ OSStatus ZStreamRWCon_SSL_OSX::spWrite(
 // MARK: - ZStreamerRWCon_SSL_OSX
 
 ZStreamerRWCon_SSL_OSX::ZStreamerRWCon_SSL_OSX(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW, bool iIsServer)
 :	fStreamerR(iStreamerR)
 ,	fStreamerW(iStreamerW)
-,	fStream(fStreamerR->GetStreamR(), fStreamerW->GetStreamW())
+,	fStream(fStreamerR->GetStreamR(), fStreamerW->GetStreamW(), iIsServer)
 	{}
 
 ZStreamerRWCon_SSL_OSX::~ZStreamerRWCon_SSL_OSX()

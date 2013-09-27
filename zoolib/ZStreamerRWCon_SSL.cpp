@@ -24,11 +24,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 ZRef<ZStreamerRWCon> sStreamerRWCon_SSL(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW, bool iIsServer)
 	{
 	MakeSSLParam_t theParam;
 	theParam.fStreamerR = iStreamerR;
 	theParam.fStreamerW = iStreamerW;
+	theParam.fIsServer = iIsServer;
 	return ZFunctionChain_T<ZRef<ZStreamerRWCon>, MakeSSLParam_t>::sInvoke(theParam);
 	}
 

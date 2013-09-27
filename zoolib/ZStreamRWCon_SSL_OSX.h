@@ -39,7 +39,7 @@ class ZStreamRWCon_SSL_OSX
 ,	public ZStreamWCon
 	{
 public:
-	ZStreamRWCon_SSL_OSX(const ZStreamR& iStreamR, const ZStreamW& iStreamW);
+	ZStreamRWCon_SSL_OSX(const ZStreamR& iStreamR, const ZStreamW& iStreamW, bool iIsServer);
 	~ZStreamRWCon_SSL_OSX();
 
 // From ZStreamR via ZStreamRCon
@@ -79,7 +79,7 @@ class ZStreamerRWCon_SSL_OSX
 :	public ZStreamerRWCon
 	{
 public:
-	ZStreamerRWCon_SSL_OSX(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+	ZStreamerRWCon_SSL_OSX(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW, bool iIsServer);
 	virtual ~ZStreamerRWCon_SSL_OSX();
 
 // From ZStreamerRCon via ZStreamerRWCon_SSL
