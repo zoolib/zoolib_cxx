@@ -18,24 +18,23 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZNetDNSSD.h"
-
-#if ZCONFIG_API_Enabled(NetDNSSD)
+#include "zoolib/ZDNS_SD.h"
 
 #include "zoolib/ZLog.h"
 
 #include <vector>
 
 namespace ZooLib {
+namespace DNS_SD {
 
 using std::runtime_error;
 using std::string;
 using std::vector;
 
 // =================================================================================================
-// MARK: - ZNetNameRegistered_DNSSD
+// MARK: - Registration
 
-void ZNetNameRegistered_DNSSD::pInit(ip_port iPort,
+void Registration::pInit(ip_port iPort,
 	const char* iName, const string& iRegType,
 	const char* iDomain,
 	ConstPString* iTXT, size_t iTXTCount)
@@ -55,13 +54,13 @@ void ZNetNameRegistered_DNSSD::pInit(ip_port iPort,
 
 	DNSServiceErrorType result = ::DNSServiceRegister(
 		&fDNSServiceRef, // output service ref
-		0, // flags
+		kDNSServiceFlagsDefault, // flags
 		0, // default interface index
 		iName, // name, nullptr for default
 		iRegType.c_str(),
 		iDomain, // domain, nullptr for default
 		nullptr, // host, we presume the current host
-		iPort,
+		htons(iPort),
 		theTXTData.size(),
 		theTXTData.empty() ? nullptr : &theTXTData[0],
 		spDNSServiceRegisterReply, // our callback
@@ -69,15 +68,13 @@ void ZNetNameRegistered_DNSSD::pInit(ip_port iPort,
 
 	if (result)
 		{
-		if (ZLOG(s, eNotice, "ZNetNameRegistered_DNSSD"))
-			{
+		if (ZLOG(s, eNotice, "Registration"))
 			s.Writef("DNSServiceRegister, failed with result: %d", result);
-			throw runtime_error("Couldn't register name");
-			}
+		throw runtime_error("Couldn't register name");
 		}
 	}
 
-ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
+Registration::Registration(ip_port iPort,
 	const string& iName, const string& iRegType,
 	const string& iDomain,
 	ConstPString* iTXT, size_t iTXTCount)
@@ -89,7 +86,7 @@ ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
 		iTXT, iTXTCount);
 	}
 
-ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
+Registration::Registration(ip_port iPort,
 	const string& iName, const string& iRegType,
 	ConstPString* iTXT, size_t iTXTCount)
 	{
@@ -100,7 +97,7 @@ ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
 		iTXT, iTXTCount);
 	}
 
-ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
+Registration::Registration(ip_port iPort,
 	const string& iName, const string& iRegType)
 	{
 	this->pInit(iPort,
@@ -110,7 +107,7 @@ ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
 		nullptr, 0);
 	}
 
-ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
+Registration::Registration(ip_port iPort,
 	const string& iRegType,
 	ConstPString* iTXT, size_t iTXTCount)
 	{
@@ -121,7 +118,7 @@ ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
 		iTXT, iTXTCount);
 	}
 
-ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
+Registration::Registration(ip_port iPort,
 	const string& iRegType)
 	{
 	this->pInit(iPort,
@@ -131,38 +128,38 @@ ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
 		nullptr, 0);
 	}
 
-ZNetNameRegistered_DNSSD::~ZNetNameRegistered_DNSSD()
+Registration::~Registration()
 	{
 	ZAcqMtx acq(fMutex);
 	if (fDNSServiceRef)
 		::DNSServiceRefDeallocate(fDNSServiceRef);
 	}
 
-std::string ZNetNameRegistered_DNSSD::GetName() const
+std::string Registration::GetName() const
 	{
 	ZAcqMtx acq(fMutex);
 	return fName;
 	}
 
-std::string ZNetNameRegistered_DNSSD::GetRegType() const
+std::string Registration::GetRegType() const
 	{
 	ZAcqMtx acq(fMutex);
 	return fRegType;
 	}
 
-std::string ZNetNameRegistered_DNSSD::GetDomain() const
+std::string Registration::GetDomain() const
 	{
 	ZAcqMtx acq(fMutex);
 	return fDomain;
 	}
 
-ip_port ZNetNameRegistered_DNSSD::GetPort() const
+ip_port Registration::GetPort() const
 	{
 	ZAcqMtx acq(fMutex);
 	return fPort;
 	}
 
-void ZNetNameRegistered_DNSSD::pDNSServiceRegisterReply(
+void Registration::pDNSServiceRegisterReply(
 	DNSServiceFlags flags,
 	DNSServiceErrorType errorCode,
 	const char* name,
@@ -171,7 +168,7 @@ void ZNetNameRegistered_DNSSD::pDNSServiceRegisterReply(
 	{
 	ZAcqMtx acq(fMutex);
 
-	if (ZLOG(s, eNotice, "ZNetNameRegistered_DNSSD"))
+	if (ZLOG(s, eNotice, "Registration"))
 		{
 		s.Writef("pDNSServiceRegisterReply, flags: %d, errorCode: %d", flags, errorCode);
 		s << ", name: " << name;
@@ -180,7 +177,7 @@ void ZNetNameRegistered_DNSSD::pDNSServiceRegisterReply(
 		}
 	}
 
-void ZNetNameRegistered_DNSSD::spDNSServiceRegisterReply(
+void Registration::spDNSServiceRegisterReply(
 	DNSServiceRef sdRef,
 	DNSServiceFlags flags,
 	DNSServiceErrorType errorCode,
@@ -192,10 +189,9 @@ void ZNetNameRegistered_DNSSD::spDNSServiceRegisterReply(
 	if (!context)
 		return;
 
-	static_cast<ZNetNameRegistered_DNSSD*>(context)->
+	static_cast<Registration*>(context)->
 		pDNSServiceRegisterReply(flags, errorCode, name, regtype, domain);
 	}
 
+} // namespace DNS_SD
 } // namespace ZooLib
-
-#endif // ZCONFIG_API_Enabled(NetDNSSD)

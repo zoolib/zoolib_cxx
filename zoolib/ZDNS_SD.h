@@ -18,22 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNetDNSSD_h__
-#define __ZNetDNSSD_h__ 1
+#ifndef __ZDNS_SD_h__
+#define __ZDNS_SD_h__ 1
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_API.h"
-#include "zoolib/ZCONFIG_SPI.h"
-
-#ifndef ZCONFIG_API_Avail__NetDNSSD
-	#define ZCONFIG_API_Avail__NetDNSSD ZCONFIG_SPI_Enabled(DNSSD)
-#endif
-
-#ifndef ZCONFIG_API_Desired__NetDNSSD
-	#define ZCONFIG_API_Desired__NetDNSSD 1
-#endif
-
-
-#if ZCONFIG_API_Enabled(NetDNSSD)
 
 #include "zoolib/ZNet_Internet.h" // For ip_port
 #include "zoolib/ZThread.h"
@@ -43,40 +30,41 @@ extern "C" {
 }
 
 namespace ZooLib {
+namespace DNS_SD {
 
 // =================================================================================================
-// MARK: - ZNetNameRegistered_DNSSD
+// MARK: - Registration
 
-class ZNetNameRegistered_DNSSD
+class Registration
 	{
 protected:
-	ZNetNameRegistered_DNSSD() {}
-	ZNetNameRegistered_DNSSD(const ZNetNameRegistered_DNSSD& other); // Not implemented
-	ZNetNameRegistered_DNSSD& operator=(const ZNetNameRegistered_DNSSD& other); // Not implemented
+	Registration() {}
+	Registration(const Registration& other); // Not implemented
+	Registration& operator=(const Registration& other); // Not implemented
 
 public:
 	typedef const unsigned char* ConstPString;
 
-	ZNetNameRegistered_DNSSD(ip_port iPort,
+	Registration(ip_port iPort,
 		const std::string& iName, const std::string& iRegType,
 		const std::string& iDomain,
 		ConstPString* iTXT, size_t iTXTCount);
 
-	ZNetNameRegistered_DNSSD(ip_port iPort,
+	Registration(ip_port iPort,
 		const std::string& iName, const std::string& iRegType,
 		ConstPString* iTXT, size_t iTXTCount);
 
-	ZNetNameRegistered_DNSSD(ip_port iPort,
+	Registration(ip_port iPort,
 		const std::string& iName, const std::string& iRegType);
 
-	ZNetNameRegistered_DNSSD(ip_port iPort,
+	Registration(ip_port iPort,
 		const std::string& iRegType,
 		ConstPString* iTXT, size_t iTXTCount);
 
-	ZNetNameRegistered_DNSSD(ip_port iPort,
+	Registration(ip_port iPort,
 		const std::string& iRegType);
 
-	~ZNetNameRegistered_DNSSD();
+	~Registration();
 
 	std::string GetName() const;
 	std::string GetRegType() const;
@@ -113,8 +101,7 @@ private:
 	ip_port fPort;
 	};
 
+} // namespace DNS_SD
 } // namespace ZooLib
 
-#endif // ZCONFIG_API_Enabled(NetDNSSD)
-
-#endif // __ZNetDNSSD_h__
+#endif // __ZDNS_SD_h__
