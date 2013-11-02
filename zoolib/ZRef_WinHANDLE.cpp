@@ -58,7 +58,7 @@ static HANDLE spDuplicateHandle(HANDLE iHANDLE)
 			::GetCurrentProcess(), // hSourceProcessHandle
 			iHANDLE, // hSourceHandle
 			::GetCurrentProcess(), // hTargetProcessHandle(
-			LPHANDLE)&result, // lpTargetHandle
+			(LPHANDLE)&result, // lpTargetHandle
 			0, // dwDesiredAccess
 			false, // bInheritHandle
 			DUPLICATE_SAME_ACCESS // dwOptions
