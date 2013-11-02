@@ -282,7 +282,7 @@ void ZStreamR::Read(void* oDest, size_t iCount) const
 
 void ZStreamR::ReadAll(void* oDest, size_t iCount, size_t* oCountRead) const
 	{
-	char* localDest = reinterpret_cast<char*>(oDest);
+	char* localDest = static_cast<char*>(oDest);
 	size_t countRemaining = iCount;
 	while (countRemaining > 0)
 		{
@@ -296,7 +296,7 @@ void ZStreamR::ReadAll(void* oDest, size_t iCount, size_t* oCountRead) const
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<char*>(oDest);
+		*oCountRead = localDest - static_cast<char*>(oDest);
 	}
 
 /** \brief Read data from this stream and write it
@@ -782,7 +782,7 @@ will be thrown.
 */
 void ZStreamW::Write(const void* iSource, size_t iCount) const
 	{
-	const char* localSource = reinterpret_cast<const char*>(iSource);
+	const char* localSource = static_cast<const char*>(iSource);
 	size_t countRemaining = iCount;
 	while (countRemaining > 0)
 		{
@@ -807,13 +807,11 @@ void ZStreamW::Write(const void* iSource, size_t iCount) const
 responsibility to ensure that \c iSource to \c iSource + \c iCount are allocated and readable.
 \param iCount The number of bytes to write.
 \param oCountWritten (optional output) The number of bytes actually written. If iCount is
-non zero and oCountWritten is zero this indicates that the stream has reached its end.
+non zero and oCountWritten is smaller this indicates that the stream has reached its end.
 */
 void ZStreamW::Write(const void* iSource, size_t iCount, size_t* oCountWritten) const
 	{
-	if (oCountWritten)
-		*oCountWritten = 0;
-	const char* localSource = reinterpret_cast<const char*>(iSource);
+	const char* localSource = static_cast<const char*>(iSource);
 	size_t countRemaining = iCount;
 	while (countRemaining > 0)
 		{
@@ -824,9 +822,9 @@ void ZStreamW::Write(const void* iSource, size_t iCount, size_t* oCountWritten) 
 			break;
 		countRemaining -= countWritten;
 		localSource += countWritten;
-		if (oCountWritten)
-			*oCountWritten += countWritten;
 		}
+	if (oCountWritten)
+		*oCountWritten = localSource - static_cast<const char*>(iSource);
 	}
 
 
