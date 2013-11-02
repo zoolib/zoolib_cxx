@@ -113,7 +113,7 @@ ZTSS::Key sKey(ZAtomicPtr_t& ioStorage)
 	ZAssertCompile(sizeof(ZAtomicPtr_t) >= sizeof(ZTSS::Key));
 
 	if (not ZAtomicPtr_Get(&ioStorage))
-		sAtomicPtr_CAS(&ioStorage, 0, reinterpret_cast<void*>(ZTSS::sCreate()));
+		sAtomicPtr_CAS(&ioStorage, 0, (void*)(intptr_t)(ZTSS::sCreate()));
 	return static_cast<ZTSS::Key>(reinterpret_cast<intptr_t>(ZAtomicPtr_Get(&ioStorage)));
 	}
 
