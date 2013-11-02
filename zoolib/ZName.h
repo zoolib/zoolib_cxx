@@ -104,9 +104,9 @@ private:
 	bool fIsCounted;
 	};
 
-template <> struct RelopsTraits_HasEQ<ZName> { enum { Value = 1 }; };
+template <> struct RelopsTraits_HasEQ<ZName> : public RelopsTraits_Has {};
 
-template <> struct RelopsTraits_HasLT<ZName> { enum { Value = 1 }; };
+template <> struct RelopsTraits_HasLT<ZName> : public RelopsTraits_Has {};
 
 template <>
 inline
