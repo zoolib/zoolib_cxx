@@ -203,7 +203,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if __cplusplus>=201103L
 	#define ZCONFIG_CPP 2011
-#elif __cplusplus>=199711L
+#elif __cplusplus>=199711L && !defined(_MSC_VER)
 	#define ZCONFIG_CPP 2003
 #else
 	#define ZCONFIG_CPP 1998
@@ -332,31 +332,43 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_CPP >= 2011
 	// nullptr is naturally available
+	#define ZCONFIG_Has_nullptr 1
 
-#elif defined(__clang_major__) && __has_extension(cxx_nullptr)
-	// nullptr is naturally available
-
-#elif defined(__MWERKS__)
-
-	class nullptr_t
-		{
-		void operator&() const;
-	public:
-		template <class T> operator T*() const { return 0; }
-		};
-	#define nullptr nullptr_t()
-
-#else
-
-	const class nullptr_t
-		{
-		void operator&() const;
-	public:
-		template <class T> operator T*() const { return 0; }
-		template <class C, class T> operator T C::*() const { return 0; }
-		} nullptr = {};
+#elif defined(__clang_major__)
+	#if __has_extension(cxx_nullptr)
+		// nullptr is naturally available
+		#define ZCONFIG_Has_nullptr 1
+	#endif
 
 #endif
+
+#ifndef ZCONFIG_Has_nullptr
+
+	#if defined(__MWERKS__)
+
+		class nullptr_t
+			{
+			void operator&() const;
+		public:
+			template <class T> operator T*() const { return 0; }
+			};
+		#define nullptr nullptr_t()
+
+	#else
+
+		const class nullptr_t
+			{
+			void operator&() const;
+		public:
+			template <class T> operator T*() const { return 0; }
+			template <class C, class T> operator T C::*() const { return 0; }
+			} nullptr = {};
+
+	#endif
+
+	#define ZCONFIG_Has_nullptr 1
+
+#endif // ZCONFIG_Has_nullptr
 
 // =================================================================================================
 
