@@ -274,10 +274,10 @@ public:
 	};
 
 template <class Map_p, class Seq_p>
-struct RelopsTraits_HasEQ<ZVal_T<Map_p,Seq_p> > { enum { Value = 1 }; };
+struct RelopsTraits_HasEQ<ZVal_T<Map_p,Seq_p> > : public RelopsTraits_Has {};
 
 template <class Map_p, class Seq_p>
-struct RelopsTraits_HasLT<ZVal_T<Map_p,Seq_p> > { enum { Value = 1 }; };
+struct RelopsTraits_HasLT<ZVal_T<Map_p,Seq_p> > : public RelopsTraits_Has {};
 
 } // namespace ZooLib
 

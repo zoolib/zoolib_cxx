@@ -29,71 +29,74 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - RelopsTraits
 
-template <class S> struct RelopsTraits_HasEQ { enum { Value = 0 }; };
-template <class S> struct RelopsTraits_HasNE { enum { Value = 0 }; };
-template <class S> struct RelopsTraits_HasLT { enum { Value = 0 }; };
-template <class S> struct RelopsTraits_HasGT { enum { Value = 0 }; };
-template <class S> struct RelopsTraits_HasLE { enum { Value = 0 }; };
-template <class S> struct RelopsTraits_HasGE { enum { Value = 0 }; };
+struct RelopsTraits_Has
+	{ enum { Yes = 1, No = 0 }; };
+
+template <class S> struct RelopsTraits_HasEQ;// { enum { No = 1 }; };
+template <class S> struct RelopsTraits_HasNE;// { enum { No = 1 }; };
+template <class S> struct RelopsTraits_HasLT;// { enum { No = 1 }; };
+template <class S> struct RelopsTraits_HasGT;// { enum { No = 1 }; };
+template <class S> struct RelopsTraits_HasLE;// { enum { No = 1 }; };
+template <class S> struct RelopsTraits_HasGE;// { enum { No = 1 }; };
 
 // =================================================================================================
 // MARK: - Free relational operators, with conditionalized availability
 
 template <class T>
 typename EnableIfC
-	<not RelopsTraits_HasEQ<T>::Value
-	&& RelopsTraits_HasNE<T>::Value,bool>::type
+	<RelopsTraits_HasEQ<T>::No
+	&& RelopsTraits_HasNE<T>::Yes,bool>::type
 operator==(const T& l, const T& r)
 	{ return not (l != r); }
 
 template <class T>
 typename EnableIfC
-	<not RelopsTraits_HasEQ<T>::Value
-	&& not RelopsTraits_HasNE<T>::Value
-	&& RelopsTraits_HasLT<T>::Value,bool>::type
+	<RelopsTraits_HasEQ<T>::No
+	&& RelopsTraits_HasNE<T>::No
+	&& RelopsTraits_HasLT<T>::Yes,bool>::type
 operator==(const T& l, const T& r)
 	{ return not (l < r || r < l); }
 
 template <class T>
 typename EnableIfC
-	<not RelopsTraits_HasNE<T>::Value
-	&& RelopsTraits_HasEQ<T>::Value,bool>::type
+	<RelopsTraits_HasNE<T>::No
+	&& RelopsTraits_HasEQ<T>::Yes,bool>::type
 operator!=(const T& l, const T& r)
 	{ return not (l == r); }
 
 template <class T>
 typename EnableIfC
-	<not RelopsTraits_HasNE<T>::Value
-	&& not RelopsTraits_HasEQ<T>::Value
-	&& RelopsTraits_HasLT<T>::Value,bool>::type
+	<RelopsTraits_HasNE<T>::No
+	&& RelopsTraits_HasEQ<T>::No
+	&& RelopsTraits_HasLT<T>::Yes,bool>::type
 operator!=(const T& l, const T& r)
 	{ return l < r || r < l; }
 
 template <class T>
 typename EnableIfC
-	<not RelopsTraits_HasLT<T>::Value
-	&& RelopsTraits_HasGT<T>::Value,bool>::type
+	<RelopsTraits_HasLT<T>::No
+	&& RelopsTraits_HasGT<T>::Yes,bool>::type
 operator<(const T& l, const T& r)
 	{ return l > r; }
 
 template <class T>
 typename EnableIfC
-	<not RelopsTraits_HasGT<T>::Value
-	&& RelopsTraits_HasLT<T>::Value,bool>::type
+	<RelopsTraits_HasGT<T>::No
+	&& RelopsTraits_HasLT<T>::Yes,bool>::type
 operator>(const T& l, const T& r)
 	{ return r < l; }
 
 template <class T>
 typename EnableIfC
-	<not RelopsTraits_HasLE<T>::Value
-	&& RelopsTraits_HasLT<T>::Value,bool>::type
+	<RelopsTraits_HasLE<T>::No
+	&& RelopsTraits_HasLT<T>::Yes,bool>::type
 operator<=(const T& l, const T& r)
 	{ return not (r < l); }
 
 template <class T>
 typename EnableIfC
-	<not RelopsTraits_HasGE<T>::Value
-	&& RelopsTraits_HasLT<T>::Value,bool>::type
+	<RelopsTraits_HasGE<T>::No
+	&& RelopsTraits_HasLT<T>::Yes,bool>::type
 operator>=(const T& l, const T& r)
 	{ return not (l < r); }
 
