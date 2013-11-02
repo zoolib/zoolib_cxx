@@ -97,7 +97,7 @@ public:
 
 private:
 	WSADATA fWSADATA;
-	} sInitializeWinSock;
+	} spInitializeWinSock;
 
 } // anonymous namespace
 
@@ -509,6 +509,8 @@ bool ZNetEndpoint_TCP_WinSock::Imp_ReceiveDisconnect(double iTimeout)
 		if (result == 0)
 			{
 			// result is zero, indicating that the other end has sent FIN.
+			// 0 == SHUT_RD
+			::shutdown(fSOCKET, 0);
 			gotIt = true;
 			break;
 			}
@@ -542,16 +544,19 @@ void ZNetEndpoint_TCP_WinSock::Imp_SendDisconnect()
 	{
 	// Graceful close. See "Windows Sockets Network Programming"
 	// pp 231-232, Quinn, Shute. Addison Wesley. ISBN 0-201-63372-8
+	// 1 == SHUT_WR
 	::shutdown(fSOCKET, 1);
 	}
 
 void ZNetEndpoint_TCP_WinSock::Imp_Abort()
 	{
-	struct linger theLinger;
-	theLinger.l_onoff = 1;
-	theLinger.l_linger = 0;
-	::setsockopt(fSOCKET, SOL_SOCKET, SO_LINGER, (char*)&theLinger, sizeof(theLinger));
-	::shutdown(fSOCKET, 2);
+//	struct linger theLinger;
+//	theLinger.l_onoff = 1;
+//	theLinger.l_linger = 0;
+//	::setsockopt(fSOCKET, SOL_SOCKET, SO_LINGER, (char*)&theLinger, sizeof(theLinger));
+	// 2 == SHUT_RDWR
+//	::shutdown(fSOCKET, 2);
+	::closesocket(fSOCKET);
 	}
 
 } // namespace ZooLib

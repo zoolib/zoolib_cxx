@@ -398,6 +398,7 @@ bool ZNetEndpoint_Socket::Imp_ReceiveDisconnect(double iTimeout)
 		if (result == 0)
 			{
 			// result is zero, indicating that the other end has sent FIN.
+			::shutdown(fSocketFD, SHUT_RD);
 			return true;
 			}
 		else if (result < 0)
@@ -430,15 +431,11 @@ void ZNetEndpoint_Socket::Imp_SendDisconnect()
 
 void ZNetEndpoint_Socket::Imp_Abort()
 	{
-	// Cause a RST to be sent when we close(). See UNIX Network
-	// Programming, 2nd Ed, Stevens, page 423
+	// Cause a RST to be sent when we close().
+	// See UNIX Network Programming, 2nd Ed, Stevens, page 423
 
 	struct linger theLinger;
 	theLinger.l_onoff = 1;
-
-	// AG 2001-10-04. [Stevens] says that l_linger should be 0. The code previously set l_linger
-	// to be 1, I'm not sure if we found that to be correct in practice so I'm correcting it --
-	// if we experience problems, let me know.
 	theLinger.l_linger = 0;
 
 	::setsockopt(fSocketFD, SOL_SOCKET, SO_LINGER, (char*)&theLinger, sizeof(theLinger));
