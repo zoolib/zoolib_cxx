@@ -169,8 +169,7 @@ public:
 			{
 			const ColName& theColName = *iterRH;
 			if (fProjection.Contains(theColName))
-                sInsertMust(newRename, theColName, theColName); // sSet??
-//				sSet(newRename, theColName, theColName);
+				sQInsert(newRename, theColName, theColName);
 			}
 
 		if (fRestriction == sTrue())
@@ -369,9 +368,7 @@ public:
 } // anonymous namespace
 
 ZRef<ZRA::Expr_Rel> sTransform_Search(const ZRef<ZRA::Expr_Rel>& iExpr)
-	{
-	return Transform_Search().Do(iExpr);
-	}
+	{ return Transform_Search().Do(iExpr); }
 
 } // namespace ZQE
 } // namespace ZooLib

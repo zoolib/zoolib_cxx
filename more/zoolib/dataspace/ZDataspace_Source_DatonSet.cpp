@@ -280,7 +280,7 @@ void Source_DatonSet::ModifyRegistrations(
 			s << "\nDatonSet Raw:\n" << iAdded->GetRel();
 
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
-//##		theRel = ZQE::sTransform_Search(theRel);
+		theRel = ZQE::sTransform_Search(theRel);
 
 		if (ZLOGPF(s, eDebug + 1))
 			s << "\nDatonSet Cooked:\n" << theRel;
