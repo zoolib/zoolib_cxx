@@ -19,6 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZExpr_Bool_ValPred.h"
+#include "zoolib/ZLog.h"
+
 #include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
 #include "zoolib/zqe/ZQE_Walker_Calc.h"
 #include "zoolib/zqe/ZQE_Walker_Const.h"
@@ -38,7 +40,12 @@ namespace ZQE {
 // MARK: - Visitor_DoMakeWalker
 
 void Visitor_DoMakeWalker::Visit(const ZRef<ZVisitee>& iRep)
-	{ ZUnimplemented(); }
+	{
+	if (ZLOGPF(w, eDebug))
+		w << "Unimplemented for visitee: " << typeid(*iRep.Get()).name();
+
+	ZUnimplemented();
+	}
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
 	{
