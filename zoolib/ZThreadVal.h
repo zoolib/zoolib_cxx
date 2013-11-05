@@ -66,7 +66,7 @@ public:
 		return *this;
 		}
 
-	//--
+	// -----
 
 	static const Type_p* sPGet()
 		{

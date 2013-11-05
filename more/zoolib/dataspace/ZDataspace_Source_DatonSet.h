@@ -107,7 +107,7 @@ private:
 	class Visitor_DoMakeWalker;
 	friend class Visitor_DoMakeWalker;
 
-//--
+	// -----
 
 	class Walker_Concrete;
 	friend class Walker_Concrete;
@@ -125,20 +125,20 @@ private:
 		ZVal_Any* ioResults,
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
-//--
+	// -----
 
 	class Walker_Search;
 	friend class Walker_Search;
 
 	ZRef<ZQE::Walker> pMakeWalker_Search(PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel);
 
-//--
+	// -----
 
 	ZRef<ZDatonSet::DatonSet> fDatonSet;
 	ZRef<ZDatonSet::DatonSet> fDatonSet_Temp;
 	ZRef<Event> fEvent;
 
-//--
+	// -----
 
 	typedef std::map<ZDatonSet::Daton, std::pair<ZDatonSet::NamedEvent, ZVal_Any> > Map_Main;
 	Map_Main fMap;
@@ -147,7 +147,7 @@ private:
 	Map_Pending fMap_Pending;
 	std::vector<Map_Pending> fStack_Map_Pending;
 
-//--
+	// -----
 
 	class DLink_ClientQuery_InPQuery;
 	class DLink_ClientQuery_NeedsWork;
@@ -155,7 +155,7 @@ private:
 	std::map<int64, ClientQuery> fMap_Refcon_ClientQuery;
 	DListHead<DLink_ClientQuery_NeedsWork> fClientQuery_NeedsWork;
 
-//--
+	// -----
 
 	class DLink_PQuery_NeedsWork;
 	typedef std::map<ZRef<ZRA::Expr_Rel>, PQuery, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
@@ -164,7 +164,7 @@ private:
 
 	DListHead<DLink_PQuery_NeedsWork> fPQuery_NeedsWork;
 
-//--
+	// -----
 
 	class DLink_PSearch_NeedsWork;
 	class PSearch;

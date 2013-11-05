@@ -47,13 +47,13 @@ ZQ<double> sQDouble(const string& iString);
 double sDDouble(double iDefault, const string& iString);
 double sDouble(const string& iString);
 
-// --
+// -----
 
 int sComparei(const string& iLeft, const string& iRight);
 bool sEquali(const string& iLeft, const string& iRight);
 bool sContainsi(const string& iPattern, const string& iTarget);
 
-// --
+// -----
 
 ZQ<string> sQWithoutPrefix(const string& iPattern, const string& iTarget);
 ZQ<string> sQWithoutSuffix(const string& iPattern, const string& iTarget);
@@ -61,13 +61,13 @@ ZQ<string> sQWithoutSuffix(const string& iPattern, const string& iTarget);
 bool sStartsWith(const string& iPattern, const string& iTarget);
 bool sEndsWith(const string& iPattern, const string& iTarget);
 
-// --
+// -----
 
 string sFromPString(const unsigned char* iPString);
 void sToPString(const string& iString, unsigned char* oPString, size_t iMaxLength);
 void sToPString(const char* iString, unsigned char* oPString, size_t iMaxLength);
 
-// --
+// -----
 
 std::vector<string> sSplit(const string& iString, char iChar);
 
