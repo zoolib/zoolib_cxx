@@ -28,15 +28,15 @@ namespace ZooLib {
 // unnecessarily taint their callers with Unwind_SjLj_Register/Unwind_SjLj_Unregister calls,
 // which are a noticeable cost on iOS.
 
-void ZName::pRetain()
+void ZName::spRetain(const CountedString* iCounted)
 	{
-	try { sFetch_T<ZRefCountedString>(&fIntPtr)->Retain(); }
+	try { const_cast<CountedString*>(iCounted)->Retain(); }
 	catch (...) {}
 	}
 
-void ZName::pRelease()
+void ZName::spRelease(const CountedString* iCounted)
 	{
-	try { sFetch_T<ZName::ZRefCountedString>(&fIntPtr)->Release(); }
+	try { const_cast<CountedString*>(iCounted)->Release(); }
 	catch (...) {}
 	}
 

@@ -39,78 +39,119 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-static
-const char* spAsCharStar(intptr_t iIntPtr, bool iIsCounted)
-	{
-	if (iIsCounted)
-		return sFetch_T<ZName::ZRefCountedString>(&iIntPtr)->Get()->Get().c_str();
-	return (const char*)(iIntPtr);
-	}
-
 ZName& ZName::operator=(const ZName& iOther)
 	{
-	if (fIsCounted)
+	if (CountedString* self = this->pGetIfCounted())
 		{
-		if (iOther.fIsCounted)
+		if (const CountedString* other = iOther.pGetIfCounted())
 			{
-			sAssignFromVoidStar_T<ZRefCountedString>(&fIntPtr, &iOther.fIntPtr);
+			spRetain(other);
 			}
 		else
 			{
-			sFetch_T<ZRefCountedString>(&fIntPtr)->Release();
-			fIntPtr = iOther.fIntPtr;
-			fIsCounted = false;
+			#if not ZCONFIG_Is64Bit
+				fIsCounted = false;
+			#endif
 			}
+		spRelease(self);
 		}
-	else if (iOther.fIsCounted)
+	else if (const CountedString* other = iOther.pGetIfCounted())
 		{
-		sCtorFromVoidStar_T<ZRefCountedString>(&fIntPtr, &iOther.fIntPtr);
-		fIsCounted = true;
+		spRetain(other);
+		#if not ZCONFIG_Is64Bit
+			fIsCounted = true;
+		#endif
 		}
-	else
-		{	
-		fIntPtr = iOther.fIntPtr;
-		}
+	fIntPtr = iOther.fIntPtr;
 	return *this;
 	}
 
 ZName::ZName(const string8& iString)
+#if ZCONFIG_Is64Bit
+	{
+	CountedString* theCountedString = new CountedString(iString);
+	spRetain(theCountedString);
+	fIntPtr = ((intptr_t)theCountedString) ^ 1ULL<<63;
+	}
+#else
 :	fIsCounted(true)
-	{ sCtor_T<ZRefCountedString>(&fIntPtr, sCountedVal(iString)); }
+	{
+	CountedString* theCountedString = new CountedString(iString);
+	spRetain(theCountedString);
+	fIntPtr = (intptr_t)theCountedString;
+	}
+#endif
 
 ZName::ZName(const ZRefCountedString& iCountedString)
 	{
-	if (iCountedString)
-		{
-		sCtor_T<ZRefCountedString>(&fIntPtr, iCountedString);
-		fIsCounted = true;
-		}
-	else
-		{
-		fIntPtr = 0;
-		fIsCounted = false;
-		}
+	CountedString* theCountedString = iCountedString.Get();
+	#if ZCONFIG_Is64Bit
+		if (theCountedString)
+			{
+			spRetain(theCountedString);
+			fIntPtr = ((intptr_t)theCountedString) ^ 1ULL<<63;
+			}
+		else
+			{
+			fIntPtr = 0;
+			}
+	#else
+		if (theCountedString)
+			{
+			spRetain(theCountedString);
+			fIntPtr = (intptr_t)theCountedString;
+			fIsCounted = true;
+			}
+		else
+			{
+			fIntPtr = 0;
+			fIsCounted = false;
+			}
+	#endif
 	}
 
 ZName::operator string8() const
 	{
-	if (fIsCounted)
-		return sFetch_T<ZName::ZRefCountedString>(&fIntPtr)->Get()->Get();
-	else if (fIntPtr)
+	#if ZCONFIG_Is64Bit
+		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))
+			return ((const CountedString*)(fIntPtr ^ 1ULL<<63))->Get();
+	#else
+		if (fIsCounted)
+			return ((const CountedString*)fIntPtr)->Get();
+	#endif
+
+	if (fIntPtr)
 		return (const char*)(fIntPtr);
+
 	return sDefault<string8>();
+	}
+
+ZName::operator ZRefCountedString() const
+	{
+	#if ZCONFIG_Is64Bit
+		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))
+			return (CountedString*)(fIntPtr ^ 1ULL<<63);
+	#else
+		if (fIsCounted)
+			return (CountedString*)fIntPtr;
+	#endif
+
+	if (fIntPtr)
+		return new CountedString((const char*)fIntPtr);
+
+	return null;
 	}
 
 int ZName::Compare(const ZName& iOther) const
 	{
-	if (const char* lhs = spAsCharStar(fIntPtr, fIsCounted))
+	if (const char* lhs = this->pAsCharStar())
 		{
-		if (const char* rhs = spAsCharStar(iOther.fIntPtr, iOther.fIsCounted))
+		if (const char* rhs = iOther.pAsCharStar())
 			return std::strcmp(lhs, rhs);
 		else
 			return 1;
 		}
-	else if (spAsCharStar(iOther.fIntPtr, iOther.fIsCounted))
+	else if (iOther.pAsCharStar())
 		{
 		return -1;
 		}
@@ -122,24 +163,35 @@ int ZName::Compare(const ZName& iOther) const
 
 bool ZName::IsEmpty() const
 	{
-	if (fIsCounted)
-		return sFetch_T<ZRefCountedString>(&fIntPtr)->Get()->Get().empty();
-	else if (fIntPtr)
+	#if ZCONFIG_Is64Bit
+		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))
+			return ((const CountedString*)(fIntPtr ^ 1ULL<<63))->Get().empty();
+	#else
+		if (fIsCounted)
+			return ((const CountedString*)(fIntPtr))->Get().empty();
+	#endif
+
+	if (fIntPtr)
 		return not ((const char*)(fIntPtr))[0];
+
 	return true;
 	}
 
 void ZName::Clear()
 	{
-	if (sGetSet(fIsCounted, false))
-		sFetch_T<ZRefCountedString>(&fIntPtr)->Release();
+	if (const CountedString* theCounted = this->pGetIfCounted())
+		spRelease(theCounted);
 	fIntPtr = 0;
+
+	#if not ZCONFIG_Is64Bit
+		fIsCounted = false;
+	#endif
 	}
 
 std::size_t ZName::Hash() const
 	{
 	size_t result = 0;
-	if (const char* i = spAsCharStar(fIntPtr, fIsCounted))
+	if (const char* i = this->pAsCharStar())
 		{
 		for (size_t xx = sizeof(size_t); --xx && *i; ++i)
 			{
@@ -149,5 +201,33 @@ std::size_t ZName::Hash() const
 		}
 	return result;
 	}
+
+const char* ZName::pAsCharStar() const
+	{
+	#if ZCONFIG_Is64Bit
+		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))
+			return ((const CountedString*)(fIntPtr ^ 1ULL<<63))->Get().c_str();
+	#else
+		if (fIsCounted)
+			return ((const CountedString*)(fIntPtr))->Get().c_str();
+	#endif
+	return (const char*)fIntPtr;
+	}
+
+const ZName::CountedString* ZName::pGetIfCounted() const
+	{ return const_cast<ZName*>(this)->pGetIfCounted(); }
+
+ZName::CountedString* ZName::pGetIfCounted()
+	{
+	#if ZCONFIG_Is64Bit
+		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))
+			return (CountedString*)(fIntPtr ^ 1ULL<<63);
+	#else
+		if (fIsCounted)
+			return (CountedString*)fIntPtr;
+	#endif
+	return nullptr;
+	}
+
 
 } // namespace ZooLib

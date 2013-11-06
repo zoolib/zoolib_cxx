@@ -41,16 +41,20 @@ public:
 	inline
 	ZName()
 	:	fIntPtr(0)
+	#if not ZCONFIG_Is64Bit
 	,	fIsCounted(false)
+	#endif
 		{}
 
 	inline
 	ZName(const ZName& iOther)
 	:	fIntPtr(iOther.fIntPtr)
+	#if not ZCONFIG_Is64Bit
 	,	fIsCounted(iOther.fIsCounted)
+	#endif
 		{
-		if (fIsCounted)
-			this->pRetain();
+		if (CountedString* theCounted = this->pGetIfCounted())
+			spRetain(theCounted);
 		}
 
 	ZName& operator=(const ZName& iOther);
@@ -58,20 +62,22 @@ public:
 	inline
 	~ZName()
 		{
-		if (fIsCounted)
-			this->pRelease();
+		if (CountedString* theCounted = this->pGetIfCounted())
+			spRelease(theCounted);
 		}
 
-	inline
 	ZName(const char* iStatic)
 	:	fIntPtr(((intptr_t)iStatic))
+	#if not ZCONFIG_Is64Bit
 	,	fIsCounted(false)
+	#endif
 		{}
 
 	ZName(const string8& iString);
 	ZName(const ZRefCountedString& iCountedString);
 	
 	operator string8() const;
+	operator ZRefCountedString() const;
 
 	inline
 	bool operator<(const ZName& iOther) const
@@ -83,10 +89,6 @@ public:
 
 	int Compare(const ZName& iOther) const;
 
-	inline
-	bool IsNull() const
-		{ return not fIsCounted && not fIntPtr; }
-
 	bool IsEmpty() const;
 
 	void Clear();
@@ -94,14 +96,21 @@ public:
 	std::size_t Hash() const;
 
 private:
-	ZMACRO_Attribute_NoThrow
-	void pRetain();
+	CountedString* pGetIfCounted();
+	const CountedString* pGetIfCounted() const;
+
+	const char* pAsCharStar() const;
 
 	ZMACRO_Attribute_NoThrow
-	void pRelease();
+	static void spRetain(const CountedString* iCounted);
+
+	ZMACRO_Attribute_NoThrow
+	static void spRelease(const CountedString* iCounted);
 
 	intptr_t fIntPtr;
-	bool fIsCounted;
+	#if not ZCONFIG_Is64Bit
+		bool fIsCounted;
+	#endif
 	};
 
 template <> struct RelopsTraits_HasEQ<ZName> : public RelopsTraits_Has {};
