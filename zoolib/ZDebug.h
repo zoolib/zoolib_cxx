@@ -88,12 +88,12 @@ std::size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iPa
 
 #ifndef ZDebugStop
 	#define ZDebugStop(level) \
-		ZMACRO_Debug(level, true, ZMACRO_FileFunctionLine, 0);
+		ZMACRO_Debug(level, true, ZMACRO_FileFunctionLine, 0)
 #endif
 
 #ifndef ZDebugStopf
 	#define ZDebugStopf(level, ...) \
-		ZMACRO_Debug(level, true, ZMACRO_FileFunctionLine, __VA_ARGS__);
+		ZMACRO_Debug(level, true, ZMACRO_FileFunctionLine, __VA_ARGS__)
 #endif
 
 #ifndef ZAssertLog
@@ -108,12 +108,12 @@ std::size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iPa
 
 #ifndef ZAssertStop
 	#define ZAssertStop(level, condition) \
-		ZMACRO_Assert(level, true, condition, ZMACRO_FileFunctionLine, 0);
+		ZMACRO_Assert(level, true, condition, ZMACRO_FileFunctionLine, 0)
 #endif
 
 #ifndef ZAssertStopf
 	#define ZAssertStopf(level, condition, ...) \
-		ZMACRO_Assert(level, true, condition, ZMACRO_FileFunctionLine, __VA_ARGS__);
+		ZMACRO_Assert(level, true, condition, ZMACRO_FileFunctionLine, __VA_ARGS__)
 #endif
 
 // ZAssertCompile can be used to enforce a constraint at compile time, (for example that a
