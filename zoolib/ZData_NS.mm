@@ -30,9 +30,6 @@ using ZUtil_NS::sDataMutable;
 // =================================================================================================
 // MARK: - ZData_NS
 
-ZAny ZData_NS::AsAny() const
-	{ return ZUtil_NS::sAsAny(this->pData()); }
-
 ZData_NS::ZData_NS()
 :	inherited(sDataMutable())
 	{}

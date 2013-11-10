@@ -60,9 +60,6 @@ ZData_Any::Rep::Rep(const vector<char>& iVector)
 // =================================================================================================
 // MARK: - ZData_Any
 
-ZAny ZData_Any::AsAny() const
-	{ return ZAny(*this); }
-
 ZData_Any::ZData_Any()
 :	fRep(new Rep)
 	{}

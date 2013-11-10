@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAny.h"
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZRef.h"
+#include "zoolib/ZUtil_Relops.h"
 
 namespace ZooLib {
 
@@ -36,8 +37,6 @@ class ZData_Any
 	class Rep;
 
 public:
-	ZAny AsAny() const;
-
 	ZData_Any();
 	ZData_Any(const ZData_Any& iOther);
 	~ZData_Any();
@@ -67,6 +66,9 @@ private:
 
 	ZRef<Rep> fRep;
 	};
+
+template <> struct RelopsTraits_HasEQ<ZData_Any> : public RelopsTraits_Has {};
+template <> struct RelopsTraits_HasLT<ZData_Any> : public RelopsTraits_Has {};
 
 template <> inline int sCompare_T(const ZData_Any& iL, const ZData_Any& iR)
 	{ return iL.Compare(iR); }

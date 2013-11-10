@@ -41,9 +41,8 @@ class ZData_NS
 	typedef ZRef<NSData> inherited;
 
 	class Rep;
-public:
-	ZAny AsAny() const;
 
+public:
 	ZData_NS();
 	ZData_NS(const ZData_NS& iOther);
 	~ZData_NS();

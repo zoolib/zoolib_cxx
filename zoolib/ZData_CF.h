@@ -39,9 +39,8 @@ class ZData_CF
 	typedef ZRef<CFDataRef> inherited;
 
 	class Rep;
-public:
-	ZAny AsAny() const;
 
+public:
 	ZData_CF();
 	ZData_CF(const ZData_CF& iOther);
 	~ZData_CF();

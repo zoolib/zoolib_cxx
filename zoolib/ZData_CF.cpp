@@ -34,9 +34,6 @@ using ZUtil_CF::sDataMutable;
 // =================================================================================================
 // MARK: - ZData_CF
 
-ZAny ZData_CF::AsAny() const
-	{ return ZUtil_CF::sAsAny(this->pData()); }
-
 ZData_CF::ZData_CF()
 :	inherited(sDataMutable())
 	{}
