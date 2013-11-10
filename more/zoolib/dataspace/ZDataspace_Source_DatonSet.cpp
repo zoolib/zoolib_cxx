@@ -734,6 +734,9 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const R
 ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
 	PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel)
 	{
+	// This is where we would be able to take advantage of indices. For the moment
+	// just do it the dumb way.
+
 	const ZRA::Rename& theRename = iRel->GetRename();
 	ZRA::RelHead theRelHead;
 	for (ZRA::Rename::const_iterator ii = theRename.begin(); ii != theRename.end(); ++ii)
@@ -785,8 +788,8 @@ void Source_DatonSet::pPrime_Concrete(ZRef<Walker_Concrete> iWalker,
 	iWalker->fCurrent_Main = fMap.begin();
 	iWalker->fCurrent_Pending = fMap_Pending.begin();
 	iWalker->fBaseOffset = ioBaseOffset;
-	for (size_t x = 0; x < iWalker->fNames.size(); ++x)
-		oOffsets[iWalker->fNames[x]] = ioBaseOffset++;
+	for (size_t xx = 0; xx < iWalker->fNames.size(); ++xx)
+		oOffsets[iWalker->fNames[xx]] = ioBaseOffset++;
 	}
 
 bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
@@ -810,11 +813,11 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 				bool gotAll = true;
 				vector<ZVal_Any> subset;
 				subset.reserve(theCount);
-				for (size_t x = 0; x < theCount; ++x)
+				for (size_t xx = 0; xx < theCount; ++xx)
 					{
-					if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[x]))
+					if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[xx]))
 						{
-						ioResults[iWalker->fBaseOffset + x] = *theVal;
+						ioResults[iWalker->fBaseOffset + xx] = *theVal;
 						subset.push_back(*theVal);
 						}
 					else
@@ -849,11 +852,11 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 				vector<ZVal_Any> subset;
 				subset.reserve(theCount);
 				bool gotAll = true;
-				for (size_t x = 0; x < theCount; ++x)
+				for (size_t xx = 0; xx < theCount; ++xx)
 					{
-					if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[x]))
+					if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[xx]))
 						{
-						ioResults[iWalker->fBaseOffset + x] = *theVal;
+						ioResults[iWalker->fBaseOffset + xx] = *theVal;
 						subset.push_back(*theVal);
 						}
 					else

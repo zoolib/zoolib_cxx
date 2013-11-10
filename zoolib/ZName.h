@@ -36,7 +36,7 @@ class ZName
 	{
 public:
 	typedef ZCountedVal<string8> CountedString;
-	typedef ZRef<CountedString> ZRefCountedString;
+	typedef ZRef<CountedString> RefCountedString;
 
 	inline
 	ZName()
@@ -74,10 +74,10 @@ public:
 		{}
 
 	ZName(const string8& iString);
-	ZName(const ZRefCountedString& iCountedString);
+	ZName(const RefCountedString& iRefCountedString);
 	
 	operator string8() const;
-	operator ZRefCountedString() const;
+	operator RefCountedString() const;
 
 	inline
 	bool operator<(const ZName& iOther) const
@@ -114,7 +114,6 @@ private:
 	};
 
 template <> struct RelopsTraits_HasEQ<ZName> : public RelopsTraits_Has {};
-
 template <> struct RelopsTraits_HasLT<ZName> : public RelopsTraits_Has {};
 
 template <>

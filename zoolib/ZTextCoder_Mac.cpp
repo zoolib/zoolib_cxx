@@ -174,8 +174,8 @@ bool ZTextDecoder_Mac::Decode(
 				// This is thread safe, even if two threads execute this at the same time
 				// the end result will be the same -- an array of kBufSize elements containing
 				// values from 0 to kBufSize - 1, and spInitedSourceOffsets being true.
-				for (size_t x = 0; x < kBufSize; ++x)
-					spSourceOffsets[x] = x;
+				for (size_t xx = 0; xx < kBufSize; ++xx)
+					spSourceOffsets[xx] = xx;
 				spInitedSourceOffsets = true;
 				}
 			size_t countToConvert = min(iSourceBytes, kBufSize);

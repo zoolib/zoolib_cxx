@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare_string.h" // For FastComparator_String
 #include "zoolib/ZName.h"
 #include "zoolib/ZSafePtrStack.h"
+#include "zoolib/ZUtil_Relops.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZVal_T.h"
 
@@ -158,6 +159,9 @@ private:
 
 	ZRef<Rep> fRep;
 	};
+
+template <> struct RelopsTraits_HasEQ<ZSeq_Any> : public RelopsTraits_Has {};
+template <> struct RelopsTraits_HasLT<ZSeq_Any> : public RelopsTraits_Has {};
 
 // =================================================================================================
 // MARK: - ZSeq_Any::Rep
@@ -383,6 +387,9 @@ private:
 
 	ZRef<Rep> fRep;
 	};
+
+template <> struct RelopsTraits_HasEQ<ZMap_Any> : public RelopsTraits_Has {};
+template <> struct RelopsTraits_HasLT<ZMap_Any> : public RelopsTraits_Has {};
 
 ZMap_Any operator*(const ZNameVal& iNV0, const ZNameVal& iNV1);
 

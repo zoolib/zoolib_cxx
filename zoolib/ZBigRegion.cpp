@@ -288,9 +288,9 @@ bool ZBigRegion::Contains(const ZPointPOD& iPoint) const
 
 	// Simple check -- later we can do a binary chop, or even just bail when the top
 	// of the current rectangle is >= thePoint.v
-	for (size_t x = 0; x < fNumRects; ++x)
+	for (size_t xx = 0; xx < fNumRects; ++xx)
 		{
-		if (sContains(fRects[x], iPoint))
+		if (sContains(fRects[xx], iPoint))
 			return true;
 		}
 
@@ -307,9 +307,9 @@ bool ZBigRegion::Contains(int32 iH, int32 iV) const
 
 	// Simple check -- later we can do a binary chop, or even just bail when the top
 	// of the current rectangle is >= thePoint.v
-	for (size_t x = 0; x < fNumRects; ++x)
+	for (size_t xx = 0; xx < fNumRects; ++xx)
 		{
-		if (sContains(fRects[x], iH, iV))
+		if (sContains(fRects[xx], iH, iV))
 			return true;
 		}
 
@@ -338,17 +338,17 @@ void ZBigRegion::Decompose(vector<ZRectPOD >& oRects) const
 	{
 	oRects.empty();
 	oRects.reserve(fNumRects);
-	for (size_t x = 0; x < fNumRects; ++x)
-		oRects.push_back(fRects[x]);
+	for (size_t xx = 0; xx < fNumRects; ++xx)
+		oRects.push_back(fRects[xx]);
 	}
 
 int32 ZBigRegion::Decompose(DecomposeProc iProc, void* iRefcon) const
 	{
 	int32 callbacksMade = 0;
-	for (size_t x = 0; x < fNumRects; ++x)
+	for (size_t xx = 0; xx < fNumRects; ++xx)
 		{
 		++callbacksMade;
-		if (iProc(fRects[x], iRefcon))
+		if (iProc(fRects[xx], iRefcon))
 			break;
 		}
 	return callbacksMade;
@@ -364,9 +364,9 @@ bool ZBigRegion::operator==(const ZBigRegion& iOther) const
 		return false;
 	else
 		{
-		for (size_t x = 0; x < fNumRects; ++x)
+		for (size_t xx = 0; xx < fNumRects; ++xx)
 			{
-			if (fRects[x] != iOther.fRects[x])
+			if (fRects[xx] != iOther.fRects[xx])
 				return false;
 			}
 		}
@@ -376,8 +376,8 @@ bool ZBigRegion::operator==(const ZBigRegion& iOther) const
 ZBigRegion& ZBigRegion::operator+=(const ZPointPOD& iOffset)
 	{
 	fExtent += iOffset;
-	for (size_t x = 0; x < fNumRects; ++x)
-		fRects[x] += iOffset;
+	for (size_t xx = 0; xx < fNumRects; ++xx)
+		fRects[xx] += iOffset;
 	return *this;
 	}
 

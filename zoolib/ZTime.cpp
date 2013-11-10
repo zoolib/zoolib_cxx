@@ -72,11 +72,11 @@ ZTime::ZTime()
 ZTime::operator operator_bool() const
 	{ return operator_bool_gen::translate(!isnan(fVal)); }
 
-bool ZTime::operator<(const ZTime& iOther) const
-	{ return sCompare_T(fVal, iOther.fVal) < 0; }
-
 bool ZTime::operator==(const ZTime& iOther) const
 	{ return sCompare_T(fVal, iOther.fVal) == 0; }
+
+bool ZTime::operator<(const ZTime& iOther) const
+	{ return sCompare_T(fVal, iOther.fVal) < 0; }
 
 int ZTime::Compare(const ZTime& iOther) const
 	{ return sCompare_T(fVal, iOther.fVal); }

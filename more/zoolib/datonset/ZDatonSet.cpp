@@ -212,8 +212,8 @@ void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed)
 
 	priority_queue<TSIndex_t, vector<TSIndex_t>, CompareTSReverse> queue;
 
-	for (size_t x = 0; x < theIters.size(); ++x)
-		queue.push(TSIndex_t(theIters[x]->first, x));
+	for (size_t xx = 0; xx < theIters.size(); ++xx)
+		queue.push(TSIndex_t(theIters[xx]->first, xx));
 
 	while (not queue.empty())
 		{
@@ -341,10 +341,10 @@ void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Event>& oEvent, ZRef<Deltas>& 
 		{
 		const Map_NamedEvent_Delta_t& theMap = current->GetDeltas()->GetMap();
 		for (Map_NamedEvent_Delta_t::const_iterator
-			i = theMap.lower_bound(neLower), theEnd = theMap.end(); i != theEnd; ++i)
+			ii = theMap.lower_bound(neLower), theEnd = theMap.end(); ii != theEnd; ++ii)
 			{
-			if (not i->first.GetEvent()->IsBefore(iEvent))
-				resultMap.insert(*i);
+			if (not ii->first.GetEvent()->IsBefore(iEvent))
+				resultMap.insert(*ii);
 			}
 		}
 

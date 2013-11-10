@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZStdInt.h"
+#include "zoolib/ZUtil_Relops.h"
 
 namespace ZooLib {
 
@@ -48,21 +49,9 @@ public:
 
 	ZMACRO_operator_bool(ZTime, operator_bool) const;
 
-	bool operator<(const ZTime& iOther) const;
-
-	bool operator<=(const ZTime& iOther) const
-		{ return !(iOther < *this); }
-
-	bool operator>(const ZTime& iOther) const
-		{ return iOther < *this; }
-
-	bool operator>=(const ZTime& iOther) const
-		{ return !(*this < iOther); }
-
 	bool operator==(const ZTime& iOther) const;
 
-	bool operator!=(const ZTime& iOther) const
-		{ return !(*this == iOther); }
+	bool operator<(const ZTime& iOther) const;
 
 	int Compare(const ZTime& iOther) const;
 
@@ -115,6 +104,9 @@ public:
 
 inline ZTime operator+(double iInterval, const ZTime& iTime)
 	{ return iTime + iInterval; }
+
+template <> struct RelopsTraits_HasEQ<ZTime> : public RelopsTraits_Has {};
+template <> struct RelopsTraits_HasLT<ZTime> : public RelopsTraits_Has {};
 
 template <>
 inline int sCompare_T(const ZTime& iL, const ZTime& iR)

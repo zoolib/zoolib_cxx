@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTagVal_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZUtil_Relops.h"
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -93,24 +95,18 @@ public:
 	bool operator==(const ZTagVal& iOther) const
 		{ return fVal == iOther.fVal; }
 
-	bool operator!=(const ZTagVal& iOther) const
-		{ return not (fVal == iOther.fVal); }
-
 	bool operator<(const ZTagVal& iOther) const
 		{ return fVal < iOther.fVal; }
-
-	bool operator>(const ZTagVal& iOther) const
-		{ return iOther.fVal < fVal; }
-
-	bool operator<=(const ZTagVal& iOther) const
-		{ return not (iOther.fVal < fVal) ; }
-
-	bool operator>=(const ZTagVal& iOther) const
-		{ return not (fVal < iOther.fVal) ; }
 
 protected:
 	Type_p fVal;
 	};
+
+template <class Type_p, class Tag_p>
+struct RelopsTraits_HasEQ<ZTagVal<Type_p,Tag_p> > : public RelopsTraits_Has {};
+
+template <class Type_p, class Tag_p>
+struct RelopsTraits_HasLT<ZTagVal<Type_p,Tag_p> > : public RelopsTraits_Has {};
 
 // =================================================================================================
 // MARK: - Accessors

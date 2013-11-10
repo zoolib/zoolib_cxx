@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZName.h"
 #include "zoolib/ZUnicodeString.h"
+#include "zoolib/ZUtil_Relops.h"
 
 #include <vector>
 
@@ -115,6 +116,9 @@ private:
 	};
 
 ZTrail operator+(const string8& iPOSIXTrail, const ZTrail& iTrail);
+
+template <> struct RelopsTraits_HasEQ<ZTrail> : public RelopsTraits_Has {};
+template <> struct RelopsTraits_HasLT<ZTrail> : public RelopsTraits_Has {};
 
 template <class Comp>
 void sNormalize_KeepLeadingBounces(

@@ -32,12 +32,12 @@ namespace ZooLib {
 struct RelopsTraits_Has
 	{ enum { Yes = 1, No = 0 }; };
 
-template <class S> struct RelopsTraits_HasEQ;// { enum { No = 1 }; };
-template <class S> struct RelopsTraits_HasNE;// { enum { No = 1 }; };
-template <class S> struct RelopsTraits_HasLT;// { enum { No = 1 }; };
-template <class S> struct RelopsTraits_HasGT;// { enum { No = 1 }; };
-template <class S> struct RelopsTraits_HasLE;// { enum { No = 1 }; };
-template <class S> struct RelopsTraits_HasGE;// { enum { No = 1 }; };
+template <class S> struct RelopsTraits_HasEQ { enum { No = 1 }; };
+template <class S> struct RelopsTraits_HasNE { enum { No = 1 }; };
+template <class S> struct RelopsTraits_HasLT { enum { No = 1 }; };
+template <class S> struct RelopsTraits_HasGT { enum { No = 1 }; };
+template <class S> struct RelopsTraits_HasLE { enum { No = 1 }; };
+template <class S> struct RelopsTraits_HasGE { enum { No = 1 }; };
 
 // =================================================================================================
 // MARK: - Free relational operators, with conditionalized availability

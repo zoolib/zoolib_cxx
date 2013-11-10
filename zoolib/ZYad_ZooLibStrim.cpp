@@ -725,7 +725,7 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 			else
 				{
 				string eol = iOptions.fEOLString;
-				for (size_t x = 0; x < iLevel; ++x)
+				for (size_t xx = 0; xx < iLevel; ++xx)
 					eol += iOptions.fIndentString;
 
 				ZStreamW_HexStrim(iOptions.fRawByteSeparator,

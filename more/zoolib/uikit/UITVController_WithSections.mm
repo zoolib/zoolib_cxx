@@ -52,9 +52,9 @@ NSArray* sMakeNSIndexPathArray(size_t iSectionIndex, size_t iBaseRowIndex, size_
 	NSUInteger theIndices[2];
 	theIndices[0] = iSectionIndex;
 	NSMutableArray* theArray = [NSMutableArray arrayWithCapacity:iCount];
-	for (size_t x = 0; x < iCount; ++x)
+	for (size_t xx = 0; xx < iCount; ++xx)
 		{
-		theIndices[1] = iBaseRowIndex + x;
+		theIndices[1] = iBaseRowIndex + xx;
 		[theArray addObject:[NSIndexPath indexPathWithIndexes:&theIndices[0] length:2]];
 		}
 	return theArray;
@@ -954,30 +954,30 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 - (void)tableViewWillAppear:(UITableView*)tableView
 	{
 	[tableView deselect];
-	for (size_t x = 0; x < fSections_All.size(); ++x)
-		fSections_All[x]->GetBody()->ViewWillAppear(tableView);
+	for (size_t xx = 0; xx < fSections_All.size(); ++xx)
+		fSections_All[xx]->GetBody()->ViewWillAppear(tableView);
 	}
 
 - (void)tableViewDidAppear:(UITableView*)tableView
 	{
 	fShown = true;
 	[tableView flashScrollIndicators];
-	for (size_t x = 0; x < fSections_All.size(); ++x)
-		fSections_All[x]->GetBody()->ViewDidAppear(tableView);
+	for (size_t xx = 0; xx < fSections_All.size(); ++xx)
+		fSections_All[xx]->GetBody()->ViewDidAppear(tableView);
 	}
 
 - (void)tableViewWillDisappear:(UITableView*)tableView
 	{
 	fShown = false;
-	for (size_t x = 0; x < fSections_All.size(); ++x)
-		fSections_All[x]->GetBody()->ViewWillDisappear(tableView);
+	for (size_t xx = 0; xx < fSections_All.size(); ++xx)
+		fSections_All[xx]->GetBody()->ViewWillDisappear(tableView);
 	}
 
 - (void)tableViewDidDisappear:(UITableView*)tableView
 	{
 	[tableView deselect];
-	for (size_t x = 0; x < fSections_All.size(); ++x)
-		fSections_All[x]->GetBody()->ViewDidDisappear(tableView);
+	for (size_t xx = 0; xx < fSections_All.size(); ++xx)
+		fSections_All[xx]->GetBody()->ViewDidDisappear(tableView);
 	}
 
 - (void)changeTouchState:(BOOL)touchState forTableView:(UITableView*)tableView
@@ -1033,9 +1033,9 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 
 	size_t countInSection = 0;
 	int priorSection = -1;
-	for (size_t x = 0, count = [paths count]; x < count; ++x)
+	for (size_t xx = 0, count = [paths count]; xx < count; ++xx)
 		{
-		NSIndexPath* thePath = [paths objectAtIndex:x];
+		NSIndexPath* thePath = [paths objectAtIndex:xx];
 		UITableViewCell* cell = [tableView cellForRowAtIndexPath:thePath];
 		if ([cell respondsToSelector:@selector(setPosition:)])
 			{
@@ -1057,14 +1057,14 @@ static void spInsertSections(UITableView* iTableView,
 	set<ZRef<Section> >& ioSections_ToIgnore
 	)
 	{
-	for (size_t x = 0; x < iCount; ++x)
+	for (size_t xx = 0; xx < iCount; ++xx)
 		{
-		ZRef<Section> theSection = iSections[x];
+		ZRef<Section> theSection = iSections[xx];
 		theSection->GetBody()->Update_NOP();
 		theSection->GetBody()->FinishUpdate();
 		ioSections_ToIgnore.insert(theSection);
 		[iTableView
-			insertSections:sMakeIndexSet(iBaseIndex + x)
+			insertSections:sMakeIndexSet(iBaseIndex + xx)
 			withRowAnimation:theSection->SectionAnimation_Insert()];
 		}
 	}
@@ -1080,9 +1080,9 @@ static void spInsertSections(UITableView* iTableView,
 
 	fSections_ToIgnore.clear();
 	fSections_Shown_Pending.clear();
-	for (size_t x = 0; x < fSections_All.size(); ++x)
+	for (size_t xx = 0; xx < fSections_All.size(); ++xx)
 		{
-		ZRef<Section> theSection = fSections_All[x];
+		ZRef<Section> theSection = fSections_All[xx];
 		theSection->GetBody()->PreUpdate();
 		if (not theSection->HideWhenEmpty() || not theSection->GetBody()->WillBeEmpty())
 			fSections_Shown_Pending.push_back(theSection);
@@ -1095,9 +1095,9 @@ static void spInsertSections(UITableView* iTableView,
 		{
 		// We're not onscreen, so we can Update/Finish all sections, switch
 		// to the new list of sections, reloadData, check for pending updates and return.
-		for (size_t x = 0; x < fSections_All.size(); ++x)
+		for (size_t xx = 0; xx < fSections_All.size(); ++xx)
 			{
-			ZRef<Section> theSection = fSections_All[x];
+			ZRef<Section> theSection = fSections_All[xx];
 			theSection->GetBody()->Update_NOP();
 			theSection->GetBody()->FinishUpdate();
 			}
@@ -1184,19 +1184,19 @@ static void spInsertSections(UITableView* iTableView,
 	std::vector<std::map<size_t, UITableViewRowAnimation> > theReloads(fSections_Shown.size());
 
 	bool anyChanges = false;
-	for (size_t x = 0; x < fSections_Shown.size(); ++x)
+	for (size_t xx = 0; xx < fSections_Shown.size(); ++xx)
 		{
-		if (not ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[x]))
+		if (not ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[xx]))
 			{
 			SectionBody::RowMeta theRowMeta_Old;
 			SectionBody::RowMeta theRowMeta_New;
-			SectionBody::RowUpdate theRowUpdate_Insert(theRowMeta_New, theInserts[x]);
-			SectionBody::RowUpdate theRowUpdate_Delete(theRowMeta_Old, theDeletes[x]);
-			SectionBody::RowUpdate theRowUpdate_Reload(theRowMeta_Old, theReloads[x]);
-			fSections_Shown[x]->GetBody()->Update_Normal(theRowMeta_Old, theRowMeta_New,
+			SectionBody::RowUpdate theRowUpdate_Insert(theRowMeta_New, theInserts[xx]);
+			SectionBody::RowUpdate theRowUpdate_Delete(theRowMeta_Old, theDeletes[xx]);
+			SectionBody::RowUpdate theRowUpdate_Reload(theRowMeta_Old, theReloads[xx]);
+			fSections_Shown[xx]->GetBody()->Update_Normal(theRowMeta_Old, theRowMeta_New,
 				theRowUpdate_Insert, theRowUpdate_Delete, theRowUpdate_Reload);
 
-			if (theDeletes[x].size() || theInserts[x].size() || theReloads[x].size())
+			if (theDeletes[xx].size() || theInserts[xx].size() || theReloads[xx].size())
 				anyChanges = true;
 			}
 		}
@@ -1210,44 +1210,44 @@ static void spInsertSections(UITableView* iTableView,
 
 		[tableView beginUpdates];
 
-		for (size_t x = 0; x < theReloads.size(); ++x)
+		for (size_t xx = 0; xx < theReloads.size(); ++xx)
 			{
-			map<size_t, UITableViewRowAnimation>& theMap = theReloads[x];
+			map<size_t, UITableViewRowAnimation>& theMap = theReloads[xx];
 			foreachi (ii, theMap)
 				{
 				UITableViewRowAnimation theAnimation = UITableViewRowAnimationNone;
 				if (fShown)
 					theAnimation = ii->second;
 				[tableView
-					reloadRowsAtIndexPaths:sMakeNSIndexPathArray(x, ii->first, 1)
+					reloadRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
 					withRowAnimation:theAnimation];
 				}
 			}
 
-		for (size_t x = 0; x < theDeletes.size(); ++x)
+		for (size_t xx = 0; xx < theDeletes.size(); ++xx)
 			{
-			map<size_t, UITableViewRowAnimation>& theMap = theDeletes[x];
+			map<size_t, UITableViewRowAnimation>& theMap = theDeletes[xx];
 			foreachi (ii, theMap)
 				{
 				[tableView
-					deleteRowsAtIndexPaths:sMakeNSIndexPathArray(x, ii->first, 1)
+					deleteRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
 					withRowAnimation:isShown ? ii->second : UITableViewRowAnimationNone];
 				}
 			}
 
-		for (size_t x = 0; x < theInserts.size(); ++x)
+		for (size_t xx = 0; xx < theInserts.size(); ++xx)
 			{
-			map<size_t, UITableViewRowAnimation>& theMap = theInserts[x];
+			map<size_t, UITableViewRowAnimation>& theMap = theInserts[xx];
 			foreachi (ii, theMap)
 				{
 				[tableView
-					insertRowsAtIndexPaths:sMakeNSIndexPathArray(x, ii->first, 1)
+					insertRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
 					withRowAnimation:isShown ? ii->second : UITableViewRowAnimationNone];
 				}
 			}
 
-		for (size_t x = 0; x < fSections_All.size(); ++x)
-			fSections_All[x]->GetBody()->FinishUpdate();
+		for (size_t xx = 0; xx < fSections_All.size(); ++xx)
+			fSections_All[xx]->GetBody()->FinishUpdate();
 
 		[tableView endUpdates];
 
@@ -1257,8 +1257,8 @@ static void spInsertSections(UITableView* iTableView,
 		}
 	else
 		{
-		for (size_t x = 0; x < fSections_All.size(); ++x)
-			fSections_All[x]->GetBody()->FinishUpdate();
+		for (size_t xx = 0; xx < fSections_All.size(); ++xx)
+			fSections_All[xx]->GetBody()->FinishUpdate();
 
 		[self pDoUpdate3:tableView anyChanges:anyChanges];
 		}

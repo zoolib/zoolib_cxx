@@ -111,11 +111,11 @@ void ZStreamR_Boundary::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 				else
 					{
 					// Do Boyer-Moore search on the full buffer.
-					int x;
-					for (x = boundarySize - 1; x >= 0 && fBuffer[x] == fBoundary[x]; --x)
+					int xx;
+					for (xx = boundarySize - 1; xx >= 0 && fBuffer[xx] == fBoundary[xx]; --xx)
 						{}
 
-					if (x < 0)
+					if (xx < 0)
 						{
 						// We found the boundary.
 						fHitBoundary = true;

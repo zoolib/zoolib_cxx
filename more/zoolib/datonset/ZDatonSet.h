@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZIntervalTreeClock.h"
 #include "zoolib/ZThread.h"
+#include "zoolib/ZUtil_Relops.h"
 
 #include <map>
 #include <set>
@@ -63,6 +64,13 @@ private:
 	ZData fData;
 	};
 
+} // namespace ZDatonSet
+
+template <> struct RelopsTraits_HasEQ<ZDatonSet::Daton> : public RelopsTraits_Has {};
+template <> struct RelopsTraits_HasLT<ZDatonSet::Daton> : public RelopsTraits_Has {};
+
+namespace ZDatonSet {
+
 // =================================================================================================
 // MARK: - Nombre
 
@@ -82,6 +90,12 @@ public:
 private:
 	std::vector<uint64> fForks;
 	};
+
+} // namespace ZDatonSet
+
+template <> struct RelopsTraits_HasLT<ZDatonSet::Nombre> : public RelopsTraits_Has {};
+
+namespace ZDatonSet {
 
 // =================================================================================================
 // MARK: - NamedEvent
@@ -104,6 +118,12 @@ private:
 	Nombre fNombre;
 	ZRef<Event> fEvent;
 	};
+
+} // namespace ZDatonSet
+
+template <> struct RelopsTraits_HasLT<ZDatonSet::NamedEvent> : public RelopsTraits_Has {};
+
+namespace ZDatonSet {
 
 // =================================================================================================
 // MARK: - Delta

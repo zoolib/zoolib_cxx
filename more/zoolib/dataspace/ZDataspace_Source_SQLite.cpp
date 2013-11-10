@@ -184,8 +184,8 @@ void Source_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 			theIter->HasValue(); theIter->Advance())
 			{
 			const size_t theCount = theIter->Count();
-			for (size_t x = 0; x < theCount; ++x)
-				thePackedRows.push_back(theIter->Get(x));
+			for (size_t xx = 0; xx < theCount; ++xx)
+				thePackedRows.push_back(theIter->Get(xx));
 			}
 
 		ZRef<ZQE::Result> theResult =

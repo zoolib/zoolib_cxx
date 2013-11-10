@@ -27,15 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-// It would be nice to be able to steal the bottom bit of fIntPtr to use as fIsCounted. The
-// problem is that const char* are often packed tightly and thus often have odd addresses, so
-// every bit can be significant.
-
-// x86_64 has 64 bit pointers, but only uses the bottom 48 bits -- top 16 are free.
-
-// We could stick a length in here instead of the isCounted boolean -- zero length == counted,
-// otherwise it's a length that is cheap to access.
-
 // =================================================================================================
 // MARK: -
 
@@ -82,9 +73,9 @@ ZName::ZName(const string8& iString)
 	}
 #endif
 
-ZName::ZName(const ZRefCountedString& iCountedString)
+ZName::ZName(const RefCountedString& iRefCountedString)
 	{
-	CountedString* theCountedString = iCountedString.Get();
+	CountedString* theCountedString = iRefCountedString.Get();
 	#if ZCONFIG_Is64Bit
 		if (theCountedString)
 			{
@@ -126,7 +117,7 @@ ZName::operator string8() const
 	return sDefault<string8>();
 	}
 
-ZName::operator ZRefCountedString() const
+ZName::operator RefCountedString() const
 	{
 	#if ZCONFIG_Is64Bit
 		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))

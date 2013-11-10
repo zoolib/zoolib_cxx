@@ -216,10 +216,10 @@ static UINT spLookupName(const string& iName)
 		spMutex_NameToCodePage.Acquire();
 		if (not spBuilt_NameToCodePage)
 			{
-			for (size_t x = 0; x < countof(spNameToCodePage); ++x)
+			for (size_t xx = 0; xx < countof(spNameToCodePage); ++xx)
 				{
-				spMap_NameToCodePage[spCanonicalName(spNameToCodePage[x].fName)] =
-					spNameToCodePage[x].fCodePage;
+				spMap_NameToCodePage[spCanonicalName(spNameToCodePage[xx].fName)] =
+					spNameToCodePage[xx].fCodePage;
 				}
 			spBuilt_NameToCodePage = true;
 			}
