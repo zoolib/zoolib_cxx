@@ -72,9 +72,6 @@ public:
 	bool Attach(ZRef<ZCaller> iCaller);
 	bool IsAttached();
 
-	void WaitTillDetached();
-	bool WaitTillDetachedFor(double iTimeout);
-
 private:
 	void pWakeAt(ZTime iSystemTime);
 

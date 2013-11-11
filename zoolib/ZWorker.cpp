@@ -184,22 +184,6 @@ bool ZWorker::IsAttached()
 	return fCaller;
 	}
 
-void ZWorker::WaitTillDetached()
-	{
-	ZAcqMtx acq(fMtx);
-	while (fCaller)
-		fCnd.Wait(fMtx);
-	}
-
-bool ZWorker::WaitTillDetachedFor(double iTimeout)
-	{
-	ZAcqMtx acq(fMtx);
-	if (not fCaller)
-		return true;
-	fCnd.WaitFor(fMtx, iTimeout);
-	return not fCaller;
-	}
-
 void ZWorker::pWakeAt(ZTime iSystemTime)
 	{
 	ZAcqMtx acq(fMtx);
