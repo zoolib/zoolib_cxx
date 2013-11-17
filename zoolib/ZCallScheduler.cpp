@@ -54,7 +54,7 @@ void ZCallScheduler::NextCallAt(ZTime iSystemTime, const Job& iJob)
 void ZCallScheduler::NextCallIn(double iInterval, const Job& iJob)
 	{ this->pNextCallAt(ZTime::sSystem() + iInterval, iJob); }
 
-bool ZCallScheduler::IsAwake(const Job& iJob)
+bool ZCallScheduler::WillCall(const Job& iJob)
 	{
 	ZAcqMtx acq(fMtx);
 
@@ -76,8 +76,8 @@ void ZCallScheduler::NextCallIn(double iInterval,
 	const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
 	{ this->pNextCallAt(ZTime::sSystem() + iInterval, Job(iCaller, iCallable)); }
 
-bool ZCallScheduler::IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
-	{ return this->IsAwake(Job(iCaller, iCallable)); }
+bool ZCallScheduler::WillCall(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+	{ return this->WillCall(Job(iCaller, iCallable)); }
 
 void ZCallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 	{

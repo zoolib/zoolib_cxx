@@ -135,9 +135,6 @@ void ZWorker::WakeIn(double iInterval)
 void ZWorker::WakeAt(ZTime iSystemTime)
 	{ this->pWakeAt(iSystemTime); }
 
-bool ZWorker::IsWorking()
-	{ return ZThread::sID() == fWorking; }
-
 bool ZWorker::IsAwake()
 	{
 	ZAcqMtx acq(fMtx);
@@ -146,10 +143,13 @@ bool ZWorker::IsAwake()
 		if (fWorking)
 			return fNextWake <= ZTime::sSystem();
 		else
-			return sSingleton<ZCallScheduler>().IsAwake(fCaller, this);
+			return sSingleton<ZCallScheduler>().WillCall(fCaller, this);
 		}
 	return false;
 	}
+
+bool ZWorker::IsWorking()
+	{ return ZThread::sID() == fWorking; }
 
 bool ZWorker::Attach(ZRef<ZCaller> iCaller)
 	{

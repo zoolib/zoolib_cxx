@@ -49,7 +49,7 @@ public:
 
 	void NextCallIn(double iInterval, const Job& iJob);
 
-	bool IsAwake(const Job& iJob);
+	bool WillCall(const Job& iJob);
 
 // -----
 
@@ -61,7 +61,7 @@ public:
 	void NextCallIn(double iInterval,
 		const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
-	bool IsAwake(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
+	bool WillCall(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
 
 // -----
 
