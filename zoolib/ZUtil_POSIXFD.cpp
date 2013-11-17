@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZUtil_POSIXFD.h"
 
 #if ZCONFIG_SPI_Enabled(POSIX)
@@ -45,6 +46,7 @@ namespace ZUtil_POSIXFD {
 
 static void spSetup(fd_set& oSet, int iFD)
 	{
+	ZAssert(iFD > 0);
 	// For (marginally) improved efficiency we could zero only those bits <= iFD.
 	FD_ZERO(&oSet);
 	FD_SET(iFD, &oSet);
