@@ -22,8 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDNS_SD_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCallable.h"
+#include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZNet_Internet.h" // For ip_port
 #include "zoolib/ZThread.h"
+
+#include <vector>
 
 extern "C" {
 #include <dns_sd.h>
@@ -33,15 +37,36 @@ namespace ZooLib {
 namespace DNS_SD {
 
 // =================================================================================================
+// MARK: - DNSService
+
+class DNSService
+:	public ZCounted, NonCopyable
+	{
+public:
+	DNSService();
+
+// From ZCounted
+	virtual void Initialize();
+	virtual void Finalize();
+
+// Our protocol
+	DNSServiceRef GetDNSServiceRef();
+
+protected:
+	void pSocketReadable();
+	void pWatchSocket();
+
+	ZMtxR fMtxR;
+	DNSServiceRef fDNSServiceRef;
+	ZRef<ZCallable_Void> fCallable_SocketReadable;
+	};
+
+// =================================================================================================
 // MARK: - Registration
 
 class Registration
+:	public DNSService
 	{
-protected:
-	Registration() {}
-	Registration(const Registration& other); // Not implemented
-	Registration& operator=(const Registration& other); // Not implemented
-
 public:
 	typedef const unsigned char* ConstPString;
 
@@ -66,25 +91,24 @@ public:
 
 	~Registration();
 
+// From ZCounted via DNSService
+	virtual void Initialize();
+
+// Our protocol
 	std::string GetName() const;
 	std::string GetRegType() const;
 	std::string GetDomain() const;
 	ip_port GetPort() const;
 
 private:
-	void pInit(ip_port iPort,
-		const char* iName, const std::string& iRegType,
-		const char* iDomain,
-		ConstPString* iTXT, size_t iTXTCount);
-
-	void pDNSServiceRegisterReply(
+	void pCallback(
 		DNSServiceFlags flags,
 		DNSServiceErrorType errorCode,
 		const char* name,
 		const char* regtype,
 		const char* domain);
 
-	static void spDNSServiceRegisterReply(
+	static void DNSSD_API spCallback(
 		DNSServiceRef sdRef,
 		DNSServiceFlags flags,
 		DNSServiceErrorType errorCode,
@@ -93,12 +117,90 @@ private:
 		const char* domain,
 		void* context);
 
-	DNSServiceRef fDNSServiceRef;
-	ZMtx fMutex;
+	ip_port fPort;
 	std::string fName;
 	std::string fRegType;
 	std::string fDomain;
-	ip_port fPort;
+	std::vector<unsigned char> fTXT;
+	};
+
+// =================================================================================================
+// MARK: - Browse
+
+class Browse
+:	public DNSService
+	{
+public:
+	typedef ZCallable<void(
+		bool iMoreComing,
+		bool iAdd,
+		const std::string& iServiceName,
+		const std::string& iRegType,
+		const std::string& iReplyDomain)> Callable;
+
+	Browse(const ZRef<Callable>& iCallable, const std::string& iRegType);
+
+// From ZCounted via DNSService
+	virtual void Initialize();
+
+private:
+	static void DNSSD_API spCallback(
+		DNSServiceRef sdRef,
+		DNSServiceFlags flags,
+		uint32_t interfaceIndex,
+		DNSServiceErrorType errorCode,
+		const char* serviceName,
+		const char* regtype,
+		const char* replyDomain,
+		void* context);
+
+	ZRef<Callable> fCallable;
+
+	std::string fRegType;
+	std::string fDomain;
+	};
+
+// =================================================================================================
+// MARK: - Resolve
+
+class Resolve
+:	public DNSService
+	{
+public:
+	typedef ZCallable<void(
+		bool iMoreComing,
+		const std::string& iServiceName,
+		const std::string& iHostTarget,
+		uint16_t port,
+		uint16_t txtLen,
+		const unsigned char* txtRecord)> Callable;
+
+	Resolve(const ZRef<Callable>& iCallable,
+		const std::string& iName,
+		const std::string& iRegType,
+		const std::string& iDomain);
+
+// From ZCounted via DNSService
+	virtual void Initialize();
+
+private:
+	static void DNSSD_API spCallback(
+		DNSServiceRef sdRef,
+		DNSServiceFlags flags,
+		uint32_t interfaceIndex,
+		DNSServiceErrorType errorCode,
+		const char* fullname,
+		const char* hosttarget,
+		uint16_t port,
+		uint16_t txtLen,
+		const unsigned char* txtRecord,
+		void* context);
+
+	ZRef<Callable> fCallable;
+
+	std::string fName;
+	std::string fRegType;
+	std::string fDomain;
 	};
 
 } // namespace DNS_SD

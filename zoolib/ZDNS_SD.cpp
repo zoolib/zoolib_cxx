@@ -20,6 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDNS_SD.h"
 
+#include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZNet_Socket.h"
+#include "zoolib/ZSingleton.h"
+#include "zoolib/ZSocketWatcher.h"
+
 #include "zoolib/ZLog.h"
 
 #include <vector>
@@ -32,38 +37,134 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
+// MARK: - DNSService
+
+DNSService::DNSService()
+:	fDNSServiceRef(nullptr)
+	{}
+
+void DNSService::Initialize()
+	{
+	ZCounted::Initialize();
+	fCallable_SocketReadable = sCallable(sWeakRef(this), &DNSService::pSocketReadable);
+	}
+
+void DNSService::Finalize()
+	{
+	ZGuardMtxR guard(fMtxR);
+	if (fDNSServiceRef)
+		{
+		sSingleton<ZSocketWatcher>().Cancel(
+			DNSServiceRefSockFD(fDNSServiceRef), fCallable_SocketReadable);
+		::DNSServiceRefDeallocate(fDNSServiceRef);
+		fDNSServiceRef = nullptr;
+		}
+	guard.Release();
+	ZCounted::Finalize();
+	}
+
+DNSServiceRef DNSService::GetDNSServiceRef()
+	{ return fDNSServiceRef; }
+
+void DNSService::pSocketReadable()
+	{
+	ZGuardMtxR guard(fMtxR);
+	if (fDNSServiceRef)
+		{
+		if (ZNet_Socket::sWaitReadable(DNSServiceRefSockFD(fDNSServiceRef), 0))
+			{
+			guard.Release();
+			::DNSServiceProcessResult(fDNSServiceRef);
+			}
+		this->pWatchSocket();
+		}
+	}
+
+void DNSService::pWatchSocket()
+	{
+	if (fDNSServiceRef)
+		{
+		sSingleton<ZSocketWatcher>().Watch(
+			DNSServiceRefSockFD(fDNSServiceRef), fCallable_SocketReadable);
+		}
+	}
+
+// =================================================================================================
 // MARK: - Registration
 
-void Registration::pInit(ip_port iPort,
-	const char* iName, const string& iRegType,
-	const char* iDomain,
-	ConstPString* iTXT, size_t iTXTCount)
+static vector<uint8> spFillVector(Registration::ConstPString* iTXT, size_t iTXTCount)
 	{
-	ZAcqMtx acq(fMutex);
-
-	vector<uint8> theTXTData;
-	if (iTXT && iTXTCount)
+	vector<unsigned char> result;
+	while (iTXTCount--)
 		{
-		while (iTXTCount--)
-			{
-			if (const size_t theSize = iTXT[0][0])
-				theTXTData.insert(theTXTData.end(), iTXT[0], iTXT[0] + theSize + 1);
-			++iTXT;
-			}
+		if (const size_t theSize = iTXT[0][0])
+			result.insert(result.end(), iTXT[0], iTXT[0] + theSize + 1);
+		++iTXT;
 		}
+	return result;
+	}
+
+Registration::Registration(ip_port iPort,
+	const string& iName, const string& iRegType,
+	const string& iDomain,
+	ConstPString* iTXT, size_t iTXTCount)
+:	fPort(iPort)
+,	fName(iName)
+,	fRegType(iRegType)
+,	fDomain(iDomain)
+,	fTXT(spFillVector(iTXT, iTXTCount))
+	{}
+
+Registration::Registration(ip_port iPort,
+	const string& iName, const string& iRegType,
+	ConstPString* iTXT, size_t iTXTCount)
+:	fPort(iPort)
+,	fName(iName)
+,	fRegType(iRegType)
+,	fTXT(spFillVector(iTXT, iTXTCount))
+	{}
+
+Registration::Registration(ip_port iPort,
+	const string& iName, const string& iRegType)
+:	fPort(iPort)
+,	fName(iName)
+,	fRegType(iRegType)
+	{}
+
+Registration::Registration(ip_port iPort,
+	const string& iRegType,
+	ConstPString* iTXT, size_t iTXTCount)
+:	fPort(iPort)
+,	fRegType(iRegType)
+,	fTXT(spFillVector(iTXT, iTXTCount))
+	{}
+
+Registration::Registration(ip_port iPort,
+	const string& iRegType)
+:	fPort(iPort)
+,	fRegType(iRegType)
+	{}
+
+Registration::~Registration()
+	{}
+
+void Registration::Initialize()
+	{
+	DNSService::Initialize();
+	ZAcqMtxR acq(fMtxR);
 
 	DNSServiceErrorType result = ::DNSServiceRegister(
 		&fDNSServiceRef, // output service ref
 		kDNSServiceFlagsDefault, // flags
 		0, // default interface index
-		iName, // name, nullptr for default
-		iRegType.c_str(),
-		iDomain, // domain, nullptr for default
+		fName.empty() ? nullptr : fName.c_str(),
+		fRegType.c_str(),
+		fDomain.empty() ? nullptr : fDomain.c_str(),
 		nullptr, // host, we presume the current host
-		htons(iPort),
-		theTXTData.size(),
-		theTXTData.empty() ? nullptr : &theTXTData[0],
-		spDNSServiceRegisterReply, // our callback
+		htons(fPort),
+		fTXT.size(),
+		fTXT.empty() ? nullptr : &fTXT[0],
+		spCallback, // our callback
 		this); // pointer to self as refcon
 
 	if (result)
@@ -72,112 +173,54 @@ void Registration::pInit(ip_port iPort,
 			s.Writef("DNSServiceRegister, failed with result: %d", result);
 		throw runtime_error("Couldn't register name");
 		}
-	}
-
-Registration::Registration(ip_port iPort,
-	const string& iName, const string& iRegType,
-	const string& iDomain,
-	ConstPString* iTXT, size_t iTXTCount)
-	{
-	this->pInit(iPort,
-		iName.empty() ? nullptr : iName.c_str(),
-		iRegType.c_str(),
-		iDomain.empty() ? nullptr : iDomain.c_str(),
-		iTXT, iTXTCount);
-	}
-
-Registration::Registration(ip_port iPort,
-	const string& iName, const string& iRegType,
-	ConstPString* iTXT, size_t iTXTCount)
-	{
-	this->pInit(iPort,
-		iName.empty() ? nullptr : iName.c_str(),
-		iRegType.c_str(),
-		nullptr,
-		iTXT, iTXTCount);
-	}
-
-Registration::Registration(ip_port iPort,
-	const string& iName, const string& iRegType)
-	{
-	this->pInit(iPort,
-		iName.empty() ? nullptr : iName.c_str(),
-		iRegType.c_str(),
-		nullptr,
-		nullptr, 0);
-	}
-
-Registration::Registration(ip_port iPort,
-	const string& iRegType,
-	ConstPString* iTXT, size_t iTXTCount)
-	{
-	this->pInit(iPort,
-		nullptr,
-		iRegType.c_str(),
-		nullptr,
-		iTXT, iTXTCount);
-	}
-
-Registration::Registration(ip_port iPort,
-	const string& iRegType)
-	{
-	this->pInit(iPort,
-		nullptr,
-		iRegType.c_str(),
-		nullptr,
-		nullptr, 0);
-	}
-
-Registration::~Registration()
-	{
-	ZAcqMtx acq(fMutex);
-	if (fDNSServiceRef)
-		::DNSServiceRefDeallocate(fDNSServiceRef);
+	this->pWatchSocket();
 	}
 
 std::string Registration::GetName() const
 	{
-	ZAcqMtx acq(fMutex);
+	ZAcqMtxR acq(fMtxR);
 	return fName;
 	}
 
 std::string Registration::GetRegType() const
 	{
-	ZAcqMtx acq(fMutex);
+	ZAcqMtxR acq(fMtxR);
 	return fRegType;
 	}
 
 std::string Registration::GetDomain() const
 	{
-	ZAcqMtx acq(fMutex);
+	ZAcqMtxR acq(fMtxR);
 	return fDomain;
 	}
 
 ip_port Registration::GetPort() const
 	{
-	ZAcqMtx acq(fMutex);
+	ZAcqMtxR acq(fMtxR);
 	return fPort;
 	}
 
-void Registration::pDNSServiceRegisterReply(
+void Registration::pCallback(
 	DNSServiceFlags flags,
 	DNSServiceErrorType errorCode,
 	const char* name,
 	const char* regtype,
 	const char* domain)
 	{
-	ZAcqMtx acq(fMutex);
+	ZAcqMtxR acq(fMtxR);
 
-	if (ZLOG(s, eNotice, "Registration"))
+	if (ZLOGPF(w, eDebug))
 		{
-		s.Writef("pDNSServiceRegisterReply, flags: %d, errorCode: %d", flags, errorCode);
-		s << ", name: " << name;
-		s << ", regtype: " << regtype;
-		s << ", domain: " << domain;
+		w << "\n"
+			<< ", flags: " << flags
+			<< ", errorCode: " << errorCode
+			<< ", name: " << name
+			<< ", regtype: " << regtype
+			<< ", domain: " << domain;
 		}
 	}
 
-void Registration::spDNSServiceRegisterReply(
+void Registration::spCallback(
 	DNSServiceRef sdRef,
 	DNSServiceFlags flags,
 	DNSServiceErrorType errorCode,
@@ -186,11 +229,122 @@ void Registration::spDNSServiceRegisterReply(
 	const char* domain,
 	void* context)
 	{
-	if (!context)
-		return;
+	if (ZRef<Registration> theOb = static_cast<Registration*>(context))
+		theOb->pCallback(flags, errorCode, name, regtype, domain);
+	}
 
-	static_cast<Registration*>(context)->
-		pDNSServiceRegisterReply(flags, errorCode, name, regtype, domain);
+// =================================================================================================
+// MARK: - Browse
+
+Browse::Browse(const ZRef<Callable>& iCallable, const std::string& iRegType)
+:	fCallable(iCallable)
+,	fRegType(iRegType)
+	{}
+
+void Browse::Initialize()
+	{
+	DNSService::Initialize();
+
+	ZAcqMtxR acq(fMtxR);
+
+	DNSServiceErrorType result = ::DNSServiceBrowse(
+		&fDNSServiceRef, // output service ref
+		kDNSServiceFlagsDefault, // flags
+		0, // default interface index
+		fRegType.c_str(),
+		fDomain.empty() ? nullptr : fDomain.c_str(),
+		spCallback, // our callback
+		this); // pointer to self as refcon
+
+	if (result)
+		{
+		if (ZLOG(s, eNotice, "Browse"))
+			s.Writef("DNSServiceBrowse, failed with result: %d", result);
+		throw runtime_error("Couldn't browse");
+		}
+
+	this->pWatchSocket();
+	}
+
+void Browse::spCallback(
+	DNSServiceRef sdRef,
+	DNSServiceFlags flags,
+	uint32_t interfaceIndex,
+	DNSServiceErrorType errorCode,
+	const char* serviceName,
+	const char* regtype,
+	const char* replyDomain,
+	void* context)
+	{
+	if (ZRef<Browse> theOb = static_cast<Browse*>(context))
+		{
+		if (ZRef<Callable> theCallable = theOb->fCallable)
+			{
+			theCallable->Call(flags & kDNSServiceFlagsMoreComing, flags & kDNSServiceFlagsAdd,
+				serviceName, regtype, replyDomain);
+			}
+		}
+	}
+
+// =================================================================================================
+// MARK: - Resolve
+
+Resolve::Resolve(const ZRef<Callable>& iCallable,
+	const std::string& iName,
+	const std::string& iRegType,
+	const std::string& iDomain)
+:	fCallable(iCallable)
+,	fName(iName)
+,	fRegType(iRegType)
+,	fDomain(iDomain)
+	{}
+
+void Resolve::Initialize()
+	{
+	DNSService::Initialize();
+
+	ZAcqMtxR acq(fMtxR);
+
+	DNSServiceErrorType result = ::DNSServiceResolve(
+		&fDNSServiceRef, // output service ref
+		0, // flags
+		0, // default interface index
+		fName.c_str(),
+		fRegType.c_str(),
+		fDomain.c_str(),
+		spCallback, // our callback
+		this); // pointer to self as refcon
+
+	if (result)
+		{
+		if (ZLOG(s, eNotice, "Resolve"))
+			s.Writef("DNSServiceResolve, failed with result: %d", result);
+		throw runtime_error("Couldn't resolve");
+		}
+
+	this->pWatchSocket();
+	}
+
+void Resolve::spCallback(
+	DNSServiceRef sdRef,
+	DNSServiceFlags flags,
+	uint32_t interfaceIndex,
+	DNSServiceErrorType errorCode,
+	const char* fullname,
+	const char* hosttarget,
+	uint16_t port,
+	uint16_t txtLen,
+	const unsigned char* txtRecord,
+	void* context)
+	{
+	if (ZRef<Resolve> theOb = static_cast<Resolve*>(context))
+		{
+		if (ZRef<Callable> theCallable = theOb->fCallable)
+			{
+			theCallable->Call(flags & kDNSServiceFlagsMoreComing,
+				fullname, hosttarget, ntohs(port), txtLen, txtRecord);
+			}
+		}
 	}
 
 } // namespace DNS_SD
