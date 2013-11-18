@@ -212,9 +212,9 @@ public:
 		ZRef<Expr_Rel> newOp1;
 
 		{
-		ZSetRestore_T<ZRef<ZExpr_Bool> > sr0(fRestriction, sTrue());
-		ZSetRestore_T<ZUniSet_T<ColName> > sr1(fProjection, ZUniSet_T<ColName>::sUniversal());
-		ZSetRestore_T<Rename> sr2(fRename);
+		ZSaveSetRestore_T<ZRef<ZExpr_Bool> > ssr0(fRestriction, sTrue());
+		ZSaveSetRestore_T<ZUniSet_T<ColName> > ssr1(fProjection, ZUniSet_T<ColName>::sUniversal());
+		ZSaveSetRestore_T<Rename> ssr2(fRename, Rename());
 		newOp1 = this->Do(iExpr->GetOp1());
 		}
 
@@ -222,8 +222,8 @@ public:
 
 		ZRef<ZRA::Expr_Rel> newEmbed;
 		{
-		ZSetRestore_T<ZRef<ZExpr_Bool> > sr0(fRestriction, sTrue());
-		ZSetRestore_T<ZUniSet_T<ColName> > sr1(fProjection, ZUniSet_T<ColName>::sUniversal());
+		ZSaveSetRestore_T<ZRef<ZExpr_Bool> > ssr0(fRestriction, sTrue());
+		ZSaveSetRestore_T<ZUniSet_T<ColName> > ssr1(fProjection, ZUniSet_T<ColName>::sUniversal());
 		ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 		newEmbed = new ZRA::Expr_Rel_Embed(newOp0, theName, newOp1);
 		}
@@ -277,7 +277,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr)
 		{
-		ZSetRestore_T<ZUniSet_T<ColName> > sr(fProjection, iExpr->GetProjectRelHead());
+		ZSaveSetRestore_T<ZUniSet_T<ColName> > ssr(fProjection, iExpr->GetProjectRelHead());
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 
