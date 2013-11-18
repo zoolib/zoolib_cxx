@@ -70,23 +70,29 @@ class Registration
 public:
 	typedef const unsigned char* ConstPString;
 
-	Registration(ip_port iPort,
-		const std::string& iName, const std::string& iRegType,
-		const std::string& iDomain,
+	typedef ZCallable<void(ZRef<Registration>)> Callable;
+
+	Registration(const ZRef<Callable>& iCallable,
+		ip_port iPort,
+		const std::string& iName, const std::string& iRegType, const std::string& iDomain,
 		ConstPString* iTXT, size_t iTXTCount);
 
-	Registration(ip_port iPort,
+	Registration(const ZRef<Callable>& iCallable,
+		ip_port iPort,
 		const std::string& iName, const std::string& iRegType,
 		ConstPString* iTXT, size_t iTXTCount);
 
-	Registration(ip_port iPort,
+	Registration(const ZRef<Callable>& iCallable,
+		ip_port iPort,
 		const std::string& iName, const std::string& iRegType);
 
-	Registration(ip_port iPort,
+	Registration(const ZRef<Callable>& iCallable,
+		ip_port iPort,
 		const std::string& iRegType,
 		ConstPString* iTXT, size_t iTXTCount);
 
-	Registration(ip_port iPort,
+	Registration(const ZRef<Callable>& iCallable,
+		ip_port iPort,
 		const std::string& iRegType);
 
 	~Registration();
@@ -95,10 +101,12 @@ public:
 	virtual void Initialize();
 
 // Our protocol
-	std::string GetName() const;
+	std::string GetName_Desired() const;
 	std::string GetRegType() const;
 	std::string GetDomain() const;
 	ip_port GetPort() const;
+
+	ZQ<std::string> QGetName_Registered() const;
 
 private:
 	void pCallback(
@@ -117,11 +125,14 @@ private:
 		const char* domain,
 		void* context);
 
+	ZRef<Callable> fCallable;
+
 	ip_port fPort;
 	std::string fName;
 	std::string fRegType;
 	std::string fDomain;
 	std::vector<unsigned char> fTXT;
+	ZQ<std::string> fQName_Registered;
 	};
 
 // =================================================================================================

@@ -43,8 +43,8 @@ public:
 
 // -----
 
-	bool Watch(int iSocket, const ZRef<ZCallable_Void>& iCallable);
-	bool Cancel(int iSocket, const ZRef<ZCallable_Void>& iCallable);
+	bool QInsert(int iSocket, const ZRef<ZCallable_Void>& iCallable);
+	bool QErase(int iSocket, const ZRef<ZCallable_Void>& iCallable);
 
 // -----
 

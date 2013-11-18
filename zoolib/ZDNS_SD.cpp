@@ -54,7 +54,7 @@ void DNSService::Finalize()
 	ZGuardMtxR guard(fMtxR);
 	if (fDNSServiceRef)
 		{
-		sSingleton<ZSocketWatcher>().Cancel(
+		sSingleton<ZSocketWatcher>().QErase(
 			DNSServiceRefSockFD(fDNSServiceRef), fCallable_SocketReadable);
 		::DNSServiceRefDeallocate(fDNSServiceRef);
 		fDNSServiceRef = nullptr;
@@ -84,7 +84,7 @@ void DNSService::pWatchSocket()
 	{
 	if (fDNSServiceRef)
 		{
-		sSingleton<ZSocketWatcher>().Watch(
+		sSingleton<ZSocketWatcher>().QInsert(
 			DNSServiceRefSockFD(fDNSServiceRef), fCallable_SocketReadable);
 		}
 	}
@@ -104,44 +104,53 @@ static vector<uint8> spFillVector(Registration::ConstPString* iTXT, size_t iTXTC
 	return result;
 	}
 
-Registration::Registration(ip_port iPort,
-	const string& iName, const string& iRegType,
-	const string& iDomain,
+Registration::Registration(const ZRef<Callable>& iCallable,
+	ip_port iPort,
+	const string& iName, const string& iRegType, const string& iDomain,
 	ConstPString* iTXT, size_t iTXTCount)
-:	fPort(iPort)
+:	fCallable(iCallable)
+,	fPort(iPort)
 ,	fName(iName)
 ,	fRegType(iRegType)
 ,	fDomain(iDomain)
 ,	fTXT(spFillVector(iTXT, iTXTCount))
 	{}
 
-Registration::Registration(ip_port iPort,
+Registration::Registration(const ZRef<Callable>& iCallable,
+	ip_port iPort,
 	const string& iName, const string& iRegType,
 	ConstPString* iTXT, size_t iTXTCount)
-:	fPort(iPort)
+:	fCallable(iCallable)
+,	fPort(iPort)
 ,	fName(iName)
 ,	fRegType(iRegType)
 ,	fTXT(spFillVector(iTXT, iTXTCount))
 	{}
 
-Registration::Registration(ip_port iPort,
+Registration::Registration(const ZRef<Callable>& iCallable,
+	ip_port iPort,
 	const string& iName, const string& iRegType)
-:	fPort(iPort)
+:	fCallable(iCallable)
+,	fPort(iPort)
 ,	fName(iName)
 ,	fRegType(iRegType)
 	{}
 
-Registration::Registration(ip_port iPort,
+Registration::Registration(const ZRef<Callable>& iCallable,
+	ip_port iPort,
 	const string& iRegType,
 	ConstPString* iTXT, size_t iTXTCount)
-:	fPort(iPort)
+:	fCallable(iCallable)
+,	fPort(iPort)
 ,	fRegType(iRegType)
 ,	fTXT(spFillVector(iTXT, iTXTCount))
 	{}
 
-Registration::Registration(ip_port iPort,
+Registration::Registration(const ZRef<Callable>& iCallable,
+	ip_port iPort,
 	const string& iRegType)
-:	fPort(iPort)
+:	fCallable(iCallable)
+,	fPort(iPort)
 ,	fRegType(iRegType)
 	{}
 
@@ -176,10 +185,16 @@ void Registration::Initialize()
 	this->pWatchSocket();
 	}
 
-std::string Registration::GetName() const
+std::string Registration::GetName_Desired() const
 	{
 	ZAcqMtxR acq(fMtxR);
 	return fName;
+	}
+
+ZQ<std::string> Registration::QGetName_Registered() const
+	{
+	ZAcqMtxR acq(fMtxR);
+	return fQName_Registered;
 	}
 
 std::string Registration::GetRegType() const
@@ -209,15 +224,9 @@ void Registration::pCallback(
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	if (ZLOGPF(w, eDebug))
-		{
-		w << "\n"
-			<< ", flags: " << flags
-			<< ", errorCode: " << errorCode
-			<< ", name: " << name
-			<< ", regtype: " << regtype
-			<< ", domain: " << domain;
-		}
+	fQName_Registered = string(name);
+
+	sCall(fCallable, this);
 	}
 
 void Registration::spCallback(

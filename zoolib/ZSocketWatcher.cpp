@@ -43,7 +43,7 @@ ZSocketWatcher::ZSocketWatcher()
 :	fThreadRunning(false)
 	{}
 
-bool ZSocketWatcher::Watch(int iSocket, const ZRef<ZCallable_Void>& iCallable)
+bool ZSocketWatcher::QInsert(int iSocket, const ZRef<ZCallable_Void>& iCallable)
 	{
 	ZAcqMtx acq(fMtx);
 	if (not fSet.insert(pair<int,ZRef<ZCallable_Void> >(iSocket, iCallable)).second)
@@ -58,7 +58,7 @@ bool ZSocketWatcher::Watch(int iSocket, const ZRef<ZCallable_Void>& iCallable)
 	return true;
 	}
 
-bool ZSocketWatcher::Cancel(int iSocket, const ZRef<ZCallable_Void>& iCallable)
+bool ZSocketWatcher::QErase(int iSocket, const ZRef<ZCallable_Void>& iCallable)
 	{
 	ZAcqMtx acq(fMtx);
 	return fSet.erase(pair<int,ZRef<ZCallable_Void> >(iSocket, iCallable));
