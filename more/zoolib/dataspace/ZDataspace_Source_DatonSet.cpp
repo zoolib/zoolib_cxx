@@ -280,7 +280,8 @@ void Source_DatonSet::ModifyRegistrations(
 			s << "\nDatonSet Raw:\n" << iAdded->GetRel();
 
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
-		theRel = ZQE::sTransform_Search(theRel);
+//## DAMN. With the transform, restrictions in an embed don't find names in the owning rel.
+//###		theRel = ZQE::sTransform_Search(theRel);
 
 		if (ZLOGPF(s, eDebug + 1))
 			s << "\nDatonSet Cooked:\n" << theRel;
@@ -515,7 +516,7 @@ void Source_DatonSet::pPull()
 	fDatonSet->GetDeltas(fEvent, fEvent, theDeltas);
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
 	if (s)
-		s << "\ntheMNED.size()=" << theMNED.size();
+		s << ", theMNED.size()=" << theMNED.size();
 
 	foreachi (iterMNED, theMNED)
 		{
@@ -523,8 +524,8 @@ void Source_DatonSet::pPull()
 		const map<Daton, bool>& theStatements = iterMNED->second->GetStatements();
 		if (s)
 			{
-			s << "\ntheStatements.size()=" << theStatements.size();
-			s << "\nclk:" << theNamedEvent.GetEvent();
+			s << ", theStatements.size()=" << theStatements.size();
+			s << ", clk:" << theNamedEvent.GetEvent();
 			}
 
 		foreachi (iterStmts, theStatements)
