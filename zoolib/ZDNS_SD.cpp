@@ -194,7 +194,7 @@ std::string Registration::GetName_Desired() const
 ZQ<std::string> Registration::QGetName_Registered() const
 	{
 	ZAcqMtxR acq(fMtxR);
-	return fQName_Registered;
+	return fName_RegisteredQ;
 	}
 
 std::string Registration::GetRegType() const
@@ -224,7 +224,7 @@ void Registration::pCallback(
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	fQName_Registered = string(name);
+	fName_RegisteredQ = string(name);
 
 	sCall(fCallable, this);
 	}

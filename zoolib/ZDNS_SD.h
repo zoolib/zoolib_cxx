@@ -132,7 +132,7 @@ private:
 	std::string fRegType;
 	std::string fDomain;
 	std::vector<unsigned char> fTXT;
-	ZQ<std::string> fQName_Registered;
+	ZQ<std::string> fName_RegisteredQ;
 	};
 
 // =================================================================================================
