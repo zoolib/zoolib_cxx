@@ -139,11 +139,11 @@ namespace std {
 namespace std { namespace tr1 {
 #endif
 
-template <typename T> struct hash;
+template <typename T> class hash;
 
 template <>
-struct hash<ZooLib::ZName>
-	{ std::size_t operator()(const ZooLib::ZName& iName) const { return iName.Hash(); } };
+class hash<ZooLib::ZName>
+	{ public: std::size_t operator()(const ZooLib::ZName& iName) const { return iName.Hash(); } };
 
 template <typename T> class hash;
 #if defined(_LIBCPP_END_NAMESPACE_STD)
