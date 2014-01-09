@@ -28,10 +28,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ZMACRO_MSVCStaticLib_cpp(Net_Internet_WinSock)
 
-#include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZTime.h"
+#include "zoolib/ZUtil_WinSock.h"
 
 using std::string;
 
@@ -442,41 +442,10 @@ void ZNetEndpoint_TCP_WinSock::Imp_Read(void* oDest, size_t iCount, size_t* oCou
 	}
 
 size_t ZNetEndpoint_TCP_WinSock::Imp_CountReadable()
-	{
-	// Use non-blocking select to see if a read would succeed
-	fd_set readSet;
-	FD_ZERO(&readSet);
-	FD_SET(fSOCKET, &readSet);
-	struct timeval timeOut;
-	timeOut.tv_sec = 0;
-	timeOut.tv_usec = 0;
-	int result = ::select(0, &readSet, nullptr, nullptr, &timeOut);
-	if (result <= 0)
-		return 0;
-
-	// FIONREAD will give us a result without hanging.
-	unsigned long localResult;
-	if (::ioctlsocket(fSOCKET, FIONREAD, &localResult) == SOCKET_ERROR)
-		return 0;
-	return localResult;
-	}
-
-static bool spWaitReadable(SOCKET iSOCKET, double iTimeout)
-	{
-	fd_set readSet, exceptSet;
-	FD_ZERO(&readSet);
-	FD_ZERO(&exceptSet);
-	FD_SET(iSOCKET, &readSet);
-	FD_SET(iSOCKET, &exceptSet);
-
-	struct timeval timeOut;
-	timeOut.tv_sec = int(iTimeout);
-	timeOut.tv_usec = int(fmod(iTimeout, 1.0) * 1e6);
-	return 0 < ::select(0, &readSet, nullptr, &exceptSet, &timeOut);
-	}
+	{ return ZUtil_WinSock::sCountReadable(fSOCKET); }
 
 bool ZNetEndpoint_TCP_WinSock::Imp_WaitReadable(double iTimeout)
-	{ return spWaitReadable(fSOCKET, iTimeout); }
+	{ return ZUtil_WinSock::sWaitReadable(fSOCKET, iTimeout); }
 
 void ZNetEndpoint_TCP_WinSock::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
@@ -521,14 +490,14 @@ bool ZNetEndpoint_TCP_WinSock::Imp_ReceiveDisconnect(double iTimeout)
 				{
 				if (iTimeout < 0)
 					{
-					spWaitReadable(fSOCKET, 60);
+					ZUtil_WinSock::sWaitReadable(fSOCKET, 60);
 					}
 				else
 					{
 					ZTime now = ZTime::sSystem();
 					if (endTime < now)
 						break;
-					spWaitReadable(fSOCKET, endTime - now);
+					ZUtil_WinSock::sWaitReadable(fSOCKET, endTime - now);
 					}
 				}
 			else

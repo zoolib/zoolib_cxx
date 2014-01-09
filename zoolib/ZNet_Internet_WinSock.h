@@ -33,18 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if ZCONFIG_API_Enabled(Net_Internet_WinSock)
-
-// -----
-// Maddening crud to be able to reference winsock2 stuff
-#ifndef NOMINMAX
-#	define NOMINMAX
+	#include "zoolib/ZCompat_WinSock.h"
 #endif
-#include <winsock2.h>
-#include "zoolib/ZCompat_Win.h"
-#include <ws2tcpip.h>
-// -----
-
-#endif //  ZCONFIG_API_Enabled(Net_Internet_WinSock)
 
 #include "zoolib/ZNet_Internet.h"
 
