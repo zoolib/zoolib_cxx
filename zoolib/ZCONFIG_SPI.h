@@ -65,7 +65,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //#define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
 
 // =================================================================================================
-// MARK: - mark AppleEvent
+// MARK: - AppleEvent
 #ifndef ZCONFIG_SPI_Avail__AppleEvent
 	#define ZCONFIG_SPI_Avail__AppleEvent \
 		(ZCONFIG_SPI_Avail__Carbon64 && ZCONFIG_SPI_Desired__Carbon64)
@@ -75,9 +75,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__AppleEvent 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark BeOS
+// MARK: - BeOS
+
 #ifndef ZCONFIG_SPI_Avail__BeOS
 	#define ZCONFIG_SPI_Avail__BeOS 0
 #endif
@@ -86,9 +86,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__BeOS 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark BerkeleyDB
+// MARK: - BerkeleyDB
+
 #ifndef ZCONFIG_SPI_Avail__BerkeleyDB
 	#define ZCONFIG_SPI_Avail__BerkeleyDB (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
 #endif
@@ -101,9 +101,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__BerkeleyDB 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark boost
+// MARK: - boost
+
 #ifndef ZCONFIG_SPI_Avail__boost
 	#define ZCONFIG_SPI_Avail__boost 0
 #endif
@@ -112,9 +112,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__boost 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark BSD
+// MARK: - BSD
+
 #ifndef ZCONFIG_SPI_Avail__BSD
 	#if defined(__APPLE__) \
 	|| defined(__NetBSD__) \
@@ -132,9 +132,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__BSD 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark bzip2
+// MARK: - bzip2
+
 #ifndef ZCONFIG_SPI_Avail__bzip2
 	#define ZCONFIG_SPI_Avail__bzip2 0
 #endif
@@ -143,9 +143,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__bzip2 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark Carbon
+// MARK: - Carbon
+
 #ifndef ZCONFIG_SPI_Avail__Carbon
 	#if __MACH__
 		#if ! ZMACRO_IOS && ! __LP64__
@@ -168,9 +168,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__Carbon 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark Carbon64
+// MARK: - Carbon64
+
 #ifndef ZCONFIG_SPI_Avail__Carbon64
 	#if ZCONFIG_SPI_Avail__Carbon
 		#define ZCONFIG_SPI_Avail__Carbon64 1
@@ -189,9 +189,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__Carbon64 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark CFType
+// MARK: - CFType
+
 #ifndef ZCONFIG_SPI_Avail__CFType
 	#if __MACH__
 		#define ZCONFIG_SPI_Avail__CFType 1
@@ -208,9 +208,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__CFType 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark Cocoa
+// MARK: - Cocoa
+
 #ifndef ZCONFIG_SPI_Avail__Cocoa
 	#if __MACH__
 		#define ZCONFIG_SPI_Avail__Cocoa 1
@@ -227,9 +227,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__Cocoa 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark CocoaFoundation
+// MARK: - CocoaFoundation
+
 #ifndef ZCONFIG_SPI_Avail__CocoaFoundation
 	#if __MACH__
 		#define ZCONFIG_SPI_Avail__CocoaFoundation 1
@@ -246,9 +246,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__CocoaFoundation 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark CocoaAppKit
+// MARK: - CocoaAppKit
+
 #ifndef ZCONFIG_SPI_Avail__CocoaAppKit
 	#if __MACH__
 		#define ZCONFIG_SPI_Avail__CocoaAppKit (!ZMACRO_IOS)
@@ -265,9 +265,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__CocoaAppKit 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark CoreFoundation
+// MARK: - CoreFoundation
+
 #ifndef ZCONFIG_SPI_Avail__CoreFoundation
 	#if __MACH__
 		#define ZCONFIG_SPI_Avail__CoreFoundation 1
@@ -284,9 +284,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__CoreFoundation 1
 #endif
 
-
 // =================================================================================================
 // MARK: - CoreGraphics
+
 #ifndef ZCONFIG_SPI_Avail__CoreGraphics
 	#if __MACH__
 		#define ZCONFIG_SPI_Avail__CoreGraphics 1
@@ -301,9 +301,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__CoreGraphics 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark GDI
+// MARK: - GDI
+
 #ifndef ZCONFIG_SPI_Avail__GDI
 	#define ZCONFIG_SPI_Avail__GDI (ZCONFIG_SPI_Avail__Win && ZCONFIG_SPI_Desired__Win)
 #endif
@@ -317,7 +317,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-// MARK: - mark iconv
+// MARK: - iconv
 #ifndef ZCONFIG_SPI_Avail__iconv
 	#define ZCONFIG_SPI_Avail__iconv \
 		((ZCONFIG_SPI_Avail__MacOSX && ZCONFIG_SPI_Desired__MacOSX) || ZMACRO_IOS)
@@ -327,9 +327,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__iconv 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark ICU
+// MARK: - ICU
+
 #ifndef ZCONFIG_SPI_Avail__ICU
 	#define ZCONFIG_SPI_Avail__ICU 0
 #endif
@@ -338,9 +338,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__ICU 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark imagehlp
+// MARK: - imagehlp
+
 #ifndef ZCONFIG_SPI_Avail__imagehlp
 	#define ZCONFIG_SPI_Avail__imagehlp 0
 #endif
@@ -349,9 +349,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__imagehlp 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark iPhone
+// MARK: - iPhone
+
 
 #ifndef ZCONFIG_SPI_Avail__iPhone
 	#if ZMACRO_IOS
@@ -367,9 +367,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__iPhone 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark Linux
+// MARK: - Linux
+
 #ifndef ZCONFIG_SPI_Avail__Linux
 	#ifdef linux
 		#define ZCONFIG_SPI_Avail__Linux 1
@@ -384,9 +384,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__Linux 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark MacClassic
+// MARK: - MacClassic
+
 #ifndef ZCONFIG_SPI_Avail__MacClassic
 	#if macintosh && ! ZCONFIG_SPI_Avail__Carbon
 		#define ZCONFIG_SPI_Avail__MacClassic 1
@@ -401,9 +401,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__MacClassic 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark MacMP
+// MARK: - MacMP
+
 #ifndef ZCONFIG_SPI_Avail__MacMP
 	#if macintosh || ZCONFIG_SPI_Avail__Carbon64
 		#define ZCONFIG_SPI_Avail__MacMP 1
@@ -418,9 +418,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__MacMP 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark MacOSX
+// MARK: - MacOSX
+
 #ifndef ZCONFIG_SPI_Avail__MacOSX
 	#if __MACH__ && ! ZMACRO_IOS
 		#define ZCONFIG_SPI_Avail__MacOSX 1
@@ -435,9 +435,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__MacOSX 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark openssl
+// MARK: - openssl
+
 #ifndef ZCONFIG_SPI_Avail__openssl
 	#define ZCONFIG_SPI_Avail__openssl 0
 #endif
@@ -446,9 +446,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__openssl 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark POSIX
+// MARK: - POSIX
+
 #ifndef ZCONFIG_SPI_Avail__POSIX
 	#if __MACH__
 		#define ZCONFIG_SPI_Avail__POSIX 1
@@ -465,9 +465,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__POSIX 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark pthread
+// MARK: - pthread
+
 #ifndef ZCONFIG_SPI_Avail__pthread
 	#define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
 #endif
@@ -480,9 +480,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__pthread 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark QuickDraw
+// MARK: - QuickDraw
+
 #ifndef ZCONFIG_SPI_Avail__QuickDraw
 	#define ZCONFIG_SPI_Avail__QuickDraw \
 		((ZCONFIG_SPI_Avail__Carbon && ZCONFIG_SPI_Desired__Carbon) \
@@ -497,9 +497,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__QuickDraw 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark stlsoft
+// MARK: - stlsoft
+
 #ifndef ZCONFIG_SPI_Avail__stlsoft
 	#define ZCONFIG_SPI_Avail__stlsoft 0
 #endif
@@ -508,9 +508,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__stlsoft 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark SystemConfiguration
+// MARK: - SystemConfiguration
+
 #ifndef ZCONFIG_SPI_Avail__SystemConfiguration
 	#define ZCONFIG_SPI_Avail__SystemConfiguration ZCONFIG_SPI_Avail__MacOSX
 #endif
@@ -523,9 +523,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__SystemConfiguration 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark Win
+// MARK: - Win
+
 #ifndef ZCONFIG_SPI_Avail__Win
 	#if defined(WIN32) || defined(_WIN32) || defined(WINDOWS)
 		#define ZCONFIG_SPI_Avail__Win 1
@@ -542,9 +542,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__Win 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark X11
+// MARK: - X11
+
 //#ifndef ZCONFIG_SPI_Avail__X11
 //	#define ZCONFIG_SPI_Avail__X11 (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
 //#endif
@@ -557,9 +557,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_SPI_Desired__X11 1
 #endif
 
-
 // =================================================================================================
-// MARK: - mark zlib
+// MARK: - zlib
+
 #ifndef ZCONFIG_SPI_Avail__zlib
 	#define ZCONFIG_SPI_Avail__zlib 0
 #endif
