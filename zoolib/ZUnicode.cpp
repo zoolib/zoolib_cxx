@@ -234,8 +234,8 @@ string16& operator+=(string16& ioString, UTF32 iCP)
 	else
 		{
 		realCP -= 0x10000;
-		ioString += UTF16(realCP / 0x400 + ZUnicode::kCPSurrogateHighBegin);
-		ioString += UTF16(realCP & 0x3FF + ZUnicode::kCPSurrogateLowBegin);
+		ioString += UTF16((realCP / 0x400) + ZUnicode::kCPSurrogateHighBegin);
+		ioString += UTF16((realCP & 0x3FF) + ZUnicode::kCPSurrogateLowBegin);
 		}
 	return ioString;
 	}
@@ -828,8 +828,8 @@ string16 sAsUTF16(const string8& iString)
 					if (result > uint32(kCPMaxUCS2))
 						{
 						result -= 0x10000;
-						*dest++ = result / 0x400 + kCPSurrogateHighBegin;
-						*dest++ = result & 0x3FF + kCPSurrogateLowBegin;
+						*dest++ = (result / 0x400) + kCPSurrogateHighBegin;
+						*dest++ = (result & 0x3FF) + kCPSurrogateLowBegin;
 						}
 					else
 						{

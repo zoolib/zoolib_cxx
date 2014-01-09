@@ -846,8 +846,8 @@ bool Functions_Write_T<I, UTF16>::sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 				return false;
 				}
 			iCP -= 0x10000;
-			*ioDest++ = iCP / 0x400 + kCPSurrogateHighBegin;
-			*ioDest++ = iCP & 0x3FF + kCPSurrogateLowBegin;
+			*ioDest++ = (iCP / 0x400) + kCPSurrogateHighBegin;
+			*ioDest++ = (iCP & 0x3FF) + kCPSurrogateLowBegin;
 			}
 		else
 			{
@@ -1567,8 +1567,8 @@ string16 Functions_Convert_T<I>::sAsUTF16(I iSource, size_t iCountCU)
 		else
 			{
 			realCP -= 0x10000;
-			*iter++ = UTF16(realCP / 0x400 + ZUnicode::kCPSurrogateHighBegin);
-			*iter++ += UTF16(realCP & 0x3FF + ZUnicode::kCPSurrogateLowBegin);
+			*iter++ = UTF16((realCP / 0x400) + ZUnicode::kCPSurrogateHighBegin);
+			*iter++ += UTF16((realCP & 0x3FF) + ZUnicode::kCPSurrogateLowBegin);
 			}
 		}
 	result.resize(iter - result.begin());
