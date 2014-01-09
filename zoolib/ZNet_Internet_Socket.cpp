@@ -230,8 +230,6 @@ void ZNetNameLookup_Internet_Socket::Start()
 
 	fStarted = true;
 
-	struct addrinfo hints = {0};
-	hints.ai_family = PF_UNSPEC;
 	struct addrinfo* theAI;
 	if (0 != ::getaddrinfo(fName.c_str(), nullptr, nullptr, &theAI))
 		return;
