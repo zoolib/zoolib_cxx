@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZSafe.h"
 
 #include <set>
 
