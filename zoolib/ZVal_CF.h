@@ -28,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZData_CF.h"
 #include "zoolib/ZRef_CF.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValAccessors_Std.h"
 
 namespace ZooLib {
@@ -44,9 +43,6 @@ class ZVal_CF
 	{
 	typedef ZRef<CFTypeRef> inherited;
 public:
-	ZAny AsAny() const;
-	ZAny DAsAny(const ZAny& iDefault) const;
-
 	operator bool() const;
 
 	ZVal_CF();
@@ -154,8 +150,6 @@ class ZSeq_CF
 public:
 	typedef ZVal_CF Val;
 
-	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
-
 	operator bool() const;
 
 	ZSeq_CF();
@@ -221,8 +215,6 @@ class ZMap_CF
 
 public:
 	typedef ZVal_CF Val;
-
-	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 
 	operator bool() const;
 

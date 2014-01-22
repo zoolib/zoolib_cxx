@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZRef_CF.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal_Any.h"
 
 namespace ZooLib {
 namespace ZUtil_CF {
@@ -72,14 +71,7 @@ ZRef<CFMutableDataRef> sDataMutable(CFDataRef iCFData);
 string8 sAsUTF8(CFStringRef iCFString);
 string16 sAsUTF16(CFStringRef iCFString);
 
-ZAny sDAsAny(const ZAny& iDefault, CFTypeRef iVal);
-ZAny sAsAny(CFTypeRef iVal);
-
-ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal);
-ZRef<CFTypeRef> sAsCFType(const ZAny& iVal);
-
-ZSeq_Any sAsSeq_Any(const ZAny& iDefault, CFArrayRef iCFArray);
-ZMap_Any sAsMap_Any(const ZAny& iDefault, CFDictionaryRef iCFDictionary);
+// -----------------
 
 CFTypeRef sIfIs(CFTypeID iTypeID, CFTypeRef iTypeRef);
 

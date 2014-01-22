@@ -90,12 +90,6 @@ ZRef<CFTypeRef> spNumber_T(CFNumberType iNumberType, const S& iVal)
 \brief Compatible with ZVal & CFTypeRef
 */
 
-ZAny ZVal_CF::AsAny() const
-	{ return ZUtil_CF::sDAsAny(ZAny(), *this); }
-
-ZAny ZVal_CF::DAsAny(const ZAny& iDefault) const
-	{ return ZUtil_CF::sDAsAny(iDefault, *this); }
-
 ZVal_CF::operator bool() const
 	{
 	if (CFTypeRef theVal = inherited::Get())
@@ -483,9 +477,6 @@ ZMACRO_ZValAccessors_Def_GetSet(ZVal_CF, Map, ZMap_CF)
 // =================================================================================================
 // MARK: - ZSeq_CF
 
-ZSeq_Any ZSeq_CF::AsSeq_Any(const ZAny& iDefault) const
-	{ return ZUtil_CF::sAsSeq_Any(iDefault, this->pArray()); }
-
 ZSeq_CF::operator bool() const
 	{ return this->Count(); }
 
@@ -648,9 +639,6 @@ CFMutableArrayRef ZSeq_CF::pTouch()
 
 // =================================================================================================
 // MARK: - ZMap_CF
-
-ZMap_Any ZMap_CF::AsMap_Any(const ZAny& iDefault) const
-	{ return ZUtil_CF::sAsMap_Any(iDefault, this->pDictionary()); }
 
 ZMap_CF::operator bool() const
 	{
