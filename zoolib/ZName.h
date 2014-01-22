@@ -139,13 +139,12 @@ namespace std {
 namespace std { namespace tr1 {
 #endif
 
-template <typename T> class hash;
+template <typename T> struct hash;
 
 template <>
-class hash<ZooLib::ZName>
+struct hash<ZooLib::ZName>
 	{ public: std::size_t operator()(const ZooLib::ZName& iName) const { return iName.Hash(); } };
 
-template <typename T> class hash;
 #if defined(_LIBCPP_END_NAMESPACE_STD)
 _LIBCPP_END_NAMESPACE_STD
 #elif ZCONFIG_LIBCPP_2011
