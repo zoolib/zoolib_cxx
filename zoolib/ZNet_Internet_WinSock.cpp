@@ -294,8 +294,8 @@ void ZNetListener_TCP_WinSock::pInit(
 		throw ZNetEx(sTranslateError(err));
 		}
 
-	int reuseAddrFlag = 1;
-	::setsockopt(fSOCKET, IPPROTO_TCP, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
+	::setsockopt(fSOCKET, IPPROTO_TCP, SO_REUSEADDR,
+		(const char*)(const int*)sConstPtr(int(1)), sizeof(int));
 
 	sockaddr_in localSockAddr;
 	sMemZero_T(localSockAddr);
@@ -335,8 +335,8 @@ ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock(SOCKET iSOCKET)
 	// Assumes that the socket is already connected
 	fSOCKET = iSOCKET;
 	// Make sure that Nagle algorithm is enabled
-	int noDelayFlag = 0;
-	::setsockopt(fSOCKET, IPPROTO_TCP, TCP_NODELAY, (char*)&noDelayFlag, sizeof(noDelayFlag));
+	::setsockopt(fSOCKET, IPPROTO_TCP, TCP_NODELAY,
+		(const char*)(const int*)sConstPtr(int(0)), sizeof(int));
 	}
 
 static SOCKET spConnect(ip4_addr iLocalHost, ip_port iLocalPort,
@@ -519,12 +519,7 @@ void ZNetEndpoint_TCP_WinSock::Imp_SendDisconnect()
 
 void ZNetEndpoint_TCP_WinSock::Imp_Abort()
 	{
-//	struct linger theLinger;
-//	theLinger.l_onoff = 1;
-//	theLinger.l_linger = 0;
-//	::setsockopt(fSOCKET, SOL_SOCKET, SO_LINGER, (char*)&theLinger, sizeof(theLinger));
-	// 2 == SHUT_RDWR
-//	::shutdown(fSOCKET, 2);
+	// SO_LINGER doesn't seem to work with WinSock.
 	::closesocket(fSOCKET);
 	}
 

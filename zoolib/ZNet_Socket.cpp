@@ -63,12 +63,12 @@ static void spSetSocketOptions(int iSocket)
 	::fcntl(iSocket, F_SETFL, ::fcntl(iSocket, F_GETFL,0) | O_NONBLOCK);
 
 	// Enable keep alive
-	int keepAliveFlag = 1;
-	::setsockopt(iSocket, SOL_SOCKET, SO_KEEPALIVE, (char*)&keepAliveFlag, sizeof(keepAliveFlag));
+	::setsockopt(iSocket, SOL_SOCKET, SO_KEEPALIVE,
+		(const char*)(const int*)sConstPtr(int(1)), sizeof(int));
 
 	// Disable sigpipe when writing/reading a far-closed socket.
-	int noSigPipeFlag = 1;
-	::setsockopt(iSocket, SOL_SOCKET, SO_NOSIGPIPE, (char*)&noSigPipeFlag, sizeof(noSigPipeFlag));
+	::setsockopt(iSocket, SOL_SOCKET, SO_NOSIGPIPE,
+		(const char*)(const int*)sConstPtr(int(1)), sizeof(int));
 	}
 
 int ZNet_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
@@ -90,8 +90,8 @@ static void spSetSocketOptions(int iSocket)
 	::fcntl(iSocket, F_SETFL, ::fcntl(iSocket, F_GETFL, 0) | O_NONBLOCK);
 
 	// Enable keep alive
-	int keepAliveFlag = 1;
-	::setsockopt(iSocket, SOL_SOCKET, SO_KEEPALIVE, (char*)&keepAliveFlag, sizeof(keepAliveFlag));
+	::setsockopt(iSocket, SOL_SOCKET, SO_KEEPALIVE,
+		(const char*)(const int*)sConstPtr(int(1)), sizeof(int));
 	}
 
 #ifndef MSG_NOSIGNAL
