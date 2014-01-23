@@ -27,13 +27,56 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
+namespace ZooLib {
+namespace ZUtil_Python {
+
 // =================================================================================================
 // MARK: -
 
-namespace ZooLib {
-
 ZQ<std::string> sQAsString(PyObject* iObject);
 
+// =================================================================================================
+// MARK: -
+
+class ThreadStateReleaser
+	{
+public:
+	ThreadStateReleaser();
+	~ThreadStateReleaser();
+
+	void Acquire();
+	void Release();
+
+private:
+	PyThreadState* fState;
+	};
+
+// =================================================================================================
+// MARK: -
+
+class GILStateEnsurer
+	{
+public:
+	GILStateEnsurer();
+	~GILStateEnsurer();
+
+private:
+	PyGILState_STATE fState;
+	};
+
+// =================================================================================================
+// MARK: -
+
+PyObject* sInvokeSafely(PyCFunction iFunc, PyObject* self, PyObject* args);
+
+template <PyCFunction Func>
+struct MethodWrapper_T
+	{
+	static PyObject* sFunc(PyObject* self, PyObject* args)
+		{ return sInvokeSafely(Func, self, args); }
+	};
+
+} // namespace ZUtil_Python
 } // namespace ZooLib
 
 #endif // __ZUtil_Python_h__

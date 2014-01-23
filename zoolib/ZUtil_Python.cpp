@@ -18,12 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZUtil_Python.h"
+
+namespace ZooLib {
+namespace ZUtil_Python {
 
 // =================================================================================================
 // MARK: -
-
-namespace ZooLib {
 
 ZQ<std::string> sQAsString(PyObject* iObject)
 	{
@@ -32,5 +34,64 @@ ZQ<std::string> sQAsString(PyObject* iObject)
 	return null;
 	}
 
+// =================================================================================================
+// MARK: -
 
+ThreadStateReleaser::ThreadStateReleaser()
+:	fState(PyEval_SaveThread())
+	{}
+
+ThreadStateReleaser::~ThreadStateReleaser()
+	{
+	if (fState)
+		PyEval_RestoreThread(fState);
+	}
+
+void ThreadStateReleaser::Acquire()
+	{
+	ZAssert(fState);
+	PyEval_RestoreThread(fState);
+	fState = nullptr;
+	}
+
+void ThreadStateReleaser::Release()
+	{
+	ZAssert(not fState);
+	fState = PyEval_SaveThread();
+	}
+
+// =================================================================================================
+// MARK: -
+
+GILStateEnsurer::GILStateEnsurer()
+:	fState(PyGILState_Ensure())
+	{}
+
+GILStateEnsurer::~GILStateEnsurer()
+	{ PyGILState_Release(fState); }
+
+// =================================================================================================
+// MARK: -
+
+PyObject* sInvokeSafely(PyCFunction iFunc, PyObject* self, PyObject* args)
+	{
+	try
+		{
+		if (PyObject* result = iFunc(self, args))
+			return result;
+		return Py_INCREF(Py_None), Py_None;
+		}
+	catch (std::exception& ex)
+		{
+		PyErr_SetString(PyExc_RuntimeError, ex.what());
+		}
+	catch (...)
+		{
+		PyErr_SetString(PyExc_RuntimeError, "Unknown C++ exception");
+		}
+	return nullptr;
+	}
+
+
+} // namespace ZUtil_Python
 } // namespace ZooLib
