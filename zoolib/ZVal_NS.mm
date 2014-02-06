@@ -62,12 +62,6 @@ NSNumber* spAsNumber(NSObject* iObj)
 \brief Compatible with ZVal & NSObject
 */
 
-ZAny ZVal_NS::AsAny() const
-	{ return this->DAsAny(ZAny()); }
-
-ZAny ZVal_NS::DAsAny(const ZAny& iDefault) const
-	{ return ZUtil_NS::sDAsAny(iDefault, inherited::Get()); }
-
 ZVal_NS::operator bool() const
 	{
 	if (NSObject* theVal = inherited::Get())

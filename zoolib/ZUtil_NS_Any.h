@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,66 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_NS_h__
-#define __ZUtil_NS_h__ 1
+#ifndef __ZUtil_NS_Any_h__
+#define __ZUtil_NS_Any_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-// Urg. We need to include this before any std C++ headers when building
-// with Cocotron, otherwise va_list isn't appropriately visible to ObjC code.
-#include <Foundation/Foundation.h>
+#include "zoolib/ZVal_Any.h"
 
-#include "zoolib/ZUnicodeString.h"
-
-// =================================================================================================
-// MARK: - ZUtil_NS
+#import <Foundation/NSObject.h>
 
 namespace ZooLib {
 namespace ZUtil_NS {
 
-NSString* sString();
-NSString* sString(const string8& iString8);
-NSString* sString(const string16& iString16);
+// =================================================================================================
+// MARK: - ZUtil_NS
 
-NSMutableString* sStringMutable();
-NSMutableString* sStringMutable(const string8& iString8);
-NSMutableString* sStringMutable(const string16& iString16);
-NSMutableString* sStringMutable(NSString* iNSString);
+ZAny sDAsAny(const ZAny& iDefault, NSObject* iVal);
+ZAny sAsAny(NSObject* iVal);
 
-// -----------------
-
-NSDictionary* sDictionary();
-
-NSMutableDictionary* sDictionaryMutable();
-NSMutableDictionary* sDictionaryMutable(NSDictionary* iNSDictionary);
-
-// -----------------
-
-NSArray* sArray();
-
-NSMutableArray* sArrayMutable();
-NSMutableArray* sArrayMutable(NSArray* iNSArray);
-
-// -----------------
-
-NSData* sData();
-NSData* sData(const void* iSource, size_t iSize);
-
-NSMutableData* sDataMutable();
-NSMutableData* sDataMutable(size_t iSize);
-NSMutableData* sDataMutable(const void* iSource, size_t iSize);
-NSMutableData* sDataMutable(NSData* iNSData);
-
-// -----------------
-
-string8 sAsUTF8(NSString* iNSString);
-string16 sAsUTF16(NSString* iNSString);
+NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal);
+NSObject* sAsNSObject(const ZAny& iVal);
 
 } // namespace ZUtil_NS
 } // namespace ZooLib
 
+// =================================================================================================
+// MARK: - asAnyWithDefault
+
+@interface NSObject (ZAny_Additions)
+-(ZooLib::ZAny)asAnyWithDefault:(const ZooLib::ZAny&)iDefault;
+@end
+
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-#endif // __ZUtil_NS_h__
+#endif // __ZUtil_CF_Any_h__

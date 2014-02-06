@@ -50,9 +50,6 @@ class ZVal_NS
 	{
 	typedef ZRef<NSObject> inherited;
 public:
-	ZAny AsAny() const;
-	ZAny DAsAny(const ZAny& iDefault) const;
-
 	operator bool() const;
 
 	ZVal_NS();
