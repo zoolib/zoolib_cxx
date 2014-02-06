@@ -29,23 +29,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_FILE
+// MARK: - ZStream_FILE
 
-/// A read stream that wraps a POSIX FILE*.
-
-class ZStreamR_FILE : public ZStreamR
+class ZStream_FILE
 	{
 public:
-	ZStreamR_FILE(FILE* iFILE);
-	ZStreamR_FILE(FILE* iFILE, bool iAdopt);
-	~ZStreamR_FILE();
+	ZStream_FILE(FILE* iFILE, bool iAdopt);
+	~ZStream_FILE();
 
-// From ZStreamR
-	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
-
-// Our protocol
-	FILE* GetFILE() { return fFILE; }
-	FILE* OrphanFILE() { FILE* theFILE = fFILE; fFILE = nullptr; return theFILE; }
+	FILE* GetFILE();
+	FILE* OrphanFILE();
 
 protected:
 	FILE* fFILE;
@@ -53,16 +46,34 @@ protected:
 	};
 
 // =================================================================================================
+// MARK: - ZStreamR_FILE
+
+/// A read stream that wraps a POSIX FILE*.
+
+class ZStreamR_FILE
+:	public ZStreamR
+,	public ZStream_FILE
+	{
+public:
+	ZStreamR_FILE(FILE* iFILE);
+	ZStreamR_FILE(FILE* iFILE, bool iAdopt);
+
+// From ZStreamR
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
+	};
+
+// =================================================================================================
 // MARK: - ZStreamRPos_FILE
 
 /// A positionable read stream that wraps a POSIX FILE*.
 
-class ZStreamRPos_FILE : public ZStreamRPos
+class ZStreamRPos_FILE
+:	public ZStreamRPos
+,	public ZStream_FILE
 	{
 public:
 	ZStreamRPos_FILE(FILE* iFILE);
 	ZStreamRPos_FILE(FILE* iFILE, bool iAdopt);
-	~ZStreamRPos_FILE();
 
 // From ZStreamR
 	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
@@ -72,14 +83,6 @@ public:
 	virtual void Imp_SetPosition(uint64 iPosition);
 
 	virtual uint64 Imp_GetSize();
-
-// Our protocol
-	FILE* GetFILE() { return fFILE; }
-	FILE* OrphanFILE() { FILE* theFILE = fFILE; fFILE = nullptr; return theFILE; }
-
-protected:
-	FILE* fFILE;
-	bool fAdopted;
 	};
 
 // =================================================================================================
@@ -87,24 +90,17 @@ protected:
 
 /// A write stream that wraps a POSIX FILE*.
 
-class ZStreamW_FILE : public ZStreamW
+class ZStreamW_FILE
+:	public ZStreamW
+,	public ZStream_FILE
 	{
 public:
 	ZStreamW_FILE(FILE* iFILE);
 	ZStreamW_FILE(FILE* iFILE, bool iAdopt);
-	~ZStreamW_FILE();
 
 // From ZStreamW
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
 	virtual void Imp_Flush();
-
-// Our protocol
-	FILE* GetFILE() { return fFILE; }
-	FILE* OrphanFILE() { FILE* theFILE = fFILE; fFILE = nullptr; return theFILE; }
-
-protected:
-	FILE* fFILE;
-	bool fAdopted;
 	};
 
 // =================================================================================================

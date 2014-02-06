@@ -133,23 +133,35 @@ static uint64 spGetSize(FILE* iFILE)
 using std::range_error;
 
 // =================================================================================================
-// MARK: - ZStreamR_FILE
+// MARK: - ZStream_FILE
 
-ZStreamR_FILE::ZStreamR_FILE(FILE* iFILE)
-:	fFILE(iFILE),
-	fAdopted(false)
+ZStream_FILE::ZStream_FILE(FILE* iFILE, bool iAdopt)
+:	fFILE(iFILE)
+,	fAdopted(false)
 	{}
 
-ZStreamR_FILE::ZStreamR_FILE(FILE* iFILE, bool iAdopt)
-:	fFILE(iFILE),
-	fAdopted(iAdopt)
-	{}
-
-ZStreamR_FILE::~ZStreamR_FILE()
+ZStream_FILE::~ZStream_FILE()
 	{
 	if (fFILE && fAdopted)
 		fclose(fFILE);
 	}
+
+FILE* ZStream_FILE::GetFILE()
+	{ return fFILE; }
+
+FILE* ZStream_FILE::OrphanFILE()
+	{ FILE* theFILE = fFILE; fFILE = nullptr; return theFILE; }
+
+// =================================================================================================
+// MARK: - ZStreamR_FILE
+
+ZStreamR_FILE::ZStreamR_FILE(FILE* iFILE)
+:	ZStream_FILE(iFILE, false)
+	{}
+
+ZStreamR_FILE::ZStreamR_FILE(FILE* iFILE, bool iAdopt)
+:	ZStream_FILE(iFILE, iAdopt)
+	{}
 
 void ZStreamR_FILE::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{ spRead(fFILE, oDest, iCount, oCountRead); }
@@ -158,20 +170,12 @@ void ZStreamR_FILE::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 // MARK: - ZStreamRPos_FILE
 
 ZStreamRPos_FILE::ZStreamRPos_FILE(FILE* iFILE)
-:	fFILE(iFILE),
-	fAdopted(false)
+:	ZStream_FILE(iFILE, false)
 	{}
 
 ZStreamRPos_FILE::ZStreamRPos_FILE(FILE* iFILE, bool iAdopt)
-:	fFILE(iFILE),
-	fAdopted(iAdopt)
+:	ZStream_FILE(iFILE, iAdopt)
 	{}
-
-ZStreamRPos_FILE::~ZStreamRPos_FILE()
-	{
-	if (fFILE && fAdopted)
-		fclose(fFILE);
-	}
 
 void ZStreamRPos_FILE::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{ spRead(fFILE, oDest, iCount, oCountRead); }
@@ -192,29 +196,18 @@ uint64 ZStreamRPos_FILE::Imp_GetSize()
 // MARK: - ZStreamW_FILE
 
 ZStreamW_FILE::ZStreamW_FILE(FILE* iFILE)
-:	fFILE(iFILE),
-	fAdopted(false)
+:	ZStream_FILE(iFILE, false)
 	{}
 
 ZStreamW_FILE::ZStreamW_FILE(FILE* iFILE, bool iAdopt)
-:	fFILE(iFILE),
-	fAdopted(iAdopt)
+:	ZStream_FILE(iFILE, iAdopt)
 	{}
-
-ZStreamW_FILE::~ZStreamW_FILE()
-	{
-	if (fFILE && fAdopted)
-		fclose(fFILE);
-	}
 
 void ZStreamW_FILE::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{ spWrite(fFILE, iSource, iCount, oCountWritten); }
 
 void ZStreamW_FILE::Imp_Flush()
-	{
-	if (fFILE)
-		fflush(fFILE);
-	}
+	{ fflush(fFILE); }
 
 // =================================================================================================
 // MARK: - FILE backed by a ZStream
