@@ -56,6 +56,21 @@ inline void sCheck(IUnknown* iP)
 namespace ZWinCOM {
 
 // =================================================================================================
+// MARK: - EnsureInitialized
+
+class EnsureInitialized
+	{
+public:
+	EnsureInitialized();
+	~EnsureInitialized();
+
+	bool IsOK() const;
+
+private:
+	bool fIsOK;
+	};
+
+// =================================================================================================
 // MARK: - Support for QueryInterface and output-param APIs
 
 template <class T>

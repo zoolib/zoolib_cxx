@@ -31,6 +31,22 @@ namespace ZooLib {
 namespace ZWinCOM {
 
 // =================================================================================================
+// MARK: - EnsureInitialized
+
+EnsureInitialized::EnsureInitialized()
+:	fIsOK(sSuccess& CoInitializeEx(nullptr, COINIT_MULTITHREADED))
+	{}
+
+EnsureInitialized::~EnsureInitialized()
+	{
+	if (fIsOK)
+		::CoUninitialize();
+	}
+
+bool EnsureInitialized::IsOK() const
+	{ return fIsOK; }
+
+// =================================================================================================
 // MARK: - Variant
 
 /**
