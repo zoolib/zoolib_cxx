@@ -72,6 +72,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			#define ZCONFIG_Processor ZCONFIG_Processor_PPC_64
 		#elif defined(__arm__)
 			#define ZCONFIG_Processor ZCONFIG_Processor_ARM
+		#elif defined(__arm64__)
+			#define ZCONFIG_Processor ZCONFIG_Processor_ARM_64
 		#endif
 	#elif defined(_MSC_VER)
 		#if 0
@@ -119,6 +121,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#elif ZCONFIG(Processor, PPC_64)
 		#define ZCONFIG_Is64Bit 1
 	#elif ZCONFIG(Processor, x86_64)
+		#define ZCONFIG_Is64Bit 1
+	#elif ZCONFIG(Processor, ARM_64)
 		#define ZCONFIG_Is64Bit 1
 	#endif
 #endif
