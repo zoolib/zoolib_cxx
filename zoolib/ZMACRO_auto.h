@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZMACRO_auto(name,expr) auto name(expr)
 	#define ZMACRO_auto_(name,expr) auto name=(expr)
 
-#else
+#elif defined(ZMACRO_decltype)
 
 	#define ZMACRO_auto(name,expr) ZMACRO_decltype(expr) name(expr)
 	#define ZMACRO_auto_(name,expr) ZMACRO_decltype(expr) name = (expr)
