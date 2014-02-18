@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStrim_NSString.h"
 #include "zoolib/ZUtil_NS.h"
+#include "zoolib/ZUtil_NS_Any.h"
 
 namespace ZooLib {
 
