@@ -405,7 +405,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // MARK: - MacMP
 
 #ifndef ZCONFIG_SPI_Avail__MacMP
-	#if macintosh || ZCONFIG_SPI_Avail__Carbon64
+	#if macintosh || (ZCONFIG_SPI_Avail__Carbon64 && __MAC_OS_X_VERSION_MIN_REQUIRED < 1070)
 		#define ZCONFIG_SPI_Avail__MacMP 1
 	#endif
 #endif
