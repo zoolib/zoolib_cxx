@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCtorDtor.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZName.h"
-#include "zoolib/ZTypes.h" // For sDefault
+#include "zoolib/ZSingleton.h" // For sDefault
 
 #include <cstring>
 
