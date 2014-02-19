@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZCONFIG_Compiler_CodeWarrior 1
 #define ZCONFIG_Compiler_MSVC 2
 #define ZCONFIG_Compiler_GCC 4
+#define ZCONFIG_Compiler_Clang 8
 
 // Which processor -- ZCONFIG_Processor
 #define ZCONFIG_Processor_68K 1

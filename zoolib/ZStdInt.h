@@ -103,7 +103,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		|| ZCONFIG_SPI_Enabled(MacClassic) \
 		|| ZCONFIG_SPI_Enabled(Carbon64)
 
-		#if __arm__
+		#if ZCONFIG(Compiler,Clang)
 			#include <MacTypes.h>
 		#else
 			#include ZMACINCLUDE3(CoreServices,CarbonCore,MacTypes.h)

@@ -35,6 +35,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#if 0
 	#elif defined(__MWERKS__)
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_CodeWarrior
+	#elif defined(__clang_major__)
+		#define ZCONFIG_Compiler ZCONFIG_Compiler_Clang
 	#elif defined(__GNUC__)
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_GCC
 	#elif defined(_MSC_VER)
@@ -410,7 +412,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 
 #ifndef ZMACRO_Attribute_Format_Printf
-	#if ZCONFIG(Compiler,GCC)
+	#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
 		#define ZMACRO_Attribute_Format_Printf(m,n) __attribute__((format(printf,m,n)))
 	#else
 		#define ZMACRO_Attribute_Format_Printf(m,n)
@@ -418,7 +420,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #ifndef ZMACRO_Attribute_Aligned
-	#if ZCONFIG(Compiler,GCC)
+	#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
 		#define ZMACRO_Attribute_Aligned __attribute__((aligned))
 	#else
 		#define ZMACRO_Attribute_Aligned
@@ -426,7 +428,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #ifndef ZMACRO_Attribute_Deprecated
-	#if ZCONFIG(Compiler,GCC)
+	#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
 		#define ZMACRO_Attribute_Deprecated __attribute__((deprecated))
 	#else
 		#define ZMACRO_Attribute_Deprecated
@@ -434,7 +436,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #ifndef ZMACRO_Attribute_NoThrow
-	#if ZCONFIG(Compiler,GCC)
+	#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
 		#define ZMACRO_Attribute_NoThrow __attribute__((nothrow))
 	#else
 		#define ZMACRO_Attribute_NoThrow
@@ -442,7 +444,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #ifndef ZMACRO_Attribute_Unused
-	#if ZCONFIG(Compiler,GCC)
+	#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
 		#define ZMACRO_Attribute_Unused __attribute__((unused))
 	#else
 		#define ZMACRO_Attribute_Unused
@@ -458,7 +460,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #ifndef ZMACRO_NoReturn_Post
-	#if ZCONFIG(Compiler,GCC)
+	#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
 		#define ZMACRO_NoReturn_Post __attribute__((noreturn))
 	#else
 		#define ZMACRO_NoReturn_Post
