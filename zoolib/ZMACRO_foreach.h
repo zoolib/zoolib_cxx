@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMACRO_auto.h"
 #include "zoolib/ZMACRO_decltype.h"
 
-#if ZCONFIG_SPI_Enabled(type_traits)
+#if ZCONFIG_SPI_Enabled(type_traits) && defined(ZMACRO_auto)
 
 // =================================================================================================
 // MARK: - ZMACRO_foreach helpers
@@ -149,7 +149,7 @@ struct ForEachWrapper_Reverse_T
 		for (ZMACRO_auto(varname, *__FEW.fIter); not __FEBreak; --__FEBreak)
 #endif
 
-#endif // ZCONFIG_SPI_Enabled(type_traits)
+#endif // ZCONFIG_SPI_Enabled(type_traits) && defined(ZMACRO_auto)
 
 // =================================================================================================
 // MARK: - Failure-marking macros
