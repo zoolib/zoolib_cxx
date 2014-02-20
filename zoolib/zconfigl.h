@@ -207,42 +207,74 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 // ZCONFIG_CPP
 
-#if __cplusplus>=201103L
-	#define ZCONFIG_CPP 2011
-#elif __cplusplus>=199711L && !defined(_MSC_VER)
-	#define ZCONFIG_CPP 2003
-#else
+//MSVC++ 12.0 _MSC_VER == 1800 (Visual Studio 2013)
+//MSVC++ 11.0 _MSC_VER == 1700 (Visual Studio 2012)
+//MSVC++ 10.0 _MSC_VER == 1600 (Visual Studio 2010)
+//MSVC++ 9.0  _MSC_VER == 1500 (Visual Studio 2008)
+//MSVC++ 8.0  _MSC_VER == 1400 (Visual Studio 2005)
+//MSVC++ 7.1  _MSC_VER == 1310 (Visual Studio 2003)
+//MSVC++ 7.0  _MSC_VER == 1300
+//MSVC++ 6.0  _MSC_VER == 1200
+//MSVC++ 5.0  _MSC_VER == 1100
+
+#ifndef ZCONFIG_CPP
+	#if  defined(__clang__)
+		#if __cplusplus >= 201103L
+			#define ZCONFIG_CPP 2011
+		#else
+			#define ZCONFIG_CPP 2003
+		#endif
+	#elif defined(__GNUC__)
+		#if __cplusplus >= 199711L // Go figure.
+			#define ZCONFIG_CPP 2003
+		#else
+			#define ZCONFIG_CPP 1998
+		#endif
+	#elif defined(_MSC_VER)
+		#if _MSC_VER >= 1600
+			#define ZCONFIG_CPP 2011
+		#elif _MSC_VER >= 1500
+			#define ZCONFIG_CPP 1998
+		#endif
+	#endif
+#endif
+
+#ifndef ZCONFIG_CPP
 	#define ZCONFIG_CPP 1998
 #endif
 
 // =================================================================================================
-// ZCONFIG_LIBCPP
+// ZCONFIG_CPPLIB
 
-#if ZCONFIG_CPP >= 2011
-	// ciso646 does nothing, but on a libc++ system it'll get _LIBCPP_VERSION defined.
-	#include <ciso646>
-	#if defined(_LIBCPP_VERSION)
-		#define ZCONFIG_LIBCPP_2011 1
-	#else
-		#define ZCONFIG_LIBCPP_TR1 1
+#if  defined(__clang__)
+	#define ZMACRO_namespace_tr1_prefix std
+	#define ZMACRO_namespace_tr1_begin namespace std {
+	#define ZMACRO_namespace_tr1_end }
+	#define ZMACRO_tr1_header(a) <a>
+	#define ZMACRO_Has_TR1 1
+#elif defined(_MSC_VER)
+	#if _MSC_VER >= 1600
+		#define ZMACRO_namespace_tr1_prefix std
+		#define ZMACRO_namespace_tr1_begin namespace std {
+		#define ZMACRO_namespace_tr1_end }
+		#define ZMACRO_tr1_header(a) <a>
+		#define ZMACRO_Has_TR1 1
+	#elif _MSC_VER >= 1500 && defined(_HAS_TR1) && (_HAS_TR1+0)
+		#define ZMACRO_namespace_tr1_prefix std::tr1
+		#define ZMACRO_namespace_tr1_begin namespace std { namespace tr1 {
+		#define ZMACRO_namespace_tr1_end } }
+		#define ZMACRO_tr1_header(a) <a>
+		#define ZMACRO_Has_TR1 1
 	#endif
-#elif ZCONFIG_CPP >= 2003
-	#if defined(_MSC_VER) && _MSC_VER >= 1600
-		#define ZCONFIG_LIBCPP_2011 1
-	#else
-		#define ZCONFIG_LIBCPP_TR1 1
-		#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 2))
-			#define ZCONFIG_LIBCPP_GCCExtensions 1
-		#endif
-	#endif
-#elif defined(__ANDROID__)
-	#define ZCONFIG_LIBCPP_TR1 1
-	#define ZCONFIG_LIBCPP_GCCExtensions 1
-#else
-	#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 2))
-		#define ZCONFIG_LIBCPP_TR1 1
-		#define ZCONFIG_LIBCPP_GCCExtensions 1
-	#endif
+#elif defined(__GNUC__)
+	#define ZMACRO_namespace_tr1_begin namespace std { namespace tr1 {
+	#define ZMACRO_namespace_tr1_end } }
+	#define ZMACRO_tr1_header(a) <tr1/a>
+	#define ZMACRO_Has_TR1 1
+#endif
+
+#ifndef ZMACRO_Has_TR1
+	#define ZMACRO_Has_TR1 0
 #endif
 
 // =================================================================================================
@@ -294,7 +326,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#endif
 
 	// Ghastly workaround for MSVC non-compliance with C++ standard
-	#if _MSC_VER < 600
+	#if _MSC_VER < 1200
 		#define for if (0) {} else for
 	#endif
 
