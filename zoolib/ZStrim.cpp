@@ -1156,7 +1156,11 @@ void ZStrimW::pWritev(size_t* oCountCU, size_t* oWritten, const UTF8* iString, v
 			int count = _vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
 		#else
 			va_list args;
-			va_copy(args, iArgs);
+			#ifdef __va_copy
+				__va_copy(args, iArgs);
+			#else
+				va_copy(args, iArgs);
+			#endif
 			int count = vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
 		#endif
 
