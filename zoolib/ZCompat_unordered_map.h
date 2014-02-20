@@ -28,32 +28,27 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if ZCONFIG_SPI_Desired__unordered_map
-	#define ZCONFIG_SPI_Avail__unordered_map 1
-	#if ZCONFIG_LIBCPP_2011
-		#include <unordered_map>
+
+	#if ZMACRO_Has_TR1
+		#define ZCONFIG_SPI_Avail__unordered_map 1
+		#include ZMACRO_tr1_header(unordered_map)
 		namespace ZooLib
 			{
-			using std::unordered_map;
-			using std::unordered_multimap;
+			using ZMACRO_namespace_tr1_prefix::unordered_map;
+			using ZMACRO_namespace_tr1_prefix::unordered_multimap;
 			}
-	#elif ZCONFIG_LIBCPP_TR1
-		#include <tr1/unordered_map>
-		namespace ZooLib
-			{
-			using std::tr1::unordered_map;
-			using std::tr1::unordered_multimap;
-			}
-	#elif ZCONFIG_LIBCPP_GCCExtensions
+	#elif defined(__GNUC__)
 		#include <hash_map>
 		namespace ZooLib
 			{
 			typedef hash_map unordered_map;
 			typedef unordered_hash_map unordered_multimap;
 			}
-	#else
-		#undef ZCONFIG_SPI_Avail__unordered_map
-		#define ZCONFIG_SPI_Avail__unordered_map 0
 	#endif
+#endif
+
+#ifndef ZCONFIG_SPI_Avail__unordered_map
+	#define ZCONFIG_SPI_Avail__unordered_map 0
 #endif
 
 #endif // __ZCompat_unordered_map_h__
