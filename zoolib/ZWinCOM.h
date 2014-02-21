@@ -67,7 +67,7 @@ public:
 	bool IsOK() const;
 
 private:
-	bool fIsOK;
+	const HRESULT fHRESULT;
 	};
 
 // =================================================================================================

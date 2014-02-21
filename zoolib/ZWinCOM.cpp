@@ -34,17 +34,17 @@ namespace ZWinCOM {
 // MARK: - EnsureInitialized
 
 EnsureInitialized::EnsureInitialized()
-:	fIsOK(sSuccess& CoInitializeEx(nullptr, COINIT_MULTITHREADED))
+:	fHRESULT(::CoInitializeEx(nullptr, COINIT_MULTITHREADED))
 	{}
 
 EnsureInitialized::~EnsureInitialized()
 	{
-	if (fIsOK)
+	if (sSuccess(fHRESULT))
 		::CoUninitialize();
 	}
 
 bool EnsureInitialized::IsOK() const
-	{ return fIsOK; }
+	{ return fHRESULT == RPC_E_CHANGED_MODE || sSuccess(fHRESULT); }
 
 // =================================================================================================
 // MARK: - Variant
