@@ -35,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#if 0
 	#elif defined(__MWERKS__)
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_CodeWarrior
-	#elif defined(__clang_major__)
+	#elif defined(__clang__)
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_Clang
 	#elif defined(__GNUC__)
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_GCC
@@ -62,7 +62,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#elif __INTEL__
 			#define ZCONFIG_Processor ZCONFIG_Processor_x86
 		#endif
-	#elif defined(__GNUC__)
+	#elif defined(__GNUC__) || defined(__clang__)
 		#if 0
 		#elif defined(__i386__)
 			#define ZCONFIG_Processor ZCONFIG_Processor_x86
@@ -247,34 +247,50 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ZCONFIG_CPPLIB
 
 #if  defined(__clang__)
-	#define ZMACRO_namespace_tr1_prefix std
-	#define ZMACRO_namespace_tr1_begin namespace std {
-	#define ZMACRO_namespace_tr1_end }
-	#define ZMACRO_tr1_header(a) <a>
-	#define ZMACRO_Has_TR1 1
+	#include <cstddef> // To see if _LIBCPP_VERSION gets defined
+	#ifdef _LIBCPP_VERSION
+		#define ZMACRO_namespace_tr1_prefix std
+		#define ZMACRO_namespace_tr1_begin namespace std {
+		#define ZMACRO_namespace_tr1_end }
+		#define ZMACRO_tr1_header(a) <a>
+		#define ZMACRO_Has_tr1 1
+	#else
+		#define ZMACRO_namespace_tr1_prefix std::tr1
+		#define ZMACRO_namespace_tr1_begin namespace std { namespace tr1 {
+		#define ZMACRO_namespace_tr1_end } }
+		#define ZMACRO_tr1_header(a) <tr1/a>
+		#define ZMACRO_Has_tr1 1
+		#define ZMACRO_Has_tr1_early 1
+	#endif
 #elif defined(_MSC_VER)
+	#include <yvals.h> // For _HAS_TR1
 	#if _MSC_VER >= 1600
 		#define ZMACRO_namespace_tr1_prefix std
 		#define ZMACRO_namespace_tr1_begin namespace std {
 		#define ZMACRO_namespace_tr1_end }
 		#define ZMACRO_tr1_header(a) <a>
-		#define ZMACRO_Has_TR1 1
+		#define ZMACRO_Has_tr1 1
 	#elif _MSC_VER >= 1500 && defined(_HAS_TR1) && (_HAS_TR1+0)
 		#define ZMACRO_namespace_tr1_prefix std::tr1
 		#define ZMACRO_namespace_tr1_begin namespace std { namespace tr1 {
 		#define ZMACRO_namespace_tr1_end } }
 		#define ZMACRO_tr1_header(a) <a>
-		#define ZMACRO_Has_TR1 1
+		#define ZMACRO_Has_tr1 1
+		#define ZMACRO_Has_tr1_early 1
 	#endif
 #elif defined(__GNUC__)
 	#define ZMACRO_namespace_tr1_begin namespace std { namespace tr1 {
 	#define ZMACRO_namespace_tr1_end } }
 	#define ZMACRO_tr1_header(a) <tr1/a>
-	#define ZMACRO_Has_TR1 1
+	#define ZMACRO_Has_tr1 1
 #endif
 
-#ifndef ZMACRO_Has_TR1
-	#define ZMACRO_Has_TR1 0
+#ifndef ZMACRO_Has_tr1
+	#define ZMACRO_Has_tr1 0
+#endif
+
+#ifndef ZMACRO_Has_tr1_early
+	#define ZMACRO_Has_tr1_early 0
 #endif
 
 // =================================================================================================
@@ -372,9 +388,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// nullptr is naturally available
 	#define ZCONFIG_Has_nullptr 1
 
-#elif defined(__clang_major__)
+#elif defined(__clang__)
 	#if __has_extension(cxx_nullptr)
 		// nullptr is naturally available
+		#define ZCONFIG_Has_nullptr 1
+	#elif defined nullptr
+		// It's being faked out by stuff in cstddef.
 		#define ZCONFIG_Has_nullptr 1
 	#endif
 
@@ -406,7 +425,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	#define ZCONFIG_Has_nullptr 1
 
-#endif // ZCONFIG_Has_nullptr
+#endif
 
 // =================================================================================================
 

@@ -131,7 +131,7 @@ bool sNotEmpty(const ZName& iName)
 
 } // namespace ZooLib
 
-#if ZMACRO_Has_TR1
+#if ZMACRO_Has_tr1
 
 	ZMACRO_namespace_tr1_begin
 	template <typename T> struct hash;

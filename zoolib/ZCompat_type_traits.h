@@ -30,29 +30,29 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Desired__type_traits
 
-	#if ZMACRO_Has_TR1
+	#if ZMACRO_Has_tr1
 
 		#define ZCONFIG_SPI_Avail__type_traits 1
 
 		#include ZMACRO_tr1_header(type_traits)
 
-//		#if defined(linux) \
-//			|| defined(__GNUC__) && (__GNUC__ < 4 \
+		#if ZMACRO_Has_tr1_early
+//		#if defined(_GLIBCXX_STD) and defined(__GNUC__) && (__GNUC__ < 4 \
 //			|| (__GNUC__ == 4 && __GNUC_MINOR__ < 5))
-//			// No enable_if or conditional prior to 4.5
-//			namespace std { namespace tr1 {
-//
-//				template<bool, typename _Tp = void> struct enable_if {};
-//				template<typename _Tp> struct enable_if<true,_Tp> { typedef _Tp type; };
-//
-//				template<bool _Cond, typename _Iftrue, typename _Iffalse>
-//				struct conditional { typedef _Iftrue type; };
-//
-//				template<typename _Iftrue, typename _Iffalse>
-//				struct conditional<false,_Iftrue,_Iffalse> { typedef _Iffalse type; };
-//
-//			}} // namespace tr1, namespace std
-//		#endif
+			// No enable_if or conditional prior to 4.5
+			namespace std { namespace tr1 {
+
+				template<bool, typename _Tp = void> struct enable_if {};
+				template<typename _Tp> struct enable_if<true,_Tp> { typedef _Tp type; };
+
+				template<bool _Cond, typename _Iftrue, typename _Iffalse>
+				struct conditional { typedef _Iftrue type; };
+
+				template<typename _Iftrue, typename _Iffalse>
+				struct conditional<false,_Iftrue,_Iffalse> { typedef _Iffalse type; };
+
+			}} // namespace tr1, namespace std
+		#endif
 	#endif
 
 #endif // ZCONFIG_SPI_Desired__type_traits
@@ -107,11 +107,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		// Reference transformations:
 	using ZMACRO_namespace_tr1_prefix::remove_reference;
-	#if ZCONFIG_CPP >= 2011 or ZCONFIG(Compiler,Clang)
+	#if ZMACRO_Has_tr1_early
+		using ZMACRO_namespace_tr1_prefix::add_reference;
+	#else
 		using ZMACRO_namespace_tr1_prefix::add_lvalue_reference;
 		template <class _Tp> using add_reference = add_lvalue_reference<_Tp>;
-	#else
-		using ZMACRO_namespace_tr1_prefix::add_reference;
 	#endif
 //		using ZMACRO_namespace_tr1_prefix::add_rvalue_reference;
 
