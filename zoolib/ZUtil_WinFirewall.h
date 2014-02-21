@@ -47,6 +47,9 @@ namespace ZUtil_WinFirewall {
 
 ZRef<INetFwMgr> sMgr();
 
+ZRef<INetFwProfile>
+sCurrentProfile_LocalPolicy(ZRef<INetFwMgr> iMgr);
+
 ZRef<INetFwAuthorizedApplications>
 sAuthorizedApplications_CurrentProfile_LocalPolicy(ZRef<INetFwMgr> iMgr);
 

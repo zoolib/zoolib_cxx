@@ -41,8 +41,8 @@ using namespace ZWinCOM;
 ZRef<INetFwMgr> sMgr()
 	{ return ZWinCOM::sCreate<NetFwMgr,INetFwMgr>(); }
 
-ZRef<INetFwAuthorizedApplications>
-sAuthorizedApplications_CurrentProfile_LocalPolicy(ZRef<INetFwMgr> iMgr)
+ZRef<INetFwProfile>
+sCurrentProfile_LocalPolicy(ZRef<INetFwMgr> iMgr)
 	{
 	if (false)
 		{}
@@ -64,6 +64,20 @@ sAuthorizedApplications_CurrentProfile_LocalPolicy(ZRef<INetFwMgr> iMgr)
 		if (ZLOGF(s, eDebug))
 			s << "No profile";
 		}
+	else
+		{
+		return theProfile.Get();
+		}
+	return null;
+	}
+
+ZRef<INetFwAuthorizedApplications>
+sAuthorizedApplications_CurrentProfile_LocalPolicy(ZRef<INetFwMgr> iMgr)
+	{
+	if (false)
+		{}
+	else if (ZRef<INetFwProfile,false> theProfile = sCurrentProfile_LocalPolicy(iMgr))
+		{}
 	else if (OParam<ZRef<INetFwAuthorizedApplications>,false> theApps =
 		theProfile->get_AuthorizedApplications(theApps)
 		|| not theApps.Get())
