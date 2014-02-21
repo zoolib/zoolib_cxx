@@ -61,7 +61,7 @@ public:
 	~GILStateEnsurer();
 
 private:
-	PyGILState_STATE fState;
+	const PyGILState_STATE fState;
 	};
 
 // =================================================================================================
