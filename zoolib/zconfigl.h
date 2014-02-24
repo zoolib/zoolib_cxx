@@ -279,10 +279,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#define ZMACRO_Has_tr1_early 1
 	#endif
 #elif defined(__GNUC__)
-	#define ZMACRO_namespace_tr1_begin namespace std { namespace tr1 {
-	#define ZMACRO_namespace_tr1_end } }
-	#define ZMACRO_tr1_header(a) <tr1/a>
-	#define ZMACRO_Has_tr1 1
+	#if __GNUC__ == 4 and __GNUC_MINOR__ >= 7
+		#define ZMACRO_namespace_tr1_prefix std
+		#define ZMACRO_namespace_tr1_begin namespace std {
+		#define ZMACRO_namespace_tr1_end }
+		#define ZMACRO_tr1_header(a) <a>
+		#define ZMACRO_Has_tr1 1
+	#elif __GNUC__ == 4 and __GNUC_MINOR__ >= 6 and defined (__GXX_EXPERIMENTAL_CXX0X__)
+		#define ZMACRO_namespace_tr1_prefix std
+		#define ZMACRO_namespace_tr1_begin namespace std {
+		#define ZMACRO_namespace_tr1_end }
+		#define ZMACRO_tr1_header(a) <a>
+		#define ZMACRO_Has_tr1 1
+	#else
+		#define ZMACRO_namespace_tr1_prefix std::tr1
+		#define ZMACRO_namespace_tr1_begin namespace std { namespace tr1 {
+		#define ZMACRO_namespace_tr1_end } }
+		#define ZMACRO_tr1_header(a) <tr1/a>
+		#define ZMACRO_Has_tr1 1
+		#define ZMACRO_Has_tr1_early 1
+	#endif
 #endif
 
 #ifndef ZMACRO_Has_tr1

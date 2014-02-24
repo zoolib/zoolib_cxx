@@ -37,9 +37,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#include ZMACRO_tr1_header(type_traits)
 
 		#if ZMACRO_Has_tr1_early
-//		#if defined(_GLIBCXX_STD) and defined(__GNUC__) && (__GNUC__ < 4 \
-//			|| (__GNUC__ == 4 && __GNUC_MINOR__ < 5))
-			// No enable_if or conditional prior to 4.5
 			namespace std { namespace tr1 {
 
 				template<bool, typename _Tp = void> struct enable_if {};
