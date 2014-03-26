@@ -59,6 +59,8 @@ template <bool> struct IfSmall { enum { value = eUse_normal }; };
 template <> struct IfSmall<false> { enum { value = eUse_stret }; };
 
 #if defined(__arm__)
+	// Haven't yet checked this on 64 bit arm.
+	ZAssertCompile(not ZCONFIG_Is64Bit)
 
 	// On Arm void, integer, float, and enum (natural types) use objc_msgSend.
 	// By inspection, objc_msgSend is also used for structures <= 4 bytes in size.

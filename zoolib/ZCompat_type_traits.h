@@ -64,18 +64,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	using ZMACRO_namespace_tr1_prefix::true_type;
 	using ZMACRO_namespace_tr1_prefix::false_type;
 
-		// helper traits
+	// helper traits
 	using ZMACRO_namespace_tr1_prefix::enable_if;
 	using ZMACRO_namespace_tr1_prefix::conditional;
 
-		// Primary classification traits:
+	// Primary classification traits:
 	using ZMACRO_namespace_tr1_prefix::is_void;
 	using ZMACRO_namespace_tr1_prefix::is_integral;
 	using ZMACRO_namespace_tr1_prefix::is_floating_point;
 	using ZMACRO_namespace_tr1_prefix::is_array;
 	using ZMACRO_namespace_tr1_prefix::is_pointer;
-//		using ZMACRO_namespace_tr1_prefix::is_lvalue_reference;
-//		using ZMACRO_namespace_tr1_prefix::is_rvalue_reference;
+	#if not ZMACRO_Has_tr1_early
+		using ZMACRO_namespace_tr1_prefix::is_lvalue_reference;
+		using ZMACRO_namespace_tr1_prefix::is_rvalue_reference;
+	#endif
 	using ZMACRO_namespace_tr1_prefix::is_member_object_pointer;
 	using ZMACRO_namespace_tr1_prefix::is_member_function_pointer;
 	using ZMACRO_namespace_tr1_prefix::is_enum;
@@ -83,7 +85,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	using ZMACRO_namespace_tr1_prefix::is_class;
 	using ZMACRO_namespace_tr1_prefix::is_function;
 
-		// Secondary classification traits:
+	// Secondary classification traits:
 	using ZMACRO_namespace_tr1_prefix::is_reference;
 	using ZMACRO_namespace_tr1_prefix::is_arithmetic;
 	using ZMACRO_namespace_tr1_prefix::is_fundamental;
@@ -92,7 +94,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	using ZMACRO_namespace_tr1_prefix::is_object;
 	using ZMACRO_namespace_tr1_prefix::is_compound;
 
-		// Const-volatile properties and transformations:
+	// Const-volatile properties and transformations:
 	using ZMACRO_namespace_tr1_prefix::is_const;
 	using ZMACRO_namespace_tr1_prefix::is_volatile;
 	using ZMACRO_namespace_tr1_prefix::remove_const;
@@ -102,77 +104,83 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	using ZMACRO_namespace_tr1_prefix::add_volatile;
 	using ZMACRO_namespace_tr1_prefix::add_cv;
 
-		// Reference transformations:
+	// Reference transformations:
 	using ZMACRO_namespace_tr1_prefix::remove_reference;
 	#if ZMACRO_Has_tr1_early
 		using ZMACRO_namespace_tr1_prefix::add_reference;
 	#else
 		using ZMACRO_namespace_tr1_prefix::add_lvalue_reference;
+//		using ZMACRO_namespace_tr1_prefix::add_rvalue_reference;
 		template <class _Tp> using add_reference = add_lvalue_reference<_Tp>;
 	#endif
-//		using ZMACRO_namespace_tr1_prefix::add_rvalue_reference;
 
-		// Pointer transformations:
+	// Pointer transformations:
 	using ZMACRO_namespace_tr1_prefix::remove_pointer;
 	using ZMACRO_namespace_tr1_prefix::add_pointer;
 
-		// Integral properties:
+	// Integral properties:
 	using ZMACRO_namespace_tr1_prefix::is_signed;
 	using ZMACRO_namespace_tr1_prefix::is_unsigned;
-//		using ZMACRO_namespace_tr1_prefix::make_signed;
-//		using ZMACRO_namespace_tr1_prefix::make_unsigned;
+	#if not ZMACRO_Has_tr1_early
+		using ZMACRO_namespace_tr1_prefix::make_signed;
+		using ZMACRO_namespace_tr1_prefix::make_unsigned;
+	#endif
 
-		// Array properties and transformations:
+	// Array properties and transformations:
 	using ZMACRO_namespace_tr1_prefix::rank;
 	using ZMACRO_namespace_tr1_prefix::extent;
 	using ZMACRO_namespace_tr1_prefix::remove_extent;
 	using ZMACRO_namespace_tr1_prefix::remove_all_extents;
 
-		// Member introspection:
+	// Member introspection:
 	using ZMACRO_namespace_tr1_prefix::is_pod;
-//		using ZMACRO_namespace_tr1_prefix::is_trivial;
-//		using ZMACRO_namespace_tr1_prefix::is_trivially_copyable;
-//		using ZMACRO_namespace_tr1_prefix::is_standard_layout;
-//		using ZMACRO_namespace_tr1_prefix::is_literal_type;
+	#if not ZMACRO_Has_tr1_early
+		using ZMACRO_namespace_tr1_prefix::is_trivial;
+		using ZMACRO_namespace_tr1_prefix::is_trivially_copyable;
+		using ZMACRO_namespace_tr1_prefix::is_standard_layout;
+		using ZMACRO_namespace_tr1_prefix::is_literal_type;
+	#endif
 	using ZMACRO_namespace_tr1_prefix::is_empty;
 	using ZMACRO_namespace_tr1_prefix::is_polymorphic;
 	using ZMACRO_namespace_tr1_prefix::is_abstract;
 
-//		using ZMACRO_namespace_tr1_prefix::is_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_default_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_copy_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_move_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_assignable;
-//		using ZMACRO_namespace_tr1_prefix::is_copy_assignable;
-//		using ZMACRO_namespace_tr1_prefix::is_move_assignable;
-//		using ZMACRO_namespace_tr1_prefix::is_destructible;
+	#if not ZMACRO_Has_tr1_early
+		using ZMACRO_namespace_tr1_prefix::is_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_default_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_copy_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_move_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_assignable;
+		using ZMACRO_namespace_tr1_prefix::is_copy_assignable;
+		using ZMACRO_namespace_tr1_prefix::is_move_assignable;
+		using ZMACRO_namespace_tr1_prefix::is_destructible;
 
-//		using ZMACRO_namespace_tr1_prefix::is_trivially_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_trivially_default_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_trivially_copy_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_trivially_move_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_trivially_assignable;
-//		using ZMACRO_namespace_tr1_prefix::is_trivially_copy_assignable;
-//		using ZMACRO_namespace_tr1_prefix::is_trivially_move_assignable;
-//		using ZMACRO_namespace_tr1_prefix::is_trivially_destructible;
+		using ZMACRO_namespace_tr1_prefix::is_trivially_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_trivially_default_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_trivially_copy_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_trivially_move_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_trivially_assignable;
+		using ZMACRO_namespace_tr1_prefix::is_trivially_copy_assignable;
+		using ZMACRO_namespace_tr1_prefix::is_trivially_move_assignable;
+		using ZMACRO_namespace_tr1_prefix::is_trivially_destructible;
 
-//		using ZMACRO_namespace_tr1_prefix::is_nothrow_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_nothrow_default_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_nothrow_copy_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_nothrow_move_constructible;
-//		using ZMACRO_namespace_tr1_prefix::is_nothrow_assignable;
-//		using ZMACRO_namespace_tr1_prefix::is_nothrow_copy_assignable;
-//		using ZMACRO_namespace_tr1_prefix::is_nothrow_move_assignable;
-//		using ZMACRO_namespace_tr1_prefix::is_nothrow_destructible;
+		using ZMACRO_namespace_tr1_prefix::is_nothrow_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_nothrow_default_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_nothrow_copy_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_nothrow_move_constructible;
+		using ZMACRO_namespace_tr1_prefix::is_nothrow_assignable;
+		using ZMACRO_namespace_tr1_prefix::is_nothrow_copy_assignable;
+		using ZMACRO_namespace_tr1_prefix::is_nothrow_move_assignable;
+		using ZMACRO_namespace_tr1_prefix::is_nothrow_destructible;
+	#endif
 
 	using ZMACRO_namespace_tr1_prefix::has_virtual_destructor;
 
-		// Relationships between types:
+	// Relationships between types:
 	using ZMACRO_namespace_tr1_prefix::is_same;
 	using ZMACRO_namespace_tr1_prefix::is_base_of;
 	using ZMACRO_namespace_tr1_prefix::is_convertible;
 
-		// Alignment properties and transformations:
+	// Alignment properties and transformations:
 	using ZMACRO_namespace_tr1_prefix::alignment_of;
 
 	using ZMACRO_namespace_tr1_prefix::is_pod;

@@ -244,7 +244,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-// ZCONFIG_CPPLIB
+// TR1
 
 #if  defined(__clang__)
 	#include <cstddef> // To see if _LIBCPP_VERSION gets defined
@@ -285,7 +285,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#define ZMACRO_namespace_tr1_end }
 		#define ZMACRO_tr1_header(a) <a>
 		#define ZMACRO_Has_tr1 1
-	#elif __GNUC__ == 4 and __GNUC_MINOR__ >= 6 and defined (__GXX_EXPERIMENTAL_CXX0X__)
+	#elif __GNUC__ == 4 and __GNUC_MINOR__ >= 6 and defined(__GXX_EXPERIMENTAL_CXX0X__)
 		#define ZMACRO_namespace_tr1_prefix std
 		#define ZMACRO_namespace_tr1_begin namespace std {
 		#define ZMACRO_namespace_tr1_end }
