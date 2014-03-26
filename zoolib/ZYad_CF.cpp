@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStrim_CFString.h"
 #include "zoolib/ZUtil_CF.h"
+#include "zoolib/ZUtil_CF_Any.h"
 #include "zoolib/ZVal_CF.h"
 
 #include <CoreFoundation/CFString.h>
