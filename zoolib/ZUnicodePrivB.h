@@ -861,6 +861,7 @@ bool Functions_Write_T<I, UTF16>::sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 
 // =================================================================================================
 // MARK: - ZUnicode::Functions_Read_T<I, UTF8>
+
 template <class I>
 struct Functions_Read_T<I, UTF8>
 	{
