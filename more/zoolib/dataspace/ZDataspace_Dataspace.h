@@ -99,7 +99,7 @@ public:
 	virtual void Changed(bool iIsLoad);
 
 	ZRef<ZRA::Expr_Rel> GetRel();
-	ZRef<ZQE::Result> GetResult();
+	ZRef<QueryEngine::Result> GetResult();
 	ZRef<Event> GetEvent();
 
 	bool IsLoaded();
@@ -108,7 +108,7 @@ private:
 	Dataspace* fDataspace;
 	int64 fRefcon;
 	ZRef<ZRA::Expr_Rel> fRel;
-	ZRef<ZQE::Result> fResult;
+	ZRef<QueryEngine::Result> fResult;
 	ZRef<Event> fEvent;
 
 	friend class Dataspace;

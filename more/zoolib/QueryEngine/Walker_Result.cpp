@@ -19,30 +19,59 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
 
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/QueryEngine/Walker_Result.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace QueryEngine {
+
+using std::map;
+using std::set;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: - Walker_Result
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
+Walker_Result::Walker_Result(ZRef<Result> iResult)
+:	fResult(iResult)
+,	fIndex(0)
+	{}
+
+Walker_Result::~Walker_Result()
+	{}
+
+void Walker_Result::Rewind()
+	{ fIndex = 0; }
+
+ZRef<Walker> Walker_Result::Prime(
+	const map<string8,size_t>& iOffsets,
+	map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
 	{
-	bool isSubsequent = false;
-	foreachi (ii, iSet)
-		{
-		if (sGetSet(isSubsequent, true))
-			w << ", ";
-		w << *ii;
-		}
-	return w;
+	fBaseOffset = ioBaseOffset;
+	foreachi (ii, fResult->GetRelHead())
+		oOffsets[*ii] = ioBaseOffset++;
+	return this;
 	}
 
-} // namespace ZDataspace
+bool Walker_Result::QReadInc(
+	ZVal_Any* oResults,
+	set<ZRef<ZCounted> >* oAnnotations)
+	{
+	if (fIndex >= fResult->Count())
+		return false;
+
+	if (oAnnotations)
+		fResult->GetAnnotationsAt(fIndex, *oAnnotations);
+
+	size_t theOffset = fBaseOffset;
+	const ZVal_Any* theVals = fResult->GetValsAt(fIndex);
+	foreachi (ii, fResult->GetRelHead())
+		oResults[theOffset++] = *theVals++;
+
+	++fIndex;
+
+	return true;
+	}
+
+} // namespace QueryEngine
 } // namespace ZooLib

@@ -128,7 +128,7 @@ void Visitor::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 void Visitor::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
 	{ this->pWriteBinary("Union", iExpr); }
 
-void Visitor::Visit_Expr_Rel_Search(const ZRef<ZQE::Expr_Rel_Search>& iExpr)
+void Visitor::Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Search(";

@@ -28,8 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/datonset/ZDatonSet.h"
 #include "zoolib/dataspace/ZDataspace_Source.h"
 
-#include "zoolib/zqe/ZQE_Expr_Rel_Search.h"
-#include "zoolib/zqe/ZQE_Walker.h"
+#include "zoolib/QueryEngine/Expr_Rel_Search.h"
+#include "zoolib/QueryEngine/Walker.h"
 
 #include <map>
 #include <vector>
@@ -112,7 +112,7 @@ private:
 	class Walker_Concrete;
 	friend class Walker_Concrete;
 
-	ZRef<ZQE::Walker> pMakeWalker_Concrete(PQuery* iPQuery, const RelHead& iRelHead);
+	ZRef<QueryEngine::Walker> pMakeWalker_Concrete(PQuery* iPQuery, const RelHead& iRelHead);
 
 	void pRewind_Concrete(ZRef<Walker_Concrete> iWalker);
 
@@ -130,7 +130,7 @@ private:
 	class Walker_Search;
 	friend class Walker_Search;
 
-	ZRef<ZQE::Walker> pMakeWalker_Search(PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel);
+	ZRef<QueryEngine::Walker> pMakeWalker_Search(PQuery* iPQuery, const ZRef<QueryEngine::Expr_Rel_Search>& iRel);
 
 	// -----
 

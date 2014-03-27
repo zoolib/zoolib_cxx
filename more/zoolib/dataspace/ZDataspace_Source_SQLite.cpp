@@ -31,9 +31,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDataspace {
 
+using std::make_pair;
 using std::map;
 using std::pair;
-using std::make_pair;
 using std::set;
 using std::vector;
 
@@ -188,8 +188,8 @@ void Source_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 				thePackedRows.push_back(theIter->Get(xx));
 			}
 
-		ZRef<ZQE::Result> theResult =
-			new ZQE::Result(thePQuery->fRelHead, &thePackedRows, nullptr);
+		ZRef<QueryEngine::Result> theResult =
+			new QueryEngine::Result(thePQuery->fRelHead, &thePackedRows, nullptr);
 
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 			iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())

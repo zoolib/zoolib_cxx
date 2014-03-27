@@ -33,8 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/ZDataspace_Source_Union.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
-#include "zoolib/zqe/ZQE_DoQuery.h"
-#include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
+#include "zoolib/QueryEngine/DoQuery.h"
+#include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
@@ -115,7 +115,7 @@ public:
 	PSource* fPSource;
 	bool fNeedsAdd;
 	int64 fRefcon;
-	ZRef<ZQE::Result> fResult;
+	ZRef<QueryEngine::Result> fResult;
 	ZRef<Event> fEvent;
 	};
 
@@ -203,7 +203,7 @@ void Source_Union::Proxy::Accept_Proxy(Visitor_Proxy& iVisitor)
 // =================================================================================================
 // MARK: - Source_Union::Walker_Proxy
 
-class Source_Union::Walker_Proxy : public ZQE::Walker
+class Source_Union::Walker_Proxy : public QueryEngine::Walker
 	{
 public:
 	Walker_Proxy(ZRef<Source_Union> iSource, ZRef<Proxy> iProxy)
@@ -237,7 +237,7 @@ public:
 	size_t fBaseOffset;
 
 	DListIterator<PIP, DLink_PIP_InProxy> fIter_PIP;
-	ZRef<ZQE::Result> fCurrentResult;
+	ZRef<QueryEngine::Result> fCurrentResult;
 	size_t fCurrentIndex;
 	};
 
@@ -285,7 +285,7 @@ public:
 	ZRef<ZRA::Expr_Rel> fRel_Analyzed;
 	set<ZRef<Proxy> > fProxiesDependedUpon;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
-	ZRef<ZQE::Result> fResult;
+	ZRef<QueryEngine::Result> fResult;
 	ZRef<Event> fEvent;
 	};
 
@@ -293,7 +293,7 @@ public:
 // MARK: - Source_Union::Visitor_DoMakeWalker
 
 class Source_Union::Visitor_DoMakeWalker
-:	public virtual ZQE::Visitor_DoMakeWalker
+:	public virtual QueryEngine::Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Proxy
 	{
@@ -927,11 +927,11 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 
 				const ZTime start = ZTime::sNow();
 
-				ZRef<ZQE::Walker> theWalker =
+				ZRef<QueryEngine::Walker> theWalker =
 					Source_Union::Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
 				const ZTime afterMakeWalker = ZTime::sNow();
 
-				thePQuery->fResult = ZQE::sDoQuery(theWalker);
+				thePQuery->fResult = QueryEngine::sDoQuery(theWalker);
 				thePQuery->fEvent = theEvent;
 				const ZTime afterDoQuery = ZTime::sNow();
 

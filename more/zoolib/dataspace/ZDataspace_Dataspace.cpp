@@ -206,7 +206,7 @@ void Sieve::Changed(bool iIsLoad)
 ZRef<ZRA::Expr_Rel> Sieve::GetRel()
 	{ return fRel; }
 
-ZRef<ZQE::Result> Sieve::GetResult()
+ZRef<QueryEngine::Result> Sieve::GetResult()
 	{ return fResult; }
 
 ZRef<Event> Sieve::GetEvent()

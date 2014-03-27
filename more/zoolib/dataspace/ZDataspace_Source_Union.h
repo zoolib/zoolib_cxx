@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDList.h"
 
 #include "zoolib/dataspace/ZDataspace_Source.h"
-#include "zoolib/zqe/ZQE_Walker.h"
+#include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
 namespace ZDataspace {

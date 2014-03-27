@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZIntervalTreeClock.h"
 
-#include "zoolib/zqe/ZQE_Result.h"
+#include "zoolib/QueryEngine/Result.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 #include "zoolib/zra/ZRA_RelHead.h"
 
@@ -72,15 +72,15 @@ public:
 	~QueryResult();
 	QueryResult& operator=(const QueryResult& iOther);
 
-	QueryResult(int64 iRefcon, const ZRef<ZQE::Result>& iResult, const ZRef<Event>& iEvent);
+	QueryResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResult, const ZRef<Event>& iEvent);
 
 	int64 GetRefcon() const;
-	ZRef<ZQE::Result> GetResult() const;
+	ZRef<QueryEngine::Result> GetResult() const;
 	ZRef<Event> GetEvent() const;
 
 private:
 	int64 fRefcon;
-	ZRef<ZQE::Result> fResult;
+	ZRef<QueryEngine::Result> fResult;
 	ZRef<Event> fEvent;
 	};
 

@@ -33,13 +33,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Source_DatonSet.h"
 
-#include "zoolib/zqe/ZQE_DoQuery.h"
-#include "zoolib/zqe/ZQE_Transform_Search.h"
-#include "zoolib/zqe/ZQE_Visitor_DoMakeWalker.h"
-#include "zoolib/zqe/ZQE_Walker_Project.h"
-#include "zoolib/zqe/ZQE_Walker_Result.h"
-#include "zoolib/zqe/ZQE_Walker_Rename.h"
-#include "zoolib/zqe/ZQE_Walker_Restrict.h"
+#include "zoolib/QueryEngine/DoQuery.h"
+#include "zoolib/QueryEngine/Transform_Search.h"
+#include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
+#include "zoolib/QueryEngine/Walker_Project.h"
+#include "zoolib/QueryEngine/Walker_Result.h"
+#include "zoolib/QueryEngine/Walker_Rename.h"
+#include "zoolib/QueryEngine/Walker_Restrict.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
@@ -120,11 +120,11 @@ Daton sAsDaton(const ZVal_Any& iVal)
 // MARK: - Source_DatonSet::Visitor_DoMakeWalker
 
 class Source_DatonSet::Visitor_DoMakeWalker
-:	public virtual ZQE::Visitor_DoMakeWalker
+:	public virtual QueryEngine::Visitor_DoMakeWalker
 ,	public virtual ZRA::Visitor_Expr_Rel_Concrete
-,	public virtual ZQE::Visitor_Expr_Rel_Search
+,	public virtual QueryEngine::Visitor_Expr_Rel_Search
 	{
-	typedef ZQE::Visitor_DoMakeWalker inherited;
+	typedef QueryEngine::Visitor_DoMakeWalker inherited;
 public:
 	Visitor_DoMakeWalker(ZRef<Source_DatonSet> iSource, PQuery* iPQuery)
 	:	fSource(iSource)
@@ -134,7 +134,7 @@ public:
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
 		{ this->pSetResult(fSource->pMakeWalker_Concrete(fPQuery, iExpr->GetConcreteRelHead())); }
 
-	virtual void Visit_Expr_Rel_Search(const ZRef<ZQE::Expr_Rel_Search>& iExpr)
+	virtual void Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iExpr)
 		{ this->pSetResult(fSource->pMakeWalker_Search(fPQuery, iExpr)); }
 
 	ZRef<Source_DatonSet> const fSource;
@@ -144,7 +144,7 @@ public:
 // =================================================================================================
 // MARK: - Source_DatonSet::Walker_Concrete
 
-class Source_DatonSet::Walker_Concrete : public ZQE::Walker
+class Source_DatonSet::Walker_Concrete : public QueryEngine::Walker
 	{
 public:
 	Walker_Concrete(ZRef<Source_DatonSet> iSource, const vector<string8>& iNames)
@@ -155,11 +155,11 @@ public:
 	virtual ~Walker_Concrete()
 		{}
 
-// From ZQE::Walker
+// From QueryEngine::Walker
 	virtual void Rewind()
 		{ fSource->pRewind_Concrete(this); }
 
-	virtual ZRef<ZQE::Walker> Prime(const map<string8,size_t>& iOffsets,
+	virtual ZRef<QueryEngine::Walker> Prime(const map<string8,size_t>& iOffsets,
 		map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset)
 		{
@@ -223,7 +223,7 @@ public:
 	const ZRef<ZRA::Expr_Rel> fRel;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQuery_InPQuery;
 	set<PSearch*> fPSearch_Used;
-	ZRef<ZQE::Result> fResult;
+	ZRef<QueryEngine::Result> fResult;
 	};
 
 // =================================================================================================
@@ -241,7 +241,7 @@ public:
 
 	RelHead fRelHead;
 	set<PQuery*> fPQuery_Using;
-	ZRef<ZQE::Result> fResult;
+	ZRef<QueryEngine::Result> fResult;
 	};
 
 // =================================================================================================
@@ -281,7 +281,7 @@ void Source_DatonSet::ModifyRegistrations(
 
 		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
 //## DAMN. With the transform, restrictions in an embed don't find names in the owning rel.
-//###		theRel = ZQE::sTransform_Search(theRel);
+//###		theRel = QueryEngine::sTransform_Search(theRel);
 
 		if (ZLOGPF(s, eDebug + 1))
 			s << "\nDatonSet Cooked:\n" << theRel;
@@ -378,7 +378,7 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 
 		const ZTime start = ZTime::sNow();
 
-		ZRef<ZQE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
+		ZRef<QueryEngine::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
 		const ZTime afterMakeWalker = ZTime::sNow();
 
 		if (s)
@@ -387,7 +387,7 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 			s.Emit();
 			}
 
-		thePQuery->fResult = ZQE::sDoQuery(theWalker);
+		thePQuery->fResult = QueryEngine::sDoQuery(theWalker);
 		const ZTime afterDoQuery = ZTime::sNow();
 
 		if (s && 0)
@@ -700,7 +700,7 @@ void Source_DatonSet::pChangedAll()
 		}
 	}
 
-ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const RelHead& iRelHead)
+ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const RelHead& iRelHead)
 	{
 	++fWalkerCount;
 
@@ -724,16 +724,16 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const R
 
 	if (not thePSearch->fResult)
 		{
-		ZRef<ZQE::Walker> theWalker =
+		ZRef<QueryEngine::Walker> theWalker =
 			new Walker_Concrete(this, vector<string8>(iRelHead.begin(), iRelHead.end()));
 		thePSearch->fResult = sDoQuery(theWalker);
 		}
 
-	return new ZQE::Walker_Result(thePSearch->fResult);
+	return new QueryEngine::Walker_Result(thePSearch->fResult);
 	}
 
-ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
-	PQuery* iPQuery, const ZRef<ZQE::Expr_Rel_Search>& iRel)
+ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Search(
+	PQuery* iPQuery, const ZRef<QueryEngine::Expr_Rel_Search>& iRel)
 	{
 	// This is where we would be able to take advantage of indices. For the moment
 	// just do it the dumb way.
@@ -743,7 +743,7 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
 	for (ZRA::Rename::const_iterator ii = theRename.begin(); ii != theRename.end(); ++ii)
 		theRelHead |= ii->first;
 
-	ZRef<ZQE::Walker> theWalker;
+	ZRef<QueryEngine::Walker> theWalker;
 	const ZRef<ZExpr_Bool>& theExpr_Bool = iRel->GetExpr_Bool();
 	if (theExpr_Bool && theExpr_Bool != sTrue())
 		{
@@ -751,13 +751,13 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
 		if (augmented.size() != theRelHead.size())
 			{
 			theWalker = this->pMakeWalker_Concrete(iPQuery, augmented);
-			theWalker = new ZQE::Walker_Restrict(theWalker, theExpr_Bool);
-			theWalker = new ZQE::Walker_Project(theWalker, theRelHead);
+			theWalker = new QueryEngine::Walker_Restrict(theWalker, theExpr_Bool);
+			theWalker = new QueryEngine::Walker_Project(theWalker, theRelHead);
 			}
 		else
 			{
 			theWalker = this->pMakeWalker_Concrete(iPQuery, theRelHead);
-			theWalker = new ZQE::Walker_Restrict(theWalker, theExpr_Bool);
+			theWalker = new QueryEngine::Walker_Restrict(theWalker, theExpr_Bool);
 			}
 		}
 	else
@@ -769,7 +769,7 @@ ZRef<ZQE::Walker> Source_DatonSet::pMakeWalker_Search(
 		iterRename != theRename.end(); ++iterRename)
 		{
 		if (iterRename->first != iterRename->second)
-			theWalker = new ZQE::Walker_Rename(theWalker, iterRename->second, iterRename->first);
+			theWalker = new QueryEngine::Walker_Rename(theWalker, iterRename->second, iterRename->first);
 		}
 
 	return theWalker;

@@ -18,31 +18,49 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
-
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/QueryEngine/Walker_Const.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace QueryEngine {
+
+using std::map;
+using std::set;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: - Walker_Const
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
+Walker_Const::Walker_Const(const string8& iColName, const ZVal_Any& iVal)
+:	fExhausted(false)
+,	fColName(iColName)
+,	fVal(iVal)
+	{}
+
+Walker_Const::~Walker_Const()
+	{}
+
+void Walker_Const::Rewind()
+	{ fExhausted = false; }
+
+ZRef<Walker> Walker_Const::Prime(
+	const map<string8,size_t>& iOffsets,
+	map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
 	{
-	bool isSubsequent = false;
-	foreachi (ii, iSet)
-		{
-		if (sGetSet(isSubsequent, true))
-			w << ", ";
-		w << *ii;
-		}
-	return w;
+	fOutputOffset = ioBaseOffset++;
+	oOffsets[fColName] = fOutputOffset;
+	return this;
 	}
 
-} // namespace ZDataspace
+bool Walker_Const::QReadInc(
+	ZVal_Any* ioResults,
+	set<ZRef<ZCounted> >* oAnnotations)
+	{
+	if (sGetSet(fExhausted, true))
+		return false;
+
+	ioResults[fOutputOffset] = fVal;
+	return true;
+	}
+
+} // namespace QueryEngine
 } // namespace ZooLib

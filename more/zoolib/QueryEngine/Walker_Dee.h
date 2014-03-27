@@ -18,31 +18,41 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
+#ifndef zoolib_QueryEngine_Walker_Dee_h__
+#define zoolib_QueryEngine_Walker_Dee_h__ 1
+#include "zconfig.h"
 
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: - Walker_Dee
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
+class Walker_Dee : public Walker
 	{
-	bool isSubsequent = false;
-	foreachi (ii, iSet)
-		{
-		if (sGetSet(isSubsequent, true))
-			w << ", ";
-		w << *ii;
-		}
-	return w;
-	}
+public:
+	Walker_Dee();
+	virtual ~Walker_Dee();
 
-} // namespace ZDataspace
+// From QueryEngine::Walker
+	virtual void Rewind();
+
+	virtual ZRef<Walker> Prime(
+		const std::map<string8,size_t>& iOffsets,
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool QReadInc(
+		ZVal_Any* ioResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
+
+private:
+	bool fExhausted;
+	};
+
+} // namespace QueryEngine
 } // namespace ZooLib
+
+#endif // zoolib_QueryEngine_Walker_Dee_h__

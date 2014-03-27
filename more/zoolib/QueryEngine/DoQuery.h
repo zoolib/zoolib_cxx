@@ -18,31 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
+#ifndef zoolib_QueryEngine_DoQuery_h__
+#define zoolib_QueryEngine_DoQuery_h__ 1
+#include "zconfig.h"
 
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/QueryEngine/Result.h"
+#include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: - sQuery
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
-	{
-	bool isSubsequent = false;
-	foreachi (ii, iSet)
-		{
-		if (sGetSet(isSubsequent, true))
-			w << ", ";
-		w << *ii;
-		}
-	return w;
-	}
+ZRef<Result> sDoQuery(ZRef<Walker> iWalker);
 
-} // namespace ZDataspace
+} // namespace QueryEngine
 } // namespace ZooLib
+
+#endif // zoolib_QueryEngine_DoQuery_h__

@@ -36,7 +36,7 @@ using std::vector;
 
 using namespace ZUtil_STL;
 
-typedef map<int64,pair<ZRef<ZQE::Result>,ZRef<Event> > > Map_Refcon_Result;
+typedef map<int64,pair<ZRef<QueryEngine::Result>,ZRef<Event> > > Map_Refcon_Result;
 
 // =================================================================================================
 // MARK: - SourceMUX::ClientSource

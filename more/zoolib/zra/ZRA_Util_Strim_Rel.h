@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_ToStrim.h"
 
-#include "zoolib/zqe/ZQE_Expr_Rel_Search.h"
+#include "zoolib/QueryEngine/Expr_Rel_Search.h"
 
 #include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
@@ -62,7 +62,7 @@ class Visitor
 ,	public virtual Visitor_Expr_Rel_Rename
 ,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Union
-,	public virtual ZQE::Visitor_Expr_Rel_Search
+,	public virtual QueryEngine::Visitor_Expr_Rel_Search
 	{
 public:
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr);
@@ -79,7 +79,7 @@ public:
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
 	virtual void Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr);
 
-	virtual void Visit_Expr_Rel_Search(const ZRef<ZQE::Expr_Rel_Search>& iExpr);
+	virtual void Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iExpr);
 
 private:
 	void pWriteBinary(const std::string& iFunctionName, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr);

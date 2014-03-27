@@ -82,7 +82,7 @@ QueryResult& QueryResult::operator=(const QueryResult& iOther)
 	}
 
 QueryResult::QueryResult(
-	int64 iRefcon, const ZRef<ZQE::Result>& iResult, const ZRef<Event>& iEvent)
+	int64 iRefcon, const ZRef<QueryEngine::Result>& iResult, const ZRef<Event>& iEvent)
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
 ,	fEvent(iEvent)
@@ -91,7 +91,7 @@ QueryResult::QueryResult(
 int64 QueryResult::GetRefcon() const
 	{ return fRefcon; }
 
-ZRef<ZQE::Result> QueryResult::GetResult() const
+ZRef<QueryEngine::Result> QueryResult::GetResult() const
 	{ return fResult; }
 
 ZRef<Event> QueryResult::GetEvent() const

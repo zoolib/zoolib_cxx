@@ -18,31 +18,49 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
-
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/QueryEngine/Walker_Rename.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace QueryEngine {
+
+using std::map;
+using std::set;
+
+using namespace ZUtil_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: - Walker_Rename
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
+Walker_Rename::Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, const string8& iOld)
+:	Walker_Unary(iWalker)
+,	fNew(iNew)
+,	fOld(iOld)
+	{}
+
+Walker_Rename::~Walker_Rename()
+	{}
+
+ZRef<Walker> Walker_Rename::Prime(
+	const map<string8,size_t>& iOffsets,
+	map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
 	{
-	bool isSubsequent = false;
-	foreachi (ii, iSet)
-		{
-		if (sGetSet(isSubsequent, true))
-			w << ", ";
-		w << *ii;
-		}
-	return w;
+	map<string8,size_t> newBindingOffsets = iOffsets;
+	if (ZQ<size_t> theQ = sQGetErase(newBindingOffsets, fNew))
+		newBindingOffsets[fOld] = *theQ;
+
+	fWalker = fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
+
+	sInsertMust(oOffsets, fNew, sGetEraseMust(oOffsets, fOld));
+
+	return fWalker;
 	}
 
-} // namespace ZDataspace
+bool Walker_Rename::QReadInc(
+	ZVal_Any* ioResults,
+	set<ZRef<ZCounted> >* oAnnotations)
+	{ return fWalker->QReadInc(ioResults, oAnnotations); }
+
+} // namespace QueryEngine
 } // namespace ZooLib

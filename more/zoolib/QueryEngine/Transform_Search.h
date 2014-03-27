@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,31 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
+#ifndef zoolib_QueryEngine_Transform_Search_h__
+#define zoolib_QueryEngine_Transform_Search_h__ 1
+#include "zconfig.h"
 
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/ZExpr_Bool.h"
+#include "zoolib/zra/ZRA_Expr_Rel.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: - sTransform_Search
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
-	{
-	bool isSubsequent = false;
-	foreachi (ii, iSet)
-		{
-		if (sGetSet(isSubsequent, true))
-			w << ", ";
-		w << *ii;
-		}
-	return w;
-	}
+ZRef<ZRA::Expr_Rel> sTransform_Search(const ZRef<ZRA::Expr_Rel>& iExpr);
 
-} // namespace ZDataspace
+} // namespace QueryEngine
 } // namespace ZooLib
+
+#endif // zoolib_QueryEngine_Transform_Search_h__

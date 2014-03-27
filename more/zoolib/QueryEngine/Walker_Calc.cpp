@@ -18,31 +18,56 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
-
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/QueryEngine/Walker_Calc.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace QueryEngine {
+
+using std::map;
+using std::set;
+using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: - Walker_Calc
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
+Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
+	const string8& iColName,
+	const ZRef<Callable>& iCallable)
+:	Walker_Unary(iWalker)
+,	fColName(iColName)
+,	fCallable(iCallable)
+	{}
+
+Walker_Calc::~Walker_Calc()
+	{}
+
+ZRef<Walker> Walker_Calc::Prime(
+	const map<string8,size_t>& iOffsets,
+	map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
 	{
-	bool isSubsequent = false;
-	foreachi (ii, iSet)
-		{
-		if (sGetSet(isSubsequent, true))
-			w << ", ";
-		w << *ii;
-		}
-	return w;
+	fWalker = fWalker->Prime(iOffsets, fBindings, ioBaseOffset);
+	oOffsets.insert(fBindings.begin(), fBindings.end());
+	fOutputOffset = ioBaseOffset++;
+	oOffsets[fColName] = fOutputOffset;
+
+	if (not fWalker)
+		return null;
+
+	return this;
 	}
 
-} // namespace ZDataspace
+bool Walker_Calc::QReadInc(
+	ZVal_Any* ioResults,
+	set<ZRef<ZCounted> >* oAnnotations)
+	{
+	if (not fWalker->QReadInc(ioResults, oAnnotations))
+		return false;
+
+	ioResults[fOutputOffset] = fCallable->Call(PseudoMap(fBindings, ioResults));
+
+	return true;
+	}
+
+} // namespace QueryEngine
 } // namespace ZooLib

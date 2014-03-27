@@ -18,31 +18,50 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
+#ifndef zoolib_QueryEngine_Walker_Embed_h__
+#define zoolib_QueryEngine_Walker_Embed_h__ 1
+#include "zconfig.h"
 
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/QueryEngine/Walker.h"
+#include "zoolib/zra/ZRA_RelHead.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: - Walker_Embed
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
+class Walker_Embed : public Walker
 	{
-	bool isSubsequent = false;
-	foreachi (ii, iSet)
-		{
-		if (sGetSet(isSubsequent, true))
-			w << ", ";
-		w << *ii;
-		}
-	return w;
-	}
+public:
+	Walker_Embed(const ZRef<Walker>& iWalker_Parent,
+		const string8& iColName, const ZRef<Walker>& iWalker_Embedee);
 
-} // namespace ZDataspace
+	virtual ~Walker_Embed();
+
+// From QueryEngine::Walker
+	virtual void Rewind();
+
+	virtual ZRef<Walker> Prime(
+		const std::map<string8,size_t>& iOffsets,
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool QReadInc(
+		ZVal_Any* ioResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
+
+private:
+	ZRef<Walker> fWalker_Parent;
+	const string8 fColName;
+	ZRef<Walker> fWalker_Embedee;
+
+	size_t fOutputOffset;
+	ZRA::RelHead fEmbedeeRelHead;
+	std::vector<size_t> fEmbedeeOffsets;
+	};
+
+} // namespace QueryEngine
 } // namespace ZooLib
+
+#endif // zoolib_QueryEngine_Walker_Embed_h__

@@ -18,31 +18,50 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
+#ifndef zoolib_QueryEngine_Walker_Calc_h__
+#define zoolib_QueryEngine_Walker_Calc_h__ 1
+#include "zconfig.h"
 
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
-
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
+#include "zoolib/zra/ZRA_RelHead.h"
+#include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: - Walker_Calc
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
+class Walker_Calc : public Walker_Unary
 	{
-	bool isSubsequent = false;
-	foreachi (ii, iSet)
-		{
-		if (sGetSet(isSubsequent, true))
-			w << ", ";
-		w << *ii;
-		}
-	return w;
-	}
+public:
+	typedef ZRA::Expr_Rel_Calc::Callable Callable;
+	typedef ZRA::Expr_Rel_Calc::PseudoMap PseudoMap;
 
-} // namespace ZDataspace
+	Walker_Calc(const ZRef<Walker>& iWalker,
+		const string8& iColName,
+		const ZRef<Callable>& iCallable);
+
+	virtual ~Walker_Calc();
+
+// From QueryEngine::Walker
+	virtual ZRef<Walker> Prime(
+		const std::map<string8,size_t>& iOffsets,
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	virtual bool QReadInc(
+		ZVal_Any* oResults,
+		std::set<ZRef<ZCounted> >* oAnnotations);
+
+private:
+	const string8 fColName;
+	const ZRef<Callable> fCallable;
+	size_t fOutputOffset;
+	std::map<string8,size_t> fBindings;
+	};
+
+} // namespace QueryEngine
 } // namespace ZooLib
+
+#endif // zoolib_QueryEngine_Walker_Calc_h__

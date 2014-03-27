@@ -18,31 +18,58 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
+#ifndef __ZooLib_QueryEngine_Result_h__
+#define __ZooLib_QueryEngine_Result_h__ 1
+#include "zconfig.h"
 
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
+#include "zoolib/ZCompare_T.h"
+#include "zoolib/ZCounted.h"
+#include "zoolib/ZVal_Any.h"
 
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/zra/ZRA_RelHead.h"
+
+#include <set>
+#include <vector>
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: - Result
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
+class Result : public ZCounted
 	{
-	bool isSubsequent = false;
-	foreachi (ii, iSet)
-		{
-		if (sGetSet(isSubsequent, true))
-			w << ", ";
-		w << *ii;
-		}
-	return w;
-	}
+public:
+	Result(const ZRA::RelHead& iRelHead,
+		std::vector<ZVal_Any>* ioPackedRows,
+		std::vector<std::vector<ZRef<ZCounted> > >* ioAnnotations);
 
-} // namespace ZDataspace
+	Result(const ZRef<QueryEngine::Result>& iOther, size_t iRow);
+
+	virtual ~Result();
+
+	const ZRA::RelHead& GetRelHead();
+
+	size_t Count();
+	const ZVal_Any* GetValsAt(size_t iIndex);
+	void GetAnnotationsAt(size_t iIndex, std::set<ZRef<ZCounted> >& oAnnotations);
+
+	int Compare(const Result& iOther) const;
+
+private:
+	ZRA::RelHead fRelHead;
+	std::vector<ZVal_Any> fPackedRows;
+	std::vector<std::vector<ZRef<ZCounted> > > fAnnotations;
+	};
+
+} // namespace QueryEngine
+
+template <>
+int sCompare_T(const QueryEngine::Result& iL, const QueryEngine::Result& iR);
+
+template <>
+int sCompare_T<ZRef<QueryEngine::Result> >(const ZRef<QueryEngine::Result>& iL, const ZRef<QueryEngine::Result>& iR);
+
 } // namespace ZooLib
+
+#endif // __ZooLib_QueryEngine_Result_h__
