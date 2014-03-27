@@ -158,7 +158,7 @@ private:
 	// -----
 
 	class DLink_PQuery_NeedsWork;
-	typedef std::map<ZRef<ZRA::Expr_Rel>, PQuery, Less_Compare_T<ZRef<ZRA::Expr_Rel> > >
+	typedef std::map<ZRef<RelationalAlgebra::Expr_Rel>, PQuery, Less_Compare_T<ZRef<RelationalAlgebra::Expr_Rel> > >
 		Map_Rel_PQuery;
 	Map_Rel_PQuery fMap_Rel_PQuery;
 
@@ -169,7 +169,7 @@ private:
 	class DLink_PSearch_NeedsWork;
 	class PSearch;
 
-	typedef std::map<ZRA::RelHead,PSearch> Map_PSearch;
+	typedef std::map<RelationalAlgebra::RelHead,PSearch> Map_PSearch;
 	Map_PSearch fMap_PSearch;
 
 	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;

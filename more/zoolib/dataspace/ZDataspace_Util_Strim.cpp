@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 namespace ZooLib {
 namespace ZDataspace {

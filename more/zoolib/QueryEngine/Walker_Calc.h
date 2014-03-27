@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define zoolib_QueryEngine_Walker_Calc_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
-#include "zoolib/zra/ZRA_RelHead.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Calc.h"
+#include "zoolib/RelationalAlgebra/RelHead.h"
 #include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
@@ -35,8 +35,8 @@ namespace QueryEngine {
 class Walker_Calc : public Walker_Unary
 	{
 public:
-	typedef ZRA::Expr_Rel_Calc::Callable Callable;
-	typedef ZRA::Expr_Rel_Calc::PseudoMap PseudoMap;
+	typedef RelationalAlgebra::Expr_Rel_Calc::Callable Callable;
+	typedef RelationalAlgebra::Expr_Rel_Calc::PseudoMap PseudoMap;
 
 	Walker_Calc(const ZRef<Walker>& iWalker,
 		const string8& iColName,

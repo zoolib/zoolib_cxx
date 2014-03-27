@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool.h"
-#include "zoolib/zra/ZRA_Expr_Rel.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel.h"
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -34,12 +34,12 @@ class Visitor_Expr_Rel_Search;
 // MARK: - Expr_Rel_Search
 
 class Expr_Rel_Search
-:	public virtual ZRA::Expr_Rel
-,	public virtual ZExpr_Op0_T<ZRA::Expr_Rel>
+:	public virtual RelationalAlgebra::Expr_Rel
+,	public virtual ZExpr_Op0_T<RelationalAlgebra::Expr_Rel>
 	{
 	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Search(const ZRA::Rename& iRename, const ZRef<ZExpr_Bool>& iExpr_Bool);
+	Expr_Rel_Search(const RelationalAlgebra::Rename& iRename, const ZRef<ZExpr_Bool>& iExpr_Bool);
 
 // From ZVisitee
 	virtual void Accept(const ZVisitor& iVisitor);
@@ -47,17 +47,17 @@ public:
 // From ZExpr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<ZRA::Expr_Rel> Self();
-	virtual ZRef<ZRA::Expr_Rel> Clone();
+	virtual ZRef<RelationalAlgebra::Expr_Rel> Self();
+	virtual ZRef<RelationalAlgebra::Expr_Rel> Clone();
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Search(Visitor_Expr_Rel_Search& iVisitor);
 
-	const ZRA::Rename& GetRename() const;
+	const RelationalAlgebra::Rename& GetRename() const;
 	const ZRef<ZExpr_Bool>& GetExpr_Bool() const;
 
 private:
-	const ZRA::Rename fRename;
+	const RelationalAlgebra::Rename fRename;
 	const ZRef<ZExpr_Bool> fExpr_Bool;
 	};
 
@@ -65,7 +65,7 @@ private:
 // MARK: - Visitor_Expr_Rel_Search
 
 class Visitor_Expr_Rel_Search
-:	public virtual ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>
+:	public virtual ZVisitor_Expr_Op0_T<RelationalAlgebra::Expr_Rel>
 	{
 public:
 	virtual void Visit_Expr_Rel_Search(const ZRef<Expr_Rel_Search>& iExpr);

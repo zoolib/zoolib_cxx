@@ -28,7 +28,7 @@ using std::set;
 // =================================================================================================
 // MARK: - AddedQuery
 
-AddedQuery::AddedQuery(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel)
+AddedQuery::AddedQuery(int64 iRefcon, const ZRef<RelationalAlgebra::Expr_Rel>& iRel)
 :	fRefcon(iRefcon)
 ,	fRel(iRel)
 	{}
@@ -54,7 +54,7 @@ AddedQuery& AddedQuery::operator=(const AddedQuery& iOther)
 int64 AddedQuery::GetRefcon() const
 	{ return fRefcon; }
 
-ZRef<ZRA::Expr_Rel> AddedQuery::GetRel() const
+ZRef<RelationalAlgebra::Expr_Rel> AddedQuery::GetRel() const
 	{ return fRel; }
 
 // =================================================================================================

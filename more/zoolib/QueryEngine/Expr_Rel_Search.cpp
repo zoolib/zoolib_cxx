@@ -42,7 +42,7 @@ namespace QueryEngine {
 // =================================================================================================
 // MARK: - Expr_Rel_Search
 
-Expr_Rel_Search::Expr_Rel_Search(const ZRA::Rename& iRename, const ZRef<ZExpr_Bool>& iExpr_Bool)
+Expr_Rel_Search::Expr_Rel_Search(const RelationalAlgebra::Rename& iRename, const ZRef<ZExpr_Bool>& iExpr_Bool)
 :	fRename(iRename)
 ,	fExpr_Bool(iExpr_Bool)
 	{}
@@ -55,7 +55,7 @@ void Expr_Rel_Search::Accept(const ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Expr_Rel_Search::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>& iVisitor)
+void Expr_Rel_Search::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<RelationalAlgebra::Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Search* theVisitor = sDynNonConst<Visitor_Expr_Rel_Search>(&iVisitor))
 		this->Accept_Expr_Rel_Search(*theVisitor);
@@ -63,16 +63,16 @@ void Expr_Rel_Search::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>& iVisit
 		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
-ZRef<ZRA::Expr_Rel> Expr_Rel_Search::Self()
+ZRef<RelationalAlgebra::Expr_Rel> Expr_Rel_Search::Self()
 	{ return this; }
 
-ZRef<ZRA::Expr_Rel> Expr_Rel_Search::Clone()
+ZRef<RelationalAlgebra::Expr_Rel> Expr_Rel_Search::Clone()
 	{ return this; }
 
 void Expr_Rel_Search::Accept_Expr_Rel_Search(Visitor_Expr_Rel_Search& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Search(this); }
 
-const ZRA::Rename& Expr_Rel_Search::GetRename() const
+const RelationalAlgebra::Rename& Expr_Rel_Search::GetRename() const
 	{ return fRename; }
 
 const ZRef<ZExpr_Bool>& Expr_Rel_Search::GetExpr_Bool() const

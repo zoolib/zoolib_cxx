@@ -25,8 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Dataspace.h"
 
-#include "zoolib/zra/ZRA_Transform_DecomposeRestricts.h"
-#include "zoolib/zra/ZRA_Transform_PushDownRestricts.h"
+#include "zoolib/RelationalAlgebra/Transform_DecomposeRestricts.h"
+#include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -58,7 +58,7 @@ void Dataspace::SetCallable_UpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable)
 	fCallable_UpdateNeeded = iCallable;
 	}
 
-void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
+void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<RelationalAlgebra::Expr_Rel>& iRel)
 	{
 	ZAcqMtxR acq(fMtxR);
 	ZAssert(!iSieve->fDataspace);
@@ -69,8 +69,8 @@ void Dataspace::Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel)
 	iSieve->fRel = iRel;
 	sInsertMust(kDebug, fMap_RefconToSieve, iSieve->fRefcon, iSieve.Get());
 
-	ZRef<ZRA::Expr_Rel> theRel = ZRA::Transform_DecomposeRestricts().Do(iRel);
-	theRel = ZRA::Transform_PushDownRestricts().Do(theRel);
+	ZRef<RelationalAlgebra::Expr_Rel> theRel = RelationalAlgebra::Transform_DecomposeRestricts().Do(iRel);
+	theRel = RelationalAlgebra::Transform_PushDownRestricts().Do(theRel);
 	const AddedQuery theAddedQuery(iSieve->fRefcon, theRel);
 	fSource->ModifyRegistrations(&theAddedQuery, 1, nullptr, 0);
 	}
@@ -203,7 +203,7 @@ void Sieve::Loaded()
 void Sieve::Changed(bool iIsLoad)
 	{}
 
-ZRef<ZRA::Expr_Rel> Sieve::GetRel()
+ZRef<RelationalAlgebra::Expr_Rel> Sieve::GetRel()
 	{ return fRel; }
 
 ZRef<QueryEngine::Result> Sieve::GetResult()

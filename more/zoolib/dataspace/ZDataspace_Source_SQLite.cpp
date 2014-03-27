@@ -25,8 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Source_SQLite.h"
 
-#include "zoolib/zra/ZRA_AsSQL.h"
-#include "zoolib/zra/ZRA_GetRelHead.h"
+#include "zoolib/RelationalAlgebra/AsSQL.h"
+#include "zoolib/RelationalAlgebra/GetRelHead.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -40,7 +40,7 @@ using std::vector;
 using namespace ZSQLite;
 using namespace ZUtil_STL;
 
-using ZRA::ColName;
+using RelationalAlgebra::ColName;
 
 // =================================================================================================
 // MARK: - Source_SQLite::ClientQuery
@@ -68,11 +68,11 @@ public:
 class Source_SQLite::PQuery
 	{
 public:
-	PQuery(ZRef<ZRA::Expr_Rel> iRel)
+	PQuery(ZRef<RelationalAlgebra::Expr_Rel> iRel)
 	:	fRel(iRel)
 		{}
 
-	ZRef<ZRA::Expr_Rel> fRel;
+	ZRef<RelationalAlgebra::Expr_Rel> fRel;
 	RelHead fRelHead;
 	string8 fSQL;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
@@ -111,7 +111,7 @@ bool Source_SQLite::Intersects(const RelHead& iRelHead)
 	foreachi (iterTables, fMap_Tables)
 		{
 		if (sNotEmpty(
-			ZRA::sPrefixInserted(iterTables->first + "_", iterTables->second) & iRelHead))
+			RelationalAlgebra::sPrefixInserted(iterTables->first + "_", iterTables->second) & iRelHead))
 			{ return true; }
 		}
 	return false;
@@ -128,7 +128,7 @@ void Source_SQLite::ModifyRegistrations(
 
 	while (iAddedCount--)
 		{
-		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
+		ZRef<RelationalAlgebra::Expr_Rel> theRel = iAdded->GetRel();
 
 		pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
@@ -137,7 +137,7 @@ void Source_SQLite::ModifyRegistrations(
 
 		if (iterPQueryPair.second)
 			{
-			ZRA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String<string8>(thePQuery->fSQL));
+			RelationalAlgebra::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String<string8>(thePQuery->fSQL));
 			thePQuery->fRelHead = sGetRelHead(theRel);
 			}
 

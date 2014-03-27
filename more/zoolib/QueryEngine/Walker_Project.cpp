@@ -34,7 +34,7 @@ using namespace ZUtil_STL;
 // =================================================================================================
 // MARK: - Walker_Project
 
-Walker_Project::Walker_Project(const ZRef<Walker>& iWalker, const ZRA::RelHead& iRelHead)
+Walker_Project::Walker_Project(const ZRef<Walker>& iWalker, const RelationalAlgebra::RelHead& iRelHead)
 :	Walker_Unary(iWalker)
 ,	fRelHead(iRelHead)
 	{}

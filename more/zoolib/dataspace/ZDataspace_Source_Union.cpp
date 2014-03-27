@@ -36,16 +36,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/DoQuery.h"
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
 
-#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Project.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Util_Strim_Rel.h"
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Embed.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Project.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Rename.h"
+#include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
+#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
-#include "zoolib/zra/ZRA_Transform_ConsolidateRenames.h"
-#include "zoolib/zra/ZRA_Transform_DecomposeRestricts.h"
-#include "zoolib/zra/ZRA_Transform_PushDownRestricts.h"
+#include "zoolib/RelationalAlgebra/Transform_ConsolidateRenames.h"
+#include "zoolib/RelationalAlgebra/Transform_DecomposeRestricts.h"
+#include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -64,14 +64,14 @@ using namespace ZUtil_STL;
 namespace { // anonymous
 
 class InsertPrefix
-:	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel>
-,	public virtual ZRA::Visitor_Expr_Rel_Concrete
+:	public virtual ZVisitor_Expr_Op_Do_Transform_T<RelationalAlgebra::Expr_Rel>
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Concrete
 	{
 public:
 	InsertPrefix(const string8& iPrefix);
 
-// From ZRA::Visitor_Expr_Rel_Concrete
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr);
+// From RelationalAlgebra::Visitor_Expr_Rel_Concrete
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<RelationalAlgebra::Expr_Rel_Concrete>& iExpr);
 
 private:
 	const string8 fPrefix;
@@ -81,14 +81,14 @@ InsertPrefix::InsertPrefix(const string8& iPrefix)
 :	fPrefix(iPrefix)
 	{}
 
-void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
+void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<RelationalAlgebra::Expr_Rel_Concrete>& iExpr)
 	{
 	const RelHead& theRelHead = iExpr->GetConcreteRelHead();
 
-	const RelHead newRelHead = ZRA::sPrefixErased(fPrefix, theRelHead);
-	ZRef<ZRA::Expr_Rel> theRel = ZRA::sConcrete(newRelHead);
+	const RelHead newRelHead = RelationalAlgebra::sPrefixErased(fPrefix, theRelHead);
+	ZRef<RelationalAlgebra::Expr_Rel> theRel = RelationalAlgebra::sConcrete(newRelHead);
 	foreachi (ii, newRelHead)
-		theRel = sRename(theRel, ZRA::sPrefixInserted(fPrefix, *ii), *ii);
+		theRel = sRename(theRel, RelationalAlgebra::sPrefixInserted(fPrefix, *ii), *ii);
 
 	this->pSetResult(theRel);
 	}
@@ -123,8 +123,8 @@ public:
 // MARK: - Source_Union::Proxy declaration
 
 class Source_Union::Proxy
-:	public virtual ZRA::Expr_Rel
-,	public virtual ZExpr_Op0_T<ZRA::Expr_Rel>
+:	public virtual RelationalAlgebra::Expr_Rel
+,	public virtual ZExpr_Op0_T<RelationalAlgebra::Expr_Rel>
 	{
 	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
@@ -139,15 +139,15 @@ public:
 // From ZExpr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<ZRA::Expr_Rel> Self();
-	virtual ZRef<ZRA::Expr_Rel> Clone();
+	virtual ZRef<RelationalAlgebra::Expr_Rel> Self();
+	virtual ZRef<RelationalAlgebra::Expr_Rel> Clone();
 
 // Our protocol
 	virtual void Accept_Proxy(Visitor_Proxy& iVisitor);
 
 	Source_Union* const fSource;
-	ZRef<ZRA::Expr_Rel> fRel;
-	ZRA::RelHead fResultRelHead;
+	ZRef<RelationalAlgebra::Expr_Rel> fRel;
+	RelationalAlgebra::RelHead fResultRelHead;
 	set<PQuery*> fDependentPQueries;
 
 	// Something that ties this proxy to each Source.
@@ -158,7 +158,7 @@ public:
 // MARK: - Source_Union::Visitor_Proxy
 
 class Source_Union::Visitor_Proxy
-:	public virtual ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>
+:	public virtual ZVisitor_Expr_Op0_T<RelationalAlgebra::Expr_Rel>
 	{
 public:
 	virtual void Visit_Proxy(const ZRef<Proxy>& iExpr)
@@ -183,7 +183,7 @@ void Source_Union::Proxy::Accept(const ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Source_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>& iVisitor)
+void Source_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<RelationalAlgebra::Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Proxy* theVisitor = sDynNonConst<Visitor_Proxy>(&iVisitor))
 		this->Accept_Proxy(*theVisitor);
@@ -191,10 +191,10 @@ void Source_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZRA::Expr_Rel>& iV
 		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
-ZRef<ZRA::Expr_Rel> Source_Union::Proxy::Self()
+ZRef<RelationalAlgebra::Expr_Rel> Source_Union::Proxy::Self()
 	{ return this; }
 
-ZRef<ZRA::Expr_Rel> Source_Union::Proxy::Clone()
+ZRef<RelationalAlgebra::Expr_Rel> Source_Union::Proxy::Clone()
 	{ return this; }
 
 void Source_Union::Proxy::Accept_Proxy(Visitor_Proxy& iVisitor)
@@ -277,12 +277,12 @@ class Source_Union::PQuery
 :	public DLink_PQuery_NeedsWork
 	{
 public:
-	PQuery(const ZRef<ZRA::Expr_Rel>& iRel)
+	PQuery(const ZRef<RelationalAlgebra::Expr_Rel>& iRel)
 	:	fRel(iRel)
 		{}
 
-	ZRef<ZRA::Expr_Rel> const fRel;
-	ZRef<ZRA::Expr_Rel> fRel_Analyzed;
+	ZRef<RelationalAlgebra::Expr_Rel> const fRel;
+	ZRef<RelationalAlgebra::Expr_Rel> fRel_Analyzed;
 	set<ZRef<Proxy> > fProxiesDependedUpon;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
 	ZRef<QueryEngine::Result> fResult;
@@ -294,7 +294,7 @@ public:
 
 class Source_Union::Visitor_DoMakeWalker
 :	public virtual QueryEngine::Visitor_DoMakeWalker
-,	public virtual ZRA::Visitor_Expr_Rel_Concrete
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Proxy
 	{
 public:
@@ -302,7 +302,7 @@ public:
 	:	fSource(iSource)
 		{}
 
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<RelationalAlgebra::Expr_Rel_Concrete>& iExpr)
 		{
 		// We'll never see a Concrete -- we're called only an a Rel that's been
 		// analyzed and where any concrete or expression incorporating a concrete
@@ -321,39 +321,39 @@ private:
 // MARK: - Source_Union::Analyze
 
 class Source_Union::Analyze
-:	public virtual ZVisitor_Expr_Op_Do_Transform_T<ZRA::Expr_Rel>
-,	public virtual ZRA::Visitor_Expr_Rel_Calc
-,	public virtual ZRA::Visitor_Expr_Rel_Embed
-,	public virtual ZRA::Visitor_Expr_Rel_Concrete
-,	public virtual ZRA::Visitor_Expr_Rel_Const
-,	public virtual ZRA::Visitor_Expr_Rel_Product
-,	public virtual ZRA::Visitor_Expr_Rel_Project
-,	public virtual ZRA::Visitor_Expr_Rel_Rename
-,	public virtual ZRA::Visitor_Expr_Rel_Restrict
-,	public virtual ZRA::Visitor_Expr_Rel_Union
+:	public virtual ZVisitor_Expr_Op_Do_Transform_T<RelationalAlgebra::Expr_Rel>
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Calc
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Embed
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Concrete
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Const
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Product
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Project
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Rename
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Restrict
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Union
 	{
 public:
 	Analyze(Source_Union* iSource_Union, PQuery* iPQuery);
 
-// From ZRA::Visitor_Expr_Rel_XXX
-	virtual void Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr);
-	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr);
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr);
-	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
-	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr);
-	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
-	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr);
-	virtual void Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>& iExpr);
+// From RelationalAlgebra::Visitor_Expr_Rel_XXX
+	virtual void Visit_Expr_Rel_Calc(const ZRef<RelationalAlgebra::Expr_Rel_Calc>& iExpr);
+	virtual void Visit_Expr_Rel_Const(const ZRef<RelationalAlgebra::Expr_Rel_Const>& iExpr);
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<RelationalAlgebra::Expr_Rel_Concrete>& iExpr);
+	virtual void Visit_Expr_Rel_Embed(const ZRef<RelationalAlgebra::Expr_Rel_Embed>& iExpr);
+	virtual void Visit_Expr_Rel_Product(const ZRef<RelationalAlgebra::Expr_Rel_Product>& iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZRef<RelationalAlgebra::Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZRef<RelationalAlgebra::Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<RelationalAlgebra::Expr_Rel_Restrict>& iExpr);
+	virtual void Visit_Expr_Rel_Union(const ZRef<RelationalAlgebra::Expr_Rel_Union>& iExpr);
 
 // Our protocol
-	ZRef<ZRA::Expr_Rel> TopLevelDo(ZRef<ZRA::Expr_Rel> iRel);
+	ZRef<RelationalAlgebra::Expr_Rel> TopLevelDo(ZRef<RelationalAlgebra::Expr_Rel> iRel);
 
 private:
 	Source_Union* fSource_Union;
 	PQuery* fPQuery;
 	set<PSource*> fPSources;
-	ZRA::RelHead fResultRelHead;
+	RelationalAlgebra::RelHead fResultRelHead;
 	};
 
 Source_Union::Analyze::Analyze(Source_Union* iSource_Union, PQuery* iPQuery)
@@ -361,14 +361,14 @@ Source_Union::Analyze::Analyze(Source_Union* iSource_Union, PQuery* iPQuery)
 ,	fPQuery(iPQuery)
 	{}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Calc(const ZRef<RelationalAlgebra::Expr_Rel_Calc>& iExpr)
 	{
-	ZRA::Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(iExpr);
+	RelationalAlgebra::Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(iExpr);
 
 	fResultRelHead |= iExpr->GetColName();
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<RelationalAlgebra::Expr_Rel_Concrete>& iExpr)
 	{
 	ZAssertStop(kDebug, fResultRelHead.empty());
 
@@ -383,31 +383,31 @@ void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Con
 		this->pSetResult(fSource_Union->pGetProxy(fPQuery, fPSources, fResultRelHead, iExpr));
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<RelationalAlgebra::Expr_Rel_Const>& iExpr)
 	{
-	ZRA::Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(iExpr);
+	RelationalAlgebra::Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(iExpr);
 	fResultRelHead |= iExpr->GetColName();
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<RelationalAlgebra::Expr_Rel_Embed>& iExpr)
 	{
 	// Visit parent
-	const ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	const ZRef<RelationalAlgebra::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 	// Remember which PSources it touches.
 	set<PSource*> leftPSources = fPSources;
 
 	// And the relhead
-	ZRA::RelHead leftRelHead;
+	RelationalAlgebra::RelHead leftRelHead;
 	leftRelHead.swap(fResultRelHead);
 
 	// Visit embedee
-	const ZRef<ZRA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+	const ZRef<RelationalAlgebra::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 
 	// Remember its PSources.
 	set<PSource*> rightPSources;
 	rightPSources.swap(fPSources);
-	ZRA::RelHead rightRelHead;
+	RelationalAlgebra::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
 	fPSources = leftPSources | rightPSources;
@@ -425,14 +425,14 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>
 			{
 			// With the addition of our right branch we *now* reference multiple sources.
 			// We register a proxy for the left branch.
-			ZRef<ZRA::Expr_Rel> proxy0 =
+			ZRef<RelationalAlgebra::Expr_Rel> proxy0 =
 				fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
 
 			if (rightPSources.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet. Will
 				// only happen if there's no restrict on the right branch.
-				ZRef<ZRA::Expr_Rel> proxy1 =
+				ZRef<RelationalAlgebra::Expr_Rel> proxy1 =
 					fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
@@ -448,7 +448,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>
 		if (rightPSources.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
-			ZRef<ZRA::Expr_Rel> proxy1 =
+			ZRef<RelationalAlgebra::Expr_Rel> proxy1 =
 				fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
@@ -459,26 +459,26 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>
 		}
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<RelationalAlgebra::Expr_Rel_Product>& iExpr)
 	{
 	// Visit left branch
-	const ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	const ZRef<RelationalAlgebra::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 	// Remember which PSources it touches.
 	set<PSource*> leftPSources;
 	leftPSources.swap(fPSources);
 
 	// And the relhead
-	ZRA::RelHead leftRelHead;
+	RelationalAlgebra::RelHead leftRelHead;
 	leftRelHead.swap(fResultRelHead);
 
 	// Visit right branch
-	const ZRef<ZRA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+	const ZRef<RelationalAlgebra::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 
 	// Remember its PSources.
 	set<PSource*> rightPSources;
 	rightPSources.swap(fPSources);
-	ZRA::RelHead rightRelHead;
+	RelationalAlgebra::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
 	fPSources = leftPSources | rightPSources;
@@ -496,13 +496,13 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 			{
 			// This is the interesting scenario. With the addition of our right branch
 			// we *now* reference multiple sources. We register a proxy for the left branch.
-			ZRef<ZRA::Expr_Rel> proxy0 =
+			ZRef<RelationalAlgebra::Expr_Rel> proxy0 =
 				fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
 
 			if (rightPSources.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet.
-				ZRef<ZRA::Expr_Rel> proxy1 =
+				ZRef<RelationalAlgebra::Expr_Rel> proxy1 =
 					fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
@@ -518,7 +518,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 		if (rightPSources.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
-			ZRef<ZRA::Expr_Rel> proxy1 =
+			ZRef<RelationalAlgebra::Expr_Rel> proxy1 =
 				fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
@@ -529,27 +529,27 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Prod
 		}
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Project(const ZRef<RelationalAlgebra::Expr_Rel_Project>& iExpr)
 	{
-	ZRA::Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(iExpr);
+	RelationalAlgebra::Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(iExpr);
 
 	fResultRelHead &= iExpr->GetProjectRelHead();
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<RelationalAlgebra::Expr_Rel_Rename>& iExpr)
 	{
-	ZRA::Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(iExpr);
+	RelationalAlgebra::Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(iExpr);
 
 	if (sQErase(fResultRelHead, iExpr->GetOld()))
 		fResultRelHead |= iExpr->GetNew();
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<RelationalAlgebra::Expr_Rel_Restrict>& iExpr)
 	{
 	// If fPSources is not empty, then we're in an embed. Remember it.
 	set<PSource*> priorPSources = fPSources;
 
-	const ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	const ZRef<RelationalAlgebra::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 	if (fPSources.size() > 1)
 		{
@@ -565,7 +565,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Res
 			{
 			// We're complex with the addition of our prior sources.
 			// Create a proxy for the child.
-			ZRef<ZRA::Expr_Rel> proxy0 =
+			ZRef<RelationalAlgebra::Expr_Rel> proxy0 =
 				fSource_Union->pGetProxy(fPQuery, fPSources, fResultRelHead, newOp0);
 			this->pSetResult(iExpr->Clone(proxy0));
 			}
@@ -578,26 +578,26 @@ void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Res
 		}
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>& iExpr)
+void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RelationalAlgebra::Expr_Rel_Union>& iExpr)
 	{
 	// Visit left branch
-	const ZRef<ZRA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	const ZRef<RelationalAlgebra::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 	// Remember which PSources it touches.
 	set<PSource*> leftPSources;
 	leftPSources.swap(fPSources);
 
 	// And the relhead
-	ZRA::RelHead leftRelHead;
+	RelationalAlgebra::RelHead leftRelHead;
 	leftRelHead.swap(fResultRelHead);
 
 	// Visit right branch
-	const ZRef<ZRA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+	const ZRef<RelationalAlgebra::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 
 	// Remember its PSources.
 	set<PSource*> rightPSources;
 	rightPSources.swap(fPSources);
-	ZRA::RelHead rightRelHead;
+	RelationalAlgebra::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
 	fPSources = leftPSources | rightPSources;
@@ -616,13 +616,13 @@ void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>
 			{
 			// This is the interesting scenario. With the addition of our right branch
 			// we *now* reference multiple sources. We register a proxy for the left branch.
-			ZRef<ZRA::Expr_Rel> proxy0 =
+			ZRef<RelationalAlgebra::Expr_Rel> proxy0 =
 				fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
 
 			if (rightPSources.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet.
-				ZRef<ZRA::Expr_Rel> proxy1 =
+				ZRef<RelationalAlgebra::Expr_Rel> proxy1 =
 					fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
@@ -638,7 +638,7 @@ void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>
 		if (rightPSources.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
-			ZRef<ZRA::Expr_Rel> proxy1 =
+			ZRef<RelationalAlgebra::Expr_Rel> proxy1 =
 				fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
@@ -649,9 +649,9 @@ void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>
 		}
 	}
 
-ZRef<ZRA::Expr_Rel> Source_Union::Analyze::TopLevelDo(ZRef<ZRA::Expr_Rel> iRel)
+ZRef<RelationalAlgebra::Expr_Rel> Source_Union::Analyze::TopLevelDo(ZRef<RelationalAlgebra::Expr_Rel> iRel)
 	{
-	ZRef<ZRA::Expr_Rel> result = this->Do(iRel);
+	ZRef<RelationalAlgebra::Expr_Rel> result = this->Do(iRel);
 	if (fPSources.size() <= 1)
 		return fSource_Union->pGetProxy(fPQuery, fPSources, fResultRelHead, result);
 	return result;
@@ -676,7 +676,7 @@ public:
 	PSource(ZRef<Source> iSource, const string8& iPrefix);
 
 	bool Intersects(const RelHead& iRelHead);
-	ZRef<ZRA::Expr_Rel> UsableRel(ZRef<ZRA::Expr_Rel> iRel);
+	ZRef<RelationalAlgebra::Expr_Rel> UsableRel(ZRef<RelationalAlgebra::Expr_Rel> iRel);
 
 	ZRef<Source> fSource;
 	int64 fNextRefcon;
@@ -698,13 +698,13 @@ bool Source_Union::PSource::Intersects(const RelHead& iRelHead)
 	{
 	if (fPrefix.empty())
 		return fSource->Intersects(iRelHead);
-	else if (ZRA::sHasPrefix(fPrefix, iRelHead))
-		return fSource->Intersects(ZRA::sPrefixErased(fPrefix, iRelHead));
+	else if (RelationalAlgebra::sHasPrefix(fPrefix, iRelHead))
+		return fSource->Intersects(RelationalAlgebra::sPrefixErased(fPrefix, iRelHead));
 
 	return false;
 	}
 
-ZRef<ZRA::Expr_Rel> Source_Union::PSource::UsableRel(ZRef<ZRA::Expr_Rel> iRel)
+ZRef<RelationalAlgebra::Expr_Rel> Source_Union::PSource::UsableRel(ZRef<RelationalAlgebra::Expr_Rel> iRel)
 	{
 	if (fPrefix.empty())
 		return iRel;
@@ -798,7 +798,7 @@ void Source_Union::ModifyRegistrations(
 	// Add any Queries
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
-		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
+		ZRef<RelationalAlgebra::Expr_Rel> theRel = iAdded->GetRel();
 
 		pair<Map_Rel_PQuery::iterator,bool> inPQuery =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
@@ -1019,8 +1019,8 @@ set<Source_Union::PSource*> Source_Union::pIdentifyPSources(const RelHead& iRelH
 	return result;
 	}
 
-ZRef<ZRA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
-	const set<PSource*>& iPSources, const RelHead& iRelHead, ZRef<ZRA::Expr_Rel> iRel)
+ZRef<RelationalAlgebra::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
+	const set<PSource*>& iPSources, const RelHead& iRelHead, ZRef<RelationalAlgebra::Expr_Rel> iRel)
 	{
 	if (iPSources.empty())
 		return iRel;
@@ -1126,7 +1126,7 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 		if (oAnnotations)
 			iWalker->fCurrentResult->GetAnnotationsAt(iWalker->fCurrentIndex, *oAnnotations);
 
-		const ZRA::RelHead& theRH = iWalker->fCurrentResult->GetRelHead();
+		const RelationalAlgebra::RelHead& theRH = iWalker->fCurrentResult->GetRelHead();
 		if (theRH != iWalker->fProxy->fResultRelHead)
 			{
 			if (ZLOGPF(s, eDebug))

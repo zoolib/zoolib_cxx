@@ -41,9 +41,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/Walker_Rename.h"
 #include "zoolib/QueryEngine/Walker_Restrict.h"
 
-#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
-#include "zoolib/zra/ZRA_Util_Strim_Rel.h"
-#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
+#include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
+#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -54,7 +54,7 @@ using ZDatonSet::Deltas;
 using ZDatonSet::Map_NamedEvent_Delta_t;
 using ZDatonSet::NamedEvent;
 
-using namespace ZRA;
+using namespace RelationalAlgebra;
 using namespace ZUtil_STL;
 
 using std::make_pair;
@@ -121,7 +121,7 @@ Daton sAsDaton(const ZVal_Any& iVal)
 
 class Source_DatonSet::Visitor_DoMakeWalker
 :	public virtual QueryEngine::Visitor_DoMakeWalker
-,	public virtual ZRA::Visitor_Expr_Rel_Concrete
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Concrete
 ,	public virtual QueryEngine::Visitor_Expr_Rel_Search
 	{
 	typedef QueryEngine::Visitor_DoMakeWalker inherited;
@@ -131,7 +131,7 @@ public:
 	,	fPQuery(iPQuery)
 		{}
 
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<ZRA::Expr_Rel_Concrete>& iExpr)
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<RelationalAlgebra::Expr_Rel_Concrete>& iExpr)
 		{ this->pSetResult(fSource->pMakeWalker_Concrete(fPQuery, iExpr->GetConcreteRelHead())); }
 
 	virtual void Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iExpr)
@@ -216,11 +216,11 @@ class Source_DatonSet::PQuery
 :	public DLink_PQuery_NeedsWork
 	{
 public:
-	PQuery(ZRef<ZRA::Expr_Rel> iRel)
+	PQuery(ZRef<RelationalAlgebra::Expr_Rel> iRel)
 	:	fRel(iRel)
 		{}
 
-	const ZRef<ZRA::Expr_Rel> fRel;
+	const ZRef<RelationalAlgebra::Expr_Rel> fRel;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQuery_InPQuery;
 	set<PSearch*> fPSearch_Used;
 	ZRef<QueryEngine::Result> fResult;
@@ -279,7 +279,7 @@ void Source_DatonSet::ModifyRegistrations(
 		if (ZLOGPF(s, eDebug + 1))
 			s << "\nDatonSet Raw:\n" << iAdded->GetRel();
 
-		ZRef<ZRA::Expr_Rel> theRel = iAdded->GetRel();
+		ZRef<RelationalAlgebra::Expr_Rel> theRel = iAdded->GetRel();
 //## DAMN. With the transform, restrictions in an embed don't find names in the owning rel.
 //###		theRel = QueryEngine::sTransform_Search(theRel);
 
@@ -738,16 +738,16 @@ ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Search(
 	// This is where we would be able to take advantage of indices. For the moment
 	// just do it the dumb way.
 
-	const ZRA::Rename& theRename = iRel->GetRename();
-	ZRA::RelHead theRelHead;
-	for (ZRA::Rename::const_iterator ii = theRename.begin(); ii != theRename.end(); ++ii)
+	const RelationalAlgebra::Rename& theRename = iRel->GetRename();
+	RelationalAlgebra::RelHead theRelHead;
+	for (RelationalAlgebra::Rename::const_iterator ii = theRename.begin(); ii != theRename.end(); ++ii)
 		theRelHead |= ii->first;
 
 	ZRef<QueryEngine::Walker> theWalker;
 	const ZRef<ZExpr_Bool>& theExpr_Bool = iRel->GetExpr_Bool();
 	if (theExpr_Bool && theExpr_Bool != sTrue())
 		{
-		const ZRA::RelHead augmented = theRelHead | sGetNames(theExpr_Bool);
+		const RelationalAlgebra::RelHead augmented = theRelHead | sGetNames(theExpr_Bool);
 		if (augmented.size() != theRelHead.size())
 			{
 			theWalker = this->pMakeWalker_Concrete(iPQuery, augmented);
@@ -765,7 +765,7 @@ ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Search(
 		theWalker = this->pMakeWalker_Concrete(iPQuery, theRelHead);
 		}
 
-	for (ZRA::Rename::const_iterator iterRename = theRename.begin();
+	for (RelationalAlgebra::Rename::const_iterator iterRename = theRename.begin();
 		iterRename != theRename.end(); ++iterRename)
 		{
 		if (iterRename->first != iterRename->second)

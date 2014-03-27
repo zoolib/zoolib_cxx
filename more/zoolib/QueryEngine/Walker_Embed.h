@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/QueryEngine/Walker.h"
-#include "zoolib/zra/ZRA_RelHead.h"
+#include "zoolib/RelationalAlgebra/RelHead.h"
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -57,7 +57,7 @@ private:
 	ZRef<Walker> fWalker_Embedee;
 
 	size_t fOutputOffset;
-	ZRA::RelHead fEmbedeeRelHead;
+	RelationalAlgebra::RelHead fEmbedeeRelHead;
 	std::vector<size_t> fEmbedeeOffsets;
 	};
 

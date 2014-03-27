@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool.h"
-#include "zoolib/zra/ZRA_Expr_Rel.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel.h"
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -31,7 +31,7 @@ namespace QueryEngine {
 // =================================================================================================
 // MARK: - sTransform_Search
 
-ZRef<ZRA::Expr_Rel> sTransform_Search(const ZRef<ZRA::Expr_Rel>& iExpr);
+ZRef<RelationalAlgebra::Expr_Rel> sTransform_Search(const ZRef<RelationalAlgebra::Expr_Rel>& iExpr);
 
 } // namespace QueryEngine
 } // namespace ZooLib

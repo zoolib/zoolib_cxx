@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZVal_Any.h"
 
-#include "zoolib/zra/ZRA_RelHead.h"
+#include "zoolib/RelationalAlgebra/RelHead.h"
 
 #include <set>
 #include <vector>
@@ -40,7 +40,7 @@ namespace QueryEngine {
 class Result : public ZCounted
 	{
 public:
-	Result(const ZRA::RelHead& iRelHead,
+	Result(const RelationalAlgebra::RelHead& iRelHead,
 		std::vector<ZVal_Any>* ioPackedRows,
 		std::vector<std::vector<ZRef<ZCounted> > >* ioAnnotations);
 
@@ -48,7 +48,7 @@ public:
 
 	virtual ~Result();
 
-	const ZRA::RelHead& GetRelHead();
+	const RelationalAlgebra::RelHead& GetRelHead();
 
 	size_t Count();
 	const ZVal_Any* GetValsAt(size_t iIndex);
@@ -57,7 +57,7 @@ public:
 	int Compare(const Result& iOther) const;
 
 private:
-	ZRA::RelHead fRelHead;
+	RelationalAlgebra::RelHead fRelHead;
 	std::vector<ZVal_Any> fPackedRows;
 	std::vector<std::vector<ZRef<ZCounted> > > fAnnotations;
 	};

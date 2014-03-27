@@ -26,8 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZIntervalTreeClock.h"
 
 #include "zoolib/QueryEngine/Result.h"
-#include "zoolib/zra/ZRA_Expr_Rel.h"
-#include "zoolib/zra/ZRA_RelHead.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel.h"
+#include "zoolib/RelationalAlgebra/RelHead.h"
 
 #include <set>
 #include <vector>
@@ -38,7 +38,7 @@ namespace ZDataspace {
 using ZIntervalTreeClock::Clock;
 using ZIntervalTreeClock::Event;
 
-using ZRA::RelHead;
+using RelationalAlgebra::RelHead;
 
 // =================================================================================================
 // MARK: - AddedQuery
@@ -51,14 +51,14 @@ public:
 	~AddedQuery();
 	AddedQuery& operator=(const AddedQuery& iOther);
 
-	AddedQuery(int64 iRefcon, const ZRef<ZRA::Expr_Rel>& iRel);
+	AddedQuery(int64 iRefcon, const ZRef<RelationalAlgebra::Expr_Rel>& iRel);
 
 	int64 GetRefcon() const;
-	ZRef<ZRA::Expr_Rel> GetRel() const;
+	ZRef<RelationalAlgebra::Expr_Rel> GetRel() const;
 
 private:
 	int64 fRefcon;
-	ZRef<ZRA::Expr_Rel> fRel;
+	ZRef<RelationalAlgebra::Expr_Rel> fRel;
 	};
 
 // =================================================================================================

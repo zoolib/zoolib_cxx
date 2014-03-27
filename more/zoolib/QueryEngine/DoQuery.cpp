@@ -31,7 +31,7 @@ namespace QueryEngine {
 using std::map;
 using std::set;
 using std::vector;
-using ZRA::RelHead;
+using RelationalAlgebra::RelHead;
 
 // =================================================================================================
 // MARK: - sQuery

@@ -47,7 +47,7 @@ ZMACRO_CompareRegistration_T(ZRef<QueryEngine::Result>)
 
 namespace QueryEngine {
 
-Result::Result(const ZRA::RelHead& iRelHead,
+Result::Result(const RelationalAlgebra::RelHead& iRelHead,
 	vector<ZVal_Any>* ioPackedRows,
 	vector<vector<ZRef<ZCounted> > >* ioAnnotations)
 :	fRelHead(iRelHead)
@@ -81,7 +81,7 @@ Result::Result(const ZRef<QueryEngine::Result>& iOther, size_t iRow)
 Result::~Result()
 	{}
 
-const ZRA::RelHead& Result::GetRelHead()
+const RelationalAlgebra::RelHead& Result::GetRelHead()
 	{ return fRelHead; }
 
 size_t Result::Count()

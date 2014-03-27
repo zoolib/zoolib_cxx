@@ -115,7 +115,7 @@ void Source_Client::pWrite()
 	{
 	ZGuardMtxR guard(fMtxR);
 	fNeedsWrite = false;
-	std::map<int64, ZRef<ZRA::Expr_Rel> > theAdds;
+	std::map<int64, ZRef<RelationalAlgebra::Expr_Rel> > theAdds;
 	theAdds.swap(fAdds);
 
 	std::set<int64> theRemoves;

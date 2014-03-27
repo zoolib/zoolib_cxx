@@ -46,7 +46,7 @@ public:
 	typedef ZCallable<void(Dataspace*)> Callable_UpdateNeeded;
 	void SetCallable_UpdateNeeded(ZRef<Callable_UpdateNeeded> iCallable);
 
-	void Register(ZRef<Sieve> iSieve, const ZRef<ZRA::Expr_Rel>& iRel);
+	void Register(ZRef<Sieve> iSieve, const ZRef<RelationalAlgebra::Expr_Rel>& iRel);
 
 	void Update();
 
@@ -98,7 +98,7 @@ public:
 	virtual void Loaded();
 	virtual void Changed(bool iIsLoad);
 
-	ZRef<ZRA::Expr_Rel> GetRel();
+	ZRef<RelationalAlgebra::Expr_Rel> GetRel();
 	ZRef<QueryEngine::Result> GetResult();
 	ZRef<Event> GetEvent();
 
@@ -107,7 +107,7 @@ public:
 private:
 	Dataspace* fDataspace;
 	int64 fRefcon;
-	ZRef<ZRA::Expr_Rel> fRel;
+	ZRef<RelationalAlgebra::Expr_Rel> fRel;
 	ZRef<QueryEngine::Result> fResult;
 	ZRef<Event> fEvent;
 

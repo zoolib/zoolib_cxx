@@ -71,7 +71,7 @@ private:
 	bool fTriggered_Update;
 	bool fNeeds_SourceCollectResults;
 
-	std::map<int64,ZRef<ZRA::Expr_Rel> > fPendingAdds;
+	std::map<int64,ZRef<RelationalAlgebra::Expr_Rel> > fPendingAdds;
 	std::set<int64> fPendingRemoves;
 	std::map<int64,QueryResult> fPendingResults;
 	};

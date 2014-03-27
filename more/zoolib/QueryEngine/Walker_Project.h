@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/QueryEngine/Walker.h"
-#include "zoolib/zra/ZRA_RelHead.h"
+#include "zoolib/RelationalAlgebra/RelHead.h"
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -34,7 +34,7 @@ namespace QueryEngine {
 class Walker_Project : public Walker_Unary
 	{
 public:
-	Walker_Project(const ZRef<Walker>& iWalker, const ZRA::RelHead& iRelHead);
+	Walker_Project(const ZRef<Walker>& iWalker, const RelationalAlgebra::RelHead& iRelHead);
 	virtual ~Walker_Project();
 
 // From QueryEngine::Walker
@@ -50,7 +50,7 @@ public:
 		std::set<ZRef<ZCounted> >* oAnnotations);
 
 private:
-	const ZRA::RelHead fRelHead;
+	const RelationalAlgebra::RelHead fRelHead;
 	std::vector<size_t> fChildMapping;
 	std::set<std::vector<ZVal_Any> > fPriors;
 	};

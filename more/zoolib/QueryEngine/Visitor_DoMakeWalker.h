@@ -26,16 +26,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/QueryEngine/Walker.h"
 
-#include "zoolib/zra/ZRA_Expr_Rel_Calc.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Const.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Dee.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Dum.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Embed.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Product.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Project.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Union.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Calc.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Const.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Dee.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Dum.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Embed.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Product.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Project.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Rename.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Restrict.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Union.h"
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -45,32 +45,32 @@ namespace QueryEngine {
 
 class Visitor_DoMakeWalker
 :	public virtual ZVisitor_Do_T<ZRef<Walker> >
-,	public virtual ZRA::Visitor_Expr_Rel_Calc
-,	public virtual ZRA::Visitor_Expr_Rel_Const
-,	public virtual ZRA::Visitor_Expr_Rel_Dee
-,	public virtual ZRA::Visitor_Expr_Rel_Dum
-,	public virtual ZRA::Visitor_Expr_Rel_Embed
-,	public virtual ZRA::Visitor_Expr_Rel_Product
-,	public virtual ZRA::Visitor_Expr_Rel_Project
-,	public virtual ZRA::Visitor_Expr_Rel_Rename
-,	public virtual ZRA::Visitor_Expr_Rel_Restrict
-,	public virtual ZRA::Visitor_Expr_Rel_Union
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Calc
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Const
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Dee
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Dum
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Embed
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Product
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Project
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Rename
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Restrict
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Union
 	{
 public:
 // From ZVisitor
 	virtual void Visit(const ZRef<ZVisitee>& iRep);
 
 // From Visitor_Expr_Rel_XXX
-	virtual void Visit_Expr_Rel_Calc(const ZRef<ZRA::Expr_Rel_Calc>& iExpr);
-	virtual void Visit_Expr_Rel_Const(const ZRef<ZRA::Expr_Rel_Const>& iExpr);
-	virtual void Visit_Expr_Rel_Dee(const ZRef<ZRA::Expr_Rel_Dee>& iExpr);
-	virtual void Visit_Expr_Rel_Dum(const ZRef<ZRA::Expr_Rel_Dum>& iExpr);
-	virtual void Visit_Expr_Rel_Embed(const ZRef<ZRA::Expr_Rel_Embed>& iExpr);
-	virtual void Visit_Expr_Rel_Product(const ZRef<ZRA::Expr_Rel_Product>& iExpr);
-	virtual void Visit_Expr_Rel_Project(const ZRef<ZRA::Expr_Rel_Project>& iExpr);
-	virtual void Visit_Expr_Rel_Rename(const ZRef<ZRA::Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<ZRA::Expr_Rel_Restrict>& iExpr);
-	virtual void Visit_Expr_Rel_Union(const ZRef<ZRA::Expr_Rel_Union>& iExpr);
+	virtual void Visit_Expr_Rel_Calc(const ZRef<RelationalAlgebra::Expr_Rel_Calc>& iExpr);
+	virtual void Visit_Expr_Rel_Const(const ZRef<RelationalAlgebra::Expr_Rel_Const>& iExpr);
+	virtual void Visit_Expr_Rel_Dee(const ZRef<RelationalAlgebra::Expr_Rel_Dee>& iExpr);
+	virtual void Visit_Expr_Rel_Dum(const ZRef<RelationalAlgebra::Expr_Rel_Dum>& iExpr);
+	virtual void Visit_Expr_Rel_Embed(const ZRef<RelationalAlgebra::Expr_Rel_Embed>& iExpr);
+	virtual void Visit_Expr_Rel_Product(const ZRef<RelationalAlgebra::Expr_Rel_Product>& iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZRef<RelationalAlgebra::Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZRef<RelationalAlgebra::Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<RelationalAlgebra::Expr_Rel_Restrict>& iExpr);
+	virtual void Visit_Expr_Rel_Union(const ZRef<RelationalAlgebra::Expr_Rel_Union>& iExpr);
 	};
 
 } // namespace QueryEngine

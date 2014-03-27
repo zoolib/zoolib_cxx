@@ -63,7 +63,7 @@ private:
 
 	ZMtxR fMtxR;
 	bool fNeedsWrite;
-	std::map<int64, ZRef<ZRA::Expr_Rel> > fAdds;
+	std::map<int64, ZRef<RelationalAlgebra::Expr_Rel> > fAdds;
 	std::set<int64> fRemoves;
 	std::vector<QueryResult> fResults;
 	};

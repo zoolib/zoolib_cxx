@@ -71,7 +71,7 @@ bool SourceServer::pRead(ZRef<ZWorker> iWorker)
 	for (uint32 theCount = r.ReadCount(); theCount; --theCount)
 		{
 		int64 theRefcon = r.ReadInt64();
-		ZRef<ZRA::Expr_Rel> theRel;
+		ZRef<RelationalAlgebra::Expr_Rel> theRel;
 		addedQueries.push_back(AddedQuery(theRefcon, theRel));
 		}
 
