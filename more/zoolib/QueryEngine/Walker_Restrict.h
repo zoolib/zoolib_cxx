@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef zoolib_QueryEngine_Walker_Restrict_h__
-#define zoolib_QueryEngine_Walker_Restrict_h__ 1
+#ifndef __ZooLib_QueryEngine_Walker_Restrict_h__
+#define __ZooLib_QueryEngine_Walker_Restrict_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Bool.h"
@@ -60,4 +60,4 @@ private:
 } // namespace QueryEngine
 } // namespace ZooLib
 
-#endif // zoolib_QueryEngine_Walker_Restrict_h__
+#endif // __ZooLib_QueryEngine_Walker_Restrict_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Expr_Rel_Product_h__
-#define __ZRA_Expr_Rel_Product_h__ 1
+#ifndef __ZooLib_RelationalAlgebra_Expr_Rel_Product_h__
+#define __ZooLib_RelationalAlgebra_Expr_Rel_Product_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Op_T.h"
@@ -80,4 +80,4 @@ int sCompare_T(const RelationalAlgebra::Expr_Rel_Product& iL, const RelationalAl
 
 } // namespace ZooLib
 
-#endif // __ZRA_Expr_Rel_h__
+#endif // __ZooLib_RelationalAlgebra_Expr_Rel_h__
