@@ -401,6 +401,66 @@ ZMap_Any operator*(const ZNameVal& iNV, const ZMap_Any& iMap);
 ZMap_Any& operator*=(ZMap_Any& ioMap0, const ZMap_Any& iMap1);
 ZMap_Any operator*(const ZMap_Any& iMap0, const ZMap_Any& iMap1);
 
+// -----
+
+inline const ZVal_Any* sPGet(const ZMap_Any& iMap, const ZMap_Any::Name_t& iName)
+	{ return iMap.PGet(iName); }
+
+inline const ZQ<ZVal_Any> sQGet(const ZMap_Any& iMap, const ZMap_Any::Name_t& iName)
+	{ return iMap.QGet(iName); }
+
+inline const ZVal_Any& sDGet(const ZVal_Any& iDefault, const ZMap_Any& iMap, const ZMap_Any::Name_t& iName)
+	{ return iMap.DGet(iDefault, iName); }
+
+inline const ZVal_Any& sGet(const ZMap_Any& iMap, const ZMap_Any::Name_t& iName)
+	{ return iMap.Get(iName); }
+
+inline ZVal_Any* sPMut(ZMap_Any& ioMap, const ZMap_Any::Name_t& iName)
+	{ return ioMap.PMut(iName); }
+
+inline ZVal_Any& sDMut(const ZVal_Any& iDefault, ZMap_Any& ioMap, const ZMap_Any::Name_t& iName)
+	{ return ioMap.DMut(iDefault, iName); }
+
+inline ZVal_Any& sMut(ZMap_Any& ioMap, const ZMap_Any::Name_t& iName)
+	{ return ioMap.Mut(iName); }
+
+// inline ZVal_Any& sSet(ZMap_Any& ioMap, const ZMap_Any::Name_t& iName, const ZVal_Any& iVal)
+//	{ return ioMap.Set(iName, iVal); }
+
+// -----
+
+template <class S>
+const S* sPGet(const ZMap_Any& iMap, const ZMap_Any::Name_t& iName)
+	{ return iMap.PGet<S>(iName); }
+
+template <class S>
+const ZQ<S> sQGet(const ZMap_Any& iMap, const ZMap_Any::Name_t& iName)
+	{ return iMap.QGet<S>(iName); }
+
+template <class S>
+const S& sDGet(const S& iDefault, const ZMap_Any& iMap, const ZMap_Any::Name_t& iName)
+	{ return iMap.DGet<S>(iDefault, iName); }
+
+template <class S>
+const S& sGet(const ZMap_Any& iMap, const ZMap_Any::Name_t& iName)
+	{ return iMap.Get<S>(iName); }
+
+template <class S>
+S* sPMut(ZMap_Any& ioMap, const ZMap_Any::Name_t& iName)
+	{ return ioMap.PMut<S>(iName); }
+
+template <class S>
+S& sDMut(const S& iDefault, ZMap_Any& ioMap, const ZMap_Any::Name_t& iName)
+	{ return ioMap.DMut<S>(iDefault, iName); }
+
+template <class S>
+S& sMut(ZMap_Any& ioMap, const ZMap_Any::Name_t& iName)
+	{ return ioMap.Mut<S>(iName); }
+
+template <class S>
+S& sSet(ZMap_Any& ioMap, const ZMap_Any::Name_t& iName, const S& iVal)
+	{ return ioMap.Set<S>(iName, iVal); }
+
 // =================================================================================================
 // MARK: - ZMap_Any::Rep
 
