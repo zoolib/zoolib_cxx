@@ -131,5 +131,47 @@ RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead)
 	return result;
 	}
 
+// =================================================================================================
+// MARK: - ConcreteHead
+
+ConcreteHead sConcreteHead(const RelHead& iRequired)
+	{
+	ConcreteHead result;
+	for (RelHead::const_iterator ii = iRequired.begin(), end = iRequired.end();
+		ii != end; ++ii)
+		{ result[*ii] = true; }
+	return result;
+	}
+
+ConcreteHead sConcreteHead(const RelHead& iRequired, const RelHead& iOptional)
+	{
+	ConcreteHead result;
+
+	for (RelHead::const_iterator ii = iOptional.begin(), end = iOptional.end();
+		ii != end; ++ii)
+		{ result[*ii] = false; }
+
+	for (RelHead::const_iterator ii = iRequired.begin(), end = iRequired.end();
+		ii != end; ++ii)
+		{ result[*ii] = true; }
+
+	return result;
+	}
+
+
+RelHead sRelHead_Required(const ConcreteHead& iConcreteHead)
+	{
+	RelHead result;
+	for (ConcreteHead::const_iterator ii = iConcreteHead.begin(), end = iConcreteHead.end();
+		ii != end; ++ii)
+		{
+		if (ii->second)
+			ZUtil_STL::sInsert(result, ii->first);
+		}
+	return result;
+	}
+
+RelHead sRelHead_Optional(const ConcreteHead& iConcreteHead);
+
 } // namespace RelationalAlgebra
 } // namespace ZooLib

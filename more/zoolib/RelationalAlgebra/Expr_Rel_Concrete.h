@@ -41,7 +41,8 @@ class Expr_Rel_Concrete
 	{
 	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Concrete(const RelHead& iRelHead);
+	Expr_Rel_Concrete(const RelHead& iRequired);
+	Expr_Rel_Concrete(const RelHead& iRequired, const RelHead& iOptional);
 
 // From ZVisitee
 	virtual void Accept(const ZVisitor& iVisitor);
@@ -55,10 +56,10 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor);
 
-	const RelHead& GetConcreteRelHead() const;
+	const ConcreteHead& GetConcreteHead() const;
 
 private:
-	const RelHead fRelHead;
+	ConcreteHead fConcreteHead;
 	};
 
 // =================================================================================================
@@ -79,7 +80,8 @@ ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead);
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Concrete& iL, const RelationalAlgebra::Expr_Rel_Concrete& iR);
+int sCompare_T(const RelationalAlgebra::Expr_Rel_Concrete& iL,
+	const RelationalAlgebra::Expr_Rel_Concrete& iR);
 
 } // namespace ZooLib
 

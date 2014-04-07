@@ -119,6 +119,18 @@ RelHead sPrefixInserted(const ColName& iPrefix, const RelHead& iRelHead);
 RelHead sPrefixErased(const ColName& iPrefix, const RelHead& iRelHead);
 RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead);
 
+// =================================================================================================
+// MARK: - ConcreteHead
+
+typedef std::map<ColName,bool> ConcreteHead;
+
+ConcreteHead sConcreteHead(const RelHead& iRequired);
+ConcreteHead sConcreteHead(const RelHead& iRequired, const RelHead& iOptional);
+
+RelHead sRelHead_Required(const ConcreteHead& iConcreteHead);
+RelHead sRelHead_Optional(const ConcreteHead& iConcreteHead);
+
+
 } // namespace RelationalAlgebra
 } // namespace ZooLib
 

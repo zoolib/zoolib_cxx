@@ -27,8 +27,9 @@ namespace ZooLib {
 // MARK: - sCompare_T
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Concrete& iL, const RelationalAlgebra::Expr_Rel_Concrete& iR)
-	{ return sCompare_T(iL.GetConcreteRelHead(), iR.GetConcreteRelHead()); }
+int sCompare_T(const RelationalAlgebra::Expr_Rel_Concrete& iL,
+	const RelationalAlgebra::Expr_Rel_Concrete& iR)
+	{ return sCompare_T(iL.GetConcreteHead(), iR.GetConcreteHead()); }
 
 ZMACRO_CompareRegistration_T(RelationalAlgebra::Expr_Rel_Concrete)
 
@@ -37,8 +38,12 @@ namespace RelationalAlgebra {
 // =================================================================================================
 // MARK: - Expr_Rel_Concrete
 
-Expr_Rel_Concrete::Expr_Rel_Concrete(const RelHead& iRelHead)
-:	fRelHead(iRelHead)
+Expr_Rel_Concrete::Expr_Rel_Concrete(const RelHead& iRequired)
+:	fConcreteHead(sConcreteHead(iRequired))
+	{}
+
+Expr_Rel_Concrete::Expr_Rel_Concrete(const RelHead& iRequired, const RelHead& iOptional)
+:	fConcreteHead(sConcreteHead(iRequired, iOptional))
 	{}
 
 void Expr_Rel_Concrete::Accept(const ZVisitor& iVisitor)
@@ -66,8 +71,8 @@ ZRef<Expr_Rel> Expr_Rel_Concrete::Clone()
 void Expr_Rel_Concrete::Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Concrete(this); }
 
-const RelHead& Expr_Rel_Concrete::GetConcreteRelHead() const
-	{ return fRelHead; }
+const ConcreteHead& Expr_Rel_Concrete::GetConcreteHead() const
+	{ return fConcreteHead; }
 
 // =================================================================================================
 // MARK: - Visitor_Expr_Rel_Concrete
