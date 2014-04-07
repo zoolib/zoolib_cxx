@@ -41,22 +41,6 @@ ZVal_Any sAsVal(const ZDatonSet::Daton& iDaton);
 ZDatonSet::Daton sAsDaton(const ZVal_Any& iVal);
 
 // =================================================================================================
-// MARK: - Annotation_Daton
-
-class Annotation_Daton : public ZCounted
-	{
-public:
-	Annotation_Daton(const ZDatonSet::Daton& iDaton)
-	:	fDaton(iDaton)
-		{}
-
-	const ZDatonSet::Daton& GetDaton() { return fDaton; }
-
-private:
-	const ZDatonSet::Daton fDaton;
-	};
-
-// =================================================================================================
 // MARK: - Source_DatonSet
 
 class Source_DatonSet : public Source
