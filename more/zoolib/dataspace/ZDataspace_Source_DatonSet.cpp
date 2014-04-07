@@ -751,13 +751,13 @@ ZRef<QE::Walker> Source_DatonSet::pMakeWalker_Search(
 		if (augmented.size() != theRelHead.size())
 			{
 			theWalker = this->pMakeWalker_Concrete(iPQuery, augmented);
-			theWalker = new QueryEngine::Walker_Restrict(theWalker, theExpr_Bool);
-			theWalker = new QueryEngine::Walker_Project(theWalker, theRelHead);
+			theWalker = new QE::Walker_Restrict(theWalker, theExpr_Bool);
+			theWalker = new QE::Walker_Project(theWalker, theRelHead);
 			}
 		else
 			{
 			theWalker = this->pMakeWalker_Concrete(iPQuery, theRelHead);
-			theWalker = new QueryEngine::Walker_Restrict(theWalker, theExpr_Bool);
+			theWalker = new QE::Walker_Restrict(theWalker, theExpr_Bool);
 			}
 		}
 	else
