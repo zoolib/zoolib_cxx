@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDatonSet {
 
-typedef ZData_Any ZData;
+typedef ZData_Any Data;
 
 using ZIntervalTreeClock::Clock;
 using ZIntervalTreeClock::Event;
@@ -52,16 +52,16 @@ public:
 	~Daton();
 	Daton& operator=(const Daton& iOther);
 
-	Daton(ZData iData);
+	Daton(Data iData);
 
 	bool operator==(const Daton& iOther) const;
 	bool operator!=(const Daton& iOther) const;
 	bool operator<(const Daton& iOther) const;
 
-	ZData GetData() const;
+	Data GetData() const;
 
 private:
-	ZData fData;
+	Data fData;
 	};
 
 } // namespace ZDatonSet

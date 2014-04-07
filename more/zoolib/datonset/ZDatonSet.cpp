@@ -50,7 +50,7 @@ Daton& Daton::operator=(const Daton& iOther)
 	return *this;
 	}
 
-Daton::Daton(ZData iData)
+Daton::Daton(Data iData)
 :	fData(iData)
 	{}
 
@@ -63,7 +63,7 @@ bool Daton::operator!=(const Daton& iOther) const
 bool Daton::operator<(const Daton& iOther) const
 	{ return fData < iOther.fData; }
 
-ZData Daton::GetData() const
+Data Daton::GetData() const
 	{ return fData; }
 
 // =================================================================================================
