@@ -184,6 +184,19 @@ ZRef<ZTween<Val> > sTween_Cos()
 	{ return new ZTween_Fun<Val,spTweenFun_Cos>; }
 
 // =================================================================================================
+// MARK: - sTween_Erf
+
+// <https://en.wikipedia.org/wiki/Error_function>
+
+template <class Val>
+Val spTweenFun_Erf(double iTime)
+	{ return erf(2 * iTime); }
+
+template <class Val>
+ZRef<ZTween<Val> > sTween_Erf()
+	{ return new ZTween_Fun<Val,spTweenFun_Erf>; }
+
+// =================================================================================================
 // MARK: - sTween_QuadIn
 
 template <class Val>
