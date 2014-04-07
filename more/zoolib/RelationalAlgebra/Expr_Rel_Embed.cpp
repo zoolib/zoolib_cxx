@@ -28,7 +28,8 @@ namespace ZooLib {
 // MARK: - sCompare_T
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Embed& iL, const RelationalAlgebra::Expr_Rel_Embed& iR)
+int sCompare_T(const RelationalAlgebra::Expr_Rel_Embed& iL,
+	const RelationalAlgebra::Expr_Rel_Embed& iR)
 	{
 	if (int compare = sCompare_T(iL.GetColName(), iR.GetColName()))
 		return compare;

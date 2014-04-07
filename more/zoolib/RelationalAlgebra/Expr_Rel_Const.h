@@ -82,7 +82,8 @@ ZRef<Expr_Rel> sConst(const ColName& iColName, const ZVal_Any& iVal);
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Const& iL, const RelationalAlgebra::Expr_Rel_Const& iR);
+int sCompare_T(const RelationalAlgebra::Expr_Rel_Const& iL,
+	const RelationalAlgebra::Expr_Rel_Const& iR);
 
 } // namespace ZooLib
 

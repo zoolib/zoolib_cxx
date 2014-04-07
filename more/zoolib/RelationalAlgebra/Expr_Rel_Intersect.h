@@ -73,7 +73,8 @@ ZRef<Expr_Rel> operator&(
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Intersect& iL, const RelationalAlgebra::Expr_Rel_Intersect& iR);
+int sCompare_T(const RelationalAlgebra::Expr_Rel_Intersect& iL,
+	const RelationalAlgebra::Expr_Rel_Intersect& iR);
 
 } // namespace ZooLib
 

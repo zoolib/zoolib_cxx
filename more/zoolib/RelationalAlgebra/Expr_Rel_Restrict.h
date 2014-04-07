@@ -89,7 +89,8 @@ ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& i
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Restrict& iL, const RelationalAlgebra::Expr_Rel_Restrict& iR);
+int sCompare_T(const RelationalAlgebra::Expr_Rel_Restrict& iL,
+	const RelationalAlgebra::Expr_Rel_Restrict& iR);
 
 } // namespace ZooLib
 

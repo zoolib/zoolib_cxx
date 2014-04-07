@@ -138,7 +138,8 @@ ZRef<Expr_Rel> sCalc(const ZRef<Expr_Rel>& iOp0,
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Calc& iL, const RelationalAlgebra::Expr_Rel_Calc& iR);
+int sCompare_T(const RelationalAlgebra::Expr_Rel_Calc& iL,
+	const RelationalAlgebra::Expr_Rel_Calc& iR);
 
 } // namespace ZooLib
 
