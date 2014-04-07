@@ -54,7 +54,6 @@ using ZDatonSet::Deltas;
 using ZDatonSet::Map_NamedEvent_Delta_t;
 using ZDatonSet::NamedEvent;
 
-using namespace RelationalAlgebra;
 using namespace ZUtil_STL;
 
 using std::make_pair;
@@ -62,6 +61,9 @@ using std::map;
 using std::pair;
 using std::set;
 using std::vector;
+
+namespace QE = QueryEngine;
+namespace RA = RelationalAlgebra;
 
 /*
 Minimally, keep an index of property names in contents -- that way we can efficiently
@@ -120,21 +122,20 @@ Daton sAsDaton(const ZVal_Any& iVal)
 // MARK: - Source_DatonSet::Visitor_DoMakeWalker
 
 class Source_DatonSet::Visitor_DoMakeWalker
-:	public virtual QueryEngine::Visitor_DoMakeWalker
-,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Concrete
-,	public virtual QueryEngine::Visitor_Expr_Rel_Search
+:	public virtual QE::Visitor_DoMakeWalker
+,	public virtual RA::Visitor_Expr_Rel_Concrete
+,	public virtual QE::Visitor_Expr_Rel_Search
 	{
-	typedef QueryEngine::Visitor_DoMakeWalker inherited;
+	typedef QE::Visitor_DoMakeWalker inherited;
 public:
 	Visitor_DoMakeWalker(ZRef<Source_DatonSet> iSource, PQuery* iPQuery)
 	:	fSource(iSource)
 	,	fPQuery(iPQuery)
 		{}
 
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<RelationalAlgebra::Expr_Rel_Concrete>& iExpr)
-		{ this->pSetResult(fSource->pMakeWalker_Concrete(fPQuery, iExpr->GetConcreteRelHead())); }
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
 
-	virtual void Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iExpr)
+	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
 		{ this->pSetResult(fSource->pMakeWalker_Search(fPQuery, iExpr)); }
 
 	ZRef<Source_DatonSet> const fSource;
@@ -144,7 +145,7 @@ public:
 // =================================================================================================
 // MARK: - Source_DatonSet::Walker_Concrete
 
-class Source_DatonSet::Walker_Concrete : public QueryEngine::Walker
+class Source_DatonSet::Walker_Concrete : public QE::Walker
 	{
 public:
 	Walker_Concrete(ZRef<Source_DatonSet> iSource, const vector<string8>& iNames)
@@ -155,11 +156,11 @@ public:
 	virtual ~Walker_Concrete()
 		{}
 
-// From QueryEngine::Walker
+// From QE::Walker
 	virtual void Rewind()
 		{ fSource->pRewind_Concrete(this); }
 
-	virtual ZRef<QueryEngine::Walker> Prime(const map<string8,size_t>& iOffsets,
+	virtual ZRef<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
 		map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset)
 		{
@@ -167,10 +168,8 @@ public:
 		return this;
 		}
 
-	virtual bool QReadInc(
-		ZVal_Any* ioResults,
-		set<ZRef<ZCounted> >* oAnnotations)
-		{ return fSource->pReadInc_Concrete(this, ioResults, oAnnotations); }
+	virtual bool QReadInc(ZVal_Any* ioResults)
+		{ return fSource->pReadInc_Concrete(this, ioResults); }
 
 	const ZRef<Source_DatonSet> fSource;
 	const vector<string8> fNames;
@@ -216,14 +215,14 @@ class Source_DatonSet::PQuery
 :	public DLink_PQuery_NeedsWork
 	{
 public:
-	PQuery(ZRef<RelationalAlgebra::Expr_Rel> iRel)
+	PQuery(ZRef<RA::Expr_Rel> iRel)
 	:	fRel(iRel)
 		{}
 
-	const ZRef<RelationalAlgebra::Expr_Rel> fRel;
+	const ZRef<RA::Expr_Rel> fRel;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQuery_InPQuery;
 	set<PSearch*> fPSearch_Used;
-	ZRef<QueryEngine::Result> fResult;
+	ZRef<QE::Result> fResult;
 	};
 
 // =================================================================================================
@@ -241,7 +240,7 @@ public:
 
 	RelHead fRelHead;
 	set<PQuery*> fPQuery_Using;
-	ZRef<QueryEngine::Result> fResult;
+	ZRef<QE::Result> fResult;
 	};
 
 // =================================================================================================
@@ -279,9 +278,9 @@ void Source_DatonSet::ModifyRegistrations(
 		if (ZLOGPF(s, eDebug + 1))
 			s << "\nDatonSet Raw:\n" << iAdded->GetRel();
 
-		ZRef<RelationalAlgebra::Expr_Rel> theRel = iAdded->GetRel();
-//## DAMN. With the transform, restrictions in an embed don't find names in the owning rel.
-//###		theRel = QueryEngine::sTransform_Search(theRel);
+		ZRef<RA::Expr_Rel> theRel = iAdded->GetRel();
+// FIXME: With the transform, restrictions in an embed don't find names in the owning rel
+//###		theRel = QE::sTransform_Search(theRel);
 
 		if (ZLOGPF(s, eDebug + 1))
 			s << "\nDatonSet Cooked:\n" << theRel;
@@ -378,7 +377,7 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 
 		const ZTime start = ZTime::sNow();
 
-		ZRef<QueryEngine::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
+		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
 		const ZTime afterMakeWalker = ZTime::sNow();
 
 		if (s)
@@ -387,7 +386,7 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 			s.Emit();
 			}
 
-		thePQuery->fResult = QueryEngine::sDoQuery(theWalker);
+		thePQuery->fResult = QE::sDoQuery(theWalker);
 		const ZTime afterDoQuery = ZTime::sNow();
 
 		if (s && 0)
@@ -626,12 +625,13 @@ void Source_DatonSet::pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& iV
 	this->pChanged(iVal);
 	}
 
+
 void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 	{
 	const ZMap_Any theMap = iVal.Get<ZMap_Any>();
 	RelHead theRH;
 	for (ZMap_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
-		theRH |= ColName(theMap.NameOf(i));
+		theRH |= RA::ColName(theMap.NameOf(i));
 
 	for (Map_PSearch::iterator iterPSearch = fMap_PSearch.begin();
 		iterPSearch != fMap_PSearch.end(); ++iterPSearch)
@@ -729,11 +729,11 @@ ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery,
 		thePSearch->fResult = sDoQuery(theWalker);
 		}
 
-	return new QueryEngine::Walker_Result(thePSearch->fResult);
+	return new QE::Walker_Result(thePSearch->fResult);
 	}
 
-ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Search(
-	PQuery* iPQuery, const ZRef<QueryEngine::Expr_Rel_Search>& iRel)
+ZRef<QE::Walker> Source_DatonSet::pMakeWalker_Search(
+	PQuery* iPQuery, const ZRef<QE::Expr_Rel_Search>& iRel)
 	{
 	// This is where we would be able to take advantage of indices. For the moment
 	// just do it the dumb way.
@@ -765,11 +765,11 @@ ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Search(
 		theWalker = this->pMakeWalker_Concrete(iPQuery, theRelHead);
 		}
 
-	for (RelationalAlgebra::Rename::const_iterator iterRename = theRename.begin();
+	for (RA::Rename::const_iterator iterRename = theRename.begin();
 		iterRename != theRename.end(); ++iterRename)
 		{
 		if (iterRename->first != iterRename->second)
-			theWalker = new QueryEngine::Walker_Rename(theWalker, iterRename->second, iterRename->first);
+			theWalker = new QE::Walker_Rename(theWalker, iterRename->second, iterRename->first);
 		}
 
 	return theWalker;
@@ -793,9 +793,7 @@ void Source_DatonSet::pPrime_Concrete(ZRef<Walker_Concrete> iWalker,
 		oOffsets[iWalker->fNames[xx]] = ioBaseOffset++;
 	}
 
-bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
-	ZVal_Any* ioResults,
-	set<ZRef<ZCounted> >* oAnnotations)
+bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker, ZVal_Any* ioResults)
 	{
 	++fReadCount;
 
@@ -816,7 +814,14 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 				subset.reserve(theCount);
 				for (size_t xx = 0; xx < theCount; ++xx)
 					{
-					if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[xx]))
+					// Empty name indicates that we want the Daton itself.
+					if (theNamesPtr[xx].empty())
+						{
+						const ZVal_Any& theVal = iWalker->fCurrent_Main->first;
+						ioResults[iWalker->fBaseOffset + xx] = theVal;
+						subset.push_back(theVal);
+						}
+					else if (const ZVal_Any* theVal = sPGet(*theMap, theNamesPtr[xx]))
 						{
 						ioResults[iWalker->fBaseOffset + xx] = *theVal;
 						subset.push_back(*theVal);
@@ -832,8 +837,6 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 					{
 					if (ZLOGF(s, eDebug + 2))
 						ZYad_ZooLibStrim::sToStrim(sYadR(*theMap), s);
-					if (oAnnotations)
-						oAnnotations->insert(new Annotation_Daton(iWalker->fCurrent_Main->first));
 					++iWalker->fCurrent_Main;
 					return true;
 					}
@@ -855,7 +858,13 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 				bool gotAll = true;
 				for (size_t xx = 0; xx < theCount; ++xx)
 					{
-					if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[xx]))
+					if (theNamesPtr[xx].empty())
+						{
+						const ZVal_Any& theVal = iWalker->fCurrent_Pending->first;
+						ioResults[iWalker->fBaseOffset + xx] = theVal;
+						subset.push_back(theVal);
+						}
+					else if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[xx]))
 						{
 						ioResults[iWalker->fBaseOffset + xx] = *theVal;
 						subset.push_back(*theVal);
@@ -863,6 +872,7 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 					else
 						{
 						gotAll = false;
+						break;
 						}
 					}
 
@@ -871,8 +881,6 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
 					if (ZLOGF(s, eDebug + 2))
 						ZYad_ZooLibStrim::sToStrim(sYadR(*theMap), s);
 
-					if (oAnnotations)
-						oAnnotations->insert(new Annotation_Daton(iWalker->fCurrent_Pending->first));
 					++iWalker->fCurrent_Pending;
 					return true;
 					}

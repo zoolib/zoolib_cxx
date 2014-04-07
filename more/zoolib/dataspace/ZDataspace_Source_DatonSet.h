@@ -105,16 +105,15 @@ private:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,
-		ZVal_Any* ioResults,
-		std::set<ZRef<ZCounted> >* oAnnotations);
+	bool pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,ZVal_Any* ioResults);
 
 	// -----
 
 	class Walker_Search;
 	friend class Walker_Search;
 
-	ZRef<QueryEngine::Walker> pMakeWalker_Search(PQuery* iPQuery, const ZRef<QueryEngine::Expr_Rel_Search>& iRel);
+	ZRef<QueryEngine::Walker> pMakeWalker_Search(PQuery* iPQuery,
+		const ZRef<QueryEngine::Expr_Rel_Search>& iRel);
 
 	// -----
 
