@@ -59,7 +59,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 	{
 	RelHead theRelHead;
 
-	{ // Scope for sr
+	{ // Scope for ssr
 	ZSaveSetRestore_T<RelHead> ssr(fRelHead, RelHead());
 	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 	ZRef<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());

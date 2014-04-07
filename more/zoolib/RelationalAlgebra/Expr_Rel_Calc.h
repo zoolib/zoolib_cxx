@@ -77,17 +77,9 @@ private:
 class Expr_Rel_Calc::PseudoMap
 	{
 public:
-	PseudoMap(const std::map<string8,size_t>& iBindings, const ZVal_Any* iVals)
-	:	fBindings(iBindings)
-	,	fVals(iVals)
-		{}
+	PseudoMap(const std::map<string8,size_t>& iBindings, const ZVal_Any* iVals);
 
-	const ZVal_Any* PGet(const string8& iName) const
-		{
-		if (ZQ<size_t> theOffsetQ = ZUtil_STL::sQGet(fBindings, iName))
-			return fVals + *theOffsetQ;
-		return nullptr;
-		}
+	const ZVal_Any* PGet(const string8& iName) const;
 
 	template <class S>
 	const S* PGet(const string8& iName) const
