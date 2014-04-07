@@ -50,9 +50,7 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool QReadInc(
-		ZVal_Any* oResults,
-		std::set<ZRef<ZCounted> >* oAnnotations);
+	virtual bool QReadInc(ZVal_Any* oResults);
 
 private:
 	const string8 fColName;

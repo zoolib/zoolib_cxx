@@ -44,15 +44,12 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool QReadInc(
-		ZVal_Any* ioResults,
-		std::set<ZRef<ZCounted> >* oAnnotations);
+	virtual bool QReadInc(ZVal_Any* ioResults);
 
 private:
 	ZRef<Walker> fWalker_Left;
 	std::map<string8,size_t> fLeftOffsets;
 	std::vector<ZVal_Any> fResults_Left;
-	std::set<ZRef<ZCounted> > fAnnotations_Left;
 
 	ZRef<Walker> fWalker_Right;
 	size_t fBaseOffset;

@@ -52,18 +52,14 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 		}
 
 	vector<ZVal_Any> thePackedRows;
-	vector<vector<ZRef<ZCounted> > > theAnnotationsVector;
-	vector<ZVal_Any> theRow(baseOffset, ZVal_Any());
+	vector<ZVal_Any> theRow(baseOffset);
+//	vector<ZVal_Any> theRow(baseOffset, ZVal_Any());
 	if (iWalker)
 		{
 		for (;;)
 			{
-			set<ZRef<ZCounted> > theAnnotations;
-			if (not iWalker->QReadInc(&theRow[0], &theAnnotations))
+			if (not iWalker->QReadInc(&theRow[0]))
 				break;
-
-			theAnnotationsVector.push_back(
-				vector<ZRef<ZCounted> >(theAnnotations.begin(), theAnnotations.end()));
 
 			foreachi (ii, offsets)
 				thePackedRows.push_back(theRow[ii->second]);
@@ -76,8 +72,6 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 					//## ZYad_ZooLibStrim::sToStrim(sYadR(theRow[ii->second]), s);
 					s << ", ";
 					}
-				if (int theAnnoCount = theAnnotations.size())
-					s << "annotations: " << theAnnoCount;
 				}
 			}
 		}
@@ -92,7 +86,7 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 	foreachi (ii, offsets)
 		theRelHead.insert(ii->first);
 
-	return new QueryEngine::Result(theRelHead, &thePackedRows, &theAnnotationsVector);
+	return new Result(theRelHead, &thePackedRows);
 	}
 
 } // namespace QueryEngine

@@ -41,10 +41,9 @@ class Result : public ZCounted
 	{
 public:
 	Result(const RelationalAlgebra::RelHead& iRelHead,
-		std::vector<ZVal_Any>* ioPackedRows,
-		std::vector<std::vector<ZRef<ZCounted> > >* ioAnnotations);
+		std::vector<ZVal_Any>* ioPackedRows);
 
-	Result(const ZRef<QueryEngine::Result>& iOther, size_t iRow);
+	Result(const ZRef<Result>& iOther, size_t iRow);
 
 	virtual ~Result();
 
@@ -52,14 +51,12 @@ public:
 
 	size_t Count();
 	const ZVal_Any* GetValsAt(size_t iIndex);
-	void GetAnnotationsAt(size_t iIndex, std::set<ZRef<ZCounted> >& oAnnotations);
 
 	int Compare(const Result& iOther) const;
 
 private:
 	RelationalAlgebra::RelHead fRelHead;
 	std::vector<ZVal_Any> fPackedRows;
-	std::vector<std::vector<ZRef<ZCounted> > > fAnnotations;
 	};
 
 } // namespace QueryEngine
@@ -68,7 +65,8 @@ template <>
 int sCompare_T(const QueryEngine::Result& iL, const QueryEngine::Result& iR);
 
 template <>
-int sCompare_T<ZRef<QueryEngine::Result> >(const ZRef<QueryEngine::Result>& iL, const ZRef<QueryEngine::Result>& iR);
+int sCompare_T<ZRef<QueryEngine::Result> >(
+	const ZRef<QueryEngine::Result>& iL, const ZRef<QueryEngine::Result>& iR);
 
 } // namespace ZooLib
 

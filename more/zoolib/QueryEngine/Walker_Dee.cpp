@@ -45,9 +45,7 @@ ZRef<Walker> Walker_Dee::Prime(
 	size_t& ioBaseOffset)
 	{ return this; }
 
-bool Walker_Dee::QReadInc(
-	ZVal_Any* ioResults,
-	set<ZRef<ZCounted> >* oAnnotations)
+bool Walker_Dee::QReadInc(ZVal_Any* ioResults)
 	{ return not sGetSet(fExhausted, true); }
 
 } // namespace QueryEngine

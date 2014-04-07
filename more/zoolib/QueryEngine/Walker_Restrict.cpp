@@ -436,30 +436,17 @@ ZRef<Walker> Walker_Restrict::Prime(
 	return this;
 	}
 
-bool Walker_Restrict::QReadInc(
-	ZVal_Any* ioResults,
-	set<ZRef<ZCounted> >* oAnnotations)
+bool Walker_Restrict::QReadInc(ZVal_Any* ioResults)
 	{
-	set<ZRef<ZCounted> > localAnnotations;
-	set<ZRef<ZCounted> >* localAnnotationsPtr = nullptr;
-	if (oAnnotations)
-		localAnnotationsPtr = &localAnnotations;
-
 	const ZVal_Any* theConsts = ZUtil_STL::sFirstOrNil(fConsts);
 
 	for (;;)
 		{
-		if (not fWalker->QReadInc(ioResults, localAnnotationsPtr))
+		if (not fWalker->QReadInc(ioResults))
 			return false;
 
 		if (fExec->Call(ioResults, theConsts))
-			{
-			if (oAnnotations)
-				oAnnotations->insert(localAnnotations.begin(), localAnnotations.end());
 			return true;
-			}
-
-		localAnnotations.clear();
 		}
 	}
 

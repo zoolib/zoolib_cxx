@@ -57,10 +57,8 @@ ZRef<Walker> Walker_Rename::Prime(
 	return fWalker;
 	}
 
-bool Walker_Rename::QReadInc(
-	ZVal_Any* ioResults,
-	set<ZRef<ZCounted> >* oAnnotations)
-	{ return fWalker->QReadInc(ioResults, oAnnotations); }
+bool Walker_Rename::QReadInc(ZVal_Any* ioResults)
+	{ return fWalker->QReadInc(ioResults); }
 
 } // namespace QueryEngine
 } // namespace ZooLib

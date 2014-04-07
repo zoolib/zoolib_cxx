@@ -48,33 +48,19 @@ ZMACRO_CompareRegistration_T(ZRef<QueryEngine::Result>)
 namespace QueryEngine {
 
 Result::Result(const RelationalAlgebra::RelHead& iRelHead,
-	vector<ZVal_Any>* ioPackedRows,
-	vector<vector<ZRef<ZCounted> > >* ioAnnotations)
+	vector<ZVal_Any>* ioPackedRows)
 :	fRelHead(iRelHead)
 	{
 	ioPackedRows->swap(fPackedRows);
-	if (const size_t theSize = fRelHead.size())
-		{
-		const size_t theCount = fPackedRows.size() / theSize;
-		if (ioAnnotations)
-			{
-			ioAnnotations->swap(fAnnotations);
-			ZAssert(fAnnotations.size() == theCount);
-			}
-		}
 	}
 
-Result::Result(const ZRef<QueryEngine::Result>& iOther, size_t iRow)
+Result::Result(const ZRef<Result>& iOther, size_t iRow)
 :	fRelHead(iOther->GetRelHead())
 	{
 	if (iRow < iOther->Count())
 		{
 		const ZVal_Any* theVals = iOther->GetValsAt(iRow);
 		fPackedRows.insert(fPackedRows.end(), theVals, theVals + fRelHead.size());
-		set<ZRef<ZCounted> > annoSet;
-		iOther->GetAnnotationsAt(iRow, annoSet);
-		if (annoSet.size())
-			fAnnotations.push_back(vector<ZRef<ZCounted> >(annoSet.begin(), annoSet.end()));
 		}
 	}
 
@@ -93,15 +79,6 @@ size_t Result::Count()
 
 const ZVal_Any* Result::GetValsAt(size_t iIndex)
 	{ return &fPackedRows[fRelHead.size() * iIndex]; }
-
-void Result::GetAnnotationsAt(size_t iIndex, set<ZRef<ZCounted> >& oAnnotations)
-	{
-	if (iIndex < fAnnotations.size())
-		{
-		const vector<ZRef<ZCounted> >& theAnnotations = fAnnotations[iIndex];
-		oAnnotations.insert(theAnnotations.begin(), theAnnotations.end());
-		}
-	}
 
 int Result::Compare(const Result& iOther) const
 	{

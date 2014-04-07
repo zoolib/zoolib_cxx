@@ -72,19 +72,16 @@ ZRef<Walker> Walker_Product::Prime(
 	return this;
 	}
 
-bool Walker_Product::QReadInc(
-	ZVal_Any* ioResults,
-	set<ZRef<ZCounted> >* oAnnotations)
+bool Walker_Product::QReadInc(ZVal_Any* ioResults)
 	{
 	for (;;)
 		{
 		if (fNeedLoadLeft)
 			{
 			fWalker_Right->Rewind();
-			fAnnotations_Left.clear();
 			fNeedLoadLeft = false;
 
-			if (not fWalker_Left->QReadInc(ioResults, &fAnnotations_Left))
+			if (not fWalker_Left->QReadInc(ioResults))
 				return false;
 
 			std::copy(ioResults, ioResults + fResults_Left.size(), fResults_Left.begin());
@@ -94,21 +91,8 @@ bool Walker_Product::QReadInc(
 			std::copy(fResults_Left.begin(), fResults_Left.end(), ioResults);
 			}
 
-		if (oAnnotations)
-			{
-			set<ZRef<ZCounted> > localAnnotations;
-			if (fWalker_Right->QReadInc(ioResults, &localAnnotations))
-				{
-				oAnnotations->insert(localAnnotations.begin(), localAnnotations.end());
-				oAnnotations->insert(fAnnotations_Left.begin(), fAnnotations_Left.end());
-				return true;
-				}
-			}
-		else
-			{
-			if (fWalker_Right->QReadInc(ioResults, nullptr))
-				return true;
-			}
+		if (fWalker_Right->QReadInc(ioResults))
+			return true;
 
 		fNeedLoadLeft = true;
 		}

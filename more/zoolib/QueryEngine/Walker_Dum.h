@@ -44,9 +44,7 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool QReadInc(
-		ZVal_Any* ioResults,
-		std::set<ZRef<ZCounted> >* oAnnotations);
+	virtual bool QReadInc(ZVal_Any* ioResults);
 	};
 
 } // namespace QueryEngine

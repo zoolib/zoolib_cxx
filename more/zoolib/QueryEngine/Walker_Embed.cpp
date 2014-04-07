@@ -73,11 +73,9 @@ ZRef<Walker> Walker_Embed::Prime(
 	return this;
 	}
 
-bool Walker_Embed::QReadInc(
-	ZVal_Any* ioResults,
-	set<ZRef<ZCounted> >* oAnnotations)
+bool Walker_Embed::QReadInc(ZVal_Any* ioResults)
 	{
-	if (not fWalker_Parent->QReadInc(ioResults, oAnnotations))
+	if (not fWalker_Parent->QReadInc(ioResults))
 		return false;
 
 	if (fWalker_Embedee)
@@ -87,14 +85,14 @@ bool Walker_Embed::QReadInc(
 		vector<ZVal_Any> thePackedRows;
 		for (;;)
 			{
-			if (not fWalker_Embedee->QReadInc(ioResults, nullptr))
+			if (not fWalker_Embedee->QReadInc(ioResults))
 				break;
 
 			foreachi (ii, fEmbedeeOffsets)
 				thePackedRows.push_back(ioResults[*ii]);
 			}
 
-		ZRef<QueryEngine::Result> theResult = new QueryEngine::Result(fEmbedeeRelHead, &thePackedRows, nullptr);
+		ZRef<Result> theResult = new Result(fEmbedeeRelHead, &thePackedRows);
 		ioResults[fOutputOffset] = theResult;
 		}
 

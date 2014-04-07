@@ -69,20 +69,13 @@ ZRef<Walker> Walker_Project::Prime(
 	return this;
 	}
 
-bool Walker_Project::QReadInc(
-	ZVal_Any* ioResults,
-	set<ZRef<ZCounted> >* oAnnotations)
+bool Walker_Project::QReadInc(ZVal_Any* ioResults)
 	{
-	set<ZRef<ZCounted> > localAnnotations;
-	set<ZRef<ZCounted> >* localAnnotationsPtr = nullptr;
-	if (oAnnotations)
-		localAnnotationsPtr = &localAnnotations;
-
 	const size_t count = fRelHead.size();
 
 	for (;;)
 		{
-		if (not fWalker->QReadInc(ioResults, localAnnotationsPtr))
+		if (not fWalker->QReadInc(ioResults))
 			return false;
 
 		vector<ZVal_Any> subset;
@@ -91,12 +84,7 @@ bool Walker_Project::QReadInc(
 			subset.push_back(ioResults[fChildMapping[xx]]);
 
 		if (sQInsert(fPriors, subset))
-			{
-			if (oAnnotations)
-				oAnnotations->insert(localAnnotations.begin(), localAnnotations.end());
 			return true;
-			}
-		localAnnotations.clear();
 		}
 	}
 

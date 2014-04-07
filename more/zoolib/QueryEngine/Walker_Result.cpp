@@ -53,15 +53,10 @@ ZRef<Walker> Walker_Result::Prime(
 	return this;
 	}
 
-bool Walker_Result::QReadInc(
-	ZVal_Any* oResults,
-	set<ZRef<ZCounted> >* oAnnotations)
+bool Walker_Result::QReadInc(ZVal_Any* oResults)
 	{
 	if (fIndex >= fResult->Count())
 		return false;
-
-	if (oAnnotations)
-		fResult->GetAnnotationsAt(fIndex, *oAnnotations);
 
 	size_t theOffset = fBaseOffset;
 	const ZVal_Any* theVals = fResult->GetValsAt(fIndex);

@@ -51,9 +51,7 @@ ZRef<Walker> Walker_Const::Prime(
 	return this;
 	}
 
-bool Walker_Const::QReadInc(
-	ZVal_Any* ioResults,
-	set<ZRef<ZCounted> >* oAnnotations)
+bool Walker_Const::QReadInc(ZVal_Any* ioResults)
 	{
 	if (sGetSet(fExhausted, true))
 		return false;

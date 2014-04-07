@@ -96,9 +96,7 @@ private:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc(ZRef<Walker_Proxy> iWalker,
-		ZVal_Any* ioResults,
-		std::set<ZRef<ZCounted> >* oAnnotations);
+	bool pReadInc(ZRef<Walker_Proxy> iWalker, ZVal_Any* ioResults);
 
 	size_t fWalkerCount;
 	size_t fReadCount;

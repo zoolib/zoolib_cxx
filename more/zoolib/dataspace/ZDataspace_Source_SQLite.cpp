@@ -189,7 +189,7 @@ void Source_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 			}
 
 		ZRef<QueryEngine::Result> theResult =
-			new QueryEngine::Result(thePQuery->fRelHead, &thePackedRows, nullptr);
+			new QueryEngine::Result(thePQuery->fRelHead, &thePackedRows);
 
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 			iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())

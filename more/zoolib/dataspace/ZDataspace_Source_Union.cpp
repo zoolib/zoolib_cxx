@@ -227,10 +227,8 @@ public:
 		return this;
 		}
 
-	virtual bool QReadInc(
-		ZVal_Any* ioResults,
-		set<ZRef<ZCounted> >* oAnnotations)
-		{ return fSource->pReadInc(this, ioResults, oAnnotations); }
+	virtual bool QReadInc(ZVal_Any* ioResults)
+		{ return fSource->pReadInc(this, ioResults); }
 
 	ZRef<Source_Union> const fSource;
 	ZRef<Proxy> const fProxy;
@@ -1098,9 +1096,7 @@ void Source_Union::pPrime(ZRef<Walker_Proxy> iWalker,
 		oOffsets[*ii] = ioBaseOffset++;
 	}
 
-bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
-	ZVal_Any* ioResults,
-	set<ZRef<ZCounted> >* oAnnotations)
+bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,ZVal_Any* ioResults)
 	{
 	++fReadCount;
 	for (;;)
@@ -1122,9 +1118,6 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,
 			iWalker->fIter_PIP.Advance();
 			continue;
 			}
-
-		if (oAnnotations)
-			iWalker->fCurrentResult->GetAnnotationsAt(iWalker->fCurrentIndex, *oAnnotations);
 
 		const RelationalAlgebra::RelHead& theRH = iWalker->fCurrentResult->GetRelHead();
 		if (theRH != iWalker->fProxy->fResultRelHead)

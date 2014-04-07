@@ -90,15 +90,8 @@ ZRef<Walker> Walker_Union::Prime(
 	return this;
 	}
 
-bool Walker_Union::QReadInc(
-	ZVal_Any* ioResults,
-	set<ZRef<ZCounted> >* oAnnotations)
+bool Walker_Union::QReadInc(ZVal_Any* ioResults)
 	{
-	set<ZRef<ZCounted> > localAnnotations;
-	set<ZRef<ZCounted> >* localAnnotationsPtr = nullptr;
-	if (oAnnotations)
-		localAnnotationsPtr = &localAnnotations;
-
 	const size_t count = fMapping_Left.size();
 
 	for (;;)
@@ -107,7 +100,7 @@ bool Walker_Union::QReadInc(
 		subset.reserve(count);
 		if (not fExhaustedLeft)
 			{
-			if (fWalker_Left->QReadInc(ioResults, oAnnotations))
+			if (fWalker_Left->QReadInc(ioResults))
 				{
 				for (size_t xx = 0; xx < count; ++xx)
 					subset.push_back(ioResults[fMapping_Left[xx]]);
@@ -118,7 +111,7 @@ bool Walker_Union::QReadInc(
 			fExhaustedLeft = true;
 			}
 
-		if (not fWalker_Right->QReadInc(ioResults, localAnnotationsPtr))
+		if (not fWalker_Right->QReadInc(ioResults))
 			return false;
 
 		for (size_t xx = 0; xx < count; ++xx)
@@ -128,11 +121,8 @@ bool Walker_Union::QReadInc(
 			{
 			for (size_t xx = 0; xx < count; ++xx)
 				ioResults[fMapping_Left[xx]] = subset[xx];
-			if (oAnnotations)
-				oAnnotations->insert(localAnnotations.begin(), localAnnotations.end());
 			return true;
 			}
-		localAnnotations.clear();
 		}
 	}
 
