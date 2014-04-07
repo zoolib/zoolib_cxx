@@ -134,6 +134,7 @@ public:
 		{}
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
+		{ this->pSetResult(fSource->pMakeWalker_Concrete(fPQuery, iExpr->GetConcreteRelHead())); }
 
 	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
 		{ this->pSetResult(fSource->pMakeWalker_Search(fPQuery, iExpr)); }
@@ -738,12 +739,12 @@ ZRef<QE::Walker> Source_DatonSet::pMakeWalker_Search(
 	// This is where we would be able to take advantage of indices. For the moment
 	// just do it the dumb way.
 
-	const RelationalAlgebra::Rename& theRename = iRel->GetRename();
-	RelationalAlgebra::RelHead theRelHead;
-	for (RelationalAlgebra::Rename::const_iterator ii = theRename.begin(); ii != theRename.end(); ++ii)
+	const RA::Rename& theRename = iRel->GetRename();
+	RA::RelHead theRelHead;
+	for (RA::Rename::const_iterator ii = theRename.begin(); ii != theRename.end(); ++ii)
 		theRelHead |= ii->first;
 
-	ZRef<QueryEngine::Walker> theWalker;
+	ZRef<QE::Walker> theWalker;
 	const ZRef<ZExpr_Bool>& theExpr_Bool = iRel->GetExpr_Bool();
 	if (theExpr_Bool && theExpr_Bool != sTrue())
 		{
@@ -826,6 +827,11 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker, ZVal_Any*
 						ioResults[iWalker->fBaseOffset + xx] = *theVal;
 						subset.push_back(*theVal);
 						}
+//					else if (const ZVal_Any* theVal = sPGet(iWalker->fDefaults, theNamesPtr[xx]))
+//						{
+//						ioResults[iWalker->fBaseOffset + xx] = *theVal;
+//						subset.push_back(*theVal);
+//						}
 					else
 						{
 						gotAll = false;
