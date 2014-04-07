@@ -90,8 +90,7 @@ int sCompare_T(const ZValComparator_StringContains& iL, const ZValComparator_Str
 ZValComparandPseudo CConst(const ZVal_Any& iVal);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: -
 
 bool sMatches(const ZValPred& iValPred, const ZVal_Any& iVal);
 

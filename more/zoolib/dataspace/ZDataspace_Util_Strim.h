@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: -
 
 const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet);
 

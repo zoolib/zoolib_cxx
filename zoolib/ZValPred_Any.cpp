@@ -80,8 +80,7 @@ ZValComparandPseudo CConst(const ZVal_Any& iVal)
 	{ return new ZValComparand_Const_Any(iVal); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+// MARK: -
 
 namespace { // anonymous
 

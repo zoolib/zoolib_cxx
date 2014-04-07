@@ -31,7 +31,7 @@ static const char LF = '\n';
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark * ZMIME
+// MARK: - ZMIME
 
 // Character classification.
 bool ZMIME::sIs_LWS(char iChar)
