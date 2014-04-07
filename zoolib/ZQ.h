@@ -339,6 +339,30 @@ private:
 	bool fHasValue;
 	};
 
+template <class T, bool SenseL, bool SenseR>
+bool operator==(const ZQ<T,SenseL>& iL, const ZQ<T,SenseR>& iR)
+	{
+	if (const T* ll = iL.PGet())
+		{
+		if (const T* rr = iR.PGet())
+			return *ll == *rr;
+		return false;
+		}
+	return not iR.HasValue();
+	}
+
+template <class T, bool SenseL, bool SenseR>
+bool operator<(const ZQ<T,SenseL>& iL, const ZQ<T,SenseR>& iR)
+	{
+	if (const T* ll = iL.PGet())
+		{
+		if (const T* rr = iR.PGet())
+			return *ll < *rr;
+		return false;
+		}
+	return iR.HasValue();
+	}
+
 // =================================================================================================
 // MARK: - ZQ (specialized for void)
 
@@ -434,6 +458,18 @@ private:
 
 	friend class ZQ<void, !Sense>;
 	};
+
+template <bool SenseL, bool SenseR>
+bool operator==(const ZQ<void,SenseL>& iL, const ZQ<void,SenseR>& iR)
+	{
+	if (iL.HasValue())
+		return iR.HasValue();
+	return not iR.HasValue();
+	}
+
+template <bool SenseL, bool SenseR>
+bool operator<(const ZQ<void,SenseL>& iL, const ZQ<void,SenseR>& iR)
+	{ return not iL.HasValue() && iR.HasValue(); }
 
 // =================================================================================================
 // MARK: - Pseudo-ctor
