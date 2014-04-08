@@ -45,11 +45,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace QueryEngine {
 
-using RelationalAlgebra::Expr_Rel;
-using RelationalAlgebra::ColName;
-using RelationalAlgebra::RelHead;
-using RelationalAlgebra::sRelHead;
-using RelationalAlgebra::Rename;
+namespace RA = RelationalAlgebra;
+
+using RA::Expr_Rel;
+using RA::ColName;
+using RA::RelHead;
+using RA::sRelHead;
+using RA::Rename;
 
 using std::set;
 
@@ -105,19 +107,19 @@ is encountered instead return a search incorporating the accumulated info.
 */
 
 class Transform_Search
-:	public virtual ZVisitor_Expr_Op_Do_Transform_T<RelationalAlgebra::Expr_Rel>
-,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Calc
-,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Concrete
-,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Const
-,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Dee
-,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Dum
-,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Embed
-,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Product
-,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Project
-,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Rename
-,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Restrict
+:	public virtual ZVisitor_Expr_Op_Do_Transform_T<RA::Expr_Rel>
+,	public virtual RA::Visitor_Expr_Rel_Calc
+,	public virtual RA::Visitor_Expr_Rel_Concrete
+,	public virtual RA::Visitor_Expr_Rel_Const
+,	public virtual RA::Visitor_Expr_Rel_Dee
+,	public virtual RA::Visitor_Expr_Rel_Dum
+,	public virtual RA::Visitor_Expr_Rel_Embed
+,	public virtual RA::Visitor_Expr_Rel_Product
+,	public virtual RA::Visitor_Expr_Rel_Project
+,	public virtual RA::Visitor_Expr_Rel_Rename
+,	public virtual RA::Visitor_Expr_Rel_Restrict
 	{
-	typedef ZVisitor_Expr_Op_Do_Transform_T<RelationalAlgebra::Expr_Rel> inherited;
+	typedef ZVisitor_Expr_Op_Do_Transform_T<RA::Expr_Rel> inherited;
 public:
 	Transform_Search()
 	:	fRestriction(sTrue())
@@ -127,9 +129,9 @@ public:
 	virtual void Visit(const ZRef<ZVisitee>& iRep)
 		{ ZUnimplemented(); }
 
-	virtual void Visit_Expr_Rel_Calc(const ZRef<RelationalAlgebra::Expr_Rel_Calc>& iExpr)
+	virtual void Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iExpr)
 		{
-		const ColName& theName = RelationalAlgebra::sRenamed(fRename, iExpr->GetColName());
+		const ColName& theName = RA::sRenamed(fRename, iExpr->GetColName());
 
 		// The restriction may reference the name we introduce, so don't pass it down the tree.
 		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
@@ -140,8 +142,8 @@ public:
 		const ZUniSet_T<ColName> priorProjection = fProjection;
 		fProjection = ZUniSet_T<ColName>::sUniversal();
 
-		ZRef<RelationalAlgebra::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
-		ZRef<RelationalAlgebra::Expr_Rel> newCalc = new RelationalAlgebra::Expr_Rel_Calc(newOp0, theName, iExpr->GetCallable());
+		ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+		ZRef<RA::Expr_Rel> newCalc = new RA::Expr_Rel_Calc(newOp0, theName, iExpr->GetCallable());
 
 		fRestriction = priorRestriction;
 		fProjection = priorProjection;
@@ -149,13 +151,14 @@ public:
 		this->pApplyRestrictProject(newCalc);
 		}
 
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<RelationalAlgebra::Expr_Rel_Concrete>& iExpr)
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
 		{
 		// fRestriction by now is written in terms used by the concrete itself,
 		// and fRename maps from the concrete's terms to those used at the top of
 		// the containing branch. We'll pass a rename that includes only those
 		// resulting names that are in fProjection, so the passed rename is
 		// effectively a project/rename descriptor.
+
 
 		Rename newRename;
 		foreachi (iterRename, fRename)
@@ -165,11 +168,14 @@ public:
 			}
 
 		// Add missing entries
-		foreachi (iterRH, iExpr->GetConcreteRelHead())
+		RelHead theRH_Optional;
+		foreachi (iter, iExpr->GetConcreteHead())
 			{
-			const ColName& theColName = *iterRH;
+			const ColName& theColName = iter->first;
 			if (fProjection.Contains(theColName))
 				sQInsert(newRename, theColName, theColName);
+			if (not iter->second)
+				sQInsert(theRH_Optional, theColName);
 			}
 
 		if (fRestriction == sTrue())
@@ -185,29 +191,29 @@ public:
 			fLikelySize = 100;
 			}
 
-		ZRef<Expr_Rel_Search> theRel = new Expr_Rel_Search(newRename, fRestriction);
+		ZRef<Expr_Rel_Search> theRel = new Expr_Rel_Search(newRename, theRH_Optional, fRestriction);
 		this->pSetResult(theRel);
 		}
 
-	virtual void Visit_Expr_Rel_Const(const ZRef<RelationalAlgebra::Expr_Rel_Const>& iExpr)
+	virtual void Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr)
 		{
 		fLikelySize = 1;
 		this->pApplyRestrictProject(sRelHead(iExpr->GetColName()), iExpr);
 		}
 
-	virtual void Visit_Expr_Rel_Dee(const ZRef<RelationalAlgebra::Expr_Rel_Dee>& iExpr)
+	virtual void Visit_Expr_Rel_Dee(const ZRef<RA::Expr_Rel_Dee>& iExpr)
 		{
 		fLikelySize = 1;
 		this->pApplyRestrictProject(RelHead(), iExpr);
 		}
 
-	virtual void Visit_Expr_Rel_Dum(const ZRef<RelationalAlgebra::Expr_Rel_Dum>& iExpr)
+	virtual void Visit_Expr_Rel_Dum(const ZRef<RA::Expr_Rel_Dum>& iExpr)
 		{
 		fLikelySize = 0;
 		this->pApplyRestrictProject(RelHead(), iExpr);
 		}
 
-	virtual void Visit_Expr_Rel_Embed(const ZRef<RelationalAlgebra::Expr_Rel_Embed>& iExpr)
+	virtual void Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr)
 		{
 		ZRef<Expr_Rel> newOp1;
 
@@ -218,21 +224,21 @@ public:
 		newOp1 = this->Do(iExpr->GetOp1());
 		}
 
-		const ColName& theName = RelationalAlgebra::sRenamed(fRename, iExpr->GetColName());
+		const ColName& theName = RA::sRenamed(fRename, iExpr->GetColName());
 
-		ZRef<RelationalAlgebra::Expr_Rel> newEmbed;
+		ZRef<RA::Expr_Rel> newEmbed;
 		{
 		ZSaveSetRestore_T<ZRef<ZExpr_Bool> > ssr0(fRestriction, sTrue());
 		ZSaveSetRestore_T<ZUniSet_T<ColName> > ssr1(fProjection, ZUniSet_T<ColName>::sUniversal());
-		ZRef<RelationalAlgebra::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
-		newEmbed = new RelationalAlgebra::Expr_Rel_Embed(newOp0, theName, newOp1);
+		ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+		newEmbed = new RA::Expr_Rel_Embed(newOp0, theName, newOp1);
 		}
 
 		fRename.clear();
 		this->pApplyRestrictProject(newEmbed);
 		}
 
-	virtual void Visit_Expr_Rel_Product(const ZRef<RelationalAlgebra::Expr_Rel_Product>& iExpr)
+	virtual void Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
 		{
 		// Remember curent state
 		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
@@ -246,7 +252,7 @@ public:
 		fProjection = ZUniSet_T<ColName>::sUniversal();
 
 		// Process the left branch.
-		ZRef<RelationalAlgebra::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
+		ZRef<RA::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
 		const double leftLikelySize = fLikelySize.Get();
 		fLikelySize.Clear();
 
@@ -257,7 +263,7 @@ public:
 		fRename = priorRename;
 
 		// Process the right branch.
-		ZRef<RelationalAlgebra::Expr_Rel> op1 = this->Do(iExpr->GetOp1());
+		ZRef<RA::Expr_Rel> op1 = this->Do(iExpr->GetOp1());
 		const double rightLikelySize = fLikelySize.Get();
 
 		fLikelySize = leftLikelySize * rightLikelySize;
@@ -270,18 +276,18 @@ public:
 		fRename.clear();
 
 		if (rightLikelySize < leftLikelySize)
-			this->pApplyRestrictProject(new RelationalAlgebra::Expr_Rel_Product(op1, op0));
+			this->pApplyRestrictProject(new RA::Expr_Rel_Product(op1, op0));
 		else
-			this->pApplyRestrictProject(new RelationalAlgebra::Expr_Rel_Product(op0, op1));
+			this->pApplyRestrictProject(new RA::Expr_Rel_Product(op0, op1));
 		}
 
-	virtual void Visit_Expr_Rel_Project(const ZRef<RelationalAlgebra::Expr_Rel_Project>& iExpr)
+	virtual void Visit_Expr_Rel_Project(const ZRef<RA::Expr_Rel_Project>& iExpr)
 		{
 		ZSaveSetRestore_T<ZUniSet_T<ColName> > ssr(fProjection, iExpr->GetProjectRelHead());
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 
-	virtual void Visit_Expr_Rel_Rename(const ZRef<RelationalAlgebra::Expr_Rel_Rename>& iExpr)
+	virtual void Visit_Expr_Rel_Rename(const ZRef<RA::Expr_Rel_Rename>& iExpr)
 		{
 		const ColName& oldName = iExpr->GetOld();
 		ColName newName = iExpr->GetNew();
@@ -302,7 +308,7 @@ public:
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<RelationalAlgebra::Expr_Rel_Restrict>& iExpr)
+	virtual void Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Restrict>& iExpr)
 		{
 		ZRef<ZExpr_Bool> theRestriction = iExpr->GetExpr_Bool();
 		if (theRestriction != sTrue())
@@ -367,7 +373,7 @@ public:
 
 } // anonymous namespace
 
-ZRef<RelationalAlgebra::Expr_Rel> sTransform_Search(const ZRef<RelationalAlgebra::Expr_Rel>& iExpr)
+ZRef<RA::Expr_Rel> sTransform_Search(const ZRef<RA::Expr_Rel>& iExpr)
 	{ return Transform_Search().Do(iExpr); }
 
 } // namespace QueryEngine

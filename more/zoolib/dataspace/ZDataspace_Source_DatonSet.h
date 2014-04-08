@@ -74,6 +74,11 @@ public:
 	void ClearTransaction(size_t iIndex);
 	void CloseTransaction(size_t iIndex);
 
+	typedef RelationalAlgebra::ConcreteHead ConcreteHead;
+	typedef RelationalAlgebra::RelHead RelHead;
+
+	struct Default_t {};
+
 private:
 	ZMtxR fMtxR;
 	size_t fWalkerCount;
@@ -96,7 +101,8 @@ private:
 	class Walker_Concrete;
 	friend class Walker_Concrete;
 
-	ZRef<QueryEngine::Walker> pMakeWalker_Concrete(PQuery* iPQuery, const RelHead& iRelHead);
+	ZRef<QueryEngine::Walker> pMakeWalker_Concrete(PQuery* iPQuery,
+		const ConcreteHead& iConcreteHead);
 
 	void pRewind_Concrete(ZRef<Walker_Concrete> iWalker);
 
@@ -152,7 +158,7 @@ private:
 	class DLink_PSearch_NeedsWork;
 	class PSearch;
 
-	typedef std::map<RelationalAlgebra::RelHead,PSearch> Map_PSearch;
+	typedef std::map<RelHead,PSearch> Map_PSearch;
 	Map_PSearch fMap_PSearch;
 
 	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;

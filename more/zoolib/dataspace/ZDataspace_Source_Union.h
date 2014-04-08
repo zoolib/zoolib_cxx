@@ -80,7 +80,9 @@ private:
 
 	std::set<PSource*> pIdentifyPSources(const RelHead& iRelHead);
 	ZRef<RelationalAlgebra::Expr_Rel> pGetProxy(PQuery* iPQuery,
-		const std::set<PSource*>& iPSources, const RelHead& iRelHead, ZRef<RelationalAlgebra::Expr_Rel> iRel);
+		const std::set<PSource*>& iPSources,
+		const RelHead& iRelHead,
+		ZRef<RelationalAlgebra::Expr_Rel> iRel);
 	void pFinalizeProxy(Proxy* iProxy);
 
 	// -----
@@ -118,7 +120,8 @@ private:
 	class DLink_PQuery_NeedsWork;
 	DListHead<DLink_PQuery_NeedsWork> fPQuery_NeedsWork;
 
-	typedef std::map<ZRef<RelationalAlgebra::Expr_Rel>, PQuery, Less_Compare_T<ZRef<RelationalAlgebra::Expr_Rel> > >
+	typedef std::map<ZRef<RelationalAlgebra::Expr_Rel>, PQuery,
+		Less_Compare_T<ZRef<RelationalAlgebra::Expr_Rel> > >
 		Map_Rel_PQuery;
 	Map_Rel_PQuery fMap_Rel_PQuery;
 

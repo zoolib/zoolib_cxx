@@ -58,7 +58,7 @@ class Visitor_GetRelHead
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | iExpr->GetColName()); }
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
-		{ this->pSetResult(iExpr->GetConcreteRelHead()); }
+		{ this->pSetResult(sRelHead(iExpr->GetConcreteHead())); }
 
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 		{ this->pSetResult(sRelHead(iExpr->GetColName())); }

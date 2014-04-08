@@ -134,7 +134,7 @@ public:
 		{}
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
-		{ this->pSetResult(fSource->pMakeWalker_Concrete(fPQuery, iExpr->GetConcreteRelHead())); }
+		{ this->pSetResult(fSource->pMakeWalker_Concrete(fPQuery, iExpr->GetConcreteHead())); }
 
 	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
 		{ this->pSetResult(fSource->pMakeWalker_Search(fPQuery, iExpr)); }
@@ -149,9 +149,9 @@ public:
 class Source_DatonSet::Walker_Concrete : public QE::Walker
 	{
 public:
-	Walker_Concrete(ZRef<Source_DatonSet> iSource, const vector<string8>& iNames)
+	Walker_Concrete(ZRef<Source_DatonSet> iSource, const ConcreteHead& iConcreteHead)
 	:	fSource(iSource)
-	,	fNames(iNames)
+	,	fConcreteHead(iConcreteHead)
 		{}
 
 	virtual ~Walker_Concrete()
@@ -173,7 +173,7 @@ public:
 		{ return fSource->pReadInc_Concrete(this, ioResults); }
 
 	const ZRef<Source_DatonSet> fSource;
-	const vector<string8> fNames;
+	const ConcreteHead fConcreteHead;
 	size_t fBaseOffset;
 	Map_Main::const_iterator fCurrent_Main;
 	Map_Pending::const_iterator fCurrent_Pending;
@@ -701,12 +701,14 @@ void Source_DatonSet::pChangedAll()
 		}
 	}
 
-ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const RelHead& iRelHead)
+ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const ConcreteHead& iConcreteHead)
 	{
 	++fWalkerCount;
 
+	const RelHead theRelHead_Required = RelationalAlgebra::sRelHead_Required(iConcreteHead);
+
 	PSearch* thePSearch;
-	Map_PSearch::iterator iterPSearch = fMap_PSearch.find(iRelHead);
+	Map_PSearch::iterator iterPSearch = fMap_PSearch.find(theRelHead_Required);
 	if (iterPSearch != fMap_PSearch.end())
 		{
 		thePSearch = &iterPSearch->second;
@@ -714,10 +716,10 @@ ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery,
 	else
 		{
 		pair<Map_PSearch::iterator,bool> inPSearch =
-			fMap_PSearch.insert(make_pair(iRelHead, PSearch()));
+			fMap_PSearch.insert(make_pair(theRelHead_Required, PSearch()));
 
 		thePSearch = &inPSearch.first->second;
-		thePSearch->fRelHead = iRelHead;
+		thePSearch->fRelHead = theRelHead_Required;
 		}
 
 	sInsertMust(kDebug, iPQuery->fPSearch_Used, thePSearch);
@@ -725,8 +727,7 @@ ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery,
 
 	if (not thePSearch->fResult)
 		{
-		ZRef<QueryEngine::Walker> theWalker =
-			new Walker_Concrete(this, vector<string8>(iRelHead.begin(), iRelHead.end()));
+		ZRef<QueryEngine::Walker> theWalker = new Walker_Concrete(this, iConcreteHead);
 		thePSearch->fResult = sDoQuery(theWalker);
 		}
 
@@ -740,30 +741,26 @@ ZRef<QE::Walker> Source_DatonSet::pMakeWalker_Search(
 	// just do it the dumb way.
 
 	const RA::Rename& theRename = iRel->GetRename();
-	RA::RelHead theRelHead;
+	RA::RelHead theRH_Required;
 	for (RA::Rename::const_iterator ii = theRename.begin(); ii != theRename.end(); ++ii)
-		theRelHead |= ii->first;
+		theRH_Required |= ii->first;
+
+	const RA::RelHead& theRH_Optional = iRel->GetRelHead_Optional();
 
 	ZRef<QE::Walker> theWalker;
 	const ZRef<ZExpr_Bool>& theExpr_Bool = iRel->GetExpr_Bool();
 	if (theExpr_Bool && theExpr_Bool != sTrue())
 		{
-		const RelationalAlgebra::RelHead augmented = theRelHead | sGetNames(theExpr_Bool);
-		if (augmented.size() != theRelHead.size())
-			{
-			theWalker = this->pMakeWalker_Concrete(iPQuery, augmented);
-			theWalker = new QE::Walker_Restrict(theWalker, theExpr_Bool);
-			theWalker = new QE::Walker_Project(theWalker, theRelHead);
-			}
-		else
-			{
-			theWalker = this->pMakeWalker_Concrete(iPQuery, theRelHead);
-			theWalker = new QE::Walker_Restrict(theWalker, theExpr_Bool);
-			}
+		const RelHead augmented = theRH_Required | sGetNames(theExpr_Bool);
+		theWalker = this->pMakeWalker_Concrete(iPQuery, RA::sConcreteHead(augmented, theRH_Optional));
+		theWalker = new QE::Walker_Restrict(theWalker, theExpr_Bool);
+
+		if (augmented.size() != theRH_Required.size())
+			theWalker = new QE::Walker_Project(theWalker, theRH_Required);
 		}
 	else
 		{
-		theWalker = this->pMakeWalker_Concrete(iPQuery, theRelHead);
+		theWalker = this->pMakeWalker_Concrete(iPQuery, RA::sConcreteHead(theRH_Required, theRH_Optional));
 		}
 
 	for (RA::Rename::const_iterator iterRename = theRename.begin();
@@ -790,17 +787,18 @@ void Source_DatonSet::pPrime_Concrete(ZRef<Walker_Concrete> iWalker,
 	iWalker->fCurrent_Main = fMap.begin();
 	iWalker->fCurrent_Pending = fMap_Pending.begin();
 	iWalker->fBaseOffset = ioBaseOffset;
-	for (size_t xx = 0; xx < iWalker->fNames.size(); ++xx)
-		oOffsets[iWalker->fNames[xx]] = ioBaseOffset++;
+	const ConcreteHead& theConcreteHead = iWalker->fConcreteHead;
+	for (ConcreteHead::const_iterator ii =
+		theConcreteHead.begin(), end = theConcreteHead.end();
+		ii != end; ++ii)
+		{ oOffsets[ii->first] = ioBaseOffset++; }
 	}
 
 bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker, ZVal_Any* ioResults)
 	{
 	++fReadCount;
 
-	const vector<string8>& theNames = iWalker->fNames;
-	const string8* theNamesPtr = &theNames[0];
-	const size_t theCount = theNames.size();
+	const ConcreteHead& theConcreteHead = iWalker->fConcreteHead;
 
 	while (iWalker->fCurrent_Main != fMap.end())
 		{
@@ -812,26 +810,30 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker, ZVal_Any*
 				{
 				bool gotAll = true;
 				vector<ZVal_Any> subset;
-				subset.reserve(theCount);
-				for (size_t xx = 0; xx < theCount; ++xx)
+				subset.reserve(theConcreteHead.size());
+				size_t offset = iWalker->fBaseOffset;
+				for (ConcreteHead::const_iterator
+					ii = theConcreteHead.begin(), end = theConcreteHead.end();
+					ii != end; ++ii, ++offset)
 					{
 					// Empty name indicates that we want the Daton itself.
-					if (theNamesPtr[xx].empty())
+					const string8& theName = ii->first;
+					if (theName.empty())
 						{
 						const ZVal_Any& theVal = iWalker->fCurrent_Main->first;
-						ioResults[iWalker->fBaseOffset + xx] = theVal;
+						ioResults[offset] = theVal;
 						subset.push_back(theVal);
 						}
-					else if (const ZVal_Any* theVal = sPGet(*theMap, theNamesPtr[xx]))
+					else if (const ZVal_Any* theVal = sPGet(*theMap, theName))
 						{
-						ioResults[iWalker->fBaseOffset + xx] = *theVal;
+						ioResults[offset] = *theVal;
 						subset.push_back(*theVal);
 						}
-//					else if (const ZVal_Any* theVal = sPGet(iWalker->fDefaults, theNamesPtr[xx]))
-//						{
-//						ioResults[iWalker->fBaseOffset + xx] = *theVal;
-//						subset.push_back(*theVal);
-//						}
+					else if (not ii->second)
+						{
+						ioResults[offset] = Default_t();
+						subset.push_back(Default_t());
+						}
 					else
 						{
 						gotAll = false;
@@ -859,21 +861,30 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker, ZVal_Any*
 			{
 			if (const ZMap_Any* theMap = iWalker->fCurrent_Pending->second.first.PGet<ZMap_Any>())
 				{
-				vector<ZVal_Any> subset;
-				subset.reserve(theCount);
 				bool gotAll = true;
-				for (size_t xx = 0; xx < theCount; ++xx)
+				vector<ZVal_Any> subset;
+				subset.reserve(theConcreteHead.size());
+				size_t offset = iWalker->fBaseOffset;
+				for (ConcreteHead::const_iterator
+					ii = theConcreteHead.begin(), end = theConcreteHead.end();
+					ii != end; ++ii, ++offset)
 					{
-					if (theNamesPtr[xx].empty())
+					const string8& theName = ii->first;
+					if (theName.empty())
 						{
 						const ZVal_Any& theVal = iWalker->fCurrent_Pending->first;
-						ioResults[iWalker->fBaseOffset + xx] = theVal;
+						ioResults[offset] = theVal;
 						subset.push_back(theVal);
 						}
-					else if (const ZVal_Any* theVal = theMap->PGet(theNamesPtr[xx]))
+					else if (const ZVal_Any* theVal = theMap->PGet(theName))
 						{
-						ioResults[iWalker->fBaseOffset + xx] = *theVal;
+						ioResults[offset] = *theVal;
 						subset.push_back(*theVal);
+						}
+					else if (not ii->second)
+						{
+						ioResults[offset] = Default_t();
+						subset.push_back(Default_t());
 						}
 					else
 						{
@@ -886,7 +897,6 @@ bool Source_DatonSet::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker, ZVal_Any*
 					{
 					if (ZLOGF(s, eDebug + 2))
 						ZYad_ZooLibStrim::sToStrim(sYadR(*theMap), s);
-
 					++iWalker->fCurrent_Pending;
 					return true;
 					}

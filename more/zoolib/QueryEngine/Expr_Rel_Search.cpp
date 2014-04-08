@@ -32,6 +32,9 @@ int sCompare_T(const QueryEngine::Expr_Rel_Search& iL, const QueryEngine::Expr_R
 	if (int compare = sCompare_T(iL.GetRename(), iR.GetRename()))
 		return compare;
 
+	if (int compare = sCompare_T(iL.GetRelHead_Optional(), iR.GetRelHead_Optional()))
+		return compare;
+
 	return sCompare_T(iL.GetExpr_Bool(), iR.GetExpr_Bool());
 	}
 
@@ -42,8 +45,11 @@ namespace QueryEngine {
 // =================================================================================================
 // MARK: - Expr_Rel_Search
 
-Expr_Rel_Search::Expr_Rel_Search(const RelationalAlgebra::Rename& iRename, const ZRef<ZExpr_Bool>& iExpr_Bool)
+Expr_Rel_Search::Expr_Rel_Search(const RelationalAlgebra::Rename& iRename,
+	const RelationalAlgebra::RelHead& iRelHead_Optional,
+	const ZRef<ZExpr_Bool>& iExpr_Bool)
 :	fRename(iRename)
+,	fRelHead_Optional(iRelHead_Optional)
 ,	fExpr_Bool(iExpr_Bool)
 	{}
 
@@ -74,6 +80,9 @@ void Expr_Rel_Search::Accept_Expr_Rel_Search(Visitor_Expr_Rel_Search& iVisitor)
 
 const RelationalAlgebra::Rename& Expr_Rel_Search::GetRename() const
 	{ return fRename; }
+
+const RelationalAlgebra::RelHead& Expr_Rel_Search::GetRelHead_Optional() const
+	{ return fRelHead_Optional; }
 
 const ZRef<ZExpr_Bool>& Expr_Rel_Search::GetExpr_Bool() const
 	{ return fExpr_Bool; }

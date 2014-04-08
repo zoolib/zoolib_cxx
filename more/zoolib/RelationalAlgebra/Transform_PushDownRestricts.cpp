@@ -38,7 +38,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>&
 	{ this->pHandleIt(sRelHead(iExpr->GetColName()), iExpr->SelfOrClone(this->Do(iExpr->GetOp0()))); }
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
-	{ this->pHandleIt(iExpr->GetConcreteRelHead(), iExpr); }
+	{ this->pHandleIt(sRelHead(iExpr->GetConcreteHead()), iExpr); }
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	{ this->pHandleIt(sRelHead(iExpr->GetColName()), iExpr); }
