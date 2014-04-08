@@ -129,6 +129,9 @@ ConcreteHead sConcreteHead(const RelHead& iRequired, const RelHead& iOptional);
 
 RelHead sRelHead_Required(const ConcreteHead& iConcreteHead);
 RelHead sRelHead_Optional(const ConcreteHead& iConcreteHead);
+RelHead sRelHead(const ConcreteHead& iConcreteHead);
+
+void sRelHeads(const ConcreteHead& iConcreteHead, RelHead& oRequired, RelHead& oOptional);
 
 
 } // namespace RelationalAlgebra

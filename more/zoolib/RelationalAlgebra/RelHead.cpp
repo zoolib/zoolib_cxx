@@ -41,6 +41,12 @@ int sCompare_T(const RelationalAlgebra::Rename& iL, const RelationalAlgebra::Ren
 
 ZMACRO_CompareRegistration_T(RelationalAlgebra::Rename)
 
+template <>
+int sCompare_T(const RelationalAlgebra::ConcreteHead& iL, const RelationalAlgebra::ConcreteHead& iR)
+	{ return sCompareIterators_T(iL.begin(), iL.end(), iR.begin(), iR.end()); }
+
+ZMACRO_CompareRegistration_T(RelationalAlgebra::ConcreteHead)
+
 } // namespace ZooLib
 
 namespace ZooLib {
@@ -158,7 +164,6 @@ ConcreteHead sConcreteHead(const RelHead& iRequired, const RelHead& iOptional)
 	return result;
 	}
 
-
 RelHead sRelHead_Required(const ConcreteHead& iConcreteHead)
 	{
 	RelHead result;
@@ -171,7 +176,38 @@ RelHead sRelHead_Required(const ConcreteHead& iConcreteHead)
 	return result;
 	}
 
-RelHead sRelHead_Optional(const ConcreteHead& iConcreteHead);
+RelHead sRelHead_Optional(const ConcreteHead& iConcreteHead)
+	{
+	RelHead result;
+	for (ConcreteHead::const_iterator ii = iConcreteHead.begin(), end = iConcreteHead.end();
+		ii != end; ++ii)
+		{
+		if (not ii->second)
+			ZUtil_STL::sInsert(result, ii->first);
+		}
+	return result;
+	}
+
+RelHead sRelHead(const ConcreteHead& iConcreteHead)
+	{
+	RelHead result;
+	for (ConcreteHead::const_iterator ii = iConcreteHead.begin(), end = iConcreteHead.end();
+		ii != end; ++ii)
+		{ ZUtil_STL::sInsert(result, ii->first); }
+	return result;
+	}
+
+void sRelHeads(const ConcreteHead& iConcreteHead, RelHead& oRequired, RelHead& oOptional)
+	{
+	for (ConcreteHead::const_iterator ii = iConcreteHead.begin(), end = iConcreteHead.end();
+		ii != end; ++ii)
+		{
+		if (ii->second)
+			ZUtil_STL::sInsert(oRequired, ii->first);
+		else
+			ZUtil_STL::sInsert(oOptional, ii->first);
+		}
+	}
 
 } // namespace RelationalAlgebra
 } // namespace ZooLib
