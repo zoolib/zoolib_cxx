@@ -85,7 +85,7 @@ bool sQSet(T& ioLoc, const S& iVal)
 	}
 
 // =================================================================================================
-// MARK: - sCAS (Compare And Set)
+// MARK: - sCAS (Check And Set)
 
 template <class T, class S, class R>
 inline
