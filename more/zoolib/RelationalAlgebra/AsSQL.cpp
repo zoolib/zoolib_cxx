@@ -104,11 +104,57 @@ void Analyzer::Visit(const ZRef<ZVisitee>& iRep)
 void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{
 	// Identify the table.
-	const RelHead& theRH = iExpr->GetConcreteRelHead();
+	RelHead theRH_Required;
+	RelHead theRH_Optional;
+	sRelHeads(iExpr->GetConcreteHead(), theRH_Required, theRH_Optional);
+
+	bool allOK = true;
+	Analysis resultAnalysis;
+	resultAnalysis.fCondition = sTrue();
 
 	ZQ<map<string8,RelHead>::const_iterator> found;
+	RelHead theDefault;
 	foreachi (iter, fTables)
 		{
+		const RelHead theRH_Table = sPrefixInserted(iter->first + "_", iter->second);
+		const RelHead theRH_Overlap = theRH_Table & theRH_Required;
+		if (theRH_Overlap.size() >= theRH_Required.size())
+			{
+			// Required columns are all present in the table.
+			const RelHead theRH_WO_Required_Or_Optional =
+				theRH_Table - theRH_Required - theRH_Optional;
+
+			if (theRH_WO_Required_Or_Optional.empty())
+				{
+				// All columns in the table are in required or optional.
+				const RelHead theRH_Extra = theRH_Optional - theRH_Table;
+
+				const string8 realTableName = found.Get()->first;
+				const string8 realTableNameUnderscore = realTableName + "_";
+				const int numericSuffix = fTablesUsed[realTableName]++;
+				const string8 usedTableName = realTableName + sStringf("%d", numericSuffix);
+				const string8 usedTableNameDot = usedTableName + ".";
+
+				Analysis theAnalysis;
+				theAnalysis.fCondition = sTrue();
+				foreachi (iter, theRH)
+					{
+					const string8 attrName = *iter;
+					const string8 fieldName = sPrefixErased(realTableNameUnderscore, attrName);
+					const string8 physicalFieldName = usedTableNameDot + fieldName;
+					theAnalysis.fRelHead_Physical |= physicalFieldName;
+					sInsertMust(theAnalysis.fRename, attrName, physicalFieldName);
+					sInsertMust(theAnalysis.fRename_Inverse, physicalFieldName, attrName);
+					}
+
+				uuuuurrrrrggggghhhhh ... with optional and required columns it's now
+				possible for more than table to satisfy the concrete, so we'll need
+				to construct a term *here*, and union it with others.
+
+				}
+
+
+		if ((theRH_Table & theRH_Required).size() >= theRH_Table.size())
 		if ((sPrefixInserted(iter->first + "_", iter->second) & theRH).size() == theRH.size())
 			{
 			found = iter;
@@ -118,25 +164,9 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	if (not found)
 		throw std::runtime_error("Couldn't find table");
 
-	const string8 realTableName = found.Get()->first;
-	const string8 realTableNameUnderscore = realTableName + "_";
-	const int numericSuffix = fTablesUsed[realTableName]++;
-	const string8 usedTableName = realTableName + sStringf("%d", numericSuffix);
-	const string8 usedTableNameDot = usedTableName + ".";
+SELECT a, b, c from (a0, NULL, something) Union (a1) where 
 
-	Analysis theAnalysis;
-	theAnalysis.fCondition = sTrue();
-	foreachi (iter, theRH)
-		{
-		const string8 attrName = *iter;
-		const string8 fieldName = sPrefixErased(realTableNameUnderscore, attrName);
-		const string8 physicalFieldName = usedTableNameDot + fieldName;
-		theAnalysis.fRelHead_Physical |= physicalFieldName;
-		sInsertMust(theAnalysis.fRename, attrName, physicalFieldName);
-		sInsertMust(theAnalysis.fRename_Inverse, physicalFieldName, attrName);
-		}
-
-	this->pSetResult(theAnalysis);
+	this->pSetResult(resultAnalysis);
 	}
 
 void Analyzer::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
