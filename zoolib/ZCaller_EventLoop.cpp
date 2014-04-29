@@ -36,10 +36,10 @@ ZCaller_EventLoop::~ZCaller_EventLoop()
 
 bool ZCaller_EventLoop::Enqueue(const ZRef<ZCallable_Void>& iCallable)
 	{
+	ZAcqMtx acq(fMtx);
 	if (iCallable)
 		{
-		ZAcqMtx acq(fMtx);
-		if (sGetSet(fTriggered, true) || this->pTrigger())
+		if (fTriggered || (fTriggered = this->pTrigger()))
 			{
 			fCallables.push_back(iCallable);
 			return true;
@@ -60,7 +60,10 @@ void ZCaller_EventLoop::pCall()
 
 	for (vector<ZRef<ZCallable_Void> >::iterator iter = calling.begin();
 		iter != calling.end(); ++iter)
-		{ (*iter)->Call(); }
+		{
+		try { (*iter)->Call(); }
+		catch (...) {}
+		}
 	}
 
 void ZCaller_EventLoop::pDiscardPending()
