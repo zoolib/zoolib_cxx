@@ -885,7 +885,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 
 	// -----------------
 
-	if (not fPQuery_NeedsWork.IsEmpty())
+	if (sNotEmpty(fPQuery_NeedsWork))
 		{
 		ZLOGPF(s, eDebug+1);
 

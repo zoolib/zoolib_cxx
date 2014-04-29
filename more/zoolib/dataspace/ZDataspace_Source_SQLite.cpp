@@ -40,7 +40,7 @@ using std::vector;
 using namespace ZSQLite;
 using namespace ZUtil_STL;
 
-using RelationalAlgebra::ColName;
+namespace RA = RelationalAlgebra;
 
 // =================================================================================================
 // MARK: - Source_SQLite::ClientQuery
@@ -68,11 +68,11 @@ public:
 class Source_SQLite::PQuery
 	{
 public:
-	PQuery(ZRef<RelationalAlgebra::Expr_Rel> iRel)
+	PQuery(ZRef<RA::Expr_Rel> iRel)
 	:	fRel(iRel)
 		{}
 
-	ZRef<RelationalAlgebra::Expr_Rel> fRel;
+	ZRef<RA::Expr_Rel> fRel;
 	RelHead fRelHead;
 	string8 fSQL;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
@@ -93,10 +93,8 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
 		RelHead theRelHead;
 		for (ZRef<Iter> iterTable = new Iter(fDB, "pragma table_info(" + theTableName + ");");
 			iterTable->HasValue(); iterTable->Advance())
-			{
-			theRelHead |= iterTable->Get(1).Get<string8>();
-			}
-		theRelHead |= ColName("oid");
+			{ theRelHead |= iterTable->Get(1).Get<string8>(); }
+		theRelHead |= RA::ColName("oid");
 
 		if (sNotEmpty(theRelHead))
 			sInsertMust(kDebug, fMap_Tables, theTableName, theRelHead);
@@ -110,9 +108,8 @@ bool Source_SQLite::Intersects(const RelHead& iRelHead)
 	{
 	foreachi (iterTables, fMap_Tables)
 		{
-		if (sNotEmpty(
-			RelationalAlgebra::sPrefixInserted(iterTables->first + "_", iterTables->second) & iRelHead))
-			{ return true; }
+		if (sNotEmpty(RA::sPrefixInserted(iterTables->first + "_", iterTables->second) & iRelHead))
+			return true;
 		}
 	return false;
 	}
@@ -121,14 +118,11 @@ void Source_SQLite::ModifyRegistrations(
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	if (iAddedCount)// || iRemovedCount)
-		{
-		Source::pTriggerResultsAvailable();
-		}
+	const bool trigger = iAddedCount || iRemovedCount;
 
 	while (iAddedCount--)
 		{
-		ZRef<RelationalAlgebra::Expr_Rel> theRel = iAdded->GetRel();
+		ZRef<RA::Expr_Rel> theRel = iAdded->GetRel();
 
 		pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
@@ -137,7 +131,7 @@ void Source_SQLite::ModifyRegistrations(
 
 		if (iterPQueryPair.second)
 			{
-			RelationalAlgebra::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String<string8>(thePQuery->fSQL));
+			RA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String<string8>(thePQuery->fSQL));
 			thePQuery->fRelHead = sGetRelHead(theRel);
 			}
 
@@ -168,6 +162,9 @@ void Source_SQLite::ModifyRegistrations(
 
 		fMap_RefconToClientQuery.erase(iterClientQuery);
 		}
+
+	if (trigger)
+		Source::pTriggerResultsAvailable();
 	}
 
 void Source_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
