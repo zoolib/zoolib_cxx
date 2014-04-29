@@ -307,7 +307,7 @@ ZRef<DatonSet> DatonSet::Fork()
 	return new DatonSet(Nombre(fNombre, fNextFork++), b, fDeltasChain);
 	}
 
-void DatonSet::Join(ZRef<DatonSet>& ioOther)
+bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 	{
 	ZLOGF(s, eDebug + 1);
 	if (s)
@@ -326,6 +326,7 @@ void DatonSet::Join(ZRef<DatonSet>& ioOther)
 	ioOther->fPendingStatements.clear();
 	ioOther->fDeltasChain.Clear();
 	ioOther.Clear();
+	return bool(theDeltas->GetMap().size());
 	}
 
 void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas)
@@ -382,7 +383,7 @@ void DatonSet::pCommit()
 
 	ZLOGF(s, eDebug + 1);
 	if (s)
-		s << this << " before:" << fClock;
+		s << this << " before: " << fClock;
 
 	const NamedEvent theNE(fNombre, fClock->GetEvent());
 	const ZRef<Delta> theDelta = new Delta(&fPendingStatements);
@@ -400,7 +401,7 @@ void DatonSet::pCommit()
 	sEvent(fClock);
 
 	if (s)
-		s << ", after:"<< fClock;
+		s << ", after: " << fClock;
 	}
 
 } // namespace ZDatonSet

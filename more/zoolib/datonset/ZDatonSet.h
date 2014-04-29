@@ -197,7 +197,7 @@ public:
 
 	ZRef<DatonSet> Fork();
 
-	void Join(ZRef<DatonSet>& ioOther);
+	bool Join(ZRef<DatonSet>& ioOther);
 
 	void GetDeltas(ZRef<Event> iEvent, ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas);
 
