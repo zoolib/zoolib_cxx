@@ -147,7 +147,7 @@ void ZSocketWatcher::pRun()
 			foreachi (ii, toCall)
 				{
 				try { (*ii)->Call(); }
-				catch (...){}
+				catch (...) {}
 				}
 			guard.Acquire();
 			}

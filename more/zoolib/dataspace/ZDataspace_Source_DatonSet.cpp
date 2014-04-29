@@ -701,7 +701,8 @@ void Source_DatonSet::pChangedAll()
 		}
 	}
 
-ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Concrete(PQuery* iPQuery, const ConcreteHead& iConcreteHead)
+ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Concrete(
+	PQuery* iPQuery, const ConcreteHead& iConcreteHead)
 	{
 	++fWalkerCount;
 
