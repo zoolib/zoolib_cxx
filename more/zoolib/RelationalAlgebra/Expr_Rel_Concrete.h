@@ -42,7 +42,7 @@ class Expr_Rel_Concrete
 	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
 	Expr_Rel_Concrete(const RelHead& iRequired);
-	Expr_Rel_Concrete(const RelHead& iRequired, const RelHead& iOptional);
+	Expr_Rel_Concrete(const ConcreteHead& iConcrete);
 
 // From ZVisitee
 	virtual void Accept(const ZVisitor& iVisitor);
@@ -76,6 +76,7 @@ public:
 // MARK: - Relational operators
 
 ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead);
+ZRef<Expr_Rel> sConcrete(const ConcreteHead& iConcreteHead);
 
 } // namespace RelationalAlgebra
 

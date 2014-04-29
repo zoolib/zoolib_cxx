@@ -42,8 +42,8 @@ Expr_Rel_Concrete::Expr_Rel_Concrete(const RelHead& iRequired)
 :	fConcreteHead(sConcreteHead(iRequired))
 	{}
 
-Expr_Rel_Concrete::Expr_Rel_Concrete(const RelHead& iRequired, const RelHead& iOptional)
-:	fConcreteHead(sConcreteHead(iRequired, iOptional))
+Expr_Rel_Concrete::Expr_Rel_Concrete(const ConcreteHead& iConcreteHead)
+:	fConcreteHead(iConcreteHead)
 	{}
 
 void Expr_Rel_Concrete::Accept(const ZVisitor& iVisitor)
@@ -85,6 +85,9 @@ void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Conc
 
 ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead)
 	{ return new Expr_Rel_Concrete(iRelHead); }
+
+ZRef<Expr_Rel> sConcrete(const ConcreteHead& iConcreteHead)
+	{ return new Expr_Rel_Concrete(iConcreteHead); }
 
 } // namespace RelationalAlgebra
 } // namespace ZooLib
