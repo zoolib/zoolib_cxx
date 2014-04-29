@@ -143,7 +143,7 @@ int ZNet_TCP_Socket::sListen(ip4_addr iLocalAddress, ip_port iLocalPort)
 	::setsockopt(theSocketFD, SOL_SOCKET, SO_REUSEADDR,
 		(const char*)(const int*)sConstPtr(int(1)), sizeof(int));
 
-	sockaddr_in localSockAddr = {0};
+	sockaddr_in localSockAddr = {};
 	#if ZCONFIG_SPI_Enabled(BSD)
 		localSockAddr.sin_len = sizeof(localSockAddr);
 	#endif
@@ -172,7 +172,7 @@ int ZNet_TCP_Socket::sListen(ip6_addr iLocalAddress, ip_port iLocalPort)
 	::setsockopt(theSocketFD, SOL_SOCKET, SO_REUSEADDR,
 		(const char*)(const int*)sConstPtr(int(1)), sizeof(int));
 
-	sockaddr_in6 localSockAddr = {0};
+	sockaddr_in6 localSockAddr = {};
 	#if ZCONFIG_SPI_Enabled(BSD)
 		localSockAddr.sin6_len = sizeof(localSockAddr);
 	#endif
@@ -371,7 +371,7 @@ static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteH
 
 	if (iLocalHost || iLocalPort)
 		{
-		sockaddr_in localSockAddr = {0};
+		sockaddr_in localSockAddr = {};
 		#if ZCONFIG_SPI_Enabled(BSD)
 			localSockAddr.sin_len = sizeof(localSockAddr);
 		#endif
@@ -386,7 +386,7 @@ static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteH
 			}
 		}
 
-	sockaddr_in remoteSockAddr = {0};
+	sockaddr_in remoteSockAddr = {};
 	#if ZCONFIG_SPI_Enabled(BSD)
 		remoteSockAddr.sin_len = sizeof(remoteSockAddr);
 	#endif
@@ -408,7 +408,7 @@ static int spConnect6(ip6_addr iRemoteHost, ip_port iRemotePort)
 	if (socketFD < 0)
 		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
 
-	sockaddr_in6 remoteSockAddr = {0};
+	sockaddr_in6 remoteSockAddr = {};
 	#if ZCONFIG_SPI_Enabled(BSD)
 		remoteSockAddr.sin6_len = sizeof(remoteSockAddr);
 	#endif

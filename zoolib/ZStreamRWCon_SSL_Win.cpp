@@ -124,7 +124,7 @@ static bool spReadMore(vector<char>& ioBuf, const ZStreamR& r)
 
 static bool spAcquireCredentials(bool iVerify, bool iCheckName, CredHandle& oCredHandle)
 	{
-	SCHANNEL_CRED theSCC = {0};
+	SCHANNEL_CRED theSCC = {};
 	theSCC.dwVersion = SCHANNEL_CRED_VERSION;
 	theSCC.grbitEnabledProtocols = SP_PROT_SSL3TLS1_CLIENTS | 0xA00;
 

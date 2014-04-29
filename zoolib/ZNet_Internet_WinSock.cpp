@@ -351,7 +351,7 @@ static SOCKET spConnect(ip4_addr iLocalHost, ip_port iLocalPort,
 
 	if (iLocalHost || iLocalPort)
 		{
-		sockaddr_in localSockAddr = {0};
+		sockaddr_in localSockAddr = {};
 		localSockAddr.sin_family = AF_INET;
 		localSockAddr.sin_port = htons(iLocalPort);
 		localSockAddr.sin_addr.s_addr = htonl(iLocalHost);
@@ -364,7 +364,7 @@ static SOCKET spConnect(ip4_addr iLocalHost, ip_port iLocalPort,
 			}
 		}
 
-	sockaddr_in remoteSockAddr = {0};
+	sockaddr_in remoteSockAddr = {};
 	remoteSockAddr.sin_family = AF_INET;
 	remoteSockAddr.sin_port = htons(iRemotePort);
 	remoteSockAddr.sin_addr.s_addr = htonl(iRemoteHost);

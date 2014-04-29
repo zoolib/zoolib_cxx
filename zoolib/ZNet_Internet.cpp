@@ -96,7 +96,7 @@ ZRef<ZNetEndpoint> ZNetAddress_IP6::Connect() const
 const ip6_addr& ZNetAddress_IP6::GetAddr() const
 	{ return fAddr; }
 
-const ip6_addr ZNetAddress_IP6::sLoopback = {{{0}}};
+const ip6_addr ZNetAddress_IP6::sLoopback = {};
 
 const ip6_addr ZNetAddress_IP6::sAny =
 	{{{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

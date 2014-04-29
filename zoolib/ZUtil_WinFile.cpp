@@ -85,7 +85,7 @@ DWORD sRead(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
 	if (oCountRead)
 		*oCountRead = 0;
 
-	OVERLAPPED theOVERLAPPED = {0};
+	OVERLAPPED theOVERLAPPED = {};
 
 	if (iOffset)
 		{
@@ -123,7 +123,7 @@ DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset, HANDLE iEvent,
 	if (oCountWritten)
 		*oCountWritten = 0;
 
-	OVERLAPPED theOVERLAPPED = {0};
+	OVERLAPPED theOVERLAPPED = {};
 
 	if (iOffset)
 		{

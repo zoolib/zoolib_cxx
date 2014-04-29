@@ -42,7 +42,7 @@ bool ZWinService::sIsService()
 	{
 	if (HWINSTA theHWINSTA = ::GetProcessWindowStation())
 		{
-		USEROBJECTFLAGS theUSEROBJECTFLAGS = {0};
+		USEROBJECTFLAGS theUSEROBJECTFLAGS = {};
 		if (::GetUserObjectInformation(
 			theHWINSTA, UOI_FLAGS, &theUSEROBJECTFLAGS, sizeof(theUSEROBJECTFLAGS), nullptr))
 			{

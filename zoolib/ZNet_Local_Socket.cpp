@@ -162,7 +162,7 @@ ZNetListener_Local_Socket::ZNetListener_Local_Socket(int iSocketFD, const IKnowW
 
 static int spListen(const string& iPath)
 	{
-	sockaddr_un localSockAddr = {0};
+	sockaddr_un localSockAddr = {};
 	#if ZCONFIG_SPI_Enabled(BSD)
 		localSockAddr.sun_len = sizeof(sockaddr_un);
 	#endif
@@ -233,7 +233,7 @@ static int spConnect(const string& iPath)
 	if (socketFD < 0)
 		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
 
-	sockaddr_un remoteSockAddr = {0};
+	sockaddr_un remoteSockAddr = {};
 	#if ZCONFIG_SPI_Enabled(BSD)
 		remoteSockAddr.sun_len = sizeof(remoteSockAddr);
 	#endif
