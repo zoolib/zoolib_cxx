@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_RelHead_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompare.h"
+
 #include "zoolib/ZUtil_STL_set.h"
 
 #include "zoolib/RelationalAlgebra/ColName.h"
@@ -133,8 +135,20 @@ RelHead sRelHead(const ConcreteHead& iConcreteHead);
 
 void sRelHeads(const ConcreteHead& iConcreteHead, RelHead& oRequired, RelHead& oOptional);
 
-
 } // namespace RelationalAlgebra
+
+// =================================================================================================
+// MARK: - sCompare_T declarations.
+
+template <>
+int sCompare_T(const RelationalAlgebra::RelHead& iL, const RelationalAlgebra::RelHead& iR);
+
+template <>
+int sCompare_T(const RelationalAlgebra::Rename& iL, const RelationalAlgebra::Rename& iR);
+
+template <>
+int sCompare_T(const RelationalAlgebra::ConcreteHead& iL, const RelationalAlgebra::ConcreteHead& iR);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_RelationalAlgebra_RelHead_h__
