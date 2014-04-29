@@ -31,7 +31,8 @@ namespace ZooLib {
 // MARK: - sCompare_T
 
 template <>
-int sCompare_T(const QueryEngine::Result& iL, const QueryEngine::Result& iR)
+int sCompare_T<QueryEngine::Result>(
+	const QueryEngine::Result& iL, const QueryEngine::Result& iR)
 	{ return iL.Compare(iR); }
 
 ZMACRO_CompareRegistration_T(QueryEngine::Result)

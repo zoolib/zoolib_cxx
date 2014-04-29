@@ -62,7 +62,8 @@ private:
 } // namespace QueryEngine
 
 template <>
-int sCompare_T(const QueryEngine::Result& iL, const QueryEngine::Result& iR);
+int sCompare_T<QueryEngine::Result>(
+	const QueryEngine::Result& iL, const QueryEngine::Result& iR);
 
 template <>
 int sCompare_T<ZRef<QueryEngine::Result> >(
