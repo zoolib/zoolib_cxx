@@ -119,7 +119,7 @@ void ZCallScheduler::pRun()
 		if (fTimeJobs.empty())
 			{
 			// Nothing pending, wait 100ms in case something else comes along.
-			fCnd.WaitFor(fMtx, 0.1);
+			fCnd.WaitFor(fMtx, 100e-3);
 			if (fTimeJobs.empty())
 				{
 				// Still nothing pending, exit thread.
