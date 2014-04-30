@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStrim.h"
 
+#include "zoolib/ZStringf.h"
+
 #include <typeinfo>
 
 // =================================================================================================
@@ -76,6 +78,14 @@ const ZStrimW& operator<<(const ZStrimW& w, P* iVal)
 #if not defined(ZMACRO_Util_Strim_Operators_Suppress) || not ZMACRO_Util_Strim_Operators_Suppress
 	using ZUtil_Strim_Operators::operator<<;
 #endif
+
+template <class P>
+std::string sObjPtrStr(const P* iVal)
+	{ return std::string("(const ") + typeid(P).name() + "*)" + sStringf("%p", reinterpret_cast<const void*>(iVal)); }
+
+template <class P>
+std::string sObjPtrStr(P* iVal)
+	{ return std::string("(") + typeid(P).name() + "*)" + sStringf("%p", reinterpret_cast<void*>(iVal)); }
 
 } // namespace ZooLib
 
