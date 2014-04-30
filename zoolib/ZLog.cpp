@@ -210,13 +210,13 @@ bool LogMeister::Enabled(EPriority iPriority, const string& iName)
 bool LogMeister::Enabled(EPriority iPriority, const char* iName)
 	{ return true; }
 
-void sLogIt(EPriority iPriority, const std::string& iName, const std::string& iMessage)
+void sLogIt(EPriority iPriority, const std::string& iName, size_t iDepth, const std::string& iMessage)
 	{
 	if (ZRef<LogMeister> theLM = sLogMeister)
 		{
 		try
 			{
-			theLM->LogIt(iPriority, iName, iMessage);
+			theLM->LogIt(iPriority, iName, iDepth, iMessage);
 			}
 		catch (...)
 			{}

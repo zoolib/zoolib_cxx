@@ -146,14 +146,16 @@ class LogMeister
 public:
 	virtual bool Enabled(EPriority iPriority, const std::string& iName);
 	virtual bool Enabled(EPriority iPriority, const char* iName);
-	virtual void LogIt(
-		EPriority iPriority, const std::string& iName, size_t iDepth, const std::string& iMessage) = 0;
+	virtual void LogIt(EPriority iPriority, const std::string& iName,
+		size_t iDepth, const std::string& iMessage) = 0;
 	};
 
 extern ZRef<LogMeister> sLogMeister;
 //extern ZSafe<ZRef<LogMeister> > sLogMeister;
 
-void sLogIt(EPriority iPriority, const std::string& iName, const std::string& iMessage);
+void sLogIt(EPriority iPriority, const std::string& iName,
+	size_t iDepth, const std::string& iMessage);
+
 
 // =================================================================================================
 // MARK: - ZLog::FunctionEntryExit
