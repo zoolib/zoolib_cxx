@@ -115,7 +115,7 @@ public:
 		{ return iPriority <= this->pGetLogPriority(); }
 
 	virtual void LogIt(
-		ZLog::EPriority iPriority, const std::string& iName, const std::string& iMessage)
+		ZLog::EPriority iPriority, const std::string& iName, size_t iDepth, const std::string& iMessage)
 		{
 		if (iPriority > this->pGetLogPriority())
 			return;
@@ -171,7 +171,11 @@ public:
 		theStrimW
 			<< " P" << sStringf("%X", iPriority)
 			<< " " << extraSpace << iName
-			<< " - " << iMessage << "\n";
+			<< " - " ;
+		while (iDepth--)
+			theStrimW.Write("    ");
+		theStrimW
+			<< iMessage << "\n";
 
 		theStrimW.Flush();
 		}

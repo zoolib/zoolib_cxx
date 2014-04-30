@@ -33,6 +33,44 @@ ZRef<LogMeister> sLogMeister;
 //ZSafe<ZRef<LogMeister> > sLogMeister;
 
 // =================================================================================================
+// MARK: - ZLog::CallDepth
+
+static ZTSS::Key spKey()
+	{
+	static ZAtomicPtr_t spKey;
+	return ZTSS::sKey(spKey);
+	}
+
+CallDepth::CallDepth(bool iActive)
+:	fActive(iActive)
+,	fPrior(((CallDepth*)(ZTSS::sGet(spKey()))))
+	{ ZTSS::sSet(spKey(), this); }
+
+CallDepth::~CallDepth()
+	{ ZTSS::sSet(spKey(), fPrior); }
+
+size_t CallDepth::sCount()
+	{
+	size_t count = 0;
+	for (const CallDepth* current = ((CallDepth*)(ZTSS::sGet(spKey())));
+		current; current = current->fPrior)
+		++count;
+	return count;
+	}
+
+size_t CallDepth::sCountActive()
+	{
+	size_t count = 0;
+	for (const CallDepth* current = ((CallDepth*)(ZTSS::sGet(spKey())));
+		current; current = current->fPrior)
+		{
+		if (current->fActive)
+			++count;
+		}
+	return count;
+	}
+
+// =================================================================================================
 // MARK: - String/integer mapping
 
 static const char* const spNames[] =
@@ -160,7 +198,7 @@ void StrimW::pEmit()
 	{
 	if (not fName_StringQ)
 		fName_StringQ = *fName_CharStarQ;
-	sLogIt(fPriority, *fName_StringQ, *fMessageQ);
+	sLogIt(fPriority, *fName_StringQ, CallDepth::sCountActive(), *fMessageQ);
 	}
 
 // =================================================================================================

@@ -60,6 +60,23 @@ namespace ZooLib {
 namespace ZLog {
 
 // =================================================================================================
+// MARK: - ZLog::CallDepth
+
+class CallDepth
+	{
+public:
+	CallDepth(bool iActive = true);
+	~CallDepth();
+
+	static size_t sCount();
+	static size_t sCountActive();
+
+private:
+	bool const fActive;
+	const CallDepth* const fPrior;
+	};
+
+// =================================================================================================
 // MARK: - EPriority
 
 enum
@@ -130,7 +147,7 @@ public:
 	virtual bool Enabled(EPriority iPriority, const std::string& iName);
 	virtual bool Enabled(EPriority iPriority, const char* iName);
 	virtual void LogIt(
-		EPriority iPriority, const std::string& iName, const std::string& iMessage) = 0;
+		EPriority iPriority, const std::string& iName, size_t iDepth, const std::string& iMessage) = 0;
 	};
 
 extern ZRef<LogMeister> sLogMeister;
