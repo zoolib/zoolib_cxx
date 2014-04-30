@@ -110,13 +110,15 @@ string sNameFromPriority(EPriority iPriority)
 // MARK: - ZLog::StrimW
 
 StrimW::StrimW(EPriority iPriority, const string& iName_String)
-:	fPriority(iPriority),
-	fName_StringQ(iName_String)
+:	fPriority(iPriority)
+,	fName_StringQ(iName_String)
+,	fOutdent(false)
 	{}
 
 StrimW::StrimW(EPriority iPriority, const char* iName_CharStar)
-:	fPriority(iPriority),
-	fName_CharStarQ(iName_CharStar)
+:	fPriority(iPriority)
+,	fName_CharStarQ(iName_CharStar)
+,	fOutdent(false)
 	{}
 
 StrimW::~StrimW()
@@ -198,7 +200,10 @@ void StrimW::pEmit()
 	{
 	if (not fName_StringQ)
 		fName_StringQ = *fName_CharStarQ;
-	sLogIt(fPriority, *fName_StringQ, CallDepth::sCountActive(), *fMessageQ);
+	size_t theDepth = CallDepth::sCountActive();
+	if (fOutdent and theDepth > 0)
+		theDepth -= 1;
+	sLogIt(fPriority, *fName_StringQ, theDepth, *fMessageQ);
 	}
 
 // =================================================================================================
@@ -226,18 +231,36 @@ void sLogIt(EPriority iPriority, const std::string& iName, size_t iDepth, const 
 // =================================================================================================
 // MARK: - ZLog::FunctionEntryExit
 
+FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionName, const std::string& iMessage)
+:	fPriority(iPriority)
+,	fFunctionName(iFunctionName)
+	{
+	if (const S& s = S(fPriority, "ZLF"))
+		{
+		s.fOutdent = true;
+		s << "> " << fFunctionName << iMessage;
+		}
+	}
+
+
 FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionName)
 :	fPriority(iPriority)
 ,	fFunctionName(iFunctionName)
 	{
-	if (const S& s = S(fPriority, "ZLOGFUNCTION>>"))
-		s << fFunctionName;
+	if (const S& s = S(fPriority, "ZLF"))
+		{
+		s.fOutdent = true;
+		s << "> " << fFunctionName;
+		}
 	}
 
 FunctionEntryExit::~FunctionEntryExit()
 	{
-	if (const S& s = S(fPriority, "ZLOGFUNCTION<<"))
-		s << fFunctionName;
+	if (const S& s = S(fPriority, "ZLF"))
+		{
+		s.fOutdent = true;
+		s << "< " << fFunctionName;
+		}
 	}
 
 // =================================================================================================

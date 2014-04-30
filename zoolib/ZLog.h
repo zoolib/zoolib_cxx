@@ -53,6 +53,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZLOGFUNCTION(p) ZooLib::ZLog::FunctionEntryExit \
 	ZMACRO_Concat(theLogFEE_,__LINE__)(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION)
 
+#define ZLOGFUNV(p, v) ZooLib::ZLog::FunctionEntryExit \
+	ZMACRO_Concat(theLogFEE_,__LINE__)(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION, v)
+
 #define ZLOGTRACE(p) \
 	ZooLib::ZLog::sLogTrace(ZooLib::ZLog::p, __FILE__, __LINE__, ZMACRO_PRETTY_FUNCTION)
 
@@ -133,6 +136,9 @@ private:
 	mutable ZQ<std::string> fName_StringQ;
 	const ZQ<const char*> fName_CharStarQ;
 	mutable ZQ<std::string> fMessageQ;
+
+public:
+	mutable bool fOutdent;
 	};
 
 typedef StrimW S;
@@ -163,10 +169,12 @@ void sLogIt(EPriority iPriority, const std::string& iName,
 class FunctionEntryExit
 	{
 public:
+	FunctionEntryExit(EPriority iPriority, const char* iFunctionName, const std::string& iMessage);
 	FunctionEntryExit(EPriority iPriority, const char* iFunctionName);
 	~FunctionEntryExit();
 
 private:
+	const CallDepth fCallDepth;
 	EPriority fPriority;
 	const char* fFunctionName;
 	};
@@ -177,6 +185,7 @@ private:
 void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iFunctionName);
 
 } // namespace ZLog
+
 } // namespace ZooLib
 
 #endif // __ZLog_h__
