@@ -515,8 +515,8 @@ void Source_DatonSet::pPull()
 	ZRef<Deltas> theDeltas;
 	fDatonSet->GetDeltas(fEvent, fEvent, theDeltas);
 	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
-	if (s)
-		s << ", theMNED.size()=" << theMNED.size();
+	if (sNotEmpty(theMNED) && s)
+		s << "theMNED.size(): " << theMNED.size();
 
 	foreachi (iterMNED, theMNED)
 		{
