@@ -66,7 +66,7 @@ class Exec_True : public Walker_Restrict::Exec
 	{
 public:
 	virtual bool Call(const ZVal_Any* iVars, const ZVal_Any* iConsts)
-		{ return false; }
+		{ return true; }
 	};
 
 class Exec_Not : public Walker_Restrict::Exec
