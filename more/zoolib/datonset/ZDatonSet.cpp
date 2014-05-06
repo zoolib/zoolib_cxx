@@ -284,7 +284,6 @@ ZRef<Event> DatonSet::TickleClock()
 	if (fPendingStatements.empty())
 		{
 		sEvent(fClock);
-		sEvent(fClock);
 		}
 	else
 		{
@@ -297,14 +296,13 @@ ZRef<DatonSet> DatonSet::Fork()
 	{
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
+
 	ZRef<Clock> a, b;
 	fClock->Forked(a, b);
 
-//	if (random() & 1)
-//		swap(a, b);
-	fClock = a;
+	fClock = a->Evented();
 
-	return new DatonSet(Nombre(fNombre, fNextFork++), b, fDeltasChain);
+	return new DatonSet(Nombre(fNombre, fNextFork++), b->Evented(), fDeltasChain);
 	}
 
 bool DatonSet::Join(ZRef<DatonSet>& ioOther)
@@ -394,10 +392,7 @@ void DatonSet::pCommit()
 	ZRef<Deltas> theDeltas = new Deltas(&theMap);
 
 	fDeltasChain = new DeltasChain(fDeltasChain, theDeltas);
-	// TODO, fix this
-	// This is a hack -- comparing (2+0,0) against 2 has them be concurrent,
-	// sEvent against (2+0,0) is 2, which might not be correct.
-	sEvent(fClock);
+
 	sEvent(fClock);
 
 	if (s)
