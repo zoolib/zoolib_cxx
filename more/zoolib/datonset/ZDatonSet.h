@@ -55,7 +55,6 @@ public:
 	Daton(Data iData);
 
 	bool operator==(const Daton& iOther) const;
-	bool operator!=(const Daton& iOther) const;
 	bool operator<(const Daton& iOther) const;
 
 	Data GetData() const;
