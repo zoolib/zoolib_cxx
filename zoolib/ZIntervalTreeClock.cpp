@@ -64,15 +64,15 @@ Identity::Identity(const ZRef<Identity>& iLeft, const ZRef<Identity>& iRight)
 ,	fRight(iRight)
 	{
 	ZAssert(fLeft && fRight);
-	ZAssert(!(fLeft->IsZero() && fRight->IsZero()));
-	ZAssert(!(fLeft->IsOne() && fRight->IsOne()));
+	ZAssert(not (fLeft->IsZero() && fRight->IsZero()));
+	ZAssert(not (fLeft->IsOne() && fRight->IsOne()));
 	}
 
 bool Identity::IsLeaf() const
-	{ return !fLeft; }
+	{ return not fLeft; }
 
 bool Identity::IsOne() const
-	{ return spZero != this && !fLeft; }
+	{ return spZero != this && not fLeft; }
 
 bool Identity::IsZero() const
 	{ return spZero == this; }
@@ -173,7 +173,7 @@ Event::Event(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
 ,	fRight(iRight)
 ,	fValue(iValue)
 	{
-	ZAssert(fLeft && fRight || !fLeft && !fRight);
+	ZAssert(fLeft && fRight || not fLeft && not fRight);
 	}
 
 Event::Event(bool iWithZeroChildren, size_t iValue)
@@ -188,7 +188,7 @@ size_t Event::Value() const
 	{ return fValue; }
 
 bool Event::IsLeaf() const
-	{ return !fLeft; }
+	{ return not fLeft; }
 
 bool Event::IsInternal() const
 	{ return fLeft; }
@@ -210,7 +210,7 @@ bool Event::Equals(const ZRef<Event>& iOther) const
 	if (fLeft && iOther->fLeft)
 		return fLeft->Equals(iOther->fLeft) && fRight->Equals(iOther->fRight);
 
-	return !fLeft && !iOther->fLeft;
+	return not fLeft && not iOther->fLeft;
 	}
 
 bool Event::LessEqual(const ZRef<Event>& iOther) const
@@ -245,13 +245,13 @@ bool Event::LessEqual(const ZRef<Event>& iOther) const
 	}
 
 bool Event::IsBefore(const ZRef<Event>& iOther) const
-	{ return this->LessEqual(iOther) && !iOther->LessEqual(const_cast<Event*>(this)); }
+	{ return this->LessEqual(iOther) && not iOther->LessEqual(const_cast<Event*>(this)); }
 
 bool Event::IsAfter(const ZRef<Event>& iOther) const
-	{ return !this->LessEqual(iOther) && iOther->LessEqual(const_cast<Event*>(this)); }
+	{ return not this->LessEqual(iOther) && iOther->LessEqual(const_cast<Event*>(this)); }
 
 bool Event::IsConcurrent(const ZRef<Event>& iOther) const
-	{ return !this->LessEqual(iOther) && !iOther->LessEqual(const_cast<Event*>(this)); }
+	{ return not this->LessEqual(iOther) && not iOther->LessEqual(const_cast<Event*>(this)); }
 
 bool Event::IsSame(const ZRef<Event>& iOther) const
 	{ return this->LessEqual(iOther) && iOther->LessEqual(const_cast<Event*>(this)); }
