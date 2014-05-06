@@ -54,7 +54,7 @@ size_t CallDepth::sCount()
 	size_t count = 0;
 	for (const CallDepth* current = ((CallDepth*)(ZTSS::sGet(spKey())));
 		current; current = current->fPrior)
-		++count;
+		{ ++count; }
 	return count;
 	}
 
