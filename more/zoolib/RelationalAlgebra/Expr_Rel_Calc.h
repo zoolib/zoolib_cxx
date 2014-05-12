@@ -26,7 +26,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Op_T.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZVal_Any.h"
+
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
+#include "zoolib/RelationalAlgebra/PseudoMap.h"
 
 namespace ZooLib {
 namespace RelationalAlgebra {
@@ -42,7 +44,8 @@ class Expr_Rel_Calc
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	class PseudoMap;
+	typedef RelationalAlgebra::PseudoMap PseudoMap;
+
 	typedef ZCallable<ZVal_Any(const PseudoMap&)> Callable;
 
 	Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
@@ -69,53 +72,6 @@ public:
 private:
 	const ColName fColName;
 	const ZRef<Callable> fCallable;
-	};
-
-// =================================================================================================
-// MARK: - Expr_Rel_Calc::PseudoMap
-
-class Expr_Rel_Calc::PseudoMap
-	{
-public:
-	PseudoMap(const std::map<string8,size_t>& iBindings, const ZVal_Any* iVals);
-
-	const ZVal_Any* PGet(const string8& iName) const;
-
-	template <class S>
-	const S* PGet(const string8& iName) const
-		{
-		if (const ZVal_Any* theVal = this->PGet(iName))
-			return theVal->PGet<S>();
-		return nullptr;
-		}
-
-	template <class S>
-	ZQ<S> QGet(const string8& iName) const
-		{
-		if (const ZVal_Any* theVal = this->PGet(iName))
-			return theVal->QGet<S>();
-		return null;
-		}
-
-	template <class S>
-	S DGet(const S& iDefault, const string8& iName) const
-		{
-		if (const S* theVal = this->PGet<S>(iName))
-			return *theVal;
-		return iDefault;
-		}
-
-	template <class S>
-	S Get(const string8& iName) const
-		{
-		if (const S* theVal = this->PGet<S>(iName))
-			return *theVal;
-		return S();
-		}
-
-private:
-	const std::map<string8,size_t>& fBindings;
-	const ZVal_Any* fVals;
 	};
 
 // =================================================================================================

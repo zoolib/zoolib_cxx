@@ -97,22 +97,6 @@ const ZRef<Expr_Rel_Calc::Callable>& Expr_Rel_Calc::GetCallable() const
 	{ return fCallable; }
 
 // =================================================================================================
-// MARK: - Expr_Rel_Calc::PseudoMap
-
-Expr_Rel_Calc::PseudoMap::PseudoMap(
-	const std::map<string8,size_t>& iBindings, const ZVal_Any* iVals)
-:	fBindings(iBindings)
-,	fVals(iVals)
-	{}
-
-const ZVal_Any* Expr_Rel_Calc::PseudoMap::PGet(const string8& iName) const
-	{
-	if (ZQ<size_t> theOffsetQ = ZUtil_STL::sQGet(fBindings, iName))
-		return fVals + *theOffsetQ;
-	return nullptr;
-	}
-
-// =================================================================================================
 // MARK: - Visitor_Expr_Rel_Calc
 
 void Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)

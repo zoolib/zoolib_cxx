@@ -18,54 +18,38 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/QueryEngine/Walker_Calc.h"
+#include "zoolib/RelationalAlgebra/PseudoMap.h"
+
+#include "zoolib/ZUtil_STL_map.h"
 
 namespace ZooLib {
-namespace QueryEngine {
-
-using std::map;
-using std::set;
-using std::vector;
+namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - Walker_Calc
+// MARK: - PseudoMap
 
-Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
-	const string8& iColName,
-	const ZRef<Callable>& iCallable)
-:	Walker_Unary(iWalker)
-,	fColName(iColName)
-,	fCallable(iCallable)
+PseudoMap::PseudoMap(const std::map<string8,size_t>* iBindings, const ZVal_Any* iVals)
+:	fBindings(iBindings)
+,	fVals(iVals)
 	{}
 
-Walker_Calc::~Walker_Calc()
-	{}
-
-ZRef<Walker> Walker_Calc::Prime(
-	const map<string8,size_t>& iOffsets,
-	map<string8,size_t>& oOffsets,
-	size_t& ioBaseOffset)
+const ZVal_Any* PseudoMap::PGet(const string8& iName) const
 	{
-	fWalker = fWalker->Prime(iOffsets, fBindings, ioBaseOffset);
-	oOffsets.insert(fBindings.begin(), fBindings.end());
-	fOutputOffset = ioBaseOffset++;
-	oOffsets[fColName] = fOutputOffset;
-
-	if (not fWalker)
-		return null;
-
-	return this;
+	if (ZQ<size_t> theOffsetQ = ZUtil_STL::sQGet(*fBindings, iName))
+		return fVals + *theOffsetQ;
+	return nullptr;
 	}
 
-bool Walker_Calc::QReadInc(ZVal_Any* ioResults)
+// =================================================================================================
+// MARK: - PseudoMap_RelHead
+
+PseudoMap_RelHead::PseudoMap_RelHead(const RelHead& iRH, const ZVal_Any* iVals)
+:	PseudoMap(&fBindings_Storage, iVals)
 	{
-	if (not fWalker->QReadInc(ioResults))
-		return false;
-
-	ioResults[fOutputOffset] = fCallable->Call(PseudoMap(&fBindings, ioResults));
-
-	return true;
+	size_t index = 0;
+	for (RelHead::const_iterator ii = iRH.begin(), end = iRH.end(); ii != end; ++ii, ++index)
+		fBindings_Storage.insert(std::pair<string8,size_t>(*ii, index));
 	}
 
-} // namespace QueryEngine
+} // namespace RelationalAlgebra
 } // namespace ZooLib
