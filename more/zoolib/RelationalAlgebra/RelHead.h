@@ -46,6 +46,9 @@ Rename sInverted(const Rename& iRename);
 
 typedef std::set<ColName> RelHead;
 
+inline RelHead sRelHead()
+	{ return RelHead(); }
+
 inline RelHead sRelHead(const ColName* iElem, size_t iCount)
 	{ return RelHead(iElem, iElem + iCount); }
 
