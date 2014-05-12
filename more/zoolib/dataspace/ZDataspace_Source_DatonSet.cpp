@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZLog.h"
+#include "zoolib/ZCompare.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStrim_Stream.h"
@@ -46,6 +47,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 namespace ZooLib {
+
+// =================================================================================================
+// MARK: - sCompare_T
+
+template <>
+int sCompare_T(const ZDataspace::Source_DatonSet::Default_t& iL,
+	const ZDataspace::Source_DatonSet::Default_t& iR)
+	{ return 0; }
+
+ZMACRO_CompareRegistration_T(ZDataspace::Source_DatonSet::Default_t)
+
 namespace ZDataspace {
 
 using ZDatonSet::DatonSet;
