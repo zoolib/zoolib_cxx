@@ -66,11 +66,19 @@ inline uint32 ZFourCC(uint8 a, uint8 b, uint8 c, uint8 d)
 // For a discussion of the implementation of countof See section 14.3 of
 // "Imperfect C++" by Matthew Wilson, published by Addison Wesley.
 
-template <class T, int N>
-uint8 (&byte_array_of_same_dimension_as(T(&)[N]))[N];
-
 #ifndef countof
-	#define countof(x) sizeof(ZooLib::byte_array_of_same_dimension_as((x)))
+	#if ZCONFIG_Compiler == ZCONFIG_Compiler_MSVC
+		#define countof(x) _countof(x)
+	#else
+		template <class T, int N>
+		char (&charArrayOneGreaterThan(const T(&)[N]))[N+1];
+
+		// Switching to one based and adding this specialization lets us interpret
+		// zero-sized arrays provided the compiler itself doesn't complain.
+		char (&charArrayOneGreaterThan(const void*))[1];
+
+		#define countof(array) (sizeof(ZooLib::charArrayOneGreaterThan((array)))-1)
+	#endif
 #endif
 
 // =================================================================================================
