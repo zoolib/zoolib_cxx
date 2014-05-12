@@ -98,8 +98,8 @@ public:
 	static const __int64 kEpochDelta_1900_To_1970 = 70 * kYear + 17 * kDay; // 2,208,988,800
 	static const __int64 kEpochDelta_1601_To_1970 = 369 * kYear + 89 * kDay; // 11,644,473,600
 
-	static const __int64 kEpochDelta_1970_To_2001 = -978307200.0;
-	static const __int64 kEpochDelta_2001_To_1970 = 978307200.0;
+	static const __int64 kEpochDelta_1970_To_2001 = -978307200;
+	static const __int64 kEpochDelta_2001_To_1970 = 978307200;
 	};
 
 inline ZTime operator+(double iInterval, const ZTime& iTime)
