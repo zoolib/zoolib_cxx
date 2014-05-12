@@ -371,7 +371,7 @@ sCallablePair(
 	}
 
 // =================================================================================================
-// MARK: - sGenerator
+// MARK: - sGenerator, function is passed a yield callable
 
 template <class T0, class T1>
 ZRef<typename AsSig<T0,T1>::Callable>
@@ -398,7 +398,7 @@ sGenerator(const ZRef<ZCallable<void(const ZRef<ZCallable<T()> >&)> >& iCallable
 	{ return sGenerator<void,T>(iCallable); }
 
 // =================================================================================================
-// MARK: - sGenerator
+// MARK: - sGenerator, yield is installed as a thread value.
 
 typedef ZThreadVal<ZRef<ZCounted>, struct Tag_Callable_Yield> ZThreadVal_Callable_Yield;
 
@@ -419,34 +419,29 @@ sYield(P iP)
 
 template <class T0, class T1>
 void
-sInstallYieldCall(const ZRef<ZCallable_Void>& iCallable_Void,
+sInstallYieldCall(const ZRef<ZCallable<void(T0*,T1*)> >& iCallable,
 	const ZRef<typename AsSig<T1,T0>::Callable>& iCallable_Yield)
 	{
 	ZThreadVal_Callable_Yield theTV(iCallable_Yield);
-	iCallable_Void->Call();
+	iCallable->Call(nullptr, nullptr);
 	}
 
 template <class T0, class T1>
 ZRef<typename AsSig<T0,T1>::Callable>
-sGenerator(const ZRef<ZCallable_Void>& iCallable_Void)
+sGenerator(const ZRef<ZCallable<void(T0*,T1*)> >& iCallable)
 	{
 	ZRef<typename AsSig<T0,T1>::Callable> theCallable_Gen;
 	ZRef<typename AsSig<T1,T0>::Callable> theCallable_Yield;
 	sCallablePair<T0,T1>(theCallable_Gen, theCallable_Yield);
 
-	if (iCallable_Void)
+	if (iCallable)
 		{
 		sCallOnNewThread(
-			sBindR(sCallable(sInstallYieldCall<T0,T1>), iCallable_Void, theCallable_Yield));
+			sBindR(sCallable(sInstallYieldCall<T0,T1>), iCallable, theCallable_Yield));
 		}
 
 	return theCallable_Gen;
 	}
-
-template <class T>
-ZRef<typename AsSig<T,void>::Callable>
-sGenerator(const ZRef<ZCallable_Void>& iCallable_Void)
-	{ return sGenerator<T,void>(iCallable_Void); }
 
 } // namespace ZGenerator
 
