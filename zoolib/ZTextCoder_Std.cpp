@@ -120,7 +120,7 @@ void ZTextEncoder_ASCII::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 		if (not ZUnicode::sReadInc(localSource, localSourceEnd, theCP))
 			break;
 		if (uint32(theCP) <= 0x7F)
-			*localDest++ = theCP;
+			*localDest++ = uint8(theCP);
 		}
 
 	if (oSourceCU)

@@ -493,7 +493,7 @@ inline void ZByteSwap_32(volatile void* ioValueAddress)
 		inline int16 ZByteSwap_16(int16 iValue)
 			{
 			uint16 theValue = iValue;
-			return (theValue >> 8) | (theValue << 8);
+			return (theValue >> 8) | int16(theValue << 8);
 			}
 
 		inline int32 ZByteSwap_32(int32 iValue)

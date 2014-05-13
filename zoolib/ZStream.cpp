@@ -1109,7 +1109,7 @@ void ZStreamW::WriteCount(uint32 iCount) const
 	{
 	if (iCount < 0xFF)
 		{
-		this->WriteUInt8(iCount);
+		this->WriteUInt8(uint8(iCount));
 		}
 	else
 		{
