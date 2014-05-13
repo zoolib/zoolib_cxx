@@ -99,7 +99,7 @@ static void spReadUTF32_UTF16Swap(const ZStreamR& iStreamR,
 		UTF16* swapPtr = utf16Buffer;
 		for (size_t count = utf16Read; count; --count)
 			{
-			*swapPtr = ZByteSwap_Read32(swapPtr);
+			*swapPtr = ZByteSwap_Read16(swapPtr);
 			++swapPtr;
 			}
 
