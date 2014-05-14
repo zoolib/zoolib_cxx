@@ -40,17 +40,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace RelationalAlgebra {
 
+ZRef<Expr_Rel> sConst(const ZNameVal& iNameVal);
+
+ZRef<Expr_Rel> operator*(const ZNameVal& iNameVal, const ZRef<Expr_Rel>& iRel);
+ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZNameVal& iNameVal);
+ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZNameVal& iNameVal);
+
 ZRef<Expr_Rel> sConst(const ZMap_Any& iMap);
 
 ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel);
-ZRef<Expr_Rel> operator*(const ZNameVal& iNameVal, const ZRef<Expr_Rel>& iRel);
 ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZMap_Any& iMap);
 ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap);
 
 ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred& iValPred);
-
 ZRef<Expr_Rel> operator&(const ZValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel);
-
 ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZValPred& iValPred);
 
 } // namespace RelationalAlgebra

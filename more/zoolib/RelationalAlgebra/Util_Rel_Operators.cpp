@@ -23,6 +23,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace RelationalAlgebra {
 
+ZRef<Expr_Rel> sConst(const ZNameVal& iNameVal)
+	{ return sConst(iNameVal.first, iNameVal.second); }
+
+ZRef<Expr_Rel> operator*(const ZNameVal& iNameVal, const ZRef<Expr_Rel>& iRel)
+	{ return sConst(iNameVal) * iRel; }
+
+ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZNameVal& iNameVal)
+	{ return iRel * sConst(iNameVal); }
+
+ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZNameVal& iNameVal)
+	{ return ioRel *= sConst(iNameVal); }
+
+// -----
+
 static ZRef<Expr_Rel> spConst(const ZMap_Any& iMap)
 	{
 	ZRef<Expr_Rel> result;
@@ -52,9 +66,6 @@ ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel)
 	return iRel;
 	}
 
-ZRef<Expr_Rel> operator*(const ZNameVal& iNameVal, const ZRef<Expr_Rel>& iRel)
-	{ return sConst(iNameVal.first, iNameVal.second) * iRel; }
-
 ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZMap_Any& iMap)
 	{
 	if (ZRef<Expr_Rel> asRel = spConst(iMap))
@@ -68,6 +79,8 @@ ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap)
 		ioRel = ioRel * asRel;
 	return ioRel;
 	}
+
+// -----
 
 ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred& iValPred)
 	{ return new Expr_Rel_Restrict(iExpr_Rel, new ZExpr_Bool_ValPred(iValPred)); }
