@@ -43,11 +43,12 @@ public:
 
 	Identity(const ZRef<Identity>& iLeft, const ZRef<Identity>& iRight);
 
-	bool IsLeaf() const;
 	bool IsOne() const;
 	bool IsZero() const;
 
+	bool IsLeaf() const;
 	bool IsInternal() const;
+
 	ZRef<Identity> Left() const;
 	ZRef<Identity> Right() const;
 
@@ -82,23 +83,18 @@ public:
 	bool IsLeaf() const;
 
 	bool IsInternal() const;
-	ZRef<Event> Left() const;
-	ZRef<Event> Right() const;
+	const ZRef<Event>& Left() const;
+	const ZRef<Event>& Right() const;
 
 // Comparison
-	bool Equals(const ZRef<Event>& iOther) const;
 	bool LessEqual(const ZRef<Event>& iOther) const;
 
-	bool IsBefore(const ZRef<Event>& iOther) const;
-	bool IsAfter(const ZRef<Event>& iOther) const;
-	bool IsConcurrent(const ZRef<Event>& iOther) const;
-	bool IsSame(const ZRef<Event>& iOther) const;
-
 // Fundamental operations
-	ZRef<Event> Evented(const ZRef<Identity>& iIdentity) const;
+	ZRef<Event> Advanced(const ZRef<Identity>& iIdentity) const;
 	ZRef<Event> Joined(const ZRef<Event>& iOther) const;
 
 private:
+	bool pEqual(const ZRef<Event>& iOther) const;
 	size_t pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent) const;
 
 	ZRef<Event> pFilled(const ZRef<Identity>& iIdentity) const;
@@ -113,60 +109,12 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Event mutating operations
+// MARK: -
 
-void sEvent(ZRef<Event>& ioEvent, const ZRef<Identity>& iIdentity);
-void sJoin(ZRef<Event>& ioEvent, const ZRef<Event>& iOther);
-
-// =================================================================================================
-// MARK: - Clock
-
-class Clock
-:	public ZCountedWithoutFinalize
-	{
-public:
-	static ZRef<Clock> sSeed();
-
-	Clock(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent);
-	Clock(const ZRef<Clock>& iClock, const ZRef<Event>& iEvent);
-	Clock(const ZRef<Identity>& iIdentity, const ZRef<Clock>& iClock);
-	virtual ~Clock();
-
-// Accessors, mainly for text and binary streaming.
-	ZRef<Identity> GetIdentity() const;
-	ZRef<Event> GetEvent() const;
-
-// Comparison
-	bool LessEqual(const ZRef<Clock>& iOther) const;
-
-	bool IsBefore(const ZRef<Clock>& iOther) const;
-	bool IsAfter(const ZRef<Clock>& iOther) const;
-	bool IsConcurrent(const ZRef<Clock>& iOther) const;
-	bool IsSame(const ZRef<Clock>& iOther) const;
-
-// Higher level operations
-	ZRef<Clock> Sent() const;
-	ZRef<Clock> Received(const ZRef<Event>& iEvent) const;
-
-// Fundamental operations
-	ZRef<Clock> Evented() const;
-	ZRef<Clock> Joined(const ZRef<Clock>& iOther) const;
-	void Forked(ZRef<Clock>& oLeft, ZRef<Clock>& oRight) const;
-
-private:
-	const ZRef<Identity> fIdentity;
-	const ZRef<Event> fEvent;
-	};
-
-// =================================================================================================
-// MARK: - Clock mutating operations
-
-void sSend(ZRef<Clock>& ioClock);
-void sReceive(ZRef<Clock>& ioClock, const ZRef<Event>& iEventReceived);
-
-void sEvent(ZRef<Clock>& ioClock);
-void sJoin(ZRef<Clock>& ioClock, const ZRef<Clock>& iOther);
-ZRef<Clock> sFork(ZRef<Clock>& ioClock);
+bool sIsBefore(const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
+bool sIsAfter(const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
+bool sIsConcurrent(const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
+bool sIsSame(const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
 
 } // namespace ZIntervalTreeClock
 } // namespace ZooLib

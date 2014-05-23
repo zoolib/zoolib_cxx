@@ -21,6 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h" // for std::min/std::max
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZIntervalTreeClock.h"
+#include "zoolib/ZSingleton.h"
+
+#include "zoolib/ZLog.h"
 
 /*
 See the paper "Interval Tree Clocks: A Logical Clock for Dynamic Systems"
@@ -68,15 +71,14 @@ Identity::Identity(const ZRef<Identity>& iLeft, const ZRef<Identity>& iRight)
 	ZAssert(not (fLeft->IsOne() && fRight->IsOne()));
 	}
 
-bool Identity::IsLeaf() const
-	{ return not fLeft; }
-
 bool Identity::IsOne() const
 	{ return spZero != this && not fLeft; }
 
 bool Identity::IsZero() const
 	{ return spZero == this; }
 
+bool Identity::IsLeaf() const
+	{ return not fLeft; }
 bool Identity::IsInternal() const
 	{ return fLeft; }
 
@@ -134,6 +136,7 @@ ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther) const
 	else if (this->IsOne() || iOther->IsOne())
 		{
 		// This case is not covered in the ITC paper, but seems reasonable to me.
+		ZLOGTRACE(eDebug);
 		return const_cast<Identity*>(this);
 		}
 	else
@@ -152,10 +155,8 @@ ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther) const
 // =================================================================================================
 // MARK: - Event
 
-const ZRef<Event> spEventZero = new Event;
-
 ZRef<Event> Event::sZero()
-	{ return spEventZero; }
+	{ return sSingleton<ZRef_Counted<Event> >(); }
 
 Event::Event()
 :	fValue(0)
@@ -177,8 +178,8 @@ Event::Event(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
 	}
 
 Event::Event(bool iWithZeroChildren, size_t iValue)
-:	fLeft(spEventZero)
-,	fRight(spEventZero)
+:	fLeft(sZero())
+,	fRight(sZero())
 ,	fValue(iValue)
 	{
 	ZAssert(iWithZeroChildren);
@@ -193,25 +194,11 @@ bool Event::IsLeaf() const
 bool Event::IsInternal() const
 	{ return fLeft; }
 
-ZRef<Event> Event::Left() const
+const ZRef<Event>& Event::Left() const
 	{ return fLeft; }
 
-ZRef<Event> Event::Right() const
+const ZRef<Event>& Event::Right() const
 	{ return fRight; }
-
-bool Event::Equals(const ZRef<Event>& iOther) const
-	{
-	if (iOther == this)
-		return true;
-
-	if (fValue != iOther->fValue)
-		return false;
-
-	if (fLeft && iOther->fLeft)
-		return fLeft->Equals(iOther->fLeft) && fRight->Equals(iOther->fRight);
-
-	return not fLeft && not iOther->fLeft;
-	}
 
 bool Event::LessEqual(const ZRef<Event>& iOther) const
 	{
@@ -244,22 +231,10 @@ bool Event::LessEqual(const ZRef<Event>& iOther) const
 	return false;
 	}
 
-bool Event::IsBefore(const ZRef<Event>& iOther) const
-	{ return this->LessEqual(iOther) && not iOther->LessEqual(const_cast<Event*>(this)); }
-
-bool Event::IsAfter(const ZRef<Event>& iOther) const
-	{ return not this->LessEqual(iOther) && iOther->LessEqual(const_cast<Event*>(this)); }
-
-bool Event::IsConcurrent(const ZRef<Event>& iOther) const
-	{ return not this->LessEqual(iOther) && not iOther->LessEqual(const_cast<Event*>(this)); }
-
-bool Event::IsSame(const ZRef<Event>& iOther) const
-	{ return this->LessEqual(iOther) && iOther->LessEqual(const_cast<Event*>(this)); }
-
-ZRef<Event> Event::Evented(const ZRef<Identity>& iIdentity) const
+ZRef<Event> Event::Advanced(const ZRef<Identity>& iIdentity) const
 	{
 	ZRef<Event> newEvent = this->pFilled(iIdentity);
-	if (newEvent->Equals(const_cast<Event*>(this)))
+	if (newEvent->pEqual(const_cast<Event*>(this)))
 		newEvent->pGrown(iIdentity, newEvent);
 	return newEvent;
 	}
@@ -303,6 +278,20 @@ ZRef<Event> Event::Joined(const ZRef<Event>& iOther) const
 			return result->pNormalized();
 			}
 		}
+	}
+
+bool Event::pEqual(const ZRef<Event>& iOther) const
+	{
+	if (iOther == this)
+		return true;
+
+	if (fValue != iOther->fValue)
+		return false;
+
+	if (fLeft && iOther->fLeft)
+		return fLeft->pEqual(iOther->fLeft) && fRight->pEqual(iOther->fRight);
+
+	return not fLeft && not iOther->fLeft;
 	}
 
 size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent) const
@@ -435,103 +424,19 @@ size_t Event::pHeight() const
 	}
 
 // =================================================================================================
-// MARK: - Event mutating operations
+// MARK: -
 
-void sEvent(ZRef<Event>& ioEvent, const ZRef<Identity>& iIdentity)
-	{ ioEvent = ioEvent->Evented(iIdentity); }
+bool sIsBefore(const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
+	{ return iLeft->LessEqual(iRight) && not iRight->LessEqual(iLeft); }
 
-void sJoin(ZRef<Event>& ioEvent, const ZRef<Event>& iOther)
-	{ ioEvent = ioEvent->Joined(iOther); }
+bool sIsAfter(const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
+	{ return not iLeft->LessEqual(iRight) && iRight->LessEqual(iLeft); }
 
-// =================================================================================================
-// MARK: - Clock
+bool sIsConcurrent(const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
+	{ return not iLeft->LessEqual(iRight) && not iRight->LessEqual(iLeft); }
 
-ZRef<Clock> Clock::sSeed()
-	{ return new Clock(Identity::sOne(), Event::sZero()); }
-
-Clock::Clock(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent)
-:	fIdentity(iIdentity)
-,	fEvent(iEvent)
-	{
-	ZAssert(fIdentity && fEvent);
-	}
-
-Clock::Clock(const ZRef<Clock>& iClock, const ZRef<Event>& iEvent)
-:	fIdentity(iClock->fIdentity)
-,	fEvent(iEvent)
-	{}
-
-Clock::Clock(const ZRef<Identity>& iIdentity, const ZRef<Clock>& iClock)
-:	fIdentity(iIdentity)
-,	fEvent(iClock->fEvent)
-	{}
-
-Clock::~Clock()
-	{}
-
-ZRef<Identity> Clock::GetIdentity() const
-	{ return fIdentity; }
-
-ZRef<Event> Clock::GetEvent() const
-	{ return fEvent; }
-
-bool Clock::LessEqual(const ZRef<Clock>& iOther) const
-	{ return fEvent->LessEqual(iOther->fEvent); }
-
-bool Clock::IsBefore(const ZRef<Clock>& iOther) const
-	{ return fEvent->IsBefore(iOther->fEvent); }
-
-bool Clock::IsAfter(const ZRef<Clock>& iOther) const
-	{ return fEvent->IsAfter(iOther->fEvent); }
-
-bool Clock::IsConcurrent(const ZRef<Clock>& iOther) const
-	{ return fEvent->IsConcurrent(iOther->fEvent); }
-
-bool Clock::IsSame(const ZRef<Clock>& iOther) const
-	{ return fEvent->IsSame(iOther->fEvent); }
-
-ZRef<Clock> Clock::Sent() const
-	{ return new Clock(fIdentity, fEvent->Evented(fIdentity)); }
-
-ZRef<Clock> Clock::Received(const ZRef<Event>& iEvent) const
-	{ return new Clock(fIdentity, fEvent->Joined(iEvent)->Evented(fIdentity)); }
-
-ZRef<Clock> Clock::Evented() const
-	{ return new Clock(fIdentity, fEvent->Evented(fIdentity)); }
-
-ZRef<Clock> Clock::Joined(const ZRef<Clock>& iOther) const
-	{ return new Clock(fIdentity->Summed(iOther->fIdentity), fEvent->Joined(iOther->fEvent)); }
-
-void Clock::Forked(ZRef<Clock>& oLeft, ZRef<Clock>& oRight) const
-	{
-	ZRef<Identity> newLeft, newRight;
-	fIdentity->Split(newLeft, newRight);
-	oLeft = new Clock(newLeft, fEvent);
-	oRight = new Clock(newRight, fEvent);
-	}
-
-// =================================================================================================
-// MARK: - Clock mutating operations
-
-void sSend(ZRef<Clock>& ioClock)
-	{ ioClock = ioClock->Sent(); }
-
-void sReceive(ZRef<Clock>& ioClock, const ZRef<Event>& iEventReceived)
-	{ ioClock = ioClock->Received(iEventReceived); }
-
-void sEvent(ZRef<Clock>& ioClock)
-	{ ioClock = ioClock->Evented(); }
-
-void sJoin(ZRef<Clock>& ioClock, const ZRef<Clock>& iOther)
-	{ ioClock = ioClock->Joined(iOther); }
-
-ZRef<Clock> sFork(ZRef<Clock>& ioClock)
-	{
-	ZRef<Clock> a, b;
-	ioClock->Forked(a, b);
-	ioClock = a;
-	return b;
-	}
+bool sIsSame(const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
+	{ return iLeft->LessEqual(iRight) && iRight->LessEqual(iLeft); }
 
 } // namespace ZIntervalTreeClock
 } // namespace ZooLib
