@@ -133,14 +133,5 @@ void Source::pTriggerResultsAvailable()
 		}
 	}
 
-// =================================================================================================
-// MARK: - SourceFactory
-
-SourceFactory::SourceFactory()
-	{}
-
-SourceFactory::~SourceFactory()
-	{}
-
 } // namespace ZDataspace
 } // namespace ZooLib

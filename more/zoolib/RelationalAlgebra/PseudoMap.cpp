@@ -40,6 +40,16 @@ const ZVal_Any* PseudoMap::PGet(const string8& iName) const
 	return nullptr;
 	}
 
+ZMap_Any PseudoMap::AsMap() const
+	{
+	ZMap_Any result;
+	for (std::map<string8,size_t>::const_iterator ii = fBindings->begin(), end = fBindings->end();
+		ii != end; ++ii)
+		{ result.Set(ii->first, fVals[ii->second]); }
+
+	return result;
+	}
+
 // =================================================================================================
 // MARK: - PseudoMap_RelHead
 

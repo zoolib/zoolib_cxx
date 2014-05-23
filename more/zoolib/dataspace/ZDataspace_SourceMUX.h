@@ -40,12 +40,12 @@ public:
 	SourceMUX(ZRef<Source> iSource);
 	virtual ~SourceMUX();
 
-// From ZCounted via SourceFactory
+// From ZCounted via SourceFactory (aka ZCallable<ZRef<Source>()>)
 	virtual void Initialize();
 	virtual void Finalize();
 
 // From SourceFactory
-	virtual ZRef<Source> Make();
+	virtual ZQ<ZRef<Source> > QCall();
 
 private:
 	class PQuery;

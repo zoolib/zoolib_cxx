@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
+#include "zoolib/ZUtil_STL_vector.h"
 
 #include "zoolib/datonset/ZDatonSet.h"
 
@@ -30,6 +31,7 @@ namespace ZooLib {
 namespace ZDatonSet {
 
 using namespace std;
+using namespace ZUtil_STL;
 
 // =================================================================================================
 // MARK: - Daton
@@ -64,102 +66,30 @@ Data Daton::GetData() const
 	{ return fData; }
 
 // =================================================================================================
-// MARK: - Nombre
-
-Nombre::Nombre()
-	{}
-
-Nombre::Nombre(const Nombre& iOther)
-:	fForks(iOther.fForks)
-	{}
-
-Nombre::~Nombre()
-	{}
-
-Nombre& Nombre::operator=(const Nombre& iOther)
-	{
-	fForks = iOther.fForks;
-	return *this;
-	}
-
-Nombre::Nombre(uint64 iFork)
-:	fForks(1, iFork)
-	{}
-
-Nombre::Nombre(const Nombre& iOther, uint64 iFork)
-:	fForks(iOther.fForks)
-	{
-	fForks.push_back(iFork);
-	}
-
-bool Nombre::operator<(const Nombre& iRHS) const
-	{ return fForks < iRHS.fForks; }
-
-// =================================================================================================
-// MARK: - NamedEvent
-
-NamedEvent::NamedEvent()
-	{}
-
-NamedEvent::NamedEvent(const NamedEvent& iOther)
-:	fNombre(iOther.fNombre)
-,	fEvent(iOther.fEvent)
-	{}
-
-NamedEvent::~NamedEvent()
-	{}
-
-NamedEvent& NamedEvent::operator=(const NamedEvent& iOther)
-	{
-	fNombre = iOther.fNombre;
-	fEvent = iOther.fEvent;
-	return *this;
-	}
-
-NamedEvent::NamedEvent(const Nombre& iNombre, const ZRef<Event>& iEvent)
-:	fNombre(iNombre)
-,	fEvent(iEvent)
-	{}
-
-bool NamedEvent::operator<(const NamedEvent& iRHS) const
-	{
-	const bool aleb = fEvent->LessEqual(iRHS.fEvent);
-	const bool blea = iRHS.fEvent->LessEqual(fEvent);
-
-	if (aleb == blea)
-		return fNombre < iRHS.fNombre;
-	else
-		return aleb;
-	}
-
-ZRef<Event> NamedEvent::GetEvent() const
-	{ return fEvent; }
-
-// =================================================================================================
 // MARK: - Delta
 
-Delta::Delta(const map<Daton, bool>& iStatements)
+Delta::Delta(const Statements_t& iStatements)
 :	fStatements(iStatements)
 	{}
 
-Delta::Delta(map<Daton, bool>* ioStatements)
+Delta::Delta(Statements_t* ioStatements)
 	{ ioStatements->swap(fStatements); }
 
-const map<Daton, bool>& Delta::GetStatements() const
+const Delta::Statements_t& Delta::GetStatements() const
 	{ return fStatements; }
 
 // =================================================================================================
 // MARK: - Deltas
 
-Deltas::Deltas(const Map_NamedEvent_Delta_t& iMap)
-:	fMap(iMap)
+Deltas::Deltas(const Vector_Event_Delta_t& iVector)
+:	fVector(iVector)
 	{}
 
-Deltas::Deltas(Map_NamedEvent_Delta_t* ioMap)
-	{ ioMap->swap(fMap); }
+Deltas::Deltas(Vector_Event_Delta_t* ioVector)
+	{ ioVector->swap(fVector); }
 
-const Map_NamedEvent_Delta_t& Deltas::GetMap() const
-	{ return fMap; }
+const Vector_Event_Delta_t& Deltas::GetVector() const
+	{ return fVector; }
 
 // =================================================================================================
 // MARK: - DeltasChain
@@ -175,7 +105,7 @@ ZRef<DeltasChain> DeltasChain::GetParent() const
 ZRef<Deltas> DeltasChain::GetDeltas() const
 	{ return fDeltas; }
 
-typedef pair<NamedEvent, size_t> TSIndex_t;
+typedef pair<ZRef<Event>, size_t> TSIndex_t;
 
 class CompareTSReverse
 :	public std::binary_function<TSIndex_t, TSIndex_t, bool>
@@ -183,22 +113,22 @@ class CompareTSReverse
 public:
 	// We want oldest ts first, so we reverse the sense of the compare.
 	result_type operator()(const first_argument_type& i1, const second_argument_type& i2) const
-		{ return i2.first < i1.first; }
+		{ return i2.first->IsBefore(i1.first); }
 	};
 
 void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed)
 	{
 	// This is a bit tricky. We're effectively merge sorting from our history entries.
 
-	vector<Map_NamedEvent_Delta_t::const_iterator> theIters, theEnds;
+	vector<Vector_Event_Delta_t::const_iterator> theIters, theEnds;
 	for (ZRef<DeltasChain> current = iDeltasChain;
 		current; current = current->GetParent())
 		{
-		Map_NamedEvent_Delta_t::const_iterator theBegin =
-			current->GetDeltas()->GetMap().begin();
+		Vector_Event_Delta_t::const_iterator theBegin =
+			current->GetDeltas()->GetVector().begin();
 
-		Map_NamedEvent_Delta_t::const_iterator theEnd =
-			current->GetDeltas()->GetMap().end();
+		Vector_Event_Delta_t::const_iterator theEnd =
+			current->GetDeltas()->GetVector().end();
 
 		if (theBegin != theEnd)
 			{
@@ -233,18 +163,13 @@ void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed)
 // =================================================================================================
 // MARK: - DatonSet
 
-DatonSet::DatonSet(
-	const Nombre& iNombre, const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain)
-:	fNombre(iNombre)
-,	fNextFork(1)
-,	fClock(iClock)
+DatonSet::DatonSet(const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain)
+:	fClock(iClock)
 ,	fDeltasChain(iDeltasChain)
 	{}
 
-DatonSet::DatonSet(const Nombre& iNombre, const ZRef<Clock>& iClock)
-:	fNombre(iNombre)
-,	fNextFork(1)
-,	fClock(iClock)
+DatonSet::DatonSet(const ZRef<Clock>& iClock)
+:	fClock(iClock)
 	{}
 
 void DatonSet::Insert(const Daton& iDaton)
@@ -259,13 +184,6 @@ void DatonSet::Erase(const Daton& iDaton)
 	ZAcqMtx acq(fMtx);
 
 	fPendingStatements[iDaton] = false;
-	}
-
-ZRef<Clock> DatonSet::GetClock()
-	{
-	ZAcqMtx acq(fMtx);
-	this->pCommit();
-	return fClock;
 	}
 
 ZRef<Event> DatonSet::GetEvent()
@@ -299,7 +217,7 @@ ZRef<DatonSet> DatonSet::Fork()
 
 	fClock = a->Evented();
 
-	return new DatonSet(Nombre(fNombre, fNextFork++), b->Evented(), fDeltasChain);
+	return new DatonSet(b->Evented(), fDeltasChain);
 	}
 
 bool DatonSet::Join(ZRef<DatonSet>& ioOther)
@@ -311,7 +229,7 @@ bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 	ZRef<Event> otherEvent;
 	ZRef<Deltas> theDeltas;
 	ioOther->GetDeltas(fClock->GetEvent(), otherEvent, theDeltas);
-	this->IncorporateDeltas(otherEvent, theDeltas);
+	this->pIncorporateDeltas(otherEvent, theDeltas);
 	if (s)
 		s << ", incorporate other:" << otherEvent << ", clock:" << fClock;
 	sJoin(fClock, ioOther->fClock);
@@ -321,7 +239,7 @@ bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 	ioOther->fPendingStatements.clear();
 	ioOther->fDeltasChain.Clear();
 	ioOther.Clear();
-	return bool(theDeltas->GetMap().size());
+	return sNotEmpty(theDeltas->GetVector());
 	}
 
 void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas)
@@ -329,32 +247,31 @@ void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Event>& oEvent, ZRef<Deltas>& 
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
 
-	const NamedEvent neLower(Nombre(), iEvent);
-
-	Map_NamedEvent_Delta_t resultMap;
+	Vector_Event_Delta_t resultVector;
 	for (ZRef<DeltasChain> current = fDeltasChain;
 		current; current = current->GetParent())
 		{
-		const Map_NamedEvent_Delta_t& theMap = current->GetDeltas()->GetMap();
-		for (Map_NamedEvent_Delta_t::const_iterator
-			ii = theMap.lower_bound(neLower), theEnd = theMap.end(); ii != theEnd; ++ii)
+		// Indexing can't work. But maybe we can record the join and meet of the
+		// contents, and thus be able to reject entire blocks at times??
+
+//##		Similarly, with incorporate deltas -- we should probably join the individual delta clocks?
+
+		const Vector_Event_Delta_t& theVector = current->GetDeltas()->GetVector();
+		for (Vector_Event_Delta_t::const_iterator
+			ii = theVector.begin(), theEnd = theVector.end(); ii != theEnd; ++ii)
 			{
-			if (not ii->first.GetEvent()->IsBefore(iEvent))
-				resultMap.insert(*ii);
+			if (not ii->first->IsBefore(iEvent))
+				resultVector.push_back(*ii);
 			}
 		}
 
-	oDeltas = new Deltas(&resultMap);
-	oEvent = fClock->GetEvent();
-	}
+	if (resultVector.empty())
+		{
+		ZLOGTRACE(eDebug);
+		}
 
-void DatonSet::IncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& iDeltas)
-	{
-	ZAcqMtx acq(fMtx);
-	this->pCommit();
-	if (iDeltas && iDeltas->GetMap().size())
-		fDeltasChain = new DeltasChain(fDeltasChain, iDeltas);
-	sReceive(fClock, iEvent);
+	oDeltas = new Deltas(&resultVector);
+	oEvent = fClock->GetEvent();
 	}
 
 ZRef<DeltasChain> DatonSet::GetDeltasChain(ZRef<Event>* oEvent)
@@ -368,8 +285,14 @@ ZRef<DeltasChain> DatonSet::GetDeltasChain(ZRef<Event>* oEvent)
 	return fDeltasChain;
 	}
 
-const Nombre& DatonSet::GetNombre()
-	{ return fNombre; }
+void DatonSet::pIncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& iDeltas)
+	{
+	ZAcqMtx acq(fMtx);
+	this->pCommit();
+	if (iDeltas && iDeltas->GetVector().size())
+		fDeltasChain = new DeltasChain(fDeltasChain, iDeltas);
+	sReceive(fClock, iEvent);
+	}
 
 void DatonSet::pCommit()
 	{
@@ -380,13 +303,12 @@ void DatonSet::pCommit()
 	if (s)
 		s << this << " before: " << fClock;
 
-	const NamedEvent theNE(fNombre, fClock->GetEvent());
 	const ZRef<Delta> theDelta = new Delta(&fPendingStatements);
 
-	Map_NamedEvent_Delta_t theMap;
-	theMap.insert(Map_NamedEvent_Delta_t::value_type(theNE, theDelta));
+	Vector_Event_Delta_t theVector;
+	theVector.push_back(Vector_Event_Delta_t::value_type(fClock->GetEvent(), theDelta));
 
-	ZRef<Deltas> theDeltas = new Deltas(&theMap);
+	ZRef<Deltas> theDeltas = new Deltas(&theVector);
 
 	fDeltasChain = new DeltasChain(fDeltasChain, theDeltas);
 

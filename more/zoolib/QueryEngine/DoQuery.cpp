@@ -42,7 +42,7 @@ ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
 	size_t baseOffset = 0;
 	iWalker = iWalker->Prime(map<string8,size_t>(), offsets, baseOffset);
 
-	ZLOGF(s, eDebug + 1);
+	ZLOGF(s, eDebug + 2);
 	if (s)
 		{
 		s << "\n";

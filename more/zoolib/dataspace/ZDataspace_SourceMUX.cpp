@@ -103,7 +103,7 @@ void SourceMUX::Finalize()
 	SourceFactory::Finalize();
 	}
 
-ZRef<Source> SourceMUX::Make()
+ZQ<ZRef<Source> > SourceMUX::QCall()
 	{
 	ZAcqMtxR acq(fMtxR);
 

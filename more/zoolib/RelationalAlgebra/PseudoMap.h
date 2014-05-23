@@ -71,6 +71,8 @@ public:
 		return S();
 		}
 
+	ZMap_Any AsMap() const;
+
 protected:
 	const std::map<string8,size_t>* fBindings;
 	const ZVal_Any* fVals;

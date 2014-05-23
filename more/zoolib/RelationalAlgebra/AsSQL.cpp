@@ -37,7 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Expr_Rel_Project.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Rename.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Restrict.h"
-#include "zoolib/RelationalAlgebra/Util_RelOperators.h"
+#include "zoolib/RelationalAlgebra/Util_Rel_Operators.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 namespace ZooLib {
@@ -111,7 +111,7 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	bool allOK = true;
 	Analysis resultAnalysis;
 	resultAnalysis.fCondition = sTrue();
-
+	ZAssertCompile(false); // NDY
 	ZQ<map<string8,RelHead>::const_iterator> found;
 	RelHead theDefault;
 	foreachi (iter, fTables)
@@ -122,7 +122,7 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 			{
 			// Required columns are all present in the table.
 			const RelHead theRH_WO_Required_Or_Optional =
-				theRH_Table - theRH_Required - theRH_Optional;
+				(theRH_Table - theRH_Required) - theRH_Optional;
 
 			if (theRH_WO_Required_Or_Optional.empty())
 				{
@@ -137,7 +137,7 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 
 				Analysis theAnalysis;
 				theAnalysis.fCondition = sTrue();
-				foreachi (iter, theRH)
+				foreachi (iter, theRH_Table)
 					{
 					const string8 attrName = *iter;
 					const string8 fieldName = sPrefixErased(realTableNameUnderscore, attrName);
@@ -147,24 +147,24 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 					sInsertMust(theAnalysis.fRename_Inverse, physicalFieldName, attrName);
 					}
 
-				uuuuurrrrrggggghhhhh ... with optional and required columns it's now
-				possible for more than table to satisfy the concrete, so we'll need
-				to construct a term *here*, and union it with others.
+//##				uuuuurrrrrggggghhhhh ... with optional and required columns it's now
+//##				possible for more than table to satisfy the concrete, so we'll need
+//##				to construct a term *here*, and union it with others.
 
 				}
 
 
-		if ((theRH_Table & theRH_Required).size() >= theRH_Table.size())
-		if ((sPrefixInserted(iter->first + "_", iter->second) & theRH).size() == theRH.size())
-			{
-			found = iter;
-			break;
+			if ((sPrefixInserted(iter->first + "_", iter->second) & theRH_Table).size() == theRH_Table.size())
+				{
+				found = iter;
+				break;
+				}
 			}
 		}
 	if (not found)
 		throw std::runtime_error("Couldn't find table");
 
-SELECT a, b, c from (a0, NULL, something) Union (a1) where 
+//##SELECT a, b, c from (a0, NULL, something) Union (a1) where
 
 	this->pSetResult(resultAnalysis);
 	}

@@ -129,7 +129,7 @@ private:
 
 	// -----
 
-	typedef std::map<ZDatonSet::Daton, std::pair<ZDatonSet::NamedEvent, ZVal_Any> > Map_Main;
+	typedef std::map<ZDatonSet::Daton, std::pair<ZRef<Event>, ZVal_Any> > Map_Main;
 	Map_Main fMap;
 
 	typedef std::map<ZDatonSet::Daton, std::pair<ZVal_Any, bool> > Map_Pending;

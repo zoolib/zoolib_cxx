@@ -119,16 +119,7 @@ private:
 // =================================================================================================
 // MARK: - SourceFactory
 
-class SourceFactory : public ZCounted
-	{
-protected:
-	SourceFactory();
-
-public:
-	virtual ~SourceFactory();
-
-	virtual ZRef<Source> Make() = 0;
-	};
+typedef ZCallable<ZRef<Source>()> SourceFactory;
 
 } // namespace ZDataspace
 } // namespace ZooLib

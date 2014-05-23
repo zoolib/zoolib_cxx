@@ -71,78 +71,27 @@ template <> struct RelopsTraits_HasLT<ZDatonSet::Daton> : public RelopsTraits_Ha
 namespace ZDatonSet {
 
 // =================================================================================================
-// MARK: - Nombre
-
-class Nombre
-	{
-public:
-	Nombre();
-	Nombre(const Nombre& iOther);
-	~Nombre();
-	Nombre& operator=(const Nombre& iOther);
-
-	Nombre(uint64 iFork);
-	Nombre(const Nombre& iOther, uint64 iFork);
-
-	bool operator<(const Nombre& iRHS) const;
-
-private:
-	std::vector<uint64> fForks;
-	};
-
-} // namespace ZDatonSet
-
-template <> struct RelopsTraits_HasLT<ZDatonSet::Nombre> : public RelopsTraits_Has {};
-
-namespace ZDatonSet {
-
-// =================================================================================================
-// MARK: - NamedEvent
-
-class NamedEvent
-	{
-public:
-	NamedEvent();
-	NamedEvent(const NamedEvent& iOther);
-	~NamedEvent();
-	NamedEvent& operator=(const NamedEvent& iOther);
-
-	NamedEvent(const Nombre& iNombre, const ZRef<Event>& iEvent);
-
-	bool operator<(const NamedEvent& iRHS) const;
-
-	ZRef<Event> GetEvent() const;
-
-private:
-	Nombre fNombre;
-	ZRef<Event> fEvent;
-	};
-
-} // namespace ZDatonSet
-
-template <> struct RelopsTraits_HasLT<ZDatonSet::NamedEvent> : public RelopsTraits_Has {};
-
-namespace ZDatonSet {
-
-// =================================================================================================
 // MARK: - Delta
 
 class Delta : public ZCountedWithoutFinalize
 	{
 public:
-	Delta(const std::map<Daton, bool>& iStatements);
-	Delta(std::map<Daton, bool>* ioStatements);
+	typedef std::map<Daton, bool> Statements_t;
 
-	const std::map<Daton, bool>& GetStatements() const;
+	Delta(const Statements_t& iStatements);
+
+	Delta(Statements_t* ioStatements);
+
+	const Statements_t& GetStatements() const;
 
 private:
-	std::map<Daton, bool> fStatements;
+	Statements_t fStatements;
 	};
 
 // =================================================================================================
-// MARK: - Map_NamedEvent_Delta_t
+// MARK: - Vector_Event_Delta_t
 
-typedef std::map<NamedEvent, ZRef<Delta> > Map_NamedEvent_Delta_t;
+typedef std::vector<std::pair<ZRef<Event>, ZRef<Delta> > > Vector_Event_Delta_t;
 
 // =================================================================================================
 // MARK: - Deltas
@@ -150,13 +99,13 @@ typedef std::map<NamedEvent, ZRef<Delta> > Map_NamedEvent_Delta_t;
 class Deltas : public ZCountedWithoutFinalize
 	{
 public:
-	Deltas(const Map_NamedEvent_Delta_t& iMap);
-	Deltas(Map_NamedEvent_Delta_t* ioMap);
+	Deltas(const Vector_Event_Delta_t& iVector);
+	Deltas(Vector_Event_Delta_t* ioVector);
 
-	const Map_NamedEvent_Delta_t& GetMap() const;
+	const Vector_Event_Delta_t& GetVector() const;
 
 private:
-	Map_NamedEvent_Delta_t fMap;
+	Vector_Event_Delta_t fVector;
 	};
 
 // =================================================================================================
@@ -184,12 +133,11 @@ void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed);
 class DatonSet : public ZCountedWithoutFinalize
 	{
 public:
-	DatonSet(const Nombre& iNombre, const ZRef<Clock>& iClock);
+	DatonSet(const ZRef<Clock>& iClock);
 
 	void Insert(const Daton& iDaton);
 	void Erase(const Daton& iDaton);
 
-	ZRef<Clock> GetClock();
 	ZRef<Event> GetEvent();
 
 	ZRef<Event> TickleClock();
@@ -200,23 +148,18 @@ public:
 
 	void GetDeltas(ZRef<Event> iEvent, ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas);
 
-	void IncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& iDeltas);
-
 	ZRef<DeltasChain> GetDeltasChain(ZRef<Event>* oEvent);
 
-	const Nombre& GetNombre();
-
 private:
-	DatonSet(
-		const Nombre& iNombre, const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain);
+	DatonSet(const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain);
+
+	void pIncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& iDeltas);
 
 	void pCommit();
 
 	ZMtx fMtx; // RWLock?
-	const Nombre fNombre;
-	uint64 fNextFork;
 	ZRef<Clock> fClock;
-	std::map<Daton, bool> fPendingStatements;
+	Delta::Statements_t fPendingStatements;
 	ZRef<DeltasChain> fDeltasChain;
 	};
 

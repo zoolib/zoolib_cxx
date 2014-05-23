@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
 #include "zoolib/ZYad_Any.h"
@@ -63,8 +64,7 @@ namespace ZDataspace {
 using ZDatonSet::DatonSet;
 using ZDatonSet::Daton;
 using ZDatonSet::Deltas;
-using ZDatonSet::Map_NamedEvent_Delta_t;
-using ZDatonSet::NamedEvent;
+using ZDatonSet::Vector_Event_Delta_t;
 
 using namespace ZUtil_STL;
 
@@ -369,7 +369,9 @@ void Source_DatonSet::ModifyRegistrations(
 
 void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 	{
-	this->pCollectResultsCalled();
+	this->pCollectResultsCalled
+
+	();
 
 	ZAcqMtxR acq(fMtxR);
 
@@ -526,31 +528,33 @@ void Source_DatonSet::pPull()
 	ZLOGPF(s, eDebug);
 	ZRef<Deltas> theDeltas;
 	fDatonSet->GetDeltas(fEvent, fEvent, theDeltas);
-	const Map_NamedEvent_Delta_t& theMNED = theDeltas->GetMap();
-	if (sNotEmpty(theMNED) && s)
-		s << "theMNED.size(): " << theMNED.size();
+	const Vector_Event_Delta_t& theVector = theDeltas->GetVector();
+//##	if (sNotEmpty(theVector) && s)
+	if (s)
+		s << fDatonSet.Get() << ", theVector.size(): " << theVector.size();
 
-	foreachi (iterMNED, theMNED)
+	foreachi (iterVector, theVector)
 		{
-		const NamedEvent& theNamedEvent = iterMNED->first;
-		const map<Daton, bool>& theStatements = iterMNED->second->GetStatements();
-		if (s)
+		const ZRef<Event>& theEvent = iterVector->first;
+		const map<Daton, bool>& theStatements = iterVector->second->GetStatements();
+		if (s and false)
 			{
 			s << ", theStatements.size()=" << theStatements.size();
-			s << ", clk:" << theNamedEvent.GetEvent();
+			s << ", clk:" << theEvent;
 			}
 
 		foreachi (iterStmts, theStatements)
 			{
 			const Daton& theDaton = iterStmts->first;
 
-			if (s)
+			if (s and false)
 				s << "\n" << (iterStmts->second ? "+" : "-") << ":";
 
-			map<Daton, pair<NamedEvent, ZVal_Any> >::iterator iterMap = fMap.lower_bound(theDaton);
+			map<Daton, pair<ZRef<Event>, ZVal_Any> >::iterator iterMap = fMap.lower_bound(theDaton);
 			if (iterMap == fMap.end() || iterMap->first != theDaton)
 				{
-				s << " NFo";
+				if (s and false)
+					s << " NFo";
 				if (iterStmts->second)
 					{
 					const ZVal_Any theVal = sAsVal(theDaton);
@@ -558,16 +562,16 @@ void Source_DatonSet::pPull()
 
 					fMap.insert(iterMap,
 						make_pair(theDaton,
-						pair<NamedEvent, ZVal_Any>(theNamedEvent, theVal)));
+						pair<ZRef<Event>, ZVal_Any>(theEvent, theVal)));
 					}
 				}
 			else
 				{
-				const bool alb = iterMap->second.first < theNamedEvent;
-				const bool bla = theNamedEvent < iterMap->second.first;
+				const bool alb = iterMap->second.first->IsBefore(theEvent);
+				const bool bla = theEvent->IsBefore(iterMap->second.first);
 
-				if (s)
-					s << " " << iterMap->second.first.GetEvent() << (alb?" alb":"") << (bla?" blb":"");
+				if (s and false)
+					s << " " << iterMap->second.first << (alb?" alb":"") << (bla?" blb":"");
 
 				if (alb)
 					{
@@ -579,18 +583,18 @@ void Source_DatonSet::pPull()
 					this->pChanged(theVal);
 
 					if (iterStmts->second)
-						iterMap->second = pair<NamedEvent, ZVal_Any>(theNamedEvent, theVal);
+						iterMap->second = pair<ZRef<Event>, ZVal_Any>(theEvent, theVal);
 					else
 						fMap.erase(iterMap);
 					}
 				else
 					{
-					if (s)
+					if (s and false)
 						s << " Old";
 					}
 				}
 
-			if (s)
+			if (s and false)
 				s << " " << theDaton;
 			}
 		}
@@ -598,7 +602,7 @@ void Source_DatonSet::pPull()
 
 ZRef<Event> Source_DatonSet::pConditionalPushDown()
 	{
-	if (not fStack_Map_Pending.empty())
+	if (sNotEmpty(fStack_Map_Pending))
 		{
 		ZAssert(fDatonSet_Temp);
 		return fDatonSet->GetEvent()->Joined(fDatonSet_Temp->TickleClock());
