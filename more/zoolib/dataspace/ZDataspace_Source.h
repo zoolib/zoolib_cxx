@@ -35,7 +35,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZDataspace {
 
-using ZIntervalTreeClock::Clock;
 using ZIntervalTreeClock::Event;
 
 using RelationalAlgebra::RelHead;

@@ -527,7 +527,7 @@ void Source_DatonSet::pPull()
 	// Get our map in sync with fDatonSet
 	ZLOGPF(s, eDebug);
 	ZRef<Deltas> theDeltas;
-	fDatonSet->GetDeltas(fEvent, fEvent, theDeltas);
+	fDatonSet->GetDeltas(fEvent, theDeltas, fEvent);
 	const Vector_Event_Delta_t& theVector = theDeltas->GetVector();
 //##	if (sNotEmpty(theVector) && s)
 	if (s)
@@ -567,8 +567,8 @@ void Source_DatonSet::pPull()
 				}
 			else
 				{
-				const bool alb = iterMap->second.first->IsBefore(theEvent);
-				const bool bla = theEvent->IsBefore(iterMap->second.first);
+				const bool alb = sIsBefore(iterMap->second.first, theEvent);
+				const bool bla = sIsBefore(theEvent, iterMap->second.first);
 
 				if (s and false)
 					s << " " << iterMap->second.first << (alb?" alb":"") << (bla?" blb":"");

@@ -52,11 +52,13 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Event>& iEvent)
 	return w;
 	}
 
+#if 0
 const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Clock>& iClock)
 	{
 	w << "[" << iClock->GetIdentity() << "/" << iClock->GetEvent() << "]";
 	return w;
 	}
+#endif
 
 } // namespace ZIntervalTreeClock
 } // namespace ZooLib

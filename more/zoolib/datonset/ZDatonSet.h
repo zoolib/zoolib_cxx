@@ -36,7 +36,8 @@ namespace ZDatonSet {
 
 typedef ZData_Any Data;
 
-using ZIntervalTreeClock::Clock;
+//##using ZIntervalTreeClock::Clock;
+using ZIntervalTreeClock::Identity;
 using ZIntervalTreeClock::Event;
 
 // =================================================================================================
@@ -133,7 +134,7 @@ void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed);
 class DatonSet : public ZCountedWithoutFinalize
 	{
 public:
-	DatonSet(const ZRef<Clock>& iClock);
+	DatonSet(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent);
 
 	void Insert(const Daton& iDaton);
 	void Erase(const Daton& iDaton);
@@ -144,21 +145,22 @@ public:
 
 	ZRef<DatonSet> Fork();
 
+	bool TentativeJoin(const ZRef<DatonSet>& ioOther);
 	bool Join(ZRef<DatonSet>& ioOther);
 
-	void GetDeltas(ZRef<Event> iEvent, ZRef<Event>& oEvent, ZRef<Deltas>& oDeltas);
+	void GetDeltas(ZRef<Event> iEvent, ZRef<Deltas>& oDeltas, ZRef<Event>& oEvent);
 
 	ZRef<DeltasChain> GetDeltasChain(ZRef<Event>* oEvent);
 
 private:
-	DatonSet(const ZRef<Clock>& iClock, const ZRef<DeltasChain>& iDeltasChain);
-
-	void pIncorporateDeltas(const ZRef<Event>& iEvent, const ZRef<Deltas>& iDeltas);
+	DatonSet(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent,
+		const ZRef<DeltasChain>& iDeltasChain);
 
 	void pCommit();
 
 	ZMtx fMtx; // RWLock?
-	ZRef<Clock> fClock;
+	ZRef<Identity> fIdentity;
+	ZRef<Event> fEvent;
 	Delta::Statements_t fPendingStatements;
 	ZRef<DeltasChain> fDeltasChain;
 	};
