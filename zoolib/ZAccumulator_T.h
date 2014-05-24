@@ -59,6 +59,11 @@ public:
 	:	fCount(0)
 		{}
 
+	ZAccumulator_T(const T& iT)
+	:	fStack(1, iT)
+	,	fCount(1)
+		{}
+
 	void Include(const T& iT)
 		{
 		fStack.push_back(iT);
