@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZAccumulator_T.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
@@ -262,10 +263,16 @@ bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 
 void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Deltas>& oDeltas, ZRef<Event>& oEvent)
 	{
+	struct Accumulator_Join
+		{
+		void operator()(ZRef<Event>& io0, const ZRef<Event>& i1) const
+			{ io0= io0 ? io0->Joined(i1) : i1; }
+		};
+
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
 
-	oEvent = iEvent;
+	ZAccumulator_T<ZRef<Event>,Accumulator_Join,vector<ZRef<Event> > > theAcc(iEvent);
 
 	Vector_Event_Delta_t resultVector;
 	for (ZRef<DeltasChain> current = fDeltasChain;
@@ -281,11 +288,12 @@ void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Deltas>& oDeltas, ZRef<Event>&
 				{
 				// ii->first is after iEvent, or is concurrent with it.
 				resultVector.push_back(*ii);
-				oEvent = oEvent->Joined(ii->first);
+				theAcc.Include(ii->first);
 				}
 			}
 		}
 	oDeltas = new Deltas(&resultVector);
+	oEvent = theAcc.Get();
 	}
 
 ZRef<DeltasChain> DatonSet::GetDeltasChain(ZRef<Event>* oEvent)
