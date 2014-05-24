@@ -44,17 +44,20 @@ using std::max;
 // =================================================================================================
 // MARK: - Identity
 
-static const ZRef<Identity> spZero = new Identity;
-static const ZRef<Identity> spOne = new Identity;
-
-static const ZRef<Identity> spZeroOne = new Identity(spZero, spOne);
-static const ZRef<Identity> spOneZero = new Identity(spOne, spZero);
-
 ZRef<Identity> Identity::sZero()
-	{ return spZero; }
+	{
+	static const ZRef<Identity> spZero = new Identity;
+	return spZero;
+	}
 
 ZRef<Identity> Identity::sOne()
-	{ return spOne; }
+	{
+	static const ZRef<Identity> spOne = new Identity;
+	return spOne;
+	}
+
+static const ZRef<Identity> spZeroOne = new Identity(Identity::sZero(), Identity::sOne());
+static const ZRef<Identity> spOneZero = new Identity(Identity::sOne(), Identity::sZero());
 
 Identity::Identity()
 	{}
@@ -72,13 +75,14 @@ Identity::Identity(const ZRef<Identity>& iLeft, const ZRef<Identity>& iRight)
 	}
 
 bool Identity::IsOne() const
-	{ return spZero != this && not fLeft; }
+	{ return sZero() != this && not fLeft; }
 
 bool Identity::IsZero() const
-	{ return spZero == this; }
+	{ return sZero() == this; }
 
 bool Identity::IsLeaf() const
 	{ return not fLeft; }
+
 bool Identity::IsInternal() const
 	{ return fLeft; }
 
@@ -105,21 +109,21 @@ void Identity::Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight) const
 		ZRef<Identity> newLeft, newRight;
 		fLeft->Split(newLeft, newRight);
 
-		oLeft = new Identity(newLeft, spZero);
-		oRight = new Identity(newRight, spZero);
+		oLeft = new Identity(newLeft, sZero());
+		oRight = new Identity(newRight, sZero());
 		}
 	else if (fLeft->IsZero() && not fRight->IsZero())
 		{
 		ZRef<Identity> newLeft, newRight;
 		fRight->Split(newLeft, newRight);
 
-		oLeft = new Identity(spZero, newLeft);
-		oRight = new Identity(spZero, newRight);
+		oLeft = new Identity(sZero(), newLeft);
+		oRight = new Identity(sZero(), newRight);
 		}
 	else
 		{
-		oLeft = new Identity(fLeft, spZero);
-		oRight = new Identity(spZero, fRight);
+		oLeft = new Identity(fLeft, sZero());
+		oRight = new Identity(sZero(), fRight);
 		}
 	}
 
@@ -208,25 +212,21 @@ bool Event::LessEqual(const ZRef<Event>& iOther) const
 	if (this->IsLeaf())
 		return true;
 
+	const ZRef<Event> thisLiftedLeft = fLeft->pLifted(fValue);
 	if (iOther->IsInternal())
 		{
-		ZRef<Event> thisLiftedLeft = fLeft->pLifted(fValue);
-		ZRef<Event> otherLiftedLeft = iOther->fLeft->pLifted(iOther->fValue);
+		const ZRef<Event> otherLiftedLeft = iOther->fLeft->pLifted(iOther->fValue);
 		if (thisLiftedLeft->LessEqual(otherLiftedLeft))
 			{
-			ZRef<Event> thisLiftedRight = fRight->pLifted(fValue);
-			ZRef<Event> otherLiftedRight = iOther->fRight->pLifted(iOther->fValue);
+			const ZRef<Event> thisLiftedRight = fRight->pLifted(fValue);
+			const ZRef<Event> otherLiftedRight = iOther->fRight->pLifted(iOther->fValue);
 			return thisLiftedRight->LessEqual(otherLiftedRight);
 			}
 		}
-	else
+	else if (thisLiftedLeft->LessEqual(iOther))
 		{
-		ZRef<Event> thisLiftedLeft = fLeft->pLifted(fValue);
-		if (thisLiftedLeft->LessEqual(iOther))
-			{
-			ZRef<Event> thisLiftedRight = fRight->pLifted(fValue);
-			return thisLiftedRight->LessEqual(iOther);
-			}
+		const ZRef<Event> thisLiftedRight = fRight->pLifted(fValue);
+		return thisLiftedRight->LessEqual(iOther);
 		}
 	return false;
 	}
@@ -250,33 +250,30 @@ ZRef<Event> Event::Joined(const ZRef<Event>& iOther) const
 		else
 			{
 			// Could call iOther->Joined(this);
-			ZRef<Event> tmp = new Event(true, this->fValue);
+			const ZRef<Event> tmp = new Event(true, this->fValue);
 			return tmp->Joined(iOther);
 			}
 		}
 	else if (iOther->IsLeaf())
 		{
-		ZRef<Event> tmp = new Event(true, iOther->fValue);
+		const ZRef<Event> tmp = new Event(true, iOther->fValue);
 		return this->Joined(tmp);
+		}
+	else if (fValue > iOther->fValue)
+		{
+		const size_t d = fValue - iOther->fValue;
+		const ZRef<Event> newLeft = iOther->fLeft->Joined(fLeft->pLifted(d));
+		const ZRef<Event> newRight = iOther->fRight->Joined(fRight->pLifted(d));
+		const ZRef<Event> result = new Event(iOther->fValue, newLeft, newRight);
+		return result->pNormalized();
 		}
 	else
 		{
-		if (fValue > iOther->fValue)
-			{
-			const size_t d = fValue - iOther->fValue;
-			ZRef<Event> newLeft = iOther->fLeft->Joined(fLeft->pLifted(d));
-			ZRef<Event> newRight = iOther->fRight->Joined(fRight->pLifted(d));
-			ZRef<Event> result = new Event(iOther->fValue, newLeft, newRight);
-			return result->pNormalized();
-			}
-		else
-			{
-			const size_t d = iOther->fValue - this->fValue;
-			ZRef<Event> newLeft = fLeft->Joined(iOther->fLeft->pLifted(d));
-			ZRef<Event> newRight = fRight->Joined(iOther->fRight->pLifted(d));
-			ZRef<Event> result = new Event(fValue, newLeft, newRight);
-			return result->pNormalized();
-			}
+		const size_t d = iOther->fValue - this->fValue;
+		const ZRef<Event> newLeft = fLeft->Joined(iOther->fLeft->pLifted(d));
+		const ZRef<Event> newRight = fRight->Joined(iOther->fRight->pLifted(d));
+		const ZRef<Event> result = new Event(fValue, newLeft, newRight);
+		return result->pNormalized();
 		}
 	}
 
@@ -305,7 +302,7 @@ size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent) const
 			}
 		else
 			{
-			ZRef<Event> tmp = new Event(true, fValue);
+			const ZRef<Event> tmp = new Event(true, fValue);
 			return 1000 + tmp->pGrown(iIdentity, oEvent);
 			}
 		}
@@ -370,21 +367,21 @@ ZRef<Event> Event::pFilled(const ZRef<Identity>& iIdentity) const
 		const ZRef<Identity> identityRight = iIdentity->Right();
 		if (identityLeft->IsOne())
 			{
-			ZRef<Event> newRight = fRight->pFilled(identityRight);
-			ZRef<Event> newLeft = new Event(max(fLeft->pHeight(), newRight->pHeight()));
-			ZRef<Event> result = new Event(fValue, newLeft, newRight);
+			const ZRef<Event> newRight = fRight->pFilled(identityRight);
+			const ZRef<Event> newLeft = new Event(max(fLeft->pHeight(), newRight->pHeight()));
+			const ZRef<Event> result = new Event(fValue, newLeft, newRight);
 			return result->pNormalized();
 			}
 		else if (identityRight->IsOne())
 			{
-			ZRef<Event> newLeft = fLeft->pFilled(identityLeft);
-			ZRef<Event> newRight = new Event(max(newLeft->pHeight(), fRight->pHeight()));
-			ZRef<Event> result = new Event(fValue, newLeft, newRight);
+			const ZRef<Event> newLeft = fLeft->pFilled(identityLeft);
+			const ZRef<Event> newRight = new Event(max(newLeft->pHeight(), fRight->pHeight()));
+			const ZRef<Event> result = new Event(fValue, newLeft, newRight);
 			return result->pNormalized();
 			}
 		else
 			{
-			ZRef<Event> result =
+			const ZRef<Event> result =
 				new Event(fValue, fLeft->pFilled(identityLeft), fRight->pFilled(identityRight));
 			return result->pNormalized();
 			}
