@@ -242,101 +242,43 @@ ZAtomic_t sHits_Right;
 typedef ZRef<Event> Ev;
 
 bool Event::LessEqual(const ZRef<Event>& iOther) const
-#if 1
-	{//This works.
-	if (fLeft and iOther->fLeft)
+	{
+	if (fLeft)
 		{
 		if (fValue > iOther->fValue)
 			return false;
 
 		Ev xl1 = fLeft->pLifted(fValue);
-		Ev xl2 = iOther->fLeft->pLifted(iOther->fValue);
-		if (not xl1->LessEqual(xl2))
-			return false;
+		if (iOther->fLeft)
+			{
+			Ev xl2 = iOther->fLeft->pLifted(iOther->fValue);
+			if (not xl1->LessEqual(xl2))
+				return false;
 
-		Ev xr1 = fRight->pLifted(fValue);
-		Ev xr2 = iOther->fRight->pLifted(iOther->fValue);
-		if (not xr1->LessEqual(xr2))
-			return false;
-		return true;
+			Ev xr1 = fRight->pLifted(fValue);
+			Ev xr2 = iOther->fRight->pLifted(iOther->fValue);
+			return xr1->LessEqual(xr2);
+			}
+		else
+			{
+			if (not xl1->LessEqual(iOther))
+				return false;
+			Ev xr1 = fRight->pLifted(fValue);
+			return xr1->LessEqual(iOther);
+			}
 		}
-	else if (fLeft and not iOther->fLeft)
-		{
-		if (fValue > iOther->fValue)
-			return false;
-		Ev xl1 = fLeft->pLifted(fValue);
-		if (not xl1->LessEqual(iOther))
-			return false;
-		Ev xr1 = fRight->pLifted(fValue);
-		if (not xr1->LessEqual(iOther))
-			return false;
-		return true;
-		}
-	else if (not fLeft and not iOther->fLeft)
-		{
-		return fValue <= iOther->fValue;
-		}
-	else if (not fLeft and iOther->fLeft)
+	else if (iOther->fLeft)
 		{
 		if (fValue < iOther->fValue)
 			return true;
 		Ev newEv = new Event(fValue, sZero(), sZero());
 		return newEv->LessEqual(iOther);
 		}
-	return false;
-	}
-#else
-	{
-	if (fValue > iOther->fValue)
-		return false;
-
-	if (this->IsLeaf())
-		return true;
-
-	sAtomic_Inc(&sCalls_Left);
-	if (not fLeftLifted)
-		fLeftLifted = fLeft->pLifted(fValue);
 	else
-		sAtomic_Inc(&sHits_Left);
-
-	if (iOther->IsInternal())
 		{
-		sAtomic_Inc(&sCalls_Left);
-		if (not iOther->fLeftLifted)
-			iOther->fLeftLifted = iOther->fLeft->pLifted(fValue);
-		else
-			sAtomic_Inc(&sHits_Left);
-
-		if (fLeftLifted->LessEqual(iOther->fLeftLifted))
-			{
-			sAtomic_Inc(&sCalls_Right);
-			if (not fRightLifted)
-				fRightLifted = fRight->pLifted(fValue);
-			else
-				sAtomic_Inc(&sHits_Right);
-
-			sAtomic_Inc(&sCalls_Right);
-			if (not iOther->fRightLifted)
-				iOther->fRightLifted = iOther->fRight->pLifted(fValue);
-			else
-				sAtomic_Inc(&sHits_Right);
-
-			return fRightLifted->LessEqual(iOther->fRightLifted);
-			}
+		return fValue <= iOther->fValue;
 		}
-	else if (fLeftLifted->LessEqual(iOther))
-		{
-		sAtomic_Inc(&sCalls_Right);
-		if (not fRightLifted)
-			fRightLifted = fRight->pLifted(fValue);
-		else
-			sAtomic_Inc(&sHits_Right);
-
-		return fRightLifted->LessEqual(iOther);
-		}
-	return false;
 	}
-#endif
 
 ZRef<Event> Event::Advanced(const ZRef<Identity>& iIdentity) const
 	{
@@ -347,38 +289,6 @@ ZRef<Event> Event::Advanced(const ZRef<Identity>& iIdentity) const
 	}
 
 ZRef<Event> Event::Joined(const ZRef<Event>& iOther) const
-#if 0
-	{
-	if (not this->IsLeaf() and not iOther->IsLeaf())
-		{
-		if (iOther->fValue < this->fValue)
-			{ return iOther->Joined(const_cast<Event*>(this)); }
-		else
-			{
-			size_t d = iOther->fValue - this->fValue;
-			const ZRef<Event> newLeft = fLeft->Joined(iOther->fLeft->pLifted(d));
-			const ZRef<Event> newRight = fRight->Joined(iOther->fRight->pLifted(d));
-
-			const ZRef<Event> result = new Event(fValue, newLeft, newRight);
-			return result->pNormalized();
-			}
-		}
-	else if (this->IsLeaf() and not iOther->IsLeaf())
-		{
-		const ZRef<Event> tmp = new Event(this->fValue, sZero(), sZero());
-		return tmp->Joined(iOther);
-		}
-	else if (not this->IsLeaf() and iOther->IsLeaf())
-		{
-		const ZRef<Event> tmp = new Event(iOther->fValue, sZero(), sZero());
-		return this->Joined(tmp);
-		}
-	else
-		{
-		return new Event(max(this->fValue, iOther->fValue));
-		}
-	}
-#else
 	{
 	if (this->IsLeaf())
 		{
@@ -415,7 +325,6 @@ ZRef<Event> Event::Joined(const ZRef<Event>& iOther) const
 		return result->pNormalized();
 		}
 	}
-#endif
 
 bool Event::pEqual(const ZRef<Event>& iOther) const
 	{
