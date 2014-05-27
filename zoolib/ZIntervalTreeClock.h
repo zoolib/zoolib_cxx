@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZIntervalTreeClock_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCountedWithoutFinalize.h"
+#include "zoolib/ZCounted.h"
 #include "zoolib/ZRef.h"
+#include "zoolib/ZSafePtrStack.h"
 
 namespace ZooLib {
 namespace ZIntervalTreeClock {
@@ -65,7 +66,7 @@ private:
 // MARK: - Event
 
 class Event
-:	public ZCountedWithoutFinalize
+:	public ZCounted
 	{
 public:
 	static ZRef<Event> sZero();
@@ -75,16 +76,15 @@ public:
 
 	Event(size_t iValue);
 	Event(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
-	Event(bool iWithZeroChildren, size_t iValue);
 
 // Accessors, mainly for text and binary streaming.
 	size_t Value() const;
 
-	bool IsLeaf() const;
-
-	bool IsInternal() const;
 	const ZRef<Event>& Left() const;
 	const ZRef<Event>& Right() const;
+
+	bool IsLeaf() const;
+	bool IsInternal() const;
 
 // Comparison
 	bool LessEqual(const ZRef<Event>& iOther) const;
@@ -106,6 +106,9 @@ private:
 	const ZRef<Event> fLeft;
 	const ZRef<Event> fRight;
 	const size_t fValue;
+
+	mutable ZRef<Event> fLeftLifted;
+	mutable ZRef<Event> fRightLifted;
 	};
 
 // =================================================================================================

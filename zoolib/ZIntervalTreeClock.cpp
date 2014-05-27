@@ -75,7 +75,7 @@ Identity::Identity(const ZRef<Identity>& iLeft, const ZRef<Identity>& iRight)
 	}
 
 bool Identity::IsOne() const
-	{ return sZero() != this && not fLeft; }
+	{ return not fLeft && sZero() != this; }
 
 bool Identity::IsZero() const
 	{ return sZero() == this; }
@@ -159,19 +159,42 @@ ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther) const
 // =================================================================================================
 // MARK: - Event
 
+ZAtomic_t sAllocated;
+ZAtomic_t sFreed;
+
+//namespace {
+//
+//ZSafePtrStack_WithDestroyer<Event,SafePtrStackLink_Event> spSafePtrStack_Event;
+//
+//} // anonymous namespace
+//
+//ZRef<ZMap_Any::Rep> ZMap_Any::Rep::sMake()
+//	{
+//	if (Rep* result = spSafePtrStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
+//		return result;
+//
+//	return new Rep;
+//	}
+//
 ZRef<Event> Event::sZero()
 	{ return sSingleton<ZRef_Counted<Event> >(); }
 
 Event::Event()
 :	fValue(0)
-	{}
+	{
+	sAtomic_Inc(&sAllocated);
+	}
 
 Event::~Event()
-	{}
+	{
+	sAtomic_Inc(&sFreed);
+	}
 
 Event::Event(size_t iValue)
 :	fValue(iValue)
-	{}
+	{
+	sAtomic_Inc(&sAllocated);
+	}
 
 Event::Event(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
 :	fLeft(iLeft)
@@ -179,24 +202,24 @@ Event::Event(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
 ,	fValue(iValue)
 	{
 	ZAssert(fLeft && fRight || not fLeft && not fRight);
+	sAtomic_Inc(&sAllocated);
 	}
 
-Event::Event(bool iWithZeroChildren, size_t iValue)
-:	fLeft(sZero())
-,	fRight(sZero())
-,	fValue(iValue)
-	{
-	ZAssert(iWithZeroChildren);
-	}
+//void Event::Rep::Finalize()
+//	{
+//	bool finalized = this->FinishFinalize();
+//	ZAssert(finalized);
+//	ZAssert(not this->IsReferenced());
+//	fLeft.Clear();
+//	fLeftLifted.Clear();
+//	fRight.Clear();
+//	fRightLifted.Clear();
+//
+//	spSafePtrStack_Event.Push(this);
+//	}
 
 size_t Event::Value() const
 	{ return fValue; }
-
-bool Event::IsLeaf() const
-	{ return not fLeft; }
-
-bool Event::IsInternal() const
-	{ return fLeft; }
 
 const ZRef<Event>& Event::Left() const
 	{ return fLeft; }
@@ -204,7 +227,65 @@ const ZRef<Event>& Event::Left() const
 const ZRef<Event>& Event::Right() const
 	{ return fRight; }
 
+bool Event::IsLeaf() const
+	{ return not fLeft; }
+
+bool Event::IsInternal() const
+	{ return fLeft; }
+
+ZAtomic_t sCalls_Left;
+ZAtomic_t sCalls_Right;
+
+ZAtomic_t sHits_Left;
+ZAtomic_t sHits_Right;
+
+typedef ZRef<Event> Ev;
+
 bool Event::LessEqual(const ZRef<Event>& iOther) const
+#if 1
+	{//This works.
+	if (fLeft and iOther->fLeft)
+		{
+		if (fValue > iOther->fValue)
+			return false;
+
+		Ev xl1 = fLeft->pLifted(fValue);
+		Ev xl2 = iOther->fLeft->pLifted(iOther->fValue);
+		if (not xl1->LessEqual(xl2))
+			return false;
+
+		Ev xr1 = fRight->pLifted(fValue);
+		Ev xr2 = iOther->fRight->pLifted(iOther->fValue);
+		if (not xr1->LessEqual(xr2))
+			return false;
+		return true;
+		}
+	else if (fLeft and not iOther->fLeft)
+		{
+		if (fValue > iOther->fValue)
+			return false;
+		Ev xl1 = fLeft->pLifted(fValue);
+		if (not xl1->LessEqual(iOther))
+			return false;
+		Ev xr1 = fRight->pLifted(fValue);
+		if (not xr1->LessEqual(iOther))
+			return false;
+		return true;
+		}
+	else if (not fLeft and not iOther->fLeft)
+		{
+		return fValue <= iOther->fValue;
+		}
+	else if (not fLeft and iOther->fLeft)
+		{
+		if (fValue < iOther->fValue)
+			return true;
+		Ev newEv = new Event(fValue, sZero(), sZero());
+		return newEv->LessEqual(iOther);
+		}
+	return false;
+	}
+#else
 	{
 	if (fValue > iOther->fValue)
 		return false;
@@ -212,24 +293,50 @@ bool Event::LessEqual(const ZRef<Event>& iOther) const
 	if (this->IsLeaf())
 		return true;
 
-	const ZRef<Event> thisLiftedLeft = fLeft->pLifted(fValue);
+	sAtomic_Inc(&sCalls_Left);
+	if (not fLeftLifted)
+		fLeftLifted = fLeft->pLifted(fValue);
+	else
+		sAtomic_Inc(&sHits_Left);
+
 	if (iOther->IsInternal())
 		{
-		const ZRef<Event> otherLiftedLeft = iOther->fLeft->pLifted(iOther->fValue);
-		if (thisLiftedLeft->LessEqual(otherLiftedLeft))
+		sAtomic_Inc(&sCalls_Left);
+		if (not iOther->fLeftLifted)
+			iOther->fLeftLifted = iOther->fLeft->pLifted(fValue);
+		else
+			sAtomic_Inc(&sHits_Left);
+
+		if (fLeftLifted->LessEqual(iOther->fLeftLifted))
 			{
-			const ZRef<Event> thisLiftedRight = fRight->pLifted(fValue);
-			const ZRef<Event> otherLiftedRight = iOther->fRight->pLifted(iOther->fValue);
-			return thisLiftedRight->LessEqual(otherLiftedRight);
+			sAtomic_Inc(&sCalls_Right);
+			if (not fRightLifted)
+				fRightLifted = fRight->pLifted(fValue);
+			else
+				sAtomic_Inc(&sHits_Right);
+
+			sAtomic_Inc(&sCalls_Right);
+			if (not iOther->fRightLifted)
+				iOther->fRightLifted = iOther->fRight->pLifted(fValue);
+			else
+				sAtomic_Inc(&sHits_Right);
+
+			return fRightLifted->LessEqual(iOther->fRightLifted);
 			}
 		}
-	else if (thisLiftedLeft->LessEqual(iOther))
+	else if (fLeftLifted->LessEqual(iOther))
 		{
-		const ZRef<Event> thisLiftedRight = fRight->pLifted(fValue);
-		return thisLiftedRight->LessEqual(iOther);
+		sAtomic_Inc(&sCalls_Right);
+		if (not fRightLifted)
+			fRightLifted = fRight->pLifted(fValue);
+		else
+			sAtomic_Inc(&sHits_Right);
+
+		return fRightLifted->LessEqual(iOther);
 		}
 	return false;
 	}
+#endif
 
 ZRef<Event> Event::Advanced(const ZRef<Identity>& iIdentity) const
 	{
@@ -240,6 +347,38 @@ ZRef<Event> Event::Advanced(const ZRef<Identity>& iIdentity) const
 	}
 
 ZRef<Event> Event::Joined(const ZRef<Event>& iOther) const
+#if 0
+	{
+	if (not this->IsLeaf() and not iOther->IsLeaf())
+		{
+		if (iOther->fValue < this->fValue)
+			{ return iOther->Joined(const_cast<Event*>(this)); }
+		else
+			{
+			size_t d = iOther->fValue - this->fValue;
+			const ZRef<Event> newLeft = fLeft->Joined(iOther->fLeft->pLifted(d));
+			const ZRef<Event> newRight = fRight->Joined(iOther->fRight->pLifted(d));
+
+			const ZRef<Event> result = new Event(fValue, newLeft, newRight);
+			return result->pNormalized();
+			}
+		}
+	else if (this->IsLeaf() and not iOther->IsLeaf())
+		{
+		const ZRef<Event> tmp = new Event(this->fValue, sZero(), sZero());
+		return tmp->Joined(iOther);
+		}
+	else if (not this->IsLeaf() and iOther->IsLeaf())
+		{
+		const ZRef<Event> tmp = new Event(iOther->fValue, sZero(), sZero());
+		return this->Joined(tmp);
+		}
+	else
+		{
+		return new Event(max(this->fValue, iOther->fValue));
+		}
+	}
+#else
 	{
 	if (this->IsLeaf())
 		{
@@ -250,13 +389,13 @@ ZRef<Event> Event::Joined(const ZRef<Event>& iOther) const
 		else
 			{
 			// Could call iOther->Joined(this);
-			const ZRef<Event> tmp = new Event(true, this->fValue);
+			const ZRef<Event> tmp = new Event(this->fValue, sZero(), sZero());
 			return tmp->Joined(iOther);
 			}
 		}
 	else if (iOther->IsLeaf())
 		{
-		const ZRef<Event> tmp = new Event(true, iOther->fValue);
+		const ZRef<Event> tmp = new Event(iOther->fValue, sZero(), sZero());
 		return this->Joined(tmp);
 		}
 	else if (fValue > iOther->fValue)
@@ -276,6 +415,7 @@ ZRef<Event> Event::Joined(const ZRef<Event>& iOther) const
 		return result->pNormalized();
 		}
 	}
+#endif
 
 bool Event::pEqual(const ZRef<Event>& iOther) const
 	{
@@ -302,7 +442,7 @@ size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent) const
 			}
 		else
 			{
-			const ZRef<Event> tmp = new Event(true, fValue);
+			const ZRef<Event> tmp = new Event(fValue, sZero(), sZero());
 			return 1000 + tmp->pGrown(iIdentity, oEvent);
 			}
 		}
@@ -407,7 +547,9 @@ ZRef<Event> Event::pNormalized() const
 	{
 	if (fLeft)
 		{
-		if (const int tmp = min(fLeft->fValue, fRight->fValue))
+		if (not fLeft->fLeft and not fRight->fLeft and fLeft->fValue == fRight->fValue)
+			return new Event(fValue + fLeft->fValue, null, null);
+		if (const size_t tmp = min(fLeft->fValue, fRight->fValue))
 			return new Event(fValue + tmp, fLeft->pDropped(tmp), fRight->pDropped(tmp));
 		}
 	return const_cast<Event*>(this);
