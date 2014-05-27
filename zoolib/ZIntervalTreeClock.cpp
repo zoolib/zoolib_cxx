@@ -183,8 +183,6 @@ ZRef<Event> Event::sMake(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Eve
 
 Event::Event()
 :	fValue(0)
-,	fLeftCached(false)
-,	fRightCached(false)
 	{}
 
 Event::~Event()
@@ -192,14 +190,10 @@ Event::~Event()
 
 void Event::Finalize()
 	{
-	bool finalized = this->FinishFinalize();
-	ZAssert(finalized);
-	ZAssert(not this->IsReferenced());
+	this->FinishFinalize();
 	fValue = 0;
 	fLeft.Clear();
 	fRight.Clear();
-	fLeftCached = false;
-	fRightCached = false;
 
 	spSafePtrStack_Event.Push(this);
 	}
@@ -219,8 +213,6 @@ bool Event::IsLeaf() const
 bool Event::IsInternal() const
 	{ return fLeft; }
 
-static ZAtomic_t sCountLeft, sHitLeft, sCountRight, sHitRight;
-
 bool Event::LessEqual(const ZRef<Event>& iOther) const
 	{
 	if (fLeft)
@@ -228,30 +220,14 @@ bool Event::LessEqual(const ZRef<Event>& iOther) const
 		if (fValue > iOther->fValue)
 			return false;
 
-		if (0 == fValue || sGetSet(fLeftCached, true))
-			sAtomic_Inc(&sHitLeft);
-		sAtomic_Inc(&sCountLeft);
-
 		ZRef<Event> xl1 = fLeft->pLifted(fValue);
 		if (iOther->fLeft)
 			{
-			if (0 == iOther->fValue || sGetSet(iOther->fLeftCached, true))
-				sAtomic_Inc(&sHitLeft);
-			sAtomic_Inc(&sCountLeft);
-
 			ZRef<Event> xl2 = iOther->fLeft->pLifted(iOther->fValue);
 			if (not xl1->LessEqual(xl2))
 				return false;
 
-			if (0 == fValue || sGetSet(fRightCached, true))
-				sAtomic_Inc(&sHitRight);
-			sAtomic_Inc(&sCountRight);
-
 			ZRef<Event> xr1 = fRight->pLifted(fValue);
-
-			if (0 == iOther->fValue || sGetSet(iOther->fRightCached, true))
-				sAtomic_Inc(&sHitRight);
-			sAtomic_Inc(&sCountRight);
 
 			ZRef<Event> xr2 = iOther->fRight->pLifted(iOther->fValue);
 			return xr1->LessEqual(xr2);
@@ -260,9 +236,6 @@ bool Event::LessEqual(const ZRef<Event>& iOther) const
 			{
 			if (not xl1->LessEqual(iOther))
 				return false;
-			if (0 == fValue || sGetSet(fRightCached, true))
-				sAtomic_Inc(&sHitRight);
-			sAtomic_Inc(&sCountRight);
 			ZRef<Event> xr1 = fRight->pLifted(fValue);
 			return xr1->LessEqual(iOther);
 			}

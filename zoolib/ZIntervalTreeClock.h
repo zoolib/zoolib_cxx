@@ -116,12 +116,6 @@ private:
 	ZRef<Event> fLeft;
 	ZRef<Event> fRight;
 	size_t fValue;
-
-	mutable bool fLeftCached;
-	mutable bool fRightCached;
-
-//	mutable ZRef<Event> fLeftLifted;
-//	mutable ZRef<Event> fRightLifted;
 	};
 
 // =================================================================================================
