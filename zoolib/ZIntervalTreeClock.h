@@ -65,17 +65,26 @@ private:
 // =================================================================================================
 // MARK: - Event
 
+class Event;
+
+class SafePtrStackLink_Event
+:	public ZSafePtrStackLink<Event,SafePtrStackLink_Event>
+	{};
+
 class Event
 :	public ZCounted
+,	public SafePtrStackLink_Event
 	{
 public:
 	static ZRef<Event> sZero();
 
+	static ZRef<Event> sMake(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
+
 	Event();
 	virtual ~Event();
 
-	Event(size_t iValue);
-	Event(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
+// From ZCounted
+	virtual void Finalize();
 
 // Accessors, mainly for text and binary streaming.
 	size_t Value() const;
@@ -103,12 +112,16 @@ private:
 	ZRef<Event> pNormalized() const;
 	size_t pHeight() const;
 
-	const ZRef<Event> fLeft;
-	const ZRef<Event> fRight;
-	const size_t fValue;
+	// Only changed by sMake and Finalize
+	ZRef<Event> fLeft;
+	ZRef<Event> fRight;
+	size_t fValue;
 
-	mutable ZRef<Event> fLeftLifted;
-	mutable ZRef<Event> fRightLifted;
+	mutable bool fLeftCached;
+	mutable bool fRightCached;
+
+//	mutable ZRef<Event> fLeftLifted;
+//	mutable ZRef<Event> fRightLifted;
 	};
 
 // =================================================================================================
