@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCompare_vector.h"
+#include "zoolib/ZSingleton.h"
 #include "zoolib/ZVal_Any.h"
 
 using std::map;
@@ -30,7 +31,8 @@ using std::vector;
 
 namespace ZooLib {
 
-static ZVal_Any spVal_Null;
+static const ZVal_Any& spVal_Null()
+	{ return sSingleton<ZVal_Any>(); }
 
 template <>
 int sCompare_T(const ZVal_Any& iL, const ZVal_Any& iR)
@@ -158,7 +160,7 @@ const ZVal_Any& ZSeq_Any::Get(size_t iIndex) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return *theVal;
-	return spVal_Null;
+	return spVal_Null();
 	}
 
 ZVal_Any* ZSeq_Any::PMut(size_t iIndex)
@@ -500,14 +502,14 @@ const ZVal_Any& ZMap_Any::Get(const Name_t& iName) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iName))
 		return *theVal;
-	return spVal_Null;
+	return spVal_Null();
 	}
 
 const ZVal_Any& ZMap_Any::Get(const Index_t& iIndex) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return *theVal;
-	return spVal_Null;
+	return spVal_Null();
 	}
 
 ZVal_Any* ZMap_Any::PMut(const Name_t& iName)
@@ -614,7 +616,7 @@ const ZVal_Any& ZMap_Any::operator[](const Name_t& iName) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iName))
 		return *theVal;
-	return spVal_Null;
+	return spVal_Null();
 	}
 
 ZVal_Any& ZMap_Any::operator[](const Index_t& iIndex)
@@ -632,7 +634,7 @@ const ZVal_Any& ZMap_Any::operator[](const Index_t& iIndex) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return *theVal;
-	return spVal_Null;
+	return spVal_Null();
 	}
 
 void ZMap_Any::pTouch()
