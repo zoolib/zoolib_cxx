@@ -50,10 +50,10 @@ public:
 	bool IsLeaf() const;
 	bool IsInternal() const;
 
-	ZRef<Identity> Left() const;
-	ZRef<Identity> Right() const;
+	const ZRef<Identity>& Left() const;
+	const ZRef<Identity>& Right() const;
 
-	void Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight) const;
+	void Splitted(ZRef<Identity>& oLeft, ZRef<Identity>& oRight) const;
 
 	ZRef<Identity> Summed(const ZRef<Identity>& iOther) const;
 

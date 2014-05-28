@@ -46,18 +46,29 @@ using std::max;
 
 ZRef<Identity> Identity::sZero()
 	{
+	// This could be a nullptr
 	static const ZRef<Identity> spZero = new Identity;
 	return spZero;
 	}
 
 ZRef<Identity> Identity::sOne()
 	{
+	// And this could be a pointer with low bit set.
 	static const ZRef<Identity> spOne = new Identity;
 	return spOne;
 	}
 
-static const ZRef<Identity> spZeroOne = new Identity(Identity::sZero(), Identity::sOne());
-static const ZRef<Identity> spOneZero = new Identity(Identity::sOne(), Identity::sZero());
+static ZRef<Identity> spZeroOne()
+	{
+	static const ZRef<Identity> spIdentity = new Identity(Identity::sZero(), Identity::sOne());
+	return spIdentity;
+	}
+
+static ZRef<Identity> spOneZero()
+	{
+	static const ZRef<Identity> spIdentity = new Identity(Identity::sOne(), Identity::sZero());
+	return spIdentity;
+	}
 
 Identity::Identity()
 	{}
@@ -86,13 +97,13 @@ bool Identity::IsLeaf() const
 bool Identity::IsInternal() const
 	{ return fLeft; }
 
-ZRef<Identity> Identity::Left() const
+const ZRef<Identity>& Identity::Left() const
 	{ return fLeft; }
 
-ZRef<Identity> Identity::Right() const
+const ZRef<Identity>& Identity::Right() const
 	{ return fRight; }
 
-void Identity::Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight) const
+void Identity::Splitted(ZRef<Identity>& oLeft, ZRef<Identity>& oRight) const
 	{
 	if (this->IsZero())
 		{
@@ -101,13 +112,13 @@ void Identity::Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight) const
 		}
 	else if (this->IsOne())
 		{
-		oLeft = spOneZero;
-		oRight = spZeroOne;
+		oLeft = spOneZero();
+		oRight = spZeroOne();
 		}
 	else if (not fLeft->IsZero() && fRight->IsZero())
 		{
 		ZRef<Identity> newLeft, newRight;
-		fLeft->Split(newLeft, newRight);
+		fLeft->Splitted(newLeft, newRight);
 
 		oLeft = new Identity(newLeft, sZero());
 		oRight = new Identity(newRight, sZero());
@@ -115,7 +126,7 @@ void Identity::Split(ZRef<Identity>& oLeft, ZRef<Identity>& oRight) const
 	else if (fLeft->IsZero() && not fRight->IsZero())
 		{
 		ZRef<Identity> newLeft, newRight;
-		fRight->Split(newLeft, newRight);
+		fRight->Splitted(newLeft, newRight);
 
 		oLeft = new Identity(sZero(), newLeft);
 		oRight = new Identity(sZero(), newRight);
@@ -330,8 +341,8 @@ size_t Event::pGrown(const ZRef<Identity>& iIdentity, ZRef<Event>& oEvent) const
 	else
 		{
 		ZAssert(iIdentity->IsInternal());
-		const ZRef<Identity> identityLeft = iIdentity->Left();
-		const ZRef<Identity> identityRight = iIdentity->Right();
+		const ZRef<Identity>& identityLeft = iIdentity->Left();
+		const ZRef<Identity>& identityRight = iIdentity->Right();
 		if (identityLeft->IsZero())
 			{
 			ZRef<Event> tmp;
@@ -384,8 +395,8 @@ ZRef<Event> Event::pFilled(const ZRef<Identity>& iIdentity) const
 		}
 	else
 		{
-		const ZRef<Identity> identityLeft = iIdentity->Left();
-		const ZRef<Identity> identityRight = iIdentity->Right();
+		const ZRef<Identity>& identityLeft = iIdentity->Left();
+		const ZRef<Identity>& identityRight = iIdentity->Right();
 		if (identityLeft->IsOne())
 			{
 			const ZRef<Event> newRight = fRight->pFilled(identityRight);
