@@ -212,7 +212,7 @@ ZRef<DatonSet> DatonSet::Fork()
 	this->pCommit();
 
 	ZRef<Identity> newLeft, newRight;
-	fIdentity->Split(newLeft, newRight);
+	fIdentity->Splitted(newLeft, newRight);
 	fIdentity = newLeft;
 
 	ZRef<DatonSet> newDS = new DatonSet(newRight, fEvent->Advanced(newRight), fDeltasChain);
@@ -220,28 +220,16 @@ ZRef<DatonSet> DatonSet::Fork()
 	return newDS;
 	}
 
-
-bool DatonSet::TentativeJoin(const ZRef<DatonSet>& iOther)
-	{
-	ZGuardMtx guard(fMtx);
-	this->pCommit();
-	guard.Release();
-
-	ZRef<Event> otherEvent;
-	ZRef<Deltas> theDeltas;
-	iOther->GetDeltas(fEvent, theDeltas, otherEvent);
-	return sNotEmpty(theDeltas->GetVector());
-	}
-
 bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 	{
 	ZGuardMtx guard(fMtx);
 	this->pCommit();
+	ZRef<Event> theEvent = fEvent;
 	guard.Release();
 
 	ZRef<Event> otherEvent;
 	ZRef<Deltas> theDeltas;
-	ioOther->GetDeltas(fEvent, theDeltas, otherEvent);
+	ioOther->GetDeltas(theEvent, theDeltas, otherEvent);
 
 	guard.Acquire();
 
@@ -266,17 +254,19 @@ void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Deltas>& oDeltas, ZRef<Event>&
 	struct Accumulator_Join
 		{
 		void operator()(ZRef<Event>& io0, const ZRef<Event>& i1) const
-			{ io0= io0 ? io0->Joined(i1) : i1; }
+			{ io0 = io0 ? io0->Joined(i1) : i1; }
 		};
 
-	ZAcqMtx acq(fMtx);
+	ZGuardMtx guard(fMtx);
 	this->pCommit();
 
 	ZAccumulator_T<ZRef<Event>,Accumulator_Join,vector<ZRef<Event> > > theAcc(iEvent);
 
 	Vector_Event_Delta_t resultVector;
-	for (ZRef<DeltasChain> current = fDeltasChain;
-		current; current = current->GetParent())
+	ZRef<DeltasChain> current = fDeltasChain;
+	guard.Release();
+
+	for (/*no init*/; current; current = current->GetParent())
 		{
 		// Indexing can't work. But maybe we can record the join and meet of the
 		// contents, and thus be able to reject entire blocks at times??
