@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/RelationalAlgebra/PseudoMap.h"
 
+#include "zoolib/ZSingleton.h"
 #include "zoolib/ZUtil_STL_map.h"
 
 namespace ZooLib {
@@ -38,6 +39,27 @@ const ZVal_Any* PseudoMap::PGet(const string8& iName) const
 	if (ZQ<size_t> theOffsetQ = ZUtil_STL::sQGet(*fBindings, iName))
 		return fVals + *theOffsetQ;
 	return nullptr;
+	}
+
+const ZQ<ZVal_Any> PseudoMap::QGet(const string8& iName) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iName))
+		return *theVal;
+	return null;
+	}
+
+const ZVal_Any& PseudoMap::DGet(const ZVal_Any& iDefault, const string8& iName) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iName))
+		return *theVal;
+	return iDefault;
+	}
+
+const ZVal_Any& PseudoMap::Get(const string8& iName) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iName))
+		return *theVal;
+	return sSingleton<ZVal_Any>();
 	}
 
 ZMap_Any PseudoMap::AsMap() const

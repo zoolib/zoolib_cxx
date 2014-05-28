@@ -38,6 +38,9 @@ public:
 	PseudoMap(const std::map<string8,size_t>* iBindings, const ZVal_Any* iVals);
 
 	const ZVal_Any* PGet(const string8& iName) const;
+	const ZQ<ZVal_Any> QGet(const string8& iName) const;
+	const ZVal_Any& DGet(const ZVal_Any& iDefault, const string8& iName) const;
+	const ZVal_Any& Get(const string8& iName) const;
 
 	template <class S>
 	const S* PGet(const string8& iName) const
