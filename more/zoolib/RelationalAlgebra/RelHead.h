@@ -61,6 +61,27 @@ inline RelHead sRelHead(const char* iElem)
 inline size_t sIndexOf(const RelHead& iRelHead, const ColName& iElem)
 	{ return std::distance(iRelHead.begin(), iRelHead.find(iElem)); }
 
+RelHead sRelHead(const ColName& i0, const ColName& i1);
+
+RelHead sRelHead(const ColName& i0, const ColName& i1, const ColName& i2);
+
+RelHead sRelHead(const ColName& i0, const ColName& i1, const ColName& i2, const ColName& i3);
+
+RelHead sRelHead(const ColName& i0, const ColName& i1, const ColName& i2, const ColName& i3,
+	const ColName& i4);
+
+RelHead sRelHead(
+	const ColName& i0, const ColName& i1, const ColName& i2, const ColName& i3,
+	const ColName& i4, const ColName& i5);
+
+RelHead sRelHead(
+	const ColName& i0, const ColName& i1, const ColName& i2, const ColName& i3,
+	const ColName& i4, const ColName& i5, const ColName& i6);
+
+RelHead sRelHead(
+	const ColName& i0, const ColName& i1, const ColName& i2, const ColName& i3,
+	const ColName& i4, const ColName& i5, const ColName& i6, const ColName& i7);
+
 // =================================================================================================
 // MARK: - RelHead operators
 

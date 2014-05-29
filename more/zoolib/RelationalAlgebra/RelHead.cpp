@@ -63,6 +63,93 @@ Rename sInverted(const Rename& iRename)
 	}
 
 // =================================================================================================
+// MARK: - sRelHead
+
+RelHead sRelHead(const ColName& i0, const ColName& i1)
+	{
+	RelHead result;
+	result.insert(i0);
+	result.insert(i1);
+	return result;
+	}
+
+RelHead sRelHead(const ColName& i0, const ColName& i1, const ColName& i2)
+	{
+	RelHead result;
+	result.insert(i0);
+	result.insert(i1);
+	result.insert(i2);
+	return result;
+	}
+
+RelHead sRelHead(const ColName& i0, const ColName& i1, const ColName& i2, const ColName& i3)
+	{
+	RelHead result;
+	result.insert(i0);
+	result.insert(i1);
+	result.insert(i2);
+	result.insert(i3);
+	return result;
+	}
+
+RelHead sRelHead(const ColName& i0, const ColName& i1, const ColName& i2, const ColName& i3,
+	const ColName& i4)
+	{
+	RelHead result;
+	result.insert(i0);
+	result.insert(i1);
+	result.insert(i2);
+	result.insert(i3);
+	result.insert(i4);
+	return result;
+	}
+
+RelHead sRelHead(
+	const ColName& i0, const ColName& i1, const ColName& i2, const ColName& i3,
+	const ColName& i4, const ColName& i5)
+	{
+	RelHead result;
+	result.insert(i0);
+	result.insert(i1);
+	result.insert(i2);
+	result.insert(i3);
+	result.insert(i4);
+	result.insert(i5);
+	return result;
+	}
+
+RelHead sRelHead(
+	const ColName& i0, const ColName& i1, const ColName& i2, const ColName& i3,
+	const ColName& i4, const ColName& i5, const ColName& i6)
+	{
+	RelHead result;
+	result.insert(i0);
+	result.insert(i1);
+	result.insert(i2);
+	result.insert(i3);
+	result.insert(i4);
+	result.insert(i5);
+	result.insert(i6);
+	return result;
+	}
+
+RelHead sRelHead(
+	const ColName& i0, const ColName& i1, const ColName& i2, const ColName& i3,
+	const ColName& i4, const ColName& i5, const ColName& i6, const ColName& i7)
+	{
+	RelHead result;
+	result.insert(i0);
+	result.insert(i1);
+	result.insert(i2);
+	result.insert(i3);
+	result.insert(i4);
+	result.insert(i5);
+	result.insert(i6);
+	result.insert(i7);
+	return result;
+	}
+
+// =================================================================================================
 // MARK: - Prefix
 
 bool sHasPrefix(const ColName& iPrefix, const ColName& iColName)
