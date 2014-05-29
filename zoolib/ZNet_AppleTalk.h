@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // ==================================================
-#pragma mark -
-#pragma mark * ZNetAddress_AppleTalk
+// MARK: - ZNetAddress_AppleTalk
 
 class ZNetAddress_AppleTalk : public ZNetAddress
 	{
@@ -50,8 +49,7 @@ private:
 	};
 
 // ==================================================
-#pragma mark -
-#pragma mark * ZNetName_AppleTalk
+// MARK: - ZNetName_AppleTalk
 
 class ZNetNameRegistered_AppleTalk;
 
@@ -81,8 +79,7 @@ private:
 	};
 
 // ==================================================
-#pragma mark -
-#pragma mark * ZNetNameRegistered_AppleTalk
+// MARK: - ZNetNameRegistered_AppleTalk
 
 class ZNetNameRegistered_AppleTalk : public ZCounted
 	{
@@ -99,8 +96,7 @@ public:
 	};
 
 // ==================================================
-#pragma mark -
-#pragma mark * ZNetListener_ADSP
+// MARK: - ZNetListener_ADSP
 
 class ZNetListener_ADSP : public ZNetListener
 	{
@@ -114,8 +110,7 @@ public:
 	};
 
 // ==================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_ADSP
+// MARK: - ZNetEndpoint_ADSP
 
 class ZNetEndpoint_ADSP : public ZNetEndpoint
 	{

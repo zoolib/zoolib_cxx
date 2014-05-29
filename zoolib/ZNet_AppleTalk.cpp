@@ -25,8 +25,7 @@ using std::string;
 namespace ZooLib {
 
 // ==================================================
-#pragma mark -
-#pragma mark * ZNetAddress_AppleTalk
+// MARK: - ZNetAddress_AppleTalk
 
 ZNetAddress_AppleTalk::ZNetAddress_AppleTalk()
 :	fNet(0),
@@ -47,8 +46,7 @@ ZRef<ZNetEndpoint> ZNetAddress_AppleTalk::Connect() const
 	{ return ZNetEndpoint_ADSP::sCreateConnectedEndpoint(fNet, fNode, fSocket); }
 
 // ==================================================
-#pragma mark -
-#pragma mark * ZNetName_AppleTalk
+// MARK: - ZNetName_AppleTalk
 
 ZNetName_AppleTalk::ZNetName_AppleTalk()
 	{}
@@ -98,8 +96,7 @@ ZRef<ZNetNameRegistered_AppleTalk> ZNetName_AppleTalk::RegisterSocket(uint8 iSoc
 	}
 
 // ==================================================
-#pragma mark -
-#pragma mark * ZNetNameRegistered_AppleTalk
+// MARK: - ZNetNameRegistered_AppleTalk
 
 ZNetNameRegistered_AppleTalk::ZNetNameRegistered_AppleTalk()
 	{}
@@ -108,8 +105,7 @@ ZNetNameRegistered_AppleTalk::~ZNetNameRegistered_AppleTalk()
 	{}
 
 // ==================================================
-#pragma mark -
-#pragma mark * ZNetListener_ADSP
+// MARK: - ZNetListener_ADSP
 
 ZNetListener_ADSP::ZNetListener_ADSP()
 	{}
@@ -127,8 +123,7 @@ ZRef<ZNetListener_ADSP> ZNetListener_ADSP::sCreateListener()
 	}
 
 // ==================================================
-#pragma mark -
-#pragma mark * ZNetEndpoint_ADSP
+// MARK: - ZNetEndpoint_ADSP
 
 ZRef<ZNetEndpoint_ADSP> ZNetEndpoint_ADSP::sCreateConnectedEndpoint(
 	int16 iNet, uint8 iNode, int8 iSocket)
