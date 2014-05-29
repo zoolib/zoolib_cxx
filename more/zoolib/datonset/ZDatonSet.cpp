@@ -268,8 +268,9 @@ void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Deltas>& oDeltas, ZRef<Event>&
 
 	for (/*no init*/; current; current = current->GetParent())
 		{
-		// Indexing can't work. But maybe we can record the join and meet of the
-		// contents, and thus be able to reject entire blocks at times??
+		// Actually, maybe indexing can work -- we've got indeterminate ordering, which
+		// may be unstable, but once a sequence firms up it doesn't go squishy again. That
+		// may be enough to give us more efficient lookup than a linear scan.
 		const Vector_Event_Delta_t& theVector = current->GetDeltas()->GetVector();
 		for (Vector_Event_Delta_t::const_iterator
 			ii = theVector.begin(), theEnd = theVector.end(); ii != theEnd; ++ii)
