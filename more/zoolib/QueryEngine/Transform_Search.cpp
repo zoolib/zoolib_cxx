@@ -159,7 +159,6 @@ public:
 		// resulting names that are in fProjection, so the passed rename is
 		// effectively a project/rename descriptor.
 
-
 		Rename newRename;
 		foreachi (iterRename, fRename)
 			{
