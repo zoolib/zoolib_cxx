@@ -74,11 +74,6 @@ public:
 	void ClearTransaction(size_t iIndex);
 	void CloseTransaction(size_t iIndex);
 
-	typedef RelationalAlgebra::ConcreteHead ConcreteHead;
-	typedef RelationalAlgebra::RelHead RelHead;
-
-	struct Default_t {};
-
 private:
 	ZMtxR fMtxR;
 	size_t fWalkerCount;

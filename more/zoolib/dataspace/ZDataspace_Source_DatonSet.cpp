@@ -52,13 +52,6 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - sCompare_T
 
-template <>
-int sCompare_T(const ZDataspace::Source_DatonSet::Default_t& iL,
-	const ZDataspace::Source_DatonSet::Default_t& iR)
-	{ return 0; }
-
-ZMACRO_CompareRegistration_T(ZDataspace::Source_DatonSet::Default_t)
-
 namespace ZDataspace {
 
 using ZDatonSet::DatonSet;
@@ -756,6 +749,8 @@ ZRef<QE::Walker> Source_DatonSet::pMakeWalker_Search(
 	{
 	// This is where we would be able to take advantage of indices. For the moment
 	// just do it the dumb way.
+
+	ZUnimplemented();
 
 	const RA::Rename& theRename = iRel->GetRename();
 	RA::RelHead theRH_Required;

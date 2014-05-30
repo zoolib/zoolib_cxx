@@ -29,15 +29,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
+#include "zoolib/dataspace/Types.h"
+
 #include <set>
 #include <vector>
 
 namespace ZooLib {
 namespace ZDataspace {
-
-using ZIntervalTreeClock::Event;
-
-using RelationalAlgebra::RelHead;
 
 // =================================================================================================
 // MARK: - AddedQuery
