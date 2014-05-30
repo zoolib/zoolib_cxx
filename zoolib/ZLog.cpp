@@ -47,7 +47,7 @@ CallDepth::CallDepth(bool iActive)
 	{ ZTSS::sSet(spKey(), this); }
 
 CallDepth::~CallDepth()
-	{ ZTSS::sSet(spKey(), fPrior); }
+	{ ZTSS::sSet(spKey(), const_cast<CallDepth*>(fPrior)); }
 
 size_t CallDepth::sCount()
 	{
