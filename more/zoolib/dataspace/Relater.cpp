@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/dataspace/ZDataspace_Source.h"
+#include "zoolib/dataspace/Relater.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -98,29 +98,29 @@ ZRef<Event> QueryResult::GetEvent() const
 	{ return fEvent; }
 
 // =================================================================================================
-// MARK: - Source
+// MARK: - Relater
 
-Source::Source()
+Relater::Relater()
 :	fCalled_ResultsAvailable(false)
 	{}
 
-Source::~Source()
+Relater::~Relater()
 	{}
 
-void Source::SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable)
+void Relater::SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable)
 	{
 	ZAcqMtx acq(fMtx);
 	fCalled_ResultsAvailable = false;
 	fCallable_ResultsAvailable = iCallable;
 	}
 
-void Source::pCollectResultsCalled()
+void Relater::pCollectResultsCalled()
 	{
 	ZAcqMtx acq(fMtx);
 	fCalled_ResultsAvailable = false;
 	}
 
-void Source::pTriggerResultsAvailable()
+void Relater::pTriggerResultsAvailable()
 	{
 	ZGuardMtx guard(fMtx);
 	if (not sGetSet(fCalled_ResultsAvailable, true))
