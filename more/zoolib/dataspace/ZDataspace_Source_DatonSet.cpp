@@ -35,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/ZDataspace_Source_DatonSet.h"
 
-#include "zoolib/QueryEngine/DoQuery.h"
+#include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Transform_Search.h"
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
 #include "zoolib/QueryEngine/Walker_Project.h"
@@ -50,7 +50,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCompare_T
+// MARK: -
 
 namespace ZDataspace {
 
@@ -227,22 +227,22 @@ public:
 
 	const ZRef<RA::Expr_Rel> fRel;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQuery_InPQuery;
-	set<PSearch*> fPSearch_Used;
+	set<PScan*> fPScan_Used;
 	ZRef<QE::Result> fResult;
 	};
 
 // =================================================================================================
-// MARK: - Source_DatonSet::PSearch
+// MARK: - Source_DatonSet::PScan
 
-class Source_DatonSet::DLink_PSearch_NeedsWork
-:	public DListLink<PSearch, DLink_PSearch_NeedsWork, kDebug>
+class Source_DatonSet::DLink_PScan_NeedsWork
+:	public DListLink<PScan, DLink_PScan_NeedsWork, kDebug>
 	{};
 
-class Source_DatonSet::PSearch
-:	public DLink_PSearch_NeedsWork
+class Source_DatonSet::PScan
+:	public DLink_PScan_NeedsWork
 	{
 public:
-	PSearch() {}
+	PScan() {}
 
 	RelHead fRelHead;
 	set<PQuery*> fPQuery_Using;
@@ -262,7 +262,7 @@ Source_DatonSet::Source_DatonSet(ZRef<DatonSet> iDatonSet)
 
 Source_DatonSet::~Source_DatonSet()
 	{
-	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
+	for (DListEraser<PScan,DLink_PScan_NeedsWork> eraser = fPScan_NeedsWork;
 		eraser; eraser.Advance())
 		{}
 	for (DListEraser<ClientQuery,DLink_ClientQuery_NeedsWork> eraser = fClientQuery_NeedsWork;
@@ -334,16 +334,16 @@ void Source_DatonSet::ModifyRegistrations(
 		sEraseMust(thePQuery->fClientQuery_InPQuery, theClientQuery);
 		if (sIsEmpty(thePQuery->fClientQuery_InPQuery))
 			{
-			// Detach from any depended-upon PSearch
-			for (set<PSearch*>::iterator iterPSearch = thePQuery->fPSearch_Used.begin();
-				iterPSearch != thePQuery->fPSearch_Used.end(); ++iterPSearch)
+			// Detach from any depended-upon PScan
+			for (set<PScan*>::iterator iterPScan = thePQuery->fPScan_Used.begin();
+				iterPScan != thePQuery->fPScan_Used.end(); ++iterPScan)
 				{
-				PSearch* thePSearch = *iterPSearch;
-				sEraseMust(kDebug, thePSearch->fPQuery_Using, thePQuery);
-				if (thePSearch->fPQuery_Using.empty())
-					sQInsertBack(fPSearch_NeedsWork, thePSearch);
+				PScan* thePScan = *iterPScan;
+				sEraseMust(kDebug, thePScan->fPQuery_Using, thePQuery);
+				if (thePScan->fPQuery_Using.empty())
+					sQInsertBack(fPScan_NeedsWork, thePScan);
 				}
-			thePQuery->fPSearch_Used.clear();
+			thePQuery->fPScan_Used.clear();
 
 			sQErase(fPQuery_NeedsWork, thePQuery);
 			sEraseMust(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
@@ -362,9 +362,7 @@ void Source_DatonSet::ModifyRegistrations(
 
 void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 	{
-	this->pCollectResultsCalled
-
-	();
+	this->pCollectResultsCalled();
 
 	ZAcqMtxR acq(fMtxR);
 
@@ -394,7 +392,7 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 			s.Emit();
 			}
 
-		thePQuery->fResult = QE::sDoQuery(theWalker);
+		thePQuery->fResult = sResultFromWalker(theWalker);
 		const ZTime afterDoQuery = ZTime::sNow();
 
 		if (s && 0)
@@ -424,13 +422,13 @@ void Source_DatonSet::CollectResults(vector<QueryResult>& oChanged)
 		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult, theEvent));
 		}
 
-	// Remove any unused PSearches
-	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
+	// Remove any unused PScanes
+	for (DListEraser<PScan,DLink_PScan_NeedsWork> eraser = fPScan_NeedsWork;
 		eraser; eraser.Advance())
 		{
-		PSearch* thePSearch = eraser.Current();
-		if (thePSearch->fPQuery_Using.empty())
-			sEraseMust(kDebug, fMap_PSearch, thePSearch->fRelHead);
+		PScan* thePScan = eraser.Current();
+		if (thePScan->fPQuery_Using.empty())
+			sEraseMust(kDebug, fMap_PScan, thePScan->fRelHead);
 		}
 	}
 
@@ -635,7 +633,6 @@ void Source_DatonSet::pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& iV
 	this->pChanged(iVal);
 	}
 
-
 void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 	{
 	const ZMap_Any theMap = iVal.Get<ZMap_Any>();
@@ -643,70 +640,70 @@ void Source_DatonSet::pChanged(const ZVal_Any& iVal)
 	for (ZMap_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
 		theRH |= RA::ColName(theMap.NameOf(i));
 
-	for (Map_PSearch::iterator iterPSearch = fMap_PSearch.begin();
-		iterPSearch != fMap_PSearch.end(); ++iterPSearch)
+	for (Map_PScan::iterator iterPScan = fMap_PScan.begin();
+		iterPScan != fMap_PScan.end(); ++iterPScan)
 		{
-		PSearch* thePSearch = &iterPSearch->second;
-		if (sIncludes(theRH, thePSearch->fRelHead))
+		PScan* thePScan = &iterPScan->second;
+		if (sIncludes(theRH, thePScan->fRelHead))
 			{
-			for (set<PQuery*>::iterator iterPQuery = thePSearch->fPQuery_Using.begin();
-				iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)
+			for (set<PQuery*>::iterator iterPQuery = thePScan->fPQuery_Using.begin();
+				iterPQuery != thePScan->fPQuery_Using.end(); ++iterPQuery)
 				{
 				PQuery* thePQuery = *iterPQuery;
 				sQInsertBack(fPQuery_NeedsWork, thePQuery);
-				for (set<PSearch*>::iterator iterPSearch_Used =
-					thePQuery->fPSearch_Used.begin();
-					iterPSearch_Used != thePQuery->fPSearch_Used.end();
-					++iterPSearch_Used)
+				for (set<PScan*>::iterator iterPScan_Used =
+					thePQuery->fPScan_Used.begin();
+					iterPScan_Used != thePQuery->fPScan_Used.end();
+					++iterPScan_Used)
 					{
-					PSearch* thePSearch_Used = *iterPSearch_Used;
-					if (thePSearch_Used != thePSearch)
+					PScan* thePScan_Used = *iterPScan_Used;
+					if (thePScan_Used != thePScan)
 						{
-						sEraseMust(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
+						sEraseMust(kDebug, thePScan_Used->fPQuery_Using, thePQuery);
 
-						if (thePSearch_Used->fPQuery_Using.empty())
-							sQInsertBack(fPSearch_NeedsWork, thePSearch_Used);
+						if (thePScan_Used->fPQuery_Using.empty())
+							sQInsertBack(fPScan_NeedsWork, thePScan_Used);
 						}
 					}
-				thePQuery->fPSearch_Used.clear();
+				thePQuery->fPScan_Used.clear();
 				}
-			thePSearch->fPQuery_Using.clear();
-			thePSearch->fResult.Clear();
-			sQInsertBack(fPSearch_NeedsWork, thePSearch);
+			thePScan->fPQuery_Using.clear();
+			thePScan->fResult.Clear();
+			sQInsertBack(fPScan_NeedsWork, thePScan);
 			}
 		}
 	}
 
 void Source_DatonSet::pChangedAll()
 	{
-	for (Map_PSearch::iterator iterPSearch = fMap_PSearch.begin();
-		iterPSearch != fMap_PSearch.end(); ++iterPSearch)
+	for (Map_PScan::iterator iterPScan = fMap_PScan.begin();
+		iterPScan != fMap_PScan.end(); ++iterPScan)
 		{
-		PSearch* thePSearch = &iterPSearch->second;
-		for (set<PQuery*>::iterator iterPQuery = thePSearch->fPQuery_Using.begin();
-			iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)
+		PScan* thePScan = &iterPScan->second;
+		for (set<PQuery*>::iterator iterPQuery = thePScan->fPQuery_Using.begin();
+			iterPQuery != thePScan->fPQuery_Using.end(); ++iterPQuery)
 			{
 			PQuery* thePQuery = *iterPQuery;
 			sQInsertBack(fPQuery_NeedsWork, thePQuery);
-			for (set<PSearch*>::iterator iterPSearch_Used =
-				thePQuery->fPSearch_Used.begin();
-				iterPSearch_Used != thePQuery->fPSearch_Used.end();
-				++iterPSearch_Used)
+			for (set<PScan*>::iterator iterPScan_Used =
+				thePQuery->fPScan_Used.begin();
+				iterPScan_Used != thePQuery->fPScan_Used.end();
+				++iterPScan_Used)
 				{
-				PSearch* thePSearch_Used = *iterPSearch_Used;
-				if (thePSearch_Used != thePSearch)
+				PScan* thePScan_Used = *iterPScan_Used;
+				if (thePScan_Used != thePScan)
 					{
-					sEraseMust(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
+					sEraseMust(kDebug, thePScan_Used->fPQuery_Using, thePQuery);
 
-					if (thePSearch_Used->fPQuery_Using.empty())
-						sQInsertBack(fPSearch_NeedsWork, thePSearch_Used);
+					if (thePScan_Used->fPQuery_Using.empty())
+						sQInsertBack(fPScan_NeedsWork, thePScan_Used);
 					}
 				}
-			thePQuery->fPSearch_Used.clear();
+			thePQuery->fPScan_Used.clear();
 			}
-		thePSearch->fPQuery_Using.clear();
-		thePSearch->fResult.Clear();
-		sQInsertBack(fPSearch_NeedsWork, thePSearch);
+		thePScan->fPQuery_Using.clear();
+		thePScan->fResult.Clear();
+		sQInsertBack(fPScan_NeedsWork, thePScan);
 		}
 	}
 
@@ -717,31 +714,31 @@ ZRef<QueryEngine::Walker> Source_DatonSet::pMakeWalker_Concrete(
 
 	const RelHead theRelHead_Required = RelationalAlgebra::sRelHead_Required(iConcreteHead);
 
-	PSearch* thePSearch;
-	Map_PSearch::iterator iterPSearch = fMap_PSearch.find(theRelHead_Required);
-	if (iterPSearch != fMap_PSearch.end())
+	PScan* thePScan;
+	Map_PScan::iterator iterPScan = fMap_PScan.find(theRelHead_Required);
+	if (iterPScan != fMap_PScan.end())
 		{
-		thePSearch = &iterPSearch->second;
+		thePScan = &iterPScan->second;
 		}
 	else
 		{
-		pair<Map_PSearch::iterator,bool> inPSearch =
-			fMap_PSearch.insert(make_pair(theRelHead_Required, PSearch()));
+		pair<Map_PScan::iterator,bool> inPScan =
+			fMap_PScan.insert(make_pair(theRelHead_Required, PScan()));
 
-		thePSearch = &inPSearch.first->second;
-		thePSearch->fRelHead = theRelHead_Required;
+		thePScan = &inPScan.first->second;
+		thePScan->fRelHead = theRelHead_Required;
 		}
 
-	sInsertMust(kDebug, iPQuery->fPSearch_Used, thePSearch);
-	sInsertMust(kDebug, thePSearch->fPQuery_Using, iPQuery);
+	sInsertMust(kDebug, iPQuery->fPScan_Used, thePScan);
+	sInsertMust(kDebug, thePScan->fPQuery_Using, iPQuery);
 
-	if (not thePSearch->fResult)
+	if (not thePScan->fResult)
 		{
 		ZRef<QueryEngine::Walker> theWalker = new Walker_Concrete(this, iConcreteHead);
-		thePSearch->fResult = sDoQuery(theWalker);
+		thePScan->fResult = sResultFromWalker(theWalker);
 		}
 
-	return new QE::Walker_Result(thePSearch->fResult);
+	return new QE::Walker_Result(thePScan->fResult);
 	}
 
 ZRef<QE::Walker> Source_DatonSet::pMakeWalker_Search(

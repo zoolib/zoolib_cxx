@@ -106,7 +106,7 @@ private:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc_Concrete(ZRef<Walker_Concrete> iWalker,ZVal_Any* ioResults);
+	bool pReadInc_Concrete(ZRef<Walker_Concrete> iWalker, ZVal_Any* ioResults);
 
 	// -----
 
@@ -150,13 +150,13 @@ private:
 
 	// -----
 
-	class DLink_PSearch_NeedsWork;
-	class PSearch;
+	class DLink_PScan_NeedsWork;
+	class PScan;
 
-	typedef std::map<RelHead,PSearch> Map_PSearch;
-	Map_PSearch fMap_PSearch;
+	typedef std::map<RelHead,PScan> Map_PScan;
+	Map_PScan fMap_PScan;
 
-	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
+	DListHead<DLink_PScan_NeedsWork> fPScan_NeedsWork;
 	};
 
 } // namespace ZDataspace
